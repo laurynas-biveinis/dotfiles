@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 2002 David Ponce
 
-;; Author: Laurynas Biveinis <lauris@lauris-laptop>
-;; Created: 2009-02-19 21:54:15+0100
+;; Author:  <lauras@LATI07>
+;; Created: 2009-02-28 00:33:42+0100
 ;; Keywords: syntax
 ;; X-RCS: $Id$
 

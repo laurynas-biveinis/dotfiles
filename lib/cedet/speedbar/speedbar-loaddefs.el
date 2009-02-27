@@ -3,7 +3,7 @@
 ;;; Code:
 
 
-;;;### (autoloads (rpm) "rpm" "rpm.el" (17213 40778))
+;;;### (autoloads (rpm) "rpm" "rpm.el" (18856 27232))
 ;;; Generated autoloads from rpm.el
 
 (autoload (quote rpm) "rpm" "\
@@ -13,8 +13,8 @@ Red Hat Package Management in Emacs.
 
 ;;;***
 
-;;;### (autoloads (gud-speedbar-buttons) "sb-gud" "sb-gud.el" (16232
-;;;;;;  37556))
+;;;### (autoloads (gud-speedbar-buttons) "sb-gud" "sb-gud.el" (18856
+;;;;;;  27232))
 ;;; Generated autoloads from sb-gud.el
 
 (autoload (quote gud-speedbar-buttons) "sb-gud" "\
@@ -27,7 +27,7 @@ off the specialized speedbar mode.
 ;;;***
 
 ;;;### (autoloads (Info-speedbar-buttons Info-speedbar-browser) "sb-info"
-;;;;;;  "sb-info.el" (17563 42408))
+;;;;;;  "sb-info.el" (18856 27232))
 ;;; Generated autoloads from sb-info.el
 
 (autoload (quote Info-speedbar-browser) "sb-info" "\
@@ -47,7 +47,7 @@ BUFFER is the buffer speedbar is requesting buttons for.
 ;;;***
 
 ;;;### (autoloads (rmail-speedbar-buttons) "sb-rmail" "sb-rmail.el"
-;;;;;;  (15958 27182))
+;;;;;;  (18856 27232))
 ;;; Generated autoloads from sb-rmail.el
 
 (autoload (quote rmail-speedbar-buttons) "sb-rmail" "\
@@ -60,8 +60,8 @@ current message into that RMAIL folder.
 
 ;;;***
 
-;;;### (autoloads (w3-speedbar-buttons) "sb-w3" "sb-w3.el" (17213
-;;;;;;  40805))
+;;;### (autoloads (w3-speedbar-buttons) "sb-w3" "sb-w3.el" (18856
+;;;;;;  27232))
 ;;; Generated autoloads from sb-w3.el
 
 (autoload (quote w3-speedbar-buttons) "sb-w3" "\
@@ -72,7 +72,7 @@ Create speedbar buttons for the current web BUFFER displayed in w3 mode.
 ;;;***
 
 ;;;### (autoloads (speedbar-get-focus speedbar-frame-mode) "speedbar"
-;;;;;;  "speedbar.el" (18435 29472))
+;;;;;;  "speedbar.el" (18856 27232))
 ;;; Generated autoloads from speedbar.el
 
 (defalias (quote speedbar) (quote speedbar-frame-mode))
@@ -98,7 +98,7 @@ selected.  If the speedbar frame is active, then select the attached frame.
 
 ;;;### (autoloads nil nil ("bigclock.el" "dframe.el" "fsum.el" "sb-ant.el"
 ;;;;;;  "sb-html.el" "sb-image.el" "sb-texinfo.el" "speedbar-load.el")
-;;;;;;  (18845 50919 823695))
+;;;;;;  (18856 30793 578000))
 
 ;;;***
 
