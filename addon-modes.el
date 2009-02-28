@@ -215,8 +215,10 @@
 ; Xrefactory configuration part ;;
 (defvar xref-current-project nil) ;; can be also "my_project_name"
 (defvar xref-key-binding 'global) ;; can be also 'local or 'none
-(setq exec-path (cons xref-dir exec-path))
-(load "xrefactory")
+(if (file-exists-p xref-dir)
+      (progn
+	(setq exec-path (cons xref-dir exec-path))
+	(load "xrefactory")))
 
 ; Monotone
 (require 'monotone)
