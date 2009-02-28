@@ -673,7 +673,10 @@ END-RE is the regexp to match the end of a record."
 
 (defsubst egg-is-in-git ()
   "is the default-directory in a git repo."
-  (= (call-process egg-git-command nil nil nil "rev-parse" "--git-dir") 0))
+  (= (condition-case nil
+	 (call-process egg-git-command nil nil nil "rev-parse" "--git-dir")
+       (error 1))
+     0))
 
 (defsubst egg-is-dir-in-git (dir)
   "is DIR in a git repo."
@@ -694,7 +697,7 @@ END-RE is the regexp to match the end of a record."
 (defun egg-read-git-dir ()
   "call GIT to read the git directory of default-directory."
   (let ((dir (egg-git-to-string "rev-parse" "--git-dir")))
-    (if (stringp dir) 
+    (if (stringp dir)
 	(expand-file-name dir))))
 
 (defsubst egg-read-dir-git-dir (dir)
@@ -706,8 +709,10 @@ END-RE is the regexp to match the end of a record."
   "return the (pre-read) git-dir of default-directory"
   (if (local-variable-p 'egg-git-dir)
       egg-git-dir
-    (set (make-local-variable 'egg-git-dir) 
-	 (or (egg-read-git-dir)
+    (set (make-local-variable 'egg-git-dir)
+	 (or (condition-case nil
+		  (egg-read-git-dir)
+		(error nil))
 	     (and error-if-not-git
 		  (or (kill-local-variable 'egg-git-dir) t)
 		  (error "Not in a git repository: %s" default-directory))))
