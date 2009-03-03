@@ -49,4 +49,8 @@
 ; Use Unix-style line endings.
 (setq-default buffer-file-coding-system 'undecided-unix)
 
+; XXI century encodings
 (set-language-environment "UTF-8")
+
+; No fancy input encodings
+(set-input-method nil)
