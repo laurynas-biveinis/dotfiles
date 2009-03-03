@@ -48,3 +48,5 @@
 
 ; Use Unix-style line endings.
 (setq-default buffer-file-coding-system 'undecided-unix)
+
+(set-language-environment "UTF-8")
