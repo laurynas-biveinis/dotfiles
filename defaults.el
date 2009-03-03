@@ -46,6 +46,5 @@
 ; Ask for initial file checking comment
 (setq vc-initial-comment t)
 
-;;; Use Unix-style line endings.
+; Use Unix-style line endings.
 (setq-default buffer-file-coding-system 'undecided-unix)
-

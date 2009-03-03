@@ -46,7 +46,6 @@
   ;; If there is more than one, they won't work right.
  '(cua-mode t nil (cua-base))
  '(ecb-options-version "2.32")
- '(ispell-program-name "aspell")
  '(preview-auto-cache-preamble t)
  '(preview-image-type (quote dvipng))
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))

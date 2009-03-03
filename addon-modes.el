@@ -61,12 +61,12 @@
 ;; -------------------------------------------
 ;; Multiple spell checkers in the same buffers
 ;; -------------------------------------------
-(require 'ispell-multi)
+;(require 'ispell-multi)
 
 ;; In XML modes
-(autoload 'flyspell-xml-lang-setup "flyspell-xml-lang")
-(add-hook 'xml-mode-hook 'flyspell-xml-lang-setup)
-(add-hook 'nxml-mode-hook 'flyspell-xml-lang-setup)
+;(autoload 'flyspell-xml-lang-setup "flyspell-xml-lang")
+;(add-hook 'xml-mode-hook 'flyspell-xml-lang-setup)
+;(add-hook 'nxml-mode-hook 'flyspell-xml-lang-setup)
 
 ;; --------------------------
 ;; AUCTeX and other TeX stuff
@@ -92,19 +92,19 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
 ;; Spellcheck on the fly
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'c-mode-hook          'flyspell-prog-mode 1)
-(add-hook 'c++-mode-hook        'flyspell-prog-mode 1)
-(add-hook 'cperl-mode-hook      'flyspell-prog-mode 1)
-(add-hook 'autoconf-mode-hook   'flyspell-prog-mode 1)
-(add-hook 'autotest-mode-hook   'flyspell-prog-mode 1)
-(add-hook 'sh-mode-hook         'flyspell-prog-mode 1)
-(add-hook 'makefile-mode-hook   'flyspell-prog-mode 1)
-(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode 1)
+;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+;(add-hook 'c-mode-hook          'flyspell-prog-mode 1)
+;(add-hook 'c++-mode-hook        'flyspell-prog-mode 1)
+;(add-hook 'cperl-mode-hook      'flyspell-prog-mode 1)
+;(add-hook 'autoconf-mode-hook   'flyspell-prog-mode 1)
+;(add-hook 'autotest-mode-hook   'flyspell-prog-mode 1)
+;(add-hook 'sh-mode-hook         'flyspell-prog-mode 1)
+;(add-hook 'makefile-mode-hook   'flyspell-prog-mode 1)
+;(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode 1)
 
 ;; Spellcheck on the fly multiple languages at once
-(autoload 'flyspell-babel-setup "flyspell-babel")
-(add-hook 'LaTeX-mode-hook 'flyspell-babel-setup)
+;(autoload 'flyspell-babel-setup "flyspell-babel")
+;(add-hook 'LaTeX-mode-hook 'flyspell-babel-setup)
 
 ;; Integrate RefTeX into AUCTeX
 (setq reftex-plug-into-AUCTeX t)
