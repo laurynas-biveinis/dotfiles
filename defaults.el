@@ -54,3 +54,6 @@
 
 ; No fancy input encodings
 (set-input-method nil)
+
+; No startup message
+(setq inhibit-startup-message t)
