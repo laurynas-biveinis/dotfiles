@@ -58,6 +58,9 @@
 ;; ------------------------
 (require 'psvn)
 
+; Short status
+(setq svn-status-verbose nil)
+
 ;; -------------------------------------------
 ;; Multiple spell checkers in the same buffers
 ;; -------------------------------------------
