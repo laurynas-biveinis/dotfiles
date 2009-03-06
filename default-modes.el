@@ -59,7 +59,11 @@
 (setq dired-recursive-copies 'always)
 ; Delete recursively, but ask
 (setq dired-recursive-deletes 'top)
+
 (add-hook 'dired-load-hook
 	  (lambda ()
 	    (load "dired-x")))
+
 (add-hook 'Man-mode-hook 'goto-address)
+
+(put 'dired-find-alternate-file 'disabled nil)
