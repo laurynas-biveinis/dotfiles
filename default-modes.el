@@ -67,3 +67,5 @@
 (add-hook 'Man-mode-hook 'goto-address)
 
 (put 'dired-find-alternate-file 'disabled nil)
+
+(setq wdired-allow-to-change-permissions t)
