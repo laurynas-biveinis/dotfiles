@@ -150,8 +150,6 @@
 ;; ----
 ;; nXML
 ;; ----
-(load (concat private-elisp-lib "nxml-mode-20041004/rng-auto"))
-
 ;; Autocomplete closing tags
 (setq nxml-slash-auto-complete-flag t)
 

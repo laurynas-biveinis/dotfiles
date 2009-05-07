@@ -1,106 +1,22 @@
-;;; rng-auto.el --- automatically extracted autoloads for RELAX NG
-
-;; Copyright (C) 2003 Free Software Foundation, Inc.
-
-;; Author: James Clark
-;; Keywords: XML, RelaxNG
-
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License as
-;; published by the Free Software Foundation; either version 2 of
-;; the License, or (at your option) any later version.
-
-;; This program is distributed in the hope that it will be
-;; useful, but WITHOUT ANY WARRANTY; without even the implied
-;; warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-;; PURPOSE.  See the GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public
-;; License along with this program; if not, write to the Free
-;; Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-;; MA 02111-1307 USA
-
-(setq nxml-version "20041004")
-
-(unless (and (fboundp 'make-hash-table)
-	     (boundp 'fontification-functions))
-  (error "FSF GNU Emacs version 21 or later required"))
-
-(when (featurep 'mucs)
-  (error "nxml-mode is not compatible with Mule-UCS"))
-
-;; Add fix for Unicode-display bug in Emacs 21.1 on Windows (fixed in 21.2)
-(when (and (fboundp 'w32-add-charset-info)
-	   (boundp 'w32-charset-info-alist)
-	   (not (assoc "iso10646-1" w32-charset-info-alist)))
-  (w32-add-charset-info "iso10646-1" 'w32-charset-ansi t))
-
-(defun rng-add-info-dir (dir)
-  (cond ((and (boundp 'Info-directory-list) Info-directory-list)
-	 (unless (member dir Info-directory-list)
-	   (setq Info-directory-list
-		 (append Info-directory-list (list dir)))
-	   (when (boundp 'Info-dir-contents)
-	     (setq Info-dir-contents nil))
-	   (when (and (boundp 'Info-current-file)
-		      (equal Info-current-file "dir")
-		      (fboundp 'Info-find-node-2)
-		      (get-buffer "*info*"))
-	     (save-excursion
-	       (set-buffer (get-buffer "*info*"))
-	       (Info-find-node-2 t "Top")))))
-	(t
-	 (unless (member dir Info-default-directory-list)
-	   (setq Info-default-directory-list
-		 (append Info-default-directory-list (list dir)))))))
-
-(let* ((dir (file-name-directory load-file-name))
-       (schema-dir (concat dir "schema/")))
-  (unless (member dir load-path)
-    (setq load-path (cons dir load-path)))
-  (setq rng-schema-locating-files-default
-	(list "schemas.xml"
-	      (abbreviate-file-name
-	       (expand-file-name "schemas.xml" schema-dir))))
-  (setq rng-schema-locating-file-schema-file
-	(expand-file-name "locate.rnc" schema-dir))
-  (rng-add-info-dir dir))
-
-;; Users shouldn't edit this.
-;; Instead they should customize `rng-preferred-prefix-alist'.
-
-(setq rng-preferred-prefix-alist-default
-      ;; For XHTML and RELAX NG, prefer no prefix
-      '(("http://www.w3.org/1999/XSL/Transform" . "xsl")
-	("http://www.w3.org/1999/02/22-rdf-syntax-ns#" . "rdf")))
-
-(add-hook 'nxml-mode-hook 'rng-nxml-mode-init)
-(add-hook 'nxml-mode-hook 'nxml-enable-unicode-char-name-sets)
-
-(setq rng-schema-loader-alist '(("rnc" . rng-c-load-schema)))
-
-;; This is needed for compatibility with versions before 21.4.
-;; We need mode-line-process to be risky because otherwise we can't
-;; :eval in its value.
-(put 'mode-line-process 'risky-local-variable t)
-
-(require 'nxml-enc)
-;; Install our own `set-auto-coding-function'.
-(nxml-start-auto-coding)
+;;; nxml-mode-autoloads.el --- automatically extracted autoloads
+;;
+;;; Code:
 
 
 ;;;### (autoloads (nxml-glyph-display-string) "nxml-glyph" "nxml-glyph.el"
-;;;;;;  (16278 18099))
+;;;;;;  (18947 1777))
 ;;; Generated autoloads from nxml-glyph.el
 
 (autoload (quote nxml-glyph-display-string) "nxml-glyph" "\
 Return a string that can display a glyph for Unicode code-point N.
 FACE gives the face that will be used for displaying the string.
-Return nil if the face cannot display a glyph for N." nil nil)
+Return nil if the face cannot display a glyph for N.
+
+\(fn N FACE)" nil nil)
 
 ;;;***
 
-;;;### (autoloads (nxml-mode) "nxml-mode" "nxml-mode.el" (16702 54517))
+;;;### (autoloads (nxml-mode) "nxml-mode" "nxml-mode.el" (18947 1777))
 ;;; Generated autoloads from nxml-mode.el
 
 (autoload (quote nxml-mode) "nxml-mode" "\
@@ -121,6 +37,12 @@ automatically inserts the rest of the end-tag.
 
 \\[nxml-dynamic-markup-word] uses the contents of the current buffer
 to choose a tag to put around the word preceding point.
+
+Sections of the document can be displayed in outline form.  The
+variable `nxml-section-element-name-regexp' controls when an element
+is recognized as a section.  The same key sequences that change
+visibility in outline mode are used except that they start with C-c C-o
+instead of C-c.
 
 Validation is provided by the related minor-mode `rng-validate-mode'.
 This also makes completion schema- and context- sensitive.  Element
@@ -147,65 +69,87 @@ be treated as a single markup item, set the variable
 `nxml-sexp-element-flag' to t.  For more details, see the function
 `nxml-forward-balanced-item'.
 
-\\[nxml-backward-up-element] and \\[nxml-down-element] move up and
-down the element structure.
+\\[nxml-backward-up-element] and \\[nxml-down-element] move up and down the element structure.
 
 Many aspects this mode can be customized using
-\\[customize-group] nxml RET." t nil)
+\\[customize-group] nxml RET.
+
+\(fn)" t nil)
 
 ;;;***
 
 ;;;### (autoloads (nxml-enable-unicode-char-name-sets) "nxml-uchnm"
-;;;;;;  "nxml-uchnm.el" (16270 38352))
+;;;;;;  "nxml-uchnm.el" (18947 1777))
 ;;; Generated autoloads from nxml-uchnm.el
 
 (autoload (quote nxml-enable-unicode-char-name-sets) "nxml-uchnm" "\
 Enable the use of Unicode standard names for characters.
 The Unicode blocks for which names are enabled is controlled by
-the variable `nxml-enabled-unicode-blocks'." t nil)
+the variable `nxml-enabled-unicode-blocks'.
+
+\(fn)" t nil)
+
+;;;***
+
+;;;### (autoloads nil "rng-auto" "rng-auto.el" (18947 1777))
+;;; Generated autoloads from rng-auto.el
+ (load "rng-auto")
 
 ;;;***
 
 ;;;### (autoloads (rng-c-load-schema) "rng-cmpct" "rng-cmpct.el"
-;;;;;;  (16280 36493))
+;;;;;;  (18947 1777))
 ;;; Generated autoloads from rng-cmpct.el
 
 (autoload (quote rng-c-load-schema) "rng-cmpct" "\
 Load a schema in RELAX NG compact syntax from FILENAME.
-Return a pattern." nil nil)
+Return a pattern.
+
+\(fn FILENAME)" nil nil)
 
 ;;;***
 
 ;;;### (autoloads (rng-write-version rng-format-manual rng-byte-compile-load
-;;;;;;  rng-update-autoloads) "rng-maint" "rng-maint.el" (16279 23645))
+;;;;;;  rng-update-autoloads) "rng-maint" "rng-maint.el" (18947 1777))
 ;;; Generated autoloads from rng-maint.el
 
 (autoload (quote rng-update-autoloads) "rng-maint" "\
-Update the autoloads in rng-auto.el." t nil)
+Update the autoloads in rng-auto.el.
+
+\(fn)" t nil)
 
 (autoload (quote rng-byte-compile-load) "rng-maint" "\
-Byte-compile and load all of the RELAX NG library in an appropriate order." t nil)
+Byte-compile and load all of the RELAX NG library in an appropriate order.
+
+\(fn)" t nil)
 
 (autoload (quote rng-format-manual) "rng-maint" "\
-Create manual.texi from manual.xml." t nil)
+Create manual.texi from manual.xml.
 
-(autoload (quote rng-write-version) "rng-maint" nil nil nil)
+\(fn)" t nil)
+
+(autoload (quote rng-write-version) "rng-maint" "\
+Not documented
+
+\(fn)" nil nil)
 
 ;;;***
 
-;;;### (autoloads (rng-nxml-mode-init) "rng-nxml" "rng-nxml.el" (16294
-;;;;;;  8571))
+;;;### (autoloads (rng-nxml-mode-init) "rng-nxml" "rng-nxml.el" (18947
+;;;;;;  1777))
 ;;; Generated autoloads from rng-nxml.el
 
 (autoload (quote rng-nxml-mode-init) "rng-nxml" "\
 Initialize `nxml-mode' to take advantage of `rng-validate-mode'.
 This is typically called from `nxml-mode-hook'.
-Validation will be enabled if `rng-nxml-auto-validate-flag' is non-nil." t nil)
+Validation will be enabled if `rng-nxml-auto-validate-flag' is non-nil.
+
+\(fn)" t nil)
 
 ;;;***
 
 ;;;### (autoloads (rng-validate-mode) "rng-valid" "rng-valid.el"
-;;;;;;  (16664 9855))
+;;;;;;  (18947 1777))
 ;;; Generated autoloads from rng-valid.el
 
 (autoload (quote rng-validate-mode) "rng-valid" "\
@@ -229,12 +173,14 @@ file name or on the root element name.  In each case the schema must
 be a RELAX NG schema using the compact schema (such schemas
 conventionally have a suffix of `.rnc').  The variable
 `rng-schema-locating-files' specifies files containing rules
-to use for finding the schema." t nil)
+to use for finding the schema.
+
+\(fn &optional ARG NO-CHANGE-SCHEMA)" t nil)
 
 ;;;***
 
-;;;### (autoloads (rng-xsd-compile) "rng-xsd" "rng-xsd.el" (16216
-;;;;;;  26672))
+;;;### (autoloads (rng-xsd-compile) "rng-xsd" "rng-xsd.el" (18947
+;;;;;;  1777))
 ;;; Generated autoloads from rng-xsd.el
 
 (put (quote http://www\.w3\.org/2001/XMLSchema-datatypes) (quote rng-dt-compile) (quote rng-xsd-compile))
@@ -254,12 +200,14 @@ members of the list.  The function must return an object representing
 the value of the datatype that was represented by the string, or nil
 if the string is not a representation of any value. The object
 returned can be any convenient non-nil value, provided that, if two
-strings represent the same value, the returned objects must be equal." nil nil)
+strings represent the same value, the returned objects must be equal.
+
+\(fn NAME PARAMS)" nil nil)
 
 ;;;***
 
 ;;;### (autoloads (xmltok-get-declared-encoding-position) "xmltok"
-;;;;;;  "xmltok.el" (16664 8418))
+;;;;;;  "xmltok.el" (18947 1777))
 ;;; Generated autoloads from xmltok.el
 
 (autoload (quote xmltok-get-declared-encoding-position) "xmltok" "\
@@ -271,8 +219,23 @@ of the encoding name; if there is no encoding declaration return
 the position where and encoding declaration could be inserted.
 If there is XML that is not well-formed that looks like an XML declaration,
 return nil.  Otherwise, return t.
-If LIMIT is non-nil, then do not consider characters beyond LIMIT." nil nil)
+If LIMIT is non-nil, then do not consider characters beyond LIMIT.
+
+\(fn &optional LIMIT)" nil nil)
 
 ;;;***
 
-;;; rng-auto.el ends here
+;;;### (autoloads nil nil ("nxml-enc.el" "nxml-maint.el" "nxml-mode-pkg.el"
+;;;;;;  "nxml-ns.el" "nxml-outln.el" "nxml-parse.el" "nxml-rap.el"
+;;;;;;  "nxml-util.el" "rng-dt.el" "rng-loc.el" "rng-match.el" "rng-parse.el"
+;;;;;;  "rng-pttrn.el" "rng-uri.el" "rng-util.el" "xsd-regexp.el")
+;;;;;;  (18947 1777 759698))
+
+;;;***
+
+;; Local Variables:
+;; version-control: never
+;; no-byte-compile: t
+;; no-update-autoloads: t
+;; End:
+;;; nxml-mode-autoloads.el ends here

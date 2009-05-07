@@ -8,6 +8,7 @@
 (setq xref-dir (concat home-dir "/opt/xref/"))
 (setq xref-lib (concat xref-dir "emacs/"))
 (setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
+(setq elpa-dir (concat private-elisp "elpa/"))
 
 ; Setup elisp search directories
 (defun add-to-load-path (new)
@@ -29,6 +30,14 @@
 
 (load "defaults")
 (load "default-modes")
+
+; ELPA
+(setq package-user-dir elpa-dir)
+(when
+    (load
+     (expand-file-name (concat elpa-dir "package.el")))
+  (package-initialize))
+
 (load "addon-modes")
 (load "misc")
 
@@ -57,3 +66,5 @@
 (load "ede-projects")
 
 (load "load-desktop")
+
+

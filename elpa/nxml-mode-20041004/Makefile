@@ -49,15 +49,34 @@ TAGS: $(SRC)
 	$(ETAGS) $(SRC)
 
 dist: stamp-byte-compile $(EXTRA)
+	$(MAKE) ELPA=no do-dist
+
+elpa: $(EXTRA)
+	$(MAKE) ELPA=yes do-dist
+
+do-dist:
 	@version=`cat VERSION`; \
 	set -e; \
-	echo Making $(PACKAGE)-$$version.tar.gz; \
+	if test "$(ELPA)" = yes; then \
+	  file=$(PACKAGE)-$$version.tar; \
+	  tarflag= ; \
+	else \
+	  file=$(PACKAGE)-$$version.tar.gz; \
+	  tarflag=z ; \
+	fi; \
+	echo Making $$file; \
 	rm -fr $(PACKAGE)-$$version; \
 	mkdir $(PACKAGE)-$$version; \
 	cd $(PACKAGE)-$$version; \
-	for f in $(EXTRA) $(SRC) $(ELC); do \
+	for f in $(EXTRA) $(SRC); do \
 	  ln -s ../$$f .; \
 	done; \
+	if test "$(ELPA)" = no; then \
+	  for f in $(ELC); do \
+	    ln -s ../$$f .; \
+	  done; \
+	fi; \
+	sed -e "s/VERSION/$$version/" < ../nxml-mode-pkg.el > nxml-mode-pkg.el; \
 	mkdir schema; \
 	cd schema; \
 	for f in ../../schema/*.rnc ../../schema/*.xml; do \
@@ -71,7 +90,7 @@ dist: stamp-byte-compile $(EXTRA)
 	  ln -s $$f .; \
 	done; \
 	cd ../../..; \
-	tar cfhz $(PACKAGE)-$$version.tar.gz $(PACKAGE)-$$version; \
+	tar cfh$$tarflag $$file $(PACKAGE)-$$version; \
 	rm -fr $(PACKAGE)-$$version
 
 clean:
