@@ -7,7 +7,7 @@
 (setq private-x-symbol-lisp-dir (concat private-x-symbol-dir "lisp/x-symbol/"))
 (setq xref-dir (concat home-dir "/opt/xref/"))
 (setq xref-lib (concat xref-dir "emacs/"))
-(setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
+(setq cedet-lib (concat private-elisp-lib "cedet-1.0pre6/common/cedet.el"))
 (setq elpa-dir (concat private-elisp "elpa/"))
 
 ; Setup elisp search directories
