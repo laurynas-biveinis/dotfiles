@@ -63,7 +63,7 @@
 
 (system-specific-setup)
 
-(load "ede-projects")
+(load "projects")
 
 (load "load-desktop")
 
