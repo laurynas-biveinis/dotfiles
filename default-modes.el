@@ -88,3 +88,10 @@
   (after auto-refresh-dired (arg &optional all-frame) activate)
   (if (equal major-mode 'dired-mode)
       (revert-buffer)))
+
+; On save, create missing parent directories automatically
+; From http://atomized.org/2008/12/emacs-create-directory-before-saving/
+(add-hook 'before-save-hook
+	  '(lambda ()
+	     (or (file-exists-p (file-name-directory buffer-file-name))
+		 (make-directory (file-name-directory buffer-file-name) t))))
