@@ -44,6 +44,10 @@
 	  'comint-watch-for-password-prompt
 	  'comint-strip-ctrl-m)
 
+;; Colors
+(require 'ansi-color)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
 ;; ----------------------------
 ;; ssh mode on the top of shell
 ;; ----------------------------
