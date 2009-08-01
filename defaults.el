@@ -61,3 +61,7 @@
 ; Initial window geometry
 (add-to-list 'default-frame-alist '(width . 95))
 (add-to-list 'default-frame-alist '(height . 56))
+
+; Default Info path
+(add-to-list 'Info-default-directory-list cedet-info-dir)
+

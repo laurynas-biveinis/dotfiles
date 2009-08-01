@@ -8,6 +8,8 @@
 (setq xref-dir (concat home-dir "/opt/xref/"))
 (setq xref-lib (concat xref-dir "emacs/"))
 (setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
+(setq cedet-info-dir (concat private-elisp-lib "cedet-info"))
+
 (setq elpa-dir (concat private-elisp "elpa/"))
 
 ; Setup elisp search directories
