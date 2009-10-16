@@ -229,3 +229,6 @@
 (require 'monotone)
 (monotone-set-vc-prefix-key "\C-cm")
 (setq monotone-passwd-remember t)
+
+; JDEE
+(require 'jde)
