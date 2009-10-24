@@ -9,8 +9,8 @@
 (setq xref-lib (concat xref-dir "emacs/"))
 (setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
 (setq cedet-info-dir (concat private-elisp-lib "cedet-info"))
+(setq elib-dir (concat private-elisp-lib "elib-1.0"))
 (setq jdee-dir (concat private-elisp-lib "jdee/lisp"))
-(setq elib-dir "/usr/share/emacs/site-lisp/elib")
 
 (setq elpa-dir (concat private-elisp "elpa/"))
 
@@ -23,8 +23,8 @@
 (add-to-load-path private-elisp-lib)
 (add-to-load-path private-x-symbol-lisp-dir)
 (add-to-load-path xref-lib)
-(add-to-load-path jdee-dir)
 (add-to-load-path elib-dir)
+(add-to-load-path jdee-dir)
 
 
 ; Load system-specific library and setup system-specific things that
