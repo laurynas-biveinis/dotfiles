@@ -95,3 +95,21 @@
 	  '(lambda ()
 	     (or (file-exists-p (file-name-directory buffer-file-name))
 		 (make-directory (file-name-directory buffer-file-name) t))))
+
+; CC Mode
+; CEDET configuration is in addon-modes.el
+
+;; Default indentation offset
+(setq c-basic-offset 4)
+
+;; Styles I use
+(setq c-default-style '((java-mode . "java")
+			(awk-mode . "awk")
+			(c++-mode . "stroustrup")
+			(other . "gnu")))
+
+;; Enter indents the new line
+(defun my-make-CR-do-indent ()
+  (define-key c-mode-base-map "\C-m" 'c-context-line-break))
+(add-hook 'c-initialization-hook 'my-make-CR-do-indent)
+

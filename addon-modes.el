@@ -162,27 +162,15 @@
       (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
 	    auto-mode-alist))
 
-;; -------
-;; cc-mode
-;; -------
-
-;; GNU indentation of 2
-(setq c-basic-offset 2)
-
-;; GNU style by default
-(setq c-default-style '((java-mode . "java")
-			(awk-mode . "awk")
-			(other . "gnu")))
-
-;; Enter indents the new line
-(defun my-make-CR-do-indent ()
-  (define-key c-mode-base-map "\C-m" 'c-context-line-break))
-(add-hook 'c-initialization-hook 'my-make-CR-do-indent)
-
 ;; ---
 ;; CEDET
 ;; ---
 (load-file cedet-lib)
+
+;; Additional global include directories
+(semantic-add-system-include "/usr/local/include" 'c-mode)
+(semantic-add-system-include "/usr/local/include" 'c++-mode)
+
 (global-ede-mode t)
 (semantic-load-enable-excessive-code-helpers)
 ; TODO: should already be enabled by previous line
@@ -232,3 +220,5 @@
 
 ; JDEE
 (require 'jde)
+(setq jde-jdk-registry
+      (quote (("1.6.0.16" . "/usr/lib/jvm/java-6-sun-1.6.0.16"))))
