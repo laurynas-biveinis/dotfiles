@@ -160,7 +160,16 @@
 ;; Automatically use nXML for interesting file types
 (setq auto-mode-alist
       (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
-	    auto-mode-alist))
+            auto-mode-alist))
+
+;; GNU Global
+; TODO5: gracefully degrade in case Global is not installed
+(autoload 'gtags-mode "gtags" "" t)
+(add-hook 'c-mode-common-hook
+          '(lambda ()
+             (gtags-mode 1)
+             )
+)
 
 ;; ---
 ;; CEDET
@@ -172,6 +181,11 @@
 (semantic-add-system-include "/usr/local/include" 'c++-mode)
 
 (global-ede-mode t)
+; Use GNU Global
+; TODO: gracefully degrade in case Global is not installed
+(require 'semanticdb-global)
+(semanticdb-enable-gnu-global-databases 'c-mode)
+(semanticdb-enable-gnu-global-databases 'c++-mode)
 (semantic-load-enable-excessive-code-helpers)
 ; TODO: should already be enabled by previous line
 (global-semantic-idle-completions-mode)
