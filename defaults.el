@@ -65,3 +65,10 @@
 ; Default Info path
 (add-to-list 'Info-default-directory-list cedet-info-dir)
 
+; Keybindings
+(global-set-key "\C-cg" 'goto-line)
+(global-set-key "\C-cn" 'next-error)
+(global-set-key "\C-cp" 'previous-error)
+(global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-c\C-m" 'execute-extended-command)
+

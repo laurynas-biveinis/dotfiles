@@ -32,6 +32,11 @@
 ; Recent files menu
 (recentf-mode)
 
+; CUA mode
+(cua-mode t)
+; Keep region after copying
+(setq cua-keep-region-after-copy t)
+
 ; Turn on font-lock mode
 (if (fboundp 'global-font-lock-mode)
     (global-font-lock-mode 1)       ; GNU Emacs
@@ -51,6 +56,12 @@
 ;; Show which function we are at
 (setq which-func-modes t)
 (which-function-mode)
+
+(cond ((>= emacs-major-version 23)
+    (global-visual-line-mode 1)))
+
+; Uniquify buffer names
+(setq uniquify-buffer-name-style 'forward)
 
 ;; -----
 ;; dired
@@ -97,7 +108,7 @@
 		 (make-directory (file-name-directory buffer-file-name) t))))
 
 ; CC Mode
-; CEDET configuration is in addon-modes.el
+; (CEDET configuration is in addon-modes.el)
 
 ;; Default indentation offset
 (setq c-basic-offset 4)
@@ -113,3 +124,5 @@
   (define-key c-mode-base-map "\C-m" 'c-context-line-break))
 (add-hook 'c-initialization-hook 'my-make-CR-do-indent)
 
+; Grand Unified Debugger
+(gud-tooltip-mode t)

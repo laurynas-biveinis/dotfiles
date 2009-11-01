@@ -47,31 +47,6 @@
 
 (load "addon-modes")
 (load "misc")
-
-(global-set-key "\C-cg" 'goto-line)
-(global-set-key "\C-cn" 'next-error)
-(global-set-key "\C-cp" 'previous-error)
-(global-set-key "\C-x\C-m" 'execute-extended-command)
-(global-set-key "\C-c\C-m" 'execute-extended-command)
-
-; TODO: get rid of it
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(cua-mode t nil (cua-base))
- '(ecb-options-version "2.32")
- '(preview-auto-cache-preamble t)
- '(preview-image-type (quote dvipng))
- '(uniquify-buffer-name-style (quote forward) nil (uniquify))
- '(x-symbol-image-convert-program "convert")
- '(gud-tooltip-mode t))
-
 (system-specific-setup)
-
 (load "projects")
-
 (load "load-desktop")
-
-
