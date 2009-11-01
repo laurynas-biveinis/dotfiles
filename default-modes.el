@@ -135,7 +135,13 @@
 (add-hook 'c-initialization-hook 'my-make-CR-do-indent)
 
 ; Grand Unified Debugger
-(gud-tooltip-mode t)
+(defun my-gud-hook ()
+  (gud-tooltip-mode t))
+(add-hook 'gdb-mode-hook 'my-gud-hook)
+(add-hook 'sdb-mode-hook 'my-gud-hook)
+(add-hook 'xdb-mode-hook 'my-gud-hook)
+(add-hook 'perldb-mode-hook 'my-gud-hook)
+(add-hook 'jdb-mode-hook 'my-gud-hook)
 
 ; Automatically indent pasted code
 (setq auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode))
