@@ -5,6 +5,9 @@
 (setq user-full-name "Laurynas Biveinis")
 (setq user-mail-address "laurynas.biveinis@gmail.com")
 
+; Keep all messages
+(setq message-log-max t)
+
 ; Proper clipboard, why oh why this isn't the default?
 (setq x-select-enable-clipboard t)
 

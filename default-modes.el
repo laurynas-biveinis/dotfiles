@@ -34,8 +34,6 @@
 
 ; CUA mode
 (cua-mode t)
-; Keep region after copying
-(setq cua-keep-region-after-copy t)
 
 ; Turn on font-lock mode
 (if (fboundp 'global-font-lock-mode)
@@ -57,8 +55,14 @@
 (setq which-func-modes t)
 (which-function-mode)
 
+; Soft word wrap
 (cond ((>= emacs-major-version 23)
-    (global-visual-line-mode 1)))
+       (global-visual-line-mode 1)))
+
+; Line numbers
+(cond ((>= emacs-major-version 23)
+       (global-linum-mode 1)))
+
 
 ; Uniquify buffer names
 (setq uniquify-buffer-name-style 'forward)
@@ -126,3 +130,15 @@
 
 ; Grand Unified Debugger
 (gud-tooltip-mode t)
+
+; Automatically indent pasted code
+(setq auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode))
+
+(defadvice yank (after indent-region activate)
+  (if (member major-mode auto-indent-paste-modes)
+      (indent-region (region-beginning) (region-end) nil)))
+
+(defadvice yank-pop (after indent-region activate)
+  (if (member major-mode auto-indent-paste-modes)
+      (indent-region (region-beginning) (region-end) nil)))
+
