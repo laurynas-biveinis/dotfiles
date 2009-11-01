@@ -35,6 +35,12 @@
 ; No annoying beeps
 (setq visible-bell t)
 
+; Indentation can only insert spaces
+(setq-default indent-tabs-mode nil)
+
+; Diff options
+(setq diff-switches "-c -p")
+
 ; Preserve hard links to the file you are editing
 ; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
 (setq backup-by-copying-when-linked t)
@@ -75,3 +81,7 @@
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 
+(global-set-key [(control shift up)] 'enlarge-window)
+(global-set-key [(control shift down)] 'shrink-window)
+(global-set-key [(control shift left)] 'enlarge-window-horizontally)
+(global-set-key [(control shift right)] 'shrink-window-horizontally)

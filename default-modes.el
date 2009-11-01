@@ -35,6 +35,9 @@
 ; CUA mode
 (cua-mode t)
 
+; Ignore file size in fontlocking
+(setq font-lock-maximum-size nil)
+
 ; Turn on font-lock mode
 (if (fboundp 'global-font-lock-mode)
     (global-font-lock-mode 1)       ; GNU Emacs
@@ -66,6 +69,9 @@
 
 ; Uniquify buffer names
 (setq uniquify-buffer-name-style 'forward)
+
+; Automatically show images as images
+(auto-image-file-mode 1)
 
 ;; -----
 ;; dired
