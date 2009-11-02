@@ -67,9 +67,13 @@
 ; No startup message
 (setq inhibit-startup-message t)
 
-; Initial window geometry
-(add-to-list 'default-frame-alist '(width . 95))
-(add-to-list 'default-frame-alist '(height . 56))
+; Initial frame positioned in the top left corner
+(add-to-list 'initial-frame-alist '(top . 1))
+(add-to-list 'initial-frame-alist '(left . 1))
+
+; Frame geometry
+(add-to-list 'default-frame-alist `(width . ,my-frame-width))
+(add-to-list 'default-frame-alist `(height . ,my-frame-height))
 
 ; Default Info path
 (add-to-list 'Info-default-directory-list cedet-info-dir)
