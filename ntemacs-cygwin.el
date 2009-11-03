@@ -12,7 +12,11 @@
   (add-to-load-path "/usr/share/emacs/site-lisp")
   ; Add Cygwin Info pages
   (add-to-list 'Info-default-directory-list
-	       (concat cygwin-root "usr/share/info/"))
+               (concat cygwin-root "usr/share/info/"))
+
+  ;; Workaround XSymbol initialization bug
+  ;; ("C:\\ImageMagick\\convert" instead of system $PATH? Seriously?)
+  (setq x-symbol-image-convert-program "convert")
 
   ;; Setup shell
   (setq shell-file-name "bash")
