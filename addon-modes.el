@@ -120,6 +120,9 @@
 (setq bib-cite-use-reftex-view-crossref t)
 
 ;; X-symbol
+(unless (image-type-available-p 'xpm)
+    (setq x-symbol-image-convert-colormap nil))
+
 (setq x-symbol-data-directory
       (concat private-x-symbol-dir "etc/x-symbol/"))
 (load (expand-file-name "auto-autoloads" private-x-symbol-lisp-dir))

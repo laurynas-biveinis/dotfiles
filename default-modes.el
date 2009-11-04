@@ -1,7 +1,7 @@
 ; Configure, enable or disable various standard minor modes
 
 ; Scroll bars on the right
-(set-scroll-bar-mode 'right)
+(if (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode 'right))
 
 ; Show time
 (display-time)
