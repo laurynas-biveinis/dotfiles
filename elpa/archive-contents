@@ -1,6 +1,17 @@
 (1
+ (sass-mode .
+	    [(2 2 7)
+	     ((haml-mode
+	       (2 2 7)))
+	     "Major mode for editing Sass files" single])
+ (haml-mode .
+	    [(2 2 7)
+	     nil "Major mode for editing Haml files" single])
+ (smart-tab .
+	    [(0 3)
+	     nil "Intelligent tab completion and indentation." single])
  (cssh .
-       [(0 3)
+       [(0 5)
 	nil "clusterssh implementation for emacs" single])
  (relax .
 	[(0 2)
@@ -47,7 +58,7 @@
 		       (1 1)))
 		     "Minor mode for Clojure tests" single])
  (clojure-mode .
-	       [(1 3)
+	       [(1 5)
 		nil "Major mode for Clojure code" single])
  (magit .
 	[(0 7)
@@ -56,7 +67,7 @@
      [(4 0 46)
       nil "A web browser written entirely in Emacs Lisp" tar])
  (yasnippet-bundle .
-		   [(0 6 0)
+		   [(0 6 1)
 		    nil "Yet another snippet extension (Auto compiled bundle)" single])
  (rinari .
 	 [(2 1)
@@ -101,7 +112,7 @@
        [(0 3)
 	nil "Emacs integration for gist.github.com" single])
  (confluence .
-	     [(1 1)
+	     [(1 2)
 	      ((xml-rpc
 		(1 6 4)))
 	      "Emacs mode for interacting with confluence wikis" single])
@@ -213,15 +224,17 @@
 	     [(1 5)
 	      nil "clean a patch for submission via email" single])
  (lisppaste .
-	    [(1 5)
+	    [(1 8)
 	     ((xml-rpc
-	       (1 6 4)))
+	       (1 6 7)))
 	     "Interact with the lisppaste pastebot via XML-RPC." single])
  (weblogger .
-	    [(1 2 1)
-	     nil "Weblog maintenance via XML-RPC APIs" single])
+	    [(1 4 3)
+	     ((xml-rpc
+	       (1 6 5)))
+	     "Weblog maintenance via XML-RPC APIs" single])
  (xml-rpc .
-	  [(1 6 4)
+	  [(1 6 6)
 	   nil "An elisp implementation of clientside XML-RPC" single])
  (iresize .
 	  [(0 2)
@@ -272,16 +285,16 @@
 		   [(6)
 		    nil "preview TeX math expressions." single])
  (gtk-look .
-	   [(13)
+	   [(17)
 	    nil "lookup Gtk and Gnome documentation." single])
  (xtide .
-	[(9)
+	[(10)
 	 nil "XTide display in Emacs.      -*- coding: latin-1 -*-" single])
  (compilation-recenter-end .
 			   [(4)
 			    nil "compilation-mode window recentre" single])
  (gdb-shell .
-	    [(0 2)
+	    [(0 4)
 	     nil "minor mode to add gdb features to shell" single])
  (highline .
 	   [(4 2)

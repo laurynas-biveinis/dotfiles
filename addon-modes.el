@@ -123,6 +123,8 @@
 (unless (image-type-available-p 'xpm)
     (setq x-symbol-image-convert-colormap nil))
 
+(setq x-symbol-default-coding 'iso-8859-1)
+
 (setq x-symbol-data-directory
       (concat private-x-symbol-dir "etc/x-symbol/"))
 (load (expand-file-name "auto-autoloads" private-x-symbol-lisp-dir))
@@ -166,7 +168,7 @@
             auto-mode-alist))
 
 ;; GNU Global
-; TODO5: gracefully degrade in case Global is not installed
+; TODO: gracefully degrade in case Global is not installed
 (autoload 'gtags-mode "gtags" "" t)
 (add-hook 'c-mode-common-hook
           '(lambda ()
