@@ -4,6 +4,10 @@
   "NT Emacs on Cygwin: set some things before main .emacs setup"
 
   ;; Setup paths
+  ;; EmacsW32
+  (setq emacsw32-root (concat private-elisp-lib "EmacsW32"))
+  (add-to-load-path emacsw32-root)
+
   (setq cygwin-root "c:/cygwin/")
   (setq private-bin (concat home-dir "/usr/bin"))
   (setq exec-path (cons private-bin exec-path))
