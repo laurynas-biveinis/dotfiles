@@ -78,6 +78,8 @@
 ;; --------------------------
 ;; AUCTeX and other TeX stuff
 ;; --------------------------
+(load "auctex.el" nil t t)
+(load "preview-latex.el" nil t t)
 
 ;; Enable document parsing for AUCTeX
 (setq TeX-auto-save t)
@@ -133,8 +135,6 @@
       (dolist (load list) (custom-add-load symbol load))))
 (load (expand-file-name "custom-load" private-x-symbol-lisp-dir))
 (x-symbol-initialize)
-(add-to-list 'Info-default-directory-list
-	     (concat private-x-symbol-dir "info/"))
 
 ;; ----------------------------------------------
 ;; cmd-mode.el major mode for cmd and bat scripts

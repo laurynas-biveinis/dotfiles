@@ -5,19 +5,23 @@
 (setq private-elisp-lib (concat private-elisp "lib/"))
 (setq private-x-symbol-dir (concat private-elisp-lib "x-symbol-4.51/"))
 (setq private-x-symbol-lisp-dir (concat private-x-symbol-dir "lisp/x-symbol/"))
+(setq private-x-symbol-info-dir (concat private-x-symbol-dir "info/"))
 (setq xref-dir (concat home-dir "/opt/xref/"))
 (setq xref-lib (concat xref-dir "emacs/"))
 (setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
 (setq cedet-info-dir (concat private-elisp-lib "cedet-info"))
 (setq elib-dir (concat private-elisp-lib "elib-1.0"))
 (setq jdee-dir (concat private-elisp-lib "jdee/lisp"))
+(setq auctex-dir (concat private-elisp-lib "auctex-11.85/"))
+(setq auctex-lisp-dir (concat auctex-dir "lisp/"))
+(setq auctex-info-dir (concat auctex-dir "info/"))
 
 (setq elpa-dir (concat private-elisp "elpa/"))
 
 ; Setup elisp search directories
 (defun add-to-load-path (new)
   (setq load-path
-	(cons new load-path)))
+        (cons new load-path)))
 
 (add-to-load-path private-elisp)
 (add-to-load-path private-elisp-lib)
@@ -25,7 +29,14 @@
 (add-to-load-path xref-lib)
 (add-to-load-path elib-dir)
 (add-to-load-path jdee-dir)
+(add-to-load-path auctex-lisp-dir)
 
+; Setup info search directories
+(defun add-to-info-path (new)
+  (add-to-list 'Info-default-directory-list new))
+
+(add-to-info-path auctex-info-dir)
+(add-to-info-path private-x-symbol-info-dir)
 
 ; Load system-specific library and setup system-specific things that
 ; must be setup before main setup
