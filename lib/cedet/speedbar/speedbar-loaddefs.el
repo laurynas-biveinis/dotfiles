@@ -3,21 +3,21 @@
 ;;; Code:
 
 
-;;;### (autoloads (rpm) "rpm" "rpm.el" (17213 40778))
+;;;### (autoloads (rpm) "rpm" "rpm.el" (19215 38456))
 ;;; Generated autoloads from rpm.el
 
-(autoload (quote rpm) "rpm" "\
+(autoload 'rpm "rpm" "\
 Red Hat Package Management in Emacs.
 
 \(fn)" t nil)
 
 ;;;***
 
-;;;### (autoloads (gud-speedbar-buttons) "sb-gud" "sb-gud.el" (16232
-;;;;;;  37556))
+;;;### (autoloads (gud-speedbar-buttons) "sb-gud" "sb-gud.el" (19215
+;;;;;;  38456))
 ;;; Generated autoloads from sb-gud.el
 
-(autoload (quote gud-speedbar-buttons) "sb-gud" "\
+(autoload 'gud-speedbar-buttons "sb-gud" "\
 Create a speedbar display based on the current state of GUD.
 If the GUD BUFFER is not running a supported debugger, then turn
 off the specialized speedbar mode.
@@ -27,30 +27,30 @@ off the specialized speedbar mode.
 ;;;***
 
 ;;;### (autoloads (Info-speedbar-buttons Info-speedbar-browser) "sb-info"
-;;;;;;  "sb-info.el" (18873 37159))
+;;;;;;  "sb-info.el" (19215 38456))
 ;;; Generated autoloads from sb-info.el
 
-(autoload (quote Info-speedbar-browser) "sb-info" "\
+(autoload 'Info-speedbar-browser "sb-info" "\
 Initialize speedbar to display an info node browser.
 This will add a speedbar major display mode.
 
 \(fn)" t nil)
 
-(autoload (quote Info-speedbar-buttons) "sb-info" "\
+(autoload 'Info-speedbar-buttons "sb-info" "\
 Create a speedbar display to help navigation in an Info file.
 BUFFER is the buffer speedbar is requesting buttons for.
 
 \(fn BUFFER)" nil nil)
 
-(eval-after-load "info" (quote (require (quote sb-info))))
+(eval-after-load "info" '(require 'sb-info))
 
 ;;;***
 
 ;;;### (autoloads (rmail-speedbar-buttons) "sb-rmail" "sb-rmail.el"
-;;;;;;  (15958 27182))
+;;;;;;  (19215 38456))
 ;;; Generated autoloads from sb-rmail.el
 
-(autoload (quote rmail-speedbar-buttons) "sb-rmail" "\
+(autoload 'rmail-speedbar-buttons "sb-rmail" "\
 Create buttons for BUFFER containing rmail messages.
 Click on the address under Reply to: to reply to this person.
 Under Folders: Click a name to read it, or on the <M> to move the
@@ -60,11 +60,11 @@ current message into that RMAIL folder.
 
 ;;;***
 
-;;;### (autoloads (w3-speedbar-buttons) "sb-w3" "sb-w3.el" (17213
-;;;;;;  40805))
+;;;### (autoloads (w3-speedbar-buttons) "sb-w3" "sb-w3.el" (19215
+;;;;;;  38456))
 ;;; Generated autoloads from sb-w3.el
 
-(autoload (quote w3-speedbar-buttons) "sb-w3" "\
+(autoload 'w3-speedbar-buttons "sb-w3" "\
 Create speedbar buttons for the current web BUFFER displayed in w3 mode.
 
 \(fn BUFFER)" nil nil)
@@ -72,12 +72,12 @@ Create speedbar buttons for the current web BUFFER displayed in w3 mode.
 ;;;***
 
 ;;;### (autoloads (speedbar-get-focus speedbar-frame-mode) "speedbar"
-;;;;;;  "speedbar.el" (18881 38525))
+;;;;;;  "speedbar.el" (19215 38456))
 ;;; Generated autoloads from speedbar.el
 
-(defalias (quote speedbar) (quote speedbar-frame-mode))
+(defalias 'speedbar 'speedbar-frame-mode)
 
-(autoload (quote speedbar-frame-mode) "speedbar" "\
+(autoload 'speedbar-frame-mode "speedbar" "\
 Enable or disable speedbar.  Positive ARG means turn on, negative turn off.
 A nil ARG means toggle.  Once the speedbar frame is activated, a buffer in
 `speedbar-mode' will be displayed.  Currently, only one speedbar is
@@ -87,7 +87,7 @@ supported at a time.
 
 \(fn &optional ARG)" t nil)
 
-(autoload (quote speedbar-get-focus) "speedbar" "\
+(autoload 'speedbar-get-focus "speedbar" "\
 Change frame focus to or from the speedbar frame.
 If the selected frame is not speedbar, then speedbar frame is
 selected.  If the speedbar frame is active, then select the attached frame.
@@ -98,7 +98,7 @@ selected.  If the speedbar frame is active, then select the attached frame.
 
 ;;;### (autoloads nil nil ("bigclock.el" "dframe.el" "fsum.el" "sb-ant.el"
 ;;;;;;  "sb-html.el" "sb-image.el" "sb-texinfo.el" "speedbar-load.el")
-;;;;;;  (19003 25980 676970))
+;;;;;;  (19215 38861 571000))
 
 ;;;***
 

@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2008 Eric M. Ludlam
 
-;; Author: Laurynas Biveinis <lauris@h236>
-;; Created: 2009-06-19 12:16:49+0200
+;; Author:  <lauras@AAU-LAPTOP>
+;; Created: 2009-11-27 10:12:16+0100
 ;; Keywords: syntax
 ;; X-RCS: $Id$
 

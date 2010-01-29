@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 2002, 2003, 2004, 2007 Richard Kim
 
-;; Author: Laurynas Biveinis <lauris@h236>
-;; Created: 2009-06-19 12:16:46+0200
+;; Author:  <lauras@AAU-LAPTOP>
+;; Created: 2009-11-27 10:12:10+0100
 ;; Keywords: syntax
 ;; X-RCS: $Id$
 

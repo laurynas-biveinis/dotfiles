@@ -4,15 +4,15 @@
 
 
 ;;;### (autoloads (eassist-list-methods eassist-switch-h-cpp) "eassist"
-;;;;;;  "eassist.el" (18368 33706))
+;;;;;;  "eassist.el" (19215 38463))
 ;;; Generated autoloads from eassist.el
 
-(defvar eassist-header-switches (quote (("h" "cpp" "cc" "c") ("hpp" "cpp" "cc") ("cpp" "h" "hpp") ("c" "h") ("C" "H") ("H" "C" "CPP" "CC") ("cc" "h" "hpp"))) "\
+(defvar eassist-header-switches '(("h" "cpp" "cc" "c") ("hpp" "cpp" "cc") ("cpp" "h" "hpp") ("c" "h") ("C" "H") ("H" "C" "CPP" "CC") ("cc" "h" "hpp")) "\
 This variable defines possible switches for `eassist-switch-h-cpp' function.
 Its format is list of (from . (to1 to2 to3...)) elements.  From and toN are
 strings which are extentions of the files.")
 
-(autoload (quote eassist-switch-h-cpp) "eassist" "\
+(autoload 'eassist-switch-h-cpp "eassist" "\
 Switch header and body file according to `eassist-header-switches' var.
 The current buffer's file name extention is searched in
 `eassist-header-switches' variable to find out extention for file's counterpart,
@@ -20,7 +20,7 @@ for example *.hpp <--> *.cpp.
 
 \(fn)" t nil)
 
-(autoload (quote eassist-list-methods) "eassist" "\
+(autoload 'eassist-list-methods "eassist" "\
 Show method/function list of current buffer in a newly created buffer.
 This function is recommended to be bound to some convinient hotkey.
 
@@ -28,18 +28,18 @@ This function is recommended to be bound to some convinient hotkey.
 
 ;;;***
 
-;;;### (autoloads nil "ede-gnustep" "ede-gnustep.el" (18786 39631))
+;;;### (autoloads nil "ede-gnustep" "ede-gnustep.el" (19215 38463))
 ;;; Generated autoloads from ede-gnustep.el
 
-(add-to-list (quote ede-project-class-files) (ede-project-autoload "edegnustep" :name "GNUstep-Make" :file (quote ede-gnustep) :proj-file "ProjStep.ede" :load-type (quote ede-step-load) :class-sym (quote ede-step-project)) t)
+(add-to-list 'ede-project-class-files (ede-project-autoload "edegnustep" :name "GNUstep-Make" :file 'ede-gnustep :proj-file "ProjStep.ede" :load-type 'ede-step-load :class-sym 'ede-step-project) t)
 
-(add-to-list (quote auto-mode-alist) (quote ("ProjStep\\.ede" . emacs-lisp-mode)))
+(add-to-list 'auto-mode-alist '("ProjStep\\.ede" . emacs-lisp-mode))
 
 ;;;***
 
 ;;;### (autoloads (semantic-tag-folding-mode global-semantic-tag-folding-mode
 ;;;;;;  global-semantic-tag-folding-mode) "semantic-tag-folding"
-;;;;;;  "semantic-tag-folding.el" (17213 40189))
+;;;;;;  "semantic-tag-folding.el" (19215 38463))
 ;;; Generated autoloads from semantic-tag-folding.el
 
 (defvar global-semantic-tag-folding-mode nil "\
@@ -47,16 +47,16 @@ This function is recommended to be bound to some convinient hotkey.
 With this mode enabled, a new folding decoration mode is added.
 Clicking on a + or - in the fringe will fold that tag.")
 
-(custom-autoload (quote global-semantic-tag-folding-mode) "semantic-tag-folding" nil)
+(custom-autoload 'global-semantic-tag-folding-mode "semantic-tag-folding" nil)
 
-(autoload (quote global-semantic-tag-folding-mode) "semantic-tag-folding" "\
+(autoload 'global-semantic-tag-folding-mode "semantic-tag-folding" "\
 Toggle global use of option `semantic-tag-folding-mode'.
 If ARG is positive, enable, if it is negative, disable.
 If ARG is nil, then toggle.
 
 \(fn &optional ARG)" t nil)
 
-(autoload (quote semantic-tag-folding-mode) "semantic-tag-folding" "\
+(autoload 'semantic-tag-folding-mode "semantic-tag-folding" "\
 Minor mode mark semantic tags for folding.
 This mode will display +/- icons in the fringe.  Clicking on them
 will fold the current tag.
@@ -70,34 +70,35 @@ minor mode is enabled.
 ;;;***
 
 ;;;### (autoloads (wisent-csharp-default-setup) "wisent-csharp" "wisent-csharp.el"
-;;;;;;  (17880 37474))
+;;;;;;  (19215 38463))
 ;;; Generated autoloads from wisent-csharp.el
 
-(autoload (quote wisent-csharp-default-setup) "wisent-csharp" "\
+(autoload 'wisent-csharp-default-setup "wisent-csharp" "\
 Not documented
 
 \(fn)" nil nil)
 
-(add-hook (quote csharp-mode-hook) (function wisent-csharp-default-setup))
+(add-hook 'csharp-mode-hook #'wisent-csharp-default-setup)
 
 ;;;***
 
 ;;;### (autoloads (wisent-php-default-setup) "wisent-php" "wisent-php.el"
-;;;;;;  (18810 37948))
+;;;;;;  (19215 38463))
 ;;; Generated autoloads from wisent-php.el
 
-(autoload (quote wisent-php-default-setup) "wisent-php" "\
+(autoload 'wisent-php-default-setup "wisent-php" "\
 Hook run to setup Semantic in `php-mode'.
 Use the alternate LALR(1) parser.
 
 \(fn)" nil nil)
 
-(add-hook (quote php-mode-hook) (function wisent-php-default-setup))
+(add-hook 'php-mode-hook #'wisent-php-default-setup)
 
 ;;;***
 
 ;;;### (autoloads nil nil ("cedet-contrib-load.el" "cedet-contrib.el"
-;;;;;;  "wisent-ruby.el") (19003 26011 634887))
+;;;;;;  "wisent-csharp-wy.el" "wisent-php-wy.el" "wisent-ruby-wy.el"
+;;;;;;  "wisent-ruby.el") (19215 38905 806000))
 
 ;;;***
 

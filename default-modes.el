@@ -12,7 +12,7 @@
   (barf-if-buffer-read-only))
 
 ; No scrollbars
-;(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ; No toolbar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -82,8 +82,8 @@
 (setq dired-recursive-deletes 'top)
 
 (add-hook 'dired-load-hook
-	  (lambda ()
-	    (load "dired-x")))
+          (lambda ()
+            (load "dired-x")))
 
 (add-hook 'Man-mode-hook 'goto-address)
 

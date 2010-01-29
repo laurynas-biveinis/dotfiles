@@ -41,8 +41,8 @@
 
 ;; In Shell mode, do not echo passwords
 (add-hook 'comint-output-filter-functions
-	  'comint-watch-for-password-prompt
-	  'comint-strip-ctrl-m)
+          'comint-watch-for-password-prompt
+          'comint-strip-ctrl-m)
 
 ;; Colors
 (require 'ansi-color)
@@ -96,8 +96,8 @@
 
 ;; Source specials
 (add-hook 'LaTeX-mode-hook
-	  (lambda ()
-	    (TeX-source-specials-mode 1)))
+          (lambda ()
+            (TeX-source-specials-mode 1)))
 (setq TeX-source-specials-view-start-server t)
 
 ;; Use RefTeX
@@ -144,7 +144,7 @@
 ;; ----------------------------------------------
 (autoload 'cmd-mode "cmd-mode" "CMD mode." t)
 (setq auto-mode-alist (append '(("\\.\\(cmd\\|bat\\)$" . cmd-mode))
-			      auto-mode-alist))
+                              auto-mode-alist))
 
 ;; ------------------------------
 ;; po-mode.el for PO file editing
@@ -210,9 +210,10 @@
   (local-set-key ">" 'semantic-complete-self-insert)
   (local-set-key (kbd "C-c q") 'semantic-ia-show-summary)
   (local-set-key (kbd "C-c <f1>") 'semantic-ia-show-doc)
+  ; TODO gather all jumps to C-c b
   (local-set-key (kbd "C-c b") 'semantic-complete-jump)
   (local-set-key (kbd "C-c C-b") 'semantic-analyze-proto-impl-toggle)
-  (local-set-key (kbd "C-c C-i") 'semantic-decoration-include-visit) ; TODO gather all jumps to C-c b
+  (local-set-key (kbd "C-c C-i") 'semantic-decoration-include-visit)
   (local-set-key (kbd "M-<f7>") 'semantic-symref)
 )
 (add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
@@ -224,7 +225,7 @@
 (setq auto-mode-alist
       (append
        '(("\\.php$" . php-mode)
-	 ("\\.php5$" . php-mode))
+         ("\\.php5$" . php-mode))
        auto-mode-alist))
 
 ; Xrefactory configuration part ;;
@@ -232,8 +233,8 @@
 (defvar xref-key-binding 'global) ;; can be also 'local or 'none
 (if (file-exists-p xref-dir)
       (progn
-	(setq exec-path (cons xref-dir exec-path))
-	(load "xrefactory")))
+        (setq exec-path (cons xref-dir exec-path))
+        (load "xrefactory")))
 
 ; Monotone
 (require 'monotone)

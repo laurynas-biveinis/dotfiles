@@ -18,7 +18,7 @@
   (add-to-list 'Info-default-directory-list
                (concat cygwin-root "usr/share/info/"))
 
-  ;; Workaround XSymbol initialization bug
+  ;; Work around XSymbol initialization bug
   ;; ("C:\\ImageMagick\\convert" instead of system $PATH? Seriously?)
   (setq x-symbol-image-convert-program "convert")
 

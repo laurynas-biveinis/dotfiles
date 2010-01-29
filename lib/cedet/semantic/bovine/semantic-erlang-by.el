@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 2002, 2003 Vladimir G. Sekissov
 
-;; Author: Laurynas Biveinis <lauris@h236>
-;; Created: 2009-06-19 12:16:50+0200
+;; Author:  <lauras@AAU-LAPTOP>
+;; Created: 2009-11-27 10:12:17+0100
 ;; Keywords: syntax
 ;; X-RCS: $Id$
 

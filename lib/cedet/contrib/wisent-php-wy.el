@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 2008 Free Software Foundation
 
-;; Author: Laurynas Biveinis <lauris@h236>
-;; Created: 2009-06-19 12:17:01+0200
+;; Author:  <lauras@AAU-LAPTOP>
+;; Created: 2009-11-27 10:12:31+0100
 ;; Keywords: syntax
 ;; X-RCS: $Id$
 
