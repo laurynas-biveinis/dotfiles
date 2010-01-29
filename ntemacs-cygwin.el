@@ -44,7 +44,11 @@
     (setq w32-quote-process-args ?\")
     (make-variable-buffer-local 'comint-completion-addsuffix))
 
-  (setq shell-mode-hook 'my-shell-setup))
+  (setq shell-mode-hook 'my-shell-setup)
+
+  (cond ((>= emacs-major-version 23)
+         (setq use-x-symbol-p nil)))
+)
 
 (defun system-specific-setup()
   "NT Emacs on Cygwin .emacs specifics"

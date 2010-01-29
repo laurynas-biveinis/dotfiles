@@ -18,14 +18,28 @@
 
 (setq elpa-dir (concat private-elisp "elpa/"))
 
+; Use x-symbol by default
+(setq use-x-symbol-p 't)
+
 ; Setup elisp search directories
 (defun add-to-load-path (new)
   (setq load-path
         (cons new load-path)))
 
 (add-to-load-path private-elisp)
+
+; Load system-specific library and setup system-specific things that
+; must be setup before main setup
+(cond ((eq system-type 'windows-nt) (load-library "ntemacs-cygwin"))
+      ((eq system-type 'gnu/linux) (load-library "linux"))
+      (t (load-library "default")))
+
+(system-specific-presetup)
+
 (add-to-load-path private-elisp-lib)
-(add-to-load-path private-x-symbol-lisp-dir)
+(if use-x-symbol-p
+    (add-to-load-path private-x-symbol-lisp-dir)
+)
 (add-to-load-path xref-lib)
 (add-to-load-path elib-dir)
 (add-to-load-path jdee-dir)
@@ -36,18 +50,14 @@
   (add-to-list 'Info-default-directory-list new))
 
 (add-to-info-path auctex-info-dir)
-(add-to-info-path private-x-symbol-info-dir)
 
-; Load system-specific library and setup system-specific things that
-; must be setup before main setup
-(cond ((eq system-type 'windows-nt) (load-library "ntemacs-cygwin"))
-      ((eq system-type 'gnu/linux) (load-library "linux"))
-      (t (load-library "default")))
-
-(system-specific-presetup)
+(if use-x-symbol-p
+    (add-to-info-path private-x-symbol-info-dir)
+)
 
 (load "defaults")
 (load "default-modes")
+(load "locate-tools")
 
 ; ELPA
 (setq package-user-dir elpa-dir)

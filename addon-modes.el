@@ -125,19 +125,24 @@
 (setq bib-cite-use-reftex-view-crossref t)
 
 ;; X-symbol
-(unless (image-type-available-p 'xpm)
-    (setq x-symbol-image-convert-colormap nil))
+(if use-x-symbol-p
+    (progn
 
-(setq x-symbol-default-coding 'iso-8859-1)
+      (unless (image-type-available-p 'xpm)
+        (setq x-symbol-image-convert-colormap nil))
 
-(setq x-symbol-data-directory
-      (concat private-x-symbol-dir "etc/x-symbol/"))
-(load (expand-file-name "auto-autoloads" private-x-symbol-lisp-dir))
-(or (fboundp 'custom-add-loads)
-    (defun custom-add-loads (symbol list)
-      (dolist (load list) (custom-add-load symbol load))))
-(load (expand-file-name "custom-load" private-x-symbol-lisp-dir))
-(x-symbol-initialize)
+      (setq x-symbol-default-coding 'iso-8859-1)
+
+      (setq x-symbol-data-directory
+            (concat private-x-symbol-dir "etc/x-symbol/"))
+      (load (expand-file-name "auto-autoloads" private-x-symbol-lisp-dir))
+      (or (fboundp 'custom-add-loads)
+          (defun custom-add-loads (symbol list)
+            (dolist (load list) (custom-add-load symbol load))))
+      (load (expand-file-name "custom-load" private-x-symbol-lisp-dir))
+      (x-symbol-initialize)
+      )
+)
 
 ;; ----------------------------------------------
 ;; cmd-mode.el major mode for cmd and bat scripts
@@ -171,13 +176,15 @@
             auto-mode-alist))
 
 ;; GNU Global
-; TODO: gracefully degrade in case Global is not installed
-(autoload 'gtags-mode "gtags" "" t)
-(add-hook 'c-mode-common-hook
-          '(lambda ()
-             (gtags-mode 1)
-             )
-)
+(if use-global-p
+    (progn (autoload 'gtags-mode "gtags" "" t)
+           (add-hook 'c-mode-common-hook
+                     '(lambda ()
+                        (gtags-mode 1)
+                        )
+                     )
+           )
+  )
 
 ;; ---
 ;; CEDET
@@ -191,9 +198,13 @@
 (global-ede-mode t)
 ; Use GNU Global
 ; TODO: gracefully degrade in case Global is not installed
-(require 'semanticdb-global)
-(semanticdb-enable-gnu-global-databases 'c-mode)
-(semanticdb-enable-gnu-global-databases 'c++-mode)
+(if use-global-p
+    (progn
+      (require 'semanticdb-global)
+      (semanticdb-enable-gnu-global-databases 'c-mode)
+      (semanticdb-enable-gnu-global-databases 'c++-mode)
+      )
+  )
 (semantic-load-enable-excessive-code-helpers)
 ; TODO: should already be enabled by previous line
 (global-semantic-idle-completions-mode)
