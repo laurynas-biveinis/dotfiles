@@ -124,26 +124,6 @@
 ;; Integrate RefTeX with bib-cite
 (setq bib-cite-use-reftex-view-crossref t)
 
-;; X-symbol
-(if use-x-symbol-p
-    (progn
-
-      (unless (image-type-available-p 'xpm)
-        (setq x-symbol-image-convert-colormap nil))
-
-      (setq x-symbol-default-coding 'iso-8859-1)
-
-      (setq x-symbol-data-directory
-            (concat private-x-symbol-dir "etc/x-symbol/"))
-      (load (expand-file-name "auto-autoloads" private-x-symbol-lisp-dir))
-      (or (fboundp 'custom-add-loads)
-          (defun custom-add-loads (symbol list)
-            (dolist (load list) (custom-add-load symbol load))))
-      (load (expand-file-name "custom-load" private-x-symbol-lisp-dir))
-      (x-symbol-initialize)
-      )
-)
-
 ;; ----------------------------------------------
 ;; cmd-mode.el major mode for cmd and bat scripts
 ;; ----------------------------------------------
@@ -217,8 +197,8 @@
 (defun my-c-mode-cedet-hook ()
   (local-set-key [(control tab)] 'semantic-ia-complete-symbol)
   (local-set-key (kbd "C-?") 'semantic-ia-complete-symbol-menu)
-  (local-set-key "." 'semantic-complete-self-insert)
-  (local-set-key ">" 'semantic-complete-self-insert)
+;  (local-set-key "." 'semantic-complete-self-insert) ; These suck seriously FIXME
+;  (local-set-key ">" 'semantic-complete-self-insert)
   (local-set-key (kbd "C-c q") 'semantic-ia-show-summary)
   (local-set-key (kbd "C-c <f1>") 'semantic-ia-show-doc)
   ; TODO gather all jumps to C-c b

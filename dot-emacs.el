@@ -3,9 +3,6 @@
 (setq private-elisp
       (concat home-dir "/emacs/"))
 (setq private-elisp-lib (concat private-elisp "lib/"))
-(setq private-x-symbol-dir (concat private-elisp-lib "x-symbol-4.51/"))
-(setq private-x-symbol-lisp-dir (concat private-x-symbol-dir "lisp/x-symbol/"))
-(setq private-x-symbol-info-dir (concat private-x-symbol-dir "info/"))
 (setq xref-dir (concat home-dir "/opt/xref/"))
 (setq xref-lib (concat xref-dir "emacs/"))
 (setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
@@ -17,9 +14,6 @@
 (setq auctex-info-dir (concat auctex-dir "info/"))
 
 (setq elpa-dir (concat private-elisp "elpa/"))
-
-; Use x-symbol by default
-(setq use-x-symbol-p 't)
 
 ; Setup elisp search directories
 (defun add-to-load-path (new)
@@ -37,9 +31,6 @@
 (system-specific-presetup)
 
 (add-to-load-path private-elisp-lib)
-(if use-x-symbol-p
-    (add-to-load-path private-x-symbol-lisp-dir)
-)
 (add-to-load-path xref-lib)
 (add-to-load-path elib-dir)
 (add-to-load-path jdee-dir)
@@ -50,10 +41,6 @@
   (add-to-list 'Info-default-directory-list new))
 
 (add-to-info-path auctex-info-dir)
-
-(if use-x-symbol-p
-    (add-to-info-path private-x-symbol-info-dir)
-)
 
 (load "defaults")
 (load "default-modes")

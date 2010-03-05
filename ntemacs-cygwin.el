@@ -18,10 +18,6 @@
   (add-to-list 'Info-default-directory-list
                (concat cygwin-root "usr/share/info/"))
 
-  ;; Work around XSymbol initialization bug
-  ;; ("C:\\ImageMagick\\convert" instead of system $PATH? Seriously?)
-  (setq x-symbol-image-convert-program "convert")
-
   ;; Setup shell
   (setq shell-file-name "bash")
   (setenv "SHELL" shell-file-name)
@@ -45,9 +41,6 @@
     (make-variable-buffer-local 'comint-completion-addsuffix))
 
   (setq shell-mode-hook 'my-shell-setup)
-
-  (cond ((>= emacs-major-version 23)
-         (setq use-x-symbol-p nil)))
 )
 
 (defun system-specific-setup()
