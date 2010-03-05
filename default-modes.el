@@ -125,9 +125,9 @@
 
 ;; Styles I use
 (setq c-default-style '((java-mode . "java")
-			(awk-mode . "awk")
-			(c++-mode . "stroustrup")
-			(other . "gnu")))
+                        (awk-mode . "awk")
+                        (c++-mode . "stroustrup")
+                        (other . "gnu")))
 
 ;; Enter indents the new line
 (defun my-make-CR-do-indent ()
