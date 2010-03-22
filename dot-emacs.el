@@ -9,7 +9,7 @@
 (setq cedet-info-dir (concat private-elisp-lib "cedet-info"))
 (setq elib-dir (concat private-elisp-lib "elib-1.0"))
 (setq jdee-dir (concat private-elisp-lib "jdee/lisp"))
-(setq auctex-dir (concat private-elisp-lib "auctex-11.85/"))
+(setq auctex-dir (concat private-elisp-lib "auctex-11.86/"))
 (setq auctex-lisp-dir (concat auctex-dir "lisp/"))
 (setq auctex-info-dir (concat auctex-dir "info/"))
 
