@@ -177,7 +177,6 @@
 
 (global-ede-mode t)
 ; Use GNU Global
-; TODO: gracefully degrade in case Global is not installed
 (if use-global-p
     (progn
       (require 'semanticdb-global)
@@ -197,6 +196,7 @@
 (defun my-c-mode-cedet-hook ()
   (local-set-key [(control tab)] 'semantic-ia-complete-symbol)
   (local-set-key (kbd "C-?") 'semantic-ia-complete-symbol-menu)
+; TODO: try CVS post 1.0pre7
 ;  (local-set-key "." 'semantic-complete-self-insert) ; These suck seriously FIXME
 ;  (local-set-key ">" 'semantic-complete-self-insert)
   (local-set-key (kbd "C-c q") 'semantic-ia-show-summary)
