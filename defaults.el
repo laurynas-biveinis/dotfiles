@@ -11,14 +11,26 @@
 ; Proper clipboard, why oh why this isn't the default?
 (setq x-select-enable-clipboard t)
 
+; Emacs 23.2: Active region becomes primary selection
+(if (fboundp 'select-active-regions)
+    (setq select-active-regions t))
+
 ; C-k kills line including its newline
 (setq kill-whole-line t)
+
+; Emacs 23.2+: do not store duplicate kills
+(if (fboundp 'kill-do-not-save-duplicates)
+    (setq kill-do-not-save-duplicates t))
 
 ; Bookmarks are saved automatically
 (setq bookmark-save-flag 1)
 
 ; Trailing newlines are highlighted
-(setq default-indicate-empty-lines t)
+; indicate-empty-lines for Emacs 23.2+, default-indicate-empty-lines for
+; earlier versions
+(if (fboundp 'indicate-empty-lines)
+    (setq indicate-empty-lines t)
+  (setq default-indicate-empty-lines t))
 
 ; 24h time format
 (setq display-time-24hr-format t)

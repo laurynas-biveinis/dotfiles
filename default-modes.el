@@ -24,7 +24,9 @@
 (delete-selection-mode 1)
 
 ; Mouse avoidance
-(mouse-avoidance-mode)
+(if (fboundp 'make-pointer-invisible)
+    (setq make-pointer-invisible t)
+  (mouse-avoidance-mode))
 
 ; Enable visual feedback on selections
 (setq transient-mark-mode t)
@@ -113,9 +115,9 @@
 ; On save, create missing parent directories automatically
 ; From http://atomized.org/2008/12/emacs-create-directory-before-saving/
 (add-hook 'before-save-hook
-	  '(lambda ()
-	     (or (file-exists-p (file-name-directory buffer-file-name))
-		 (make-directory (file-name-directory buffer-file-name) t))))
+          '(lambda ()
+             (or (file-exists-p (file-name-directory buffer-file-name))
+                 (make-directory (file-name-directory buffer-file-name) t))))
 
 ; CC Mode
 ; (CEDET configuration is in addon-modes.el)
