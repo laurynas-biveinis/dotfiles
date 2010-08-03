@@ -1,3 +1,7 @@
+; Integrated or 3rd party?
+(setq integrated-cedet-p (and (>= emacs-major-version 23)
+                              (>= emacs-minor-version 2)))
+
 ; Various paths
 (setq home-dir (replace-regexp-in-string "\\\\" "/" (getenv "HOME")))
 (setq private-elisp
@@ -5,8 +9,10 @@
 (setq private-elisp-lib (concat private-elisp "lib/"))
 (setq xref-dir (concat home-dir "/opt/xref/"))
 (setq xref-lib (concat xref-dir "emacs/"))
-(setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
-(setq cedet-info-dir (concat private-elisp-lib "cedet-info"))
+(unless integrated-cedet-p
+  (progn
+    (setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
+    (setq cedet-info-dir (concat private-elisp-lib "cedet-info"))))
 (setq elib-dir (concat private-elisp-lib "elib-1.0"))
 (setq jdee-dir (concat private-elisp-lib "jdee/lisp"))
 (setq auctex-dir (concat private-elisp-lib "auctex-11.86/"))

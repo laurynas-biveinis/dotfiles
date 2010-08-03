@@ -169,7 +169,10 @@
 ;; ---
 ;; CEDET
 ;; ---
-(load-file cedet-lib)
+(if (boundp 'cedet-lib)
+    (load-file cedet-lib))
+
+(semantic-mode 1)
 
 ;; Additional global include directories
 (semantic-add-system-include "/usr/local/include" 'c-mode)
@@ -184,12 +187,25 @@
       (semanticdb-enable-gnu-global-databases 'c++-mode)
       )
   )
-(semantic-load-enable-excessive-code-helpers)
-; TODO: should already be enabled by previous line
-(global-semantic-idle-completions-mode)
-(global-semantic-tag-folding-mode)
-(require 'semantic-ia)
-(require 'semantic-gcc)
+
+(if (boundp 'semantic-load-enable-excessive-code-helpers)
+    (progn
+      (semantic-load-enable-excessive-code-helpers)
+      ; TODO: should already be enabled by previous line
+      (global-semantic-idle-completions-mode)
+      (global-semantic-tag-folding-mode))
+  (setq semantic-default-submodes
+        '(global-semanticdb-minor-mode
+          global-semantic-idle-scheduler-mode
+          global-semantic-idle-summary-mode
+          global-semantic-idle-completions-mode
+          global-semantic-decoration-mode
+          global-semantic-highlight-func-mode
+          global-semantic-stickyfunc-mode)))
+; TODO: global-semantic-mru-bookmark-mode above
+
+(if (boundp 'semantic-ia) (require 'semantic-ia))
+(if (boundp 'semantic-gcc) (require 'semantic-gcc))
 
 
 ; Loosely inspired by JetBrains IntelliJ IDEA
@@ -233,6 +249,7 @@
 (setq monotone-passwd-remember t)
 
 ; JDEE
-(require 'jde)
-(setq jde-jdk-registry
-      (quote (("1.6.0.16" . "/usr/lib/jvm/java-6-sun-1.6.0.16"))))
+; TODO: broken with Emacs 23.2 integrated CEDET
+;(require 'jde)
+;(setq jde-jdk-registry
+;      (quote (("1.6.0.16" . "/usr/lib/jvm/java-6-sun-1.6.0.16"))))
