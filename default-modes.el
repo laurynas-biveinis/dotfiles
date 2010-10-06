@@ -50,8 +50,14 @@
 ; Show column number
 (column-number-mode t)
 
-; Better C-x b menu
+; Better C-x b menu by IDO mode
 (ido-mode t)
+; Kill completion buffers after completing
+(add-hook 'minibuffer-exit-hook
+          '(lambda ()
+             (progn
+               (kill-buffer "*Completions*")
+               (kill-buffer "*Ido Completions*"))))
 
 ;; Auto Fill
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
