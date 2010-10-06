@@ -23,8 +23,8 @@
   (setenv "SHELL" shell-file-name)
   (setq explicit-shell-file-name shell-file-name)
 
-  (setq my-frame-width 84)
-  (setq my-frame-height 50)
+  (setq my-frame-width 80)
+  (setq my-frame-height 40)
 
   ;; Use Cygwin inferior shell
   (setq w32shell-cygwin-bin "c:\\cygwin\\bin")
