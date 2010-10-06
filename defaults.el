@@ -88,7 +88,8 @@
 (add-to-list 'default-frame-alist `(height . ,my-frame-height))
 
 ; Default Info path
-(add-to-list 'Info-default-directory-list cedet-info-dir)
+(if (boundp 'cedet-info-dir)
+            (add-to-list 'Info-default-directory-list cedet-info-dir))
 
 ; Keybindings
 (global-set-key "\C-cg" 'goto-line)
