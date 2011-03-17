@@ -53,11 +53,15 @@
 ; Better C-x b menu by IDO mode
 (ido-mode t)
 ; Kill completion buffers after completing
+(defun kill-buffer-if-exists (buffer)
+  "Kill the buffer if it exists"
+  (if (buffer-live-p buffer)
+      (kill-buffer buffer)))
 (add-hook 'minibuffer-exit-hook
           '(lambda ()
              (progn
-               (kill-buffer "*Completions*")
-               (kill-buffer "*Ido Completions*"))))
+               (kill-buffer-if-exists "*Completions*")
+               (kill-buffer-if-existsv "*Ido Completions*"))))
 
 ;; Auto Fill
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
