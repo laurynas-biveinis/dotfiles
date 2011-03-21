@@ -61,7 +61,7 @@
           '(lambda ()
              (progn
                (kill-buffer-if-exists "*Completions*")
-               (kill-buffer-if-existsv "*Ido Completions*"))))
+               (kill-buffer-if-exists "*Ido Completions*"))))
 
 ;; Auto Fill
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -129,11 +129,36 @@
              (or (file-exists-p (file-name-directory buffer-file-name))
                  (make-directory (file-name-directory buffer-file-name) t))))
 
+; -------
 ; CC Mode
+; -------
 ; (CEDET configuration is in addon-modes.el)
 
 ;; Default indentation offset
 (setq c-basic-offset 4)
+
+(c-add-style
+ "MySQL"
+ '("K&R"
+   (c-basic-offset . 2)
+   (c-comment-only-line-offset . 0)
+   (c-offsets-alist . ((statement-block-intro . +)
+                       (knr-argdecl-intro . 0)
+                       (substatement-open . 0)
+                       (label . -)
+                       (statement-cont . +)
+                       (arglist-intro . c-lineup-arglist-intro-after-paren)
+                       (arglist-close . c-lineup-arglist)
+                       (innamespace . 0)
+                       (inline-open . 0)
+                       (statement-case-open . +)
+                       )
+                    )
+   )
+)
+
+(add-to-list 'auto-mode-alist '("\\.ic\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.i\\'" . c++-mode))
 
 ;; Styles I use
 (setq c-default-style '((java-mode . "java")
