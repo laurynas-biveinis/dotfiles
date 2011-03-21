@@ -1,9 +1,9 @@
 ;;; srecode-map.el --- Manage a template file map
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-map.el,v 1.15 2009/03/14 15:16:55 zappo Exp $
+;; X-RCS: $Id: srecode-map.el,v 1.20 2010/06/12 00:45:51 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -41,7 +41,7 @@
 ;;
 
 (defvar srecode-current-map nil
-  "The current map for global SRecode templtes.")
+  "The current map for global SRecode templates.")
 
 (defcustom srecode-map-save-file (expand-file-name "~/.srecode/srecode-map")
   "The save location for SRecode's map file.
@@ -194,7 +194,7 @@ Optional argument RESET forces a reset of the current map."
   ;; the user asks for one.
   (srecode-map-update-map (not reset))
 
-  (if (interactive-p)
+  (if (cedet-called-interactively-p 'any)
       ;; Dump this map.
       (with-output-to-temp-buffer "*SRECODE MAP*"
 	(princ "   -- SRecode Global map --\n")
@@ -226,7 +226,7 @@ Optional argument RESET forces a reset of the current map."
 	)
     (message "Updating the map took %.2f seconds."
 	     (semantic-elapsed-time start end))
-    (data-debug-new-buffer "*SRECUDE ADEBUG*")
+    (data-debug-new-buffer "*SRECODE ADEBUG*")
     (data-debug-insert-stuff-list p "*")))
 
 (defun srecode-maps-dump-file-list (flist)
@@ -294,10 +294,15 @@ if that file is NEW, otherwise assume the mode has not changed."
 
     ;; 2) Do we not have a current map?  If so load.
     (when (not srecode-current-map)
-      (setq srecode-current-map
-	    (eieio-persistent-read srecode-map-save-file))
+      (condition-case nil
+	  (setq srecode-current-map
+		(eieio-persistent-read srecode-map-save-file))
+	(error
+	 ;; There was an error loading the old map.  Create a new one.
+	 (setq srecode-current-map
+	       (srecode-map "SRecode Map"
+			    :file srecode-map-save-file))))
       )
-
     )
 
   ;;
@@ -396,7 +401,7 @@ Return non-nil if the map changed."
   (list (srecode-map-base-template-dir)
 	(expand-file-name "~/.srecode/")
 	)
-  "*Global load path for SRecode template files."
+  "Global load path for SRecode template files."
   :group 'srecode
   :type '(repeat file)
   :set 'srecode-map-load-path-set)

@@ -1,13 +1,13 @@
 ;;; c.by -- LL grammar for C/C++ language specification
 ;;
-;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
 ;; Copyright (C) 2002, 2003 David Ponce
 ;;
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;;         David Ponce <david@dponce.com>
 ;;         Klaus Berndl <klaus.berndl@sdm.de>
 ;;
-;; X-RCS: $Id: c.by,v 1.57 2009/04/18 12:15:51 zappo Exp $
+;; X-RCS: $Id: c.by,v 1.63 2010/08/05 03:01:00 zappo Exp $
 ;;
 ;; c.by is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -24,6 +24,23 @@
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;
+
+;; TODO:  From Nate Schley
+;; >  * Can't parse signature element: "const char* const rmc_ClrTxt"
+;; >  * Can't parse signature element: "char* const dellog_ClrTxt"
+;; >  * Can't parse signature element: "const char* dellog_SetTxt"
+;; >  * Can't parse signature element: "const RmcCmdSSPADetailedStatus& status"
+;; > 
+;; > And FWIW I have seen the following argument cases not handled, even
+;; > with no leading/trailing spaces in the split:
+;; > 
+;; >  * Can't parse signature element: "const bool currentAlarmStatus"
+;; >  * Can't parse signature element: "unsigned char mode"
+;; >  * Can't parse signature element: "TskTimingTask* tsktimingtask"
+;; >  * Can't parse signature element: "unsigned char htrStatus"
+;; >  * Can't parse signature element: "char trackPower[]"
+;; >  * Can't parse signature element: "const RmcCmdMCDetailedStatus& status"
+;; >  * Can't parse signature element: "RmcBucStatus* rftBucStatus"
 
 %package semantic-c-by
 
@@ -196,13 +213,13 @@ declaration
   | extern-c
   | template
   | using
-    (TAG (car (car $1)) 'using :type (car $1))
   ;
 
 codeblock
   : define
   | codeblock-var-or-fun
   | type ;; type is less likely to be used here.
+  | using
   ;
 
 extern-c-contents
@@ -357,7 +374,6 @@ namespacesubparts
  ;; PUBLIC or PRIVATE bits.  Ignore them for now.
   | template
   | using
-    (TAG (car (car $1)) 'using :type (car $1))
   | ;;EMPTY
   ;
 
@@ -440,17 +456,28 @@ type
  ;; unnamed namespaces like "namespace {"
   | NAMESPACE namespaceparts
     (TYPE-TAG "unnamed" $1 $2 nil )
+ ;; David Engster: namespace alias like "namespace foo = bar;"
+  | NAMESPACE symbol EQUAL typeformbase SEMICOLON
+    (TYPE-TAG $2 $1 (list (TYPE-TAG (car $4) $1 nil nil)) nil :kind 'alias )
   ;
 
 ;; Klaus Berndl: We must parse "using namespace XXX" too
 
 ;; Using is vaguely like an include statement in the named portions
 ;; of the code.  We should probably specify a new token type for this.
+
 using
-  : USING typeformbase SEMICOLON
-    ( TYPE-TAG ,$2 "class" nil nil :prototype t)
-  | USING NAMESPACE typeformbase SEMICOLON
-    ( TYPE-TAG ,$3 "class" nil nil :prototype t)
+  : USING usingname SEMICOLON
+    (TAG (car $2) 'using :type ,$2 )
+  ;
+
+;; Jan Moringen: Differentiate between 'using' and 'using namespace'
+;; Adapted to creating type tags by EML.
+usingname
+  : typeformbase
+    (TYPE-TAG (car $1) "class" nil nil :prototype t)
+  | NAMESPACE typeformbase
+    (TYPE-TAG (car $2) "namespace" nil nil :prototype t)
   ;
 
 template
@@ -467,7 +494,7 @@ opt-template-specifier
   : template-specifier
     ( ,$1 )
   | ;;EMPTY
-    ()
+    ( )
   ;
 
 template-specifier
@@ -756,7 +783,7 @@ func-decl
           ;; Extra stuff goes in here.
           ;; Continue with the stuff we found in
           ;; this definition
-          $2 $3 $7 $9 $8 ,$1 ,$11 ,$5)
+          $2 $3 $7 $9 $8 ,$1 ,$11 $5 ,$10)
   | opt-stars opt-class opt-destructor functionname
     opt-template-specifier
     opt-under-p
@@ -769,7 +796,7 @@ func-decl
           ;; Extra stuff goes in here.
           ;; Continue with the stuff we found in
           ;; this definition
-          $2 $3 nil $8 $7 ,$1 ,$10 ,$5)
+          $2 $3 nil $8 $7 ,$1 ,$10 $5 ,$9)
   ;
 
 var-decl
@@ -856,8 +883,8 @@ opt-restrict
 ;; then also some invalid C++-syntax is parsed but this is better than
 ;; not parsing valid syntax.
 varname
-  : opt-stars opt-restrict namespace-symbol opt-bits opt-array opt-assign
-    ( ,$3 ,$1 ,$4 ,$5 ,$6 )
+  : opt-stars opt-restrict namespace-symbol opt-bits opt-array 
+    ( ,$3 ,$1 ,$4 ,$5 )
   ;
 
 ;; I should store more in this def, but leave it simple for now.
@@ -880,10 +907,16 @@ variablearg-opt-name
     ( "" ,$1 nil nil nil )
   ;
 
+varname-opt-initializer
+  : semantic-list
+  | opt-assign
+  | ;; EMPTY
+  ;
+
 varnamelist
-  : opt-ref varname COMA varnamelist
-    ( ,(cons $2 $4) )
-  | opt-ref varname
+  : opt-ref varname varname-opt-initializer COMA varnamelist
+    ( ,(cons $2 $5) )
+  | opt-ref varname varname-opt-initializer
     ( $2 )
   ;
 
@@ -1132,33 +1165,42 @@ expr-start
   | AMPERSAND
   ;
 
+expr-binop
+  : MINUS
+  | PLUS
+  | STAR
+  | DIVIDE
+  | AMPERSAND AMPERSAND
+  | AMPERSAND
+  | OR OR
+  | OR
+ ;; There are more.
+  ;
+
 ;; Use expression for parsing only.  Don't actually return anything
 ;; for now.  Hopefully we can fix this later.
 expression
+  : unaryexpression expr-binop unaryexpression
+    ( (identity start) (identity end) )
+  | unaryexpression
+    ( (identity start) (identity end) )
+  ;
+
+unaryexpression
   : number
-    ( (identity start) (identity end) )
   | multi-stage-dereference
-    ( (identity start) (identity end) )
   | NEW multi-stage-dereference
-    ( (identity start) (identity end) )
   | NEW builtintype-types semantic-list
-    ( (identity start) (identity end) )
  ;; Klaus Berndl: symbol -> namespace-symbol!
   | namespace-symbol
-    ( (identity start) (identity end) )
  ;; Klaus Berndl: C/C++ allows sequences of strings which are
  ;; concatenated by the precompiler to one string
   | string-seq
-    ( (identity start) (identity end) )
   | type-cast expression  ;; A cast to some other type
-    ( (identity start) (identity end) )
  ;; Casting the results of one expression to something else.
   | semantic-list expression
-    ( (identity start) (identity end) )
   | semantic-list
-    ( (identity start) (identity end) )
   | expr-start expression
-    ( (identity start) (identity end) )
   ;
 
 ;;; c.by ends here

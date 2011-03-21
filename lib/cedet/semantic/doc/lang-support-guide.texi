@@ -126,7 +126,7 @@ Currently each tag is a list with up to five elements:
 values include @code{variable}, @code{function}, or @code{type}.
 @inforef{Tag Basics, , semantic-appdev.info}.
 
-@var{ATTRIBUTES} is a slot filled with langauge specific options for
+@var{ATTRIBUTES} is a slot filled with language specific options for
 the tag.  Function arguments, return type, and other flags all are
 stored in attributes.  A language author fills in the ATTRIBUTES with
 the tag constructor, which is parser style dependant.
@@ -398,7 +398,7 @@ correct strings.
 The analysis tool requires that the @code{semanticdb} tool is active,
 and that the searching methods are overloaded.  In addition,
 @code{semanticdb} system database could be written to provide symbols
-from the global environment of your langauge.
+from the global environment of your language.
 @inforef{System Databases, , semantic-appdev}
 
 In addition, the analyzer requires that the @code{semantic-ctxt}
@@ -1164,7 +1164,7 @@ Typical structure for this file is:
 ;;; Overload methods
 ;;
 ;; OPTIONAL
-;; To allow your langauge to be fully supported by all the
+;; To allow your language to be fully supported by all the
 ;; applications that use semantic, it is important, but not necessary
 ;; to create implementations of overload methods.
 (define-mode-overload-implementation some-semantic-function foo-mode (tag)
@@ -1242,7 +1242,7 @@ and in your expand function, you would write:
 
 @example
 (defun my-tag-expand (tag)
-  "Expand tags for my langauge."
+  "Expand tags for my language."
   (when (semantic-tag-of-class-p tag 'compound-class)
      (remq nil
         (semantic-tag-get-attribute tag :value))))

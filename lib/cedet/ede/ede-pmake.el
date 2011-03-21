@@ -1,10 +1,10 @@
-;;; ede-pmake.el --- EDE Generic Project Makefile code generator.
+;; ede-pmake.el --- EDE Generic Project Makefile code generator.
 
-;;;  Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009  Eric M. Ludlam
+;;;  Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede-pmake.el,v 1.57 2009/04/30 01:16:06 zappo Exp $
+;; RCS: $Id: ede-pmake.el,v 1.66 2010/03/15 13:40:54 xscript Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -44,6 +44,7 @@
 ;;       1) Insert distribution source variables for targets
 ;;       2) Insert user requested rules
 
+(eval-when-compile (require 'cl))
 (require 'ede-proj)
 (require 'ede-proj-obj)
 (require 'ede-proj-comp)
@@ -79,16 +80,16 @@ MFILENAME is the makefile to generate."
       (if (and
 	   (not (eobp))
 	   (not (looking-at "# Automatically Generated \\w+ by EDE.")))
-	  (if (not (y-or-n-p (format "Really replace %s?" mfilename)))
-	      (error "Not replacing Makefile."))
+	  (if (not (y-or-n-p (format "Really replace %s? " mfilename)))
+	      (error "Not replacing Makefile"))
 	(message "Replace EDE Makefile"))
       (erase-buffer)
       (ede-srecode-setup)
       ;; Insert a giant pile of stuff that is common between
       ;; one of our Makefiles, and a Makefile.in
-      (ede-srecode-insert 
+      (ede-srecode-insert
        "file:ede-empty"
-       "MAKETYPE" 
+       "MAKETYPE"
        (with-slots (makefile-type) this
 	 (cond ((eq makefile-type 'Makefile) "make")
 	       ((eq makefile-type 'Makefile.in) "autoconf")
@@ -114,7 +115,7 @@ MFILENAME is the makefile to generate."
 				  targ))))
 	  ;; Distribution variables
 	  (ede-compiler-begin-unique
-	    (mapcar 'ede-proj-makefile-insert-variables targ))
+	    (mapc 'ede-proj-makefile-insert-variables targ))
 	  ;; Only add the distribution stuff in when depth != 0
 	  (let ((top  (ede-toplevel this))
 		(tmp this)
@@ -201,6 +202,9 @@ MFILENAME is the makefile to generate."
 	(error "Makefile.in is not supported"))
        ((eq (oref this makefile-type) 'Makefile.am)
 	(require 'ede-pconf)
+	;; Basic vars needed:
+	(ede-proj-makefile-automake-insert-subdirs this)
+	(ede-proj-makefile-automake-insert-extradist this)
 	;; Distribution variables
 	(let ((targ (if isdist (oref this targets) mt)))
 	  (ede-compiler-begin-unique
@@ -236,26 +240,42 @@ MFILENAME is the makefile to generate."
   "Add VARNAME into the current Makefile.
 Execute BODY in a location where a value can be placed."
   `(let ((addcr t) (v ,varname))
-       (if (re-search-backward (concat "^" v "\\s-*=") nil t)
-	   (progn
-	     (ede-pmake-end-of-variable)
-	     (if (< (current-column) 40)
-		 (if (and (/= (preceding-char) ?=)
-			  (/= (preceding-char) ? ))
-		     (insert " "))
-	       (insert "\\\n   "))
-	     (setq addcr nil))
-	 (insert v "="))
+     (if (save-excursion
+	   (goto-char (point-max))
+	   (re-search-backward (concat "^" v "\\s-*=") nil t))
+	 (progn
+	   (goto-char (match-end 0))
+	   (ede-pmake-end-of-variable)
+	   (if (< (current-column) 40)
+	       (if (and (/= (preceding-char) ?=)
+			(/= (preceding-char) ? ))
+		   (insert " "))
+	     (insert "\\\n   "))
+	   (setq addcr nil))
+       (insert v "="))
+     ,@body
+     (if addcr (insert "\n"))
+     (goto-char (point-max))))
+(put 'ede-pmake-insert-variable-shared 'lisp-indent-function 1)
+
+(defmacro ede-pmake-insert-variable-once (varname &rest body)
+  "Add VARNAME into the current Makefile if it doesn't exist.
+Execute BODY in a location where a value can be placed."
+  `(let ((addcr t) (v ,varname))
+     (unless (re-search-backward (concat "^" v "\\s-*=") nil t)
+       (insert v "=")
        ,@body
        (if addcr (insert "\n"))
-       (goto-char (point-max))))
-(put 'ede-pmake-insert-variable-shared 'lisp-indent-function 1)
+       (goto-char (point-max)))
+     ))
+(put 'ede-pmake-insert-variable-once 'lisp-indent-function 1)
 
 ;;; SOURCE VARIABLE NAME CONSTRUCTION
 ;;
 ;;;###autoload
 (defun ede-pmake-varname (obj)
-  "Convert OBJ into a variable name name, which converts .  to _."
+  "Convert OBJ into a variable name name.
+Change .  to _ in the variable name."
   (let ((name (oref obj name)))
     (while (string-match "\\." name)
       (setq name (replace-match "_" nil t name)))
@@ -303,7 +323,7 @@ NOTE: Not yet in use!  This is part of an SRecode conversion of
 ;	       (if (assoc (car c) conf-table)
 ;		   (let ((vdict (srecode-dictionary-add-section-dictionary
 ;				 ldict "VALUE")))
-;		     (srecode-dictionary-set-value 
+;		     (srecode-dictionary-set-value
 ;		      vdict "VAL" (cdr (assoc (car c) conf-table)))
 ;		     (setq conf-done (cons (car c) conf-done))))
 ;	       (let ((vdict (srecode-dictionary-add-section-dictionary
@@ -358,10 +378,14 @@ NOTE: Not yet in use!  This is part of an SRecode conversion of
 	  conf-table))
   (let* ((top "")
 	 (tmp this))
+    ;; Use relativistic paths for subdirs.
     (while (ede-parent-project tmp)
       (setq tmp (ede-parent-project tmp)
 	    top (concat "../" top)))
-    (insert "\ntop=" top))
+    ;; If this is the top, then use CURDIR.
+    (if (and (not (oref this metasubproject)) (string= top ""))
+	(insert "\ntop=\"$(CURDIR)\"/")
+      (insert "\ntop=" top)))
   (insert "\nede_FILES=" (file-name-nondirectory (oref this file)) " "
 	  (file-name-nondirectory (ede-proj-dist-makefile this)) "\n"))
 
@@ -414,9 +438,9 @@ sources variable."
 	(link (ede-proj-linkers this))
 	(name (ede-proj-makefile-target-name this))
 	(src (oref this source)))
+    (ede-proj-makefile-insert-object-variables (car comp) name src)
     (while comp
       (ede-compiler-only-once (car comp)
-	(ede-proj-makefile-insert-object-variables (car comp) name src)
 	(ede-proj-makefile-insert-variables (car comp)))
       (setq comp (cdr comp)))
     (while link
@@ -497,6 +521,19 @@ Argument THIS is the target that should insert stuff."
 Argument THIS is the target that should insert stuff."
   (ede-proj-makefile-insert-dist-dependencies this)
   )
+
+(defmethod ede-proj-makefile-automake-insert-subdirs ((this ede-proj-project))
+  "Insert a SUBDIRS variable for Automake."
+  (ede-pmake-insert-variable-once "SUBDIRS"
+    (ede-map-subprojects
+     this (lambda (sproj)
+	    (insert " " (ede-subproject-relative-path sproj))
+	    ))))
+
+(defmethod ede-proj-makefile-automake-insert-extradist ((this ede-proj-project))
+  "Insert the EXTRADIST variable entries needed for Automake and EDE."
+  (ede-pmake-insert-variable-once "EXTRA_DIST"
+    (insert "Project.ede")))
 
 (defmethod ede-proj-makefile-insert-dist-rules ((this ede-proj-project))
   "Insert distribution rules for THIS in a Makefile, such as CLEAN and DIST."
@@ -618,7 +655,7 @@ This allows customization of how these elements appear."
 	    (setq out
 		  (concat out "$(" (ede-compiler-intermediate-object-variable
 				    (car c)
-				    (ede-pmake-varname this)) ")")
+				    (ede-proj-makefile-target-name this)) ")")
 		  c (cdr c)))
 	  out)
       (let ((sv (ede-proj-makefile-sourcevar this))

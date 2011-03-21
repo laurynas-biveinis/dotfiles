@@ -1,12 +1,12 @@
 ;;; semantic-grammar.el --- Major mode framework for Semantic grammars
 ;;
-;; Copyright (C) 2002, 2003, 2004, 2005, 2007, 2008, 2009 David Ponce
+;; Copyright (C) 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010 David Ponce
 ;;
 ;; Author: David Ponce <david@dponce.com>
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 15 Aug 2002
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-grammar.el,v 1.77 2009/03/15 21:21:33 zappo Exp $
+;; X-RCS: $Id: semantic-grammar.el,v 1.80 2010/08/19 23:28:10 zappo Exp $
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -34,7 +34,6 @@
 
 ;;; Code:
 (require 'semantic-wisent)
-(require 'sformat)
 (require 'font-lock)
 (require 'pp)
 
@@ -544,15 +543,15 @@ Typically a DEFINE expression should look like this:
       (indent-sexp))))
 
 (defconst semantic-grammar-header-template
-  "\
-;;; %F --- Generated parser support file
+  '("\
+;;; " file " --- Generated parser support file
 
-%C
+" copy "
 
-;; Author: %U <%M>
-;; Created: %D
+;; Author: " user-full-name " <" user-mail-address ">
+;; Created: " date "
 ;; Keywords: syntax
-;; X-RCS: %V
+;; X-RCS: " vcid "
 
 ;; This file is not part of GNU Emacs.
 ;;
@@ -574,23 +573,24 @@ Typically a DEFINE expression should look like this:
 ;;; Commentary:
 ;;
 ;; PLEASE DO NOT MANUALLY EDIT THIS FILE!  It is automatically
-;; generated from the grammar file %G.
-
-;;; History:
-;;
+;; generated from the grammar file " gram ".
 
 ;;; Code:
-"
-  "Generated header template.")
+")
+  "Generated header template.
+The symbols in the template are local variables in
+`semantic-grammar-header'")
 
 (defconst semantic-grammar-footer-template
-  "\
+  '("\
 
-\(provide '%L)
+\(provide '" libr ")
 
-;;; %F ends here
-"
-  "Generated footer template.")
+;;; " file " ends here
+")
+  "Generated footer template.
+The symbols in the list are local variables in
+`semantic-grammar-footer'.")
 
 (defun semantic-grammar-copyright-line ()
   "Return the grammar copyright line, or nil if not found."
@@ -613,24 +613,27 @@ Typically a DEFINE expression should look like this:
         ;; generate a new one if not found.
         (copy (or (semantic-grammar-copyright-line)
                   (concat (format-time-string ";; Copyright (C) %Y ")
-                          user-full-name))))
-    (Sformat '((?U user-full-name)
-               (?M user-mail-address)
-               (?F file)
-               (?G gram)
-               (?C copy)
-               (?D date)
-               (?V vcid))
-             semantic-grammar-header-template)))
+                          user-full-name)))
+	(out ""))
+    (dolist (S semantic-grammar-header-template)
+      (cond ((stringp S)
+	     (setq out (concat out S)))
+	    ((symbolp S)
+	     (setq out (concat out (symbol-value S))))))
+    out))
 
 (defun semantic-grammar-footer ()
   "Return text of a generated standard footer."
   (let* ((file (semantic-grammar-buffer-file
                 semantic--grammar-output-buffer))
-         (libr (file-name-sans-extension file)))
-    (Sformat '((?F file)
-               (?L libr))
-             semantic-grammar-footer-template)))
+         (libr (file-name-sans-extension file))
+	 (out ""))
+    (dolist (S semantic-grammar-footer-template)
+      (cond ((stringp S)
+	     (setq out (concat out S)))
+	    ((symbolp S)
+	     (setq out (concat out (symbol-value S))))))
+    out))
 
 (defun semantic-grammar-token-data ()
   "Return the string value of the table of lexical tokens."
@@ -665,7 +668,7 @@ Typically a DEFINE expression should look like this:
                  (car delim-spec) (symbolp (car delim-spec))
                  (cadr delim-spec) (symbolp (cadr delim-spec)))
             delim-spec
-          (error)))
+          (error "Invalid delimiter")))
     (error
      (error "Invalid delimiters specification %s in block token %s"
             (cdr block-spec) (car block-spec)))))
@@ -905,6 +908,12 @@ Lisp code."
         ;; If running interactively, eval declarations and epilogue
         ;; code, then pop to the buffer visiting the generated file.
         (eval-region (point) (point-max))
+	;; Loop over the defvars and eval them explicitly to force
+	;; them to be evaluated and ready to use.
+        (goto-char (point-min))
+	(while (re-search-forward "(defvar " nil t)
+	  (eval-defun nil))
+	;; Move cursor to a logical spot in the generated code.
         (goto-char (point-min))
         (pop-to-buffer (current-buffer))
         ;; The generated code has been evaluated and updated into
@@ -912,7 +921,7 @@ Lisp code."
         ;; have created this language for, and force them to call our
         ;; setup function again, refreshing all semantic data, and
         ;; enabling them to work with the new code just created.
-;;;; FIXME?
+
         ;; At this point, I don't know any user's defined setup code :-(
         ;; At least, what I can do for now, is to run the generated
         ;; parser-install function.
@@ -924,7 +933,7 @@ Lisp code."
     output))
 
 (defun semantic-grammar-recreate-package ()
-  "Unconditionnaly create Lisp code from grammar in current buffer.
+  "Unconditionally create Lisp code from grammar in current buffer.
 Like \\[universal-argument] \\[semantic-grammar-create-package]."
   (interactive)
   (semantic-grammar-create-package t))
@@ -1513,7 +1522,7 @@ library found in DEF."
           (list mac lib))))
 
 (defun semantic--grammar-macro-compl-dict ()
-  "Return a completion dictionnary of macro definitions."
+  "Return a completion dictionary of macro definitions."
   (let ((defs (semantic-grammar-macros))
         def dups dict)
     (while defs
@@ -1639,8 +1648,16 @@ EXPANDER is the name of the function that expands MACRO."
        (t
         (setq doc (eldoc-function-argstring expander))))
       (when doc
-        (setq doc (eldoc-docstring-format-sym-doc
-                   macro (format "==> %s %s" expander doc)))
+        (setq doc
+	      (condition-case nil
+		  (eldoc-docstring-format-sym-doc
+                   macro (format "==> %s %s" expander doc)
+		   'default)
+		;; Older emacsen w/out the third arg here.
+		(error
+		 (eldoc-docstring-format-sym-doc
+		  macro (format "==> %s %s" expander doc)))))
+		
         (eldoc-last-data-store expander doc 'function))
       doc)))
 
@@ -1868,8 +1885,7 @@ Optional argument COLOR determines if color is added to the text."
   (if (semantic-grammar-in-lisp-p)
       (with-mode-local emacs-lisp-mode
 	(semantic-analyze-possible-completions context))
-    (save-excursion
-      (set-buffer (oref context buffer))
+    (with-current-buffer (oref context buffer)
       (let* ((prefix (car (oref context :prefix)))
 	     (completetext (cond ((semantic-tag-p prefix)
 				  (semantic-tag-name prefix))

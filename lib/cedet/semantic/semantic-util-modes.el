@@ -1,12 +1,12 @@
 ;;; semantic-util-modes.el --- Semantic minor modes
 
-;;; Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 ;;; Copyright (C) 2001 David Ponce
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Author: David Ponce <david@dponce.com>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-util-modes.el,v 1.70 2009/04/23 21:44:07 zappo Exp $
+;; X-RCS: $Id: semantic-util-modes.el,v 1.78 2010/04/09 02:24:54 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -101,7 +101,7 @@ Only minor modes that are locally enabled are shown in the mode line."
                 ml (cdr ml))
           (when (and (symbol-value mm)
                      ;; Only show local minor mode status
-                     (not (memq mm semantic-init-hooks)))
+                     (not (memq mm semantic-init-hook)))
             (and ms
                  (symbolp ms)
                  (setq ms (symbol-value ms)))
@@ -183,26 +183,26 @@ function used to toggle the mode."
   (or (and (fboundp mode) (assq mode minor-mode-alist))
       (error "Semantic minor mode %s not found" mode))
   (if (not arg)
-      (if (memq mode semantic-init-hooks)
+      (if (memq mode semantic-init-hook)
 	  (setq arg -1)
 	(setq arg 1)))
   ;; Add or remove the MODE toggle function from
-  ;; `semantic-init-hooks'.  Then turn MODE on or off in every
+  ;; `semantic-init-hook'.  Then turn MODE on or off in every
   ;; Semantic enabled buffer.
   (cond
    ;; Turn off if ARG < 0
    ((< arg 0)
-    (remove-hook 'semantic-init-hooks mode)
+    (remove-hook 'semantic-init-hook mode)
     (semantic-map-buffers #'(lambda () (funcall mode -1)))
     nil)
    ;; Turn on if ARG > 0
    ((> arg 0)
-    (add-hook 'semantic-init-hooks mode)
+    (add-hook 'semantic-init-hook mode)
     (semantic-map-buffers #'(lambda () (funcall mode 1)))
     t)
    ;; Otherwise just check MODE state
    (t
-    (memq mode semantic-init-hooks))
+    (memq mode semantic-init-hook))
    ))
 
 ;;;;
@@ -307,7 +307,7 @@ minor mode is enabled."
           (not semantic-highlight-edits-mode)))
   (semantic-highlight-edits-mode-setup)
   (run-hooks 'semantic-highlight-edits-mode-hook)
-  (if (interactive-p)
+  (if (cedet-called-interactively-p 'interactive)
       (message "highlight-edits minor mode %sabled"
                (if semantic-highlight-edits-mode "en" "dis")))
   (semantic-mode-line-update)
@@ -334,7 +334,7 @@ If ARG is nil, then toggle."
 
 ;;;###autoload
 (defcustom global-semantic-show-unmatched-syntax-mode nil
-  "*If non-nil, enable global use of `semantic-show-unmatched-syntax-mode'.
+  "If non-nil, enable global use of `semantic-show-unmatched-syntax-mode'.
 When this mode is enabled, syntax in the current buffer which the
 semantic parser cannot match is highlighted with a red underline."
   :group 'semantic
@@ -346,7 +346,7 @@ semantic parser cannot match is highlighted with a red underline."
          (global-semantic-show-unmatched-syntax-mode (if val 1 -1))))
 
 (defcustom semantic-show-unmatched-syntax-mode-hook nil
-  "*Hook run at the end of function `semantic-show-unmatched-syntax-mode'."
+  "Hook run at the end of function `semantic-show-unmatched-syntax-mode'."
   :group 'semantic
   :type 'hook)
 
@@ -355,8 +355,8 @@ semantic parser cannot match is highlighted with a red underline."
      (:underline "red"))
     (((class color) (background light))
      (:underline "red")))
-  "*Face used to show unmatched syntax in.
-The face is used in  `semantic-show-unmatched-syntax-mode'."
+  "Face used to show unmatched syntax in.
+The face is used in `semantic-show-unmatched-syntax-mode'."
   :group 'semantic-faces)
 
 (defsubst semantic-unmatched-syntax-overlay-p (overlay)
@@ -489,7 +489,7 @@ minor mode is enabled."
     ;; Cleanup unmatched-syntax highlighting
     (semantic-clean-unmatched-syntax-in-buffer))
   semantic-show-unmatched-syntax-mode)
-  
+
 ;;;###autoload
 (defun semantic-show-unmatched-syntax-mode (&optional arg)
   "Minor mode to highlight unmatched lexical syntax tokens.
@@ -515,7 +515,7 @@ minor mode is enabled.
           (not semantic-show-unmatched-syntax-mode)))
   (semantic-show-unmatched-syntax-mode-setup)
   (run-hooks 'semantic-show-unmatched-syntax-mode-hook)
-  (if (interactive-p)
+  (if (cedet-called-interactively-p 'interactive)
       (message "show-unmatched-syntax minor mode %sabled"
                (if semantic-show-unmatched-syntax-mode "en" "dis")))
   (semantic-mode-line-update)
@@ -541,7 +541,7 @@ minor mode is enabled.
 (defcustom global-semantic-show-parser-state-mode nil
   "*If non-nil enable global use of `semantic-show-parser-state-mode'.
 When enabled, the current parse state of the current buffer is displayed
-in the mode line. See `semantic-show-parser-state-marker' for details
+in the mode line.  See `semantic-show-parser-state-marker' for details
 on what is displayed."
   :group 'semantic
   :type 'boolean
@@ -599,8 +599,8 @@ minor mode is enabled."
         (semantic-make-local-hook 'semantic-edits-new-change-hooks)
         (add-hook 'semantic-edits-new-change-hooks
                   'semantic-show-parser-state-marker nil t)
-	(semantic-make-local-hook 'semantic-edits-incremental-reparse-failed-hooks)
-	(add-hook 'semantic-edits-incremental-reparse-failed-hooks
+	(semantic-make-local-hook 'semantic-edits-incremental-reparse-failed-hook)
+	(add-hook 'semantic-edits-incremental-reparse-failed-hook
 		  'semantic-show-parser-state-marker nil t)
 	(semantic-make-local-hook 'semantic-after-partial-cache-change-hook)
 	(add-hook 'semantic-after-partial-cache-change-hook
@@ -617,11 +617,11 @@ minor mode is enabled."
 	(add-hook 'semantic-after-auto-parse-hooks
 		  'semantic-show-parser-state-marker nil t)
 
-	(semantic-make-local-hook 'semantic-before-idle-scheduler-reparse-hooks)
-	(add-hook 'semantic-before-idle-scheduler-reparse-hooks
+	(semantic-make-local-hook 'semantic-before-idle-scheduler-reparse-hook)
+	(add-hook 'semantic-before-idle-scheduler-reparse-hook
 		  'semantic-show-parser-state-auto-marker nil t)
-	(semantic-make-local-hook 'semantic-after-idle-scheduler-reparse-hooks)
-	(add-hook 'semantic-after-idle-scheduler-reparse-hooks
+	(semantic-make-local-hook 'semantic-after-idle-scheduler-reparse-hook)
+	(add-hook 'semantic-after-idle-scheduler-reparse-hook
 		  'semantic-show-parser-state-marker nil t)
         )
     ;; Remove parts of mode line
@@ -630,7 +630,7 @@ minor mode is enabled."
     ;; Remove hooks
     (remove-hook 'semantic-edits-new-change-hooks
 		 'semantic-show-parser-state-marker t)
-    (remove-hook 'semantic-edits-incremental-reparse-failed-hooks
+    (remove-hook 'semantic-edits-incremental-reparse-failed-hook
 		 'semantic-show-parser-state-marker t)
     (remove-hook 'semantic-after-partial-cache-change-hook
 		 'semantic-show-parser-state-marker t)
@@ -642,9 +642,9 @@ minor mode is enabled."
     (remove-hook 'semantic-after-auto-parse-hooks
 		 'semantic-show-parser-state-marker t)
 
-    (remove-hook 'semantic-before-idle-scheduler-reparse-hooks
+    (remove-hook 'semantic-before-idle-scheduler-reparse-hook
 		 'semantic-show-parser-state-auto-marker t)
-    (remove-hook 'semantic-after-idle-scheduler-reparse-hooks
+    (remove-hook 'semantic-after-idle-scheduler-reparse-hook
 		 'semantic-show-parser-state-marker t)
     )
   semantic-show-parser-state-mode)
@@ -653,7 +653,7 @@ minor mode is enabled."
 (defun semantic-show-parser-state-mode (&optional arg)
   "Minor mode for displaying parser cache state in the modeline.
 The cache can be in one of three states.  They are
-Up to date, Partial reprase needed, and Full reparse needed.
+Up to date, Partial reparse needed, and Full reparse needed.
 The state is indicated in the modeline with the following characters:
  `-'  ->  The cache is up to date.
  `!'  ->  The cache requires a full update.
@@ -675,7 +675,7 @@ minor mode is enabled."
           (not semantic-show-parser-state-mode)))
   (semantic-show-parser-state-mode-setup)
   (run-hooks 'semantic-show-parser-state-mode-hook)
-  (if (interactive-p)
+  (if (cedet-called-interactively-p 'interactive)
       (message "show-parser-state minor mode %sabled"
                (if semantic-show-parser-state-mode "en" "dis")))
   (semantic-mode-line-update)
@@ -786,7 +786,7 @@ This makes it appear that the first line of that tag is
       ]
     [ "Narrow To Headerline Tag" senator-narrow-to-defun
       :active (semantic-current-tag)
-      :help "Narrow to the bounds of the current tag."]
+      :help "Narrow to the bounds of the current tag"]
     [ "Fold Headerline Tag" senator-fold-tag-toggle
       :active (semantic-current-tag)
       :style toggle
@@ -823,7 +823,7 @@ Use the command `semantic-stickyfunc-mode' to change this variable.")
 		     (eq scrollpos t))
 		 (let ((w (when (boundp 'scroll-bar-width)
 			    (symbol-value 'scroll-bar-width))))
-		 
+
 		   (if (not w)
 		       (setq w (frame-parameter (selected-frame)
 						'scroll-bar-width)))
@@ -873,7 +873,7 @@ when it lands in the sticky line."
   :type 'string)
 
 (defvar semantic-stickyfunc-old-hlf nil
-  "Value of the header line when entering sticky func mode.")
+  "Value of the header line when entering stickyfunc mode.")
 
 (defconst semantic-stickyfunc-header-line-format
   (cond ((featurep 'xemacs)
@@ -887,13 +887,13 @@ when it lands in the sticky line."
 	 '(:eval (list semantic-stickyfunc-indent-string
 		       (semantic-stickyfunc-fetch-stickyline))))
 	(t nil))
-  "The header line format used by sticky func mode.")
+  "The header line format used by stickyfunc mode.")
 
 (defun semantic-stickyfunc-mode-setup ()
   "Setup option `semantic-stickyfunc-mode'.
 For semantic enabled buffers, make the function declaration for the top most
 function \"sticky\".  This is accomplished by putting the first line of
-text for that function in Emacs 21's header line."
+text for that function in the header line."
   (if semantic-stickyfunc-mode
       (progn
 	(unless (and (featurep 'semantic) (semantic-active-p))
@@ -930,7 +930,7 @@ Enables/disables making the header line of functions sticky.
 A function (or other tag class specified by
 `semantic-stickyfunc-sticky-classes') has a header line, meaning the
 first line which describes the rest of the construct.  This first
-line is what is displayed in the Emacs 21 header line.
+line is what is displayed in the header line.
 
 With prefix argument ARG, turn on if positive, otherwise off.  The
 minor mode can be turned on only if semantic feature is available and
@@ -947,7 +947,7 @@ minor mode is enabled."
           (not semantic-stickyfunc-mode)))
   (semantic-stickyfunc-mode-setup)
   (run-hooks 'semantic-stickyfunc-mode-hook)
-  (if (interactive-p)
+  (if (cedet-called-interactively-p 'interactive)
       (message "Stickyfunc minor mode %sabled"
                (if semantic-stickyfunc-mode "en" "dis")))
   (semantic-mode-line-update)
@@ -957,6 +957,13 @@ minor mode is enabled."
   '(function type)
   "List of tag classes which sticky func will display in the header line.")
 (make-variable-buffer-local 'semantic-stickyfunc-sticky-classes)
+
+(defcustom semantic-stickyfunc-show-only-functions-p nil
+  "Non-nil means don't show lines that aren't part of a tag.
+If this is nil, then comments or other text between tags that is
+1 line above the top of the current window will be shown."
+  :group 'semantic
+  :type 'boolean)
 
 (defun semantic-stickyfunc-tag-to-stick ()
   "Return the tag to stick at the current point."
@@ -972,47 +979,52 @@ minor mode is enabled."
 
 (defun semantic-stickyfunc-fetch-stickyline ()
   "Make the function at the top of the current window sticky.
-Capture it's function declaration, and place it in the header line.
+Capture its function declaration, and place it in the header line.
 If there is no function, disable the header line."
-  (let ((str
-	 (save-excursion
-	   (goto-char (window-start (selected-window)))
-	   (forward-line -1)
-	   (end-of-line)
-	   ;; Capture this function
-	   (let* ((tag (semantic-stickyfunc-tag-to-stick)))
-	     ;; TAG is nil if there was nothing of the apropriate type there.
-	     (if (not tag)
-		 ;; Set it to be the text under the header line
-		 (buffer-substring (point-at-bol) (point-at-eol))
-	       ;; Get it
-	       (goto-char (semantic-tag-start tag))
-               ;; Klaus Berndl <klaus.berndl@sdm.de>:
-               ;; goto the tag name; this is especially needed for languages
-               ;; like c++ where a often used style is like:
-               ;;     void
-               ;;     ClassX::methodM(arg1...)
-               ;;     {
-               ;;       ...
-               ;;     }
-               ;; Without going to the tag-name we would get"void" in the
-               ;; header line which is IMHO not really useful
-               (search-forward (semantic-tag-name tag) nil t)
-	       (buffer-substring (point-at-bol) (point-at-eol))
-	       ))))
-	(start 0))
-    (while (string-match "%" str start)
-      (setq str (replace-match "%%" t t str 0)
-	    start (1+ (match-end 0)))
-      )
-    ;; In 21.4 (or 22.1) the heder doesn't expand tabs.  Hmmmm.
-    ;; We should replace them here.
-    ;;
-    ;; This hack assumes that tabs are kept smartly at tab boundaries
-    ;; instead of in a tab boundary where it might only represent 4 spaces.
-    (while (string-match "\t" str start)
-      (setq str (replace-match "        " t t str 0)))
-    str))
+  (save-excursion
+    (goto-char (window-start (selected-window)))
+    (let* ((noshow (bobp))
+	   (str
+	    (progn
+	      (forward-line -1)
+	      (end-of-line)
+	      ;; Capture this function
+	      (let* ((tag (semantic-stickyfunc-tag-to-stick)))
+		;; TAG is nil if there was nothing of the appropriate type there.
+		(if (not tag)
+		    ;; Set it to be the text under the header line
+		    (if noshow ""
+		      (if semantic-stickyfunc-show-only-functions-p ""
+			(buffer-substring (point-at-bol) (point-at-eol))
+			))
+		  ;; Go get the first line of this tag.
+		  (goto-char (semantic-tag-start tag))
+		  ;; Klaus Berndl <klaus.berndl@sdm.de>:
+		  ;; goto the tag name; this is especially needed for languages
+		  ;; like c++ where a often used style is like:
+		  ;;     void
+		  ;;     ClassX::methodM(arg1...)
+		  ;;     {
+		  ;;       ...
+		  ;;     }
+		  ;; Without going to the tag-name we would get"void" in the
+		  ;; header line which is IMHO not really useful
+		  (search-forward (semantic-tag-name tag) nil t)
+		  (buffer-substring (point-at-bol) (point-at-eol))
+		  ))))
+	   (start 0))
+      (while (string-match "%" str start)
+	(setq str (replace-match "%%" t t str 0)
+	      start (1+ (match-end 0)))
+	)
+      ;; In 21.4 (or 22.1) the header doesn't expand tabs.  Hmmmm.
+      ;; We should replace them here.
+      ;;
+      ;; This hack assumes that tabs are kept smartly at tab boundaries
+      ;; instead of in a tab boundary where it might only represent 4 spaces.
+      (while (string-match "\t" str start)
+	(setq str (replace-match "        " t t str 0)))
+      str)))
 
 (defun semantic-stickyfunc-menu (event)
   "Popup a menu that can help a user understand stickyfunc-mode.
@@ -1041,7 +1053,7 @@ Argument EVENT describes the event that caused this function to be called."
 ;;;;
 
 ;; Highlight the first like of the function we are in if it is different
-;; from the the tag going off the top of the screen.
+;; from the tag going off the top of the screen.
 
 ;;;###autoload
 (defun global-semantic-highlight-func-mode (&optional arg)
@@ -1055,7 +1067,7 @@ If ARG is nil, then toggle."
 
 ;;;###autoload
 (defcustom global-semantic-highlight-func-mode nil
-  "*If non-nil, enable global use of `semantic-highlight-func-mode'.
+  "If non-nil, enable global use of `semantic-highlight-func-mode'.
 When enabled, the first line of the current tag is highlighted."
   :group 'semantic
   :group 'semantic-modes
@@ -1066,7 +1078,7 @@ When enabled, the first line of the current tag is highlighted."
          (global-semantic-highlight-func-mode (if val 1 -1))))
 
 (defcustom semantic-highlight-func-mode-hook nil
-  "*Hook run at the end of function `semantic-highlight-func-mode'."
+  "Hook run at the end of function `semantic-highlight-func-mode'."
   :group 'semantic
   :type 'hook)
 
@@ -1099,7 +1111,7 @@ When enabled, the first line of the current tag is highlighted."
       ]
     [ "Narrow To Tag" senator-narrow-to-defun
       :active (semantic-current-tag)
-      :help "Narrow to the bounds of the current tag."]
+      :help "Narrow to the bounds of the current tag"]
     [ "Fold Tag" senator-fold-tag-toggle
       :active (semantic-current-tag)
       :style toggle
@@ -1148,7 +1160,7 @@ Use the command `semantic-highlight-func-mode' to change this variable.")
 
 (defun semantic-highlight-func-mode-setup ()
   "Setup option `semantic-highlight-func-mode'.
-For semantic enabled buffers, highlight the first line of the
+For Semantic enabled buffers, highlight the first line of the
 current tag declaration."
   (if semantic-highlight-func-mode
       (progn
@@ -1168,12 +1180,12 @@ current tag declaration."
 ;;;###autoload
 (defun semantic-highlight-func-mode (&optional arg)
   "Minor mode to highlight the first line of the current tag.
-Enables/disables making the header line of functions sticky.
+Enables/disables making current function first line light up.
 A function (or other tag class specified by
-`semantic-stickfunc-sticky-classes') is highlighted, meaning the
+`semantic-stickyfunc-sticky-classes') is highlighted, meaning the
 first line which describes the rest of the construct.
 
-See `semantic-stickfunc-mode' for putting a function in the
+See `semantic-stickyfunc-mode' for putting a function in the
 header line.  This mode recycles the stickyfunc configuration
 classes list.
 
@@ -1192,7 +1204,7 @@ minor mode is enabled."
           (not semantic-highlight-func-mode)))
   (semantic-highlight-func-mode-setup)
   (run-hooks 'semantic-highlight-func-mode-hook)
-  (if (interactive-p)
+  (if (cedet-called-interactively-p 'interactive)
       (message "Highlight-Func minor mode %sabled"
                (if semantic-highlight-func-mode "en" "dis")))
   semantic-highlight-func-mode)
@@ -1221,7 +1233,7 @@ function was called, move the overlay."
 	(setq semantic-highlight-func-ct-overlay ol)
 	)
 
-      ;; TAG is nil if there was nothing of the apropriate type there.
+      ;; TAG is nil if there was nothing of the appropriate type there.
       (if (or (not tag) disable)
 	  ;; No tag, make the overlay go away.
 	  (progn

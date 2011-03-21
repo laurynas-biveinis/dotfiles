@@ -3,7 +3,7 @@
 ;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-args.el,v 1.8 2009/01/16 01:27:10 zappo Exp $
+;; X-RCS: $Id: srecode-args.el,v 1.10 2010/03/26 22:18:07 xscript Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -26,7 +26,7 @@
 ;; sets of dictionary words that need to be derived.  This file contains
 ;; a set of simple arguments for srecode templates.
 
-(require 'srecode-insert)
+(require 'srecode-dictionary)
 
 ;;; Code:
 
@@ -34,12 +34,12 @@
 ;;
 ;; Using :blank means that the template should force blank lines
 ;; before and after the template, reguardless of where the insertion
-;; is occuring.
+;; is occurring.
 ;;;###autoload
 (defun srecode-semantic-handle-:blank (dict)
   "Add macros into the dictionary DICT specifying blank line spacing.
 The wrapgap means make sure the first and last lines of the macro
-do not contain any text from preceeding or following text."
+do not contain any text from preceding or following text."
   ;; This won't actually get used, but it might be nice
   ;; to know about it.
   (srecode-dictionary-set-value dict "BLANK" t)

@@ -1,6 +1,6 @@
 ;; srecode-dot.srt --- 
 ;;
-;; Copyright (C) 2009 Eric M. Ludlam
+;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
 ;;
@@ -47,10 +47,12 @@ template cogre :time :dot :cogre
 context declaration
 
 template digraph-tag :blank
-"Insert a digraph structure."
+"Insert a digraph structure.
+NOTE: Using Courier font allows Emacs monospace fonts to match the
+layout specified by dot with a simple ratio."
 ----
 digraph structs {
-	node [shape=record];
+	node [shape=record fontsize=12 fontname=Courier];
 	{{^}}
 }
 ----

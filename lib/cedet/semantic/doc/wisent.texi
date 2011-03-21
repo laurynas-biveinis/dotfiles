@@ -870,9 +870,9 @@ that the input cursor.
 @group
 state 0
 
-    NUM	shift, and go to state 1
+    NUM shift, and go to state 1
 
-    exp	go to state 2
+    exp go to state 2
 @end group
 @end example
 
@@ -892,7 +892,7 @@ state 1
 
     exp  ->  NUM .   (rule 5)
 
-    $default	reduce using rule 5 (exp)
+    $default    reduce using rule 5 (exp)
 @end group
 @end example
 
@@ -910,11 +910,11 @@ state 2
     exp  ->  exp . '*' exp   (rule 3)
     exp  ->  exp . '/' exp   (rule 4)
 
-    $EOI	shift, and go to state 11
-    '+'	shift, and go to state 3
-    '-'	shift, and go to state 4
-    '*'	shift, and go to state 5
-    '/'	shift, and go to state 6
+    $EOI        shift, and go to state 11
+    '+' shift, and go to state 3
+    '-' shift, and go to state 4
+    '*' shift, and go to state 5
+    '/' shift, and go to state 6
 @end group
 @end example
 
@@ -930,9 +930,9 @@ state 3
 
     exp  ->  exp '+' . exp   (rule 1)
 
-    NUM	shift, and go to state 1
+    NUM shift, and go to state 1
 
-    exp	go to state 7
+    exp go to state 7
 @end group
 @end example
 
@@ -947,9 +947,9 @@ state 4
 
     exp  ->  exp '-' . exp   (rule 2)
 
-    NUM	shift, and go to state 1
+    NUM shift, and go to state 1
 
-    exp	go to state 8
+    exp go to state 8
 
 
 
@@ -957,9 +957,9 @@ state 5
 
     exp  ->  exp '*' . exp   (rule 3)
 
-    NUM	shift, and go to state 1
+    NUM shift, and go to state 1
 
-    exp	go to state 9
+    exp go to state 9
 
 
 
@@ -967,9 +967,9 @@ state 6
 
     exp  ->  exp '/' . exp   (rule 4)
 
-    NUM	shift, and go to state 1
+    NUM shift, and go to state 1
 
-    exp	go to state 10
+    exp go to state 10
 @end group
 @end example
 
@@ -986,11 +986,11 @@ state 7
     exp  ->  exp . '*' exp   (rule 3)
     exp  ->  exp . '/' exp   (rule 4)
 
-    '*'	shift, and go to state 5
-    '/'	shift, and go to state 6
+    '*' shift, and go to state 5
+    '/' shift, and go to state 6
 
-    '/'	[reduce using rule 1 (exp)]
-    $default	reduce using rule 1 (exp)
+    '/' [reduce using rule 1 (exp)]
+    $default    reduce using rule 1 (exp)
 @end group
 @end example
 
@@ -1032,11 +1032,11 @@ state 8
     exp  ->  exp . '*' exp   (rule 3)
     exp  ->  exp . '/' exp   (rule 4)
 
-    '*'	shift, and go to state 5
-    '/'	shift, and go to state 6
+    '*' shift, and go to state 5
+    '/' shift, and go to state 6
 
-    '/'	[reduce using rule 2 (exp)]
-    $default	reduce using rule 2 (exp)
+    '/' [reduce using rule 2 (exp)]
+    $default    reduce using rule 2 (exp)
 
 
 
@@ -1048,10 +1048,10 @@ state 9
     exp  ->  exp '*' exp .   (rule 3)
     exp  ->  exp . '/' exp   (rule 4)
 
-    '/'	shift, and go to state 6
+    '/' shift, and go to state 6
 
-    '/'	[reduce using rule 3 (exp)]
-    $default	reduce using rule 3 (exp)
+    '/' [reduce using rule 3 (exp)]
+    $default    reduce using rule 3 (exp)
 
 
 
@@ -1063,16 +1063,16 @@ state 10
     exp  ->  exp . '/' exp   (rule 4)
     exp  ->  exp '/' exp .   (rule 4)
 
-    '+'	shift, and go to state 3
-    '-'	shift, and go to state 4
-    '*'	shift, and go to state 5
-    '/'	shift, and go to state 6
+    '+' shift, and go to state 3
+    '-' shift, and go to state 4
+    '*' shift, and go to state 5
+    '/' shift, and go to state 6
 
-    '+'	[reduce using rule 4 (exp)]
-    '-'	[reduce using rule 4 (exp)]
-    '*'	[reduce using rule 4 (exp)]
-    '/'	[reduce using rule 4 (exp)]
-    $default	reduce using rule 4 (exp)
+    '+' [reduce using rule 4 (exp)]
+    '-' [reduce using rule 4 (exp)]
+    '*' [reduce using rule 4 (exp)]
+    '/' [reduce using rule 4 (exp)]
+    $default    reduce using rule 4 (exp)
 @end group
 @end example
 
@@ -1087,13 +1087,13 @@ Finally, the state 11 (plus 12) is named the @dfn{final state}, or the
 @group
 state 11
 
-    $EOI	shift, and go to state 12
+    $EOI        shift, and go to state 12
 
 
 
 state 12
 
-    $default	accept
+    $default    accept
 @end group
 @end example
 

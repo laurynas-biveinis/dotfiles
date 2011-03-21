@@ -1,6 +1,6 @@
 ;;; cogre-mode.el --- Graph editing mode
 
-;;; Copyright (C) 2001, 2002, 2003, 2007, 2009 Eric M. Ludlam
+;;; Copyright (C) 2001, 2002, 2003, 2007, 2009, 2010 Eric M. Ludlam
 
 ;; This file is not part of GNU Emacs.
 
@@ -78,6 +78,7 @@ Argument OLDFUN is removed NEWFUN is substituted in."
     (define-key km "L" 'cogre-new-link)
     (define-key km "D" 'cogre-delete)
     (define-key km "U" 'cogre-update-node-from-source)
+    (define-key km "J" 'cogre-jump-from-node-to-peer)
     ;; Changing and Setting Defaults
     (define-key km "\C-c\C-n" 'cogre-default-node)
     (define-key km "\C-c\C-l" 'cogre-default-link)
@@ -180,6 +181,7 @@ Argument OLDFUN is removed NEWFUN is substituted in."
     [ "Rename" cogre-set-element-name t ]
     [ "View/Edit" cogre-activate-element t ]
     [ "Update Node from Peer" cogre-update-node-from-source (cogre-node-with-peer) ]
+    [ "Jump to Peer" cogre-jump-from-node-to-peer (cogre-node-with-peer) ]
     "---"
     [ "Kill Node" cogre-kill-element (cogre-current-element) ]
     [ "Copy Node" cogre-copy-element (cogre-current-element) ]
@@ -254,7 +256,7 @@ Argument MENU-DEF is the easy-menu definition."
       ))))
 
 (defun cogre-change-forms-menu (menu-def)
-  "Create a menu for cogre CHANGE item.
+  "Create a menu for a cogre node item.
 Argument MENU-DEF is the easy-menu definition."
   (easy-menu-filter-return
    (easy-menu-create-menu
@@ -371,7 +373,7 @@ If it is already drawing a graph, then don't convert."
   (not (ring-empty-p senator-tag-ring)))
 
 (defun cogre-node-with-peer ()
-  "Return no-nil if there is a node with a peer under the cursor."
+  "Return non-nil if there is a node with a peer under the cursor."
   (let* ((node (cogre-current-element (point))))
     (and node (oref node peer))))
 
@@ -427,7 +429,7 @@ in to the created node."
 	   (n (apply 'make-instance nodetype (oref nodetype name-default)
 		     :position (vector x y)
 		     fields)))
-      (when (interactive-p)
+      (when (cedet-called-interactively-p)
 	(cogre-render n)
 	)
       ;; Return the node.
@@ -444,7 +446,7 @@ LINKTYPE is the eieio class name for the link to insert."
   (if (not linktype) (setq linktype cogre-link))
   (let ((l (make-instance linktype "Link" :start mark :end point)))
 
-    (when (interactive-p)
+    (when (cedet-called-interactively-p)
       (cogre-render l))
     l))
 
@@ -582,7 +584,7 @@ It will redraw the links too."
 		 (list e  (read-string "New Name: " name)))))
   (cogre-erase node)
   (oset node object-name (cogre-unique-name cogre-graph name))
-  (when (interactive-p)
+  (when (cedet-called-interactively-p)
     (cogre-render-node-after-erase node)
     (cogre-goto-element node)
     ;; If the user changes the name, update the peer.
@@ -598,7 +600,7 @@ It will redraw the links too."
 		 (list e  (read-string "New Package Name: " name)))))
   (cogre-erase node)
   (oset node package-name package)
-  (when (interactive-p)
+  (when (cedet-called-interactively-p)
     (cogre-render-node-after-erase node)
     (cogre-goto-element node)
     ;; If the user changes the name, update the peer.
@@ -618,6 +620,17 @@ The source is defined by the peer belonging to NODE."
       (cogre-peer-update-from-source peer node)
       (cogre-render-node-after-erase node)
       (cogre-goto-element node)
+      )))
+
+(defun cogre-jump-from-node-to-peer (node)
+  "Jump to some representation of the peer from NODE.
+The source is defined by the peer belonging to NODE."
+  (interactive (list (cogre-node-at-point-interactive)))
+  (let ((peer (oref node peer))
+	(win (selected-window)))
+    (if (not peer)
+	(message "No peer to visit.")
+      (cogre-peer-jump-to-source peer node)
       )))
 
 (defun cogre-update-graph-from-source ()
@@ -867,7 +880,10 @@ Pops up a context menu of various activities to perform."
 	 (t
 	  (popup-menu cogre-mode-create-popup-menu)))
 	))
-    (select-window startwin)))
+    ;; If the selected window didn't change, then go back to the old window.
+    ;; If it did change, leave this state alone.
+    (when (eq win (selected-window))
+      (select-window startwin)) ))
 
 (provide 'cogre-mode)
 

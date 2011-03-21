@@ -1,9 +1,9 @@
 ;;; semantic-decorate-include.el --- Decoration modes for include statements
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-decorate-include.el,v 1.23 2009/04/23 03:17:36 zappo Exp $
+;; X-RCS: $Id: semantic-decorate-include.el,v 1.30 2010/04/09 01:56:22 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -25,7 +25,7 @@
 ;; Highlight any include that is in a state the user may care about.
 ;; The basic idea is to have the state be highly visible so users will
 ;; as 'what is this?" and get the info they need to fix problems that
-;; are otherwises transparent when trying to get smart completion
+;; are otherwise transparent when trying to get smart completion
 ;; working.
 
 (require 'semantic-decorate-mode)
@@ -61,7 +61,7 @@ Used by the decoration style: `semantic-decoration-on-includes'."
   semantic-decoration-on-include-menu
   semantic-decoration-on-include-map
   "Include Menu"
-  (list 
+  (list
    "Include"
    (semantic-menu-item
     ["What Is This?" semantic-decoration-include-describe
@@ -101,7 +101,7 @@ Used by the decoration style: `semantic-decoration-on-includes'."
     ["Remove a System Include Path" semantic-remove-system-include
      :active t
      :help "Add an include path for this session." ])
-   ;;["" semantic-decoration-include- 
+   ;;["" semantic-decoration-include-
    ;; :active t
    ;; :help "" ]
    ))
@@ -112,7 +112,7 @@ Used by the decoration style: `semantic-decoration-on-includes'."
   '((((class color) (background dark))
      (:background "#900000"))
     (((class color) (background light))
-     (:background "#ff5050")))
+     (:background "#fff0f0")))
   "*Face used to show includes that cannot be found.
 Used by the decoration style: `semantic-decoration-on-unknown-includes'."
   :group 'semantic-faces)
@@ -242,7 +242,7 @@ Used by the decoration style: `semantic-decoration-on-unparsed-includes'."
     ["Remove a System Include Path" semantic-remove-system-include
      :active t
      :help "Add an include path for this session." ])
-   ;;["" semantic-decoration-unparsed-include- 
+   ;;["" semantic-decoration-unparsed-include-
    ;; :active t
    ;; :help "" ]
    ))
@@ -296,16 +296,19 @@ This mode provides a nice context menu on the include statements."
 	)
       ))
 
-    (let ((ol (semantic-decorate-tag tag
-				     (semantic-tag-start tag)
-				     (semantic-tag-end tag)
-				     face))
-	  )
-      (semantic-overlay-put ol 'mouse-face 'highlight)
-      (semantic-overlay-put ol 'keymap map)
-      (semantic-overlay-put ol 'help-echo
-			    "Header File : mouse-3 - Context menu")
-      )))
+    ;; @TODO - if not a tag w/ a position, we need to get one.  How?
+
+    (when (semantic-tag-with-position-p tag)
+      (let ((ol (semantic-decorate-tag tag
+				       (semantic-tag-start tag)
+				       (semantic-tag-end tag)
+				       face))
+	    )
+	(semantic-overlay-put ol 'mouse-face 'highlight)
+	(semantic-overlay-put ol 'keymap map)
+	(semantic-overlay-put ol 'help-echo
+			      "Header File : mouse-3 - Context menu")
+	))))
 
 ;;; Regular Include Functions
 ;;
@@ -318,7 +321,9 @@ Argument EVENT is the mouse clicked event."
 	 (file (semantic-dependency-tag-file tag))
 	 (table (when file
 		  (semanticdb-file-table-object file t))))
-    (with-output-to-temp-buffer "*Help*"
+    (with-output-to-temp-buffer (help-buffer) ; "*Help*"
+      (help-setup-xref (list #'semantic-decoration-include-describe)
+		       (cedet-called-interactively-p 'interactive))
       (princ "Include File: ")
       (princ (semantic-format-tag-name tag nil t))
       (princ "\n")
@@ -415,7 +420,9 @@ Argument EVENT is the mouse clicked event."
   (interactive)
   (let ((tag (semantic-current-tag))
 	(mm major-mode))
-    (with-output-to-temp-buffer "*Help*"
+    (with-output-to-temp-buffer (help-buffer) ; "*Help*"
+      (help-setup-xref (list #'semantic-decoration-unknown-include-describe)
+		       (cedet-called-interactively-p 'interactive))
       (princ "Include File: ")
       (princ (semantic-format-tag-name tag nil t))
       (princ "\n\n")
@@ -451,7 +458,7 @@ wrap existing project code for Semantic's benifit.
 
       (when (or (eq mm 'c++-mode) (eq mm 'c-mode))
 	(princ "
-For C/C++ includes located within a a project, you can use a special
+For C/C++ includes located within a project, you can use a special
 EDE project that will wrap an existing build system.  You can do that
 like this in your .emacs file:
 
@@ -495,7 +502,10 @@ Argument EVENT describes the event that caused this function to be called."
 Argument EVENT is the mouse clicked event."
   (interactive)
   (let ((tag (semantic-current-tag)))
-    (with-output-to-temp-buffer "*Help*"
+    (with-output-to-temp-buffer (help-buffer); "*Help*"
+      (help-setup-xref (list #'semantic-decoration-unparsed-include-describe)
+		       (cedet-called-interactively-p 'interactive))
+
       (princ "Include File: ")
       (princ (semantic-format-tag-name tag nil t))
       (princ "\n")
@@ -568,12 +578,15 @@ Argument EVENT describes the event that caused this function to be called."
 (defun semantic-decoration-all-include-summary ()
   "Provide a general summary for the state of all includes."
   (interactive)
-  
+
   (let* ((table semanticdb-current-table)
 	 (tags (semantic-fetch-tags))
 	 (inc (semantic-find-tags-by-class 'include table))
 	 )
-    (with-output-to-temp-buffer "*Help*"
+    (with-output-to-temp-buffer (help-buffer) ;"*Help*"
+      (help-setup-xref (list #'semantic-decoration-all-include-summary)
+		       (cedet-called-interactively-p 'interactive))
+
       (princ "Include Summary for File: ")
       (princ (file-truename (buffer-file-name)))
       (princ "\n")
@@ -746,4 +759,5 @@ If TABLE is not in a buffer, do nothing."
 
 
 (provide 'semantic-decorate-include)
+
 ;;; semantic-decorate-include.el ends here

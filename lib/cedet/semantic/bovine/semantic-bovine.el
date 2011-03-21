@@ -2,7 +2,7 @@
 
 ;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007 Eric M. Ludlam
 
-;; X-CVS: $Id: semantic-bovine.el,v 1.14 2007/09/02 17:07:30 zappo Exp $
+;; X-CVS: $Id: semantic-bovine.el,v 1.16 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -23,13 +23,13 @@
 
 ;;; Commentary:
 ;;
-;; Semantix 1.x uses an LL parser named the "bovinator".  This parser
+;; Semantic 1.x uses an LL parser named the "bovinator".  This parser
 ;; had several conveniences in it which made for parsing tags out of
 ;; languages with list characters easy.  This parser lives on as one
 ;; of many available parsers for semantic the tool.
 ;;
 ;; This parser should be used when the language is simple, such as
-;; makefiles or other data-declaritive langauges.
+;; makefiles or other data-declarative languages.
 
 ;;; Code:
 (require 'semantic)
@@ -146,7 +146,7 @@ list of semantic tokens found."
                       ;; In this case, we have an EMPTY match!  Make
                       ;; stuff up.
                       (setq cvl (list nil))))
-            
+
                 (while (and lte
                             (not (byte-code-function-p (car lte)))
                             (not (listp (car lte))))
@@ -170,11 +170,11 @@ list of semantic tokens found."
 
 			      )))
                   ;; END GRAMMAR SOURCE DEBUGGING!
-              
+
                   (cond
                    ;; We have a nonterminal symbol.  Recurse inline.
                    ((setq nt-loop (assq (car lte) table))
-          
+
                     (setq
                      ;; push state into the nt-stack
                      nt-stack (cons (vector matchlist cvl lte stream end
@@ -184,7 +184,7 @@ list of semantic tokens found."
                      matchlist   (cdr nt-loop)
                      ;; new non-terminal stream
                      stream      s)
-               
+
                     (throw 'push-non-terminal t)
 
                     )
@@ -254,7 +254,7 @@ list of semantic tokens found."
                           end         (aref state 4)
                           ;; update the stack
                           nt-stack    (cdr nt-stack))
-                
+
                     (if out
                         (let ((len (length out))
                               (strip (nreverse (cdr (cdr (reverse out))))))

@@ -1,9 +1,9 @@
 ;;; semantic-ectag-parse.el --- exuberent CTags into Semantic tags
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-ectag-parse.el,v 1.15 2009/03/16 09:39:08 ottalex Exp $
+;; X-RCS: $Id: semantic-ectag-parse.el,v 1.18 2010/04/09 02:02:47 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -53,13 +53,13 @@ Convert the output tags into Semantic tags."
   (when (not semantic-ectag-lang)
     (error "Exuberent CTag support for Semantic not configured for %s"
            major-mode))
-  (let* ((semantic-ectag-collect-errors (interactive-p))
+  (let* ((semantic-ectag-collect-errors (cedet-called-interactively-p 'any))
          (start (current-time))
          (tags
           (semantic-ectag-parse-file-with-mode (buffer-file-name) major-mode))
          (end (current-time)))
 
-    (when (interactive-p)
+    (when (cedet-called-interactively-p 'any)
       (message "Parsed %d tags in %d seconds."
                (length tags)
                (semantic-elapsed-time start end))
@@ -236,17 +236,17 @@ parents running forward, such as namespace/namespace/class"
          (type nil)
 
          (class-sym (cond
-                     ((member class '(function variable label program))
+                     ((member class '(function variable label program value))
                       class)
                      ((eq class 'prototype)
                       (setq prototype t)
                       'function)
-                     ((member class '(namespace class struct union enum typedef))
+                     ((member class '(namespace class trait struct union enum typedef))
                       (setq type (symbol-name class))
                       'type)
                      ((eq class 'member)
                       'variable)
-                     ((eq class 'include)
+                     ((member class '(include import))
                       'include)
                      ((or (eq class 'macro) (eq class 'define))
                       (setq const t)
@@ -359,7 +359,7 @@ text from a file where the tag was found.")
 (defun semantic-ectag-split-signature-summary-default (summary)
   "Default behavior for splitting a Exuberent CTags SUMMARY.
 Assume comma separated list."
-  (cedet-split-string summary "[(),]" t))
+  (cedet-split-string summary "[(), ]" t))
 
 (define-overloadable-function semantic-ectag-set-language-attributes (tag parents)
   "Augment TAG with additional attributes based on language.

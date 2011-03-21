@@ -1,11 +1,11 @@
 ;;; ede-dired.el --- EDE extensions to dired.
 
-;;;  Copyright (C) 1998, 99, 00, 03  Eric M. Ludlam
+;;;  Copyright (C) 1998, 1999, 2000, 2003, 2010  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Version: 0.4
 ;; Keywords: project, make
-;; RCS: $Id: ede-dired.el,v 1.10 2005/09/30 20:16:20 zappo Exp $
+;; RCS: $Id: ede-dired.el,v 1.13 2010/04/09 01:43:07 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ negative, force off."
 	(not (or (and (null arg) ede-dired-minor-mode)
 		 (<= (prefix-numeric-value arg) 0))))
   (if (and (not (ede-directory-project-p default-directory))
-	   (not (interactive-p)))
+	   (not (cedet-called-interactively-p)))
       (setq ede-dired-minor-mode nil))
   )
 
@@ -88,10 +88,9 @@ negative, force off."
   (let ((files (dired-get-marked-files t)))
     (while files
       (project-add-file target (car files))
-      ;; Find the buffer for this files, and set it's ede-object
+      ;; Find the buffer for this files, and set its ede-object
       (if (get-file-buffer (car files))
-	  (save-excursion
-	    (set-buffer (get-file-buffer (car files)))
+	  (with-current-buffer (get-file-buffer (car files))
 	    (setq ede-object nil)
 	    (setq ede-object (ede-buffer-object (current-buffer)))))
       ;; Increment.

@@ -1,10 +1,10 @@
 ;;; semantic-decorate.el --- Utilities for decorating/highlighting tokens.
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2009 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-decorate.el,v 1.18 2009/03/08 16:14:16 zappo Exp $
+;; X-RCS: $Id: semantic-decorate.el,v 1.19 2010/01/07 02:22:53 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -50,7 +50,7 @@ Optional FACE specifies the face to use."
 
 ;;;###autoload
 (defun semantic-unhighlight-tag (tag)
-  "Unhighlight TAG, restoring it's previous face."
+  "Unhighlight TAG, restoring its previous face."
   (let ((o (semantic-tag-overlay tag)))
     (semantic-overlay-put o 'face (car (semantic-overlay-get o 'old-face)))
     (semantic-overlay-put o 'old-face (cdr (semantic-overlay-get o 'old-face)))

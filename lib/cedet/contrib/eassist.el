@@ -1,6 +1,6 @@
 ;;; eassist.el --- EmacsAssist, C/C++/Java/Python/ELisp method/function navigator.
 
-;; Copyright (C) 2006, 2007 Anton V. Belyaev
+;; Copyright (C) 2006, 2007, 2010 Anton V. Belyaev
 ;; Author: Anton V. Belyaev <anton.belyaev at the gmail.com>
 
 ;; This file is *NOT* part of GNU Emacs.
@@ -21,7 +21,7 @@
 ;; MA 02111-1307 USA
 
 ;; Version: 0.9
-;; CEDET CVS Version: $Id: eassist.el,v 1.5 2008/02/23 20:35:54 kpoxman Exp $
+;; CEDET CVS Version: $Id: eassist.el,v 1.7 2010/02/08 23:29:59 zappo Exp $
 
 ;; Compatibility: Emacs 22 or 23, CEDET 1.0pre4
 
@@ -117,13 +117,13 @@
 ;; ================================== CPP-H switch ===========================
 ;;;###autoload
 (defvar eassist-header-switches '(("h" . ("cpp" "cc" "c"))
-			     ("hpp" . ("cpp" "cc"))
-			     ("cpp" . ("h" "hpp"))
-			     ("c" . ("h"))
-			     ("C" . ("H"))
-			     ("H" . ("C" "CPP" "CC"))
-			     ("cc" . ("h" "hpp")))
-"This variable defines possible switches for `eassist-switch-h-cpp' function.
+				  ("hpp" . ("cpp" "cc"))
+				  ("cpp" . ("h" "hpp"))
+				  ("c" . ("h"))
+				  ("C" . ("H"))
+				  ("H" . ("C" "CPP" "CC"))
+				  ("cc" . ("h" "hpp")))
+  "This variable defines possible switches for `eassist-switch-h-cpp' function.
 Its format is list of (from . (to1 to2 to3...)) elements.  From and toN are
 strings which are extentions of the files.")
 
@@ -143,7 +143,12 @@ for example *.hpp <--> *.cpp."
       (unless
           (or
            (loop for b in (mapcar (lambda (i) (concat base-name i)) count-ext)
-                 when (bufferp (get-buffer b)) return (switch-to-buffer b))
+		 when (bufferp (get-buffer b)) return
+ 		 (if (get-buffer-window b)
+ 		     (switch-to-buffer-other-window b)
+ 		   (if (get-buffer-window b t)
+ 		       (switch-to-buffer-other-frame b)
+ 		     (switch-to-buffer b))))
            (loop for c in (mapcar (lambda (count-ext) (concat base-path count-ext)) count-ext)
                  when (file-exists-p c) return (find-file c)))
         (message "There is no corresponding pair (header or body) file.")))

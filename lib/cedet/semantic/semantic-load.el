@@ -1,9 +1,9 @@
 ;;; semantic-load.el --- Autoload definitions for Semantic
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: semantic-load.el,v 1.67 2009/03/10 00:35:14 zappo Exp $
+;; X-RCS: $Id: semantic-load.el,v 1.72 2010/04/20 00:42:31 zappo Exp $
 
 ;; Semantic is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -102,18 +102,25 @@ This includes `semantic-load-enable-minimum-features' plus:
   `senator-minor-mode' - Semantic Navigator, and global menu for all
                          features Semantic.
   `semantic-mru-bookmark-mode' - Provides a `switch-to-buffer' like
-                       keybinding for tag names."
+                       keybinding for tag names.
+
+This also sets `semantic-idle-work-update-headers-flag' to t to
+pre-build your database of header files in idle time for features
+such as idle summary mode."
   (interactive)
 
   (semantic-load-enable-minimum-features)
 
+  ;; This enables parsing of header files.
+  (setq semantic-idle-work-update-headers-flag t)
+
   (when (and (eq window-system 'x)
 	     (locate-library "imenu"))
-    (add-hook 'semantic-init-hooks (lambda ()
-				     (condition-case nil
-					 (imenu-add-to-menubar
-					  semantic-load-imenu-string)
-				       (error nil)))))
+    (add-hook 'semantic-init-hook (lambda ()
+				    (condition-case nil
+					(imenu-add-to-menubar
+					 semantic-load-imenu-string)
+				      (error nil)))))
 
   (global-semantic-idle-summary-mode 1)
 
@@ -133,8 +140,13 @@ This includes `semantic-load-enable-code-helpers'.
   `semantic-decoration-mode' - Decorate tags based on various attributes.
   `semantic-decoration-on-includes' - Decoration style for include files.
   `semantic-idle-completions-mode' - Provide smart symbol completion
-                                 automatically at idle time."
+                                 automatically at idle time.
+
+This also sets `semantic-idle-work-parse-neighboring-files-flag' to t
+to pre-build your databases in idle time."
   (interactive)
+
+  (semantic-load-enable-code-helpers)
 
   (global-semantic-decoration-mode 1)
   (require 'semantic-decorate-include)
@@ -143,10 +155,12 @@ This includes `semantic-load-enable-code-helpers'.
     (global-semantic-stickyfunc-mode 1))
 
   (condition-case nil
-      (global-semantic-idle-completions-mode 1)
+      (progn
+	(global-semantic-idle-completions-mode 1)
+	;; Enable preparsing many neighboring files.
+	(setq semantic-idle-work-parse-neighboring-files-flag t)
+	)
     (error nil))
-
-  (semantic-load-enable-code-helpers)
   )
 
 (semantic-alias-obsolete 'semantic-load-enable-guady-code-helpers
@@ -156,21 +170,24 @@ This includes `semantic-load-enable-code-helpers'.
   "Enable all semantic features that provide coding assistance.
 This includes all features of `semantic-load-enable-gaudy-code-helpers' plus:
   `semantic-highlight-func-mode' - Highlight the current tag.
+  `semantic-idle-local-symbol-highlight-mode' - Highlight the tag for symbol at pt.
   `semantic-decoration-on-*-members' - Two decoration modes that
                     color the background of private and protected methods.
   `which-func-mode' - Display the current function in the mode line."
   (interactive)
 
+  (semantic-load-enable-gaudy-code-helpers)
+
   (global-semantic-highlight-func-mode 1)
 
-  (semantic-load-enable-gaudy-code-helpers)
+  (global-semantic-idle-local-symbol-highlight-mode 1)
 
   (semantic-toggle-decoration-style "semantic-decoration-on-private-members" t)
   (semantic-toggle-decoration-style "semantic-decoration-on-protected-members" t)
 
   (if (fboundp #'which-func-mode)
-      (add-hook 'semantic-init-hooks (lambda ()
-				       (which-func-mode 1))))
+      (add-hook 'semantic-init-hook (lambda ()
+				      (which-func-mode 1))))
   )
 
 (defun semantic-load-enable-semantic-debugging-helpers ()

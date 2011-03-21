@@ -8,7 +8,9 @@
     :name "ctags"
     :path ""
     :source '("semantic-ectag-util.el" "semantic-ectag-lang.el" "semantic-ectag-parse.el" "semanticdb-ectag.el" "semantic-ectag-lang2.el")
+    :compiler 'ede-emacs-preload-compiler
     :aux-packages '("mode-local" "semantic-fw" "eieio" "semantic-bovine.el")
+    :pre-load-packages '("cedet-compat")
     )
    )
   )

@@ -1,9 +1,9 @@
 ;;; ede-srecode.el --- EDE utilities on top of SRecoder
 
-;; Copyright (C) 2008 Eric M. Ludlam
+;; Copyright (C) 2008, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-srecode.el,v 1.2 2008/09/01 02:53:58 zappo Exp $
+;; X-RCS: $Id: ede-srecode.el,v 1.3 2010/07/24 13:54:36 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -46,6 +46,9 @@
     ;; We don't call this unless we need it.  Load in the templates.
     (srecode-load-tables-for-mode 'makefile-mode)
     (srecode-load-tables-for-mode 'makefile-mode 'ede)
+
+    (srecode-load-tables-for-mode 'autoconf-mode)
+    (srecode-load-tables-for-mode 'autoconf-mode 'ede)
 
     ;; @todo - autoconf files.
 

@@ -1,10 +1,10 @@
 ;;; semantic-sort.el --- Utilities for sorting and re-arranging tag tables.
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-sort.el,v 1.28 2009/01/10 00:08:30 zappo Exp $
+;; X-RCS: $Id: semantic-sort.el,v 1.29 2010/01/07 02:23:15 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -514,7 +514,7 @@ include the default behavior, and merely extend your own."
 (define-overloadable-function semantic-tag-external-member-p (parent tag)
   "Return non-nil if PARENT is the parent of TAG.
 TAG is an external member of PARENT when it is somehow tagged
-as having PARENT as it's parent.
+as having PARENT as its parent.
 PARENT and TAG must both be semantic tags.
 
 The default behavior, if not overridden with

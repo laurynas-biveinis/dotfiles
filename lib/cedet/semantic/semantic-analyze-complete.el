@@ -1,9 +1,9 @@
 ;;; semantic-analyze-complete.el --- Smart Completions
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-analyze-complete.el,v 1.14 2009/04/01 04:40:39 zappo Exp $
+;; X-RCS: $Id: semantic-analyze-complete.el,v 1.21 2010/04/27 00:44:23 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 ;;
-;; Caclulate smart completions.
+;; Calculate smart completions.
 ;;
 ;; Uses the analyzer context routine to determine the best possible
 ;; list of completions.
@@ -81,11 +81,15 @@ Used as options when completing.")
 ;;
 ;;
 ;;;###autoload
-(define-overloadable-function semantic-analyze-possible-completions (context)
+(define-overloadable-function semantic-analyze-possible-completions (context &rest flags)
   "Return a list of semantic tags which are possible completions.
 CONTEXT is either a position (such as point), or a precalculated
 context.  Passing in a context is useful if the caller also needs
 to access parts of the analysis.
+The remaining FLAGS arguments are passed to the mode specific completion engine.
+Bad flags should be ignored by modes that don't use them.
+See `semantic-analyze-possible-completions-default' for details on the default FLAGS.
+
 Completions run through the following filters:
   * Elements currently in scope
   * Constants currently in scope
@@ -106,19 +110,23 @@ in a buffer."
                         context
                       (semantic-analyze-current-context context)))
 	   (ans (if (not context)
-		    (error "Nothing to Complete.")
+		    (error "Nothing to complete")
 		  (:override))))
       ;; If interactive, display them.
-      (when (interactive-p)
+      (when (cedet-called-interactively-p)
 	(with-output-to-temp-buffer "*Possible Completions*"
 	  (semantic-analyze-princ-sequence ans "" (current-buffer)))
 	(shrink-window-if-larger-than-buffer
 	 (get-buffer-window "*Possible Completions*")))
       ans)))
 
-(defun semantic-analyze-possible-completions-default (context)
+(defun semantic-analyze-possible-completions-default (context &optional flags)
   "Default method for producing smart completions.
-Argument CONTEXT is an object specifying the locally derived context."
+Argument CONTEXT is an object specifying the locally derived context.
+The optional argument FLAGS changes which return options are returned.
+FLAGS can be any number of:
+  'no-tc     - do not apply data-type constraint.
+  'no-unique - do not apply unique by name filtering."
   (let* ((a context)
 	 (desired-type (semantic-analyze-type-constraint a))
 	 (desired-class (oref a prefixclass))
@@ -127,8 +135,13 @@ Argument CONTEXT is an object specifying the locally derived context."
 	 (completetext nil)
 	 (completetexttype nil)
 	 (scope (oref a scope))
-	 (localvar (oref scope localvar))
-	 (c nil))
+	 (localvar (when scope (oref scope localvar)))
+	 (origc nil)
+	 (c nil)
+	 (any nil)
+	 (do-typeconstraint (not (memq 'no-tc flags)))
+	 (do-unique (not (memq 'no-unique flags)))
+	 )
 
     ;; Calculate what our prefix string is so that we can
     ;; find all our matching text.
@@ -170,7 +183,7 @@ Argument CONTEXT is an object specifying the locally derived context."
 		 completetext
 		 (semantic-analyze-scoped-type-parts completetexttype scope)
 		 ))
-	      
+
       ;; No type based on the completetext.  This is a free-range
       ;; var or function.  We need to expand our search beyond this
       ;; scope into semanticdb, etc.
@@ -178,33 +191,36 @@ Argument CONTEXT is an object specifying the locally derived context."
 	       ;; Argument list and local variables
 	       (semantic-find-tags-for-completion completetext localvar)
 	       ;; The current scope
-	       (semantic-find-tags-for-completion completetext (oref scope fullscope))
+	       (semantic-find-tags-for-completion completetext (when scope (oref scope fullscope)))
 	       ;; The world
 	       (semantic-analyze-find-tags-by-prefix completetext))
 	    )
       )
 
-    (let ((origc c)
+    (let ((loopc c)
 	  (dtname (semantic-tag-name desired-type)))
-	
+
+      ;; Save off our first batch of completions
+      (setq origc c)
+
       ;; Reset c.
       (setq c nil)
 
       ;; Loop over all the found matches, and catagorize them
       ;; as being possible features.
-      (while origc
+      (while (and loopc do-typeconstraint)
 
 	(cond
 	 ;; Strip operators
-	 ((semantic-tag-get-attribute (car origc) :operator-flag)
+	 ((semantic-tag-get-attribute (car loopc) :operator-flag)
 	  nil
 	  )
-	 
+
 	 ;; If we are completing from within some prefix,
 	 ;; then we want to exclude constructors and destructors
 	 ((and completetexttype
-	       (or (semantic-tag-get-attribute (car origc) :constructor-flag)
-		   (semantic-tag-get-attribute (car origc) :destructor-flag)))
+	       (or (semantic-tag-get-attribute (car loopc) :constructor-flag)
+		   (semantic-tag-get-attribute (car loopc) :destructor-flag)))
 	  nil
 	  )
 
@@ -215,29 +231,29 @@ Argument CONTEXT is an object specifying the locally derived context."
 	   ;; Ok, we now have a completion list based on the text we found
 	   ;; we want to complete on.  Now filter that stream against the
 	   ;; type we want to search for.
-	   ((string= dtname (semantic-analyze-type-to-name (semantic-tag-type (car origc))))
-	    (setq c (cons (car origc) c))
+	   ((string= dtname (semantic-analyze-type-to-name (semantic-tag-type (car loopc))))
+	    (setq c (cons (car loopc) c))
 	    )
 
 	   ;; Now anything that is a compound type which could contain
 	   ;; additional things which are of the desired type
-	   ((semantic-tag-type (car origc))
-	    (let ((att (semantic-analyze-tag-type (car origc) scope))
+	   ((semantic-tag-type (car loopc))
+	    (let ((att (semantic-analyze-tag-type (car loopc) scope))
 		)
 	      (if (and att (semantic-tag-type-members att))
-		  (setq c (cons (car origc) c))))
+		  (setq c (cons (car loopc) c))))
 	    )
-	   
+
 	   ) ; cond
 	  ); desired type
 
 	 ;; No desired type, no other restrictions.  Just add.
 	 (t
-	  (setq c (cons (car origc) c)))
+	  (setq c (cons (car loopc) c)))
 
 	 ); cond
 
-	(setq origc (cdr origc)))
+	(setq loopc (cdr loopc)))
 
       (when desired-type
 	;; Some types, like the enum in C, have special constant values that
@@ -259,18 +275,18 @@ Argument CONTEXT is an object specifying the locally derived context."
     (when desired-class
       (setq c (semantic-analyze-tags-of-class-list c desired-class)))
 
-    ;; Pull out trash.
-    ;; NOTE TO SELF: Is this too slow?
-    ;; OTHER NOTE: Do we not want to strip duplicates by name and
-    ;; only by position?  When are duplicate by name but not by tag
-    ;; useful?
-    (setq c (semantic-unique-tag-table-by-name c))
+    (if do-unique
+	(if c
+	    ;; Pull out trash.
+	    ;; NOTE TO SELF: Is this too slow?
+	    (setq c (semantic-unique-tag-table-by-name c))
+	  (setq c (semantic-unique-tag-table-by-name origc)))
+      (when (not c)
+	(setq c origc)))
 
     ;; All done!
-
     c))
 
-
-
 (provide 'semantic-analyze-complete)
+
 ;;; semantic-analyze-complete.el ends here

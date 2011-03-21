@@ -1,6 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c
-@c $Id: speedbar.texi,v 1.19 2005/10/22 02:54:34 zappo Exp $
+@c $Id: speedbar.texi,v 1.20 2010/05/30 02:39:28 emacsman Exp $
 @c
 
 @c This file is part of GNU Emacs
@@ -1186,7 +1186,7 @@ beginning, like this:
 
 @example
 (add-to-list 'speedbar-dynamic-tags-function-list
-	     '(my-fetch-dynamic-tags  . my-insert-tag-list))
+             '(my-fetch-dynamic-tags  . my-insert-tag-list))
 @end example
 
 @defvar speedbar-dynamic-tags-function-list
@@ -1374,10 +1374,10 @@ This function should then use the @var{text} parameter to determine
 what to do.  For example:
 
 @example
-  (cond ((string-match "+" text)	;we have to expand this file
+  (cond ((string-match "+" text)        ;we have to expand this file
          ;; Expand stuff here
          )
-	((string-match "-" text)	;we have to contract this node
+        ((string-match "-" text)        ;we have to contract this node
          ;; Contract stuff here
          ))
 @end example
@@ -1393,13 +1393,13 @@ Change the expansion button character to @var{char} for the current line.
 Our sample would then look like this:
 
 @example
-  (cond ((string-match "+" text)	;we have to expand this file
+  (cond ((string-match "+" text)        ;we have to expand this file
          ;; Expand stuff here
-	 (speedbar-change-expand-button-char ?-)
+         (speedbar-change-expand-button-char ?-)
          )
-	((string-match "-" text)	;we have to contract this node
+        ((string-match "-" text)        ;we have to contract this node
          ;; Contract stuff here
-	 (speedbar-change-expand-button-char ?+)
+         (speedbar-change-expand-button-char ?+)
          ))
 @end example
 
@@ -1419,12 +1419,12 @@ expand button just clicked though.  As such, the code might look like
 this:
 
 @example
-  (cond ((string-match "+" text)	;we have to expand this file
+  (cond ((string-match "+" text)        ;we have to expand this file
          ;; Expand stuff here
-	 (speedbar-change-expand-button-char ?-)
-	 (speedbar-with-writable
-	   (save-excursion
-	     (end-of-line) (forward-char 1)
+         (speedbar-change-expand-button-char ?-)
+         (speedbar-with-writable
+           (save-excursion
+             (end-of-line) (forward-char 1)
              ;; Insert goodies here.
            ))         
          )
@@ -1445,19 +1445,19 @@ Remember that @var{indent} is also available as passed into
 The end result would then look like this:
 
 @example
-  (cond ((string-match "+" text)	;we have to expand this file
+  (cond ((string-match "+" text)        ;we have to expand this file
          ;; Expand stuff here
-	 (speedbar-change-expand-button-char ?-)
-	 (speedbar-with-writable
-	   (save-excursion
-	     (end-of-line) (forward-char 1)
+         (speedbar-change-expand-button-char ?-)
+         (speedbar-with-writable
+           (save-excursion
+             (end-of-line) (forward-char 1)
              ;; Insert goodies here.
            ))         
          )
-	((string-match "-" text)	;we have to contract this node
+        ((string-match "-" text)        ;we have to contract this node
          ;; Contract stuff here
-	 (speedbar-change-expand-button-char ?+)
-	 (speedbar-delete-subblock indent))
+         (speedbar-change-expand-button-char ?+)
+         (speedbar-delete-subblock indent))
          ))
 @end example
 

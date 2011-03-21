@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-format.el,v 1.33 2009/05/08 11:12:27 zappo Exp $
+;; X-RCS: $Id: semantic-format.el,v 1.37 2010/03/15 13:40:54 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -68,18 +68,18 @@ COLOR indicates that the generated text should be colored using
 
 ;;;###autoload
 (semantic-varalias-obsolete 'semantic-token->text-functions
-                            'semantic-format-tag-functions)
+			    'semantic-format-tag-functions)
 ;;;###autoload
 (defvar semantic-format-tag-custom-list
   (append '(radio)
 	  (mapcar (lambda (f) (list 'const f))
 		  semantic-format-tag-functions)
 	  '(function))
-  "A List used by customizeable variables to choose a tag to text function.
+  "A List used by customizable variables to choose a tag to text function.
 Use this variable in the :type field of a customizable variable.")
 
 (semantic-varalias-obsolete 'semantic-token->text-custom-list
-                            'semantic-format-tag-custom-list)
+			    'semantic-format-tag-custom-list)
 
 (defcustom semantic-format-use-images-flag ezimage-use-images
   "Non-nil means semantic format functions use images.
@@ -94,29 +94,6 @@ Images can be used as icons instead of some types of text strings."
 (defvar semantic-format-parent-separator "::"
   "Text used to separate names when between namespaces/classes and functions.")
 (make-variable-buffer-local 'semantic-format-parent-separator)
-
-(defun semantic-test-all-format-tag-functions (&optional arg)
-  "Test all outputs from `semantic-format-tag-functions'.
-Output is generated from the function under `point'.
-Optional argument ARG specifies not to use color."
-  (interactive "P")
-  (semantic-fetch-tags)
-  (let* ((tag (semantic-current-tag))
-	 (par (semantic-current-tag-parent))
-	 (fns semantic-format-tag-functions))
-    (with-output-to-temp-buffer "*format-tag*"
-      (princ "Tag->format function tests:")
-      (while fns
-	(princ "\n")
-	(princ (car fns))
-	(princ ":\n ")
-	(let ((s (funcall (car fns) tag par (not arg))))
-	  (save-excursion
-	    (set-buffer "*format-tag*")
-	    (goto-char (point-max))
-	    (insert s)))
-	(setq fns (cdr fns))))
-      ))
 
 (defvar semantic-format-face-alist
   `( (function . font-lock-function-name-face)
@@ -148,7 +125,7 @@ Faces used are generated in `font-lock' for consistency, and will not
 be used unless font lock is a feature.")
 
 (semantic-varalias-obsolete 'semantic-face-alist
-                            'semantic-format-face-alist)
+			    'semantic-format-face-alist)
 
 
 
@@ -166,7 +143,7 @@ for details on adding new types."
     text))
 
 (make-obsolete 'semantic-colorize-text
-               'semantic--format-colorize-text)
+	       'semantic--format-colorize-text)
 
 (defun semantic--format-colorize-merge-text (precoloredtext face-class)
   "Apply onto PRECOLOREDTEXT a color associated with FACE-CLASS.
@@ -334,14 +311,14 @@ local definitions."
 
 (define-overloadable-function semantic-format-tag-canonical-name (tag &optional parent color)
   "Return a canonical name for TAG.
-A canonical name includes the names of any parents or namespaces preceeding
+A canonical name includes the names of any parents or namespaces preceding
 the tag.
 Optional argument PARENT is the parent type if TAG is a detail.
 Optional argument COLOR means highlight the prototype with font-lock colors.")
 
 (defun semantic-format-tag-canonical-name-default (tag &optional parent color)
   "Return a canonical name for TAG.
-A canonical name includes the names of any parents or namespaces preceeding
+A canonical name includes the names of any parents or namespaces preceding
 the tag with colons separating them.
 Optional argument PARENT is the parent type if TAG is a detail.
 Optional argument COLOR means highlight the prototype with font-lock colors."
@@ -421,14 +398,14 @@ Optional argument COLOR means highlight the prototype with font-lock colors.")
 Optional argument PARENT is the parent type if TAG is a detail.
 Optional argument COLOR means highlight the prototype with font-lock colors."
   (let* ((proto (semantic-format-tag-prototype tag nil color))
-         (names (if parent
-                    semantic-symbol->name-assoc-list-for-type-parts
-                  semantic-symbol->name-assoc-list))
-         (tsymb (semantic-tag-class tag))
-         (label (capitalize (or (cdr-safe (assoc tsymb names))
-                                (symbol-name tsymb)))))
+	 (names (if parent
+		    semantic-symbol->name-assoc-list-for-type-parts
+		  semantic-symbol->name-assoc-list))
+	 (tsymb (semantic-tag-class tag))
+	 (label (capitalize (or (cdr-safe (assoc tsymb names))
+				(symbol-name tsymb)))))
     (if color
-        (setq label (semantic--format-colorize-text label 'label)))
+	(setq label (semantic--format-colorize-text label 'label)))
     (concat label ": " proto)))
 
 ;;;###autoload
@@ -442,7 +419,7 @@ Optional argument COLOR means highlight the prototype with font-lock colors.")
 Optional argument PARENT is the parent type if TAG is a detail.
 Optional argument COLOR means highlight the prototype with font-lock colors."
   (let* ((proto (semantic-format-tag-prototype tag nil color))
-         (file (semantic-tag-file-name tag))
+	 (file (semantic-tag-file-name tag))
 	 )
     ;; Nothing for tag?  Try parent.
     (when (and (not file) (and parent))
@@ -475,7 +452,8 @@ Optional argument COLOR means highlight the prototype with font-lock colors."
     (when (and (not doc) (not buf) fname)
       ;; If there is no doc, and no buffer, but we have a filename,
       ;; lets try again.
-      (setq buf (find-file-noselect fname))
+      (save-match-data
+	(setq buf (find-file-noselect fname)))
       (setq doc (semantic-tag-docstring tag buf)))
     (when (not doc)
       (setq doc (semantic-documentation-for-tag tag))
@@ -515,14 +493,14 @@ Optional argument COLOR means highlight the prototype with font-lock colors."
 	 (type (if (member class '(function variable type))
 		   (semantic-format-tag-type tag color)))
 	 (args (if (member class '(function type))
-                   (semantic--format-tag-arguments
-                    (if (eq class 'function)
-                        (semantic-tag-function-arguments tag)
+		   (semantic--format-tag-arguments
+		    (if (eq class 'function)
+			(semantic-tag-function-arguments tag)
 		      (list "")
-                      ;;(semantic-tag-type-members tag)
+		      ;;(semantic-tag-type-members tag)
 		      )
-                    #'semantic-format-tag-prototype
-                    color)))
+		    #'semantic-format-tag-prototype
+		    color)))
 	 (const (semantic-tag-get-attribute tag :constant-flag))
 	 (tm (semantic-tag-get-attribute tag :typemodifiers))
 	 (mods (append
@@ -580,14 +558,14 @@ Optional argument COLOR means highlight the prototype with font-lock colors."
 	      ")"))
      ((eq class 'variable)
       (let* ((deref (semantic-tag-get-attribute
-                     tag :dereference))
-             (array "")
-             )
-        (while (and deref (/= deref 0))
-          (setq array (concat array "[]")
-                deref (1- deref)))
-        (concat (semantic-format-tag-name tag parent color)
-                array)))
+		     tag :dereference))
+	     (array "")
+	     )
+	(while (and deref (/= deref 0))
+	  (setq array (concat array "[]")
+		deref (1- deref)))
+	(concat (semantic-format-tag-name tag parent color)
+		array)))
      (t
       (semantic-format-tag-abbreviate tag parent color)))))
 
@@ -756,6 +734,32 @@ Optional argument COLOR means highlight the prototype with font-lock colors."
 	(setq text (semantic--format-uml-post-colorize text tag parent)))
     text
     ))
+
+
+;;; Test routines
+;;
+(defun semantic-test-all-format-tag-functions (&optional arg)
+  "Test all outputs from `semantic-format-tag-functions'.
+Output is generated from the function under `point'.
+Optional argument ARG specifies not to use color."
+  (interactive "P")
+  (semantic-fetch-tags)
+  (let* ((tag (semantic-current-tag))
+	 (par (semantic-current-tag-parent))
+	 (fns semantic-format-tag-functions))
+    (with-output-to-temp-buffer "*format-tag*"
+      (princ "Tag->format function tests:")
+      (while fns
+	(princ "\n")
+	(princ (car fns))
+	(princ ":\n ")
+	(let ((s (funcall (car fns) tag par (not arg))))
+	  (save-excursion
+	    (set-buffer "*format-tag*")
+	    (goto-char (point-max))
+	    (insert s)))
+	(setq fns (cdr fns))))
+      ))
 
 
 ;;; Compatibility and aliases

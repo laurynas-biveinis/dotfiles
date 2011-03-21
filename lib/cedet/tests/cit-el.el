@@ -1,9 +1,9 @@
 ;;; cit-el.el --- Elisp code generation for integration tests
 
-;; Copyright (C) 2008 Eric M. Ludlam
+;; Copyright (C) 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cit-el.el,v 1.1 2008/02/24 02:58:10 zappo Exp $
+;; X-RCS: $Id: cit-el.el,v 1.3 2009/10/15 03:42:55 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -28,22 +28,10 @@
 
 (defconst cit-el-tags
   (list
-   (semantic-tag-new-include "eieio" nil)
-
    (semantic-tag-new-variable "cit-spiffy-var" nil
 			      t)
    (semantic-tag-new-variable "cit-spiffy-var-const" nil
 			      "'(1 2 3)" :constant-flag t)
-
-   (semantic-tag-new-type
-    "elfoo" "class"
-    (list
-     (semantic-tag-new-variable "Field1" nil "t" :documentation "First Field")
-     (semantic-tag-new-variable "Field2" nil "nil" :documentation "Second Field")
-     (semantic-tag-new-variable "Field3" nil "1" :documentation "Third Field")
-     (semantic-tag-new-variable "Field4" nil "\"Hi\"" :documentation "Fourth Field")
-     )
-    nil)
 
    (semantic-tag-new-function
     "doSomething" nil
@@ -57,15 +45,6 @@
     :parent "elfoo"
     :documentation "Nice method on elfoo")
 
-   (semantic-tag-new-type
-    "elbar" "class"
-    (list
-     (semantic-tag-new-variable "Slot1" nil "nil" :documentation "First Slot")
-     (semantic-tag-new-variable "Slot2" nil "\"What\"" :documentation "First Slot")
-     (semantic-tag-new-variable "Slot3" nil "'(1 2 3)" :documentation "First Slot")
-     )
-    (list "elfoo"))
-
    (semantic-tag-new-function
     "niceMethod" nil
     (list "arg1")
@@ -78,20 +57,51 @@
     :documentation "Some boring old function.")
 
    )
-  "Tags to be inserted into a header file.")
+  "Tags to be inserted into an Emacs Lisp file.")
 
-(defun cit-srecode-fill-el ()
-  "Fill up a base set of files with some base tags."
+(defconst cit-el-tags-eieio
+  (list
+   (semantic-tag-new-include "eieio" nil)
+
+   (semantic-tag-new-type
+    "elfoo" "class"
+    (list
+     (semantic-tag-new-variable "Field1" nil "t" :documentation "First Field")
+     (semantic-tag-new-variable "Field2" nil "nil" :documentation "Second Field")
+     (semantic-tag-new-variable "Field3" nil "1" :documentation "Third Field")
+     (semantic-tag-new-variable "Field4" nil "\"Hi\"" :documentation "Fourth Field")
+     )
+    nil)
+
+   (semantic-tag-new-type
+    "elbar" "class"
+    (list
+     (semantic-tag-new-variable "Slot1" nil "nil" :documentation "First Slot")
+     (semantic-tag-new-variable "Slot2" nil "\"What\"" :documentation "First Slot")
+     (semantic-tag-new-variable "Slot3" nil "'(1 2 3)" :documentation "First Slot")
+     )
+    (list "elfoo"))
+   )
+  "Tags to be inserted into an Emacs Lisp file that supports EIEIO.")
+
+(defun cit-srecode-fill-el (make-type)
+  "Fill up a base set of files with some base tags.
+MAKE-TYPE indicates the makefile type being used."
   ;;(interactive)
  
   ;; 2 b) Test various templates.
 
-  (cit-srecode-fill-with-stuff "src/elfoo.el" cit-el-tags)
+  (if (string= make-type "Automake")
+      (cit-srecode-fill-with-stuff "src/elfoo.el" cit-el-tags)
+    (cit-srecode-fill-with-stuff "src/elfoo.el" (append
+						 cit-el-tags
+						 cit-el-tags-eieio)))
   ;; 1 e) Tell EDE where the srcs are
 
   ;; Making the autoloads first should PREPEND, but Lisp should append.
   ;; going in this order makes sure that happens.
-  (ede-new-target "Auto" "emacs lisp autoloads" "n")
+  (when (string= make-type "Make")
+    (ede-new-target "Auto" "emacs lisp autoloads" "n"))
   (ede-new-target "Lisp" "emacs lisp" "n")
   (ede-add-file "Lisp")
 

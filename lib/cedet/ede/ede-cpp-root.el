@@ -1,9 +1,9 @@
 ;;; ede-cpp-root.el --- A simple way to wrap a C++ project with a single root
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-cpp-root.el,v 1.20 2009/03/05 02:39:05 zappo Exp $
+;; X-RCS: $Id: ede-cpp-root.el,v 1.24 2010/08/19 23:29:09 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -31,7 +31,7 @@
 ;;
 ;; The cpp-root project type will allow you to create a single object
 ;; with no save-file in your .emacs file that will be recognized, and
-;; provide a way to easilly allow EDE to provide Semantic with the
+;; provide a way to easily allow EDE to provide Semantic with the
 ;; ability to find header files, and other various source files
 ;; quickly.
 ;;
@@ -43,7 +43,7 @@
 ;;
 ;;; EXAMPLE
 ;; 
-;; Add this to your .emacs file, modifying apropriate bits as needed.
+;; Add this to your .emacs file, modifying appropriate bits as needed.
 ;;
 ;; (ede-cpp-root-project "SOMENAME" :file "/dir/to/some/file")
 ;;
@@ -110,7 +110,7 @@
 ;; `ede-project-class-files' list, and also provide two functions to
 ;; teach EDE how to load your project pattern
 ;;
-;; It would oook like this:
+;; It would look like this:
 ;;
 ;; (defun MY-FILE-FOR-DIR (&optional dir)
 ;;   "Return a full file name to the project file stored in DIR."
@@ -334,7 +334,7 @@ exist, it should return nil."
 	       )
    )
   "EDE cpp-root project class.
-Each directory needs a a project file to control it.")
+Each directory needs a project file to control it.")
 
 ;;; INIT
 ;;
@@ -359,7 +359,7 @@ Each directory needs a a project file to control it.")
     (when (or (not (file-exists-p f))
 	      (file-directory-p f))
       (delete-instance this)
-      (error ":file for ede-cpp-root must be a file."))
+      (error ":file for ede-cpp-root must be a file"))
     (oset this :file f)
     (oset this :directory (file-name-directory f))
     (ede-project-directory-remove-hash (file-name-directory f))
@@ -500,8 +500,8 @@ Also set up the lexical preprocessor map."
 	 (when (not table)
 	   (message "Cannot find file %s in project." F))
 	 (when (and table (semanticdb-needs-refresh-p table))
-	   (semanticdb-refresh-table table))
-	 (setq spp (append spp (oref table lexical-table)))))
+	   (semanticdb-refresh-table table)
+	   (setq spp (append spp (oref table lexical-table))))))
      (oref this spp-files))
     spp))
 
@@ -513,6 +513,20 @@ Also set up the lexical preprocessor map."
   "Get the pre-processor map for project THIS."
   (ede-preprocessor-map  (ede-target-parent this)))
 
+;;; Quick Hack
+(defun ede-create-lots-of-projects-under-dir (dir projfile &rest attributes)
+  "Create a bunch of projects under directory DIR.
+PROJFILE is a file name sans directory that indicates a subdirectory
+is a project directory.
+Generic ATTRIBUTES, such as :include-path can be added.
+Note: This needs some work."
+  (let ((files (directory-files dir t)))
+    (dolist (F files)
+      (if (file-exists-p (expand-file-name projfile F))
+	  `(ede-cpp-root-project (file-name-nondirectory F)
+				 :name (file-name-nondirectory F)
+				 :file (expand-file-name projfile F)
+				 attributes)))))
 
 (provide 'ede-cpp-root)
 ;;; ede-cpp-root.el ends here

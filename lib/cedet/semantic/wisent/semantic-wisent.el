@@ -6,7 +6,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 30 Aug 2001
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-wisent.el,v 1.4 2007/01/23 15:41:09 ponced Exp $
+;; X-RCS: $Id: semantic-wisent.el,v 1.5 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -54,7 +54,7 @@ When non-nil it is directly returned by `wisent-lex-function'.")
 
 (defmacro wisent-lex-eoi ()
   "Return an End-Of-Input lexical token.
-The EOI token is like this: ($EOI "" POINT-MAX . POINT-MAX)."
+The EOI token is like this: ($EOI \"\" POINT-MAX . POINT-MAX)."
   `(cons ',wisent-eoi-term
          (cons ""
                (cons (point-max) (point-max)))))

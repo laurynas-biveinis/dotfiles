@@ -3,7 +3,7 @@
 ;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-semantic.el,v 1.14 2009/04/04 03:09:42 zappo Exp $
+;; X-RCS: $Id: srecode-semantic.el,v 1.16 2010/05/21 01:08:28 scymtym Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -86,10 +86,10 @@ If this is nil, then `senator-tag-ring' is used.")
 ;;; :tag ARGUMENT HANDLING
 ;;
 ;; When a :tag argument is required, identify the current :tag,
-;; and apply it's parts into the dictionary.
+;; and apply its parts into the dictionary.
 ;;;###autoload
 (defun srecode-semantic-handle-:tag (dict)
-  "Add macroes into the dictionary DICT based on the current :tag."
+  "Add macros into the dictionary DICT based on the current :tag."
   ;; We have a tag, start adding "stuff" into the dictionary.
   (let ((tag (or srecode-semantic-selected-tag
 		 (srecode-semantic-tag-from-kill-ring))))
@@ -107,7 +107,7 @@ If this is nil, then `senator-tag-ring' is used.")
 
 ;;;###autoload
 (defun srecode-semantic-handle-:tagtype (dict)
-  "Add macroes into the dictionary DICT based on a tag of class type at point.
+  "Add macros into the dictionary DICT based on a tag of class type at point.
 Assumes the cursor is in a tag of class type.  If not, throw an error."
   (let ((typetag (or srecode-semantic-selected-tag
 		     (semantic-current-tag-of-class 'type))))
@@ -127,7 +127,7 @@ to be augmented.")
 
 ;;;###autoload
 (define-overload srecode-semantic-apply-tag-to-dict (tagobj dict)
-  "Insert fewatures of TAGOBJ into the dictionary DICT.
+  "Insert features of TAGOBJ into the dictionary DICT.
 TAGOBJ is an object of class `srecode-semantic-tag'.  This class
 is a compound inserter value.
 DICT is a dictionary object.
@@ -147,7 +147,7 @@ variable default values, and other things."
 
     (srecode-dictionary-set-value dict "NAME" (semantic-tag-name tag))
     (srecode-dictionary-set-value dict "TYPE" (semantic-format-tag-type tag nil))
-  
+
     (run-hook-with-args 'srecode-semantic-apply-tag-augment-hook tag dict)
 
     (cond
@@ -289,7 +289,7 @@ CTXT is the pre-calculated context."
 (defun srecode-semantic-insert-tag (tag &optional style-option
 					point-insert-fcn
 					&rest dict-entries)
-  "Insert TAG into a buffer useing srecode templates at point.
+  "Insert TAG into a buffer using srecode templates at point.
 
 Optional STYLE-OPTION is a list of minor configuration of styles,
 such as the symbol 'prototype for prototype functions, or
@@ -311,8 +311,8 @@ or `code'.
 
 For various conditions, this function looks for a template with
 the name CLASS-tag, where CLASS is the tag class.  If it cannot
-find that, it will look for that template in the
-`declaration'context (if the current context was not `declaration').
+find that, it will look for that template in the `declaration'
+context (if the current context was not `declaration').
 
 If PROTOTYPE is specified, it will first look for templates with
 the name CLASS-tag-prototype, or CLASS-prototype as above.
@@ -322,7 +322,7 @@ the dictionary when the templates are called.
 
 This function returns to location in the buffer where the
 inserted tag ENDS, and will leave point inside the inserted
-text based on any occurance of a point-inserter.  Templates such
+text based on any occurrence of a point-inserter.  Templates such
 as `function' will leave point where code might be inserted."
   (srecode-load-tables-for-mode major-mode)
   (let* ((ctxt (srecode-calculate-context))
@@ -388,7 +388,7 @@ as `function' will leave point where code might be inserted."
       (error "Cannot find template %s in %s for inserting tag %S"
 	     errtype top (semantic-format-tag-summarize tag)))
 
-    ;; Resolve Arguments
+    ;; Resolve arguments.
     (let ((srecode-semantic-selected-tag tag))
       (srecode-resolve-arguments temp dict))
 
@@ -418,7 +418,7 @@ as `function' will leave point where code might be inserted."
        ((semantic-tag-of-class-p tag 'type)
 	;; Insert all the members at the current insertion point.
 	(dolist (m (semantic-tag-type-members tag))
-	  
+
 	  (when (stringp m)
 	    (setq m (semantic-tag-new-variable m nil nil)))
 
@@ -435,4 +435,3 @@ as `function' will leave point where code might be inserted."
 (provide 'srecode-semantic)
 
 ;;; srecode-semantic.el ends here
-

@@ -1,8 +1,8 @@
-This is eieio.info, produced by makeinfo version 4.11 from eieio.texi.
+This is eieio.info, produced by makeinfo version 4.9 from eieio.texi.
 
-This manual documents CEDET, a collection of other tools.
+   This manual documents CEDET, a collection of other tools.
 
-   Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+   Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -125,7 +125,7 @@ is given a name so different instances can be easily distinguished
 during debugging.
 
    It can be a bit repetitive to also have a :name slot.  A handy
-baseclass to use in this case is `eieio-named'.  *note eieio-named::.
+baseclass to use in this case is `eieio-named'.  *Note eieio-named::.
 
    Calling methods on an object is a lot like calling any function.  The
 first argument should be an object of a class which has had this method
@@ -140,7 +140,7 @@ defined for it.  In this example it would look like this:
    In these examples, the method `call-record' is called.  EIEIO
 examines the class of `rec' and method defined above will be called.
 If `rec' is some other class, or a number, or other datatype, then it
-will signal `no-method-definition'. *note Signals::.
+will signal `no-method-definition'. *Note Signals::.
 
 
 File: eieio.info,  Node: Introduction,  Next: Building Classes,  Prev: Quick Start,  Up: Top
@@ -225,8 +225,8 @@ EIEIO a class has similar structure to that found in other OO languages.
 
      Creates a new class called CLASS-NAME.  In Emacs, the class is
      represented as a self-referential symbol with the name CLASS-NAME.
-     The structure of the class is stored on the CLASS-NAME symbol as a
-     property.
+     The structure of the class is stored on the CLASS-NAME symbol as
+     a property.
 
      The CLASS-NAME symbol's variable documentation string is a
      modified version of the doc string found in OPTIONS-OR-DOC.  Each
@@ -240,8 +240,12 @@ EIEIO a class has similar structure to that found in other OO languages.
 
      If two parents share the same slot name, the parent which appears
      in the SUPERCLASS-LIST first sets the tags for that slot.  If a
-     slot in the new class' slot list matches a parent, then the new
-     specifications for the child class override that of the parent.
+     slot in the new class' slot list matches a parent, then some of the
+     new specifications for the child class override that of the parent.
+
+     When overriding a slot, some slot attributes cannot be overriden
+     because they break basic OO rules.  You cannot override `:type' or
+     `:protection'.
 
      Whenever defclass is used to create a new class, two predicates are
      created for it.  The predicate names are `CLASS-NAME-p' and
@@ -265,8 +269,8 @@ EIEIO a class has similar structure to that found in other OO languages.
 * Menu:
 
 * Inheritance::         How to specify parents classes
-* Slot Options::	How to specify features of a slot.
-* Class Options::	How to specify features for this class.
+* Slot Options::        How to specify features of a slot.
+* Class Options::       How to specify features for this class.
 
 
 File: eieio.info,  Node: Inheritance,  Next: Slot Options,  Up: Building Classes
@@ -325,7 +329,7 @@ then the superclass showing up in the list first will define the slot
 attributes.
 
    Inheritance in EIEIO is more than just combining different slots.
-It is also important in method invocation.  *note Methods::.
+It is also important in method invocation.  *Note Methods::.
 
    If a method is called on an instance of `my-subclass', and that
 method only has an implementation on `my-baseclass', or perhaps
@@ -377,33 +381,19 @@ ATTRIB-VALUE is a lisp expression that will be used for :TAG.
      to always be in a bound state, you should always use an
      `:initform' specifier.
 
-     Use `slot-boundp' to test if a slot is unbound *note Predicates::.
+     Use `slot-boundp' to test if a slot is unbound *Note Predicates::.
      Use `slot-makeunbound' to set a slot to being unbound after giving
-     it a value *note Accessing Slots::.
+     it a value *Note Accessing Slots::.
 
      The value passed to initform is automatically quoted.  Thus,
           :initform (1 2 3)
      appears as the specified list in the default object.  A symbol
      that is a function like this:
           :initform +
-     will set the initial value as that symbol.  A function that is a
-     lambda expression, like this:
-          :initform (lambda () some-variablename)
-
-     will be evaluated at instantiation time to the value of
-     `some-variablename'.
-
-     Lastly, using the function `lambda-default' instead of `lambda'
-     will let you specify a lambda expression to use as the value,
-     without evaluation, thus:
-          :initform (lambda-default () some-variablename)
-     @TODO - This will be deleted after fair warning.
-
-     will not be evaluated at instantiation time, and the value in this
-     slot will instead be `(lambda () some-variablename)'.
+     will set the initial value as that symbol.
 
      After a class has been created with `defclass', you can change
-     that default value with `oset-default'. *note Accessing Slots::.
+     that default value with `oset-default'. *Note Accessing Slots::.
 
 `:type'
      An unquoted type specifier used to validate data set into this
@@ -419,10 +409,6 @@ ATTRIB-VALUE is a lisp expression that will be used for :TAG.
 
     `(or null symbol)'
           A symbol, or nil.
-
-    `function'
-          A function symbol, or a `lambda-default' expression.
-
 
 `:allocation'
      Either :class or :instance (defaults to :instance) used to specify
@@ -543,8 +529,8 @@ A Class can have class options.  EIEIO supports these class options.
 
 `:custom-groups'
      This is a list of groups that can be customized within this class.
-     This slot is auto-generated when a class is created and need not be
-     specified.  It can be retrieved with the `class-option' command,
+     This slot is auto-generated when a class is created and need not
+     be specified.  It can be retrieved with the `class-option' command,
      however, to see what groups are available.
 
      This option is specific to Emacs, and is not in the CLOS spec.
@@ -566,7 +552,12 @@ A Class can have class options.  EIEIO supports these class options.
           Search for methods in the class hierarchy in a depth first
           order.
 
-     For more on method invocation order, *note Method Invocation::.
+    `:c3'
+          Searches for methods in in a learnarized way that most
+          closely matches what CLOS does when CLOS when a monotonic
+          class structure is defined.
+
+     For more on method invocation order, *Note Method Invocation::.
 
 `:metaclass'
      Unsupported CLOS option.  Enables the use of a different base
@@ -867,7 +858,7 @@ method :after
 generic :after
 
    If no methods exist, then the signal and error named
-`no-method-definition'. *note Signals::
+`no-method-definition'. *Note Signals::
 
    See the file `eieio-test.el' for an example testing these
 differently tagged methods.
@@ -920,7 +911,36 @@ File: eieio.info,  Node: Method Invocation,  Next: Predicates,  Prev: Writing Me
 7 Method Invocation
 *******************
 
-TODO - writeme
+When classes are defined, you can specify the
+`:method-invocation-order'.  This is a feature specific to EIEIO.
+
+   This controls the order in which method resolution occurs for
+`:primary' methods in cases of multiple inheritance.  The order affects
+which method is called first in a tree, and if `call-next-method' is
+used, it controls the order in which the stack of methods are run.
+
+   The original EIEIO order turned out to be broken for multiple
+inheritance, but some programs depended on it.  As such this option was
+added when the default invocation order was fixed to something that
+made more sense in that case.
+
+   Valid values are:
+
+`:breadth-first'
+     Search for methods in the class hierarchy in breadth first order.
+     This is the default.
+
+`:depth-first'
+     Search for methods in the class hierarchy in a depth first order.
+
+`:c3'
+     Searches for methods in in a learnarized way that most closely
+     matches what CLOS does when CLOS when a monotonic class structure
+     is defined.
+
+     This is derived from the Dylan language documents by Kim Barrett
+     et al.: A Monotonic Superclass Linearization for Dylan Retrieved
+     from: http://192.220.96.201/dylan/linearization-oopsla96.html
 
 
 File: eieio.info,  Node: Predicates,  Next: Association Lists,  Prev: Method Invocation,  Up: Top
@@ -1609,7 +1629,7 @@ the error by providing some behavior.
      available.  OBJECT is othe object being called on
      "call-next-method".  ARGS are the  arguments it is called by.
      This method signals "no-next-method" by default.  Override this
-     method to not throw an error, and it's return value becomes the
+     method to not throw an error, and its return value becomes the
      return value of "call-next-method".
 
 
@@ -1662,7 +1682,7 @@ File: eieio.info,  Node: Naming Conventions,  Next: CLOS compatibility,  Prev: S
 
 The Emacs Lisp programming manual has a great chapter programming
 conventions that help keep each Emacs package working nicely with the
-entire system.  *note (elisp)Standards:: An EIEIO based program needs to
+entire system.  *Note (elisp)Standards:: An EIEIO based program needs to
 follow these conventions, while simultaneously taking advantage of the
 Object Oriented features.
 
@@ -1803,8 +1823,8 @@ Function Index
 * class-children-fast:                   Predicates.           (line 80)
 * class-constructor:                     Predicates.           (line 39)
 * class-name:                            Predicates.           (line 27)
-* CLASS-NAME-child-p:                    Building Classes.     (line 44)
-* CLASS-NAME-p:                          Building Classes.     (line 41)
+* CLASS-NAME-child-p:                    Building Classes.     (line 48)
+* CLASS-NAME-p:                          Building Classes.     (line 45)
 * class-of:                              Predicates.           (line 56)
 * class-option:                          Predicates.           (line 32)
 * class-p:                               Predicates.           (line 16)
@@ -1888,63 +1908,63 @@ Function Index
 
 
 Tag Table:
-Node: Top853
-Node: Quick Start2566
-Node: Introduction5782
-Node: Building Classes7639
-Node: Inheritance10024
-Node: Slot Options12324
-Node: Class Options18486
-Node: Making New Objects20972
-Ref: make-instance22396
-Node: Accessing Slots23068
-Ref: oref24292
-Ref: oref-default24505
-Ref: slot-value24925
-Ref: set-slot-value25090
-Ref: object-add-to-list25547
-Ref: object-remove-from-list25939
-Ref: with-slots26188
-Node: Writing Methods27174
-Node: Generics27918
-Node: Methods29166
-Ref: call-next-method32153
-Ref: next-method-p32588
-Node: Static Methods32927
-Node: Method Invocation33591
-Node: Predicates33747
-Ref: find-class34148
-Ref: class-p34354
-Ref: slot-exists-p34474
-Ref: slot-boundp34557
-Node: Association Lists37479
-Ref: object-assoc37837
-Node: Customizing38806
-Node: Introspection41253
-Node: Base Classes41930
-Node: eieio-instance-inheritor42666
-Node: eieio-instance-tracker43933
-Node: eieio-singleton45390
-Node: eieio-persistent45818
-Node: eieio-named47715
-Node: eieio-speedbar48041
-Node: Browsing51874
-Node: Class Values52656
-Node: Documentation53155
-Node: Default Superclass54780
-Node: Initialization55919
-Node: Basic Methods56992
-Ref: clone57243
-Ref: object-print57561
-Node: Signal Handling58888
-Ref: slot-missing59380
-Ref: slot-unbound60071
-Ref: no-applicable-method60763
-Ref: no-next-method61128
-Node: Signals61497
-Node: Naming Conventions63114
-Node: CLOS compatibility64344
-Node: Wish List67214
-Node: Function Index67989
+Node: Top861
+Node: Quick Start2574
+Node: Introduction5790
+Node: Building Classes7647
+Node: Inheritance10216
+Node: Slot Options12516
+Node: Class Options17991
+Node: Making New Objects20659
+Ref: make-instance22083
+Node: Accessing Slots22755
+Ref: oref23979
+Ref: oref-default24192
+Ref: slot-value24612
+Ref: set-slot-value24777
+Ref: object-add-to-list25234
+Ref: object-remove-from-list25626
+Ref: with-slots25875
+Node: Writing Methods26861
+Node: Generics27605
+Node: Methods28853
+Ref: call-next-method31840
+Ref: next-method-p32275
+Node: Static Methods32614
+Node: Method Invocation33278
+Node: Predicates34636
+Ref: find-class35037
+Ref: class-p35243
+Ref: slot-exists-p35363
+Ref: slot-boundp35446
+Node: Association Lists38368
+Ref: object-assoc38726
+Node: Customizing39695
+Node: Introspection42142
+Node: Base Classes42819
+Node: eieio-instance-inheritor43555
+Node: eieio-instance-tracker44822
+Node: eieio-singleton46279
+Node: eieio-persistent46707
+Node: eieio-named48604
+Node: eieio-speedbar48930
+Node: Browsing52763
+Node: Class Values53545
+Node: Documentation54044
+Node: Default Superclass55669
+Node: Initialization56808
+Node: Basic Methods57881
+Ref: clone58132
+Ref: object-print58450
+Node: Signal Handling59777
+Ref: slot-missing60269
+Ref: slot-unbound60960
+Ref: no-applicable-method61652
+Ref: no-next-method62017
+Node: Signals62385
+Node: Naming Conventions64002
+Node: CLOS compatibility65232
+Node: Wish List68102
+Node: Function Index68877
 
 End Tag Table

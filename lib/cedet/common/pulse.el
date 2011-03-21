@@ -1,9 +1,9 @@
 ;;; pulse.el --- Pulsing Overlays
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: pulse.el,v 1.12 2009/04/02 13:11:07 zappo Exp $
+;; X-RCS: $Id: pulse.el,v 1.15 2010/07/31 01:17:35 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -44,7 +44,7 @@
 ;; `pulse-momentary-highlight-overlay' - Pulse an overlay
 ;;      These three functions will just blink the specified area if
 ;;      the version of Emacs you are using doesn't support pulsing.
-;;    
+;;
 ;; `pulse-line-hook-function' - A simple function that can be used in a
 ;;      hook that will pulse whatever line the cursor is on.
 ;;
@@ -64,10 +64,11 @@
     (error nil)))
 
 (defcustom pulse-flag (pulse-available-p)
-  "*Non-nil means to pulse the overlay face for momentary highlighting.
-Pulsing involves a bright highlight that slowly shifts to the background
-color.  Non-nil just means to highlight with an unchanging color for a short
-time.
+  "*t means to pulse the overlay face for momentary highlighting.
+Pulsing involves a bright highlight that slowly shifts to the
+background color.
+Nil means to highlight with an unchanging color until a key is pressed.
+'never means to do no coloring at all.
 
 If `pulse-flag' is non-nil, but `pulse-available-p' is nil, then
 this flag is ignored."
@@ -210,11 +211,11 @@ When optional NO-ERROR Don't throw an error if we can't run tests."
 	(error (concat "Pulse test only works on versions of Emacs"
 		       " that support pulsing")))
     ;; Run the tests
-    (when (interactive-p)
+    (when (cedet-called-interactively-p)
       (message "<Press a key> Pulse one line.")
       (read-char))
     (pulse-momentary-highlight-one-line (point))
-    (when (interactive-p)
+    (when (cedet-called-interactively-p)
       (message "<Press a key> Pulse a region.")
       (read-char))
     (pulse-momentary-highlight-region (point)
@@ -223,11 +224,11 @@ When optional NO-ERROR Don't throw an error if we can't run tests."
 					    (forward-char 30)
 					  (error nil))
 					(point)))
-    (when (interactive-p)
+    (when (cedet-called-interactively-p)
       (message "<Press a key> Pulse line a specific color.")
       (read-char))
     (pulse-momentary-highlight-one-line (point) 'modeline)
-    (when (interactive-p)
+    (when (cedet-called-interactively-p)
       (message "<Press a key> Pulse a pre-existing overlay.")
       (read-char))
     (let* ((start (point-at-bol))
@@ -243,7 +244,7 @@ When optional NO-ERROR Don't throw an error if we can't run tests."
 	  (pulse-overlay-delete o)
 	(error "Non-temporary overlay was deleted!"))
       )
-    (when (interactive-p)
+    (when (cedet-called-interactively-p)
       (message "Done!"))))
 
 
@@ -258,24 +259,26 @@ When optional NO-ERROR Don't throw an error if we can't run tests."
 Optional argument FACE specifies the fact to do the highlighting."
   (pulse-overlay-put o 'original-face (pulse-overlay-get o 'face))
   (add-to-list 'pulse-momentary-overlay o)
-  (if (or (not pulse-flag) (not (pulse-available-p)))
-      ;; Provide a face... clear on next command
-      (progn
-	(pulse-overlay-put o 'face (or face 'pulse-highlight-start-face))
-	(add-hook 'pre-command-hook
-		  'pulse-momentary-unhighlight)
-	)
-    ;; pulse it.
-    (unwind-protect
+  (if (eq pulse-flag 'never)
+      nil
+    (if (or (not pulse-flag) (not (pulse-available-p)))
+	;; Provide a face... clear on next command
 	(progn
-	  (pulse-overlay-put o 'face 'pulse-highlight-face)
-	  ;; The pulse function puts FACE onto 'pulse-highlight-face.
-	  ;; Thus above we put our face on the overlay, but pulse
-	  ;; with a reference face needed for the color.
-	  (pulse face))
-      (pulse-momentary-unhighlight))
-    )
-  )
+	  (pulse-overlay-put o 'face (or face 'pulse-highlight-start-face))
+	  (add-hook 'pre-command-hook
+		    'pulse-momentary-unhighlight)
+	  )
+      ;; pulse it.
+      (unwind-protect
+	  (progn
+	    (pulse-overlay-put o 'face 'pulse-highlight-face)
+	    ;; The pulse function puts FACE onto 'pulse-highlight-face.
+	    ;; Thus above we put our face on the overlay, but pulse
+	    ;; with a reference face needed for the color.
+	    (pulse face))
+	(pulse-momentary-unhighlight))
+      )
+    ))
 
 (defun pulse-momentary-unhighlight ()
   "Unhighlight a line recently highlighted."
@@ -293,7 +296,7 @@ Optional argument FACE specifies the fact to do the highlighting."
 
     ;; Clear the variable.
     (setq pulse-momentary-overlay nil))
-    
+
   ;; Reset the pulsing face.
   (pulse-reset-face)
 
@@ -361,33 +364,33 @@ the following hook:
 
 (defadvice goto-line (after pulse-advice activate)
   "Cause the line that is `goto'd to pulse when the cursor gets there."
-  (when (and pulse-command-advice-flag (interactive-p))
+  (when (and pulse-command-advice-flag (cedet-called-interactively-p))
     (pulse-momentary-highlight-one-line (point))))
 
 (defadvice exchange-point-and-mark (after pulse-advice activate)
   "Cause the line that is `goto'd to pulse when the cursor gets there."
-  (when (and pulse-command-advice-flag (interactive-p)
+  (when (and pulse-command-advice-flag (cedet-called-interactively-p)
 	     (> (abs (- (point) (mark))) 400))
     (pulse-momentary-highlight-one-line (point))))
 
 (defadvice find-tag (after pulse-advice activate)
   "After going to a tag, pulse the line the cursor lands on."
-  (when (and pulse-command-advice-flag (interactive-p))
+  (when (and pulse-command-advice-flag (cedet-called-interactively-p))
     (pulse-momentary-highlight-one-line (point))))
 
 (defadvice tags-search (after pulse-advice activate)
   "After going to a hit, pulse the line the cursor lands on."
-  (when (and pulse-command-advice-flag (interactive-p))
+  (when (and pulse-command-advice-flag (cedet-called-interactively-p))
     (pulse-momentary-highlight-one-line (point))))
 
 (defadvice tags-loop-continue (after pulse-advice activate)
   "After going to a hit, pulse the line the cursor lands on."
-  (when (and pulse-command-advice-flag (interactive-p))
+  (when (and pulse-command-advice-flag (cedet-called-interactively-p))
     (pulse-momentary-highlight-one-line (point))))
 
 (defadvice pop-tag-mark (after pulse-advice activate)
   "After going to a hit, pulse the line the cursor lands on."
-  (when (and pulse-command-advice-flag (interactive-p))
+  (when (and pulse-command-advice-flag (cedet-called-interactively-p))
     (pulse-momentary-highlight-one-line (point))))
 
 (defadvice imenu-default-goto-function (after pulse-advice activate)

@@ -1,9 +1,9 @@
 ;;; ede-make.el --- General information about "make"
 ;;
-;; Copyright (C) 2009 Eric M. Ludlam
+;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-make.el,v 1.2 2009/03/12 01:06:18 zappo Exp $
+;; X-RCS: $Id: ede-make.el,v 1.4 2010/04/09 01:36:48 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -75,9 +75,8 @@ If NOERROR is nil, then throw an error on failure.  Return t otherwise."
 	(rev nil)
 	(ans nil)
 	)
-    (save-excursion
+    (with-current-buffer b
       ;; Setup, and execute make.
-      (set-buffer b)
       (setq default-directory cd)
       (erase-buffer)
       (call-process ede-make-command nil b nil
@@ -89,7 +88,7 @@ If NOERROR is nil, then throw an error on failure.  Return t otherwise."
 	(setq ans (not (inversion-check-version rev nil ede-make-min-version))))
 
       ;; Answer reporting.
-      (when (and (interactive-p) ans)
+      (when (and (cedet-called-interactively-p 'interactive) ans)
 	(message "GNU Make version %s.  Good enough for CEDET." rev))
 
       (when (and (not noerror) (not ans))

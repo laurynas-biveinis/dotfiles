@@ -1,9 +1,9 @@
 ;;; data-debug.el --- Datastructure Debugger
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: data-debug.el,v 1.23 2009/04/19 16:18:38 zappo Exp $
+;; X-RCS: $Id: data-debug.el,v 1.30 2010/06/13 23:33:00 scymtym Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -41,6 +41,8 @@
 ;;     stuff))
 
 (require 'font-lock)
+(require 'ring)
+
 ;;; Code:
 
 ;;; Compatibility
@@ -109,7 +111,7 @@ PREFIX specifies what to insert at the start of each line."
 
 (defun data-debug-insert-overlay-button (overlay prefix prebuttontext)
   "Insert a button representing OVERLAY.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the overlay button."
   (let ((start (point))
 	(end nil)
@@ -158,7 +160,7 @@ PREFIX specifies what to insert at the start of each line."
 					      prefix
 					      prebuttontext)
   "Insert a button representing OVERLAYLIST.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the overlay list button."
   (let ((start (point))
 	(end nil)
@@ -183,7 +185,7 @@ PREBUTTONTEXT is some text between prefix and the overlay list button."
   "Insert all the parts of BUFFER.
 PREFIX specifies what to insert at the start of each line."
   (let ((attrprefix (concat (make-string (length prefix) ? ) "# "))
-	(proplist 
+	(proplist
 	 (list :filename (buffer-file-name buffer)
 	       :live (buffer-live-p buffer)
 	       :modified (buffer-modified-p buffer)
@@ -213,7 +215,7 @@ PREFIX specifies what to insert at the start of each line."
 
 (defun data-debug-insert-buffer-button (buffer prefix prebuttontext)
   "Insert a button representing BUFFER.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the buffer button."
   (let ((start (point))
 	(end nil)
@@ -262,7 +264,7 @@ PREFIX specifies what to insert at the start of each line."
 					      prefix
 					      prebuttontext)
   "Insert a button representing BUFFERLIST.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the buffer list button."
   (let ((start (point))
 	(end nil)
@@ -318,7 +320,7 @@ PREFIX specifies what to insert at the start of each line."
 
 (defun data-debug-insert-process-button (process prefix prebuttontext)
   "Insert a button representing PROCESS.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the process button."
   (let ((start (point))
 	(end nil)
@@ -370,7 +372,7 @@ PREFIX specifies what to insert at the start of each line."
 				      prefix
 				      prebuttontext)
   "Insert a button representing RING.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the stuff list button."
   (let* ((start (point))
 	 (end nil)
@@ -379,18 +381,9 @@ PREBUTTONTEXT is some text between prefix and the stuff list button."
 		      (ring-size ring)))
 	 (ringthing
 	  (if (= (ring-length ring) 0) nil (ring-ref ring 0)))
-	 (tip (format "Ring max-size %d, length %d.  Full of: %S"
+	 (tip (format "Ring max-size %d, length %d."
 		      (ring-size ring)
-		      (ring-length ring)
-		      (cond ((stringp ringthing)
-			     "strings")
-			    ((semantic-tag-p ringthing)
-			     "tags")
-			    ((eieio-object-p ringthing)
-			     "eieio objects")
-			    ((listp ringthing)
-			     "List of somethin'")
-			    (t "stuff"))))
+		      (ring-length ring)))
 	 )
     (insert prefix prebuttontext str)
     (setq end (point))
@@ -406,7 +399,7 @@ PREBUTTONTEXT is some text between prefix and the stuff list button."
   )
 
 
-;;; Hash-table 
+;;; Hash-table
 ;;
 
 ;;;###autoload
@@ -414,10 +407,10 @@ PREBUTTONTEXT is some text between prefix and the stuff list button."
   "Insert the contents of HASH-TABLE inserting PREFIX before each element."
   (maphash
    (lambda (key value)
-     (data-debug-insert-thing 
+     (data-debug-insert-thing
       key prefix
       (dd-propertize "key " 'face font-lock-comment-face))
-     (data-debug-insert-thing 
+     (data-debug-insert-thing
       value prefix
       (dd-propertize "val " 'face font-lock-comment-face)))
    hash-table))
@@ -438,9 +431,13 @@ PREBUTTONTEXT is some text between prefix and the stuff list button."
 
 (defun data-debug-insert-hash-table-button (hash-table prefix prebuttontext)
   "Insert HASH-TABLE as expandable button with recursive prefix PREFIX and PREBUTTONTEXT in front of the button text."
-  (let ((string (dd-propertize (format "%s" hash-table)
-			    'face 'font-lock-keyword-face)))
-    (insert (dd-propertize 
+  (let ((string (dd-propertize
+		 (format "#(hash-table count %d size %d test %s)"
+			 (hash-table-count hash-table)
+			 (hash-table-size hash-table)
+			 (hash-table-test hash-table))
+		 'face 'font-lock-keyword-face)))
+    (insert (dd-propertize
 	     (concat prefix prebuttontext string)
 	     'ddebug        hash-table
 	     'ddebug-indent (length prefix)
@@ -490,7 +487,7 @@ PREBUTTONTEXT is some text between prefix and the stuff list button."
 (defun data-debug-insert-widget (widget prefix prebuttontext)
   "Insert one WIDGET.
 A Symbol is a simple thing, but this provides some face and prefix rules.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the thing."
   (let ((string (dd-propertize (format "#<WIDGET %s>" (car widget))
 			       'face 'font-lock-keyword-face)))
@@ -544,7 +541,7 @@ PREFIX specifies what to insert at the start of each line."
 					    prefix
 					    prebuttontext)
   "Insert a button representing STUFFLIST.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the stuff list button."
   (let ((start (point))
 	(end nil)
@@ -604,7 +601,7 @@ PREFIX specifies what to insert at the start of each line."
 					    prefix
 					    prebuttontext)
   "Insert a button representing STUFFVECTOR.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the stuff vector button."
   (let* ((start (point))
 	 (end nil)
@@ -638,11 +635,11 @@ PREBUTTONTEXT is some text between prefix and the stuff vector button."
       (data-debug-insert-thing
        (symbol-value symbol)
        (concat (make-string indent ? ) "> ")
-       (concat 
+       (concat
 	(dd-propertize "value"
 		    'face 'font-lock-comment-face)
 	" ")))
-    (data-debug-insert-property-list 
+    (data-debug-insert-property-list
      (symbol-plist symbol)
      (concat (make-string indent ? ) "> "))
     (goto-char start))
@@ -650,7 +647,7 @@ PREBUTTONTEXT is some text between prefix and the stuff vector button."
 
 (defun data-debug-insert-symbol-button (symbol prefix prebuttontext)
   "Insert a button representing SYMBOL.
- PREFIX is the text that preceeds the button.
+ PREFIX is the text that precedes the button.
  PREBUTTONTEXT is some text between prefix and the symbol button."
   (let ((string
 	 (cond ((fboundp symbol)
@@ -660,7 +657,7 @@ PREBUTTONTEXT is some text between prefix and the stuff vector button."
 		(dd-propertize (concat "'" (symbol-name symbol))
 			    'face 'font-lock-variable-name-face))
 	       (t (format "'%s" symbol)))))
-    (insert (dd-propertize 
+    (insert (dd-propertize
 	     (concat prefix prebuttontext string)
 	     'ddebug          symbol
 	     'ddebug-indent   (length prefix)
@@ -675,7 +672,7 @@ PREBUTTONTEXT is some text between prefix and the stuff vector button."
 (defun data-debug-insert-string (thing prefix prebuttontext)
   "Insert one symbol THING.
 A Symbol is a simple thing, but this provides some face and prefix rules.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the thing."
   (let ((newstr thing))
     (while (string-match "\n" newstr)
@@ -691,7 +688,7 @@ PREBUTTONTEXT is some text between prefix and the thing."
 (defun data-debug-insert-number (thing prefix prebuttontext)
   "Insert one symbol THING.
 A Symbol is a simple thing, but this provides some face and prefix rules.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the thing."
   (insert prefix prebuttontext
 	  (dd-propertize (format "%S" thing)
@@ -702,7 +699,7 @@ PREBUTTONTEXT is some text between prefix and the thing."
 (defun data-debug-insert-lambda-expression (thing prefix prebuttontext)
   "Insert one lambda expression THING.
 A Symbol is a simple thing, but this provides some face and prefix rules.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the thing."
   (let ((txt (prin1-to-string thing)))
     (data-debug-insert-simple-thing
@@ -712,7 +709,7 @@ PREBUTTONTEXT is some text between prefix and the thing."
 ;;; nil thing
 (defun data-debug-insert-nil (thing prefix prebuttontext)
   "Insert one simple THING with a face.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the thing.
 FACE is the face to use."
   (insert prefix prebuttontext)
@@ -728,7 +725,7 @@ FACE is the face to use."
 ;;; simple thing
 (defun data-debug-insert-simple-thing (thing prefix prebuttontext face)
   "Insert one simple THING with a face.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the thing.
 FACE is the face to use."
   (insert prefix prebuttontext)
@@ -744,7 +741,7 @@ FACE is the face to use."
 (defun data-debug-insert-custom (thingstring prefix prebuttontext face)
   "Insert one simple THINGSTRING with a face.
 Use for simple items that need a custom insert.
-PREFIX is the text that preceeds the button.
+PREFIX is the text that precedes the button.
 PREBUTTONTEXT is some text between prefix and the thing.
 FACE is the face to use."
   (insert prefix prebuttontext)
@@ -761,25 +758,6 @@ FACE is the face to use."
   '(
     ;; nil
     (null . data-debug-insert-nil)
-
-    ;; eieio object
-    ((lambda (thing) (object-p thing)) . data-debug-insert-object-button)
-
-    ;; tag
-    (semantic-tag-p . data-debug-insert-tag)
-
-    ;; taglist
-    ((lambda (thing) (and (listp thing) (semantic-tag-p (car thing)))) .
-     data-debug-insert-tag-list-button)
-
-    ;; find results
-    (semanticdb-find-results-p . data-debug-insert-find-results-button)
-   
-    ;; Elt of a find-results
-    ((lambda (thing) (and (listp thing)
-			  (semanticdb-abstract-table-child-p (car thing))
-			  (semantic-tag-p (cdr thing)))) .
-			  data-debug-insert-db-and-tag-button)
 
     ;; Overlay
     (data-debug-overlay-p . data-debug-insert-overlay-button)
@@ -819,7 +797,7 @@ FACE is the face to use."
 
     ;; Widgets
     (widgetp . data-debug-insert-widget)
-     
+
     ;; List of stuff
     (listp . data-debug-insert-stuff-list-button)
 
@@ -827,6 +805,22 @@ FACE is the face to use."
     (vectorp . data-debug-insert-stuff-vector-button)
     )
   "Alist of methods used to insert things into an Ddebug buffer.")
+
+;; An augmentation function for the thing alist.
+(defun data-debug-add-specialized-thing (predicate fcn)
+  "Add a new specialized thing to display with data-debug.
+PREDICATE is a function that returns t if a thing is this new type.
+FCN is a function that will display stuff in the data debug buffer."
+  (let ((entry (cons predicate fcn))
+	;; Specialized entries show up AFTER nil,
+	;; but before listp, vectorp, symbolp, and
+	;; other general things.  Splice it into
+	;; the beginning.
+	(first (nthcdr 0 data-debug-thing-alist))
+	(second (nthcdr 1 data-debug-thing-alist))
+      )
+  (when (not (member entry data-debug-thing-alist))
+    (setcdr first (cons entry second)))))
 
 ;; uber insert method
 ;;;###autoload
@@ -839,11 +833,19 @@ If PARENT is non-nil, it is somehow related as a parent to thing."
 	  (dolist (test data-debug-thing-alist)
 	    (when (funcall (car test) thing)
 	      (condition-case nil
-		  (funcall (cdr test) thing prefix prebuttontext parent)
+		  (progn
+		    (funcall (cdr test) thing prefix prebuttontext parent)
+		    (throw 'done nil))
 		(error
-		 (funcall (cdr test) thing prefix prebuttontext)))
-	      (throw 'done nil))
-	    )
+		 (condition-case nil
+		     (progn
+		       (funcall (cdr test) thing prefix prebuttontext)
+		       (throw 'done nil))
+		   (error nil))))
+	      ;; Only throw the 'done if no error was caught.
+	      ;; If an error was caught, skip this predicate as being
+	      ;; unsuccessful, and move on.
+	      ))
 	  nil)
     (data-debug-insert-simple-thing (format "%S" thing)
 				    prefix
@@ -853,11 +855,11 @@ If PARENT is non-nil, it is somehow related as a parent to thing."
 ;;; MAJOR MODE
 ;;
 ;; The Ddebug major mode provides an interactive space to explore
-;; the current state of semantic's parsing and analysis
+;; complicated data structures.
 ;;
 (defgroup data-debug nil
   "data-debug group."
-  :group 'langauges)
+  :group 'extensions)
 
 (defvar data-debug-mode-syntax-table
   (let ((table (make-syntax-table (standard-syntax-table))))
@@ -869,7 +871,7 @@ If PARENT is non-nil, it is somehow related as a parent to thing."
     (modify-syntax-entry ?\` "'"     table) ;; Prefix ` (backquote)
     (modify-syntax-entry ?\' "'"     table) ;; Prefix ' (quote)
     (modify-syntax-entry ?\, "'"     table) ;; Prefix , (comma)
-    
+
     table)
   "Syntax table used in data-debug macro buffers.")
 
@@ -1046,11 +1048,11 @@ Do nothing if already expanded."
 
 ;;; DEBUG COMMANDS
 ;;
-;; Various commands to output aspects of the current semantic environment.
+;; Various commands for displaying complex data structures.
 
 ;;;###autoload
 (defun data-debug-edebug-expr (expr)
-  "Dump out the contets of some expression EXPR in edebug with ddebug."
+  "Dump out the contents of some expression EXPR in edebug with ddebug."
   (interactive
    (list (let ((minibuffer-completing-symbol t))
 	   (read-from-minibuffer "Eval: "

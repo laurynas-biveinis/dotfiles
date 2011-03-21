@@ -1,6 +1,6 @@
 @c -*-texinfo-*-
 @c
-@c $Id: ede-projects.texi,v 1.5 2009/02/14 15:28:57 zappo Exp $
+@c $Id: ede-projects.texi,v 1.7 2010/03/15 13:40:54 xscript Exp $
 @c
 
 @c The next line is for the back-search to see what node this one
@@ -96,7 +96,7 @@ Get the inode of the directory project @var{PROJ} is in.
 @end deffn
 
 @deffn Method ede-project-root :AFTER this 
-If a project knows it's root, return it here.
+If a project knows its root, return it here.
 Allows for one-project-object-for-a-tree type systems.
 @end deffn
 
@@ -105,7 +105,7 @@ Find a subproject of @var{PROJ} that corresponds to @var{DIR}.
 @end deffn
 
 @deffn Method ede-project-root-directory :AFTER this &optional file 
-If a project knows it's root, return it here.
+If a project knows its root, return it here.
 Allows for one-project-object-for-a-tree type systems.
 Optional @var{FILE} is the file to test.  It is ignored in preference
 of the anchor file for the project.
@@ -1460,7 +1460,7 @@ The variable GNUSTEP_INSTALLATION_DOMAIN is set at this value.
 Type: @code{(or null list)} @*
 Default Value: @code{(quote ("GNUmakefile.preamble"))}
 
-The auxilliary makefile for additional variables.
+The auxiliary makefile for additional variables.
 Included just before the specific target files.
 @refill
 
@@ -1468,7 +1468,7 @@ Included just before the specific target files.
 Type: @code{(or null list)} @*
 Default Value: @code{(quote ("GNUmakefile.postamble"))}
 
-The auxilliary makefile for additional rules.
+The auxiliary makefile for additional rules.
 Included just after the specific target files.
 @refill
 

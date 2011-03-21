@@ -1,8 +1,8 @@
 ;;; semantic-edit.el --- Edit Management for Semantic
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
-;; X-CVS: $Id: semantic-edit.el,v 1.40 2009/01/20 02:28:09 zappo Exp $
+;; X-CVS: $Id: semantic-edit.el,v 1.44 2010/03/26 22:18:02 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -55,7 +55,7 @@
 ;;    syntax instead.
 ;;
 ;; 2. Incremental parsing while a new function is being typed in
-;;    somtimes gets a chance only when lists are incomplete,
+;;    sometimes gets a chance only when lists are incomplete,
 ;;    preventing correct context identification.
 
 ;;
@@ -82,15 +82,13 @@ common hook `after-change-functions'.")
 
 (defvar semantic-reparse-needed-change-hook nil
   "Hooks run when a user edit is detected as needing a reparse.
-For language specific hooks, make sure you define this as a local
-hook.
-Not used yet; part of the next generation reparse mechanism")
+For language specific hooks, make sure you define this as a local hook.
+Not used yet; part of the next generation reparse mechanism.")
 
 (defvar semantic-no-reparse-needed-change-hook nil
   "Hooks run when a user edit is detected as not needing a reparse.
 If the hook returns non-nil, then declare that a reparse is needed.
-For language specific hooks, make sure you define this as a local
-hook.
+For language specific hooks, make sure you define this as a local hook.
 Not used yet; part of the next generation reparse mechanism.")
 
 (defvar semantic-edits-new-change-hooks nil
@@ -113,13 +111,16 @@ Functions must take one argument representing an overlay being moved.")
 Functions are called before the overlay is deleted, and after the
 incremental reparse.")
 
-(defvar semantic-edits-incremental-reparse-failed-hooks nil
-  "Hooks run after the incremental parser fails.
-When this happens, the buffer is marked as needing a full reprase.")
+(defvar semantic-edits-incremental-reparse-failed-hook nil
+  "Hook run after the incremental parser fails.
+When this happens, the buffer is marked as needing a full reparse.")
+
+(semantic-varalias-obsolete 'semantic-edits-incremental-reparse-failed-hooks
+                          'semantic-edits-incremental-reparse-failed-hook)
 
 ;;;###autoload
 (defcustom semantic-edits-verbose-flag nil
-  "Non-nil means the incremental perser is verbose.
+  "Non-nil means the incremental parser is verbose.
 If nil, errors are still displayed, but informative messages are not."
   :group 'semantic
   :type 'boolean)
@@ -308,7 +309,7 @@ See `semantic-edits-change-leaf-tag' for details on parents."
 		    (semantic-tag-components (car tags)))
 	      ;; Ok, we are completely encompassed within the first tag
 	      ;; entry, AND that tag has children.  This means that change
-	      ;; occured outside of all children, but inside some tag
+	      ;; occurred outside of all children, but inside some tag
 	      ;; with children.
 	      (if (or (not (semantic-tag-with-position-p (car list-to-search)))
 		      (> start (semantic-tag-end
@@ -430,7 +431,7 @@ See `semantic-edits-change-leaf-tag' for details on parents."
 	    ;; confirmed as the lineage of `overlapped-tags'
 	    ;; which must have a value by now.
 
-	    ;; Loop over the search list to find the preceeding CDR.
+	    ;; Loop over the search list to find the preceding CDR.
 	    ;; Fortunatly, (car overlapped-tags) happens to be
 	    ;; the first tag positionally.
 	    (let ((tokstart (semantic-tag-start (car overlapped-tags))))
@@ -472,7 +473,7 @@ a 'semantic-parse-changes-failed exception with value t."
   (when semantic-edits-verbose-flag
     (working-temp-message "Force full reparse (%s)"
 			  (buffer-name (current-buffer))))
-  (run-hooks 'semantic-edits-incremental-reparse-failed-hooks))
+  (run-hooks 'semantic-edits-incremental-reparse-failed-hook))
 
 ;;;###autoload
 (defun semantic-edits-incremental-parser ()
@@ -501,7 +502,7 @@ the semantic cache to see what needs to be changed."
     changed-tags))
 
 (defmacro semantic-edits-assert-valid-region ()
-  "Asert that parse-start and parse-end are sorted correctly."
+  "Assert that parse-start and parse-end are sorted correctly."
 ;;;  (if (> parse-start parse-end)
 ;;;      (error "Bug is %s !> %d!  Buff min/max = [ %d %d ]"
 ;;;	     parse-start parse-end
@@ -753,7 +754,7 @@ This function is for internal use by `semantic-edits-incremental-parser'."
 
 ;;;; Whitespace change
        ((and (not tags) (not newf-tags))
-        ;; A change that occured outside of any existing tags
+        ;; A change that occurred outside of any existing tags
         ;; and there are no new tags to replace it.
 	(when semantic-edits-verbose-flag
 	  (working-temp-message "White space changes"))
@@ -762,7 +763,7 @@ This function is for internal use by `semantic-edits-incremental-parser'."
 
 ;;;; New tags in old whitespace area.
        ((and (not tags) newf-tags)
-        ;; A change occured outside existing tags which added
+        ;; A change occurred outside existing tags which added
         ;; a new tag.  We need to splice these tags back
         ;; into the cache at the right place.
         (semantic-edits-splice-insert newf-tags parent-tag cache-list)
@@ -777,7 +778,7 @@ This function is for internal use by `semantic-edits-incremental-parser'."
 
 ;;;; Old tags removed
        ((and tags (not newf-tags))
-        ;; A change occured where pre-existing tags were
+        ;; A change occurred where pre-existing tags were
         ;; deleted!  Remove the tag from the cache.
         (semantic-edits-splice-remove tags parent-tag cache-list)
 
@@ -840,7 +841,7 @@ This function is for internal use by `semantic-edits-incremental-parser'."
 ;; list can be fiddled.
 (defun semantic-edits-splice-remove (oldtags parent cachelist)
   "Remove OLDTAGS from PARENT's CACHELIST.
-OLDTAGS are tags in the currenet buffer, preferably linked
+OLDTAGS are tags in the current buffer, preferably linked
 together also in CACHELIST.
 PARENT is the parent tag containing OLDTAGS.
 CACHELIST should be the children from PARENT, but may be
@@ -879,7 +880,7 @@ pre-positioned to a convenient location."
 	    ))
       (working-temp-message "To Remove Middle Tag: (%s)"
 			    (semantic-format-tag-name first)))
-    ;; Find in the cache the preceeding tag
+    ;; Find in the cache the preceding tag
     (while (and cachestart (not (eq first (car (cdr cachestart)))))
       (setq cachestart (cdr cachestart)))
     ;; Find the last tag
@@ -933,7 +934,7 @@ convenient location, so use that."
 
 (defun semantic-edits-splice-replace (oldtag newtag)
   "Replace OLDTAG with NEWTAG in the current cache.
-Do this by recycling OLDTAG's first CONS cell.  This effectivly
+Do this by recycling OLDTAG's first CONS cell.  This effectively
 causes the new tag to completely replace the old one.
 Make sure that all information in the overlay is transferred.
 It is presumed that OLDTAG and NEWTAG are both cooked.

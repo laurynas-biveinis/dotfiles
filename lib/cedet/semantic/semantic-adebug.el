@@ -3,7 +3,7 @@
 ;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-adebug.el,v 1.26 2009/01/20 02:27:13 zappo Exp $
+;; X-RCS: $Id: semantic-adebug.el,v 1.29 2010/03/15 13:40:54 xscript Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -28,14 +28,18 @@
 ;; Goals:
 ;;
 ;; Inspect all known details of a TAG in a buffer.
-;; 
-;; Analyze the list of active semantic databases, and the tags therin.
+;;
+;; Analyze the list of active semantic databases, and the tags therein.
 ;;
 ;; Allow interactive navigation of the analysis process, tags, etc.
 
+(require 'eieio)
 (require 'data-debug)
-(require 'eieio-datadebug)
-(require 'semantic-analyze)
+(require 'semantic)
+(require 'semantic-tag)
+(require 'semantic-format)
+(eval-when-compile
+  (require 'semanticdb-find))
 
 ;;; Code:
 
@@ -119,7 +123,7 @@ Add text properties needed to allow tag expansion later."
     (put-text-property start end 'help-echo tip)
     (put-text-property start end 'ddebug-function
 		       'data-debug-insert-tag-parts-from-point)
-    
+
     ))
 
 ;;; TAG LISTS
@@ -288,12 +292,12 @@ PREBUTTONTEXT is some text between prefix and the find results button."
 
     (message "Retrieving tags took %.2f seconds."
 	     (semantic-elapsed-time start end))
-    
+
     (data-debug-new-buffer (concat "*" (buffer-name) " ADEBUG*"))
     (data-debug-insert-tag-list out "* "))
   )
 
-;;;###autoload  
+;;;###autoload
 (defun semantic-adebug-searchdb (regex)
   "Search the semanticdb for REGEX for the current buffer.
 Display the results as a debug list."
@@ -307,39 +311,8 @@ Display the results as a debug list."
 				   " ADEBUG*"))
     (message "Search of tags took %.2f seconds."
 	     (semantic-elapsed-time start end))
-    
+
     (data-debug-insert-find-results fr "*")))
-
-;;;###autoload
-(defun semantic-adebug-analyze (&optional ctxt)
-  "Perform `semantic-analyze-current-context'.
-Display the results as a debug list.
-Optional argument CTXT is the context to show."
-  (interactive)
-  (let ((start (current-time))
-	(ctxt (or ctxt (semantic-analyze-current-context)))
-	(end (current-time)))
-    (if (not ctxt)
-	(message "No Analyzer Results")
-      (message "Analysis  took %.2f seconds."
-	       (semantic-elapsed-time start end))
-      (semantic-analyze-pulse ctxt)
-      (if ctxt
-	  (progn
-	    (data-debug-new-buffer "*Analyzer ADEBUG*")
-	    (data-debug-insert-object-slots ctxt "]"))
-	(message "No Context to analyze here.")))))
-
-;;;###autoload
-(defun semantic-adebug-edebug-expr (expr)
-  "Dump out the contets of some expression EXPR in edebug with adebug."
-  (interactive "sExpression: ")
-  (let ((v (eval (read expr))))
-    (if (not v)
-	(message "Expression %s is nil." expr)
-      (data-debug-new-buffer "*expression ADEBUG*")
-      (data-debug-insert-thing v "?" "")
-      )))
 
 ;;;###autoload
 (defun semanticdb-debug-file-tag-check (startfile)
@@ -429,7 +402,7 @@ Optional argument CTXT is the context to show."
 ;; (semanticdb-debug-file-tag-check "/usr/lib/gcc/i486-linux-gnu/4.2/include/stddef.h")
 ;; (semanticdb-debug-file-tag-check "/usr/include/stdlib.h")
 
-  
+
 
 (provide 'semantic-adebug)
 

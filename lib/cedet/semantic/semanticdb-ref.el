@@ -1,9 +1,9 @@
 ;;; semanticdb-ref.el --- Handle cross-db file references
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semanticdb-ref.el,v 1.11 2009/01/20 02:31:00 zappo Exp $
+;; X-RCS: $Id: semanticdb-ref.el,v 1.12 2010/01/07 02:24:52 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -141,7 +141,7 @@ DBT, the second argument is DBT."
 
 (defun semanticdb-ref-test (refresh)
   "Dump out the list of references for the current buffer.
-If REFRESH is non-nil, cause the current table to have it's references
+If REFRESH is non-nil, cause the current table to have its references
 refreshed before dumping the result."
   (interactive "p")
   ;; If we need to refresh... then do so.

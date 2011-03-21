@@ -1,11 +1,12 @@
 ## Makefile --- Definition file for building CEDET
 ##
-## Copyright (C) 2003, 2004, 2005, 2007, 2008, 2009 by David Ponce
+## Copyright (C) 2005, 2007, 2008, 2009, 2010 by Eric M. Ludlam
+## Copyright (C) 2003, 2004  by David Ponce
 ##
 ## Author: David Ponce <david@dponce.com>
 ## Maintainer: CEDET developers <http://sf.net/projects/cedet>
 ## Created: 12 Sep 2003
-## X-RCS: $Id: Makefile,v 1.23 2009/03/08 16:31:53 zappo Exp $
+## X-RCS: $Id: Makefile,v 1.27 2010/04/23 00:04:39 zappo Exp $
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -28,7 +29,7 @@
 CEDET_HOME="$(CURDIR)"
 
 ## The CEDET's packages installed
-CEDET_PACKAGES=\
+CEDET_ELISP_PACKAGES=\
 common \
 speedbar \
 eieio \
@@ -36,11 +37,14 @@ semantic \
 srecode \
 ede \
 cogre \
-contrib \
+contrib
+
+CEDET_PACKAGES=\
+$(CEDET_ELISP_PACKAGES) \
 tests
 
 ## Path to your Emacs
-EMACS=emacs
+EMACS?=emacs
 EMACSFLAGS=-batch --no-site-file
 
 ## Your shell (On Windows/Cygwin I recommend to use bash)
@@ -65,7 +69,7 @@ DIST_ROOT=cedet-$(CEDET_VERSION)
 DIST_DIR=$(CEDET_HOME)/$(DIST_ROOT)
 DIST_FILE=$(DIST_DIR).tar.gz
 
-__BUILD_AUTOLOADS=$(patsubst %,%-autoloads,$(CEDET_PACKAGES))
+__BUILD_AUTOLOADS=$(patsubst %,%-autoloads,$(CEDET_ELISP_PACKAGES))
 __CLEAN_AUTOLOADS=$(patsubst %,clean-%,$(__BUILD_AUTOLOADS))
 __DOMAKE=$(MAKE) $(MFLAGS) EMACS="$(EMACS)" EMACSFLAGS="$(EMACSFLAGS)" SHELL="$(SHELL)"
 
@@ -142,7 +146,9 @@ utest:
 	$(EMACS) $(EMACSFLAGS) -l "common/cedet.el" -f cedet-utest-batch
 
 itest:
-	cd tests; ./cit-test.sh
+	cd tests; ./cit-test.sh Make
+	cd tests; ./cit-test.sh Automake
+	cd tests; ./cit-test.sh GNUStep
 
 ### Install info files
 ## Thanks Stefano Sabatini for the info install patch.

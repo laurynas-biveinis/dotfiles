@@ -44,7 +44,7 @@ License''.
 @ifinfo
 @dircategory Emacs
 @direntry
-* Semantic: (semantic).	Infrastructure for parser based text analysis.
+* Semantic: (semantic). Infrastructure for parser based text analysis.
 @end direntry
 @end ifinfo
 

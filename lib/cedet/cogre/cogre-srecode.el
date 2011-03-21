@@ -1,9 +1,9 @@
 ;;; cogre-srecode.el --- SRecode macros for COGRE.
 ;;
-;; Copyright (C) 2009 Eric M. Ludlam
+;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cogre-srecode.el,v 1.5 2009/04/06 02:28:18 zappo Exp $
+;; X-RCS: $Id: cogre-srecode.el,v 1.6 2010/03/06 02:25:43 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -71,7 +71,7 @@
     ))
 
 ;;;###autoload
-(eval-after-load "srecode-map" (cogre-srecode-setup))
+(eval-after-load "srecode-map" '(cogre-srecode-setup))
 
 ;;;###autoload
 (defun srecode-semantic-handle-:dot (dict)

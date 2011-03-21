@@ -1,10 +1,10 @@
 ;;; ede-proj.el --- EDE Generic Project file driver
 
-;;;  Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2007, 2008, 2009  Eric M. Ludlam
+;;;  Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2007, 2008, 2009, 2010  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede-proj.el,v 1.59 2009/03/08 12:54:29 zappo Exp $
+;; RCS: $Id: ede-proj.el,v 1.72 2010/06/06 14:22:32 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@
 	      :custom (repeat (string :tag "File"))
 	      :label "Auxiliary Source Files"
 	      :group (default source)
-	      :documentation "Auxilliary source files included in this target.
+	      :documentation "Auxiliary source files included in this target.
 Each of these is considered equivalent to a source file, but it is not
 distributed, and each should have a corresponding rule to build it.")
    (dirty :initform nil
@@ -148,7 +148,7 @@ It is safe to leave this blank.")
 (autoload 'ede-proj-target-scheme "ede-proj-scheme"
   "Target class for a group of lisp files." nil nil)
 (autoload 'ede-proj-target-makefile-miscelaneous "ede-proj-misc"
-  "Target class for a group of miscelaneous w/ a special makefile." nil nil)
+  "Target class for a group of miscellaneous w/ a special makefile." nil nil)
 (autoload 'ede-proj-target-makefile-program "ede-proj-prog"
   "Target class for building a program." nil nil)
 (autoload 'ede-proj-target-makefile-archive "ede-proj-archive"
@@ -332,8 +332,10 @@ Argument TARGET is the project we are completing customization on."
   (let ((f (ede-convert-path this (buffer-file-name buffer))))
     (or (string= (file-name-nondirectory (oref this file)) f)
 	(string= (ede-proj-dist-makefile this) f)
-	(string-match "Makefile\\(\\.\\(in\\|am\\)\\)?" f)
-	(string-match "config\\(ure\\.in\\|\\.stutus\\)?" f)
+	(string-match "Makefile\\(\\.\\(in\\|am\\)\\)?$" f)
+	(string-match "config\\(ure\\.\\(in\\|ac\\)\\|\\.stutus\\)?$" f)
+	(string-match "config.h\\(\\.in\\)?" f)
+	(member f '("AUTHORS" "NEWS" "COPYING" "INSTALL" "README"))
 	)))
 
 (defmethod ede-buffer-mine ((this ede-proj-target) buffer)
@@ -351,7 +353,7 @@ Argument TARGET is the project we are completing customization on."
 			       &optional name type autoadd)
   "Create a new target in THIS based on the current buffer."
   (let* ((name (or name (read-string "Name: " "")))
-	 (type (or type 
+	 (type (or type
 		   (completing-read "Type: " ede-proj-target-alist
 				    nil t nil '(ede-proj-target-history . 1))))
 	 (ot nil)
@@ -364,7 +366,7 @@ Argument TARGET is the project we are completing customization on."
 	 )
 
     (when (not fcn)
-      (error "Unknown target type %s for EDE Project." type))
+      (error "Unknown target type %s for EDE Project" type))
 
     (setq ot (funcall fcn name :name name
 		      :path (ede-convert-path this default-directory)
@@ -395,23 +397,22 @@ Argument TARGET is the project we are completing customization on."
 	     :source nil)))
 
 (defmethod project-delete-target ((this ede-proj-target))
-  "Delete the current target THIS from it's parent project."
+  "Delete the current target THIS from its parent project."
   (let ((p (ede-current-project))
 	(ts (oref this source)))
     ;; Loop across all sources.  If it exists in a buffer,
-    ;; clear it's object.
+    ;; clear its object.
     (while ts
       (let* ((default-directory (oref this path))
 	     (b (get-file-buffer (car ts))))
 	(if b
-	    (save-excursion
-	      (set-buffer b)
+	    (with-current-buffer b
 	      (if (eq ede-object this)
 		  (progn
 		    (setq ede-object nil)
 		    (ede-apply-object-keymap))))))
       (setq ts (cdr ts)))
-    ;; Remove THIS from it's parent.
+    ;; Remove THIS from its parent.
     ;; The two vectors should be pointer equivalent.
     (oset p targets (delq this (oref p targets)))
     (ede-proj-save (ede-current-project))))
@@ -445,17 +446,16 @@ FILE must be massaged by `ede-convert-path'."
 
 (defmethod project-make-dist ((this ede-proj-project))
   "Build a distribution for the project based on THIS target."
-  ;; I'm a lazy bum, so I'll make a makefile for doing this sort
-  ;; of thing, and rely only on that small section of code.
   (let ((pm (ede-proj-dist-makefile this))
 	(df (project-dist-files this)))
     (if (and (file-exists-p (car df))
 	     (not (y-or-n-p "Dist file already exists.  Rebuild? ")))
 	(error "Try `ede-update-version' before making a distribution"))
     (ede-proj-setup-buildenvironment this)
-    (if (string= pm "Makefile.am") (setq pm "Makefile"))
-    (compile (concat ede-make-command " -f " pm " dist"))
-    ))
+    (if (ede-proj-automake-p this)
+	(setq pm (expand-file-name "Makefile"
+				   (file-name-directory pm))))
+    (compile (concat ede-make-command " -f " pm " dist"))))
 
 (defmethod project-dist-files ((this ede-proj-project))
   "Return a list of files that constitutes a distribution of THIS project."
@@ -470,7 +470,9 @@ Argument COMMAND is the command to use when compiling."
   (let ((pm (ede-proj-dist-makefile proj))
 	(default-directory (file-name-directory (oref proj file))))
     (ede-proj-setup-buildenvironment proj)
-    (if (string= pm "Makefile.am") (setq pm "Makefile"))
+    (if (ede-proj-automake-p proj)
+	(setq pm (expand-file-name "Makefile"
+				   (file-name-directory pm))))
     (compile (concat ede-make-command" -f " pm " all"))))
 
 ;;; Target type specific compilations/debug
@@ -491,6 +493,10 @@ Optional argument COMMAND is the s the alternate command to use."
 (defmethod project-debug-target ((obj ede-proj-target))
   "Run the current project target OBJ in a debugger."
   (error "Debug-target not supported by %s" (object-name obj)))
+
+(defmethod project-run-target ((obj ede-proj-target))
+  "Run the current project target OBJ."
+  (error "Run-target not supported by %s" (object-name obj)))
 
 (defmethod ede-proj-makefile-target-name ((this ede-proj-target))
   "Return the name of the main target for THIS target."
@@ -530,7 +536,15 @@ Converts all symbols into the objects to be used."
 	    (if (ede-want-any-source-files-p (symbol-value (car st)) sources)
 		(let ((c (ede-proj-find-compiler avail (car st))))
 		  (if c (setq comp (cons c comp)))))
-	    (setq st (cdr st)))))
+	    (setq st (cdr st)))
+	  ;; Provide a good error msg.
+	  (unless comp
+	    (error "Could not find compiler match for source code extension \"%s\".
+You may need to add support for this type of file."
+		   (if sources
+		       (file-name-extension (car sources))
+		     "")))
+	  ))
       ;; Return the disovered compilers
       comp)))
 
@@ -562,12 +576,13 @@ Converts all symbols into the objects to be used."
 	  (unless link
 	    ;; No linker stands out!  Loop over our linkers and pull out
 	    ;; the first that has no source type requirement.
-	    (while (and avail (not (slot-boundp (car avail) 'sourcetype)))
+	    (while (and avail (not (eieio-instance-inheritor-slot-boundp (car avail) 'sourcetype)))
 	      (setq avail (cdr avail)))
-	    (setq link (cdr avail)))))
+	    (setq link (cdr avail)))
+	  ))
       ;; Return the disovered linkers
       link)))
-    
+
 
 ;;; Target type specific autogenerating gobbldegook.
 ;;
@@ -599,11 +614,11 @@ Converts all symbols into the objects to be used."
 	 (concat (file-name-directory (oref this file))
 		 "Makefile.am"))
 	((eq (oref this makefile-type) 'Makefile.in)
-	 (concat (file-name-directory (oref this file))
-		 "Makefile.in"))
+	 (expand-file-name "Makefile.in"
+			   (file-name-directory (oref this file))))
 	((object-assoc "Makefile" 'makefile (oref this targets))
-	 (concat (file-name-directory (oref this file))
-		 "Makefile"))
+	 (expand-file-name "Makefile"
+			   (file-name-directory (oref this file))))
 	(t
 	 (let ((targets (oref this targets)))
 	   (while (and targets
@@ -612,8 +627,8 @@ Converts all symbols into the objects to be used."
 			     'ede-proj-target-makefile)))
 	     (setq targets (cdr targets)))
 	   (if targets (oref (car targets) makefile)
-	     (concat (file-name-directory (oref this file))
-		     "Makefile"))))))
+	     (expand-file-name "Makefile"
+			       (file-name-directory (oref this file))))))))
 
 (defun ede-proj-regenerate ()
   "Regenerate Makefiles for and edeproject project."
@@ -638,39 +653,30 @@ Optional argument FORCE will force items to be regenerated."
       (ede-proj-makefile-create-maybe this (ede-proj-dist-makefile this))
     (require 'ede-pmake)
     (ede-proj-makefile-create this (ede-proj-dist-makefile this)))
-  (if (ede-proj-automake-p this)
-      (progn 
-	(require 'ede-pconf)
-	;; If the user wants to force this, do it some other way?
-	(ede-proj-configure-synchronize this)
-	;; Now run automake to fill in the blanks, autoconf, and other
-	;; auto thingies so that we can just say "make" when done.
-	
-	))
   ;; Rebuild all subprojects
   (ede-map-subprojects
    this (lambda (sproj) (ede-proj-setup-buildenvironment sproj force)))
+  ;; Autoconf projects need to do other kinds of initializations.
+  (when (and (ede-proj-automake-p this)
+	     (eq this (ede-toplevel this)))
+    (require 'ede-pconf)
+    ;; If the user wants to force this, do it some other way?
+    (ede-proj-configure-synchronize this)
+    ;; Now run automake to fill in the blanks, autoconf, and other
+    ;; auto thingies so that we can just say "make" when done.
+    )
   )
 
 
 ;;; Lower level overloads
-;;  
+;;
 (defmethod project-rescan ((this ede-proj-project))
   "Rescan the EDE proj project THIS."
   (let ((root (or (ede-project-root this) this))
 	)
     (setq ede-projects (delq root ede-projects))
-    (ede-proj-load (ede-project-root-directory root))
+    (ede-load-project-file (ede-project-root-directory root))
     ))
-	
-(defmethod project-rescan ((this ede-proj-target) readstream)
-  "Rescan target THIS from the read list READSTREAM."
-  (setq readstream (cdr (cdr readstream))) ;; constructor/name
-  (while readstream
-    (let ((tag (car readstream))
-	  (val (car (cdr readstream))))
-      (eieio-oset this tag val))
-    (setq readstream (cdr (cdr readstream)))))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("Project\\.ede$" . emacs-lisp-mode))

@@ -355,7 +355,7 @@ refers to that parent by name, then the @code{:parent} attribute should be used.
 Return the parent of the function that @var{tag} describes.
 That is the value of the `:parent' attribute.
 A function has a parent if it is a method of a class, and if the
-function does not appear in body of it's parent class.
+function does not appear in body of its parent class.
 @obsolete{semantic-token-function-parent,semantic-tag-function-parent}
 @end defun
 
@@ -617,7 +617,7 @@ Narrow to @var{tag}, and execute @var{body}.
 * Tag Properties Internals::
 * Tag Overlay Internals::
 * Creating Tags::
-* Copying Tags::	
+* Copying Tags::
 * Misc Tag Internals::
 @end menu
 
@@ -883,12 +883,13 @@ property of the copied tag.
 This runs the tag hook `unlink-copy-hook`.
 @end defun
 
-@defun semantic-tag-deep-copy-one-tag tag &optional filter
+@defun semantic-tag-deep-copy-one-tag tag filter
 @anchor{semantic-tag-deep-copy-one-tag}
-Make a deep copy of @var{tag}, applying @var{filter} to each child-tag.
-Properties and overlay info are not copied.
-@var{filter} takes @var{tag} as an argument, and should returns a semantic-tag. 
-It is safe for @var{filter} to modify the input tag and return it.
+Make a deep copy of @var{TAG}, applying @var{FILTER} to each child-tag.
+No properties are copied except for @code{:filename}.
+Overlay will be a vector.
+@var{FILTER} takes @var{TAG} as an argument, and should returns a @dfn{semantic-tag}.
+It is safe for @var{FILTER} to modify the input tag and return it.
 @end defun
 
 @node Misc Tag Internals

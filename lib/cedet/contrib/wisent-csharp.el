@@ -1,7 +1,7 @@
 ;;; wisent-csharp.el --- LALR grammar for C#
 ;;
+;; Some Changes Copyright (C) 2006, 2010 Eric M. Ludlam
 ;; Copyright (C) 2003, 2007 David Shilvock
-;; Some Changes Copyright (C) 2006 Eric M. Ludlam
 
 ;; Time-stamp: <2003-12-08 19:11:48 dave>
 ;;
@@ -250,7 +250,7 @@ This function overrides `get-local-variables'."
 
 (define-lex-regex-analyzer wisent-csharp-lex-ignore-region
   "Ignore # type macros for C sharp."
-  "^\\s-*#region\\>"
+  "\\s-*#region\\>"
   (goto-char (match-end 0))
   (forward-word 1)
   (setq semantic-lex-end-point (point))
@@ -258,7 +258,7 @@ This function overrides `get-local-variables'."
 
 (define-lex-regex-analyzer wisent-csharp-lex-ignore-endregion
   "Ignore # type macros for C sharp."
-  "^\\s-*#endregion\\>"
+  "\\s-*#endregion\\>"
   (setq semantic-lex-end-point (match-end 0))
   nil)
 

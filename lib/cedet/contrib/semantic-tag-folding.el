@@ -1,7 +1,7 @@
 ;;; semantic-tag-folding.el --- semantic decoration style to enable folding of semantic tags
-;; Time-stamp: <2005-04-28 17:03:44 sacharya>
+;; Time-stamp: <2010-03-08 01:32:31 (lluis)>
 
-;;; Copyright (C) 2005 Suraj Acharya
+;;; Copyright (C) 2005, 2009, 2010 Suraj Acharya
 
 ;; Author: Suraj Acharya <sacharya@cs.indiana.edu>
 
@@ -27,7 +27,7 @@
 ;;; Defines a `semantic-decoration-mode' style which allows semantic
 ;;; tags to be expanded or collapsed in the style of folding mode and
 ;;; hideshow mode.  In addition to regular semantic tag, comments
-;;; preceeding tags can also be folded, and consecutive 'include tags
+;;; preceding tags can also be folded, and consecutive 'include tags
 ;;; are folded as a single unit.  A semantic minor mode
 ;;; `semantic-tag-folding-mode' is also created.  So M-x
 ;;; semantic-tag-folding-mode can be used to turn this mode on and
@@ -69,7 +69,7 @@
 
 
 (require 'semantic-decorate-mode)
-(require 'cl)
+(eval-when-compile (require 'cl))
 
 ;;; Code:
 
@@ -254,7 +254,7 @@ minor mode is enabled."
           (not semantic-tag-folding-mode)))
   (semantic-tag-folding-mode-setup)
   (run-hooks 'semantic-tag-folding-mode-hook)
-  (if (interactive-p)
+  (if (cedet-called-interactively-p)
       (message "folding minor mode %sabled"
                (if semantic-tag-folding-mode "en" "dis")))
   semantic-tag-folding-mode)
@@ -291,7 +291,7 @@ minor mode is enabled."
 	      (const :tag "Blocks of consecutive include/import statements" include)
 	      (boolean :tag "Fold by default"))
         (cons :format "%v"
-	      (const :tag "Comment blocks preceeding tags" comment)
+	      (const :tag "Comment blocks preceding tags" comment)
 	      (boolean :tag "Fold by default"))
         (cons :format "%v"
 	      (const :tag "Package declarations" package)
@@ -540,21 +540,21 @@ Create the overlay if CREATE-IF-NULL is non-nil."
 (defun semantic-tag-folding-get-folding-attribute (comment)
   "Return the symbol used to store the fold state.
 The symbol returned is for a tag (COMMENT is nil) or the comment
-preceeding a tag (COMMENT is non-nil)"
+preceding a tag (COMMENT is non-nil)"
   (if comment
       'semantic-tag-folding-comment
     'semantic-tag-folding-tag))
 
 (defun semantic-tag-folding-get-fold-state (tag comment)
   "Return the fold state for TAG.
-If COMMENT is non-nil return the fold state for the comment preceeding TAG."
+If COMMENT is non-nil return the fold state for the comment preceding TAG."
   (let* ((attr (semantic-tag-folding-get-folding-attribute comment))
          (ov (semantic-tag-folding-get-attribute-overlay tag nil)))
     (and ov (semantic-overlay-get ov attr))))
 
 (defun semantic-tag-folding-set-fold-state (tag comment state)
   "Set the fold state for TAG to STATE.
-If COMMENT is non-nil set the fold state for the comment preceeding TAG."
+If COMMENT is non-nil set the fold state for the comment preceding TAG."
   (let* ((attr (semantic-tag-folding-get-folding-attribute comment))
          (ov (semantic-tag-folding-get-attribute-overlay tag t)))
     (semantic-overlay-put ov attr state)))

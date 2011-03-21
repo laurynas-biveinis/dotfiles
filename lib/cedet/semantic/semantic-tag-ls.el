@@ -2,7 +2,7 @@
 
 ;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2008 Eric M. Ludlam
 
-;; X-CVS: $Id: semantic-tag-ls.el,v 1.15 2008/06/10 00:43:39 zappo Exp $
+;; X-CVS: $Id: semantic-tag-ls.el,v 1.16 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -23,11 +23,11 @@
 
 ;;; Commentary:
 ;;
-;; There are some features of tags that are too langauge dependent to
+;; There are some features of tags that are too language dependent to
 ;; put in the core `semantic-tag' functionality.  For instance, the
 ;; protection of a tag (as specified by UML) could be almost anything.
 ;; In Java, it is a type specifier.  In C, there is a label.  This
-;; informatin can be derived, and thus should not be stored in the tag
+;; information can be derived, and thus should not be stored in the tag
 ;; itself.  These are the functions that languages can use to derive
 ;; the information.
 
@@ -51,8 +51,7 @@ search locally, then semanticdb for that tag (when enabled.)")
 (defun semantic-tag-calculate-parent-default (tag)
   "Attempt to calculate the parent of TAG."
   (when (semantic-tag-in-buffer-p tag)
-    (save-excursion
-      (set-buffer (semantic-tag-buffer tag))
+    (with-current-buffer (semantic-tag-buffer tag)
       (save-excursion
 	(goto-char (semantic-tag-start tag))
 	(semantic-current-tag-parent))

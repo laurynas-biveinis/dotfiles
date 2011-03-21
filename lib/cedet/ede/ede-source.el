@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede-source.el,v 1.5 2008/12/28 22:14:28 zappo Exp $
+;; RCS: $Id: ede-source.el,v 1.6 2010/03/15 13:40:54 xscript Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -137,7 +137,7 @@ Used to guess header files, but uses the auxsource regular expression."
   (object-assoc name :name ede-sourcecode-list))
 
 (defun ede-source-match (file)
-  "Find the list of soucecode objects which matches FILE."
+  "Find the list of sourcecode objects which matches FILE."
   (let ((lst ede-sourcecode-list)
 	(match nil))
     (while lst

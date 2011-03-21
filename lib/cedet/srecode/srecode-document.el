@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-document.el,v 1.9 2009/01/20 03:46:31 zappo Exp $
+;; X-RCS: $Id: srecode-document.el,v 1.10 2010/03/15 13:40:55 xscript Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -164,7 +164,7 @@ If the cursor is on a one line prototype, then insert post-fcn comments."
 (defun srecode-document-insert-function-comment (&optional fcn-in)
   "Insert or replace a function comment.
 FCN-IN is the Semantic tag of the function to add a comment too.
-If FCN-IN is not provied, the current tag is used instead.
+If FCN-IN is not provided, the current tag is used instead.
 It is assumed that the comment occurs just in front of FCN-IN."
   (interactive)
 
@@ -275,7 +275,7 @@ It is assumed that the comment occurs just in front of FCN-IN."
 (defun srecode-document-insert-variable-one-line-comment (&optional var-in)
   "Insert or replace a variable comment.
 VAR-IN is the Semantic tag of the function to add a comment too.
-If VAR-IN is not provied, the current tag is used instead.
+If VAR-IN is not provided, the current tag is used instead.
 It is assumed that the comment occurs just after VAR-IN."
   (interactive)
 
@@ -459,7 +459,7 @@ If there is only one tag in the region, complain."
   "Create documentation for the function defined in TAG.
 If we can identify a verb in the list followed by some
 name part then check the return value to see if we can use that to
-finish off the sentence.  ie. any function with 'alloc' in it will be
+finish off the sentence.  That is, any function with 'alloc' in it will be
 allocating something based on its type."
   (let ((al srecode-document-autocomment-return-first-alist)
 	(dropit nil)

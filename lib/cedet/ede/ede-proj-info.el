@@ -1,10 +1,10 @@
 ;;; ede-proj-info.el --- EDE Generic Project texinfo support
 
-;;;  Copyright (C) 1998, 1999, 2000, 2001, 2004, 2007, 2008, 2009  Eric M. Ludlam
+;;;  Copyright (C) 1998, 1999, 2000, 2001, 2004, 2007, 2008, 2009, 2010  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede-proj-info.el,v 1.23 2009/01/31 13:12:03 zappo Exp $
+;; RCS: $Id: ede-proj-info.el,v 1.24 2010/06/12 00:35:23 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@
 (defclass ede-proj-target-makefile-info (ede-proj-target-makefile)
   ((menu :initform nil)
    (keybindings :initform nil)
-   (availablecompilers :initform (ede-makeinfo-compiler
-				  ede-texi2html-compiler))
-   (sourcetype :initform (ede-makeinfo-source))
+   (availablecompilers :initform '(ede-makeinfo-compiler
+				   ede-texi2html-compiler))
+   (sourcetype :initform '(ede-makeinfo-source))
    (mainmenu :initarg :mainmenu
 	     :initform ""
 	     :type string

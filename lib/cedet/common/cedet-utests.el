@@ -1,9 +1,9 @@
 ;;; cedet-utests.el --- Run all unit tests in the CEDET suite.
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cedet-utests.el,v 1.20 2009/04/11 06:55:23 zappo Exp $
+;; X-RCS: $Id: cedet-utests.el,v 1.24 2010/04/23 00:14:21 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -30,6 +30,7 @@
 ;;; Code:
 (defvar cedet-utest-test-alist
   '(
+    ("cedet versions" . cedet-version-print)
     ;;
     ;; COMMON
     ;;
@@ -54,6 +55,9 @@
 
     ;; Files
     ("cedet file conversion" . cedet-files-utest)
+
+    ;; Compatability APIs
+    ("cedet compatability fcns" . cedet-compat-utest)
 
     ;;
     ;; EIEIO
@@ -91,11 +95,13 @@
 	 (semantic-test-throw-on-input))))
 
     ("semantic: gcc: output parse test" . semantic-gcc-test-output-parser)
+    ("wisent calculator" . wisent-calc-utest)
     ;;
     ;; SRECODE
     ;;
     ("srecode: fields" . srecode-field-utest)
     ("srecode: templates" . srecode-utest-template-output)
+    ("srecode: project" . srecode-utest-project)
     ("srecode: show maps" . srecode-get-maps)
     ("srecode: getset" . srecode-utest-getset-output)
 
@@ -144,7 +150,7 @@ of just logging the error."
       ;; Cleanup stray input and events that are in the way.
       ;; Not doing this causes sit-for to not refresh the screen.
       ;; Doing this causes the user to need to press keys more frequently.
-      (when (and (interactive-p) (input-pending-p))
+      (when (and (cedet-called-interactively-p) (input-pending-p))
 	(if (fboundp 'read-event)
 	    (read-event)
 	  (read-char)))

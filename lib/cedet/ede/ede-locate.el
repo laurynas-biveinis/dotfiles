@@ -1,9 +1,9 @@
 ;;; ede-locate.el --- Locate support
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-locate.el,v 1.8 2009/02/27 04:59:25 zappo Exp $
+;; X-RCS: $Id: ede-locate.el,v 1.14 2010/08/15 17:03:29 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -35,7 +35,7 @@
 ;; projects are completely controlled by EDE, such sh the Project.ede
 ;; based projects.
 ;;
-;; For other projects, haveing a "quick hack" to support these location
+;; For other projects, having a "quick hack" to support these location
 ;; routines is handy.
 ;;
 ;; The baseclass `ede-locate-base' provides the abstract interface to
@@ -90,18 +90,18 @@ based on `ede-locate-setup-options'."
     (while (and opts (not ans))
       (when (ede-locate-ok-in-project (car opts) root)
 	;; If interactive, check with the user.
-	(when (or (not (interactive-p))
+	(when (or (not (cedet-called-interactively-p 'any))
 		  (y-or-n-p (format "Set project locator to %s? " (car opts))))
 	  (setq ans (car opts))))
       (setq opts (cdr opts)))
     ;; No match?  Always create the baseclass for the hashing tool.
     (when (not ans)
-      (when (interactive-p)
+      (when (cedet-called-interactively-p 'interactive)
 	(message "Setting locator to ede-locate-base"))
       (setq ans 'ede-locate-base))
     (oset proj locate-obj (make-instance ans "Loc" :root root))
-    (when (interactive-p)
-      (message "Satting locator to %s." ans))
+    (when (cedet-called-interactively-p 'interactive)
+      (message "Setting locator to %s" ans))
     ))
 
 ;;; LOCATE BASECLASS
@@ -125,13 +125,17 @@ based on `ede-locate-setup-options'."
   ;; Basic setup.
   (call-next-method)
   ;; Make sure we have a hash table.
-  (oset loc hash (make-hash-table :test 'equal))
+  (ede-locate-flush-hash loc)
   )
 
 (defmethod ede-locate-ok-in-project :static ((loc ede-locate-base)
 					     root)
   "Is it ok to use this project type under ROOT."
   t)
+
+(defmethod ede-locate-flush-hash ((loc ede-locate-base))
+  "For LOC, flush hashtable and start from scratch."
+  (oset loc hash (make-hash-table :test 'equal)))
 
 (defmethod ede-locate-file-in-hash ((loc ede-locate-base)
 				    filestring)
@@ -146,9 +150,9 @@ based on `ede-locate-setup-options'."
 (defmethod ede-locate-file-in-project ((loc ede-locate-base)
 				       filesubstring
 				       )
-  "Locate with LOC occurances of FILESUBSTRING.
+  "Locate with LOC occurrences of FILESUBSTRING.
 Searches are done under the current root of the EDE project
-that crated this ede locat object."
+that created this EDE locate object."
   (let ((ans (ede-locate-file-in-project-impl loc filesubstring))
 	)
     (oset loc file filesubstring)
@@ -158,11 +162,18 @@ that crated this ede locat object."
 (defmethod ede-locate-file-in-project-impl ((loc ede-locate-base)
 					    filesubstring
 					    )
-  "Locate with LOC occurances of FILESUBSTRING.
+  "Locate with LOC occurrences of FILESUBSTRING.
 Searches are done under the current root of the EDE project
-that crated this ede locat object."
+that created this EDE locate object."
   nil
   )
+
+(defmethod ede-locate-create/update-root-database :STATIC 
+  ((loc ede-locate-base) root)
+  "Create or update the database for the current project.
+You cannot create projects for the baseclass."
+  (error "Cannot create/update a database of type %S"
+	 (object-name loc)))
 
 ;;; LOCATE
 ;;
@@ -184,9 +195,9 @@ configure the use of EDE locate.")
 
 (defmethod ede-locate-file-in-project-impl ((loc ede-locate-locate)
 					    filesubstring)
-  "Locate with LOC occurances of FILESUBSTRING under PROJECTROOT.
+  "Locate with LOC occurrences of FILESUBSTRING under PROJECTROOT.
 Searches are done under the current root of the EDE project
-that crated this ede locat object."
+that created this EDE locate object."
   ;; We want something like:
   ;;  /my/project/root*/filesubstring.c
   (let* ((searchstr (concat (directory-file-name (oref loc root))
@@ -194,16 +205,14 @@ that crated this ede locat object."
 	 (b (get-buffer-create "*LOCATE*"))
 	 (cd default-directory)
 	 )
-    (save-excursion
-      (set-buffer b)
+    (with-current-buffer b
       (setq default-directory cd)
       (erase-buffer))
     (require 'locate)
     (apply 'call-process locate-command
 	   nil b nil
 	   searchstr nil)
-    (save-excursion
-      (set-buffer b)
+    (with-current-buffer b
       (split-string (buffer-string) "\n" t))
     )
   )
@@ -219,6 +228,7 @@ variable `cedet-global-command'.")
 (defmethod initialize-instance ((loc ede-locate-global)
 				&rest slots)
   "Make sure that we can use GNU Global."
+  (require 'cedet-global)
   ;; Get ourselves initialized.
   (call-next-method)
   ;; Do the checks.
@@ -233,6 +243,7 @@ variable `cedet-global-command'.")
 (defmethod ede-locate-ok-in-project :static ((loc ede-locate-global)
 					     root)
   "Is it ok to use this project type under ROOT."
+  (require 'cedet-global)
   (cedet-gnu-global-version-check)
   (let* ((default-directory root)
 	 (newroot (cedet-gnu-global-root)))
@@ -240,11 +251,17 @@ variable `cedet-global-command'.")
 
 (defmethod ede-locate-file-in-project-impl ((loc ede-locate-global)
 					    filesubstring)
-  "Locate with LOC occurances of FILESUBSTRING under PROJECTROOT.
+  "Locate with LOC occurrences of FILESUBSTRING under PROJECTROOT.
 Searches are done under the current root of the EDE project
-that crated this ede locat object."
+that created this EDE locate object."
+  (require 'cedet-global)
   (let ((default-directory (oref loc root)))
     (cedet-gnu-global-expand-filename filesubstring)))
+
+(defmethod ede-locate-create/update-root-database :STATIC
+  ((loc ede-locate-global) root)
+  "Create or update the GNU Global database for the current project."
+  (cedet-gnu-global-create/update-database root))
 
 ;;; IDUTILS
 ;;
@@ -260,6 +277,7 @@ file name searching variable `cedet-idutils-file-command'.")
   ;; Get ourselves initialized.
   (call-next-method)
   ;; Do the checks.
+  (require 'cedet-idutils)
   (cedet-idutils-version-check)
   (when (not (cedet-idutils-support-for-directory (oref loc root)))
     (error "Cannot use IDUtils in %s"
@@ -269,17 +287,24 @@ file name searching variable `cedet-idutils-file-command'.")
 (defmethod ede-locate-ok-in-project :static ((loc ede-locate-idutils)
 					     root)
   "Is it ok to use this project type under ROOT."
+  (require 'cedet-idutils)
   (cedet-idutils-version-check)
   (when (cedet-idutils-support-for-directory root)
     root))
 
 (defmethod ede-locate-file-in-project-impl ((loc ede-locate-idutils)
 					    filesubstring)
-  "Locate with LOC occurances of FILESUBSTRING under PROJECTROOT.
+  "Locate with LOC occurrences of FILESUBSTRING under PROJECTROOT.
 Searches are done under the current root of the EDE project
-that crated this ede locat object."
+that created this EDE locate object."
+  (require 'cedet-idutils)
   (let ((default-directory (oref loc root)))
     (cedet-idutils-expand-filename filesubstring)))
+
+(defmethod ede-locate-create/update-root-database :STATIC
+  ((loc ede-locate-idutils) root)
+  "Create or update the GNU Global database for the current project."
+  (cedet-idutils-create/update-database root))
 
 ;;; CSCOPE
 ;;
@@ -310,11 +335,16 @@ file name searching variable `cedet-cscope-file-command'.")
 
 (defmethod ede-locate-file-in-project-impl ((loc ede-locate-cscope)
 					    filesubstring)
-  "Locate with LOC occurances of FILESUBSTRING under PROJECTROOT.
+  "Locate with LOC occurrences of FILESUBSTRING under PROJECTROOT.
 Searches are done under the current root of the EDE project
-that crated this ede locat object."
+that created this EDE locate object."
   (let ((default-directory (oref loc root)))
     (cedet-cscope-expand-filename filesubstring)))
+
+(defmethod ede-locate-create/update-root-database :STATIC
+  ((loc ede-locate-cscope) root)
+  "Create or update the GNU Global database for the current project."
+  (cedet-cscope-create/update-database root))
 
 ;;; TESTS
 ;;

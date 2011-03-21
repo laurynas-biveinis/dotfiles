@@ -1,10 +1,10 @@
 ;;; ede-gnustep.el --- EDE GNUstep Project file driver
 
-;;;  Copyright (C) 2008  Marco Bardelli
+;;;  Copyright (C) 2008,2009,2010  Marco Bardelli
 
 ;; Author: Marco (Bj) Bardelli <bardelli.marco@gmail.com>
 ;; Keywords: project, make, gnustep, gnustep-make
-;; RCS: $Id: ede-gnustep.el,v 1.6 2009/01/05 23:42:07 zappo Exp $
+;; RCS: $Id: ede-gnustep.el,v 1.13 2010/06/12 00:44:16 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -57,14 +57,37 @@
 ;; various variables and rules should be added in preamble and postamble
 ;; respectively, for convention.
 ;;
-;; I focused on the method `ede-proj-makefile-crate' to write a working
+;; I focused on the method `ede-proj-makefile-create' to write a working
 ;; GNUmakefile.
+
+;; Provide a class `ede-step-project' child of ede-project, it has a 
+;; :project-mode attribute for 'scanner or 'writer mode.
+;; difference is in direction of generation
+;;     scanner: parse *makefile* to write *project file*
+;;     writer : parse *project file* to write *makefile*
+
+;; To show what's TODO
+;; M-x occur <RET> XXX\|todo\|TODO\|fix\|FIX <RET>
 
 
 (eval-and-compile 
   (require 'ede)
   (require 'ede-proj)
+  (require 'makefile-edit)
+  ;; to easy parsing of GNUmakefiles
+  (require 'semantic)
+  (require 'semantic-find)
+  (require 'semantic-tag-file)
   )
+
+(unless (fboundp 'string-file-contents)
+  (defun string-file-contents (file)
+    "Get the plain contents of FILE."
+    (with-temp-buffer 
+      (insert-file-contents file)
+      (buffer-substring-no-properties (point-min)(point-max))))
+  )
+
 
 
 ;;; Class Definitions:
@@ -116,8 +139,7 @@
 ;; Target
 ;(defclass ede-step-target (ede-proj-target) ;; may be don't need
 (defclass ede-step-target (ede-target)
-  ((makefile :initarg :makefile
-	     :initform "GNUmakefile"
+  ((makefile :initarg :makefile ;;:initform "GNUmakefile"
 	     :type string
 	     :custom string
 	     :label "Parent Makefile"
@@ -150,7 +172,7 @@ Include some dir via the -I preprocessor flag, for this target.")
 	      :custom (repeat (string :tag "File"))
 	      :label "Auxiliary Source Files"
 	      :group (default source)
-	      :documentation "Auxilliary source files included in this target.
+	      :documentation "Auxiliary source files included in this target.
 Each of these is considered equivalent to a source file, but it is not
 distributed, and each should have a corresponding rule to build it.")
    (dirty :initform nil
@@ -160,8 +182,8 @@ distributed, and each should have a corresponding rule to build it.")
 "Abstract class for ede-step targets.")
 
 (defclass ede-step-target-ctool (ede-step-target)
-  ((sourcetype :initform (ede-source-gnustep-c
-			  ede-source-header-gnustep-c))
+  ((sourcetype :initform '(ede-source-gnustep-c
+			   ede-source-header-gnustep-c))
    (type :initform 'ctool)
    (cflags :initarg :cflags
 	   :initform nil
@@ -176,10 +198,10 @@ distributed, and each should have a corresponding rule to build it.")
   "Class for CTool targets.")
 
 (defclass ede-step-target-tool (ede-step-target)
-  ((sourcetype :initform (ede-source-gnustep-objc
-			  ede-source-gnustep-c
-			  ede-source-header-gnustep-c
-			  ede-source-header-gnustep-objc))
+  ((sourcetype :initform '(ede-source-gnustep-objc
+			   ede-source-gnustep-c
+			   ede-source-header-gnustep-c
+			   ede-source-header-gnustep-objc))
    (type :initform 'tool)
    (cflags :initarg :cflags
 	   :initform nil
@@ -195,8 +217,8 @@ distributed, and each should have a corresponding rule to build it.")
 
 ;; FIX XXX :  _LIBS_DEPEND
 (defclass ede-step-target-clibrary (ede-step-target)
-  ((sourcetype :initform (ede-source-gnustep-c
-			  ede-source-header-gnustep-c))
+  ((sourcetype :initform '(ede-source-gnustep-c
+			   ede-source-header-gnustep-c))
    (type :initform 'clibrary)
 ;;;    (header-install-dir :initarg :header-install-dir
 ;;; 		       :initform ""
@@ -217,10 +239,10 @@ distributed, and each should have a corresponding rule to build it.")
   "Class for CLib targets.")
 
 (defclass ede-step-target-library (ede-step-target)
-  ((sourcetype :initform (ede-source-gnustep-objc
-			  ede-source-gnustep-c
-			  ede-source-header-gnustep-objc
-			  ede-source-header-gnustep-c))
+  ((sourcetype :initform '(ede-source-gnustep-objc
+			   ede-source-gnustep-c
+			   ede-source-header-gnustep-objc
+			   ede-source-header-gnustep-c))
    (type :initform 'library)
 ;;;    (header-install-dir :initarg :header-install-dir
 ;;; 		       :initform ""
@@ -241,10 +263,10 @@ distributed, and each should have a corresponding rule to build it.")
   "Class for Lib targets.")
 
 (defclass ede-step-target-application (ede-step-target)
-  ((sourcetype :initform (ede-source-gnustep-objc
-			  ede-source-gnustep-c
-			  ede-source-header-gnustep-objc
-			  ede-source-header-gnustep-c))
+  ((sourcetype :initform '(ede-source-gnustep-objc
+			   ede-source-gnustep-c
+			   ede-source-header-gnustep-objc
+			   ede-source-header-gnustep-c))
    (type :initform 'application)
    (cflags :initarg :cflags
 	   :initform nil
@@ -259,37 +281,60 @@ distributed, and each should have a corresponding rule to build it.")
   "Class for App targets.")
 
 (defclass ede-step-target-documentation (ede-step-target)
-  ((sourcetype :initform (ede-source-gnustep-texi))
+  ((sourcetype :initform '(ede-source-gnustep-texi))
    (type :initform 'documentation))
   "Class for Doc targets.")
 
-(defclass ede-step-target-subproject (ede-step-target)
-  ()
-  "Class for Subproject targets.")
+;; ;; (defclass ede-step-target-subproject (ede-step-target)
+;; ;;   ()
+;; ;;   "Class for Subproject targets.")
+;; (defclass ede-step-target-aggregate (ede-target)
+;;   () ;; this allow the parent to track subprojects in targets.
+;;   "Dummy class for aggregate target, really a subprojet.")
+;; (defmethod project-rescan ((this ede-step-target-aggregate) &optional unused)
+;;   "A dummy method. Do nothing." nil)
 
+;;; XXX FIX: add files.make for inclusion (aka tool.make)
 (defvar ede-step-target-alist
-  '(("ctool" . ede-step-target-ctool)
-    ("tool" . ede-step-target-tool)
-    ("app" . ede-step-target-application)
-    ("doc" . ede-step-target-documentation)
-    ("clib" . ede-step-target-clibrary)
-    ("lib" . ede-step-target-library)
-    ("subproject" . ede-step-target-subproject)
+  '(("ctool" ede-step-target-ctool "CTOOL_NAME")
+    ("objc" ede-step-target-tool "OBJC_PROGRAM_NAME")
+    ("tool" ede-step-target-tool "TOOL_NAME")
+    ("test-tool" ede-step-target-tool "TEST_TOOL_NAME")
+    ("app" ede-step-target-application "APP_NAME")
+    ("test-app" ede-step-target-application "TEST_APP_NAME")
+    ("doc" ede-step-target-documentation "DOCUMENT_NAME")
+    ("clib" ede-step-target-clibrary "CLIBRARY_NAME")
+    ("lib" ede-step-target-library "LIBRARY_NAME")
+    ("framework" ede-step-target-library "FRAMEWORK_NAME")
+    ("subproject" ede-step-project "SUBPROJECTS")
     )
   "Alist of names to class target-types available by GNUstep-Make.")
 
-(defun ede-step-register-target (name class)
+(defun ede-step-register-target (name class &optional macro)
   "Register a new target class with NAME and class symbol CLASS.
 This enables the creation of your target type."
   (let ((a (assoc name ede-step-target-alist)))
     (if a
-	(setcdr a class)
+	(setcdr a (list class macro))
       (setq ede-step-target-alist
 	    (cons (cons name class) ede-step-target-alist)))))
 
+;(defcustom ede-gnustep-project-mode-default 'scanner)
+
 (defclass ede-step-project (ede-project)
 ;(defclass ede-step-project (ede-proj-project) ;; to mix several project types, but don't solve ...
-  ((init-variables
+  ((project-mode :initarg :project-mode :initform writer
+		 :type symbol
+		 :custom (choice (const :tag "Scanner Mode" scanner)
+				 (const :tag "Writer Mode" writer))
+		 :group (settings)
+		 :documentation "In scanner mode, `ede-proj-makefile-create'
+is useless, the project-rescan methods change their behavoir to scan
+GNUmakefiles, and possibly a ProjStep.ede could be created. In writer mode,
+the behavoir is the same that in any ede-proj-project, scan ProjStep.ede to
+write Makefiles")
+
+   (init-variables
     :initarg :init-variables
     :initform nil
     :type list
@@ -348,14 +393,20 @@ The variable GNUSTEP_INSTALLATION_DOMAIN is set at this value.")
 	     :type (or null list)
 	     :custom (repeat (string :tag "Makefile"))
 	     :group make
-	     :documentation "The auxilliary makefile for additional variables.
+	     :documentation "The auxiliary makefile for additional variables.
 Included just before the specific target files.")
+   (included-makefiles :initarg :included-makefiles
+		       :type (or null list)
+		       :custom (repeat (string :tag "Makefile"))
+		       :group make
+		       :documentation "The auxiliary makefile for targets rules.
+Included common and specific target files.")
    (postamble :initarg :postamble
 	     :initform '("GNUmakefile.postamble")
 	     :type (or null list)
 	     :custom (repeat (string :tag "Makefile"))
 	     :group make
-	     :documentation "The auxilliary makefile for additional rules.
+	     :documentation "The auxiliary makefile for additional rules.
 Included just after the specific target files.")
 
    (metasubproject
@@ -374,6 +425,75 @@ making a tar file.")
   "The EDE-STEP project definition class.")
 
 ;;; Code:
+(defun ede-gnustep-load (proj &optional rootproj)
+  "Load project from the topmost GNUmakefile in PROJ directory."
+  (let* ((mf (ede-gnustep-get-valid-makefile
+	      (expand-file-name proj rootproj)))
+	 (dir (directory-file-name
+	       (or (file-name-directory (or mf "")) "")))
+	 pkgname pkgversion proj-obj prj-file)
+
+    ;; check for the file project root.
+    ;; this allow to touch a RootProjStep.ede and `M-x ede'
+    ;; to load a root gnustep package.
+    (if (file-exists-p (expand-file-name "RootProjStep.ede" dir))
+	(setq prj-file "RootProjStep.ede")
+      (setq prj-file "ProjStep.ede"))
+    (and mf
+	 ;; To FIX, maybe VCS_MODULE ???
+	 (setq pkgname
+	       (or
+		(with-temp-buffer
+		  (insert-file-contents mf)
+		  (goto-char (point-min))
+		  (car (makefile-macro-file-list "PACKAGE_NAME"))
+		  ;; (ede-gnustep-semantic-value-for-tag
+		  ;;  (car (semantic-find-tags-by-name
+		  ;; 	 "PACKAGE_NAME"
+		  ;; 	 (semantic-find-tags-by-class
+		  ;; 	  'variable (current-buffer)))))
+		  )
+		(file-name-nondirectory
+		 (directory-file-name dir))))
+	 (setq pkgversion
+	       (or
+		(with-temp-buffer
+		  (insert-file-contents mf)
+		  (goto-char (point-min))
+		  (or
+		   (car (makefile-macro-file-list "PACKAGE_VERSION"))
+		   ;; (ede-gnustep-semantic-value-for-tag
+		   ;;  (car (semantic-find-tags-by-name
+		   ;; 	  "PACKAGE_VERSION"
+		   ;; 	  (semantic-find-tags-by-class
+		   ;; 	   'variable (current-buffer)))))
+		   (car (makefile-macro-file-list "VERSION"))))
+		   ;; (ede-gnustep-semantic-value-for-tag
+		   ;;  (car (semantic-find-tags-by-name
+		   ;; 	  "VERSION"
+		   ;; 	  (semantic-find-tags-by-class
+		   ;; 	   'variable (current-buffer)))))))
+		"1.0"))
+	 
+	 ;; use dirinode to check for existence
+	 (unless (setq proj-obj
+		       (object-assoc (ede--inode-for-dir dir)
+				     'dirinode ede-projects))
+	   (setq proj-obj
+		 (ede-step-project pkgname :name pkgname
+				   :version pkgversion
+				   :project-mode 'scanner
+				   :directory (file-name-as-directory dir)
+				   :file (expand-file-name prj-file dir)
+;				   :makefile (file-name-nondirectory mf)
+				   ;; bind :targets
+				   :targets nil))
+	   (oset proj-obj :project-mode 'scanner)))
+    (when (ede-step-project-p proj-obj)
+      (project-rescan proj-obj)
+      (ede-step-save proj-obj))
+    proj-obj))
+  
 ;(defalias 'ede-proj-load 'ede-step-load)
 (defun ede-step-load (project &optional rootproj)
   "Load a project file from PROJECT directory.
@@ -382,11 +502,12 @@ for the tree being read in.  If ROOTPROJ is nil, then assume that
 the PROJECT being read in is the root project."
   (save-excursion
     (let ((ret nil)
+	  (prj-file (car (directory-files project nil "\\(Root\\)?ProjStep.ede" nil)))
 	  (subdirs (directory-files project nil "[^.].*" nil)))
       (set-buffer (get-buffer-create " *tmp proj read*"))
       (unwind-protect
 	  (progn
-	    (insert-file-contents (concat project "ProjStep.ede")
+	    (insert-file-contents (expand-file-name prj-file project)
 				  nil nil nil t)
 	    (goto-char (point-min))
 	    (setq ret (read (current-buffer)))
@@ -404,9 +525,10 @@ the PROJECT being read in is the root project."
 	  (if (and (file-directory-p sd)
 		   (ede-directory-project-p sd))
 	      (oset ret subproj
-		    (cons (ede-proj-load sd (or rootproj ret))
+		    (cons (ede-step-load sd (or rootproj ret))
 			  (oref ret subproj))))
 	  (setq subdirs (cdr subdirs))))
+      (if (eq 'scanner (oref ret :project-mode)) (project-rescan ret))
       ret)))
 
 (defun ede-step-save (&optional project)
@@ -454,8 +576,6 @@ Argument TARGET is the project we are completing customization on."
 	(string= (ede-proj-dist-makefile this) f)
 	(string-match "GNUmakefile\\(\\.in\\|\\.preamble\\|\\.postamble\\)?" f)
 	(string-match "Makefile\\(\\.\\(preamble\\|postamble\\)\\)?" f)
-;; 	(string-match "Makefile\\(\\.\\(in\\|am\\)\\)?" f)
-;; 	(string-match "config\\(ure\\.in\\|\\.status\\)?" f)
 	)))
 
 (defmethod ede-buffer-mine ((this ede-step-target) buffer)
@@ -469,64 +589,65 @@ Argument TARGET is the project we are completing customization on."
 (defmethod ede-proj-makefile-create ((this ede-step-project) mfilename)
   "Create a GNUmakefile for all Makefile targets in THIS.
 MFILENAME is the makefile to generate."
-  (let ((mt nil) tmp
- 	(isdist (string= mfilename (ede-proj-dist-makefile this)))
-	(depth 0)
-	)
-;;     ;; Find out how deep this project is.
-;;     (let ((tmp this))
-;;       (while (setq tmp (ede-parent-project tmp))
-;; 	(setq depth (1+ depth))))
-;;     ;; Collect the targets that belong in a makefile.
-;;     (mapcar
-;;      (lambda (obj)
-;;        (if (and (obj-of-class-p obj 'ede-step-target)
-;; 		(string= (oref obj makefile) mfilename))
-;; 	   (setq mt (cons obj mt))))
-;;      (oref this targets))
-;;     ;; Fix the order so things compile in the right direction.
-;;     (setq mt (nreverse mt))
-    ;; Add in the header part of the Makefile*
-    (save-excursion
-      (set-buffer (find-file-noselect mfilename))
-      (goto-char (point-min))
-      (if (and
-	   (not (eobp))
-	   (not (looking-at "# Automatically Generated \\w+ by EDE.")))
-	  (if (not (y-or-n-p (format "Really replace %s?" mfilename)))
-	      (error "Not replacing Makefile."))
-	(message "Replace EDE Makefile"))
-      (erase-buffer)
-      ;; Insert a giant pile of stuff that is common between
-      ;; one of our Makefiles, and a Makefile.in
-      (insert
-       "# Automatically Generated " (file-name-nondirectory mfilename)
-       " by EDE.\n"
-       "# For use with: gnustep-make"
-       "\n#\n"
-       "# DO NOT MODIFY THIS FILE OR YOUR CHANGES MAY BE LOST.\n"
-       "# EDE is the Emacs Development Environment.\n"
-       "# http://cedet.sourceforge.net/ede.shtml\n"
-       "# \n")
-      (insert "\nede_FILES=" (file-name-nondirectory (oref this file)) " "
-	      (file-name-nondirectory (ede-proj-dist-makefile this)) "\n")
-      (insert "\n\n")
-      ;; Standard prologe in a GNUmakefile
-      (insert ;; init-variables of project
-       "ifeq ($(GNUSTEP_MAKEFILES),)\n"
-       " GNUSTEP_MAKEFILES := $(shell gnustep-config"
-       "--variable=GNUSTEP_MAKEFILES 2>/dev/null)\n"
-       "endif\n\n"
-       "include $(GNUSTEP_MAKEFILES)/common.make\n\n# Stuff\n")
-
-      ;; FIX XXX package,vcs repository ... variables
-      ;; ...
-      ;; Just this project's targets variables
-      (ede-map-targets this
-       (lambda (tx)
-	  (cond ((or (eq (oref tx type) 'ctool)(eq (oref tx type) 'tool))
-		 (ede-pmake-insert-variable-shared "TOOL_NAME"
-		   (insert (ede-name tx))))
+  (when (eq 'writer (oref this :project-mode))
+    (let ((mt nil) tmp
+	  (isdist (string= mfilename (ede-proj-dist-makefile this)))
+	  (depth 0)
+	  )
+      ;;     ;; Find out how deep this project is.
+      ;;     (let ((tmp this))
+      ;;       (while (setq tmp (ede-parent-project tmp))
+      ;; 	(setq depth (1+ depth))))
+      ;;     ;; Collect the targets that belong in a makefile.
+      ;;     (mapcar
+      ;;      (lambda (obj)
+      ;;        (if (and (obj-of-class-p obj 'ede-step-target)
+      ;; 		(string= (oref obj makefile) mfilename))
+      ;; 	   (setq mt (cons obj mt))))
+      ;;      (oref this targets))
+      ;;     ;; Fix the order so things compile in the right direction.
+      ;;     (setq mt (nreverse mt))
+      ;; Add in the header part of the Makefile*
+      (save-excursion
+	(set-buffer (find-file-noselect mfilename))
+	(goto-char (point-min))
+	(if (and
+	     (not (eobp))
+	     (not (looking-at "# Automatically Generated \\w+ by EDE.")))
+	    (if (not (y-or-n-p (format "Really replace %s?" mfilename)))
+		(error "Not replacing Makefile."))
+	  (message "Replace EDE Makefile"))
+	(erase-buffer)
+	;; Insert a giant pile of stuff that is common between
+	;; one of our Makefiles, and a Makefile.in
+	(insert
+	 "# Automatically Generated " (file-name-nondirectory mfilename)
+	 " by EDE.\n"
+	 "# For use with: gnustep-make"
+	 "\n#\n"
+	 "# DO NOT MODIFY THIS FILE OR YOUR CHANGES MAY BE LOST.\n"
+	 "# EDE is the Emacs Development Environment.\n"
+	 "# http://cedet.sourceforge.net/ede.shtml\n"
+	 "# \n")
+	(insert "\nede_FILES=" (file-name-nondirectory (oref this file)) " "
+		(file-name-nondirectory (ede-proj-dist-makefile this)) "\n")
+	(insert "\n\n")
+	;; Standard prologe in a GNUmakefile
+	(insert ;; init-variables of project
+	 "ifeq ($(GNUSTEP_MAKEFILES),)\n"
+	 " GNUSTEP_MAKEFILES := $(shell gnustep-config"
+	 "--variable=GNUSTEP_MAKEFILES 2>/dev/null)\n"
+	 "endif\n\n"
+	 "include $(GNUSTEP_MAKEFILES)/common.make\n\n# Stuff\n")
+	
+	;; FIX XXX package,vcs repository ... variables
+	;; ...
+	;; Just this project's targets variables
+	(ede-map-targets this
+			 (lambda (tx)
+			   (cond ((or (eq (oref tx type) 'ctool)(eq (oref tx type) 'tool))
+				  (ede-pmake-insert-variable-shared "TOOL_NAME"
+				    (insert (ede-name tx))))
 		((eq (oref tx type) 'library)
 		 (ede-pmake-insert-variable-shared "LIBRARY_NAME"
 		   (insert (ede-name tx))))
@@ -653,7 +774,7 @@ MFILENAME is the makefile to generate."
 
       ;; END
       (save-buffer)
-      (goto-char (point-min)))))
+      (goto-char (point-min))))))
 
 ;;; EDE command functions
 ;;
@@ -663,6 +784,8 @@ MFILENAME is the makefile to generate."
 (defmethod project-new-target ((this ede-step-project)
 			       &optional name type autoadd)
   "Create a new target in THIS based on the current buffer."
+  (if (eq (oref this :project-mode) 'scanner)
+      (warn "This ProjStep is in Scanner Mode, are u sure what are u doing?"))
   (let* ((name (or name (read-string "Name: " "")))
 	 (type (or type
 		   (completing-read "Type: " ede-step-target-alist
@@ -673,8 +796,9 @@ MFILENAME is the makefile to generate."
 			   (string= autoadd "y")
 			 (y-or-n-p (format "Add %s to %s? " (buffer-name) name))))
 		  (buffer-file-name))))
-    (setq ot (funcall (cdr (assoc type ede-step-target-alist)) name :name name
+    (setq ot (funcall (nth 1 (assoc type ede-step-target-alist)) name :name name
 		      :path (ede-convert-path this default-directory)
+		      :makefile "GNUmakefile"
 		      :source (if src
 				  (list (file-name-nondirectory src))
 				nil)))
@@ -694,15 +818,19 @@ MFILENAME is the makefile to generate."
 
 (defmethod project-new-target-custom ((this ede-step-project))
   "Create a new target in THIS for custom."
+  (if (eq (oref this :project-mode) 'scanner)
+      (warn "This ProjStep is in Scanner Mode, are u sure what are u doing?"))
   (let* ((name (read-string "Name: " ""))
 	 (type (completing-read "Type: " ede-step-target-alist
 				nil t nil '(ede-step-target-history . 1))))
-    (funcall (cdr (assoc type ede-step-target-alist)) name :name name
+    (funcall (nth 1 (assoc type ede-step-target-alist)) name :name name
 	     :path (ede-convert-path this default-directory)
 	     :source nil)))
 
 (defmethod project-delete-target ((this ede-step-target))
   "Delete the current target THIS from it's parent project."
+  (if (eq (oref (ede-current-project (oref this :path)) :project-mode) 'scanner)
+      (warn "This ProjStep is in Scanner Mode, are u sure what are u doing?"))
   (let ((p (ede-current-project))
 	(ts (oref this source)))
     ;; Loop across all sources.  If it exists in a buffer,
@@ -725,6 +853,8 @@ MFILENAME is the makefile to generate."
 
 (defmethod project-add-file ((this ede-step-target) file)
   "Add to target THIS the current buffer represented as FILE."
+  (if (eq (oref (ede-current-project (oref this :path)) :project-mode) 'scanner)
+      (warn "This ProjStep is in Scanner Mode, are u sure what are u doing?"))
   (let ((file (ede-convert-path this file))
 	(src (ede-target-sourcecode this))
 	(aux nil))
@@ -742,6 +872,8 @@ MFILENAME is the makefile to generate."
 (defmethod project-remove-file ((target ede-step-target) file)
   "For TARGET, remove FILE.
 FILE must be massaged by `ede-convert-path'."
+  (if (eq (oref (ede-current-project (oref this :path)) :project-mode) 'scanner)
+      (warn "This ProjStep is in Scanner Mode, are u sure what are u doing?"))
   ;; Speedy delete should be safe.
   (object-remove-from-list target 'source (ede-convert-path target file))
   (object-remove-from-list target 'auxsource (ede-convert-path target file))
@@ -815,15 +947,17 @@ Argument COMMAND is the command to use for compiling the target."
   (require 'ede-pmake "ede-pmake.el")
   (require 'ede-pconf "ede-pconf.el"))
 
-;; FIX XXX
 (defmethod ede-proj-dist-makefile ((this ede-step-project))
   "Return the name of the Makefile with the DIST target in it for THIS."
-  (concat (file-name-directory (oref this file)) "GNUmakefile"))
+  (or (ede-gnustep-get-topmost-makefile (oref this directory))
+      (concat (file-name-directory (oref this file)) "GNUmakefile")))
 
+;; This Func is implemented elsewhere, probably in ede.el
 ;; (defun ede-proj-regenerate ()
 ;;   "Regenerate Makefiles for and edeproject project."
 ;;   (interactive)
-;;   (ede-proj-setup-buildenvironment (ede-current-project) t))
+;;   (and (eq 'writer (oref (ede-current-project) :project-mode))
+;;        (ede-proj-setup-buildenvironment (ede-current-project) t)))
 
 (defmethod ede-proj-makefile-create-maybe ((this ede-step-project) mfilename)
   "Create a Makefile for all Makefile targets in THIS if needed.
@@ -851,52 +985,273 @@ Optional argument FORCE will force items to be regenerated."
 
 ;;; Lower level overloads
 ;;
+;; utils using semantic for parsing.
+(defsubst ede-gnustep-semantic-tags-named ()
+  (semantic--find-tags-by-function
+   '(lambda (tag)(string-match "_NAME$" (car tag)))
+   (semantic-find-tags-by-class 'variable (current-buffer))))
+
+(defsubst ede-gnustep-semantic-tags-subprojects ()
+  (semantic--find-tags-by-function
+   '(lambda (tag)(string-match "^SUBPROJECTS$" (car tag)))
+   (semantic-find-tags-by-class 'variable (current-buffer))))
+
+(defsubst ede-gnustep-semantic-tags-included-files ()
+  (semantic-find-tags-by-class 'include (current-buffer)))
+
+(defsubst ede-gnustep-semantic-tags-all-variables ()
+  (semantic-find-tags-by-class 'variable (current-buffer)))
+
+(defsubst ede-gnustep-semantic-value-for-tag (tag)
+  (cadr (caddr tag)))
+
+(defun ede-gnustep-semantic-tag-for-value (name)
+  (let ((tags (semantic-fetch-tags))(found nil))
+    (while (and tags (not found))
+      (and (member name (ede-gnustep-semantic-value-for-tag (car tags)))
+	   (setq found (car tags)))
+      (setq tags (cdr tags)))
+    found))
+
+;; maybe require some makefile utils
 (defmethod project-rescan ((this ede-step-project))
   "Rescan the EDE proj project THIS."
-  (ede-with-projectfile this
-    (goto-char (point-min))
-    (let ((l (read (current-buffer)))
-	  (fields (object-slots this))
-	  (targets (oref this targets)))
-      (setq l (cdr (cdr l))) ;; objtype and name skip
-      (while fields ;  reset to defaults those that dont appear.
-	(if (and (not (assoc (car fields) l))
-		 (not (eq (car fields) 'file)))
-	    (let ((eieio-skip-typecheck t))
-	      ;; This is a hazardous thing, for some elements
-	      ;; might not be bound.  Skip typechecking and duplicate
-	      ;; unbound slots along the way.
-	      (eieio-oset this (car fields)
-			  (eieio-oref-default this (car fields)))))
-	(setq fields (cdr fields)))
-      (while l
-	(let ((field (car l)) (val (car (cdr l))))
-	  (cond ((eq field targets)
-		 (let ((targets (oref this targets))
-		       (newtarg nil))
-		   (setq val (cdr val)) ;; skip the `list'
-		   (while val
-		     (let ((o (object-assoc (car (cdr (car val))) ; name
-					    'name targets)))
-		       (if o
-			   (project-rescan o (car val))
-			 (setq o (eval (car val))))
-		       (setq newtarg (cons o newtarg)))
-		     (setq val (cdr val)))
-		   (oset this targets newtarg)))
-		(t
-		 (eieio-oset this field val))))
-	(setq l (cdr (cdr l))))))) ;; field/value
+  (cond ((eq 'writer (oref this :project-mode))
+	 (ede-with-projectfile this
+	   (goto-char (point-min))
+	   (let ((l (read (current-buffer)))
+		 (fields (object-slots this))
+		 (targets (oref this targets)))
+	     (setq l (cdr (cdr l))) ;; objtype and name skip
+	     (while fields ;  reset to defaults those that dont appear.
+	       (if (and (not (assoc (car fields) l))
+			(not (eq (car fields) 'file)))
+		   (let ((eieio-skip-typecheck t))
+		     ;; This is a hazardous thing, for some elements
+		     ;; might not be bound.  Skip typechecking and duplicate
+		     ;; unbound slots along the way.
+		     (eieio-oset this (car fields)
+				 (eieio-oref-default this (car fields)))))
+	       (setq fields (cdr fields)))
+	     (while l
+	       (let ((field (car l)) (val (car (cdr l))))
+		 (cond ((eq field targets)
+			(let ((targets (oref this targets))
+			      (newtarg nil))
+			  (setq val (cdr val)) ;; skip the `list'
+			  (while val
+			    (let ((o (object-assoc (car (cdr (car val))) ; name
+						   'name targets)))
+			      (if o
+				  (project-rescan o (car val))
+				(setq o (eval (car val))))
+			      (setq newtarg (cons o newtarg)))
+			    (setq val (cdr val)))
+			  (oset this targets newtarg)))
+		       (t
+			(eieio-oset this field val))))
+	       (setq l (cdr (cdr l))))))) ;; field/value
 
-(defmethod project-rescan ((this ede-step-target) readstream)
+	;; Scanner-mode
+	((eq 'scanner (oref this :project-mode))
+	 (let ((mf (ede-gnustep-get-valid-makefile (oref this :directory)))
+	       (otargets (oref this targets))
+	       (osubproj (oref this subproj))
+	       (pn (oref this :name)) (ntargets nil) (nsubproj nil))
+	   (when mf
+;	     (oset this :makefile (file-name-nondirectory mf))
+	     (with-temp-buffer
+	       (insert-file-contents mf)
+	       (goto-char (point-min))
+	       (let (;; XXX : Why these don't work ???
+		     (named (ede-gnustep-semantic-tags-named))
+		     (subprojs (ede-gnustep-semantic-tags-subprojects))
+		     (included (ede-gnustep-semantic-tags-included-files))
+		     (allvariables (ede-gnustep-semantic-tags-all-variables))
+		     inst-domain)
+		 (oset this included-makefiles included)
+		 (setq inst-domain 
+		       (ede-gnustep-semantic-value-for-tag
+			(assoc "GNUSTEP_INSTALLATION_DOMAIN" allvariables)))
+		 (cond ((string= "USER" inst-domain)(oset this installation-domain 'user))
+		       ((string= "SYSTEM" inst-domain)(oset this installation-domain 'system))
+		       ((string= "NETWORK" inst-domain)(oset this installation-domain 'network))
+		       (t (oset this installation-domain 'local)))
+		 (mapc
+		  ;; Map all the different types
+		  (lambda (typecar)
+		    (let ((macro (nth 2 typecar))
+			  (class (nth 1 typecar))
+			  )
+		      (let ((tmp nil)(targets
+				      (makefile-macro-file-list macro)
+				      ;; (ede-gnustep-semantic-value-for-tag
+				      ;;  (car (semantic-find-tags-by-name
+				      ;; 	     macro
+				      ;; 	     (semantic-find-tags-by-class
+				      ;; 	      'variable (current-buffer)))))
+				      ))
+			(setq targets (remove-duplicates targets :test 'equal))
+			(while targets
+			  (setq tmp (object-assoc (car targets) 'name otargets))
+			  (when (not tmp)
+			    (if (eq class 'ede-step-project)
+				;; I found a sub project.
+				(let ((spdir
+				       (file-name-as-directory
+					(expand-file-name (car targets)(oref this :directory)))) mf)
+				  (when (and
+					 (file-directory-p spdir)
+					 (ede-gnustep-get-valid-makefile spdir))
+				    ;; For each project id found, see if we need to recycle,
+				    ;; and if we do not, then make a new one.  Check the deep
+				    ;; rescan value for behavior patterns.
+				    (setq tmp (object-assoc spdir 'directory osubproj))
+				    (unless tmp
+				      (setq tmp
+					    (condition-case nil
+						;; In case of problem, ignore it.
+						(ede-step-project
+						 (car targets) :name (car targets)
+						 :project-mode 'scanner
+						 :directory spdir
+						 :file (expand-file-name "ProjStep.ede" spdir)
+						 :targets nil)
+					      (error nil)))
+				      ;; new subproject
+				      (and (ede-step-project-child-p tmp)
+					   (setq nsubproj (cons tmp nsubproj))))
+				    (when tmp
+				      ;; force to be a subproject and in scanner mode
+				      ;;(oset tmp rootproj (or (oref this rootproj) this))
+				      (oset tmp :project-mode 'scanner)
+				      ;; rescan subproj after, in tail
+				      ;; (if ede-deep-rescan (project-rescan tmp))
+				      )))
+			      
+			      ;; I found a non-subproject target.
+			      (setq tmp (apply class (car targets) :name (car targets)
+					       ;; XXX check for possible relative path
+					       ;; in names, like Library/SubLibTarget
+					       ;;:path ""
+					       ;; FIX: we need an absolute path
+					       ;; because ede-object-progect var don't work,
+					       ;; we can't use it in `project-rescan'(target)
+					       :path (file-name-directory mf)
+					       :makefile (file-name-nondirectory mf)
+					       nil))
+			      ;; force :makefile, i don't know why !!!
+			      (oset tmp :makefile (file-name-nondirectory mf))
+			      (setq ntargets (cons tmp ntargets))
+			      ))
+			  ;; If we have tmp, then rescan it only if deep mode.
+			  (if (and ede-deep-rescan (ede-step-target-child-p tmp))
+			      (project-rescan tmp))
+			  (setq targets (cdr targets))))))
+		  ede-step-target-alist)
+		 ) ;; close temp buffer, we don't need makefile-macro-file-list
+	       (oset this :targets (append ntargets otargets))
+	       (oset this subproj (append nsubproj osubproj))
+	       (ede-step-save this)
+	       (if ede-deep-rescan
+		   (dolist (SP (oref this subproj))
+		     (project-rescan SP)))
+	       ))))))
+
+(defmethod project-rescan ((this ede-step-target) &optional readstream)
   "Rescan target THIS from the read list READSTREAM."
-  (setq readstream (cdr (cdr readstream))) ;; constructor/name
-  (while readstream
-    (let ((tag (car readstream))
-	  (val (car (cdr readstream))))
-      (eieio-oset this tag val))
-    (setq readstream (cdr (cdr readstream)))))
+  ;; use the root project to distinguish between scanner/writer mode.
+  ;; FIX is better something like `ede-target-parent' ??? non force topmost.
+  (let ((this-step-root-project
+  	 (ede-current-project
+  	  (file-name-directory
+  	   (or (ede-gnustep-get-topmost-makefile (oref this :path)) (oref this :makefile) "")))))
+    ;;(when (ede-step-project-child-p ede-object-project)
+    (when (ede-step-project-child-p this-step-root-project)
+      (cond ((eq 'writer (oref this-step-root-project :project-mode))
+	     (progn
+	       (setq readstream (cdr (cdr readstream))) ;; constructor/name
+	       (while readstream
+		 (let ((tag (car readstream))
+		       (val (car (cdr readstream))))
+		   (eieio-oset this tag val))
+		 (setq readstream (cdr (cdr readstream))))))
+	    ;;((eq 'scanner (oref ede-object-project :project-mode))
+	    ((eq 'scanner (oref this-step-root-project :project-mode))
+	     ;;(let ((mf (ede-gnustep-get-valid-makefile (oref ede-object-project :directory)))
+	     (let ((mf ;;(ede-gnustep-get-valid-makefile (oref this-step-root-project :directory)))
+		    (oref this :makefile))
+		   (allsource nil))
+	       (with-temp-buffer
+		 (insert-file-contents mf)
+		 (goto-char (point-min))
+		 ;; FIX add all available _MACROS_FOR_TARGETS by gnustep-make, 
+		 ;; or find a way to do it.
+		 (let ((c-src
+			(makefile-macro-file-list (concat (oref this :name) "_C_FILES"))
+			;; (ede-gnustep-semantic-value-for-tag ;;was makefile-macro-file-list
+			;;  (car (semantic-find-tags-by-name
+			;;        (concat (oref this :name) "_C_FILES")
+			;;        (semantic-find-tags-by-class
+			;; 	'variable (current-buffer)))))
+		      )
+		     (objc-src
+		      (makefile-macro-file-list (concat (oref this :name) "_OBJC_FILES"))
+		      ;; (ede-gnustep-semantic-value-for-tag ;;was makefile-macro-file-list
+		      ;;  (car (semantic-find-tags-by-name
+		      ;; 		      (concat (oref this :name) "_OBJC_FILES")
+		      ;; 		      (semantic-find-tags-by-class
+		      ;; 		       'variable (current-buffer)))))
+		      )
+		     (h-src
+		      (makefile-macro-file-list (concat (oref this :name) "_HEADER_FILES"))
+		      ;; (ede-gnustep-semantic-value-for-tag ;;was makefile-macro-file-list
+		      ;; 	     (car (semantic-find-tags-by-name
+		      ;; 		   (concat (oref this :name) "_HEADER_FILES")
+		      ;; 		   (semantic-find-tags-by-class
+		      ;; 		    'variable (current-buffer)))))
+		      )
+		     )
+		   (if c-src (setq allsource (append c-src allsource)))
+		   (if objc-src (setq allsource (append objc-src allsource)))
+		   (if h-src (setq allsource (append h-src allsource)))))
+	       (oset this :source allsource)))))
+    ))
 
+;; XXX regexp to validate a makefile may be customizable list. &&'d, OR'd ???
+;; if we use a list of regexp, thier have to match "every or any" element ???
+(defun ede-gnustep-get-valid-makefile (dir)
+  "Return the absolute path of a valid GNUmakefile in DIR.
+Check match of a line for validity."
+  (let ((rexp-ok "^include \\$(GNUSTEP_MAKEFILES)/common\\.make")
+	(mfs (directory-files dir t "^\\(GNU\\)?[mM]akefile.*")) (found nil))
+    (while (and (not found) mfs)
+      (if (string-match rexp-ok (string-file-contents (car mfs)))
+	  (setq found (car mfs)))
+      (setq mfs (cdr mfs)))
+    found))
+    
+(defun ede-gnustep-get-topmost-makefile (&optional dir)
+  "Find the top most valid (for gnustep) GNUmakefile."
+  (let* ((newdir (expand-file-name (or dir default-directory)))
+	 (valid (ede-gnustep-get-valid-makefile newdir))
+	 (found nil) olddir)
+    (while (and (not found) (not (equal olddir newdir)))
+      (setq olddir newdir) ;; to prevent loop at /
+      ;; check for RootProjStep.ede file presence, 
+      ;; for a valid ede-step-project root, would be the topmost. 
+      (if (file-readable-p (expand-file-name "RootProjStep.ede" newdir))
+	  (setq found valid))
+      (unless (or found (ede-gnustep-get-valid-makefile
+			 (file-name-directory
+			  (directory-file-name newdir))))
+	(setq found valid))
+      ;; up to ..
+      (setq newdir (file-name-directory (directory-file-name newdir)))
+      (setq valid (ede-gnustep-get-valid-makefile newdir)))
+    found))
+
+
 ;;;###autoload
 ;; @todo - below is not compatible w/ Emacs 20!
 (add-to-list 'ede-project-class-files
@@ -908,7 +1263,32 @@ Optional argument FORCE will force items to be regenerated."
 	     t)
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("ProjStep\\.ede" . emacs-lisp-mode))
+;; ;; @todo - below is not compatible w/ Emacs 20! ede-project-class-files
+(add-to-list 'ede-project-class-files
+	     (ede-project-autoload "gnustep-root"
+	      :name "GNUstep-make Top Most" :file 'ede-gnustep
+	      :proj-file "RootProjStep.ede"
+	      :initializers '(:project-mode scanner)
+	      :load-type 'ede-gnustep-load
+	      :class-sym 'ede-step-project)
+	     t)
+
+;;;###autoload
+;; @todo - below is not compatible w/ Emacs 20!
+(add-to-list 'ede-project-class-files
+	     (ede-project-autoload "gnustep"
+	      :name "GNUstep-Make in scanner mode" :file 'ede-gnustep
+	      :proj-file "ProjStep.ede"
+	      :initializers '(:project-mode scanner)
+	      :load-type 'ede-gnustep-load
+	      :class-sym 'ede-step-project)
+	     t)
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\(Root\\)?ProjStep\\.ede" . emacs-lisp-mode))
+
+;; (assoc "gnustep" (object-assoc-list 'name ede-project-class-files))
+
 
 (provide 'ede-gnustep)
 

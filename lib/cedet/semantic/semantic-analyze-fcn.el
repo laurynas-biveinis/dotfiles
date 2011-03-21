@@ -3,7 +3,7 @@
 ;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-analyze-fcn.el,v 1.28 2009/04/11 16:50:09 zappo Exp $
+;; X-RCS: $Id: semantic-analyze-fcn.el,v 1.30 2010/03/15 13:40:54 xscript Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -113,16 +113,16 @@ tags of TAGCLASS."
 	    (notypeinfo nil)
 	    )
 	(while (and (not best) sequence)
-	
+
 	  ;; 3) select a non-prototype.
 	  (if (not (semantic-tag-type (car sequence)))
 	      (setq notypeinfo (car sequence))
 
 	    (setq best (car sequence))
 	    )
-	
+
 	  (setq sequence (cdr sequence)))
-      
+
 	;; Select the best, or at least the prototype.
 	(or best notypeinfo)))))
 
@@ -144,7 +144,7 @@ Almost all searches use the same arguments."
     ;; Search just this file because there is no DB available.
     (semantic-find-tags-for-completion
      prefix (current-buffer))))
- 
+
 ;;; Finding Datatypes
 ;;
 ;; Finding a data type by name within a project.
@@ -269,16 +269,16 @@ SCOPE is the scope object with additional items in which to search for names."
   (catch 'default-behavior
     (let* ((ans-tuple (:override
                        ;; Nothing fancy, just return type by default.
-                       (throw 'default-behavior (list type type-declaration))))           
+                       (throw 'default-behavior (list type type-declaration))))
            (ans-type (car ans-tuple))
-           (ans-type-declaration (cadr ans-tuple)))      
+           (ans-type-declaration (cadr ans-tuple)))
        (list (semantic-analyze-dereference-metatype-1 ans-type scope) ans-type-declaration))))
 
 ;; @ TODO - the typecache can also return a stack of scope names.
 
 (defun semantic-analyze-dereference-metatype-1 (ans scope)
   "Do extra work after dereferencing a metatype.
-ANS is the answer from the the language specific query.
+ANS is the answer from the language specific query.
 SCOPE is the current scope."
   ;; If ANS is a string, or if ANS is a short tag, we
   ;; need to do some more work to look it up.
@@ -322,4 +322,5 @@ SCOPE is the current scope."
     ))
 
 (provide 'semantic-analyze-fcn)
+
 ;;; semantic-analyze-fcn.el ends here

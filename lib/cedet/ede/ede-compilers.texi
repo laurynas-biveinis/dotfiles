@@ -1,6 +1,6 @@
 @c -*-texinfo-*-
 @c
-@c $Id: ede-compilers.texi,v 1.3 2008/09/07 14:35:16 zappo Exp $
+@c $Id: ede-compilers.texi,v 1.4 2010/01/07 02:12:20 zappo Exp $
 @c
 
 @c The next line is for the back-search to see what node this one
@@ -94,7 +94,7 @@ Type: @code{list}
 
 The commands used to execute this compiler.
 The object which uses this compiler will place these commands after
-it's rule definition.
+its rule definition.
 @refill
 
 @item :autoconf
@@ -214,7 +214,7 @@ Type: @code{list}
 
 The commands used to execute this compiler.
 The object which uses this compiler will place these commands after
-it's rule definition.
+its rule definition.
 @refill
 
 @item :objectextention
@@ -331,7 +331,7 @@ Type: @code{list}
 
 The commands used to execute this compiler.
 The object which uses this compiler will place these commands after
-it's rule definition.
+its rule definition.
 @refill
 
 @item :objectextention
@@ -429,7 +429,7 @@ Type: @code{list}
 
 The commands used to execute this compiler.
 The object which uses this compiler will place these commands after
-it's rule definition.
+its rule definition.
 @refill
 
 @item :objectextention
@@ -506,7 +506,7 @@ Type: @code{list}
 
 The commands used to execute this compiler.
 The object which uses this compiler will place these commands after
-it's rule definition.
+its rule definition.
 @refill
 
 @item :objectextention

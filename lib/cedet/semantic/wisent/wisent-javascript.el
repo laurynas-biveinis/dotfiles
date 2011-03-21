@@ -1,10 +1,10 @@
 ;;; wisent-javascript.el --- javascript parser support
 
-;; Copyright (C) 2005 Eric M. Ludlam
+;; Copyright (C) 2005, 2010 Eric M. Ludlam
 
 ;; Author: Eric Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-javascript.el,v 1.1 2008/09/04 01:58:33 zappo Exp $
+;; X-RCS: $Id: wisent-javascript.el,v 1.4 2010/08/27 12:04:35 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -51,8 +51,8 @@ to this variable NAME."
               elts  (cdr elts)
               clone (semantic-tag-clone tag (car elt))
 	      value (car (cdr elt))
-              start (if elts  (caddr elt) (semantic-tag-start tag))
-              end   (if xpand (cdddr elt) (semantic-tag-end   tag))
+              start (if elts  (car (cddr elt)) (semantic-tag-start tag))
+              end   (if xpand (cdr (cddr elt)) (semantic-tag-end   tag))
               xpand (cons clone xpand))
 	;; Set the definition of the cloned tag
 	(semantic-tag-put-attribute clone :default-value value)
@@ -82,7 +82,7 @@ This function overrides `get-local-variables'."
 (defun wisent-javascript-setup-parser ()
   "Setup buffer for parse."
   (wisent-javascript-jv-wy--install-parser)
-  (setq 
+  (setq
    ;; Lexical Analysis
    semantic-lex-analyzer 'javascript-lexer-jv
    semantic-lex-number-expression semantic-java-number-regexp
@@ -99,6 +99,10 @@ This function overrides `get-local-variables'."
 (add-hook 'javascript-mode-hook 'wisent-javascript-setup-parser)
 ;;;###autoload
 (add-hook 'ecmascript-mode-hook 'wisent-javascript-setup-parser)
+;;;###autoload
+(add-hook 'js-mode-hook 'wisent-javascript-setup-parser)
+;;;###autoload
+(add-hook 'js2-mode-hook 'wisent-javascript-setup-parser)
 
 (provide 'wisent-javascript-jv)
 

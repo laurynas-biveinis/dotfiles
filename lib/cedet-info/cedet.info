@@ -1,8 +1,8 @@
-This is cedet.info, produced by makeinfo version 4.11 from cedet.texi.
+This is cedet.info, produced by makeinfo version 4.9 from cedet.texi.
 
-This manual documents CEDET, a collection of other tools.
+   This manual documents CEDET, a collection of other tools.
 
-   Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+   Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -14,7 +14,7 @@ This manual documents CEDET, a collection of other tools.
 
 INFO-DIR-SECTION Emacs
 START-INFO-DIR-ENTRY
-* CEDET: (cedet).	Collection of Emacs Development Environment Tools
+* CEDET: (cedet).       Collection of Emacs Development Environment Tools
 END-INFO-DIR-ENTRY
 
    This file documents CEDET.  _Collection of Emacs Development
@@ -56,7 +56,7 @@ the mailing list cedet-devel.net via the URL:
 * GNU Global::
 * ID Utils::
 * CScope::
-* Maintenance::	Maintaining your CEDET Data files
+* Maintenance:: Maintaining your CEDET Data files
 * GNU Free Documentation License::
 * Index::
 
@@ -66,7 +66,7 @@ File: cedet.info,  Node: Overview,  Next: Installation/Basic Configuration,  Pre
 1 Overview
 **********
 
-The CEDET collection is made up of several tools.  Each tool has it's
+The CEDET collection is made up of several tools.  Each tool has its
 own manual with details for that tool.
 
    At the core of the CEDET suite is EIEIO, which is an Implementation
@@ -93,7 +93,7 @@ Completion" feature.
    Another mid-level tool is SRecode or the Semantic Recoder.  SRecode
 is a template management system designed with the goal of providing a
 way to build code-generating applications that are easily modified or
-extended by users.  At it's core is a template authoring and insertion
+extended by users.  At its core is a template authoring and insertion
 system.  A minor mode provides a simple way to insert templates from
 the various template libraries.
 
@@ -116,7 +116,7 @@ as inversion, ezimage, pretty printing, and mode-local variables.
 
 * EIEIO::       Object system for Emacs.
 * Semantic::    Parser generator and tag management tool.
-* SRecode::	Semantic Recoder Template manager
+* SRecode::     Semantic Recoder Template manager
 * Speedbar::    File and tag explorer, plus more.
 * EDE::         Project Management tool.
 * COGRE::       Diagram editor for object design.
@@ -571,8 +571,8 @@ File: cedet.info,  Node: C++ Features,  Next: GNU Global,  Prev: Code Generation
 8 C++ Features
 **************
 
-If you are using CEDET With C++, then there are a few C++ specific
-options you may need to update.
+If you are using CEDET with C or C++, then there are a few C/C++
+specific options you may need to update.
 
 8.1 C Pre-processor
 ===================
@@ -588,7 +588,7 @@ can customize the preprocessor symbol map.
      Table of C Preprocessor keywords used by the Semantic C lexer.
      Each entry is a cons cell like this:   ( "KEYWORD" . "REPLACEMENT"
      ) Where KEYWORD is the macro that gets replaced in the lexical
-     phase, and REPLACEMENT is a string that is inserted in it's place.
+     phase, and REPLACEMENT is a string that is inserted in its place.
      Empty string implies that the lexical analyzer will discard
      KEYWORD when it is encountered.
 
@@ -632,6 +632,16 @@ preprocessor list.
      implies that some blocks of code will not be parsed based on the
      values of the conditions in the #if blocks.
 
+ -- Function: semantic-lex-c-nested-namespace-ignore-second
+     Should _GLIBCXX_BEGIN_NESTED_NAMESPACE ignore the second namespace?
+     It is really there, but if a majority of uses is to squeeze out
+     the second namespace in use, then it should not be included.
+
+     If you are having problems with smart completion and STL templates,
+     it may that this is set incorrectly.  After changing the value of
+     this flag, you will need to delete any semanticdb cache files that
+     may have been incorrectly parsed.
+
 8.2 System Include path
 =======================
 
@@ -647,10 +657,24 @@ include path and will update all files when you use custom to do it.
 8.3 EDE Setup
 =============
 
-For large C++ programs, it is important to setup EDE for it.  While EDE
-can be used to create makefiles and such using Automake, EDE also
-provides a way to merely describe a project so that tools like semantic
-can find your sources.  For C++, you may want to do this:
+For large C or C++ programs, it is important to setup EDE for it.
+While EDE can be used to create Makefiles or use Automake files, EDE
+also provides a way to merely describe a project so that tools like
+semantic can find your sources.
+
+   If your project already uses Automake, or if your project is Emacs or
+the Linux Kernel, there are pre-existing EDE project types that will
+automatically detect these projects.
+
+   If you use a generic project type, such as Make (using a Makefile),
+SCons, or CMake, you can use a *note Generic: (ede)Generic project.
+Generic projects allow some basic customization for C/C++.  Enable
+generic projects with `ede-enable-generic-projects'.
+
+   If the options there are insufficient, or if Generic projects can't
+identify your build system you will need to use the very simple
+`ede-cpp-root-project' type.  To use it, add this to your `.emacs'
+file, or other configuration:
 
      (global-ede-mode 1) ;; Enable EDE
      (ede-cpp-root-project "SOMENAME" :file "/dir/to/some/file")
@@ -832,10 +856,16 @@ Something like this can work in your `.emacs' file.
 11.3 semantic Database
 ======================
 
-@TODO
+semantic could use CScope as a back end for database searches, but this
+has not been implemented yet.
 
-   semantic can could use CScope as a back end for database searches,
-but this has not been implemented yet.
+     (semanticdb-enable-cscope-databases)
+
+   This will enable the use of cscope for all C and C++ buffers.
+
+   CScope will then be used for project-wide searches as a backup when
+pre-existing semantic database searches may not have parsed all your
+files.
 
 11.4 semantic
 =============
@@ -1057,19 +1087,20 @@ Appendix A GNU Free Documentation License
      H. Include an unaltered copy of this License.
      I. Preserve the section entitled "History", and its title, and add
      to    it an item stating at least the title, year, new authors, and
-       publisher of the Modified Version as given on the Title Page.  If
-       there is no section entitled "History" in the Document, create
-     one    stating the title, year, authors, and publisher of the
-     Document as    given on its Title Page, then add an item
+       publisher of the Modified Version as given on the Title Page.
+     If    there is no section entitled "History" in the Document,
+     create one    stating the title, year, authors, and publisher of
+     the Document as    given on its Title Page, then add an item
      describing the Modified    Version as stated in the previous
      sentence.
      J. Preserve the network location, if any, given in the Document for
-       public access to a Transparent copy of the Document, and likewise
-       the network locations given in the Document for previous versions
-       it was based on.  These may be placed in the "History" section.
-       You may omit a network location for a work that was published at
-       least four years before the Document itself, or if the original
-      publisher of the version it refers to gives permission.
+       public access to a Transparent copy of the Document, and
+     likewise    the network locations given in the Document for
+     previous versions    it was based on.  These may be placed in the
+     "History" section.     You may omit a network location for a work
+     that was published at    least four years before the Document
+     itself, or if the original    publisher of the version it refers
+     to gives permission.
      K. In any section entitled "Acknowledgements" or "Dedications",
      preserve the section's title, and preserve in the section all the
       substance and tone of each of the contributor acknowledgements
@@ -1228,10 +1259,10 @@ notices just after the title page:
        Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
        A copy of the license is included in the section entitled ``GNU
        Free Documentation License''.
-If you have no Invariant Sections, write "with no Invariant Sections"
-instead of saying which ones are invariant.  If you have no Front-Cover
-Texts, write "no Front-Cover Texts" instead of "Front-Cover Texts being
-LIST"; likewise for Back-Cover Texts.
+If you have no Invariant Sections, write "with no Invariant
+Sections" instead of saying which ones are invariant.  If you have no
+Front-Cover Texts, write "no Front-Cover Texts" instead of "Front-Cover
+Texts being LIST"; likewise for Back-Cover Texts.
 
    If your document contains nontrivial examples of program code, we
 recommend releasing these examples in parallel under your choice of
@@ -1249,30 +1280,31 @@ Index
 
 
 Tag Table:
-Node: Top899
-Node: Overview1928
-Node: EIEIO4837
-Node: Semantic5848
-Node: SRecode7164
-Node: Speedbar7651
-Node: EDE8601
-Node: COGRE9925
-Node: Other Library Functions10460
-Node: Installation/Basic Configuration13056
-Node: JDEE Target15611
-Node: ECB Target16560
-Node: Project Management17283
-Node: Code Completion18618
-Node: Code Generation20242
-Node: C++ Features21011
-Ref: semantic-lex-c-preprocessor-symbol-map21632
-Ref: semantic-lex-c-preprocessor-symbol-file22985
-Ref: semantic-c-obey-conditional-section-parsing-flag23578
-Node: GNU Global24944
-Node: ID Utils26980
-Node: CScope28502
-Node: Maintenance30654
-Node: GNU Free Documentation License31064
-Node: Index50787
+Node: Top913
+Node: Overview1942
+Node: EIEIO4853
+Node: Semantic5864
+Node: SRecode7180
+Node: Speedbar7667
+Node: EDE8617
+Node: COGRE9941
+Node: Other Library Functions10476
+Node: Installation/Basic Configuration13072
+Node: JDEE Target15627
+Node: ECB Target16576
+Node: Project Management17299
+Node: Code Completion18634
+Node: Code Generation20258
+Node: C++ Features21027
+Ref: semantic-lex-c-preprocessor-symbol-map21655
+Ref: semantic-lex-c-preprocessor-symbol-file23007
+Ref: semantic-c-obey-conditional-section-parsing-flag23600
+Ref: semantic-lex-c-nested-namespace-ignore-second23847
+Node: GNU Global26131
+Node: ID Utils28167
+Node: CScope29689
+Node: Maintenance32084
+Node: GNU Free Documentation License32494
+Node: Index52229
 
 End Tag Table

@@ -3,7 +3,7 @@
 ;;; Code:
 
 
-;;;### (autoloads (rpm) "rpm" "rpm.el" (19215 38456))
+;;;### (autoloads (rpm) "rpm" "rpm.el" (19575 43633))
 ;;; Generated autoloads from rpm.el
 
 (autoload 'rpm "rpm" "\
@@ -13,8 +13,8 @@ Red Hat Package Management in Emacs.
 
 ;;;***
 
-;;;### (autoloads (gud-speedbar-buttons) "sb-gud" "sb-gud.el" (19215
-;;;;;;  38456))
+;;;### (autoloads (gud-speedbar-buttons) "sb-gud" "sb-gud.el" (19575
+;;;;;;  43633))
 ;;; Generated autoloads from sb-gud.el
 
 (autoload 'gud-speedbar-buttons "sb-gud" "\
@@ -27,7 +27,7 @@ off the specialized speedbar mode.
 ;;;***
 
 ;;;### (autoloads (Info-speedbar-buttons Info-speedbar-browser) "sb-info"
-;;;;;;  "sb-info.el" (19215 38456))
+;;;;;;  "sb-info.el" (19575 43633))
 ;;; Generated autoloads from sb-info.el
 
 (autoload 'Info-speedbar-browser "sb-info" "\
@@ -47,7 +47,7 @@ BUFFER is the buffer speedbar is requesting buttons for.
 ;;;***
 
 ;;;### (autoloads (rmail-speedbar-buttons) "sb-rmail" "sb-rmail.el"
-;;;;;;  (19215 38456))
+;;;;;;  (19575 43633))
 ;;; Generated autoloads from sb-rmail.el
 
 (autoload 'rmail-speedbar-buttons "sb-rmail" "\
@@ -60,8 +60,8 @@ current message into that RMAIL folder.
 
 ;;;***
 
-;;;### (autoloads (w3-speedbar-buttons) "sb-w3" "sb-w3.el" (19215
-;;;;;;  38456))
+;;;### (autoloads (w3-speedbar-buttons) "sb-w3" "sb-w3.el" (19575
+;;;;;;  43633))
 ;;; Generated autoloads from sb-w3.el
 
 (autoload 'w3-speedbar-buttons "sb-w3" "\
@@ -72,7 +72,7 @@ Create speedbar buttons for the current web BUFFER displayed in w3 mode.
 ;;;***
 
 ;;;### (autoloads (speedbar-get-focus speedbar-frame-mode) "speedbar"
-;;;;;;  "speedbar.el" (19215 38456))
+;;;;;;  "speedbar.el" (19575 43633))
 ;;; Generated autoloads from speedbar.el
 
 (defalias 'speedbar 'speedbar-frame-mode)
@@ -96,15 +96,17 @@ selected.  If the speedbar frame is active, then select the attached frame.
 
 ;;;***
 
-;;;### (autoloads nil nil ("bigclock.el" "dframe.el" "fsum.el" "sb-ant.el"
+;;;### (autoloads nil nil ("bigclock.el" "dframe.el" "sb-ant.el"
 ;;;;;;  "sb-html.el" "sb-image.el" "sb-texinfo.el" "speedbar-load.el")
-;;;;;;  (19215 38861 571000))
+;;;;;;  (19846 55953 867015))
 
 ;;;***
 
+(provide 'speedbar-loaddefs)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; speedbar-loaddefs.el ends here

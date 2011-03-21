@@ -1,9 +1,9 @@
 ;;; cogre-layout.el --- Execute a layout engine on a cogre graph.
 ;;
-;; Copyright (C) 2009 Eric M. Ludlam
+;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cogre-layout.el,v 1.3 2009/04/07 00:36:44 zappo Exp $
+;; X-RCS: $Id: cogre-layout.el,v 1.5 2010/03/26 01:51:19 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -36,7 +36,6 @@ This function depends on graphviz `dot' program."
   (interactive)
   (let ((tags nil)
 	(elts nil)
-	(maxy nil)
 	(scalex (car cogre-dot-node-position-scale))
 	(scaley (cdr cogre-dot-node-position-scale))
 	)
@@ -46,7 +45,9 @@ This function depends on graphviz `dot' program."
 	(cogre-export-dot)
 	;; Pump it through DOT, extract the output.
 	(set-buffer
-	 (cedet-graphviz-dot-call (list (buffer-file-name))))
+	 (cedet-graphviz-dot-call (list (buffer-file-name)
+					"-y" ;; invert Y
+					)))
 	;; Put the output into dot-mode
 	(cogre-dot-mode)
 	;; For some reason, the above mode change doesn't trigger
@@ -59,15 +60,6 @@ This function depends on graphviz `dot' program."
 	))
     ;; Get stuff in the graph.
     (setq elts (semantic-tag-get-attribute (car tags) :members))
-
-    ;; Get the graph max size so we can invert Y
-    (let* ((graphgeneric (semantic-find-first-tag-by-name "GRAPH" elts))
-	   (graphsize (semantic-find-first-tag-by-name
-		       "bb" (semantic-tag-get-attribute graphgeneric
-							:attributes)))
-	   (size (semantic-tag-get-attribute graphsize :value))
-	   (ss (split-string size "," t)))
-      (setq maxy (string-to-number (nth 3 ss))))
     
     ;; Loop over the tags.
     (dolist (E elts)
@@ -89,8 +81,8 @@ This function depends on graphviz `dot' program."
 		       :value))
 	       ;; dot reports width/height as inches, and the position
 	       ;; as points, which is 72 points/inch.
-	       (HH (* (/ (string-to-number height) 2) 72))
-	       (HW (* (/ (string-to-number width) 2) 72))
+	       (HH (* (/ (string-to-number height) 2.0) 72.0))
+	       (HW (* (/ (string-to-number width) 2.0) 72.0))
 	       ;; The node we want to modify
 	       (cogrenode (cogre-find-node-by-name name))
 	       )
@@ -100,8 +92,10 @@ This function depends on graphviz `dot' program."
 		(message "Found new pos %d,%d for matching node %s"
 			 X Y name)
 		(oset cogrenode :position
-		      (vector (max 0 (floor (/ (- X HH) scalex)))
-			      (max 0 (floor (/ (- maxy Y HH) scaley))))))
+		      (vector (max 0 (floor (/ (- X HW) scalex)))
+			      (max 0 (floor (/ (- Y HH) scaley)))))
+		;;(message "Node %s at %S (%d -> %d)" (object-name cogrenode) (oref cogrenode :position) HW X)
+		)
 	    ;; No match?
 	    (message "Could not find node for element %S" E)
 	    ))))

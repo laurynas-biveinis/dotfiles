@@ -1,9 +1,9 @@
 ;;; semantic-utest.el --- Tests for semantic's parsing system.
 
-;;; Copyright (C) 2003, 2004, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 2003, 2004, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: semantic-utest.el,v 1.14 2009/05/08 13:11:19 zappo Exp $
+;; X-RCS: $Id: semantic-utest.el,v 1.17 2010/04/18 21:44:04 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -99,7 +99,7 @@ int calc_sv(int);
 (defvar semantic-utest-C-filename (semantic-utest-fname "sutest.c")
   "File to open and erase during this test for C.")
 
-(defvar semantic-utest-C-filename-h 
+(defvar semantic-utest-C-filename-h
   (concat (file-name-sans-extension semantic-utest-C-filename)
 	  ".h")
   "Header file filename for C")
@@ -162,12 +162,101 @@ int calc_sv(int);
 
 (defvar semantic-utest-Python-buffer-contents
 "
+# Comment
+
+# Import statements
+import foo
+import q.foo
+import bar as baz
+import q.bar as baz
+from blah import *
+from q.blah import *
+from blah import a, b, c, d
+from q.blah import a, b, c, d
+
+# Classes
+class Empty:
+  pass
+
+# Simple class compound statement with blank lines sprinkled.
+class Foo(Bar):
+
+    x = 1
+
+    y = 2
+
+class DocString:
+  \"\"\"Documentation string\"\"\"
+
+class MultipleInheritance(Parent1, Parent2):
+  pass
+
+class Methods:
+  def method(this):
+    pass
+
+  def method2(self):
+    pass
+
+  def method3(self, a, b, c):
+    \"\"\"Documentation string\"\"\"
+
+class longclasslist(xx.yyy,
+                    zz.aa):
+  foo=1
+
+# Functions
+def simple():
+    pass
+
+def args(a, b):
+    return 1, 2
+
+def rest(a, b, *args):
+    len(args)
+
+def kw(**kwargs):
+    pass
+
+def longarglist(a,
+                b,
+                c,
+                d):
+    a=1;
+    b=1;
+    c=1;
+    d=1;
+
 def fun1(a,b,c):
   return a
 
 def fun2(a,b,c): #1
   return b
 
+def fun_yield():
+  yield
+  yield 1
+  yield 1, 2
+
+# Statements
+for x in y:
+    print x
+
+for (x, (y, z)) in a:
+    pass
+
+while y > 0:
+    y = y - 1
+
+a=b=c=d=e=f=i=j=k=l=m=n=o=p=q=r=s=t=x=y=1
+
+if x:
+    x = 2
+    y = 3
+
+x = 2
+y = 3
+r, s, t = 1, 2, '3'
 "
 
 
@@ -176,7 +265,110 @@ def fun2(a,b,c): #1
 
 
 (defvar semantic-utest-Python-name-contents
-  '(("fun1" function
+  '(;; Imports
+    ("foo"    include nil nil (overlay  33  43 "tst.py"))
+    ("q.foo"  include nil nil (overlay  44  56 "tst.py"))
+    ("bar"    include nil nil (overlay  57  74 "tst.py"))
+    ("q.bar"  include nil nil (overlay  75  94 "tst.py"))
+    ("blah"   include nil nil (overlay  95 113 "tst.py"))
+    ("q.blah" include nil nil (overlay 114 134 "tst.py"))
+    ("blah"   include nil nil (overlay 135 162 "tst.py"))
+    ("q.blah" include nil nil (overlay 163 192 "tst.py"))
+
+    ;; Class
+    ("Empty" type
+     (:members
+      (("pass" code nil (reparse-symbol indented_block_body) nil nil))
+      :type "class")
+     nil nil)
+    ("Foo" type
+     (:superclasses ("Bar")
+      :members
+      (("x" variable nil (reparse-symbol indented_block_body) nil) ;; value is 1
+       ("y" variable nil (reparse-symbol indented_block_body) nil)) ;; value is 2
+      :type "class")
+     nil nil)
+    ("DocString" type
+     (:members
+      (("\"\"\"Documentation string\"\"\"" code
+	nil (reparse-symbol indented_block_body) nil))
+      :type "class")
+     nil nil) ;; doc "Documentation string"
+    ("MultipleInheritance" type
+     (:superclasses ("Parent1" "Parent2")
+      :members
+      (("pass" code nil (reparse-symbol indented_block_body) nil nil))
+      :type "class")
+     nil nil)
+    ("Methods" type
+     (:members
+      (("method" function
+	(:arguments
+	 (("this" variable
+	   nil (reparse-symbol function_parameters) nil)))
+	(reparse-symbol indented_block_body) nil)
+       ("method2" function
+	(:arguments
+	 (("self" variable
+	   nil (reparse-symbol function_parameters) nil)))
+	(reparse-symbol indented_block_body) nil)
+       ("method3" function
+	(:arguments
+	 (("self" variable
+	   nil (reparse-symbol function_parameters) nil)
+	  ("a" variable
+	   nil (reparse-symbol function_parameters) nil)
+	  ("b" variable
+	   nil (reparse-symbol function_parameters) nil)
+	  ("c" variable
+	   nil (reparse-symbol function_parameters) nil)))
+	(reparse-symbol indented_block_body) nil))
+      :type "class")
+     nil nil) ;; doc "Documentation string"
+    ("longclasslist" type
+     (:superclasses ("xx.yyy" "zz.aa")
+      :members
+      (("foo" variable
+	nil (reparse-symbol function_parameters) nil)) ;; TODO value is 1
+      :type "class")
+     nil nil)
+
+    ;; Functions
+    ("simple" function
+     nil nil nil) ;; pass
+    ("args" function
+     (:arguments
+      (("a" variable
+	nil (reparse-symbol function_parameters) nil)
+       ("b" variable
+	nil (reparse-symbol function_parameters) nil)))
+     nil nil)
+    ("rest" function
+     (:arguments
+      (("a" variable
+	nil (reparse-symbol function_parameters) nil)
+       ("b" variable
+	nil (reparse-symbol function_parameters) nil)
+       ("args" variable
+	nil (reparse-symbol function_parameters) nil))) ;; TODO actually *args
+     ) ;; len(args)
+    ("kw" function
+     (:arguments
+      (("kwargs" variable
+	nil (reparse-symbol function_parameters) nil))) ;; TODO actually **kwargs
+     nil nil)
+    ("longarglist" function
+     (:arguments
+      (("a" variable
+	nil (reparse-symbol function_parameters) nil)
+       ("b" variable
+	nil (reparse-symbol function_parameters) nil)
+       ("c" variable
+	nil (reparse-symbol function_parameters) nil)
+       ("d" variable
+	nil (reparse-symbol function_parameters) nil)))
+     nil nil)
+    ("fun1" function
      (:arguments
       (("a" variable nil
         (reparse-symbol function_parameters)
@@ -199,11 +391,21 @@ def fun2(a,b,c): #1
        ("c" variable nil
         (reparse-symbol function_parameters)
         (overlay 45 46 "tst.py"))))
-     nil (overlay 32 65 "tst.py")))
-  
+     nil (overlay 32 65 "tst.py"))
+    ("fun_yield" function
+     nil nil nil)
+
+    ;; Statements
+    ("for"     code     nil nil nil)
+    ("for"     code     nil nil nil)
+    ("while"   code     nil nil nil)
+    ("a"       variable nil nil nil) ;; TODO there are multiple variables in this
+    ("if"      code     nil nil nil)
+    ("x"       variable nil nil nil)
+    ("y"       variable nil nil nil)
+    ("r, s, t" code     nil nil nil) ;; TODO should be multiple variable tags
+    )
   "List of expected tag names for Python.")
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -504,7 +706,7 @@ Pre-fill the buffer with CONTENTS."
 	  )
       (semantic-fetch-tags)
       (set-buffer buff)
-      
+
       ;; Turn off a range of modes
       (semantic-idle-scheduler-mode -1)
 
@@ -516,7 +718,7 @@ Pre-fill the buffer with CONTENTS."
 
       (switch-to-buffer buff)
       (sit-for 0)
-      
+
       ;; Run the tests.
       ;;(message "First parsing test.")
       (semantic-utest-verify-names semantic-utest-C-name-contents)
@@ -524,6 +726,8 @@ Pre-fill the buffer with CONTENTS."
       ;;(message "Invalid tag test.")
       (semantic-utest-last-invalid semantic-utest-C-name-contents '("fun2") "/\\*1\\*/" "/* Deleted this line */")
       (semantic-utest-verify-names semantic-utest-C-name-contents)
+
+      (semantic-sanity-check)
 
       (set-buffer-modified-p nil)
       ;; Clean up
@@ -559,7 +763,7 @@ INSERTME is the text to be inserted after the deletion."
       (semantic-fetch-tags)
       (switch-to-buffer buff)
       (sit-for 0)
-      
+
       ;; Run the tests.
       ;;(message "First parsing test %s." testname)
       (semantic-utest-verify-names name-contents)
@@ -567,6 +771,8 @@ INSERTME is the text to be inserted after the deletion."
       ;;(message "Invalid tag test %s." testname)
       (semantic-utest-last-invalid name-contents names-removed killme insertme)
       (semantic-utest-verify-names name-contents)
+
+      (semantic-sanity-check)
 
       (set-buffer-modified-p nil)
       ;; Clean up
@@ -578,7 +784,12 @@ INSERTME is the text to be inserted after the deletion."
 (defun semantic-utest-Python()
   (interactive)
   (if (fboundp 'python-mode)
-      (semantic-utest-generic "Python" (semantic-utest-fname "pytest.py") semantic-utest-Python-buffer-contents  semantic-utest-Python-name-contents   '("fun2") "#1" "#deleted line")
+      (semantic-utest-generic
+       "Python"
+       (semantic-utest-fname "pytest.py")
+       semantic-utest-Python-buffer-contents
+       semantic-utest-Python-name-contents
+       '("fun2") "#1" "#deleted line")
     (message "Skilling Python test: NO major mode."))
   )
 
@@ -640,7 +851,7 @@ INSERTME is the text to be inserted after the deletion."
 ;-export([hello_world/0]).
 ;
 ;hello_world()->
-;    io:format("Hello World ~n"). 
+;    io:format("Hello World ~n").
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;(defun semantic-utest-Erlang()
 ;  (interactive)
@@ -665,7 +876,7 @@ INSERTME is the text to be inserted after the deletion."
   (cedet-utest-log " * Python tests...")
   (semantic-utest-Python)
   (cedet-utest-log " * Java tests...")
-  (semantic-utest-Java) 
+  (semantic-utest-Java)
   (cedet-utest-log " * Javascript tests...")
   (semantic-utest-Javascript)
   (cedet-utest-log " * Makefile tests...")
@@ -700,7 +911,7 @@ Argument SKIPNAMES is a list of names that may be child nodes to skip."
 		   )
 		  (t
 		   (equal (car attr1) (car attr2)))))
-      
+
       (if (not res)
 	  (error "TAG INTERNAL DIFF: %S %S"
 		 (car attr1) (car attr2)))
@@ -738,7 +949,7 @@ SKIPNAMES is a list of names that should be skipped in the NAMES list."
   (when names (error "Items forgotten: %S"
 		     (mapcar 'semantic-tag-name names)
 		     ))
-  (when table (error "Items extra: %S" 
+  (when table (error "Items extra: %S"
 		     (mapcar 'semantic-tag-name table)))
   t)
 
@@ -789,7 +1000,7 @@ SKIPNAMES is a list of names to remove from NAME-CONTENTS"
 (defun semantic-utest-kill-indicator ( killme insertme)
   "Kill the line with KILLME on it and insert INSERTME in its place."
   (goto-char (point-min))
-;  (re-search-forward (concat "/\\*" indicator "\\*/")); JAVE this isnt generic enough for different lagnuages
+;  (re-search-forward (concat "/\\*" indicator "\\*/")); JAVE this isnt generic enough for different languages
   (re-search-forward killme)
   (beginning-of-line)
   (setq semantic-utest-last-kill-pos (point))
@@ -863,6 +1074,3 @@ SKIPNAMES is a list of names to remove from NAME-CONTENTS"
 ;; Eric
 
 ;; -----------
-
-
-

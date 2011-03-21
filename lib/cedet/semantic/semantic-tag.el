@@ -1,8 +1,8 @@
 ;;; semantic-tag.el --- tag creation and access
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
-;; X-CVS: $Id: semantic-tag.el,v 1.70 2009/05/29 00:49:03 zappo Exp $
+;; X-CVS: $Id: semantic-tag.el,v 1.75 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,7 +22,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
-;; 
+;;
 ;; I.  The core production of semantic is the list of tags produced by the
 ;;    different parsers.  This file provides 3 APIs related to tag access:
 ;;
@@ -40,11 +40,8 @@
 ;; II.  There is also an API for tag creation.  Use `semantic-tag' to create
 ;;     a new tag.
 ;;
-;; III.  Tag Comparison.  Allows explicit or comparitive tests to see
+;; III.  Tag Comparison.  Allows explicit or comparative tests to see
 ;;      if two tags are the same.
-
-;;; History:
-;; 
 
 ;;; Code:
 ;;
@@ -110,7 +107,7 @@ A variable, or named storage for data.
 @item include
 Statement that represents a file from which more tags can be found.
 @item package
-Statement that declairs this file's package name.
+Statement that declares this file's package name.
 @item code
 Code that has not name or binding to any other symbol, such as in a script.
 @end table
@@ -179,6 +176,13 @@ If a tag is not in a buffer, return nil."
 	       (semantic-overlay-live-p o))
       (semantic-overlay-buffer o))))
 
+(defsubst semantic--tag-get-property (tag property)
+  "From TAG, extract the value of PROPERTY.
+Return the value found, or nil if PROPERTY is not one of the
+properties of TAG.
+That function is for internal use only."
+  (plist-get (semantic-tag-properties tag) property))
+
 (defun semantic-tag-buffer (tag)
   "Return the buffer TAG resides in.
 If TAG has an originating file, read that file into a (maybe new)
@@ -190,7 +194,8 @@ Return nil if there is no buffer for this tag."
       ;; TAG has an originating file, read that file into a buffer, and
       ;; return it.
      (if (semantic--tag-get-property tag :filename)
-	 (find-file-noselect (semantic--tag-get-property tag :filename))
+	 (save-match-data
+	   (find-file-noselect (semantic--tag-get-property tag :filename)))
        ;; TAG is not in Emacs right now, no buffer is available.
        ))))
 
@@ -291,13 +296,6 @@ That function is for internal use only."
                           property value))))
     tag))
 
-(defsubst semantic--tag-get-property (tag property)
-  "From TAG, extract the value of PROPERTY.
-Return the value found, or nil if PROPERTY is not one of the
-properties of TAG.
-That function is for internal use only."
-  (plist-get (semantic-tag-properties tag) property))
-
 (defun semantic-tag-file-name (tag)
   "Return the name of the file from which TAG originated.
 Return nil if that information can't be obtained.
@@ -326,6 +324,19 @@ If TAG is unlinked, but has a :filename property, then that is used."
 (defsubst semantic-tag-of-class-p (tag class)
   "Return non-nil if class of TAG is CLASS."
   (eq (semantic-tag-class tag) class))
+
+(defsubst semantic-tag-type-members (tag)
+  "Return the members of the type that TAG describes.
+That is the value of the `:members' attribute."
+  (semantic-tag-get-attribute tag :members))
+
+(defsubst semantic-tag-type (tag)
+  "Return the value of the `:type' attribute of TAG.
+For a function it would be the data type of the return value.
+For a variable, it is the storage type of that variable.
+For a data type, the type is the style of datatype, such as
+struct or union."
+  (semantic-tag-get-attribute tag :type))
 
 (defun semantic-tag-with-position-p (tag)
   "Return non-nil if TAG has positional information."
@@ -386,7 +397,7 @@ Optional argument IGNORABLE-ATTRIBUTES are attributes to ignore while comparing 
 	       nil))
 	)
       (setq attr1 (cdr (cdr attr1))))
-    
+
     (and A1 A2 A3)
     ))
 
@@ -417,7 +428,7 @@ Optional argument IGNORABLE-ATTRIBUTES is passed down to
 	  )
 	;; If we made it this far, we are ok.
 	t) )))
-  
+
 
 (defun semantic-tag-of-type-p (tag type)
   "Compare TAG's type against TYPE.  Non nil if equivalent.
@@ -516,8 +527,9 @@ ATTRIBUTES is a list of additional attributes belonging to this tag."
   "Create a semantic tag of class 'variable.
 NAME is the name of this variable.
 TYPE is a string or semantic tag representing the type of this variable.
-Optional DEFAULT-VALUE is a string representing the default value of this variable.
-ATTRIBUTES is a list of additional attributes belonging to this tag."
+Optional DEFAULT-VALUE is a string representing the default value of this
+variable.  ATTRIBUTES is a list of additional attributes belonging to this
+tag."
   (apply 'semantic-tag name 'variable
          :type type
          :default-value default-value
@@ -619,7 +631,7 @@ copied tag.
 If optional argument KEEP-FILE is non-nil, and TAG was linked to a
 buffer, the originating buffer file name is kept in the `:filename'
 property of the copied tag.
-If KEEP-FILE is a string, and the orginating buffer is NOT available,
+If KEEP-FILE is a string, and the originating buffer is NOT available,
 then KEEP-FILE is stored on the `:filename' property.
 This runs the tag hook `unlink-copy-hook`."
   ;; Right now, TAG is a list.
@@ -674,61 +686,67 @@ This function is for internal use only."
 ;;
 (defun semantic-tag-deep-copy-one-tag (tag &optional filter)
   "Make a deep copy of TAG, applying FILTER to each child-tag.
-Properties and overlay info are not copied.
-FILTER takes TAG as an argument, and should returns a semantic-tag. 
+No properties are copied except for :filename.
+Overlay will be a vector.
+FILTER takes TAG as an argument, and should returns a `semantic-tag'.
 It is safe for FILTER to modify the input tag and return it."
   (when (not filter) (setq filter 'identity))
   (when (not (semantic-tag-p tag))
     (signal 'wrong-type-argument (list tag 'semantic-tag-p)))
-  (funcall filter (list (semantic-tag-name tag) 
-                        (semantic-tag-class tag)
-                        (semantic--tag-deep-copy-attributes
-			 (semantic-tag-attributes tag) filter)
-                        nil
-                        nil)))
+  (let ((ol (semantic-tag-overlay tag))
+	(fn (semantic-tag-file-name tag)))
+    (funcall filter (list (semantic-tag-name tag)
+			  (semantic-tag-class tag)
+			  (semantic--tag-deep-copy-attributes
+			   (semantic-tag-attributes tag) filter)
+			  ;; Only copy the filename property
+			  (when fn (list :filename fn))
+			  ;; Only setup a vector if we had an overlay.
+			  (when ol (vector (semantic-tag-start tag) (semantic-tag-end tag)))
+			  ))))
 
 (defun semantic--tag-deep-copy-attributes (attrs &optional filter)
   "Make a deep copy of ATTRS, applying FILTER to each child-tag.
 
-It is safe to modify ATTR, and return a permutaion of that list.
+It is safe to modify ATTR, and return a permutation of that list.
 
-FILTER takes TAG as an argument, and should returns a semantic-tag. 
+FILTER takes TAG as an argument, and should returns a semantic-tag.
 It is safe for FILTER to modify the input tag and return it."
   (when (car attrs)
     (when (not (symbolp (car attrs))) (error "Bad Attribute List in tag"))
-    (cons (car attrs) 
-          (cons (semantic--tag-deep-copy-value (nth 1 attrs) filter) 
+    (cons (car attrs)
+          (cons (semantic--tag-deep-copy-value (nth 1 attrs) filter)
                 (semantic--tag-deep-copy-attributes (nthcdr 2 attrs) filter)))))
 
 (defun semantic--tag-deep-copy-value (value &optional filter)
   "Make a deep copy of VALUE, applying FILTER to each child-tag.
 
-It is safe to  modify VALUE, and return a permutaion of that list.
+It is safe to modify VALUE, and return a permutation of that list.
 
-FILTER takes TAG as an argument, and should returns a semantic-tag. 
+FILTER takes TAG as an argument, and should returns a semantic-tag.
 It is safe for FILTER to modify the input tag and return it."
   (cond
    ;; Another tag.
    ((semantic-tag-p value)
     (semantic-tag-deep-copy-one-tag value filter))
-   
+
    ;; A list of more tags
    ((and (listp value) (semantic-tag-p (car value)))
     (semantic--tag-deep-copy-tag-list value filter))
-   
+
    ;; Some arbitrary data.
    (t value)))
 
 (defun semantic--tag-deep-copy-tag-list (tags &optional filter)
   "Make a deep copy of TAGS, applying FILTER to each child-tag.
 
-It is safe to modify the TAGS list, and return a permutaion of that list.
+It is safe to modify the TAGS list, and return a permutation of that list.
 
-FILTER takes TAG as an argument, and should returns a semantic-tag. 
+FILTER takes TAG as an argument, and should returns a semantic-tag.
 It is safe for FILTER to modify the input tag and return it."
   (when (car tags)
     (if (semantic-tag-p (car tags))
-        (cons (semantic-tag-deep-copy-one-tag (car tags) filter) 
+        (cons (semantic-tag-deep-copy-one-tag (car tags) filter)
               (semantic--tag-deep-copy-tag-list (cdr tags) filter))
       (cons (car tags) (semantic--tag-deep-copy-tag-list (cdr tags) filter)))))
 
@@ -738,14 +756,6 @@ It is safe for FILTER to modify the input tag and return it."
 
 ;;; Common
 ;;
-(defsubst semantic-tag-type (tag)
-  "Return the value of the `:type' attribute of TAG.
-For a function it would be the data type of the return value.
-For a variable, it is the storage type of that variable.
-For a data type, the type is the style of datatype, such as
-struct or union."
-  (semantic-tag-get-attribute tag :type))
-
 (defsubst semantic-tag-modifiers (tag)
   "Return the value of the `:typemodifiers' attribute of TAG."
   (semantic-tag-get-attribute tag :typemodifiers))
@@ -783,11 +793,6 @@ refers to that parent by name, then the :parent attribute should be used."
   (semantic-tag-get-attribute tag :parent))
 
 ;;; Tags of class `type'
-;;
-(defsubst semantic-tag-type-members (tag)
-  "Return the members of the type that TAG describes.
-That is the value of the `:members' attribute."
-  (semantic-tag-get-attribute tag :members))
 
 (defun semantic-tag-type-superclasses (tag)
   "Return the list of superclass names of the type that TAG describes."
@@ -876,7 +881,7 @@ That is the value of the `:throws' attribute."
   "Return the parent of the function that TAG describes.
 That is the value of the `:parent' attribute.
 A function has a parent if it is a method of a class, and if the
-function does not appear in body of it's parent class."
+function does not appear in body of its parent class."
   (semantic-tag-named-parent tag))
 
 (defsubst semantic-tag-function-destructor-p (tag)
@@ -964,7 +969,7 @@ Return nil if TAG is not of class 'alias."
 (define-overloadable-function semantic-tag-components (tag)
   "Return a list of components for TAG.
 A Component is a part of TAG which itself may be a TAG.
-Examples include the elements of a structure in a 
+Examples include the elements of a structure in a
 tag of class `type, or the list of arguments to a
 tag of class 'function."
   )
@@ -996,7 +1001,7 @@ Ignoring this step will prevent several features from working correctly."
   "Return the list of top level components belonging to TAG.
 Children are any sub-tags which contain overlays.
 The default action collects regular components of TAG, in addition
-to any components beloning to an anonymous type."
+to any components belonging to an anonymous type."
   (let ((explicit-children (semantic-tag-components tag))
 	(type (semantic-tag-type tag))
 	(anon-type-children nil)
@@ -1112,6 +1117,11 @@ For any given situation, additional ARGS may be passed."
 ;; Overlays are used so that we can quickly identify tags from
 ;; buffer positions and regions using built in Emacs commands.
 ;;
+(defsubst semantic--tag-unlink-list-from-buffer (tags)
+  "Convert TAGS from using an overlay to using an overlay proxy.
+This function is for internal use only."
+  (mapcar 'semantic--tag-unlink-from-buffer tags))
+
 (defun semantic--tag-unlink-from-buffer (tag)
   "Convert TAG from using an overlay to using an overlay proxy.
 This function is for internal use only."
@@ -1127,6 +1137,11 @@ This function is for internal use only."
       ;; Fix the sub-tags which contain overlays.
       (semantic--tag-unlink-list-from-buffer
        (semantic-tag-components-with-overlays tag)))))
+
+(defsubst semantic--tag-link-list-to-buffer (tags)
+  "Convert TAGS from using an overlay proxy to using an overlay.
+This function is for internal use only."
+  (mapc 'semantic--tag-link-to-buffer tags))
 
 (defun semantic--tag-link-to-buffer (tag)
   "Convert TAG from using an overlay proxy to using an overlay.
@@ -1145,16 +1160,6 @@ This function is for internal use only."
       ;; Fix the sub-tags which contain overlays.
       (semantic--tag-link-list-to-buffer
        (semantic-tag-components-with-overlays tag)))))
-
-(defsubst semantic--tag-unlink-list-from-buffer (tags)
-  "Convert TAGS from using an overlay to using an overlay proxy.
-This function is for internal use only."
-  (mapcar 'semantic--tag-unlink-from-buffer tags))
-
-(defsubst semantic--tag-link-list-to-buffer (tags)
-  "Convert TAGS from using an overlay proxy to using an overlay.
-This function is for internal use only."
-  (mapcar 'semantic--tag-link-to-buffer tags))
 
 (defun semantic--tag-unlink-cache-from-buffer ()
   "Convert all tags in the current cache to use overlay proxys.
@@ -1228,7 +1233,7 @@ This function is for internal use only."
       ;; semantic action), or if it isn't recognized as a valid
       ;; semantic tag.
       tag
-    
+
     ;; Try to cook the tag.  This code will be removed when tag will
     ;; be directly created with the right format.
     (condition-case nil
@@ -1248,7 +1253,7 @@ This function is for internal use only."
        (message "A Rule must return a single tag-line list!")
        (debug tag)
        nil))
-    
+
 ;;    @todo - I think we've waited long enough.  Lets find out.
 ;;
 ;;    ;; Compatibility code to be removed in future versions.
@@ -1256,7 +1261,7 @@ This function is for internal use only."
 ;;      ;; This line throws a byte compiler warning.
 ;;      (setq semantic-tag-expand-function semantic-expand-nonterminal)
 ;;      )
-    
+
     ;; Expand based on local configuration
     (if semantic-tag-expand-function
         (or (funcall semantic-tag-expand-function tag)
@@ -1535,7 +1540,7 @@ and `semantic-tag-type-interfaces' instead")
 
 (semantic-alias-obsolete 'semantic-raw-to-cooked-token
                          'semantic--tag-expand)
-			 
+
 ;; Lets test this out during this short transition.
 (semantic-alias-obsolete 'semantic-clone-tag
                          'semantic-tag-clone)

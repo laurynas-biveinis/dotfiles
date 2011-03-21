@@ -186,8 +186,8 @@ headers, you might add code like this for C mode.
 
 @example
 (setq-mode-local c-mode
-		 semanticdb-find-default-throttle
-		 '(project unloaded recursive))
+                 semanticdb-find-default-throttle
+                 '(project unloaded recursive))
                  ;; Remove 'system from the throttle
 @end example
 

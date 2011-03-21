@@ -7,13 +7,13 @@
 ;;;;;;  srecode-semantic-handle-:file srecode-semantic-handle-:time
 ;;;;;;  srecode-semantic-handle-:user srecode-semantic-handle-:region
 ;;;;;;  srecode-semantic-handle-:indent srecode-semantic-handle-:blank)
-;;;;;;  "srecode-args" "srecode-args.el" (19215 38441))
+;;;;;;  "srecode-args" "srecode-args.el" (19575 43634))
 ;;; Generated autoloads from srecode-args.el
 
 (autoload 'srecode-semantic-handle-:blank "srecode-args" "\
 Add macros into the dictionary DICT specifying blank line spacing.
 The wrapgap means make sure the first and last lines of the macro
-do not contain any text from preceeding or following text.
+do not contain any text from preceding or following text.
 
 \(fn DICT)" nil nil)
 
@@ -55,7 +55,7 @@ Add macros into the dictionary DICT based on the kill ring.
 ;;;***
 
 ;;;### (autoloads (srecode-compile-templates srecode-compile-file)
-;;;;;;  "srecode-compile" "srecode-compile.el" (19215 38441))
+;;;;;;  "srecode-compile" "srecode-compile.el" (19575 43634))
 ;;; Generated autoloads from srecode-compile.el
 
 (autoload 'srecode-compile-file "srecode-compile" "\
@@ -71,7 +71,7 @@ Compile a semantic recode template file into a mode-local variable.
 ;;;***
 
 ;;;### (autoloads (srecode-semantic-handle-:cpp) "srecode-cpp" "srecode-cpp.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-cpp.el
 
 (autoload 'srecode-semantic-handle-:cpp "srecode-cpp" "\
@@ -85,7 +85,7 @@ HEADER - Shown section if in a header file.
 ;;;***
 
 ;;;### (autoloads (srecode-calculate-context) "srecode-ctxt" "srecode-ctxt.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-ctxt.el
 
 (autoload 'srecode-calculate-context "srecode-ctxt" "\
@@ -127,7 +127,7 @@ Some useful context values used by the provided srecode templates are:
 
 ;;;### (autoloads (srecode-dictionary-dump srecode-adebug-dictionary
 ;;;;;;  srecode-create-dictionary) "srecode-dictionary" "srecode-dictionary.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-dictionary.el
 
 (eieio-defclass-autoload 'srecode-dictionary 'nil "srecode-dictionary" "Dictionary of symbols and what they mean.\nDictionaries are used to look up named symbols from\ntemplates to decide what to do with those symbols.")
@@ -146,7 +146,7 @@ is the same as belongs to the parent dictionary.
 The dictionary is initialized with variables setup for that
 buffer's table.
 If BUFFER-OR-PARENT is t, then this dictionary should not be
-assocated with a buffer or parent.
+associated with a buffer or parent.
 
 \(fn &optional BUFFER-OR-PARENT)" nil nil)
 
@@ -167,7 +167,7 @@ Dump a typical fabricated dictionary.
 ;;;### (autoloads (srecode-document-function-comment-extract-test
 ;;;;;;  srecode-document-insert-group-comments srecode-document-insert-variable-one-line-comment
 ;;;;;;  srecode-document-insert-function-comment srecode-document-insert-comment)
-;;;;;;  "srecode-document" "srecode-document.el" (19215 38441))
+;;;;;;  "srecode-document" "srecode-document.el" (19575 43634))
 ;;; Generated autoloads from srecode-document.el
 
 (eval-after-load "srecode-mode" '(progn (srecode-add-code-generator 'srecode-document-insert-comment "Comments" "C")))
@@ -186,7 +186,7 @@ If the cursor is on a one line prototype, then insert post-fcn comments.
 (autoload 'srecode-document-insert-function-comment "srecode-document" "\
 Insert or replace a function comment.
 FCN-IN is the Semantic tag of the function to add a comment too.
-If FCN-IN is not provied, the current tag is used instead.
+If FCN-IN is not provided, the current tag is used instead.
 It is assumed that the comment occurs just in front of FCN-IN.
 
 \(fn &optional FCN-IN)" t nil)
@@ -194,7 +194,7 @@ It is assumed that the comment occurs just in front of FCN-IN.
 (autoload 'srecode-document-insert-variable-one-line-comment "srecode-document" "\
 Insert or replace a variable comment.
 VAR-IN is the Semantic tag of the function to add a comment too.
-If VAR-IN is not provied, the current tag is used instead.
+If VAR-IN is not provided, the current tag is used instead.
 It is assumed that the comment occurs just after VAR-IN.
 
 \(fn &optional VAR-IN)" t nil)
@@ -216,7 +216,7 @@ Dump out the extracted dictionary.
 ;;;***
 
 ;;;### (autoloads (srecode-semantic-handle-:el-custom srecode-semantic-handle-:el)
-;;;;;;  "srecode-el" "srecode-el.el" (19215 38441))
+;;;;;;  "srecode-el" "srecode-el.el" (19575 43634))
 ;;; Generated autoloads from srecode-el.el
 
 (autoload 'srecode-semantic-handle-:el "srecode-el" "\
@@ -237,7 +237,7 @@ Adds the following:
 ;;;***
 
 ;;;### (autoloads (srecode-insert-prototype-expansion) "srecode-expandproto"
-;;;;;;  "srecode-expandproto.el" (19215 38441))
+;;;;;;  "srecode-expandproto.el" (19575 43634))
 ;;; Generated autoloads from srecode-expandproto.el
 
 (autoload 'srecode-insert-prototype-expansion "srecode-expandproto" "\
@@ -248,7 +248,7 @@ Insert get/set methods for the current class.
 ;;;***
 
 ;;;### (autoloads (srecode-field-utest) "srecode-fields" "srecode-fields.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-fields.el
 
 (eieio-defclass-autoload 'srecode-field '(srecode-overlaid) "srecode-fields" "Representation of one field.")
@@ -261,7 +261,7 @@ Test the srecode field manager.
 ;;;***
 
 ;;;### (autoloads (srecode-comment-prefix) "srecode-filters" "srecode-filters.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-filters.el
 
 (autoload 'srecode-comment-prefix "srecode-filters" "\
@@ -273,7 +273,7 @@ Prefix each line of STR with the comment prefix characters.
 
 ;;;### (autoloads (srecode-read-template-name srecode-template-get-table-for-binding
 ;;;;;;  srecode-template-get-table srecode-load-tables-for-mode srecode-table)
-;;;;;;  "srecode-find" "srecode-find.el" (19215 38441))
+;;;;;;  "srecode-find" "srecode-find.el" (19575 43634))
 ;;; Generated autoloads from srecode-find.el
 
 (autoload 'srecode-table "srecode-find" "\
@@ -323,7 +323,7 @@ DEFAULT is what to use if the user presses RET.
 ;;;***
 
 ;;;### (autoloads (srecode-insert-getset) "srecode-getset" "srecode-getset.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-getset.el
 
 (eval-after-load "srecode-mode" '(progn (srecode-add-code-generator 'srecode-insert-getset "Get/Set" "G")))
@@ -340,7 +340,7 @@ will be derived.
 ;;;***
 
 ;;;### (autoloads (srecode-insert-fcn srecode-insert srecode-insert-again)
-;;;;;;  "srecode-insert" "srecode-insert.el" (19215 38441))
+;;;;;;  "srecode-insert" "srecode-insert.el" (19575 43634))
 ;;; Generated autoloads from srecode-insert.el
 
 (autoload 'srecode-insert-again "srecode-insert" "\
@@ -349,7 +349,7 @@ Insert the previously inserted template (by name) again.
 \(fn)" t nil)
 
 (autoload 'srecode-insert "srecode-insert" "\
-Inesrt the template TEMPLATE-NAME into the current buffer at point.
+Insert the template TEMPLATE-NAME into the current buffer at point.
 DICT-ENTRIES are additional dictionary values to add.
 
 \(fn TEMPLATE-NAME &rest DICT-ENTRIES)" t nil)
@@ -365,7 +365,7 @@ has set everything up already.
 ;;;***
 
 ;;;### (autoloads (srecode-semantic-handle-:java) "srecode-java"
-;;;;;;  "srecode-java.el" (19215 38441))
+;;;;;;  "srecode-java.el" (19575 43634))
 ;;; Generated autoloads from srecode-java.el
 
 (autoload 'srecode-semantic-handle-:java "srecode-java" "\
@@ -379,7 +379,7 @@ FILENAME_AS_CLASS - file converted to a Java class name.
 ;;;***
 
 ;;;### (autoloads (srecode-adebug-maps srecode-get-maps) "srecode-map"
-;;;;;;  "srecode-map.el" (19215 38441))
+;;;;;;  "srecode-map.el" (19575 43634))
 ;;; Generated autoloads from srecode-map.el
 
 (autoload 'srecode-get-maps "srecode-map" "\
@@ -396,7 +396,7 @@ Run ADEBUG on the output of `srecode-get-maps'.
 ;;;***
 
 ;;;### (autoloads (global-srecode-minor-mode srecode-minor-mode)
-;;;;;;  "srecode-mode" "srecode-mode.el" (19215 38441))
+;;;;;;  "srecode-mode" "srecode-mode.el" (19575 43634))
 ;;; Generated autoloads from srecode-mode.el
 
 (autoload 'srecode-minor-mode "srecode-mode" "\
@@ -422,22 +422,22 @@ If ARG is nil, then toggle.
 ;;;### (autoloads (srecode-semantic-insert-tag srecode-semantic-apply-tag-to-dict-default
 ;;;;;;  srecode-semantic-apply-tag-to-dict srecode-semantic-handle-:tagtype
 ;;;;;;  srecode-semantic-handle-:tag) "srecode-semantic" "srecode-semantic.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-semantic.el
 
 (autoload 'srecode-semantic-handle-:tag "srecode-semantic" "\
-Add macroes into the dictionary DICT based on the current :tag.
+Add macros into the dictionary DICT based on the current :tag.
 
 \(fn DICT)" nil nil)
 
 (autoload 'srecode-semantic-handle-:tagtype "srecode-semantic" "\
-Add macroes into the dictionary DICT based on a tag of class type at point.
+Add macros into the dictionary DICT based on a tag of class type at point.
 Assumes the cursor is in a tag of class type.  If not, throw an error.
 
 \(fn DICT)" nil nil)
 
 (autoload 'srecode-semantic-apply-tag-to-dict "srecode-semantic" "\
-Insert fewatures of TAGOBJ into the dictionary DICT.
+Insert features of TAGOBJ into the dictionary DICT.
 TAGOBJ is an object of class `srecode-semantic-tag'.  This class
 is a compound inserter value.
 DICT is a dictionary object.
@@ -453,7 +453,7 @@ Insert features of TAGOBJ into dictionary DICT.
 \(fn TAGOBJ DICT)" nil nil)
 
 (autoload 'srecode-semantic-insert-tag "srecode-semantic" "\
-Insert TAG into a buffer useing srecode templates at point.
+Insert TAG into a buffer using srecode templates at point.
 
 Optional STYLE-OPTION is a list of minor configuration of styles,
 such as the symbol 'prototype for prototype functions, or
@@ -475,8 +475,8 @@ or `code'.
 
 For various conditions, this function looks for a template with
 the name CLASS-tag, where CLASS is the tag class.  If it cannot
-find that, it will look for that template in the
-`declaration'context (if the current context was not `declaration').
+find that, it will look for that template in the `declaration'
+context (if the current context was not `declaration').
 
 If PROTOTYPE is specified, it will first look for templates with
 the name CLASS-tag-prototype, or CLASS-prototype as above.
@@ -486,7 +486,7 @@ the dictionary when the templates are called.
 
 This function returns to location in the buffer where the
 inserted tag ENDS, and will leave point inside the inserted
-text based on any occurance of a point-inserter.  Templates such
+text based on any occurrence of a point-inserter.  Templates such
 as `function' will leave point where code might be inserted.
 
 \(fn TAG &optional STYLE-OPTION POINT-INSERT-FCN &rest DICT-ENTRIES)" nil nil)
@@ -495,11 +495,11 @@ as `function' will leave point where code might be inserted.
 
 ;;;### (autoloads (srecode-semantic-handle-:srt srecode-read-major-mode-name
 ;;;;;;  srecode-read-variable-name) "srecode-srt" "srecode-srt.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-srt.el
 
 (autoload 'srecode-read-variable-name "srecode-srt" "\
-Read in the name of a declaired variable in the current SRT file.
+Read in the name of a declared variable in the current SRT file.
 PROMPT is the prompt to use.
 INITIAL is the initial string.
 HIST is the history value, otherwise `srecode-read-variable-name-history'
@@ -531,7 +531,7 @@ MODE - The mode of this buffer.  If not declared yet, guess.
 
 ;;;### (autoloads (srecode-dump-templates srecode-mode-table-new
 ;;;;;;  srecode-get-mode-table) "srecode-table" "srecode-table.el"
-;;;;;;  (19215 38441))
+;;;;;;  (19575 43634))
 ;;; Generated autoloads from srecode-table.el
 
 (autoload 'srecode-get-mode-table "srecode-table" "\
@@ -543,7 +543,7 @@ was not found.
 
 (autoload 'srecode-mode-table-new "srecode-table" "\
 Create a new template table for MODE in FILE.
-INIT are the initialization parametrs for the new template table.
+INIT are the initialization parameters for the new template table.
 
 \(fn MODE FILE &rest INIT)" nil nil)
 
@@ -555,7 +555,7 @@ Dump a list of the current templates for MODE.
 ;;;***
 
 ;;;### (autoloads (srecode-template-setup-parser) "srecode-template"
-;;;;;;  "srecode-template.el" (19215 38441))
+;;;;;;  "srecode-template.el" (19575 43634))
 ;;; Generated autoloads from srecode-template.el
 
 (autoload 'srecode-template-setup-parser "srecode-template" "\
@@ -568,11 +568,11 @@ Setup buffer for parse.
 ;;;***
 
 ;;;### (autoloads (srecode-template-mode) "srecode-template-mode"
-;;;;;;  "srecode-template-mode.el" (19215 38441))
+;;;;;;  "srecode-template-mode.el" (19575 43634))
 ;;; Generated autoloads from srecode-template-mode.el
 
 (autoload 'srecode-template-mode "srecode-template-mode" "\
-Major-mode for writing srecode macros.
+Major-mode for writing SRecode macros.
 
 \(fn)" t nil)
 
@@ -581,7 +581,7 @@ Major-mode for writing srecode macros.
 ;;;***
 
 ;;;### (autoloads (srecode-utest-template-output) "srecode-test"
-;;;;;;  "srecode-test.el" (19215 38441))
+;;;;;;  "srecode-test.el" (19575 43634))
 ;;; Generated autoloads from srecode-test.el
 
 (autoload 'srecode-utest-template-output "srecode-test" "\
@@ -592,7 +592,7 @@ Test various template insertion options.
 ;;;***
 
 ;;;### (autoloads (srecode-utest-getset-output) "srecode-test-getset"
-;;;;;;  "srecode-test-getset.el" (19215 38441))
+;;;;;;  "srecode-test-getset.el" (19575 43634))
 ;;; Generated autoloads from srecode-test-getset.el
 
 (autoload 'srecode-utest-getset-output "srecode-test-getset" "\
@@ -602,9 +602,9 @@ Test various template insertion options.
 
 ;;;***
 
-;;;### (autoloads (srecode-semantic-handle-:texitag srecode-semantic-handle-:texi
-;;;;;;  srecode-texi-add-menu) "srecode-texi" "srecode-texi.el" (19215
-;;;;;;  38441))
+;;;### (autoloads (srecode-texi-insert-tag-as-doc srecode-semantic-handle-:texitag
+;;;;;;  srecode-semantic-handle-:texi srecode-texi-add-menu) "srecode-texi"
+;;;;;;  "srecode-texi.el" (19575 43634))
 ;;; Generated autoloads from srecode-texi.el
 
 (autoload 'srecode-texi-add-menu "srecode-texi" "\
@@ -628,19 +628,26 @@ Adds the following:
 
 \(fn DICT)" nil nil)
 
-(define-mode-local-override semantic-insert-foreign-tag texinfo-mode (foreign-tag) "Insert TAG from a foreign buffer in TAGFILE.\nAssume TAGFILE is a source buffer, and create a documentation\nthingy from it using the `document' tool." (let ((srecode-semantic-selected-tag foreign-tag)) (srecode-insert "declaration:function")))
+(define-mode-local-override semantic-insert-foreign-tag texinfo-mode (foreign-tag) "Insert FOREIGN-TAG from a foreign buffer in TAGFILE.\nAssume TAGFILE is a source buffer, and create a documentation\nthingy from it using the `document' tool." (srecode-texi-insert-tag-as-doc foreign-tag))
+
+(autoload 'srecode-texi-insert-tag-as-doc "srecode-texi" "\
+Insert TAG into the current buffer with SRecode.
+
+\(fn TAG)" nil nil)
 
 ;;;***
 
 ;;;### (autoloads nil nil ("srecode-document-vars.el" "srecode-extract.el"
 ;;;;;;  "srecode-load.el" "srecode-template-wy.el" "srecode.el")
-;;;;;;  (19215 38899 509000))
+;;;;;;  (19846 55993 183883))
 
 ;;;***
 
+(provide 'srecode-loaddefs)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; srecode-loaddefs.el ends here

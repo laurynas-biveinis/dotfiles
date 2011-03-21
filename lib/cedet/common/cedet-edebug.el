@@ -1,7 +1,7 @@
 ;;; cedet-edebug.el --- Special EDEBUG augmentation code
 
 ;;;
-;; Copyright (C) 2003, 2004, 2007, 2008 Eric M. Ludlam
+;; Copyright (C) 2003, 2004, 2007, 2008, 2009 Eric M. Ludlam
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -32,10 +32,13 @@
 ;; This package provides a way to extend some aspects of edebug, such as value
 ;; printing.
 
+(eval-when-compile
+  (require 'edebug)
+  (require 'debug)
+  )
 
 ;;; Code:
-(defvar cedet-edebug-prin1-extensions
-  nil
+(defvar cedet-edebug-prin1-extensions nil
   "An alist of of code that can extend PRIN1 for edebug.
 Each entry has the value: (CONDITION . PRIN1COMMAND).")
 
@@ -73,7 +76,8 @@ print methods for very large complex objects."
 
   ;; Call the auto-generated version.
   ;; This is not going to be available at compile time.
-  (cedet-edebug-prin1-to-string-inner object noescape))
+  (with-no-warnings
+    (cedet-edebug-prin1-to-string-inner object noescape)))
 
 
 (defun cedet-edebug-add-print-override (testfcn printfcn)

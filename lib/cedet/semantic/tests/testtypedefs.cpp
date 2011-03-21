@@ -72,3 +72,51 @@ int main()
 
   return 0;
 }
+
+// ------------------
+// Example from Yupeng.
+
+typedef struct epd_info {
+     int a;
+} epd_info_t;
+
+static int epd_probe(struct platform_device *pdev)
+{
+     struct epd_info *db;
+     epd_info_t db1;
+
+     db.// -5-
+       ; // #5# ("a")
+     db1.// -6-
+       ;// #6# ("a")
+
+     return 1;
+}
+
+// ------------------
+// Example from Michel LAFON-PUYO
+
+typedef enum
+{
+   ENUM1,
+   ENUM2
+} e_toto;
+
+typedef struct
+{
+   int field_a;
+   int field_b;
+} t_toto;
+
+// Note: Error condition from anonymous types in a typedef
+//       was that the first (ie - the enum) would be used in
+//       place of the struct.
+int func(void)
+{
+   t_toto t;
+   t. // -7-
+     ; // #7# ( "field_a" "field_b" )
+   return 0;
+}
+
+

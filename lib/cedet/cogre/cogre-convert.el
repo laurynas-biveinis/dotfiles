@@ -1,9 +1,9 @@
 ;;; cogre-convert.el --- Conversion for cogre charts into other formats
 ;;
-;; Copyright (C) 2009 Eric M. Ludlam
+;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cogre-convert.el,v 1.12 2009/04/11 06:18:11 zappo Exp $
+;; X-RCS: $Id: cogre-convert.el,v 1.15 2010/04/21 18:02:02 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -213,7 +213,18 @@ This works similarly to `semantic-tag-put-attribute'."
    )
   )
 
-(defcustom cogre-dot-node-position-scale (cons 6 12)
+(defun cogre-calculate-node-position-scale ()
+  "Calculate the node-position scale from the default face."
+  ;; The height is reported in units of 1/10th of a point.
+  (let ((height (face-attribute 'default :height)))
+    ;; There is probaly somoething better to do here, like find out if
+    ;; the :width is 'normal, or 'condensed, or whatever.
+    (if (and height (numberp height))
+	(cons (/ height 20) (/ height 10))
+      (cons 6 12))))
+
+(defcustom cogre-dot-node-position-scale
+  (cogre-calculate-node-position-scale)
   "The scale to use when converting between COGRE and DOT position values.
 This is of the format ( XSCALE . YSCALE ).
 DOT uses points, where as COGRE uses characters."
@@ -266,11 +277,11 @@ DOT uses points, where as COGRE uses characters."
 
 (defmethod cogre-export-dot-methodlist ((node cogre-class))
   "Get a list of methods on NODE.  Return as \n separated list."
-  (mapconcat (lambda (s) (cogre-uml-stoken->uml node s)) (oref node methods) "\\n"))
+  (mapconcat (lambda (s) (cogre-uml-stoken->uml node s)) (oref node methods) "\\l"))
 
 (defmethod cogre-export-dot-fieldslist ((node cogre-class))
   "Get a list of fields on NODE.  Return as \n separated list."
-  (mapconcat (lambda (s) (cogre-uml-stoken->uml node s)) (oref node attributes) "\\n"))
+  (mapconcat (lambda (s) (cogre-uml-stoken->uml node s)) (oref node attributes) "\\l"))
 
 (defmethod cogre-export-dot-label ((node cogre-instance))
   "Convert NODE into DOT syntax of semantic tags."

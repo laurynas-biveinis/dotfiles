@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-sb.el,v 1.60 2008/06/10 00:43:28 zappo Exp $
+;; X-RCS: $Id: semantic-sb.el,v 1.62 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -28,7 +28,7 @@
 ;; Convert a tag table into speedbar buttons.
 
 ;;; TODO:
-;; 
+;;
 ;; Use semanticdb to find which semanticdb-table is being used for each
 ;; file/tag.  Replace `semantic-sb-with-tag-buffer' to instead call
 ;; children with the new `with-mode-local' instead.
@@ -41,7 +41,7 @@
 
 (defcustom semantic-sb-autoexpand-length 1
   "*Length of a semantic bucket to autoexpand in place.
-This will replace the named bucket that would have usually occured here."
+This will replace the named bucket that would have usually occurred here."
   :group 'speedbar
   :type 'integer)
 
@@ -145,7 +145,7 @@ Optional PREFIX is used to specify special marker characters."
     ;; version of Emacs 21 CVS
     (put-text-property start end 'invisible t)
     ))
-  
+
 (defun semantic-sb-speedbar-data-line (depth button text &optional
 					     text-fun text-data)
   "Insert a semantic token data element.
@@ -391,8 +391,7 @@ Returns the tag list, or t for an error."
 	;; Successful DB query.
 	nil
       ;; No database, do it the old way.
-      (save-excursion
-	(set-buffer (find-file-noselect file))
+      (with-current-buffer (find-file-noselect file)
 	(if (or (not (featurep 'semantic))
 		(not semantic--parse-table))
 	    (setq out t)

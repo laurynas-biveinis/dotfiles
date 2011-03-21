@@ -1,9 +1,9 @@
 ;;; semantic-texi.el --- Semantic details for Texinfo files
 
-;;; Copyright (C) 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: semantic-texi.el,v 1.43 2009/03/01 04:39:11 zappo Exp $
+;; X-RCS: $Id: semantic-texi.el,v 1.47 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -248,7 +248,7 @@ The cursor should be on the @ sign."
 	      "menu\\|"
 	       (substring texinfo-environment-regexp
 			 (match-beginning 0)))))
-  "Regular expression for matching texinfo enviroments.
+  "Regular expression for matching texinfo environments.
 uses `texinfo-environment-regexp', but makes sure that it
 can handle the @menu environment.")
 
@@ -275,7 +275,7 @@ can handle the @menu environment.")
 	    (setq done (point))
 	  ;; Skip over this block
 	  (let ((env (match-string 1)))
-	    (re-search-backward (concat "@" env))))	  
+	    (re-search-backward (concat "@" env))))
 	))
     ;; All over, post what we find.
     (if done
@@ -315,7 +315,7 @@ It would be nice to know function arguments too, but not today."
 ;;; Overrides : Formatting
 ;;
 ;; Various override to better format texi tags.
-;; 
+;;
 
 (define-mode-local-override semantic-format-tag-abbreviate
   texinfo-mode  (tag &optional parent color)
@@ -393,7 +393,7 @@ Optional argument POINT is where to look for the environment."
   (append (mapcar (lambda (a) (car a)) texinfo-section-list)
 	  (condition-case nil
 	      texinfo-environments
-	    (error 
+	    (error
 	     ;; XEmacs doesn't use the above.  Split up its regexp
 	     (split-string texinfo-environment-regexp "\\\\|\\|\\^@\\\\(\\|\\\\)")
 	     ))
@@ -443,6 +443,11 @@ that start with that symbol."
 
 ;;; Parser Setup
 ;;
+;; In semantic-imenu.el, not part of Emacs.
+(defvar semantic-imenu-expandable-tag-classes)
+(defvar semantic-imenu-bucketize-file)
+(defvar semantic-imenu-bucketize-type-members)
+
 ;;;###autoload
 (defun semantic-default-texi-setup ()
   "Set up a buffer for parsing of Texinfo files."
@@ -463,6 +468,7 @@ that start with that symbol."
 	semantic-imenu-bucketize-file nil
 	semantic-imenu-bucketize-type-members nil
 	senator-step-at-start-end-tag-classes '(section)
+	senator-step-at-tag-classes '(section)
 	semantic-stickyfunc-sticky-classes '(section)
 	)
   (local-set-key [(f9)] 'semantic-texi-update-doc-from-texi)
@@ -582,12 +588,16 @@ If TAG is nil, determine a tag based on the current position."
     ;; Test for doc string
     (unless docstring
       (error "Could not find documentation for %s" (semantic-tag-name tag)))
+
+    (require 'srecode)
+    (require 'srecode-texi)
+
     ;; If we have a string, do the replacement.
     (delete-region (semantic-tag-start tag)
 		   (semantic-tag-end tag))
     ;; Use useful functions from the docaument library.
-    (require 'document)
-    (document-insert-texinfo doctag (semantic-tag-buffer doctag))
+    (srecode-texi-insert-tag-as-doc doctag)
+    ;(semantic-insert-foreign-tag doctag)
     ))
 
 (defun semantic-texi-update-doc-from-source (&optional tag)
@@ -622,11 +632,15 @@ The current buffer must include TAG."
 	(set-buffer docbuff)
       (switch-to-buffer docbuff))
     (goto-char (semantic-tag-start doctag))
+
+    (require 'srecode)
+    (require 'srecode-texi)
+
     (delete-region (semantic-tag-start doctag)
 		   (semantic-tag-end doctag))
     ;; Use useful functions from the document library.
-    (require 'document)
-    (document-insert-texinfo tag (semantic-tag-buffer tag))
+    (srecode-texi-insert-tag-as-doc doctag)
+    ;(semantic-insert-foreign-tag doctag)
     ))
 
 (defun semantic-texi-update-doc (&optional tag)

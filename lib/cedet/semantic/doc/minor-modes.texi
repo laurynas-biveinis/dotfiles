@@ -19,13 +19,15 @@ Scheduler}, and @ref{semanticdb}
 @section Code Helpers
 
 Code Helpers are minor modes that augment basic Emacs behavior in ways
-that can assist in programming Semantic supported langauges.
+that can assist in programming Semantic supported languages.
 
 @menu
 * Sticky Function Mode::
-* Highlight Func Mode::	
+* Highlight Func Mode::
+* Local Symbol Highlight Mode::
 * Tag Decoration Mode::
 * MRU Bookmarks Mode::
+* Breadcrumbs Mode::
 @end menu
 
 Senator is another mode which can assist in programming @ref{senator}.
@@ -90,6 +92,26 @@ minor mode is enabled.
 @defun semantic-highlight-func-current-tag-face
 @anchor{semantic-highlight-func-current-tag-face}
 Face used to show the top of current function.
+@end defun
+
+@node Local Symbol Highlight Mode
+@subsection Local Symbol Highlight Mode
+@cindex semantic-idle-local-symbol-highlight
+
+Highlight Local Symbol Mode will put a highlight overlay over
+references to the symbol under point.  Within the context of the
+function or method body point is in, all occurances of that symbol
+will be highlighted.  Each location will be analyzed to make sure it
+is the same as the location where point is.
+
+Unlike @ref{Highlight Func Mode} which lighlights the tag the point is
+in, this highlights uses of the symbol the point is in.  Note that the
+``current tag'' is an entity that may contain code that the point is
+in.  A symbol is a single word or symbol under point.
+
+@defun semantic-idle-symbol-highlight-face
+@anchor{semantic-idle-symbol-highlight-face}
+Face used for the highlighting local symbols.
 @end defun
 
 @node Tag Decoration Mode
@@ -245,7 +267,53 @@ use @kbd{M-p} and @kbd{M-n} to cycle through the bookmark list in
 MRU order.
 @end table
 
+@node Breadcrumbs Mode
+@subsection Breadcrumbs Mode
 
+@deffn Command semantic-idle-breadcrumbs-mode &optional arg
+Idle breadcrumbs mode displays the tag containing point and its
+surrounding tags. The nesting structure of the tags is transformed into
+path much like with directories and files in a filesystem but for
+classes and members. This path is displayed in the header-line or
+mode-line and updated when Emacs is idle.
+
+With prefix argument @var{ARG}, turn on if positive, otherwise
+off. Return non-@code{nil} if the minor mode is enabled.
+@end deffn
+
+Tags appearing in the breadcrumbs display expand into tooltips giving
+additional information and are clickable. @kbd{mouse-1} directly jumps
+to the clicked tag, while @kbd{mouse-2} brings up a popup-menu with
+additional commands.
+
+@deffn Option semantic-idle-breadcrumbs-display-function
+@anchor{semantic-idle-breadcrumbs-display-function}
+Specify how to display the tag under point in idle time. This function
+should take a list of Semantic tags as its only argument. The tag are
+sorted according to their nesting order, starting with the outermost
+tag.
+@end deffn
+
+@deffn Option semantic-idle-breadcrumbs-format-tag-function
+@anchor{semantic-idle-breadcrumbs-format-tag-function}
+Function to call to format information about tag under point.  This
+function should take a single argument, a Semantic tag, and return a
+string to display. Some useful functions are found in
+@dfn{semantic-format-tag-functions}.
+@end deffn
+
+@deffn Option semantic-idle-breadcrumbs-separator
+@anchor{semantic-idle-breadcrumbs-separator}
+Specify how to separate tags in the breadcrumbs string. An arbitrary
+string or a mode-specific scope nesting string (like, for example, "::"
+in C++, or "." in Java) can be used.
+@end deffn
+
+@deffn Option semantic-idle-breadcrumbs-header-line-prefix
+@anchor{semantic-idle-breadcrumbs-header-line-prefix}
+String used to indent the breadcrumbs string. Customize this string to
+match the space used by scrollbars and fringe.
+@end deffn
 
 @node Highlight Edits Mode
 @subsection Highlight Edits Mode
@@ -310,11 +378,10 @@ minor mode can be turned on only if semantic feature is available and
 the current buffer was set up for parsing.  Return non-@code{nil} if the
 minor mode is enabled.
 
-@kbd{C-c , `}		@dfn{semantic-show-unmatched-syntax-next}
+@kbd{C-c , `}           @dfn{semantic-show-unmatched-syntax-next}
 @end deffn
 
 @deffn Option semantic-unmatched-syntax-face
 Face used to show unmatched-syntax in.
 The face is used in  @dfn{semantic-show-unmatched-syntax-mode}.
 @end deffn
-

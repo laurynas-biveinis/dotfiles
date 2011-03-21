@@ -1,6 +1,6 @@
 @c -*-texinfo-*-
 @c
-@c $Id: ede-targets.texi,v 1.4 2009/02/14 15:29:27 zappo Exp $
+@c $Id: ede-targets.texi,v 1.5 2010/01/07 02:15:42 zappo Exp $
 @c
 
 @c The next line is for the back-search to see what node this one
@@ -224,7 +224,7 @@ In sources for @var{THIS}, change version numbers to @var{VERSION}.
 @end deffn
 
 @deffn Method project-delete-target :AFTER ot 
-Delete the current target @var{OT} from it's parent project.
+Delete the current target @var{OT} from its parent project.
 @end deffn
 
 @deffn Method ede-target-sourcecode :AFTER this 
@@ -948,7 +948,7 @@ Converts all symbols into the objects to be used.
 @end deffn
 
 @deffn Method project-delete-target :AFTER this 
-Delete the current target @var{THIS} from it's parent project.
+Delete the current target @var{THIS} from its parent project.
 @end deffn
 
 @deffn Method ede-proj-makefile-target-name :AFTER this 

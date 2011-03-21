@@ -13,7 +13,8 @@ ctags_LISP=semantic-ectag-util.el semantic-ectag-lang.el semantic-ectag-parse.el
 EMACS=emacs
 EMACSFLAGS=-batch --no-site-file
 LOADPATH= ../bovine/ ../../eieio/ ../ ../../common/
-VERSION=2.0pre6
+ELISPPRELOAD= cedet-compat
+VERSION=2.0
 DISTDIR=$(top)semantic-$(VERSION)/ctags
 
 
@@ -25,6 +26,9 @@ ctags: $(ctags_LISP)
 	@echo "(add-to-list 'load-path nil)" > $@-compile-script
 	for loadpath in . ${LOADPATH}; do \
 	   echo "(add-to-list 'load-path \"$$loadpath\")" >> $@-compile-script; \
+	done;
+	for preload in ${ELISPPRELOAD}; do \
+	   echo "(load \"$$preload\")" >> $@-compile-script; \
 	done;
 	@echo "(setq debug-on-error t)" >> $@-compile-script
 	"$(EMACS)" $(EMACSFLAGS) -l $@-compile-script -f batch-byte-compile $^

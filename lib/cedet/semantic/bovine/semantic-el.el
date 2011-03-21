@@ -3,7 +3,7 @@
 ;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: semantic-el.el,v 1.52 2009/05/28 02:33:12 zappo Exp $
+;; X-RCS: $Id: semantic-el.el,v 1.55 2010/03/26 22:18:06 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -141,8 +141,8 @@ syntax as specified by the syntax table."
     (nreverse vars)))
 
 (defun semantic-elisp-form-to-doc-string (form)
-  "After reading a form FORM, covert it to a doc string.
-For Emacs Lisp, sometimes that string is non-existant.
+  "After reading a form FORM, convert it to a doc string.
+For Emacs Lisp, sometimes that string is non-existent.
 Sometimes it is a form which is evaluated at compile time, permitting
 compound strings."
   (cond ((stringp form) form)
@@ -465,7 +465,7 @@ Return a bovination list to use."
       (condition-case nil
 	  ;; Try an Emacs 22 fcn.  This throws errors.
 	  (find-library-name (semantic-tag-name tag))
-	(error 
+	(error
 	 (message "semantic: connot find source file %s"
 		  (semantic-tag-name tag))))
     ;; No handy function available.  (Older Emacsen)
@@ -496,7 +496,7 @@ used to perform the override."
     ""))
 
 (defun semantic-emacs-lisp-obsoleted-doc (tag)
-  "Indicate that TAG is a new name that has obsoleted  some old name.
+  "Indicate that TAG is a new name that has obsoleted some old name.
 Unfortunately, this requires that the tag in question has been loaded
 into Emacs Lisp's memory."
   (let ((obsoletethis (intern-soft (semantic-tag-name tag)))
@@ -535,14 +535,14 @@ Optional argument NOSNARF is ignored."
 	       (cond ((eq (semantic-tag-class tag) 'function)
 		      (setq d (documentation sym)))
 		     (t
-		      (setq d (documentation-property 
+		      (setq d (documentation-property
 			       sym 'variable-documentation)))))
 	     ;; Label it as system doc.. perhaps just for debugging
 	     ;; purposes.
 	     (if d (setq d (concat "Sytem Doc: \n" d)))
 	     ))
       )
-    
+
     (when d
       (concat
        (substitute-command-keys
@@ -602,7 +602,7 @@ Overrides `semantic-nonterminal-static'."
 (define-mode-local-override semantic-up-context emacs-lisp-mode
   (&optional point bounds-type)
   "Move up one context in an Emacs Lisp function.
-A Context in many languages is a block with it's own local variables.
+A Context in many languages is a block with its own local variables.
 In Emacs, we will move up lists and stop when one starts with one of
 the following context specifiers:
   `let', `let*', `defun', `with-slots'
@@ -621,7 +621,7 @@ define-mode-overload\\)\
 (define-mode-local-override semantic-get-local-variables emacs-lisp-mode
   (&optional point)
   "Return a list of local variables for POINT.
-Scan backwards from point at each successive function.  For all occurances
+Scan backwards from point at each successive function.  For all occurrences
 of `let' or `let*', grab those variable names."
   (let* ((vars nil)
 	 (fn nil))
@@ -680,7 +680,7 @@ of `let' or `let*', grab those variable names."
 (define-mode-local-override semantic-end-of-command emacs-lisp-mode
   ()
   "Move cursor to the end of the current command.
-In emacs lisp this is easilly defined by parenthisis bounding."
+In Emacs Lisp this is easily defined by parenthesis bounding."
   (condition-case nil
       (up-list 1)
     (error nil)))
@@ -688,7 +688,7 @@ In emacs lisp this is easilly defined by parenthisis bounding."
 (define-mode-local-override semantic-beginning-of-command emacs-lisp-mode
   ()
   "Move cursor to the beginning of the current command.
-In emacs lisp this is easilly defined by parenthisis bounding."
+In Emacs Lisp this is easily defined by parenthesis bounding."
   (condition-case nil
       (progn
         (up-list -1)
@@ -824,7 +824,7 @@ In emacs lisp this is easilly defined by parenthisis bounding."
   (&optional point)
   "Return a list of tag classes allowed at POINT.
 Emacs Lisp knows much more about the class of the tag needed to perform
-completion than some langauges.  We distincly know if we are to be
+completion than some languages.  We distincly know if we are to be
 a function name, variable name, or any type of symbol.  We could identify
 fields and such to, but that is for some other day."
   (save-excursion
@@ -939,7 +939,7 @@ See `semantic-format-tag-prototype' for Emacs Lisp for more details."
 ELisp variables can be pretty long, so track this one too.")
 
 (define-child-mode lisp-mode emacs-lisp-mode
-  "Make `lisp-mode' inherits mode local behavior from `emacs-lisp-mode'.")
+  "Make `lisp-mode' inherit mode local behavior from `emacs-lisp-mode'.")
 
 ;;;###autoload
 (defun semantic-default-elisp-setup ()

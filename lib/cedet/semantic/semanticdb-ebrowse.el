@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>, Joakim Verona
 ;; Keywords: tags
-;; X-RCS: $Id: semanticdb-ebrowse.el,v 1.22 2009/01/10 01:30:51 zappo Exp $
+;; X-RCS: $Id: semanticdb-ebrowse.el,v 1.25 2010/03/26 22:18:05 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -80,14 +80,47 @@ be searched."
   :group 'semanticdb
   :type 'string)
 
+;;; SEMANTIC Database related Code
+;;; Classes:
+(defclass semanticdb-table-ebrowse (semanticdb-table)
+  ((major-mode :initform c++-mode)
+   (ebrowse-tree :initform nil
+		 :initarg :ebrowse-tree
+		 :documentation
+		 "The raw ebrowse tree for this file."
+		 )
+   (global-extract :initform nil
+		   :initarg :global-extract
+		   :documentation
+		   "Table of ebrowse tags specific to this file.
+This table is composited from the ebrowse *Globals* section.")
+   )
+  "A table for returning search results from ebrowse.")
+
+(defclass semanticdb-project-database-ebrowse
+  (semanticdb-project-database)
+  ((new-table-class :initform semanticdb-table-ebrowse
+		    :type class
+		    :documentation
+		    "New tables created for this database are of this class.")
+   (system-include-p :initform nil
+		     :initarg :system-include
+		     :documentation
+		     "Flag indicating this database represents a system include directory.")
+   (ebrowse-struct :initform nil
+		   :initarg :ebrowse-struct
+		   )
+   )
+  "Semantic Database deriving tags using the EBROWSE tool.
+EBROWSE is a C/C++ parser for use with `ebrowse' Emacs program.")
+
 (defun semanticdb-ebrowse-C-file-p (file)
   "Is FILE a C or C++ file?"
   (or (string-match semanticdb-ebrowse-file-match file)
       (and (string-match "/\\w+$" file)
 	   (not (file-directory-p file))
 	   (let ((tmp (get-buffer-create "*semanticdb-ebrowse-tmp*")))
-	     (save-excursion
-	       (set-buffer tmp)
+	     (with-current-buffer tmp
 	       (condition-case nil
 		   (insert-file-contents file nil 0 100 t)
 		 (error (insert-file-contents file nil nil nil t)))
@@ -98,7 +131,7 @@ be searched."
 
 ;;;###autoload
 (defun semanticdb-create-ebrowse-database (dir)
-  "Create an EBROSE database for directory DIR.
+  "Create an EBROWSE database for directory DIR.
 The database file is stored in ~/.semanticdb, or whichever directory
 is specified by `semanticdb-default-save-directory'."
   (interactive "DDirectory: ")
@@ -110,8 +143,7 @@ is specified by `semanticdb-default-save-directory'."
 	 (regexp nil)
 	 )
     ;; Create the input to the ebrowse command
-    (save-excursion
-      (set-buffer filebuff)
+    (with-current-buffer filebuff
       (buffer-disable-undo filebuff)
       (setq default-directory (expand-file-name dir))
 
@@ -119,14 +151,13 @@ is specified by `semanticdb-default-save-directory'."
       ;; to get the file names.
 
 
-      (mapcar (lambda (f)
-		(when (semanticdb-ebrowse-C-file-p f)
-		  (insert f)
-		  (insert "\n")))
-	      files)
+      (mapc (lambda (f)
+	      (when (semanticdb-ebrowse-C-file-p f)
+		(insert f)
+		(insert "\n")))
+	    files)
       ;; Cleanup the ebrowse output buffer.
-      (save-excursion
-	(set-buffer (get-buffer-create "*EBROWSE OUTPUT*"))
+      (with-current-buffer (get-buffer-create "*EBROWSE OUTPUT*")
 	(erase-buffer))
       ;; Call the EBROWSE command.
       (message "Creating ebrowse file: %s ..." savein)
@@ -138,8 +169,7 @@ is specified by `semanticdb-default-save-directory'."
     ;; Create a short LOADER program for loading in this database.
     (let* ((lfn (concat savein "-load.el"))
 	   (lf (find-file-noselect lfn)))
-      (save-excursion
-	(set-buffer lf)
+      (with-current-buffer lf
 	(erase-buffer)
 	(insert "(semanticdb-ebrowse-load-helper \""
 		(expand-file-name dir)
@@ -193,41 +223,7 @@ warn instead."
 	    (delete-file BFLB))
 	  )))))
 
-;;; SEMANTIC Database related Code
-;;; Classes:
-(defclass semanticdb-table-ebrowse (semanticdb-table)
-  ((major-mode :initform c++-mode)
-   (ebrowse-tree :initform nil
-		 :initarg :ebrowse-tree
-		 :documentation
-		 "The raw ebrowse tree for this file."
-		 )
-   (global-extract :initform nil
-		   :initarg :global-extract
-		   :documentation
-		   "Table of ebrowse tags specific to this file.
-This table is compisited from the ebrowse *Globals* section.")
-   )
-  "A table for returning search results from ebrowse.")
-
-(defclass semanticdb-project-database-ebrowse
-  (semanticdb-project-database)
-  ((new-table-class :initform semanticdb-table-ebrowse
-		    :type class
-		    :documentation
-		    "New tables created for this database are of this class.")
-   (system-include-p :initform nil
-		     :initarg :system-include
-		     :documentation
-		     "Flag indicating this database represents a system include directory.")
-   (ebrowse-struct :initform nil
-		   :initarg :ebrowse-struct
-		   )
-   )
-  "Semantic Database deriving tags using the EBROWSE tool.
-EBROWSE is a C/C++ parser for use with `ebrowse' Emacs program.")
-
-;JAVE this just instantiates a default empty ebrowse struct? 
+;JAVE this just instantiates a default empty ebrowse struct?
 ; how would new instances wind up here?
 ; the ebrowse class isnt singleton, unlike the emacs lisp one
 (defvar-mode-local c++-mode semanticdb-project-system-databases
@@ -331,7 +327,7 @@ If there is no database for DIRECTORY available, then
       ;; add ourselves to the include list for C++.
       (semantic-add-system-include directory 'c++-mode)
       (semantic-add-system-include directory 'c-mode)
-      
+
       db)))
 
 (defmethod semanticdb-ebrowse-strip-trees  ((dbe semanticdb-project-database-ebrowse)
@@ -352,7 +348,7 @@ If there is no database for DIRECTORY available, then
              (filename (or (ebrowse-cs-source-file class)
 			   (ebrowse-cs-file class)))
 	     )
-	(cond 
+	(cond
 	 ((ebrowse-globals-tree-p tree)
 	  ;; We have the globals tree.. save this special.
 	  (semanticdb-ebrowse-add-globals-to-table dbe tree)
@@ -403,12 +399,12 @@ If there is no database for DIRECTORY available, then
 				     (vector defpoint defpoint)))
 	(setq toks (cons nt toks)))
       (setq fns (cdr fns)))
-    
+
     ))
 
 (defun semanticdb-ebrowse-add-tree-to-table (dbe tree &optional fname baseclasses)
   "For database DBE, add the ebrowse TREE into the table for FNAME.
-Optional argument BASECLASSES specifyies a baseclass to the tree being provided."
+Optional argument BASECLASSES specifies a baseclass to the tree being provided."
   (if (not (ebrowse-ts-p tree))
       (signal 'wrong-type-argument (list 'ebrowse-ts-p tree)))
 
@@ -418,7 +414,7 @@ Optional argument BASECLASSES specifyies a baseclass to the tree being provided.
   ;; 3) Fabricate a tag proxy for CLASS
   ;; 4) Add it to the namespace
   ;; 5) Add subclasses
-    
+
   ;; 1 - Find the filename
   (if (not fname)
       (setq fname (or (ebrowse-cs-source-file (ebrowse-ts-class tree))
@@ -605,7 +601,7 @@ Return a list of tags."
 
 (defmethod semanticdb-find-tags-for-completion-method
   ((table semanticdb-table-ebrowse) prefix &optional tags)
-  "In TABLE, find all occurances of tags matching PREFIX.
+  "In TABLE, find all occurrences of tags matching PREFIX.
 Optional argument TAGS is a list of tags to search.
 Returns a table of all matching tags."
   (if tags (call-next-method)
@@ -615,7 +611,7 @@ Returns a table of all matching tags."
 
 (defmethod semanticdb-find-tags-by-class-method
   ((table semanticdb-table-ebrowse) class &optional tags)
-  "In TABLE, find all occurances of tags of CLASS.
+  "In TABLE, find all occurrences of tags of CLASS.
 Optional argument TAGS is a list of tags to search.
 Returns a table of all matching tags."
   (if tags (call-next-method)
@@ -633,7 +629,7 @@ Returns a table of all matching tags."
 (defmethod semanticdb-deep-find-tags-by-name-method
   ((table semanticdb-table-ebrowse) name &optional tags)
   "Find all tags name NAME in TABLE.
-Optional argument TAGS is a list of tags t
+Optional argument TAGS is a list of tags to search.
 Like `semanticdb-find-tags-by-name-method' for ebrowse."
   ;;(semanticdb-find-tags-by-name-method table name tags)
   (call-next-method))
@@ -648,7 +644,7 @@ Like `semanticdb-find-tags-by-name-method' for ebrowse."
 
 (defmethod semanticdb-deep-find-tags-for-completion-method
   ((table semanticdb-table-ebrowse) prefix &optional tags)
-  "In TABLE, find all occurances of tags matching PREFIX.
+  "In TABLE, find all occurrences of tags matching PREFIX.
 Optional argument TAGS is a list of tags to search.
 Like `semanticdb-find-tags-for-completion-method' for ebrowse."
   ;;(semanticdb-find-tags-for-completion-method table prefix tags)
@@ -691,7 +687,7 @@ All systems are different.  Ask questions along the way."
     (error "Please make your default buffer be a C or C++ file, then
 run the test again..")
     )
-  
+
   )
 
 (defun semanticdb-ebrowse-dump ()

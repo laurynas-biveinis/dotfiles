@@ -1,10 +1,10 @@
 ;;; semantic-decorate-mode.el --- Minor mode for decorating tags
 
-;;; Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008 Eric M. Ludlam
+;;; Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-decorate-mode.el,v 1.26 2008/09/07 11:19:10 zappo Exp $
+;; X-RCS: $Id: semantic-decorate-mode.el,v 1.31 2010/04/09 01:53:36 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -38,6 +38,7 @@
 ;;
 
 ;;; Code:
+(eval-when-compile (require 'cl))
 (require 'semantic)
 (require 'semantic-decorate)
 (require 'semantic-util-modes)
@@ -195,8 +196,11 @@ Also make sure old decorations in the area are completely flushed."
 ;; such identified change ought to be setup as PENDING.  This means
 ;; that the next idle step will do the decoration change, but at the
 ;; time of the state change, minimal work would be done.
-(defvar semantic-decorate-pending-decoration-hooks nil
-  "Functions to call with pending decoration changes.")
+(defvar semantic-decorate-pending-decoration-hook nil
+  "Normal hook run to perform pending decoration changes.")
+
+(semantic-varalias-obsolete 'semantic-decorate-pending-decoration-hooks
+                          'semantic-decorate-pending-decoration-hook)
 
 (defun semantic-decorate-add-pending-decoration (fcn &optional buffer)
   "Add a pending decoration change represented by FCN.
@@ -205,35 +209,23 @@ The setting of FCN will be removed after it is run."
   (save-excursion
     (when buffer (set-buffer buffer))
     (semantic-make-local-hook 'semantic-decorate-flush-pending-decorations)
-    (add-hook 'semantic-decorate-pending-decoration-hooks fcn nil t)))
+    (add-hook 'semantic-decorate-pending-decoration-hook fcn nil t)))
 
 ;;;###autoload
 (defun semantic-decorate-flush-pending-decorations (&optional buffer)
   "Flush any pending decorations for BUFFER.
-Flush functions from `semantic-decorate-pending-decoration-hooks'."
+Flush functions from `semantic-decorate-pending-decoration-hook'."
   (save-excursion
     (when buffer (set-buffer buffer))
-    (run-hooks 'semantic-decorate-pending-decoration-hooks)
+    (run-hooks 'semantic-decorate-pending-decoration-hook)
     ;; Always reset the hooks
-    (setq semantic-decorate-pending-decoration-hooks nil)))
-  
+    (setq semantic-decorate-pending-decoration-hook nil)))
+
 
 ;;; DECORATION MODE
 ;;
 ;; Generic mode for handling basic highlighting and decorations.
 ;;
-
-;;;###autoload
-(defun global-semantic-decoration-mode (&optional arg)
-  "Toggle global use of option `semantic-decoration-mode'.
-Decoration mode turns on all active decorations as specified
-by `semantic-decoration-styles'.
-If ARG is positive, enable, if it is negative, disable.
-If ARG is nil, then toggle."
-  (interactive "P")
-  (setq global-semantic-decoration-mode
-        (semantic-toggle-minor-mode-globally
-         'semantic-decoration-mode arg)))
 
 ;;;###autoload
 (defcustom global-semantic-decoration-mode nil
@@ -247,6 +239,18 @@ When this mode is activated, decorations specified by
   :initialize 'custom-initialize-default
   :set (lambda (sym val)
          (global-semantic-decoration-mode (if val 1 -1))))
+
+;;;###autoload
+(defun global-semantic-decoration-mode (&optional arg)
+  "Toggle global use of option `semantic-decoration-mode'.
+Decoration mode turns on all active decorations as specified
+by `semantic-decoration-styles'.
+If ARG is positive, enable, if it is negative, disable.
+If ARG is nil, then toggle."
+  (interactive "P")
+  (setq global-semantic-decoration-mode
+        (semantic-toggle-minor-mode-globally
+         'semantic-decoration-mode arg)))
 
 (defcustom semantic-decoration-mode-hook nil
   "*Hook run at the end of function `semantic-decoration-mode'."
@@ -317,7 +321,7 @@ minor mode is enabled."
           (not semantic-decoration-mode)))
   (semantic-decoration-mode-setup)
   (run-hooks 'semantic-decoration-mode-hook)
-  (if (interactive-p)
+  (if (cedet-called-interactively-p 'interactive)
       (message "decoration-mode minor mode %sabled"
                (if semantic-decoration-mode "en" "dis")))
   (semantic-mode-line-update)
@@ -376,7 +380,7 @@ Return non-nil if the decoration style is enabled."
         (when semantic-decoration-mode
           (semantic-decoration-mode -1)
           (semantic-decoration-mode 1))
-        (when (interactive-p)
+        (when (cedet-called-interactively-p 'interactive)
           (message "Decoration style %s turned %s" (car style)
                    (if flag "on" "off"))))
       flag)))

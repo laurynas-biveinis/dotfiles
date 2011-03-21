@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: tags
-;; X-RCS: $Id: semanticdb-el.el,v 1.32 2009/03/12 22:44:42 zappo Exp $
+;; X-RCS: $Id: semanticdb-el.el,v 1.37 2010/03/26 22:18:05 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,7 +22,7 @@
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
-;; 
+;;
 ;;; Commentary:
 ;;
 ;; There are a lot of Emacs Lisp functions and variables available for
@@ -33,13 +33,12 @@
 ;; to also work in Emacs Lisp with no compromises.
 ;;
 
-(require 'semanticdb-search)
 (eval-when-compile
   ;; For generic function searching.
   (require 'eieio)
   (require 'eieio-opt)
-  (require 'eieio-base)
-  )
+  (require 'eieio-base))
+
 ;;; Code:
 
 ;;; Classes:
@@ -48,7 +47,7 @@
    )
   "A table for returning search results from Emacs.")
 
-(defmethod semanticdb-refresh-table ((obj semanticdb-table-emacs-lisp))
+(defmethod semanticdb-refresh-table ((obj semanticdb-table-emacs-lisp) &optional force)
   "Do not refresh Emacs Lisp table.
 It does not need refreshing."
   nil)
@@ -75,7 +74,7 @@ It does not need refreshing."
 (defvar-mode-local emacs-lisp-mode semanticdb-find-default-throttle
   '(project omniscience)
   "Search project files, then search this omniscience database.
-It is not necessary to to system or recursive searching because of
+It is not necessary to do system or recursive searching because of
 the omniscience database.")
 
 ;;; Filename based methods
@@ -106,10 +105,9 @@ For Emacs Lisp, creates a specialized table."
 
 (defmethod semanticdb-equivalent-mode ((table semanticdb-table-emacs-lisp) &optional buffer)
   "Return non-nil if TABLE's mode is equivalent to BUFFER.
-Equivalent modes are specified by by `semantic-equivalent-major-modes'
+Equivalent modes are specified by the `semantic-equivalent-major-modes'
 local variable."
-  (save-excursion
-    (set-buffer buffer)
+  (with-current-buffer buffer
     (eq (or mode-local-active-mode major-mode) 'emacs-lisp-mode)))
 
 (defmethod semanticdb-full-filename ((obj semanticdb-table-emacs-lisp))
@@ -245,12 +243,12 @@ TOKTYPE is a hint to the type of tag desired."
 ;;; Search Overrides
 ;;
 (defvar semanticdb-elisp-mapatom-collector nil
-  "Variable used to collect mapatoms output.")
+  "Variable used to collect 'mapatoms' output.")
 
 (defmethod semanticdb-find-tags-by-name-method
   ((table semanticdb-table-emacs-lisp) name &optional tags)
-  "Find all tags name NAME in TABLE.
-Uses `inter-soft' to match NAME to emacs symbols.
+  "Find all tags named NAME in TABLE.
+Uses `intern-soft' to match NAME to Emacs symbols.
 Return a list of tags."
   (if tags (call-next-method)
     ;; No need to search.  Use `intern-soft' which does the same thing for us.
@@ -280,7 +278,7 @@ Return a list of tags."
 
 (defmethod semanticdb-find-tags-for-completion-method
   ((table semanticdb-table-emacs-lisp) prefix &optional tags)
-  "In TABLE, find all occurances of tags matching PREFIX.
+  "In TABLE, find all occurrences of tags matching PREFIX.
 Optional argument TAGS is a list of tags to search.
 Returns a table of all matching tags."
   (if tags (call-next-method)
@@ -289,7 +287,7 @@ Returns a table of all matching tags."
 
 (defmethod semanticdb-find-tags-by-class-method
   ((table semanticdb-table-emacs-lisp) class &optional tags)
-  "In TABLE, find all occurances of tags of CLASS.
+  "In TABLE, find all occurrences of tags of CLASS.
 Optional argument TAGS is a list of tags to search.
 Returns a table of all matching tags."
   (if tags (call-next-method)
@@ -315,7 +313,7 @@ Like `semanticdb-find-tags-by-name-method' for Emacs Lisp."
 
 (defmethod semanticdb-deep-find-tags-for-completion-method
   ((table semanticdb-table-emacs-lisp) prefix &optional tags)
-  "In TABLE, find all occurances of tags matching PREFIX.
+  "In TABLE, find all occurrences of tags matching PREFIX.
 Optional argument TAGS is a list of tags to search.
 Like `semanticdb-find-tags-for-completion-method' for Emacs Lisp."
   (semanticdb-find-tags-for-completion-method table prefix tags))

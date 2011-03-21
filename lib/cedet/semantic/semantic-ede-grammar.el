@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: semantic-ede-grammar.el,v 1.17 2009/03/08 16:31:19 zappo Exp $
+;; RCS: $Id: semantic-ede-grammar.el,v 1.18 2010/03/15 13:40:54 xscript Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -131,8 +131,7 @@ Lays claim to all -by.el, and -wy.el files."
 	 (proj (ede-target-parent obj))
 	 (default-directory (oref proj directory)))
     (mapc (lambda (src)
-	    (save-excursion
-	      (set-buffer (find-file-noselect src))
+	    (with-current-buffer (find-file-noselect src)
 	      (save-excursion
 		(semantic-grammar-create-package))
 	      (save-buffer)
@@ -164,8 +163,7 @@ Lays claim to all -by.el, and -wy.el files."
       (concat (ede-pmake-varname this) "_SEMANTIC_GRAMMAR_EL")
     (insert
      (mapconcat (lambda (src)
-		  (save-excursion
-		    (set-buffer (find-file-noselect src))
+		  (with-current-buffer (find-file-noselect src)
 		    (concat (semantic-grammar-package) ".el")))
 		(oref this source)
 		" ")))

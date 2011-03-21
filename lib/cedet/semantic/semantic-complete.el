@@ -1,10 +1,10 @@
 ;;; semantic-complete.el --- Routines for performing tag completion
 
-;;; Copyright (C) 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 2003, 2004, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-complete.el,v 1.61 2009/05/31 19:37:08 zappo Exp $
+;; X-RCS: $Id: semantic-complete.el,v 1.71 2010/06/06 15:46:08 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -38,7 +38,7 @@
 ;; quickly without resorting to "show me every possible option now".
 ;;
 ;; In addition, some symbol names will appear in multiple locations.
-;; If it is important to distiguish, then a way to provide a choice
+;; If it is important to distinguish, then a way to provide a choice
 ;; over these locations is important as well.
 ;;
 ;; Beyond brute force offers for completion of plain strings,
@@ -57,7 +57,7 @@
 ;;
 ;; Here, we will treat each section separately (excluding D)
 ;; They can then be strung together in user-visible commands to
-;; fullfill specific needs.
+;; fulfil specific needs.
 ;;
 ;; COLLECTORS:
 ;;
@@ -109,6 +109,7 @@
 ;; `semantic-complete-inline-tag-engine' will complete text in
 ;; a buffer.
 
+(eval-when-compile (require 'cl))
 (require 'eieio)
 (require 'semantic-tag)
 (require 'semantic-find)
@@ -126,7 +127,7 @@
       (require 'tooltip)
     (error nil))
   )
-  
+
 ;;; Code:
 
 ;;; Compatibility
@@ -211,10 +212,10 @@ Keeps STRINGS only in the history.")
 						    default-tag initial-input
 						    history)
   "Read a semantic tag, and return a tag for the selection.
-Argument COLLECTOR is an object which can be used to to calculate
+Argument COLLECTOR is an object which can be used to calculate
 a list of possible hits.  See `semantic-completion-collector-engine'
 for details on COLLECTOR.
-Argumeng DISPLAYOR is an object used to display a list of possible
+Argument DISPLAYOR is an object used to display a list of possible
 completions for a given prefix.  See`semantic-completion-display-engine'
 for details on DISPLAYOR.
 PROMPT is a string to prompt with.
@@ -243,7 +244,7 @@ HISTORY is a symbol representing a variable to story the history in."
       (if (string-match ":" prompt)
 	  (setq prompt (concat
 			(substring prompt 0 (match-beginning 0))
-			" (" default-as-string ")"
+			" (default " default-as-string ")"
 			(substring prompt (match-beginning 0))))
 	(setq prompt (concat prompt " (" default-as-string "): "))))
     ;;
@@ -407,7 +408,7 @@ Return value can be:
 
 ;;; Keybindings
 ;;
-;; Keys are bound to to perform completion using our mechanisms.
+;; Keys are bound to perform completion using our mechanisms.
 ;; Do that work here.
 (defun semantic-complete-done ()
   "Accept the current input."
@@ -528,8 +529,13 @@ if INLINE, then completion is happening inline in a buffer."
 	(semantic-displayor-set-completions
 	 displayor
 	 (or
-	  (and (not (eq na 'displayend))
-	       (semantic-collector-current-exact-match collector))
+	  ;; For the below - This caused problems for Chong Yidong
+	  ;; when experimenting with the completion engine.  I don't
+	  ;; remember what the problem was though, and I wasn't sure why
+	  ;; the below two lines were there since they obviously added
+	  ;; some odd behavior.  -EML	  
+	  ;(and (not (eq na 'displayend))
+	  ;     (semantic-collector-current-exact-match collector))
 	  (semantic-collector-all-completions collector contents))
 	 contents)
 	;; Ask the displayor to display them.
@@ -564,10 +570,9 @@ if INLINE, then completion is happening inline in a buffer."
     (define-key km "\C-g" 'semantic-complete-inline-quit)
     (define-key km "?"
       (lambda () (interactive)
-	(describe-variable 'semantic-complete-inline-map)))
+        (describe-variable 'semantic-complete-inline-map)))
     km)
-  "Keymap used while performing Semantic inline completion.
-\\{semantic-complete-inline-map}")
+  "Keymap used while performing Semantic inline completion.")
 
 (defface semantic-complete-inline-face
   '((((class color) (background dark))
@@ -603,7 +608,7 @@ Similar to `minibuffer-contents' when completing in the minibuffer."
 	  (insert (substring (semantic-tag-name tag)
 			     (length txt)))
 	  (semantic-complete-inline-exit))
-      
+
       ;; Get whatever binding RET usually has.
       (let ((fcn
 	     (condition-case nil
@@ -652,7 +657,7 @@ Similar to `minibuffer-contents' when completing in the minibuffer."
 	(setq semantic-completion-collector-engine nil
 	      semantic-completion-display-engine nil))
     (error nil))
-    
+
   ;; Remove this hook LAST!!!
   ;; This will force us back through this function if there was
   ;; some sort of error above.
@@ -719,7 +724,7 @@ a reasonable distance."
 	   (t
 	    ;; Else, show completions now
 	    (semantic-complete-inline-force-display)
-    
+
 	    ))))
     ;; If something goes terribly wrong, clean up after ourselves.
     (error (semantic-complete-inline-exit))))
@@ -748,10 +753,10 @@ DO NOT CALL THIS IF THE INLINE COMPLETION ENGINE IS NOT ACTIVE."
 (defun semantic-complete-inline-tag-engine
   (collector displayor buffer start end)
   "Perform completion based on semantic tags in a buffer.
-Argument COLLECTOR is an object which can be used to to calculate
+Argument COLLECTOR is an object which can be used to calculate
 a list of possible hits.  See `semantic-completion-collector-engine'
 for details on COLLECTOR.
-Argumeng DISPLAYOR is an object used to display a list of possible
+Argument DISPLAYOR is an object used to display a list of possible
 completions for a given prefix.  See`semantic-completion-display-engine'
 for details on DISPLAYOR.
 BUFFER is the buffer in which completion will take place.
@@ -850,7 +855,7 @@ Expected return values are:
      ;; Use ans1 when we have it.
      (t
       ans1))))
-	  
+
 
 
 ;;; ------------------------------------------------------------
@@ -961,8 +966,7 @@ Calculate the cache if there isn't one."
   "Calculate the completions for prefix from completionlist.
 Output must be in semanticdb Find result format."
   ;; Must output in semanticdb format
-  (let ((table (save-excursion
-		 (set-buffer (oref obj buffer))
+  (let ((table (with-current-buffer (oref obj buffer)
 		 semanticdb-current-table))
 	(result (semantic-find-tags-for-completion
 		 prefix
@@ -1213,6 +1217,27 @@ Uses semanticdb for searching all tags in the current project."
   "Calculate the completions for prefix from completionlist."
   (semanticdb-brute-deep-find-tags-for-completion prefix (oref obj path)))
 
+;;; Current Datatype member search.
+(defclass semantic-collector-local-members (semantic-collector-project-abstract)
+  ((scope :initform nil
+	  :type (or null semantic-scope-cache)
+	  :documentation
+	  "The scope the local members are being completed from."))
+  "Completion engine for tags in a project.")
+
+(defmethod semantic-collector-calculate-completions-raw
+  ((obj semantic-collector-local-members) prefix completionlist)
+  "Calculate the completions for prefix from completionlist."
+  (let* ((scope (or (oref obj scope)
+		    (oset obj scope (semantic-calculate-scope))))
+	 (localstuff (oref scope scope)))
+    (list
+     (cons
+      (oref scope :table)
+      (semantic-find-tags-for-completion prefix localstuff)))))
+    ;(semanticdb-brute-deep-find-tags-for-completion prefix (oref obj path))))
+
+;;; Smart completion collector
 (defclass semantic-collector-analyze-completions (semantic-collector-abstract)
   ((context :initarg :context
 	    :type semantic-analyze-context
@@ -1237,8 +1262,7 @@ inserted into the current context.")
 	    (semantic-analyze-possible-completions (oref obj context))))
   ;; search our cached completion list.  make it look like a semanticdb
   ;; results type.
-  (list (cons (save-excursion
-		(set-buffer (oref (oref obj context) buffer))
+  (list (cons (with-current-buffer (oref (oref obj context) buffer)
 		semanticdb-current-table)
 	      (semantic-find-tags-for-completion
 	       prefix
@@ -1251,7 +1275,7 @@ inserted into the current context.")
 ;; A typical displayor accepts a pre-determined list of completions
 ;; generated by a collector.  This format is in semanticdb search
 ;; form.  This vaguely standard form is a bit challenging to navigate
-;; because the tags do not contain buffer info, but the file assocated
+;; because the tags do not contain buffer info, but the file associated
 ;; with the tags preceed the tag in the list.
 ;;
 ;; Basic displayors don't care, and can strip the results.
@@ -1374,7 +1398,7 @@ which have the same name."
   (if (and (slot-boundp obj 'last-prefix)
 	   (string= (oref obj last-prefix) (semantic-completion-text))
 	   (eq last-command this-command))
-      (if (and 
+      (if (and
 	   (slot-boundp obj 'focus)
 	   (slot-boundp obj 'table)
 	   (<= (semanticdb-find-result-length (oref obj table))
@@ -1473,8 +1497,7 @@ one in the source buffer."
 		   (and table (semanticdb-get-buffer table)))))
       ;; If no buffer is provided, then we can make up a summary buffer.
       (when (not buf)
-	(save-excursion
-	  (set-buffer (get-buffer-create "*Completion Focus*"))
+	(with-current-buffer (get-buffer-create "*Completion Focus*")
 	  (erase-buffer)
 	  (insert "Focus on tag: \n")
 	  (insert (semantic-format-tag-summarize tag nil t) "\n\n")
@@ -1512,7 +1535,7 @@ one in the source buffer."
 
 
 ;;; Tooltip completion lister
-;; 
+;;
 ;; Written and contributed by Masatake YAMATO <jet@gyve.org>
 ;;
 ;; Modified by Eric Ludlam for
@@ -1667,7 +1690,7 @@ Return a cons cell (X . Y)"
 ;;; Ghost Text displayor
 ;;
 (defclass semantic-displayor-ghost (semantic-displayor-focus-abstract)
-				    
+
   ((ghostoverlay :type overlay
 		 :documentation
 		 "The overlay the ghost text is displayed in.")
@@ -1744,10 +1767,10 @@ completion text in ghost text."
 	     (os (substring (semantic-tag-name tag) (length lp)))
 	     (ol (oref obj ghostoverlay))
 	     )
-      
+
 	(put-text-property 0 (length os) 'face 'region os)
 
-	(semantic-overlay-put 
+	(semantic-overlay-put
 	 ol 'display (concat os (buffer-substring (point) (1+ (point)))))
 	)
       ;; Calculate text difference between contents and the focus item.
@@ -1764,6 +1787,29 @@ completion text in ghost text."
 ;;; ------------------------------------------------------------
 ;;; Specific queries
 ;;
+(defvar semantic-complete-inline-custom-type
+  (append '(radio)
+	  (mapcar
+	   (lambda (class)
+	     (let* ((C (intern (car class)))
+		    (doc (documentation-property C 'variable-documentation))
+		    (doc1 (car (split-string doc "\n")))
+		    )
+	       (list 'const
+		     :tag doc1
+		     C)))
+	   (eieio-build-class-alist semantic-displayor-abstract t))
+	  )
+  "Possible options for inline completion displayors.
+Use this to enable custom editing.")
+
+(defcustom semantic-complete-inline-analyzer-displayor-class
+  'semantic-displayor-traditional
+  "*Class for displayor to use with inline completion."
+  :group 'semantic
+  :type semantic-complete-inline-custom-type
+  )
+
 ;;;###autoload
 (defun semantic-complete-read-tag-buffer-deep (prompt &optional
 						      default-tag
@@ -1779,6 +1825,29 @@ If INITIAL-INPUT is non-nil, insert it in the minibuffer initially.
 HISTORY is a symbol representing a variable to store the history in."
   (semantic-complete-read-tag-engine
    (semantic-collector-buffer-deep prompt :buffer (current-buffer))
+   (semantic-displayor-traditional-with-focus-highlight "simple")
+   ;;(semantic-displayor-tooltip "simple")
+   prompt
+   default-tag
+   initial-input
+   history)
+  )
+
+;;;###autoload
+(defun semantic-complete-read-tag-local-members (prompt &optional
+							default-tag
+							initial-input
+							history)
+  "Ask for a tag by name from the local type members.
+Available tags are from the the current scope.
+Completion options are presented in a traditional way, with highlighting
+to resolve same-name collisions.
+PROMPT is a string to prompt with.
+DEFAULT-TAG is a semantic tag or string to use as the default value.
+If INITIAL-INPUT is non-nil, insert it in the minibuffer initially.
+HISTORY is a symbol representing a variable to store the history in."
+  (semantic-complete-read-tag-engine
+   (semantic-collector-local-members prompt :buffer (current-buffer))
    (semantic-displayor-traditional-with-focus-highlight "simple")
    ;;(semantic-displayor-tooltip "simple")
    prompt
@@ -1866,12 +1935,12 @@ completion works."
 						   history)
   "Ask for a tag by name based on the current context.
 The function `semantic-analyze-current-context' is used to
-calculate the context.  `semantic-analyze-possible-completions' is used 
+calculate the context.  `semantic-analyze-possible-completions' is used
 to generate the list of possible completions.
 PROMPT is the first part of the prompt.  Additional prompt
 is added based on the contexts full prefix.
 CONTEXT is the semantic analyzer context to start with.
-HISTORY is a symbol representing a variable to stor the history in.
+HISTORY is a symbol representing a variable to store the history in.
 usually a default-tag and initial-input are available for completion
 prompts.  these are calculated from the CONTEXT variable passed in."
   (if (not context) (setq context (semantic-analyze-current-context (point))))
@@ -1884,8 +1953,7 @@ prompts.  these are calculated from the CONTEXT variable passed in."
       :buffer (oref context buffer)
       :context context)
      (semantic-displayor-traditional-with-focus-highlight "simple")
-     (save-excursion
-       (set-buffer (oref context buffer))
+     (with-current-buffer (oref context buffer)
        (goto-char (cdr (oref context bounds)))
        (concat prompt (mapconcat 'identity syms ".")
 	       (if syms "." "")
@@ -1893,30 +1961,6 @@ prompts.  these are calculated from the CONTEXT variable passed in."
      nil
      inp
      history)))
-
-(defvar semantic-complete-inline-custom-type
-  (append '(radio)
-	  (mapcar
-	   (lambda (class)
-	     (let* ((C (intern (car class)))
-		    (doc (documentation-property C 'variable-documentation))
-		    (doc1 (car (split-string doc "\n")))
-		    )
-	       (list 'const
-		     :tag doc1
-		     C)))
-	   (eieio-build-class-alist semantic-displayor-abstract t))
-	  )
-  "Possible options for inlince completion displayors.
-Use this to enable custom editing.")
-  
-(defcustom semantic-complete-inline-analyzer-displayor-class
-  'semantic-displayor-traditional
-  "*Class for displayor to use with inline completion."
-  :group 'semantic
-  :type semantic-complete-inline-custom-type
-  )
-
 
 ;;;###autoload
 (defun semantic-complete-inline-analyzer (context)
@@ -2002,14 +2046,14 @@ completion works."
   (interactive)
   (message "%S"
    (semantic-format-tag-prototype
-    (semantic-complete-read-tag-project "Symbol: ")
+    (semantic-complete-read-tag-project "Jump to symbol: ")
     )))
 
 ;;;###autoload
 (defun semantic-complete-jump-local ()
   "Jump to a semantic symbol."
   (interactive)
-  (let ((tag (semantic-complete-read-tag-buffer-deep "Symbol: ")))
+  (let ((tag (semantic-complete-read-tag-buffer-deep "Jump to symbol: ")))
     (when (semantic-tag-p tag)
       (push-mark)
       (goto-char (semantic-tag-start tag))
@@ -2022,7 +2066,7 @@ completion works."
 (defun semantic-complete-jump ()
   "Jump to a semantic symbol."
   (interactive)
-  (let* ((tag (semantic-complete-read-tag-project "Symbol: ")))
+  (let* ((tag (semantic-complete-read-tag-project "Jump to symbol: ")))
     (when (semantic-tag-p tag)
       (push-mark)
       (semantic-go-to-tag tag)
@@ -2031,6 +2075,23 @@ completion works."
       (working-message "%S: %s "
                        (semantic-tag-class tag)
                        (semantic-tag-name  tag)))))
+
+;;;###autoload
+(defun semantic-complete-jump-local-members ()
+  "Jump to a semantic symbol."
+  (interactive)
+  (let* ((tag (semantic-complete-read-tag-local-members "Jump to symbol: ")))
+    (when (semantic-tag-p tag)
+      (let ((start (condition-case nil (semantic-tag-start tag)
+		     (error nil))))
+	(unless start
+	  (error "Tag %s has no location" (semantic-format-tag-prototype tag)))
+	(push-mark)
+	(goto-char start)
+	(semantic-momentary-highlight-tag tag)
+	(working-message "%S: %s "
+			 (semantic-tag-class tag)
+			 (semantic-tag-name  tag))))))
 
 ;;;###autoload
 (defun semantic-complete-analyze-and-replace ()
@@ -2063,13 +2124,12 @@ how completion options are displayed."
       (semantic-complete-inline-analyzer
        (semantic-analyze-current-context (point))))
   ;; Report a message if things didn't startup.
-  (if (and (interactive-p)
+  (if (and (cedet-called-interactively-p 'any)
 	   (not (semantic-completion-inline-active-p)))
       (message "Inline completion not needed.")
     ;; Since this is most likely bound to something, and not used
     ;; at idle time, throw in a TAB for good measure.
-    (semantic-complete-inline-TAB)
-    ))
+    (semantic-complete-inline-TAB)))
 
 ;;;###autoload
 (defun semantic-complete-analyze-inline-idle ()
@@ -2086,10 +2146,9 @@ to change how completion options are displayed."
       (semantic-complete-inline-analyzer-idle
        (semantic-analyze-current-context (point))))
   ;; Report a message if things didn't startup.
-  (if (and (interactive-p)
+  (if (and (cedet-called-interactively-p 'interactive)
 	   (not (semantic-completion-inline-active-p)))
-      (message "Inline completion not needed."))
-  )
+      (message "Inline completion not needed.")))
 
 ;;;###autoload
 (defun semantic-complete-self-insert (arg)
@@ -2105,15 +2164,17 @@ use `semantic-complete-analyze-inline' to complete."
 
   ;; Prepare for doing completion, but exit quickly if there is keyboard
   ;; input.
-  (when (and (not (semantic-exit-on-input 'csi
-		    (semantic-fetch-tags)
-		    (semantic-throw-on-input 'csi)
-		    nil))
-	     (= arg 1)
-	     (not (semantic-exit-on-input 'csi
-		    (semantic-analyze-current-context)
-		    (semantic-throw-on-input 'csi)
-		    nil)))
+  (when (save-window-excursion
+	  (save-excursion
+	    (and (not (semantic-exit-on-input 'csi
+			(semantic-fetch-tags)
+			(semantic-throw-on-input 'csi)
+			nil))
+		 (= arg 1)
+		 (not (semantic-exit-on-input 'csi
+			(semantic-analyze-current-context)
+			(semantic-throw-on-input 'csi)
+			nil)))))
     (condition-case nil
 	(semantic-complete-analyze-inline)
       ;; Ignore errors.  Seems likely that we'll get some once in a while.

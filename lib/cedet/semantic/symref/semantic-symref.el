@@ -1,6 +1,6 @@
 ;;; semantic-symref.el --- Symbol Reference API
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
 
@@ -25,7 +25,7 @@
 ;;
 ;; Semantic's native parsing tools do not handle symbol references.
 ;; Tracking such information is a task that requires a huge amount of
-;; space and processing not apropriate for an Emacs Lisp program.
+;; space and processing not appropriate for an Emacs Lisp program.
 ;;
 ;; Many desired tools used in refactoring, however, need to have
 ;; such references available to them.  This API aims to provide a
@@ -58,7 +58,7 @@
 ;;
 ;; ADD A NEW EXTERNAL TOOL
 ;;
-;; To support a new external tool, sublcass `semantic-symref-tool-baseclass'
+;; To support a new external tool, subclass `semantic-symref-tool-baseclass'
 ;; and implement the methods.  The baseclass provides support for
 ;; managing external processes that produce parsable output.
 ;;
@@ -95,16 +95,27 @@ is supported.
 
 If no tools are supported, then 'grep is assumed.")
 
+(defun semantic-symref-calculate-rootdir ()
+  "Calculate the root directory for a symref search.
+Start with and EDE project, or use the default directory."
+  (let* ((rootproj (when (and (featurep 'ede) ede-minor-mode)
+		       (ede-toplevel)))
+	   (rootdirbase (if rootproj
+			    (ede-project-root-directory rootproj)
+			  default-directory)))
+    (if (and rootproj (condition-case nil
+			  ;; Hack for subprojects.
+			  (oref rootproj :metasubproject)
+			(error nil)))
+	(ede-up-directory rootdirbase)
+      rootdirbase)))
+
 (defun semantic-symref-detect-symref-tool ()
   "Detect the symref tool to use for the current buffer."
   (if (not (eq semantic-symref-tool 'detect))
       semantic-symref-tool
     ;; We are to perform a detection for the right tool to use.
-    (let* ((rootproj (when (and (featurep 'ede) ede-minor-mode)
-		       (ede-toplevel)))
-	   (rootdir (if rootproj
-			(ede-project-root-directory rootproj)
-		      default-directory))
+    (let* ((rootdir (semantic-symref-calculate-rootdir))
 	   (tools semantic-symref-tool-alist))
       (while (and tools (eq semantic-symref-tool 'detect))
 	(when (funcall (car (car tools)) rootdir)
@@ -163,7 +174,7 @@ to perform the search.  This was added for use by a test harness."
       (set tool-return inst))
     (prog1
 	(setq semantic-symref-last-result result)
-      (when (interactive-p)
+      (when (cedet-called-interactively-p 'interactive)
 	(semantic-symref-data-debug-last-result))))
   )
 
@@ -183,7 +194,7 @@ Returns an object of class `semantic-symref-result'."
 	 (result (semantic-symref-get-result inst)))
     (prog1
 	(setq semantic-symref-last-result result)
-      (when (interactive-p)
+      (when (cedet-called-interactively-p 'interactive)
 	(semantic-symref-data-debug-last-result))))
   )
 
@@ -203,7 +214,7 @@ Returns an object of class `semantic-symref-result'."
 	 (result (semantic-symref-get-result inst)))
     (prog1
 	(setq semantic-symref-last-result result)
-      (when (interactive-p)
+      (when (cedet-called-interactively-p 'interactive)
 	(semantic-symref-data-debug-last-result))))
   )
 
@@ -223,7 +234,7 @@ Returns an object of class `semantic-symref-result'."
 	 (result (semantic-symref-get-result inst)))
     (prog1
 	(setq semantic-symref-last-result result)
-      (when (interactive-p)
+      (when (cedet-called-interactively-p 'interactive)
 	(semantic-symref-data-debug-last-result))))
   )
 
@@ -243,13 +254,13 @@ Returns an object of class `semantic-symref-result'."
 	 (result (semantic-symref-get-result inst)))
     (prog1
 	(setq semantic-symref-last-result result)
-      (when (interactive-p)
+      (when (cedet-called-interactively-p 'interactive)
 	(semantic-symref-data-debug-last-result))))
   )
 
 ;;;###autoload
 (defun semantic-symref-find-text (text &optional scope)
-  "Find a list of occurances of TEXT in the current project.
+  "Find a list of occurrences of TEXT in the current project.
 TEXT is a regexp formatted for use with egrep.
 Optional SCOPE specifies which file set to search.  Defaults to 'project.
 Refers to `semantic-symref-tool', to determine the reference tool to use
@@ -264,7 +275,7 @@ Returns an object of class `semantic-symref-result'."
 	 (result (semantic-symref-get-result inst)))
     (prog1
 	(setq semantic-symref-last-result result)
-      (when (interactive-p)
+      (when (cedet-called-interactively-p 'interactive)
 	(semantic-symref-data-debug-last-result))))
   )
 
@@ -351,7 +362,7 @@ already."
 	       ;; We have a table, but it needs a refresh.
 	       ;; This means we should load in that buffer.
 	       (t
-		(let ((kbuff 
+		(let ((kbuff
 		       (if open-buffers
 			   ;; Even if we keep the buffers open, don't
 			   ;; let EDE ask lots of questions.
@@ -472,8 +483,7 @@ The symref TOOL should already contain the search criteria."
   "Parse the entire OUTPUTBUFFER of a symref tool.
 Calls the method `semantic-symref-parse-tool-output-one-line' over and
 over until it returns nil."
-  (save-excursion
-    (set-buffer outputbuffer)
+  (with-current-buffer outputbuffer
     (goto-char (point-min))
     (let ((result nil)
 	  (hit nil))

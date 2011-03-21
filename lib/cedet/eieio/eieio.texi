@@ -1,7 +1,7 @@
 
 \input texinfo   @c -*-texinfo-*-
 @c
-@c $Id: eieio.texi,v 1.62 2009/01/14 00:00:20 zappo Exp $
+@c $Id: eieio.texi,v 1.67 2010/08/19 23:27:15 zappo Exp $
 @c
 
 @c
@@ -22,7 +22,7 @@
 @copying
 This manual documents CEDET, a collection of other tools.
 
-Copyright @copyright{} 2007, 2008, 2009 Eric M. Ludlam
+Copyright @copyright{} 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -295,10 +295,14 @@ Each element of @var{superclass-list} must be a class.  These classes
 are the parents of the class being created.  Every slot that appears
 in each parent class is replicated in the new class.
 
-  If two parents share the same slot name, the parent which appears in
-the @var{superclass-list} first sets the tags for that slot.  If
-a slot in the new class' slot list matches a parent, then the new
-specifications for the child class override that of the parent.
+If two parents share the same slot name, the parent which appears in
+the @var{superclass-list} first sets the tags for that slot.  If a
+slot in the new class' slot list matches a parent, then some of the
+new specifications for the child class override that of the parent.
+
+When overriding a slot, some slot attributes cannot be overriden
+because they break basic OO rules.  You cannot override @code{:type}
+or @code{:protection}.
 
 Whenever defclass is used to create a new class, two predicates are
 created for it.  The predicate names are @code{@var{CLASS-NAME}-p} and
@@ -326,8 +330,8 @@ This option is here to support programs written with older versions of
 
 @menu
 * Inheritance::         How to specify parents classes
-* Slot Options::	How to specify features of a slot.
-* Class Options::	How to specify features for this class.
+* Slot Options::        How to specify features of a slot.
+* Class Options::       How to specify features for this class.
 @end menu
 
 @node Inheritance
@@ -464,36 +468,6 @@ A symbol that is a function like this:
 :initform +
 @end example
 will set the initial value as that symbol.
-A function that is a lambda expression, like this:
-@example
-:initform (lambda () some-variablename)
-@end example
-
-will be evaluated at instantiation time to the value of
-@code{some-variablename}.
-@c This feature was more annoying than useful.  Use the
-@c `initialize-instance' function to do this.
-@c
-@c On the other hand, if you need code to be
-@c executed at instantiation time as the initform, code like this:
-@c @example
-@c :initform (lambda () (+ 1 some-global-var))
-@c @end example
-@c will be identified as a function call, and be executed in place.
-
-@cindex lambda-default
-
-
-Lastly, using the function @code{lambda-default} instead of
-@code{lambda} will let you specify a lambda expression to use as the
-value, without evaluation, thus:
-@example
-:initform (lambda-default () some-variablename)
-@end example
-@@TODO - This will be deleted after fair warning.
-
-will not be evaluated at instantiation time, and the value in this
-slot will instead be @code{(lambda () some-variablename)}.
 
 After a class has been created with @code{defclass}, you can change
 that default value with @code{oset-default}. @ref{Accessing Slots}.
@@ -511,9 +485,6 @@ Here are some examples:
  An object of your class type.
  @item (or null symbol)
  A symbol, or nil.
- @item function
- A function symbol, or a @code{lambda-default} expression.
-
  @end table
 
 @item :allocation
@@ -649,10 +620,12 @@ Search for methods in the class hierarchy in breadth first order.
 This is the default.
 @item :depth-first
 Search for methods in the class hierarchy in a depth first order.
+@item :c3
+Searches for methods in in a learnarized way that most closely matches
+what CLOS does when CLOS when a monotonic class structure is defined.
 @end table
 
 For more on method invocation order, @ref{Method Invocation}.
-
 
 @item :metaclass
 Unsupported CLOS option.  Enables the use of a different base class other
@@ -1042,7 +1015,36 @@ TODO - Write some more about static methods here
 @node Method Invocation
 @chapter Method Invocation
 
-TODO - writeme
+When classes are defined, you can specify the
+@code{:method-invocation-order}.  This is a feature specific to EIEIO.
+
+This controls the order in which method resolution occurs for
+@code{:primary} methods in cases of multiple inheritance.  The order
+affects which method is called first in a tree, and if
+@code{call-next-method} is used, it controls the order in which the
+stack of methods are run.
+
+The original EIEIO order turned out to be broken for multiple
+inheritance, but some programs depended on it.  As such this option
+was added when the default invocation order was fixed to something
+that made more sense in that case.
+
+Valid values are:
+
+@table @code
+@item :breadth-first
+Search for methods in the class hierarchy in breadth first order.
+This is the default.
+@item :depth-first
+Search for methods in the class hierarchy in a depth first order.
+@item :c3
+Searches for methods in in a learnarized way that most closely matches
+what CLOS does when CLOS when a monotonic class structure is defined.
+
+This is derived from the Dylan language documents by
+Kim Barrett et al.: A Monotonic Superclass Linearization for Dylan
+Retrieved from: http://192.220.96.201/dylan/linearization-oopsla96.html
+@end table
 
 @node Predicates
 @comment  node-name,  next,  previous,  up
@@ -1790,7 +1792,7 @@ Called from @dfn{call-next-method} when no additional methods are available.
 @var{object} is othe object being called on @dfn{call-next-method}.
 @var{args} are the  arguments it is called by.
 This method signals @dfn{no-next-method} by default.  Override this
-method to not throw an error, and it's return value becomes the
+method to not throw an error, and its return value becomes the
 return value of @dfn{call-next-method}.
 @end defun
 

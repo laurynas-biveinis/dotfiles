@@ -28,11 +28,18 @@ Emacs
 * Speedbar: (speedbar).         File/Tag summarizing utility.
 
 Emacs
+* Semantic: (semantic).         Infrastructure for parser based text analysis.
+* Semantic Application Writer's guide: (semantic-appdev).
+* Semantic Grammar Framework: (grammar-fw).
+* Semantic Language Writer's guide: (semantic-langdev).
+* Semantic User's guide: (semantic-user).
+* Semantic Wisent parser development: (wisent).
+* Semantic bovine parser development: (bovine).
 * Speedbar: (speedbar).         File/Tag summarizing utility.
 * Speedbar: (speedbar).         File/Tag summarizing utility.
 
 Miscellaneous
 * cogre: (cogre).               Graphs & UML for Emacs
-* ede: (ede).                   Objects for Emacs
+* ede: (ede).                   Project management for Emacs
 * eieio: (eieio).               Objects for Emacs
 * srecode: (srecode).           Template code generator

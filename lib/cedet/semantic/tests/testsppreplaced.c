@@ -32,6 +32,9 @@ int myFcn1 ();
 int myFcn2 (int a, int b);
 int myFcn3 (int a, int b);
 
+/* TEST: Macro replacement for very long argument lists. (See xdisp.c in Emacs) */
+int myFcn4 (int a, int b, int c, int d, int e, int f);
+
 /* TEST: Multiple args to a macro. */
 struct ma_struct { int moose; int penguin; int emu; };
 
@@ -81,10 +84,26 @@ namespace foo { namespace bar {
   } 
 }
 
+/* TEST: The VC++ macro hack. */
+namespace std {
+
+  int inside_std_namespace(int a) { }
+
+}
+
 /* TEST: Recursion prevention.  CPP doesn't allow even 1 level of recursion. */
 int MACROA () {
 
 }
+
+/* TEST: Fancy concat/recursive macros */
+int ABtest;
+
+/* TEST: Macro Recursion limits in arguments to a macro. 
+ * This code is from ALSA, noticed by Yupeng. */
+struct mr_moose_ops {
+  int (*mr_moose_disconnect)(struct mr_moose *dev);
+};
 
 
 /* End */

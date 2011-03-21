@@ -1,9 +1,9 @@
 ;;; cedet-global.el --- GNU Global support for CEDET.
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cedet-global.el,v 1.7 2009/05/30 13:39:15 zappo Exp $
+;; X-RCS: $Id: cedet-global.el,v 1.12 2010/07/24 23:58:53 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -32,6 +32,13 @@
 ;;;###autoload
 (defcustom cedet-global-command "global"
   "Command name for the GNU Global executable."
+  :type 'string
+  :group 'cedet)
+
+;;;###autoload
+(defcustom cedet-global-gtags-command "gtags"
+  "Command name for the GNU Global gtags executable.
+GTAGS is used to create the tags table queried by the 'global' command."
   :type 'string
   :group 'cedet)
 
@@ -72,11 +79,23 @@ SCOPE is the scope of the search, such as 'project or 'subdirs."
   (let ((b (get-buffer-create "*CEDET Global*"))
 	(cd default-directory)
 	)
-    (save-excursion
-      (set-buffer b)
+    (with-current-buffer b
       (setq default-directory cd)
       (erase-buffer))
     (apply 'call-process cedet-global-command
+	   nil b nil
+	   flags)
+    b))
+
+(defun cedet-gnu-global-gtags-call (flags)
+  "Create GNU Global TAGS using gtags with FLAGS."
+  (let ((b (get-buffer-create "*CEDET Global gtags*"))
+	(cd default-directory)
+	)
+    (with-current-buffer b
+      (setq default-directory cd)
+      (erase-buffer))
+    (apply 'call-process cedet-global-gtags-command
 	   nil b nil
 	   flags)
     b))
@@ -86,13 +105,12 @@ SCOPE is the scope of the search, such as 'project or 'subdirs."
   "Expand the FILENAME with GNU Global.
 Return a fully qualified filename."
   (interactive "sFile: ")
-  (let ((ans (save-excursion
-	       (set-buffer (cedet-gnu-global-call (list "-Pa" filename)))
+  (let ((ans (with-current-buffer (cedet-gnu-global-call (list "-Pa" filename))
 	       (goto-char (point-min))
 	       (if (looking-at "global: ")
 		   (error "GNU Global not available")
 		 (split-string (buffer-string) "\n" t)))))
-    (when (interactive-p)
+    (when (cedet-called-interactively-p 'interactive)
       (if ans
 	  (if (= (length ans) 1)
 	      (message "%s" (car ans))
@@ -114,8 +132,7 @@ If a default starting DIR is not specified, the current buffer's
 `default-directory' is used."
   (let ((default-directory (or dir default-directory))
 	)
-    (save-excursion
-      (set-buffer (cedet-gnu-global-call (list "-pq")))
+    (with-current-buffer (cedet-gnu-global-call (list "-pq"))
       (goto-char (point-min))
       (when (not (eobp))
 	(file-name-as-directory
@@ -134,11 +151,10 @@ return nil."
 	(rev nil))
     (if (not b)
 	(progn
-	  (when (interactive-p)
+	  (when (cedet-called-interactively-p 'interactive)
 	    (message "GNU Global not found."))
 	  nil)
-      (save-excursion
-	(set-buffer b)
+      (with-current-buffer b
 	(goto-char (point-min))
 	(re-search-forward "GNU GLOBAL \\([0-9.]+\\)" nil t)
 	(setq rev (match-string 1))
@@ -148,7 +164,7 @@ return nil."
 	      (error "Version of GNU Global is %s.  Need at least %s"
 		     rev cedet-global-min-version))
 	  ;; Else, return TRUE, as in good enough.
-	  (when (interactive-p)
+	  (when (cedet-called-interactively-p 'interactive)
 	    (message "GNU Global %s  - Good enough for CEDET." rev))
 	  t)))))
 
@@ -156,8 +172,7 @@ return nil."
   "Scan all the hits from the GNU Global output BUFFER."
   (let ((hits nil)
 	(r1 "^\\([^ ]+\\) +\\([0-9]+\\) \\([^ ]+\\) "))
-    (save-excursion
-      (set-buffer buffer)
+    (with-current-buffer buffer
       (goto-char (point-min))
       (while (re-search-forward r1 nil t)
 	(setq hits (cons (cons (string-to-number (match-string 2))
@@ -165,6 +180,18 @@ return nil."
 			 hits)))
       ;; Return the results
       (nreverse hits))))
+
+(defun cedet-gnu-global-create/update-database (&optional dir)
+  "Create a GNU Global database in DIR.
+If a database already exists, then just update it."
+  (interactive "DDirectory: ")
+  (let ((root (cedet-gnu-global-root dir)))
+    (if root (setq dir root))
+    (let ((default-directory dir))
+      (cedet-gnu-global-gtags-call
+       (when root
+	 '("-i");; Incremental update flag.
+	 )))))
 
 (provide 'cedet-global)
 ;;; cedet-global.el ends here

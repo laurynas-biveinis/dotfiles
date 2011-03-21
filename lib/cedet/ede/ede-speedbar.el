@@ -1,10 +1,10 @@
 ;;; ede-speedbar.el --- Speedbar viewing of EDE projects
 
-;;;  Copyright (C) 1998, 1999, 2000, 2001, 2003, 2005, 2007, 2008, 2009  Eric M. Ludlam
+;;;  Copyright (C) 1998, 1999, 2000, 2001, 2003, 2005, 2007, 2008, 2009, 2010  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make, tags
-;; RCS: $Id: ede-speedbar.el,v 1.34 2009/01/28 16:12:15 zappo Exp $
+;; RCS: $Id: ede-speedbar.el,v 1.36 2010/03/15 13:40:54 xscript Exp $
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -29,6 +29,8 @@
 ;;
 
 ;;; Code:
+
+(eval-when-compile (require 'cl))
 (require 'speedbar)
 (require 'eieio-speedbar)
 
@@ -107,7 +109,7 @@ Argument DIR is the directory from which to derive the list of objects."
 ;;; Some special commands useful in EDE
 ;;
 (defun ede-speedbar-remove-file-from-target ()
-  "Remove the file at point from it's target."
+  "Remove the file at point from its target."
   (interactive)
   (if (stringp (speedbar-line-token))
       (progn

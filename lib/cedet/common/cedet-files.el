@@ -3,7 +3,7 @@
 ;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cedet-files.el,v 1.4 2009/02/04 23:28:28 zappo Exp $
+;; X-RCS: $Id: cedet-files.el,v 1.7 2010/03/26 22:17:57 xscript Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -35,7 +35,7 @@ Obsoleted in some versions of Emacs.  Needed in others.")
 
 (defun cedet-directory-name-to-file-name (referencedir &optional testmode)
   "Convert the REFERENCEDIR (a full path name) into a filename.
-Converts directory seperation characters into ! characters.
+Converts directory separation characters into ! characters.
 Optional argument TESTMODE is used by tests to avoid conversion
 to the file's truename, and dodging platform tricks."
   (let ((file referencedir)
@@ -80,7 +80,7 @@ specific conversions during tests."
   (let ((file referencefile))
     ;; Replace the ! with /
     (setq file (subst-char-in-string ?! ?/ file))
-    ;; Occurances of // meant there was once a single !.
+    ;; Occurrences of // meant there was once a single !.
     (setq file (replace-regexp-in-string "//" "!" file))
 
     ;; Handle Windows special cases
@@ -97,7 +97,7 @@ specific conversions during tests."
       (when (string-match "^!" file)
 	(setq file (concat "//" (substring file 1))))
       )
-    
+
     file))
 
 ;;; Tests

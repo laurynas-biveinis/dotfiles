@@ -1,10 +1,10 @@
 ;;; semantic-util.el --- Utilities for use with semantic tag tables
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-util.el,v 1.138 2008/11/28 03:02:55 zappo Exp $
+;; X-RCS: $Id: semantic-util.el,v 1.146 2010/04/12 11:09:37 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -66,19 +66,18 @@ If FILE is not loaded, check to see if `semanticdb' feature exists,
    and use it to get tags from files not in memory.
 If FILE is not loaded, and semanticdb is not available, find the file
    and parse it."
-  (if (find-buffer-visiting file)
-      (save-excursion
-	(set-buffer (find-buffer-visiting file))
-	(semantic-fetch-tags))
-    ;; File not loaded
-    (if (and (fboundp 'semanticdb-minor-mode-p)
-	     (semanticdb-minor-mode-p))
-	;; semanticdb is around, use it.
-	(semanticdb-file-stream file)
-      ;; Get the stream ourselves.
-      (save-excursion
-	(set-buffer (find-file-noselect file))
-	(semantic-fetch-tags)))))
+  (save-match-data
+    (if (find-buffer-visiting file)
+	(with-current-buffer (find-buffer-visiting file)
+	  (semantic-fetch-tags))
+      ;; File not loaded
+      (if (and (fboundp 'semanticdb-minor-mode-p)
+	       (semanticdb-minor-mode-p))
+	  ;; semanticdb is around, use it.
+	  (semanticdb-file-stream file)
+	;; Get the stream ourselves.
+	(with-current-buffer (find-file-noselect file)
+	  (semantic-fetch-tags))))))
 
 (semantic-alias-obsolete 'semantic-file-token-stream
 			 'semantic-file-tag-table)
@@ -94,14 +93,12 @@ buffer, or a filename.  If SOMETHING is nil return nil."
     something)
    ;; A buffer
    ((bufferp something)
-    (save-excursion
-      (set-buffer something)
+    (with-current-buffer something
       (semantic-fetch-tags)))
    ;; A Tag: Get that tag's buffer
    ((and (semantic-tag-with-position-p something)
 	 (semantic-tag-in-buffer-p something))
-    (save-excursion
-      (set-buffer (semantic-tag-buffer something))
+    (with-current-buffer (semantic-tag-buffer something)
       (semantic-fetch-tags)))
    ;; Tag with a file name in it
    ((and (semantic-tag-p something)
@@ -135,45 +132,6 @@ buffer, or a filename.  If SOMETHING is nil return nil."
 (semantic-alias-obsolete 'semantic-something-to-stream
 			 'semantic-something-to-tag-table)
 
-;;; Recursive searching through dependency trees
-;;
-;; This will depend on the general searching APIS defined above.
-;; but will add full recursion through the dependencies list per
-;; stream.
-(defun semantic-recursive-find-nonterminal-by-name (name buffer)
-  "Recursively find the first occurrence of NAME.
-Start search with BUFFER.  Recurse through all dependencies till found.
-The return item is of the form (BUFFER TOKEN) where BUFFER is the buffer
-in which TOKEN (the token found to match NAME) was found.
-
-THIS ISN'T USED IN SEMANTIC.  DELETE ME SOON."
-  (save-excursion
-    (set-buffer buffer)
-    (let* ((stream (semantic-fetch-tags))
-	   (includelist (or (semantic-find-tags-by-class 'include stream)
-			    "empty.silly.thing"))
-	   (found (semantic-find-first-tag-by-name name stream))
-	   (unfound nil))
-      (while (and (not found) includelist)
-	(let ((fn (semantic-dependency-tag-file (car includelist))))
-	  (if (and fn (not (member fn unfound)))
-	      (save-excursion
-		(set-buffer (find-file-noselect fn))
-		(message "Scanning %s" (buffer-file-name))
-		(setq stream (semantic-fetch-tags))
-		(setq found (semantic-find-first-tag-by-name name stream))
-		(if found
-		    (setq found (cons (current-buffer) (list found)))
-		  (setq includelist
-			(append includelist
-				(semantic-find-tags-by-class
-				 'include stream))))
-		(setq unfound (cons fn unfound)))))
-	(setq includelist (cdr includelist)))
-      found)))
-(make-obsolete 'semantic-recursive-find-nonterminal-by-name
-	       "Do not use this function.")
-  
 ;;; Completion APIs
 ;;
 ;; These functions provide minibuffer reading/completion for lists of
@@ -284,8 +242,7 @@ If TAG is not specified, use the tag at point."
 ;; Some hacks to help me test these functions
 (defun semantic-describe-buffer-var-helper (varsym buffer)
   "Display to standard out the value of VARSYM in BUFFER."
-  (let ((value (save-excursion
-		 (set-buffer buffer)
+  (let ((value (with-current-buffer buffer
 		 (symbol-value varsym))))
     (cond
      ((and (consp value)
@@ -309,6 +266,8 @@ If TAG is not specified, use the tag at point."
 	)
 
     (with-output-to-temp-buffer (help-buffer)
+      (help-setup-xref (list #'semantic-describe-buffer)
+                       (cedet-called-interactively-p 'interactive))
       (with-current-buffer standard-output
 	(princ "Semantic Configuration in ")
 	(princ (buffer-name buff))
@@ -317,70 +276,36 @@ If TAG is not specified, use the tag at point."
 	(princ "Buffer specific configuration items:\n")
 	(let ((vars '(major-mode
 		      semantic-case-fold
-		      semantic-expand-nonterminal
+		      semantic-tag-expand-function
 		      semantic-parser-name
 		      semantic-parse-tree-state
 		      semantic-lex-analyzer
 		      semantic-lex-reset-hooks
+		      semantic-lex-syntax-modifications
 		      )))
 	  (dolist (V vars)
 	    (semantic-describe-buffer-var-helper V buff)))
 
 	(princ "\nGeneral configuration items:\n")
 	(let ((vars '(semantic-inhibit-functions
-		      semantic-init-hooks
-		      semantic-init-db-hooks
+		      semantic-init-hook
+		      semantic-init-db-hook
 		      semantic-unmatched-syntax-hook
 		      semantic--before-fetch-tags-hook
 		      semantic-after-toplevel-bovinate-hook
 		      semantic-after-toplevel-cache-change-hook
 		      semantic-before-toplevel-cache-flush-hook
 		      semantic-dump-parse
-		      
+		      semantic-type-relation-separator-character
+		      semantic-command-separation-character
 		      )))
 	  (dolist (V vars)
 	    (semantic-describe-buffer-var-helper V buff)))
-	
+
 	(princ "\n\n")
 	(mode-local-describe-bindings-2 buff)
 	)))
   )
-
-(defun semantic-current-tag-interactive (p)
-  "Display the current token.
-Argument P is the point to search from in the current buffer."
-  (interactive "d")
-  (let ((tok (semantic-brute-find-innermost-tag-by-position
-	      p (current-buffer))))
-    (message (mapconcat 'semantic-abbreviate-nonterminal tok ","))
-    (car tok))
-  )
-
-(defun semantic-hack-search ()
-  "Display info about something under the cursor using generic methods."
-  (interactive)
-  (let (
-	;(name (thing-at-point 'symbol))
-	(strm (cdr (semantic-fetch-tags)))
-	(res nil))
-;    (if name
-	(setq res
-;	      (semantic-find-nonterminal-by-name name strm)
-;	      (semantic-find-nonterminal-by-type name strm)
-;	      (semantic-recursive-find-nonterminal-by-name name (current-buffer))
-	      (semantic-brute-find-tag-by-position (point) strm)
-	      
-	      )
-;	)
-    (if res
-	(progn
-	  (pop-to-buffer "*SEMANTIC HACK RESULTS*")
-	  (require 'pp)
-	  (erase-buffer)
-	  (insert (pp-to-string res) "\n")
-	  (goto-char (point-min))
-	  (shrink-window-if-larger-than-buffer))
-      (message "nil"))))
 
 (defun semantic-assert-valid-token (tok)
   "Assert that TOK is a valid token."
@@ -425,7 +350,8 @@ NOTFIRST indicates that this was not the first call in the recursive use."
 			      'unmatched)))
 	    (setq o (cons (car over) o)))
 	  (setq over (cdr over)))
-	(message "Remaining overlays: %S" o)))
+	(when (cedet-called-interactively-p 'any)
+	  (message "Remaining overlays: %S" o))))
   over)
 
 (provide 'semantic-util)

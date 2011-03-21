@@ -1,10 +1,10 @@
 ;;; eieio-tests.el -- eieio tests routines
 
 ;;;
-;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: <zappo@gnu.org>
-;; RCS: $Id: eieio-tests.el,v 1.46 2009/02/01 20:54:40 scymtym Exp $
+;; RCS: $Id: eieio-tests.el,v 1.50 2010/06/18 00:08:17 zappo Exp $
 ;; Keywords: oop, lisp, tools
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -138,7 +138,19 @@
     (error "defgeneric did not make a generic method."))
 
 (defmethod generic1 ((c class-a))
-  "Method on generic1.")
+  "Method on generic1."
+  'monkey)
+
+(defmethod generic1 (not-an-object)
+  "Method generic1 that can take a non-object."
+  not-an-object)
+
+(let ((ans-obj (generic1 (class-a "test")))
+      (ans-num (generic1 666)))
+  (when (not (eq ans-obj 'monkey))
+    (error "Specialized method called wrong method."))
+  (when (not (eq ans-num 666))
+    (error "Generic method called wrong method.")))
 
 ;;; Class with a static method
 ;;
@@ -511,33 +523,54 @@ METHOD is the method that was attempting to be called."
     (error "Class allocatd slot thought bound when it is unbound."))
 
 
-;;; Test function type in a class
-;;
-(defvar class-typep-var 0
-  "A variable used in an initform.")
+;;; initforms that need to be evalled at construction time.
+(defvar eieio-test-permuting-value 1)
+(setq eieio-test-permuting-value 1)
 
-(setq class-typep-var 1)
-
-(defclass class-typep ()
-  ((slot1 :type function
-	  :initform <
-	  )
-   (slot2 :type integer
-	  :initform (lambda () class-typep-var)
-	  )
-   (slot4 :type function
-	  :initform (lambda-default () 2)
-	  )
+(defclass inittest nil
+  ((staticval :initform 1)
+   (symval :initform eieio-test-permuting-value)
+   (evalval :initform (symbol-value 'eieio-test-permuting-value))
+   (evalnow :initform (symbol-value 'eieio-test-permuting-value)
+	    :allocation :class)
    )
-  "Test different types in a class.")
+  "Test initforms that eval.")
 
-(setq class-typep-var 2)
+(setq eieio-test-permuting-value 2)
 
-(defvar ct nil)
-(setq ct (class-typep "foo"))
+(setq pvinit (inittest "permuteme"))
 
-(if (/= (oref ct slot2) 2)
-    (error "Default value for slot2 incorrect.")) 
+(when (not (eq (oref pvinit staticval) 1))
+  (error "Error with initial value for staticval slot."))
+(when (not (eq (oref pvinit symval) 'eieio-test-permuting-value))
+  (error "Error with initial value for symval slot."))
+(when (not (eq (oref pvinit evalval) 2))
+  (error "Error with initial value for evalval slot."))
+(when (not (eq (oref pvinit evalnow) 1))
+  (error "Error with initial value for evalnow slot."))
+
+
+;;; Init forms with types that don't match the runnable.
+(defclass test-subordinate nil
+  ((text :initform "" :type string))
+  "Test class that will be a calculated value.")
+
+(defclass test-superior nil
+  ((sub :initform (test-subordinate "test")
+	:type test-subordinate))
+  "A class with an initform that creates a class.")
+
+(setq tests (test-superior "test"))
+
+(condition-case err
+    (progn
+      (defclass broken-init nil
+	((broken :initform 1
+		 :type string))
+	"This class should break.")
+      (error t))
+  (invalid-slot-type nil) ;; This is the error
+  (error (error "Wrong type of error thrown from broken init class.")))
 
 
 ;;; Inheritance status

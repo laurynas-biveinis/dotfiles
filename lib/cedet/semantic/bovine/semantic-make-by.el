@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2008 Eric M. Ludlam
 
-;; Author:  <lauras@AAU-LAPTOP>
-;; Created: 2009-11-27 10:12:16+0100
+;; Author: Laurynas Biveinis <laurynas@laurynas-ThinkPad-T410>
+;; Created: 2011-03-21 06:57:25+0200
 ;; Keywords: syntax
 ;; X-RCS: $Id$
 
@@ -28,9 +28,6 @@
 ;;
 ;; PLEASE DO NOT MANUALLY EDIT THIS FILE!  It is automatically
 ;; generated from the grammar file make.by.
-
-;;; History:
-;;
 
 ;;; Code:
 

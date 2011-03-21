@@ -25,7 +25,7 @@
 @copying
 This is the Semantic User's Manual
 
-Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Eric M. Ludlam
+Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
 Copyright @copyright{} 2001, 2002, 2003, 2004 David Ponce
 Copyright @copyright{} 2002, 2003 Richard Y. Kim
 
@@ -164,7 +164,7 @@ in your @file{.emacs} file:
 
 @example
 (add-hook 'semantic-init-hooks (lambda ()
-                               	   (imenu-add-to-menubar "TAGS")))
+                                   (imenu-add-to-menubar "TAGS")))
 @end example
 
 Also supported is @dfn{which-func-mode}.  This usually uses imenu
@@ -552,6 +552,11 @@ symbol in question in different ways.
 Display a summary for the symbol under @var{point}.
 @end deffn
 
+@defun semantic-ia-show-variants point
+@anchor{semantic-ia-show-variants}
+Display a list of all variants for the symbol under @var{POINT}.
+@end defun
+
 @deffn Command semantic-ia-show-doc point
 @anchor{semantic-ia-show-doc}
 Display the code-level documentation for the symbol at @var{point}.
@@ -844,16 +849,58 @@ they are used in.
 Display the references in@dfn{semantic-symref-results-mode}
 @end deffn
 
-The results are listed by file, then by tag within those files.  You
-can expand tag hits to see the line of code a given match is on.  You
-can jump to the matched file, tag, or line from this mode.
+@defun semantic-symref-regexp sym
+@anchor{semantic-symref-regexp}
+Find references to the a symbol regexp @var{SYM}.
+This command uses the currently configured references tool within the
+current project to find references to the input @var{SYM}.  The
+references are the organized by file and the name of the function
+they are used in.
+Display the references in@dfn{semantic-symref-results-mode}.
+@end defun
+
+@menu
+* SymRef Results Mode::
+* Configuring SymRef::
+@end menu
+
+@node SymRef Results Mode
+@section SymRef Results Mode
+
+When a symref command identifies several hits, a new buffer is created
+to display the results which is placed in @code{semantic-symref-results-mode}.
+
+The results are listed by file, then by tag within those files.  Files
+and tags can be expanded or contracted to show or hide more detail
+about a given hit by clicking on the @code{[+]} or @code{[-]} buttons.
+
+Clicking on a file name, tag name, or hit result will display the
+location in another window.  Using @kbd{SPC} on one of the buttons is
+the same as clicking on it.
+
+Simple navigation commands:
+@table @kbd
+@item -
+@item =
+@itemx +
+Expand or contract the current line.
+@item C-c C-e
+Expand all tag items in the results buffer.
+@item C-c C-r
+Contract all tag items in the results buffer.
+@end table
+
+
+
+@node Configuring SymRef
+@section Configuring SymRef
 
 The type of external tool used for finding references determines the
 kind of results found.  Each available tool, such as GNU Global, will
 identify when it can be used.  If no such tool is available, then a
 find/grep combination will be used instead.
 
-For best results, install, and use GNU Global for your project.
+For best results, install and use GNU Global for your project.
 @semantic{} symref does not manage your GNU Global tables for you.
 You must manage those yourself.  The symref tool is not meant to
 replace the standard grep-like interface available with GNU Global.
@@ -875,9 +922,6 @@ is supported.
 
 If no tools are supported, then @code{'grep} is assumed.
 @end defun
-
-@@TODO - This mode is supposed to be the starting point of refactoring
-tools.  Doc those features here once they are written.
 
 @node Document
 @chapter Document
@@ -1195,12 +1239,12 @@ specific to a major mode.  For example, in jde mode:
 @example
 (defvar-mode-local jde-mode semantic-idle-summary-out-of-context-faces
    (append (default-value 'semantic-idle-summary-out-of-context-faces)
-	   '(jde-java-font-lock-doc-tag-face
-	     jde-java-font-lock-link-face
-	     jde-java-font-lock-bold-face
-	     jde-java-font-lock-underline-face
-	     jde-java-font-lock-pre-face
-	     jde-java-font-lock-code-face)))
+           '(jde-java-font-lock-doc-tag-face
+             jde-java-font-lock-link-face
+             jde-java-font-lock-bold-face
+             jde-java-font-lock-underline-face
+             jde-java-font-lock-pre-face
+             jde-java-font-lock-code-face)))
 @end example
 
 @end defvar
@@ -1290,7 +1334,7 @@ mechanism, you do not need to add the above lines in your
 @file{.emacs} file.
 
 The Semantic Database has several user level configuration options
-that controls it's use.  From the user perspective, it appears to be
+that controls its use.  From the user perspective, it appears to be
 one large application.  Internally it is divided into sections.
 
 @table @asis
@@ -1410,7 +1454,7 @@ system directories
 
 In C/C++ code, @semantic{} tries to distinguish between project and
 system headers based on @code{""} or @code{<>} delimiters.  Each
-language can distinguish using it's own rules.
+language can distinguish using its own rules.
 
 The system directory is set up via the variable
 @code{semantic-dependency-system-include-path}.  The path is also
@@ -1496,6 +1540,16 @@ To create a customizable include path for a major @var{mode}, use the
 macro @dfn{defcustom-mode-local-semantic-dependency-system-include-path}.
 @end deffn
 
+@defun semanticdb-implied-include-tags
+@anchor{semanticdb-implied-include-tags}
+Include tags implied for all files of a given mode.
+Set this variable with @dfn{defvar-mode-local} for a particular mode so
+that any symbols that exist for all files for that mode are included.
+
+Note: This could be used as a way to write a file in a language
+to declare all the built-ins for that language.
+@end defun
+
 For a bit more on include paths, see the
 @inforef{Search Optimization, Search Optimization section, semantic}.
 
@@ -1550,8 +1604,8 @@ To set the throttle, use a command like this:
 
 @example
 (setq-mode-local c-mode
-		 semanticdb-find-default-throttle
-		 '(project unloaded system recursive))
+                 semanticdb-find-default-throttle
+                 '(project unloaded system recursive))
 @end example
 
 The default value of the throttle is for maximum accuracy at the

@@ -1,11 +1,11 @@
 ;;; ede.el --- Emacs Development Environment gloss
 
-;;;  Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009  Eric M. Ludlam
+;;;  Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede.el,v 1.135 2009/05/16 13:50:24 zappo Exp $
-(defconst ede-version "1.0pre7"
+;; RCS: $Id: ede.el,v 1.154 2010/07/31 01:12:34 zappo Exp $
+(defconst ede-version "1.0"
   "Current version of the Emacs EDE.")
 
 ;; This software is free software; you can redistribute it and/or modify
@@ -51,13 +51,12 @@
 (require 'custom)
 
 (defgroup ede nil
-  "Emacs Development Environment gloss."
+  "Emacs Development Environment."
   :group 'tools
-  :group 'convenience
-  )
+  :group 'extensions)
 
 (defcustom ede-auto-add-method 'ask
-  "*Determins if a new source file shoud be automatically added to a target.
+  "*Determines if a new source file should be automatically added to a target.
 Whenever a new file is encountered in a directory controlled by a
 project file, all targets are queried to see if it should be added.
 If the value is 'always, then the new file is added to the first
@@ -79,280 +78,9 @@ target willing to take the file.  'never means never perform the check."
 
 (require 'eieio)
 (require 'eieio-speedbar)
+(require 'ede-auto)
+(require 'ede-base)
 
-;;; Top level classes for projects and targets
-;;
-;;;###autoload
-(defclass ede-project-autoload ()
-  ((name :initarg :name
-	 :documentation "Name of this project type")
-   (file :initarg :file
-	 :documentation "The lisp file belonging to this class.")
-   (proj-file :initarg :proj-file
-	      :documentation "Name of a project file of this type.")
-   (proj-root :initarg :proj-root
-	      :type function
-	      :documentation "A function symbol to call for the project root.
-This function takes no arguments, and returns the current directories
-root, if available.  Leave blank to use the EDE directory walking
-routine instead.")
-   (initializers :initarg :initializers
-		 :initform nil
-		 :documentation
-		 "Initializers passed to the project object.
-These are used so there can be multiple types of projects
-associated with a single object class, based on the initilizeres used.")
-   (load-type :initarg :load-type
-	      :documentation "Fn symbol used to load this project file.")
-   (class-sym :initarg :class-sym
-	      :documentation "Symbol representing the project class to use.")
-   (new-p :initarg :new-p
-	  :initform t
-	  :documentation
-	  "Non-nil if this is an option when a user creates a project.")
-   )
-  "Class representing minimal knowledge set to run preliminary EDE functions.
-When more advanced functionality is needed from a project type, that projects
-type is required and the load function used.")
-
-(defvar ede-project-class-files
-  (list
-   (ede-project-autoload "edeproject-makefile"
-			 :name "Make" :file 'ede-proj
-			 :proj-file "Project.ede"
-			 :load-type 'ede-proj-load
-			 :class-sym 'ede-proj-project)
-   (ede-project-autoload "edeproject-automake"
-			 :name "Automake" :file 'ede-proj
-			 :proj-file "Project.ede"
-			 :initializers '(:makefile-type Makefile.am)
-			 :load-type 'ede-proj-load
-			 :class-sym 'ede-proj-project)
-   (ede-project-autoload "automake"
-			 :name "automake" :file 'project-am
-			 :proj-file "Makefile.am"
-			 :load-type 'project-am-load
-			 :class-sym 'project-am-makefile
-			 :new-p nil)
-   )
-  "List of vectos defining how to determine what type of projects exist.")
-
-;;; Generic project information manager objects
-;;
-;;;###autoload
-(defclass ede-target (eieio-speedbar-directory-button)
-  ((buttonface :initform speedbar-file-face) ;override for superclass
-   (name :initarg :name
-	 :type string
-	 :custom string
-	 :label "Name"
-	 :group (default name)
-	 :documentation "Name of this target.")
-   ;; @todo - I think this should be "dir", and not "path".
-   (path :initarg :path
-	 :type string
-	 ;:custom string
-	 ;:label "Path to target"
-	 ;:group (default name)
-	 :documentation "The path to the sources of this target.
-Relative to the path of the project it belongs to.")
-   (source :initarg :source
-	   :initform nil
-	   ;; I'd prefer a list of strings.
-	   :type list
-	   :custom (repeat (string :tag "File"))
-	   :label "Source Files"
-	   :group (default source)
-	   :documentation "Source files in this target.")
-   (versionsource :initarg :versionsource
-		  :initform nil
-		  :type list
-		  :custom (repeat (string :tag "File"))
-		  :label "Source Files with Version String"
-		  :group (source)
-		  :documentation
-		  "Source files with a version string in them.
-These files are checked for a version string whenever the EDE version
-of the master project is changed.  When strings are found, the version
-previously there is updated.")
-   ;; Class level slots
-   ;;
-;   (takes-compile-command :allocation :class
-;			  :initarg :takes-compile-command
-;			  :type boolean
-;			  :initform nil
-;			  :documentation
-;     "Non-nil if this target requires a user approved command.")
-   (sourcetype :allocation :class
-	       :type list ;; list of symbols
-	       :documentation
-	       "A list of `ede-sourcecode' objects this class will handle.
-This is used to match target objects with the compilers they can use, and
-which files this object is interested in."
-	       :accessor ede-object-sourcecode)
-   (keybindings :allocation :class
-		:initform (("D" . ede-debug-target))
-		:documentation 
-"Keybindings specialized to this type of target."
-		:accessor ede-object-keybindings)
-   (menu :allocation :class
-	 :initform ( [ "Debug target" ede-debug-target
-		       (and ede-object
-			    (obj-of-class-p ede-object ede-target)) ]
-		     )
-	 :documentation "Menu specialized to this type of target."
-	 :accessor ede-object-menu)
-   )
-  "A top level target to build.")
-
-(defclass ede-project-placeholder (eieio-speedbar-directory-button)
-  ((name :initarg :name
-	 :initform "Untitled"
-	 :type string
-	 :custom string
-	 :label "Name"
-	 :group (default name)
-	 :documentation "The name used when generating distribution files.")
-   (version :initarg :version
-	    :initform "1.0"
-	    :type string
-	    :custom string
-	    :label "Version"
-	    :group (default name)
-	    :documentation "The version number used when distributing files.")
-   (directory :type string
-	      :initarg :directory
-	      :documentation "Directory this project is associated with.")
-   (dirinode :documentation "The inode id for :directory.")
-   (file :type string
-	 :initarg :file
-	 :documentation "File name where this project is stored.")
-   (rootproject ; :initarg - no initarg, don't save this slot!
-    :initform nil
-    :type (or null ede-project-placeholder-child)
-    :documentation "Pointer to our root project.")
-   )
-  "Placeholder object for projects not loaded into memory.
-Projects placeholders will be stored in a user specific location
-and querying them will cause the actual project to get loaded.")
-
-;;;###autoload
-(defclass ede-project (ede-project-placeholder)
-  ((subproj :initform nil
-	    :type list
-	    :documentation "Sub projects controlled by this project.
-For Automake based projects, each directory is treated as a project.")
-   (targets :initarg :targets
-	    :type list
-	    :custom (repeat (object :objectcreatefcn ede-new-target-custom))
-	    :label "Local Targets"
-	    :group (targets)
-	    :documentation "List of top level targets in this project.")
-   (locate-obj :type (or null ede-locate-base-child)
-	       :documentation
-	       "A locate object to use as a backup to `ede-expand-filename'.")
-   (tool-cache :initarg :tool-cache
-	       :type list
-	       :custom (repeat object)
-	       :label "Tool: "
-	       :group tools
-	       :documentation "List of tool cache configurations in this project.
-This allows any tool to create, manage, and persist project-specific settings.")
-   (web-site-url :initarg :web-site-url
-		 :initform ""
-		 :type string
-		 :custom string
-		 :label "Web Site URL"
-		 :group name
-		 :documentation "URL to this projects web site.
-This is a URL to be sent to a web site for documentation.")
-   (web-site-directory :initarg :web-site-directory
-		       :initform ""
-		       :custom string
-		       :label "Web Page Directory"
-		       :group name
-		       :documentation
-		       "A directory where web pages can be found by Emacs.
-For remote locations use a path compatible with ange-ftp or EFS.
-You can also use TRAMP for use with rcp & scp.")
-   (web-site-file :initarg :web-site-file
-		  :initform ""
-		  :custom string
-		  :label "Web Page File"
-		  :group name
-		  :documentation
-		  "A file which contains the home page for this project.
-This file can be relative to slot `web-site-directory'.
-This can be a local file, use ange-ftp, EFS, or TRAMP.")
-   (ftp-site :initarg :ftp-site
-	     :initform ""
-	     :type string
-	     :custom string
-	     :label "FTP site"
-	     :group name
-	     :documentation
-	     "FTP site where this project's distribution can be found.
-This FTP site should be in Emacs form, as needed by `ange-ftp', but can
-also be of a form used by TRAMP for use with scp, or rcp.")
-   (ftp-upload-site :initarg :ftp-upload-site
-		    :initform ""
-		    :type string
-		    :custom string
-		    :label "FTP Upload site"
-		    :group name
-		    :documentation
-		    "FTP Site to upload new distributions to.
-This FTP site should be in Emacs form as needed by `ange-ftp'.
-If this slot is nil, then use `ftp-site' instead.")
-   (configurations :initarg :configurations
-		   :initform ("debug" "release")
-		   :type list
-		   :custom (repeat string)
-		   :label "Configuration Options"
-		   :group (settings)
-		   :documentation "List of available configuration types.
-Individual target/project types can form associations between a configuration,
-and target specific elements such as build variables.")
-   (configuration-default :initarg :configuration-default
-			  :initform "debug"
-			  :custom string
-			  :label "Current Configuration"
-			  :group (settings)
-			  :documentation "The default configuration.")
-   (local-variables :initarg :local-variables
-		    :initform nil
-		    :custom (repeat (cons (sexp :tag "Variable")
-					  (sexp :tag "Value")))
-		    :label "Project Local Variables"
-		    :group (settings)
-		    :documentation "Project local variables")
-   (keybindings :allocation :class
-		:initform (("D" . ede-debug-target))
-		:documentation "Keybindings specialized to this type of target."
-		:accessor ede-object-keybindings)
-   (menu :allocation :class
-	 :initform
-	 (
-	  [ "Update Version" ede-update-version ede-object ]
-	  [ "Version Control Status" ede-vc-project-directory ede-object ]
-	  [ "Edit Project Homepage" ede-edit-web-page
-	    (and ede-object (oref (ede-toplevel) web-site-file)) ]
-	  [ "Browse Project URL" ede-web-browse-home
-	    (and ede-object
-		 (not (string= "" (oref (ede-toplevel) web-site-url)))) ]
-	  "--"
-	  [ "Rescan Project Files" ede-rescan-toplevel t ]
-	  [ "Edit Projectfile" ede-edit-file-target
-	    (and ede-object
-		 (or (listp ede-object)
-		     (not (obj-of-class-p ede-object ede-project)))) ]
-	  )
-	 :documentation "Menu specialized to this type of target."
-	 :accessor ede-object-menu)
-   )
-  "Top level EDE project specification.
-All specific project types must derive from this project."
-  :method-invocation-order :depth-first)
 
 ;;; Management variables
 ;;
@@ -382,117 +110,13 @@ This object's class determines how to compile and debug from a buffer.")
 If `ede-object' is nil, then commands will operate on this object.")
 
 (defvar ede-constructing nil
-  "Non nil when constructing a project hierarchy.")
+  "Non nil when constructing a project hierarchy.
+If the project is being constructed from an autoload, then the
+value is the autoload object being used.")
 
 (defvar ede-deep-rescan nil
   "Non nil means scan down a tree, otherwise rescans are top level only.
 Do not set this to non-nil globally.  It is used internally.")
-
-;;; The EDE persistent cache.
-;;
-(defcustom ede-project-placeholder-cache-file
-  (expand-file-name "~/.projects.ede")
-  "*File containing the list of projects EDE has viewed."
-  :group 'ede
-  :type 'file)
-
-(defvar ede-project-cache-files nil
-  "List of project files EDE has seen before.")
-
-(defun ede-save-cache ()
-  "Save a cache of EDE objects that Emacs has seen before."
-  (interactive)
-  (let ((p ede-projects)
-	(c ede-project-cache-files)
-	(recentf-exclude '(ignore))
-	)
-    (condition-case nil
-	(progn
-	  (set-buffer (find-file-noselect ede-project-placeholder-cache-file t))
-	  (erase-buffer)
-	  (insert ";; EDE project cache file.
-;; This contains a list of projects you have visited.\n(")
-	  (while p
-	    (when (and (car p) (ede-project-p p))
-	      (let ((f (oref (car p) file)))
-		(when (file-exists-p f)
-		  (insert "\n  \"" f "\""))))
-	    (setq p (cdr p)))
-	  (while c
-	    (insert "\n \"" (car c) "\"")
-	    (setq c (cdr c)))
-	  (insert "\n)\n")
-	  (condition-case nil
-	      (save-buffer 0)
-	    (error
-	     (message "File %s could not be saved."
-		      ede-project-placeholder-cache-file)))
-	  (kill-buffer (current-buffer))
-	  )
-      (error
-       (message "File %s could not be read."
-	       	ede-project-placeholder-cache-file))
-
-      )))
-
-(defun ede-load-cache ()
-  "Load the cache of EDE projects."
-  (save-excursion
-    (let ((cachebuffer nil))
-      (condition-case nil
-	  (progn
-	    (setq cachebuffer
-		  (find-file-noselect ede-project-placeholder-cache-file t))
-	    (set-buffer cachebuffer)
-	    (goto-char (point-min))
-	    (let ((c (read (current-buffer)))
-		  (new nil)
-		  (p ede-projects))
-	      ;; Remove loaded projects from the cache.
-	      (while p
-		(setq c (delete (oref (car p) file) c))
-		(setq p (cdr p)))
-	      ;; Remove projects that aren't on the filesystem
-	      ;; anymore.
-	      (while c
-		(when (file-exists-p (car c))
-		  (setq new (cons (car c) new)))
-		(setq c (cdr c)))
-	      ;; Save it
-	      (setq ede-project-cache-files (nreverse new))))
-	(error nil))
-      (when cachebuffer (kill-buffer cachebuffer))
-      )))
-
-;;; Get the cache usable.
-(add-hook 'kill-emacs-hook 'ede-save-cache)
-(when (not noninteractive)
-  ;; No need to load the EDE cache if we aren't interactive.
-  ;; This occurs during batch byte-compiling of other tools.
-  (ede-load-cache))
-
-
-;;; Important macros for doing commands.
-;;
-(defmacro ede-with-projectfile (obj &rest forms)
-  "For the project in which OBJ resides, execute FORMS."
-  (list 'save-window-excursion
-	(list 'let* (list
-		     (list 'pf
-			   (list 'if (list 'obj-of-class-p
-					   obj 'ede-target)
-				 ;; @todo -I think I can change
-				 ;; this to not need ede-load-project-file
-				 ;; but I'm not sure how to test well.
-				 (list 'ede-load-project-file
-				       (list 'oref obj 'path))
-				 obj))
-		     '(dbka (get-file-buffer (oref pf file))))
-	      '(if (not dbka) (find-file (oref pf file))
-		 (switch-to-buffer dbka))
-	      (cons 'progn forms)
-	      '(if (not dbka) (kill-buffer (current-buffer))))))
-(put 'ede-with-projectfile 'lisp-indent-function 1)
 
 
 ;;; Prompting
@@ -536,6 +160,7 @@ Argument LIST-O-O is the list of objects to choose from."
     (define-key pmap "c" 'ede-compile-target)
     (define-key pmap "\C-c" 'ede-compile-selected)
     (define-key pmap "D" 'ede-debug-target)
+    (define-key pmap "R" 'ede-run-target)
     ;; bind our submap into map
     (define-key map "\C-c." pmap)
     map)
@@ -544,20 +169,20 @@ Argument LIST-O-O is the list of objects to choose from."
 (if ede-minor-keymap
     (progn
       (easy-menu-define
-       ede-minor-menu ede-minor-keymap "Project Minor Mode Menu"
-       '("Project"
-	 ( "Build" :filter ede-build-forms-menu )
-	 ( "Project Options" :filter ede-project-forms-menu )
-	 ( "Target Options" :filter ede-target-forms-menu )
-	 [ "Create Project" ede-new (not ede-object) ]
-	 [ "Load a project" ede t ]
-;;	 [ "Select Active Target" 'undefined nil ]
-;;	 [ "Remove Project" 'undefined nil ]
-	 "---"
-	 [ "Find File in Project..." ede-find-file t ]
-	 ( "Customize" :filter ede-customize-forms-menu )
-	 [ "View Project Tree" ede-speedbar t ]
-	 ))
+	ede-minor-menu ede-minor-keymap "Project Minor Mode Menu"
+	'("Project"
+	  ( "Build" :filter ede-build-forms-menu )
+	  ( "Project Options" :filter ede-project-forms-menu )
+	  ( "Target Options" :filter ede-target-forms-menu )
+	  [ "Create Project" ede-new (not ede-object) ]
+	  [ "Load a project" ede t ]
+	  ;;	 [ "Select Active Target" 'undefined nil ]
+	  ;;	 [ "Remove Project" 'undefined nil ]
+	  "---"
+	  [ "Find File in Project..." ede-find-file t ]
+	  ( "Customize" :filter ede-customize-forms-menu )
+	  [ "View Project Tree" ede-speedbar t ]
+	  ))
       ))
 
 ;; Allow re-insertion of a new keymap
@@ -567,6 +192,18 @@ Argument LIST-O-O is the list of objects to choose from."
     (add-to-list 'minor-mode-map-alist
 		 (cons 'ede-minor-mode ede-minor-keymap))
     ))
+
+(defun ede-buffer-belongs-to-target-p ()
+  "Return non-nil if this buffer belongs to at least one target."
+  (let ((obj ede-object))
+    (if (consp obj)
+	(setq obj (car obj)))
+    (and obj (obj-of-class-p obj ede-target))))
+
+(defun ede-buffer-belongs-to-project-p ()
+  "Return non-nil if this buffer belongs to at least one target."
+  (if (or (null ede-object) (consp ede-object)) nil
+    (obj-of-class-p ede-object ede-project)))
 
 (defun ede-menu-obj-of-class-p (class)
   "Return non-nil if some member of `ede-object' is a child of CLASS."
@@ -625,11 +262,11 @@ Argument MENU-DEF is the menu definition to use."
     "Target Forms"
     (let ((obj (or ede-selected-object ede-object)))
       (append
-       '([ "Add File" ede-add-file (ede-current-project) ]
+       '([ "Add File" ede-add-file
+	   (and (ede-current-project)
+		(oref (ede-current-project) targets)) ]
 	 [ "Remove File" ede-remove-file
-	   (and ede-object
-		(or (listp ede-object)
-		    (not (obj-of-class-p ede-object ede-project)))) ]
+	   (ede-buffer-belongs-to-project-p) ]
 	 "-")
        (if (not obj)
 	   nil
@@ -638,7 +275,7 @@ Argument MENU-DEF is the menu definition to use."
 	   (when (listp obj)
 	     ;; This is bad, but I'm not sure what else to do.
 	     (oref (car obj) menu)))))))))
-       
+
 (defun ede-project-forms-menu (menu-def)
   "Create a target MENU-DEF based on the object belonging to this buffer."
   (easy-menu-filter-return
@@ -671,7 +308,7 @@ Argument MENU-DEF is the definition of the current menu."
    (easy-menu-create-menu
     "Customize Project"
     (let* ((obj (ede-current-project))
-	   (targ (when (slot-boundp obj 'targets)
+	   (targ (when (and obj (slot-boundp obj 'targets))
 		   (oref obj targets))))
       (when obj
 	;; Make custom menus for everything here.
@@ -760,25 +397,35 @@ mode.  nil means to toggle the mode."
       (setq ede-minor-mode
 	    (not (or (and (null arg) ede-minor-mode)
 		     (<= (prefix-numeric-value arg) 0))))
-      (if (and ede-minor-mode (not ede-constructing)
-	       (ede-directory-project-p default-directory t))
-	  (let* ((ROOT nil)
-		 (proj (ede-directory-get-open-project default-directory
-						       'ROOT)))
-	    (when (not proj)
-	      ;; @todo - this could be wasteful.
-	      (setq proj (ede-load-project-file default-directory 'ROOT)))
-
-	    (setq ede-object-project proj)
-	    (setq ede-object-root-project
-		  (or ROOT (ede-project-root proj)))
-	    (setq ede-object (ede-buffer-object))
-	    (if (and (not ede-object) ede-object-project)
-		(ede-auto-add-to-target))
-	    (ede-apply-target-options))
+      (if (and ede-minor-mode (not ede-constructing))
+	  (ede-initialize-state-current-buffer)
 	;; If we fail to have a project here, turn it back off.
-	(if (not (interactive-p))
+	(if (not (cedet-called-interactively-p))
 	    (setq ede-minor-mode nil))))))
+
+(defun ede-initialize-state-current-buffer ()
+  "Initialize the current buffer's state for EDE.
+Sets buffer local variables for EDE."
+  (let* ((ROOT nil)
+	 (proj (ede-directory-get-open-project default-directory
+					       'ROOT)))
+    (when (or proj ROOT
+	      (ede-directory-project-p default-directory t))
+
+      (when (not proj)
+	;; @todo - this could be wasteful.
+	(setq proj (ede-load-project-file default-directory 'ROOT)))
+
+      (setq ede-object (ede-buffer-object (current-buffer)
+					  'ede-object-project))
+
+      (setq ede-object-root-project
+	    (or ROOT (ede-project-root ede-object-project)))
+
+      (if (and (not ede-object) ede-object-project)
+	  (ede-auto-add-to-target))
+
+      (ede-apply-target-options))))
 
 (defun ede-reset-all-buffers (onoff)
   "Reset all the buffers due to change in EDE.
@@ -786,7 +433,15 @@ ONOFF indicates enabling or disabling the mode."
   (let ((b (buffer-list)))
     (while b
       (when (buffer-file-name (car b))
-	(ede-buffer-object (car b))
+	(save-excursion
+	  (set-buffer (car b))
+	  ;; Reset all state variables
+	  (setq ede-object nil
+		ede-object-project nil
+		ede-object-root-project nil)
+	  ;; Now re-initialize this buffer.
+	  (ede-initialize-state-current-buffer)
+	  )
 	)
       (setq b (cdr b)))))
 
@@ -914,6 +569,12 @@ Optional argument NAME is the name to give this project."
 			     r)
 			   )
 			  nil t)))
+  ;; Make sure we have a valid directory
+  (when (not (file-exists-p default-directory))
+    (error "Cannot create project in non-existent directory %s" default-directory))
+  (when (not (file-writable-p default-directory))
+    (error "No write permissions for %s" default-directory))
+  ;; Create the project
   (let* ((obj (object-assoc type 'name ede-project-class-files))
 	 (nobj (let ((f (oref obj file))
 		     (pf (oref obj proj-file)))
@@ -954,20 +615,6 @@ Optional argument NAME is the name to give this project."
 (defmethod ede-add-subproject ((proj-a ede-project) proj-b)
   "Add into PROJ-A, the subproject PROJ-B."
   (oset proj-a subproj (cons proj-b (oref proj-a subproj))))
-
-(defmethod ede-subproject-relative-path ((proj ede-project) &optional parent-in)
-  "Get a path name for PROJ which is relative to the parent project.
-If PARENT is specified, then be relative to the PARENT project.
-Specifying PARENT is useful for sub-sub projects relative to the root project."
-  (let* ((parent (or parent-in (ede-parent-project proj)))
-	 (dir (file-name-directory (oref proj file))))
-    (if (and parent (not (eq parent proj)))
-	(file-relative-name dir (file-name-directory (oref parent file)))
-      "")))
-
-(defmethod ede-subproject-p ((proj ede-project))
-  "Return non-nil if PROJ is a sub project."
-  (ede-parent-project proj))
 
 (defun ede-invoke-method (sym &rest args)
   "Invoke method SYM on the current buffer's project object.
@@ -1093,183 +740,21 @@ Optional argument FORCE forces the file to be removed without asking."
   (ede-invoke-method 'project-compile-target))
 
 (defun ede-debug-target ()
-  "Debug the current buffer's assocated target."
+  "Debug the current buffer's associated target."
   (interactive)
   (ede-invoke-method 'project-debug-target))
+
+(defun ede-run-target ()
+  "Run the current buffer's associated target."
+  (interactive)
+  (ede-invoke-method 'project-run-target))
 
 (defun ede-make-dist ()
   "Create a distribution from the current project."
   (interactive)
-  (let ((ede-object (ede-current-project)))
+  (let ((ede-object (ede-toplevel)))
     (ede-invoke-method 'project-make-dist)))
 
-;;; Customization
-;;
-;; Routines for customizing projects and targets.
-
-(eval-when-compile (require 'eieio-custom))
-
-(defvar eieio-ede-old-variables nil
-  "The old variables for a project.")
-
-(defalias 'customize-project 'ede-customize-project)
-(defun ede-customize-project (&optional group)
-  "Edit fields of the current project through EIEIO & Custom.
-Optional GROUP specifies the subgroup of slots to customize."
-  (interactive "P")
-  (require 'eieio-custom)
-  (let* ((ov (oref (ede-current-project) local-variables))
-	 (cp (ede-current-project))
-	 (group (if group (eieio-read-customization-group cp))))
-    (eieio-customize-object cp group)
-    (make-local-variable 'eieio-ede-old-variables)
-    (setq eieio-ede-old-variables ov)))
-
-(defalias 'customize-target 'ede-customize-current-target)
-(defun ede-customize-current-target(&optional group)
-  "Edit fields of the current target through EIEIO & Custom.
-Optional argument OBJ is the target object to customize.
-Optional argument GROUP is the slot group to display."
-  (interactive "P")
-  (require 'eieio-custom)
-  (if (not (obj-of-class-p ede-object ede-target))
-      (error "Current file is not part of a target."))
-  (let ((group (if group (eieio-read-customization-group ede-object))))
-    (ede-customize-target ede-object group)))
-
-(defun ede-customize-target (obj group)
-  "Edit fields of the current target through EIEIO & Custom.
-Optional argument OBJ is the target object to customize.
-Optional argument GROUP is the slot group to display."
-  (require 'eieio-custom)
-  (if (and obj (not (obj-of-class-p obj ede-target)))
-      (error "No logical target to customize"))
-  (eieio-customize-object obj (or group 'default)))
-;;; Target Sorting
-;;
-;; Target order can be important, but custom doesn't support a way
-;; to resort items in a list.  This function by David Engster allows
-;; targets to be re-arranged.
-
-(defvar ede-project-sort-targets-order nil
-  "Variable for tracking target order in `ede-project-sort-targets'.")
-
-(defun ede-project-sort-targets ()
-  "Create a custom-like buffer for sorting targets of current project."
-  (interactive)
-  (let ((proj (ede-current-project))
-        (count 1)
-        current order)
-    (switch-to-buffer (get-buffer-create "*EDE sort targets*"))
-    (erase-buffer)
-    (setq ede-object-project proj)
-    (widget-create 'push-button
-                   :notify (lambda (&rest ignore)
-                             (let ((targets (oref ede-object-project targets))
-                                   cur newtargets)
-                               (while (setq cur (pop ede-project-sort-targets-order))
-                                 (setq newtargets (append newtargets
-                                                          (list (nth cur targets)))))
-                               (oset ede-object-project targets newtargets))
-                             (ede-commit-project ede-object-project)
-                             (kill-buffer))
-                   " Accept ")
-    (widget-insert "   ")
-    (widget-create 'push-button
-                   :notify (lambda (&rest ignore)
-                               (kill-buffer))
-                   " Cancel ")
-    (widget-insert "\n\n")
-    (setq ede-project-sort-targets-order nil)
-    (mapc (lambda (x)
-            (add-to-ordered-list
-             'ede-project-sort-targets-order
-             x x))
-          (number-sequence 0 (1- (length (oref proj targets)))))
-    (ede-project-sort-targets-list)
-    (use-local-map widget-keymap)
-    (widget-setup)
-    (goto-char (point-min))))
-
-(defun ede-project-sort-targets-list ()
-  "Sort the target list while using `ede-project-sort-targets'."
-  (save-excursion
-    (let ((count 0)
-          (targets (oref ede-object-project targets))
-          (inhibit-read-only t)
-          (inhibit-modification-hooks t))
-      (goto-char (point-min))
-      (forward-line 2)
-      (delete-region (point) (point-max))
-      (while (< count (length targets))
-        (if (> count 0)
-            (widget-create 'push-button
-                           :notify `(lambda (&rest ignore)
-                                      (let ((cur ede-project-sort-targets-order))
-                                        (add-to-ordered-list
-                                         'ede-project-sort-targets-order
-                                         (nth ,count cur)
-                                         (1- ,count))
-                                        (add-to-ordered-list
-                                         'ede-project-sort-targets-order
-                                         (nth (1- ,count) cur) ,count))
-                                      (ede-project-sort-targets-list))
-                           " Up ")
-          (widget-insert "      "))
-        (if (< count (1- (length targets)))
-            (widget-create 'push-button
-                           :notify `(lambda (&rest ignore)
-                                      (let ((cur ede-project-sort-targets-order))
-                                        (add-to-ordered-list
-                                         'ede-project-sort-targets-order
-                                         (nth ,count cur) (1+ ,count))
-                                        (add-to-ordered-list
-                                         'ede-project-sort-targets-order
-                                         (nth (1+ ,count) cur) ,count))
-                                      (ede-project-sort-targets-list))
-                           " Down ")
-          (widget-insert "        "))
-        (widget-insert (concat " " (number-to-string (1+ count)) ".:   "
-                               (oref (nth (nth count ede-project-sort-targets-order)
-                                          targets) name) "\n"))
-        (setq count (1+ count))))))
-
-;;; Customization hooks
-;;
-;; These hooks are used when finishing up a customization.
-(defmethod eieio-done-customizing ((proj ede-project))
-  "Call this when a user finishes customizing PROJ."
-  (let ((ov eieio-ede-old-variables)
-	(nv (oref proj local-variables)))
-    (setq eieio-ede-old-variables nil)
-    (while ov
-      (if (not (assoc (car (car ov)) nv))
-	  (save-excursion
-	    (mapc (lambda (b)
-		    (set-buffer b)
-		    (kill-local-variable (car (car ov))))
-		  (ede-project-buffers proj))))
-      (setq ov (cdr ov)))
-    (mapc (lambda (b) (ede-set-project-variables proj b))
-	  (ede-project-buffers proj))))
-
-(defmethod eieio-done-customizing ((target ede-target))
-  "Call this when a user finishes customizing TARGET."
-  nil)
-
-(defmethod ede-commit-project ((proj ede-project))
-  "Commit any change to PROJ to its file."
-  nil
-  )
-
-
-;;; EDE project placeholder methods
-;;
-(defmethod ede-project-force-load ((this ede-project-placeholder))
-  "Make sure the placeholder THIS is replaced with the real thing.
-Return the new object created in its place."
-  this
-  )
 
 
 ;;; EDE project target baseline methods.
@@ -1283,9 +768,9 @@ Return the new object created in its place."
 ;;  methods based on those below.
 
 (defmethod project-interactive-select-target ((this ede-project-placeholder) prompt)
-  ; checkdoc-params: (prompt)
+					; checkdoc-params: (prompt)
   "Make sure placeholder THIS is replaced with the real thing, and pass through."
-  (project-interactive-select-target (ede-project-force-load this) prompt))
+  (project-interactive-select-target this prompt))
 
 (defmethod project-interactive-select-target ((this ede-project) prompt)
   "Interactively query for a target that exists in project THIS.
@@ -1294,9 +779,9 @@ Argument PROMPT is the prompt to use when querying the user for a target."
     (cdr (assoc (completing-read prompt ob nil t) ob))))
 
 (defmethod project-add-file ((this ede-project-placeholder) file)
-  ; checkdoc-params: (file)
+					; checkdoc-params: (file)
   "Make sure placeholder THIS is replaced with the real thing, and pass through."
-  (project-add-file (ede-project-force-load this) file))
+  (project-add-file this file))
 
 (defmethod project-add-file ((ot ede-target) file)
   "Add the current buffer into project project target OT.
@@ -1322,7 +807,7 @@ Argument FNND is an argument."
   (error "New-target-custom not supported by %s" (object-name proj)))
 
 (defmethod project-delete-target ((ot ede-target))
-  "Delete the current target OT from it's parent project."
+  "Delete the current target OT from its parent project."
   (error "add-file not supported by %s" (object-name ot)))
 
 ;;;###autoload
@@ -1341,149 +826,22 @@ Argument COMMAND is the command to use for compiling the target."
   "Run the current project target OBJ in a debugger."
   (error "debug-target not supported by %s" (object-name obj)))
 
+(defmethod project-run-target ((obj ede-target))
+  "Run the current project target OBJ."
+  (error "run-target not supported by %s" (object-name obj)))
+
 ;;;###autoload
 (defmethod project-make-dist ((this ede-project))
   "Build a distribution for the project based on THIS project."
   (error "Make-dist not supported by %s" (object-name this)))
 
 (defmethod project-dist-files ((this ede-project))
-  "Return a list of files that constitutes a distribution of THIS project."
+  "Return a list of files that constitute a distribution of THIS project."
   (error "Dist-files is not supported by %s" (object-name this)))
 
 (defmethod project-rescan ((this ede-project))
   "Rescan the EDE proj project THIS."
   (error "Rescanning a project is not supported by %s" (object-name this)))
-
-;;; Default methods for EDE classes
-;;
-;; These are methods which you might want to override, but there is
-;; no need to in most situations because they are either a) simple, or
-;; b) cosmetic.
-
-;;;###autoload
-(defmethod ede-name ((this ede-target))
-  "Return the name of THIS targt."
-  (oref this name))
-
-(defmethod ede-target-name ((this ede-target))
-  "Return the name of THIS target, suitable for make or debug style commands."
-  (oref this name))
-
-(defmethod ede-name ((this ede-project))
-  "Return a short-name for THIS project file.
-Do this by extracting the lowest directory name."
-  (oref this name))
-
-;;;###autoload
-(defmethod ede-description ((this ede-project))
-  "Return a description suitable for the minibuffer about THIS."
-  (format "Project %s: %d subprojects, %d targets."
-	  (ede-name this) (length (oref this subproj))
-	  (length (oref this targets))))
-
-(defmethod ede-description ((this ede-target))
-  "Return a description suitable for the minibuffer about THIS."
-  (format "Target %s: with %d source files."
-	  (ede-name this) (length (oref this source))))
-
-(defmethod ede-want-file-p ((this ede-target) file)
-  "Return non-nil if THIS target wants FILE."
-  ;; By default, all targets reference the source object, and let it decide.
-  (let ((src (ede-target-sourcecode this)))
-    (while (and src (not (ede-want-file-p (car src) file)))
-      (setq src (cdr src)))
-    src))
-
-(defmethod ede-want-file-source-p ((this ede-target) file)
-  "Return non-nil if THIS target wants FILE."
-  ;; By default, all targets reference the source object, and let it decide.
-  (let ((src (ede-target-sourcecode this)))
-    (while (and src (not (ede-want-file-source-p (car src) file)))
-      (setq src (cdr src)))
-    src))
-
-(defun ede-header-file ()
-  "Return the header file for the current buffer.
-Not all buffers need headers, so return nil if no applicable."
-  (if ede-object
-      (ede-buffer-header-file ede-object (current-buffer))
-    nil))
-
-(defmethod ede-buffer-header-file ((this ede-project) buffer)
-  "Return nil, projects don't have header files."
-  nil)
-
-(defmethod ede-buffer-header-file ((this ede-target) buffer)
-  "There are no default header files in EDE.
-Do a quick check to see if there is a Header tag in this buffer."
-  (save-excursion
-    (set-buffer buffer)
-    (if (re-search-forward "::Header:: \\([a-zA-Z0-9.]+\\)" nil t)
-	(buffer-substring-no-properties (match-beginning 1)
-					(match-end 1))
-      (let ((src (ede-target-sourcecode this))
-	    (found nil))
-	(while (and src (not found))
-	  (setq found (ede-buffer-header-file (car src) (buffer-file-name))
-		src (cdr src)))
-	found))))
-
-;;;###autoload
-(defun ede-documentation-files ()
-  "Return the documentation files for the current buffer.
-Not all buffers need documentations, so return nil if no applicable.
-Some projects may have multiple documentation files, so return a list."
-  (if ede-object
-      (ede-buffer-documentation-files ede-object (current-buffer))
-    nil))
-
-(defmethod ede-buffer-documentation-files ((this ede-project) buffer)
-  "Return all documentation in project THIS based on BUFFER."
-  ;; Find the info node.
-  (ede-documentation this))
-
-(defmethod ede-buffer-documentation-files ((this ede-target) buffer)
-  "Check for some documentation files for THIS.
-Also do a quick check to see if there is a Documentation tag in this BUFFER."
-  (save-excursion
-    (set-buffer buffer)
-    (if (re-search-forward "::Documentation:: \\([a-zA-Z0-9.]+\\)" nil t)
-	(buffer-substring-no-properties (match-beginning 1)
-					(match-end 1))
-      ;; Check the master project
-      (let ((cp (ede-toplevel)))
-	(ede-buffer-documentation-files cp (current-buffer))))))
-
-(defmethod ede-documentation ((this ede-project))
-  "Return a list of files that provides documentation.
-Documentation is not for object THIS, but is provided by THIS for other
-files in the project."
-  (let ((targ (oref this targets))
-	(proj (oref this subproj))
-	(found nil))
-    (while targ
-      (setq found (append (ede-documentation (car targ)) found)
-	    targ (cdr targ)))
-    (while proj
-      (setq found (append (ede-documentation (car proj)) found)
-	    proj (cdr proj)))
-    found))
-
-(defmethod ede-documentation ((this ede-target))
-  "Return a list of files that provides documentation.
-Documentation is not for object THIS, but is provided by THIS for other
-files in the project."
-  nil)
-
-(defun ede-html-documentation-files ()
-  "Return a list of HTML documentation files associated with this project."
-  (ede-html-documentation (ede-toplevel))
-  )
-
-(defmethod ede-html-documentation ((this ede-project))
-  "Return a list of HTML files provided by project THIS."
-  
-  )
 
 (defun ede-ecb-project-paths ()
   "Return a list of all paths for all active EDE projects.
@@ -1495,24 +853,8 @@ This functions is meant for use with ECB."
 		    d)
 	    p (cdr p)))
     d))
-
-;;; EDE project-autoload methods
-;;
-(defmethod ede-dir-to-projectfile ((this ede-project-autoload) dir)
-  "Return a full file name of project THIS found in DIR.
-Return nil if the project file does not exist."
-  (let* ((d (file-name-as-directory dir))
-	 (root (ede-project-root-directory this d))
-	 (pf (oref this proj-file))
-	 (f (cond ((stringp pf)
-		   (expand-file-name pf (or root d)))
-		  ((and (symbolp pf) (fboundp pf))
-		   (funcall pf (or root d)))))
-	 )
-    (when (and f (file-exists-p f))
-      f)))
 
-;;; EDE basic functions
+;;; PROJECT LOADING/TRACKING
 ;;
 (defun ede-add-project-to-global-list (proj)
   "Add the project PROJ to the master list of projects.
@@ -1549,7 +891,7 @@ Optional ROOTRETURN will return the root project for DIR."
 	(if p (ede-load-project-file p)
 	  nil)
 	;; recomment as we go
-	;nil
+	;;nil
 	))
      ;; Do nothing if we are buiding an EDE project already
      (ede-constructing
@@ -1558,15 +900,15 @@ Optional ROOTRETURN will return the root project for DIR."
      (t
       (setq toppath (ede-toplevel-project path))
       ;; We found the top-most directory.  Check to see if we already
-      ;; have an object defining it's project.
+      ;; have an object defining its project.
       (setq pfc (ede-directory-project-p toppath t))
 
-      ;; See if it's been loaded before
+      ;; See if its been loaded before
       (setq o (object-assoc (ede-dir-to-projectfile pfc toppath) 'file
 			    ede-projects))
       (if (not o)
 	  ;; If not, get it now.
-	  (let ((ede-constructing t))
+	  (let ((ede-constructing pfc))
 	    (setq o (funcall (oref pfc load-type) toppath))
 	    (when (not o)
 	      (error "Project type error: :load-type failed to create a project"))
@@ -1595,10 +937,15 @@ Optional ROOTRETURN will return the root project for DIR."
 		(delete (oref found file) ede-project-cache-files)))
 	found)))))
 
+;;; PROJECT ASSOCIATIONS
+;;
+;; Moving between relative projects.  Associating between buffers and
+;; projects.
+
 ;;;###autoload
 (defun ede-parent-project (&optional obj)
   "Return the project belonging to the parent directory.
-nil if there is no previous directory.
+Return nil if there is no previous directory.
 Optional argument OBJ is an object to find the parent of."
   (let* ((proj (or obj ede-object-project)) ;; Current project.
 	 (root (if obj (ede-project-root obj)
@@ -1612,21 +959,21 @@ Optional argument OBJ is an object to find the parent of."
 			default-directory))
 	     (updir (ede-up-directory thisdir)))
         (when updir
-          ;; If there was no root, perhaps we can derive it from
-          ;; updir now.
-          (let ((root (or root (ede-directory-get-toplevel-open-project updir))))
-            (or
-             ;; This lets us find a subproject under root based on updir.
+	  ;; If there was no root, perhaps we can derive it from
+	  ;; updir now.
+	  (let ((root (or root (ede-directory-get-toplevel-open-project updir))))
+	    (or
+	     ;; This lets us find a subproject under root based on updir.
 	     (and root
 		  (ede-find-subproject-for-directory root updir))
-             ;; Try the all structure based search.
-             (ede-directory-get-open-project updir)
-             ;; Load up the project file as a last resort.
-             ;; Last resort since it uses file-truename, and other
-             ;; slow features.
-             (and (ede-directory-project-p updir)
-                  (ede-load-project-file
-                   (file-name-as-directory updir))))))))))
+	     ;; Try the all structure based search.
+	     (ede-directory-get-open-project updir)
+	     ;; Load up the project file as a last resort.
+	     ;; Last resort since it uses file-truename, and other
+	     ;; slow features.
+	     (and (ede-directory-project-p updir)
+		  (ede-load-project-file
+		   (file-name-as-directory updir))))))))))
 
 (defun ede-current-project (&optional dir)
   "Return the current project file.
@@ -1648,17 +995,38 @@ If optional DIR is provided, get the project for DIR instead."
     ;; Return what we found.
     ans))
 
-(defun ede-buffer-object (&optional buffer)
+(defun ede-buffer-object (&optional buffer projsym)
   "Return the target object for BUFFER.
-This function clears cached values and recalculates."
+This function clears cached values and recalculates.
+Optional PROJSYM is a symbol, which will be set to the project
+that contains the target that becomes buffer's object."
   (save-excursion
     (if (not buffer) (setq buffer (current-buffer)))
     (set-buffer buffer)
     (setq ede-object nil)
-    (let ((po (ede-current-project)))
-      (if po (setq ede-object (ede-find-target po buffer))))
-    (if (= (length ede-object) 1)
-	(setq ede-object (car ede-object)))
+    (let* ((localpo (ede-current-project))
+	   (po localpo)
+	   (top (ede-toplevel po)))
+      (if po (setq ede-object (ede-find-target po buffer)))
+      ;; If we get nothing, go with the backup plan of slowly
+      ;; looping upward
+      (while (and (not ede-object) (not (eq po top)))
+	(setq po (ede-parent-project po))
+	(if po (setq ede-object (ede-find-target po buffer))))
+      ;; Filter down to 1 project if there are dups.
+      (if (= (length ede-object) 1)
+	  (setq ede-object (car ede-object)))
+      ;; Track the project, if needed.
+      (when (and projsym (symbolp projsym))
+	(if ede-object
+	    ;; If we found a target, then PO is the
+	    ;; project to use.
+	    (set projsym po)
+	  ;; If there is no ede-object, then the projsym
+	  ;; is whichever part of the project is most local.
+	  (set projsym localpo))
+	))
+    ;; Return our findings.
     ede-object))
 
 (defmethod ede-target-in-project-p ((proj ede-project) target)
@@ -1686,18 +1054,9 @@ could become slow in time."
 	    projs (cdr projs)))
     ans))
 
-(defun ede-maybe-checkout (&optional buffer)
-  "Check BUFFER out of VC if necessary."
-  (save-excursion
-    (if buffer (set-buffer buffer))
-    (if (and buffer-read-only vc-mode
-	     (y-or-n-p "Checkout Makefile.am from VC? "))
-	(vc-toggle-read-only))))
-
 (defmethod ede-find-target ((proj ede-project) buffer)
   "Fetch the target in PROJ belonging to BUFFER or nil."
-  (save-excursion
-    (set-buffer buffer)
+  (with-current-buffer buffer
     (or ede-object
 	(if (ede-buffer-mine proj buffer)
 	    proj
@@ -1734,9 +1093,8 @@ This includes buffers controlled by a specific target of PROJECT."
   (let ((bl (buffer-list))
 	(pl nil))
     (while bl
-      (save-excursion
-	(set-buffer (car bl))
-	(if (and ede-object (eq (ede-current-project) project))
+      (with-current-buffer (car bl)
+	(if (ede-buffer-belongs-to-project-p)
 	    (setq pl (cons (car bl) pl))))
       (setq bl (cdr bl)))
     pl))
@@ -1746,8 +1104,7 @@ This includes buffers controlled by a specific target of PROJECT."
   (let ((bl (buffer-list))
 	(pl nil))
     (while bl
-      (save-excursion
-	(set-buffer (car bl))
+      (with-current-buffer (car bl)
 	(if (if (listp ede-object)
 		(memq target ede-object)
 	      (eq ede-object target))
@@ -1756,19 +1113,18 @@ This includes buffers controlled by a specific target of PROJECT."
     pl))
 
 (defun ede-buffers ()
-  "Return a list of all buffers controled by an EDE object."
+  "Return a list of all buffers controlled by an EDE object."
   (let ((bl (buffer-list))
 	(pl nil))
     (while bl
-      (save-excursion
-	(set-buffer (car bl))
+      (with-current-buffer (car bl)
 	(if ede-object
 	    (setq pl (cons (car bl) pl))))
       (setq bl (cdr bl)))
     pl))
 
 (defun ede-map-buffers (proc)
-  "Execute PROC on all buffers controled by EDE."
+  "Execute PROC on all buffers controlled by EDE."
   (mapcar proc (ede-buffers)))
 
 (defmethod ede-map-project-buffers ((this ede-project) proc)
@@ -1809,6 +1165,16 @@ See also `ede-map-subprojects'."
 Return the first non-nil value returned by PROC."
   (ede-or (ede-map-targets this proc)))
 
+;;; VC Handling
+;;
+(defun ede-maybe-checkout (&optional buffer)
+  "Check BUFFER out of VC if necessary."
+  (save-excursion
+    (if buffer (set-buffer buffer))
+    (if (and buffer-read-only vc-mode
+	     (y-or-n-p "Checkout Makefile.am from VC? "))
+	(vc-toggle-read-only))))
+
 
 ;;; Some language specific methods.
 ;;
@@ -1817,12 +1183,17 @@ Return the first non-nil value returned by PROC."
 (defun ede-apply-preprocessor-map ()
   "Apply preprocessor tables onto the current buffer."
   (when (and ede-object (boundp 'semantic-lex-spp-macro-symbol-obarray))
-    (let ((map (ede-preprocessor-map ede-object)))
+    (let* ((objs ede-object)
+	   (map (ede-preprocessor-map (if (consp objs)
+					  (car objs)
+					objs))))
       (when map
 	;; We can't do a require for the below symbol.
 	(setq semantic-lex-spp-project-macro-symbol-obarray
-	      (semantic-lex-make-spp-table map))
-	))))
+	      (semantic-lex-make-spp-table map)))
+      (when (consp objs)
+	(message "Choosing preprocessor syms for project %s"
+		 (object-name (car objs)))))))
 
 (defmethod ede-system-include-path ((this ede-project))
   "Get the system include path used by project THIS."
@@ -1850,34 +1221,31 @@ Return the first non-nil value returned by PROC."
       nil
     (oset project local-variables (cons (list variable)
 					(oref project local-variables)))
-    (mapcar (lambda (b) (save-excursion
-			  (set-buffer  b)
-			  (make-local-variable variable)))
-	    (ede-project-buffers project))))
+    (dolist (b (ede-project-buffers project))
+      (with-current-buffer b
+        (make-local-variable variable)))))
 
 (defmethod ede-set-project-variables ((project ede-project) &optional buffer)
   "Set variables local to PROJECT in BUFFER."
   (if (not buffer) (setq buffer (current-buffer)))
-  (save-excursion
-   (set-buffer buffer)
-   (mapcar (lambda (v)
-	     (make-local-variable (car v))
-	     ;; set it's value here?
-	     (set (car v) (cdr v))
-	     )
-	   (oref project local-variables))))
+  (with-current-buffer buffer
+    (dolist (v (oref project local-variables))
+      (make-local-variable (car v))
+      ;; set its value here?
+      (set (car v) (cdr v)))))
 
-(defun ede-set (variable value)
+(defun ede-set (variable value &optional proj)
   "Set the project local VARIABLE to VALUE.
-If VARIABLE is not project local, just use set."
-  (let ((p (ede-current-project)) a)
+If VARIABLE is not project local, just use set.  Optional argument PROJ
+is the project to use, instead of `ede-current-project'."
+  (let ((p (or proj (ede-current-project)))
+	a)
     (if (and p (setq a (assoc variable (oref p local-variables))))
 	(progn
 	  (setcdr a value)
-	  (mapc (lambda (b) (save-excursion
-			      (set-buffer b)
-			      (set variable value)))
-		(ede-project-buffers p)))
+      (dolist (b (ede-project-buffers p))
+        (with-current-buffer b
+          (set variable value))))
       (set variable value))
     (ede-commit-local-variables p))
   value)
@@ -1889,59 +1257,16 @@ If VARIABLE is not project local, just use set."
 
 ;;; Accessors for more complex types where oref is inappropriate.
 ;;
-(defmethod ede-target-sourcecode ((this ede-target))
-  "Return the sourcecode objects which THIS permits."
-  (let ((sc (oref this sourcetype))
-	(rs nil))
-    (while (and (listp sc) sc)
-      (setq rs (cons (symbol-value (car sc)) rs)
-	    sc (cdr sc)))
-    rs))
 
-
 ;;; Lame stuff
 ;;
+;; @todo - Can I remove this?
 (defun ede-or (arg)
   "Do `or' like stuff to ARG because you can't apply `or'."
   (while (and arg (not (car arg)))
     (setq arg (cdr arg)))
   arg)
 
-
-;;; Debugging.
-;;
-;;;###autoload
-(defun ede-adebug-project ()
-  "Run adebug against the current ede project.
-Display the results as a debug list."
-  (interactive)
-  (require 'data-debug)
-  (when (ede-current-project)
-    (data-debug-new-buffer "*Analyzer ADEBUG*")
-    (data-debug-insert-object-slots (ede-current-project) "")
-    ))
-
-;;;###autoload
-(defun ede-adebug-project-parent ()
-  "Run adebug against the current ede parent project.
-Display the results as a debug list."
-  (interactive)
-  (require 'data-debug)
-  (when (ede-parent-project)
-    (data-debug-new-buffer "*Analyzer ADEBUG*")
-    (data-debug-insert-object-slots (ede-parent-project) "")
-    ))
-
-;;;###autoload
-(defun ede-adebug-project-root ()
-  "Run adebug against the current ede parent project.
-Display the results as a debug list."
-  (interactive)
-  (require 'data-debug)
-  (when (ede-toplevel)
-    (data-debug-new-buffer "*Analyzer ADEBUG*")
-    (data-debug-insert-object-slots (ede-toplevel) "")
-    ))
 
 ;;; Hooks & Autoloads
 ;;

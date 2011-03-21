@@ -1,4 +1,4 @@
-This is cogre.info, produced by makeinfo version 4.11 from cogre.texi.
+This is cogre.info, produced by makeinfo version 4.9 from cogre.texi.
 
 START-INFO-DIR-ENTRY
 * cogre: (cogre).       Graphs & UML for Emacs
@@ -238,26 +238,26 @@ File: cogre.info,  Node: Index,  Prev: Semantic Support,  Up: Top
 
 
 Tag Table:
-Node: Top160
-Node: Getting Started833
-Ref: cogre2049
-Node: Creating Nodes and Links2432
-Ref: cogre-new-node2944
-Ref: cogre-new-link3532
-Ref: cogre-default-node4037
-Ref: cogre-default-link4363
-Node: Moving Nodes4635
-Node: Customizing Nodes5646
-Node: Class Diagrams5909
-Node: Export6051
-Ref: cogre-export-ascii6300
-Ref: cedet-graphviz-dot-command6612
-Ref: cedet-graphviz-neato-command6707
-Ref: cogre-dot-node-position-scale6988
-Ref: cogre-export-dot7245
-Ref: cogre-export-dot-png7367
-Ref: cogre-export-dot-postscript-print7575
-Node: Semantic Support7752
-Node: Index7890
+Node: Top159
+Node: Getting Started832
+Ref: cogre2048
+Node: Creating Nodes and Links2431
+Ref: cogre-new-node2943
+Ref: cogre-new-link3531
+Ref: cogre-default-node4036
+Ref: cogre-default-link4362
+Node: Moving Nodes4634
+Node: Customizing Nodes5645
+Node: Class Diagrams5908
+Node: Export6050
+Ref: cogre-export-ascii6299
+Ref: cedet-graphviz-dot-command6611
+Ref: cedet-graphviz-neato-command6706
+Ref: cogre-dot-node-position-scale6987
+Ref: cogre-export-dot7244
+Ref: cogre-export-dot-png7366
+Ref: cogre-export-dot-postscript-print7574
+Node: Semantic Support7751
+Node: Index7889
 
 End Tag Table

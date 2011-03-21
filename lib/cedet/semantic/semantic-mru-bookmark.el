@@ -1,9 +1,9 @@
 ;;; semantic-mru-bookmark.el --- Automatic bookmark tracking
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-mru-bookmark.el,v 1.18 2009/01/10 13:31:15 zappo Exp $
+;; X-RCS: $Id: semantic-mru-bookmark.el,v 1.21 2010/04/09 01:54:41 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -41,7 +41,7 @@
 ;;
 ;; C-x B  <select a tag name> RET
 ;;
-;; In the above, the history is pre-filled with the tags you recenetly
+;; In the above, the history is pre-filled with the tags you recently
 ;; edited in the order you edited them.
 
 
@@ -129,7 +129,7 @@ REASON is a symbol.  See slot `reason' on `semantic-bookmark'."
 	  (setq frequency (1+ frequency))
 	  )
 	(oset sbm reason reason))
-    ;; This can fail on XEmacs at miscelaneous times.
+    ;; This can fail on XEmacs at miscellaneous times.
     (error nil))
   )
 
@@ -253,9 +253,9 @@ If ARG is nil, then toggle."
 
 ;;;###autoload
 (defcustom global-semantic-mru-bookmark-mode nil
-  "*If non-nil enable global use of variable `semantic-mru-bookmark-mode'.
-When this mode is enabled, changes made to a buffer are highlighted
-until the buffer is reparsed."
+  "If non-nil, enable `semantic-mru-bookmark-mode' globally.
+When this mode is enabled, Emacs keeps track of which tags have
+been edited, and you can re-visit them with \\[semantic-mrub-switch-tags]."
   :group 'semantic
   :group 'semantic-modes
   :type 'boolean
@@ -310,8 +310,8 @@ minor mode is enabled."
 ;;;###autoload
 (defun semantic-mru-bookmark-mode (&optional arg)
   "Minor mode for tracking tag-based bookmarks automatically.
-Tag based bookmarks a tracked based on editing and viewing habits
-and can then be navigated via the MRU bookmark keymap.
+When this mode is enabled, Emacs keeps track of which tags have
+been edited, and you can re-visit them with \\[semantic-mrub-switch-tags].
 
 \\{semantic-mru-bookmark-mode-map}
 
@@ -330,7 +330,7 @@ minor mode is enabled."
           (not semantic-mru-bookmark-mode)))
   (semantic-mru-bookmark-mode-setup)
   (run-hooks 'semantic-mru-bookmark-mode-hook)
-  (if (interactive-p)
+  (if (cedet-called-interactively-p 'interactive)
       (message "mru-bookmark minor mode %sabled"
                (if semantic-mru-bookmark-mode "en" "dis")))
   (semantic-mode-line-update)
@@ -360,7 +360,7 @@ minor mode is enabled."
 
 (defun semantic-mrub-completing-read (prompt)
   "Do a `completing-read' on elements from the mru bookmark ring.
-Argument PROMPT is the promot to use when reading."
+Argument PROMPT is the prompt to use when reading."
   (if (ring-empty-p (oref semantic-mru-bookmark-ring ring))
       (error "Semantic Bookmark ring is currently empty"))
   (let* ((ring (oref semantic-mru-bookmark-ring ring))
@@ -404,7 +404,7 @@ Argument PROMPT is the promot to use when reading."
 
 (defun semantic-mrub-switch-tags (tagmark)
   "Switch tags to TAGMARK.
-Selects a new tag via promt through the mru tag ring.
+Selects a new tag via prompt through the mru tag ring.
 Jumps to the tag and highlights it briefly."
   (interactive (list (semantic-mrub-completing-read "Switch to tag")))
   (if (not (semantic-bookmark-p tagmark))
@@ -432,7 +432,7 @@ the mru bookmark stack."
 ;  "Set this buffer's mark to POS.
 ;If `semantic-mru-bookmark-mode' is active, also push a tag onto
 ;the mru bookmark stack."
-;  (when (and semantic-mru-bookmark-mode (interactive-p))
+;  (when (and semantic-mru-bookmark-mode (called-interactively-p 'interactive))
 ;    (semantic-mrub-push semantic-mru-bookmark-ring
 ;			(point)
 ;			'mark))

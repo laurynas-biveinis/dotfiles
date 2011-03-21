@@ -1,9 +1,9 @@
 ;;; srecode-texi.el --- Srecode texinfo support.
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-texi.el,v 1.7 2009/01/10 18:49:07 zappo Exp $
+;; X-RCS: $Id: srecode-texi.el,v 1.9 2010/02/22 02:38:58 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -178,14 +178,21 @@ Adds the following:
 ;;;###autoload
 (define-mode-local-override semantic-insert-foreign-tag
   texinfo-mode (foreign-tag)
-  "Insert TAG from a foreign buffer in TAGFILE.
+  "Insert FOREIGN-TAG from a foreign buffer in TAGFILE.
 Assume TAGFILE is a source buffer, and create a documentation
 thingy from it using the `document' tool."
-  (let ((srecode-semantic-selected-tag foreign-tag))
+  (srecode-texi-insert-tag-as-doc foreign-tag))
+
+;;;###autoload
+(defun srecode-texi-insert-tag-as-doc (tag)
+  "Insert TAG into the current buffer with SRecode."
+  (when (not (eq major-mode 'texinfo-mode))
+    (error "Can only insert tags into texinfo in texinfo mode"))
+  (let ((srecode-semantic-selected-tag tag))
+    (srecode-load-tables-for-mode major-mode)
     ;; @todo - choose of the many types of tags to insert,
     ;; or put all that logic into srecode.
     (srecode-insert "declaration:function")))
-
 
 
 ;;; Texinfo mangling.

@@ -13,8 +13,8 @@ It would be useful mostly for the hackers who would like to learn
 more about how @semantic{} works.
 
 @menu
-* Parser code ::	Code used for the parsers
-* Tag handling ::	Code used for manipulating tags
+* Parser code ::        Code used for the parsers
+* Tag handling ::       Code used for manipulating tags
 * Semanticdb ::         Code used in the semantic database
 * Analyzer ::           Code used in the code analyzer
 * Tools ::              Code used in user tools.

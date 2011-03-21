@@ -1,8 +1,8 @@
 ;;; semantic-fw.el --- Framework for Semantic
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
-;; X-CVS: $Id: semantic-fw.el,v 1.77 2009/05/16 11:45:33 zappo Exp $
+;; X-CVS: $Id: semantic-fw.el,v 1.85 2010/05/04 23:25:34 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -60,7 +60,7 @@
       (defalias 'semantic-overlay-move            'set-extent-endpoints)
       (defalias 'semantic-overlay-delete          'delete-extent)
       (defalias 'semantic-overlays-at
-        (lambda (pos) 
+        (lambda (pos)
 	  (condition-case nil
 	      (extent-list nil pos pos)
 	    (error nil))
@@ -92,7 +92,6 @@
 	(while (popup-up-p) (dispatch-event (next-event))))
       )
   ;; Emacs Bindings
-  (defalias 'semantic-buffer-local-value      'buffer-local-value) 
   (defalias 'semantic-overlay-live-p          'overlay-buffer)
   (defalias 'semantic-make-overlay            'make-overlay)
   (defalias 'semantic-overlay-put             'overlay-put)
@@ -115,6 +114,13 @@
   (defun semantic-event-window (event)
     "Extract the window from EVENT."
     (car (car (cdr event))))
+
+  (if (> emacs-major-version 21)
+      (defalias 'semantic-buffer-local-value 'buffer-local-value)
+
+    (defun semantic-buffer-local-value (sym &optional buf)
+      "Get the value of SYM from buffer local variable in BUF."
+      (cdr (assoc sym (buffer-local-variables buf)))))
   )
 
 (if (and (not (featurep 'xemacs))
@@ -265,12 +271,12 @@ Remove self from `post-command-hook' if it is empty."
 	(intern (substring sym-name (match-end 0)))
       name)))
 
-(defun semantic-alias-obsolete (oldfnalias newfn)
+(defun semantic-alias-obsolete (oldfnalias newfn &optional when)
   "Make OLDFNALIAS an alias for NEWFN.
 Mark OLDFNALIAS as obsolete, such that the byte compiler
 will throw a warning when it encounters this symbol."
   (defalias oldfnalias newfn)
-  (make-obsolete oldfnalias newfn)
+  (make-obsolete oldfnalias newfn when)
   (when (and (function-overload-p newfn)
              (not (overload-obsoleted-by newfn))
              ;; Only throw this warning when byte compiling things.
@@ -278,7 +284,7 @@ will throw a warning when it encounters this symbol."
              byte-compile-current-file
 	     (not (string-match "cedet" byte-compile-current-file))
 	     )
-    (make-obsolete-overload oldfnalias newfn)
+    (make-obsolete-overload oldfnalias newfn when)
     (semantic-compile-warn
      "%s: `%s' obsoletes overload `%s'"
      byte-compile-current-file
@@ -286,11 +292,11 @@ will throw a warning when it encounters this symbol."
      (semantic-overload-symbol-from-function oldfnalias))
     ))
 
-(defun semantic-varalias-obsolete (oldvaralias newvar)
+(defun semantic-varalias-obsolete (oldvaralias newvar &optional when)
   "Make OLDVARALIAS an alias for variable NEWVAR.
 Mark OLDVARALIAS as obsolete, such that the byte compiler
 will throw a warning when it encounters this symbol."
-  (make-obsolete-variable oldvaralias newvar)
+  (make-obsolete-variable oldvaralias newvar when)
   (condition-case nil
       (defvaralias oldvaralias newvar)
     (error
@@ -432,7 +438,7 @@ FILE, NOWARN, RAWFILE, and WILDCARDS are passed into `find-file-noselect'"
 	 ;; This is a brave statement.  Don't waste time loading in
 	 ;; lots of modes.  Especially decoration mode can waste a lot
 	 ;; of time for a buffer we intend to kill.
-	 (semantic-init-hooks nil)
+	 (semantic-init-hook nil)
 	 ;; This disables the part of EDE that asks questions
 	 (ede-auto-add-method 'never)
 	 ;; Ask font-lock to not colorize these buffers, nor to
@@ -455,10 +461,22 @@ FILE, NOWARN, RAWFILE, and WILDCARDS are passed into `find-file-noselect'"
 	 ;; ... or eval variables
 	 (enable-local-eval nil)
 	 )
-    (if (featurep 'xemacs)
-	(find-file-noselect file nowarn rawfile)
-      (find-file-noselect file nowarn rawfile wildcards))
+    (save-match-data
+      (if (featurep 'xemacs)
+	  (find-file-noselect file nowarn rawfile)
+	(find-file-noselect file nowarn rawfile wildcards)))
     ))
+
+;;; Database restriction settings
+;;
+(defmacro semanticdb-without-unloaded-file-searches (forms)
+  "Execute FORMS with `unloaded' removed from the current throttle."
+  `(let ((semanticdb-find-default-throttle
+	  (if (featurep 'semanticdb-find)
+	      (remq 'unloaded semanticdb-find-default-throttle)
+	    nil)))
+     ,forms))
+(put 'semanticdb-without-unloaded-file-searches 'lisp-indent-function 1)
 
 
 ;;; Editor goodies ;-)
@@ -535,6 +553,30 @@ FILE, NOWARN, RAWFILE, and WILDCARDS are passed into `find-file-noselect'"
      (def-edebug-spec semantic-exit-on-input
        (quote def-body)
        )
+
+     ))
+
+;;; Interfacing with data-debug
+;;
+(eval-after-load "data-debug"
+  '(progn
+;;; Augment data-debug
+     ;;
+     ;; A tag
+     (data-debug-add-specialized-thing #'semantic-tag-p
+				       #'data-debug-insert-tag)
+     ;; A taglist
+     (data-debug-add-specialized-thing (lambda (thing) (and (listp thing) (semantic-tag-p (car thing))))
+				       #'data-debug-insert-tag-list-button)
+     ;; Find results
+     (data-debug-add-specialized-thing #'semanticdb-find-results-p
+				       #'data-debug-insert-find-results-button)
+     ;; Find results elements.
+     (data-debug-add-specialized-thing (lambda (thing) 
+					 (and (listp thing)
+					      (semanticdb-abstract-table-child-p (car thing))
+					      (semantic-tag-p (cdr thing))))
+				       #'data-debug-insert-db-and-tag-button)
 
      ))
 

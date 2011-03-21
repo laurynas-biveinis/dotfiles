@@ -7,7 +7,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 15 Dec 2001
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-java-tags.el,v 1.33 2009/01/24 03:47:02 zappo Exp $
+;; X-RCS: $Id: wisent-java-tags.el,v 1.34 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -85,6 +85,9 @@ This function override `get-local-variables'."
 ;;;;
 ;;;; Semantic integration of the Java LALR parser
 ;;;;
+
+;; In semantic-imenu.el, not part of Emacs.
+(defvar semantic-imenu-summary-function)
 
 ;;;###autoload
 (defun wisent-java-default-setup ()

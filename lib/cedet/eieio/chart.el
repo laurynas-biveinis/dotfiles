@@ -4,7 +4,7 @@
 ;;
 ;; Author: <zappo@gnu.org>
 ;; Version: 0.2
-;; RCS: $Id: chart.el,v 1.19 2009/03/28 13:04:10 zappo Exp $
+;; RCS: $Id: chart.el,v 1.20 2010/02/27 03:44:25 zappo Exp $
 ;; Keywords: OO, chart, graph
 ;;                                                                          
 ;; This program is free software; you can redistribute it and/or modify
@@ -142,6 +142,16 @@ Returns the newly created buffer"
     (setq chart-local-object obj)
     (current-buffer)))
 
+(defun chart-width ()
+  "Return the width of a chart for the current buffer.
+It is either `window-width', or a minimum of 20 chars."
+  (max (window-width) 30))
+
+(defun chart-height ()
+  "Return the height of a chart for the current buffer.
+It is either `window-height', or a minimum of 20 chars."
+  (max (window-height) 20))
+
 (defclass chart ()
   ((title :initarg :title
 	  :initform "Emacs Chart")
@@ -169,8 +179,8 @@ Returns the newly created buffer"
 (defmethod initialize-instance :AFTER ((obj chart) &rest fields)
   "Initialize the chart OBJ being created with FIELDS.
 Make sure the width/height is correct."
-  (oset obj x-width (- (window-width) 10))
-  (oset obj y-width (- (window-height) 12)))
+  (oset obj x-width (- (chart-width) 10))
+  (oset obj y-width (- (chart-height) 12)))
 
 (defclass chart-axis ()
   ((name :initarg :name
@@ -234,7 +244,7 @@ Erases current contents of buffer"
 (defmethod chart-draw-title ((c chart))
   "Draw a title upon the chart.
 Argument C is the chart object."
-  (chart-display-label (oref c title) 'horizontal 0 0 (window-width)
+  (chart-display-label (oref c title) 'horizontal 0 0 (chart-width)
 		       (oref c title-face)))
 
 (defmethod chart-size-in-dir ((c chart) dir)

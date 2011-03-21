@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-ia-sb.el,v 1.24 2009/03/22 17:28:37 zappo Exp $
+;; X-RCS: $Id: semantic-ia-sb.el,v 1.26 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -106,8 +106,7 @@ DIRECTORY is the current directory, which is ignored, and ZERO is 0."
 	    ))
       (error nil))
     (select-frame cf)
-    (save-excursion
-      (set-buffer speedbar-buffer)
+    (with-current-buffer speedbar-buffer
       ;; If we have something, do something spiff with it.
       (erase-buffer)
       (speedbar-insert-separator "Buffer/Function")
@@ -243,7 +242,7 @@ Optional IDX is an index into LIST to apply IDXFACE instead."
 	(setq list (cdr list)
 	      count (1+ count)))
       )))
-		 
+
 (defun semantic-ia-sb-completion-list (list face function)
   "Create some speedbar buttons from LIST.
 Each button will use FACE, and be activated with FUNCTION."
@@ -290,16 +289,14 @@ TEXT, TAG, and INDENT are speedbar function arguments."
 	  (setq ob (current-buffer))
 	  (with-output-to-temp-buffer "*Tag Information*"
 	    ;; Output something about this tag:
-	    (save-excursion
-	      (set-buffer "*Tag Information*")
+	    (with-current-buffer "*Tag Information*"
 	      (goto-char (point-max))
 	      (insert
 	       (semantic-format-tag-prototype tag nil t)
 	       "\n")
 	      (let ((typetok
 		     (condition-case nil
-			 (save-excursion
-			   (set-buffer ob)
+			 (with-current-buffer ob
 			   ;; @todo - We need a context to derive a scope from.
 			   (semantic-analyze-tag-type tag nil))
 		       (error nil))))

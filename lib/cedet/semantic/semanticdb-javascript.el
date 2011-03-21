@@ -1,11 +1,11 @@
 ;;; semanticdb-javascript.el --- Semantic database extensions for javascript
 
-;;; Copyright (C) 2002, 2003, 2004, 2005, 2007, 2008 Eric M. Ludlam
+;;; Copyright (C) 2002, 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
 ;;; Copyright (C) 2006 Joakim Verona
 
 ;; Author: Joakim Verona
 ;; Keywords: tags
-;; X-RCS: $Id: semanticdb-javascript.el,v 1.1 2008/09/04 22:43:05 zappo Exp $
+;; X-RCS: $Id: semanticdb-javascript.el,v 1.6 2010/03/26 22:18:05 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -23,7 +23,7 @@
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
-;; 
+;;
 ;;; Commentary:
 ;;
 ;; Semanticdb database for Javascript.
@@ -33,7 +33,6 @@
 ;; the list of tags.
 ;;
 
-(require 'semanticdb-search)
 (eval-when-compile
   ;; For generic function searching.
   (require 'eieio)
@@ -79,7 +78,7 @@
       (("uriComponent" variable nil nil nil)))
      nil nil))
   "Hard-coded list of javascript tags for semanticdb.
-See bottom of this file for instruction on managing this list.")
+See bottom of this file for instructions on managing this list.")
 
 ;;; Classes:
 (defclass semanticdb-table-javascript (semanticdb-search-results-table)
@@ -89,7 +88,7 @@ See bottom of this file for instruction on managing this list.")
 
 (defclass semanticdb-project-database-javascript
   (semanticdb-project-database
-   eieio-singleton ;this db is for js globals, so singleton is apropriate
+   eieio-singleton ;this db is for js globals, so singleton is appropriate
    )
   ((new-table-class :initform semanticdb-table-javascript
 		    :type class
@@ -109,7 +108,7 @@ See bottom of this file for instruction on managing this list.")
 (defvar-mode-local javascript-mode semanticdb-find-default-throttle
   '(project omniscience)
   "Search project files, then search this omniscience database.
-It is not necessary to to system or recursive searching because of
+It is not necessary to do system or recursive searching because of
 the omniscience database.")
 
 ;;; Filename based methods
@@ -147,10 +146,9 @@ Create one of our special tables that can act as an intermediary."
 
 (defmethod semanticdb-equivalent-mode ((table semanticdb-table-javascript) &optional buffer)
   "Return non-nil if TABLE's mode is equivalent to BUFFER.
-Equivalent modes are specified by by `semantic-equivalent-major-modes'
+Equivalent modes are specified by the `semantic-equivalent-major-modes'
 local variable."
-  (save-excursion
-    (set-buffer buffer)
+  (with-current-buffer buffer
     (eq (or mode-local-active-mode major-mode) 'javascript-mode)))
 
 ;;; Usage
@@ -160,7 +158,7 @@ local variable."
 ;; to a search list.
 (define-mode-local-override semanticdb-find-translate-path javascript-mode
   (path brutish)
-  "Return a list of semanticdb tables asociated with PATH.
+  "Return a list of semanticdb tables associated with PATH.
 If brutish, do the default action.
 If not brutish, do the default action, and append the system
 database (if available.)"
@@ -214,12 +212,12 @@ Return a list of tags."
   (if tags (call-next-method)
     ;; YOUR IMPLEMENTATION HERE
     (semanticdb-javascript-regexp-search regex)
-    
+
     ))
 
 (defmethod semanticdb-find-tags-for-completion-method
   ((table semanticdb-table-javascript) prefix &optional tags)
-  "In TABLE, find all occurances of tags matching PREFIX.
+  "In TABLE, find all occurrences of tags matching PREFIX.
 Optional argument TAGS is a list of tags to search.
 Returns a table of all matching tags."
   (if tags (call-next-method)
@@ -229,7 +227,7 @@ Returns a table of all matching tags."
 
 (defmethod semanticdb-find-tags-by-class-method
   ((table semanticdb-table-javascript) class &optional tags)
-  "In TABLE, find all occurances of tags of CLASS.
+  "In TABLE, find all occurrences of tags of CLASS.
 Optional argument TAGS is a list of tags to search.
 Returns a table of all matching tags."
   (if tags (call-next-method)
@@ -251,7 +249,7 @@ Returns a table of all matching tags."
 (defmethod semanticdb-deep-find-tags-by-name-method
   ((table semanticdb-table-javascript) name &optional tags)
   "Find all tags name NAME in TABLE.
-Optional argument TAGS is a list of tags t
+Optional argument TAGS is a list of tags to search.
 Like `semanticdb-find-tags-by-name-method' for javascript."
   (semanticdb-find-tags-by-name-method table name tags))
 
@@ -264,7 +262,7 @@ Like `semanticdb-find-tags-by-name-method' for javascript."
 
 (defmethod semanticdb-deep-find-tags-for-completion-method
   ((table semanticdb-table-javascript) prefix &optional tags)
-  "In TABLE, find all occurances of tags matching PREFIX.
+  "In TABLE, find all occurrences of tags matching PREFIX.
 Optional argument TAGS is a list of tags to search.
 Like `semanticdb-find-tags-for-completion-method' for javascript."
   (semanticdb-find-tags-for-completion-method table prefix tags))
@@ -273,7 +271,7 @@ Like `semanticdb-find-tags-for-completion-method' for javascript."
 ;;
 (defmethod semanticdb-find-tags-external-children-of-type-method
   ((table semanticdb-table-javascript) type &optional tags)
-  "Find all nonterminals which are child elements of TYPE
+  "Find all nonterminals which are child elements of TYPE.
 Optional argument TAGS is a list of tags to search.
 Return a list of tags."
   (if tags (call-next-method)
@@ -286,7 +284,7 @@ Return a list of tags."
     ;; If it is optional, you can just delete this method.
     ))
 
-(provide 'semanticdb-el)
+(provide 'semanticdb-javascript)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

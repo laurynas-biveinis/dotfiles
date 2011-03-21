@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-dep.el,v 1.13 2009/01/28 19:39:44 zappo Exp $
+;; X-RCS: $Id: semantic-dep.el,v 1.16 2010/03/15 13:40:54 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -33,7 +33,7 @@
 ;; EDE or even ECB can control our project dependencies, and help us
 ;; find file within the setting of a given project.  For system
 ;; dependencies, we need to depend on user supplied lists, which can
-;; manifest themselves in the form of system datatabases (from
+;; manifest themselves in the form of system databases (from
 ;; semanticdb.)
 ;;
 ;; Provide ways to track these different files here.
@@ -51,7 +51,7 @@ to the file being included.
 If `semantic-dependency-tag-file' is overridden for a given
 language, this path is most likely ignored.
 
-The above function, reguardless of being overriden, caches the
+The above function, regardless of being overridden, caches the
 located dependency file location in the tag property
 `dependency-file'.  If you override this function, you do not
 need to implement your own cache.  Each time the buffer is fully
@@ -102,7 +102,7 @@ keep semantic data structures up to date."
 	      (setq-mode-local ,mode
 			       semantic-dependency-system-include-path
 			       val)
-	      (when (fboundp 
+	      (when (fboundp
 		     'semantic-decoration-unparsed-include-do-reset)
 		(mode-local-map-mode-buffers
 		 'semantic-decoration-unparsed-include-do-reset
@@ -194,7 +194,7 @@ macro `defcustom-mode-local-semantic-dependency-system-include-path'."
       (locate-file file path))
 
   ;; Else, older version of Emacs.
-  
+
   (defsubst semantic--dependency-find-file-on-path (file path)
     "Return an expanded file name for FILE on PATH."
     (let ((p path)
@@ -219,7 +219,8 @@ provided mode, not from the current major mode."
 	       mode 'semantic-dependency-system-include-path))
 	(edesys (when (and (featurep 'ede) ede-minor-mode
 			   ede-object)
-		  (ede-system-include-path ede-object)))
+		  (ede-system-include-path
+		   (if (listp ede-object) (car ede-object) ede-object))))
 	(locp (mode-local-value
 	       mode 'semantic-dependency-include-path))
 	(found nil))

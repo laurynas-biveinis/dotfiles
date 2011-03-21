@@ -1,10 +1,10 @@
 ;;; dframe --- dedicate frame support modes
 
-;;; Copyright (C) 1996, 97, 98, 99, 2000, 01, 02, 03, 04, 05 Free Software Foundation
+;;; Copyright (C) 1996, 97, 98, 99, 2000, 01, 02, 03, 04, 05, 10 Free Software Foundation
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: file, tags, tools
-;; X-RCS: $Id: dframe.el,v 1.29 2005/12/07 16:52:51 zappo Exp $
+;; X-RCS: $Id: dframe.el,v 1.30 2010/05/21 02:40:57 zappo Exp $
 
 (defvar dframe-version "1.3"
   "The current version of the dedicated frame library.")
@@ -116,35 +116,7 @@
 (defvar dframe-xemacs20p (and dframe-xemacsp
 			      (>= emacs-major-version 20)))
 
-;; From custom web page for compatibility between versions of custom
-;; with help from ptype@dera.gov.uk (Proto Type)
-(eval-and-compile
-  (condition-case ()
-      (require 'custom)
-    (error nil))
-  (if (and (featurep 'custom) (fboundp 'custom-declare-variable)
-	   ;; Some XEmacsen w/ custom don't have :set keyword.
-	   ;; This protects them against custom.
-	   (fboundp 'custom-initialize-set))
-      nil ;; We've got what we needed
-    ;; We have the old custom-library, hack around it!
-    (if (boundp 'defgroup)
-	nil
-      (defmacro defgroup (&rest args)
-	nil))
-    (if (boundp 'defface)
-	nil
-      (defmacro defface (var values doc &rest args)
-	(` (progn
-	     (defvar (, var) (quote (, var)))
-	     ;; To make colors for your faces you need to set your .Xdefaults
-	     ;; or set them up ahead of time in your .emacs file.
-	     (make-face (, var))
-	     ))))
-    (if (boundp 'defcustom)
-	nil
-      (defmacro defcustom (var value doc &rest args)
-	(` (defvar (, var) (, value) (, doc)))))))
+(require 'custom)
 
 
 ;;; Compatibility functions

@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-srt.el,v 1.6 2009/01/09 22:59:17 zappo Exp $
+;; X-RCS: $Id: srecode-srt.el,v 1.7 2010/03/15 13:40:55 xscript Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -31,7 +31,7 @@
 
 ;;;###autoload
 (defun srecode-read-variable-name (prompt &optional initial hist default)
-  "Read in the name of a declaired variable in the current SRT file.
+  "Read in the name of a declared variable in the current SRT file.
 PROMPT is the prompt to use.
 INITIAL is the initial string.
 HIST is the history value, otherwise `srecode-read-variable-name-history'

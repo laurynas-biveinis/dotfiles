@@ -7,7 +7,7 @@
 ;; Author: Vladimir G. Sekissov <svg@surnet.ru>
 ;;         David Ponce <david@dponce.com>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-erlang.el,v 1.7 2009/01/24 04:05:54 zappo Exp $
+;; X-RCS: $Id: semantic-erlang.el,v 1.8 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -67,7 +67,7 @@
 (defcustom-mode-local-semantic-dependency-system-include-path
   erlang-mode semantic-erlang-dependency-system-include-path
   nil
-  "The system include path used by Erlang langauge.")
+  "The system include path used by Erlang language.")
 
 (defun semantic-erlang-default-setup ()
   "Set up a buffer for semantic parsing of the Erlang language."

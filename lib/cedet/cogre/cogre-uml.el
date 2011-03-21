@@ -1,10 +1,10 @@
 ;;; cogre-uml.el --- UML support for COGRE
 
-;;; Copyright (C) 2001, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 2001, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: oop, uml
-;; X-RCS: $Id: cogre-uml.el,v 1.30 2009/04/23 03:26:59 zappo Exp $
+;; X-RCS: $Id: cogre-uml.el,v 1.31 2010/04/09 01:44:01 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -429,7 +429,7 @@ Return it as a list of lists.  Each entry is of the form:
     ;; DONE
     (setq out (nreverse out))
     ;; 4) Dump if in interactive mode.
-    (when (interactive-p)
+    (when (cedet-called-interactively-p)
       ;; Dump the output.
       (data-debug-show-stuff out "SortedInheritanceNodes"))
     out))

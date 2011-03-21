@@ -43,6 +43,14 @@ int myFcn1 P_((a,b));
 int myFcn2 P__((int a, int b));
 int myFcn3 (int a, int b);
 
+/* TEST: Macro replacement for very long argument lists. (See xdisp.c in Emacs) */
+int myFcn4 P__((int a,
+		int b,
+		int c,
+		int d,
+		int e,
+		int f));
+
 /* TEST: Multiple args to a macro. */
 #define MULTI_ARGS(name, field1, field2, field3) struct name { int field1; int field2; int field3; }
 
@@ -114,6 +122,14 @@ _GLIBCXX_BEGIN_NESTED_NAMESPACE(foo,bar)
 
 _GLIBCXX_END_NESTED_NAMESPACE;
 
+
+/* TEST: The VC++ macro hack. */
+_STD_BEGIN
+
+  int inside_std_namespace(int a) { }
+
+_STD_END
+
 /* TEST: Recursion prevention.  CPP doesn't allow even 1 level of recursion. */
 #define STARTMACRO MACROA
 #define MACROA MACROB
@@ -122,6 +138,24 @@ _GLIBCXX_END_NESTED_NAMESPACE;
 int STARTMACRO () {
 
 }
+
+/* TEST: Fancy concat/recursive macros */
+#define CONCAT(x,y)     x##y
+#define PASTE(x,y)      CONCAT(x,y)
+#define OBJ(fn)         PASTE(PREFIX, fn)
+#define PREFIX          PASTE(A,B)
+
+int 
+OBJ(test)     /* expands to ABtest */
+  ;
+
+/* TEST: Macro Recursion limits in arguments to a macro. 
+ * This code is from ALSA (with names changed to moose), noticed by Yupeng. */
+#define mr_moose(n) list_entry(n, struct mr_moose, list)
+
+struct mr_moose_ops {
+  int (*mr_moose_disconnect)(struct mr_moose *dev);
+};
 
 
 /* END */

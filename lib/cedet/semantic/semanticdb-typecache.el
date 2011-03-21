@@ -1,9 +1,9 @@
 ;;; semanticdb-typecache.el --- Manage Datatypes
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semanticdb-typecache.el,v 1.39 2009/04/03 12:59:35 zappo Exp $
+;; X-RCS: $Id: semanticdb-typecache.el,v 1.46 2010/04/18 13:14:25 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -104,7 +104,7 @@ Said object must support `semantic-reset' methods.")
 	 )
     (object-add-to-list cache 'dependants dep)))
 
-(defun semanticdb-typecache-length(thing)
+(defun semanticdb-typecache-length (thing)
   "How long is THING?
 Debugging function."
   (cond ((semanticdb-typecache-child-p thing)
@@ -123,10 +123,10 @@ Debugging function."
   "Retrieve the typecache from the semanticdb TABLE.
 If there is no table, create one, and fill it in."
   (semanticdb-refresh-table table)
-  (let* ((idx (semanticdb-get-table-index table))	 
+  (let* ((idx (semanticdb-get-table-index table))
 	 (cache (oref idx type-cache))
 	 )
-    
+
     ;; Make sure we have a cache object in the DB index.
     (when (not cache)
       ;; The object won't change as we fill it with stuff.
@@ -212,6 +212,14 @@ Adds a filename and copies the tags."
    (semanticdb-full-filename table)
    tags))
 
+(defun semanticdb-typecache-faux-namespace (name members)
+  "Create a new namespace tag with NAME and a set of MEMBERS.
+The new tag will be a faux tag, used as a placeholder in a typecache."
+  (let ((tag (semantic-tag-new-type name "namespace" members nil)))
+    ;; Make sure we mark this as a fake tag.
+    (semantic-tag-set-faux tag)
+    tag))
+
 ;;;###autoload
 (defun semanticdb-typecache-merge-streams (cache1 cache2)
   "Merge into CACHE1 and CACHE2 together.  The Caches will be merged in place."
@@ -251,23 +259,22 @@ Adds a filename and copies the tags."
 	    (setq ans (cons next ans))
 	  ;; ELSE - We have a NAME match.
 	  (setq type (semantic-tag-type next))
-	  (if (semantic-tag-of-type-p prev type) ; Are they the same datatype
+	  (if (or (semantic-tag-of-type-p prev type) ; Are they the same datatype
+		  (semantic-tag-faux-p prev)
+		  (semantic-tag-faux-p next) ; or either a faux tag?
+		  )
 	      ;; Same Class, we can do a merge.
 	      (cond
 	       ((and (semantic-tag-of-class-p next 'type)
 		     (string= type "namespace"))
 		;; Namespaces - merge the children together.
 		(setcar ans
-			(semantic-tag-new-type
+			(semanticdb-typecache-faux-namespace
 			 (semantic-tag-name prev) ; - they are the same
-			 "namespace"	; - we know this as fact
 			 (semanticdb-typecache-merge-streams
 			  (semanticdb-typecache-safe-tag-members prev)
 			  (semanticdb-typecache-safe-tag-members next))
-			 nil		; - no attributes
 			 ))
-		;; Make sure we mark this as a fake tag.
-		(semantic-tag-set-faux (car ans))
 		)
 	       ((semantic-tag-prototype-p next)
 		;; NEXT is a prototype... so keep previous.
@@ -294,6 +301,12 @@ Adds a filename and copies the tags."
 ;;; Refresh / Query API
 ;;
 ;; Queries that can be made for the typecache.
+(define-overloadable-function semanticdb-expand-nested-tag (tag)
+  "Expand TAG from fully qualified names.
+If TAG has fully qualified names, expand it to a series of nested
+namespaces instead."
+  tag)
+
 (defmethod semanticdb-typecache-file-tags ((table semanticdb-abstract-table))
   "No tags available from non-file based tables."
   nil)
@@ -302,17 +315,20 @@ Adds a filename and copies the tags."
   "Update the typecache for TABLE, and return the file-tags.
 File-tags are those that belong to this file only, and excludes
 all included files."
-  (let* (;(idx (semanticdb-get-table-index table))	 
+  (let* (;(idx (semanticdb-get-table-index table))
 	 (cache (semanticdb-get-typecache table))
 	 )
 
     ;; Make sure our file-tags list is up to date.
     (when (not (oref cache filestream))
-      (let ((tags  (semantic-find-tags-by-class 'type table)))
+      (let ((tags  (semantic-find-tags-by-class 'type table))
+	    (exptags nil))
 	(when tags
 	  (setq tags (semanticdb-typecache-safe-tag-list tags table))
-	  (oset cache filestream (semanticdb-typecache-merge-streams tags nil)))))
-    
+	  (dolist (T tags)
+	    (push (semanticdb-expand-nested-tag T) exptags))
+	  (oset cache filestream (semanticdb-typecache-merge-streams exptags nil)))))
+
     ;; Return our cache.
     (oref cache filestream)
     ))
@@ -355,7 +371,7 @@ a master list."
 		   (copy-sequence
 		    (semanticdb-typecache-file-tags i))))
 	    ))
-	  
+
 	;; Save...
 	(oset cache includestream incstream)))
 
@@ -379,19 +395,23 @@ FIND-FILE-MATCH is non-nil to force all found tags to be loaded into a buffer.")
 (defun semanticdb-typecache-find-default (type &optional path find-file-match)
   "Default implementation of `semanticdb-typecache-find'.
 TYPE is the datatype to find.
-PATH is the search path.. which should be one table object.
+PATH is the search path, which should be one table object.
 If FIND-FILE-MATCH is non-nil, then force the file belonging to the
 found tag to be loaded."
-  (semanticdb-typecache-find-method (or path semanticdb-current-table)
-				    type find-file-match))
+  (if (not (and (featurep 'semanticdb) semanticdb-current-database))
+      nil ;; No DB, no search
+    (save-excursion
+      (semanticdb-typecache-find-method (or path semanticdb-current-table)
+					type find-file-match))))
 
 (defun semanticdb-typecache-find-by-name-helper (name table)
   "Find the tag with NAME in TABLE, which is from a typecache.
 If more than one tag has NAME in TABLE, we will prefer the tag that
 is of class 'type."
   (let* ((names (semantic-find-tags-by-name name table))
-	 (types (semantic-find-tags-by-class 'type names)))
-    (or (car-safe types) (car-safe names))))
+	 (nmerge (semanticdb-typecache-merge-streams names nil))
+	 (types (semantic-find-tags-by-class 'type nmerge)))
+    (or (car-safe types) (car-safe nmerge))))
 
 (defmethod semanticdb-typecache-find-method ((table semanticdb-abstract-table)
 					     type find-file-match)
@@ -523,7 +543,7 @@ If there isn't one, create it.
 	)
     (dolist (table (semanticdb-get-database-tables db))
       (when (eq lmode (oref table :major-mode))
-	(setq stream 
+	(setq stream
 	      (semanticdb-typecache-merge-streams
 	       stream
 	       (copy-sequence
@@ -535,8 +555,7 @@ If there isn't one, create it.
 ;;;###autoload
 (defun semanticdb-typecache-refresh-for-buffer (buffer)
   "Refresh the typecache for BUFFER."
-  (save-excursion
-    (set-buffer buffer)
+  (with-current-buffer buffer
     (let* ((tab semanticdb-current-table)
 	   ;(idx (semanticdb-get-table-index tab))
 	   (tc (semanticdb-get-typecache tab)))
@@ -582,7 +601,7 @@ If there isn't one, create it.
 	 (tc (semanticdb-typecache-for-database (oref tab parent-db)))
 	 (end (current-time))
 	 )
-    (data-debug-new-buffer "*TypeCache ADEBUG*")    
+    (data-debug-new-buffer "*TypeCache ADEBUG*")
     (message "Calculating Cache took %.2f seconds."
 	     (semantic-elapsed-time start end))
 

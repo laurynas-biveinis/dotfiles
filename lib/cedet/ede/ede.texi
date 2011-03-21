@@ -1,6 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c
-@c $Id: ede.texi,v 1.23 2009/02/27 22:13:02 zappo Exp $
+@c $Id: ede.texi,v 1.30 2010/07/25 14:12:32 zappo Exp $
 @c
 @setfilename ede.info
 @settitle Emacs Development Environment
@@ -8,7 +8,7 @@
 @ifinfo
 @format
 START-INFO-DIR-ENTRY
-* ede: (ede).       Objects for Emacs
+* ede: (ede).       Project management for Emacs
 END-INFO-DIR-ENTRY
 @end format
 @end ifinfo
@@ -17,7 +17,7 @@ END-INFO-DIR-ENTRY
 @sp 10
 @center @titlefont{ede}
 @vskip 0pt plus 1 fill
-Copyright @copyright{} 1998, 1999, 2000, 2001, 2004, 2005, 2008, 2009 Eric M. Ludlam
+Copyright @copyright{} 1998, 1999, 2000, 2001, 2004, 2005, 2008, 2009, 2010 Eric M. Ludlam
 @end titlepage
 
 @macro cedet{}
@@ -142,16 +142,20 @@ projects are loaded at that time.
 @node Creating a project, Modifying your project, EDE Mode, top
 @chapter Creating a project
 
-To create a new project, first load a file you would want in that
-project into a buffer.  If you have a hierarchy of directories, choose
-a file in the topmost directory first.  From this buffer, run
-@command{ede-new}.
+@emph{Note:} It is not necessary to Create a project as described below to
+use @ede{}.  Some kinds of projects are autodetected, such as projects
+that use Automake, Emacs, or Linux.  See @xref{Simple projects}.
+
+To create a new project that will also create Makefiles for you, first
+load a file you would want in that project into a buffer.  If you have
+a hierarchy of directories, choose a file in the topmost directory
+first.  From this buffer, run @command{ede-new}.
 
 @ede{} can support several types of projects.  When creating a new
 project with the command @command{ede-new} you must choose the type of
 project you would like to create.  @xref{Project types}.
 
-Each type has it's own benefits or language specific enhancements.  You
+Each type has its own benefits or language specific enhancements.  You
 will be prompted for the type of project you would like to create.  The
 simplest and most language agnostic project type is @emph{Make}.  A
 derivation of this is the @samp{Automake} type.
@@ -241,7 +245,7 @@ the behavior with the variable @command{ede-auto-add-method}.
 @node Customize Features, EDE Project Features, Add/Remove files, Modifying your project
 @section Customize Features
 
-A project, and it's targets, are objects using the @samp{EIEIO} object
+A project, and its targets, are objects using the @samp{EIEIO} object
 system. @xref{(eieio)EIEIO}.  These objects have data fields containing
 important information related to your work.
 
@@ -450,12 +454,106 @@ It can be configured with minimal lisp knowledge to do header file
 lookup for @semantic{}, improving code completion performance.
 
 @menu
+* Generic::             Detect generic Make, SCons or CMake projects
+* Add Generic Support:: Support more build types with Generic projects
 * ede-cpp-root::        This project marks the root of a C/C++ code project.
-* ede-simple subclassing:: Create your own simple project.
-* ede-emacs::		A project for working with Emacs.
-* ede-linux::		A project for working with Linux kernels.
+* ede-emacs::           A project for working with Emacs.
+* ede-linux::           A project for working with Linux kernels.
 * Custom Locate::       Customizing how to locate files in a simple project
 @end menu
+
+@node Generic
+@subsection Generic Projects
+
+The Generic project system provides a way for EDE to identify a
+project based on the build system.  Simple aspects of how this project
+builds or interacts with @semantic{} can be done via the Customize
+interface.
+
+For C++ projects, even if the build system is supported by Generic,
+may want to use @ref{ede-cpp-root} which has addtional options for
+C/C++.
+
+Generic projects are new, and disabled by default to prevent possible
+conflicts with other types of projects, to enable them, use
+@code{ede-enable-generic-projects}.
+
+@defun ede-enable-generic-projects
+@anchor{ede-enable-generic-projects}
+Enable generic project loaders.
+@end defun
+
+When a generic project identifies your code, you can use:
+
+@example
+M-x ede-customize-project
+@end example
+
+to create an customization buffer and edit any configuration items for
+your project.  It will save the configuration in @file{EDEConfig.el}
+at the root of your project.
+
+Generic projects also support @ref{Building and Debugging} for the
+different project types.
+
+@node Add Generic Support
+@subsection Add Generic Support for new build systems
+
+The Generic EDE project type can support almost any kind of build
+system.  To add support for a new build system using the Generic type
+is pretty easy.  Here is an example for supporting SCons:
+
+@example
+;;; SCONS
+(defclass ede-generic-scons-project (ede-generic-project)
+  ((buildfile :initform "SConstruct")
+   )
+  "Generic Project for scons.")
+
+(defmethod ede-generic-setup-configuration ((proj ede-generic-scons-project) config)
+  "Setup a configuration for SCONS."
+  (oset config build-command "scons")
+  (oset config debug-command "gdb ")
+  )
+@end example
+
+The first block of code creates a new class for the SCons project
+type.  It inherits from @code{ede-generic-project}.  The only
+configuration really needed is to specify the initial value for the
+@code{buildfile} slot.  This is @file{SConstruct} for SCons, and is
+@file{Makefile} for supporting Make.
+
+The second thing to do is implement a method for your build system
+that will setup the Configuration.  Each generic project gets a common
+Configuration object which contains details on how to work with the
+different kinds of Source code.  It also contains the build and debug
+commands which should be setup here.  These are the defaults.  A user
+of your generic project can customize the configuration and change
+these values later.
+
+Once the class is created, it needs to be registered.  If you wish to
+permanently add this to ede-generic.el, then you would edit
+@code{ede-enable-generic-projects}.  If you write support just for
+you, you would add a line of code like this example from SCons.
+
+@example
+(ede-generic-new-autoloader "edeproject-scons" "SCons"
+			    "SConstruct" 'ede-generic-scons-project)
+@end example
+
+Adding a generic autoloader tells EDE how to identify, and
+automatically create your project.
+
+@defun ede-generic-new-autoloader internal-name external-name projectfile class
+@anchor{ede-generic-new-autoloader}
+Add a new @var{EDE} Autoload instance for identifying a generic project.
+@var{INTERNAL-NAME} is a long name that identifies thsi project type.
+@var{EXTERNAL-NAME} is a shorter human readable name to describe the project.
+@var{PROJECTFILE} is a file name that identifies a project of this type to @var{EDE}, such as 
+a Makefile, or SConstruct file.
+@var{CLASS} is the @var{EIEIO} class that is used to track this project.  It should subclass
+the class @dfn{ede-generic-project} project.
+@end defun
 
 @node ede-cpp-root
 @subsection ede-cpp-root
@@ -573,25 +671,18 @@ Return nil if there isn't one."
   )
 
 (add-to-list 'ede-project-class-files
-	     (ede-project-autoload "cpp-root"
-	      :name "CPP ROOT"
-	      :file 'ede-cpp-root
-	      :proj-file 'MY-FILE-FOR-DIR
+             (ede-project-autoload "cpp-root"
+              :name "CPP ROOT"
+              :file 'ede-cpp-root
+              :proj-file 'MY-FILE-FOR-DIR
               :proj-root 'MY-ROOT-FCN
-	      :load-type 'MY-LOAD
-	      :class-sym 'ede-cpp-root)
-	     t)
+              :load-type 'MY-LOAD
+              :class-sym 'ede-cpp-root)
+             t)
 @end example
 
 This example only creates an auto-loader, and does not create a new kind
 of project.
-
-@node ede-simple subclassing
-@subsection ede-simple Subclassing
-
-todo - Write some doc.
-
-  In the meantime look in the commentary of ede-simple.el
 
 @node ede-emacs
 @subsection ede-emacs
@@ -657,10 +748,51 @@ This chapter is intended for users who want to write new parts or fix
 bugs in @ede{}.  A knowledge of Emacs Lisp, and some @eieio{}(CLOS) is
 required.
 
-@ede{}'s dependency on @eieio{}, the CLOS package for Emacs lets @ede{} define
-two object superclasses, specifically the PROJECT and TARGET.  All
-commands in @ede{} are usually meant to address the current project, or
-current target.
+If you are in this chapter because you need to enhance or fix @ede{},
+here are some suggestions:
+
+@table @asis
+@item @ede{} doesn't recognize your project
+In this case, you will need to read @ref{Detecting a Project}.  If you
+think one of the existing project types should work, then you will
+need to understand the detection process, then investigate the project
+code to see what may be wrong.
+@item @ede{} doesn't support your project
+In this case, you will need to read all the sections, though you can
+skip those sections specific to the secions on sourcecode and
+compiler/linker objects which are specific to the project type that
+autogenerates Makefiles.
+@item @ede{} doesn't support your compiler/linker
+For the @ede{} project types that build makefiles, you will want to
+read the @ref{Compiler and Linker objects} section.
+@item @ede{} doesn't support your language
+For the @ede{} project types that build makefiles, you will need to
+read the section on the @code{ede-proj-project}, which is a project
+type that will accept new types of languages, and build Makefiles that
+support that language.
+@end table
+
+
+@menu
+* Development Overview::        Overview for developers
+* Detecting a Project::         How EDE identifies projects
+* User interface methods::      Methods associated with keybindings
+* Base project methods::        The most basic methods on @ede{} objects.
+* EDE proj-project::            Extending Makefile generating project types.
+* Sourcecode objects::          Defining new sourcecode classes.
+* Compiler and Linker objects::  Defining new compilers and linkers.
+@end menu
+
+@node Development Overview
+@section Development Overview
+
+@ede{} is made up of a series of classes implemented with @eieio{}.
+These classes define an interface that can be used to create different
+types of projects. 
+
+@ede{} defines two superclasses which are @code{ede-project} and
+@code{ede-target}.  All commands in @ede{} are usually meant to
+address the current project, or current target.
 
 All specific projects in @ede{} derive subclasses of the @ede{} superclasses.
 In this way, specific behaviors such as how a project is saved, or how a
@@ -671,36 +803,146 @@ these methods.  For details on different types of projects,
 @ref{Project types}.  @ref{(eieio)Top}. For details on using @eieio{} to
 extending classes, and writing methods.
 
-If you intend to extend @ede{}, it is most likely that a new target type is
-needed in one of the existing project types.  The rest of this chapter
-will discuss extending the @code{ede-project} class, and it's targets.
-See @file{project-am.el} for basic details on adding targets to it.
+Some example project types are:
 
-For the @code{ede-project} type, the core target class is called
-@code{ede-proj-target}.  Inheriting from this will give you everything
-you need to start, including adding your sources into the makefile.  If
-you also need additional rules in the makefile, you will want to inherit
-from @code{ede-proj-target-makefile} instead.  You may want to also add
-new fields to track important information.
+@table @code
+@item project-am
+Autmake project which reads existing Automake files.
+@item ede-proj-project
+This project type will create @file{Makefiles},
+or @file{Makefile.am} files to compile your project.
+@item ede-linux
+This project type will detect linux source trees.
+@item ede-emacs
+This proejct will detect an Emacs source tree.
+@end table
 
-If you are building currently unsupported code into a program or shared
-library, it is unlikely you need a new target at all.  Instead you
-would need to create a new compiler or linker object that compiles
-source code of the desired type. @ref{Compiler and Linker objects}.
+There are several other project types as well.
 
-Once your new class exists, you will want to fill in some basic methods.
-See the @file{ede-skel.el} file for examples of these.  The files
-@file{ede-proj-info.el} and @file{ede-proj-elisp.el} are two interesting
-examples.
+The first class you need to know to create a new project type is
+@code{ede-project-autoload}.  New instances of this class are needed
+to define how Emacs associates different files/buffers with different
+project types.  All the autoloads are kept in the variable
+@code{ede-project-class-files}.
 
-@menu
-* User interface methods::      Methods associated with keybindings
-* Base project methods::        The most basic methods on @ede{} objects.
-* Sourcecode objects::          Defining new sourcecode classes.
-* Compiler and Linker objects::  Defining new compilers and linkers.
-@end menu
+The next most important class to know is @code{ede-project}.  This is
+the baseclass defines how all projects behave.  The basic pattern for
+a project is that there is one project per directory, and the topmost
+project or directory defines the project as a whole.
 
-@node User interface methods, Base project methods, Extending EDE, Extending EDE
+Key features of @code{ede-project} are things like name and version
+number.  It also holds a list of @code{ede-target} objects and a list
+of sub projects, or more @code{ede-project} objects.
+
+New project types must subclass @code{ede-project} to add special
+behavior. New project types also need to subclass @code{ede-target} to
+add specialty behavior.
+
+In this way, the common @ede{} interface is designed to work against
+@code{ede-project}, and thus all subclasses.
+
+@code{ede-project} subclasses @code{ede-project-placeholder}.  This is
+the minimum necessary project needed to be cached between runs of
+Emacs.  This way, Emacs can track all projects ever seen, without
+loading those projects into memory.
+
+Here is a high-level UML diagram for the @ede{} system created with @cogre{}..
+
+@example
++-----------------------+        +-----------------------+
+|                       |        |ede-project-placeholder|
+|ede-project-class-files|        +-----------------------+
+|                       |        +-----------------------+
++-----------------------+        +-----------------------+
+           /\                                ^ 
+           \/                               /_\
+            |                                |
+ +--------------------+                +-----------+         +----------+
+ |ede-project-autoload|                |ede-project|         |ede-target|
+ +--------------------+<>--------------+-----------+<>-------+----------+
+ +--------------------+                +-----------+         +----------+
+ +--------------------+                +-----------+         +----------+
+                                             ^ 
+                                            /_\
+                                             |
+                       +---------------------+-----------------+
+                       |                     |                 |
+                       |                     |                 |
+                       |                     |                 |
+              +----------------+   +-------------------+  +---------+
+              |ede-proj-project|   |project-am-makefile|  |ede-emacs|
+              +----------------+   +-------------------+  +---------+
+              +----------------+   +-------------------+  +---------+
+              +----------------+   +-------------------+  +---------+
+@end example
+
+
+@node Detecting a Project
+@section Detecting a Project
+
+Project detection happens with the list of @code{ede-project-autoload}
+instances stored in @code{ede-project-class-files}.  The full project
+detection scheme works like this:
+
+@table @asis
+@item Step 1:
+@code{find-file-hooks} calls @code{ede-turn-on-hook} on BUFFER.
+@item Step 2:
+@code{ede-turn-on-hook} turns on @code{ede-minor-mode}
+@item Step 3:
+@code{ede-minor-mode} looks to see if BUFFER is assicated with any
+open projects.  If not, it calls @code{ede-load-project-file} to find
+a project associated with the current directory BUFFER is in.
+@item Step 4:
+@code{ede-minor-mode} associates the found project with the current
+buffer with a series of variables, such as @code{ede-object}, and
+@code{ede-object-project} and @code{ede-object-root-project}.
+@end table
+
+Once a buffer is associated, @ede{} minor mode commands will operate
+on that buffer.
+
+The function @code{ede-load-project-file} is at the heart of detecting
+projects, and it works by looping over all the known project autoload
+types in @code{ede-project-autoload} using the utility
+@code{ede-directory-project-p}.
+
+The function @code{ede-directory-project-p} will call
+@code{ede-dir-to-projectfile} on every @code{ede-project-autoload}
+until one of them returns true.  The method
+@code{ede-dir-to-projectfile} in turn gets the @code{:proj-file} slot
+from the autoload.  If it is a string (ie, a project file name), it
+checks to see if that exists in BUFFER's directory.  If it is a
+function, then it calls that function and expects it to return a file
+name or nil.  If the file exists, then this directory is assumed to be
+part of a project, and @code{ede-directory-project-p} returns the
+instance of @code{ede-project-autoload} that matched.
+
+If the current directory contains the file @code{.ede-ignore} then
+that directory is automatically assumed to contain no projects, even
+if there is a matching pattern.  Use this type of file in a directory
+that may contain many other sub projects, but still has a Makefile of
+some sort.
+
+If the current directory is a project, then @ede{} scans upwards till
+it finds the top of the project.  It does this by calling
+@code{ede-toplevel-project}.  If this hasn't already been discovered,
+the directories as scanned upward one at a time until a directory with
+no project is found.  The last found project becomes the project
+root.  If the ofund instance of @code{ede-project-autoload} has a
+valid @code{proj-root} slot value, then that function is called instead
+of scanning the project by hand.  Some project types have a short-cut
+for determining the root of a project, so this comes in handy.
+
+Getting back to @code{ede-load-project-file}, this now has an instance
+of @code{ede-project-autoload}.  It uses the @code{load-type} slot to
+both autoload in the project type, and to create a new instance of the
+project type found for the root of the project.  That project is added
+to the global list of all projects.  All subprojects are then created
+and assembled into the project data structures.
+
+
+@node User interface methods
 @section User interface methods
 
 These methods are core behaviors associated with user commands.
@@ -732,7 +974,7 @@ Make a distribution (tar archive) of the project.
 Rescan a project file, changing the data in the existing objects.
 @end table
 
-@node Base project methods, Sourcecode objects, User interface methods, Extending EDE
+@node Base project methods
 @section Base project methods
 
 These methods are important for querying base information from project
@@ -769,7 +1011,23 @@ stored in.
 List all documentation a project or target is responsible for.
 @end table
 
-@node Sourcecode objects, Compiler and Linker objects, Base project methods, Extending EDE
+@node EDE proj-project
+@section EDE proj-project
+
+The @ede{} proj-project is a project type that will build Makefiles.
+This project type stores data in a @file{Project.ede}, and implements
+new user commands for building a Makefile.
+
+This project type can be extended through the use of new Targets,
+@ref{Sourcecode objects}, or @ref{Compiler and Linker objects}.
+
+This project type could also be extended to support alternate forms of
+build systems, though no documentation has been setup for this.
+
+TODO - write more for this.  See cedet-devel mailing list for help here.
+
+
+@node Sourcecode objects
 @section Sourcecode objects
 
 @ede{} projects track source file / target associates via source code
@@ -793,9 +1051,9 @@ Here is an example for an instantiation of an Emacs Lisp source code object:
 @example
 (defvar ede-source-emacs
   (ede-sourcecode "ede-emacs-source"
-		  :name "Emacs Lisp"
-		  :sourcepattern "\\.el$"
-		  :garbagepattern '("*.elc"))
+                  :name "Emacs Lisp"
+                  :sourcepattern "\\.el$"
+                  :garbagepattern '("*.elc"))
   "Emacs Lisp source code definition.")
 @end example
 
@@ -815,7 +1073,7 @@ In this case, the garbage pattern is the same.
 
 @xref{Sourcecode}.
 
-@node Compiler and Linker objects,  , Sourcecode objects, Extending EDE
+@node Compiler and Linker objects
 @section Compiler and Linker objects
 
 In order for a target to create a @file{Makefile}, it must know how to

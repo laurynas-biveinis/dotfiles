@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede-util.el,v 1.4 2005/09/30 20:17:29 zappo Exp $
+;; RCS: $Id: ede-util.el,v 1.5 2010/03/15 13:40:54 xscript Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 ;;; Commentary:
 ;;
-;; Utilities that may not require project specific help, and oporate
+;; Utilities that may not require project specific help, and operate
 ;; on generic EDE structures.  Provide user level commands for activities
 ;; not directly related to source code organization or makefile generation.
 
@@ -65,9 +65,8 @@ their sources to VERSION."
 	   (oref this versionsource))
       (let ((vs (oref this versionsource)))
 	(while vs
-	  (save-excursion
-	    (set-buffer (find-file-noselect
-			 (ede-expand-filename this (car vs))))
+	  (with-current-buffer (find-file-noselect
+                            (ede-expand-filename this (car vs)))
 	    (goto-char (point-min))
 	    (let ((case-fold-search t))
 	      (if (re-search-forward "version:\\s-*\\([^ \t\n]+\\)" nil t)

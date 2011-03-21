@@ -1,9 +1,9 @@
 ;;; semantic-c.el --- Semantic details for C
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: semantic-c.el,v 1.116 2009/04/18 12:16:49 zappo Exp $
+;; X-RCS: $Id: semantic-c.el,v 1.145 2010/08/05 03:01:57 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -38,8 +38,10 @@
   (require 'semantic-imenu)
   (require 'semantic-tag-ls)
   (require 'senator)
-  (require 'cc-mode))
+  (require 'cc-mode)
+  )
 
+(require 'hideif)
 
 ;;; Compatibility
 ;;
@@ -62,6 +64,8 @@ This function does not do any hidden buffer changes."
   )
 
 ;;; Code:
+(define-child-mode c++-mode c-mode
+  "`c++-mode' uses the same parser as `c-mode'.")
 
 
 ;;; Include Paths
@@ -69,7 +73,7 @@ This function does not do any hidden buffer changes."
 (defcustom-mode-local-semantic-dependency-system-include-path
   c-mode semantic-c-dependency-system-include-path
   '("/usr/include")
-  "The system include path used by the C langauge.")
+  "The system include path used by the C language.")
 
 (defcustom semantic-default-c-path nil
   "Default set of include paths for C code.
@@ -127,8 +131,11 @@ part of the preprocessor map.")
 	      (when table
 		(when (semanticdb-needs-refresh-p table)
 		  (condition-case nil
-		      (semanticdb-refresh-table table)
-		    (error nil)))
+		      ;; Call with FORCE, as the file is very likely to
+		      ;; not be in a buffer.
+		      (semanticdb-refresh-table table t)
+		    (error (message "Error updating tables for %S"
+				    (object-name table)))))
 		(setq filemap (append filemap (oref table lexical-table)))
 		)
 	      ))))
@@ -148,7 +155,7 @@ part of the preprocessor map.")
 Each entry is a cons cell like this:
   ( \"KEYWORD\" . \"REPLACEMENT\" )
 Where KEYWORD is the macro that gets replaced in the lexical phase,
-and REPLACEMENT is a string that is inserted in it's place.  Empty string
+and REPLACEMENT is a string that is inserted in its place.  Empty string
 implies that the lexical analyzer will discard KEYWORD when it is encountered.
 
 Alternately, it can be of the form:
@@ -158,7 +165,7 @@ lexical analyzer, such as `symbol' or `string'.  The string in the
 second position is the text that makes up the replacement.  This is
 the way to have multiple lexical symbols in a replacement.  Using the
 first way to specify text like \"foo::bar\" would not work, because :
-is a sepearate lexical symbol.
+is a separate lexical symbol.
 
 A quick way to see what you would need to insert is to place a
 definition such as:
@@ -199,7 +206,7 @@ to store your global macros in a more natural way."
 
 ;;;###autoload
 (defcustom semantic-c-member-of-autocast 't
-  "Non-nil means classes with a '->' operator will cast to it's return type.
+  "Non-nil means classes with a '->' operator will cast to its return type.
 
 For Examples:
 
@@ -220,13 +227,13 @@ if `semantic-c-member-of-autocast' is nil :
 (define-lex-spp-macro-declaration-analyzer semantic-lex-cpp-define
   "A #define of a symbol with some value.
 Record the symbol in the semantic preprocessor.
-Return the the defined symbol as a special spp lex token."
+Return the defined symbol as a special spp lex token."
   "^\\s-*#\\s-*define\\s-+\\(\\(\\sw\\|\\s_\\)+\\)" 1
   (goto-char (match-end 0))
   (skip-chars-forward " \t")
   (if (eolp)
       nil
-    (let* ((name (buffer-substring-no-properties 
+    (let* ((name (buffer-substring-no-properties
 		  (match-beginning 1) (match-end 1)))
 	   (with-args (save-excursion
 			(goto-char (match-end 0))
@@ -256,7 +263,7 @@ Return the the defined symbol as a special spp lex token."
 (define-lex-spp-macro-undeclaration-analyzer semantic-lex-cpp-undef
   "A #undef of a symbol.
 Remove the symbol from the semantic preprocessor.
-Return the the defined symbol as a special spp lex token."
+Return the defined symbol as a special spp lex token."
   "^\\s-*#\\s-*undef\\s-+\\(\\(\\sw\\|\\s_\\)+\\)" 1)
 
 
@@ -272,7 +279,7 @@ values of the conditions in the #if blocks."
 (defun semantic-c-skip-conditional-section ()
   "Skip one section of a conditional.
 Moves forward to a matching #elif, #else, or #endif.
-Movers completely over balanced #if blocks."
+Moves completely over balanced #if blocks."
   (let ((done nil))
     ;; (if (looking-at "^\\s-*#if")
     ;; (semantic-lex-spp-push-if (point))
@@ -286,6 +293,8 @@ Movers completely over balanced #if blocks."
       (cond
        ((looking-at "^\\s-*#\\s-*if")
 	;; We found a nested if.  Skip it.
+	;; @TODO - can we use the new c-scan-conditionals
+	;; - available in Emacs/CVS as of AUG 2009
 	(c-forward-conditional 1))
        ((looking-at "^\\s-*#\\s-*elif")
 	;; We need to let the preprocessor analize this one.
@@ -305,34 +314,206 @@ Movers completely over balanced #if blocks."
 	;; We found an elif.  Stop here.
 	(setq done t))))))
 
+;;; HIDEIF USAGE:
+;; NOTE: All hideif using code was contributed by Brian Carlson as
+;;       copies from hideif plus modifications and additions.
+;;       Eric then converted things to use hideif functions directly,
+;;       deleting most of that code, and added the advice.
+
+;;; SPP SYM EVAL
+;;
+;; Convert SPP symbols into values usable by hideif.
+;;
+;; @TODO - can these conversion fcns be a part of semantic-lex-spp.el?
+;;       -- TRY semantic-lex-spp-one-token-to-txt
+(defun semantic-c-convert-spp-value-to-hideif-value (symbol macrovalue)
+  "Convert an spp macro SYMBOL MACROVALUE, to something that hideif can use.
+Take the first interesting thing and convert it."
+  ;; Just warn for complex macros.
+  (when (> (length macrovalue) 1)
+    (semantic-push-parser-warning
+     (format "Complex macro value (%s) may be improperly evaluated. "
+	     symbol) 0 0))
+
+  (let* ((lextoken (car macrovalue))
+	 (key (semantic-lex-token-class lextoken))
+	 (value (semantic-lex-token-text lextoken)))
+    (cond
+     ((eq key 'number) (string-to-number value))
+     ((eq key 'symbol) (semantic-c-evaluate-symbol-for-hideif value))
+     ((eq key 'string)
+      (if (string-match "^[0-9]+L?$" value)
+	  ;; If it matches a number expression, then
+	  ;; convert to a number.
+	  (string-to-number value)
+	value))
+     (t (semantic-push-parser-warning
+	 (format "Unknown macro value. Token class = %s value = %s. " key value)
+	 0 0)
+      nil)
+     )))
+
+(defun semantic-c-evaluate-symbol-for-hideif (spp-symbol)
+  "Lookup the symbol SPP-SYMBOL (a string) to something hideif can use.
+Pulls out the symbol list, and call `semantic-c-convert-spp-value-to-hideif-value'."
+  (interactive "sSymbol name: ")
+  (when (symbolp spp-symbol) (setq spp-symbol (symbol-name spp-symbol)))
+
+  (if (semantic-lex-spp-symbol-p spp-symbol )
+      ;; Convert the symbol into a stream of tokens from the macro which we
+      ;; can then interpret.
+      (let ((stream (semantic-lex-spp-symbol-stream spp-symbol)))
+	(cond
+	 ;; Empyt string means defined, so t.
+	 ((null stream) t)
+	 ;; A list means a parsed macro stream.
+	 ((listp stream)
+	  ;; Convert the macro to something we can return.
+	  (semantic-c-convert-spp-value-to-hideif-value spp-symbol stream))
+
+	 ;; Strings might need to be turned into numbers
+	 ((stringp stream)
+	  (if (string-match "^[0-9]+L?$" stream)
+	      ;; If it matches a number expression, then convert to a
+	      ;; number.
+	      (string-to-number stream)
+	    stream))
+
+	 ;; Just return the stream.  A user might have just stuck some
+	 ;; value in it directly.
+	 (t stream)
+	 ))
+    ;; Else, store an error, return nil.
+    (progn
+      (semantic-push-parser-warning
+       (format "SPP Symbol %s not available" spp-symbol)
+       (point) (point))
+      nil)))
+
+;;; HIDEIF HACK support fcns
+;;
+;; These fcns can replace the impl of some hideif features.
+;;
+;; @TODO - Should hideif and semantic-c merge?
+;;       I picture a grammar just for CPP that expands into
+;;       a second token stream for the parser.
+(defun semantic-c-hideif-lookup (var)
+  "Replacement for `hif-lookup'.
+I think it just gets the value for some CPP variable VAR."
+  (let ((val (semantic-c-evaluate-symbol-for-hideif
+              (cond
+               ((stringp var) var)
+               ((symbolp var) (symbol-name var))
+               (t "Unable to determine var")))))
+    (if val
+	val
+      ;; Real hideif will return the right undefined symbol.
+      nil)))
+
+(defun semantic-c-hideif-defined (var)
+  "Replacement for `hif-defined'.
+I think it just returns t/nil dependent on if VAR has been defined."
+  (let ((var-symbol-name
+          (cond
+           ((symbolp var) (symbol-name var))
+           ((stringp var) var)
+           (t "Not A Symbol"))))
+    (if (not (semantic-lex-spp-symbol-p var-symbol-name))
+        (progn
+          (semantic-push-parser-warning
+	   (format "Skip %s" (buffer-substring-no-properties
+			      (point-at-bol) (point-at-eol)))
+	   (point-at-bol) (point-at-eol))
+          nil)
+      t)))
+
+;;; HIDEIF ADVICE
+;;
+;; Advise hideif functions to use our lexical tables instead.
+(defvar semantic-c-takeover-hideif nil
+  "Non-nil when Semantic is taking over hideif features.")
+
+(defadvice hif-defined (around semantic-c activate)
+  "Is the variable defined?"
+  (if semantic-c-takeover-hideif
+      (setq ad-return-value
+	    (semantic-c-hideif-defined (ad-get-arg 0)))
+    ad-do-it))
+
+(defadvice hif-lookup (around semantic-c activate)
+  "Is the argument defined?  Return true or false."
+  (let ((ans nil))
+    (when semantic-c-takeover-hideif
+      (setq ans (semantic-c-hideif-lookup (ad-get-arg 0))))
+    (if (null ans)
+	ad-do-it
+      (setq ad-return-value ans))))
+
+;;; #if macros
+;;
+;; Support #if macros by evaluating the values via use of hideif
+;; logic.  See above for hacks to make this work.
 (define-lex-regex-analyzer semantic-lex-c-if
   "Code blocks wrapped up in #if, or #ifdef.
 Uses known macro tables in SPP to determine what block to skip."
-  "^\\s-*#\\s-*\\(if\\|ifndef\\|ifdef\\|elif\\)\\s-+\\(!?defined(\\|\\)\\s-*\\(\\(\\sw\\|\\s_\\)+\\)\\(\\s-*)\\)?\\s-*$"
+  "^\\s-*#\\s-*\\(if\\|elif\\).*$"
   (semantic-c-do-lex-if))
 
 (defun semantic-c-do-lex-if ()
+  "Handle lexical CPP if statements.
+Enables a takeover of some hideif functions, then uses hideif to
+evaluate the #if expression and enables us to make decisions on which
+code to parse."
+  ;; Enable our advice, and use hideif to parse.
+  (let* ((semantic-c-takeover-hideif t)
+	 (parsedtokelist
+	  (condition-case nil
+	      ;; This is imperfect, so always assume on error.
+	      (hif-canonicalize)
+	    (error nil))))
+
+    (let ((eval-form (eval parsedtokelist)))
+      (if (or (not eval-form)
+              (and (numberp eval-form)
+                   (equal eval-form 0)));; ifdefline resulted in false
+
+	;; The if indicates to skip this preprocessor section
+	(let ((pt nil))
+	  (semantic-push-parser-warning (format "Skip %s" (buffer-substring-no-properties (point-at-bol) (point-at-eol)))
+					(point-at-bol) (point-at-eol))
+	  (beginning-of-line)
+	  (setq pt (point))
+	  ;; This skips only a section of a conditional.  Once that section
+	  ;; is opened, encountering any new #else or related conditional
+	  ;; should be skipped.
+	  (semantic-c-skip-conditional-section)
+	  (setq semantic-lex-end-point (point))
+	  
+	  ;; @TODO -somewhere around here, we also need to skip
+	  ;; other sections of the conditional.
+
+	  nil)
+      ;; Else, don't ignore it, but do handle the internals.
+      (end-of-line)
+      (setq semantic-lex-end-point (point))
+      nil))))
+
+(define-lex-regex-analyzer semantic-lex-c-ifdef
+  "Code blocks wrapped up in #ifdef.
+Uses known macro tables in SPP to determine what block to skip."
+  "^\\s-*#\\s-*\\(ifndef\\|ifdef\\)\\s-+\\(\\(\\sw\\|\\s_\\)+\\)$"
+  (semantic-c-do-lex-ifdef))
+
+(defun semantic-c-do-lex-ifdef ()
   "Handle lexical CPP if statements."
   (let* ((sym (buffer-substring-no-properties
-	       (match-beginning 3) (match-end 3)))
-	 (defstr (buffer-substring-no-properties
-		  (match-beginning 2) (match-end 2)))
-	 (defined (string= defstr "defined("))
-	 (notdefined (string= defstr "!defined("))
+	       (match-beginning 2) (match-end 2)))
 	 (ift (buffer-substring-no-properties
 	       (match-beginning 1) (match-end 1)))
-	 (ifdef (or (string= ift "ifdef")
-		    (and (string= ift "if") defined)
-		    (and (string= ift "elif") defined)
-		    ))
-	 (ifndef (or (string= ift "ifndef")
-		     (and (string= ift "if") notdefined)
-		     (and (string= ift "elif") notdefined)
-		     ))
+	 (ifdef (string= ift "ifdef"))
+	 (ifndef (string= ift "ifndef"))
 	 )
-    (if (or (and (or (string= ift "if") (string= ift "elif"))
-		 (string= sym "0"))
-	    (and ifdef (not (semantic-lex-spp-symbol-p sym)))
+    (if (or (and ifdef (not (semantic-lex-spp-symbol-p sym)))
 	    (and ifndef (semantic-lex-spp-symbol-p sym)))
 	;; The if indecates to skip this preprocessor section
 	(let ((pt nil))
@@ -347,14 +528,16 @@ Uses known macro tables in SPP to determine what block to skip."
 	  (setq semantic-lex-end-point (point))
 	  (semantic-push-parser-warning (format "Skip #%s %s" ift sym)
 					pt (point))
-;;	  (semantic-lex-push-token
-;;	   (semantic-lex-token 'c-preprocessor-skip pt (point)))
+	  ;;	  (semantic-lex-push-token
+	  ;;	   (semantic-lex-token 'c-preprocessor-skip pt (point)))
 	  nil)
       ;; Else, don't ignore it, but do handle the internals.
       ;;(message "%s %s no" ift sym)
       (end-of-line)
       (setq semantic-lex-end-point (point))
       nil)))
+
+;;; END HIDEIF HACKS
 
 (define-lex-regex-analyzer semantic-lex-c-macro-else
   "Ignore an #else block.
@@ -396,7 +579,7 @@ case, we must skip it since it is the ELSE part."
     (cons (buffer-substring-no-properties (match-beginning 1)
 					  (match-end 1))
 	  nil))
-  
+
 
 (define-lex-regex-analyzer semantic-lex-c-ignore-ending-backslash
   "Skip backslash ending a line.
@@ -412,7 +595,7 @@ Go to the next line."
 	 (sym-end (match-end 2))
 	 (ms (buffer-substring-no-properties sym-start sym-end)))
     ;; Push the namespace keyword.
-    (semantic-lex-push-token 
+    (semantic-lex-push-token
      (semantic-lex-token 'NAMESPACE (match-beginning 0) nsend "namespace"))
     ;; Push the name.
     (semantic-lex-push-token
@@ -429,6 +612,41 @@ Go to the next line."
 			   (list 'prefix-fake)))))
   (setq semantic-lex-end-point (point)))
 
+(defcustom semantic-lex-c-nested-namespace-ignore-second t
+  "Should _GLIBCXX_BEGIN_NESTED_NAMESPACE ignore the second namespace?
+It is really there, but if a majority of uses is to squeeze out
+the second namespace in use, then it should not be included.
+
+If you are having problems with smart completion and STL templates,
+it may be that this is set incorrectly.  After changing the value
+of this flag, you will need to delete any semanticdb cache files
+that may have been incorrectly parsed."
+  :group 'semantic
+  :type 'boolean)
+
+(define-lex-regex-analyzer semantic-lex-c-VC++-begin-std-namespace
+  "Handle VC++'s definition of the std namespace."
+  "\\(_STD_BEGIN\\)"
+  (semantic-lex-push-token
+   (semantic-lex-token 'NAMESPACE (match-beginning 0) (match-end 0) "namespace"))
+  (semantic-lex-push-token
+   (semantic-lex-token 'symbol (match-beginning 0) (match-end 0) "std"))
+  (goto-char (match-end 0))
+  (let ((start (point))
+	(end 0))
+    (when (re-search-forward "_STD_END" nil t)
+      (setq end (point))
+      (semantic-lex-push-token
+       (semantic-lex-token 'semantic-list start end
+			   (list 'prefix-fake)))))
+  (setq semantic-lex-end-point (point)))
+
+(define-lex-regex-analyzer semantic-lex-c-VC++-end-std-namespace
+  "Handle VC++'s definition of the std namespace."
+  "\\(_STD_END\\)"
+  (goto-char (match-end 0))
+  (setq semantic-lex-end-point (point)))
+
 (define-lex-regex-analyzer semantic-lex-c-namespace-begin-nested-macro
   "Handle G++'s namespace macros which the pre-processor can't handle."
   "\\(_GLIBCXX_BEGIN_NESTED_NAMESPACE\\)(\\s-*\\(\\(?:\\w\\|\\s_\\)+\\)\\s-*,\\s-*\\(\\(?:\\w\\|\\s_\\)+\\)\\s-*)"
@@ -441,7 +659,7 @@ Go to the next line."
 	 (sym2-end (match-end 3))
 	 (ms2 (buffer-substring-no-properties sym2-start sym2-end)))
     ;; Push the namespace keyword.
-    (semantic-lex-push-token 
+    (semantic-lex-push-token
      (semantic-lex-token 'NAMESPACE (match-beginning 0) nsend "namespace"))
     ;; Push the name.
     (semantic-lex-push-token
@@ -453,19 +671,25 @@ Go to the next line."
       ;; If we can't find a matching end, then create the fake list.
       (when (re-search-forward "_GLIBCXX_END_NESTED_NAMESPACE" nil t)
 	(setq end (point))
-	(semantic-lex-push-token
-	 (semantic-lex-token 'semantic-list start end
-			     ;; We'll depend on a quick hack
-			     (list 'prefix-fake-plus
-				   (semantic-lex-token 'NAMESPACE 
-						       sym-end sym2-start
-						       "namespace")
-				   (semantic-lex-token 'symbol
-						       sym2-start sym2-end
-						       ms2)
-				   (semantic-lex-token 'semantic-list start end
-						       (list 'prefix-fake)))
-			     ))
+	(if semantic-lex-c-nested-namespace-ignore-second
+	    ;; The same as _GLIBCXX_BEGIN_NAMESPACE
+	    (semantic-lex-push-token
+	     (semantic-lex-token 'semantic-list start end
+				 (list 'prefix-fake)))
+	  ;; Do both the top and second level namespace
+	  (semantic-lex-push-token
+	   (semantic-lex-token 'semantic-list start end
+			       ;; We'll depend on a quick hack
+			       (list 'prefix-fake-plus
+				     (semantic-lex-token 'NAMESPACE
+							 sym-end sym2-start
+							 "namespace")
+				     (semantic-lex-token 'symbol
+							 sym2-start sym2-end
+							 ms2)
+				     (semantic-lex-token 'semantic-list start end
+							 (list 'prefix-fake)))
+			       )))
 	)))
   (setq semantic-lex-end-point (point)))
 
@@ -506,6 +730,7 @@ Use semantic-cpp-lexer for parsing text inside a CPP macro."
   ;; C preprocessor features
   semantic-lex-cpp-define
   semantic-lex-cpp-undef
+  semantic-lex-c-ifdef
   semantic-lex-c-if
   semantic-lex-c-macro-else
   semantic-lex-c-macrobits
@@ -523,6 +748,8 @@ Use semantic-cpp-lexer for parsing text inside a CPP macro."
   semantic-lex-c-namespace-begin-macro
   semantic-lex-c-namespace-begin-nested-macro
   semantic-lex-c-namespace-end-macro
+  semantic-lex-c-VC++-begin-std-namespace
+  semantic-lex-c-VC++-end-std-namespace
   ;; Handle macros, symbols, and keywords
   semantic-lex-spp-replace-or-symbol-or-keyword
   semantic-lex-charquote
@@ -566,9 +793,9 @@ Use semantic-cpp-lexer for parsing text inside a CPP macro."
   semantic-lex-punctuation
   semantic-lex-default-action)
 
-(define-mode-local-override semantic-parse-region c-mode 
+(define-mode-local-override semantic-parse-region c-mode
   (start end &optional nonterminal depth returnonerror)
-  "Calls 'semantic-parse-region-default', except in a macro expansion.
+  "Calls `semantic-parse-region-default', except in a macro expansion.
 MACRO expansion mode is handled through the nature of Emacs's non-lexical
 binding of variables.
 START, END, NONTERMINAL, DEPTH, and RETURNONERRORS are the same
@@ -596,7 +823,7 @@ as for the parent."
 		   )
 	      (progn
 		(setq depth 0)
-		
+
 		;; This is a copy of semantic-parse-region-default where we
 		;; are doing something special with the lexication of the
 		;; contents of the semantic-list token.  Stuff not used by C
@@ -620,7 +847,7 @@ as for the parent."
 
 	    ;; It was not a macro expansion, nor a special semantic-list.
 	    ;; Do old thing.
-	    (semantic-parse-region-default start end 
+	    (semantic-parse-region-default start end
 					   nonterminal depth
 					   returnonerror)
 	    )))
@@ -628,6 +855,9 @@ as for the parent."
     (semantic-parse-region-default start end nonterminal
 				   depth returnonerror)
     ))
+
+(defvar semantic-c-parse-token-hack-depth 0
+  "Current depth of recursive calls to `semantic-c-parse-lexical-token'.")
 
 (defun semantic-c-parse-lexical-token (lexicaltoken nonterminal depth
 						    returnonerror)
@@ -637,7 +867,9 @@ The text of the token is inserted into a different buffer, and
 parsed there.
 Argument NONTERMINAL, DEPTH, and RETURNONERROR are passed into
 the regular parser."
-  (let* ((buf (get-buffer-create " *C parse hack*"))
+  (let* ((semantic-c-parse-token-hack-depth (1+ semantic-c-parse-token-hack-depth))
+	 (buf (get-buffer-create (format " *C parse hack %d*"
+					 semantic-c-parse-token-hack-depth)))
 	 (mode major-mode)
 	 (spp-syms semantic-lex-spp-dynamic-macro-symbol-obarray)
 	 (stream nil)
@@ -646,146 +878,292 @@ the regular parser."
 	 (symtext (semantic-lex-token-text lexicaltoken))
 	 (macros (get-text-property 0 'macros symtext))
 	 )
-    (save-excursion
-      (set-buffer buf)
-      (erase-buffer)
-      (when (not (eq major-mode mode))
-	(funcall mode)
-	;; Hack in mode-local
-	(activate-mode-local-bindings)
-	;; CHEATER!  The following 3 lines are from
-	;; `semantic-new-buffer-fcn', but we don't want to turn
-	;; on all the other annoying modes for this little task.
-	(setq semantic-new-buffer-fcn-was-run t)
-	(semantic-lex-init)
-	(semantic-clear-toplevel-cache)
-	(remove-hook 'semantic-lex-reset-hooks 'semantic-lex-spp-reset-hook
-		     t)
-	)
-      ;; Get the macro symbol table right.
-      (setq semantic-lex-spp-dynamic-macro-symbol-obarray spp-syms)
-      ;; (message "%S" macros)
-      (dolist (sym macros)
-	(semantic-lex-spp-symbol-set (car sym) (cdr sym)))
+    (if (> semantic-c-parse-token-hack-depth 5)
+	nil
+      (with-current-buffer buf
+	(erase-buffer)
+	(when (not (eq major-mode mode))
+	  (save-match-data
 
-      (insert symtext)
+	    ;; Protect against user hooks throwing errors.
+	    (condition-case nil
+		(funcall mode)
+	      (error
+	       (if (y-or-n-p
+		    (format "There was an error initializing %s in buffer \"%s\".  Debug your hooks? "
+			    mode (buffer-name)))
+		   (semantic-c-debug-mode-init mode)
+		 (message "Macro parsing state may be broken...")
+		 (sit-for 1))))
+	    )				; save match data
+	
+	  ;; Hack in mode-local
+	  (activate-mode-local-bindings)
+	  ;; CHEATER!  The following 3 lines are from
+	  ;; `semantic-new-buffer-fcn', but we don't want to turn
+	  ;; on all the other annoying modes for this little task.
+	  (setq semantic-new-buffer-fcn-was-run t)
+	  (semantic-lex-init)
+	  (semantic-clear-toplevel-cache)
+	  (remove-hook 'semantic-lex-reset-hooks 'semantic-lex-spp-reset-hook
+		       t)
+	  )
+	;; Get the macro symbol table right.
+	(setq semantic-lex-spp-dynamic-macro-symbol-obarray spp-syms)
+	;; (message "%S" macros)
+	(dolist (sym macros)
+	  (semantic-lex-spp-symbol-set (car sym) (cdr sym)))
 
-      (setq stream
-	    (semantic-parse-region-default
-	     (point-min) (point-max) nonterminal depth returnonerror))
+	(insert symtext)
 
-      ;; Clean up macro symbols
-      (dolist (sym macros)
-	(semantic-lex-spp-symbol-remove (car sym)))
+	(setq stream
+	      (semantic-parse-region-default
+	       (point-min) (point-max) nonterminal depth returnonerror))
 
-      ;; Convert the text of the stream.
-      (dolist (tag stream)
-	;; Only do two levels here 'cause I'm lazy.
-	(semantic--tag-set-overlay tag (list start end))
-	(dolist (stag (semantic-tag-components-with-overlays tag))
-	  (semantic--tag-set-overlay stag (list start end))
-	  ))
-      )
+	;; Clean up macro symbols
+	(dolist (sym macros)
+	  (semantic-lex-spp-symbol-remove (car sym)))
+
+	;; Convert the text of the stream.
+	(dolist (tag stream)
+	  ;; Only do two levels here 'cause I'm lazy.
+	  (semantic--tag-set-overlay tag (list start end))
+	  (dolist (stag (semantic-tag-components-with-overlays tag))
+	    (semantic--tag-set-overlay stag (list start end))
+	    ))
+	))
     stream))
 
+(defvar semantic-c-debug-mode-init-last-mode nil
+  "The most recent mode needing debugging.")
+
+(defun semantic-c-debug-mode-init (mm)
+  "Debug mode init for major mode MM after we're done parsing now."
+  (interactive (list semantic-c-debug-mode-init-last-mode))
+  (if (cedet-called-interactively-p 'interactive)
+      ;; Do the debug.
+      (progn
+	(switch-to-buffer (get-buffer-create "*MODE HACK TEST*"))
+	(let ((debug-on-error t))
+	  (funcall mm)))
+
+    ;; Notify about the debug
+    (setq semantic-c-debug-mode-init-last-mode mm)
+
+    (add-hook 'post-command-hook 'semantic-c-debug-mode-init-pch)))
+
+(defun semantic-c-debug-mode-init-pch ()
+  "Notify user about needing to debug their major mode hooks."
+  (let ((mm semantic-c-debug-mode-init-last-mode))
+    (switch-to-buffer-other-window
+     (get-buffer-create "*MODE HACK TEST*"))
+    (erase-buffer)
+    (insert "A failure occurred while parsing your buffers.
+
+The failure occurred while attempting to initialize " (symbol-name mm) " in a
+buffer not associated with a file.  To debug this problem, type
+
+M-x semantic-c-debug-mode-init
+
+now.
+")
+    (remove-hook 'post-command-hook 'semantic-c-debug-mode-init-pch)))
+  
 (defun semantic-expand-c-tag (tag)
   "Expand TAG into a list of equivalent tags, or nil."
-  (cond ((eq (semantic-tag-class tag) 'extern)
-	 ;; We have hit an exter "C" command with a list after it.
-	 (let* ((mb (semantic-tag-get-attribute tag :members))
-		(ret mb))
-	   (while mb
-	     (let ((mods (semantic-tag-get-attribute (car mb) :typemodifiers)))
-	       (setq mods (cons "extern" (cons "\"C\"" mods)))
-	       (semantic-tag-put-attribute (car mb) :typemodifiers mods))
-	     (setq mb (cdr mb)))
-	   ret))
-	((listp (car tag))
-	 (cond ((eq (semantic-tag-class tag) 'variable)
-		;; The name part comes back in the form of:
-		;; ( NAME NUMSTARS BITS ARRAY ASSIGN )
-		(let ((vl nil)
-		      (basety (semantic-tag-type tag))
-		      (ty "")
-		      (mods (semantic-tag-get-attribute tag :typemodifiers))
-		      (suffix "")
-		      (lst (semantic-tag-name tag))
-		      (default nil)
-		      (cur nil))
-		  (while lst
-		    (setq suffix "" ty "")
-		    (setq cur (car lst))
-		    (if (nth 2 cur)
-			(setq suffix (concat ":" (nth 2 cur))))
-		    (if (= (length basety) 1)
-			(setq ty (car basety))
-		      (setq ty basety))
-		    (setq default (nth 4 cur))
-		    (setq vl (cons
-			      (semantic-tag-new-variable
-			       (car cur) ;name
-			       ty	;type
-			       (if default
-				   (buffer-substring-no-properties
-				    (car default) (car (cdr default))))
-			       :constant-flag (semantic-tag-variable-constant-p tag)
-			       :suffix suffix
-			       :typemodifiers mods
-			       :dereference (length (nth 3 cur))
-			       :pointer (nth 1 cur)
-			       :reference (semantic-tag-get-attribute tag :reference)
-			       :documentation (semantic-tag-docstring tag) ;doc
-			       )
-			      vl))
-		    (semantic--tag-copy-properties tag (car vl))
-		    (semantic--tag-set-overlay (car vl)
-					       (semantic-tag-overlay tag))
-		    (setq lst (cdr lst)))
-		  vl))
-	       ((eq (semantic-tag-class tag) 'type)
-		;; We may someday want to add an extra check for a type
-		;; of type "typedef".
-		;; Each elt of NAME is ( STARS NAME )
-		(let ((vl nil)
-		      (names (semantic-tag-name tag)))
-		  (while names
-		    (setq vl (cons (semantic-tag-new-type
-				    (nth 1 (car names)) ; name
-				    "typedef"
-				    (semantic-tag-type-members tag)
-				    ;; parent is just tbe name of what
-				    ;; is passed down as a tag.
-				    (list
-				     (semantic-tag-name
-				      (semantic-tag-type-superclasses tag)))
-				    :pointer
-				    (let ((stars (car (car (car names)))))
-				      (if (= stars 0) nil stars))
-				    ;; This specifies what the typedef
-				    ;; is expanded out as.  Just the
-				    ;; name shows up as a parent of this
-				    ;; typedef.
-				    :typedef
-				    (semantic-tag-get-attribute tag :superclasses)
-				    ;;(semantic-tag-type-superclasses tag)
-				    :documentation
-				    (semantic-tag-docstring tag))
-				   vl))
-		    (semantic--tag-copy-properties tag (car vl))
-		    (semantic--tag-set-overlay (car vl)
-					       (semantic-tag-overlay tag))
-		    (setq names (cdr names)))
-		  vl))
-	       ((and (listp (car tag))
-		     (eq (semantic-tag-class (car tag)) 'variable))
-		;; Argument lists come in this way.  Append all the expansions!
-		(let ((vl nil))
-		  (while tag
-		    (setq vl (append (semantic-tag-components (car vl))
-				     vl)
-			  tag (cdr tag)))
-		  vl))
-	       (t nil)))
+  (let ((return-list nil)
+	)
+    ;; Expand an EXTERN C first.
+    (when (eq (semantic-tag-class tag) 'extern)
+      (let* ((mb (semantic-tag-get-attribute tag :members))
+	     (ret mb))
+	(while mb
+	  (let ((mods (semantic-tag-get-attribute (car mb) :typemodifiers)))
+	    (setq mods (cons "extern" (cons "\"C\"" mods)))
+	    (semantic-tag-put-attribute (car mb) :typemodifiers mods))
+	  (setq mb (cdr mb)))
+	(setq return-list ret)))
+
+    ;; Function or variables that have a :type that is some complex
+    ;; thing, extract it, and replace it with a reference.
+    ;;
+    ;; Thus, struct A { int a; } B;
+    ;;
+    ;; will create 2 toplevel tags, one is type A, and the other variable B
+    ;; where the :type of B is just a type tag A that is a prototype, and
+    ;; the actual struct info of A is it's own toplevel tag.
+    (when (or (semantic-tag-of-class-p tag 'function)
+	      (semantic-tag-of-class-p tag 'variable))
+      (let* ((basetype (semantic-tag-type tag))
+	     (typeref nil)
+	     (tname (when (consp basetype)
+		      (semantic-tag-name basetype))))
+	;; Make tname be a string.
+	(when (consp tname) (setq tname (car (car tname))))
+	;; Is the basetype a full type with a name of its own?
+	(when (and basetype (semantic-tag-p basetype)
+		   (not (semantic-tag-prototype-p basetype))
+		   tname
+		   (not (string= tname "")))
+	  ;; a type tag referencing the type we are extracting.
+	  (setq typeref (semantic-tag-new-type
+			 (semantic-tag-name basetype)
+			 (semantic-tag-type basetype)
+			 nil nil
+			 :prototype t))
+	  ;; Convert original tag to only have a reference.
+	  (setq tag (semantic-tag-copy tag))
+	  (semantic-tag-put-attribute tag :type typeref)
+	  ;; Convert basetype to have the location information.
+	  (semantic--tag-copy-properties tag basetype)
+	  (semantic--tag-set-overlay basetype
+				     (semantic-tag-overlay tag))
+	  ;; Store the base tag as part of the return list.
+	  (setq return-list (cons basetype return-list)))))
+
+    ;; Name of the tag is a list, so expand it.  Tag lists occur
+    ;; for variables like this: int var1, var2, var3;
+    ;;
+    ;; This will expand that to 3 tags that happen to share the
+    ;; same overlay information.
+    (if (consp (semantic-tag-name tag))
+	(let ((rl (semantic-expand-c-tag-namelist tag)))
+	  (cond
+	   ;; If this returns nothing, then return nil overall
+	   ;; because that will restore the old TAG input.
+	   ((not rl) (setq return-list nil))
+	   ;; If we have a return, append it to the existing list
+	   ;; of returns.
+	   ((consp rl)
+	    (setq return-list (append rl return-list)))
+	   ))
+      ;; If we didn't have a list, but the return-list is non-empty,
+      ;; that means we still need to take our existing tag, and glom
+      ;; it onto our extracted type.
+      (if (consp return-list)
+	  (setq return-list (cons tag return-list)))
+      )
+
+    ;; Default, don't change the tag means returning nil.
+    return-list))
+
+(defun semantic-expand-c-tag-namelist (tag)
+  "Expand TAG whose name is a list into a list of tags, or nil."
+  (cond ((semantic-tag-of-class-p tag 'variable)
+	 ;; The name part comes back in the form of:
+	 ;; ( NAME NUMSTARS BITS ARRAY ASSIGN )
+	 (let ((vl nil)
+	       (basety (semantic-tag-type tag))
+	       (ty "")
+	       (mods (semantic-tag-get-attribute tag :typemodifiers))
+	       (suffix "")
+	       (lst (semantic-tag-name tag))
+	       (default nil)
+	       (cur nil))
+	   ;; Open up each name in the name list.
+	   (while lst
+	     (setq suffix "" ty "")
+	     (setq cur (car lst))
+	     (if (nth 2 cur)
+		 (setq suffix (concat ":" (nth 2 cur))))
+	     (if (= (length basety) 1)
+		 (setq ty (car basety))
+	       (setq ty basety))
+	     (setq default (nth 4 cur))
+	     (setq vl (cons
+		       (semantic-tag-new-variable
+			(car cur)	;name
+			ty		;type
+			(if default
+			    (buffer-substring-no-properties
+			     (car default) (car (cdr default))))
+			:constant-flag (semantic-tag-variable-constant-p tag)
+			:suffix suffix
+			:typemodifiers mods
+			:dereference (length (nth 3 cur))
+			:pointer (nth 1 cur)
+			:reference (semantic-tag-get-attribute tag :reference)
+			:documentation (semantic-tag-docstring tag) ;doc
+			)
+		       vl))
+	     (semantic--tag-copy-properties tag (car vl))
+	     (semantic--tag-set-overlay (car vl)
+					(semantic-tag-overlay tag))
+	     (setq lst (cdr lst)))
+	   ;; Return the list
+	   (nreverse vl)))
+	((semantic-tag-of-class-p tag 'type)
+	 ;; We may someday want to add an extra check for a type
+	 ;; of type "typedef".
+	 ;; Each elt of NAME is ( STARS NAME )
+	 (let ((vl nil)
+	       (names (semantic-tag-name tag))
+	       (super (semantic-tag-get-attribute tag :superclasses))
+	       (addlast nil))
+
+	   (when (and (semantic-tag-of-type-p tag "typedef")
+		      (semantic-tag-of-class-p super 'type)
+		      (semantic-tag-type-members super))
+	     ;; This is a typedef of a real type.  Extract
+	     ;; the super class, and stick it into the tags list.
+	     (setq addlast super)
+
+	     ;; Clone super and remove the members IFF super has a name.
+	     ;; Note: anonymous struct/enums that are typedef'd shouldn't
+	     ;; exist in the top level type list, so they will appear only
+	     ;; in the :typedef slot of the typedef.
+	     (setq super (semantic-tag-clone super))
+	     (if (not (string= (semantic-tag-name super) ""))
+		 (semantic-tag-put-attribute super :members nil)
+	       (setq addlast nil))
+
+	     ;; Add in props to the full superclass.
+	     (when addlast
+	       (semantic--tag-copy-properties tag addlast)
+	       (semantic--tag-set-overlay addlast (semantic-tag-overlay tag)))
+	     )
+
+	   
+	   (while names
+
+	     (setq vl (cons (semantic-tag-new-type
+			     (nth 1 (car names)) ; name
+			     "typedef"
+			     (semantic-tag-type-members tag)
+			     ;; parent is just tbe name of what
+			     ;; is passed down as a tag.
+			     (list
+			      (semantic-tag-name
+			       (semantic-tag-type-superclasses tag)))
+			     :pointer
+			     (let ((stars (car (car (car names)))))
+			       (if (= stars 0) nil stars))
+			     ;; This specifies what the typedef
+			     ;; is expanded out as.  Just the
+			     ;; name shows up as a parent of this
+			     ;; typedef.
+			     :typedef super
+			     ;;(semantic-tag-type-superclasses tag)
+			     :documentation
+			     (semantic-tag-docstring tag))
+			    vl))
+	     (semantic--tag-copy-properties tag (car vl))
+	     (semantic--tag-set-overlay (car vl) (semantic-tag-overlay tag))
+	     (setq names (cdr names)))
+
+	   ;; Add typedef superclass last.
+	   (when addlast (setq vl (cons addlast vl)))
+
+	   vl))
+	((and (listp (car tag))
+	      (semantic-tag-of-class-p (car tag) 'variable))
+	 ;; Argument lists come in this way.  Append all the expansions!
+	 (let ((vl nil))
+	   (while tag
+	     (setq vl (append (semantic-tag-components (car vl))
+			      vl)
+		   tag (cdr tag)))
+	   vl))
 	(t nil)))
 
 (defvar-mode-local c-mode semantic-tag-expand-function 'semantic-expand-c-tag
@@ -795,7 +1173,7 @@ the regular parser."
   "At parse time, assign a class or struct name text here.
 It is picked up by `semantic-c-reconstitute-token' to determine
 if something is a constructor.  Value should be:
-  ( TYPENAME .  TYPEOFTYPE)
+  (TYPENAME .  TYPEOFTYPE)
 where typename is the name of the type, and typeoftype is \"class\"
 or \"struct\".")
 
@@ -827,10 +1205,10 @@ Optional argument STAR and REF indicate the number of * and & in the typedef."
 					(car tokenpart)))
 			  (and (stringp (car (nth 2 tokenpart)))
 			       (string= (car (nth 2 tokenpart)) (car tokenpart)))
+			  (nth 10 tokenpart) ; initializers
 			  )
 		      (not (car (nth 3 tokenpart)))))
-		(fcnpointer (and (string-match "^\\*" (car tokenpart))
-				 (string-match "[a-z][A-Z]" (car tokenpart))))
+		(fcnpointer (string-match "^\\*" (car tokenpart)))
 		(fnname (if fcnpointer
 			    (substring (car tokenpart) 1)
 			  (car tokenpart)))
@@ -858,7 +1236,10 @@ Optional argument STAR and REF indicate the number of * and & in the typedef."
 			 (semantic-tag-new-type
 			  ;; name
 			  (or (car semantic-c-classname)
-			      (car (nth 2 tokenpart)))
+			      (let ((split (semantic-analyze-split-name-c-mode
+					    (car (nth 2 tokenpart)))))
+				(if (stringp split) split
+				  (car (last split)))))
 			  ;; type
 			  (or (cdr semantic-c-classname)
 			      "class")
@@ -941,9 +1322,9 @@ Argument COLOR adds color to the text."
 	      (setq defaulttype typename)
 	    (setq defaulttype (concat typetype " " typename))))
       (setq defaulttype (semantic-format-tag-type-default tag color)))
-      
+
     ;; Colorize
-    (when color 
+    (when color
       (setq defaulttype (semantic--format-colorize-text defaulttype 'type)))
 
     ;; Add refs, ptrs, etc
@@ -974,7 +1355,7 @@ and collecting tags based on the labels we see along the way."
 		   ("private" . 3)))
 	  )
       (dolist (tag table)
-	(cond 
+	(cond
 	 ((semantic-tag-of-class-p tag 'label)
 	  (setq curprot (cdr (assoc (semantic-tag-name tag) alist)))
 	  )
@@ -1087,7 +1468,7 @@ Optional PARENT and COLOR as specified with
 
 (define-mode-local-override semantic-format-tag-uml-prototype
   c-mode (token &optional parent color)
-  "Return an uml string describing TOKEN for C and C++.
+  "Return an UML string describing TOKEN for C and C++.
 Optional PARENT and COLOR as specified with
 `semantic-abbreviate-tag-default'."
   ;; If we have special template things, append.
@@ -1146,15 +1527,15 @@ DEF-LIST is the template information.
 SPEC-LIST is the template specifier of the datatype instantiated."
   (when (and (car def-list) (car spec-list))
 
-    (when (and (string= (semantic-tag-type (car def-list)) "class") 
+    (when (and (string= (semantic-tag-type (car def-list)) "class")
                (string= (semantic-tag-name tag) (semantic-tag-name (car def-list))))
       (semantic-tag-set-name tag (semantic-tag-name (car spec-list))))
 
     (semantic-c--instantiate-template tag (cdr def-list) (cdr spec-list))))
 
 (defun semantic-c--template-name-1 (spec-list)
-  "return a string used to compute template class name based on SPEC-LIST
-for ref<Foo,Bar> it will return 'Foo,Bar'."
+  "Return a string used to compute template class name.
+Based on SPEC-LIST, for ref<Foo,Bar> it will return 'Foo,Bar'."
   (when (car spec-list)
     (let* ((endpart (semantic-c--template-name-1 (cdr spec-list)))
 	   (separator (and endpart ",")))
@@ -1168,7 +1549,7 @@ return 'ref<Foo,Bar>'."
 	  "<" (semantic-c--template-name-1 (cdr spec-list)) ">"))
 
 (defun semantic-c-dereference-template (type scope &optional type-declaration)
-  "Dereference any template specifieres in TYPE within SCOPE.
+  "Dereference any template specifiers in TYPE within SCOPE.
 If TYPE is a template, return a TYPE copy with the templates types
 instantiated as specified in TYPE-DECLARATION."
   (when (semantic-tag-p type-declaration)
@@ -1196,37 +1577,157 @@ SCOPE is the current local scope to perform searches in.
 TYPE-DECLARATION is passed through."
   (if semantic-c-member-of-autocast
       (let ((operator (car (semantic-find-tags-by-name "->" (semantic-analyze-scoped-type-parts type)))))
-        (if operator 
+        (if operator
             (list (semantic-tag-get-attribute operator :type) (semantic-tag-get-attribute operator :type))
           (list type type-declaration)))
     (list type type-declaration)))
+
+;; David Engster: The following three functions deal with namespace
+;; aliases and types which are member of a namespace through a using
+;; statement. For examples, see the file semantic/tests/testusing.cpp,
+;; tests 5 and following.
+
+(defun semantic-c-dereference-namespace (type scope &optional type-declaration)
+  "Dereference namespace which might hold an 'alias' for TYPE.
+Such an alias can be created through 'using' statements in a
+namespace declaration.  This function checks the namespaces in
+SCOPE for such statements."
+  (let ((scopetypes (oref scope scopetypes))
+	typename currentns tmp usingname result namespaces)
+    (when (and (semantic-tag-p type-declaration)
+	       (or (null type) (semantic-tag-prototype-p type)))
+      (setq typename (semantic-analyze-split-name (semantic-tag-name type-declaration)))
+      ;; If we already have that TYPE in SCOPE, we do nothing
+      (unless (semantic-deep-find-tags-by-name (or (car-safe typename) typename) scopetypes)
+	(if (stringp typename)
+	    ;; The type isn't fully qualified, so we have to search in all namespaces in SCOPE.
+	    (setq namespaces (semantic-find-tags-by-type "namespace" scopetypes))
+	  ;; This is a fully qualified name, so we only have to search one namespace.
+	  (setq namespaces (semanticdb-typecache-find (car typename)))
+	  ;; Make sure it's really a namespace.
+	  (if (string= (semantic-tag-type namespaces) "namespace")
+	      (setq namespaces (list namespaces))
+	    (setq namespaces nil)))
+	(setq result nil)
+	;; Iterate over all the namespaces we have to check.
+	(while (and namespaces
+		    (null result))
+	  (setq currentns (car namespaces))
+	  ;; Check if this is namespace is an alias and dereference it if necessary.
+	  (setq result (semantic-c-dereference-namespace-alias type-declaration currentns))
+	  (unless result
+	    ;; Otherwise, check if we can reach the type through 'using' statements.
+	    (setq result
+		  (semantic-c-check-type-namespace-using type-declaration currentns)))
+	  (setq namespaces (cdr namespaces)))))
+    (if result
+	;; we have found the original type
+	(list result result)
+      (list type type-declaration))))
+
+(defun semantic-c-dereference-namespace-alias (type namespace)
+  "Dereference TYPE in NAMESPACE, given that NAMESPACE is an alias.
+Checks if NAMESPACE is an alias and if so, returns a new type
+with a fully qualified name in the original namespace.  Returns
+nil if NAMESPACE is not an alias."
+  (when (eq (semantic-tag-get-attribute namespace :kind) 'alias)
+    (let ((typename (semantic-analyze-split-name (semantic-tag-name type)))
+	  ns nstype originaltype newtype)
+      ;; Make typename unqualified
+      (if (listp typename)
+	  (setq typename (last typename))
+	(setq typename (list typename)))
+      (when
+	  (and
+	   ;; Get original namespace and make sure TYPE exists there.
+	   (setq ns (semantic-tag-name
+		     (car (semantic-tag-get-attribute namespace :members))))
+	   (setq nstype (semanticdb-typecache-find ns))
+	   (setq originaltype (semantic-find-tags-by-name
+			       (car typename)
+			       (semantic-tag-get-attribute nstype :members))))
+	;; Construct new type with name in original namespace.
+	(setq ns (semantic-analyze-split-name ns))
+	(setq newtype
+	      (semantic-tag-clone
+	       (car originaltype)
+	       (semantic-analyze-unsplit-name
+		(if (listp ns)
+		    (append ns typename)
+		  (append (list ns) typename)))))))))
+
+;; This searches a type in a namespace, following through all using
+;; statements.
+(defun semantic-c-check-type-namespace-using (type namespace)
+  "Check if TYPE is accessible in NAMESPACE through a using statement.
+Returns the original type from the namespace where it is defined,
+or nil if it cannot be found."
+  (let (usings result usingname usingtype unqualifiedname members shortname tmp)
+    ;; Get all using statements from NAMESPACE.
+    (when (and (setq usings (semantic-tag-get-attribute namespace :members))
+	       (setq usings (semantic-find-tags-by-class 'using usings)))
+      ;; Get unqualified typename.
+      (when (listp (setq unqualifiedname (semantic-analyze-split-name
+					  (semantic-tag-name type))))
+	(setq unqualifiedname (car (last unqualifiedname))))
+      ;; Iterate over all using statements in NAMESPACE.
+      (while (and usings
+		  (null result))
+	(setq usingname (semantic-analyze-split-name
+			 (semantic-tag-name (car usings)))
+	      usingtype (semantic-tag-type (semantic-tag-type (car usings))))
+	(cond
+	 ((or (string= usingtype "namespace")
+	      (stringp usingname))
+	  ;; We are dealing with a 'using [namespace] NAMESPACE;'
+	  ;; Search for TYPE in that namespace
+	  (setq result
+		(semanticdb-typecache-find usingname))
+	  (if (and result
+		   (setq members (semantic-tag-get-attribute result :members))
+		   (setq members (semantic-find-tags-by-name unqualifiedname members)))
+	      ;; TYPE is member of that namespace, so we are finished
+	      (setq result (car members))
+	    ;; otherwise recursively search in that namespace for an alias
+	    (setq result (semantic-c-check-type-namespace-using type result))
+	    (when result
+	      (setq result (semantic-tag-type result)))))
+	 ((and (string= usingtype "class")
+	       (listp usingname))
+	  ;; We are dealing with a 'using TYPE;'
+	  (when (string= unqualifiedname (car (last usingname)))
+	    ;; We have found the correct tag.
+	    (setq result (semantic-tag-type (car usings))))))
+	(setq usings (cdr usings))))
+    result))
 
 
 (define-mode-local-override semantic-analyze-dereference-metatype
   c-mode (type scope &optional type-declaration)
   "Dereference TYPE as described in `semantic-analyze-dereference-metatype'.
 Handle typedef, template instantiation, and '->' operator."
-  (let* ((dereferencer-list '(semantic-c-dereference-typedef 
+  (let* ((dereferencer-list '(semantic-c-dereference-typedef
                               semantic-c-dereference-template
-                              semantic-c-dereference-member-of))
+                              semantic-c-dereference-member-of
+			      semantic-c-dereference-namespace))
          (dereferencer (pop dereferencer-list))
          (type-tuple)
          (original-type type))
     (while dereferencer
       (setq type-tuple (funcall dereferencer type scope type-declaration)
-            type (car type-tuple) 
-            type-declaration (cadr type-tuple))      
+            type (car type-tuple)
+            type-declaration (cadr type-tuple))
       (if (not (eq type original-type))
-          ;; we found a new type so break the dereferencer loop now ! 
-          ;; (we will be recalled with the new type expanded by 
+          ;; we found a new type so break the dereferencer loop now !
+          ;; (we will be recalled with the new type expanded by
           ;; semantic-analyze-dereference-metatype-stack).
-          (setq dereferencer nil)        
+          (setq dereferencer nil)
         ;; no new type found try the next dereferencer :
         (setq dereferencer (pop dereferencer-list)))))
     (list type type-declaration))
 
 (define-mode-local-override semantic-analyze-type-constants c-mode (type)
-  "When TYPE is a tag for an enum, return it's parts.
+  "When TYPE is a tag for an enum, return its parts.
 These are constants which are of type TYPE."
   (if (and (eq (semantic-tag-class type) 'type)
 	   (string= (semantic-tag-type type) "enum"))
@@ -1274,9 +1775,60 @@ DO NOT return the list of tags encompassing point."
 	)
       (setq tagsaroundpoint (cdr tagsaroundpoint))
       )
+    ;; If in a function...
+    (when (and (semantic-tag-of-class-p (car tagsaroundpoint) 'function)
+	       ;; ...search for using statements in the local scope...
+	       (setq tmp (semantic-find-tags-by-class
+			  'using
+			  (semantic-get-local-variables))))
+      ;; ... and add them.
+      (setq tagreturn
+	    (append tagreturn
+		    (mapcar 'semantic-tag-type tmp))))
     ;; Return the stuff
     tagreturn
     ))
+
+(define-mode-local-override semantic-ctxt-imported-packages c++-mode (&optional point)
+  "Return the list of using tag types in scope of POINT."
+  (when point (goto-char (point)))
+  (let ((tagsaroundpoint (semantic-find-tag-by-overlay))
+	(namereturn nil)
+	(tmp nil)
+	)
+    ;; Collect using statements from the top level.
+    (setq tmp (semantic-find-tags-by-class 'using (current-buffer)))
+    (dolist (T tmp) (setq namereturn (cons (semantic-tag-type T) namereturn)))
+    ;; Move through the tags around point looking for more using statements
+    (while (cdr tagsaroundpoint)  ; don't search the last one
+      (setq tmp (semantic-find-tags-by-class 'using (semantic-tag-components (car tagsaroundpoint))))
+      (dolist (T tmp) (setq namereturn (cons (semantic-tag-type T) namereturn)))
+      (setq tagsaroundpoint (cdr tagsaroundpoint))
+      )
+    namereturn))
+
+(define-mode-local-override semanticdb-expand-nested-tag c++-mode (tag)
+  "Expand TAG if it has a fully qualified name.
+For types with a :parent, create faux namespaces to put TAG into."
+  (let ((p (semantic-tag-get-attribute tag :parent)))
+    (if (and p (semantic-tag-of-class-p tag 'type))
+	;; Expand the tag
+	(let ((s (semantic-analyze-split-name p))
+	      (newtag (semantic-tag-copy tag nil t)))
+	  ;; Erase the qualified name.
+	  (semantic-tag-put-attribute newtag :parent nil)
+	  ;; Fixup the namespace name
+	  (setq s (if (stringp s) (list s) (nreverse s)))
+	  ;; Loop over all the parents, creating the nested
+	  ;; namespace.
+	  (dolist (namespace s)
+	    (setq newtag (semanticdb-typecache-faux-namespace
+			  namespace (list newtag)))
+	    )
+	  ;; Return the last created namespace.
+	  newtag)
+      ;; Else, return tag unmodified.
+      tag)))
 
 (define-mode-local-override semantic-get-local-variables c++-mode ()
   "Do what `semantic-get-local-variables' does, plus add `this' if needed."
@@ -1316,7 +1868,7 @@ DO NOT return the list of tags encompassing point."
       (semantic-idle-summary-current-symbol-info-default))))
 
 (defvar-mode-local c-mode semantic-orphaned-member-metaparent-type "struct"
-  "When lost memberes are found in the class hierarchy generator, use a struct.")
+  "When lost members are found in the class hierarchy generator, use a struct.")
 
 (defvar-mode-local c-mode semantic-symbol->name-assoc-list
   '((type     . "Types")
@@ -1337,12 +1889,12 @@ DO NOT return the list of tags encompassing point."
 (defvar-mode-local c-mode imenu-create-index-function 'semantic-create-imenu-index
   "Imenu index function for C.")
 
-(defvar-mode-local c-mode semantic-type-relation-separator-character 
+(defvar-mode-local c-mode semantic-type-relation-separator-character
   '("." "->" "::")
   "Separator characters between something of a given type, and a field.")
 
 (defvar-mode-local c-mode semantic-command-separation-character ";"
-  "Commen separation character for C")
+  "Command separation character for C")
 
 (defvar-mode-local c-mode senator-step-at-tag-classes '(function variable)
   "Tag classes where senator will stop at the end.")
@@ -1355,7 +1907,7 @@ DO NOT return the list of tags encompassing point."
                                             (?< ".")
                                             )
         )
-  
+
   (setq semantic-lex-analyzer #'semantic-c-lexer)
   (add-hook 'semantic-lex-reset-hooks 'semantic-lex-spp-reset-hook nil t)
   )
@@ -1380,9 +1932,6 @@ DO NOT return the list of tags encompassing point."
 (add-hook 'c-mode-hook 'semantic-default-c-setup)
 ;;;###autoload
 (add-hook 'c++-mode-hook 'semantic-default-c-setup)
-
-(define-child-mode c++-mode c-mode
-  "`c++-mode' uses the same parser as `c-mode'.")
 
 ;;; SETUP QUERY
 ;;
@@ -1464,6 +2013,24 @@ DO NOT return the list of tags encompassing point."
 	  (princ (cdr S))
 	  (princ "\n")
 	  ))
+
+      (when (arrayp semantic-lex-spp-project-macro-symbol-obarray)
+	(princ "\n  Project symbol map:\n")
+	(princ "      Your project symbol map is derived from the EDE object:\n      ")
+	(princ (object-print ede-object))
+	(princ "\n\n")
+	(let ((macros nil))
+	  (mapatoms
+	   #'(lambda (symbol)
+	       (setq macros (cons symbol macros)))
+	   semantic-lex-spp-project-macro-symbol-obarray)
+	  (dolist (S macros)
+	    (princ "    ")
+	    (princ (symbol-name S))
+	    (princ " = ")
+	    (princ (symbol-value S))
+	    (princ "\n")
+	    )))
 
       (princ "\n\n  Use: M-x semantic-lex-spp-describe RET\n")
       (princ "\n  to see the complete macro table.\n")

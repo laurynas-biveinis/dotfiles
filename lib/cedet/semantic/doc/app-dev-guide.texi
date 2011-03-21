@@ -25,7 +25,7 @@
 @copying
 This manual documents Application Development with Semantic.
 
-Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
+Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 Copyright @copyright{} 2001, 2002, 2003, 2004 David Ponce
 Copyright @copyright{} 2002, 2003 Richard Y. Kim
 
@@ -398,17 +398,6 @@ Find tags for which @var{FORM} is non-@code{nil} in @var{TABLE}.
 @var{TABLE} is a semantic tags table.  See @dfn{semantic-something-to-tag-table}.
 @end defun
 
-@c @defun semantic-recursive-find-nonterminal-by-name name buffer
-@c Recursivly find the first occurance of @var{NAME}.
-@c Start search with @var{BUFFER}.  Recurse through all dependencies till
-@c found.  The return item is of the form (@var{BUFFER} @var{TOKEN})
-@c where @var{BUFFER} is the buffer in which @var{TOKEN} (the token found
-@c to match @var{NAME}) was found.
-@c 
-@c @var{THIS} ISN'T @var{USED} @var{IN} @var{SEMANTIC}.  @var{DELETE}
-@c @var{ME} @var{SOON}.
-@c @end defun
-
 @node Tags at Point
 @chapter Tags at Point
 
@@ -497,7 +486,7 @@ Optional @var{face} specifies the face to use.
 
 @defun semantic-unhighlight-tag tag
 @anchor{semantic-unhighlight-tag}
-Unhighlight @var{tag}, restoring it's previous face.
+Unhighlight @var{tag}, restoring its previous face.
 @obsolete{semantic-unhighlight-token,semantic-unhighlight-tag}
 @end defun
 
@@ -859,7 +848,7 @@ For example:
 
 @example
 (defun semantic-complete-read-tag-buffer-deep (prompt &optional
-						      default-tag initial-input history)
+                                                      default-tag initial-input history)
   "Ask for a tag by name from the current buffer.
 PROMPT is a string to prompt with.
 DEFAULT-TAG is a semantic tag or string to use as the default value.
@@ -1080,8 +1069,8 @@ For more on override methods, @inforef{Semantic Overload Mechanism, , lang-suppo
 * Format Tag::                  Converting Tokens into text strings
 * Tag Members::                 Tags in tags
 * Tag Details::                 Arbitrary token detail fetching
-* Tag File Reference::	        Files a tag references.
-* Jump to a Tag::	        Go to a tag's location
+* Tag File Reference::          Files a tag references.
+* Jump to a Tag::               Go to a tag's location
 * Making New Methods::          How to add your own methods for your own tool
 @end menu
 
@@ -1259,7 +1248,7 @@ overload functions.
 @anchor{semantic-tag-external-member-p}
 Return non-@code{nil} if @var{parent} is the parent of @var{tag}.
 @var{tag} is an external member of @var{parent} when it is somehow tagged
-as having @var{parent} as it's parent.
+as having @var{parent} as its parent.
 @var{parent} and @var{tag} must both be semantic tags.
 
 The default behavior, if not overridden with
@@ -1940,13 +1929,13 @@ translation routines are:
 Translate @var{path} into a list of semantic tables.
 Path translation involves identifying the @var{path} input argument
 in one of the following ways:
-  @code{nil} - Take the current buffer, and use it's include list
+  @code{nil} - Take the current buffer, and use its include list
   buffer - Use that buffer's include list.
   filename - Use that file's include list.  If the file is not
       in a buffer, see of there is a semanticdb table for it.  If
       not, read that file into a buffer.
   tag - Get that tag's buffer of file file.  See above.
-  table - Search that table, and it's include list.
+  table - Search that table, and its include list.
   find result - Search the results of a previous find.
 
 In addition, once the base path is found, there is the possibility of
@@ -1959,7 +1948,7 @@ identified by translating @var{path}.  Such searches use brute force to
 scan every available table.
 
 The return value is a list of objects of type @dfn{semanticdb-table} or
-it's children.  In the case of passing in a find result, the result
+its children.  In the case of passing in a find result, the result
 is returned unchanged.
 
 This routine uses @dfn{semanticdb-find-table-for-include} to translate
@@ -2273,7 +2262,7 @@ To debug references, use this routine:
 @deffn Command semanticdb-ref-test refresh
 @anchor{semanticdb-ref-test}
 Dump out the list of references for the current buffer.
-If @var{refresh} is non-@code{nil}, cause the current table to have it's references
+If @var{refresh} is non-@code{nil}, cause the current table to have its references
 refreshed before dumping the result.
 @end deffn
 
@@ -2539,7 +2528,7 @@ This function can be overloaded (see @dfn{define-mode-local-override} for detail
 
 The context parsing API is used in a context analysis library.  This
 library provides high level routines for scanning through token
-databases to create lists of token associates.  At it's core is a set
+databases to create lists of token associates.  At its core is a set
 of EIEIO classes defining a context.  The context contains information
 about what was parsed at a given position, such as the strings there,
 and they type of assignment.  The analysis library then searches the
@@ -2562,13 +2551,15 @@ This function can be overloaded (see @dfn{define-mode-local-override} for detail
 @end deffn
 
 
-@deffn Command semantic-analyze-possible-completions context
+@defun semantic-analyze-possible-completions context flags
 @anchor{semantic-analyze-possible-completions}
 Return a list of semantic tags which are possible completions.
-@var{context} is either a position (such as point), or a precalculated
+@var{CONTEXT} is either a position (such as point), or a precalculated
 context.  Passing in a context is useful if the caller also needs
 to access parts of the analysis.
-Completions run through the following filters:
+The remaining @var{FLAGS} arguments are passed to the mode specific completion engine.
+Bad flags should be ignored by modes that don't use them.
+See @dfn{semantic-analyze-possible-completions-default} for details on the default @var{FLAGS}.
 
 @itemize
 @item
@@ -2594,8 +2585,9 @@ Argument to a function with type constraints.
 
 When called interactively, displays the list of possible completions
 in a buffer.
-This function can be overloaded (see @dfn{define-mode-local-override} for details).
-@end deffn
+This function can be overloaded with @dfn{define-mode-local-override}.
+@end defun
+
 
 @menu
 * Analysis Overview::           A description of how the analyzer works.

@@ -1,13 +1,13 @@
 ;;; wisent.el --- GNU Bison for Emacs - Runtime
 
-;; Copyright (C) 2009 Eric M. Ludlam
+;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007 David Ponce
 
 ;; Author: David Ponce <david@dponce.com>
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 30 January 2002
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent.el,v 1.39 2009/01/10 00:15:49 zappo Exp $
+;; X-RCS: $Id: wisent.el,v 1.43 2010/04/09 02:07:37 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -141,7 +141,7 @@ POSITIONS are available."
   "Toggle whether to issue more messages while parsing."
   (interactive)
   (setq wisent-parse-verbose-flag (not wisent-parse-verbose-flag))
-  (when (interactive-p)
+  (when (cedet-called-interactively-p 'interactive)
     (message "More messages while parsing %sabled"
              (if wisent-parse-verbose-flag "en" "dis"))))
 
@@ -274,9 +274,9 @@ Return nil.
 Must be used in error recovery semantic actions.
 Optional argument BOUNDS is a pair (START . END) which indicates where
 the parenthesized block starts.  Typically the value of a `$regionN'
-variable, where `N' is the the Nth element of the current rule
-components that match the block beginning.  It defaults to the value
-of the `$region' variable."
+variable, where `N' is the Nth element of the current rule components
+that match the block beginning.  It defaults to the value of the
+`$region' variable."
   (let ((start (car (or bounds $region)))
         end input)
     (if (not (number-or-marker-p start))
@@ -392,12 +392,12 @@ automaton has only one entry point."
             tokid (car wisent-input)
             wisent-loop (wisent-parse-action tokid (aref actions state)))
       (cond
-       
+
        ;; Input successfully parsed
        ;; -------------------------
        ((eq wisent-loop wisent-accept-tag)
         (setq wisent-loop nil))
-       
+
        ;; Syntax error in input
        ;; ---------------------
        ((eq wisent-loop wisent-error-tag)
@@ -423,10 +423,10 @@ automaton has only one entry point."
               (run-hook-with-args
                'wisent-discarding-token-functions wisent-input)
               (setq wisent-input (wisent-lexer)))
-          
+
           ;; Else will try to reuse lookahead token after shifting the
           ;; error token.
-          
+
           ;; Each real token shifted decrements this.
           (setq wisent-recovering wisent-parse-max-recover)
           ;; Pop the value/state stack to see if an action associated
@@ -437,7 +437,7 @@ automaton has only one entry point."
                                       choice  (assq wisent-error-term choices))
                                 (natnump (cdr choice)))))
             (setq sp (- sp 2)))
-          
+
           (if (not choice)
               ;; No 'error terminal was found.  Just terminate.
               (wisent-abort)
@@ -458,7 +458,7 @@ automaton has only one entry point."
                   (run-hook-with-args
                    'wisent-discarding-token-functions wisent-input)
                   (setq wisent-input (wisent-lexer)))))))
-       
+
        ;; Shift current token on top of the stack
        ;; ---------------------------------------
        ((natnump wisent-loop)
@@ -471,7 +471,7 @@ automaton has only one entry point."
         (aset stack (1- sp) (cdr wisent-input))
         (aset stack sp wisent-loop)
         (setq wisent-input (wisent-lexer)))
-       
+
        ;; Reduce by rule (call semantic action)
        ;; -------------------------------------
        (t

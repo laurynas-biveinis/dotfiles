@@ -1,4 +1,4 @@
-This is speedbar.info, produced by makeinfo version 4.11 from
+This is speedbar.info, produced by makeinfo version 4.9 from
 speedbar.texi.
 
 INFO-DIR-SECTION Emacs
@@ -270,7 +270,7 @@ extra text characters at the end of the line.  File mode uses boolean
 flags, such as a `*' to indicate that a file has been checked out of a
 versioning system.
 
-   For additional flags, see *note File Mode::, and *note Version
+   For additional flags, see *Note File Mode::, and *Note Version
 Control::.
 
 2.2.0.4 Unadorned Text
@@ -1104,14 +1104,14 @@ inserted by its paired function:
      information required.
 
    It is often useful to use `speedbar-create-tag-hierarchy' on your
-tag list *note Creating a display::.
+tag list *Note Creating a display::.
 
    Once these two functions are written, modify the variable
 `speedbar-dynamic-tags-function-list' to include your parser at the
 beginning, like this:
 
      (add-to-list 'speedbar-dynamic-tags-function-list
-     	     '(my-fetch-dynamic-tags  . my-insert-tag-list))
+                  '(my-fetch-dynamic-tags  . my-insert-tag-list))
 
  -- Variable: speedbar-dynamic-tags-function-list
      A list of functions which will return and insert a list of tags.
@@ -1135,7 +1135,7 @@ File: speedbar.info,  Node: Creating a display,  Prev: Tagging Extensions,  Up: 
 ======================
 
 Rendering a display in speedbar is completely flexible.  When your
-button function is called, see *note Minor Display Modes::, and *note
+button function is called, see *Note Minor Display Modes::, and *Note
 Major Display Modes::, you have control to `insert' anything you want.
 
    The conventions allow almost anything to be inserted, but several
@@ -1298,10 +1298,10 @@ functions, such as:
    This function should then use the TEXT parameter to determine what
 to do.  For example:
 
-       (cond ((string-match "+" text)	;we have to expand this file
+       (cond ((string-match "+" text)        ;we have to expand this file
               ;; Expand stuff here
               )
-     	((string-match "-" text)	;we have to contract this node
+             ((string-match "-" text)        ;we have to contract this node
               ;; Contract stuff here
               ))
 
@@ -1313,13 +1313,13 @@ to do.  For example:
 
    Our sample would then look like this:
 
-       (cond ((string-match "+" text)	;we have to expand this file
+       (cond ((string-match "+" text)        ;we have to expand this file
               ;; Expand stuff here
-     	 (speedbar-change-expand-button-char ?-)
+              (speedbar-change-expand-button-char ?-)
               )
-     	((string-match "-" text)	;we have to contract this node
+             ((string-match "-" text)        ;we have to contract this node
               ;; Contract stuff here
-     	 (speedbar-change-expand-button-char ?+)
+              (speedbar-change-expand-button-char ?+)
               ))
 
    To expand text, the speedbar buffer needs to be writable.  The
@@ -1335,12 +1335,12 @@ using any mechanism you like.  Remember that the cursor will be on the
 expand button just clicked though.  As such, the code might look like
 this:
 
-       (cond ((string-match "+" text)	;we have to expand this file
+       (cond ((string-match "+" text)        ;we have to expand this file
               ;; Expand stuff here
-     	 (speedbar-change-expand-button-char ?-)
-     	 (speedbar-with-writable
-     	   (save-excursion
-     	     (end-of-line) (forward-char 1)
+              (speedbar-change-expand-button-char ?-)
+              (speedbar-with-writable
+                (save-excursion
+                  (end-of-line) (forward-char 1)
                   ;; Insert goodies here.
                 ))
               )
@@ -1357,19 +1357,19 @@ function to do the work:
 
    The end result would then look like this:
 
-       (cond ((string-match "+" text)	;we have to expand this file
+       (cond ((string-match "+" text)        ;we have to expand this file
               ;; Expand stuff here
-     	 (speedbar-change-expand-button-char ?-)
-     	 (speedbar-with-writable
-     	   (save-excursion
-     	     (end-of-line) (forward-char 1)
+              (speedbar-change-expand-button-char ?-)
+              (speedbar-with-writable
+                (save-excursion
+                  (end-of-line) (forward-char 1)
                   ;; Insert goodies here.
                 ))
               )
-     	((string-match "-" text)	;we have to contract this node
+             ((string-match "-" text)        ;we have to contract this node
               ;; Contract stuff here
-     	 (speedbar-change-expand-button-char ?+)
-     	 (speedbar-delete-subblock indent))
+              (speedbar-change-expand-button-char ?+)
+              (speedbar-delete-subblock indent))
               ))
 
    Expand buttons, unlike other speedbar operations can cause new data
@@ -1493,41 +1493,41 @@ Concept Index
 
 
 Tag Table:
-Node: Top1467
-Node: Introduction3243
-Node: Basic Navigation4807
-Node: Basic Key Bindings5252
-Node: Basic Visuals7393
-Node: Mouse Bindings11348
-Node: Displays Submenu12973
-Node: File Mode13653
-Node: Directory Display14260
-Node: Hidden Files17300
-Node: File Key Bindings18747
-Node: Buffer Mode20181
-Node: Minor Modes21296
-Node: RMAIL22152
-Node: Info23050
-Node: GDB23657
-Node: Customizing24324
-Node: Frames and Faces25135
-Node: Tag Hierarchy Methods26473
-Node: Version Control28699
-Node: Hooks30046
-Node: Extending31302
-Node: Minor Display Modes32348
-Node: Major Display Modes34339
-Ref: speedbar-stealthy-function-list39278
-Node: Tagging Extensions40187
-Ref: speedbar-dynamic-tags-function-list41672
-Node: Creating a display42452
-Node: Creating Buttons43617
-Node: Generic Tag Lists46258
-Node: Expand Buttons48521
-Ref: speedbar-change-expand-button-char49815
-Ref: speedbar-with-writable50544
-Ref: speedbar-delete-subblock51296
-Ref: speedbar-center-buffer-smartly52295
-Node: Index52481
+Node: Top1466
+Node: Introduction3242
+Node: Basic Navigation4806
+Node: Basic Key Bindings5251
+Node: Basic Visuals7392
+Node: Mouse Bindings11347
+Node: Displays Submenu12972
+Node: File Mode13652
+Node: Directory Display14259
+Node: Hidden Files17299
+Node: File Key Bindings18746
+Node: Buffer Mode20180
+Node: Minor Modes21295
+Node: RMAIL22151
+Node: Info23049
+Node: GDB23656
+Node: Customizing24323
+Node: Frames and Faces25134
+Node: Tag Hierarchy Methods26472
+Node: Version Control28698
+Node: Hooks30045
+Node: Extending31301
+Node: Minor Display Modes32347
+Node: Major Display Modes34338
+Ref: speedbar-stealthy-function-list39277
+Node: Tagging Extensions40186
+Ref: speedbar-dynamic-tags-function-list41678
+Node: Creating a display42458
+Node: Creating Buttons43623
+Node: Generic Tag Lists46264
+Node: Expand Buttons48527
+Ref: speedbar-change-expand-button-char49842
+Ref: speedbar-with-writable50606
+Ref: speedbar-delete-subblock51393
+Ref: speedbar-center-buffer-smartly52455
+Node: Index52641
 
 End Tag Table

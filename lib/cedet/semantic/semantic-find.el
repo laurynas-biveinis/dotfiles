@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-find.el,v 1.27 2009/04/09 02:57:15 zappo Exp $
+;; X-RCS: $Id: semantic-find.el,v 1.29 2010/03/15 13:40:54 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -34,11 +34,11 @@
 ;;    used for compatibility with the semantic 1.x search routines.
 ;;
 ;; 1.5) semantic-brute-find-first-tag-by-*
-;;    Like 1, except seraching stops on the first match for the given
+;;    Like 1, except searching stops on the first match for the given
 ;;    information.
 ;;
 ;; 2) semantic-find-tag-by-*
-;;    These prefered search routines attempt to scan through lists
+;;    These preferred search routines attempt to scan through lists
 ;;    in an intelligent way based on questions asked.
 ;;
 ;; 3) semantic-find-*-overlay
@@ -85,7 +85,7 @@ from largest to smallest via the start location."
 ;;;###autoload
 (defun semantic-find-tag-by-overlay-in-region (start end &optional buffer)
   "Find all tags which exist in whole or in part between START and END.
-Uses overlays to determine positin.
+Uses overlays to determine position.
 Optional BUFFER argument specifies the buffer to use."
   (save-excursion
     (if buffer (set-buffer buffer))
@@ -281,7 +281,7 @@ TABLE is a tag table.  See `semantic-something-to-tag-table'."
 
 ;;;###autoload
 (defmacro semantic-find-tags-for-completion (prefix &optional table)
-  "Find all tags whos name begins with PREFIX in TABLE.
+  "Find all tags whose name begins with PREFIX in TABLE.
 PREFIX is a string.
 TABLE is a tag table.  See `semantic-something-to-tag-table'.
 While it would be nice to use `try-completion' or `all-completions',
@@ -340,7 +340,7 @@ Used in completion."
 
 ;;;###autoload
 (define-overloadable-function semantic-find-tags-by-scope-protection (scopeprotection parent &optional table)
-  "Find all tags accessable by SCOPEPROTECTION.
+  "Find all tags accessible by SCOPEPROTECTION.
 SCOPEPROTECTION is a symbol which can be returned by the method
 `semantic-tag-protection'.  A hard-coded order is used to determine a match.
 PARENT is a tag representing the PARENT slot needed for
@@ -392,7 +392,7 @@ See also `semantic-find-tags-by-name'."
 
 ;;;###autoload
 (defmacro semantic-deep-find-tags-for-completion (prefix &optional table)
-  "Find all tags whos name begins with PREFIX in TABLE.
+  "Find all tags whose name begins with PREFIX in TABLE.
 Search in top level tags, and their components, in TABLE.
 TABLE is a tag table.  See `semantic-flatten-tags-table'.
 See also `semantic-find-tags-for-completion'."
@@ -662,8 +662,7 @@ the median calculation, and return nil."
   (save-excursion
     (if (markerp position) (set-buffer (marker-buffer position)))
     (let* ((stream (if (bufferp streamorbuffer)
-		       (save-excursion
-			 (set-buffer streamorbuffer)
+		       (with-current-buffer streamorbuffer
 			 (semantic-fetch-tags))
 		     streamorbuffer))
 	   (prev nil)
@@ -840,7 +839,7 @@ Optional argument ARG is the number of iterations to run."
 	  (benchmark-run-compiled
 	      1000 (semantic-find-tags-by-name-regexp "^method"
 						      "test/test.cpp")))
-    
+
     (message "Name [new old] [ %.3f %.3f ] Complete [newc/new old] [ %.3f/%.3f %.3f ]"
 	     (car f-name) (car b-name)
 	     (car f-comp) (car f-regex)

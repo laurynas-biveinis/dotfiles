@@ -9,7 +9,7 @@
 ;;; Copyright (C) 2001, 2003, 2004, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: semantic-skel.el,v 1.8 2009/01/24 03:53:52 zappo Exp $
+;; X-RCS: $Id: semantic-skel.el,v 1.9 2010/03/15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -86,7 +86,7 @@
 (defcustom-mode-local-semantic-dependency-system-include-path
   skel-mode semantic-makefile-dependency-system-include-path
   nil
-  "The system include path used by skel langauge.")
+  "The system include path used by skel language.")
 
 ;; Add methods to the override table here.  See
 ;; `semantic-install-function-overrides' for more details.

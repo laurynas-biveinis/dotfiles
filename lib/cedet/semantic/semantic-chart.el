@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: chart
-;; X-RCS: $Id: semantic-chart.el,v 1.14 2009/01/20 02:32:10 zappo Exp $
+;; X-RCS: $Id: semantic-chart.el,v 1.16 2010/03/15 13:40:54 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -40,7 +40,7 @@
 Each bar represents how many toplevel tags in TAGTABLE
 exist with a given class.  See `semantic-symbol->name-assoc-list'
 for tokens which will be charted.
-TAGTABLE is passedto `semantic-something-to-tag-table'."
+TAGTABLE is passed to `semantic-something-to-tag-table'."
   (interactive)
   (let* ((stream (semantic-something-to-tag-table
 		  (or tagtable (current-buffer))))
@@ -65,9 +65,9 @@ Each bar represents how many toplevel tags in TAGTABLE
 exist in each database entry.
 TAGTABLE is passed to `semantic-something-to-tag-table'."
   (interactive)
-  (if (or (not (fboundp 'semanticdb-minor-mode-p))
-	  (not (semanticdb-minor-mode-p)))
-      (error "Semanticdb is not enabled"))
+  (unless (and (fboundp 'semanticdb-minor-mode-p)
+	       (semanticdb-minor-mode-p))
+    (error "Semanticdb is not enabled"))
   (let* ((db semanticdb-current-database)
 	 (dbt (semanticdb-get-database-tables db))
 	 (names (mapcar 'car
@@ -110,7 +110,7 @@ TAGTABLE is passed to `semantic-something-to-tag-table'."
   "Create a bar chart representing the complexity of some tags.
 Complexity is calculated for tags of CLASS.  Each bar represents
 the complexity of some tag in TAGTABLE.  Only the most complex
-items are charted.  TAGTABLE is passedto
+items are charted.  TAGTABLE is passed to
 `semantic-something-to-tag-table'."
   (interactive)
   (let* ((sym (if (not class) 'function))
@@ -166,7 +166,7 @@ items are charted.  TAGTABLE is passedto
 		       (list plen tclen fslen lvarlen)
 		       "Number of tags")
     ))
-	 
+
 
 
 (provide 'semantic-chart)

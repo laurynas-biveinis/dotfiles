@@ -1,10 +1,10 @@
 ;;; semanticdb-file.el --- Save a semanticdb to a cache file.
 
-;;; Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
+;;; Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: tags
-;; X-RCS: $Id: semanticdb-file.el,v 1.45 2009/06/12 11:18:43 zappo Exp $
+;; X-RCS: $Id: semanticdb-file.el,v 1.49 2010/04/18 20:22:08 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,7 +22,7 @@
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
-;; 
+;;
 ;;; Commentary:
 ;;
 ;; A set of semanticdb classes for persistently saving caches on disk.
@@ -184,7 +184,7 @@ If DIRECTORY doesn't exist, create a new one."
 	  (delete-instance r)
 	  (setq r nil))
 	r)
-    (error (message "Cache Error: [%s] %s, Restart" 
+    (error (message "Cache Error: [%s] %s, Restart"
 		    filename foo)
 	   nil)))
 
@@ -203,12 +203,17 @@ If SUPRESS-QUESTIONS, then do not ask to create the directory."
 	   ;; @TODO - If it was never set up... what should we do ?
 	   nil)
 	  ((file-exists-p dest) t)
-	  (supress-questions nil)
-	  ((y-or-n-p (format "Create directory %s for SemanticDB? "
-			     dest))
+	  ((or supress-questions
+	       (and (boundp 'semanticdb--inhibit-make-directory)
+		    semanticdb--inhibit-make-directory))
+	   nil)
+	  ((y-or-n-p (format "Create directory %s for SemanticDB? " dest))
 	   (make-directory dest t)
 	   t)
-	  (t nil))
+	  (t 
+	   (if (boundp 'semanticdb--inhibit-make-directory)
+               (setq semanticdb--inhibit-make-directory t))
+	   nil))
     ))
 
 (defmethod semanticdb-save-db ((DB semanticdb-project-database-file)
@@ -241,7 +246,7 @@ If DB is not specified, then use the current database."
 	   ;; @todo - It should ask if we are not called from a hook.
 	   ;;         How?
 	   (if (or supress-questions
-		   (y-or-n-p (format "Skip Error: %S ?" (car (cdr foo)))))
+		   (y-or-n-p (format "Skip Error: %s ?" (car (cdr foo)))))
 	       (message "Save Error: %S: %s" (car (cdr foo))
 			objname)
 	     (error "%S" (car (cdr foo))))))))
@@ -276,8 +281,7 @@ Restore the overlays after writting.
 Argument OBJ is the object to write."
   (when (semanticdb-live-p obj)
     (when (semanticdb-in-buffer-p obj)
-      (save-excursion
-	(set-buffer (semanticdb-in-buffer-p obj))
+      (with-current-buffer (semanticdb-in-buffer-p obj)
 
 	;; Make sure all our tag lists are up to date.
 	(semantic-fetch-tags)
@@ -290,7 +294,7 @@ Argument OBJ is the object to write."
 	  (oset obj unmatched-syntax
 		(semantic-show-unmatched-lex-tokens-fetch))
 	  )
-		       
+
 	;; Make sure pointmax is up to date
 	(oset obj pointmax (point-max))
 	))
@@ -301,18 +305,18 @@ Argument OBJ is the object to write."
       (oset obj fsize (nth 7 fattr))
       (oset obj lastmodtime (nth 5 fattr))
       )
-    
+
     ;; Do it!
     (condition-case tableerror
 	(call-next-method)
-      (error 
+      (error
        (when semanticdb-data-debug-on-write-error
 	 (data-debug-new-buffer (concat "*SEMANTICDB ERROR*"))
 	 (data-debug-insert-thing obj "*" "")
 	 (setq semanticdb-data-debug-on-write-error nil))
        (message "Error Writing Table: %s" (object-name obj))
        (error "%S" (car (cdr tableerror)))))
-    
+
     ;; Clear the dirty bit.
     (oset obj dirty nil)
     ))
@@ -376,7 +380,7 @@ The returned path is related to DIRECTORY."
       (let ((file (cedet-directory-name-to-file-name directory)))
         ;; Now create a filename for the cache file in
         ;; ;`semanticdb-default-save-directory'.
-	(expand-file-name 
+	(expand-file-name
 	 file (file-name-as-directory semanticdb-default-save-directory)))
     directory))
 

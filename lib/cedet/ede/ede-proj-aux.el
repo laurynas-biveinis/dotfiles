@@ -1,10 +1,10 @@
-;;; ede-proj-aux.el --- EDE Generic Project auxilliary file support
+;;; ede-proj-aux.el --- EDE Generic Project auxiliary file support
 
-;;;  Copyright (C) 1998, 1999, 2000, 2007  Eric M. Ludlam
+;;;  Copyright (C) 1998, 1999, 2000, 2007, 2010  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede-proj-aux.el,v 1.9 2008/01/20 00:09:51 zappo Exp $
+;; RCS: $Id: ede-proj-aux.el,v 1.11 2010/06/12 00:34:40 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -30,14 +30,14 @@
 
 ;;; Code:
 (defclass ede-proj-target-aux (ede-proj-target)
-  ((sourcetype :initform (ede-aux-source)))
+  ((sourcetype :initform '(ede-aux-source)))
   "This target consists of aux files such as READMEs and COPYING.")
 
 (defvar ede-aux-source
   (ede-sourcecode "ede-aux-source-txt"
 		  :name "Auxiliary Text"
 		  :sourcepattern "^[A-Z]+$\\|\\.txt$")
-  "Miscelaneous fields definition.")
+  "Miscellaneous fields definition.")
 
 (defmethod ede-proj-makefile-sourcevar ((this ede-proj-target-aux))
   "Return the variable name for THIS's sources."

@@ -1,10 +1,10 @@
 ;;; srecode-template.wy --- Semantic Recoder Template parser
 
-;; Copyright (C) 2005, 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: srecode-template.wy,v 1.10 2009/01/09 23:01:54 zappo Exp $
+;; X-RCS: $Id: srecode-template.wy,v 1.12 2010/06/12 00:47:24 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -35,36 +35,55 @@
 %start template_file
 
 ;;; KEYWORDS
+
 %type    <keyword>
-%keyword SET  "set"
-%put     SET  summary "set <name> <value>"
-%keyword SHOW "show"
-%put     SHOW summary "show <name>   ; to show a section"
-%keyword MACRO "macro"
-%put     MACRO summary "... macro \"string\" ..."
-%keyword CONTEXT "context"
-%put     CONTEXT summary "context <name>"
-%keyword TEMPLATE  "template"
-%put     TEMPLATE  summary "template <name>\\n <template definition>"
+
+%keyword SET      "set"
+%put     SET      summary "set <name> <value>"
+
+%keyword SHOW     "show"
+%put     SHOW     summary "show <name>   ; to show a section"
+
+%keyword MACRO    "macro"
+%put     MACRO    summary "... macro \"string\" ..."
+
+%keyword CONTEXT  "context"
+%put     CONTEXT  summary "context <name>"
+
+%keyword TEMPLATE "template"
+%put     TEMPLATE summary "template <name>\\n <template definition>"
+
 %keyword SECTIONDICTIONARY "sectiondictionary"
 %put     SECTIONDICTIONARY summary "sectiondictionary <name>\\n <dictionary entries>"
+
+%keyword SECTION  "section"
+%put     SECTION  summary
+         "section <name>\\n <dictionary entries>\\n end"
+
+%keyword END      "end"
+%put     END      summary
+         "section ... end"
+
 %keyword PROMPT "prompt"
 %keyword DEFAULT "default"
 %keyword DEFAULTMACRO "defaultmacro"
 %keyword READ "read"
 %put     { PROMPT DEFAULT DEFAULTMACRO READ } summary "prompt <symbol> \"Describe Symbol: \" [default[macro] <lispsym>|\"valuetext\"] [read <lispsym>]"
+
 %keyword BIND "bind"
 %put     BIND summary "bind \"<letter>\""
 
 ;;; Punctuation Types
-%type <punctuation> syntax "\\s.+"
-%type <newline>
+
+%type  <punctuation> syntax "\\s.+"
+
+%type  <newline>
 %token <newline> newline
 
 %token <separator> TEMPLATE_BLOCK "^----"
 
 ;;; Bland default types
-%type <property> ":\\(\\w\\|\\s_\\)*"
+%type <property> syntax ":\\(\\w\\|\\s_\\)*"
 %token <property> property
 
 %type  <symbol>
@@ -136,7 +155,7 @@ insertable-string
 template
   : TEMPLATE templatename opt-dynamic-arguments newline
     opt-string
-    opt-section-dictionaries
+    section-dictionary-list
     TEMPLATE_BLOCK newline
     opt-bind
     (FUNCTION-TAG $2 nil $3 :documentation $5 :code $7
@@ -167,29 +186,52 @@ opt-string
   | ()
   ;
 
-opt-section-dictionaries
-  : () ;; EMPTY
-  | section-dictionary-list
-  ;
-
 section-dictionary-list
-  : one-section-dictionary
-    (list $1)
-  | section-dictionary-list one-section-dictionary
+  : ;; empty
+    ()
+  | section-dictionary-list flat-section-dictionary
+    (append $1 (list $2))
+  | section-dictionary-list section-dictionary
     (append $1 (list $2))
   ;
 
-one-section-dictionary
+flat-section-dictionary
   : SECTIONDICTIONARY string newline
-    variable-list
+    flat-dictionary-entry-list
     (cons (read $2) $4)
   ;
 
-variable-list
+flat-dictionary-entry-list
+  : ;; empty
+    ()
+  | flat-dictionary-entry-list flat-dictionary-entry
+    (append $1 $2)
+  ;
+
+flat-dictionary-entry
   : variable
     (EXPANDTAG $1)
-  | variable-list variable
-    (append $1 (EXPANDTAG $2))
+  ;
+
+section-dictionary
+  : SECTION string newline
+    dictionary-entry-list
+    END newline
+    (cons (read $2) $4)
+  ;
+
+dictionary-entry-list
+  : ;; emtpy
+    ()
+  | dictionary-entry-list dictionary-entry
+    (append $1 $2)
+  ;
+
+dictionary-entry
+  : variable
+    (EXPANDTAG $1)
+  | section-dictionary
+    (list $1)
   ;
 
 opt-bind
@@ -199,6 +241,7 @@ opt-bind
   ;
 
 %%
+
 (define-lex-simple-regex-analyzer srecode-template-property-analyzer
   "Detect and create a dynamic argument properties."
   ":\\(\\w\\|\\s_\\)*" 'property 0)

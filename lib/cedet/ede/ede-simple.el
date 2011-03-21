@@ -1,9 +1,9 @@
 ;;; ede-simple.el --- Overlay an EDE structure on an existing project
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-simple.el,v 1.10 2009/02/25 23:08:25 zappo Exp $
+;; X-RCS: $Id: ede-simple.el,v 1.12 2010/07/25 13:03:54 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -21,6 +21,10 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
+;;
+;; NOTE: EDE Simple Projects are considered obsolete.  Use generic
+;; projects instead.  They have much better automatic support and
+;; simpler configuration.
 ;;
 ;; A vast majority of projects use non-EDE project techniques, such
 ;; as hand written Makefiles, or other IDE's.
@@ -41,7 +45,6 @@
 (require 'cedet-files)
 
 ;;; Code:
-;;;###autoload
 ;; @todo - below is not compatible w/ Emacs 20!
 (add-to-list 'ede-project-class-files
 	     (ede-project-autoload "simple-overlay"
@@ -101,7 +104,7 @@ All directories need at least one target.")
    (file-header-line :initform ";; EDE Simple Project")
    )
   "EDE Simple project class.
-Each directory needs a a project file to control it.")
+Each directory needs a project file to control it.")
 
 (defmethod ede-commit-project ((proj ede-simple-project))
   "Commit any change to PROJ to its file."

@@ -1,9 +1,9 @@
 ;;; semantic-symref-grep.el --- Symref implementation using find/grep
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-symref-grep.el,v 1.6 2009/03/08 15:36:07 zappo Exp $
+;; X-RCS: $Id: semantic-symref-grep.el,v 1.11 2010/05/03 01:13:41 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -29,7 +29,9 @@
 ;; can be used in small projects to find symbol references.
 
 (require 'semantic-symref)
-(require 'grep)
+(condition-case nil
+    (require 'grep)
+  (error nil))
 
 ;;; Code:
 
@@ -86,7 +88,7 @@ Optional argument MODE specifies the `major-mode' to test."
 			      " -o ")
 		   " \\)"))
 	  (t
-	   (error "Configuration for `semantic-symref-tool-grep' needed for %s" major-mode))
+	   (error "Customize `semantic-symref-filepattern-alist' for %s" major-mode))
 	  )))
 
 (defvar semantic-symref-grep-expand-keywords
@@ -103,9 +105,9 @@ Optional argument MODE specifies the `major-mode' to test."
 (defun semantic-symref-grep-use-template (rootdir filepattern grepflags greppattern)
   "Use the grep template expand feature to create a grep command.
 ROOTDIR is the root location to run the `find' from.
-FILEPATTERN is a string represeting find flags for searching file patterns.
+FILEPATTERN is a string representing find flags for searching file patterns.
 GREPFLAGS are flags passed to grep, such as -n or -l.
-GREPPATTERN is the pattren used by grep."
+GREPPATTERN is the pattern used by grep."
   ;; We have grep-compute-defaults.  Lets use it.
   (grep-compute-defaults)
   (let* ((grep-expand-keywords semantic-symref-grep-expand-keywords)
@@ -119,6 +121,12 @@ GREPPATTERN is the pattren used by grep."
     ;;(message "New command: %s" cmd)
     cmd))
 
+(defcustom semantic-symref-grep-shell "sh"
+  "The shell command to use for executing find/grep.
+This shell should support pipe redirect syntax."
+  :group 'semantic
+  :type 'string)
+
 (defmethod semantic-symref-perform-search ((tool semantic-symref-tool-grep))
   "Perform a search with Grep."
   ;; Grep doesn't support some types of searches.
@@ -129,19 +137,7 @@ GREPPATTERN is the pattren used by grep."
   ;; Find the root of the project, and do a find-grep...
   (let* (;; Find the file patterns to use.
 	 (pat (cdr (assoc major-mode semantic-symref-filepattern-alist)))
-	 (rootdir (cond 
-		   ;; Project root via EDE.
-		   ((eq (oref tool :searchscope) 'project)
-		    (let ((rootproj (when (and (featurep 'ede) ede-minor-mode)
-				      (ede-toplevel))))
-		      (if rootproj
-			  (ede-project-root-directory rootproj)
-			default-directory)))
-		   ;; Calculate the target files as just in
-		   ;; this directory... cause I'm lazy.
-		   ((eq (oref tool :searchscope) 'target)
-		    default-directory)
-		   ))
+	 (rootdir (semantic-symref-calculate-rootdir))
 	 (filepattern (semantic-symref-derive-find-filepatterns))
 	 ;; Grep based flags.
 	 (grepflags (cond ((eq (oref tool :resulttype) 'file)
@@ -156,8 +152,7 @@ GREPPATTERN is the pattren used by grep."
 	 (ans nil)
 	 )
     
-    (save-excursion
-      (set-buffer b)
+    (with-current-buffer b
       (erase-buffer)
       (setq default-directory rootdir)
 
@@ -169,10 +164,10 @@ GREPPATTERN is the pattren used by grep."
 	  (let ((cmd (concat "find " default-directory " -type f " filepattern " -print0 "
 			     "| xargs -0 grep -H " grepflags "-e " greppat)))
 	    ;;(message "Old command: %s" cmd)
-	    (call-process "sh" nil b nil "-c" cmd)
+	    (call-process semantic-symref-grep-shell nil b nil "-c" cmd)
 	    )
 	(let ((cmd (semantic-symref-grep-use-template rootdir filepattern grepflags greppat)))
-	  (call-process "sh" nil b nil "-c" cmd))
+	  (call-process semantic-symref-grep-shell nil b nil "-c" cmd))
 	))
     (setq ans (semantic-symref-parse-tool-output tool b))
     ;; Return the answer

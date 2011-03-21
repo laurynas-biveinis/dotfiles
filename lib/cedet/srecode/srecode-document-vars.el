@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-document-vars.el,v 1.1 2008/12/31 19:16:23 zappo Exp $
+;; X-RCS: $Id: srecode-document-vars.el,v 1.2 2010/03/15 13:40:55 xscript Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -54,7 +54,7 @@
     )
   "List of common English abbreviations or full words.
 These are nouns (as opposed to verbs) for use in creating expanded
-versions of names.This is an alist with each element of the form:
+versions of names.  This is an alist with each element of the form:
  (MATCH . RESULT)
 MATCH is a regexp to match in the type field.
 RESULT is a string."
@@ -141,7 +141,7 @@ doesn't always work correctly."
     )
   "List of common English abbreviations or full words.
 These are nouns (as opposed to verbs) for use in creating expanded
-versions of names.This is an alist with each element of the form:
+versions of names.  This is an alist with each element of the form:
  (MATCH . RESULT)
 MATCH is a regexp to match in the type field.
 RESULT is a string."
@@ -181,7 +181,7 @@ RESULT is a string."
 This is an alist with each element of the form:
  (MATCH . RESULT)
 MATCH is a regexp to match in the type field.
-RESULT is a string, which can contain %s, whih is replaced with
+RESULT is a string, which can contain %s, which is replaced with
 `match-string' 1."
   :group 'document
   :type '(repeat (cons (string :tag "Regexp")
@@ -223,7 +223,7 @@ place this comment after the parameter name."
     ("GC" . "Graphic Context")
     ("Widget" . "Widget")
     )
-  "Alist of input parameter types and strings desribing them.
+  "Alist of input parameter types and strings describing them.
 This is an alist with each element of the form:
  (MATCH . RESULT)
 MATCH is a regexp to match in the type field.
