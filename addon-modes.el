@@ -188,6 +188,10 @@
       )
   )
 
+(semantic-load-enable-minimum-features)
+(semantic-load-enable-code-helpers)
+(semantic-load-enable-gaudy-code-helpers)
+
 (if (boundp 'semantic-load-enable-excessive-code-helpers)
     (progn
       (semantic-load-enable-excessive-code-helpers)
