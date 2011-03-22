@@ -47,7 +47,7 @@
 ; No annoying beeps
 (setq visible-bell t)
 
-; Indentation can only insert spaces
+; Indentation can only insert spaces by default
 (setq-default indent-tabs-mode nil)
 
 ; Diff options
