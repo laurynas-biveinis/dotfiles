@@ -157,8 +157,35 @@
    )
 )
 
+; InnoDB coding style
+(c-add-style "InnoDB"
+             '("K&R"
+               (c-basic-offset . 8)
+               (c-comment-only-line-offset . 0)
+               (c-offsets-alist . ((statement-block-intro . +)
+                                   (knr-argdecl-intro . 0)
+                                   (substatement-open . 0)
+                                   (label . [0])
+                                   (c . 0)
+                                   (statement-cont . +)
+                                   (arglist-intro . +)
+                                   (arglist-close . c-lineup-arglist)
+                                   (innamespace . 0)
+                                   (inline-open . 0)
+                                   (statement-case-open . +)
+                                   ))
+               ))
+
 (add-to-list 'auto-mode-alist '("\\.ic\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.i\\'" . c++-mode))
+
+
+(dir-locals-set-class-variables 'innodb-source
+                                '((c-mode . ((c-file-style . "InnoDB")
+                                             (indent-tabs-mode . t)))
+                                  ((cc-mode . ((c-file-style . "InnoDB")
+                                               (indent-tabs-mode . t)))))
+                                )
 
 ;; Styles I use
 (setq c-default-style '((java-mode . "java")
@@ -191,3 +218,5 @@
   (if (member major-mode auto-indent-paste-modes)
       (indent-region (region-beginning) (region-end) nil)))
 
+; sql-mode
+(add-to-list 'auto-mode-alist '("\\.test\\'" . sql-mode)) ; MySQL test files
