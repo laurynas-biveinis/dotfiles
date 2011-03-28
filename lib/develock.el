@@ -1,14 +1,15 @@
 ;;; develock.el --- additional font-lock keywords for the developers
 
-;; Copyright (C) 2001, 2002, 2003, 2005 Katsumi Yamaoka
+;; Copyright (C) 2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009 Katsumi Yamaoka
 
 ;; Author: Katsumi Yamaoka  <yamaoka@jpl.org>
 ;;         Jun'ichi Shiono  <jun@fsas.fujitsu.com>
 ;;         Yasutaka SHINDOH <ring-pub@fan.gr.jp>
+;;         Oscar Bonilla    <ob@bitmover.com>
 ;; Created: 2001/06/28
-;; Revised: 2006/01/23
+;; Revised: 2009/08/18
 ;; Keywords: font-lock emacs-lisp change-log texinfo c java perl html
-;;           mail news
+;;           tcl ruby mail news
 
 ;; Develock is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -31,8 +32,9 @@
 ;; lock highlight leading and trailing whitespace, long lines and
 ;; oddities in the file buffer for Lisp modes, ChangeLog mode, Texinfo
 ;; mode, C modes, Java mode, Jde-mode , CPerl mode, Perl mode, HTML
-;; modes and some Mail modes.  Here is an example of how to set up
-;; your startup file (possibly .emacs) to use Develock:
+;; modes, some Mail modes, Tcl mode and Ruby mode.  Here is an example
+;; of how to set up your startup file (possibly .emacs) to use
+;; Develock:
 ;;
 ;;(cond ((featurep 'xemacs)
 ;;       (require 'develock)
@@ -42,7 +44,7 @@
 ;;       (add-hook 'mail-setup-hook 'turn-on-font-lock))
 ;;      ((>= emacs-major-version 20)
 ;;       (require 'develock)
-;;       (global-font-lock-mode t)))
+;;       (global-font-lock-mode 1)))
 ;;
 ;; Alternatively, you can use the following to enable font-lock for
 ;; each mode individually in Emacs.
@@ -66,7 +68,9 @@
 ;;       (add-hook 'java-mode-hook 'turn-on-font-lock)
 ;;       (add-hook 'html-mode-hook 'turn-on-font-lock)
 ;;       (add-hook 'html-helper-mode-hook 'turn-on-font-lock)
-;;       (add-hook 'message-mode-hook 'turn-on-font-lock)))
+;;       (add-hook 'message-mode-hook 'turn-on-font-lock)
+;;       (add-hook 'tcl-mode-hook 'turn-on-font-lock)
+;;       (add-hook 'ruby-mode-hook 'turn-on-font-lock)))
 ;;
 ;; Note that `jde-mode' activates the `font-lock-mode' by default
 ;; because of the `jde-use-font-lock' variable.
@@ -209,7 +213,7 @@
 
 ;;; Code:
 
-(defconst develock-version "0.27"
+(defconst develock-version "0.39"
   "Version number for this version of Develock.")
 
 (require 'advice)
@@ -273,28 +277,28 @@ minor mode strings as shown below:
     '(setcdr (assq 'font-lock-mode minor-mode-alist)
 	     (list (cons 'develock-mode develock-mode-strings)))))
 
-(defface develock-whitespace-face-1
+(defface develock-whitespace-1
   '((t (:background "Red")))
   "Develock face used to highlight whitespace."
   :group 'develock
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-whitespace-face-2
+(defface develock-whitespace-2
   '((t (:background "Orange")))
   "Develock face used to highlight whitespace."
   :group 'develock
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-whitespace-face-3
+(defface develock-whitespace-3
   '((t (:background "Yellow")))
   "Develock face used to highlight whitespace."
   :group 'develock
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-long-line-face-1
+(defface develock-long-line-1
   '((((background dark))
      (:foreground "Orange"))
     (t
@@ -304,21 +308,21 @@ minor mode strings as shown below:
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-long-line-face-2
+(defface develock-long-line-2
   '((t (:foreground "Red" :background "Yellow")))
   "Develock face used to highlight long lines."
   :group 'develock
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-lonely-parentheses-face
+(defface develock-lonely-parentheses
   '((t (:foreground "Blue" :background "PaleTurquoise")))
   "Develock face used to highlight lonely parentheses."
   :group 'develock
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-bad-manner-face
+(defface develock-bad-manner
   '((((background dark))
      (:foreground "Black" :background "Yellow"))
     (t
@@ -329,7 +333,7 @@ Those might violate the manners of mail messages or news articles."
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-upper-case-tag-face
+(defface develock-upper-case-tag
   '((((background dark))
      (:foreground "Black" :background "PowderBlue"))
     (t
@@ -339,7 +343,7 @@ Those might violate the manners of mail messages or news articles."
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-upper-case-attribute-face
+(defface develock-upper-case-attribute
   '((((background dark))
      (:foreground "Black" :background "Wheat"))
     (t
@@ -349,10 +353,20 @@ Those might violate the manners of mail messages or news articles."
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
 
-(defface develock-reachable-mail-address-face
+(defface develock-reachable-mail-address
   '((t (:foreground "DarkGreen" :background "LemonChiffon")))
   "Develock face used to highlight reachable E-mail addresses.
 That would be defenseless to spammers."
+  :group 'develock
+  :group 'font-lock-highlighting-faces
+  :group 'font-lock-faces)
+
+(defface develock-attention
+  '((((background dark))
+     (:foreground "OrangeRed" :bold t))
+    (t
+     (:foreground "Red" :bold t)))
+  "Develock face used to highlight things to be paid attention."
   :group 'develock
   :group 'font-lock-highlighting-faces
   :group 'font-lock-faces)
@@ -401,7 +415,9 @@ That would be defenseless to spammers."
 	'perl-mode 79
 	'mail-mode t
 	'message-mode t
-	'cmail-mail-mode t)
+	'cmail-mail-mode t
+	'tcl-mode 79
+	'ruby-mode 79)
   "Plist of `major-mode's and limitation values for long lines.
 The part of a line that is longer than the limitation value according
 to the `major-mode' is highlighted.  Value `w' means one subtracted
@@ -426,7 +442,11 @@ the value nil."
   "Alist of `major-mode's and the values for `fill-column'.
 When Develock is turned on, `auto-fill-mode' is automatically enabled
 in the buffer where `major-mode' included in this list runs.
-Each value is applied to `fill-column' in the buffer."
+Each value is applied to `fill-column' in the buffer overriding the
+one in the directory-local variables specified in the .dir-locals.el
+file (if any).  If `fill-column' is specified as a local variable and
+is allowed in the buffer, this variable will be made buffer-local and
+the value will be modified."
   :type '(repeat (cons :format "%v"
 		       (symbol :tag "Major mode")
 		       (integer :tag "Fill column")))
@@ -435,7 +455,7 @@ Each value is applied to `fill-column' in the buffer."
 
 (defcustom develock-mode-ignore-kinsoku-list
   '(emacs-lisp-mode lisp-interaction-mode c-mode c++-mode java-mode jde-mode
-		    cperl-mode perl-mode)
+		    cperl-mode perl-mode tcl-mode)
   "List of `major-mode's that ignore kinsoku at the end of lines."
   :type '(repeat (symbol :format "Major-Mode: %v\n" :size 0))
   :set 'develock-custom-set-and-refontify
@@ -553,6 +573,12 @@ try the following advice in your startup file.
 (defvar html-font-lock-keywords-x nil
   "Extraordinary level font-lock keywords for the HTML mode.")
 
+(defvar tcl-font-lock-keywords-x nil
+  "Extraordinary level font-lock keywords for the Tcl mode.")
+
+(defvar ruby-font-lock-keywords-x nil
+  "Extraordinary level font-lock keywords for the Ruby mode.")
+
 (defvar develock-keywords-alist
   '((emacs-lisp-mode lisp-font-lock-keywords-x
 		     develock-lisp-font-lock-keywords)
@@ -583,42 +609,64 @@ try the following advice in your startup file.
     (message-mode message-font-lock-keywords-x
 		  develock-mail-font-lock-keywords)
     (cmail-mail-mode cmail-font-lock-keywords-x
-		     develock-mail-font-lock-keywords))
+		     develock-mail-font-lock-keywords)
+    (tcl-mode tcl-font-lock-keywords-x
+	      develock-tcl-font-lock-keywords)
+    (ruby-mode ruby-font-lock-keywords-x
+	       develock-ruby-font-lock-keywords))
   "*Alist of keyword symbols for major modes.
 Each element should be triple symbols of the following form:
 
 \(major-mode internal-keywords user-defined-keywords)")
 
 (defvar develock-keywords-custom-type
-  (let ((args
-	 '(option :format "    %v"
-		  (list :inline t :tag "Args"
-			(radio :format "  Override: %v"
-			       (const :format "%v " nil)
-			       (const :format "%v " t)
-			       (const :format "%v " keep)
-			       (const :format "%v " prepend)
-			       (const append))
-			(boolean :tag "  LaxMatch"))))
-	(fixed-function
-	 `(list
-	   :convert-widget
-	   (lambda (widget)
-	     `(function
-	       :format "  %t: %v\n"
-	       :size 0 :value (lambda (limit))
-	       ,@(if (not (widget-get widget :copy))
-		     ;; Emacs versions prior to 21.4.
-		     '(:match
-		       (lambda (widget value) (functionp value))
-		       :value-to-internal
-		       (lambda (widget value)
-			 (widget-sexp-value-to-internal
-			  widget
-			  (if (and (stringp value)
-				   (string-match "\\`\".*\"\\'" value))
-			      (substring value 1 -1)
-			    value))))))))))
+  (let* ((args
+	  '(option :format "    %v"
+		   (list :inline t :tag "Args"
+			 (radio :format "  Override: %v"
+				(const :format "%v " nil)
+				(const :format "%v " t)
+				(const :format "%v " keep)
+				(const :format "%v " prepend)
+				(const append))
+			 (boolean :tag "  LaxMatch"))))
+	 (fixed-function
+	  `(list
+	    :convert-widget
+	    (lambda (widget)
+	      `(function
+		:format "  %t: %v\n"
+		:size 0 :value (lambda (limit))
+		,@(if (not (widget-get widget :copy))
+		      ;; Emacs versions prior to 21.4.
+		      '(:match
+			(lambda (widget value) (functionp value))
+			:value-to-internal
+			(lambda (widget value)
+			  (widget-sexp-value-to-internal
+			   widget
+			   (if (and (stringp value)
+				    (string-match "\\`\".*\"\\'" value))
+			       (substring value 1 -1)
+			     value)))))))))
+	 (face-widget
+	  (lambda (prompt)
+	    `(group
+	      :convert-widget (lambda (widget)
+				(apply 'widget-convert (widget-type widget)
+				       (eval (car (widget-get widget :args)))))
+	      (list
+	       '(const :format "" quote)
+	       (append '(face :indent 6 :format)
+		       (if (condition-case nil
+			       (string-match
+				"%{sample%}"
+				(widget-get (get 'face 'widget-type) :format))
+			     (error nil))
+			   (list (concat ,prompt "(%{sample%}) %v\n") :size 0)
+			 (list (concat ,prompt "%[select face%] %v"))))))))
+	 (face1 (funcall face-widget "  %{%t%}: "))
+	 (face2 (funcall face-widget "    %{%t%}: ")))
     `(repeat
       (choice
        :format "%[%t%] %v\n" :indent 0 :tag "Keyword Type"
@@ -626,16 +674,12 @@ Each element should be triple symbols of the following form:
 	     (const :format "  Function: %v\n"
 		    :value develock-find-long-lines)
 	     (group (const :format "" 1)
-		    (group (const :format "" quote)
-			   (face :format "\
-  %t used in a boundary (subexpression #1):\n    %[select face%] %v"
-				 :indent 6))
+		    ,(funcall face-widget "\
+  %t used in a boundary (subexpression #1):\n    ")
 		    ,args)
 	     (group (const :format "" 2)
-		    (group (const :format "" quote)
-			   (face :format "\
-  %t used out of a boundary (subexpression #2):\n    %[select face%] %v"
-				 :indent 6))
+		    ,(funcall face-widget "\
+  %t used out of a boundary (subexpression #2):\n    ")
 		    ,args))
        (list :tag "Find Tabs or Long Spaces"
 	     :sample-face widget-documentation-face
@@ -647,31 +691,24 @@ Each element should be triple symbols of the following form:
   Function: %v\n"
 		    :value develock-find-tab-or-long-space)
 	     (group (const :format "" 1)
-		    (group (const :format "" quote)
-			   (face :format "\
-  %t used for tabs before long spaces (subexpression #1):
-    %[select face%] %v"
-				 :indent 6))
+		    ,(funcall face-widget "\
+  %t used for tabs before long spaces (subexpression #1):\n    ")
 		    ,args)
 	     (group (const :format "" 2)
-		    (group (const :format "" quote)
-			   (face :format "\
-  %t used for long spaces (subexpression #2):\n    %[select face%] %v"
-				 :indent 6))
+		    ,(funcall face-widget "\
+  %t used for long spaces (subexpression #2):\n    ")
 		    ,args))
        (list :tag "(REGEXP NUM 'FACE...)"
 	     (regexp :format "  %t: %v\n" :size 0)
 	     (integer :format "  Match Subexpression Number: %v\n"
 		      :size 0)
-	     (group (const :format "" quote)
-		    (face :format "  %t: %[select face%] %v" :indent 6))
+	     ,face1
 	     ,args)
        (list :tag "(FUNCTION NUM 'FACE...)"
 	     ,fixed-function
 	     (integer :format "  Match Subexpression Number: %v\n"
 		      :size 0)
-	     (group (const :format "" quote)
-		    (face :format "  %t: %[select face%] %v" :indent 6))
+	     ,face1
 	     ,args)
        (cons :tag "(REGEXP (NUM 'FACE...) (NUM 'FACE...)...)"
 	     (regexp :format "  %t: %v\n" :size 0)
@@ -681,9 +718,7 @@ Each element should be triple symbols of the following form:
 		    (integer
 		     :format "    Match Subexpression Number: %v\n"
 		     :size 0)
-		    (group (const :format "" quote)
-			   (face :format "    %t: %[select face%] %v"
-				 :indent 6))
+		    ,face2
 		    ,args)))
        (cons :tag "(CASE_SENSITIVE_REGEXP (NUM 'FACE...)...)"
 	     (group
@@ -700,9 +735,7 @@ Each element should be triple symbols of the following form:
 		    (integer
 		     :format "    Match Subexpression Number: %v\n"
 		     :size 0)
-		    (group (const :format "" quote)
-			   (face :format "    %t: %[select face%] %v"
-				 :indent 6))
+		    ,face2
 		    ,args)))
        (cons :tag "(FUNCTION (NUM 'FACE...) (NUM 'FACE...)...)"
 	     ,fixed-function
@@ -712,9 +745,7 @@ Each element should be triple symbols of the following form:
 		    (integer
 		     :format "    Match Subexpression Number: %v\n"
 		     :size 0)
-		    (group (const :format "" quote)
-			   (face :format "    %t: %[select face%] %v"
-				 :indent 6))
+		    ,face2
 		    ,args)))
        (cons :tag "(REGEXP (NUM (IF COND 'FACE)...)...)"
 	     (regexp :format "  %t: %v\n" :size 0)
@@ -727,9 +758,7 @@ Each element should be triple symbols of the following form:
 		    (group :format "%v"
 			   (const :format "" if)
 			   (sexp :format "    Condition: %v\n" :size 0)
-			   (group (const :format "" quote)
-				  (face :format "    %t: %[select face%] %v"
-					:indent 6)))
+			   ,face2)
 		    ,args)))
        (sexp :size 0))))
   "*Customizing widget for the extraordinary level font-lock keywords.")
@@ -759,40 +788,43 @@ Each element should be triple symbols of the following form:
 (defcustom develock-lisp-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 t)
-     (2 'develock-long-line-face-2 t))
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
     ;; long spaces
     (develock-find-tab-or-long-space
-     (1 'develock-whitespace-face-2)
-     (2 'develock-whitespace-face-3 nil t))
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; spaces before tabs
     ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 t))
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
     ;; tab space tab
     ("\\(\t\\) \t"
-     (1 'develock-whitespace-face-2 append))
+     (1 'develock-whitespace-2 append))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append))
+     (0 'develock-whitespace-2 append))
     ;; lonely left parentheses or brackets without a comment
     ("^[\t ]*\\(['`]?[\t ([]*[([]\\)[\t ]*$"
-     1 'develock-lonely-parentheses-face)
+     1 'develock-lonely-parentheses)
     ;; lonely right parentheses or brackets
     ("^[\t ]*\\([]\t )]*[])]\\)\\([\t ;]+\\|[\t ]*$\\)"
-     1 'develock-lonely-parentheses-face)
+     1 'develock-lonely-parentheses)
     ;; whitespace after a left parenthesis
     ("(\\([\t ]+\\)[^\n;]"
-     1 'develock-whitespace-face-2)
+     1 'develock-whitespace-2)
     ;; whitespace before a right parenthesis
     ("([^\n]\\([\t ]+\\))"
-     1 'develock-whitespace-face-2)
+     1 'develock-whitespace-2)
     ;; reachable E-mail addresses
     ("<?[-+.0-9A-Z_a-z]+@[-0-9A-Z_a-z]+\\(\\.[-0-9A-Z_a-z]+\\)+>?"
-     (0 'develock-reachable-mail-address-face t)))
+     (0 'develock-reachable-mail-address t))
+    ;; things to be paid attention
+    ("\\<\\(?:[Ff][Ii][Xx][Mm][Ee]\\|[Tt][Oo][Dd][Oo]\\)\\(?::\\|\\>\\)"
+     (0 'develock-attention t)))
   "Extraordinary level highlighting for the Lisp modes."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
@@ -802,43 +834,52 @@ Each element should be triple symbols of the following form:
 (defcustom develock-change-log-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 append)
-     (2 'develock-long-line-face-2 append))
-    ;; tabs or 3 or more spaces in the entry line
-    ("\t[\t ]*\\|   +"
-     (0 (if (memq (char-after (develock-point-at-bol)) '(?1 ?2))
-	    'develock-whitespace-face-2)
-	append))
-    ;; a leading tab in the entry line
-    ("^\\(\t\\)[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]  "
-     (1 'develock-whitespace-face-2))
+     (1 'develock-long-line-1 append)
+     (2 'develock-long-line-2 append))
+    ;; an ugly entry line
+    (develock-find-ugly-change-log-entry-line
+     (1 'develock-whitespace-1 nil t)
+     (2 'develock-whitespace-1 t t)
+     (3 'develock-whitespace-1 t t)
+     (4 'develock-whitespace-1 t t)
+     (5 'develock-whitespace-1 t t)
+     (6 'develock-whitespace-1 t t)
+     (7 'develock-whitespace-1 t t)
+     (8 'develock-whitespace-2 t t)
+     (9 'develock-whitespace-2 t t)
+     (10 'develock-whitespace-3 t t)
+     (11 'develock-whitespace-1 t t)
+     (12 'develock-whitespace-1 t t)
+     (13 'develock-whitespace-1 t t)
+     (14 'develock-whitespace-1 t t))
     ;; leading spaces
     ("^\\( +\\)[^\t\n]"
-     (1 'develock-whitespace-face-3))
+     (1 'develock-whitespace-3))
     ;; leading 2 or more tabs
     ("^\\([\t ][\t ]+\\)[^\t\n]"
-     (1 'develock-whitespace-face-2))
+     (1 'develock-whitespace-2))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; tabs or 2 or more spaces in the log line
     ("[^\t\n ]\\(\t[\t ]*\\|  +\\)[^\t ]"
      (1 (if (and (memq (char-after (develock-point-at-bol)) '(?\t ?\ ))
 		 (not (string-equal ".  "
 				    (buffer-substring (1- (match-beginning 1))
 						      (match-end 1)))))
-	    'develock-whitespace-face-2)
+	    'develock-whitespace-2)
 	prepend))
     ;; spaces before tabs
-    ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 append))
+    ("\\( +\\)\\(\t+\\)\\([\t ]*\\)"
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 append)
+     (3 'develock-whitespace-2 append t))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append))
+     (0 'develock-whitespace-2 append))
     ;; whitespace between a file name and a colon
     ("^\t\\* [^\t\n ]+\\( (.+)\\)?\\([\t ]+\\):"
-     (2 'develock-whitespace-face-1 t)))
+     (2 'develock-whitespace-1 t)))
   "Extraordinary level highlighting for the Change Log mode."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
@@ -848,21 +889,27 @@ Each element should be triple symbols of the following form:
 (defcustom develock-texinfo-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 t)
-     (2 'develock-long-line-face-2 t))
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; spaces before tabs
     ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 t))
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
     ;; tab space tab
     ("\\(\t\\) \t"
-     (1 'develock-whitespace-face-2 append))
+     (1 'develock-whitespace-2 append))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append)))
+     (0 'develock-whitespace-2 append))
+    ;; tabs
+    ("\t+"
+     (0 'develock-whitespace-1 append))
+    ;; things to be paid attention
+    ("\\<\\(?:[Ff][Ii][Xx][Mm][Ee]\\|[Tt][Oo][Dd][Oo]\\)\\(?::\\|\\>\\)"
+     (0 'develock-attention t)))
   "Extraordinary level highlighting for the TeXinfo mode."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
@@ -872,28 +919,31 @@ Each element should be triple symbols of the following form:
 (defcustom develock-c-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 t)
-     (2 'develock-long-line-face-2 t))
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
     ;; long spaces
     (develock-find-tab-or-long-space
-     (1 'develock-whitespace-face-2)
-     (2 'develock-whitespace-face-3 nil t))
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; spaces before tabs
     ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 t))
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
     ;; tab space tab
     ("\\(\t\\) \t"
-     (1 'develock-whitespace-face-2 append))
+     (1 'develock-whitespace-2 append))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append))
+     (0 'develock-whitespace-2 append))
     ;; reachable E-mail addresses
     ("<?[-+.0-9A-Z_a-z]+@[-0-9A-Z_a-z]+\\(\\.[-0-9A-Z_a-z]+\\)+>?"
-     (0 'develock-reachable-mail-address-face t)))
+     (0 'develock-reachable-mail-address t))
+    ;; things to be paid attention
+    ("\\<\\(?:[Ff][Ii][Xx][Mm][Ee]\\|[Tt][Oo][Dd][Oo]\\)\\(?::\\|\\>\\)"
+     (0 'develock-attention t)))
   "Extraordinary level highlighting for the C modes."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
@@ -903,28 +953,31 @@ Each element should be triple symbols of the following form:
 (defcustom develock-java-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 t)
-     (2 'develock-long-line-face-2 t))
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
     ;; long spaces
     (develock-find-tab-or-long-space
-     (1 'develock-whitespace-face-2)
-     (2 'develock-whitespace-face-3 nil t))
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; spaces before tabs
     ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 t))
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
     ;; tab space tab
     ("\\(\t\\) \t"
-     (1 'develock-whitespace-face-2 append))
+     (1 'develock-whitespace-2 append))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append))
+     (0 'develock-whitespace-2 append))
     ;; reachable E-mail addresses
     ("<?[-+.0-9A-Z_a-z]+@[-0-9A-Z_a-z]+\\(\\.[-0-9A-Z_a-z]+\\)+>?"
-     (0 'develock-reachable-mail-address-face t)))
+     (0 'develock-reachable-mail-address t))
+    ;; things to be paid attention
+    ("\\<\\(?:[Ff][Ii][Xx][Mm][Ee]\\|[Tt][Oo][Dd][Oo]\\)\\(?::\\|\\>\\)"
+     (0 'develock-attention t)))
   "Extraordinary level highlighting for the Java mode."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
@@ -934,35 +987,35 @@ Each element should be triple symbols of the following form:
 (defcustom develock-html-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 t)
-     (2 'develock-long-line-face-2 t))
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
     ;; long spaces
     (develock-find-tab-or-long-space
-     (1 'develock-whitespace-face-2)
-     (2 'develock-whitespace-face-3 nil t))
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; spaces before tabs
     ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 t))
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
     ;; tab space tab
     ("\\(\t\\) \t"
-     (1 'develock-whitespace-face-2 append))
+     (1 'develock-whitespace-2 append))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append))
+     (0 'develock-whitespace-2 append))
     ;; using upper case tag
     ((lambda (limit)
        (let (case-fold-search)
 	 (re-search-forward "</?\\([A-Z]+\\)" limit t)))
-     (1 'develock-upper-case-tag-face t))
+     (1 'develock-upper-case-tag t))
     ;; using upper case attribute
     ((lambda (limit)
        (let (case-fold-search)
 	 (re-search-forward "<[a-zA-Z]+[\t ]+\\([A-Z]+\\)[\t ]*=" limit t)))
-     (1 'develock-upper-case-attribute-face t)))
+     (1 'develock-upper-case-attribute t)))
   "Extraordinary level highlighting for the HTML mode."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
@@ -972,28 +1025,31 @@ Each element should be triple symbols of the following form:
 (defcustom develock-cperl-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 t)
-     (2 'develock-long-line-face-2 t))
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
     ;; long spaces
     (develock-find-tab-or-long-space
-     (1 'develock-whitespace-face-2)
-     (2 'develock-whitespace-face-3 nil t))
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; spaces before tabs
     ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 t))
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
     ;; tab space tab
     ("\\(\t\\) \t"
-     (1 'develock-whitespace-face-2 append))
+     (1 'develock-whitespace-2 append))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append))
+     (0 'develock-whitespace-2 append))
     ;; reachable E-mail addresses
     ("<?[-+.0-9A-Z_a-z]+@[-0-9A-Z_a-z]+\\(\\.[-0-9A-Z_a-z]+\\)+>?"
-     (0 'develock-reachable-mail-address-face t)))
+     (0 'develock-reachable-mail-address t))
+    ;; things to be paid attention
+    ("\\<\\(?:[Ff][Ii][Xx][Mm][Ee]\\|[Tt][Oo][Dd][Oo]\\)\\(?::\\|\\>\\)"
+     (0 'develock-attention t)))
   "Extraordinary level highlighting for the CPerl mode."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
@@ -1003,28 +1059,31 @@ Each element should be triple symbols of the following form:
 (defcustom develock-perl-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 t)
-     (2 'develock-long-line-face-2 t))
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
     ;; long spaces
     (develock-find-tab-or-long-space
-     (1 'develock-whitespace-face-2)
-     (2 'develock-whitespace-face-3 nil t))
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; spaces before tabs
     ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 t))
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
     ;; tab space tab
     ("\\(\t\\) \t"
-     (1 'develock-whitespace-face-2 append))
+     (1 'develock-whitespace-2 append))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append))
+     (0 'develock-whitespace-2 append))
     ;; reachable E-mail addresses
     ("<?[-+.0-9A-Z_a-z]+@[-0-9A-Z_a-z]+\\(\\.[-0-9A-Z_a-z]+\\)+>?"
-     (0 'develock-reachable-mail-address-face t)))
+     (0 'develock-reachable-mail-address t))
+    ;; things to be paid attention
+    ("\\<\\(?:[Ff][Ii][Xx][Mm][Ee]\\|[Tt][Oo][Dd][Oo]\\)\\(?::\\|\\>\\)"
+     (0 'develock-attention t)))
   "Extraordinary level highlighting for the Perl mode."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
@@ -1034,29 +1093,97 @@ Each element should be triple symbols of the following form:
 (defcustom develock-mail-font-lock-keywords
   `(;; a long line
     (develock-find-long-lines
-     (1 'develock-long-line-face-1 t)
-     (2 'develock-long-line-face-2 t))
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
     ;; long spaces
     (develock-find-tab-or-long-space
-     (1 'develock-whitespace-face-2)
-     (2 'develock-whitespace-face-3 nil t))
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
-     (1 'develock-whitespace-face-1 t))
+     (1 'develock-whitespace-1 t))
     ;; spaces before tabs
     ("\\( +\\)\\(\t+\\)"
-     (1 'develock-whitespace-face-1 t)
-     (2 'develock-whitespace-face-2 t))
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
     ;; tab space tab
     ("\\(\t\\) \t"
-     (1 'develock-whitespace-face-2 append))
+     (1 'develock-whitespace-2 append))
     ;; only tabs or spaces in the line
     ("^[\t ]+$"
-     (0 'develock-whitespace-face-2 append))
+     (0 'develock-whitespace-2 append))
     ,(if (featurep 'mule)
 	 ;; Japanese hankaku katakana
-	 '("\\ck+" (0 'develock-bad-manner-face t))))
+	 '("\\ck+" (0 'develock-bad-manner t))))
   "Extraordinary level highlighting for the Mail modes."
+  :type develock-keywords-custom-type
+  :set 'develock-keywords-custom-set
+  :group 'develock
+  :group 'font-lock)
+
+(defcustom develock-tcl-font-lock-keywords
+  '(;; a long line
+    (develock-find-long-lines
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
+    ;; long spaces
+    (develock-find-tab-or-long-space
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
+    ;; trailing whitespace
+    ("[^\t\n ]\\([\t ]+\\)$"
+     (1 'develock-whitespace-1 t))
+    ;; spaces before tabs
+    ("\\( +\\)\\(\t+\\)"
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
+    ;; tab space tab
+    ("\\(\t\\) \t"
+     (1 'develock-whitespace-2 append))
+    ;; only tabs or spaces in the line
+    ("^[\t ]+$"
+     (0 'develock-whitespace-2 append))
+    ;; reachable E-mail addresses
+    ("<?[-+.0-9A-Z_a-z]+@[-0-9A-Z_a-z]+\\(\\.[-0-9A-Z_a-z]+\\)+>?"
+     (0 'develock-reachable-mail-address t))
+    ;; things to be paid attention
+    ("\\<\\(?:[Ff][Ii][Xx][Mm][Ee]\\|[Tt][Oo][Dd][Oo]\\)\\(?::\\|\\>\\)"
+     (0 'develock-attention t)))
+  "Extraordinary level highlighting for the Tcl mode."
+  :type develock-keywords-custom-type
+  :set 'develock-keywords-custom-set
+  :group 'develock
+  :group 'font-lock)
+
+(defcustom develock-ruby-font-lock-keywords
+  '(;; a long line
+    (develock-find-long-lines
+     (1 'develock-long-line-1 t)
+     (2 'develock-long-line-2 t))
+    ;; long spaces
+    (develock-find-tab-or-long-space
+     (1 'develock-whitespace-2)
+     (2 'develock-whitespace-3 nil t))
+    ;; trailing whitespace
+    ("[^\t\n ]\\([\t ]+\\)$"
+     (1 'develock-whitespace-1 t))
+    ;; spaces before tabs
+    ("\\( +\\)\\(\t+\\)"
+     (1 'develock-whitespace-1 t)
+     (2 'develock-whitespace-2 t))
+    ;; tab space tab
+    ("\\(\t\\) \t"
+     (1 'develock-whitespace-2 append))
+    ;; only tabs or spaces in the line
+    ("^[\t ]+$"
+     (0 'develock-whitespace-2 append))
+    ;; reachable E-mail addresses
+    ("<?[-+.0-9A-Z_a-z]+@[-0-9A-Z_a-z]+\\(\\.[-0-9A-Z_a-z]+\\)+>?"
+     (0 'develock-reachable-mail-address t))
+    ;; things to be paid attention
+    ("\\<\\(?:[Ff][Ii][Xx][Mm][Ee]\\|[Tt][Oo][Dd][Oo]\\)\\(?::\\|\\>\\)"
+     (0 'develock-attention t)))
+  "Extraordinary level highlighting for the Ruby mode."
   :type develock-keywords-custom-type
   :set 'develock-keywords-custom-set
   :group 'develock
@@ -1101,6 +1228,53 @@ Users should never modify the value.")
   "Internal variable used to save `fill-column' and `auto-fill-mode'.
 It becomes buffer-local in the buffer in which Develock is on, and
 keeps the values as a cons cell before Develock is turned on.")
+
+(if (boundp 'file-local-variables-alist)
+    ;; Emacs 23
+    (progn
+      (defadvice hack-dir-local-variables (after
+					   hack-file-local-variables-alist
+					   activate)
+	"Advised by Develock.
+Remove `fill-column' element from `file-local-variables-alist' if
+`develock-fill-column-alist' specifies it."
+	(and develock-mode
+	     (cdr (assq major-mode develock-fill-column-alist))
+	     (setq file-local-variables-alist
+		   (delq (assq 'fill-column file-local-variables-alist)
+			 file-local-variables-alist))))
+      (defadvice hack-local-variables (after hack-file-local-variables-alist
+					     activate)
+	"Advised by Develock.
+Merge `fill-column' local variable into `develock-fill-column-alist'."
+	(let (old new)
+	  (and develock-mode
+	       (setq old (assq major-mode develock-fill-column-alist))
+	       (setq new (assq 'fill-column file-local-variables-alist))
+	       (not (eq (cdr old) (cdr new)))
+	       (progn
+		 (set (make-local-variable 'develock-fill-column-alist)
+		      (copy-sequence develock-fill-column-alist))
+		 (setcar (memq (assq major-mode develock-fill-column-alist)
+			       develock-fill-column-alist)
+			 (cons major-mode (cdr new)))
+		 (setcar develock-original-fill-configuration (cdr new)))))))
+  ;; Emacs 22 or earlier
+  (defadvice hack-local-variables (around develock-allow-local-variables
+					  activate)
+    "Advised by Develock.
+Merge `fill-column' local variable into `develock-fill-column-alist'."
+    (let ((fc fill-column))
+      ad-do-it
+      (if (and (assq major-mode develock-fill-column-alist)
+	       (not (eq fc fill-column)))
+	  (progn
+	    (set (make-local-variable 'develock-fill-column-alist)
+		 (copy-sequence develock-fill-column-alist))
+	    (setcar (memq (assq major-mode develock-fill-column-alist)
+			  develock-fill-column-alist)
+		    (cons major-mode fill-column))
+	    (setcar develock-original-fill-configuration fill-column))))))
 
 (let (current-load-list)
   (eval
@@ -1303,6 +1477,30 @@ non-nil and sets beginning and ending points as the `match-data' #0,
 				 "+\\)")
 		       "\\(\t+\\)")
 		     limit t))
+
+(defun develock-find-ugly-change-log-entry-line (limit)
+  "Find an ugly entry line between the point and LIMIT in ChangeLog file."
+  (and (re-search-forward "\
+^\\( +\\|\t[\t ]*\\)?\\(?:[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]\
+\\(?:\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[012][0-9]:[0-5][0-9]:[0-5][0-9]\\)?\
+\\|\\(?:Sun\\|Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\)\
+\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)\
+\\(?:Jan\\|Feb\\|Mar\\|Apr\\|May\\|Jun\\|Jul\\|Aug\\|Sep\\|Oct\\|Nov\\|Dec\\)\
+\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[ 0-3][0-9]\
+\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[012][0-9]:[0-5][0-9]:[0-5][0-9]\
+\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[12][0-9][0-9][0-9]\\)\
+\\(?:  \\|\\( \\|   +\\|\t[\t ]*\\)\\)[^\t <>]+\
+\\(?:\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[^\t <>]+\\)?\
+\\(?:\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[^\t <>]+\\)?\
+\\(\\(?:[\t ]+[^\t <>]+\\)*\\)\
+\\(?:\\(?:  \\|\\( \\|   +\\|\t[\t ]*\\)\\)<\\|\\(<\\)\\)[^<>]+>\
+\\(?:\\(?:  \\|\\( \\|   +\\|\t[\t ]*\\)\\)\(\\|\\([^\n ].*\\)\\)?"
+			  limit t)
+       (prog2
+	   (goto-char (match-beginning 0))
+	   (or (not (zerop (forward-line -1)))
+	       (save-match-data (looking-at "[\t ]*$")))
+	 (goto-char (match-end 0)))))
 
 (eval-when-compile
   (defvar lisp-interaction-mode-hook))
@@ -1576,7 +1774,9 @@ IGNORE-POINT-POS are ignored."
 	  (looking-at "[\t ]*")
 	  (or (setq mod (buffer-modified-p))
 	      (setq orig (match-string 0)))
-	  (delete-region (point) (match-end 0))
+	  (if indent-tabs-mode
+	      (tabify (point) (match-end 0))
+	    (untabify (point) (match-end 0)))
 	  (develock-Orig-c-indent-line syntax quiet ignore-point-pos)
 	  (setq pt (point))
 	  (or mod
