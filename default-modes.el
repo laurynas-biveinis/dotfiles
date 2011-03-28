@@ -137,6 +137,9 @@
 ;; Default indentation offset
 (setq c-basic-offset 4)
 
+;; TAB indents only if point in the beginning of the line
+(setq c-tab-always-indent nil)
+
 (c-add-style
  "MySQL"
  '("K&R"
