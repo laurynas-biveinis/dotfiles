@@ -195,7 +195,7 @@
 (if (boundp 'semantic-load-enable-excessive-code-helpers)
     (progn
       (semantic-load-enable-excessive-code-helpers)
-      ; TODO: should already be enabled by previous line
+      ; TODO: should be already enabled by the previous line
       (global-semantic-idle-completions-mode)
       (global-semantic-tag-folding-mode))
   (setq semantic-default-submodes
