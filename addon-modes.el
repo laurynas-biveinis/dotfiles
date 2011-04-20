@@ -257,3 +257,48 @@
 ;(require 'jde)
 ;(setq jde-jdk-registry
 ;      (quote (("1.6.0.16" . "/usr/lib/jvm/java-6-sun-1.6.0.16"))))
+
+
+; --------
+; org-mode
+; --------
+(require 'org-install)
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cs" 'org-iswitchb)
+(define-key global-map "\C-cc" 'org-capture)
+(setq org-log-done t)
+(setq org-agenda-files (list "~/org/percona.org"
+                             "~/org/gcc.org"
+                             "~/org/phd.org"
+                             "~/org/gtd.org"
+                             "~/org/music.org")
+)
+(setq org-default-notes-file "~/org/gtd.org")
+(setq org-mobile-inbox-for-pull "~/org/flagged.org")
+(setq org-mobile-directory "~/Dropbox/MobileOrg")
+(setq org-mobile-use-encryption t)
+(setq org-mobile-encryption-password "2878")
+(setq org-use-tag-inheritance nil)
+(setq org-agenda-custom-commands
+      '(("h" tags-todo
+         "@anywhere|@call|@internet|@computer|@home|@percona|@readreview")
+        ("o" tags-todo
+         "@anywhere|@call|@internet|@computer|@office|@percona|@readreview")
+        ("p" tags "project")
+        ("g" tags-todo "@agenda")
+        ("f" tags-todo "@waitingfor")
+        ("k" tags "somedaymaybe")
+        ("v" tags-todo "@vilnius")
+        )
+)
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+(setq org-capture-templates
+      '(("t" "TODO" entry (file+headline "~/org/gtd.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("i" "Inbox" entry (file+headline "~/org/gtd.org" "Inbox")
+         "* INBOX: %?\n  %i\n  %a" :killbuffer)
+        )
+      )

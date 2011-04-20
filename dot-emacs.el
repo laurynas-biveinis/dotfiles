@@ -18,6 +18,7 @@
 (setq auctex-dir (concat private-elisp-lib "auctex-11.86/"))
 (setq auctex-lisp-dir (concat auctex-dir "lisp/"))
 (setq auctex-info-dir (concat auctex-dir "info/"))
+(setq org-mode-root (concat private-elisp-lib "org/"))
 
 (setq elpa-dir (concat private-elisp "elpa/"))
 
@@ -41,12 +42,15 @@
 (add-to-load-path elib-dir)
 (add-to-load-path jdee-dir)
 (add-to-load-path auctex-lisp-dir)
+(add-to-load-path (concat org-mode-root "lisp/"))
+(add-to-load-path (concat org-mode-root "contrib/lisp/"))
 
 ; Setup info search directories
 (defun add-to-info-path (new)
   (add-to-list 'Info-default-directory-list new))
 
 (add-to-info-path auctex-info-dir)
+(add-to-info-path (concat org-mode-root "info/"))
 
 (load "defaults")
 (load "default-modes")
