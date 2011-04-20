@@ -242,3 +242,4 @@
 
 ; sql-mode
 (add-to-list 'auto-mode-alist '("\\.test\\'" . sql-mode)) ; MySQL test files
+
