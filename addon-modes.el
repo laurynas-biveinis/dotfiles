@@ -300,23 +300,24 @@
 (setq org-use-tag-inheritance nil)
 (setq org-agenda-custom-commands
       '(("h" tags-todo
-         "@anywhere|@call|@internet|@computer|@home|@percona|@readreview")
+         "@anywhere|@call|@internet|@computer|@home|@percona|@readreview/!TODO")
         ("o" tags-todo
-         "@anywhere|@call|@internet|@computer|@office|@percona|@readreview")
+         "@anywhere|@call|@internet|@computer|@office|@percona|@readreview/!TODO")
         ("p" tags "project")
         ("g" tags-todo "@agenda")
         ("f" tags-todo "@waitingfor")
         ("k" tags "somedaymaybe")
         ("v" tags-todo "@vilnius")
-        )
+        ("r" tags-todo "@readreview")
+       )
 )
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-capture-templates
       '(("t" "TODO" entry (file+headline "~/org/gtd.org" "Tasks")
-         "* TODO %?\n  %i\n  %a")
+         "** TODO %?\n  %i\n  %a")
         ("i" "Inbox" entry (file+headline "~/org/gtd.org" "Inbox")
-         "* INBOX: %?\n  %i\n  %a" :killbuffer)
+         "** INBOX: %?\n  %i\n  %a" :killbuffer)
         )
       )
 (setq org-todo-keywords
@@ -325,4 +326,7 @@
 (setq org-todo-keyword-faces
       '(("WAITING" . "blue"))
       )
-
+(setq org-modules
+      '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
+        org-jsinfo org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl)
+)
