@@ -291,7 +291,8 @@
                       ("@percona" . ?x)
                       ("@readreview" . ?r)
                       ("@vilnius" . ?v)
-                      ("@waitinfor" . ?f)
+                      ("@waitingfor" . ?f)
+                      ("@checklist" . ?l)
                       (:endgroup . nil)
                       ("project" . ?p)
                       ("somedaymaybe" . ?s)
@@ -304,6 +305,7 @@
         ("o" tags-todo
          "@anywhere|@call|@internet|@computer|@office|@percona|@readreview/!TODO")
         ("p" tags "project")
+        ("l" tags "@checklist")
         ("g" tags-todo "@agenda")
         ("f" tags-todo "@waitingfor")
         ("k" tags "somedaymaybe")
@@ -330,3 +332,11 @@
       '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
         org-jsinfo org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl)
 )
+(setq org-agenda-skip-scheduled-if-done t)
+(setq org-log-redeadline t)
+(setq org-log-reschedule t)
+(setq org-agenda-todo-ignore-scheduled 'future)
+(setq org-stuck-projects
+      '("+project-somedaymaybe" ("TODO") nil "")
+)
+
