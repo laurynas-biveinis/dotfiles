@@ -262,6 +262,8 @@
 ; --------
 ; org-mode
 ; --------
+(setq org-enforce-todo-dependencies t)
+(setq org-enforce-todo-checkbox-dependencies t)
 (require 'org-install)
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
@@ -300,19 +302,19 @@
 )
 (setq org-use-tag-inheritance nil)
 (setq org-agenda-custom-commands
-      '(("h" tags-todo
+      '(("h" "Home actions" tags-todo
          "@anywhere|@call|@internet|@computer|@home|@percona|@readreview/!TODO")
-        ("o" tags-todo
+        ("o" "Office actions" tags-todo
          "@anywhere|@call|@internet|@computer|@office|@percona|@readreview/!TODO")
-        ("p" tags "project")
-        ("l" tags "@checklist")
-        ("g" tags-todo "@agenda")
-        ("f" tags-todo "@waitingfor")
-        ("k" tags "somedaymaybe")
-        ("v" tags-todo "@vilnius")
-        ("r" tags-todo "@readreview")
-       )
-)
+        ("p" "Projects" tags "project")
+        ("l" "Checklists" tags "@checklist")
+        ("g" "Agendas" tags-todo "@agenda")
+        ("f" "Waiting for" tags-todo "@waitingfor")
+        ("k" "Someday/maybe" tags "somedaymaybe")
+        ("v" "Vilnius" tags-todo "@vilnius")
+        ("r" "Read/review" tags-todo "@readreview")
+        )
+      )
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-capture-templates
@@ -339,4 +341,6 @@
 (setq org-stuck-projects
       '("+project-somedaymaybe" ("TODO") nil "")
 )
-
+(setq org-todo-repeat-to-state "TODO")
+(setq org-special-ctrl-a/e t)
+(setq org-special-ctrl-k t)
