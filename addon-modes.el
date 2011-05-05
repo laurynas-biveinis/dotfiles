@@ -308,7 +308,7 @@
          "@anywhere|@call|@internet|@computer|@office|@percona|@readreview/!TODO")
         ("p" "Projects" tags "project")
         ("l" "Checklists" tags "@checklist")
-        ("g" "Agendas" tags-todo "@agenda")
+        ("g" "Agendas" tags-todo "@agenda/!TODO")
         ("f" "Waiting for" tags-todo "@waitingfor")
         ("k" "Someday/maybe" tags "somedaymaybe")
         ("v" "Vilnius" tags-todo "@vilnius")
