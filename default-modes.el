@@ -52,6 +52,9 @@
 
 ; Better C-x b menu by IDO mode
 (ido-mode t)
+
+(setq ido-default-buffer-method 'selected-window)
+
 ; Kill completion buffers after completing
 (defun kill-buffer-if-exists (buffer)
   "Kill the buffer if it exists"
