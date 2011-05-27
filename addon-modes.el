@@ -1,3 +1,6 @@
+; Disable linum where it makes sense and fixes performance
+(require 'linum-off)
+
 ; Nice unique buffer names
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
