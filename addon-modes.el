@@ -342,6 +342,7 @@
 (setq org-log-redeadline t)
 (setq org-log-reschedule t)
 (setq org-agenda-todo-ignore-scheduled 'future)
+(setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-stuck-projects
       '("+project-somedaymaybe" ("TODO") nil "")
 )
