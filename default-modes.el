@@ -77,11 +77,6 @@
 (cond ((>= emacs-major-version 23)
        (global-visual-line-mode 1)))
 
-; Line numbers
-(cond ((>= emacs-major-version 23)
-       (global-linum-mode 1)))
-
-
 ; Uniquify buffer names
 (setq uniquify-buffer-name-style 'forward)
 
