@@ -5,7 +5,7 @@
 ;; Author: Eric Schulte
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 
@@ -71,7 +71,7 @@ This function is called by `org-babel-execute-src-block'."
                                      (or cmdline "")
                                      (org-babel-process-file-name in-file)
                                      (org-babel-process-file-name out-file)))
-                    ('mysql (format "mysql %s -e \"source %s\" > %s"
+                    ('mysql (format "mysql %s < %s > %s"
                                     (or cmdline "")
 				    (org-babel-process-file-name in-file)
 				    (org-babel-process-file-name out-file)))

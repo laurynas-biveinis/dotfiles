@@ -2,7 +2,7 @@
 ;;
 ;; Copyright (C) 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 ;;
-;; Version: 7.5
+;; Version: 7.6
 ;; Author: Carsten Dominik <carsten.dominik AT gmail DOT com>
 ;; Maintainer: Carsten Dominik <carsten.dominik AT gmail DOT com>
 ;; Keywords: org, wp, tex
@@ -139,6 +139,7 @@ open    The opening template for the environment, with the following escapes
         %h   the headline text
         %H   if there is headline text, that text in {} braces
         %U   if there is headline text, that text in [] brackets
+        %x   the content of the BEAMER_extra property
 close   The closing string of the environment."
 
   :group 'org-beamer

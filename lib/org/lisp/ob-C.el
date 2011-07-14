@@ -5,7 +5,7 @@
 ;; Author: Eric Schulte
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 
@@ -38,6 +38,8 @@
 (declare-function org-entry-get "org"
 		  (pom property &optional inherit literal-nil))
 
+
+(defvar org-babel-tangle-lang-exts)
 (add-to-list 'org-babel-tangle-lang-exts '("C++" . "cpp"))
 
 (defvar org-babel-default-header-args:C '())

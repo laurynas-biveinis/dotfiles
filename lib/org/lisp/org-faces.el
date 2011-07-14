@@ -6,7 +6,7 @@
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -50,6 +50,11 @@
   "Faces in Org-mode."
   :tag "Org Faces"
   :group 'org-appearance)
+
+(defface org-default
+  (org-compatible-face 'default nil)
+  "Face used for default text."
+  :group 'org-faces)
 
 (defface org-hide
   '((((background light)) (:foreground "white"))

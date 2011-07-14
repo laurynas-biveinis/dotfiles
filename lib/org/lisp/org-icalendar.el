@@ -6,7 +6,7 @@
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -432,7 +432,10 @@ When COMBINE is non nil, add the category to each line."
 	  (if scheduledp (setq summary (concat "S: " summary)))
 	  (if (string-match "\\`<%%" ts)
 	      (with-current-buffer sexp-buffer
-		(insert (substring ts 1 -1) " " summary "\n"))
+		(let ((entry (substring ts 1 -1)))
+		  (put-text-property 0 1 'uid
+				     (concat " " prefix uid) entry)
+		  (insert entry " " summary "\n")))
 	    (princ (format "BEGIN:VEVENT
 UID: %s
 %s

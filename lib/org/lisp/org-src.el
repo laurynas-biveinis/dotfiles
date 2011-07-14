@@ -8,7 +8,7 @@
 ;;         Dan Davison <davison at stats dot ox dot ac dot uk>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -153,7 +153,7 @@ but which mess up the display of a snippet in Org exported files.")
 (defcustom org-src-lang-modes
   '(("ocaml" . tuareg) ("elisp" . emacs-lisp) ("ditaa" . artist)
     ("asymptote" . asy) ("dot" . fundamental) ("sqlite" . sql)
-    ("calc" . fundamental))
+    ("calc" . fundamental) ("C" . c))
   "Alist mapping languages to their major mode.
 The key is the language name, the value is the string that should
 be inserted as the name of the major mode.  For many languages this is
@@ -214,6 +214,7 @@ buffer."
   (let ((mark (and (org-region-active-p) (mark)))
 	(case-fold-search t)
 	(info (org-edit-src-find-region-and-lang))
+	(full-info (org-babel-get-src-block-info))
 	(org-mode-p (or (org-mode-p) (derived-mode-p 'org-mode)))
 	(beg (make-marker))
 	(end (make-marker))
@@ -323,7 +324,10 @@ buffer."
 	(org-src-mode)
 	(set-buffer-modified-p nil)
 	(and org-edit-src-persistent-message
-	     (org-set-local 'header-line-format msg)))
+	     (org-set-local 'header-line-format msg))
+	(let ((edit-prep-func (intern (concat "org-babel-edit-prep:" lang))))
+	  (when (fboundp edit-prep-func)
+	    (funcall edit-prep-func full-info))))
       t)))
 
 (defun org-edit-src-continue (e)
@@ -674,7 +678,7 @@ the language, a switch telling if the content should be in a single line."
 (defun org-src-mode-configure-edit-buffer ()
   (when (org-bound-and-true-p org-edit-src-from-org-mode)
     (org-add-hook 'kill-buffer-hook
-		  '(lambda () (delete-overlay org-edit-src-overlay)) nil 'local)
+		  #'(lambda () (delete-overlay org-edit-src-overlay)) nil 'local)
     (if (org-bound-and-true-p org-edit-src-allow-write-back-p)
 	(progn
 	  (setq buffer-offer-save t)
@@ -770,7 +774,7 @@ fontification of code blocks see `org-src-fontify-block' and
 	      (get-buffer-create
 	       (concat " org-src-fontification:" (symbol-name lang-mode)))
 	    (delete-region (point-min) (point-max))
-	    (insert string)
+	    (insert (concat string " ")) ;; so there's a final property change
 	    (unless (eq major-mode lang-mode) (funcall lang-mode))
 	    (font-lock-fontify-buffer)
 	    (setq pos (point-min))

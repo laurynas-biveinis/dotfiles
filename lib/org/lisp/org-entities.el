@@ -6,7 +6,7 @@
 ;;         Ulf Stegemann <ulf at zeitform dot de>
 ;; Keywords: outlines, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -304,7 +304,7 @@ loaded, add these packages to `org-export-latex-packages-alist'."
     ("prod" "\\prod" t "&prod;" "[product]" "[n-ary product]" "∏")
     ("micro" "\\textmu{}" nil "&micro;" "micro" "µ" "µ")
     ("macr" "\\textasciimacron{}" nil "&macr;" "[macron]" "¯" "¯")
-    ("deg" "\\textdegree{}" nil "deg" "degree" "°" "°")
+    ("deg" "\\textdegree{}" nil "&deg;" "degree" "°" "°")
     ("prime" "\\prime" t "&prime;" "'" "'" "′")
     ("Prime" "\\prime{}\\prime" t "&Prime;" "''" "''" "″")
     ("infin" "\\propto" t "&infin;" "[infinity]" "[infinity]" "∞")

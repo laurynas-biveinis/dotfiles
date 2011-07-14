@@ -5,7 +5,7 @@
 ;; Author: David O'Toole <dto@gnu.org>
 ;; Maintainer: Carsten Dominik <carsten DOT dominik AT gmail DOT com>
 ;; Keywords: hypermedia, outlines, wp
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 ;;
@@ -178,6 +178,11 @@ sitemap of files or summary page for a given project.
                          `tree' (the directory structure of the source
                          files is reflected in the sitemap).  Defaults to
                          `tree'.
+  :sitemap-sans-extension Remove extension from sitemap's
+                           filenames.  Useful to have cool
+                           URIs (see
+                           http://www.w3.org/Provider/Style/URI).
+                           Defaults to nil.
 
   If you create a sitemap file, adjust the sorting like this:
 
@@ -197,8 +202,8 @@ The following properties control the creation of a concept index.
 Other properties affecting publication.
 
   :body-only              Set this to 't' to publish only the body of the
-                         documents, excluding everything outside and 
-                         including the <body> tags in HTML, or 
+                         documents, excluding everything outside and
+                         including the <body> tags in HTML, or
                          \begin{document}..\end{document} in LaTeX."
   :group 'org-publish
   :type 'alist)
@@ -525,9 +530,9 @@ matching filenames."
 		 (xm (concat "^" b (if r ".+" "[^/]+") "\\.\\(" x "\\)$")))
 	    (when
 		(or
-		   (and 
+		   (and
 		  i (member filename
-			    (mapcar 
+			    (mapcar
 			     (lambda (file) (expand-file-name file b))
 			     i)))
 		   (and
@@ -566,8 +571,8 @@ PUB-DIR is the publishing directory."
 	(setq export-buf-or-file
 	      (funcall (intern (concat "org-export-as-" format))
 		       (plist-get plist :headline-levels)
-		       nil plist nil 
-		       (plist-get plist :body-only) 
+		       nil plist nil
+		       (plist-get plist :body-only)
 		       pub-dir))
 	(when (and (bufferp export-buf-or-file)
 		   (buffer-live-p export-buf-or-file))
@@ -758,6 +763,7 @@ Default for SITEMAP-FILENAME is 'sitemap.org'."
 			  (concat "Sitemap for project " (car project))))
 	 (sitemap-style (or (plist-get project-plist :sitemap-style)
 			  'tree))
+	 (sitemap-sans-extension (plist-get project-plist :sitemap-sans-extension))
 	 (visiting (find-buffer-visiting sitemap-filename))
 	 (ifn (file-name-nondirectory sitemap-filename))
 	 file sitemap-buffer)
@@ -769,6 +775,8 @@ Default for SITEMAP-FILENAME is 'sitemap.org'."
 	(let ((fn (file-name-nondirectory file))
 	      (link (file-relative-name file dir))
 	      (oldlocal localdir))
+	  (when sitemap-sans-extension
+	    (setq link (file-name-sans-extension link)))
 	  ;; sitemap shouldn't list itself
 	  (unless (equal (file-truename sitemap-filename)
 			 (file-truename file))
@@ -800,7 +808,7 @@ Default for SITEMAP-FILENAME is 'sitemap.org'."
 					(+ (length indent-str) 2) ?\ )))))))
 	    ;; This is common to 'flat and 'tree
 	    (let ((entry
-		   (org-publish-format-file-entry sitemap-file-entry-format 
+		   (org-publish-format-file-entry sitemap-file-entry-format
 						  file project-plist))
 		  (regexp "\\(.*\\)\\[\\([^][]+\\)\\]\\(.*\\)"))
 	      (cond ((string-match-p regexp entry)
@@ -809,7 +817,7 @@ Default for SITEMAP-FILENAME is 'sitemap.org'."
 				     "[[file:" link "]["
 				     (match-string 2 entry)
 				     "]]" (match-string 3 entry) "\n")))
-		    (t 
+		    (t
 		     (insert (concat indent-str " + [[file:" link "]["
 				     entry
 				     "]]\n"))))))))
@@ -819,10 +827,10 @@ Default for SITEMAP-FILENAME is 'sitemap.org'."
 (defun org-publish-format-file-entry (fmt file project-plist)
   (format-spec fmt
 	     `((?t . ,(org-publish-find-title file t))
-	       (?d . ,(format-time-string sitemap-date-format 
+	       (?d . ,(format-time-string sitemap-date-format
 					  (org-publish-find-date file)))
 	       (?a . ,(or (plist-get project-plist :author) user-full-name)))))
-			    
+
 (defun org-publish-find-title (file &optional reset)
   "Find the title of FILE in project."
   (or
@@ -852,7 +860,7 @@ system's modification time.
 It returns time in `current-time' format."
   (let ((visiting (find-buffer-visiting file)))
     (save-excursion
-      (switch-to-buffer (or visiting (find-file file)))
+      (switch-to-buffer (or visiting (find-file-noselect file nil t)))
       (let* ((plist (org-infile-export-plist))
 	     (date (plist-get plist :date)))
 	(unless visiting
@@ -1088,15 +1096,29 @@ If FREE-CACHE, empty the cache."
 
 (defun org-publish-cache-file-needs-publishing (filename &optional pub-dir pub-func)
   "Check the timestamp of the last publishing of FILENAME.
-Return `t', if the file needs publishing"
+Return `t', if the file needs publishing.  The function also
+checks if any included files have been more recently published,
+so that the file including them will be republished as well."
   (unless org-publish-cache
     (error "%s" "`org-publish-cache-file-needs-publishing' called, but no cache present"))
   (let* ((key (org-publish-timestamp-filename filename pub-dir pub-func))
-	 (pstamp (org-publish-cache-get key)))
+	 (pstamp (org-publish-cache-get key))
+	 included-files-ctime)
+    (with-temp-buffer 
+      (when (equal (file-name-extension filename) "org")
+	(find-file (expand-file-name filename))
+	(goto-char (point-min))
+	(while (re-search-forward "^#\\+INCLUDE: \\(.+\\)[ ^\t]*$" nil t)
+	  (let* ((included-file (expand-file-name (match-string 1))))
+	    (add-to-list 'included-files-ctime
+			 (org-publish-cache-ctime-of-src included-file) t)))))
     (if (null pstamp)
 	t
       (let ((ctime (org-publish-cache-ctime-of-src filename)))
-	(< pstamp ctime)))))
+	(or (< pstamp ctime)
+	    (when included-files-ctime
+	      (not (null (delq nil (mapcar (lambda(ct) (< ctime ct)) 
+					   included-files-ctime))))))))))
 
 (defun org-publish-cache-set-file-property (filename property value &optional project-name)
   "Set the VALUE for a PROPERTY of file FILENAME in publishing cache to VALUE.
@@ -1149,9 +1171,12 @@ Returns value on success, else nil."
 
 (defun org-publish-cache-ctime-of-src (filename)
   "Get the FILENAME ctime as an integer."
-  (let ((src-attr (file-attributes (if (stringp (file-symlink-p filename))
-				       (file-symlink-p filename)
-				     filename))))
+  (let* ((symlink-maybe (or (file-symlink-p filename) filename))
+	 (src-attr (file-attributes (if (file-name-absolute-p symlink-maybe)
+					symlink-maybe
+				      (expand-file-name
+				       symlink-maybe
+				       (file-name-directory filename))))))
     (+
      (lsh (car (nth 5 src-attr)) 16)
      (cadr (nth 5 src-attr)))))

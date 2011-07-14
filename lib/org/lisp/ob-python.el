@@ -5,7 +5,7 @@
 ;; Author: Eric Schulte, Dan Davison
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 
@@ -38,6 +38,7 @@
 (declare-function py-toggle-shells "ext:python-mode" (arg))
 (declare-function run-python "ext:python" (&optional cmd noshow new))
 
+(defvar org-babel-tangle-lang-exts)
 (add-to-list 'org-babel-tangle-lang-exts '("python" . "py"))
 
 (defvar org-babel-default-header-args:python '())
@@ -202,29 +203,33 @@ open('%s', 'w').write( pprint.pformat(main()) )")
 If RESULT-TYPE equals 'output then return standard output as a
 string. If RESULT-TYPE equals 'value then return the value of the
 last statement in BODY, as elisp."
-  (case result-type
-    (output (org-babel-eval org-babel-python-command
-			    (concat (if preamble (concat preamble "\n") "") body)))
-    (value (let ((tmp-file (org-babel-temp-file "python-")))
-	     (org-babel-eval org-babel-python-command
-			     (concat
-			      (if preamble (concat preamble "\n") "")
-			      (format
-			       (if (member "pp" result-params)
-				   org-babel-python-pp-wrapper-method
-				 org-babel-python-wrapper-method)
-			       (mapconcat
-				(lambda (line) (format "\t%s" line))
-				(split-string
-				 (org-remove-indentation
-				  (org-babel-trim body))
-				 "[\r\n]") "\n")
-			       (org-babel-process-file-name tmp-file 'noquote))))
-	     ((lambda (raw)
-		(if (or (member "code" result-params)
-			(member "pp" result-params))
-		    raw
-		  (org-babel-python-table-or-string raw)))
+  ((lambda (raw)
+     (if (or (member "code" result-params)
+	     (member "pp" result-params)
+	     (and (member "output" result-params)
+		  (not (member "table" result-params))))
+	 raw
+       (org-babel-python-table-or-string (org-babel-trim raw))))
+   (case result-type
+     (output (org-babel-eval org-babel-python-command
+			     (concat (if preamble (concat preamble "\n") "")
+				     body)))
+     (value (let ((tmp-file (org-babel-temp-file "python-")))
+	      (org-babel-eval
+	       org-babel-python-command
+	       (concat
+		(if preamble (concat preamble "\n") "")
+		(format
+		 (if (member "pp" result-params)
+		     org-babel-python-pp-wrapper-method
+		   org-babel-python-wrapper-method)
+		 (mapconcat
+		  (lambda (line) (format "\t%s" line))
+		  (split-string
+		   (org-remove-indentation
+		    (org-babel-trim body))
+		   "[\r\n]") "\n")
+		 (org-babel-process-file-name tmp-file 'noquote))))
 	      (org-babel-eval-read-file tmp-file))))))
 
 (defun org-babel-python-evaluate-session
@@ -233,10 +238,11 @@ last statement in BODY, as elisp."
 If RESULT-TYPE equals 'output then return standard output as a
 string. If RESULT-TYPE equals 'value then return the value of the
 last statement in BODY, as elisp."
-  (flet ((dump-last-value
+  (flet ((send-wait () (comint-send-input nil t) (sleep-for 0 5))
+	 (dump-last-value
 	  (tmp-file pp)
 	  (mapc
-	   (lambda (statement) (insert statement) (comint-send-input))
+	   (lambda (statement) (insert statement) (send-wait))
 	   (if pp
 	       (list
 		"import pprint"
@@ -245,34 +251,39 @@ last statement in BODY, as elisp."
 	     (list (format "open('%s', 'w').write(str(_))"
 			   (org-babel-process-file-name tmp-file 'noquote))))))
 	 (input-body (body)
-		     (mapc (lambda (statement) (insert statement) (comint-send-input))
-			   (split-string (org-babel-trim body) "[\r\n]+"))
-		     (comint-send-input) (comint-send-input)))
-    (case result-type
-      (output
-       (mapconcat
-	#'org-babel-trim
-	(butlast
-	 (org-babel-comint-with-output
-	     (session org-babel-python-eoe-indicator t body)
-	   (let ((comint-process-echoes nil))
-	     (input-body body)
-	     (insert org-babel-python-eoe-indicator)
-	     (comint-send-input))) 2) "\n"))
-      (value
-       ((lambda (results)
-	  (if (or (member "code" result-params) (member "pp" result-params))
-	      results
-	    (org-babel-python-table-or-string results)))
+		     (mapc (lambda (line) (insert line) (send-wait))
+			   (split-string body "[\r\n]"))
+		     (send-wait)))
+    ((lambda (results)
+       (unless (string= (substring org-babel-python-eoe-indicator 1 -1) results)
+	 (if (or (member "code" result-params)
+		 (member "pp" result-params)
+		 (and (member "output" result-params)
+		      (not (member "table" result-params))))
+	     results
+	   (org-babel-python-table-or-string results))))
+     (case result-type
+       (output
+	(mapconcat
+	 #'org-babel-trim
+	 (butlast
+	  (org-babel-comint-with-output
+	      (session org-babel-python-eoe-indicator t body)
+	    (input-body body)
+	    (send-wait) (send-wait)
+	    (insert org-babel-python-eoe-indicator)
+	    (send-wait))
+	  2) "\n"))
+       (value
 	(let ((tmp-file (org-babel-temp-file "python-")))
 	  (org-babel-comint-with-output
 	      (session org-babel-python-eoe-indicator nil body)
 	    (let ((comint-process-echoes nil))
 	      (input-body body)
 	      (dump-last-value tmp-file (member "pp" result-params))
-	      (comint-send-input) (comint-send-input)
+	      (send-wait) (send-wait)
 	      (insert org-babel-python-eoe-indicator)
-	      (comint-send-input)))
+	      (send-wait)))
 	  (org-babel-eval-read-file tmp-file)))))))
 
 (defun org-babel-python-read-string (string)

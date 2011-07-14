@@ -4,7 +4,7 @@
 
 ;; Emacs Lisp Archive Entry
 ;; Filename: org-crypt.el
-;; Version: 7.5
+;; Version: 7.6
 ;; Keywords: org-mode
 ;; Author: John Wiegley <johnw@gnu.org>
 ;; Maintainer: Peter Jones <pjones@pmade.com>
@@ -56,9 +56,6 @@
 ;; 4. To automatically encrypt all necessary entries when saving a
 ;;    file, call `org-crypt-use-before-save-magic' after loading
 ;;    org-crypt.el.
-;;
-;; TODO:
-;;   - Allow symmetric encryption as well
 
 ;;; Thanks:
 
@@ -96,6 +93,29 @@ See the \"Match syntax\" section of the org manual for more details."
 This setting can also be overridden in the CRYPTKEY property."
   :type 'string 
   :group 'org-crypt)
+
+(defcustom org-crypt-disable-auto-save 'ask
+  "What org-decrypt should do if `auto-save-mode' is enabled.
+
+t        : Disable auto-save-mode for the current buffer
+           prior to decrypting an entry.
+
+nil      : Leave auto-save-mode enabled.
+           This may cause data to be written to disk unencrypted!
+
+'ask     : Ask user whether or not to disable auto-save-mode
+           for the current buffer.
+
+'encrypt : Leave auto-save-mode enabled for the current buffer,
+           but automatically re-encrypt all decrypted entries
+           *before* auto-saving.
+           NOTE: This only works for entries which have a tag
+           that matches `org-crypt-tag-matcher'."
+  :group 'org-crypt
+  :type '(choice (const :tag "Always"  t)
+                 (const :tag "Never"   nil)
+                 (const :tag "Ask"     ask)
+                 (const :tag "Encrypt" encrypt)))
 
 (defun org-crypt-key-for-heading ()
   "Return the encryption key for the current heading."
@@ -145,6 +165,30 @@ This setting can also be overridden in the CRYPTKEY property."
 (defun org-decrypt-entry ()
   "Decrypt the content of the current headline."
   (interactive)
+
+  ; auto-save-mode may cause leakage, so check whether it's enabled.
+  (when buffer-auto-save-file-name
+    (cond
+     ((or
+       (eq org-crypt-disable-auto-save t)
+       (and
+        (eq org-crypt-disable-auto-save 'ask)
+        (y-or-n-p "org-decrypt: auto-save-mode may cause leakage. Disable it for current buffer? ")))
+      (message (concat "org-decrypt: Disabling auto-save-mode for " (or (buffer-file-name) (current-buffer))))
+      ; The argument to auto-save-mode has to be "-1", since
+      ; giving a "nil" argument toggles instead of disabling.
+      (auto-save-mode -1))
+     ((eq org-crypt-disable-auto-save nil)
+      (message "org-decrypt: Decrypting entry with auto-save-mode enabled. This may cause leakage."))
+     ((eq org-crypt-disable-auto-save 'encrypt)
+      (message "org-decrypt: Enabling re-encryption on auto-save.")
+      (add-hook 'auto-save-hook
+                (lambda ()
+                  (message "org-crypt: Re-encrypting all decrypted entries due to auto-save.")
+                  (org-encrypt-entries))
+                nil t))
+     (t nil)))
+
   (require 'epg)
   (unless (org-before-first-heading-p)
     (save-excursion
@@ -203,18 +247,6 @@ This setting can also be overridden in the CRYPTKEY property."
   (add-hook
    'org-mode-hook
    (lambda () (add-hook 'before-save-hook 'org-encrypt-entries nil t))))
-
-;; FIXME Find a better way to encrypt Org auto-saved buffers?
-;; When `auto-save-default' is non-nil, make sure entries are
-;; encrypted before auto-saving
-;; (when auto-save-default
-;;    (add-hook
-;;     'org-mode-hook
-;;     (lambda () (add-hook 'auto-save-hook 'org-encrypt-entries nil t))))
-
-(when auto-save-default
-  (message "Warning: turn auto-save-mode off in Org buffers containing crypted entries.")
-  (sit-for 5))
 
 (add-hook 'org-reveal-start-hook 'org-decrypt-entry)
 

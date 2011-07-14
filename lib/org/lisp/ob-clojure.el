@@ -5,7 +5,7 @@
 ;; Author: Joel Boehland, Eric Schulte
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 
@@ -42,6 +42,7 @@
 
 (declare-function slime-eval "ext:slime" (sexp &optional package))
 
+(defvar org-babel-tangle-lang-exts)
 (add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj"))
 
 (defvar org-babel-default-header-args:clojure '())
@@ -63,11 +64,13 @@
 		  body))))
     (if (or (member "code" result-params)
 	    (member "pp" result-params))
-	(format (concat "(let [org-mode-print-catcher (java.io.StringWriter.)]"
-			"(clojure.pprint/with-pprint-dispatch %s-dispatch"
-			"(clojure.pprint/pprint %s org-mode-print-catcher)"
-			"(str org-mode-print-catcher)))")
-		(if (member "code" result-params) "code" "simple") body)
+	(format
+	 (concat
+	  "(let [org-mode-print-catcher (java.io.StringWriter.)] "
+	  "(clojure.pprint/with-pprint-dispatch clojure.pprint/%s-dispatch "
+	  "(clojure.pprint/pprint (do %s) org-mode-print-catcher) "
+	  "(str org-mode-print-catcher)))")
+	 (if (member "code" result-params) "code" "simple") body)
       body)))
 
 (defun org-babel-execute:clojure (body params)
@@ -75,10 +78,12 @@
   (require 'slime) (require 'swank-clojure)
   (with-temp-buffer
     (insert (org-babel-expand-body:clojure body params))
-    (read
+    ((lambda (result) (condition-case nil
+		     (read (org-babel-script-escape result 'force))
+		   (error result)))
      (slime-eval
       `(swank:interactive-eval-region
-        ,(buffer-substring-no-properties (point-min) (point-max)))
+	,(buffer-substring-no-properties (point-min) (point-max)))
       (cdr (assoc :package params))))))
 
 (provide 'ob-clojure)

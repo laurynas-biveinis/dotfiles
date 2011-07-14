@@ -4,7 +4,7 @@
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -133,7 +133,7 @@ been appended to the file given here.  This file should be in
 This should not be changed, because MobileOrg assumes this name.")
 
 (defcustom org-mobile-index-file "index.org"
-  "The index file with inks to all Org files that should be loaded by MobileOrg.
+  "The index file with links to all Org files that should be loaded by MobileOrg.
 Relative to `org-mobile-directory'.  The Address field in the MobileOrg setup
 should point to this file."
   :group 'org-mobile
@@ -305,9 +305,9 @@ create all custom agenda views, for upload to the mobile phone."
 	  (org-agenda-redo-command org-agenda-redo-command))
       (save-excursion
 	(save-window-excursion
+	  (run-hooks 'org-mobile-pre-push-hook)
 	  (org-mobile-check-setup)
 	  (org-mobile-prepare-file-lists)
-	  (run-hooks 'org-mobile-pre-push-hook)
 	  (message "Creating agendas...")
 	  (let ((inhibit-redisplay t)) (org-mobile-create-sumo-agenda))
 	  (message "Creating agendas...done")
@@ -630,12 +630,12 @@ The table of checksums is written to the file mobile-checksums."
 		      (get-text-property (point) 'org-marker)))
 	  (setq sexp (member (get-text-property (point) 'type)
 			     '("diary" "sexp")))
-	  (if (setq pl (get-text-property (point) 'prefix-length))
+	  (if (setq pl (text-property-any (point) (point-at-eol) 'org-heading t))
 	      (progn
 		(setq prefix (org-trim (buffer-substring
-					(point) (+ (point) pl)))
+					(point) pl))
 		      line (org-trim (buffer-substring
-				      (+ (point) pl)
+				      pl
 				      (point-at-eol))))
 		(delete-region (point-at-bol) (point-at-eol))
 		(insert line "<before>" prefix "</before>")

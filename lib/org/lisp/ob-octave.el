@@ -5,7 +5,7 @@
 ;; Author: Dan Davison
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 
@@ -103,7 +103,7 @@ end")
   "Return list of octave statements assigning the block's variables"
   (mapcar
    (lambda (pair)
-     (format "%s=%s"
+     (format "%s=%s;"
 	     (car pair)
 	     (org-babel-octave-var-to-octave (cdr pair))))
    (mapcar #'cdr (org-babel-get-header params :var))))

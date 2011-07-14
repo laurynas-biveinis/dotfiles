@@ -5,7 +5,7 @@
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -54,7 +54,7 @@
 (require 'org-mks)
 
 (declare-function org-datetree-find-date-create "org-datetree"
-		  (DATE &optional KEEP-RESTRICTION))
+		  (date &optional keep-restriction))
 (declare-function org-table-get-specials "org-table" ())
 (declare-function org-table-goto-line "org-table" (N))
 (defvar org-remember-default-headline)
@@ -194,9 +194,9 @@ properties are:
                      only see the new stuff.
 
  :table-line-pos     Specification of the location in the table where the
-                     new line should be inserted.  It looks like \"II-3\"
-                     which means that the new line should become the third
-                     line before the second horizontal separator line.
+                     new line should be inserted.  It should be a string like
+                     \"II-3\", meaning that the new line should become the
+                     third line before the second horizontal separator line.
 
  :kill-buffer        If the target file was not yet visited by a buffer when
                      capture was invoked, kill the buffer again after capture
@@ -215,6 +215,7 @@ Furthermore, the following %-escapes will be replaced with content:
   %u, %U      like the above, but inactive time stamps
   %^t         like %t, but prompt for date.  Similarly %^T, %^u, %^U.
               You may define a prompt like %^{Please specify birthday
+  %<...>      the result of format-time-string on the ... format specification
   %n          user name (taken from `user-full-name')
   %a          annotation, normally the link created with `org-store-link'
   %i          initial content, copied from the active region.  If %i is
@@ -321,7 +322,7 @@ calendar                |  %:type %:date"
 			    ((const :format "%v " :immediate-finish) (const t))
 			    ((const :format "%v " :empty-lines) (const 1))
 			    ((const :format "%v " :clock-in) (const t))
-			    ((const :format "%v " :clock-keep) (const nil))
+			    ((const :format "%v " :clock-keep) (const t))
 			    ((const :format "%v " :clock-resume) (const t))
 			    ((const :format "%v " :unnarrowed) (const t))
 			    ((const :format "%v " :kill-buffer) (const t))))))))
@@ -342,20 +343,37 @@ The remember buffer is still current when this hook runs."
 
 (defvar org-capture-plist nil
   "Plist for the current capture process, global, to avoid having to pass it.")
+
 (defvar org-capture-current-plist nil
   "Local variable holding the plist in a capture buffer.
-This is used to store the plist for use when finishing a capture process.
-Another such process might have changed the global variable by then.")
+This is used to store the plist for use when finishing a capture process
+because another such process might have changed the global variable by then.
+
+Each time a new capture buffer has been set up, the global `org-capture-plist'
+is copied to this variable, which is local in the indirect buffer.")
+
+(defvar org-capture-clock-keep nil
+  "Local variable to store the value of the :clock-keep parameter.
+This is needed in case org-capture-finalize is called interactively.")
 
 (defun org-capture-put (&rest stuff)
+  "Add properties to the capture property list `org-capture-plist'."
   (while stuff
     (setq org-capture-plist (plist-put org-capture-plist
 				       (pop stuff) (pop stuff)))))
 (defun org-capture-get (prop &optional local)
+  "Get properties from the capture property list `org-capture-plist'.
+When LOCAL is set, use the local variable `org-capture-current-plist',
+this is necessary after initialization of the capture process,
+to avoid conflicts with other active capture processes."
   (plist-get (if local org-capture-current-plist org-capture-plist) prop))
 
-(defun org-capture-member (prop)
-  (plist-get org-capture-plist prop))
+(defun org-capture-member (prop &optional local)
+  "Is PROP a preperty in `org-capture-plist'.
+When LOCAL is set, use the local variable `org-capture-current-plist',
+this is necessary after initialization of the capture process,
+to avoid conflicts with other active capture processes."
+  (plist-get (if local org-capture-current-plist org-capture-plist) prop))
 
 ;;; The minor mode
 
@@ -411,7 +429,7 @@ bypassed."
 	   (annotation (if (and (boundp 'org-capture-link-is-already-stored)
 				org-capture-link-is-already-stored)
 			   (plist-get org-store-link-plist :annotation)
-			 (org-store-link nil)))
+			 (ignore-errors (org-store-link nil))))
 	   (initial (and (org-region-active-p)
 			 (buffer-substring (point) (mark))))
 	   (entry (org-capture-select-template keys)))
@@ -446,6 +464,7 @@ bypassed."
 	   (if (get-buffer "*Capture*") (kill-buffer "*Capture*"))
 	   (error "Capture abort: %s" error)))
 
+	(setq org-capture-clock-keep (org-capture-get :clock-keep))
 	(if (equal goto 0)
 	    ;;insert at point
 	    (org-capture-insert-template-here)
@@ -459,19 +478,19 @@ bypassed."
 	     (error "Capture template `%s': %s"
 		    (org-capture-get :key)
 		    (nth 1 error))))
+	  (if (and (org-mode-p)
+		   (org-capture-get :clock-in))
+	      (condition-case nil
+		  (progn
+		    (if (org-clock-is-active)
+			(org-capture-put :interrupted-clock
+					 (copy-marker org-clock-marker)))
+		    (org-clock-in)
+		    (org-set-local 'org-capture-clock-was-started t))
+		(error
+		 "Could not start the clock in this capture buffer")))
 	  (if (org-capture-get :immediate-finish)
-	      (org-capture-finalize nil (not (org-capture-get :clock-keep)))
-	    (if (and (org-mode-p)
-		     (org-capture-get :clock-in))
-		(condition-case nil
-		    (progn
-		      (if (org-clock-is-active)
-			  (org-capture-put :interrupted-clock
-					   (copy-marker org-clock-marker)))
-		      (org-clock-in)
-		      (org-set-local 'org-capture-clock-was-started t))
-		  (error
-		   "Could not start the clock in this capture buffer")))))))))))
+	      (org-capture-finalize nil)))))))))
 
 (defun org-capture-get-template ()
   "Get the template from a file or a function if necessary."
@@ -491,12 +510,10 @@ bypassed."
      (t (setq txt "* Invalid capture template")))
     (org-capture-put :template txt)))
 
-(defun org-capture-finalize (&optional stay-with-capture clock-out)
+(defun org-capture-finalize (&optional stay-with-capture)
   "Finalize the capture process.
 With prefix argument STAY-WITH-CAPTURE, jump to the location of the
-captured item after finalizing.
-A second optional argument tells whether finalizing the capture
-process should clock-out the captured entry."
+captured item after finalizing."
   (interactive "P")
   (unless (and org-capture-mode
 	       (buffer-base-buffer (current-buffer)))
@@ -509,8 +526,8 @@ process should clock-out the captured entry."
 	     (> org-clock-marker (point-min))
 	     (< org-clock-marker (point-max)))
     ;; Looks like the clock we started is still running.  Clock out.
-    (when clock-out (let (org-log-note-clock-out) (org-clock-out)))
-    (when (and clock-out
+    (when (not org-capture-clock-keep) (let (org-log-note-clock-out) (org-clock-out)))
+    (when (and (not org-capture-clock-keep)
 	       (org-capture-get :clock-resume 'local)
 	       (markerp (org-capture-get :interrupted-clock 'local))
 	       (buffer-live-p (marker-buffer
@@ -742,16 +759,17 @@ already gone.  Any prefix argument will be passed to the refile command."
 	(org-datetree-find-date-create
 	 (calendar-gregorian-from-absolute
 	  (cond
-
 	   (org-overriding-default-time
 	    ;; use the overriding default time
 	    (time-to-days org-overriding-default-time))
 
 	   ((eq (car target) 'file+datetree+prompt)
 	    ;; prompt for date
-	    (time-to-days (org-read-date
-			   nil t nil "Date for tree entry:"
-			   (current-time))))
+	    (let ((prompt-time (org-read-date
+				nil t nil "Date for tree entry:"
+				(current-time))))
+	      (org-capture-put :prompt-time prompt-time)
+	      (time-to-days prompt-time)))
 	   (t
 	    ;; current date, possible corrected for late night workers
 	    (org-today))))))
@@ -1011,13 +1029,28 @@ it.  When it is a variable, retrieve the value.  Return whatever we get."
     (org-table-align)))
 
 (defun org-capture-place-plain-text ()
-  "Place the template plainly."
+  "Place the template plainly.
+If the target locator points at an Org node, place the template into
+the text of the entry, before the first child.  If not, place the
+template at the beginning or end of the file.
+Of course, if exact position has been required, just put it there."
   (let* ((txt (org-capture-get :template))
 	 beg end)
-    (goto-char (cond
-		((org-capture-get :exact-position))
-		((org-capture-get :prepend) (point-min))
-		(t (point-max))))
+    (cond
+     ((org-capture-get :exact-position)
+      (goto-char (org-capture-get :exact-position)))
+     ((and (org-capture-get :target-entry-p)
+	   (bolp)
+	   (looking-at org-outline-regexp))
+      ;; we should place the text into this entry
+      (if (org-capture-get :prepend)
+	  ;; Skip meta data and drawers
+	  (org-end-of-meta-data-and-drawers)
+	;; go to ent of the entry text, before the next headline
+	(outline-next-heading)))
+     (t
+      ;; beginning or end of file
+      (goto-char (if (org-capture-get :prepend) (point-min) (point-max)))))
     (or (bolp) (newline))
     (org-capture-empty-lines-before)
     (setq beg (point))
@@ -1298,6 +1331,11 @@ The template may still contain \"%?\" for cursor positioning."
 	    (let ((result (org-eval (read (current-buffer)))))
 	      (delete-region template-start (point))
 	      (insert result)))))
+
+      ;; The current time
+      (goto-char (point-min))
+      (while (re-search-forward "%<\\([^>\n]+\\)>" nil t)
+	(replace-match (format-time-string (match-string 1)) t t))
 
       ;; Simple %-escapes
       (goto-char (point-min))

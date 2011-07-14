@@ -5,7 +5,7 @@
 ;; Author: Eric Schulte, Dan Davison
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 
@@ -57,6 +57,9 @@
 (declare-function org-at-table-p "org" (&optional table-type))
 (declare-function org-count "org" (CL-ITEM CL-SEQ))
 (declare-function org-at-item-p "org-list" ())
+(declare-function org-narrow-to-subtree "org" ())
+(declare-function org-id-find-id-in-file "org-id" (id file &optional markerp))
+(declare-function org-show-context "org" (&optional key))
 
 (defvar org-babel-ref-split-regexp
   "[ \f\t\n\r\v]*\\(.+?\\)[ \f\t\n\r\v]*=[ \f\t\n\r\v]*\\(.+\\)[ \f\t\n\r\v]*")
@@ -81,6 +84,33 @@ the variable."
 		    (org-babel-ref-resolve ref))
 		out))))))
 
+(defun org-babel-ref-goto-headline-id (id)
+  (goto-char (point-min))
+  (let ((rx (regexp-quote id)))
+    (or (re-search-forward
+	 (concat "^[ \t]*:CUSTOM_ID:[ \t]+" rx "[ \t]*$") nil t)
+	(let* ((file (org-id-find-id-file id))
+	       (m (when file (org-id-find-id-in-file id file 'marker))))
+	  (when (and file m)
+	    (message "file:%S" file)
+	    (switch-to-buffer (marker-buffer m))
+	    (goto-char m)
+	    (move-marker m nil)
+	    (org-show-context)
+	    t)))))
+
+(defun org-babel-ref-headline-body ()
+  (save-restriction
+    (org-narrow-to-subtree)
+    (buffer-substring
+     (save-excursion (goto-char (point-min))
+		     (forward-line 1)
+		     (when (looking-at "[ \t]*:PROPERTIES:")
+		       (re-search-forward ":END:" nil)
+		       (forward-char))
+		     (point))
+     (point-max))))
+
 (defvar org-babel-library-of-babel)
 (defun org-babel-ref-resolve (ref)
   "Resolve the reference REF and return its value."
@@ -88,7 +118,7 @@ the variable."
   (save-excursion
     (let ((case-fold-search t)
           type args new-refere new-header-args new-referent result
-	  lob-info split-file split-ref index index-row index-col)
+	  lob-info split-file split-ref index index-row index-col id)
       ;; if ref is indexed grab the indices -- beware nested indices
       (when (and (string-match "\\[\\([^\\[]+\\)\\]$" ref)
 		 (let ((str (substring ref 0 (match-beginning 0))))
@@ -106,8 +136,8 @@ the variable."
 	    (setq args (mapcar (lambda (ref) (cons :var ref))
 			       (org-babel-ref-split-args new-referent))))
 	  (when (> (length new-header-args) 0)
-	    (setq args (append (org-babel-parse-header-arguments new-header-args)
-			       args)))
+	    (setq args (append (org-babel-parse-header-arguments
+				new-header-args) args)))
           (setq ref new-refere)))
       (when (string-match "^\\(.+\\):\\(.+\\)$" ref)
         (setq split-file (match-string 1 ref))
@@ -116,43 +146,47 @@ the variable."
       (save-restriction
 	(widen)
 	(goto-char (point-min))
-	(if (let ((result_regexp (concat "^[ \t]*#\\+\\(TBLNAME\\|RESNAME"
-					 "\\|RESULTS\\):[ \t]*"
-					 (regexp-quote ref) "[ \t]*$"))
-		  (regexp (concat org-babel-src-name-regexp
-				  (regexp-quote ref) "\\(\(.*\)\\)?" "[ \t]*$")))
+	(if (let* ((rx (regexp-quote ref))
+		   (res-rx (concat org-babel-result-regexp rx "[ \t]*$"))
+		   (src-rx (concat org-babel-src-name-regexp
+				   rx "\\(\(.*\)\\)?" "[ \t]*$")))
 	      ;; goto ref in the current buffer
 	      (or (and (not args)
-		       (or (re-search-forward result_regexp nil t)
-			   (re-search-backward result_regexp nil t)))
-		  (re-search-forward regexp nil t)
-		  (re-search-backward regexp nil t)
+		       (or (re-search-forward res-rx nil t)
+			   (re-search-backward res-rx nil t)))
+		  (re-search-forward src-rx nil t)
+		  (re-search-backward src-rx nil t)
+		  ;; check for local or global headlines by id
+		  (setq id (org-babel-ref-goto-headline-id ref))
 		  ;; check the Library of Babel
 		  (setq lob-info (cdr (assoc (intern ref)
 					     org-babel-library-of-babel)))))
-	    (unless lob-info (goto-char (match-beginning 0)))
+	    (unless (or lob-info id) (goto-char (match-beginning 0)))
 	  ;; ;; TODO: allow searching for names in other buffers
 	  ;; (setq id-loc (org-id-find ref 'marker)
 	  ;;       buffer (marker-buffer id-loc)
 	  ;;       loc (marker-position id-loc))
 	  ;; (move-marker id-loc nil)
 	  (error "reference '%s' not found in this buffer" ref))
-	(if lob-info
-	    (setq type 'lob)
-	  (while (not (setq type (org-babel-ref-at-ref-p)))
-	    (forward-line 1)
-	    (beginning-of-line)
-	    (if (or (= (point) (point-min)) (= (point) (point-max)))
-		(error "reference not found"))))
+	(cond
+	 (lob-info (setq type 'lob))
+	 (id (setq type 'id))
+	 (t (while (not (setq type (org-babel-ref-at-ref-p)))
+	      (forward-line 1)
+	      (beginning-of-line)
+	      (if (or (= (point) (point-min)) (= (point) (point-max)))
+		  (error "reference not found")))))
 	(let ((params (append args '((:results . "silent")))))
 	  (setq result
 		(case type
-		  ('results-line (org-babel-read-result))
-		  ('table (org-babel-read-table))
-		  ('list (org-babel-read-list))
-		  ('file (org-babel-read-link))
-		  ('source-block (org-babel-execute-src-block nil nil params))
-		  ('lob (org-babel-execute-src-block nil lob-info params)))))
+		  (results-line (org-babel-read-result))
+		  (table        (org-babel-read-table))
+		  (list         (org-babel-read-list))
+		  (file         (org-babel-read-link))
+		  (source-block (org-babel-execute-src-block nil nil params))
+		  (lob          (org-babel-execute-src-block
+				 nil lob-info params))
+		  (id           (org-babel-ref-headline-body)))))
 	(if (symbolp result)
 	    (format "%S" result)
 	  (if (and index (listp result))
@@ -208,7 +242,7 @@ to \"0:-1\"."
       (cond
        ((string= holder ",")
         (when (= depth 0)
-          (setq return (reverse (cons (substring buffer 0 -1) return)))
+          (setq return (cons (substring buffer 0 -1) return))
           (setq buffer "")))
        ((or (string= holder "(") (string= holder "[")) (setq depth (+ depth 1)))
        ((or (string= holder ")") (string= holder "]")) (setq depth (- depth 1)))))

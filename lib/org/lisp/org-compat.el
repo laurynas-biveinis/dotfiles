@@ -6,7 +6,7 @@
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -246,6 +246,15 @@ Works on both Emacs and XEmacs."
   (when (and (org-region-active-p)
 	     (> (point) (region-beginning)))
     (exchange-point-and-mark)))
+
+;; Emacs 22 misses `activate-mark'
+(if (fboundp 'activate-mark)
+    (defalias 'org-activate-mark 'activate-mark)
+  (defun org-activate-mark ()
+    (when (mark t)
+      (setq mark-active t)
+      (unless transient-mark-mode
+	(setq transient-mark-mode 'lambda)))))
 
 ;; Invisibility compatibility
 

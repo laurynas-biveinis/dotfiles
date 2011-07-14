@@ -7,7 +7,7 @@
 ;;	   Bastien Guerry <bzg AT altern DOT org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -29,9 +29,9 @@
 
 ;; This file contains the code dealing with plain lists in Org-mode.
 
-;; The fundamental idea behind lists work is to use structures. A
-;; structure is a snapshot of the list, in the shape of data tree (see
-;; `org-list-struct').
+;; The fundamental idea behind lists work is to use structures.
+;; A structure is a snapshot of the list, in the shape of data tree
+;; (see `org-list-struct').
 
 ;; Once the list structure is stored, it is possible to make changes
 ;; directly on it or get useful information about the list, with the
@@ -39,8 +39,8 @@
 ;; `org-list-prevs-alist', and using accessors or methods.
 
 ;; Structure is eventually applied to the buffer with
-;; `org-list-write-struct'. This function repairs (bullets,
-;; indentation, checkboxes) the structure before applying it. It
+;; `org-list-write-struct'.  This function repairs (bullets,
+;; indentation, checkboxes) the structure before applying it.  It
 ;; should be called near the end of any function working on
 ;; structures.
 
@@ -48,8 +48,8 @@
 ;; template:
 
 ;; 1. Verify point is in a list and grab item beginning (with the same
-;;    function `org-in-item-p'). If the function requires the cursor
-;;    to be at item's bullet, `org-at-item-p' is more selective. If
+;;    function `org-in-item-p').  If the function requires the cursor
+;;    to be at item's bullet, `org-at-item-p' is more selective.  If
 ;;    the cursor is amidst the buffer, it is possible to find the
 ;;    closest item with `org-list-search-backward', or
 ;;    `org-list-search-forward', applied to `org-item-beginning-re'.
@@ -63,13 +63,13 @@
 ;; 4. Proceed with the modifications, using methods and accessors.
 
 ;; 5. Verify and apply structure to buffer, using
-;;    `org-list-write-struct'. Possibly use
+;;    `org-list-write-struct'.  Possibly use
 ;;    `org-update-checkbox-count-maybe' if checkboxes might have been
 ;;    modified.
 
 ;; Computing a list structure can be a costly operation on huge lists
-;; (a few thousand lines long). Thus, code should follow the rule :
-;; "collect once, use many". As a corollary, it is usally a bad idea
+;; (a few thousand lines long).  Thus, code should follow the rule :
+;; "collect once, use many".  As a corollary, it is usally a bad idea
 ;; to use directly an interactive function inside the code, as those,
 ;; being independant entities, read the whole list structure another
 ;; time.
@@ -81,18 +81,21 @@
 (require 'org-macs)
 (require 'org-compat)
 
-(defvar org-blank-before-new-entry)
-(defvar org-complex-heading-regexp)
-(defvar org-description-max-indent)
-(defvar org-drawer-regexp)
-(defvar org-drawers)
 (defvar org-M-RET-may-split-line)
+(defvar org-auto-align-tags)
+(defvar org-blank-before-new-entry)
+(defvar org-clock-string)
+(defvar org-closed-string)
+(defvar org-deadline-string)
+(defvar org-description-max-indent)
+(defvar org-drawers)
 (defvar org-odd-levels-only)
-(defvar org-outline-regexp)
+(defvar org-scheduled-string)
 (defvar org-ts-regexp)
 (defvar org-ts-regexp-both)
 
 (declare-function org-at-heading-p "org" (&optional ignored))
+(declare-function org-before-first-heading-p "org" ())
 (declare-function org-back-over-empty-lines "org" ())
 (declare-function org-back-to-heading "org" (&optional invisible-ok))
 (declare-function org-combine-plists "org" (&rest plists))
@@ -100,6 +103,7 @@
 (declare-function org-current-level "org" ())
 (declare-function org-entry-get "org"
 		  (pom property &optional inherit literal-nil))
+(declare-function org-fix-tags-on-the-fly "org" ())
 (declare-function org-get-indentation "org" (&optional line))
 (declare-function org-icompleting-read "org" (&rest args))
 (declare-function org-in-regexp "org" (re &optional nlines visually))
@@ -114,6 +118,7 @@
 (declare-function org-on-heading-p "org" (&optional invisible-ok))
 (declare-function org-previous-line-empty-p "org" ())
 (declare-function org-remove-if "org" (predicate seq))
+(declare-function org-reduced-level "org" (L))
 (declare-function org-show-subtree "org" ())
 (declare-function org-time-string-to-seconds "org" (s))
 (declare-function org-timer-hms-to-secs "org-timer" (hms))
@@ -209,18 +214,18 @@ the safe choice."
 
 (defcustom org-alphabetical-lists nil
   "Non-nil means single character alphabetical bullets are allowed.
-Both uppercase and lowercase are handled. Lists with more than 26
-items will fallback to standard numbering. Alphabetical counters
-like \"[@c]\" will be recognized."
+Both uppercase and lowercase are handled.  Lists with more than
+26 items will fallback to standard numbering.  Alphabetical
+counters like \"[@c]\" will be recognized."
   :group 'org-plain-lists
   :type 'boolean)
 
 (defcustom org-list-two-spaces-after-bullet-regexp nil
   "A regular expression matching bullets that should have 2 spaces after them.
-When nil, no bullet will have two spaces after them.
-When a string, it will be used as a regular expression.  When the
+When nil, no bullet will have two spaces after them.  When
+a string, it will be used as a regular expression.  When the
 bullet type of a list is changed, the new bullet type will be
-matched against this regexp. If it matches, there will be two
+matched against this regexp.  If it matches, there will be two
 spaces instead of one after the bullet in each item of the list."
   :group 'org-plain-lists
   :type '(choice
@@ -240,7 +245,7 @@ an item, but not starting one, is less or equally indented than
 the first item of the list.
 
 When set to `both', each of the preceding methods is applied to
-determine lists endings. This is the default method."
+determine lists endings.  This is the default method."
   :group 'org-plain-lists
   :type '(choice
 	  (const :tag "With a regexp defining ending" regexp)
@@ -250,7 +255,7 @@ determine lists endings. This is the default method."
 (defcustom org-empty-line-terminates-plain-lists nil
   "Non-nil means an empty line ends all plain list levels.
 This variable only makes sense if `org-list-ending-method' is set
-to `regexp' or `both'. This is then equivalent to set
+to `regexp' or `both'.  This is then equivalent to set
 `org-list-end-regexp' to \"^[ \\t]*$\"."
   :group 'org-plain-lists
   :type 'boolean)
@@ -272,7 +277,7 @@ By default, automatic actions are taken when using
  \\[org-shiftmetaright], \\[org-shiftmetaleft],
  \\[org-ctrl-c-minus], \\[org-toggle-checkbox] or
  \\[org-insert-todo-heading]. You can disable individually these
- rules by setting them to nil. Valid rules are:
+ rules by setting them to nil.  Valid rules are:
 
 bullet    when non-nil, cycling bullet do not allow lists at
           column 0 to have * as a bullet and descriptions lists
@@ -344,14 +349,14 @@ list, obtained by prompting the user."
 	  (list (symbol :tag "Major mode")
 		(string :tag "Format"))))
 
-(defvar org-list-forbidden-blocks '("example" "verse" "src")
+(defvar org-list-forbidden-blocks '("example" "verse" "src" "latex" "html" "docbook")
   "Names of blocks where lists are not allowed.
 Names must be in lower case.")
 
 (defvar org-list-export-context '(block inlinetask)
   "Context types where lists will be interpreted during export.
 
-Valid types are `drawer', `inlinetask' and `block'. More
+Valid types are `drawer', `inlinetask' and `block'.  More
 specifically, type `block' is determined by the variable
 `org-list-forbidden-blocks'.")
 
@@ -365,10 +370,10 @@ specifically, type `block' is determined by the variable
 It depends on `org-empty-line-terminates-plain-lists'.")
 
 (defconst org-list-full-item-re
-  (concat "^[ \t]*\\(\\(?:[-+*]\\|\\(?:[0-9]+\\|[A-Za-z]\\)[.)]\\)[ \t]*\\)"
-	  "\\(?:\\[@\\(?:start:\\)?\\([0-9]+\\|[A-Za-z]\\)\\]\\)?"
+  (concat "^[ \t]*\\(\\(?:[-+*]\\|\\(?:[0-9]+\\|[A-Za-z]\\)[.)]\\)[ \t]+\\)"
+	  "\\(?:\\[@\\(?:start:\\)?\\([0-9]+\\|[A-Za-z]\\)\\][ \t]*\\)?"
 	  "\\(?:\\(\\[[ X-]\\]\\)[ \t]+\\)?"
-	  "\\(?:\\(.*\\)[ \t]+::[ \t]+\\)?")
+	  "\\(?:\\(.*\\)[ \t]+::\\(?:[ \t]+\\|$\\)\\)?")
   "Matches a list item and puts everything into groups:
 group 1: bullet
 group 2: counter
@@ -395,10 +400,25 @@ group 4: description tag")
   (and (org-at-item-p)
        (save-excursion
 	 (goto-char (match-end 0))
-         ;; Ignore counter if any
-         (when (looking-at "\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?")
-           (goto-char (match-end 0)))
+	 (let ((counter-re (concat "\\(?:\\[@\\(?:start:\\)?"
+				   (if org-alphabetical-lists
+				       "\\([0-9]+\\|[A-Za-z]\\)"
+				     "[0-9]+")
+				   "\\][ \t]*\\)")))
+	   ;; Ignore counter if any
+	   (when (looking-at counter-re) (goto-char (match-end 0))))
 	 (looking-at regexp))))
+
+(defun org-list-in-valid-context-p ()
+  "Non-nil if point is in a valid block.
+Invalid blocks are referring to `org-list-forbidden-blocks'."
+  (save-match-data
+    (let ((case-fold-search t))
+      (not (org-in-regexps-block-p
+	    (concat "^[ \t]*#\\+begin_\\("
+		    (mapconcat 'regexp-quote org-list-forbidden-blocks "\\|")
+		    "\\)")
+	    '(concat "^[ \t]*#\\+end_" (match-string 1)))))))
 
 (defun org-in-item-p ()
   "Return item beginning position when in a plain list, nil otherwise.
@@ -408,6 +428,9 @@ This checks `org-list-ending-method'."
     (let* ((case-fold-search t)
 	   (context (org-list-context))
 	   (lim-up (car context))
+	   (drawers-re (concat "^[ \t]*:\\("
+			       (mapconcat 'regexp-quote org-drawers "\\|")
+			       "\\):[ \t]*$"))
 	   (inlinetask-re (and (featurep 'org-inlinetask)
 			       (org-inlinetask-outline-regexp)))
 	   (item-re (org-item-re))
@@ -421,9 +444,9 @@ This checks `org-list-ending-method'."
        ((eq (nth 2 context) 'invalid) nil)
        ((looking-at item-re) (point))
        (t
-	;; Detect if cursor in amidst `org-list-end-re'. First, count
+	;; Detect if cursor in amidst `org-list-end-re'.  First, count
 	;; number HL of hard lines it takes, then call `org-in-regexp'
-	;; to compute its boundaries END-BOUNDS. When point is
+	;; to compute its boundaries END-BOUNDS.  When point is
 	;; in-between, move cursor before regexp beginning.
 	(let ((hl 0) (i -1) end-bounds)
 	  (when (and (not (eq org-list-ending-method 'indent))
@@ -454,10 +477,10 @@ This checks `org-list-ending-method'."
 		     (looking-at org-list-end-re))
 		(throw 'exit nil))
 	       ;; Skip blocks, drawers, inline-tasks, blank lines
-	       ((looking-at "^[ \t]*#\\+end_")
-		(re-search-backward "^[ \t]*#\\+begin_" nil t))
-	       ((looking-at "^[ \t]*:END:")
-		(re-search-backward org-drawer-regexp nil t)
+	       ((and (looking-at "^[ \t]*#\\+end_")
+		     (re-search-backward "^[ \t]*#\\+begin_" lim-up t)))
+	       ((and (looking-at "^[ \t]*:END:")
+		     (re-search-backward drawers-re lim-up t))
 		(beginning-of-line))
 	       ((and inlinetask-re (looking-at inlinetask-re))
 		(org-inlinetask-goto-beginning)
@@ -476,8 +499,7 @@ This checks `org-list-ending-method'."
   "Is point in a line starting a hand-formatted item?"
   (save-excursion
     (beginning-of-line)
-    (and (looking-at (org-item-re))
-	 (not (eq (nth 2 (org-list-context)) 'invalid)))))
+    (and (looking-at (org-item-re)) (org-list-in-valid-context-p))))
 
 (defun org-at-item-bullet-p ()
   "Is point at the bullet of a plain list item?"
@@ -520,7 +542,7 @@ Contexts `block' and `invalid' refer to `org-list-forbidden-blocks'."
       (org-with-limited-levels
        (beginning-of-line)
        (let ((case-fold-search t) (pos (point)) beg end context-type
-	     ;; Get positions of surrounding headings. This is the
+	     ;; Get positions of surrounding headings.  This is the
 	     ;; default context.
 	     (lim-up (or (save-excursion (and (ignore-errors (org-back-to-heading t))
 					      (point)))
@@ -528,8 +550,8 @@ Contexts `block' and `invalid' refer to `org-list-forbidden-blocks'."
 	     (lim-down (or (save-excursion (outline-next-heading)) (point-max))))
 	 ;; Is point inside a drawer?
 	 (let ((end-re "^[ \t]*:END:")
-	       ;; Can't use org-drawers-regexp as this function
-	       ;; might be called in buffers not in Org mode
+	       ;; Can't use org-drawers-regexp as this function might
+	       ;; be called in buffers not in Org mode.
 	       (beg-re (concat "^[ \t]*:\\("
 			       (mapconcat 'regexp-quote org-drawers "\\|")
 			       "\\):[ \t]*$")))
@@ -585,8 +607,8 @@ values are:
 2. bullet with trailing whitespace,
 3. bullet counter, if any,
 4. checkbox, if any,
-5. position at item end,
-6. description tag, if any.
+5. description tag, if any,
+6. position at item end.
 
 Thus the following list, where numbers in parens are
 point-at-bol:
@@ -641,7 +663,7 @@ Assume point is at an item."
 	       (skip-chars-backward " \r\t\n")
 	       (min (1+ (point-at-eol)) lim-down)))))
       ;; 1. Read list from starting item to its beginning, and save
-      ;;    top item position and indentation in BEG-CELL. Also store
+      ;;    top item position and indentation in BEG-CELL.  Also store
       ;;    ending position of items in END-LST.
       (save-excursion
 	(catch 'exit
@@ -660,38 +682,26 @@ Assume point is at an item."
 				 (memq (assq (car beg-cell) itm-lst) itm-lst)
 			       (setq beg-cell (cons (point) ind))
 			       (cons (funcall assoc-at-point ind) itm-lst)))))
-	       ;; At a verbatim block, go before its beginning. Move
+	       ;; At a verbatim block, go before its beginning.  Move
 	       ;; from eol to ensure `previous-single-property-change'
 	       ;; will return a value.
 	       ((get-text-property (point) 'org-example)
 		(goto-char (previous-single-property-change
 			    (point-at-eol) 'org-example nil lim-up))
 		(forward-line -1))
-	       ;; Looking at a list ending regexp. Dismiss useless
-	       ;; data recorded above BEG-CELL. Jump to part 2.
+	       ;; Looking at a list ending regexp.  Dismiss useless
+	       ;; data recorded above BEG-CELL.  Jump to part 2.
 	       ((and (not (eq org-list-ending-method 'indent))
 		     (looking-at org-list-end-re))
 		(throw 'exit
 		       (setq itm-lst
 			     (memq (assq (car beg-cell) itm-lst) itm-lst))))
-	       ;; Skip blocks, drawers, inline tasks, blank lines
-	       ;; along the way.
-	       ((looking-at "^[ \t]*#\\+end_")
-		(re-search-backward "^[ \t]*#\\+begin_" nil t))
-	       ((looking-at "^[ \t]*:END:")
-		(re-search-backward drawers-re nil t)
-		(beginning-of-line))
-	       ((and inlinetask-re (looking-at inlinetask-re))
-		(org-inlinetask-goto-beginning)
-		(forward-line -1))
-	       ((looking-at "^[ \t]*$")
-		(forward-line -1))
+	       ;; Point is at an item.  Add data to ITM-LST. It may
+	       ;; also end a previous item: save it in END-LST.  If
+	       ;; ind is less or equal than BEG-CELL and there is no
+	       ;; end at this ind or lesser, this item becomes the new
+	       ;; BEG-CELL.
 	       ((looking-at item-re)
-		;; Point is at an item. Add data to ITM-LST. It may
-		;; also end a previous item: save it in END-LST. If
-		;; ind is less or equal than BEG-CELL and there is no
-		;; end at this ind or lesser, this item becomes the
-		;; new BEG-CELL.
 		(push (funcall assoc-at-point ind) itm-lst)
 		(push (cons ind (point)) end-lst)
 		(when (or (and (eq org-list-ending-method 'regexp)
@@ -699,13 +709,24 @@ Assume point is at an item."
 			  (< ind text-min-ind))
 		  (setq beg-cell (cons (point) ind)))
 		(forward-line -1))
-	       ;; From there, point is not at an item. Unless ending
+	       ;; Skip blocks, drawers, inline tasks, blank lines.
+	       ((and (looking-at "^[ \t]*#\\+end_")
+		     (re-search-backward "^[ \t]*#\\+begin_" lim-up t)))
+	       ((and (looking-at "^[ \t]*:END:")
+		     (re-search-backward drawers-re lim-up t))
+		(beginning-of-line))
+	       ((and inlinetask-re (looking-at inlinetask-re))
+		(org-inlinetask-goto-beginning)
+		(forward-line -1))
+	       ((looking-at "^[ \t]*$")
+		(forward-line -1))
+	       ;; From there, point is not at an item.  Unless ending
 	       ;; method is `regexp', interpret line's indentation:
 	       ;; - text at column 0 is necessarily out of any list.
-	       ;;   Dismiss data recorded above BEG-CELL. Jump to
+	       ;;   Dismiss data recorded above BEG-CELL.  Jump to
 	       ;;   part 2.
-	       ;; - any other case, it can possibly be an ending
-	       ;;   position for an item above. Save it and proceed.
+	       ;; - any other case may be an ending position for an
+	       ;;   hypothetical item above.  Store it and proceed.
 	       ((eq org-list-ending-method 'regexp) (forward-line -1))
 	       ((zerop ind)
 		(throw 'exit
@@ -716,9 +737,9 @@ Assume point is at an item."
 		(push (cons ind (point)) end-lst)
 		(forward-line -1)))))))
       ;; 2. Read list from starting point to its end, that is until we
-      ;;    get out of context, or a non-item line is less or equally
-      ;;    indented that BEG-CELL's cdr. Also store ending position
-      ;;    of items in END-LST-2.
+      ;;    get out of context, or that a non-item line is less or
+      ;;    equally indented than BEG-CELL's cdr.  Also, store ending
+      ;;    position of items in END-LST-2.
       (catch 'exit
       	(while t
       	  (let ((ind (+ (or (get-text-property (point) 'original-indentation) 0)
@@ -726,56 +747,54 @@ Assume point is at an item."
       	    (cond
       	     ((>= (point) lim-down)
 	      ;; At downward limit: this is de facto the end of the
-	      ;; list. Save point as an ending position, and jump to
+	      ;; list.  Save point as an ending position, and jump to
 	      ;; part 3.
       	      (throw 'exit
 		     (push (cons 0 (funcall end-before-blank)) end-lst-2)))
-	     ;; At a verbatim block, move to its end. Point is at bol
+	     ;; At a verbatim block, move to its end.  Point is at bol
 	     ;; and 'org-example property is set by whole lines:
 	     ;; `next-single-property-change' always return a value.
 	     ((get-text-property (point) 'org-example)
 	      (goto-char
 	       (next-single-property-change (point) 'org-example nil lim-down)))
-	     ;; Looking at a list ending regexp. Save point as an
+	     ;; Looking at a list ending regexp.  Save point as an
 	     ;; ending position and jump to part 3.
 	     ((and (not (eq org-list-ending-method 'indent))
 		   (looking-at org-list-end-re))
 	      (throw 'exit (push (cons 0 (point)) end-lst-2)))
-	     ;; Skip blocks, drawers, inline tasks and blank lines
-	     ;; along the way
-	     ((looking-at "^[ \t]*#\\+begin_")
-	      (re-search-forward "^[ \t]*#\\+end_")
+	     ((looking-at item-re)
+	      ;; Point is at an item.  Add data to ITM-LST-2. It may
+	      ;; also end a previous item, so save it in END-LST-2.
+	      (push (funcall assoc-at-point ind) itm-lst-2)
+	      (push (cons ind (point)) end-lst-2)
 	      (forward-line 1))
-	     ((looking-at drawers-re)
-	      (re-search-forward "^[ \t]*:END:" nil t)
-	      (forward-line 1))
+	     ;; Skip inline tasks and blank lines along the way
 	     ((and inlinetask-re (looking-at inlinetask-re))
 	      (org-inlinetask-goto-end))
 	     ((looking-at "^[ \t]*$")
 	      (forward-line 1))
-	     ((looking-at item-re)
-	      ;; Point is at an item. Add data to ITM-LST-2. It may also
-	      ;; end a previous item, so save it in END-LST-2.
-	      (push (funcall assoc-at-point ind) itm-lst-2)
-	      (push (cons ind (point)) end-lst-2)
-	      (forward-line 1))
-	     ;; From there, point is not at an item. If ending method
-	     ;; is not `regexp', two situations are of interest:
-	     ;; - ind is lesser or equal than BEG-CELL's. The list is
-	     ;;   over. Store point as an ending position and jump to
-	     ;;   part 3.
-	     ;; - ind is lesser or equal than previous item's. This
-	     ;;   is an ending position. Store it and proceed.
-	     ((eq org-list-ending-method 'regexp) (forward-line 1))
-	     ((<= ind (cdr beg-cell))
+	     ;; Ind is lesser or equal than BEG-CELL's.  The list is
+	     ;; over: store point as an ending position and jump to
+	     ;; part 3.
+	     ((and (not (eq org-list-ending-method 'regexp))
+		   (<= ind (cdr beg-cell)))
 	      (throw 'exit
 		     (push (cons 0 (funcall end-before-blank)) end-lst-2)))
-	     ((<= ind (nth 1 (car itm-lst-2)))
-	      (push (cons ind (point)) end-lst-2)
-	      (forward-line 1))
-	     (t (forward-line 1))))))
-      (setq struct (append itm-lst (cdr (nreverse itm-lst-2))))
-      (setq end-lst (append end-lst (cdr (nreverse end-lst-2))))
+	     ;; Else, if ind is lesser or equal than previous item's,
+	     ;; this is an ending position: store it.  In any case,
+	     ;; skip block or drawer at point, and move to next line.
+	     (t
+	      (when (and (not (eq org-list-ending-method 'regexp))
+			 (<= ind (nth 1 (car itm-lst-2))))
+		(push (cons ind (point)) end-lst-2))
+	      (cond
+	       ((and (looking-at "^[ \t]*#\\+begin_")
+		     (re-search-forward "^[ \t]*#\\+end_" lim-down t)))
+	       ((and (looking-at drawers-re)
+		     (re-search-forward "^[ \t]*:END:" lim-down t))))
+	      (forward-line 1))))))
+      (setq struct (append itm-lst (cdr (nreverse itm-lst-2)))
+	    end-lst (append end-lst (cdr (nreverse end-lst-2))))
       ;; 3. Correct ill-formed lists by ensuring top item is the least
       ;;    indented.
       (let ((min-ind (nth 1 (car struct))))
@@ -784,7 +803,8 @@ Assume point is at an item."
 		      (bul (nth 2 item)))
 		  (when (< ind min-ind)
 		    (setcar (cdr item) min-ind)
-		    ;; Modify bullet to be sure item will be modified
+		    ;; Trim bullet so item will be seen as different
+		    ;; when compared with repaired version.
 		    (setcar (nthcdr 2 item) (org-trim bul)))))
 	      struct))
       ;; 4. Associate each item to its end pos.
@@ -804,10 +824,10 @@ This function modifies STRUCT."
      (lambda (elt)
        (let ((pos (car elt))
 	     (ind (nth 1 elt)))
-	 ;; Remove end candidates behind current item
+	 ;; Remove end candidates behind current item.
 	 (while (or (<= (cdar endings) pos))
 	   (pop endings))
-	 ;; Add end position to item assoc
+	 ;; Add end position to item assoc.
 	 (let ((old-end (nthcdr 6 elt))
 	       (new-end (assoc-default ind endings '<=)))
 	   (if old-end
@@ -907,8 +927,8 @@ Point returned is at end of line."
 
 (defun org-list-get-parent (item struct parents)
   "Return parent of ITEM or nil.
-STRUCT is the list structure. PARENTS is the alist of parents, as
-returned by `org-list-parents-alist'."
+STRUCT is the list structure.  PARENTS is the alist of parents,
+as returned by `org-list-parents-alist'."
   (let ((parents (or parents (org-list-parents-alist struct))))
     (cdr (assq item parents))))
 
@@ -926,13 +946,13 @@ Value returned is the position of the first child of ITEM."
 
 (defun org-list-get-next-item (item struct prevs)
   "Return next item in same sub-list as ITEM, or nil.
-STRUCT is the list structure. PREVS is the alist of previous
+STRUCT is the list structure.  PREVS is the alist of previous
 items, as returned by `org-list-prevs-alist'."
   (car (rassq item prevs)))
 
 (defun org-list-get-prev-item (item struct prevs)
   "Return previous item in same sub-list as ITEM, or nil.
-STRUCT is the list structure. PREVS is the alist of previous
+STRUCT is the list structure.  PREVS is the alist of previous
 items, as returned by `org-list-prevs-alist'."
   (cdr (assq item prevs)))
 
@@ -951,7 +971,7 @@ STRUCT is the list structure."
 
 (defun org-list-get-all-items (item struct prevs)
   "List all items in the same sub-list as ITEM.
-STRUCT is the list structure. PREVS is the alist of previous
+STRUCT is the list structure.  PREVS is the alist of previous
 items, as returned by `org-list-prevs-alist'."
   (let ((prev-item item)
 	(next-item item)
@@ -985,7 +1005,7 @@ STRUCT is the list structure."
 
 (defun org-list-get-list-begin (item struct prevs)
   "Return point at beginning of sub-list ITEM belongs.
-STRUCT is the list structure. PREVS is the alist of previous
+STRUCT is the list structure.  PREVS is the alist of previous
 items, as returned by `org-list-prevs-alist'."
   (let ((first-item item) prev-item)
     (while (setq prev-item (org-list-get-prev-item first-item struct prevs))
@@ -996,7 +1016,7 @@ items, as returned by `org-list-prevs-alist'."
 
 (defun org-list-get-last-item (item struct prevs)
   "Return point at last item of sub-list ITEM belongs.
-STRUCT is the list structure. PREVS is the alist of previous
+STRUCT is the list structure.  PREVS is the alist of previous
 items, as returned by `org-list-prevs-alist'."
   (let ((last-item item) next-item)
     (while (setq next-item (org-list-get-next-item last-item struct prevs))
@@ -1005,17 +1025,17 @@ items, as returned by `org-list-prevs-alist'."
 
 (defun org-list-get-list-end (item struct prevs)
   "Return point at end of sub-list ITEM belongs.
-STRUCT is the list structure. PREVS is the alist of previous
+STRUCT is the list structure.  PREVS is the alist of previous
 items, as returned by `org-list-prevs-alist'."
   (org-list-get-item-end (org-list-get-last-item item struct prevs) struct))
 
 (defun org-list-get-list-type (item struct prevs)
   "Return the type of the list containing ITEM, as a symbol.
 
-STRUCT is the list structure. PREVS is the alist of previous
+STRUCT is the list structure.  PREVS is the alist of previous
 items, as returned by `org-list-prevs-alist'.
 
-Possible types are `descriptive', `ordered' and `unordered'. The
+Possible types are `descriptive', `ordered' and `unordered'.  The
 type is determined by the first item of the list."
   (let ((first (org-list-get-list-begin item struct prevs)))
     (cond
@@ -1037,9 +1057,9 @@ in `re-search-forward'."
 	(unless (funcall search re bound noerr)
 	  (throw 'exit (and (goto-char (if (memq noerr '(t nil)) origin bound))
 			    nil)))
-	;; 2. Match in an `invalid' context: continue searching. Else,
-	;;    return point.
-	(unless (eq (org-list-context) 'invalid) (throw 'exit (point)))))))
+	;; 2. Match in valid context: return point.  Else, continue
+	;;    searching.
+	(when (org-list-in-valid-context-p) (throw 'exit (point)))))))
 
 (defun org-list-search-backward (regexp &optional bound noerror)
   "Like `re-search-backward' but stop only where lists are recognized.
@@ -1074,15 +1094,16 @@ It determines the number of whitespaces to append by looking at
 (defun org-list-separating-blank-lines-number (pos struct prevs)
   "Return number of blank lines that should separate items in list.
 
-POS is the position at item beginning to be considered.
+POS is the position of point where `org-list-insert-item' was called.
 
-STRUCT is the list structure. PREVS is the alist of previous
+STRUCT is the list structure.  PREVS is the alist of previous
 items, as returned by `org-list-prevs-alist'.
 
-Assume point is at item's beginning. If the item is alone, apply
+Assume point is at item's beginning.  If the item is alone, apply
 some heuristics to guess the result."
   (save-excursion
-    (let ((insert-blank-p
+    (let ((item (point))
+	  (insert-blank-p
 	   (cdr (assq 'plain-list-item org-blank-before-new-entry)))
 	  usr-blank)
       (cond
@@ -1092,27 +1113,27 @@ some heuristics to guess the result."
 	    (not insert-blank-p)) 0)
        ;; When `org-blank-before-new-entry' says so, it is 1.
        ((eq insert-blank-p t) 1)
-       ;; plain-list-item is 'auto. Count blank lines separating
+       ;; `plain-list-item' is 'auto.  Count blank lines separating
        ;; neighbours items in list.
-       (t (let ((next-p (org-list-get-next-item (point) struct prevs)))
+       (t (let ((next-p (org-list-get-next-item item struct prevs)))
 	    (cond
 	     ;; Is there a next item?
 	     (next-p (goto-char next-p)
 		     (org-back-over-empty-lines))
 	     ;; Is there a previous item?
-	     ((org-list-get-prev-item (point) struct prevs)
+	     ((org-list-get-prev-item item struct prevs)
 	      (org-back-over-empty-lines))
-	     ;; User inserted blank lines, trust him
-	     ((and (> pos (org-list-get-item-end-before-blank pos struct))
+	     ;; User inserted blank lines, trust him.
+	     ((and (> pos (org-list-get-item-end-before-blank item struct))
 		   (> (save-excursion
 			(goto-char pos)
 			(skip-chars-backward " \t")
 			(setq usr-blank (org-back-over-empty-lines))) 0))
 	      usr-blank)
-	     ;; Are there blank lines inside the item ?
+	     ;; Are there blank lines inside the item?
 	     ((save-excursion
 		(org-list-search-forward
-		 "^[ \t]*$" (org-list-get-item-end-before-blank pos struct) t))
+		 "^[ \t]*$" (org-list-get-item-end-before-blank item struct) t))
 	      1)
 	     ;; No parent: no blank line.
 	     (t 0))))))))
@@ -1122,11 +1143,11 @@ some heuristics to guess the result."
 If POS is before first character after bullet of the item, the
 new item will be created before the current one.
 
-STRUCT is the list structure. PREVS is the the alist of previous
+STRUCT is the list structure.  PREVS is the the alist of previous
 items, as returned by `org-list-prevs-alist'.
 
 Insert a checkbox if CHECKBOX is non-nil, and string AFTER-BULLET
-after the bullet. Cursor will be after this text once the
+after the bullet.  Cursor will be after this text once the
 function ends.
 
 This function modifies STRUCT."
@@ -1135,25 +1156,25 @@ This function modifies STRUCT."
     ;;    functions, position of point with regards to item start
     ;;    (BEFOREP), blank lines number separating items (BLANK-NB),
     ;;    position of split (POS) if we're allowed to (SPLIT-LINE-P).
-    (let* ((item (goto-char (org-list-get-item-begin)))
+    (let* ((item (progn (goto-char pos) (goto-char (org-list-get-item-begin))))
 	   (item-end (org-list-get-item-end item struct))
 	   (item-end-no-blank (org-list-get-item-end-before-blank item struct))
 	   (beforep (and (looking-at org-list-full-item-re)
 			 (<= pos (match-end 0))))
 	   (split-line-p (org-get-alist-option org-M-RET-may-split-line 'item))
 	   (blank-nb (org-list-separating-blank-lines-number
-		      item struct prevs))
-	   ;; 2. Build the new item to be created. Concatenate same
+		      pos struct prevs))
+	   ;; 2. Build the new item to be created.  Concatenate same
 	   ;;    bullet as item, checkbox, text AFTER-BULLET if
 	   ;;    provided, and text cut from point to end of item
-	   ;;    (TEXT-CUT) to form item's BODY. TEXT-CUT depends on
-	   ;;    BEFOREP and SPLIT-LINE-P. The difference of size
+	   ;;    (TEXT-CUT) to form item's BODY.  TEXT-CUT depends on
+	   ;;    BEFOREP and SPLIT-LINE-P.  The difference of size
 	   ;;    between what was cut and what was inserted in buffer
 	   ;;    is stored in SIZE-OFFSET.
-	   (ind (let ((ind-ref (org-list-get-ind item struct)))
-		  (if (not indent-tabs-mode)
-		      ind-ref
-		    (+ (/ ind-ref tab-width) (mod ind-ref tab-width)))))
+	   (ind (org-list-get-ind item struct))
+	   (ind-size (if indent-tabs-mode
+			 (+ (/ ind tab-width) (mod ind tab-width))
+		       ind))
 	   (bullet (org-list-bullet-string (org-list-get-bullet item struct)))
 	   (box (when checkbox "[ ]"))
 	   (text-cut
@@ -1170,9 +1191,9 @@ This function modifies STRUCT."
 				    text-cut))
 			     "")))
 	   (item-sep (make-string  (1+ blank-nb) ?\n))
-	   (item-size (+ ind (length body) (length item-sep)))
+	   (item-size (+ ind-size (length body) (length item-sep)))
 	   (size-offset (- item-size (length text-cut))))
-      ;; 4. Insert effectively item into buffer
+      ;; 4. Insert effectively item into buffer.
       (goto-char item)
       (org-indent-to-column ind)
       (insert body item-sep)
@@ -1187,13 +1208,13 @@ This function modifies STRUCT."
 		 ((< p item)
 		  (when (> end item) (setcar (nthcdr 6 e) (+ end size-offset))))
 		 ;; Trivial cases where current item isn't split in
-		 ;; two. Just shift every item after new one by
+		 ;; two.  Just shift every item after new one by
 		 ;; ITEM-SIZE.
 		 ((or beforep (not split-line-p))
 		  (setcar e (+ p item-size))
 		  (setcar (nthcdr 6 e) (+ end item-size)))
 		 ;; Item is split in two: elements before POS are just
-		 ;; shifted by ITEM-SIZE. In the case item would end
+		 ;; shifted by ITEM-SIZE.  In the case item would end
 		 ;; after split POS, ending is only shifted by
 		 ;; SIZE-OFFSET.
 		 ((< p pos)
@@ -1201,8 +1222,8 @@ This function modifies STRUCT."
 		  (if (< end pos)
 		      (setcar (nthcdr 6 e) (+ end item-size))
 		    (setcar (nthcdr 6 e) (+ end size-offset))))
-		 ;; Elements after POS are moved into new item. Length
-		 ;; of ITEM-SEP has to be removed as ITEM-SEP
+		 ;; Elements after POS are moved into new item.
+		 ;; Length of ITEM-SEP has to be removed as ITEM-SEP
 		 ;; doesn't appear in buffer yet.
 		 ((< p item-end)
 		  (setcar e (+ p size-offset (- item pos (length item-sep))))
@@ -1219,7 +1240,7 @@ This function modifies STRUCT."
       (push (list item ind bullet nil box nil (+ item item-size)) struct)
       (setq struct (sort struct (lambda (e1 e2) (< (car e1) (car e2)))))
       ;; 6. If not BEFOREP, new item must appear after ITEM, so
-      ;; exchange ITEM with the next item in list. Position cursor
+      ;; exchange ITEM with the next item in list.  Position cursor
       ;; after bullet, counter, checkbox, and label.
       (if beforep
 	  (goto-char item)
@@ -1230,8 +1251,8 @@ This function modifies STRUCT."
 
 (defun org-list-exchange-items (beg-A beg-B struct)
   "Swap item starting at BEG-A with item starting at BEG-B in STRUCT.
-Blank lines at the end of items are left in place. Return the new
-structure after the changes.
+Blank lines at the end of items are left in place.  Return the
+new structure after the changes.
 
 Assume BEG-A is lesser than BEG-B and that BEG-A and BEG-B belong
 to the same sub-list.
@@ -1253,12 +1274,12 @@ This function modifies STRUCT."
       (goto-char beg-A)
       (delete-region beg-A end-B-no-blank)
       (insert (concat body-B between-A-no-blank-and-B body-A))
-      ;; 2. Now modify struct. No need to re-read the list, the
-      ;;    transformation is just a shift of positions. Some special
+      ;; 2. Now modify struct.  No need to re-read the list, the
+      ;;    transformation is just a shift of positions.  Some special
       ;;    attention is required for items ending at END-A and END-B
-      ;;    as empty spaces are not moved there. In others words, item
-      ;;    BEG-A will end with whitespaces that were at the end of
-      ;;    BEG-B and the same applies to BEG-B.
+      ;;    as empty spaces are not moved there.  In others words,
+      ;;    item BEG-A will end with whitespaces that were at the end
+      ;;    of BEG-B and the same applies to BEG-B.
       (mapc (lambda (e)
 	      (let ((pos (car e)))
 		(cond
@@ -1286,7 +1307,7 @@ This function modifies STRUCT."
 (defun org-list-struct-outdent (start end struct parents)
   "Outdent items between positions START and END.
 
-STRUCT is the list structure. PARENTS is the alist of items'
+STRUCT is the list structure.  PARENTS is the alist of items'
 parents, as returned by `org-list-parents-alist'.
 
 START is included, END excluded."
@@ -1295,20 +1316,20 @@ START is included, END excluded."
 		(let* ((item (car cell))
 		       (parent (cdr cell)))
 		  (cond
-		   ;; Item not yet in zone: keep association
+		   ;; Item not yet in zone: keep association.
 		   ((< item start) cell)
-		   ;; Item out of zone: follow associations in acc
+		   ;; Item out of zone: follow associations in ACC.
 		   ((>= item end)
 		    (let ((convert (and parent (assq parent acc))))
 		      (if convert (cons item (cdr convert)) cell)))
 		   ;; Item has no parent: error
 		   ((not parent)
 		    (error "Cannot outdent top-level items"))
-		   ;; Parent is outdented: keep association
+		   ;; Parent is outdented: keep association.
 		   ((>= parent start)
 		    (push (cons parent item) acc) cell)
 		   (t
-		    ;; Parent isn't outdented: reparent to grand-parent
+		    ;; Parent isn't outdented: reparent to grand-parent.
 		    (let ((grand-parent (org-list-get-parent
 					 parent struct parents)))
 		      (push (cons parent item) acc)
@@ -1318,9 +1339,10 @@ START is included, END excluded."
 (defun org-list-struct-indent (start end struct parents prevs)
   "Indent items between positions START and END.
 
-STRUCT is the list structure. PARENTS is the alist of parents and
-PREVS is the alist of previous items, returned by, respectively,
-`org-list-parents-alist' and `org-list-prevs-alist'.
+STRUCT is the list structure.  PARENTS is the alist of parents
+and PREVS is the alist of previous items, returned by,
+respectively, `org-list-parents-alist' and
+`org-list-prevs-alist'.
 
 START is included and END excluded.
 
@@ -1339,26 +1361,27 @@ bullets between START and END."
 	    (let* ((item (car cell))
 		   (parent (cdr cell)))
 	      (cond
-	       ;; Item not yet in zone: keep association
+	       ;; Item not yet in zone: keep association.
 	       ((< item start) cell)
 	       ((>= item end)
-		;; Item out of zone: follow associations in acc
+		;; Item out of zone: follow associations in ACC.
 		(let ((convert (assq parent acc)))
 		  (if convert (cons item (cdr convert)) cell)))
 	       (t
 		;; Item is in zone...
 		(let ((prev (org-list-get-prev-item item struct prevs)))
-		  ;; Check if bullet needs to be changed
+		  ;; Check if bullet needs to be changed.
 		  (funcall change-bullet-maybe item)
 		  (cond
 		   ;; First item indented but not parent: error
 		   ((and (not prev) (< parent start))
 		    (error "Cannot indent the first item of a list"))
-		   ;; First item and parent indented: keep same parent
+		   ;; First item and parent indented: keep same
+		   ;; parent.
 		   ((not prev) (funcall set-assoc cell))
-		   ;; Previous item not indented: reparent to it
+		   ;; Previous item not indented: reparent to it.
 		   ((< prev start) (funcall set-assoc (cons item prev)))
-		   ;; Previous item indented: reparent like it
+		   ;; Previous item indented: reparent like it.
 		   (t
 		    (funcall set-assoc
 			     (cons item (cdr (assq prev acc)))))))))))))
@@ -1494,13 +1517,13 @@ This function modifies STRUCT."
           (lambda (item)
             (let ((parent (org-list-get-parent item struct parents)))
               (if parent
-                  ;; Indent like parent + length of parent's bullet
+                  ;; Indent like parent + length of parent's bullet.
                   (org-list-set-ind
 		   item struct (+ (or bullet-size
 				      (length
 				       (org-list-get-bullet parent struct)))
 				  (org-list-get-ind parent struct)))
-                ;; If no parent, indent like top-point
+                ;; If no parent, indent like top-point.
 		(org-list-set-ind item struct top-ind))))))
     (mapc new-ind (mapcar 'car (cdr struct)))))
 
@@ -1512,8 +1535,8 @@ previous items, as returned by, respectively,
 `org-list-parents-alist' and `org-list-prevs-alist'.
 
 If ORDERED is non-nil, a checkbox can only be checked when every
-checkbox before it is checked too. If there was an attempt to
-break this rule, the function will return the blocking item. In
+checkbox before it is checked too.  If there was an attempt to
+break this rule, the function will return the blocking item.  In
 all others cases, the return value will be nil.
 
 This function modifies STRUCT."
@@ -1532,10 +1555,10 @@ This function modifies STRUCT."
 		((member "[-]" box-list) "[-]")
 		((member "[X]" box-list) "[X]")
 		((member "[ ]" box-list) "[ ]")
-		;; parent has no boxed child: leave box as-is
+		;; Parent has no boxed child: leave box as-is.
 		(t (org-list-get-checkbox item struct))))))))
 	parent-list)
-    ;; 1. List all parents with a checkbox
+    ;; 1. List all parents with a checkbox.
     (mapc
      (lambda (e)
        (let* ((parent (org-list-get-parent e struct parents))
@@ -1543,34 +1566,34 @@ This function modifies STRUCT."
 	 (when (and parent-box-p (not (memq parent parent-list)))
 	   (push parent parent-list))))
      all-items)
-    ;; 2. Sort those parents by decreasing indentation
+    ;; 2. Sort those parents by decreasing indentation.
     (setq parent-list (sort parent-list
 			    (lambda (e1 e2)
 			      (> (org-list-get-ind e1 struct)
 				 (org-list-get-ind e2 struct)))))
     ;; 3. For each parent, get all children's checkboxes to determine
-    ;;    and set its checkbox accordingly
+    ;;    and set its checkbox accordingly.
     (mapc set-parent-box parent-list)
-    ;; 4. If ORDERED is set, see if we need to uncheck some boxes
+    ;; 4. If ORDERED is set, see if we need to uncheck some boxes.
     (when ordered
       (let* ((box-list
 	      (mapcar (lambda (e) (org-list-get-checkbox e struct)) all-items))
 	     (after-unchecked (member "[ ]" box-list)))
-	;; there are boxes checked after an unchecked one: fix that
+	;; There are boxes checked after an unchecked one: fix that.
 	(when (member "[X]" after-unchecked)
 	  (let ((index (- (length struct) (length after-unchecked))))
 	    (mapc (lambda (e) (org-list-set-checkbox e struct "[ ]"))
 		  (nthcdr index all-items))
-	    ;; Verify once again the structure, without ORDERED
+	    ;; Verify once again the structure, without ORDERED.
 	    (org-list-struct-fix-box struct parents prevs nil)
-	    ;; return blocking item
+	    ;; Return blocking item.
 	    (nth index all-items)))))))
 
 (defun org-list-struct-apply-struct (struct old-struct)
   "Apply set-difference between STRUCT and OLD-STRUCT to the buffer.
 
 OLD-STRUCT is the structure before any modifications, and STRUCT
-the structure to be applied. The function will only modify parts
+the structure to be applied.  The function will only modify parts
 of the list which have changed.
 
 Initial position of cursor is restored after the changes."
@@ -1591,10 +1614,10 @@ Initial position of cursor is restored after the changes."
 			(and (= (point) beg)
 			     (not (looking-at item-re))))
 	       (cond
-		;; Skip inline tasks
+		;; Skip inline tasks.
 		((and inlinetask-re (looking-at inlinetask-re))
 		 (org-inlinetask-goto-beginning))
-		;; Shift only non-empty lines
+		;; Shift only non-empty lines.
 		((org-looking-at-p "^[ \t]*\\S-")
 		 (let ((i (org-get-indentation)))
 		   (org-indent-line-to (+ i delta)))))
@@ -1615,7 +1638,7 @@ Initial position of cursor is restored after the changes."
 	       ;; a. Replace bullet
 	       (unless (equal old-bul new-bul)
 		 (replace-match new-bul nil nil nil 1))
-	       ;; b. Replace checkbox
+	       ;; b. Replace checkbox.
 	       (cond
 		((and new-box box-rule-p
 		      (save-match-data (org-at-item-description-p)))
@@ -1624,20 +1647,22 @@ Initial position of cursor is restored after the changes."
 		((and (match-string 3) new-box)
 		 (replace-match new-box nil nil nil 3))
 		((match-string 3)
-		 (goto-char (or (match-end 2) (match-end 1)))
-		 (looking-at "\\[[ X-]\\][ \t]+")
-		 (replace-match ""))
-		(t (goto-char (or (match-end 2) (match-end 1)))
-		   (insert (concat new-box " "))))
-	       ;; c. Indent item to appropriate column
+		 ;; (goto-char (or (match-end 2) (match-end 1)))
+		 ;; (skip-chars-backward " \t")
+		 (looking-at ".*?\\([ \t]*\\[[ X-]\\]\\)")
+		 (replace-match "" nil nil nil 1))
+		(t (let ((counterp (match-end 2)))
+		     (goto-char (if counterp (1+ counterp) (match-end 1)))
+		   (insert (concat new-box (unless counterp " "))))))
+	       ;; c. Indent item to appropriate column.
 	       (unless (= new-ind old-ind)
 		 (delete-region (goto-char (point-at-bol))
 				(progn (skip-chars-forward " \t") (point)))
 		 (indent-to new-ind)))))))
-    ;; 1. First get list of items and position endings. We maintain
+    ;; 1. First get list of items and position endings.  We maintain
     ;;    two alists: ITM-SHIFT, determining indentation shift needed
     ;;    at item, and END-POS, a pseudo-alist where key is ending
-    ;;    position and value point
+    ;;    position and value point.
     (let (end-list acc-end itm-shift all-ends sliced-struct)
       (mapc (lambda (e)
 	      (let* ((pos (car e))
@@ -1650,16 +1675,17 @@ Initial position of cursor is restored after the changes."
 		     (end-pos (org-list-get-item-end pos old-struct)))
 		(push (cons pos ind-shift) itm-shift)
 		(unless (assq end-pos old-struct)
-		  ;; To determine real ind of an ending position that is
-		  ;; not at an item, we have to find the item it belongs
-		  ;; to: it is the last item (ITEM-UP), whose ending is
-		  ;; further than the position we're interested in.
+		  ;; To determine real ind of an ending position that
+		  ;; is not at an item, we have to find the item it
+		  ;; belongs to: it is the last item (ITEM-UP), whose
+		  ;; ending is further than the position we're
+		  ;; interested in.
 		  (let ((item-up (assoc-default end-pos acc-end '>)))
 		    (push (cons end-pos item-up) end-list)))
 		(push (cons end-pos pos) acc-end)))
 	    old-struct)
       ;; 2. Slice the items into parts that should be shifted by the
-      ;;    same amount of indentation. The slices are returned in
+      ;;    same amount of indentation.  The slices are returned in
       ;;    reverse order so changes modifying buffer do not change
       ;;    positions they refer to.
       (setq all-ends (sort (append (mapcar 'car itm-shift)
@@ -1673,7 +1699,7 @@ Initial position of cursor is restored after the changes."
 		      (cdr (assq (cdr (assq up end-list)) itm-shift)))))
 	  (push (list down up ind) sliced-struct)))
       ;; 3. Shift each slice in buffer, provided delta isn't 0, from
-      ;;    end to beginning. Take a special action when beginning is
+      ;;    end to beginning.  Take a special action when beginning is
       ;;    at item bullet.
       (mapc (lambda (e)
 	      (unless (zerop (nth 2 e)) (apply shift-body-ind e))
@@ -1682,13 +1708,13 @@ Initial position of cursor is restored after the changes."
 		(unless (or (not cell) (equal cell (assq beg old-struct)))
 		  (funcall modify-item beg))))
 	    sliced-struct))
-    ;; 4. Go back to initial position
+    ;; 4. Go back to initial position.
     (goto-char pos)))
 
 (defun org-list-write-struct (struct parents)
   "Correct bullets, checkboxes and indentation in list at point.
-STRUCT is the list structure. PARENTS is the alist of parents, as
-returned by `org-list-parents-alist'."
+STRUCT is the list structure.  PARENTS is the alist of parents,
+as returned by `org-list-parents-alist'."
   ;; Order of functions matters here: checkboxes and endings need
   ;; correct indentation to be set, and indentation needs correct
   ;; bullets.
@@ -1712,7 +1738,7 @@ returned by `org-list-parents-alist'."
 		;; further than the position we're interested in.
 		(let ((item-up (assoc-default end-pos acc-end '>)))
 		  (push (cons
-			 ;; Else part is for the bottom point
+			 ;; Else part is for the bottom point.
 			 (if item-up (+ (org-list-get-ind item-up struct) 2) 0)
 			 end-pos)
 			end-list)))
@@ -1721,14 +1747,14 @@ returned by `org-list-parents-alist'."
 	  struct)
     (setq end-list (sort end-list (lambda (e1 e2) (< (cdr e1) (cdr e2)))))
     (org-list-struct-assoc-end struct end-list))
-  ;; 3. Get bullets right
+  ;; 3. Get bullets right.
   (let ((prevs (org-list-prevs-alist struct)))
     (org-list-struct-fix-bul struct prevs)
-    ;; 4. Now get real indentation
+    ;; 4. Now get real indentation.
     (org-list-struct-fix-ind struct parents)
-    ;; 5. Eventually fix checkboxes
+    ;; 5. Eventually fix checkboxes.
     (org-list-struct-fix-box struct parents prevs))
-  ;; 6. Apply structure modifications to buffer
+  ;; 6. Apply structure modifications to buffer.
   (org-list-struct-apply-struct struct old-struct)))
 
 
@@ -1745,7 +1771,7 @@ FUNCTION is applied on items in reverse order.
 As an example, \(org-apply-on-list \(lambda \(result\) \(1+ result\)\) 0\)
 will return the number of items in the current list.
 
-Sublists of the list are skipped. Cursor is always at the
+Sublists of the list are skipped.  Cursor is always at the
 beginning of the item."
   (let* ((struct (org-list-struct))
 	 (prevs (org-list-prevs-alist struct))
@@ -1982,8 +2008,8 @@ This cycle the entire list level through the sequence:
 
    `-'  ->  `+'  ->  `*'  ->  `1.'  ->  `1)'
 
-If WHICH is a valid string, use that as the new bullet. If WHICH
-is an integer, 0 means `-', 1 means `+' etc. If WHICH is
+If WHICH is a valid string, use that as the new bullet.  If WHICH
+is an integer, 0 means `-', 1 means `+' etc.  If WHICH is
 `previous', cycle backwards."
   (interactive "P")
   (unless (org-at-item-p) (error "Not at an item"))
@@ -2005,13 +2031,13 @@ is an integer, 0 means `-', 1 means `+' etc. If WHICH is
 		     ((string-match "\\." bullet) "1.")
 		     ((string-match ")" bullet) "1)")
 		     (t (org-trim bullet))))
-           ;; Compute list of possible bullets, depending on context
+           ;; Compute list of possible bullets, depending on context.
 	   (bullet-list
 	    (append '("-" "+" )
-		    ;; *-bullets are not allowed at column 0
+		    ;; *-bullets are not allowed at column 0.
 		    (unless (and bullet-rule-p
 				 (looking-at "\\S-")) '("*"))
-		    ;; Description items cannot be numbered
+		    ;; Description items cannot be numbered.
 		    (unless (or (eq org-plain-list-ordered-item-terminator ?\))
 				(and bullet-rule-p (org-at-item-description-p)))
 		      '("1."))
@@ -2060,9 +2086,17 @@ in subtree, ignoring drawers."
 	   block-item
 	   lim-up
 	   lim-down
+	   (drawer-re (concat "^[ \t]*:\\("
+			      (mapconcat 'regexp-quote org-drawers "\\|")
+			      "\\):[ \t]*$"))
+	   (keyword-re (concat "^[ \t]*\\<\\(" org-scheduled-string
+			       "\\|" org-deadline-string
+			       "\\|" org-closed-string
+			       "\\|" org-clock-string "\\)"
+			       " *[[<]\\([^]>]+\\)[]>]"))
 	   (orderedp (org-entry-get nil "ORDERED"))
 	   (bounds
-	    ;; In a region, start at first item in region
+	    ;; In a region, start at first item in region.
 	    (cond
 	     ((org-region-active-p)
 	      (let ((limit (region-end)))
@@ -2072,23 +2106,26 @@ in subtree, ignoring drawers."
 		  (error "No item in region"))
 		(setq lim-down (copy-marker limit))))
 	     ((org-on-heading-p)
-	      ;; On an heading, start at first item after drawers
+	      ;; On an heading, start at first item after drawers and
+	      ;; time-stamps (scheduled, etc.).
 	      (let ((limit (save-excursion (outline-next-heading) (point))))
 		(forward-line 1)
-		(when (looking-at org-drawer-regexp)
-		  (re-search-forward "^[ \t]*:END:" limit nil))
+		(while (or (looking-at drawer-re) (looking-at keyword-re))
+		  (if (looking-at keyword-re)
+		      (forward-line 1)
+		    (re-search-forward "^[ \t]*:END:" limit nil)))
 		(if (org-list-search-forward (org-item-beginning-re) limit t)
 		    (setq lim-up (point-at-bol))
 		  (error "No item in subtree"))
 		(setq lim-down (copy-marker limit))))
-	     ;; Just one item: set singlep flag
+	     ;; Just one item: set SINGLEP flag.
 	     ((org-at-item-p)
 	      (setq singlep t)
 	      (setq lim-up (point-at-bol)
 		    lim-down (point-at-eol)))
 	     (t (error "Not at an item or heading, and no active region"))))
 	   ;; Determine the checkbox going to be applied to all items
-	   ;; within bounds
+	   ;; within bounds.
 	   (ref-checkbox
 	    (progn
 	      (goto-char lim-up)
@@ -2097,12 +2134,14 @@ in subtree, ignoring drawers."
 		 ((equal toggle-presence '(16)) "[-]")
 		 ((equal toggle-presence '(4))
 		  (unless cbox "[ ]"))
-		 ((equal "[ ]" cbox) "[X]")
-		 (t "[ ]"))))))
+		 ((equal "[X]" cbox) "[ ]")
+		 (t "[X]"))))))
       ;; When an item is found within bounds, grab the full list at
-      ;; point structure, then: 1. set checkbox of all its items
-      ;; within bounds to ref-checkbox; 2. fix checkboxes of the whole
-      ;; list; 3. move point after the list.
+      ;; point structure, then:
+      ;; 1. set check-box of all its items within bounds to
+      ;;    REF-CHECKBOX;
+      ;; 2. fix check-boxes of the whole list; 3. move point after the
+      ;;    list.
       (goto-char lim-up)
       (while (and (< (point) lim-down)
 		  (org-list-search-forward (org-item-beginning-re)
@@ -2117,8 +2156,8 @@ in subtree, ignoring drawers."
 				 (mapcar 'car struct))))
 	  (mapc (lambda (e) (org-list-set-checkbox
 			e struct
-			;; if there is no box at item, leave as-is
-			;; unless function was called with C-u prefix
+			;; If there is no box at item, leave as-is
+			;; unless function was called with C-u prefix.
 			(let ((cur-box (org-list-get-checkbox e struct)))
 			  (if (or cur-box (equal toggle-presence '(4)))
 			      ref-checkbox
@@ -2126,8 +2165,8 @@ in subtree, ignoring drawers."
 		items-to-toggle)
 	  (setq block-item (org-list-struct-fix-box
 			    struct parents prevs orderedp))
-	  ;; Report some problems due to ORDERED status of subtree. If
-	  ;; only one box was being checked, throw an error, else,
+	  ;; Report some problems due to ORDERED status of subtree.
+	  ;; If only one box was being checked, throw an error, else,
 	  ;; only signal problems.
 	  (cond
 	   ((and singlep block-item (> lim-up block-item))
@@ -2139,23 +2178,25 @@ in subtree, ignoring drawers."
 	     "Checkboxes were removed due to unchecked box at line %d"
 	     (org-current-line block-item))))
 	  (goto-char bottom)
-	  (org-list-struct-apply-struct struct struct-copy))))
-    (org-update-checkbox-count-maybe)))
+	  (org-list-struct-apply-struct struct struct-copy)))))
+  (org-update-checkbox-count-maybe))
 
 (defun org-reset-checkbox-state-subtree ()
   "Reset all checkboxes in an entry subtree."
   (interactive "*")
-  (save-restriction
-    (save-excursion
-      (org-narrow-to-subtree)
-      (org-show-subtree)
-      (goto-char (point-min))
-      (let ((end (point-max)))
-	(while (< (point) end)
-	  (when (org-at-item-checkbox-p)
-	    (replace-match "[ ]" t t nil 1))
-	  (beginning-of-line 2))))
-    (org-update-checkbox-count-maybe)))
+  (if (org-before-first-heading-p)
+      (error "Not inside a tree")
+    (save-restriction
+      (save-excursion
+	(org-narrow-to-subtree)
+	(org-show-subtree)
+	(goto-char (point-min))
+	(let ((end (point-max)))
+	  (while (< (point) end)
+	    (when (org-at-item-checkbox-p)
+	      (replace-match "[ ]" t t nil 1))
+	    (beginning-of-line 2)))
+	(org-update-checkbox-count-maybe 'all)))))
 
 (defun org-update-checkbox-count (&optional all)
   "Update the checkbox statistics in the current section.
@@ -2179,10 +2220,10 @@ With optional prefix argument ALL, do this for the whole buffer."
 	  (count-boxes
 	   (function
 	    ;; Return number of checked boxes and boxes of all types
-	    ;; in all structures in STRUCTS. If RECURSIVEP is non-nil,
-	    ;; also count boxes in sub-lists. If ITEM is nil, count
-	    ;; across the whole structure, else count only across
-	    ;; subtree whose ancestor is ITEM.
+	    ;; in all structures in STRUCTS.  If RECURSIVEP is
+	    ;; non-nil, also count boxes in sub-lists.  If ITEM is
+	    ;; nil, count across the whole structure, else count only
+	    ;; across subtree whose ancestor is ITEM.
 	    (lambda (item structs recursivep)
 	      (let ((c-on 0) (c-all 0))
 		(mapc
@@ -2207,7 +2248,7 @@ With optional prefix argument ALL, do this for the whole buffer."
 	  (backup-end 1)
 	  cookies-list structs-bak box-num)
       (goto-char (car bounds))
-      ;; 1. Build an alist for each cookie found within BOUNDS. The
+      ;; 1. Build an alist for each cookie found within BOUNDS.  The
       ;;    key will be position at beginning of cookie and values
       ;;    ending position, format of cookie, and a cell whose car is
       ;;    number of checked boxes to report, and cdr total number of
@@ -2229,19 +2270,20 @@ With optional prefix argument ALL, do this for the whole buffer."
 				    (or (org-entry-get nil "COOKIE_DATA") ""))))
 		(throw 'skip nil))
 	       ;; Cookie is at an heading, but all lists before next
-	       ;; heading already have been read. Use data collected
-	       ;; in STRUCTS-BAK. This should only happen when heading
-	       ;; has more than one cookie on it.
+	       ;; heading already have been read.  Use data collected
+	       ;; in STRUCTS-BAK.  This should only happen when
+	       ;; heading has more than one cookie on it.
 	       ((and (org-on-heading-p)
 		     (<= (save-excursion (outline-next-heading) (point))
 			 backup-end))
 		(funcall count-boxes nil structs-bak recursivep))
-	       ;; Cookie is at a fresh heading. Grab structure of
+	       ;; Cookie is at a fresh heading.  Grab structure of
 	       ;; every list containing a checkbox between point and
 	       ;; next headline, and save them in STRUCTS-BAK.
 	       ((org-on-heading-p)
 		(setq backup-end (save-excursion
-				   (outline-next-heading) (point)))
+				   (outline-next-heading) (point))
+		      structs-bak nil)
 		(while (org-list-search-forward box-re backup-end 'move)
 		  (let* ((struct (org-list-struct))
 			 (bottom (org-list-get-bottom-point struct)))
@@ -2262,7 +2304,7 @@ With optional prefix argument ALL, do this for the whole buffer."
 		  (setq backup-end (org-list-get-bottom-point struct)
 			structs-bak (list struct)))
 		(funcall count-boxes (point-at-bol) structs-bak recursivep))
-	       ;; Else, cookie found is at a wrong place. Skip it.
+	       ;; Else, cookie found is at a wrong place.  Skip it.
 	       (t (throw 'skip nil))))
 	     cookies-list))))
       ;; 2. Apply alist to buffer, in reverse order so positions stay
@@ -2279,7 +2321,8 @@ With optional prefix argument ALL, do this for the whole buffer."
 			    (format "[%d/%d]" checked total))))
 		(goto-char beg)
 		(insert new)
-		(delete-region (point) (+ (point) (- end beg)))))
+		(delete-region (point) (+ (point) (- end beg)))
+		(when org-auto-align-tags (org-fix-tags-on-the-fly))))
 	    cookies-list))))
 
 (defun org-get-checkbox-statistics-face ()
@@ -2295,10 +2338,10 @@ Otherwise it will be `org-todo'."
 	'org-checkbox-statistics-done
       'org-checkbox-statistics-todo)))
 
-(defun org-update-checkbox-count-maybe ()
+(defun org-update-checkbox-count-maybe (&optional all)
   "Update checkbox statistics unless turned off by user."
   (when (cdr (assq 'checkbox org-list-automatic-rules))
-    (org-update-checkbox-count))
+    (org-update-checkbox-count all))
   (run-hooks 'org-checkbox-statistics-hook))
 
 (defvar org-last-indent-begin-marker (make-marker))
@@ -2332,7 +2375,7 @@ Return t if successful."
 		     (error
 		      "First item of list cannot move without its subtree")
 		   t))))
-      ;; Determine begin and end points of zone to indent. If moving
+      ;; Determine begin and end points of zone to indent.  If moving
       ;; more than one item, save them for subsequent moves.
       (unless (and (memq last-command '(org-shiftmetaright org-shiftmetaleft))
 		   (memq this-command '(org-shiftmetaright org-shiftmetaleft)))
@@ -2349,7 +2392,7 @@ Return t if successful."
       (let* ((beg (marker-position org-last-indent-begin-marker))
 	     (end (marker-position org-last-indent-end-marker)))
 	(cond
-	 ;; Special case: moving top-item with indent rule
+	 ;; Special case: moving top-item with indent rule.
 	 (specialp
 	  (let* ((level-skip (org-level-increment))
 		 (offset (if (< arg 0) (- level-skip) level-skip))
@@ -2357,13 +2400,13 @@ Return t if successful."
 		 (old-struct (copy-tree struct)))
 	    (if (< (+ top-ind offset) 0)
 		(error "Cannot outdent beyond margin")
-	      ;; Change bullet if necessary
+	      ;; Change bullet if necessary.
 	      (when (and (= (+ top-ind offset) 0)
 			 (string-match "*"
 				       (org-list-get-bullet beg struct)))
 		(org-list-set-bullet beg struct
 				     (org-list-bullet-string "-")))
-	      ;; Shift every item by OFFSET and fix bullets. Then
+	      ;; Shift every item by OFFSET and fix bullets.  Then
 	      ;; apply changes to buffer.
 	      (mapc (lambda (e)
 		      (let ((ind (org-list-get-ind (car e) struct)))
@@ -2373,12 +2416,12 @@ Return t if successful."
 	      (org-list-struct-apply-struct struct old-struct))))
 	 ;; Forbidden move:
 	 ((and (< arg 0)
-	       ;; If only one item is moved, it mustn't have a child
+	       ;; If only one item is moved, it mustn't have a child.
 	       (or (and no-subtree
 			(not regionp)
 			(org-list-has-child-p beg struct))
 		   ;; If a subtree or region is moved, the last item
-		   ;; of the subtree mustn't have a child
+		   ;; of the subtree mustn't have a child.
 		   (let ((last-item (caar
 				     (reverse
 				      (org-remove-if
@@ -2447,8 +2490,8 @@ If a region is active, all items inside will be moved."
 (defvar org-tab-ind-state)
 (defun org-cycle-item-indentation ()
   "Cycle levels of indentation of an empty item.
-The first run indents the item, if applicable. Subsequents runs
-outdent it at meaningful levels in the list. When done, item is
+The first run indents the item, if applicable.  Subsequents runs
+outdent it at meaningful levels in the list.  When done, item is
 put back at its original position with its original bullet.
 
 Return t at each successful move."
@@ -2456,7 +2499,7 @@ Return t at each successful move."
     (let* ((org-adapt-indentation nil)
 	   (struct (org-list-struct))
 	   (ind (org-list-get-ind (point-at-bol) struct))
-	   (bullet (org-list-get-bullet (point-at-bol) struct)))
+	   (bullet (org-trim (buffer-substring (point-at-bol) (point-at-eol)))))
       ;; Accept empty items or if cycle has already started.
       (when (or (eq last-command 'org-cycle-item-indentation)
 		(and (save-excursion
@@ -2468,9 +2511,9 @@ Return t at each successful move."
 					 (skip-chars-backward " \r\t\n")
 					 (point)))))
 	(setq this-command 'org-cycle-item-indentation)
-	;; When in the middle of the cycle, try to outdent first. If it
-	;; fails, and point is still at initial position, indent. Else,
-	;; go back to original position.
+	;; When in the middle of the cycle, try to outdent first.  If
+	;; it fails, and point is still at initial position, indent.
+	;; Else, re-create it at its original position.
 	(if (eq last-command 'org-cycle-item-indentation)
 	    (cond
 	     ((ignore-errors (org-list-indent-item-generic -1 t struct)))
@@ -2478,11 +2521,11 @@ Return t at each successful move."
 		   (ignore-errors (org-list-indent-item-generic 1 t struct))))
 	     (t (delete-region (point-at-bol) (point-at-eol))
 		(org-indent-to-column (car org-tab-ind-state))
-		(insert (cdr org-tab-ind-state))
+		(insert (cdr org-tab-ind-state) " ")
 		;; Break cycle
 		(setq this-command 'identity)))
 	  ;; If a cycle is starting, remember indentation and bullet,
-	  ;; then try to indent. If it fails, try to outdent.
+	  ;; then try to indent.  If it fails, try to outdent.
 	  (setq org-tab-ind-state (cons ind bullet))
 	  (cond
 	   ((ignore-errors (org-list-indent-item-generic 1 t struct)))
@@ -2493,12 +2536,12 @@ Return t at each successful move."
 (defun org-sort-list (&optional with-case sorting-type getkey-func compare-func)
   "Sort list items.
 The cursor may be at any item of the list that should be sorted.
-Sublists are not sorted. Checkboxes, if any, are ignored.
+Sublists are not sorted.  Checkboxes, if any, are ignored.
 
-Sorting can be alphabetically, numerically, by date/time as given by
-a time stamp, by a property or by priority.
+Sorting can be alphabetically, numerically, by date/time as given
+by a time stamp, by a property or by priority.
 
-Comparing entries ignores case by default. However, with an
+Comparing entries ignores case by default.  However, with an
 optional argument WITH-CASE, the sorting considers case as well.
 
 The command prompts for the sorting type unless it has been given
@@ -2513,11 +2556,11 @@ t   By date/time, either the first active time stamp in the entry, if
 
 Capital letters will reverse the sort order.
 
-If the SORTING-TYPE is ?f or ?F, then GETKEY-FUNC specifies a
-function to be called with point at the beginning of the record.
-It must return either a string or a number that should serve as
-the sorting key for that record. It will then use COMPARE-FUNC to
-compare entries."
+If the SORTING-TYPE is ?f or ?F, then GETKEY-FUNC specifies
+a function to be called with point at the beginning of the
+record.  It must return either a string or a number that should
+serve as the sorting key for that record. It will then use
+COMPARE-FUNC to compare entries."
   (interactive "P")
   (let* ((case-func (if with-case 'identity 'downcase))
          (struct (org-list-struct))
@@ -2530,9 +2573,8 @@ compare entries."
 	     "Sort plain list: [a]lpha  [n]umeric  [t]ime  [f]unc   A/N/T/F means reversed:")
 	    (read-char-exclusive)))
 	 (getkey-func (and (= (downcase sorting-type) ?f)
-			   (org-icompleting-read "Sort using function: "
-						 obarray 'fboundp t nil nil)
-			   (intern getkey-func))))
+			   (intern (org-icompleting-read "Sort using function: "
+							 obarray 'fboundp t nil nil)))))
     (message "Sorting items...")
     (save-restriction
       (narrow-to-region start end)
@@ -2559,7 +2601,8 @@ compare entries."
 		    (string-to-number (buffer-substring (match-end 0)
 							(point-at-eol))))
 		   ((= dcst ?a)
-		    (buffer-substring (match-end 0) (point-at-eol)))
+		    (funcall case-func
+			     (buffer-substring (match-end 0) (point-at-eol))))
 		   ((= dcst ?t)
 		    (cond
 		     ;; If it is a timer list, convert timer to seconds
@@ -2597,10 +2640,10 @@ compare entries."
   "Parse the list at point and maybe DELETE it.
 
 Return a list whose car is a symbol of list type, among
-`ordered', `unordered' and `descriptive'. Then, each item is a
-list whose car is counter, and cdr are strings and other
-sub-lists. Inside strings, checkboxes are replaced by \"[CBON]\"
-and \"[CBOFF]\".
+`ordered', `unordered' and `descriptive'.  Then, each item is
+a list whose car is counter, and cdr are strings and other
+sub-lists.  Inside strings, check-boxes are replaced by
+\"[CBON]\", \"[CBOFF]\" and \"[CBTRANS]\".
 
 For example, the following list:
 
@@ -2634,9 +2677,13 @@ Point is left at list end."
 	   ;; checkboxes replaced.
 	   (lambda (beg end)
 	     (let ((text (org-trim (buffer-substring beg end))))
-	       (if (string-match "\\`\\[\\([X ]\\)\\]" text)
+	       (if (string-match "\\`\\[\\([-X ]\\)\\]" text)
 		   (replace-match
-		    (if (equal (match-string 1 text) " ") "CBOFF" "CBON")
+		    (let ((box (match-string 1 text)))
+		      (cond
+		       ((equal box " ") "CBOFF")
+		       ((equal box "-") "CBTRANS")
+		       (t "CBON")))
 		    t nil text 1)
 		 text)))))
 	 (parse-sublist
@@ -2653,7 +2700,7 @@ Point is left at list end."
 	   (lambda (e)
 	     (let ((start (save-excursion
 			    (goto-char e)
-			    (looking-at "[ \t]*\\S-+[ \t]+\\(\\[@[:[:alnum:]]+\\][ \t]*\\)?")
+			    (looking-at "[ \t]*\\S-+\\([ \t]+\\[@\\(start:\\)?\\([0-9]+\\|[a-zA-Z]\\)\\]\\)?[ \t]*")
 			    (match-end 0)))
 		   ;; Get counter number. For alphabetic counter, get
 		   ;; its position in the alphabet.
@@ -2668,7 +2715,7 @@ Point is left at list end."
 		   (childp (org-list-has-child-p e struct))
 		   (end (org-list-get-item-end e struct)))
 	       ;; If item has a child, store text between bullet and
-	       ;; next child, then recursively parse all sublists. At
+	       ;; next child, then recursively parse all sublists.  At
 	       ;; the end of each sublist, check for the presence of
 	       ;; text belonging to the original item.
 	       (if childp
@@ -2727,8 +2774,8 @@ Point is left at list end."
 
 (defun org-list-send-list (&optional maybe)
   "Send a transformed version of this list to the receiver position.
-With argument MAYBE, fail quietly if no transformation is defined for
-this list."
+With argument MAYBE, fail quietly if no transformation is defined
+for this list."
   (interactive)
   (catch 'exit
     (unless (org-at-item-p) (error "Not at a list item"))
@@ -2777,7 +2824,7 @@ this list."
 
 (defun org-list-to-generic (list params)
   "Convert a LIST parsed through `org-list-parse-list' to other formats.
-Valid parameters PARAMS are
+Valid parameters PARAMS are:
 
 :ustart	    String to start an unordered list
 :uend	    String to end an unordered list
@@ -2802,11 +2849,12 @@ Valid parameters PARAMS are
 :lsep	    String to separate sublists
 :csep	    String to separate text from a sub-list
 
-:cboff      String to insert for an unchecked checkbox
-:cbon       String to insert for a checked checkbox
+:cboff      String to insert for an unchecked check-box
+:cbon       String to insert for a checked check-box
+:cbtrans    String to insert for a check-box in transitional state
 
-Alternatively, each parameter can also be a form returning a
-string. These sexp can use keywords `counter' and `depth',
+Alternatively, each parameter can also be a form returning
+a string.  These sexp can use keywords `counter' and `depth',
 reprensenting respectively counter associated to the current
 item, and depth of the current sub-list, starting at 0.
 Obviously, `counter' is only available for parameters applying to
@@ -2832,21 +2880,28 @@ items."
 	 (csep (plist-get p :csep))
 	 (cbon (plist-get p :cbon))
 	 (cboff (plist-get p :cboff))
+	 (cbtrans (plist-get p :cbtrans))
 	 export-sublist			; for byte-compiler
 	 (export-item
 	  (function
-	   ;; Export an item ITEM of type TYPE, at DEPTH. First string
-	   ;; in item is treated in a special way as it can bring
-	   ;; extra information that needs to be processed.
+	   ;; Export an item ITEM of type TYPE, at DEPTH.  First
+	   ;; string in item is treated in a special way as it can
+	   ;; bring extra information that needs to be processed.
 	   (lambda (item type depth)
 	     (let* ((counter (pop item))
-		    (fmt (concat (cond
-				  ((eq type 'descriptive)
-				   (concat (org-trim (eval istart)) "%s"
-				   (eval ddend)))
-				  ((and counter (eq type 'ordered))
-				   (concat (eval icount) "%s"))
-				  (t (concat (eval istart) "%s")))
+		    (fmt (concat
+			  (cond
+			   ((eq type 'descriptive)
+			    ;; Stick DTSTART to ISTART by
+			    ;; left-trimming the latter.
+			    (concat (let ((s (eval istart)))
+				      (or (and (string-match "[ \t\n\r]+\\'" s)
+					       (replace-match "" t t s))
+					  istart))
+				    "%s" (eval ddend)))
+			   ((and counter (eq type 'ordered))
+			    (concat (eval icount) "%s"))
+			   (t (concat (eval istart) "%s")))
 				 (eval iend)))
 		    (first (car item)))
 	       ;; Replace checkbox if any is found.
@@ -2855,15 +2910,20 @@ items."
 		 (setq first (replace-match cbon t t first)))
 		((string-match "\\[CBOFF\\]" first)
 		 (setq first (replace-match cboff t t first)))
-		((string-match "\\[-\\]" first)
-		 (setq first (replace-match "$\\boxminus$" t t first))))
+		((string-match "\\[CBTRANS\\]" first)
+		 (setq first (replace-match cbtrans t t first))))
 	       ;; Insert descriptive term if TYPE is `descriptive'.
-	       (when (and (eq type 'descriptive)
-			  (string-match "^\\(.*\\)[ \t]+::" first))
-		 (setq first (concat
-			      (eval dtstart) (org-trim (match-string 1 first))
-			      (eval dtend) (eval ddstart)
-			      (org-trim (substring first (match-end 0))) "")))
+	       (when (eq type 'descriptive)
+		 (let* ((complete (string-match "^\\(.*\\)[ \t]+::" first))
+			(term (if complete
+				  (save-match-data
+				    (org-trim (match-string 1 first)))
+				"???"))
+			(desc (if complete
+				  (org-trim (substring first (match-end 0)))
+				first)))
+		   (setq first (concat (eval dtstart) term (eval dtend)
+				       (eval ddstart) desc))))
 	       (setcar item first)
 	       (format fmt
 		       (mapconcat (lambda (e)
@@ -2872,17 +2932,17 @@ items."
 				  item (or (eval csep) "")))))))
 	 (export-sublist
 	  (function
-	   ;; Export sublist SUB at DEPTH
+	   ;; Export sublist SUB at DEPTH.
 	   (lambda (sub depth)
 	     (let* ((type (car sub))
 		    (items (cdr sub))
 		    (fmt (concat (cond
 				  (splicep "%s")
 				  ((eq type 'ordered)
-				   (concat (eval ostart) "\n%s" (eval oend)))
+				   (concat (eval ostart) "%s" (eval oend)))
 				  ((eq type 'descriptive)
-				   (concat (eval dstart) "\n%s" (eval dend)))
-				  (t (concat (eval ustart) "\n%s" (eval uend))))
+				   (concat (eval dstart) "%s" (eval dend)))
+				  (t (concat (eval ustart) "%s" (eval uend))))
 				 (eval lsep))))
 	       (format fmt (mapconcat (lambda (e)
 					(funcall export-item e type depth))
@@ -2896,18 +2956,22 @@ with overruling parameters for `org-list-to-generic'."
   (org-list-to-generic
    list
    (org-combine-plists
-    '(:splice nil :ostart "\\begin{enumerate}" :oend "\\end{enumerate}"
-	       :ustart "\\begin{itemize}" :uend "\\end{itemize}"
-	       :dstart "\\begin{description}" :dend "\\end{description}"
+    '(:splice nil :ostart "\\begin{enumerate}\n" :oend "\\end{enumerate}"
+	       :ustart "\\begin{itemize}\n" :uend "\\end{itemize}"
+	       :dstart "\\begin{description}\n" :dend "\\end{description}"
 	       :dtstart "[" :dtend "] "
 	       :istart "\\item " :iend "\n"
 	       :icount (let ((enum (nth depth '("i" "ii" "iii" "iv"))))
 			 (if enum
+			     ;; LaTeX increments counter just before
+			     ;; using it, so set it to the desired
+			     ;; value, minus one.
 			     (format "\\setcounter{enum%s}{%s}\n\\item "
-				     enum counter)
+				     enum (1- counter))
 			   "\\item "))
 	       :csep "\n"
-	       :cbon "\\texttt{[X]}" :cboff "\\texttt{[ ]}")
+	       :cbon "\\texttt{[X]}" :cboff "\\texttt{[ ]}"
+	       :cbtrans "$\\boxminus$")
     params)))
 
 (defun org-list-to-html (list &optional params)
@@ -2917,15 +2981,16 @@ with overruling parameters for `org-list-to-generic'."
   (org-list-to-generic
    list
    (org-combine-plists
-    '(:splice nil :ostart "<ol>" :oend "\n</ol>"
-	       :ustart "<ul>" :uend "\n</ul>"
-	       :dstart "<dl>" :dend "</dl>"
+    '(:splice nil :ostart "<ol>\n" :oend "\n</ol>"
+	       :ustart "<ul>\n" :uend "\n</ul>"
+	       :dstart "<dl>\n" :dend "\n</dl>"
 	       :dtstart "<dt>" :dtend "</dt>\n"
 	       :ddstart "<dd>" :ddend "</dd>"
-	       :istart "<li>" :iend "\n</li>"
+	       :istart "<li>" :iend "</li>"
 	       :icount (format "<li value=\"%s\">" counter)
 	       :isep "\n" :lsep "\n" :csep "\n"
-	       :cbon "<code>[X]</code>" :cboff "<code>[ ]</code>")
+	       :cbon "<code>[X]</code>" :cboff "<code>[ ]</code>"
+	       :cbtrans "<code>[-]</code>")
     params)))
 
 (defun org-list-to-texinfo (list &optional params)
@@ -2935,14 +3000,15 @@ with overruling parameters for `org-list-to-generic'."
   (org-list-to-generic
    list
    (org-combine-plists
-    '(:splice nil :ostart "@itemize @minus" :oend "@end itemize"
-	       :ustart "@enumerate" :uend "@end enumerate"
-	       :dstart "@table @asis" :dend "@end table"
+    '(:splice nil :ostart "@itemize @minus\n" :oend "@end itemize"
+	       :ustart "@enumerate\n" :uend "@end enumerate"
+	       :dstart "@table @asis\n" :dend "@end table"
 	       :dtstart " " :dtend "\n"
 	       :istart "@item\n" :iend "\n"
 	       :icount "@item\n"
 	       :csep "\n"
-	       :cbon "@code{[X]}" :cboff "@code{[ ]}")
+	       :cbon "@code{[X]}" :cboff "@code{[ ]}"
+	       :cbtrans "@code{[-]}")
     params)))
 
 (defun org-list-to-subtree (list &optional params)
@@ -2950,7 +3016,7 @@ with overruling parameters for `org-list-to-generic'."
 LIST is as returned by `org-list-parse-list'.  PARAMS is a property list
 with overruling parameters for `org-list-to-generic'."
   (let* ((rule (cdr (assq 'heading org-blank-before-new-entry)))
-	 (level (or (org-current-level) 0))
+	 (level (org-reduced-level (or (org-current-level) 0)))
 	 (blankp (or (eq rule t)
 		     (and (eq rule 'auto)
 			  (save-excursion
@@ -2961,11 +3027,12 @@ with overruling parameters for `org-list-to-generic'."
 	   ;; Return the string for the heading, depending on depth D
 	   ;; of current sub-list.
 	   (lambda (d)
-	     (concat
-	      (make-string (+ level
-			      (if org-odd-levels-only (* 2 (1+ d)) (1+ d)))
-			   ?*)
-	      " ")))))
+	     (let ((oddeven-level (+ level d 1)))
+	       (concat (make-string (if org-odd-levels-only
+					(1- (* 2 oddeven-level))
+				      oddeven-level)
+				    ?*)
+		       " "))))))
     (org-list-to-generic
      list
      (org-combine-plists
@@ -2975,7 +3042,7 @@ with overruling parameters for `org-list-to-generic'."
 		:icount (funcall get-stars depth)
 		:isep (if blankp "\n\n" "\n")
 		:csep (if blankp "\n\n" "\n")
-		:cbon "DONE" :cboff "TODO")
+		:cbon "DONE" :cboff "TODO" :cbtrans "TODO")
       params))))
 
 (provide 'org-list)

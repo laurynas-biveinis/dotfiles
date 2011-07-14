@@ -5,7 +5,7 @@
 ;; Author: Eric Schulte, Dan Davison
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 
@@ -21,12 +21,6 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Commentary:
-
-;; See the online documentation for more information
-;; 
-;;   http://orgmode.org/worg/org-contrib/babel/
 
 ;;; Code:
 (require 'ob)
@@ -54,28 +48,6 @@ process."
   :type 'boolean)
 (put 'org-export-babel-evaluate 'safe-local-variable (lambda (x) (eq x nil)))
 
-(defvar org-babel-function-def-export-keyword "function"
-  "The keyword to substitute for the source name line on export.
-When exporting a source block function, this keyword will
-appear in the exported version in the place of source name
-line. A source block is considered to be a source block function
-if the source name is present and is followed by a parenthesized
-argument list. The parentheses may be empty or contain
-whitespace. An example is the following which generates n random
-\(uniform) numbers.
-
-#+source: rand(n)
-#+begin_src R
-  runif(n)
-#+end_src")
-
-(defvar org-babel-function-def-export-indent 4
-  "Number of characters to indent a source block on export.
-When exporting a source block function, the block contents will
-be indented by this many characters. See
-`org-babel-function-def-export-name' for the definition of a
-source block function.")
-
 (defmacro org-babel-exp-in-export-file (lang &rest body)
   (declare (indent 1))
   `(let* ((lang-headers (intern (concat "org-babel-default-header-args:" ,lang)))
@@ -93,7 +65,8 @@ source block function.")
        (set-buffer (get-file-buffer org-current-export-file))
        (save-restriction
 	 (condition-case nil
-	     (org-open-link-from-string link)
+	     (let ((org-link-search-inhibit-query t))
+	       (org-open-link-from-string link))
 	   (error (when heading
 		    (goto-char (point-min))
 		    (re-search-forward (regexp-quote heading) nil t))))
@@ -116,7 +89,7 @@ results - just like none only the block is run on export ensuring
 
 none ----- do not display either code or results upon export"
   (interactive)
-  (message "org-babel-exp processing...")
+  (unless noninteractive (message "org-babel-exp processing..."))
   (save-excursion
     (goto-char (match-beginning 0))
     (let* ((info (org-babel-get-src-block-info 'light))
@@ -193,53 +166,75 @@ Example and verbatim code include escaped portions of
 an org-mode buffer code that should be treated as normal
 org-mode text."
   (or (org-in-indented-comment-line) 
-      (save-excursion
-	(save-match-data
+      (save-match-data
+	(save-excursion
 	  (goto-char (point-at-bol))
 	  (looking-at "[ \t]*:[ \t]")))
+      (org-in-verbatim-emphasis)
       (org-in-regexps-block-p "^[ \t]*#\\+begin_src" "^[ \t]*#\\+end_src")))
 
+(defvar org-babel-default-lob-header-args)
 (defun org-babel-exp-lob-one-liners (start end)
   "Process Library of Babel calls between START and END for export.
 See `org-babel-exp-src-block' for export options. Currently the
 options are taken from `org-babel-default-header-args'."
   (interactive)
-  (let (replacement)
-    (save-excursion
-      (goto-char start)
-      (while (and (< (point) end)
-		  (re-search-forward org-babel-lob-one-liner-regexp nil t))
-	(setq replacement
-	      (let ((lob-info (org-babel-lob-get-info)))
-		(save-match-data
-		  (org-babel-exp-do-export
-		   (list "emacs-lisp" "results"
-			 (org-babel-merge-params
-			  org-babel-default-header-args
-			  (org-babel-params-from-buffer)
-			  (org-babel-params-from-properties)
-			  (org-babel-parse-header-arguments
-			   (org-babel-clean-text-properties
-			    (concat ":var results="
-				    (mapconcat #'identity
-					       (butlast lob-info) " ")))))
-			 (car (last lob-info)))
-		   'lob))))
-	(setq end (+ end (- (length replacement) (length (match-string 0)))))
-	(if replacement (replace-match replacement t t))))))
+  (save-excursion
+    (goto-char start)
+    (while (and (< (point) end)
+		(re-search-forward org-babel-lob-one-liner-regexp nil t))
+      (unless (and (match-string 12) (org-babel-in-example-or-verbatim))
+	(let* ((lob-info (org-babel-lob-get-info))
+	       (inlinep (match-string 11))
+	       (inline-start (match-end 11))
+	       (inline-end (match-end 0))
+	       (rep (let ((lob-info (org-babel-lob-get-info)))
+		      (save-match-data
+			(org-babel-exp-do-export
+			 (list "emacs-lisp" "results"
+			       (org-babel-merge-params
+				org-babel-default-header-args
+				org-babel-default-lob-header-args
+				(org-babel-params-from-buffer)
+				(org-babel-params-from-properties)
+				(org-babel-parse-header-arguments
+				 (org-babel-clean-text-properties
+				  (concat ":var results="
+					  (mapconcat #'identity
+						     (butlast lob-info) " ")))))
+			       "" nil (car (last lob-info)))
+			 'lob)))))
+	  (setq end (+ end (- (length rep)
+			      (- (length (match-string 0))
+				 (length (or (match-string 11) ""))))))
+	  (if inlinep
+	      (save-excursion
+		(goto-char inline-start)
+		(delete-region inline-start inline-end)
+		(insert rep))
+	    (replace-match rep t t)))))))
 
 (defun org-babel-exp-do-export (info type &optional hash)
   "Return a string with the exported content of a code block.
 The function respects the value of the :exports header argument."
   (flet ((silently () (let ((session (cdr (assoc :session (nth 2 info)))))
-			(when (and session (not (equal "none" session)))
+			(when (not (and session (equal "none" session)))
 			  (org-babel-exp-results info type 'silent))))
 	 (clean () (unless (eq type 'inline) (org-babel-remove-result info))))
     (case (intern (or (cdr (assoc :exports (nth 2 info))) "code"))
       ('none (silently) (clean) "")
-      ('code (silently) (clean) nil)
+      ('code (silently) (clean) (org-babel-exp-code info))
       ('results (org-babel-exp-results info type nil hash) "")
-      ('both (org-babel-exp-results info type nil hash) nil))))
+      ('both (org-babel-exp-results info type nil hash)
+	     (org-babel-exp-code info)))))
+
+(defun org-babel-exp-code (info)
+  "Return the original code block formatted for export."
+  (org-fill-template
+   "#+BEGIN_SRC %lang%flags\n%body\n#+END_SRC\n"
+   `(("lang"  . ,(nth 0 info))
+     ("flags" . ,((lambda (f) (when f (concat " " f))) (nth 3 info)))
+     ("body"  . ,(nth 1 info)))))
 
 (defun org-babel-exp-results (info type &optional silent hash)
   "Evaluate and return the results of the current code block for export.
@@ -250,7 +245,7 @@ inhibit insertion of results into the buffer."
   (when (and org-export-babel-evaluate
 	     (not (and hash
 		       (equal hash (org-babel-exp-in-export-file (nth 0 info)
-				     (org-babel-result-hash))))))
+				     (org-babel-result-hash info))))))
     (let ((lang (nth 0 info))
 	  (body (nth 1 info)))
       ;; skip code blocks which we can't evaluate

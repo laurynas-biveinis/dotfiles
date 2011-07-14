@@ -5,7 +5,7 @@
 ;; Author: Dan Davison, Eric Schulte
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
+;; Version: 7.6
 
 ;; This file is part of GNU Emacs.
 
@@ -31,6 +31,7 @@
 (require 'ob-eval)
 (eval-when-compile (require 'cl))
 
+(defvar org-babel-tangle-lang-exts)
 (add-to-list 'org-babel-tangle-lang-exts '("perl" . "pl"))
 
 (defvar org-babel-default-header-args:perl '())
