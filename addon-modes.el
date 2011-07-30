@@ -60,14 +60,6 @@
 ;(autoload 'magit-status "magit" nil t)
 (require 'egg)
 
-;; ------------------------
-;; psvn mode for Subversion
-;; ------------------------
-(require 'psvn)
-
-; Short status
-(setq svn-status-verbose nil)
-
 ;; -------------------------------------------
 ;; Multiple spell checkers in the same buffers
 ;; -------------------------------------------
