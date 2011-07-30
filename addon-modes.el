@@ -56,10 +56,6 @@
 ;; ----------------------------
 (require 'ssh)
 
-;; git mode
-;(autoload 'magit-status "magit" nil t)
-(require 'egg)
-
 ;; -------------------------------------------
 ;; Multiple spell checkers in the same buffers
 ;; -------------------------------------------
@@ -241,11 +237,6 @@
       (progn
         (setq exec-path (cons xref-dir exec-path))
         (load "xrefactory")))
-
-; Monotone
-(require 'monotone)
-(monotone-set-vc-prefix-key "\C-cm")
-(setq monotone-passwd-remember t)
 
 ; JDEE
 ; TODO: broken with Emacs 23.2 integrated CEDET
