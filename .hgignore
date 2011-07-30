@@ -1,0 +1,3 @@
+syntax: glob
+*.elc
+projects.el
