@@ -5,7 +5,7 @@
 ;; Author: Eric Schulte
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.6
+;; Version: 7.7
 
 ;; This file is part of GNU Emacs.
 
@@ -143,6 +143,7 @@ return the value of the last statement in BODY."
   ((lambda (results)
      (when results
        (if (or (member "scalar" result-params)
+	       (member "verbatim" result-params)
 	       (member "output" result-params))
 	   results
 	 (let ((tmp-file (org-babel-temp-file "sh-")))
