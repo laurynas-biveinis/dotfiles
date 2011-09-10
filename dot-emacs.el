@@ -1,6 +1,9 @@
 ; Integrated or 3rd party?
-(setq integrated-cedet-p (and (>= emacs-major-version 23)
-                              (>= emacs-minor-version 2)))
+(setq integrated-cedet-p (or (and (= emacs-major-version 23)
+                                  (>= emacs-minor-version 2))
+                             (>= emacs-major-version 24)
+                             )
+)
 
 ; Various paths
 (setq home-dir (replace-regexp-in-string "\\\\" "/" (getenv "HOME")))
