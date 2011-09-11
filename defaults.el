@@ -84,8 +84,32 @@
 (add-to-list 'initial-frame-alist '(left . 1))
 
 ; Frame geometry
-(add-to-list 'default-frame-alist `(width . ,my-frame-width))
-(add-to-list 'default-frame-alist `(height . ,my-frame-height))
+(defun reset-frame-size ()
+  "Re-size the current frame to be 98 columns x full height"
+  (interactive)
+  (if window-system
+      (progn
+        (let ((new-width 98)
+              (new-height (/ (- (x-display-pixel-height)
+                                110)
+                             (frame-char-height)))
+              (width-cell (assq 'width default-frame-alist))
+              (height-cell (assq 'height default-frame-alist))
+              )
+          (set-frame-width (selected-frame) new-width)
+          (set-frame-height (selected-frame) new-height)
+          (if (consp width-cell)
+              (setcdr width-cell new-width)
+            (add-to-list 'default-frame-alist `(width . ,new-width)))
+          (if (consp height-cell)
+              (setcdr height-cell new-height)
+            (add-to-list 'default-frame-alist (cons 'height new-height)))
+          )
+        )
+    )
+)
+
+(reset-frame-size)
 
 ; Default Info path
 (if (boundp 'cedet-info-dir)
