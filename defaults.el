@@ -115,6 +115,21 @@
 (if (boundp 'cedet-info-dir)
             (add-to-list 'Info-default-directory-list cedet-info-dir))
 
+; Custom keybindings
+(defun smart-home ()
+  "Move point to first non-whitespace character or beginning-of-line.
+
+Move point to the first non-whitespace character on this line.  If point was
+already at that position, move point to the beginning of line."
+  (interactive "^")
+  (let ((oldpos (point)))
+    (back-to-indentation)
+    (and (= oldpos (point))
+         (beginning-of-line)
+         )
+    )
+  )
+
 ; Keybindings
 (global-set-key "\C-cg" 'goto-line)
 (global-set-key "\C-cn" 'next-error)
@@ -126,3 +141,5 @@
 (global-set-key [(control shift down)] 'shrink-window)
 (global-set-key [(control shift left)] 'enlarge-window-horizontally)
 (global-set-key [(control shift right)] 'shrink-window-horizontally)
+
+(global-set-key [home] 'smart-home)
