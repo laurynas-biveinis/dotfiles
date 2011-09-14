@@ -1,0 +1,105 @@
+README for CC Mode 5.32
+Current maintainer : Alan Mackenzie
+Contact address    : bug-cc-mode@gnu.org
+
+INTRODUCTION
+
+    The canonical web location for all knowledge CC Mode is:
+
+	<http://cc-mode.sourceforge.net/>
+
+    Please read the cc-mode.texi manual for details on using CC Mode.
+    This is available on-line from:
+
+        <http://cc-mode.sourceforge.net/cc-mode.html>
+
+    As of this writing (August 2011), CC Mode currently works
+    out of the box with XEmacs versions 21.4 and later, and with Emacs
+    versions 22 and later.  (It might well still work with some earlier
+    versions and will very likely work with later versions too, when
+    they become available.)
+
+MORE INFORMATION
+
+    Check out the CC Mode web site for the latest information,
+    updates, tips, installation and compatibility notes, etc. on using
+    CC Mode.  The installation instructions given below are an excerpt
+    of the on-line instructions.  If you have problems installing CC
+    Mode, please check out the URL above before submitting a bug
+    report.  Thanks!
+
+    The MANIFEST file contains a description of all the files you
+    should have gotten with this distribution.
+
+MANUALS
+
+    Preformatted versions of the manual in DVI, PostScript, and Info,
+    are all available at the CC Mode web page.  The Info manual has
+    two variants, one for GNU Emacs, the other for XEmacs - the only
+    differences between them are the targets of some cross references
+    within the manual.
+
+    To build the manual yourself, you will need Texinfo 4.7 or later.
+    Simply type:
+
+        % makeinfo cc-mode.texi                   # For GNU Emacs
+    or
+        % makeinfo -DXEMACS cc-mode.texi          # For XEmacs
+
+    To make the DVI version, type:
+
+        % texi2dvi cc-mode.texi
+
+INSTALLATION
+
+    Here is a quick guide for installing CC Mode.  For the latest
+    information on installing CC Mode, please see the CC Mode web site
+    given above.
+
+    If you're using XEmacs, make sure you've got the "advice" package
+    installed.
+
+  Byte Compiling
+
+    It is highly recommended that you byte-compile CC Mode for
+    performance reasons.  Running CC Mode non-byte-compiled is not
+    supported.
+
+    You can compile CC Mode in the same way as any other package.  To
+    compile it from a running (X)Emacs session:
+
+        M-0 M-x byte-recompile-directory RET /path/to/cc-mode RET
+
+    To compile CC Mode from the shell:
+
+        % cd /path/to/cc-mode
+        % $(EMACS) -batch -no-site-file -q -f batch-byte-compile cc-*.el
+
+    where $(EMACS) is either emacs or xemacs depending on the flavor
+    you use.  Note that the byte compiled files from one version of
+    (X)Emacs are likely not to work on a different version - compile
+    them fresh when you upgrade your (X)Emacs version.
+
+  Installing
+
+    Put the compiled files somewhere (X)Emacs will find them, i.e. in
+    some path that's in the load-path variable.  You must make sure
+    they are found before any CC Mode files which are distributed with
+    (X)Emacs.  A directory has higher precendence than all directories
+    after it in the load-path list.
+
+    To test that you have things set up correctly, visit a C file and
+    then type:
+
+        M-x c-version RET
+        => Using CC Mode version 5.XX
+
+    where XX is the correct minor revision number.
+
+  Compatibility Issues
+
+    CC Mode should work fine with most versions of Emacs and XEmacs
+    which aren't ancient (see the introduction above).
+
+    For more details about interactions with different packages, see
+    the CC Mode web page.

@@ -1,0 +1,1094 @@
+CC Mode NEWS -- user visible changes.  -*- outline -*-
+
+* Changes in 5.32
+
+This version contains few, but big, new features, and significant internal
+improvements.
+
+** CC Mode is now licensed under the GPL version 3 or any later version.
+
+** Emacs 21 is no longer supported,
+although CC Mode might well still work with it.  The minimum versions
+supported are Emacs 22 and XEmacs 21.4.
+
+** It is now possible for CC Mode to "guess" an existing buffer's style.
+This style can then be used in other buffers.  Contributed by Masatake YAMATO,
+after original code by Barry Warsaw.
+
+** Java Mode has been enhanced to support Java 5.0 (Tiger) and Java 6 (Mustang).
+Contributed by Nathaniel Flath.
+
+** c-beginning-of-defun and c-end-of-defun now respect nested scopes.
+Thus C-M-a will, by default, go to the beginning of the immediate function,
+not the top level.
+
+** "Macros with semicolons" can be registered, for correct indentation.
+Where such a macro ends a line (no semicolon), the next statement is no longer
+parsed as a statement continuation.
+
+** Many bugs have been fixed, font locking has become more accurate, angle
+brackets are better handled, and sluggish code has been optimised.
+
+* Changes in 5.31
+
+This version contains only a few new visible features, but significant
+internal improvements.
+
+** Emacs 19.34 and XEmacs 19.15 are no longer supported.
+The minimum versions required are now Emacs 20.4 or XEmacs 21.4.
+
+** The CC Mode manual has been extensively revised.
+The information about using CC Mode has been separated from the larger
+and more difficult chapters about configuration.
+
+*** There are now two variants of the manual - for GNU Emacs and XEmacs.
+The only difference between them is where some cross references point
+(e.g. GNU Emacs Manual vs. XEmacs Manual).  The default variant is for
+GNU.  To build an XEmacs version, you must define the texinfo symbol
+"XEMACS".  See README and cc-mode.texi.
+
+** Changes in Key Sequences
+*** c-toggle-auto-hungry-state is no longer bound to C-c C-t.
+
+*** c-toggle-hungry-state is no longer bound to C-c C-d.
+This binding has been taken over by c-hungry-delete-forwards.
+
+*** c-toggle-auto-state (C-c C-t) has been renamed to c-toggle-auto-newline.
+c-toggle-auto-state remains as an alias.
+
+*** c-hungry-backspace has been renamed to c-hungry-delete-backwards.
+c-hungry-backspace remains as an alias.
+
+*** c-hungry-delete-backwards and c-hungry-delete-forwards
+now have permanent key bindings, respectively C-c C-DEL (or C-c DEL, for
+the benefit of TTYs) and C-c C-d (or C-c C-<delete> or C-c <delete>).
+These commands delete entire blocks of whitespace with a single
+key-sequence.  [N.B. "DEL" is the <backspace> key.]
+
+*** The new command c-toggle-electric-mode is bound to C-c C-l.
+
+*** The new command c-subword-mode is bound to C-c C-w.
+
+** C-c C-s (`c-show-syntactic-information') now highlights the anchor
+position(s).
+
+** The new GtkDoc Doc Comment style has become the default for C Mode.
+Contributed by Masatake YAMATO.
+
+** New Minor Modes
+*** Electric Minor Mode toggles the electric action of non-alphabetic keys.
+The new command c-toggle-electric-mode is bound to C-c C-l.  Turning the
+mode off can be helpful for editing chaotically indented code and for
+users new to CC Mode, who sometimes find electric indentation
+disconcerting.  Its current state is displayed in the mode line with an
+'l', e.g. "C/al".
+
+*** Subword Minor Mode makes Emacs recognize word boundaries at upper case
+letters in StudlyCapsIdentifiers.  You enable this feature by C-c C-w.  It can
+also be used in non-CC Mode buffers.  :-) Contributed by Masatake YAMATO.
+Subword Minor Mode doesn't (yet?) work in Emacs 20.n.
+
+** New clean-ups
+
+*** `comment-close-slash'.
+With this clean-up, a block (i.e. c-style) comment can be terminated by
+typing a slash at the start of a line.
+
+*** `c-one-liner-defun'
+This clean-up compresses a short enough defun (for example, an AWK
+pattern/action pair) onto a single line.  "Short enough" is configurable.
+
+** AWK support
+AWK Mode is now better integrated into CC Mode as a whole.  In detail:
+
+*** Comment and line-breaking commands now work for AWK.
+
+*** M-a and M-e (c-beginning/end-of-statement) now work for AWK.
+
+*** "awk" style, Auto-newline insertion, special AWK initialization hook.
+A new style, "awk" has been introduced, and this is now the default
+style for AWK code.  With its introduction, Auto-newline insertion can
+be used freely for AWK code, and there is no longer a need for the
+special initialization function in the AWK Mode hook.
+
+*** The standard Line-up functions still haven't been adapted for AWK.
+Some of these may work serendipitously.  There shouldn't be any problems
+writing custom indentation functions for AWK mode.
+
+*** AWK Font Locking still hasn't been fully integrated into CC Mode.
+There is just a single level of font locking in AWK mode.
+
+* Changes in 5.30
+
+There is a lot of change in this version, so it's considered experimental.  It is however fairly well tested already since the developers have an extensive test suite to ensure correct syntactic analysis and font locking.
+
+** Font lock support.
+CC Mode now provides font lock support for all its languages.  This
+supersedes the font lock patterns that have been in the core font lock
+package for C, C++, Java and Objective-C.  Like indentation, font
+locking is done in a uniform way across all languages (except the new
+AWK mode - see below).  That means that the new font locking will be
+different from the old patterns in various details for most languages.
+
+The main goal of the font locking in CC Mode is accuracy, to provide a
+dependable aid in recognizing the various constructs.  Some, like
+strings and comments, are easy to recognize while others, like
+declarations and types, can be very tricky.  CC Mode can go to great
+lengths to recognize declarations and casts correctly, especially when
+the types aren't recognized by standard patterns.  This is a fairly
+demanding analysis which can be slow on older hardware, and it can
+therefore be disabled by choosing a lower decoration level with the
+variable font-lock-maximum-decoration.
+
+Note that the most demanding font lock level has been tuned with lazy
+fontification in mind, i.e.  there should be a support mode that waits
+with the fontification until the text is actually shown
+(e.g. Just-in-time Lock mode, which is the default in Emacs 21, or
+Lazy Lock mode).  Fontifying a file with several thousand lines in one
+go can take the better part of a minute even on a fast system.
+
+*** The (c|c++|objc|java|idl|pike)-font-lock-extra-types variables
+are now used by CC Mode to recognize identifiers that are certain to
+be types.  (They are also used in cases that aren't related to font
+locking.)  At the maximum decoration level, types are often recognized
+properly anyway, so these variables should be fairly restrictive and
+not contain patterns for uncertain types.
+
+*** Support for documentation comments.
+There is a "plugin" system to fontify documentation comments like
+Javadoc and the markup within them.  It's independent of the host
+language, so it's possible to e.g. turn on Javadoc font locking in C
+buffers.  See the variable c-doc-comment-style for details.
+
+Currently two kinds of doc comment styles are recognized: Suns Javadoc
+and Autodoc which is used in Pike.  This is by no means a complete
+list of the most common tools; if your doc comment extractor of choice
+is missing then please drop a note to bug-cc-mode@gnu.org.
+
+*** Better handling of C++ templates.
+As a side effect of the more accurate font locking, C++ templates are
+now handled much better.  The angle brackets that delimit them are
+given parenthesis syntax so that they can be navigated like other
+parens.
+
+This also improves indentation of templates, although there still is
+work to be done in that area.  E.g. it's required that multiline
+template clauses are written in full and then refontified to be
+recognized, and the indentation of nested templates is a bit odd and
+not as configurable as it ought to be.
+
+*** Improved handling of Objective-C and CORBA IDL.
+Especially the support for Objective-C and IDL has gotten an overhaul.
+The special "@" declarations in Objective-C are handled correctly.
+All the keywords used in CORBA IDL, PSDL, and CIDL are recognized and
+handled correctly, also wrt indentation.
+
+** Support for the AWK language.
+Support for the AWK language has been introduced.  The implementation is
+based around GNU AWK version 3.1, but it should work pretty well with
+any AWK.  As yet, not all features of CC Mode have been adapted for AWK.
+Here is a summary:
+
+*** Indentation Engine
+The CC Mode indentation engine fully supports AWK mode.
+
+AWK mode handles code formatted in the conventional AWK fashion: `{'s
+which start actions, user-defined functions, or compound statements are
+placed on the same line as the associated construct; the matching `}'s
+are normally placed under the start of the respective pattern, function
+definition, or structured statement.
+
+The predefined indentation functions haven't yet been adapted for AWK
+mode, though some of them may work serendipitously.  There shouldn't be
+any problems writing custom indentation functions for AWK mode.
+
+The command C-c C-q (c-indent-defun) hasn't yet been adapted for AWK,
+though in practice it works properly nearly all the time.  Should it
+fail, explicitly set the region around the function (using C-u C-SPC:
+C-M-h probably won't work either) then do C-M-\ (indent-region).
+
+*** Font Locking
+There is a single level of font locking in AWK mode, rather than the
+three distinct levels the other modes have.  There are several
+idiosyncrasies in AWK mode's font-locking due to the peculiarities of
+the AWK language itself.
+
+*** Comment Commands
+M-; (indent-for-comment) works fine.  None of the other CC Mode
+comment formatting commands have yet been adapted for AWK mode.
+
+*** Movement Commands
+Most of the movement commands work in AWK mode.  The most important
+exceptions are M-a (c-beginning-of-statement) and M-e
+(c-end-of-statement) which haven't yet been adapted.
+
+The notion of "defun" has been augmented to include AWK pattern-action
+pairs.  C-M-a (c-awk-beginning-of-defun) and C-M-e (c-awk-end-of-defun)
+recognise these pattern-action pairs, as well as user defined
+functions.
+
+*** Auto-newline Insertion and Clean-ups
+Auto-newline insertion hasn't yet been adapted for AWK.  Some of
+the clean-ups can actually convert good AWK code into syntactically
+invalid code.  These features are best disabled in AWK buffers.
+
+** New syntactic symbols in IDL mode.
+The top level constructs "module" and "composition" (from CIDL) are
+now handled like "namespace" in C++: They are given syntactic symbols
+module-open, module-close, inmodule, composition-open,
+composition-close, and incomposition.
+
+** New lineup function c-lineup-string-cont.
+This lineup function lines up a continued string under the one it
+continues.  E.g:
+
+result = prefix + "A message "
+                  "string.";      <- c-lineup-string-cont
+
+** New functions to do hungry delete without enabling hungry delete mode.
+The functions c-hungry-backspace and c-hungry-delete-forward can be
+bound to keys to get this feature without toggling a mode.
+Contributed by Kevin Ryde.
+
+** Better control over require-final-newline.
+The variable that controls how to handle a final newline when the
+buffer is saved, require-final-newline, is now customizable on a
+per-mode basis through c-require-final-newline.  The default is to set
+it to t only in languages that mandate a final newline in source files
+(C, C++ and Objective-C).
+
+** Format change for syntactic context elements.
+The elements in the syntactic context returned by c-guess-basic-syntax
+and stored in c-syntactic-context has been changed somewhat to allow
+attaching more information.  They are now lists instead of single cons
+cells.  E.g. a line that previously had the syntactic analysis
+
+((inclass . 11) (topmost-intro . 13))
+
+is now analysed as
+
+((inclass 11) (topmost-intro 13))
+
+In some cases there are more than one position given for a syntactic
+symbol.
+
+This change might affect code that call c-guess-basic-syntax directly,
+and custom lineup functions if they use c-syntactic-context.  However,
+the argument given to lineup functions is still a single cons cell
+with nil or an integer in the cdr.
+
+** API changes for derived modes.
+There have been extensive changes "under the hood" which can affect
+derived mode writers.  Some of these changes are likely to cause
+incompatibilities with existing derived modes, but on the other hand
+care has now been taken to make it possible to extend and modify CC
+Mode with less risk of such problems in the future.
+
+*** New language variable system.
+See the comment blurb near the top of cc-langs.el.
+
+*** New initialization functions.
+The initialization procedure has been split up into more functions to
+give better control: c-basic-common-init, c-font-lock-init, and
+c-init-language-vars.
+
+** Compiled byte code is now (X)Emacs version specific.
+Previously byte compiled versions of CC Mode could be shared between
+major (X)Emacs versions to some extent.  That is no longer the case
+since macros are now used extensively to adapt to (X)Emacs specific
+features without sacrificing performance.
+
+* Changes in 5.29
+
+Note: This was an unfinished interim release that was never publicly
+announced.
+
+** Changes in analysis of nested syntactic constructs.
+The syntactic analysis engine has better handling of cases where
+several syntactic constructs appear nested on the same line.  They are
+now handled as if each construct started on a line of its own.
+
+This means that CC Mode now indents some cases differently, and
+although it's more consistent there might be cases where the old way
+gave results that's more to one's liking.  So if you find a situation
+where you think that the indentation has become worse, please report
+it to bug-cc-mode@gnu.org.
+
+*** New syntactic symbol substatement-label.
+This symbol is used when a label is inserted between a statement and
+its substatement.  E.g:
+
+    if (x)
+      x_is_true:
+        do_stuff();
+
+** Better handling of multiline macros.
+
+*** Syntactic indentation inside macros.
+The contents of multiline #define's are now analyzed and indented
+syntactically just like other code.  This can be disabled by the new
+variable c-syntactic-indentation-in-macros.  A new syntactic symbol
+cpp-define-intro has been added to control the initial indentation
+inside #define's.
+
+*** New lineup function c-lineup-cpp-define.
+Now used by default to line up macro continuation lines.  The behavior
+of this function closely mimics the indentation one gets if the macro
+is indented while the line continuation backslashes are temporarily
+removed.  If syntactic indentation in macros is turned off, it works
+much line c-lineup-dont-change, which was used earlier, but handles
+empty lines within the macro better.
+
+*** Automatically inserted newlines continues the macro if used within one.
+This applies to the newlines inserted by the auto-newline mode, and to
+c-context-line-break and c-context-open-line.
+
+*** Better alignment of line continuation backslashes.
+c-backslash-region tries to adapt to surrounding backslashes.  New
+variable c-backslash-max-column which put a limit on how far out
+backslashes can be moved.
+
+*** Automatic alignment of line continuation backslashes.
+This is controlled by the new variable c-auto-align-backslashes.  It
+affects c-context-line-break, c-context-open-line and newlines
+inserted in auto-newline mode.
+
+*** Line indentation works better inside macros.
+Regardless whether syntactic indentation and syntactic indentation
+inside macros are enabled or not, line indentation now ignores the
+line continuation backslashes.  This is most noticeable when syntactic
+indentation is turned off and there are empty lines (save for the
+backslash) in the macro.
+
+** indent-for-comment is more customizable.
+The behavior of M-; (indent-for-comment) is now configurable through
+the variable c-indent-comment-alist.  The indentation behavior is
+based on the preceding code on the line, e.g. to get two spaces after
+#else and #endif but indentation to comment-column in most other cases
+(something which was hardcoded earlier).
+
+** New function c-context-open-line.
+It's the open-line equivalent of c-context-line-break.
+
+** New lineup functions
+
+*** c-lineup-cascaded-calls
+Lines up series of calls separated by "->" or ".".
+
+*** c-lineup-knr-region-comment
+Gives (what most people think is) better indentation of comments in
+the "K&R region" between the function header and its body.
+
+*** c-lineup-gcc-asm-reg
+Provides better indentation inside asm blocks.  Contributed by Kevin
+Ryde.
+
+*** c-lineup-argcont
+Lines up continued function arguments after the preceding comma.
+Contributed by Kevin Ryde.
+
+** Better caching of the syntactic context.
+CC Mode caches the positions of the opening parentheses (of any kind)
+of the lists surrounding the point.  Those positions are used in many
+places as anchor points for various searches.  The cache is now
+improved so that it can be reused to a large extent when the point is
+moved.  The less it moves, the less needs to be recalculated.
+
+The effect is that CC Mode should be fast most of the time even when
+opening parens are hung (i.e. aren't in column zero).  It's typically
+only the first time after the point is moved far down in a complex
+file that it'll take noticeable time to find out the syntactic
+context.
+
+** Statements are recognized in a more robust way.
+Statements are recognized most of the time even when they occur in an
+"invalid" context, e.g. in a function argument.  In practice that can
+happen when macros are involved.
+
+** Improved the way c-indent-exp chooses the block to indent.
+It now indents the block for the closest sexp following the point
+whose closing paren ends on a different line.  This means that the
+point doesn't have to be immediately before the block to indent.
+Also, only the block and the closing line is indented; the current
+line is left untouched.
+
+** Added toggle for syntactic indentation.
+The function c-toggle-syntactic-indentation can be used to toggle
+syntactic indentation.
+
+* Changes in 5.28
+
+** The hardcoded switch to "java" style in Java mode is gone.
+CC Mode used to automatically set the style to "java" when Java mode
+is entered.  This has now been removed since it caused too much
+confusion.
+
+However, to keep backward compatibility to a certain extent, the
+default value for c-default-style now specifies the "java" style for
+java-mode, but "gnu" for all other modes (as before).  So you won't
+notice the change if you haven't touched that variable.
+
+** New cleanups, space-before-funcall and compact-empty-funcall.
+Two new cleanups have been added to c-cleanup-list:
+
+space-before-funcall causes a space to be inserted before the opening
+parenthesis of a function call, which gives the style "foo (bar)".
+
+compact-empty-funcall causes any space before a function call opening
+parenthesis to be removed if there are no arguments to the function.
+It's typically useful together with space-before-funcall to get the
+style "foo (bar)" and "foo()".
+
+** Some keywords now automatically trigger reindentation.
+Keywords like "else", "while", "catch" and "finally" have been made
+"electric" to make them reindent automatically when they continue an
+earlier statement.  An example:
+
+for (i = 0; i < 17; i++)
+  if (a[i])
+    res += a[i]->offset;
+else
+
+Here, the "else" should be indented like the preceding "if", since it
+continues that statement. CC Mode will automatically reindent it after
+the "else" has been typed in full, since it's not until then it's
+possible to decide whether it's a new statement or a continuation of
+the preceding "if".
+
+CC Mode uses Abbrev mode to achieve this, which is therefore turned on
+by default.
+
+** M-a and M-e now moves by sentence in multiline strings.
+Previously these two keys only moved by sentence in comments, which
+meant that sentence movement didn't work in strings containing
+documentation or other natural language text.
+
+The reason it's only activated in multiline strings (i.e. strings that
+contain a newline, even when escaped by a '\') is to avoid stopping in
+the short strings that often reside inside statements.  Multiline
+strings almost always contain text in a natural language, as opposed
+to other strings that typically contain format specifications,
+commands, etc.  Also, it's not that bothersome that M-a and M-e misses
+sentences in single line strings, since they're short anyway.
+
+** Support for autodoc comments in Pike mode.
+Autodoc comments for Pike are used to extract documentation from the
+source, like Javadoc in Java.  Pike mode now recognize this markup in
+comment prefixes and paragraph starts.
+
+** The comment prefix regexps on c-comment-prefix may be mode specific.
+When c-comment-prefix is an association list, it specifies the comment
+line prefix on a per-mode basis, like c-default-style does.  This
+change came about to support the special autodoc comment prefix in
+Pike mode only.
+
+** Better handling of syntactic errors.
+The recovery after unbalanced parens earlier in the buffer has been
+improved; CC Mode now reports them by dinging and giving a message
+stating the offending line, but still recovers and indent the
+following lines in a sane way (most of the time).  An "else" with no
+matching "if" is handled similarly.  If an error is discovered while
+indenting a region, the whole region is still indented and the error
+is reported afterwards.
+
+** Lineup functions may now return absolute columns.
+A lineup function can give an absolute column to indent the line to by
+returning a vector with the desired column as the first element.
+
+** More robust and warning-free byte compilation.
+Although this is strictly not a user visible change (well, depending
+on the view of a user), it's still worth mentioning that CC Mode now
+can be compiled in the standard ways without causing trouble.  Some
+code have also been moved between the subpackages to enhance the
+modularity somewhat.  Thanks to Martin Buchholz for doing the
+groundwork.
+
+* Changes in 5.27
+
+Note: This is mostly a bugfix release.  The features labeled
+experimental in 5.26 remain and are now considered permanent.
+
+** c-style-variables-are-local-p now defaults to t.
+This is an incompatible change that has been made to make the behavior
+of the style system wrt global variable settings less confusing for
+non-advanced users.  If you know what this variable does you might
+want to set it to nil in your .emacs, otherwise you probably don't
+have to bother.
+
+Defaulting c-style-variables-are-local-p to t avoids the confusing
+situation that occurs when a user sets some style variables globally
+and edit both a Java and a non-Java file in the same Emacs session.
+If the style variables aren't buffer local in this case, loading of
+the second file will cause the default style (either "gnu" or "java"
+by default) to override the global settings made by the user.
+
+* Changes in 5.26
+
+Note: This release contains changes that might not be compatible with
+current user setups (although it's believed that these
+incompatibilities will only show up in very uncommon circumstances).
+However, since the impact is uncertain, these changes may be rolled
+back depending on user feedback.  Therefore there's no forward
+compatibility guarantee wrt the new features introduced in this
+release.
+
+** New initialization procedure for the style system.
+When the initial style for a buffer is determined by CC Mode (from the
+variable c-default-style), the global values of style variables now
+take precedence over the values specified by the chosen style.  This
+is different from the old behavior: previously, the style-specific
+settings would override the global settings.  This change makes it
+possible to do simple configuration in the intuitive way with
+Customize or with setq lines in one's .emacs file.
+
+By default, the global value of every style variable is the new
+special symbol set-from-style, which causes the value to be taken from
+the style system.  This means that in effect, only an explicit setting
+of a style variable will cause the "overriding" behavior described
+above.
+
+Also note that global settings override style-specific settings *only*
+when the initial style of a buffer is chosen by a CC Mode major mode
+function.  When a style is chosen in other ways --- for example, by a
+call like (c-set-style "gnu") in a hook, or via M-x c-set-style ---
+then the style-specific values take precedence over any global style
+values.  In Lisp terms, global values override style-specific values
+only when the new second argument to c-set-style is non-nil; see the
+function documentation for more info.
+
+The purpose of these changes is to make it easier for users,
+especially novice users, to do simple customizations with Customize or
+with setq in their .emacs files.  On the other hand, the new system is
+intended to be compatible with advanced users' customizations as well,
+such as those that choose styles in hooks or whatnot.  This new system
+is believed to be almost entirely compatible with current
+configurations, in spite of the changed precedence between style and
+global variable settings when a buffer's default style is set.
+
+(Thanks to Eric Eide for clarifying this explanation a bit.)
+
+*** c-offsets-alist is now a customizable variable.
+This became possible as a result of the new initialization behavior.
+
+This variable is treated slightly differently from the other style
+variables; instead of using the symbol set-from-style, it will be
+completed with the syntactic symbols it doesn't already contain when
+the style is first initialized.  This means it now defaults to the
+empty list to make all syntactic elements get their values from the
+style system.
+
+*** Compatibility variable to restore the old behavior.
+In case your configuration doesn't work with this change, you can set
+c-old-style-variable-behavior to non-nil to get the old behavior back
+as far as possible.
+
+** Improvements to line breaking and text filling.
+CC Mode now handles this more intelligently and seamlessly wrt the
+surrounding code, especially inside comments.  For details see the new
+chapter about this in the manual.
+
+*** New variable to recognize comment line prefix decorations.
+The variable c-comment-prefix-regexp has been added to properly
+recognize the line prefix in both block and line comments.  It's
+primarily used to initialize the various paragraph recognition and
+adaptive filling variables that the text handling functions uses.
+
+*** New variable c-block-comment-prefix.
+This is a generalization of the now obsolete variable
+c-comment-continuation-stars to handle arbitrary strings.
+
+*** CC Mode now uses adaptive fill mode.
+This to make it adapt better to the paragraph style inside comments.
+
+It's also possible to use other adaptive filling packages inside CC
+Mode, notably Kyle E. Jones' Filladapt mode (http://wonderworks.com/).
+A new convenience function c-setup-filladapt sets up Filladapt for use
+inside CC Mode.
+
+Note though that the 2.12 version of Filladapt lacks a feature that
+causes it to work suboptimally when c-comment-prefix-regexp can match
+the empty string (which it commonly does).  A patch for that is
+available from the CC Mode web site (http://www.python.org/emacs/
+cc-mode/).
+
+*** It's now possible to selectively turn off auto filling.
+The variable c-ignore-auto-fill is used to ignore auto fill mode in
+specific contexts, e.g. in preprocessor directives and in string
+literals.
+
+*** New context sensitive line break function c-context-line-break.
+It works like newline-and-indent in normal code, and adapts the line
+prefix according to the comment style when used inside comments.  If
+you're normally using newline-and-indent, you might want to switch to
+this function.
+
+*** c-hanging-comment-starter-p and c-hanging-comment-ender-p are obsolete.
+The new comment handling code no longer consults these two variables.
+It instead detects how the "hangingness" of the comment delimiters
+look like currently and simply keeps them that way.
+
+** Fixes to IDL mode.
+It now does a better job in recognizing only the constructs relevant
+to IDL.  E.g. it no longer matches "class" as the beginning of a
+struct block, but it does match the CORBA 2.3 "valuetype" keyword.
+Thanks to Eric Eide.
+
+** Improvements to the Whitesmith style.
+It now keeps the style consistently on all levels and both when
+opening braces hangs and when they don't.
+
+*** New lineup function c-lineup-whitesmith-in-block.
+
+** New lineup functions c-lineup-template-args and c-indent-multi-line-block.
+See their docstrings for details.  c-lineup-template-args does a
+better job of tracking the brackets used as parens in C++ templates,
+and is used by default to line up continued template arguments.
+
+** c-lineup-comment now preserves alignment with a comment on the
+previous line.  It used to instead preserve comments that started in
+the column specified by comment-column.
+
+** c-lineup-C-comments handles "free form" text comments.
+In comments with a long delimiter line at the start, the indentation
+is kept unchanged for lines that start with an empty comment line
+prefix.  This is intended for the type of large block comments that
+contain documentation with its own formatting.  In these you normally
+don't want CC Mode to change the indentation.
+
+** The `c' syntactic symbol is now relative to the comment start
+instead of the previous line, to make integers usable as lineup
+arguments.
+
+** All lineup functions have gotten docstrings.
+
+** More preprocessor directive movement functions.
+c-down-conditional does the reverse of c-up-conditional.
+c-up-conditional-with-else and c-down-conditional-with-else are
+variants of these that also stops at "#else" lines (suggested by Don
+Provan).
+
+** Minor improvements to many movement functions in tricky situations.
+
+* Changes in 5.25
+
+This is a bug fix release only.
+
+* Changes in 5.24
+
+Note: See also changes in 5.23 to get the complete list of additions
+since the last public release.
+
+** c-default-style can now take an association list that maps major
+modes to style names.  When this variable is an alist, Java mode no
+longer hardcodes a setting to "java" style.  See the variable's
+docstring for details.
+
+** It's now possible to put a list as the offset on a syntactic
+symbol.  The list is evaluated recursively until a non-nil offset is
+found.  This is useful to combine several lineup functions to act in a
+prioritized order on a single line.  However, none of the supplied
+lineup functions use this feature currently.
+
+** New syntactic symbol catch-clause, which is used on the "catch" and
+"finally" lines in try-catch constructs in C++ and Java.
+
+** New cleanup brace-catch-brace on c-cleanup-list, which does for
+"catch" lines what brace-elseif-brace does for "else if" lines.
+
+** The braces of Java anonymous inner classes are treated separately
+from the braces of other classes in auto-newline mode.  Two new
+symbols inexpr-class-open and inexpr-class-close may be used on
+c-hanging-braces-alist to control the automatic newlines used for
+anonymous classes.
+
+** bug-cc-mode@gnu.org is now the primary bug reporting address.
+This is an alias for cc-mode-help@python.org.
+
+* Changes in 5.23
+
+Note: Due to the extensive changes, this version was a beta test
+release that was never publicly announced.
+
+** Support for the Pike language added, along with new Pike specific
+syntactic symbols: inlambda, lambda-intro-cont
+
+** Support for Java anonymous classes via new syntactic symbol
+inexpr-class.  New syntactic symbol inexpr-statement for Pike
+support and gcc-style statements inside expressions.  New lineup
+function c-lineup-inexpr-stat.
+
+** New syntactic symbol brace-entry-open which is used in brace lists
+(i.e. static initializers) when a list entry starts with an open
+brace.  These used to be recognized as brace-list-entry's.
+c-electric-brace also recognizes brace-entry-open braces
+(brace-list-entry's can no longer be electrified).
+
+** New command c-indent-line-or-region, not bound by default.
+
+** Improvements to M-C-h (c-mark-function).
+
+** `#' is only electric when typed in the indentation of a line.
+
+** Parentheses are now electric (via the new command c-electric-paren)
+for auto-reindenting lines when parens are typed.
+
+** In "gnu" style, inline-open offset is now set to zero.
+
+** Uniform handling of the inclass syntactic symbol.  The indentation
+associated with it is now always relative to the class opening brace.
+This means that the indentation behavior has changed in some
+circumstances, but only if you've put anything besides 0 on the
+class-open syntactic symbol (none of the default styles do that).
+
+** c-enable-xemacs-performance-kludge-p is set to nil by default,
+since for Emacs-friendly styles (i.e. where the top-level opening
+brace starts in column zero) setting this variable to t can degrade
+performance significantly.
+
+* Changes in 5.22
+
+Note: There was no net release of 5.22!  This version went only to the
+XEmacs developers and was primarily a bug fix release.
+
+* Changes in 5.21
+
+This is a bug fix release only.
+
+* Changes in 5.20
+
+** Multiline macros are now handled, both as they affect indentation,
+and as recognized syntax.  New syntactic symbol cpp-macro-cont is
+assigned to second and subsequent lines of a multiline macro
+definition.
+
+** A new style "user" which captures all non-hook-ified
+(i.e. top-level) .emacs file variable settings and customizations.
+Style "cc-mode" is an alias for "user" and is deprecated.  "gnu" style
+is still the default however.
+
+** "java" style now conforms to Sun's JDK coding style.
+
+** New commands c-beginning-of-defun, c-end-of-defun which are not
+bound by default to C-M-a and C-M-e.
+
+** New and improved implementations of M-a (c-beginning-of-statement)
+and M-e (c-end-of-statement).
+
+** C++ namespace blocks are supported, with new syntactic symbols
+namespace-open, namespace-close, and innamespace.
+
+** File local variable settings of c-file-style and c-file-offsets
+makes the style variables local to that buffer only.
+
+** New indentation functions c-lineup-close-paren,
+c-indent-one-line-block, c-lineup-dont-change.
+
+** Various Imenu patches (thanks to Masatake Yamato, Jan Dubois, and
+Peter Pilgrim).
+
+** Performance improvements.  Some improvements affect only Emacs or
+only XEmacs (see the variable c-enable-xemacs-performance-kludge-p).
+
+** Improvements (hopefully!) to the way CC Mode is loaded.  You should
+now be able to do a (require 'cc-mode) to get the entire package
+loaded properly for customization in your .emacs file.  A new variable
+c-initialize-on-load controls this and is set to t by default.
+
+* Changes in 5.19
+
+** extern-lang-close relative buffer positions have changed.  The used
+to point to the extern's open brace, but they now point to the first
+non-whitespace character on the line with the open brace.
+
+** c-progress-interval's semantics have changed slightly.  When set to
+nil, indentation proceeds silently.  Previously, even when nil, the
+start and end messages were printed.
+
+* Changes in 5.18
+
+** M-a and M-e should now properly move into comments when point is
+before or after a comment, and move by sentences when inside a
+comment.
+
+** c-electric-slash should be bound in all modes now.  Also,
+c-expand-macro is not bound in Java or IDL modes.
+
+** Imenu enhancements: Objective-C support donated by Masatake (jet)
+YAMATO; a fix to Java support given by Ake Stenhoff; and improvements
+to C++ support given by Jan Dubois.
+
+* Changes in 5.17
+
+** Recognition of enum declarations in K&R argdecls.
+
+** Changes to "python" style to more closely match Python C API coding
+standards.
+
+** / is bound to c-electric-slash in all modes, and C-c C-e is bound
+to c-expand-macro in all languages except Java and IDL.
+
+* Changes in 5.16
+
+This is primarily a bug fix release.  Users of XEmacs 19.15 and Emacs
+19.34 are highly encouraged to pick up this release.
+
+* Changes in 5.15
+
+** A new syntactic symbol: template-args-cont, used in C++ template
+declarations where the argument list spans multiple lines.
+
+** In "java" style, c-hanging-comment-starter-p defaults to nil to
+preserve Javadoc starter lines.
+
+** Line oriented comments (i.e. C++ style comments) are now recognized
+by default in all modes, including C mode (as per the ANSI 9X C draft
+standard).  Thus the function c-enable-//-in-c-mode has been removed.
+
+** Auto-filling of comments has been improved.  CC Mode will now
+properly auto-fill both line and block oriented comments, and allows
+you to choose the leader string on block oriented continued comments,
+via the variable c-comment-continuation-stars.  See the CC Mode manual
+for details.
+
+** c-electric-slash is electric in all modes.
+
+** The need for c-mode-19.el is automatically detected now.  You do
+not need to load or require it in your .emacs file.
+
+* Changes in 5.14
+
+** Support for CORBA's IDL language.  There is now a new mode called
+idl-mode, with all the expected hooks, abbreviation tables, etc.
+
+** In "java" style, c-hanging-comment-starter-p is set to nil by
+default to preserve Javadoc comments.
+
+** A new hook variable: c-initialization-hook. This is called only
+once an X/Emacs session, when the CC Mode package is initialized.
+
+* Changes in version 5
+
+CC Mode version 5 was a major upgrade, as evidenced by the change in
+major revision number.  Here is a list of the important user visible
+changes in CC Mode 5.
+
+** CC Mode 5 will not work with Emacs 18, and will only work with the
+latest Emacs and XEmacs releases.
+
+** c-mode-map is no longer the base keymap for all modes.  This was
+incompatible with the way Emacs 19 supports menus, so now
+c-mode-base-map is the base map for all modes (including c-mode-map).
+If you are installing custom keybindings into c-mode-map and expecting
+them to be present in all other modes, this will break.  Put your
+keybindings in c-mode-base-map instead.
+
+** The function c-electric-delete and variable c-delete-function are
+handled differently now, in order to accommodate the separation of the
+BackSpace and Delete keysyms.  CC Mode now binds only the Delete
+keysym to c-electric-delete (which runs c-delete-function), and the
+BackSpace keysym to c-electric-backspace (which runs
+c-backspace-function).  See the CC Mode manual for details.
+
+** The single cc-mode.el file was simply too unwieldy so I have split
+the file up.  See the MANIFEST file for details.
+
+** Also, all user variables have been converted to Per Abrahamsen's
+Custom library, and all support for older Emacsen have been ripped
+out.  See the release notes for details of running CC Mode 5 in your
+version of Emacs.
+
+** All style variables are now global by default.  Specifically, the
+default value for c-style-variables-are-local-p is nil.  The same
+rules apply as before, only reversed: if you want the style variables
+to be buffer local, you should set c-style-variables-are-local-p to t
+before you load CC Mode.
+
+* Changes from 4.322 to 4.353
+
+** Better control over the buffer localness of the indentation variables.
+
+In previous version of cc-mode the variables that control indentation
+were always buffer local.  This was applauded by those who edited
+files in many different styles, but reviled by those who usually edit
+files of only one style.
+
+You can now control whether these variables are buffer local or not,
+by setting the variable c-style-variables-are-local-p.  This variable
+only has effect at the time cc-mode.el is loaded.  If this variable is
+non-nil, then all indentation style related variables will be made
+buffer local.  Otherwise, they will remain global, so that users can
+actually use setq in their top-level .emacs file without having to use
+a mode hook.
+
+Note that once the variables are made buffer local, they cannot be
+made global again; they will remain buffer local for the rest of the
+current Emacs session.  The list of variables that are buffer
+localizable are:
+
+  c-offsets-alist
+  c-basic-offset
+  c-file-style
+  c-file-offsets
+  c-comment-only-line-offset
+  c-cleanup-list
+  c-hanging-braces-alist
+  c-hanging-colons-alist
+  c-hanging-comment-ender-p
+  c-backslash-column
+  c-label-minimum-indentation
+  c-special-indent-hook
+  c-indentation-style
+
+For backwards compatibility, the default value of
+c-style-variables-are-local-p is non-nil, meaning the variables are
+buffer local by default.  This may change in the future.
+
+** New variable c-indentation-style which holds the current style name
+of the buffer.
+
+** Menus are not installed when running in Infodock.
+
+** Improvements to the alignment of C block comments.
+The variable c-block-comments-indent-p has been removed.
+
+I have improved the c-lineup-C-comments function, which is responsible
+for lining up subsequent lines in C block comments.  It should now do
+the Right Thing for most comment styles that use some combination of
+stars at the beginning of comment lines (including zero stars! :-).
+For example, the following styles are aligned correctly by default:
+
+int main()
+{
+    /*
+     *
+     */
+
+    /*
+    **
+    **
+    */
+
+    /**
+     **
+     **
+     **/
+
+    /***
+     ***
+     ***
+     ***
+     ***/
+
+    /**
+    ***
+    ***
+    **/
+}
+
+For this reason, the variable c-block-comments-indent-p has been
+removed.
+
+** New indentation style python.
+The blessed standard for writing Python extension modules in C.
+
+** New c-cleanup-list option: brace-elseif-brace
+
+* Changes from 4.282 to 4.322
+
+** A new style linux has been added.
+
+**The following variables have been removed from the default cc-mode
+style:
+   c-echo-syntactic-information-p
+   c-strict-syntax-p
+   c-tab-always-indent
+   c-inhibit-startup-warnings-p
+
+** External language declaration blocks are now handled properly.
+Three new syntactic symbols have been added:
+
+*** extern-lang-open
+The brace that opens an extern block.  Hangable via
+c-hanging-braces-alist.
+
+*** extern-lang-close
+The brace that closes an extern block.  Hangable via
+c-hanging-braces-alist.
+
+*** inextern-lang
+A modifier (with no relative buffer position) which is added to
+topmost-intro syntax lines that occur within an extern block.  See the
+texinfo manual for details.
+
+** New variable: c-label-minimum-indentation which defines the minimum
+indentation a label can have in gnu style.  This variable has no
+effect in other styles.
+
+** c-special-indent-hook is handled slightly differently when it
+appears in a style definition; the functions in the style definition
+are appended to the global value of c-special-indent-hook.
+
+** c-style-alist is defconst'd now.
+This should eliminate problems people had with Java mode.
+
+** Lambda expressions (anonymous functions) can now be used as custom
+indentation functions.
+
+** Whitespace is allowed between the protection keyword (public,
+private, protected) and the trailing colon in C++.
+
+** Java mode now recognizes the finally and synchronized keywords.
+
+** New lineup function: c-lineup-arglist-close-under-paren.
+Try setting arglist-close to this function.
+
+** The variable c-recognize-knr-p is deprecated.
+Now by default, c-mode will always recognize K&R argument declarations
+with no performance penalty.  cc-mode has adopted BOCM's approach
+which assumes that argdecls will always be indented at least one
+space, while the function headers they are associated with will not be
+indented at all.  If your programming style differs from this, you may
+have trouble.  You should remove any setting of this variable from
+your cc-mode configurations!
+
+** New variable c-insert-tab-function, normally just inserts a tab
+character when indicated by c-tab-always-indent and indent-tabs-mode.
+You could set this to run tab-to-tab-stop instead.
+
+** C-s C-s (c-show-syntactic-information) now takes an optional
+universal argument, which inserts the analysis into the buffer on the
+current line, as a comment.
+
+** c-mark-function has been moved to C-c C-m.
+
+** In addition, I have made a change to the way braces which are given
+inline-open syntax are handled.
+
+In the following sample:
+
+  1: class Outer
+  2: {
+  3:     void a_function( int a )
+  4:     {
+  5:         do_something( a );
+  6:     }
+  7:     class Inner
+  8:     {
+  9:         void b_function( int b )
+ 10:         {
+ 11:             do_something( b );
+ 12:         }
+ 13:     }
+ 14: }
+
+cc-mode 4.282 would have analyzed line 4 as ((inline-open . 1)), and
+line 10 as ((inline-open . 87)).  So the fact that this brace opened
+an inclass-inline method which should be given extra indentation, was
+implicit in the syntactic symbol.
+
+Some people have argued that the inclass modifier should be added to
+the analysis of such lines.  This release implements this change so
+that line 4 is now analyzed as ((inclass . 1) (inline-open)) and line
+10 as ((inclass . 87) (inline-open)).  The inline-open symbol has no
+relative buffer position so that braces in nested classes would not be
+indented too much.

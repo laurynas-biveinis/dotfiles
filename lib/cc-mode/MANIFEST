@@ -1,0 +1,40 @@
+Manifest for CC Mode 5.31
+
+You should have received the following files in this distribution:
+
+    MANIFEST: This file.
+
+    README: Quick intro into how to get CC Mode up and running.
+
+    NEWS: A list of the user visible changes in each version.
+
+    cc-align.el, cc-awk.el, cc-cmds.el, cc-defs.el, cc-engine.el,
+    cc-fonts.el, cc-guess.el, cc-langs.el, cc-menus.el, cc-mode.el,
+    cc-styles.el, cc-subword.el, cc-vars.el: The source code.
+
+    cc-compat.el: Helps ease the transition from c-mode.el (BOCM) to
+    the new indentation engine.  This is provided for your convenience
+    only, and is unguaranteed and unsupported.
+
+    cc-fix.el: (previously named cc-mode-19.el).  Detects and corrects
+    bugs in various older (X)Emacs versions.
+
+    cc-lobotomy.el: Performance vs. accuracy trade-offs.  May not
+    work, yadda, yadda.
+
+    cc-bytecomp.el: Contains helpers used during byte compiling to
+    ensure that there's no mixup with earler versions of CC Mode which
+    might be loaded.
+
+    cc-mode.texi: The latest CC Mode Texinfo manual.
+
+    ANNOUNCEMENT: Release announcement as it appeared on various
+    forums.
+
+Note that of the above files, the following are distributed with Emacs
+and XEmacs:
+
+    cc-align.el, cc-awk.el, cc-bytecomp.el, cc-cmds.el, cc-compat.el,
+    cc-defs.el, cc-engine.el, cc-fonts.el, cc-guess.el, cc-langs.el,
+    cc-menus.el, cc-mode.el, cc-styles.el, cc-subword.el, cc-vars.el,
+    cc-mode.texi
