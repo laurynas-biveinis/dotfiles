@@ -68,7 +68,7 @@
 (setq vc-initial-comment t)
 
 ; Use Unix-style line endings.
-(setq-default buffer-file-coding-system 'undecided-unix)
+(setq-default buffer-file-coding-system 'utf-8-unix)
 
 ; XXI century encodings
 (set-language-environment "UTF-8")
