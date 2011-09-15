@@ -55,6 +55,7 @@
   (add-to-list 'Info-default-directory-list new))
 
 (add-to-info-path auctex-info-dir)
+(add-to-info-path cedet-info-dir)
 (add-to-info-path (concat org-mode-root "info/"))
 (add-to-info-path (concat cc-mode-root "info/"))
 

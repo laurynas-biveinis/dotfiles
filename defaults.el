@@ -111,10 +111,6 @@
 
 (reset-frame-size)
 
-; Default Info path
-(if (boundp 'cedet-info-dir)
-            (add-to-list 'Info-default-directory-list cedet-info-dir))
-
 ; Custom keybindings
 (defun smart-home ()
   "Move point to first non-whitespace character or beginning-of-line.
