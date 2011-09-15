@@ -111,6 +111,12 @@
 
 (reset-frame-size)
 
+; Treat new (empty) files as modified
+(add-hook 'find-file-hooks
+          '(lambda ()
+             (when (not (file-exists-p (buffer-file-name)))
+               (set-buffer-modified-p t))))
+
 ; Custom keybindings
 (defun smart-home ()
   "Move point to first non-whitespace character or beginning-of-line.
