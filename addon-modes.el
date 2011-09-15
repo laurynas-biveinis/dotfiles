@@ -1,3 +1,7 @@
+; Autopair
+(require 'autopair)
+(autopair-global-mode)
+
 ; Disable linum where it makes sense and fixes performance
 (require 'linum-off)
 
