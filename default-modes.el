@@ -206,6 +206,32 @@
                                   ((cc-mode . ((c-file-style . "InnoDB")
                                                (indent-tabs-mode . t)))))
                                 )
+;; InnoDB directory names
+(setq innodb-dir-names (list "innodb_plugin" "innobase" "xtrabackup"))
+
+(defadvice dir-locals-find-file (before mysql-set-file-class
+                                        (file))
+  ; What we are going to check for
+  (setq directory (file-name-directory (expand-file-name file)))
+  ; Check if this directory has not been processed before
+  (setq found-in-cache-p nil)
+  (dolist (elt dir-locals-directory-cache)
+    (when (and (eq t (compare-strings file nil (length (car elt))
+                                      (car elt) nil nil
+                                      (memq system-type
+                                            '(windows-nt cygwin ms-dos)))))
+      (setq found-in-cache-p 't))) ; TODO: no need to process the rest on match
+  ; No - check if it is InnoDB directory
+  (setq innodb-dir-p nil)
+  (unless found-in-cache-p
+    (dolist (elt innodb-dir-names)
+      (when (string-match elt directory)
+        (setq innodb-dir-p 't))) ; TODO: no need to process the rest on match
+    (when innodb-dir-p
+      (dir-locals-set-directory-class directory 'innodb-source)))
+)
+
+(ad-activate 'dir-locals-find-file)
 
 ;; Styles I use
 (setq c-default-style '((java-mode . "java")
