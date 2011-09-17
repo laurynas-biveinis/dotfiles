@@ -138,29 +138,38 @@
 ;; TAB indents only if point in the beginning of the line
 (setq c-tab-always-indent nil)
 
-(c-add-style
- "MySQL"
- '("K&R"
-   (c-basic-offset . 2)
-   (c-comment-only-line-offset . 0)
-   (c-offsets-alist . ((statement-block-intro . +)
-                       (knr-argdecl-intro . 0)
-                       (substatement-open . 0)
-                       (label . -)
-                       (statement-cont . +)
-                       (arglist-intro . c-lineup-arglist-intro-after-paren)
-                       (arglist-close . c-lineup-arglist)
-                       (innamespace . 0)
-                       (inline-open . 0)
-                       (statement-case-open . +)
-                       )
-                    )
-   )
-)
+;; Styles I use
+(setq c-default-style '((java-mode . "java")
+                        (awk-mode . "awk")
+                        (c++-mode . "stroustrup")
+                        (other . "gnu")))
 
-; InnoDB coding style
+;; Enter indents the new line
+(defun my-make-CR-do-indent ()
+  (define-key c-mode-base-map "\C-m" 'c-context-line-break))
+(add-hook 'c-initialization-hook 'my-make-CR-do-indent)
+
+;; MySQL
+
+(c-add-style "MySQL"
+             '("K&R"
+               (indent-tabs-mode . nil)
+               (c-basic-offset . 2)
+               (c-comment-only-line-offset . 0)
+               (c-offsets-alist . ((statement-block-intro . +)
+                                   (knr-argdecl-intro . 0)
+                                   (substatement-open . 0)
+                                   (label . -)
+                                   (statement-cont . +)
+                                   (arglist-intro . c-lineup-arglist-intro-after-paren)
+                                   (arglist-close . c-lineup-arglist)
+                                   (innamespace . 0)
+                                   (inline-open . 0)
+                                   (statement-case-open . +)))))
+
 (c-add-style "InnoDB"
              '("K&R"
+               (indent-tabs-mode . t)
                (c-basic-offset . 8)
                (c-comment-only-line-offset . 0)
                (c-offsets-alist . ((statement-block-intro . +)
@@ -177,72 +186,70 @@
                                    ))
                ))
 
-(c-add-style
- "Drizzle"
- '((indent-tabs-mode . nil)
-   (c-basic-offset . 2)
-   (c-comment-only-line-offset . 0)
-   (setq c-hanging-braces-alist
-         (append '((class-open before)) c-hanging-braces-alist))
-   (c-offsets-alist . ((statement-block-intro . 2)
-                       (knr-argdecl-intro . 0)
-                       (substatement-open . 0)
-                       (label . -)
-                       (statement-cont . +)
-                       (arglist-intro . c-lineup-arglist-intro-after-paren)
-                       (arglist-close . c-lineup-arglist)
-                       )
-                    )
-   )
- )
+(c-add-style "Drizzle"
+             '((indent-tabs-mode . nil)
+               (c-basic-offset . 2)
+               (c-comment-only-line-offset . 0)
+               (setq c-hanging-braces-alist
+                     (append '((class-open before)) c-hanging-braces-alist))
+               (c-offsets-alist . ((statement-block-intro . 2)
+                                   (knr-argdecl-intro . 0)
+                                   (substatement-open . 0)
+                                   (label . -)
+                                   (statement-cont . +)
+                                   (arglist-intro . c-lineup-arglist-intro-after-paren)
+                                   (arglist-close . c-lineup-arglist)))))
 
 (add-to-list 'auto-mode-alist '("\\.ic\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.i\\'" . c++-mode))
 
-
 (dir-locals-set-class-variables 'innodb-source
-                                '((c-mode . ((c-file-style . "InnoDB")
-                                             (indent-tabs-mode . t)))
-                                  ((cc-mode . ((c-file-style . "InnoDB")
-                                               (indent-tabs-mode . t)))))
-                                )
-;; InnoDB directory names
-(setq innodb-dir-names (list "innodb_plugin" "innobase" "xtrabackup"))
+                                '((c-mode . ((c-file-style . "InnoDB")))
+                                  ((cc-mode . ((c-file-style . "InnoDB"))))))
+(dir-locals-set-class-variables 'mysql-source
+                                '((c-mode . ((c-file-style . "MySQL")))
+                                  ((cc-mode . ((c-file-style . "MySQL"))))))
+(dir-locals-set-class-variables 'drizzle-source
+                                '((c-mode . ((c-file-style . "Drizzle")))
+                                  ((cc-mode . ((c-file-style . "Drizzle"))))))
+
+(defvar mysql-dirs '(("innodb_plugin"     . innodb-source)
+                     ("innobase"          . innodb-source)
+                     ("xtrabackup"        . innodb-source)
+                     ("Percona-Server"    . mysql-source)
+                     ("mysql"             . mysql-source)
+                     ("mysql-[:digit:].*" . mysql-source)
+                     ("drizzle"           . drizzle-source))
+  "An association list of regexps matching directory name substrings and their
+corresponding directory classes.")
 
 (defadvice dir-locals-find-file (before mysql-set-file-class
                                         (file))
-  ; What we are going to check for
-  (setq directory (file-name-directory (expand-file-name file)))
-  ; Check if this directory has not been processed before
-  (setq found-in-cache-p nil)
-  (dolist (elt dir-locals-directory-cache)
-    (when (and (eq t (compare-strings file nil (length (car elt))
-                                      (car elt) nil nil
-                                      (memq system-type
-                                            '(windows-nt cygwin ms-dos)))))
-      (setq found-in-cache-p 't))) ; TODO: no need to process the rest on match
-  ; No - check if it is InnoDB directory
-  (setq innodb-dir-p nil)
-  (unless found-in-cache-p
-    (dolist (elt innodb-dir-names)
-      (when (string-match elt directory)
-        (setq innodb-dir-p 't))) ; TODO: no need to process the rest on match
-    (when innodb-dir-p
-      (dir-locals-set-directory-class directory 'innodb-source)))
-)
+  (let* ((file (expand-file-name file))
+         (directory (file-name-directory file))
+         (found-in-cache-p nil)
+         (dlocals-itr dir-locals-directory-cache)
+         (mysql-dirs-itr mysql-dirs))
+    ; Check if this directory has not been processed before
+    (while dlocals-itr
+      (let ((elt (car dlocals-itr)))
+        (if (eq t (compare-strings directory nil nil
+                                   (car elt) nil nil
+                                   (memq system-type
+                                         '(windows-nt cygwin ms-dos))))
+            (progn (setq found-in-cache-p 't)
+                   (setq dlocals-itr nil))
+          (setq dlocals-itr (cdr dlocals-itr)))))
+    ; No - classify this directory
+    (unless found-in-cache-p
+      (while mysql-dirs-itr
+        (let ((elt (car mysql-dirs-itr)))
+          (if (string-match (car elt) directory)
+              (progn (dir-locals-set-directory-class directory (cdr elt))
+                     (setq mysql-dirs-itr nil))
+            (setq mysql-dirs-itr (cdr mysql-dirs-itr))))))))
 
 (ad-activate 'dir-locals-find-file)
-
-;; Styles I use
-(setq c-default-style '((java-mode . "java")
-                        (awk-mode . "awk")
-                        (c++-mode . "stroustrup")
-                        (other . "gnu")))
-
-;; Enter indents the new line
-(defun my-make-CR-do-indent ()
-  (define-key c-mode-base-map "\C-m" 'c-context-line-break))
-(add-hook 'c-initialization-hook 'my-make-CR-do-indent)
 
 ; Grand Unified Debugger
 (defun my-gud-hook ()
