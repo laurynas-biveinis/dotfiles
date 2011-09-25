@@ -1,0 +1,1467 @@
+This is dvc-intro.info, produced by makeinfo version 4.13 from
+./dvc-intro.texinfo.
+
+distributed version control systems.
+
+
+File: dvc-intro.info,  Node: Top,  Next: Overview,  Up: (dir)
+
+DVC Intro
+*********
+
+       Copyright (C) 2007 - 2011 Stephen Leake
+       Permission is granted to copy, distribute and/or modify this document
+       under the terms of the GNU Free Documentation License, Version 1.2
+       or any later version published by the Free Software Foundation;
+       with no Invariant Sections, with no Front-Cover Texts, and with no
+       Back-Cover Texts. A copy of the license is included in the section
+       entitled ``GNU Free Documentation License''.
+
+* Menu:
+
+* Overview::
+* Installing::
+* Invoking::
+* Status Display::
+* Key bindings::
+* Previewing updates::
+* Merging::
+* mtn command line::
+* Common Errors and Solutions::
+* GNU Free Documentation License::
+
+ --- The Detailed Node Listing ---
+
+Overview
+
+* Basic DVC::
+* Compare to CVS::
+
+Invoking
+
+* xmtn-status-one::
+* xmtn-propagate-one::
+* xmtn-sync-review::
+
+Key bindings
+
+* status buffer keys::
+* Ediff keys::
+* Log edit keys::
+* DVC log keys::
+* DVC diff keys::
+* mtn conflicts keys::
+
+Common Errors and Solutions
+
+* Attach blocked by unversioned path::
+* Revision id does not match conflict file::
+
+
+File: dvc-intro.info,  Node: Overview,  Next: Installing,  Prev: Top,  Up: Top
+
+1 Overview
+**********
+
+DVC is a common interface to several extremely powerful and flexible
+version control systems, such as Gnu arch, monotone, bzr, and others
+(known as 'backends' to DVC).
+
+   DVC provides the same (or at least similar) user interface for each
+backend, making it easier to use multiple backends in related projects.
+It also automates some tasks, and provides guidance to the user as to
+what needs to be done.
+
+   DVC is not included with the standard Gnu emacs distribution. It is
+provided in source form via a bzr repository (see *note Installing::).
+
+   If you are not already familiar with version control systems, please
+read *note Basic DVC::.
+
+   One of the most important features of the DVC user interface is that
+it identifies what files in a project need attention of some sort; you
+have changed them in your working directory, or someone else has
+changed them in the repository, or they've been deleted or are new,
+etc. DVC presents a list of all such files, and makes it easy to see
+what needs to be done for each file.
+
+   When committing files, ediff is used to allow reviewing the changes,
+so an appropriate change comment can be written.
+
+   DVC replaces the command-line interface to the backends for the most
+common operations, but it is still necessary to use the command line at
+times. Creating a repository, starting a project in a repository, and
+managing branches require command line operations.
+
+   This manual describes the DVC user interface, and gives examples of
+some required command line operations, using the monotone backend.
+
+   It also describes some DVC extensions that are specific to the
+monotone backend.
+
+* Menu:
+
+* Basic DVC::
+* Compare to CVS::
+
+
+File: dvc-intro.info,  Node: Basic DVC,  Next: Compare to CVS,  Up: Overview
+
+1.1 Basic DVC
+=============
+
+Here we give a brief introduction to general concepts of distributed
+version control systems, focusing on the concepts that are needed to
+use DVC, and providing common terminology.
+
+   Each backend will have its own documentation, and terminology that
+differs from this. The terms here are taken mostly from the monotone
+backend.
+
+   Let's start with some definitions:
+
+"workspace"
+     Each user has a workspace, containing a copy of the files she is
+     working on. This is typically a directory tree. In the root
+     directory of the tree there is typically a directory containing
+     backend control files, used only by the backend.
+
+"database"
+     The database stores copies of all files in the workspace (and
+     typically more than one workspace), together with all of the
+     change history and other meta-information. The database is never
+     edited directly; only the backends modify it.
+
+"local database"
+     A database on the user's machine. This database is used to control
+     all workspaces on the user's machine.
+
+"remote database"
+     A database on a remote machine. This may be another user's local
+     database, or a central database set up specifically for sharing
+     files.  The user interacts with the remote database in order to
+     retrieve other user's files, or deliver files to them.
+
+"revision"
+     The state of the entire workspace, usually including the set of
+     changes to the workspace that transform it from the previous
+     revision. Most operations on the database involve revisions, and
+     all changes to files are part of a revision.
+
+"branch"
+     A label for distinct trees of revisions. There are two main uses
+     for branches; parallel development on a single project, and
+     completely separate projects. Branches of a single project are
+     typically merged back together (this is called "propagating"),
+     while completely separate projects are not.
+
+     A database can store any number of branches.
+
+"heads"
+     The revisions that are the leaves of the history tree on a single
+     branch. In monotone, there can be any number of heads on a branch
+     (see *note Merging::).
+
+"merge"
+     The process of combining multiple heads of a branch into one head.
+     This can encounter conflicts that require user resolution; see
+     *note Merging::.
+
+"propagate"
+     One branch can be "propagated" to another. This is a form of
+     merging; it merges all the changes from one branch into another,
+     starting from their common ancestor (which is usually the previous
+     propagate between the two branches).
+
+     This is how changes in a development branch are promoted to the
+     main branch.
+
+     Since propagating is a form of merging, it can encounter all of the
+     same conflicts that merging can.
+
+"*dvc-status* buffer"
+     A main user interface buffer. It shows all files in the workspace
+     that need attention. Single keystrokes invoke various operations.
+     *Note Status Display::, for more details.
+
+     The name of the buffer is not literally "*dvc-status*"; instead,
+     "dvc" is replaced by the backend name; "xmtn" for monotone, "bzr"
+     for bzr, etc. But in this document, we will use the name
+     "*dvc-status*".
+
+"*dvc-diff* buffer"
+     Another main user interface buffer. It shows the files changed in a
+     particular revision, together with the diffs of the changes. Single
+     keystrokes invoke various operations.
+
+
+   Users edit files in their workspace, then use DVC to synchronize the
+workspace with the local database. Later, they use the command line to
+synchronize their local database with a remote database. This allows
+each user to make changes locally but still under change control,
+without affecting other users until they each choose to synchronize.
+
+
+File: dvc-intro.info,  Node: Compare to CVS,  Prev: Basic DVC,  Up: Overview
+
+1.2 Compare to CVS
+==================
+
+Since many people are familiar with the CVS version control system, we
+compare that with DVC, and monotone in particular.
+
+   In CVS, each file is committed separately; in DVC, all files in a
+workspace are committed together. This makes sure that all changes that
+are related are committed together.
+
+   This means the commit log message mentions all files that have
+changes; it is a much longer message, but there are fewer of them, and
+the message can more easily describe changes that affect more than one
+file.
+
+   In CVS, you must always have access to the remote server. In DVC, you
+work with a local database, then separately sync that database with a
+remote server. Thus DVC is useful when not on a network; monotone can
+even sync via USB disk rather than a network connection.
+
+   This means there are two steps to syncing a workspace with the
+central server, which can be annoying. On the other hand, the sync
+process syncs all projects in the database at once; with monotone, it
+lets you know what projects have changes.
+
+   Otherwise the primary Emacs interface to CVS and DVC are very
+similar, although DVC has many secondary interfaces that CVS does not
+have.
+
+
+File: dvc-intro.info,  Node: Installing,  Next: Invoking,  Prev: Overview,  Up: Top
+
+2 Installing
+************
+
+Install bzr; see `http://bazaar.canonical.com/en/'.
+
+   Retrieve the DCV source; see `https://gna.org/projects/dvc#options'
+for general information.
+
+   In a bash shell:
+     cd ~
+     bzr get http://bzr.xsteve.at/dvc/
+     cd ~/dvc
+     autoconf
+     ./configure
+     make
+
+   In your `.emacs', add `(load-file (expand-file-name
+"~/dvc/dvc-load.el"))'
+
+
+File: dvc-intro.info,  Node: Invoking,  Next: Status Display,  Prev: Installing,  Up: Top
+
+3 Invoking
+**********
+
+Before invoking DVC, you may want to ensure that the local database is
+synchronized with the central database, via a backend-specific command
+line.
+
+   You typically invoke DVC with the Emacs command `dvc-status' or
+`dvc-diff'. This prompts for a workspace; it should be the top level
+directory in your working directory tree.
+
+   You can also create shortcuts in text files to invoke dvc:
+
+     (dvc-status (expand-file-name "~/dvc"))
+     (dvc-diff nil (expand-file-name "~/dvc"))
+
+   These can be executed with <C-x C-e>, and are a handy way of keeping
+track of several workspaces.
+
+   `dvc-status' or `dvc-diff' run the corresponding backend command,
+comparing the workspace against the local database, and presenting the
+information in the "*dvc-status*" or "*dvc-diff*" buffer.
+
+   For monotone, there are higher-level starting points:
+`xmtn-status-one'
+     Summarizes the status of one workspace.
+
+`xmtn-status-multiple'
+     Similar to `xmtn-status-one', but shows all workspaces immediately
+     under a root directory.
+
+`xmtn-propagate-one'
+     Supervises propagating one workspace.
+
+`xmtn-propagate-multiple'
+     Supervises propagating several workspaces.
+
+`xmtn-sync-sync'
+     Syncs the local database with a remote database, then runs
+     xmtn-sync-review.
+
+`xmtn-sync-review'
+     Reviews saved output of a command-line `mtn automate sync',
+     displays branches that have been transferred. This is useful for
+     syncs that take a long time, because the command-line displays
+     progress tickers.
+
+* Menu:
+
+* xmtn-status-one::
+* xmtn-propagate-one::
+* xmtn-sync-review::
+
+
+File: dvc-intro.info,  Node: xmtn-status-one,  Next: xmtn-propagate-one,  Up: Invoking
+
+3.1 xmtn-status-one
+===================
+
+Summarizes the status of one workspace, in a "xmtn-multi-status"
+buffer. The branch name is shown, followed by possible appropriate
+actions. As each action is performed, it is replaced by the next
+action, until there are none left.
+
+   Similarly, `xmtn-status-multiple' shows the status of all workspaces
+immediately under a root directory.
+
+   Actions are invoked with <M-d>.
+
+   The possible actions are:
+"need-refresh"
+     Shown while the backend is computing, or the user is performing
+     operations in an associated "*xmtn-multi-status*" buffer.
+
+"commit"
+     Open an "*xmtn-status*" buffer to commit changes.
+
+"resolve conflicts"
+     Open an "*xmtn-conflicts*" buffer to resolve conflicts; see *note
+     Merging::.
+
+"show heads"
+     Open an "*xmtn-revlist*" buffer to show the current head revisions.
+
+"merge"
+     Perform the merge, using the conflict resolutions.
+
+"update"
+     Update the workspace to the current head revision (must be merged).
+
+"update preview"
+     Open an "*xmtn-revlist*" buffer to review the revisions that will
+     be included in the next update.
+
+"update review"
+     Open an "*xmtn-revlist*" buffer to review the revisions that were
+     included in the most recent update.
+
+"ignore local changes"
+     Don't show "commit".
+
+"refresh"
+     Recompute the "*xmtn-multi-status*" display.
+
+"clean/delete"
+     Delete conflicts and conflict resolution files, and delete the
+     workspace from the display.
+
+
+
+File: dvc-intro.info,  Node: xmtn-propagate-one,  Next: xmtn-sync-review,  Prev: xmtn-status-one,  Up: Invoking
+
+3.2 xmtn-propagate-one
+======================
+
+`xmtn-propagate-one' supervises the process of propagating from one
+workspace to another, in an "xmtn-propagate" buffer.
+
+   The display shows one source and destination branch pair, and
+possible appropriate actions. As each action is performed, it is
+replaced by the next action, until there are none left.
+
+   Similarly, `xmtn-propagate-multiple' supervises the propagation of
+all workspaces immediately under two root directories. This is useful
+when several related projects branch together.
+
+   In the list of actions, "from" stands for the name of the source
+branch, "to" the name of the destination branch.
+
+   Actions are invoked with <M-d>.
+
+   The possible actions are:
+`status ``from'''
+`status ``to'''
+     Start an "xmtn-multi-status" buffer for the specified workspace,
+     to allow commit, update preview, or merge with conflict resolution.
+
+`update ``to'''
+     Update the specified workspace to the current head revision (must
+     be merged). This bypasses the "xmtn-multi-status" buffer, and
+     therefore does not provide for update preview. It does allow for
+     update review.
+
+`ignore local changes ``from'''
+
+`ignore local changes ``to'''
+     Don't show "need commit"; assume the workspace is committed.
+     Useful when you know that any local changes won't interfere with
+     the propagate.
+
+`resolve conflicts'
+     Open an "*xmtn-conflicts*" buffer in the destination workspace to
+     resolve propagate conflicts; see *note Merging::.
+
+`propagate'
+     Propagate the branch pair, using the conflict resolutions.
+
+`refresh'
+     Recompute the display. If prefixed with <C-u>, force examining
+     workspaces for local changes.
+
+`clean/delete'
+     Delete conflicts and conflict resolution files, and delete the
+     workspace from the display.
+
+
+
+File: dvc-intro.info,  Node: xmtn-sync-review,  Prev: xmtn-propagate-one,  Up: Invoking
+
+3.3 xmtn-sync-review
+====================
+
+`xmtn-sync-review' supervises the process of updating local workspaces
+after a command line operation that synchronizes the local and remote
+databases.
+
+   The command line operation should redirect stdout to
+`~/.dvc/sync.basic_io'. Most users will want to define shell functions
+to invoke common syncs. For example:
+
+         mtn --db ~/monotone-dbs/gds.db automate sync --ticker=count "ssh:user@host/gds.db?*" >> ~/.dvc/sync.basic_io
+
+   The `xmtn-sync-review' display shows each branch that was
+transferred, with a count of how many revisions were sent and received.
+
+   The user may set the variable `xmtn-sync-sort' to a function that
+indicates how to order the branches in the display.
+
+   Actions on branches are invoked with <M-d>.
+
+   The possible branch actions are:
+`status'
+     Start an "xmtn-multi-status" buffer for the workspace assoicated
+     with the specified branch, to allow commit, update preview, update
+     followed by update review, or merge with conflict resolution.
+
+     The user may set the variable `xmtn-sync-guess-workspace' to a
+     function that returns a workspace given a branch. Otherwise, the
+     user is prompted for the workspace location; the location is
+     cached for future use.
+
+`update'
+     Start an "xmtn-multi-status" buffer for the workspace assoicated
+     with the specified branch, then perform `update' (if appropriate).
+     This is often convenient when you know the workspace has no local
+     changes.
+
+`brief'
+     Show the first line of the changelog for each revision received.
+
+`full'
+     Show the complete changelog for each revision received.
+
+`clean'
+     Delete the branch from the display.
+
+     Branches that are not cleaned are cached; they will reappear the
+     next time `xmtn-sync-review' is run.
+
+
+   In addition, there are global actions:
+`next'
+     Move to the next branch
+
+`prev'
+     Move to the previous branch
+
+`save-quit'
+     Save the displayed branches, quit.
+
+`save'
+     Save the displayed branches.
+
+
+
+File: dvc-intro.info,  Node: Status Display,  Next: Key bindings,  Prev: Invoking,  Up: Top
+
+4 Status Display
+****************
+
+After invoking `dvc-status', you are presented with the "*dvc-status*"
+buffer.
+
+   The detailed format differs depending on the backend. This
+presentation is close to the bzr and mtn formats.
+
+   The buffer contains a header, such as:
+
+     Status for c:/Projects/GDS/common/main/:
+       base revision : e946839c833b15e6bf12bd1536764e1106c41924
+       branch        : common.main
+       branch is merged
+       base revision is a head revision
+
+   The last two lines are important; either may have "not" in it.
+
+   If the branch is not merged, it must be merged before an update can
+be done; see *note Merging::. However, commits can be done when the
+branch is not merged; this allows saving work before attempting the
+merge.
+
+   If the base revision is not a head revision, there are updates that
+need to be applied to the workspace. The updates may be reviewed first
+using <M m>; they may be applied using <M u>.
+
+   In the main body of the buffer, there is one line for each file in
+the workspace that needs attention. For example:
+
+      * modified      hardware/gds-hardware-pmrd_wrapper.adb
+        unknown       build/ip1k110_quartus/serv_req_info.txt
+      E modified      hardware/test/test_hardware-one_harness.adb
+
+   Each line has three fields:
+
+"Mark"
+     Either blank (not marked), '*' (marked), or 'E' (excluded). Most
+     commands can apply to a group of marked files, but some cannot
+     (they warn if a group is marked).
+
+     Excluded files are under configuration management, but are excluded
+     from commits. This is used for files that each user modifies, such
+     as development test drivers.
+
+"Status"
+     A phrase indicating the status of the file; see the table below.
+
+"File name"
+     Gives the file name of the working file, with a path relative to
+     the root directory.
+
+
+   In addition, some files will have extra status information that
+appears on the next line, indented.
+
+   The following table defines each status phrase, and gives the set of
+actions that can be taken for each. The action shown is from the DVC
+menu; the equivalent key is also given.
+
+   Other actions (such as commit) apply to all files; they are discussed
+later.
+
+`Added'
+     Working file has been added, but not committed.
+    `<r> Delete'
+          Remove the file from the workspace, do not commit it.  Do
+          this if you've changed your mind.
+
+`Conflict'
+     A conflict was detected while merging.  The same lines have been
+     edited differently by different people.
+
+     This status does not appear with the monotone back-end.
+
+    `<<enter>> Edit the file.'
+          Either resolve the conflict manually, or use `M-x
+          smerge-ediff'. Execute `M-x dvc-resolve' when finished to
+          inform the back-end that the conflict is resolved.
+
+    `<U> Revert'
+          Delete the working copy, replace it with the database copy. Do
+          this if you decide the changes are not correct.
+
+`Deleted'
+     Working file has been marked for deletion, but not committed.
+    `<a> Add'
+          Undo the removal.
+
+`Ignored'
+     Working file is ignored by the back-end. Files with this status
+     are not typically shown - ignored files are ignored by DVC as well.
+     They can be enabled by setting `dvc-status-display-ignored' to nil.
+    `<# e>'
+          Edit the back-end ignore file.
+
+`Known'
+     Working file is known to the back-end, and unchanged. Files with
+     this status are not typically shown. They can be enabled by setting
+     `dvc-status-display-known' to nil. There are no appropriate
+     actions.
+
+`Missing'
+     A previously known file has been deleted from the workspace, but
+      not marked for deletion.
+          <U> Revert Restore the file to the workspace from the
+          database.
+
+    `<r> Delete'
+          Mark the file for deletion.
+
+`Modified'
+     A changed file in the workspace.
+    `<e> ediff'
+          Review differences and collect a change comment.
+
+    `<U> Revert'
+          Delete the working copy, replace it with the database copy. Do
+          this if you decide your changes are not correct.
+
+`Rename-source'
+     Working file has been marked as renamed but not committed. No
+     appropriate actions.
+
+`Rename-target'
+     Working file has been marked as renamed but not committed. No
+     appropriate actions.
+
+`Unknown'
+     Working file is unknown.
+    `<a> Add'
+          The file is a new source file; add it to the current
+          revision. This will change the status to 'Added'.
+
+    `<i> Ignore'
+          The file is an output file of some sort (ie object file, test
+          output).  Ignore it in all future DVC sessions.
+
+    `<I> Ignore extension in dir'
+          Ignore all files with this extension in this directory.
+
+    `<M-I> Ignore extension'
+          Ignore all files with this extension in all directories.
+
+    `<r> Delete'
+          The file is a scratch file, or was created by mistake. Remove
+          it from the workspace.
+
+   Changes are committed all at once; the set of changes to the entire
+workspace is called a "revision". <c> opens the `*dvc-log-edit*'
+buffer, where you can write a change comment.  Then <C-c C-c> commits
+all changes.
+
+   The key <M-d> invokes a function called "Do the Right Thing". If
+there is only a single choice (or an extremely common choice) in the
+table above, it does that action. Otherwise, it presents a short list
+of the actions, in the message buffer, reminding the user of the
+appropriate options. Note that <M-d> means meta-d (alt-d on most PC
+keyboards))
+
+
+File: dvc-intro.info,  Node: Key bindings,  Next: Previewing updates,  Prev: Status Display,  Up: Top
+
+5 Key bindings
+**************
+
+Here is a summary of the most useful key bindings in the various
+buffers associated with DVC.
+
+* Menu:
+
+* status buffer keys::
+* Ediff keys::
+* Log edit keys::
+* DVC log keys::
+* DVC diff keys::
+* mtn conflicts keys::
+
+
+File: dvc-intro.info,  Node: status buffer keys,  Next: Ediff keys,  Up: Key bindings
+
+5.1 status buffer keys
+======================
+
+In a `*dvc-status*' buffer:
+
+<M-d>
+     Do the right thing for the current file.
+
+<c>
+     Open a `*dvc-log-edit*' buffer to accumulate comments for a commit.
+
+<M m>
+     Show missing revisions; changes that will be applied by update.
+
+<M M>
+     Merge current heads; see *note Merging::.
+
+<M u>
+     Update to the current head.
+
+<R>
+     Rename a missing to an unknown file. The two files must be marked
+     first, and they must be the only files marked.
+
+<t>
+     Create an entry in the `*dvc-log-edit*' for the current diff.
+
+
+
+File: dvc-intro.info,  Node: Ediff keys,  Next: Log edit keys,  Prev: status buffer keys,  Up: Key bindings
+
+5.2 Ediff keys
+==============
+
+In an Ediff control buffer (the small window with Ediff in the title
+bar):
+
+<a>
+     Copy from buffer A to buffer B.
+
+<b>
+     Copy from buffer B to buffer A.
+
+<n>
+     Move to next diff.
+
+<p>
+     Move to previous diff.
+
+<q>
+     Quit Ediff.
+
+<t>
+     Create an entry in the `*dvc-log-edit*' for the current diff.
+
+<$$>
+     Focus on conflicts in a merge.
+
+<?>
+     Show the help summary for Ediff. <?> hides it again.
+
+
+
+File: dvc-intro.info,  Node: Log edit keys,  Next: DVC log keys,  Prev: Ediff keys,  Up: Key bindings
+
+5.3 log edit keys
+=================
+
+In the `*dvc-log-edit*' buffer:
+
+<C-c C-c>
+     Commit. Note that this is the only way to actually commit.
+
+
+
+File: dvc-intro.info,  Node: DVC log keys,  Next: DVC diff keys,  Prev: Log edit keys,  Up: Key bindings
+
+5.4 DVC log keys
+================
+
+In a `*xmtn-log*' buffer:
+
+<n>
+     move to the next revision
+
+<p>
+     move to the previous revision
+
+<=>
+     show a diff of the changes in a single revision
+
+<C-=>
+     show a diff between the revision and the workspace
+
+
+
+File: dvc-intro.info,  Node: DVC diff keys,  Next: mtn conflicts keys,  Prev: DVC log keys,  Up: Key bindings
+
+5.5 DVC diff keys
+=================
+
+In a `*dvc-diff*' buffer:
+
+<e>
+     show ediff for current file
+
+<j>
+     jump between file list and diff hunks
+
+<n>
+     move to the next diff hunk
+
+<p>
+     move to the previous diff hunk
+
+
+
+File: dvc-intro.info,  Node: mtn conflicts keys,  Prev: DVC diff keys,  Up: Key bindings
+
+5.6 mtn conflicts keys
+======================
+
+In a `*xmtn-conflicts*' buffer:
+
+<C>
+     Delete conflicts file and any resolution files.
+
+<c>
+     Clear the current resolution, so you can specify a different one.
+
+<n>
+     Move to the next conflict.
+
+<N>
+     Move to the next unresolved conflict.
+
+<p>
+     Move to the previous conflict.
+
+<P>
+     Move to the previous unresolved conflict.
+
+<q>
+     Quit the `*xmtn-conflicts*' buffer. The conflicts file and
+     associated resolution files are saved.
+
+<r>
+     Specify a resolution for the current conflict. This prompts with a
+     choice of resolutions appropriate for the current conflict; select
+     the appropriate resolution by number. See *note Merging::, for
+     information on the possible resolutions.
+
+<M-d>
+     Same as <r>
+
+
+
+File: dvc-intro.info,  Node: Previewing updates,  Next: Merging,  Prev: Key bindings,  Up: Top
+
+6 Previewing updates
+********************
+
+To preview updates before applying them to your workspace, use the
+`dvc-missing' command; it's on the status buffer menu at `DVC |
+Merge/Update | show missing'.
+
+   `dvc-missing' can also be invoked via the Emacs command line
+(<M-x>); that prompts for a local tree.
+
+   Invoking `dvc-missing' brings up an `*dvc-log*' window, showing
+revisions that are in your local database but not yet applied to the
+workspace.
+
+   The revisions are listed oldest first.
+
+   You can view the changes made in a single revision, or from that
+revision to the current workspace.
+
+   See *Note Log edit keys::, for key bindings.
+
+   <=> and <C-=> bring up a `*dvc-diff*' buffer for the revision
+selected. The diffs are shown in Gnu diff format; all files in one
+`*dvc-diff*' buffer. There is a list of the files at the top of the
+buffer. See *Note DVC diff keys::, for key bindings.
+
+   Note that you can also review updates after they have been applied.
+This is often more useful, because you can edit the workspace file to
+fix problems caused by the update, or just to see the final state after
+all revisions have been applied.
+
+
+File: dvc-intro.info,  Node: Merging,  Next: mtn command line,  Prev: Previewing updates,  Up: Top
+
+7 Merging
+*********
+
+Monotone allows multiple people to each commit to their local database.
+Then when the databases are synced, there are multiple heads for the
+branch; one head for each developer that commited since the last sync.
+
+   These multiple heads must be merged before a local workspace can be
+updated to the head of the branch; there must be only one head to
+update to. The monotone command line allows updating to one head of an
+unmerged branch, but DVC does not support this.
+
+   When the changes in the different heads are to different files, or to
+different parts of the same file, monotone can perform the merge
+itself. However, when there are changes to the same parts of one file,
+it needs help; this is called a content conflict.
+
+   An `*xmtn-conflicts*' buffer shows all conflicts in a merge or
+propagate. You can work thru the list one a time, using <M-d> to
+specify conflict resolutions. The list is saved in a file, so you can
+come back to it later.
+
+   The conflicts that monotone knows how to resolve internally have
+resolutions of `resolved-internal'; the others have no resolutions.
+
+   The conflicts file and associated resolution files are stored in the
+monotone bookkeeping area. They must be deleted when you are done with
+them; use <C C> for that.
+
+   <M-d> prompts with a list of appropriate resolutions for the current
+conflict; select the appropriate resolution by number. The possible
+resolutions are:
+
+right: drop
+left: drop
+     Resolve one side of a duplicate name conflict by dropping it.
+
+drop
+     Resolve an orphaned node conflict by dropping it.
+
+right: rename
+left: rename
+     Resolve one side of a duplicate name conflict by specifying a new
+     name.
+
+rename
+     Resolve an orphaned node conflict by specifying a new name.
+
+right: right file
+right: left file
+left: right file
+left: left file
+     Resolve one side of a duplicate name conflict by specifying a file.
+
+     The other side must be dropped or renamed.
+
+left file
+     Resolve a content conflict by specifying a file. The file defaults
+     to the current workspace file.
+
+right: keep
+left: keep
+     Resolve one side of a duplicate name conflict by keeping it as is.
+
+     The other side must be dropped or renamed.
+
+right: ediff
+left: ediff
+     Resolve one side of a duplicate name conflict by ediff. This
+     brings up an ediff merge of the two files, and saves the result in
+     the resolution file area.
+
+     The other side must be dropped or renamed.
+
+ediff
+     Resolve a content conflict via ediff. This brings up an ediff
+     merge of the two files, and saves the result in the resolution
+     file area.
+
+
+   See *Note mtn conflicts keys::, for a summary of key bindings.
+
+
+File: dvc-intro.info,  Node: mtn command line,  Next: Common Errors and Solutions,  Prev: Merging,  Up: Top
+
+8 mtn command line
+******************
+
+Sometimes, especially over NFS, the Emacs DVC interface can be
+painfully slow, and it is appropriate to use the mtn command line
+instead.
+
+   Other times, the mtn command line is just simpler.
+
+   So we list the most useful mtn commands here. See the monotone
+command line help or manual for more information.
+
+`status'
+     `mtn status'
+
+`commit'
+     `mtn commit --message="<message>"'
+
+     `mtn commit --message-file=_MTN/log'
+
+`rename'
+     `mtn rename <file> <new-file>'
+
+`update'
+     `mtn update --move-conflicting-paths'
+
+
+
+File: dvc-intro.info,  Node: Common Errors and Solutions,  Next: GNU Free Documentation License,  Prev: mtn command line,  Up: Top
+
+9 Common Errors and Solutions
+*****************************
+
+* Menu:
+
+* Attach blocked by unversioned path::
+* Revision id does not match conflict file::
+
+
+File: dvc-intro.info,  Node: Attach blocked by unversioned path,  Next: Revision id does not match conflict file,  Up: Common Errors and Solutions
+
+9.1 Attach blocked by unversioned path
+======================================
+
+Problem: When attempting to update a directory, this warning appears:
+
+     $ mtn update
+      ...
+     mtn: warning: attach node 2147486644 blocked by unversioned path '<file path>'
+     mtn: misuse: 1 workspace conflict
+
+   Explanation: "Unversioned path" means the indicated file is not in
+the current revision, however the file already exists on the disk. The
+revision you are updating to contains the file, but it can't be updated
+because it would overwrite the unknown file on the disk
+
+   Solution: Delete the indicated files from the disk and retry the
+update, or specify the `--move-conflicting-paths' option.
+
+
+File: dvc-intro.info,  Node: Revision id does not match conflict file,  Prev: Attach blocked by unversioned path,  Up: Common Errors and Solutions
+
+9.2 Revision id does not match conflict file
+============================================
+
+Problem: When attempting to propagate from one branch to another, this
+message appears:
+
+     $ mtn: propagating common.main -> common.work_user
+       mtn: [left]  48b675060af47a02bc6f773bd63647726f96cbd5
+       mtn: [right] 94ffd0b529dfb44c3ab122fe6c514b5f2e857104
+       mtn: misuse: left revision id does not match conflict file
+
+   Explanation: It means you have some conflict files left over from a
+previous propagation or merge.
+
+   Solution: In a buffer showing the "from" workspace, run: M-x
+xmtn-conflicts-clean.  Repeat in the "to" workspace, then propagate
+again.
+
+
+File: dvc-intro.info,  Node: GNU Free Documentation License,  Prev: Common Errors and Solutions,  Up: Top
+
+Appendix A GNU Free Documentation License
+*****************************************
+
+                      Version 1.2, November 2002
+
+     Copyright (C) 2000,2001,2002 Free Software Foundation, Inc.
+     51 Franklin St, Fifth Floor, Boston, MA  02110-1301, USA
+
+     Everyone is permitted to copy and distribute verbatim copies
+     of this license document, but changing it is not allowed.
+
+  0. PREAMBLE
+
+     The purpose of this License is to make a manual, textbook, or other
+     functional and useful document "free" in the sense of freedom: to
+     assure everyone the effective freedom to copy and redistribute it,
+     with or without modifying it, either commercially or
+     noncommercially.  Secondarily, this License preserves for the
+     author and publisher a way to get credit for their work, while not
+     being considered responsible for modifications made by others.
+
+     This License is a kind of "copyleft", which means that derivative
+     works of the document must themselves be free in the same sense.
+     It complements the GNU General Public License, which is a copyleft
+     license designed for free software.
+
+     We have designed this License in order to use it for manuals for
+     free software, because free software needs free documentation: a
+     free program should come with manuals providing the same freedoms
+     that the software does.  But this License is not limited to
+     software manuals; it can be used for any textual work, regardless
+     of subject matter or whether it is published as a printed book.
+     We recommend this License principally for works whose purpose is
+     instruction or reference.
+
+  1. APPLICABILITY AND DEFINITIONS
+
+     This License applies to any manual or other work, in any medium,
+     that contains a notice placed by the copyright holder saying it
+     can be distributed under the terms of this License.  Such a notice
+     grants a world-wide, royalty-free license, unlimited in duration,
+     to use that work under the conditions stated herein.  The
+     "Document", below, refers to any such manual or work.  Any member
+     of the public is a licensee, and is addressed as "you".  You
+     accept the license if you copy, modify or distribute the work in a
+     way requiring permission under copyright law.
+
+     A "Modified Version" of the Document means any work containing the
+     Document or a portion of it, either copied verbatim, or with
+     modifications and/or translated into another language.
+
+     A "Secondary Section" is a named appendix or a front-matter section
+     of the Document that deals exclusively with the relationship of the
+     publishers or authors of the Document to the Document's overall
+     subject (or to related matters) and contains nothing that could
+     fall directly within that overall subject.  (Thus, if the Document
+     is in part a textbook of mathematics, a Secondary Section may not
+     explain any mathematics.)  The relationship could be a matter of
+     historical connection with the subject or with related matters, or
+     of legal, commercial, philosophical, ethical or political position
+     regarding them.
+
+     The "Invariant Sections" are certain Secondary Sections whose
+     titles are designated, as being those of Invariant Sections, in
+     the notice that says that the Document is released under this
+     License.  If a section does not fit the above definition of
+     Secondary then it is not allowed to be designated as Invariant.
+     The Document may contain zero Invariant Sections.  If the Document
+     does not identify any Invariant Sections then there are none.
+
+     The "Cover Texts" are certain short passages of text that are
+     listed, as Front-Cover Texts or Back-Cover Texts, in the notice
+     that says that the Document is released under this License.  A
+     Front-Cover Text may be at most 5 words, and a Back-Cover Text may
+     be at most 25 words.
+
+     A "Transparent" copy of the Document means a machine-readable copy,
+     represented in a format whose specification is available to the
+     general public, that is suitable for revising the document
+     straightforwardly with generic text editors or (for images
+     composed of pixels) generic paint programs or (for drawings) some
+     widely available drawing editor, and that is suitable for input to
+     text formatters or for automatic translation to a variety of
+     formats suitable for input to text formatters.  A copy made in an
+     otherwise Transparent file format whose markup, or absence of
+     markup, has been arranged to thwart or discourage subsequent
+     modification by readers is not Transparent.  An image format is
+     not Transparent if used for any substantial amount of text.  A
+     copy that is not "Transparent" is called "Opaque".
+
+     Examples of suitable formats for Transparent copies include plain
+     ASCII without markup, Texinfo input format, LaTeX input format,
+     SGML or XML using a publicly available DTD, and
+     standard-conforming simple HTML, PostScript or PDF designed for
+     human modification.  Examples of transparent image formats include
+     PNG, XCF and JPG.  Opaque formats include proprietary formats that
+     can be read and edited only by proprietary word processors, SGML or
+     XML for which the DTD and/or processing tools are not generally
+     available, and the machine-generated HTML, PostScript or PDF
+     produced by some word processors for output purposes only.
+
+     The "Title Page" means, for a printed book, the title page itself,
+     plus such following pages as are needed to hold, legibly, the
+     material this License requires to appear in the title page.  For
+     works in formats which do not have any title page as such, "Title
+     Page" means the text near the most prominent appearance of the
+     work's title, preceding the beginning of the body of the text.
+
+     A section "Entitled XYZ" means a named subunit of the Document
+     whose title either is precisely XYZ or contains XYZ in parentheses
+     following text that translates XYZ in another language.  (Here XYZ
+     stands for a specific section name mentioned below, such as
+     "Acknowledgements", "Dedications", "Endorsements", or "History".)
+     To "Preserve the Title" of such a section when you modify the
+     Document means that it remains a section "Entitled XYZ" according
+     to this definition.
+
+     The Document may include Warranty Disclaimers next to the notice
+     which states that this License applies to the Document.  These
+     Warranty Disclaimers are considered to be included by reference in
+     this License, but only as regards disclaiming warranties: any other
+     implication that these Warranty Disclaimers may have is void and
+     has no effect on the meaning of this License.
+
+  2. VERBATIM COPYING
+
+     You may copy and distribute the Document in any medium, either
+     commercially or noncommercially, provided that this License, the
+     copyright notices, and the license notice saying this License
+     applies to the Document are reproduced in all copies, and that you
+     add no other conditions whatsoever to those of this License.  You
+     may not use technical measures to obstruct or control the reading
+     or further copying of the copies you make or distribute.  However,
+     you may accept compensation in exchange for copies.  If you
+     distribute a large enough number of copies you must also follow
+     the conditions in section 3.
+
+     You may also lend copies, under the same conditions stated above,
+     and you may publicly display copies.
+
+  3. COPYING IN QUANTITY
+
+     If you publish printed copies (or copies in media that commonly
+     have printed covers) of the Document, numbering more than 100, and
+     the Document's license notice requires Cover Texts, you must
+     enclose the copies in covers that carry, clearly and legibly, all
+     these Cover Texts: Front-Cover Texts on the front cover, and
+     Back-Cover Texts on the back cover.  Both covers must also clearly
+     and legibly identify you as the publisher of these copies.  The
+     front cover must present the full title with all words of the
+     title equally prominent and visible.  You may add other material
+     on the covers in addition.  Copying with changes limited to the
+     covers, as long as they preserve the title of the Document and
+     satisfy these conditions, can be treated as verbatim copying in
+     other respects.
+
+     If the required texts for either cover are too voluminous to fit
+     legibly, you should put the first ones listed (as many as fit
+     reasonably) on the actual cover, and continue the rest onto
+     adjacent pages.
+
+     If you publish or distribute Opaque copies of the Document
+     numbering more than 100, you must either include a
+     machine-readable Transparent copy along with each Opaque copy, or
+     state in or with each Opaque copy a computer-network location from
+     which the general network-using public has access to download
+     using public-standard network protocols a complete Transparent
+     copy of the Document, free of added material.  If you use the
+     latter option, you must take reasonably prudent steps, when you
+     begin distribution of Opaque copies in quantity, to ensure that
+     this Transparent copy will remain thus accessible at the stated
+     location until at least one year after the last time you
+     distribute an Opaque copy (directly or through your agents or
+     retailers) of that edition to the public.
+
+     It is requested, but not required, that you contact the authors of
+     the Document well before redistributing any large number of
+     copies, to give them a chance to provide you with an updated
+     version of the Document.
+
+  4. MODIFICATIONS
+
+     You may copy and distribute a Modified Version of the Document
+     under the conditions of sections 2 and 3 above, provided that you
+     release the Modified Version under precisely this License, with
+     the Modified Version filling the role of the Document, thus
+     licensing distribution and modification of the Modified Version to
+     whoever possesses a copy of it.  In addition, you must do these
+     things in the Modified Version:
+
+       A. Use in the Title Page (and on the covers, if any) a title
+          distinct from that of the Document, and from those of
+          previous versions (which should, if there were any, be listed
+          in the History section of the Document).  You may use the
+          same title as a previous version if the original publisher of
+          that version gives permission.
+
+       B. List on the Title Page, as authors, one or more persons or
+          entities responsible for authorship of the modifications in
+          the Modified Version, together with at least five of the
+          principal authors of the Document (all of its principal
+          authors, if it has fewer than five), unless they release you
+          from this requirement.
+
+       C. State on the Title page the name of the publisher of the
+          Modified Version, as the publisher.
+
+       D. Preserve all the copyright notices of the Document.
+
+       E. Add an appropriate copyright notice for your modifications
+          adjacent to the other copyright notices.
+
+       F. Include, immediately after the copyright notices, a license
+          notice giving the public permission to use the Modified
+          Version under the terms of this License, in the form shown in
+          the Addendum below.
+
+       G. Preserve in that license notice the full lists of Invariant
+          Sections and required Cover Texts given in the Document's
+          license notice.
+
+       H. Include an unaltered copy of this License.
+
+       I. Preserve the section Entitled "History", Preserve its Title,
+          and add to it an item stating at least the title, year, new
+          authors, and publisher of the Modified Version as given on
+          the Title Page.  If there is no section Entitled "History" in
+          the Document, create one stating the title, year, authors,
+          and publisher of the Document as given on its Title Page,
+          then add an item describing the Modified Version as stated in
+          the previous sentence.
+
+       J. Preserve the network location, if any, given in the Document
+          for public access to a Transparent copy of the Document, and
+          likewise the network locations given in the Document for
+          previous versions it was based on.  These may be placed in
+          the "History" section.  You may omit a network location for a
+          work that was published at least four years before the
+          Document itself, or if the original publisher of the version
+          it refers to gives permission.
+
+       K. For any section Entitled "Acknowledgements" or "Dedications",
+          Preserve the Title of the section, and preserve in the
+          section all the substance and tone of each of the contributor
+          acknowledgements and/or dedications given therein.
+
+       L. Preserve all the Invariant Sections of the Document,
+          unaltered in their text and in their titles.  Section numbers
+          or the equivalent are not considered part of the section
+          titles.
+
+       M. Delete any section Entitled "Endorsements".  Such a section
+          may not be included in the Modified Version.
+
+       N. Do not retitle any existing section to be Entitled
+          "Endorsements" or to conflict in title with any Invariant
+          Section.
+
+       O. Preserve any Warranty Disclaimers.
+
+     If the Modified Version includes new front-matter sections or
+     appendices that qualify as Secondary Sections and contain no
+     material copied from the Document, you may at your option
+     designate some or all of these sections as invariant.  To do this,
+     add their titles to the list of Invariant Sections in the Modified
+     Version's license notice.  These titles must be distinct from any
+     other section titles.
+
+     You may add a section Entitled "Endorsements", provided it contains
+     nothing but endorsements of your Modified Version by various
+     parties--for example, statements of peer review or that the text
+     has been approved by an organization as the authoritative
+     definition of a standard.
+
+     You may add a passage of up to five words as a Front-Cover Text,
+     and a passage of up to 25 words as a Back-Cover Text, to the end
+     of the list of Cover Texts in the Modified Version.  Only one
+     passage of Front-Cover Text and one of Back-Cover Text may be
+     added by (or through arrangements made by) any one entity.  If the
+     Document already includes a cover text for the same cover,
+     previously added by you or by arrangement made by the same entity
+     you are acting on behalf of, you may not add another; but you may
+     replace the old one, on explicit permission from the previous
+     publisher that added the old one.
+
+     The author(s) and publisher(s) of the Document do not by this
+     License give permission to use their names for publicity for or to
+     assert or imply endorsement of any Modified Version.
+
+  5. COMBINING DOCUMENTS
+
+     You may combine the Document with other documents released under
+     this License, under the terms defined in section 4 above for
+     modified versions, provided that you include in the combination
+     all of the Invariant Sections of all of the original documents,
+     unmodified, and list them all as Invariant Sections of your
+     combined work in its license notice, and that you preserve all
+     their Warranty Disclaimers.
+
+     The combined work need only contain one copy of this License, and
+     multiple identical Invariant Sections may be replaced with a single
+     copy.  If there are multiple Invariant Sections with the same name
+     but different contents, make the title of each such section unique
+     by adding at the end of it, in parentheses, the name of the
+     original author or publisher of that section if known, or else a
+     unique number.  Make the same adjustment to the section titles in
+     the list of Invariant Sections in the license notice of the
+     combined work.
+
+     In the combination, you must combine any sections Entitled
+     "History" in the various original documents, forming one section
+     Entitled "History"; likewise combine any sections Entitled
+     "Acknowledgements", and any sections Entitled "Dedications".  You
+     must delete all sections Entitled "Endorsements."
+
+  6. COLLECTIONS OF DOCUMENTS
+
+     You may make a collection consisting of the Document and other
+     documents released under this License, and replace the individual
+     copies of this License in the various documents with a single copy
+     that is included in the collection, provided that you follow the
+     rules of this License for verbatim copying of each of the
+     documents in all other respects.
+
+     You may extract a single document from such a collection, and
+     distribute it individually under this License, provided you insert
+     a copy of this License into the extracted document, and follow
+     this License in all other respects regarding verbatim copying of
+     that document.
+
+  7. AGGREGATION WITH INDEPENDENT WORKS
+
+     A compilation of the Document or its derivatives with other
+     separate and independent documents or works, in or on a volume of
+     a storage or distribution medium, is called an "aggregate" if the
+     copyright resulting from the compilation is not used to limit the
+     legal rights of the compilation's users beyond what the individual
+     works permit.  When the Document is included in an aggregate, this
+     License does not apply to the other works in the aggregate which
+     are not themselves derivative works of the Document.
+
+     If the Cover Text requirement of section 3 is applicable to these
+     copies of the Document, then if the Document is less than one half
+     of the entire aggregate, the Document's Cover Texts may be placed
+     on covers that bracket the Document within the aggregate, or the
+     electronic equivalent of covers if the Document is in electronic
+     form.  Otherwise they must appear on printed covers that bracket
+     the whole aggregate.
+
+  8. TRANSLATION
+
+     Translation is considered a kind of modification, so you may
+     distribute translations of the Document under the terms of section
+     4.  Replacing Invariant Sections with translations requires special
+     permission from their copyright holders, but you may include
+     translations of some or all Invariant Sections in addition to the
+     original versions of these Invariant Sections.  You may include a
+     translation of this License, and all the license notices in the
+     Document, and any Warranty Disclaimers, provided that you also
+     include the original English version of this License and the
+     original versions of those notices and disclaimers.  In case of a
+     disagreement between the translation and the original version of
+     this License or a notice or disclaimer, the original version will
+     prevail.
+
+     If a section in the Document is Entitled "Acknowledgements",
+     "Dedications", or "History", the requirement (section 4) to
+     Preserve its Title (section 1) will typically require changing the
+     actual title.
+
+  9. TERMINATION
+
+     You may not copy, modify, sublicense, or distribute the Document
+     except as expressly provided for under this License.  Any other
+     attempt to copy, modify, sublicense or distribute the Document is
+     void, and will automatically terminate your rights under this
+     License.  However, parties who have received copies, or rights,
+     from you under this License will not have their licenses
+     terminated so long as such parties remain in full compliance.
+
+ 10. FUTURE REVISIONS OF THIS LICENSE
+
+     The Free Software Foundation may publish new, revised versions of
+     the GNU Free Documentation License from time to time.  Such new
+     versions will be similar in spirit to the present version, but may
+     differ in detail to address new problems or concerns.  See
+     `http://www.gnu.org/copyleft/'.
+
+     Each version of the License is given a distinguishing version
+     number.  If the Document specifies that a particular numbered
+     version of this License "or any later version" applies to it, you
+     have the option of following the terms and conditions either of
+     that specified version or of any later version that has been
+     published (not as a draft) by the Free Software Foundation.  If
+     the Document does not specify a version number of this License,
+     you may choose any version ever published (not as a draft) by the
+     Free Software Foundation.
+
+
+
+Tag Table:
+Node: Top123
+Node: Overview1287
+Node: Basic DVC3076
+Node: Compare to CVS6969
+Node: Installing8263
+Node: Invoking8731
+Node: xmtn-status-one10443
+Node: xmtn-propagate-one12021
+Node: xmtn-sync-review13962
+Node: Status Display16090
+Node: Key bindings21747
+Node: status buffer keys22102
+Node: Ediff keys22769
+Node: Log edit keys23333
+Node: DVC log keys23584
+Node: DVC diff keys23952
+Node: mtn conflicts keys24294
+Node: Previewing updates25179
+Node: Merging26432
+Node: mtn command line29235
+Node: Common Errors and Solutions29917
+Node: Attach blocked by unversioned path30206
+Node: Revision id does not match conflict file31055
+Node: GNU Free Documentation License31873
+
+End Tag Table

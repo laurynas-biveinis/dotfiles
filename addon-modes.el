@@ -359,3 +359,6 @@
 (setq org-todo-repeat-to-state "TODO")
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
+
+; DVC
+(require 'dvc-autoloads)
