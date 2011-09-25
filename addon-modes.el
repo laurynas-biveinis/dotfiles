@@ -98,6 +98,29 @@
 ;; Use RefTeX
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
+;; Set up -pdf option for latexmk
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (push
+             '("%(-PDF)"
+               (lambda ()
+                 (if (and
+                      (eq TeX-engine 'default)
+                      (or TeX-PDF-mode TeX-DVI-via-PDFTeX))
+                     "-pdf" "")))
+             TeX-expand-list)))
+
+
+;; Use latexmk
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (push
+             '("latexmk" "latexmk %(-PDF) %s" TeX-run-TeX nil t
+               :help "Run latexmk on file")
+             TeX-command-list)))
+
+
+
 ;; Spellcheck on the fly
 ;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
 ;(add-hook 'c-mode-hook          'flyspell-prog-mode 1)
