@@ -1,3 +1,4 @@
 syntax: glob
 *.elc
 projects.el
+semantic.cache
