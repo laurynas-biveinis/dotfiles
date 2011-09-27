@@ -65,7 +65,6 @@
 
 (load "defaults")
 (load "default-modes")
-(load "locate-tools")
 
 ; ELPA
 (setq package-user-dir elpa-dir)

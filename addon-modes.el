@@ -173,17 +173,6 @@
       (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
             auto-mode-alist))
 
-;; GNU Global
-(if use-global-p
-    (progn (autoload 'gtags-mode "gtags" "" t)
-           (add-hook 'c-mode-common-hook
-                     '(lambda ()
-                        (gtags-mode 1)
-                        )
-                     )
-           )
-  )
-
 ;; ---
 ;; CEDET
 ;; ---
@@ -197,14 +186,6 @@
 (semantic-add-system-include "/usr/local/include" 'c++-mode)
 
 (global-ede-mode t)
-; Use GNU Global
-(if use-global-p
-    (progn
-      (require 'semanticdb-global)
-      (semanticdb-enable-gnu-global-databases 'c-mode)
-      (semanticdb-enable-gnu-global-databases 'c++-mode)
-      )
-  )
 
 (semantic-load-enable-minimum-features)
 (semantic-load-enable-code-helpers)
