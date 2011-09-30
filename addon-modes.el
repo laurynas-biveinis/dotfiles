@@ -340,9 +340,11 @@
 (setq org-todo-repeat-to-state "TODO")
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
-; TODO: compute the column from the defaults.el frame size calculations.
+(setq org-cycle-separator-lines 1)
+; TODO: compute these columns from the defaults.el frame size calculations.
 (setq org-tags-column -90)
 (setq org-agenda-tags-column -90)
+(setq org-habit-graph-column 50)
 
 ; DVC
 (require 'dvc-autoloads)
