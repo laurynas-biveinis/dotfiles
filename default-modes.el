@@ -24,7 +24,7 @@
 (delete-selection-mode 1)
 
 ; Mouse avoidance
-(if (fboundp 'make-pointer-invisible)
+(if (symbolp 'make-pointer-invisible)
     (setq make-pointer-invisible t)
   (mouse-avoidance-mode))
 
@@ -101,24 +101,28 @@
 
 (setq wdired-allow-to-change-permissions t)
 
-; Refresh dired buffers on redisplay or buffer change
-; From http://nflath.com/2009/07/dired/
-(defadvice switch-to-buffer-other-window
-  (after auto-refresh-dired (buffer &optional norecord) activate)
-  (if (equal major-mode 'dired-mode)
-      (revert-buffer)))
-(defadvice switch-to-buffer
-  (after auto-refresh-dired (buffer &optional norecord) activate)
-  (if (equal major-mode 'dired-mode)
-      (revert-buffer)))
-(defadvice display-buffer
-  (after auto-refresh-dired (buffer &optional not-this-window frame)  activate)
-  (if (equal major-mode 'dired-mode)
-      (revert-buffer)))
-(defadvice other-window
-  (after auto-refresh-dired (arg &optional all-frame) activate)
-  (if (equal major-mode 'dired-mode)
-      (revert-buffer)))
+(if (symbolp dired-auto-revert-buffer)
+    (setq dired-auto-revert-buffer t)
+  (progn
+    ; Refresh dired buffers on redisplay or buffer change
+    ; From http://nflath.com/2009/07/dired/
+    (defadvice switch-to-buffer-other-window
+      (after auto-refresh-dired (buffer &optional norecord) activate)
+      (if (equal major-mode 'dired-mode)
+          (revert-buffer)))
+    (defadvice switch-to-buffer
+      (after auto-refresh-dired (buffer &optional norecord) activate)
+      (if (equal major-mode 'dired-mode)
+          (revert-buffer)))
+    (defadvice display-buffer
+      (after auto-refresh-dired (buffer &optional not-this-window frame)
+             activate)
+      (if (equal major-mode 'dired-mode)
+          (revert-buffer)))
+    (defadvice other-window
+      (after auto-refresh-dired (arg &optional all-frame) activate)
+      (if (equal major-mode 'dired-mode)
+          (revert-buffer)))))
 
 ; On save, create missing parent directories automatically
 ; From http://atomized.org/2008/12/emacs-create-directory-before-saving/

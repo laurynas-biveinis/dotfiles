@@ -187,12 +187,11 @@
 
 (global-ede-mode t)
 
-(semantic-load-enable-minimum-features)
-(semantic-load-enable-code-helpers)
-(semantic-load-enable-gaudy-code-helpers)
-
 (if (boundp 'semantic-load-enable-excessive-code-helpers)
     (progn
+      (semantic-load-enable-minimum-features)
+      (semantic-load-enable-code-helpers)
+      (semantic-load-enable-gaudy-code-helpers)
       (semantic-load-enable-excessive-code-helpers)
       ; TODO: should be already enabled by the previous line
       (global-semantic-idle-completions-mode)
@@ -204,8 +203,8 @@
           global-semantic-idle-completions-mode
           global-semantic-decoration-mode
           global-semantic-highlight-func-mode
-          global-semantic-stickyfunc-mode)))
-; TODO: global-semantic-mru-bookmark-mode above
+          global-semantic-stickyfunc-mode
+          global-semantic-mru-bookmark-mode)))
 
 (if (boundp 'semantic-ia) (require 'semantic-ia))
 (if (boundp 'semantic-gcc) (require 'semantic-gcc))

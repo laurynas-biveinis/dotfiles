@@ -12,23 +12,21 @@
 (setq x-select-enable-clipboard t)
 
 ; Emacs 23.2: Active region becomes primary selection
-(if (fboundp 'select-active-regions)
+(if (symbolp 'select-active-regions)
     (setq select-active-regions t))
 
 ; C-k kills line including its newline
 (setq kill-whole-line t)
 
 ; Emacs 23.2+: do not store duplicate kills
-(if (fboundp 'kill-do-not-save-duplicates)
+(if (symbolp 'kill-do-not-save-duplicates)
     (setq kill-do-not-save-duplicates t))
 
 ; Bookmarks are saved automatically
 (setq bookmark-save-flag 1)
 
 ; Trailing newlines are highlighted
-; indicate-empty-lines for Emacs 23.2+, default-indicate-empty-lines for
-; earlier versions
-(if (fboundp 'indicate-empty-lines)
+(if (symbolp 'indicate-empty-lines) ; Emacs 23.2+
     (setq indicate-empty-lines t)
   (setq default-indicate-empty-lines t))
 
@@ -49,6 +47,10 @@
 
 ; Indentation can only insert spaces by default
 (setq-default indent-tabs-mode nil)
+
+; If already indented, complete
+(if (symbolp 'tab-always-indent)
+    (setq tab-always-indent 'complete))
 
 ; Diff options
 (setq diff-switches "-c -p")
@@ -85,13 +87,13 @@
 
 ; Frame geometry
 (defun reset-frame-size ()
-  "Re-size the current frame to be 98 columns x full height"
+  "Re-size the current frame to be 99 columns x full height"
   (interactive)
   (if window-system
       (progn
-        (let ((new-width 98)
+        (let ((new-width 99) ; TODO: calculate automatically!
               (new-height (/ (- (x-display-pixel-height)
-                                110)
+                                80)
                              (frame-char-height)))
               (width-cell (assq 'width default-frame-alist))
               (height-cell (assq 'height default-frame-alist))
