@@ -24,6 +24,9 @@
 (setq org-mode-root (concat private-elisp-lib "org/"))
 (setq cc-mode-root (concat private-elisp-lib "cc-mode/"))
 (setq dvc-mode-root (concat private-elisp-lib "dvc/"))
+(setq color-theme-dir (concat private-elisp-lib "color-theme-6.6.0/"))
+(setq solarized-theme-dir (concat private-elisp-lib
+                                  "emacs-color-theme-solarized"))
 
 (setq elpa-dir (concat private-elisp "elpa/"))
 
@@ -51,6 +54,8 @@
 (add-to-load-path (concat org-mode-root "contrib/lisp/"))
 (add-to-load-path (concat cc-mode-root "lisp/"))
 (add-to-load-path (concat dvc-mode-root "elisp/"))
+(add-to-load-path color-theme-dir)
+(add-to-load-path solarized-theme-dir)
 
 ; Setup info search directories
 (defun add-to-info-path (new)
@@ -78,3 +83,9 @@
 (system-specific-setup)
 (load "projects")
 (load "load-desktop")
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(org-todo ((t (:foreground "red" :weight bold)))))

@@ -321,9 +321,10 @@
 (setq org-todo-keywords
       '((sequence "WAITING(w)" "TODO(t)" "|" "DONE(d)"))
 )
+
 (setq org-todo-keyword-faces
-      '(("WAITING" . "blue"))
-      )
+      '(("WAITING" . (:foreground "OrangeRed" :weight bold))))
+
 (setq org-modules
       '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
         org-jsinfo org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl)
@@ -347,3 +348,11 @@
 
 ; DVC
 (require 'dvc-autoloads)
+
+; color-theme and color-theme-solarized (-dark)
+(require 'color-theme)
+(require 'color-theme-solarized)
+(eval-after-load "color-theme"
+  '(progn
+     (color-theme-initialize)
+     (color-theme-solarized-dark)))
