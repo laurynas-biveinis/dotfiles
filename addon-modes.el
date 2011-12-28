@@ -356,3 +356,119 @@
   '(progn
      (color-theme-initialize)
      (color-theme-solarized-dark)))
+
+; todochiku
+(require 'todochiku)
+
+(setq todochiku-icons-directory todochiku-icons-dir)
+
+; IRC (ERC)
+(require 'erc)
+
+(setq erc-user-full-name "Laurynas Biveinis")
+
+(require 'erc-log)
+
+(setq erc-log-channels-directory erc-log-dir)
+
+; (setq erc-log-insert-log-on-open t)
+
+(setq erc-save-buffer-on-part nil
+      erc-save-queries-on-quit nil
+      erc-log-write-after-send t
+      erc-log-write-after-insert t)
+
+(erc-log-enable)
+
+(setq erc-keywords '("team" "laurynas"))
+
+(setq erc-current-nick-highlight-type 'all)
+(setq erc-keyword-highlight-type 'all)
+
+(setq erc-track-exclude-types '("JOIN" "PART" "QUIT" "NICK" "MODE"))
+
+(setq erc-track-faces-priority-list
+      '(erc-current-nick-face erc-keyword-face))
+
+(defadvice erc-track-find-face
+  (around erc-track-find-face-promote-query activate)
+  (if (erc-query-buffer-p)
+      (setq ad-return-value (intern "erc-current-nick-face"))
+    ad-do-it))
+
+(setq erc-paranoid t)
+
+; TODO: this is in-buffer highlight, right?
+; (require 'erc-highlight-nicknames)
+; (add-to-list 'erc-modules 'highlight-nicknames)
+; (erc-update-modules)
+(add-hook 'erc-text-matched-hook
+          (lambda (match-type nick message)
+            (todochiku-message (format "IRC: %s says" nick)
+                               message
+                               (todochiku-icon 'irc))))
+
+
+(setq erc-autojoin-channels-alist
+      '(("MPB" "#mysqldev" "#percona")
+        ("oftc.net" "#pov" "#gcc")
+        ("freenode.net" "#percona" "#drizzle" "#maria" "#mysql")))
+
+(require 'erc-services)
+(erc-services-mode 1)
+
+(setq erc-prompt-for-nickserv-password nil)
+
+(setq erc-nickserv-passwords
+      `((freenode (("laurynas" . ,freenode-nickserv-password)))))
+
+(setq erc-server-coding-system '(utf-8 . utf-8))
+
+; TODO
+;(require 'erc-spelling)
+;(add-hook 'erc-mode-hook
+          ;(lambda()
+            ;(erc-spelling-mode)))
+
+
+; (setq erc-modules 'autojoin 'log 'readonly 'services 'stamp)
+; (erc-update-modules)
+
+
+; Jabber (Google Talk)
+(require 'jabber-autoloads)
+
+(setq jabber-account-list
+      `(("laurynas.biveinis@gmail.com/emacs"
+         (:network-server . "talk.google.com")
+         (:connection-type . ssl)
+         (:password . ,g-talk-password))))
+
+(add-hook 'jabber-post-connect-hooks 'jabber-autoaway-start)
+
+(setq jabber-auto-reconnect t)
+
+(setq jabber-activity-count-in-title t)
+
+(setq jabber-history-enabled t)
+(setq jabber-use-global-history nil)
+(setq jabber-backlog-number 50)
+(setq jabber-backlog-days 14)
+
+(setq jabber-mode-line-mode t)
+
+(add-hook 'jabber-alert-message-hooks 'libnotify)
+
+(defun start-chats ()
+  "Connect to all chats"
+  (interactive)
+  (erc :server "localhost" :port 6667 :nick "laurynas|autoconnect")
+  (erc :server "irc.oftc.net" :port 6667 :nick "laurynas")
+  (erc :server "irc.freenode.net" :port 6667 :nick "laurynas")
+  (jabber-connect-all))
+
+(defun stop-chats ()
+  "Disconnect from all chats"
+  (interactive)
+  (jabber-disconnect)
+  (erc-cmd-GQ "Leaving"))

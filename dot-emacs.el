@@ -6,9 +6,9 @@
 )
 
 ; Various paths
-(setq home-dir (replace-regexp-in-string "\\\\" "/" (getenv "HOME")))
+(setq home-dir (concat (replace-regexp-in-string "\\\\" "/" (getenv "HOME")) "/"))
 (setq private-elisp
-      (concat home-dir "/emacs/"))
+      (concat home-dir "emacs/"))
 (setq private-elisp-lib (concat private-elisp "lib/"))
 (setq xref-dir (concat home-dir "/opt/xref/"))
 (setq xref-lib (concat xref-dir "emacs/"))
@@ -27,14 +27,19 @@
 (setq color-theme-dir (concat private-elisp-lib "color-theme-6.6.0/"))
 (setq solarized-theme-dir (concat private-elisp-lib
                                   "emacs-color-theme-solarized"))
+(setq todochiku-icons-dir (concat private-elisp-lib "todochiku-icons"))
+(setq jabber-dir (concat private-elisp-lib "emacs-jabber-0.8.90/"))
 
 (setq elpa-dir (concat private-elisp "elpa/"))
+
+(setq erc-log-dir (concat home-dir "erclogs"))
 
 ; Setup elisp search directories
 (defun add-to-load-path (new)
   (setq load-path
         (cons new load-path)))
 
+(add-to-load-path home-dir)
 (add-to-load-path private-elisp)
 
 ; Load system-specific library and setup system-specific things that
@@ -56,6 +61,7 @@
 (add-to-load-path (concat dvc-mode-root "elisp/"))
 (add-to-load-path color-theme-dir)
 (add-to-load-path solarized-theme-dir)
+(add-to-load-path jabber-dir)
 
 ; Setup info search directories
 (defun add-to-info-path (new)
@@ -68,6 +74,7 @@
 (add-to-info-path (concat cc-mode-root "info/"))
 (add-to-info-path (concat dvc-mode-root "info/"))
 
+(load "secrets")
 (load "defaults")
 (load "default-modes")
 
