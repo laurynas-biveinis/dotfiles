@@ -378,6 +378,22 @@
       erc-log-write-after-send t
       erc-log-write-after-insert t)
 
+(defun my-erc-generate-log-file-name-channel-network
+  (buffer target nick server port)
+  "Generates an ERC log fle name using the channel and network name, resulting
+in #channl@network.txt.
+Ths function is a possible values for `erc-generate-log-file-name-function'."
+  (require 'erc-networks)
+  (let ((file (concat
+               target "!"
+               (or (with-current-buffer buffer (erc-network-name)) server)
+               ".txt")))
+    ;; we need a make-safe-file-name function.
+    (convert-standard-filename file)))
+
+(setq erc-generate-log-file-name-function
+      'my-erc-generate-log-file-name-channel-network)
+
 (erc-log-enable)
 
 (setq erc-keywords '("team" "laurynas"))
