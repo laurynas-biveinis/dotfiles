@@ -209,13 +209,13 @@
 
 (dir-locals-set-class-variables 'innodb-source
                                 '((c-mode . ((c-file-style . "InnoDB")))
-                                  ((cc-mode . ((c-file-style . "InnoDB"))))))
+                                  (c++-mode . ((c-file-style . "InnoDB")))))
 (dir-locals-set-class-variables 'mysql-source
                                 '((c-mode . ((c-file-style . "MySQL")))
-                                  ((cc-mode . ((c-file-style . "MySQL"))))))
+                                  (c++-mode . ((c-file-style . "MySQL")))))
 (dir-locals-set-class-variables 'drizzle-source
                                 '((c-mode . ((c-file-style . "Drizzle")))
-                                  ((cc-mode . ((c-file-style . "Drizzle"))))))
+                                  (c++-mode . ((c-file-style . "Drizzle")))))
 
 (defvar mysql-dirs '(("innodb_plugin"     . innodb-source)
                      ("innobase"          . innodb-source)
