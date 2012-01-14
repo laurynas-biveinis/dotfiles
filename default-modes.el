@@ -220,6 +220,7 @@
 (defvar mysql-dirs '(("innodb_plugin"     . innodb-source)
                      ("innobase"          . innodb-source)
                      ("xtrabackup"        . innodb-source)
+                     ("haildb"            . innodb-source)
                      ("Percona-Server"    . mysql-source)
                      ("mysql"             . mysql-source)
                      ("mysql-[:digit:].*" . mysql-source)
