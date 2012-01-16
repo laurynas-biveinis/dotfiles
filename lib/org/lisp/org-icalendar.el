@@ -1,12 +1,10 @@
 ;;; org-icalendar.el --- iCalendar export for Org-mode
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
-;;   Free Software Foundation, Inc.
+;; Copyright (C) 2004-2011 Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.7
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -419,7 +417,7 @@ When COMBINE is non nil, add the category to each line."
 	  (let ((t1 (ignore-errors (org-parse-time-string ts 'nodefault))))
 	    (if (and (> org-icalendar-alarm-time 0)
 		     (car t1) (nth 1 t1) (nth 2 t1))
-		(setq alarm (format "\nBEGIN:VALARM\nACTION:DISPLAY\nDESCRIPTION:%s\nTRIGGER:-P0D0H%dM0S\nEND:VALARM" summary org-icalendar-alarm-time))
+		(setq alarm (format "\nBEGIN:VALARM\nACTION:DISPLAY\nDESCRIPTION:%s\nTRIGGER:-P0DT0H%dM0S\nEND:VALARM" summary org-icalendar-alarm-time))
 	      (setq alarm ""))
 	    )
 	  (if (string-match org-bracket-link-regexp summary)
@@ -685,5 +683,4 @@ a time), or the day by one (if it does not contain a time)."
 
 (provide 'org-icalendar)
 
-;; arch-tag: 2dee2b6e-9211-4aee-8a47-a3c7e5bc30cf
 ;;; org-icalendar.el ends here

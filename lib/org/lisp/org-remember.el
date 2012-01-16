@@ -1,12 +1,10 @@
 ;;; org-remember.el --- Fast note taking in Org-mode
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
-;;   Free Software Foundation, Inc.
+;; Copyright (C) 2004-2011 Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.7
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -945,7 +943,7 @@ See also the variable `org-reverse-note-order'."
 	(throw 'quit t))
       ;; Find the file
       (with-current-buffer (or visiting (find-file-noselect file))
-	(unless (or (org-mode-p) (member heading '(top bottom)))
+	(unless (or (eq major-mode 'org-mode) (member heading '(top bottom)))
 	  (error "Target files for notes must be in Org-mode if not filing to top/bottom"))
 	(save-excursion
 	  (save-restriction
@@ -955,7 +953,7 @@ See also the variable `org-reverse-note-order'."
 	    ;; Find the default location
 	    (when heading
 	      (cond
-	       ((not (org-mode-p))
+	       ((not (eq major-mode 'org-mode))
 		(if (eq heading 'top)
 		    (goto-char (point-min))
 		  (goto-char (point-max))
@@ -1016,7 +1014,7 @@ See also the variable `org-reverse-note-order'."
 					; not handle this note
 	    (and visitp (run-with-idle-timer 0.01 nil 'org-remember-visit-immediately))
 	    (goto-char spos)
-	    (cond ((org-on-heading-p t)
+	    (cond ((org-at-heading-p t)
 		   (org-back-to-heading t)
 		   (setq level (funcall outline-level))
 		   (cond
@@ -1152,8 +1150,6 @@ See also the variable `org-reverse-note-order'."
 						     (point-at-eol)))))))
 
 (provide 'org-remember)
-
-;; arch-tag: 497f30d0-4bc3-4097-8622-2d27ac5f2698
 
 ;;; org-remember.el ends here
 

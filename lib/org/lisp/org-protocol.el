@@ -1,15 +1,14 @@
 ;;; org-protocol.el --- Intercept calls from emacsclient to trigger custom actions.
 ;;
-;; Copyright (C) 2008, 2009, 2010
+;; Copyright (C) 2008-2011
 ;;          Free Software Foundation, Inc.
 ;;
-;; Author: Bastien Guerry <bzg AT altern DOT org>
+;; Author: Bastien Guerry <bzg AT gnu DOT org>
 ;; Author: Daniel M German <dmg AT uvic DOT org>
 ;; Author: Sebastian Rose <sebastian_rose AT gmx DOT de>
 ;; Author: Ross Patterson <me AT rpatterson DOT net>
 ;; Maintainer: Sebastian Rose <sebastian_rose AT gmx DOT de>
 ;; Keywords: org, emacsclient, wp
-;; Version: 7.7
 
 ;; This file is part of GNU Emacs.
 ;;
@@ -547,8 +546,8 @@ as filename."
               (when (string-match proto fname)
                 (let* ((func (plist-get (cdr prolist) :function))
                        (greedy (plist-get (cdr prolist) :greedy))
-                       (splitted (split-string fname proto))
-                       (result (if greedy restoffiles (cadr splitted))))
+                       (split (split-string fname proto))
+                       (result (if greedy restoffiles (cadr split))))
                   (when (plist-get (cdr prolist) :kill-client)
 		    (message "Greedy org-protocol handler. Killing client.")
 		    (server-edit))
@@ -645,5 +644,4 @@ project-plist is the CDR of an element in `org-publish-project-alist', reuse
 
 (provide 'org-protocol)
 
-;; arch-tag: b5c5c2ac-77cf-4a94-a649-2163dff95846
 ;;; org-protocol.el ends here

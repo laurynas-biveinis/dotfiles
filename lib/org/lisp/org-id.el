@@ -1,11 +1,10 @@
 ;;; org-id.el --- Global identifiers for Org-mode entries
 ;;
-;; Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
+;; Copyright (C) 2008-2011 Free Software Foundation, Inc.
 ;;
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.7
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -432,7 +431,7 @@ When CHECK is given, prepare detailed information about duplicate IDs."
 		 (delq nil
 		       (mapcar (lambda (b)
 				 (with-current-buffer b
-				   (and (org-mode-p) (buffer-file-name))))
+				   (and (eq major-mode 'org-mode) (buffer-file-name))))
 			       (buffer-list)))
 		 ;; All files known to have IDs
 		 org-id-files)))
@@ -601,7 +600,7 @@ optional argument MARKERP, return the position as a new marker."
 (defun org-id-store-link ()
   "Store a link to the current entry, using its ID."
   (interactive)
-  (when (and (buffer-file-name (buffer-base-buffer)) (org-mode-p))
+  (when (and (buffer-file-name (buffer-base-buffer)) (eq major-mode 'org-mode))
     (let* ((link (org-make-link "id:" (org-id-get-create)))
 	   (case-fold-search nil)
 	   (desc (save-excursion
@@ -643,6 +642,6 @@ optional argument MARKERP, return the position as a new marker."
 
 ;;; org-id.el ends here
 
-;; arch-tag: e5abaca4-e16f-4b25-832a-540cfb63a712
+
 
 

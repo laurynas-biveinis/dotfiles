@@ -5,7 +5,6 @@
 ;; Author: Eric Schulte
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.7
 
 ;; This file is part of GNU Emacs.
 
@@ -21,8 +20,6 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Commentary:
 
 ;;; Commentary:
 
@@ -51,7 +48,7 @@
   "Expand BODY according to PARAMS, return the expanded body."
   (dolist (pair (mapcar #'cdr (org-babel-get-header params :var)))
     (setf body (replace-regexp-in-string
-                (regexp-quote (concat "$" (car pair))) (cdr pair) body)))
+                (regexp-quote (format "$%s" (car pair))) (cdr pair) body)))
   body)
 
 (defun org-babel-execute:awk (body params)
@@ -114,6 +111,6 @@ Emacs-lisp table, otherwise return the results as a string."
 
 (provide 'ob-awk)
 
-;; arch-tag: 844e2c88-6aad-4018-868d-a2df6bcdf68f
+
 
 ;;; ob-awk.el ends here

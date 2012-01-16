@@ -1,12 +1,11 @@
 ;;; org-colview-xemacs.el --- Column View in Org-mode, XEmacs-specific version
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
+;; Copyright (C) 2004-2011
 ;;   Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.7
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -354,7 +353,7 @@ This is the compiled version of the format.")
 			  (funcall org-columns-modify-value-for-display-function
 				   title val))
 			 ((equal property "ITEM")
-			  (if (org-mode-p)
+			  (if (eq major-mode 'org-mode)
 			      (org-columns-cleanup-item
 			       val org-columns-current-fmt-compiled)))
 			 ((and calc (functionp calc)
@@ -658,7 +657,7 @@ Where possible, use the standard interface for changing this line."
 		(org-columns-eval eval))
 	    (org-columns-display-here)))
 	(org-move-to-column col)
-	(if (and (org-mode-p)
+	(if (and (eq major-mode 'org-mode)
 		 (nth 3 (assoc key org-columns-current-fmt-compiled)))
 	    (org-columns-update key)))))))
 
@@ -708,7 +707,7 @@ Where possible, use the standard interface for changing this line."
       (beginning-of-line 1)
       ;; `next-line' is needed here, because it skips invisible line.
       (condition-case nil (org-no-warnings (next-line 1)) (error nil))
-      (setq hidep (org-on-heading-p 1)))
+      (setq hidep (org-at-heading-p 1)))
     (eval form)
     (and hidep (hide-entry))))
 
@@ -1037,7 +1036,7 @@ display, or in the #+COLUMNS line of the current buffer."
 	      (replace-match (concat "#+COLUMNS: " fmt) t t))
 	    (unless (> cnt 0)
 	      (goto-char (point-min))
-	      (or (org-on-heading-p t) (outline-next-heading))
+	      (or (org-at-heading-p t) (outline-next-heading))
 	      (let ((inhibit-read-only t))
 		(insert-before-markers "#+COLUMNS: " fmt "\n")))
 	    (org-set-local 'org-columns-default-format fmt))))))
@@ -1167,7 +1166,7 @@ Don't set this, this is meant for dynamic scoping.")
     (if (marker-position org-columns-begin-marker)
 	(goto-char org-columns-begin-marker))
     (org-columns-remove-overlays)
-    (if (org-mode-p)
+    (if (eq major-mode 'org-mode)
 	(call-interactively 'org-columns)
       (org-agenda-redo)
       (call-interactively 'org-agenda-columns)))
@@ -1318,12 +1317,13 @@ of fields."
   (if (featurep 'xemacs)
       (save-excursion
         (let* ((title (mapcar 'cadr org-columns-current-fmt-compiled))
-	       (re-comment (concat "\\*+[ \t]+" org-comment-string "\\>"))
+	       (re-comment (format org-heading-keyword-regexp-format
+				   org-comment-string))
 	       (re-archive (concat ".*:" org-archive-tag ":"))
                (n (length title)) row tbl)
           (goto-char (point-min))
 
-	  (while (re-search-forward "^\\(\\*+\\) " nil t)
+	  (while (re-search-forward org-heading-regexp nil t)
 	    (catch 'next
 	      (when (and (or (null maxlevel)
 			     (>= maxlevel

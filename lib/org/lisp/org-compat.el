@@ -1,12 +1,10 @@
 ;;; org-compat.el --- Compatibility code for Org-mode
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
-;;   Free Software Foundation, Inc.
+;; Copyright (C) 2004-2011 Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.7
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -253,8 +251,12 @@ Works on both Emacs and XEmacs."
   (defun org-activate-mark ()
     (when (mark t)
       (setq mark-active t)
-      (unless transient-mark-mode
-	(setq transient-mark-mode 'lambda)))))
+      (when (and (boundp 'transient-mark-mode)
+		 (not transient-mark-mode))
+	(setq transient-mark-mode 'lambda))
+      (when (boundp 'zmacs-regions)
+	(setq zmacs-regions t)))))
+
 
 ;; Invisibility compatibility
 
@@ -286,6 +288,7 @@ Works on both Emacs and XEmacs."
      (dolist (ext-inv-spec ext-inv-specs)
        (set-extent-property (car ext-inv-spec) 'invisible
 			    (cadr ext-inv-spec)))))
+(def-edebug-spec org-xemacs-without-invisibility (body))
 
 (defun org-indent-to-column (column &optional minimum buffer)
   "Work around a bug with extents with invisibility in XEmacs."
@@ -439,11 +442,9 @@ With two arguments, return floor and remainder of their quotient."
   "Pop to buffer specified by BUFFER-OR-NAME in the selected window."
   (if (fboundp 'pop-to-buffer-same-window)
       (funcall
-       'pop-to-buffer-same-window buffer-or-name norecord label)
+       'pop-to-buffer-same-window buffer-or-name norecord)
     (funcall 'switch-to-buffer buffer-or-name norecord)))
 
 (provide 'org-compat)
-
-;; arch-tag: a0a0579f-e68c-4bdf-9e55-93768b846bbe
 
 ;;; org-compat.el ends here

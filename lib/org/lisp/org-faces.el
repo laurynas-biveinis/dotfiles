@@ -1,12 +1,10 @@
 ;;; org-faces.el --- Face definitions for Org-mode.
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
-;;   Free Software Foundation, Inc.
+;; Copyright (C) 2004-2011 Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.7
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -674,6 +672,18 @@ month and 365.24 days for a year)."
   "Face for showing the agenda restriction lock."
   :group 'org-faces)
 
+(defface org-agenda-filter-tags
+  (org-compatible-face 'modeline
+    nil)
+  "Face for tag(s) in the mode-line when filtering the agenda."
+  :group 'org-faces)
+
+(defface org-agenda-filter-category
+  (org-compatible-face 'modeline
+    nil)
+  "Face for tag(s) in the mode-line when filtering the agenda."
+  :group 'org-faces)
+
 (defface org-time-grid ;; originally copied from font-lock-variable-name-face
   (org-compatible-face nil
     '((((class color) (min-colors 16) (background light)) (:foreground "DarkGoldenrod"))
@@ -689,6 +699,18 @@ month and 365.24 days for a year)."
   (org-compatible-face 'default
     nil)
   "Face used for agenda entries that come from the Emacs diary."
+  :group 'org-faces)
+
+(defface org-agenda-calendar-event
+  (org-compatible-face 'default
+    nil)
+  "Face used to show events and appointments in the agenda."
+  :group 'org-faces)
+
+(defface org-agenda-calendar-sexp
+  (org-compatible-face 'default
+    nil)
+  "Face used to show events computed from a S-expression."
   :group 'org-faces)
 
 (defconst org-level-faces
@@ -735,7 +757,5 @@ level org-n-level-faces"
   :background "red")
 
 (provide 'org-faces)
-
-;; arch-tag: 9dab5f91-c4b9-4d6f-bac3-1f6211ad0a04
 
 ;;; org-faces.el ends here
