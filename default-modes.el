@@ -34,8 +34,7 @@
 ; Recent files menu
 (recentf-mode)
 
-; CUA mode
-(cua-mode t)
+(setq shift-select-mode t)
 
 ; Ignore file size in fontlocking
 (setq font-lock-maximum-size nil)
