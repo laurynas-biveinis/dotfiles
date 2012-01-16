@@ -257,7 +257,9 @@
 ; --------
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
+(require 'org-checklist)
 (require 'org-install)
+(require 'org-checklist)
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
@@ -275,6 +277,11 @@
 (setq org-mobile-directory "~/Dropbox/MobileOrg")
 (setq org-mobile-use-encryption t)
 (setq org-mobile-encryption-password "2878")
+(setq org-ctrl-k-protect-subtree t)
+(setq org-support-shift-select t)
+(setq org-yank-adjusted-subtrees t)
+
+; Tags
 (setq org-tag-alist '((:startgroup . nil)
                       ("@agenda" . ?a)
                       ("@anywhere" . ?w)
@@ -290,10 +297,12 @@
                       ("@checklist" . ?l)
                       (:endgroup . nil)
                       ("project" . ?p)
-                      ("somedaymaybe" . ?s)
-                      )
-)
+                      ("somedaymaybe" . ?s)))
 (setq org-use-tag-inheritance nil)
+(setq org-agenda-tags-todo-honor-ignore-options t)
+(setq org-fast-tag-selection-single-key 'expert)
+
+; Agendas
 (setq org-agenda-custom-commands
       '(("h" "Home actions" tags-todo
          "@anywhere|@call|@internet|@computer|@home|@percona|@readreview/!TODO")
@@ -307,8 +316,31 @@
         ("k" "Someday/maybe" tags "somedaymaybe")
         ("v" "Vilnius" tags-todo "@vilnius/!TODO")
         ("r" "Read/review" tags-todo "@readreview/!TODO")
-        )
-      )
+        (" " "Agenda"
+         ((agenda "" nil)
+          (tags-todo "@anywhere|@call|@internet|@computer|@home|@percona/!TODO"
+                     ((org-agenda-overriding-header "Common next actions")))
+          (tags-todo "@agenda/!TODO"
+                     ((org-agenda-overriding-header "Agendas")))
+          (tags-todo "@home/!TODO"
+                     ((org-agenda-overriding-header "Home actions")))
+          (tags-todo "@office/!TODO"
+                     ((org-agenda-overriding-header "Office actions")))
+          (tags-todo "@waitinfor/!TODO"
+                     ((org-agenda-overriding-header "Waiting for")))
+          (tags-todo "@vilnius/!TODO"
+                     ((org-agenda-overriding-header "Errands")))
+          (tags-todo "@readreview/!TODO"
+                     ((org-agenda-overriding-header "Read/review")))))))
+(setq org-agenda-start-on-weekday nil)
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-scheduled-if-done t)
+(setq org-agenda-todo-ignore-scheduled 'future)
+(setq org-agenda-repeating-timestamp-show-all nil)
+
+; scheduling and deadlines
+(setq org-deadline-warning-days 30)
+
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-capture-templates
@@ -319,8 +351,7 @@
         )
       )
 (setq org-todo-keywords
-      '((sequence "WAITING(w)" "TODO(t)" "|" "DONE(d)"))
-)
+      '((sequence "WAITING(w)" "TODO(t)" "|" "DONE(d)" "CANCELLED(c)")))
 
 (setq org-todo-keyword-faces
       '(("WAITING" . (:foreground "OrangeRed" :weight bold))))
@@ -329,11 +360,8 @@
       '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
         org-jsinfo org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl)
 )
-(setq org-agenda-skip-scheduled-if-done t)
 (setq org-log-redeadline t)
 (setq org-log-reschedule t)
-(setq org-agenda-todo-ignore-scheduled 'future)
-(setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-stuck-projects
       '("+project-somedaymaybe" ("TODO") nil "")
 )
