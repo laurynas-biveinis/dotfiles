@@ -257,21 +257,20 @@
 ; --------
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
-(require 'org-checklist)
-(require 'org-install)
-(require 'org-checklist)
+; Bendra
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
 (define-key global-map "\C-cs" 'org-iswitchb)
 (define-key global-map "\C-cc" 'org-capture)
+(setq org-use-speed-commands t)
+(setq org-pretty-entities t)
 (setq org-log-done t)
 (setq org-agenda-files (list "~/org/percona.org"
                              "~/org/gcc.org"
                              "~/org/phd.org"
                              "~/org/gtd.org"
-                             "~/org/music.org")
-)
+                             "~/org/music.org"))
 (setq org-default-notes-file "~/org/gtd.org")
 (setq org-mobile-inbox-for-pull "~/org/gtd.org")
 (setq org-mobile-directory "~/Dropbox/MobileOrg")
@@ -290,56 +289,91 @@
                       ("@computer" . ?c)
                       ("@home" . ?h)
                       ("@office" . ?o)
-                      ("@percona" . ?x)
                       ("@readreview" . ?r)
                       ("@vilnius" . ?v)
                       ("@waitingfor" . ?f)
                       ("@checklist" . ?l)
                       (:endgroup . nil)
                       ("project" . ?p)
-                      ("somedaymaybe" . ?s)))
-(setq org-use-tag-inheritance nil)
+                      ("somedaymaybe" . ?s)
+                      ("crypt" . ?k)))
+(setq org-use-tag-inheritance '("somedaymaybe" "@readreview"))
 (setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-fast-tag-selection-single-key 'expert)
 
 ; Agendas
 (setq org-agenda-custom-commands
       '(("h" "Home actions" tags-todo
-         "@anywhere|@call|@internet|@computer|@home|@percona|@readreview/!TODO")
+         "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe|@home-somedaymaybe|@percona-somedaymaybe|@readreview-somedaymaybe/!TODO")
         ("o" "Office actions" tags-todo
-         "@anywhere|@call|@internet|@computer|@office|@percona|@readreview/!TODO")
-        ("c" "Calls" tags-todo "@call/!TODO")
-        ("p" "Projects" tags-todo "project/!TODO")
-        ("l" "Checklists" tags "@checklist")
-        ("g" "Agendas" tags-todo "@agenda/!TODO")
-        ("f" "Waiting for" tags-todo "@waitingfor/!TODO")
-        ("k" "Someday/maybe" tags "somedaymaybe")
-        ("v" "Vilnius" tags-todo "@vilnius/!TODO")
-        ("r" "Read/review" tags-todo "@readreview/!TODO")
+         "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe|@office-somedaymaybe|@percona-somedaymaybe|@readreview-somedaymaybe/!TODO")
+        ("c" "Calls" tags-todo "@call-somedaymaybe/!TODO")
+        ("p" "Projects" tags-todo "project-somedaymaybe/!TODO")
+        ("l" "Checklists" tags "@checklist-somedaymaybe")
+        ("g" "Agendas" tags-todo "@agenda-somedaymaybe/!TODO")
+        ("f" "Waiting for" tags-todo "@waitingfor-somedaymaybe/!TODO")
+        ("k" "Someday/maybe" tags-todo "somedaymaybe+LEVEL=2/!TODO")
+        ("v" "Vilnius" tags-todo "@vilnius-somedaymaybe/!TODO")
+        ("r" "Read/review" tags-todo "@readreview-somedaymaybe/!TODO")
         (" " "Agenda"
          ((agenda "" nil)
-          (tags-todo "@anywhere|@call|@internet|@computer|@home|@percona/!TODO"
+          (tags-todo "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe|@home-somedaymaybe|@percona-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Common next actions")))
-          (tags-todo "@agenda/!TODO"
+          (tags-todo "@agenda-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Agendas")))
-          (tags-todo "@home/!TODO"
+          (tags-todo "@home-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Home actions")))
-          (tags-todo "@office/!TODO"
+          (tags-todo "@office-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Office actions")))
-          (tags-todo "@waitinfor/!TODO"
+          (tags-todo "@waitingfor-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Waiting for")))
-          (tags-todo "@vilnius/!TODO"
+          (tags-todo "@vilnius-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Errands")))
-          (tags-todo "@readreview/!TODO"
+          (tags-todo "@readreview-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Read/review")))))))
+; The only blocked tasks could be a project, which are filtered out of next
+; action lists anyway
+(setq org-agenda-dim-blocked-tasks nil)
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-todo-ignore-scheduled 'future)
+(setq org-agenda-todo-ignore-deadlines 'near)
+(setq org-agenda-todo-ignore-timestamp 'all)
 (setq org-agenda-repeating-timestamp-show-all nil)
+(setq org-agenda-clock-consistency-checks
+      (list
+       :max-duration "6:00"
+       :min-duration "0:00"
+       :max-gap "0:05"
+       :gap-ok-around (list "2:00" "12:30")))
 
-; scheduling and deadlines
+; Scheduling and deadlines
 (setq org-deadline-warning-days 30)
+
+; Drawers
+
+; Clock tables
+(setq org-clocktable-defaults
+      (list
+       :maxlevel 99
+       :scope 'agenda-with-archives
+       :stepskip0 t
+       :fileskip0 t
+       :narrow 50
+       :link t
+       :indent t
+       :tcolumns 0))
+
+; Logging
+(setq org-log-into-drawer t)
+(setq org-clock-into-drawer t)
+
+; Refiling
+(setq org-refile-targets (quote ((org-agenda-files :maxlevel . 9))))
+(setq org-refile-use-outline-path 'file)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+(setq org-log-refile 'time)
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -363,8 +397,7 @@
 (setq org-log-redeadline t)
 (setq org-log-reschedule t)
 (setq org-stuck-projects
-      '("+project-somedaymaybe" ("TODO") nil "")
-)
+      '("+project-somedaymaybe/!TODO" ("TODO") nil ""))
 (setq org-todo-repeat-to-state "TODO")
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
@@ -373,6 +406,16 @@
 (setq org-tags-column -90)
 (setq org-agenda-tags-column -90)
 (setq org-habit-graph-column 50)
+
+; And load everything except crypt
+(require 'org-install)
+(require 'org-checklist)
+
+; org-mode encryption of selected subtrees
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-crypt-key "B8D47CD8")
+(setq org-crypt-disable-auto-save 'encrypt)
 
 ; DVC
 (require 'dvc-autoloads)
