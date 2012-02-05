@@ -264,7 +264,6 @@
 (define-key global-map "\C-cs" 'org-iswitchb)
 (define-key global-map "\C-cc" 'org-capture)
 (setq org-use-speed-commands t)
-(setq org-pretty-entities t)
 (setq org-log-done t)
 (setq org-agenda-files (list "~/org/percona.org"
                              "~/org/gcc.org"
