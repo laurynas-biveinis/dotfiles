@@ -437,6 +437,11 @@
 
 (setq erc-user-full-name "Laurynas Biveinis")
 
+; Disable autopair
+(add-hook 'erc-mode-hook
+          (lambda ()
+              (setq autopair-dont-activate t)))
+
 (require 'erc-log)
 
 (setq erc-log-channels-directory erc-log-dir)
@@ -531,6 +536,11 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
          (:password . ,g-talk-password))))
 
 (add-hook 'jabber-post-connect-hooks 'jabber-autoaway-start)
+
+; Disable autopair
+(add-hook 'jabber-chat-mode-hook
+          (lambda ()
+            (setq autopair-dont-activate t)))
 
 (setq jabber-auto-reconnect t)
 
