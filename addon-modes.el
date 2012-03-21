@@ -426,6 +426,7 @@
   '(progn
      (color-theme-initialize)
      (color-theme-solarized-dark)))
+(setq solarized-termcolor 256)
 
 ; todochiku
 (require 'todochiku)
@@ -502,8 +503,8 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (setq erc-autojoin-channels-alist
       '(("MPB" "#mysqldev" "#percona")
-        ("oftc.net" "#pov" "#gcc")
-        ("freenode.net" "#percona" "#drizzle" "#maria" "#mysql")))
+        ("oftc.net" "#gcc")
+        ("freenode.net" "#percona" "#drizzle" "#maria" "#mysql" "#pov")))
 
 (require 'erc-services)
 (erc-services-mode 1)
