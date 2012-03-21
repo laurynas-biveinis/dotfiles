@@ -1,6 +1,6 @@
 ;;; org-latex.el --- LaTeX exporter for org-mode
 ;;
-;; Copyright (C) 2007-2011 Free Software Foundation, Inc.
+;; Copyright (C) 2007-2012 Free Software Foundation, Inc.
 ;;
 ;; Emacs Lisp Archive Entry
 ;; Filename: org-latex.el
@@ -1988,7 +1988,8 @@ The conversion is made depending of STRING-BEFORE and STRING-AFTER."
                              (if shortn (concat "[" shortn "]") "")
                              (or caption "")
 			     (if label (format "\\label{%s}" label) "")))
-			(if (and longtblp caption) "\\\\\n" "\n")
+			(if (and longtblp caption org-export-latex-table-caption-above)
+			    "\\\\\n" "\n")
                         (if (and org-export-latex-tables-centered (not longtblp))
                             "\\begin{center}\n")
                         (if (not longtblp)
@@ -2572,9 +2573,7 @@ The conversion is made depending of STRING-BEFORE and STRING-AFTER."
   "Convert plain text lists in current buffer into LaTeX lists."
   ;; `org-list-end-re' output has changed since preprocess from
   ;; org-exp.el. Make sure it is taken into account.
-  (let ((org-list-ending-method
-	 (if (eq org-list-ending-method 'regexp) 'regexp 'both))
-	(org-list-end-re "^ORG-LIST-END-MARKER\n"))
+  (let ((org-list-end-re "^ORG-LIST-END-MARKER\n"))
     (mapc
      (lambda (e)
        ;; For each type of context allowed for list export (E), find

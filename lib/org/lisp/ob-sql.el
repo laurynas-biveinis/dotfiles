@@ -1,6 +1,6 @@
 ;;; ob-sql.el --- org-babel functions for sql evaluation
 
-;; Copyright (C) 2009-2011  Free Software Foundation, Inc.
+;; Copyright (C) 2009-2012  Free Software Foundation, Inc.
 
 ;; Author: Eric Schulte
 ;; Keywords: literate programming, reproducible research
@@ -24,6 +24,7 @@
 ;;; Commentary:
 
 ;; Org-Babel support for evaluating sql source code.
+;; (see also ob-sqlite.el)
 ;;
 ;; SQL is somewhat unique in that there are many different engines for
 ;; the evaluation of sql (Mysql, PostgreSQL, etc...), so much of this

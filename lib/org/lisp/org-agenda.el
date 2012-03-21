@@ -1,6 +1,6 @@
 ;;; org-agenda.el --- Dynamic task and appointment lists for Org
 
-;; Copyright (C) 2004-2011 Free Software Foundation, Inc.
+;; Copyright (C) 2004-2012 Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
@@ -28,7 +28,7 @@
 ;;
 ;; The functions `org-batch-agenda', `org-batch-agenda-csv', and
 ;; `org-batch-store-agenda-views' are implemented as macros to provide
-;; a conveniant way for extracting agenda information from the command
+;; a convenient way for extracting agenda information from the command
 ;; line. The Lisp does not evaluate parameters of a macro call; thus
 ;; it is not necessary to quote the parameters passed to one of those
 ;; functions. E.g. you can write:
@@ -406,7 +406,7 @@ where
 
 desc   A description string to be displayed in the dispatcher menu.
 cmd    An agenda command, similar to the above.  However, tree commands
-       are no allowed, but instead you can get agenda and global todo list.
+       are not allowed, but instead you can get agenda and global todo list.
        So valid commands for a set are:
        (agenda \"\" settings)
        (alltodo \"\" settings)
@@ -1086,7 +1086,7 @@ and timeline buffers."
 	      (const :tag "Sunday" 0)))
 
 (defcustom org-agenda-move-date-from-past-immediately-to-today t
-  "Non-nil means jumpt to today when moving a past date forward in time.
+  "Non-nil means jump to today when moving a past date forward in time.
 When using S-right in the agenda to move a a date forward, and the date
 stamp currently points to the past, the first key press will move it
 to today.  WHen nil, just move one day forward even if the date stays
@@ -1658,7 +1658,7 @@ Where CATEGORY-REGEXP is a regexp matching the categories where
 the icon should be displayed.
 FILE-OR-DATA either a file path or a string containing image data.
 
-The other fields can be omited safely if not needed:
+The other fields can be omitted safely if not needed:
 TYPE indicates the image type.
 DATA-P is a boolean indicating whether the FILE-OR-DATA string is
 image data.
@@ -3062,7 +3062,7 @@ define a filter for one of the individual blocks.  You need to set it in
 the global options and expect it to be applied to the entire view.")
 
 (defvar org-agenda-category-filter-preset nil
-  "A preset of the categeory filter used for secondary agenda filtering.
+  "A preset of the category filter used for secondary agenda filtering.
 This must be a list of strings, each string must be a single category
 preceded by \"+\" or \"-\".
 This variable should not be set directly, but agenda custom commands can
@@ -3073,7 +3073,6 @@ the global options and expect it to be applied to the entire view.")
 
 (defun org-prepare-agenda (&optional name)
   (setq org-todo-keywords-for-agenda nil)
-  (setq org-done-keywords-for-agenda nil)
   (setq org-drawers-for-agenda nil)
   (unless org-agenda-persistent-filter
     (setq org-agenda-tag-filter nil
@@ -3092,6 +3091,7 @@ the global options and expect it to be applied to the entire view.")
 		    (make-string (window-width) org-agenda-block-separator))
 		  "\n"))
 	(narrow-to-region (point) (point-max)))
+    (setq org-done-keywords-for-agenda nil)
     (org-agenda-reset-markers)
     (setq org-agenda-contributing-files nil)
     (setq org-agenda-columns-active nil)
@@ -4219,7 +4219,7 @@ See `org-agenda-skip-if' for details."
 (defun org-agenda-skip-if (subtree conditions)
   "Checks current entity for CONDITIONS.
 If SUBTREE is non-nil, the entire subtree is checked.  Otherwise, only
-the entry, i.e. the text before the next heading is checked.
+the entry (i.e. the text before the next heading) is checked.
 
 CONDITIONS is a list of symbols, boolean OR is used to combine the results
 from different tests.  Valid conditions are:
@@ -4245,12 +4245,12 @@ keywords, which may include \"*\" to match any todo keyword.
 
 would skip all entries with \"TODO\" or \"WAITING\" keywords.
 
-Instead of a list a keyword class may be given
+Instead of a list, a keyword class may be given.  For example:
 
     (org-agenda-skip-entry-if 'nottodo 'done)
 
 would skip entries that haven't been marked with any of \"DONE\"
-keywords. Possible classes are: `todo', `done', `any'.
+keywords.  Possible classes are: `todo', `done', `any'.
 
 If any of these conditions is met, this function returns the end point of
 the entity, causing the search to continue from there.  This is a function
@@ -4283,8 +4283,8 @@ that can be put into `org-agenda-skip-function' for the duration of a command."
 	   (stringp (nth 1 m))
 	   (not (re-search-forward (nth 1 m) end t)))
       (and (or
-	    (setq m (memq 'todo conditions))
-	    (setq m (memq 'nottodo conditions)))
+	    (setq m (memq 'nottodo conditions))
+	    (setq m (memq 'todo conditions)))
 	   (org-agenda-skip-if-todo m end)))
      end)))
 
@@ -4920,7 +4920,7 @@ DAYNAME is a number between 0 (Sunday) and 6 (Saturday).
 SKIP-WEEKS is any number of ISO weeks in the block period for which the
 item should be skipped.  If any of the SKIP-WEEKS arguments is the symbol
 `holidays', then any date that is known by the Emacs calendar to be a
-holidy will also be skipped."
+holiday will also be skipped."
   (let* ((date1 (calendar-absolute-from-gregorian (list m1 d1 y1)))
 	 (date2 (calendar-absolute-from-gregorian (list m2 d2 y2)))
 	 (d (calendar-absolute-from-gregorian date)))
@@ -5868,8 +5868,18 @@ could bind the variable in the options section of a custom command.")
       (let ((pl (text-property-any 0 (length x) 'org-heading t x)))
 	(setq re (get-text-property 0 'org-todo-regexp x))
 	(when (and re
+		   ;; Test `pl' because if there's no heading content,
+		   ;; there's no point matching to highlight.  Note
+		   ;; that if we didn't test `pl' first, and there
+		   ;; happened to be no keyword from `org-todo-regexp'
+		   ;; on this heading line, then the `equal' comparison
+		   ;; afterwards would spuriously succeed in the case
+		   ;; where `pl' is nil -- causing an args-out-of-range
+		   ;; error when we try to add text properties to text
+		   ;; that isn't there.
+		   pl
 		   (equal (string-match (concat "\\(\\.*\\)" re "\\( +\\)")
-					x (or pl 0)) pl))
+					x pl) pl))
 	  (add-text-properties
 	   (or (match-end 1) (match-end 0)) (match-end 0)
 	   (list 'face (org-get-todo-face (match-string 2 x)))
@@ -7280,16 +7290,18 @@ use the dedicated frame)."
   (if (and current-prefix-arg (listp current-prefix-arg))
       (org-agenda-do-tree-to-indirect-buffer)
     (let ((agenda-window (selected-window))
-          (indirect-window (get-buffer-window org-last-indirect-buffer)))
+          (indirect-window
+	   (and org-last-indirect-buffer
+		(get-buffer-window org-last-indirect-buffer))))
       (save-window-excursion (org-agenda-do-tree-to-indirect-buffer))
       (unwind-protect
           (progn
-            (unless indirect-window
+            (unless (and indirect-window (window-live-p indirect-window))
               (setq indirect-window (split-window agenda-window)))
             (select-window indirect-window)
             (switch-to-buffer org-last-indirect-buffer :norecord)
             (fit-window-to-buffer indirect-window))
-        (select-window agenda-window)))))
+        (select-window (get-buffer-window org-agenda-buffer-name))))))
 
 (defun org-agenda-do-tree-to-indirect-buffer ()
   "Same as `org-agenda-tree-to-indirect-buffer' without saving window."
@@ -8505,7 +8517,7 @@ tag and (if present) the flagging note."
 	  (org-agenda-remove-flag hdmarker)
 	  (let ((win (get-buffer-window "*Flagging Note*")))
 	    (and win (delete-window win)))
-	  (message "Entry unflaged"))
+	  (message "Entry unflagged"))
       (setq note (org-entry-get hdmarker "THEFLAGGINGNOTE"))
       (unless note
 	(error "No flagging note"))
@@ -8528,7 +8540,7 @@ tag and (if present) the flagging note."
       (org-entry-delete nil "THEFLAGGINGNOTE")
       (setq newhead (org-get-heading)))
     (org-agenda-change-all-lines newhead marker)
-    (message "Entry unflaged")))
+    (message "Entry unflagged")))
 
 (defun org-agenda-get-any-marker (&optional pos)
   (or (get-text-property (or pos (point-at-bol)) 'org-hd-marker)

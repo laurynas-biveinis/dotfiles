@@ -1,5 +1,5 @@
 ;;; org-publish.el --- publish related org-mode files as a website
-;; Copyright (C) 2006-2011 Free Software Foundation, Inc.
+;; Copyright (C) 2006-2012 Free Software Foundation, Inc.
 
 ;; Author: David O'Toole <dto@gnu.org>
 ;; Maintainer: Carsten Dominik <carsten DOT dominik AT gmail DOT com>
@@ -277,12 +277,12 @@ in the sitemap."
   :type 'string)
 
 (defcustom org-publish-sitemap-file-entry-format "%t"
-  "How a sitemap file entry is formated.
+  "How a sitemap file entry is formatted.
 You could use brackets to delimit on what part the link will be.
 
 %t is the title.
 %a is the author.
-%d is the date formated using `org-publish-sitemap-date-format'."
+%d is the date formatted using `org-publish-sitemap-date-format'."
   :group 'org-publish
   :type 'string)
 

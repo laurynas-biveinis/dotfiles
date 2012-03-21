@@ -1,5 +1,5 @@
 ;;; org-indent.el --- Dynamic indentation for  Org-mode
-;; Copyright (C) 2009-2011 Free Software Foundation, Inc.
+;; Copyright (C) 2009-2012 Free Software Foundation, Inc.
 ;;
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
@@ -412,6 +412,7 @@ This function is meant to be called by `after-change-functions'."
       (if (or org-indent-modified-headline-flag
 	      (save-excursion
 		(goto-char beg)
+		(beginning-of-line)
 		(re-search-forward org-outline-regexp-bol end t)))
 	(let ((end (save-excursion
 		     (goto-char end)
