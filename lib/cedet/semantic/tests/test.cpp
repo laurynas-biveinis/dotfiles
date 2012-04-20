@@ -3,7 +3,7 @@
  * Do not include things tested in test.c since that shares the
  * same language.
  *
- * $Id: test.cpp,v 1.22 2008/05/17 20:12:55 zappo Exp $
+ * $Id: test.cpp,v 1.22 2008-05-17 20:12:55 zappo Exp $
  *
  */
 

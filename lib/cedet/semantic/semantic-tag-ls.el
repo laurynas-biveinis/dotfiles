@@ -1,8 +1,8 @@
 ;;; semantic-tag-ls.el --- Language Specific override functions for tags
 
-;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2008 Eric M. Ludlam
+;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2008, 2010 Eric M. Ludlam
 
-;; X-CVS: $Id: semantic-tag-ls.el,v 1.16 2010/03/15 13:40:55 xscript Exp $
+;; X-CVS: $Id: semantic-tag-ls.el,v 1.16 2010-03-15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -34,6 +34,149 @@
 (require 'semantic-tag)
 
 ;;; Code:
+
+;;; TAG SIMILARITY:
+;;
+;; Two tags that represent the same thing are "similar", but not the "same".
+;; Similar tags might have the same name, but one is a :prototype, while
+;; the other is an implementation.
+;;
+;; Each language will have different things that can be ignored
+;; between two "similar" tags, so similarity checks involve a series
+;; of mode overridable features.  Some are "internal" features.
+(defvar semantic-tag-similar-ignorable-attributes '(:prototype-flag)
+  "The tag attributes that can be ignored during a similarity test.")
+
+(define-overloadable-function semantic--tag-similar-names-p (tag1 tag2 blankok)
+  "Compare the names of TAG1 and TAG2.
+If BLANKOK is false, then the names must exactly match.
+If BLANKOK is true, then if either of TAG1 or TAG2 has blank
+names, then that is ok, and this returns true, but if they both
+have values, they must still match.")
+
+(defun semantic--tag-similar-names-p-default (tag1 tag2 blankok)
+  "Compare the names of TAG1 and TAG2.
+If BLANKOK is false, then the names must exactly match.
+If BLANKOK is true, then if either of TAG1 or TAG2 has blank
+names, then that is ok, and this returns true, but if they both
+have values, they must still match."
+  (let ((n1 (semantic-tag-name tag1))
+	(n2 (semantic-tag-name tag2)))
+    (or (and blankok (or (null n1) (null n2) (string= n1 "") (string= n2 "")))
+	(string= n1 n2))))
+
+(define-overloadable-function semantic--tag-similar-types-p (tag1 tag2)
+  "Compare the types of TAG1 and TAG2.
+This functions can be overriden, for example to compare a fully
+qualified with an unqualified type."
+  (cond
+   ((and (null (semantic-tag-type tag1))
+	 (null (semantic-tag-type tag2)))
+    t)
+   ((or (null (semantic-tag-type tag1))
+	(null (semantic-tag-type tag2)))
+    nil)
+   (t
+    (:override))))
+
+(defun semantic--tag-similar-types-p-default (tag1 tag2)
+  "Compare the types of TAG1 and TAG2.
+This functions can be overriden, for example to compare a fully
+qualified with an unqualified type."
+  (semantic-tag-of-type-p tag1 (semantic-tag-type tag2)))
+
+(define-overloadable-function semantic--tag-attribute-similar-p (attr value1 value2 ignorable-attributes)
+  "Test to see if attribute ATTR is similar for VALUE1 and VALUE2.
+IGNORABLE-ATTRIBUTES is described in `semantic-tag-similar-p'.
+This function is internal, but allows customization of `semantic-tag-similar-p'
+for a given mode at a more granular level.
+
+Note that :type, :name, and anything in IGNORABLE-ATTRIBUTES will
+not be passed to this function.
+
+Modes that override this function can call `semantic--tag-attribute-similar-p-default'
+to do the default equality tests if ATTR is not special for that mode.")
+
+(defun semantic--tag-attribute-similar-p-default (attr value1 value2 ignorable-attributes)
+  "For ATTR, VALUE1, VALUE2 and IGNORABLE-ATTRIBUTES, test for similarness."
+  (cond
+   ;; Tag sublists require special testing.
+   ((and (listp value1) (semantic-tag-p (car value1))
+	 (listp value2) (semantic-tag-p (car value2)))
+    (let ((ans t)
+	  (taglist1 value1)
+	  (taglist2 value2))
+      (when (not (eq (length taglist1) (length taglist2)))
+	(setq ans nil))
+      (while (and ans taglist1 taglist2)
+	(setq ans (apply 'semantic-tag-similar-p
+			 (car taglist1) (car taglist2)
+			 ignorable-attributes)
+	      taglist1 (cdr taglist1)
+	      taglist2 (cdr taglist2)))
+      ans))
+   
+   ;; The attributes are not the same?
+   ((not (equal value1 value2))
+    nil)
+
+   (t t))
+  )
+
+(define-overloadable-function semantic-tag-similar-p (tag1 tag2 &rest ignorable-attributes)
+  "Test to see if TAG1 and TAG2 are similar.
+Two tags are similar if their name, datatype, and various attributes
+are the same.
+
+Similar tags that have sub-tags such as arg lists or type members,
+are similar w/out checking the sub-list of tags.
+Optional argument IGNORABLE-ATTRIBUTES are attributes to ignore while comparing similarity.
+By default, `semantic-tag-similar-ignorable-attributes' is referenced for
+attributes, and IGNOREABLE-ATTRIBUTES will augment this list.
+
+Note that even though :name is not an attribute, it can be used to
+to indicate lax comparison of names via `semantic--tag-similar-names-p'")
+
+;; Note: optional thing is because overloadable fcns don't handle this
+;; quite right.
+(defun semantic-tag-similar-p-default (tag1 tag2 &optional ignorable-attributes)
+  "Test to see if TAG1 and TAG2 are similar.
+Two tags are similar if their name, datatype, and various attributes
+are the same.
+
+IGNORABLE-ATTRIBUTES are tag attributes that can be ignored.
+
+See `semantic-tag-similar-p' for details."
+  (let* ((ignore (append ignorable-attributes semantic-tag-similar-ignorable-attributes))
+	 (A1 (and (semantic--tag-similar-names-p tag1 tag2 (memq :name ignore))
+		  (semantic--tag-similar-types-p tag1 tag2)
+		  (semantic-tag-of-class-p tag1 (semantic-tag-class tag2))))
+	 (attr1 (semantic-tag-attributes tag1))
+	 (attr2 (semantic-tag-attributes tag2))
+	 (A2 t)
+	 (A3 t)
+	 )
+    ;; Test if there are non-ignorable attributes in A2 which are not present in A1
+    (while (and A2 attr2)
+      (let ((a (car attr2)))
+	(unless (or (eq a :type) (memq a ignore))
+	  (setq A2 (semantic-tag-get-attribute tag1 a)))
+	(setq attr2 (cdr (cdr attr2)))))
+    (while (and A2 attr1 A3)
+      (let ((a (car attr1)))
+
+	(cond ((or (eq a :type) ;; already tested above.
+		   (memq a ignore)) ;; Ignore them...
+	       nil)
+
+	      (t
+	       (setq A3
+		     (semantic--tag-attribute-similar-p
+		      a (car (cdr attr1)) (semantic-tag-get-attribute tag2 a)
+		      ignorable-attributes)))
+	      ))
+      (setq attr1 (cdr (cdr attr1))))
+    (and A1 A2 A3)))
 
 ;;; UML features:
 ;;

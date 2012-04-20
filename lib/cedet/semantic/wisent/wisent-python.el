@@ -1,13 +1,14 @@
 ;;; wisent-python.el --- Semantic support for Python
 ;;
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2010, 2011, 2012 Jan Moringen
+;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
 ;; Copyright (C) 2002, 2004, 2006 Richard Kim
 ;;
 ;; Author: Richard Kim <ryk@dspwiz.com>
 ;; Maintainer: Richard Kim <ryk@dspwiz.com>
 ;; Created: June 2002
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-python.el,v 1.56 2010/03/26 22:18:06 xscript Exp $
+;; X-RCS: $Id: wisent-python.el,v 1.56 2010-03-26 22:18:06 xscript Exp $
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -38,16 +39,55 @@
 ;; An X/Emacs major mode for editing Python source code is available
 ;; at <http://sourceforge.net/projects/python-mode/>.
 ;;
+
 ;;; Code:
+
+(require 'rx)
+
+;; Try to load python support, but fail silently since it is only used
+;; for optional functionality
+(require 'python nil t)
 
 (require 'semantic-wisent)
 (require 'wisent-python-wy)
+
+
+;;; Customization
+;;
+
+(defun semantic-python-get-system-include-path ()
+  "Evaluate some Python code that determines the system include path."
+  (python-proc)
+  (if python-buffer
+      (with-current-buffer python-buffer
+	(set (make-local-variable 'python-preoutput-result) nil)
+	(python-send-string
+	 "import sys; print '_emacs_out ' + '\\0'.join(sys.path)")
+	(accept-process-output (python-proc) 2)
+	(if python-preoutput-result
+	    (split-string python-preoutput-result "[\0\n]" t)
+	  ;; Try a second, Python3k compatible shot
+	  (python-send-string
+	   "import sys; print('_emacs_out ' + '\\0'.join(sys.path))")
+	  (accept-process-output (python-proc) 2)
+	  (if python-preoutput-result
+	      (split-string python-preoutput-result "[\0\n]" t)
+	    (message "Timeout while querying Python for system include path.")
+	    nil)))
+    (message "Python seems to be unavailable on this system.")))
+
+(defcustom-mode-local-semantic-dependency-system-include-path
+  python-mode semantic-python-dependency-system-include-path
+  (when (featurep 'python)
+    (semantic-python-get-system-include-path))
+  "The system include path used by Python language.")
+
 
 ;;; Lexical analysis
 ;;
 
 ;; Python strings are delimited by either single quotes or double
-;; quotes, e.g., "I'm a string" and 'I too am s string'.
+;; quotes, e.g., "I'm a string" and 'I too am a string'.
 ;; In addition a string can have either a 'r' and/or 'u' prefix.
 ;; The 'r' prefix means raw, i.e., normal backslash substitutions are
 ;; to be suppressed.  For example, r"01\n34" is a string with six
@@ -116,8 +156,8 @@ line ends at the end of the buffer, leave the point there."
 
 (defun wisent-python-forward-line-skip-indented ()
   "Move point to the next logical line, skipping indented lines.
-That is the next line whose indentation is less than or equal to the
-identation of the current line."
+That is the next line whose indentation is less than or equal to
+the indentation of the current line."
   (let ((indent (current-indentation)))
     (while (progn (wisent-python-forward-line)
                   (and (not (eobp))
@@ -260,9 +300,118 @@ elsewhere on a line outside a string literal."
   semantic-lex-ignore-comments
   ;; Signal error on unhandled syntax.
   semantic-lex-default-action)
+
+
+;;; Parsing
+;;
+
+(defun wisent-python-reconstitute-function-tag (tag suite)
+  "Move a docstring from TAG's members into its :documentation attribute.
+Set attributes for constructors, special, private and static methods."
+  ;; Analyze first statement to see whether it is a documentation
+  ;; string.
+  (let ((first-statement (car suite)))
+    (when (semantic-python-docstring-p first-statement)
+      (semantic-tag-put-attribute
+       tag :documentation
+       (semantic-python-extract-docstring first-statement))))
+
+  ;; TODO HACK: we try to identify methods using the following
+  ;; heuristic:
+  ;; + at least one argument
+  ;; + first argument is self
+  (when (and (> (length (semantic-tag-function-arguments tag)) 0)
+	     (string= (semantic-tag-name
+		       (first (semantic-tag-function-arguments tag)))
+		      "self"))
+    (semantic-tag-put-attribute tag :parent "dummy"))
+
+  ;; Identify constructors, special and private functions
+  (cond
+   ;; TODO only valid when the function resides inside a class
+   ((string= (semantic-tag-name tag) "__init__")
+    (semantic-tag-put-attribute tag :constructor-flag t)
+    (semantic-tag-put-attribute tag :suite            suite))
+
+   ((semantic-python-special-p tag)
+    (semantic-tag-put-attribute tag :special-flag t))
+
+   ((semantic-python-private-p tag)
+    (semantic-tag-put-attribute tag :protection "private")))
+
+  ;; If there is a staticmethod decorator, add a static typemodifier
+  ;; for the function.
+  (when (semantic-find-tags-by-name
+	 "staticmethod"
+	 (semantic-tag-get-attribute tag :decorators))
+    (semantic-tag-put-attribute
+     tag :typemodifiers
+     (cons "static"
+	   (semantic-tag-get-attribute tag :typemodifiers))))
+
+  ;; TODO 
+  ;; + check for decorators classmethod
+  ;; + check for operators
+  tag)
+
+(defun wisent-python-reconstitute-class-tag (tag)
+  "Move a docstring from TAG's members into its :documentation attribute."
+  ;; The first member of TAG may be a documentation string. If that is
+  ;; the case, remove of it from the members list and stick its
+  ;; content into the :documentation attribute.
+  (let ((first-member (car (semantic-tag-type-members tag))))
+    (when (semantic-python-docstring-p first-member)
+      (semantic-tag-put-attribute
+       tag :members
+       (cdr (semantic-tag-type-members tag)))
+      (semantic-tag-put-attribute
+       tag :documentation
+       (semantic-python-extract-docstring first-member))))
+
+  ;; Try to find the constructor, determine the name of the instance
+  ;; parameter, find assignments to instance variables and add
+  ;; corresponding variable tags to the list of members.
+  (dolist (member (remove-if-not
+		   #'semantic-tag-function-constructor-p
+		   (semantic-tag-type-members tag)))
+    (let ((self (semantic-tag-name
+		 (car (semantic-tag-function-arguments member)))))
+      (dolist (statement (remove-if-not
+			  (lambda (s)
+			    (semantic-python-instance-variable-p s self))
+			  (semantic-tag-get-attribute member :suite)))
+	(let ((variable (semantic-tag-clone
+			 statement
+			 (substring (semantic-tag-name statement) 5)))
+	      (members  (semantic-tag-get-attribute tag :members)))
+
+	  (when (semantic-python-private-p variable)
+	    (semantic-tag-put-attribute variable :protection "private"))
+
+	  (setcdr (last members) (list variable))))))
+
+  ;; TODO remove the :suite attribute
+  tag)
+
+(defun semantic-python-expand-tag (tag)
+  "Expand compound declarations found in TAG into separate tags.
+TAG contains compound declaration if the NAME part of the tag is
+a list.  In python, this can happen with `import' statements."
+  (let ((class (semantic-tag-class tag))
+	(elts (semantic-tag-name tag))
+	(expand nil))
+    (cond
+     ((and (eq class 'include) (listp elts))
+      (dolist (E elts)
+	(setq expand (cons (semantic-tag-clone tag E) expand)))
+      (setq expand (nreverse expand)))
+     )))
+     
+
 
 ;;; Overridden Semantic API.
 ;;
+
 (define-mode-local-override semantic-lex python-mode
   (start end &optional depth length)
   "Lexically analyze Python code in current buffer.
@@ -284,10 +433,11 @@ what remains in the `wisent-python-indent-stack'."
 To be implemented for Python!  For now just return nil."
   nil)
 
-(defcustom-mode-local-semantic-dependency-system-include-path
-  python-mode semantic-python-dependency-system-include-path
-  nil
-  "The system include path used by Python language.")
+;; Adapted from the semantic Java support by Andrey Torba
+(define-mode-local-override semantic-tag-include-filename python-mode (tag)
+  "Return a suitable path for (some) Python imports."
+  (let ((name (semantic-tag-name tag)))
+    (concat (mapconcat 'identity (split-string name "\\.") "/") ".py")))
 
 ;;; Enable Semantic in `python-mode'.
 ;;
@@ -297,13 +447,15 @@ To be implemented for Python!  For now just return nil."
   "Setup buffer for parse."
   (wisent-python-wy--install-parser)
   (set (make-local-variable 'parse-sexp-ignore-comments) t)
+  ;; Give python modes the possibility to overwrite this:
+  (if (not comment-start-skip)
+      (set (make-local-variable 'comment-start-skip) "#+\\s-*"))
   (setq
-   ;; Character used to separation a parent/child relationship
+  ;; Character used to separation a parent/child relationship
    semantic-type-relation-separator-character '(".")
    semantic-command-separation-character ";"
-   ;; The following is no more necessary as semantic-lex is overriden
-   ;; in python-mode.
-   ;; semantic-lex-analyzer 'wisent-python-lexer
+   ;; Parsing
+   semantic-tag-expand-function 'semantic-python-expand-tag
 
    ;; Semantic to take over from the one provided by python.
    ;; The python one, if it uses the senator advice, will hang
@@ -330,8 +482,56 @@ To be implemented for Python!  For now just return nil."
 (define-child-mode python-3-mode python-mode "Python 3 mode")
 
 
+;;; Utility functions
+;;
+
+(defun semantic-python-special-p (tag)
+  "Return non-nil if the name of TAG is a special identifier of
+the form __NAME__. "
+  (string-match
+   (rx (seq string-start "__" (1+ (syntax symbol)) "__" string-end))
+   (semantic-tag-name tag)))
+
+(defun semantic-python-private-p (tag)
+  "Return non-nil if the name of TAG follows the convention _NAME
+for private names."
+  (string-match
+   (rx (seq string-start "_" (0+ (syntax symbol)) string-end))
+   (semantic-tag-name tag)))
+
+(defun semantic-python-instance-variable-p (tag &optional self)
+  "Return non-nil if TAG is an instance variable of the instance
+SELF or the instance name \"self\" if SELF is nil."
+  (when (semantic-tag-of-class-p tag 'variable)
+    (let ((name (semantic-tag-name tag)))
+      (when (string-match
+	     (rx-to-string
+	      `(seq string-start ,(or self "self") "."))
+	     name)
+	(not (string-match "\\." (substring name 5)))))))
+
+(defun semantic-python-docstring-p (tag)
+  "Return non-nil, when TAG is a Python documentation string."
+  ;; TAG is considered to be a documentation string if the first
+  ;; member is of class 'code and its name looks like a documentation
+  ;; string.
+  (let ((class (semantic-tag-class tag))
+	(name  (semantic-tag-name  tag)))
+    (and (eq class 'code)
+	 (string-match
+	  (rx (seq string-start "\"\"\"" (0+ anything) "\"\"\"" string-end))
+	  name))))
+
+(defun semantic-python-extract-docstring (tag)
+  "Return the Python documentation string contained in TAG."
+  ;; Strip leading and trailing """
+  (let ((name (semantic-tag-name tag)))
+    (substring name 3 -3)))
+
+
 ;;; Test
 ;;
+
 (defun wisent-python-lex-buffer ()
   "Run `wisent-python-lexer' on current buffer."
   (interactive)

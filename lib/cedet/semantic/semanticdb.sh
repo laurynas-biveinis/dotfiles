@@ -5,7 +5,7 @@
 #
 # Author: Eric M. Ludlam <zappo@gnu.org>
 # Keywords: tags
-# X-RCS: $Id: semanticdb.sh,v 1.3 2005/09/30 20:19:32 zappo Exp $
+# X-RCS: $Id: semanticdb.sh,v 1.3 2005-09-30 20:19:32 zappo Exp $
 #
 # This file is not part of GNU Emacs.
 #

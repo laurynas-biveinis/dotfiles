@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-symref-cscope.el,v 1.1 2009/02/27 04:53:50 zappo Exp $
+;; X-RCS: $Id: semantic-symref-cscope.el,v 1.1 2009-02-27 04:53:50 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

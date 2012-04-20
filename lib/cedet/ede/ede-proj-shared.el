@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede-proj-shared.el,v 1.16 2010/06/12 00:36:12 zappo Exp $
+;; RCS: $Id: ede-proj-shared.el,v 1.16 2010-06-12 00:36:12 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

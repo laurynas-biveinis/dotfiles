@@ -1,9 +1,9 @@
 ;;; ede-emacs.el --- Special project for Emacs
 
-;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010, 2011, 2012 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-emacs.el,v 1.12 2010/05/18 00:42:14 zappo Exp $
+;; X-RCS: $Id: ede-emacs.el,v 1.12 2010-05-18 00:42:14 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -94,6 +94,17 @@ emacs_beta_version=\\([0-9]+\\)")
 			  (match-string 2) "."
 			  (match-string 3)))
 	)
+       ((file-exists-p "sxemacs.pc.in")
+	(setq emacs "SXEmacs")
+	(insert-file-contents "sxemacs_version.m4")
+	(goto-char (point-min))
+	(re-search-forward "m4_define(\\[SXEM4CS_MAJOR_VERSION\\], \\[\\([0-9]+\\)\\])
+m4_define(\\[SXEM4CS_MINOR_VERSION\\], \\[\\([0-9]+\\)\\])
+m4_define(\\[SXEM4CS_BETA_VERSION\\], \\[\\([0-9]+\\)\\])")
+	(setq ver (concat (match-string 1) "."
+			  (match-string 2) "."
+			  (match-string 3)))
+	)
        ;; Insert other Emacs here...
 
        ;; Vaguely recent version of GNU Emacs?
@@ -108,6 +119,13 @@ emacs_beta_version=\\([0-9]+\\)")
       (cons emacs ver))))
 
 ;;;###autoload
+(defclass ede-emacs-project (ede-project eieio-instance-tracker)
+  ((tracking-symbol :initform 'ede-emacs-project-list)
+   )
+  "Project Type for the Emacs source code."
+  :method-invocation-order :depth-first)
+
+;;;###autoload
 (defun ede-emacs-load (dir &optional rootproj)
   "Return an Emacs Project object if there is a match.
 Return nil if there isn't one.
@@ -115,28 +133,29 @@ Argument DIR is the directory it is created for.
 ROOTPROJ is nil, since there is only one project."
   (or (ede-emacs-file-existing dir)
       ;; Doesn't already exist, so lets make one.
-      (let* ((vertuple (ede-emacs-version dir)))
-	(ede-emacs-project (car vertuple)
-			   :name (car vertuple)
-			   :version (cdr vertuple)
-			   :directory (file-name-as-directory dir)
-			   :file (expand-file-name "src/emacs.c"
-						   dir)))
-      (ede-add-project-to-global-list this)
-      )
-  )
+      (let* ((vertuple (ede-emacs-version dir))
+	     (proj (ede-emacs-project
+		    (car vertuple)
+		    :name (car vertuple)
+		    :version (cdr vertuple)
+		    :directory (file-name-as-directory dir)
+		    :file (expand-file-name "src/emacs.c"
+					    dir))))
+	(ede-add-project-to-global-list proj))))
 
 ;;;###autoload
-(add-to-list 'ede-project-class-files
-	     (ede-project-autoload "emacs"
-	      :name "EMACS ROOT"
-	      :file 'ede-emacs
-	      :proj-file "src/emacs.c"
-	      :proj-root 'ede-emacs-project-root
-	      :load-type 'ede-emacs-load
-	      :class-sym 'ede-emacs-project
-	      :new-p nil)
-	     t)
+(ede-add-project-autoload
+ (ede-project-autoload "emacs"
+		       :name "EMACS ROOT"
+		       :file 'ede-emacs
+		       :proj-file "src/emacs.c"
+		       :proj-root-dirmatch "emacs[^/]*"
+		       :proj-root 'ede-emacs-project-root
+		       :load-type 'ede-emacs-load
+		       :class-sym 'ede-emacs-project
+		       :new-p nil
+		       :safe-p t)
+ 'unique)
 
 (defclass ede-emacs-target-c (ede-target)
   ()
@@ -152,13 +171,6 @@ All directories need at least one target.")
   ()
   "EDE Emacs Project target for Misc files.
 All directories need at least one target.")
-
-;;;###autoload
-(defclass ede-emacs-project (ede-project eieio-instance-tracker)
-  ((tracking-symbol :initform 'ede-emacs-project-list)
-   )
-  "Project Type for the Emacs source code."
-  :method-invocation-order :depth-first)
 
 (defmethod initialize-instance ((this ede-emacs-project)
 				&rest fields)

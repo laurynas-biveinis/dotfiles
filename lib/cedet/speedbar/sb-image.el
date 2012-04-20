@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: file, tags, tools
-;; X-RCS: $Id: sb-image.el,v 1.11 2005/09/30 20:25:59 zappo Exp $
+;; X-RCS: $Id: sb-image.el,v 1.11 2005-09-30 20:25:59 zappo Exp $
 
 ;; This file is part of GNU Emacs.
 

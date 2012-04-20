@@ -1,10 +1,10 @@
 ;;; eieio-base.el --- Base classes for EIEIO.
 
 ;;;
-;; Copyright (C) 2000, 2001, 2002, 2004, 2005, 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2000, 2001, 2002, 2004, 2005, 2007, 2008, 2009, 2012 Eric M. Ludlam
 ;;
 ;; Author: <zappo@gnu.org>
-;; RCS: $Id: eieio-base.el,v 1.29 2009/10/10 15:10:00 davenar Exp $
+;; RCS: $Id: eieio-base.el,v 1.29 2009-10-10 15:10:00 davenar Exp $
 ;; Keywords: OO, lisp
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -152,7 +152,7 @@ Returns the first match."
 	      "The only instance of this class that will be instantiated.
 Multiple calls to `make-instance' will return this object."))
   "This special class causes subclasses to be singletons.
-A singleton is a class which will only ever have one instace."
+A singleton is a class which will only ever have one instance."
   :abstract t)
 
 (defmethod constructor :STATIC ((class eieio-singleton) name &rest slots)
@@ -215,7 +215,7 @@ specified will not be saved."
 
 (defmethod eieio-persistent-save-interactive ((this eieio-persistent) prompt
 					      &optional name)
-  "Perpare to save THIS.  Use in an `interactive' statement.
+  "Prepare to save THIS.  Use in an `interactive' statement.
 Query user for file name with PROMPT if THIS does not yet specify
 a file.  Optional argument NAME specifies a default file name."
   (unless (slot-boundp this 'file)
@@ -226,14 +226,22 @@ a file.  Optional argument NAME specifies a default file name."
 			      ))))
   (oref this file))
 
-(defun eieio-persistent-read (filename)
-  "Read a persistent object from FILENAME, and return it."
+(defun eieio-persistent-read (filename &optional class allow-subclass)
+  "Read a persistent object from FILENAME, and return it.
+Signal an error if the object in FILENAME is not a constructor
+for CLASS.  Optional ALLOW-SUBCLASS says that it is ok for
+`eieio-peristent-read' to load in subclasses of class instead of
+being pendantic."
+  (when (not class)
+    (message "Unsafe call to `eieio-persistent-read'.")
+    )
+  (when (not (class-p class))
+    (signal 'wrong-type-argument (list 'class-p class)))
   (let ((ret nil)
 	(buffstr nil))
     (unwind-protect
 	(progn
-	  (save-excursion
-	    (set-buffer (get-buffer-create " *tmp eieio read*"))
+	  (with-current-buffer (get-buffer-create " *tmp eieio read*")
 	    (insert-file-contents filename nil nil nil t)
 	    (goto-char (point-min))
 	    (setq buffstr (buffer-string)))
@@ -241,12 +249,172 @@ a file.  Optional argument NAME specifies a default file name."
 	  ;; so that any initialize-instance calls that depend on
 	  ;; the current buffer will work.
 	  (setq ret (read buffstr))
-	  (if (not (child-of-class-p (car ret) 'eieio-persistent))
-	      (error "Corrupt object on disk"))
-	  (setq ret (eval ret))
+	  (when (not (child-of-class-p (car ret) 'eieio-persistent))
+	    (error "Corrupt object on disk: Unknown saved object"))
+	  (when (and class
+		     (not (or (eq (car ret) class ) ; same class
+			      (and allow-subclass
+				   (child-of-class-p (car ret) class)) ; subclasses
+			      )))
+	    (error "Corrupt object on disk: Invalid saved class"))
+	  (setq ret (eieio-persistent-convert-list-to-object ret))
 	  (oset ret file filename))
       (kill-buffer " *tmp eieio read*"))
     ret))
+
+(defun eieio-persistent-convert-list-to-object (inputlist)
+  "Convert the INPUTLIST, representing object creation to an object.
+While it is possible to just `eval' the INPUTLIST, this code instead
+validates the existing list, and explicitly creates objects instead of
+calling eval.  This avoids the possibility of accidentally running
+malicious code.
+
+Note: This function recurses when a slot of :type of some object is
+identified, and needing more object creation."
+  (let ((objclass (nth 0 inputlist))
+	(objname (nth 1 inputlist))
+	(slots (nthcdr 2 inputlist))
+	(createslots nil)
+	)
+    
+    ;; If OBJCLASS is an eieio autoload object, then we need to load it.
+    (eieio-class-un-autoload objclass)
+
+    (while slots
+      (let ((name (car slots))
+	    (value (car (cdr slots)))
+	    )
+
+	;; Make sure that the value proposed for SLOT is valid.
+	;; In addition, strip out quotes, list functions, and update
+	;; object constructors as needed.
+	(setq value (eieio-persistent-validate/fix-slot-value
+		     objclass name value))
+
+	(push name createslots)
+	(push value createslots)
+	)
+
+      (setq slots (cdr (cdr slots))))
+
+    (apply 'make-instance objclass objname (nreverse createslots))
+
+    ;;(eval inputlist)
+    ))
+
+(defun eieio-persistent-validate/fix-slot-value (class slot proposed-value)
+  "Validate that in CLASS, the SLOT with PROPOSED-VALUE is good, then fix.
+A limited number of functions, such as quote, list, and valid object
+constructor functions are considered valid.
+Secondarilly, any text properties will be stripped from strings."
+  (cond ((consp proposed-value)
+	 ;; Lists with something in them need special treatment.
+	 (let ((slot-idx (eieio-slot-name-index class nil slot))
+	       (type nil)
+	       (classtype nil))
+	   (setq slot-idx (- slot-idx 3))
+	   (setq type (aref (aref (class-v class) class-public-type)
+			    slot-idx))
+
+	   (setq classtype (eieio-persistent-slot-type-is-class-p
+			    type))
+
+	   (cond ((eq (car proposed-value) 'quote)
+		  (car (cdr proposed-value)))
+
+		 ;; An empty list sometimes shows up as (list), which is dumb, but
+		 ;; we need to support it for backward compat.
+		 ((and (eq (car proposed-value) 'list)
+		       (= (length proposed-value) 1))
+		  nil)
+
+		  ;; We have a slot with a single object that can be
+		  ;; saved here.  Recurse and evaluate that
+		  ;; sub-object.
+		 ((and classtype (class-p classtype)
+		       (child-of-class-p (car proposed-value) classtype))
+		  (eieio-persistent-convert-list-to-object
+		   proposed-value))
+
+		 ;; List of object constructors.
+		 ((and (eq (car proposed-value) 'list)
+		       ;; 2nd item is a list.
+		       (consp (car (cdr proposed-value)))
+		       ;; 1st elt of 2nd item is a class name.
+		       (class-p (car (car (cdr proposed-value))))
+		       )
+
+		  ;; Check the value against the input class type.
+		  ;; If something goes wrong, issue a smart warning
+		  ;; about how a :type is needed for this to work.
+		  (unless (and
+			   ;; Do we have a type?
+			   (consp classtype) (class-p (car classtype)))
+		    (error "In save file, list of object constructors found, but no :type specified for slot %S"
+			   slot))
+
+		  ;; We have a predicate, but it doesn't satisfy the predicate?
+		  (dolist (PV (cdr proposed-value))
+		    (unless (child-of-class-p (car PV) (car classtype))
+		      (error "Corrupt object on disk")))
+
+		  ;; We have a list of objects here.  Lets load them
+		  ;; in.
+		  (let ((objlist nil))
+		    (dolist (subobj (cdr proposed-value))
+		      (push (eieio-persistent-convert-list-to-object subobj)
+			    objlist))
+		    ;; return the list of objects ... reversed.
+		    (nreverse objlist)))
+		 (t
+		  proposed-value))))
+	 
+	 ((stringp proposed-value)
+	  ;; Else, check for strings, remove properties.
+	  (substring-no-properties proposed-value))
+
+	 (t
+	  ;; Else, just return whatever the constant was.
+	  proposed-value))
+  )
+
+(defun eieio-persistent-slot-type-is-class-p (type)
+  "Return the class refered to in TYPE.
+If no class is referenced there, then return nil."
+  (cond ((class-p type)
+	 ;; If the type is a class, then return it.
+	 type)
+
+	((and (symbolp type) (string-match "-child$" (symbol-name type))
+	      (class-p (intern-soft (substring (symbol-name type) 0
+					       (match-beginning 0)))))
+	 ;; If it is the predicate ending with -child, then return
+	 ;; that class.  Unfortunately, in EIEIO, typep of just the
+	 ;; class is the same as if we used -child, so no further work needed.
+	 (intern-soft (substring (symbol-name type) 0
+				 (match-beginning 0))))
+
+	((and (symbolp type) (string-match "-list$" (symbol-name type))
+	      (class-p (intern-soft (substring (symbol-name type) 0
+					       (match-beginning 0)))))
+	 ;; If it is the predicate ending with -list, then return
+	 ;; that class and the predicate to use.
+	 (cons (intern-soft (substring (symbol-name type) 0
+				       (match-beginning 0)))
+	       type))
+
+	((and (consp type) (eq (car type) 'or))
+	 ;; If type is a list, and is an or, it is possibly something
+	 ;; like (or null myclass), so check for that.
+	 (let ((ans nil))
+	   (dolist (subtype (cdr type))
+	     (setq ans (eieio-persistent-slot-type-is-class-p
+			subtype)))
+	   ans))
+
+	(t
+	 ;; No match, not a class.
+	 nil)))
 
 (defmethod object-write ((this eieio-persistent) &optional comment)
   "Write persistent object THIS out to the current stream.
@@ -312,9 +480,9 @@ access to it."
 
 (defmethod slot-missing ((obj eieio-named)
 			 slot-name operation &optional new-value)
-  "Called when a on-existant slot is accessed.
+  "Called when a non-existent slot is accessed.
 For variable `eieio-named', provide an imaginary `object-name' slot.
-Argument OBJ is the Named object.
+Argument OBJ is the named object.
 Argument SLOT-NAME is the slot that was attempted to be accessed.
 OPERATION is the type of access, such as `oref' or `oset'.
 NEW-VALUE is the value that was being set into SLOT if OPERATION were

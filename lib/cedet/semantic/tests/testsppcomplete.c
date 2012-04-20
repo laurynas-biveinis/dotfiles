@@ -27,3 +27,19 @@ int main(int argc, char *argv[]) {
   bar->// -3-
     ; // #3# ( "test" )
 }
+
+/* Test symref and macros together. */
+
+// This function exists only so we can have a comment in a tag with this name.
+void function_with_macro_name ()
+// %1% ( ( "testsppcomplete.c" ) ( "function_with_macro_name" "function_with_macro_name" "use_macro") )
+// Note: fwmn is in twice, once for function, and once for the constant macro below.
+{
+}
+
+#define function_with_macro_name 1
+
+int use_macro () {
+  int a = function_with_macro_name;
+}
+    

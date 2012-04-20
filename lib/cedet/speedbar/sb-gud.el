@@ -5,7 +5,7 @@
 ;; Author: Eric M. Ludlam <zappo@gnu.ai.mit.edu>
 ;; Version: 0.1
 ;; Keywords: tools, gud
-;; X-RCS: $Id: sb-gud.el,v 1.11 2003/09/17 16:58:28 ponced Exp $
+;; X-RCS: $Id: sb-gud.el,v 1.11 2003-09-17 16:58:28 ponced Exp $
 ;;
 ;; This file is part of GNU Emacs.
 ;;

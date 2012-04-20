@@ -9,7 +9,7 @@
 ;;; Copyright (C) 2001, 2003, 2004, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: semantic-skel.el,v 1.9 2010/03/15 13:40:55 xscript Exp $
+;; X-RCS: $Id: semantic-skel.el,v 1.9 2010-03-15 13:40:55 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 

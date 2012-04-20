@@ -1,6 +1,6 @@
 @c -*-texinfo-*-
 @c
-@c $Id: ede-targets.texi,v 1.5 2010/01/07 02:15:42 zappo Exp $
+@c $Id: ede-targets.texi,v 1.5 2010-01-07 02:15:42 zappo Exp $
 @c
 
 @c The next line is for the back-search to see what node this one

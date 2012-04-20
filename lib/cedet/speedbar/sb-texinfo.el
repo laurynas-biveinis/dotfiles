@@ -5,7 +5,7 @@
 ;; Author: Richard Y. Kim, <ryk@ap.com>
 ;; Maintainer: Richard Y. Kim, <ryk@ap.com>
 ;; Created: Fri Jun 16 17:23:11 2000
-;; Version: $Id: sb-texinfo.el,v 1.9 2005/09/30 20:26:09 zappo Exp $
+;; Version: $Id: sb-texinfo.el,v 1.9 2005-09-30 20:26:09 zappo Exp $
 ;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or

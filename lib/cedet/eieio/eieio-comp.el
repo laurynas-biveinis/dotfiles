@@ -4,7 +4,7 @@
 ;; Copyright (C) 1995,1996, 1998, 1999, 2000, 2001, 2002, 2005, 2008, 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: <zappo@gnu.org>
-;; RCS: $Id: eieio-comp.el,v 1.17 2010/03/29 11:22:40 zappo Exp $
+;; RCS: $Id: eieio-comp.el,v 1.17 2010-03-29 11:22:40 zappo Exp $
 ;; Keywords: oop, lisp, tools
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -97,8 +97,9 @@ that is called but rarely.  Argument FORM is the body of the method."
 	 )
     (let ((name (format "%s::%s" (or class "#<generic>") meth)))
       (if byte-compile-verbose
-	  ;; #### filename used free
-	  (message "Compiling %s... (%s)" (or filename "") name))
+	  (let ((fname (when (boundp 'filename)
+			 filename)))
+	  (message "Compiling %s... (%s)" (or fname "") name)))
       (setq byte-compile-current-form name) ; for warnings
       )
     ;; Flush any pending output

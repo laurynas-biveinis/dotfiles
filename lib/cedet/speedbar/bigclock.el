@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: amusement
-;; X-RCS: $Id: bigclock.el,v 1.4 2005/09/30 20:25:35 zappo Exp $
+;; X-RCS: $Id: bigclock.el,v 1.4 2005-09-30 20:25:35 zappo Exp $
 
 ;; This file is part of GNU Emacs.
 

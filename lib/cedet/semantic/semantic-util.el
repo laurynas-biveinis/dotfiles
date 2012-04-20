@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-util.el,v 1.146 2010/04/12 11:09:37 zappo Exp $
+;; X-RCS: $Id: semantic-util.el,v 1.146 2010-04-12 11:09:37 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -298,6 +298,7 @@ If TAG is not specified, use the tag at point."
 		      semantic-dump-parse
 		      semantic-type-relation-separator-character
 		      semantic-command-separation-character
+		      semantic-new-buffer-fcn-was-run
 		      )))
 	  (dolist (V vars)
 	    (semantic-describe-buffer-var-helper V buff)))

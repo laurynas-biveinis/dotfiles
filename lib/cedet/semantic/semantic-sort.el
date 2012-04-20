@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-sort.el,v 1.29 2010/01/07 02:23:15 zappo Exp $
+;; X-RCS: $Id: semantic-sort.el,v 1.29 2010-01-07 02:23:15 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

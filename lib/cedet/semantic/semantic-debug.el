@@ -3,7 +3,7 @@
 ;;; Copyright (C) 2003, 2004, 2005, 2008 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: semantic-debug.el,v 1.19 2010/03/15 13:40:54 xscript Exp $
+;; X-RCS: $Id: semantic-debug.el,v 1.19 2010-03-15 13:40:54 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 

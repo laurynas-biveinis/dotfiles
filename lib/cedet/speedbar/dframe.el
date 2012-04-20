@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: file, tags, tools
-;; X-RCS: $Id: dframe.el,v 1.30 2010/05/21 02:40:57 zappo Exp $
+;; X-RCS: $Id: dframe.el,v 1.30 2010-05-21 02:40:57 zappo Exp $
 
 (defvar dframe-version "1.3"
   "The current version of the dedicated frame library.")

@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cogre-srecode.el,v 1.6 2010/03/06 02:25:43 zappo Exp $
+;; X-RCS: $Id: cogre-srecode.el,v 1.6 2010-03-06 02:25:43 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

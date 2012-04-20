@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: oop, uml
-;; X-RCS: $Id: cogre-uml.el,v 1.31 2010/04/09 01:44:01 zappo Exp $
+;; X-RCS: $Id: cogre-uml.el,v 1.31 2010-04-09 01:44:01 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

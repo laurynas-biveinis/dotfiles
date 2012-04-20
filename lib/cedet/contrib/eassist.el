@@ -21,7 +21,7 @@
 ;; MA 02111-1307 USA
 
 ;; Version: 0.9
-;; CEDET CVS Version: $Id: eassist.el,v 1.7 2010/02/08 23:29:59 zappo Exp $
+;; CEDET CVS Version: $Id: eassist.el,v 1.7 2010-02-08 23:29:59 zappo Exp $
 
 ;; Compatibility: Emacs 22 or 23, CEDET 1.0pre4
 

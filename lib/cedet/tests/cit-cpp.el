@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cit-cpp.el,v 1.13 2010/06/13 01:14:46 zappo Exp $
+;; X-RCS: $Id: cit-cpp.el,v 1.13 2010-06-13 01:14:46 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -239,6 +239,7 @@ Argument MAKE-TYPE is the type of make project to create."
   (cit-compile-and-wait)
 
   ;; Use the local libs version also to make sure it works.
+  (pop-to-buffer "main.cpp")
   (let ((mt ede-object))
     (if (string= make-type "Automake")
 	(progn

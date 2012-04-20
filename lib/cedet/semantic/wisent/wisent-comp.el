@@ -8,7 +8,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 30 January 2002
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-comp.el,v 1.30 2010/04/09 02:08:59 zappo Exp $
+;; X-RCS: $Id: wisent-comp.el,v 1.30 2010-04-09 02:08:59 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -139,8 +139,11 @@ If optional LEFT is non-nil insert spaces on left."
 ;;;; ------------------------
 
 (defconst wisent-BITS-PER-WORD
-  (let ((i 1))
-    (while (not (zerop (lsh 1 i)))
+  (let ((i 1)
+	(do-shift (if (boundp 'most-positive-fixnum)
+		      (lambda (i) (lsh most-positive-fixnum (- i)))
+		    (lambda (i) (lsh 1 i)))))
+    (while (not (zerop (funcall do-shift i)))
       (setq i (1+ i)))
     i))
 
@@ -3500,9 +3503,19 @@ Automatically called by the Emacs Lisp byte compiler as a
   ;; automaton internal data structure.  Then, because the internal
   ;; data structure contains an obarray, convert it to a lisp form so
   ;; it can be byte-compiled.
-  (byte-compile-form (wisent-automaton-lisp-form (eval form))))
+  (byte-compile-form
+   ;; FIXME: we macroexpand here since `byte-compile-form' expects
+   ;; macroexpanded code, but that's just a workaround: for lexical-binding
+   ;; the lisp form should have to pass through closure-conversion and
+   ;; `wisent-byte-compile-grammar' is called much too late for that.
+   ;; Why isn't this `wisent-automaton-lisp-form' performed at
+   ;; macroexpansion time?  --Stef
+   (macroexpand-all
+    (wisent-automaton-lisp-form (eval form)))))
 
-;;;###autoload
+;; FIXME: We shouldn't use a `byte-compile' handler.  Maybe using a hash-table
+;; instead of an obarray would work around the problem that obarrays
+;; aren't printable.  Then (put 'wisent-compile-grammar 'side-effect-free t).
 (put 'wisent-compile-grammar 'byte-compile 'wisent-byte-compile-grammar)
 
 (defun wisent-automaton-lisp-form (automaton)

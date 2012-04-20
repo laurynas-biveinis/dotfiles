@@ -7,7 +7,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 27 Feb 2002
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-awk.wy,v 1.3 2005/09/30 20:22:50 zappo Exp $
+;; X-RCS: $Id: wisent-awk.wy,v 1.3 2005-09-30 20:22:50 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

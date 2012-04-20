@@ -1,9 +1,9 @@
 ;;; semantic-c-by.el --- Generated parser support file
 
-;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2012 Eric M. Ludlam
 
-;; Author: Laurynas Biveinis <laurynas@laurynas-ThinkPad-T410>
-;; Created: 2011-03-21 06:57:24+0200
+;; Author: Eric M. Ludlam <eric@siege-engine.com>
+;; Created: 2012-02-16 21:11:23-0500
 ;; Keywords: syntax
 ;; X-RCS: $Id$
 
@@ -48,6 +48,7 @@
      ("inline" . INLINE)
      ("virtual" . VIRTUAL)
      ("mutable" . MUTABLE)
+     ("explicit" . EXPLICIT)
      ("struct" . STRUCT)
      ("union" . UNION)
      ("enum" . ENUM)
@@ -130,6 +131,7 @@
      ("enum" summary "Enumeration Type Declaration: enum [name] { ... };")
      ("union" summary "Union Type Declaration: union [name] { ... };")
      ("struct" summary "Structure Type Declaration: struct [name] { ... };")
+     ("explicit" summary "Forbids implicit type conversion: explicit <constructor>")
      ("mutable" summary "Member Declaration Modifier: mutable <type> <name> ...")
      ("virtual" summary "Method Modifier: virtual <type> <name>(...) ...")
      ("inline" summary "Function Modifier: inline <return  type> <name>(...) {...};")
@@ -188,11 +190,11 @@
 
 (defconst semantic-c-by--parse-table
   `(
-    (bovine-toplevel 
+    (bovine-toplevel
      (declaration)
      ) ;; end bovine-toplevel
 
-    (bovine-inner-scope 
+    (bovine-inner-scope
      (codeblock)
      ) ;; end bovine-inner-scope
 
@@ -492,6 +494,12 @@
       )
      (template)
      (using)
+     (spp-include
+      ,(semantic-lambda
+	(semantic-tag
+	 (nth 0 vals)
+	 'include :inside-ns t))
+      )
      ( ;;EMPTY
       )
      ) ;; end namespacesubparts
@@ -1992,6 +2000,15 @@
 	 (concat
 	  "*"
 	  (nth 2 vals))))
+      )
+     (open-paren
+      "("
+      symbol
+      close-paren
+      ")"
+      ,(semantic-lambda
+	(list
+	 (nth 1 vals)))
       )
      ) ;; end function-pointer
 

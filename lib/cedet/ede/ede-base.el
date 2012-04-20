@@ -1,9 +1,9 @@
 ;;; ede-base.el --- Baseclasses for EDE.
 ;;
-;; Copyright (C) 2010 Eric M. Ludlam
+;; Copyright (C) 2010, 2012 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-base.el,v 1.5 2010/07/31 01:13:08 zappo Exp $
+;; X-RCS: $Id: ede-base.el,v 1.5 2010-07-31 01:13:08 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -156,7 +156,7 @@ and querying them will cause the actual project to get loaded.")
 	    :documentation "Sub projects controlled by this project.
 For Automake based projects, each directory is treated as a project.")
    (targets :initarg :targets
-	    :type list
+	    :type ede-target-list
 	    :custom (repeat (object :objectcreatefcn ede-new-target-custom))
 	    :label "Local Targets"
 	    :group (targets)
@@ -283,11 +283,7 @@ All specific project types must derive from this project."
 		     (list 'pf
 			   (list 'if (list 'obj-of-class-p
 					   obj 'ede-target)
-				 ;; @todo -I think I can change
-				 ;; this to not need ede-load-project-file
-				 ;; but I'm not sure how to test well.
-				 (list 'ede-load-project-file
-				       (list 'oref obj 'path))
+				 (list 'ede-target-parent obj)
 				 obj))
 		     '(dbka (get-file-buffer (oref pf file))))
 	      '(if (not dbka) (find-file (oref pf file))

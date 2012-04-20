@@ -5,7 +5,7 @@
 ;; Author: Eric M. Ludlam <zappo@gnu.ai.mit.edu>
 ;; Version: 0.3
 ;; Keywords: file, tags, tools
-;; X-RCS: $Id: sb-info.el,v 1.21 2009/03/12 22:48:07 zappo Exp $
+;; X-RCS: $Id: sb-info.el,v 1.21 2009-03-12 22:48:07 zappo Exp $
 ;;
 ;; This file is patch of GNU Emacs.
 ;;

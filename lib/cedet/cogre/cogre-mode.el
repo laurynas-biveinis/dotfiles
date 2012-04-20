@@ -1,6 +1,6 @@
 ;;; cogre-mode.el --- Graph editing mode
 
-;;; Copyright (C) 2001, 2002, 2003, 2007, 2009, 2010 Eric M. Ludlam
+;;; Copyright (C) 2001, 2002, 2003, 2007, 2009, 2010, 2012 Eric M. Ludlam
 
 ;; This file is not part of GNU Emacs.
 
@@ -313,7 +313,8 @@ If it is already drawing a graph, then don't convert."
 	(let ((cogre-loading-from-file t))
 	  ;; Convert this file into a graph.
 	  (condition-case nil
-	      (setq cogre-graph (eieio-persistent-read (buffer-file-name)))
+	      (setq cogre-graph (eieio-persistent-read (buffer-file-name)
+						       cogre-base-graph t))
 	    (error (fundamental-mode)
 		   (error "Not a COGRE graph file")))
 	  (oset cogre-graph file (buffer-file-name))

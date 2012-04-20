@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008, 2009 Eric Ludlam
 
 ;; Author: Eric Ludlam <eludlam@mathworks.com>
-;; X-RCS: $Id: semantic-symref-global.el,v 1.7 2009/02/27 05:00:20 zappo Exp $
+;; X-RCS: $Id: semantic-symref-global.el,v 1.7 2009-02-27 05:00:20 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

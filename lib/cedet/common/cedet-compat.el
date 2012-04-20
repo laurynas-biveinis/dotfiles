@@ -6,7 +6,7 @@
 ;; Author: David Ponce <david@dponce.com>
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Keywords: compatibility
-;; X-RCS: $Id: cedet-compat.el,v 1.10 2010/04/09 01:12:18 zappo Exp $
+;; X-RCS: $Id: cedet-compat.el,v 1.10 2010-04-09 01:12:18 zappo Exp $
 
 ;; This file is not part of Emacs
 

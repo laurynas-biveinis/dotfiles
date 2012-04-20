@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cedet-idutils.el,v 1.7 2010/07/24 23:59:09 zappo Exp $
+;; X-RCS: $Id: cedet-idutils.el,v 1.7 2010-07-24 23:59:09 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -180,8 +180,9 @@ return nil."
 	  nil)
       (with-current-buffer b
 	(goto-char (point-min))
-	(re-search-forward "fnid - \\([0-9.]+\\)" nil t)
-	(setq rev (match-string 1))
+	(if (re-search-forward "fnid - \\([0-9.]+\\)" nil t)
+	    (setq rev (match-string 1))
+	  (setq rev "0"))
 	(if (inversion-check-version rev nil cedet-idutils-min-version)
 	    (if noerror
 		nil

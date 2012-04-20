@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009, 2010 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
-;; X-RCS: $Id: eieio-test-mro.el,v 1.1 2010/03/03 01:34:55 scymtym Exp $
+;; X-RCS: $Id: eieio-test-mro.el,v 1.1 2010-03-03 01:34:55 scymtym Exp $
 ;; Keywords: oop, lisp, tools
 ;;
 ;; This program is free software; you can redistribute it and/or modify

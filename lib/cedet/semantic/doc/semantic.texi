@@ -89,8 +89,8 @@ Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
 
 @semantic{} is a program for Emacs which includes, at its core, a
 lexer, and two compiler compilers (bovinator and wisent).  Additional
-tools include, support for imenu, speedbar, whichfunc, eldoc,
-hippie-expand, and several other build in tools.
+tools include, support for imenu, speedbar, which-func, eldoc,
+hippie-expand, and several other built-in tools.
 
 The core utility is the parser infrastructure which allows different
 types of parsers to be linked into the system.  Two build in parsers

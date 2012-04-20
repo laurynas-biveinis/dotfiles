@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-locate.el,v 1.14 2010/08/15 17:03:29 zappo Exp $
+;; X-RCS: $Id: ede-locate.el,v 1.14 2010-08-15 17:03:29 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

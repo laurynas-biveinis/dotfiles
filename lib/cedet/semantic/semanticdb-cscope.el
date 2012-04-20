@@ -1,9 +1,9 @@
 ;;; semanticdb-cscope.el --- Use CSCOPE databases w/ Semantic
 
-;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010, 2011 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semanticdb-cscope.el,v 1.6 2010/07/25 00:05:15 zappo Exp $
+;; X-RCS: $Id: semanticdb-cscope.el,v 1.6 2010-07-25 00:05:15 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -36,18 +36,26 @@
 
 ;;; Code:
 ;;;###autoload
-(defun semanticdb-enable-cscope-databases ()
+(defun semanticdb-enable-cscope-databases (&optional noerror)
   "Enable the use of the CScope back end for all files in C/C++.
 This will add an instance of a CScope database to each buffer in a
-CScope supported hierarchy."
-  ;; First, make sure the version is ok.
-  (cedet-cscope-version-check)
+CScope supported hierarchy.
 
-  (dolist (mode '(c-mode c++-mode))
-    (let ((ih (mode-local-value mode 'semantic-init-mode-hook)))
-      (eval `(setq-mode-local
-	      ,mode semantic-init-mode-hook
-	      (cons 'semanticdb-enable-cscope-hook ih))))))
+Two sanity checks are performed to assure (a) that cscope program exists
+and (b) that the cscope program version is compatibility with the database
+version.  If optional NOERROR is nil, then an error may be signalled on version
+mismatch.  If NOERROR is not nil, then no error will be signlled.  Instead
+return value will indicate success or failure with non-nil or nil respective
+values."
+  ;; First, make sure the version is ok.
+  (if (not (cedet-cscope-version-check noerror))
+      nil
+    (dolist (mode '(c-mode c++-mode))
+      (let ((ih (mode-local-value mode 'semantic-init-mode-hook)))
+        (eval `(setq-mode-local
+                ,mode semantic-init-mode-hook
+                (cons 'semanticdb-enable-cscope-hook ih)))))
+    t))
 
 (defun semanticdb-enable-cscope-hook ()
   "Add support for CScope in the current buffer via `semantic-init-hook'."
@@ -92,6 +100,11 @@ Equivalent modes are specified by the `semantic-equivalent-major-modes'
 local variable."
   ;; @todo - hack alert!
   t)
+
+(defmethod object-print ((obj semanticdb-table-cscope) &rest strings)
+  "Pretty printer extension for `semanticdb-table-cscope'.
+Adds the number of tags in this file to the object print name."
+  (apply 'call-next-method obj (cons " (proxy)" strings)))
 
 ;;; Filename based methods
 ;;

@@ -1,9 +1,9 @@
 ;;; ede-cpp-root.el --- A simple way to wrap a C++ project with a single root
 
-;; Copyright (C) 2007, 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-cpp-root.el,v 1.24 2010/08/19 23:29:09 zappo Exp $
+;; X-RCS: $Id: ede-cpp-root.el,v 1.24 2010-08-19 23:29:09 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -136,7 +136,8 @@
 ;; 	      :proj-file 'MY-FILE-FOR-DIR
 ;;            :proj-root 'MY-ROOT-FCN
 ;; 	      :load-type 'MY-LOAD
-;; 	      :class-sym 'ede-cpp-root)
+;; 	      :class-sym 'ede-cpp-root-project
+;;	      :safe-p t)
 ;; 	     t)
 ;; 
 ;;; TODO
@@ -234,17 +235,22 @@ ROOTPROJ is nil, since there is only one project."
   ;; Snoop through our master list.
   (ede-cpp-root-file-existing dir))
 
-;;;###autoload
-(add-to-list 'ede-project-class-files
-	     (ede-project-autoload "cpp-root"
-	      :name "CPP ROOT"
-	      :file 'ede-cpp-root
-	      :proj-file 'ede-cpp-root-project-file-for-dir
-	      :proj-root 'ede-cpp-root-project-root
-	      :load-type 'ede-cpp-root-load
-	      :class-sym 'ede-cpp-root
-	      :new-p nil)
-	     t)
+;; No autoload - unless a user creates one, there will never be
+;; a match.
+(ede-add-project-autoload
+ (ede-project-autoload "cpp-root"
+		       :name "CPP ROOT"
+		       :file 'ede-cpp-root
+		       :proj-file 'ede-cpp-root-project-file-for-dir
+		       :proj-root 'ede-cpp-root-project-root
+		       :load-type 'ede-cpp-root-load
+		       :class-sym 'ede-cpp-root
+		       :new-p nil
+		       :safe-p t)
+ ;; When a user creates one of these, it should override any other project
+ ;; type that might happen to be in this directory, so force this to the
+ ;; very front.
+ 'unique)
 
 ;;; CLASSES
 ;;
@@ -437,6 +443,7 @@ This knows details about or source tree."
 	    ;; Else, do the usual.
 	    (setq ans (call-next-method)))
 	  )))
+    ;; TODO - does this call-next-method happen twice.  Is that bad??  Why is it here?
     (or ans (call-next-method))))
 
 (defmethod ede-project-root ((this ede-cpp-root-project))
@@ -497,16 +504,16 @@ Also set up the lexical preprocessor map."
 	      (table (when expfile
 		       (semanticdb-file-table-object expfile)))
 	      )
-	 (when (not table)
-	   (message "Cannot find file %s in project." F))
-	 (when (and table (semanticdb-needs-refresh-p table))
-	   (semanticdb-refresh-table table)
+	 (if (not table)
+	     (message "Cannot find file %s in project." F)
+	   (when (semanticdb-needs-refresh-p table)
+	     (semanticdb-refresh-table table))
 	   (setq spp (append spp (oref table lexical-table))))))
      (oref this spp-files))
     spp))
 
 (defmethod ede-system-include-path ((this ede-cpp-root-target))
-  "Get the system include path used by project THIS."
+  "Get the system include path used by target THIS."
   (ede-system-include-path (ede-target-parent this)))
   
 (defmethod ede-preprocessor-map ((this ede-cpp-root-target))

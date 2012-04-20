@@ -7,7 +7,7 @@
    (semantic-ede-proj-target-grammar "by"
     :name "by"
     :path ""
-    :source '("c.by" "make.by" "scheme.by" "erlang.by")
+    :source '("c.by" "make.by" "scheme.by" "erlang.by" "f90.by")
     )
    (ede-proj-target-elisp "bovinator"
     :name "bovinator"
@@ -23,7 +23,7 @@
    (ede-proj-target-elisp "languages"
     :name "languages"
     :path ""
-    :source '("semantic-c.el" "semantic-el.el" "semantic-make.el" "semantic-scm.el" "semantic-java.el" "semantic-erlang.el" "semantic-gcc.el")
+    :source '("semantic-c.el" "semantic-el.el" "semantic-make.el" "semantic-scm.el" "semantic-java.el" "semantic-erlang.el" "semantic-gcc.el" "semantic-f90.el" "semantic-clang.el")
     :compiler 'ede-emacs-preload-compiler
     :pre-load-packages '("cedet-compat")
     )

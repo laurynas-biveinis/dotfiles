@@ -197,13 +197,13 @@ overload functions as well.
 @node Semantic Overload Mechanism
 @section Semantic Overload Mechanism
 
-one of @semantic{}'s goals is to provide a framework for supporting a
+One of @semantic{}'s goals is to provide a framework for supporting a
 wide range of languages.
-writing parsers for some languages are very simple, e.g.,
+Writing parsers for some languages are very simple, e.g.,
 any dialect of lisp family such as emacs-lisp and scheme.
-parsers for many languages can be written in context free grammars
+Parsers for many languages can be written in context free grammars
 such as c, java, python, etc.
-on the other hand, it is impossible to specify context free grammars
+On the other hand, it is impossible to specify context free grammars
 for other languages such as texinfo.
 Yet @semantic{} already provides parsers for all these languages.
 
@@ -227,14 +227,14 @@ Many built-in @semantic{} functions are declared as being
 @i{over-loadable}, i.e., functions that do reasonable things for most
 languages, but can be customized to suit the particular needs of a
 given language.  All @i{over-loadable} functions then can easily be
-@i{over-ridden} if necessary.  The rest of this section provides
+@i{overridden} if necessary.  The rest of this section provides
 details on this @i{overloading mechanism}.
 
 Over-loadable functions are created by defining functions with the
 @code{define-overloadable-function} macro rather than the usual
 @code{defun}.  @code{define-overloadable-function} is a thin wrapper
 around @code{defun} that sets up the function so that it can be
-overloaded.  An @i{over-loadable} function then can be @i{over-ridden}
+overloaded.  An @i{over-loadable} function then can be @i{overridden}
 in one of two ways: @code{define-mode-overload-implementation} and
 @code{semantic-install-function-overrides}.
 
@@ -283,12 +283,12 @@ An example from @file{semantic-texi.el} file is shown below:
 The above function is from the texinfo parser support.
 
 The call to @code{semantic-install-function-overrides} above indicates
-that @code{semantic-texi-parse-region} is to over-ride the default
+that @code{semantic-texi-parse-region} is to override the default
 implementation of @code{semantic-parse-region}.  Note the use of
 @code{parse-region} symbol which is @code{semantic-parse-region}
 without the leading @i{semantic-} prefix.
 
-Another way to over-ride a built-in @semantic{} function is via
+Another way to override a built-in @semantic{} function is via
 @code{define-mode-overload-implementation}.
 An example from @file{wisent-python.el} file is shown below.
 
@@ -303,7 +303,7 @@ An example from @file{wisent-python.el} file is shown below.
      start end nonterminal depth returnonerror)))
 @end example
 
-The above declaration over-rides @code{semantic-parse-region} so that
+The above declaration overrides @code{semantic-parse-region} so that
 for buffers whose major mode is @code{python-mode}, the code specified
 above is executed rather than the default implementation.
 
@@ -825,7 +825,7 @@ Within the bounds of @var{CONDITION} and @var{FORMS}, the use of backquote
 can be used to evaluate expressions at compile time.
 While forms are running, the following variables will be locally bound:
   @code{semantic-lex-analysis-bounds} - The bounds of the current analysis.
-                  of the form (@var{START} . @var{END})
+                  Of the form (@var{START} . @var{END})
   @code{semantic-lex-maximum-depth} - The maximum depth of semantic-list
                   for the current analysis.
   @code{semantic-lex-current-depth} - The current depth of @code{semantic-list} that has
@@ -1381,7 +1381,7 @@ Parse the current buffer and run in debug mode.
 @end deffn
 
 Once the parser is activated in this mode, the current tag cache is
-flushed, and the parser started.  At each stage in the LALR parser,
+flushed, and the parser started.  At each stage in the LL parser,
 the current rule, and match step is highlighted in your parser source
 buffer.  In a second window, the text being parsed is shown, and the
 lexical token found is highlighted.  A clue of the current stack of

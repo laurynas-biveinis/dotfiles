@@ -1,9 +1,9 @@
 ;;; ede-files.el --- Associate projects with files and directories.
 
-;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010, 2011, 2012 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-files.el,v 1.25 2010/08/15 17:05:50 zappo Exp $
+;; X-RCS: $Id: ede-files.el,v 1.25 2010-08-15 17:05:50 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -55,7 +55,8 @@ the current EDE project."
   "Flush the file locate hash for the current project."
   (interactive)
   (let* ((loc (ede-get-locator-object (ede-current-project))))
-    (ede-locate-flush-hash loc)))
+    (when loc
+      (ede-locate-flush-hash loc))))
 
 ;;; Placeholders for ROOT directory scanning on base objects
 ;;
@@ -102,7 +103,7 @@ of the anchor file for the project."
 	 (when (not ans)
 	   (if (equal (ede--project-inode SP) inode)
 	       (setq ans SP)
-	     (ede-find-subproject-for-directory SP dir)))))
+	     (setq ans (ede-find-subproject-for-directory SP dir))))))
       ans)))
 
 ;;; DIRECTORY IN OPEN PROJECT
@@ -214,6 +215,18 @@ Does not check subprojects."
 				    :test 'equal)
   "A hash of directory names and associated EDE objects.")
 
+(defun ede-flush-directory-hash ()
+  "Flush the project directory hash.
+Do this only when developing new projects that are incorrectly putting
+'nomatch tokens into the hash."
+  (interactive)
+  (setq ede-project-directory-hash (make-hash-table :test 'equal))
+  ;; Also slush the current project's locator hash.
+  (let ((loc (ede-get-locator-object this)))
+    (when loc
+      (ede-locate-flush-hash loc)))
+  )
+
 (defun ede-project-directory-remove-hash (dir)
   "Reset the directory hash for DIR.
 Do this whenever a new project is created, as opposed to loaded."
@@ -244,7 +257,7 @@ Do this whenever a new project is created, as opposed to loaded."
   "Return a project description object if DIR has a project.
 Optional argument FORCE means to ignore a hash-hit of 'nomatch.
 This depends on an up to date `ede-project-class-files' variable.
-Any directory that contains the file .ede-ignore will allways
+Any directory that contains the file .ede-ignore will always
 return nil."
   (when (not (file-exists-p (expand-file-name ".ede-ignore" dir)))
     (let* ((dirtest (expand-file-name dir))
@@ -381,10 +394,11 @@ Get it from the toplevel project.  If it doesn't have one, make one."
   ;; Make sure we have a location object available for
   ;; caching values, and for locating things more robustly.
   (let ((top (ede-toplevel proj)))
-    (when (not (slot-boundp top 'locate-obj))
-      (ede-enable-locate-on-project top))
-    (oref top locate-obj)
-    ))
+    (when top
+      (when (not (slot-boundp top 'locate-obj))
+	(ede-enable-locate-on-project top))
+      (oref top locate-obj)
+      )))
 
 (defmethod ede-expand-filename ((this ede-project) filename &optional force)
   "Return a fully qualified file name based on project THIS.

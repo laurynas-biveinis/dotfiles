@@ -6,7 +6,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 11 Sep 2001
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-calc.el,v 1.21 2010/04/09 02:08:09 zappo Exp $
+;; X-RCS: $Id: wisent-calc.el,v 1.21 2010-04-09 02:08:09 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

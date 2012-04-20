@@ -1,9 +1,9 @@
 ;;; semantic-ia-utest.el --- Analyzer unit tests
 
-;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010, 2011 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-ia-utest.el,v 1.33 2010/08/05 03:03:39 zappo Exp $
+;; X-RCS: $Id: semantic-ia-utest.el,v 1.33 2010-08-05 03:03:39 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -25,9 +25,10 @@
 ;; Use marked-up files in the test directory and run the analyzer
 ;; on them.  Make sure the answers are correct.
 ;;
-;; Each file has cursor keys in them of the form:
+;; Each file has cursor keys in them of the form of special comments:
 ;;   // -#- ("ans1" "ans2" )
-;; where # is 1, 2, 3, etc, and some sort of answer list.
+;; where # is 1, 2, 3, etc, and some sort of answer list (you have to
+;; replace '//' with the `comment-start' for the used language).
 
 ;;; Code:
 (require 'cedet-utests)
@@ -50,8 +51,19 @@
     "tests/testsppcomplete.c"
     "tests/testvarnames.c"
     "tests/testjavacomp.java"
+    "tests/testf90.f90"
     )
   "List of files with analyzer completion test points.")
+
+(defvar semantic-ia-utest-file-optional-list
+  '(
+    ;("tests/testsysimport.java" . cedet-java-version-check)
+    )
+  "List of files with analyzer completion test points that are optionally run.
+Each test file has a corresponding check function.  Each check function
+takes an optional argument NOERROR which will be set to t.
+This allows the standard version checking functions in CEDET helpers to
+be used to test if an external tool is available.")
 
 (defvar semantic-ia-utest-error-log-list nil
   "List of errors occuring during a run.")
@@ -181,8 +193,10 @@ If the error occurs w/ a C or C++ file, rethrow the error."
 	 )
     ;; Keep looking for test points until we run out.
     (while (save-excursion
-	     (setq regex-p (concat "//\\s-*-" (number-to-string idx) "-" )
-		   regex-a (concat "//\\s-*#" (number-to-string idx) "#" ))
+	     (setq regex-p (concat comment-start-skip "\\s-*-"
+				   (number-to-string idx) "-" )
+		   regex-a (concat comment-start-skip "\\s-*#"
+				   (number-to-string idx) "#" ))
 	     (goto-char (point-min))
 	     (save-match-data
 	       (when (re-search-forward regex-p nil t)
@@ -256,7 +270,8 @@ If the error occurs w/ a C or C++ file, rethrow the error."
 	 )
     ;; Keep looking for test points until we run out.
     (while (save-excursion
-	     (setq regex-p (concat "//\\s-*\\^" (number-to-string idx) "^" )
+	     (setq regex-p (concat comment-start-skip
+				   "\\s-*\\^" (number-to-string idx) "^" )
 		   )
 	     (goto-char (point-min))
 	     (save-match-data
@@ -377,7 +392,8 @@ If the error occurs w/ a C or C++ file, rethrow the error."
 	 )
     ;; Keep looking for test points until we run out.
     (while (save-excursion
-	     (setq regex-p (concat "//\\s-*\\%" (number-to-string idx) "%" )
+	     (setq regex-p (concat comment-start-skip "\\s-*\\%"
+				   (number-to-string idx) "%" )
 		   )
 	     (goto-char (point-min))
 	     (save-match-data
@@ -475,13 +491,14 @@ If the error occurs w/ a C or C++ file, rethrow the error."
 	 )
     ;; Keep looking for test points until we run out.
     (while (save-excursion
-	     (setq regex-p (concat "//\\s-*@"
+	     (setq regex-p (concat comment-start-skip "\\s-*@"
 				   (number-to-string idx)
-				   "@\\s-+\\(\\w+\\)" ))
+				   "@\\s-+\\w+" ))
 	     (goto-char (point-min))
 	     (save-match-data
 	       (when (re-search-forward regex-p nil t)
-		 (goto-char (match-beginning 1))
+		 (goto-char (match-end 0))
+		 (skip-syntax-backward "w")
 		 (setq desired (read (buffer-substring (point) (point-at-eol))))
 		 (setq start (match-beginning 0))
 		 (goto-char start)

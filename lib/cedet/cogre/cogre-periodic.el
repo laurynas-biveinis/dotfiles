@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cogre-periodic.el,v 1.7 2009/04/07 01:45:09 zappo Exp $
+;; X-RCS: $Id: cogre-periodic.el,v 1.7 2009-04-07 01:45:09 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: picture
-;; X-RCS: $Id: picture-hack.el,v 1.14 2009/03/31 09:28:02 zappo Exp $
+;; X-RCS: $Id: picture-hack.el,v 1.14 2009-03-31 09:28:02 zappo Exp $
 
 ;; Semantic is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

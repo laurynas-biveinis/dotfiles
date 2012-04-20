@@ -3,7 +3,7 @@
 ;; Copyright (C) 2005, 2007, 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: srecode-template.srt,v 1.9 2009/01/04 14:27:08 zappo Exp $
+;; X-RCS: $Id: srecode-template.srt,v 1.9 2009-01-04 14:27:08 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -112,7 +112,7 @@ bind "f"
 prompt NAME "Name of new variable: "
 
 template variable :blank
-"Inert a variable."
+"Insert a variable."
 ----
 set $?NAME$ "$^$"
 ----
@@ -140,7 +140,7 @@ set application "$^$"
 template context :blank
 "Insert a context statement."
 ----
-context $NAME$
+context $?NAME$
 ----
 bind "c"
 

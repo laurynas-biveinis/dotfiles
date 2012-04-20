@@ -1,7 +1,8 @@
 ;; Object EDE
-;; EDE project file.
+;; EDE Project Files are auto generated: Do Not Edit
 (ede-proj-project "EDE"
   :name "EDE"
+  :version "1.1"
   :file "Project.ede"
   :targets (list 
    (ede-proj-target-elisp-autoloads "autoloads"
@@ -19,7 +20,7 @@
    (ede-proj-target-elisp "ede"
     :name "ede"
     :path ""
-    :source '("ede.el" "ede-auto.el" "ede-base.el" "ede-custom.el" "ede-dired.el" "ede-source.el" "ede-util.el" "ede-system.el" "ede-speedbar.el" "ede-srecode.el" "ede-files.el" "ede-locate.el" "ede-make.el" "ede-shell.el")
+    :source '("ede.el" "ede-auto.el" "ede-base.el" "ede-custom.el" "ede-dired.el" "ede-source.el" "ede-util.el" "ede-system.el" "ede-speedbar.el" "ede-srecode.el" "ede-files.el" "ede-locate.el" "ede-make.el" "ede-shell.el" "ede-android.el" "ede-m3.el" "ede-arduino.el")
     :versionsource '("ede.el")
     :compiler 'ede-emacs-preload-compiler
     :aux-packages '("eieio" "speedbar" "cedet-files" "srecode")
@@ -34,7 +35,7 @@
    (ede-proj-target-elisp "projects"
     :name "projects"
     :path ""
-    :source '("project-am.el" "ede-simple.el" "ede-cpp-root.el" "ede-emacs.el" "ede-linux.el" "ede-generic.el")
+    :source '("project-am.el" "ede-cpp-root.el" "ede-emacs.el" "ede-linux.el" "ede-generic.el")
     :compiler 'ede-emacs-preload-compiler
     :aux-packages '("eieio" "cedet-files" "semantic" "semantic-el")
     )

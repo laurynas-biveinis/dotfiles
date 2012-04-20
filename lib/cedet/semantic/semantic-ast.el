@@ -6,7 +6,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 25 June 2003
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-ast.el,v 1.2 2005/09/30 20:18:47 zappo Exp $
+;; X-RCS: $Id: semantic-ast.el,v 1.2 2005-09-30 20:18:47 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

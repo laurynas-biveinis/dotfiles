@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-decorate.el,v 1.19 2010/01/07 02:22:53 zappo Exp $
+;; X-RCS: $Id: semantic-decorate.el,v 1.19 2010-01-07 02:22:53 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

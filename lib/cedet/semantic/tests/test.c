@@ -1,7 +1,7 @@
 /* Test file for C language.
  * Attempt to include as many aspects of the C language as possible.
  *
- * $Id: test.c,v 1.12 2008/05/17 20:16:03 zappo Exp $
+ * $Id: test.c,v 1.12 2008-05-17 20:16:03 zappo Exp $
  *
  */
 /* types of include files */

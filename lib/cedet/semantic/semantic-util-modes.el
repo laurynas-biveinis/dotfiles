@@ -6,7 +6,7 @@
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Author: David Ponce <david@dponce.com>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-util-modes.el,v 1.78 2010/04/09 02:24:54 zappo Exp $
+;; X-RCS: $Id: semantic-util-modes.el,v 1.78 2010-04-09 02:24:54 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

@@ -1,11 +1,11 @@
 ;;; project-am.el --- A project management scheme based on automake files.
 
-;;;  Copyright (C) 1998, 1999, 2000, 2003, 2005, 2007, 2008, 2009, 2010  Eric M. Ludlam
+;;;  Copyright (C) 1998, 1999, 2000, 2003, 2005, 2007, 2008, 2009, 2010, 2012  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Version: 0.0.3
 ;; Keywords: project, make
-;; RCS: $Id: project-am.el,v 1.57 2010/07/18 15:00:04 safanaj Exp $
+;; RCS: $Id: project-am.el,v 1.57 2010-07-18 15:00:04 safanaj Exp $
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -219,7 +219,7 @@ OT is the object target.  DIR is the directory to start in."
 							 (oref amf targets))
 				      nil t))))
 	 ;; The input target might be new.  See if we can find it.
-	 (amf (ede-load-project-file (oref ot path)))
+	 (amf (ede-target-parent ot))
 	 (ot (object-assoc target 'name (oref amf targets)))
 	 (ofn (file-name-nondirectory (buffer-file-name))))
     (if (not ot)

@@ -13,7 +13,9 @@ namespace Name1 {
       int get();
 
     private:
-      void publishStuff(int a, int b);
+      void publishStuff(char /* a */, char /* b */);
+
+      void publishStuff(int q, int r); // Purposely different names.
 
       void sendStuff(int a, int b);
     

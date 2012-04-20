@@ -1,12 +1,13 @@
 ;;; wisent-python.wy -- LALR grammar for Python
 ;;
-;; Copyright (C) 2002, 2003, 2004, 2007 Richard Kim
+;; Copyright (C) 2002, 2003, 2004, 2007, 2012 Richard Kim
+;; Copyright (C) 2001-2010 Python Software Foundation
 ;;
 ;; Author: Richard Kim <ryk@dspwiz.com>
 ;; Maintainer: Richard Kim <ryk@dspwiz.com>
 ;; Created: June 2002
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-python.wy,v 1.39 2010/03/26 22:18:06 xscript Exp $
+;; X-RCS: $Id: wisent-python.wy,v 1.39 2010-03-26 22:18:06 xscript Exp $
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -28,7 +29,58 @@
 ;;; Commentary:
 ;;
 ;; This is an LALR python parser that follows the official python
-;; grammar closely with very few exceptions.
+;; grammar closely with very few exceptions.  The Python grammar is
+;; used under the following license:
+;;
+;; PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
+;; --------------------------------------------
+;; 1. This LICENSE AGREEMENT is between the Python Software Foundation
+;; ("PSF"), and the Individual or Organization ("Licensee") accessing
+;; and otherwise using this software ("Python") in source or binary
+;; form and its associated documentation.
+;;
+;; 2. Subject to the terms and conditions of this License Agreement,
+;; PSF hereby grants Licensee a nonexclusive, royalty-free, world-wide
+;; license to reproduce, analyze, test, perform and/or display
+;; publicly, prepare derivative works, distribute, and otherwise use
+;; Python alone or in any derivative version, provided, however, that
+;; PSF's License Agreement and PSF's notice of copyright, i.e.,
+;; "Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008,
+;; 2009, 2010 Python Software Foundation; All Rights Reserved" are
+;; retained in Python alone or in any derivative version prepared by
+;; Licensee.
+;;
+;; 3. In the event Licensee prepares a derivative work that is based
+;; on or incorporates Python or any part thereof, and wants to make
+;; the derivative work available to others as provided herein, then
+;; Licensee hereby agrees to include in any such work a brief summary
+;; of the changes made to Python.
+;;
+;; 4. PSF is making Python available to Licensee on an "AS IS"
+;; basis.  PSF MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+;; IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, PSF MAKES NO AND
+;; DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+;; FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF PYTHON WILL NOT
+;; INFRINGE ANY THIRD PARTY RIGHTS.
+;;
+;; 5. PSF SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF PYTHON
+;; FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS A
+;; RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING PYTHON, OR
+;; ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
+;;
+;; 6. This License Agreement will automatically terminate upon a
+;; material breach of its terms and conditions.
+;;
+;; 7. Nothing in this License Agreement shall be deemed to create any
+;; relationship of agency, partnership, or joint venture between PSF
+;; and Licensee.  This License Agreement does not grant permission to
+;; use PSF trademarks or trade name in a trademark sense to endorse or
+;; promote products or services of Licensee, or any third party.
+;;
+;; 8. By copying, installing or otherwise using Python, Licensee
+;; agrees to be bound by the terms and conditions of this License
+;; Agreement.
+
 ;;
 ;;; To do:
 ;;
@@ -124,6 +176,7 @@
 %token <punctuation> COMMA 	","
 %token <punctuation> ASSIGN 	"="
 %token <punctuation> BACKQUOTE	"`"
+%token <punctuation> AT         "@"
 
 
 ;; -----------------
@@ -257,6 +310,10 @@
 %keyword WHILE	     "while"
 %put     WHILE summary
 "Start a 'while' loop"
+
+%keyword WITH        "with"
+%put     WITH summary
+"Start statement with an associated context object"
 
 %keyword YIELD	     "yield"
 %put     YIELD summary
@@ -496,8 +553,10 @@ import_stmt
 
 ;; dotted_as_name (',' dotted_as_name)*
 dotted_as_name_list
-  : dotted_as_name
-  | dotted_as_name_list COMMA dotted_as_name
+  : dotted_as_name_list COMMA dotted_as_name
+    (cons $3 $1)
+  | dotted_as_name
+    (list $1)
   ;
 
 ;; ('*' | import_as_name (',' import_as_name)*)
@@ -600,6 +659,7 @@ compound_stmt
   | while_stmt
   | for_stmt
   | try_stmt
+  | with_stmt
   | funcdef
   | class_declaration
   ;
@@ -707,13 +767,46 @@ zero_one_or_two_test
   ;
 
 ;;;============================================================================
+;;@@ with_stmt
+;;;============================================================================
+
+;; with_stmt: 'with' test [ with_var ] ':' suite
+with_stmt
+  : WITH test COLON suite
+    (CODE-TAG $1 nil)
+  | WITH test with_var COLON suite
+    (CODE-TAG $1 nil) ;; TODO capture variable
+  ;
+
+with_var
+  : AS expr
+    () ;; TODO capture
+  ;
+
+;;;============================================================================
 ;;;@@ funcdef
 ;;;============================================================================
 
-;; funcdef: 'def' NAME parameters ':' suite
+decorator
+  : AT dotted_name varargslist_opt NEWLINE
+    (FUNCTION-TAG $2 "decorator" $3)
+  ;
+
+decorators
+  : decorator
+    (list $1)
+  | decorator decorators
+    (cons $1 $2)
+  ;
+
+;; funcdef: [decorators] 'def' NAME parameters ':' suite
 funcdef
   : DEF NAME function_parameter_list COLON suite
-    (FUNCTION-TAG $2 nil $3)
+    (wisent-python-reconstitute-function-tag
+     (FUNCTION-TAG $2 nil $3) $5)
+  | decorators DEF NAME function_parameter_list COLON suite
+    (wisent-python-reconstitute-function-tag
+     (FUNCTION-TAG $3 nil $4 :decorators $1) $6)
   ;
 
 function_parameter_list
@@ -749,10 +842,11 @@ function_parameter
 ;; classdef: 'class' NAME ['(' testlist ')'] ':' suite
 class_declaration
   : CLASS NAME paren_class_list_opt COLON suite
-    (TYPE-TAG $2 $1             ;; Name "class"
-              $5                ;; Members
-              (cons $3 nil)     ;; (SUPERCLASSES . INTERFACES)
-              )
+    (wisent-python-reconstitute-class-tag
+     (TYPE-TAG $2 $1             ;; Name "class"
+               $5                ;; Members
+               (cons $3 nil)     ;; (SUPERCLASSES . INTERFACES)
+               ))
   ;
 
 ;; ['(' testlist ')']

@@ -1,9 +1,9 @@
 ;;; cit-load.el --- Configuration when running the integration tests.
 
-;; Copyright (C) 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2012 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cit-load.el,v 1.5 2009/10/18 16:15:59 zappo Exp $
+;; X-RCS: $Id: cit-load.el,v 1.5 2009-10-18 16:15:59 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -51,6 +51,9 @@
 ;; Disabling the srecoder map, we won't load a pre-existing one
 ;; and will be forced to bootstrap a new one.
 (setq srecode-map-save-file nil)
+
+;; Disable asking lots of questions while the tests are running.
+(setq ede-project-directories t)
 
 (require 'cedet-integ-test)
 

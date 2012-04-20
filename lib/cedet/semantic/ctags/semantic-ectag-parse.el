@@ -1,9 +1,9 @@
 ;;; semantic-ectag-parse.el --- exuberent CTags into Semantic tags
 
-;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010, 2011 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-ectag-parse.el,v 1.18 2010/04/09 02:02:47 zappo Exp $
+;; X-RCS: $Id: semantic-ectag-parse.el,v 1.18 2010-04-09 02:02:47 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -115,7 +115,7 @@ Convert the output tags into Semantic tags."
         )
     (while (not (eobp))
       (let* ((ptag (semantic-ectag-parse-one-tag
-                    (buffer-substring (point) (point-at-eol))))
+                    (buffer-substring-no-properties (point) (point-at-eol))))
              (tag (car ptag))
              (parents (cdr ptag))
              )

@@ -153,7 +153,13 @@ special behavior for tag of classes include, using and function."
 	    (templates (semantic-tag-get-attribute tag :template))
 	    (modifiers (semantic-tag-modifiers tag)))
 
-	;; Add modifiers into the dictionary
+	;; Mark constructors and destructors as such.
+	(when (semantic-tag-function-constructor-p tag)
+	  (srecode-dictionary-show-section dict "CONSTRUCTOR"))
+	(when (semantic-tag-function-destructor-p tag)
+	  (srecode-dictionary-show-section dict "DESTRUCTOR"))
+
+	;; Add modifiers into the dictionary.
 	(dolist (modifier modifiers)
 	  (let ((modifier-dict (srecode-dictionary-add-section-dictionary
 				dict "MODIFIERS")))
@@ -174,8 +180,7 @@ special behavior for tag of classes include, using and function."
 	  ;; If the member function is pure virtual, add a dictionary
 	  ;; entry.
 	  (when (semantic-tag-get-attribute tag :pure-virtual-flag)
-	    (srecode-dictionary-show-section dict "PURE"))
-	  )))
+	    (srecode-dictionary-show-section dict "PURE")))))
 
      ;;
      ;; CLASS

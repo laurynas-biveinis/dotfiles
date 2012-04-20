@@ -5,7 +5,7 @@
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Version: 0.2.1
 ;; Keywords: tags, tools, w3
-;; X-RCS: $Id: sb-w3.el,v 1.10 2005/09/30 20:26:13 zappo Exp $
+;; X-RCS: $Id: sb-w3.el,v 1.10 2005-09-30 20:26:13 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

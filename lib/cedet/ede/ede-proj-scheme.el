@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make, scheme
-;; RCS: $Id: ede-proj-scheme.el,v 1.8 2005/09/30 20:17:08 zappo Exp $
+;; RCS: $Id: ede-proj-scheme.el,v 1.8 2005-09-30 20:17:08 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

@@ -5,7 +5,7 @@
 
 ;; Author: Joakim Verona
 ;; Keywords: tags
-;; X-RCS: $Id: semanticdb-javascript.el,v 1.6 2010/03/26 22:18:05 xscript Exp $
+;; X-RCS: $Id: semanticdb-javascript.el,v 1.6 2010-03-26 22:18:05 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 

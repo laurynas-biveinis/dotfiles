@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-fields.el,v 1.12 2010/02/22 00:48:23 zappo Exp $
+;; X-RCS: $Id: srecode-fields.el,v 1.12 2010-02-22 00:48:23 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: tags
-;; X-RCS: $Id: semanticdb-find.el,v 1.90 2010/08/05 03:02:31 zappo Exp $
+;; X-RCS: $Id: semanticdb-find.el,v 1.90 2010-08-05 03:02:31 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -165,6 +165,8 @@ the following keys:
   :group 'semanticdb
   :type semanticdb-find-throttle-custom-list)
 
+(make-variable-buffer-local 'semanticdb-find-default-throttle)
+
 (defun semanticdb-find-throttle-active-p (access-type)
   "Non-nil if ACCESS-TYPE is an active throttle type."
   (or (memq access-type semanticdb-find-default-throttle)
@@ -321,8 +323,10 @@ Default action as described in `semanticdb-find-translate-path'."
 	 (cond ((null path) semanticdb-current-database)
 	       ((semanticdb-table-p path) (oref path parent-db))
 	       (t (let ((tt (semantic-something-to-tag-table path)))
-		    ;; @todo - What does this DO ??!?!
-		    (with-current-buffer (semantic-tag-buffer (car tt))
+		    (if tt
+			;; @todo - What does this DO ??!?!
+			(with-current-buffer (semantic-tag-buffer (car tt))
+			  semanticdb-current-database)
 		      semanticdb-current-database))))))
     (apply
      #'nconc
@@ -897,8 +901,9 @@ instead."
 		;; Find-file-match allows a tool to make sure the tag is
 		;; 'live', somewhere in a buffer.
 		(cond ((eq find-file-match 'name)
-		       (let ((f (semanticdb-full-filename nametable)))
-			 (semantic--tag-put-property ntag :filename f)))
+		       (or (semantic--tag-get-property ntag :filename)
+			   (let ((f (semanticdb-full-filename nametable)))
+			     (semantic--tag-put-property ntag :filename f))))
 		      ((and find-file-match ntab)
 		       (semanticdb-get-buffer ntab))
 		      )
@@ -1355,7 +1360,12 @@ Returns a table of all matching tags."
   "In TABLE, find all occurrences of tags of CLASS.
 Optional argument TAGS is a list of tags to search.
 Returns a table of all matching tags."
-  (semantic-find-tags-by-class class (or tags (semanticdb-get-tags table))))
+  ;; Delegate 'include' to the overridable
+  ;; `semantic-find-tags-included', which by default will just call
+  ;; `semantic-find-tags-by-class'.
+  (if (eq class 'include)
+      (semantic-find-tags-included (or tags (semanticdb-get-tags table)))
+    (semantic-find-tags-by-class class (or tags (semanticdb-get-tags table)))))
 
 (defmethod semanticdb-find-tags-external-children-of-type-method ((table semanticdb-abstract-table) parent &optional tags)
    "In TABLE, find all occurrences of tags whose parent is the PARENT type.

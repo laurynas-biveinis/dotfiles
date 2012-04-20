@@ -1,10 +1,10 @@
 ;;; ede-gnustep.el --- EDE GNUstep Project file driver
 
-;;;  Copyright (C) 2008,2009,2010  Marco Bardelli
+;;;  Copyright (C) 2008,2009,2010,2012  Marco Bardelli
 
 ;; Author: Marco (Bj) Bardelli <bardelli.marco@gmail.com>
 ;; Keywords: project, make, gnustep, gnustep-make
-;; RCS: $Id: ede-gnustep.el,v 1.13 2010/06/12 00:44:16 zappo Exp $
+;; RCS: $Id: ede-gnustep.el,v 1.13 2010-06-12 00:44:16 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -1254,35 +1254,32 @@ Check match of a line for validity."
 
 ;;;###autoload
 ;; @todo - below is not compatible w/ Emacs 20!
-(add-to-list 'ede-project-class-files
-	     (ede-project-autoload "edegnustep"
-	      :name "GNUstep-Make" :file 'ede-gnustep
-	      :proj-file "ProjStep.ede"
-	      :load-type 'ede-step-load
-	      :class-sym 'ede-step-project)
-	     t)
+(ede-add-project-autoload
+ (ede-project-autoload "edegnustep"
+		       :name "GNUstep-Make" :file 'ede-gnustep
+		       :proj-file "ProjStep.ede"
+		       :load-type 'ede-step-load
+		       :class-sym 'ede-step-project))
 
 ;;;###autoload
 ;; ;; @todo - below is not compatible w/ Emacs 20! ede-project-class-files
-(add-to-list 'ede-project-class-files
-	     (ede-project-autoload "gnustep-root"
-	      :name "GNUstep-make Top Most" :file 'ede-gnustep
-	      :proj-file "RootProjStep.ede"
-	      :initializers '(:project-mode scanner)
-	      :load-type 'ede-gnustep-load
-	      :class-sym 'ede-step-project)
-	     t)
+(ede-add-project-autoload
+ (ede-project-autoload "gnustep-root"
+		       :name "GNUstep-make Top Most" :file 'ede-gnustep
+		       :proj-file "RootProjStep.ede"
+		       :initializers '(:project-mode scanner)
+		       :load-type 'ede-gnustep-load
+		       :class-sym 'ede-step-project))
 
 ;;;###autoload
 ;; @todo - below is not compatible w/ Emacs 20!
-(add-to-list 'ede-project-class-files
-	     (ede-project-autoload "gnustep"
-	      :name "GNUstep-Make in scanner mode" :file 'ede-gnustep
-	      :proj-file "ProjStep.ede"
-	      :initializers '(:project-mode scanner)
-	      :load-type 'ede-gnustep-load
-	      :class-sym 'ede-step-project)
-	     t)
+(ede-add-project-autoload
+ (ede-project-autoload "gnustep"
+		       :name "GNUstep-Make in scanner mode" :file 'ede-gnustep
+		       :proj-file "ProjStep.ede"
+		       :initializers '(:project-mode scanner)
+		       :load-type 'ede-gnustep-load
+		       :class-sym 'ede-step-project))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\(Root\\)?ProjStep\\.ede" . emacs-lisp-mode))

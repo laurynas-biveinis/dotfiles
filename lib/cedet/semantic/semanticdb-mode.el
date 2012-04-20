@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semanticdb-mode.el,v 1.6 2009/09/29 01:33:06 zappo Exp $
+;; X-RCS: $Id: semanticdb-mode.el,v 1.6 2009-09-29 01:33:06 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

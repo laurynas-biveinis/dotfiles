@@ -1,9 +1,9 @@
 ;;; srecode-cpp.srt --- Templates for c++-mode
 
-;; Copyright (C) 2007, 2008, 2009 Eric M. Ludlam
+;; Copyright (C) 2007, 2008, 2009, 2012 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-cpp.srt,v 1.11 2009/03/29 12:41:54 zappo Exp $
+;; X-RCS: $Id: srecode-cpp.srt,v 1.11 2009-03-29 12:41:54 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -151,6 +151,13 @@ template include :blank
 "An include statement."
 ----
 #include "{{?NAME}}"
+----
+bind "i"
+
+template system-include :blank
+"An include statement."
+----
+#include <{{?NAME}}>
 ----
 bind "i"
 

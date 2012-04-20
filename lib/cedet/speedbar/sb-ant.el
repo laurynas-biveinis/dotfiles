@@ -9,7 +9,7 @@
 ;; Author: Richard Y. Kim, <ryk@dspwiz.com>
 ;; Maintainer: Richard Y. Kim, <ryk@dspwiz.com>
 ;; Created: Mon Apr 09 09:44:06 2001
-;; Version: $Id: sb-ant.el,v 1.3 2005/09/30 20:25:50 zappo Exp $
+;; Version: $Id: sb-ant.el,v 1.3 2005-09-30 20:25:50 zappo Exp $
 ;; Keywords: speedbar, html
 
 ;; This program is free software; you can redistribute it and/or

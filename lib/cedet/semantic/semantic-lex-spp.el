@@ -1,8 +1,8 @@
 ;;; semantic-lex-spp.el --- Semantic Lexical Pre-processor
 
-;;; Copyright (C) 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
+;;; Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 Eric M. Ludlam
 
-;; X-CVS: $Id: semantic-lex-spp.el,v 1.53 2010/04/18 20:40:15 zappo Exp $
+;; X-CVS: $Id: semantic-lex-spp.el,v 1.53 2010-04-18 20:40:15 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -498,7 +498,7 @@ and what valid VAL values are."
   ;;  (symbol "name" 569 . 573)
   ;;  (semantic-list "(int in)" 574 . 582))
   ;;
-  ;; In the second case, a macro with an argument list as the a rgs as the
+  ;; In the second case, a macro with an argument list as the args as the
   ;; first entry.
   ;;
   ;; CASE 3: Symbol text merge
@@ -578,13 +578,7 @@ and what valid VAL values are."
 	(cond
 	 ;; CASE 3: Merge symbols together.
 	 ((eq (semantic-lex-token-class v) 'spp-symbol-merge)
-	  ;; We need to merge the tokens in the 'text segement together,
-	  ;; and produce a single symbol from it.
-	  (let ((newsym
-		 (mapconcat (lambda (tok)
-			      (semantic-lex-spp-one-token-to-txt tok))
-			    txt
-			    "")))
+	  (let ((newsym (semantic-lex-spp-symbol-merge txt)))
 	    (semantic-lex-push-token
 	     (semantic-lex-token 'symbol beg end newsym))
 	    ))
@@ -637,6 +631,27 @@ and what valid VAL values are."
     (dolist (A arglist)
       (semantic-lex-spp-symbol-pop A))
     ))
+
+(defun semantic-lex-spp-symbol-merge (txt)
+  "Merge the tokens listed in TXT.
+TXT might contain further 'spp-symbol-merge, which will
+be merged recursively."
+  ;; We need to merge the tokens in the 'text segement together,
+  ;; and produce a single symbol from it.
+  (mapconcat (lambda (tok)
+	       (cond
+		((eq (car tok) 'symbol)
+		 (semantic-lex-spp-one-token-to-txt tok))
+		((eq (car tok) 'spp-symbol-merge)
+		 ;; Call recursively for multiple merges, like
+		 ;; #define FOO(a) foo##a##bar
+		 (semantic-lex-spp-symbol-merge (cadr tok)))
+		(t
+		 (message "Invalid merge macro ecountered; \
+will return empty string instead.")
+		 "")))
+	     txt
+	     ""))
 
 ;;; Macro Merging
 ;;
@@ -870,7 +885,14 @@ Parsing starts inside the parens, and ends at the end of TOKEN."
 	(forward-char 1)
 	(setq fresh-toks (semantic-lex-spp-stream-for-macro (1- end)))
 	(dolist (tok fresh-toks)
-	  (when (memq (semantic-lex-token-class tok) '(symbol semantic-list))
+	  ;; march 2011: This is too restrictive!  For example "void"
+	  ;; can't get through.  What elements was I trying to expunge
+	  ;; to put this in here in the first place?  If I comment it
+	  ;; out, does anything new break?
+	  ;(when (memq (semantic-lex-token-class tok) '(symbol semantic-list))
+	  ;; It appears the commas need to be dumped.  perhaps this is better,
+	  ;; but will it cause more problems later?
+	  (unless (eq (semantic-lex-token-class tok) 'punctuation)
 	    (setq toks (cons tok toks))))
 
 	(nreverse toks)))))

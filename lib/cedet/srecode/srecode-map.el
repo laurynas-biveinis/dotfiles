@@ -1,9 +1,9 @@
 ;;; srecode-map.el --- Manage a template file map
 
-;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010, 2012 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-map.el,v 1.20 2010/06/12 00:45:51 zappo Exp $
+;; X-RCS: $Id: srecode-map.el,v 1.20 2010-06-12 00:45:51 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -296,7 +296,7 @@ if that file is NEW, otherwise assume the mode has not changed."
     (when (not srecode-current-map)
       (condition-case nil
 	  (setq srecode-current-map
-		(eieio-persistent-read srecode-map-save-file))
+		(eieio-persistent-read srecode-map-save-file srecode-map))
 	(error
 	 ;; There was an error loading the old map.  Create a new one.
 	 (setq srecode-current-map

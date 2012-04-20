@@ -6,7 +6,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 06 Mar 2002
 ;; Keywords: lisp
-;; X-RCS: $Id: pprint.el,v 1.8 2005/09/30 20:07:41 zappo Exp $
+;; X-RCS: $Id: pprint.el,v 1.8 2005-09-30 20:07:41 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

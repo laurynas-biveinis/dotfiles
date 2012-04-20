@@ -3,7 +3,7 @@
 ;;; Copyright (C) 2002 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: bison-wisent.el,v 1.3 2005/09/30 20:22:44 zappo Exp $
+;; X-RCS: $Id: bison-wisent.el,v 1.3 2005-09-30 20:22:44 zappo Exp $
 
 ;; Semantic is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

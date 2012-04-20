@@ -1,10 +1,10 @@
 ;;; eieio-tests.el -- eieio tests routines
 
 ;;;
-;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009, 2010, 2012 Eric M. Ludlam
 ;;
 ;; Author: <zappo@gnu.org>
-;; RCS: $Id: eieio-tests.el,v 1.50 2010/06/18 00:08:17 zappo Exp $
+;; RCS: $Id: eieio-tests.el,v 1.50 2010-06-18 00:08:17 zappo Exp $
 ;; Keywords: oop, lisp, tools
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -305,12 +305,6 @@ METHOD is the method that was attempting to be called."
 (oset a self a)
 (oset ab self ab)
 
-
-;;; Test the BEFORE, PRIMARY, and AFTER method tags.
-;;
-(let ((lib (locate-library  "eieio-test-methodinvoke.el")))
-  (load-file lib))
-
 ;;; Test value of a generic function call
 ;;
 (defvar class-fun-value-seq '())
@@ -594,6 +588,19 @@ METHOD is the method that was attempting to be called."
      )
     nil
   (error "Inheritance tests: failed"))
+
+
+;;; List of object predicates
+;;
+(let ((listooa (list (class-ab "ab") (class-a "a")))
+      (listoob (list (class-ab "ab") (class-b "b")))
+      )
+  (unless (and (class-a-list-p listooa)
+	       (class-b-list-p listoob)
+	       (not (class-b-list-p listooa))
+	       (not (class-a-list-p listoob))
+	       t)
+    (error "Inheritance and list predicate tests: failed")))
 
 
 ;;; Slot parameter testing
@@ -1009,49 +1016,6 @@ Subclasses to override slot attributes.")
 ;; CLOS form of make-instance
 (setq CLONETEST1 (make-instance 'class-a))
 (setq CLONETEST2 (clone CLONETEST1))
-
-
-;;; Test the persistent object, and object-write by side-effect.
-;;
-(defclass PO (eieio-persistent)
-  ((slot1 :initarg :slot1
-	  :initform 'moose
-	  :printer PO-slot1-printer)
-   (slot2 :initarg :slot2
-	  :initform "foo"))
-  "A Persistent object with two initializable slots.")
-
-(defun PO-slot1-printer (slotvalue)
-  "Print the slot value SLOTVALUE to stdout.
-Assume SLOTVALUE is a symbol of some sort."
-  (princ "(make-symbol \"")
-  (princ (symbol-name slotvalue))
-  (princ "\")")
-  nil)
-;;(PO-slot1-printer 'moose)
-
-(defvar PO1 nil)
-(setq PO1 (PO "persist" :slot1 'goose :slot2 "testing"
-	      :file (concat default-directory "test-p.el")))
-
-(eieio-persistent-save PO1)
-
-(let ((obj (eieio-persistent-read "test-p.el")))
-  (message "%S" obj)
-  )
-
-
-(let* ((find-file-hooks nil)
-       (tbuff (find-file-noselect "test-p.el"))
-       )
-  (condition-case nil
-      (unwind-protect
-	  (save-excursion
-	    (set-buffer tbuff)
-	    (goto-char (point-min))
-	    (re-search-forward ":slot1 (make-symbol"))
-	(kill-buffer tbuff))
-    (error "PO's Slot1 printer function didn't work.")))
 
 
 ;;; Test the instance tracker

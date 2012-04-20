@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cedet-cscope.el,v 1.7 2010/07/24 23:58:38 zappo Exp $
+;; X-RCS: $Id: cedet-cscope.el,v 1.7 2010-07-24 23:58:38 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -26,7 +26,7 @@
 
 (require 'inversion)
 
-(defvar cedet-cscope-min-version "16.0"
+(defvar cedet-cscope-min-version "15.7"
   "Minimum version of CScope required.")
 
 ;;;###autoload

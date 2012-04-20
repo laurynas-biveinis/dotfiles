@@ -10,7 +10,6 @@ top=
 ede_FILES=Project.ede Makefile
 
 Misc_AUX=ChangeLog
-EMACSFLAGS=-batch --no-site-file
 EMACS=emacs
 LOADPATH= ../common/  ../ede/ ../semantic/ ../eieio/\
     ../speedbar/ ../semantic/bovine/ ../semantic/wisent/
@@ -18,13 +17,14 @@ LOADDEFS=srecode-loaddefs.el
 LOADDIRS=.
 lang_SEMANTIC_GRAMMAR=srecode-template.wy
 lang_SEMANTIC_GRAMMAR_EL=srecode-template-wy.el
-srecode_LISP=srecode.el srecode-mode.el srecode-compile.el srecode-insert.el srecode-template-mode.el srecode-semantic.el srecode-load.el srecode-template.el srecode-dictionary.el srecode-args.el srecode-table.el srecode-filters.el srecode-find.el srecode-ctxt.el srecode-getset.el srecode-cpp.el srecode-expandproto.el srecode-el.el srecode-srt.el srecode-texi.el srecode-map.el srecode-extract.el srecode-java.el srecode-fields.el
+srecode_LISP=srecode.el srecode-mode.el srecode-compile.el srecode-insert.el srecode-template-mode.el srecode-semantic.el srecode-load.el srecode-template.el srecode-dictionary.el srecode-args.el srecode-table.el srecode-filters.el srecode-find.el srecode-ctxt.el srecode-getset.el srecode-cpp.el srecode-expandproto.el srecode-el.el srecode-srt.el srecode-texi.el srecode-map.el srecode-extract.el srecode-java.el srecode-fields.el srecode-android.el srecode-m3.el
+EMACSFLAGS=-batch --no-site-file
 ELISPPRELOAD= cedet-compat
 doc_TEXINFOS=srecode.texi
 MAKEINFO=makeinfo
 tests_LISP=srecode-test.el srecode-test-getset.el
 document_LISP=srecode-document.el srecode-document-vars.el
-VERSION=1.0
+VERSION=1.1
 DISTDIR=$(top)srecode-$(VERSION)
 
 

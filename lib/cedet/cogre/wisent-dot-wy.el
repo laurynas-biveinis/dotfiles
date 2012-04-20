@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 2003, 2004, 2009 Eric M. Ludlam
 
-;; Author: Laurynas Biveinis <laurynas@laurynas-ThinkPad-T410>
-;; Created: 2011-03-21 06:57:38+0200
+;; Author: Eric M. Ludlam <zappo@projectile.siege-engine.com>
+;; Created: 2010-09-23 21:03:43-0400
 ;; Keywords: syntax
 ;; X-RCS: $Id$
 

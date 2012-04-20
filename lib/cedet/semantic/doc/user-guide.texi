@@ -508,7 +508,7 @@ in a buffer.
 @node Smart Completion
 @section Smart Completion
 
-The file @file{semantic-ia.el} contains two commands for performing
+The file @file{semantic-ia.el} contains several commands for performing
 smart completion using the analysis library.  Analysis to calculate
 these completions are done through the analyzer and completion
 mechanism.  These functions just provide commands that can be bound
@@ -583,7 +583,7 @@ Summaries are provided with @code{semantic-idle-summary-mode}.  See
 
 If you are on a symbol in some code, you might want to jump directly
 to it.  You can use @code{find-tag}, but in complex C++ systems, you
-can spend a lot of time pressing @kbd{C-h M-.} trying to find the
+can spend a lot of time pressing @kbd{C-u M-.} trying to find the
 specific instance of some function.
 
 The analyzer can pinpoint very closely to where you actually indent
@@ -827,7 +827,7 @@ GNU Global and IDUtils.  The symref tool interface can use one of
 these external tools to collect locations where different tags or
 symbols may be used.
 
-There are two main command into the symref system.  They are:
+There are several commands into the symref system.  They are:
 
 @deffn Command semantic-symref
 @anchor{semantic-symref}
@@ -871,7 +871,7 @@ When a symref command identifies several hits, a new buffer is created
 to display the results which is placed in @code{semantic-symref-results-mode}.
 
 The results are listed by file, then by tag within those files.  Files
-and tags can be expanded or contracted to show or hide more detail
+and tags can be expanded or collapsed to show or hide more detail
 about a given hit by clicking on the @code{[+]} or @code{[-]} buttons.
 
 Clicking on a file name, tag name, or hit result will display the
@@ -887,7 +887,7 @@ Expand or contract the current line.
 @item C-c C-e
 Expand all tag items in the results buffer.
 @item C-c C-r
-Contract all tag items in the results buffer.
+Collapse all tag items in the results buffer.
 @end table
 
 

@@ -18,7 +18,7 @@ LOADPATH= ../../speedbar/ ../../common/ ../bovine/ ../\
 wy_SEMANTIC_GRAMMAR=wisent-java-tags.wy wisent-awk.wy wisent-calc.wy wisent-cim.wy wisent-java.wy wisent-python.wy wisent-javascript-jv.wy
 wy_SEMANTIC_GRAMMAR_EL=wisent-java-tags-wy.el wisent-awk-wy.el wisent-calc-wy.el wisent-cim-wy.el wisent-java-wy.el wisent-python-wy.el wisent-javascript-jv-wy.el
 languages_LISP=wisent-calc.el wisent-java.el wisent-java-tags.el wisent-python.el wisent-javascript.el
-VERSION=2.0
+VERSION=2.1
 DISTDIR=$(top)semantic-$(VERSION)/wisent
 
 

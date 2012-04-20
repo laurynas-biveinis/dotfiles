@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008, 2009 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-extract.el,v 1.5 2010/03/26 22:18:07 xscript Exp $
+;; X-RCS: $Id: srecode-extract.el,v 1.5 2010-03-26 22:18:07 xscript Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

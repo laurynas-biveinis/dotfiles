@@ -3,7 +3,7 @@
 ;;; Copyright (C) 2003, 2009 David Ponce
 
 ;; Author: David Ponce <david@dponce.com>
-;; X-RCS: $Id: ede-load.el,v 1.3 2009/01/10 13:30:15 zappo Exp $
+;; X-RCS: $Id: ede-load.el,v 1.3 2009-01-10 13:30:15 zappo Exp $
 
 ;; EDE is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

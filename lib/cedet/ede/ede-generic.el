@@ -1,9 +1,9 @@
 ;;; ede-generic.el --- Base Support for generic build systems
 ;;
-;; Copyright (C) 2010 Eric M. Ludlam
+;; Copyright (C) 2010, 2012 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: ede-generic.el,v 1.5 2010/07/25 14:12:11 zappo Exp $
+;; X-RCS: $Id: ede-generic.el,v 1.5 2010-07-25 14:12:11 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -79,6 +79,8 @@
 ;; the above described support features.
 
 (require 'ede)
+(require 'ede-auto)
+(require 'eieio-opt)
 
 ;;; Code:
 ;;
@@ -104,6 +106,13 @@
 		  :group (default build)
 		  :documentation
 		  "Command used for debugging this project.")
+   (run-command :initarg :run-command
+		:initform nil
+		:type (or null string)
+		:custom string
+		:group (default build)
+		:documentation
+		"Command used to run something related to this project.")
    ;; C target customixations
    (c-include-path :initarg :c-include-path
 		   :initform nil
@@ -196,7 +205,7 @@ The class allocated value is replace by different sub classes.")
 				     (oref proj :directory))))
 	(if (file-exists-p fname)
 	    ;; Load in the configuration
-	    (setq config (eieio-persistent-read fname))
+	    (setq config (eieio-persistent-read fname 'ede-generic-config))
 	  ;; Create a new one.
 	  (setq config (ede-generic-config 
 			"Configuration"
@@ -321,6 +330,44 @@ If one doesn't exist, create a new one for this directory."
 	(config (ede-generic-get-configuration proj)))
     (oref config c-include-path)))
 
+;;; Commands
+;;
+(defmethod project-compile-project ((proj ede-generic-project) &optional command)
+  "Compile the entire current project PROJ.
+Argument COMMAND is the command to use when compiling."
+  (let* ((config (ede-generic-get-configuration proj))
+	 (comp (oref config :build-command)))
+    (compile comp)))
+
+(defmethod project-compile-target ((obj ede-generic-target) &optional command)
+  "Compile the current target OBJ.
+Argument COMMAND is the command to use for compiling the target."
+  (project-compile-project (ede-current-project) command))
+
+(defmethod project-debug-target ((target ede-generic-target))
+  "Run the current project derived from TARGET in a debugger."
+  (let* ((proj (ede-target-parent target))
+	 (config (ede-generic-get-configuration proj))
+	 (debug (oref config :debug-command))
+	 (cmd (read-from-minibuffer
+	       "Debug Command: "
+	       debug))
+	 (cmdsplit (split-string cmd " " t))
+	 ;; @TODO - this depends on the user always typing in something good
+	 ;;  like "gdb" or "dbx" which also exists as a useful Emacs command.
+	 ;;  Is there a better way?
+	 (cmdsym (intern-soft (car cmdsplit))))
+    (call-interactively cmdsym t)))
+
+(defmethod project-run-target ((target ede-generic-target))
+  "Run the current project derived from TARGET."
+  (require 'ede-shell)
+  (let* ((proj (ede-target-parent target))
+	 (config (ede-generic-get-configuration proj))
+	 (run (concat "./" (oref config :run-command)))
+	 (cmd (read-from-minibuffer "Run (like this): " run)))
+    (ede-shell-run-something target cmd)))
+
 ;;; Customization
 ;;
 (defmethod ede-customize ((proj ede-generic-project))
@@ -345,8 +392,7 @@ the new configuration."
      (ede-map-target-buffers
       target
       (lambda (b)
-	(save-excursion
-	  (set-buffer b)
+	(with-current-buffer b
 	  (ede-apply-target-options)))))))
 
 (defmethod ede-commit ((config ede-generic-config))
@@ -366,27 +412,31 @@ PROJECTFILE is a file name that identifies a project of this type to EDE, such a
 a Makefile, or SConstruct file.
 CLASS is the EIEIO class that is used to track this project.  It should subclass
 the class `ede-generic-project' project."
-  (add-to-list 'ede-project-class-files
-	       (ede-project-autoload internal-name
-				     :name external-name
-				     :file 'ede-generic
-				     :proj-file projectfile
-				     :load-type 'ede-generic-load
-				     :class-sym class
-				     :new-p nil)
-	       ;; Generics must go at the end, since more specific types
-	       ;; can create Makefiles also.
-	       t))
+  (ede-add-project-autoload
+   (ede-project-autoload internal-name
+			 :name external-name
+			 :file 'ede-generic
+			 :proj-file projectfile
+			 :load-type 'ede-generic-load
+			 :class-sym class
+			 :new-p nil
+			 :safe-p nil)	; @todo - could be
+					; safe if we do something
+					; about the loading of the
+					; generic config file.
+   ;; Generics must go at the end, since more specific types
+   ;; can create Makefiles also.
+   'generic))
 
 ;;;###autoload
 (defun ede-enable-generic-projects ()
   "Enable generic project loaders."
   (interactive)
-  (ede-generic-new-autoloader "edeproject-makefile" "Make"
+  (ede-generic-new-autoloader "generic-makefile" "Make"
 			      "Makefile" 'ede-generic-makefile-project)
-  (ede-generic-new-autoloader "edeproject-scons" "SCons"
+  (ede-generic-new-autoloader "generic-scons" "SCons"
 			      "SConstruct" 'ede-generic-scons-project)
-  (ede-generic-new-autoloader "edeproject-cmake" "CMake"
+  (ede-generic-new-autoloader "generic-cmake" "CMake"
 			      "CMakeLists" 'ede-generic-cmake-project)
   )
 

@@ -3,7 +3,7 @@
 ;; Copyright (C) 2008 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: eieio-perftest.el,v 1.4 2009/06/24 23:17:46 zappo Exp $
+;; X-RCS: $Id: eieio-perftest.el,v 1.4 2009-06-24 23:17:46 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

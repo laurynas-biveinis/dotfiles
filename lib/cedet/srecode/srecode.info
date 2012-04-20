@@ -1,5 +1,4 @@
-This is srecode.info, produced by makeinfo version 4.9 from
-srecode.texi.
+This is srecode.info, produced by makeinfo version 4.13 from srecode.texi.
 
 START-INFO-DIR-ENTRY
 * srecode: (srecode).       Template code generator
@@ -60,7 +59,7 @@ should appear.
    into a language hook function to force it on (which is the default)
 or pass in `-1' to force it off.
 
-   See *Note SRecode Minor Mode:: for more on using the minor mode.
+   See *note SRecode Minor Mode:: for more on using the minor mode.
 
    Use the menu to insert templates into the current file.
 
@@ -97,13 +96,13 @@ file.
      The save location for SRecode's map file.
 
    Template files end with a `.srt' extension.  Details on how to write
-templates are in *Note Template Writing::.
+templates are in *note Template Writing::.
 
    Each template file you write is dedicated to a single major mode.  In
 it, you can write templates within the same context and with the same
 name as core templates.  You can force your templates to override the
 core templates for a particular major mode by setting the priority.
-See *Note Special Variables::.
+See *note Special Variables::.
 
    To get going quickly, open a new `.srt' file.  It will start in the
 SRecode template writing mode.  Use the SRecode minor mode menu to
@@ -150,7 +149,7 @@ only the small sections they want, instead of either accepting someone
 else's template, or writing large new templates of their own.
 
    Templates are written in `.srt' files.  You can learn how to author
-new `.srt' files *Note Template Writing::.
+new `.srt' files *note Template Writing::.
 
    While the template system was designed for SRecode based
 applications it can also be used independently for simple template
@@ -175,7 +174,7 @@ used in macros in a template.  Variables are what allows a generic
 template such as a function to be made specific, such as a function
 named foo.  The value of a variable can be one of three things; a
 string, a list of more dictionaries, or a special
-`srecode-dictionary-compound-value' object subclass.  See *Note
+`srecode-dictionary-compound-value' object subclass.  See *note
 Variables:: for more.
 
 3.4 Template Insertion
@@ -239,7 +238,7 @@ simple access to different templates or template applications.
 <<insert>> can also be used.
 
    The most important key is bound to `srecode-insert' which is <C-c /
-/>, or <insert insert>.  *Note Quick Start::.
+/>, or <insert insert>.  *note Quick Start::.
 
    Major keybindings are:
 
@@ -548,7 +547,7 @@ A variable can also have a compound value.  This means the value of the
 variable is an EIEIO object, which is a subclass of
 `srecode-dictionary-compound-value'.
 
-   New compound variables can only be setup from Lisp code.  See *Note
+   New compound variables can only be setup from Lisp code.  See *note
 Compound Dictionary Values:: for details on setting up compound
 variables from Lisp.
 
@@ -667,7 +666,7 @@ File: srecode.info,  Node: Template Macros,  Prev: Template Section Dictionaries
 
 Template macros occur in the template text.  The default escape
 characters are "{{" and "}}", though they can be changed in the
-top-level variables.  See *Note Variables::.
+top-level variables.  See *note Variables::.
 
    Thus, if you have the template code that looks like this:
 
@@ -874,7 +873,7 @@ the type of macro being inserted.
 
    Most of this chapter is for writing Lisp programs that use SRecode.
 If you only want to write template files, then you only need to read
-the *Note Template Argument Dictionary Entries:: section.
+the *note Template Argument Dictionary Entries:: section.
 
 * Menu:
 
@@ -1017,7 +1016,7 @@ File: srecode.info,  Node: Argument Resolution,  Next: Creating new Arguments,  
 =======================
 
 Some dictionary entries can be set via template arguments in the
-template declaration.  For examples of template arguments, see *Note
+template declaration.  For examples of template arguments, see *note
 Template Argument Dictionary Entries::.
 
    You can resolve an argument list into a dictionary with:
@@ -1138,13 +1137,13 @@ Sets up variables about the current user.
      Value of the Emacs function `user-full-name'
 
 `EMAIL'
-     Current Emacs users email address.
+     Current Emacs user's email address.
 
 `LOGIN'
-     Current Emacs users login name.
+     Current Emacs user's login name.
 
 `UID'
-     Current Emacs users login name.
+     Current Emacs user's login ID.
 
 `EMACSINITFILE'
      This Emacs sessions' init file.
@@ -1199,10 +1198,10 @@ Sets up variables with the current date and time.
 Sets up variables with details about the current file.
 
 `FILENAME'
-     The filename with out the directory part of the current buffer.
+     The filename without the directory part of the current buffer.
 
 `FILE'
-     The filename with out the directory or extension
+     The filename without the directory or extension
 
 `EXTENSION'
      The filename extension.
@@ -1370,6 +1369,9 @@ Used for SRecoder template files.
      Converts the filename into text that would be suitable as a
      class-name for the main class in the file.
 
+`CURRENT_PACKAGE'
+     Finds the occurance of "package" and gets its value.
+
 6.7.5.1 Argument :el
 ....................
 
@@ -1409,6 +1411,13 @@ additional variable `TAGDOC' is provided for each tag.
    The `TAGDOC' is filled with derived documentation from the tag in
 question, and that documentation is also reformatted to be mostly
 texinfo compatible.
+
+6.7.6 Argument :android
+-----------------------
+
+The `:android' argument pulls in information from your current project.
+
+   @TODO - add more here.
 
 
 File: srecode.info,  Node: Developing Template Functions,  Next: Template Naming Conventions,  Prev: Dictionaries,  Up: Top
@@ -1511,10 +1520,10 @@ Several dictionary calls are made in this example, including:
 
 `srecode-dictionary-add-section-dictionary'
 
-   These are documented more fully *Note Dictionaries::.
+   These are documented more fully *note Dictionaries::.
 
    Also used is `srecode-resolve-arguments'.  To learn more about that,
-see *Note Argument Resolution::.
+see *note Argument Resolution::.
 
 7.4 Template Insertion Commands
 ===============================
@@ -1742,60 +1751,60 @@ File: srecode.info,  Node: Index,  Prev: Application Writing,  Up: Top
 
 
 Tag Table:
-Node: Top168
-Node: Quick Start1551
-Ref: srecode-map-load-path2270
-Ref: srecode-insert2468
-Node: User Templates2861
-Ref: srecode-map-save-file3243
-Node: Parts of SRecode4752
-Node: SRecode Minor Mode8639
-Ref: srecode-insert-ask-variable-method10032
-Node: Template Writing11219
-Ref: `SRecode-template-mode'11363
-Node: Variables12482
-Node: String Values13508
-Node: Multi-string Values13937
-Node: Section Show14771
-Node: Special Variables15294
-Node: Automatic Loop Variables18380
-Node: Compound Variable Values19019
-Node: Templates19505
-Node: Template Section Dictionaries20380
-Node: Template Macros22890
-Node: Contexts26305
-Node: Prompts27347
-Node: Dictionaries29221
-Node: Create a Dictionary30164
-Ref: srecode-create-dictionary30373
-Node: Setting Dictionary Values30643
-Ref: srecode-dictionary-set-value31118
-Ref: srecode-dictionary-show-section31349
-Ref: srecode-dictionary-add-section-dictionary31516
-Node: Compound Dictionary Values32467
-Ref: srecode-dictionary-compound-value32939
-Ref: srecode-compound-toString33400
-Ref: srecode-dump33772
-Node: Argument Resolution34843
-Ref: srecode-resolve-arguments35313
-Node: Creating new Arguments35427
-Node: Querying a Dictionary36409
-Ref: srecode-dictionary-lookup-name36916
-Node: Template Argument Dictionary Entries37169
-Node: Base Arguments37795
+Node: Top169
+Node: Quick Start1552
+Ref: srecode-map-load-path2271
+Ref: srecode-insert2469
+Node: User Templates2862
+Ref: srecode-map-save-file3244
+Node: Parts of SRecode4753
+Node: SRecode Minor Mode8640
+Ref: srecode-insert-ask-variable-method10033
+Node: Template Writing11220
+Ref: `SRecode-template-mode'11364
+Node: Variables12483
+Node: String Values13509
+Node: Multi-string Values13938
+Node: Section Show14772
+Node: Special Variables15295
+Node: Automatic Loop Variables18381
+Node: Compound Variable Values19020
+Node: Templates19506
+Node: Template Section Dictionaries20381
+Node: Template Macros22891
+Node: Contexts26306
+Node: Prompts27348
+Node: Dictionaries29222
+Node: Create a Dictionary30165
+Ref: srecode-create-dictionary30374
+Node: Setting Dictionary Values30644
+Ref: srecode-dictionary-set-value31119
+Ref: srecode-dictionary-show-section31350
+Ref: srecode-dictionary-add-section-dictionary31517
+Node: Compound Dictionary Values32468
+Ref: srecode-dictionary-compound-value32940
+Ref: srecode-compound-toString33401
+Ref: srecode-dump33773
+Node: Argument Resolution34844
+Ref: srecode-resolve-arguments35314
+Node: Creating new Arguments35428
+Node: Querying a Dictionary36410
+Ref: srecode-dictionary-lookup-name36917
+Node: Template Argument Dictionary Entries37170
+Node: Base Arguments37796
 Node: Semantic Arguments41059
 Ref: srecode-semantic-selected-tag41697
 Node: Language Arguments43442
-Node: Developing Template Functions45531
-Ref: srecode-read-template-name47963
-Ref: srecode-table48342
-Ref: srecode-template-get-table48576
-Ref: srecode-insert-fcn49769
-Node: Template Naming Conventions49874
-Node: Inserting Tag Lists53546
-Ref: srecode-semantic-insert-tag54135
-Node: Application Writing55819
-Ref: srecode-load-tables-for-mode56748
-Node: Index57073
+Node: Developing Template Functions45757
+Ref: srecode-read-template-name48189
+Ref: srecode-table48568
+Ref: srecode-template-get-table48802
+Ref: srecode-insert-fcn49995
+Node: Template Naming Conventions50100
+Node: Inserting Tag Lists53772
+Ref: srecode-semantic-insert-tag54361
+Node: Application Writing56045
+Ref: srecode-load-tables-for-mode56974
+Node: Index57299
 
 End Tag Table

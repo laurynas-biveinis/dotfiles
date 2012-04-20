@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-symref-idutils.el,v 1.2 2009/02/24 15:05:08 zappo Exp $
+;; X-RCS: $Id: semantic-symref-idutils.el,v 1.2 2009-02-24 15:05:08 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

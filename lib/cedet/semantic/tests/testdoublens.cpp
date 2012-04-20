@@ -22,12 +22,27 @@ namespace Name1 {
       return 0;
     }
 
-    void Foo::publishStuff(int /* a */, int /* b */) // ^2^
+    void Foo::publishStuff(int a, int b) // ^2^
     {
+      int foo = a;
+      int bar = b;
     }
 
-    void Foo::sendStuff(int /* a */, int /* b */) // ^3^
+    // Test polymorphism on arg types.  Note that order is
+    // mixed to maximize failure cases
+    void Foo::publishStuff(char a, char b) // ^4^
     {
+      int foo = a;
+      int bar = b;
+    }
+
+    void Foo::sendStuff(int a, int b) // ^3^
+    {
+      int foo = a;
+      int bar = b;
+
+      Foo::publishStuff(1,2)
+
     }
     
   } // namespace Name2

@@ -4,7 +4,7 @@
 
 ;; Author: Eric Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-dot.el,v 1.12 2009/04/07 00:34:49 zappo Exp $
+;; X-RCS: $Id: wisent-dot.el,v 1.12 2009-04-07 00:34:49 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

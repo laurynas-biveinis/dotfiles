@@ -5,7 +5,7 @@
 ;; Author: David Ponce <david@dponce.com>
 ;; Created: 22 Aug 2003
 ;; Keywords: maint
-;; X-CVS: $Id: cedet-autogen.el,v 1.8 2008/07/03 02:06:19 zappo Exp $
+;; X-CVS: $Id: cedet-autogen.el,v 1.8 2008-07-03 02:06:19 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

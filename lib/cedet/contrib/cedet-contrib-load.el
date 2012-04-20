@@ -3,7 +3,7 @@
 ;;; Copyright (C) 2004 Eric Ludlam
 
 ;; Author: Eric Ludlam <zappo@gnu.org>
-;; X-RCS: $Id: cedet-contrib-load.el,v 1.2 2005/09/30 20:15:51 zappo Exp $
+;; X-RCS: $Id: cedet-contrib-load.el,v 1.2 2005-09-30 20:15:51 zappo Exp $
 
 ;; CEDET is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

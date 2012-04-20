@@ -82,7 +82,7 @@ all template files for that application will be loaded."
 	;; No parent mode, all templates depend on the defaults being
 	;; loaded in, so get that in instead.
 	(srecode-load-tables-for-mode 'default appname)))
-    
+
     ;; Load in templates for our major mode.
     (dolist (f files)
       (let ((mt (srecode-get-mode-table mmode))
@@ -222,32 +222,37 @@ tables that do not belong to an application will be searched."
 (defvar srecode-read-template-name-history nil
   "History for completing reads for template names.")
 
-(defun srecode-all-template-hash (&optional mode hash)
+(defun srecode-user-template-p (template)
+  "Non-nil if TEMPLATE is intended for user insertion.
+Templates not matching this predicate are used for code
+generation or other internal purposes."
+  t)
+
+(defun srecode-all-template-hash (&optional mode hash predicate)
   "Create a hash table of all the currently available templates.
 Optional argument MODE is the major mode to look for.
-Optional argument HASH is the hash table to fill in."
-  (let* ((mhash (or hash (make-hash-table :test 'equal)))
-	 (mmode (or mode major-mode))
-	 (mp (get-mode-local-parent mmode))
-	 )
+Optional argument HASH is the hash table to fill in.
+Optional argument PREDICATE can be used to filter the returned
+templates."
+  (let* ((mhash       (or hash (make-hash-table :test 'equal)))
+	 (mmode       (or mode major-mode))
+	 (parent-mode (get-mode-local-parent mmode)))
     ;; Get the parent hash table filled into our current hash.
-    (when (not (eq mode 'default))
-      (if mp
-	  (srecode-all-template-hash mp mhash)
-	(srecode-all-template-hash 'default mhash)))
+    (unless (eq mode 'default)
+      (srecode-all-template-hash (or parent-mode 'default) mhash))
+
     ;; Load up the hash table for our current mode.
-    (let* ((mt (srecode-get-mode-table mmode))
-	   (tabs (when mt (oref mt :tables)))
-	   )
-      (while tabs
-	;; Exclude templates for a perticular application.
-	(when (and (not (oref (car tabs) :application))
-		   (srecode-template-table-in-project-p (car tabs)))
+    (let* ((mt   (srecode-get-mode-table mmode))
+	   (tabs (when mt (oref mt :tables))))
+      (dolist (tab tabs)
+	;; Exclude templates for a particular application.
+	(when (and (not (oref tab :application))
+		   (srecode-template-table-in-project-p tab))
 	  (maphash (lambda (key temp)
-		     (puthash key temp mhash)
-		     )
-		   (oref (car tabs) namehash)))
-	(setq tabs (cdr tabs)))
+		     (when (or (not predicate)
+			       (funcall predicate temp))
+		       (puthash key temp mhash)))
+		   (oref tab namehash))))
       mhash)))
 
 (defun srecode-calculate-default-template-string (hash)
@@ -271,15 +276,13 @@ INITIAL is the initial string to use.
 HIST is a history variable to use.
 DEFAULT is what to use if the user presses RET."
   (srecode-load-tables-for-mode major-mode)
-  (let* ((hash (srecode-all-template-hash))
-	 (def (or initial
-		  (srecode-calculate-default-template-string hash))))
-    (completing-read prompt hash
-		     nil t def
-		     (or hist
-			 'srecode-read-template-name-history))))
-
-
+  ;; Collect all templates that are intended for user insertion.
+  (let* ((hash    (srecode-all-template-hash
+		   nil nil #'srecode-user-template-p))
+	 (default (or default initial
+		      (srecode-calculate-default-template-string hash))))
+    (completing-read prompt hash nil t default
+		     (or hist 'srecode-read-template-name-history))))
 
 (provide 'srecode-find)
 

@@ -1,7 +1,7 @@
 
 \input texinfo   @c -*-texinfo-*-
 @c
-@c $Id: eieio.texi,v 1.67 2010/08/19 23:27:15 zappo Exp $
+@c $Id: eieio.texi,v 1.67 2010-08-19 23:27:15 zappo Exp $
 @c
 
 @c
@@ -22,7 +22,7 @@
 @copying
 This manual documents CEDET, a collection of other tools.
 
-Copyright @copyright{} 2007, 2008, 2009, 2010 Eric M. Ludlam
+Copyright @copyright{} 2007, 2008, 2009, 2010, 2012 Eric M. Ludlam
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -1426,9 +1426,12 @@ a header line comment from the class allocated slot if one is not
 provided.
 @end defmethod
 
-@defun eieio-persistent-read filename
-Read @var{filename} which contains an @code{eieio-persistent} object
-previously written with @code{eieio-persistent-save}.
+@defun eieio-persistent-read filename &optional class allow-subclass
+Read a persistent object from @var{filename}, and return it.
+Signal an error if the object in @var{FILENAME} is not a constructor
+for @var{CLASS}.  Optional @var{allow-subclass} says that it is ok for
+@code{eieio-peristent-read} to load in subclasses of class instead of
+being pendantic."
 @end defun
 
 @node eieio-named

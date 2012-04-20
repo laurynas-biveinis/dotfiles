@@ -1,6 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c
-@c $Id: srecode.texi,v 1.24 2010/05/30 20:22:40 scymtym Exp $
+@c $Id: srecode.texi,v 1.24 2010-05-30 20:22:40 scymtym Exp $
 @c
 @c %**start of header
 @setfilename srecode.info
@@ -21,7 +21,7 @@ END-INFO-DIR-ENTRY
 @sp 10
 @center @titlefont{srecode}
 @vskip 0pt plus 1 fill
-Copyright @copyright{} 2007, 2008, 2009, 2010 Eric M. Ludlam
+Copyright @copyright{} 2007, 2008, 2009, 2010, 2011 Eric M. Ludlam
 @end titlepage
 
 @macro semantic{}
@@ -1181,11 +1181,11 @@ Sets up variables about the current user.
 @item AUTHOR
 Value of the Emacs function @code{user-full-name}
 @item EMAIL
-Current Emacs users email address.
+Current Emacs user's email address.
 @item LOGIN
-Current Emacs users login name.
+Current Emacs user's login name.
 @item UID
-Current Emacs users login name.
+Current Emacs user's login ID.
 @item EMACSINITFILE
 This Emacs sessions' init file.
 @end table
@@ -1229,9 +1229,9 @@ Sets up variables with details about the current file.
 
 @table @code
 @item FILENAME
-The filename with out the directory part of the current buffer.
+The filename without the directory part of the current buffer.
 @item FILE
-The filename with out the directory or extension
+The filename without the directory or extension
 @item EXTENSION
 The filename extension.
 @item DIRECTORY
@@ -1387,6 +1387,8 @@ name.
 @item FILENAME_AS_CLASS
 Converts the filename into text that would be suitable as a class-name
 for the main class in the file.
+@item CURRENT_PACKAGE
+Finds the occurance of ``package'' and gets its value.
 @end table
 
 @subsubsection Argument :el
@@ -1427,6 +1429,12 @@ The @code{TAGDOC} is filled with derived documentation from the tag in
 question, and that documentation is also reformatted to be mostly
 texinfo compatible.
 
+@subsection Argument :android
+
+The @code{:android} argument pulls in information from your current
+project.
+
+@@TODO - add more here.
 
 @node Developing Template Functions
 @chapter Developing Template Functions

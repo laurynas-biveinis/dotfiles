@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: file, tags, tools
-;; X-RCS: $Id: ezimage.el,v 1.6 2005/12/07 16:51:22 zappo Exp $
+;; X-RCS: $Id: ezimage.el,v 1.6 2005-12-07 16:51:22 zappo Exp $
 
 ;; This file is part of GNU Emacs.
 

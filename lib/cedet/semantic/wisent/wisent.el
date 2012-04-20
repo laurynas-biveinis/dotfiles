@@ -7,7 +7,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 30 January 2002
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent.el,v 1.43 2010/04/09 02:07:37 zappo Exp $
+;; X-RCS: $Id: wisent.el,v 1.43 2010-04-09 02:07:37 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

@@ -4,7 +4,7 @@
 ;;; Copyright (C) 2003 David Ponce
 
 ;; Author: David Ponce <david@dponce.com>
-;; X-RCS: $Id: cedet-load.el,v 1.3 2008/03/14 22:38:15 zappo Exp $
+;; X-RCS: $Id: cedet-load.el,v 1.3 2008-03-14 22:38:15 zappo Exp $
 
 ;; CEDET is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

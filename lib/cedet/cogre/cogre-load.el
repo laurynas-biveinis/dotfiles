@@ -3,7 +3,7 @@
 ;;; Copyright (C) 2003 David Ponce
 
 ;; Author: David Ponce <david@dponce.com>
-;; X-RCS: $Id: cogre-load.el,v 1.2 2005/09/30 20:06:52 zappo Exp $
+;; X-RCS: $Id: cogre-load.el,v 1.2 2005-09-30 20:06:52 zappo Exp $
 
 ;; COGRE is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

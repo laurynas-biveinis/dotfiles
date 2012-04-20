@@ -5,7 +5,7 @@
 
 ;; Created By: Paul Kinnucan
 ;; Maintainer: Eric Ludlam
-;; X-RCS: $Id: semantic-imenu.el,v 1.61 2010/07/24 11:55:22 zappo Exp $
+;; X-RCS: $Id: semantic-imenu.el,v 1.61 2010-07-24 11:55:22 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

@@ -1,10 +1,10 @@
 ;;; autoconf-edit.el --- Keymap for autoconf
 
-;;  Copyright (C) 1998, 1999, 2000, 2009, 2010  Eric M. Ludlam
+;;  Copyright (C) 1998, 1999, 2000, 2009, 2010, 2011, 2012  Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project
-;; RCS: $Id: autoconf-edit.el,v 1.15 2010/07/24 13:55:40 zappo Exp $
+;; RCS: $Id: autoconf-edit.el,v 1.15 2010-07-24 13:55:40 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -173,6 +173,9 @@ items such as CHECK_HEADERS."
     (setq param (substring param (match-end 0))))
   (when (string-match "\\s-*\\]?\\s-*\\'" param)
     (setq param (substring param 0  (match-beginning 0))))
+  ;; Look for occurances of backslash newline
+  (while (string-match "\\s-*\\\\\\s-*\n\\s-*" param)
+    (setq param (replace-match " " t t param)))
   param)
 
 ;;;###autoload
@@ -382,6 +385,38 @@ Optional argument BODY is the code to execute which edits the autoconf file."
 	      (string= autoconf-deleted-text autoconf-inserted-text))
 	 (set-buffer-modified-p nil))))
 
+(defun autoconf-parameter-count ()
+  "Return the number of parameters to the function on the current line."
+  (save-excursion
+    (beginning-of-line)
+    (let* ((end-of-cmd
+	    (save-excursion
+	      (if (re-search-forward "(" (point-at-eol) t)
+		  (progn
+		    (forward-char -1)
+		    (forward-sexp 1)
+		    (point))
+		;; Else, just return EOL.
+		(point-at-eol))))
+	   (cnt 0))
+      (save-restriction
+	(narrow-to-region (point-at-bol) end-of-cmd)
+	(condition-case nil
+	    (progn
+	      (down-list 1)
+	      (while (re-search-forward ", ?" end-of-cmd t)
+		(setq cnt (1+ cnt)))
+	      (cond ((> cnt 1)
+		     ;; If the # is > 1, then there is one fewer , than args.
+		     (1+ cnt))
+		    ((not (looking-at "\\s-*)"))
+		     ;; If there are 0 args, then we have to see if there is one arg.
+		     (1+ cnt))
+		    (t
+		     ;; Else, just return the 0.
+		     cnt)))
+	  (error 0))))))
+
 (defun autoconf-delete-parameter (index)
   "Delete the INDEXth parameter from the macro starting on the current line.
 Leaves the cursor where a new parameter can be inserted.
@@ -407,12 +442,19 @@ INDEX starts at 1."
   "Set the version used with automake to VERSION."
   (if (not (stringp version))
       (signal 'wrong-type-argument '(stringp version)))
-  (if (not (autoconf-find-last-macro "AM_INIT_AUTOMAKE"))
-      (error "Cannot update version")
-    ;; Move to correct position.
+  (if (and (autoconf-find-last-macro "AM_INIT_AUTOMAKE")
+	   (>= (autoconf-parameter-count) 2))
+      ;; We can edit right here.
+      nil
+    ;; Else, look for AC init instead.
+    (if (not (and (autoconf-find-last-macro "AC_INIT")
+		  (>= (autoconf-parameter-count) 2)))
+      (error "Cannot update version")))
+
+    ;; Perform the edit.
     (autoconf-edit-cycle
      (autoconf-delete-parameter 2)
-     (autoconf-insert version))))
+     (autoconf-insert (concat "[" version "]"))))
 
 (defun autoconf-set-output (outputlist)
   "Set the files created in AC_OUTPUT to OUTPUTLIST.

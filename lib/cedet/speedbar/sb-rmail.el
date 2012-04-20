@@ -5,7 +5,7 @@
 ;; Author: Eric M. Ludlam <zappo@gnu.ai.mit.edu>
 ;; Version: 0.1
 ;; Keywords: file, tags, tools
-;; X-RCS: $Id: sb-rmail.el,v 1.12 2003/02/21 18:04:30 zappo Exp $
+;; X-RCS: $Id: sb-rmail.el,v 1.12 2003-02-21 18:04:30 zappo Exp $
 ;;
 ;; This file is part of GNU Emacs.
 ;;

@@ -3,7 +3,7 @@
 ;; Copyright (C) 2007 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: srecode-expandproto.el,v 1.1 2007/03/18 16:47:16 zappo Exp $
+;; X-RCS: $Id: srecode-expandproto.el,v 1.1 2007-03-18 16:47:16 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

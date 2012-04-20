@@ -3,7 +3,7 @@
 ;;; Copyright (C) 1996, 1998, 1999, 2000, 2001, 2004, 2005 Eric M. Ludlam
 ;;
 ;; Author: <zappo@gnu.org>
-;; RCS: $Id: eieio-doc.el,v 1.20 2005/09/30 20:18:01 zappo Exp $
+;; RCS: $Id: eieio-doc.el,v 1.20 2005-09-30 20:18:01 zappo Exp $
 ;; Keywords: OO, lisp, docs
 ;;
 ;; This program is free software; you can redistribute it and/or modify

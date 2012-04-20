@@ -1,11 +1,11 @@
 ;;; semantic-java.el --- Semantic functions for Java
 
-;;; Copyright (C) 2009 Eric M. Ludlam
+;;; Copyright (C) 2009, 2011 Eric M. Ludlam
 ;;; Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 ;;;   David Ponce
 
 ;; Author: David Ponce <david@dponce.com>
-;; X-RCS: $Id: semantic-java.el,v 1.21 2010/03/26 22:18:06 xscript Exp $
+;; X-RCS: $Id: semantic-java.el,v 1.21 2010-03-26 22:18:06 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -120,6 +120,7 @@ corresponding compound declaration."
       (setq clone (semantic-tag-clone tag (car dim))
             xpand (cons clone xpand))
       (semantic-tag-put-attribute clone :dereference (cdr dim)))
+
      ((eq class 'variable)
       (or (consp elts) (setq elts (list (list elts))))
       (setq dim  (semantic-java-dim (semantic-tag-get-attribute tag :type))
@@ -138,7 +139,20 @@ corresponding compound declaration."
         (semantic-tag-put-attribute clone :type type)
         (semantic-tag-put-attribute clone :dereference (+ dim0 (cdr dim)))
         (semantic-tag-set-bounds clone start end)))
-     )
+
+     ((and (eq class 'type) (string-match "\\." (semantic-tag-name tag)))
+      ;; javap outputs files where the package name is stuck onto the class or interface
+      ;; name.  To make this more regular, we extract the package name into a package statement,
+      ;; then make the class name regular.
+      (let* ((name (semantic-tag-name tag))
+	     (rsplit (nreverse (split-string name "\\." t)))
+	     (newclassname (car rsplit))
+	     (newpkg (mapconcat 'identity (reverse (cdr rsplit)) ".")))
+	(semantic-tag-set-name tag newclassname)
+	(setq xpand
+	      (list tag
+		    (semantic-tag-new-package newpkg nil))))
+      ))
     xpand))
 
 ;;; Environment

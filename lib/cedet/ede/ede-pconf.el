@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project
-;; RCS: $Id: ede-pconf.el,v 1.20 2010/03/16 02:54:40 zappo Exp $
+;; RCS: $Id: ede-pconf.el,v 1.20 2010-03-16 02:54:40 zappo Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

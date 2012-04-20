@@ -7,7 +7,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 27 Apr 2004
 ;; Keywords: syntax
-;; X-RCS: $Id: mode-local.el,v 1.28 2010/04/09 02:14:51 zappo Exp $
+;; X-RCS: $Id: mode-local.el,v 1.28 2010-04-09 02:14:51 zappo Exp $
 ;;
 ;; This file is not part of GNU Emacs.
 ;;

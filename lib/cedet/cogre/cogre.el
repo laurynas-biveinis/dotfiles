@@ -1,12 +1,12 @@
 ;;; cogre.el --- COnnected GRaph Editor for Emacs
 
-;;; Copyright (C) 2001, 2002, 2003, 2005, 2007, 2008, 2009, 2010 Eric M. Ludlam
+;;; Copyright (C) 2001, 2002, 2003, 2005, 2007, 2008, 2009, 2010, 2012 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: graph, oop, extensions, outlines
-;; X-RCS: $Id: cogre.el,v 1.47 2010/04/18 21:39:12 zappo Exp $
+;; X-RCS: $Id: cogre.el,v 1.47 2010-04-18 21:39:12 zappo Exp $
 
-(defvar cogre-version "1.0"
+(defvar cogre-version "1.1"
   "Current version of Cogre.")
 
 ;; This file is not part of GNU Emacs.
@@ -111,6 +111,32 @@ Subclasses should define slots to store their data."
 ;;; GRAPH Classes
 ;;
 ;;;###autoload
+(defclass cogre-graph-element (eieio-named)
+  ((dirty :initform t
+	  :documentation
+	  "Non-nil if this graph element is dirty.
+Elements are made dirty when they are erased from the screen.
+Elements must be erased before any graphical fields are changed.")
+   (name-default :initform "Name"
+		 :type string
+		 :custom string
+		 :allocation :class
+		 :documentation
+     "The object-name of this node.
+Node object-names must be unique within the current graph so that save
+references in links can be restored.")
+   (peer :initarg :peer
+	 :initform nil
+	 :type (or null cogre-element-peer)
+	 :documentation
+	 "The peer for this graph.")
+   )
+  "A Graph Element.
+Graph elements are anything that is drawn into a `cogre-base-graph'.
+Graph elements have a method for marking themselves dirty."
+  :abstract t)
+
+;;;###autoload
 (defclass cogre-base-graph (eieio-persistent)
   ((extension :initform ".cgr") ;; Override the default
    (name :initarg :name
@@ -158,7 +184,7 @@ A 2 means to show less than that.
 A 3 means just the package and name.")
    (elements :initarg :elements
 	     :initform nil
-	     :type list
+	     :type cogre-graph-element-list
 	     :documentation
 	     "The list of elements in this graph.")
    )
@@ -171,32 +197,6 @@ rendered in a buffer, or serialized to disk.")
   (call-next-method)
   (oset G buffer (current-buffer))
   )
-
-;;;###autoload
-(defclass cogre-graph-element (eieio-named)
-  ((dirty :initform t
-	  :documentation
-	  "Non-nil if this graph element is dirty.
-Elements are made dirty when they are erased from the screen.
-Elements must be erased before any graphical fields are changed.")
-   (name-default :initform "Name"
-		 :type string
-		 :custom string
-		 :allocation :class
-		 :documentation
-     "The object-name of this node.
-Node object-names must be unique within the current graph so that save
-references in links can be restored.")
-   (peer :initarg :peer
-	 :initform nil
-	 :type (or null cogre-element-peer)
-	 :documentation
-	 "The peer for this graph.")
-   )
-  "A Graph Element.
-Graph elements are anything that is drawn into a `cogre-base-graph'.
-Graph elements have a method for marking themselves dirty."
-  :abstract t)
 
 ;;;###autoload
 (defclass cogre-node (cogre-graph-element)

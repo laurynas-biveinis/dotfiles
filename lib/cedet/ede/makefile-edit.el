@@ -1,9 +1,9 @@
 ;;; makefile-edit.el --- Makefile editing/scanning commands.
 ;;
-;; Copyright (C) 2009 Eric M. Ludlam
+;; Copyright (C) 2009, 2012 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: makefile-edit.el,v 1.3 2010/03/15 13:40:54 xscript Exp $
+;; X-RCS: $Id: makefile-edit.el,v 1.3 2010-03-15 13:40:54 xscript Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -100,7 +100,8 @@ STOP-BEFORE is a regular expression matching a file name."
   "Return a list of all files in MACRO."
   (save-excursion
     (goto-char (point-min))
-    (let ((lst nil))
+    (let ((lst nil)
+	  (case-fold-search nil))
       (while (makefile-move-to-macro macro t)
 	(let ((e (save-excursion
 		   (makefile-end-of-command)

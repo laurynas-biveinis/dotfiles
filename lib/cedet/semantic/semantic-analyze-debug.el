@@ -1,9 +1,9 @@
 ;;; semantic-analyze-debug.el --- Debug the analyzer
 
-;; Copyright (C) 2008, 2009, 2010 Eric M. Ludlam
+;; Copyright (C) 2008, 2009, 2010, 2011 Eric M. Ludlam
 
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: semantic-analyze-debug.el,v 1.13 2010/04/10 00:52:16 zappo Exp $
+;; X-RCS: $Id: semantic-analyze-debug.el,v 1.13 2010-04-10 00:52:16 zappo Exp $
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -434,7 +434,7 @@ or implementing a version specific to ")
 			     (semanticdb-file-table-object fileinner t))))
 	  (cond ((not fileinner)
 		 (setq unknown (1+ unknown)))
-		((number-or-marker-p (oref tableinner pointmax))
+		((and tableinner (number-or-marker-p (oref tableinner pointmax)))
 		 (setq ok (1+ ok)))
 		(t
 		 (setq unparsed (1+ unparsed))))))

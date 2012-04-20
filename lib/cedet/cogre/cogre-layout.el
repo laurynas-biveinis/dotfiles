@@ -3,7 +3,7 @@
 ;; Copyright (C) 2009, 2010 Eric M. Ludlam
 ;;
 ;; Author: Eric M. Ludlam <eric@siege-engine.com>
-;; X-RCS: $Id: cogre-layout.el,v 1.5 2010/03/26 01:51:19 zappo Exp $
+;; X-RCS: $Id: cogre-layout.el,v 1.5 2010-03-26 01:51:19 zappo Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -53,14 +53,14 @@ This function depends on graphviz `dot' program."
 	;; For some reason, the above mode change doesn't trigger
 	;; the semantic new buffer function.  Do it here.
 	(semantic-new-buffer-fcn)
-	;; Fetch teh tags.
+	;; Fetch the tags.
 	(setq tags (semantic-fetch-tags))
 	;; Now that we have the tags, switch back to our original
 	;; graph, and try to apply the positional information.
 	))
     ;; Get stuff in the graph.
     (setq elts (semantic-tag-get-attribute (car tags) :members))
-    
+
     ;; Loop over the tags.
     (dolist (E elts)
       (when (semantic-tag-of-class-p E 'node)
@@ -102,6 +102,6 @@ This function depends on graphviz `dot' program."
     ;; Refresh the graph.
     (cogre-refresh)
     ))
-  
+
 (provide 'cogre-layout)
 ;;; cogre-layout.el ends here

@@ -4,7 +4,7 @@
 
 ;; Author: Original code for Java by David Ponce <david@dponce.com>
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-php.el,v 1.3 2009/01/24 04:08:28 zappo Exp $
+;; X-RCS: $Id: wisent-php.el,v 1.3 2009-01-24 04:08:28 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

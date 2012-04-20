@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-analyze.el,v 1.92 2010/04/18 21:45:44 zappo Exp $
+;; X-RCS: $Id: semantic-analyze.el,v 1.92 2010-04-18 21:45:44 zappo Exp $
 
 ;; This file is not part of GNU Emacs.
 

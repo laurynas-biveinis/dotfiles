@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: syntax
-;; X-RCS: $Id: semantic-find.el,v 1.29 2010/03/15 13:40:54 xscript Exp $
+;; X-RCS: $Id: semantic-find.el,v 1.29 2010-03-15 13:40:54 xscript Exp $
 
 ;; This file is not part of GNU Emacs.
 
@@ -372,9 +372,14 @@ See `semantic-tag-protected-p' for details on which tags are returned."
        table)))
 
 ;;;###autoload
-(defsubst semantic-find-tags-included (&optional table)
+(define-overloadable-function semantic-find-tags-included (&optional table)
   "Find all tags in TABLE that are of the 'include class.
-TABLE is a tag table.  See `semantic-something-to-tag-table'."
+TABLE is a tag table.  See `semantic-something-to-tag-table'.")
+
+(defun semantic-find-tags-included-default (&optional table)
+  "Find all tags in TABLE that are of the 'include class.
+TABLE is a tag table.  See `semantic-something-to-tag-table'.
+By default, just call `semantic-find-tags-by-class'."
   (semantic-find-tags-by-class 'include table))
 
 ;;; Deep Searches

@@ -6,7 +6,7 @@
 ;; Maintainer: David Ponce <david@dponce.com>
 ;; Created: 02 Aug 2003
 ;; Keywords: syntax
-;; X-RCS: $Id: wisent-grammar-macros.el,v 1.6 2006/05/31 12:46:17 ponced Exp $
+;; X-RCS: $Id: wisent-grammar-macros.el,v 1.6 2006-05-31 12:46:17 ponced Exp $
 ;;
 ;; This file is not part of GNU Emacs.
 ;;

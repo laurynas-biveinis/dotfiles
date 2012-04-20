@@ -4,7 +4,7 @@
 
 ;; Author: Eric M. Ludlam <zappo@gnu.org>
 ;; Keywords: project, make
-;; RCS: $Id: ede-proj-comp.el,v 1.15 2010/03/25 15:07:50 xscript Exp $
+;; RCS: $Id: ede-proj-comp.el,v 1.15 2010-03-25 15:07:50 xscript Exp $
 
 ;; This software is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -308,7 +308,7 @@ Not all compilers do this."
 
 (defmethod ede-proj-makefile-insert-rules ((this ede-makefile-rule))
   "Insert rules needed for THIS rule object."
-  (if (oref this phony) (insert ".PHONY: (oref this target)\n"))
+  (if (oref this phony) (insert ".PHONY: " (oref this target) "\n"))
   (insert (oref this target) ": " (oref this dependencies) "\n\t"
 	  (mapconcat (lambda (c) c) (oref this rules) "\n\t")
 	  "\n\n"))
