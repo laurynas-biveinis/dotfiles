@@ -1,9 +1,9 @@
 ; Integrated or 3rd party?
 (setq integrated-cedet-p (or (and (= emacs-major-version 23)
                                   (>= emacs-minor-version 2))
-                             (>= emacs-major-version 24)
-                             )
-)
+                             (>= emacs-major-version 24)))
+; OK, use the 3rd party CEDET 1.1 this time
+(setq integrated-cedet-p nil)
 
 ; Various paths
 (setq home-dir (concat (replace-regexp-in-string "\\\\" "/" (getenv "HOME")) "/"))
@@ -96,3 +96,5 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(org-todo ((t (:foreground "red" :weight bold)))))
+
+(server-start)
