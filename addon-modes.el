@@ -179,7 +179,7 @@
 (if (boundp 'cedet-lib)
     (load-file cedet-lib))
 
-(if (boundp 'semantic-mode) (semantic-mode 1))
+(if integrated-cedet-p (semantic-mode 1))
 
 ;; Additional global include directories
 (semantic-add-system-include "/usr/local/include" 'c-mode)
