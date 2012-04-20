@@ -2,8 +2,8 @@
 
 ;; Copyright (C) 2009-2012  Free Software Foundation, Inc.
 
-;; Author: Eric Schulte
-;;	Dan Davison
+;; Authors: Eric Schulte
+;;	 Dan Davison
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
 
@@ -39,6 +39,7 @@ files to `org-babel-lob-files'.")
   "Files used to populate the `org-babel-library-of-babel'.
 To add files to this list use the `org-babel-lob-ingest' command."
   :group 'org-babel
+  :version "24.1"
   :type 'list)
 
 (defvar org-babel-default-lob-header-args '((:exports . "results"))
@@ -104,18 +105,18 @@ if so then run the appropriate source block from the Library."
 	(beginning-of-line 1)
 	(when (looking-at org-babel-lob-one-liner-regexp)
 	  (append
-	   (mapcar #'org-babel-clean-text-properties 
+	   (mapcar #'org-babel-clean-text-properties
 		   (list
 		    (format "%s%s(%s)%s"
 			    (nonempty 3 12)
-			    (if (not (= 0 (length (nonempty 5 13))))
-				(concat "[" (nonempty 5 13) "]") "")
+			    (if (not (= 0 (length (nonempty 5 14))))
+				(concat "[" (nonempty 5 14) "]") "")
 			    (or (nonempty 7 16) "")
 			    (or (nonempty 8 19) ""))
 		    (nonempty 9 18)))
 	   (list (length (if (= (length (match-string 12)) 0)
 			     (match-string 2) (match-string 11))))))))))
-  
+
 (defun org-babel-lob-execute (info)
   "Execute the lob call specified by INFO."
   (let ((params (org-babel-process-params

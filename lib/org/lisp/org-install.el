@@ -5,7 +5,7 @@
 ;;;;;;  org-insert-link-global org-store-link org-run-like-in-org-mode
 ;;;;;;  turn-on-orgstruct++ turn-on-orgstruct orgstruct-mode org-global-cycle
 ;;;;;;  org-mode org-version org-babel-do-load-languages) "org" "org.el"
-;;;;;;  (20327 42849))
+;;;;;;  (20357 24035))
 ;;; Generated autoloads from org.el
 
 (autoload 'org-babel-do-load-languages "org" "\
@@ -238,7 +238,7 @@ Call the customize function with org as argument.
 ;;;;;;  org-diary org-agenda-list-stuck-projects org-tags-view org-todo-list
 ;;;;;;  org-search-view org-agenda-list org-batch-store-agenda-views
 ;;;;;;  org-store-agenda-views org-batch-agenda-csv org-batch-agenda
-;;;;;;  org-agenda) "org-agenda" "org-agenda.el" (20327 42846))
+;;;;;;  org-agenda) "org-agenda" "org-agenda.el" (20357 24019))
 ;;; Generated autoloads from org-agenda.el
 
 (autoload 'org-agenda "org-agenda" "\
@@ -493,7 +493,7 @@ details and examples.
 ;;;### (autoloads (org-export-as-ascii org-export-region-as-ascii
 ;;;;;;  org-replace-region-by-ascii org-export-as-ascii-to-buffer
 ;;;;;;  org-export-as-utf8-to-buffer org-export-as-utf8 org-export-as-latin1-to-buffer
-;;;;;;  org-export-as-latin1) "org-ascii" "org-ascii.el" (20327 42846))
+;;;;;;  org-export-as-latin1) "org-ascii" "org-ascii.el" (20357 24019))
 ;;; Generated autoloads from org-ascii.el
 
 (autoload 'org-export-as-latin1 "org-ascii" "\
@@ -566,8 +566,8 @@ publishing directory.
 
 ;;;***
 
-;;;### (autoloads (org-attach) "org-attach" "org-attach.el" (20327
-;;;;;;  42846))
+;;;### (autoloads (org-attach) "org-attach" "org-attach.el" (20357
+;;;;;;  24019))
 ;;; Generated autoloads from org-attach.el
 
 (autoload 'org-attach "org-attach" "\
@@ -580,7 +580,7 @@ Shows a list of commands and prompts for another key to execute a command.
 
 ;;;### (autoloads (org-archive-subtree-default-with-confirmation
 ;;;;;;  org-archive-subtree-default) "org-archive" "org-archive.el"
-;;;;;;  (20327 42846))
+;;;;;;  (20357 24019))
 ;;; Generated autoloads from org-archive.el
 
 (autoload 'org-archive-subtree-default "org-archive" "\
@@ -598,7 +598,7 @@ This command is set with the variable `org-archive-default-command'.
 ;;;***
 
 ;;;### (autoloads (org-bbdb-anniversaries) "org-bbdb" "org-bbdb.el"
-;;;;;;  (20327 42846))
+;;;;;;  (20357 24019))
 ;;; Generated autoloads from org-bbdb.el
 
 (autoload 'org-bbdb-anniversaries "org-bbdb" "\
@@ -609,7 +609,7 @@ Extract anniversaries from BBDB for display in the agenda.
 ;;;***
 
 ;;;### (autoloads (org-capture-import-remember-templates org-capture-insert-template-here
-;;;;;;  org-capture) "org-capture" "org-capture.el" (20327 42846))
+;;;;;;  org-capture) "org-capture" "org-capture.el" (20357 24019))
 ;;; Generated autoloads from org-capture.el
 
 (autoload 'org-capture "org-capture" "\
@@ -647,7 +647,7 @@ Set org-capture-templates to be similar to `org-remember-templates'.
 ;;;***
 
 ;;;### (autoloads (org-clock-persistence-insinuate org-get-clocktable)
-;;;;;;  "org-clock" "org-clock.el" (20327 42846))
+;;;;;;  "org-clock" "org-clock.el" (20357 24019))
 ;;; Generated autoloads from org-clock.el
 
 (autoload 'org-get-clocktable "org-clock" "\
@@ -665,7 +665,7 @@ Set up hooks for clock persistence.
 ;;;***
 
 ;;;### (autoloads (org-datetree-find-date-create) "org-datetree"
-;;;;;;  "org-datetree.el" (20323 36516))
+;;;;;;  "org-datetree.el" (20357 24019))
 ;;; Generated autoloads from org-datetree.el
 
 (autoload 'org-datetree-find-date-create "org-datetree" "\
@@ -679,8 +679,8 @@ tree can be found.
 ;;;***
 
 ;;;### (autoloads (org-insert-export-options-template org-export-as-org
-;;;;;;  org-export-visible org-export) "org-exp" "org-exp.el" (20327
-;;;;;;  42846))
+;;;;;;  org-export-visible org-export) "org-exp" "org-exp.el" (20357
+;;;;;;  24019))
 ;;; Generated autoloads from org-exp.el
 
 (autoload 'org-export "org-exp" "\
@@ -743,7 +743,7 @@ Insert into the buffer a template with information for exporting.
 ;;;### (autoloads (org-export-as-docbook org-export-as-docbook-pdf-and-open
 ;;;;;;  org-export-as-docbook-pdf org-export-region-as-docbook org-replace-region-by-docbook
 ;;;;;;  org-export-as-docbook-to-buffer org-export-as-docbook-batch)
-;;;;;;  "org-docbook" "org-docbook.el" (20327 42846))
+;;;;;;  "org-docbook" "org-docbook.el" (20357 24019))
 ;;; Generated autoloads from org-docbook.el
 
 (autoload 'org-export-as-docbook-batch "org-docbook" "\
@@ -819,7 +819,7 @@ publishing directory.
 ;;;***
 
 ;;;### (autoloads (org-feed-show-raw-feed org-feed-goto-inbox org-feed-update
-;;;;;;  org-feed-update-all) "org-feed" "org-feed.el" (20327 42846))
+;;;;;;  org-feed-update-all) "org-feed" "org-feed.el" (20342 54213))
 ;;; Generated autoloads from org-feed.el
 
 (autoload 'org-feed-update-all "org-feed" "\
@@ -847,7 +847,7 @@ Show the raw feed buffer of a feed.
 ;;;***
 
 ;;;### (autoloads (org-footnote-normalize org-footnote-action) "org-footnote"
-;;;;;;  "org-footnote.el" (20327 42846))
+;;;;;;  "org-footnote.el" (20357 24019))
 ;;; Generated autoloads from org-footnote.el
 
 (autoload 'org-footnote-action "org-footnote" "\
@@ -898,7 +898,7 @@ Additional note on `org-footnote-insert-pos-for-preprocessor':
 ;;;### (autoloads (org-freemind-to-org-mode org-freemind-from-org-sparse-tree
 ;;;;;;  org-freemind-from-org-mode org-freemind-from-org-mode-node
 ;;;;;;  org-freemind-show org-export-as-freemind) "org-freemind"
-;;;;;;  "org-freemind.el" (20327 42846))
+;;;;;;  "org-freemind.el" (20357 24019))
 ;;; Generated autoloads from org-freemind.el
 
 (autoload 'org-export-as-freemind "org-freemind" "\
@@ -959,7 +959,7 @@ Convert FreeMind file MM-FILE to `org-mode' file ORG-FILE.
 ;;;### (autoloads (org-export-htmlize-generate-css org-export-as-html
 ;;;;;;  org-export-region-as-html org-replace-region-by-html org-export-as-html-to-buffer
 ;;;;;;  org-export-as-html-batch org-export-as-html-and-open) "org-html"
-;;;;;;  "org-html.el" (20327 42846))
+;;;;;;  "org-html.el" (20357 24019))
 ;;; Generated autoloads from org-html.el
 
 (put 'org-export-html-style-include-default 'safe-local-variable 'booleanp)
@@ -1053,7 +1053,7 @@ that uses these same face definitions.
 
 ;;;### (autoloads (org-export-icalendar-combine-agenda-files org-export-icalendar-all-agenda-files
 ;;;;;;  org-export-icalendar-this-file) "org-icalendar" "org-icalendar.el"
-;;;;;;  (20327 42846))
+;;;;;;  (20357 24019))
 ;;; Generated autoloads from org-icalendar.el
 
 (autoload 'org-export-icalendar-this-file "org-icalendar" "\
@@ -1081,7 +1081,7 @@ The file is stored under the name `org-combined-agenda-icalendar-file'.
 ;;;### (autoloads (org-id-store-link org-id-find-id-file org-id-find
 ;;;;;;  org-id-goto org-id-get-with-outline-drilling org-id-get-with-outline-path-completion
 ;;;;;;  org-id-get org-id-copy org-id-get-create) "org-id" "org-id.el"
-;;;;;;  (20327 42846))
+;;;;;;  (20342 54224))
 ;;; Generated autoloads from org-id.el
 
 (autoload 'org-id-get-create "org-id" "\
@@ -1150,7 +1150,7 @@ Store a link to the current entry, using its ID.
 ;;;***
 
 ;;;### (autoloads (org-indent-mode) "org-indent" "org-indent.el"
-;;;;;;  (20327 42846))
+;;;;;;  (20342 54213))
 ;;; Generated autoloads from org-indent.el
 
 (autoload 'org-indent-mode "org-indent" "\
@@ -1167,8 +1167,8 @@ during idle time.
 
 ;;;***
 
-;;;### (autoloads (org-irc-store-link) "org-irc" "org-irc.el" (20327
-;;;;;;  42846))
+;;;### (autoloads (org-irc-store-link) "org-irc" "org-irc.el" (20342
+;;;;;;  54224))
 ;;; Generated autoloads from org-irc.el
 
 (autoload 'org-irc-store-link "org-irc" "\
@@ -1180,8 +1180,8 @@ Dispatch to the appropriate function to store a link to an IRC session.
 
 ;;;### (autoloads (org-export-as-pdf-and-open org-export-as-pdf org-export-as-latex
 ;;;;;;  org-export-region-as-latex org-replace-region-by-latex org-export-as-latex-to-buffer
-;;;;;;  org-export-as-latex-batch) "org-latex" "org-latex.el" (20327
-;;;;;;  42846))
+;;;;;;  org-export-as-latex-batch) "org-latex" "org-latex.el" (20342
+;;;;;;  54224))
 ;;; Generated autoloads from org-latex.el
 
 (autoload 'org-export-as-latex-batch "org-latex" "\
@@ -1262,7 +1262,7 @@ Export as LaTeX, then process through to PDF, and open.
 
 ;;;### (autoloads (org-lparse-region org-replace-region-by org-lparse-to-buffer
 ;;;;;;  org-lparse-batch org-lparse-and-open) "org-lparse" "org-lparse.el"
-;;;;;;  (20323 36516))
+;;;;;;  (20342 54224))
 ;;; Generated autoloads from org-lparse.el
 
 (autoload 'org-lparse-and-open "org-lparse" "\
@@ -1319,7 +1319,7 @@ in a window.  A non-interactive call will only return the buffer.
 ;;;***
 
 ;;;### (autoloads (org-mobile-create-sumo-agenda org-mobile-pull
-;;;;;;  org-mobile-push) "org-mobile" "org-mobile.el" (20327 42846))
+;;;;;;  org-mobile-push) "org-mobile" "org-mobile.el" (20357 24019))
 ;;; Generated autoloads from org-mobile.el
 
 (autoload 'org-mobile-push "org-mobile" "\
@@ -1345,7 +1345,7 @@ Create a file that contains all custom agenda views.
 
 ;;;### (autoloads (org-export-as-odf-and-open org-export-as-odf org-export-odt-convert
 ;;;;;;  org-export-as-odt org-export-as-odt-batch org-export-as-odt-and-open)
-;;;;;;  "org-odt" "org-odt.el" (20323 36516))
+;;;;;;  "org-odt" "org-odt.el" (20342 54224))
 ;;; Generated autoloads from org-odt.el
 
 (autoload 'org-export-as-odt-and-open "org-odt" "\
@@ -1416,7 +1416,7 @@ formula file.
 
 ;;;### (autoloads (org-publish-current-project org-publish-current-file
 ;;;;;;  org-publish-all org-publish) "org-publish" "org-publish.el"
-;;;;;;  (20327 42846))
+;;;;;;  (20357 24019))
 ;;; Generated autoloads from org-publish.el
 
 (defalias 'org-publish-project 'org-publish)
@@ -1463,7 +1463,7 @@ line directly before or after the table.
 
 ;;;### (autoloads (org-remember-handler org-remember org-remember-apply-template
 ;;;;;;  org-remember-annotation org-remember-insinuate) "org-remember"
-;;;;;;  "org-remember.el" (20327 42846))
+;;;;;;  "org-remember.el" (20342 54224))
 ;;; Generated autoloads from org-remember.el
 
 (autoload 'org-remember-insinuate "org-remember" "\
@@ -1539,7 +1539,7 @@ See also the variable `org-reverse-note-order'.
 ;;;***
 
 ;;;### (autoloads (org-table-to-lisp orgtbl-mode turn-on-orgtbl)
-;;;;;;  "org-table" "org-table.el" (20327 42846))
+;;;;;;  "org-table" "org-table.el" (20357 24019))
 ;;; Generated autoloads from org-table.el
 
 (autoload 'turn-on-orgtbl "org-table" "\
@@ -1563,7 +1563,7 @@ The table is taken from the parameter TXT, or from the buffer at point.
 ;;;***
 
 ;;;### (autoloads (org-export-as-taskjuggler-and-open org-export-as-taskjuggler)
-;;;;;;  "org-taskjuggler" "org-taskjuggler.el" (20327 42846))
+;;;;;;  "org-taskjuggler" "org-taskjuggler.el" (20357 24019))
 ;;; Generated autoloads from org-taskjuggler.el
 
 (autoload 'org-export-as-taskjuggler "org-taskjuggler" "\
@@ -1590,8 +1590,8 @@ with the TaskJuggler GUI.
 ;;;***
 
 ;;;### (autoloads (org-timer-set-timer org-timer-item org-timer-change-times-in-region
-;;;;;;  org-timer org-timer-start) "org-timer" "org-timer.el" (20327
-;;;;;;  42846))
+;;;;;;  org-timer org-timer-start) "org-timer" "org-timer.el" (20357
+;;;;;;  24019))
 ;;; Generated autoloads from org-timer.el
 
 (autoload 'org-timer-start "org-timer" "\
@@ -1651,8 +1651,8 @@ replace any running timer.
 
 ;;;***
 
-;;;### (autoloads (org-export-as-xoxo) "org-xoxo" "org-xoxo.el" (20323
-;;;;;;  36516))
+;;;### (autoloads (org-export-as-xoxo) "org-xoxo" "org-xoxo.el" (20357
+;;;;;;  24019))
 ;;; Generated autoloads from org-xoxo.el
 
 (autoload 'org-export-as-xoxo "org-xoxo" "\
@@ -1675,7 +1675,7 @@ The XOXO buffer is named *xoxo-<source buffer name>*
 ;;;;;;  org-babel-pop-to-session-maybe org-babel-load-in-session-maybe
 ;;;;;;  org-babel-expand-src-block-maybe org-babel-view-src-block-info
 ;;;;;;  org-babel-execute-maybe org-babel-execute-safely-maybe) "ob"
-;;;;;;  "ob.el" (20327 42846))
+;;;;;;  "ob.el" (20357 24019))
 ;;; Generated autoloads from ob.el
 
 (autoload 'org-babel-execute-safely-maybe "ob" "\
@@ -1890,7 +1890,7 @@ Mark current src block
 ;;;***
 
 ;;;### (autoloads (org-babel-lob-get-info org-babel-lob-execute-maybe
-;;;;;;  org-babel-lob-ingest) "ob-lob" "ob-lob.el" (20327 42846))
+;;;;;;  org-babel-lob-ingest) "ob-lob" "ob-lob.el" (20357 24019))
 ;;; Generated autoloads from ob-lob.el
 
 (autoload 'org-babel-lob-ingest "ob-lob" "\
@@ -1914,8 +1914,8 @@ Return a Library of Babel function call as a string.
 ;;;***
 
 ;;;### (autoloads (org-babel-tangle org-babel-tangle-file org-babel-load-file
-;;;;;;  org-babel-tangle-lang-exts) "ob-tangle" "ob-tangle.el" (20327
-;;;;;;  42846))
+;;;;;;  org-babel-tangle-lang-exts) "ob-tangle" "ob-tangle.el" (20357
+;;;;;;  24019))
 ;;; Generated autoloads from ob-tangle.el
 
 (defvar org-babel-tangle-lang-exts '(("emacs-lisp" . "el")) "\

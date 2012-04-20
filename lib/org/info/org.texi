@@ -4,8 +4,8 @@
 @setfilename ../../info/org
 @settitle The Org Manual
 
-@set VERSION 7.8.06
-@set DATE mars 2012
+@set VERSION 7.8.09
+@set DATE April 2012
 
 @c Use proper quote and backtick for code sections in PDF output
 @c Cf. Texinfo manual 14.2
@@ -265,7 +265,7 @@
 @copying
 This manual is for Org version @value{VERSION}.
 
-Copyright @copyright{} 2004-2011  Free Software Foundation, Inc.
+Copyright @copyright{} 2004-2012  Free Software Foundation, Inc.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -613,13 +613,14 @@ DocBook export
 OpenDocument Text export
 
 * Pre-requisites for ODT export::  What packages ODT exporter relies on
-* ODT export commands::  How to invoke ODT export
-* Extending ODT export:: How to produce @samp{doc}, @samp{pdf} files
+* ODT export commands::         How to invoke ODT export
+* Extending ODT export::        How to produce @samp{doc}, @samp{pdf} files
 * Applying custom styles::      How to apply custom styles to the output
-* Links in ODT export::  How links will be interpreted and formatted
-* Tables in ODT export::  How Tables are exported
-* Images in ODT export::  How to insert images
+* Links in ODT export::         How links will be interpreted and formatted
+* Tables in ODT export::        How Tables are exported
+* Images in ODT export::        How to insert images
 * Math formatting in ODT export::  How @LaTeX{} fragments are formatted
+* Labels and captions in ODT export::  How captions are rendered
 * Literal examples in ODT export::  How source and example blocks are formatted
 * Advanced topics in ODT export::  Read this if you are a power user
 
@@ -1006,7 +1007,7 @@ from within Emacs, please copy and paste the content into your Email program.
 
 Sometimes you might face a problem due to an error in your Emacs or Org mode
 setup.  Before reporting a bug, it is very helpful to start Emacs with minimal
-customisations and reproduce the problem.  Doing so often helps you determine
+customizations and reproduce the problem.  Doing so often helps you determine
 if the problem is with your customization or with Org mode itself.  You can
 start a typical minimal session with a command like the example below.
 
@@ -2243,7 +2244,8 @@ of columns, much like horizontal lines can do for groups of rows.  In
 order to specify column groups, you can use a special row where the
 first field contains only @samp{/}.  The further fields can either
 contain @samp{<} to indicate that this column should start a group,
-@samp{>} to indicate the end of a column, or @samp{<>} to make a column
+@samp{>} to indicate the end of a column, or @samp{<>} (no space between @samp{<}
+and @samp{>}) to make a column
 a group of its own.  Boundaries between column groups will upon export be
 marked with vertical lines.  Here is an example:
 
@@ -5696,8 +5698,8 @@ until the entry is marked DONE.  An example:
 
 @example
 *** TODO write article about the Earth for the Guide
-    The editor in charge is [[bbdb:Ford Prefect]]
     DEADLINE: <2004-02-29 Sun>
+    The editor in charge is [[bbdb:Ford Prefect]]
 @end example
 
 You can specify a different lead time for warnings for a specific
@@ -6895,10 +6897,7 @@ Use the refile interface to jump to a heading.
 Jump to the location where @code{org-refile} last moved a tree to.
 @item C-2 C-c C-w
 Refile as the child of the item currently being clocked.
-@item C-0 C-c C-w @ @r{or} @ C-u C-u C-u C-c C-w
-
 @orgcmdtkc{C-0 C-c C-w @ @r{or} @ C-u C-u C-u C-c C-w,C-0 C-c C-w,org-refile-cache-clear}
-
 Clear the target cache.  Caching of refile targets can be turned on by
 setting @code{org-refile-use-cache}.  To make the command see new possible
 targets, you have to clear the cache with this command.
@@ -7853,9 +7852,9 @@ the other commands, the cursor needs to be in the desired line.
 @tsubheading{Motion}
 @cindex motion commands in agenda
 @orgcmd{n,org-agenda-next-line}
-Next line (same as @key{up} and @kbd{C-p}).
+Next line (same as @key{down} and @kbd{C-n}).
 @orgcmd{p,org-agenda-previous-line}
-Previous line (same as @key{down} and @kbd{C-n}).
+Previous line (same as @key{up} and @kbd{C-p}).
 @tsubheading{View/Go to Org file}
 @orgcmdkkc{@key{SPC},mouse-3,org-agenda-show-and-scroll-up}
 Display the original location of the item in another window.
@@ -9538,12 +9537,12 @@ the web, while the XOXO format provides a solid base for exchange with a
 broad range of other applications.  @LaTeX{} export lets you use Org mode and
 its structured editing functions to easily create @LaTeX{} files.  DocBook
 export makes it possible to convert Org files to many other formats using
-DocBook tools.  OpenDocument Text(ODT) export allows seamless
+DocBook tools.  OpenDocument Text (ODT) export allows seamless
 collaboration across organizational boundaries.  For project management you
 can create gantt and resource charts by using TaskJuggler export.  To
 incorporate entries with associated times like deadlines or appointments into
 a desktop calendar program like iCal, Org mode can also produce extracts in
-the iCalendar format.  Currently Org mode only supports export, not import of
+the iCalendar format.  Currently, Org mode only supports export, not import of
 these different formats.
 
 Org supports export of selected regions when @code{transient-mark-mode} is
@@ -10801,13 +10800,14 @@ are compatible with LibreOffice 3.4.
 
 @menu
 * Pre-requisites for ODT export::  What packages ODT exporter relies on
-* ODT export commands::  How to invoke ODT export
-* Extending ODT export:: How to produce @samp{doc}, @samp{pdf} files
+* ODT export commands::         How to invoke ODT export
+* Extending ODT export::        How to produce @samp{doc}, @samp{pdf} files
 * Applying custom styles::      How to apply custom styles to the output
-* Links in ODT export::  How links will be interpreted and formatted
-* Tables in ODT export::  How Tables are exported
-* Images in ODT export::  How to insert images
+* Links in ODT export::         How links will be interpreted and formatted
+* Tables in ODT export::        How Tables are exported
+* Images in ODT export::        How to insert images
 * Math formatting in ODT export::  How @LaTeX{} fragments are formatted
+* Labels and captions in ODT export::  How captions are rendered
 * Literal examples in ODT export::  How source and example blocks are formatted
 * Advanced topics in ODT export::  Read this if you are a power user
 @end menu
@@ -10869,10 +10869,10 @@ one format (say @samp{csv}) to another format (say @samp{ods} or @samp{xls}).
 If you have a working installation of LibreOffice, a document converter is
 pre-configured for you and you can use it right away.  If you would like to
 use @file{unoconv} as your preferred converter, customize the variable
-@code{org-export-odt-convert-process} to point to @code{unoconv}.  If you
-would like to use a converter of your own choosing or tweak the default
-settings of the default @file{LibreOffice} and @samp{unoconv} converters
-@xref{Configuring a document converter}.
+@code{org-export-odt-convert-process} to point to @code{unoconv}.  You can
+also use your own favorite converter or tweak the default settings of the
+@file{LibreOffice} and @samp{unoconv} converters.  @xref{Configuring a
+document converter}.
 
 @subsubsection Automatically exporting to other formats
 @anchor{x-export-to-other-formats}
@@ -10968,8 +10968,15 @@ the factory settings.
 @subsection Links in ODT export
 @cindex tables, in DocBook export
 
-The ODT exporter creates cross-references (aka bookmarks) for
-internal links.  It creates Internet-style links for all other links.
+ODT exporter creates native cross-references for internal links.  It creates
+Internet-style links for all other links.
+
+A link with no description and destined to a regular (un-itemized) outline
+heading is replaced with a cross-reference and section number of the heading.
+
+A @samp{\ref@{label@}}-style reference to an image, table etc. is replaced
+with a cross-reference and sequence number of the labeled entity.
+@xref{Labels and captions in ODT export}.
 
 @node Tables in ODT export, Images in ODT export, Links in ODT export, OpenDocument Text export
 @subsection Tables in ODT export
@@ -10992,7 +10999,7 @@ You can control the width of the table by specifying @code{:rel-width}
 property using an @code{#+ATTR_ODT} line.
 
 For example, consider the following table which makes use of all the rules
-mentoned above.
+mentioned above.
 
 @example
 #+ATTR_ODT: :rel-width 50
@@ -11118,7 +11125,7 @@ To create an image that is anchored to a page, do the following:
 [[./img.png]]
 @end example
 
-@node Math formatting in ODT export, Literal examples in ODT export, Images in ODT export, OpenDocument Text export
+@node Math formatting in ODT export, Labels and captions in ODT export, Images in ODT export, OpenDocument Text export
 @subsection Math formatting in ODT export
 
 The ODT exporter has special support for handling math.
@@ -11199,7 +11206,7 @@ that the @file{dvipng} program be available on your system.
 
 For various reasons, you may find embedding @LaTeX{} math snippets in an
 ODT document less than reliable.  In that case, you can embed a
-math equation by linking to its MathML(@file{.mml}) source or its
+math equation by linking to its MathML (@file{.mml}) source or its
 OpenDocument formula (@file{.odf}) file as shown below:
 
 @example
@@ -11212,34 +11219,69 @@ or
 [[./equation.odf]]
 @end example
 
-@node Literal examples in ODT export, Advanced topics in ODT export, Math formatting in ODT export, OpenDocument Text export
+@node Labels and captions in ODT export, Literal examples in ODT export, Math formatting in ODT export, OpenDocument Text export
+@subsection Labels and captions in ODT export
+
+You can label and caption various category of objects - an inline image, a
+table, a @LaTeX{} fragment or a Math formula - using @code{#+LABEL} and
+@code{#+CAPTION} lines.  @xref{Images and tables}.  ODT exporter enumerates
+each labeled or captioned object of a given category separately.  As a
+result, each such object is assigned a sequence number based on order of it's
+appearance in the Org file.
+
+In the exported document, a user-provided caption is augmented with the
+category and sequence number.  Consider the following inline image in an Org
+file.
+
+@example
+#+CAPTION: Bell curve
+#+LABEL:   fig:SED-HR4049
+[[./img/a.png]]
+@end example
+
+It could be rendered as shown below in the exported document.
+
+@example
+Figure 2: Bell curve
+@end example
+
+@vindex org-export-odt-category-strings
+You can modify the category component of the caption by customizing the
+variable @code{org-export-odt-category-strings}.  For example, to tag all
+embedded images with the string @samp{Illustration} (instead of the default
+@samp{Figure}) use the following setting.
+
+@lisp
+(setq org-export-odt-category-strings
+      '(("en" "Table" "Illustration" "Equation" "Equation")))
+@end lisp
+
+With this, previous image will be captioned as below in the exported
+document.
+
+@example
+Illustration 2: Bell curve
+@end example
+
+@node Literal examples in ODT export, Advanced topics in ODT export, Labels and captions in ODT export, OpenDocument Text export
 @subsection Literal examples in ODT export
 
 Export of literal examples (@pxref{Literal examples}) with full fontification
-is supported.  This feature is enabled by default and is activated
-automatically if an enhanced version of @file{htmlfontify.el} is available in
-the @code{load-path}.@footnote{The @file{htmlfontify.el} that ships with
-standard Emacs <= 24.1 has no support for ODT fontification.  A
-copy of the proposed version is available as an attachment to
-@url{http://debbugs.gnu.org/cgi/bugreport.cgi?msg=5;filename=htmlfontify.el;att=9;bug=9914,
-Emacs Bug #9914}.}
+is supported.  Internally, the exporter relies on @file{htmlfontify.el} to
+generate all style definitions needed for a fancy listing.@footnote{Your
+@file{htmlfontify.el} library must at least be at Emacs 24.1 levels for
+fontification to be turned on.}  The auto-generated styles have @samp{OrgSrc}
+as prefix and inherit their color from the faces used by Emacs
+@code{font-lock} library for the source language.
 
 @vindex org-export-odt-fontify-srcblocks
-
-The character styles used for fontification of the literal blocks are
-auto-generated by the exporter in conjunction with @file{htmlfontify.el}
-library and need not be included in the default @file{styles.xml} file.
-These auto-generated styles have the @samp{OrgSrc} prefix and inherit their color
-based on the face used by Emacs @code{font-lock} library.
-
-@vindex org-export-odt-create-custom-styles-for-srcblocks
-If you prefer to use your own custom styles for fontification and disable
-their auto-generation altogether, you can do so by customizing the variable
+If you prefer to use your own custom styles for fontification, you can do so
+by customizing the variable
 @code{org-export-odt-create-custom-styles-for-srcblocks}.
 
-You can turn off fontification support for literal examples by customizing
-the variable @code{org-export-odt-fontify-srcblocks}.
-
+@vindex org-export-odt-create-custom-styles-for-srcblocks
+You can turn off fontification of literal examples by customizing the
+variable @code{org-export-odt-fontify-srcblocks}.
 
 @node Advanced topics in ODT export,  , Literal examples in ODT export, OpenDocument Text export
 @subsection Advanced topics in ODT export
@@ -11276,10 +11318,9 @@ the variable @code{org-export-odt-convert-processes}.  Also specify how the
 converter can be invoked via command-line to effect the conversion.
 
 @item Configure its capabilities
+
 @vindex org-export-odt-convert-capabilities
-
 @anchor{x-odt-converter-capabilities}
-
 Specify the set of formats the converter can handle by customizing the
 variable @code{org-export-odt-convert-capabilities}.  Use the default value
 for this variable as a guide for configuring your converter.  As suggested by
@@ -11418,7 +11459,7 @@ regular text.
 @end example
 
 @strong{Hint:} To see the above example in action, edit your
-@file{styles.xml}(@pxref{x-orgodtstyles-xml,,Factory styles}) and add a
+@file{styles.xml} (@pxref{x-orgodtstyles-xml,,Factory styles}) and add a
 custom @samp{Highlight} style as shown below.
 
 @example
@@ -11437,7 +11478,7 @@ directive.  For example, to force a page break do the following:
 @end example
 
 @strong{Hint:} To see the above example in action, edit your
-@file{styles.xml}(@pxref{x-orgodtstyles-xml,,Factory styles}) and add a
+@file{styles.xml} (@pxref{x-orgodtstyles-xml,,Factory styles}) and add a
 custom @samp{PageBreak} style as shown below.
 
 @example
@@ -11498,7 +11539,7 @@ the table that follows.
 @end lisp
 
 @example
-#+ATTR_ODT: TableWithHeaderRowAndColumn
+#+ATTR_ODT: :style "TableWithHeaderRowAndColumn"
 | Name  | Phone | Age |
 | Peter |  1234 |  17 |
 | Anna  |  4321 |  25 |
@@ -11603,9 +11644,9 @@ To define a table style, create an entry for the style in the variable
 @end itemize
 
 For example, the entry below defines two different table styles
-@samp{TableWithHeaderRowsAndColumns} and @samp{TableWithHeaderColumns} based
-on the same template @samp{Custom}.  The styles achieve their intended effect
-by selectively activating the individual cell styles in that template.
+@samp{TableWithHeaderRowAndColumn} and @samp{TableWithFirstRowandLastRow}
+based on the same template @samp{Custom}.  The styles achieve their intended
+effect by selectively activating the individual cell styles in that template.
 
 @lisp
 (setq org-export-odt-table-styles
@@ -11625,7 +11666,7 @@ To do this, specify the table style created in step (2) as part of
 the @code{ATTR_ODT} line as shown below.
 
 @example
-#+ATTR_ODT: TableWithHeaderRowAndColumn
+#+ATTR_ODT: :style "TableWithHeaderRowAndColumn"
 | Name  | Phone | Age |
 | Peter |  1234 |  17 |
 | Anna  |  4321 |  25 |
@@ -12665,7 +12706,7 @@ Org mode buffer.  The results of evaluation are placed following a line that
 begins by default with @code{#+RESULTS} and optionally a cache identifier
 and/or the name of the evaluated code block.  The default value of
 @code{#+RESULTS} can be changed with the customizable variable
-@code{org-babel-results-keyword}. 
+@code{org-babel-results-keyword}.
 
 By default, the evaluation facility is only enabled for Lisp code blocks
 specified as @code{emacs-lisp}. However, source code blocks in many languages

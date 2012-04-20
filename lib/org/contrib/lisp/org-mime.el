@@ -43,13 +43,13 @@
 ;;
 ;; you might want to bind this to a key with something like the
 ;; following message-mode binding
-;; 
+;;
 ;;   (add-hook 'message-mode-hook
 ;;             (lambda ()
 ;;               (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
 ;;
 ;; and the following org-mode binding
-;; 
+;;
 ;;   (add-hook 'org-mode-hook
 ;;             (lambda ()
 ;;               (local-set-key "\C-c\M-o" 'org-mime-org-buffer-htmlize)))
@@ -206,7 +206,7 @@ export that region, otherwise export the entire body."
          ;; makes the replies with ">"s look nicer
          (org-export-preserve-breaks org-mime-preserve-breaks)
 	 ;; dvipng for inline latex because MathJax doesn't work in mail
-	 (org-export-with-LaTeX-fragments "dvipng")
+	 (org-export-with-LaTeX-fragments 'dvipng)
          ;; to hold attachments for inline html images
          (html-and-images
           (org-mime-replace-images

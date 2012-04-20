@@ -304,11 +304,13 @@ you can \"misuse\" it to also add other text to the header.  However,
 		    (string :tag "+tag or -tag"))))
 	    (list :tag "Set daily/weekly entry types"
 		  (const org-agenda-entry-types)
-		  (set :greedy t :value (:deadline :scheduled :timestamp :sexp)
-		       (const :deadline)
-		       (const :scheduled)
-		       (const :timestamp)
-		       (const :sexp)))
+		  (list
+		   (const :format "" quote)
+		   (set :greedy t :value (:deadline :scheduled :timestamp :sexp)
+			(const :deadline)
+			(const :scheduled)
+			(const :timestamp)
+			(const :sexp))))
 	    (list :tag "Standard skipping condition"
 		  :value (org-agenda-skip-function '(org-agenda-skip-entry-if))
 		  (const org-agenda-skip-function)
@@ -647,6 +649,7 @@ See also the variable `org-agenda-tags-todo-honor-ignore-options' if you want
 to make his option also apply to the tags-todo list."
   :group 'org-agenda-skip
   :group 'org-agenda-todo-list
+  :version "24.1"
   :type '(choice
 	  (const :tag "Ignore future timestamp todos" future)
 	  (const :tag "Ignore past or present timestamp todos" past)
@@ -794,6 +797,7 @@ trigger you to schedule it, and then you don't want to be reminded of it
 because you will take care of it on the day when scheduled."
   :group 'org-agenda-skip
   :group 'org-agenda-daily/weekly
+  :version "24.1"
   :type '(choice
 	  (const :tag "Alwas show prewarning" nil)
 	  (const :tag "Remove prewarning if entry is scheduled" t)
@@ -858,6 +862,7 @@ property so than moving the mouse over the command shows it.
 Setting it to nil is good if matcher strings are very long and/or if
 you want to use two-column display (see `org-agenda-menu-two-column')."
   :group 'org-agenda
+  :version "24.1"
   :type 'boolean)
 
 (defcustom org-agenda-menu-two-column nil
@@ -865,6 +870,7 @@ you want to use two-column display (see `org-agenda-menu-two-column')."
 If you use this, you probably want to set `org-agenda-menu-show-matcher'
 to nil."
   :group 'org-agenda
+  :version "24.1"
   :type 'boolean)
 
 (defcustom org-finalize-agenda-hook nil
@@ -888,6 +894,7 @@ Needs to be set before org.el is loaded."
   "Non-nil means `org-agenda-follow-mode' displays only the
 current item's tree, in an indirect buffer."
   :group 'org-agenda
+  :version "24.1"
   :type 'boolean)
 
 (defcustom org-agenda-show-outline-path t
@@ -1040,11 +1047,13 @@ This function makes sure that dates are aligned for easy reading."
   "Non-nil means use leading zero for military times in agenda.
 For example, 9:30am would become 09:30 rather than  9:30."
   :group 'org-agenda-daily/weekly
+  :version "24.1"
   :type 'boolean)
 
 (defcustom org-agenda-timegrid-use-ampm nil
   "When set, show AM/PM style timestamps on the timegrid."
   :group 'org-agenda
+  :version "24.1"
   :type 'boolean)
 
 (defun org-agenda-time-of-day-to-ampm (time)
@@ -1092,6 +1101,7 @@ stamp currently points to the past, the first key press will move it
 to today.  WHen nil, just move one day forward even if the date stays
 in the past."
   :group 'org-agenda-daily/weekly
+  :version "24.1"
   :type 'boolean)
 
 (defcustom org-agenda-include-diary nil
@@ -1104,6 +1114,7 @@ Custom commands can set this variable in the options section."
   "If non-nil, include entries within their deadline warning period.
 Custom commands can set this variable in the options section."
   :group 'org-agenda-daily/weekly
+  :version "24.1"
   :type 'boolean)
 
 (defcustom org-agenda-repeating-timestamp-show-all t
@@ -1179,6 +1190,7 @@ issue display.
 :short-face           face for clock intervals that are too short"
   :group 'org-agenda-daily/weekly
   :group 'org-clock
+  :version "24.1"
   :type 'plist)
 
 (defcustom org-agenda-log-mode-add-notes t
@@ -1237,6 +1249,7 @@ by preceding the first snippet with \"+\" or \"-\".  If the first snippet
 is a regexp marked with braces like \"{abc}\", this will also switch to
 boolean search."
   :group 'org-agenda-search-view
+  :version "24.1"
   :type 'boolean)
 
 (if (fboundp 'defvaralias)
@@ -1247,6 +1260,7 @@ boolean search."
   "Non-nil means, search words must be matches as complete words.
 When nil, they may also match part of a word."
   :group 'org-agenda-search-view
+  :version "24.1"
   :type 'boolean)
 
 (defgroup org-agenda-time-grid nil
@@ -1310,12 +1324,14 @@ a grid line."
 (defcustom org-agenda-show-current-time-in-grid t
   "Non-nil means show the current time in the time grid."
   :group 'org-agenda-time-grid
+  :version "24.1"
   :type 'boolean)
 
 (defcustom org-agenda-current-time-string
   "now - - - - - - - - - - - - - - - - - - - - - - - - -"
   "The string for the current time marker in the agenda."
   :group 'org-agenda-time-grid
+  :version "24.1"
   :type 'string)
 
 (defgroup org-agenda-sorting nil
@@ -1526,6 +1542,7 @@ that passed since this item was scheduled first."
   "Text preceding item pulled into the agenda by inactive time stamps.
 These entries are added to the agenda when pressing \"[\"."
   :group 'org-agenda-line-format
+  :version "24.1"
   :type '(list
 	  (string :tag "Scheduled today     ")
 	  (string :tag "Scheduled previously")))
@@ -1564,6 +1581,7 @@ the headline/diary entry."
   "Non-nil means remove time ranges specifications in agenda
 items that span on several days."
   :group 'org-agenda-line-format
+  :version "24.1"
   :type 'boolean)
 
 (defcustom org-agenda-default-appointment-duration nil
@@ -1645,6 +1663,7 @@ The only argument passed to that function is the day. It should
 returns a face, or nil if does not want to specify a face and let
 the normal rules apply."
   :group 'org-agenda-line-format
+  :version "24.1"
   :type 'function)
 
 (defcustom org-agenda-category-icon-alist nil
@@ -1677,6 +1696,7 @@ category, you can use:
 
   (\"Emacs\" '(space . (:width (16))))"
   :group 'org-agenda-line-format
+  :version "24.1"
   :type '(alist :key-type (string :tag "Regexp matching category")
 		:value-type (choice (list :tag "Icon"
 					  (string :tag "File or data")
@@ -1739,6 +1759,7 @@ With selected entries in an agenda buffer, `B R' will call
 the custom function `set-category' on the selected entries.
 Note that functions in this alist don't need to be quoted."
   :type 'alist
+  :version "24.1"
   :group 'org-agenda)
 
 (eval-when-compile
@@ -6191,6 +6212,7 @@ When this is the global TODO list, a prefix argument will be interpreted."
 
 (defvar org-global-tags-completion-table nil)
 (defvar org-agenda-filter-form nil)
+(defvar org-agenda-filtered-by-category nil)
 
 (defun org-agenda-filter-by-category (strip)
   "Keep only those lines in the agenda buffer that have a specific category.
@@ -6343,7 +6365,9 @@ to switch to narrowing."
     (dolist (x (delete-dups
 		(append (get 'org-agenda-category-filter
 			     :preset-filter) org-agenda-category-filter)))
-      (setq f1 (list 'equal (substring x 1) 'cat))
+      (if (equal "-" (substring x 0 1))
+	  (setq f1 (list 'not (list 'equal (substring x 1) 'cat)))
+	(setq f1 (list 'equal (substring x 1) 'cat)))
       (push f1 f))
     (cons 'and (nreverse f))))
 
@@ -6369,15 +6393,18 @@ If the line does not have an effort defined, return nil."
       (funcall op (or eff (if org-sort-agenda-noeffort-is-high 32767 0))
 	       value))))
 
-(defvar org-agenda-filtered-by-category nil)
 (defun org-agenda-filter-apply (filter type)
   "Set FILTER as the new agenda filter and apply it."
-  (let (tags)
+  (let (tags cat)
     (if (eq type 'tag)
 	(setq org-agenda-tag-filter filter)
-      (setq org-agenda-category-filter filter
-	    org-agenda-filtered-by-category t))
+      (setq org-agenda-category-filter filter))
     (setq org-agenda-filter-form (org-agenda-filter-make-matcher))
+    (if (and (eq type 'category)
+	     (not (equal (substring (car filter) 0 1) "-")))
+	;; Only set `org-agenda-filtered-by-category' to t
+	;; when a unique category is used as the filter
+	(setq org-agenda-filtered-by-category t))
     (org-agenda-set-mode-name)
     (save-excursion
       (goto-char (point-min))
@@ -6391,7 +6418,7 @@ If the line does not have an effort defined, return nil."
 	      (beginning-of-line 2))
 	  (beginning-of-line 2))))
     (if (get-char-property (point) 'invisible)
-	(org-agenda-previous-line))))
+	(ignore-errors (org-agenda-previous-line)))))
 
 (defun org-agenda-filter-hide-line (type)
   (let (ov)
@@ -7996,6 +8023,7 @@ top-level    as top-level entries at the end of the file."
 (defcustom org-agenda-insert-diary-extract-time nil
   "Non-nil means extract any time specification from the diary entry."
   :group 'org-agenda
+  :version "24.1"
   :type 'boolean)
 
 (defun org-agenda-add-entry-to-org-agenda-diary-file (type text &optional d1 d2)

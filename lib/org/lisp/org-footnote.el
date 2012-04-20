@@ -58,6 +58,7 @@
 (declare-function org-show-context "org" (&optional key))
 (declare-function org-trim "org" (s))
 (declare-function outline-next-heading "outline")
+(declare-function org-skip-whitespace "org" ())
 
 (defvar org-outline-regexp-bol)		; defined in org.el
 (defvar org-odd-levels-only)		; defined in org.el
@@ -703,7 +704,7 @@ Additional note on `org-footnote-insert-pos-for-preprocessor':
 				     (org-combine-plists
 				      export-props
 				      '(:todo-keywords t :tags t :priority t))))
-				(org-export-preprocess-string def parameters))
+				(apply #'org-export-preprocess-string def parameters))
 			    def)
 			  ;; Reference beginning position is a marker
 			  ;; to preserve it during further buffer
@@ -863,8 +864,9 @@ Return the number of footnotes removed."
 	  (ndef 0))
       (while (re-search-forward def-re nil t)
 	(let ((full-def (org-footnote-at-definition-p)))
-	  (delete-region (nth 1 full-def) (nth 2 full-def)))
-	(incf ndef))
+	  (when full-def
+	    (delete-region (nth 1 full-def) (nth 2 full-def))
+	    (incf ndef))))
       ndef)))
 
 (defun org-footnote-delete (&optional label)

@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2009-2012  Free Software Foundation, Inc.
 
-;; Author: Eric Schulte
+;; Authors: Eric Schulte
 ;;	Dan Davison
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
@@ -43,6 +43,7 @@
 When set to nil no code will be evaluated as part of the export
 process."
   :group 'org-babel
+  :version "24.1"
   :type 'boolean)
 (put 'org-export-babel-evaluate 'safe-local-variable (lambda (x) (eq x nil)))
 
@@ -218,7 +219,9 @@ The function respects the value of the :exports header argument."
    "#+BEGIN_SRC %lang%flags\n%body\n#+END_SRC"
    `(("lang"  . ,(nth 0 info))
      ("flags" . ,((lambda (f) (when f (concat " " f))) (nth 3 info)))
-     ("body"  . ,(nth 1 info)))))
+     ("body"  . ,(if (string= (nth 0 info) "org")
+		     (replace-regexp-in-string "^" "," (nth 1 info))
+		   (nth 1 info))))))
 
 (defun org-babel-exp-results (info type &optional silent hash)
   "Evaluate and return the results of the current code block for export.
