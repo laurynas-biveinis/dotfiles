@@ -28,6 +28,21 @@ Emacs
 * Speedbar: (speedbar).         File/Tag summarizing utility.
 
 Emacs
+* CEDET: (cedet).               Collection of Emacs Development Environment 
+                                  Tools
+* Semantic: (semantic).         Infrastructure for parser based text analysis.
+* Semantic Application Writer's guide: (semantic-appdev).
+* Semantic Grammar Framework: (grammar-fw).
+* Semantic Language Writer's guide: (semantic-langdev).
+* Semantic User's guide: (semantic-user).
+* Semantic Wisent parser development: (wisent).
+* Semantic bovine parser development: (bovine).
+* Speedbar: (speedbar).         File/Tag summarizing utility.
+* Speedbar: (speedbar).         File/Tag summarizing utility.
+
+Emacs
+* CEDET: (cedet).               Collection of Emacs Development Environment 
+                                  Tools
 * Semantic: (semantic).         Infrastructure for parser based text analysis.
 * Semantic Application Writer's guide: (semantic-appdev).
 * Semantic Grammar Framework: (grammar-fw).
