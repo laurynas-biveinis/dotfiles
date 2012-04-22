@@ -496,9 +496,13 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 ; (erc-update-modules)
 (add-hook 'erc-text-matched-hook
           (lambda (match-type nick message)
-            (todochiku-message (format "IRC: %s says" nick)
-                               message
-                               (todochiku-icon 'irc))))
+            (unless (or
+                     (posix-string-match "^\\** *Users on #" message)
+                     (posix-string-match "^\\** *Your new nickname is "
+                                         message))
+              (todochiku-message (format "IRC: %s says" nick)
+                                 message
+                                 (todochiku-icon 'irc)))))
 
 
 (setq erc-autojoin-channels-alist
