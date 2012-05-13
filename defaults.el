@@ -119,6 +119,10 @@
              (when (not (file-exists-p (buffer-file-name)))
                (set-buffer-modified-p t))))
 
+; Mark executable files as executable on save
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
+
 ; Custom keybindings
 (defun smart-home ()
   "Move point to first non-whitespace character or beginning-of-line.
