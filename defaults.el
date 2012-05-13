@@ -42,6 +42,9 @@
 ; Compilation window follows last output
 (setq compilation-scroll-window t)
 
+; Don't interrupt redraw on input
+(setq redisplay-dont-pause t)
+
 ; No annoying beeps
 (setq visible-bell t)
 
