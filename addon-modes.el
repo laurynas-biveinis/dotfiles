@@ -520,6 +520,8 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (setq erc-server-coding-system '(utf-8 . utf-8))
 
+(setq erc-server-reconnect-attempts t)
+
 ; TODO
 ;(require 'erc-spelling)
 ;(add-hook 'erc-mode-hook
