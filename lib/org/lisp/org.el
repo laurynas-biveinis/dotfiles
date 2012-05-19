@@ -6,7 +6,7 @@
 ;; Maintainer: Bastien Guerry <bzg at gnu dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.8.09
+;; Version: 7.8.10
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -206,7 +206,7 @@ identifier."
 
 ;;; Version
 
-(defconst org-version "7.8.09"
+(defconst org-version "7.8.10"
   "The version number of the file org.el.")
 
 ;;;###autoload
@@ -4789,10 +4789,11 @@ but the stars and the body are.")
 		    "\\|" org-clock-string "\\)\\)?"
 		    " *\\([[<][0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ?[^]\r\n>]*?[]>]\\|<%%([^\r\n>]*>\\)")
 	    org-planning-or-clock-line-re
-	    (concat "\\(?:^[ \t]*\\(" org-scheduled-string
-		    "\\|" org-deadline-string
-		    "\\|" org-closed-string "\\|" org-clock-string
-		    "\\)\\>\\)")
+	    (concat "^[ \t]*\\("
+		    org-scheduled-string "\\|"
+		    org-deadline-string "\\|"
+		    org-closed-string "\\|"
+		    org-clock-string "\\)")
 	    org-all-time-keywords
 	    (mapcar (lambda (w) (substring w 0 -1))
 		    (list org-scheduled-string org-deadline-string
@@ -5057,8 +5058,7 @@ The following commands are available:
        'org-parse-arguments)
   (set (make-local-variable 'pcomplete-termination-string) "")
   (when (>= emacs-major-version 23)
-    (set (make-local-variable 'buffer-face-mode-face) 'org-default)
-    (buffer-face-mode))
+    (set (make-local-variable 'buffer-face-mode-face) 'org-default))
 
   ;; If empty file that did not turn on org-mode automatically, make it to.
   (if (and org-insert-mode-line-in-empty-file
@@ -5917,16 +5917,19 @@ needs to be inserted at a specific position in the font-lock sequence.")
     (when org-pretty-entities
       (catch 'match
 	(while (re-search-forward
-		"\\\\\\(frac[13][24]\\|[a-zA-Z]+\\)\\($\\|[^[:alpha:]\n]\\)"
+		"\\\\\\(frac[13][24]\\|[a-zA-Z]+\\)\\($\\|{}\\|[^[:alpha:]\n]\\)"
 		limit t)
 	  (if (and (not (org-in-indented-comment-line))
 		   (setq ee (org-entity-get (match-string 1)))
 		   (= (length (nth 6 ee)) 1))
-	      (progn
+	      (let*
+		  ((end (if (equal (match-string 2) "{}")
+			    (match-end 2)
+			  (match-end 1))))
 		(add-text-properties
-		 (match-beginning 0) (match-end 1)
+		 (match-beginning 0) end
 		 (list 'font-lock-fontified t))
-		(compose-region (match-beginning 0) (match-end 1)
+		(compose-region (match-beginning 0) end
 				(nth 6 ee) nil)
 		(backward-char 1)
 		(throw 'match t))))
@@ -6256,34 +6259,36 @@ in special contexts.
 
 (defun org-cycle-internal-global ()
   "Do the global cycling action."
-  (cond
-   ((and (eq last-command this-command)
-	 (eq org-cycle-global-status 'overview))
-    ;; We just created the overview - now do table of contents
-    ;; This can be slow in very large buffers, so indicate action
-    (run-hook-with-args 'org-pre-cycle-hook 'contents)
-    (message "CONTENTS...")
-    (org-content)
-    (message "CONTENTS...done")
-    (setq org-cycle-global-status 'contents)
-    (run-hook-with-args 'org-cycle-hook 'contents))
+  ;; Hack to avoid display of messages for .org  attachments in Gnus
+  (let ((ga (string-match "\\*fontification" (buffer-name))))
+    (cond
+     ((and (eq last-command this-command)
+	   (eq org-cycle-global-status 'overview))
+      ;; We just created the overview - now do table of contents
+      ;; This can be slow in very large buffers, so indicate action
+      (run-hook-with-args 'org-pre-cycle-hook 'contents)
+      (unless ga (message "CONTENTS..."))
+      (org-content)
+      (unless ga (message "CONTENTS...done"))
+      (setq org-cycle-global-status 'contents)
+      (run-hook-with-args 'org-cycle-hook 'contents))
 
-   ((and (eq last-command this-command)
-	 (eq org-cycle-global-status 'contents))
-    ;; We just showed the table of contents - now show everything
-    (run-hook-with-args 'org-pre-cycle-hook 'all)
-    (show-all)
-    (message "SHOW ALL")
-    (setq org-cycle-global-status 'all)
-    (run-hook-with-args 'org-cycle-hook 'all))
+     ((and (eq last-command this-command)
+	   (eq org-cycle-global-status 'contents))
+      ;; We just showed the table of contents - now show everything
+      (run-hook-with-args 'org-pre-cycle-hook 'all)
+      (show-all)
+      (unless ga (message "SHOW ALL"))
+      (setq org-cycle-global-status 'all)
+      (run-hook-with-args 'org-cycle-hook 'all))
 
-   (t
-    ;; Default action: go to overview
-    (run-hook-with-args 'org-pre-cycle-hook 'overview)
-    (org-overview)
-    (message "OVERVIEW")
-    (setq org-cycle-global-status 'overview)
-    (run-hook-with-args 'org-cycle-hook 'overview))))
+     (t
+      ;; Default action: go to overview
+      (run-hook-with-args 'org-pre-cycle-hook 'overview)
+      (org-overview)
+      (unless ga (message "OVERVIEW"))
+      (setq org-cycle-global-status 'overview)
+      (run-hook-with-args 'org-cycle-hook 'overview)))))
 
 (defun org-cycle-internal-local ()
   "Do the local cycling action."
@@ -8575,7 +8580,7 @@ call CMD."
 ;;; Link abbreviations
 
 (defun org-link-expand-abbrev (link)
-  "Apply replacements as defined in `org-link-abbrev-alist."
+  "Apply replacements as defined in `org-link-abbrev-alist'."
   (if (string-match "^\\([^:]*\\)\\(::?\\(.*\\)\\)?$" link)
       (let* ((key (match-string 1 link))
 	     (as (or (assoc key org-link-abbrev-alist-local)
@@ -9433,7 +9438,7 @@ If the link is in hidden text, expose it."
 	   (string-match "\\([a-zA-Z0-9]+\\):\\(.*\\)" s))
       (progn
 	(setq s (funcall org-link-translation-function
-			 (match-string 1) (match-string 2)))
+			 (match-string 1 s) (match-string 2 s)))
 	(concat (car s) ":" (cdr s)))
     s))
 
@@ -12824,7 +12829,9 @@ headlines matching this string."
 		     " *\\(\\<\\("
 		     (mapconcat 'regexp-quote org-todo-keywords-1 "\\|")
 		     (org-re
-		      "\\>\\)\\)? *\\(.*?\\)\\(:[[:alnum:]_@#%:]+:\\)?[ \t]*$")))
+		      (if todo-only
+			  "\\>\\)\\)[ \t]+\\(.*?\\)\\(:[[:alnum:]_@#%:]+:\\)?[ \t]*$"
+			"\\>\\)\\)? *\\([^ ].*?\\)\\(:[[:alnum:]_@#%:]+:\\)?[ \t]*$"))))
 	 (props (list 'face 'default
 		      'done-face 'org-agenda-done
 		      'undone-face 'default
@@ -14915,7 +14922,7 @@ So these are more for recording a certain time/date."
   (org-time-stamp arg 'inactive))
 
 (defvar org-date-ovl (make-overlay 1 1))
-(overlay-put org-date-ovl 'face 'org-warning)
+(overlay-put org-date-ovl 'face 'org-date-selected)
 (org-detach-overlay org-date-ovl)
 
 (defvar org-ans1) ; dynamically scoped parameter
@@ -15131,35 +15138,35 @@ user."
   (when org-read-date-display-live
     (when org-read-date-overlay
       (delete-overlay org-read-date-overlay))
-    (let ((p (point)))
-      (end-of-line 1)
-      (while (not (equal (buffer-substring
-			  (max (point-min) (- (point) 4)) (point))
-			 "    "))
-	(insert " "))
-      (goto-char p))
-    (let* ((ans (concat (buffer-substring (point-at-bol) (point-max))
-			" " (or org-ans1 org-ans2)))
-	   (org-end-time-was-given nil)
-	   (f (org-read-date-analyze ans org-def org-defdecode))
-	   (fmts (if org-dcst
-		     org-time-stamp-custom-formats
-		   org-time-stamp-formats))
-	   (fmt (if (or org-with-time
-			(and (boundp 'org-time-was-given) org-time-was-given))
-		    (cdr fmts)
-		  (car fmts)))
-	   (txt (concat "=> " (format-time-string fmt (apply 'encode-time f)))))
-      (when (and org-end-time-was-given
-		 (string-match org-plain-time-of-day-regexp txt))
-	(setq txt (concat (substring txt 0 (match-end 0)) "-"
-			  org-end-time-was-given
-			  (substring txt (match-end 0)))))
-      (when org-read-date-analyze-futurep
-	(setq txt (concat txt " (=>F)")))
-      (setq org-read-date-overlay
-	    (make-overlay (1- (point-at-eol)) (point-at-eol)))
-      (org-overlay-display org-read-date-overlay txt 'secondary-selection))))
+    (when (minibufferp (current-buffer))
+      (save-excursion
+	(end-of-line 1)
+	(while (not (equal (buffer-substring
+			    (max (point-min) (- (point) 4)) (point))
+			   "    "))
+	  (insert " ")))
+      (let* ((ans (concat (buffer-substring (point-at-bol) (point-max))
+			  " " (or org-ans1 org-ans2)))
+	     (org-end-time-was-given nil)
+	     (f (org-read-date-analyze ans org-def org-defdecode))
+	     (fmts (if org-dcst
+		       org-time-stamp-custom-formats
+		     org-time-stamp-formats))
+	     (fmt (if (or org-with-time
+			  (and (boundp 'org-time-was-given) org-time-was-given))
+		      (cdr fmts)
+		    (car fmts)))
+	     (txt (concat "=> " (format-time-string fmt (apply 'encode-time f)))))
+	(when (and org-end-time-was-given
+		   (string-match org-plain-time-of-day-regexp txt))
+	  (setq txt (concat (substring txt 0 (match-end 0)) "-"
+			    org-end-time-was-given
+			    (substring txt (match-end 0)))))
+	(when org-read-date-analyze-futurep
+	  (setq txt (concat txt " (=>F)")))
+	(setq org-read-date-overlay
+	      (make-overlay (1- (point-at-eol)) (point-at-eol)))
+	(org-overlay-display org-read-date-overlay txt 'secondary-selection)))))
 
 (defun org-read-date-analyze (ans org-def org-defdecode)
   "Analyze the combined answer of the date prompt."
@@ -17969,28 +17976,34 @@ See the individual commands for more information."
 
 (defun org-shiftmetaleft ()
   "Promote subtree or delete table column.
-Calls `org-promote-subtree', `org-outdent-item',
-or `org-table-delete-column', depending on context.
-See the individual commands for more information."
+Calls `org-promote-subtree', `org-outdent-item-tree', or
+`org-table-delete-column', depending on context.  See the
+individual commands for more information."
   (interactive)
   (cond
    ((run-hook-with-args-until-success 'org-shiftmetaleft-hook))
    ((org-at-table-p) (call-interactively 'org-table-delete-column))
    ((org-at-heading-p) (call-interactively 'org-promote-subtree))
-   ((org-at-item-p) (call-interactively 'org-outdent-item-tree))
+   ((if (not (org-region-active-p)) (org-at-item-p)
+      (save-excursion (goto-char (region-beginning))
+		      (org-at-item-p)))
+    (call-interactively 'org-outdent-item-tree))
    (t (org-modifier-cursor-error))))
 
 (defun org-shiftmetaright ()
   "Demote subtree or insert table column.
-Calls `org-demote-subtree', `org-indent-item',
-or `org-table-insert-column', depending on context.
-See the individual commands for more information."
+Calls `org-demote-subtree', `org-indent-item-tree', or
+`org-table-insert-column', depending on context.  See the
+individual commands for more information."
   (interactive)
   (cond
    ((run-hook-with-args-until-success 'org-shiftmetaright-hook))
    ((org-at-table-p) (call-interactively 'org-table-insert-column))
    ((org-at-heading-p) (call-interactively 'org-demote-subtree))
-   ((org-at-item-p) (call-interactively 'org-indent-item-tree))
+   ((if (not (org-region-active-p)) (org-at-item-p)
+      (save-excursion (goto-char (region-beginning))
+		      (org-at-item-p)))
+    (call-interactively 'org-indent-item-tree))
    (t (org-modifier-cursor-error))))
 
 (defun org-shiftmetaup (&optional arg)
