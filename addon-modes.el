@@ -302,18 +302,11 @@
 
 ; Agendas
 (setq org-agenda-custom-commands
-      '(("h" "Home actions" tags-todo
-         "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe|@home-somedaymaybe|@percona-somedaymaybe|@readreview-somedaymaybe/!TODO")
-        ("o" "Office actions" tags-todo
-         "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe|@office-somedaymaybe|@percona-somedaymaybe|@readreview-somedaymaybe/!TODO")
-        ("c" "Calls" tags-todo "@call-somedaymaybe/!TODO")
+      '(("c" "Calls" tags-todo "@call-somedaymaybe/!TODO")
         ("p" "Projects" tags-todo "project-somedaymaybe/!TODO")
         ("l" "Checklists" tags "@checklist-somedaymaybe")
-        ("g" "Agendas" tags-todo "@agenda-somedaymaybe/!TODO")
-        ("f" "Waiting for" tags-todo "@waitingfor-somedaymaybe/!TODO")
         ("k" "Someday/maybe" tags-todo "somedaymaybe+LEVEL=2/!TODO")
         ("v" "Vilnius" tags-todo "@vilnius-somedaymaybe/!TODO")
-        ("r" "Read/review" tags-todo "@readreview-somedaymaybe/!TODO")
         (" " "Agenda"
          ((agenda "" nil)
           (tags-todo "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe|@home-somedaymaybe|@percona-somedaymaybe/!TODO"
@@ -329,15 +322,21 @@
           (tags-todo "@vilnius-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Errands")))
           (tags-todo "@readreview-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Read/review")))))))
+                     ((org-agenda-overriding-header "Read/review")))
+          (todo "LOGTIME"
+                ((org-agenda-overriding-header "Time log actions")))
+          (tags "-project/+DONE|+CANCELLED"
+                ((org-agenda-overriding-header "Archivable tasks")
+                 (org-use-tag-inheritance '("project"))))))))
+
 ; The only blocked tasks could be a project, which are filtered out of next
 ; action lists anyway
-(setq org-agenda-dim-blocked-tasks nil)
+(setq org-agenda-dim-blocked-tasks 'invisible)
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-skip-scheduled-if-done t)
-(setq org-agenda-todo-ignore-scheduled 'future)
-(setq org-agenda-todo-ignore-deadlines 'near)
+(setq org-agenda-todo-ignore-scheduled 'all)
+(setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-timestamp 'all)
 (setq org-agenda-repeating-timestamp-show-all nil)
 (setq org-agenda-clock-consistency-checks
@@ -384,10 +383,12 @@
         )
       )
 (setq org-todo-keywords
-      '((sequence "WAITING(w)" "TODO(t)" "|" "DONE(d)" "CANCELLED(c)")))
+      '((sequence "WAITING(w)" "TODO(t)" "LOGTIME(l)"
+                  "|" "DONE(d)" "CANCELLED(c)")))
 
 (setq org-todo-keyword-faces
-      '(("WAITING" . (:foreground "OrangeRed" :weight bold))))
+      '(("WAITING" . (:foreground "OrangeRed" :weight bold))
+        ("LOGTIME" . (:foreground "OrangeRed" :weight bold))))
 
 (setq org-modules
       '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
