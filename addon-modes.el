@@ -307,31 +307,38 @@
         ("l" "Checklists" tags "@checklist-somedaymaybe")
         ("k" "Someday/maybe" tags-todo "somedaymaybe+LEVEL=2/!TODO")
         ("v" "Vilnius" tags-todo "@vilnius-somedaymaybe/!TODO")
+        ("n" "Non-project tasks" tags-todo "-project-@waitingfor-somedaymaybe/!TODO"
+         ((org-use-tag-inheritance '("project" "somedaymaybe"))))
         (" " "Agenda"
          ((agenda "" nil)
           (tags-todo "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe|@home-somedaymaybe|@percona-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Common next actions")))
+                     ((org-agenda-overriding-header "Common next actions")
+                      (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@agenda-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Agendas")))
+                     ((org-agenda-overriding-header "Agendas")
+                      (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@home-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Home actions")))
+                     ((org-agenda-overriding-header "Home actions")
+                      (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@office-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Office actions")))
+                     ((org-agenda-overriding-header "Office actions")
+                      (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@waitingfor-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Waiting for")))
+                     ((org-agenda-overriding-header "Waiting for")
+                      (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@vilnius-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Errands")))
+                     ((org-agenda-overriding-header "Errands")
+                      (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@readreview-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Read/review")))
+                     ((org-agenda-overriding-header "Read/review")
+                      (org-agenda-dim-blocked-tasks 'invisible)))
           (todo "LOGTIME"
-                ((org-agenda-overriding-header "Time log actions")))
+                ((org-agenda-overriding-header "Time log actions")
+                 (org-agenda-dim-blocked-tasks 'invisible)))
           (tags "-project/+DONE|+CANCELLED"
                 ((org-agenda-overriding-header "Archivable tasks")
                  (org-use-tag-inheritance '("project"))))))))
 
-; The only blocked tasks could be a project, which are filtered out of next
-; action lists anyway
-(setq org-agenda-dim-blocked-tasks 'invisible)
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-skip-scheduled-if-done t)
