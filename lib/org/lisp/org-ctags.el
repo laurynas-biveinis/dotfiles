@@ -193,6 +193,7 @@ Created as a local variable in each buffer.")
 The following patterns are replaced in the string:
     `%t' - replaced with the capitalized title of the hyperlink"
   :group 'org-ctags
+  :version "24.1"
   :type 'string)
 
 
@@ -308,7 +309,7 @@ The new topic will be titled NAME (or TITLE if supplied)."
 			    activate compile)
   "Before trying to find a tag, save our current position on org mark ring."
   (save-excursion
-    (if (and (eq major-mode 'org-mode) org-ctags-enabled-p)
+    (if (and (derived-mode-p 'org-mode) org-ctags-enabled-p)
         (org-mark-ring-push))))
 
 

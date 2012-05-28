@@ -39,11 +39,33 @@
 (declare-function ess-make-buffer-current "ext:ess-inf" ())
 (declare-function ess-eval-buffer "ext:ess-inf" (vis))
 (declare-function org-number-sequence "org-compat" (from &optional to inc))
+(declare-function org-remove-if-not "org" (predicate seq))
 
-(defconst org-babel-header-arg-names:R
-  '(width height bg units pointsize antialias quality compression
-	  res type family title fonts version paper encoding
-	  pagecentre colormodel useDingbats horizontal)
+(defconst org-babel-header-args:R
+  '((width		 . :any)
+    (height		 . :any)
+    (bg			 . :any)
+    (units		 . :any)
+    (pointsize		 . :any)
+    (antialias		 . :any)
+    (quality		 . :any)
+    (compression	 . :any)
+    (res		 . :any)
+    (type		 . :any)
+    (family		 . :any)
+    (title		 . :any)
+    (fonts		 . :any)
+    (version		 . :any)
+    (paper		 . :any)
+    (encoding		 . :any)
+    (pagecentre		 . :any)
+    (colormodel		 . :any)
+    (useDingbats	 . :any)
+    (horizontal		 . :any)
+    (results             . ((file list vector table scalar verbatim)
+			    (raw org html latex code pp wrap)
+			    (replace silent append prepend)
+			    (output value graphics))))
   "R-specific header arguments.")
 
 (defvar org-babel-default-header-args:R '())
@@ -146,16 +168,35 @@ This function is called by `org-babel-execute-src-block'."
 (defun org-babel-R-assign-elisp (name value colnames-p rownames-p)
   "Construct R code assigning the elisp VALUE to a variable named NAME."
   (if (listp value)
-      (let ((transition-file (org-babel-temp-file "R-import-")))
+      (let ((max (apply #'max (mapcar #'length (org-remove-if-not
+						#'sequencep value))))
+	    (min (apply #'min (mapcar #'length (org-remove-if-not
+						#'sequencep value))))
+	    (transition-file (org-babel-temp-file "R-import-")))
         ;; ensure VALUE has an orgtbl structure (depth of at least 2)
         (unless (listp (car value)) (setq value (list value)))
         (with-temp-file transition-file
-          (insert (orgtbl-to-tsv value '(:fmt org-babel-R-quote-tsv-field)))
-          (insert "\n"))
-        (format "%s <- read.table(\"%s\", header=%s, row.names=%s, sep=\"\\t\", as.is=TRUE)"
-                name (org-babel-process-file-name transition-file 'noquote)
-		(if (or (eq (nth 1 value) 'hline) colnames-p) "TRUE" "FALSE")
-		(if rownames-p "1" "NULL")))
+          (insert
+	   (orgtbl-to-tsv value '(:fmt org-babel-R-quote-tsv-field))
+	   "\n"))
+	(let ((file (org-babel-process-file-name transition-file 'noquote))
+	      (header (if (or (eq (nth 1 value) 'hline) colnames-p)
+			  "TRUE" "FALSE"))
+	      (row-names (if rownames-p "1" "NULL")))
+	  (if (= max min)
+	      (format "%s <- read.table(\"%s\",
+                      header=%s,
+                      row.names=%s,
+                      sep=\"\\t\",
+                      as.is=TRUE)" name file header row-names)
+	    (format "%s <- read.table(\"%s\",
+                   header=%s,
+                   row.names=%s,
+                   sep=\"\\t\",
+                   as.is=TRUE,
+                   fill=TRUE,
+                   col.names = paste(\"V\", seq_len(%d), sep =\"\"))"
+		    name file header row-names max))))
     (format "%s <- %s" name (org-babel-R-quote-tsv-field value))))
 
 (defvar ess-ask-for-ess-directory nil)

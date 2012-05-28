@@ -107,6 +107,7 @@ These are just a completion help.")
     ("theorem"        "t" "\\begin{theorem}%a%U%x"             "\\end{theorem}")
     ("definition"     "d" "\\begin{definition}%a%U%x"          "\\end{definition}")
     ("example"        "e" "\\begin{example}%a%U%x"             "\\end{example}")
+    ("exampleblock"   "E" "\\begin{exampleblock}%a{%h}%x"      "\\end{exampleblock}")
     ("proof"          "p" "\\begin{proof}%a%U%x"               "\\end{proof}")
     ("beamercolorbox" "o" "\\begin{beamercolorbox}%o{%h}%x"    "\\end{beamercolorbox}")
     ("normal"         "h" "%h" "") ; Emit the heading as normal text
@@ -154,6 +155,12 @@ close   The closing string of the environment."
 	   (string :tag "Selection key")
 	   (string :tag "Begin")
 	   (string :tag "End"))))
+
+(defcustom org-beamer-inherited-properties nil
+  "Properties that should be inherited during beamer export."
+  :group 'org-beamer
+  :type '(repeat
+	  (string :tag "Property")))
 
 (defvar org-beamer-frame-level-now nil)
 (defvar org-beamer-header-extra nil)
@@ -488,7 +495,13 @@ The effect is that these values will be accessible during export."
 	   (if (and (not (assoc "BEAMER_env" props))
 		    (looking-at ".*?:B_\\(note\\(NH\\)?\\):"))
 	       (push (cons "BEAMER_env" (match-string 1)) props))
-	   (put-text-property (point-at-bol) (point-at-eol) 'org-props props)))
+          (when (org-bound-and-true-p org-beamer-inherited-properties)
+            (mapc (lambda (p)
+		    (unless (assoc p props)
+                      (let ((v (org-entry-get nil p 'inherit)))
+                        (and v (push (cons p v) props)))))
+                  org-beamer-inherited-properties))
+	  (put-text-property (point-at-bol) (point-at-eol) 'org-props props)))
        (setq org-export-latex-options-plist
 	     (plist-put org-export-latex-options-plist :tags nil))))))
 
@@ -502,7 +515,7 @@ This function will run in the final LaTeX document."
       (while (re-search-forward org-beamer-fragile-re nil t)
 	(save-excursion
 	  ;; Are we inside a frame here?
-	  (when (and (re-search-backward "^[ \t]*\\\\\\(begin\\|end\\){frame}"
+	  (when (and (re-search-backward "^[ \t]*\\\\\\(begin\\|end\\){frame}\\(<[^>]*>\\)?"
 					 nil t)
 		     (equal (match-string 1) "begin"))
 	    ;; yes, inside a frame, make sure "fragile" is one of the options

@@ -45,6 +45,7 @@
 (declare-function org-inlinetask-get-task-level "org-inlinetask" ())
 (declare-function org-inlinetask-in-task-p "org-inlinetask" ())
 (declare-function org-list-item-body-column "org-list" (item))
+(defvar org-inlinetask-show-first-star)
 
 (defgroup org-indent nil
   "Options concerning dynamic virtual outline indentation."
@@ -182,9 +183,11 @@ during idle time." nil " Ind" nil
       (org-set-local 'org-hide-leading-stars-before-indent-mode
 		     org-hide-leading-stars)
       (org-set-local 'org-hide-leading-stars t))
-    (make-local-variable 'buffer-substring-filters)
-    (add-to-list 'buffer-substring-filters
-		 'org-indent-remove-properties-from-string)
+    (make-local-variable 'filter-buffer-substring-functions)
+    (add-hook 'filter-buffer-substring-functions
+	      (lambda (fun start end delete)
+		(org-indent-remove-properties-from-string
+		 (funcall fun start end delete))))
     (org-add-hook 'after-change-functions 'org-indent-refresh-maybe nil 'local)
     (org-add-hook 'before-change-functions
 		  'org-indent-notify-modified-headline nil 'local)
@@ -208,9 +211,10 @@ during idle time." nil " Ind" nil
     (when (boundp 'org-hide-leading-stars-before-indent-mode)
       (org-set-local 'org-hide-leading-stars
 		     org-hide-leading-stars-before-indent-mode))
-    (setq buffer-substring-filters
-	  (delq 'org-indent-remove-properties-from-string
-		buffer-substring-filters))
+    (remove-hook 'filter-buffer-substring-functions
+	      (lambda (fun start end delete)
+		(org-indent-remove-properties-from-string
+		 (funcall fun start end delete))))
     (remove-hook 'after-change-functions 'org-indent-refresh-maybe 'local)
     (remove-hook 'before-change-functions
 		 'org-indent-notify-modified-headline 'local)
@@ -222,7 +226,7 @@ during idle time." nil " Ind" nil
 (defun org-indent-indent-buffer ()
   "Add indentation properties to the accessible part of the buffer."
   (interactive)
-  (if (not (eq major-mode 'org-mode))
+  (if (not (derived-mode-p 'org-mode))
       (error "Not in Org mode")
     (message "Setting buffer indentation. It may take a few seconds...")
     (org-indent-remove-properties (point-min) (point-max))
@@ -293,8 +297,10 @@ Assume point is at beginning of line."
 		(let ((stars (aref org-indent-stars
 				   (min l org-indent-max-levels))))
 		  (and stars
-		       (concat org-indent-inlinetask-first-star
-			       (substring stars 1)))))
+		       (if (org-bound-and-true-p org-inlinetask-show-first-star)
+			   (concat org-indent-inlinetask-first-star
+				   (substring stars 1))
+			 stars))))
 	       (h (aref org-indent-stars
 			(min l org-indent-max-levels)))
 	       (t (aref org-indent-strings

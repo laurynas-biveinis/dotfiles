@@ -208,10 +208,22 @@ which defaults to the value of `org-export-blocks-witheld'."
 		(let ((replacement (save-match-data
 				     (if (memq type org-export-blocks-witheld) ""
 				       (apply func body headers)))))
+		  ;; ;; un-comment this code after the org-element merge
+		  ;; (save-match-data
+		  ;;   (when (and replacement (string= replacement ""))
+		  ;;     (delete-region
+		  ;;      (car (org-element-collect-affiliated-keyword))
+		  ;;      match-start)))
 		  (when replacement
 		    (delete-region match-start match-end)
 		    (goto-char match-start) (insert replacement)
-		    (unless preserve-indent
+		    (if preserve-indent
+			;; indent only the code block markers
+			(save-excursion
+			  (indent-line-to indentation) ; indent end_block
+			  (goto-char match-start)
+			  (indent-line-to indentation))	; indent begin_block
+		      ;; indent everything
 		      (indent-code-rigidly match-start (point) indentation)))))
 	      ;; cleanup markers
 	      (set-marker match-start nil)
@@ -234,7 +246,7 @@ which defaults to the value of `org-export-blocks-witheld'."
 			      (file-name-as-directory
 			       (expand-file-name
 				"../contrib"
-				(file-name-directory (find-library-name "org")))))))
+				(file-name-directory (org-find-library-dir "org")))))))
   "Path to the ditaa jar executable."
   :group 'org-babel
   :type 'string)

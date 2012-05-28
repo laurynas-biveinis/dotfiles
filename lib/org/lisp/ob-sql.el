@@ -51,8 +51,9 @@
 
 (defvar org-babel-default-header-args:sql '())
 
-(defvar org-babel-header-arg-names:sql
-  '(engine out-file))
+(defvar org-babel-header-args:sql
+  '((engine   . :any)
+    (out-file . :any)))
 
 (defun org-babel-expand-body:sql (body params)
   "Expand BODY according to the values of PARAMS."
@@ -70,6 +71,15 @@ This function is called by `org-babel-execute-src-block'."
                        (org-babel-temp-file "sql-out-")))
 	 (header-delim "")
          (command (case (intern engine)
+                    ('dbi (format "dbish --batch '%s' < %s | sed '%s' > %s"
+				  (or cmdline "")
+				  (org-babel-process-file-name in-file)
+				  "/^+/d;s/^\|//;$d"
+				  (org-babel-process-file-name out-file)))
+                    ('monetdb (format "mclient -f tab %s < %s > %s"
+                                      (or cmdline "")
+                                      (org-babel-process-file-name in-file)
+                                      (org-babel-process-file-name out-file)))
                     ('msosql (format "osql %s -s \"\t\" -i %s -o %s"
                                      (or cmdline "")
                                      (org-babel-process-file-name in-file)
@@ -85,7 +95,11 @@ This function is called by `org-babel-execute-src-block'."
 				    (or cmdline "")))
                     (t (error "no support for the %s sql engine" engine)))))
     (with-temp-file in-file
-      (insert (org-babel-expand-body:sql body params)))
+      (insert
+       (case (intern engine)
+	 ('dbi "/format partbox\n")
+	 (t ""))
+       (org-babel-expand-body:sql body params)))
     (message command)
     (shell-command command)
     (if (or (member "scalar" result-params)

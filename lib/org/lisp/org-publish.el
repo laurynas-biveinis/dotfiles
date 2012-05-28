@@ -1036,7 +1036,7 @@ the project."
        (setq ibuffer (find-file-noselect index-file))
        (with-current-buffer ibuffer
          (erase-buffer)
-         (insert "\n\n#+include: \"theindex.inc\"\n\n")
+         (insert "\n\n#+INCLUDE: \"theindex.inc\"\n\n")
          (save-buffer))
        (kill-buffer ibuffer)))))
 
@@ -1115,13 +1115,14 @@ so that the file including them will be republished as well."
   (let* ((key (org-publish-timestamp-filename filename pub-dir pub-func))
 	 (pstamp (org-publish-cache-get key))
 	 (visiting (find-buffer-visiting filename))
+	 (case-fold-search t)
 	 included-files-ctime buf)
 
     (when (equal (file-name-extension filename) "org")
       (setq buf (find-file (expand-file-name filename)))
       (with-current-buffer buf
 	(goto-char (point-min))
-	(while (re-search-forward "^#\\+INCLUDE:[ \t]+\"?\\([^ \t\n\r\"]*\\)\"?[ \t]*.*$" nil t)
+	(while (re-search-forward "^#\\+include:[ \t]+\"\\([^\t\n\r\"]*\\)\"[ \t]*.*$" nil t)
 	  (let* ((included-file (expand-file-name (match-string 1))))
 	    (add-to-list 'included-files-ctime
 			 (org-publish-cache-ctime-of-src included-file) t))))

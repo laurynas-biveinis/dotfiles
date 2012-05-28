@@ -1,4 +1,5 @@
 ;;; org-mtags.el --- Muse-like tags in Org-mode
+
 ;; Copyright (C) 2008-2012 Free Software Foundation, Inc.
 ;;
 ;; Author: Carsten Dominik <carsten at orgmode dot org>

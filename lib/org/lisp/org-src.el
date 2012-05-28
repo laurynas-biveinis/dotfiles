@@ -41,6 +41,7 @@
 (declare-function org-at-table.el-p "org" ())
 (declare-function org-get-indentation "org" (&optional line))
 (declare-function org-switch-to-buffer-other-window "org" (&rest args))
+(declare-function org-strip-protective-commas "org" (beg end))
 (declare-function org-pop-to-buffer-same-window
 		  "org-compat" (&optional buffer-or-name norecord label))
 (declare-function org-strip-protective-commas "org" (beg end))
@@ -174,6 +175,7 @@ For example, there is no ocaml-mode in Emacs, but the mode to use is
 
 (defvar org-src-mode-map (make-sparse-keymap))
 (define-key org-src-mode-map "\C-c'" 'org-edit-src-exit)
+(define-key org-src-mode-map "\C-x\C-s" 'org-edit-src-save)
 
 (defvar org-edit-src-force-single-line nil)
 (defvar org-edit-src-from-org-mode nil)
@@ -309,7 +311,7 @@ buffer."
 	     (error "Language mode `%s' fails with: %S" lang-f (nth 1 e)))))
 	(dolist (pair transmitted-variables)
 	  (org-set-local (car pair) (cadr pair)))
-	(if (eq major-mode 'org-mode)
+	(if (derived-mode-p 'org-mode)
 	    (progn
 	      (goto-char (point-min))
 	      (while (re-search-forward "^," nil t)
@@ -328,6 +330,7 @@ buffer."
 	 (if org-src-preserve-indentation col (max 0 (- col total-nindent))))
 	(org-src-mode)
 	(set-buffer-modified-p nil)
+	(setq buffer-file-name nil)
 	(and org-edit-src-persistent-message
 	     (org-set-local 'header-line-format msg))
 	(let ((edit-prep-func (intern (concat "org-babel-edit-prep:" lang))))
@@ -412,7 +415,7 @@ the fragment in the Org-mode buffer."
 	(case-fold-search t)
 	(msg (substitute-command-keys
 	      "Edit, then exit with C-c ' (C-c and single quote)"))
-	(org-mode-p (eq major-mode 'org-mode))
+	(org-mode-p (derived-mode-p 'org-mode))
 	(beg (make-marker))
 	(end (make-marker))
 	(preserve-indentation org-src-preserve-indentation)
@@ -631,7 +634,7 @@ the language, a switch telling if the content should be in a single line."
       (when (org-bound-and-true-p org-edit-src-from-org-mode)
 	(goto-char (point-min))
 	(while (re-search-forward
-		(if (eq major-mode 'org-mode) "^\\(.\\)" "^\\([*]\\|[ \t]*#\\+\\)") nil t)
+		(if (derived-mode-p 'org-mode) "^\\(.\\)" "^\\([*]\\|[ \t]*#\\+\\)") nil t)
 	  (if (eq (org-current-line) line) (setq delta (1+ delta)))
 	  (replace-match ",\\1")))
       (when (org-bound-and-true-p org-edit-src-picture)
@@ -673,21 +676,33 @@ the language, a switch telling if the content should be in a single line."
       (set-window-configuration org-edit-src-saved-temp-window-config)
       (setq org-edit-src-saved-temp-window-config nil))))
 
+(defmacro org-src-in-org-buffer (&rest body)
+  `(let ((p (point)) (m (mark)) (ul buffer-undo-list) msg)
+     (save-window-excursion
+       (org-edit-src-exit 'save)
+       ,@body
+       (setq msg (current-message))
+       (if (eq org-src-window-setup 'other-frame)
+	   (let ((org-src-window-setup 'current-window))
+	     (org-edit-src-code 'save))
+	 (org-edit-src-code 'save)))
+     (setq buffer-undo-list ul)
+     (push-mark m 'nomessage)
+     (goto-char (min p (point-max)))
+     (message (or msg ""))))
+(def-edebug-spec org-src-in-org-buffer (body))
+
 (defun org-edit-src-save ()
   "Save parent buffer with current state source-code buffer."
   (interactive)
-  (let ((p (point)) (m (mark)) msg)
-    (save-window-excursion
-      (org-edit-src-exit 'save)
-      (save-buffer)
-      (setq msg (current-message))
-      (if (eq org-src-window-setup 'other-frame)
-	  (let ((org-src-window-setup 'current-window))
-	    (org-edit-src-code 'save))
-	(org-edit-src-code 'save)))
-    (push-mark m 'nomessage)
-    (goto-char (min p (point-max)))
-    (message (or msg ""))))
+  (org-src-in-org-buffer (save-buffer)))
+
+(declare-function org-babel-tangle "ob-tangle" (&optional only-this-block target-file lang))
+
+(defun org-src-tangle (arg)
+  "Tangle the parent buffer."
+  (interactive)
+  (org-src-in-org-buffer (org-babel-tangle arg)))
 
 (defun org-src-mode-configure-edit-buffer ()
   (when (org-bound-and-true-p org-edit-src-from-org-mode)

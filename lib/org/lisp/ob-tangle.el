@@ -290,7 +290,7 @@ references."
   (interactive)
   (goto-char (point-min))
   (while (or (re-search-forward "\\[\\[file:.*\\]\\[.*\\]\\]" nil t)
-             (re-search-forward "<<[^[:space:]]*>>" nil t))
+             (re-search-forward (org-babel-noweb-wrap) nil t))
     (delete-region (save-excursion (beginning-of-line 1) (point))
                    (save-excursion (end-of-line 1) (forward-char 1) (point)))))
 
@@ -351,11 +351,7 @@ code blocks by language."
 			     body params
 			     (and (fboundp assignments-cmd)
 				  (funcall assignments-cmd params))))))
-		      (if (and (cdr (assoc :noweb params)) ;; expand noweb refs
-			       (let ((nowebs (split-string
-					      (cdr (assoc :noweb params)))))
-				 (or (member "yes" nowebs)
-				     (member "tangle" nowebs))))
+		      (if (org-babel-noweb-p params :tangle)
 			  (org-babel-expand-noweb-references info)
 			(nth 1 info)))))
 		   (comment
