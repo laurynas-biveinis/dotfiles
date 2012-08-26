@@ -100,7 +100,7 @@
 
 (setq wdired-allow-to-change-permissions t)
 
-(if (symbolp dired-auto-revert-buffer)
+(if emacs-23-2-or-later
     (setq dired-auto-revert-buffer t)
   (progn
     ; Refresh dired buffers on redisplay or buffer change

@@ -11,9 +11,13 @@
 ; Proper clipboard, why oh why this isn't the default?
 (setq x-select-enable-clipboard t)
 
-; Emacs 23.2: Active region becomes primary selection
+; Emacs 23.2+: Active region becomes primary selection
 (if (symbolp 'select-active-regions)
     (setq select-active-regions t))
+
+; Emacs 24.1+: deleting a region deletes.
+(if (symbolp 'delete-active-region)
+    (setq delete-active-region t))
 
 ; C-k kills line including its newline
 (setq kill-whole-line t)

@@ -312,7 +312,7 @@
          ((org-use-tag-inheritance '("project" "somedaymaybe"))))
         (" " "Agenda"
          ((agenda "" nil)
-          (tags-todo "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe|@home-somedaymaybe|@percona-somedaymaybe/!TODO"
+          (tags-todo "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Common next actions")
                       (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@agenda-somedaymaybe/!TODO"
@@ -517,7 +517,8 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 (setq erc-autojoin-channels-alist
       '(("MPB" "#mysqldev" "#percona")
         ("oftc.net" "#gcc")
-        ("freenode.net" "#percona" "#drizzle" "#maria" "#mysql" "#pov")))
+        ("freenode.net" "#percona" "#drizzle" "#maria" "#mysql" "#mysql-dev"
+         "#pov")))
 
 (require 'erc-services)
 (erc-services-mode 1)

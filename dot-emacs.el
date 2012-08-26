@@ -1,7 +1,10 @@
+; Some version checks
+(setq emacs-23-2-or-later (or (and (= emacs-major-version 23)
+                                   (>= emacs-minor-version 2))
+                              (>= emacs-major-version 24)))
+(setq emacs-24-or-later (>= emacs-major-version 24))
 ; Integrated or 3rd party?
-(setq integrated-cedet-p (or (and (= emacs-major-version 23)
-                                  (>= emacs-minor-version 2))
-                             (>= emacs-major-version 24)))
+(setq integrated-cedet-p emacs-23-2-or-later)
 ; OK, use the 3rd party CEDET 1.1 this time
 (setq integrated-cedet-p nil)
 
@@ -30,7 +33,9 @@
 (setq todochiku-icons-dir (concat private-elisp-lib "todochiku-icons"))
 (setq jabber-dir (concat private-elisp-lib "emacs-jabber-0.8.90/"))
 
-(setq elpa-dir (concat private-elisp "elpa/"))
+(if emacs-24-or-later
+    (setq elpa-dir (concat private-elisp "elpa/"))
+  (setq elpa-dir (concat private-elisp "elpa-23/")))
 
 (setq erc-log-dir (concat home-dir "erclogs"))
 
@@ -80,10 +85,11 @@
 
 ; ELPA
 (setq package-user-dir elpa-dir)
-(when
-    (load
-     (expand-file-name (concat elpa-dir "package.el")))
-  (package-initialize))
+(unless emacs-24-or-later
+  (when
+      (load
+       (expand-file-name (concat elpa-dir "package.el")))
+    (package-initialize)))
 
 (load "addon-modes")
 (load "misc")
