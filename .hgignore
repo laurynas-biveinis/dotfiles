@@ -2,3 +2,4 @@ syntax: glob
 *.elc
 projects.el
 semantic.cache
+archive-contents
