@@ -429,12 +429,17 @@
 (require 'dvc-autoloads)
 
 ; color-theme and color-theme-solarized (-dark)
-(require 'color-theme)
-(require 'color-theme-solarized)
-(eval-after-load "color-theme"
-  '(progn
-     (color-theme-initialize)
-     (color-theme-solarized-dark)))
+(if emacs-24-or-later
+    (progn
+      (add-to-list 'custom-theme-load-path solarized-theme-dir)
+      (load-theme 'solarized-dark t))
+  (progn
+    (require 'color-theme)
+    (require 'color-theme-solarized)
+    (eval-after-load "color-theme"
+      '(progn
+         (color-theme-initialize)
+         (color-theme-solarized-dark)))))
 (setq solarized-termcolor 256)
 
 ; todochiku
