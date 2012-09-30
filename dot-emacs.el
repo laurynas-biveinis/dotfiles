@@ -85,11 +85,12 @@
 
 ; ELPA
 (setq package-user-dir elpa-dir)
-(unless emacs-24-or-later
+(if emacs-24-or-later
+    (require 'package)
   (when
-      (load
-       (expand-file-name (concat elpa-dir "package.el")))
-    (package-initialize)))
+       (load
+        (expand-file-name (concat elpa-dir "package.el")))
+     (package-initialize)))
 
 (load "addon-modes")
 (load "misc")
