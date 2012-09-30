@@ -396,7 +396,8 @@
 
 (setq org-todo-keyword-faces
       '(("WAITING" . (:foreground "OrangeRed" :weight bold))
-        ("LOGTIME" . (:foreground "OrangeRed" :weight bold))))
+        ("LOGTIME" . (:foreground "OrangeRed" :weight bold))
+        ("TODO" . (:foreground "Red" :weight bold))))
 
 (setq org-modules
       '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
@@ -428,7 +429,8 @@
 ; DVC
 (require 'dvc-autoloads)
 
-; color-theme and color-theme-solarized (-dark)
+; Solarized-dark color theme
+(setq solarized-termcolors 256)
 (if emacs-24-or-later
     (progn
       (add-to-list 'custom-theme-load-path solarized-theme-dir)
@@ -440,7 +442,6 @@
       '(progn
          (color-theme-initialize)
          (color-theme-solarized-dark)))))
-(setq solarized-termcolor 256)
 
 ; todochiku
 (require 'todochiku)
