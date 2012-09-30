@@ -1,28 +1,26 @@
 ;;; org-colview-xemacs.el --- Column View in Org-mode, XEmacs-specific version
 
 ;; Copyright (C) 2004-2012
-;;   Free Software Foundation, Inc.
+;;   Carsten Dominik
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
 ;;
-;; This file is part of GNU Emacs.
+;; This file is part of Org mode, it is not part of GNU Emacs.
 ;;
-;; GNU Emacs is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 3, or (at your option)
-;; any later version.
+;; You can redistribute it and/or modify it under the terms of the
+;; GNU General Public License as published by the Free Software
+;; Foundation; either version 3, or (at your option) any later
+;; version.
 
-;; GNU Emacs is distributed in the hope that it will be useful,
+;; This file is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this file; see the file COPYING.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
@@ -305,10 +303,9 @@ This is the compiled version of the format.")
 		       (and (looking-at "\\(\\**\\)\\(\\* \\)")
 			    (org-get-level-face 2))))
          (item (save-match-data
-                 (org-no-properties
-                  (org-remove-tabs
-                   (buffer-substring-no-properties
-                    (point-at-bol) (point-at-eol))))))
+		 (org-remove-tabs
+		  (buffer-substring-no-properties
+		   (point-at-bol) (point-at-eol)))))
 	 (color (if (featurep 'xemacs)
                     (save-excursion
                       (beginning-of-line 1)
@@ -600,26 +597,26 @@ Where possible, use the standard interface for changing this line."
       (setq eval '(org-with-point-at pom (org-edit-headline))))
      ((equal key "TODO")
       (setq eval '(org-with-point-at
-		   pom
-		   (call-interactively 'org-todo))))
+		      pom
+		    (call-interactively 'org-todo))))
      ((equal key "PRIORITY")
       (setq eval '(org-with-point-at pom
-				     (call-interactively 'org-priority))))
+		    (call-interactively 'org-priority))))
      ((equal key "TAGS")
       (setq eval '(org-with-point-at
-		   pom
-		   (let ((org-fast-tag-selection-single-key
-			  (if (eq org-fast-tag-selection-single-key 'expert)
-			      t org-fast-tag-selection-single-key)))
-		     (call-interactively 'org-set-tags)))))
+		      pom
+		    (let ((org-fast-tag-selection-single-key
+			   (if (eq org-fast-tag-selection-single-key 'expert)
+			       t org-fast-tag-selection-single-key)))
+		      (call-interactively 'org-set-tags)))))
      ((equal key "DEADLINE")
       (setq eval '(org-with-point-at
-		   pom
-		   (call-interactively 'org-deadline))))
+		      pom
+		    (call-interactively 'org-deadline))))
      ((equal key "SCHEDULED")
       (setq eval '(org-with-point-at
-		   pom
-		   (call-interactively 'org-schedule))))
+		      pom
+		    (call-interactively 'org-schedule))))
      (t
       (setq allowed (org-property-get-allowed-values pom key 'table))
       (if allowed
@@ -935,8 +932,8 @@ interactive function `org-columns-new'.
 	(setq width (string-to-number width))
       (setq width nil))
     (setq fmt (org-icompleting-read "Summary [none]: "
-				       (mapcar (lambda (x) (list (symbol-name (cadr x)))) org-columns-compile-map)
-				       nil t))
+				    (mapcar (lambda (x) (list (symbol-name (cadr x)))) org-columns-compile-map)
+				    nil t))
     (setq fmt (intern fmt)
 	  fun (cdr (assoc fmt (mapcar 'cdr org-columns-compile-map))))
     (if (eq fmt 'none) (setq fmt nil))
@@ -1519,7 +1516,7 @@ and tailing newline characters."
   (org-columns-remove-overlays)
   (move-marker org-columns-begin-marker (point))
   (let ((org-columns-time (time-to-number-of-days (current-time)))
-	 cache maxwidths m p a d fmt)
+	cache maxwidths m p a d fmt)
     (cond
      ((and (boundp 'org-agenda-overriding-columns-format)
 	   org-agenda-overriding-columns-format)
@@ -1552,7 +1549,7 @@ and tailing newline characters."
 	  (setq p (org-entry-properties m))
 
 	  (when (or (not (setq a (assoc org-effort-property p)))
-			 (not (string-match "\\S-" (or (cdr a) ""))))
+		    (not (string-match "\\S-" (or (cdr a) ""))))
 	    ;; OK, the property is not defined.  Use appointment duration?
 	    (when (and org-agenda-columns-add-appointments-to-effort-sum
 		       (setq d (get-text-property (point) 'duration)))
@@ -1636,7 +1633,7 @@ This will add overlays to the date lines, to show the summary for each day."
 				     (t "")))
 			 (put-text-property 0 (length lsum) 'face 'bold lsum)
 			 (unless (eq calc 'identity)
-			     (put-text-property 0 (length lsum) 'org-computed t lsum))
+			   (put-text-property 0 (length lsum) 'org-computed t lsum))
 			 (cons prop lsum))))
 		     fmt))
 	      (org-columns-display-here props)
@@ -1673,12 +1670,12 @@ This will add overlays to the date lines, to show the summary for each day."
 (defun org-format-time-period (interval)
   "Convert time in fractional days to days/hours/minutes/seconds."
   (if (numberp interval)
-    (let* ((days (floor interval))
-	   (frac-hours (* 24 (- interval days)))
-	   (hours (floor frac-hours))
-	   (minutes (floor (* 60 (- frac-hours hours))))
-	   (seconds (floor (* 60 (- (* 60 (- frac-hours hours)) minutes)))))
-      (format "%dd %02dh %02dm %02ds" days hours minutes seconds))
+      (let* ((days (floor interval))
+	     (frac-hours (* 24 (- interval days)))
+	     (hours (floor frac-hours))
+	     (minutes (floor (* 60 (- frac-hours hours))))
+	     (seconds (floor (* 60 (- (* 60 (- frac-hours hours)) minutes)))))
+	(format "%dd %02dh %02dm %02ds" days hours minutes seconds))
     ""))
 
 (defun org-estimate-mean-and-var (v)

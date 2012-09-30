@@ -36,114 +36,126 @@
 ;;; Code:
 
 (eval-when-compile (require 'cl))
+(require 'org-export)
 
 (defvar org-export-latex-default-packages-alist)
 (defvar org-export-latex-packages-alist)
-
-(declare-function org-element-property "org-element" (property element))
-(declare-function org-element-normalize-string "org-element" (s))
-
-(declare-function org-export-data "org-export" (data info))
-(declare-function org-export-directory "org-export" (type plist))
-(declare-function org-export-expand-macro "org-export" (macro info))
-(declare-function org-export-first-sibling-p "org-export" (headline info))
-(declare-function org-export-footnote-first-reference-p "org-export"
-		  (footnote-reference info))
-(declare-function org-export-format-code "org-export"
-		  (code fun &optional num-lines ref-alist))
-(declare-function org-export-format-code-default "org-export" (element info))
-(declare-function org-export-get-coderef-format "org-export" (path desc))
-(declare-function org-export-get-footnote-definition "org-export"
-		  (footnote-reference info))
-(declare-function org-export-get-footnote-number "org-export" (footnote info))
-(declare-function org-export-get-previous-element "org-export" (blob info))
-(declare-function org-export-get-relative-level "org-export" (headline info))
-(declare-function org-export-unravel-code "org-export" (element))
-(declare-function org-export-inline-image-p "org-export"
-		  (link &optional extensions))
-(declare-function org-export-last-sibling-p "org-export" (headline info))
-(declare-function org-export-low-level-p "org-export" (headline info))
-(declare-function org-export-output-file-name
-		  "org-export" (extension &optional subtreep pub-dir))
-(declare-function org-export-resolve-coderef "org-export" (ref info))
-(declare-function org-export-resolve-fuzzy-link "org-export" (link info))
-(declare-function org-export-resolve-radio-link "org-export" (link info))
-(declare-function org-export-solidify-link-text "org-export" (s))
-(declare-function
- org-export-to-buffer "org-export"
- (backend buffer &optional subtreep visible-only body-only ext-plist))
-(declare-function
- org-export-to-file "org-export"
- (backend file &optional subtreep visible-only body-only ext-plist))
+(defvar orgtbl-exp-regexp)
 
 
 
 ;;; Define Back-End
 
-(defvar org-e-latex-translate-alist
-  '((babel-call . org-e-latex-babel-call)
-    (bold . org-e-latex-bold)
-    (center-block . org-e-latex-center-block)
-    (clock . org-e-latex-clock)
-    (code . org-e-latex-code)
-    (comment . org-e-latex-comment)
-    (comment-block . org-e-latex-comment-block)
-    (drawer . org-e-latex-drawer)
-    (dynamic-block . org-e-latex-dynamic-block)
-    (entity . org-e-latex-entity)
-    (example-block . org-e-latex-example-block)
-    (export-block . org-e-latex-export-block)
-    (export-snippet . org-e-latex-export-snippet)
-    (fixed-width . org-e-latex-fixed-width)
-    (footnote-definition . org-e-latex-footnote-definition)
-    (footnote-reference . org-e-latex-footnote-reference)
-    (headline . org-e-latex-headline)
-    (horizontal-rule . org-e-latex-horizontal-rule)
-    (inline-babel-call . org-e-latex-inline-babel-call)
-    (inline-src-block . org-e-latex-inline-src-block)
-    (inlinetask . org-e-latex-inlinetask)
-    (italic . org-e-latex-italic)
-    (item . org-e-latex-item)
-    (keyword . org-e-latex-keyword)
-    (latex-environment . org-e-latex-latex-environment)
-    (latex-fragment . org-e-latex-latex-fragment)
-    (line-break . org-e-latex-line-break)
-    (link . org-e-latex-link)
-    (macro . org-e-latex-macro)
-    (paragraph . org-e-latex-paragraph)
-    (plain-list . org-e-latex-plain-list)
-    (plain-text . org-e-latex-plain-text)
-    (planning . org-e-latex-planning)
-    (property-drawer . org-e-latex-property-drawer)
-    (quote-block . org-e-latex-quote-block)
-    (quote-section . org-e-latex-quote-section)
-    (radio-target . org-e-latex-radio-target)
-    (section . org-e-latex-section)
-    (special-block . org-e-latex-special-block)
-    (src-block . org-e-latex-src-block)
-    (statistics-cookie . org-e-latex-statistics-cookie)
-    (strike-through . org-e-latex-strike-through)
-    (subscript . org-e-latex-subscript)
-    (superscript . org-e-latex-superscript)
-    (table . org-e-latex-table)
-    (table-cell . org-e-latex-table-cell)
-    (table-row . org-e-latex-table-row)
-    (target . org-e-latex-target)
-    (template . org-e-latex-template)
-    (timestamp . org-e-latex-timestamp)
-    (underline . org-e-latex-underline)
-    (verbatim . org-e-latex-verbatim)
-    (verse-block . org-e-latex-verse-block))
-  "Alist between element or object types and translators.")
+(org-export-define-backend e-latex
+  ((bold . org-e-latex-bold)
+   (center-block . org-e-latex-center-block)
+   (clock . org-e-latex-clock)
+   (code . org-e-latex-code)
+   (drawer . org-e-latex-drawer)
+   (dynamic-block . org-e-latex-dynamic-block)
+   (entity . org-e-latex-entity)
+   (example-block . org-e-latex-example-block)
+   (export-block . org-e-latex-export-block)
+   (export-snippet . org-e-latex-export-snippet)
+   (fixed-width . org-e-latex-fixed-width)
+   (footnote-definition . org-e-latex-footnote-definition)
+   (footnote-reference . org-e-latex-footnote-reference)
+   (headline . org-e-latex-headline)
+   (horizontal-rule . org-e-latex-horizontal-rule)
+   (inline-src-block . org-e-latex-inline-src-block)
+   (inlinetask . org-e-latex-inlinetask)
+   (italic . org-e-latex-italic)
+   (item . org-e-latex-item)
+   (keyword . org-e-latex-keyword)
+   (latex-environment . org-e-latex-latex-environment)
+   (latex-fragment . org-e-latex-latex-fragment)
+   (line-break . org-e-latex-line-break)
+   (link . org-e-latex-link)
+   (macro . org-e-latex-macro)
+   (paragraph . org-e-latex-paragraph)
+   (plain-list . org-e-latex-plain-list)
+   (plain-text . org-e-latex-plain-text)
+   (planning . org-e-latex-planning)
+   (property-drawer . org-e-latex-property-drawer)
+   (quote-block . org-e-latex-quote-block)
+   (quote-section . org-e-latex-quote-section)
+   (radio-target . org-e-latex-radio-target)
+   (section . org-e-latex-section)
+   (special-block . org-e-latex-special-block)
+   (src-block . org-e-latex-src-block)
+   (statistics-cookie . org-e-latex-statistics-cookie)
+   (strike-through . org-e-latex-strike-through)
+   (subscript . org-e-latex-subscript)
+   (superscript . org-e-latex-superscript)
+   (table . org-e-latex-table)
+   (table-cell . org-e-latex-table-cell)
+   (table-row . org-e-latex-table-row)
+   (target . org-e-latex-target)
+   (template . org-e-latex-template)
+   (timestamp . org-e-latex-timestamp)
+   (underline . org-e-latex-underline)
+   (verbatim . org-e-latex-verbatim)
+   (verse-block . org-e-latex-verse-block))
+  :export-block "LATEX"
+  :options-alist ((:date "DATE" nil org-e-latex-date-format t)
+		  (:latex-class "LATEX_CLASS" nil org-e-latex-default-class t)
+		  (:latex-class-options "LATEX_CLASS_OPTIONS" nil nil t)
+		  (:latex-header-extra "LATEX_HEADER" nil nil newline)))
 
-(defconst org-e-latex-options-alist
-  '((:date "DATE" nil org-e-latex-date-format t)
-    (:latex-class "LATEX_CLASS" nil org-e-latex-default-class t)
-    (:latex-class-options "LATEX_CLASS_OPTIONS" nil nil t)
-    (:latex-header-extra "LATEX_HEADER" nil nil newline))
-  "Alist between LaTeX export properties and ways to set them.
-See `org-export-options-alist' for more information on the
-structure of the values.")
+
+
+;;; Internal Variables
+
+(defconst org-e-latex-babel-language-alist
+  '(("af" . "afrikaans")
+    ("bg" . "bulgarian")
+    ("bt-br" . "brazilian")
+    ("ca" . "catalan")
+    ("cs" . "czech")
+    ("cy" . "welsh")
+    ("da" . "danish")
+    ("de" . "germanb")
+    ("de-at" . "naustrian")
+    ("de-de" . "ngerman")
+    ("el" . "greek")
+    ("en" . "english")
+    ("en-au" . "australian")
+    ("en-ca" . "canadian")
+    ("en-gb" . "british")
+    ("en-ie" . "irish")
+    ("en-nz" . "newzealand")
+    ("en-us" . "american")
+    ("es" . "spanish")
+    ("et" . "estonian")
+    ("eu" . "basque")
+    ("fi" . "finnish")
+    ("fr" . "frenchb")
+    ("fr-ca" . "canadien")
+    ("gl" . "galician")
+    ("hr" . "croatian")
+    ("hu" . "hungarian")
+    ("id" . "indonesian")
+    ("is" . "icelandic")
+    ("it" . "italian")
+    ("la" . "latin")
+    ("ms" . "malay")
+    ("nl" . "dutch")
+    ("no-no" . "nynorsk")
+    ("pl" . "polish")
+    ("pt" . "portuguese")
+    ("ro" . "romanian")
+    ("ru" . "russian")
+    ("sa" . "sanskrit")
+    ("sb" . "uppersorbian")
+    ("sk" . "slovak")
+    ("sl" . "slovene")
+    ("sq" . "albanian")
+    ("sr" . "serbian")
+    ("sv" . "swedish")
+    ("ta" . "tamil")
+    ("tr" . "turkish")
+    ("uk" . "ukrainian"))
+  "Alist between language code and corresponding Babel option.")
 
 
 
@@ -219,7 +231,6 @@ macro-like placeholders.
  [NO-PACKAGES]           do not include the packages
  [EXTRA]                 the stuff from #+LaTeX_HEADER
  [NO-EXTRA]              do not include #+LaTeX_HEADER stuff
- [BEAMER-HEADER-EXTRA]   the beamer extra headers
 
 So a header like
 
@@ -815,12 +826,38 @@ For non-floats, see `org-e-latex--wrap-label'."
 		label-str
 		(org-export-data (car caption) info))))))
 
-(defun org-e-latex--guess-inputenc (header)
-  "Set the coding system in inputenc to what the buffer is.
+(defun org-e-latex--guess-babel-language (header info)
+  "Set Babel's language according to LANGUAGE keyword.
 
-HEADER is the LaTeX header string.
+HEADER is the LaTeX header string.  INFO is the plist used as
+a communication channel.
+
+Insertion of guessed language only happens when Babel package has
+explicitly been loaded.  Then it is added to the rest of
+package's options.
 
 Return the new header."
+  (let ((language-code (plist-get info :language)))
+    ;; If no language is set or Babel package is not loaded, return
+    ;; HEADER as-is.
+    (if (or (not (stringp language-code))
+	    (not (string-match "\\\\usepackage\\[\\(.*\\)\\]{babel}" header)))
+	header
+      (let ((options (save-match-data
+		       (org-split-string (match-string 1 header) ",")))
+	    (language (cdr (assoc language-code
+				  org-e-latex-babel-language-alist))))
+	;; If LANGUAGE is already loaded, return header.  Otherwise,
+	;; append LANGUAGE to other options.
+	(if (member language options) header
+	  (replace-match (mapconcat 'identity
+				    (append options (list language))
+				    ",")
+			 nil nil header 1))))))
+
+(defun org-e-latex--guess-inputenc (header)
+  "Set the coding system in inputenc to what the buffer is.
+HEADER is the LaTeX header string.  Return the new header."
   (let* ((cs (or (ignore-errors
 		   (latexenc-coding-system-to-inputenc
 		    buffer-file-coding-system))
@@ -876,7 +913,7 @@ This function shouldn't be used for floats.  See
       (concat (format "\\label{%s}\n" label) output))))
 
 (defun org-e-latex--text-markup (text markup)
-  "Format text depending on MARKUP text markup.
+  "Format TEXT depending on MARKUP text markup.
 See `org-e-latex-text-markup-alist' for details."
   (let ((fmt (cdr (assq markup org-e-latex-text-markup-alist))))
     (cond
@@ -911,6 +948,47 @@ See `org-e-latex-text-markup-alist' for details."
      ;; Else use format string.
      (t (format fmt text)))))
 
+(defun org-e-latex--delayed-footnotes-definitions (element info)
+  "Return footnotes definitions in ELEMENT as a string.
+
+INFO is a plist used as a communication channel.
+
+Footnotes definitions are returned within \"\\footnotetxt{}\"
+commands.
+
+This function is used within constructs that don't support
+\"\\footnote{}\" command (i.e. an item's tag).  In that case,
+\"\\footnotemark\" is used within the construct and the function
+just outside of it."
+  (mapconcat
+   (lambda (ref)
+     (format
+      "\\footnotetext[%s]{%s}"
+      (org-export-get-footnote-number ref info)
+      (org-trim
+       (org-export-data
+	(org-export-get-footnote-definition ref info) info))))
+   ;; Find every footnote reference in ELEMENT.
+   (let* (all-refs
+	  search-refs			; For byte-compiler.
+	  (search-refs
+	   (function
+	    (lambda (data)
+	      ;; Return a list of all footnote references never seen
+	      ;; before in DATA.
+	      (org-element-map
+	       data 'footnote-reference
+	       (lambda (ref)
+		 (when (org-export-footnote-first-reference-p ref info)
+		   (push ref all-refs)
+		   (when (eq (org-element-property :type ref) 'standard)
+		     (funcall search-refs
+			      (org-export-get-footnote-definition ref info)))))
+	       info)
+	      (reverse all-refs)))))
+     (funcall search-refs element))
+   ""))
+
 
 
 ;;; Template
@@ -921,10 +999,10 @@ CONTENTS is the transcoded contents string.  INFO is a plist
 holding export options."
   (let ((title (org-export-data (plist-get info :title) info)))
     (concat
-     ;; 1. Time-stamp.
+     ;; Time-stamp.
      (and (plist-get info :time-stamp-file)
 	  (format-time-string "%% Created %Y-%m-%d %a %H:%M\n"))
-     ;; 2. Document class and packages.
+     ;; Document class and packages.
      (let ((class (plist-get info :latex-class))
 	   (class-options (plist-get info :latex-class-options)))
        (org-element-normalize-string
@@ -936,19 +1014,20 @@ holding export options."
 			  "^[ \t]*\\\\documentclass\\(\\[.*?\\]\\)"
 			  class-options header t nil 1)
 		       header))))
-	  (org-e-latex--guess-inputenc
-	   (org-splice-latex-header
-	    document-class-string
-	    org-export-latex-default-packages-alist ; defined in org.el
-	    org-export-latex-packages-alist nil ; defined in org.el
-	    (plist-get info :latex-header-extra))))))
-     ;; 3. Define alert if not yet defined.
-     "\\providecommand{\\alert}[1]{\\textbf{#1}}\n"
-     ;; 4. Possibly limit depth for headline numbering.
+	  (when document-class-string
+	    (org-e-latex--guess-babel-language
+	     (org-e-latex--guess-inputenc
+	      (org-splice-latex-header
+	       document-class-string
+	       org-export-latex-default-packages-alist ; defined in org.el
+	       org-export-latex-packages-alist nil ; defined in org.el
+	       (plist-get info :latex-header-extra)))
+	     info)))))
+     ;; Possibly limit depth for headline numbering.
      (let ((sec-num (plist-get info :section-numbers)))
        (when (integerp sec-num)
 	 (format "\\setcounter{secnumdepth}{%d}\n" sec-num)))
-     ;; 5. Author.
+     ;; Author.
      (let ((author (and (plist-get info :with-author)
 			(let ((auth (plist-get info :author)))
 			  (and auth (org-export-data auth info)))))
@@ -958,20 +1037,20 @@ holding export options."
 	      (format "\\author{%s\\thanks{%s}}\n" author email))
 	     (author (format "\\author{%s}\n" author))
 	     (t "\\author{}\n")))
-     ;; 6. Date.
-     (let ((date (plist-get info :date)))
+     ;; Date.
+     (let ((date (org-export-data (plist-get info :date) info)))
        (and date (format "\\date{%s}\n" date)))
-     ;; 7. Title
+     ;; Title
      (format "\\title{%s}\n" title)
-     ;; 8. Hyperref options.
+     ;; Hyperref options.
      (format "\\hypersetup{\n  pdfkeywords={%s},\n  pdfsubject={%s},\n  pdfcreator={%s}}\n"
 	     (or (plist-get info :keywords) "")
 	     (or (plist-get info :description) "")
 	     (if (not (plist-get info :with-creator)) ""
 	       (plist-get info :creator)))
-     ;; 9. Document start.
+     ;; Document start.
      "\\begin{document}\n\n"
-     ;; 10. Title command.
+     ;; Title command.
      (org-element-normalize-string
       (cond ((string= "" title) nil)
 	    ((not (stringp org-e-latex-title-command)) nil)
@@ -979,22 +1058,22 @@ holding export options."
 			   org-e-latex-title-command)
 	     (format org-e-latex-title-command title))
 	    (t org-e-latex-title-command)))
-     ;; 11. Table of contents.
+     ;; Table of contents.
      (let ((depth (plist-get info :with-toc)))
        (when depth
 	 (concat (when (wholenump depth)
 		   (format "\\setcounter{tocdepth}{%d}\n" depth))
 		 "\\tableofcontents\n\\vspace*{1cm}\n\n")))
-     ;; 12. Document's body.
+     ;; Document's body.
      contents
-     ;; 13. Creator.
+     ;; Creator.
      (let ((creator-info (plist-get info :with-creator)))
        (cond
 	((not creator-info) "")
 	((eq creator-info 'comment)
 	 (format "%% %s\n" (plist-get info :creator)))
 	(t (concat (plist-get info :creator) "\n"))))
-     ;; 14. Document end.
+     ;; Document end.
      "\\end{document}")))
 
 
@@ -1144,6 +1223,56 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
 
 
 ;;;; Footnote Reference
+;;
+;; Footnote reference export is handled by
+;; `org-e-latex-footnote-reference'.
+;;
+;; Internally, `org-e-latex--get-footnote-counter' is used to restore
+;; the value of the LaTeX "footnote" counter after a jump due to
+;; a reference to an already defined footnote.  It is only needed in
+;; item tags since the optional argument to \footnotemark is not
+;; allowed there.
+
+(defun org-e-latex--get-footnote-counter (footnote-reference info)
+  "Return \"footnote\" counter before FOOTNOTE-REFERENCE is encountered.
+INFO is a plist used as a communication channel."
+  ;; Find original counter value by counting number of footnote
+  ;; references appearing for the first time before the current
+  ;; footnote reference.
+  (let* ((label (org-element-property :label footnote-reference))
+	 seen-refs
+	 search-ref			; For byte-compiler.
+	 (search-ref
+	  (function
+	   (lambda (data)
+	     ;; Search footnote references through DATA, filling
+	     ;; SEEN-REFS along the way.
+	     (org-element-map
+	      data 'footnote-reference
+	      (lambda (fn)
+		(let ((fn-lbl (org-element-property :label fn)))
+		  (cond
+		   ;; Anonymous footnote match: return number.
+		   ((eq fn footnote-reference) (length seen-refs))
+		   ;; Anonymous footnote: it's always a new one.
+		   ;; Also, be sure to return nil from the `cond' so
+		   ;; `first-match' doesn't get us out of the loop.
+		   ((not fn-lbl) (push 'inline seen-refs) nil)
+		   ;; Label not seen so far: add it so SEEN-REFS.
+		   ;;
+		   ;; Also search for subsequent references in
+		   ;; footnote definition so numbering follows reading
+		   ;; logic.  Note that we don't have to care about
+		   ;; inline definitions, since `org-element-map'
+		   ;; already traverse them at the right time.
+		   ((not (member fn-lbl seen-refs))
+		    (push fn-lbl seen-refs)
+		    (funcall search-ref
+			     (org-export-get-footnote-definition fn info))))))
+	      ;; Don't enter footnote definitions since it will happen
+	      ;; when their first reference is found.
+	      info 'first-match 'footnote-definition)))))
+    (funcall search-ref (plist-get info :parse-tree))))
 
 (defun org-e-latex-footnote-reference (footnote-reference contents info)
   "Transcode a FOOTNOTE-REFERENCE element from Org to LaTeX.
@@ -1154,17 +1283,30 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
      (when (eq (org-element-type prev) 'footnote-reference)
        org-e-latex-footnote-separator))
    (cond
+    ;; Use \footnotemark if reference is within an item's tag.
+    ((eq (org-element-type (org-export-get-parent-element footnote-reference))
+	 'item)
+     (if (org-export-footnote-first-reference-p footnote-reference info)
+	 "\\footnotemark"
+       ;; Since we can't specify footnote number as an optional
+       ;; argument within an item tag, some extra work has to be done
+       ;; when the footnote has already been referenced.  In that
+       ;; case, set footnote counter to the desired number, use the
+       ;; footnotemark, then set counter back to its original value.
+       (format
+	"\\setcounter{footnote}{%s}\\footnotemark\\setcounter{footnote}{%s}"
+	(1- (org-export-get-footnote-number footnote-reference info))
+	(org-e-latex--get-footnote-counter footnote-reference info))))
     ;; Use \footnotemark if the footnote has already been defined.
     ((not (org-export-footnote-first-reference-p footnote-reference info))
      (format "\\footnotemark[%s]{}"
 	     (org-export-get-footnote-number footnote-reference info)))
-    ;; Use also \footnotemark if reference is within another footnote
+    ;; Use \footnotemark if reference is within another footnote
     ;; reference or footnote definition.
-    ((loop for parent in (org-export-get-genealogy footnote-reference info)
+    ((loop for parent in (org-export-get-genealogy footnote-reference)
 	   thereis (memq (org-element-type parent)
 			 '(footnote-reference footnote-definition)))
-     (let ((num (org-export-get-footnote-number footnote-reference info)))
-       (format "\\footnotemark[%s]{}\\setcounter{footnote}{%s}" num num)))
+     "\\footnotemark")
     ;; Otherwise, define it with \footnote command.
     (t
      (let ((def (org-export-get-footnote-definition footnote-reference info)))
@@ -1175,31 +1317,7 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
 	;; Retrieve all footnote references within the footnote and
 	;; add their definition after it, since LaTeX doesn't support
 	;; them inside.
-	(let* (all-refs
-	       search-refs		; for byte-compiler
-	       (search-refs
-		(function
-		 (lambda (data)
-		   ;; Return a list of all footnote references in DATA.
-		   (org-element-map
-		    data 'footnote-reference
-		    (lambda (ref)
-		      (when (org-export-footnote-first-reference-p ref info)
-			(push ref all-refs)
-			(when (eq (org-element-property :type ref) 'standard)
-			  (funcall
-			   search-refs
-			   (org-export-get-footnote-definition ref info)))))
-		    info) (reverse all-refs)))))
-	  (mapconcat
-	   (lambda (ref)
-	     (format
-	      "\\footnotetext[%s]{%s}"
-	      (org-export-get-footnote-number ref info)
-	      (org-trim
-	       (org-export-data
-		(org-export-get-footnote-definition ref info) info))))
-	   (funcall search-refs def) ""))))))))
+	(org-e-latex--delayed-footnotes-definitions def info)))))))
 
 
 ;;;; Headline
@@ -1241,10 +1359,11 @@ holding contextual information."
 		 (and todo (org-export-data todo info)))))
 	 (todo-type (and todo (org-element-property :todo-type headline)))
 	 (tags (and (plist-get info :with-tags)
-		    (org-element-property :tags headline)))
+		    (org-export-get-tags headline info)))
 	 (priority (and (plist-get info :with-priority)
 			(org-element-property :priority headline)))
-	 ;; Create the headline text.
+	 ;; Create the headline text along with a no-tag version.  The
+	 ;; latter is required to remove tags from table of contents.
 	 (full-text (if (functionp org-e-latex-format-headline-function)
 			;; User-defined formatting function.
 			(funcall org-e-latex-format-headline-function
@@ -1258,6 +1377,16 @@ holding contextual information."
 		       (when tags
 			 (format "\\hfill{}\\textsc{:%s:}"
 				 (mapconcat 'identity tags ":"))))))
+	 (full-text-no-tag
+	  (if (functionp org-e-latex-format-headline-function)
+	      ;; User-defined formatting function.
+	      (funcall org-e-latex-format-headline-function
+		       todo todo-type priority text nil)
+	    ;; Default formatting.
+	    (concat
+	     (when todo (format "\\textbf{\\textsf{\\textsc{%s}}} " todo))
+	     (when priority (format "\\framebox{\\#%c} " priority))
+	     text)))
 	 ;; Associate some \label to the headline for internal links.
 	 (headline-label
 	  (format "\\label{sec-%s}\n"
@@ -1290,8 +1419,33 @@ holding contextual information."
 	   (format "\n\\\\end{%s}" (if numberedp 'enumerate 'itemize))
 	   low-level-body))))
      ;; Case 3. Standard headline.  Export it as a section.
-     (t (format section-fmt full-text
-		(concat headline-label pre-blanks contents))))))
+     (t
+      (cond
+       ((not (and tags (eq (plist-get info :with-tags) 'not-in-toc)))
+	;; Regular section.  Use specified format string.
+	(format section-fmt full-text
+		(concat headline-label pre-blanks contents)))
+       ((string-match "\\`\\\\\\(.*?\\){" section-fmt)
+	;; If tags should be removed from table of contents, insert
+	;; title without tags as an alternative heading in sectioning
+	;; command.
+	(format (replace-match (concat (match-string 1 section-fmt) "[%s]")
+			       nil nil section-fmt 1)
+		;; Replace square brackets with parenthesis since
+		;; square brackets are not supported in optional
+		;; arguments.
+		(replace-regexp-in-string
+		 "\\[" "("
+		 (replace-regexp-in-string
+		  "\\]" ")"
+		  full-text-no-tag))
+		full-text
+		(concat headline-label pre-blanks contents)))
+       (t
+	;; Impossible to add an alternative heading.  Fallback to
+	;; regular sectioning format string.
+	(format section-fmt full-text
+		(concat headline-label pre-blanks contents))))))))
 
 
 ;;;; Horizontal Rule
@@ -1299,10 +1453,20 @@ holding contextual information."
 (defun org-e-latex-horizontal-rule (horizontal-rule contents info)
   "Transcode an HORIZONTAL-RULE  object from Org to LaTeX.
 CONTENTS is nil.  INFO is a plist holding contextual information."
-  (let ((attr (mapconcat #'identity
-			 (org-element-property :attr_latex horizontal-rule)
-			 " ")))
-    (org-e-latex--wrap-label horizontal-rule (concat "\\hrule " attr))))
+  (let ((attr (org-export-read-attribute :attr_latex horizontal-rule))
+	(prev (org-export-get-previous-element horizontal-rule info)))
+    (concat
+     ;; Make sure the rule doesn't start at the end of the current
+     ;; line by separating it with a blank line from previous element.
+     (when (and prev
+		(let ((prev-blank (org-element-property :post-blank prev)))
+		  (or (not prev-blank) (zerop prev-blank))))
+       "\n")
+     (org-e-latex--wrap-label
+      horizontal-rule
+      (format "\\rule{%s}{%s}"
+	      (or (plist-get attr :width) "\\linewidth")
+	      (or (plist-get attr :thickness) "0.5pt"))))))
 
 
 ;;;; Inline Babel Call
@@ -1360,7 +1524,7 @@ holding contextual information."
 		     (and todo (org-export-data todo info)))))
 	(todo-type (org-element-property :todo-type inlinetask))
 	(tags (and (plist-get info :with-tags)
-		   (org-element-property :tags inlinetask)))
+		   (org-export-get-tags inlinetask info)))
 	(priority (and (plist-get info :with-priority)
 		       (org-element-property :priority inlinetask))))
     ;; If `org-e-latex-format-inlinetask-function' is provided, call it
@@ -1408,7 +1572,7 @@ contextual information."
   (let* ((counter
 	  (let ((count (org-element-property :counter item))
 		(level
-		 (loop for parent in (org-export-get-genealogy item info)
+		 (loop for parent in (org-export-get-genealogy item)
 		       count (eq (org-element-type parent) 'plain-list)
 		       until (eq (org-element-type parent) 'headline))))
 	    (and count
@@ -1416,13 +1580,24 @@ contextual information."
 		 (format "\\setcounter{enum%s}{%s}\n"
 			 (nth (1- level) '("i" "ii" "iii" "iv"))
 			 (1- count)))))
-	 (checkbox (let ((checkbox (org-element-property :checkbox item)))
-		     (cond ((eq checkbox 'on) "$\\boxtimes$ ")
-			   ((eq checkbox 'off) "$\\Box$ ")
-			   ((eq checkbox 'trans) "$\\boxminus$ "))))
+	 (checkbox (case (org-element-property :checkbox item)
+		     (on "$\\boxtimes$ ")
+		     (off "$\\Box$ ")
+		     (trans "$\\boxminus$ ")))
 	 (tag (let ((tag (org-element-property :tag item)))
-		(and tag (format "[%s]" (org-export-data tag info))))))
-    (concat counter "\\item" tag " " checkbox contents)))
+		;; Check-boxes must belong to the tag.
+		(and tag (format "[%s] "
+				 (concat checkbox
+					 (org-export-data tag info)))))))
+    (concat counter "\\item" (or tag (concat " " checkbox))
+	    (and contents (org-trim contents))
+	    ;; If there are footnotes references in tag, be sure to
+	    ;; add their definition at the end of the item.  This
+	    ;; workaround is necessary since "\footnote{}" command is
+	    ;; not supported in tags.
+	    (and tag
+		 (org-e-latex--delayed-footnotes-definitions
+		  (org-element-property :tag item) info)))))
 
 
 ;;;; Keyword
@@ -1501,7 +1676,7 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
   "Return LaTeX code for an inline image.
 LINK is the link pointing to the inline image.  INFO is a plist
 used as a communication channel."
-  (let* ((parent (org-export-get-parent-paragraph link info))
+  (let* ((parent (org-export-get-parent-element link))
 	 (path (let ((raw-path (org-element-property :path link)))
 		 (if (not (file-name-absolute-p raw-path)) raw-path
 		   (expand-file-name raw-path))))
@@ -1598,6 +1773,10 @@ INFO is a plist holding contextual information.  See
 			     (org-export-resolve-fuzzy-link link info)
 			   (org-export-resolve-id-link link info))))
 	(case (org-element-type destination)
+	  ;; Id link points to an external file.
+	  (plain-text
+	   (if desc (format "\\href{file://%s}{%s}" destination desc)
+	     (format "\\url{file://%s}" destination)))
 	  ;; Fuzzy link points nowhere.
 	  ('nil
 	   (format org-e-latex-link-with-unknown-path-format
@@ -1955,7 +2134,8 @@ contextual information."
 (defun org-e-latex-statistics-cookie (statistics-cookie contents info)
   "Transcode a STATISTICS-COOKIE object from Org to LaTeX.
 CONTENTS is nil.  INFO is a plist holding contextual information."
-  (org-element-property :value statistics-cookie))
+  (replace-regexp-in-string
+   "%" "\\%" (org-element-property :value statistics-cookie) nil t))
 
 
 ;;;; Strike-Through
@@ -1973,7 +2153,31 @@ holding contextual information."
   "Transcode a SUBSCRIPT object from Org to LaTeX.
 CONTENTS is the contents of the object.  INFO is a plist holding
 contextual information."
-  (format (if (= (length contents) 1) "$_%s$" "$_{\\mathrm{%s}}$") contents))
+  (if (= (length contents) 1) (format "$_%s$" contents)
+    ;; Handle multiple objects in SUBSCRIPT by creating a subscript
+    ;; command for each of them.
+    (let ((prev-blanks 0))
+      (mapconcat
+       (lambda (obj)
+	 (case (org-element-type obj)
+	   ((entity latex-fragment)
+	    (setq prev-blanks (org-element-property :post-blank obj))
+	    (let ((data (org-trim (org-export-data obj info))))
+	      (string-match
+	       "\\`\\(?:\\\\[([]\\|\\$+\\)?\\(.*?\\)\\(?:\\\\[])]\\|\\$+\\)?\\'"
+	       data)
+	      (format "$_{%s}$" (match-string 1 data))))
+	   (plain-text
+	    (format "$_\\mathrm{%s}$"
+		    (concat (make-string prev-blanks ? )
+			    ;; mathrm command doesn't handle spaces,
+			    ;; so we have to enforce them.
+			    (replace-regexp-in-string
+			     " " "\\\\ " (org-export-data obj info)))))
+	   (otherwise
+	    (setq prev-blanks (org-element-property :post-blank obj))
+	    (format "$_{%s}$" (org-export-data obj info)))))
+       (org-element-contents subscript) ""))))
 
 
 ;;;; Superscript
@@ -1982,7 +2186,31 @@ contextual information."
   "Transcode a SUPERSCRIPT object from Org to LaTeX.
 CONTENTS is the contents of the object.  INFO is a plist holding
 contextual information."
-  (format (if (= (length contents) 1) "$^%s$" "$^{\\mathrm{%s}}$") contents))
+  (if (= (length contents) 1) (format "$^%s$" contents)
+    ;; Handle multiple objects in SUPERSCRIPT by creating
+    ;; a superscript command for each of them.
+    (let ((prev-blanks 0))
+      (mapconcat
+       (lambda (obj)
+	 (case (org-element-type obj)
+	   ((entity latex-fragment)
+	    (setq prev-blanks (org-element-property :post-blank obj))
+	    (let ((data (org-trim (org-export-data obj info))))
+	      (string-match
+	       "\\`\\(?:\\\\[([]\\|\\$+\\)?\\(.*?\\)\\(?:\\\\[])]\\|\\$+\\)?\\'"
+	       data)
+	      (format "$^{%s}$" (match-string 1 data))))
+	   (plain-text
+	    (format "$^\\mathrm{%s}$"
+		    (concat (make-string prev-blanks ? )
+			    ;; mathrm command doesn't handle spaces,
+			    ;; so we have to enforce them.
+			    (replace-regexp-in-string
+			     " " "\\\\ " (org-export-data obj info)))))
+	   (otherwise
+	    (setq prev-blanks (org-element-property :post-blank obj))
+	    (format "$^{%s}$" (org-export-data obj info)))))
+       (org-element-contents superscript) ""))))
 
 
 ;;;; Table
@@ -1998,7 +2226,8 @@ contextual information."
 
 (defun org-e-latex-table (table contents info)
   "Transcode a TABLE element from Org to LaTeX.
-CONTENTS is nil.  INFO is a plist holding contextual information."
+CONTENTS is the contents of the table.  INFO is a plist holding
+contextual information."
   (cond
    ;; Case 1: verbatim table.
    ((or org-e-latex-tables-verbatim
@@ -2077,7 +2306,7 @@ This function assumes TABLE has `org' as its `:type' attribute."
 	 (float-env (cond
 		     ((string= "longtable" table-env) nil)
 		     ((and attr (string-match "\\<sidewaystable\\>" attr))
-		      "sidewaystables")
+		      "sidewaystable")
 		     ((and attr
 			   (or (string-match (regexp-quote "table*") attr)
 			       (string-match "\\<multicolumn\\>" attr)))
@@ -2188,7 +2417,7 @@ a communication channel."
   (when (eq (org-element-property :type table-row) 'standard)
     (let* ((attr (mapconcat 'identity
 			    (org-element-property
-			     :attr_latex (org-export-get-parent table-row info))
+			     :attr_latex (org-export-get-parent table-row))
 			    " "))
 	   (longtablep (and attr (string-match "\\<longtable\\>" attr)))
 	   (booktabsp
@@ -2216,7 +2445,7 @@ a communication channel."
 		 (if booktabsp "\\midrule" "\\hline")
 		 ;; Number of columns.
 		 (cdr (org-export-table-dimensions
-		       (org-export-get-parent-table table-row info) info))))
+		       (org-export-get-parent-table table-row) info))))
 	;; When BOOKTABS are activated enforce bottom rule even when
 	;; no hline was specifically marked.
 	((and booktabsp (memq 'bottom borders)) "\\bottomrule")
@@ -2241,12 +2470,21 @@ information."
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let ((value (org-translate-time (org-element-property :value timestamp)))
-	(type (org-element-property :type timestamp)))
-    (cond ((memq type '(active active-range))
-	   (format org-e-latex-active-timestamp-format value))
-	  ((memq type '(inactive inactive-range))
-	   (format org-e-latex-inactive-timestamp-format value))
-	  (t (format org-e-latex-diary-timestamp-format value)))))
+	(range-end (org-element-property :range-end timestamp)))
+    (case (org-element-property :type timestamp)
+      (active (format org-e-latex-active-timestamp-format value))
+      (active-range
+       (concat (format org-e-latex-active-timestamp-format value)
+	       "--"
+	       (format org-e-latex-active-timestamp-format
+		       (org-translate-time range-end))))
+      (inactive (format org-e-latex-inactive-timestamp-format value))
+      (inactive-range
+       (concat (format org-e-latex-inactive-timestamp-format value)
+	       "--"
+	       (format org-e-latex-inactive-timestamp-format
+		       (org-translate-time range-end))))
+      (otherwise (format org-e-latex-diary-timestamp-format value)))))
 
 
 ;;;; Underline
@@ -2294,6 +2532,42 @@ contextual information."
 
 ;;; Interactive functions
 
+;;;###autoload
+(defun org-e-latex-export-as-latex
+  (&optional subtreep visible-only body-only ext-plist)
+  "Export current buffer as a LaTeX buffer.
+
+If narrowing is active in the current buffer, only export its
+narrowed part.
+
+If a region is active, export that region.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+When optional argument BODY-ONLY is non-nil, only write code
+between \"\\begin{document}\" and \"\\end{document}\".
+
+EXT-PLIST, when provided, is a property list with external
+parameters overriding Org default settings, but still inferior to
+file-local settings.
+
+Export is done in a buffer named \"*Org E-LATEX Export*\", which
+will be displayed when `org-export-show-temporary-export-buffer'
+is non-nil."
+  (interactive)
+  (let ((outbuf (org-export-to-buffer
+		 'e-latex "*Org E-LATEX Export*"
+		 subtreep visible-only body-only ext-plist)))
+    (with-current-buffer outbuf (LaTeX-mode))
+    (when org-export-show-temporary-export-buffer
+      (switch-to-buffer-other-window outbuf))))
+
+;;;###autoload
 (defun org-e-latex-export-to-latex
   (&optional subtreep visible-only body-only ext-plist pub-dir)
   "Export current buffer to a LaTeX file.
@@ -2326,6 +2600,7 @@ Return output file's name."
     (org-export-to-file
      'e-latex outfile subtreep visible-only body-only ext-plist)))
 
+;;;###autoload
 (defun org-e-latex-export-to-pdf
   (&optional subtreep visible-only body-only ext-plist pub-dir)
   "Export current buffer to LaTeX then process through to PDF.
@@ -2394,7 +2669,7 @@ Return PDF file name or an error if it couldn't be produced."
 		  outbuf))
 	       org-e-latex-pdf-process)
 	      ;; Collect standard errors from output buffer.
-	      (setq errors (org-e-latex-collect-errors outbuf))))
+	      (setq errors (org-e-latex--collect-errors outbuf))))
 	   (t (error "No valid command to process to PDF")))
 	  (let ((pdffile (concat base ".pdf")))
 	    ;; Check for process failure.  Provide collected errors if
@@ -2415,7 +2690,7 @@ Return PDF file name or an error if it couldn't be produced."
 	    pdffile))
       (set-window-configuration wconfig))))
 
-(defun org-e-latex-collect-errors (buffer)
+(defun org-e-latex--collect-errors (buffer)
   "Collect some kind of errors from \"pdflatex\" command output.
 
 BUFFER is the buffer containing output.

@@ -70,15 +70,17 @@
 
 (defvar org-babel-default-header-args:R '())
 
-(defvar org-babel-R-command "R --slave --no-save"
-  "Name of command to use for executing R code.")
+(defcustom org-babel-R-command "R --slave --no-save"
+  "Name of command to use for executing R code."
+  :group 'org-babel
+  :version "24.1"
+  :type 'string)
 
-(defvar ess-local-process-name)
+(defvar ess-local-process-name) ; dynamically scoped
 (defun org-babel-edit-prep:R (info)
   (let ((session (cdr (assoc :session (nth 2 info)))))
     (when (and session (string-match "^\\*\\(.+?\\)\\*$" session))
-      (save-match-data (org-babel-R-initiate-session session nil))
-      (setq ess-local-process-name (match-string 1 session)))))
+      (save-match-data (org-babel-R-initiate-session session nil)))))
 
 (defun org-babel-expand-body:R (body params &optional graphics-file)
   "Expand BODY according to PARAMS, return the expanded body."
@@ -142,7 +144,7 @@ This function is called by `org-babel-execute-src-block'."
 ;; helper functions
 
 (defun org-babel-variable-assignments:R (params)
-  "Return list of R statements assigning the block's variables"
+  "Return list of R statements assigning the block's variables."
   (let ((vars (mapcar #'cdr (org-babel-get-header params :var))))
     (mapcar
      (lambda (pair)
@@ -199,13 +201,14 @@ This function is called by `org-babel-execute-src-block'."
 		    name file header row-names max))))
     (format "%s <- %s" name (org-babel-R-quote-tsv-field value))))
 
-(defvar ess-ask-for-ess-directory nil)
+(defvar ess-ask-for-ess-directory) ; dynamically scoped
 (defun org-babel-R-initiate-session (session params)
   "If there is not a current R process then create one."
   (unless (string= session "none")
     (let ((session (or session "*R*"))
 	  (ess-ask-for-ess-directory
-	   (and ess-ask-for-ess-directory (not (cdr (assoc :dir params))))))
+	   (and (and (boundp 'ess-ask-for-ess-directory) ess-ask-for-ess-directory)
+		(not (cdr (assoc :dir params))))))
       (if (org-babel-comint-buffer-livep session)
 	  session
 	(save-window-excursion
@@ -218,7 +221,6 @@ This function is called by `org-babel-execute-src-block'."
 	       (buffer-name))))
 	  (current-buffer))))))
 
-(defvar ess-local-process-name nil)
 (defun org-babel-R-associate-session (session)
   "Associate R code buffer with an R session.
 Make SESSION be the inferior ESS process associated with the
@@ -260,7 +262,7 @@ current code buffer."
     (setq args (mapconcat
 		(lambda (pair)
 		  (if (member (car pair) allowed-args)
-		      (format ",%s=%s"
+		      (format ",%s=%S"
 			      (substring (symbol-name (car pair)) 1)
 			      (cdr pair)) ""))
 		params ""))
@@ -286,7 +288,7 @@ current code buffer."
   (body result-type result-params column-names-p row-names-p)
   "Evaluate BODY in external R process.
 If RESULT-TYPE equals 'output then return standard output as a
-string. If RESULT-TYPE equals 'value then return the value of the
+string.  If RESULT-TYPE equals 'value then return the value of the
 last statement in BODY, as elisp."
   (case result-type
     (value
@@ -313,7 +315,7 @@ last statement in BODY, as elisp."
   (session body result-type result-params column-names-p row-names-p)
   "Evaluate BODY in SESSION.
 If RESULT-TYPE equals 'output then return standard output as a
-string. If RESULT-TYPE equals 'value then return the value of the
+string.  If RESULT-TYPE equals 'value then return the value of the
 last statement in BODY, as elisp."
   (case result-type
     (value
