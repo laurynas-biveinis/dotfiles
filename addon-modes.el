@@ -353,6 +353,7 @@
        :min-duration "0:00"
        :max-gap "0:05"
        :gap-ok-around (list "2:00" "12:30")))
+(setq org-agenda-sticky t)
 
 ; Scheduling and deadlines
 (setq org-deadline-warning-days 30)
@@ -388,8 +389,7 @@
          "** TODO %?\n  %i\n  %a")
         ("i" "Inbox" entry (file+headline "~/org/gtd.org" "Inbox")
          "** INBOX: %?\n  %i\n  %a" :killbuffer)
-        )
-      )
+        ("c" "Current" plain (clock) "" :clock-in :clock-keep)))
 (setq org-todo-keywords
       '((sequence "WAITING(w)" "TODO(t)" "LOGTIME(l)"
                   "|" "DONE(d)" "CANCELLED(c)")))
