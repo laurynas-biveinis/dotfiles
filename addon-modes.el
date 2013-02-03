@@ -338,7 +338,9 @@
                  (org-agenda-dim-blocked-tasks 'invisible)))
           (tags "-project/+DONE|+CANCELLED"
                 ((org-agenda-overriding-header "Archivable tasks")
-                 (org-use-tag-inheritance '("project"))))))))
+                 (org-use-tag-inheritance '("project"))))
+          (todo "-@agenda-@anywhere-@call-@internet-@computer-@home-@office-@readreview-@vilnius-@waitingfor-@checklist-project-somedaymaybe"
+                ((org-agenda-overriding-header "Contextless tasks")))))))
 
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-skip-deadline-if-done t)
