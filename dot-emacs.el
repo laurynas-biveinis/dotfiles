@@ -4,12 +4,11 @@
                               (>= emacs-major-version 24)))
 (setq emacs-24-or-later (>= emacs-major-version 24))
 ; Integrated or 3rd party?
-(setq integrated-cedet-p emacs-23-2-or-later)
-; OK, use the 3rd party CEDET 1.1 this time
-(setq integrated-cedet-p nil)
+(setq integrated-cedet-p emacs-24-or-later)
 
 ; Various paths
-(setq home-dir (concat (replace-regexp-in-string "\\\\" "/" (getenv "HOME")) "/"))
+(setq home-dir (concat (replace-regexp-in-string "\\\\" "/"
+                                                 (getenv "HOME")) "/"))
 (setq private-elisp
       (concat home-dir "emacs/"))
 (setq private-elisp-lib (concat private-elisp "lib/"))
@@ -52,6 +51,7 @@
 ; must be setup before main setup
 (cond ((eq system-type 'windows-nt) (load-library "ntemacs-cygwin"))
       ((eq system-type 'gnu/linux) (load-library "linux"))
+      ((eq system-type 'darwin) (load-library "darwin"))
       (t (load-library "default")))
 
 (system-specific-presetup)
