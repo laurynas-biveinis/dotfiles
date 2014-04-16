@@ -13,7 +13,8 @@
     (add-to-list
      'default-frame-alist
      `(font . ,my-frame-font))
-    (set-frame-font my-frame-font nil t)))
+    (set-frame-font my-frame-font nil t)
+    (add-to-list 'exec-path "/usr/local/bin")))
 
 (defun system-specific-setup()
   "Setup specifics for Darwin"
