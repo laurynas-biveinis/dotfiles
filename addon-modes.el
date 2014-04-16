@@ -377,6 +377,7 @@
 ; Logging
 (setq org-log-into-drawer t)
 (setq org-clock-into-drawer t)
+(setq org-closed-keep-when-no-todo t)
 
 ; Refiling
 (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 9))))
@@ -524,9 +525,7 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (setq erc-autojoin-channels-alist
       '(("MPB" "#mysqldev" "#percona")
-        ("oftc.net" "#gcc")
-        ("freenode.net" "#percona" "#drizzle" "#maria" "#mysql" "#mysql-dev"
-         "#pov")))
+        ("freenode.net" "#percona" "#maria" "#mysql" "#mysql-dev")))
 
 (require 'erc-services)
 (erc-services-mode 1)
