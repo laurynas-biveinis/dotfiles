@@ -582,7 +582,6 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
   "Connect to all chats"
   (interactive)
   (erc :server "localhost" :port 6667 :nick "laurynas|autoconnect")
-  (erc :server "irc.oftc.net" :port 6667 :nick "laurynas")
   (erc :server "irc.freenode.net" :port 6667 :nick "laurynas")
   (jabber-connect-all))
 

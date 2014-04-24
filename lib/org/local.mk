@@ -9,7 +9,7 @@ oldorg:	# do what the old Makefile did by default.
 ##----------------------------------------------------------------------
 
 # Name of your emacs binary
-EMACS	= emacs
+EMACS	= emacs-24.3
 
 # Where local software is found
 prefix	= /usr/share
