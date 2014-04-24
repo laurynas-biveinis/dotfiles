@@ -266,7 +266,6 @@
 (setq org-use-speed-commands t)
 (setq org-log-done t)
 (setq org-agenda-files (list "~/org/percona.org"
-                             "~/org/gcc.org"
                              "~/org/phd.org"
                              "~/org/gtd.org"
                              "~/org/music.org"))
