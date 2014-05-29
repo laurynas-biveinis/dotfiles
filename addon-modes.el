@@ -286,7 +286,6 @@
                       ("@internet" . ?i)
                       ("@computer" . ?c)
                       ("@home" . ?h)
-                      ("@office" . ?o)
                       ("@readreview" . ?r)
                       ("@vilnius" . ?v)
                       ("@waitingfor" . ?f)
@@ -320,9 +319,6 @@
           (tags-todo "@home-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Home actions")
                       (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags-todo "@office-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Office actions")
-                      (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@waitingfor-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Waiting for")
                       (org-agenda-dim-blocked-tasks 'invisible)))
@@ -338,7 +334,7 @@
           (tags "-project/+DONE|+CANCELLED"
                 ((org-agenda-overriding-header "Archivable tasks")
                  (org-use-tag-inheritance '("project"))))
-          (todo "-@agenda-@anywhere-@call-@internet-@computer-@home-@office-@readreview-@vilnius-@waitingfor-@checklist-project-somedaymaybe"
+          (todo "-@agenda-@anywhere-@call-@internet-@computer-@home-@readreview-@vilnius-@waitingfor-@checklist-project-somedaymaybe"
                 ((org-agenda-overriding-header "Contextless tasks")))))))
 
 (setq org-agenda-start-on-weekday nil)
@@ -524,7 +520,8 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (setq erc-autojoin-channels-alist
       '(("MPB" "#mysqldev" "#percona")
-        ("freenode.net" "#percona" "#maria" "#mysql" "#mysql-dev")))
+        ("freenode.net" "#percona" "#maria" "#mysql" "#mysql-dev"
+         "#webscalesql")))
 
 (require 'erc-services)
 (erc-services-mode 1)
