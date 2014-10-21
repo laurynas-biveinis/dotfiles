@@ -3,8 +3,14 @@
                                    (>= emacs-minor-version 2))
                               (>= emacs-major-version 24)))
 (setq emacs-24-or-later (>= emacs-major-version 24))
+(setq emacs-24-4-or-later (or (and (= emacs-major-version 24)
+                                   (>= emacs-minor-version 4))
+                              (>= emacs-major-version 25)))
 ; Integrated or 3rd party?
 (setq integrated-cedet-p emacs-24-or-later)
+; org-checklist is not in Emacs
+; (setq integrated-org-mode-p emacs-24-4-or-later)
+(setq integrated-org-mode-p nil)
 
 ; Various paths
 (setq home-dir (concat (replace-regexp-in-string "\\\\" "/"
@@ -23,7 +29,8 @@
 (setq auctex-dir (concat private-elisp-lib "auctex-11.86/"))
 (setq auctex-lisp-dir (concat auctex-dir "lisp/"))
 (setq auctex-info-dir (concat auctex-dir "info/"))
-(setq org-mode-root (concat private-elisp-lib "org/"))
+(unless integrated-org-mode-p
+  (setq org-mode-root (concat private-elisp-lib "org/")))
 (setq cc-mode-root (concat private-elisp-lib "cc-mode/"))
 (setq dvc-mode-root (concat private-elisp-lib "dvc/"))
 (unless emacs-24-or-later
@@ -61,8 +68,10 @@
 (add-to-load-path elib-dir)
 (add-to-load-path jdee-dir)
 (add-to-load-path auctex-lisp-dir)
-(add-to-load-path (concat org-mode-root "lisp/"))
-(add-to-load-path (concat org-mode-root "contrib/lisp/"))
+(unless integrated-org-mode-p
+  (progn
+    (add-to-load-path (concat org-mode-root "lisp/"))
+    (add-to-load-path (concat org-mode-root "contrib/lisp/"))))
 (add-to-load-path (concat cc-mode-root "lisp/"))
 (add-to-load-path (concat dvc-mode-root "elisp/"))
 (unless emacs-24-or-later
@@ -77,7 +86,8 @@
 (add-to-info-path auctex-info-dir)
 (unless integrated-cedet-p
   (add-to-info-path cedet-info-dir))
-(add-to-info-path (concat org-mode-root "info/"))
+(unless integrated-org-mode-p
+  (add-to-info-path (concat org-mode-root "info/")))
 (add-to-info-path (concat cc-mode-root "info/"))
 (add-to-info-path (concat dvc-mode-root "info/"))
 

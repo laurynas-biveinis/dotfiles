@@ -1,14 +1,11 @@
 ; Autopair
-(require 'autopair)
-(autopair-global-mode)
+(unless emacs-24-4-or-later
+  (progn
+    (require 'autopair)
+    (autopair-global-mode)))
 
 ; Disable linum where it makes sense and fixes performance
 (require 'linum-off)
-
-; Nice unique buffer names
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward)
-(setq uniquify-after-kill-buffer-p t)
 
 ; Show matching parents
 (require 'paren)
@@ -485,7 +482,9 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (erc-log-enable)
 
-(setq erc-keywords '("team" "laurynas"))
+; Disabled until ERC supports SASL
+; (setq erc-keywords '("team" "laurynas"))
+(setq erc-keywords '("laurynas"))
 
 (setq erc-current-nick-highlight-type 'all)
 (setq erc-keyword-highlight-type 'all)
@@ -578,7 +577,6 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 (defun start-chats ()
   "Connect to all chats"
   (interactive)
-  (erc :server "localhost" :port 6667 :nick "laurynas|autoconnect")
   (erc :server "irc.freenode.net" :port 6667 :nick "laurynas")
   (jabber-connect-all))
 

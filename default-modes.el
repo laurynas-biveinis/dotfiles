@@ -17,9 +17,6 @@
 ; No toolbar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
-; No menus.
-;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-
 ; Typing or <Delete> will remove selected text
 (delete-selection-mode 1)
 
@@ -76,8 +73,10 @@
 (cond ((>= emacs-major-version 23)
        (global-visual-line-mode 1)))
 
-; Uniquify buffer names
+; Nice unique buffer names
+(require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
+(setq uniquify-after-kill-buffer-p t)
 
 ; Automatically show images as images
 (auto-image-file-mode 1)
@@ -188,20 +187,6 @@
                                    (statement-case-open . +)
                                    ))
                ))
-
-(c-add-style "Drizzle"
-             '((indent-tabs-mode . nil)
-               (c-basic-offset . 2)
-               (c-comment-only-line-offset . 0)
-               (setq c-hanging-braces-alist
-                     (append '((class-open before)) c-hanging-braces-alist))
-               (c-offsets-alist . ((statement-block-intro . 2)
-                                   (knr-argdecl-intro . 0)
-                                   (substatement-open . 0)
-                                   (label . -)
-                                   (statement-cont . +)
-                                   (arglist-intro . c-lineup-arglist-intro-after-paren)
-                                   (arglist-close . c-lineup-arglist)))))
 
 (add-to-list 'auto-mode-alist '("\\.ic\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.i\\'" . c++-mode))
