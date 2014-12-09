@@ -75,7 +75,7 @@
 
 ; Nice unique buffer names
 (require 'uniquify)
-(setq uniquify-buffer-name-style 'forward)
+(setq uniquify-buffer-name-style 'post-forward)
 (setq uniquify-after-kill-buffer-p t)
 
 ; Automatically show images as images
