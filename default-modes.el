@@ -34,7 +34,8 @@
 (setq shift-select-mode t)
 
 ; Ignore file size in fontlocking
-(setq font-lock-maximum-size nil)
+(unless emacs-24-or-later
+  (setq font-lock-maximum-size nil))
 
 ; Turn on font-lock mode
 (if (fboundp 'global-font-lock-mode)
@@ -147,9 +148,9 @@
                         (other . "gnu")))
 
 ;; Enter indents the new line
-(defun my-make-CR-do-indent ()
-  (define-key c-mode-base-map "\C-m" 'c-context-line-break))
-(add-hook 'c-initialization-hook 'my-make-CR-do-indent)
+; (defun my-make-CR-do-indent ()
+;  (define-key c-mode-base-map "\C-m" 'c-context-line-break))
+; (add-hook 'c-initialization-hook 'my-make-CR-do-indent)
 
 ;; MySQL
 
@@ -197,9 +198,6 @@
 (dir-locals-set-class-variables 'mysql-source
                                 '((c-mode . ((c-file-style . "MySQL")))
                                   (c++-mode . ((c-file-style . "MySQL")))))
-(dir-locals-set-class-variables 'drizzle-source
-                                '((c-mode . ((c-file-style . "Drizzle")))
-                                  (c++-mode . ((c-file-style . "Drizzle")))))
 
 (defvar mysql-dirs '(("innodb_plugin"     . innodb-source)
                      ("innobase"          . innodb-source)
@@ -207,8 +205,7 @@
                      ("haildb"            . innodb-source)
                      ("Percona-Server"    . mysql-source)
                      ("mysql"             . mysql-source)
-                     ("mysql-[:digit:].*" . mysql-source)
-                     ("drizzle"           . drizzle-source))
+                     ("mysql-[:digit:].*" . mysql-source))
   "An association list of regexps matching directory name substrings and their
 corresponding directory classes.")
 

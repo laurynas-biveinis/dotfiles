@@ -7,7 +7,8 @@
                                    (>= emacs-minor-version 4))
                               (>= emacs-major-version 25)))
 ; Integrated or 3rd party?
-(setq integrated-cedet-p emacs-24-or-later)
+(setq integrated-cc-mode-p emacs-24-4-or-later)
+(setq integrated-cedet-p emacs-23-2-or-later)
 ; org-checklist is not in Emacs
 ; (setq integrated-org-mode-p emacs-24-4-or-later)
 (setq integrated-org-mode-p nil)
@@ -19,19 +20,21 @@
       (concat home-dir "emacs/"))
 (setq private-elisp-lib (concat private-elisp "lib/"))
 (setq xref-dir (concat home-dir "/opt/xref/"))
+(setq use-xref (file-exists-p xref-dir))
 (setq xref-lib (concat xref-dir "emacs/"))
 (unless integrated-cedet-p
   (progn
     (setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
     (setq cedet-info-dir (concat private-elisp-lib "cedet-info"))))
 (setq elib-dir (concat private-elisp-lib "elib-1.0"))
-(setq jdee-dir (concat private-elisp-lib "jdee/lisp"))
-(setq auctex-dir (concat private-elisp-lib "auctex-11.86/"))
+(setq jdee-dir (concat private-elisp-lib "jdee/lisp")) ; TODO outdated
+(setq auctex-dir (concat private-elisp-lib "auctex-11.86/")) ; TODO outdated
 (setq auctex-lisp-dir (concat auctex-dir "lisp/"))
 (setq auctex-info-dir (concat auctex-dir "info/"))
 (unless integrated-org-mode-p
   (setq org-mode-root (concat private-elisp-lib "org/")))
-(setq cc-mode-root (concat private-elisp-lib "cc-mode/"))
+(unless integrated-cc-mode-p
+  (setq cc-mode-root (concat private-elisp-lib "cc-mode/")))
 (setq dvc-mode-root (concat private-elisp-lib "dvc/"))
 (unless emacs-24-or-later
   (setq color-theme-dir (concat private-elisp-lib "color-theme-6.6.0/")))
@@ -64,7 +67,7 @@
 (system-specific-presetup)
 
 (add-to-load-path private-elisp-lib)
-(add-to-load-path xref-lib)
+(if use-xref (add-to-load-path xref-lib))
 (add-to-load-path elib-dir)
 (add-to-load-path jdee-dir)
 (add-to-load-path auctex-lisp-dir)
@@ -72,7 +75,8 @@
   (progn
     (add-to-load-path (concat org-mode-root "lisp/"))
     (add-to-load-path (concat org-mode-root "contrib/lisp/"))))
-(add-to-load-path (concat cc-mode-root "lisp/"))
+(unless integrated-cc-mode-p
+  (add-to-load-path (concat cc-mode-root "lisp/")))
 (add-to-load-path (concat dvc-mode-root "elisp/"))
 (unless emacs-24-or-later
   (add-to-load-path color-theme-dir))
@@ -88,7 +92,8 @@
   (add-to-info-path cedet-info-dir))
 (unless integrated-org-mode-p
   (add-to-info-path (concat org-mode-root "info/")))
-(add-to-info-path (concat cc-mode-root "info/"))
+(unless integrated-cc-mode-p
+  (add-to-info-path (concat cc-mode-root "info/")))
 (add-to-info-path (concat dvc-mode-root "info/"))
 
 (load "secrets")

@@ -237,7 +237,7 @@
 ; Xrefactory configuration part ;;
 (defvar xref-current-project nil) ;; can be also "my_project_name"
 (defvar xref-key-binding 'global) ;; can be also 'local or 'none
-(if (file-exists-p xref-dir)
+(if use-xref
       (progn
         (setq exec-path (cons xref-dir exec-path))
         (load "xrefactory")))
@@ -396,7 +396,7 @@
 
 (setq org-modules
       '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
-        org-jsinfo org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl)
+        org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl)
 )
 (setq org-log-redeadline t)
 (setq org-log-reschedule t)
@@ -439,6 +439,7 @@
          (color-theme-solarized-dark)))))
 
 ; todochiku
+(require 'cl)
 (require 'todochiku)
 
 (setq todochiku-icons-directory todochiku-icons-dir)

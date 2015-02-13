@@ -74,7 +74,8 @@
 (setq make-backup-files nil)
 
 ; Ask for initial file checking comment
-(setq vc-initial-comment t)
+(unless emacs-23-2-or-later
+  (setq vc-initial-comment t))
 
 ; Use Unix-style line endings.
 (setq-default buffer-file-coding-system 'utf-8-unix)
