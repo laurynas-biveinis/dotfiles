@@ -1,13 +1,14 @@
 ;;; develock.el --- additional font-lock keywords for the developers
 
-;; Copyright (C) 2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009 Katsumi Yamaoka
+;; Copyright (C) 2001-2003, 2005-2009, 2012, 2013
+;; Katsumi Yamaoka
 
 ;; Author: Katsumi Yamaoka  <yamaoka@jpl.org>
 ;;         Jun'ichi Shiono  <jun@fsas.fujitsu.com>
 ;;         Yasutaka SHINDOH <ring-pub@fan.gr.jp>
 ;;         Oscar Bonilla    <ob@bitmover.com>
 ;; Created: 2001/06/28
-;; Revised: 2009/08/18
+;; Revised: 2013/11/15
 ;; Keywords: font-lock emacs-lisp change-log texinfo c java perl html
 ;;           tcl ruby mail news
 
@@ -213,7 +214,7 @@
 
 ;;; Code:
 
-(defconst develock-version "0.39"
+(defconst develock-version "0.45"
   "Version number for this version of Develock.")
 
 (require 'advice)
@@ -831,6 +832,8 @@ Each element should be triple symbols of the following form:
   :group 'develock
   :group 'font-lock)
 
+(defvar change-log-indent-text)
+
 (defcustom develock-change-log-font-lock-keywords
   '(;; a long line
     (develock-find-long-lines
@@ -857,7 +860,11 @@ Each element should be triple symbols of the following form:
      (1 'develock-whitespace-3))
     ;; leading 2 or more tabs
     ("^\\([\t ][\t ]+\\)[^\t\n]"
-     (1 'develock-whitespace-2))
+     ;; Improved by NISHIYAMA-san; cf. [Elips: 0005541].
+     (1 (if (and (eq (char-after (develock-point-at-bol)) ?\t)
+		 (not (= (- (match-end 1) (match-beginning 1) 1)
+			 change-log-indent-text)))
+	    'develock-whitespace-2)))
     ;; trailing whitespace
     ("[^\t\n ]\\([\t ]+\\)$"
      (1 'develock-whitespace-1 t))
@@ -1453,16 +1460,16 @@ highlighted.  This function is affected by the values of
 	    (progn
 	      (goto-char (min (develock-point-at-eol) limit))
 	      nil)
-	  (setq start (point)
-		end (min (develock-point-at-eol) limit))
+	  (setq start (point-marker)
+		end (set-marker (make-marker)
+				(min (develock-point-at-eol) limit)))
 	  (or (memq (char-after) '(?\t ?\ ))
 	      (skip-chars-backward "0-9A-Za-z"))
 	  (if (> (current-column) max-column)
 	      (if (> (move-to-column max-column) max-column)
 		  (forward-char -1)))
-	  (store-match-data (list (point) end
-				  (point) start
-				  start end))
+	  (let ((mk (point-marker)))
+	    (store-match-data (list mk end mk start start end)))
 	  (goto-char end)))))
 
 (defun develock-find-tab-or-long-space (limit)
@@ -1505,6 +1512,12 @@ non-nil and sets beginning and ending points as the `match-data' #0,
 (eval-when-compile
   (defvar lisp-interaction-mode-hook))
 
+(eval-when-compile
+  (defmacro develock-called-interactively-p (kind)
+    (if (fboundp 'called-interactively-p)
+	`(called-interactively-p ,kind)
+      '(interactive-p))))
+
 ;;;###autoload
 (defun develock-mode (arg)
   "Toggle Develock mode.
@@ -1517,14 +1530,14 @@ long lines and oddities."
 		  develock-ignored-buffer-name-regexp
 		  (string-match develock-ignored-buffer-name-regexp
 				(buffer-name)))
-	     (if (interactive-p)
+	     (if (develock-called-interactively-p 'any)
 		 (message "Develock is inhibited for this buffer")))
 	    ((and (not develock-mode)
 		  buffer-file-name
 		  develock-ignored-file-name-regexp
 		  (string-match develock-ignored-file-name-regexp
 				(file-name-nondirectory buffer-file-name)))
-	     (if (interactive-p)
+	     (if (develock-called-interactively-p 'any)
 		 (message "Develock is inhibited for this file")))
 	    (t
 	     (let ((oldmode develock-mode)
@@ -1663,15 +1676,15 @@ When command is advised, it removes useless whitespace."
   (or (fboundp 'develock-Orig-lisp-indent-line)
       (defalias 'develock-Orig-lisp-indent-line
 	;; The genuine function definition of `lisp-indent-line'.
-	(symbol-function (if (fboundp 'ad-Orig-lisp-indent-line)
-			     'ad-Orig-lisp-indent-line
-			   'lisp-indent-line)))))
+	(or (ad-real-orig-definition 'lisp-indent-line)
+	    (symbol-function 'lisp-indent-line)))))
 
-(defun develock-lisp-indent-line (&optional whole-exp do-not-move)
+(defun develock-lisp-indent-line (&optional whole-exp)
   "Internal function used to advise some Lisp indent functions."
   (save-restriction
     (widen)
-    (let (pt mod orig)
+    (let ((st (set-marker (make-marker) (point)))
+	  pt mod orig)
       (save-excursion
 	(end-of-line)
 	(setq pt (point))
@@ -1705,15 +1718,14 @@ When command is advised, it removes useless whitespace."
 					   (looking-at "[\t ]*")
 					   (match-string 0)))
 		      (set-buffer-modified-p nil))))))
-	(or do-not-move
-	    (goto-char pt))))))
+	(goto-char st)
+	(set-marker st nil)
+	(if (bolp) (skip-chars-forward "\t "))))))
 
 (defun develock-Orig-c-indent-line (&optional syntax quiet ignore-point-pos)
   "This function should be redefined to the genuine `c-indent-line'."
-  (require 'cc-engine)
-  (let* ((fn (symbol-function (if (fboundp 'ad-Orig-c-indent-line)
-				  'ad-Orig-c-indent-line
-				'c-indent-line)))
+  (let* ((fn (or (ad-real-orig-definition 'c-indent-line)
+		 (symbol-function 'c-indent-line)))
 	 ;; Checking how many arguments `c-indent-line' accepts.
 	 (nargs (length (ad-arglist fn))))
     (cond ((= nargs 4)
@@ -1731,7 +1743,9 @@ IGNORE-POINT-POS is ignored."
 Identical to `c-indent-line', but the optional arguments QUIET and
 IGNORE-POINT-POS are ignored."
 		(funcall ,fn syntax))))))
-  (if (featurep 'bytecomp)
+  (if (and (featurep 'bytecomp)
+	   (eq (car-safe (symbol-function 'develock-Orig-c-indent-line))
+	       'lambda))
       (byte-compile 'develock-Orig-c-indent-line))
   (develock-Orig-c-indent-line syntax quiet ignore-point-pos))
 
@@ -1869,9 +1883,9 @@ turn off this advice permanently by customizing the
     (if (and develock-mode font-lock-mode
 	     (plist-get develock-energize-functions-plist 'newline-and-indent))
 	(cond ((memq major-mode '(emacs-lisp-mode lisp-interaction-mode))
-	       (develock-lisp-indent-line nil t))
+	       (develock-lisp-indent-line))
 	      ((memq major-mode '(c-mode c++-mode java-mode jde-mode))
-	       (develock-c-indent-line nil nil))))
+	       (develock-c-indent-line))))
     ad-do-it))
 
 (let ((plist develock-energize-functions-plist)
