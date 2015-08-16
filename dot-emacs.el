@@ -11,7 +11,7 @@
 (setq integrated-cedet-p emacs-23-2-or-later)
 ; org-checklist is not in Emacs
 ; (setq integrated-org-mode-p emacs-24-4-or-later)
-(setq integrated-org-mode-p nil)
+; (setq integrated-org-mode-p nil)
 
 ; Various paths
 (setq home-dir (concat (replace-regexp-in-string "\\\\" "/"
@@ -31,8 +31,8 @@
 (setq auctex-dir (concat private-elisp-lib "auctex-11.86/")) ; TODO outdated
 (setq auctex-lisp-dir (concat auctex-dir "lisp/"))
 (setq auctex-info-dir (concat auctex-dir "info/"))
-(unless integrated-org-mode-p
-  (setq org-mode-root (concat private-elisp-lib "org/")))
+;(unless integrated-org-mode-p
+;  (setq org-mode-root (concat private-elisp-lib "org/")))
 (unless integrated-cc-mode-p
   (setq cc-mode-root (concat private-elisp-lib "cc-mode/")))
 (setq dvc-mode-root (concat private-elisp-lib "dvc/"))
@@ -71,10 +71,10 @@
 (add-to-load-path elib-dir)
 (add-to-load-path jdee-dir)
 (add-to-load-path auctex-lisp-dir)
-(unless integrated-org-mode-p
-  (progn
-    (add-to-load-path (concat org-mode-root "lisp/"))
-    (add-to-load-path (concat org-mode-root "contrib/lisp/"))))
+;(unless integrated-org-mode-p
+;  (progn
+;    (add-to-load-path (concat org-mode-root "lisp/"))
+;    (add-to-load-path (concat org-mode-root "contrib/lisp/"))))
 (unless integrated-cc-mode-p
   (add-to-load-path (concat cc-mode-root "lisp/")))
 (add-to-load-path (concat dvc-mode-root "elisp/"))
@@ -90,8 +90,8 @@
 (add-to-info-path auctex-info-dir)
 (unless integrated-cedet-p
   (add-to-info-path cedet-info-dir))
-(unless integrated-org-mode-p
-  (add-to-info-path (concat org-mode-root "info/")))
+;(unless integrated-org-mode-p
+;  (add-to-info-path (concat org-mode-root "info/")))
 (unless integrated-cc-mode-p
   (add-to-info-path (concat cc-mode-root "info/")))
 (add-to-info-path (concat dvc-mode-root "info/"))
@@ -106,8 +106,9 @@
     (require 'package)
   (when
        (load
-        (expand-file-name (concat elpa-dir "package.el")))
-     (package-initialize)))
+        (expand-file-name (concat elpa-dir "package.el")))))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(package-initialize)
 
 (load "addon-modes")
 (load "misc")
