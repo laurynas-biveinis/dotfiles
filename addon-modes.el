@@ -247,6 +247,9 @@
 ;      (quote (("1.6.0.16" . "/usr/lib/jvm/java-6-sun-1.6.0.16"))))
 
 
+; easypg
+(setq epg-gpg-program "gpg1")
+
 ; --------
 ; org-mode
 ; --------
@@ -266,7 +269,7 @@
                              "~/org/music.org"))
 (setq org-default-notes-file "~/org/gtd.org")
 (setq org-mobile-inbox-for-pull "~/org/gtd.org")
-(setq org-mobile-directory "~/Dropbox/MobileOrg")
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 (setq org-mobile-use-encryption t)
 (setq org-mobile-encryption-password "2878")
 (setq org-ctrl-k-protect-subtree t)
@@ -346,6 +349,7 @@
        :max-gap "0:05"
        :gap-ok-around (list "2:00" "12:30")))
 (setq org-agenda-sticky t)
+(setq org-agenda-window-setup 'current-window)
 
 ; Scheduling and deadlines
 (setq org-deadline-warning-days 30)
@@ -518,8 +522,8 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (setq erc-autojoin-channels-alist
       '(("MPB" "#mysqldev" "#percona")
-        ("freenode.net" "#percona" "#maria" "#mysql" "#mysql-dev"
-         "#webscalesql")))
+        ("freenode.net" "#percona" "#maria" "#maria-dev" "#mysql"
+         "#mysql-dev")))
 
 (require 'erc-services)
 (erc-services-mode 1)
