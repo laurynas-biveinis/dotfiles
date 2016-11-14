@@ -363,7 +363,7 @@
        :scope 'agenda-with-archives
        :stepskip0 t
        :fileskip0 t
-       :narrow 50
+       :narrow 45
        :link t
        :indent t
        :tcolumns 0))
