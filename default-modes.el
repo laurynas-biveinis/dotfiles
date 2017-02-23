@@ -271,3 +271,7 @@ corresponding directory classes.")
   (modify-syntax-entry ?# "< b" sql-mode-syntax-table)
   (set-syntax-table sql-mode-syntax-table)
 )
+
+; windmove
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings 'super))

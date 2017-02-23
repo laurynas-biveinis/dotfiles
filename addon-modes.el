@@ -409,8 +409,8 @@
 (setq org-special-ctrl-k t)
 (setq org-cycle-separator-lines 1)
 ; TODO: compute these columns from the defaults.el frame size calculations.
-(setq org-tags-column -90)
-(setq org-agenda-tags-column -90)
+(setq org-tags-column -85)
+(setq org-agenda-tags-column -85)
 (setq org-habit-graph-column 50)
 
 ; And load everything except crypt
