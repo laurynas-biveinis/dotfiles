@@ -3,3 +3,6 @@ syntax: glob
 projects.el
 semantic.cache
 archive-contents
+.DS_Store
+secring.gpg
+trustdb.gpg

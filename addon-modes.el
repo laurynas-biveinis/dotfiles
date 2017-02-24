@@ -271,7 +271,6 @@
 (setq org-mobile-inbox-for-pull "~/org/gtd.org")
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 (setq org-mobile-use-encryption t)
-(setq org-mobile-encryption-password "2878")
 (setq org-ctrl-k-protect-subtree t)
 (setq org-support-shift-select t)
 (setq org-yank-adjusted-subtrees t)
