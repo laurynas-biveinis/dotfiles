@@ -106,7 +106,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (php-mode autopair magit org-plus-contrib org auctex))))
+ '(package-selected-packages
+   (quote
+    (exec-path-from-shell php-mode autopair magit org-plus-contrib org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
