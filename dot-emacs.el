@@ -33,7 +33,6 @@
 (setq solarized-theme-dir (concat private-elisp-lib
                                   "emacs-color-theme-solarized"))
 (setq todochiku-icons-dir (concat private-elisp-lib "todochiku-icons"))
-(setq jabber-dir (concat private-elisp-lib "emacs-jabber-0.8.90/"))
 
 (if emacs-24-or-later
     (setq elpa-dir (concat private-elisp "elpa/"))
@@ -68,7 +67,6 @@
 (unless emacs-24-or-later
   (add-to-load-path color-theme-dir))
 (add-to-load-path solarized-theme-dir)
-(add-to-load-path jabber-dir)
 
 ; Setup info search directories
 (defun add-to-info-path (new)
@@ -108,7 +106,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (magit org-plus-contrib org auctex))))
+ '(package-selected-packages (quote (php-mode autopair magit org-plus-contrib org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

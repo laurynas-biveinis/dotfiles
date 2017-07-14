@@ -547,43 +547,15 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 ; (erc-update-modules)
 
 
-; Jabber (Google Talk)
-(require 'jabber-autoloads)
-
-(setq jabber-account-list
-      `(("laurynas.biveinis@gmail.com/emacs"
-         (:network-server . "talk.google.com")
-         (:connection-type . ssl)
-         (:password . ,g-talk-password))))
-
-(add-hook 'jabber-post-connect-hooks 'jabber-autoaway-start)
-
-; Disable autopair
-(add-hook 'jabber-chat-mode-hook
-          (lambda ()
-            (setq autopair-dont-activate t)))
-
-(setq jabber-auto-reconnect t)
-
-(setq jabber-activity-count-in-title t)
-
-(setq jabber-history-enabled t)
-(setq jabber-use-global-history nil)
-(setq jabber-backlog-number 50)
-(setq jabber-backlog-days 14)
-
-(setq jabber-mode-line-mode t)
-
-(add-hook 'jabber-alert-message-hooks 'libnotify)
-
 (defun start-chats ()
   "Connect to all chats"
   (interactive)
-  (erc :server "irc.freenode.net" :port 6667 :nick "laurynas")
-  (jabber-connect-all))
+  (erc :server "irc.freenode.net" :port 6667 :nick "laurynas"))
 
 (defun stop-chats ()
   "Disconnect from all chats"
   (interactive)
-  (jabber-disconnect)
   (erc-cmd-GQ "Leaving"))
+
+; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
