@@ -530,11 +530,6 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
           ;(lambda()
             ;(erc-spelling-mode)))
 
-
-; (setq erc-modules 'autojoin 'log 'readonly 'services 'stamp)
-; (erc-update-modules)
-
-
 (defun start-chats ()
   "Connect to all chats"
   (interactive)
