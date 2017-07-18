@@ -32,7 +32,6 @@
   (setq color-theme-dir (concat private-elisp-lib "color-theme-6.6.0/")))
 (setq solarized-theme-dir (concat private-elisp-lib
                                   "emacs-color-theme-solarized"))
-(setq todochiku-icons-dir (concat private-elisp-lib "todochiku-icons"))
 
 (if emacs-24-or-later
     (setq elpa-dir (concat private-elisp "elpa/"))

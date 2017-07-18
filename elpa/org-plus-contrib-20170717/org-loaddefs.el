@@ -1215,7 +1215,7 @@ Set `org-capture-templates' to be similar to `org-remember-templates'.
 
 ;;;***
 
-;;;### (autoloads nil "org-clock" "org-clock.el" "6ff02d90fd4d4568e71f6d9f999f69b3")
+;;;### (autoloads nil "org-clock" "org-clock.el" "3d8bdde5d328b2bff7ef2d37153074f9")
 ;;; Generated autoloads from org-clock.el
 
 (autoload 'org-resolve-clocks "org-clock" "\
@@ -4289,7 +4289,7 @@ Return output file name.
 
 ;;;***
 
-;;;### (autoloads nil "ox-md" "ox-md.el" "545f28c0fd74af5b934159221d58e66e")
+;;;### (autoloads nil "ox-md" "ox-md.el" "82c276722d4dc981e4c70d51391a648c")
 ;;; Generated autoloads from ox-md.el
 
 (autoload 'org-md-export-as-markdown "ox-md" "\

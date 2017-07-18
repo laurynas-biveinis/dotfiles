@@ -443,12 +443,6 @@
          (color-theme-initialize)
          (color-theme-solarized-dark)))))
 
-; todochiku
-(require 'cl)
-(require 'todochiku)
-
-(setq todochiku-icons-directory todochiku-icons-dir)
-
 ; IRC (ERC)
 (require 'erc)
 
@@ -470,6 +464,8 @@
       erc-log-write-after-send t
       erc-log-write-after-insert t)
 
+(setq erc-join-buffer 'bury)
+
 (defun my-erc-generate-log-file-name-channel-network
   (buffer target nick server port)
   "Generates an ERC log fle name using the channel and network name, resulting
@@ -488,8 +484,6 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (erc-log-enable)
 
-; Disabled until ERC supports SASL
-; (setq erc-keywords '("team" "laurynas"))
 (setq erc-keywords '("laurynas"))
 
 (setq erc-current-nick-highlight-type 'all)
@@ -512,16 +506,6 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 ; (require 'erc-highlight-nicknames)
 ; (add-to-list 'erc-modules 'highlight-nicknames)
 ; (erc-update-modules)
-(add-hook 'erc-text-matched-hook
-          (lambda (match-type nick message)
-            (unless (or
-                     (posix-string-match "^\\** *Users on #" message)
-                     (posix-string-match "^\\** *Your new nickname is "
-                                         message))
-              (todochiku-message (format "IRC: %s says" nick)
-                                 message
-                                 (todochiku-icon 'irc)))))
-
 
 (setq erc-autojoin-channels-alist
       '(("MPB" "#mysqldev" "#percona")
