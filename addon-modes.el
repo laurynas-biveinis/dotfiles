@@ -542,3 +542,5 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 ; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
+
+(setq vc-handled-backends (delq 'Git vc-handled-backends))
