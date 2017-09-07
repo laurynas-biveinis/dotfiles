@@ -1,4 +1,4 @@
-; exec-path-from-shell
+ exec-path-from-shell
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
@@ -172,60 +172,6 @@
       (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
             auto-mode-alist))
 
-;; ---
-;; CEDET
-;; ---
-(if (boundp 'cedet-lib)
-    (load-file cedet-lib))
-
-(if integrated-cedet-p (semantic-mode 1))
-
-;; Additional global include directories
-(semantic-add-system-include "/usr/local/include" 'c-mode)
-(semantic-add-system-include "/usr/local/include" 'c++-mode)
-
-(global-ede-mode t)
-
-(if (boundp 'semantic-load-enable-excessive-code-helpers)
-    (progn
-      (semantic-load-enable-minimum-features)
-      (semantic-load-enable-code-helpers)
-      (semantic-load-enable-gaudy-code-helpers)
-      (semantic-load-enable-excessive-code-helpers)
-      ; TODO: should be already enabled by the previous line
-      (global-semantic-idle-completions-mode)
-      (global-semantic-tag-folding-mode))
-  (setq semantic-default-submodes
-        '(global-semanticdb-minor-mode
-          global-semantic-idle-scheduler-mode
-          global-semantic-idle-summary-mode
-          global-semantic-idle-completions-mode
-          global-semantic-decoration-mode
-          global-semantic-highlight-func-mode
-          global-semantic-stickyfunc-mode
-          global-semantic-mru-bookmark-mode)))
-
-(if (boundp 'semantic-ia) (require 'semantic-ia))
-(if (boundp 'semantic-gcc) (require 'semantic-gcc))
-
-
-; Loosely inspired by JetBrains IntelliJ IDEA
-(defun my-c-mode-cedet-hook ()
-  (local-set-key [(control tab)] 'semantic-ia-complete-symbol)
-  (local-set-key (kbd "C-?") 'semantic-ia-complete-symbol-menu)
-; TODO: try CVS post 1.0pre7
-;  (local-set-key "." 'semantic-complete-self-insert) ; These suck seriously FIXME
-;  (local-set-key ">" 'semantic-complete-self-insert)
-  (local-set-key (kbd "C-c q") 'semantic-ia-show-summary)
-  (local-set-key (kbd "C-c <f1>") 'semantic-ia-show-doc)
-  ; TODO gather all jumps to C-c b
-  (local-set-key (kbd "C-c b") 'semantic-complete-jump)
-  (local-set-key (kbd "C-c C-b") 'semantic-analyze-proto-impl-toggle)
-  (local-set-key (kbd "C-c C-i") 'semantic-decoration-include-visit)
-  (local-set-key (kbd "M-<f7>") 'semantic-symref)
-)
-(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
-
 ;; --------
 ;; PHP mode
 ;; --------
@@ -344,7 +290,12 @@
 (setq org-agenda-todo-ignore-scheduled 'all)
 (setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-timestamp 'all)
-(setq org-agenda-repeating-timestamp-show-all nil)
+; Let's try doing without
+; (setq org-agenda-repeating-timestamp-show-all nil)
+; whose replacement in 9.1 is
+; (setq org-agenda-show-future-repeats nil)
+; (setq org-agenda-prefer-last-repeat t)
+
 (setq org-agenda-clock-consistency-checks
       (list
        :max-duration "6:00"
@@ -378,6 +329,7 @@
 
 ; Refiling
 (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 9))))
+; or 'buffer-name starting with 9.1, not much difference in my setup
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 (setq org-log-refile 'time)
@@ -413,7 +365,7 @@
 (setq org-cycle-separator-lines 1)
 ; TODO: compute these columns from the defaults.el frame size calculations.
 (setq org-tags-column -85)
-(setq org-agenda-tags-column -85)
+(setq org-agenda-tags-column 'auto)
 (setq org-habit-graph-column 50)
 
 ; And load everything except crypt

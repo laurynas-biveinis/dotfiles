@@ -133,7 +133,6 @@
 ; -------
 ; CC Mode
 ; -------
-; (CEDET configuration is in addon-modes.el)
 
 ;; Default indentation offset
 (setq c-basic-offset 4)

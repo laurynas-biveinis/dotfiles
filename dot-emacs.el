@@ -8,7 +8,6 @@
                               (>= emacs-major-version 25)))
 ; Integrated or 3rd party?
 (setq integrated-cc-mode-p emacs-24-4-or-later)
-(setq integrated-cedet-p emacs-23-2-or-later)
 
 ; Various paths
 (setq home-dir (concat (replace-regexp-in-string "\\\\" "/"
@@ -19,10 +18,6 @@
 (setq xref-dir (concat home-dir "/opt/xref/"))
 (setq use-xref (file-exists-p xref-dir))
 (setq xref-lib (concat xref-dir "emacs/"))
-(unless integrated-cedet-p
-  (progn
-    (setq cedet-lib (concat private-elisp-lib "cedet/common/cedet.el"))
-    (setq cedet-info-dir (concat private-elisp-lib "cedet-info"))))
 (setq elib-dir (concat private-elisp-lib "elib-1.0"))
 (setq jdee-dir (concat private-elisp-lib "jdee/lisp")) ; TODO outdated
 (unless integrated-cc-mode-p
@@ -71,8 +66,6 @@
 (defun add-to-info-path (new)
   (add-to-list 'Info-default-directory-list new))
 
-(unless integrated-cedet-p
-  (add-to-info-path cedet-info-dir))
 (unless integrated-cc-mode-p
   (add-to-info-path (concat cc-mode-root "info/")))
 (add-to-info-path (concat dvc-mode-root "info/"))
@@ -107,7 +100,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (exec-path-from-shell php-mode autopair magit org-plus-contrib org auctex))))
+    (exec-path-from-shell php-mode autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
