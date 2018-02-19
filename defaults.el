@@ -162,3 +162,8 @@ already at that position, move point to the beginning of line."
 
 ; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
+
+; Compilation
+(setq compilation-scroll-output 'first-error)
+
+(setq compilation-environment '("LANG=C"))
