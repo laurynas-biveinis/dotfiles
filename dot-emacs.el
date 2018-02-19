@@ -6,6 +6,10 @@
 (setq emacs-24-4-or-later (or (and (= emacs-major-version 24)
                                    (>= emacs-minor-version 4))
                               (>= emacs-major-version 25)))
+(defconst emacs-25-3-or-later (or (>= emacs-major-version 26)
+                                  (and (= emacs-major-version 25)
+                                       (>= emacs-minor-version 3))))
+
 ; Integrated or 3rd party?
 (setq integrated-cc-mode-p emacs-24-4-or-later)
 
@@ -81,9 +85,14 @@
   (when
        (load
         (expand-file-name (concat elpa-dir "package.el")))))
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (add-to-list 'package-archives
-             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archive-priorities
+      '(("org"          . 20)
+        ("melpa-stable" . 15)
+        ("melpa"        . 10)))
 (package-initialize)
 
 (load "addon-modes")
@@ -100,7 +109,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (exec-path-from-shell php-mode autopair magit org auctex))))
+    (irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell php-mode autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
