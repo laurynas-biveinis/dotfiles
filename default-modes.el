@@ -3,9 +3,6 @@
 ; Scroll bars on the right
 (if (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode 'right))
 
-; Show time
-(display-time)
-
 ; Don't bother entering search and replace args if the buffer is read-only
 (defadvice query-replace-read-args (before barf-if-buffer-read-only activate)
   "Signal a `buffer-read-only' error if the current buffer is read-only."
@@ -274,3 +271,9 @@ corresponding directory classes.")
 ; windmove
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings 'super))
+
+; Workaround Emacs 25.2- security vuln
+(unless emacs-25-3-or-later
+  (eval-after-load "enriched"
+    '(defun enriched-decode-display-prop (start end &optional param)
+       (list start end))))
