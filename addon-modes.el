@@ -1,7 +1,3 @@
- exec-path-from-shell
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
-
 ; Autopair
 (unless emacs-24-4-or-later
   (progn
@@ -496,3 +492,24 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 (global-set-key (kbd "C-x g") 'magit-status)
 
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
+
+; Wakatime
+(global-wakatime-mode)
+
+; Irony
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+(add-hook 'irony-mode-hook #'irony-eldoc)
+
+; Flycheck
+(global-flycheck-mode)
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+; Company mode
+(add-hook 'after-init-hook 'global-company-mode)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))

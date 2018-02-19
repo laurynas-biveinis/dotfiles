@@ -18,5 +18,6 @@
 
 (defun system-specific-setup()
   "Setup specifics for Darwin"
-  (setq ns-right-alternate-modifier 'none))
+  (setq ns-right-alternate-modifier 'none)
+  (exec-path-from-shell-initialize))
 
