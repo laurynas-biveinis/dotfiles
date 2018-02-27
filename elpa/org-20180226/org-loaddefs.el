@@ -293,8 +293,8 @@ used to limit the exported source code blocks by language.
 
 ;;;***
 
-;;;### (autoloads nil "org-agenda" "org-agenda.el" (23159 40579 119716
-;;;;;;  779000))
+;;;### (autoloads nil "org-agenda" "org-agenda.el" (23187 19970 872020
+;;;;;;  368000))
 ;;; Generated autoloads from org-agenda.el
 
 (autoload 'org-toggle-sticky-agenda "org-agenda" "\
@@ -648,8 +648,8 @@ Extract anniversaries from BBDB for display in the agenda.
 
 ;;;***
 
-;;;### (autoloads nil "org-capture" "org-capture.el" (23141 10627
-;;;;;;  868 282000))
+;;;### (autoloads nil "org-capture" "org-capture.el" (23187 19970
+;;;;;;  872020 368000))
 ;;; Generated autoloads from org-capture.el
 
 (autoload 'org-capture-string "org-capture" "\
@@ -695,7 +695,7 @@ Set `org-capture-templates' to be similar to `org-remember-templates'.
 
 ;;;***
 
-;;;### (autoloads nil "org-clock" "org-clock.el" "84a9c8a5c42221e50bf12f2ee1fb5609")
+;;;### (autoloads nil "org-clock" "org-clock.el" "4d6de752a10ddf50da94cf7464ea0a68")
 ;;; Generated autoloads from org-clock.el
 
 (autoload 'org-resolve-clocks "org-clock" "\
@@ -2064,8 +2064,8 @@ using three `C-u' prefix arguments.
 
 ;;;***
 
-;;;### (autoloads nil "org-version" "org-version.el" (23178 5004
-;;;;;;  537087 630000))
+;;;### (autoloads nil "org-version" "org-version.el" (23187 19979
+;;;;;;  711911 311000))
 ;;; Generated autoloads from org-version.el
 
 (autoload 'org-release "org-version" "\
@@ -2085,7 +2085,7 @@ The location of ODT styles.")
 
 ;;;***
 
-;;;### (autoloads nil "org" "org.el" (23168 55554 406654 286000))
+;;;### (autoloads nil "org" "org.el" (23187 19970 880020 269000))
 ;;; Generated autoloads from org.el
 
 (autoload 'org-babel-do-load-languages "org" "\

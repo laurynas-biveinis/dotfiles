@@ -510,6 +510,7 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
   '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
 ; Company mode
+(require 'company-irony-c-headers)
 (add-hook 'after-init-hook 'global-company-mode)
 (eval-after-load 'company
-  '(add-to-list 'company-backends 'company-irony))
+  '(add-to-list 'company-backends '(company-irony-c-headers company-irony)))
