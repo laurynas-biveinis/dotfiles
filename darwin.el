@@ -4,12 +4,13 @@
 ; Default font
 (defconst my-frame-font
   "-apple-Menlo-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
-  "My default frame font on Darwin")
+  "My default frame font on Darwin.")
 
 (defun system-specific-presetup()
   "Things that must be set on Darwin before main setup"
 
   (progn
+    (setq insert-directory-program "/usr/local/bin/gls")
     (add-to-list
      'default-frame-alist
      `(font . ,my-frame-font))
