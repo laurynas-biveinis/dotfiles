@@ -349,7 +349,7 @@
 
 (setq org-modules
       '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
-        org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl)
+        org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl org-id)
 )
 (setq org-log-redeadline t)
 (setq org-log-reschedule t)
@@ -373,6 +373,9 @@
 (org-crypt-use-before-save-magic)
 (setq org-crypt-key "B8D47CD8")
 (setq org-crypt-disable-auto-save 'encrypt)
+
+; org-id
+(setq org-id-link-to-org-use-id t)
 
 ; DVC
 (require 'dvc-autoloads)
