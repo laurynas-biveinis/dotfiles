@@ -1,6 +1,4 @@
-
 ; MySQL work setup
-(require 'irony)
 
 (defconst mysql-git-path "~/percona/mysql-server"
   "Default path to MySQL git checkout.")
@@ -14,6 +12,7 @@
 (defun switch-mysql-build (mysql-build-dir-arg)
   "Switch MySQL build directory to MYSQL-BUILD-DIR-ARG."
   (interactive "DSwitch to MySQL build directory: ")
+  (require 'irony)
   (setq mysql-build-dir (file-name-as-directory mysql-build-dir-arg))
   (let ((mysql-build-dir-cdb (expand-file-name cdb-json-fn mysql-build-dir)))
     (irony-cdb-json-add-compile-commands-path
@@ -23,6 +22,7 @@
   "Compile preconfigured MySQL in the current MySQL build directory.
 Compilation will use NUM-OF-WORKERS parallel workers."
   (interactive "nNumber of make workers: ")
+  (require 'compile)
   (setq compile-command
         (concat "make -j" (number-to-string num-of-workers) " "))
   (let ((saved-default-directory default-directory))
