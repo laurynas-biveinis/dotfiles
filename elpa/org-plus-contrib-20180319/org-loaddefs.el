@@ -2526,8 +2526,8 @@ DIRECTORY is where the directory org-mode/ lives (i.e. the
 
 ;;;***
 
-;;;### (autoloads nil "org-version" "org-version.el" (23205 49938
-;;;;;;  196777 821000))
+;;;### (autoloads nil "org-version" "org-version.el" (23214 64913
+;;;;;;  242133 447000))
 ;;; Generated autoloads from org-version.el
 
 (autoload 'org-release "org-version" "\
@@ -2547,7 +2547,7 @@ The location of ODT styles.")
 
 ;;;***
 
-;;;### (autoloads nil "org" "org.el" (23205 49922 840961 615000))
+;;;### (autoloads nil "org" "org.el" (23214 64898 490310 899000))
 ;;; Generated autoloads from org.el
 
 (autoload 'org-babel-do-load-languages "org" "\
