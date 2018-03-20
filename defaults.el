@@ -93,33 +93,17 @@
 (add-to-list 'initial-frame-alist '(top . 1))
 (add-to-list 'initial-frame-alist '(left . 1))
 
-; Frame geometry
-(defun reset-frame-size ()
-  "Re-size the current frame to be 99 columns x full height"
+(defun six-windows ()
+  "Make frame contain 2x3 windows."
   (interactive)
-  (if window-system
-      (progn
-        (let ((new-width 99) ; TODO: calculate automatically!
-              (new-height (/ (- (x-display-pixel-height)
-                                80)
-                             (frame-char-height)))
-              (width-cell (assq 'width default-frame-alist))
-              (height-cell (assq 'height default-frame-alist))
-              )
-          (set-frame-width (selected-frame) new-width)
-          (set-frame-height (selected-frame) new-height)
-          (if (consp width-cell)
-              (setcdr width-cell new-width)
-            (add-to-list 'default-frame-alist `(width . ,new-width)))
-          (if (consp height-cell)
-              (setcdr height-cell new-height)
-            (add-to-list 'default-frame-alist (cons 'height new-height)))
-          )
-        )
-    )
-)
-
-(reset-frame-size)
+  (delete-other-windows)
+  (split-window-below)
+  (split-window-right)
+  (split-window-right)
+  (windmove-down)
+  (split-window-right)
+  (split-window-right)
+  (balance-windows))
 
 ; Treat new (empty) files as modified
 (add-hook 'find-file-hooks
