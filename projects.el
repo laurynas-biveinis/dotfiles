@@ -6,6 +6,15 @@
 (defconst cdb-json-fn "compile_commands.json"
   "Default file name for compilation database in JSON format.")
 
+(defconst mysql-mtr-error-log-dir "mysql-test/var"
+  "The root of directory containing MySQL error logs after MTR run.")
+
+(defconst mysql-mtr-error-log-pattern "*.err"
+  "Shell pattern to match MySQL error logs after MTR run.")
+
+(defconst mysql-crash-marker "UTC - mysqld got signal"
+  "A string in MySQL error log indicating a crash.")
+
 (defvar mysql-build-dir ""
   "Currently active MySQL build directory.")
 
@@ -31,3 +40,11 @@ Compilation will use NUM-OF-WORKERS parallel workers."
     (setq default-directory saved-default-directory)))
 
 (global-set-key [f9] 'compile-mysql)
+
+(defun find-crash ()
+  "Grep current build dir for assertion errors in MTR MySQL error logs."
+  (interactive)
+  (let ((mysql-error-log-path
+         (expand-file-name (concat mysql-build-dir mysql-mtr-error-log-dir))))
+    (rgrep mysql-crash-marker mysql-mtr-error-log-pattern mysql-error-log-path
+           nil)))
