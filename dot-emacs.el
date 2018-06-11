@@ -99,7 +99,8 @@
 (load "misc")
 (system-specific-setup)
 (load "projects")
-(load "load-desktop")
+
+(six-windows)
 
 (server-start)
 (custom-set-variables
@@ -109,7 +110,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell php-mode autopair magit org auctex))))
+    (company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell php-mode autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
