@@ -50,6 +50,9 @@
 ; No annoying beeps
 (setq visible-bell t)
 
+; Indentation can only insert spaces by default
+(setq-default indent-tabs-mode nil)
+
 ; If already indented, complete
 (if (symbolp 'tab-always-indent)
     (setq tab-always-indent 'complete))
@@ -138,8 +141,3 @@ already at that position, move point to the beginning of line."
 
 ; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
-
-; Compilation
-(setq compilation-scroll-output 'first-error)
-
-(setq compilation-environment '("LANG=C"))
