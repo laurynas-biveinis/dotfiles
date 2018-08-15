@@ -40,7 +40,7 @@
 (cond ((eq system-type 'windows-nt) (load-library "ntemacs-cygwin"))
       ((eq system-type 'gnu/linux) (load-library "linux"))
       ((eq system-type 'darwin) (load-library "darwin"))
-      (t (load-library "default")))
+      (t (load-library "platform-default")))
 
 (system-specific-presetup)
 
