@@ -362,9 +362,6 @@
 ; org-id
 (setq org-id-link-to-org-use-id t)
 
-; DVC
-(require 'dvc-autoloads)
-
 ; Solarized-dark color theme
 (setq solarized-termcolors 256)
 (if emacs-24-or-later

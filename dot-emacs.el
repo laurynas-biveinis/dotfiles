@@ -20,7 +20,6 @@
       (concat home-dir "emacs/"))
 (defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
-(defconst dvc-mode-root (concat private-elisp-lib "dvc/"))
 
 (if emacs-24-or-later
     (defconst elpa-dir (concat private-elisp "elpa/"))
@@ -48,7 +47,6 @@
 (add-to-load-path private-elisp-lib)
 (unless integrated-cc-mode-p
   (add-to-load-path (concat cc-mode-root "lisp/")))
-(add-to-load-path (concat dvc-mode-root "elisp/"))
 
 ; Setup info search directories
 (defun add-to-info-path (new)
@@ -56,7 +54,6 @@
 
 (unless integrated-cc-mode-p
   (add-to-info-path (concat cc-mode-root "info/")))
-(add-to-info-path (concat dvc-mode-root "info/"))
 
 (load "secrets")
 (load "defaults")
