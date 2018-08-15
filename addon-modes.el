@@ -14,17 +14,8 @@
 (require 'paren)
 (show-paren-mode 1)
 
-; Develock
-(cond ((featurep 'xemacs)
-       (require 'develock)
-       ;; `turn-on-develock' is equivalent to `turn-on-font-lock',
-       ;;  except that it does not highlight the startup screen.
-       (add-hook 'lisp-interaction-mode-hook 'turn-on-develock)
-       (add-hook 'mail-setup-hook 'turn-on-font-lock))
-      ((>= emacs-major-version 20)
-       (require 'develock)
-       (global-font-lock-mode t)))
-
+; Show whitespace errors
+(require 'develock)
 
 ;; Imenu
 (require 'imenu+)
