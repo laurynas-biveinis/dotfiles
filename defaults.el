@@ -324,6 +324,10 @@ already at that position, move point to the beginning of line."
                                 '((c-mode . ((c-file-style . "MySQL-5.7")))
                                   (c++-mode . ((c-file-style . "MySQL-5.7")))))
 
+(setq c-doc-comment-style
+      '((c-mode . javadoc)
+        (c++-mode . javadoc)))
+
 ; Grand Unified Debugger
 (defun my-gud-hook ()
   (gud-tooltip-mode t))
