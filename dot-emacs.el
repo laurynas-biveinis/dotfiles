@@ -21,9 +21,9 @@
 (defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
 
-(if emacs-24-or-later
-    (defconst elpa-dir (concat private-elisp "elpa/"))
-  (defconst elpa-dir (concat private-elisp "elpa-23/")))
+(defconst elpa-dir (if emacs-24-or-later
+    (concat private-elisp "elpa/")
+  (concat private-elisp "elpa-23/")))
 
 (defconst erc-log-dir (concat home-dir "erclogs"))
 
