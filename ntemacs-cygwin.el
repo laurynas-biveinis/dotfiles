@@ -6,14 +6,14 @@
   ;; Setup paths
   ;; EmacsW32
   (setq emacsw32-root (concat private-elisp-lib "EmacsW32"))
-  (add-to-load-path emacsw32-root)
+  (add-to-list 'load-path emacsw32-root)
 
   (setq cygwin-root "c:/cygwin/")
   (setq private-bin (concat home-dir "/usr/bin"))
   (setq exec-path (cons private-bin exec-path))
   (setenv "PATH" (concat private-bin ";" (getenv "PATH")))
   ; Add Cygwin Emacs stuff
-  (add-to-load-path "/usr/share/emacs/site-lisp")
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp")
   ; Add Cygwin Info pages
   (add-to-list 'Info-default-directory-list
                (concat cygwin-root "usr/share/info/"))

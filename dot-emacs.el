@@ -28,12 +28,8 @@
 (defconst erc-log-dir (concat home-dir "erclogs"))
 
 ; Setup elisp search directories
-(defun add-to-load-path (new)
-  (setq load-path
-        (cons new load-path)))
-
-(add-to-load-path home-dir)
-(add-to-load-path private-elisp)
+(add-to-list 'load-path home-dir)
+(add-to-list 'load-path private-elisp)
 
 ; Load system-specific library and setup system-specific things that
 ; must be setup before main setup
@@ -44,9 +40,9 @@
 
 (system-specific-presetup)
 
-(add-to-load-path private-elisp-lib)
+(add-to-list 'load-path private-elisp-lib)
 (unless integrated-cc-mode-p
-  (add-to-load-path (concat cc-mode-root "lisp/")))
+  (add-to-list 'load-path (concat cc-mode-root "lisp/")))
 
 ; Setup info search directories
 (defun add-to-info-path (new)
