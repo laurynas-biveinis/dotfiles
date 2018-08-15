@@ -5,7 +5,10 @@
 (defconst emacs-24-or-later (>= emacs-major-version 24))
 (defconst emacs-24-4-or-later (or (and (= emacs-major-version 24)
                                    (>= emacs-minor-version 4))
-                              (>= emacs-major-version 25)))
+                                  (>= emacs-major-version 25)))
+(defconst emacs-24-5-or-later (or (and (= emacs-major-version 24)
+                                       (>= emacs-minor-version 5))
+                                  (>= emacs-major-version 25)))
 (defconst emacs-25-3-or-later (or (>= emacs-major-version 26)
                                   (and (= emacs-major-version 25)
                                        (>= emacs-minor-version 3))))
@@ -45,11 +48,8 @@
   (add-to-list 'load-path (concat cc-mode-root "lisp/")))
 
 ; Setup info search directories
-(defun add-to-info-path (new)
-  (add-to-list 'Info-default-directory-list new))
-
 (unless integrated-cc-mode-p
-  (add-to-info-path (concat cc-mode-root "info/")))
+  (add-to-list 'Info-default-directory-list (concat cc-mode-root "info/")))
 
 (load "secrets")
 (load "defaults")

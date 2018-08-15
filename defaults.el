@@ -8,15 +8,16 @@
 ; Keep all messages
 (setq message-log-max t)
 
-; Proper clipboard, why oh why this isn't the default?
-(setq x-select-enable-clipboard t)
+; Proper clipboard on Emacs 23 and earlier
+(unless emacs-24-or-later
+  (setq x-select-enable-clipboard t))
 
 ; Emacs 23.2+: Active region becomes primary selection
 (if (symbolp 'select-active-regions)
     (setq select-active-regions t))
 
 ; Emacs 24.1+: deleting a region deletes.
-(if (symbolp 'delete-active-region)
+(unless (or emacs-24-or-later (not (symbolp 'delete-active-region)))
     (setq delete-active-region t))
 
 ; C-k kills line including its newline
@@ -31,8 +32,7 @@
 
 ; Trailing newlines are highlighted
 (if (symbolp 'indicate-empty-lines) ; Emacs 23.2+
-    (setq indicate-empty-lines t)
-  (setq default-indicate-empty-lines t))
+    (setq-default indicate-empty-lines t))
 
 ; 24h time format
 (setq display-time-24hr-format t)
@@ -41,26 +41,21 @@
 (setq require-final-newline 'query)
 
 ; Display trailing whitespace
-(setq show-trailing-whitespace t)
-
-; Compilation window follows last output
-(setq compilation-scroll-window t)
+(setq-default show-trailing-whitespace t)
 
 ; Don't interrupt redraw on input
-(setq redisplay-dont-pause t)
+(unless emacs-24-5-or-later
+  (setq redisplay-dont-pause t))
 
 ; No annoying beeps
 (setq visible-bell t)
-
-; Indentation can only insert spaces by default
-(setq-default indent-tabs-mode nil)
 
 ; If already indented, complete
 (if (symbolp 'tab-always-indent)
     (setq tab-always-indent 'complete))
 
 ; Diff options
-(setq diff-switches "-c -p")
+(setq diff-switches "-u -p")
 
 ; Preserve hard links to the file you are editing
 ; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
@@ -82,9 +77,6 @@
 
 ; XXI century encodings
 (set-language-environment "UTF-8")
-
-; No fancy input encodings
-(set-input-method nil)
 
 ; No startup message
 (setq inhibit-startup-message t)
@@ -117,7 +109,7 @@
 
 ; Custom keybindings
 (defun smart-home ()
-  "Move point to first non-whitespace character or beginning-of-line.
+  "Move point to first non-whitespace character or 'beginning-of-line'.
 
 Move point to the first non-whitespace character on this line.  If point was
 already at that position, move point to the beginning of line."
