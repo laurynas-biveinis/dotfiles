@@ -1,15 +1,12 @@
 ; Configure, enable or disable various standard minor modes
 
-; Scroll bars on the right
-(if (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode 'right))
+; No scroll bars
+(if (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
 
 ; Don't bother entering search and replace args if the buffer is read-only
 (defadvice query-replace-read-args (before barf-if-buffer-read-only activate)
   "Signal a `buffer-read-only' error if the current buffer is read-only."
   (barf-if-buffer-read-only))
-
-; No scrollbars
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ; No toolbar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -35,9 +32,7 @@
   (setq font-lock-maximum-size nil))
 
 ; Turn on font-lock mode
-(if (fboundp 'global-font-lock-mode)
-    (global-font-lock-mode 1)       ; GNU Emacs
-  (setq font-lock-auto-fontify t))  ; XEmacs
+(global-font-lock-mode 1)
 (setq font-lock-maximum-decoration t)
 (setq font-lock-support-mode 'jit-lock-mode)
 
@@ -51,7 +46,7 @@
 
 ; Kill completion buffers after completing
 (defun kill-buffer-if-exists (buffer)
-  "Kill the buffer if it exists"
+  "Kill the BUFFER if it exists."
   (if (buffer-live-p buffer)
       (kill-buffer buffer)))
 (add-hook 'minibuffer-exit-hook
@@ -68,8 +63,8 @@
 (which-function-mode)
 
 ; Soft word wrap
-(cond ((>= emacs-major-version 23)
-       (global-visual-line-mode 1)))
+(if emacs-23-or-later
+       (global-visual-line-mode 1))
 
 ; Nice unique buffer names
 (require 'uniquify)
@@ -277,3 +272,8 @@ corresponding directory classes.")
   (eval-after-load "enriched"
     '(defun enriched-decode-display-prop (start end &optional param)
        (list start end))))
+
+; Compilation
+(setq compilation-scroll-output 'first-error)
+
+(setq compilation-environment '("LANG=C"))

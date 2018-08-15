@@ -1,4 +1,5 @@
 ; Some version checks
+(defconst emacs-23-or-later (>= emacs-major-version 23))
 (defconst emacs-23-2-or-later (or (and (= emacs-major-version 23)
                                    (>= emacs-minor-version 2))
                               (>= emacs-major-version 24)))
@@ -87,7 +88,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell php-mode autopair magit org auctex))))
+    (google-c-style solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell php-mode autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
