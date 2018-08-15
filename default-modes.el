@@ -140,7 +140,7 @@
 
 ;; MySQL
 
-(c-add-style "MySQL"
+(c-add-style "MySQL-5.7"
              '("K&R"
                (indent-tabs-mode . nil)
                (c-basic-offset . 2)
@@ -156,7 +156,7 @@
                                    (inline-open . 0)
                                    (statement-case-open . +)))))
 
-(c-add-style "InnoDB"
+(c-add-style "InnoDB-5.7"
              '("K&R"
                (indent-tabs-mode . t)
                (c-basic-offset . 8)
@@ -178,50 +178,12 @@
 (add-to-list 'auto-mode-alist '("\\.ic\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.i\\'" . c++-mode))
 
-(dir-locals-set-class-variables 'innodb-source
-                                '((c-mode . ((c-file-style . "InnoDB")))
-                                  (c++-mode . ((c-file-style . "InnoDB")))))
-(dir-locals-set-class-variables 'mysql-source
-                                '((c-mode . ((c-file-style . "MySQL")))
-                                  (c++-mode . ((c-file-style . "MySQL")))))
-
-(defvar mysql-dirs '(("innodb_plugin"     . innodb-source)
-                     ("innobase"          . innodb-source)
-                     ("xtrabackup"        . innodb-source)
-                     ("haildb"            . innodb-source)
-                     ("Percona-Server"    . mysql-source)
-                     ("mysql"             . mysql-source)
-                     ("mysql-[:digit:].*" . mysql-source))
-  "An association list of regexps matching directory name substrings and their
-corresponding directory classes.")
-
-(defadvice dir-locals-find-file (before mysql-set-file-class
-                                        (file))
-  (let* ((file (expand-file-name file))
-         (directory (file-name-directory file))
-         (found-in-cache-p nil)
-         (dlocals-itr dir-locals-directory-cache)
-         (mysql-dirs-itr mysql-dirs))
-    ; Check if this directory has not been processed before
-    (while dlocals-itr
-      (let ((elt (car dlocals-itr)))
-        (if (eq t (compare-strings directory nil nil
-                                   (car elt) nil nil
-                                   (memq system-type
-                                         '(windows-nt cygwin ms-dos))))
-            (progn (setq found-in-cache-p 't)
-                   (setq dlocals-itr nil))
-          (setq dlocals-itr (cdr dlocals-itr)))))
-    ; No - classify this directory
-    (unless found-in-cache-p
-      (while mysql-dirs-itr
-        (let ((elt (car mysql-dirs-itr)))
-          (if (string-match (car elt) directory)
-              (progn (dir-locals-set-directory-class directory (cdr elt))
-                     (setq mysql-dirs-itr nil))
-            (setq mysql-dirs-itr (cdr mysql-dirs-itr))))))))
-
-(ad-activate 'dir-locals-find-file)
+(dir-locals-set-class-variables 'innodb-source-5.7
+                                '((c-mode . ((c-file-style . "InnoDB-5.7")))
+                                  (c++-mode . ((c-file-style . "InnoDB-5.7")))))
+(dir-locals-set-class-variables 'mysql-source-5.7
+                                '((c-mode . ((c-file-style . "MySQL-5.7")))
+                                  (c++-mode . ((c-file-style . "MySQL-5.7")))))
 
 ; Grand Unified Debugger
 (defun my-gud-hook ()
