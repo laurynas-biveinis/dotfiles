@@ -54,7 +54,6 @@
 
 (load "secrets")
 (load "defaults")
-(load "default-modes")
 
 ; ELPA
 (setq package-user-dir elpa-dir)
