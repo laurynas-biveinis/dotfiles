@@ -51,16 +51,6 @@
 ;; ----------------------------
 (require 'ssh)
 
-;; -------------------------------------------
-;; Multiple spell checkers in the same buffers
-;; -------------------------------------------
-;(require 'ispell-multi)
-
-;; In XML modes
-;(autoload 'flyspell-xml-lang-setup "flyspell-xml-lang")
-;(add-hook 'xml-mode-hook 'flyspell-xml-lang-setup)
-;(add-hook 'nxml-mode-hook 'flyspell-xml-lang-setup)
-
 ;; --------------------------
 ;; AUCTeX and other TeX stuff
 ;; --------------------------
@@ -394,8 +384,8 @@
 
 (defun my-erc-generate-log-file-name-channel-network
   (buffer target nick server port)
-  "Generates an ERC log fle name using the channel and network name, resulting
-in #channl@network.txt.
+  "Generate an ERC log file name. using the channel and network name, resulting
+in #channel@network.txt.
 Ths function is a possible values for `erc-generate-log-file-name-function'."
   (require 'erc-networks)
   (let ((file (concat
@@ -457,12 +447,12 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
             ;(erc-spelling-mode)))
 
 (defun start-chats ()
-  "Connect to all chats"
+  "Connect to all chats."
   (interactive)
   (erc :server "irc.freenode.net" :port 6667 :nick "laurynas"))
 
 (defun stop-chats ()
-  "Disconnect from all chats"
+  "Disconnect from all chats."
   (interactive)
   (erc-cmd-GQ "Leaving"))
 
