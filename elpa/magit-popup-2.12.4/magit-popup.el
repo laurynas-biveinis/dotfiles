@@ -554,7 +554,7 @@ usually specified in that order):
 
 `:variables'
 
-  Git variables which can be set from the popup.  VALUE is a list
+  Variables which can be set from the popup.  VALUE is a list
   whose members have the form (KEY DESC COMMAND FORMATTER), see
   `magit-define-popup-variable' for details.
 
@@ -1296,26 +1296,29 @@ of events shared by all popups and before point is adjusted.")
           'type type 'event (magit-popup-event-key ev))))
 
 (defun magit-popup-format-action-button (type ev)
-  (let* ((dsc (magit-popup-event-dsc ev))
+  (let* ((cmd (magit-popup-event-fun ev))
+         (dsc (magit-popup-event-dsc ev))
          (fun (and (functionp dsc) dsc)))
-    (when fun
-      (setq dsc
-            (-when-let (branch (funcall fun))
-              (if (text-property-not-all 0 (length branch) 'face nil branch)
-                  branch
-                (magit-branch-set-face branch)))))
-    (when dsc
-      (list (format-spec
-             (button-type-get type 'format)
-             `((?k . ,(propertize (magit-popup-event-keydsc ev)
-                                  'face 'magit-popup-key))
-               (?d . ,dsc)
-               (?D . ,(if (and (not fun)
-                               (eq (magit-popup-event-fun ev)
-                                   (magit-popup-get :default-action)))
-                          (propertize dsc 'face 'bold)
-                        dsc))))
-            'type type 'event (magit-popup-event-key ev)))))
+    (unless (and disabled-command-function
+                 (symbolp cmd)
+                 (get cmd 'disabled))
+      (when fun
+        (setq dsc
+              (-when-let (branch (funcall fun))
+                (if (text-property-not-all 0 (length branch) 'face nil branch)
+                    branch
+                  (magit-branch-set-face branch)))))
+      (when dsc
+        (list (format-spec
+               (button-type-get type 'format)
+               `((?k . ,(propertize (magit-popup-event-keydsc ev)
+                                    'face 'magit-popup-key))
+                 (?d . ,dsc)
+                 (?D . ,(if (and (not fun)
+                                 (eq cmd (magit-popup-get :default-action)))
+                            (propertize dsc 'face 'bold)
+                          dsc))))
+              'type type 'event (magit-popup-event-key ev))))))
 
 (defun magit-popup-insert-command-section (type spec)
   (magit-popup-insert-section

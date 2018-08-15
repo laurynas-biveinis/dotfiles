@@ -10,7 +10,7 @@ magit-popup.texi.
 
      This document is distributed in the hope that it will be useful,
      but WITHOUT ANY WARRANTY; without even the implied warranty of
-     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
      General Public License for more details.
 INFO-DIR-SECTION Emacs
 START-INFO-DIR-ENTRY
@@ -28,7 +28,7 @@ this library implements a similar abstraction; a new kind of prefix
 command that is associated with a specific set of infix arguments and
 suffix commands.
 
-This manual is for Magit-Popup version 2.12.2 (v2.12.2-6-gbd04ebd+1).
+This manual is for Magit-Popup version 2.12.4.
 
      Copyright (C) 2015-2018 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -39,7 +39,7 @@ This manual is for Magit-Popup version 2.12.2 (v2.12.2-6-gbd04ebd+1).
 
      This document is distributed in the hope that it will be useful,
      but WITHOUT ANY WARRANTY; without even the implied warranty of
-     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
      General Public License for more details.
 
 * Menu:
@@ -369,7 +369,7 @@ to an existing popup using the following functions.
 
  -- Function: magit-remove-popup-key popup type key
 
-     In POPUP, remove KEY’s binding of TYPE. POPUP is a popup command
+     In POPUP, remove KEY’s binding of TYPE.  POPUP is a popup command
      defined using ‘magit-define-popup’.  TYPE is one of ‘:action’,
      ‘:sequence-action’, ‘:switch’, or ‘:option’.  KEY is the character
      which is to be unbound.
@@ -492,7 +492,7 @@ commands have to be defined separately using plain ‘defun’.
  -- Macro: magit-define-popup name doc [group [mode [option]]] :keyword
           value...
 
-     This macro defines a popup named NAME. The NAME should begin with
+     This macro defines a popup named NAME.  The NAME should begin with
      the package prefix and by convention end with ‘-popup’, it is used
      as the name of the command which shows the popup and for an
      internal variable (whose value is used to store information about
@@ -619,9 +619,9 @@ commands have to be defined separately using plain ‘defun’.
 
         • ‘:variables’
 
-          Git variables which can be set from the popup.  VALUE is a
-          list whose members have the form ‘(KEY DESC COMMAND
-          FORMATTER)’, see ‘magit-define-popup-variable’ for details.
+          Variables which can be set from the popup.  VALUE is a list
+          whose members have the form ‘(KEY DESC COMMAND FORMATTER)’,
+          see ‘magit-define-popup-variable’ for details.
 
           Members of VALUE may also be strings and functions, assuming
           the first member is a string or function.  In that case the
@@ -723,14 +723,14 @@ directly.
 
 
 Tag Table:
-Node: Top768
-Node: Introduction2013
-Node: Usage4712
-Node: Customizing Existing Popups9409
-Node: Other Options15155
-Node: Defining Prefix and Suffix Commands16698
-Node: Defining Prefix Commands18850
-Node: Defining Suffix Commands27548
+Node: Top769
+Node: Introduction1992
+Node: Usage4691
+Node: Customizing Existing Popups9388
+Node: Other Options15135
+Node: Defining Prefix and Suffix Commands16678
+Node: Defining Prefix Commands18830
+Node: Defining Suffix Commands27525
 
 End Tag Table
 

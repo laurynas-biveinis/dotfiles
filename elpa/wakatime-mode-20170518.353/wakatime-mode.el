@@ -6,7 +6,7 @@
 ;; Maintainer: Alan Hamlett <alan@wakatime.com>
 ;; Website: https://wakatime.com
 ;; Keywords: calendar, comm
-;; Package-Version: 20170517.2053
+;; Package-Version: 20170518.353
 ;; Version: 1.0.2
 
 ;; This program is free software; you can redistribute it and/or modify

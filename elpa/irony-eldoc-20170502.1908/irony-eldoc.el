@@ -4,7 +4,7 @@
 ;;
 ;; Author: Kirill Ignatiev <github.com/ikirill>
 ;; Version: 0.1
-;; Package-Version: 20170502.1208
+;; Package-Version: 20170502.1908
 ;; Keywords: c, c++, objc, convenience, tools
 ;; URL: https://github.com/ikirill/irony-eldoc
 ;; Package-Requires: ((emacs "24") (cl-lib "0.5") (irony "0.1"))
