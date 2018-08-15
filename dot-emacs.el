@@ -1,9 +1,9 @@
 ; Some version checks
-(setq emacs-23-2-or-later (or (and (= emacs-major-version 23)
+(defconst emacs-23-2-or-later (or (and (= emacs-major-version 23)
                                    (>= emacs-minor-version 2))
                               (>= emacs-major-version 24)))
-(setq emacs-24-or-later (>= emacs-major-version 24))
-(setq emacs-24-4-or-later (or (and (= emacs-major-version 24)
+(defconst emacs-24-or-later (>= emacs-major-version 24))
+(defconst emacs-24-4-or-later (or (and (= emacs-major-version 24)
                                    (>= emacs-minor-version 4))
                               (>= emacs-major-version 25)))
 (defconst emacs-25-3-or-later (or (>= emacs-major-version 26)
@@ -11,32 +11,30 @@
                                        (>= emacs-minor-version 3))))
 
 ; Integrated or 3rd party?
-(setq integrated-cc-mode-p emacs-24-4-or-later)
+(defconst integrated-cc-mode-p emacs-24-4-or-later)
 
 ; Various paths
-(setq home-dir (concat (replace-regexp-in-string "\\\\" "/"
+(defconst home-dir (concat (replace-regexp-in-string "\\\\" "/"
                                                  (getenv "HOME")) "/"))
-(setq private-elisp
+(defconst private-elisp
       (concat home-dir "emacs/"))
-(setq private-elisp-lib (concat private-elisp "lib/"))
-(setq xref-dir (concat home-dir "/opt/xref/"))
-(setq use-xref (file-exists-p xref-dir))
-(setq xref-lib (concat xref-dir "emacs/"))
-(setq elib-dir (concat private-elisp-lib "elib-1.0"))
-(setq jdee-dir (concat private-elisp-lib "jdee/lisp")) ; TODO outdated
-(unless integrated-cc-mode-p
-  (setq cc-mode-root (concat private-elisp-lib "cc-mode/")))
-(setq dvc-mode-root (concat private-elisp-lib "dvc/"))
-(unless emacs-24-or-later
-  (setq color-theme-dir (concat private-elisp-lib "color-theme-6.6.0/")))
-(setq solarized-theme-dir (concat private-elisp-lib
+(defconst private-elisp-lib (concat private-elisp "lib/"))
+(defconst xref-dir (concat home-dir "/opt/xref/"))
+(defconst use-xref (file-exists-p xref-dir))
+(defconst xref-lib (concat xref-dir "emacs/"))
+(defconst elib-dir (concat private-elisp-lib "elib-1.0"))
+(defconst jdee-dir (concat private-elisp-lib "jdee/lisp")) ; TODO outdated
+(defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
+(defconst dvc-mode-root (concat private-elisp-lib "dvc/"))
+(defconst color-theme-dir (concat private-elisp-lib "color-theme-6.6.0/"))
+(defconst solarized-theme-dir (concat private-elisp-lib
                                   "emacs-color-theme-solarized"))
 
 (if emacs-24-or-later
-    (setq elpa-dir (concat private-elisp "elpa/"))
-  (setq elpa-dir (concat private-elisp "elpa-23/")))
+    (defconst elpa-dir (concat private-elisp "elpa/"))
+  (defconst elpa-dir (concat private-elisp "elpa-23/")))
 
-(setq erc-log-dir (concat home-dir "erclogs"))
+(defconst erc-log-dir (concat home-dir "erclogs"))
 
 ; Setup elisp search directories
 (defun add-to-load-path (new)
