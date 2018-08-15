@@ -195,7 +195,7 @@
 (add-hook 'jdb-mode-hook 'my-gud-hook)
 
 ; Automatically indent pasted code
-(setq auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode))
+(defconst auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode))
 
 (defadvice yank (after indent-region activate)
   (if (member major-mode auto-indent-paste-modes)
