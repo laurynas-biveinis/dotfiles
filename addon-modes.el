@@ -1,3 +1,7 @@
+; Google C style
+
+(c-add-style "google" google-c-style)
+
 ; Autopair
 (unless emacs-24-4-or-later
   (progn
