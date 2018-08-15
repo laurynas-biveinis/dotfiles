@@ -3,10 +3,10 @@
 ; Default font
 (defconst my-frame-font
   "-Misc-Fixed-Medium-R-Normal--14-130-75-75-C-70-ISO8859-1"
-  "My default frame font for Emacs 23.1-")
+  "My default frame font for Emacs 23.1 and lower.")
 
 (defun system-specific-presetup()
-  "Things that must be set on Linux before main setup"
+  "Things that must be set on Linux before main setup."
 
   (if (symbolp 'font-use-system-font)
       (setq font-use-system-font t)
@@ -17,7 +17,7 @@
       (set-frame-font my-frame-font))))
 
 (defun system-specific-setup()
-  "Setup specifics for Linux"
+  "Setup specifics for Linux."
 
   ;; Make shifted direction keys work on the Linux console or in an xterm
    (when (member (getenv "TERM") '("linux" "xterm"))

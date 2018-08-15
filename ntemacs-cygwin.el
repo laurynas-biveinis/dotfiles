@@ -1,15 +1,15 @@
 ;; Specific setup for NTEmacs + EmacsW32 with Cygwin
 
 (defun system-specific-presetup()
-  "NT Emacs on Cygwin: set some things before main .emacs setup"
+  "NT Emacs on Cygwin: set some things before main .emacs setup."
 
   ;; Setup paths
   ;; EmacsW32
-  (setq emacsw32-root (concat private-elisp-lib "EmacsW32"))
+  (defconst emacsw32-root (concat private-elisp-lib "EmacsW32"))
   (add-to-list 'load-path emacsw32-root)
 
-  (setq cygwin-root "c:/cygwin/")
-  (setq private-bin (concat home-dir "/usr/bin"))
+  (defconst cygwin-root "c:/cygwin/")
+  (defconst private-bin (concat home-dir "/usr/bin"))
   (setq exec-path (cons private-bin exec-path))
   (setenv "PATH" (concat private-bin ";" (getenv "PATH")))
   ; Add Cygwin Emacs stuff
@@ -41,7 +41,7 @@
 )
 
 (defun system-specific-setup()
-  "NT Emacs on Cygwin .emacs specifics"
+  "NT Emacs on Cygwin .emacs specifics."
 
   ;; Path to Python
   (setq python-python-command "c:\\Python25\\python.exe")
