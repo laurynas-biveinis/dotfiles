@@ -178,14 +178,6 @@
          ("\\.php5$" . php-mode))
        auto-mode-alist))
 
-; Xrefactory configuration part ;;
-(defvar xref-current-project nil) ;; can be also "my_project_name"
-(defvar xref-key-binding 'global) ;; can be also 'local or 'none
-(if use-xref
-      (progn
-        (setq exec-path (cons xref-dir exec-path))
-        (load "xrefactory")))
-
 ; JDEE
 ; TODO: broken with Emacs 23.2 integrated CEDET
 ;(require 'jde)

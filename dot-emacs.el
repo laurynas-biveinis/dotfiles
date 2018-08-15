@@ -19,9 +19,6 @@
 (defconst private-elisp
       (concat home-dir "emacs/"))
 (defconst private-elisp-lib (concat private-elisp "lib/"))
-(defconst xref-dir (concat home-dir "/opt/xref/"))
-(defconst use-xref (file-exists-p xref-dir))
-(defconst xref-lib (concat xref-dir "emacs/"))
 (defconst elib-dir (concat private-elisp-lib "elib-1.0"))
 (defconst jdee-dir (concat private-elisp-lib "jdee/lisp")) ; TODO outdated
 (defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
@@ -54,7 +51,6 @@
 (system-specific-presetup)
 
 (add-to-load-path private-elisp-lib)
-(if use-xref (add-to-load-path xref-lib))
 (add-to-load-path elib-dir)
 (add-to-load-path jdee-dir)
 (unless integrated-cc-mode-p
