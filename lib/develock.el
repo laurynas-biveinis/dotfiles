@@ -1,6 +1,6 @@
 ;;; develock.el --- additional font-lock keywords for the developers
 
-;; Copyright (C) 2001-2003, 2005-2009, 2012, 2013
+;; Copyright (C) 2001-2003, 2005-2009, 2012, 2013, 2015
 ;; Katsumi Yamaoka
 
 ;; Author: Katsumi Yamaoka  <yamaoka@jpl.org>
@@ -8,7 +8,7 @@
 ;;         Yasutaka SHINDOH <ring-pub@fan.gr.jp>
 ;;         Oscar Bonilla    <ob@bitmover.com>
 ;; Created: 2001/06/28
-;; Revised: 2013/11/15
+;; Revised: 2015/10/14
 ;; Keywords: font-lock emacs-lisp change-log texinfo c java perl html
 ;;           tcl ruby mail news
 
@@ -214,7 +214,7 @@
 
 ;;; Code:
 
-(defconst develock-version "0.45"
+(defconst develock-version "0.47"
   "Version number for this version of Develock.")
 
 (require 'advice)
@@ -849,12 +849,14 @@ Each element should be triple symbols of the following form:
      (6 'develock-whitespace-1 t t)
      (7 'develock-whitespace-1 t t)
      (8 'develock-whitespace-2 t t)
-     (9 'develock-whitespace-2 t t)
-     (10 'develock-whitespace-3 t t)
+     (9 'develock-whitespace-1 t t)
+     (10 'develock-whitespace-1 t t)
      (11 'develock-whitespace-1 t t)
      (12 'develock-whitespace-1 t t)
-     (13 'develock-whitespace-1 t t)
-     (14 'develock-whitespace-1 t t))
+     (13 'develock-whitespace-2 t t)
+     (14 'develock-whitespace-1 t t)
+     (15 'develock-whitespace-1 t t)
+     (16 'develock-whitespace-1 t t))
     ;; leading spaces
     ("^\\( +\\)[^\t\n]"
      (1 'develock-whitespace-3))
@@ -1237,19 +1239,27 @@ It becomes buffer-local in the buffer in which Develock is on, and
 keeps the values as a cons cell before Develock is turned on.")
 
 (if (boundp 'file-local-variables-alist)
-    ;; Emacs 23
+    ;; Emacs >=23
     (progn
       (defadvice hack-dir-local-variables (after
 					   hack-file-local-variables-alist
 					   activate)
 	"Advised by Develock.
 Remove `fill-column' element from `file-local-variables-alist' if
-`develock-fill-column-alist' specifies it."
-	(and develock-mode
-	     (cdr (assq major-mode develock-fill-column-alist))
-	     (setq file-local-variables-alist
-		   (delq (assq 'fill-column file-local-variables-alist)
-			 file-local-variables-alist))))
+`develock-fill-column-alist' specifies it.  Also remove dir-local
+`indent-tabs-mode' element for the Lisp modes since there should be
+no rational reason to force it."
+	(if develock-mode
+	    (progn
+	      (if (cdr (assq major-mode develock-fill-column-alist))
+		  (setq file-local-variables-alist
+			(delq (assq 'fill-column file-local-variables-alist)
+			      file-local-variables-alist)))
+	      (if (memq major-mode '(emacs-lisp-mode lisp-interaction-mode))
+		  (setq file-local-variables-alist
+			(delq (assq 'indent-tabs-mode
+				    file-local-variables-alist)
+			      file-local-variables-alist))))))
       (defadvice hack-local-variables (after hack-file-local-variables-alist
 					     activate)
 	"Advised by Develock.
@@ -1487,22 +1497,71 @@ non-nil and sets beginning and ending points as the `match-data' #0,
 
 (defun develock-find-ugly-change-log-entry-line (limit)
   "Find an ugly entry line between the point and LIMIT in ChangeLog file."
-  (and (re-search-forward "\
-^\\( +\\|\t[\t ]*\\)?\\(?:[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]\
-\\(?:\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[012][0-9]:[0-5][0-9]:[0-5][0-9]\\)?\
-\\|\\(?:Sun\\|Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\)\
-\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)\
+  (and (re-search-forward
+	(eval-when-compile
+	  (concat
+	   ;; 1. leading whitespace
+	   "^\\([\t ]+\\)?"
+	   ;; -- timestamp in various styles -->
+	   "\\(?:[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]\\(?:\\(?: \\|"
+	   ;; 2. abnormal whitespace between YYYY-MM-DD and HH:MM:SS
+	   "\\(  +\\|\t[\t ]*\\)"
+	   "\\)[012][0-9]:[0-5][0-9]:[0-5][0-9]\\)?\
+\\|\\(?:Sun\\|Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\)\\(?: \\|"
+	   ;; 3. abnormal whitespace before month name
+	   "\\(  +\\|\t[\t ]*\\)"
+	   "\\)\
 \\(?:Jan\\|Feb\\|Mar\\|Apr\\|May\\|Jun\\|Jul\\|Aug\\|Sep\\|Oct\\|Nov\\|Dec\\)\
-\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[ 0-3][0-9]\
-\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[012][0-9]:[0-5][0-9]:[0-5][0-9]\
-\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[12][0-9][0-9][0-9]\\)\
-\\(?:  \\|\\( \\|   +\\|\t[\t ]*\\)\\)[^\t <>]+\
-\\(?:\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[^\t <>]+\\)?\
-\\(?:\\(?: \\|\\(  +\\|\t[\t ]*\\)\\)[^\t <>]+\\)?\
-\\(\\(?:[\t ]+[^\t <>]+\\)*\\)\
-\\(?:\\(?:  \\|\\( \\|   +\\|\t[\t ]*\\)\\)<\\|\\(<\\)\\)[^<>]+>\
-\\(?:\\(?:  \\|\\( \\|   +\\|\t[\t ]*\\)\\)\(\\|\\([^\n ].*\\)\\)?"
-			  limit t)
+\\(?: \\|"
+	   ;; 4. abnormal whitespace between month name and day number
+	   "\\(  +\\|\t[\t ]*\\)"
+	   "\\)[ 0-3][0-9]\\(?: \\|"
+	   ;; 5. abnormal whitespace between day number and HH:MM:SS
+	   "\\(  +\\|\t[\t ]*\\)"
+	   "\\)[012][0-9]:[0-5][0-9]:[0-5][0-9]\\(?: \\|"
+	   ;; 6. abnormal whitespace between HH:MM:SS and YYYY
+	   "\\(  +\\|\t[\t ]*\\)"
+	   "\\)[12][0-9][0-9][0-9]\\)"
+	   ;; <-- timestamp in various styles --
+
+	   "\\(?:  \\|"
+	   ;; 7. abnormal whitespace between time stamp and author's name
+	   "\\( \\|   +\\|\t[\t ]*\\)"
+	   "\\)"
+	   ;; -- author's name --
+	   "\\(?:[^\t <>]+\\(?: [^\t <>]+\\)*\\|"
+	   ;; 8. abnormal whitespace within names
+	   "\\([^\t <>]+\\(?: [^\t <>]+\\)*\\(?:\\(?:  +\\|\t[\t ]*\\)\
+[^\t <>]+\\)+\\(?: [^\t <>]+\\)*\\)"
+	   "\\)\\(?:\\(?:  \\|"
+	   ;; 9. abnormal whitespace between author's name and e-mail address
+	   "\\( \\|   +\\|\t[\t ]*\\)"
+	   "\\)<\\|"
+	   ;; 10. no space between author's name and e-mail address
+	   "\\(<\\)"
+	   "\\)"
+	   ;; 11. unwanted whitespace between < and e-mail address
+	   "\\([\t ]+\\)?"
+	   "\\(?:"
+	   ;; -- e-mail address --
+	   "[^\t <>]+"
+	   ;; 12. unwanted whitespace between e-mail address and >
+	   "\\([\t ]+\\)?"
+	   ">\\|"
+	   ;; 13. whitespace in the middle of e-mail address
+	   "\\([^\t <>]+\\(?:[\t ]+[^\t <>]+\\)+\\)"
+	   ;; 14. unwanted whitespace between e-mail address and >
+	   "\\([\t ]+\\)?"
+	   ">\\)"
+	   ;; -- a supplement e.g., (tiny change) --
+	   "\\(?:\\(?:  \\|"
+	   ;; 15. abnormal whitespace between e-mail address and supplement
+	   "\\( \\|   +\\|\t[\t ]*\\)"
+	   "\\)\(\\|"
+	   ;; 16. trailing garbage
+	   "\\([^\n ].*\\)"
+	   "\\)?"))
+	limit t)
        (prog2
 	   (goto-char (match-beginning 0))
 	   (or (not (zerop (forward-line -1)))
@@ -1510,7 +1569,10 @@ non-nil and sets beginning and ending points as the `match-data' #0,
 	 (goto-char (match-end 0)))))
 
 (eval-when-compile
-  (defvar lisp-interaction-mode-hook))
+  (defvar file-local-variables-alist)
+  (defvar lisp-interaction-mode-hook)
+  (if (not (fboundp 'hack-dir-local-variables))
+      (defalias 'hack-dir-local-variables 'ignore)))
 
 (eval-when-compile
   (defmacro develock-called-interactively-p (kind)
@@ -1526,58 +1588,70 @@ In Develock mode, highlighting leading and trailing whitespace,
 long lines and oddities."
   (interactive "P")
   (if (assq major-mode develock-keywords-alist)
-      (cond ((and (not develock-mode)
-		  develock-ignored-buffer-name-regexp
-		  (string-match develock-ignored-buffer-name-regexp
-				(buffer-name)))
-	     (if (develock-called-interactively-p 'any)
-		 (message "Develock is inhibited for this buffer")))
-	    ((and (not develock-mode)
-		  buffer-file-name
-		  develock-ignored-file-name-regexp
-		  (string-match develock-ignored-file-name-regexp
-				(file-name-nondirectory buffer-file-name)))
-	     (if (develock-called-interactively-p 'any)
-		 (message "Develock is inhibited for this file")))
-	    (t
-	     (let ((oldmode develock-mode)
-		   fc)
-	       (setq develock-mode (if (numberp arg)
-				       (> arg 0)
-				     (if font-lock-mode
-					 (not develock-mode)
-				       t)))
-	       (if develock-mode
-		   (if (and (not oldmode)
-			    (setq fc (cdr (assq major-mode
-						develock-fill-column-alist))))
+      (progn
+	(cond ((and (not develock-mode)
+		    develock-ignored-buffer-name-regexp
+		    (string-match develock-ignored-buffer-name-regexp
+				  (buffer-name)))
+	       (if (develock-called-interactively-p 'any)
+		   (message "Develock is inhibited for this buffer")))
+	      ((and (not develock-mode)
+		    buffer-file-name
+		    develock-ignored-file-name-regexp
+		    (string-match develock-ignored-file-name-regexp
+				  (file-name-nondirectory buffer-file-name)))
+	       (if (develock-called-interactively-p 'any)
+		   (message "Develock is inhibited for this file")))
+	      (t
+	       (let ((oldmode develock-mode)
+		     fc)
+		 (setq develock-mode (if (numberp arg)
+					 (> arg 0)
+				       (if font-lock-mode
+					   (not develock-mode)
+					 t)))
+		 (if develock-mode
+		     (if (and (not oldmode)
+			      (setq fc (cdr (assq
+					     major-mode
+					     develock-fill-column-alist))))
+			 (progn
+			   (set (make-local-variable
+				 'develock-original-fill-configuration)
+				(cons (current-fill-column)
+				      (and auto-fill-function t)))
+			   (setq fill-column fc)
+			   (auto-fill-mode 1)))
+		   (if (and oldmode
+			    (local-variable-p
+			     'develock-original-fill-configuration
+			     (current-buffer))
+			    (car develock-original-fill-configuration))
 		       (progn
-			 (set (make-local-variable
-			       'develock-original-fill-configuration)
-			      (cons (current-fill-column)
-				    (and auto-fill-function t)))
-			 (setq fill-column fc)
-			 (auto-fill-mode 1)))
-		 (if (and oldmode
-			  (local-variable-p
-			   'develock-original-fill-configuration
-			   (current-buffer))
-			  (car develock-original-fill-configuration))
-		     (progn
-		       (setq fill-column
-			     (car develock-original-fill-configuration))
-		       (auto-fill-mode
-			(if (cdr develock-original-fill-configuration)
-			    1
-			  0))))))
-	     (if font-lock-mode
-		 (progn
-		   (font-lock-mode 0)
-		   (let ((develock-auto-enable develock-mode))
-		     (font-lock-mode 1)))
-	       (if develock-mode
-		   (let ((develock-auto-enable t))
-		     (font-lock-mode 1))))))
+			 (setq fill-column
+			       (car develock-original-fill-configuration))
+			 (auto-fill-mode
+			  (if (cdr develock-original-fill-configuration)
+			      1
+			    0))))))
+	       (if font-lock-mode
+		   (progn
+		     (font-lock-mode 0)
+		     (let ((develock-auto-enable develock-mode))
+		       (font-lock-mode 1)))
+		 (if develock-mode
+		     (let ((develock-auto-enable t))
+		       (font-lock-mode 1))))))
+	(condition-case nil
+	    (progn
+	      (hack-dir-local-variables)
+	      (if develock-mode
+		  (setq indent-tabs-mode (default-value 'indent-tabs-mode))
+		(if (assq 'indent-tabs-mode file-local-variables-alist)
+		    (setq indent-tabs-mode
+			  (cdr (assq 'indent-tabs-mode
+				     file-local-variables-alist))))))
+	  (error)))
     (error "Develock does not support `%s'" major-mode)))
 
 ;;;###autoload

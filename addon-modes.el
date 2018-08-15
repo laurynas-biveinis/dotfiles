@@ -1,5 +1,4 @@
 ; Google C style
-
 (c-add-style "google" google-c-style)
 
 ; Autopair
