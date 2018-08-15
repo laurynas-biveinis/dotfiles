@@ -19,8 +19,6 @@
 (defconst private-elisp
       (concat home-dir "emacs/"))
 (defconst private-elisp-lib (concat private-elisp "lib/"))
-(defconst elib-dir (concat private-elisp-lib "elib-1.0"))
-(defconst jdee-dir (concat private-elisp-lib "jdee/lisp")) ; TODO outdated
 (defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
 (defconst dvc-mode-root (concat private-elisp-lib "dvc/"))
 (defconst color-theme-dir (concat private-elisp-lib "color-theme-6.6.0/"))
@@ -51,8 +49,6 @@
 (system-specific-presetup)
 
 (add-to-load-path private-elisp-lib)
-(add-to-load-path elib-dir)
-(add-to-load-path jdee-dir)
 (unless integrated-cc-mode-p
   (add-to-load-path (concat cc-mode-root "lisp/")))
 (add-to-load-path (concat dvc-mode-root "elisp/"))

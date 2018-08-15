@@ -178,13 +178,6 @@
          ("\\.php5$" . php-mode))
        auto-mode-alist))
 
-; JDEE
-; TODO: broken with Emacs 23.2 integrated CEDET
-;(require 'jde)
-;(setq jde-jdk-registry
-;      (quote (("1.6.0.16" . "/usr/lib/jvm/java-6-sun-1.6.0.16"))))
-
-
 ; easypg
 (setq epg-gpg-program "gpg1")
 
