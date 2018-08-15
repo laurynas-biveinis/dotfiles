@@ -21,9 +21,6 @@
 (defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
 (defconst dvc-mode-root (concat private-elisp-lib "dvc/"))
-(defconst color-theme-dir (concat private-elisp-lib "color-theme-6.6.0/"))
-(defconst solarized-theme-dir (concat private-elisp-lib
-                                  "emacs-color-theme-solarized"))
 
 (if emacs-24-or-later
     (defconst elpa-dir (concat private-elisp "elpa/"))
@@ -52,9 +49,6 @@
 (unless integrated-cc-mode-p
   (add-to-load-path (concat cc-mode-root "lisp/")))
 (add-to-load-path (concat dvc-mode-root "elisp/"))
-(unless emacs-24-or-later
-  (add-to-load-path color-theme-dir))
-(add-to-load-path solarized-theme-dir)
 
 ; Setup info search directories
 (defun add-to-info-path (new)
@@ -100,7 +94,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell php-mode autopair magit org auctex))))
+    (solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell php-mode autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

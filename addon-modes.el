@@ -369,7 +369,6 @@
 (setq solarized-termcolors 256)
 (if emacs-24-or-later
     (progn
-      (add-to-list 'custom-theme-load-path solarized-theme-dir)
       (load-theme 'solarized-dark t))
   (progn
     (require 'color-theme)
