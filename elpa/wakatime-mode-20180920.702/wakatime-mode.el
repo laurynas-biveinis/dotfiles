@@ -6,7 +6,7 @@
 ;; Maintainer: Alan Hamlett <alan@wakatime.com>
 ;; Website: https://wakatime.com
 ;; Keywords: calendar, comm
-;; Package-Version: 20170518.353
+;; Package-Version: 20180920.702
 ;; Version: 1.0.2
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -214,12 +214,16 @@
 
 (defun wakatime-ping ()
   "Send ping notice to WakaTime."
-  (when (buffer-file-name (current-buffer))
+  (when (and
+         (buffer-file-name (current-buffer))
+         (not (auto-save-file-name-p (buffer-file-name (current-buffer)))))
     (wakatime-call nil)))
 
 (defun wakatime-save ()
   "Send save notice to WakaTime."
-  (when (buffer-file-name (current-buffer))
+  (when (and
+         (buffer-file-name (current-buffer))
+         (not (auto-save-file-name-p (buffer-file-name (current-buffer)))))
     (wakatime-call t)))
 
 (defun wakatime-bind-hooks ()

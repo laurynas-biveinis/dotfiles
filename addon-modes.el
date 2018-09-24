@@ -178,12 +178,13 @@
 (define-key global-map "\C-cc" 'org-capture)
 (setq org-use-speed-commands t)
 (setq org-log-done t)
-(setq org-agenda-files (list "~/org/percona.org"
-                             "~/org/phd.org"
-                             "~/org/gtd.org"
-                             "~/org/music.org"))
-(setq org-default-notes-file "~/org/gtd.org")
-(setq org-mobile-inbox-for-pull "~/org/gtd.org")
+(defconst main-org-file (concat org-directory "gtd.org"))
+(setq org-agenda-files (list main-org-file
+                             (concat org-directory "percona.org")
+                             (concat org-directory "phd.org")
+                             (concat org-directory "music.org")))
+(setq org-default-notes-file main-org-file)
+(setq org-mobile-inbox-for-pull main-org-file)
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 (setq org-mobile-use-encryption t)
 (setq org-ctrl-k-protect-subtree t)
@@ -302,9 +303,9 @@
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-capture-templates
-      '(("t" "TODO" entry (file+headline "~/org/gtd.org" "Tasks")
+      '(("t" "TODO" entry (file+headline main-org-file "Tasks")
          "** TODO %?\n  %i\n  %a")
-        ("i" "Inbox" entry (file+headline "~/org/gtd.org" "Inbox")
+        ("i" "Inbox" entry (file+headline main-org-file "Inbox")
          "** INBOX: %?\n  %i\n  %a" :killbuffer)
         ("c" "Current" plain (clock) "" :clock-in :clock-keep)))
 (setq org-todo-keywords

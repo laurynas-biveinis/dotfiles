@@ -1057,7 +1057,7 @@ Set up org-eldoc documentation function.
 
 ;;;***
 
-;;;### (autoloads nil "org-element" "org-element.el" "e62435f392d3c18634ecbe76b12866cd")
+;;;### (autoloads nil "org-element" "org-element.el" "9884bb79ba81b08be137ab07c79303a1")
 ;;; Generated autoloads from org-element.el
 
 (autoload 'org-element-update-syntax "org-element" "\
@@ -2526,8 +2526,8 @@ DIRECTORY is where the directory org-mode/ lives (i.e. the
 
 ;;;***
 
-;;;### (autoloads nil "org-version" "org-version.el" (23418 1164
-;;;;;;  946017 864000))
+;;;### (autoloads nil "org-version" "org-version.el" (23454 61070
+;;;;;;  606985 957000))
 ;;; Generated autoloads from org-version.el
 
 (autoload 'org-release "org-version" "\
@@ -2547,7 +2547,7 @@ The location of ODT styles.")
 
 ;;;***
 
-;;;### (autoloads nil "org" "org.el" (23279 38659 992378 536000))
+;;;### (autoloads nil "org" "org.el" (23427 16131 247531 494000))
 ;;; Generated autoloads from org.el
 
 (autoload 'org-babel-do-load-languages "org" "\
@@ -3694,7 +3694,7 @@ Return output file name.
 
 ;;;***
 
-;;;### (autoloads nil "ox-odt" "ox-odt.el" "9ca93a8f4db1aedd392d836a7e4e6370")
+;;;### (autoloads nil "ox-odt" "ox-odt.el" "07f96439ecf6e83d08d1acc3b3a85023")
 ;;; Generated autoloads from ox-odt.el
 
 (put 'org-odt-preferred-output-format 'safe-local-variable 'stringp)
