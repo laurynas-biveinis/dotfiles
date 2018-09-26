@@ -163,6 +163,8 @@
        auto-mode-alist))
 
 ; easypg
+; Still only works if there's a symlink gpg -> gpg1, and I was not able to
+; find what uses gpg.
 (setq epg-gpg-program "gpg1")
 
 ; --------
