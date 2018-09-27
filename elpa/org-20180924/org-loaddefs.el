@@ -265,17 +265,6 @@ see.
 
 ;;;***
 
-;;;### (autoloads nil "ob-sclang" "ob-sclang.el" (23224 14339 242428
-;;;;;;  171000))
-;;; Generated autoloads from ob-sclang.el
-
-(autoload 'org-babel-execute:sclang "ob-sclang" "\
-Org-mode Babel sclang hook for evaluate `BODY' with `PARAMS'.
-
-\(fn BODY PARAMS)" nil nil)
-
-;;;***
-
 ;;;### (autoloads nil "ob-tangle" "ob-tangle.el" "6f42a8d7a0ef762480d9e747e6ab033a")
 ;;; Generated autoloads from ob-tangle.el
 
@@ -578,26 +567,6 @@ to override `appt-message-warning-time'.
 
 ;;;***
 
-;;;### (autoloads nil "org-annotate-file" "org-annotate-file.el"
-;;;;;;  (23109 8649 998433 412000))
-;;; Generated autoloads from org-annotate-file.el
-
-(autoload 'org-annotate-file "org-annotate-file" "\
-Visit `org-annotate-file-storage-file` and add a new annotation section.
-The annotation is opened at the new section which will be referencing
-the point in the current file.
-
-\(fn)" t nil)
-
-(autoload 'org-annotate-file-show-section "org-annotate-file" "\
-Add or show annotation entry in STORAGE-FILE and return the buffer.
-The annotation will link to ANNOTATED-BUFFER if specified,
-  otherwise the current buffer is used.
-
-\(fn STORAGE-FILE &optional ANNOTATED-BUFFER)" nil nil)
-
-;;;***
-
 ;;;### (autoloads nil "org-archive" "org-archive.el" "b46ec348f237e44615caaa99e48ff324")
 ;;; Generated autoloads from org-archive.el
 
@@ -669,7 +638,7 @@ Shows a list of commands and prompts for another key to execute a command.
 
 ;;;***
 
-;;;### (autoloads nil "org-bbdb" "org-bbdb.el" "fa404717dfcbde54e13812132d9d4850")
+;;;### (autoloads nil "org-bbdb" "org-bbdb.el" "aa953543efa5be33326f443bfe558753")
 ;;; Generated autoloads from org-bbdb.el
 
 (autoload 'org-bbdb-anniversaries "org-bbdb" "\
@@ -954,17 +923,6 @@ Try very hard to provide sensible version strings.
 
 ;;;***
 
-;;;### (autoloads nil "org-contacts" "org-contacts.el" (23109 8649
-;;;;;;  998433 412000))
-;;; Generated autoloads from org-contacts.el
-
-(autoload 'org-contacts "org-contacts" "\
-Create agenda view for contacts matching NAME.
-
-\(fn NAME)" t nil)
-
-;;;***
-
 ;;;### (autoloads nil "org-datetree" "org-datetree.el" "ba966f278edd387a7bef6fe54c90b123")
 ;;; Generated autoloads from org-datetree.el
 
@@ -1041,19 +999,6 @@ with \"H:MM:SS\" format, return `h:mm:ss'.  Otherwise, return
 `h:mm'.
 
 \(fn TIMES)" nil nil)
-
-;;;***
-
-;;;### (autoloads nil "org-eldoc" "org-eldoc.el" (23122 46211 529086
-;;;;;;  791000))
-;;; Generated autoloads from org-eldoc.el
-
-(autoload 'org-eldoc-load "org-eldoc" "\
-Set up org-eldoc documentation function.
-
-\(fn)" t nil)
-
-(add-hook 'org-mode-hook #'org-eldoc-load)
 
 ;;;***
 
@@ -1296,105 +1241,6 @@ Dispatch to the appropriate function to store a link to an IRC session.
 
 ;;;***
 
-;;;### (autoloads nil "org-link-edit" "org-link-edit.el" (23195 45027
-;;;;;;  349190 580000))
-;;; Generated autoloads from org-link-edit.el
-
-(autoload 'org-link-edit-forward-slurp "org-link-edit" "\
-Slurp N trailing blobs into link's description.
-
-  The [[https://orgmode.org/][Org mode]] site
-
-                        |
-                        v
-
-  The [[https://orgmode.org/][Org mode site]]
-
-A blob is a block of non-whitespace characters.  When slurping
-forward, trailing punctuation characters are not considered part
-of a blob.
-
-After slurping, return the slurped text and move point to the
-beginning of the link.
-
-If N is negative, slurp leading blobs instead of trailing blobs.
-
-\(fn &optional N)" t nil)
-
-(autoload 'org-link-edit-backward-slurp "org-link-edit" "\
-Slurp N leading blobs into link's description.
-
-  The [[https://orgmode.org/][Org mode]] site
-
-                        |
-                        v
-
-  [[https://orgmode.org/][The Org mode]] site
-
-A blob is a block of non-whitespace characters.
-
-After slurping, return the slurped text and move point to the
-beginning of the link.
-
-If N is negative, slurp trailing blobs instead of leading blobs.
-
-\(fn &optional N)" t nil)
-
-(autoload 'org-link-edit-forward-barf "org-link-edit" "\
-Barf N trailing blobs from link's description.
-
-  The [[https://orgmode.org/][Org mode]] site
-
-                        |
-                        v
-
-  The [[https://orgmode.org/][Org]] mode site
-
-A blob is a block of non-whitespace characters.
-
-After barfing, return the barfed text and move point to the
-beginning of the link.
-
-If N is negative, barf leading blobs instead of trailing blobs.
-
-\(fn &optional N)" t nil)
-
-(autoload 'org-link-edit-backward-barf "org-link-edit" "\
-Barf N leading blobs from link's description.
-
-  The [[https://orgmode.org/][Org mode]] site
-
-                        |
-                        v
-
-  The Org [[https://orgmode.org/][mode]] site
-
-A blob is a block of non-whitespace characters.
-
-After barfing, return the barfed text and move point to the
-beginning of the link.
-
-If N is negative, barf trailing blobs instead of leading blobs.
-
-\(fn &optional N)" t nil)
-
-(autoload 'org-link-edit-transport-next-link "org-link-edit" "\
-Move the next link to point.
-
-If the region is active, use the selected text as the link's
-description.  Otherwise, use the word at point.
-
-With prefix argument PREVIOUS, move the previous link instead of
-the next link.
-
-Non-interactively, use the text between BEG and END as the
-description, moving the next (or previous) link relative BEG and
-END.
-
-\(fn &optional PREVIOUS BEG END)" t nil)
-
-;;;***
-
 ;;;### (autoloads nil "org-lint" "org-lint.el" (23122 46211 569086
 ;;;;;;  279000))
 ;;; Generated autoloads from org-lint.el
@@ -1409,174 +1255,6 @@ checker by its name.
 ARG can also be a list of checker names, as symbols, to run.
 
 \(fn &optional ARG)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "org-mac-link" "org-mac-link.el" (23122 46211
-;;;;;;  533086 741000))
-;;; Generated autoloads from org-mac-link.el
-
-(autoload 'org-mac-grab-link "org-mac-link" "\
-Prompt for an application to grab a link from.
-When done, go grab the link, and insert it at point.
-
-\(fn)" t nil)
-
-(autoload 'org-mac-firefox-get-frontmost-url "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-firefox-insert-frontmost-url "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-vimperator-get-frontmost-url "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-vimperator-insert-frontmost-url "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-chrome-get-frontmost-url "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-chrome-insert-frontmost-url "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-safari-get-frontmost-url "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-safari-insert-frontmost-url "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-together-get-selected "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-together-insert-selected "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-finder-item-get-selected "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-finder-insert-selected "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-addressbook-item-get-selected "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-addressbook-insert-selected "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-skim-get-page "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-skim-insert-page "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-acrobat-get-page "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-acrobat-insert-page "org-mac-link" "\
-
-
-\(fn)" t nil)
-
-(autoload 'org-mac-outlook-message-get-links "org-mac-link" "\
-Create links to the messages currently selected or flagged in Microsoft Outlook.app.
-This will use AppleScript to get the message-id and the subject of the
-messages in Microsoft Outlook.app and make a link out of it.
-When SELECT-OR-FLAG is \"s\", get the selected messages (this is also
-the default).  When SELECT-OR-FLAG is \"f\", get the flagged messages.
-The Org-syntax text will be pushed to the kill ring, and also returned.
-
-\(fn &optional SELECT-OR-FLAG)" t nil)
-
-(autoload 'org-mac-outlook-message-insert-selected "org-mac-link" "\
-Insert a link to the messages currently selected in Microsoft Outlook.app.
-This will use AppleScript to get the message-id and the subject
-of the active mail in Microsoft Outlook.app and make a link out
-of it.
-
-\(fn)" t nil)
-
-(autoload 'org-mac-outlook-message-insert-flagged "org-mac-link" "\
-Asks for an org buffer and a heading within it, and replace message links.
-If heading exists, delete all mac-outlook:// links within
-heading's first level.  If heading doesn't exist, create it at
-point-max.  Insert list of mac-outlook:// links to flagged mail
-after heading.
-
-\(fn ORG-BUFFER ORG-HEADING)" t nil)
-
-(autoload 'org-mac-evernote-note-insert-selected "org-mac-link" "\
-Insert a link to the notes currently selected in Evernote.app.
-This will use AppleScript to get the note id and the title of the
-note(s) in Evernote.app and make a link out of it/them.
-
-\(fn)" t nil)
-
-(autoload 'org-mac-devonthink-item-insert-selected "org-mac-link" "\
-Insert a link to the item(s) currently selected in DEVONthink Pro Office.
-This will use AppleScript to get the `uuid'(s) and the name(s) of the
-selected items in DEVONthink Pro Office and make link(s) out of it/them.
-
-\(fn)" t nil)
-
-(autoload 'org-mac-message-get-links "org-mac-link" "\
-Create links to the messages currently selected or flagged in Mail.app.
-This will use AppleScript to get the message-id and the subject of the
-messages in Mail.app and make a link out of it.
-When SELECT-OR-FLAG is \"s\", get the selected messages (this is also
-the default).  When SELECT-OR-FLAG is \"f\", get the flagged messages.
-The Org-syntax text will be pushed to the kill ring, and also returned.
-
-\(fn &optional SELECT-OR-FLAG)" t nil)
-
-(autoload 'org-mac-message-insert-selected "org-mac-link" "\
-Insert a link to the messages currently selected in Mail.app.
-This will use AppleScript to get the message-id and the subject of the
-active mail in Mail.app and make a link out of it.
-
-\(fn)" t nil)
-
-(autoload 'org-mac-message-insert-flagged "org-mac-link" "\
-Asks for an org buffer and a heading within it, and replace message links.
-If heading exists, delete all message:// links within heading's first
-level.  If heading doesn't exist, create it at point-max.  Insert
-list of message:// links to flagged mail after heading.
-
-\(fn ORG-BUFFER ORG-HEADING)" t nil)
 
 ;;;***
 
@@ -1610,31 +1288,6 @@ agenda view showing the flagged items.
 
 ;;;***
 
-;;;### (autoloads nil "org-passwords" "org-passwords.el" (23195 45027
-;;;;;;  349190 580000))
-;;; Generated autoloads from org-passwords.el
-
-(autoload 'org-passwords-mode "org-passwords" "\
-Mode for storing passwords
-
-\(fn)" t nil)
-
-(autoload 'org-passwords "org-passwords" "\
-Open the password file. Open the password file defined by the
-variable `org-password-file' in read-only mode and kill that
-buffer later according to the value of the variable
-`org-passwords-time-opened'. It also adds the `org-password-file'
-to the auto-mode-alist so that it is opened with its mode being
-`org-passwords-mode'.
-
-With prefix arg ARG, the command does not set up a timer to kill the buffer.
-
-With a double prefix arg \\[universal-argument] \\[universal-argument], open the file for editing.
-
-\(fn &optional ARG)" t nil)
-
-;;;***
-
 ;;;### (autoloads nil "org-plot" "org-plot.el" "85b14ab93a67abe34c254eb6c55bd79c")
 ;;; Generated autoloads from org-plot.el
 
@@ -1644,88 +1297,6 @@ If not given options will be taken from the +PLOT
 line directly before or after the table.
 
 \(fn &optional PARAMS)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "org-registry" "org-registry.el" (23109 8650
-;;;;;;  6433 311000))
-;;; Generated autoloads from org-registry.el
-
-(autoload 'org-registry-show "org-registry" "\
-Show Org files where there are links pointing to the current
-buffer.
-
-\(fn &optional VISIT)" t nil)
-
-(autoload 'org-registry-visit "org-registry" "\
-If an Org file contains a link to the current location, visit
-this file.
-
-\(fn)" t nil)
-
-(autoload 'org-registry-initialize "org-registry" "\
-Initialize `org-registry-alist'.
-If FROM-SCRATCH is non-nil or the registry does not exist yet,
-create a new registry from scratch and eval it. If the registry
-exists, eval `org-registry-file' and make it the new value for
-`org-registry-alist'.
-
-\(fn &optional FROM-SCRATCH)" t nil)
-
-(autoload 'org-registry-insinuate "org-registry" "\
-Call `org-registry-update' after saving in Org-mode.
-Use with caution.  This could slow down things a bit.
-
-\(fn)" t nil)
-
-(autoload 'org-registry-update "org-registry" "\
-Update the registry for the current Org file.
-
-\(fn)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "org-screenshot" "org-screenshot.el" (23195
-;;;;;;  45027 349190 580000))
-;;; Generated autoloads from org-screenshot.el
-
-(autoload 'org-screenshot-take "org-screenshot" "\
-Take a screenshot and insert link to it at point, if image
-display is already on (see \\[org-toggle-inline-images])
-screenshot will be displayed as an image
-
-Screen area for the screenshot is selected with the mouse, left
-click on a window screenshots that window, while left click and
-drag selects a region. Pressing any key cancels the screen shot
-
-With `C-u' universal argument waits one second after target is
-selected before taking the screenshot. With double `C-u' wait two
-seconds.
-
-With triple `C-u' wait 3 seconds, and also rings the bell when
-screenshot is done, any more `C-u' after that increases delay by
-2 seconds
-
-\(fn &optional DELAY)" t nil)
-
-(autoload 'org-screenshot-rotate-prev "org-screenshot" "\
-Rotate last screenshot with one of the previously taken
-screenshots from the same directory. If DIR is negative, rotate
-in the other direction
-
-\(fn DIR)" t nil)
-
-(autoload 'org-screenshot-rotate-next "org-screenshot" "\
-Rotate last screenshot with one of the previously taken
-screenshots from the same directory. If DIR is negative, rotate
-in the other direction
-
-\(fn DIR)" t nil)
-
-(autoload 'org-screenshot-show-unused "org-screenshot" "\
-Open A Dired buffer with unused screenshots marked
-
-\(fn)" t nil)
 
 ;;;***
 
@@ -2493,41 +2064,8 @@ using three `C-u' prefix arguments.
 
 ;;;***
 
-;;;### (autoloads nil "org-toc" "org-toc.el" (23122 46211 533086
-;;;;;;  741000))
-;;; Generated autoloads from org-toc.el
-
-(autoload 'org-toc-show "org-toc" "\
-Show the table of contents of the current Org-mode buffer.
-
-\(fn &optional DEPTH POSITION)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "org-track" "org-track.el" (23195 45027 349190
-;;;;;;  580000))
-;;; Generated autoloads from org-track.el
-
-(autoload 'org-track-fetch-package "org-track" "\
-Fetch Org package depending on `org-track-fetch-package-extension'.
-If DIRECTORY is defined, unpack the package there, i.e. add the
-subdirectory org-mode/ to DIRECTORY.
-
-\(fn &optional DIRECTORY)" t nil)
-
-(autoload 'org-track-compile-org "org-track" "\
-Compile all *.el files that come with org-mode.
-Generate the autoloads file `org-loaddefs.el'.
-
-DIRECTORY is where the directory org-mode/ lives (i.e. the
-          parent directory of your local repo.
-
-\(fn &optional DIRECTORY)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "org-version" "org-version.el" (23454 61070
-;;;;;;  606985 957000))
+;;;### (autoloads nil "org-version" "org-version.el" (23464 10504
+;;;;;;  806120 704000))
 ;;; Generated autoloads from org-version.el
 
 (autoload 'org-release "org-version" "\
@@ -3193,42 +2731,6 @@ Return output file name.
 
 ;;;***
 
-;;;### (autoloads nil "ox-freemind" "ox-freemind.el" (23122 46211
-;;;;;;  533086 741000))
-;;; Generated autoloads from ox-freemind.el
-
-(autoload 'org-freemind-export-to-freemind "ox-freemind" "\
-Export current buffer to a Freemind Mindmap file.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting file should be accessible through
-the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-When optional argument BODY-ONLY is non-nil, only write code
-between \"<body>\" and \"</body>\" tags.
-
-EXT-PLIST, when provided, is a property list with external
-parameters overriding Org default settings, but still inferior to
-file-local settings.
-
-Return output file's name.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t nil)
-
-;;;***
-
 ;;;### (autoloads nil "ox-html" "ox-html.el" "b2b303489000b91b8507671209cc2924")
 ;;; Generated autoloads from ox-html.el
 
@@ -3382,107 +2884,6 @@ The file is stored under the name chosen in
 `org-icalendar-combined-agenda-file'.
 
 \(fn &optional ASYNC)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "ox-koma-letter" "ox-koma-letter.el" (23122
-;;;;;;  46211 537086 689000))
-;;; Generated autoloads from ox-koma-letter.el
-
-(autoload 'org-koma-letter-export-as-latex "ox-koma-letter" "\
-Export current buffer as a KOMA Scrlttr2 letter.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting buffer should be accessible
-through the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-When optional argument BODY-ONLY is non-nil, only write code
-between \"\\begin{letter}\" and \"\\end{letter}\".
-
-EXT-PLIST, when provided, is a proeprty list with external
-parameters overriding Org default settings, but still inferior to
-file-local settings.
-
-Export is done in a buffer named \"*Org KOMA-LETTER Export*\".  It
-will be displayed if `org-export-show-temporary-export-buffer' is
-non-nil.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t nil)
-
-(autoload 'org-koma-letter-export-to-latex "ox-koma-letter" "\
-Export current buffer as a KOMA Scrlttr2 letter (tex).
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting file should be accessible through
-the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-When optional argument BODY-ONLY is non-nil, only write code
-between \"\\begin{letter}\" and \"\\end{letter}\".
-
-EXT-PLIST, when provided, is a property list with external
-parameters overriding Org default settings, but still inferior to
-file-local settings.
-
-When optional argument PUB-DIR is set, use it as the publishing
-directory.
-
-Return output file's name.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t nil)
-
-(autoload 'org-koma-letter-export-to-pdf "ox-koma-letter" "\
-Export current buffer as a KOMA Scrlttr2 letter (pdf).
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting file should be accessible through
-the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-When optional argument BODY-ONLY is non-nil, only write code
-between \"\\begin{letter}\" and \"\\end{letter}\".
-
-EXT-PLIST, when provided, is a property list with external
-parameters overriding Org default settings, but still inferior to
-file-local settings.
-
-Return PDF file's name.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t nil)
 
 ;;;***
 
@@ -3874,157 +3275,6 @@ With a prefix argument, force publishing of all files in
 the project.
 
 \(fn &optional FORCE ASYNC)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "ox-rss" "ox-rss.el" (23195 45027 349190 580000))
-;;; Generated autoloads from ox-rss.el
-
-(autoload 'org-rss-export-as-rss "ox-rss" "\
-Export current buffer to a RSS buffer.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting buffer should be accessible
-through the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-Export is done in a buffer named \"*Org RSS Export*\", which will
-be displayed when `org-export-show-temporary-export-buffer' is
-non-nil.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t nil)
-
-(autoload 'org-rss-export-to-rss "ox-rss" "\
-Export current buffer to a RSS file.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting file should be accessible through
-the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-Return output file's name.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t nil)
-
-(autoload 'org-rss-publish-to-rss "ox-rss" "\
-Publish an org file to RSS.
-
-FILENAME is the filename of the Org file to be published.  PLIST
-is the property list for the given project.  PUB-DIR is the
-publishing directory.
-
-Return output file name.
-
-\(fn PLIST FILENAME PUB-DIR)" nil nil)
-
-;;;***
-
-;;;### (autoloads nil "ox-taskjuggler" "ox-taskjuggler.el" (23122
-;;;;;;  46211 537086 689000))
-;;; Generated autoloads from ox-taskjuggler.el
-
-(autoload 'org-taskjuggler-export "ox-taskjuggler" "\
-Export current buffer to a TaskJuggler file.
-
-The exporter looks for a tree with tag that matches
-`org-taskjuggler-project-tag' and takes this as the tasks for
-this project.  The first node of this tree defines the project
-properties such as project name and project period.
-
-If there is a tree with tag that matches
-`org-taskjuggler-resource-tag' this tree is taken as resources
-for the project.  If no resources are specified, a default
-resource is created and allocated to the project.
-
-Also the TaskJuggler project will be created with default reports
-as defined in `org-taskjuggler-default-reports'.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting file should be accessible through
-the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-Return output file's name.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t nil)
-
-(autoload 'org-taskjuggler-export-and-process "ox-taskjuggler" "\
-Export current buffer to a TaskJuggler file and process it.
-
-The exporter looks for a tree with tag that matches
-`org-taskjuggler-project-tag' and takes this as the tasks for
-this project.  The first node of this tree defines the project
-properties such as project name and project period.
-
-If there is a tree with tag that matches
-`org-taskjuggler-resource-tag' this tree is taken as resources
-for the project.  If no resources are specified, a default
-resource is created and allocated to the project.
-
-Also the TaskJuggler project will be created with default reports
-as defined in `org-taskjuggler-default-reports'.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-Return a list of reports.
-
-\(fn &optional SUBTREEP VISIBLE-ONLY)" t nil)
-
-(autoload 'org-taskjuggler-export-process-and-open "ox-taskjuggler" "\
-Export current buffer to a TaskJuggler file, process and open it.
-
-Export and process the file using
-`org-taskjuggler-export-and-process' and open the generated
-reports with a browser.
-
-If you are targeting TaskJuggler 2.4 (see
-`org-taskjuggler-target-version') the processing and display of
-the reports is done using the TaskJuggler GUI.
-
-\(fn &optional SUBTREEP VISIBLE-ONLY)" t nil)
 
 ;;;***
 
