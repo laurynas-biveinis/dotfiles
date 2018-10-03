@@ -1,7 +1,8 @@
 ; MySQL work setup
 
-(defconst mysql-git-path "~/percona/mysql-server"
-  "Default path to MySQL git checkout.")
+; TODO: provide this as default value to switch-mysql-build
+;(defconst mysql-git-path "~/percona/mysql-server"
+;  "Default path to MySQL git checkout.")
 
 (defconst cdb-json-fn "compile_commands.json"
   "Default file name for compilation database in JSON format.")
@@ -18,14 +19,16 @@
 (defvar mysql-build-dir ""
   "Currently active MySQL build directory.")
 
-(defun switch-mysql-build (mysql-build-dir-arg)
-  "Switch MySQL build directory to MYSQL-BUILD-DIR-ARG."
-  (interactive "DSwitch to MySQL build directory: ")
+(defun switch-mysql-build (mysql-build-dir-arg mysql-work-dir-arg)
+  "Switch MySQL git worktree and build directories.
+The build directory is switched to MYSQL-BUILD-DIR-ARG and the git worktree to
+MYSQL-WORK-DIR-ARG."
+  (interactive "DSwitch to MySQL build directory: \nDFor git worktree at: ")
   (require 'irony)
   (setq mysql-build-dir (file-name-as-directory mysql-build-dir-arg))
   (let ((mysql-build-dir-cdb (expand-file-name cdb-json-fn mysql-build-dir)))
     (irony-cdb-json-add-compile-commands-path
-     mysql-git-path mysql-build-dir-cdb)))
+     mysql-work-dir-arg mysql-build-dir-cdb)))
 
 (defun compile-mysql (num-of-workers)
   "Compile preconfigured MySQL in the current MySQL build directory.
