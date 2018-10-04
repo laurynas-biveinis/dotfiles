@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -u
+
+source library.bash
+
+function pull_repo () {
+    local path=$1
+    local fullpath=$WORK_SRC_ROOT/$path
+    pushd $fullpath
+    git fetch --all
+    popd
+}
+
+function update_worktree () {
+    local worktree=$1
+    local fullpath=$WORK_SRC_ROOT/$worktree
+    pushd $fullpath
+    git pull
+    popd
+}
+
+for repo in $WORK_REPOS_TO_PULL; do
+    pull_repo $repo
+done
+
+for worktree in $WORK_TREES_TO_UPDATE; do
+    update_worktree $worktree
+done
+
+for worktree in $WORK_TREES_TO_UPDATE; do
+    for buildtree in $WORK_SRC_ROOT/obj-$worktree*; do
+        [ -e "$buildtree" -a -d "$buildtree" ] || continue
+        if ! is_on_ac; then
+            echo Laptop is on battery: skipping incremental rebuild of $buildtree
+            continue
+        fi
+        pushd $buildtree
+        make -j $MAKE_J
+        popd
+    done
+done
