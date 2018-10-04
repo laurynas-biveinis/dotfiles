@@ -1,13 +1,15 @@
-;;; ssh.el --- remote login interface
+;;; ssh.el --- Support for remote logins using ssh.
 
-;; Copyright (C) 1996, 97, 98, 2001 Noah S. Friedman
+;; Copyright (C) 1996, 97, 98, 2001, Noah S. Friedman
+;; Copyright (C) 2010-2012, Ian Eure
 
 ;; Author: Noah Friedman <friedman@splode.com>
+;; Maintainer: Ian Eure <ian.eure@gmail.com>
 ;; Maintainer: friedman@splode.com
+;; Version: 1.2
+;; Package-Version: 20120904.2042
 ;; Keywords: unix, comm
 ;; Created: 1996-07-03
-
-;; $Id: ssh.el,v 1.9 2002/07/04 02:09:12 friedman Exp $
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -137,6 +139,11 @@ this variable is set from that."
 
 (defvar ssh-history nil)
 
+;;;###
+(defun ssh-hostname-at-point ()
+  (let ((hostname (thing-at-point 'url)))
+    (and hostname (substring-no-properties hostname 7))))
+
 ;;;###autoload
 (defun ssh (input-args &optional buffer)
   "Open a network login connection via `ssh' with args INPUT-ARGS.
@@ -179,18 +186,21 @@ The variable `ssh-x-display-follow-current-frame' can be used to specify
 how ssh X display tunelling interacts with frames on remote displays."
   (interactive (list
 		(read-from-minibuffer "ssh arguments (hostname first): "
-				      nil nil nil 'ssh-history)
+                      (ssh-hostname-at-point)
+                      nil nil 'ssh-history)
 		current-prefix-arg))
 
   (let* ((process-connection-type ssh-process-connection-type)
          (args (ssh-parse-words input-args))
-	 (host (car args))
-	 (user (or (car (cdr (member "-l" args)))
+         (host-parts (split-string (car args) "@"))
+         (host (car (last host-parts)))
+         (user (or (cadr (member "-l" args))
+                   (if (= 2 (length host-parts)) (car host-parts))
                    (user-login-name)))
          (buffer-name (if (string= user (user-login-name))
-                          (format "*ssh-%s*" host)
-                        (format "*ssh-%s@%s*" user host)))
-	 proc)
+                          (format "*ssh %s*" host)
+                        (format "*ssh %s@%s*" user host)))
+         proc)
 
     (and ssh-explicit-args
          (setq args (append ssh-explicit-args args)))
@@ -250,7 +260,8 @@ how ssh X display tunelling interacts with frames on remote displays."
                 ((null ssh-directory-tracking-mode))
                 (t
                  (cd-absolute (concat comint-file-name-prefix "~/"))))
-        (error nil))))))
+        (error nil)))))
+  buffer)
 
 (put 'ssh-mode 'mode-class 'special)
 
