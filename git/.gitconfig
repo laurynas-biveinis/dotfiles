@@ -1,0 +1,9 @@
+[user]
+	name = Laurynas Biveinis
+	email = laurynas.biveinis@gmail.com
+[magit]
+	hideCampaign = true
+[diff]
+	renamelimit = 100000
+[fetch]
+	prune = true
