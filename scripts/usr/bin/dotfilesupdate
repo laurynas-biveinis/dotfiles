@@ -5,5 +5,5 @@ set -u
 readonly DOTFILES_ROOT=~/dotfiles
 
 pushd $DOTFILES_ROOT
-git pull
+git pull origin-ro master
 popd
