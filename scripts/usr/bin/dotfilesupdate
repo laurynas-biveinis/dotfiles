@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -u
+
+readonly DOTFILES_ROOT=~/dotfiles
+
+pushd $DOTFILES_ROOT
+git pull
+popd
