@@ -8,8 +8,6 @@ ulimit -c unlimited
 export LC_TYPE=C
 export LANG=C
 export LC_CTYPE=C
-export EDITOR="emacsclient -c"
-export VISUAL="emacsclient -c"
 source /usr/local/etc/bash_completion.d/git-completion.bash
 export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=/usr/local/lib --mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1 --mysqld-env=DYLD_INSERT_LIBRARIES=/usr/local/lib/libeatmydata.dylib"
 export MYALL="-DBUILD_CONFIG=mysql_release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
@@ -29,3 +27,7 @@ alias cf_on="git config --local include.path ../.gitconfig"
 alias cf_off="git config --local --unset include.path"
 
 source $HOME/usr/src/bash-wakatime/bash-wakatime.sh
+
+for script in $HOME/.bash.d/rc/*; do
+    source $script
+done
