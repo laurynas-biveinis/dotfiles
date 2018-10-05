@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -u
+
+readonly NIGHTLY=~/nightly.out
+
+if [ ! -f $NIGHTLY ]; then
+    echo "$NIGHTLY not present"
+    exit
+fi
+
+less ~/nightly.out
+
+while true; do
+      read -p "Delete $NIGHTLY? " yn
+      case $yn in
+          [Yy]* ) rm $NIGHTLY; break;;
+          [Nn]* ) exit;;
+          * ) echo "Please answer y or n";;
+      esac
+done
