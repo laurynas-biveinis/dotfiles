@@ -279,51 +279,6 @@ already at that position, move point to the beginning of line."
 
 ;; MySQL
 
-(c-add-style "MySQL-5.7"
-             '("K&R"
-               (indent-tabs-mode . nil)
-               (c-basic-offset . 2)
-               (c-comment-only-line-offset . 0)
-               (c-offsets-alist . ((statement-block-intro . +)
-                                   (knr-argdecl-intro . 0)
-                                   (substatement-open . 0)
-                                   (label . -)
-                                   (statement-cont . +)
-                                   (arglist-intro . c-lineup-arglist-intro-after-paren)
-                                   (arglist-close . c-lineup-arglist)
-                                   (innamespace . 0)
-                                   (inline-open . 0)
-                                   (statement-case-open . +)))))
-
-(c-add-style "InnoDB-5.7"
-             '("K&R"
-               (indent-tabs-mode . t)
-               (c-basic-offset . 8)
-               (c-comment-only-line-offset . 0)
-               (c-offsets-alist . ((statement-block-intro . +)
-                                   (knr-argdecl-intro . 0)
-                                   (substatement-open . 0)
-                                   (label . [0])
-                                   (c . 0)
-                                   (statement-cont . +)
-                                   (arglist-intro . +)
-                                   (arglist-close . c-lineup-arglist)
-                                   (innamespace . 0)
-                                   (inline-open . 0)
-                                   (statement-case-open . +)
-                                   ))
-               ))
-
-(add-to-list 'auto-mode-alist '("\\.ic\\'" . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.i\\'" . c++-mode))
-
-(dir-locals-set-class-variables 'innodb-source-5.7
-                                '((c-mode . ((c-file-style . "InnoDB-5.7")))
-                                  (c++-mode . ((c-file-style . "InnoDB-5.7")))))
-(dir-locals-set-class-variables 'mysql-source-5.7
-                                '((c-mode . ((c-file-style . "MySQL-5.7")))
-                                  (c++-mode . ((c-file-style . "MySQL-5.7")))))
-
 (setq c-doc-comment-style
       '((c-mode . javadoc)
         (c++-mode . javadoc)))
@@ -347,21 +302,6 @@ already at that position, move point to the beginning of line."
 (defadvice yank-pop (after indent-region activate)
   (if (member major-mode auto-indent-paste-modes)
       (indent-region (region-beginning) (region-end) nil)))
-
-; sql-mode
-(add-to-list 'auto-mode-alist '("\\.test\\'" . sql-mode)) ; MySQL test files
-
-; Thanks to Alexey Kopytov
-(add-hook 'sql-mode-hook 'my-sql-mode-hook)
-(defun my-sql-mode-hook ()
-  (define-key sql-mode-map (kbd "RET") 'newline-and-indent)
-
-  ;; Make # start a new line comment in SQL. This is a MySQL-specific
-  ;; syntax.
-
-  (modify-syntax-entry ?# "< b" sql-mode-syntax-table)
-  (set-syntax-table sql-mode-syntax-table)
-  )
 
 ; windmove
 (when (fboundp 'windmove-default-keybindings)
