@@ -3,7 +3,19 @@
 set -u
 
 readonly DOTFILES_ROOT=~/dotfiles
+readonly DOTFILES_SETUP_DIR=$DOTFILES_ROOT/dotfiles
+readonly MANDATORY_MODULES=bash git scripts
+readonly EXTRA_MODULES_FILE=$DOTFILES_SETUP_DIR/extra_modules
 
 pushd $DOTFILES_ROOT
 git pull origin-ro master
+for module in $MANDATORY_MODULES; do
+    stow $module
+done
+# Extra modules, if defined
+for module in $(cat $EXTRA_MODULES_FILE); do
+    stow $module
+done
+# TODO: check ~ for stray symlinks (since we cannot do stow -D before git pull)
+# TODO: allow each module to have setup script here (use case: launchd)
 popd
