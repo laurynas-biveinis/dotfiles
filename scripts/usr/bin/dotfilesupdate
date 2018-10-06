@@ -4,16 +4,18 @@ set -u
 
 readonly DOTFILES_ROOT=~/dotfiles
 readonly DOTFILES_SETUP_DIR=$DOTFILES_ROOT/dotfiles
-readonly MANDATORY_MODULES=bash git scripts
+readonly MANDATORY_MODULES="bash git scripts"
 readonly EXTRA_MODULES_FILE=$DOTFILES_SETUP_DIR/extra_modules
 
 pushd $DOTFILES_ROOT
 git pull origin-ro master
 for module in $MANDATORY_MODULES; do
+    echo "Re-creating symlinks for $module"
     stow $module
 done
 # Extra modules, if defined
 for module in $(cat $EXTRA_MODULES_FILE); do
+    echo "Re-creating symlinks for optional $module"
     stow $module
 done
 # TODO: check ~ for stray symlinks (since we cannot do stow -D before git pull)
