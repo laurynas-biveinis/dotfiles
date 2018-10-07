@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -u
+
+source ~/.noninteractive_init.bash
+
+for script in $HOME/.nightly/*; do
+    echo "Running nightly $script..."
+    source $script
+done
