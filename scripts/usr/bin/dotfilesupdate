@@ -18,6 +18,9 @@ for module in $(cat $EXTRA_MODULES_FILE); do
     echo "Re-creating symlinks for optional $module"
     stow $module
 done
-# TODO: check ~ for stray symlinks (since we cannot do stow -D before git pull)
+# Since we cannot do stow -D before git pull, check manually for any now-stray symlinks
+echo "Stray symlinks in $HOME, if any:"
+find ~ -path ~/Library/Containers -prune -o -type l ! -exec test -e {} \; -print 2>/dev/null
+echo "End of stray symlink list"
 # TODO: allow each module to have setup script here (use case: launchd)
 popd
