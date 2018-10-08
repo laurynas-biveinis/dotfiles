@@ -1,9 +1,0 @@
-#!/bin/bash
-
-set -u
-
-readonly NIGHTLY_PLIST=~/Library/LaunchAgents/nightly.plist
-
-launchctl unload $NIGHTLY_PLIST
-launchctl load $NIGHTLY_PLIST
-

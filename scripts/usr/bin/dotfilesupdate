@@ -22,8 +22,4 @@ done
 echo "Stray symlinks in $HOME, if any:"
 find ~ -path ~/Library/Containers -prune -o -type l ! -exec test -e {} \; -print 2>/dev/null
 echo "End of stray symlink list"
-for script in $HOME/.dotfiles/post-update/*; do
-    echo "Running post-update script $script..."
-    source $script
-done
 popd

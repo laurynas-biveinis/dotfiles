@@ -4,7 +4,7 @@ set -u
 
 source ~/.noninteractive_init.bash
 
-for script in $HOME/.nightly/*; do
-    echo "Running nightly $script..."
-    source $script
+for nightly_script in $HOME/.nightly/*; do
+    echo "Running nightly $nightly_script..."
+    source $nightly_script
 done
