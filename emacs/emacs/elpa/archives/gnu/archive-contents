@@ -475,6 +475,13 @@
 	   "Color unbalanced parentheses and parentheses inconsistent with indentation" single
 	   ((:url . "http://elpa.gnu.org/packages/flylisp.html")
 	    (:keywords))])
+ (fountain-mode .
+		[(2 6 0)
+		 ((emacs
+		   (24 5)))
+		 "Major mode for screenwriting in Fountain markup" single
+		 ((:url . "https://github.com/rnkn/fountain-mode")
+		  (:keywords "wp" "text"))])
  (frame-tabs .
 	     [(1 1)
 	      nil "show buffer tabs in side window" single
@@ -1038,7 +1045,7 @@
 	      ((:url . "http://elpa.gnu.org/packages/smart-yank.html")
 	       (:keywords "convenience"))])
  (sml-mode .
-	   [(6 8)
+	   [(6 9)
 	    ((emacs
 	      (24))
 	     (cl-lib
