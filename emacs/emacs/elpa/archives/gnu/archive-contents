@@ -480,7 +480,7 @@
 		 ((emacs
 		   (24 5)))
 		 "Major mode for screenwriting in Fountain markup" single
-		 ((:url . "https://github.com/rnkn/fountain-mode")
+		 ((:url . "http://elpa.gnu.org/packages/fountain-mode.html")
 		  (:keywords "wp" "text"))])
  (frame-tabs .
 	     [(1 1)
