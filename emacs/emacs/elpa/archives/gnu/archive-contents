@@ -448,9 +448,9 @@
 	       ((:keywords "calendar")
 		(:url . "http://elpa.gnu.org/packages/excorporate.html"))])
  (exwm .
-       [(0 19)
+       [(0 20)
 	((xelb
-	  (0 15)))
+	  (0 16)))
 	"Emacs X Window Manager" tar
 	((:keywords "unix")
 	 (:url . "https://github.com/ch11ng/exwm"))])
@@ -476,7 +476,7 @@
 	   ((:url . "http://elpa.gnu.org/packages/flylisp.html")
 	    (:keywords))])
  (fountain-mode .
-		[(2 6 0)
+		[(2 6 1)
 		 ((emacs
 		   (24 5)))
 		 "Major mode for screenwriting in Fountain markup" single
@@ -544,6 +544,11 @@
 	 "play GNU Go in a buffer" tar
 	 ((:keywords "games" "processes")
 	  (:url . "http://www.gnuvola.org/software/gnugo/"))])
+ (gnus-mock .
+	    [(0 1 1)
+	     nil "Mock Gnus installation for testing" single
+	     ((:url . "http://elpa.gnu.org/packages/gnus-mock.html")
+	      (:keywords))])
  (heap .
        [(0 5)
 	nil "Heap (a.k.a. priority queue) data structure" single
@@ -1275,7 +1280,7 @@
 	 ((:url . "http://elpa.gnu.org/packages/xclip.html")
 	  (:keywords "convenience" "tools"))])
  (xelb .
-       [(0 15)
+       [(0 16)
 	((emacs
 	  (24 4))
 	 (cl-generic

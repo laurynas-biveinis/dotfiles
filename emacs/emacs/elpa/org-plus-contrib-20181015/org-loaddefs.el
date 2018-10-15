@@ -304,8 +304,8 @@ used to limit the exported source code blocks by language.
 
 ;;;***
 
-;;;### (autoloads nil "org-agenda" "org-agenda.el" (23266 31379 196273
-;;;;;;  327000))
+;;;### (autoloads nil "org-agenda" "org-agenda.el" (23491 55426 988377
+;;;;;;  952000))
 ;;; Generated autoloads from org-agenda.el
 
 (autoload 'org-toggle-sticky-agenda "org-agenda" "\
@@ -2526,8 +2526,8 @@ DIRECTORY is where the directory org-mode/ lives (i.e. the
 
 ;;;***
 
-;;;### (autoloads nil "org-version" "org-version.el" (23482 40462
-;;;;;;  133185 67000))
+;;;### (autoloads nil "org-version" "org-version.el" (23491 55438
+;;;;;;  816285 823000))
 ;;; Generated autoloads from org-version.el
 
 (autoload 'org-release "org-version" "\

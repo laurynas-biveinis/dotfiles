@@ -293,8 +293,8 @@ used to limit the exported source code blocks by language.
 
 ;;;***
 
-;;;### (autoloads nil "org-agenda" "org-agenda.el" (23266 31379 196273
-;;;;;;  327000))
+;;;### (autoloads nil "org-agenda" "org-agenda.el" (23491 55426 988377
+;;;;;;  952000))
 ;;; Generated autoloads from org-agenda.el
 
 (autoload 'org-toggle-sticky-agenda "org-agenda" "\
@@ -2064,8 +2064,8 @@ using three `C-u' prefix arguments.
 
 ;;;***
 
-;;;### (autoloads nil "org-version" "org-version.el" (23482 40456
-;;;;;;  465229 461000))
+;;;### (autoloads nil "org-version" "org-version.el" (23491 55432
+;;;;;;  820332 526000))
 ;;; Generated autoloads from org-version.el
 
 (autoload 'org-release "org-version" "\
