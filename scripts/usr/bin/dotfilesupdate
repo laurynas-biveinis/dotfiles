@@ -7,6 +7,8 @@ readonly DOTFILES_SETUP_DIR=$DOTFILES_ROOT/dotfiles
 readonly MANDATORY_MODULES="bash git scripts"
 readonly EXTRA_MODULES_FILE=$DOTFILES_SETUP_DIR/extra_modules
 
+readonly IGNORE_FOR_SYMLINKS="Library/Containers Library/Caches/com.apple.bird"
+
 pushd $DOTFILES_ROOT
 git pull origin-ro master
 for module in $MANDATORY_MODULES; do
@@ -20,6 +22,10 @@ for module in $(cat $EXTRA_MODULES_FILE); do
 done
 # Since we cannot do stow -D before git pull, check manually for any now-stray symlinks
 echo "Stray symlinks in $HOME, if any:"
-find ~ -path ~/Library/Containers -prune -o -type l ! -exec test -e {} \; -print 2>/dev/null
+find_ignore_paths=""
+for find_ignore_path in $IGNORE_FOR_SYMLINKS; do
+    find_ignore_paths+="-path $HOME/$find_ignore_path -prune -o "
+done
+find ~ $find_ignore_paths -type l ! -exec test -e {} \; -print 2>/dev/null
 echo "End of stray symlink list"
 popd
