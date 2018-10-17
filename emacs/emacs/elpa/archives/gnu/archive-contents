@@ -28,7 +28,7 @@
 	       ((:keywords "languages" "ada")
 		(:url . "http://stephe-leake.org/ada/arm.html"))])
  (adaptive-wrap .
-		[(0 6)
+		[(0 7)
 		 nil "Smart line-wrapping with wrap-prefix" single
 		 ((:url . "http://elpa.gnu.org/packages/adaptive-wrap.html")
 		  (:keywords))])
@@ -710,7 +710,7 @@
 	  ((:url . "https://github.com/fourier/loccur")
 	   (:keywords "matching"))])
  (markchars .
-	    [(0 2 0)
+	    [(0 2 1)
 	     nil "Mark chars fitting certain characteristics" single
 	     ((:url . "http://elpa.gnu.org/packages/markchars.html")
 	      (:keywords))])
@@ -1059,7 +1059,7 @@
 	    ((:url . "http://elpa.gnu.org/packages/sml-mode.html")
 	     (:keywords "sml"))])
  (soap-client .
-	      [(3 1 4)
+	      [(3 1 5)
 	       ((cl-lib
 		 (0 6 1)))
 	       "Access SOAP web services" tar
@@ -1213,6 +1213,11 @@
 	    "Run a vigenere cipher on a block of text ;" single
 	    ((:url . "https://elpa.gnu.org/packages/vigenere.html")
 	     (:keywords "data" "vigenere" "cipher"))])
+ (visual-fill .
+	      [(0 1)
+	       nil "Auto-refill paragraphs without modifying the buffer" single
+	       ((:url . "http://elpa.gnu.org/packages/visual-fill.html")
+		(:keywords))])
  (vlf .
       [(1 7 1)
        nil "View Large Files" tar
