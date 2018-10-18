@@ -270,9 +270,9 @@
 		((:url . "http://elpa.gnu.org/packages/dbus-codegen.html")
 		 (:keywords "comm" "dbus" "convenience"))])
  (debbugs .
-	  [(0 15)
+	  [(0 16)
 	   ((soap-client
-	     (3 1 1))
+	     (3 1 5))
 	    (cl-lib
 	     (0 5)))
 	   "SOAP library to access debbugs servers" tar
