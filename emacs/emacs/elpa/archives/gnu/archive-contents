@@ -545,10 +545,9 @@
 	 ((:keywords "games" "processes")
 	  (:url . "http://www.gnuvola.org/software/gnugo/"))])
  (gnus-mock .
-	    [(0 1 1)
-	     nil "Mock Gnus installation for testing" single
-	     ((:url . "http://elpa.gnu.org/packages/gnus-mock.html")
-	      (:keywords))])
+	    [(0 1 2)
+	     nil "Mock Gnus installation for testing" tar
+	     ((:url . "http://elpa.gnu.org/packages/gnus-mock.html"))])
  (heap .
        [(0 5)
 	nil "Heap (a.k.a. priority queue) data structure" single
