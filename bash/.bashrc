@@ -9,6 +9,15 @@ export LC_TYPE=C
 export LANG=C
 export LC_CTYPE=C
 
+export HISTCONTROL=ignoreboth:erasedups
+# Unlimited history
+export HISTFILESIZE=
+export HISTSIZE=
+# Prepend history entries with timestamps
+export HISTTIMEFORMAT="[%F %T] "
+# Append history, do not overwrite
+shopt -s histappend
+
 export LSCOLORS=Exfxcxdxbxegedabagacad
 export CLICOLOR=1
 
