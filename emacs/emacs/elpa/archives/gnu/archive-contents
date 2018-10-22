@@ -121,10 +121,10 @@
 	  ((:url . "https://github.com/Malabarba/beacon")
 	   (:keywords "convenience"))])
  (brief .
-	[(5 85)
-	 nil "Brief Editor Emulator" single
-	 ((:url . "http://elpa.gnu.org/packages/brief.html")
-	  (:keywords "brief" "emulations" "crisp"))])
+	[(5 86)
+	 nil "Brief Editor Emulator (Brief Mode)" tar
+	 ((:keywords "brief" "emulations" "crisp")
+	  (:url . "http://elpa.gnu.org/packages/brief.html"))])
  (bug-hunter .
 	     [(1 3 1)
 	      ((seq
@@ -1090,6 +1090,13 @@
 	      "Support for indenting code in SQL files." tar
 	      ((:keywords "languages" "sql")
 	       (:url . "http://elpa.gnu.org/packages/sql-indent.html"))])
+ (ssh-deploy .
+	     [(2 0)
+	      ((emacs
+		(24)))
+	      "Deployment via TRAMP, global or per directory." tar
+	      ((:keywords "tools" "convenience")
+	       (:url . "https://github.com/cjohansson/emacs-ssh-deploy"))])
  (stream .
 	 [(2 2 4)
 	  ((emacs
