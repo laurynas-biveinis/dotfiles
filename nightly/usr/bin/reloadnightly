@@ -4,8 +4,8 @@ set -u
 
 readonly NIGHTLY_PLIST=$HOME/Library/LaunchAgents/nightly.plist
 
-launchctl unload $NIGHTLY_PLIST
+launchctl unload "$NIGHTLY_PLIST"
 echo "launchctl unload $NIGHTLY_PLIST returned $?"
-launchctl load $NIGHTLY_PLIST
+launchctl load "$NIGHTLY_PLIST"
 echo "launchctl load $NIGHTLY_PLIST returned $?"
 

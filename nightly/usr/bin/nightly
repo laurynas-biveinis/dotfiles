@@ -2,9 +2,11 @@
 
 set -u
 
+# shellcheck source=/dev/null
 source ~/.noninteractive_init.bash
 
-for nightly_script in $HOME/.nightly/*; do
+for nightly_script in "$HOME"/.nightly/*; do
     echo "Running nightly $nightly_script..."
-    source $nightly_script
+    # shellcheck source=/dev/null
+    source "$nightly_script"
 done

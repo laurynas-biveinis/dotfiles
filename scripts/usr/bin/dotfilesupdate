@@ -9,16 +9,16 @@ readonly EXTRA_MODULES_FILE=$DOTFILES_SETUP_DIR/extra_modules
 
 readonly IGNORE_FOR_SYMLINKS="Library/Containers Library/Caches/com.apple.bird"
 
-pushd $DOTFILES_ROOT
+pushd $DOTFILES_ROOT || exit
 git pull origin-ro master
 for module in $MANDATORY_MODULES; do
     echo "Re-creating symlinks for $module"
-    stow $module
+    stow "$module"
 done
 # Extra modules, if defined
 for module in $(cat $EXTRA_MODULES_FILE); do
     echo "Re-creating symlinks for optional $module"
-    stow $module
+    stow "$module"
 done
 # Since we cannot do stow -D before git pull, check manually for any now-stray symlinks
 echo "Stray symlinks in $HOME, if any:"
@@ -28,4 +28,4 @@ for find_ignore_path in $IGNORE_FOR_SYMLINKS; do
 done
 find ~ $find_ignore_paths -type l ! -exec test -e {} \; -print 2>/dev/null
 echo "End of stray symlink list"
-popd
+popd || exit

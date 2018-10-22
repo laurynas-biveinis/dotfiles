@@ -12,7 +12,7 @@ fi
 less ~/nightly.out
 
 while true; do
-      read -p "Delete $NIGHTLY? " yn
+      read -rp "Delete $NIGHTLY? " yn
       case $yn in
           [Yy]* ) rm $NIGHTLY; break;;
           [Nn]* ) exit;;
