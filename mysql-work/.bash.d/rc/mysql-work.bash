@@ -1,20 +1,46 @@
 #!/bin/bash
 
-export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=/usr/local/lib --mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1 --mysqld-env=DYLD_INSERT_LIBRARIES=/usr/local/lib/libeatmydata.dylib"
+UNAME_OUT="$(uname -s)"
 
-export MYALL="-DBUILD_CONFIG=mysql_release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-export MY557="-DWITH_ZLIB=system -DWITH_PAM=ON"
-export MY55="$MYALL $MY557 -DWITH_EMBEDDED_SERVER=OFF -DWITH_SSL=system -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/"
-export MY567="-DWITH_LIBEVENT=system"
-# No point trying to build TokuDB until macOS fixes
-export MY568="-DENABLE_DOWNLOADS=ON -DWITH_SSL=/usr/local/opt/openssl/ -DWITHOUT_TOKUDB=ON"
+if [ "$UNAME_OUT" == "Darwin" ]; then
+    export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=/usr/local/lib --mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1 --mysqld-env=DYLD_INSERT_LIBRARIES=/usr/local/lib/libeatmydata.dylib"
+    MY55_SSL="-DWITH_SSL=system -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/"
+    MY568_SSL="-DWITH_SSL=/usr/local/opt/openssl/"
+    # No point trying to build TokuDB until macOS fixes
+    MY568_EXTRA="-DWITHOUT_TOKUDB=ON"
+    # No point trying to build MyRocks until macOS fixes
+    MY578_EXTRA="-DWITH_ROCKSDB=OFF"
+    MY57_EXTRA="-DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf@3.1/"
+    MY80_EXTRA="-DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf/ -DWITH_ICU=/usr/local/opt/icu4c"
+else
+    # Linux
+    export LD_EMD="LD_PRELOAD=/usr/local/lib/libeatmydata.so"
+    MY55_SSL="-DWITH_SSL=system"
+    MY568_SSL="$MY55_SSL"
+    MY568_EXTRA=""
+    MY578_EXTRA=""
+    MY57_EXTRA=""
+    MY80_EXTRA=""
+fi
+
+MYALL="-DBUILD_CONFIG=mysql_release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DWITH_PAM=ON"
+MY557="-DWITH_ZLIB=system"
+export MY55="$MYALL $MY557 $MY55_SSL"
+MY567="-DWITH_LIBEVENT=system"
+MY568="-DENABLE_DOWNLOADS=ON $MY568_SSL $MY568_EXTRA"
 export MY56="$MYALL $MY557 $MY567 $MY568"
-# No point trying to build MyRocks until macOS fixes
-export MY578="-DDOWNLOAD_BOOST=ON -DWITH_BOOST=~/percona/mysql-boost/ -DWITH_ROCKSDB=OFF -DWITH_KEYRING_VAULT=ON -DWITH_PROTOBUF=system"
-export MY57="$MYALL $MY557 $MY567 $MY568 $MY578 -DWITH_CURL=system -DWITH_LZ4=system -DWITH_MECAB=system -DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf@3.1/"
-export MY80="$MYALL $MY568 $MY578 -DWITH_AUTHENTICATION_LDAP=ON -DWITH_SYSTEM_LIBS=ON -DWITH_ICU=/usr/local/opt/icu4c -DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf/"
+MY578="-DDOWNLOAD_BOOST=ON -DWITH_BOOST=~/percona/mysql-boost/ $MY578_EXTRA -DWITH_KEYRING_VAULT=ON"
+export MY57="$MYALL $MY557 $MY567 $MY568 $MY578 -DWITH_CURL=system -DWITH_LZ4=system -DWITH_MECAB=system -DWITH_PROTOBUF=system $MY57_EXTRA"
+export MY80="$MYALL $MY568 $MY578 -DWITH_AUTHENTICATION_LDAP=ON -DWITH_SYSTEM_LIBS=ON $MY80_EXTRA"
 export MY80D="$MY80 -DWITH_DEBUG=ON -DWITH_INNODB_EXTRA_DEBUG=ON"
 
+unset UNAME_OUT
+unset MY55_SSL
+unset MY568_SSL
+unset MY568_EXTRA
+unset MY578_EXTRA
+unset MY57_EXTRA
+unset MY80_EXTRA
 unset MYALL
 unset MY557
 unset MY567
