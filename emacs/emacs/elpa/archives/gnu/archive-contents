@@ -1084,7 +1084,7 @@
 	   ((:url . "https://github.com/Malabarba/spinner.el")
 	    (:keywords "processes" "mode-line"))])
  (sql-indent .
-	     [(1 2)
+	     [(1 3)
 	      ((cl-lib
 		(0 5)))
 	      "Support for indenting code in SQL files." tar
