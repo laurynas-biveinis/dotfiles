@@ -37,7 +37,8 @@ for worktree in $WORK_TREES_TO_UPDATE; do
             continue
         fi
         pushd "$buildtree" || return
-        make -j "$MAKE_J"
+        time make -j "$MAKE_J"
+        date
         popd || return
     done
 done
