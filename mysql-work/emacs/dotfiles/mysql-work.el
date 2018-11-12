@@ -17,15 +17,16 @@
 (c-add-style "InnoDB-5.7"
              '("K&R"
                (indent-tabs-mode . t)
-               (c-basic-offset . 8)
+               (c-basic-offset . 8) ; InnoDB-specific
+               (c-label-minimum-indentation . 0) ; InnoDB-specific
                (c-comment-only-line-offset . 0)
                (c-offsets-alist . ((statement-block-intro . +)
                                    (knr-argdecl-intro . 0)
                                    (substatement-open . 0)
-                                   (label . [0])
-                                   (c . 0)
+                                   (label . [0]) ; InnoDB-specific
+                                   (c . 0) ; InnoDB-specific
                                    (statement-cont . +)
-                                   (arglist-intro . +)
+                                   (arglist-intro . +) ; InnoDB-specific
                                    (arglist-close . c-lineup-arglist)
                                    (innamespace . 0)
                                    (inline-open . 0)
@@ -35,6 +36,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.ic\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.i\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("storage/innobase/.*\\.h\\'" . c++-mode))
 
 (dir-locals-set-class-variables 'innodb-source-5.7
                                 '((c-mode . ((c-file-style . "InnoDB-5.7")))
