@@ -349,6 +349,9 @@
 ; org-id
 (setq org-id-link-to-org-use-id t)
 
+; Save org buffers automatically
+(add-hook 'auto-save-hook 'org-save-all-org-buffers)
+
 ; Solarized-dark color theme
 (setq solarized-termcolors 256)
 (if emacs-24-or-later
