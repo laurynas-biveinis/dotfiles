@@ -16,3 +16,7 @@ brew, stow, git
 Create `~/.noninteractive_init_private.bash`, if needed.
 
 Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g. "emacs nightly"
+
+`cd ~/dotfiles && stow bash git scripts $(cat dotfiles/extra_modules)`
+
+If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
