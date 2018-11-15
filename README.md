@@ -12,3 +12,5 @@ brew, stow, git
 `cd dotfiles`
 
 `git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git`
+
+Create `~/.noninteractive_init_private.bash`, if needed
