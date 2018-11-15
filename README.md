@@ -1,5 +1,5 @@
 # dotfiles
-My dotfiles and scripts
+My dotfiles and scripts. Specific for bash.
 
 # prerequisites
 brew, stow, git
@@ -13,4 +13,6 @@ brew, stow, git
 
 `git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git`
 
-Create `~/.noninteractive_init_private.bash`, if needed
+Create `~/.noninteractive_init_private.bash`, if needed.
+
+Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g. "emacs nightly"
