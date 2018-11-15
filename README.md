@@ -20,3 +20,14 @@ Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g. "
 `cd ~/dotfiles && stow bash git scripts $(cat dotfiles/extra_modules)`
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
+
+If "wakatime" is enabled then
+`sudo easy_install pip`
+
+`sudo pip install wakatime`
+
+`mkdir -p ~/usr/src`
+
+`cd ~/usr/src`
+
+`git clone https://github.com/gjsheep/bash-wakatime.git`
