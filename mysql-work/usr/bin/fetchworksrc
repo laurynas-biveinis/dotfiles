@@ -17,7 +17,9 @@ function update_worktree () {
     local worktree=$1
     local fullpath=$WORK_SRC_ROOT/$worktree
     pushd "$fullpath" || return
+    $CF_OFF
     git pull
+    $CF_ON
     popd || return
 }
 
