@@ -95,6 +95,6 @@ if ! shopt -oq posix; then
     fi
 fi
 
-for script in $HOME/.bash.d/rc/*; do
-    source $script
+for script in ~/.bash.d/rc/*; do
+    source "$script"
 done
