@@ -31,7 +31,7 @@ to perform almost all of their daily version control tasks directly from
 within Emacs.  While many fine Git clients exist, only Magit and Git
 itself deserve to be called porcelains.
 
-This manual is for Magit version 2.90.0.
+This manual is for Magit version 2.90.1.
 
      Copyright (C) 2015-2018 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -3619,7 +3619,7 @@ File: magit.info,  Node: Revision Buffer,  Prev: Diff Options,  Up: Diffing
         • ‘mixed’ Show all containing branches and local merged
           branches.
 
- -- User Option: magit-revision-show-gravatar
+ -- User Option: magit-revision-show-gravatars
 
      Whether to show gravatar images in revision buffers.
 
