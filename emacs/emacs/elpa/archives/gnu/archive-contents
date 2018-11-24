@@ -380,7 +380,7 @@
 	     ((:url . "http://elpa.gnu.org/packages/ediprolog.html")
 	      (:keywords "languages" "processes"))])
  (eglot .
-	[(1 1)
+	[(1 2)
 	 ((emacs
 	   (26 1))
 	  (jsonrpc
