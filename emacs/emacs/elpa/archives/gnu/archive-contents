@@ -527,7 +527,7 @@
 		 ((:keywords "gnome" "c" "coding style")
 		  (:url . "http://elpa.gnu.org/packages/gnome-c-style.html"))])
  (gnorb .
-	[(1 6 0)
+	[(1 6 1)
 	 ((cl-lib
 	   (0 5)))
 	 "Glue code between Gnus, Org, and BBDB" tar
@@ -856,7 +856,7 @@
        ((:keywords "outlines" "hypermedia" "calendar" "wp")
 	(:url . "http://elpa.gnu.org/packages/org.html"))])
  (org-edna .
-	   [(1 0 -2 8)
+	   [(1 0)
 	    ((emacs
 	      (25 1))
 	     (seq
@@ -1091,7 +1091,7 @@
 	      ((:keywords "languages" "sql")
 	       (:url . "http://elpa.gnu.org/packages/sql-indent.html"))])
  (ssh-deploy .
-	     [(2 0)
+	     [(3 0)
 	      ((emacs
 		(24)))
 	      "Deployment via TRAMP, global or per directory." tar
