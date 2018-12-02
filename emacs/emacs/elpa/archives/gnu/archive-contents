@@ -448,7 +448,7 @@
 	       ((:keywords "calendar")
 		(:url . "http://elpa.gnu.org/packages/excorporate.html"))])
  (exwm .
-       [(0 20)
+       [(0 21)
 	((xelb
 	  (0 16)))
 	"Emacs X Window Manager" tar
@@ -1203,6 +1203,11 @@
 	    "Schema validation for Emacs-lisp" single
 	    ((:url . "http://elpa.gnu.org/packages/validate.html")
 	     (:keywords "lisp"))])
+ (vcl-mode .
+	   [(1 1)
+	    nil "Major mode for Varnish Configuration Language" single
+	    ((:url . "http://elpa.gnu.org/packages/vcl-mode.html")
+	     (:keywords "varnish" "vcl"))])
  (vdiff .
 	[(0 2 3)
 	 ((emacs
