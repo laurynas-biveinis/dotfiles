@@ -12,13 +12,13 @@
        ((:keywords "tools" "processes" "convenience")
 	(:url . "https://github.com/leoliu/ack-el"))])
  (ada-mode .
-	   [(5 3 2)
+	   [(6 0 0)
 	    ((wisi
-	      (1 1 6))
+	      (2 0))
 	     (cl-lib
-	      (0 4))
+	      (1 0))
 	     (emacs
-	      (24 3)))
+	      (25 0)))
 	    "major-mode for editing Ada sources" tar
 	    ((:keywords "languages" "ada")
 	     (:url . "http://www.nongnu.org/ada-mode/"))])
@@ -1105,7 +1105,7 @@
 	  ((:keywords "stream" "laziness" "sequences")
 	   (:url . "http://elpa.gnu.org/packages/stream.html"))])
  (svg .
-      [(0 1)
+      [(0 2)
        ((emacs
 	 (25)))
        "svg image creation functions" single
@@ -1277,11 +1277,13 @@
 	      ((:url . "http://elpa.gnu.org/packages/windresize.html")
 	       (:keywords "window"))])
  (wisi .
-       [(1 1 6)
+       [(2 0 0)
 	((cl-lib
-	  (0 4))
+	  (1 0))
 	 (emacs
-	  (24 3)))
+	  (25 0))
+	 (seq
+	  (2 20)))
 	"Utilities for implementing an indentation/navigation engine using a generalized LALR parser" tar
 	((:keywords "parser" "indentation" "navigation")
 	 (:url . "http://www.nongnu.org/ada-mode/wisi/wisi.html"))])
