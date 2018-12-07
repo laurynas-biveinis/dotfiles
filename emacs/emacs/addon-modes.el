@@ -152,16 +152,6 @@
       (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
             auto-mode-alist))
 
-;; --------
-;; PHP mode
-;; --------
-(autoload 'php-mode "php-mode" "PHP mode" t)
-(setq auto-mode-alist
-      (append
-       '(("\\.php$" . php-mode)
-         ("\\.php5$" . php-mode))
-       auto-mode-alist))
-
 ; easypg
 ; Still only works if there's a symlink gpg -> gpg1, and I was not able to
 ; find what uses gpg.

@@ -89,7 +89,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (markdown-mode linum-off po-mode ssh ssh-config-mode bison-mode company-irony org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell php-mode autopair magit org auctex))))
+    (markdown-mode linum-off po-mode ssh ssh-config-mode bison-mode company-irony org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
