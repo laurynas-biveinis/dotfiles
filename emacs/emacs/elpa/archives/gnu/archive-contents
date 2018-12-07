@@ -476,7 +476,7 @@
 	   ((:url . "http://elpa.gnu.org/packages/flylisp.html")
 	    (:keywords))])
  (flymake .
-	  [(1 0 1)
+	  [(1 0 2)
 	   ((emacs
 	     (26 1)))
 	   "A universal on-the-fly syntax checker" single
