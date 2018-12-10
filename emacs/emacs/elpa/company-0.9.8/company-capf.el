@@ -34,6 +34,13 @@
 
 (defvar company--capf-cache nil)
 
+;; FIXME: Provide a way to save this info once in Company itself
+;; (https://github.com/company-mode/company-mode/pull/845).
+(defvar-local company-capf--current-completion-data nil
+  "Value last returned by `company-capf' when called with `candidates'.
+For most properties/actions, this is just what we need: the exact values
+that accompanied the completion table that's currently is use.")
+
 (defun company--capf-data ()
   (let ((cache company--capf-cache))
     (if (and (equal (current-buffer) (car cache))
@@ -68,6 +75,16 @@
       completion-at-point-functions
     (remq 'python-completion-complete-at-point completion-at-point-functions)))
 
+(defun company-capf--save-current-data (data)
+  (setq company-capf--current-completion-data data)
+  (add-hook 'company-completion-cancelled-hook
+            #'company-capf--clear-current-data nil t)
+  (add-hook 'company-completion-finished-hook
+            #'company-capf--clear-current-data nil t))
+
+(defun company-capf--clear-current-data (_ignored)
+  (setq company-capf--current-completion-data nil))
+
 (defun company-capf (command &optional arg &rest _args)
   "`company-mode' backend using `completion-at-point-functions'."
   (interactive (list 'interactive))
@@ -84,6 +101,7 @@
             (t prefix))))))
     (`candidates
      (let ((res (company--capf-data)))
+       (company-capf--save-current-data res)
        (when res
          (let* ((table (nth 3 res))
                 (pred (plist-get (nthcdr 4 res) :predicate))
@@ -105,7 +123,7 @@
                          candidates))
              candidates)))))
     (`sorted
-     (let ((res (company--capf-data)))
+     (let ((res company-capf--current-completion-data))
        (when res
          (let ((meta (completion-metadata
                       (buffer-substring (nth 1 res) (nth 2 res))
@@ -114,7 +132,8 @@
     (`match
      ;; Ask the for the `:company-match' function.  If that doesn't help,
      ;; fallback to sniffing for face changes to get a suitable value.
-     (let ((f (plist-get (nthcdr 4 (company--capf-data)) :company-match)))
+     (let ((f (plist-get (nthcdr 4 company-capf--current-completion-data)
+                         :company-match)))
        (if f (funcall f arg)
          (let* ((match-start nil) (pos -1)
                 (prop-value nil)  (faces nil)
@@ -138,29 +157,21 @@
     (`no-cache t)   ;Not much can be done here, as long as we handle
                     ;non-prefix matches.
     (`meta
-     (let ((f (plist-get (nthcdr 4 (company--capf-data)) :company-docsig)))
+     (let ((f (plist-get (nthcdr 4 company-capf--current-completion-data)
+                         :company-docsig)))
        (when f (funcall f arg))))
     (`doc-buffer
-     (let ((f (plist-get (nthcdr 4 (company--capf-data)) :company-doc-buffer)))
+     (let ((f (plist-get (nthcdr 4 company-capf--current-completion-data)
+                         :company-doc-buffer)))
        (when f (funcall f arg))))
     (`location
-     (let ((f (plist-get (nthcdr 4 (company--capf-data)) :company-location)))
+     (let ((f (plist-get (nthcdr 4 company-capf--current-completion-data)
+                         :company-location)))
        (when f (funcall f arg))))
     (`annotation
-     (save-excursion
-       ;; FIXME: `company-begin' sets `company-point' after calling
-       ;; `company--begin-new'.  We shouldn't rely on `company-point' here,
-       ;; better to cache the capf-data value instead.  However: we can't just
-       ;; save the last capf-data value in `prefix', because that command can
-       ;; get called more often than `candidates', and at any point in the
-       ;; buffer (https://github.com/company-mode/company-mode/issues/153).
-       ;; We could try propertizing the returned prefix string, but it's not
-       ;; passed to `annotation', and `company-prefix' is set only after
-       ;; `company--strip-duplicates' is called.
-       (when company-point
-         (goto-char company-point))
-       (let ((f (plist-get (nthcdr 4 (company--capf-data)) :annotation-function)))
-         (when f (funcall f arg)))))
+     (let ((f (plist-get (nthcdr 4 company-capf--current-completion-data)
+                         :annotation-function)))
+       (when f (funcall f arg))))
     (`require-match
      (plist-get (nthcdr 4 (company--capf-data)) :company-require-match))
     (`init nil)      ;Don't bother: plenty of other ways to initialize the code.
@@ -169,7 +180,7 @@
     ))
 
 (defun company--capf-post-completion (arg)
-  (let* ((res (company--capf-data))
+  (let* ((res company-capf--current-completion-data)
          (exit-function (plist-get (nthcdr 4 res) :exit-function))
          (table (nth 3 res))
          (pred (plist-get (nthcdr 4 res) :predicate)))
