@@ -7,3 +7,5 @@
 	renamelimit = 100000
 [fetch]
 	prune = true
+[rerere]
+	enabled = false
