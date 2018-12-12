@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2016  Guillaume Papin
 
 ;; Author: Guillaume Papin <guillaume.papin@epitech.eu>
-;; Version: 1.2.0
+;; Version: 1.3.1
 ;; URL: https://github.com/Sarcasm/irony-mode
 ;; Compatibility: GNU Emacs 24.x
 ;; Keywords: c, convenience, tools
@@ -95,6 +95,11 @@ automatically buffer-local wherever it is set."
 (defcustom irony-lighter " Irony"
   "Text to display in the mode line when irony mode is on."
   :type 'string
+  :group 'irony)
+
+(defcustom irony-extra-cmake-args nil
+  "Extra arguments to CMake when compiling the server."
+  :type '(repeat string)
   :group 'irony)
 
 (defcustom irony-user-dir (locate-user-emacs-file "irony/")
@@ -524,12 +529,13 @@ The installation requires CMake and the libclang developpement package."
   (interactive
    (list (let ((command
                 (format
-                 (concat "%s %s %s && %s --build . "
+                 (concat "%s %s %s %s && %s --build . "
                          "--use-stderr --config Release --target install")
                  (shell-quote-argument irony-cmake-executable)
                  (shell-quote-argument (concat "-DCMAKE_INSTALL_PREFIX="
                                                (expand-file-name
                                                 irony-server-install-prefix)))
+                 (mapconcat 'shell-quote-argument irony-extra-cmake-args " ")
                  (shell-quote-argument
                   (or irony-server-source-dir
                       (expand-file-name "server"
@@ -745,7 +751,9 @@ That is:
     (cond
      ((irony--buffer-state-modified new) 'set-unsaved)
      ((null old) nil)                   ;noop
-     ((irony--buffer-state-modified old) 'reset-unsaved))))
+     ((and
+       (irony--buffer-state-modified old)
+       (irony--buffer-state-exists old)) 'reset-unsaved))))
 
 (irony-iotask-define-task irony--t-set-unsaved
   "`set-unsaved' server command."
@@ -893,6 +901,12 @@ old-state can be nil if the old state isn't known."
     (if (and (cdr types) (not (string= (car types) (cadr types))))
         (message "%s (aka '%s')" (car types) (cadr types))
       (message "%s" (car types)))))
+
+(defun irony-parse-buffer-async (&optional callback)
+  "Parse the current buffer sending results to an optional
+  CALLBACK function."
+  (irony--run-task-asynchronously (irony--parse-task)
+                                  (or callback #'ignore)))
 
 (provide 'irony)
 
