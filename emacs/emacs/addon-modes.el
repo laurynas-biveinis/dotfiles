@@ -166,8 +166,8 @@
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
-(define-key global-map "\C-cs" 'org-iswitchb)
 (define-key global-map "\C-cc" 'org-capture)
+(define-key global-map "\C-c\C-x\C-o" 'org-clock-out)
 (setq org-use-speed-commands t)
 (setq org-log-done t)
 (defconst main-org-file (concat org-directory "gtd.org"))
@@ -248,11 +248,6 @@
 (setq org-agenda-todo-ignore-scheduled 'all)
 (setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-timestamp 'all)
-; Let's try doing without
-; (setq org-agenda-repeating-timestamp-show-all nil)
-; whose replacement in 9.1 is
-; (setq org-agenda-show-future-repeats nil)
-; (setq org-agenda-prefer-last-repeat t)
 
 (setq org-agenda-clock-consistency-checks
       (list
