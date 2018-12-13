@@ -5,6 +5,10 @@ if [ -f ~/.noninteractive_init_private.bash ]; then
     source ~/.noninteractive_init_private.bash
 fi
 
+if [ -d /usr/lib/ccache ]; then
+    export PATH=/usr/lib/ccache:$PATH
+fi
+
 export PATH=~/usr/bin:/usr/local/bin:$PATH
 
 for script in ~/.bash.d/noninteractive_init/*; do
