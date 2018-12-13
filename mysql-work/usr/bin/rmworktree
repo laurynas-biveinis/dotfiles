@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -u
+
+readonly WORKTREE=$1
+
+if ! pushd "$WORK_SRC_ROOT"; then
+    echo "Failed to pushd to $WORK_SRC_ROOT"
+    exit 1
+fi
+
+for buildtree in obj-"$WORKTREE"*; do
+    if [[ ! -e "$buildtree" ]]; then
+        echo "Buildtree $buildtree does not exist, skipping"
+        continue
+    fi
+    if [[ ! -d "$buildtree" ]]; then
+        echo "Buildtree $buildtree is not a directory, skipping"
+        continue
+    fi
+
+    echo "Removing $buildtree"
+    rm -rf "$buildtree"
+done
+
+echo "Removing $WORKTREE"
+rm -rf "$WORKTREE"
+
+if cd "$WORK_MAIN_REPO"; then
+    git worktree prune
+else
+    echo "Failed to cd to $WORK_MAIN_REPO"
+    exit 1
+fi
+
+popd || exit 1
