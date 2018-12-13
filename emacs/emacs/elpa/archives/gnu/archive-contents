@@ -1304,7 +1304,7 @@
 	   ((:url . "http://elpa.gnu.org/packages/wpuzzle.html")
 	    (:keywords))])
  (xclip .
-	[(1 6)
+	[(1 7)
 	 nil "Copy&paste GUI clipboard from text terminal" single
 	 ((:url . "http://elpa.gnu.org/packages/xclip.html")
 	  (:keywords "convenience" "tools"))])
