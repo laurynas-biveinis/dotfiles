@@ -1,9 +1,23 @@
 set -u
 
 function is_on_ac() {
-    if [[ $(pmset -g ps | head -1) =~ "AC Power" ]]; then
-        true
+    local UNAME_OUT
+    UNAME_OUT="$(uname -s)"
+    if [ "$UNAME_OUT" == "Darwin" ]; then
+        if [[ $(pmset -g ps | head -1) =~ "AC Power" ]]; then
+            true
+        else
+            false
+        fi
     else
-        false
+        # Linux
+        # https://askubuntu.com/questions/386949/how-to-check-if-the-ac-laptop-adapter-is-plugged-or-not
+        local ac_adapter
+        ac_adapter=$(acpi -a | cut -d' ' -f3 | cut -d- -f1)
+        if [ "$ac_adapter" = "on" ]; then
+            true
+        else
+            false
+         fi
     fi
 }
