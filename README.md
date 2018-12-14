@@ -31,3 +31,7 @@ If "wakatime" is enabled then
 `cd ~/usr/src`
 
 `git clone https://github.com/gjsheep/bash-wakatime.git`
+
+# TODO new system setup
+Ubuntu: apt-get install ccache acpi valgrind rapidjson-dev
+
