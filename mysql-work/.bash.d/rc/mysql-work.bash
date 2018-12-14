@@ -57,4 +57,4 @@ unset MY567
 unset MY568
 unset MY578
 
-alias cleancores="rm -rf /cores/*"
+alias rmcores="rm -rf /cores/*"
