@@ -186,7 +186,7 @@
 		      ((:url . "https://github.com/cpitclaudel/compact-docstrings")
 		       (:keywords "convenience" "faces" "lisp" "maint" "c"))])
  (company .
-	  [(0 9 8)
+	  [(0 9 9)
 	   ((emacs
 	     (24 3)))
 	   "Modular text completion framework" tar
@@ -480,7 +480,7 @@
 	   ((:url . "http://elpa.gnu.org/packages/flylisp.html")
 	    (:keywords))])
  (flymake .
-	  [(1 0 2)
+	  [(1 0 3)
 	   ((emacs
 	     (26 1)))
 	   "A universal on-the-fly syntax checker" single
