@@ -1,0 +1,26 @@
+#!/bin/bash
+
+readonly BRANCH=$1
+
+function create_git_gca_worktree ()
+{
+    local lower_base_branch=$1
+    local lower_branch=$2
+    local higher_branch=$3
+
+    local gca_rev
+    gca_rev="$(git rev-list "$lower_base_branch" ^"$higher_branch" --first-parent --topo-order \
+        | tail -1)^"
+
+    echo "Creating $lower_branch from $lower_base_branch for merge to $higher_branch at $gca_rev"
+
+    git worktree add -b "$lower_branch" "../$lower_branch" "$gca_rev"
+}
+
+pushd "$WORK_MAIN_REPO" || exit 1
+
+git worktree add -b "$BRANCH-8.0" "../$BRANCH-8.0" percona/8.0
+create_git_gca_worktree "percona/5.7" "$BRANCH-5.7" "$BRANCH-8.0"
+create_git_gca_worktree "percona/5.6" "$BRANCH-5.6" "$BRANCH-5.7"
+
+popd || exit 0
