@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -u
+
 readonly BRANCH=$1
 
 function create_git_gca_worktree ()
