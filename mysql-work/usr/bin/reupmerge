@@ -32,7 +32,7 @@ popd || exit 1
 
 pushd "$BRANCH-$HIGHER" || exit 1
 git merge --no-commit "$BRANCH-$LOWER" -s ours
-git apply "$tmp_patch"
+git apply --index "$tmp_patch"
 git commit -F "$tmp_patch_commit"
 popd || exit 0
 
