@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -u
+
+readonly BRANCH=$1
+readonly LOWER=$2
+readonly HIGHER=$3
+
+pushd "$WORK_SRC_ROOT" || exit 1
+
+if ! pushd "$BRANCH-$HIGHER"; then
+    echo "Failed to pushd to $BRANCH-$HIGHER, check args"
+    exit 1
+fi
+
+readonly base_rev="$(git rev-list HEAD -1 --skip=1 --first-parent --topo-order)"
+readonly tmp_patch=$(mktemp)
+readonly tmp_patch_commit=$(mktemp)
+echo "Saving $BRANCH-$HIGHER last commit on top of $base_rev"
+git log --format=%B -1 > "$tmp_patch_commit"
+git log -1 -p -m --first-parent --pretty=email > "$tmp_patch"
+
+popd || exit 1
+
+rm -rf "$BRANCH-$HIGHER"
+
+pushd "$WORK_MAIN_REPO" || exit 1
+git worktree prune
+git branch -D "$BRANCH-$HIGHER"
+git worktree add -b "$BRANCH-$HIGHER" "../$BRANCH-$HIGHER" "$base_rev"
+popd || exit 1
+
+pushd "$BRANCH-$HIGHER" || exit 1
+git merge --no-commit "$BRANCH-$LOWER" -s ours
+git apply "$tmp_patch"
+git commit -F "$tmp_patch_commit"
+popd || exit 0
+
+popd || exit 0
+
+rm "$tmp_patch" "$tmp_patch_commit"
