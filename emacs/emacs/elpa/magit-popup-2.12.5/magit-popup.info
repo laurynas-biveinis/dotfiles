@@ -1,4 +1,4 @@
-This is magit-popup.info, produced by makeinfo version 6.1 from
+This is magit-popup.info, produced by makeinfo version 6.5 from
 magit-popup.texi.
 
      Copyright (C) 2015-2018 Jonas Bernoulli <jonas@bernoul.li>
@@ -28,7 +28,7 @@ this library implements a similar abstraction; a new kind of prefix
 command that is associated with a specific set of infix arguments and
 suffix commands.
 
-This manual is for Magit-Popup version 2.12.4.
+This manual is for Magit-Popup version 2.12.4 (v2.12.4+1).
 
      Copyright (C) 2015-2018 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -303,9 +303,14 @@ to an existing popup using the following functions.
      VALUE is its default value.
 
      READER is used to read a value from the user when the option is
-     invoked and does not currently have a value.  It should take one
-     argument and use it as the prompt.  If this is nil, then
-     ‘read-from-minibuffer’ is used.
+     invoked and does not currently have a value.  (When the option has
+     a value, then invoking the option causes it to be unset.)  This
+     function must take two arguments but may choose to ignore them.
+     The first argument is the name of the option (with ": \" appended,
+     unless it ends with "=") and can be used as the prompt.  The second
+     argument is nil or the value that was in effect before the option
+     was unset, which may be suitable as initial completion input.  If
+     no reader is specified, then ‘read-from-minibuffer’ is used.
 
      OPTION is inserted after all other options already defined for
      POPUP, unless optional PREPEND is non-nil, in which case it is
@@ -724,13 +729,13 @@ directly.
 
 Tag Table:
 Node: Top769
-Node: Introduction1992
-Node: Usage4691
-Node: Customizing Existing Popups9388
-Node: Other Options15135
-Node: Defining Prefix and Suffix Commands16678
-Node: Defining Prefix Commands18830
-Node: Defining Suffix Commands27525
+Node: Introduction2004
+Node: Usage4703
+Node: Customizing Existing Popups9400
+Node: Other Options15541
+Node: Defining Prefix and Suffix Commands17084
+Node: Defining Prefix Commands19236
+Node: Defining Suffix Commands27931
 
 End Tag Table
 

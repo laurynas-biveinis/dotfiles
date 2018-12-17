@@ -669,8 +669,14 @@ If optional VALUE is non-nil then the option is on by default,
 and VALUE is its default value.
 
 READER is used to read a value from the user when the option is
-invoked and does not currently have a value.  It should take one
-argument and use it as the prompt.  If this is nil, then
+invoked and does not currently have a value.  (When the option
+has a value, then invoking the option causes it to be unset.)
+This function must take two arguments but may choose to ignore
+them.  The first argument is the name of the option (with \": \"
+appended, unless it ends with \"=\") and can be used as the
+prompt.  The second argument is nil or the value that was in
+effect before the option was unset, which may be suitable as
+initial completion input.  If no reader is specified, then
 `read-from-minibuffer' is used.
 
 OPTION is inserted after all other options already defined for
@@ -842,12 +848,13 @@ TYPE is one of `:action', `:sequence-action', `:switch', or
      ((memq use-prefix '(default popup nil))
       (magit-popup-mode-setup popup mode)
       (when magit-popup-show-help-echo
-        (message
-         (format
-          "[%s] show common commands, [%s] describe events, [%s] show manual"
-          (propertize "C-t"   'face 'magit-popup-key)
-          (propertize "?"     'face 'magit-popup-key)
-          (propertize "C-h i" 'face 'magit-popup-key)))))
+        (let ((message-log-max nil))
+          (message
+           (format
+            "[%s] show common commands, [%s] describe events, [%s] show manual"
+            (propertize "C-t"   'face 'magit-popup-key)
+            (propertize "?"     'face 'magit-popup-key)
+            (propertize "C-h i" 'face 'magit-popup-key))))))
      (local
       (error "Invalid :use-prefix popup property value: %s" use-prefix))
      (t
