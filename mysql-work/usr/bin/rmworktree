@@ -2,14 +2,14 @@
 
 set -u
 
-readonly WORKTREE=$1
+readonly BRANCH=$1
 
 if ! pushd "$WORK_SRC_ROOT"; then
     echo "Failed to pushd to $WORK_SRC_ROOT"
     exit 1
 fi
 
-for buildtree in obj-"$WORKTREE"*; do
+for buildtree in obj-"$BRANCH"*; do
     if [[ ! -e "$buildtree" ]]; then
         echo "Buildtree $buildtree does not exist, skipping"
         continue
@@ -23,8 +23,19 @@ for buildtree in obj-"$WORKTREE"*; do
     rm -rf "$buildtree"
 done
 
-echo "Removing $WORKTREE"
-rm -rf "$WORKTREE"
+for worktree in "$BRANCH"-?.?; do
+    if [[ ! -e "$worktree" ]]; then
+        echo "Worktree $worktree does not exist, skipping"
+        continue
+    fi
+    if [[ ! -d "$worktree" ]]; then
+        echo "Worktree $worktree is not a directory, skipping"
+        continue
+    fi
+
+    echo "Removing $worktree"
+    rm -rf "$worktree"
+done
 
 if cd "$WORK_MAIN_REPO"; then
     git worktree prune
