@@ -19,7 +19,7 @@ function create_git_gca_worktree ()
     git worktree add -b "$lower_branch" "../$lower_branch" "$gca_rev"
 }
 
-pushd "$WORK_MAIN_REPO" || exit 1
+pushd "$WORK_SRC_ROOT/$WORK_MAIN_REPO" || exit 1
 
 git worktree add -b "$BRANCH-8.0" "../$BRANCH-8.0" percona/8.0
 create_git_gca_worktree "percona/5.7" "$BRANCH-5.7" "$BRANCH-8.0"
