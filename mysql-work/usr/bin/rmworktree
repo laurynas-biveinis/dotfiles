@@ -23,7 +23,7 @@ for buildtree in obj-"$BRANCH"*; do
     rm -rf "$buildtree"
 done
 
-for worktree in "$BRANCH"-?.?; do
+for worktree in "$BRANCH"-?.? "$BRANCH"; do
     if [[ ! -e "$worktree" ]]; then
         echo "Worktree $worktree does not exist, skipping"
         continue
