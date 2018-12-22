@@ -19,6 +19,11 @@ Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g. "
 
 `cd ~/dotfiles && stow bash git scripts $(cat dotfiles/extra_modules)`
 
+If "emacs" is enabled, then 
+`brew install gnupg@1.4
+ln -sf /usr/local/bin/gpg1 /usr/local/bin/gpg
+ln -sf $HOME/Documents/secrets.el $HOME/secrets.el`
+
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
 If "wakatime" is enabled then
