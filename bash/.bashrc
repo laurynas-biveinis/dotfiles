@@ -98,3 +98,5 @@ fi
 for script in ~/.bash.d/rc/*; do
     source "$script"
 done
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
