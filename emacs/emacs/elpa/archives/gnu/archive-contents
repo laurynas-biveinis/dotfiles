@@ -168,6 +168,13 @@
 	    "CL-style generic printing" single
 	    ((:url . "http://elpa.gnu.org/packages/cl-print.html")
 	     (:keywords))])
+ (clipboard-collector .
+		      [(0 2)
+		       ((emacs
+			 (25)))
+		       "Collect clipboard entries according to regex rules" single
+		       ((:url . "https://github.com/clemera/clipboard-collector")
+			(:keywords "convenience"))])
  (cobol-mode .
 	     [(1 0 0)
 	      ((cl-lib
@@ -571,15 +578,6 @@
 	nil "Heap (a.k.a. priority queue) data structure" single
 	((:url . "http://www.dr-qubit.org/emacs.php")
 	 (:keywords "extensions" "data structures" "heap" "priority queue"))])
- (helm-ebdb .
-	    [(1)
-	     ((helm
-	       (1 0))
-	      (ebdb
-	       (0 2)))
-	     "Helm integration for EBDB" single
-	     ((:url . "http://elpa.gnu.org/packages/helm-ebdb.html")
-	      (:keywords "mail" "convenience"))])
  (highlight-escape-sequences .
 			     [(0 4)
 			      nil "Highlight escape sequences" single
@@ -1350,7 +1348,7 @@
 			      ((:keywords "snippets")
 			       (:url . "http://elpa.gnu.org/packages/yasnippet-classic-snippets.html"))])
  (zones .
-	[(2018 11 21)
+	[(2018 12 28)
 	 nil "Zones of text - like multiple regions" single
 	 ((:url . "https://elpa.gnu.org/packages/zones.html")
 	  (:keywords "narrow" "restriction" "widen" "region" "zone"))])
