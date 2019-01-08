@@ -40,5 +40,9 @@ If "wakatime" is enabled then
 `git clone https://github.com/gjsheep/bash-wakatime.git`
 
 # TODO new system setup
-Ubuntu: apt-get install ccache acpi valgrind rapidjson-dev
+## Ubuntu
+`apt-get install ccache acpi valgrind rapidjson-dev`
+## macOS
+brew
+`brew install stow git fzf`
 
