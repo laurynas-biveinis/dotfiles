@@ -628,6 +628,15 @@
        "Incremental Vertical completYon" tar
        ((:keywords "matching")
 	(:url . "https://github.com/abo-abo/swiper"))])
+ (ivy-explorer .
+	       [(0 1 2)
+		((emacs
+		  (25))
+		 (ivy
+		  (0 10 0)))
+		"Dynamic file browsing grid using ivy" single
+		((:url . "https://github.com/clemera/ivy-explorer")
+		 (:keywords "convenience" "files" "matching"))])
  (javaimp .
 	  [(0 6)
 	   nil "Add and reorder Java import statements in Maven projects" tar
@@ -724,6 +733,13 @@
 	  "Perform an occur-like folding in current buffer" single
 	  ((:url . "https://github.com/fourier/loccur")
 	   (:keywords "matching"))])
+ (map .
+      [(1 2)
+       ((emacs
+	 (25)))
+       "Map manipulation functions" single
+       ((:url . "http://elpa.gnu.org/packages/map.html")
+	(:keywords "convenience" "map" "hash-table" "alist" "array"))])
  (markchars .
 	    [(0 2 1)
 	     nil "Mark chars fitting certain characteristics" single
@@ -854,6 +870,15 @@
 	  nil "OAuth 2.0 Authorization Protocol" single
 	  ((:url . "http://elpa.gnu.org/packages/oauth2.html")
 	   (:keywords "comm"))])
+ (objed .
+	[(0 2 0)
+	 ((emacs
+	   (25))
+	  (cl-lib
+	   (0 5)))
+	 "Navigate and edit text objects." tar
+	 ((:keywords "convenience")
+	  (:url . "https://github.com/clemera/objed"))])
  (omn-mode .
 	   [(1 2)
 	    nil "Support for OWL Manchester Notation" single
