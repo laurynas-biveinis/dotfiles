@@ -9,3 +9,5 @@
 	prune = true
 [rerere]
 	enabled = false
+[commit]
+	gpgsign = true
