@@ -1,4 +1,16 @@
 #!/bin/bash
+#
+# Export a set of environment variable shortcuts for long MySQL CMake and MTR invocations:
+# MY55, MY56, MY57, MY80: CMake options for release build
+# MY55D, MY56D, MY57D, MY80D: CMake options for debug build
+# MY56SAN, MY57SAN, MYSAN: CMake options to add maximum supported Sanitizer configuration
+# MYGCC7: CMake options to compile with GCC 7
+#
+# MTR_EMD: MTR options to preload libeatmydata
+#
+# alias rmcores="rm -rf /cores/*"
+#
+# Works on Linux and macOS.
 
 UNAME_OUT="$(uname -s)"
 
