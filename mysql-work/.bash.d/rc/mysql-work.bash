@@ -14,7 +14,7 @@ if [ "$UNAME_OUT" == "Darwin" ]; then
     MY80_EXTRA="-DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf/ -DWITH_ICU=/usr/local/opt/icu4c"
 else
     # Linux
-    export LD_EMD="LD_PRELOAD=/usr/local/lib/libeatmydata.so"
+    export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/local/lib/libeatmydata.so"
     MY55_SSL="-DWITH_SSL=system"
     MY568_SSL="$MY55_SSL"
     MY568_EXTRA=""
