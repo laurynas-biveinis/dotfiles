@@ -629,7 +629,7 @@
 		((:url . "https://github.com/clemera/ivy-explorer")
 		 (:keywords "convenience" "files" "matching"))])
  (javaimp .
-	  [(0 6)
+	  [(0 6 1)
 	   nil "Add and reorder Java import statements in Maven projects" tar
 	   ((:keywords "java" "maven" "programming")
 	    (:url . "http://elpa.gnu.org/packages/javaimp.html"))])
