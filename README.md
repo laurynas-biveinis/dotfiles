@@ -44,5 +44,5 @@ If "wakatime" is enabled then
 `apt-get install ccache acpi valgrind rapidjson-dev stow`
 ## macOS
 brew
-`brew install stow git fzf`
+`brew install stow git fzf z`
 
