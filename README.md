@@ -17,6 +17,7 @@ Create `~/.noninteractive_init_private.bash`, if needed.
 
 Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g. "emacs nightly"
 
+Check that existing .bashrc .profile files are OK to overwrite, rm them, and
 `cd ~/dotfiles && stow bash git scripts $(cat dotfiles/extra_modules)`
 
 If "emacs" is enabled, then 
