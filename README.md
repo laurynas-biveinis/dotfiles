@@ -30,7 +30,6 @@ If "emacs" is enabled, then
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
 If "wakatime" is enabled then
-`sudo easy_install pip`
 
 `sudo pip install wakatime`
 
@@ -47,3 +46,4 @@ If "wakatime" is enabled then
 brew
 `brew install stow git fzf z`
 
+`sudo easy_install pip`
