@@ -41,7 +41,7 @@ If "wakatime" is enabled then
 
 # TODO new system setup
 ## Ubuntu
-`apt-get install ccache acpi valgrind rapidjson-dev stow`
+`apt-get install ccache acpi valgrind rapidjson-dev stow gdb gdb-doc valgrind-dbg`
 ## macOS
 brew
 `brew install stow git fzf z`
