@@ -106,4 +106,9 @@ for script in ~/.bash.d/rc/*; do
 done
 
 source_if_exists ~/.fzf.bash
-source_if_exists /usr/local/etc/profile.d/z.sh
+if [ -f /usr/local/etc/profile.d/z.sh ]; then
+    source /usr/local/etc/profile.d/z.sh
+else
+    source_if_exists "$LINUXBREW_PATH/etc/profile.d/z.sh"
+fi
+
