@@ -7,6 +7,12 @@ case $- in
       *) return;;
 esac
 
+function source_if_exists()
+{
+    local file=$1
+    [ -f "$file" ] && source "$file"
+}
+
 # So that Ctrl-s works for forward i-search
 stty -ixon
 
@@ -90,8 +96,8 @@ if ! shopt -oq posix; then
     elif [ -f /etc/bash_completion ]; then
         # shellcheck disable=SC1091
         . /etc/bash_completion
-    elif [ -f /usr/local/etc/bash_completion ]; then
-        . /usr/local/etc/bash_completion
+    else
+        source_if_exists /usr/local/etc/bash_completion
     fi
 fi
 
@@ -99,4 +105,5 @@ for script in ~/.bash.d/rc/*; do
     source "$script"
 done
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+source_if_exists ~/.fzf.bash
+source_if_exists /usr/local/etc/profile.d/z.sh
