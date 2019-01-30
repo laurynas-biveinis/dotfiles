@@ -47,13 +47,13 @@ If "wakatime" is enabled then
 
 # TODO new system setup
 ## Ubuntu
-`apt-get install build-essential ccache acpi valgrind rapidjson-dev stow gdb gdb-doc valgrind-dbg python-pip binutils build-essential cpp g++ gcc libasan5 libc6-dev liblsan0 libtsan0 libubsan1 make manpages-dev binutils-doc cpp-doc gcc-8-doc libstdc++-8-dev libstdc++6-8-dbg libasan5-dbg liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc libstdc++-8-doc make-doc gcc-doc cmake libboost-container-dev cmake-doc libboost-doc clang clang-7-doc llvm-7-doc clang-format clang-tidy cppcheck iwyu`
+`apt-get install build-essential ccache acpi valgrind rapidjson-dev stow gdb gdb-doc valgrind-dbg python-pip binutils build-essential cpp g++ gcc libasan5 libc6-dev liblsan0 libtsan0 libubsan1 make manpages-dev binutils-doc cpp-doc gcc-8-doc libstdc++-8-dev libstdc++6-8-dbg libasan5-dbg liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc libstdc++-8-doc make-doc gcc-doc cmake libboost-container-dev cmake-doc libboost-doc clang clang-7-doc llvm-7-doc clang-format clang-tidy cppcheck iwyu ncdu`
 
 `sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"`
 ## macOS
 brew
-`brew install stow git z`
+`brew install stow git z ncdu`
 
 `sudo easy_install pip`
 ## Common
-`brew install fzf hexyl ncdu`
+`brew install fzf hexyl`
