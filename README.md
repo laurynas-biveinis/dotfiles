@@ -46,6 +46,8 @@ If "wakatime" is enabled then
 `sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"`
 ## macOS
 brew
-`brew install stow git fzf z`
+`brew install stow git z`
 
 `sudo easy_install pip`
+## Common
+`brew install fzf`
