@@ -56,4 +56,4 @@ brew
 
 `sudo easy_install pip`
 ## Common
-`brew install fzf`
+`brew install fzf hexyl`
