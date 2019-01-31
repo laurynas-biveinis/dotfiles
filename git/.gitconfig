@@ -11,3 +11,5 @@
 	enabled = false
 [commit]
 	gpgsign = true
+[gpg]
+	program = gpg1
