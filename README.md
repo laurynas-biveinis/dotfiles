@@ -49,7 +49,9 @@ If "wakatime" is enabled then
 `sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"`
 ## macOS
 `defaults write com.apple.Safari AutoOpenSafeDownloads 0`
+
 brew
+
 `brew install stow git z ncdu gnupg@1.4`
 
 `sudo easy_install pip`
