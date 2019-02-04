@@ -9,6 +9,7 @@ if [ -d /usr/lib/ccache ]; then
     export PATH=/usr/lib/ccache:$PATH
 fi
 
+export HOMEBREW_NO_INSTALL_CLEANUP=y
 export LINUXBREW_PATH=/home/linuxbrew/.linuxbrew
 
 if [ -d $LINUXBREW_PATH ]; then
