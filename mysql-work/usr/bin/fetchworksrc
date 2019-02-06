@@ -19,6 +19,7 @@ function update_worktree () {
     pushd "$fullpath" || return
     $CF_OFF
     git pull
+    git submodule update
     $CF_ON
     popd || return
 }
