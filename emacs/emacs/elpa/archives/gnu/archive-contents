@@ -396,7 +396,7 @@
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
  (el-search .
-	    [(1 9 6)
+	    [(1 9 7)
 	     ((emacs
 	       (25))
 	      (stream
@@ -574,7 +574,7 @@
 	   ((emacs
 	     (25)))
 	   "gnamù reader, a reader with espeak tts" tar
-	   ((:keywords "tools")
+	   ((:keywords "tools" "accessibility")
 	    (:url . "http://elpa.gnu.org/packages/greader.html"))])
  (heap .
        [(0 5)
@@ -1111,7 +1111,9 @@
  (sokoban .
 	  [(1 4 7)
 	   ((emacs
-	     (23 1)))
+	     (23 1))
+	    (cl-lib
+	     (0 5)))
 	   "Implementation of Sokoban for Emacs." tar
 	   ((:keywords "games")
 	    (:url . "http://elpa.gnu.org/packages/sokoban.html"))])
