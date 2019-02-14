@@ -1109,7 +1109,7 @@
 	       ((:keywords "soap" "web-services" "comm" "hypermedia")
 		(:url . "http://elpa.gnu.org/packages/soap-client.html"))])
  (sokoban .
-	  [(1 4 7)
+	  [(1 4 8)
 	   ((emacs
 	     (23 1))
 	    (cl-lib
@@ -1364,10 +1364,10 @@
        ((:keywords "multimedia" "xpm")
 	(:url . "http://www.gnuvola.org/software/xpm/"))])
  (xr .
-     [(1 0)
-      nil "Convert string regexp to rx notation" single
-      ((:url . "http://elpa.gnu.org/packages/xr.html")
-       (:keywords "lisp" "maint" "regexps"))])
+     [(1 1)
+      nil "Convert string regexp to rx notation" tar
+      ((:keywords "lisp" "maint" "regexps")
+       (:url . "http://elpa.gnu.org/packages/xr.html"))])
  (yasnippet .
 	    [(0 13 0)
 	     ((cl-lib
