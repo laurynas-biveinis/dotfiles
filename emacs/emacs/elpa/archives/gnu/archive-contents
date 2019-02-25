@@ -298,7 +298,7 @@
 	     ((:url . "http://www.dr-qubit.org/emacs.php")
 	      (:keywords "extensions" "matching" "data structures trie" "tree" "dictionary" "completion" "regexp"))])
  (diff-hl .
-	  [(1 8 5)
+	  [(1 8 6)
 	   ((cl-lib
 	     (0 2))
 	    (emacs
@@ -312,7 +312,7 @@
 	    ((:url . "https://github.com/mgalgs/diffview-mode")
 	     (:keywords "convenience" "diff"))])
  (dired-du .
-	   [(0 5 1)
+	   [(0 5 2)
 	    ((emacs
 	      (24 4))
 	     (cl-lib
@@ -320,6 +320,20 @@
 	    "Dired with recursive directory sizes" tar
 	    ((:keywords "files" "unix" "convenience")
 	     (:url . "http://elpa.gnu.org/packages/dired-du.html"))])
+ (dired-git-info .
+		 [(0 2)
+		  ((emacs
+		    (25)))
+		  "Show git info in dired" single
+		  ((:url . "https://github.com/clemera/dired-git-info")
+		   (:keywords "dired" "files"))])
+ (disk-usage .
+	     [(1 1 0)
+	      ((emacs
+		(25 1)))
+	      "Sort and browse disk usage listings" single
+	      ((:url . "https://gitlab.com/Ambrevar/emacs-disk-usage")
+	       (:keywords "files" "convenience" "tools"))])
  (dismal .
 	 [(1 5)
 	  ((cl-lib
@@ -396,7 +410,7 @@
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
  (el-search .
-	    [(1 9 7)
+	    [(1 11 3)
 	     ((emacs
 	       (25))
 	      (stream
@@ -455,7 +469,7 @@
 	       ((:keywords "calendar")
 		(:url . "http://elpa.gnu.org/packages/excorporate.html"))])
  (exwm .
-       [(0 22)
+       [(0 22 1)
 	((xelb
 	  (0 16)))
 	"Emacs X Window Manager" tar
@@ -576,6 +590,17 @@
 	   "gnamù reader, a reader with espeak tts" tar
 	   ((:keywords "tools" "accessibility")
 	    (:url . "http://elpa.gnu.org/packages/greader.html"))])
+ (guess-language .
+		 [(0 0 1)
+		  ((cl-lib
+		    (0 5))
+		   (emacs
+		    (24))
+		   (advice
+		    (0 1)))
+		  "Robust automatic language detection" single
+		  ((:url . "https://github.com/tmalsburg/guess-language.el")
+		   (:keywords))])
  (heap .
        [(0 5)
 	nil "Heap (a.k.a. priority queue) data structure" single
@@ -653,7 +678,7 @@
 	       ((:url . "http://elpa.gnu.org/packages/jgraph-mode.html")
 		(:keywords "tex" "wp"))])
  (js2-mode .
-	   [(20180301)
+	   [(20190219)
 	    ((emacs
 	      (24 1))
 	     (cl-lib
@@ -895,7 +920,7 @@
 	     ((:url . "https://github.com/michael-heerdegen/on-screen.el")
 	      (:keywords "convenience"))])
  (org .
-      [(9 2 1)
+      [(9 2 2)
        nil "Outline-based notes management and organizer" tar
        ((:keywords "outlines" "hypermedia" "calendar" "wp")
 	(:url . "http://elpa.gnu.org/packages/org.html"))])
@@ -1364,7 +1389,7 @@
        ((:keywords "multimedia" "xpm")
 	(:url . "http://www.gnuvola.org/software/xpm/"))])
  (xr .
-     [(1 1)
+     [(1 2)
       nil "Convert string regexp to rx notation" tar
       ((:keywords "lisp" "maint" "regexps")
        (:url . "http://elpa.gnu.org/packages/xr.html"))])
