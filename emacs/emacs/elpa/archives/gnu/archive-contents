@@ -130,6 +130,15 @@
 	 nil "Brief Editor Emulator (Brief Mode)" tar
 	 ((:keywords "brief" "emulations" "crisp")
 	  (:url . "http://elpa.gnu.org/packages/brief.html"))])
+ (buffer-expose .
+		[(0 1)
+		 ((emacs
+		   (25))
+		  (cl-lib
+		   (0 5)))
+		 "Visual buffer switching using a window grid" single
+		 ((:url . "https://github.com/clemera/buffer-expose")
+		  (:keywords "convenience"))])
  (bug-hunter .
 	     [(1 3 1)
 	      ((seq
@@ -1389,7 +1398,7 @@
        ((:keywords "multimedia" "xpm")
 	(:url . "http://www.gnuvola.org/software/xpm/"))])
  (xr .
-     [(1 2)
+     [(1 3)
       nil "Convert string regexp to rx notation" tar
       ((:keywords "lisp" "maint" "regexps")
        (:url . "http://elpa.gnu.org/packages/xr.html"))])
