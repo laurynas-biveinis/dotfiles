@@ -131,7 +131,7 @@
 	 ((:keywords "brief" "emulations" "crisp")
 	  (:url . "http://elpa.gnu.org/packages/brief.html"))])
  (buffer-expose .
-		[(0 2)
+		[(0 3)
 		 ((emacs
 		   (25))
 		  (cl-lib
