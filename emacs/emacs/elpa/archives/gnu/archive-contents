@@ -666,7 +666,7 @@
        ((:keywords "matching")
 	(:url . "https://github.com/abo-abo/swiper"))])
  (ivy-explorer .
-	       [(0 2 0)
+	       [(0 3 1)
 		((emacs
 		  (25))
 		 (ivy
@@ -987,7 +987,7 @@
 	  ((:keywords "extensions")
 	   (:url . "https://github.com/cute-jumper/parsec.el"))])
  (peg .
-      [(0 8)
+      [(0 9 1)
        ((emacs
 	 (25)))
        "Parsing Expression Grammars in Emacs Lisp" tar
