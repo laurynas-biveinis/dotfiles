@@ -666,7 +666,7 @@
        ((:keywords "matching")
 	(:url . "https://github.com/abo-abo/swiper"))])
  (ivy-explorer .
-	       [(0 3 1)
+	       [(0 3 2)
 		((emacs
 		  (25))
 		 (ivy
