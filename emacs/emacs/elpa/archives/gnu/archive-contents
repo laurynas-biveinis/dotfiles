@@ -908,7 +908,7 @@
 	  ((:url . "http://elpa.gnu.org/packages/oauth2.html")
 	   (:keywords "comm"))])
  (objed .
-	[(0 7 3)
+	[(0 7 4)
 	 ((emacs
 	   (25))
 	  (cl-lib
@@ -987,7 +987,7 @@
 	  ((:keywords "extensions")
 	   (:url . "https://github.com/cute-jumper/parsec.el"))])
  (peg .
-      [(0 9 1)
+      [(1 0)
        ((emacs
 	 (25)))
        "Parsing Expression Grammars in Emacs Lisp" tar
