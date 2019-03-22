@@ -1411,7 +1411,7 @@
        ((:keywords "multimedia" "xpm")
 	(:url . "http://www.gnuvola.org/software/xpm/"))])
  (xr .
-     [(1 7)
+     [(1 9)
       nil "Convert string regexp to rx notation" tar
       ((:keywords "lisp" "maint" "regexps")
        (:url . "http://elpa.gnu.org/packages/xr.html"))])
