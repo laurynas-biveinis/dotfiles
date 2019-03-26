@@ -525,11 +525,13 @@
 	      ((:url . "http://elpa.gnu.org/packages/frame-tabs.html")
 	       (:keywords "frames" "tabs"))])
  (frog-menu .
-	    [(0 1 1)
+	    [(0 2 1)
 	     ((emacs
 	       (26))
-	      (avy)
-	      (posframe))
+	      (avy
+	       (0 4))
+	      (posframe
+	       (0 4)))
 	     "Quickly pick items from ad hoc menus" single
 	     ((:url . "https://github.com/clemera/frog-menu")
 	      (:keywords "convenience"))])
@@ -917,7 +919,7 @@
 	  ((:url . "http://elpa.gnu.org/packages/oauth2.html")
 	   (:keywords "comm"))])
  (objed .
-	[(0 8)
+	[(0 8 1)
 	 ((emacs
 	   (25))
 	  (cl-lib
