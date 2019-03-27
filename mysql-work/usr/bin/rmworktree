@@ -35,7 +35,12 @@ for worktree in "$BRANCH"-?.? "$BRANCH"; do
 
     echo "Removing $worktree"
     rm -rf "$worktree"
+    if ! pushd "$WORK_MAIN_REPO"; then
+        echo "Failed to pushd to $WORK_MAIN_REPO"
+        exit 1
+    fi
     git branch -d "$worktree"
+    popd || exit 1
 done
 
 if cd "$WORK_MAIN_REPO"; then
