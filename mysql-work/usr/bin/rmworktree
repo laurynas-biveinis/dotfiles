@@ -35,6 +35,7 @@ for worktree in "$BRANCH"-?.? "$BRANCH"; do
 
     echo "Removing $worktree"
     rm -rf "$worktree"
+    git branch -d "$worktree"
 done
 
 if cd "$WORK_MAIN_REPO"; then
