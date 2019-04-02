@@ -1087,9 +1087,9 @@
 		 ((:url . "http://elpa.gnu.org/packages/register-list.html")
 		  (:keywords "register"))])
  (relint .
-	 [(1 5)
+	 [(1 6)
 	  ((xr
-	    (1 7)))
+	    (1 10)))
 	  "Elisp regexp mistake finder" single
 	  ((:url . "https://github.com/mattiase/relint")
 	   (:keywords "lisp" "maint" "regexps"))])
@@ -1436,10 +1436,10 @@
        ((:keywords "multimedia" "xpm")
 	(:url . "http://www.gnuvola.org/software/xpm/"))])
  (xr .
-     [(1 9)
+     [(1 10)
       nil "Convert string regexp to rx notation" tar
       ((:keywords "lisp" "maint" "regexps")
-       (:url . "http://elpa.gnu.org/packages/xr.html"))])
+       (:url . "https://github.com/mattiase/xr"))])
  (yasnippet .
 	    [(0 13 0)
 	     ((cl-lib
