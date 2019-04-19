@@ -49,6 +49,7 @@ If "wakatime" is enabled then
 `sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"`
 ## macOS
 `defaults write com.apple.Safari AutoOpenSafeDownloads 0`
+`chflags nohidden ~/Library/`
 
 brew
 
