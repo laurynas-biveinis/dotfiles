@@ -428,7 +428,7 @@
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
  (el-search .
-	    [(1 11 4)
+	    [(1 12 4)
 	     ((emacs
 	       (25))
 	      (stream
@@ -590,6 +590,11 @@
 	 "Glue code between Gnus, Org, and BBDB" tar
 	 ((:keywords "mail" "org" "gnus" "bbdb" "todo" "task")
 	  (:url . "http://elpa.gnu.org/packages/gnorb.html"))])
+ (gnu-elpa-keyring-update .
+			  [(2019 0)
+			   nil "Update Emacs's GPG keyring for GNU ELPA" single
+			   ((:url . "http://elpa.gnu.org/packages/gnu-elpa-keyring-update.html")
+			    (:keywords "maint" "tools"))])
  (gnugo .
 	[(3 1 0)
 	 ((ascii-art-to-unicode
