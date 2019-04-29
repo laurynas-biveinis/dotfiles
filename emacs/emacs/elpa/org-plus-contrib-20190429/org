@@ -16450,7 +16450,7 @@ handles ‘visual-line-mode’ and directly applied settings through
 
    (2) Also see the variable ‘org-adapt-indentation’.
 
-   (3) Because ‘LEVEL=2’ has 3 stars, ‘LEVEL=3’ has 4 stars, and so on.
+   (3) Because ‘LEVEL=2’ has 3 stars, ‘LEVEL=3’ has 5 stars, and so on.
 
 
 File: org,  Node: TTY Keys,  Next: Documentation Access,  Prev: Clean View,  Up: Miscellaneous
