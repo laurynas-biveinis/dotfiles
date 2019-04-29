@@ -112,3 +112,6 @@ else
     source_if_exists "$LINUXBREW_PATH/etc/profile.d/z.sh"
 fi
 
+
+# added by travis gem
+[ -f /Users/laurynas/.travis/travis.sh ] && source /Users/laurynas/.travis/travis.sh
