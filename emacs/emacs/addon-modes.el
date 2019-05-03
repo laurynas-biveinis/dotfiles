@@ -339,16 +339,7 @@
 
 ; Solarized-dark color theme
 (setq solarized-termcolors 256)
-(if emacs-24-or-later
-    (progn
-      (load-theme 'solarized-dark t))
-  (progn
-    (require 'color-theme)
-    (require 'color-theme-solarized)
-    (eval-after-load "color-theme"
-      '(progn
-         (color-theme-initialize)
-         (color-theme-solarized-dark)))))
+(load-theme 'solarized-dark t)
 
 ; IRC (ERC)
 (require 'erc)

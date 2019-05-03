@@ -1,9 +1,4 @@
 ; Some version checks
-(defconst emacs-23-or-later (>= emacs-major-version 23))
-(defconst emacs-23-2-or-later (or (and (= emacs-major-version 23)
-                                   (>= emacs-minor-version 2))
-                              (>= emacs-major-version 24)))
-(defconst emacs-24-or-later (>= emacs-major-version 24))
 (defconst emacs-24-4-or-later (or (and (= emacs-major-version 24)
                                    (>= emacs-minor-version 4))
                                   (>= emacs-major-version 25)))
@@ -18,6 +13,7 @@
 (defconst integrated-cc-mode-p emacs-24-4-or-later)
 
 ; Various paths
+; TODO: duplicated with .epm.el
 (defconst home-dir (concat (replace-regexp-in-string "\\\\" "/"
                                                  (getenv "HOME")) "/"))
 (defconst private-elisp
@@ -25,10 +21,6 @@
 (defconst dotfiles-elisp (concat private-elisp "dotfiles/*.el"))
 (defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
-
-(defconst elpa-dir (if emacs-24-or-later
-    (concat private-elisp "elpa/")
-  (concat private-elisp "elpa-23/")))
 
 (defconst erc-log-dir (concat home-dir "erclogs"))
 
@@ -56,22 +48,7 @@
 (load "secrets")
 (load "defaults")
 
-; ELPA
-(setq package-user-dir elpa-dir)
-(if emacs-24-or-later
-    (require 'package)
-  (when
-       (load
-        (expand-file-name (concat elpa-dir "package.el")))))
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(setq package-archive-priorities
-      '(("org"          . 20)
-        ("melpa-stable" . 15)
-        ("melpa"        . 10)))
-(package-initialize)
+(load "~/.epm.el")
 
 (load "addon-modes")
 (load "misc")
@@ -89,7 +66,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yaml-mode markdown-mode linum-off po-mode ssh ssh-config-mode bison-mode company-irony org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell autopair magit org auctex))))
+    (epm yaml-mode markdown-mode linum-off po-mode ssh ssh-config-mode bison-mode company-irony org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

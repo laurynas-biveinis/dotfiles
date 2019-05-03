@@ -5,17 +5,9 @@
 ; Keep all messages
 (setq message-log-max t)
 
-; Proper clipboard on Emacs 23 and earlier
-(unless emacs-24-or-later
-  (setq x-select-enable-clipboard t))
-
 ; Emacs 23.2+: Active region becomes primary selection
 (if (symbolp 'select-active-regions)
     (setq select-active-regions t))
-
-; Emacs 24.1+: deleting a region deletes.
-(unless (or emacs-24-or-later (not (symbolp 'delete-active-region)))
-    (setq delete-active-region t))
 
 ; C-k kills line including its newline
 (setq kill-whole-line t)
@@ -67,10 +59,6 @@
 
 ; Do not backup
 (setq make-backup-files nil)
-
-; Ask for initial file checking comment
-(unless emacs-23-2-or-later
-  (setq vc-initial-comment t))
 
 ; Use Unix-style line endings.
 (setq-default buffer-file-coding-system 'utf-8-unix)
@@ -166,10 +154,6 @@ already at that position, move point to the beginning of line."
 
 (setq shift-select-mode t)
 
-; Ignore file size in fontlocking
-(unless emacs-24-or-later
-  (setq font-lock-maximum-size nil))
-
 ; Turn on font-lock mode
 (global-font-lock-mode 1)
 (setq font-lock-maximum-decoration t)
@@ -202,8 +186,7 @@ already at that position, move point to the beginning of line."
 (which-function-mode)
 
 ; Soft word wrap
-(if emacs-23-or-later
-    (global-visual-line-mode 1))
+(global-visual-line-mode 1)
 
 ; Nice unique buffer names
 (require 'uniquify)
@@ -231,28 +214,7 @@ already at that position, move point to the beginning of line."
 
 (setq wdired-allow-to-change-permissions t)
 
-(if emacs-23-2-or-later
-    (setq dired-auto-revert-buffer t)
-  (progn
-    ; Refresh dired buffers on redisplay or buffer change
-    ; From http://nflath.com/2009/07/dired/
-    (defadvice switch-to-buffer-other-window
-        (after auto-refresh-dired (buffer &optional norecord) activate)
-      (if (equal major-mode 'dired-mode)
-          (revert-buffer)))
-    (defadvice switch-to-buffer
-        (after auto-refresh-dired (buffer &optional norecord) activate)
-      (if (equal major-mode 'dired-mode)
-          (revert-buffer)))
-    (defadvice display-buffer
-        (after auto-refresh-dired (buffer &optional not-this-window frame)
-               activate)
-      (if (equal major-mode 'dired-mode)
-          (revert-buffer)))
-    (defadvice other-window
-        (after auto-refresh-dired (arg &optional all-frame) activate)
-      (if (equal major-mode 'dired-mode)
-          (revert-buffer)))))
+(setq dired-auto-revert-buffer t)
 
 ; On save, create missing parent directories automatically
 ; From http://atomized.org/2008/12/emacs-create-directory-before-saving/
