@@ -1,4 +1,4 @@
-(define-package "epm" "0.1beta2" "Emacs Package Manager"
+(define-package "epm" "0.1" "Emacs Package Manager"
   '((emacs "24.3")
     (epl "0.8"))
   :authors

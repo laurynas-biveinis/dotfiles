@@ -43,16 +43,20 @@
 (require 'cl-lib)
 
 (when (equal "yes" (getenv "EPM_RUNNING_P"))
-  (let ((epm-init-file "~/.epm.el"))
+  (let ((epm-init-file (expand-file-name (or (getenv "EPM_INIT_FILE") "~/.epm.el"))))
     (if (file-exists-p epm-init-file)
-        ;; Using this instead of simply `load-file' is because I don't know how to
-        ;; silence load message, something like:
-        ;; Loading /Users/xcy/.epm.el (source)...
-        (with-temp-buffer
-          (insert-file-contents epm-init-file)
-          (eval-buffer))
+        (load epm-init-file nil 'no-message)
       (require 'package)
       (package-initialize))))
+
+;; NOTE: This variable was added into Emacs at April 22 2016.
+(when (boundp 'inhibit-message)
+  (require 'cus-edit)
+  (defun epm--inhibit-message (orig-func &rest r)
+    "Let-bind `inhibit-message' around ORIG-FUNC."
+    (let ((inhibit-message t))
+      (apply orig-func r)))
+  (advice-add 'customize-save-variable :around #'epm--inhibit-message))
 
 (require 'epl)
 
