@@ -182,6 +182,7 @@
 (setq org-ctrl-k-protect-subtree t)
 (setq org-support-shift-select t)
 (setq org-yank-adjusted-subtrees t)
+(setq org-catch-invisible-edits 'smart)
 
 ; Tags
 (setq org-tag-alist '((:startgroup . nil)
