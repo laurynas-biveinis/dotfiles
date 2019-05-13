@@ -6,7 +6,7 @@
 ;; Authors: François Pinard <pinard@iro.umontreal.ca>
 ;;          Greg McGary <gkm@magilla.cichlid.com>
 ;; Keywords: i18n gettext
-;; Package-Version: 20190420.1255
+;; Package-Version: 20190511.1542
 ;; Created: 1995
 
 ;; This file is part of GNU gettext.
@@ -2118,6 +2118,9 @@ comments) from the current entry, if the user gives the permission."
 (add-hook 'ediff-keymap-setup-hook
           '(lambda ()
              (define-key ediff-mode-map "Q" 'po-ediff-quit)))
+
+;; Avoid byte compiler warnings.
+(defvar entry-buffer)
 
 (defun po-ediff-buffers-exit-recursive (b1 b2 oldbuf end)
   "Ediff buffer B1 and B2, pop back to OLDBUF and replace the old variants.
