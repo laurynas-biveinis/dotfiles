@@ -70,7 +70,7 @@
 	((:url . "http://elpa.gnu.org/packages/ampc.html")
 	 (:keywords "ampc" "mpc" "mpd"))])
  (arbitools .
-	    [(0 975)
+	    [(0 976)
 	     ((cl-lib
 	       (0 5)))
 	     "Package for chess tournaments administration" single
@@ -111,12 +111,12 @@
 		 ((:keywords "extensions")
 		  (:url . "http://www.dr-qubit.org/emacs.php"))])
  (avy .
-      [(0 4 0)
+      [(0 5 0)
        ((emacs
 	 (24 1))
 	(cl-lib
 	 (0 5)))
-       "tree-based completion" tar
+       "Jump to arbitrary positions in visible text and select text quickly." tar
        ((:keywords "point" "location")
 	(:url . "https://github.com/abo-abo/avy"))])
  (bbdb .
@@ -133,7 +133,7 @@
 	  ((:url . "https://github.com/Malabarba/beacon")
 	   (:keywords "convenience"))])
  (bnf-mode .
-	   [(0 4 1)
+	   [(0 4 2)
 	    ((cl-lib
 	      (0 5))
 	     (emacs
@@ -681,7 +681,7 @@
 	 ((:keywords "bindings")
 	  (:url . "https://github.com/abo-abo/hydra"))])
  (hyperbole .
-	    [(7 0 2)
+	    [(7 0 3)
 	     ((emacs
 	       (24 4)))
 	     "GNU Hyperbole: The Everyday Hypertextual Information Manager" tar
@@ -700,7 +700,7 @@
 	     ((:url . "http://elpa.gnu.org/packages/iterators.html")
 	      (:keywords "extensions" "elisp"))])
  (ivy .
-      [(0 10 0)
+      [(0 11 0)
        ((emacs
 	 (24 1)))
        "Incremental Vertical completYon" tar

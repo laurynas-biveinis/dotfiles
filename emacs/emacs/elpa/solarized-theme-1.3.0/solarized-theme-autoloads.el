@@ -9,6 +9,16 @@
 ;;;### (autoloads nil "solarized" "solarized.el" (0 0 0 0))
 ;;; Generated autoloads from solarized.el
 
+(autoload 'solarized-color-blend "solarized" "\
+Blends COLOR1 onto COLOR2 with ALPHA.
+
+COLOR1 and COLOR2 should be color names (e.g. \"white\") or RGB
+triplet strings (e.g. \"#ff12ec\").
+
+Alpha should be a float between 0 and 1.
+
+\(fn COLOR1 COLOR2 ALPHA)" nil nil)
+
 (when (and (boundp 'custom-theme-load-path) load-file-name) (add-to-list 'custom-theme-load-path (file-name-as-directory (file-name-directory load-file-name))))
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "solarized" '("create-solarized-theme" "solarized-")))
