@@ -18,7 +18,7 @@ readonly tmp_patch=$(mktemp)
 readonly tmp_patch_commit=$(mktemp)
 echo "Saving $BRANCH-$HIGHER last commit on top of $base_rev"
 git log --format=%B -1 > "$tmp_patch_commit"
-git log -1 -p -m --first-parent --pretty=email > "$tmp_patch"
+git log -1 -p -m --first-parent --pretty=email --full-index --binary > "$tmp_patch"
 
 popd || exit 1
 
