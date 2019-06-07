@@ -1495,7 +1495,7 @@
 	     ((:keywords "news" "hypermedia" "blog" "feed" "rss" "atom")
 	      (:url . "https://gitlab.com/Ambrevar/emacs-webfeeder"))])
  (websocket .
-	    [(1 8)
+	    [(1 9)
 	     ((cl-lib
 	       (0 5)))
 	     "Emacs WebSocket client and server" tar
