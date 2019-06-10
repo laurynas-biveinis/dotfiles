@@ -1051,7 +1051,7 @@
 	 ((:url . "http://elpa.gnu.org/packages/poker.html")
 	  (:keywords "games"))])
  (posframe .
-	   [(0 4 3)
+	   [(0 5 0)
 	    ((emacs
 	      (26)))
 	    "Pop a posframe (just a frame) at point" single
