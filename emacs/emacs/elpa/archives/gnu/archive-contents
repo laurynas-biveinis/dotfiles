@@ -1468,11 +1468,6 @@
       nil "Fully customizable, largely undocumented web browser for Emacs" tar
       ((:keywords "faces" "help" "comm" "news" "mail" "processes" "mouse" "hypermedia")
        (:url . "http://elpa.gnu.org/packages/w3.html"))])
- (wcheck-mode .
-	      [(2016 1 30)
-	       nil "General interface for text checkers" single
-	       ((:url . "https://github.com/tlikonen/wcheck-mode")
-		(:keywords "text" "spell" "check" "languages" "ispell"))])
  (wconf .
 	[(0 2 1)
 	 ((emacs
