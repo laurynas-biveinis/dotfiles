@@ -488,7 +488,7 @@
 		  ((:keywords "convenience")
 		   (:url . "https://github.com/ergoemacs/ergoemacs-mode"))])
  (excorporate .
-	      [(0 8 2)
+	      [(0 8 3)
 	       ((emacs
 		 (24 1))
 		(fsm
