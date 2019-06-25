@@ -188,7 +188,7 @@
 	       (:keywords))])
  (cl-lib .
 	 [(0 6 1)
-	  nil "Properly prefixed CL functions and macros" single
+	  nil "Forward cl-lib compatibility library for Emacs<24.3" single
 	  ((:url . "http://elpa.gnu.org/packages/cl-lib.html")
 	   (:keywords))])
  (cl-print .
@@ -298,7 +298,7 @@
 		((:url . "http://elpa.gnu.org/packages/dbus-codegen.html")
 		 (:keywords "comm" "dbus" "convenience"))])
  (debbugs .
-	  [(0 18)
+	  [(0 19)
 	   ((emacs
 	     (25 1))
 	    (soap-client
