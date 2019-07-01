@@ -559,7 +559,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:keywords "killing" "convenience"))])
  (ebdb .
-       [(0 6 9)
+       [(0 6 10)
 	((emacs
 	  (25 1))
 	 (cl-lib
@@ -772,7 +772,7 @@
 		("Martin Rudalics" . "rudalics@gmx.at"))
 	       (:maintainer "Martin Rudalics" . "rudalics@gmx.at"))])
  (frog-menu .
-	    [(0 2 8)
+	    [(0 2 9)
 	     ((emacs
 	       (26))
 	      (avy
@@ -1470,6 +1470,13 @@
 	(:authors
 	 ("Helmut Eller" . "eller.helmut@gmail.com"))
 	(:url . "http://elpa.gnu.org/packages/peg.html"))])
+ (persist .
+	  [(0 1)
+	   nil "Persist Variables" single
+	   ((:url . "http://elpa.gnu.org/packages/persist.html")
+	    (:authors
+	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
+	    (:maintainer "Phillip Lord" . "phillip.lord@russet.org.uk"))])
  (pinentry .
 	   [(0 1)
 	    nil "GnuPG Pinentry server implementation" single
@@ -1952,6 +1959,17 @@
 	 (:authors
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
+ (tramp .
+	[(2 4 2)
+	 ((emacs
+	   (24 4)))
+	 "Transparent Remote Access, Multiple Protocol" tar
+	 ((:url . "https://savannah.gnu.org/projects/tramp")
+	  (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
+	  (:authors
+	   ("Kai Großjohann" . "kai.grossjohann@gmx.net")
+	   ("Michael Albinus" . "michael.albinus@gmx.de"))
+	  (:keywords "comm" "processes"))])
  (tramp-theme .
 	      [(0 2)
 	       ((emacs
@@ -2207,7 +2225,7 @@
 	    [(0 13 0)
 	     ((cl-lib
 	       (0 5)))
-	     "Yet another snippet extension for Emacs." tar
+	     "Yet another snippet extension for Emacs" tar
 	     ((:url . "http://github.com/joaotavora/yasnippet")
 	      (:maintainer "Noam Postavsky" . "npostavs@gmail.com")
 	      (:keywords "convenience" "emulation"))])

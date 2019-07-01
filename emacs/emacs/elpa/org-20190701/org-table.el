@@ -1081,6 +1081,7 @@ Before doing so, re-align the table if necessary."
       (org-table-align))
   (let ((col (org-table-current-column)))
     (beginning-of-line 2)
+    (unless (bolp) (insert "\n"))	;missing newline at eob
     (when (or (not (org-at-table-p))
 	      (org-at-table-hline-p))
       (beginning-of-line 0)
@@ -3355,8 +3356,7 @@ existing formula for column %s"
 			    (user-error
 			     "Missing columns in the table.  Aborting"))))))
 	      (org-table-eval-formula nil formula t t t t)))
-	  ;; Clean up markers and internal text property.
-	  (remove-text-properties (point-min) (point-max) '(:org-untouchable t))
+	  ;; Clean up marker.
 	  (set-marker end nil)))
 	(unless noalign
 	  (when org-table-may-need-update (org-table-align))
