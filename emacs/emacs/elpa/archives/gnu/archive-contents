@@ -744,7 +744,7 @@
 	     ("Barry O'Reilly" . "gundaetiapo@gmail.com"))
 	    (:maintainer "Barry O'Reilly" . "gundaetiapo@gmail.com"))])
  (flymake .
-	  [(1 0 6)
+	  [(1 0 8)
 	   ((emacs
 	     (26 1)))
 	   "A universal on-the-fly syntax checker" single
