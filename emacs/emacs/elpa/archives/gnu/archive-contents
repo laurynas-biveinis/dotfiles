@@ -102,7 +102,7 @@
 	  ("Christopher Schmidt" . "christopher@ch.ristopher.com"))
 	 (:maintainer nil . "emacs-devel@gnu.org"))])
  (arbitools .
-	    [(0 976)
+	    [(0 977)
 	     ((cl-lib
 	       (0 5)))
 	     "Package for chess tournaments administration" single
@@ -461,7 +461,7 @@
 	      (:maintainer "Toby Cubitt" . "toby-predictive@dr-qubit.org")
 	      (:url . "http://www.dr-qubit.org/emacs.php"))])
  (diff-hl .
-	  [(1 8 6)
+	  [(1 8 7)
 	   ((cl-lib
 	     (0 2))
 	    (emacs
@@ -1471,12 +1471,12 @@
 	 ("Helmut Eller" . "eller.helmut@gmail.com"))
 	(:url . "http://elpa.gnu.org/packages/peg.html"))])
  (persist .
-	  [(0 1)
-	   nil "Persist Variables" single
-	   ((:url . "http://elpa.gnu.org/packages/persist.html")
+	  [(0 4)
+	   nil "Persist Variables between Emacs Sessions" tar
+	   ((:maintainer "Phillip Lord" . "phillip.lord@russet.org.uk")
 	    (:authors
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
-	    (:maintainer "Phillip Lord" . "phillip.lord@russet.org.uk"))])
+	    (:url . "http://elpa.gnu.org/packages/persist.html"))])
  (pinentry .
 	   [(0 1)
 	    nil "GnuPG Pinentry server implementation" single
