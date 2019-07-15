@@ -8,8 +8,6 @@
 #
 # MTR_EMD: MTR options to preload libeatmydata
 #
-# alias rmcores="rm -rf /cores/*"
-#
 # Works on Linux and macOS.
 
 UNAME_OUT="$(uname -s)"
@@ -72,5 +70,3 @@ unset MY557
 unset MY567
 unset MY568
 unset MY578
-
-alias rmcores="rm -rf /cores/*"

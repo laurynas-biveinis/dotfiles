@@ -112,6 +112,7 @@ else
     source_if_exists "$LINUXBREW_PATH/etc/profile.d/z.sh"
 fi
 
+alias rmcores="rm -rf /cores/*"
 
 # added by travis gem
 [ -f /Users/laurynas/.travis/travis.sh ] && source /Users/laurynas/.travis/travis.sh
