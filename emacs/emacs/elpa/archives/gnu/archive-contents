@@ -1899,7 +1899,8 @@
        ((:url . "http://elpa.gnu.org/packages/svg.html")
 	(:keywords "image")
 	(:authors
-	 ("Lars Magne Ingebrigtsen" . "larsi@gnus.org"))
+	 ("Lars Magne Ingebrigtsen" . "larsi@gnus.org")
+	 ("Felix E. Klee" . "felix.klee@inka.de"))
 	(:maintainer "Lars Magne Ingebrigtsen" . "larsi@gnus.org"))])
  (svg-clock .
 	    [(1 0)
@@ -2257,7 +2258,7 @@
 			       (:keywords "snippets")
 			       (:url . "http://elpa.gnu.org/packages/yasnippet-classic-snippets.html"))])
  (zones .
-	[(2019 4 30)
+	[(2019 7 13)
 	 nil "Zones of text - like multiple regions" single
 	 ((:keywords "narrow" "restriction" "widen" "region" "zone")
 	  (:authors
