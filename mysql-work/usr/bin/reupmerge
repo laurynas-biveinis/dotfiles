@@ -27,11 +27,13 @@ rm -rf "$BRANCH-$HIGHER"
 pushd "$WORK_MAIN_REPO" || exit 1
 git worktree prune
 git branch -D "$BRANCH-$HIGHER"
+$CF_OFF
 git worktree add -b "$BRANCH-$HIGHER" "../$BRANCH-$HIGHER" "$base_rev"
 popd || exit 1
 
 pushd "$BRANCH-$HIGHER" || exit 1
 git merge --no-commit "$BRANCH-$LOWER" -s ours
+$CF_ON
 git apply --index "$tmp_patch"
 git commit -F "$tmp_patch_commit"
 popd || exit 0
