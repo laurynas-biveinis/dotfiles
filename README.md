@@ -44,7 +44,7 @@ If "wakatime" is enabled then
 
 # TODO new system setup
 ## Ubuntu
-`apt-get install build-essential ccache acpi valgrind rapidjson-dev stow gdb gdb-doc valgrind-dbg python-pip binutils cpp g++ gcc libasan5 libc6-dev liblsan0 libtsan0 libubsan1 make manpages-dev binutils-doc cpp-doc gcc-doc libstdc++-9-dev libstdc++6-9-dbg libasan5-dbg liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc libstdc++-9-doc make-doc gcc-doc cmake libboost-container-dev cmake-doc libboost-doc clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu gnupg1 lcov autoconf automake libtool flex bison ncurses-doc python-doc autoconf-archive gnu-standards autoconf-doc gettext bison-doc`
+`apt-get install build-essential ccache acpi valgrind rapidjson-dev stow gdb gdb-doc valgrind-dbg python-pip binutils cpp g++ gcc libasan5 libc6-dev liblsan0 libtsan0 libubsan1 make manpages-dev binutils-doc cpp-doc gcc-doc libstdc++-9-dev libstdc++6-9-dbg libasan5-dbg liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc libstdc++-9-doc make-doc gcc-doc cmake libboost-container-dev cmake-doc libboost-doc clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu gnupg1 lcov autoconf automake libtool flex bison ncurses-doc python-doc autoconf-archive gnu-standards autoconf-doc gettext bison-doc fzf`
 
 `sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"`
 ## macOS
@@ -56,8 +56,8 @@ If "wakatime" is enabled then
 
 brew
 
-`brew install stow git z ncdu gnupg@1.4`
+`brew install stow git z ncdu gnupg@1.4 fzf`
 
 `sudo easy_install pip`
 ## Common
-`brew install fzf hexyl tldr`
+`brew install hexyl tldr`
