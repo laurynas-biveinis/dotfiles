@@ -45,6 +45,10 @@ put .wakatime.cfg into $HOME
 ## Ubuntu
 `apt-get install build-essential ccache acpi valgrind rapidjson-dev stow gdb gdb-doc valgrind-dbg python-pip binutils cpp g++ gcc libasan5 libc6-dev liblsan0 libtsan0 libubsan1 make manpages-dev binutils-doc cpp-doc gcc-doc libstdc++-9-dev libstdc++6-9-dbg libasan5-dbg liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc libstdc++-9-doc make-doc gcc-doc cmake libboost-container-dev cmake-doc libboost-doc clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu gnupg1 lcov autoconf automake libtool flex bison ncurses-doc python-doc autoconf-archive gnu-standards autoconf-doc gettext bison-doc fzf hexyl tldr libaio-dev libssl-dev libreadline-dev readline-doc liblz4-dev libre2-dev libicu-dev icu-doc zlib1g-dev libevent-dev pkg-config libcurl4-gnutls-dev libcurl4-doc libpam0g-dev libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc`
 
+Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
+
+`sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"`
+
 ## macOS
 `defaults write com.apple.Safari AutoOpenSafeDownloads 0`
 
