@@ -1380,14 +1380,6 @@
 	       ("Michael Heerdegen" . "michael_heerdegen@web.de"))
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de")
 	      (:url . "https://github.com/michael-heerdegen/on-screen.el"))])
- (org .
-      [(9 2 3)
-       nil "Outline-based notes management and organizer" tar
-       ((:url . "https://orgmode.org")
-	(:maintainer "Carsten Dominik <carsten at orgmode dot org>")
-	(:authors
-	 ("Carsten Dominik <carsten at orgmode dot org>"))
-	(:keywords "outlines" "hypermedia" "calendar" "wp"))])
  (org-edna .
 	   [(1 0 2)
 	    ((emacs
@@ -1461,6 +1453,15 @@
 	   (:authors
 	    ("Junpeng Qiu" . "qjpchmail@gmail.com"))
 	   (:keywords "extensions"))])
+ (path-iterator .
+		[(1 0)
+		 ((emacs
+		   (25 0)))
+		 "An iterator for traversing a directory path." tar
+		 ((:maintainer "Stephen Leake" . "stephen_leake@stephe-leake.org")
+		  (:authors
+		   ("Stephen Leake" . "stephen_leake@stephe-leake.org"))
+		  (:url . "http://elpa.gnu.org/packages/path-iterator.html"))])
  (peg .
       [(1 0)
        ((emacs
@@ -1478,7 +1479,7 @@
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
 	    (:url . "http://elpa.gnu.org/packages/persist.html"))])
  (phps-mode .
-	    [(0 2 1)
+	    [(0 2 3)
 	     ((emacs
 	       (26)))
 	     "Major mode for PHP with Semantic integration" tar
@@ -1586,7 +1587,7 @@
 		("Alex Schroeder" . "alex@gnu.org"))
 	       (:maintainer "Alex Schroeder" . "alex@gnu.org"))])
  (realgud .
-	  [(1 5 0)
+	  [(1 5 1)
 	   ((load-relative
 	     (1 3 1))
 	    (loc-changes
@@ -1899,8 +1900,7 @@
        ((:url . "http://elpa.gnu.org/packages/svg.html")
 	(:keywords "image")
 	(:authors
-	 ("Lars Magne Ingebrigtsen" . "larsi@gnus.org")
-	 ("Felix E. Klee" . "felix.klee@inka.de"))
+	 ("Lars Magne Ingebrigtsen" . "larsi@gnus.org"))
 	(:maintainer "Lars Magne Ingebrigtsen" . "larsi@gnus.org"))])
  (svg-clock .
 	    [(1 0)
@@ -2023,6 +2023,16 @@
 		   nil "Unicode confusables table" tar
 		   ((:maintainer "Teodor Zlatanov" . "tzz@lifelogs.com")
 		    (:url . "http://elpa.gnu.org/packages/uni-confusables.html"))])
+ (uniquify-files .
+		 [(1 0)
+		  ((emacs
+		    (25 0)))
+		  "Completion style for files, minimizing directories" tar
+		  ((:maintainer "Stephen Leake" . "stephen_leake@stephe-leake.org")
+		   (:authors
+		    ("Stephen Leake" . "stephen_leake@stephe-leake.org"))
+		   (:keywords "completion" "table" "uniquify")
+		   (:url . "http://elpa.gnu.org/packages/uniquify-files.html"))])
  (url-http-ntlm .
 		[(2 0 4)
 		 ((cl-lib
