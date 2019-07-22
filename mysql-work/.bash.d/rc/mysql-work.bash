@@ -21,7 +21,8 @@ if [ "$UNAME_OUT" == "Darwin" ]; then
     # No point trying to build MyRocks until macOS fixes
     MY578_EXTRA="-DWITH_ROCKSDB=OFF"
     MY57_EXTRA="-DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf@3.1/"
-    MY80_EXTRA="-DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf/ -DWITH_ICU=/usr/local/opt/icu4c"
+    # 8.0.17 fails to build with system protobuf (brew 3.7.1), otherwise -DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf/
+    MY80_EXTRA="-DWITH_MYSQLX=OFF -DWITH_ICU=/usr/local/opt/icu4c -DWITH_RAPIDJSON=bundled"
 else
     # Linux
     export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/local/lib/libeatmydata.so"
