@@ -2550,7 +2550,7 @@ Return PDF file's name.
 ;;; Generated autoloads from ox-rss.el
 
 (autoload 'org-rss-export-as-rss "ox-rss" "\
-Export current buffer to a RSS buffer.
+Export current buffer to an RSS buffer.
 
 If narrowing is active in the current buffer, only export its
 narrowed part.
@@ -2575,7 +2575,7 @@ non-nil.
 \(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t nil)
 
 (autoload 'org-rss-export-to-rss "ox-rss" "\
-Export current buffer to a RSS file.
+Export current buffer to an RSS file.
 
 If narrowing is active in the current buffer, only export its
 narrowed part.
