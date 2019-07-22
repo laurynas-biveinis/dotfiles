@@ -22,7 +22,7 @@ if [ "$UNAME_OUT" == "Darwin" ]; then
     MY578_EXTRA="-DWITH_ROCKSDB=OFF"
     MY57_EXTRA="-DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf@3.1/"
     # 8.0.17 fails to build with system protobuf (brew 3.7.1), otherwise -DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf/
-    MY80_EXTRA="-DWITH_MYSQLX=OFF -DWITH_ICU=/usr/local/opt/icu4c -DWITH_RAPIDJSON=bundled"
+    MY80_EXTRA="-DWITH_MYSQLX=OFF -DWITH_ICU=/usr/local/opt/icu4c"
 else
     # Linux
     export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/local/lib/libeatmydata.so"
@@ -48,7 +48,7 @@ export MY56D="$MY56 $MYALLD"
 export MY57="$MYALL $MY557 $MY567 $MY568 $MY578 -DWITH_CURL=system -DWITH_LZ4=system -DWITH_MECAB=system -DWITH_PROTOBUF=system $MY57_EXTRA"
 export MY57D="$MY57 $MYALLD"
 
-export MY80="$MYALL $MY568 $MY578 -DWITH_AUTHENTICATION_LDAP=ON -DWITH_SYSTEM_LIBS=ON $MY80_EXTRA"
+export MY80="$MYALL $MY568 $MY578 -DWITH_AUTHENTICATION_LDAP=ON -DWITH_SYSTEM_LIBS=ON -DWITH_RAPIDJSON=bundled $MY80_EXTRA"
 export MY80D="$MY80 $MYALLD -DWITH_INNODB_EXTRA_DEBUG=ON"
 
 export MY56SAN="-DWITH_ASAN=ON"
