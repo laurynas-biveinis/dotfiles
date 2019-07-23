@@ -15,7 +15,7 @@ UNAME_OUT="$(uname -s)"
 if [ "$UNAME_OUT" == "Darwin" ]; then
     export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=/usr/local/lib --mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1 --mysqld-env=DYLD_INSERT_LIBRARIES=/usr/local/lib/libeatmydata.dylib"
     MY55_SSL="-DWITH_SSL=system -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/"
-    MY568_SSL="-DWITH_SSL=/usr/local/opt/openssl/"
+    MY567_SSL="-DWITH_SSL=/usr/local/opt/openssl/"
     # No point trying to build TokuDB until macOS fixes
     MY568_EXTRA="-DWITHOUT_TOKUDB=ON"
     # No point trying to build MyRocks until macOS fixes
