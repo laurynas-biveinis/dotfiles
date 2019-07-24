@@ -120,7 +120,11 @@
 			 (:url . "http://www.gnuvola.org/software/aa2u/"))])
  (async .
 	[(1 9 2)
-	 nil "Asynchronous processing in Emacs" tar
+	 ((cl-lib
+	   (0 5))
+	  (nadvice
+	   (0 3)))
+	 "Asynchronous processing in Emacs" tar
 	 ((:url . "https://github.com/jwiegley/emacs-async")
 	  (:maintainer "John Wiegley" . "jwiegley@gmail.com")
 	  (:authors
@@ -440,7 +444,11 @@
 	    (:url . "http://elpa.gnu.org/packages/debbugs.html"))])
  (delight .
 	  [(1 5)
-	   nil "A dimmer switch for your lighter text." single
+	   ((cl-lib
+	     (0 5))
+	    (nadvice
+	     (0 3)))
+	   "A dimmer switch for your lighter text" single
 	   ((:keywords "convenience")
 	    (:authors
 	     ("Phil Sainty" . "psainty@orcon.net.nz"))
