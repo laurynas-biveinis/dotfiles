@@ -114,5 +114,6 @@ fi
 
 alias rmcores="rm -rf /cores/*"
 
+# shellcheck disable=SC1091
 # added by travis gem
 [ -f /Users/laurynas/.travis/travis.sh ] && source /Users/laurynas/.travis/travis.sh
