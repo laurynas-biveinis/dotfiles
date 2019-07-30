@@ -48,7 +48,7 @@
 		   ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
 		  (:maintainer "Stephen Berman" . "stephen.berman@gmx.net"))])
  (adjust-parens .
-		[(3 0)
+		[(3 1)
 		 nil "Indent and dedent Lisp code, automatically adjust close parens" tar
 		 ((:maintainer "Barry O'Reilly" . "gundaetiapo@gmail.com")
 		  (:authors
@@ -635,7 +635,7 @@
 	   ("João Távora" . "joaotavora@gmail.com"))
 	  (:keywords "convenience" "languages"))])
  (el-search .
-	    [(1 12 5)
+	    [(1 12 6)
 	     ((emacs
 	       (25))
 	      (stream
@@ -1987,7 +1987,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tramp .
-	[(2 4 2)
+	[(2 4 2 1)
 	 ((emacs
 	   (24 4)))
 	 "Transparent Remote Access, Multiple Protocol" tar
