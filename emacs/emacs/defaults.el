@@ -279,3 +279,7 @@ already at that position, move point to the beginning of line."
 (setq compilation-scroll-output 'first-error)
 
 (setq compilation-environment '("LANG=C"))
+
+; GNU TLS
+; Workaround https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341 until 26.3
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
