@@ -1090,7 +1090,7 @@
 	      ("Terrence Brannon" . "metaperl@gmail.com"))
 	     (:maintainer nil . "emacs-devel@gnu.org"))])
  (let-alist .
-   [(1 0 5)
+   [(1 0 6)
     ((emacs
       (24 1)))
     "Easily let-bind values of an assoc-list by their names" single
@@ -1916,7 +1916,8 @@
        ((:url . "http://elpa.gnu.org/packages/svg.html")
 	(:keywords "image")
 	(:authors
-	 ("Lars Magne Ingebrigtsen" . "larsi@gnus.org"))
+	 ("Lars Magne Ingebrigtsen" . "larsi@gnus.org")
+	 ("Felix E. Klee" . "felix.klee@inka.de"))
 	(:maintainer "Lars Magne Ingebrigtsen" . "larsi@gnus.org"))])
  (svg-clock .
 	    [(1 0)
