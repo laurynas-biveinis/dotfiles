@@ -157,9 +157,9 @@
 ; find what uses gpg.
 (setq epg-gpg-program "gpg1")
 
-; --------
 ; org-mode
-; --------
+; Prerequisites: const main-org-file and list org-agenda-files, that must be
+; set elsewhere (i.e. secrets.el)
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
 ; Bendra
@@ -170,11 +170,6 @@
 (define-key global-map "\C-c\C-x\C-o" 'org-clock-out)
 (setq org-use-speed-commands t)
 (setq org-log-done t)
-(defconst main-org-file (concat org-directory "gtd.org"))
-(setq org-agenda-files (list main-org-file
-                             (concat org-directory "percona.org")
-                             (concat org-directory "phd.org")
-                             (concat org-directory "music.org")))
 (setq org-default-notes-file main-org-file)
 (setq org-mobile-inbox-for-pull main-org-file)
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
