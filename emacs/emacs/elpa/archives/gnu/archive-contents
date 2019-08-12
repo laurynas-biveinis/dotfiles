@@ -635,7 +635,7 @@
 	   ("João Távora" . "joaotavora@gmail.com"))
 	  (:keywords "convenience" "languages"))])
  (el-search .
-	    [(1 12 6)
+	    [(1 12 6 1)
 	     ((emacs
 	       (25))
 	      (stream
@@ -762,15 +762,15 @@
 	     ("Pavel Kobyakov" . "pk_at_work@yahoo.com"))
 	    (:maintainer "João Távora" . "joaotavora@gmail.com"))])
  (fountain-mode .
-		[(2 7 1)
+		[(2 7 3)
 		 ((emacs
 		   (24 5)))
 		 "Major mode for screenwriting in Fountain markup" single
-		 ((:url . "http://elpa.gnu.org/packages/fountain-mode.html")
-		  (:keywords "wp" "text")
+		 ((:keywords "wp" "text")
 		  (:authors
-		   ("Paul W. Rankin" . "hello@paulwrankin.com"))
-		  (:maintainer "Paul W. Rankin" . "hello@paulwrankin.com"))])
+		   ("Paul W. Rankin" . "pwr@sdf.org"))
+		  (:maintainer "Paul W. Rankin" . "pwr@sdf.org")
+		  (:url . "https://fountain-mode.org"))])
  (frame-tabs .
 	     [(1 1)
 	      nil "show buffer tabs in side window" single
@@ -818,7 +818,7 @@
 	   (:maintainer "Leo Liu" . "sdl.web@gmail.com")
 	   (:url . "https://github.com/leoliu/ggtags"))])
  (gited .
-	[(0 5 3)
+	[(0 5 4)
 	 ((emacs
 	   (24 4))
 	  (cl-lib
@@ -1389,7 +1389,7 @@
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de")
 	      (:url . "https://github.com/michael-heerdegen/on-screen.el"))])
  (org .
-      [(9 2 3)
+      [(9 2 5)
        nil "Outline-based notes management and organizer" tar
        ((:url . "https://orgmode.org")
 	(:maintainer "Carsten Dominik <carsten at orgmode dot org>")
@@ -1713,9 +1713,9 @@
 		   ("Bastien Guerry" . "bzg@gnu.org"))
 		  (:maintainer "Bastien Guerry" . "bzg@gnu.org"))])
  (relint .
-	 [(1 8)
+	 [(1 10)
 	  ((xr
-	    (1 12)))
+	    (1 13)))
 	  "Elisp regexp mistake finder" single
 	  ((:keywords "lisp" "maint" "regexps")
 	   (:authors
@@ -2261,7 +2261,7 @@
 	 ("Thien-Thi Nguyen" . "ttn@gnu.org"))
 	(:keywords "multimedia" "xpm"))])
  (xr .
-     [(1 12)
+     [(1 13)
       nil "Convert string regexp to rx notation" tar
       ((:url . "https://github.com/mattiase/xr")
        (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
