@@ -50,6 +50,8 @@ Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 `sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"`
 
 ## macOS
+`defaults write -g AppleLocale -string lt_LT`
+
 `defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"`
 
 `defaults write -g KeyRepeat -int 2`
