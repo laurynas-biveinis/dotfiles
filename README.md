@@ -52,6 +52,8 @@ Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 ## macOS
 `defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"`
 
+`defaults write -g KeyRepeat -int 2`
+
 `defaults write com.apple.Safari AutoOpenSafeDownloads 0`
 
 `chflags nohidden ~/Library/`
