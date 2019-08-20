@@ -780,7 +780,7 @@
 		("Martin Rudalics" . "rudalics@gmx.at"))
 	       (:maintainer "Martin Rudalics" . "rudalics@gmx.at"))])
  (frog-menu .
-	    [(0 2 9)
+	    [(0 2 10)
 	     ((emacs
 	       (26))
 	      (avy
@@ -1369,8 +1369,8 @@
 	    ((:url . "http://elpa.gnu.org/packages/olivetti.html")
 	     (:keywords "wp" "text")
 	     (:authors
-	      ("Paul Rankin" . "hello@paulwrankin.com"))
-	     (:maintainer "Paul Rankin" . "hello@paulwrankin.com"))])
+	      ("Paul W. Rankin" . "pwr@sdf.org"))
+	     (:maintainer "Paul W. Rankin" . "pwr@sdf.org"))])
  (omn-mode .
 	   [(1 2)
 	    nil "Support for OWL Manchester Notation" single
@@ -2224,7 +2224,7 @@
 	  ("Stephen Leake" . "stephen_leake@stephe-leake.org"))
 	 (:keywords "parser" "indentation" "navigation"))])
  (wisitoken-grammar-mode .
-			 [(1 0 2)
+			 [(1 0 3)
 			  ((wisi
 			    (2 2 1))
 			   (emacs
