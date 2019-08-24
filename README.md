@@ -48,6 +48,8 @@ Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 
 ## macOS
 
+Do applicable bits of [macOS Security and Privacy Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide)
+
 ```bash
 defaults write -g AppleLocale -string lt_LT
 defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
