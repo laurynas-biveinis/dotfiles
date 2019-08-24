@@ -2,13 +2,12 @@
 My dotfiles and scripts. Specific for bash.
 
 # installation
-`cd`
-
-`git clone git@github.com:laurynas-biveinis/dotfiles.git`
-
-`cd dotfiles`
-
-`git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git`
+```bash
+cd
+git clone git@github.com:laurynas-biveinis/dotfiles.git
+cd dotfiles
+git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git
+````
 
 Create `~/.noninteractive_init_private.bash`, if needed.
 
@@ -21,23 +20,21 @@ On macOS:
 `/usr/local/opt/fzf/install`
 
 If "emacs" is enabled, then 
-`brew install gnupg@1.4`
-
-`ln -sf /usr/local/bin/gpg1 /usr/local/bin/gpg`
-
-`ln -sf $HOME/Documents/secrets.el $HOME/secrets.el`
+```bash
+brew install gnupg@1.4
+ln -sf /usr/local/bin/gpg1 /usr/local/bin/gpg
+ln -sf $HOME/Documents/secrets.el $HOME/secrets.el
+```
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
 If "wakatime" is enabled then
-
-`sudo pip install wakatime`
-
-`mkdir -p ~/usr/src`
-
-`cd ~/usr/src`
-
-`git clone https://github.com/gjsheep/bash-wakatime.git`
+```bash
+sudo pip install wakatime
+mkdir -p ~/usr/src
+cd ~/usr/src
+git clone https://github.com/gjsheep/bash-wakatime.git
+```
 
 put .wakatime.cfg into $HOME
 
@@ -50,22 +47,20 @@ Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 `sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"`
 
 ## macOS
-`defaults write -g AppleLocale -string lt_LT`
 
-`defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"`
-
-`defaults write -g KeyRepeat -int 2`
-
-`defaults write -g InitialKeyRepeat -int 35`
-
-`defaults write com.apple.Safari AutoOpenSafeDownloads 0`
-
-`chflags nohidden ~/Library/`
-
-`defaults write com.apple.finder AppleShowAllFiles YES`
+```bash
+defaults write -g AppleLocale -string lt_LT
+defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
+defaults write -g KeyRepeat -int 2
+defaults write -g InitialKeyRepeat -int 35
+defaults write com.apple.Safari AutoOpenSafeDownloads 0
+chflags nohidden ~/Library/
+defaults write com.apple.finder AppleShowAllFiles YES
+```
 
 brew
 
-`brew install stow git z ncdu gnupg@1.4 fzf hexyl tldr`
-
-`sudo easy_install pip`
+```bash
+brew install stow git z ncdu gnupg@1.4 fzf hexyl tldr
+sudo easy_install pip
+```
