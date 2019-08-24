@@ -55,6 +55,7 @@ Install [Lithuanian Standard Keyboard Layout](http://ims.mii.lt/klav/tvarkyk.htm
 ```bash
 sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
+sudo dscl . create /Users/admin IsHidden 1
 # defaults write -g AppleLocale -string en_LT
 # defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 defaults write -g KeyRepeat -int 2
