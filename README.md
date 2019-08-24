@@ -53,6 +53,8 @@ Do applicable bits of [macOS Security and Privacy Guide](https://github.com/drdu
 Install [Lithuanian Standard Keyboard Layout](http://ims.mii.lt/klav/tvarkyk.html)
 
 ```bash
+sudo scutil --set ComputerName new-computer-name
+sudo scutil --set LocalHostName new-computer-name
 # defaults write -g AppleLocale -string en_LT
 # defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 defaults write -g KeyRepeat -int 2
