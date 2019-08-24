@@ -52,7 +52,7 @@ Do applicable bits of [macOS Security and Privacy Guide](https://github.com/drdu
 
 ```bash
 # defaults write -g AppleLocale -string en_LT
-defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
+# defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 35
 defaults write com.apple.Safari AutoOpenSafeDownloads 0
