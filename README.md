@@ -59,6 +59,9 @@ sudo fdesetup enable
 # Reboot
 sudo fdesetup remove -user admin
 sudo dscl . create /Users/admin IsHidden 1
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
 # defaults write -g AppleLocale -string en_LT
 # defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 defaults write -g KeyRepeat -int 2
