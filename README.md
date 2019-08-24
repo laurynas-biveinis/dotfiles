@@ -63,6 +63,7 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
 sudo pkill -HUP socketfilterfw
+# Install XCode
 # defaults write -g AppleLocale -string en_LT
 # defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 defaults write -g KeyRepeat -int 2
