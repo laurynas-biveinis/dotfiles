@@ -71,6 +71,7 @@ defaults write -g InitialKeyRepeat -int 35
 defaults write com.apple.Safari AutoOpenSafeDownloads 0
 chflags nohidden ~/Library/
 defaults write com.apple.finder AppleShowAllFiles YES
+sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 ```
 
 brew
