@@ -71,6 +71,7 @@ defaults write -g InitialKeyRepeat -int 35
 defaults write com.apple.Safari AutoOpenSafeDownloads 0
 chflags nohidden ~/Library/
 defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 ```
 
