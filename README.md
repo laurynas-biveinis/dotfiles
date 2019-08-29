@@ -78,6 +78,6 @@ sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 brew
 
 ```bash
-brew install stow git z ncdu gnupg@1.4 fzf hexyl tldr
+brew install stow git z ncdu gnupg@1.4 fzf hexyl tldr lynis
 sudo easy_install pip
 ```
