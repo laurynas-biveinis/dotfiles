@@ -57,6 +57,7 @@ Command-Option-P-R on the first boot
 Defaults script based on links from [here](https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/), especially [this one](https://github.com/mathiasbynens/dotfiles/blob/master/.macos).
 
 ```bash
+# Add Terminal.app to System Preferences -> Privacy -> Full Disk Access
 #
 # Lithuanian Standard Keyboard Layout (http://ims.mii.lt/klav/tvarkyk.html)
 #
