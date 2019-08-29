@@ -72,6 +72,7 @@ defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 35
 defaults write com.apple.Safari AutoOpenSafeDownloads 0
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFraudulentWebsites -bool true
+defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 chflags nohidden ~/Library/
 defaults write com.apple.finder AppleShowAllFiles -bool true
 defaults -currentHost write /Library/Preferences/SystemConfiguration/com.apple.finder AppleShowAllFiles -bool true
