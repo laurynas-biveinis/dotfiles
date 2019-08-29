@@ -99,6 +99,15 @@ sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 # Activity Monitor
 # Show all processes
 defaults write com.apple.ActivityMonitor ShowCategory -int 0
+#
+# Software Update
+#
+# Check for updates automatically
+defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+# Check daily
+defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+# Download updates in background automatically
+defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 ```
 
 brew
