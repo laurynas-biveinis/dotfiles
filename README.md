@@ -57,9 +57,9 @@ sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
 sudo scutil --set HostName new-computer-name
 sudo fdesetup enable
+# Reboot (required by fdsetup enable)
 # Show language menu in the login screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
-# Reboot
 sudo fdesetup remove -user admin
 sudo dscl . create /Users/admin IsHidden 1
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
@@ -68,6 +68,8 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
 defaults -currentHost write ~/Library/Preferences/com.apple.alf -bool true
 defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
 sudo pkill -HUP socketfilterfw
+# TimeMachine: do not ask to use new hard drives for backup
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Install XCode
 # defaults write -g AppleLocale -string en_LT
 # defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
