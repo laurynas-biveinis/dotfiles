@@ -73,6 +73,13 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bo
 defaults delete com.apple.HIToolbox AppleEnabledInputSources
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 #
+# Keyboard
+#
+sudo defaults write -g KeyRepeat -int 2
+sudo defaults write -g InitialKeyRepeat -int 35
+defaults write KeyRepeat -int 2
+defaults write InitialKeyRepeat -int 35
+#
 # Computer name
 #
 sudo scutil --set ComputerName new-computer-name
@@ -101,11 +108,6 @@ sudo dscl . create /Users/admin IsHidden 1 # TODO
 # do not ask to use new hard drives for backup
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Install XCode, start it once, accept EULA
-#
-# Keyboard
-#
-defaults write -g KeyRepeat -int 2
-defaults write -g InitialKeyRepeat -int 35
 sudo defaults write com.apple.Safari AutoOpenSafeDownloads 0
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
