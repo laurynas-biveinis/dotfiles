@@ -96,6 +96,9 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 killall Dock
 killall Finder
 sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+# Activity Monitor
+# Show all processes
+defaults write com.apple.ActivityMonitor ShowCategory -int 0
 ```
 
 brew
