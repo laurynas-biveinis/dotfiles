@@ -108,7 +108,10 @@ sudo dscl . create /Users/admin IsHidden 1 # TODO
 # do not ask to use new hard drives for backup
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Install XCode, start it once, accept EULA
-sudo defaults write com.apple.Safari AutoOpenSafeDownloads 0
+#
+# Safari
+#
+defaults write com.apple.Safari AutoOpenSafeDownloads 0
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari ShowFullURLInSearchField -bool true
