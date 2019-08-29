@@ -95,7 +95,10 @@ sudo fdesetup enable
 # Reboot (required by fdsetup enable)
 sudo fdesetup remove -user admin # TODO
 sudo dscl . create /Users/admin IsHidden 1 # TODO
-# TimeMachine: do not ask to use new hard drives for backup
+#
+# TimeMachine (set up manually)
+#
+# do not ask to use new hard drives for backup
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Install XCode
 # defaults write -g AppleLocale -string en_LT
