@@ -119,9 +119,9 @@ defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 #
 # Dock
 #
-# Hot Corners: screen saver on the bottom left corner
-defaults write com.apple.dock wvous-bl-corner -int 5
-defaults write com.apple.dock wvous-bl-modifier -int 0
+# Hot Corners: screen saver on the bottom right corner
+defaults write com.apple.dock wvous-br-corner -int 5
+defaults write com.apple.dock wvous-br-modifier -int 0
 killall Dock
 #
 # Finder
