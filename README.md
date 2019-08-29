@@ -50,6 +50,8 @@ Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 
 Do applicable bits of [macOS Security and Privacy Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide)
 
+Command-R, reboot, Disk Utility, Erase root partition, format as a APFS (not encrypted, that will be enabled later)
+
 Install [Lithuanian Standard Keyboard Layout](http://ims.mii.lt/klav/tvarkyk.html)
 
 Defaults script based on links from [here](https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/), especially [this one](https://github.com/mathiasbynens/dotfiles/blob/master/.macos).
