@@ -64,6 +64,9 @@ curl http://ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
 # Verify the downloaded file (note that lack of https above!)
 unzip macOS.zip
 sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
+sudo defaults delete /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+defaults delete com.apple.HIToolbox AppleEnabledInputSources
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
