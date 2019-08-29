@@ -116,10 +116,12 @@ defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFrau
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari ShowFullURLInSearchField -bool true
 #
-# Hot Corners: screen saver on the bottom left corner
+# Dock
 #
+# Hot Corners: screen saver on the bottom left corner
 defaults write com.apple.dock wvous-bl-corner -int 5
 defaults write com.apple.dock wvous-bl-modifier -int 0
+killall Dock
 #
 # Finder
 #
@@ -131,10 +133,14 @@ sudo defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 sudo defaults -currentHost write /Library/Preferences/SystemConfiguration/com.apple.finder AppleShowAllFiles -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-killall Dock
 killall Finder
+#
+# SSH
+#
 sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+#
 # Activity Monitor
+#
 # Show all processes
 defaults write com.apple.ActivityMonitor ShowCategory -int 0
 #
