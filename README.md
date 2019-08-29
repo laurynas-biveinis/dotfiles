@@ -62,6 +62,7 @@ sudo dscl . create /Users/admin IsHidden 1
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
+sudo defaults -currentHost write ~/Library/Preferences/com.apple.alf -bool true
 sudo pkill -HUP socketfilterfw
 # Install XCode
 # defaults write -g AppleLocale -string en_LT
