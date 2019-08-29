@@ -52,11 +52,19 @@ Do applicable bits of [macOS Security and Privacy Guide](https://github.com/drdu
 
 Command-R, reboot, Disk Utility, Erase root partition, format as a APFS (not encrypted, that will be enabled later)
 
+Command-Option-P-R on the first boot
+
 Install [Lithuanian Standard Keyboard Layout](http://ims.mii.lt/klav/tvarkyk.html)
 
 Defaults script based on links from [here](https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/), especially [this one](https://github.com/mathiasbynens/dotfiles/blob/master/.macos).
 
 ```bash
+# Lithuanian Standard Keyboard Layout (http://ims.mii.lt/klav/tvarkyk.html)
+curl http://ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
+# Verify the downloaded file (note that lack of https above!)
+unzip macOS.zip
+sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
+defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
 sudo scutil --set HostName new-computer-name
