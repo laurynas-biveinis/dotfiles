@@ -115,8 +115,6 @@ defaults write com.apple.Safari AutoOpenSafeDownloads 0
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari ShowFullURLInSearchField -bool true
-chflags nohidden ~/Library/
-sudo chflags nohidden /Volumes
 # Hot Corners: screen saver on the bottom left corner
 defaults write com.apple.dock wvous-bl-corner -int 5
 defaults write com.apple.dock wvous-bl-modifier -int 0
@@ -149,7 +147,14 @@ defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 #
 # Do not open automatically when something is plugged in
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+#
+# Miscellaneous
+#
+chflags nohidden ~/Library/
+sudo chflags nohidden /Volumes
+#
 # SetupAssistant defaults:
+#
 # defaults write -g AppleLocale -string en_LT
 # defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 ```
