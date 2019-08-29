@@ -67,6 +67,8 @@ sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
 # Global and login screen setting
 sudo defaults delete /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources
 sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+# Show language menu in the login screen
+sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
 # Current user setting
 defaults delete com.apple.HIToolbox AppleEnabledInputSources
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
@@ -77,9 +79,8 @@ sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
 sudo scutil --set HostName new-computer-name
 sudo fdesetup enable
+# Save the recovery key
 # Reboot (required by fdsetup enable)
-# Show language menu in the login screen
-sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
 sudo fdesetup remove -user admin
 sudo dscl . create /Users/admin IsHidden 1
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
