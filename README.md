@@ -112,7 +112,7 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 #
 # Safari
 #
-defaults write com.apple.Safari AutoOpenSafeDownloads 0
+defaults write ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari AutoOpenSafeDownloads -bool false
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari ShowFullURLInSearchField -bool true
