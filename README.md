@@ -57,21 +57,23 @@ sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
 sudo scutil --set HostName new-computer-name
 sudo fdesetup enable
+# Show language menu in the login screen
+sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
 # Reboot
 sudo fdesetup remove -user admin
 sudo dscl . create /Users/admin IsHidden 1
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
-sudo defaults -currentHost write ~/Library/Preferences/com.apple.alf -bool true
-sudo defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
+defaults -currentHost write ~/Library/Preferences/com.apple.alf -bool true
+defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
 sudo pkill -HUP socketfilterfw
 # Install XCode
 # defaults write -g AppleLocale -string en_LT
 # defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 35
-defaults write com.apple.Safari AutoOpenSafeDownloads 0
+sudo defaults write com.apple.Safari AutoOpenSafeDownloads 0
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari ShowFullURLInSearchField -bool true
