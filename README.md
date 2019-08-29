@@ -79,6 +79,7 @@ chflags nohidden ~/Library/
 # Default view as list
 defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 defaults write com.apple.finder AppleShowAllFiles -bool true
+deafults write com.apple.finder ShowPathbar -bool true
 defaults -currentHost write /Library/Preferences/SystemConfiguration/com.apple.finder AppleShowAllFiles -bool true
 killall Dock
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
