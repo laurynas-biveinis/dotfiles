@@ -108,6 +108,11 @@ defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 # Download updates in background automatically
 defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
+#
+# Photos
+#
+# Do not open automatically when something is plugged in
+defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 ```
 
 brew
