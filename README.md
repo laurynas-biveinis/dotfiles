@@ -75,6 +75,9 @@ defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFrau
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari ShowFullURLInSearchField -bool true
 chflags nohidden ~/Library/
+# Finder
+# Default view as list
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 defaults write com.apple.finder AppleShowAllFiles -bool true
 defaults -currentHost write /Library/Preferences/SystemConfiguration/com.apple.finder AppleShowAllFiles -bool true
 killall Dock
