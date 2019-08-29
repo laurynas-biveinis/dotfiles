@@ -100,9 +100,10 @@ sudo dscl . create /Users/admin IsHidden 1 # TODO
 #
 # do not ask to use new hard drives for backup
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-# Install XCode
-# defaults write -g AppleLocale -string en_LT
-# defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
+# Install XCode, start it once, accept EULA
+#
+# Keyboard
+#
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 35
 sudo defaults write com.apple.Safari AutoOpenSafeDownloads 0
@@ -143,6 +144,9 @@ defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 #
 # Do not open automatically when something is plugged in
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+# SetupAssistant defaults:
+# defaults write -g AppleLocale -string en_LT
+# defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 ```
 
 brew
