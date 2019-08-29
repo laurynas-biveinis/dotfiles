@@ -55,6 +55,7 @@ Install [Lithuanian Standard Keyboard Layout](http://ims.mii.lt/klav/tvarkyk.htm
 ```bash
 sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
+sudo scutil --set HostName new-computer-name
 sudo fdesetup enable
 # Reboot
 sudo fdesetup remove -user admin
