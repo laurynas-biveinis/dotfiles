@@ -79,6 +79,9 @@ defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1Cert
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari ShowFullURLInSearchField -bool true
 chflags nohidden ~/Library/
 sudo chflags nohidden /Volumes
+# Hot Corners: screen saver on the bottom left corner
+defaults write com.apple.dock wvous-bl-corner -int 5
+defaults write com.apple.dock wvous-bl-modifier -int 0
 # Finder
 # Default view as list
 defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
