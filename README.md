@@ -78,17 +78,23 @@ defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><k
 sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
 sudo scutil --set HostName new-computer-name
-sudo fdesetup enable
-# Save the recovery key
-# Reboot (required by fdsetup enable)
-sudo fdesetup remove -user admin
-sudo dscl . create /Users/admin IsHidden 1
+#
+# Application Firewall
+#
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
 defaults -currentHost write ~/Library/Preferences/com.apple.alf -bool true
 defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
 sudo pkill -HUP socketfilterfw
+#
+# FileVault
+#
+sudo fdesetup enable
+# Save the recovery key
+# Reboot (required by fdsetup enable)
+sudo fdesetup remove -user admin # TODO
+sudo dscl . create /Users/admin IsHidden 1 # TODO
 # TimeMachine: do not ask to use new hard drives for backup
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Install XCode
