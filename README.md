@@ -52,6 +52,8 @@ Do applicable bits of [macOS Security and Privacy Guide](https://github.com/drdu
 
 Install [Lithuanian Standard Keyboard Layout](http://ims.mii.lt/klav/tvarkyk.html)
 
+Defaults script based on links from [here](https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/), especially [this one](https://github.com/mathiasbynens/dotfiles/blob/master/.macos).
+
 ```bash
 sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
