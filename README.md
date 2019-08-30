@@ -110,6 +110,11 @@ sudo dscl . create /Users/admin IsHidden 1 # TODO
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Install XCode, start it once, accept EULA
 #
+# Desktop picture could be set, but isn't - see 
+# https://www.tech-otaku.com/mac/setting-desktop-image-macos-mojave-from-command-line/ -
+# scripting there is sensitive to e.g. number of monitors
+#
+#
 # Safari
 #
 defaults write ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari AutoOpenSafeDownloads -bool false
