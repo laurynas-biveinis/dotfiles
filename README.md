@@ -115,6 +115,10 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # scripting there is sensitive to e.g. number of monitors
 #
 #
+# Screensaver
+#
+defaults -currentHost write com.apple.screensaver showClock -bool true
+#
 # Safari
 #
 defaults write ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari AutoOpenSafeDownloads -bool false
