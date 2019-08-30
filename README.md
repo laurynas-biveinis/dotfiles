@@ -81,6 +81,10 @@ sudo defaults write -g InitialKeyRepeat -int 35
 defaults write KeyRepeat -int 2
 defaults write InitialKeyRepeat -int 35
 #
+# Mouse
+#
+sudo defaults write -g com.apple.mouse.scaling -float 2
+#
 # Computer name
 #
 sudo scutil --set ComputerName new-computer-name
