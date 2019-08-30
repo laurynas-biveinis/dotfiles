@@ -36,7 +36,7 @@ cd ~/usr/src
 git clone https://github.com/gjsheep/bash-wakatime.git
 ```
 
-put .wakatime.cfg into $HOME
+put .wakatime.cfg into $HOME, `chmod 700` it.
 
 # TODO new system setup
 ## Ubuntu
