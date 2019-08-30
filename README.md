@@ -177,6 +177,11 @@ defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 # Do not open automatically when something is plugged in
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 #
+# Printer
+#
+# Automatically quit printer app once the print jobs complete
+defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+#
 # Miscellaneous
 #
 chflags nohidden ~/Library/
