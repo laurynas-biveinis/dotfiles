@@ -108,11 +108,9 @@ sudo dscl . create /Users/admin IsHidden 1 # TODO
 #
 # do not ask to use new hard drives for backup
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+#
 # Install XCode, start it once, accept EULA
 #
-# Desktop picture could be set, but isn't - see 
-# https://www.tech-otaku.com/mac/setting-desktop-image-macos-mojave-from-command-line/ -
-# scripting there is sensitive to e.g. number of monitors
 #
 #
 # Screensaver
@@ -177,6 +175,15 @@ sudo chflags nohidden /Volumes
 #
 # defaults write -g AppleLocale -string en_LT
 # defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
+#
+# Things tried but not working due to various reasons, set up manually:
+#
+# - Desktop picture could be set, but isn't - see 
+# https://www.tech-otaku.com/mac/setting-desktop-image-macos-mojave-from-command-line/ -
+# scripting there is sensitive to e.g. number of monitors
+# - NightShift recipes at e.g. 
+# https://gist.github.com/thomasfinch/14bd3181799734c872d2ad3b207cc01c have no effect 
+# on Mojave
 ```
 
 brew
