@@ -143,6 +143,8 @@ killall Dock
 defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 defaults write com.apple.finder AppleShowAllFiles -bool true
 defaults write com.apple.finder ShowPathbar -bool true
+# Show POSIX path in the window title
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 sudo defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 sudo defaults -currentHost write /Library/Preferences/SystemConfiguration/com.apple.finder AppleShowAllFiles -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
