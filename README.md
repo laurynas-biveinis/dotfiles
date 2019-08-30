@@ -153,6 +153,11 @@ killall Finder
 #
 sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 #
+# Screen Sharing
+#
+sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool false
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
+#
 # Activity Monitor
 #
 # Show all processes
