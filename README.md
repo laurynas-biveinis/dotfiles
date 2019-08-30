@@ -84,6 +84,8 @@ defaults write InitialKeyRepeat -int 35
 # Mouse
 #
 sudo defaults write -g com.apple.mouse.scaling -float 2
+defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string "TwoButton"
+defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode -string "TwoButton"
 #
 # Computer name
 #
