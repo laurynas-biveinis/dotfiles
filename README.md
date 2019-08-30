@@ -9,11 +9,7 @@ cd dotfiles
 git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git
 ````
 
-Create `~/.noninteractive_init_private.bash`, if needed.
-
-Create `secrets.el`.
-
-Apply `chmod 700` to both of them
+Create `~/.noninteractive_init_private.bash`, if needed. Then `chmod 700` it.
 
 Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g. "emacs nightly"
 
