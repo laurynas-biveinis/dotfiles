@@ -324,7 +324,6 @@
 ; org-mode encryption of selected subtrees
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
-(setq org-crypt-key "B8D47CD8")
 (setq org-crypt-disable-auto-save 'encrypt)
 
 ; org-id
