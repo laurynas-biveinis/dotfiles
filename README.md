@@ -207,7 +207,7 @@ sudo chflags nohidden /Volumes
 brew
 
 ```bash
-brew install stow git z ncdu gnupg@1.4 fzf hexyl tldr lynis curl
+brew install stow git z ncdu gnupg@1.4 fzf hexyl tldr lynis curl shellcheck
 sudo easy_install pip
 brew cask install emacs eve intel-power-gadget rescuetime slack vlc
 ```
