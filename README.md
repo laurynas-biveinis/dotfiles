@@ -216,4 +216,7 @@ brew
 brew install stow git z ncdu gnupg@1.4 fzf hexyl tldr lynis curl shellcheck
 sudo easy_install pip
 brew cask install emacs eve intel-power-gadget rescuetime slack vlc
+# Work: to be done
+# Play
+brew cask install banktivity beatunes disk-inventory-x google-chrome lastfm steam virtualbox virtualbox-extension-pack xld
 ```
