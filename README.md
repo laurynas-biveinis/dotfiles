@@ -207,6 +207,7 @@ sudo chflags nohidden /Volumes
 # - NightShift recipes at e.g. 
 # https://gist.github.com/thomasfinch/14bd3181799734c872d2ad3b207cc01c have no effect 
 # on Mojave
+# - Found no way to set "Show Time Machine in menu bar" from command line
 ```
 
 brew
