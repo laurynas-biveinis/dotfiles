@@ -130,6 +130,11 @@ defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFrau
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 #
+# Terminal
+#
+defaults write com.apple.Terminal "Default Window Settings" -string "Homebrew"
+defaults write com.apple.Terminal "Startup Window Settings" -string "Homebrew"
+#
 # Dock
 #
 # Hot Corners: screen saver on the bottom right corner
