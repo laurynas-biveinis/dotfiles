@@ -74,6 +74,11 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bo
 defaults delete com.apple.HIToolbox AppleEnabledInputSources
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 #
+# UI Controls
+#
+# Full keyboard control (e.g. Tab over buttons in modal dialogs)
+defaults write -g AppleKeyboardUIMode -int 3
+#
 # Keyboard
 #
 sudo defaults write -g KeyRepeat -int 2
@@ -129,6 +134,9 @@ defaults write ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/co
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+# Cmd-W should only close tab, never window
+defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' '<string>@w</string></dict>'
+defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add '<string>com.apple.Safari</string>'
 #
 # Terminal
 #
