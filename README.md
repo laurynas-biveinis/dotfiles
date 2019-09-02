@@ -129,6 +129,9 @@ defaults write ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/co
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari TreatSHA1CertificatesAsInsecure -bool true
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+# Cmd-W should only close tab, never window
+defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' '<string>@w</string></dict>'
+defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add '<string>com.apple.Safari</string>'
 #
 # Terminal
 #
