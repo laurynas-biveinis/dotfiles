@@ -53,8 +53,10 @@ libtool-doc m4-doc python-doc
 apt-get install libstdc++6-8-dbg libstdc++-8-doc
 # Ubuntu 19.04-specific
 apt-get install libstdc++6-9-dbg libstdc++-9-doc
+# Work
+apt-get install pkg-config libev-dev libssl-dev libssl-doc
 # MySQL development specific
-apt-get install ccache valgrind rapidjson-dev gdb-doc valgrind-dbg cmake libboost-container-dev \
+apt-get install ccache valgrind rapidjson-dev valgrind-dbg cmake libboost-container-dev \
 cmake-doc libboost-doc clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu \
 lcov ncurses-doc python-doc libaio-dev libssl-dev libreadline-dev readline-doc liblz4-dev \
 libre2-dev libicu-dev icu-doc zlib1g-dev libevent-dev pkg-config libcurl4-gnutls-dev \
