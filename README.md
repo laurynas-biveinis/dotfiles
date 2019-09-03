@@ -55,7 +55,8 @@ apt-get install libstdc++6-8-dbg libstdc++-8-doc
 apt-get install libstdc++6-9-dbg libstdc++-9-doc
 # Work
 apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev zlib1g-dev \
-libreadline-dev readline-doc ncurses-doc
+libreadline-dev readline-doc ncurses-doc pex python-pex-doc python-secretstorage-doc \
+python-setuptools-doc
 # MySQL development specific
 apt-get install ccache valgrind rapidjson-dev valgrind-dbg libboost-container-dev libboost-doc \
 clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu lcov ncurses-doc \
