@@ -43,19 +43,23 @@ put .wakatime.cfg into $HOME, `chmod 700` it.
 Common
 ```
 apt-get install acpi stow gnupg1 fzf hexyl tldr
-apt-get install python-pip
-apt-get install build-essential gdb manpages-dev binutils binutils-doc cpp g++ gcc \
-libasan5 liblsan0 libtsan0 libubsan1 libc6-dev make cpp-doc gcc-doc autoconf automake \
-libtool flex bison libasan5-dbg liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc \
-make-doc
-apt-get install ccache valgrind rapidjson-dev gdb gdb-doc valgrind-dbg libstdc++-9-dev \
-libstdc++6-9-dbg libstdc++-9-doc cmake libboost-container-dev cmake-doc libboost-doc \
-clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu lcov ncurses-doc \
-python-doc autoconf-archive gnu-standards autoconf-doc gettext bison-doc libaio-dev \
-libssl-dev libreadline-dev readline-doc liblz4-dev libre2-dev libicu-dev icu-doc \
-zlib1g-dev libevent-dev pkg-config libcurl4-gnutls-dev libcurl4-doc libpam0g-dev \
-libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab libprotoc-dev \
-doxygen doxygen-doc graphviz graphviz-doc libedit-dev
+apt-get install python-pip build-essential gdb manpages-dev binutils binutils-doc cpp g++ gcc \
+libasan5 liblsan0 libtsan0 libubsan1 libc6-dev make cpp-doc gcc-doc autoconf automake libtool \
+flex bison libasan5-dbg liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc make-doc \
+autoconf-archive gnu-standards autoconf-doc gettext bison-doc flex-doc libgcc1-dbg \
+libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg libquadmath0-dbg gdb-doc gettext-doc \
+libtool-doc m4-doc python-doc
+# Ubuntu 18.04-specific
+apt-get install libstdc++6-8-dbg libstdc++-8-doc
+# Ubuntu 19.04-specific
+apt-get install libstdc++6-9-dbg libstdc++-9-doc
+# MySQL development specific
+apt-get install ccache valgrind rapidjson-dev gdb-doc valgrind-dbg cmake libboost-container-dev \
+cmake-doc libboost-doc clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu \
+lcov ncurses-doc python-doc libaio-dev libssl-dev libreadline-dev readline-doc liblz4-dev \
+libre2-dev libicu-dev icu-doc zlib1g-dev libevent-dev pkg-config libcurl4-gnutls-dev \
+libcurl4-doc libpam0g-dev libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev \
+mecab libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev
 ```
 
 Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
