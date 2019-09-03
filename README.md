@@ -48,7 +48,7 @@ libasan5 liblsan0 libtsan0 libubsan1 libc6-dev make cpp-doc gcc-doc autoconf aut
 flex bison libasan5-dbg liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc make-doc \
 autoconf-archive gnu-standards autoconf-doc gettext bison-doc flex-doc libgcc1-dbg \
 libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg libquadmath0-dbg gdb-doc gettext-doc \
-libtool-doc m4-doc python-doc
+libtool-doc m4-doc python-doc cmake cmake-doc
 # Ubuntu 18.04-specific
 apt-get install libstdc++6-8-dbg libstdc++-8-doc
 # Ubuntu 19.04-specific
@@ -56,11 +56,11 @@ apt-get install libstdc++6-9-dbg libstdc++-9-doc
 # Work
 apt-get install pkg-config libev-dev libssl-dev libssl-doc
 # MySQL development specific
-apt-get install ccache valgrind rapidjson-dev valgrind-dbg cmake libboost-container-dev \
-cmake-doc libboost-doc clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu \
-lcov ncurses-doc python-doc libaio-dev libssl-dev libreadline-dev readline-doc liblz4-dev \
-libre2-dev libicu-dev icu-doc zlib1g-dev libevent-dev pkg-config libcurl4-gnutls-dev \
-libcurl4-doc libpam0g-dev libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev \
+apt-get install ccache valgrind rapidjson-dev valgrind-dbg libboost-container-dev libboost-doc \
+clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck iwyu ncdu lcov ncurses-doc \
+libaio-dev libssl-dev libreadline-dev readline-doc liblz4-dev libre2-dev libicu-dev icu-doc \
+zlib1g-dev libevent-dev pkg-config libcurl4-gnutls-dev libcurl4-doc libpam0g-dev libtirpc-dev \
+libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev \
 mecab libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev
 ```
 
