@@ -216,6 +216,21 @@ defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 # Do not open automatically when something is plugged in
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 #
+# Image Capture
+#
+# Scan To path
+defaults write com.apple.Image_Capture IK_Scanner_downloadURL -string "~/Downloads"
+defaults write com.apple.Image_Capture IK_Scanner_selectedPathType -int 2
+# PDF format
+defaults write com.apple.Image_Capture IK_FileFormatTag -int 6
+defaults write com.apple.Image_Capture IK_FileFormatTagText -int 6
+# 150dpi
+defaults write com.apple.Image_Capture IK_ScanResolution -int 150
+# Do not Use Custom Size
+defaults write com.apple.Image_Capture IK_UseCustomScanSize -int 0
+# Show Details
+defaults write com.apple.Image_Capture IK_scannerDisplayMode -int 1
+#
 # Printer
 #
 # Automatically quit printer app once the print jobs complete
