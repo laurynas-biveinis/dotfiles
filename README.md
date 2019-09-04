@@ -13,6 +13,8 @@ Create `~/.noninteractive_init_private.bash`, if needed. Then `chmod 700` it.
 
 Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g. "emacs nightly"
 
+If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
+
 Check that existing .bashrc .profile files are OK to overwrite, rm them, and
 `cd ~/dotfiles && stow bash git scripts $(cat dotfiles/extra_modules)`
 
