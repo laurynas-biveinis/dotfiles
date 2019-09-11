@@ -69,9 +69,16 @@
 ; No startup message
 (setq inhibit-startup-message t)
 
-; Initial frame positioned in the top left corner
-(add-to-list 'initial-frame-alist '(top . 1))
-(add-to-list 'initial-frame-alist '(left . 1))
+(defconst darkstar-laptop-screen '(1680 . 1050))
+
+(let ((display-geometry (cons (display-pixel-width) (display-pixel-height))))
+  (cond ((equal display-geometry darkstar-laptop-screen)
+         ; darkstar without external screens: initial frame positioned in the
+         ; top left corner
+         (add-to-list 'initial-frame-alist '(top . 1))
+         (add-to-list 'initial-frame-alist '(left . 1)))
+        (t (message "Unknown display size %sx%s"
+                    (car display-geometry) (cdr display-geometry)))))
 
 (defun two-windows ()
   "Make frame contain two vertical windows."
