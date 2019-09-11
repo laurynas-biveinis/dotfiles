@@ -73,6 +73,12 @@
 (add-to-list 'initial-frame-alist '(top . 1))
 (add-to-list 'initial-frame-alist '(left . 1))
 
+(defun two-windows ()
+  "Make frame contain two vertical windows."
+  (interactive)
+  (delete-other-windows)
+  (split-window-right))
+
 (defun six-windows ()
   "Make frame contain 2x3 windows."
   (interactive)
