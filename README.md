@@ -218,6 +218,11 @@ defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 # Do not open automatically when something is plugged in
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 #
+# Preview
+#
+# Do not show sidebar
+defaults write com.apple.Preview PVSidebarViewModeForNewDocuments -int 0
+#
 # Image Capture
 #
 # Scan To path
