@@ -69,17 +69,6 @@
 ; No startup message
 (setq inhibit-startup-message t)
 
-(defconst darkstar-laptop-screen '(1680 . 1050))
-
-(let ((display-geometry (cons (display-pixel-width) (display-pixel-height))))
-  (cond ((equal display-geometry darkstar-laptop-screen)
-         ; darkstar without external screens: initial frame positioned in the
-         ; top left corner
-         (add-to-list 'initial-frame-alist '(top . 1))
-         (add-to-list 'initial-frame-alist '(left . 1)))
-        (t (message "Unknown display size %sx%s"
-                    (car display-geometry) (cdr display-geometry)))))
-
 (defun two-windows ()
   "Make frame contain two vertical windows."
   (interactive)
@@ -97,6 +86,28 @@
   (split-window-right)
   (split-window-right)
   (balance-windows))
+
+(defconst darkstar-laptop-screen '(1680 . 1050))
+(defconst darkstar-laptop-top 1)
+(defconst darkstar-laptop-left 1)
+(defconst darkstar-laptop-height 65)
+(defconst darkstar-laptop-width 237)
+
+(defun diagnose-unknown-display-geometry (display-geometry)
+  "Diagnose unknown DISPLAY-GEOMETRY."
+  (message "Unknown display size %sx%s"
+           (car display-geometry) (cdr display-geometry)))
+
+(let ((display-geometry (cons (display-pixel-width) (display-pixel-height))))
+  (cond ((equal display-geometry darkstar-laptop-screen)
+         ; darkstar without external screens: initial frame positioned in the
+         ; top left corner
+         (add-to-list 'initial-frame-alist `(top . ,darkstar-laptop-top))
+         (add-to-list 'initial-frame-alist `(left . ,darkstar-laptop-left))
+         (add-to-list 'initial-frame-alist `(height . ,darkstar-laptop-height))
+         (add-to-list 'initial-frame-alist `(width . ,darkstar-laptop-width))
+         (two-windows))
+        (t (diagnose-unknown-display-geometry display-geometry))))
 
 ; Treat new (empty) files as modified
 (add-hook 'find-file-hooks

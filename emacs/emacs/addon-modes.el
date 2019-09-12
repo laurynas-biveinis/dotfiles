@@ -470,3 +470,17 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 (add-to-list 'auto-mode-alist '("/known_hosts\\'"       . ssh-known-hosts-mode))
 (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode))
 (add-hook 'ssh-config-mode-hook 'turn-on-font-lock)
+
+; dispwatch
+(require 'dispwatch)
+(defun my-display-changed-hook (new-display-geometry)
+  "Reconfigure frame windows on display geometry change to NEW-DISPLAY-GEOMETRY."
+  (message "Resizing for %s" new-display-geometry)
+  (cond ((equal new-display-geometry darkstar-laptop-screen)
+         (set-frame-position nil darkstar-laptop-top darkstar-laptop-left)
+         (set-frame-size nil darkstar-laptop-width darkstar-laptop-height)
+         (two-windows))
+        (t (diagnose-unknown-display-geometry display-geometry))))
+
+(add-hook 'dispwatch-display-change-hooks #'my-display-changed-hook)
+(dispwatch-mode 1)
