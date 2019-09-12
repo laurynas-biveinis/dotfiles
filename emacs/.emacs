@@ -56,8 +56,6 @@
 
 (mapc 'load (file-expand-wildcards dotfiles-elisp))
 
-(six-windows)
-
 (server-start)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
