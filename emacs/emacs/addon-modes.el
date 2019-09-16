@@ -342,7 +342,7 @@
 ; IRC (ERC)
 (require 'erc)
 
-(setq erc-user-full-name "Laurynas Biveinis")
+(setq erc-user-full-name user-full-name)
 
 ; Disable autopair
 (add-hook 'erc-mode-hook
