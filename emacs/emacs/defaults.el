@@ -185,8 +185,6 @@ already at that position, move point to the beginning of line."
 ; Recent files menu
 (recentf-mode)
 
-(setq shift-select-mode t)
-
 ; Turn on font-lock mode
 (global-font-lock-mode 1)
 (setq font-lock-maximum-decoration t)
