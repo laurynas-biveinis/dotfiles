@@ -252,34 +252,18 @@ already at that position, move point to the beginning of line."
 ; CC Mode
 ; -------
 
-;; Default indentation offset
-(setq c-basic-offset 4)
-
 ;; TAB indents only if point in the beginning of the line
-(setq c-tab-always-indent nil)
-
-;; Styles I use
-(setq c-default-style '((java-mode . "java")
-                        (awk-mode . "awk")
-                        (c++-mode . "stroustrup")
-                        (other . "gnu")))
-
-;; MySQL
+(setq c-tab-always-indent 1)
 
 (setq c-doc-comment-style
       '((c-mode . javadoc)
         (c++-mode . javadoc)))
 
 ; Grand Unified Debugger
-(defun my-gud-hook ()
-  (gud-tooltip-mode t))
-(add-hook 'gdb-mode-hook 'my-gud-hook)
-(add-hook 'sdb-mode-hook 'my-gud-hook)
-(add-hook 'xdb-mode-hook 'my-gud-hook)
-(add-hook 'perldb-mode-hook 'my-gud-hook)
-(add-hook 'jdb-mode-hook 'my-gud-hook)
+(gud-tooltip-mode t)
 
-(defconst auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode)
+; TODO(laurynas): replace with auto-indent-mode?
+(defconst auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode sh-mode)
   "Automatically ident pasted code in these modes.")
 
 (defadvice yank (after indent-region activate)
