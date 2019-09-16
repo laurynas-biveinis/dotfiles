@@ -29,8 +29,6 @@
 (defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
 
-(defconst erc-log-dir (concat home-dir "erclogs"))
-
 ; Setup elisp search directories
 (add-to-list 'load-path home-dir)
 (add-to-list 'load-path private-elisp)

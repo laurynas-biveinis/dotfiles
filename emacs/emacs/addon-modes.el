@@ -351,8 +351,6 @@
 
 (require 'erc-log)
 
-(setq erc-log-channels-directory erc-log-dir)
-
 ; (setq erc-log-insert-log-on-open t)
 
 (setq erc-save-buffer-on-part nil
@@ -380,8 +378,6 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (erc-log-enable)
 
-(setq erc-keywords '("laurynas"))
-
 (setq erc-current-nick-highlight-type 'all)
 (setq erc-keyword-highlight-type 'all)
 
@@ -403,22 +399,14 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 ; (add-to-list 'erc-modules 'highlight-nicknames)
 ; (erc-update-modules)
 
-(setq erc-autojoin-channels-alist
-      '(("MPB" "#mysqldev" "#percona")
-        ("freenode.net" "#percona" "#maria" "#maria-dev" "#mysql"
-         "#mysql-dev")))
-
 (require 'erc-services)
 (erc-services-mode 1)
 
 (setq erc-prompt-for-nickserv-password nil)
 
-(setq erc-nickserv-passwords
-      `((freenode (("laurynas" . ,freenode-nickserv-password)))))
-
 (setq erc-server-coding-system '(utf-8 . utf-8))
 
-(setq erc-server-reconnect-attempts t)
+(setq erc-server-reconnect-attempts 0)
 
 ; TODO
 ;(require 'erc-spelling)
