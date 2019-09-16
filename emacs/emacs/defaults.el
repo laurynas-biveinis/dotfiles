@@ -155,6 +155,7 @@ already at that position, move point to the beginning of line."
 (global-set-key [(control shift right)] 'shrink-window-horizontally)
 
 (global-set-key [home] 'smart-home)
+(global-set-key "\C-a" 'smart-home)
 
 ; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
