@@ -1,7 +1,5 @@
 ; System specific setup for Darwin
-; TODO: factor out common bits with linux.el
 
-; Default font
 (defconst my-frame-font
   "-apple-Menlo-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
   "My default frame font on Darwin.")
@@ -11,10 +9,6 @@
 
   (progn
     (setq insert-directory-program "/usr/local/bin/gls")
-    (add-to-list
-     'default-frame-alist
-     `(font . ,my-frame-font))
-    (set-frame-font my-frame-font nil t)
     (add-to-list 'exec-path "/usr/local/bin")))
 
 (defun system-specific-setup()

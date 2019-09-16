@@ -109,6 +109,14 @@
          (two-windows))
         (t (diagnose-unknown-display-geometry display-geometry))))
 
+; Use system font if under Gnome, otherwise use a specified font if one was
+; specified
+(cond ((symbolp 'font-use-system-font)
+       (setq font-use-system-font t))
+      ((symbolp 'my-frame-font)
+       (add-to-list 'default-frame-alist `(font . ,my-frame-font))
+       (add-to-list 'initial-frame-alist `(font . ,my-frame-font))))
+
 ; Treat new (empty) files as modified
 (add-hook 'find-file-hooks
           '(lambda ()

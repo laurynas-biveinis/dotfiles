@@ -1,20 +1,12 @@
 ;; System specific setup for Linux
 
-; Default font
 (defconst my-frame-font
   "-Misc-Fixed-Medium-R-Normal--14-130-75-75-C-70-ISO8859-1"
-  "My default frame font for Emacs 23.1 and lower.")
+  "My default Linux frame font when not running under Gnome.")
 
 (defun system-specific-presetup()
   "Things that must be set on Linux before main setup."
-
-  (if (symbolp 'font-use-system-font)
-      (setq font-use-system-font t)
-    (progn
-      (add-to-list
-       'default-frame-alist
-       `(font . ,my-frame-font))
-      (set-frame-font my-frame-font))))
+  ())
 
 (defun system-specific-setup()
   "Setup specifics for Linux."
