@@ -27,7 +27,7 @@
 (setq display-time-24hr-format t)
 
 ; Should files end with newline?
-(setq require-final-newline 'query)
+(setq-default require-final-newline 'query)
 
 ; Display trailing whitespace
 (setq-default show-trailing-whitespace t)
