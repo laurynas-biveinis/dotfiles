@@ -286,8 +286,8 @@ already at that position, move point to the beginning of line."
 (add-hook 'perldb-mode-hook 'my-gud-hook)
 (add-hook 'jdb-mode-hook 'my-gud-hook)
 
-; Automatically indent pasted code
-(defconst auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode))
+(defconst auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode)
+  "Automatically ident pasted code in these modes.")
 
 (defadvice yank (after indent-region activate)
   (if (member major-mode auto-indent-paste-modes)

@@ -16,8 +16,8 @@
                                        (>= emacs-minor-version 3))))
 ; 26.1, released on 2018-05-28, is the default on Debian 10
 
-; cc-mode: integrated or 3rd party?
-(defconst integrated-cc-mode-p emacs-24-4-or-later)
+(defconst integrated-cc-mode-p emacs-24-4-or-later
+  "Whether we are using integrated or 3rd party cc-mode.")
 
 ; Various paths
 ; TODO: duplicated with .epm.el

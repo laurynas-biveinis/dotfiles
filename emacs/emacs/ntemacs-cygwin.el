@@ -4,7 +4,6 @@
   "NT Emacs on Cygwin: set some things before main .emacs setup."
 
   ;; Setup paths
-  ;; EmacsW32
   (defconst emacsw32-root (concat private-elisp-lib "EmacsW32"))
   (add-to-list 'load-path emacsw32-root)
 
