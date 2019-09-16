@@ -15,6 +15,10 @@
                                   (and (= emacs-major-version 25)
                                        (>= emacs-minor-version 3))))
 ; 26.1, released on 2018-05-28, is the default on Debian 10
+; 26.3, released on 2019-08-28
+(defconst emacs-26-3-or-later (or (>= emacs-major-version 27)
+                                  (and (= emacs-major-version 26)
+                                       (>= emacs-minor-version 3))))
 
 (defconst integrated-cc-mode-p emacs-24-4-or-later
   "Whether we are using integrated or 3rd party cc-mode.")

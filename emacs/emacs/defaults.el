@@ -291,4 +291,5 @@ already at that position, move point to the beginning of line."
 
 ; GNU TLS
 ; Workaround https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341 until 26.3
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(unless emacs-26-3-or-later
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
