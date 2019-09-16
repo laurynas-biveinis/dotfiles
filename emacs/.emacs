@@ -1,13 +1,20 @@
 ; Some version checks
+; 22.1, released on 2007-06-02, is the default on macOS, we don't use that.
+; 23.1, released on 2009-07-29, is the default on CentOS 6
+; 24.3, released on 2013-03-11, is the default on CentOS 7
+; 24.4, released on 2014-10-20, is the default on Debian 8
 (defconst emacs-24-4-or-later (or (and (= emacs-major-version 24)
                                    (>= emacs-minor-version 4))
                                   (>= emacs-major-version 25)))
+; 24.5, released on 2015-04-10, is the default on Ubuntu 16.04 LTS and Debian 9
 (defconst emacs-24-5-or-later (or (and (= emacs-major-version 24)
                                        (>= emacs-minor-version 5))
                                   (>= emacs-major-version 25)))
+; 25.2, released on 2017-04-21, is the default on Ubuntu 18.04 LTS
 (defconst emacs-25-3-or-later (or (>= emacs-major-version 26)
                                   (and (= emacs-major-version 25)
                                        (>= emacs-minor-version 3))))
+; 26.1, released on 2018-05-28, is the default on Debian 10
 
 ; Integrated or 3rd party?
 (defconst integrated-cc-mode-p emacs-24-4-or-later)
