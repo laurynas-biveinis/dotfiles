@@ -5,7 +5,7 @@
 ; Keep all messages
 (setq message-log-max t)
 
-; Emacs 23.2+: Active region becomes primary selection
+; Emacs 23.2+: Active region becomes primary selection, default in 24.1+
 (if (symbolp 'select-active-regions)
     (setq select-active-regions t))
 
@@ -32,7 +32,7 @@
 ; Display trailing whitespace
 (setq-default show-trailing-whitespace t)
 
-; Don't interrupt redraw on input
+; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
 (unless emacs-24-5-or-later
   (setq redisplay-dont-pause t))
 
@@ -160,7 +160,7 @@ already at that position, move point to the beginning of line."
 ; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
 
-; No scroll bars
+; No scroll bars, introduced in 24.1.
 (if (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
 
 ; Don't bother entering search and replace args if the buffer is read-only
@@ -168,16 +168,16 @@ already at that position, move point to the beginning of line."
   "Signal a `buffer-read-only' error if the current buffer is read-only."
   (barf-if-buffer-read-only))
 
-; No toolbar
+; No toolbar, introduced in 24.1
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
 ; Typing or <Delete> will remove selected text
 (delete-selection-mode 1)
 
-; Mouse avoidance
+; Mouse avoidance. The var was introduced in 23.2.
 (if (symbolp 'make-pointer-invisible)
     (setq make-pointer-invisible t)
-  (mouse-avoidance-mode))
+  (moquse-avoidance-mode))
 
 ; Enable visual feedback on selections
 (setq transient-mark-mode t)
@@ -185,15 +185,12 @@ already at that position, move point to the beginning of line."
 ; Recent files menu
 (recentf-mode)
 
-; Turn on font-lock mode
 (global-font-lock-mode 1)
-(setq font-lock-maximum-decoration t)
-(setq font-lock-support-mode 'jit-lock-mode)
 
 ; Show column number
 (column-number-mode t)
 
-; Better C-x b menu by IDO mode
+; Better C-x b menu by IDO mode. Alternatives: helm, ivy
 (ido-mode t)
 
 (setq ido-default-buffer-method 'selected-window)
@@ -212,7 +209,7 @@ already at that position, move point to the beginning of line."
 ;; Auto Fill
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
-;; Show which function we are at
+;; Show which function we are at. which-func-modes default to t in 24.1+.
 (setq which-func-modes t)
 (which-function-mode)
 
@@ -222,7 +219,6 @@ already at that position, move point to the beginning of line."
 ; Nice unique buffer names
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
-(setq uniquify-after-kill-buffer-p t)
 
 ; Automatically show images as images
 (auto-image-file-mode 1)
@@ -232,8 +228,6 @@ already at that position, move point to the beginning of line."
 ;; -----
 ; Copy recursively
 (setq dired-recursive-copies 'always)
-; Delete recursively, but ask
-(setq dired-recursive-deletes 'top)
 
 (add-hook 'dired-load-hook
           (lambda ()
