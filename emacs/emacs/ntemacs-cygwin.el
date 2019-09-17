@@ -1,4 +1,4 @@
-;; Specific setup for NTEmacs + EmacsW32 with Cygwin
+;;; Specific setup for NTEmacs + EmacsW32 with Cygwin
 
 (defun system-specific-presetup()
   "NT Emacs on Cygwin: set some things before main .emacs setup."

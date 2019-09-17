@@ -1,34 +1,31 @@
-; undo-tree
+;; undo-tree
 (global-undo-tree-mode)
 
-; Google C style
+;; Google C style
 (c-add-style "google" google-c-style)
 
-;
-; auto-indent-mode
-;
+;;; auto-indent-mode
 (auto-indent-global-mode)
-; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT instead,
-; not sure how
+;; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT
+;; instead, not sure how
 (setq auto-indent-mode-untabify-on-yank-or-paste nil)
-; Leave tabs/spaces alone on save.
+;; Leave tabs/spaces alone on save.
 (setq auto-indent-untabify-on-save-file nil)
-; auto-indent-mode advices move-beginning-of-line but not beginning-of-visual-line.
-; https://github.com/mattfidler/auto-indent-mode.el/issues/61
+;; auto-indent-mode advices move-beginning-of-line but not
+;; beginning-of-visual-line.
+;; https://github.com/mattfidler/auto-indent-mode.el/issues/61
 (advice-add 'beginning-of-visual-line :around #'ad-Advice-move-beginning-of-line)
 
-;
-; Autopair, only in 24.3-
-;
+;;; Autopair, only in 24.3-
 (unless emacs-24-4-or-later
   (progn
     (require 'autopair)
     (autopair-global-mode)))
 
-; Disable linum where it makes sense and fixes performance
+;; Disable linum where it makes sense and fixes performance
 (require 'linum-off)
 
-; Show matching parents
+;; Show matching parents
 (require 'paren)
 (show-paren-mode 1)
 
@@ -38,9 +35,7 @@
   (condition-case nil (imenu-add-menubar-index) (error nil)))
 (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
-;; --------------------------
-;; Programming language modes
-;; --------------------------
+;;;; Programming language modes
 
 ;; Show the arguments of the currently written function in the echo area
 (autoload 'turn-on-eldoc-mode "eldoc" nil t)
@@ -48,9 +43,7 @@
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
-;; ----------
-;; Shell mode
-;; ----------
+;;; sh-mode
 
 ;; In Shell mode, do not echo passwords
 (add-hook 'comint-output-filter-functions
@@ -61,14 +54,10 @@
 (require 'ansi-color)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-;; ----------------------------
 ;; ssh mode on the top of shell
-;; ----------------------------
 (require 'ssh)
 
-;; --------------------------
-;; AUCTeX and other TeX stuff
-;; --------------------------
+;;;; AUCTeX and other TeX stuff
 
 ;; preview-latex image type
 (setq preview-image-type 'png)
@@ -116,19 +105,19 @@
 
 
 ;; Spellcheck on the fly
-;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-;(add-hook 'c-mode-hook          'flyspell-prog-mode 1)
-;(add-hook 'c++-mode-hook        'flyspell-prog-mode 1)
-;(add-hook 'cperl-mode-hook      'flyspell-prog-mode 1)
-;(add-hook 'autoconf-mode-hook   'flyspell-prog-mode 1)
-;(add-hook 'autotest-mode-hook   'flyspell-prog-mode 1)
-;(add-hook 'sh-mode-hook         'flyspell-prog-mode 1)
-;(add-hook 'makefile-mode-hook   'flyspell-prog-mode 1)
-;(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode 1)
+;;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+;;(add-hook 'c-mode-hook          'flyspell-prog-mode 1)
+;;(add-hook 'c++-mode-hook        'flyspell-prog-mode 1)
+;;(add-hook 'cperl-mode-hook      'flyspell-prog-mode 1)
+;;(add-hook 'autoconf-mode-hook   'flyspell-prog-mode 1)
+;;(add-hook 'autotest-mode-hook   'flyspell-prog-mode 1)
+;;(add-hook 'sh-mode-hook         'flyspell-prog-mode 1)
+;;(add-hook 'makefile-mode-hook   'flyspell-prog-mode 1)
+;;(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode 1)
 
 ;; Spellcheck on the fly multiple languages at once
-;(autoload 'flyspell-babel-setup "flyspell-babel")
-;(add-hook 'LaTeX-mode-hook 'flyspell-babel-setup)
+;;(autoload 'flyspell-babel-setup "flyspell-babel")
+;;(add-hook 'LaTeX-mode-hook 'flyspell-babel-setup)
 
 ;; Integrate RefTeX into AUCTeX
 (setq reftex-plug-into-AUCTeX t)
@@ -136,17 +125,12 @@
 ;; Integrate RefTeX with bib-cite
 (setq bib-cite-use-reftex-view-crossref t)
 
-;; ----------------------------------------------
-;; cmd-mode.el major mode for cmd and bat scripts
-;; ----------------------------------------------
+;;; cmd-mode.el major mode for cmd and bat scripts
 (autoload 'cmd-mode "cmd-mode" "CMD mode." t)
 (setq auto-mode-alist (append '(("\\.\\(cmd\\|bat\\)$" . cmd-mode))
                               auto-mode-alist))
 
-;; ------------------------------
-;; po-mode.el for PO file editing
-;; ------------------------------
-
+;;; po-mode.el for PO file editing
 (setq auto-mode-alist
    (cons '("\\.po\\'\\|\\.po\\." . po-mode) auto-mode-alist))
 (autoload 'po-mode "po-mode" "Major mode for translators to edit PO files" t)
@@ -156,9 +140,7 @@
    'po-find-file-coding-system)
 (autoload 'po-find-file-coding-system "po-mode")
 
-;; ----
-;; nXML
-;; ----
+;;; nXML
 ;; Autocomplete closing tags
 (setq nxml-slash-auto-complete-flag t)
 
@@ -167,17 +149,17 @@
       (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
             auto-mode-alist))
 
-; easypg
-; Still only works if there's a symlink gpg -> gpg1, and I was not able to
-; find what uses gpg.
+;; easypg
+;; Still only works if there's a symlink gpg -> gpg1, and I was not able to
+;; find what uses gpg.
 (setq epg-gpg-program "gpg1")
 
-; org-mode
-; Prerequisites: const main-org-file and list org-agenda-files, that must be
-; set elsewhere (i.e. secrets.el)
+;;; org-mode
+;; Prerequisites: const main-org-file and list org-agenda-files, that must be
+;; set elsewhere (i.e. secrets.el)
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
-; Bendra
+;; Bendra
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
@@ -194,7 +176,7 @@
 (setq org-yank-adjusted-subtrees t)
 (setq org-catch-invisible-edits 'smart)
 
-; Tags
+;; Tags
 (setq org-tag-alist '((:startgroup . nil)
                       ("@agenda" . ?a)
                       ("@anywhere" . ?w)
@@ -214,7 +196,7 @@
 (setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-fast-tag-selection-single-key 'expert)
 
-; Agendas
+;; Agendas
 (setq org-agenda-custom-commands
       '(("c" "Calls" tags-todo "@call-somedaymaybe/!TODO")
         ("p" "Projects" tags-todo "project-somedaymaybe/!TODO")
@@ -269,12 +251,12 @@
 (setq org-agenda-sticky t)
 (setq org-agenda-window-setup 'current-window)
 
-; Scheduling and deadlines
+;; Scheduling and deadlines
 (setq org-deadline-warning-days 30)
 
-; Drawers
+;; Drawers
 
-; Clock tables
+;; Clock tables
 (setq org-clocktable-defaults
       (list
        :maxlevel 99
@@ -286,14 +268,14 @@
        :indent t
        :tcolumns 0))
 
-; Logging
+;; Logging
 (setq org-log-into-drawer t)
 (setq org-clock-into-drawer t)
 (setq org-closed-keep-when-no-todo t)
 
-; Refiling
+;; Refiling
 (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 9))))
-; or 'buffer-name starting with 9.1, not much difference in my setup
+;; or 'buffer-name starting with 9.1, not much difference in my setup
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 (setq org-log-refile 'time)
@@ -327,43 +309,43 @@
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
 (setq org-cycle-separator-lines 1)
-; TODO: compute these columns from the defaults.el frame size calculations.
+;; TODO: compute these columns from the defaults.el frame size calculations.
 (setq org-tags-column -85)
 (setq org-agenda-tags-column 'auto)
 (setq org-habit-graph-column 50)
 
-; And load everything except crypt
+;; And load everything except crypt
 (require 'org-install)
 (require 'org-checklist)
 
-; org-mode encryption of selected subtrees
+;; org-mode encryption of selected subtrees
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
 (setq org-crypt-disable-auto-save 'encrypt)
 
-; org-id
+;; org-id
 (setq org-id-link-to-org-use-id t)
 
-; Save org buffers automatically
+;; Save org buffers automatically
 (add-hook 'auto-save-hook 'org-save-all-org-buffers)
 
-; Solarized-dark color theme
+;;; Solarized-dark color theme
 (setq solarized-termcolors 256)
 (load-theme 'solarized-dark t)
 
-; IRC (ERC)
+;;; IRC (ERC)
 (require 'erc)
 
 (setq erc-user-full-name user-full-name)
 
-; Disable autopair
+;; Disable autopair
 (add-hook 'erc-mode-hook
           (lambda ()
               (setq autopair-dont-activate t)))
 
 (require 'erc-log)
 
-; (setq erc-log-insert-log-on-open t)
+;; (setq erc-log-insert-log-on-open t)
 
 (setq erc-save-buffer-on-part nil
       erc-save-queries-on-quit nil
@@ -406,10 +388,10 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (setq erc-paranoid t)
 
-; TODO: this is in-buffer highlight, right?
-; (require 'erc-highlight-nicknames)
-; (add-to-list 'erc-modules 'highlight-nicknames)
-; (erc-update-modules)
+;; TODO: this is in-buffer highlight, right?
+;; (require 'erc-highlight-nicknames)
+;; (add-to-list 'erc-modules 'highlight-nicknames)
+;; (erc-update-modules)
 
 (require 'erc-services)
 (erc-services-mode 1)
@@ -420,11 +402,11 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (setq erc-server-reconnect-attempts 0)
 
-; TODO
-;(require 'erc-spelling)
-;(add-hook 'erc-mode-hook
-          ;(lambda()
-            ;(erc-spelling-mode)))
+;; TODO
+;;(require 'erc-spelling)
+;;(add-hook 'erc-mode-hook
+;;  (lambda()
+;;    (erc-spelling-mode)))
 
 (defun start-chats ()
   "Connect to all chats."
@@ -436,15 +418,15 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
   (interactive)
   (erc-cmd-GQ "Leaving"))
 
-; Magit
+;;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
 
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
-; Wakatime
+;;; Wakatime
 (global-wakatime-mode)
 
-; Irony
+;;; Irony
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
 (add-hook 'objc-mode-hook 'irony-mode)
@@ -452,18 +434,18 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 (add-hook 'irony-mode-hook #'irony-eldoc)
 
-; Flycheck
+;;; Flycheck
 (global-flycheck-mode)
 (eval-after-load 'flycheck
   '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
-; Company mode
+;;; Company mode
 (require 'company-irony-c-headers)
 (add-hook 'after-init-hook 'global-company-mode)
 (eval-after-load 'company
   '(add-to-list 'company-backends '(company-irony-c-headers company-irony)))
 
-; SSH config
+;;; SSH config
 (autoload 'ssh-config-mode "ssh-config-mode" t)
 (add-to-list 'auto-mode-alist '("/\\.ssh/config\\'"     . ssh-config-mode))
 (add-to-list 'auto-mode-alist '("/sshd?_config\\'"      . ssh-config-mode))
@@ -471,7 +453,7 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode))
 (add-hook 'ssh-config-mode-hook 'turn-on-font-lock)
 
-; dispwatch
+;;; dispwatch
 (require 'dispwatch)
 (defun my-display-changed-hook (new-display-geometry)
   "Reconfigure frame windows on display geometry change to NEW-DISPLAY-GEOMETRY."

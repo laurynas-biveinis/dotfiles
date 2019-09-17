@@ -1,4 +1,4 @@
-; System specific setup for Darwin
+;;; System specific setup for Darwin
 
 (defconst my-frame-font
   "-apple-Menlo-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
@@ -16,4 +16,3 @@
   (setq ns-right-alternate-modifier 'none)
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
-
