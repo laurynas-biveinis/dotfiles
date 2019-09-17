@@ -15,6 +15,8 @@
 ;; beginning-of-visual-line.
 ;; https://github.com/mattfidler/auto-indent-mode.el/issues/61
 (advice-add 'beginning-of-visual-line :around #'ad-Advice-move-beginning-of-line)
+;; Make delete less hungry
+(setq auto-indent-backward-delete-char-behavior 'untabify)
 
 ;;; Autopair, only in 24.3-
 (unless emacs-24-4-or-later
