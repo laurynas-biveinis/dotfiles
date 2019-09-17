@@ -2644,6 +2644,8 @@ around and the whitespace was deleted from the line."
 
 (add-hook 'after-change-major-mode-hook 'auto-indent-disable-electric)
 
+(advice-add 'beginning-of-visual-line :around #'ad-Advice-move-beginning-of-line)
+
 (defvar auto-indent-was-on nil)
 
 (provide 'auto-indent-mode)

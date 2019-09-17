@@ -11,10 +11,6 @@
 (setq auto-indent-mode-untabify-on-yank-or-paste nil)
 ;; Leave tabs/spaces alone on save.
 (setq auto-indent-untabify-on-save-file nil)
-;; auto-indent-mode advices move-beginning-of-line but not
-;; beginning-of-visual-line.
-;; https://github.com/mattfidler/auto-indent-mode.el/issues/61
-(advice-add 'beginning-of-visual-line :around #'ad-Advice-move-beginning-of-line)
 ;; Make delete less hungry
 (setq auto-indent-backward-delete-char-behavior 'untabify)
 
