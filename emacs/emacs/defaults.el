@@ -148,11 +148,12 @@
        (add-to-list 'default-frame-alist `(font . ,my-frame-font))
        (add-to-list 'initial-frame-alist `(font . ,my-frame-font))))
 
-;; Treat new (empty) files as modified
-(add-hook 'find-file-hooks
-          '(lambda ()
-             (when (not (file-exists-p (buffer-file-name)))
-               (set-buffer-modified-p t))))
+(defun treat-new-files-as-modified ()
+  "Treat new (empty) files as modified."
+  (unless (file-exists-p (buffer-file-name))
+    (set-buffer-modified-p t)))
+
+(add-hook 'find-file-hooks 'treat-new-files-as-modified)
 
 ;; Mark executable files as executable on save
 (add-hook 'after-save-hook
@@ -208,16 +209,17 @@
 
 (setq ido-default-buffer-method 'selected-window)
 
-;; Kill completion buffers after completing
 (defun kill-buffer-if-exists (buffer)
   "Kill the BUFFER if it exists."
   (if (buffer-live-p buffer)
       (kill-buffer buffer)))
-(add-hook 'minibuffer-exit-hook
-          '(lambda ()
-             (progn
-               (kill-buffer-if-exists "*Completions*")
-               (kill-buffer-if-exists "*Ido Completions*"))))
+
+(defun kill-completion-buffers ()
+  "Kill completion buffers, if they exist."
+  (kill-buffer-if-exists "*Completions*")
+  (kill-buffer-if-exists "*Ido Completions*"))
+
+(add-hook 'minibuffer-exit-hook 'kill-completion-buffers)
 
 ;; Auto Fill
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -240,9 +242,11 @@
 ;; Copy recursively
 (setq dired-recursive-copies 'always)
 
-(add-hook 'dired-load-hook
-          (lambda ()
-            (load "dired-x")))
+(defun load-dired-x ()
+  "Load dired-x."
+  (load "dired-x"))
+
+(add-hook 'dired-load-hook 'load-dired-x)
 
 (add-hook 'Man-mode-hook 'goto-address)
 
@@ -252,12 +256,13 @@
 
 (setq dired-auto-revert-buffer t)
 
-;; On save, create missing parent directories automatically
 ;; From http://atomized.org/2008/12/emacs-create-directory-before-saving/
-(add-hook 'before-save-hook
-          '(lambda ()
-             (or (file-exists-p (file-name-directory buffer-file-name))
-                 (make-directory (file-name-directory buffer-file-name) t))))
+(defun create-missing-parent-dirs ()
+  "Create parent directories automatically, if missing."
+  (or (file-exists-p (file-name-directory buffer-file-name))
+      (make-directory (file-name-directory buffer-file-name) t)))
+
+(add-hook 'before-save-hook 'create-missing-parent-dirs)
 
 ;;; cc-mode
 
@@ -292,8 +297,11 @@
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
 ;;; elisp-mode
-;; Should the global default ever change, elisp should stay with spaces
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda () (progn
-                        (setq indent-tabs-mode nil)
-                        (setq fill-column 80))))
+
+(defun my-emacs-lisp-mode-hook ()
+  "Configuration for 'emacs-lisp-mode'."
+  ;; Should the global default ever change, elisp should stay with spaces
+  (setq indent-tabs-mode nil)
+  (setq fill-column 80))
+
+(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)

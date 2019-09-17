@@ -78,37 +78,30 @@
 ;; AUCTeX toolbar support
 (add-hook 'LaTeX-mode-hook #'LaTeX-install-toolbar)
 
-;; Source specials
-(add-hook 'LaTeX-mode-hook
-          (lambda ()
-            (TeX-source-specials-mode 1)))
+(defun my-latex-mode-hook ()
+  "My configuration hook for 'latex-mode'."
+  ;; Source specials
+  (TeX-source-specials-mode 1)
+  ;; Set up -pdf option for latexmk
+  (push
+   '("%(-PDF)"
+     (lambda ()
+       (if (and
+            (eq TeX-engine 'default)
+            (or TeX-PDF-mode TeX-DVI-via-PDFTeX))
+           "-pdf" "")))
+   TeX-expand-list)
+  ;; Use latexmk
+  (push
+   '("latexmk" "latexmk %(-PDF) %s" TeX-run-TeX nil t
+     :help "Run latexmk on file")
+   TeX-command-list))
+
+(add-hook 'LaTeX-mode-hook 'my-latex-mode-hook)
 (setq TeX-source-specials-view-start-server t)
 
 ;; Use RefTeX
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-
-;; Set up -pdf option for latexmk
-(add-hook 'LaTeX-mode-hook
-          (lambda ()
-            (push
-             '("%(-PDF)"
-               (lambda ()
-                 (if (and
-                      (eq TeX-engine 'default)
-                      (or TeX-PDF-mode TeX-DVI-via-PDFTeX))
-                     "-pdf" "")))
-             TeX-expand-list)))
-
-
-;; Use latexmk
-(add-hook 'LaTeX-mode-hook
-          (lambda ()
-            (push
-             '("latexmk" "latexmk %(-PDF) %s" TeX-run-TeX nil t
-               :help "Run latexmk on file")
-             TeX-command-list)))
-
-
 
 ;; Spellcheck on the fly
 ;;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
@@ -335,8 +328,11 @@
 ;; Save org buffers automatically
 (add-hook 'auto-save-hook 'org-save-all-org-buffers)
 
-;; org-mode has a specific fill-column value
-(add-hook 'org-mode-hook (lambda () (setq fill-column 85)))
+(defun my-org-mode-hook ()
+  "My configuration hook for 'org-mode'."
+  (setq fill-column 85))
+
+(add-hook 'org-mode-hook 'my-org-mode-hook)
 
 ;;; Solarized-dark color theme
 (setq solarized-termcolors 256)
@@ -347,10 +343,11 @@
 
 (setq erc-user-full-name user-full-name)
 
-;; Disable autopair
-(add-hook 'erc-mode-hook
-          (lambda ()
-              (setq autopair-dont-activate t)))
+(defun my-erc-mode-hook ()
+  "My configuration hook for 'erc-mode'."
+  (setq autopair-dont-activate t))
+
+(add-hook 'erc-mode-hook 'my-erc-mode-hook)
 
 (require 'erc-log)
 
@@ -414,7 +411,7 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 ;; TODO
 ;;(require 'erc-spelling)
 ;;(add-hook 'erc-mode-hook
-;;  (lambda()
+;;  (lambda ()
 ;;    (erc-spelling-mode)))
 
 (defun start-chats ()
