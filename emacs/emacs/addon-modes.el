@@ -4,7 +4,22 @@
 ; Google C style
 (c-add-style "google" google-c-style)
 
-; Autopair
+;
+; auto-indent-mode
+;
+(auto-indent-global-mode)
+; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT instead,
+; not sure how
+(setq auto-indent-mode-untabify-on-yank-or-paste nil)
+; Leave tabs/spaces alone on save.
+(setq auto-indent-untabify-on-save-file nil)
+; auto-indent-mode advices move-beginning-of-line but not beginning-of-visual-line.
+; https://github.com/mattfidler/auto-indent-mode.el/issues/61
+(advice-add 'beginning-of-visual-line :around #'ad-Advice-move-beginning-of-line)
+
+;
+; Autopair, only in 24.3-
+;
 (unless emacs-24-4-or-later
   (progn
     (require 'autopair)

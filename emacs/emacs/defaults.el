@@ -134,21 +134,6 @@
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
 
-; Custom keybindings
-(defun smart-home ()
-  "Move point to first non-whitespace character or 'beginning-of-line'.
-
-Move point to the first non-whitespace character on this line.  If point was
-already at that position, move point to the beginning of line."
-  (interactive "^")
-  (let ((oldpos (point)))
-    (back-to-indentation)
-    (and (= oldpos (point))
-         (beginning-of-line)
-         )
-    )
-  )
-
 ; Keybindings
 (global-set-key "\C-cg" 'goto-line)
 (global-set-key "\C-cn" 'next-error)
@@ -160,9 +145,6 @@ already at that position, move point to the beginning of line."
 (global-set-key [(control shift down)] 'shrink-window)
 (global-set-key [(control shift left)] 'enlarge-window-horizontally)
 (global-set-key [(control shift right)] 'shrink-window-horizontally)
-
-(global-set-key [home] 'smart-home)
-(global-set-key "\C-a" 'smart-home)
 
 ; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
@@ -268,18 +250,6 @@ already at that position, move point to the beginning of line."
 
 ; Grand Unified Debugger
 (gud-tooltip-mode t)
-
-; TODO(laurynas): replace with auto-indent-mode?
-(defconst auto-indent-paste-modes '(emacs-lisp-mode c-mode c++-mode sh-mode)
-  "Automatically ident pasted code in these modes.")
-
-(defadvice yank (after indent-region activate)
-  (if (member major-mode auto-indent-paste-modes)
-      (indent-region (region-beginning) (region-end) nil)))
-
-(defadvice yank-pop (after indent-region activate)
-  (if (member major-mode auto-indent-paste-modes)
-      (indent-region (region-beginning) (region-end) nil)))
 
 ; windmove
 (when (fboundp 'windmove-default-keybindings)
