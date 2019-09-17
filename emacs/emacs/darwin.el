@@ -14,5 +14,6 @@
 (defun system-specific-setup()
   "Setup specifics for Darwin."
   (setq ns-right-alternate-modifier 'none)
+  (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
 
