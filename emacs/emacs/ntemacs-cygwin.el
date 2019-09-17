@@ -1,5 +1,17 @@
 ;;; Specific setup for NTEmacs + EmacsW32 with Cygwin
 
+;; Variables defined elsewhere we'll be using
+(defvar private-elisp-lib)
+(defvar home-dir)
+(defvar explicit-shell-file-name)
+(defvar w32shell-cygwin-bin)
+(defvar comint-scroll-show-maximum-output)
+(defvar comint-completion-addsuffix)
+(defvar comint-eol-on-send)
+(defvar w32-quote-process-args)
+(defvar shell-mode-hook)
+(defvar python-python-command)
+
 (defun system-specific-presetup()
   "NT Emacs on Cygwin: set some things before main .emacs setup."
 

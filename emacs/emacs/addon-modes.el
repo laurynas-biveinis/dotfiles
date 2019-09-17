@@ -1,3 +1,10 @@
+;; Variables defined elsewhere we'll be using
+(defvar google-c-style)
+(defvar auto-indent-mode-untabify-on-yank-or-paste)
+(defvar auto-indent-untabify-on-save-file)
+(defvar auto-indent-backward-delete-char-behavior)
+(defvar emacs-24-4-or-later)
+
 ;; undo-tree
 (global-undo-tree-mode)
 

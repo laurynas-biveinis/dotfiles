@@ -1,5 +1,8 @@
 ;;; System specific setup for Darwin
 
+;; Variables defined elsewhere we'll be using
+(defvar exec-path-from-shell-check-startup-files)
+
 (defconst my-frame-font
   "-apple-Menlo-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
   "My default frame font on Darwin.")
