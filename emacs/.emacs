@@ -24,14 +24,13 @@
   "Whether we are using integrated or 3rd party cc-mode.")
 
 ; Various paths
-; TODO: duplicated with .epm.el
 (defconst home-dir (concat (replace-regexp-in-string "\\\\" "/"
                                                  (getenv "HOME")) "/"))
-(defconst private-elisp
-  (concat home-dir "emacs/"))
+(defconst private-elisp (concat home-dir "emacs/"))
 (defconst dotfiles-elisp (concat private-elisp "dotfiles/*.el"))
 (defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
+(defconst elpa-dir (concat private-elisp "elpa/"))
 
 ; Setup elisp search directories
 (add-to-list 'load-path home-dir)
@@ -57,7 +56,19 @@
 (load "secrets")
 (load "defaults")
 
-(load "~/.epm.el")
+;; Setup ELPA
+(setq package-user-dir elpa-dir)
+(require 'package)
+
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archive-priorities
+      '(("org"          . 20)
+        ("melpa-stable" . 15)
+        ("melpa"        . 10)))
+(package-initialize)
 
 (load "addon-modes")
 (load "misc")
@@ -73,7 +84,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (auto-indent-mode dispwatch org-analyzer undo-tree epm yaml-mode markdown-mode linum-off po-mode ssh ssh-config-mode bison-mode company-irony org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell autopair magit org auctex))))
+    (auto-indent-mode dispwatch org-analyzer undo-tree yaml-mode markdown-mode linum-off po-mode ssh ssh-config-mode bison-mode company-irony org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme company-irony-c-headers irony-eldoc flycheck-irony wakatime-mode exec-path-from-shell autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
