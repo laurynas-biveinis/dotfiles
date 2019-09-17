@@ -17,9 +17,7 @@ loaded as such.)"
           (re-search-forward
            "\x000\\([-A-Za-z0-9_\\.\\\\\\$%@(){}~!#^'`][-A-Za-z0-9_\\.\\\\\\$%@(){}~!#^'`]+\\)")
           (find-alternate-file (match-string 1)))
-      (if (looking-at "!<symlink>")
-          (progn
-            (re-search-forward "!<symlink>\\(.*\\)\0")
-            (find-alternate-file (match-string 1))))
-      )))
+      (when (looking-at "!<symlink>")
+        (re-search-forward "!<symlink>\\(.*\\)\0")
+        (find-alternate-file (match-string 1))))))
 (add-hook 'find-file-hooks 'follow-cygwin-symlinks)

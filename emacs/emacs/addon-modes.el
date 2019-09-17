@@ -25,9 +25,8 @@
 
 ;;; Autopair, only in 24.3-
 (unless emacs-24-4-or-later
-  (progn
-    (require 'autopair)
-    (autopair-global-mode)))
+  (require 'autopair)
+  (autopair-global-mode))
 
 ;; Disable linum where it makes sense and fixes performance
 (require 'linum-off)
