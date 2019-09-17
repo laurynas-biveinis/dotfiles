@@ -36,6 +36,8 @@
 (global-whitespace-mode)
 (setq whitespace-style (quote (face trailing lines-tail empty indentation
                                     big-intent space-after-tab space-before-tab)))
+;; Use fill-column value
+(setq whitespace-line-column nil)
 
 ;; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
 (unless emacs-24-5-or-later

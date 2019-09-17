@@ -327,6 +327,9 @@
 ;; Save org buffers automatically
 (add-hook 'auto-save-hook 'org-save-all-org-buffers)
 
+;; org-mode has a specific fill-column value
+(add-hook 'org-mode-hook (lambda () (setq fill-column 85)))
+
 ;;; Solarized-dark color theme
 (setq solarized-termcolors 256)
 (load-theme 'solarized-dark t)
