@@ -290,3 +290,10 @@
 ;; Workaround https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341 until 26.3
 (unless emacs-26-3-or-later
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+
+;;; elisp-mode
+;; Should the global default ever change, elisp should stay with spaces
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda () (progn
+                        (setq indent-tabs-mode nil)
+                        (setq fill-column 80))))
