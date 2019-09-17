@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; Specific setup for NTEmacs + EmacsW32 with Cygwin
 
 ;; Variables defined elsewhere we'll be using

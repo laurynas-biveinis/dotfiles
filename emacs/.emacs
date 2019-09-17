@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; Some version checks
 ;; 22.1, released on 2007-06-02, is the default on macOS, we don't use that.
 ;; 23.1, released on 2009-07-29, is the default on CentOS 6

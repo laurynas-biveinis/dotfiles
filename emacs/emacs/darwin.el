@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; System specific setup for Darwin
 
 ;; Variables defined elsewhere we'll be using
