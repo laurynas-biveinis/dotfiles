@@ -17,9 +17,6 @@
 (require 'paren)
 (show-paren-mode 1)
 
-; Show whitespace errors
-(require 'develock)
-
 ;; Imenu
 (require 'imenu+)
 (defun try-to-add-imenu ()
