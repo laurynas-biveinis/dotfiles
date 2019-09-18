@@ -3,11 +3,8 @@
 
 ;;; Code:
 
-;; Variables defined elsewhere we'll be using
+;; Variables and functions defined elsewhere we'll be using
 (defvar google-c-style)
-(defvar auto-indent-mode-untabify-on-yank-or-paste)
-(defvar auto-indent-untabify-on-save-file)
-(defvar auto-indent-backward-delete-char-behavior)
 (defvar emacs-24-4-or-later)
 (defvar TeX-auto-save)
 (defvar TeX-parse-self)
@@ -18,58 +15,7 @@
 (defvar bib-cite-use-reftex-view-crossref)
 (defvar nxml-slash-auto-complete-flag)
 (defvar epg-gpg-program)
-(defvar org-enforce-todo-dependencies)
-(defvar org-enforce-todo-checkbox-dependencies)
-(defvar org-use-speed-commands)
-(defvar org-log-done)
-(defvar org-default-notes-file)
 (defvar main-org-file)
-(defvar org-mobile-inbox-for-pull)
-(defvar org-mobile-directory)
-(defvar org-mobile-use-encryption)
-(defvar org-ctrl-k-protect-subtree)
-(defvar org-support-shift-select)
-(defvar org-yank-adjusted-subtrees)
-(defvar org-catch-invisible-edits)
-(defvar org-tag-alist)
-(defvar org-use-tag-inheritance)
-(defvar org-agenda-tags-todo-honor-ignore-options)
-(defvar org-fast-tag-selection-single-key)
-(defvar org-agenda-custom-commands)
-(defvar org-agenda-start-on-weekday)
-(defvar org-agenda-skip-deadline-if-done)
-(defvar org-agenda-skip-scheduled-if-done)
-(defvar org-agenda-todo-ignore-scheduled)
-(defvar org-agenda-todo-ignore-deadlines)
-(defvar org-agenda-todo-ignore-timestamp)
-(defvar org-agenda-clock-consistency-checks)
-(defvar org-agenda-sticky)
-(defvar org-agenda-window-setup)
-(defvar org-deadline-warning-days)
-(defvar org-clocktable-defaults)
-(defvar org-log-into-drawer)
-(defvar org-clock-into-drawer)
-(defvar org-closed-keep-when-no-todo)
-(defvar org-refile-targets)
-(defvar org-refile-use-outline-path)
-(defvar org-refile-allow-creating-parent-nodes)
-(defvar org-log-refile)
-(defvar org-clock-persist)
-(defvar org-capture-templates)
-(defvar org-todo-keywords)
-(defvar org-todo-keyword-faces)
-(defvar org-modules)
-(defvar org-log-redeadline)
-(defvar org-log-reschedule)
-(defvar org-stuck-projects)
-(defvar org-todo-repeat-to-state)
-(defvar org-special-ctrl-a/e)
-(defvar org-special-ctrl-k)
-(defvar org-cycle-separator-lines)
-(defvar org-tags-column)
-(defvar org-agenda-tags-column)
-(defvar org-habit-graph-column)
-(defvar org-id-link-to-org-use-id)
 (defvar autopair-dont-activate)
 (defvar erc-track-exclude-types)
 (defvar erc-track-faces-priority-list)
@@ -79,14 +25,29 @@
 (defvar darkstar-laptop-left)
 (defvar darkstar-laptop-width)
 (defvar darkstar-laptop-height)
+(declare-function comint-watch-for-password-prompt "comint" (string))
+(declare-function comint-strip-ctrl-m "comint" (&optional _string))
+(declare-function erc-network-name "erc-networks" ())
+(declare-function irony-mode "irony" (&optional arg))
+(declare-function autopair-global-mode "autopair" (&optional arg))
+(declare-function LaTeX-install-toolbar "tex-bar" ())
+(declare-function TeX-source-correlate-mode "tex" (&optional arg))
+(declare-function magit-status "magit-status" (directory cache))
+(declare-function irony-cdb-autosetup-compile-options "irony-cdb" ())
+(declare-function irony-eldoc "irony-eldoc" (&optional arg))
+(declare-function flycheck-irony-setup "flycheck-irony" ())
+(declare-function two-windows "" ())
+(declare-function diagnose-unknown-display-geometry "" (geometry))
 
-;; undo-tree
+;;; undo-tree
+(require 'undo-tree)
 (global-undo-tree-mode)
 
 ;; Google C style
 (c-add-style "google" google-c-style)
 
 ;;; auto-indent-mode
+(require 'auto-indent-mode)
 (auto-indent-global-mode)
 ;; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT
 ;; instead, not sure how
@@ -227,10 +188,15 @@
 ;;; org-mode
 ;; Prerequisites: const main-org-file and list org-agenda-files, that must be
 ;; set elsewhere (i.e. secrets.el)
+(require 'org)
+(require 'org-element)
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
 ;; Bendra
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(require 'org-agenda)
+(require 'org-clock)
+(require 'org-capture)
 (define-key global-map "\C-cl" #'org-store-link)
 (define-key global-map "\C-ca" #'org-agenda)
 (define-key global-map "\C-cc" #'org-capture)
@@ -239,6 +205,7 @@
 (setq org-log-done t)
 (setq org-default-notes-file main-org-file)
 ;; org-mobile
+(require 'org-mobile)
 (setq org-mobile-inbox-for-pull main-org-file)
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 (setq org-mobile-use-encryption t)
@@ -368,10 +335,9 @@
         ("LOGTIME" . (:foreground "OrangeRed" :weight bold))
         ("TODO" . (:foreground "Red" :weight bold))))
 
-(setq org-modules
-      '(org-habit org-bbdb org-bibtex org-docview org-gnus org-info
-        org-irc org-mew org-mhe org-rmail org-vm org-w3m org-wl org-id)
-)
+(require 'org-habit)
+(setq org-habit-graph-column 50)
+
 (setq org-log-redeadline t)
 (setq org-log-reschedule t)
 (setq org-stuck-projects
@@ -383,10 +349,7 @@
 ;; TODO: compute these columns from the defaults.el frame size calculations.
 (setq org-tags-column -85)
 (setq org-agenda-tags-column 'auto)
-(setq org-habit-graph-column 50)
 
-;; And load everything except crypt
-(require 'org-install)
 (require 'org-checklist)
 
 ;; org-mode encryption of selected subtrees
@@ -395,6 +358,7 @@
 (setq org-crypt-disable-auto-save 'encrypt)
 
 ;; org-id
+(require 'org-id)
 (setq org-id-link-to-org-use-id t)
 
 ;; Save org buffers automatically
@@ -499,6 +463,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
 ;;; Wakatime
+(require 'wakatime-mode)
 (global-wakatime-mode)
 
 ;;; Irony
@@ -510,6 +475,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-hook 'irony-mode-hook #'irony-eldoc)
 
 ;;; Flycheck
+(require 'flycheck)
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
