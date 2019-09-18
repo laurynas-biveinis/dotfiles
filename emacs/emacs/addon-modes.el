@@ -69,9 +69,6 @@
 
 ;;;; AUCTeX and other TeX stuff
 
-;; preview-latex image type
-(setq preview-image-type 'png)
-
 ;; Enable document parsing for AUCTeX
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -102,7 +99,7 @@
    TeX-command-list))
 
 (add-hook #'LaTeX-mode-hook #'my-latex-mode-hook)
-(setq TeX-source-specials-view-start-server t)
+(setq TeX-source-correlate-start-server t)
 
 ;; Use RefTeX
 (add-hook #'LaTeX-mode-hook #'turn-on-reftex)
