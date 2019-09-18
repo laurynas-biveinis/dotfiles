@@ -22,7 +22,7 @@
                                   (and (= emacs-major-version 26)
                                        (>= emacs-minor-version 3))))
 
-(defconst integrated-cc-mode-p emacs-24-4-or-later
+(defconst integrated-cc-mode emacs-24-4-or-later
   "Whether we are using integrated or 3rd party cc-mode.")
 
 ;;; Various paths
@@ -48,11 +48,11 @@
 (system-specific-presetup)
 
 (add-to-list 'load-path private-elisp-lib)
-(unless integrated-cc-mode-p
+(unless integrated-cc-mode
   (add-to-list 'load-path (concat cc-mode-root "lisp/")))
 
 ;; Setup info search directories
-(unless integrated-cc-mode-p
+(unless integrated-cc-mode
   (add-to-list 'Info-default-directory-list (concat cc-mode-root "info/")))
 
 (load "secrets")
