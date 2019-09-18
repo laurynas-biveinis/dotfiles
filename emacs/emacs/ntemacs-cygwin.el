@@ -3,7 +3,7 @@
 
 ;;; Code:
 
-;; Variables defined elsewhere we'll be using
+;; Variables and functions defined elsewhere we'll be using
 (defvar private-elisp-lib)
 (defvar home-dir)
 (defvar explicit-shell-file-name)
@@ -14,7 +14,6 @@
 (defvar w32-quote-process-args)
 (defvar shell-mode-hook)
 (defvar python-python-command)
-
 (declare-function w32shell-add-emacs "w32shell" (&optional append))
 (declare-function w32shell-set-shell "w32shell" (shellname))
 (declare-function cygwin-mount-activate "cygwin-mount" ())
