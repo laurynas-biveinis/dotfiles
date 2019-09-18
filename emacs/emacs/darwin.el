@@ -1,4 +1,8 @@
-;;; System specific setup for Darwin
+;;; darwin.el --- Darwin-specific Emacs initialization
+
+;;; Commentary:
+
+;;; Code:
 
 ;; Variables defined elsewhere we'll be using
 (defvar exec-path-from-shell-check-startup-files)
@@ -18,3 +22,5 @@
   (setq ns-right-alternate-modifier 'none)
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
+
+;;; darwin.el ends here

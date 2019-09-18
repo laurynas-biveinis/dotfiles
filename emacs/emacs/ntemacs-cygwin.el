@@ -1,4 +1,7 @@
-;;; Specific setup for NTEmacs + EmacsW32 with Cygwin
+;;; ntemacs-cygwin.el --- NTEmacs/EmacsW32/Cygwin-specific Emacs initialization
+;;; Commentary:
+
+;;; Code:
 
 ;; Variables defined elsewhere we'll be using
 (defvar private-elisp-lib)
@@ -69,3 +72,5 @@
   (emacsw32-mode t)
   (emacsw32-style-frame-title t)
   (menuacc-active t nil (menuacc)))
+
+;;; ntemacs-cygwin.el ends here

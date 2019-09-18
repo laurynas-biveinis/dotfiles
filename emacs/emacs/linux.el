@@ -1,4 +1,8 @@
-;;; System specific setup for Linux
+;;; linux.el --- Linux-specific Emacs configuration
+
+;;; Commentary:
+
+;;; Code:
 
 (defconst my-frame-font
   "-Misc-Fixed-Medium-R-Normal--14-130-75-75-C-70-ISO8859-1"
@@ -19,3 +23,5 @@
             (read-kbd-macro (concat (cdr m) (cdr k)))))))
     )
   )
+
+;;; linux.el ends here
