@@ -419,7 +419,7 @@
     "My configuration hook for 'erc-mode'."
     (setq autopair-dont-activate t))
 
-  (add-hook 'erc-mode-hook #'my-erc-mode-hook))
+  (with-no-warnings (add-hook 'erc-mode-hook #'my-erc-mode-hook)))
 
 (require 'erc-log)
 
