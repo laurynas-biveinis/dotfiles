@@ -68,7 +68,8 @@
 
 ;; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
 (unless emacs-24-5-or-later
-  (setq redisplay-dont-pause t))
+  (with-no-warnings
+    (setq redisplay-dont-pause t)))
 
 ;; No annoying beeps
 (setq visible-bell t)
