@@ -343,11 +343,12 @@
 
 (setq erc-user-full-name user-full-name)
 
-(defun my-erc-mode-hook ()
-  "My configuration hook for 'erc-mode'."
-  (setq autopair-dont-activate t))
+(unless emacs-24-4-or-later
+  (defun my-erc-mode-hook ()
+    "My configuration hook for 'erc-mode'."
+    (setq autopair-dont-activate t))
 
-(add-hook #'erc-mode-hook #'my-erc-mode-hook)
+  (add-hook #'erc-mode-hook #'my-erc-mode-hook))
 
 (require 'erc-log)
 
