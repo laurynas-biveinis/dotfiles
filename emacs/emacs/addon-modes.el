@@ -378,9 +378,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (erc-log-enable)
 
-(setq erc-current-nick-highlight-type 'all)
-(setq erc-keyword-highlight-type 'all)
-
 (setq erc-track-exclude-types '("JOIN" "PART" "QUIT" "NICK" "MODE"))
 
 (setq erc-track-faces-priority-list
