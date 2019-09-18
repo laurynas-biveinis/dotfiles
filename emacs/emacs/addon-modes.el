@@ -152,7 +152,7 @@
 (defun my-latex-mode-hook ()
   "My configuration hook for 'latex-mode'."
   ;; Source specials
-  (TeX-source-specials-mode 1)
+  (TeX-source-correlate-mode 1)
   ;; Set up -pdf option for latexmk
   (push
    '("%(-PDF)"
