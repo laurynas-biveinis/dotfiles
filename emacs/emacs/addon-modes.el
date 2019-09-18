@@ -472,7 +472,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
          (set-frame-position nil darkstar-laptop-top darkstar-laptop-left)
          (set-frame-size nil darkstar-laptop-width darkstar-laptop-height)
          (two-windows))
-        (t (diagnose-unknown-display-geometry display-geometry))))
+        (t (diagnose-unknown-display-geometry new-display-geometry))))
 
 (add-hook #'dispwatch-display-change-hooks #'my-display-changed-hook)
 (dispwatch-mode 1)
