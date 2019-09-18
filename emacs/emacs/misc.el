@@ -22,6 +22,6 @@ loaded as such.)"
       (when (looking-at "!<symlink>")
         (re-search-forward "!<symlink>\\(.*\\)\0")
         (find-alternate-file (match-string 1))))))
-(add-hook #'find-file-hooks #'follow-cygwin-symlinks)
+(add-hook 'find-file-hooks #'follow-cygwin-symlinks)
 
 ;;; misc.el ends here

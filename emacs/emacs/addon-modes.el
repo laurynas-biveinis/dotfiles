@@ -119,20 +119,20 @@
 
 ;; Show the arguments of the currently written function in the echo area
 (autoload #'turn-on-eldoc-mode "eldoc" nil t)
-(add-hook #'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
-(add-hook #'lisp-interaction-mode-hook #'turn-on-eldoc-mode)
-(add-hook #'ielm-mode-hook #'turn-on-eldoc-mode)
+(add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook #'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook #'turn-on-eldoc-mode)
 
 ;;; sh-mode
 
 ;; In Shell mode, do not echo passwords
-(add-hook #'comint-output-filter-functions
+(add-hook 'comint-output-filter-functions
           #'comint-watch-for-password-prompt
           #'comint-strip-ctrl-m)
 
 ;; Colors
 (require 'ansi-color)
-(add-hook #'shell-mode-hook #'ansi-color-for-comint-mode-on)
+(add-hook 'shell-mode-hook #'ansi-color-for-comint-mode-on)
 
 ;; ssh mode on the top of shell
 (require 'ssh)
@@ -147,7 +147,7 @@
 (setq-default TeX-master nil)
 
 ;; AUCTeX toolbar support
-(add-hook #'LaTeX-mode-hook #'LaTeX-install-toolbar)
+(add-hook 'LaTeX-mode-hook #'LaTeX-install-toolbar)
 
 (defun my-latex-mode-hook ()
   "My configuration hook for 'latex-mode'."
@@ -168,26 +168,26 @@
      :help "Run latexmk on file")
    TeX-command-list))
 
-(add-hook #'LaTeX-mode-hook #'my-latex-mode-hook)
+(add-hook 'LaTeX-mode-hook #'my-latex-mode-hook)
 (setq TeX-source-correlate-start-server t)
 
 ;; Use RefTeX
-(add-hook #'LaTeX-mode-hook #'turn-on-reftex)
+(add-hook 'LaTeX-mode-hook #'turn-on-reftex)
 
 ;; Spellcheck on the fly
-;;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-;;(add-hook 'c-mode-hook          'flyspell-prog-mode 1)
-;;(add-hook 'c++-mode-hook        'flyspell-prog-mode 1)
-;;(add-hook 'cperl-mode-hook      'flyspell-prog-mode 1)
-;;(add-hook 'autoconf-mode-hook   'flyspell-prog-mode 1)
-;;(add-hook 'autotest-mode-hook   'flyspell-prog-mode 1)
-;;(add-hook 'sh-mode-hook         'flyspell-prog-mode 1)
-;;(add-hook 'makefile-mode-hook   'flyspell-prog-mode 1)
-;;(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode 1)
+;;(add-hook 'LaTeX-mode-hook #'flyspell-mode)
+;;(add-hook 'c-mode-hook          #'flyspell-prog-mode 1)
+;;(add-hook 'c++-mode-hook        #'flyspell-prog-mode 1)
+;;(add-hook 'cperl-mode-hook      #'flyspell-prog-mode 1)
+;;(add-hook 'autoconf-mode-hook   #'flyspell-prog-mode 1)
+;;(add-hook 'autotest-mode-hook   #'flyspell-prog-mode 1)
+;;(add-hook 'sh-mode-hook         #'flyspell-prog-mode 1)
+;;(add-hook 'makefile-mode-hook   #'flyspell-prog-mode 1)
+;;(add-hook 'emacs-lisp-mode-hook #'flyspell-prog-mode 1)
 
 ;; Spellcheck on the fly multiple languages at once
 ;;(autoload 'flyspell-babel-setup "flyspell-babel")
-;;(add-hook 'LaTeX-mode-hook 'flyspell-babel-setup)
+;;(add-hook 'LaTeX-mode-hook #'flyspell-babel-setup)
 
 ;; Integrate RefTeX into AUCTeX
 (setq reftex-plug-into-AUCTeX t)
@@ -398,13 +398,13 @@
 (setq org-id-link-to-org-use-id t)
 
 ;; Save org buffers automatically
-(add-hook #'auto-save-hook #'org-save-all-org-buffers)
+(add-hook 'auto-save-hook #'org-save-all-org-buffers)
 
 (defun my-org-mode-hook ()
   "My configuration hook for 'org-mode'."
   (setq fill-column 85))
 
-(add-hook #'org-mode-hook #'my-org-mode-hook)
+(add-hook 'org-mode-hook #'my-org-mode-hook)
 
 ;;; Solarized-dark color theme
 (load-theme 'solarized-dark t)
@@ -419,7 +419,7 @@
     "My configuration hook for 'erc-mode'."
     (setq autopair-dont-activate t))
 
-  (add-hook #'erc-mode-hook #'my-erc-mode-hook))
+  (add-hook 'erc-mode-hook #'my-erc-mode-hook))
 
 (require 'erc-log)
 
@@ -502,12 +502,12 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (global-wakatime-mode)
 
 ;;; Irony
-(add-hook #'c++-mode-hook #'irony-mode)
-(add-hook #'c-mode-hook #'irony-mode)
-(add-hook #'objc-mode-hook #'irony-mode)
+(add-hook 'c++-mode-hook #'irony-mode)
+(add-hook 'c-mode-hook #'irony-mode)
+(add-hook 'objc-mode-hook #'irony-mode)
 
-(add-hook #'irony-mode-hook #'irony-cdb-autosetup-compile-options)
-(add-hook #'irony-mode-hook #'irony-eldoc)
+(add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options)
+(add-hook 'irony-mode-hook #'irony-eldoc)
 
 ;;; Flycheck
 (global-flycheck-mode)
@@ -515,11 +515,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;; Irony integration with Flycheck
 (eval-after-load 'flycheck
-  '(add-hook #'flycheck-mode-hook #'flycheck-irony-setup))
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
 ;;; Company mode
 (require 'company-irony-c-headers)
-(add-hook #'after-init-hook #'global-company-mode)
+(add-hook 'after-init-hook #'global-company-mode)
 (eval-after-load 'company
   '(add-to-list 'company-backends '(company-irony-c-headers company-irony)))
 
@@ -529,7 +529,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'auto-mode-alist '("/sshd?_config\\'"      . ssh-config-mode))
 (add-to-list 'auto-mode-alist '("/known_hosts\\'"       . ssh-known-hosts-mode))
 (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode))
-(add-hook #'ssh-config-mode-hook #'turn-on-font-lock)
+(add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
 
 ;;; dispwatch
 (require 'dispwatch)
@@ -542,7 +542,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
          (two-windows))
         (t (diagnose-unknown-display-geometry new-display-geometry))))
 
-(add-hook #'dispwatch-display-change-hooks #'my-display-changed-hook)
+(add-hook 'dispwatch-display-change-hooks #'my-display-changed-hook)
 (dispwatch-mode 1)
 
 ;;; addon-modes.el ends here
