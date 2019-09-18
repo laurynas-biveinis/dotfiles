@@ -157,10 +157,10 @@
   (unless (file-exists-p (buffer-file-name))
     (set-buffer-modified-p t)))
 
-(add-hook #'find-file-hooks #'treat-new-files-as-modified)
+(add-hook 'find-file-hook #'treat-new-files-as-modified)
 
 ;; Mark executable files as executable on save
-(add-hook #'after-save-hook
+(add-hook 'after-save-hook
           #'executable-make-buffer-file-executable-if-script-p)
 
 ;; Keybindings
@@ -223,10 +223,10 @@
   (kill-buffer-if-exists "*Completions*")
   (kill-buffer-if-exists "*Ido Completions*"))
 
-(add-hook #'minibuffer-exit-hook #'kill-completion-buffers)
+(add-hook 'minibuffer-exit-hook #'kill-completion-buffers)
 
 ;; Auto Fill
-(add-hook #'text-mode-hook #'turn-on-auto-fill)
+(add-hook 'text-mode-hook #'turn-on-auto-fill)
 
 ;; Show which function we are at. which-func-modes default to t in 24.1+.
 (setq which-func-modes t)
@@ -250,9 +250,9 @@
   "Load dired-x."
   (load "dired-x"))
 
-(add-hook #'dired-load-hook #'load-dired-x)
+(add-hook 'dired-load-hook #'load-dired-x)
 
-(add-hook #'Man-mode-hook #'goto-address)
+(add-hook 'Man-mode-hook #'goto-address)
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -266,7 +266,7 @@
   (or (file-exists-p (file-name-directory buffer-file-name))
       (make-directory (file-name-directory buffer-file-name) t)))
 
-(add-hook #'before-save-hook #'create-missing-parent-dirs)
+(add-hook 'before-save-hook #'create-missing-parent-dirs)
 
 ;;; cc-mode
 
@@ -308,6 +308,6 @@
   (setq indent-tabs-mode nil)
   (setq fill-column 80))
 
-(add-hook #'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
+(add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
 
 ;;; defaults.el ends here
