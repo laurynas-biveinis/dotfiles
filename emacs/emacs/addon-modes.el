@@ -336,7 +336,6 @@
 (add-hook #'org-mode-hook #'my-org-mode-hook)
 
 ;;; Solarized-dark color theme
-(setq solarized-termcolors 256)
 (load-theme 'solarized-dark t)
 
 ;;; IRC (ERC)
