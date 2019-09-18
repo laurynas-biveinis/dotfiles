@@ -46,10 +46,10 @@
   (defun my-shell-setup()
     "For Cygwin bash"
     (setq comint-scroll-show-maximum-output 'this)
+    (make-local-variable 'comint-completion-addsuffix)
     (setq comint-completion-addsuffix t)
     (setq comint-eol-on-send t)
-    (setq w32-quote-process-args ?\")
-    (make-variable-buffer-local 'comint-completion-addsuffix))
+    (setq w32-quote-process-args ?\"))
 
   (setq shell-mode-hook 'my-shell-setup)
 )
