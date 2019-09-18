@@ -446,6 +446,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; Flycheck
 (global-flycheck-mode)
+(setq flycheck-emacs-lisp-load-path 'inherit)
+
+;; Irony integration with Flycheck
 (eval-after-load 'flycheck
   '(add-hook #'flycheck-mode-hook #'flycheck-irony-setup))
 
