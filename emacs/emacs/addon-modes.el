@@ -1,3 +1,8 @@
+;;; addon-modes.el --- Emacs init configuration for the extra modes and packages
+;;; Commentary:
+
+;;; Code:
+
 ;; Variables defined elsewhere we'll be using
 (defvar google-c-style)
 (defvar auto-indent-mode-untabify-on-yank-or-paste)
@@ -36,6 +41,7 @@
 ;; Imenu
 (require 'imenu+)
 (defun try-to-add-imenu ()
+  "Try to add imenu to menu bar, silently eating any errors."
   (condition-case nil (imenu-add-menubar-index) (error nil)))
 (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
@@ -360,9 +366,8 @@
 
 (defun my-erc-generate-log-file-name-channel-network
   (buffer target nick server port)
-  "Generate an ERC log file name. using the channel and network name, resulting
-in #channel@network.txt.
-Ths function is a possible values for `erc-generate-log-file-name-function'."
+  "Generate an ERC log file name in form of #channel@network.txt.
+BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (require 'erc-networks)
   (let ((file (concat
                target "!"
@@ -386,6 +391,7 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (defadvice erc-track-find-face
   (around erc-track-find-face-promote-query activate)
+  "Pretend that any ERC query buffers contain my name, for better modeline notification."
   (if (erc-query-buffer-p)
       (setq ad-return-value (intern "erc-current-nick-face"))
     ad-do-it))
@@ -470,3 +476,5 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 
 (add-hook #'dispwatch-display-change-hooks #'my-display-changed-hook)
 (dispwatch-mode 1)
+
+;;; addon-modes.el ends here

@@ -1,3 +1,8 @@
+;;; defaults.el --- Emacs default and builtin mode configuration
+;;; Commentary:
+
+;;; Code:
+
 ;; Variables defined elsewhere we'll be using
 (defvar bookmark-save-flag)
 (defvar display-time-24hr-format)
@@ -303,3 +308,5 @@
   (setq fill-column 80))
 
 (add-hook #'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
+
+;;; defaults.el ends here

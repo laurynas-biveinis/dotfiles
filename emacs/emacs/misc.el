@@ -1,7 +1,11 @@
-;;; Follow Cygwin symlinks.
-;; Handles old-style (text file) symlinks and new-style (.lnk file) symlinks.
-;; (Non-Cygwin-symlink .lnk files, such as desktop shortcuts, are still loaded
-;;  as such.)
+;;; misc.el --- Miscellaneous Emacs init code, not fitting elsewhere
+;;; Commentary:
+;; Follow Cygwin symlinks.  Handles old-style (text file) symlinks and new-style
+;; (.lnk file) symlinks.  (Non-Cygwin-symlink .lnk files, such as desktop
+;; shortcuts, are still loaded as such.)
+
+;;; Code:
+
 (defun follow-cygwin-symlinks ()
   "Follow Cygwin symlinks.
 Handles old-style (text file) and new-style (.lnk file) symlinks.
@@ -19,3 +23,5 @@ loaded as such.)"
         (re-search-forward "!<symlink>\\(.*\\)\0")
         (find-alternate-file (match-string 1))))))
 (add-hook #'find-file-hooks #'follow-cygwin-symlinks)
+
+;;; misc.el ends here
