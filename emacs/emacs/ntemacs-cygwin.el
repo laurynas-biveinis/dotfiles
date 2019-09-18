@@ -15,6 +15,10 @@
 (defvar shell-mode-hook)
 (defvar python-python-command)
 
+(declare-function w32shell-add-emacs "w32shell" (&optional append))
+(declare-function w32shell-set-shell "w32shell" (shellname))
+(declare-function cygwin-mount-activate "cygwin-mount" ())
+
 (defun system-specific-presetup()
   "NT Emacs on Cygwin: set some things before main .emacs setup."
 
@@ -66,11 +70,6 @@
   (require 'tex-mik)
 
   (require 'cygwin-mount)
-  (cygwin-mount-activate)
-
-  ;; EmacsW32
-  (emacsw32-mode t)
-  (emacsw32-style-frame-title t)
-  (menuacc-active t nil (menuacc)))
+  (cygwin-mount-activate))
 
 ;;; ntemacs-cygwin.el ends here
