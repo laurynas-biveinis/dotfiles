@@ -47,10 +47,9 @@
 ;; must be setup before main setup
 (cond ((eq system-type 'windows-nt) (load-library "ntemacs-cygwin"))
       ((eq system-type 'gnu/linux) (load-library "linux"))
-      ((eq system-type 'darwin) (load-library "darwin"))
-      (t (load-library "platform-default")))
+      ((eq system-type 'darwin) (load-library "darwin")))
 
-(system-specific-presetup)
+(when (fboundp 'system-specific-presetup) (system-specific-presetup))
 
 (add-to-list 'load-path private-elisp-lib)
 (unless integrated-cc-mode
@@ -79,7 +78,8 @@
 
 (load "addon-modes")
 (load "misc")
-(system-specific-setup)
+
+(when (fboundp 'system-specific-setup) (system-specific-setup))
 
 (mapc #'load (file-expand-wildcards dotfiles-elisp))
 
