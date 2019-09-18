@@ -1,5 +1,3 @@
-;;; -*- lexical-binding: t; -*-
-
 ;; Variables defined elsewhere we'll be using
 (defvar google-c-style)
 (defvar auto-indent-mode-untabify-on-yank-or-paste)

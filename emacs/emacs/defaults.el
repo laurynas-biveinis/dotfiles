@@ -1,5 +1,3 @@
-;;; -*- lexical-binding: t; -*-
-
 ;; Variables defined elsewhere we'll be using
 (defvar bookmark-save-flag)
 (defvar display-time-24hr-format)

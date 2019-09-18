@@ -1,4 +1,3 @@
-;;; -*- lexical-binding: t; -*-
 ;;; Defaults for system-specific setup
 
 (defun system-specific-presetup()

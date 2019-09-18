@@ -1,5 +1,3 @@
-;;; -*- lexical-binding: t; -*-
-
 ;;; Follow Cygwin symlinks.
 ;; Handles old-style (text file) symlinks and new-style (.lnk file) symlinks.
 ;; (Non-Cygwin-symlink .lnk files, such as desktop shortcuts, are still loaded

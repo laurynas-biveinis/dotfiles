@@ -1,4 +1,3 @@
-;;; -*- lexical-binding: t; -*-
 ;;; System specific setup for Linux
 
 (defconst my-frame-font
