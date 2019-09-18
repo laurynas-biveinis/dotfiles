@@ -66,6 +66,6 @@
   (cygwin-mount-activate)
 
   ;; EmacsW32
-  '(emacsw32-mode t)
-  '(emacsw32-style-frame-title t)
-  '(menuacc-active t nil (menuacc)))
+  (emacsw32-mode t)
+  (emacsw32-style-frame-title t)
+  (menuacc-active t nil (menuacc)))

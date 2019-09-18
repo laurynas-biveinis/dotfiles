@@ -76,7 +76,7 @@
 (load "misc")
 (system-specific-setup)
 
-(mapc 'load (file-expand-wildcards dotfiles-elisp))
+(mapc #'load (file-expand-wildcards dotfiles-elisp))
 
 (server-start)
 (custom-set-variables

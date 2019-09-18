@@ -55,8 +55,8 @@
 
 ;;; whitespace-mode
 (global-whitespace-mode)
-(setq whitespace-style (quote (face trailing lines-tail empty indentation
-                                    big-intent space-after-tab space-before-tab)))
+(setq whitespace-style '(face trailing lines-tail empty indentation big-intent
+                              space-after-tab space-before-tab))
 ;; Use fill-column value
 (setq whitespace-line-column nil)
 (setq whitespace-global-modes '(not dired-mode))
@@ -151,29 +151,29 @@
   (unless (file-exists-p (buffer-file-name))
     (set-buffer-modified-p t)))
 
-(add-hook 'find-file-hooks 'treat-new-files-as-modified)
+(add-hook #'find-file-hooks #'treat-new-files-as-modified)
 
 ;; Mark executable files as executable on save
-(add-hook 'after-save-hook
-          'executable-make-buffer-file-executable-if-script-p)
+(add-hook #'after-save-hook
+          #'executable-make-buffer-file-executable-if-script-p)
 
 ;; Keybindings
-(global-set-key "\C-cg" 'goto-line)
-(global-set-key "\C-cn" 'next-error)
-(global-set-key "\C-cp" 'previous-error)
-(global-set-key "\C-x\C-m" 'execute-extended-command)
-(global-set-key "\C-c\C-m" 'execute-extended-command)
+(global-set-key "\C-cg" #'goto-line)
+(global-set-key "\C-cn" #'next-error)
+(global-set-key "\C-cp" #'previous-error)
+(global-set-key "\C-x\C-m" #'execute-extended-command)
+(global-set-key "\C-c\C-m" #'execute-extended-command)
 
-(global-set-key [(control shift up)] 'enlarge-window)
-(global-set-key [(control shift down)] 'shrink-window)
-(global-set-key [(control shift left)] 'enlarge-window-horizontally)
-(global-set-key [(control shift right)] 'shrink-window-horizontally)
+(global-set-key [(control shift up)] #'enlarge-window)
+(global-set-key [(control shift down)] #'shrink-window)
+(global-set-key [(control shift left)] #'enlarge-window-horizontally)
+(global-set-key [(control shift right)] #'shrink-window-horizontally)
 
 ;; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
 
 ;; No scroll bars, introduced in 24.1.
-(if (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
+(if (fboundp #'set-scroll-bar-mode) (set-scroll-bar-mode nil))
 
 ;; Don't bother entering search and replace args if the buffer is read-only
 (defadvice query-replace-read-args (before barf-if-buffer-read-only activate)
@@ -181,7 +181,7 @@
   (barf-if-buffer-read-only))
 
 ;; No toolbar, introduced in 24.1
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp #'tool-bar-mode) (tool-bar-mode -1))
 
 ;; Typing or <Delete> will remove selected text
 (delete-selection-mode 1)
@@ -217,10 +217,10 @@
   (kill-buffer-if-exists "*Completions*")
   (kill-buffer-if-exists "*Ido Completions*"))
 
-(add-hook 'minibuffer-exit-hook 'kill-completion-buffers)
+(add-hook #'minibuffer-exit-hook #'kill-completion-buffers)
 
 ;; Auto Fill
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook #'text-mode-hook #'turn-on-auto-fill)
 
 ;; Show which function we are at. which-func-modes default to t in 24.1+.
 (setq which-func-modes t)
@@ -244,9 +244,9 @@
   "Load dired-x."
   (load "dired-x"))
 
-(add-hook 'dired-load-hook 'load-dired-x)
+(add-hook #'dired-load-hook #'load-dired-x)
 
-(add-hook 'Man-mode-hook 'goto-address)
+(add-hook #'Man-mode-hook #'goto-address)
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -260,7 +260,7 @@
   (or (file-exists-p (file-name-directory buffer-file-name))
       (make-directory (file-name-directory buffer-file-name) t)))
 
-(add-hook 'before-save-hook 'create-missing-parent-dirs)
+(add-hook #'before-save-hook #'create-missing-parent-dirs)
 
 ;;; cc-mode
 
@@ -275,7 +275,7 @@
 (gud-tooltip-mode t)
 
 ;; windmove
-(when (fboundp 'windmove-default-keybindings)
+(when (fboundp #'windmove-default-keybindings)
   (windmove-default-keybindings 'super))
 
 ;; Workaround Emacs 25.2- security vuln
@@ -302,4 +302,4 @@
   (setq indent-tabs-mode nil)
   (setq fill-column 80))
 
-(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
+(add-hook #'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)

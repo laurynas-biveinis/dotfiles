@@ -37,26 +37,26 @@
 (require 'imenu+)
 (defun try-to-add-imenu ()
   (condition-case nil (imenu-add-menubar-index) (error nil)))
-(add-hook 'font-lock-mode-hook 'try-to-add-imenu)
+(add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
 ;;;; Programming language modes
 
 ;; Show the arguments of the currently written function in the echo area
-(autoload 'turn-on-eldoc-mode "eldoc" nil t)
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+(autoload #'turn-on-eldoc-mode "eldoc" nil t)
+(add-hook #'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
+(add-hook #'lisp-interaction-mode-hook #'turn-on-eldoc-mode)
+(add-hook #'ielm-mode-hook #'turn-on-eldoc-mode)
 
 ;;; sh-mode
 
 ;; In Shell mode, do not echo passwords
-(add-hook 'comint-output-filter-functions
-          'comint-watch-for-password-prompt
-          'comint-strip-ctrl-m)
+(add-hook #'comint-output-filter-functions
+          #'comint-watch-for-password-prompt
+          #'comint-strip-ctrl-m)
 
 ;; Colors
 (require 'ansi-color)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(add-hook #'shell-mode-hook #'ansi-color-for-comint-mode-on)
 
 ;; ssh mode on the top of shell
 (require 'ssh)
@@ -74,7 +74,7 @@
 (setq-default TeX-master nil)
 
 ;; AUCTeX toolbar support
-(add-hook 'LaTeX-mode-hook #'LaTeX-install-toolbar)
+(add-hook #'LaTeX-mode-hook #'LaTeX-install-toolbar)
 
 (defun my-latex-mode-hook ()
   "My configuration hook for 'latex-mode'."
@@ -95,11 +95,11 @@
      :help "Run latexmk on file")
    TeX-command-list))
 
-(add-hook 'LaTeX-mode-hook 'my-latex-mode-hook)
+(add-hook #'LaTeX-mode-hook #'my-latex-mode-hook)
 (setq TeX-source-specials-view-start-server t)
 
 ;; Use RefTeX
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(add-hook #'LaTeX-mode-hook #'turn-on-reftex)
 
 ;; Spellcheck on the fly
 ;;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
@@ -158,10 +158,10 @@
 (setq org-enforce-todo-checkbox-dependencies t)
 ;; Bendra
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(define-key global-map "\C-cc" 'org-capture)
-(define-key global-map "\C-c\C-x\C-o" 'org-clock-out)
+(define-key global-map "\C-cl" #'org-store-link)
+(define-key global-map "\C-ca" #'org-agenda)
+(define-key global-map "\C-cc" #'org-capture)
+(define-key global-map "\C-c\C-x\C-o" #'org-clock-out)
 (setq org-use-speed-commands t)
 (setq org-log-done t)
 (setq org-default-notes-file main-org-file)
@@ -271,7 +271,7 @@
 (setq org-closed-keep-when-no-todo t)
 
 ;; Refiling
-(setq org-refile-targets (quote ((org-agenda-files :maxlevel . 9))))
+(setq org-refile-targets '((org-agenda-files :maxlevel . 9)))
 ;; or 'buffer-name starting with 9.1, not much difference in my setup
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
@@ -324,13 +324,13 @@
 (setq org-id-link-to-org-use-id t)
 
 ;; Save org buffers automatically
-(add-hook 'auto-save-hook 'org-save-all-org-buffers)
+(add-hook #'auto-save-hook #'org-save-all-org-buffers)
 
 (defun my-org-mode-hook ()
   "My configuration hook for 'org-mode'."
   (setq fill-column 85))
 
-(add-hook 'org-mode-hook 'my-org-mode-hook)
+(add-hook #'org-mode-hook #'my-org-mode-hook)
 
 ;;; Solarized-dark color theme
 (setq solarized-termcolors 256)
@@ -345,7 +345,7 @@
   "My configuration hook for 'erc-mode'."
   (setq autopair-dont-activate t))
 
-(add-hook 'erc-mode-hook 'my-erc-mode-hook)
+(add-hook #'erc-mode-hook #'my-erc-mode-hook)
 
 (require 'erc-log)
 
@@ -372,7 +372,7 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
     (convert-standard-filename file)))
 
 (setq erc-generate-log-file-name-function
-      'my-erc-generate-log-file-name-channel-network)
+      #'my-erc-generate-log-file-name-channel-network)
 
 (erc-log-enable)
 
@@ -423,7 +423,7 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
   (erc-cmd-GQ "Leaving"))
 
 ;;; Magit
-(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x g") #'magit-status)
 
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
@@ -431,21 +431,21 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 (global-wakatime-mode)
 
 ;;; Irony
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
+(add-hook #'c++-mode-hook #'irony-mode)
+(add-hook #'c-mode-hook #'irony-mode)
+(add-hook #'objc-mode-hook #'irony-mode)
 
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-(add-hook 'irony-mode-hook #'irony-eldoc)
+(add-hook #'irony-mode-hook #'irony-cdb-autosetup-compile-options)
+(add-hook #'irony-mode-hook #'irony-eldoc)
 
 ;;; Flycheck
 (global-flycheck-mode)
 (eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+  '(add-hook #'flycheck-mode-hook #'flycheck-irony-setup))
 
 ;;; Company mode
 (require 'company-irony-c-headers)
-(add-hook 'after-init-hook 'global-company-mode)
+(add-hook #'after-init-hook #'global-company-mode)
 (eval-after-load 'company
   '(add-to-list 'company-backends '(company-irony-c-headers company-irony)))
 
@@ -455,7 +455,7 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
 (add-to-list 'auto-mode-alist '("/sshd?_config\\'"      . ssh-config-mode))
 (add-to-list 'auto-mode-alist '("/known_hosts\\'"       . ssh-known-hosts-mode))
 (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode))
-(add-hook 'ssh-config-mode-hook 'turn-on-font-lock)
+(add-hook #'ssh-config-mode-hook #'turn-on-font-lock)
 
 ;;; dispwatch
 (require 'dispwatch)
@@ -468,5 +468,5 @@ Ths function is a possible values for `erc-generate-log-file-name-function'."
          (two-windows))
         (t (diagnose-unknown-display-geometry display-geometry))))
 
-(add-hook 'dispwatch-display-change-hooks #'my-display-changed-hook)
+(add-hook #'dispwatch-display-change-hooks #'my-display-changed-hook)
 (dispwatch-mode 1)
