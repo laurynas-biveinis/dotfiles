@@ -56,7 +56,9 @@
 (setq-default require-final-newline 'query)
 
 ;; Display trailing whitespace
-(setq-default show-trailing-whitespace t)
+(defun enable-show-trailing-ws ()
+  "Enable showing of trailing whitespace."
+  (setq show-trailing-whitespace t))
 
 ;;; whitespace-mode
 (global-whitespace-mode)
@@ -225,8 +227,9 @@
 
 (add-hook 'minibuffer-exit-hook #'kill-completion-buffers)
 
-;; Auto Fill
+;;; text-mode
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
+(add-hook 'text-mode-hook #'enable-show-trailing-ws)
 
 ;; Show which function we are at. which-func-modes default to t in 24.1+.
 (setq which-func-modes t)
@@ -270,6 +273,8 @@
 
 ;;; cc-mode
 
+(add-hook 'c-mode-common-hook #'enable-show-trailing-ws)
+
 ;; TAB indents only if point in the beginning of the line
 (setq c-tab-always-indent 1)
 
@@ -304,10 +309,16 @@
 
 (defun my-emacs-lisp-mode-hook ()
   "Configuration for 'emacs-lisp-mode'."
+  (enable-show-trailing-ws)
   ;; Should the global default ever change, elisp should stay with spaces
   (setq indent-tabs-mode nil)
   (setq fill-column 80))
 
 (add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
+
+;;; eldoc-mode: show the args of the current function in the echo aread
+(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
+(add-hook 'ielm-mode-hook 'eldoc-mode)
 
 ;;; defaults.el ends here

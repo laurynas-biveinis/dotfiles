@@ -38,6 +38,7 @@
 (declare-function flycheck-irony-setup "flycheck-irony" ())
 (declare-function two-windows "" ())
 (declare-function diagnose-unknown-display-geometry "" (geometry))
+(declare-function enable-show-trailing-ws "" ())
 
 ;;; undo-tree
 (require 'undo-tree)
@@ -78,12 +79,6 @@
 
 ;;;; Programming language modes
 
-;; Show the arguments of the currently written function in the echo area
-(autoload #'turn-on-eldoc-mode "eldoc" nil t)
-(add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
-(add-hook 'lisp-interaction-mode-hook #'turn-on-eldoc-mode)
-(add-hook 'ielm-mode-hook #'turn-on-eldoc-mode)
-
 ;;; sh-mode
 
 ;; In Shell mode, do not echo passwords
@@ -112,6 +107,7 @@
 
 (defun my-latex-mode-hook ()
   "My configuration hook for 'latex-mode'."
+  (enable-show-trailing-ws)
   ;; Source specials
   (TeX-source-correlate-mode 1)
   ;; Set up -pdf option for latexmk
@@ -366,6 +362,7 @@
 
 (defun my-org-mode-hook ()
   "My configuration hook for 'org-mode'."
+  (enable-show-trailing-ws)
   (setq fill-column 85))
 
 (add-hook 'org-mode-hook #'my-org-mode-hook)
@@ -496,6 +493,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'auto-mode-alist '("/known_hosts\\'"       . ssh-known-hosts-mode))
 (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode))
 (add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
+(add-hook 'ssh-config-mode-hook #'enable-show-trailing-ws)
 
 ;;; dispwatch
 (require 'dispwatch)
