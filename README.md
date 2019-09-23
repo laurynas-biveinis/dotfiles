@@ -269,8 +269,8 @@ brew
 ```bash
 brew install stow git z ncdu gnupg@1.4 coreutils fzf hexyl tldr lynis curl shellcheck wget hunspell
 sudo mkdir /Library/Spelling
-sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/tree/en/en_US.aff
-sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/tree/en/en_US.dic
+sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
+sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
 sudo easy_install pip
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc virtualbox virtualbox-extension-pack
 # Work: to be done
