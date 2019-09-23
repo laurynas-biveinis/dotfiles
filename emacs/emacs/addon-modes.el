@@ -155,13 +155,11 @@
 
 ;;; cmd-mode.el major mode for cmd and bat scripts
 (autoload 'cmd-mode "cmd-mode" "CMD mode." t)
-(setq auto-mode-alist (append '(("\\.\\(cmd\\|bat\\)$" . cmd-mode))
-                              auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.\\(cmd\\|bat\\)$" . cmd-mode))
 
 ;;; po-mode.el for PO file editing
-(setq auto-mode-alist
-   (cons '("\\.po\\'\\|\\.po\\." . po-mode) auto-mode-alist))
 (autoload 'po-mode "po-mode" "Major mode for translators to edit PO files" t)
+(add-to-list 'auto-mode-alist '("\\.po\\'\\|\\.po\\." . po-mode))
 
 (require 'po)
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
@@ -171,11 +169,8 @@
 ;;; nXML
 ;; Autocomplete closing tags
 (setq nxml-slash-auto-complete-flag t)
-
-;; Automatically use nXML for interesting file types
-(setq auto-mode-alist
-      (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
-            auto-mode-alist))
+(add-to-list 'auto-mode-alist
+             '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode))
 
 ;; easypg
 ;; Still only works if there's a symlink gpg -> gpg1, and I was not able to
