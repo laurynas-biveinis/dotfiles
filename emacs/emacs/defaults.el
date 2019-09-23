@@ -347,7 +347,7 @@ loaded as such.)"
 ;; Workaround Emacs 25.2- security vuln
 (unless emacs-25-3-or-later
   (eval-after-load "enriched"
-    '(defun enriched-decode-display-prop (start end &optional param)
+    '(defun enriched-decode-display-prop (start end &optional _param)
        (list start end))))
 
 ;; Compilation
