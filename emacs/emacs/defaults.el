@@ -10,6 +10,7 @@
 (defvar whitespace-style)
 (defvar whitespace-line-column)
 (defvar whitespace-global-modes)
+(defvar emacs-24-1-or-later)
 (defvar emacs-24-5-or-later)
 (defvar font-use-system-font)
 (defvar ido-default-buffer-method)
@@ -287,7 +288,8 @@ loaded as such.)"
 (add-hook 'text-mode-hook #'enable-show-trailing-ws)
 
 ;; Show which function we are at. which-func-modes default to t in 24.1+.
-(setq which-func-modes t)
+(unless emacs-24-1-or-later
+  (setq which-func-modes t))
 (which-function-mode)
 
 ;; Soft word wrap

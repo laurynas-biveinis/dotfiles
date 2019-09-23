@@ -6,6 +6,9 @@
 ;;; Some version checks
 ;; 22.1, released on 2007-06-02, is the default on macOS, we don't use that.
 ;; 23.1, released on 2009-07-29, is the default on CentOS 6
+(defconst emacs-24-1-or-later (or (and (= emacs-major-version 24)
+                                       (>= emacs-minor-version 1))
+                                  (>= emacs-major-version 25)))
 ;; 24.3, released on 2013-03-11, is the default on CentOS 7
 ;; 24.4, released on 2014-10-20, is the default on Debian 8 - once it becomes
 ;; the oldest version, replace eval-after-load with with-eval-after-load, enable
