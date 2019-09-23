@@ -399,7 +399,7 @@
 (setq erc-join-buffer 'bury)
 
 (defun my-erc-generate-log-file-name-channel-network
-  (buffer target nick server port)
+  (buffer target _nick server _port)
   "Generate an ERC log file name in form of #channel@network.txt.
 BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (require 'erc-networks)
