@@ -1,4 +1,4 @@
-;;;; .emacs --- my initialization file for Emacs
+;;;; .emacs --- my initialization file for Emacs.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:

@@ -1,4 +1,4 @@
-;;; addon-modes.el --- Emacs init configuration for the extra modes and packages
+;;; addon-modes.el --- Configure extra packages.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:

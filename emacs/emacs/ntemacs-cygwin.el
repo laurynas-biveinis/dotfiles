@@ -1,4 +1,4 @@
-;;; ntemacs-cygwin.el --- NTEmacs/EmacsW32/Cygwin-specific Emacs initialization
+;;; ntemacs-cygwin.el --- Cygwin-specific init.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:

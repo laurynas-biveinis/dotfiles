@@ -1,4 +1,4 @@
-;;; darwin.el --- Darwin-specific Emacs initialization
+;;; darwin.el --- Darwin-specific Emacs init.  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

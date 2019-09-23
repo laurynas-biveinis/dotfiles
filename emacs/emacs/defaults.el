@@ -1,4 +1,4 @@
-;;; defaults.el --- Emacs default and builtin mode configuration
+;;; defaults.el --- Emacs builtin mode config.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:
