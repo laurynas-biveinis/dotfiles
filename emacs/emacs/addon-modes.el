@@ -107,11 +107,10 @@
 ;; Make AUCTeX aware of multifile documents
 (setq-default TeX-master nil)
 
-;; AUCTeX toolbar support
-(add-hook 'LaTeX-mode-hook #'LaTeX-install-toolbar)
-
 (defun my-latex-mode-hook ()
   "My configuration hook for 'latex-mode'."
+  (LaTeX-install-toolbar)
+  (turn-on-reftex)
   (enable-show-trailing-ws)
   ;; Source specials
   (TeX-source-correlate-mode 1)
@@ -132,9 +131,6 @@
 
 (add-hook 'LaTeX-mode-hook #'my-latex-mode-hook)
 (setq TeX-source-correlate-start-server t)
-
-;; Use RefTeX
-(add-hook 'LaTeX-mode-hook #'turn-on-reftex)
 
 ;; Spellcheck on the fly
 ;;(add-hook 'LaTeX-mode-hook #'flyspell-mode)
