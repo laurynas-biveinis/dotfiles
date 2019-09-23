@@ -68,7 +68,7 @@
                               space-after-tab space-before-tab))
 ;; Use fill-column value
 (setq whitespace-line-column nil)
-(setq whitespace-global-modes '(not dired-mode))
+(setq whitespace-global-modes '(not dired-mode erc-mode))
 
 ;; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
 (unless emacs-24-5-or-later
