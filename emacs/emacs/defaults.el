@@ -2,6 +2,7 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'cl-lib)
 
 ;; Variables defined elsewhere we'll be using
 (defvar bookmark-save-flag)
@@ -124,11 +125,35 @@
   (split-window-right)
   (balance-windows))
 
+(cl-defstruct frame-geometry top left height width)
+
+(defun add-frame-geometry-to-initial-alist (geometry)
+  "Add frame GEOMETRY to `initial-frame-alist'."
+  (add-to-list 'initial-frame-alist `(top . ,(frame-geometry-top geometry)))
+  (add-to-list 'initial-frame-alist `(left . ,(frame-geometry-left geometry)))
+  (add-to-list 'initial-frame-alist `(height . ,(frame-geometry-height geometry)))
+  (add-to-list 'initial-frame-alist `(width . ,(frame-geometry-width geometry))))
+
+(defun move-to-frame-geometry (geometry)
+  "Resize and repositon frame to GEOMETRY."
+  (set-frame-position
+   nil (frame-geometry-left geometry) (frame-geometry-top geometry))
+  (set-frame-size
+   nil (frame-geometry-width geometry) (frame-geometry-height geometry)))
+
 (defconst darkstar-laptop-screen '(1680 . 1050))
-(defconst darkstar-laptop-top 1)
-(defconst darkstar-laptop-left 1)
-(defconst darkstar-laptop-height 65)
-(defconst darkstar-laptop-width 237)
+(defconst darkstar-laptop-geometry
+  (make-frame-geometry :top 1 :left 1 :height 65 :width 237))
+
+(defconst darkstar-external-screen '(7696 . 1692))
+(defconst darkstar-external-geometry
+  (make-frame-geometry :top 4 :left 3011 :height 117 :width 426))
+
+;; Possible interim states while docking/undocking - ignore
+(defconst darkstar-ignore '(3600 . 1080))
+(defconst darkstar-ignore2 '(5520 . 1080))
+(defconst darkstar-ignore3 '(4688 . 1692))
+(defconst darkstar-ignore4 '(3600 . 1692))
 
 (defun diagnose-unknown-display-geometry (display-geometry)
   "Diagnose unknown DISPLAY-GEOMETRY."
@@ -139,11 +164,19 @@
   (cond ((equal display-geometry darkstar-laptop-screen)
          ;; darkstar without external screens: initial frame positioned in the
          ;; top left corner
-         (add-to-list 'initial-frame-alist `(top . ,darkstar-laptop-top))
-         (add-to-list 'initial-frame-alist `(left . ,darkstar-laptop-left))
-         (add-to-list 'initial-frame-alist `(height . ,darkstar-laptop-height))
-         (add-to-list 'initial-frame-alist `(width . ,darkstar-laptop-width))
+         (add-frame-geometry-to-initial-alist darkstar-laptop-geometry)
          (two-windows))
+        ((equal display-geometry darkstar-external-screen)
+         ;; darkstar with external screens: initial frame maximized in the
+         ;; middle screen
+         (add-frame-geometry-to-initial-alist darkstar-external-geometry)
+         (add-to-list 'initial-frame-alist '(fullscreen . fullboth))
+         (add-to-list 'initial-frame-alist '(fullscreen-restore . maximized))
+         (six-windows))
+        ((equal display-geometry darkstar-ignore) ())
+        ((equal display-geometry darkstar-ignore2) ())
+        ((equal display-geometry darkstar-ignore3) ())
+        ((equal display-geometry darkstar-ignore4) ())
         (t (diagnose-unknown-display-geometry display-geometry))))
 
 ;; Use system font if under Gnome, otherwise use a specified font if one was
