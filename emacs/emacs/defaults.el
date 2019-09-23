@@ -252,7 +252,7 @@ loaded as such.)"
 ;; Mouse avoidance. The var was introduced in 23.2.
 (if (symbolp 'make-pointer-invisible)
     (setq make-pointer-invisible t)
-  (moquse-avoidance-mode))
+  (mouse-avoidance-mode))
 
 ;; Enable visual feedback on selections
 (setq transient-mark-mode t)
