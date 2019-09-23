@@ -325,7 +325,7 @@
       '(("t" "TODO" entry (file+headline main-org-file "Tasks")
          "** TODO %?\n  %i\n  %a")
         ("i" "Inbox" entry (file+headline main-org-file "Inbox")
-         "** INBOX: %?\n  %i\n  %a" :killbuffer)
+         "** INBOX: %?\n  %i\n  %a")
         ("c" "Current" plain (clock) "" :clock-in :clock-keep)))
 (setq org-todo-keywords
       '((sequence "WAITING(w)" "TODO(t)" "LOGTIME(l)"
