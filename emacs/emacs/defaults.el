@@ -419,4 +419,9 @@ loaded as such.)"
 (require 'epg-config)
 (setq epg-gpg-program "gpg1")
 
+;;; Tramp
+;; The default level 3 is too noisy with showing each file shipped
+(require 'tramp)
+(setq tramp-verbose 2)
+
 ;;; defaults.el ends here
