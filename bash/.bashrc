@@ -108,8 +108,6 @@ done
 source_if_exists ~/.fzf.bash
 if [ -f /usr/local/etc/profile.d/z.sh ]; then
     source /usr/local/etc/profile.d/z.sh
-else
-    source_if_exists "$LINUXBREW_PATH/etc/profile.d/z.sh"
 fi
 
 alias rmcores="rm -rf /cores/*"
