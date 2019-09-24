@@ -52,6 +52,12 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 
+;;; markdown-mode
+(defun my-markdown-mode-hook ()
+  "Configuration for `markdown-mode' and `gfm-mode'."
+  (setq fill-column 80))
+(add-hook 'markdown-mode-hook #'my-markdown-mode-hook)
+
 ;; Google C style
 (c-add-style "google" google-c-style)
 
