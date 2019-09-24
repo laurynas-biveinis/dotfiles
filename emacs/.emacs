@@ -94,7 +94,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company flycheck auto-indent-mode dispwatch org-analyzer undo-tree yaml-mode markdown-mode linum-off po-mode ssh ssh-config-mode bison-mode org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme wakatime-mode exec-path-from-shell autopair magit org auctex))))
+    (company-lsp lsp-ui lsp-mode company flycheck auto-indent-mode dispwatch org-analyzer undo-tree yaml-mode markdown-mode linum-off po-mode ssh ssh-config-mode bison-mode org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme wakatime-mode exec-path-from-shell autopair magit org auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -436,6 +436,29 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
 
+;;; lsp-mode
+(require 'lsp-mode)
+(require 'lsp-clients)
+(setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
+(setq lsp-clients-clangd-args '("-background-index"))
+(setq lsp-enable-snippet nil)
+(setq lsp-prefer-flymake nil)
+
+(defconst lsp-clients-clangd-tramp-executable "clangd")
+(defun lsp-clients--clangd-tramp-command ()
+  "Generate the clangd over Tramp startup command."
+  `(,lsp-clients-clangd-tramp-executable ,@lsp-clients-clangd-args))
+
+(lsp-register-client
+ (make-lsp-client :new-connection (lsp-tramp-connection
+                                   'lsp-clients--clangd-tramp-command)
+                  :major-modes '(c-mode c++-mode objc-mode)
+                  :priority -1
+                  :server-id 'clangd-tramp
+                  :remote? t))
+
+(add-hook 'prog-mode-hook #'lsp)
+
 ;;; SSH config
 (autoload 'ssh-config-mode "ssh-config-mode" t)
 (add-to-list 'auto-mode-alist '("/\\.ssh/config\\'"     . ssh-config-mode))
