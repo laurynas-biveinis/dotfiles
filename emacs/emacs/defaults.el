@@ -59,6 +59,8 @@
 ;; Should files end with newline?
 (setq-default require-final-newline 'query)
 
+(setq-default fill-column 80)
+
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
   "Enable showing of trailing whitespace."
@@ -384,8 +386,7 @@ loaded as such.)"
   (flyspell-prog-mode)
   (eldoc-mode)
   ;; Should the global default ever change, elisp should stay with spaces
-  (setq indent-tabs-mode nil)
-  (setq fill-column 80))
+  (setq indent-tabs-mode nil))
 
 (add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
 
