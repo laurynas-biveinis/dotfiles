@@ -6,6 +6,7 @@
 
 ;; Variables and functions defined elsewhere we'll be using
 (defvar exec-path-from-shell-check-startup-files)
+(defvar exec-path-from-shell-variables)
 (declare-function exec-path-from-shell-initialize "exec-path-from-shell" ())
 
 (defconst my-frame-font
@@ -23,6 +24,7 @@
   (setq ns-right-alternate-modifier 'none)
   (require 'exec-path-from-shell)
   (setq exec-path-from-shell-check-startup-files nil)
+  (add-to-list 'exec-path-from-shell-variables "LANG")
   (exec-path-from-shell-initialize))
 
 ;;; darwin.el ends here
