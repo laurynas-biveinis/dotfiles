@@ -108,6 +108,7 @@
 ;; No startup message
 (setq inhibit-startup-message t)
 
+;;; Window and frame geometry
 (defun two-windows ()
   "Make frame contain two vertical windows."
   (interactive)
