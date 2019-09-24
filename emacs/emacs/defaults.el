@@ -378,4 +378,9 @@ loaded as such.)"
 (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
 (add-hook 'ielm-mode-hook 'eldoc-mode)
 
+;;; ispell
+(require 'ispell)
+(setq ispell-program-name "hunspell")
+(setq ispell-really-hunspell t)
+
 ;;; defaults.el ends here
