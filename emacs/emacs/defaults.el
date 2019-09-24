@@ -25,6 +25,8 @@
 (defvar compilation-environment)
 (defvar emacs-26-3-or-later)
 (defvar gnutls-algorithm-priority)
+(declare-function comint-watch-for-password-prompt "comint" (string))
+(declare-function comint-strip-ctrl-m "comint" (&optional _string))
 
 ;; User info
 (setq user-full-name "Laurynas Biveinis")
@@ -394,5 +396,27 @@ loaded as such.)"
 (setq ispell-dictionary "en_US,lt")
 (ispell-set-spellchecker-params)
 (ispell-hunspell-add-multi-dic "en_US,lt")
+
+;;; Show matching parents
+(require 'paren)
+(show-paren-mode 1)
+
+;;; sh-mode
+(add-hook 'sh-mode-hook #'flyspell-prog-mode)
+
+;; In Shell mode, do not echo passwords
+(add-hook 'comint-output-filter-functions
+          #'comint-watch-for-password-prompt
+          #'comint-strip-ctrl-m)
+
+;; Colors
+(require 'ansi-color)
+(add-hook 'shell-mode-hook #'ansi-color-for-comint-mode-on)
+
+;;; easypg
+;; Still only works if there's a symlink gpg -> gpg1, and I was not able to
+;; find what uses gpg.
+(require 'epg-config)
+(setq epg-gpg-program "gpg1")
 
 ;;; defaults.el ends here

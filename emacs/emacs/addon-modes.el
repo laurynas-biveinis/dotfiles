@@ -15,7 +15,6 @@
 (defvar reftex-plug-into-AUCTeX)
 (defvar bib-cite-use-reftex-view-crossref)
 (defvar nxml-slash-auto-complete-flag)
-(defvar epg-gpg-program)
 (defvar main-org-file)
 (defvar autopair-dont-activate)
 (defvar erc-track-exclude-types)
@@ -30,9 +29,6 @@
 (defvar darkstar-ignore3)
 (defvar darkstar-ignore4)
 (declare-function turn-on-flyspell "flyspell" ())
-(declare-function flyspell-prog-mode "flyspell" ())
-(declare-function comint-watch-for-password-prompt "comint" (string))
-(declare-function comint-strip-ctrl-m "comint" (&optional _string))
 (declare-function erc-network-name "erc-networks" ())
 (declare-function irony-mode "irony" (&optional arg))
 (declare-function autopair-global-mode "autopair" (&optional arg))
@@ -83,10 +79,6 @@
 ;; Disable linum where it makes sense and fixes performance
 (require 'linum-off)
 
-;; Show matching parents
-(require 'paren)
-(show-paren-mode 1)
-
 ;; Imenu
 (require 'imenu+)
 (defun try-to-add-imenu ()
@@ -95,18 +87,6 @@
 (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
 ;;;; Programming language modes
-
-;;; sh-mode
-(add-hook 'sh-mode-hook #'flyspell-prog-mode)
-
-;; In Shell mode, do not echo passwords
-(add-hook 'comint-output-filter-functions
-          #'comint-watch-for-password-prompt
-          #'comint-strip-ctrl-m)
-
-;; Colors
-(require 'ansi-color)
-(add-hook 'shell-mode-hook #'ansi-color-for-comint-mode-on)
 
 ;; ssh mode on the top of shell
 (require 'ssh)
@@ -170,11 +150,6 @@
 (setq nxml-slash-auto-complete-flag t)
 (add-to-list 'auto-mode-alist
              '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode))
-
-;; easypg
-;; Still only works if there's a symlink gpg -> gpg1, and I was not able to
-;; find what uses gpg.
-(setq epg-gpg-program "gpg1")
 
 ;;; org-mode
 ;; Prerequisites: const main-org-file and list org-agenda-files, that must be
