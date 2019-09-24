@@ -220,8 +220,8 @@ loaded as such.)"
           #'executable-make-buffer-file-executable-if-script-p)
 
 ;; Keybindings
-(global-set-key (kbd "<home>") 'move-beginning-of-line)
-(global-set-key (kbd "<end>") 'move-end-of-line)
+(global-set-key (kbd "<home>") #'move-beginning-of-line)
+(global-set-key (kbd "<end>") #'move-end-of-line)
 
 (global-set-key "\C-cg" #'goto-line)
 (global-set-key "\C-cn" #'next-error)
