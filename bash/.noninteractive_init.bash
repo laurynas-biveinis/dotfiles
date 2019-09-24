@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LANG=C
+
 if [ -f ~/.noninteractive_init_private.bash ]; then
     # shellcheck disable=SC1090
     source ~/.noninteractive_init_private.bash

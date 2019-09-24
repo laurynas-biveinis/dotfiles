@@ -18,10 +18,6 @@ stty -ixon
 
 ulimit -c unlimited
 
-export LC_TYPE=C
-export LANG=C
-export LC_CTYPE=C
-
 export HISTCONTROL=ignoreboth:erasedups
 # Unlimited history
 export HISTFILESIZE=
