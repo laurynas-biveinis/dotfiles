@@ -284,9 +284,16 @@ loaded as such.)"
 
 (add-hook 'minibuffer-exit-hook #'kill-completion-buffers)
 
+;;; flyspell
+(add-hook 'cperl-mode-hook      #'flyspell-prog-mode)
+(add-hook 'autoconf-mode-hook   #'flyspell-prog-mode)
+(add-hook 'autotest-mode-hook   #'flyspell-prog-mode)
+(add-hook 'makefile-mode-hook   #'flyspell-prog-mode)
+
 ;;; text-mode
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'text-mode-hook #'enable-show-trailing-ws)
+(add-hook 'text-mode-hook #'turn-on-flyspell)
 
 ;; Show which function we are at. which-func-modes default to t in 24.1+.
 (unless emacs-24-1-or-later
@@ -332,6 +339,7 @@ loaded as such.)"
 ;;; cc-mode
 
 (add-hook 'c-mode-common-hook #'enable-show-trailing-ws)
+(add-hook 'c-mode-common-hook #'flyspell-prog-mode)
 
 ;; TAB indents only if point in the beginning of the line
 (setq c-tab-always-indent 1)
@@ -363,25 +371,28 @@ loaded as such.)"
 (unless emacs-26-3-or-later
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
-;;; elisp-mode
+;;; eldoc-mode: show the args of the current function in the echo aread
+(add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
+(add-hook 'ielm-mode-hook 'eldoc-mode)
 
+;;; elisp-mode
 (defun my-emacs-lisp-mode-hook ()
   "Configuration for 'emacs-lisp-mode'."
   (enable-show-trailing-ws)
+  (flyspell-prog-mode)
+  (eldoc-mode)
   ;; Should the global default ever change, elisp should stay with spaces
   (setq indent-tabs-mode nil)
   (setq fill-column 80))
 
 (add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
 
-;;; eldoc-mode: show the args of the current function in the echo aread
-(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-(add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
-(add-hook 'ielm-mode-hook 'eldoc-mode)
-
 ;;; ispell
 (require 'ispell)
 (setq ispell-program-name "hunspell")
 (setq ispell-really-hunspell t)
+(setq ispell-dictionary "en_US,lt")
+(ispell-set-spellchecker-params)
+(ispell-hunspell-add-multi-dic "en_US,lt")
 
 ;;; defaults.el ends here

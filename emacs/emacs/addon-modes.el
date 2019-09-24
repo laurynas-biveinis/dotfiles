@@ -29,6 +29,8 @@
 (defvar darkstar-ignore2)
 (defvar darkstar-ignore3)
 (defvar darkstar-ignore4)
+(declare-function turn-on-flyspell "flyspell" ())
+(declare-function flyspell-prog-mode "flyspell" ())
 (declare-function comint-watch-for-password-prompt "comint" (string))
 (declare-function comint-strip-ctrl-m "comint" (&optional _string))
 (declare-function erc-network-name "erc-networks" ())
@@ -89,6 +91,7 @@
 ;;;; Programming language modes
 
 ;;; sh-mode
+(add-hook 'sh-mode-hook #'flyspell-prog-mode)
 
 ;; In Shell mode, do not echo passwords
 (add-hook 'comint-output-filter-functions
@@ -115,6 +118,7 @@
   "My configuration hook for 'latex-mode'."
   (LaTeX-install-toolbar)
   (turn-on-reftex)
+  (turn-on-flyspell)
   (enable-show-trailing-ws)
   ;; Source specials
   (TeX-source-correlate-mode 1)
@@ -135,21 +139,6 @@
 
 (add-hook 'LaTeX-mode-hook #'my-latex-mode-hook)
 (setq TeX-source-correlate-start-server t)
-
-;; Spellcheck on the fly
-;;(add-hook 'LaTeX-mode-hook #'flyspell-mode)
-;;(add-hook 'c-mode-hook          #'flyspell-prog-mode 1)
-;;(add-hook 'c++-mode-hook        #'flyspell-prog-mode 1)
-;;(add-hook 'cperl-mode-hook      #'flyspell-prog-mode 1)
-;;(add-hook 'autoconf-mode-hook   #'flyspell-prog-mode 1)
-;;(add-hook 'autotest-mode-hook   #'flyspell-prog-mode 1)
-;;(add-hook 'sh-mode-hook         #'flyspell-prog-mode 1)
-;;(add-hook 'makefile-mode-hook   #'flyspell-prog-mode 1)
-;;(add-hook 'emacs-lisp-mode-hook #'flyspell-prog-mode 1)
-
-;; Spellcheck on the fly multiple languages at once
-;;(autoload 'flyspell-babel-setup "flyspell-babel")
-;;(add-hook 'LaTeX-mode-hook #'flyspell-babel-setup)
 
 ;; Integrate RefTeX into AUCTeX
 (setq reftex-plug-into-AUCTeX t)
@@ -363,6 +352,7 @@
 (defun my-org-mode-hook ()
   "My configuration hook for 'org-mode'."
   (enable-show-trailing-ws)
+  (turn-on-flyspell)
   (setq fill-column 85))
 
 (add-hook 'org-mode-hook #'my-org-mode-hook)
@@ -375,12 +365,15 @@
 
 (setq erc-user-full-name user-full-name)
 
-(unless emacs-24-4-or-later
-  (defun my-erc-mode-hook ()
-    "My configuration hook for 'erc-mode'."
-    (setq autopair-dont-activate t))
+(require 'erc-spelling)
 
-  (with-no-warnings (add-hook 'erc-mode-hook #'my-erc-mode-hook)))
+(defun my-erc-mode-hook ()
+  "My configuration hook for `erc-mode'."
+  (erc-spelling-mode)
+  (unless emacs-24-4-or-later
+    (setq autopair-dont-activate t)))
+
+(with-no-warnings (add-hook 'erc-mode-hook #'my-erc-mode-hook))
 
 (require 'erc-log)
 
@@ -437,12 +430,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq erc-server-coding-system '(utf-8 . utf-8))
 
 (setq erc-server-reconnect-attempts 0)
-
-;; TODO
-;;(require 'erc-spelling)
-;;(add-hook 'erc-mode-hook
-;;  (lambda ()
-;;    (erc-spelling-mode)))
 
 (defun start-chats ()
   "Connect to all chats."
