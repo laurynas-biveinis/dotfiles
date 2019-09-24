@@ -30,14 +30,10 @@
 (defvar darkstar-ignore4)
 (declare-function turn-on-flyspell "flyspell" ())
 (declare-function erc-network-name "erc-networks" ())
-(declare-function irony-mode "irony" (&optional arg))
 (declare-function autopair-global-mode "autopair" (&optional arg))
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function magit-status "magit-status" (directory cache))
-(declare-function irony-cdb-autosetup-compile-options "irony-cdb" ())
-(declare-function irony-eldoc "irony-eldoc" (&optional arg))
-(declare-function flycheck-irony-setup "flycheck-irony" ())
 (declare-function move-to-frame-geometry "" (geometry))
 (declare-function two-windows "" ())
 (declare-function six-windows "" ())
@@ -431,28 +427,14 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'wakatime-mode)
 (global-wakatime-mode)
 
-;;; Irony
-(add-hook 'c++-mode-hook #'irony-mode)
-(add-hook 'c-mode-hook #'irony-mode)
-(add-hook 'objc-mode-hook #'irony-mode)
-
-(add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options)
-(add-hook 'irony-mode-hook #'irony-eldoc)
-
 ;;; Flycheck
 (require 'flycheck)
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
-;; Irony integration with Flycheck
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
 ;;; Company mode
-(require 'company-irony-c-headers)
+(require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
-(eval-after-load 'company
-  '(add-to-list 'company-backends '(company-irony-c-headers company-irony)))
 
 ;;; SSH config
 (autoload 'ssh-config-mode "ssh-config-mode" t)
