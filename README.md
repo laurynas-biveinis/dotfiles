@@ -308,6 +308,7 @@ sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.d
 sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
 sudo easy_install pip
+sudo gem install mdl
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
     virtualbox virtualbox-extension-pack
 # Work: to be done
