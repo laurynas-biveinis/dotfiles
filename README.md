@@ -71,7 +71,8 @@ apt-get install libstdc++6-9-dbg libstdc++-9-doc
 apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
-    maven
+    maven clang-tools-8 clang-8-doc llvm-8-doc bear
+sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-8 100
 # MySQL development specific
 apt-get install ccache valgrind rapidjson-dev valgrind-dbg \
     libboost-container-dev libboost-doc clang clang-8-doc llvm-8-doc \
@@ -298,7 +299,7 @@ brew
 
 ```bash
 brew install stow git z ncdu gnupg@1.4 coreutils fzf hexyl tldr lynis curl \
-    shellcheck wget hunspell
+    shellcheck wget hunspell llvm
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
