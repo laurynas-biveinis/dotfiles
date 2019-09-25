@@ -7,9 +7,6 @@
 ;; Variables defined elsewhere we'll be using
 (defvar bookmark-save-flag)
 (defvar display-time-24hr-format)
-(defvar whitespace-style)
-(defvar whitespace-line-column)
-(defvar whitespace-global-modes)
 (defvar emacs-24-1-or-later)
 (defvar emacs-24-5-or-later)
 (defvar font-use-system-font)
@@ -67,12 +64,14 @@
   (setq show-trailing-whitespace t))
 
 ;;; whitespace-mode
+(require 'whitespace)
 (global-whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail empty indentation big-intent
                               space-after-tab space-before-tab))
 ;; Use fill-column value
 (setq whitespace-line-column nil)
-(setq whitespace-global-modes '(not dired-mode erc-mode markdown-mode gfm-mode))
+(setq whitespace-global-modes '(not dired-mode erc-mode markdown-mode gfm-mode
+                                    lisp-interaction-mode))
 
 ;; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
 (unless emacs-24-5-or-later
