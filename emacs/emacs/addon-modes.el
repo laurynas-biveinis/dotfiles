@@ -329,6 +329,7 @@
   "My configuration hook for 'org-mode'."
   (enable-show-trailing-ws)
   (turn-on-flyspell)
+  (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
   (setq fill-column 85))
 
 (add-hook 'org-mode-hook #'my-org-mode-hook)
