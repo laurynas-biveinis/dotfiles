@@ -385,11 +385,9 @@
 	   ("Gary D. Foster" . "Gary.Foster@Corp.Sun.COM"))
 	  (:maintainer "Luke Lee" . "luke.yx.lee@gmail.com"))])
  (csv-mode .
-	   [(1 9)
+	   [(1 8)
 	    ((emacs
-	      (24 1))
-	     (cl-lib
-	      (0 5)))
+	      (24 1)))
 	    "Major mode for editing comma/char separated values" single
 	    ((:url . "http://elpa.gnu.org/packages/csv-mode.html")
 	     (:keywords "convenience")
