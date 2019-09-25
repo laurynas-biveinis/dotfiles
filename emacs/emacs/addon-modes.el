@@ -17,8 +17,6 @@
 (defvar nxml-slash-auto-complete-flag)
 (defvar main-org-file)
 (defvar autopair-dont-activate)
-(defvar erc-track-exclude-types)
-(defvar erc-track-faces-priority-list)
 (defvar flycheck-emacs-lisp-load-path)
 (defvar darkstar-laptop-screen)
 (defvar darkstar-laptop-geometry)
@@ -29,7 +27,6 @@
 (defvar darkstar-ignore3)
 (defvar darkstar-ignore4)
 (declare-function turn-on-flyspell "flyspell" ())
-(declare-function erc-network-name "erc-networks" ())
 (declare-function autopair-global-mode "autopair" (&optional arg))
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
@@ -37,6 +34,7 @@
 (declare-function move-to-frame-geometry "" (geometry))
 (declare-function two-windows "" ())
 (declare-function six-windows "" ())
+(declare-function start-erc-chats "" ())
 (declare-function diagnose-unknown-display-geometry "" (geometry))
 (declare-function enable-show-trailing-ws "" ())
 
@@ -357,6 +355,7 @@
 
 (setq erc-join-buffer 'bury)
 
+(require 'erc-networks)
 (defun my-erc-generate-log-file-name-channel-network
   (buffer target _nick server _port)
   "Generate an ERC log file name in form of #channel@network.txt.
@@ -374,6 +373,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (erc-log-enable)
 
+(require 'erc-track)
 (setq erc-track-exclude-types '("JOIN" "PART" "QUIT" "NICK" "MODE"))
 
 (setq erc-track-faces-priority-list
@@ -402,10 +402,13 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (setq erc-server-reconnect-attempts 0)
 
+(require 'erc-join)
+(setq erc-autojoin-timing 'ident)
+
 (defun start-chats ()
   "Connect to all chats."
   (interactive)
-  (erc :server "irc.freenode.net" :port 6667 :nick "laurynas"))
+  (start-erc-chats))
 
 (defun stop-chats ()
   "Disconnect from all chats."
