@@ -244,6 +244,14 @@ defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 # Download updates in background automatically
 defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 #
+# TextEdit
+#
+# Plain text by default
+defaults write com.apple.TextEdit RichText -int 0
+# Open and save files as UTF-8 in TextEdit
+defaults write com.apple.TextEdit PlainTextEncoding -int 4
+defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+#
 # Photos
 #
 # Do not open automatically when something is plugged in
