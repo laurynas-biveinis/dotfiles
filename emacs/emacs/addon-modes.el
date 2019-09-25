@@ -311,6 +311,13 @@
 (org-crypt-use-before-save-magic)
 (setq org-crypt-disable-auto-save 'encrypt)
 
+(defun org-mode-flyspell-verify-disable-for-org-crypt ()
+  "Do not flyspell blocks encrypted by `org-crypt'."
+  (not (org-at-encrypted-entry-p)))
+
+(advice-add 'org-mode-flyspell-verify :before-while
+            #'org-mode-flyspell-verify-disable-for-org-crypt)
+
 ;; org-id
 (require 'org-id)
 (setq org-id-link-to-org-use-id t)
