@@ -1,4 +1,4 @@
-(define-package "auto-indent-mode" "20190917.1430" "Auto indent Minor mode" 'nil :keywords
+(define-package "auto-indent-mode" "20190925.231" "Auto indent Minor mode" 'nil :keywords
   '("auto" "indentation")
   :authors
   '(("Matthew L. Fidler, Le Wang & Others"))
