@@ -396,6 +396,8 @@ loaded as such.)"
 (setq ispell-dictionary "en_US,lt")
 (ispell-set-spellchecker-params)
 (ispell-hunspell-add-multi-dic "en_US,lt")
+(add-to-list 'ispell-skip-region-alist
+             '("^-----BEGIN PGP MESSAGE-----$" . "^-----END PGP MESSAGE-----$"))
 
 ;;; Show matching parents
 (require 'paren)
