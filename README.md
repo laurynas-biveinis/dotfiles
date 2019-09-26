@@ -307,7 +307,7 @@ brew
 
 ```bash
 brew install stow git z ncdu gnupg@1.4 coreutils fzf hexyl tldr lynis curl \
-    shellcheck wget hunspell llvm
+    shellcheck wget hunspell llvm duti
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
@@ -320,6 +320,7 @@ sudo easy_install pip
 sudo gem install mdl
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
     virtualbox virtualbox-extension-pack
+duti -s org.videolan.vlc .MP4 all
 # Work: to be done
 # Play
 brew cask install banktivity beatunes disk-inventory-x google-chrome lastfm \
