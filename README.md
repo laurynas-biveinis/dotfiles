@@ -72,7 +72,9 @@ apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
     maven clang-tools-8 clang-8-doc llvm-8-doc bear
-sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-8 100
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+apt-get install clangd-9
+update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
 # MySQL development specific
 apt-get install ccache valgrind rapidjson-dev valgrind-dbg \
     libboost-container-dev libboost-doc clang clang-8-doc llvm-8-doc \
