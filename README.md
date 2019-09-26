@@ -319,10 +319,11 @@ sudo ln -sf en_US.dic en_LT.dic
 sudo easy_install pip
 sudo gem install mdl
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
-    virtualbox virtualbox-extension-pack
+    virtualbox virtualbox-extension-pack disk-inventory-x
+xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
-# Work: to be done
+# Work
+brew cask install tunnelblick
 # Play
-brew cask install banktivity beatunes disk-inventory-x google-chrome lastfm \
-    steam xld
+brew cask install banktivity beatunes google-chrome lastfm steam xld
 ```
