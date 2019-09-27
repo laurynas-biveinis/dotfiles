@@ -32,6 +32,7 @@ If "emacs" is enabled, then
 brew install gnupg@1.4
 ln -sf /usr/local/bin/gpg1 /usr/local/bin/gpg
 ln -sf $HOME/Documents/secrets.el $HOME/secrets.el
+ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 ```
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
