@@ -25,10 +25,6 @@
 (declare-function comint-watch-for-password-prompt "comint" (string))
 (declare-function comint-strip-ctrl-m "comint" (&optional _string))
 
-;; User info
-(setq user-full-name "Laurynas Biveinis")
-(setq user-mail-address "laurynas.biveinis@gmail.com")
-
 ;; Keep all messages
 (setq message-log-max t)
 
