@@ -30,7 +30,6 @@
 (declare-function autopair-global-mode "autopair" (&optional arg))
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
-(declare-function magit-status "magit-status" (directory cache))
 (declare-function move-to-frame-geometry "" (geometry))
 (declare-function two-windows "" ())
 (declare-function six-windows "" ())
@@ -42,6 +41,7 @@
 (require 'undo-tree)
 (add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'Info-mode)
+(require 'magit)
 (add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
 (global-undo-tree-mode)
 
