@@ -50,9 +50,6 @@
 (if (symbolp 'indicate-empty-lines) ; Emacs 23.2+
     (setq-default indicate-empty-lines t))
 
-;; 24h time format
-(setq display-time-24hr-format t)
-
 ;; Should files end with newline?
 (setq-default require-final-newline 'query)
 
@@ -62,6 +59,31 @@
 (defun enable-show-trailing-ws ()
   "Enable showing of trailing whitespace."
   (setq show-trailing-whitespace t))
+
+;;; modeline
+;; display-time-mode
+(setq display-time-24hr-format t)
+(setq display-time-day-and-date t)
+;; Do not check for mail
+(require 'time)
+(setq display-time-mail-file t)
+(display-time-mode)
+
+;; size-indication-mode
+(size-indication-mode)
+
+;; which-function-mode
+(unless emacs-24-1-or-later
+  (setq which-func-modes t))
+(which-function-mode)
+
+;; Show column number
+(column-number-mode t)
+
+;; display-battery-mode
+(require 'battery)
+(setq battery-mode-line-format " [%b%p%% %t]")
+(display-battery-mode)
 
 ;;; whitespace-mode
 (require 'whitespace)
@@ -222,7 +244,7 @@ loaded as such.)"
 (add-hook 'after-save-hook
           #'executable-make-buffer-file-executable-if-script-p)
 
-;; Keybindings
+;;; Keybindings
 (global-set-key (kbd "<home>") #'move-beginning-of-line)
 (global-set-key (kbd "<end>") #'move-end-of-line)
 
@@ -267,9 +289,6 @@ loaded as such.)"
 
 (global-font-lock-mode 1)
 
-;; Show column number
-(column-number-mode t)
-
 ;; Better C-x b menu by IDO mode. Alternatives: helm, ivy
 (ido-mode t)
 
@@ -297,11 +316,6 @@ loaded as such.)"
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'text-mode-hook #'enable-show-trailing-ws)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
-
-;; Show which function we are at. which-func-modes default to t in 24.1+.
-(unless emacs-24-1-or-later
-  (setq which-func-modes t))
-(which-function-mode)
 
 ;; Soft word wrap
 (global-visual-line-mode 1)
