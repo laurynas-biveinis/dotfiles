@@ -465,6 +465,20 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-enable-snippet nil)
 (setq lsp-prefer-flymake nil)
 
+(require 'lsp-ui)
+(setq lsp-ui-sideline-ignore-duplicate t)
+(setq lsp-ui-sideline-show-symbol nil)
+
+(define-key lsp-ui-mode-map [remap xref-find-definitions]
+  #'lsp-ui-peek-find-definitions)
+(define-key lsp-ui-mode-map [remap xref-find-references]
+  #'lsp-ui-peek-find-references)
+
+(require 'lsp-ui-doc)
+(setq lsp-ui-doc-header t)
+(setq lsp-ui-doc-include-signature t)
+(setq lsp-ui-doc-position 'at-point)
+
 (defconst lsp-clients-clangd-tramp-executable "clangd")
 (defun lsp-clients--clangd-tramp-command ()
   "Generate the clangd over Tramp startup command."
