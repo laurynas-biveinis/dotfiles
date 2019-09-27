@@ -53,7 +53,7 @@
 (require 'auto-indent-mode)
 (add-to-list 'auto-indent-disabled-modes-list #'help-mode)
 (add-to-list 'auto-indent-disabled-modes-list #'Info-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
+(add-to-list 'auto-indent-disabled-modes-list #'magit-status-mode)
 (auto-indent-global-mode)
 ;; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT
 ;; instead, not sure how
