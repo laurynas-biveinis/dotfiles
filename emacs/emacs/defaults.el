@@ -56,6 +56,17 @@
   "Enable showing of trailing whitespace."
   (setq show-trailing-whitespace t))
 
+;;; header-line-format
+;; which-function-mode
+(unless emacs-24-1-or-later
+  (setq which-func-modes t))
+(which-function-mode)
+
+(setq-default header-line-format
+              '((which-func-mode ("" which-func-format " "))))
+
+(setq mode-line-misc-info (assq-delete-all 'which-function-mode mode-line-misc-info))
+
 ;;; modeline
 ;; display-time-mode
 (setq display-time-24hr-format t)
@@ -67,11 +78,6 @@
 
 ;; size-indication-mode
 (size-indication-mode)
-
-;; which-function-mode
-(unless emacs-24-1-or-later
-  (setq which-func-modes t))
-(which-function-mode)
 
 ;; Show column number
 (column-number-mode t)
