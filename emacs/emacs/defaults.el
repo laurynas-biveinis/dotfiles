@@ -94,7 +94,7 @@
 (setq whitespace-line-column nil)
 (setq whitespace-global-modes '(not dired-mode erc-mode markdown-mode gfm-mode
                                     lisp-interaction-mode help-mode Info-mode
-                                    magit-status-mode))
+                                    magit-status-mode org-agenda-mode))
 
 ;; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
 (unless emacs-24-5-or-later

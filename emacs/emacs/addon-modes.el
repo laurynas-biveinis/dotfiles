@@ -54,6 +54,7 @@
 (add-to-list 'auto-indent-disabled-modes-list #'help-mode)
 (add-to-list 'auto-indent-disabled-modes-list #'Info-mode)
 (add-to-list 'auto-indent-disabled-modes-list #'magit-status-mode)
+(add-to-list 'auto-indent-disabled-modes-list #'org-agenda-mode)
 (auto-indent-global-mode)
 ;; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT
 ;; instead, not sure how
@@ -452,7 +453,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; Company mode
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
-(setq company-global-modes '(not Info-mode help-mode magit-status-mode))
+(setq company-global-modes '(not Info-mode help-mode magit-status-mode
+                                 org-agenda-mode))
 
 ;;; lsp-mode
 (require 'lsp-mode)
