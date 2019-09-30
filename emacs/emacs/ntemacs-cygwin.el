@@ -12,7 +12,6 @@
 (defvar comint-eol-on-send)
 (defvar shell-mode-hook)
 (defvar python-python-command)
-(declare-function cygwin-mount-activate "cygwin-mount" ())
 
 (defun system-specific-presetup()
   "NT Emacs on Cygwin: set some things before main .emacs setup."
@@ -52,9 +51,6 @@
   ;; AUCTeX should be loaded manually
   (load "auctex.el" nil t t)
   (load "preview-latex.el" nil t t)
-  (require 'tex-mik)
-
-  (require 'cygwin-mount)
-  (cygwin-mount-activate))
+  (require 'tex-mik))
 
 ;;; ntemacs-cygwin.el ends here
