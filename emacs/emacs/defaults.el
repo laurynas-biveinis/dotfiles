@@ -415,6 +415,8 @@ loaded as such.)"
 (ispell-hunspell-add-multi-dic "en_US,lt")
 (add-to-list 'ispell-skip-region-alist
              '("^-----BEGIN PGP MESSAGE-----$" . "^-----END PGP MESSAGE-----$"))
+;; Workaround header line covering the ispell choices window
+(setq ispell-choices-win-default-height 3)
 
 ;;; Show matching parents
 (require 'paren)
