@@ -30,16 +30,12 @@
                                   (and (= emacs-major-version 26)
                                        (>= emacs-minor-version 3))))
 
-(defconst integrated-cc-mode emacs-24-4-or-later
-  "Whether we are using integrated or 3rd party cc-mode.")
-
 ;;; Various paths
 (defconst home-dir (concat (replace-regexp-in-string "\\\\" "/"
                                                  (getenv "HOME")) "/"))
 (defconst private-elisp (concat home-dir "emacs/"))
 (defconst dotfiles-elisp (concat private-elisp "dotfiles/*.el"))
 (defconst private-elisp-lib (concat private-elisp "lib/"))
-(defconst cc-mode-root (concat private-elisp-lib "cc-mode/"))
 (defconst elpa-dir (concat private-elisp "elpa/"))
 
 ;; Setup elisp search directories
@@ -55,12 +51,6 @@
 (when (fboundp 'system-specific-presetup) (system-specific-presetup))
 
 (add-to-list 'load-path private-elisp-lib)
-(unless integrated-cc-mode
-  (add-to-list 'load-path (concat cc-mode-root "lisp/")))
-
-;; Setup info search directories
-(unless integrated-cc-mode
-  (add-to-list 'Info-default-directory-list (concat cc-mode-root "info/")))
 
 (load "secrets")
 (load "defaults")
