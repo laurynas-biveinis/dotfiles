@@ -477,7 +477,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'lsp-ui-doc)
 (setq lsp-ui-doc-header t)
 (setq lsp-ui-doc-include-signature t)
-(setq lsp-ui-doc-position 'at-point)
+(setq lsp-ui-doc-position 'top)
 
 (defconst lsp-clients-clangd-tramp-executable "clangd")
 (defun lsp-clients--clangd-tramp-command ()
