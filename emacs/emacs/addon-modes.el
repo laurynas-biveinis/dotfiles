@@ -128,10 +128,6 @@
 ;; Integrate RefTeX with bib-cite
 (setq bib-cite-use-reftex-view-crossref t)
 
-;;; cmd-mode.el major mode for cmd and bat scripts
-(autoload 'cmd-mode "cmd-mode" "CMD mode." t)
-(add-to-list 'auto-mode-alist '("\\.\\(cmd\\|bat\\)$" . cmd-mode))
-
 ;;; po-mode.el for PO file editing
 (autoload 'po-mode "po-mode" "Major mode for translators to edit PO files" t)
 (add-to-list 'auto-mode-alist '("\\.po\\'\\|\\.po\\." . po-mode))
