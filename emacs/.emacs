@@ -80,7 +80,6 @@
 (package-initialize)
 
 (load "addon-modes")
-(load "misc")
 
 (when (fboundp 'system-specific-setup) (system-specific-setup))
 
