@@ -15,8 +15,6 @@
 (defvar dired-recursive-copies)
 (defvar wdired-allow-to-change-permissions)
 (defvar dired-auto-revert-buffer)
-(defvar c-tab-always-indent)
-(defvar c-doc-comment-style)
 (defvar emacs-25-3-or-later)
 (defvar compilation-scroll-output)
 (defvar compilation-environment)
@@ -358,6 +356,7 @@ loaded as such.)"
 
 ;;; cc-mode
 
+(require 'cc-vars)
 (add-hook 'c-mode-common-hook #'enable-show-trailing-ws)
 (add-hook 'c-mode-common-hook #'flyspell-prog-mode)
 
