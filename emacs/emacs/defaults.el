@@ -444,4 +444,8 @@ loaded as such.)"
 (require 'tramp)
 (setq tramp-verbose 2)
 
+;;; calendar
+(require 'calendar)
+(setq calendar-week-start-day 1)
+
 ;;; defaults.el ends here
