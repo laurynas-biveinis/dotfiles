@@ -41,6 +41,7 @@
 (require 'undo-tree)
 (add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'Info-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'grep-mode)
 (require 'magit)
 (add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
 (global-undo-tree-mode)
@@ -56,6 +57,7 @@
 (add-to-list 'auto-indent-disabled-modes-list #'magit-status-mode)
 (add-to-list 'auto-indent-disabled-modes-list #'org-agenda-mode)
 (add-to-list 'auto-indent-disabled-modes-list #'erc-mode)
+(add-to-list 'auto-indent-disabled-modes-list #'grep-mode)
 (auto-indent-global-mode)
 ;; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT
 ;; instead, not sure how
@@ -451,7 +453,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
 (setq company-global-modes '(not Info-mode help-mode magit-status-mode
-                                 org-agenda-mode))
+                                 org-agenda-mode grep-mode))
 
 ;;; lsp-mode
 (require 'lsp-mode)
