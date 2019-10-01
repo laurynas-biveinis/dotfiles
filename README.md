@@ -221,6 +221,7 @@ sudo defaults -currentHost write \
     AppleShowAllFiles -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+defaults write -g AppleShowAllExtensions -bool true
 killall Finder
 #
 # SSH
