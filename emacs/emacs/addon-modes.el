@@ -17,7 +17,6 @@
 (defvar nxml-slash-auto-complete-flag)
 (defvar main-org-file)
 (defvar autopair-dont-activate)
-(defvar flycheck-emacs-lisp-load-path)
 (defvar darkstar-laptop-screen)
 (defvar darkstar-laptop-geometry)
 (defvar darkstar-external-screen)
