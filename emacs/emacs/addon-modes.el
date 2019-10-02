@@ -445,6 +445,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; Flycheck
 (require 'flycheck)
+(setq flycheck-global-modes '(not org-agenda-mode))
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
