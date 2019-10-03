@@ -523,4 +523,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-hook 'dispwatch-display-change-hooks #'my-display-changed-hook)
 (dispwatch-mode 1)
 
+;;; yaml-mode
+(add-to-list 'auto-mode-alist '("/.clang-format\\'" . yaml-mode))
+
 ;;; addon-modes.el ends here
