@@ -367,6 +367,13 @@ loaded as such.)"
       '((c-mode . javadoc)
         (c++-mode . javadoc)))
 
+(defun aerospike-c ()
+  "A temporary hack until LSP is sorted out."
+  (interactive)
+  (c-set-style "k&r")
+  (setq indent-tabs-mode t)
+  (setq c-basic-offset 8))
+
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
 
