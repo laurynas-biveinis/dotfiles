@@ -448,4 +448,27 @@ loaded as such.)"
 (require 'calendar)
 (setq calendar-week-start-day 1)
 
+;;; Change appearance for screen sharing
+(defconst screen-sharing-default-height
+  (face-attribute 'default :height)
+  "Default frame font height, when screen sharing is off.")
+
+(defconst screen-sharing-larger-height
+  (+ screen-sharing-default-height 10)
+  "Larger frame font height, when screen sharing is on.")
+
+(defun start-screen-sharing ()
+  "Change Emacs appearance for screen sharing."
+  (interactive)
+  (set-face-attribute 'default nil :height screen-sharing-larger-height)
+  (balance-windows)
+  (global-linum-mode 1))
+
+(defun stop-screen-sharing ()
+  "Restore Emacs appearance after screen sharing."
+  (interactive)
+  (set-face-attribute 'default nil :height screen-sharing-default-height)
+  (balance-windows)
+  (global-linum-mode -1))
+
 ;;; defaults.el ends here
