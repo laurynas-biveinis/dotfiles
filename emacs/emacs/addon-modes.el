@@ -57,6 +57,7 @@
 (add-to-list 'auto-indent-disabled-modes-list #'org-agenda-mode)
 (add-to-list 'auto-indent-disabled-modes-list #'erc-mode)
 (add-to-list 'auto-indent-disabled-modes-list #'grep-mode)
+(add-to-list 'auto-indent-disabled-modes-list #'term-mode)
 (auto-indent-global-mode)
 ;; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT
 ;; instead, not sure how
