@@ -5,7 +5,7 @@
 
 ;; Variables and functions defined elsewhere we'll be using
 (defvar google-c-style)
-(defvar auto-indent-key-for-end-of-line-then-newline)
+;;(defvar auto-indent-key-for-end-of-line-then-newline)
 (defvar emacs-24-4-or-later)
 (defvar TeX-auto-save)
 (defvar TeX-parse-self)
@@ -50,31 +50,32 @@
 (c-add-style "google" google-c-style)
 
 ;;; auto-indent-mode
-(setq auto-indent-key-for-end-of-line-then-newline "<M-RET>")
-(require 'auto-indent-mode)
-(add-to-list 'auto-indent-disabled-modes-list #'help-mode)
-(add-to-list 'auto-indent-disabled-modes-list #'Info-mode)
-(add-to-list 'auto-indent-disabled-modes-list #'magit-status-mode)
-(add-to-list 'auto-indent-disabled-modes-list #'org-agenda-mode)
-(add-to-list 'auto-indent-disabled-modes-list #'erc-mode)
-(add-to-list 'auto-indent-disabled-modes-list #'grep-mode)
-(require 'term)
-(add-to-list 'auto-indent-disabled-modes-list #'term-mode)
-(add-to-list 'auto-indent-disabled-modes-list #'package-menu-mode)
-(auto-indent-global-mode)
+;;(setq auto-indent-key-for-end-of-line-then-newline "<M-RET>")
+;;(require 'auto-indent-mode)
+;;(add-to-list 'auto-indent-disabled-modes-list #'help-mode)
+;;(add-to-list 'auto-indent-disabled-modes-list #'Info-mode)
+;;(add-to-list 'auto-indent-disabled-modes-list #'magit-status-mode)
+;;(add-to-list 'auto-indent-disabled-modes-list #'org-agenda-mode)
+;;(add-to-list 'auto-indent-disabled-modes-list #'erc-mode)
+;;(add-to-list 'auto-indent-disabled-modes-list #'grep-mode)
+;;(require 'term)
+;;(add-to-list 'auto-indent-disabled-modes-list #'term-mode)
+;;(add-to-list 'auto-indent-disabled-modes-list #'package-menu-mode)
+;;(auto-indent-global-mode)
 ;; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT
 ;; instead, not sure how
-(setq auto-indent-mode-untabify-on-yank-or-paste nil)
+;;(setq auto-indent-mode-untabify-on-yank-or-paste nil)
 ;; Leave tabs/spaces alone on save.
-(setq auto-indent-untabify-on-save-file nil)
+;;(setq auto-indent-untabify-on-save-file nil)
 ;; Make delete less hungry, but hungry nevertheless
-(setq auto-indent-backward-delete-char-behavior 'hungry)
+;;(setq auto-indent-backward-delete-char-behavior 'hungry)
 ;; Don't add bunch of WS just by scrolling
-(setq auto-indent-blank-lines-on-move nil)
+;;(setq auto-indent-blank-lines-on-move nil)
 
 ;;; Autopair, only in 24.3-
 (unless emacs-24-4-or-later
   (require 'autopair)
+  (require 'linum-off)
   (autopair-global-mode))
 
 ;; Disable linum where it makes sense and fixes performance
@@ -529,5 +530,18 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; yaml-mode
 (add-to-list 'auto-mode-alist '("/.clang-format\\'" . yaml-mode))
+
+;;; aggressive-indent-mode
+(require 'aggressive-indent)
+(global-aggressive-indent-mode 1)
+(add-to-list 'aggressive-indent-excluded-modes #'help-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'Info-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'magit-status-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'org-agenda-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'erc-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'grep-mode)
+(require 'term)
+(add-to-list 'aggressive-indent-excluded-modes #'term-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'package-menu-mode)
 
 ;;; addon-modes.el ends here
