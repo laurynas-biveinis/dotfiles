@@ -71,6 +71,7 @@
 ;;(setq auto-indent-backward-delete-char-behavior 'hungry)
 ;; Don't add bunch of WS just by scrolling
 ;;(setq auto-indent-blank-lines-on-move nil)
+;;(setq auto-indent-key-for-end-of-line-insert-char-then-newline "<M-S-RET>")
 
 ;;; Autopair, only in 24.3-
 (unless emacs-24-4-or-later
