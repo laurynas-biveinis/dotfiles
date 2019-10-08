@@ -85,6 +85,9 @@
 (setq battery-mode-line-format " [%b%p%% %t]")
 (display-battery-mode)
 
+;;; auto-fill-mode
+(setq-default auto-fill-function #'do-auto-fill)
+
 ;;; whitespace-mode
 (require 'whitespace)
 (global-whitespace-mode)
@@ -315,7 +318,6 @@ loaded as such.)"
 (add-hook 'makefile-mode-hook   #'flyspell-prog-mode)
 
 ;;; text-mode
-(add-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'text-mode-hook #'enable-show-trailing-ws)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
 
