@@ -427,7 +427,14 @@ loaded as such.)"
 
 ;;; Show matching parents
 (require 'paren)
+(setq show-paren-style 'mixed)
+(setq show-paren-when-point-inside-paren t)
+(setq show-paren-when-point-in-periphery t)
 (show-paren-mode 1)
+
+;;; electric-pair-mode
+(require 'elec-pair)
+(electric-pair-mode)
 
 ;;; sh-mode
 (add-hook 'sh-mode-hook #'flyspell-prog-mode)
