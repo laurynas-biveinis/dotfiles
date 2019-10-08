@@ -4,7 +4,6 @@
 ;;; Code:
 
 ;;; Some version checks
-;; 22.1, released on 2007-06-02, is the default on macOS, we don't use that.
 ;; 23.1, released on 2009-07-29, is the default on CentOS 6
 (defconst emacs-24-1-or-later (or (and (= emacs-major-version 24)
                                        (>= emacs-minor-version 1))
