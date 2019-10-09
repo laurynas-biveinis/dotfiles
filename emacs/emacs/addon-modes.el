@@ -445,6 +445,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'magit-status-mode-hook #'turn-off-size-indication-mode)
 
+;;; git-gutter-fringe
+(require 'git-gutter-fringe)
+(global-git-gutter-mode +1)
+
 ;;; Wakatime
 (require 'wakatime-mode)
 (global-wakatime-mode)
