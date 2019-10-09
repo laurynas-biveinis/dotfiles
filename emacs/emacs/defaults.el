@@ -47,8 +47,6 @@
 ;; Should files end with newline?
 (setq-default require-final-newline 'query)
 
-(setq-default fill-column 80)
-
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
   "Enable showing of trailing whitespace."
@@ -85,8 +83,12 @@
 (setq battery-mode-line-format " [%b%p%% %t]")
 (display-battery-mode)
 
-;;; auto-fill-mode
+;;; auto-fill-mode and other filling-related matters
+(setq-default fill-column 80)
+
 (setq-default auto-fill-function #'do-auto-fill)
+
+(setq sentence-end-double-space nil)
 
 ;;; whitespace-mode
 (require 'whitespace)
