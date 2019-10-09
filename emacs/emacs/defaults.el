@@ -276,6 +276,14 @@ loaded as such.)"
 (global-set-key [(control shift left)] #'enlarge-window-horizontally)
 (global-set-key [(control shift right)] #'shrink-window-horizontally)
 
+(defun end-of-line-and-newline-and-indent ()
+  "Go to the end of line, insert a new line, and indent."
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+(global-set-key (kbd "<M-RET>") #'end-of-line-and-newline-and-indent)
+
 ;; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
 
