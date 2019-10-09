@@ -90,6 +90,16 @@
 
 (setq sentence-end-double-space nil)
 
+(add-hook 'dired-mode-hook #'turn-off-auto-fill)
+(add-hook 'erc-mode-hook #'turn-off-auto-fill)
+(add-hook 'help-mode-hook #'turn-off-auto-fill)
+(add-hook 'Info-mode-hook #'turn-off-auto-fill)
+(add-hook 'magit-status-mode-hook #'turn-off-auto-fill)
+(add-hook 'org-agenda-mode-hook #'turn-off-auto-fill)
+(add-hook 'grep-mode-hook #'turn-off-auto-fill)
+(add-hook 'package-menu-mode-hook #'turn-off-auto-fill)
+(add-hook 'term-mode-hook #'turn-off-auto-fill)
+
 ;;; whitespace-mode
 (require 'whitespace)
 (global-whitespace-mode)
