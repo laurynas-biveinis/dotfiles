@@ -320,6 +320,9 @@ loaded as such.)"
 
 (global-font-lock-mode 1)
 
+;; icomplete
+(icomplete-mode)
+
 ;; Better C-x b menu by IDO mode. Alternatives: helm, ivy
 (ido-mode t)
 
