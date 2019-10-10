@@ -485,6 +485,10 @@ loaded as such.)"
 (require 'calendar)
 (setq calendar-week-start-day 1)
 
+;;; display-line-numbers
+(require 'display-line-numbers)
+(setq display-line-numbers-grow-only t)
+
 ;;; Change appearance for screen sharing
 (defconst screen-sharing-default-height
   (face-attribute 'default :height)
@@ -499,13 +503,14 @@ loaded as such.)"
   (interactive)
   (set-face-attribute 'default nil :height screen-sharing-larger-height)
   (balance-windows)
-  (global-linum-mode 1))
+  (global-display-line-numbers-mode))
 
 (defun stop-screen-sharing ()
   "Restore Emacs appearance after screen sharing."
   (interactive)
   (set-face-attribute 'default nil :height screen-sharing-default-height)
   (balance-windows)
+  (global-display-line-numbers-mode t)
   (global-linum-mode -1))
 
 ;;; defaults.el ends here
