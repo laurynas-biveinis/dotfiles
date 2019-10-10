@@ -43,6 +43,9 @@
 ;; Raw bytes in hexadecimal not octal
 (setq display-raw-bytes-as-hex t)
 
+;; Enter quoted chars in hex
+(setq read-quoted-char-radix 16)
+
 ;; Trailing newlines are highlighted
 (if (symbolp 'indicate-empty-lines) ; Emacs 23.2+
     (setq-default indicate-empty-lines t))
