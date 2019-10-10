@@ -345,6 +345,8 @@ loaded as such.)"
 (add-hook 'text-mode-hook #'turn-on-flyspell)
 
 ;; Soft word wrap
+(setq visual-line-fringe-indicators '(nil right-curly-arrow))
+
 (global-visual-line-mode 1)
 
 ;; Nice unique buffer names
