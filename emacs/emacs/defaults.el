@@ -40,6 +40,9 @@
 ;; Bookmarks are saved automatically
 (setq bookmark-save-flag 1)
 
+;; Raw bytes in hexadecimal not octal
+(setq display-raw-bytes-as-hex t)
+
 ;; Trailing newlines are highlighted
 (if (symbolp 'indicate-empty-lines) ; Emacs 23.2+
     (setq-default indicate-empty-lines t))
