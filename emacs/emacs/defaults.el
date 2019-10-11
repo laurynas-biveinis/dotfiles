@@ -23,7 +23,7 @@
 (declare-function comint-watch-for-password-prompt "comint" (string))
 (declare-function comint-strip-ctrl-m "comint" (&optional _string))
 
-;;; Variables
+;;; General settings
 ;; Keep all messages
 (setq message-log-max t)
 
@@ -88,6 +88,9 @@
 
 ;; Enable visual feedback on selections
 (setq transient-mark-mode t)
+
+;; No startup message
+(setq inhibit-startup-message t)
 
 ;;; Hook helpers
 ;; Display trailing whitespace
@@ -158,9 +161,6 @@
 
 ;; XXI century encodings
 (set-language-environment "UTF-8")
-
-;; No startup message
-(setq inhibit-startup-message t)
 
 ;;; Window and frame geometry
 (defun two-windows ()
