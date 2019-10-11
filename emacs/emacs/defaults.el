@@ -23,6 +23,7 @@
 (declare-function comint-watch-for-password-prompt "comint" (string))
 (declare-function comint-strip-ctrl-m "comint" (&optional _string))
 
+;;; Variables
 ;; Keep all messages
 (setq message-log-max t)
 
@@ -53,11 +54,48 @@
 ;; Should files end with newline?
 (setq-default require-final-newline 'query)
 
+;; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
+(unless emacs-24-5-or-later
+  (with-no-warnings
+    (setq redisplay-dont-pause t)))
+
+;; No annoying beeps
+(setq visible-bell t)
+
+;; Indentation can only insert spaces by default
+(setq-default indent-tabs-mode nil)
+
+;; If already indented, complete
+(if (symbolp 'tab-always-indent)
+    (setq tab-always-indent 'complete))
+
+;; Diff options
+(setq diff-switches "-u -p")
+
+;; Preserve hard links to the file you are editing
+;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
+(setq backup-by-copying-when-linked t)
+
+;; Preserve the owner and group of the file you are editing
+;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
+(setq backup-by-copying-when-mismatch t)
+
+;; Do not backup
+(setq make-backup-files nil)
+
+;; Use Unix-style line endings.
+(setq-default buffer-file-coding-system 'utf-8-unix)
+
+;; Enable visual feedback on selections
+(setq transient-mark-mode t)
+
+;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
   "Enable showing of trailing whitespace."
   (setq show-trailing-whitespace t))
 
+;;;; Bundled modes
 ;;; header-line-format
 ;; which-function-mode
 (unless emacs-24-1-or-later
@@ -117,38 +155,6 @@
                                     lisp-interaction-mode help-mode Info-mode
                                     magit-status-mode org-agenda-mode grep-mode
                                     package-menu-mode))
-
-;; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
-(unless emacs-24-5-or-later
-  (with-no-warnings
-    (setq redisplay-dont-pause t)))
-
-;; No annoying beeps
-(setq visible-bell t)
-
-;; Indentation can only insert spaces by default
-(setq-default indent-tabs-mode nil)
-
-;; If already indented, complete
-(if (symbolp 'tab-always-indent)
-    (setq tab-always-indent 'complete))
-
-;; Diff options
-(setq diff-switches "-u -p")
-
-;; Preserve hard links to the file you are editing
-;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
-(setq backup-by-copying-when-linked t)
-
-;; Preserve the owner and group of the file you are editing
-;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
-(setq backup-by-copying-when-mismatch t)
-
-;; Do not backup
-(setq make-backup-files nil)
-
-;; Use Unix-style line endings.
-(setq-default buffer-file-coding-system 'utf-8-unix)
 
 ;; XXI century encodings
 (set-language-environment "UTF-8")
@@ -321,9 +327,6 @@ loaded as such.)"
 (if (symbolp 'make-pointer-invisible)
     (setq make-pointer-invisible t)
   (mouse-avoidance-mode))
-
-;; Enable visual feedback on selections
-(setq transient-mark-mode t)
 
 ;; Recent files menu
 (recentf-mode)
