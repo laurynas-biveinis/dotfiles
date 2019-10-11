@@ -441,9 +441,9 @@ loaded as such.)"
 (unless emacs-26-3-or-later
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
-;;; eldoc-mode: show the args of the current function in the echo aread
-(add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
-(add-hook 'ielm-mode-hook 'eldoc-mode)
+;;; eldoc-mode: show the args of the current function in the echo area
+(add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
+(add-hook 'ielm-mode-hook #'eldoc-mode)
 
 ;;; elisp-mode
 (defun my-emacs-lisp-mode-hook ()
