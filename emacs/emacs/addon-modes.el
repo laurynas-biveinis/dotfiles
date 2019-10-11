@@ -521,4 +521,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'aggressive-indent-excluded-modes #'term-mode)
 (add-to-list 'aggressive-indent-excluded-modes #'package-menu-mode)
 
+;;; rich-minority-mode
+(require 'rich-minority)
+(setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
+                     " ElDoc" " Wrap" " Fill"))
+(rich-minority-mode)
+
 ;;; addon-modes.el ends here
