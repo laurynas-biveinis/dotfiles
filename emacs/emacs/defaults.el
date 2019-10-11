@@ -92,6 +92,8 @@
 ;; No startup message
 (setq inhibit-startup-message t)
 
+(setq kill-read-only-ok t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
