@@ -5,7 +5,6 @@
 
 ;; Variables and functions defined elsewhere we'll be using
 (defvar google-c-style)
-;;(defvar auto-indent-key-for-end-of-line-then-newline)
 (defvar emacs-24-4-or-later)
 (defvar TeX-auto-save)
 (defvar TeX-parse-self)
@@ -48,30 +47,6 @@
 
 ;; Google C style
 (c-add-style "google" google-c-style)
-
-;;; auto-indent-mode
-;;(setq auto-indent-key-for-end-of-line-then-newline "<M-RET>")
-;;(require 'auto-indent-mode)
-;;(add-to-list 'auto-indent-disabled-modes-list #'help-mode)
-;;(add-to-list 'auto-indent-disabled-modes-list #'Info-mode)
-;;(add-to-list 'auto-indent-disabled-modes-list #'magit-status-mode)
-;;(add-to-list 'auto-indent-disabled-modes-list #'org-agenda-mode)
-;;(add-to-list 'auto-indent-disabled-modes-list #'erc-mode)
-;;(add-to-list 'auto-indent-disabled-modes-list #'grep-mode)
-;;(require 'term)
-;;(add-to-list 'auto-indent-disabled-modes-list #'term-mode)
-;;(add-to-list 'auto-indent-disabled-modes-list #'package-menu-mode)
-;;(auto-indent-global-mode)
-;; Leave tabs/spaces alone on paste. TODO(laurynas): we would like to DTRT
-;; instead, not sure how
-;;(setq auto-indent-mode-untabify-on-yank-or-paste nil)
-;; Leave tabs/spaces alone on save.
-;;(setq auto-indent-untabify-on-save-file nil)
-;; Make delete less hungry, but hungry nevertheless
-;;(setq auto-indent-backward-delete-char-behavior 'hungry)
-;; Don't add bunch of WS just by scrolling
-;;(setq auto-indent-blank-lines-on-move nil)
-;;(setq auto-indent-key-for-end-of-line-insert-char-then-newline "<M-S-RET>")
 
 ;;; Autopair, only in 24.3-
 (unless emacs-24-4-or-later
