@@ -509,6 +509,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; aggressive-indent-mode
 (require 'aggressive-indent)
+(setq aggressive-indent-comments-too t)
 (global-aggressive-indent-mode 1)
 (add-to-list 'aggressive-indent-excluded-modes #'help-mode)
 (add-to-list 'aggressive-indent-excluded-modes #'Info-mode)
