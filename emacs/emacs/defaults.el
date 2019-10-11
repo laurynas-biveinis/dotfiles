@@ -333,6 +333,7 @@ loaded as such.)"
 
 (global-font-lock-mode 1)
 
+;;; minibuffer
 ;; icomplete
 (icomplete-mode)
 
@@ -352,6 +353,10 @@ loaded as such.)"
   (kill-buffer-if-exists "*Ido Completions*"))
 
 (add-hook 'minibuffer-exit-hook #'kill-completion-buffers)
+
+(require 'minibuf-eldef)
+(setq minibuffer-eldef-shorten-default t)
+(minibuffer-electric-default-mode)
 
 ;;; flyspell
 (add-hook 'cperl-mode-hook      #'flyspell-prog-mode)
