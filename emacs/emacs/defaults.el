@@ -290,6 +290,16 @@ loaded as such.)"
 
 (global-set-key (kbd "<M-RET>") #'end-of-line-and-newline-and-indent)
 
+;; Yank should indent in programming modes
+(defun indent-if-prog-mode ()
+  "Indent current region if in programming mode and no prefix arg."
+  (interactive)
+  (if (and (not current-prefix-arg) (derived-mode-p 'prog-mode))
+      (indent-region (region-beginning) (region-end) nil)))
+
+(advice-add #'yank :after #'indent-if-prog-mode)
+(advice-add #'yank-pop :after #'indent-if-prog-mode)
+
 ;; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
 
