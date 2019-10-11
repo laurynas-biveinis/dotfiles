@@ -527,4 +527,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                      " ElDoc" " Wrap" " Fill"))
 (rich-minority-mode)
 
+;;; all-the-icons-dired
+(require 'all-the-icons-dired)
+(add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
+
 ;;; addon-modes.el ends here
