@@ -526,7 +526,7 @@ loaded as such.)"
   "Default frame font height, when screen sharing is off.")
 
 (defconst screen-sharing-larger-height
-  (+ screen-sharing-default-height 10)
+  (+ screen-sharing-default-height 20)
   "Larger frame font height, when screen sharing is on.")
 
 (defun start-screen-sharing ()
