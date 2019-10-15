@@ -96,6 +96,8 @@
 
 (setq scroll-error-top-bottom t)
 
+(setq fast-but-imprecise-scrolling t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
