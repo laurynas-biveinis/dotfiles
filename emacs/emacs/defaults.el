@@ -100,6 +100,8 @@
 
 (setq recenter-redisplay t)
 
+(setq-default indicate-buffer-boundaries t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
