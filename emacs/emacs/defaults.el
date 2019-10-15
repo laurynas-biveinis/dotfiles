@@ -94,6 +94,8 @@
 
 (setq kill-read-only-ok t)
 
+(setq scroll-error-top-bottom t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
