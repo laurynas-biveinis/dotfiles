@@ -104,6 +104,8 @@
 
 (setq blink-cursor-blinks -1)
 
+(setq x-stretch-cursor t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
