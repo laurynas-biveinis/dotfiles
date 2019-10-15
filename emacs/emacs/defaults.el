@@ -102,6 +102,8 @@
 
 (setq-default indicate-buffer-boundaries t)
 
+(setq blink-cursor-blinks -1)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
