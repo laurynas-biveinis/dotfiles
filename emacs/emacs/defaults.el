@@ -98,6 +98,8 @@
 
 (setq fast-but-imprecise-scrolling t)
 
+(setq recenter-redisplay t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
