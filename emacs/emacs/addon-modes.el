@@ -24,7 +24,6 @@
 (defvar darkstar-ignore2)
 (defvar darkstar-ignore3)
 (defvar darkstar-ignore4)
-(declare-function turn-on-flyspell "flyspell" ())
 (declare-function autopair-global-mode "autopair" (&optional arg))
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
@@ -78,8 +77,6 @@
   "My configuration hook for 'latex-mode'."
   (LaTeX-install-toolbar)
   (turn-on-reftex)
-  (turn-on-flyspell)
-  (enable-show-trailing-ws)
   ;; Source specials
   (TeX-source-correlate-mode 1)
   ;; Set up -pdf option for latexmk
@@ -309,8 +306,6 @@
 
 (defun my-org-mode-hook ()
   "My configuration hook for 'org-mode'."
-  (enable-show-trailing-ws)
-  (turn-on-flyspell)
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
   (setq fill-column 85))
 
@@ -480,6 +475,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode))
 (add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
 (add-hook 'ssh-config-mode-hook #'enable-show-trailing-ws)
+(add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
 
 ;;; dispwatch
 (require 'dispwatch)

@@ -144,22 +144,10 @@
 (setq battery-mode-line-format " [%b%p%% %t]")
 (display-battery-mode)
 
-;;; auto-fill-mode and other filling-related matters
+;;; fill-column and other filling-related matters
 (setq-default fill-column 80)
 
-(setq-default auto-fill-function #'do-auto-fill)
-
 (setq sentence-end-double-space nil)
-
-(add-hook 'dired-mode-hook #'turn-off-auto-fill)
-(add-hook 'erc-mode-hook #'turn-off-auto-fill)
-(add-hook 'help-mode-hook #'turn-off-auto-fill)
-(add-hook 'Info-mode-hook #'turn-off-auto-fill)
-(add-hook 'magit-status-mode-hook #'turn-off-auto-fill)
-(add-hook 'org-agenda-mode-hook #'turn-off-auto-fill)
-(add-hook 'grep-mode-hook #'turn-off-auto-fill)
-(add-hook 'package-menu-mode-hook #'turn-off-auto-fill)
-(add-hook 'term-mode-hook #'turn-off-auto-fill)
 
 ;;; whitespace-mode
 (require 'whitespace)
@@ -372,13 +360,13 @@ loaded as such.)"
 (setq minibuffer-eldef-shorten-default t)
 (minibuffer-electric-default-mode)
 
-;;; flyspell
-(add-hook 'cperl-mode-hook      #'flyspell-prog-mode)
-(add-hook 'autoconf-mode-hook   #'flyspell-prog-mode)
-(add-hook 'autotest-mode-hook   #'flyspell-prog-mode)
-(add-hook 'makefile-mode-hook   #'flyspell-prog-mode)
+;;; common programming modes
+(add-hook 'prog-mode-hook #'turn-on-auto-fill)
+(add-hook 'prog-mode-hook #'enable-show-trailing-ws)
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
 ;;; text-mode
+(add-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'text-mode-hook #'enable-show-trailing-ws)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
 
@@ -423,8 +411,6 @@ loaded as such.)"
 ;;; cc-mode
 
 (require 'cc-vars)
-(add-hook 'c-mode-common-hook #'enable-show-trailing-ws)
-(add-hook 'c-mode-common-hook #'flyspell-prog-mode)
 
 ;; TAB indents only if point in the beginning of the line
 (setq c-tab-always-indent 1)
@@ -470,8 +456,6 @@ loaded as such.)"
 ;;; elisp-mode
 (defun my-emacs-lisp-mode-hook ()
   "Configuration for 'emacs-lisp-mode'."
-  (enable-show-trailing-ws)
-  (flyspell-prog-mode)
   (eldoc-mode)
   ;; Should the global default ever change, elisp should stay with spaces
   (setq indent-tabs-mode nil))
@@ -500,9 +484,6 @@ loaded as such.)"
 ;;; electric-pair-mode
 (require 'elec-pair)
 (electric-pair-mode)
-
-;;; sh-mode
-(add-hook 'sh-mode-hook #'flyspell-prog-mode)
 
 ;; In Shell mode, do not echo passwords
 (add-hook 'comint-output-filter-functions
