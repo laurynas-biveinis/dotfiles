@@ -995,9 +995,9 @@
 	       ("Michael Heerdegen" . "michael_heerdegen@web.de"))
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de"))])
  (ivy .
-      [(0 12 0)
+      [(0 13 0)
        ((emacs
-	 (24 1)))
+	 (24 5)))
        "Incremental Vertical completYon" tar
        ((:url . "https://github.com/abo-abo/swiper")
 	(:maintainer "Oleh Krehel" . "ohwoeowho@gmail.com")
