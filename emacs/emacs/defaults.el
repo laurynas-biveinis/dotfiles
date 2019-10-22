@@ -314,6 +314,8 @@ loaded as such.)"
 ;; No scroll bars, introduced in 24.1.
 (if (fboundp #'set-scroll-bar-mode) (set-scroll-bar-mode nil))
 
+(setq search-nonincremental-instead nil)
+
 (setq query-replace-skip-read-only t)
 
 ;; Don't bother entering search and replace args if the buffer is read-only
