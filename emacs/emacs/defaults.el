@@ -513,6 +513,10 @@ loaded as such.)"
 (require 'display-line-numbers)
 (setq display-line-numbers-grow-only t)
 
+;;; calculator
+(require 'calculator)
+(setq calculator-electric-mode t)
+
 ;;; Change appearance for screen sharing
 (defconst screen-sharing-default-height
   (face-attribute 'default :height)
