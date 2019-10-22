@@ -314,6 +314,8 @@ loaded as such.)"
 ;; No scroll bars, introduced in 24.1.
 (if (fboundp #'set-scroll-bar-mode) (set-scroll-bar-mode nil))
 
+(setq query-replace-skip-read-only t)
+
 ;; Don't bother entering search and replace args if the buffer is read-only
 (defadvice query-replace-read-args (before barf-if-buffer-read-only activate)
   "Signal a `buffer-read-only' error if the current buffer is read-only."
