@@ -385,7 +385,7 @@
 	   ("Gary D. Foster" . "Gary.Foster@Corp.Sun.COM"))
 	  (:maintainer "Luke Lee" . "luke.yx.lee@gmail.com"))])
  (csv-mode .
-	   [(1 9)
+	   [(1 10)
 	    ((emacs
 	      (24 1))
 	     (cl-lib
@@ -1145,9 +1145,9 @@
 		(:maintainer "Rocky Bernstein" . "rocky@gnu.org")
 		(:url . "http://github.com/rocky/emacs-loc-changes"))])
  (loccur .
-	 [(1 2 3)
-	  ((cl-lib
-	    (0)))
+	 [(1 2 4)
+	  ((emacs
+	    (24 3)))
 	  "Perform an occur-like folding in current buffer" single
 	  ((:keywords "matching")
 	   (:authors
