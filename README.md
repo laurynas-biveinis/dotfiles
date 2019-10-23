@@ -195,7 +195,9 @@ defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 # Cmd-W should only close tab, never window
 defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' '<string>@w</string></dict>'
-defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add '<string>com.apple.Safari</string>'
+defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add
+'<string>com.apple.Safari</string>'
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
 #
 # Terminal
 #
