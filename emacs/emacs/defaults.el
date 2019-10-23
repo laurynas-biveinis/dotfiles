@@ -364,6 +364,10 @@ loaded as such.)"
 (setq minibuffer-eldef-shorten-default t)
 (minibuffer-electric-default-mode)
 
+;;; autorevert
+(require 'autorevert)
+(setq global-auto-revert-non-file-buffers t)
+
 ;;; common programming modes
 (add-hook 'prog-mode-hook #'turn-on-auto-fill)
 (add-hook 'prog-mode-hook #'enable-show-trailing-ws)
@@ -401,8 +405,6 @@ loaded as such.)"
 (put 'dired-find-alternate-file 'disabled nil)
 
 (setq wdired-allow-to-change-permissions t)
-
-(setq dired-auto-revert-buffer t)
 
 ;; From http://atomized.org/2008/12/emacs-create-directory-before-saving/
 (defun create-missing-parent-dirs ()
