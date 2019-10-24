@@ -106,6 +106,8 @@
 
 (setq x-stretch-cursor t)
 
+(setq delete-by-moving-to-trash t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
