@@ -108,6 +108,8 @@
 
 (setq delete-by-moving-to-trash t)
 
+(setq use-dialog-box nil)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
