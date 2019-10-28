@@ -134,6 +134,7 @@
 (define-key global-map "\C-ca" #'org-agenda)
 (define-key global-map "\C-cc" #'org-capture)
 (define-key global-map "\C-c\C-x\C-o" #'org-clock-out)
+(define-key global-map "\C-c\C-x\C-j" #'org-clock-goto)
 (setq org-use-speed-commands t)
 (setq org-log-done t)
 (setq org-default-notes-file main-org-file)
