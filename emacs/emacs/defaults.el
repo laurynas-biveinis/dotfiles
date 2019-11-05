@@ -378,6 +378,7 @@ loaded as such.)"
 (add-hook 'prog-mode-hook #'turn-on-auto-fill)
 (add-hook 'prog-mode-hook #'enable-show-trailing-ws)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+(add-hook 'prog-mode-hook #'electric-layout-mode)
 
 ;;; text-mode
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
