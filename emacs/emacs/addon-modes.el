@@ -59,6 +59,9 @@
   (condition-case nil (imenu-add-menubar-index) (error nil)))
 (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
+(setq imenu-auto-rescan t)
+(setq imenu-auto-rescan-maxout 6000000)
+
 ;;;; Programming language modes
 
 ;; ssh mode on the top of shell
