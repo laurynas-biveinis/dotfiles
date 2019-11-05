@@ -110,6 +110,8 @@
 
 (setq use-dialog-box nil)
 
+(setq load-prefer-newer t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun enable-show-trailing-ws ()
