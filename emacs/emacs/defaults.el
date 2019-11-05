@@ -422,7 +422,7 @@ loaded as such.)"
 (add-hook 'before-save-hook #'create-missing-parent-dirs)
 
 ;;; cc-mode
-
+(require 'cc-mode)
 (require 'cc-vars)
 
 ;; TAB indents only if point in the beginning of the line
@@ -431,6 +431,11 @@ loaded as such.)"
 (setq c-doc-comment-style
       '((c-mode . javadoc)
         (c++-mode . javadoc)))
+
+(defun bind-context-line-break-ret ()
+  "Bind c-context-line-break to RET in C modes."
+  (define-key c-mode-base-map "<RET>" #'c-context-line-break))
+(add-hook 'c-initialization-hook #'bind-context-line-break-ret)
 
 (defconst aerospike-c-style
   '("k&r"
