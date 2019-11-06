@@ -525,7 +525,13 @@ loaded as such.)"
 
 ;;; calendar
 (require 'calendar)
+(require 'solar)
 (setq calendar-week-start-day 1)
+(setq calendar-date-style 'iso)
+;; Vilnius!
+(setq calendar-latitude 54.7)
+(setq calendar-longitude 25.3)
+(setq calendar-location-name "Vilnius, Lithuania")
 
 ;;; display-line-numbers
 (require 'display-line-numbers)
