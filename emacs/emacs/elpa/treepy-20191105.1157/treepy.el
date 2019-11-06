@@ -7,7 +7,7 @@
 ;; Description: Generic Tree Traversing Tools
 ;; Author: Daniel Barreto <daniel.barreto.n@gmail.com>
 ;; Keywords: lisp, maint, tools
-;; Package-Version: 20180724.656
+;; Package-Version: 20191105.1157
 ;; Created: Mon Jul 10 15:17:36 2017 (+0200)
 ;; Version: 0.1.1
 ;; Package-Requires: ((emacs "25.1"))
@@ -42,6 +42,7 @@
 ;;; Code:
 
 (require 'map)
+(require 'cl-lib)
 
 ;;; Walk (recursive tree traversal)
 
