@@ -51,6 +51,11 @@
 ;;;### (autoloads nil "lsp-fsharp" "lsp-fsharp.el" (0 0 0 0))
 ;;; Generated autoloads from lsp-fsharp.el
 
+(autoload 'lsp-fsharp--workspace-load "lsp-fsharp" "\
+Load all of the provided PROJECTS.
+
+\(fn PROJECTS)" nil nil)
+
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-fsharp" '("lsp-fsharp-")))
 
 ;;;***
@@ -59,6 +64,13 @@
 ;;; Generated autoloads from lsp-go.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-go" '("lsp-")))
+
+;;;***
+
+;;;### (autoloads nil "lsp-haxe" "lsp-haxe.el" (0 0 0 0))
+;;; Generated autoloads from lsp-haxe.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-haxe" '("lsp-")))
 
 ;;;***
 
@@ -86,12 +98,14 @@
 
 ;;;### (autoloads nil "lsp-mode" "lsp-mode.el" (0 0 0 0))
 ;;; Generated autoloads from lsp-mode.el
+(put 'lsp-enable-file-watchers 'safe-local-variable #'booleanp)
+(put 'lsp-file-watch-threshold 'safe-local-variable (lambda (i) (or (numberp i) (not i))))
 
 (autoload 'lsp "lsp-mode" "\
 Entry point for the server startup.
 When ARG is t the lsp mode will start new language server even if
 there is language server which can handle current language. When
-ARG is nil current file will be openned in multi folder language
+ARG is nil current file will be opened in multi folder language
 server if there is such. When `lsp' is called with prefix
 argument ask the user to select which language server to start. 
 
@@ -104,7 +118,7 @@ This avoids overloading the server with many files when starting Emacs.
 
 \(fn)" nil nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-mode" '("lsp-" "make-lsp-client" "with-lsp-workspace" "when-lsp-workspace" "seq-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-mode" '("lsp-" "make-lsp-client" "with-lsp-workspace" "when-lsp-workspace")))
 
 ;;;***
 
@@ -130,6 +144,13 @@ This avoids overloading the server with many files when starting Emacs.
 
 ;;;***
 
+;;;### (autoloads nil "lsp-terraform" "lsp-terraform.el" (0 0 0 0))
+;;; Generated autoloads from lsp-terraform.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-terraform" '("lsp-terraform-")))
+
+;;;***
+
 ;;;### (autoloads nil "lsp-vetur" "lsp-vetur.el" (0 0 0 0))
 ;;; Generated autoloads from lsp-vetur.el
 
@@ -137,10 +158,24 @@ This avoids overloading the server with many files when starting Emacs.
 
 ;;;***
 
+;;;### (autoloads nil "lsp-vhdl" "lsp-vhdl.el" (0 0 0 0))
+;;; Generated autoloads from lsp-vhdl.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-vhdl" '("lsp-vhdl-")))
+
+;;;***
+
 ;;;### (autoloads nil "lsp-xml" "lsp-xml.el" (0 0 0 0))
 ;;; Generated autoloads from lsp-xml.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-xml" '("lsp-xml-")))
+
+;;;***
+
+;;;### (autoloads nil "lsp-yaml" "lsp-yaml.el" (0 0 0 0))
+;;; Generated autoloads from lsp-yaml.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-yaml" '("lsp-yaml-")))
 
 ;;;***
 

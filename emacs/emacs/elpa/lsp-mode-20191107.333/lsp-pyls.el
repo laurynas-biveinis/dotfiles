@@ -154,7 +154,7 @@ complexity."
 (defcustom lsp-pyls-plugins-pylint-args []
   "Arguments, passed to pylint"
   :risky t
-  :type '(repeat string)
+  :type 'lsp-string-vector
   :group 'lsp-pyls
   :package-version '(lsp-mode . "6.1"))
 
@@ -332,18 +332,13 @@ at all."
 (lsp-register-client
  (make-lsp-client :new-connection (lsp-stdio-connection
                                    (lambda () lsp-clients-python-command))
-                  :major-modes '(python-mode)
+                  :major-modes '(python-mode cython-mode)
                   :priority -1
                   :server-id 'pyls
                   :library-folders-fn (lambda (_workspace) lsp-clients-python-library-directories)
                   :initialized-fn (lambda (workspace)
                                     (with-lsp-workspace workspace
-                                      (lsp--set-configuration (lsp-configuration-section "pyls")))
-                                    (puthash
-                                     "textDocumentSync"
-                                     (ht ("save" t)
-                                         ("change" 2))
-                                     (lsp--workspace-server-capabilities workspace)))))
+                                      (lsp--set-configuration (lsp-configuration-section "pyls"))))))
 
 (provide 'lsp-pyls)
 ;;; lsp-pyls.el ends here

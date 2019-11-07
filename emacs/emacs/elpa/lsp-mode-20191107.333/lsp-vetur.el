@@ -668,6 +668,15 @@ Code's JavaScript and TypeScript support."
   :type 'boolean
   :package-version '(lsp-mode . "6.1"))
 
+(defcustom lsp-vetur-emmet "never"
+  "Controls the Emmet suggestions that show up in the suggestion/completion list."
+  :type  '(choice
+           (const "never")
+           (const "inMarkupAndStylesheetFilesOnly")
+           (const "always" ))
+  :group 'lsp-vetur
+  :package-version '(lsp-mode . "6.1"))
+
 (lsp-register-custom-settings
  '(("javascript.autoClosingTags" lsp-javascript-auto-closing-tags t)
    ("javascript.format.enable" lsp-javascript-format-enable t)
@@ -763,12 +772,19 @@ Code's JavaScript and TypeScript support."
    ("vetur.completion.tagCasing" lsp-vetur-completion-tag-casing)
    ("vetur.completion.useScaffoldSnippets" lsp-vetur-completion-use-scaffold-snippets t)
    ("vetur.completion.autoImport" lsp-vetur-completion-auto-import t)
-   ("vetur.useWorkspaceDependencies" lsp-vetur-use-workspace-dependencies t)))
+   ("vetur.useWorkspaceDependencies" lsp-vetur-use-workspace-dependencies t)
+   ("emmet.showExpandedAbbreviation" lsp-vetur-emmet)))
 
 (define-obsolete-variable-alias
   'lsp-vetur-server
   'lsp-vetur-server-command
   "lsp-mode 6.1")
+
+(defcustom lsp-vetur-global-snippets-dir (expand-file-name (locate-user-emacs-file ".snippets/vetur"))
+  "Path to snippets dir."
+  :type 'file
+  :risky t
+  :package-version '(lsp-mode . "6.2"))
 
 (defcustom lsp-vetur-server-command '("vls")
   "Command to start vetur."
@@ -788,13 +804,16 @@ Code's JavaScript and TypeScript support."
                   :initialization-options (lambda () (ht-merge (lsp-configuration-section "vetur")
                                                                (lsp-configuration-section "html")
                                                                (lsp-configuration-section "javascript")
-                                                               (lsp-configuration-section "typescript")))
+                                                               (lsp-configuration-section "typescript")
+                                                               (lsp-configuration-section "emmet")
+                                                               (ht ("globalSnippetDir" lsp-vetur-global-snippets-dir))))
                   :initialized-fn (lambda (workspace)
                                     (with-lsp-workspace workspace
                                       (lsp--set-configuration
                                        (ht-merge (lsp-configuration-section "vetur")
                                                  (lsp-configuration-section "html")
                                                  (lsp-configuration-section "javascript")
+                                                 (lsp-configuration-section "emmet")
                                                  (lsp-configuration-section "typescript")))))))
 
 (provide 'lsp-vetur)

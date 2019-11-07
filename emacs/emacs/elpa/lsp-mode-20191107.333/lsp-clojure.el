@@ -31,7 +31,7 @@
   "LSP support for Clojure."
   :link '(url-link "https://github.com/snoe/clojure-lsp")
   :group 'lsp-mode
-  :tag "Language Server")
+  :tag "Lsp Clojure")
 
 (defcustom lsp-clojure-server-command  '("bash" "-c" "clojure-lsp")
   "The clojure-lisp server command."
@@ -123,7 +123,7 @@
 
 (defun lsp-clj--file-in-jar (uri)
   (string-match "^\\(jar\\|zip\\):\\(file:.+\\)!/\\(.+\\)" uri)
-  (when-let* ((entry (match-string 3 uri))
+  (-when-let* ((entry (match-string 3 uri))
               (path (lsp--uri-to-path (match-string 2 uri)))
               (name (format "%s:%s" path entry))
               (content (lsp-send-request (lsp-make-request "clojure/dependencyContents" (list :uri uri)))))
