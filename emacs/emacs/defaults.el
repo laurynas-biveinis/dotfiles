@@ -508,6 +508,12 @@ loaded as such.)"
           #'comint-watch-for-password-prompt
           #'comint-strip-ctrl-m)
 
+(setq comint-scroll-to-bottom-on-input 'all)
+(setq comint-scroll-to-bottom-on-output 'other)
+(setq comint-prompt-read-only t)
+(setq comint-input-ignoredups t)
+(setq comint-terminfo-terminal "ansi")
+
 ;; Colors
 (require 'ansi-color)
 (add-hook 'shell-mode-hook #'ansi-color-for-comint-mode-on)
