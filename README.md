@@ -315,7 +315,7 @@ brew
 
 ```bash
 brew install stow git z ncdu gnupg@1.4 coreutils fzf hexyl tldr lynis curl \
-    shellcheck wget hunspell llvm duti grep
+    shellcheck wget hunspell llvm duti grep ghostscript
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
@@ -327,7 +327,8 @@ sudo ln -sf en_US.dic en_LT.dic
 sudo easy_install pip
 sudo gem install mdl
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
-    virtualbox virtualbox-extension-pack disk-inventory-x google-chrome
+    virtualbox virtualbox-extension-pack disk-inventory-x google-chrome \
+    pdftotext
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
 # Work
