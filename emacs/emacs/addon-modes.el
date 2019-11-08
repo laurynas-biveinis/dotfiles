@@ -423,11 +423,17 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'wakatime-mode)
 (global-wakatime-mode)
 
-;;; Flycheck
+;;; Flycheck - replace with 26.1+ flymake? OTOH flycheck worked just fine,
+;;; except on TRAMP buffers under lsp-mode
 (require 'flycheck)
 (setq flycheck-global-modes '(not org-agenda-mode))
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
+
+;; flymake-diagnostic-at-point
+(with-eval-after-load 'flymake
+  (require 'flymake-diagnostic-at-point)
+  (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
 
 ;;; Company mode
 (require 'company)
@@ -440,7 +446,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'lsp-clients)
 (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
 (setq lsp-enable-snippet nil)
-(setq lsp-prefer-flymake nil)
+;; Experimental. Possible to have nil on tramp buffers only?
+(setq lsp-prefer-flymake t)
 
 (require 'lsp-ui)
 (setq lsp-ui-sideline-ignore-duplicate t)
