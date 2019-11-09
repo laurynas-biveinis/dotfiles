@@ -523,6 +523,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'aggressive-indent-excluded-modes #'org-agenda-mode)
 (add-to-list 'aggressive-indent-excluded-modes #'erc-mode)
 (add-to-list 'aggressive-indent-excluded-modes #'grep-mode)
+;; Incompatible (corrupts buffer) and redundant anyway with LSP server-provided
+;; formatting
+(add-to-list 'aggressive-indent-excluded-modes #'c-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'c++-mode)
 (require 'term)
 (add-to-list 'aggressive-indent-excluded-modes #'term-mode)
 (add-to-list 'aggressive-indent-excluded-modes #'package-menu-mode)
