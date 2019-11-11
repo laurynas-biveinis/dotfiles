@@ -504,6 +504,7 @@ loaded as such.)"
 (electric-pair-mode)
 
 ;; In Shell mode, do not echo passwords
+(require 'comint)
 (add-hook 'comint-output-filter-functions
           #'comint-watch-for-password-prompt
           #'comint-strip-ctrl-m)
