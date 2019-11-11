@@ -437,13 +437,6 @@ loaded as such.)"
   (define-key c-mode-base-map "<RET>" #'c-context-line-break))
 (add-hook 'c-initialization-hook #'bind-context-line-break-ret)
 
-(defconst aerospike-c-style
-  '("k&r"
-    (indent-tabs-mode . t)
-    (c-basic-offset . 4)
-    (tab-width . 4)))
-(c-add-style "aerospike" aerospike-c-style)
-
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
 
