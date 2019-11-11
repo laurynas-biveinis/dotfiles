@@ -435,10 +435,12 @@ loaded as such.)"
       '((c-mode . javadoc)
         (c++-mode . javadoc)))
 
-(defun bind-context-line-break-ret ()
-  "Bind c-context-line-break to RET in C modes."
-  (define-key c-mode-base-map "<RET>" #'c-context-line-break))
-(add-hook 'c-initialization-hook #'bind-context-line-break-ret)
+(defun my-c-mode-common-hook ()
+  "My customization of cc-mode init."
+  (define-key c-mode-base-map "<RET>" #'c-context-line-break)
+  (c-toggle-auto-newline 1))
+
+(add-hook 'c-initialization-hook #'my-c-mode-common-hook)
 
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
