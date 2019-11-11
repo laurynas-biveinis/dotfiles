@@ -7,6 +7,12 @@
   '("k&r"
     (indent-tabs-mode . t)
     (c-basic-offset . 4)
+    (c-offsets-alist . ((topmost-intro-cont . ++)
+                        (func-decl-cont . ++)
+                        (arglist-cont . ++)
+                        (arglist-cont-nonempty . ++)
+                        (cpp-macro-cont . ++)
+                        (statement-cont . ++)))
     (tab-width . 4)))
 
 (c-add-style "aerospike" aerospike-c-style)
