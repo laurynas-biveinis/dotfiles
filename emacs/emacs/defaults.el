@@ -251,6 +251,7 @@
        (add-to-list 'default-frame-alist `(font . ,my-frame-font))
        (add-to-list 'initial-frame-alist `(font . ,my-frame-font))))
 
+;;; files, directories, and similar things
 (defun treat-new-files-as-modified ()
   "Treat new (empty) files as modified."
   (unless (file-exists-p (buffer-file-name))
@@ -280,6 +281,8 @@ loaded as such.)"
 ;; Mark executable files as executable on save
 (add-hook 'after-save-hook
           #'executable-make-buffer-file-executable-if-script-p)
+
+(setq enable-remote-dir-locals t)
 
 ;;; Keybindings
 (global-set-key (kbd "<home>") #'move-beginning-of-line)
