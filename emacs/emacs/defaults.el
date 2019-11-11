@@ -548,6 +548,25 @@ loaded as such.)"
 (require 'calculator)
 (setq calculator-electric-mode t)
 
+;;; ediff
+(require 'ediff-wind)
+(setq ediff-window-setup-function #'ediff-setup-windows-plain)
+(setq ediff-split-window-function #'split-window-horizontally)
+(setq ediff-merge-split-window-function #'split-window-horizontally)
+
+(defvar pre-ediff-window-config nil)
+
+(defun save-pre-ediff-window-config ()
+  "Save the current window configuration, to be used as an ediff pre-setup hook."
+  (setq pre-ediff-window-config (current-window-configuration)))
+
+(defun restore-pre-ediff-window-config ()
+  "Restore the current window configuration, to be used as an ediff exit hook."
+  (set-window-configuration pre-ediff-window-config))
+
+(add-hook 'ediff-before-setup-hook #'save-pre-ediff-window-config)
+(add-hook 'ediff-quit-hook #'restore-pre-ediff-window-config)
+
 ;;; Change appearance for screen sharing
 (defconst screen-sharing-default-height
   (face-attribute 'default :height)
