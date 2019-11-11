@@ -447,6 +447,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
 (setq lsp-enable-snippet nil)
 (setq lsp-eldoc-render-all t)
+(setq lsp-restart 'auto-restart)
 ;; Experimental. Possible to have nil on tramp buffers only?
 (setq lsp-prefer-flymake t)
 
