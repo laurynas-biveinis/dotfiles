@@ -38,8 +38,8 @@
 (defconst elpa-dir (concat private-elisp "elpa/"))
 
 ;; Setup elisp search directories
-(add-to-list 'load-path home-dir)
-(add-to-list 'load-path private-elisp)
+(push home-dir load-path)
+(push private-elisp load-path)
 
 ;; Load system-specific library and setup system-specific things that
 ;; must be setup before main setup
@@ -49,7 +49,7 @@
 
 (when (fboundp 'system-specific-presetup) (system-specific-presetup))
 
-(add-to-list 'load-path private-elisp-lib)
+(push private-elisp-lib load-path)
 
 (load "secrets")
 (load "defaults")
