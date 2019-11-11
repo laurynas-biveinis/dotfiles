@@ -335,4 +335,5 @@ duti -s org.videolan.vlc .MP4 all
 brew cask install tunnelblick
 # Play
 brew cask install banktivity beatunes lastfm steam xld
+duti -s jp.tmkk.XLD .flac all
 ```
