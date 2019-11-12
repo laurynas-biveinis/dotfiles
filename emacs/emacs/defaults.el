@@ -437,7 +437,7 @@ loaded as such.)"
 
 (defun my-c-mode-common-hook ()
   "My customization of cc-mode init."
-  (define-key c-mode-base-map "<RET>" #'c-context-line-break)
+  (define-key c-mode-base-map (kbd "<RET>") #'c-context-line-break)
   (c-toggle-auto-newline 1))
 
 (add-hook 'c-initialization-hook #'my-c-mode-common-hook)
