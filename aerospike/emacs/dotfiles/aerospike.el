@@ -14,7 +14,7 @@
                                (class-open . (brace-entry-open))
                                (substatement-open . (brace-entry-open))
                                (block-close . (brace-entry-open))))
-    (c-offsets-alist . ((topmost-intro-cont . ++)
+    (c-offsets-alist . ((topmost-intro-cont . 0)
                         (func-decl-cont . ++)
                         (arglist-cont . ++)
                         (arglist-cont-nonempty . ++)
