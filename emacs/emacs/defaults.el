@@ -565,6 +565,9 @@ loaded as such.)"
 (add-hook 'ediff-before-setup-hook #'save-pre-ediff-window-config)
 (add-hook 'ediff-quit-hook #'restore-pre-ediff-window-config)
 
+;;; printing
+(setq ps-print-color-p 'black-white)
+
 ;;; Change appearance for screen sharing
 (defconst screen-sharing-default-height
   (face-attribute 'default :height)
