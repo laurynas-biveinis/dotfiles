@@ -384,11 +384,13 @@ loaded as such.)"
 (add-hook 'prog-mode-hook #'enable-show-trailing-ws)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'prog-mode-hook #'electric-layout-mode)
+(add-hook 'prog-mode-hook #'goto-address-prog-mode)
 
 ;;; text-mode
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'text-mode-hook #'enable-show-trailing-ws)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
+(add-hook 'text-mode-hook #'goto-address-mode)
 
 ;; Soft word wrap
 (setq visual-line-fringe-indicators '(nil right-curly-arrow))
