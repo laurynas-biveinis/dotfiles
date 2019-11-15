@@ -284,8 +284,6 @@ loaded as such.)"
 
 (setq enable-remote-dir-locals t)
 
-(ffap-bindings)
-
 ;;; Keybindings
 (global-set-key (kbd "<home>") #'move-beginning-of-line)
 (global-set-key (kbd "<end>") #'move-end-of-line)
