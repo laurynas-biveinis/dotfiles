@@ -194,15 +194,17 @@
 	   (:maintainer "Artur Malabarba" . "emacs@endlessparentheses.com")
 	   (:url . "https://github.com/Malabarba/beacon"))])
  (bluetooth .
-	    [(0 1)
+	    [(0 1 1)
 	     ((emacs
-	       (25 1)))
+	       (25 1))
+	      (dash
+	       (2 12 0)))
 	     "A Major mode for Bluetooth devices" single
 	     ((:keywords "hardware")
 	      (:authors
 	       ("Raffael Stocker" . "r.stocker@mnet-mail.de"))
 	      (:maintainer "Raffael Stocker" . "r.stocker@mnet-mail.de")
-	      (:url . "https://elpa.gnu.org/packages/bluetooth"))])
+	      (:url . "https://gitlab.com/rstocker/emacs-bluetooth"))])
  (bnf-mode .
 	   [(0 4 2)
 	    ((cl-lib
