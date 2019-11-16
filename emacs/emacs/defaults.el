@@ -83,6 +83,9 @@
 ;; Do not backup
 (setq make-backup-files nil)
 
+;; But if we did backup, do not break macOS file metadata
+(setq backup-by-copying t)
+
 ;; Use Unix-style line endings.
 (setq-default buffer-file-coding-system 'utf-8-unix)
 
