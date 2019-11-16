@@ -1030,11 +1030,11 @@
 		 (:url . "https://github.com/clemera/ivy-explorer"))])
  (javaimp .
 	  [(0 6 1)
-	   nil "Add and reorder Java import statements in Maven projects" tar
+	   nil "Add and reorder Java import statements in Maven/Gradle projects" tar
 	   ((:maintainer "Filipp Gunbin" . "fgunbin@fastmail.fm")
 	    (:authors
 	     ("Filipp Gunbin" . "fgunbin@fastmail.fm"))
-	    (:keywords "java" "maven" "programming")
+	    (:keywords "java" "maven" "gradle" "programming")
 	    (:url . "http://elpa.gnu.org/packages/javaimp.html"))])
  (jgraph-mode .
 	      [(1 1)
