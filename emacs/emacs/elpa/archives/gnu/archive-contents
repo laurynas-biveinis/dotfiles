@@ -194,7 +194,7 @@
 	   (:maintainer "Artur Malabarba" . "emacs@endlessparentheses.com")
 	   (:url . "https://github.com/Malabarba/beacon"))])
  (bluetooth .
-	    [(0 1 1)
+	    [(0 1 2)
 	     ((emacs
 	       (25 1))
 	      (dash
