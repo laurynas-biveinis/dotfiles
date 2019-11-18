@@ -17331,13 +17331,12 @@ similar to source code block specifications:
 
    Before updating a dynamic block, Org removes content between the
 ‘BEGIN’ and ‘END’ markers.  Org then reads the parameters on the ‘BEGIN’
-line for passing to the writer function.  If the function expects to
-access the removed content, then Org expects an extra parameter,
-‘:content’, on the ‘BEGIN’ line.
+line for passing to the writer function as a plist.  The previous
+content of the dynamic block becomes erased from the buffer and appended
+to the plist under ‘:content’.
 
    The syntax for naming a writer function with a dynamic block labelled
-‘myblock’ is: ‘org-dblock-write:myblock’.  Parameters come from the
-‘BEGIN’ line.
+‘myblock’ is: ‘org-dblock-write:myblock’.
 
    The following is an example of a dynamic block and a block writer
 function that updates the time when the function was last run:
@@ -21046,7 +21045,7 @@ F Command and Function Index
 * org-move-subtree-down:                 Structure Editing.   (line  58)
 * org-move-subtree-up:                   Structure Editing.   (line  55)
 * org-narrow-to-block:                   Structure Editing.   (line 118)
-* org-narrow-to-block <1>:               Dynamic Blocks.      (line  56)
+* org-narrow-to-block <1>:               Dynamic Blocks.      (line  55)
 * org-narrow-to-subtree:                 Structure Editing.   (line 115)
 * org-next-link:                         Handling Links.      (line 151)
 * org-next-visible-heading:              Motion.              (line   9)
@@ -22540,22 +22539,22 @@ Ref: A LaTeX example-Footnote-2717327
 Ref: A LaTeX example-Footnote-3717488
 Node: Translator functions717940
 Node: Dynamic Blocks720111
-Node: Special Agenda Views722257
-Ref: Special Agenda Views-Footnote-1725963
-Ref: Special Agenda Views-Footnote-2726170
-Node: Speeding Up Your Agendas726302
-Node: Extracting Agenda Information727356
-Node: Using the Property API731156
-Node: Using the Mapping API734506
-Node: History and Acknowledgments738537
-Ref: From Carsten738730
-Ref: From Bastien742154
-Ref: List of Contributions744286
-Node: GNU Free Documentation License752495
-Node: Main Index777875
-Node: Key Index871484
-Node: Command and Function Index925433
-Node: Variable Index970155
+Node: Special Agenda Views722212
+Ref: Special Agenda Views-Footnote-1725918
+Ref: Special Agenda Views-Footnote-2726125
+Node: Speeding Up Your Agendas726257
+Node: Extracting Agenda Information727311
+Node: Using the Property API731111
+Node: Using the Mapping API734461
+Node: History and Acknowledgments738492
+Ref: From Carsten738685
+Ref: From Bastien742109
+Ref: List of Contributions744241
+Node: GNU Free Documentation License752450
+Node: Main Index777830
+Node: Key Index871439
+Node: Command and Function Index925388
+Node: Variable Index970110
 
 End Tag Table
 

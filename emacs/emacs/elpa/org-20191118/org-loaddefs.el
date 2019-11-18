@@ -3609,7 +3609,7 @@ The file is stored under the name chosen in
 
 ;;;***
 
-;;;### (autoloads nil "ox-latex" "ox-latex.el" "f053f99b85a13076e25129148beb2444")
+;;;### (autoloads nil "ox-latex" "ox-latex.el" "09e71477d4c2f10085383db7033fd003")
 ;;; Generated autoloads from ox-latex.el
 
 (autoload 'org-latex-make-preamble "ox-latex" "\
