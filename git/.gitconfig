@@ -1,6 +1,7 @@
 [user]
 	name = Laurynas Biveinis
 	email = laurynas.biveinis@gmail.com
+        signingkey = 790127ED9B02C534
 [magit]
 	hideCampaign = true
 [diff]
@@ -11,5 +12,3 @@
 	enabled = false
 [commit]
 	gpgsign = true
-[gpg]
-	program = gpg1

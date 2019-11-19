@@ -522,12 +522,6 @@ loaded as such.)"
 (require 'ansi-color)
 (add-hook 'shell-mode-hook #'ansi-color-for-comint-mode-on)
 
-;;; easypg
-;; Still only works if there's a symlink gpg -> gpg1, and I was not able to
-;; find what uses gpg.
-(require 'epg-config)
-(setq epg-gpg-program "gpg1")
-
 ;;; Tramp
 ;; The default level 3 is too noisy with showing each file shipped
 (require 'tramp)

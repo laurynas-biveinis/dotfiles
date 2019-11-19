@@ -29,8 +29,6 @@ On macOS:
 If "emacs" is enabled, then
 
 ```bash
-brew install gnupg@1.4
-ln -sf /usr/local/bin/gpg1 /usr/local/bin/gpg
 ln -sf $HOME/Documents/secrets.el $HOME/secrets.el
 ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 ```
@@ -55,7 +53,7 @@ put .wakatime.cfg into $HOME, `chmod 700` it.
 Common
 
 ```bash
-apt-get install acpi stow gnupg1 fzf hexyl tldr
+apt-get install acpi stow fzf hexyl tldr
 apt-get install python-pip build-essential gdb manpages-dev binutils \
     binutils-doc cpp g++ gcc libasan5 liblsan0 libtsan0 libubsan1 libc6-dev \
     make cpp-doc gcc-doc autoconf automake libtool flex bison libasan5-dbg \
@@ -314,7 +312,7 @@ sudo chflags nohidden /Volumes
 brew
 
 ```bash
-brew install stow git z ncdu gnupg@1.4 coreutils fzf hexyl tldr lynis curl \
+brew install stow git z ncdu gnupg coreutils fzf hexyl tldr lynis curl \
     shellcheck wget hunspell llvm duti grep ghostscript
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
