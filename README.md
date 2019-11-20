@@ -21,7 +21,7 @@ Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
 
 Check that existing .bashrc .profile files are OK to overwrite, rm them, and
-`cd ~/dotfiles && stow bash git scripts $(cat dotfiles/extra_modules)`
+`cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
 
 On macOS:
 `/usr/local/opt/fzf/install`
