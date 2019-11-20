@@ -483,6 +483,17 @@ loaded as such.)"
 
 (add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
 
+;;; gpg
+(require 'epa)
+(setq epa-pinentry-mode 'loopback)
+
+;; TODO(laurynas): report this bug upstream
+(defun set-epg-context-pinentry-mode (context _cipher)
+  "Fix epg CONTEXT to the correct pinentry mode."
+  (setf (epg-context-pinentry-mode context) epa-pinentry-mode))
+
+(advice-add #'epg-decrypt-string :before #'set-epg-context-pinentry-mode)
+
 ;;; ispell
 (require 'ispell)
 (setq ispell-program-name "hunspell")
