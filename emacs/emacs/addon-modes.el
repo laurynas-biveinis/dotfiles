@@ -255,6 +255,7 @@
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 (setq org-log-refile 'time)
 
+(setq org-clock-display-default-range 'untilnow)
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-capture-templates
