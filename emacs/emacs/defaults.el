@@ -599,7 +599,6 @@ loaded as such.)"
   (interactive)
   (set-face-attribute 'default nil :height screen-sharing-default-height)
   (balance-windows)
-  (global-display-line-numbers-mode t)
-  (global-linum-mode -1))
+  (global-display-line-numbers-mode nil))
 
 ;;; defaults.el ends here
