@@ -20,6 +20,13 @@
 
 ;;;***
 
+;;;### (autoloads nil "lsp-csharp" "lsp-csharp.el" (0 0 0 0))
+;;; Generated autoloads from lsp-csharp.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-csharp" '("lsp-csharp-")))
+
+;;;***
+
 ;;;### (autoloads nil "lsp-css" "lsp-css.el" (0 0 0 0))
 ;;; Generated autoloads from lsp-css.el
 
