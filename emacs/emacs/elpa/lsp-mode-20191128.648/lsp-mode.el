@@ -3900,6 +3900,18 @@ When language is nil render as markup if `markdown-mode' is loaded."
     (t (error "Failed to handle %s" content)))
    ""))
 
+(defun lsp--select-action (actions)
+  "Select an action to execute from ACTIONS."
+  (cond
+   ((seq-empty-p actions) (signal 'lsp-no-code-actions nil))
+   ((and (eq (seq-length actions) 1) lsp-auto-execute-action)
+    (lsp-seq-first actions))
+   (t (lsp--completing-read "Select code action: "
+                            (seq-into actions 'list)
+                            (-lambda ((&hash "title" "command"))
+                              (or title command))
+                            nil t))))
+
 (defun lsp--render-on-hover-content (contents render-all)
   "Render the content received from 'document/onHover' request.
 CONTENTS  - MarkedString | MarkedString[] | MarkupContent
@@ -3966,7 +3978,6 @@ RENDER-ALL - nil if only the signature should be rendered."
 (eldoc-add-command #'lsp-signature-stop)
 (eldoc-add-command #'lsp-signature-next)
 (eldoc-add-command #'lsp-signature-previous)
-(eldoc-add-command #'company-complete-selection)
 
 (defun lsp-signature-stop ()
   (interactive)
@@ -4038,7 +4049,8 @@ RENDER-ALL - nil if only the signature should be rendered."
                                                                 'face 'shadow) it))
                                      (s-join "\n"))))))))
       (when (and active-parameter (not (seq-empty-p parameters)))
-        (-when-let* ((param (seq-elt parameters active-parameter))
+        (-when-let* ((param (when (and (< -1 active-parameter (length parameters)))
+                              (seq-elt parameters active-parameter)))
                      (selected-param-label (let ((label (gethash "label" param)))
                                              (if (stringp label) label (append label nil))))
                      (start (if (stringp selected-param-label)
