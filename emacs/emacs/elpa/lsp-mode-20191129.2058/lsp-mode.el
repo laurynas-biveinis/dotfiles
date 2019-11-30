@@ -4,7 +4,7 @@
 
 ;; Author: Vibhav Pant, Fangrui Song, Ivan Yonchovski
 ;; Keywords: languages
-;; Package-Requires: ((emacs "25.1") (dash "2.14.1") (dash-functional "2.14.1") (f "0.20.0") (ht "2.0") (spinner "1.7.3") (markdown-mode "2.3"))
+;; Package-Requires: ((emacs "25.1") (dash "2.14.1") (dash-functional "2.14.1") (f "0.20.0") (ht "2.0") (spinner "1.7.3") (markdown-mode "2.3") (lv "0"))
 ;; Version: 6.2
 
 ;; URL: https://github.com/emacs-lsp/lsp-mode
@@ -44,6 +44,7 @@
 (require 'imenu)
 (require 'inline)
 (require 'json)
+(require 'lv)
 (require 'network-stream)
 (require 'pcase)
 (require 's)
@@ -547,7 +548,9 @@ Changes take effect only when a new session is started."
                                         (".*\\.xml$" . "xml")
                                         (".*\\.hx$" . "haxe")
                                         (".*\\.lua$" . "lua")
+                                        (".*\\.sql$" . "sql")
                                         (ada-mode . "ada")
+                                        (sql-mode . "sql")
                                         (vimrc-mode . "vim")
                                         (sh-mode . "shellscript")
                                         (sh-mode . "lua")
@@ -3741,13 +3744,7 @@ If INCLUDE-DECLARATION is non-nil, request the server to include declarations."
 
 (defun lsp-eldoc-function ()
   "`lsp-mode' eldoc function."
-  (run-hook-wrapped
-   'lsp-eldoc-hook
-   (lambda (fn)
-     (condition-case nil
-         (funcall fn)
-       (lsp-capability-not-supported nil))
-     nil))
+  (run-hooks 'lsp-eldoc-hook)
   eldoc-last-message)
 
 (defun dash-expand:&lsp-wks (key source)
@@ -3947,6 +3944,7 @@ RENDER-ALL - nil if only the signature should be rendered."
 
 (defvar-local lsp--last-signature nil)
 (defvar-local lsp--last-signature-index nil)
+(defvar lsp--last-signature-buffer nil)
 
 (defvar lsp-signature-mode-map
   (-doto (make-sparse-keymap)
@@ -3961,7 +3959,6 @@ RENDER-ALL - nil if only the signature should be rendered."
   :lighter ""
   :group 'lsp-mode)
 
-
 (defcustom lsp-signature-render-documentation t
   "Display signature documentation in `eldoc'."
   :type 'boolean
@@ -3974,28 +3971,36 @@ RENDER-ALL - nil if only the signature should be rendered."
   :group 'lsp-mode
   :package-version '(lsp-mode . "6.2"))
 
-(eldoc-add-command #'lsp-signature-activate)
-(eldoc-add-command #'lsp-signature-stop)
-(eldoc-add-command #'lsp-signature-next)
-(eldoc-add-command #'lsp-signature-previous)
-
 (defun lsp-signature-stop ()
   (interactive)
-  (lsp-cancel-request-by-token :eldoc-hover)
-  (setq-local lsp-eldoc-hook '(lsp-hover))
+  (lsp-cancel-request-by-token :signature)
+  (remove-hook 'lsp-on-idle-hook #'lsp-signature t)
+  (remove-hook 'post-command-hook #'lsp-signature-maybe-stop)
+  (lv-delete-window)
   (lsp-signature-mode -1))
+
+(defun lsp--lv-message (message)
+  (setq lsp--last-signature-buffer (current-buffer))
+  (let ((lv-force-update t))
+    (lv-message message)))
 
 (defun lsp--handle-signature-update (signature)
   (let ((message (lsp--signature->message signature)))
     (if (s-present? message)
-        (lsp--eldoc-message message)
+        (lsp--lv-message message)
       (lsp-signature-stop))))
+
+(defun lsp-signature-maybe-stop ()
+  (when (and lsp--last-signature-buffer
+             (not (equal (current-buffer) lsp--last-signature-buffer)))
+    (lsp-signature-stop)))
 
 (defun lsp-signature-activate ()
   (interactive)
   (setq-local lsp--last-signature nil)
   (setq-local lsp--last-signature-index nil)
-  (setq-local lsp-eldoc-hook '(lsp-signature))
+  (add-hook 'lsp-on-idle-hook #'lsp-signature nil t)
+  (add-hook 'post-command-hook #'lsp-signature-maybe-stop)
   (lsp-signature-mode t))
 
 (defun lsp-signature-next ()
@@ -4005,7 +4010,7 @@ RENDER-ALL - nil if only the signature should be rendered."
              lsp--last-signature
              (< (1+ lsp--last-signature-index) (length (gethash "signatures" lsp--last-signature))))
     (setq-local lsp--last-signature-index (1+ lsp--last-signature-index))
-    (setq-local eldoc-last-message (lsp--signature->message lsp--last-signature))))
+    (lsp--lv-message (lsp--signature->message lsp--last-signature))))
 
 (defun lsp-signature-previous ()
   "Next signature."
@@ -4014,7 +4019,7 @@ RENDER-ALL - nil if only the signature should be rendered."
              lsp--last-signature
              (not (zerop lsp--last-signature-index)))
     (setq-local lsp--last-signature-index (1- lsp--last-signature-index))
-    (setq-local eldoc-last-message (lsp--signature->message lsp--last-signature))))
+    (lsp--lv-message (lsp--signature->message lsp--last-signature))))
 
 (defun lsp--signature->message (signature-help)
   "Generate eldoc message from SIGNATURE-HELP response."
@@ -4067,8 +4072,7 @@ RENDER-ALL - nil if only the signature should be rendered."
   (lsp-request-async "textDocument/signatureHelp"
                      (lsp--text-document-position-params)
                      #'lsp--handle-signature-update
-                     :cancel-token :eldoc-hover)
-  lsp--eldoc-saved-message)
+                     :cancel-token :signature))
 
 
 ;; hover
@@ -4157,8 +4161,10 @@ If ACTION is not set it will be selected from `lsp-code-actions'."
 (defun lsp--make-document-formatting-params ()
   "Create document formatting params."
   `(:textDocument ,(lsp--text-document-identifier)
-                  :options (:tabSize ,tab-width :insertSpaces
-                                     ,(if indent-tabs-mode :json-false t))))
+                  :options (:tabSize ,(if (bound-and-true-p c-buffer-is-cc-mode)
+                                          c-basic-offset
+                                        tab-width)
+                                     :insertSpaces ,(if indent-tabs-mode :json-false t))))
 
 (defun lsp-format-buffer ()
   "Ask the server to format this document."
