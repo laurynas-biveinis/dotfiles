@@ -24,7 +24,17 @@ Check that existing .bashrc .profile files are OK to overwrite, rm them, and
 `cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
 
 On macOS:
-`/usr/local/opt/fzf/install`
+
+``` bash
+ln -s ~/.gnupg/gpg-agent.conf.macOS ~/.gnupg/gpg-agent.conf
+/usr/local/opt/fzf/install
+```
+
+On Linux:
+
+``` bash
+ln -s ~/.gnupg/gpg-agent.conf.linux ~/.gnupg/gpg-agent.conf
+```
 
 If "emacs" is enabled, then
 
