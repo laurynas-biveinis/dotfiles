@@ -194,7 +194,7 @@
 
 (cl-defstruct frame-geometry top left height width)
 
-(defun add-frame-geometry-to-initial-alist (geometry)
+(defun dotfiles--add-frame-geometry-to-initial-alist (geometry)
   "Add frame GEOMETRY to `initial-frame-alist'."
   (add-to-list 'initial-frame-alist `(top . ,(frame-geometry-top geometry)))
   (add-to-list 'initial-frame-alist `(left . ,(frame-geometry-left geometry)))
@@ -231,12 +231,14 @@
   (cond ((equal display-geometry darkstar-laptop-screen)
          ;; darkstar without external screens: initial frame positioned in the
          ;; top left corner
-         (add-frame-geometry-to-initial-alist darkstar-laptop-geometry)
+         (dotfiles--add-frame-geometry-to-initial-alist
+          darkstar-laptop-geometry)
          (two-windows))
         ((equal display-geometry darkstar-external-screen)
          ;; darkstar with external screens: initial frame maximized in the
          ;; middle screen
-         (add-frame-geometry-to-initial-alist darkstar-external-geometry)
+         (dotfiles--add-frame-geometry-to-initial-alist
+          darkstar-external-geometry)
          (add-to-list 'initial-frame-alist '(fullscreen . fullboth))
          (add-to-list 'initial-frame-alist '(fullscreen-restore . maximized))
          (six-windows))
@@ -255,14 +257,14 @@
        (add-to-list 'initial-frame-alist `(font . ,my-frame-font))))
 
 ;;; files, directories, and similar things
-(defun treat-new-files-as-modified ()
+(defun dotfiles--treat-new-files-as-modified ()
   "Treat new (empty) files as modified."
   (unless (file-exists-p (buffer-file-name))
     (set-buffer-modified-p t)))
 
-(add-hook 'find-file-hook #'treat-new-files-as-modified)
+(add-hook 'find-file-hook #'dotfiles--treat-new-files-as-modified)
 
-(defun follow-cygwin-symlinks ()
+(defun dotfiles--follow-cygwin-symlinks ()
   "Follow Cygwin symlinks.
 Handles old-style (text file) and new-style (.lnk file) symlinks.
 \(Non-Cygwin-symlink .lnk files, such as desktop shortcuts, are still
@@ -279,7 +281,7 @@ loaded as such.)"
         (re-search-forward "!<symlink>\\(.*\\)\0")
         (find-alternate-file (match-string 1))))))
 
-(add-hook 'find-file-hook #'follow-cygwin-symlinks)
+(add-hook 'find-file-hook #'dotfiles--follow-cygwin-symlinks)
 
 ;; Mark executable files as executable on save
 (add-hook 'after-save-hook
@@ -360,17 +362,17 @@ loaded as such.)"
 
 (setq ido-default-buffer-method 'selected-window)
 
-(defun kill-buffer-if-exists (buffer)
+(defun dotfiles--kill-buffer-if-exists (buffer)
   "Kill the BUFFER if it exists."
   (if (buffer-live-p buffer)
       (kill-buffer buffer)))
 
-(defun kill-completion-buffers ()
+(defun dotfiles--kill-completion-buffers ()
   "Kill completion buffers, if they exist."
-  (kill-buffer-if-exists "*Completions*")
-  (kill-buffer-if-exists "*Ido Completions*"))
+  (dotfiles--kill-buffer-if-exists "*Completions*")
+  (dotfiles--kill-buffer-if-exists "*Ido Completions*"))
 
-(add-hook 'minibuffer-exit-hook #'kill-completion-buffers)
+(add-hook 'minibuffer-exit-hook #'dotfiles--kill-completion-buffers)
 
 (require 'minibuf-eldef)
 (setq minibuffer-eldef-shorten-default t)
@@ -409,11 +411,11 @@ loaded as such.)"
 ;; Copy recursively
 (setq dired-recursive-copies 'always)
 
-(defun load-dired-x ()
+(defun dotfiles--load-dired-x ()
   "Load dired-x."
   (load "dired-x"))
 
-(add-hook 'dired-load-hook #'load-dired-x)
+(add-hook 'dired-load-hook #'dotfiles--load-dired-x)
 
 (add-hook 'Man-mode-hook #'goto-address)
 
@@ -422,12 +424,12 @@ loaded as such.)"
 (setq wdired-allow-to-change-permissions t)
 
 ;; From http://atomized.org/2008/12/emacs-create-directory-before-saving/
-(defun create-missing-parent-dirs ()
+(defun dotfiles--create-missing-parent-dirs ()
   "Create parent directories automatically, if missing."
   (or (file-exists-p (file-name-directory buffer-file-name))
       (make-directory (file-name-directory buffer-file-name) t)))
 
-(add-hook 'before-save-hook #'create-missing-parent-dirs)
+(add-hook 'before-save-hook #'dotfiles--create-missing-parent-dirs)
 
 ;;; cc-mode
 (require 'cc-mode)
@@ -440,12 +442,12 @@ loaded as such.)"
       '((c-mode . javadoc)
         (c++-mode . javadoc)))
 
-(defun my-c-mode-common-hook ()
+(defun dotfiles--c-mode-common-hook ()
   "My customization of cc-mode init."
   (define-key c-mode-base-map (kbd "<RET>") #'c-context-line-break)
   (c-toggle-auto-newline 1))
 
-(add-hook 'c-initialization-hook #'my-c-mode-common-hook)
+(add-hook 'c-initialization-hook #'dotfiles--c-mode-common-hook)
 
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
@@ -475,24 +477,25 @@ loaded as such.)"
 (add-hook 'ielm-mode-hook #'eldoc-mode)
 
 ;;; elisp-mode
-(defun my-emacs-lisp-mode-hook ()
+(defun dotfiles--emacs-lisp-mode-hook ()
   "Configuration for 'emacs-lisp-mode'."
   (eldoc-mode)
   ;; Should the global default ever change, elisp should stay with spaces
   (setq indent-tabs-mode nil))
 
-(add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
+(add-hook 'emacs-lisp-mode-hook #'dotfiles--emacs-lisp-mode-hook)
 
 ;;; gpg
 (require 'epa)
 (setq epa-pinentry-mode 'loopback)
 
 ;; TODO(laurynas): report this bug upstream
-(defun set-epg-context-pinentry-mode (context _cipher)
+(defun dotfiles--set-epg-context-pinentry-mode (context _cipher)
   "Fix epg CONTEXT to the correct pinentry mode."
   (setf (epg-context-pinentry-mode context) epa-pinentry-mode))
 
-(advice-add #'epg-decrypt-string :before #'set-epg-context-pinentry-mode)
+(advice-add #'epg-decrypt-string :before
+            #'dotfiles--set-epg-context-pinentry-mode)
 
 ;;; ispell
 (require 'ispell)
@@ -562,18 +565,18 @@ loaded as such.)"
 (setq ediff-split-window-function #'split-window-horizontally)
 (setq ediff-merge-split-window-function #'split-window-horizontally)
 
-(defvar pre-ediff-window-config nil)
+(defvar dotfiles--pre-ediff-window-config nil)
 
-(defun save-pre-ediff-window-config ()
+(defun dotfiles--save-pre-ediff-window-config ()
   "Save the current window configuration, to be used as an ediff pre-setup hook."
-  (setq pre-ediff-window-config (current-window-configuration)))
+  (setq dotfiles--pre-ediff-window-config (current-window-configuration)))
 
-(defun restore-pre-ediff-window-config ()
+(defun dotfiles--restore-pre-ediff-window-config ()
   "Restore the current window configuration, to be used as an ediff exit hook."
-  (set-window-configuration pre-ediff-window-config))
+  (set-window-configuration dotfiles--pre-ediff-window-config))
 
-(add-hook 'ediff-before-setup-hook #'save-pre-ediff-window-config)
-(add-hook 'ediff-quit-hook #'restore-pre-ediff-window-config)
+(add-hook 'ediff-before-setup-hook #'dotfiles--save-pre-ediff-window-config)
+(add-hook 'ediff-quit-hook #'dotfiles--restore-pre-ediff-window-config)
 
 ;;; printing
 (setq ps-print-color-p 'black-white)

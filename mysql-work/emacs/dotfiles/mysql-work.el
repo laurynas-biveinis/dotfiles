@@ -31,8 +31,7 @@
                                    (innamespace . 0)
                                    (inline-open . 0)
                                    (statement-case-open . +)
-                                   ))
-               ))
+                                   ))))
 
 (add-to-list 'auto-mode-alist '("\\.ic\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.i\\'" . c++-mode))
@@ -45,23 +44,22 @@
                                 '((c-mode . ((c-file-style . "MySQL-5.7")))
                                   (c++-mode . ((c-file-style . "MySQL-5.7")))))
 
-; sql-mode
+;; sql-mode
 (add-to-list 'auto-mode-alist '("\\.test\\'" . sql-mode)) ; MySQL test files
 
-; Thanks to Alexey Kopytov
-(add-hook 'sql-mode-hook 'my-sql-mode-hook)
-(defun my-sql-mode-hook ()
-  (define-key sql-mode-map (kbd "RET") 'newline-and-indent)
-
+;; Thanks to Alexey Kopytov
+(defun dotfiles--sql-mode-hook ()
+  (define-key sql-mode-map (kbd "RET") #'newline-and-indent)
   ;; Make # start a new line comment in SQL. This is a MySQL-specific
   ;; syntax.
-
   (modify-syntax-entry ?# "< b" sql-mode-syntax-table)
   (set-syntax-table sql-mode-syntax-table))
 
-; TODO: provide this as default value to switch-mysql-build
-;(defconst mysql-git-path "~/percona/mysql-server"
-;  "Default path to MySQL git checkout.")
+(add-hook 'sql-mode-hook #'dotfiles--sql-mode-hook)
+
+;; TODO: provide this as default value to switch-mysql-build
+;;(defconst mysql-git-path "~/percona/mysql-server"
+;;  "Default path to MySQL git checkout.")
 
 (defconst cdb-json-fn "compile_commands.json"
   "Default file name for compilation database in JSON format.")

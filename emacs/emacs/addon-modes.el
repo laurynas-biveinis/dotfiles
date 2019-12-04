@@ -54,10 +54,10 @@
 
 ;; Imenu
 (require 'imenu+)
-(defun try-to-add-imenu ()
+(defun dotfiles--try-to-add-imenu ()
   "Try to add imenu to menu bar, silently eating any errors."
   (condition-case nil (imenu-add-menubar-index) (error nil)))
-(add-hook 'font-lock-mode-hook #'try-to-add-imenu)
+(add-hook 'font-lock-mode-hook #'dotfiles--try-to-add-imenu)
 
 (setq imenu-auto-rescan t)
 (setq imenu-auto-rescan-maxout 6000000)
@@ -76,7 +76,7 @@
 ;; Make AUCTeX aware of multifile documents
 (setq-default TeX-master nil)
 
-(defun my-latex-mode-hook ()
+(defun dotfiles--latex-mode-hook ()
   "My configuration hook for 'latex-mode'."
   (LaTeX-install-toolbar)
   (turn-on-reftex)
@@ -97,7 +97,7 @@
      :help "Run latexmk on file")
    TeX-command-list))
 
-(add-hook 'LaTeX-mode-hook #'my-latex-mode-hook)
+(add-hook 'LaTeX-mode-hook #'dotfiles--latex-mode-hook)
 (setq TeX-source-correlate-start-server t)
 
 ;; Integrate RefTeX into AUCTeX
@@ -296,12 +296,12 @@
 (org-crypt-use-before-save-magic)
 (setq org-crypt-disable-auto-save 'encrypt)
 
-(defun org-mode-flyspell-verify-disable-for-org-crypt ()
+(defun dotfiles--org-mode-flyspell-verify-disable-for-org-crypt ()
   "Do not flyspell blocks encrypted by `org-crypt'."
   (not (org-at-encrypted-entry-p)))
 
 (advice-add 'org-mode-flyspell-verify :before-while
-            #'org-mode-flyspell-verify-disable-for-org-crypt)
+            #'dotfiles--org-mode-flyspell-verify-disable-for-org-crypt)
 
 ;; org-id
 (require 'org-id)
@@ -310,12 +310,12 @@
 ;; Save org buffers automatically
 (add-hook 'auto-save-hook #'org-save-all-org-buffers)
 
-(defun my-org-mode-hook ()
+(defun dotfiles--org-mode-hook ()
   "My configuration hook for 'org-mode'."
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
   (setq fill-column 85))
 
-(add-hook 'org-mode-hook #'my-org-mode-hook)
+(add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
 ;;; Solarized-dark color theme
 (load-theme 'solarized-dark t)
@@ -327,13 +327,13 @@
 
 (require 'erc-spelling)
 
-(defun my-erc-mode-hook ()
+(defun dotfiles--erc-mode-hook ()
   "My configuration hook for `erc-mode'."
   (erc-spelling-mode)
   (unless emacs-24-4-or-later
     (setq autopair-dont-activate t)))
 
-(with-no-warnings (add-hook 'erc-mode-hook #'my-erc-mode-hook))
+(with-no-warnings (add-hook 'erc-mode-hook #'dotfiles--erc-mode-hook))
 
 (require 'erc-log)
 
@@ -347,8 +347,8 @@
 (setq erc-join-buffer 'bury)
 
 (require 'erc-networks)
-(defun my-erc-generate-log-file-name-channel-network
-  (buffer target _nick server _port)
+(defun dotfiles--erc-generate-log-file-name-channel-network
+    (buffer target _nick server _port)
   "Generate an ERC log file name in form of #channel@network.txt.
 BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (require 'erc-networks)
@@ -360,7 +360,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
     (convert-standard-filename file)))
 
 (setq erc-generate-log-file-name-function
-      #'my-erc-generate-log-file-name-channel-network)
+      #'dotfiles--erc-generate-log-file-name-channel-network)
 
 (erc-log-enable)
 
@@ -411,11 +411,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
-(defun turn-off-size-indication-mode ()
+(defun dotfiles--turn-off-size-indication-mode ()
   "Turn off function `size-indication-mode' unconditionally."
   (size-indication-mode -1))
 
-(add-hook 'magit-status-mode-hook #'turn-off-size-indication-mode)
+(add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
 
 ;;; git-gutter-fringe
 (require 'git-gutter-fringe)
@@ -495,7 +495,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; dispwatch
 (require 'dispwatch)
-(defun my-display-changed-hook (new-display-geometry)
+(defun dotfiles--display-changed-hook (new-display-geometry)
   "Reconfigure frame windows on display geometry change to NEW-DISPLAY-GEOMETRY."
   (message "Resizing for %s" new-display-geometry)
   (cond ((equal new-display-geometry darkstar-laptop-screen)
@@ -512,7 +512,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
         ((equal new-display-geometry darkstar-ignore4) ())
         (t (diagnose-unknown-display-geometry new-display-geometry))))
 
-(add-hook 'dispwatch-display-change-hooks #'my-display-changed-hook)
+(add-hook 'dispwatch-display-change-hooks #'dotfiles--display-changed-hook)
 (dispwatch-mode 1)
 
 ;;; yaml-mode
