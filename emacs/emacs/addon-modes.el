@@ -288,6 +288,7 @@
 (setq org-tags-column -85)
 (setq org-agenda-tags-column 'auto)
 
+;; Comes from org-contrib
 (require 'org-checklist)
 
 ;; org-mode encryption of selected subtrees
