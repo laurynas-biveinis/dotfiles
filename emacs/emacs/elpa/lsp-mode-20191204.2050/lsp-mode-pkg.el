@@ -1,4 +1,4 @@
-(define-package "lsp-mode" "20191203.1144" "LSP mode"
+(define-package "lsp-mode" "20191204.2050" "LSP mode"
   '((emacs "25.1")
     (dash "2.14.1")
     (dash-functional "2.14.1")
@@ -6,7 +6,8 @@
     (ht "2.0")
     (spinner "1.7.3")
     (markdown-mode "2.3")
-    (lv "0"))
+    (lv "0")
+    (flymake "1.0.5"))
   :keywords
   '("languages")
   :authors

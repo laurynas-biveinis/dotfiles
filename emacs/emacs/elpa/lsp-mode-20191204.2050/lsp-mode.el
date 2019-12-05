@@ -4,7 +4,7 @@
 
 ;; Author: Vibhav Pant, Fangrui Song, Ivan Yonchovski
 ;; Keywords: languages
-;; Package-Requires: ((emacs "25.1") (dash "2.14.1") (dash-functional "2.14.1") (f "0.20.0") (ht "2.0") (spinner "1.7.3") (markdown-mode "2.3") (lv "0"))
+;; Package-Requires: ((emacs "25.1") (dash "2.14.1") (dash-functional "2.14.1") (f "0.20.0") (ht "2.0") (spinner "1.7.3") (markdown-mode "2.3") (lv "0") (flymake "1.0.5"))
 ;; Version: 6.2
 
 ;; URL: https://github.com/emacs-lsp/lsp-mode
@@ -609,7 +609,8 @@ Changes take effect only when a new session is started."
                                         (latex-mode . "latex")
                                         (vhdl-mode . "vhdl")
                                         (terraform-mode . "terraform")
-                                        (ess-r-mode . "r"))
+                                        (ess-r-mode . "r")
+                                        (crystal-mode . "crystal"))
   "Language id configuration.")
 
 (defvar lsp-method-requirements
@@ -754,7 +755,7 @@ They are added to `markdown-code-lang-modes'")
   "Return Nth element of SEQUENCE or nil if N is out of range."
   (cond
    ((listp sequence) (elt sequence n))
-   ((arrayp sequence) 
+   ((arrayp sequence)
     (and (> (length sequence) n) (aref sequence n)))
    (t (and (> (length sequence) n) (elt sequence n)))))
 
@@ -1057,7 +1058,10 @@ INHERIT-INPUT-METHOD will be proxied to `completing-read' without changes."
   ;; structure is an alist of the form (KEY . VALUE), where KEY is a
   ;; string (regularly in all caps), and VALUE may be a string, a
   ;; boolean, or a sequence of strings.
-  (environment-fn))
+  (environment-fn)
+
+  ;; ‘after-open-fn’ workspace after open specific hooks.
+  (after-open-fn nil))
 
 ;; from http://emacs.stackexchange.com/questions/8082/how-to-get-buffer-position-given-line-number-and-column-number
 (defun lsp--line-character-to-point (line character)
@@ -2918,7 +2922,11 @@ in that particular folder."
   (lsp--on-change-debounce (current-buffer))
   (lsp--on-idle (current-buffer))
 
-  (run-hooks 'lsp-after-open-hook))
+  (run-hooks 'lsp-after-open-hook)
+  (-some-> lsp--cur-workspace
+    (lsp--workspace-client)
+    (lsp--client-after-open-fn)
+    (funcall)))
 
 (defun lsp--text-document-identifier ()
   "Make TextDocumentIdentifier.
@@ -3129,6 +3137,8 @@ The method uses `replace-buffer-contents'."
                                     beg (+ beg (length newText))
                                     length)))))))))
 
+(defvar-local lsp--filter-cr? t)
+
 (defun lsp--apply-text-edits (edits)
   "Apply the edits described in the TextEdit[] object."
   (unless (seq-empty-p edits)
@@ -3146,6 +3156,11 @@ The method uses `replace-buffer-contents'."
                            'lsp--apply-text-edit)))
         (unwind-protect
             (->> edits
+                 (mapc (lambda (edit)
+                         (when lsp--filter-cr?
+                           ;; filter \r out of text since it's mostly useless
+                           (ht-set edit "newText"
+                                   (s-replace "\r" "" (ht-get edit "newText" ""))))))
                  (nreverse)
                  (seq-sort #'lsp--text-edit-sort-predicate)
                  (mapc (lambda (edit)
@@ -3593,20 +3608,6 @@ and the position respectively."
 
 (defalias 'lsp--cur-line-diagnotics 'lsp-cur-line-diagnostics)
 
-(defun lsp--gethash (key table &optional dflt)
-  "Look up KEY in TABLE and return its associated value,
-unless KEY not found or its value is false, when it returns DFLT.
-DFLT defaults to nil.
-
-Needed for completion request fallback behavior for the fields
-'sortText', 'filterText', and 'insertText' as described here:
-
-https://microsoft.github.io/language-server-protocol/specification#textDocument_completion"
-  (let ((result (gethash key table dflt)))
-    (when (member result '(nil "" 0 :json-false))
-      (setq result dflt))
-    result))
-
 (defun lsp--make-completion-item (item)
   (propertize (or (gethash "insertText" item)
                   (gethash "label" item ""))
@@ -4048,15 +4049,15 @@ RENDER-ALL - nil if only the signature should be rendered."
                              (when (s-present? docs)
                                (concat
                                 (propertize (concat "\n"
-                                                    (s-repeat prefix-length " ")
-                                                    "├─────────────────────────────────────────────────")
+                                                    (s-repeat prefix-length "─")
+                                                    "┴─────────────────────────────────────────────────")
                                             'face 'shadow)
                                 "\n"
-                                (->> docs
-                                     s-lines
-                                     (--map (concat (propertize (concat (s-repeat prefix-length " ") "│ ")
-                                                                'face 'shadow) it))
-                                     (s-join "\n"))))))))
+                                docs
+                                (propertize (concat "\n"
+                                                    (s-repeat prefix-length "─")
+                                                    "──────────────────────────────────────────────────")
+                                            'face 'shadow)))))))
       (when (and active-parameter (not (seq-empty-p parameters)))
         (-when-let* ((param (when (and (< -1 active-parameter (length parameters)))
                               (seq-elt parameters active-parameter)))
