@@ -217,16 +217,15 @@
   (make-frame-geometry :top 4 :left 3011 :height 117 :width 426))
 
 ;; Possible interim states while docking/undocking - ignore
-(defconst darkstar-ignore '(3600 . 1080))
-(defconst darkstar-ignore2 '(5520 . 1080))
-(defconst darkstar-ignore3 '(4688 . 1692))
-(defconst darkstar-ignore4 '(3600 . 1692))
+(defconst frame-geometries-to-ignore [(3600 . 1080) (5520 . 1080) (4688 . 1692)
+                                      (3600 . 1692)])
 
 (defun diagnose-unknown-display-geometry (display-geometry)
   "Diagnose unknown DISPLAY-GEOMETRY."
   (message "Unknown display size %sx%s"
            (car display-geometry) (cdr display-geometry)))
 
+(require 'seq)
 (let ((display-geometry (cons (display-pixel-width) (display-pixel-height))))
   (cond ((equal display-geometry darkstar-laptop-screen)
          ;; darkstar without external screens: initial frame positioned in the
@@ -242,10 +241,7 @@
          (add-to-list 'initial-frame-alist '(fullscreen . fullboth))
          (add-to-list 'initial-frame-alist '(fullscreen-restore . maximized))
          (six-windows))
-        ((equal display-geometry darkstar-ignore) ())
-        ((equal display-geometry darkstar-ignore2) ())
-        ((equal display-geometry darkstar-ignore3) ())
-        ((equal display-geometry darkstar-ignore4) ())
+        ((seq-position frame-geometries-to-ignore display-geometry) ())
         (t (diagnose-unknown-display-geometry display-geometry))))
 
 ;; Use system font if under Gnome, otherwise use a specified font if one was
