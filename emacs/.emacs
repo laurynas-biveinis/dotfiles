@@ -46,7 +46,7 @@
 
 (when (fboundp 'system-specific-presetup) (system-specific-presetup))
 
-(push private-elisp-lib load-path)
+(add-to-list 'load-path private-elisp-lib)
 
 (load (concat home-dir "secrets"))
 (load (concat private-elisp "defaults"))
