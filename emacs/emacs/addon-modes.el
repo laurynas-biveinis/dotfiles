@@ -430,9 +430,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
 ;; flymake-diagnostic-at-point
-(with-eval-after-load 'flymake
-  (require 'flymake-diagnostic-at-point)
-  (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
+(require 'flymake)
+(require 'flymake-diagnostic-at-point)
+(add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode)
 
 ;;; Company mode
 (require 'company)
