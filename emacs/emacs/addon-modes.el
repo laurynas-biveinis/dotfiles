@@ -178,7 +178,7 @@
         ("v" "Vilnius" tags-todo "@vilnius-somedaymaybe/!TODO")
         ("n" "Non-project tasks" tags-todo "-project-@waitingfor-somedaymaybe/!TODO"
          ((org-use-tag-inheritance '("project" "somedaymaybe"))))
-        (" " "Agenda"
+        ("A" "Agenda"
          ((agenda "" nil)
           (tags-todo "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Common next actions")
