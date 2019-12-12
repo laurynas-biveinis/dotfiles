@@ -42,6 +42,7 @@
 (global-undo-tree-mode)
 
 ;; Google C style
+(require 'google-c-style)
 (c-add-style "google" google-c-style)
 
 ;;; Autopair, only in 24.3-
