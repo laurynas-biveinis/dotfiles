@@ -96,6 +96,13 @@ Load all of the provided PROJECTS.
 
 ;;;***
 
+;;;### (autoloads nil "lsp-json" "lsp-json.el" (0 0 0 0))
+;;; Generated autoloads from lsp-json.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-json" '("lsp-")))
+
+;;;***
+
 ;;;### (autoloads nil "lsp-metals" "lsp-metals.el" (0 0 0 0))
 ;;; Generated autoloads from lsp-metals.el
 
