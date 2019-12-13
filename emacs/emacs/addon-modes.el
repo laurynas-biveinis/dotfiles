@@ -13,7 +13,6 @@
 (defvar TeX-source-correlate-start-server)
 (defvar reftex-plug-into-AUCTeX)
 (defvar bib-cite-use-reftex-view-crossref)
-(defvar nxml-slash-auto-complete-flag)
 (defvar main-org-file)
 (defvar autopair-dont-activate)
 (defvar darkstar-laptop-screen)
@@ -114,10 +113,9 @@
 (autoload 'po-find-file-coding-system "po-mode")
 
 ;;; nXML
+(require 'nxml-mode)
 ;; Autocomplete closing tags
 (setq nxml-slash-auto-complete-flag t)
-(add-to-list 'auto-mode-alist
-             '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode))
 
 ;;; org-mode
 ;; Prerequisites: const main-org-file and list org-agenda-files, that must be
