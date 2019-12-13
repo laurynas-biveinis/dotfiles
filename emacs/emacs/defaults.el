@@ -441,6 +441,7 @@ loaded as such.)"
 (defun dotfiles--c-mode-common-hook ()
   "My customization of cc-mode init."
   (define-key c-mode-base-map (kbd "<RET>") #'c-context-line-break)
+  (define-key c-mode-base-map (kbd "C-o") #'c-context-open-line)
   (c-toggle-auto-newline 1))
 
 (add-hook 'c-initialization-hook #'dotfiles--c-mode-common-hook)
