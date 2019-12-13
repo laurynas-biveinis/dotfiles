@@ -434,6 +434,9 @@ loaded as such.)"
 ;; TAB indents only if point in the beginning of the line
 (setq c-tab-always-indent 1)
 
+;; Typing # moves it to the first column
+(setq c-electric-pound-behavior '(alignleft))
+
 (setq c-doc-comment-style
       '((c-mode . javadoc)
         (c++-mode . javadoc)))
