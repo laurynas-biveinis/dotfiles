@@ -537,9 +537,12 @@ loaded as such.)"
 (add-hook 'shell-mode-hook #'ansi-color-for-comint-mode-on)
 
 ;;; Tramp
-;; The default level 3 is too noisy with showing each file shipped
 (require 'tramp)
+;; The default level 3 is too noisy with showing each file shipped
 (setq tramp-verbose 2)
+(setq tramp-inline-compress-start-size 10240)
+(setq tramp-copy-size-limit 102400)
+(setq tramp-default-method "scpx")
 
 ;;; calendar
 (require 'calendar)
