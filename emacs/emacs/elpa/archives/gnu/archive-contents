@@ -1069,7 +1069,7 @@
 	       ("Simen Heggestøyl" . "simenheg@gmail.com"))
 	      (:maintainer "Simen Heggestøyl" . "simenheg@gmail.com"))])
  (jsonrpc .
-	  [(1 0 8)
+	  [(1 0 9)
 	   ((emacs
 	     (25 2)))
 	   "JSON-RPC library" single
@@ -1509,7 +1509,7 @@
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
 	    (:url . "http://elpa.gnu.org/packages/persist.html"))])
  (phps-mode .
-	    [(0 3 24)
+	    [(0 3 25)
 	     ((emacs
 	       (26)))
 	     "Major mode for PHP with Semantic integration" tar
