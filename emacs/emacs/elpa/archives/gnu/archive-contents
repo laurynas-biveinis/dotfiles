@@ -515,7 +515,7 @@
 	     (:keywords "files" "unix" "convenience")
 	     (:url . "http://elpa.gnu.org/packages/dired-du.html"))])
  (dired-git-info .
-		 [(0 3)
+		 [(0 3 1)
 		  ((emacs
 		    (25)))
 		  "Show git info in dired" single
