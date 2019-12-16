@@ -464,6 +464,25 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-ui-doc-include-signature t)
 (setq lsp-ui-doc-position 'top)
 
+
+(defun dotfiles--lsp-format-defun ()
+  "Format the current defun using LSP, replacing ‘c-indent-defun’."
+  (interactive)
+  (save-mark-and-excursion
+    (c-mark-function)
+    (lsp-format-region (region-beginning) (region-end))))
+
+(defun dotfiles--lsp-replace-c-indent-defun ()
+  "Make ‘c-indent-defun’ use LSP."
+  (advice-add #'c-indent-defun :override #'lsp-format-defun))
+
+(defun dotfiles--lsp-restore-c-indent-defun ()
+  "Make ‘c-indent-defun’ no longer use LSP."
+  (advice-remove #'c-indent-region #'lsp-format-defun))
+
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-c-indent-defun)
+(add-hook 'lsp-after-uninitialized-hook #'dotfiles--lsp-restore-c-indent-defun)
+
 (defconst lsp-clients-clangd-tramp-executable "clangd")
 (defun lsp-clients--clangd-tramp-command ()
   "Generate the clangd over Tramp startup command."
