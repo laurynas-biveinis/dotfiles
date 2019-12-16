@@ -464,13 +464,15 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-ui-doc-include-signature t)
 (setq lsp-ui-doc-position 'top)
 
-
-(defun dotfiles--lsp-format-defun ()
+(defun lsp-format-defun ()
   "Format the current defun using LSP, replacing ‘c-indent-defun’."
   (interactive)
-  (save-mark-and-excursion
-    (c-mark-function)
-    (lsp-format-region (region-beginning) (region-end))))
+  (when (and lsp-enable-indentation
+             (or (lsp--capability "documentRangeFormattingProvider")
+                 (lsp--registered-capability "textDocument/rangeFormatting")))
+    (save-mark-and-excursion
+      (c-mark-function)
+      (lsp-format-region (region-beginning) (region-end)))))
 
 (defun dotfiles--lsp-replace-c-indent-defun ()
   "Make ‘c-indent-defun’ use LSP."
