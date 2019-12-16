@@ -464,9 +464,13 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-ui-doc-include-signature t)
 (setq lsp-ui-doc-position 'top)
 
+(require 'cc-cmds)
+;; Namespace violation but this is an interactive defun. Hopefully I'll notice
+;; when/if lsp-mode implements the same.
 (defun lsp-format-defun ()
   "Format the current defun using LSP, replacing ‘c-indent-defun’."
   (interactive)
+  ;; Using internal LSP symbols is not ideal but I don't see an alternative.
   (when (and lsp-enable-indentation
              (or (lsp--capability "documentRangeFormattingProvider")
                  (lsp--registered-capability "textDocument/rangeFormatting")))
@@ -474,16 +478,20 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
       (c-mark-function)
       (lsp-format-region (region-beginning) (region-end)))))
 
-(defun dotfiles--lsp-replace-c-indent-defun ()
-  "Make ‘c-indent-defun’ use LSP."
-  (advice-add #'c-indent-defun :override #'lsp-format-defun))
+(defun dotfiles--lsp-replace-cc-mode-indent ()
+  "Make ‘c-indent-defun’ and ‘c-indent-region’ use LSP."
+  (advice-add #'c-indent-defun :override #'lsp-format-defun)
+  ;; This loses support for the third arg of c-indent-region (report parsing
+  ;; errors), which is fine with me.
+  (advice-add #'c-indent-region :override #'lsp-format-region))
 
-(defun dotfiles--lsp-restore-c-indent-defun ()
-  "Make ‘c-indent-defun’ no longer use LSP."
-  (advice-remove #'c-indent-region #'lsp-format-defun))
+(defun dotfiles--lsp-restore-cc-mode-indent ()
+  "Make ‘c-indent-defun’ and ‘c-indent-region’ no longer use LSP."
+  (advice-remove #'c-indent-defun #'lsp-format-defun)
+  (advice-remove #'c-indent-region #'lsp-format-region))
 
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-c-indent-defun)
-(add-hook 'lsp-after-uninitialized-hook #'dotfiles--lsp-restore-c-indent-defun)
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-cc-mode-indent)
+(add-hook 'lsp-after-uninitialized-hook #'dotfiles--lsp-restore-cc-mode-indent)
 
 (defconst lsp-clients-clangd-tramp-executable "clangd")
 (defun lsp-clients--clangd-tramp-command ()
