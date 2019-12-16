@@ -477,7 +477,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                   :server-id 'clangd-tramp
                   :remote? t))
 
-(add-hook 'prog-mode-hook #'lsp)
+(add-hook 'prog-mode-hook #'lsp-deferred)
 
 ;;; SSH config
 (autoload 'ssh-config-mode "ssh-config-mode" t)
