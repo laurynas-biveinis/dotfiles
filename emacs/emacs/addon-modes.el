@@ -466,6 +466,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (require 'cc-cmds)
 
+;; Breaks idempotence of this file, which I am not using anyway.
 (if (fboundp #'lsp-format-defun)
     (display-warning
      'dotfiles
