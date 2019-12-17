@@ -465,8 +465,13 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-ui-doc-position 'top)
 
 (require 'cc-cmds)
-;; Namespace violation but this is an interactive defun. Hopefully I'll notice
-;; when/if lsp-mode implements the same.
+
+(if (fboundp #'lsp-format-defun)
+    (display-warning
+     'dotfiles
+     "‘lsp-format-defun’ defined by ‘lsp-mode’: fix it in addon-modes.el!"
+     :warning))
+
 (defun lsp-format-defun ()
   "Format the current defun using LSP, replacing ‘c-indent-defun’."
   (interactive)
