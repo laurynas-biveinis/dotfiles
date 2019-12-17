@@ -543,6 +543,7 @@ loaded as such.)"
 (setq tramp-inline-compress-start-size 10240)
 (setq tramp-copy-size-limit 102400)
 (setq tramp-default-method "scpx")
+(setq tramp-completion-reread-directory-timeout t)
 
 ;;; calendar
 (require 'calendar)
