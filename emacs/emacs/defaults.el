@@ -357,6 +357,7 @@ loaded as such.)"
 (ido-mode t)
 (setq ido-enable-flex-matching t)
 (setq ido-default-buffer-method 'selected-window)
+(setq ido-use-filename-at-point 'guess)
 
 (defun dotfiles--kill-buffer-if-exists (buffer)
   "Kill the BUFFER if it exists."
