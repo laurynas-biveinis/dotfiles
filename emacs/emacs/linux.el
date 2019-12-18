@@ -20,8 +20,6 @@
                      ("D" . "<left>") ("H" . "<home>") ("F" . "<end>")))
           (define-key function-key-map
             (concat prefix (car m) (car k))
-            (read-kbd-macro (concat (cdr m) (cdr k)))))))
-    )
-  )
+            (read-kbd-macro (concat (cdr m) (cdr k)))))))))
 
 ;;; linux.el ends here

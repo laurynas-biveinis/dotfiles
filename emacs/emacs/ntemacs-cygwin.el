@@ -6,12 +6,11 @@
 ;; Variables and functions defined elsewhere we'll be using
 (defvar private-elisp-lib)
 (defvar home-dir)
-(defvar explicit-shell-file-name)
-(defvar comint-scroll-show-maximum-output)
-(defvar comint-completion-addsuffix)
-(defvar comint-eol-on-send)
-(defvar shell-mode-hook)
 (defvar python-python-command)
+
+(require 'comint)
+(require 'shell)
+(require 'term)
 
 (defun system-specific-presetup()
   "NT Emacs on Cygwin: set some things before main .emacs setup."
@@ -21,9 +20,9 @@
     ;; Setup paths
     (setq exec-path (cons private-bin exec-path))
     (setenv "PATH" (concat private-bin ";" (getenv "PATH")))
-                                        ; Add Cygwin Emacs stuff
+    ;; Add Cygwin Emacs stuff
     (add-to-list 'load-path "/usr/share/emacs/site-lisp")
-                                        ; Add Cygwin Info pages
+    ;; Add Cygwin Info pages
     (add-to-list 'Info-default-directory-list
                  (concat cygwin-root "usr/share/info/"))
 

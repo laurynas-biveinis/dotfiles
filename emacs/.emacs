@@ -11,6 +11,8 @@
 (defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst elpa-dir (concat private-elisp "elpa/"))
 
+(load (concat home-dir "secrets"))
+
 ;; Load system-specific library and setup system-specific things that
 ;; must be setup before main setup
 (cond ((eq system-type 'windows-nt) (load (concat private-elisp
@@ -19,11 +21,6 @@
       ((eq system-type 'darwin) (load (concat private-elisp "darwin"))))
 
 (when (fboundp 'system-specific-presetup) (system-specific-presetup))
-
-(add-to-list 'load-path private-elisp-lib)
-
-(load (concat home-dir "secrets"))
-(load (concat private-elisp "defaults"))
 
 ;; Setup ELPA
 (setq package-user-dir elpa-dir)
@@ -37,7 +34,9 @@
         ("melpa"        . 10)))
 (package-initialize)
 
-(load (concat private-elisp "addon-modes"))
+(add-to-list 'load-path private-elisp-lib)
+
+(load (concat private-elisp "setup"))
 
 (when (fboundp 'system-specific-setup) (system-specific-setup))
 
