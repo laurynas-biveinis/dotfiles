@@ -10,7 +10,6 @@
 
 (defun system-specific-setup()
   "Setup specifics for Linux."
-
   ;; Make shifted direction keys work on the Linux console or in an xterm
   (when (member (getenv "TERM") '("linux" "xterm"))
     (dolist (prefix '("\eO" "\eO1;" "\e[1;"))

@@ -13,11 +13,8 @@
   "-apple-Menlo-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
   "My default frame font on Darwin.")
 
-(defun system-specific-presetup()
-  "Things that must be set on Darwin before main setup."
-
-  (setq insert-directory-program "/usr/local/bin/gls")
-  (add-to-list 'exec-path "/usr/local/bin"))
+(setq insert-directory-program "/usr/local/bin/gls")
+(add-to-list 'exec-path "/usr/local/bin")
 
 (defun system-specific-setup()
   "Setup specifics for Darwin."

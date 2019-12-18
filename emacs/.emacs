@@ -20,8 +20,6 @@
       ((eq system-type 'gnu/linux) (load (concat private-elisp "linux")))
       ((eq system-type 'darwin) (load (concat private-elisp "darwin"))))
 
-(when (fboundp 'system-specific-presetup) (system-specific-presetup))
-
 ;; Setup ELPA
 (setq package-user-dir elpa-dir)
 (require 'package)
