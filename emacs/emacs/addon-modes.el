@@ -425,6 +425,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; except on TRAMP buffers under lsp-mode
 (require 'flycheck)
 (setq flycheck-global-modes '(not org-agenda-mode c-mode c++-mode))
+
+(define-key flycheck-mode-map (kbd "M-n") #'flycheck-next-error)
+(define-key flycheck-mode-map (kbd "M-p") #'flycheck-previous-error)
+
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
