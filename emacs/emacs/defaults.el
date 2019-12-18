@@ -10,7 +10,6 @@
 (defvar emacs-24-1-or-later)
 (defvar emacs-24-5-or-later)
 (defvar font-use-system-font)
-(defvar ido-default-buffer-method)
 (defvar which-func-modes)
 (defvar dired-recursive-copies)
 (defvar wdired-allow-to-change-permissions)
@@ -354,8 +353,9 @@ loaded as such.)"
 (icomplete-mode)
 
 ;; Better C-x b menu by IDO mode. Alternatives: helm, ivy
+(require 'ido)
 (ido-mode t)
-
+(setq ido-enable-flex-matching t)
 (setq ido-default-buffer-method 'selected-window)
 
 (defun dotfiles--kill-buffer-if-exists (buffer)
