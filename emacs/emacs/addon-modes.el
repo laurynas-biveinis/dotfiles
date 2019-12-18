@@ -5,7 +5,6 @@
 
 ;; Variables and functions defined elsewhere we'll be using
 (defvar google-c-style)
-(defvar emacs-24-4-or-later)
 (defvar TeX-auto-save)
 (defvar TeX-parse-self)
 (defvar TeX-expand-list)
@@ -14,13 +13,11 @@
 (defvar reftex-plug-into-AUCTeX)
 (defvar bib-cite-use-reftex-view-crossref)
 (defvar main-org-file)
-(defvar autopair-dont-activate)
 (defvar darkstar-laptop-screen)
 (defvar darkstar-laptop-geometry)
 (defvar darkstar-external-screen)
 (defvar darkstar-external-geometry)
 (defvar frame-geometries-to-ignore)
-(declare-function autopair-global-mode "autopair" (&optional arg))
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function move-to-frame-geometry "" (geometry))
@@ -43,11 +40,6 @@
 ;; Google C style
 (require 'google-c-style)
 (c-add-style "google" google-c-style)
-
-;;; Autopair, only in 24.3-
-(unless emacs-24-4-or-later
-  (require 'autopair)
-  (autopair-global-mode))
 
 ;; Imenu
 (require 'imenu+)
@@ -322,14 +314,7 @@
 (setq erc-user-full-name user-full-name)
 
 (require 'erc-spelling)
-
-(defun dotfiles--erc-mode-hook ()
-  "My configuration hook for `erc-mode'."
-  (erc-spelling-mode)
-  (unless emacs-24-4-or-later
-    (setq autopair-dont-activate t)))
-
-(with-no-warnings (add-hook 'erc-mode-hook #'dotfiles--erc-mode-hook))
+(add-hook 'erc-mode-hook #'erc-spelling-mode)
 
 (require 'erc-log)
 

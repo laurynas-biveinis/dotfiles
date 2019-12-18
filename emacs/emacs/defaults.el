@@ -7,18 +7,12 @@
 ;; Variables defined elsewhere we'll be using
 (defvar bookmark-save-flag)
 (defvar display-time-24hr-format)
-(defvar emacs-24-1-or-later)
-(defvar emacs-24-5-or-later)
 (defvar font-use-system-font)
-(defvar which-func-modes)
 (defvar dired-recursive-copies)
 (defvar wdired-allow-to-change-permissions)
 (defvar dired-auto-revert-buffer)
-(defvar emacs-25-3-or-later)
 (defvar compilation-scroll-output)
 (defvar compilation-environment)
-(defvar emacs-26-3-or-later)
-(defvar gnutls-algorithm-priority)
 (declare-function comint-watch-for-password-prompt "comint" (string))
 (declare-function comint-strip-ctrl-m "comint" (&optional _string))
 
@@ -52,11 +46,6 @@
 
 ;; Should files end with newline?
 (setq-default require-final-newline 'query)
-
-;; Don't interrupt redraw on input. Obsolete in 24.5+, default in 24.1+
-(unless emacs-24-5-or-later
-  (with-no-warnings
-    (setq redisplay-dont-pause t)))
 
 ;; No annoying beeps
 (setq visible-bell t)
@@ -123,8 +112,6 @@
 ;;;; Bundled modes
 ;;; header-line-format
 ;; which-function-mode
-(unless emacs-24-1-or-later
-  (setq which-func-modes t))
 (which-function-mode)
 
 (setq-default header-line-format
@@ -458,21 +445,10 @@ loaded as such.)"
 (when (fboundp #'windmove-default-keybindings)
   (windmove-default-keybindings 'super))
 
-;; Workaround Emacs 25.2- security vuln
-(unless emacs-25-3-or-later
-  (eval-after-load "enriched"
-    '(defun enriched-decode-display-prop (start end &optional _param)
-       (list start end))))
-
 ;; Compilation
 (setq compilation-scroll-output 'first-error)
 
 (setq compilation-environment '("LANG=C"))
-
-;; GNU TLS
-;; Workaround https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341 until 26.3
-(unless emacs-26-3-or-later
-  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
 ;;; eldoc-mode: show the args of the current function in the echo area
 (add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
