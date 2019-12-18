@@ -660,15 +660,6 @@ loaded as such.)"
 ;; Integrate RefTeX with bib-cite
 (setq bib-cite-use-reftex-view-crossref t)
 
-;;; po-mode.el for PO file editing
-(autoload 'po-mode "po-mode" "Major mode for translators to edit PO files" t)
-(add-to-list 'auto-mode-alist '("\\.po\\'\\|\\.po\\." . po-mode))
-
-(require 'po)
-(modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
-                            'po-find-file-coding-system)
-(autoload 'po-find-file-coding-system "po-mode")
-
 ;;; nXML
 (require 'nxml-mode)
 ;; Autocomplete closing tags
