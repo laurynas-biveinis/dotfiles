@@ -428,8 +428,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
-;; flymake-diagnostic-at-point
+;; flymake & flymake-diagnostic-at-point
 (require 'flymake)
+(define-key flymake-mode-map (kbd "M-n") #'flymake-goto-next-error)
+(define-key flymake-mode-map (kbd "M-p") #'flymake-goto-prev-error)
+
 (require 'flymake-diagnostic-at-point)
 (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode)
 
