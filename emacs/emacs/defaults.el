@@ -355,6 +355,7 @@ loaded as such.)"
 ;; Better C-x b menu by IDO mode. Alternatives: helm, ivy
 (require 'ido)
 (ido-mode t)
+(setq ido-everywhere t)
 (setq ido-enable-flex-matching t)
 (setq ido-default-buffer-method 'selected-window)
 (setq ido-use-filename-at-point 'guess)
