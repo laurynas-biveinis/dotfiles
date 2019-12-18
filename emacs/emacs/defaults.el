@@ -568,6 +568,7 @@ loaded as such.)"
 (setq ediff-window-setup-function #'ediff-setup-windows-plain)
 (setq ediff-split-window-function #'split-window-horizontally)
 (setq ediff-merge-split-window-function #'split-window-horizontally)
+(setq ediff-quit-widened nil)
 
 (defvar dotfiles--pre-ediff-window-config nil)
 
