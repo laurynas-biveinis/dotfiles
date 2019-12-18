@@ -24,16 +24,11 @@
 ;; Keep all messages
 (setq message-log-max t)
 
-;; Emacs 23.2+: Active region becomes primary selection, default in 24.1+
-(if (symbolp 'select-active-regions)
-    (setq select-active-regions t))
-
 ;; C-k kills line including its newline
 (setq kill-whole-line t)
 
-;; Emacs 23.2+: do not store duplicate kills
-(if (symbolp 'kill-do-not-save-duplicates)
-    (setq kill-do-not-save-duplicates t))
+;; Do not store duplicate kills
+(setq kill-do-not-save-duplicates t)
 
 ;; Bookmarks are saved automatically
 (setq bookmark-save-flag 1)
@@ -45,8 +40,7 @@
 (setq read-quoted-char-radix 16)
 
 ;; Trailing newlines are highlighted
-(if (symbolp 'indicate-empty-lines) ; Emacs 23.2+
-    (setq-default indicate-empty-lines t))
+(setq-default indicate-empty-lines t)
 
 ;; Should files end with newline?
 (setq-default require-final-newline 'query)
@@ -58,8 +52,7 @@
 (setq-default indent-tabs-mode nil)
 
 ;; If already indented, complete
-(if (symbolp 'tab-always-indent)
-    (setq tab-always-indent 'complete))
+(setq tab-always-indent 'complete)
 
 ;; Diff options
 (setq diff-switches "-u -p")
@@ -121,7 +114,8 @@
 (setq-default header-line-format
               '((which-func-mode ("" which-func-format " "))))
 
-(setq mode-line-misc-info (assq-delete-all 'which-function-mode mode-line-misc-info))
+(setq mode-line-misc-info (assq-delete-all 'which-function-mode
+                                           mode-line-misc-info))
 
 ;;; modeline
 ;; display-time-mode
@@ -311,8 +305,8 @@ loaded as such.)"
 ;; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
 
-;; No scroll bars, introduced in 24.1.
-(if (fboundp #'set-scroll-bar-mode) (set-scroll-bar-mode nil))
+;; No scollbars
+(set-scroll-bar-mode nil)
 
 (setq search-nonincremental-instead nil)
 
@@ -323,16 +317,14 @@ loaded as such.)"
   "Signal a `buffer-read-only' error if the current buffer is read-only."
   (barf-if-buffer-read-only))
 
-;; No toolbar, introduced in 24.1
-(if (fboundp #'tool-bar-mode) (tool-bar-mode -1))
+;; No toolbar
+(tool-bar-mode -1)
 
 ;; Typing or <Delete> will remove selected text
 (delete-selection-mode 1)
 
-;; Mouse avoidance. The var was introduced in 23.2.
-(if (symbolp 'make-pointer-invisible)
-    (setq make-pointer-invisible t)
-  (mouse-avoidance-mode))
+;; Mouse avoidance.
+(setq make-pointer-invisible t)
 
 ;; Recent files menu
 (recentf-mode)
@@ -447,8 +439,7 @@ loaded as such.)"
 (gud-tooltip-mode t)
 
 ;; windmove
-(when (fboundp #'windmove-default-keybindings)
-  (windmove-default-keybindings 'super))
+(windmove-default-keybindings 'super)
 
 ;; Compilation
 (require 'compile)
@@ -615,8 +606,6 @@ loaded as such.)"
 
 (setq imenu-auto-rescan t)
 (setq imenu-auto-rescan-maxout 6000000)
-
-;;;; Programming language modes
 
 ;; ssh mode on the top of shell
 (require 'ssh)
