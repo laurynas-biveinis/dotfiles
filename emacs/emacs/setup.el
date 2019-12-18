@@ -102,7 +102,7 @@
 
 ;;; Hook helpers
 ;; Display trailing whitespace
-(defun enable-show-trailing-ws ()
+(defun dotfiles--enable-show-trailing-ws ()
   "Enable showing of trailing whitespace."
   (setq show-trailing-whitespace t))
 
@@ -176,29 +176,34 @@
   (split-window-right)
   (balance-windows))
 
-(cl-defstruct frame-geometry top left height width)
+(cl-defstruct dotfiles--frame-geometry top left height width)
 
 (defun dotfiles--add-frame-geometry-to-initial-alist (geometry)
   "Add frame GEOMETRY to `initial-frame-alist'."
-  (add-to-list 'initial-frame-alist `(top . ,(frame-geometry-top geometry)))
-  (add-to-list 'initial-frame-alist `(left . ,(frame-geometry-left geometry)))
-  (add-to-list 'initial-frame-alist `(height . ,(frame-geometry-height geometry)))
-  (add-to-list 'initial-frame-alist `(width . ,(frame-geometry-width geometry))))
+  (add-to-list 'initial-frame-alist
+               `(top . ,(dotfiles--frame-geometry-top geometry)))
+  (add-to-list 'initial-frame-alist
+               `(left . ,(dotfiles--frame-geometry-left geometry)))
+  (add-to-list 'initial-frame-alist
+               `(height . ,(dotfiles--frame-geometry-height geometry)))
+  (add-to-list 'initial-frame-alist
+               `(width . ,(dotfiles--frame-geometry-width geometry))))
 
-(defun move-to-frame-geometry (geometry)
+(defun dotfiles--move-to-frame-geometry (geometry)
   "Resize and repositon frame to GEOMETRY."
-  (set-frame-position
-   nil (frame-geometry-left geometry) (frame-geometry-top geometry))
-  (set-frame-size
-   nil (frame-geometry-width geometry) (frame-geometry-height geometry)))
+  (set-frame-position nil (dotfiles--frame-geometry-left
+                           geometry)
+                      (dotfiles--frame-geometry-top geometry))
+  (set-frame-size nil (dotfiles--frame-geometry-width geometry)
+                  (dotfiles--frame-geometry-height geometry)))
 
 (defconst darkstar-laptop-screen '(1680 . 1050))
 (defconst darkstar-laptop-geometry
-  (make-frame-geometry :top 1 :left 1 :height 65 :width 237))
+  (make-dotfiles--frame-geometry :top 1 :left 1 :height 65 :width 237))
 
 (defconst darkstar-external-screen '(7696 . 1692))
 (defconst darkstar-external-geometry
-  (make-frame-geometry :top 4 :left 3011 :height 117 :width 426))
+  (make-dotfiles--frame-geometry :top 4 :left 3011 :height 117 :width 426))
 
 ;; Possible interim states while docking/undocking - ignore
 (defconst frame-geometries-to-ignore [(3600 . 1080) (5520 . 1080) (4688 . 1692)
@@ -365,14 +370,14 @@ loaded as such.)"
 
 ;;; common programming modes
 (add-hook 'prog-mode-hook #'turn-on-auto-fill)
-(add-hook 'prog-mode-hook #'enable-show-trailing-ws)
+(add-hook 'prog-mode-hook #'dotfiles--enable-show-trailing-ws)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'prog-mode-hook #'electric-layout-mode)
 (add-hook 'prog-mode-hook #'goto-address-prog-mode)
 
 ;;; text-mode
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
-(add-hook 'text-mode-hook #'enable-show-trailing-ws)
+(add-hook 'text-mode-hook #'dotfiles--enable-show-trailing-ws)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
 (add-hook 'text-mode-hook #'goto-address-mode)
 
@@ -1058,7 +1063,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'auto-mode-alist '("/known_hosts\\'"       . ssh-known-hosts-mode))
 (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode))
 (add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
-(add-hook 'ssh-config-mode-hook #'enable-show-trailing-ws)
+(add-hook 'ssh-config-mode-hook #'dotfiles--enable-show-trailing-ws)
 (add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
 
 ;;; dispwatch
@@ -1067,11 +1072,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   "Reconfigure frame windows on display geometry change to NEW-DISPLAY-GEOMETRY."
   (message "Resizing for %s" new-display-geometry)
   (cond ((equal new-display-geometry darkstar-laptop-screen)
-         (move-to-frame-geometry darkstar-laptop-geometry)
+         (dotfiles--move-to-frame-geometry darkstar-laptop-geometry)
          (set-frame-parameter nil 'fullscreen 'maximized)
          (two-windows))
         ((equal new-display-geometry darkstar-external-screen)
-         (move-to-frame-geometry darkstar-external-geometry)
+         (dotfiles--move-to-frame-geometry darkstar-external-geometry)
          (set-frame-parameter nil 'fullscreen 'fullboth)
          (six-windows))
         ((seq-position frame-geometries-to-ignore new-display-geometry) ())
