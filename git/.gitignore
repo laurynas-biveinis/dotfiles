@@ -1,0 +1,7 @@
+# C & C++ LSP
+compile_commands.json
+.clangd/
+
+# Aerospike
+modules/nghttp2
+modules/snappy
