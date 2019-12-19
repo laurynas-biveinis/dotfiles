@@ -1031,7 +1031,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   ;; errors), which is fine with me.
   (advice-add #'c-indent-region :override #'lsp-format-region))
 
-(defun dotfiles--lsp-restore-cc-mode-indent ()
+(defun dotfiles--lsp-restore-cc-mode-indent (_lsp_workspace)
   "Make ‘c-indent-defun’ and ‘c-indent-region’ no longer use LSP."
   (advice-remove #'c-indent-defun #'lsp-format-defun)
   (advice-remove #'c-indent-region #'lsp-format-region))
