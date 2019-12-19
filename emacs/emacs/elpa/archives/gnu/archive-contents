@@ -1440,8 +1440,8 @@
        ((:url . "http://elpa.gnu.org/packages/osc.html")
 	(:keywords "comm" "processes" "multimedia")
 	(:authors
-	 ("Mario Lang" . "mlang@delysid.org"))
-	(:maintainer "Mario Lang" . "mlang@delysid.org"))])
+	 ("Mario Lang" . "mlang@blind.guru"))
+	(:maintainer "Mario Lang" . "mlang@blind.guru"))])
  (other-frame-window .
 		     [(1 0 6)
 		      ((emacs
@@ -2111,7 +2111,7 @@
 	  (:maintainer "Justin Burkett" . "justin@burkett.cc")
 	  (:url . "https://github.com/justbur/emacs-vdiff"))])
  (verilog-mode .
-	       [(2019 11 21 248091482)
+	       [(2019 12 17 268053413)
 		nil "major mode for editing verilog source in Emacs" single
 		((:keywords "languages")
 		 (:authors
@@ -2217,6 +2217,16 @@
 	      (:maintainer "Justin Burkett" . "justin@burkett.cc")
 	      (:authors
 	       ("Justin Burkett" . "justin@burkett.cc")))])
+ (windower .
+	   [(0 0 1)
+	    ((emacs
+	      (25)))
+	    "Helper functions for window manipulation." single
+	    ((:keywords "convenience" "tools")
+	     (:authors
+	      ("Pierre Neidhardt" . "mail@ambrevar.xyz"))
+	     (:maintainer "Pierre Neidhardt" . "mail@ambrevar.xyz")
+	     (:url . "https://gitlab.com/ambrevar/windower"))])
  (windresize .
 	     [(0 1)
 	      nil "Resize windows interactively" single
