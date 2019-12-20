@@ -1013,28 +1013,40 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
      "‘lsp-format-defun’ defined by ‘lsp-mode’: fix it in setup.el!"
      :warning))
 
+(defvar-local dotfiles--use-lsp-indent nil
+  "If t, use LSP instead of cc-mode for indentation in this buffer.")
+
 (defun lsp-format-defun ()
-  "Format the current defun using LSP, replacing ‘c-indent-defun’."
+  "Format the current cc-mode defun using LSP."
   (interactive)
-  ;; Using internal LSP symbols is not ideal but I don't see an alternative.
-  (when (and lsp-enable-indentation
-             (or (lsp--capability "documentRangeFormattingProvider")
-                 (lsp--registered-capability "textDocument/rangeFormatting")))
-    (save-mark-and-excursion
-      (c-mark-function)
-      (lsp-format-region (region-beginning) (region-end)))))
+  (save-mark-and-excursion
+    (c-mark-function)
+    (lsp-format-region (region-beginning) (region-end))))
+
+(defun dotfiles--lsp-format-defun-advice (orig-fun)
+  "Format the defun using LSP with a fallback to ORIG-FUN (‘c-indent-defun’)."
+  (if dotfiles--use-lsp-indent (lsp-format-defun)
+    (funcall orig-fun)))
+
+(defun dotfiles--lsp-format-region-advice (orig-fun &rest args)
+  "Format the region (ARGS) using LSP with a fallback to ORIG-FUN (‘c-indent-region’)."
+  (if dotfiles--use-lsp-indent (apply #'lsp-format-region args)
+    (apply orig-fun args)))
 
 (defun dotfiles--lsp-replace-cc-mode-indent ()
   "Make ‘c-indent-defun’ and ‘c-indent-region’ use LSP."
-  (advice-add #'c-indent-defun :override #'lsp-format-defun)
-  ;; This loses support for the third arg of c-indent-region (report parsing
-  ;; errors), which is fine with me.
-  (advice-add #'c-indent-region :override #'lsp-format-region))
+  (when (and lsp-enable-indentation
+             ;; Using internal LSP symbols is not ideal but I don't see an
+             ;; alternative.
+             (or (lsp--capability "documentRangeFormattingProvider")
+                 (lsp--registered-capability "textDocument/rangeFormatting")))
+    (setq-local dotfiles--use-lsp-indent t)
+    (advice-add #'c-indent-defun :around #'dotfiles--lsp-format-defun-advice)
+    (advice-add #'c-indent-region :around #'dotfiles--lsp-format-region-advice)))
 
 (defun dotfiles--lsp-restore-cc-mode-indent (_lsp_workspace)
   "Make ‘c-indent-defun’ and ‘c-indent-region’ no longer use LSP."
-  (advice-remove #'c-indent-defun #'lsp-format-defun)
-  (advice-remove #'c-indent-region #'lsp-format-region))
+  (setq-local dotfiles--use-lsp-indent nil))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-cc-mode-indent)
 (add-hook 'lsp-after-uninitialized-hook #'dotfiles--lsp-restore-cc-mode-indent)
