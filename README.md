@@ -71,8 +71,7 @@ apt-get install python-pip build-essential gdb manpages-dev binutils \
     autoconf-archive gnu-standards autoconf-doc gettext bison-doc flex-doc \
     libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg \
     libquadmath0-dbg gdb-doc gettext-doc libtool-doc m4-doc python-doc cmake \
-    cmake-doc diffstat
-sudo snap install ripgrep --classic
+    cmake-doc diffstat ripgrep
 # Ubuntu 18.04-specific
 apt-get install libstdc++6-8-dbg libstdc++-8-doc
 # Ubuntu 19.04-specific
