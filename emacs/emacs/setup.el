@@ -1121,4 +1121,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'all-the-icons-dired)
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
 
+;;; deadgrep. Alternatives: rg.el, ripgrep.el, counsel/helm, etc.
+(require 'deadgrep)
+(global-set-key (kbd "<f5>") #'deadgrep)
+
 ;;; setup.el ends here
