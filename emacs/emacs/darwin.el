@@ -18,9 +18,6 @@
 
 (defun system-specific-setup()
   "Setup specifics for Darwin."
-  (require 'grep)
-  (grep-apply-setting 'grep-command "ggrep -H -n")
-  (grep-apply-setting 'grep-highlight-matches 'auto)
   (setq ns-right-alternate-modifier 'none)
   (require 'exec-path-from-shell)
   (setq exec-path-from-shell-check-startup-files nil)
