@@ -1372,7 +1372,7 @@
 	    ("Julien Danjou" . "julien@danjou.info"))
 	   (:maintainer "Julien Danjou" . "julien@danjou.info"))])
  (objed .
-	[(0 8 1)
+	[(0 8 3)
 	 ((emacs
 	   (25))
 	  (cl-lib
@@ -1411,7 +1411,7 @@
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de")
 	      (:url . "https://github.com/michael-heerdegen/on-screen.el"))])
  (org .
-      [(9 3)
+      [(9 3 1)
        nil "Outline-based notes management and organizer" tar
        ((:url . "https://orgmode.org")
 	(:maintainer "Carsten Dominik <carsten at orgmode dot org>")
@@ -1433,7 +1433,7 @@
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:keywords "convenience" "text" "org"))])
  (orgalist .
-	   [(1 9)
+	   [(1 11)
 	    ((emacs
 	      (24 4)))
 	    "Manage Org-like lists in non-Org buffers" single
@@ -2010,7 +2010,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tramp .
-	[(2 4 2 5)
+	[(2 4 3)
 	 ((emacs
 	   (24 4)))
 	 "Transparent Remote Access, Multiple Protocol" tar
@@ -2063,7 +2063,7 @@
 		   ((:maintainer "Teodor Zlatanov" . "tzz@lifelogs.com")
 		    (:url . "http://elpa.gnu.org/packages/uni-confusables.html"))])
  (uniquify-files .
-		 [(1 0 1)
+		 [(1 0 2)
 		  ((emacs
 		    (25 0)))
 		  "Completion style for files, minimizing directories" tar
