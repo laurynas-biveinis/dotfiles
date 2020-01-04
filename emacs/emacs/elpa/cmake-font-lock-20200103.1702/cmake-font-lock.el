@@ -4,9 +4,9 @@
 
 ;; Author: Anders Lindgren
 ;; Keywords: faces, languages
-;; Package-Version: 20190728.1901
+;; Package-Version: 20200103.1702
 ;; Created: 2012-12-05
-;; Version: 0.1.5
+;; Version: 0.1.6
 ;; Package-Requires: ((cmake-mode "0.0"))
 ;; URL: https://github.com/Lindydancer/cmake-font-lock
 
@@ -220,6 +220,7 @@
                                       "UNKNOWN"))
     ("add_subdirectory"            . ("EXCLUDE_FROM_ALL"))
     ("add_test"                    . ("COMMAND"
+                                      "COMMAND_EXPAND_LISTS"
                                       "CONFIGURATIONS"
                                       "NAME"
                                       "WORKING_DIRECTORY"))
@@ -298,18 +299,22 @@
                                       "TARGETS"))
     ("export_library_dependencies" . ("APPEND"))
     ("file"                        . ("APPEND"
+                                      "BUNDLE_EXECUTABLE"
                                       "CONDITION"
+                                      "CONFLICTING_DEPENDENCIES_PREFIX"
                                       "CONFIGURE_DEPENDS"
                                       "CONTENT"
                                       "COPY"
                                       "COPY_ON_ERROR"
                                       "CREATE_SYMLINK"
                                       "DESTINATION"
+                                      "DIRECTORIES"
                                       "DIRECTORY"
                                       "DIRECTORY_PERMISSIONS"
                                       "DOWNLOAD"
                                       "ENCODING"
                                       "EXCLUDE"
+                                      "EXECUTABLES"
                                       "EXPECTED_HASH"
                                       "EXPECTED_MD5"
                                       "FILE"
@@ -319,6 +324,7 @@
                                       "FOLLOW_SYMLINK_CHAIN"
                                       "FUNCTION"
                                       "GENERATE"
+                                      "GET_RUNTIME_DEPENDENCIES"
                                       "GLOB"
                                       "GLOB_RECURSE"
                                       "GUARD"
@@ -330,6 +336,7 @@
                                       "INPUT"
                                       "LENGTH_MAXIMUM"
                                       "LENGTH_MINIMUM"
+                                      "LIBRARIES"
                                       "LIMIT"
                                       "LIMIT_COUNT"
                                       "LIMIT_INPUT"
@@ -339,6 +346,7 @@
                                       "LOG"
                                       "MAKE_DIRECTORY"
                                       "MD5"
+                                      "MODULES"
                                       "NETRC"
                                       "NETRC_FILE"
                                       "NEWLINE_CONSUME"
@@ -349,6 +357,10 @@
                                       "OUTPUT"
                                       "PATTERN"
                                       "PERMISSIONS"
+                                      "POST_EXCLUDE_REGEXES"
+                                      "POST_INCLUDE_REGEXES"
+                                      "PRE_EXCLUDE_REGEXES"
+                                      "PRE_INCLUDE_REGEXES"
                                       "PROCESS"
                                       "READ"
                                       "READ_SYMLINK"
@@ -360,6 +372,7 @@
                                       "REMOVE_RECURSE"
                                       "RENAME"
                                       "REQUIRED"
+                                      "RESOLVED_DEPENDENCIES_VAR"
                                       "RESULT"
                                       "RESULT_VARIABLE"
                                       "SHA1"
@@ -380,6 +393,7 @@
                                       "TO_NATIVE_PATH"
                                       "TOUCH"
                                       "TOUCH_NOCREATE"
+                                      "UNRESOLVED_DEPENDENCIES_VAR"
                                       "UPLOAD"
                                       "USE_SOURCE_PERMISSIONS"
                                       "USERPWD"
@@ -751,6 +765,10 @@
                                       "INTERFACE"
                                       "PRIVATE"
                                       "PUBLIC"))
+    ("target_precompile_headers"   . ("INTERFACE"
+                                      "PRIVATE"
+                                      "PUBLIC"
+                                      "REUSE_FROM"))
     ("target_sources"              . ("INTERFACE"
                                       "PRIVATE"
                                       "PUBLIC"))
@@ -848,6 +866,14 @@ This is used to keep down the size of
                                       ("SHA3_512"        :path :var)
                                       ("STRINGS"         :path :var)
                                       ("TIMESTAMP"       :path :var)
+                                      ("RESOLVED_DEPENDENCIES_VAR"   :var)
+                                      ("UNRESOLVED_DEPENDENCIES_VAR" :var)
+                                      ("CONFLICTING_DEPENDENCIES_PREFIX" nil)
+                                      ("EXECUTABLES"     :repeat :path)
+                                      ("LIBRARIES"       :repeat :path)
+                                      ("MODULES"         :repeat :path)
+                                      ("DIRECTORIES"     :repeat :path)
+                                      ("BUNDLE_EXECUTABLE" :path)
                                       ("GLOB"            :var)
                                       ("GLOB_RECURSE"    :var)
                                       ("RESULT_VARIABLE" :var)
@@ -869,7 +895,7 @@ This is used to keep down the size of
       ("DEFINITION" :var :optional :prop)))
     ("get_filename_component" (:var :path))
     ("get_property"           (:var) (("PROPERTY"  :prop)
-                                      ("DIRECTORY" :path)
+                                      ("DIRECTORY" :optional :path)
                                       ("INSTALL"   :path)
                                       ("SOURCE"    :path)
                                       ("TARGET"    :tgt)
@@ -1001,7 +1027,15 @@ This is used to keep down the size of
     ("target_include_directories" (:tgt) (("INTERFACE" :repeat :path)
                                           ("PUBLIC"    :repeat :path)
                                           ("PRIVATE"   :repeat :path)))
+    ("target_link_directories"    (:tgt) (("INTERFACE" :repeat :path)
+                                          ("PUBLIC"    :repeat :path)
+                                          ("PRIVATE"   :repeat :path)))
     ("target_link_libraries"      (:tgt))
+    ("target_link_options"        (:tgt))
+    ("target_precompile_headers"  (:tgt) (("INTERFACE" :repeat :path)
+                                          ("PUBLIC"    :repeat :path)
+                                          ("PRIVATE"   :repeat :path)
+                                          ("REUSE_FROM" :tgt)))
     ("target_sources"             (:tgt))
     ;; Placement of :optional is to allow "try_compile(var dir SOURCES ...)"
     ("try_compile"             (:var nil :optional nil nil :tgt)
