@@ -196,7 +196,7 @@ This avoids overloading the server with many files when starting Emacs.
 ;;;### (autoloads nil "lsp-vhdl" "lsp-vhdl.el" (0 0 0 0))
 ;;; Generated autoloads from lsp-vhdl.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-vhdl" '("lsp-vhdl-" "hdl-checker-" "vhdl-tool-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-vhdl" '("lsp-vhdl-" "vhdl-" "hdl-checker-bin-name")))
 
 ;;;***
 
