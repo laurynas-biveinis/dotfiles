@@ -324,7 +324,7 @@ brew
 ```bash
 brew install stow git z ncdu gnupg coreutils fzf hexyl tldr lynis curl \
     shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac findutils \
-    libtool
+    libtool npm
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
@@ -340,6 +340,7 @@ brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
     pdftotext
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
+npm i -g bash-language-server
 # Work
 brew cask install tunnelblick
 # Play
