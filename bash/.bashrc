@@ -111,3 +111,9 @@ alias rmcores="rm -rf /cores/*"
 # shellcheck disable=SC1091
 # added by travis gem
 [ -f /Users/laurynas/.travis/travis.sh ] && source /Users/laurynas/.travis/travis.sh
+
+# Emacs vterm directory tracking
+vterm_prompt_end(){
+    printf "\e]51;A%s@%s:%s\e\\" "$(whoami)" "$(hostname)" "$(pwd)"
+}
+PS1=$PS1'\[$(vterm_prompt_end)\]'

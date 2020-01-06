@@ -152,7 +152,7 @@
 (setq whitespace-global-modes '(not dired-mode erc-mode markdown-mode gfm-mode
                                     lisp-interaction-mode help-mode Info-mode
                                     magit-status-mode org-agenda-mode grep-mode
-                                    package-menu-mode))
+                                    package-menu-mode vterm-mode))
 
 ;; XXI century encodings
 (set-language-environment "UTF-8")
@@ -959,7 +959,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; Flycheck - replace with 26.1+ flymake? OTOH flycheck worked just fine,
 ;;; except on TRAMP buffers under lsp-mode
 (require 'flycheck)
-(setq flycheck-global-modes '(not org-agenda-mode c-mode c++-mode))
+(setq flycheck-global-modes '(not org-agenda-mode c-mode c++-mode vterm-mode))
 
 (define-key flycheck-mode-map (kbd "M-n") #'flycheck-next-error)
 (define-key flycheck-mode-map (kbd "M-p") #'flycheck-previous-error)
@@ -979,7 +979,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
 (setq company-global-modes '(not Info-mode help-mode magit-status-mode
-                                 org-agenda-mode grep-mode package-menu-mode))
+                                 org-agenda-mode grep-mode package-menu-mode
+                                 vterm-mode))
 
 ;;; lsp-mode
 (require 'lsp-mode)
