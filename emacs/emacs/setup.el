@@ -896,13 +896,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq erc-track-faces-priority-list
       '(erc-current-nick-face erc-keyword-face))
 
-(defadvice erc-track-find-face
-    (around erc-track-find-face-promote-query activate)
-  "Pretend that any ERC query buffers contain my name, for better modeline notification."
-  (if (erc-query-buffer-p)
-      (setq ad-return-value (intern "erc-current-nick-face"))
-    ad-do-it))
-
 (setq erc-paranoid t)
 
 ;; TODO: this is in-buffer highlight, right?
