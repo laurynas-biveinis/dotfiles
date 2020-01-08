@@ -968,11 +968,11 @@ INHERIT-INPUT-METHOD will be proxied to `completing-read' without changes."
   ;; for a list of language identifiers.  Also consult the documentation for
   ;; the language server represented by this client to find out what language
   ;; identifiers it supports or expects.
-  (language-id nil :read-only t)
+  (language-id nil)
 
   ;; ‘add-on?’ when set to t the server will be started no matter whether there
   ;; is another server handling the same mode.
-  (add-on? nil :read-only t)
+  (add-on? nil)
   ;; ‘new-connection’ is a function that should start a language server process
   ;; and return a cons (COMMAND-PROCESS . COMMUNICATION-PROCESS).
   ;; COMMAND-PROCESS must be a process object representing the server process
@@ -990,79 +990,79 @@ INHERIT-INPUT-METHOD will be proxied to `completing-read' without changes."
   ;; ‘ignore-regexps’ is a list of regexps.  When a data packet from the
   ;; language server matches any of these regexps, it will be ignored.  This is
   ;; intended for dealing with language servers that output non-protocol data.
-  (ignore-regexps nil :read-only t)
+  (ignore-regexps nil)
 
   ;; ‘ignore-messages’ is a list of regexps.  When a message from the language
   ;; server matches any of these regexps, it will be ignored.  This is useful
   ;; for filtering out unwanted messages; such as servers that send nonstandard
   ;; message types, or extraneous log messages.
-  (ignore-messages nil :read-only t)
+  (ignore-messages nil)
 
   ;; ‘notification-handlers’ is a hash table mapping notification method names
   ;; (strings) to functions handling the respective notifications.  Upon
   ;; receiving a notification, ‘lsp-mode’ will call the associated handler
   ;; function passing two arguments, the ‘lsp--workspace’ object and the
   ;; deserialized notification parameters.
-  (notification-handlers (make-hash-table :test 'equal) :read-only t)
+  (notification-handlers (make-hash-table :test 'equal))
 
   ;; ‘request-handlers’ is a hash table mapping request method names
   ;; (strings) to functions handling the respective notifications.  Upon
   ;; receiving a request, ‘lsp-mode’ will call the associated handler function
   ;; passing two arguments, the ‘lsp--workspace’ object and the deserialized
   ;; request parameters.
-  (request-handlers (make-hash-table :test 'equal) :read-only t)
+  (request-handlers (make-hash-table :test 'equal))
 
   ;; ‘response-handlers’ is a hash table mapping integral JSON-RPC request
   ;; identifiers for pending asynchronous requests to functions handling the
   ;; respective responses.  Upon receiving a response from the language server,
   ;; ‘lsp-mode’ will call the associated response handler function with a
   ;; single argument, the deserialized response parameters.
-  (response-handlers (make-hash-table :test 'eql) :read-only t)
+  (response-handlers (make-hash-table :test 'eql))
 
   ;; ‘prefix-function’ is called for getting the prefix for completion.
   ;; The function takes no parameter and returns a cons (start . end) representing
   ;; the start and end bounds of the prefix. If it's not set, the client uses a
   ;; default prefix function."
-  (prefix-function nil :read-only t)
+  (prefix-function nil)
 
   ;; Contains mapping of scheme to the function that is going to be used to load
   ;; the file.
-  (uri-handlers (make-hash-table :test #'equal) :read-only t)
+  (uri-handlers (make-hash-table :test #'equal))
 
   ;; ‘action-handlers’ is a hash table mapping action to a handler function. It
   ;; can be used in `lsp-execute-code-action' to determine whether the action
   ;; current client is interested in executing the action instead of sending it
   ;; to the server.
-  (action-handlers (make-hash-table :test 'equal) :read-only t)
+  (action-handlers (make-hash-table :test 'equal))
 
   ;; major modes supported by the client.
-  (major-modes)
+  major-modes
   ;; Function that will be called to decide if this language client
   ;; should manage a particular buffer. The function will be passed
   ;; the file name and major mode to inform the decision. Setting
   ;; `activation-fn' will override `major-modes' and `remote?', if
   ;; present.
-  (activation-fn)
+  activation-fn
   ;; Break the tie when major-mode is supported by multiple clients.
   (priority 0)
   ;; Unique identifier for representing the client object.
-  (server-id)
+  server-id
   ;; defines whether the client supports multi root workspaces.
-  (multi-root)
+  multi-root
   ;; Initialization options or a function that returns initialization options.
-  (initialization-options)
+  initialization-options
   ;; Provides support for registering LSP Server specific capabilities.
-  (custom-capabilities)
+  custom-capabilities
   ;; Function which returns the folders that are considered to be not projects but library files.
   ;; The function accepts one parameter currently active workspace.
   ;; See: https://github.com/emacs-lsp/lsp-mode/issues/225.
-  (library-folders-fn)
+  library-folders-fn
   ;; function which will be called when opening file in the workspace to perform
   ;; client specific initialization. The function accepts one parameter
   ;; currently active workspace.
-  (before-file-open-fn)
+  before-file-open-fn
   ;; Function which will be called right after a workspace has been initialized.
-  (initialized-fn)
+  initialized-fn
   ;; ‘remote?’ indicate whether the client can be used for LSP server over TRAMP.
   (remote? nil)
 
@@ -1081,7 +1081,7 @@ INHERIT-INPUT-METHOD will be proxied to `completing-read' without changes."
   ;; structure is an alist of the form (KEY . VALUE), where KEY is a
   ;; string (regularly in all caps), and VALUE may be a string, a
   ;; boolean, or a sequence of strings.
-  (environment-fn)
+  environment-fn
 
   ;; ‘after-open-fn’ workspace after open specific hooks.
   (after-open-fn nil)
@@ -1092,10 +1092,10 @@ INHERIT-INPUT-METHOD will be proxied to `completing-read' without changes."
   ;; associated handler function passing three arguments, the ‘lsp--workspace’
   ;; object, the deserialized request parameters and the callback which accept
   ;; result as its parameter.
-  (async-request-handlers (make-hash-table :test 'equal) :read-only t)
-  (download-server-fn)
-  (download-in-progress?)
-  (buffers))
+  (async-request-handlers (make-hash-table :test 'equal))
+  download-server-fn
+  download-in-progress?
+  buffers)
 
 ;; from http://emacs.stackexchange.com/questions/8082/how-to-get-buffer-position-given-line-number-and-column-number
 (defun lsp--line-character-to-point (line character)
@@ -1247,8 +1247,8 @@ DELETE when `lsp-mode.el' is deleted.")
   (--first (string-match it str) regex-list))
 
 (cl-defstruct lsp-watch
-  (descriptors (make-hash-table :test 'equal) :read-only t)
-  (root-directory))
+  (descriptors (make-hash-table :test 'equal))
+  root-directory)
 
 (defun lsp--folder-watch-callback (event callback watch)
   (let ((file-name (cl-caddr event))
@@ -1448,16 +1448,16 @@ PARAMS - the data sent from WORKSPACE."
     result))
 
 (cl-defstruct lsp-diagnostic
-  (range nil :read-only t)
+  (range nil)
   ;; range has the form (:start (:line N :column N) :end (:line N :column N))
   ;; where N are zero-indexed numbers
-  (line nil :read-only t)
-  (column nil :read-only t)
-  (severity nil :read-only t) ;; 1 - error, 2 - warning, 3 - information, 4 - hint
-  (code nil :read-only t) ;; the diagnostics code
-  (source nil :read-only t) ;;
-  (message nil :read-only t) ;; diagnostics message
-  (original nil :read-only t))
+  (line nil)
+  (column nil)
+  (severity nil) ;; 1 - error, 2 - warning, 3 - information, 4 - hint
+  (code nil) ;; the diagnostics code
+  (source nil) ;;
+  (message nil) ;; diagnostics message
+  (original nil))
 
 (defun lsp--make-diag (diag)
   "Make a `lsp-diagnostic' from DIAG."
@@ -1579,12 +1579,7 @@ WORKSPACE is the workspace that contains the diagnostics."
 
 ;; textDocument/foldingRange support
 
-(cl-defstruct lsp--folding-range
-  (beg)
-  (end)
-  (kind)
-  (children)
-  (orig-folding-range))
+(cl-defstruct lsp--folding-range beg end kind children orig-folding-range)
 
 (defvar-local lsp--cached-folding-ranges nil)
 (defvar-local lsp--cached-nested-folding-ranges nil)
@@ -2101,8 +2096,8 @@ CALLBACK - callback for the lenses."
 (defalias 'make-lsp-client 'make-lsp--client)
 
 (cl-defstruct lsp--registered-capability
-  (id "" :type string)
-  (method " " :type string)
+  (id "")
+  (method " ")
   (options nil))
 
 ;; A ‘lsp--workspace’ object represents exactly one language server process.
@@ -2124,10 +2119,10 @@ CALLBACK - callback for the lenses."
   ;; root.  ‘lsp-mode’ passes this directory to the ‘initialize’ method of the
   ;; language server; see
   ;; https://microsoft.github.io/language-server-protocol/specification#initialize.
-  (root nil :ready-only t)
+  (root nil)
 
   ;; ‘client’ is the ‘lsp--client’ object associated with this workspace.
-  (client nil :read-only t)
+  (client nil)
 
   ;; ‘host-root’ contains the host root info as derived from `file-remote-p'. It
   ;; used to derive the file path in `lsp--uri-to-path' when using tramp
@@ -2186,21 +2181,21 @@ CALLBACK - callback for the lenses."
 
   ;; ‘shutdown-action’ flag used to mark that workspace should not be restarted (e.g. it
   ;; was stopped).
-  (shutdown-action)
+  shutdown-action
 
   ;; ‘diagnostics’ a hashmap with workspace diagnostics.
   (diagnostics (make-hash-table :test 'equal)))
 
 (cl-defstruct lsp-session
   ;; contains the folders that are part of the current session
-  (folders)
+  folders
   ;; contains the folders that must not be imported in the current workspace.
-  (folders-blacklist)
+  folders-blacklist
   ;; contains the list of folders that must be imported in a project in case of
   ;; multi root LSP server.
-  (server-id->folders (make-hash-table :test 'equal) :read-only t)
+  (server-id->folders (make-hash-table :test 'equal))
   ;; folder to list of the servers that are associated with the folder.
-  (folder->servers (make-hash-table :test 'equal) :read-only t)
+  (folder->servers (make-hash-table :test 'equal))
   ;; ‘metadata’ is a generic storage for workspace specific data. It is
   ;; accessed via `lsp-workspace-set-metadata' and `lsp-workspace-set-metadata'
   (metadata (make-hash-table :test 'equal)))
@@ -2261,13 +2256,7 @@ If WORKSPACE is not provided current workspace will be used."
             body
             "\n")))
 
-(cl-defstruct lsp--log-entry
-  (timestamp)
-  (process-time)
-  (type)
-  (method)
-  (id)
-  (body))
+(cl-defstruct lsp--log-entry timestamp process-time type method id body)
 
 (defun lsp--make-log-entry (method id body type &optional process-time)
   "Create an outgoing log object from BODY with method METHOD and id ID.
@@ -3702,77 +3691,108 @@ and the position respectively."
   "Return non-nil if text before point matches any of the trigger characters."
   (looking-back (regexp-opt (cl-coerce trigger-characters 'list)) (line-beginning-position)))
 
-(add-to-list 'completion-category-defaults '(lsp-substring (styles . (substring))))
-
 (defun lsp-completion-at-point ()
   "Get lsp completions."
-  (let* ((bounds (bounds-of-thing-at-point 'word-strictly))
-         (trigger-chars (->> (lsp--server-capabilities)
-                             (gethash "completionProvider")
-                             (gethash "triggerCharacters")))
-         start-point result done?)
-    (list
-     (if bounds (car bounds) (point))
-     (point)
-     (lambda (_probe _pred action)
-       (cond
-        ((eq action 'metadata)
-         `(metadata . ((display-sort-function . (lambda (candidates)
-                                                  (--sort (string-lessp (get-text-property 0 'lsp-sort-text it)
-                                                                        (get-text-property 0 'lsp-sort-text other))
-                                                          candidates)))
-                       (category . lsp-substring))))
-        ((eq (car-safe action) 'boundaries) nil)
-        (t (if done?
-               result
-             (setf start-point (point))
-             (let* ((resp (lsp-request-while-no-input "textDocument/completion"
-                                                      (plist-put (lsp--text-document-position-params)
-                                                                 :context (ht ("triggerKind" 1)))))
-                    (items (lsp--sort-completions (cond
-                                                   ((seqp resp) resp)
-                                                   ((hash-table-p resp) (gethash "items" resp))))))
-               (setf done? (or (seqp resp)
-                               (not (gethash "isIncomplete" resp)))
-                     result (seq-into (seq-map (-lambda ((item &as &hash "label"
-                                                               "insertText" insert-text
-                                                               "sortText" sort-text))
-                                                 (propertize (or label insert-text)
-                                                             'lsp-completion-item item
-                                                             'lsp-sort-text sort-text))
-                                               items)
-                                      'list)))))))
-
-     :annotation-function #'lsp--annotate
-     :company-require-match 'never
-     :company-prefix-length (point)
-     :exit-function
-     (lambda (candidate _status)
-       (-let [(&hash "insertText" insert-text
-                     "textEdit" text-edit
-                     "insertTextFormat" insert-text-format
-                     "additionalTextEdits" additional-text-edits)
-              (lsp--resolve-completion (plist-get (text-properties-at 0 candidate) 'lsp-completion-item))]
+  (when (or (--some (lsp--client-completion-in-comments? (lsp--workspace-client it))
+                    (lsp-workspaces))
+            (not (nth 4 (syntax-ppss))))
+    (let* ((bounds (bounds-of-thing-at-point 'symbol))
+           (trigger-chars (->> (lsp--server-capabilities)
+                               (gethash "completionProvider")
+                               (gethash "triggerCharacters")))
+           start-point result done? prefix-line)
+      (list
+       (if bounds (car bounds) (point))
+       (point)
+       (lambda (_probe pred action)
          (cond
-          (text-edit
-           (delete-region start-point (point))
-           (lsp--apply-text-edit text-edit))
-          (insert-text
-           (delete-region (- (point) (length candidate)) (point))
-           (insert insert-text)))
+          ((eq action 'metadata)
+           `(metadata . ((display-sort-function
+                          . (lambda (candidates)
+                              (--sort (string-lessp
+                                       (get-text-property 0 'lsp-sort-text it)
+                                       (get-text-property 0 'lsp-sort-text other))
+                                      candidates))))))
+          ((eq (car-safe action) 'boundaries) nil)
+          (t (if done?
+                 result
+               (-let* ((resp (lsp-request-while-no-input "textDocument/completion"
+                                                         (plist-put (lsp--text-document-position-params)
+                                                                    :context (ht ("triggerKind" 1)))))
+                       (items (lsp--sort-completions (cond
+                                                      ((seqp resp) resp)
+                                                      ((hash-table-p resp) (gethash "items" resp)))))
+                       ((start . _)
+                        (or (-some-> (lsp-elt items 0)
+                              (lsp--ht-get "textEdit" "range")
+                              lsp--range-to-region)
+                            bounds))
+                       (probe
+                        (if start
+                            (buffer-substring-no-properties start (point))
+                          "")))
+                 (setf start-point (or start (point))
+                       prefix-line (buffer-substring-no-properties (point-at-bol) start-point)
+                       done? (or (seqp resp)
+                                 (not (gethash "isIncomplete" resp)))
+                       result (--> items
+                                (-map (-lambda ((item &as &hash
+                                                      "label"
+                                                      "filterText" filter-text))
+                                        (propertize (or filter-text label)
+                                                    'lsp-completion-item item))
+                                      it)
+                                (seq-into it 'list)
+                                (completion-all-completions probe it pred (length probe))
+                                ;; completion-all-completions may return a list in form (a b . x)
+                                ;; the last cdr is not important and need to be removed
+                                (let ((tail (last it)))
+                                  (if (consp tail) (setcdr tail nil))
+                                  it)
+                                (-map (-partial #'get-text-property 0 'lsp-completion-item) it)
+                                (-map (-lambda ((item &as &hash
+                                                      "label"
+                                                      "insertText" insert-text
+                                                      "sortText" sort-text))
+                                        (propertize (or label insert-text)
+                                                    'lsp-completion-item item
+                                                    'lsp-sort-text sort-text))
+                                      it))))))))
 
-         (when (eq insert-text-format 2)
-           (yas-expand-snippet (buffer-substring start-point (point))
-                               start-point
-                               (point)))
-         (when additional-text-edits
-           (lsp--apply-text-edits additional-text-edits)))
+       :annotation-function #'lsp--annotate
+       :company-require-match 'never
+       :company-prefix-length
+       (save-excursion
+         (when (car bounds) (goto-char (car bounds)))
+         (lsp--looking-back-trigger-characters-p trigger-chars))
+       :exit-function
+       (lambda (candidate _status)
+         (-let [(&hash "insertText" insert-text
+                       "textEdit" text-edit
+                       "insertTextFormat" insert-text-format
+                       "additionalTextEdits" additional-text-edits)
+                (lsp--resolve-completion (plist-get (text-properties-at 0 candidate) 'lsp-completion-item))]
+           (cond
+            (text-edit
+             (delete-region (point-at-bol) (point))
+             (insert prefix-line)
+             (lsp--apply-text-edit text-edit))
+            (insert-text
+             (delete-region (- (point) (length candidate)) (point))
+             (insert insert-text)))
 
-       (when lsp-signature-auto-activate
-         (lsp-signature-activate))
+           (when (eq insert-text-format 2)
+             (yas-expand-snippet (buffer-substring start-point (point))
+                                 start-point
+                                 (point)))
+           (when additional-text-edits
+             (lsp--apply-text-edits additional-text-edits)))
 
-       (when (lsp--looking-back-trigger-characters-p trigger-chars)
-         (setq this-command 'self-insert-command))))))
+         (when lsp-signature-auto-activate
+           (lsp-signature-activate))
+
+         (when (lsp--looking-back-trigger-characters-p trigger-chars)
+           (setq this-command 'self-insert-command)))))))
 
 (defun lsp--to-yasnippet-snippet (text)
   "Convert VS code snippet TEXT to yasnippet snippet."
@@ -5887,7 +5907,7 @@ SESSION is the active session."
                                        (switch-to-buffer (get-buffer-create  " *lsp-install*"))))
                 'mouse-face 'highlight)))
 
-(defun lsp--install-server-internal (client)
+(defun lsp--install-server-internal (client &optional update?)
   (setf (lsp--client-download-in-progress? client) t)
   (add-to-list 'global-mode-string '(t (:eval (lsp--download-status))))
   (cl-flet ((done
@@ -5919,17 +5939,20 @@ Check `*lsp-install*' and `*lsp-log*' buffer."
      client
      (lambda () (done t))
      (lambda (msg) (done nil msg))
-     t)))
+     update?)))
 
-(defun lsp-install-server ()
-  (interactive)
+(defun lsp-install-server (update?)
+  (interactive "P")
+  "Interactively install server.
+When UPDATE? is t force installation even if the server is present."
   (lsp--install-server-internal
    (lsp--completing-read
     "Select server to install: "
     (or (->> lsp-clients
              (ht-values)
              (-filter (-andfn
-                       (-not #'lsp--server-binary-present?)
+                       (-orfn (-not #'lsp--server-binary-present?)
+                              (-const update?))
                        (-not #'lsp--client-download-in-progress?)
                        #'lsp--client-download-server-fn)))
         (user-error "There are no servers with automatic installation."))
@@ -5984,11 +6007,13 @@ Check `*lsp-install*' and `*lsp-log*' buffer."
 
 ;; https://docs.npmjs.com/files/folders#executables
 (cl-defun lsp--npm-dependency-path (&key package path &allow-other-keys)
-  (let ((path (f-join lsp-server-install-dir "npm" package
-                      (cond ((eq system-type 'windows-nt) "")
-                            (t "bin"))
-                      path)))
-    (unless (f-exists? path)
+  "Return npm dependency PATH for PACKAGE."
+  (let ((path (executable-find
+               (f-join lsp-server-install-dir "npm" package
+                       (cond ((eq system-type 'windows-nt) "")
+                             (t "bin"))
+                       path))))
+    (unless (and path (f-exists? path))
       (error "The package %s is not installed.  Unable to find %s" package path))
     path))
 
@@ -6366,7 +6391,7 @@ Returns nil if the project should not be added to the current SESSION."
 
 %s==>Import project root %s.
 %s==>Import project by selecting root directory interactively.
-%s==>Do not ask again for the current project by adding %s to lsp-session-folder-blacklist.
+%s==>Do not ask again for the current project by adding %s to lsp-session-folders-blacklist.
 %s==>Do not ask again for the current project by selecting ignore path interactively.
 %s==>Do nothing: ask again when opening other files from the current project."
                                 (propertize (buffer-name) 'face 'bold)

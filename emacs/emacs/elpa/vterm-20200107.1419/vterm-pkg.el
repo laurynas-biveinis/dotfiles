@@ -1,4 +1,4 @@
-(define-package "vterm" "20191218.202" "This package implements a terminal via libvterm"
+(define-package "vterm" "20200107.1419" "This package implements a terminal via libvterm"
   '((emacs "25.1"))
   :keywords
   '("terminals")
