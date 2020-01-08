@@ -125,11 +125,6 @@
 ;; Show column number
 (column-number-mode t)
 
-;; display-battery-mode
-(require 'battery)
-(setq battery-mode-line-format " [%b%p%% %t]")
-(display-battery-mode)
-
 ;;; fill-column and other filling-related matters
 (setq-default fill-column 80)
 
