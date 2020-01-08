@@ -118,13 +118,6 @@
                                            mode-line-misc-info))
 
 ;;; modeline
-;; display-time-mode
-(require 'time)
-(setq display-time-24hr-format t)
-(setq display-time-day-and-date t)
-;; Do not check for mail
-(setq display-time-mail-file t)
-(display-time-mode)
 
 ;; size-indication-mode
 (size-indication-mode)
