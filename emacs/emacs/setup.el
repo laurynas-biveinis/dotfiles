@@ -1094,6 +1094,12 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"))
 (rich-minority-mode)
 
+;;; projectile
+(require 'projectile)
+;; Steal s-p from ns-print-buffer. I never print buffers
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(projectile-mode +1)
+
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
