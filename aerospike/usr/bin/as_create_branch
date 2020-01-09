@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#
+# NOT TESTED YET
+#
+
+# Create a new pair of CE/EE Aerospike feature branches, set up project
+
+set -u
+
+readonly BRANCH=$1
+readonly BRANCH_CE="$BRANCH"
+readonly BRANCH_EE="$BRANCH-ee"
+
+readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
+
+pushd "$ASDROOT" || exit 1
+
+mkdir "$BRANCH"
+
+pushd "$EEREPO" || exit 1
+git worktree add "$ASDROOT/$BRANCH/$BRANCH_EE" -b "$BRANCH"
+popd || exit 1
+
+pushd "$ASREPO" || exit 1
+git worktree add "$ASDROOT/$BRANCH/$BRANCH_CE" -b "$BRANCH"
+popd || exit 1
+
+pushd "$BRANCH/$BRANCH_EE" || exit 1
+git submodule update --init
+ln -sf "../$BRANCH_CE/compile_commands.json" .
+popd || exit 1
+
+pushd "$BRANCH/$BRANCH_CE" || exit 1
+git submodule update --init
+popd || exit 1
+
+pushd "$BRANCH" || exit 1
+ln -sf "$SUPPORT_FILE_DIR/.clang-format" .
+cp "$SUPPORT_FILE_DIR/.dir-locals.el" .
+touch .projectile
+popd || exit 0
+
+popd || exit 0
