@@ -1044,6 +1044,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'prog-mode-hook #'lsp-deferred)
 
+;; Integrate lsp-mode with projectile
+(setq lsp-auto-guess-root t)
+
 ;;; SSH config mode
 (add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
 (add-hook 'ssh-config-mode-hook #'dotfiles--enable-show-trailing-ws)
