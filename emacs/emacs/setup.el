@@ -1104,6 +1104,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 ;; Save mode line space
 (setq projectile-mode-line-prefix " ")
+;; Exclude some more modes from projectile
+(add-to-list 'projectile-globally-ignored-modes "lisp-interaction-mode")
+(add-to-list 'projectile-globally-ignored-modes "org-agenda-mode")
+(add-to-list 'projectile-globally-ignored-modes "package-menu-mode")
 (projectile-mode +1)
 
 ;; Workaround https://github.com/bbatsov/projectile/issues/347: remote projects
