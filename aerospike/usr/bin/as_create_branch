@@ -36,7 +36,7 @@ popd || exit 1
 pushd "$BRANCH" || exit 1
 ln -sf "$SUPPORT_FILE_DIR/.clang-format" .
 cp "$SUPPORT_FILE_DIR/.dir-locals.el" .
-cp "$SUPPORT_FILE_DIR/asd-Makefile" Makefile
+ln -sf "$SUPPORT_FILE_DIR/asd-Makefile" Makefile
 touch .projectile
 popd || exit 0
 
