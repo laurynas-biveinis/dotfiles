@@ -1,0 +1,2 @@
+build :
+	(cd ce && bear make -j5 +ee)
