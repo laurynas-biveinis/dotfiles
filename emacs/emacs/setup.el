@@ -502,8 +502,9 @@ loaded as such.)"
 (require 'tramp)
 ;; The default level 3 is too noisy with showing each file shipped
 (setq tramp-verbose 2)
-(setq tramp-inline-compress-start-size 10240)
-(setq tramp-copy-size-limit 102400)
+;; Not sure I care about scp overhead in 2020. Also, maybe this will help with
+;; duplicated sshx/scpx paths in lsp-mode cache.
+(setq tramp-copy-size-limit nil)
 (setq tramp-default-method "scpx")
 (setq tramp-completion-reread-directory-timeout t)
 
