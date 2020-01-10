@@ -1104,6 +1104,16 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 (projectile-mode +1)
 
+;; Workaround https://github.com/bbatsov/projectile/issues/347: remote projects
+;; do not get added to known project list automatically.
+(defun dotfiles--projectile-find-file-hook-function ()
+  "Hook to set up Projectile when called by `find-file-hook' on remote files."
+  (when (file-remote-p default-directory)
+    (projectile-track-known-projects-find-file-hook)))
+(advice-add #'projectile-find-file-hook-function :after
+            #'dotfiles--projectile-find-file-hook-function)
+
+
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
