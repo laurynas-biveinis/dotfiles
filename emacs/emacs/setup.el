@@ -1108,5 +1108,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; deadgrep. Alternatives: rg.el, ripgrep.el, counsel/helm, etc.
 (require 'deadgrep)
 (global-set-key (kbd "<f5>") #'deadgrep)
+;; Integrate deadgrep with projectile by using the latter's project root, if
+;; available. Deadgrep used to have a hard dependency on projectile but they
+;; removed it altogether instead of making it a soft one. Projectile itself
+;; should integrate with project.el but I am not holding my breath having read
+;; https://github.com/bbatsov/projectile/issues/1282
+(advice-add #'deadgrep--project-root :before-until #'projectile-project-root)
 
 ;;; setup.el ends here
