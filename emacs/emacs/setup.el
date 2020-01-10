@@ -1107,10 +1107,15 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (projectile-mode +1)
 
 ;; Workaround https://github.com/bbatsov/projectile/issues/347: remote projects
-;; do not get added to known project list automatically.
+;; do not get added to known project list automatically. Also workaround the
+;; lack of dynamic mode line on remote projects. It seems that after
+;; https://github.com/bbatsov/projectile/pull/1096 there is no reason not to
+;; enable it.
 (defun dotfiles--projectile-find-file-hook-function ()
   "Hook to set up Projectile when called by `find-file-hook' on remote files."
   (when (file-remote-p default-directory)
+    (when projectile-dynamic-mode-line
+      (projectile-update-mode-line))
     (projectile-track-known-projects-find-file-hook)))
 (advice-add #'projectile-find-file-hook-function :after
             #'dotfiles--projectile-find-file-hook-function)
