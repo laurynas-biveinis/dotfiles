@@ -9,8 +9,6 @@
 set -u
 
 readonly BRANCH=$1
-readonly BRANCH_CE="$BRANCH"
-readonly BRANCH_EE="$BRANCH-ee"
 
 readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
 
@@ -19,25 +17,26 @@ pushd "$ASDROOT" || exit 1
 mkdir "$BRANCH"
 
 pushd "$EEREPO" || exit 1
-git worktree add "$ASDROOT/$BRANCH/$BRANCH_EE" -b "$BRANCH"
+git worktree add "$ASDROOT/$BRANCH/ee" -b "$BRANCH"
 popd || exit 1
 
 pushd "$ASREPO" || exit 1
-git worktree add "$ASDROOT/$BRANCH/$BRANCH_CE" -b "$BRANCH"
+git worktree add "$ASDROOT/$BRANCH/ce" -b "$BRANCH"
 popd || exit 1
 
-pushd "$BRANCH/$BRANCH_EE" || exit 1
+pushd "$BRANCH/ee" || exit 1
 git submodule update --init
-ln -sf "../$BRANCH_CE/compile_commands.json" .
+ln -sf "../$BRANCH/ce/compile_commands.json" .
 popd || exit 1
 
-pushd "$BRANCH/$BRANCH_CE" || exit 1
+pushd "$BRANCH/ce" || exit 1
 git submodule update --init
 popd || exit 1
 
 pushd "$BRANCH" || exit 1
 ln -sf "$SUPPORT_FILE_DIR/.clang-format" .
 cp "$SUPPORT_FILE_DIR/.dir-locals.el" .
+cp "$SUPPORT_FILE_DIR/asd-Makefile" Makefile
 touch .projectile
 popd || exit 0
 
