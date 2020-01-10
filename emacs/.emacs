@@ -49,7 +49,7 @@
  '(package-selected-packages
    (quote
     (tramp projectile vterm deadgrep flymake-diagnostic-at-point all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent company-lsp lsp-ui lsp-mode company flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode po-mode ssh ssh-config-mode bison-mode org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme wakatime-mode exec-path-from-shell autopair magit org auctex)))
- '(safe-local-variable-values (quote ((c-tab-always-indent t) (TeX-master . t) (compilation-read-command . nil)))))
+ '(safe-local-variable-values (quote ((c-tab-always-indent t) (TeX-master . t) (compilation-read-command . nil) (projectile-generic-command . "(cd ce && git ls-files -zco --exclude-standard | sed -z 's/^/ce\\//g'); (cd ee && git ls-files -zco --exclude-standard | sed -z 's/^/ee\\//g')")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
