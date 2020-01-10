@@ -1,3 +1,4 @@
 ((nil . ((compilation-read-command . nil)
+         ;; TODO: consider setting compile-command too so that M-x compile DTRT
          (projectile-generic-command . "(cd ce && git ls-files -zco --exclude-standard | sed -z 's/^/ce\\//g'); (cd ee && git ls-files -zco --exclude-standard | sed -z 's/^/ee\\//g')")))
  (c-mode . ((c-file-style . "aerospike"))))
