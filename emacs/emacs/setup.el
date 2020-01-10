@@ -1113,6 +1113,32 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (advice-add #'projectile-find-file-hook-function :after
             #'dotfiles--projectile-find-file-hook-function)
 
+;; Workaround https://github.com/bbatsov/projectile/issues/1282 (project.el and
+;; projectile are not integrated) some more, so that xref uses projectile
+;; project roots.
+
+;; I don't know how to advice generic method default body nor how to write
+;; cl-defmethod that would replace it in all cases so ended up redefining it.
+;; I have a feeling I am going to regret this.
+(cl-defgeneric xref-backend-references (_backend identifier)
+  "Find references of IDENTIFIER.
+The result must be a list of xref objects.  If no references can
+be found, return nil.
+
+The default implementation uses `semantic-symref-tool-alist' to
+find a search tool; by default, this uses \"find | grep\" in the
+`project-current' roots."
+  (cl-mapcan
+   (lambda (dir)
+     (xref-collect-references identifier dir))
+   (let ((pr (projectile-project-root)))
+     (if pr
+         (list pr)
+       (let ((pr (project-current t)))
+         (append
+          (project-roots pr)
+          (project-external-roots pr)))))))
+
 
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
