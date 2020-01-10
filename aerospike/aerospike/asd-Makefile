@@ -1,4 +1,9 @@
+export EEREPO=$(CURDIR)/ee
+
 build :
 	(cd ce && bear make -j5 +ee)
 
-.PHONY : build
+clean :
+	(cd ce && make -j5 -k +ee clean)
+
+.PHONY : build clean
