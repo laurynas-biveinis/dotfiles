@@ -1102,6 +1102,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'projectile)
 ;; Steal s-p from ns-print-buffer. I never print buffers
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+;; Save mode line space
+(setq projectile-mode-line-prefix " ")
 (projectile-mode +1)
 
 ;; Workaround https://github.com/bbatsov/projectile/issues/347: remote projects
