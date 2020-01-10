@@ -4,7 +4,7 @@
 
 ;; Author: Toby Cubitt <toby-undo-tree@dr-qubit.org>
 ;; Maintainer: Toby Cubitt <toby-undo-tree@dr-qubit.org>
-;; Version: 0.7
+;; Version: 0.7.1
 ;; Keywords: convenience, files, undo, redo, history, tree
 ;; URL: http://www.dr-qubit.org/emacs.php
 ;; Repository: http://www.dr-qubit.org/git/undo-tree.git
@@ -1343,8 +1343,25 @@ in visualizer."
    (:copier nil))
   root current size count object-pool)
 
-(defun copy-undo-tree (tree)
-  (copy-tree tree 'copy-vectors))
+(defun undo-tree-copy (tree)
+  ;; Return a copy of undo-tree TREE.
+  (unwind-protect
+      (let ((new (make-undo-tree)))
+	(undo-tree-decircle tree)
+	(let ((max-lisp-eval-depth (* 100 (undo-tree-count tree)))
+	      (max-specpdl-size (* 100 (undo-tree-count tree))))
+	  (setf (undo-tree-root new)
+		(undo-tree-node-copy (undo-tree-root tree)
+				     new (undo-tree-current tree))))
+	(setf (undo-tree-size new)
+	      (undo-tree-size tree))
+	(setf (undo-tree-count new)
+	      (undo-tree-count tree))
+	(setf (undo-tree-object-pool new)
+	      (copy-hash-table (undo-tree-object-pool tree)))
+	(undo-tree-recircle new)
+	new)
+    (undo-tree-recircle tree)))
 
 
 (defstruct
@@ -1364,6 +1381,7 @@ in visualizer."
                   (next (list next-node))
                   (timestamp (current-time))
                   (branch 0)))
+   (:constructor undo-tree-make-empty-node ())
    (:copier nil))
   previous next undo redo timestamp branch meta-data)
 
@@ -1372,6 +1390,34 @@ in visualizer."
   (let ((len (length (undo-tree-make-node nil nil))))
     `(and (vectorp ,n) (= (length ,n) ,len))))
 
+(defun undo-tree-node-copy (node &optional tree current)
+  ;; Return a copy of undo-tree NODE, sans previous link or meta-data.
+  ;; If TREE and CURRENT are supplied, set (undo-tree-current TREE) to the
+  ;; copy of CURRENT node, if found.
+  (let* ((new (undo-tree-make-empty-node))
+	 (stack (list (cons node new)))
+	 n)
+    (while (setq n (pop stack))
+      (setf (undo-tree-node-undo (cdr n))
+	    (copy-tree (undo-tree-node-undo (car n)) 'copy-vectors))
+      (setf (undo-tree-node-redo (cdr n))
+	    (copy-tree (undo-tree-node-redo (car n)) 'copy-vectors))
+      (setf (undo-tree-node-timestamp (cdr n))
+	    (copy-sequence (undo-tree-node-timestamp (car n))))
+      (setf (undo-tree-node-branch (cdr n))
+	    (undo-tree-node-branch (car n)))
+      (setf (undo-tree-node-next (cdr n))
+	    (mapcar (lambda (_) (undo-tree-make-empty-node))
+		    (make-list (length (undo-tree-node-next (car n))) nil)))
+    ;; set (undo-tree-current TREE) to copy if we've found CURRENT
+    (when (and tree (eq (car n) current))
+      (setf (undo-tree-current tree) (cdr n)))
+    ;; recursively copy next nodes
+    (let ((next0 (undo-tree-node-next (car n)))
+	  (next1 (undo-tree-node-next (cdr n))))
+      (while (and next0 next1)
+	(push (cons (pop next0) (pop next1)) stack))))
+    new))
 
 
 (defstruct
@@ -1631,8 +1677,7 @@ that are already part of `buffer-undo-tree'."
   ;; Apply FUNCTION to NODE and to each node below it.
   (let ((stack (list node))
 	n)
-    (while stack
-      (setq n (pop stack))
+    (while (setq n (pop stack))
       (funcall --undo-tree-mapc-function-- n)
       (setq stack (append (undo-tree-node-next n) stack)))))
 
@@ -2009,12 +2054,14 @@ set by `undo-limit', `undo-strong-limit' and `undo-outer-limit'."
     (let ((node (if (> (length (undo-tree-node-next
                                 (undo-tree-root buffer-undo-tree))) 1)
                     (undo-tree-oldest-leaf (undo-tree-root buffer-undo-tree))
-                  (undo-tree-root buffer-undo-tree))))
+                  (undo-tree-root buffer-undo-tree)))
+	  discarded)
 
       ;; discard nodes until memory use is within `undo-strong-limit'
       (while (and node
                   (> (undo-tree-size buffer-undo-tree) undo-strong-limit))
-        (setq node (undo-tree-discard-node node)))
+        (setq node (undo-tree-discard-node node)
+	      discarded t))
 
       ;; discard nodes until next node to discard would bring memory use
       ;; within `undo-limit'
@@ -2042,8 +2089,11 @@ set by `undo-limit', `undo-strong-limit' and `undo-outer-limit'."
 			     (undo-list-byte-size (undo-tree-node-redo node)))
 			  ))
                      undo-limit))
-        (setq node (undo-tree-discard-node node)))
-      (message "Undo history discarded by undo-tree (see `undo-tree-limit')")
+        (setq node (undo-tree-discard-node node)
+	      discarded t))
+
+      (when discarded
+	(message "Undo history discarded by undo-tree (see `undo-tree-limit')"))
 
       ;; if we're still over the `undo-outer-limit', discard entire history
       (when (> (undo-tree-size buffer-undo-tree) undo-outer-limit)
@@ -2078,6 +2128,17 @@ You can disable the popping up of this buffer by adding the entry
 which is defined in the `warnings' library.\n")
            :warning)
           (setq buffer-undo-tree nil)))
+
+      ;; if currently displaying the visualizer, redraw it
+      (when (and buffer-undo-tree
+		 discarded
+		 (or (eq major-mode 'undo-tree-visualizer-mode)
+		     undo-tree-visualizer-parent-buffer
+		     (get-buffer undo-tree-visualizer-buffer-name)))
+	(let ((undo-tree buffer-undo-tree))
+	  (with-current-buffer undo-tree-visualizer-buffer-name
+	    (undo-tree-draw-tree undo-tree)
+	    (when undo-tree-visualizer-diff (undo-tree-visualizer-update-diff)))))
       )))
 
 
@@ -3201,7 +3262,7 @@ without asking for confirmation."
 		overwrite
 		(yes-or-no-p (format "Overwrite \"%s\"? " filename)))
 	;; transform undo-tree into non-circular structure, and make tmp copy
-	(setq tree (copy-undo-tree buffer-undo-tree))
+	(setq tree (undo-tree-copy buffer-undo-tree))
 	(undo-tree-decircle tree)
 	;; discard undo-tree object pool before saving
 	(setf (undo-tree-object-pool tree) nil)
@@ -3403,7 +3464,8 @@ Note this will overwrite any existing undo history."
 
 (defun undo-tree-draw-tree (undo-tree)
   ;; Draw undo-tree in current buffer starting from NODE (or root if nil).
-  (let ((node (if undo-tree-visualizer-lazy-drawing
+  (let ((inhibit-read-only t)
+	(node (if undo-tree-visualizer-lazy-drawing
 		  (undo-tree-current undo-tree)
 		(undo-tree-root undo-tree))))
     (erase-buffer)
@@ -4023,10 +4085,6 @@ Within the undo-tree visualizer, the following keys are available:
     (user-error "Undo-tree mode not enabled in buffer"))
   (let ((old (undo-tree-current buffer-undo-tree))
 	current)
-    ;; unhighlight old current node
-    (let ((undo-tree-insert-face 'undo-tree-visualizer-active-branch-face)
-	  (inhibit-read-only t))
-      (undo-tree-draw-node old))
     ;; undo in parent buffer
     (switch-to-buffer-other-window undo-tree-visualizer-parent-buffer)
     (deactivate-mark)
@@ -4034,6 +4092,10 @@ Within the undo-tree visualizer, the following keys are available:
 	(let ((undo-tree-inhibit-kill-visualizer t)) (undo-tree-undo-1 arg))
       (setq current (undo-tree-current buffer-undo-tree))
       (switch-to-buffer-other-window undo-tree-visualizer-buffer-name)
+      ;; unhighlight old current node
+      (let ((undo-tree-insert-face 'undo-tree-visualizer-active-branch-face)
+	    (inhibit-read-only t))
+	(undo-tree-draw-node old))
       ;; when using lazy drawing, extend tree upwards as required
       (when undo-tree-visualizer-lazy-drawing
 	(undo-tree-expand-up old current))
@@ -4050,10 +4112,6 @@ Within the undo-tree visualizer, the following keys are available:
     (user-error "Undo-tree mode not enabled in buffer"))
   (let ((old (undo-tree-current buffer-undo-tree))
 	current)
-    ;; unhighlight old current node
-    (let ((undo-tree-insert-face 'undo-tree-visualizer-active-branch-face)
-	  (inhibit-read-only t))
-      (undo-tree-draw-node (undo-tree-current buffer-undo-tree)))
     ;; redo in parent buffer
     (switch-to-buffer-other-window undo-tree-visualizer-parent-buffer)
     (deactivate-mark)
@@ -4061,6 +4119,10 @@ Within the undo-tree visualizer, the following keys are available:
 	(let ((undo-tree-inhibit-kill-visualizer t)) (undo-tree-redo-1 arg))
       (setq current (undo-tree-current buffer-undo-tree))
       (switch-to-buffer-other-window undo-tree-visualizer-buffer-name)
+      ;; unhighlight old current node
+      (let ((undo-tree-insert-face 'undo-tree-visualizer-active-branch-face)
+	    (inhibit-read-only t))
+	(undo-tree-draw-node old))
       ;; when using lazy drawing, extend tree downwards as required
       (when undo-tree-visualizer-lazy-drawing
 	(undo-tree-expand-down old current))
@@ -4084,19 +4146,19 @@ using `undo-tree-redo' or `undo-tree-visualizer-redo'."
     (undo-tree-highlight-active-branch (undo-tree-current buffer-undo-tree)))
   ;; increment branch
   (let ((branch (undo-tree-node-branch (undo-tree-current buffer-undo-tree))))
-  (setf (undo-tree-node-branch (undo-tree-current buffer-undo-tree))
-        (cond
-         ((>= (+ branch arg) (undo-tree-num-branches))
-          (1- (undo-tree-num-branches)))
-         ((<= (+ branch arg) 0) 0)
-         (t (+ branch arg))))
-  (let ((inhibit-read-only t))
-    ;; highlight new active branch below current node
-    (goto-char (undo-tree-node-marker (undo-tree-current buffer-undo-tree)))
-    (let ((undo-tree-insert-face 'undo-tree-visualizer-active-branch-face))
-      (undo-tree-highlight-active-branch (undo-tree-current buffer-undo-tree)))
-    ;; re-highlight current node
-    (undo-tree-draw-node (undo-tree-current buffer-undo-tree) 'current))))
+    (setf (undo-tree-node-branch (undo-tree-current buffer-undo-tree))
+	  (cond
+	   ((>= (+ branch arg) (undo-tree-num-branches))
+	    (1- (undo-tree-num-branches)))
+	   ((<= (+ branch arg) 0) 0)
+	   (t (+ branch arg))))
+    (let ((inhibit-read-only t))
+      ;; highlight new active branch below current node
+      (goto-char (undo-tree-node-marker (undo-tree-current buffer-undo-tree)))
+      (let ((undo-tree-insert-face 'undo-tree-visualizer-active-branch-face))
+	(undo-tree-highlight-active-branch (undo-tree-current buffer-undo-tree)))
+      ;; re-highlight current node
+      (undo-tree-draw-node (undo-tree-current buffer-undo-tree) 'current))))
 
 
 (defun undo-tree-visualize-switch-branch-left (arg)
@@ -4573,6 +4635,14 @@ specifies `saved', and a negative prefix argument specifies
 
 ;;;; ChangeLog:
 
+;; 2020-01-09  Toby S. Cubitt  <tsc25@cantab.net>
+;; 
+;; 	Bump undo-tree version number.
+;; 
+;; 2020-01-09  Toby S. Cubitt  <tsc25@cantab.net>
+;; 
+;; 	Undo-tree bug-fix release.
+;; 
 ;; 2020-01-06  Toby S. Cubitt  <tsc25@cantab.net>
 ;; 
 ;; 	New undo-tree package release.

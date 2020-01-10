@@ -2560,7 +2560,7 @@ If NO-MERGE is non-nil, don't merge the results but return alist workspace->resu
   "Unload working workspaces."
   (lsp-foreach-workspace (lsp--shutdown-workspace)))
 
-(defun lsp--shutdown-workspace ()
+(defun lsp--shutdown-workspace (&optional restart)
   "Shut down the language server process for ‘lsp--cur-workspace’."
   (with-demoted-errors "LSP error: %S"
     (let ((lsp-response-timeout 0.5))
@@ -2568,6 +2568,7 @@ If NO-MERGE is non-nil, don't merge the results but return alist workspace->resu
           (lsp-request "shutdown" (make-hash-table))
         (error (lsp--error "Timeout while sending shutdown request."))))
     (lsp-notify "exit" nil))
+  (setf (lsp--workspace-shutdown-action lsp--cur-workspace) (or (and restart 'restart) 'shutdown))
   (lsp--uninitialize-workspace))
 
 (defun lsp--uninitialize-workspace ()
@@ -2823,7 +2824,6 @@ in that particular folder."
       (when (--none? (-contains? it workspace) (ht-values folder->servers))
         (lsp--info "Shutdown %s since folder %s is removed..."
                    (lsp--workspace-print workspace) project-root)
-        (setf (lsp--workspace-shutdown-action workspace) 'shutdown)
         (with-lsp-workspace workspace (lsp--shutdown-workspace))))
 
     (setf (lsp-session-folders session)
@@ -3384,17 +3384,17 @@ Added to `after-change-functions'."
   ;; So (47 47 7) means delete 7 chars starting at pos 47
   ;; (message "lsp-on-change:(start,end,length)=(%s,%s,%s)" start end length)
   ;; (message "lsp-on-change:(lsp--before-change-vals)=%s" lsp--before-change-vals)
-  (let (inhibit-quit)
-    (when (not revert-buffer-in-progress-p)
-      (if lsp--cur-version
-          (cl-incf lsp--cur-version)
-        ;; buffer has been reset - start from scratch.
-        (setq lsp--cur-version 0))
-      (mapc
-       (lambda (it)
-         (with-lsp-workspace it
-           (with-demoted-errors "Error in ‘lsp-on-change’: %S"
-             (save-match-data
+  (save-match-data
+    (let (inhibit-quit)
+      (when (not revert-buffer-in-progress-p)
+        (if lsp--cur-version
+            (cl-incf lsp--cur-version)
+          ;; buffer has been reset - start from scratch.
+          (setq lsp--cur-version 0))
+        (mapc
+         (lambda (it)
+           (with-lsp-workspace it
+             (with-demoted-errors "Error in ‘lsp-on-change’: %S"
                ;; A (revert-buffer) call with the 'preserve-modes parameter (eg, as done
                ;; by auto-revert-mode) will cause this handler to get called with a nil
                ;; buffer-file-name. We need the buffer-file-name to send notifications;
@@ -3427,13 +3427,13 @@ Added to `after-change-functions'."
                       "textDocument/didChange"
                       `(:textDocument
                         ,(lsp--versioned-text-document-identifier)
-                        :contentChanges ,(vector (lsp--full-change-event))))))))))))
-       (lsp-workspaces))
-      ;; force cleanup overlays after each change
-      (lsp--remove-overlays 'lsp-highlight)
-      (lsp--on-change-debounce (current-buffer))
-      (setq lsp--last-signature-index nil)
-      (setq lsp--last-signature nil))))
+                        :contentChanges ,(vector (lsp--full-change-event)))))))))))
+         (lsp-workspaces))
+        ;; force cleanup overlays after each change
+        (lsp--remove-overlays 'lsp-highlight)
+        (lsp--on-change-debounce (current-buffer))
+        (setq lsp--last-signature-index nil)
+        (setq lsp--last-signature nil)))))
 
 
 
@@ -3617,7 +3617,6 @@ if it's closing the last buffer in the workspace."
          (when (and (not lsp-keep-workspace-alive)
                     (not keep-workspace-alive)
                     (not (lsp--workspace-buffers lsp--cur-workspace)))
-           (setf (lsp--workspace-shutdown-action lsp--cur-workspace) 'shutdown)
            (lsp--shutdown-workspace)))))))
 
 (defun lsp--will-save-text-document-params (reason)
@@ -6549,7 +6548,6 @@ such."
                                            (lsp-workspaces)
                                            'lsp--workspace-print nil t)))
   (lsp--warn "Stopping %s" (lsp--workspace-print workspace))
-  (setf (lsp--workspace-shutdown-action workspace) 'shutdown)
   (with-lsp-workspace workspace (lsp--shutdown-workspace)))
 
 (defun lsp-disconnect ()
@@ -6580,8 +6578,7 @@ such."
                                            (lsp-workspaces)
                                            'lsp--workspace-print nil t)))
   (lsp--warn "Restarting %s" (lsp--workspace-print workspace))
-  (setf (lsp--workspace-shutdown-action workspace) 'restart)
-  (with-lsp-workspace workspace (lsp--shutdown-workspace)))
+  (with-lsp-workspace workspace (lsp--shutdown-workspace t)))
 
 ;;;###autoload
 (defun lsp (&optional arg)
