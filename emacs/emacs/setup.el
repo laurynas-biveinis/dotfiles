@@ -1095,7 +1095,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; rich-minority-mode
 (require 'rich-minority)
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
-                     " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"))
+                     " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
+                     " Projectile"))
 (rich-minority-mode)
 
 ;;; projectile
