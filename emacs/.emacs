@@ -10,6 +10,7 @@
 (defconst dotfiles-elisp (concat private-elisp "dotfiles/*.el"))
 (defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst elpa-dir (concat private-elisp "elpa/"))
+(defconst cmake-build.el-lib (concat private-elisp-lib "cmake-build.el/"))
 
 (load (concat home-dir "secrets"))
 
@@ -33,6 +34,7 @@
 (package-initialize)
 
 (add-to-list 'load-path private-elisp-lib)
+(add-to-list 'load-path cmake-build.el-lib)
 
 (load (concat private-elisp "setup"))
 

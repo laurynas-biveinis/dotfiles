@@ -1,0 +1,3 @@
+[submodule "emacs/emacs/lib/cmake-build.el"]
+	path = emacs/emacs/lib/cmake-build.el
+	url = https://github.com/rpav/cmake-build.el.git

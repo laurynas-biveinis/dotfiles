@@ -1151,6 +1151,18 @@ find a search tool; by default, this uses \"find | grep\" in the
           (project-roots pr)
           (project-external-roots pr)))))))
 
+;;; cmake-build.el
+;; Yet another not-completely integrated but very useful project management
+;; package. If I continue using it, then:
+;; TODO: advise projectile-compile-project to do cmake-build-current if cmake
+;; config exists in the current project.
+;; TODO: make projectile-configure-project to do cmake-build-set-cmake-profile
+;; and cmake-build-clear-cache-and-configure if cmake config exists in the
+;; current project.
+;; TODO: make projectile-test-project to run cmake test config?
+(require 'cmake-build)
+(setq cmake-build-options "-j5")
+(global-set-key (kbd "<f9>") #'cmake-build-current)
 
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
