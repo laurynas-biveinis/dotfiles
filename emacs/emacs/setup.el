@@ -1163,6 +1163,7 @@ find a search tool; by default, this uses \"find | grep\" in the
 (require 'cmake-build)
 (setq cmake-build-options "-j5")
 (global-set-key (kbd "<f9>") #'cmake-build-current)
+(global-set-key (kbd "<C-f9>") #'cmake-build-run)
 
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
