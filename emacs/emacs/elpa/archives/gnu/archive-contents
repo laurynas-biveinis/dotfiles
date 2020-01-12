@@ -1321,7 +1321,7 @@
 	   ("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	  (:keywords "extensions" "lisp"))])
  (nhexl-mode .
-	     [(1 4)
+	     [(1 5)
 	      ((emacs
 		(24 4))
 	       (cl-lib
