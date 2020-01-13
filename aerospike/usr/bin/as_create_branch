@@ -38,6 +38,7 @@ ln -sf "$SUPPORT_FILE_DIR/.clang-format" .
 cp "$SUPPORT_FILE_DIR/asd-.dir-locals.el" .dir-locals.el
 ln -sf "$SUPPORT_FILE_DIR/asd-Makefile" Makefile
 touch .projectile
+make
 popd || exit 0
 
 popd || exit 0
