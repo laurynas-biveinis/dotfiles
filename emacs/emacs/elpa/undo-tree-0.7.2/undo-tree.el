@@ -4,7 +4,7 @@
 
 ;; Author: Toby Cubitt <toby-undo-tree@dr-qubit.org>
 ;; Maintainer: Toby Cubitt <toby-undo-tree@dr-qubit.org>
-;; Version: 0.7.1
+;; Version: 0.7.2
 ;; Keywords: convenience, files, undo, redo, history, tree
 ;; URL: http://www.dr-qubit.org/emacs.php
 ;; Repository: http://www.dr-qubit.org/git/undo-tree.git
@@ -2096,7 +2096,8 @@ set by `undo-limit', `undo-strong-limit' and `undo-outer-limit'."
 	(message "Undo history discarded by undo-tree (see `undo-tree-limit')"))
 
       ;; if we're still over the `undo-outer-limit', discard entire history
-      (when (> (undo-tree-size buffer-undo-tree) undo-outer-limit)
+      (when (and undo-outer-limit
+		 (> (undo-tree-size buffer-undo-tree) undo-outer-limit))
         ;; query first if `undo-ask-before-discard' is set
         (if undo-ask-before-discard
             (when (yes-or-no-p
@@ -2801,10 +2802,9 @@ Within the undo-tree visualizer, the following keys are available:
 	 (if undo-tree-limit
 	     (max undo-strong-limit undo-tree-strong-limit)
 	   most-positive-fixnum))
-    (set (make-local-variable 'undo-outer-limit)
-	 (if undo-tree-limit
-	     (max undo-outer-limit undo-tree-outer-limit)
-	   most-positive-fixnum))
+    (set (make-local-variable 'undo-outer-limit)  ; null `undo-outer-limit' means no limit
+	 (when (and undo-tree-limit undo-outer-limit undo-outer-limit)
+	   (max undo-outer-limit undo-tree-outer-limit)))
     (when (null undo-tree-limit)
       (setq undo-tree-timer
 	    (run-with-idle-timer 5 'repeat #'undo-list-transfer-to-tree)))
@@ -3385,7 +3385,9 @@ Note this will overwrite any existing undo history."
 (defun undo-tree-save-history-from-hook ()
   (when (and undo-tree-mode undo-tree-auto-save-history
 	     (not (eq buffer-undo-list t))
-	     buffer-file-name)
+	     buffer-file-name
+	     (file-writable-p
+	      (undo-tree-make-history-save-file-name buffer-file-name)))
     (undo-tree-save-history nil 'overwrite) nil))
 
 (define-obsolete-function-alias
@@ -4635,6 +4637,10 @@ specifies `saved', and a negative prefix argument specifies
 
 ;;;; ChangeLog:
 
+;; 2020-01-11  Toby S. Cubitt  <tsc25@cantab.net>
+;; 
+;; 	Undo-tree bug-fix release.
+;; 
 ;; 2020-01-09  Toby S. Cubitt  <tsc25@cantab.net>
 ;; 
 ;; 	Bump undo-tree version number.
