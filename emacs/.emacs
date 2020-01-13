@@ -50,7 +50,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (eldoc-cmake tramp projectile vterm deadgrep flymake-diagnostic-at-point all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent company-lsp lsp-ui lsp-mode company flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode po-mode ssh ssh-config-mode bison-mode org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme wakatime-mode exec-path-from-shell autopair magit org auctex)))
+    (eldoc-cmake projectile vterm deadgrep flymake-diagnostic-at-point all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent company-lsp lsp-ui lsp-mode company flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode po-mode ssh ssh-config-mode bison-mode org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme wakatime-mode exec-path-from-shell autopair magit org auctex)))
  '(safe-local-variable-values
    (quote
     ((c-tab-always-indent t)
