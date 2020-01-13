@@ -432,7 +432,13 @@ loaded as such.)"
 ;; Compilation
 (require 'compile)
 (setq compilation-scroll-output 'first-error)
-(setq compilation-environment '("LANG=C"))
+(setq compilation-environment '("LANG=C" "TERM=xterm-256color"))
+
+(defun dotfiles--compilation-filter-advice (f proc string)
+  "Compilation filter for xterm-256color, taking F, PROC, & STRING."
+  (funcall f proc (xterm-color-filter string)))
+
+(advice-add #'compilation-filter :around #'dotfiles--compilation-filter-advice)
 
 ;;; eldoc-mode: show the args of the current function in the echo area
 (add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
@@ -492,11 +498,21 @@ loaded as such.)"
 (setq comint-scroll-to-bottom-on-output 'other)
 (setq comint-prompt-read-only t)
 (setq comint-input-ignoredups t)
-(setq comint-terminfo-terminal "ansi")
 
-;; Colors
+;; Colors. Should I ever use eshell, apply its xterm-color integration too.
 (require 'ansi-color)
-(add-hook 'shell-mode-hook #'ansi-color-for-comint-mode-on)
+(setq comint-terminfo-terminal "xterm-256color")
+(setq comint-output-filter-functions
+      (remove #'ansi-color-process-output comint-output-filter-functions))
+
+(defun dotfiles--shell-mode-hook ()
+  "My hook for shell-mode."
+  (font-lock-mode -1)
+  (make-local-variable #'font-lock-function)
+  (setq font-lock-function (lambda (_) nil))
+  (add-hook 'comint-preoutput-filter-functions #'xterm-color-filter nil t))
+
+(add-hook 'shell-mode-hook #'dotfiles--shell-mode-hook)
 
 ;;; Tramp
 (require 'tramp)
