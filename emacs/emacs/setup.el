@@ -434,6 +434,7 @@ loaded as such.)"
 (setq compilation-scroll-output 'first-error)
 (setq compilation-environment '("LANG=C" "TERM=xterm-256color"))
 
+(require 'xterm-color)
 (defun dotfiles--compilation-filter-advice (f proc string)
   "Compilation filter for xterm-256color, taking F, PROC, & STRING."
   (funcall f proc (xterm-color-filter string)))
@@ -505,10 +506,11 @@ loaded as such.)"
 (setq comint-output-filter-functions
       (remove #'ansi-color-process-output comint-output-filter-functions))
 
+(require 'font-core)
 (defun dotfiles--shell-mode-hook ()
   "My hook for shell-mode."
   (font-lock-mode -1)
-  (make-local-variable #'font-lock-function)
+  (make-local-variable 'font-lock-function)
   (setq font-lock-function (lambda (_) nil))
   (add-hook 'comint-preoutput-filter-functions #'xterm-color-filter nil t))
 
