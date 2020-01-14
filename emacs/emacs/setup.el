@@ -195,7 +195,7 @@
 
 ;; Possible interim states while docking/undocking - ignore
 (defconst frame-geometries-to-ignore [(3600 . 1080) (5520 . 1080) (4688 . 1692)
-                                      (3600 . 1692)])
+                                      (3600 . 1692) (3008 . 1692)])
 
 (defun diagnose-unknown-display-geometry (display-geometry)
   "Diagnose unknown DISPLAY-GEOMETRY."
