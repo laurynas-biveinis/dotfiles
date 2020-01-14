@@ -949,24 +949,16 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'wakatime-mode)
 (global-wakatime-mode)
 
-;;; Flycheck - replace with 26.1+ flymake? OTOH flycheck worked just fine,
-;;; except on TRAMP buffers under lsp-mode
+;;; Flycheck. 26.1+ flymake works too.
 (require 'flycheck)
-(setq flycheck-global-modes '(not org-agenda-mode c-mode c++-mode vterm-mode))
+(setq flycheck-global-modes '(not org-agenda-mode vterm-mode))
+(setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc c/c++-cppcheck))
 
 (define-key flycheck-mode-map (kbd "M-n") #'flycheck-next-error)
 (define-key flycheck-mode-map (kbd "M-p") #'flycheck-previous-error)
 
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
-
-;; flymake & flymake-diagnostic-at-point
-(require 'flymake)
-(define-key flymake-mode-map (kbd "M-n") #'flymake-goto-next-error)
-(define-key flymake-mode-map (kbd "M-p") #'flymake-goto-prev-error)
-
-(require 'flymake-diagnostic-at-point)
-(add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode)
 
 ;;; Company mode
 (require 'company)
@@ -983,8 +975,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-eldoc-render-all t)
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
-;; Experimental. Possible to have nil on tramp buffers only?
-(setq lsp-prefer-flymake t)
+(setq lsp-prefer-flymake nil)
 
 (require 'lsp-ui)
 (setq lsp-ui-sideline-ignore-duplicate t)
