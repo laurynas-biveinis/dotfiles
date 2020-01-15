@@ -516,6 +516,10 @@ loaded as such.)"
 
 (add-hook 'shell-mode-hook #'dotfiles--shell-mode-hook)
 
+;;; vterm
+(require 'vterm)
+(define-key vterm-mode-map (kbd "<S-prior>") #'scroll-down-command)
+
 ;;; Tramp
 (require 'tramp)
 ;; The default level 3 is too noisy with showing each file shipped
