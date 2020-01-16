@@ -1199,6 +1199,7 @@ find a search tool; by default, this uses \"find | grep\" in the
 (advice-add #'deadgrep--project-root :before-until #'projectile-project-root)
 
 ;;; page-break-lines
+(require 'page-break-lines)
 (global-page-break-lines-mode)
 
 ;;; setup.el ends here
