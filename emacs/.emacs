@@ -14,13 +14,6 @@
 
 (load (concat home-dir "secrets"))
 
-;; Load system-specific library and setup system-specific things that
-;; must be setup before main setup
-(cond ((eq system-type 'windows-nt) (load (concat private-elisp
-                                                  "ntemacs-cygwin")))
-      ((eq system-type 'gnu/linux) (load (concat private-elisp "linux")))
-      ((eq system-type 'darwin) (load (concat private-elisp "darwin"))))
-
 ;; Setup ELPA
 (setq package-user-dir elpa-dir)
 (require 'package)
@@ -35,6 +28,13 @@
 
 (add-to-list 'load-path private-elisp-lib)
 (add-to-list 'load-path cmake-build.el-lib)
+
+;; Load system-specific library and setup system-specific things that
+;; must be setup before main setup
+(cond ((eq system-type 'windows-nt) (load (concat private-elisp
+                                                  "ntemacs-cygwin")))
+      ((eq system-type 'gnu/linux) (load (concat private-elisp "linux")))
+      ((eq system-type 'darwin) (load (concat private-elisp "darwin"))))
 
 (load (concat private-elisp "setup"))
 
