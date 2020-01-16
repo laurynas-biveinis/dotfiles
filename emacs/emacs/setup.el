@@ -1115,7 +1115,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'rich-minority)
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile"))
+                     " Projectile" " PgLn"))
 (rich-minority-mode)
 
 ;;; projectile
@@ -1197,5 +1197,8 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;; should integrate with project.el but I am not holding my breath having read
 ;; https://github.com/bbatsov/projectile/issues/1282
 (advice-add #'deadgrep--project-root :before-until #'projectile-project-root)
+
+;;; page-break-lines
+(global-page-break-lines-mode)
 
 ;;; setup.el ends here
