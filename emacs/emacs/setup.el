@@ -100,6 +100,12 @@
 
 (setq load-prefer-newer t)
 
+;;; Garbage collection
+;; Collect garbage once Emacs goes out of focus or is suspended, thanks to
+;; https://github.com/MatthewZMD/.emacs.d
+(add-hook 'focus-out-hook #'garbage-collect)
+(add-hook 'suspend-hook #'garbage-collect)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun dotfiles--enable-show-trailing-ws ()
