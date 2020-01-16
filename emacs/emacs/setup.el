@@ -429,6 +429,10 @@ loaded as such.)"
 
 (add-hook 'c-initialization-hook #'dotfiles--c-mode-common-hook)
 
+;;; modern-cpp-font-lock
+(require 'modern-cpp-font-lock)
+(add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
+
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
 
@@ -1115,7 +1119,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'rich-minority)
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile" " PgLn" " h-i-g"))
+                     " Projectile" " PgLn" " h-i-g" " mc++fl"))
 (rich-minority-mode)
 
 ;;; projectile
