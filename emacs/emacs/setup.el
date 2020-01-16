@@ -1115,7 +1115,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'rich-minority)
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile" " PgLn"))
+                     " Projectile" " PgLn" " h-i-g"))
 (rich-minority-mode)
 
 ;;; projectile
@@ -1201,5 +1201,12 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;;; page-break-lines
 (require 'page-break-lines)
 (global-page-break-lines-mode)
+
+;;; highlight-indent-guides
+(require 'highlight-indent-guides)
+(setq highlight-indent-guides-method 'character)
+(setq highlight-indent-guides-responsive 'stack)
+(setq highlight-indent-guides-delay 0)
+(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 
 ;;; setup.el ends here
