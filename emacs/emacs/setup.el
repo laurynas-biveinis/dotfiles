@@ -994,8 +994,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clients)
+(require 'company-lsp)
 (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
-(setq lsp-enable-snippet nil)
+(setq lsp-enable-snippet t)
 (setq lsp-eldoc-render-all t)
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
