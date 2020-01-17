@@ -1193,6 +1193,9 @@ find a search tool; by default, this uses \"find | grep\" in the
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
 
 ;;; deadgrep. Alternatives: rg.el, ripgrep.el, counsel/helm, etc.
+;; TODO: deadgrep-edit-mode is broken:
+;; https://github.com/Wilfred/deadgrep/issues/60, need to reconsider
+;; alternatives.
 (require 'deadgrep)
 (global-set-key (kbd "<f5>") #'deadgrep)
 ;; Integrate deadgrep with projectile by using the latter's project root, if
