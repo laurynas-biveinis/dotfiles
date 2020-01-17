@@ -1216,4 +1216,9 @@ find a search tool; by default, this uses \"find | grep\" in the
 (setq highlight-indent-guides-delay 0)
 (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 
+;;; iedit
+;; The default binding of C-; conflicts with flyspell. TODO: M-I/M-{/M-} could
+;; be useful but the keybindings seem to conflict.
+(setq iedit-toggle-key-default (kbd "<f6>"))
+
 ;;; setup.el ends here
