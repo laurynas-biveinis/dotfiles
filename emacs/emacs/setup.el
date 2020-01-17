@@ -1219,6 +1219,7 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;;; iedit
 ;; The default binding of C-; conflicts with flyspell. TODO: M-I/M-{/M-} could
 ;; be useful but the keybindings seem to conflict.
+(require 'iedit)
 (setq iedit-toggle-key-default (kbd "<f6>"))
 
 ;;; setup.el ends here
