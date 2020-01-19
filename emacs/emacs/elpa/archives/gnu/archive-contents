@@ -581,7 +581,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:keywords "killing" "convenience"))])
  (ebdb .
-       [(0 6 12)
+       [(0 6 13)
 	((emacs
 	  (25 1))
 	 (cl-lib
