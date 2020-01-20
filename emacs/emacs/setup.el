@@ -1059,6 +1059,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (setq-local dotfiles--use-lsp-indent nil))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-cc-mode-indent)
+(add-hook 'lsp-after-open-hook #'yas-minor-mode-on)
+
 (add-hook 'lsp-after-uninitialized-hook #'dotfiles--lsp-restore-cc-mode-indent)
 
 (defconst lsp-clients-clangd-tramp-executable "clangd")
@@ -1128,7 +1130,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'rich-minority)
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile" " PgLn" " h-i-g" " mc++fl"))
+                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas"))
 (rich-minority-mode)
 
 ;;; projectile
