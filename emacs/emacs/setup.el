@@ -1002,6 +1002,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; later.
 ;; (require 'setup-company-box)
 
+;;; company-quickhelp-mode
+(require 'company-quickhelp)
+(company-quickhelp-mode)
+
 ;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clients)
