@@ -991,6 +991,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                                  org-agenda-mode grep-mode package-menu-mode
                                  vterm-mode))
 
+(setq company-abort-manual-when-too-short t)
+(setq company-idle-delay .3)
+(setq company-tooltip-idle-delay .3)
+(setq company-selection-wrap-around t)
+
 ;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clients)
