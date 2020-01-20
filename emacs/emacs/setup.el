@@ -967,7 +967,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; Flycheck. 26.1+ flymake works too.
 (require 'flycheck)
-(setq flycheck-global-modes '(not org-agenda-mode vterm-mode))
+(setq flycheck-global-modes '(not org-agenda-mode vterm-mode erc-mode))
 (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc c/c++-cppcheck))
 
 (define-key flycheck-mode-map (kbd "M-n") #'flycheck-next-error)
