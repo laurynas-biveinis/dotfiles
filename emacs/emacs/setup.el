@@ -1003,8 +1003,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; (require 'setup-company-box)
 
 ;;; company-quickhelp-mode
-(require 'company-quickhelp)
-(company-quickhelp-mode)
+;; I would like to use it, but pos-tip results in ugly tooltips on macOS:
+;; https://github.com/pitkali/pos-tip/issues/11.
+;; (require 'setup-company-quickhelp)
 
 ;;; lsp-mode
 (require 'lsp-mode)
