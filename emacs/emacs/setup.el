@@ -996,6 +996,12 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq company-tooltip-idle-delay .3)
 (setq company-selection-wrap-around t)
 
+;;; company-box
+;; I would like to use it, but solarized dark theme and company-box are not
+;; integrated, resulting in too bright highlights. Maybe I will fix it myself
+;; later.
+;; (require 'setup-company-box)
+
 ;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clients)
