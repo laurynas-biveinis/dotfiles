@@ -206,16 +206,16 @@
 	      (:maintainer "Raffael Stocker" . "r.stocker@mnet-mail.de")
 	      (:url . "https://gitlab.com/rstocker/emacs-bluetooth"))])
  (bnf-mode .
-	   [(0 4 2)
+	   [(0 4 3)
 	    ((cl-lib
 	      (0 5))
 	     (emacs
 	      (24 3)))
 	    "Major mode for editing BNF grammars." tar
 	    ((:url . "https://github.com/sergeyklay/bnf-mode")
-	     (:maintainer "Serghei Iakovlev" . "sadhooklay@gmail.com")
+	     (:maintainer "Serghei Iakovlev" . "egrep@protonmail.ch")
 	     (:authors
-	      ("Serghei Iakovlev" . "sadhooklay@gmail.com"))
+	      ("Serghei Iakovlev" . "egrep@protonmail.ch"))
 	     (:keywords "languages"))])
  (brief .
 	[(5 87)
@@ -445,7 +445,7 @@
 		  ("Daiki Ueno" . "ueno@gnu.org"))
 		 (:maintainer nil . "emacs-devel@gnu.org"))])
  (debbugs .
-	  [(0 21)
+	  [(0 22)
 	   ((emacs
 	     (25 1))
 	    (soap-client

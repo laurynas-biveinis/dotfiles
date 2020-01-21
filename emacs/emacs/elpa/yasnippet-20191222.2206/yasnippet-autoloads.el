@@ -52,26 +52,6 @@ See `yas-minor-mode' for more information on Yas minor mode.
 
 ;;;***
 
-;;;### (autoloads nil "yasnippet-debug" "yasnippet-debug.el" (0 0
-;;;;;;  0 0))
-;;; Generated autoloads from yasnippet-debug.el
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "yasnippet-debug" '("yas-")))
-
-;;;***
-
-;;;### (autoloads nil "yasnippet-tests" "yasnippet-tests.el" (0 0
-;;;;;;  0 0))
-;;; Generated autoloads from yasnippet-tests.el
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "yasnippet-tests" '("do-yas-org-native-tab-in-source-block" "yas-")))
-
-;;;***
-
-;;;### (autoloads nil nil ("yasnippet-pkg.el") (0 0 0 0))
-
-;;;***
-
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
