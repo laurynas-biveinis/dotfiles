@@ -326,28 +326,22 @@ loaded as such.)"
 (global-font-lock-mode 1)
 
 ;;; minibuffer
-;; icomplete
-(icomplete-mode)
+;;; icomplete, obsoleted by Helm
+;; (require 'setup-icomplete)
 
-;; Better C-x b menu by IDO mode. Alternatives: helm, ivy
-(require 'ido)
-(ido-mode t)
-(setq ido-everywhere t)
-(setq ido-enable-flex-matching t)
-(setq ido-default-buffer-method 'selected-window)
-(setq ido-use-filename-at-point 'guess)
-
-(defun dotfiles--kill-buffer-if-exists (buffer)
+(defun dotfiles-kill-buffer-if-exists (buffer)
   "Kill the BUFFER if it exists."
   (if (buffer-live-p buffer)
       (kill-buffer buffer)))
 
-(defun dotfiles--kill-completion-buffers ()
-  "Kill completion buffers, if they exist."
-  (dotfiles--kill-buffer-if-exists "*Completions*")
-  (dotfiles--kill-buffer-if-exists "*Ido Completions*"))
+(defun dotfiles--kill-completion-buffer ()
+  "Kill completion buffer, if it exists."
+  (dotfiles-kill-buffer-if-exists "*Completions*"))
 
-(add-hook 'minibuffer-exit-hook #'dotfiles--kill-completion-buffers)
+(add-hook 'minibuffer-exit-hook #'dotfiles--kill-completion-buffer)
+
+;;; IDO mode, obsoleted by Helm
+;; (require 'setup-ido)
 
 (require 'minibuf-eldef)
 (setq minibuffer-eldef-shorten-default t)
@@ -1007,6 +1001,29 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; https://github.com/pitkali/pos-tip/issues/11.
 ;; (require 'setup-company-quickhelp)
 
+;;;; Helm
+;;; Core
+(require 'helm-config)
+(require 'helm)
+(require 'helm-files)
+(require 'helm-for-files)
+(setq completion-styles '(helm-flex))
+(setq helm-split-window-inside-p t)
+(setq helm-move-to-line-cycle-in-source t)
+(setq helm-ff-search-library-in-sexp t)
+(setq helm-buffers-fuzzy-matching t)
+(setq helm-recentf-fuzzy-match t)
+(global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(global-set-key (kbd "M-y") #'helm-show-kill-ring)
+(global-set-key (kbd "C-x b") #'helm-mini)
+(helm-mode 1)
+
+;;; helm-descbinds
+(require 'helm-descbinds)
+(helm-descbinds-mode)
+
 ;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clients)
@@ -1146,11 +1163,13 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'rich-minority)
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas"))
+                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"))
 (rich-minority-mode)
 
 ;;; projectile
 (require 'projectile)
+(setq projectile-completion-system 'helm)
+(setq projectile-switch-project-action #'helm-projectile)
 ;; Steal s-p from ns-print-buffer. I never print buffers
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 ;; Save mode line space
@@ -1160,6 +1179,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'projectile-globally-ignored-modes "org-agenda-mode")
 (add-to-list 'projectile-globally-ignored-modes "package-menu-mode")
 (projectile-mode +1)
+(require 'helm-projectile)
+(helm-projectile-on)
 
 ;; Workaround https://github.com/bbatsov/projectile/issues/347: remote projects
 ;; do not get added to known project list automatically. Also workaround the
