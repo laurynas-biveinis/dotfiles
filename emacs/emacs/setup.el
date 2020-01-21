@@ -865,6 +865,9 @@ loaded as such.)"
 
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
+;; org integration with Helm
+(setq org-outline-path-complete-in-steps nil)
+
 ;;; Solarized-dark color theme
 (load-theme 'solarized-dark t)
 
