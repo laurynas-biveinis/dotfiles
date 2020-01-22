@@ -1117,6 +1117,21 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; Integrate lsp-mode with projectile
 (setq lsp-auto-guess-root t)
 
+;;; helm-lsp
+(require 'helm-lsp)
+
+(defun dotfiles--lsp-bind-helm-lsp-workspace-symbol ()
+  "Rebind C-M-. to helm-lsp-workspace-symbol."
+  (define-key lsp-mode-map (kbd "C-M-.") #'helm-lsp-workspace-symbol))
+
+(defun dotfiles--lsp-unbind-helm-lsp-workspace-symbol ()
+  "Restore global C-M-. binding."
+  (define-key lsp-mode-map (kbd "C-M-." nil)))
+
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-bind-helm-lsp-workspace-symbol)
+(add-hook 'lsp-after-uninitialized-hook
+          #'dotfiles--lsp-unbind-helm-lsp-workspace-symbol)
+
 ;;; SSH config mode
 (add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
 (add-hook 'ssh-config-mode-hook #'dotfiles--enable-show-trailing-ws)
