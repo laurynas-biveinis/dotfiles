@@ -337,7 +337,8 @@ sudo easy_install pip
 sudo gem install mdl
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
     virtualbox virtualbox-extension-pack disk-inventory-x google-chrome \
-    pdftotext
+    pdftotext dash
+# Install Dash docsets
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
 npm i -g bash-language-server
