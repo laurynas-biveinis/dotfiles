@@ -1012,16 +1012,21 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'helm-for-files)
 (setq completion-styles '(helm-flex))
 (setq helm-split-window-inside-p t)
+(setq helm-echo-input-in-header-line t)
 (setq helm-move-to-line-cycle-in-source t)
 (setq helm-ff-search-library-in-sexp t)
 (setq helm-buffers-fuzzy-matching t)
-(setq helm-recentf-fuzzy-match t)
+(setq helm-net-prefer-curl t)
 (global-set-key (kbd "M-x") #'helm-M-x)
 (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (global-set-key (kbd "M-y") #'helm-show-kill-ring)
 (global-set-key (kbd "C-x b") #'helm-mini)
 (helm-mode 1)
+
+;; Helm integration with recentf
+(setq helm-ff-file-name-history-use-recentf t)
+(setq helm-recentf-fuzzy-match t)
 
 ;;; helm-descbinds
 (require 'helm-descbinds)
