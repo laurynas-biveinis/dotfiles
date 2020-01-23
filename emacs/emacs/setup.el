@@ -1134,7 +1134,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (defun dotfiles--lsp-unbind-helm-lsp-workspace-symbol ()
   "Restore global C-M-. binding."
-  (define-key lsp-mode-map (kbd "C-M-." nil)))
+  (define-key lsp-mode-map (kbd "C-M-.") nil))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-bind-helm-lsp-workspace-symbol)
 (add-hook 'lsp-after-uninitialized-hook
