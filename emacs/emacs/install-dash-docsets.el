@@ -1,0 +1,8 @@
+(require 'helm-dash)
+(helm-dash-install-docset "Bash")
+(helm-dash-install-docset "Boost")
+(helm-dash-install-docset "C")
+(helm-dash-install-docset "C++")
+(helm-dash-install-docset "CMake")
+(helm-dash-install-docset "Emacs_Lisp")
+(helm-dash-install-docset "Markdown")

@@ -147,6 +147,8 @@ sudo defaults write -g KeyRepeat -int 2
 sudo defaults write -g InitialKeyRepeat -int 35
 defaults write KeyRepeat -int 2
 defaults write InitialKeyRepeat -int 35
+# Uncheck "Turn keyboard access on or off ^F1" in System Preferences -> Keyboard
+# -> Shortcuts. No idea how to automate this.
 #
 # Mouse
 #
@@ -338,7 +340,8 @@ sudo gem install mdl
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
     virtualbox virtualbox-extension-pack disk-inventory-x google-chrome \
     pdftotext dash
-# Install Dash docsets
+# Evaluate emacs/emacs/install-dash-docsets.el in Emacs, then install any
+# non-main Dash docsets through the app
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
 npm i -g bash-language-server
