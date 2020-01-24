@@ -1735,9 +1735,9 @@
 		   ("Bastien Guerry" . "bzg@gnu.org"))
 		  (:maintainer "Bastien Guerry" . "bzg@gnu.org"))])
  (relint .
-	 [(1 11)
+	 [(1 12)
 	  ((xr
-	    (1 13)))
+	    (1 14)))
 	  "Elisp regexp mistake finder" tar
 	  ((:url . "https://github.com/mattiase/relint")
 	   (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
@@ -2305,7 +2305,7 @@
 	 ("Thien-Thi Nguyen" . "ttn@gnu.org"))
 	(:keywords "multimedia" "xpm"))])
  (xr .
-     [(1 13)
+     [(1 14)
       nil "Convert string regexp to rx notation" tar
       ((:url . "https://github.com/mattiase/xr")
        (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
