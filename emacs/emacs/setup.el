@@ -1343,4 +1343,9 @@ find a search tool; by default, this uses \"find | grep\" in the
 (require 'iedit)
 (setq iedit-toggle-key-default (kbd "<f6>"))
 
+;;; keyfreq
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+
 ;;; setup.el ends here
