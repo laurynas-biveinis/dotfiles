@@ -1236,7 +1236,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'rich-minority)
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"))
+                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
+                     " WK"))
 (rich-minority-mode)
 
 ;;; projectile
@@ -1347,5 +1348,9 @@ find a search tool; by default, this uses \"find | grep\" in the
 (require 'keyfreq)
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
+
+;;; which-key
+(require 'which-key)
+(which-key-mode)
 
 ;;; setup.el ends here
