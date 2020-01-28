@@ -1313,6 +1313,30 @@ find a search tool; by default, this uses \"find | grep\" in the
 (global-set-key (kbd "<f9>") #'cmake-build-current)
 (global-set-key (kbd "<C-f9>") #'cmake-build-run)
 
+;; cmake-build.el integration with Projectile
+(defun dotfiles--cmake-build-projectile-mode-line-function ()
+  "Report current Projectile and cmake-build.el project info in the modeline."
+  (let ((project-name (projectile-project-name))
+        (project-type (projectile-project-type))
+        (cmake-build-config (cmake-build-get-run-config-name)))
+    (format "%s[%s%s%s]"
+            projectile-mode-line-prefix
+            (or project-name "-")
+            (if project-type
+                (format ":%s" project-type)
+              "")
+            ;; Enable cmake-build.el part based only on
+            ;; cmake-build-get-run-config-name presence, as cmake-build-profile
+            ;; is set outside of cmake-build.el projects too.
+            (if cmake-build-config
+                (format ":%s:%s"
+                        (symbol-name cmake-build-profile)
+                        cmake-build-config)
+              ""))))
+
+(setq projectile-mode-line-function
+      #'dotfiles--cmake-build-projectile-mode-line-function)
+
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
