@@ -148,7 +148,9 @@ sudo defaults write -g InitialKeyRepeat -int 35
 defaults write KeyRepeat -int 2
 defaults write InitialKeyRepeat -int 35
 # Uncheck "Turn keyboard access on or off ^F1" in System Preferences -> Keyboard
-# -> Shortcuts. No idea how to automate this.
+# -> Shortcuts.
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 12 \
+"{enabled = 0; value = { parameters = (65535, 97, 8650752); type = 'standard'; }; }"
 #
 # Mouse
 #
