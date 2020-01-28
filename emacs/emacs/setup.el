@@ -1024,6 +1024,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (global-set-key (kbd "C-x b") #'helm-mini)
 (helm-mode 1)
 
+;; helm-autoresize-mode
+(helm-autoresize-mode)
+
 ;; Helm integration with recentf
 (setq helm-ff-file-name-history-use-recentf t)
 (setq helm-recentf-fuzzy-match t)
