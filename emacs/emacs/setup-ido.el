@@ -1,6 +1,7 @@
 ;;; setup-ido.el --- IDO config.  -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Config made redundant by Helm.
+;; Config made redundant by Helm. Useful shortcuts to learn when it's enabled:
+;; C-. & C-,
 ;;; Code:
 
 (declare-function dotfiles-kill-buffer-if-exists "setup.el" (buffer))
