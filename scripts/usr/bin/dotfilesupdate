@@ -13,6 +13,7 @@ readonly IGNORE_FOR_SYMLINKS=("Library/Containers" \
 
 pushd $DOTFILES_ROOT || exit
 git pull origin-ro master
+git submodule update
 echo -n "Re-creating symlinks for:"
 for module in $MANDATORY_MODULES; do
     echo -n " $module"
