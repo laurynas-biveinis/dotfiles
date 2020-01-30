@@ -1375,8 +1375,10 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;;; iedit
 ;; The default binding of C-; conflicts with flyspell. TODO: M-I/M-{/M-} could
 ;; be useful but the keybindings seem to conflict.
-(require 'iedit)
+;; iedit seems to be configured in an... unorthodox way. TODO: report a bug
+(defvar iedit-toggle-key-default)
 (setq iedit-toggle-key-default (kbd "<f6>"))
+(require 'iedit)
 
 ;;; keyfreq
 (require 'keyfreq)
