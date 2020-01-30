@@ -188,48 +188,49 @@
                `(width . ,(dotfiles--frame-geometry-width geometry))))
 
 (defun dotfiles--move-to-frame-geometry (geometry)
-  "Resize and repositon frame to GEOMETRY."
+  "Resize and reposition frame to GEOMETRY."
   (set-frame-position nil (dotfiles--frame-geometry-left
                            geometry)
                       (dotfiles--frame-geometry-top geometry))
   (set-frame-size nil (dotfiles--frame-geometry-width geometry)
                   (dotfiles--frame-geometry-height geometry)))
 
-(defconst darkstar-laptop-screen '(1680 . 1050))
-(defconst darkstar-laptop-geometry
+(defconst dotfiles--darkstar-laptop-screen '(1680 . 1050))
+(defconst dotfiles--darkstar-laptop-geometry
   (make-dotfiles--frame-geometry :top 1 :left 1 :height 65 :width 237))
 
-(defconst darkstar-external-screen '(7696 . 1692))
-(defconst darkstar-external-geometry
+(defconst dotfiles--darkstar-external-screen '(7696 . 1692))
+(defconst dotfiles--darkstar-external-geometry
   (make-dotfiles--frame-geometry :top 4 :left 3011 :height 117 :width 426))
 
-;; Possible interim states while docking/undocking - ignore
-(defconst frame-geometries-to-ignore [(3600 . 1080) (5520 . 1080) (4688 . 1692)
-                                      (3600 . 1692) (3008 . 1692)])
+(defconst dotfiles--frame-geometries-to-ignore
+  [(3600 . 1080) (5520 . 1080) (4688 . 1692) (3600 . 1692) (3008 . 1692)]
+  "Possible interim screen resolutions while docking/undocking to be ignored.")
 
-(defun diagnose-unknown-display-geometry (display-geometry)
+(defun dotfiles--diagnose-unknown-display-geometry (display-geometry)
   "Diagnose unknown DISPLAY-GEOMETRY."
   (message "Unknown display size %sx%s"
            (car display-geometry) (cdr display-geometry)))
 
 (require 'seq)
 (let ((display-geometry (cons (display-pixel-width) (display-pixel-height))))
-  (cond ((equal display-geometry darkstar-laptop-screen)
+  (cond ((equal display-geometry dotfiles--darkstar-laptop-screen)
          ;; darkstar without external screens: initial frame positioned in the
          ;; top left corner
          (dotfiles--add-frame-geometry-to-initial-alist
-          darkstar-laptop-geometry)
+          dotfiles--darkstar-laptop-geometry)
          (two-windows))
-        ((equal display-geometry darkstar-external-screen)
+        ((equal display-geometry dotfiles--darkstar-external-screen)
          ;; darkstar with external screens: initial frame maximized in the
          ;; middle screen
          (dotfiles--add-frame-geometry-to-initial-alist
-          darkstar-external-geometry)
+          dotfiles--darkstar-external-geometry)
          (add-to-list 'initial-frame-alist '(fullscreen . fullboth))
          (add-to-list 'initial-frame-alist '(fullscreen-restore . maximized))
          (six-windows))
-        ((seq-position frame-geometries-to-ignore display-geometry) ())
-        (t (diagnose-unknown-display-geometry display-geometry))))
+        ((seq-position dotfiles--frame-geometries-to-ignore display-geometry)
+         ())
+        (t (dotfiles--diagnose-unknown-display-geometry display-geometry))))
 
 ;; Use system font if under Gnome, otherwise use a specified font if one was
 ;; specified
@@ -1202,18 +1203,19 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; dispwatch
 (require 'dispwatch)
 (defun dotfiles--display-changed-hook (new-display-geometry)
-  "Reconfigure frame windows on display geometry change to NEW-DISPLAY-GEOMETRY."
+  "Reconfigure windows on screen resolution change to NEW-DISPLAY-GEOMETRY."
   (message "Resizing for %s" new-display-geometry)
-  (cond ((equal new-display-geometry darkstar-laptop-screen)
-         (dotfiles--move-to-frame-geometry darkstar-laptop-geometry)
+  (cond ((equal new-display-geometry dotfiles--darkstar-laptop-screen)
+         (dotfiles--move-to-frame-geometry dotfiles--darkstar-laptop-geometry)
          (set-frame-parameter nil 'fullscreen 'maximized)
          (two-windows))
-        ((equal new-display-geometry darkstar-external-screen)
-         (dotfiles--move-to-frame-geometry darkstar-external-geometry)
+        ((equal new-display-geometry dotfiles--darkstar-external-screen)
+         (dotfiles--move-to-frame-geometry dotfiles--darkstar-external-geometry)
          (set-frame-parameter nil 'fullscreen 'fullboth)
          (six-windows))
-        ((seq-position frame-geometries-to-ignore new-display-geometry) ())
-        (t (diagnose-unknown-display-geometry new-display-geometry))))
+        ((seq-position dotfiles--frame-geometries-to-ignore
+                       new-display-geometry) ())
+        (t (dotfiles--diagnose-unknown-display-geometry new-display-geometry))))
 
 (add-hook 'dispwatch-display-change-hooks #'dotfiles--display-changed-hook)
 (dispwatch-mode 1)
