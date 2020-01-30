@@ -841,8 +841,43 @@ loaded as such.)"
 (setq org-tags-column -85)
 (setq org-agenda-tags-column 'auto)
 
+;;; org-checklist
 ;; Comes from org-contrib
 (require 'org-checklist)
+
+;; Make C-c C-c on a checkbox item check it and move point to the next unchecked
+;; item. It's magic from Internet:
+;; https://emacs.stackexchange.com/a/17281/16376
+;; TODO: make it work only on unchecked items
+(defmacro dotfiles--with-advice (adlist &rest body)
+  "Execute BODY with temporary advice in ADLIST.
+
+Each element of ADLIST should be a list of the form
+  (SYMBOL WHERE FUNCTION [PROPS])
+suitable for passing to `advice-add'.  The BODY is wrapped in an
+`unwind-protect' form, so the advice will be removed even in the
+event of an error or nonlocal exit."
+  (declare (debug ((&rest (&rest form)) body))
+           (indent 1))
+  `(progn
+     ,@(mapcar (lambda (adform)
+                 (cons 'advice-add adform))
+               adlist)
+     (unwind-protect (progn ,@body)
+       ,@(mapcar (lambda (adform)
+                   `(advice-remove ,(car adform) ,(nth 2 adform)))
+                 adlist))))
+
+(defun dotfiles--org-checkbox-toggle-advice (orig-fn &rest args)
+  "Advice ORIG-FN with ARGS to move to next list item on checkbox toggle."
+  (dotfiles--with-advice
+   ((#'org-update-checkbox-count-maybe
+     :after (lambda ()
+              (ignore-errors (org-next-item)))))
+   (apply orig-fn args)))
+
+(advice-add #'org-ctrl-c-ctrl-c   :around #'dotfiles--org-checkbox-toggle-advice)
+(advice-add #'org-toggle-checkbox :around #'dotfiles--org-checkbox-toggle-advice)
 
 ;; org-mode encryption of selected subtrees
 (require 'org-crypt)
