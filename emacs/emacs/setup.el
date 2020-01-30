@@ -20,6 +20,10 @@
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function start-erc-chats "" ())
 
+;;; GC tuning - as early as possible during startup
+(require 'gcmh)
+(gcmh-mode)
+
 ;;; General settings
 ;; Keep all messages
 (setq message-log-max t)
@@ -1240,7 +1244,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK"))
+                     " WK" " GCMH"))
 (rich-minority-mode)
 
 ;;; projectile
