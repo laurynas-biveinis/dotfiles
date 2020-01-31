@@ -63,8 +63,8 @@ put .wakatime.cfg into $HOME, `chmod 700` it.
 Common
 
 ```bash
-apt-get install acpi stow fzf hexyl tldr
-apt-get install python-pip build-essential gdb manpages-dev binutils \
+sudo apt-get install acpi stow fzf hexyl tldr
+sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     binutils-doc cpp g++ gcc libasan5 liblsan0 libtsan0 libubsan1 libc6-dev \
     make cpp-doc gcc-doc autoconf automake libtool flex bison libasan5-dbg \
     liblsan0-dbg libtsan0-dbg libubsan1-dbg glibc-doc make-doc \
@@ -73,21 +73,21 @@ apt-get install python-pip build-essential gdb manpages-dev binutils \
     libquadmath0-dbg gdb-doc gettext-doc libtool-doc m4-doc python-doc cmake \
     cmake-doc diffstat ripgrep
 # Ubuntu 18.04-specific
-apt-get install libstdc++6-8-dbg libstdc++-8-doc
+sudo apt-get install libstdc++6-8-dbg libstdc++-8-doc
 # Ubuntu 19.04-specific
-apt-get install libstdc++6-9-dbg libstdc++-9-doc
+sudo apt-get install libstdc++6-9-dbg libstdc++-9-doc
 # Work
-apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
+sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
     maven clang-tools-8 clang-8-doc llvm-8-doc bear
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-apt-get install clangd-9 clang-format-9
-update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
-update-alternatives --install /usr/bin/clang-format clang-format \
+sudo apt-get install clangd-9 clang-format-9
+sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
+sudo update-alternatives --install /usr/bin/clang-format clang-format \
     /usr/bin/clang-format-9 100
 # MySQL development specific
-apt-get install ccache valgrind rapidjson-dev valgrind-dbg \
+sudo apt-get install ccache valgrind rapidjson-dev valgrind-dbg \
     libboost-container-dev libboost-doc clang clang-8-doc llvm-8-doc \
     clang-format clang-tidy cppcheck iwyu ncdu lcov ncurses-doc libaio-dev \
     libssl-dev libreadline-dev readline-doc liblz4-dev libre2-dev libicu-dev \
