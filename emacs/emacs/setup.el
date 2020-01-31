@@ -1350,7 +1350,7 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;; current project.
 ;; TODO: make projectile-test-project to run cmake test config?
 (require 'cmake-build)
-(setq cmake-build-options "-j5")
+(setq cmake-build-options "-j 5")
 (setq cmake-build-never-split t)
 (global-set-key (kbd "<f9>") #'cmake-build-current)
 (global-set-key (kbd "<C-f9>") #'cmake-build-run)
