@@ -72,6 +72,8 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg \
     libquadmath0-dbg gdb-doc gettext-doc libtool-doc m4-doc python-doc cmake \
     cmake-doc diffstat ripgrep
+# Home
+sudo apt-get install g++-8
 # Ubuntu 18.04-specific
 sudo apt-get install libstdc++6-8-dbg libstdc++-8-doc
 # Ubuntu 19.04-specific
