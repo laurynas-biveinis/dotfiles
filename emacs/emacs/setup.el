@@ -1383,13 +1383,12 @@ find a search tool; by default, this uses \"find | grep\" in the
 (setq projectile-mode-line-function
       #'dotfiles--cmake-build-projectile-mode-line-function)
 
-(advice-add #'cmake-build-set-cmake-profile :after
-            #'projectile-update-mode-line)
-
 (defun dotfiles--cmake-build-projectile-update-mode-line-1arg (_)
   "Call projectile-update-mode-line, ignoring an argument."
   (projectile-update-mode-line))
 
+(advice-add #'cmake-build-set-cmake-profile :after
+            #'dotfiles--cmake-build-projectile-update-mode-line-1arg)
 (advice-add #'cmake-build-set-config :after
             #'dotfiles--cmake-build-projectile-update-mode-line-1arg)
 
