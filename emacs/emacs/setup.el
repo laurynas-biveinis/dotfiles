@@ -1360,24 +1360,38 @@ find a search tool; by default, this uses \"find | grep\" in the
   "Report current Projectile and cmake-build.el project info in the modeline."
   (let ((project-name (projectile-project-name))
         (project-type (projectile-project-type))
-        (cmake-build-config (cmake-build-get-run-config-name)))
+        (cmake-run-config (cmake-build-get-run-config-name)))
     (format "%s[%s%s%s]"
             projectile-mode-line-prefix
             (or project-name "-")
             (if project-type
                 (format ":%s" project-type)
               "")
-            ;; Enable cmake-build.el part based only on
-            ;; cmake-build-get-run-config-name presence, as cmake-build-profile
-            ;; is set outside of cmake-build.el projects too.
-            (if cmake-build-config
+            ;; We want to report the project type when only CMake profile but
+            ;; not the run configuration is set. Unfortunately, it defaults to
+            ;; 'clang-release unconditionally. So assume that if it's indeed
+            ;; that value, that it's not has been set, unless cmake-run-config
+            ;; is set too.
+            (if cmake-run-config
                 (format ":%s:%s"
                         (symbol-name cmake-build-profile)
-                        cmake-build-config)
-              ""))))
+                        cmake-run-config)
+              (if (not (eq cmake-build-profile 'clang-release))
+                  (format ":%s" (symbol-name cmake-build-profile))
+                "")))))
 
 (setq projectile-mode-line-function
       #'dotfiles--cmake-build-projectile-mode-line-function)
+
+(advice-add #'cmake-build-set-cmake-profile :after
+            #'projectile-update-mode-line)
+
+(defun dotfiles--cmake-build-projectile-update-mode-line-1arg (_)
+  "Call projectile-update-mode-line, ignoring an argument."
+  (projectile-update-mode-line))
+
+(advice-add #'cmake-build-set-config :after
+            #'dotfiles--cmake-build-projectile-update-mode-line-1arg)
 
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
