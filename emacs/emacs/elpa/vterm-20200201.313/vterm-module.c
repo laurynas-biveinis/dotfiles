@@ -185,7 +185,7 @@ static char *get_row_directory(Term *term, int row) {
     return sbrow->info->directory;
     /* return term->dirs[0]; */
   } else {
-    LineInfo* line = term->lines[row];
+    LineInfo *line = term->lines[row];
     return line ? line->directory : NULL;
   }
 }
@@ -427,29 +427,24 @@ static void adjust_topline(Term *term, emacs_env *env) {
   size_t offset = get_col_offset(term, pos.row, pos.col);
   forward_char(env, env->make_integer(env, pos.col - offset));
 
-  bool following =
-      term->height == 1 + pos.row + term->linenum_added; // cursor at end?
-
+  emacs_value cursor_point = point(env);
   emacs_value windows = get_buffer_window_list(env);
-  emacs_value swindow = selected_window(env);
   int winnum = env->extract_integer(env, length(env, windows));
   for (int i = 0; i < winnum; i++) {
     emacs_value window = nth(env, i, windows);
-    if (eq(env, window, swindow)) {
-      if (following) {
-        // "Follow" the terminal output
-        recenter(env,
-                 env->make_integer(
-                     env, -1)); /* make current line at the screen bottom */
-      } else {
-        recenter(env, env->make_integer(env, pos.row));
-      }
-    } else {
-      if (env->is_not_nil(env, window)) {
-        set_window_point(env, window, point(env));
-      }
+    if (env->is_not_nil(env, window)) {
+      int win_height =
+          env->extract_integer(env, window_body_height(env, window));
+      /*
+        -win_height is negative,so we backward win_height lines from end of
+        buffer
+       */
+      goto_line(env, -win_height);
+      set_window_start(env, window, point(env));
+      set_window_point(env, window, cursor_point);
     }
   }
+  goto_char(env, cursor_point);
 }
 
 static void invalidate_terminal(Term *term, int start_row, int end_row) {
@@ -699,7 +694,7 @@ static void term_clear_scrollback(Term *term, emacs_env *env) {
 }
 static void term_process_key(Term *term, emacs_env *env, unsigned char *key,
                              size_t len, VTermModifier modifier) {
-    if (is_key(key, len, "<clear_scrollback>")) {
+  if (is_key(key, len, "<clear_scrollback>")) {
     term_clear_scrollback(term, env);
   } else if (is_key(key, len, "<start>")) {
     tcflow(term->pty_fd, TCOON);
@@ -961,7 +956,7 @@ emacs_value Fvterm_update(emacs_env *env, ptrdiff_t nargs, emacs_value args[],
       modifier = modifier | VTERM_MOD_CTRL;
 
     // Ignore the final zero byte
-    term_process_key(term, env,key, len - 1, modifier);
+    term_process_key(term, env, key, len - 1, modifier);
   }
 
   // Flush output
@@ -1042,7 +1037,7 @@ emacs_value Fvterm_get_pwd(emacs_env *env, ptrdiff_t nargs, emacs_value args[],
 }
 
 emacs_value Fvterm_get_icrnl(emacs_env *env, ptrdiff_t nargs,
-                              emacs_value args[], void *data) {
+                             emacs_value args[], void *data) {
   Term *term = env->get_user_ptr(env, args[0]);
 
   if (term->pty_fd > 0) {
@@ -1099,6 +1094,11 @@ int emacs_module_init(struct emacs_runtime *ert) {
   Frecenter = env->make_global_ref(env, env->intern(env, "recenter"));
   Fset_window_point =
       env->make_global_ref(env, env->intern(env, "set-window-point"));
+  Fset_window_start =
+      env->make_global_ref(env, env->intern(env, "set-window-start"));
+  Fwindow_body_height =
+      env->make_global_ref(env, env->intern(env, "window-body-height"));
+
   Fpoint = env->make_global_ref(env, env->intern(env, "point"));
   Fforward_char = env->make_global_ref(env, env->intern(env, "forward-char"));
   Fget_buffer_window_list =
@@ -1115,8 +1115,7 @@ int emacs_module_init(struct emacs_runtime *ert) {
   Feq = env->make_global_ref(env, env->intern(env, "eq"));
   Fvterm_get_color =
       env->make_global_ref(env, env->intern(env, "vterm--get-color"));
-  Fvterm_eval =
-      env->make_global_ref(env, env->intern(env, "vterm--eval"));
+  Fvterm_eval = env->make_global_ref(env, env->intern(env, "vterm--eval"));
 
   // Exported functions
   emacs_value fun;
