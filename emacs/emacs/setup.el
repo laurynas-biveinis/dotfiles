@@ -1372,7 +1372,7 @@ find a search tool; by default, this uses \"find | grep\" in the
             ;; 'clang-release unconditionally. So assume that if it's indeed
             ;; that value, that it's not has been set, unless cmake-run-config
             ;; is set too.
-            (if cmake-run-config
+            (if (and project-name cmake-run-config)
                 (format ":%s:%s"
                         (symbol-name cmake-build-profile)
                         cmake-run-config)
