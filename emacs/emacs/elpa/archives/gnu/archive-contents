@@ -1414,7 +1414,7 @@
       [(9 3 2)
        nil "Outline-based notes management and organizer" tar
        ((:url . "https://orgmode.org")
-	(:maintainer "Bastien Guerry <bzg at gnu dot org>")
+	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik <carsten at orgmode dot org>"))
 	(:keywords "outlines" "hypermedia" "calendar" "wp"))])

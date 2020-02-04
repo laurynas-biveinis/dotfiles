@@ -219,8 +219,9 @@ color is used as ansi color 15."
   "Shell process of current term.")
 
 (defvar-local vterm--redraw-timer nil)
+(defvar-local vterm--redraw-immididately nil)
 
-(defvar vterm-timer-delay 0.01
+(defvar vterm-timer-delay 0.1
   "Delay for refreshing the buffer after receiving updates from libvterm.
 Improves performance when receiving large bursts of data.
 If nil, never delay")
@@ -373,6 +374,8 @@ This is the value of `next-error-function' in Compilation buffers."
 (define-key vterm-mode-map (kbd "C-c C-u")             #'vterm-send-C-u)
 (define-key vterm-mode-map [remap self-insert-command] #'vterm--self-insert)
 
+(define-key vterm-mode-map (kbd "C-c C-r")             #'vterm-reset-cursor-point)
+
 (define-key vterm-mode-map (kbd "C-c C-t")             #'vterm-copy-mode)
 
 (defvar vterm-copy-mode-map (make-sparse-keymap)
@@ -380,8 +383,8 @@ This is the value of `next-error-function' in Compilation buffers."
 (define-key vterm-copy-mode-map (kbd "C-c C-t")        #'vterm-copy-mode)
 (define-key vterm-copy-mode-map [return]               #'vterm-copy-mode-done)
 (define-key vterm-copy-mode-map (kbd "RET")            #'vterm-copy-mode-done)
+(define-key vterm-copy-mode-map (kbd "C-c C-r")        #'vterm-reset-cursor-point)
 
-(defvar-local vterm--copy-saved-point nil)
 
 (define-minor-mode vterm-copy-mode
   "Toggle vterm copy mode."
@@ -391,10 +394,8 @@ This is the value of `next-error-function' in Compilation buffers."
   (if vterm-copy-mode
       (progn                            ;enable vterm-copy-mode
         (use-local-map nil)
-        (vterm-send-stop)
-        (setq vterm--copy-saved-point (point)))
-    (if vterm--copy-saved-point
-        (goto-char vterm--copy-saved-point))
+        (vterm-send-stop))
+    (vterm-reset-cursor-point)
     (use-local-map vterm-mode-map)
     (vterm-send-start)))
 
@@ -426,7 +427,8 @@ This is the value of `next-error-function' in Compilation buffers."
           (inhibit-read-only t))
       (when (and (not (symbolp last-input-event)) shift (not meta) (not ctrl))
         (setq key (upcase key)))
-      (vterm--update vterm--term key shift meta ctrl))))
+      (vterm--update vterm--term key shift meta ctrl)
+      (setq vterm--redraw-immididately t))))
 
 (defun vterm-send (key)
   "Sends KEY to libvterm. KEY can be anything ‘kbd’ understands."
@@ -569,16 +571,19 @@ Optional argument PASTE-P paste-p."
     (dolist (char (string-to-list string))
       (vterm--update vterm--term (char-to-string char) nil nil nil))
     (when paste-p
-      (vterm--update vterm--term "<end_paste>" nil nil nil))))
+      (vterm--update vterm--term "<end_paste>" nil nil nil)))
+  (setq vterm--redraw-immididately t))
 
 (defun vterm--invalidate()
   "The terminal buffer is invalidated, the buffer needs redrawing."
-  (if vterm-timer-delay
+  (if (and (not vterm--redraw-immididately)
+           vterm-timer-delay)
       (unless vterm--redraw-timer
         (setq vterm--redraw-timer
               (run-with-timer vterm-timer-delay nil
                               #'vterm--delayed-redraw (current-buffer))))
-    (vterm--delayed-redraw (current-buffer))))
+    (vterm--delayed-redraw (current-buffer))
+    (setq vterm--redraw-immididately nil)))
 
 (defun vterm--delayed-redraw(buffer)
   "Redraw the terminal buffer .
@@ -754,6 +759,34 @@ the called functions."
     (if f
         (apply (cadr f) args)
       (message "Failed to find command: %s" command))))
+
+(defun vterm--get-prompt-point ()
+  "Get the position of the end of current prompt."
+  (let (pt)
+    (save-excursion
+      (setq pt (vterm--get-prompt-point-internal
+                vterm--term (line-number-at-pos))))
+    pt))
+
+(defun vterm-reset-cursor-point ()
+  "Make sure the cursor at the right postion."
+  (interactive)
+  (vterm--reset-point vterm--term))
+
+(defun vterm--get-cursor-point ()
+  "Get term cursor position."
+  (save-excursion
+    (vterm-reset-cursor-point)))
+
+
+(defun vterm--at-prompt-p ()
+  "Check whether the cursor postion is at shell prompt or not."
+  (let ((pt (point))
+        (term-cursor-pt (vterm--get-cursor-point))
+        (prompt-pt (vterm--get-prompt-point)))
+    (unless prompt-pt
+      (user-error "vterm--at-prompt-p error,Please search `vterm_prompt_end' in the README.md"))
+    (= pt  term-cursor-pt (or prompt-pt 0))))
 
 (provide 'vterm)
 ;;; vterm.el ends here
