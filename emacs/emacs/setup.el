@@ -23,6 +23,10 @@
 ;;; GC tuning - as early as possible during startup
 (require 'gcmh)
 (gcmh-mode)
+;; Collect garbage once Emacs goes out of focus or is suspended, thanks to
+;; https://github.com/MatthewZMD/.emacs.d
+(add-hook 'focus-out-hook #'garbage-collect)
+(add-hook 'suspend-hook #'garbage-collect)
 
 ;;; General settings
 ;; Keep all messages
@@ -103,12 +107,6 @@
 (setq use-dialog-box nil)
 
 (setq load-prefer-newer t)
-
-;;; Garbage collection
-;; Collect garbage once Emacs goes out of focus or is suspended, thanks to
-;; https://github.com/MatthewZMD/.emacs.d
-(add-hook 'focus-out-hook #'garbage-collect)
-(add-hook 'suspend-hook #'garbage-collect)
 
 ;;; Hook helpers
 ;; Display trailing whitespace
