@@ -71,7 +71,9 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     autoconf-archive gnu-standards autoconf-doc gettext bison-doc flex-doc \
     libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg \
     libquadmath0-dbg gdb-doc gettext-doc libtool-doc m4-doc python-doc cmake \
-    cmake-doc diffstat ripgrep
+    cmake-doc diffstat ripgrep fd-find
+# Not named fd by default because fdclone (which I don't use) was first
+sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # Home
 sudo apt-get install g++-8
 # Ubuntu 18.04-specific
@@ -330,7 +332,7 @@ brew
 ```bash
 brew install stow git z ncdu gnupg coreutils fzf hexyl tldr lynis curl \
     shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac findutils \
-    libtool npm qemu
+    libtool npm qemu fd
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
