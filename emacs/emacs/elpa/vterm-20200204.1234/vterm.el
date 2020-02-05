@@ -243,6 +243,7 @@ If nil, never delay")
     (setq buffer-read-only t)
     (setq-local scroll-conservatively 101)
     (setq-local scroll-margin 0)
+    (setq-local line-spacing nil)
     (setq vterm--process
           (make-process
            :name "vterm"
@@ -785,8 +786,14 @@ the called functions."
         (term-cursor-pt (vterm--get-cursor-point))
         (prompt-pt (vterm--get-prompt-point)))
     (unless prompt-pt
-      (user-error "vterm--at-prompt-p error,Please search `vterm_prompt_end' in the README.md"))
-    (= pt  term-cursor-pt (or prompt-pt 0))))
+      (save-excursion
+        (goto-char (point-at-bol))
+        (term-skip-prompt)
+        (setq prompt-pt (point))))
+    (and
+     (= pt term-cursor-pt)
+     (or (= pt prompt-pt)
+         (string-blank-p (buffer-substring-no-properties pt prompt-pt))))))
 
 (provide 'vterm)
 ;;; vterm.el ends here

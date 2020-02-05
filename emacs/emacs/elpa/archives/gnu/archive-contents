@@ -1173,7 +1173,7 @@
 	   (:maintainer "Alexey Veretennikov" . "alexey.veretennikov@gmail.com")
 	   (:url . "https://github.com/fourier/loccur"))])
  (map .
-      [(2 0)
+      [(2 1)
        ((emacs
 	 (25)))
        "Map manipulation functions" single

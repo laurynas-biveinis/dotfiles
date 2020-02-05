@@ -246,6 +246,41 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 \(fn &optional INVALIDATE-CACHE)" t nil)
 
+(autoload 'projectile-find-related-file-other-window "projectile" "\
+Open related file in other window.
+
+\(fn)" t nil)
+
+(autoload 'projectile-find-related-file-other-frame "projectile" "\
+Open related file in other frame.
+
+\(fn)" t nil)
+
+(autoload 'projectile-find-related-file "projectile" "\
+Open related file.
+
+\(fn)" t nil)
+
+(autoload 'projectile-related-files-fn-groups "projectile" "\
+Generate a related-files-fn which relates as KIND for files in each of GROUPS.
+
+\(fn KIND GROUPS)" nil nil)
+
+(autoload 'projectile-related-files-fn-extensions "projectile" "\
+Generate a related-files-fn which relates as KIND for files having EXTENSIONS.
+
+\(fn KIND EXTENSIONS)" nil nil)
+
+(autoload 'projectile-related-files-fn-test-with-prefix "projectile" "\
+Generate a related-files-fn which relates tests and impl for files with EXTENSION based on TEST-PREFIX.
+
+\(fn EXTENSION TEST-PREFIX)" nil nil)
+
+(autoload 'projectile-related-files-fn-test-with-suffix "projectile" "\
+Generate a related-files-fn which relates tests and impl for files with EXTENSION based on TEST-SUFFIX.
+
+\(fn EXTENSION TEST-SUFFIX)" nil nil)
+
 (autoload 'projectile-project-info "projectile" "\
 Display info for current project.
 
@@ -288,9 +323,10 @@ regular expression.
 (autoload 'projectile-ripgrep "projectile" "\
 Run a Ripgrep search with `SEARCH-TERM' at current project root.
 
-SEARCH-TERM is a regexp.
+With an optional prefix argument ARG SEARCH-TERM is interpreted as a
+regular expression.
 
-\(fn SEARCH-TERM)" t nil)
+\(fn SEARCH-TERM &optional ARG)" t nil)
 
 (autoload 'projectile-regenerate-tags "projectile" "\
 Regenerate the project's [e|g]tags.
@@ -322,28 +358,45 @@ Invoke `shell' in the project's root.
 
 Switch to the project specific shell buffer if it already exists.
 
-\(fn)" t nil)
+Use a prefix argument ARG to indicate creation of a new process instead.
+
+\(fn ARG)" t nil)
 
 (autoload 'projectile-run-eshell "projectile" "\
 Invoke `eshell' in the project's root.
 
 Switch to the project specific eshell buffer if it already exists.
 
-\(fn)" t nil)
+Use a prefix argument ARG to indicate creation of a new process instead.
+
+\(fn ARG)" t nil)
 
 (autoload 'projectile-run-ielm "projectile" "\
 Invoke `ielm' in the project's root.
 
 Switch to the project specific ielm buffer if it already exists.
 
-\(fn)" t nil)
+Use a prefix argument ARG to indicate creation of a new process instead.
+
+\(fn ARG)" t nil)
 
 (autoload 'projectile-run-term "projectile" "\
 Invoke `term' in the project's root.
 
 Switch to the project specific term buffer if it already exists.
 
-\(fn PROGRAM)" t nil)
+Use a prefix argument ARG to indicate creation of a new process instead.
+
+\(fn ARG)" t nil)
+
+(autoload 'projectile-run-vterm "projectile" "\
+Invoke `vterm' in the project's root.
+
+Switch to the project specific term buffer if it already exists.
+
+Use a prefix argument ARG to indicate creation of a new process instead.
+
+\(fn &optional ARG)" t nil)
 
 (autoload 'projectile-replace "projectile" "\
 Replace literal string in project using non-regexp `tags-query-replace'.
@@ -501,6 +554,11 @@ Remove PROJECT from the list of known projects.
 Remove the current project from the list of known projects.
 
 \(fn)" t nil)
+
+(autoload 'projectile-add-known-project "projectile" "\
+Add PROJECT-ROOT to the list of known projects.
+
+\(fn PROJECT-ROOT)" t nil)
 
 (autoload 'projectile-ibuffer "projectile" "\
 Open an IBuffer window showing all buffers in the current project.
