@@ -344,8 +344,7 @@ sudo ln -sf en_US.dic en_LT.dic
 sudo easy_install pip
 sudo gem install mdl
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
-    virtualbox virtualbox-extension-pack disk-inventory-x google-chrome \
-    pdftotext dash
+    disk-inventory-x google-chrome pdftotext dash
 # Evaluate emacs/emacs/install-dash-docsets.el in Emacs, then install any
 # non-main Dash docsets through the app
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
