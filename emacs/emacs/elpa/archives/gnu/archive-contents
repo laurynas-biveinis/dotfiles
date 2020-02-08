@@ -334,7 +334,7 @@
 		       (:maintainer "Clément Pit-Claudel" . "clement.pitclaudel@live.com")
 		       (:url . "https://github.com/cpitclaudel/compact-docstrings"))])
  (company .
-	  [(0 9 11)
+	  [(0 9 12)
 	   ((emacs
 	     (24 3)))
 	   "Modular text completion framework" tar
@@ -869,7 +869,7 @@
 		  (:keywords "gnome" "c" "coding style")
 		  (:url . "http://elpa.gnu.org/packages/gnome-c-style.html"))])
  (gnorb .
-	[(1 6 4)
+	[(1 6 5)
 	 ((cl-lib
 	   (0 5)))
 	 "Glue code between Gnus, Org, and BBDB" tar
