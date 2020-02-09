@@ -1923,7 +1923,7 @@
 		("Christian Johansson" . "christian@cvj.se"))
 	       (:keywords "tools" "convenience"))])
  (stream .
-	 [(2 2 4)
+	 [(2 2 5)
 	  ((emacs
 	    (25)))
 	  "Implementation of streams" tar
