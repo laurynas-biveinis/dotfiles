@@ -1845,9 +1845,9 @@
 		("Michael Heerdegen" . "michael_heerdegen@web.de"))
 	       (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de"))])
  (sml-mode .
-	   [(6 9)
+	   [(6 10)
 	    ((emacs
-	      (24))
+	      (24 3))
 	     (cl-lib
 	      (0 5)))
 	    "Major mode for editing (Standard) ML" single
