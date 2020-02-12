@@ -12,7 +12,7 @@
 
 (defvar helm-projectile-fuzzy-match t "\
 Enable fuzzy matching for Helm Projectile commands.
-This needs to be set before loading helm-projectile.")
+This needs to be set before loading helm-projectile.el.")
 
 (custom-autoload 'helm-projectile-fuzzy-match "helm-projectile" t)
 
@@ -29,12 +29,12 @@ Other file extensions can be customized with the variable `projectile-other-file
 \(fn &optional FLEX-MATCHING)" t nil)
 
 (autoload 'helm-projectile-on "helm-projectile" "\
-Turn on helm-projectile key bindings.
+Turn on `helm-projectile' key bindings.
 
 \(fn)" t nil)
 
 (autoload 'helm-projectile-off "helm-projectile" "\
-Turn off helm-projectile key bindings.
+Turn off `helm-projectile' key bindings.
 
 \(fn)" t nil)
 
@@ -50,9 +50,14 @@ Helm version of projectile-ack.
 \(fn &optional DIR)" t nil)
 
 (autoload 'helm-projectile-ag "helm-projectile" "\
-Helm version of projectile-ag.
+Helm version of `projectile-ag'.
 
 \(fn &optional OPTIONS)" t nil)
+
+(autoload 'helm-projectile-rg "helm-projectile" "\
+Projectile version of `helm-rg'.
+
+\(fn)" t nil)
 
 (autoload 'helm-projectile-toggle "helm-projectile" "\
 Toggle Helm version of Projectile commands.
