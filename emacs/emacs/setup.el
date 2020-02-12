@@ -1077,6 +1077,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'helm-descbinds)
 (helm-descbinds-mode)
 
+;;; helm-imenu
+(require 'helm-imenu)
+(setq helm-imenu-fuzzy-match t)
+
 ;;; helm-dash
 (require 'helm-dash)
 (setq helm-dash-browser-func 'eww)
