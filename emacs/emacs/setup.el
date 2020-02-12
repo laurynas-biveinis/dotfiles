@@ -1132,7 +1132,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-eldoc-render-all t)
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
-(setq lsp-prefer-flymake nil)
 
 (require 'lsp-ui)
 (setq lsp-ui-sideline-ignore-duplicate t)
