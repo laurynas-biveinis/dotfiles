@@ -1062,6 +1062,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (global-set-key (kbd "C-x b") #'helm-mini)
 (helm-mode 1)
 
+;; helm-buffers
+(require 'helm-buffers)
+(setq helm-buffers-favorite-modes '(text-mode))
+
 ;; helm-autoresize-mode
 (helm-autoresize-mode)
 
