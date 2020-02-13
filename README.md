@@ -113,7 +113,11 @@ Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 Do applicable bits of [macOS Security and Privacy Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide)
 
 Command-R, reboot, Disk Utility, Erase root partition, format as a APFS (not
-encrypted, that will be enabled later).
+encrypted, that will be enabled later). In the recovery mode terminal:
+
+``` bash
+csrutil enable --without dtrace
+```
 
 Command-Option-P-R on the first boot
 
