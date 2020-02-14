@@ -158,10 +158,19 @@ sudo defaults write -g KeyRepeat -int 2
 sudo defaults write -g InitialKeyRepeat -int 35
 defaults write KeyRepeat -int 2
 defaults write InitialKeyRepeat -int 35
-# Uncheck "Turn keyboard access on or off ^F1" in System Preferences -> Keyboard
-# -> Shortcuts.
+# In System Preferences -> Keyboard -> Shortcuts:
+# - uncheck "Turn keyboard access on or off ^F1"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 12 \
 "{enabled = 0; value = { parameters = (65535, 97, 8650752); type = 'standard'; }; }"
+# - uncheck "Mission Control ^-up" and "Application windows ^-down"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 32 \
+"{enabled = 0; value = { parameters = (65535, 126, 8650752); type = 'standard'; }; }"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 33 \
+"{enabled = 0; value = { parameters = (65535, 125, 8650752); type = 'standard'; }; }"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 34 \
+"{enabled = 0; value = { parameters = (65535, 126, 8781824); type = 'standard'; }; }"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 35 \
+"{enabled = 0; value = { parameters = (65535, 125, 8781824); type = 'standard'; }; }"
 #
 # Mouse
 #
