@@ -1378,17 +1378,20 @@ find a search tool; by default, this uses \"find | grep\" in the
                 (format ":%s" project-type)
               "")
             ;; We want to report the project type when only CMake profile but
-            ;; not the run configuration is set. Unfortunately, it defaults to
-            ;; 'clang-release unconditionally. So assume that if it's indeed
-            ;; that value, that it's not has been set, unless cmake-run-config
-            ;; is set too.
-            (if (and (eq project-type "cmake") cmake-run-config)
-                (format ":%s:%s"
-                        (symbol-name cmake-build-profile)
-                        cmake-run-config)
-              (if (not (eq cmake-build-profile 'clang-release))
-                  (format ":%s" (symbol-name cmake-build-profile))
-                "")))))
+            ;; not the run configuration is set. Unfortunately, the build
+            ;; configuration defaults to 'clang-release unconditionally. So
+            ;; assume that if it's indeed that value, that it's not has been
+            ;; set, unless cmake-run-config is set too.
+            (if (eq project-type "cmake")
+                (let ((cmake-build-profile-string (symbol-name
+                                                   cmake-build-profile)))
+                  (cond (cmake-run-config
+                         (format ":%s:%s" cmake-build-profile-string
+                                 cmake-run-config))
+                        ((not (eq cmake-build-profile 'clang-release))
+                         (format ":%s" cmake-build-profile-string))
+                        (t "")))
+              ""))))
 
 (setq projectile-mode-line-function
       #'dotfiles--cmake-build-projectile-mode-line-function)
