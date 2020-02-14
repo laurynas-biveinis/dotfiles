@@ -1293,6 +1293,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'projectile)
 (setq projectile-completion-system 'helm)
 (setq projectile-switch-project-action #'helm-projectile)
+;; Workaround https://github.com/bbatsov/projectile/issues/1501 - the local host
+;; has fd installed but not all TRAMP hosts do. Projectile checks the local host
+;; and attempts to invoke fd on all the remote hosts, thus use the safe command
+;; available everywhere
+(setq projectile-generic-command "find . -type f -print0")
 ;; Steal s-p from ns-print-buffer. I never print buffers
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 ;; Save mode line space
