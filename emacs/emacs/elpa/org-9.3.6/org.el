@@ -7,7 +7,7 @@
 ;; Maintainer: Bastien Guerry <bzg@gnu.org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: https://orgmode.org
-;; Version: 9.3.5
+;; Version: 9.3.6
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -216,7 +216,8 @@ and then loads the resulting file using `load-file'.  With
 optional prefix argument COMPILE, the tangled Emacs Lisp file is
 byte-compiled before it is loaded."
   (interactive "fFile to load: \nP")
-  (let* ((tangled-file (concat (file-name-sans-extension file) ".el")))
+  (let* ((file (file-truename file))
+	 (tangled-file (concat (file-name-sans-extension file) ".el")))
     ;; Tangle only if the Org file is newer than the Elisp file.
     (unless (org-file-newer-than-p
 	     tangled-file
@@ -5078,9 +5079,10 @@ stacked delimiters is N.  Escaping delimiters is not possible."
 		   ;; Do not span over cells in table rows.
 		   (not (and (save-match-data (org-match-line "[ \t]*|"))
 			     (string-match-p "|" (match-string 4))))))
-	    (pcase-let ((`(,_ ,face ,_) (assoc marker org-emphasis-alist)))
+	    (pcase-let ((`(,_ ,face ,_) (assoc marker org-emphasis-alist))
+			(m (if org-hide-emphasis-markers 4 2)))
 	      (font-lock-prepend-text-property
-	       (match-beginning 2) (match-end 2) 'face face)
+	       (match-beginning m) (match-end m) 'face face)
 	      (when verbatim?
 		(org-remove-flyspell-overlays-in
 		 (match-beginning 0) (match-end 0))
@@ -18707,13 +18709,14 @@ With prefix arg UNCOMPILED, load the uncompiled versions."
 			      (and (string= org-dir contrib-dir)
 				   (org-load-noerror-mustsuffix (concat contrib-dir f)))
 			      (and (org-load-noerror-mustsuffix (concat (org-find-library-dir f) f))
-				   (add-to-list 'load-uncore f 'append)
+				   (push f load-uncore)
 				   't)
 			      f))
 			lfeat)))
     (when load-uncore
       (message "The following feature%s found in load-path, please check if that's correct:\n%s"
-	       (if (> (length load-uncore) 1) "s were" " was") load-uncore))
+	       (if (> (length load-uncore) 1) "s were" " was")
+               (reverse load-uncore)))
     (if load-misses
 	(message "Some error occurred while reloading Org feature%s\n%s\nPlease check *Messages*!\n%s"
 		 (if (> (length load-misses) 1) "s" "") load-misses (org-version nil 'full))

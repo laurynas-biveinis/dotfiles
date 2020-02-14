@@ -1411,7 +1411,7 @@
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de")
 	      (:url . "https://github.com/michael-heerdegen/on-screen.el"))])
  (org .
-      [(9 3 5)
+      [(9 3 6)
        nil "Outline-based notes management and organizer" tar
        ((:url . "https://orgmode.org")
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
@@ -2271,7 +2271,7 @@
 	     ("Ivan Kanis" . "ivan@kanis.fr"))
 	    (:maintainer "Ivan Kanis" . "ivan@kanis.fr"))])
  (xclip .
-	[(1 9)
+	[(1 10)
 	 nil "Copy&paste GUI clipboard from text terminal" single
 	 ((:url . "http://elpa.gnu.org/packages/xclip.html")
 	  (:keywords "convenience" "tools")

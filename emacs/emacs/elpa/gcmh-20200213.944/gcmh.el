@@ -6,7 +6,7 @@
 ;; Package: gcmh
 ;; Homepage: https://gitlab.com/koral/gcmh
 ;; Version: 0.1
-;; Package-Version: 20190807.2023
+;; Package-Version: 20200213.944
 ;; Package-Requires: ((emacs "24"))
 ;; Keywords: internal
 
@@ -76,11 +76,14 @@ This is to be used with the `pre-command-hook'."
 (defun gcmh-idle-garbage-collect ()
   "Run garbage collection after `gcmh-idle-delay'."
   (if gcmh-verbose
-      (progn (message "Garbage collecting...")
-             (message "Garbage Collector ran for %.06f sec"
-                      (gcmh-time (garbage-collect))))
-    (garbage-collect))
-  (setq gc-cons-threshold gcmh-low-cons-threshold))
+      (progn
+	(message "Garbage collecting...")
+	(condition-case-unless-debug e
+	    (message "Garbage collecting...done (%.3fs)"
+		     (gcmh-time (garbage-collect)))
+	  (error (message "Garbage collecting...failed")
+		 (signal (car e) (cdr e)))))
+    (garbage-collect)))
 
 ;;;###autoload
 (define-minor-mode gcmh-mode
