@@ -4,7 +4,7 @@
 ;; C-. & C-,
 ;;; Code:
 
-(declare-function dotfiles-kill-buffer-if-exists "setup.el" (buffer))
+(require 'setup-minibuffer)
 
 ;; Better C-x b menu by IDO mode. Alternatives: helm, ivy
 (require 'ido)

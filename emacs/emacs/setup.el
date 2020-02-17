@@ -329,26 +329,11 @@ loaded as such.)"
 (global-font-lock-mode 1)
 
 ;;; minibuffer
-;;; icomplete, obsoleted by Helm
+;; All config made redundant by Helm:
 ;; (require 'setup-icomplete)
-
-(defun dotfiles-kill-buffer-if-exists (buffer)
-  "Kill the BUFFER if it exists."
-  (if (buffer-live-p buffer)
-      (kill-buffer buffer)))
-
-(defun dotfiles--kill-completion-buffer ()
-  "Kill completion buffer, if it exists."
-  (dotfiles-kill-buffer-if-exists "*Completions*"))
-
-(add-hook 'minibuffer-exit-hook #'dotfiles--kill-completion-buffer)
-
-;;; IDO mode, obsoleted by Helm
 ;; (require 'setup-ido)
-
-(require 'minibuf-eldef)
-(setq minibuffer-eldef-shorten-default t)
-(minibuffer-electric-default-mode)
+;; (require 'setup-minibuf-eldef)
+;; (require 'setup-minibuffer)
 
 ;;; autorevert
 (require 'autorevert)
