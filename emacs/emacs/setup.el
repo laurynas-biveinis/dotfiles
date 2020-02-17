@@ -396,7 +396,7 @@ loaded as such.)"
 ;; TAB indents only if point in the beginning of the line
 (setq c-tab-always-indent 1)
 
-;; Typing # moves it to the first column
+;; Typing # moves it to the first column, when not under LSP
 (setq c-electric-pound-behavior '(alignleft))
 
 (setq c-doc-comment-style
@@ -1167,6 +1167,16 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (if dotfiles--use-lsp-indent (apply #'lsp-format-region args)
     (apply orig-fun args)))
 
+(defun dotfiles--lsp-disable-electric-keys ()
+  "Disable any electric keys if LSP on type formatting is enabled."
+  ;; Using internal LSP symbols is not ideal but I don't see an alternative.
+  (when (and lsp-enable-on-type-formatting (lsp--capability
+                                            "documentOnTypeFormattingProvider"))
+    (electric-layout-mode -1)
+    ;; It seems it's OK to call this in non-cc-mode buffers too
+    (c-toggle-electric-state -1)
+    (electric-pair-local-mode -1)))
+
 (defun dotfiles--lsp-replace-cc-mode-indent ()
   "Make ‘c-indent-defun’ and ‘c-indent-region’ use LSP."
   (when (and lsp-enable-indentation
@@ -1184,8 +1194,13 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-cc-mode-indent)
 (add-hook 'lsp-after-open-hook #'yas-minor-mode-on)
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-electric-keys)
 
 (add-hook 'lsp-after-uninitialized-hook #'dotfiles--lsp-restore-cc-mode-indent)
+(add-hook 'lsp-after-uninitialized-hook #'electric-layout-mode)
+;; It seems it's OK to call this in non-cc-mode buffers too
+(add-hook 'lsp-after-uninitialized-hook #'c-toggle-electric-state)
+(add-hook 'lsp-after-uninitialized-hook #'electric-pair-local-mode)
 
 (defconst lsp-clients-clangd-tramp-executable "clangd")
 (defun lsp-clients--clangd-tramp-command ()
