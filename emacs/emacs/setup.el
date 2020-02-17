@@ -1369,8 +1369,7 @@ find a search tool; by default, this uses \"find | grep\" in the
 (defun dotfiles--cmake-build-projectile-mode-line-function ()
   "Report current Projectile and cmake-build.el project info in the modeline."
   (let ((project-name (projectile-project-name))
-        (project-type (projectile-project-type))
-        (cmake-run-config (cmake-build-get-run-config-name)))
+        (project-type (projectile-project-type)))
     (format "%s[%s%s%s]"
             projectile-mode-line-prefix
             (or project-name "-")
@@ -1382,9 +1381,10 @@ find a search tool; by default, this uses \"find | grep\" in the
             ;; configuration defaults to 'clang-release unconditionally. So
             ;; assume that if it's indeed that value, that it's not has been
             ;; set, unless cmake-run-config is set too.
-            (if (eq project-type "cmake")
+            (if (eq project-type 'cmake)
                 (let ((cmake-build-profile-string (symbol-name
-                                                   cmake-build-profile)))
+                                                   cmake-build-profile))
+                      (cmake-run-config (cmake-build-get-run-config-name)))
                   (cond (cmake-run-config
                          (format ":%s:%s" cmake-build-profile-string
                                  cmake-run-config))
