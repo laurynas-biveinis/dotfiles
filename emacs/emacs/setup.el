@@ -982,6 +982,14 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'git-gutter-fringe)
 (global-git-gutter-mode +1)
 
+;; Disable git-gutter-fringe over TRAMP
+(defun dotfiles--tramp-disable-git-gutter-fringe ()
+  "Disable git-gutter-fringe on TRAMP buffers."
+  (if (file-remote-p default-directory)
+      (git-gutter-mode -1)))
+
+(add-hook 'find-file-hook #'dotfiles--tramp-disable-git-gutter-fringe)
+
 ;;; Wakatime
 (require 'wakatime-mode)
 (global-wakatime-mode)
