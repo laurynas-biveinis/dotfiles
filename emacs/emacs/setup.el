@@ -1116,7 +1116,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq helm-org-show-filename t)
 (define-key global-map [remap org-capture] #'helm-org-capture-templates)
 
-;;; lsp-mode
+;;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clients)
 (require 'company-lsp)
@@ -1202,6 +1202,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-hook 'lsp-after-uninitialized-hook #'c-toggle-electric-state)
 (add-hook 'lsp-after-uninitialized-hook #'electric-pair-local-mode)
 
+(add-hook 'prog-mode-hook #'lsp-deferred)
+
+;;; lsp-mode clangd setup
 (defconst lsp-clients-clangd-tramp-executable "clangd")
 (defun lsp-clients--clangd-tramp-command ()
   "Generate the clangd over Tramp startup command."
@@ -1215,9 +1218,15 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                   :server-id 'clangd-tramp
                   :remote? t))
 
-(add-hook 'prog-mode-hook #'lsp-deferred)
+;; https://clang.llvm.org/extra/clangd/Features.html#formatting -
+;; "Format-as-you-type is experimental and doesn’t work well yet."
+(defun dotfiles--lsp-turn-off-on-type-formatting ()
+  "Turn off LSP on type formatting for the current buffer."
+  (setq-local lsp-enable-on-type-formatting nil))
 
-;; Integrate lsp-mode with projectile
+(add-hook 'c-initialization-hook #'dotfiles--lsp-turn-off-on-type-formatting)
+
+;;; Integrate lsp-mode with projectile
 (setq lsp-auto-guess-root t)
 
 ;;; helm-lsp
