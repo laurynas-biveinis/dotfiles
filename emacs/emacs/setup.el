@@ -381,14 +381,6 @@ loaded as such.)"
 
 (setq wdired-allow-to-change-permissions t)
 
-;; From http://atomized.org/2008/12/emacs-create-directory-before-saving/
-(defun dotfiles--create-missing-parent-dirs ()
-  "Create parent directories automatically, if missing."
-  (or (file-exists-p (file-name-directory buffer-file-name))
-      (make-directory (file-name-directory buffer-file-name) t)))
-
-(add-hook 'before-save-hook #'dotfiles--create-missing-parent-dirs)
-
 ;;; cc-mode
 (require 'cc-mode)
 (require 'cc-vars)
