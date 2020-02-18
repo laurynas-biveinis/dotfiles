@@ -522,6 +522,14 @@ loaded as such.)"
 (setq tramp-default-method "scpx")
 (setq tramp-completion-reread-directory-timeout t)
 
+;; TRAMP "integration" with VC: I only use git on remote hosts, handled by
+;; Magit, thus disable VC over TRAMP
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+
+
 ;;; calendar
 (require 'calendar)
 (require 'solar)
@@ -969,6 +977,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; Magit
 (global-set-key (kbd "C-x g") #'magit-status)
 
+;; Magit "integration" with VC
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
 (defun dotfiles--turn-off-size-indication-mode ()
