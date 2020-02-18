@@ -979,8 +979,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
 
 ;;; git-gutter-fringe
-(require 'git-gutter-fringe)
-(global-git-gutter-mode +1)
+;; (require 'setup-git-gutter-fringe)
 
 ;;; Wakatime
 (require 'wakatime-mode)
@@ -1293,7 +1292,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; rich-minority-mode
 (require 'rich-minority)
-(setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
+(setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
                      " WK" " GCMH"))
