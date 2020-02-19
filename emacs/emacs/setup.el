@@ -1149,6 +1149,14 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-ui-doc-include-signature t)
 (setq lsp-ui-doc-position 'top)
 
+;; lsp-mode and TRAMP interaction: do not flycheck too eagerly
+(defun dotfiles--lsp-tramp-flycheck-reduce ()
+  "Tune down Flycheck eagerness in `lsp-mode' for TRAMP buffers."
+  (setq-local lsp-flycheck-live-reporting nil)
+  (setq-local flycheck-check-syntax-automatically '(save idle-change new-line)))
+
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-tramp-flycheck-reduce)
+
 ;; Breaks idempotence of this file, which I am not using anyway.
 (if (fboundp #'lsp-format-defun)
     (display-warning
