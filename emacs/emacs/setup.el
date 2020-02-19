@@ -1021,7 +1021,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                                  vterm-mode))
 
 (setq company-abort-manual-when-too-short t)
-(setq company-idle-delay .3)
+(setq company-idle-delay 0.0)
+(setq company-minimum-prefix-length 1)
 (setq company-tooltip-idle-delay .3)
 (setq company-selection-wrap-around t)
 
