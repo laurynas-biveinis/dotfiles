@@ -982,13 +982,12 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'git-gutter-fringe)
 (global-git-gutter-mode +1)
 
-;; Disable git-gutter-fringe over TRAMP
-(defun dotfiles--tramp-disable-git-gutter-fringe ()
-  "Disable git-gutter-fringe on TRAMP buffers."
-  (if (file-remote-p default-directory)
-      (git-gutter-mode -1)))
-
-(add-hook 'find-file-hook #'dotfiles--tramp-disable-git-gutter-fringe)
+;; Disable git-gutter-fringe over TRAMP. Not the best option to replace an
+;; internal function but oh well. Not much to be gained by advising neither.
+(defun git-gutter--turn-on ()
+  (when (and (buffer-file-name)
+             (not (file-remote-p (buffer-file-name)))
+             (not (memq major-mode git-gutter:disabled-modes)))))
 
 ;;; Wakatime
 (require 'wakatime-mode)
