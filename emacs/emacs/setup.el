@@ -1054,6 +1054,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (global-set-key (kbd "M-y") #'helm-show-kill-ring)
 (global-set-key (kbd "C-x b") #'helm-mini)
+(substitute-key-definition #'apropos-command #'helm-apropos
+                           (current-global-map))
 (helm-mode 1)
 
 ;; helm-buffers
