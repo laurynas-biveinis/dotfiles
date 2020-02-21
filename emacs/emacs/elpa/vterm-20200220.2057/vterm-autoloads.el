@@ -18,12 +18,18 @@ This is the value of `next-error-function' in Compilation buffers.
 (autoload 'vterm "vterm" "\
 Create a new vterm.
 
+If called with an argument ARG, the name of the new buffer will
+be set to ARG, otherwise it will be `vterm'
+
 \(fn &optional BUFFER-NAME)" t nil)
 
 (autoload 'vterm-other-window "vterm" "\
-Create a new vterm.
+Create a new vterm in another window.
 
-\(fn)" t nil)
+If called with an argument ARG, the name of the new buffer will
+be set to ARG, otherwise it will be `vterm'
+
+\(fn &optional BUFFER-NAME)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "vterm" '("vterm-")))
 
