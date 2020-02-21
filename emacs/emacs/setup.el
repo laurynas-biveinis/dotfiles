@@ -747,6 +747,8 @@ loaded as such.)"
                 ((org-agenda-overriding-header "Contextless tasks")))))))
 
 (setq org-agenda-start-on-weekday nil)
+(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
+(setq org-agenda-skip-scheduled-if-deadline-is-shown t)
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-todo-ignore-scheduled 'all)
