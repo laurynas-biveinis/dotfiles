@@ -1269,6 +1269,26 @@
 	     (:authors
 	      ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
 	     (:keywords "convenience" "faces" "languages" "tools"))])
+ (modus-operandi-theme .
+		       [(0 6 0)
+			((emacs
+			  (26 1)))
+			"Accessible light theme (WCAG AAA)" single
+			((:keywords "faces" "theme" "accessibility")
+			 (:authors
+			  ("Protesilaos Stavrou" . "info@protesilaos.com"))
+			 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
+			 (:url . "https://gitlab.com/protesilaos/modus-themes"))])
+ (modus-vivendi-theme .
+		      [(0 6 0)
+		       ((emacs
+			 (26 1)))
+		       "Accessible dark theme (WCAG AAA)" single
+		       ((:keywords "faces" "theme" "accessibility")
+			(:authors
+			 ("Protesilaos Stavrou" . "info@protesilaos.com"))
+			(:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
+			(:url . "https://gitlab.com/protesilaos/modus-themes"))])
  (multishell .
 	     [(1 1 5)
 	      ((cl-lib
@@ -2309,7 +2329,7 @@
 	 ("Thien-Thi Nguyen" . "ttn@gnu.org"))
 	(:keywords "multimedia" "xpm"))])
  (xr .
-     [(1 17)
+     [(1 18)
       ((emacs
 	(26 1)))
       "Convert string regexp to rx notation" tar
