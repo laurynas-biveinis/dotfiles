@@ -366,6 +366,7 @@ brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
 # non-main Dash docsets through the app
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
+duti -s org.videolan.vlc .mp3 all
 npm i -g bash-language-server
 pip3 install cmake-language-server
 # Work
