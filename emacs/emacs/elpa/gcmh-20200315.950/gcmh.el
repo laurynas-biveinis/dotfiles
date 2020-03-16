@@ -6,7 +6,7 @@
 ;; Package: gcmh
 ;; Homepage: https://gitlab.com/koral/gcmh
 ;; Version: 0.1
-;; Package-Version: 20200213.944
+;; Package-Version: 20200315.950
 ;; Package-Requires: ((emacs "24"))
 ;; Keywords: internal
 
@@ -83,7 +83,8 @@ This is to be used with the `pre-command-hook'."
 		     (gcmh-time (garbage-collect)))
 	  (error (message "Garbage collecting...failed")
 		 (signal (car e) (cdr e)))))
-    (garbage-collect)))
+    (garbage-collect))
+  (setq gc-cons-threshold gcmh-low-cons-threshold))
 
 ;;;###autoload
 (define-minor-mode gcmh-mode
