@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -u
+
+echo "Outdated npm packages, if any"
+npm -g outdated
