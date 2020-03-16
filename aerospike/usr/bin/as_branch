@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Create or checkout a new pair of CE/EE Aerospike feature branches, set up
+# project
+
+set -u
+
+readonly COMMAND=$1
+
+if [[ $COMMAND != "create" && $COMMAND != "checkout" ]]; then
+    echo "Usage: $0 [create|checkout] branch"
+    exit 1
+fi
+
+readonly BRANCH=$2
+
+readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
+readonly CE_MASTER="$ASDROOT/ce"
+readonly EE_MASTER="$ASDROOT/ee"
+
+pushd "$ASDROOT" || exit 1
+
+mkdir "$ASDROOT/$BRANCH"
+
+pushd "$EE_MASTER" || exit 1
+if [[ $COMMAND == "create" ]]; then
+    git worktree add "$ASDROOT/$BRANCH/ee" -b "$BRANCH"
+else
+    git worktree add "$ASDROOT/$BRANCH/ee" "$BRANCH"
+fi
+popd || exit 1
+
+pushd "$CE_MASTER" || exit 1
+if [[ $COMMAND == "create" ]]; then
+    git worktree add "$ASDROOT/$BRANCH/ce" -b "$BRANCH"
+else
+    git worktree add "$ASDROOT/$BRANCH/ce" "$BRANCH"
+fi
+popd || exit 1
+
+pushd "$BRANCH/ee" || exit 1
+git submodule update --init
+ln -sf "../$BRANCH/ce/compile_commands.json" .
+popd || exit 1
+
+pushd "$BRANCH/ce" || exit 1
+git submodule update --init
+popd || exit 1
+
+pushd "$BRANCH" || exit 1
+ln -sf "$SUPPORT_FILE_DIR/.clang-format" .
+cp "$SUPPORT_FILE_DIR/asd-.dir-locals.el" .dir-locals.el
+ln -sf "$SUPPORT_FILE_DIR/asd-Makefile" Makefile
+touch .projectile
+make
+popd || exit 0
+
+popd || exit 0
