@@ -71,7 +71,7 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     autoconf-archive gnu-standards autoconf-doc gettext bison-doc flex-doc \
     libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg \
     libquadmath0-dbg gdb-doc gettext-doc libtool-doc m4-doc python-doc cmake \
-    cmake-doc diffstat
+    cmake-doc diffstat unzip
 # Ubuntu 19.04+
 sudo apt-get install fzf hexyl ripgrep fd-find
 # Ubuntu 19.04+: not named fd by default because fdclone (which I don't use) was
