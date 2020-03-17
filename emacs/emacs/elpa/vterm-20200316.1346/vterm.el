@@ -359,6 +359,8 @@ This is the value of `next-error-function' in Compilation buffers."
 (vterm--exclude-keys vterm-keymap-exceptions)
 
 ;; Keybindings
+(define-key vterm-mode-map (kbd "M-<")                 #'vterm--self-insert)
+(define-key vterm-mode-map (kbd "M->")                 #'vterm--self-insert)
 (define-key vterm-mode-map [tab]                       #'vterm-send-tab)
 (define-key vterm-mode-map (kbd "TAB")                 #'vterm-send-tab)
 (define-key vterm-mode-map [backtab]                   #'vterm--self-insert)
@@ -617,6 +619,15 @@ Optional argument PASTE-P paste-p."
                               #'vterm--delayed-redraw (current-buffer))))
     (vterm--delayed-redraw (current-buffer))
     (setq vterm--redraw-immididately nil)))
+
+(defun vterm-check-proc (&optional buffer)
+  "True if there is a process associated w/buffer BUFFER, and it
+is alive.  BUFFER can be either a buffer or the name of one."
+  (let* ((buffer (get-buffer (or buffer (current-buffer))))
+         (proc (get-buffer-process buffer)))
+    (and proc
+         (memq (process-status proc) '(run stop open listen connect))
+         (buffer-local-value 'vterm--term buffer))))
 
 (defun vterm--delayed-redraw(buffer)
   "Redraw the terminal buffer .
