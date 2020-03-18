@@ -4,7 +4,7 @@
 
 ;; Author: jtbm37
 ;; Version: 1.0
-;; Package-Version: 20200301.1346
+;; Package-Version: 20200317.2133
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/jtbm37/all-the-icons-dired
@@ -80,14 +80,14 @@
   (save-excursion
     (goto-char (point-min))
     (while (not (eobp))
-      (let ((file (dired-get-filename 'verbatim t)))
+      (let ((file (dired-get-filename 'relative 'noerror)))
         (when file
           (let ((icon (if (file-directory-p file)
                           (all-the-icons-icon-for-dir file nil "")
                         (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
             (if (member file '("." ".."))
-                (all-the-icons-dired--add-overlay (point) "  ")
-              (all-the-icons-dired--add-overlay (point) (concat icon " "))))))
+                (all-the-icons-dired--add-overlay (point) "  \t")
+              (all-the-icons-dired--add-overlay (point) (concat icon "\t"))))))
       (dired-next-line 1))))
 
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
@@ -99,9 +99,11 @@
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
   (when (derived-mode-p 'dired-mode)
+    (setq-local tab-width 1)
     (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
+    (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
     (with-eval-after-load 'dired-narrow
       (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice))
     (all-the-icons-dired--refresh)))
@@ -112,6 +114,7 @@
   (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
+  (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
   (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
