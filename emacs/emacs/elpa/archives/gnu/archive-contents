@@ -1931,7 +1931,7 @@
 	    (:maintainer "Artur Malabarba" . "emacs@endlessparentheses.com")
 	    (:url . "https://github.com/Malabarba/spinner.el"))])
  (sql-indent .
-	     [(1 4)
+	     [(1 5)
 	      ((cl-lib
 		(0 5)))
 	      "Support for indenting code in SQL files." tar
