@@ -90,10 +90,11 @@ sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     maven clang-tools-8 clang-8-doc llvm-8-doc bear libcurl4-openssl-dev \
     libcurl4-doc
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-get install clangd-9 clang-format-9
-sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
+sudo add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
+sudo apt-get install clangd-10 clang-format-10
+sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
 sudo update-alternatives --install /usr/bin/clang-format clang-format \
-    /usr/bin/clang-format-9 100
+    /usr/bin/clang-format-10 100
 # MySQL development specific
 sudo apt-get install ccache valgrind rapidjson-dev valgrind-dbg \
     libboost-container-dev libboost-doc clang clang-8-doc llvm-8-doc \
