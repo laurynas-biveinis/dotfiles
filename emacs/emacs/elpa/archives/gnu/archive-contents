@@ -1005,7 +1005,11 @@
 	      (:keywords "comm" "convenience" "files" "frames" "hypermedia" "languages" "mail" "matching" "mouse" "multimedia" "outlines" "tools" "wp"))])
  (ioccur .
 	 [(2 4)
-	  nil "Incremental occur" single
+	  ((emacs
+	    (24))
+	   (cl-lib
+	    (0 5)))
+	  "Incremental occur" single
 	  ((:authors
 	    ("Thierry Volpiatto" . "thierry.volpiatto@gmail.com"))
 	   (:maintainer "Thierry Volpiatto" . "thierry.volpiatto@gmail.com")
