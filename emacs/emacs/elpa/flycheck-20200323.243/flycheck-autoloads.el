@@ -1,9 +1,12 @@
 ;;; flycheck-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory #$) (car load-path))))
+
 
-;;;### (autoloads nil "flycheck" "flycheck.el" (23173 3647 0 0))
+;;;### (autoloads nil "flycheck" "flycheck.el" (0 0 0 0))
 ;;; Generated autoloads from flycheck.el
 
 (autoload 'flycheck-manual "flycheck" "\
@@ -224,10 +227,39 @@ Use this together with the `option', `option-list' and
 
 (function-put 'flycheck-def-option-var 'doc-string-elt '4)
 
+(autoload 'flycheck-define-checker "flycheck" "\
+Define SYMBOL as command syntax checker with DOCSTRING and PROPERTIES.
+
+Like `flycheck-define-command-checker', but PROPERTIES must not
+be quoted.  Also, implicitly define the executable variable for
+SYMBOL with `flycheck-def-executable-var'.
+
+\(fn SYMBOL DOCSTRING &rest PROPERTIES)" nil t)
+
+(function-put 'flycheck-define-checker 'lisp-indent-function '1)
+
+(function-put 'flycheck-define-checker 'doc-string-elt '2)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "flycheck" '("flycheck-" "list-flycheck-errors" "help-flycheck-checker-d")))
+
 ;;;***
 
-;;;### (autoloads nil nil ("flycheck-buttercup.el" "flycheck-ert.el"
-;;;;;;  "flycheck-pkg.el") (23173 3647 0 0))
+;;;### (autoloads nil "flycheck-buttercup" "flycheck-buttercup.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from flycheck-buttercup.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "flycheck-buttercup" '("flycheck-buttercup-format-error-list")))
+
+;;;***
+
+;;;### (autoloads nil "flycheck-ert" "flycheck-ert.el" (0 0 0 0))
+;;; Generated autoloads from flycheck-ert.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "flycheck-ert" '("flycheck-er")))
+
+;;;***
+
+;;;### (autoloads nil nil ("flycheck-pkg.el") (0 0 0 0))
 
 ;;;***
 
@@ -235,5 +267,6 @@ Use this together with the `option', `option-list' and
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; flycheck-autoloads.el ends here
