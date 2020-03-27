@@ -13,28 +13,29 @@ if [[ $COMMAND != "create" && $COMMAND != "checkout" ]]; then
 fi
 
 readonly BRANCH=$2
+readonly BRANCH_ROOT=$ASD_BRANCHES/$BRANCH
 
 readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
-readonly CE_MASTER="$ASDROOT/ce"
-readonly EE_MASTER="$ASDROOT/ee"
+readonly CE_MASTER="$ASD_MASTER/ce"
+readonly EE_MASTER="$ASD_MASTER/ee"
 
-pushd "$ASDROOT" || exit 1
+pushd "$ASD_BRANCHES" || exit 1
 
-mkdir "$ASDROOT/$BRANCH"
+mkdir "$BRANCH"
 
 pushd "$EE_MASTER" || exit 1
 if [[ $COMMAND == "create" ]]; then
-    git worktree add "$ASDROOT/$BRANCH/ee" -b "$BRANCH"
+    git worktree add "$BRANCH_ROOT/ee" -b "$BRANCH"
 else
-    git worktree add "$ASDROOT/$BRANCH/ee" "$BRANCH"
+    git worktree add "$BRANCH_ROOT/ee" "$BRANCH"
 fi
 popd || exit 1
 
 pushd "$CE_MASTER" || exit 1
 if [[ $COMMAND == "create" ]]; then
-    git worktree add "$ASDROOT/$BRANCH/ce" -b "$BRANCH"
+    git worktree add "$BRANCH_ROOT/ce" -b "$BRANCH"
 else
-    git worktree add "$ASDROOT/$BRANCH/ce" "$BRANCH"
+    git worktree add "$BRANCH_ROOT/ce" "$BRANCH"
 fi
 popd || exit 1
 
