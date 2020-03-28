@@ -4,7 +4,7 @@
 
 ;; Author: jtbm37
 ;; Version: 1.0
-;; Package-Version: 20200317.2133
+;; Package-Version: 20200327.758
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/jtbm37/all-the-icons-dired
@@ -83,7 +83,9 @@
       (let ((file (dired-get-filename 'relative 'noerror)))
         (when file
           (let ((icon (if (file-directory-p file)
-                          (all-the-icons-icon-for-dir file nil "")
+                          (all-the-icons-icon-for-dir file
+                                                      :face 'all-the-icons-dired-dir-face
+                                                      :v-adjust all-the-icons-dired-v-adjust)
                         (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
             (if (member file '("." ".."))
                 (all-the-icons-dired--add-overlay (point) "  \t")
