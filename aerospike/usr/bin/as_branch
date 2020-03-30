@@ -7,19 +7,35 @@ set -u
 
 readonly COMMAND=$1
 
-if [[ $COMMAND != "create" && $COMMAND != "checkout" ]]; then
+if [[ $COMMAND != "create" && $COMMAND != "checkout"
+             && $COMMAND != "fetch" ]]; then
     echo "Usage: $0 [create|checkout] branch"
+    echo "       $0 fetch"
     exit 1
+fi
+
+readonly CE_MASTER="$ASD_MASTER/ce"
+readonly EE_MASTER="$ASD_MASTER/ee"
+
+pushd "$ASD_BRANCHES" || exit 1
+
+if [[ $COMMAND == "fetch" ]]; then
+    pushd "$EE_MASTER" || exit 1
+    git fetch --all -p --recurse-submodules=yes -j 5
+    popd || exit 1
+
+    pushd "$CE_MASTER" || exit 1
+    git fetch --all -p --recurse-submodules=yes -j 5
+    popd || exit 1
+
+    popd || exit 0
+    exit 0
 fi
 
 readonly BRANCH=$2
 readonly BRANCH_ROOT=$ASD_BRANCHES/$BRANCH
 
 readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
-readonly CE_MASTER="$ASD_MASTER/ce"
-readonly EE_MASTER="$ASD_MASTER/ee"
-
-pushd "$ASD_BRANCHES" || exit 1
 
 mkdir "$BRANCH"
 
@@ -41,7 +57,7 @@ popd || exit 1
 
 pushd "$BRANCH/ee" || exit 1
 git submodule update --init
-ln -sf "../$BRANCH/ce/compile_commands.json" .
+ln -sf "../ce/compile_commands.json" .
 popd || exit 1
 
 pushd "$BRANCH/ce" || exit 1
