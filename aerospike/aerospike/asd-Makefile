@@ -4,6 +4,6 @@ build :
 	(cd ce && bear -a make -j5 +ee)
 
 clean :
-	(cd ce && make -j5 -k +ee clean)
+	(cd ce && make -j5 -k clean+ee)
 
 .PHONY : build clean
