@@ -1,9 +1,19 @@
 export EEREPO=$(CURDIR)/ee
 
+rebuild :
+	$(MAKE) clean
+	$(MAKE) build
+
 build :
+	(cd ce && bear make -j5 +ee)
+
+incremental :
 	(cd ce && bear -a make -j5 +ee)
+
+community : clean
+	(cd ce && rm compile_commands.json && bear make -j5)
 
 clean :
 	(cd ce && make -j5 -k clean+ee)
 
-.PHONY : build clean
+.PHONY : build rebuild incremental clean community
