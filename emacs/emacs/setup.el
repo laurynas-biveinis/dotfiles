@@ -1162,6 +1162,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'lsp-ui-doc)
 (setq lsp-ui-doc-header t)
 (setq lsp-ui-doc-include-signature t)
+(setq lsp-ui-doc-alignment 'window)
 (setq lsp-ui-doc-position 'top)
 
 ;; lsp-mode and TRAMP interaction: do not flycheck too eagerly
