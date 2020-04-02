@@ -1140,7 +1140,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-eldoc-render-all t)
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
-(setq lsp-enable-semantic-highlighting t)
+(setq lsp-semantic-highlighting :immediate)
 
 ;;; lsp-diagnostics-modeline-mode
 (setq lsp-diagnostics-modeline-scope :project)
