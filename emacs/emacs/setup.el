@@ -425,14 +425,9 @@ loaded as such.)"
 
 (advice-add #'compilation-filter :around #'dotfiles--compilation-filter-advice)
 
-;;; eldoc-mode: show the args of the current function in the echo area
-(add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
-(add-hook 'ielm-mode-hook #'eldoc-mode)
-
 ;;; elisp-mode
 (defun dotfiles--emacs-lisp-mode-hook ()
   "Configuration for 'emacs-lisp-mode'."
-  (eldoc-mode)
   ;; Should the global default ever change, elisp should stay with spaces
   (setq indent-tabs-mode nil))
 
