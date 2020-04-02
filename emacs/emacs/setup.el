@@ -1137,6 +1137,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'company-lsp)
 (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
 (setq lsp-enable-snippet t)
+;; TODO(laurynas): C and C++ docs render with interspersed random backslashes:
+;; https://emacs.stackexchange.com/questions/55056/how-to-improve-eldoc-lsp-mode-output-with-c-c-comments
+;; https://github.com/jrblevin/markdown-mode/issues/409
 (setq lsp-eldoc-render-all t)
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
