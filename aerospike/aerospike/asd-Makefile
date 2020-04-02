@@ -1,11 +1,11 @@
 export EEREPO=$(CURDIR)/ee
 
+build :
+	(cd ce && bear make -j5 +ee)
+
 rebuild :
 	$(MAKE) clean
 	$(MAKE) build
-
-build :
-	(cd ce && bear make -j5 +ee)
 
 incremental :
 	(cd ce && bear -a make -j5 +ee)
