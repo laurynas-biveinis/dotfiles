@@ -982,9 +982,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; Disable git-gutter-fringe over TRAMP. Not the best option to replace an
 ;; internal function but oh well. Not much to be gained by advising neither.
 (defun git-gutter--turn-on ()
+  "Upstream git-gutter--turn-on replacement to disable git-gutter for TRAMP."
   (when (and (buffer-file-name)
              (not (file-remote-p (buffer-file-name)))
-             (not (memq major-mode git-gutter:disabled-modes)))))
+             (not (memq major-mode git-gutter:disabled-modes)))
+    (git-gutter-mode +1)))
 
 ;;; Wakatime
 (require 'wakatime-mode)
