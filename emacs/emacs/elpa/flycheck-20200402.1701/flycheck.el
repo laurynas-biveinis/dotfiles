@@ -6450,26 +6450,23 @@ the BUFFER that was checked respectively.
 
 See URL `https://palantir.github.io/tslint/' for more information
 about TSLint."
-  (let ((json-array-type 'list))
-    (seq-map (lambda (message)
-               (let-alist message
-                 (flycheck-error-new-at
-                  (+ 1 .startPosition.line)
-                  (+ 1 .startPosition.character)
-                  (pcase .ruleSeverity
-                    ("ERROR"   'error)
-                    ("WARNING" 'warning)
-                    (_         'warning))
-                  .failure
-                  :id .ruleName
-                  :checker checker
-                  :buffer buffer
-                  :filename .name
-                  :end-line (+ 1 .endPosition.line)
-                  :end-column (+ 1 .endPosition.character))))
-             ;; Don't try to parse empty output as JSON
-             (and (not (string-empty-p output))
-                  (car (flycheck-parse-json output))))))
+  (seq-map (lambda (message)
+             (let-alist message
+               (flycheck-error-new-at
+                (+ 1 .startPosition.line)
+                (+ 1 .startPosition.character)
+                (pcase .ruleSeverity
+                  ("ERROR"   'error)
+                  ("WARNING" 'warning)
+                  (_         'warning))
+                .failure
+                :id .ruleName
+                :checker checker
+                :buffer buffer
+                :filename .name
+                :end-line (+ 1 .endPosition.line)
+                :end-column (+ 1 .endPosition.character))))
+           (car (flycheck-parse-json output))))
 
 (defun flycheck-parse-rust-collect-spans (span)
   "Return a list of spans contained in a SPAN object."
@@ -6620,6 +6617,17 @@ https://github.com/rust-lang/rust/blob/master/src/librustc_errors/json.rs#L154"
             errors))
     (nreverse errors)))
 
+(defconst flycheck--json-parser
+  (if (and (functionp 'json-parse-buffer)
+           ;; json-parse-buffer only supports keyword arguments in Emacs 27+
+           (>= emacs-major-version 27))
+      (lambda ()
+        (json-parse-buffer
+         :object-type 'alist :array-type 'list
+         :null-object nil :false-object nil))
+    #'json-read)
+  "Function to use to parse JSON strings.")
+
 (defun flycheck-parse-json (output)
   "Return parsed JSON data from OUTPUT.
 
@@ -6637,7 +6645,7 @@ lines, and returns the parsed JSON lines in a list."
       (goto-char (point-min))
       (while (not (eobp))
         (when (memq (char-after) '(?\{ ?\[))
-          (push (json-read) objects))
+          (push (funcall flycheck--json-parser) objects))
         (forward-line)))
     (nreverse objects)))
 
@@ -9964,6 +9972,29 @@ which should be used and reported to the user."
   :safe #'booleanp
   :package-version '(flycheck . "0.25"))
 
+(defun flycheck-parse-pylint (output checker buffer)
+  "Parse JSON OUTPUT of CHECKER on BUFFER as Pylint errors."
+  (mapcar (lambda (err)
+            (let-alist err
+              ;; Pylint can return -1 as a line or a column, hence the call to
+              ;; `max'.  See `https://github.com/flycheck/flycheck/issues/1383'.
+              (flycheck-error-new-at
+               (and .line (max .line 1))
+               (and .column (max (1+ .column) 1))
+               (pcase .type
+                 ;; See "pylint/utils.py"
+                 ((or "fatal" "error") 'error)
+                 ((or "info" "convention") 'info)
+                 ((or "warning" "refactor" _) 'warning))
+               ;; Drop lines showing the error in context
+               (and (string-match (rx (*? nonl) eol) .message)
+                    (match-string 0 .message))
+               :id (if flycheck-pylint-use-symbolic-id .symbol .message-id)
+               :checker checker
+               :buffer buffer
+               :filename .path)))
+          (car (flycheck-parse-json output))))
+
 (flycheck-define-checker python-pylint
   "A Python syntax and style checker using Pylint.
 
@@ -9976,30 +10007,12 @@ See URL `https://www.pylint.org/'."
   :command ("python3"
             (eval (flycheck-python-module-args 'python-pylint "pylint"))
             "--reports=n"
-            "--output-format=text"
-            (eval (if flycheck-pylint-use-symbolic-id
-                      "--msg-template={path}:{line}:{column}:{C}:{symbol}:{msg}"
-                    "--msg-template={path}:{line}:{column}:{C}:{msg_id}:{msg}"))
+            "--output-format=json"
             (config-file "--rcfile=" flycheck-pylintrc concat)
             ;; Need `source-inplace' for relative imports (e.g. `from .foo
             ;; import bar'), see https://github.com/flycheck/flycheck/issues/280
             source-inplace)
-  :error-filter
-  (lambda (errors)
-    (flycheck-sanitize-errors (flycheck-increment-error-columns errors)))
-  :error-patterns
-  ((error line-start (file-name) ":" line ":" column ":"
-          (or "E" "F") ":"
-          (id (one-or-more (not (any ":")))) ":"
-          (message) line-end)
-   (warning line-start (file-name) ":" line ":" column ":"
-            (or "W" "R") ":"
-            (id (one-or-more (not (any ":")))) ":"
-            (message) line-end)
-   (info line-start (file-name) ":" line ":" column ":"
-         (or "C" "I") ":"
-         (id (one-or-more (not (any ":")))) ":"
-         (message) line-end))
+  :error-parser flycheck-parse-pylint
   :enabled (lambda ()
              (or (not (flycheck-python-needs-module-p 'python-pylint))
                  (flycheck-python-find-module 'python-pylint "pylint")))
