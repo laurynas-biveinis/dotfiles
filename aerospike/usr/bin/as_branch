@@ -1,26 +1,30 @@
 #!/bin/bash
 
-# Create or checkout a new pair of CE/EE Aerospike feature branches, set up
-# project
+# Manage Aerospike CE/EE branch pairs: create a set of branches, optionally with
+# a starting point; checkout a set of branches; fetch remotes; remove a set of
+# worktrees and their branches.
+#
+# In case of checkout or create, Emacs project will be set up and Aerospike
+# server built in EE flavor.
 
 set -u
 
 readonly COMMAND=$1
 
-if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" ]];
+if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" &&
+          $COMMAND != "rm" ]];
 then
     echo "Usage: $0 create branch [starting_point]"
     echo "Usage: $0 checkout branch"
     echo "       $0 fetch"
+    echo "       $0 rm branch"
     exit 1
 fi
 
 readonly CE_MASTER="$ASD_MASTER/ce"
 readonly EE_MASTER="$ASD_MASTER/ee"
 
-pushd "$ASD_BRANCHES" || exit 1
-
-if [[ $COMMAND == "fetch" ]]; then
+function do_fetch () {
     pushd "$EE_MASTER" || exit 1
     git fetch --all -p --recurse-submodules=yes -j 5
     popd || exit 1
@@ -28,20 +32,43 @@ if [[ $COMMAND == "fetch" ]]; then
     pushd "$CE_MASTER" || exit 1
     git fetch --all -p --recurse-submodules=yes -j 5
     popd || exit 1
+}
 
+function do_rm () {
+    rm -rf "$BRANCH_ROOT" || exit 1
+
+    pushd "$EE_MASTER" || exit 1
+    git worktree prune
+    git branch -d "$BRANCH"
+    popd || exit 1
+
+    pushd "$CE_MASTER" || exit 1
+    git worktree prune
+    git branch -d "$BRANCH"
+    popd || exit 1
+}
+
+pushd "$ASD_BRANCHES" || exit 1
+
+if [[ $COMMAND == "fetch" ]]; then
+    do_fetch
     popd || exit 0
     exit 0
 fi
 
 readonly BRANCH=$2
 
-if [[ $COMMAND == "create" && "$#" -gt 2 ]]; then
-    readonly START_POINT=$3
-else
-    readonly START_POINT=
+readonly BRANCH_ROOT=$ASD_BRANCHES/$BRANCH
+
+if [[ $COMMAND == "rm" ]]; then
+    do_rm
+    popd || exit 0
+    exit 0
 fi
 
-readonly BRANCH_ROOT=$ASD_BRANCHES/$BRANCH
+if [[ $COMMAND == "create" && "$#" -gt 2 ]]; then
+    readonly START_POINT=$3
+ fi
 
 readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
 
@@ -49,7 +76,8 @@ mkdir "$BRANCH"
 
 pushd "$EE_MASTER" || exit 1
 if [[ $COMMAND == "create" ]]; then
-    git worktree add "$BRANCH_ROOT/ee" -b "$BRANCH" "$START_POINT"
+    git worktree add "$BRANCH_ROOT/ee" -b "$BRANCH" \
+        ${START_POINT:+"$START_POINT"}
 else
     git worktree add "$BRANCH_ROOT/ee" "$BRANCH"
 fi
@@ -57,7 +85,8 @@ popd || exit 1
 
 pushd "$CE_MASTER" || exit 1
 if [[ $COMMAND == "create" ]]; then
-    git worktree add "$BRANCH_ROOT/ce" -b "$BRANCH" "$START_POINT"
+    git worktree add "$BRANCH_ROOT/ce" -b "$BRANCH" \
+        ${START_POINT:+"$START_POINT"}
 else
     git worktree add "$BRANCH_ROOT/ce" "$BRANCH"
 fi
