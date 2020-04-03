@@ -1154,6 +1154,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-ui-sideline-show-symbol nil)
 (setq lsp-ui-peek-fontify 'always)
 (setq lsp-ui-peek-peek-height 30)
+(setq lsp-ui-sideline-actions-kind-regex ".*")
 
 (define-key lsp-ui-mode-map [remap xref-find-definitions]
   #'lsp-ui-peek-find-definitions)
