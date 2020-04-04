@@ -4,7 +4,7 @@
 
 ;; Author: jtbm37
 ;; Version: 1.0
-;; Package-Version: 20200327.758
+;; Package-Version: 20200403.1018
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/jtbm37/all-the-icons-dired
@@ -80,17 +80,18 @@
   (save-excursion
     (goto-char (point-min))
     (while (not (eobp))
-      (let ((file (dired-get-filename 'relative 'noerror)))
-        (when file
-          (let ((icon (if (file-directory-p file)
-                          (all-the-icons-icon-for-dir file
-                                                      :face 'all-the-icons-dired-dir-face
-                                                      :v-adjust all-the-icons-dired-v-adjust)
-                        (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
-            (if (member file '("." ".."))
-                (all-the-icons-dired--add-overlay (point) "  \t")
-              (all-the-icons-dired--add-overlay (point) (concat icon "\t"))))))
-      (dired-next-line 1))))
+      (when (dired-move-to-filename nil)
+        (let ((file (dired-get-filename 'relative 'noerror)))
+          (when file
+            (let ((icon (if (file-directory-p file)
+                            (all-the-icons-icon-for-dir file
+                                                        :face 'all-the-icons-dired-dir-face
+                                                        :v-adjust all-the-icons-dired-v-adjust)
+                          (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
+              (if (member file '("." ".."))
+                  (all-the-icons-dired--add-overlay (point) "  \t")
+                (all-the-icons-dired--add-overlay (point) (concat icon "\t")))))))
+      (forward-line 1))))
 
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
   "Advice function for FN with ARGS."
@@ -106,6 +107,7 @@
     (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
     (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
+    (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
     (with-eval-after-load 'dired-narrow
       (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice))
     (all-the-icons-dired--refresh)))
@@ -117,6 +119,7 @@
   (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
   (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
+  (advice-remove 'dired-do-kill-lines #'all-the-icons-dired--refresh-advice)
   (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
