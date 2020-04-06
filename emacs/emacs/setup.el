@@ -1507,4 +1507,8 @@ find a search tool; by default, this uses \"find | grep\" in the
 (require 'which-key)
 (which-key-mode)
 
+;;;; calfw
+(require 'calfw)
+(require 'calfw-org)
+
 ;;; setup.el ends here
