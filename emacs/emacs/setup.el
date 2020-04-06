@@ -1267,6 +1267,13 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'c-initialization-hook #'dotfiles--lsp-turn-off-on-type-formatting)
 
+;;; lsp-treemacs
+;; TODO(laurynas): once the language servers I am interested in (clangd) start
+;; supporting call hierarchy - revisit lsp-treemacs, i.e.
+;; lsp-treemacs-call-hierarchy. There are some other slightly interesting
+;; features (lsp-treemacs-errors-list, lsp-treemacs-symbols-list), but it seems
+;; there are TRAMP issues too.
+
 ;;; Integrate lsp-mode with projectile
 (setq lsp-auto-guess-root t)
 
