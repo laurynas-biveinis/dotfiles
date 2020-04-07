@@ -1510,5 +1510,19 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;;;; calfw
 (require 'calfw)
 (require 'calfw-org)
+(require 'calfw-ical)
+
+;; Unicode characters
+(setq cfw:fchar-junction ?╋
+      cfw:fchar-vertical-line ?┃
+      cfw:fchar-horizontal-line ?━
+      cfw:fchar-left-junction ?┣
+      cfw:fchar-right-junction ?┫
+      cfw:fchar-top-junction ?┯
+      cfw:fchar-top-left-corner ?┏
+      cfw:fchar-top-right-corner ?┓)
+
+(setq cfw:render-line-breaker #'cfw:render-line-breaker-wordwrap)
+
 
 ;;; setup.el ends here
