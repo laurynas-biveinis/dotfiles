@@ -50,7 +50,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (calfw-ical calfw calfw-org helm-make gcmh which-key keyfreq helm-dash helm-org helm-lsp helm-descbinds helm-projectile helm company-box yasnippet iedit modern-cpp-font-lock highlight-indent-guides page-break-lines xterm-color eldoc-cmake projectile vterm deadgrep all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent company-lsp lsp-ui lsp-mode company flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode po-mode ssh ssh-config-mode bison-mode org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme wakatime-mode exec-path-from-shell autopair magit org auctex)))
+    (org-jira calfw-ical calfw calfw-org helm-make gcmh which-key keyfreq helm-dash helm-org helm-lsp helm-descbinds helm-projectile helm company-box yasnippet iedit modern-cpp-font-lock highlight-indent-guides page-break-lines xterm-color eldoc-cmake projectile vterm deadgrep all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent company-lsp lsp-ui lsp-mode company flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode po-mode ssh ssh-config-mode bison-mode org-plus-contrib cmake-font-lock cmake-mode google-c-style solarized-theme wakatime-mode exec-path-from-shell autopair magit org auctex)))
  '(safe-local-variable-values
    (quote
     ((c-tab-always-indent t)
