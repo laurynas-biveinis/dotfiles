@@ -1,4 +1,4 @@
-;;; lsp-dls.el --- dls configuration               -*- lexical-binding: t; -*-
+;;; lsp-perl.el --- lsp-perl config  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020 lsp-mode developers
 
@@ -20,39 +20,48 @@
 
 ;;; Commentary:
 
-;; dls client configuration
+;; lsp-perl client
 
 ;;; Code:
 
 (require 'lsp-mode)
 
-(defgroup lsp-dls nil
-  "LSP support for D, using https://github.com/d-language-server/dls."
+(defgroup lsp-perl nil
+  "LSP support for Perl"
   :group 'lsp-mode
-  :link '(url-link "https://github.com/d-language-server/dls")
+  :link '(url-link "https://github.com/richterger/Perl-LanguageServer")
   :package-version '(lsp-mode . "6.3"))
 
-(defcustom lsp-dls-path "dls"
-  "Path to dls server binary."
+(defcustom lsp-perl-language-server-path "perl"
+  "Path to perl interpreter."
   :type 'string
-  :group 'lsp-dls
+  :group 'lsp-perl
   :package-version '(lsp-mode . "6.3"))
 
-(defcustom lsp-dls-args nil
-  "Add server initialization options for dls."
-  :type '(repeat string)
-  :group 'lsp-dls
+(defcustom lsp-perl-language-server-port 13603
+  "Choose listen port."
+  :type 'integer
+  :group 'lsp-perl
+  :package-version '(lsp-mode . "6.3"))
+
+(defcustom lsp-perl-language-server-client-version "2.1.0"
+  "Choose client version."
+  :type 'string
+  :group 'lsp-perl
   :package-version '(lsp-mode . "6.3"))
 
 (lsp-register-client
  (make-lsp-client :new-connection (lsp-stdio-connection
-                                   (lambda () (cons lsp-dls-path lsp-dls-args)))
-                  :major-modes '(d-mode)
+                                   (lambda ()
+                                     (list lsp-perl-language-server-path
+                                           (format "-MPerl::LanguageServer -e Perl::LanguageServer::run -- --port %o --version %s"
+                                                   lsp-perl-language-server-port lsp-perl-language-server-client-version))))
+                  :major-modes '(perl-mode cperl-mode)
                   :priority -1
-                  :server-id 'dls))
+                  :server-id 'perl-language-server))
 
-(provide 'lsp-dls)
-;;; lsp-dls.el ends here
+(provide 'lsp-perl)
+;;; lsp-perl.el ends here
 
 ;; Local Variables:
 ;; flycheck-disabled-checkers: (emacs-lisp-checkdoc)
