@@ -410,8 +410,10 @@ loaded as such.)"
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
 
-;; windmove
+;;; windmove
 (windmove-default-keybindings 'super)
+;; TODO(laurynas): if I ever move to two frames or more setup, look into
+;; framemove
 
 ;; Compilation
 (require 'compile)
