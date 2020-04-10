@@ -1,12 +1,12 @@
 ;;; gcmh.el --- the Garbage Collector Magic Hack -*- lexical-binding:t -*-
 
-;; Copyright (C) 2019 Andrea Corallo
+;; Copyright (C) 2019-2020 Andrea Corallo
 
-;; Maintainer: andrea_corallo@yahoo.it
+;; Maintainer: akrl@sdf.org
 ;; Package: gcmh
 ;; Homepage: https://gitlab.com/koral/gcmh
 ;; Version: 0.1
-;; Package-Version: 20200315.950
+;; Package-Version: 20200409.1456
 ;; Package-Requires: ((emacs "24"))
 ;; Keywords: internal
 
