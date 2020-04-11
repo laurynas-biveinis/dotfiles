@@ -1549,7 +1549,7 @@
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
 	    (:url . "http://elpa.gnu.org/packages/persist.html"))])
  (phps-mode .
-	    [(0 3 38)
+	    [(0 3 39)
 	     ((emacs
 	       (26)))
 	     "Major mode for PHP with Semantic integration" tar
@@ -1812,6 +1812,18 @@
 	  (:authors
 	   ("Jan Moringen" . "scymtym@users.sourceforge.net"))
 	  (:keywords "rudel" "collaboration"))])
+ (scanner .
+	  [(0 1)
+	   ((emacs
+	     (25 1))
+	    (dash
+	     (2 12 0)))
+	   "Scan documents and images" tar
+	   ((:url . "https://gitlab.com/rstocker/scanner.git")
+	    (:maintainer "Raffael Stocker" . "r.stocker@mnet-mail.de")
+	    (:authors
+	     ("Raffael Stocker" . "r.stocker@mnet-mail.de"))
+	    (:keywords "hardware" "multimedia"))])
  (scroll-restore .
 		 [(1 0)
 		  nil "restore original position after scrolling" single
