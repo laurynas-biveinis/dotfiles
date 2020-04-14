@@ -9,10 +9,11 @@
 
 set -u
 
-readonly COMMAND=$1
+readonly COMMAND=${1-UNDEFINED}
 
-if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" &&
-          $COMMAND != "rm" ]];
+if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" && \
+          $COMMAND != "rm" || \
+      $COMMAND == "UNDEFINED" ]]
 then
     echo "Usage: $0 create branch [starting_point]"
     echo "Usage: $0 checkout branch"
