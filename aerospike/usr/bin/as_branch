@@ -68,7 +68,7 @@ fi
 
 if [[ $COMMAND == "create" && "$#" -gt 2 ]]; then
     readonly START_POINT=$3
- fi
+fi
 
 readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
 
