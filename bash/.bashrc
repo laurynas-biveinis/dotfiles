@@ -102,9 +102,7 @@ for script in ~/.bash.d/rc/*; do
 done
 
 source_if_exists ~/.fzf.bash
-if [ -f /usr/local/etc/profile.d/z.sh ]; then
-    source /usr/local/etc/profile.d/z.sh
-fi
+source_if_exists /usr/local/etc/profile.d/z.sh
 
 alias rmcores="rm -rf /cores/*"
 
