@@ -115,3 +115,8 @@ vterm_prompt_end(){
     printf "\e]51;A%s@%s:%s\e\\" "$(whoami)" "$(hostname)" "$(pwd)"
 }
 PS1=$PS1'\[$(vterm_prompt_end)\]'
+
+# Hashicorp Vault
+if [ -f /usr/local/bin/vault ]; then
+    complete -C /usr/local/bin/vault vault
+fi
