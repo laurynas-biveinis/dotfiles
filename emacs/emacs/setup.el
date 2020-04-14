@@ -1273,7 +1273,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   "Turn off LSP on type formatting for the current buffer."
   (setq-local lsp-enable-on-type-formatting nil))
 
-(add-hook 'c-initialization-hook #'dotfiles--lsp-turn-off-on-type-formatting)
+(add-hook 'c-mode-common-hook #'dotfiles--lsp-turn-off-on-type-formatting)
 
 ;;; lsp-treemacs
 ;; TODO(laurynas): once the language servers I am interested in (clangd) start
