@@ -1,3 +1,17 @@
+# Aerospike formatting that is not currently handled:
+#
+# clang-format produces:
+#
+# const EVP_MD* md = ns->storage_encryption == AS_ENCRYPTION_AES_128 ?
+#         EVP_sha256() :
+#         EVP_sha512();
+#
+# Should be:
+#
+# const EVP_MD* md = ns->storage_encryption == AS_ENCRYPTION_AES_128 ?
+#         EVP_sha256() : EVP_sha512();
+#
+
 ---
 Language:        Cpp
 AlignAfterOpenBracket: DontAlign
