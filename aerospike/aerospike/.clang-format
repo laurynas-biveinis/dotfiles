@@ -5,7 +5,7 @@ AlignConsecutiveMacros: false
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignEscapedNewlines: Left
-AlignOperands:   true
+AlignOperands:   false
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
@@ -32,7 +32,7 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
 BreakBeforeBinaryOperators: None
-BreakBeforeTernaryOperators: true
+BreakBeforeTernaryOperators: false
 BreakStringLiterals: true
 ColumnLimit:     80
 ContinuationIndentWidth: 8
