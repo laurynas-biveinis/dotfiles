@@ -13,7 +13,7 @@
     (c-hanging-braces-alist . ((defun-open . (before after))
                                (class-open . (brace-entry-open))
                                (substatement-open . (brace-entry-open))
-                               (block-close . (brace-entry-open))))
+                               (block-close . (before after))))
     (c-offsets-alist . ((topmost-intro-cont . 0)
                         (func-decl-cont . ++)
                         (arglist-cont . ++)
