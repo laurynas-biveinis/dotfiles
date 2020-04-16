@@ -1549,7 +1549,7 @@
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
 	    (:url . "http://elpa.gnu.org/packages/persist.html"))])
  (phps-mode .
-	    [(0 3 40)
+	    [(0 3 41)
 	     ((emacs
 	       (26)))
 	     "Major mode for PHP with Semantic integration" tar
@@ -1874,7 +1874,7 @@
  (smalltalk-mode .
 		 [(3 2 92)
 		  nil "Major mode for the GNU Smalltalk programming language" tar
-		  ((:maintainer "Derek Zhou" . "derek@shannon-data.com")
+		  ((:maintainer "Derek Zhou" . "derek@3qin.us")
 		   (:authors
 		    ("Steve Byrne"))
 		   (:url . "http://elpa.gnu.org/packages/smalltalk-mode.html"))])
