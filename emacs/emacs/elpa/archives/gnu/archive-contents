@@ -581,7 +581,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:keywords "killing" "convenience"))])
  (ebdb .
-       [(0 6 13)
+       [(0 6 14)
 	((emacs
 	  (25 1))
 	 (cl-lib
@@ -635,7 +635,7 @@
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
 	(:keywords "lisp" "e-scripts"))])
  (eglot .
-	[(1 5)
+	[(1 6)
 	 ((emacs
 	   (26 1))
 	  (jsonrpc
@@ -1871,6 +1871,13 @@
 	       ("Ralph Amissah & Ambrose Kofi Laing"))
 	      (:maintainer "Ralph Amissah" . "ralph.amissah@gmail.com")
 	      (:url . "http://www.sisudoc.org/"))])
+ (sm-c-mode .
+	    [(1 0)
+	     nil "C major mode based on SMIE" single
+	     ((:url . "http://elpa.gnu.org/packages/sm-c-mode.html")
+	      (:authors
+	       ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
+	      (:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca"))])
  (smalltalk-mode .
 		 [(3 2 92)
 		  nil "Major mode for the GNU Smalltalk programming language" tar
