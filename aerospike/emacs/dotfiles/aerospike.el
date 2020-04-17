@@ -19,7 +19,8 @@
                         (arglist-cont . ++)
                         (arglist-cont-nonempty . ++)
                         (cpp-macro-cont . ++)
-                        (statement-cont . ++)))))
+                        (statement-cont . ++)
+                        (label . [0])))))
 
 (c-add-style "aerospike" aerospike-c-style)
 
