@@ -88,7 +88,9 @@ sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
     maven clang-tools-8 clang-8-doc llvm-8-doc bear libcurl4-openssl-dev \
-    libcurl4-doc
+    libcurl4-doc docker docker-doc python3-pip
+
+sudo usermod -aG docker laurynas
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
 sudo apt-get install clangd-10 clang-format-10
