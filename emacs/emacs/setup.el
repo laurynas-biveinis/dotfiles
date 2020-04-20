@@ -1139,6 +1139,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; TODO(laurynas): integrate Helm with rg?
 
+;;;; xref
+;; Do not initialize `xref-backend-functions' to `etags--xref-backend', we never
+;; use etags and let major modes (LSP, elisp) define useful backends themselves.
+(remove-hook 'xref-backend-functions #'etags--xref-backend)
+
 ;;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clients)
