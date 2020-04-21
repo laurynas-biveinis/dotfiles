@@ -610,7 +610,7 @@
 		 ((pyim
 		   (1 6 0))
 		  (ebdb
-		   (0 2)))
+		   (0 6 17)))
 		 "China-specific internationalization support for EBDB" single
 		 ((:url . "http://elpa.gnu.org/packages/ebdb-i18n-chn.html")
 		  (:authors
