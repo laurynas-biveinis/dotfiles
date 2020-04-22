@@ -1363,6 +1363,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'projectile)
 (setq projectile-completion-system 'helm)
 (setq projectile-switch-project-action #'helm-projectile)
+(setq projectile-use-git-grep t)
 ;; Workaround https://github.com/bbatsov/projectile/issues/1501 - the local host
 ;; has fd installed but not all TRAMP hosts do. Projectile checks the local host
 ;; and attempts to invoke fd on all the remote hosts, thus use the safe command
