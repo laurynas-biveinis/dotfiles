@@ -13,7 +13,7 @@ cd dotfiles
 git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git
 ```
 
-Create `~/.noninteractive_init_private.bash`, if needed. Then `chmod 700` it.
+Create `~/.noninteractive_init_private.bash`, if needed. Then `chmod 600` it.
 
 Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 "emacs nightly".
@@ -54,7 +54,7 @@ cd ~/usr/src
 git clone https://github.com/gjsheep/bash-wakatime.git
 ```
 
-put .wakatime.cfg into $HOME, `chmod 700` it.
+put .wakatime.cfg into $HOME, `chmod 600` it.
 
 # New system setup
 
