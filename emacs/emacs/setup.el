@@ -1019,12 +1019,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
 
-(setq company-backends (delete 'company-semantic company-backends))
-(setq company-backends (delete 'company-bbdb company-backends))
-(setq company-backends (delete 'company-eclim company-backends))
-(setq company-backends (delete 'company-clang company-backends))
-(setq company-backends (delete 'company-xcode company-backends))
-(setq company-backends (delete 'company-oddmuse company-backends))
+;; Remove `company-semantic', `company-bbdb', `company-eclim', `company-clang',
+;; `company-xcode', `company-oddmuse', (`company-gtags', `company-etags'), and
+;; `company-dabbrev' from company backends.
+(setq company-backends '(company-capf company-files
+                                      (company-dabbrev-code company-keywords)))
 
 (setq company-global-modes '(not Info-mode help-mode magit-status-mode
                                  org-agenda-mode grep-mode package-menu-mode
