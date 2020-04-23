@@ -339,6 +339,10 @@ loaded as such.)"
 (require 'autorevert)
 (setq global-auto-revert-non-file-buffers t)
 
+;;; Completion at point
+;; Remove the default `tags-completion-at-point', I never use tags.
+(setq completion-at-point-functions nil)
+
 ;;; common programming modes
 (add-hook 'prog-mode-hook #'turn-on-auto-fill)
 (add-hook 'prog-mode-hook #'dotfiles--enable-show-trailing-ws)
