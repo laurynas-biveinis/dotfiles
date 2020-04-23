@@ -1150,7 +1150,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clients)
-(require 'company-lsp)
 (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
 (setq lsp-enable-snippet t)
 ;; TODO(laurynas): C and C++ docs render with interspersed random backslashes:
@@ -1160,6 +1159,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
 (setq lsp-semantic-highlighting :immediate)
+(setq lsp-prefer-capf t)
 
 ;;; lsp-diagnostics-modeline-mode
 (setq lsp-diagnostics-modeline-scope :project)
