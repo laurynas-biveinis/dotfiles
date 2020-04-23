@@ -2201,10 +2201,10 @@ Pop up a help buffer with the documentation of CHECKER."
                 (save-excursion
                   (while (re-search-backward "`\\([^`']+\\)'"
                                              beg-checker-list t)
-                    (when (flycheck-valid-checker-p
-                           (intern-soft (match-string 1)))
-                      (help-xref-button 1 'help-flycheck-checker-def checker
-                                        filename))))))))
+                    (let ((checker (intern-soft (match-string 1))))
+                      (when (flycheck-valid-checker-p checker)
+                        (help-xref-button 1 'help-flycheck-checker-doc
+                                          checker)))))))))
         ;; Call the custom print-doc function of the checker, if present
         (when print-doc
           (funcall print-doc checker))
@@ -4795,10 +4795,15 @@ LEVEL is either an error level symbol, or nil, to remove the filter."
     (flycheck-error-list-refresh)
     (flycheck-error-list-recenter-at (point-min))))
 
-(defun flycheck-error-list-reset-filter ()
-  "Remove filters and show all errors in the error list."
-  (interactive)
-  (kill-local-variable 'flycheck-error-list-minimum-level))
+(defun flycheck-error-list-reset-filter (&optional refresh)
+  "Remove local error filters and reset to the default filter.
+
+Interactively, or with non-nil REFRESH, refresh the error list."
+  (interactive '(t))
+  (kill-local-variable 'flycheck-error-list-minimum-level)
+  (when refresh
+    (flycheck-error-list-refresh)
+    (flycheck-error-list-recenter-at (point-min))))
 
 (defun flycheck-error-list-apply-filter (errors)
   "Filter ERRORS according to `flycheck-error-list-minimum-level'."
