@@ -825,7 +825,7 @@ loaded as such.)"
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
 (setq org-cycle-separator-lines 1)
-;; TODO: compute these columns from the frame size calculations above.
+;; TODO(laurynas): compute these columns from the frame size calculations above.
 (setq org-tags-column -85)
 (setq org-agenda-tags-column 'auto)
 
@@ -836,7 +836,7 @@ loaded as such.)"
 ;; Make C-c C-c on a checkbox item check it and move point to the next unchecked
 ;; item. It's magic from Internet:
 ;; https://emacs.stackexchange.com/a/17281/16376
-;; TODO: make it work only on unchecked items
+;; TODO(laurynas): make it work only on unchecked items
 (defmacro dotfiles--with-advice (adlist &rest body)
   "Execute BODY with temporary advice in ADLIST.
 
@@ -944,7 +944,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (setq erc-paranoid t)
 
-;; TODO: this is in-buffer highlight, right?
+;; TODO(laurynas): this is in-buffer highlight, right?
 ;; (require 'erc-highlight-nicknames)
 ;; (add-to-list 'erc-modules 'highlight-nicknames)
 ;; (erc-update-modules)
@@ -1426,12 +1426,12 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;;; cmake-build.el
 ;; Yet another not-completely integrated but very useful project management
 ;; package. If I continue using it, then:
-;; TODO: advise projectile-compile-project to do cmake-build-current if cmake
-;; config exists in the current project.
-;; TODO: make projectile-configure-project to do cmake-build-set-cmake-profile
-;; and cmake-build-clear-cache-and-configure if cmake config exists in the
-;; current project.
-;; TODO: make projectile-test-project to run cmake test config?
+;; TODO(laurynas): advise projectile-compile-project to do cmake-build-current
+;; if cmake config exists in the current project.
+;; TODO(laurynas): make projectile-configure-project to do
+;; cmake-build-set-cmake-profile and cmake-build-clear-cache-and-configure if
+;; cmake config exists in the current project.
+;; TODO(laurynas): make projectile-test-project to run cmake test config?
 (require 'cmake-build)
 (setq cmake-build-options "-j 5")
 (setq cmake-build-never-split t)
@@ -1507,9 +1507,10 @@ find a search tool; by default, this uses \"find | grep\" in the
 (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 
 ;;; iedit
-;; The default binding of C-; conflicts with flyspell. TODO: M-I/M-{/M-} could
-;; be useful but the keybindings seem to conflict.
-;; iedit seems to be configured in an... unorthodox way. TODO: report a bug
+;; The default binding of C-; conflicts with flyspell. TODO(laurynas):
+;; M-I/M-{/M-} could be useful but the keybindings seem to conflict.
+;; iedit seems to be configured in an... unorthodox way. TODO(laurynas): report
+;; a bug.
 (defvar iedit-toggle-key-default)
 (setq iedit-toggle-key-default (kbd "<f6>"))
 (require 'iedit)

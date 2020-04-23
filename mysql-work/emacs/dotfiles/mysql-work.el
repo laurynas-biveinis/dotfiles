@@ -57,7 +57,7 @@
 
 (add-hook 'sql-mode-hook #'dotfiles--sql-mode-hook)
 
-;; TODO: provide this as default value to switch-mysql-build
+;; TODO(laurynas): provide this as default value to switch-mysql-build
 ;;(defconst mysql-git-path "~/percona/mysql-server"
 ;;  "Default path to MySQL git checkout.")
 

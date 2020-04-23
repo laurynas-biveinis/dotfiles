@@ -204,8 +204,8 @@ sudo pkill -HUP socketfilterfw
 sudo fdesetup enable
 # Save the recovery key
 # Reboot (required by fdsetup enable)
-sudo fdesetup remove -user admin # TODO
-sudo dscl . create /Users/admin IsHidden 1 # TODO
+sudo fdesetup remove -user admin # TODO(laurynas)
+sudo dscl . create /Users/admin IsHidden 1 # TODO(laurynas)
 #
 # TimeMachine (set up manually)
 #
