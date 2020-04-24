@@ -976,6 +976,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (erc-cmd-GQ "Leaving"))
 
 ;;; Magit
+;; TODO(laurynas): over TRAMP, C-c C-d to show diff while committing broken in
+;; both 2.90.1 and 20200423.33 (https://github.com/magit/magit/issues/4098)
 (global-set-key (kbd "C-x g") #'magit-status)
 
 ;; Magit "integration" with VC
