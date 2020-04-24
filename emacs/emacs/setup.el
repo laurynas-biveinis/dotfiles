@@ -593,16 +593,6 @@ loaded as such.)"
   (balance-windows)
   (global-display-line-numbers-mode nil))
 
-;;; undo-tree
-(require 'undo-tree)
-(add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'Info-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'grep-mode)
-(require 'magit)
-(add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'package-menu-mode)
-(global-undo-tree-mode)
-
 ;; Google C style
 (require 'google-c-style)
 (c-add-style "google" google-c-style)
@@ -978,6 +968,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; Magit
 ;; TODO(laurynas): over TRAMP, C-c C-d to show diff while committing broken in
 ;; both 2.90.1 and 20200423.33 (https://github.com/magit/magit/issues/4098)
+(require 'magit)
 (global-set-key (kbd "C-x g") #'magit-status)
 
 ;; Magit "integration" with VC
@@ -1001,6 +992,15 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
              (not (file-remote-p (buffer-file-name)))
              (not (memq major-mode git-gutter:disabled-modes)))
     (git-gutter-mode +1)))
+
+;;; undo-tree
+(require 'undo-tree)
+(add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'Info-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'grep-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'package-menu-mode)
+(global-undo-tree-mode)
 
 ;;; Wakatime
 (require 'wakatime-mode)
