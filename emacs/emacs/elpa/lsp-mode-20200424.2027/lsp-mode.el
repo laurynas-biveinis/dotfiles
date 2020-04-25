@@ -4096,10 +4096,10 @@ if it's closing the last buffer in the workspace."
       (when (lsp--send-will-save-p)
         (lsp-notify "textDocument/willSave" params))
       (when (and (lsp--send-will-save-wait-until-p) lsp-before-save-edits)
-        (lsp-request-async "textDocument/willSaveWaitUntil"
-                           params
-                           #'lsp--apply-text-edits
-                           :mode 'tick)))))
+        (let ((lsp-response-timeout 0.1))
+          (lsp--apply-text-edits
+           (lsp-request "textDocument/willSaveWaitUntil"
+                        params)))))))
 
 (defun lsp--on-auto-save ()
   "Handler for auto-save."
@@ -5128,6 +5128,8 @@ interface DocumentRangeFormattingParams {
   "Create a callback to process the reply of a
 'textDocument/documentHighlight' message for the buffer BUF.
 A reference is highlighted only if it is visible in a window."
+  (lsp--remove-overlays 'lsp-highlight)
+
   (let* ((wins-visible-pos (-map (lambda (win)
                                    (cons (1- (line-number-at-pos (window-start win)))
                                          (1+ (line-number-at-pos (window-end win)))))
