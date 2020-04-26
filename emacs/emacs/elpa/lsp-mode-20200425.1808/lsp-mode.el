@@ -2336,70 +2336,75 @@ BINDINGS is a list of (key def cond)."
 ;; which-key integration
 
 (declare-function which-key-add-major-mode-key-based-replacements "ext:which-key")
+(declare-function which-key-add-key-based-replacements "ext:which-key")
 
-(defun lsp-enable-which-key-integration ()
-  (apply
-   #'which-key-add-major-mode-key-based-replacements
-   major-mode
-   (lsp--prepend-prefix
-    (list
-     ""    "lsp"
-     "s"   "sessions"
-     "s s" "start server"
-     "s r" "restart server"
-     "s q" "shutdown server"
-     "s d" "describe session"
-     "s D" "disconnect"
+(defun lsp-enable-which-key-integration (&optional all-modes)
+  "Adds descriptions for `lsp-mode-map' to `which-key-mode' for the current
+active `major-mode', or for all major modes when ALL-MODES is t."
+  (cl-flet ((which-key-fn (if all-modes
+                              'which-key-add-key-based-replacements
+                            (apply-partially 'which-key-add-major-mode-key-based-replacements major-mode))))
+    (apply
+     #'which-key-fn
+     (lsp--prepend-prefix
+      (list
+       ""    "lsp"
+       "s"   "sessions"
+       "s s" "start server"
+       "s r" "restart server"
+       "s q" "shutdown server"
+       "s d" "describe session"
+       "s D" "disconnect"
 
-     "F"   "folders"
-     "F a" "add folder"
-     "F r" "remove folder"
-     "F b" "un-blacklist folder"
+       "F"   "folders"
+       "F a" "add folder"
+       "F r" "remove folder"
+       "F b" "un-blacklist folder"
 
-     "="   "formatting"
-     "= r" "format region"
-     "= =" "format buffer"
+       "="   "formatting"
+       "= r" "format region"
+       "= =" "format buffer"
 
-     "T"   "toggle"
-     "T l" "toggle lenses"
-     "T h" "toggle highlighting"
-     "T L" "toggle log io"
-     "T s" "toggle signature"
-     "T S" "toggle sideline"
-     "T d" "toggle documentation popup"
-     "T p" "toggle signature help"
-     "T f" "toggle on type formatting"
-     "T T" "toggle treemacs integration"
+       "T"   "toggle"
+       "T l" "toggle lenses"
+       "T h" "toggle highlighting"
+       "T L" "toggle log io"
+       "T s" "toggle signature"
+       "T S" "toggle sideline"
+       "T d" "toggle documentation popup"
+       "T p" "toggle signature help"
+       "T f" "toggle on type formatting"
+       "T T" "toggle treemacs integration"
 
-     "g"   "goto"
-     "g g" "find definitions"
-     "g r" "find references"
-     "g i" "find implementations"
-     "g d" "find declarations"
-     "g t" "find type definition"
-     "g h" "call hierarchy"
-     "g a" "find symbol in workspace"
-     "g A" "find symbol in all workspaces"
-     "g e" "show errors"
+       "g"   "goto"
+       "g g" "find definitions"
+       "g r" "find references"
+       "g i" "find implementations"
+       "g d" "find declarations"
+       "g t" "find type definition"
+       "g h" "call hierarchy"
+       "g a" "find symbol in workspace"
+       "g A" "find symbol in all workspaces"
+       "g e" "show errors"
 
-     "h"   "help"
-     "h h" "describe symbol at point"
-     "h s" "signature help"
+       "h"   "help"
+       "h h" "describe symbol at point"
+       "h s" "signature help"
 
-     "r"   "refactor"
-     "r r" "rename"
-     "r o" "organize imports"
+       "r"   "refactor"
+       "r r" "rename"
+       "r o" "organize imports"
 
-     "a"   "code actions"
-     "a a" "code actions"
-     "a l" "lens"
-     "a h" "highlight symbol"
+       "a"   "code actions"
+       "a a" "code actions"
+       "a l" "lens"
+       "a h" "highlight symbol"
 
-     "G"   "peek"
-     "G g" "peek definitions"
-     "G r" "peek references"
-     "G i" "peek implementations"
-     "G s" "peek workspace symbol"))))
+       "G"   "peek"
+       "G g" "peek definitions"
+       "G r" "peek references"
+       "G i" "peek implementations"
+       "G s" "peek workspace symbol")))))
 
 
 
@@ -4607,6 +4612,7 @@ MODE is the mode used in the parent frame."
   (push '("&lt;" . ?<) prettify-symbols-alist)
   (push '("&gt;" . ?>) prettify-symbols-alist)
   (push '("&amp;" . ?&) prettify-symbols-alist)
+  (push '("&nbsp;" . ? ) prettify-symbols-alist)
   (setq prettify-symbols-compose-predicate
         (lambda (_start _end _match) t))
   (prettify-symbols-mode 1))
@@ -4641,7 +4647,7 @@ Stolen from `org-copy-visible'."
 
     (goto-char (point-min))
     (while (re-search-forward
-            (rx (and "\\" (group (or "\\" "`" "*" "_"
+            (rx (and "\\" (group (or "\\" "`" "*" "_" ":" "/"
                                      "{" "}" "[" "]" "(" ")"
                                      "#" "+" "-" "." "!" "|"))))
             nil t)
@@ -7680,12 +7686,14 @@ g. `error', `warning') and list of LSP TAGS."
                (category (--doto (intern (format "lsp-%s-category" name))
                            (setf (get it 'face) face
                                  (get it 'priority) 100)))
-               (new-level (intern name)))
+               (new-level (intern name))
+	       (bitmap (or (get flycheck-level 'flycheck-fringe-bitmaps)
+			   (get flycheck-level 'flycheck-fringe-bitmap-double-arrow))))
           (flycheck-define-error-level new-level
             :severity (get flycheck-level 'flycheck-error-severity)
             :compilation-level (get flycheck-level 'flycheck-compilation-level)
             :overlay-category category
-            :fringe-bitmap (get flycheck-level 'flycheck-fringe-bitmap-double-arrow)
+            :fringe-bitmap bitmap
             :fringe-face (get flycheck-level 'flycheck-fringe-face)
             :error-list-face face)
           new-level))))
