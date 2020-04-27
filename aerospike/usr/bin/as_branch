@@ -35,11 +35,11 @@ function do_fetch () {
 
 function do_pull () {
     pushd "ee" || exit 1
-    git --all --ff-only --recurse-submodules=yes pull
+    git pull --all --ff-only --recurse-submodules=yes
     popd || exit 1
 
     pushd "ce" || exit 1
-    git --all --ff-only --recurse-submodules=yes pull
+    git pull --all --ff-only --recurse-submodules=yes
     popd || exit 1
 }
 
