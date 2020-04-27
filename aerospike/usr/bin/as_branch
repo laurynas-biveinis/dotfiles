@@ -65,13 +65,12 @@ fi
 readonly CE_MASTER="$ASD_MASTER/ce"
 readonly EE_MASTER="$ASD_MASTER/ee"
 
-pushd "$ASD_BRANCHES" || exit 1
-
 if [[ $COMMAND == "fetch" ]]; then
     do_fetch
-    popd || exit 0
     exit 0
 fi
+
+pushd "$ASD_BRANCHES" || exit 1
 
 readonly BRANCH=$2
 
