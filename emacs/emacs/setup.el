@@ -1310,7 +1310,14 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-hook 'lsp-after-uninitialized-hook
           #'dotfiles--lsp-unbind-helm-lsp-workspace-symbol)
 
-;;; SSH config mode
+;;; lsp-mode integration with which-key
+(defun dotfiles--lsp-enable-which-key ()
+  "Enable `lsp-mode' integration with `which-key' for all major modes."
+  (lsp-enable-which-key-integration t))
+
+(add-hook 'lsp-mode-hook #'dotfiles--lsp-enable-which-key)
+
+;;;; SSH config mode
 (add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
 (add-hook 'ssh-config-mode-hook #'dotfiles--enable-show-trailing-ws)
 (add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
