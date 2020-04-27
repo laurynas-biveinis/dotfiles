@@ -12,18 +12,16 @@ set -u
 readonly COMMAND=${1-UNDEFINED}
 
 if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" && \
-          $COMMAND != "rm" || \
+          $COMMAND != "pull" && $COMMAND != "rm" || \
       $COMMAND == "UNDEFINED" ]]
 then
     echo "Usage: $0 create branch [starting_point]"
     echo "Usage: $0 checkout branch"
     echo "       $0 fetch"
+    echo "       $0 pull"
     echo "       $0 rm branch"
     exit 1
 fi
-
-readonly CE_MASTER="$ASD_MASTER/ce"
-readonly EE_MASTER="$ASD_MASTER/ee"
 
 function do_fetch () {
     pushd "$EE_MASTER" || exit 1
@@ -32,6 +30,16 @@ function do_fetch () {
 
     pushd "$CE_MASTER" || exit 1
     git fetch --all -p --recurse-submodules=yes -j 5
+    popd || exit 1
+}
+
+function do_pull () {
+    pushd "ee" || exit 1
+    git --all --ff-only --recurse-submodules=yes pull
+    popd || exit 1
+
+    pushd "ce" || exit 1
+    git --all --ff-only --recurse-submodules=yes pull
     popd || exit 1
 }
 
@@ -48,6 +56,14 @@ function do_rm () {
     git branch -d "$BRANCH"
     popd || exit 1
 }
+
+if [[ $COMMAND == "pull" ]]; then
+    do_pull
+    exit 0
+fi
+
+readonly CE_MASTER="$ASD_MASTER/ce"
+readonly EE_MASTER="$ASD_MASTER/ee"
 
 pushd "$ASD_BRANCHES" || exit 1
 
