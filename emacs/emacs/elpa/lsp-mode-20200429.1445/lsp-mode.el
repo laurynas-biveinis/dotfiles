@@ -4062,7 +4062,8 @@ Applies on type formatting."
     (->> (lsp-session)
          (lsp-session-folders)
          (--first (and (lsp--files-same-host it file-name)
-                       (f-ancestor-of? it file-name))))))
+                       (or (f-ancestor-of? it file-name)
+                           (string= it file-name)))))))
 
 (defun lsp-on-revert ()
   "Executed when a file is reverted.
@@ -4175,12 +4176,13 @@ and the position respectively."
 
 (defun lsp--looking-back-trigger-characters-p (trigger-characters)
   "Return trigger character if text before point matches any of the TRIGGER-CHARACTERS."
-  (seq-some
-   (lambda (trigger-char)
-     (and (equal (buffer-substring-no-properties (- (point) (length trigger-char)) (point))
-                 trigger-char)
-          trigger-char))
-   trigger-characters))
+  (unless (= (point) (point-at-bol))
+    (seq-some
+     (lambda (trigger-char)
+       (and (equal (buffer-substring-no-properties (- (point) (length trigger-char)) (point))
+                   trigger-char)
+            trigger-char))
+     trigger-characters)))
 
 (defvar lsp--capf-cache nil
   "Cached candidates for completion at point function.
