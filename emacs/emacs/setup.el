@@ -1249,17 +1249,22 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   "Disable eldoc for LSP."
   (eldoc-mode -1))
 
+(defun dotfiles--lsp-uninitialization (_lsp_workspace)
+  "General cleanup after LS uninitialization."
+  (electric-layout-mode)
+  ;; It seems it's OK to call this in non-cc-mode buffers too
+  (c-toggle-electric-state)
+  (electric-pair-local-mode)
+  (eldoc-mode))
+
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-cc-mode-indent)
 (add-hook 'lsp-after-open-hook #'yas-minor-mode-on)
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-electric-keys)
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-eldoc)
 
-(add-hook 'lsp-after-uninitialized-hook #'dotfiles--lsp-restore-cc-mode-indent)
-(add-hook 'lsp-after-uninitialized-hook #'electric-layout-mode)
-;; It seems it's OK to call this in non-cc-mode buffers too
-(add-hook 'lsp-after-uninitialized-hook #'c-toggle-electric-state)
-(add-hook 'lsp-after-uninitialized-hook #'electric-pair-local-mode)
-(add-hook 'lsp-after-uninitialized-hook #'eldoc-mode)
+(add-hook 'lsp-after-uninitialized-functions
+          #'dotfiles--lsp-restore-cc-mode-indent)
+(add-hook 'lsp-after-uninitialized-functions #'dotfiles--lsp-uninitialization)
 
 (add-hook 'prog-mode-hook #'lsp-deferred)
 
@@ -1300,14 +1305,15 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (defun dotfiles--lsp-bind-helm-lsp-workspace-symbol ()
   "Rebind C-M-. to helm-lsp-workspace-symbol."
-  (define-key lsp-mode-map (kbd "C-M-.") #'helm-lsp-workspace-symbol))
+  (define-key lsp-mode-map [remap xref-find-apropos]
+    #'helm-lsp-workspace-symbol))
 
-(defun dotfiles--lsp-unbind-helm-lsp-workspace-symbol ()
+(defun dotfiles--lsp-unbind-helm-lsp-workspace-symbol (_lsp_workspace)
   "Restore global C-M-. binding."
-  (define-key lsp-mode-map (kbd "C-M-.") nil))
+  (define-key lsp-mode-map [remap xref-find-apropos] #'xref-find-apropos))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-bind-helm-lsp-workspace-symbol)
-(add-hook 'lsp-after-uninitialized-hook
+(add-hook 'lsp-after-uninitialized-functions
           #'dotfiles--lsp-unbind-helm-lsp-workspace-symbol)
 
 ;;; lsp-mode integration with which-key
