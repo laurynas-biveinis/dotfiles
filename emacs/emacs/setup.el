@@ -1316,6 +1316,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-hook 'lsp-after-uninitialized-functions
           #'dotfiles--lsp-unbind-helm-lsp-workspace-symbol)
 
+(define-key global-map [remap xref-find-apropos]
+  #'helm-lsp-global-workspace-symbol)
+
 ;;; lsp-mode integration with which-key
 (defun dotfiles--lsp-enable-which-key ()
   "Enable `lsp-mode' integration with `which-key' for all major modes."
