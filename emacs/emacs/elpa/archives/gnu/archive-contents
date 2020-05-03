@@ -1096,7 +1096,7 @@
 	       ("Simen Heggestøyl" . "simenheg@gmail.com"))
 	      (:maintainer "Simen Heggestøyl" . "simenheg@gmail.com"))])
  (jsonrpc .
-	  [(1 0 9)
+	  [(1 0 11)
 	   ((emacs
 	     (25 2)))
 	   "JSON-RPC library" single
@@ -1281,7 +1281,7 @@
 	      ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
 	     (:keywords "convenience" "faces" "languages" "tools"))])
  (modus-operandi-theme .
-		       [(0 8 0)
+		       [(0 8 1)
 			((emacs
 			  (26 1)))
 			"Accessible light theme (WCAG AAA)" single
@@ -1291,7 +1291,7 @@
 			 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 			 (:url . "https://gitlab.com/protesilaos/modus-themes"))])
  (modus-vivendi-theme .
-		      [(0 8 0)
+		      [(0 8 1)
 		       ((emacs
 			 (26 1)))
 		       "Accessible dark theme (WCAG AAA)" single

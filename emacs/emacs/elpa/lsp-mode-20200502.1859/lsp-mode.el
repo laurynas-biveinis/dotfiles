@@ -1,11 +1,11 @@
 ;;; lsp-mode.el --- LSP mode                              -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019  Vibhav Pant, Ivan Yonchovski
+;; Copyright (C) 2020 emacs-lsp maintainers
 
 ;; Author: Vibhav Pant, Fangrui Song, Ivan Yonchovski
 ;; Keywords: languages
 ;; Package-Requires: ((emacs "25.1") (dash "2.14.1") (dash-functional "2.14.1") (f "0.20.0") (ht "2.0") (spinner "1.7.3") (markdown-mode "2.3") (lv "0"))
-;; Version: 6.3
+;; Version: 6.3.1
 
 ;; URL: https://github.com/emacs-lsp/lsp-mode
 ;; This program is free software; you can redistribute it and/or modify
@@ -4436,10 +4436,10 @@ Also, additional data to attached to each candidate can be passed via PLIST."
 (defun lsp--to-yasnippet-snippet (text)
   "Convert LSP snippet TEXT to yasnippet snippet."
   ;; LSP snippet doesn't escape "{", but yasnippet requires escaping it.
-  (s-replace-regexp (rx (or bos (not (any "$" "\\"))) (group "{"))
-                    (rx "\\" (backref 1))
-                    text
-                    nil nil 1))
+  (replace-regexp-in-string (rx (or bos (not (any "$" "\\"))) (group "{"))
+                            (rx "\\" (backref 1))
+                            text
+                            nil nil 1))
 
 (defun lsp--sort-completions (completions)
   "Sort COMPLETIONS."
@@ -7424,7 +7424,8 @@ Returns nil if the project should not be added to the current SESSION."
          (lsp-session-folders)
          (--filter (and (lsp--files-same-host it file-name-canonical)
                         (or (f-same? it file-name-canonical)
-                            (f-ancestor-of? it file-name-canonical))))
+                            (and (f-dir? it)
+                                 (f-ancestor-of? it file-name-canonical)))))
          (--max-by (> (length it)
                       (length other))))))
 
