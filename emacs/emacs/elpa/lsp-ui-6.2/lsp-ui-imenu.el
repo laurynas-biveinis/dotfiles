@@ -4,8 +4,7 @@
 
 ;; Author: Sebastien Chapuis <sebastien@chapu.is>
 ;; URL: https://github.com/emacs-lsp/lsp-ui
-;; Keywords: languages, tools
-;; Version: 6.2
+;; Keywords: lsp, ui
 
 ;;; License
 ;;
@@ -25,11 +24,12 @@
 ;; Floor, Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
-
+;;
 ;; Show imenu entries
 ;; Call the function `lsp-ui-imenu'
 ;;
 ;; (define-key lsp-ui-mode-map (kbd "C-c l") 'lsp-ui-imenu)
+;;
 
 ;;; Code:
 
@@ -58,16 +58,6 @@
 (defcustom lsp-ui-imenu-colors '("deep sky blue" "green3")
   "Color list to cycle through for entry groups."
   :type '(repeat color)
-  :group 'lsp-ui-menu)
-
-(defcustom lsp-ui-imenu-window-width 0
-  "When not 0, don't fit window to buffer and use value as window-width."
-  :type 'number
-  :group 'lsp-ui-menu)
-
-(defcustom lsp-ui-imenu--custom-mode-line-format nil
-  "Custom mode line format to be used in `lsp-ui-menu-mode'."
-  :type 'sexp
   :group 'lsp-ui-menu)
 
 (defconst lsp-ui-imenu--max-bars 8)
@@ -243,17 +233,12 @@ Return the updated COLOR-INDEX."
 (defun lsp-ui-imenu--clear-bit (bits offset)
   (logand bits (lognot (lsh 1 offset))))
 
-(defvar lsp-ui-imenu-buffer-name "*lsp-ui-imenu*"
-  "Buffer name for imenu buffers.")
-
 (defun lsp-ui-imenu nil
-  "Open ui-imenu in side window."
   (interactive)
   (setq lsp-ui-imenu--origin (current-buffer))
   (imenu--make-index-alist)
-  (let ((imenu-buffer (get-buffer-create lsp-ui-imenu-buffer-name))
-        (list imenu--index-alist))
-    (with-current-buffer imenu-buffer
+  (let ((list imenu--index-alist))
+    (with-current-buffer (get-buffer-create "*lsp-ui-imenu*")
       (let* ((padding (lsp-ui-imenu--get-padding list))
              (grouped-by-subs (-partition-by 'imenu--subalist-p list))
              (color-index 0)
@@ -268,23 +253,25 @@ Return the updated COLOR-INDEX."
             (lsp-ui-imenu--insert-items "" group padding bars 1 color-index)
             (setq color-index (1+ color-index))))
         (lsp-ui-imenu-mode)
-        (when lsp-ui-imenu--custom-mode-line-format
-          (setq mode-line-format lsp-ui-imenu--custom-mode-line-format))
-        (goto-char (point-min))
+        (setq mode-line-format '(:eval (lsp-ui-imenu--win-separator)))
+        (goto-char 1)
         (add-hook 'post-command-hook 'lsp-ui-imenu--post-command nil t)))
-    (let ((win (display-buffer-in-side-window imenu-buffer '((side . right)))))
+    (let ((win (display-buffer-in-side-window (get-buffer "*lsp-ui-imenu*") '((side . right))))
+          (fit-window-to-buffer-horizontally t))
       (set-window-margins win 1)
       (select-window win)
       (set-window-start win 1)
       (lsp-ui-imenu--move-to-name-beginning)
       (set-window-dedicated-p win t)
-      ;; when `lsp-ui-imenu-window-width' is 0, fit window to buffer
-      (if (= lsp-ui-imenu-window-width 0)
-          (let ((fit-window-to-buffer-horizontally 'only))
-            (fit-window-to-buffer win)
-            (window-resize win 3 t))
-        (let ((x (- lsp-ui-imenu-window-width (window-width))))
-          (window-resize (selected-window) x t))))))
+      (let ((fit-window-to-buffer-horizontally 'only))
+        (fit-window-to-buffer win))
+      (window-resize win 3 t))))
+
+(defun lsp-ui-imenu--win-separator ()
+  (when (and (window-combined-p)
+             (window-next-sibling)
+             (= (window-bottom-divider-width) 0))
+    (propertize (make-string (window-total-width) ?\─) 'face 'window-divider)))
 
 (defun lsp-ui-imenu--kill nil
   (interactive)
@@ -339,7 +326,8 @@ Return the updated COLOR-INDEX."
 (define-derived-mode lsp-ui-imenu-mode special-mode "lsp-ui-imenu"
   "Mode showing imenu entries.")
 
-(defun lsp-ui-imenu-enable (_enable))
+(defun lsp-ui-imenu-enable (_enable)
+  )
 
 (provide 'lsp-ui-imenu)
 ;;; lsp-ui-imenu.el ends here

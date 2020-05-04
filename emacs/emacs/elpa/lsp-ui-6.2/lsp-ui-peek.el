@@ -4,7 +4,7 @@
 
 ;; Author: Sebastien Chapuis <sebastien@chapu.is>
 ;; URL: https://github.com/emacs-lsp/lsp-ui
-;; Keywords: languagues, tools
+;; Keywords: lsp, ui
 ;; Version: 0.0.1
 
 ;;; License
@@ -176,14 +176,14 @@ will cause performances issues.")
   ;; compiling this code.  We can’t compile the code without requiring
   ;; ‘evil-macros’.
   (eval '(progn
-           (evil-define-motion lsp-ui-peek-jump-backward (count)
-                               (lsp-ui-peek--with-evil-jumps
-                                   (evil--jump-backward count)
-                                 (run-hooks 'xref-after-return-hook)))
-           (evil-define-motion lsp-ui-peek-jump-forward (count)
-                               (lsp-ui-peek--with-evil-jumps
-                                   (evil--jump-forward count)
-                                 (run-hooks 'xref-after-return-hook))))
+          (evil-define-motion lsp-ui-peek-jump-backward (count)
+            (lsp-ui-peek--with-evil-jumps
+             (evil--jump-backward count)
+             (run-hooks 'xref-after-return-hook)))
+          (evil-define-motion lsp-ui-peek-jump-forward (count)
+            (lsp-ui-peek--with-evil-jumps
+             (evil--jump-forward count)
+             (run-hooks 'xref-after-return-hook))))
         t))
 
 (defmacro lsp-ui-peek--prop (prop &optional string)
@@ -259,9 +259,9 @@ will cause performances issues.")
 (defun lsp-ui-peek--peek-new (src1 src2)
   (-let* ((win-width (window-text-width))
           (string (-some--> (-zip-fill "" src1 src2)
-                    (--map (lsp-ui-peek--adjust win-width it) it)
-                    (-map-indexed 'lsp-ui-peek--make-line it)
-                    (-concat it (lsp-ui-peek--make-footer))))
+                            (--map (lsp-ui-peek--adjust win-width it) it)
+                            (-map-indexed 'lsp-ui-peek--make-line it)
+                            (-concat it (lsp-ui-peek--make-footer))))
           (next-line (line-beginning-position 2))
           (ov (or (when (overlayp lsp-ui-peek--overlay) lsp-ui-peek--overlay)
                   (make-overlay next-line next-line))))
@@ -698,18 +698,12 @@ references.  The function returns a list of `ls-xref-item'."
 Returns item(s)."
   (-when-let* ((locs (lsp-request method params))
                (locs (if (listp locs) locs (if (vectorp locs) (append locs nil) (list locs)))))
-    (-filter
-     (-lambda ((&plist :file))
-       (or (f-file? file)
-           (ignore
-            (lsp-log "The following file %s is missing, ignoring from the results."
-                     file))))
-     (mapcar #'lsp-ui-peek--get-xrefs-list
-             (if (gethash "uri" (car locs))
-                 ;; Location[]
-                 (--group-by (lsp--uri-to-path (gethash "uri" it)) locs)
-               ;; LocationLink[]
-               (--group-by (lsp--uri-to-path (gethash "targetUri" it)) locs))))))
+    (mapcar #'lsp-ui-peek--get-xrefs-list
+            (if (gethash "uri" (car locs))
+                ;; Location[]
+                (--group-by (lsp--uri-to-path (gethash "uri" it)) locs)
+              ;; LocationLink[]
+              (--group-by (lsp--uri-to-path (gethash "targetUri" it)) locs)))))
 
 (defvar lsp-ui-mode-map)
 

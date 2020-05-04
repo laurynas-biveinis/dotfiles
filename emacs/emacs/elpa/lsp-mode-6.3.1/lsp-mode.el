@@ -580,16 +580,6 @@ than the second parameter.")
   :group 'lsp-mode
   :package-version '(lsp-mode . "6.3"))
 
-(defcustom lsp-completion-enable-additional-text-edit t
-  "Whether or not to apply additional text edit when performing completion.
-
-If set to non-nil, `lsp-mode' will apply additional text edits
-from the server. Otherwise, the additional text edits are
-ignored."
-  :type 'boolean
-  :group 'lsp-mode
-  :package-version '(lsp-mode . "6.3.2"))
-
 (defcustom lsp-server-trace nil
   "Request tracing on the server side.
 The actual trace output at each level depends on the language server in use.
@@ -4429,7 +4419,7 @@ Also, additional data to attached to each candidate can be passed via PLIST."
               (lsp--to-yasnippet-snippet (buffer-substring start-point (point)))
               start-point
               (point)))
-           (when (and lsp-completion-enable-additional-text-edit additional-text-edits)
+           (when additional-text-edits
              (lsp--apply-text-edits additional-text-edits)))
          (lsp--capf-clear-cache)
          (when (and lsp-signature-auto-activate
@@ -4789,34 +4779,6 @@ When language is nil render as markup if `markdown-mode' is loaded."
                               (or title command))
                             nil t))))
 
-(defun lsp-join-region (beg end)
-  "Apply join-line from BEG to END.
-This function is useful when an indented function prototype needs
-to be shown in a single line."
-  (save-excursion
-    (let ((end (copy-marker end)))
-      (goto-char beg)
-      (while (< (point) end)
-        (join-line 1)))
-    (s-trim (buffer-string))))
-
-(defun lsp--workspace-server-id (workspace)
-  "Return the server ID of WORKSPACE."
-  (-> workspace lsp--workspace-client lsp--client-server-id))
-
-(defun lsp--handle-rendered-for-echo-area (contents)
-  "Return a single line from RENDERED, appropriate for display in the echo area."
-  (pcase (lsp-workspaces)
-    (`(,workspace)
-     (lsp-clients-extract-signature-on-hover contents (lsp--workspace-server-id workspace)))
-    ;; For projects with multiple active workspaces we also default to
-    ;; render the first line.
-    (_ (lsp-clients-extract-signature-on-hover contents nil))))
-
-(cl-defgeneric lsp-clients-extract-signature-on-hover (contents _server-id)
-  "Extract a representative line from CONTENTS, to show in the echo area."
-  (car (s-lines (lsp--render-element contents))))
-
 (defun lsp--render-on-hover-content (contents render-all)
   "Render the content received from 'document/onHover' request.
 CONTENTS  - MarkedString | MarkedString[] | MarkupContent
@@ -4826,9 +4788,8 @@ RENDER-ALL - nil if only the signature should be rendered."
     ;; MarkupContent.
     ;; It tends to be long and is not suitable to display fully in the echo area.
     ;; Just display the first line which is typically the signature.
-    (if render-all
-        (lsp--render-element contents)
-      (lsp--handle-rendered-for-echo-area contents)))
+    (let ((rendered (lsp--render-element contents)))
+      (if render-all rendered (car (s-lines rendered)))))
    ((and (stringp contents) (not (string-match-p "\n" contents)))
     ;; If the contents is a single string containing a single line,
     ;; render it always.
@@ -7463,8 +7424,7 @@ Returns nil if the project should not be added to the current SESSION."
          (lsp-session-folders)
          (--filter (and (lsp--files-same-host it file-name-canonical)
                         (or (f-same? it file-name-canonical)
-                            (and (f-dir? it)
-                                 (f-ancestor-of? it file-name-canonical)))))
+                            (f-ancestor-of? it file-name-canonical))))
          (--max-by (> (length it)
                       (length other))))))
 
@@ -7935,40 +7895,6 @@ See https://github.com/emacs-lsp/lsp-mode."
                               lsp--lens-overlays))))))
       (funcall-interactively action))))
 
-
-;; lsp internal validation.
-
-(defmacro lsp--validate (&rest checks)
-  `(-let [buf (current-buffer)]
-     (with-current-buffer (get-buffer-create "*lsp-performance*")
-       (with-help-window (current-buffer)
-         ,@(-map (-lambda ((msg form))
-                   `(insert (format "%s: %s\n" ,msg
-                                    (if (with-current-buffer buf
-                                          ,form)
-                                        (propertize "OK" 'face 'success)
-                                      (propertize "ERROR" 'face 'error)))))
-                 (-partition 2 checks))))))
-
-(defun lsp-diagnose ()
-  "Validate performance settings."
-  (interactive)
-  (lsp--validate
-   "Checking for Native JSON support" (functionp 'json-serialize)
-   "Checking emacs version has `read-process-output-max'" (boundp 'read-process-output-max)
-   "Using company-capf: " (-contains? company-backends 'company-capf)
-   "Check emacs supports `read-process-output-max'" (boundp 'read-process-output-max)
-   "Check `read-process-output-max' default has been changed from 4k"
-   (and (boundp 'read-process-output-max)
-        (> read-process-output-max 4096))
-   "Byte compiled against native json (recompile emacs if failing.)"
-   (condition-case _err
-       (progn (lsp--make-message  (list "a" "b"))
-              nil)
-     (error t))
-   "`gc-cons-threshold' increased?" (> gc-cons-threshold 800000)))
-
-
 (provide 'lsp-mode)
 ;;; lsp-mode.el ends here
 
