@@ -101,6 +101,13 @@ The following PROPERTIES constitute an error level:
      A face symbol denoting the face to use for fringe indicators
      for this level.
 
+`:margin-spec SPEC'
+     A display specification indicating what to display in the
+     margin when `flycheck-indication-mode' is `left-margin' or
+     `right-margin'.  See Info node `(elisp)Displaying in the
+     Margins'.  If omitted, Flycheck generates an image spec from
+     the fringe bitmap.
+
 `:error-list-face FACE'
      A face symbol denoting the face to use for messages of this
      level in the error list.  See `flycheck-list-errors'.

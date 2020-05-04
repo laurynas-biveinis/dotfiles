@@ -52,20 +52,21 @@
 ;; time and call regexp-opt during compliation.
 
 (eval-and-compile
-  (defvar ssh-config-load-file-dir
-    (if load-file-name
-      (file-name-directory load-file-name)
-      default-directory)
-    "Where this file was loaded from."))
+  (defun ssh-config-ssh-config-keywords-path ()
+    "Find the path to 'ssh-config-keywords.txt'.
+It should be next to 'ssh-config-mode.el'.
+When testing add '.' to load-path so you find the local copy."
+    (let ((path (locate-library "ssh-config-keywords.txt" nil)))
+      ;;(message "ssh-config-keywords.txt is %s" path)
+      path)))
 
 (eval-and-compile
   (defun ssh-config-read-keywords (&optional file-path)
+    "Read the list of ssh keywords, returning them as a list."
     ;; (message "ssh-config-read-keywords")
     (let ((file-path
            (or file-path
-               (concat
-                (file-name-as-directory ssh-config-load-file-dir)
-                "ssh-config-keywords.txt"))))
+               (ssh-config-ssh-config-keywords-path))))
       (with-temp-buffer
         (insert-file-contents file-path)
         (split-string (buffer-string) "\n" t)))))
@@ -102,7 +103,7 @@
 
 (defvar ssh-config-hostname-regexp
   "[-_.a-zA-Z0-9]+"
-  "Regexp to match one hostname. (rfc1123 2.1)")
+  "Regexp to match one hostname.  (rfc1123 2.1).")
 
 (defcustom ssh-config-mode-indent 2
   "The width of indentation to use.
@@ -128,8 +129,7 @@ ssh_config(5) shows it as."
 
 (defun ssh-config-compute-indent ()
   "Compute the target indent for the current line.
-Comments right above a 'Host' are considered to be about that Host.
-"
+Comments right above a 'Host' are considered to be about that Host."
   (save-excursion
     (beginning-of-line)
     (cond
@@ -175,9 +175,9 @@ Comments right above a 'Host' are considered to be about that Host.
     (setq ssh-config-mode-syntax-table table)))
 
 (defvar ssh-config-imenu-generic-expression
-  `(("Hosts" 
+  `(("Hosts"
      ,(concat ssh-config-host-regexp "\\s-+\\(" ssh-config-hostname-regexp "\\)") 1)
-    ("Matches" 
+    ("Matches"
      ,(concat ssh-config-match-regexp "\\s-+\\(.*\\)") 1))
   "Value for `imenu-generic-expression' in `ssh-config-mode'.
 Only show the first hostname in the menu.")

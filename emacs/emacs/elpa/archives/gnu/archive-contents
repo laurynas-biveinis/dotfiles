@@ -1774,9 +1774,9 @@
 		   ("Bastien Guerry" . "bzg@gnu.org"))
 		  (:maintainer "Bastien Guerry" . "bzg@gnu.org"))])
  (relint .
-	 [(1 15)
+	 [(1 16)
 	  ((xr
-	    (1 17))
+	    (1 19))
 	   (emacs
 	    (26 1)))
 	  "Elisp regexp mistake finder" tar
@@ -2368,7 +2368,7 @@
 	 ("Thien-Thi Nguyen" . "ttn@gnu.org"))
 	(:keywords "multimedia" "xpm"))])
  (xr .
-     [(1 18)
+     [(1 19)
       ((emacs
 	(26 1)))
       "Convert string regexp to rx notation" tar
