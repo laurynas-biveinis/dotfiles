@@ -275,12 +275,6 @@ loaded as such.)"
 (global-set-key (kbd "<home>") #'move-beginning-of-line)
 (global-set-key (kbd "<end>") #'move-end-of-line)
 
-(global-set-key "\C-cg" #'goto-line)
-(global-set-key "\C-cn" #'next-error)
-(global-set-key "\C-cp" #'previous-error)
-(global-set-key "\C-x\C-m" #'execute-extended-command)
-(global-set-key "\C-c\C-m" #'execute-extended-command)
-
 (global-set-key [(control shift up)] #'enlarge-window)
 (global-set-key [(control shift down)] #'shrink-window)
 (global-set-key [(control shift left)] #'enlarge-window-horizontally)
@@ -1010,9 +1004,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'flycheck)
 (setq flycheck-global-modes '(not org-agenda-mode vterm-mode erc-mode))
 (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc c/c++-cppcheck))
-
-(define-key flycheck-mode-map (kbd "M-n") #'flycheck-next-error)
-(define-key flycheck-mode-map (kbd "M-p") #'flycheck-previous-error)
 
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
