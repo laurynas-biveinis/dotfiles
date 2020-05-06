@@ -1,19 +1,28 @@
-export EEREPO=$(CURDIR)/ee
+export EEREPO:=$(CURDIR)/ee
+
+BEAR := $(shell bear --version 2> /dev/null)
+ifdef BEAR
+	BEAR_MAKE:=bear $(MAKE)
+	BEAR_MAKE_APPEND:=bear -a $(MAKE)
+else
+	BEAR_MAKE:=$(MAKE)
+	BEAR_MAKE_APPEMND:=$(MAKE)
+endif
 
 build :
-	(cd ce && bear make -j5 +ee)
+	(cd ce && $(BEAR_MAKE) -j5 +ee)
 
 rebuild :
 	$(MAKE) clean
 	$(MAKE) build
 
 incremental :
-	(cd ce && bear -a make -j5 +ee)
+	(cd ce && $(BEAR_MAKE_APPEND) -j5 +ee)
 
 community : clean
-	(cd ce && rm compile_commands.json && bear make -j5)
+	(cd ce && rm -f compile_commands.json && $(BEAR_MAKE) -j5)
 
 clean :
-	(cd ce && make -j5 -k clean+ee)
+	(cd ce && $(MAKE) -j5 -k clean+ee)
 
 .PHONY : build rebuild incremental clean community
