@@ -20,7 +20,8 @@ Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 
 If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
 
-Check that existing .bashrc .profile files are OK to overwrite, rm them, and
+Check that existing .bashrc .profile .bash_profile files are OK to overwrite, rm
+them, and
 `cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
 
 On macOS:
@@ -72,7 +73,7 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg \
     libquadmath0-dbg gdb-doc gettext-doc libtool-doc m4-doc python-doc cmake \
     cmake-doc diffstat unzip pinentry-doc zip software-properties-common \
-    colordiff
+    colordiff valgrind
 # Ubuntu 19.04+
 sudo apt-get install fzf hexyl ripgrep fd-find
 # Ubuntu 19.04+: not named fd by default because fdclone (which I don't use) was
@@ -99,19 +100,41 @@ sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
 sudo update-alternatives --install /usr/bin/clang-format clang-format \
     /usr/bin/clang-format-10 100
 # MySQL development specific
-sudo apt-get install ccache valgrind rapidjson-dev valgrind-dbg \
-    libboost-container-dev libboost-doc clang clang-8-doc llvm-8-doc \
-    clang-format clang-tidy cppcheck iwyu ncdu lcov ncurses-doc libaio-dev \
-    libssl-dev libreadline-dev readline-doc liblz4-dev libre2-dev libicu-dev \
-    icu-doc zlib1g-dev libevent-dev pkg-config libcurl4-gnutls-dev \
-    libcurl4-doc libpam0g-dev libtirpc-dev libprotobuf-dev libldap2-dev \
-    libsasl2-dev libnuma-dev mecab libprotoc-dev doxygen doxygen-doc graphviz \
-    graphviz-doc libedit-dev
+sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
+    libboost-doc clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck \
+    iwyu ncdu lcov ncurses-doc libaio-dev libssl-dev libreadline-dev \
+    readline-doc liblz4-dev libre2-dev libicu-dev icu-doc zlib1g-dev \
+    libevent-dev pkg-config libcurl4-gnutls-dev libcurl4-doc libpam0g-dev \
+    libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab \
+    libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev
 ```
 
 Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 
 `sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"`
+
+## CentOS 6
+
+```bash
+sudovi # enable wheel
+adduser laurynas
+passwd laurynas
+usermod -aG wheel laurynas
+yum install epel-release openssh-clients -y # scp now works
+# As user:
+sudo yum install \
+    http://opensource.wandisco.com/centos/6/git/x86_64/wandisco-git-release-6-1.noarch.rpm \
+    -y
+sudo yum install git -y
+sudo yum install stow stow-doc python-pip gdb man-pages man-pages-overrides \
+    binutils cpp gcc-c++ autoconf automake libtool flex bison gettext cmake \
+    diffstat unzip zip colordiff wget -y
+# Work
+sudo yum install libev-devel openssl-devel openssl-static lua-devel lua-static \
+    zlib-devel readline-devel java-1.8.0-openjdk java-1.8.0-openjdk-devel clang \
+    libcurl-devel scl-utils cmake3 devtoolset-2-binutils devtoolset-2-gcc-c++ \
+    openldap-devel -y
+```
 
 ## macOS
 
