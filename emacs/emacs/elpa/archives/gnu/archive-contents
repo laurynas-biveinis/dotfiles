@@ -916,7 +916,7 @@
 	   ("Thien-Thi Nguyen" . "ttn@gnu.org"))
 	  (:keywords "games" "processes"))])
  (gnus-mock .
-	    [(0 4 4)
+	    [(0 4 5)
 	     nil "Mock Gnus installation for testing" tar
 	     ((:maintainer "Eric Abrahamsen" . "eric@ericabrahamsen.net")
 	      (:authors
