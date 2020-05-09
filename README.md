@@ -107,6 +107,9 @@ sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
     libevent-dev pkg-config libcurl4-gnutls-dev libcurl4-doc libpam0g-dev \
     libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab \
     libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev
+# For CPU-intensive benchmarks
+sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
+sudo /etc/init.d/cpufrequtils restart
 ```
 
 Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
