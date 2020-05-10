@@ -117,6 +117,8 @@ sudo sysctl -w vm.swappiness=0
 sudo nano /etc/sysctl.conf
 sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
 sudo /etc/init.d/cpufrequtils restart
+# DOES NOT SURVIVE REBOOT
+sudo sh -c "echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo"
 ```
 
 Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
