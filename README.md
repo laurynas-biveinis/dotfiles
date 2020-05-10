@@ -73,14 +73,15 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg \
     libquadmath0-dbg gdb-doc gettext-doc libtool-doc m4-doc python-doc cmake \
     cmake-doc diffstat unzip pinentry-doc zip software-properties-common \
-    colordiff valgrind
+    colordiff valgrind linux-tools-generic
 # Ubuntu 19.04+
 sudo apt-get install fzf hexyl ripgrep fd-find
 # Ubuntu 19.04+: not named fd by default because fdclone (which I don't use) was
 # first
 sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # Home
-sudo apt-get install g++-8 gcc-8-doc libstdc++6-8-dbg libstdc++-8-doc
+sudo apt-get install g++-8 gcc-8-doc libstdc++6-8-dbg libstdc++-8-doc \
+    libboost-dev libboost-doc
 # Ubuntu 18.04-specific
 sudo apt-get install libstdc++6-8-dbg libstdc++-8-doc
 # Ubuntu 19.04-specific
@@ -108,6 +109,8 @@ sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
     libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab \
     libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev
 # For CPU-intensive benchmarks
+sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"
+sudo nano /etc/sysctl.conf # kernel.perf_event_paranoid = -1
 sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
 sudo /etc/init.d/cpufrequtils restart
 ```
