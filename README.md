@@ -73,7 +73,8 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libmpx2-dbg \
     libquadmath0-dbg gdb-doc gettext-doc libtool-doc m4-doc python-doc cmake \
     cmake-doc diffstat unzip pinentry-doc zip software-properties-common \
-    colordiff valgrind linux-tools-generic
+    colordiff valgrind linux-tools-generic libjemalloc2 python3-scipy \
+    python-numpy-doc python3-pytest python3-numpy-dbg python-scipy-doc
 # Ubuntu 19.04+
 sudo apt-get install fzf hexyl ripgrep fd-find
 # Ubuntu 19.04+: not named fd by default because fdclone (which I don't use) was
@@ -110,7 +111,10 @@ sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
     libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev
 # For CPU-intensive benchmarks
 sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"
-sudo nano /etc/sysctl.conf # kernel.perf_event_paranoid = -1
+sudo sysctl -w vm.swappiness=0
+# kernel.perf_event_paranoid = -1
+# vm.swappiness = 0
+sudo nano /etc/sysctl.conf
 sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
 sudo /etc/init.d/cpufrequtils restart
 ```
