@@ -113,7 +113,9 @@ sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
 # For CPU-intensive benchmarks
 sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"
 sudo sysctl -w vm.swappiness=0
+sudo sysctl -w kernel.kptr_restrict=0
 # kernel.perf_event_paranoid = -1
+# kernel.kptr_restrict = 0
 # vm.swappiness = 0
 sudo nano /etc/sysctl.conf
 sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
