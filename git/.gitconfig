@@ -14,3 +14,7 @@
 	enabled = false
 [commit]
 	gpgsign = true
+[fetch]
+        jobs = 0
+[submodule]
+        fetchJobs = 0
