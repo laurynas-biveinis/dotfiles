@@ -1389,8 +1389,21 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'projectile-globally-ignored-modes "org-agenda-mode")
 (add-to-list 'projectile-globally-ignored-modes "package-menu-mode")
 (projectile-mode +1)
+
+;;; helm-projectile
 (require 'helm-projectile)
 (helm-projectile-on)
+
+;; Workaround https://github.com/bbatsov/helm-projectile/issues/134
+;; (helm-projectile-grep hard codes the grep command.), which does not allow to
+;; remove "-a" from grep options, which kills grepping over TRAMP for some
+;; projects by reverting to plain projectile-grep. Since helm-projectile-grep
+;; hardcodes several keymaps, dynamic too, the easiest way seems to be to
+;; replace the defun body.
+(defconst dotfiles--helm-projectile-grep-def (symbol-function
+                                              #'helm-projectile-grep))
+(fset 'helm-projectile-grep (symbol-function #'projectile-grep))
+(fset 'real-helm-projectile-grep dotfiles--helm-projectile-grep-def)
 
 ;; Workaround https://github.com/bbatsov/projectile/issues/347: remote projects
 ;; do not get added to known project list automatically. Also workaround the
