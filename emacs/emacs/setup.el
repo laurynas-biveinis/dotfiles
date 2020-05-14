@@ -1080,6 +1080,13 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'helm-imenu)
 (setq helm-imenu-fuzzy-match t)
 
+;;; helm-grep
+(require 'helm-grep)
+(setq helm-grep-default-command "grep --color-always -d skip %e -n%cH -e %p %f")
+(setq helm-grep-default-recurse-command
+      "grep --color=always -d recurse %e -n%cH -e %p %f")
+(setq helm-grep-file-path-style 'relative)
+
 ;;; helm-dash
 (require 'helm-dash)
 (setq helm-dash-browser-func 'eww)
