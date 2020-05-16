@@ -1602,7 +1602,7 @@
 	     (:maintainer "Feng Shu" . "tumashu@163.com")
 	     (:url . "https://github.com/tumashu/posframe"))])
  (project .
-	  [(0 1)
+	  [(0 1 2)
 	   ((emacs
 	     (26 3)))
 	   "Operations on the current project" single
@@ -2393,6 +2393,14 @@
        (:authors
 	("Mattias Engdegård" . "mattiase@acm.org"))
        (:keywords "lisp" "regexps"))])
+ (xref .
+       [(1 0 1)
+	((emacs
+	  (26 3))
+	 (project
+	  (0 1 1)))
+	"Cross-referencing commands" single
+	((:url . "http://elpa.gnu.org/packages/xref.html"))])
  (yasnippet .
 	    [(0 14 0)
 	     ((cl-lib
