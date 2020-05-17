@@ -75,7 +75,7 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     cmake-doc diffstat unzip pinentry-doc zip software-properties-common \
     colordiff valgrind linux-tools-generic libjemalloc2 python3-scipy \
     python-numpy-doc python3-pytest python3-numpy-dbg python-scipy-doc \
-    unattended-upgrades
+    unattended-upgrades screen
 # Ubuntu 19.04+
 sudo apt-get install fzf hexyl ripgrep fd-find
 # Ubuntu 19.04+: not named fd by default because fdclone (which I don't use) was
