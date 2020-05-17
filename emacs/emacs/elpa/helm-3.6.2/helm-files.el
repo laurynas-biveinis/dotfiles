@@ -531,6 +531,8 @@ with Exiftran mandatory option is \"-i\"."
     (define-key map (kbd "M-.")           'helm-ff-run-etags)
     (define-key map (kbd "M-R")           'helm-ff-run-rename-file)
     (define-key map (kbd "M-C")           'helm-ff-run-copy-file)
+    (when (executable-find "rsync")
+      (define-key map (kbd "M-V")         'helm-ff-run-rsync-file))
     (define-key map (kbd "M-B")           'helm-ff-run-byte-compile-file)
     (define-key map (kbd "M-L")           'helm-ff-run-load-file)
     (define-key map (kbd "M-S")           'helm-ff-run-symlink-file)
@@ -567,6 +569,7 @@ with Exiftran mandatory option is \"-i\"."
     (define-key map (kbd "M-l")           'helm-ff-rotate-left-persistent)
     (define-key map (kbd "M-r")           'helm-ff-rotate-right-persistent)
     (define-key map (kbd "C-l")           'helm-find-files-up-one-level)
+    (define-key map (kbd "C-_")           'helm-ff-undo)
     (define-key map (kbd "C-r")           'helm-find-files-down-last-level)
     (define-key map (kbd "C-c r")         'helm-ff-run-find-file-as-root)
     (define-key map (kbd "C-x C-v")       'helm-ff-run-find-alternate-file)
@@ -591,10 +594,12 @@ with Exiftran mandatory option is \"-i\"."
     (define-key map (kbd "C-]")           'helm-ff-run-toggle-basename)
     (define-key map (kbd "C-.")           'helm-find-files-up-one-level)
     (define-key map (kbd "C-l")           'helm-find-files-up-one-level)
+    (define-key map (kbd "C-_")           'helm-ff-undo)
     (define-key map (kbd "C-r")           'helm-find-files-down-last-level)
     (define-key map (kbd "C-c h")         'helm-ff-file-name-history)
     (define-key map (kbd "C-<backspace>") 'helm-ff-run-toggle-auto-update)
     (define-key map (kbd "C-c <DEL>")     'helm-ff-run-toggle-auto-update)
+    (define-key map (kbd "RET")           'helm-ff-RET)
     (helm-define-key-with-subkeys map (kbd "DEL") ?\d 'helm-ff-delete-char-backward
                                   '((C-backspace . helm-ff-run-toggle-auto-update)
                                     ([C-c DEL] . helm-ff-run-toggle-auto-update))
@@ -602,7 +607,7 @@ with Exiftran mandatory option is \"-i\"."
     map)
   "Keymap for `helm-read-file-name'.")
 
-(defcustom helm-ff-lynx-style-map nil
+(defcustom helm-ff-lynx-style-map t
   "Use arrow keys to navigate with `helm-find-files'.
 Note that if you define this variable with `setq' your change will
 have no effect, use customize instead."
@@ -688,6 +693,7 @@ Don't set it directly, use instead `helm-ff-auto-update-initial-value'.")
    "Grep current directory with AG `M-g a, C-u select type'" 'helm-find-files-ag
    "Git grep `M-g g, C-u from root'" 'helm-ff-git-grep
    "Zgrep File(s) `M-g z, C-u Recurse'" 'helm-ff-zgrep
+   "Pdf Grep File(s)" 'helm-ff-pdfgrep
    "Gid `M-g i'" 'helm-ff-gid
    "Switch to Eshell `M-e'" 'helm-ff-switch-to-eshell
    "Etags `M-., C-u reload tag file'" 'helm-ff-etags-select
@@ -704,6 +710,10 @@ Don't set it directly, use instead `helm-ff-auto-update-initial-value'.")
    'helm-ff-delete-files
    "Touch File(s) `M-T'" 'helm-ff-touch-files
    "Copy file(s) `M-C, C-u to follow'" 'helm-find-files-copy
+   (lambda ()
+     (and (executable-find "rsync")
+          "Rsync file(s) `M-V'"))
+   'helm-find-files-rsync
    "Rename file(s) `M-R, C-u to follow'" 'helm-find-files-rename
    "Backup files" 'helm-find-files-backup
    "Symlink files(s) `M-S, C-u to follow'" 'helm-find-files-symlink
@@ -854,8 +864,10 @@ belonging to each window."
 
 (defun helm-find-files-do-action (action)
   "Generic function for creating actions from `helm-source-find-files'.
-ACTION must be an action supported by `helm-dired-action'."
+ACTION can be `rsync' or any action supported by `helm-dired-action'."
   (require 'dired-async)
+  (when (eq action 'rsync)
+    (cl-assert (executable-find "rsync") nil "No command named rsync"))
   (let* ((ifiles (mapcar 'expand-file-name ; Allow modify '/foo/.' -> '/foo'
                          (helm-marked-candidates :with-wildcard t)))
          (cand   (helm-get-selection)) ; Target
@@ -863,6 +875,7 @@ ACTION must be an action supported by `helm-dired-action'."
          (prompt (format "%s %s file(s) %s: "
                          (if (and (and (fboundp 'dired-async-mode)
                                        dired-async-mode)
+                                  (not (eq action 'rsync))
                                   (null prefarg))
                              (concat "Async " (symbol-name action))
                            (capitalize (symbol-name action)))
@@ -897,8 +910,148 @@ ACTION must be an action supported by `helm-dired-action'."
     (unless (or dest-dir-p (file-directory-p dest-dir))
       (when (y-or-n-p (format "Create directory `%s'? " dest-dir))
         (make-directory dest-dir t)))
-    (helm-dired-action
-     dest :files ifiles :action action :follow prefarg)))
+    (if (eq action 'rsync)
+        (helm-rsync-copy-files ifiles dest)
+      (helm-dired-action
+       dest :files ifiles :action action :follow prefarg))))
+
+;; Rsync
+;;
+(defcustom helm-rsync-switches '("-a" "-z" "-h" "--info=all2")
+  "Rsync options to use with HFF Rsync action."
+  :type '(repeat string)
+  :group 'helm-files)
+
+(defcustom helm-rsync-percent-sign "％"
+  "Percentage unicode sign to use in Rsync reporter."
+  :type 'string
+  :group 'helm-files)
+
+(defvar helm-rsync-process-buffer "*helm-rsync*")
+(defvar helm-rsync-progress-str-alist nil)
+
+(defface helm-ff-rsync-progress
+  '((t (:inherit font-lock-warning-face)))
+  "Face used for rsync mode-line indicator."
+  :group 'helm-files-faces)
+
+(defun helm-rsync-remote2rsync (file)
+  (if (file-remote-p file)
+      (let ((localname (directory-file-name
+                        (expand-file-name (file-remote-p file 'localname))))
+            (user      (file-remote-p file 'user))
+            (host      (file-remote-p file 'host)))
+        (if user
+            (format "%s@%s:'%s'" user host (helm-rsync-quote-argument localname))
+          (format "%s:'%s'" host (helm-rsync-quote-argument localname))))
+    (directory-file-name
+     (expand-file-name file))))
+
+(defun helm-rsync-quote-argument (fname)
+  ;; Seems rsync already quote things like accentued chars and failed
+  ;; when passing such chars already quoted, so quote only spaces and
+  ;; only for remote path as specified in its documentation. IOW
+  ;; shell-quote-argument is not working with Rsync.
+  (mapconcat 'identity (split-string fname) "\\ "))
+
+(defun helm-rsync-format-mode-line-str (proc)
+  (format " [%s]"
+          (propertize (assoc-default proc helm-rsync-progress-str-alist)
+                      'face 'helm-ff-rsync-progress)))
+
+(defun helm-rsync-mode-line (proc)
+  "Add Rsync progress to the mode line."
+  (or global-mode-string (setq global-mode-string '("")))
+  (unless (member `(:eval (helm-rsync-format-mode-line-str ,proc))
+		  global-mode-string)
+    (setq global-mode-string
+	  (append global-mode-string
+		  `((:eval (helm-rsync-format-mode-line-str ,proc)))))))
+
+(defun helm-rsync-restore-mode-line (proc)
+  "Restore the mode line when Rsync finishes."
+  (setq global-mode-string
+	(remove `(:eval (helm-rsync-format-mode-line-str ,proc))
+                global-mode-string))
+  (force-mode-line-update))
+
+(defun helm-rsync-copy-files (files dest)
+  (setq files (cl-loop for f in files
+                       collect (helm-rsync-remote2rsync f))
+        dest (helm-rsync-remote2rsync dest))
+  (let ((proc (apply #'start-process
+                     "rsync" helm-rsync-process-buffer "rsync"
+                     (append helm-rsync-switches
+                             (append files (list dest))))))
+    (helm-rsync-mode-line proc)
+    (set-process-sentinel proc `(lambda (process event)
+                                  (cond ((string= event "finished\n")
+                                         (message "%s copied %s files"
+                                                  (capitalize (process-name process))
+                                                  ,(length files)))
+                                        (t (error "Process %s %s with code %s"
+                                                  (process-name process)
+                                                  (process-status process)
+                                                  (process-exit-status process))))
+                                  (setq helm-rsync-progress-str-alist
+                                        (delete (assoc process helm-rsync-progress-str-alist)
+                                                helm-rsync-progress-str-alist))
+                                  (helm-rsync-restore-mode-line process)
+                                  (force-mode-line-update)))
+    (set-process-filter proc #'helm-rsync-process-filter)))
+
+(defun helm-rsync-process-filter (proc output)
+  (let ((inhibit-read-only t)
+        fname progbar)
+    (with-current-buffer (process-buffer proc)
+      (when (string-match comint-password-prompt-regexp output)
+        ;; FIXME: Fully not tested and
+        ;; use an agent or auth-source
+        ;; or whatever to get password if
+        ;; available.
+        (process-send-string
+         proc (concat (read-passwd (match-string 0 output)) "\n")))
+      ;; Extract the progress bar.
+      (with-temp-buffer
+        (insert output)
+        (when (re-search-backward "[[:cntrl:]]" nil t)
+          (setq progbar (buffer-substring-no-properties
+                         (match-end 0) (point-max)))))
+      ;; Insert the text, advancing the process marker.
+      (save-excursion
+        (goto-char (process-mark proc))
+        (insert output)
+        (set-marker (process-mark proc) (point)))
+      (goto-char (process-mark proc))
+      ;; Extract the file name currently
+      ;; copied (Imply --info=all2 or all1).
+      (save-excursion
+        (when (re-search-backward "^[^[:cntrl:]]" nil t)
+          (setq fname (helm-basename
+                       (buffer-substring-no-properties
+                        (point) (point-at-eol))))))
+      ;; Now format the string for the mode-line.
+      (let ((ml-str (mapconcat 'identity
+                               (split-string
+                                (replace-regexp-in-string
+                                 "%" helm-rsync-percent-sign
+                                 progbar)
+                                " " t)
+                               " ")))
+        (setq ml-str (propertize ml-str 'help-echo
+                                 (format "%s->%s" (process-name proc) fname)))
+        ;; Now associate the formatted
+        ;; progress-bar string with process.
+        (helm-aif (assoc proc helm-rsync-progress-str-alist)
+            (setcdr it ml-str)
+          (setq helm-rsync-progress-str-alist
+                (push (cons proc ml-str) helm-rsync-progress-str-alist))))
+      ;; Finally update mode-line.
+      (force-mode-line-update t))))
+
+(defun helm-find-files-rsync (_candidate)
+  "Rsync files from `helm-find-files'."
+  (helm-find-files-do-action 'rsync))
 
 (defun helm-find-files-copy (_candidate)
   "Copy files from `helm-find-files'."
@@ -1689,6 +1842,13 @@ Called with a prefix arg open menu unconditionally."
     (helm-exit-and-execute-action 'helm-find-files-copy)))
 (put 'helm-ff-run-copy-file 'helm-only t)
 
+(defun helm-ff-run-rsync-file ()
+  "Run Rsync file action from `helm-source-find-files'."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'helm-find-files-rsync)))
+(put 'helm-ff-run-rsync-file 'helm-only t)
+
 (defun helm-ff-run-rename-file ()
   "Run Rename file action from `helm-source-find-files'."
   (interactive)
@@ -2119,6 +2279,20 @@ or hitting C-j on \"..\"."
                     (file-exists-p it))
           (helm-next-line)))))
 
+(defun helm-ff-undo ()
+  "Undo minibuffer in `helm-find-files'.
+Ensure disabling `helm-ff-auto-update-flag' before undoing."
+  (interactive)
+  (let ((old--flag helm-ff-auto-update-flag))
+    (setq helm-ff-auto-update-flag nil)
+    (setq helm-ff--auto-update-state nil)
+    (unwind-protect
+        (progn
+          (undo)
+          (helm-check-minibuffer-input))
+      (setq helm-ff-auto-update-flag old--flag)
+      (setq helm-ff--auto-update-state helm-ff-auto-update-flag))))
+
 ;;; Auto-update - helm-find-files auto expansion of directories.
 ;;
 ;;
@@ -2201,6 +2375,16 @@ or when `helm-pattern' is equal to \"~/\"."
                   (helm-set-pattern
                    ;; Need to expand-file-name to avoid e.g /ssh:host:./ in prompt.
                    (expand-file-name (file-name-as-directory helm-pattern)))))
+            ;; When typing pattern in minibuffer, helm
+            ;; expand very fast to a directory matching pattern and
+            ;; don't let undo the time to set a boundary, the result
+            ;; is when e.g. going to root with "//" and undoing, undo
+            ;; doesn't undo to previous input.  One fix for this is to
+            ;; advice `undo-auto--boundary-ensure-timer' so that it is
+            ;; possible to modify its delay (use a value of 1s for
+            ;; helm), a second fix is to run directly here `undo-boundary'
+            ;; inside a timer.
+            (run-at-time helm-input-idle-delay nil #'undo-boundary)
             (helm-check-minibuffer-input)))))))
 
 (defun helm-ff-auto-expand-to-home-or-root ()
@@ -2215,7 +2399,7 @@ or when `helm-pattern' is equal to \"~/\"."
                  (helm-basename helm-pattern))
                 (string-match-p "/\\'" helm-pattern))
            (helm-ff-recursive-dirs helm-pattern)
-           (with-helm-window (helm-check-minibuffer-input)))
+           (helm-ff--maybe-set-pattern-and-update))
           ((string-match
             "\\(?:\\`~/\\)\\|/?\\$.*/\\|/\\./\\|/\\.\\./\\|/~.*/\\|//\\|\\(/[[:alpha:]]:/\\|\\s\\+\\)"
             helm-pattern)
@@ -2235,14 +2419,15 @@ or when `helm-pattern' is equal to \"~/\"."
                        (setq input (file-name-as-directory input)))
                  (setq helm-ff-default-directory (file-name-as-directory
                                                   (file-name-directory input))))
-             (with-helm-window
-               (helm-set-pattern input)
-               (helm-check-minibuffer-input))))
+             (helm-ff--maybe-set-pattern-and-update input)))
           ((string-match "\\`/\\(-\\):.*" helm-pattern)
-           (with-helm-window
-             (helm-set-pattern
-              (replace-match tramp-default-method t t helm-pattern 1))
-             (helm-check-minibuffer-input))))))
+           (helm-ff--maybe-set-pattern-and-update
+            (replace-match tramp-default-method t t helm-pattern 1))))))
+
+(defun helm-ff--maybe-set-pattern-and-update (&optional str)
+  (with-helm-window
+    (when str (helm-set-pattern str))
+    (helm-check-minibuffer-input)))
 
 (defun helm-ff--expand-file-name-no-dot (name &optional directory)
   "Prevent expanding \"/home/user/.\" to \"/home/user\"."
@@ -3230,10 +3415,6 @@ Return candidates prefixed with basename of `helm-input' first."
                 (file-exists-p candidate))
            (helm-append-at-nth
             actions '(("Browse url file" . browse-url-of-file)) 2))
-          ((or (string= (file-name-extension candidate) "pdf")
-               (string= (file-name-extension candidate) "PDF"))
-           (helm-append-at-nth
-            actions '(("Pdfgrep File(s)" . helm-ff-pdfgrep)) 4))
           (t actions))))
 
 (defun helm-ff-trash-action (fn names &rest args)
@@ -3327,7 +3508,9 @@ Arg TRASHED-FILES is an alist of (fname_in_trash . dest) obtained with
     (cl-assert (not (file-exists-p dest-file)) nil
                (format "File `%s' already exists" dest-file))
     (cl-assert dest-file nil "No such file in trash")
+    (message "Restoring %s to %s..." (helm-basename file) (helm-basedir dest-file))
     (rename-file file dest-file)
+    (message "Restoring %s to %s done" (helm-basename file) (helm-basedir dest-file))
     (delete-file info-file)))
 
 (defun helm-ff-trash-file-p (file)
@@ -3511,7 +3694,8 @@ If a prefix arg is given or `helm-follow-mode' is on open file."
                    (when (string= (helm-basename candidate) "..")
                      (setq helm-ff-last-expanded helm-ff-default-directory))
                    (funcall insert-in-minibuffer (file-name-as-directory
-                                                  (expand-file-name candidate))))
+                                                  (expand-file-name candidate)))
+                   (with-helm-after-update-hook (helm-ff-retrieve-last-expanded)))
                  'never-split))
           ;; A symlink file, expand to it's true name. (first hit)
           ((and (file-symlink-p candidate) (not current-prefix-arg) (not follow))

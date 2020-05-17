@@ -1602,7 +1602,7 @@
 	     (:maintainer "Feng Shu" . "tumashu@163.com")
 	     (:url . "https://github.com/tumashu/posframe"))])
  (project .
-	  [(0 1 2)
+	  [(0 1 3)
 	   ((emacs
 	     (26 3)))
 	   "Operations on the current project" single
