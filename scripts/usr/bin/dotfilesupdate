@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -euo pipefail
 
 readonly DOTFILES_ROOT=~/dotfiles
 readonly DOTFILES_SETUP_DIR=$DOTFILES_ROOT/dotfiles
@@ -26,7 +26,8 @@ for extra_module in "${extra_modules[@]}"; do
     stow "$extra_module"
 done
 echo
-# Since we cannot do stow -D before git pull, check manually for any now-stray symlinks
+# Since we cannot do stow -D before git pull, check manually for any now-stray
+# symlinks
 echo "Stray symlinks in $HOME, if any:"
 find_ignore_paths=()
 for find_ignore_path in "${IGNORE_FOR_SYMLINKS[@]}"; do
@@ -34,6 +35,7 @@ for find_ignore_path in "${IGNORE_FOR_SYMLINKS[@]}"; do
 done
 # A useful alternative would be "(cd $DOTFILE_ROOT && chkstow -b)", but this
 # command finds non-stow-managed stray symlinks too
-find ~ "${find_ignore_paths[@]}" -type l ! -exec test -e {} \; -print 2>/dev/null
+find ~ "${find_ignore_paths[@]}" -type l ! -exec test -e {} \; -print \
+     2>/dev/null
 echo "End of stray symlink list"
 popd || exit

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -euo pipefail
 
 readonly BRANCH=$1
 readonly LOWEST_VERSION_ARG=$2

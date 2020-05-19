@@ -7,7 +7,7 @@
 # In case of checkout or create, Emacs project will be set up and Aerospike
 # server built in EE flavor.
 
-set -u
+set -euo pipefail
 
 readonly COMMAND=${1-UNDEFINED}
 

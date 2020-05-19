@@ -10,6 +10,8 @@
 #
 # Works on Linux and macOS.
 
+set -euo pipefail
+
 UNAME_OUT="$(uname -s)"
 
 if [ "$UNAME_OUT" == "Darwin" ]; then

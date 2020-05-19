@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -euo pipefail
 
 # shellcheck source=/dev/null
 source ~/.noninteractive_init.bash

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 readonly GREP_OPT=$1
 IFS=" " read -r -a REST_ARGS <<< "${@:2}"
 

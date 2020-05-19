@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -euo pipefail
 
 readonly NIGHTLY_PLIST=$HOME/Library/LaunchAgents/nightly.plist
 
@@ -8,4 +8,3 @@ launchctl unload "$NIGHTLY_PLIST"
 echo "launchctl unload $NIGHTLY_PLIST returned $?"
 launchctl load "$NIGHTLY_PLIST"
 echo "launchctl load $NIGHTLY_PLIST returned $?"
-

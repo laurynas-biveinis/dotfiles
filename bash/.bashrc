@@ -1,3 +1,5 @@
+set -euo pipefail
+
 # shellcheck disable=SC1090
 source ~/.noninteractive_init.bash
 

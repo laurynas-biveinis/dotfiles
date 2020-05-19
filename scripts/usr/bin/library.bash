@@ -1,4 +1,4 @@
-set -u
+set -euo pipefail
 
 function is_on_ac() {
     local UNAME_OUT
