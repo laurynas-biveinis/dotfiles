@@ -4,7 +4,7 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/helm-make
-;; Package-Version: 20200228.1742
+;; Package-Version: 20200518.950
 ;; Version: 0.2.0
 ;; Keywords: makefile
 
@@ -220,13 +220,14 @@ ninja.build file."
             (if (> jobs 0) jobs 1))))
 
 (defcustom helm-make-directory-functions-list
-  '(helm-make-current-directory helm-make-project-directory)
+  '(helm-make-current-directory helm-make-project-directory helm-make-dominating-directory)
   "Functions that return Makefile's directory, sorted by priority."
   :type
   '(repeat
     (choice
      (const :tag "Default directory" helm-make-current-directory)
      (const :tag "Project directory" helm-make-project-directory)
+     (const :tag "Dominating directory with makefile" helm-make-dominating-directory)
      (function :tag "Custom function"))))
 
 ;;;###autoload
@@ -404,6 +405,7 @@ and cache targets of MAKEFILE, if `helm-make-cache-targets' is t."
       (helm
        (require 'helm)
        (helm :sources (helm-build-sync-source "Targets"
+                        :header-name (lambda (name) (format "%s (%s):" name makefile))
                         :candidates 'targets
                         :fuzzy-match helm-make-fuzzy-matching
                         :action 'helm--make-action)
@@ -448,6 +450,8 @@ setting the buffer local variable `helm-make-build-dir'."
       (setq helm-make-command (helm--make-construct-command arg makefile))
       (helm--make makefile))))
 
+(defvar project-roots)
+
 (defun helm-make-project-directory ()
   "Return the current project root directory if found."
   (if (and (fboundp 'project-current) (project-current))
@@ -457,6 +461,10 @@ setting the buffer local variable `helm-make-build-dir'."
 (defun helm-make-current-directory()
   "Return the current directory."
   default-directory)
+
+(defun helm-make-dominating-directory ()
+  "Return the dominating directory that contains a Makefile if found"
+  (locate-dominating-file default-directory 'helm--make-makefile-exists))
 
 (provide 'helm-make)
 
