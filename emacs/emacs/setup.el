@@ -1403,6 +1403,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; Remove "-a" from grep options, because it kills grepping over TRAMP for some
 ;; projects.
 (setq helm-projectile-grep-command "grep -r %e -n%cH -e %p %f .")
+;; TODO(laurynas): fix/workaround
+;; https://github.com/bbatsov/helm-projectile/issues/139
 
 ;; Workaround https://github.com/bbatsov/projectile/issues/347: remote projects
 ;; do not get added to known project list automatically. Also workaround the
