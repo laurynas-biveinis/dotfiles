@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 export LANG=en_US.UTF-8
 
 if [ -f ~/.noninteractive_init_private.bash ]; then

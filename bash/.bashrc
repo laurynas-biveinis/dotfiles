@@ -1,5 +1,3 @@
-set -euo pipefail
-
 # shellcheck disable=SC1090
 source ~/.noninteractive_init.bash
 
@@ -90,7 +88,6 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-    set +e
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         # shellcheck disable=SC1091
         . /usr/share/bash-completion/bash_completion
@@ -100,17 +97,14 @@ if ! shopt -oq posix; then
     else
         source_if_exists /usr/local/etc/bash_completion
     fi
-    set -e
 fi
 
 for script in ~/.bash.d/rc/*; do
     source "$script"
 done
 
-set +e
 source_if_exists ~/.fzf.bash
 source_if_exists /usr/local/etc/profile.d/z.sh
-set -e
 
 alias rmcores="rm -rf /cores/*"
 
