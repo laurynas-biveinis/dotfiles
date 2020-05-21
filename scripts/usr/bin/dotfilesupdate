@@ -36,6 +36,6 @@ done
 # A useful alternative would be "(cd $DOTFILE_ROOT && chkstow -b)", but this
 # command finds non-stow-managed stray symlinks too
 find ~ "${find_ignore_paths[@]}" -type l ! -exec test -e {} \; -print \
-     2>/dev/null
+     2>/dev/null || true
 echo "End of stray symlink list"
 popd || exit
