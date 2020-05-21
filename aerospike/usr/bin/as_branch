@@ -12,13 +12,14 @@ set -euo pipefail
 readonly COMMAND=${1-UNDEFINED}
 
 if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" && \
-          $COMMAND != "pull" && $COMMAND != "rm" || \
+          $COMMAND != "pull" && $COMMAND != "push" && $COMMAND != "rm" || \
       $COMMAND == "UNDEFINED" ]]
 then
     echo "Usage: $0 create branch [starting_point]"
     echo "Usage: $0 checkout branch"
     echo "       $0 fetch"
     echo "       $0 pull"
+    echo "       $0 push"
     echo "       $0 rm branch"
     exit 1
 fi
@@ -43,6 +44,16 @@ function do_pull () {
     popd || exit 1
 }
 
+function do_push () {
+    pushd "ee" || exit 1
+    git push
+    popd || exit 1
+
+    pushd "ce" || exit 1
+    git push
+    popd || exit 1
+}
+
 function do_rm () {
     rm -rf "$BRANCH_ROOT" || exit 1
 
@@ -57,8 +68,15 @@ function do_rm () {
     popd || exit 1
 }
 
+# Zero-arg commands
+
 if [[ $COMMAND == "pull" ]]; then
     do_pull
+    exit 0
+fi
+
+if [[ $COMMAND == "push" ]]; then
+    do_push
     exit 0
 fi
 
@@ -71,6 +89,8 @@ if [[ $COMMAND == "fetch" ]]; then
 fi
 
 pushd "$ASD_BRANCHES" || exit 1
+
+# One or more-arg commands
 
 readonly BRANCH=$2
 
