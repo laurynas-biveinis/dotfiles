@@ -18,7 +18,7 @@
 	 ("Leo Liu" . "sdl.web@gmail.com"))
 	(:keywords "tools" "processes" "convenience"))])
  (ada-mode .
-	   [(7 1 1)
+	   [(7 1 2)
 	    ((uniquify-files
 	      (1 0 1))
 	     (wisi

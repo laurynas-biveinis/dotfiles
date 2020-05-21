@@ -433,7 +433,7 @@ loaded as such.)"
 
 (add-hook 'emacs-lisp-mode-hook #'dotfiles--emacs-lisp-mode-hook)
 
-;;; gpg
+;;; gpg/epa
 (require 'epa)
 (setq epa-pinentry-mode 'loopback)
 
@@ -521,6 +521,10 @@ loaded as such.)"
       (format "\\(%s\\)\\|\\(%s\\)"
               vc-ignore-dir-regexp
               tramp-file-name-regexp))
+
+;; epa "integration" with TRAMP: avoid choking trying to gpg-decrypt
+;; non-encrypted ~/.authinfo.gpg.
+(setq tramp-completion-use-auth-sources nil)
 
 
 ;;; calendar
