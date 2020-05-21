@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov
 ;; URL: https://github.com/bbatsov/helm-projectile
-;; Package-Version: 20200518.629
+;; Package-Version: 20200520.1843
 ;; Created: 2011-31-07
 ;; Keywords: project, convenience
 ;; Version: 1.0.0
@@ -926,7 +926,7 @@ If it is nil, or ack/ack-grep not found then use default grep command."
 (defun helm-projectile-grep (&optional dir)
   "Helm version of `projectile-grep'.
 DIR is the project root, if not set then current directory is used"
-  (interactive "D")
+  (interactive)
   (let ((project-root (or dir (projectile-project-root) (error "You're not in a project"))))
     (funcall 'run-with-timer 0.01 nil
              #'helm-projectile-grep-or-ack project-root nil)))
@@ -934,7 +934,7 @@ DIR is the project root, if not set then current directory is used"
 ;;;###autoload
 (defun helm-projectile-ack (&optional dir)
   "Helm version of projectile-ack."
-  (interactive "D")
+  (interactive)
   (let ((project-root (or dir (projectile-project-root) (error "You're not in a project"))))
     (let ((ack-ignored (mapconcat
                         'identity
