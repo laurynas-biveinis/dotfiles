@@ -820,7 +820,7 @@
 		("Martin Rudalics" . "rudalics@gmx.at"))
 	       (:maintainer "Martin Rudalics" . "rudalics@gmx.at"))])
  (frog-menu .
-	    [(0 2 10)
+	    [(0 2 11)
 	     ((emacs
 	       (26))
 	      (avy
