@@ -101,6 +101,7 @@
 (declare-function dired-get-filename 'dired)
 (declare-function term-emulate-terminal 'term)
 (defvar eshell-preoutput-filter-functions)
+(defvar git-commit-post-finish-hook)
 
 ;;; Options
 
@@ -176,7 +177,7 @@ please see https://github.com/magit/magit/wiki/Emacsclient."))))
 
 (defcustom with-editor-sleeping-editor "\
 sh -c '\
-echo \"WITH-EDITOR: $$ OPEN $0 IN $(pwd)\"; \
+printf \"WITH-EDITOR: $$ OPEN $0\\037 IN $(pwd)\\n\"; \
 sleep 604800 & sleep=$!; \
 trap \"kill $sleep; exit 0\" USR1; \
 trap \"kill $sleep; exit 1\" USR2; \
@@ -587,7 +588,7 @@ if that was added earlier by the advised `start-file-process'.
 Do so by wrapping the two filter functions using a lambda, which
 becomes the actual filter.  It calls `with-editor-process-filter'
 first, passing t as NO-STANDARD-FILTER.  Then it calls FILTER,
-which may or may not insert the text into the PROCESS' buffer."
+which may or may not insert the text into the PROCESS's buffer."
   (set-process-filter
    process
    (if (eq (process-filter process) 'with-editor-process-filter)
