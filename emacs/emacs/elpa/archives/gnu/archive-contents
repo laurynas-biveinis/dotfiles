@@ -131,7 +131,7 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:keywords "async"))])
  (auctex .
-	 [(12 2 1)
+	 [(12 2 2)
 	  ((emacs
 	    (24 1))
 	   (cl-lib
@@ -755,7 +755,7 @@
 		   ("Magnar Sveen" . "magnars@gmail.com"))
 		  (:keywords "marking" "region"))])
  (exwm .
-       [(0 23)
+       [(0 24)
 	((xelb
 	  (0 18)))
 	"Emacs X Window Manager" tar
