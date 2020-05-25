@@ -1510,9 +1510,6 @@ find a search tool; by default, this uses \"find | grep\" in the
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
 
 ;;; deadgrep. Alternatives: rg.el, ripgrep.el, counsel/helm, etc.
-;; TODO: deadgrep-edit-mode is broken:
-;; https://github.com/Wilfred/deadgrep/issues/60, need to reconsider
-;; alternatives.
 (require 'deadgrep)
 (global-set-key (kbd "<f5>") #'deadgrep)
 ;; Integrate deadgrep with projectile by using the latter's project root, if
@@ -1533,6 +1530,38 @@ find a search tool; by default, this uses \"find | grep\" in the
 
 (advice-add #'deadgrep--find-file :around
             #'dotfiles--deadgrep--find-file-wrapper)
+
+;; Fix the data corruption half of
+;; https://github.com/Wilfred/deadgrep/issues/60. Make
+;; `deadgrep--propagate-change' support full `after-change-functions' contract:
+;; delete the old region first, then insert the new region.
+(defun deadgrep--propagate-change (beg end length)
+  "Repeat the last modification to the results buffer in the
+underlying file."
+  ;; We should never be called outside an edit buffer, but be
+  ;; defensive. Buggy functions in change hooks are painful.
+  (when (eq major-mode 'deadgrep-edit-mode)
+    (save-mark-and-excursion
+      (goto-char beg)
+      (-let* ((column (+ (deadgrep--current-column) length))
+              (filename (deadgrep--filename))
+              (line-number (deadgrep--line-number))
+              ((buf . opened) (deadgrep--find-file filename))
+              (inserted (buffer-substring beg end)))
+        (with-current-buffer buf
+          (save-mark-and-excursion
+            (save-restriction
+              (widen)
+              (goto-char
+               (deadgrep--buffer-position line-number column))
+              (delete-char (- length))
+              (insert inserted)))
+          ;; If we weren't visiting this file before, just save it and
+          ;; close it.
+          (when opened
+            (basic-save-buffer)
+            (kill-buffer buf)))))))
+
 
 ;;; page-break-lines
 (require 'page-break-lines)
