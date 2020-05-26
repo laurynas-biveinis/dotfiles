@@ -1562,6 +1562,9 @@ underlying file."
             (basic-save-buffer)
             (kill-buffer buf)))))))
 
+;;; wgrep
+(require 'wgrep)
+(setq wgrep-auto-save-buffer t)
 
 ;;; page-break-lines
 (require 'page-break-lines)
