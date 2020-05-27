@@ -1519,18 +1519,6 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;; https://github.com/bbatsov/projectile/issues/1282
 (advice-add #'deadgrep--project-root :before-until #'projectile-project-root)
 
-;; Fix the "Match data clobbered by buffer modification hooks" half of
-;; https://github.com/Wilfred/deadgrep/issues/60. It seems that
-;; `deadgrep--propagate-change' calling `deadgrep--find-file' clobbers the match
-;; data, workaround by surrounding it with `save-match-data'.
-(defun dotfiles--deadgrep--find-file-wrapper (orig-fun &rest args)
-  "Advice ORIG-FUN with ARGS to `save-match-data' around it."
-  (save-match-data
-    (apply orig-fun args)))
-
-(advice-add #'deadgrep--find-file :around
-            #'dotfiles--deadgrep--find-file-wrapper)
-
 ;; Fix the data corruption half of
 ;; https://github.com/Wilfred/deadgrep/issues/60. Make
 ;; `deadgrep--propagate-change' support full `after-change-functions' contract:
