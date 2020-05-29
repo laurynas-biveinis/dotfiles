@@ -21,8 +21,9 @@
 ;; SOFTWARE.
 ;;
 ;; Author: DarthFennec <darthfennec@derpymail.org>
-;; Version: 0.9.0
-;; Package-Version: 20200412.2328
+;; Version: 0.9.1
+;; Package-Version: 20200528.2128
+;; Package-Commit: ab85d7fcc65bb1a8d3fa27a9a6ba69a76e7f6a14
 ;; Package-Requires: ((emacs "24"))
 ;; URL: https://github.com/DarthFennec/highlight-indent-guides
 
@@ -136,6 +137,16 @@ other levels."
   "Whether to automatically calculate faces.
 If this is enabled, highlight-indent-guides will use the current theme's
 background color to automatically calculate reasonable indent guide colors."
+  :type 'boolean
+  :group 'highlight-indent-guides)
+
+(defcustom highlight-indent-guides-suppress-auto-error nil
+  "Whether to suppress the error that sometimes prints when calculating faces.
+When automatically calculating faces, sometimes there will be an error that
+\"`default' face is not set properly\".  If this flag is enabled,
+highlight-indent-guides will not print this error.  This can be helpful in
+situations where faces are calculated correctly, but the error is printed
+anyway, which can be annoying."
   :type 'boolean
   :group 'highlight-indent-guides)
 
@@ -887,9 +898,10 @@ This runs whenever a theme is loaded, but it can also be run interactively."
            (scharp highlight-indent-guides-auto-stack-character-face-perc)
            mod fl bl)
       (if (not (and fg bg))
-          (message "Error: %s: %s"
-                   "highlight-indent-guides cannot auto set faces"
-                   "`default' face is not set properly")
+          (unless highlight-indent-guides-suppress-auto-error
+            (message "Error: %s: %s"
+                     "highlight-indent-guides cannot auto set faces"
+                     "`default' face is not set properly"))
         (setq fl (nth 2 (apply 'color-rgb-to-hsl fg)))
         (setq bl (nth 2 (apply 'color-rgb-to-hsl bg)))
         (setq mod (cond ((< fl bl) -1) ((> fl bl) 1) ((< 0.5 bl) -1) (t 1)))
