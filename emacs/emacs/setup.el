@@ -597,13 +597,8 @@ loaded as such.)"
 (require 'google-c-style)
 (c-add-style "google" google-c-style)
 
-;; Imenu
-(require 'imenu+)
-(defun dotfiles--try-to-add-imenu ()
-  "Try to add imenu to menu bar, silently eating any errors."
-  (condition-case nil (imenu-add-menubar-index) (error nil)))
-(add-hook 'font-lock-mode-hook #'dotfiles--try-to-add-imenu)
-
+;;; `imenu'
+(require 'imenu)
 (setq imenu-auto-rescan t)
 (setq imenu-auto-rescan-maxout 6000000)
 

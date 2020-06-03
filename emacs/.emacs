@@ -26,7 +26,6 @@
         ("melpa"        . 10)))
 (package-initialize)
 
-(add-to-list 'load-path private-elisp-lib)
 (add-to-list 'load-path cmake-build.el-lib)
 
 ;; Load system-specific library and setup system-specific things that
