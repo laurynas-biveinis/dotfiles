@@ -18,3 +18,5 @@
         jobs = 0
 [submodule]
         fetchJobs = 0
+[pull]
+	ff = only
