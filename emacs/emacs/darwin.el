@@ -12,6 +12,17 @@
 
 (setq ns-right-alternate-modifier 'none)
 
+;;; woman
+;; Integrate `woman' with macOS XCode some better by adding the missing man
+;; paths.
+(require 'woman)
+(add-to-list 'woman-manpath
+             "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man")
+(add-to-list 'woman-manpath
+             "/Applications/Xcode.app/Contents/Developer/usr/share/man")
+(add-to-list 'woman-manpath
+             "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man")
+
 (require 'exec-path-from-shell)
 (setq exec-path-from-shell-check-startup-files nil)
 (add-to-list 'exec-path-from-shell-variables "LANG")
