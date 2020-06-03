@@ -1094,6 +1094,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq helm-grep-file-path-style 'relative)
 
 ;;; helm-dash
+;; It's a shame Man_Pages documentation set is a dummy one and cannot be browsed
+;; with `helm-dash'. If it becomes too annoying, look into dash-at-point instead.
 (require 'helm-dash)
 (setq helm-dash-browser-func 'eww)
 (define-key global-map (kbd "<C-f1>") #'helm-dash-at-point)
