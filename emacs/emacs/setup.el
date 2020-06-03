@@ -1125,7 +1125,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (defun dotfiles--helm-dash-emacs-lisp-mode-hook ()
   "Integrate `helm-dash' with `emacs-lisp-mode'.."
   (with-no-warnings
-    (setq-local dash-docs-docsets '("Emacs_Lisp"))))
+    (setq-local dash-docs-docsets '("Emacs Lisp"))))
 (add-hook 'emacs-lisp-mode-hook #'dotfiles--helm-dash-emacs-lisp-mode-hook)
 
 ;; helm-dash integration with markdown-mode
