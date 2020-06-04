@@ -1106,7 +1106,7 @@
 	       ("Simen Heggestøyl" . "simenheg@gmail.com"))
 	      (:maintainer "Simen Heggestøyl" . "simenheg@gmail.com"))])
  (jsonrpc .
-	  [(1 0 11)
+	  [(1 0 12)
 	   ((emacs
 	     (25 2)))
 	   "JSON-RPC library" single
