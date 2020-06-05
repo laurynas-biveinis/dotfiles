@@ -1094,6 +1094,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'helm-dash)
 (setq helm-dash-browser-func 'eww)
 (define-key global-map (kbd "<C-f1>") #'helm-dash-at-point)
+;; TODO(laurynas): `thing-at-point' at "std::foo" returns "foo" whereas for
+;; `helm-dash' std:: prefix would be useful too.
 
 ;; helm-dash integration with sh-mode
 (defun dotfiles--helm-dash-sh-mode-hook ()
