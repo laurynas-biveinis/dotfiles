@@ -17,7 +17,8 @@
 
 ;; Author: Ivan Yonchovski <yyoncho@gmail.com>
 ;; Keywords: languages, debug
-;; Package-Version: 20200429.1457
+;; Package-Version: 0.1
+;; Package-Commit: 6b5ce182d7c94c62b55b8f7d0c7e643b2c30e560
 ;; URL: https://github.com/yyoncho/helm-lsp
 ;; Package-Requires: ((emacs "25.1") (dash "2.14.1") (lsp-mode "5.0") (helm "2.0"))
 ;; Version: 0.1
