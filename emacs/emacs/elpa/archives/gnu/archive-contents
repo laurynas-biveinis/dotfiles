@@ -445,7 +445,7 @@
 		  ("Daiki Ueno" . "ueno@gnu.org"))
 		 (:maintainer nil . "emacs-devel@gnu.org"))])
  (debbugs .
-	  [(0 22)
+	  [(0 23)
 	   ((emacs
 	     (25 1))
 	    (soap-client
@@ -687,13 +687,23 @@
 		      ("William Xu" . "william.xwl@gmail.com"))
 		     (:maintainer "William Xu" . "william.xwl@gmail.com"))])
  (elisp-benchmarks .
-		   [(1 5)
+		   [(1 6)
 		    nil "elisp benchmarks collection" tar
 		    ((:maintainer "Andrea Corallo" . "akrl@sdf.org")
 		     (:authors
 		      ("Andrea Corallo" . "akrl@sdf.org"))
 		     (:keywords "languages" "lisp")
 		     (:url . "http://elpa.gnu.org/packages/elisp-benchmarks.html"))])
+ (emms .
+       [(5 41)
+	((cl-lib
+	  (0 5)))
+	"The Emacs Multimedia System" tar
+	((:url . "https://www.gnu.org/software/emms/")
+	 (:maintainer "Yoni Rabkin" . "yrk@gnu.org")
+	 (:authors
+	  ("Jorgen Schäfer" . "forcer@forcix.cx"))
+	 (:keywords "emms" "mp3" "ogg" "flac" "music" "mpeg" "video" "multimedia"))])
  (enwc .
        [(2 0)
 	((emacs
