@@ -12,6 +12,10 @@
 
 (setq ns-right-alternate-modifier 'none)
 
+;; s-t binding is very annoying: a popular combination in other apps which opens
+;; a font panel popup in macOS Emacs, which I never use.
+(global-unset-key (kbd "s-t"))
+
 ;;; woman
 ;; Integrate `woman' with macOS XCode some better by adding the missing man
 ;; paths.
