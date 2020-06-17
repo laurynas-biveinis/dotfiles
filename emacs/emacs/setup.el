@@ -108,6 +108,8 @@
 
 (setq load-prefer-newer t)
 
+(setq history-delete-duplicates t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun dotfiles--enable-show-trailing-ws ()
