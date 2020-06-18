@@ -222,6 +222,10 @@ defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string "TwoButton
 defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode \
     -string "TwoButton"
 #
+# Appearance
+#
+defaults write -g CGFontRenderingFontSmoothingDisabled -bool YES
+#
 # Computer name
 #
 sudo scutil --set ComputerName new-computer-name
@@ -322,7 +326,7 @@ defaults write com.apple.ActivityMonitor ShowCategory -int 0
 #
 # Check for updates automatically
 defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-# Check daily
+# Check daily
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 # Download updates in background automatically
 defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
