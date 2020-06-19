@@ -195,9 +195,9 @@
   (set-frame-size nil (dotfiles--frame-geometry-width geometry)
                   (dotfiles--frame-geometry-height geometry)))
 
-(defconst dotfiles--darkstar-laptop-screen '(1680 . 1050))
+(defconst dotfiles--darkstar-laptop-screen '(1440 . 900))
 (defconst dotfiles--darkstar-laptop-geometry
-  (make-dotfiles--frame-geometry :top 1 :left 1 :height 65 :width 237))
+  (make-dotfiles--frame-geometry :top 1 :left 1 :height 55 :width 202))
 
 (defconst dotfiles--darkstar-external-screen '(7696 . 1692))
 (defconst dotfiles--darkstar-external-geometry
