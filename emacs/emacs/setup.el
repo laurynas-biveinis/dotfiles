@@ -199,7 +199,7 @@
 (defconst dotfiles--darkstar-laptop-geometry
   (make-dotfiles--frame-geometry :top 1 :left 1 :height 55 :width 202))
 
-(defconst dotfiles--darkstar-external-screen '(7696 . 1692))
+(defconst dotfiles--darkstar-external-screen '(7456 . 1692))
 (defconst dotfiles--darkstar-external-geometry
   (make-dotfiles--frame-geometry :top 4 :left 3011 :height 117 :width 426))
 
