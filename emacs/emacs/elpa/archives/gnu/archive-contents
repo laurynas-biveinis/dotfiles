@@ -1810,7 +1810,7 @@
 		   ("Bastien Guerry" . "bzg@gnu.org"))
 		  (:maintainer "Bastien Guerry" . "bzg@gnu.org"))])
  (relint .
-	 [(1 17)
+	 [(1 18)
 	  ((xr
 	    (1 19))
 	   (emacs
