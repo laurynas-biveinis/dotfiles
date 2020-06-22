@@ -1142,7 +1142,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq helm-org-headings-fontify t)
 (setq helm-org-format-outline-path t)
 (setq helm-org-show-filename t)
-(define-key global-map [remap org-capture] #'helm-org-capture-templates)
 
 ;;; TODO(laurynas): integrate Helm with flyspell? Neither flyspell-correct /
 ;;; flyspell-correct-helm nor helm-flyspell replace ispell-word.
