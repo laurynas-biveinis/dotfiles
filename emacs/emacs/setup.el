@@ -593,7 +593,7 @@ loaded as such.)"
   (interactive)
   (set-face-attribute 'default nil :height screen-sharing-default-height)
   (balance-windows)
-  (global-display-line-numbers-mode nil))
+  (global-display-line-numbers-mode -1))
 
 ;; Google C style
 (require 'google-c-style)
