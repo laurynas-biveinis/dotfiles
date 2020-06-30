@@ -21,10 +21,10 @@ END-INFO-DIR-ENTRY
 
 File: tramp.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
 
-TRAMP 2.4.3.5 User Manual
-*************************
+TRAMP 2.4.4 User Manual
+***********************
 
-This file documents TRAMP 2.4.3.5, a remote file editing package for
+This file documents TRAMP 2.4.4, a remote file editing package for
 Emacs.
 
    TRAMP stands for “Transparent Remote (file) Access, Multiple
@@ -1550,6 +1550,12 @@ properties are listed here:
      reestablished.  A value of ‘nil’ disables this feature.  Most of
      the methods do not set this property except the ‘sudo’ and ‘doas’
      methods, which use predefined values.
+
+   • "tmpdir"
+
+     The temporary directory on the remote host.  If not specified, the
+     default value is "/data/local/tmp" for the ‘adb’ method, "/C$/Temp"
+     for the ‘smb’ method, and "/tmp" otherwise.
 
    • "posix"
 
@@ -4614,61 +4620,61 @@ Concept Index
 
 Tag Table:
 Node: Top933
-Node: Overview5421
-Node: Obtaining TRAMP10755
-Node: Quick Start Guide13202
-Ref: Quick Start Guide: File name syntax13979
-Ref: Quick Start Guide: ssh and plink methods15081
-Ref: Quick Start Guide: su, sudo and sg methods15625
-Ref: Quick Start Guide: ssh, plink, su, sudo and sg methods16189
-Ref: Quick Start Guide: sudoedit method16719
-Ref: Quick Start Guide: smb method17130
-Ref: Quick Start Guide: GVFS-based methods17461
-Ref: Quick Start Guide: GNOME Online Accounts based methods17857
-Ref: Quick Start Guide: Android18399
-Ref: Quick Start Guide: rclone method18631
-Node: Configuration18958
-Node: Connection types21430
-Node: Inline methods22844
-Node: External methods27806
-Node: GVFS-based methods38444
-Node: Default Method41713
-Node: Default User44730
-Node: Default Host46259
-Node: Multi-hops47391
-Node: Firewalls51583
-Node: Customizing Methods53040
-Node: Customizing Completion55380
-Node: Password handling58870
-Ref: Using an authentication file59340
-Ref: Caching passwords60842
-Node: Connection caching61360
-Node: Predefined connection information62290
-Node: Remote programs66164
-Node: Remote shell setup69085
-Node: Android shell setup78701
-Node: Auto-save and Backup81088
-Node: Windows setup hints84163
-Node: Usage85783
-Node: File name syntax87136
-Node: Change file name syntax89143
-Node: File name completion90574
-Node: Ad-hoc multi-hops93729
-Node: Remote processes95795
-Ref: Running a debugger on a remote host105442
-Node: Cleanup remote connections107412
-Node: Renaming remote files109113
-Node: Archive file names113332
-Node: Bug Reports117846
-Node: Frequently Asked Questions120587
-Node: Files directories and localnames144952
-Node: Localname deconstruction145388
-Node: External packages146041
-Node: Traces and Profiles148086
-Node: GNU Free Documentation License150055
-Node: Function Index175428
-Node: Variable Index178306
-Node: Concept Index186276
+Node: Overview5415
+Node: Obtaining TRAMP10749
+Node: Quick Start Guide13196
+Ref: Quick Start Guide: File name syntax13973
+Ref: Quick Start Guide: ssh and plink methods15075
+Ref: Quick Start Guide: su, sudo and sg methods15619
+Ref: Quick Start Guide: ssh, plink, su, sudo and sg methods16183
+Ref: Quick Start Guide: sudoedit method16713
+Ref: Quick Start Guide: smb method17124
+Ref: Quick Start Guide: GVFS-based methods17455
+Ref: Quick Start Guide: GNOME Online Accounts based methods17851
+Ref: Quick Start Guide: Android18393
+Ref: Quick Start Guide: rclone method18625
+Node: Configuration18952
+Node: Connection types21424
+Node: Inline methods22838
+Node: External methods27800
+Node: GVFS-based methods38438
+Node: Default Method41707
+Node: Default User44724
+Node: Default Host46253
+Node: Multi-hops47385
+Node: Firewalls51577
+Node: Customizing Methods53034
+Node: Customizing Completion55374
+Node: Password handling58864
+Ref: Using an authentication file59334
+Ref: Caching passwords60836
+Node: Connection caching61354
+Node: Predefined connection information62284
+Node: Remote programs66378
+Node: Remote shell setup69299
+Node: Android shell setup78915
+Node: Auto-save and Backup81302
+Node: Windows setup hints84377
+Node: Usage85997
+Node: File name syntax87350
+Node: Change file name syntax89357
+Node: File name completion90788
+Node: Ad-hoc multi-hops93943
+Node: Remote processes96009
+Ref: Running a debugger on a remote host105656
+Node: Cleanup remote connections107626
+Node: Renaming remote files109327
+Node: Archive file names113546
+Node: Bug Reports118060
+Node: Frequently Asked Questions120801
+Node: Files directories and localnames145166
+Node: Localname deconstruction145602
+Node: External packages146255
+Node: Traces and Profiles148300
+Node: GNU Free Documentation License150269
+Node: Function Index175642
+Node: Variable Index178520
+Node: Concept Index186490
 
 End Tag Table
 

@@ -1379,18 +1379,11 @@ component is used as the target of the symlink."
    (format
     (eval-when-compile
       (concat
-       ;; On Opsware, pdksh (which is the true name of ksh there)
-       ;; doesn't parse correctly the sequence "((".  Therefore, we
-       ;; add a space.  Apostrophes in the stat output are masked as
+       ;; Apostrophes in the stat output are masked as
        ;; `tramp-stat-marker', in order to make a proper shell escape
        ;; of them in file names.
-       "( (%s %s || %s -h %s) && (%s -c "
-       "'((%s%%N%s) %%h %s %s %%X %%Y %%Z %%s %s%%A%s t %%i -1)' "
-       "%s | sed -e 's/\"/\\\\\"/g' -e 's/%s/\"/g') || echo nil)"))
-    (tramp-get-file-exists-command vec)
-    (tramp-shell-quote-argument localname)
-    (tramp-get-test-command vec)
-    (tramp-shell-quote-argument localname)
+       "(%s -c '((%s%%N%s) %%h %s %s %%X %%Y %%Z %%s %s%%A%s t %%i -1)' %s |"
+       " sed -e 's/\"/\\\\\"/g' -e 's/%s/\"/g')"))
     (tramp-get-remote-stat vec)
     tramp-stat-marker tramp-stat-marker
     (if (eq id-format 'integer)
@@ -1401,7 +1394,8 @@ component is used as the target of the symlink."
       (eval-when-compile (concat tramp-stat-marker "%G" tramp-stat-marker)))
     tramp-stat-marker tramp-stat-marker
     (tramp-shell-quote-argument localname)
-    tramp-stat-quoted-marker)))
+    tramp-stat-quoted-marker)
+   'noerror))
 
 (defun tramp-sh-handle-set-visited-file-modtime (&optional time-list)
   "Like `set-visited-file-modtime' for Tramp files."
@@ -3007,16 +3001,16 @@ STDERR can also be a file name."
 		      ;; the process is deleted.
 		      (when (bufferp stderr)
 			(with-current-buffer stderr
-			  (insert-file-contents-literally
-			   remote-tmpstderr 'visit))
+			  (insert-file-contents-literally remote-tmpstderr))
 			;; Delete tmpstderr file.
 			(add-function
 			 :after (process-sentinel p)
 			 (lambda (_proc _msg)
-			   (with-current-buffer stderr
-			     (insert-file-contents-literally
-			      remote-tmpstderr 'visit nil nil 'replace))
-			   (delete-file remote-tmpstderr))))
+			   (when (file-exists-p remote-tmpstderr)
+			     (with-current-buffer stderr
+			       (insert-file-contents-literally
+				remote-tmpstderr nil nil nil 'replace))
+			     (delete-file remote-tmpstderr)))))
 		      ;; Return process.
 		      p)))
 
@@ -5275,7 +5269,10 @@ raises an error."
 		    command marker (buffer-string))))))
       ;; Read the expression.
       (condition-case nil
-	  (prog1 (read (current-buffer))
+	  (prog1
+	      (let ((signal-hook-function
+		     (unless noerror signal-hook-function)))
+		(read (current-buffer)))
 	    ;; Error handling.
 	    (when (re-search-forward "\\S-" (point-at-eol) t)
 	      (error nil)))

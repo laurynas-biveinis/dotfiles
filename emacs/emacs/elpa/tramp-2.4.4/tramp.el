@@ -7,7 +7,7 @@
 ;; Maintainer: Michael Albinus <michael.albinus@gmx.de>
 ;; Keywords: comm, processes
 ;; Package: tramp
-;; Version: 2.4.3.5
+;; Version: 2.4.4
 ;; Package-Requires: ((emacs "24.4"))
 ;; Package-Type: multi
 ;; URL: https://savannah.gnu.org/projects/tramp

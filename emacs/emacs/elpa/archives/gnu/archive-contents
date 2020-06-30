@@ -131,7 +131,7 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:keywords "async"))])
  (auctex .
-	 [(12 2 3)
+	 [(12 2 4)
 	  ((emacs
 	    (24 1))
 	   (cl-lib
@@ -2132,7 +2132,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tramp .
-	[(2 4 3 5)
+	[(2 4 4)
 	 ((emacs
 	   (24 4)))
 	 "Transparent Remote Access, Multiple Protocol" tar
