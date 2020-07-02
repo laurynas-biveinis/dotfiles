@@ -1182,8 +1182,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-eldoc-render-all t)
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
-(setq lsp-semantic-highlighting :immediate)
+(setq lsp-enable-semantic-highlighting t)
 (setq lsp-prefer-capf t)
+(setq lsp-headerline-breadcrumb-enable t)
 
 ;;; lsp-diagnostics-modeline-mode
 (setq lsp-diagnostics-modeline-scope :project)
@@ -1210,7 +1211,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; lsp-mode and TRAMP interaction: do not flycheck too eagerly
 (defun dotfiles--lsp-tramp-flycheck-reduce ()
   "Tune down Flycheck eagerness in `lsp-mode' for TRAMP buffers."
-  (setq-local lsp-flycheck-live-reporting nil)
   (setq-local flycheck-check-syntax-automatically '(save idle-change new-line)))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-tramp-flycheck-reduce)
