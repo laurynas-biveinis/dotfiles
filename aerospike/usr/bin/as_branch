@@ -12,8 +12,9 @@ set -euo pipefail
 readonly COMMAND=${1-UNDEFINED}
 
 if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" && \
-          $COMMAND != "pull" && $COMMAND != "push" && $COMMAND != "rm" || \
-      $COMMAND == "UNDEFINED" ]]
+          $COMMAND != "pull" && $COMMAND != "push" && $COMMAND != "rm" && \
+          $COMMAND != "status" && $COMMAND != "worktree" || \
+          $COMMAND == "UNDEFINED" ]]
 then
     echo "Usage: $0 create branch [starting_point]"
     echo "Usage: $0 checkout branch"
@@ -21,64 +22,68 @@ then
     echo "       $0 pull"
     echo "       $0 push"
     echo "       $0 rm branch"
+    echo "       $0 status"
+    echo "       $0 worktree prune"
     exit 1
 fi
 
-function do_fetch () {
+function do_master_command () {
     pushd "$EE_MASTER" || exit 1
-    git fetch --all -p --recurse-submodules=yes -j 5
+    eval "$cmd"
     popd || exit 1
 
     pushd "$CE_MASTER" || exit 1
-    git fetch --all -p --recurse-submodules=yes -j 5
+    eval "$cmd"
     popd || exit 1
 }
 
-function do_pull () {
+function do_local_command () {
     pushd "ee" || exit 1
-    git pull --all --ff-only --recurse-submodules=yes
-    git submodule update --recursive
+    eval "$cmd"
     popd || exit 1
 
     pushd "ce" || exit 1
-    git pull --all --ff-only --recurse-submodules=yes
-    git submodule update --recursive
+    eval "$cmd"
     popd || exit 1
 }
 
-function do_push () {
-    pushd "ee" || exit 1
-    git push
-    popd || exit 1
-
-    pushd "ce" || exit 1
-    git push
-    popd || exit 1
+function do_worktree_prune () {
+    cmd="git worktree prune"
+    do_master_command
 }
 
 function do_rm () {
     rm -rf "$BRANCH_ROOT" || exit 1
 
-    pushd "$EE_MASTER" || exit 1
-    git worktree prune
-    git branch -d "$BRANCH"
-    popd || exit 1
+    do_worktree_prune
 
-    pushd "$CE_MASTER" || exit 1
-    git worktree prune
-    git branch -d "$BRANCH"
-    popd || exit 1
+    cmd="git branch -d $BRANCH"
+    do_master_command
+}
+
+function do_status () {
+    cmd="git status"
+    do_local_command
 }
 
 # Zero-arg commands
 
 if [[ $COMMAND == "pull" ]]; then
-    do_pull
+    cmd="git pull --all --ff-only --recurse-submodules=yes \
+         && git submodule update --recursive"
+    do_local_command
     exit 0
 fi
 
 if [[ $COMMAND == "push" ]]; then
-    do_push
+    cmd="git push"
+    do_local_command
+    exit 0
+fi
+
+if [[ $COMMAND = "status" ]]; then
+    cmd="git status"
+    do_local_command
     exit 0
 fi
 
@@ -86,11 +91,18 @@ readonly CE_MASTER="$ASD_MASTER/ce"
 readonly EE_MASTER="$ASD_MASTER/ee"
 
 if [[ $COMMAND == "fetch" ]]; then
-    do_fetch
+    cmd="git fetch --all -p --recurse-submodules=yes -j 5"
+    do_master_command
     exit 0
 fi
 
 pushd "$ASD_BRANCHES" || exit 1
+
+# "worktree prune" where "prune" is not an arg but a subcommand
+if [[ $COMMAND == "worktree" && "$2" == "prune" ]]; then
+    do_worktree_prune
+    exit 0
+fi
 
 # One or more-arg commands
 
