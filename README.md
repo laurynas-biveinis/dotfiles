@@ -122,6 +122,10 @@ sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
 sudo /etc/init.d/cpufrequtils restart
 # DOES NOT SURVIVE REBOOT
 sudo sh -c "echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo"
+# After each apt upgrade
+# (https://twitter.com/trav_downs/status/1280004737455271936):
+sudo ln -s /usr/lib/debug/lib/x86_64-linux-gnu/* /usr/lib/debug/usr/lib/x86_64-linux-gnu/
+
 ```
 
 Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
