@@ -1,6 +1,6 @@
-(define-package "vterm" "20200613.1457" "This package implements a terminal via libvterm"
+(define-package "vterm" "20200707.1655" "This package implements a terminal via libvterm"
   '((emacs "25.1"))
-  :commit "fbd0f097198ee110a895dcff30c0d1be39e8284e" :keywords
+  :commit "ff299824244b6497befcffeec3d74aca6e7c999f" :keywords
   '("terminals")
   :authors
   '(("Lukas Fürmetz" . "fuermetz@mailbox.org"))

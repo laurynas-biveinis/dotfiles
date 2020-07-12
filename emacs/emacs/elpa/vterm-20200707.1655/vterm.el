@@ -598,13 +598,15 @@ typically used to copy text from vterm buffers."
   :group 'vterm
   :lighter " VTermCopy"
   :keymap vterm-copy-mode-map
-  (if vterm-copy-mode
-      (progn                            ;enable vterm-copy-mode
-        (use-local-map nil)
-        (vterm-send-stop))
-    (vterm-reset-cursor-point)
-    (use-local-map vterm-mode-map)
-    (vterm-send-start)))
+  (if (equal major-mode 'vterm-mode)
+      (if vterm-copy-mode
+          (progn                            ;enable vterm-copy-mode
+            (use-local-map nil)
+            (vterm-send-stop))
+        (vterm-reset-cursor-point)
+        (use-local-map vterm-mode-map)
+        (vterm-send-start))
+    (user-error "You cannot enable vterm-copy-mode outside vterm buffers")))
 
 (defun vterm-copy-mode-done (arg)
   "Save the active region or line to the kill ring and exit `vterm-copy-mode'.
@@ -748,6 +750,11 @@ will invert `vterm-copy-exclude-prompt' for that call."
   "Send `C-\' to the libvterm."
   (interactive)
   (vterm-send-key "\\" nil nil t))
+
+(defun vterm-send-escape ()
+  "Send `<escape>' to the libvterm."
+  (interactive)
+  (vterm-send-key "<escape>"))
 
 (defun vterm-clear-scrollback ()
   "Send `<clear-scrollback>' to the libvterm."
@@ -1003,11 +1010,12 @@ If N is negative backward-line from end of buffer."
 
 (defun vterm--get-pwd (&optional linenum)
   "Get working directory at LINENUM."
-  (let ((raw-pwd (vterm--get-pwd-raw
-                  vterm--term
-                  (or linenum (line-number-at-pos)))))
-    (when raw-pwd
-      (vterm--get-directory raw-pwd))))
+  (when vterm--term
+    (let ((raw-pwd (vterm--get-pwd-raw
+                    vterm--term
+                    (or linenum (line-number-at-pos)))))
+      (when raw-pwd
+        (vterm--get-directory raw-pwd)))))
 
 (defun vterm--get-color (index)
   "Get color by index from `vterm-color-palette'.
@@ -1161,12 +1169,14 @@ Effectively toggle between the two positions."
 (defun vterm-reset-cursor-point ()
   "Make sure the cursor at the right position."
   (interactive)
-  (vterm--reset-point vterm--term))
+  (when vterm--term
+    (vterm--reset-point vterm--term)))
 
 (defun vterm--get-cursor-point ()
   "Get term cursor position."
-  (save-excursion
-    (vterm-reset-cursor-point)))
+  (when vterm--term
+    (save-excursion
+      (vterm-reset-cursor-point))))
 
 (defun vterm--remove-fake-newlines ()
   "Filter out injected newlines were injected when rendering the terminal.
