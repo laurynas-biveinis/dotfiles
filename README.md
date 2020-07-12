@@ -214,6 +214,8 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 34 \
 "{enabled = 0; value = { parameters = (65535, 126, 8781824); type = 'standard'; }; }"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 35 \
 "{enabled = 0; value = { parameters = (65535, 125, 8781824); type = 'standard'; }; }"
+# Esc closes autocompletion
+defaults write -g NSUseSpellCheckerForCompletions -bool false
 #
 # Mouse
 #
@@ -224,6 +226,7 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode \
 #
 # Appearance
 #
+defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 defaults write -g CGFontRenderingFontSmoothingDisabled -bool YES
 #
 # Computer name
@@ -262,6 +265,17 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 #
 defaults -currentHost write com.apple.screensaver showClock -bool true
 #
+# Locale
+#
+defaults write -g AppleLocale -string en_LT
+defaults write -g AppleMeasurementUnits -string "Centimeters"
+#
+# Time
+#
+sudo systemsetup -settimezone "Europe/Vilnius"
+sudo systemsetup -setnetworktimeserver "time.euro.apple.com"
+sudo systemsetup -setusingnetworktime on
+#
 # Safari
 #
 defaults write
@@ -277,6 +291,7 @@ defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' '<str
 defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add \
     '<string>com.apple.Safari</string>'
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari ShowFavoritesBar -bool false
 #
 # Terminal
 #
@@ -296,6 +311,7 @@ killall Dock
 defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 defaults write com.apple.finder AppleShowAllFiles -bool true
 defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
 # Show POSIX path in the window title
 defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 sudo defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -349,6 +365,11 @@ defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 # Do not show sidebar
 defaults write com.apple.Preview PVSidebarViewModeForNewDocuments -int 0
 #
+# Screenshots
+#
+defaults write com.apple.screencapture location -string "$HOME/Downloads"
+defaults write com.apple.screencapture type -string "png"
+#
 # Image Capture
 #
 # Scan To path
@@ -373,11 +394,6 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 #
 chflags nohidden ~/Library/
 sudo chflags nohidden /Volumes
-#
-# SetupAssistant defaults:
-#
-# defaults write -g AppleLocale -string en_LT
-# defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 #
 # Things tried but not working due to various reasons, set up manually:
 #
