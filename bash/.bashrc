@@ -29,6 +29,10 @@ export HISTTIMEFORMAT="[%F %T] "
 # Append history, do not overwrite
 shopt -s histappend
 
+# append and reload the history after each command
+# Taken from https://metaredux.com/posts/2020/07/07/supercharge-your-bash-history.html
+PROMPT_COMMAND="history -a; history -n"
+
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
