@@ -1480,6 +1480,7 @@ find a search tool; by default, this uses \"find | grep\" in the
 (require 'cmake-build)
 (setq cmake-build-options "-j 5")
 (setq cmake-build-never-split t)
+(setq cmake-build-export-compile-commands t)
 (global-set-key (kbd "<f9>") #'cmake-build-current)
 (global-set-key (kbd "<C-f9>") #'cmake-build-run)
 
