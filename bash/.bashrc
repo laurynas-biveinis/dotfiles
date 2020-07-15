@@ -126,3 +126,5 @@ PS1=$PS1'\[$(vterm_prompt_end)\]'
 if [ -f /usr/local/bin/vault ]; then
     complete -C /usr/local/bin/vault vault
 fi
+
+source_if_exists ~/.nix-profile/etc/profile.d/nix.sh
