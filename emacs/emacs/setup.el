@@ -1345,6 +1345,14 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'lsp-mode-hook #'dotfiles--lsp-enable-which-key)
 
+;;; `lsp-mode' integration with Flycheck `sh-shellcheck' checker
+(defun dotfiles--lsp-flycheck-enable-shellcheck ()
+  "Enable Shellcheck for shell buffers under LSP."
+  (when (derived-mode-p 'sh-mode)
+    (flycheck-add-next-checker 'lsp 'sh-shellcheck)))
+
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-flycheck-enable-shellcheck)
+
 ;;;; SSH config mode
 (add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
 (add-hook 'ssh-config-mode-hook #'dotfiles--enable-show-trailing-ws)
