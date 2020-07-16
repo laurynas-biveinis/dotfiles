@@ -399,6 +399,18 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 chflags nohidden ~/Library/
 sudo chflags nohidden /Volumes
 #
+# Nix package manager / neuron
+#
+sudo diskutil apfs addVolume disk1 APFS 'Nix Store' -mountpoint /nix
+wget https://raw.githubusercontent.com/LnL7/nix/darwin-10.15-install/scripts/create-darwin-volume.sh
+bash create-darwin-volume.sh
+sh <(curl -L https://nixos.org/nix/install) --daemon
+nix-env -iA cachix -f https://cachix.org/api/v1/install
+echo "trusted-users = root laurynas" | sudo tee -a /etc/nix/nix.conf \
+    && sudo pkill nix-daemon
+cachix use srid
+nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
+#
 # Things tried but not working due to various reasons, set up manually:
 #
 # - Desktop picture could be set, but isn't - see
