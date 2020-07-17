@@ -24,4 +24,21 @@
 
 (c-add-style "aerospike" aerospike-c-style)
 
+(require 'magit-status)
+
+(defun aerospike-sibling-magit-status ()
+  "Open Magit status for Aerospike server sibling repo."
+  (interactive)
+  (let* ((cur-dir default-directory)
+         (sibling-dir (cond ((string-suffix-p "/ce/" cur-dir)
+                             (replace-regexp-in-string "/ce/$" "/ee/" cur-dir))
+                            ((string-suffix-p "/ee/" cur-dir)
+                             (replace-regexp-in-string "/ee/$" "/ce/" cur-dir))
+                            (t nil))))
+    (if sibling-dir
+        (magit-status-internal sibling-dir)
+      (message "Not an Aerospike Server git directory: `%s'" cur-dir))))
+
+(global-set-key (kbd "C-x j") #'aerospike-sibling-magit-status)
+
 ;;; aerospike.el ends here
