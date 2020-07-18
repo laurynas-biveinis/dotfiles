@@ -32,7 +32,7 @@
 	      ("Stephen Leake" . "stephen_leake@stephe-leake.org"))
 	     (:keywords "languages" "ada"))])
  (ada-ref-man .
-	      [(2012 5)
+	      [(2020 1)
 	       nil "Ada Reference Manual 2012" tar
 	       ((:url . "http://stephe-leake.org/ada/arm.html")
 		(:maintainer "Stephen Leake" . "stephen_leake@member.fsf.org")
