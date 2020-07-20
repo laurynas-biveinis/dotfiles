@@ -1,7 +1,7 @@
-(define-package "magit-popup" "2.13.2" "Define prefix-infix-suffix command combos"
+(define-package "magit-popup" "2.13.3" "Define prefix-infix-suffix command combos"
   '((emacs "24.4")
     (dash "2.13.0"))
-  :keywords
+  :commit "d8585fa39f88956963d877b921322530257ba9f5" :keywords
   '("bindings")
   :authors
   '(("Jonas Bernoulli" . "jonas@bernoul.li"))
