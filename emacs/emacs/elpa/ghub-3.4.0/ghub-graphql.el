@@ -126,6 +126,16 @@ behave as for `ghub-request' (which see)."
                      name
                      color
                      description)
+     (milestones     [(:edges t)
+                      (:singular milestone id)]
+                     id
+                     number
+                     title
+                     createdAt
+                     updatedAt
+                     dueOn
+                     closedAt
+                     description)
      (pullRequests   [(:edges t)
                       (:singular pullRequest number)
                       (orderBy ((field UPDATED_AT) (direction DESC)))]
@@ -162,7 +172,7 @@ behave as for `ghub-request' (which see)."
 
 (cl-defun ghub-fetch-repository (owner name callback
                                        &optional until
-                                       &key username auth host forge)
+                                       &key username auth host forge errorback)
   "Asynchronously fetch forge data about the specified repository.
 Once all data has been collected, CALLBACK is called with the
 data as the only argument."
@@ -174,11 +184,12 @@ data as the only argument."
                         :username username
                         :auth     auth
                         :host     host
-                        :forge    forge))
+                        :forge    forge
+                        :errorback errorback))
 
 (cl-defun ghub-fetch-issue (owner name number callback
                                   &optional until
-                                  &key username auth host forge)
+                                  &key username auth host forge errorback)
   "Asynchronously fetch forge data about the specified issue.
 Once all data has been collected, CALLBACK is called with the
 data as the only argument."
@@ -192,11 +203,12 @@ data as the only argument."
                         :username username
                         :auth     auth
                         :host     host
-                        :forge    forge))
+                        :forge    forge
+                        :errorback errorback))
 
 (cl-defun ghub-fetch-pullreq (owner name number callback
                                     &optional until
-                                    &key username auth host forge)
+                                    &key username auth host forge errorback)
   "Asynchronously fetch forge data about the specified pull-request.
 Once all data has been collected, CALLBACK is called with the
 data as the only argument."
@@ -210,7 +222,8 @@ data as the only argument."
                         :username username
                         :auth     auth
                         :host     host
-                        :forge    forge))
+                        :forge    forge
+                        :errorback errorback))
 
 ;;; Internal
 
@@ -227,7 +240,8 @@ data as the only argument."
 
 (cl-defun ghub--graphql-vacuum (query variables callback
                                       &optional until
-                                      &key narrow username auth host forge)
+                                      &key narrow username auth host forge
+                                      errorback)
   "Make a GraphQL request using QUERY and VARIABLES.
 See Info node `(ghub)GraphQL Support'."
   (unless host
@@ -258,7 +272,8 @@ See Info node `(ghub)GraphQL Support'."
                        (funcall callback data))
                    (lambda (data)
                      (ghub--graphql-set-mode-line buf nil)
-                     (funcall callback data)))))))
+                     (funcall callback data))))
+    :errorback errorback)))
 
 (cl-defun ghub--graphql-retrieve (req &optional lineage cursor)
   (let ((p (cl-incf (ghub--graphql-req-pages req))))

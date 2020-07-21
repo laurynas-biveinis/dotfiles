@@ -1,7 +1,7 @@
-(define-package "with-editor" "2.9.3" "Use the Emacsclient as $EDITOR"
+(define-package "with-editor" "2.9.4" "Use the Emacsclient as $EDITOR"
   '((emacs "24.4")
     (async "1.9"))
-  :commit "48ca9bb49a1a7a37e85606de9d327a14030d4380" :keywords
+  :commit "efafd482c21b90decbb0b682ed3159c86014d4f3" :keywords
   '("tools")
   :authors
   '(("Jonas Bernoulli" . "jonas@bernoul.li"))
