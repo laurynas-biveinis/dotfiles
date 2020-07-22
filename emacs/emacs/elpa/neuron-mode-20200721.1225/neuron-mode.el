@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: 0f61ca2fc63f14a04cec0e29b541feaba6a8d3ee
-;; Package-Version: 20200704.1558
+;; Package-Commit: 96566f9afc53d5075c81bad47e3cefba672e1734
+;; Package-Version: 20200721.1225
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (markdown-mode "2.3"))
 ;;
@@ -118,6 +118,11 @@ Overrides `neuron-title-overlay-face' which you may inherif from."
   :group 'neuron
   :type '(alist :key-type string :value-type face))
 
+(defcustom neuron-max-trail-length 20
+  "Maximum length of the trail.
+The trail stores a list of zettel IDs which tracks
+the previously visited zettels.")
+
 (defgroup neuron-faces nil
   "Faces used in neuron-mode."
   :group 'neuron
@@ -178,6 +183,9 @@ selecting a zettel. Can be toggled using `neuron-toggle-id-visibility'.")
   "The currently active zettelkasten.
 Since it can be invalid sometimes, it should only be used in internal
 functions when we know that the zettelkasten was just updated.")
+
+(defvar-local neuron-trail nil
+  "List of previously visited zettels, in order.")
 
 (defun neuron--detect-zettelkasten (pwd)
   "Navigate upwards from PWD until a neuron.dhall file is found.
@@ -427,7 +435,7 @@ PROMPT is the prompt passed to `completing-read'."
 
 (defun neuron--get-zettel-path (zettel)
   "Get the path of ZETTEL."
-  (f-join "/" neuron--current-zettelkasten (concat (alist-get 'zettelID zettel) ".md")))
+  (f-join "/" neuron--current-zettelkasten (alist-get 'zettelPath zettel)))
 
 (defun neuron-edit-zettel (zettel)
   "Select and edit ZETTEL."
@@ -771,8 +779,8 @@ QUERY is a query object as described in `neuron--parse-query-from-url-or-id'."
 URL-OR-ID is a string that is meant to be parsed inside neuron links inside
 angle brackets. The query is returned as a map having at least a `'type' field.
 When URL-OR-ID is a raw ID, or that it is an URL having startin with z:zettel,
-the map also has an `'zettelID' field. Whenever URL-OR-ID is an URL and not an ID,
-the map features an `'url' field."
+the map also has an `'zettelID' field. Whenever URL-OR-ID is an URL and not an
+ID, the map features an `'url' field."
   (let* ((struct (url-generic-parse-url url-or-id))
          (path-and-query (url-path-and-query struct))
          (path   (car path-and-query))
