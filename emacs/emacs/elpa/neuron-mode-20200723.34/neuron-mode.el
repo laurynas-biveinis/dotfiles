@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: 96566f9afc53d5075c81bad47e3cefba672e1734
-;; Package-Version: 20200721.1225
+;; Package-Commit: 43dfd9e21ee4aaf904f92965c93ad1075af1b4c7
+;; Package-Version: 20200723.34
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (markdown-mode "2.3"))
 ;;
@@ -117,6 +117,16 @@ of the zettel."
 Overrides `neuron-title-overlay-face' which you may inherif from."
   :group 'neuron
   :type '(alist :key-type string :value-type face))
+
+(defcustom neuron-rib-server-host "localhost"
+  "The host on which the rib server is started."
+  :group 'neuron
+  :type  'stringp)
+
+(defcustom neuron-rib-server-port 8080
+  "The port on which the rib server is started."
+  :group 'neuron
+  :type  'integerp)
 
 (defcustom neuron-max-trail-length 20
   "Maximum length of the trail.
@@ -856,9 +866,10 @@ QUERY is an alist containing at least the query type and the URL."
   "Start a web app for browsing the zettelkasten."
   (interactive)
   (neuron-check-if-zettelkasten-exists)
-  (if (neuron--run-rib-process "-wS")
-      (message "Started web application on localhost:8080")
-    (user-error "Failed to run rib server on localhost:8080")))
+  (let ((address (format "%s:%d" neuron-rib-server-host neuron-rib-server-port)))
+  (if (neuron--run-rib-process "-ws" address)
+      (message "Started web application on %s" address)
+    (user-error "Failed to run rib server on %s" address))))
 
 (defun neuron-rib-generate ()
   "Do an one-off generation of the web interface of the zettelkasten."
@@ -871,7 +882,7 @@ QUERY is an alist containing at least the query type and the URL."
 (defun neuron-rib-open-page (page)
   "Open the web-application at page PAGE."
   (neuron-check-if-zettelkasten-exists)
-  (browse-url (format "http://localhost:8080/%s" page)))
+  (browse-url (format "http://%s:%d/%s" neuron-rib-server-host neuron-rib-server-port page)))
 
 (defun neuron-rib-open-z-index ()
   "Open the web application in the web browser at z-index."
