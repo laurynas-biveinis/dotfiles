@@ -75,19 +75,12 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     cmake-doc diffstat unzip pinentry-doc zip software-properties-common \
     colordiff valgrind linux-tools-generic libjemalloc2 python3-scipy \
     python-numpy-doc python3-pytest python3-numpy-dbg python-scipy-doc \
-    unattended-upgrades screen colordiff
-# Ubuntu 19.04+
-sudo apt-get install fzf hexyl ripgrep fd-find
-# Ubuntu 19.04+: not named fd by default because fdclone (which I don't use) was
-# first
+    unattended-upgrades screen colordiff fzf hexyl ripgrep fd-find
+# Not named fd by default because fdclone (which I don't use) was first
 sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # Home
 sudo apt-get install g++-8 gcc-8-doc libstdc++6-8-dbg libstdc++-8-doc \
     libboost-dev libboost-doc
-# Ubuntu 18.04-specific
-sudo apt-get install libstdc++6-8-dbg libstdc++-8-doc
-# Ubuntu 19.04-specific
-sudo apt-get install libstdc++6-9-dbg libstdc++-9-doc
 # Work
 sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
@@ -97,7 +90,7 @@ sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
 
 sudo usermod -aG docker laurynas
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
+sudo add-apt-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main"
 sudo apt-get install clangd-10 clang-format-10
 sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
 sudo update-alternatives --install /usr/bin/clang-format clang-format \
