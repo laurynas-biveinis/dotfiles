@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: 43dfd9e21ee4aaf904f92965c93ad1075af1b4c7
-;; Package-Version: 20200723.34
+;; Package-Commit: 99982092fbd0374f5ba523fd38fa2f68bbe03d8b
+;; Package-Version: 20200723.1635
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (markdown-mode "2.3"))
 ;;
@@ -131,7 +131,9 @@ Overrides `neuron-title-overlay-face' which you may inherif from."
 (defcustom neuron-max-trail-length 20
   "Maximum length of the trail.
 The trail stores a list of zettel IDs which tracks
-the previously visited zettels.")
+the previously visited zettels."
+  :group 'neuron
+  :type 'integerp)
 
 (defgroup neuron-faces nil
   "Faces used in neuron-mode."
@@ -444,7 +446,7 @@ PROMPT is the prompt passed to `completing-read'."
   (neuron--select-zettel-from-cache prompt))
 
 (defun neuron--get-zettel-path (zettel)
-  "Get the path of ZETTEL."
+  "Get the absolute path of ZETTEL."
   (f-join "/" neuron--current-zettelkasten (alist-get 'zettelPath zettel)))
 
 (defun neuron-edit-zettel (zettel)
@@ -577,7 +579,7 @@ NO-PROMPT is non-nil do not prompt when creating a new zettel."
                 (query (neuron--parse-query-from-url-or-id link))
                 (conn (alist-get 'conn query))
                 (toggled (if (eq conn 'ordinary) 'folgezettel 'ordinary))
-                (new-query (progn (map-put query 'conn toggled) query)))
+                (new-query (progn (map-put! query 'conn toggled) query)))
           (save-excursion
             (goto-char start)
             (delete-region start end)
@@ -698,7 +700,7 @@ When called interactively this command prompts for a tag."
 
 (defun neuron--edit-zettel-from-path (path)
   "Open a neuron zettel from PATH."
-  (let ((buffer (find-file-noselect (f-join "/" neuron--current-zettelkasten path))))
+  (let ((buffer (find-file-noselect path)))
     (pop-to-buffer-same-window buffer)))
 
 (defun neuron--query-zettel-from-id (id)
@@ -984,9 +986,10 @@ and algebra/linear/theorem to math/theorem/algebra/linear."
   "Return the face of the title overlay based on the zettel's list of tags TAGS.
 It picks the faces from the `neuron-tag-specific-title-faces' variable.
 When no tag has a particular face, return the default `neuron-title-overlay-face'."
-  (or (pcase-dolist (`(,tag . ,face) neuron-tag-specific-title-faces)
-        (when (seq-contains tags tag)
-          (return (car face))))
+  (or (catch 'found-face
+        (pcase-dolist (`(,tag . ,face) neuron-tag-specific-title-faces)
+          (when (seq-contains tags tag)
+            (throw 'found-face (car face)))))
       'neuron-title-overlay-face))
 
 (defun neuron--setup-overlay-from-id (ov id conn)
