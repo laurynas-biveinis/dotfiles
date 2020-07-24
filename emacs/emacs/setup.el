@@ -1061,6 +1061,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; (require 'setup-company-quickhelp)
 
 ;;;; Helm
+
+;;; helm-icons
+(require 'helm-icons)
+(helm-icons-enable)
+
 ;;; Core
 (require 'helm-config)
 (require 'helm)
