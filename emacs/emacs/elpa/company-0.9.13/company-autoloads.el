@@ -366,7 +366,7 @@ shadow backends that come after it.  Recommended usages:
 
 \(fn COMMAND &optional ARG &rest IGNORE)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-yasnippet" '("company-yasnippet--")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-yasnippet" '("company-yasnippet-")))
 
 ;;;***
 

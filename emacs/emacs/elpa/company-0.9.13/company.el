@@ -5,7 +5,7 @@
 ;; Author: Nikolaj Schumacher
 ;; Maintainer: Dmitry Gutov <dgutov@yandex.ru>
 ;; URL: http://company-mode.github.io/
-;; Version: 0.9.12
+;; Version: 0.9.13
 ;; Keywords: abbrev, convenience, matching
 ;; Package-Requires: ((emacs "24.3"))
 
@@ -94,6 +94,8 @@ attention to case differences."
     (((class color) (min-colors 88) (background light))
      (:background "cornsilk"))
     (((class color) (min-colors 88) (background dark))
+     (:background "yellow"))
+    (t
      (:background "yellow")))
   "Face used for the tooltip.")
 
@@ -858,7 +860,8 @@ means that `company-mode' is always turned on except in `message-mode' buffers."
 ;; Hack:
 ;; Emacs calculates the active keymaps before reading the event.  That means we
 ;; cannot change the keymap from a timer.  So we send a bogus command.
-;; XXX: Even in Emacs 24.4, seems to be needed in the terminal.
+;; XXX: Seems not to be needed anymore in Emacs 24.4
+;; Apparently, starting with emacs-mirror/emacs@99d0d6dc23.
 (defun company-ignore ()
   (interactive)
   (setq this-command last-command))
@@ -1146,7 +1149,8 @@ can retrieve meta-data for them."
   ;; It's mory efficient to fix it only when they are displayed.
   ;; FIXME: Adopt the current text's capitalization instead?
   (if (eq (company-call-backend 'ignore-case) 'keep-prefix)
-      (concat company-prefix (substring candidate (length company-prefix)))
+      (let ((prefix (company--clean-string company-prefix)))
+        (concat prefix (substring candidate (length prefix))))
     candidate))
 
 (defun company--should-complete ()
@@ -1445,7 +1449,8 @@ prefix match (same case) will be prioritized."
        (eq tick (buffer-chars-modified-tick))
        (eq pos (point))
        (when (company-auto-begin)
-         (company-input-noop)
+         (when (version< emacs-version "24.3.50")
+           (company-input-noop))
          (let ((this-command 'company-idle-begin))
            (company-post-command)))))
 
@@ -1574,9 +1579,8 @@ prefix match (same case) will be prioritized."
       (setq company-prefix new-prefix)
       (company-update-candidates c)
       c)
-     ((and (> (point) company-point)
-           (company-auto-complete-p (buffer-substring-no-properties
-                                     (point) company-point)))
+     ((and (characterp last-command-event)
+           (company-auto-complete-p (string last-command-event)))
       ;; auto-complete
       (save-excursion
         (goto-char company-point)
@@ -2282,6 +2286,7 @@ character, stripping the modifiers.  That character must be a digit."
 (defun company-doc-buffer (&optional string)
   (with-current-buffer (get-buffer-create "*company-documentation*")
     (erase-buffer)
+    (fundamental-mode)
     (when string
       (save-excursion
         (insert string)
@@ -2455,11 +2460,16 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
     (insert "\n")
     (insert "Used backend: " (pp-to-string backend))
     (insert "\n")
+    (when (if (listp backend)
+              (memq 'company-capf backend)
+            (eq backend 'company-capf))
+      (insert "Value of c-a-p-f: "
+              (pp-to-string completion-at-point-functions)))
     (insert "Major mode: " mode)
     (insert "\n")
     (insert "Prefix: " (pp-to-string prefix))
     (insert "\n")
-    (insert (message  "Completions:"))
+    (insert "Completions:")
     (unless cc (insert " none"))
     (if (eq annotations 'error)
         (insert "(error fetching)")
@@ -2527,7 +2537,7 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
                      (if company-common
                          (string-width company-common)
                        0)))
-         (_ (setq value (company--pre-render value)
+         (_ (setq value (company-reformat (company--pre-render value))
                   annotation (and annotation (company--pre-render annotation t))))
          (ann-ralign company-tooltip-align-annotations)
          (ann-truncate (< width
@@ -2788,7 +2798,7 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
     (dotimes (_ len)
       (let* ((value (pop lines-copy))
              (annotation (company-call-backend 'annotation value)))
-        (setq value (company--clean-string (company-reformat value)))
+        (setq value (company--clean-string value))
         (when annotation
           (setq annotation (company--clean-string annotation))
           (when company-tooltip-align-annotations
@@ -3165,7 +3175,7 @@ Delay is determined by `company-tooltip-idle-delay'."
         comp msg)
 
     (while candidates
-      (setq comp (company-reformat (pop candidates))
+      (setq comp (company-reformat (company--clean-string (pop candidates)))
             len (+ len 1 (length comp)))
       (if (< i 10)
           ;; Add number.
@@ -3174,10 +3184,10 @@ Delay is determined by `company-tooltip-idle-delay'."
                                    'face 'company-echo))
             (cl-incf len 3)
             (cl-incf i)
-            (add-text-properties 3 (+ 3 (length company-common))
+            (add-text-properties 3 (+ 3 (string-width company-common))
                                  '(face company-echo-common) comp))
         (setq comp (propertize comp 'face 'company-echo))
-        (add-text-properties 0 (length company-common)
+        (add-text-properties 0 (string-width company-common)
                              '(face company-echo-common) comp))
       (if (>= len limit)
           (setq candidates nil)
