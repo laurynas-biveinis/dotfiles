@@ -28,7 +28,6 @@ On macOS:
 
 ``` bash
 ln -s ~/.gnupg/gpg-agent.conf.macOS ~/.gnupg/gpg-agent.conf
-/usr/local/opt/fzf/install
 ```
 
 On Linux:
