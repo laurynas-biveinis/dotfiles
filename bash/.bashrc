@@ -107,7 +107,31 @@ for script in ~/.bash.d/rc/*; do
     source "$script"
 done
 
-source_if_exists ~/.fzf.bash
+#
+# fzf
+#
+if [[ -d /usr/local/opt/fzf/bin ]]; then
+    export PATH="$PATH:/usr/local/opt/fzf/bin"
+fi
+
+if [[ $- == *i* ]]; then
+    if [[ -f /usr/local/opt/fzf/shell/completion.bash ]]; then
+        # shellcheck disable=SC1091
+        source /usr/local/opt/fzf/shell/completion.bash
+    elif [[ -f /usr/share/doc/fzf/examples/completion.bash ]]; then
+        # shellcheck disable=SC1091
+        source /usr/share/doc/fzf/examples/completion.bash
+    fi
+fi
+
+if [[ -f /usr/local/opt/fzf/shell/key-bindings.bash ]]; then
+    # shellcheck disable=SC1091
+    source /usr/local/opt/fzf/shell/key-bindings.bash
+elif [[ -f /usr/share/doc/fzf/examples/key-bindings.bash ]]; then
+    # shellcheck disable=SC1091
+    source /usr/share/doc/fzf/examples/key-bindings.bash
+fi
+
 source_if_exists /usr/local/etc/profile.d/z.sh
 
 alias rmcores="rm -rf /cores/*"
