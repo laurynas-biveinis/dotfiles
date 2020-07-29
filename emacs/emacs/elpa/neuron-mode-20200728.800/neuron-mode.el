@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: 99982092fbd0374f5ba523fd38fa2f68bbe03d8b
-;; Package-Version: 20200723.1635
+;; Package-Commit: 09e1f47013cb0fd70e9878713c8b3a4c62c08c2f
+;; Package-Version: 20200728.800
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (markdown-mode "2.3"))
 ;;
@@ -322,10 +322,13 @@ Extract only the result itself, so the query type is lost."
   "Regenerate the zettel cache and the title overlays in all neuron-mode buffers."
   (interactive)
   (neuron-check-if-zettelkasten-exists)
-  (neuron--rebuild-cache)
-  (dolist (buffer (neuron-list-buffers))
-    (with-current-buffer buffer (neuron--setup-overlays)))
-  (message "Regenerated zettel cache"))
+  (make-thread (lambda ()
+                 (progn
+                   (dolist (buffer (neuron-list-buffers))
+                     (with-current-buffer buffer (neuron--setup-overlays)))
+                   (neuron--rebuild-cache)
+                   (message "Regenerated zettel cache")))
+               "neuron-refresh"))
 
 (defun neuron--is-valid-id (id)
   "Check whether the ID is a valid neuron zettel ID.
@@ -869,9 +872,9 @@ QUERY is an alist containing at least the query type and the URL."
   (interactive)
   (neuron-check-if-zettelkasten-exists)
   (let ((address (format "%s:%d" neuron-rib-server-host neuron-rib-server-port)))
-  (if (neuron--run-rib-process "-ws" address)
-      (message "Started web application on %s" address)
-    (user-error "Failed to run rib server on %s" address))))
+    (if (neuron--run-rib-process "-ws" address)
+        (message "Started web application on %s" address)
+      (user-error "Failed to run rib server on %s" address))))
 
 (defun neuron-rib-generate ()
   "Do an one-off generation of the web interface of the zettelkasten."
