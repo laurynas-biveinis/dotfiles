@@ -6,7 +6,8 @@
 ;; Maintainer: Alan Hamlett <alan@wakatime.com>
 ;; Website: https://wakatime.com
 ;; Keywords: calendar, comm
-;; Package-Version: 20180920.702
+;; Package-Version: 20200730.240
+;; Package-Commit: 7626678315918bdbb81ede68149f20a7d97a928f
 ;; Version: 1.0.2
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,13 @@
   "Path of Python binary."
   :type 'string
   :group 'wakatime)
+
+(defcustom wakatime-disable-on-error nil
+  "Turn off wakatime-mode and wakatime-global-mode when errors in
+the wakatime subprocess occurs."
+  :type 'boolean
+  :group 'wakatime)
+
 
 (defun wakatime-debug (msg)
   "Write a string to the *messages* buffer."
@@ -164,8 +172,8 @@
   "Return client command executable and arguments.
    Set SAVEP to non-nil for write action."
   (format "%s%s--file \"%s\" --plugin \"%s/%s\" --time %.2f%s%s"
-    (if (s-blank wakatime-python-bin) "" (format "%s " wakatime-python-bin))
-    (if (s-blank wakatime-cli-path) "wakatime " (format "%s " wakatime-cli-path))
+    (if (s-blank wakatime-python-bin) "" (format "\"%s\" " wakatime-python-bin))
+    (if (s-blank wakatime-cli-path) "wakatime " (format "\"%s\" " wakatime-cli-path))
     (buffer-file-name (current-buffer))
     wakatime-user-agent
     wakatime-version
@@ -196,6 +204,9 @@
            (kill-buffer (process-buffer process))
            (let ((exit-status (process-exit-status process)))
              (when (and (not (= 0 exit-status)) (not (= 102 exit-status)))
+               (when wakatime-disable-on-error
+                 (wakatime-mode -1)
+                 (global-wakatime-mode -1))
                (cond
                  ((= exit-status 103) (error "WakaTime Error (%s) Config file parse error. Check your ~/.wakatime.cfg file." exit-status))
                  ((= exit-status 104) (error "WakaTime Error (%s) Invalid API Key. Set your api key with: (custom-set-variables '(wakatime-api-key \"XXXX\"))" exit-status))
