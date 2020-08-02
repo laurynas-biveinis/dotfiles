@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: 6cf3475ed778784fe127a755a3213cf7eabac920
-;; Package-Version: 20200729.1132
+;; Package-Commit: e791176e59114e2638bbe51b2b5ee56632a2a888
+;; Package-Version: 20200801.953
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (markdown-mode "2.3"))
 ;;
@@ -328,9 +328,9 @@ Extract only the result itself, so the query type is lost."
   (neuron-check-if-zettelkasten-exists)
   (make-thread (lambda ()
                  (progn
+                   (neuron--rebuild-cache)
                    (dolist (buffer (neuron-list-buffers))
                      (with-current-buffer buffer (neuron--setup-overlays)))
-                   (neuron--rebuild-cache)
                    (message "Regenerated zettel cache")))
                "neuron-refresh"))
 
@@ -535,8 +535,9 @@ the inserted link will either be of the form <ID> or
   (when-let* ((buffer (call-interactively #'neuron-create-zettel-buffer))
               (id (neuron--get-zettel-id buffer)))
     (progn
-      (neuron--rebuild-cache)
       (neuron--insert-zettel-link-from-id id)
+      (save-buffer)
+      (neuron--rebuild-cache)
       (pop-to-buffer-same-window buffer)
       (message "Created %s" (buffer-name buffer)))))
 
@@ -735,8 +736,9 @@ the cache when the ID is not found."
 
 (defun neuron--edit-zettel-from-id (id)
   "Open a neuron zettel from ID."
-  (let ((zettel (neuron--get-cached-zettel-from-id id)))
-    (neuron-edit-zettel zettel)))
+  (if-let ((zettel (neuron--get-cached-zettel-from-id id)))
+      (neuron-edit-zettel zettel)
+    (user-error "Zettel %s does not exist" id)))
 
 (defun neuron--edit-zettel-from-query (uri)
   "Select and edit a zettel from a neuron query URI."
