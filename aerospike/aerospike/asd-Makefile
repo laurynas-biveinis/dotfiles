@@ -13,11 +13,11 @@ endif
 build :
 	(cd ce && $(BEAR_MAKE) -j5 +ee)
 
-rebuild :
-	$(MAKE) clean
+rebuild : clean
+	$(MAKE) recreate-ee-cdb
 	$(MAKE) build
 
-incremental :
+incremental : recreate-ee-cdb
 	(cd ce && $(BEAR_MAKE_APPEND) -j5 +ee)
 
 community : clean
@@ -26,4 +26,7 @@ community : clean
 clean :
 	(cd ce && $(MAKE) -j5 -k clean+ee)
 
-.PHONY : build rebuild incremental clean community
+recreate-ee-cdb :
+	(cd ee && ln -sf "../ce/compile_commands.json" .)
+
+.PHONY : build rebuild incremental clean community recreate-ee-cdb
