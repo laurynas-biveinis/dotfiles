@@ -1407,6 +1407,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'term)
 (add-to-list 'aggressive-indent-excluded-modes #'term-mode)
 (add-to-list 'aggressive-indent-excluded-modes #'package-menu-mode)
+;; https://github.com/Malabarba/aggressive-indent-mode/issues/140
+(add-to-list 'aggressive-indent-excluded-modes #'makefile-bsdmake-mode)
 
 ;;; rich-minority-mode
 (require 'rich-minority)
