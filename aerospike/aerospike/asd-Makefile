@@ -1,3 +1,4 @@
+# -*- mode: makefile-gmake-mode; -*-
 export EEREPO:=$(CURDIR)/ee
 
 BEAR := $(shell bear --version 2> /dev/null)
