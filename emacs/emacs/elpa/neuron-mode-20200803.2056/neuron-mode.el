@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: e791176e59114e2638bbe51b2b5ee56632a2a888
-;; Package-Version: 20200801.953
+;; Package-Commit: ea260a0f8f2bb4b15c9a9cba6be5f16865d05160
+;; Package-Version: 20200803.2056
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (markdown-mode "2.3"))
 ;;
@@ -594,7 +594,7 @@ NO-PROMPT is non-nil do not prompt when creating a new zettel."
                 (query (neuron--parse-query-from-url-or-id link))
                 (conn (alist-get 'conn query))
                 (toggled (if (eq conn 'ordinary) 'folgezettel 'ordinary))
-                (new-query (progn (map-put! query 'conn toggled) query)))
+                (new-query (progn (setf (map-elt query 'conn nil) toggled) query)))
           (save-excursion
             (goto-char start)
             (delete-region start end)
