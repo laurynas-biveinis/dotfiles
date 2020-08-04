@@ -288,6 +288,11 @@ defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add \
     '<string>com.apple.Safari</string>'
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
 defaults write com.apple.Safari ShowFavoritesBar -bool false
+# Enable continuous spellchecking, stolen from https://github.com/mathiasbynens/dotfiles
+defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
+# Disable auto-correct
+defaults write com.apple.Safari WebAutomaticSpellingCorrectionEnabled -bool false
+defaults write com.apple.Safari AutoFillPasswords -bool false
 #
 # Terminal
 #
