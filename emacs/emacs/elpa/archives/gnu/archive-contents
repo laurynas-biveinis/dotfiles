@@ -1871,6 +1871,14 @@
 	     (:authors
 	      ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
 	     (:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca"))])
+ (rt-liberation .
+		[(1 0)
+		 nil "Emacs interface to RT" tar
+		 ((:url . "http://www.nongnu.org/rtliber/")
+		  (:maintainer "Yoni Rabkin" . "yrk@gnu.org")
+		  (:authors
+		   ("Yoni Rabkin" . "yrk@gnu.org"))
+		  (:keywords "rt" "tickets"))])
  (rudel .
 	[(0 3 1)
 	 ((emacs

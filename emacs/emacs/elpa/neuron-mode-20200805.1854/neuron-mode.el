@@ -6,10 +6,10 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: ea260a0f8f2bb4b15c9a9cba6be5f16865d05160
-;; Package-Version: 20200803.2056
+;; Package-Commit: 3486183e5b2170234d71bf24d3f96bda40d09a75
+;; Package-Version: 20200805.1854
 ;; Package-X-Original-Version: 0.1
-;; Package-Requires: ((emacs "26.3") (f "0.20.0") (markdown-mode "2.3"))
+;; Package-Requires: ((emacs "26.3") (f "0.20.0") (s "1.12.0") (markdown-mode "2.3") (company "0.9.13"))
 ;;
 ;; This file is not part of GNU Emacs.
 
@@ -36,6 +36,9 @@
 ;;; Code:
 
 (require 'f)
+(require 's)
+(require 'cl-macs)
+(require 'cl-seq)
 (require 'json)
 (require 'markdown-mode)
 (require 'subr-x)
@@ -44,6 +47,7 @@
 (require 'url-parse)
 (require 'url-util)
 (require 'simple)
+(require 'company)
 
 (defgroup neuron nil
   "A major mode for editing Zettelkasten notes with neuron."
@@ -131,6 +135,11 @@ Overrides `neuron-title-overlay-face' which you may inherif from."
   "The port on which the rib server is started."
   :group 'neuron
   :type  'integerp)
+
+(defcustom neuron-max-completion-width 30
+  "Maximum width of the title in the completion candidates."
+  :group 'neuron
+  :type 'integerp)
 
 (defcustom neuron-max-trail-length 20
   "Maximum length of the trail.
@@ -236,6 +245,7 @@ Refresh the zettel cache if the value has changed."
       (neuron--rebuild-cache))
     neuron--current-zettelkasten))
 
+;;;###autoload
 (defun neuron-zettelkasten (&optional pwd)
   "The location of the current Zettelkasten directory.
 First, it tries to detect automatically the current zettelkasten assuming
@@ -322,6 +332,7 @@ Extract only the result itself, so the query type is lost."
                     (f-parent-of? root buffer-file-name))))))
     (seq-filter pred (buffer-list))))
 
+;;;###autoload
 (defun neuron-refresh ()
   "Regenerate the zettel cache and the title overlays in all neuron-mode buffers."
   (interactive)
@@ -384,6 +395,7 @@ If NO-DEFAULT-TAGS is non-nil, don't add the tags specified the variable
       (message "Created %s" (f-filename path))
       buffer)))
 
+;;;###autoload
 (defun neuron-new-zettel (&optional title id)
   "Create a new zettel and open it in a new buffer.
 The new zettel will be generated with the given TITLE and ID if specified.
@@ -463,6 +475,7 @@ PROMPT is the prompt passed to `completing-read'."
   "Get the absolute path of ZETTEL."
   (f-join "/" neuron--current-zettelkasten (alist-get 'zettelPath zettel)))
 
+;;;###autoload
 (defun neuron-edit-zettel (zettel)
   "Select and edit ZETTEL."
   (interactive (list (neuron-select-zettel "Edit zettel: ")))
@@ -483,6 +496,7 @@ PROMPT is the prompt passed to `completing-read'."
          (uplinks (neuron--get-uplinks-from-id id)))
     (neuron-edit-zettel (neuron--select-zettel-from-list uplinks "Edit uplink: " t))))
 
+;;;###autoload
 (defun neuron-edit-zettelkasten-configuration ()
   "Open the neuron.dhall configuration file at the root of the zettelkasten."
   (interactive)
@@ -707,6 +721,7 @@ When called interactively this command prompts for a tag."
   (interactive (list (neuron-select-tag)))
   (neuron-add-tags (list tag)))
 
+;;;###autoload
 (defun neuron-query-tags (&rest tags)
   "Select and edit a zettel from those that are tagged by TAGS."
   (interactive (list (neuron-select-tag "Search by tag: " t)))
@@ -760,6 +775,7 @@ The path is relative to the neuron output directory."
   "Open the generated HTML file from the zettel ID."
   (neuron--open-page (format "%s.html" id)))
 
+;;;###autoload
 (defun neuron-open-zettel ()
   "Select a zettel and open the associated HTML file."
   (interactive)
@@ -844,6 +860,7 @@ QUERY is an alist containing at least the query type and the URL."
       ('zettels (format "<z:zettels%s>" url-suffix))
       ('tags (format "<z:tags%s>" url-suffix)))))
 
+;;;###autoload
 (defun neuron-follow-thing-at-point ()
   "Open the zettel link at point."
   (interactive)
@@ -872,6 +889,7 @@ QUERY is an alist containing at least the query type and the URL."
            ("tags"   (neuron-query-tags (neuron--select-tag-from-query url)))))
         (_ (markdown-follow-thing-at-point link))))))
 
+;;;###autoload
 (defun neuron-rib-watch ()
   "Start a web app for browsing the zettelkasten."
   (interactive)
@@ -880,6 +898,7 @@ QUERY is an alist containing at least the query type and the URL."
         (message "Watching %s for changes..." root)
       (user-error "Failed to watch %s" root))))
 
+;;;###autoload
 (defun neuron-rib-serve ()
   "Start a web app for browsing the zettelkasten."
   (interactive)
@@ -889,6 +908,7 @@ QUERY is an alist containing at least the query type and the URL."
         (message "Started web application on %s" address)
       (user-error "Failed to run rib server on %s" address))))
 
+;;;###autoload
 (defun neuron-rib-generate ()
   "Do an one-off generation of the web interface of the zettelkasten."
   (interactive)
@@ -897,11 +917,13 @@ QUERY is an alist containing at least the query type and the URL."
         (message "Generated HTML files")
       (user-error "Failed to generate %s" root))))
 
+;;;###autoload
 (defun neuron-rib-open-page (page)
   "Open the web-application at page PAGE."
   (neuron-check-if-zettelkasten-exists)
   (browse-url (format "http://%s:%d/%s" neuron-rib-server-host neuron-rib-server-port page)))
 
+;;;###autoload
 (defun neuron-rib-open-z-index ()
   "Open the web application in the web browser at z-index."
   (interactive)
@@ -915,6 +937,7 @@ QUERY is an alist containing at least the query type and the URL."
   (let ((id (f-base (buffer-file-name))))
     (neuron-rib-open-page (concat id ".html"))))
 
+;;;###autoload
 (defun neuron-rib-open-zettel ()
   "Open a zettel in the web application."
   (interactive)
@@ -972,6 +995,7 @@ glob."
       (while (re-search-backward tag-regex nil t)
         (replace-match repl 'fixed-case)))))
 
+;;;###autoload
 (defun neuron-replace-tag (pattern repl)
   "Map all tags matching PATTERN to a REPL.
 PATTERN is a tag glob as used in neuron queries.
@@ -1056,6 +1080,7 @@ When AFTER is non-nil, this hook is being called after the update occurs."
             (query (neuron--parse-query-from-url-or-id (match-string 1))))
         (neuron--setup-overlay-from-query ov query)))))
 
+;;;###autoload
 (defun neuron-toggle-id-visiblity ()
   "Toggle the visibility of IDs in simple links.
 This can be useful to debug when searching for ID, explicitly seeing whether the
@@ -1064,6 +1089,86 @@ link is a folgezettel of ordinary connection."
   (setq neuron-show-ids (not neuron-show-ids))
   (dolist (buffer (neuron-list-buffers))
     (with-current-buffer buffer (neuron--setup-overlays))))
+
+;; Completion
+
+(defun company-neuron--prefix ()
+  "Extract the completion prefix, triggered by entering an opening angle bracket."
+  (and (derived-mode-p 'neuron-mode)
+       (when (looking-back (rx "<" (group (+ (not (any ">"))))) nil)
+         (match-string 1))))
+
+(defun company-neuron--fuzzy-match-title (prefix candidate)
+  "Return whether PREFIX fuzzily matches the title of the CANDIDATE zettel."
+  (let ((full-title (alist-get 'zettelTitle (get-text-property 0 'zettel candidate))))
+    (cl-subsetp (string-to-list prefix)
+                (string-to-list full-title))))
+
+(defun company-neuron--propertize-completion-candidate (zettel)
+  "Propertize a zettel title to contain all information about ZETTEL.
+The resulting title is truncated and padded to fit the width given by
+`neuron-max-completion-width'."
+  (let* ((title (alist-get 'zettelTitle zettel))
+         (padded (s-pad-right neuron-max-completion-width " " title))
+         (truncated (s-truncate neuron-max-completion-width padded)))
+    (propertize truncated 'zettel zettel)))
+
+(defun company-neuron--all-candidates ()
+  "Propertize all cached zettels to provide completion candidates."
+  (mapcar #'company-neuron--propertize-completion-candidate neuron--zettel-cache))
+
+(defun company-neuron--candidates (prefix)
+  "Filter the candidates by fuzzily matching PREFIX against the candidates."
+  (cl-remove-if-not
+   (lambda (candidate) (company-neuron--fuzzy-match-title prefix candidate))
+   (company-neuron--all-candidates)))
+
+(defun company-neuron--completion-annotation (candidate)
+  "Annotate the completion CANDIDATE so that it includes the ID of the underlying zettel."
+  (let* ((zettel (get-text-property 0 'zettel candidate))
+         (annot (format "<%s>" (alist-get 'zettelID zettel))))
+    (concat " " (propertize annot 'face 'neuron-link-face))))
+
+(defun company-neuron--completion-meta (candidate)
+  "Display information about the underlying zettel of CANDIDATE.
+The resulting string contains the ID, the full title of the zettel, as well as
+the list of its tags."
+  (let ((zettel (get-text-property 0 'zettel candidate)))
+    (neuron--propertize-zettel zettel)))
+
+(defun company-neuron--post-completion-action (candidate)
+  "Delete the completed zettel title CANDIDATE and replace it with an actual neuron link."
+  (let ((begin (point))
+        (zettel (get-text-property 0 'zettel candidate)))
+    (when (re-search-backward (rx "<"))
+      (goto-char begin)
+      (delete-region begin (match-end 0))
+      (insert (concat (alist-get 'zettelID zettel) ">"))
+      (neuron--setup-overlays))))
+
+;;;###autoload
+(defun company-neuron (command &optional arg &rest ignored)
+  "Defines a company completion backend that completes zettels by title.
+COMMAND is the relevant command provided by company.
+ARG is the command argument, depending on which command was received.
+IGNORED is the rest of the arguments, not sure why it's there."
+  (interactive (list 'interactive))
+  (cl-case command
+    ((interactive) (company-begin-backend 'company-neuron-backend))
+    ((prefix) (company-neuron--prefix))
+    ((candidates) (company-neuron--candidates arg))
+    ((annotation) (company-neuron--completion-annotation arg))
+    ((meta) (company-neuron--completion-meta arg))
+    ((post-completion) (company-neuron--post-completion-action arg))
+    ((no-cache) 't)
+    ((ignore-case) t)))
+
+;;;###autoload
+(defun company-neuron-setup ()
+  "Setup company to use the neuron backend."
+  (add-to-list 'company-backends 'company-neuron))
+
+;; Mode declaration
 
 (defvar neuron-mode-map nil "Keymap for `neuron-mode'.")
 
