@@ -1193,12 +1193,15 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
 (setq lsp-enable-semantic-highlighting t)
-(setq lsp-prefer-capf t)
 (setq lsp-headerline-breadcrumb-enable t)
 
-;;; lsp-diagnostics-modeline-mode
-(setq lsp-diagnostics-modeline-scope :project)
-(add-hook 'lsp-managed-mode-hook #'lsp-diagnostics-modeline-mode)
+;;; lsp-diagnostics-mode
+(add-hook 'lsp-managed-mode-hook #'lsp-diagnostics-mode)
+
+;;; lsp-modeline-diagnostics
+(require 'lsp-modeline)
+(setq lsp-modeline-diagnostics-scope :project)
+(add-hook 'lsp-managed-mode-hook #'lsp-modeline-diagnostics-mode)
 
 (require 'lsp-ui)
 (setq lsp-ui-sideline-ignore-duplicate t)
