@@ -9,27 +9,27 @@
 ;;;### (autoloads nil "helm-org" "helm-org.el" (0 0 0 0))
 ;;; Generated autoloads from helm-org.el
 
+(require 'helm-easymenu)
+
 (easy-menu-add-item nil '("Tools" "Helm") '("Org" ["Org headlines in org agenda files" helm-org-agenda-files-headings t] ["Org headlines in buffer" helm-org-in-buffer-headings t]) "Elpa")
 
 (autoload 'helm-org-agenda-files-headings "helm-org" "\
 Preconfigured helm for org files headings.
 
-\(fn)" t nil)
+\(fn &optional ARG)" t nil)
 
 (autoload 'helm-org-in-buffer-headings "helm-org" "\
 Preconfigured helm for org buffer headings.
 
-\(fn)" t nil)
+\(fn &optional ARG)" t nil)
 
 (autoload 'helm-org-parent-headings "helm-org" "\
 Preconfigured helm for org headings that are parents of the current heading.
 
-\(fn)" t nil)
+\(fn &optional ARG)" t nil)
 
 (autoload 'helm-org-capture-templates "helm-org" "\
-Preconfigured helm for org templates.
-
-\(fn)" t nil)
+Preconfigured helm for org templates." t nil)
 
 (autoload 'helm-org-completing-read-tags "helm-org" "\
 Completing read function for Org tags.
