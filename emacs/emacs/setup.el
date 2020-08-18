@@ -23,9 +23,19 @@
 ;;; GC tuning - as early as possible during startup
 (require 'gcmh)
 (gcmh-mode)
-;; Collect garbage once Emacs goes out of focus or is suspended, thanks to
-;; https://github.com/MatthewZMD/.emacs.d
-(add-hook 'focus-out-hook #'garbage-collect)
+
+;; Collect garbage once Emacs goes out of focus or is suspended, originally
+;; thanks to https://github.com/MatthewZMD/.emacs.d, later rewritten for 27.1
+;; `after-focus-change-function'.
+
+(defun dotfiles--gc-on-last-frame-out-of-focus ()
+  "GC if all frames are inactive."
+  (if (seq-every-p #'null (mapcar #'frame-focus-state (frame-list)))
+      (garbage-collect)))
+
+(add-function :after after-focus-change-function
+              #'dotfiles--gc-on-last-frame-out-focus)
+
 (add-hook 'suspend-hook #'garbage-collect)
 
 ;;; General settings
