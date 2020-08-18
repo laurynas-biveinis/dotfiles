@@ -34,7 +34,7 @@
       (garbage-collect)))
 
 (add-function :after after-focus-change-function
-              #'dotfiles--gc-on-last-frame-out-focus)
+              #'dotfiles--gc-on-last-frame-out-of-focus)
 
 (add-hook 'suspend-hook #'garbage-collect)
 
