@@ -1190,7 +1190,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'helm-org)
 (setq helm-org-headings-fontify t)
 (setq helm-org-format-outline-path t)
-(setq helm-org-show-filename t)
 
 ;;; TODO(laurynas): integrate Helm with flyspell? Neither flyspell-correct /
 ;;; flyspell-correct-helm nor helm-flyspell replace ispell-word.
