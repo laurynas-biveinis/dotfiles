@@ -1140,37 +1140,37 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;; helm-dash integration with sh-mode
 (defun dotfiles--helm-dash-sh-mode-hook ()
   "Integrate `helm-dash' with `sh-mode'."
-  ;; with-no-warnings because we do not want to have a
-  ;; defvar(dash-docs-docsets), it should only be a local variable only.
-  (with-no-warnings
+  ;; We do not want to have (defvar dash-docs-docsets), it should be a local
+  ;; variable only
+  (with-suppressed-warnings ((free-vars dash-docs-docsets))
     (setq-local dash-docs-docsets '("Bash"))))
 (add-hook 'sh-mode-hook #'dotfiles--helm-dash-sh-mode-hook)
 
 ;; helm-dash integration with c-mode
 (defun dotfiles--helm-dash-c-mode-hook ()
   "Integrate `helm-dash' with `c-mode'.."
-  (with-no-warnings
+  (with-suppressed-warnings ((free-vars dash-docs-docsets))
     (setq-local dash-docs-docsets '("C"))))
 (add-hook 'c-mode-hook #'dotfiles--helm-dash-c-mode-hook)
 
 ;; helm-dash integration with c++-mode
 (defun dotfiles--helm-dash-c++-mode-hook ()
   "Integrate `helm-dash' with `c++-mode'.."
-  (with-no-warnings
+  (with-suppressed-warnings ((free-vars dash-docs-docsets))
     (setq-local dash-docs-docsets '("Boost" "C" "C++" "CMake"))))
 (add-hook 'c++-mode-hook #'dotfiles--helm-dash-c++-mode-hook)
 
 ;; helm-dash integration with emacs-lisp-mode
 (defun dotfiles--helm-dash-emacs-lisp-mode-hook ()
   "Integrate `helm-dash' with `emacs-lisp-mode'.."
-  (with-no-warnings
+  (with-suppressed-warnings ((free-vars dash-docs-docsets))
     (setq-local dash-docs-docsets '("Emacs Lisp"))))
 (add-hook 'emacs-lisp-mode-hook #'dotfiles--helm-dash-emacs-lisp-mode-hook)
 
 ;; helm-dash integration with markdown-mode
 (defun dotfiles--helm-dash-markdown-mode-hook ()
   "Integrate `helm-dash' with `markdown-mode'.."
-  (with-no-warnings
+  (with-suppressed-warnings ((free-vars dash-docs-docsets))
     (setq-local dash-docs-docsets '("Markdown"))))
 (add-hook 'markdown-mode-hook #'dotfiles--helm-dash-markdown-mode-hook)
 
