@@ -330,6 +330,8 @@ loaded as such.)"
 
 (global-font-lock-mode 1)
 
+(global-display-fill-column-indicator-mode 1)
+
 ;;; minibuffer
 ;; All config made redundant by Helm:
 ;; (require 'setup-icomplete)
