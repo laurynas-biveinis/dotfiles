@@ -114,6 +114,8 @@
 
 (setq what-cursor-show-names t)
 
+(setq switch-to-prev-buffer-skip 'this)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun dotfiles--enable-show-trailing-ws ()
