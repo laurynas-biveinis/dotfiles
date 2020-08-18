@@ -18,6 +18,8 @@
 (setq package-user-dir elpa-dir)
 (require 'package)
 
+(setq package-quickstart t)
+
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
