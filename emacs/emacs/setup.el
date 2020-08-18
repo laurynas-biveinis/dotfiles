@@ -446,14 +446,14 @@ loaded as such.)"
 
 (add-hook 'emacs-lisp-mode-hook #'dotfiles--emacs-lisp-mode-hook)
 
-;;; gpg/epa
+;;; gpg/epa/EasyPG
 (require 'epa)
-(setq epa-pinentry-mode 'loopback)
+(setq epg-pinentry-mode 'loopback)
 
 ;; TODO(laurynas): report this bug upstream
 (defun dotfiles--set-epg-context-pinentry-mode (context _cipher)
   "Fix epg CONTEXT to the correct pinentry mode."
-  (setf (epg-context-pinentry-mode context) epa-pinentry-mode))
+  (setf (epg-context-pinentry-mode context) epg-pinentry-mode))
 
 (advice-add #'epg-decrypt-string :before
             #'dotfiles--set-epg-context-pinentry-mode)
