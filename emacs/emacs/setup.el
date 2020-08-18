@@ -1526,7 +1526,7 @@ find a search tool; by default, this uses \"find | grep\" in the
 `project-current' roots."
   (cl-mapcan
    (lambda (dir)
-     (xref-collect-references identifier dir))
+     (xref-references-in-directory identifier dir))
    (let ((pr (projectile-project-root)))
      (if pr
          (list pr)
