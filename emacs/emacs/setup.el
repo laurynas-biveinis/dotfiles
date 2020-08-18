@@ -1217,6 +1217,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-headerline-breadcrumb-enable t)
 
 ;;; lsp-diagnostics-mode
+(require 'lsp-diagnostics)
 (add-hook 'lsp-managed-mode-hook #'lsp-diagnostics-mode)
 
 ;;; lsp-modeline-diagnostics
