@@ -1071,8 +1071,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'helm)
 (require 'helm-files)
 (require 'helm-for-files)
-;; Replace with '(flex) after upgrade to Emacs 27
-(setq completion-styles '(helm-flex))
+(setq completion-styles '(flex))
 (setq helm-split-window-inside-p t)
 (setq helm-echo-input-in-header-line t)
 (setq helm-move-to-line-cycle-in-source t)
