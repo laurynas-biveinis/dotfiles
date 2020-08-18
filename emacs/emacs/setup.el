@@ -112,6 +112,8 @@
 
 (setq read-process-output-max (* 1024 1024))
 
+(setq what-cursor-show-names t)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun dotfiles--enable-show-trailing-ws ()
