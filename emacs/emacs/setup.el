@@ -342,6 +342,7 @@ loaded as such.)"
 (setq global-auto-revert-non-file-buffers t)
 
 ;;; Completion at point
+(setq completion-styles '(flex))
 ;; Remove the default `tags-completion-at-point', I never use tags.
 (setq completion-at-point-functions nil)
 
@@ -1077,7 +1078,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'helm)
 (require 'helm-files)
 (require 'helm-for-files)
-(setq completion-styles '(flex))
 (setq helm-split-window-inside-p t)
 (setq helm-echo-input-in-header-line t)
 (setq helm-move-to-line-cycle-in-source t)
