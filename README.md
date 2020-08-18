@@ -2,7 +2,11 @@
 
 # dotfiles
 
-My dotfiles and scripts. Specific for bash.
+My dotfiles and scripts, and configuration. Specific for bash.
+
+## Emacs
+
+The biggest part of config is for Emacs, currently version 27.1.
 
 # installation
 
