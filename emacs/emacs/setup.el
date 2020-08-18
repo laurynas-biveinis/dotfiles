@@ -390,6 +390,7 @@ loaded as such.)"
 (require 'dired)
 (setq dired-recursive-copies 'always)
 
+(require 'dired-aux)
 (setq dired-create-destination-dirs 'ask)
 
 (defun dotfiles--load-dired-x ()
