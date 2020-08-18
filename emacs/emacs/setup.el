@@ -378,6 +378,8 @@ loaded as such.)"
 (require 'dired)
 (setq dired-recursive-copies 'always)
 
+(setq dired-create-destination-dirs 'ask)
+
 (defun dotfiles--load-dired-x ()
   "Load dired-x."
   (load "dired-x"))
