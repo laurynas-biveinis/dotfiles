@@ -158,6 +158,8 @@
                                     magit-status-mode org-agenda-mode grep-mode
                                     package-menu-mode vterm-mode))
 
+(global-so-long-mode 1)
+
 ;; XXI century encodings
 (set-language-environment "UTF-8")
 
