@@ -110,6 +110,8 @@
 
 (setq history-delete-duplicates t)
 
+(setq read-process-output-max (* 1024 1024))
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun dotfiles--enable-show-trailing-ws ()
