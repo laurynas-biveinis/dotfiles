@@ -2090,7 +2090,7 @@
 	 ("Felix E. Klee" . "felix.klee@inka.de"))
 	(:maintainer "Lars Magne Ingebrigtsen" . "larsi@gnus.org"))])
  (svg-clock .
-	    [(1 1)
+	    [(1 2)
 	     ((svg
 	       (1 0))
 	      (emacs
