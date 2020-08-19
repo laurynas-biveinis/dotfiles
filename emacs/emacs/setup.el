@@ -1687,5 +1687,10 @@ underlying file."
 
 (setq cfw:render-line-breaker #'cfw:render-line-breaker-wordwrap)
 
+;;;; Upgrade helper
+(defun my-recompile-elpa ()
+  "Force full recompilation of installed ELPA packages."
+  (interactive)
+  (byte-recompile-directory package-user-dir nil 'force))
 
 ;;; setup.el ends here

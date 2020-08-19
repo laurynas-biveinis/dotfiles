@@ -6,7 +6,14 @@ My dotfiles and scripts, and configuration. Specific for bash.
 
 ## Emacs
 
-The biggest part of config is for Emacs, currently version 27.1.
+The biggest part of config is for Emacs, currently version 27.1. The focus is on
+seamless integration between all the different packages, avoiding surprises, and
+adding polish here and there. Of course, that is very much a work in progress.
+
+### Custom commands added
+
+* `my-recompile-elpa`: force recompiling all the ELPA packages, after a Emacs
+  version upgrade or a borked package upgrade.
 
 # installation
 
