@@ -21,34 +21,22 @@ optional argument topic will be appended to the argument list.
 \(fn TYPE &optional TOPIC BUFFER)" t nil)
 
 (autoload 'cmake-help-list-commands "cmake-mode" "\
-Prints out a list of the cmake commands.
-
-\(fn)" t nil)
+Prints out a list of the cmake commands." t nil)
 
 (autoload 'cmake-help-command "cmake-mode" "\
-Prints out the help message for the command the cursor is on.
-
-\(fn)" t nil)
+Prints out the help message for the command the cursor is on." t nil)
 
 (autoload 'cmake-help-module "cmake-mode" "\
-Prints out the help message for the module the cursor is on.
-
-\(fn)" t nil)
+Prints out the help message for the module the cursor is on." t nil)
 
 (autoload 'cmake-help-variable "cmake-mode" "\
-Prints out the help message for the variable the cursor is on.
-
-\(fn)" t nil)
+Prints out the help message for the variable the cursor is on." t nil)
 
 (autoload 'cmake-help-property "cmake-mode" "\
-Prints out the help message for the property the cursor is on.
-
-\(fn)" t nil)
+Prints out the help message for the property the cursor is on." t nil)
 
 (autoload 'cmake-help "cmake-mode" "\
-Queries for any of the four available help topics and prints out the appropriate page.
-
-\(fn)" t nil)
+Queries for any of the four available help topics and prints out the appropriate page." t nil)
 
 (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
 

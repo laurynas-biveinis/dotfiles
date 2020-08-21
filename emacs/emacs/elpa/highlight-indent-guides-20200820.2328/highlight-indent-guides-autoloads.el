@@ -14,12 +14,15 @@
 Automatically calculate indent guide faces.
 If this feature is enabled, calculate reasonable values for the indent guide
 colors based on the current theme's colorscheme, and set them appropriately.
-This runs whenever a theme is loaded, but it can also be run interactively.
-
-\(fn)" t nil)
+This runs whenever a theme is loaded, but it can also be run interactively." t nil)
 
 (autoload 'highlight-indent-guides-mode "highlight-indent-guides" "\
 Display indent guides in a buffer.
+
+If called interactively, enable Highlight-Indent-Guides mode if
+ARG is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 \(fn &optional ARG)" t nil)
 
