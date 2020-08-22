@@ -811,6 +811,12 @@ loaded as such.)"
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 (setq org-log-refile 'time)
 
+;; Borrowed from https://emacs.nasy.moe/
+(defun dotfiles--org-verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets."
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+(setq org-refile-target-verify-function #'dotfiles--org-verify-refile-target)
+
 (setq org-clock-display-default-range 'untilnow)
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
