@@ -10,9 +10,7 @@
 ;;; Generated autoloads from vterm.el
 
 (autoload 'vterm-module-compile "vterm" "\
-Compile vterm-module.
-
-\(fn)" t nil)
+Compile vterm-module." t nil)
 
 (autoload 'vterm-next-error-function "vterm" "\
 Advance to the next error message and visit the file where the error was.
