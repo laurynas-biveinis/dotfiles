@@ -38,6 +38,28 @@
 
 (add-hook 'suspend-hook #'garbage-collect)
 
+;; GC tuning for operation after startup - no need to do as early as possible,
+;; but keep it together with the rest of GC config. Copied with modifications
+;; from https://github.com/KaratasFurkan/.emacs.d which seems to have copied it
+;; from Doom.
+(defvar dotfiles--saved-gc-cons-threshold nil)
+
+(defun dotfiles--defer-gc ()
+  "Defer GC by setting `gc-cons-threshold' to `most-positive-fixnum'."
+  (setq dotfiles--saved-gc-cons-threshold gc-cons-threshold)
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun dotfiles--restore-gc ()
+  "Re-enable GC by restoring `gc-cons-threshold' to the saved value."
+  (setq gc-cons-threshold dotfiles--saved-gc-cons-threshold))
+
+(defun dotfiles--restore-gc-with-delay ()
+  "Re-enable GC with a delay to let the launched command execute quickly."
+  (run-at-time 1 nil #'dotfiles--restore-gc))
+
+(add-hook 'minibuffer-setup-hook #'dotfiles--defer-gc)
+(add-hook 'minibuffer-exit-hook #'dotfiles--restore-gc)
+
 ;;; General settings
 ;; Keep all messages
 (setq message-log-max t)
