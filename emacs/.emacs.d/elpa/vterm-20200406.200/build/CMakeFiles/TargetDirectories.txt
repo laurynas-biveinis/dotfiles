@@ -1,0 +1,5 @@
+/Users/laurynas/dotfiles/emacs/emacs/elpa/vterm-20200406.200/build/CMakeFiles/rebuild_cache.dir
+/Users/laurynas/dotfiles/emacs/emacs/elpa/vterm-20200406.200/build/CMakeFiles/edit_cache.dir
+/Users/laurynas/dotfiles/emacs/emacs/elpa/vterm-20200406.200/build/CMakeFiles/libvterm.dir
+/Users/laurynas/dotfiles/emacs/emacs/elpa/vterm-20200406.200/build/CMakeFiles/run.dir
+/Users/laurynas/dotfiles/emacs/emacs/elpa/vterm-20200406.200/build/CMakeFiles/vterm-module.dir

@@ -1,3 +1,3 @@
 dotfiles/extra_modules
-emacs/emacs/elpa/vterm-*/build/
-emacs/emacs/elpa/vterm-*/vterm-module.so
+emacs/.emacs.d/elpa/vterm-*/build/
+emacs/.emacs.d/elpa/vterm-*/vterm-module.so

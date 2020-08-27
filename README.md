@@ -448,7 +448,7 @@ sudo easy_install pip
 sudo gem install mdl
 brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
     disk-inventory-x google-chrome pdftotext dash
-# Evaluate emacs/emacs/install-dash-docsets.el in Emacs, then install any
+# Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
 # non-main Dash docsets through the app
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
