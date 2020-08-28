@@ -20,46 +20,6 @@
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function start-erc-chats "" ())
 
-;;; GC tuning - as early as possible during startup
-(require 'gcmh)
-(gcmh-mode)
-
-;; Collect garbage once Emacs goes out of focus or is suspended, originally
-;; thanks to https://github.com/MatthewZMD/.emacs.d, later rewritten for 27.1
-;; `after-focus-change-function'.
-
-(defun dotfiles--gc-on-last-frame-out-of-focus ()
-  "GC if all frames are inactive."
-  (if (seq-every-p #'null (mapcar #'frame-focus-state (frame-list)))
-      (garbage-collect)))
-
-(add-function :after after-focus-change-function
-              #'dotfiles--gc-on-last-frame-out-of-focus)
-
-(add-hook 'suspend-hook #'garbage-collect)
-
-;; GC tuning for operation after startup - no need to do as early as possible,
-;; but keep it together with the rest of GC config. Copied with modifications
-;; from https://github.com/KaratasFurkan/.emacs.d which seems to have copied it
-;; from Doom.
-(defvar dotfiles--saved-gc-cons-threshold nil)
-
-(defun dotfiles--defer-gc ()
-  "Defer GC by setting `gc-cons-threshold' to `most-positive-fixnum'."
-  (setq dotfiles--saved-gc-cons-threshold gc-cons-threshold)
-  (setq gc-cons-threshold most-positive-fixnum))
-
-(defun dotfiles--restore-gc ()
-  "Re-enable GC by restoring `gc-cons-threshold' to the saved value."
-  (setq gc-cons-threshold dotfiles--saved-gc-cons-threshold))
-
-(defun dotfiles--restore-gc-with-delay ()
-  "Re-enable GC with a delay to let the launched command execute quickly."
-  (run-at-time 1 nil #'dotfiles--restore-gc))
-
-(add-hook 'minibuffer-setup-hook #'dotfiles--defer-gc)
-(add-hook 'minibuffer-exit-hook #'dotfiles--restore-gc-with-delay)
-
 ;;; General settings
 ;; Keep all messages
 (setq message-log-max t)
@@ -130,15 +90,9 @@
 
 (setq-default indicate-buffer-boundaries t)
 
-(setq blink-cursor-blinks -1)
-
-(setq x-stretch-cursor t)
-
 (setq delete-by-moving-to-trash t)
 
 (setq use-dialog-box nil)
-
-(setq load-prefer-newer t)
 
 (setq history-delete-duplicates t)
 
@@ -1720,5 +1674,45 @@ underlying file."
   "Force full recompilation of installed ELPA packages."
   (interactive)
   (byte-recompile-directory package-user-dir nil 'force))
+
+;;; GC tuning for interactive use. We already set `gc-cons-threshold' to
+;;; `most-positive-fixnum' in early-init.el for startup.
+
+;; Collect garbage once Emacs goes out of focus or is suspended, originally
+;; thanks to https://github.com/MatthewZMD/.emacs.d, later rewritten for 27.1
+;; `after-focus-change-function'.
+
+(defun dotfiles--gc-on-last-frame-out-of-focus ()
+  "GC if all frames are inactive."
+  (if (seq-every-p #'null (mapcar #'frame-focus-state (frame-list)))
+      (garbage-collect)))
+
+(add-function :after after-focus-change-function
+              #'dotfiles--gc-on-last-frame-out-of-focus)
+
+(add-hook 'suspend-hook #'garbage-collect)
+
+;; Copied with modifications from https://github.com/KaratasFurkan/.emacs.d
+;; which seems to have copied it from Doom.
+(defvar dotfiles--saved-gc-cons-threshold nil)
+
+(defun dotfiles--defer-gc ()
+  "Defer GC by setting `gc-cons-threshold' to `most-positive-fixnum'."
+  (setq dotfiles--saved-gc-cons-threshold gc-cons-threshold)
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun dotfiles--restore-gc ()
+  "Re-enable GC by restoring `gc-cons-threshold' to the saved value."
+  (setq gc-cons-threshold dotfiles--saved-gc-cons-threshold))
+
+(defun dotfiles--restore-gc-with-delay ()
+  "Re-enable GC with a delay to let the launched command execute quickly."
+  (run-at-time 1 nil #'dotfiles--restore-gc))
+
+(add-hook 'minibuffer-setup-hook #'dotfiles--defer-gc)
+(add-hook 'minibuffer-exit-hook #'dotfiles--restore-gc-with-delay)
+
+(require 'gcmh)
+(gcmh-mode)
 
 ;;; setup.el ends here

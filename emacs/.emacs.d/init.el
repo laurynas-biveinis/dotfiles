@@ -7,15 +7,13 @@
 (defconst home-dir (concat (replace-regexp-in-string "\\\\" "/"
                                                      (getenv "HOME")) "/"))
 (defconst private-elisp (concat home-dir ".emacs.d/"))
-(defconst dotfiles-elisp (concat private-elisp "dotfiles/*.el"))
 (defconst private-elisp-lib (concat private-elisp "lib/"))
-(defconst elpa-dir (concat private-elisp "elpa/"))
+(defconst dotfiles-elisp (concat private-elisp "dotfiles/*.el"))
 (defconst cmake-build.el-lib (concat private-elisp-lib "cmake-build.el/"))
 
 (load (concat home-dir "secrets"))
 
 ;; Setup ELPA
-(setq package-user-dir elpa-dir)
 (require 'package)
 
 (setq package-quickstart t)
@@ -26,7 +24,6 @@
 (setq package-archive-priorities
       '(("melpa-stable" . 15)
         ("melpa"        . 10)))
-(package-initialize)
 
 (add-to-list 'load-path cmake-build.el-lib)
 
