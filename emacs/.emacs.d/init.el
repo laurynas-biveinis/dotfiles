@@ -70,4 +70,4 @@
  ;; If there is more than one, they won't work right.
  )
 
-;;; .emacs ends here
+;;; init.el ends here
