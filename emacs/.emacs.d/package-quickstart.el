@@ -10125,10 +10125,10 @@ Save keyfreq data now.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20200807.853/iedit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20200828.1129/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20200807.853/iedit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20200828.1129/iedit-autoloads.el") (car load-path))))
 
 
 
@@ -10191,9 +10191,7 @@ Keymap used within overlays:
 \(fn &optional ARG)" t nil)
 
 (autoload 'iedit-mode-toggle-on-function "iedit" "\
-Toggle Iedit mode on current function.
-
-\(fn)" t nil)
+Toggle Iedit mode on current function." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "iedit" '("iedit-")))
 
@@ -12634,9 +12632,9 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
-	(append
-	 '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.4.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.3.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.1" "/Users/laurynas/.emacs.d/elpa/dash-2.17.0" "/Users/laurynas/.emacs.d/elpa/with-editor-2.9.4")
-	 Info-directory-list)))
+        (append
+         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.4.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.3.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.1" "/Users/laurynas/.emacs.d/elpa/dash-2.17.0" "/Users/laurynas/.emacs.d/elpa/with-editor-2.9.4")
+         Info-directory-list)))
 
 ;; Local Variables:
 ;; version-control: never
