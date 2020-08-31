@@ -13,9 +13,12 @@
 
 (load (concat home-dir "secrets"))
 
-;; Setup ELPA
+;;; Setup packages
 (require 'package)
 
+;; TODO(laurynas): `package-quickstart-file', which is committed to dotfiles
+;; repo,  contains absolute paths. This is not a problem for me right now since
+;; the paths actually match on my machines. This might change in the future.
 (setq package-quickstart t)
 
 (add-to-list 'package-archives
