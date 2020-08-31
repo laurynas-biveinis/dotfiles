@@ -9,7 +9,7 @@ My dotfiles and scripts, and configuration. Specific for bash.
 The files are managed by [GNU Stow](https://www.gnu.org/software/stow/), divided
 by tool or functional area: git, emacs, etc—see the top level-directories.
 Different systems use different subsets of configuration, specified by some
-files, as described in the [installation](#installation-id) section.
+files, as described in the [installation](#installation) section.
 
 ## Emacs
 
@@ -117,7 +117,7 @@ tramp erc cc-mode
 * `my-recompile-packages`: force recompiling all the installed  packages, after
   a Emacs version upgrade or a borked package upgrade.
 
-# Installation {#installation-id}
+# Installation
 
 ```bash
 cd
