@@ -12,8 +12,8 @@ adding polish here and there. Of course, that is very much a work in progress.
 
 ### Custom commands added
 
-* `my-recompile-elpa`: force recompiling all the ELPA packages, after a Emacs
-  version upgrade or a borked package upgrade.
+* `my-recompile-packages`: force recompiling all the installed  packages, after
+  a Emacs version upgrade or a borked package upgrade.
 
 # installation
 
