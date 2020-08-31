@@ -4,18 +4,120 @@
 
 My dotfiles and scripts, and configuration. Specific for bash.
 
+## Modularity
+
+The files are managed by [GNU Stow](https://www.gnu.org/software/stow/), divided
+by tool or functional area: git, emacs, etc—see the top level-directories.
+Different systems use different subsets of configuration, specified by some
+files, as described in the [installation](#installation-id) section.
+
 ## Emacs
 
-The biggest part of config is for Emacs, currently version 27.1. The focus is on
-seamless integration between all the different packages, avoiding surprises, and
-adding polish here and there. Of course, that is very much a work in progress.
+The biggest part of configuration is for Emacs, currently version 27.1. The
+focus is on seamless integration between all the different packages, avoiding
+surprises, and adding polish here and there. Of course, that is very much a work
+in progress.
 
-### Custom commands added
+The bulk of configuration is in
+[setup.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/setup.el),
+there is also
+[early-init.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/early-init.el)
+and
+[init.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/early-init.el).
+There is also some system-specific setup over at
+[darwin.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/darwin.el).
 
+### Configured packages
+
+I always prefer a melpa-stable version, if available and not broken.
+Unfortunately, that is not always possible.
+
+#### The big ones
+
+[org](https://orgmode.org) [magit](https://magit.vc)
+[lsp-mode](https://github.com/emacs-lsp/lsp-mode)
+[flycheck](https://www.flycheck.org)
+[company](https://github.com/company-mode/company-mode)
+[helm](https://emacs-helm.github.io/helm/)
+[projectile](https://github.com/bbatsov/helm-projectile)
+[vterm](https://github.com/akermu/emacs-libvterm)
+[deadgrep](https://github.com/Wilfred/deadgrep)
+[undo-tree](http://www.dr-qubit.org/undo-tree.html)
+
+#### Major
+
+[GCMH](https://gitlab.com/koral/gcmh)
+[cmake-build.el](https://github.com/rpav/cmake-build.el)
+[neuron-mode](https://github.com/felko/neuron-mode)
+[wgrep](https://github.com/mhayashi1120/Emacs-wgrep)
+[google-c-style](https://github.com/google/styleguide/blob/gh-pages/google-c-style.el)
+
+#### Nice-to-have, niche, & specific major modes
+
+[rich-minority](https://github.com/Malabarba/rich-minority)
+[dispwatch](https://github.com/mnp/dispwatch)
+[lsp-treemacs](https://github.com/emacs-lsp/lsp-treemacs)
+[calfw](https://github.com/kiwanami/emacs-calfw)
+[helm-make](https://github.com/abo-abo/helm-make)
+[which-key](https://github.com/justbur/emacs-which-key)
+[keyfreq](https://github.com/dacap/keyfreq)
+[helm-dash](https://github.com/dash-docs-el/helm-dash)
+[helm-org](https://github.com/emacs-helm/helm-org)
+[helm-lsp](https://github.com/emacs-lsp/helm-lsp)
+[helm-projectile](https://github.com/bbatsov/helm-projectile)
+[iedit](https://github.com/victorhge/iedit)
+[eldoc-cmake](https://github.com/ikirill/eldoc-cmake)
+[aggressive-indent-mode](https://github.com/Malabarba/aggressive-indent-mode)
+[yaml-mode](https://github.com/yoshiki/yaml-mode)
+[markdown-mode](https://jblevins.org/projects/markdown-mode/)
+[ssh-config-mode](https://github.com/jhgorrell/ssh-config-mode-el)
+[bison-mode](https://github.com/Wilfred/bison-mode)
+[cmake-mode](https://github.com/Kitware/CMake/blob/master/Auxiliary/cmake-mode.el)
+
+#### Appearance
+
+[solarized-theme](https://github.com/bbatsov/solarized-emacs)
+[git-gutter-fringe](https://github.com/emacsorphanage/git-gutter-fringe)
+[helm-icons](https://github.com/yyoncho/helm-icons)
+[company-box](https://github.com/sebastiencs/company-box)
+[modern-cpp-font-lock](https://github.com/ludwigpacifici/modern-cpp-font-lock) [highlight-indent-guides](https://github.com/DarthFennec/highlight-indent-guides)
+[page-break-lines](https://github.com/purcell/page-break-lines)
+[xterm-color](https://github.com/atomontage/xterm-color)
+[all-the-icons-dired](https://github.com/jtbm37/all-the-icons-dired)
+[cmake-font-lock](https://github.com/Lindydancer/cmake-font-lock)
+
+#### Packages bundled with Emacs
+
+tramp erc cc-mode
+
+### Annoyances fixed
+
+* [Replace some cc-mode formatting commands with lsp-mode ones](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/setup.el#L1242)
+* [macOS: add the missing man page paths for woman](https://www.reddit.com/r/emacs/comments/ig7zzo/weekly_tipstricketc_thread/g34s8dl?utm_source=share&utm_medium=web2x&context=3)
+* [27.1 do GC if no frame has focus](https://www.reddit.com/r/emacs/comments/ibwzcu/weekly_tipstricketc_thread/g1zlh2t?utm_source=share&utm_medium=web2x&context=3)
+* [Re-enable Shellcheck if using lsp-mode with bash-language-server](https://www.reddit.com/r/emacs/comments/hqxm5v/weekly_tipstricketc_thread/fy4pvr8?utm_source=share&utm_medium=web2x&context=3)
+* Workaround the [emacs-wgrep
+  issue](https://github.com/mhayashi1120/Emacs-wgrep/issues/75) of edited
+  helm-grep buffers over TRAMP not applying their changes.
+* Workaround the [projectile
+  issue](https://github.com/bbatsov/projectile/issues/347) of remote projects
+  not being added to Projectile project list.
+* Workaround [projectile not being integrated with
+  project.el](https://github.com/bbatsov/projectile/issues/1282) at least for
+  xref.
+* Integrate cmake-build.el with Projectile
+* Integrate deadgrep with Projectile
+* Fix [data corruption in
+  deadgrep](https://github.com/Wilfred/deadgrep/issues/60) writable buffers by
+  search-replace.
+
+### Custom commands and functionality
+
+* [Set frame geometry after docking/undocking laptop automatically](https://www.reddit.com/r/emacs/comments/ev2q9q/weekly_tipstricketc_thread/fftpfj0?utm_source=share&utm_medium=web2x&context=3)
 * `my-recompile-packages`: force recompiling all the installed  packages, after
   a Emacs version upgrade or a borked package upgrade.
 
-# installation
+# Installation {#installation-id}
 
 ```bash
 cd
@@ -462,3 +564,9 @@ brew cask install tunnelblick
 brew cask install banktivity beatunes lastfm steam xld
 duti -s jp.tmkk.XLD .flac all
 ```
+
+# Dotfiles, Emacs distros, etc. I have been stealing from
+
+* [Doom Emacs](https://github.com/hlissner/doom-emacs)
+* [EmacsWiki: Dot Emacs Challenge](https://www.emacswiki.org/emacs/DotEmacsChallenge)
+* [https://emacs.nasy.moe/]
