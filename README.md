@@ -27,6 +27,9 @@ and
 There is also some system-specific setup over at
 [darwin.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/darwin.el).
 
+I am not using literate configuration, which seems to be very popular among Org
+users at least.. Maybe I should.
+
 ### Configured packages
 
 I always prefer a melpa-stable version, if available and not broken.
@@ -567,6 +570,8 @@ duti -s jp.tmkk.XLD .flac all
 
 # Dotfiles, Emacs distros, etc. I have been stealing from
 
+Incomplete, will add to it.
+
 * [Doom Emacs](https://github.com/hlissner/doom-emacs)
 * [EmacsWiki: Dot Emacs Challenge](https://www.emacswiki.org/emacs/DotEmacsChallenge)
-* [https://emacs.nasy.moe/]
+* <https://emacs.nasy.moe/>
