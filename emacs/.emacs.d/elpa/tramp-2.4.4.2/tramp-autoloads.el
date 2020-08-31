@@ -37,10 +37,10 @@ match file names at root of the underlying local file system,
 like \"/sys\" or \"/C:\".")
 
 (defun tramp-autoload-file-name-handler (operation &rest args) "\
-Load Tramp file name handler, and perform OPERATION." (tramp-unload-file-name-handlers) (if tramp-mode (let ((default-directory temporary-file-directory)) (load "tramp" (quote noerror) (quote nomessage)))) (apply operation args))
+Load Tramp file name handler, and perform OPERATION." (tramp-unload-file-name-handlers) (if tramp-mode (let ((default-directory temporary-file-directory)) (load "tramp" 'noerror 'nomessage))) (apply operation args))
 
 (defun tramp-register-autoload-file-name-handlers nil "\
-Add Tramp file name handlers to `file-name-handler-alist' during autoload." (add-to-list (quote file-name-handler-alist) (cons tramp-autoload-file-name-regexp (quote tramp-autoload-file-name-handler))) (put (quote tramp-autoload-file-name-handler) (quote safe-magic) t))
+Add Tramp file name handlers to `file-name-handler-alist' during autoload." (add-to-list 'file-name-handler-alist (cons tramp-autoload-file-name-regexp 'tramp-autoload-file-name-handler)) (put 'tramp-autoload-file-name-handler 'safe-magic t))
  (tramp-register-autoload-file-name-handlers)
 
 (defun tramp-unload-file-name-handlers nil "\
@@ -50,7 +50,7 @@ Unload Tramp file name handlers from `file-name-handler-alist'." (dolist (fnh fi
 If non-nil, external packages signal that they are in file name completion.")
 
 (defun tramp-unload-tramp nil "\
-Discard Tramp from loading remote files." (interactive) (ignore-errors (unload-feature (quote tramp) (quote force))))
+Discard Tramp from loading remote files." (interactive) (ignore-errors (unload-feature 'tramp 'force)))
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp" '("tramp-" "with-")))
 
@@ -78,12 +78,12 @@ List of suffixes which indicate a compressed file.
 It must be supported by libarchive(3).")
 
 (defmacro tramp-archive-autoload-file-name-regexp nil "\
-Regular expression matching archive file names." (quote (concat "\\`" "\\(" ".+" "\\." (regexp-opt tramp-archive-suffixes) "\\(?:" "\\." (regexp-opt tramp-archive-compression-suffixes) "\\)*" "\\)" "\\(" "/" ".*" "\\)" "\\'")))
+Regular expression matching archive file names." '(concat "\\`" "\\(" ".+" "\\." (regexp-opt tramp-archive-suffixes) "\\(?:" "\\." (regexp-opt tramp-archive-compression-suffixes) "\\)*" "\\)" "\\(" "/" ".*" "\\)" "\\'"))
 
 (defalias 'tramp-archive-autoload-file-name-handler #'tramp-autoload-file-name-handler)
 
 (defun tramp-register-archive-file-name-handler nil "\
-Add archive file name handler to `file-name-handler-alist'." (when tramp-archive-enabled (add-to-list (quote file-name-handler-alist) (cons (tramp-archive-autoload-file-name-regexp) (function tramp-archive-autoload-file-name-handler))) (put (quote tramp-archive-autoload-file-name-handler) (quote safe-magic) t)))
+Add archive file name handler to `file-name-handler-alist'." (when tramp-archive-enabled (add-to-list 'file-name-handler-alist (cons (tramp-archive-autoload-file-name-regexp) #'tramp-archive-autoload-file-name-handler)) (put 'tramp-archive-autoload-file-name-handler 'safe-magic t)))
 
 (add-hook 'after-init-hook #'tramp-register-archive-file-name-handler)
 

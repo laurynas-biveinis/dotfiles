@@ -179,7 +179,9 @@
  (bbdb .
        [(3 2)
 	((emacs
-	  (24)))
+	  (24))
+	 (cl-lib
+	  (0 5)))
 	"core of BBDB" tar
 	((:maintainer "Roland Winkler" . "winkler@gnu.org")
 	 (:url . "http://elpa.gnu.org/packages/bbdb.html"))])
@@ -685,7 +687,7 @@
 	      (:keywords "lisp")
 	      (:url . "http://elpa.gnu.org/packages/el-search.html"))])
  (eldoc .
-	[(1 8 0)
+	[(1 9 0)
 	 ((emacs
 	   (26 3)))
 	 "Show function arglist or variable docstring in echo area" single
@@ -2172,7 +2174,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tramp .
-	[(2 4 4 1)
+	[(2 4 4 2)
 	 ((emacs
 	   (24 4)))
 	 "Transparent Remote Access, Multiple Protocol" tar

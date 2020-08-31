@@ -90,7 +90,7 @@ For example, if the deprecated SMB1 protocol shall be used, add to
 this variable (\"client min protocol=NT1\") ."
   :group 'tramp
   :type '(repeat string)
-  :version "28.1")
+  :version "27.2")
 
 (defvar tramp-smb-version nil
   "Version string of the SMB client.")

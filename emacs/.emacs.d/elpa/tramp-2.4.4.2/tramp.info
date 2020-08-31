@@ -21,10 +21,10 @@ END-INFO-DIR-ENTRY
 
 File: tramp.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
 
-TRAMP 2.4.4.1 User Manual
+TRAMP 2.4.4.2 User Manual
 *************************
 
-This file documents TRAMP 2.4.4.1, a remote file editing package for
+This file documents TRAMP 2.4.4.2, a remote file editing package for
 Emacs.
 
    TRAMP stands for “Transparent Remote (file) Access, Multiple

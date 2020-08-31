@@ -7,7 +7,7 @@
 ;; Maintainer: Michael Albinus <michael.albinus@gmx.de>
 ;; Keywords: comm, processes
 ;; Package: tramp
-;; Version: 2.4.4.1
+;; Version: 2.4.4.2
 ;; Package-Requires: ((emacs "24.4"))
 ;; Package-Type: multi
 ;; URL: https://savannah.gnu.org/projects/tramp
@@ -5047,23 +5047,6 @@ name of a process or buffer, or nil to default to the current buffer."
    'tramp-unload-hook
    (lambda ()
      (remove-hook 'interrupt-process-functions #'tramp-interrupt-process))))
-
-(defun tramp-get-signal-strings ()
-  "Strings to return by `process-file' in case of signals."
-  ;; We use key nil for local connection properties.
-  (with-tramp-connection-property nil "signal-strings"
-    (let (result)
-      (if (and (stringp shell-file-name) (executable-find shell-file-name))
-	  (dotimes (i 128)
-	    (push
-	     (if (= i 19) 1 ;; SIGSTOP
-	       (call-process
-		shell-file-name nil nil nil "-c" (format "kill -%d $$" i)))
-	     result))
-	(dotimes (i 128)
-	  (push (format "Signal %d" i) result)))
-      ;; Due to Bug#41287, we cannot add this to the `dotimes' clause.
-      (reverse result))))
 
 ;; Checklist for `tramp-unload-hook'
 ;; - Unload all `tramp-*' packages
