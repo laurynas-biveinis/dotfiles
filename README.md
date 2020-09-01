@@ -28,7 +28,7 @@ There is also some system-specific setup over at
 [darwin.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/darwin.el).
 
 I am not using literate configuration, which seems to be very popular among Org
-users at least.. Maybe I should. Likewise for
+users at least. Maybe I should. Likewise for
 [use-package](https://github.com/jwiegley/use-package).
 
 ### Configured packages
