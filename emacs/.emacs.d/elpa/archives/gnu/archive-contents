@@ -1459,7 +1459,7 @@
 	       ("Felix Lee <felix8a@gmail.com>, Michal Nazarewicz" . "mina86@mina86.com"))
 	      (:maintainer "Michal Nazarewicz" . "mina86@mina86.com"))])
  (oauth2 .
-	 [(0 14)
+	 [(0 15)
 	  ((cl-lib
 	    (0 5))
 	   (nadvice
@@ -1518,7 +1518,7 @@
 	 ("Carsten Dominik <carsten at orgmode dot org>"))
 	(:keywords "outlines" "hypermedia" "calendar" "wp"))])
  (org-edna .
-	   [(1 1 1)
+	   [(1 1 2)
 	    ((emacs
 	      (25 1))
 	     (seq
