@@ -94,9 +94,9 @@ Unfortunately, that is not always possible.
 
 tramp erc cc-mode
 
-### Annoyances fixed
+### Improvements, fixed annoyances, and bug workarounds
 
-* [Replace some cc-mode formatting commands with lsp-mode ones](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/setup.el#L1242)
+* [Replace some cc-mode formatting commands with lsp-mode ones](https://www.reddit.com/r/emacs/comments/ikgfxd/weekly_tipstricketc_thread/g3z9rcb?utm_source=share&utm_medium=web2x&context=3)
 * [macOS: add the missing man page paths for woman](https://www.reddit.com/r/emacs/comments/ig7zzo/weekly_tipstricketc_thread/g34s8dl?utm_source=share&utm_medium=web2x&context=3)
 * [27.1 do GC if no frame has focus](https://www.reddit.com/r/emacs/comments/ibwzcu/weekly_tipstricketc_thread/g1zlh2t?utm_source=share&utm_medium=web2x&context=3)
 * [Re-enable Shellcheck if using lsp-mode with bash-language-server](https://www.reddit.com/r/emacs/comments/hqxm5v/weekly_tipstricketc_thread/fy4pvr8?utm_source=share&utm_medium=web2x&context=3)
