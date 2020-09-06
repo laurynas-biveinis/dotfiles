@@ -177,9 +177,9 @@ The package can be installed with `guix package -i emacs-vterm`.
 
 ## Shell-side configuration
 
-Some of the most useful features in `vterm` (e.g.,
-[directory-tracking and prompt-tracking](#directory-tracking-and-prompt-tracking) or
-[message passing](#message-passing)) require shell-side configurations. The main goal of
+Some of the most useful features in `vterm` (e.g., [directory-tracking and
+prompt-tracking](#directory-tracking-and-prompt-tracking) or [message
+passing](#message-passing)) require shell-side configurations. The main goal of
 these additional functions is to enable the shell to send information to `vterm`
 via properly escaped sequences. A function that helps in this task,
 `vterm_printf`, is defined below. This function is widely used throughout this
@@ -271,6 +271,15 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
         tput clear;
     }
 fi
+```
+For `fish`:
+```
+if [ "$INSIDE_EMACS" = 'vterm' ]
+    function clear
+        vterm_printf "51;Evterm-clear-scrollback";
+        tput clear;
+    end
+end
 ```
 These aliases take advantage of the fact that `vterm` can execute `elisp`
 commands, as explained below.
@@ -522,7 +531,18 @@ say() {
 }
 ```
 
-This can be used inside `vterm` as
+Or for `fish`:
+```fish
+function find_file
+    vterm_cmd find-file (realpath "$argv")
+end
+
+function say
+    vterm_cmd message "%s" "$argv"
+end
+```
+
+This newly defined `find_file` function can now be used inside `vterm` as
 
 ```sh
 find_file name_of_file_in_local_directory
@@ -554,6 +574,14 @@ Then you can open any file from inside your shell.
 ```sh
 open_file_below ~/Documents
 ```
+
+## Shell-side configuration files
+
+The configurations described in earlier sections are combined in
+[`etc/`](./etc/). These can be appended to or loaded into your user
+configuration file. Alternatively, they can be installed system-wide, for
+example in `/etc/bash/bashrc.d/`, `/etc/profile.d/` (for `zsh`), or
+`/etc/fish/conf.d/` for `fish`.
 
 ## Frequently Asked Questions and Problems
 
