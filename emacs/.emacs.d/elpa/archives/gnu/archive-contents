@@ -2093,7 +2093,7 @@
 	   (:keywords "stream" "laziness" "sequences")
 	   (:url . "http://elpa.gnu.org/packages/stream.html"))])
  (svg .
-      [(1 0)
+      [(1 1)
        ((emacs
 	 (25)))
        "SVG image creation functions" single
