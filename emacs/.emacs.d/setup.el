@@ -361,6 +361,27 @@ loaded as such.)"
 ;; Automatically show images as images
 (auto-image-file-mode 1)
 
+;; `goto-address-mode' integration with `flyspell': whenever we make a
+;;`flyspell' overlay, we iterate over all overlays and set relative priorities
+;; for `flyspell'/`goto-address' ones so that the goto-address one takes
+;; priority. This makes the mouse click go to address instead of correct word at
+;;point.
+(defun dotfiles--goto-address-overlay-p (o)
+  "Return t if O is an overlay used by `goto-address'."
+  (and (overlayp o) (overlay-get o 'goto-address)))
+
+(defun dotfiles--goto-address-higher-prio-than-flyspell (beg _end _face
+                                                             _mouse-face)
+  "Set relative priorities of `flyspell' and `goto-address' overlays at BEG."
+  (let ((overlays (overlays-at beg)))
+    (dolist (o overlays)
+      (cond ((flyspell-overlay-p o) (overlay-put o 'priority 10))
+            ((dotfiles--goto-address-overlay-p o) (overlay-put o 'priority
+                                                               20))))))
+
+(advice-add #'make-flyspell-overlay :after
+            #'dotfiles--goto-address-higher-prio-than-flyspell)
+
 ;;; dired
 ;; Copy recursively
 (require 'dired)
@@ -1050,7 +1071,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                                  vterm-mode))
 
 (setq company-abort-manual-when-too-short t)
-(setq company-idle-delay 0.0)
+(setq company-idle-delay 0.1)
 (setq company-minimum-prefix-length 1)
 (setq company-tooltip-idle-delay .3)
 (setq company-selection-wrap-around t)
