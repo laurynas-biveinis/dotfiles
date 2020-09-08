@@ -1,7 +1,7 @@
 # -*- mode: makefile-gmake; -*-
 export EEREPO:=$(CURDIR)/ee
 
-BEAR := $(shell bear --version 2> /dev/null)
+BEAR := $(shell command -v bear 2> /dev/null)
 ifdef BEAR
 	BEAR_MAKE:=bear $(MAKE)
 	BEAR_MAKE_APPEND:=bear -a $(MAKE)
