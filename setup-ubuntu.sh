@@ -23,7 +23,7 @@ sudo apt-get install g++-8 gcc-8-doc libstdc++6-8-dbg libstdc++-8-doc \
 sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
-    maven clang-tools-8 clang-8-doc llvm-8-doc bear libcurl4-openssl-dev \
+    maven clang-tools-10 clang-10-doc llvm-10-doc bear libcurl4-openssl-dev \
     libcurl4-doc docker docker-doc python3-pip apparmor-profiles
 
 sudo usermod -aG docker laurynas
