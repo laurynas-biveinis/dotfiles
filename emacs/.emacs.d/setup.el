@@ -1103,6 +1103,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq helm-move-to-line-cycle-in-source t)
 (setq helm-ff-search-library-in-sexp t)
 (setq helm-net-prefer-curl t)
+(setq helm-list-directory-function #'helm-list-dir-external)
 (global-set-key (kbd "M-x") #'helm-M-x)
 (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
