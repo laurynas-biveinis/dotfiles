@@ -5193,10 +5193,10 @@ Start org-analyzer.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.3.6/org-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.3.8/org-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.3.6/org-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.3.8/org-autoloads.el") (car load-path))))
 
 
 
@@ -5236,7 +5236,7 @@ Start org-analyzer.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-coq" '("org-babel-" "coq-program-name")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-coq" '("coq-program-name" "org-babel-")))
 
 
 
@@ -5284,7 +5284,7 @@ Start org-analyzer.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-gnuplot" '("org-babel-" "*org-babel-gnuplot-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-gnuplot" '("*org-babel-gnuplot-" "org-babel-")))
 
 
 
@@ -5320,7 +5320,7 @@ Start org-analyzer.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-lilypond" '("org-babel-" "lilypond-mode")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-lilypond" '("lilypond-mode" "org-babel-")))
 
 
 
@@ -5445,14 +5445,10 @@ is non-nil, move backward.
 
 (autoload 'org-previous-link "ol" "\
 Move backward to the previous link.
-If the link is in hidden text, expose it.
-
-\(fn)" t nil)
+If the link is in hidden text, expose it." t nil)
 
 (autoload 'org-toggle-link-display "ol" "\
-Toggle the literal or descriptive display of links.
-
-\(fn)" t nil)
+Toggle the literal or descriptive display of links." t nil)
 
 (autoload 'org-store-link "ol" "\
 Store a link to the current location.
@@ -5531,15 +5527,11 @@ Insert the last link stored in `org-stored-links'.
 
 (autoload 'org-insert-link-global "ol" "\
 Insert a link like Org mode does.
-This command can be called in any mode to insert a link in Org syntax.
-
-\(fn)" t nil)
+This command can be called in any mode to insert a link in Org syntax." t nil)
 
 (autoload 'org-update-radio-target-regexp "ol" "\
 Find all radio targets in this file and update the regular expression.
-Also refresh fontification if needed.
-
-\(fn)" t nil)
+Also refresh fontification if needed." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol" '("org-")))
 
@@ -5613,9 +5605,7 @@ FULL is given.
 \(fn &optional HERE FULL MESSAGE)" t nil)
 
 (autoload 'org-clock-persistence-insinuate "org" "\
-Set up hooks for clock persistence.
-
-\(fn)" nil nil)
+Set up hooks for clock persistence." nil nil)
 
 (autoload 'org-mode "org" "\
 Outline-based notes management and organizer, alias
@@ -5735,9 +5725,7 @@ Also follow links and emails as seen by `thing-at-point'.
 This command can be called in any mode to follow an external
 link or a time-stamp that has Org mode syntax.  Its behavior
 is undefined when called on internal links like fuzzy links.
-Raise a user error when there is nothing to follow.
-
-\(fn)" t nil)
+Raise a user error when there is nothing to follow." t nil)
 
 (autoload 'org-offer-links-in-entry "org" "\
 Offer links in the current entry and return the selected link.
@@ -5760,9 +5748,7 @@ With `\\[universal-argument] \\[universal-argument]' prefix, restrict available 
 (autoload 'org-cycle-agenda-files "org" "\
 Cycle through the files in `org-agenda-files'.
 If the current buffer visits an agenda file, find the next one in the list.
-If the current buffer does not, find the first agenda file.
-
-\(fn)" t nil)
+If the current buffer does not, find the first agenda file." t nil)
 
 (autoload 'org-submit-bug-report "org" "\
 Submit a bug report on Org via mail.
@@ -5771,9 +5757,7 @@ Don't hesitate to report any problems or inaccurate documentation.
 
 If you don't have setup sending mail from (X)Emacs, please copy the
 output buffer into your mail program, as it gives us important
-information about your Org version and configuration.
-
-\(fn)" t nil)
+information about your Org version and configuration." t nil)
 
 (autoload 'org-reload "org" "\
 Reload all Org Lisp files.
@@ -5782,9 +5766,7 @@ With prefix arg UNCOMPILED, load the uncompiled versions.
 \(fn &optional UNCOMPILED)" t nil)
 
 (autoload 'org-customize "org" "\
-Call the customize function with org as argument.
-
-\(fn)" t nil)
+Call the customize function with org as argument." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org" '("org-" "turn-on-org-cdlatex")))
 
@@ -6022,9 +6004,7 @@ subtree.
 
 (autoload 'org-calendar-goto-agenda "org-agenda" "\
 Compute the Org agenda for the calendar date displayed at the cursor.
-This is a command that has to be installed in `calendar-mode-map'.
-
-\(fn)" t nil)
+This is a command that has to be installed in `calendar-mode-map'." t nil)
 
 (autoload 'org-agenda-to-appt "org-agenda" "\
 Activate appointments found in `org-agenda-files'.
@@ -6114,9 +6094,7 @@ of the day at point (if any) or the current HH:MM time.
 \(fn &optional GOTO KEYS)" t nil)
 
 (autoload 'org-capture-import-remember-templates "org-capture" "\
-Set `org-capture-templates' to be similar to `org-remember-templates'.
-
-\(fn)" t nil)
+Set `org-capture-templates' to be similar to `org-remember-templates'." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-capture" '("org-capture-")))
 
@@ -6127,14 +6105,9 @@ Set `org-capture-templates' to be similar to `org-remember-templates'.
 
 
 (autoload 'org-columns-remove-overlays "org-colview" "\
-Remove all currently active column overlays.
+Remove all currently active column overlays." t nil)
 
-\(fn)" t nil)
-
-(autoload 'org-columns-get-format-and-top-level "org-colview" "\
-
-
-\(fn)" nil nil)
+(autoload 'org-columns-get-format-and-top-level "org-colview" nil nil nil)
 
 (autoload 'org-columns "org-colview" "\
 Turn on column view on an Org mode file.
@@ -6210,23 +6183,19 @@ PARAMS is a property list of parameters:
 \(fn PARAMS)" nil nil)
 
 (autoload 'org-columns-insert-dblock "org-colview" "\
-Create a dynamic block capturing a column view table.
+Create a dynamic block capturing a column view table." t nil)
 
-\(fn)" t nil)
+(eval-after-load 'org '(progn (org-dynamic-block-define "columnview" #'org-columns-insert-dblock)))
 
 (autoload 'org-agenda-columns "org-colview" "\
-Turn on or update column view in the agenda.
-
-\(fn)" t nil)
+Turn on or update column view in the agenda." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-colview" '("org-")))
 
 
 
 (autoload 'org-check-version "org-compat" "\
-Try very hard to provide sensible version strings.
-
-\(fn)" nil t)
+Try very hard to provide sensible version strings." nil t)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-compat" '("org-")))
 
@@ -6245,9 +6214,7 @@ Try very hard to provide sensible version strings.
 
 
 (autoload 'org-duration-set-regexps "org-duration" "\
-Set duration related regexps.
-
-\(fn)" t nil)
+Set duration related regexps." t nil)
 
 (autoload 'org-duration-p "org-duration" "\
 Non-nil when string S is a time duration.
@@ -6367,9 +6334,7 @@ With a prefix argument, use the alternative interface: e.g., if
 
 
 (autoload 'org-babel-describe-bindings "org-keys" "\
-Describe all keybindings behind `org-babel-key-prefix'.
-
-\(fn)" t nil)
+Describe all keybindings behind `org-babel-key-prefix'." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-keys" '("org-")))
 
@@ -6424,13 +6389,18 @@ NUMBERING is a list of numbers.
 (autoload 'org-num-mode "org-num" "\
 Dynamic numbering of headlines in an Org buffer.
 
+If called interactively, enable Org-Num mode if ARG is positive,
+and disable it if ARG is zero or negative.  If called from Lisp,
+also enable the mode if ARG is omitted or nil, and toggle it if
+ARG is `toggle'; disable the mode otherwise.
+
 \(fn &optional ARG)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-num" '("org-num-")))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-pcomplete" '("pcomplete/org-mode/" "org-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-pcomplete" '("org-" "pcomplete/org-mode/")))
 
 
 
@@ -6460,15 +6430,11 @@ Dynamic numbering of headlines in an Org buffer.
 
 (autoload 'org-release "org-version" "\
 The release version of Org.
-Inserted by installing Org mode or when a release is made.
-
-\(fn)" nil nil)
+Inserted by installing Org mode or when a release is made." nil nil)
 
 (autoload 'org-git-version "org-version" "\
 The Git version of Org mode.
-Inserted by installing Org or when a release is made.
-
-\(fn)" nil nil)
+Inserted by installing Org or when a release is made." nil nil)
 
 
 
@@ -12561,7 +12527,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.4.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.3.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.2" "/Users/laurynas/.emacs.d/elpa/dash-2.17.0" "/Users/laurynas/.emacs.d/elpa/with-editor-2.9.4")
+         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.4.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.3.8" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.2" "/Users/laurynas/.emacs.d/elpa/dash-2.17.0" "/Users/laurynas/.emacs.d/elpa/with-editor-2.9.4")
          Info-directory-list)))
 
 ;; Local Variables:

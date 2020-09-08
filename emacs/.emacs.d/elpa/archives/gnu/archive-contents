@@ -1510,7 +1510,7 @@
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de")
 	      (:url . "https://github.com/michael-heerdegen/on-screen.el"))])
  (org .
-      [(9 3 6)
+      [(9 3 8)
        nil "Outline-based notes management and organizer" tar
        ((:url . "https://orgmode.org")
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
@@ -2394,7 +2394,7 @@
 	      (:keywords "communication" "websocket" "server")
 	      (:url . "http://elpa.gnu.org/packages/websocket.html"))])
  (which-key .
-	    [(3 3 0)
+	    [(3 3 2)
 	     ((emacs
 	       (24 4)))
 	     "Display available keybindings in popup" tar
