@@ -13,7 +13,7 @@ fi
 
 export HOMEBREW_NO_INSTALL_CLEANUP=y
 
-export PATH=~/usr/bin:/usr/local/bin:$PATH
+export PATH=~/usr/bin:/usr/local/bin:/usr/local/sbin:$PATH
 
 for script in ~/.bash.d/noninteractive_init/*; do
     # shellcheck disable=SC1090
