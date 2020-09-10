@@ -16,6 +16,8 @@ sudo apt-get install python-pip build-essential gdb manpages-dev binutils \
     unattended-upgrades screen colordiff fzf hexyl ripgrep fd-find
 # Not named fd by default because fdclone (which I don't use) was first
 sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
+# So that I can have "gsed" as a GNU Sed on any platform
+sudo ln -sf /bin/sed /bin/gsed
 # Home
 sudo apt-get install g++-8 gcc-8-doc libstdc++6-8-dbg libstdc++-8-doc \
     libboost-dev libboost-doc
