@@ -9,9 +9,6 @@ softwareupdate --download --all
 echo "Updating brew"
 brew update
 
-echo "Outdated brew casks, if any:"
-brew cask outdated
-
 readonly outdated_formulae=$(brew outdated --quiet)
 for outdated_formula in $outdated_formulae; do
     if ! is_on_ac; then
