@@ -142,9 +142,13 @@ else
 fi
 popd || exit 1
 
+readonly UNAME_OUT="$(uname -s)"
+
 pushd "$BRANCH/ee" || exit 1
 git submodule update --init
-ln -sf "../ce/compile_commands.json" .
+if [ "$UNAME_OUT" == "Linux" ]; then
+    ln -sf "../ce/compile_commands.json" .
+fi
 popd || exit 1
 
 pushd "$BRANCH/ce" || exit 1
