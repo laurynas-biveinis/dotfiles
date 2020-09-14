@@ -267,7 +267,7 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 # brew
 #
 
-brew install stow git z ncdu gnupg coreutils fzf hexyl tldr lynis curl \
+brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl \
      shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac findutils \
      libtool npm qemu fd delta unrar
 sudo mkdir /Library/Spelling
