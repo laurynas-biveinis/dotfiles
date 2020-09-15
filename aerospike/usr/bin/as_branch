@@ -6,26 +6,39 @@
 #
 # In case of checkout or create, Emacs project will be set up and Aerospike
 # server built in EE flavor.
+#
+# Environment prerequisites:
+# - ASD_BRANCHES: the root directory of feature branches
+# - ASD_MASTER: the root directory of AS EE and CE master branches
+# - LINUX_SYSROOT (only on macOS): the sysroot directory with /usr/include from
+#   a Linux installation
+#
 
 set -euo pipefail
 
 readonly COMMAND=${1-UNDEFINED}
 
 if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" && \
-          $COMMAND != "pull" && $COMMAND != "push" && $COMMAND != "rm" && \
-          $COMMAND != "status" && $COMMAND != "worktree" || \
-          $COMMAND == "UNDEFINED" ]]
+          $COMMAND != "init" && $COMMAND != "pull" && $COMMAND != "push" && \
+          $COMMAND != "rm" && $COMMAND != "status" && \
+          $COMMAND != "worktree" && $COMMAND != "rsync" || \
+              $COMMAND == "UNDEFINED" ]]
 then
-    echo "Usage: $0 create branch [starting_point]"
     echo "Usage: $0 checkout branch"
+    echo "       $0 create branch [starting_point]"
     echo "       $0 fetch"
+    echo "       $0 init branch"
     echo "       $0 pull"
     echo "       $0 push"
     echo "       $0 rm branch"
+    echo "       $0 rsync branch"
     echo "       $0 status"
     echo "       $0 worktree prune"
     exit 1
 fi
+
+readonly UNAME_OUT="$(uname -s)"
+readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
 
 function do_master_command () {
     pushd "$EE_MASTER" || exit 1
@@ -66,6 +79,24 @@ function do_status () {
     do_local_command
 }
 
+function do_init () {
+    if [ "$UNAME_OUT" == "Linux" ]; then
+        rm -f compile_flags.txt
+    fi
+    ln -sf "$SUPPORT_FILE_DIR/.clang-format" .
+    cp "$SUPPORT_FILE_DIR/asd-.dir-locals.el" .dir-locals.el
+    ln -sf "$SUPPORT_FILE_DIR/asd-Makefile" Makefile
+    if [ "$UNAME_OUT" != "Linux" ]; then
+        cp "$SUPPORT_FILE_DIR/compile_flags.txt.in" compile_flags.txt
+        sed -i.bak "s:\$LINUX_SYSROOT:$LINUX_SYSROOT:g" compile_flags.txt
+        rm compile_flags.txt.bak
+    fi
+    touch .projectile
+    if [ "$UNAME_OUT" == "Linux" ]; then
+        make build
+    fi
+}
+
 # Zero-arg commands
 
 if [[ $COMMAND == "pull" ]]; then
@@ -81,7 +112,7 @@ if [[ $COMMAND == "push" ]]; then
     exit 0
 fi
 
-if [[ $COMMAND = "status" ]]; then
+if [[ $COMMAND == "status" ]]; then
     cmd="git status"
     do_local_command
     exit 0
@@ -116,11 +147,21 @@ if [[ $COMMAND == "rm" ]]; then
     exit 0
 fi
 
+if [[ $COMMAND == "init" ]]; then
+    pushd "$BRANCH" || exit 1
+    do_init
+    popd || exit 1
+    exit 0
+fi
+
+if [[ $COMMAND == "rsync" ]]; then
+    rsync -rzui "$BRANCH_ROOT" "$LINUX_VM:$LINUX_ASD_BRANCHES"
+    exit 0
+fi
+
 if [[ $COMMAND == "create" && "$#" -gt 2 ]]; then
     readonly START_POINT=$3
 fi
-
-readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
 
 mkdir "$BRANCH"
 
@@ -142,8 +183,6 @@ else
 fi
 popd || exit 1
 
-readonly UNAME_OUT="$(uname -s)"
-
 pushd "$BRANCH/ee" || exit 1
 git submodule update --init
 if [ "$UNAME_OUT" == "Linux" ]; then
@@ -156,11 +195,7 @@ git submodule update --init
 popd || exit 1
 
 pushd "$BRANCH" || exit 1
-ln -sf "$SUPPORT_FILE_DIR/.clang-format" .
-cp "$SUPPORT_FILE_DIR/asd-.dir-locals.el" .dir-locals.el
-ln -sf "$SUPPORT_FILE_DIR/asd-Makefile" Makefile
-touch .projectile
-make build
+do_init
 popd || exit 0
 
 popd || exit 0
