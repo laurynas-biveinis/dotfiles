@@ -724,6 +724,8 @@ loaded as such.)"
 (setq org-use-tag-inheritance '("somedaymaybe" "@readreview"))
 (setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-fast-tag-selection-single-key 'expert)
+;; Build agenda buffers faster
+(setq org-agenda-dim-blocked-tasks nil)
 
 ;; Agendas
 (setq org-agenda-custom-commands
