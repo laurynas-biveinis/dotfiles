@@ -366,6 +366,8 @@ loaded as such.)"
 ;; for `flyspell'/`goto-address' ones so that the goto-address one takes
 ;; priority. This makes the mouse click go to address instead of correct word at
 ;;point.
+(require 'flyspell)
+
 (defun dotfiles--goto-address-overlay-p (o)
   "Return t if O is an overlay used by `goto-address'."
   (and (overlayp o) (overlay-get o 'goto-address)))
