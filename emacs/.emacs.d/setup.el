@@ -703,6 +703,7 @@ loaded as such.)"
 (setq org-support-shift-select t)
 (setq org-yank-adjusted-subtrees t)
 (setq org-catch-invisible-edits 'smart)
+(setq org-fontify-todo-headline t)
 (setq org-fontify-done-headline t)
 
 ;; Tags
