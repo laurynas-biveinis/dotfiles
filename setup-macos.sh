@@ -291,6 +291,7 @@ duti -s org.videolan.vlc .m4a all
 npm i -g bash-language-server
 pip3 install cmake-language-server
 # Work
+brew install gnu-sed
 brew cask install tunnelblick
 # Play
 brew cask install banktivity beatunes lastfm steam xld
