@@ -282,6 +282,8 @@ sudo easy_install pip
 sudo gem install mdl
 brew cask install emacs eve intel-power-gadget rescuetime slack vlc \
      disk-inventory-x google-chrome pdftotext dash
+sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
+     /Library/Java/JavaVirtualMachines/openjdk.jdk
 # Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
 # non-main Dash docsets through the app
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
