@@ -267,9 +267,9 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 # brew
 #
 
-brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl \
-     shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac findutils \
-     libtool npm qemu fd delta unrar
+brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
+     shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac \
+     findutils libtool npm qemu fd delta unrar
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
@@ -280,8 +280,8 @@ sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
 sudo easy_install pip
 sudo gem install mdl
-brew cask install emacs eve intel-power-gadget java rescuetime slack vlc \
-    disk-inventory-x google-chrome pdftotext dash
+brew cask install emacs eve intel-power-gadget rescuetime slack vlc \
+     disk-inventory-x google-chrome pdftotext dash
 # Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
 # non-main Dash docsets through the app
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
