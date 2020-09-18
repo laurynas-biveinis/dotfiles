@@ -361,28 +361,23 @@ loaded as such.)"
 ;; Automatically show images as images
 (auto-image-file-mode 1)
 
-;; `goto-address-mode' integration with `flyspell': whenever we make a
-;;`flyspell' overlay, we iterate over all overlays and set relative priorities
-;; for `flyspell'/`goto-address' ones so that the goto-address one takes
-;; priority. This makes the mouse click go to address instead of correct word at
-;;point.
+;; `goto-address-mode' integration with `flyspell': do not create `flypsell'
+;; overlays, if a `goto-address' one already exists at the location. Otherwise
+;; a mouse click would offer spelling corrections instead of going to the URL.
 (require 'flyspell)
 
 (defun dotfiles--goto-address-overlay-p (o)
   "Return t if O is an overlay used by `goto-address'."
   (and (overlayp o) (overlay-get o 'goto-address)))
 
-(defun dotfiles--goto-address-higher-prio-than-flyspell (beg _end _face
-                                                             _mouse-face)
-  "Set relative priorities of `flyspell' and `goto-address' overlays at BEG."
-  (let ((overlays (overlays-at beg)))
-    (dolist (o overlays)
-      (cond ((flyspell-overlay-p o) (overlay-put o 'priority 10))
-            ((dotfiles--goto-address-overlay-p o) (overlay-put o 'priority
-                                                               20))))))
+(defun dotfiles--no-flyspell-overlay-on-goto-address (beg _end _face
+                                                          _mouse-face)
+  "Do not create a `flyspell' overlay if a `goto-address' one exists at BEG."
+  (seq-every-p #'null (mapcar #'dotfiles--goto-address-overlay-p (overlays-at
+                                                                  beg))))
 
-(advice-add #'make-flyspell-overlay :after
-            #'dotfiles--goto-address-higher-prio-than-flyspell)
+(advice-add #'make-flyspell-overlay :before-while
+            #'dotfiles--no-flyspell-overlay-on-goto-address)
 
 ;;; dired
 ;; Copy recursively
