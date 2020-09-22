@@ -1512,6 +1512,17 @@
 	     (:authors
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:keywords "convenience" "text" "org"))])
+ (org-translate .
+		[(0 1)
+		 ((emacs
+		   (25 1))
+		  (org
+		   (9 1)))
+		 "Org-based translation environment" single
+		 ((:url . "http://elpa.gnu.org/packages/org-translate.html")
+		  (:authors
+		   ("Eric Abrahamsen" . "eric@ericabrahamsen.net"))
+		  (:maintainer "Eric Abrahamsen" . "eric@ericabrahamsen.net"))])
  (orgalist .
 	   [(1 12)
 	    ((emacs

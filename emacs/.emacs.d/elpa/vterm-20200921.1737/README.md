@@ -523,7 +523,7 @@ Now we can write shell functions to call the ones defined in `vterm-eval-cmds`.
 
 ```sh
 find_file() {
-    vterm_cmd find-file "$(realpath "$@")"
+    vterm_cmd find-file "$(realpath "${@:-.}")"
 }
 
 say() {
@@ -534,6 +534,7 @@ say() {
 Or for `fish`:
 ```fish
 function find_file
+    set -q argv[1]; or set argv[1] "."
     vterm_cmd find-file (realpath "$argv")
 end
 
@@ -547,6 +548,8 @@ This newly defined `find_file` function can now be used inside `vterm` as
 ```sh
 find_file name_of_file_in_local_directory
 ```
+If you call `find_file` without specifying any file (you just execute `find_file` in your shell),
+`dired` will open with the current directory.
 
 As an example, say you like having files opened below the current window. You
 could add the command to do it on the lisp side like so:
@@ -565,7 +568,7 @@ Then add the command in your `.bashrc` file.
 
 ```sh
 open_file_below() {
-    vterm_cmd find-file-below "$(realpath "$@")"
+    vterm_cmd find-file-below "$(realpath "${@:-.}")"
 }
 ```
 
