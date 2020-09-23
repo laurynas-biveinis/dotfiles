@@ -285,7 +285,7 @@ loaded as such.)"
 (global-set-key (kbd "<M-RET>") #'end-of-line-and-newline-and-indent)
 
 ;; Yank should indent in programming modes
-(defun indent-if-prog-mode ()
+(defun indent-if-prog-mode (&optional _ARG)
   "Indent current region if in programming mode and no prefix arg."
   (interactive)
   (if (and (not current-prefix-arg) (derived-mode-p 'prog-mode))
