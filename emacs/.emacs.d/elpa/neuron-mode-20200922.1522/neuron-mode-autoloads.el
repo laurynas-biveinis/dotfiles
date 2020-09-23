@@ -21,9 +21,7 @@ existing directory, throw an user error.
 \(fn &optional PWD)" nil nil)
 
 (autoload 'neuron-refresh "neuron-mode" "\
-Regenerate the zettel cache and the title overlays in all neuron-mode buffers.
-
-\(fn)" t nil)
+Regenerate the zettel cache and the title overlays in all neuron-mode buffers." t nil)
 
 (autoload 'neuron-new-zettel "neuron-mode" "\
 Create a new zettel and open it in a new buffer.
@@ -33,9 +31,7 @@ When TITLE is nil, prompt the user.
 \(fn &optional TITLE ID)" t nil)
 
 (autoload 'neuron-open-daily-notes "neuron-mode" "\
-Create or open today's daily notes.
-
-\(fn)" t nil)
+Create or open today's daily notes." t nil)
 
 (autoload 'neuron-edit-zettel "neuron-mode" "\
 Select and edit ZETTEL.
@@ -43,9 +39,7 @@ Select and edit ZETTEL.
 \(fn ZETTEL)" t nil)
 
 (autoload 'neuron-edit-zettelkasten-configuration "neuron-mode" "\
-Open the neuron.dhall configuration file at the root of the zettelkasten.
-
-\(fn)" t nil)
+Open the neuron.dhall configuration file at the root of the zettelkasten." t nil)
 
 (autoload 'neuron-query-tags "neuron-mode" "\
 Select and edit a zettel from those that are tagged by TAGS.
@@ -53,29 +47,19 @@ Select and edit a zettel from those that are tagged by TAGS.
 \(fn &rest TAGS)" t nil)
 
 (autoload 'neuron-open-zettel "neuron-mode" "\
-Select a zettel and open the associated HTML file.
-
-\(fn)" t nil)
+Select a zettel and open the associated HTML file." t nil)
 
 (autoload 'neuron-follow-thing-at-point "neuron-mode" "\
-Open the zettel link at point.
-
-\(fn)" t nil)
+Open the zettel link at point." t nil)
 
 (autoload 'neuron-rib-watch "neuron-mode" "\
-Start a web app for browsing the zettelkasten.
-
-\(fn)" t nil)
+Start a web app for browsing the zettelkasten." t nil)
 
 (autoload 'neuron-rib-serve "neuron-mode" "\
-Start a web app for browsing the zettelkasten.
-
-\(fn)" t nil)
+Start a web app for browsing the zettelkasten." t nil)
 
 (autoload 'neuron-rib-generate "neuron-mode" "\
-Do an one-off generation of the web interface of the zettelkasten.
-
-\(fn)" t nil)
+Do an one-off generation of the web interface of the zettelkasten." t nil)
 
 (autoload 'neuron-rib-open-page "neuron-mode" "\
 Open the web-application at page PAGE.
@@ -83,14 +67,10 @@ Open the web-application at page PAGE.
 \(fn PAGE)" nil nil)
 
 (autoload 'neuron-rib-open-z-index "neuron-mode" "\
-Open the web application in the web browser at z-index.
-
-\(fn)" t nil)
+Open the web application in the web browser at z-index." t nil)
 
 (autoload 'neuron-rib-open-zettel "neuron-mode" "\
-Open a zettel in the web application.
-
-\(fn)" t nil)
+Open a zettel in the web application." t nil)
 
 (autoload 'neuron-replace-tag "neuron-mode" "\
 Map all tags matching PATTERN to a REPL.
@@ -108,9 +88,7 @@ and algebra/linear/theorem to math/theorem/algebra/linear.
 (autoload 'neuron-toggle-id-visiblity "neuron-mode" "\
 Toggle the visibility of IDs in simple links.
 This can be useful to debug when searching for ID, explicitly seeing whether the
-link is a folgezettel of ordinary connection.
-
-\(fn)" t nil)
+link is a folgezettel of ordinary connection." t nil)
 
 (autoload 'company-neuron "neuron-mode" "\
 Defines a company completion backend that completes zettels by title.
@@ -121,16 +99,14 @@ IGNORED is the rest of the arguments, not sure why it's there.
 \(fn COMMAND &optional ARG &rest IGNORED)" t nil)
 
 (autoload 'company-neuron-setup "neuron-mode" "\
-Setup company to use the neuron backend.
-
-\(fn)" nil nil)
+Setup company to use the neuron backend." nil nil)
 
 (autoload 'neuron-mode "neuron-mode" "\
 A major mode to edit Zettelkasten notes with neuron.
 
 \(fn)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "neuron-mode" '("neuron-" "company-neuron--")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "neuron-mode" '("company-neuron--" "neuron-")))
 
 ;;;***
 

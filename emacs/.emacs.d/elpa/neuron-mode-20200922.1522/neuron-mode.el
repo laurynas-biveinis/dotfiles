@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: 18d230ce6b126fe7193db9c20ac93811ccfe779d
-;; Package-Version: 20200806.833
+;; Package-Commit: 6042cb8960f0018d19db7be84e76622bdfaed5ec
+;; Package-Version: 20200922.1522
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (s "1.12.0") (markdown-mode "2.3") (company "0.9.13"))
 ;;
@@ -277,7 +277,7 @@ existing directory, throw an user error."
    " "
    (mapconcat
     #'shell-quote-argument
-    (append (list "--zettelkasten-dir" neuron--current-zettelkasten cmd) args) " ")))
+    (append (list "-d" neuron--current-zettelkasten cmd) args) " ")))
 
 (defun neuron--make-query-uri-command (uri)
   "Construct a neuron query command that queries the zettelkasten from URI.

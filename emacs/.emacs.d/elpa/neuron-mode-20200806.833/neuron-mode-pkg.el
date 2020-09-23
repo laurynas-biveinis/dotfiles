@@ -1,2 +1,0 @@
-;;; -*- no-byte-compile: t -*-
-(define-package "neuron-mode" "20200806.833" "Major mode for editing zettelkasten notes using neuron" '((emacs "26.3") (f "0.20.0") (s "1.12.0") (markdown-mode "2.3") (company "0.9.13")) :commit "18d230ce6b126fe7193db9c20ac93811ccfe779d" :keywords '("outlines") :authors '(("felko <http://github/felko>")) :maintainer '("felko <http://github/felko>") :url "https://github.com/felko/neuron-mode")
