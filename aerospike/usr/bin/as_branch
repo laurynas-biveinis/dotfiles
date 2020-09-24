@@ -25,7 +25,7 @@ if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" && \
               $COMMAND == "UNDEFINED" ]]
 then
     echo "Usage: $0 checkout branch"
-    echo "       $0 create branch [starting_point]"
+    echo "       $0 create branch starting_point [ee_starting_point]"
     echo "       $0 fetch"
     echo "       $0 init branch"
     echo "       $0 pull"
@@ -161,6 +161,11 @@ fi
 
 if [[ $COMMAND == "create" && "$#" -gt 2 ]]; then
     readonly START_POINT=$3
+    if [[ "$#" -gt 3 ]]; then
+        readonly EE_START_POINT=$4
+    else
+        readonly EE_START_POINT="$START_POINT"
+    fi
 fi
 
 mkdir "$BRANCH"
@@ -168,7 +173,7 @@ mkdir "$BRANCH"
 pushd "$EE_MASTER" || exit 1
 if [[ $COMMAND == "create" ]]; then
     git worktree add "$BRANCH_ROOT/ee" -b "$BRANCH" \
-        ${START_POINT:+"$START_POINT"}
+        ${EE_START_POINT:+"$EE_START_POINT"}
 else
     git worktree add "$BRANCH_ROOT/ee" "$BRANCH"
 fi
