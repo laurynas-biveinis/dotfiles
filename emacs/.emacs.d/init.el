@@ -65,7 +65,7 @@
     ((c-tab-always-indent t)
      (TeX-master . t)
      (compilation-read-command)
-     (projectile-generic-command . "(cd ce && git ls-files -zco --exclude-standard --recurse-submodules | gsed -z 's/^/ce\\//g'); (cd ee && git ls-files -zco --exclude-standard --recurse-submodules | gsed -z 's/^/ee\\//g')")))))
+     (projectile-generic-command . "(cd ce && git ls-files -zc --exclude-standard --recurse-submodules | gsed -z 's/^/ce\\//g'); (cd ee && git ls-files -zc --exclude-standard --recurse-submodules | gsed -z 's/^/ee\\//g')")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
