@@ -1513,7 +1513,7 @@
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:keywords "convenience" "text" "org"))])
  (org-translate .
-		[(0 1)
+		[(0 1 1)
 		 ((emacs
 		   (25 1))
 		  (org
