@@ -774,9 +774,7 @@
 		(url-http-ntlm
 		 (2 0 4))
 		(nadvice
-		 (0 3))
-		(org
-		 (9 0)))
+		 (0 3)))
 	       "Exchange Web Services (EWS) integration" tar
 	       ((:url . "https://www.fitzsim.org/blog/")
 		(:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
