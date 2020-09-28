@@ -1524,7 +1524,7 @@
 		   ("Eric Abrahamsen" . "eric@ericabrahamsen.net"))
 		  (:maintainer "Eric Abrahamsen" . "eric@ericabrahamsen.net"))])
  (orgalist .
-	   [(1 12)
+	   [(1 13)
 	    ((emacs
 	      (24 4)))
 	    "Manage Org-like lists in non-Org buffers" single
@@ -1939,7 +1939,7 @@
 	     ("Michael R. Mauger" . "michael@mauger.com"))
 	    (:maintainer "Michael R. Mauger" . "michael@mauger.com"))])
  (shell-command+ .
-		 [(1 0 3)
+		 [(2 0 0)
 		  ((emacs
 		    (24 1)))
 		  "An extended shell-command" tar

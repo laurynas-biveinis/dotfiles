@@ -1645,19 +1645,17 @@ Add archive file name handler to `file-name-handler-alist'." (when tramp-archive
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20200503.2042/ssh-config-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20200927.344/ssh-config-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20200503.2042/ssh-config-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20200927.344/ssh-config-mode-autoloads.el") (car load-path))))
 
 
 
 (autoload 'ssh-config-mode "ssh-config-mode" "\
 Major mode for fontifiying ssh config files.
 
-\\{ssh-config-mode-map}
-
-\(fn)" t nil)
+\\{ssh-config-mode-map}" t nil)
 
 (add-to-list 'auto-mode-alist '("/\\.ssh/config\\'" . ssh-config-mode))
 
@@ -1669,9 +1667,7 @@ Major mode for fontifiying ssh config files.
 
 (autoload 'ssh-known-hosts-mode "ssh-config-mode" "\
 Major mode for fontifiying ssh known_hosts files.
-\\{ssh-known-hosts-mode}
-
-\(fn)" t nil)
+\\{ssh-known-hosts-mode}" t nil)
  (autoload 'ssh-authorized-keys-mode "ssh-config-mode" nil t)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ssh-config-mode" '("ssh-")))
