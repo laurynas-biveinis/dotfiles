@@ -11078,10 +11078,10 @@ Minor mode to tweak Garbage Collection strategy.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20200926.1529/flycheck-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20200928.1705/flycheck-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20200926.1529/flycheck-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20200928.1705/flycheck-autoloads.el") (car load-path))))
 
 
 
