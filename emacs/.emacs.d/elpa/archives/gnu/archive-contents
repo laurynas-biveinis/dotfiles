@@ -1880,7 +1880,7 @@
 		   ("Yoni Rabkin" . "yrk@gnu.org"))
 		  (:keywords "rt" "tickets"))])
  (rudel .
-	[(0 3 1)
+	[(0 3 2)
 	 ((emacs
 	   (24))
 	  (cl-lib
