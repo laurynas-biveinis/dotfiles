@@ -2017,7 +2017,7 @@
 	    (:maintainer "Phil Sainty" . "psainty@orcon.net.nz")
 	    (:url . "https://savannah.nongnu.org/projects/so-long"))])
  (soap-client .
-	      [(3 1 5)
+	      [(3 2 0)
 	       ((cl-lib
 		 (0 6 1)))
 	       "Access SOAP web services" tar
