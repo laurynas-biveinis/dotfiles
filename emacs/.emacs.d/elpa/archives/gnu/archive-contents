@@ -1090,6 +1090,20 @@
 		  ("Clemens Radermacher" . "clemera@posteo.net"))
 		 (:maintainer "Clemens Radermacher" . "clemera@posteo.net")
 		 (:url . "https://github.com/clemera/ivy-explorer"))])
+ (ivy-posframe .
+	       [(0 2 0)
+		((emacs
+		  (26 0))
+		 (posframe
+		  (0 1 0))
+		 (ivy
+		  (0 11 0)))
+		"Using posframe to show Ivy" single
+		((:keywords "abbrev" "convenience" "matching" "ivy")
+		 (:authors
+		  ("Feng Shu"))
+		 (:maintainer "Feng Shu" . "tumashu@163.com")
+		 (:url . "https://github.com/tumashu/ivy-posframe"))])
  (javaimp .
 	  [(0 7 1)
 	   nil "Add and reorder Java import statements in Maven/Gradle projects" tar
