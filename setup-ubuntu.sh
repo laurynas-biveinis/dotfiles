@@ -26,7 +26,8 @@ sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
     maven clang-tools-10 clang-10-doc llvm-10-doc bear libcurl4-openssl-dev \
-    libcurl4-doc docker docker-doc python3-pip apparmor-profiles
+    libcurl4-doc docker docker-doc python3-pip apparmor-profiles libuv1-dev \
+    liblua5.1-dev
 
 sudo usermod -aG docker laurynas
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
