@@ -1248,6 +1248,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-ui-doc-alignment 'window)
 (setq lsp-ui-doc-position 'top)
 
+;; lsp-ui and lsp-ui-doc integration: avoid doc popups hiding reference popups
+;; by hiding the former.
+(advice-add #'lsp-ui-peek-find-references :before #'lsp-ui-doc-hide)
+
 ;; lsp-mode and TRAMP interaction: do not flycheck too eagerly
 (defun dotfiles--lsp-tramp-flycheck-reduce ()
   "Tune down Flycheck eagerness in `lsp-mode' for TRAMP buffers."
