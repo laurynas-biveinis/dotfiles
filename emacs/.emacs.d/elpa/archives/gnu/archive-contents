@@ -764,7 +764,7 @@
 		    ("Matthew L. Fidler" . "matthew.fidler@gmail.com"))
 		   (:keywords "convenience"))])
  (excorporate .
-	      [(0 9 0)
+	      [(0 9 1)
 	       ((emacs
 		 (24 1))
 		(fsm
