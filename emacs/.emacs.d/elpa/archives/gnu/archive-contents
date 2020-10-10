@@ -1091,7 +1091,7 @@
 		 (:maintainer "Clemens Radermacher" . "clemera@posteo.net")
 		 (:url . "https://github.com/clemera/ivy-explorer"))])
  (ivy-posframe .
-	       [(0 5 0)
+	       [(0 5 1)
 		((emacs
 		  (26 0))
 		 (posframe
@@ -1649,7 +1649,7 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(0 8 0)
+	   [(0 8 1)
 	    ((emacs
 	      (26)))
 	    "Pop a posframe (just a frame) at point" single
