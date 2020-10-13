@@ -2251,7 +2251,7 @@
 	      (:maintainer "Toby Cubitt" . "toby-undo-tree@dr-qubit.org")
 	      (:url . "http://www.dr-qubit.org/emacs.php"))])
  (uni-confusables .
-		  [(0 1)
+		  [(0 2)
 		   nil "Unicode confusables table" tar
 		   ((:maintainer "Teodor Zlatanov" . "tzz@lifelogs.com")
 		    (:url . "http://elpa.gnu.org/packages/uni-confusables.html"))])
