@@ -115,6 +115,8 @@ tramp erc cc-mode
 * Fix [data corruption in
   deadgrep](https://github.com/Wilfred/deadgrep/issues/60) writable buffers by
   search-replace.
+* [Automatically update git gutter on Magit
+  actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).
 
 ### Custom commands and functionality
 

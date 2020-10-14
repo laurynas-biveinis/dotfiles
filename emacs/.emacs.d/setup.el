@@ -1022,7 +1022,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (advice-add #'magit-toplevel :around #'dotfiles--magit-toplevel)
 
-
 ;;; git-gutter-fringe
 (require 'git-gutter-fringe)
 (global-git-gutter-mode +1)
@@ -1035,6 +1034,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
              (not (file-remote-p (buffer-file-name)))
              (not (memq major-mode git-gutter:disabled-modes)))
     (git-gutter-mode +1)))
+
+;; Integrate git-gutter with magit: update markings on magit refresh
+(add-hook 'magit-post-refresh-hook #'git-gutter:update-all-windows)
 
 ;;; undo-tree
 (require 'undo-tree)
