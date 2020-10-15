@@ -62,7 +62,10 @@ defaults write -g NSUseSpellCheckerForCompletions -bool false
 sudo defaults write -g com.apple.mouse.scaling -float 2
 defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string "TwoButton"
 defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode \
-    -string "TwoButton"
+         -string "TwoButton"
+# Drag windows at any point with Ctrl-Opt-Cmd click, from
+# https://twitter.com/nibroc/status/963088893758259200
+defaults write -g NSWindowShouldDragOnGesture YES
 #
 # Appearance
 #
