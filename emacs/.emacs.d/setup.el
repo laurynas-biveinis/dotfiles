@@ -1440,6 +1440,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; yaml-mode
 (add-to-list 'auto-mode-alist '("/.clang-format\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/.clangd\\'" . yaml-mode))
 
 ;;; aggressive-indent-mode
 (require 'aggressive-indent)
