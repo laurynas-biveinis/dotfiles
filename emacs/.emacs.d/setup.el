@@ -323,16 +323,17 @@ loaded as such.)"
 
 (global-display-fill-column-indicator-mode 1)
 
-(defun dotfiles--allow-fci ()
+(defun dotfiles--maybe-disable-fci ()
   "Selectively disable `display-fill-column-indicator' in some buffers."
   (let ((buf-name (buffer-name)))
-    (not (or buffer-read-only (derived-mode-p 'org-agenda-mode)
-             (equal " *Agenda Commands*" buf-name)
-             (equal " *Org Select*" buf-name)
-             (string-prefix-p "*helm" buf-name)))))
+    (if (or buffer-read-only (derived-mode-p 'org-agenda-mode)
+            (equal " *Agenda Commands*" buf-name)
+            (equal " *Org Select*" buf-name)
+            (string-prefix-p "*helm" buf-name))
+        (setq-local display-fill-column-indicator nil))))
 
-(advice-add #'display-fill-column-indicator--turn-on :before-while
-            #'dotfiles--allow-fci)
+(add-hook 'display-fill-column-indicator-mode-hook
+          #'dotfiles--maybe-disable-fci)
 
 ;;; minibuffer
 ;; All config made redundant by Helm:
