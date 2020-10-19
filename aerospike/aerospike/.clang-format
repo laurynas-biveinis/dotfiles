@@ -56,6 +56,7 @@ ExperimentalAutoDetectBinPacking: false
 IncludeBlocks:   Preserve
 IncludeIsMainRegex: '([-_](test|unittest))?$'
 IndentCaseLabels: true
+IndentExternBlock: false
 IndentGotoLabels: false
 IndentPPDirectives: None
 IndentWidth:     4
