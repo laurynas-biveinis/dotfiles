@@ -1,5 +1,6 @@
 # Copy this into $ASD_MASTER/ce/.git/info/exclude and
 # $ASD_MASTER/ee/.git/info/exclude
+.cache
 .clangd
 compile_commands.json
 compile_flags.txt
