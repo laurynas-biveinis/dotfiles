@@ -51,6 +51,7 @@
 (declare-function helm-hg-find-files-in-project "ext:helm-ls-hg")
 (declare-function helm-gid "helm-id-utils.el")
 (declare-function helm-find-1 "helm-find")
+(declare-function helm-fd-1 "helm-fd")
 (declare-function helm-get-default-program-for-file "helm-external")
 (declare-function helm-open-file-externally "helm-external")
 (declare-function helm-comp-read "helm-mode")
@@ -317,7 +318,9 @@ Remote filesystem are generally mounted with sshfs."
   :type '(repeat string))
 
 (defcustom helm-browse-project-default-find-files-fn
-  (cond ((executable-find "rg")
+  (cond ((executable-find "fd")
+         #'helm-browse-project-fd-find-files)
+        ((executable-find "rg")
          #'helm-browse-project-rg-find-files)
         ((executable-find "ag")
          #'helm-browse-project-ag-find-files)
@@ -675,6 +678,7 @@ currently transfered in an help-echo in mode-line, if you use
     (define-key map (kbd "C-c C-a")       'helm-ff-run-mail-attach-files)
     (define-key map (kbd "C-c p")         'helm-ff-run-print-file)
     (define-key map (kbd "C-c /")         'helm-ff-run-find-sh-command)
+    (define-key map (kbd "C-/")           'helm-ff-run-fd) 
     ;; Next 2 have no effect if candidate is not an image file.
     (define-key map (kbd "M-l")           'helm-ff-rotate-left-persistent)
     (define-key map (kbd "M-r")           'helm-ff-rotate-right-persistent)
@@ -802,6 +806,7 @@ Don't set it directly, use instead `helm-ff-auto-update-initial-value'.")
    "Complete at point `C-c i'" 'helm-insert-file-name-completion-at-point
    "Insert as org link `C-c @'" 'helm-files-insert-as-org-link
    "Find shell command `C-c /'" 'helm-ff-find-sh-command
+   "Fd shell command (C-/)" 'helm-ff-fd
    "Add marked files to file-cache" 'helm-ff-cache-add-file
    "Open file externally `C-c C-x, C-u to choose'" 'helm-open-file-externally
    "Grep File(s) `C-s, C-u Recurse'" 'helm-find-files-grep
@@ -5384,7 +5389,8 @@ doing.")
   "List files in DIRECTORY recursively with external PROGRAM."
   (let ((cmd (cl-ecase program
                (ag "ag --hidden -g '.*' %s")
-               (rg "rg --files --hidden -g '*' %s"))))
+               (rg "rg --files --hidden -g '*' %s")
+               (fd "fd --hidden --type f --glob '*' %s"))))
     (with-temp-buffer
       (call-process-shell-command
        (format cmd directory)
@@ -5401,6 +5407,11 @@ Use AG as backend."
   "A suitable function for `helm-browse-project-default-find-files-fn'.
 Use RG as backend."
   (helm-browse-project-find-files-1 directory 'rg))
+
+(defun helm-browse-project-fd-find-files (directory)
+  "A suitable function for `helm-browse-project-default-find-files-fn'.
+Use FD as backend."
+  (helm-browse-project-find-files-1 directory 'fd))
 
 (defun helm-browse-project-ag (_candidate)
   "A `helm-grep' AG action for `helm-browse-project'."
@@ -5569,6 +5580,18 @@ See `helm-browse-project'."
     (helm-exit-and-execute-action 'helm-ff-find-sh-command)))
 (put 'helm-ff-run-find-sh-command 'helm-only t)
 
+;; helm-hd bindings for hff
+(defun helm-ff-fd (_candidate)
+  "Run fd shell command from `helm-find-files'."
+  (require 'helm-fd)
+  (helm-fd-1 helm-ff-default-directory))
+
+(defun helm-ff-run-fd ()
+  "Run fd shell command action with key from `helm-find-files'."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'helm-ff-fd)))
+(put 'helm-ff-run-fd 'helm-only t)
 
 ;;;###autoload
 (defun helm-find-files (arg)

@@ -239,6 +239,13 @@ You can set your own list of commands with
 
 ;;;***
 
+;;;### (autoloads nil "helm-fd" "helm-fd.el" (0 0 0 0))
+;;; Generated autoloads from helm-fd.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-fd" '("helm-fd-")))
+
+;;;***
+
 ;;;### (autoloads nil "helm-files" "helm-files.el" (0 0 0 0))
 ;;; Generated autoloads from helm-files.el
 

@@ -34,6 +34,7 @@
                                  helm-ff-help-message
                                  helm-read-file-name-help-message
                                  helm-generic-file-help-message
+                                 helm-fd-help-message
                                  helm-grep-help-message
                                  helm-pdfgrep-help-message
                                  helm-etags-help-message
@@ -449,7 +450,7 @@ List all the files under this directory and other subdirectories
 - With two prefix arguments:
 Same but the cache is refreshed.
 
-**** You can start a recursive search with \"locate\" or \"find\"
+**** You can start a recursive search with \"locate\" \"find\" or [[https://github.com/sharkdp/fd][Fd]]
 
 See \"Note\" in the [[Recursive completion on subdirectories][section on subdirectories]].
 
@@ -489,6 +490,15 @@ the basedir as first argument of \"find\" and the subdir as the value for
 Examples:
 - \"find %s -type d -name '*%s*'\"
 - \"find %s -type d -regex .*%s.*$\"
+
+[[https://github.com/sharkdp/fd][Fd]] command is now also supported, it is regexp based and very fast, here is the
+command line to use:
+
+- \"fd --hidden --type d .*%s.*$ %s\"
+
+You can use also a glob based search, in this case use the --glob option:
+
+- \"fd --hidden --type d --glob '*%s*' %s\"
 
 *** Insert filename at point or complete filename at point
 
@@ -1240,6 +1250,47 @@ C/\\[helm-cr-empty-string]\t\tReturn empty string unless `must-match' is non-nil
 \\[helm-previous-source]\t\tGo to previous source."
      name name)))
 
+;;; FD help
+;;
+;;
+(defvar helm-fd-help-message
+  "* Helm fd
+
+** Tips
+
+\[[https://github.com/sharkdp/fd][The Fd command line tool]] is very fast to search files recursively.
+You may have to wait several seconds at first usage when your
+hard drive cache is \"cold\", then once the cache is initialized
+searchs are very fast.  You can pass any [[https://github.com/sharkdp/fd#command-line-options][Fd options]] before pattern, e.g. \"-e py foo\".
+
+The [[https://github.com/sharkdp/fd][Fd]] command line can be customized with `helm-fd-switches' user variable.
+Always use --color always as option otherwise you will have no colors.
+To customize colors see [[https://github.com/sharkdp/fd#colorized-output][Fd colorized output]].
+
+Search is (pcre) regexp based (see [[https://docs.rs/regex/1.0.0/regex/#syntax][Regexp syntax]]), multi patterns are _not_ supported.
+
+** Commands
+\\<helm-fd-map>
+\\[helm-ff-run-grep]\t\tRun grep (`\\[universal-argument]' to recurse).
+\\[helm-ff-run-zgrep]\t\tRun zgrep.
+\\[helm-ff-run-pdfgrep]\t\tRun PDFgrep on marked files.
+\\[helm-ff-run-copy-file]\t\tCopy file(s)
+\\[helm-ff-run-rename-file]\t\tRename file(s).
+\\[helm-ff-run-symlink-file]\t\tSymlink file(s).
+\\[helm-ff-run-hardlink-file]\t\tHardlink file(s).
+\\[helm-ff-run-delete-file]\t\tDelete file(s).
+\\[helm-ff-run-byte-compile-file]\t\tByte compile Elisp file(s) (`\\[universal-argument]' to load).
+\\[helm-ff-run-load-file]\t\tLoad Elisp file(s).
+\\[helm-ff-run-ediff-file]\t\tEdiff file.
+\\[helm-ff-run-ediff-merge-file]\t\tEdiff-merge file.
+\\[helm-ff-run-switch-other-window]\t\tSwitch to other window.
+\\[helm-ff-properties-persistent]\t\tShow file properties.
+\\[helm-ff-run-open-file-externally]\t\tOpen file with external program (`\\[universal-argument]' to choose).
+\\[helm-ff-run-open-file-with-default-tool]\t\tOpen file externally with default tool.
+\\[helm-ff-run-insert-org-link]\t\tInsert org link.
+\\[helm-fd-previous-directory]\t\tMove to previous directory.
+\\[helm-fd-next-directory]\tMove to next directory.")
+
 ;;; Generic file help - Used by locate.
 ;;
 ;;
@@ -1291,7 +1342,6 @@ than 1 megabyte:
 \\[helm-ff-run-toggle-basename]\t\tToggle basename.
 \\[helm-ff-run-grep]\t\tRun grep (`\\[universal-argument]' to recurse).
 \\[helm-ff-run-zgrep]\t\tRun zgrep.
-\\[helm-ff-run-gid]\t\tRun GID (id-utils).
 \\[helm-ff-run-pdfgrep]\t\tRun PDFgrep on marked files.
 \\[helm-ff-run-copy-file]\t\tCopy file(s)
 \\[helm-ff-run-rename-file]\t\tRename file(s).
@@ -1304,7 +1354,6 @@ than 1 megabyte:
 \\[helm-ff-run-ediff-merge-file]\t\tEdiff-merge file.
 \\[helm-ff-run-switch-other-window]\t\tSwitch to other window.
 \\[helm-ff-properties-persistent]\t\tShow file properties.
-\\[helm-ff-run-etags]\t\tRun etags (`\\[universal-argument]' to use tap, `\\[universal-argument] \\[universal-argument]' to reload the database).
 \\[helm-ff-run-open-file-externally]\t\tOpen file with external program (`\\[universal-argument]' to choose).
 \\[helm-ff-run-open-file-with-default-tool]\t\tOpen file externally with default tool.
 \\[helm-ff-run-insert-org-link]\t\tInsert org link.")
