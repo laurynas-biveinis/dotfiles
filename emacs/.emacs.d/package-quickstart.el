@@ -11585,39 +11585,6 @@ Major mode for editing flex files. (bison-mode by any other name)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/autopair-0.6.1/autopair-autoloads.el"))
-(add-to-list 'load-path (directory-file-name (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/autopair-0.6.1/autopair-autoloads.el") (car load-path))))
-
-
-(autoload 'autopair-mode "autopair" "\
-Automagically pair braces and quotes like in TextMate.
-
-\(fn &optional ARG)" t nil)
-
-(defvar autopair-global-mode nil "\
-Non-nil if Autopair-Global mode is enabled.
-See the `autopair-global-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `autopair-global-mode'.")
-
-(custom-autoload 'autopair-global-mode "autopair" nil)
-
-(autoload 'autopair-global-mode "autopair" "\
-Toggle Autopair mode in all buffers.
-With prefix ARG, enable Autopair-Global mode if ARG is positive;
-otherwise, disable it.  If called from Lisp, enable the mode if
-ARG is omitted or nil.
-
-Autopair mode is enabled in all buffers where
-`autopair-on' would do it.
-See `autopair-mode' for more information on Autopair mode.
-
-\(fn &optional ARG)" t nil)
-
-
-)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-4.0.1/all-the-icons-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -11755,7 +11722,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp ssh-config-mode ssh spinner solarized-theme rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck exec-path-from-shell eldoc-cmake dispwatch deadgrep cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode autopair all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp ssh-config-mode ssh spinner solarized-theme rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck exec-path-from-shell eldoc-cmake dispwatch deadgrep cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
