@@ -1,4 +1,4 @@
-(define-package "ssh-config-mode" "20201017.951" "Mode for fontification of ~/.ssh/config" 'nil :commit "a558f3095462ad5b876dc4c35cdee141788cf781" :keywords
+(define-package "ssh-config-mode" "20201023.200" "Mode for fontification of ~/.ssh/config" 'nil :commit "7860b39039e3a35ecddda8274879b2a019cafccd" :keywords
   '("ssh" "config" "emacs")
   :authors
   '(("Harley Gorrell" . "harley@panix.com"))
