@@ -500,17 +500,6 @@ loaded as such.)"
 ;; Workaround header line covering the ispell choices window
 (setq ispell-choices-win-default-height 3)
 
-;;; Show matching parents
-(require 'paren)
-(setq show-paren-style 'mixed)
-(setq show-paren-when-point-inside-paren t)
-(setq show-paren-when-point-in-periphery t)
-(show-paren-mode 1)
-
-;;; electric-pair-mode
-(require 'elec-pair)
-(electric-pair-mode)
-
 ;; In Shell mode, do not echo passwords
 (require 'comint)
 (add-hook 'comint-output-filter-functions
@@ -537,6 +526,28 @@ loaded as such.)"
   (add-hook 'comint-preoutput-filter-functions #'xterm-color-filter nil t))
 
 (add-hook 'shell-mode-hook #'dotfiles--shell-mode-hook)
+
+;;; smartparens
+(require 'smartparens-config)
+
+(define-key smartparens-mode-map (kbd "C-s-a") #'sp-beginning-of-sexp)
+(define-key smartparens-mode-map (kbd "C-s-e") #'sp-end-of-sexp)
+(define-key smartparens-mode-map (kbd "C-s-<down>") #'sp-down-sexp)
+(define-key smartparens-mode-map (kbd "C-s-<up>") #'sp-up-sexp)
+(define-key smartparens-mode-map (kbd "M-s-<down>") #'sp-backward-down-sexp)
+(define-key smartparens-mode-map (kbd "M-s-<up>") #'sp-backward-up-sexp)
+(define-key smartparens-mode-map (kbd "C-M-f") #'sp-forward-sexp)
+(define-key smartparens-mode-map (kbd "C-M-b") #'sp-backward-sexp)
+(define-key smartparens-mode-map (kbd "C-M-n") #'sp-next-sexp)
+(define-key smartparens-mode-map (kbd "C-M-p") #'sp-previous-sexp)
+(define-key smartparens-mode-map (kbd "C-s-b") #'sp-backward-symbol)
+(define-key smartparens-mode-map (kbd "C-s-f") #'sp-forward-symbol)
+
+(smartparens-global-strict-mode 1)
+(add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
+(add-hook 'text-mode-hook #'turn-on-smartparens-strict-mode)
+
+(show-smartparens-global-mode 1)
 
 ;;; vterm
 (require 'vterm)
@@ -1310,8 +1321,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                                             "documentOnTypeFormattingProvider"))
     (electric-layout-mode -1)
     ;; It seems it's OK to call this in non-cc-mode buffers too
-    (c-toggle-electric-state -1)
-    (electric-pair-local-mode -1)))
+    (c-toggle-electric-state -1)))
 
 (defun dotfiles--lsp-replace-cc-mode-indent ()
   "Make ‘c-indent-defun’ and ‘c-indent-region’ use LSP."
@@ -1337,7 +1347,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (electric-layout-mode)
   ;; It seems it's OK to call this in non-cc-mode buffers too
   (c-toggle-electric-state)
-  (electric-pair-local-mode)
   (eldoc-mode))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-cc-mode-indent)
@@ -1468,7 +1477,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK" " GCMH"))
+                     " WK" " GCMH" " SP/s"))
 (rich-minority-mode)
 
 ;;; projectile

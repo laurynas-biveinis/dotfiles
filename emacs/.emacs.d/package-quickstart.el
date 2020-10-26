@@ -1831,6 +1831,266 @@ Alpha should be a float between 0 and 1.
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/smartparens-20201007.1753/smartparens-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/smartparens-20201007.1753/smartparens-autoloads.el") (car load-path))))
+
+
+
+(autoload 'sp-cheat-sheet "smartparens" "\
+Generate a cheat sheet of all the smartparens interactive functions.
+
+Without a prefix argument, print only the short documentation and examples.
+
+With non-nil prefix argument ARG, show the full documentation for each function.
+
+You can follow the links to the function or variable help page.
+To get back to the full list, use \\[help-go-back].
+
+You can use `beginning-of-defun' and `end-of-defun' to jump to
+the previous/next entry.
+
+Examples are fontified using the `font-lock-string-face' for
+better orientation.
+
+\(fn &optional ARG)" t nil)
+
+(defvar smartparens-mode-map (make-sparse-keymap) "\
+Keymap used for `smartparens-mode'.")
+
+(autoload 'sp-use-paredit-bindings "smartparens" "\
+Initiate `smartparens-mode-map' with `sp-paredit-bindings'." t nil)
+
+(autoload 'sp-use-smartparens-bindings "smartparens" "\
+Initiate `smartparens-mode-map' with `sp-smartparens-bindings'." t nil)
+
+(autoload 'smartparens-mode "smartparens" "\
+Toggle smartparens mode.
+
+If called interactively, enable Smartparens mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+You can enable pre-set bindings by customizing
+`sp-base-key-bindings' variable.  The current content of
+`smartparens-mode-map' is:
+
+ \\{smartparens-mode-map}
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'smartparens-strict-mode "smartparens" "\
+Toggle the strict smartparens mode.
+
+If called interactively, enable Smartparens-Strict mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+When strict mode is active, `delete-char', `kill-word' and their
+backward variants will skip over the pair delimiters in order to
+keep the structure always valid (the same way as `paredit-mode'
+does).  This is accomplished by remapping them to
+`sp-delete-char' and `sp-kill-word'.  There is also function
+`sp-kill-symbol' that deletes symbols instead of words, otherwise
+working exactly the same (it is not bound to any key by default).
+
+When strict mode is active, this is indicated with \"/s\"
+after the smartparens indicator in the mode list.
+
+\(fn &optional ARG)" t nil)
+
+(put 'smartparens-global-strict-mode 'globalized-minor-mode t)
+
+(defvar smartparens-global-strict-mode nil "\
+Non-nil if Smartparens-Global-Strict mode is enabled.
+See the `smartparens-global-strict-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `smartparens-global-strict-mode'.")
+
+(custom-autoload 'smartparens-global-strict-mode "smartparens" nil)
+
+(autoload 'smartparens-global-strict-mode "smartparens" "\
+Toggle Smartparens-Strict mode in all buffers.
+With prefix ARG, enable Smartparens-Global-Strict mode if ARG is positive;
+otherwise, disable it.  If called from Lisp, enable the mode if
+ARG is omitted or nil.
+
+Smartparens-Strict mode is enabled in all buffers where
+`turn-on-smartparens-strict-mode' would do it.
+See `smartparens-strict-mode' for more information on Smartparens-Strict mode.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'turn-on-smartparens-strict-mode "smartparens" "\
+Turn on `smartparens-strict-mode'." t nil)
+
+(autoload 'turn-off-smartparens-strict-mode "smartparens" "\
+Turn off `smartparens-strict-mode'." t nil)
+
+(put 'smartparens-global-mode 'globalized-minor-mode t)
+
+(defvar smartparens-global-mode nil "\
+Non-nil if Smartparens-Global mode is enabled.
+See the `smartparens-global-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `smartparens-global-mode'.")
+
+(custom-autoload 'smartparens-global-mode "smartparens" nil)
+
+(autoload 'smartparens-global-mode "smartparens" "\
+Toggle Smartparens mode in all buffers.
+With prefix ARG, enable Smartparens-Global mode if ARG is positive;
+otherwise, disable it.  If called from Lisp, enable the mode if
+ARG is omitted or nil.
+
+Smartparens mode is enabled in all buffers where
+`turn-on-smartparens-mode' would do it.
+See `smartparens-mode' for more information on Smartparens mode.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'turn-on-smartparens-mode "smartparens" "\
+Turn on `smartparens-mode'.
+
+This function is used to turn on `smartparens-global-mode'.
+
+By default `smartparens-global-mode' ignores buffers with
+`mode-class' set to special, but only if they are also not comint
+buffers.
+
+Additionally, buffers on `sp-ignore-modes-list' are ignored.
+
+You can still turn on smartparens in these mode manually (or
+in mode's startup-hook etc.) by calling `smartparens-mode'." t nil)
+
+(autoload 'turn-off-smartparens-mode "smartparens" "\
+Turn off `smartparens-mode'." t nil)
+
+(autoload 'show-smartparens-mode "smartparens" "\
+Toggle visualization of matching pairs.  When enabled, any
+matching pair is highlighted after `sp-show-pair-delay' seconds
+of Emacs idle time if the point is immediately in front or after
+a pair.  This mode works similarly to `show-paren-mode', but
+support custom pairs.
+
+If called interactively, enable Show-Smartparens mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(put 'show-smartparens-global-mode 'globalized-minor-mode t)
+
+(defvar show-smartparens-global-mode nil "\
+Non-nil if Show-Smartparens-Global mode is enabled.
+See the `show-smartparens-global-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `show-smartparens-global-mode'.")
+
+(custom-autoload 'show-smartparens-global-mode "smartparens" nil)
+
+(autoload 'show-smartparens-global-mode "smartparens" "\
+Toggle Show-Smartparens mode in all buffers.
+With prefix ARG, enable Show-Smartparens-Global mode if ARG is positive;
+otherwise, disable it.  If called from Lisp, enable the mode if
+ARG is omitted or nil.
+
+Show-Smartparens mode is enabled in all buffers where
+`turn-on-show-smartparens-mode' would do it.
+See `show-smartparens-mode' for more information on Show-Smartparens mode.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'turn-on-show-smartparens-mode "smartparens" "\
+Turn on `show-smartparens-mode'." t nil)
+
+(autoload 'turn-off-show-smartparens-mode "smartparens" "\
+Turn off `show-smartparens-mode'." t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens" '("smartparens-" "sp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-clojure" '("sp-clojure-prefix")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-config" '("sp-lisp-invalid-hyperlink-p")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-crystal" '("sp-crystal-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-elixir" '("sp-elixir-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-ess" '("sp-ess-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-haskell" '("sp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-html" '("sp-html-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-latex" '("sp-latex-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-lua" '("sp-lua-post-keyword-insert")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-markdown" '("sp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-org" '("sp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-python" '("sp-python-fix-tripple-quotes")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-rst" '("sp-rst-point-after-backtick")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-ruby" '("sp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-rust" '("sp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-scala" '("sp-scala-wrap-with-indented-newlines")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-text" '("sp-text-mode-")))
+
+
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/rich-minority-1.0.3/rich-minority-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -11722,7 +11982,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp ssh-config-mode ssh spinner solarized-theme rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck exec-path-from-shell eldoc-cmake dispwatch deadgrep cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck exec-path-from-shell eldoc-cmake dispwatch deadgrep cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
