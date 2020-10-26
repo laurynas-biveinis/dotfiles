@@ -980,7 +980,7 @@
 	    (:keywords "tools" "accessibility")
 	    (:url . "http://elpa.gnu.org/packages/greader.html"))])
  (greenbar .
-	   [(1 0)
+	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" single
 	    ((:url . "http://elpa.gnu.org/packages/greenbar.html")
 	     (:keywords "faces" "terminals")
