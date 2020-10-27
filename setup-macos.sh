@@ -44,17 +44,32 @@ defaults write InitialKeyRepeat -int 35
 # In System Preferences -> Keyboard -> Shortcuts:
 # - uncheck "Turn keyboard access on or off ^F1"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 12 \
-"{enabled = 0; value = { parameters = (65535, 97, 8650752); type = 'standard'; }; }"
+         "{enabled = 0; value = { parameters = (65535, 97, 8650752); type = 'standard'; }; }"
 # - uncheck "Mission Control ^-up" and "Application windows ^-down"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 32 \
-"{enabled = 0; value = { parameters = (65535, 126, 8650752); type = 'standard'; }; }"
+         "{enabled = 0; value = { parameters = (65535, 126, 8650752); type = 'standard'; }; }"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 33 \
-"{enabled = 0; value = { parameters = (65535, 125, 8650752); type = 'standard'; }; }"
+         "{enabled = 0; value = { parameters = (65535, 125, 8650752); type = 'standard'; }; }"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 34 \
-"{enabled = 0; value = { parameters = (65535, 126, 8781824); type = 'standard'; }; }"
+         "{enabled = 0; value = { parameters = (65535, 126, 8781824); type = 'standard'; }; }"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 35 \
-"{enabled = 0; value = { parameters = (65535, 125, 8781824); type = 'standard'; }; }"
-# Esc closes autocompletion
+         "{enabled = 0; value = { parameters = (65535, 125, 8781824); type = 'standard'; }; }"
+# - uncheck "Mission Control": "Move left a space", "Move right a space", and
+# next/previous keyboard input source
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 60 \
+         "{enabled = 0; value = { parameters = (32, 49, 262144); type = 'standard'; }; }"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 61 \
+         "{enabled = 0; value = { parameters = (32, 49, 786432); type = 'standard'; }; }"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 79 \
+         "{enabled = 0; value = { parameters = (65535, 123, 8650752); type = 'standard'; }; }"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 80 \
+         "{enabled = 0; value = { parameters = (65535, 123, 8781824); type = 'standard'; }; }"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 81 \
+         "{enabled = 0; value = { parameters = (65535, 124, 8650752); type = 'standard'; }; }"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 82 \
+         "{enabled = 0; value = { parameters = (65535, 124, 8781824); type = 'standard'; }; }"
+
+# Esc closes autocompletion1
 defaults write -g NSUseSpellCheckerForCompletions -bool false
 #
 # Mouse
