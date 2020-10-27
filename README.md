@@ -149,3 +149,4 @@ Incomplete, will add to it.
 * <https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/>
 * <https://github.com/mathiasbynens/dotfiles/blob/master/.macos>
 * <https://github.com/ryuta69/dotfiles/>
+* <https://ebzzry.io/en/emacs-pairs/>

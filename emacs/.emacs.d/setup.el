@@ -530,6 +530,35 @@ loaded as such.)"
 ;;; smartparens
 (require 'smartparens-config)
 
+;; Borrowed from https://ebzzry.io/en/emacs-pairs/
+(defmacro dotfiles--def-sp-pairs (pairs)
+  "Define functions for pairing. PAIRS is an alist of (NAME . STRING)
+conses, where NAME is the function name that will be created and
+STRING is a single-character string that marks the opening character.
+
+  (dotfiles--def-sp-pairs ((paren . \"(\")
+                           (bracket . \"[\"))
+
+defines the functions WRAP-WITH-PARENS and WRAP-WITH-BRACKETS,
+respectively."
+  `(progn
+     ,@(loop for (key . val) in pairs
+             collect
+             `(defun ,(read (concat
+                             "wrap-with-"
+                             (prin1-to-string key)
+                             "s"))
+                  (&optional arg)
+                (interactive "p")
+                (sp-wrap-with-pair ,val)))))
+
+(dotfiles--def-sp-pairs ((paren . "(")
+                         (bracket . "[")
+                         (brace . "{")
+                         (single-quote . "'")
+                         (double-quote . "\"")
+                         (back-quote . "`")))
+
 (define-key smartparens-mode-map (kbd "C-s-a") #'sp-beginning-of-sexp)
 (define-key smartparens-mode-map (kbd "C-s-e") #'sp-end-of-sexp)
 (define-key smartparens-mode-map (kbd "C-s-<down>") #'sp-down-sexp)
@@ -542,6 +571,11 @@ loaded as such.)"
 (define-key smartparens-mode-map (kbd "C-M-p") #'sp-previous-sexp)
 (define-key smartparens-mode-map (kbd "C-s-b") #'sp-backward-symbol)
 (define-key smartparens-mode-map (kbd "C-s-f") #'sp-forward-symbol)
+
+(define-key smartparens-mode-map (kbd "C-c (") #'wrap-with-parens)
+(define-key smartparens-mode-map (kbd "C-c [") #'wrap-with-brackets)
+(define-key smartparens-mode-map (kbd "C-c {") #'wrap-with-braces)
+
 
 (smartparens-global-strict-mode 1)
 (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
