@@ -298,10 +298,10 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.0/with-editor-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.1/with-editor-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.0/with-editor-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.1/with-editor-autoloads.el") (car load-path))))
 
 
 
@@ -11241,22 +11241,26 @@ Sets up preferred newline behavior. Not set by default. Meant
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-0.90/git-gutter-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-0.91/git-gutter-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-gutter-0.90/git-gutter-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-gutter-0.91/git-gutter-autoloads.el") (car load-path))))
 
 
 
 (autoload 'git-gutter:linum-setup "git-gutter" "\
-Setup for linum-mode.
-
-\(fn)" nil nil)
+Setup for linum-mode." nil nil)
 
 (autoload 'git-gutter-mode "git-gutter" "\
 Git-Gutter mode
 
+If called interactively, enable Git-Gutter mode if ARG is positive, and disable
+it if ARG is zero or negative.  If called from Lisp, also enable the mode if ARG
+is omitted or nil, and toggle it if ARG is `toggle'; disable the mode otherwise.
+
 \(fn &optional ARG)" t nil)
+
+(put 'global-git-gutter-mode 'globalized-minor-mode t)
 
 (defvar global-git-gutter-mode nil "\
 Non-nil if Global Git-Gutter mode is enabled.
@@ -11281,14 +11285,10 @@ See `git-gutter-mode' for more information on Git-Gutter mode.
 \(fn &optional ARG)" t nil)
 
 (autoload 'git-gutter "git-gutter" "\
-Show diff information in gutter
-
-\(fn)" t nil)
+Show diff information in gutter" t nil)
 
 (autoload 'git-gutter:toggle "git-gutter" "\
-Toggle to show diff information.
-
-\(fn)" t nil)
+Toggle to show diff information." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "git-gutter" '("git-gutter")))
 
@@ -11989,7 +11989,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.4.2" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.2" "/Users/laurynas/.emacs.d/elpa/dash-2.17.0" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.4.2" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.2" "/Users/laurynas/.emacs.d/elpa/dash-2.17.0" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.1")
          Info-directory-list)))
 
 ;; Local Variables:
