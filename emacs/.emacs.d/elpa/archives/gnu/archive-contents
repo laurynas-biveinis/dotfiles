@@ -720,7 +720,7 @@
 		     (:keywords "languages" "lisp")
 		     (:url . "http://elpa.gnu.org/packages/elisp-benchmarks.html"))])
  (emms .
-       [(5 42)
+       [(6 0)
 	((cl-lib
 	  (0 5)))
 	"The Emacs Multimedia System" tar
