@@ -1,0 +1,11 @@
+$include /etc/inputrc
+
+set colored-stats On
+set mark-symlinked-directories On
+set show-all-if-ambiguous On
+set show-all-if-unmodified On
+set visible-stats On
+
+$if Bash
+    Space: magic-space
+$endif
