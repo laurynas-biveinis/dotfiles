@@ -23,7 +23,7 @@ The bulk of configuration is in
 there is also
 [early-init.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/early-init.el)
 and
-[init.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/early-init.el).
+[init.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/init.el).
 There is also some system-specific setup over at
 [darwin.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/darwin.el).
 
