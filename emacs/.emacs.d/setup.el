@@ -542,15 +542,15 @@ STRING is a single-character string that marks the opening character.
 defines the functions WRAP-WITH-PARENS and WRAP-WITH-BRACKETS,
 respectively."
   `(progn
-     ,@(loop for (key . val) in pairs
-             collect
-             `(defun ,(read (concat
-                             "wrap-with-"
-                             (prin1-to-string key)
-                             "s"))
-                  (&optional arg)
-                (interactive "p")
-                (sp-wrap-with-pair ,val)))))
+     ,@(cl-loop for (key . val) in pairs
+                collect
+                `(defun ,(read (concat
+                                "wrap-with-"
+                                (prin1-to-string key)
+                                "s"))
+                     (&optional arg)
+                   (interactive "p")
+                   (sp-wrap-with-pair ,val)))))
 
 (dotfiles--def-sp-pairs ((paren . "(")
                          (bracket . "[")
