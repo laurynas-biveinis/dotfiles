@@ -383,7 +383,7 @@ After one of the above commands, @file{~/emacs/tramp} will
 containing the latest version of @value{tramp}.
 
 @noindent
-To fetch updates from the repository, use git pull:
+To fetch updates from the repository, use @code{git pull}:
 
 @example
 @group
@@ -1687,9 +1687,9 @@ Integration for LXD containers.  A container is accessed via
 @item magit-tramp
 @cindex method @option{git}
 @cindex @option{git} method
-Browsing git repositories with @code{magit}.  A versioned file is
+Browsing Git repositories with @code{magit}.  A versioned file is
 accessed via @file{@trampfn{git,rev@@root-dir,/path/to/file}}.
-@samp{rev} is a git revision, and @samp{root-dir} is a virtual host
+@samp{rev} is a Git revision, and @samp{root-dir} is a virtual host
 name for the root directory, specified in
 @code{magit-tramp-hosts-alist}.
 
@@ -2943,19 +2943,6 @@ Example:
 @end group
 @end example
 
-During file name completion, remote directory contents are re-read
-regularly to account for any changes in the filesystem that may affect
-the completion candidates.  Such re-reads can account for changes to
-the file system by applications outside Emacs (@pxref{Connection
-caching}).
-
-@defopt tramp-completion-reread-directory-timeout
-The timeout is number of seconds since last remote command for
-rereading remote directory contents.  A value of 0 re-reads
-immediately during file name completion, @code{nil} uses cached
-directory contents.
-@end defopt
-
 
 @node Ad-hoc multi-hops
 @section Declaring multiple hops in the file name
@@ -3004,7 +2991,7 @@ to user @code{root} on host @code{remotehost}, starting with an
 @option{ssh} session on host @code{remotehost}:
 @samp{@value{prefix}ssh@value{postfixhop}%h|su@value{postfixhop}remotehost@value{postfix}}.
 
-On the other hand, if a trailing hop does not specifiy a host name,
+On the other hand, if a trailing hop does not specify a host name,
 the host name of the previous hop is reused. Therefore, the following
 file name is equivalent to the previous example:
 @samp{@value{prefix}ssh@value{postfixhop}remotehost|su@value{postfixhop}@value{postfix}}.
@@ -3909,9 +3896,6 @@ files are not independently updated outside @value{tramp}'s control.
 That cache cleanup will be necessary if the remote directories or
 files are updated independent of @value{tramp}.
 
-Set @code{tramp-completion-reread-directory-timeout} to @code{nil} to
-speed up completions, @ref{File name completion}.
-
 Disable version control to avoid delays:
 
 @lisp
@@ -4063,8 +4047,8 @@ first saving to a temporary file.
 
 @vindex tramp-local-host-regexp
 When connecting to a local host, @value{tramp} uses some internal
-optimizations.  They fail, when there is a chrooted environment.  In
-order to disable those optimizations, set user option
+optimizations.  They fail when Emacs runs in a chrooted environment.
+In order to disable those optimizations, set user option
 @code{tramp-local-host-regexp} to @code{nil}.
 
 
@@ -4644,6 +4628,18 @@ alter remote buffers’ method, host, and/or directory names.  This
 permits saving their contents in the same location via another network
 path, or somewhere else entirely (including locally).  @pxref{Renaming
 remote files}.
+
+
+@item
+I get a warning @samp{Tramp has been compiled with Emacs a.b, this is Emacs c.d}
+
+@value{tramp} comes with compatibility code for different Emacs
+versions.  When you see this warning, you don't use the Emacs built-in
+version of @value{tramp}.  In case you have installed @value{tramp}
+from GNU ELPA, you must delete and reinstall it.
+@ifset installchapter
+In case you have installed it from its Git repository, @ref{Recompilation}.
+@end ifset
 
 
 @item

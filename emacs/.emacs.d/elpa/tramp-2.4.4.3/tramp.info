@@ -21,10 +21,10 @@ END-INFO-DIR-ENTRY
 
 File: tramp.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
 
-TRAMP 2.4.4.2 User Manual
+TRAMP 2.4.4.3 User Manual
 *************************
 
-This file documents TRAMP 2.4.4.2, a remote file editing package for
+This file documents TRAMP 2.4.4.3, a remote file editing package for
 Emacs.
 
    TRAMP stands for “Transparent Remote (file) Access, Multiple
@@ -292,7 +292,7 @@ TRAMP developers:
 After one of the above commands, ‘~/emacs/tramp’ will containing the
 latest version of TRAMP.
 
-To fetch updates from the repository, use git pull:
+To fetch updates from the repository, use ‘git pull’:
 
      $ cd ~/emacs/tramp
      $ git pull
@@ -1278,8 +1278,8 @@ They can be installed with Emacs’ Package Manager.  This includes
      the same meaning as in ‘docker-tramp’.
 
 ‘magit-tramp’
-     Browsing git repositories with ‘magit’.  A versioned file is
-     accessed via ‘/git:rev@root-dir:/path/to/file’.  ‘rev’ is a git
+     Browsing Git repositories with ‘magit’.  A versioned file is
+     accessed via ‘/git:rev@root-dir:/path/to/file’.  ‘rev’ is a Git
      revision, and ‘root-dir’ is a virtual host name for the root
      directory, specified in ‘magit-tramp-hosts-alist’.
 
@@ -2219,17 +2219,6 @@ Example:
      C-x C-f /ssh:melancholia:/usr/local/bin///etc <TAB>
           ⊣ /etc
 
-   During file name completion, remote directory contents are re-read
-regularly to account for any changes in the filesystem that may affect
-the completion candidates.  Such re-reads can account for changes to the
-file system by applications outside Emacs (*note Connection caching::).
-
- -- User Option: tramp-completion-reread-directory-timeout
-     The timeout is number of seconds since last remote command for
-     rereading remote directory contents.  A value of 0 re-reads
-     immediately during file name completion, ‘nil’ uses cached
-     directory contents.
-
 
 File: tramp.info,  Node: Ad-hoc multi-hops,  Next: Remote processes,  Prev: File name completion,  Up: Usage
 
@@ -2271,7 +2260,7 @@ connections::).
 ‘root’ on host ‘remotehost’, starting with an ‘ssh’ session on host
 ‘remotehost’: ‘/ssh:%h|su:remotehost:’.
 
-   On the other hand, if a trailing hop does not specifiy a host name,
+   On the other hand, if a trailing hop does not specify a host name,
 the host name of the previous hop is reused.  Therefore, the following
 file name is equivalent to the previous example: ‘/ssh:remotehost|su::’.
 
@@ -2905,9 +2894,6 @@ File: tramp.info,  Node: Frequently Asked Questions,  Next: Files directories an
      cleanup will be necessary if the remote directories or files are
      updated independent of TRAMP.
 
-     Set ‘tramp-completion-reread-directory-timeout’ to ‘nil’ to speed
-     up completions, *note File name completion::.
-
      Disable version control to avoid delays:
 
           (setq vc-ignore-dir-regexp
@@ -3026,9 +3012,9 @@ File: tramp.info,  Node: Frequently Asked Questions,  Next: Files directories an
    • TRAMP fails in a chrooted environment
 
      When connecting to a local host, TRAMP uses some internal
-     optimizations.  They fail, when there is a chrooted environment.
-     In order to disable those optimizations, set user option
-     ‘tramp-local-host-regexp’ to ‘nil’.
+     optimizations.  They fail when Emacs runs in a chrooted
+     environment.  In order to disable those optimizations, set user
+     option ‘tramp-local-host-regexp’ to ‘nil’.
 
    • TRAMP does not recognize if a ‘ssh’ session hangs
 
@@ -3454,6 +3440,14 @@ File: tramp.info,  Node: Frequently Asked Questions,  Next: Files directories an
      permits saving their contents in the same location via another
      network path, or somewhere else entirely (including locally).
      *note Renaming remote files::.
+
+   • I get a warning ‘Tramp has been compiled with Emacs a.b, this is
+     Emacs c.d’
+
+     TRAMP comes with compatibility code for different Emacs versions.
+     When you see this warning, you don’t use the Emacs built-in version
+     of TRAMP.  In case you have installed TRAMP from GNU ELPA, you must
+     delete and reinstall it.
 
    • How to disable other packages from calling TRAMP?
 
@@ -4189,17 +4183,17 @@ Variable Index
 * customize-package-emacs-version-alist: Obtaining TRAMP.     (line  20)
 * DISPLAY, environment variable:         Remote processes.    (line 107)
 * EDITOR, environment variable:          Frequently Asked Questions.
-                                                              (line 570)
+                                                              (line 567)
 * ENV, environment variable:             Remote processes.    (line  78)
 * ESHELL, environment variable:          Remote shell setup.  (line 187)
 * HGPLAIN, environment variable:         Remote processes.    (line  96)
 * HISTFILE, environment variable:        Frequently Asked Questions.
-                                                              (line 311)
+                                                              (line 308)
 * HISTFILESIZE, environment variable:    Frequently Asked Questions.
-                                                              (line 311)
+                                                              (line 308)
 * HISTORY, environment variable:         Remote processes.    (line  66)
 * HISTSIZE, environment variable:        Frequently Asked Questions.
-                                                              (line 311)
+                                                              (line 308)
 * INSIDE_EMACS, environment variable:    Remote shell setup.  (line 104)
 * INSIDE_EMACS, environment variable <1>: Remote shell setup. (line 187)
 * INSIDE_EMACS, environment variable <2>: Remote processes.   (line  38)
@@ -4229,8 +4223,6 @@ Variable Index
                                                               (line  37)
 * tramp-completion-function-alist:       Customizing Completion.
                                                               (line   6)
-* tramp-completion-reread-directory-timeout: File name completion.
-                                                              (line  70)
 * tramp-completion-use-auth-sources:     File name completion.
                                                               (line  37)
 * tramp-confirm-rename-file-names:       Renaming remote files.
@@ -4252,16 +4244,16 @@ Variable Index
                                                               (line  28)
 * tramp-gvfs-methods:                    GVFS-based methods.  (line  60)
 * tramp-histfile-override:               Frequently Asked Questions.
-                                                              (line 311)
+                                                              (line 308)
 * tramp-ignored-file-name-regexp:        Frequently Asked Questions.
-                                                              (line 632)
+                                                              (line 637)
 * tramp-inline-compress-commands:        Inline methods.      (line  25)
 * tramp-inline-compress-start-size:      Inline methods.      (line  25)
 * tramp-local-host-regexp:               Frequently Asked Questions.
-                                                              (line 165)
+                                                              (line 162)
 * tramp-methods:                         Customizing Methods. (line   6)
 * tramp-mode:                            Frequently Asked Questions.
-                                                              (line 626)
+                                                              (line 631)
 * tramp-own-remote-path:                 Remote programs.     (line  32)
 * tramp-password-prompt-regexp:          Remote shell setup.  (line  65)
 * tramp-persistency-file-name:           Connection caching.  (line   6)
@@ -4274,14 +4266,14 @@ Variable Index
 * tramp-sh-extra-args:                   Remote shell setup.  (line  22)
 * tramp-shell-prompt-pattern:            Remote shell setup.  (line  57)
 * tramp-smb-options:                     Frequently Asked Questions.
-                                                              (line 228)
+                                                              (line 225)
 * tramp-ssh-controlmaster-options:       Frequently Asked Questions.
-                                                              (line 188)
+                                                              (line 185)
 * tramp-terminal-type:                   Remote shell setup.  (line  90)
 * tramp-theme-face-remapping-alist:      Frequently Asked Questions.
-                                                              (line 291)
+                                                              (line 288)
 * tramp-use-ssh-controlmaster-options:   Frequently Asked Questions.
-                                                              (line 201)
+                                                              (line 198)
 * tramp-verbose:                         Traces and Profiles. (line   6)
 * tramp-version:                         Obtaining TRAMP.     (line   6)
 * tramp-wrong-passwd-regexp:             Remote shell setup.  (line  65)
@@ -4596,7 +4588,7 @@ Concept Index
 * tgz file archive suffix:               Archive file names.  (line  71)
 * tlz file archive suffix:               Archive file names.  (line  71)
 * TRAMP theme:                           Frequently Asked Questions.
-                                                              (line 291)
+                                                              (line 288)
 * tset unix command:                     Remote shell setup.  (line 124)
 * txz file archive suffix:               Archive file names.  (line  71)
 * type-ahead:                            Usage.               (line  12)
@@ -4622,59 +4614,59 @@ Tag Table:
 Node: Top933
 Node: Overview5421
 Node: Obtaining TRAMP10755
-Node: Quick Start Guide13202
-Ref: Quick Start Guide: File name syntax13979
-Ref: Quick Start Guide: ssh and plink methods15081
-Ref: Quick Start Guide: su, sudo and sg methods15625
-Ref: Quick Start Guide: ssh, plink, su, sudo and sg methods16189
-Ref: Quick Start Guide: sudoedit method16719
-Ref: Quick Start Guide: smb method17130
-Ref: Quick Start Guide: GVFS-based methods17461
-Ref: Quick Start Guide: GNOME Online Accounts based methods17857
-Ref: Quick Start Guide: Android18399
-Ref: Quick Start Guide: rclone method18631
-Node: Configuration18958
-Node: Connection types21430
-Node: Inline methods22844
-Node: External methods27806
-Node: GVFS-based methods38444
-Node: Default Method41713
-Node: Default User44730
-Node: Default Host46259
-Node: Multi-hops47391
-Node: Firewalls51583
-Node: Customizing Methods53040
-Node: Customizing Completion55381
-Node: Password handling58871
-Ref: Using an authentication file59341
-Ref: Caching passwords60843
-Node: Connection caching61361
-Node: Predefined connection information62291
-Node: Remote programs66385
-Node: Remote shell setup69306
-Node: Android shell setup78922
-Node: Auto-save and Backup81309
-Node: Windows setup hints84384
-Node: Usage86004
-Node: File name syntax87357
-Node: Change file name syntax89364
-Node: File name completion90795
-Node: Ad-hoc multi-hops93950
-Node: Remote processes96016
-Ref: Running a debugger on a remote host105663
-Node: Cleanup remote connections107633
-Node: Renaming remote files109334
-Node: Archive file names113553
-Node: Bug Reports118067
-Node: Frequently Asked Questions120808
-Node: Files directories and localnames145173
-Node: Localname deconstruction145609
-Node: External packages146262
-Node: Traces and Profiles148307
-Node: GNU Free Documentation License150276
-Node: Function Index175649
-Node: Variable Index178527
-Node: Concept Index186497
+Node: Quick Start Guide13208
+Ref: Quick Start Guide: File name syntax13985
+Ref: Quick Start Guide: ssh and plink methods15087
+Ref: Quick Start Guide: su, sudo and sg methods15631
+Ref: Quick Start Guide: ssh, plink, su, sudo and sg methods16195
+Ref: Quick Start Guide: sudoedit method16725
+Ref: Quick Start Guide: smb method17136
+Ref: Quick Start Guide: GVFS-based methods17467
+Ref: Quick Start Guide: GNOME Online Accounts based methods17863
+Ref: Quick Start Guide: Android18405
+Ref: Quick Start Guide: rclone method18637
+Node: Configuration18964
+Node: Connection types21436
+Node: Inline methods22850
+Node: External methods27812
+Node: GVFS-based methods38450
+Node: Default Method41719
+Node: Default User44736
+Node: Default Host46265
+Node: Multi-hops47397
+Node: Firewalls51589
+Node: Customizing Methods53046
+Node: Customizing Completion55387
+Node: Password handling58877
+Ref: Using an authentication file59347
+Ref: Caching passwords60849
+Node: Connection caching61367
+Node: Predefined connection information62297
+Node: Remote programs66391
+Node: Remote shell setup69312
+Node: Android shell setup78928
+Node: Auto-save and Backup81315
+Node: Windows setup hints84390
+Node: Usage86010
+Node: File name syntax87363
+Node: Change file name syntax89370
+Node: File name completion90801
+Node: Ad-hoc multi-hops93383
+Node: Remote processes95448
+Ref: Running a debugger on a remote host105095
+Node: Cleanup remote connections107065
+Node: Renaming remote files108766
+Node: Archive file names112985
+Node: Bug Reports117499
+Node: Frequently Asked Questions120240
+Node: Files directories and localnames144822
+Node: Localname deconstruction145258
+Node: External packages145911
+Node: Traces and Profiles147956
+Node: GNU Free Documentation License149925
+Node: Function Index175298
+Node: Variable Index178176
+Node: Concept Index186006
 
 End Tag Table
 

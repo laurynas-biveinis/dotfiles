@@ -753,7 +753,7 @@ for($i = 0; $i < $n; $i++)
         $stat[1]);
 }
 printf(\")\\n\");' \"$1\" \"$2\" 2>/dev/null"
-  "Perl script implementing `directory-files-attributes' as Lisp `read'able
+  "Perl script implementing `directory-files-and-attributes' as Lisp `read'able
 output.
 Escape sequence %s is replaced with name of Perl binary.
 This string is passed to `format', so percent characters need to be doubled.")
@@ -2822,7 +2822,7 @@ STDERR can also be a file name."
 	  (signal 'wrong-type-argument (list #'stringp name)))
 	(unless (or (null buffer) (bufferp buffer) (stringp buffer))
 	  (signal 'wrong-type-argument (list #'stringp buffer)))
-	(unless (consp command)
+	(unless (or (null command) (consp command))
 	  (signal 'wrong-type-argument (list #'consp command)))
 	(unless (or (null coding)
 		    (and (symbolp coding) (memq coding coding-system-list))
@@ -2863,8 +2863,10 @@ STDERR can also be a file name."
 	       ;; command.
 	       (heredoc (and (stringp program)
 			     (string-match-p "sh$" program)
+			     (= (length args) 2)
 			     (string-equal "-c" (car args))
-			     (= (length args) 2)))
+			     ;; Don't if there is a string.
+			     (not (string-match-p "'\\|\"" (cadr args)))))
 	       ;; When PROGRAM is nil, we just provide a tty.
 	       (args (if (not heredoc) args
 		       (let ((i 250))

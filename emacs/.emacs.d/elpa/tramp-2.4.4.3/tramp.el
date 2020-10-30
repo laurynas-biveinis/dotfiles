@@ -7,7 +7,7 @@
 ;; Maintainer: Michael Albinus <michael.albinus@gmx.de>
 ;; Keywords: comm, processes
 ;; Package: tramp
-;; Version: 2.4.4.2
+;; Version: 2.4.4.3
 ;; Package-Requires: ((emacs "24.4"))
 ;; Package-Type: multi
 ;; URL: https://savannah.gnu.org/projects/tramp
@@ -1224,6 +1224,8 @@ have been gone since last remote command execution.  A value of t
 would require an immediate reread during filename completion, nil
 means to use always cached values for the directory contents."
   :type '(choice (const nil) (const t) integer))
+(make-obsolete-variable
+ 'tramp-completion-reread-directory-timeout 'remote-file-name-inhibit-cache "27.2")
 
 ;;; Internal Variables:
 
