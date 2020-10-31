@@ -1371,7 +1371,7 @@
 			(:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 			(:url . "https://gitlab.com/protesilaos/modus-themes"))])
  (multishell .
-	     [(1 1 8)
+	     [(1 1 9)
 	      ((cl-lib
 		(0 5)))
 	      "Easily use multiple shell buffers, local and remote" tar
