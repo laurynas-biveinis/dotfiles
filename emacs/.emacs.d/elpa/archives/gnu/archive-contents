@@ -720,9 +720,11 @@
 		     (:keywords "languages" "lisp")
 		     (:url . "http://elpa.gnu.org/packages/elisp-benchmarks.html"))])
  (emms .
-       [(6 0)
+       [(6 1)
 	((cl-lib
-	  (0 5)))
+	  (0 5))
+	 (seq
+	  (0)))
 	"The Emacs Multimedia System" tar
 	((:url . "https://www.gnu.org/software/emms/")
 	 (:maintainer "Yoni Rabkin" . "yrk@gnu.org")
@@ -914,7 +916,7 @@
 		  (:keywords "gnome" "c" "coding style")
 		  (:url . "http://elpa.gnu.org/packages/gnome-c-style.html"))])
  (gnorb .
-	[(1 6 8)
+	[(1 6 9)
 	 ((cl-lib
 	   (0 5)))
 	 "Glue code between Gnus, Org, and BBDB" tar
@@ -1272,7 +1274,7 @@
 	 ("Nicolas Petton" . "nicolas@petton.fr"))
 	(:maintainer nil . "emacs-devel@gnu.org"))])
  (markchars .
-	    [(0 2 1)
+	    [(0 2 2)
 	     nil "Mark chars fitting certain characteristics" single
 	     ((:url . "http://elpa.gnu.org/packages/markchars.html")
 	      (:authors
