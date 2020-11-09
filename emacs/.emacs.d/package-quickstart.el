@@ -51,10 +51,10 @@ See `yas-minor-mode' for more information on Yas minor mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.14/yaml-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.15/yaml-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.14/yaml-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.15/yaml-mode-autoloads.el") (car load-path))))
 
 
 
