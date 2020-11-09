@@ -576,6 +576,8 @@ respectively."
 (define-key smartparens-mode-map (kbd "C-c [") #'wrap-with-brackets)
 (define-key smartparens-mode-map (kbd "C-c {") #'wrap-with-braces)
 
+(define-key smartparens-mode-map (kbd "M-[") #'sp-backward-unwrap-sexp)
+(define-key smartparens-mode-map (kbd "M-]") #'sp-unwrap-sexp)
 
 (smartparens-global-strict-mode 1)
 (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
