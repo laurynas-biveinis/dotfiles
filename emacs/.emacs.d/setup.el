@@ -579,6 +579,13 @@ respectively."
 (define-key smartparens-mode-map (kbd "M-[") #'sp-backward-unwrap-sexp)
 (define-key smartparens-mode-map (kbd "M-]") #'sp-unwrap-sexp)
 
+;; Steal C-/M-<right>/<left> bindings from the default global map, same as
+;; https://ebzzry.io/en/emacs-pairs/ does. I use M-b/M-f in their place.
+(define-key smartparens-mode-map (kbd "C-<right>") #'sp-forward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "M-<right>") #'sp-forward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-<left>") #'sp-backward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "M-<left>") #'sp-backward-barf-sexp)
+
 (smartparens-global-strict-mode 1)
 (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
 (add-hook 'text-mode-hook #'turn-on-smartparens-strict-mode)
