@@ -287,7 +287,7 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 
 brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac \
-     findutils libtool npm qemu fd delta unrar
+     findutils libtool npm qemu fd delta unrar jq
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
