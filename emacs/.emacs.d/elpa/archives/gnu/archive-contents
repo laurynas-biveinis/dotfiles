@@ -329,7 +329,7 @@
 		(:maintainer "Chris Wanstrath" . "chris@ozmm.org")
 		(:url . "http://github.com/defunkt/coffee-mode"))])
  (compact-docstrings .
-		     [(0 1)
+		     [(0 2)
 		      nil "Shrink blank lines in docstrings and doc comments" single
 		      ((:keywords "convenience" "faces" "lisp" "maint" "c")
 		       (:authors
