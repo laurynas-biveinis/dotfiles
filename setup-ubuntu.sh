@@ -2,20 +2,25 @@
 
 # Common
 
-sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make
+sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
+     build-essential gdb manpages-dev binutils binutils-doc cpp g++ gcc \
+     libasan5 liblsan0 libtsan0 libubsan1 libc6-dev cpp-doc gcc-doc autoconf \
+     automake libtool flex bison glibc-doc make-doc autoconf-archive \
+     gnu-standards autoconf-doc gettext bison-doc flex-doc gdb-doc gettext-doc \
+     libtool-doc m4-doc cmake cmake-doc diffstat unzip pinentry-doc zip \
+     software-properties-common colordiff valgrind linux-tools-generic \
+     libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
+     python3-numpy-dbg python-scipy-doc unattended-upgrades screen colordiff \
+     fzf fd-find
+# These two conflict with each other on 20.04:
+sudo apt-get install hexyl
+sudo apt-get install ripgrep
+# If above failed due to '/usr/.crates2.json', then
+sudo apt-get -o Dpkg::Options::="--force-overwrite" install ripgrep
 # Not found on AWS EC2
 sudo apt-get install acpi python-pip libasan5-dbg liblsan0-dbg libtsan0-dbg \
      libubsan1-dbg libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg \
      libmpx2-dbg libquadmath0-dbg python-doc
-sudo apt-get install build-essential gdb manpages-dev binutils binutils-doc \
-     cpp g++ gcc libasan5 liblsan0 libtsan0 libubsan1 libc6-dev cpp-doc \
-     gcc-doc autoconf automake libtool flex bison glibc-doc make-doc \
-     autoconf-archive gnu-standards autoconf-doc gettext bison-doc flex-doc \
-     gdb-doc gettext-doc libtool-doc m4-doc cmake cmake-doc diffstat unzip \
-     pinentry-doc zip software-properties-common colordiff valgrind \
-     linux-tools-generic libjemalloc2 python3-scipy python-numpy-doc \
-     python3-pytest python3-numpy-dbg python-scipy-doc unattended-upgrades \
-     screen colordiff fzf hexyl ripgrep fd-find
 # Not named fd by default because fdclone (which I don't use) was first
 sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # So that I can have "gsed" as a GNU Sed on any platform
