@@ -350,6 +350,12 @@ behavior can be achieved by using the universal prefix (ie, calling `C-u C-l`).
 
 Shell to run in a new vterm. It defaults to `$SHELL`.
 
+## `vterm-environment`
+
+to add more environment variables there is the custom vterm-environment which has
+a similar format than the internal emacs variable process-environment.
+You can check the documentation with C-h v process-environment for more details.
+
 ## `vterm-term-environment-variable`
 
 Value for the `TERM` environment variable. It defaults to `xterm-256color`. If
@@ -423,7 +429,7 @@ add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
 ```
 For `bash`,
 ```bash
-PROMPT_COMMAND='echo -ne "\033]0;\h:\w\007"'
+PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME}:${PWD}\007"'
 ```
 For `fish`,
 ```fish
@@ -453,7 +459,7 @@ C-c`.
 
 ## Fonts
 
-If you would like to change the font or face used in a vterm, use the following code:
+You can change the font (the _face_) used in a vterm with the following code:
 
 ``` emacs
 (add-hook 'vterm-mode-hook
@@ -462,8 +468,14 @@ If you would like to change the font or face used in a vterm, use the following 
                  (buffer-face-mode t)))
 ```
 
-The above would change change the font in vterm buffers to a mono-spaced font
-(the `fixed-pitch` face) if your default font in Emacs is a proportional font.
+Where instead of `'fixed-pitch` you specify the face you want to use. The
+example reported here can be used to force vterm to use a mono-spaced font (the
+`fixed-pitch` face). This is useful when your default font in Emacs is a
+proportional font.
+
+In addition to that, you can disable some text properties (bold, underline,
+reverse video) setting the relative option to `t` (`vterm-disable-bold`,
+`vterm-disable-underline`, or `vterm-disable-inverse-video`).
 
 ## Colors
 
@@ -471,7 +483,6 @@ Set the `:foreground` and `:background` attributes of the following faces to a
 color you like. The `:foreground` is ansi color 0-7, the `:background` attribute
 is ansi color 8-15.
 
-- vterm-color-default
 - vterm-color-black
 - vterm-color-red
 - vterm-color-green
@@ -663,6 +674,23 @@ configuration file. Alternatively, they can be installed system-wide, for
 example in `/etc/bash/bashrc.d/`, `/etc/profile.d/` (for `zsh`), or
 `/etc/fish/conf.d/` for `fish`.
 
+When using vterm Emacs sets the environment variable INSIDE_EMACS in the subshell to ‘vterm’.
+Usually the programs check this variable to determine whether they are running inside emacs.
+
+Vterm also sets an extra variable EMACS_VTERM_PATH to the place where the vterm library is installed.
+This is very useful because when vterm is installed from melpa the Shell-side configuration files are
+in the EMACS_VTERM_PATH inside the /etc sub-directory. After a package update, the directory name changes,
+so, a code like this in your bashrc could be enough to load always the latest version of the file
+from the right loation without coping any file manually.
+
+```
+if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+    && [[ -n ${EMACS_VTERM_PATH} ]] \
+    && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh ]]; then
+	source ${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh
+fi
+```
+
 ## Frequently Asked Questions and Problems
 
 ### How can I increase the size of the scrollback?
@@ -802,6 +830,11 @@ not appropriate in some cases like terminals."
 ### Breaking changes
 
 Obsolete variables will be removed in version 0.1.
+
+#### October 2020
+
+* `vterm-disable-bold-font` was renamed to `vterm-disable-bold` to uniform it
+   with the other similar options.
 
 #### July 2020
 

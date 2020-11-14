@@ -666,10 +666,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20201112.1629/vterm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20201113.1531/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20201112.1629/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20201113.1531/vterm-autoloads.el") (car load-path))))
 
 
 
@@ -1833,10 +1833,10 @@ Alpha should be a float between 0 and 1.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/smartparens-20201007.1753/smartparens-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/smartparens-20201113.951/smartparens-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/smartparens-20201007.1753/smartparens-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/smartparens-20201113.951/smartparens-autoloads.el") (car load-path))))
 
 
 
