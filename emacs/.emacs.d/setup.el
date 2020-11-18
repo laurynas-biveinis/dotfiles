@@ -579,24 +579,14 @@ respectively."
 (define-key smartparens-mode-map (kbd "M-[") #'sp-backward-unwrap-sexp)
 (define-key smartparens-mode-map (kbd "M-]") #'sp-unwrap-sexp)
 
-;; Steal C-/M-<right>/<left> bindings from the default global map, same as
-;; https://ebzzry.io/en/emacs-pairs/ does. I use M-b/M-f in their place.
-(define-key smartparens-mode-map (kbd "C-<right>") #'sp-forward-slurp-sexp)
-(define-key smartparens-mode-map (kbd "M-<right>") #'sp-forward-barf-sexp)
-(define-key smartparens-mode-map (kbd "C-<left>") #'sp-backward-slurp-sexp)
-(define-key smartparens-mode-map (kbd "M-<left>") #'sp-backward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-s-<right>") #'sp-forward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "M-s-<right>") #'sp-forward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-s-<left>") #'sp-backward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "M-s-<left>") #'sp-backward-barf-sexp)
 
 (define-key smartparens-mode-map (kbd "C-M-t") #'sp-transpose-sexp)
 (define-key smartparens-mode-map (kbd "C-M-k") #'sp-kill-sexp)
-
-(defun dotfiles--kill-bkwd-sexp-or-sentence ()
-  "Kill sexp backwards, or sentence forward in `text-mode'."
-  (if (derived-mode-p 'text-mode)
-      (kill-sentence)
-    (sp-backward-kill-sexp)))
-
-(define-key smartparens-mode-map (kbd "M-k")
-  #'dotfiles--kill-bkwd-sexp-or-sentence)
+(define-key smartparens-mode-map (kbd "C-s-k") #'sp-backward-kill-sexp)
 
 (smartparens-global-strict-mode 1)
 (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
