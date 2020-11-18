@@ -594,6 +594,10 @@ respectively."
 
 (show-smartparens-global-mode 1)
 
+;; Use smartparens in minibuffer too
+(setq sp-ignore-modes-list (delete 'minibuffer-inactive-mode
+                                   sp-ignore-modes-list))
+
 ;;; vterm
 (require 'vterm)
 (define-key vterm-mode-map (kbd "<S-prior>") #'scroll-down-command)
