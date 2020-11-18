@@ -586,6 +586,18 @@ respectively."
 (define-key smartparens-mode-map (kbd "C-<left>") #'sp-backward-slurp-sexp)
 (define-key smartparens-mode-map (kbd "M-<left>") #'sp-backward-barf-sexp)
 
+(define-key smartparens-mode-map (kbd "C-M-t") #'sp-transpose-sexp)
+(define-key smartparens-mode-map (kbd "C-M-k") #'sp-kill-sexp)
+
+(defun dotfiles--kill-bkwd-sexp-or-sentence ()
+  "Kill sexp backwards, or sentence forward in `text-mode'."
+  (if (derived-mode-p 'text-mode)
+      (kill-sentence)
+    (sp-backward-kill-sexp)))
+
+(define-key smartparens-mode-map (kbd "M-k")
+  #'dotfiles--kill-bkwd-sexp-or-sentence)
+
 (smartparens-global-strict-mode 1)
 (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
 (add-hook 'text-mode-hook #'turn-on-smartparens-strict-mode)

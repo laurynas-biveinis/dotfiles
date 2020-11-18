@@ -1,0 +1,2 @@
+;;; Generated package description from /Users/laurynas/.emacs.d/elpa/gcmh-20201116.2251/gcmh.el  -*- no-byte-compile: t -*-
+(define-package "gcmh" "20201116.2251" "the Garbage Collector Magic Hack" '((emacs "24")) :commit "0089f9c3a6d4e9a310d0791cf6fa8f35642ecfd9" :keywords '("internal") :authors '(("Andrea Corallo" . "akrl@sdf.org")) :maintainer '(nil . "akrl@sdf.org") :url "https://gitlab.com/koral/gcmh")

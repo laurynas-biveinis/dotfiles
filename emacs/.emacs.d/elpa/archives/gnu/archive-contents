@@ -874,6 +874,16 @@
 	(:authors
 	 ("Magnus Henoch" . "magnus.henoch@gmail.com"))
 	(:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org"))])
+ (gcmh .
+       [(0 2 1)
+	((emacs
+	  (24)))
+	"the Garbage Collector Magic Hack" single
+	((:keywords "internal")
+	 (:authors
+	  ("Andrea Corallo" . "akrl@sdf.org"))
+	 (:maintainer nil . "akrl@sdf.org")
+	 (:url . "https://gitlab.com/koral/gcmh"))])
  (ggtags .
 	 [(0 8 13)
 	  ((emacs

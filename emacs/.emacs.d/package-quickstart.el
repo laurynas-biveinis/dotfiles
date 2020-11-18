@@ -666,10 +666,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20201113.1531/vterm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20201117.1458/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20201113.1531/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20201117.1458/vterm-autoloads.el") (car load-path))))
 
 
 
@@ -11353,10 +11353,10 @@ Toggle to show diff information." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gcmh-20200409.1456/gcmh-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gcmh-20201116.2251/gcmh-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gcmh-20200409.1456/gcmh-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gcmh-20201116.2251/gcmh-autoloads.el") (car load-path))))
 
 
 
@@ -11372,6 +11372,11 @@ or call the function `gcmh-mode'.")
 
 (autoload 'gcmh-mode "gcmh" "\
 Minor mode to tweak Garbage Collection strategy.
+
+If called interactively, enable Gcmh mode if ARG is positive, and
+disable it if ARG is zero or negative.  If called from Lisp, also
+enable the mode if ARG is omitted or nil, and toggle it if ARG is
+`toggle'; disable the mode otherwise.
 
 \(fn &optional ARG)" t nil)
 
