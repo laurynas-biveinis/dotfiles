@@ -1669,7 +1669,7 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(0 8 2)
+	   [(0 8 3)
 	    ((emacs
 	      (26)))
 	    "Pop a posframe (just a frame) at point" single

@@ -11,7 +11,7 @@
 ;; URL: https://github.com/ahungry/org-jira
 ;; Version: 4.3.1
 ;; Keywords: ahungry jira org bug tracker
-;; Package-Requires: ((emacs "24.5") (cl-lib "0.5") (request "0.2.0") (s "0.0.0") (dash "2.14.1"))
+;; Package-Requires: ((emacs "24.5") (cl-lib "0.5") (request "0.2.0") (dash "2.14.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -122,7 +122,6 @@
 (require 'url)
 (require 'ls-lisp)
 (require 'dash)
-(require 's)
 (require 'jiralib)
 (require 'org-jira-sdk)
 
@@ -177,7 +176,7 @@ where both are strings.  NEW-FILE-NAME is relative to
   :type '(repeat (string :tag "Jira state name:")))
 
 (defcustom org-jira-users
-  '(("Full Name" . "username"))
+  '(("Full Name" . "account-id"))
   "A list of displayName and key pairs."
   :group 'org-jira
   :type 'list)
@@ -314,6 +313,11 @@ See `org-default-priority' for more info."
   :group 'org-jira
   :type '(alist :value-type plist))
 
+(defcustom org-jira-download-comments t
+  "Set to nil if you don't want to update comments during issue rendering."
+  :group 'org-jira
+  :type 'boolean)
+
 (defvar org-jira-serv nil
   "Parameters of the currently selected blog.")
 
@@ -360,7 +364,7 @@ See `org-default-priority' for more info."
 
 (defvar org-jira-verbosity 'debug)
 
-(defun org-jira-log (s) (when (eq 'debug org-jira-verbosity) (message (format "%s" s))))
+(defun org-jira-log (s) (when (eq 'debug org-jira-verbosity) (message "%s" s)))
 
 (defmacro ensure-on-issue (&rest body)
   "Make sure we are on an issue heading, before executing BODY."
@@ -511,6 +515,14 @@ See `org-default-priority' for more info."
        (org-narrow-to-subtree)
        ,@body)))
 
+(defun org-jira--ensure-working-dir ()
+  "Ensure that the org-jira-working-dir exists"
+  (unless (file-exists-p org-jira-working-dir)
+    (error (format "org-jira directory does not exist! Run (make-directory \"%s\")" org-jira-working-dir))
+    )
+  org-jira-working-dir
+  )
+
 (defvar org-jira-entry-mode-map
   (let ((org-jira-map (make-sparse-keymap)))
     (define-key org-jira-map (kbd "C-c pg") 'org-jira-get-projects)
@@ -584,8 +596,8 @@ Entry to this mode calls the value of `org-jira-mode-hook'."
 (defun org-jira--get-project-file-name (project-key)
   "Translate PROJECT-KEY into filename."
   (-if-let (translation (cdr (assoc project-key org-jira-project-filename-alist)))
-      (expand-file-name translation org-jira-working-dir)
-    (expand-file-name (concat project-key ".org") org-jira-working-dir)))
+      (expand-file-name translation (org-jira--ensure-working-dir))
+    (expand-file-name (concat project-key ".org") (org-jira--ensure-working-dir))))
 
 (defun org-jira-get-project-lead (proj)
   (org-jira-find-value proj 'lead 'name))
@@ -597,7 +609,7 @@ Entry to this mode calls the value of `org-jira-mode-hook'."
    org-jira-users
    (mapcar (lambda (user)
              (cons (org-jira-decode (cdr (assoc 'displayName user)))
-                   (org-jira-decode (cdr (assoc 'name user)))))
+                   (org-jira-decode (cdr (assoc 'accountId user)))))
            (jiralib-get-users project-key))))
 
 (defun org-jira-get-reporter-candidates (project-key)
@@ -606,7 +618,7 @@ Entry to this mode calls the value of `org-jira-mode-hook'."
    org-jira-users
    (mapcar (lambda (user)
              (cons (org-jira-decode (cdr (assoc 'displayName user)))
-                   (org-jira-decode (cdr (assoc 'name user)))))
+                   (org-jira-decode (cdr (assoc 'accountId user)))))
            (jiralib-get-users project-key))))
 
 (defun org-jira-entry-put (pom property value)
@@ -650,7 +662,7 @@ to change the property names this sets."
 (defun org-jira-get-projects ()
   "Get list of projects."
   (interactive)
-  (let ((projects-file (expand-file-name "projects-list.org" org-jira-working-dir)))
+  (let ((projects-file (expand-file-name "projects-list.org" (org-jira--ensure-working-dir))))
     (or (find-buffer-visiting projects-file)
         (find-file projects-file))
     (org-jira-mode t)
@@ -862,7 +874,7 @@ Re-create it with CLOCKS.  This is used for worklogs."
                (org-jira-find-value issue 'fields 'priority 'name)
              (org-jira-find-value (jiralib-get-priorities) tmp)))
           ((eq key 'description)
-           (org-jira-strip-string tmp))
+           (org-trim tmp))
           (t
            tmp))))
 
@@ -928,7 +940,7 @@ With a prefix argument, allow you to customize the jql.  See
   (interactive
    (org-jira-get-issue-list))
 
-  (let* ((issues-file (expand-file-name "issues-headonly.org" org-jira-working-dir))
+  (let* ((issues-file (expand-file-name "issues-headonly.org" (org-jira--ensure-working-dir)))
          (issues-headonly-buffer (or (find-buffer-visiting issues-file)
                                      (find-file issues-file))))
     (with-current-buffer issues-headonly-buffer
@@ -951,7 +963,6 @@ With a prefix argument, allow you to customize the jql.  See
     (when issue-pos
       (goto-char issue-pos)
       (recenter 0))))
-
 ;;;###autoload
 (defun org-jira-get-issues-by-fixversion (fixversion)
   "Get list of issues by FIXVERSION."
@@ -1067,8 +1078,8 @@ ORG-JIRA-PROJ-KEY-OVERRIDE being set before and after running."
 
 (defun org-jira--render-issue (Issue)
   "Render single ISSUE."
-  ;; (org-jira-log "Rendering issue from issue list")
-  ;; (org-jira-log (org-jira-sdk-dump Issue))
+;;  (org-jira-log "Rendering issue from issue list")
+;;  (org-jira-log (org-jira-sdk-dump Issue))
   (with-slots (filename proj-key issue-id summary status priority headline id) Issue
     (let (p)
       (with-current-buffer (org-jira--get-project-buffer Issue)
@@ -1104,7 +1115,7 @@ ORG-JIRA-PROJ-KEY-OVERRIDE being set before and after running."
                       (when (or (and val (not (string= val "")))
                                 (eq entry 'assignee)) ;; Always show assignee
                         (org-jira-entry-put (point) (symbol-name entry) val))))
-                  '(assignee filename reporter type priority labels resolution status components created updated))
+                  '(assignee filename reporter type type-id priority labels resolution status components created updated))
 
             (org-jira-entry-put (point) "ID" issue-id)
             (org-jira-entry-put (point) "CUSTOM_ID" issue-id)
@@ -1144,10 +1155,12 @@ ORG-JIRA-PROJ-KEY-OVERRIDE being set before and after running."
                      (format "%s" (slot-value Issue heading-entry)))))))
              '(description))
 
-            (org-jira-update-comments-for-issue Issue)
+            (when org-jira-download-comments
+              (org-jira-update-comments-for-issue Issue)
 
-            ;; FIXME: Re-enable when attachments are not erroring.
-            ;;(org-jira-update-attachments-for-current-issue)
+              ;; FIXME: Re-enable when attachments are not erroring.
+              ;;(org-jira-update-attachments-for-current-issue)
+              )
 
             ;; only sync worklog clocks when the user sets it to be so.
             (when org-jira-worklog-sync-p
@@ -1566,7 +1579,7 @@ purpose of wiping an old subtree."
                           (cdr (rassoc user jira-users)))))
           (when (null reporter)
             (error "No reporter found, this should probably never happen."))
-          (org-jira-update-issue-details issue-id filename :reporter reporter))
+          (org-jira-update-issue-details issue-id filename :reporter (jiralib-get-user-account-id project reporter)))
       (error "Not on an issue"))))
 
 ;;;###autoload
@@ -1587,7 +1600,7 @@ purpose of wiping an old subtree."
                           (cdr (rassoc user jira-users)))))
           (when (null assignee)
             (error "No assignee found, use org-jira-unassign-issue to make the issue unassigned"))
-          (org-jira-update-issue-details issue-id filename :assignee assignee))
+          (org-jira-update-issue-details issue-id filename :assignee (jiralib-get-user-account-id project assignee)))
       (error "Not on an issue"))))
 
 ;;;###autoload
@@ -1712,7 +1725,7 @@ that should be bound to an issue."
    'org-jira-type-read-history
    (car org-jira-type-read-history)))
 
-(defun org-jira-get-issue-struct (project type summary description)
+(defun org-jira-get-issue-struct (project type summary description &optional parent-id)
   "Create an issue struct for PROJECT, of TYPE, with SUMMARY and DESCRIPTION."
   (if (or (equal project "")
           (equal type "")
@@ -1725,16 +1738,17 @@ that should be bound to an issue."
          (ticket-struct
           `((fields
              (project (key . ,project))
+             (parent (key . ,parent-id))
              (issuetype (id . ,(car (rassoc type (if (and (boundp 'parent-id) parent-id)
                                                      (jiralib-get-subtask-types)
-                                                   (jiralib-get-issue-types))))))
+                                                   (jiralib-get-issue-types-by-project project))))))
              (summary . ,(format "%s%s" summary
                                  (if (and (boundp 'parent-id) parent-id)
                                      (format " (subtask of [jira:%s])" parent-id)
                                    "")))
              (description . ,description)
              (priority (id . ,priority))
-             (assignee (name . ,(or (cdr (assoc user jira-users)) user)))))))
+             (assignee (accountId . ,(or (cdr (assoc user jira-users)) user)))))))
     ticket-struct))
 
 ;;;###autoload
@@ -1766,12 +1780,8 @@ that should be bound to an issue."
           (equal summary ""))
       (error "Must provide all information!"))
   (let* ((parent-id (org-jira-parse-issue-id))
-         (ticket-struct (org-jira-get-issue-struct project type summary description)))
-    (org-jira-get-issues (list (jiralib-create-subtask ticket-struct parent-id)))))
-
-(defun org-jira-strip-string (str)
-  "Remove the beginning and ending white space for a string STR."
-  (s-trim str))
+         (ticket-struct (org-jira-get-issue-struct project type summary description parent-id)))
+    (org-jira-get-issues (list (jiralib-create-subtask ticket-struct)))))
 
 (defun org-jira-get-issue-val-from-org (key)
   "Return the requested value by KEY from the current issue."
@@ -1780,7 +1790,7 @@ that should be bound to an issue."
            (org-goto-first-child)
            (forward-thing 'whitespace)
            (if (looking-at "description: ")
-               (org-jira-strip-string (org-get-entry))
+               (org-trim (org-get-entry))
              (error "Can not find description field for this issue")))
 
           ((eq key 'summary)
@@ -1879,8 +1889,12 @@ Where issue-id will be something such as \"EX-22\"."
       (outline-show-all)
       (outline-hide-sublevels 2)
       (goto-char (point-min))
+      (while (and (looking-at "^ *$")
+                  (not (eobp)))
+        (forward-line))
       (outline-next-visible-heading 1)
-      (while (not (org-next-line-empty-p))
+      (while (and (not (org-next-line-empty-p))
+                  (not (eobp)))
         (when (outline-on-heading-p t)
           ;; It's possible we could be on a non-org-jira headline, but
           ;; that should be an exceptional case and not necessitating a
@@ -2075,16 +2089,17 @@ otherwise it should return:
 
 (defun org-jira-strip-priority-tags (s)
   "Given string S, remove any priority tags in the brackets."
-  (->> s (replace-regexp-in-string "\\[#.*?\\]" "") s-trim))
+  (->> s (replace-regexp-in-string "\\[#.*?\\]" "") org-trim))
 
 (defun org-jira-update-issue-details (issue-id filename &rest rest)
   "Update the details of issue ISSUE-ID in FILENAME.  REST will contain optional input."
   (ensure-on-issue-id-with-filename issue-id filename
     ;; Set up a bunch of values from the org content
     (let* ((org-issue-components (org-jira-get-issue-val-from-org 'components))
-           (org-issue-description (s-trim (org-jira-get-issue-val-from-org 'description)))
+           (org-issue-description (org-trim (org-jira-get-issue-val-from-org 'description)))
            (org-issue-priority (org-jira-get-issue-val-from-org 'priority))
            (org-issue-type (org-jira-get-issue-val-from-org 'type))
+           (org-issue-type-id (org-jira-get-issue-val-from-org 'type-id))
            (org-issue-assignee (cl-getf rest :assignee (org-jira-get-issue-val-from-org 'assignee)))
            (org-issue-reporter (cl-getf rest :reporter (org-jira-get-issue-val-from-org 'reporter)))
            (project (replace-regexp-in-string "-[0-9]+" "" issue-id))
@@ -2109,11 +2124,12 @@ otherwise it should return:
                    (cons 'priority (org-jira-get-id-name-alist org-issue-priority
                                                        (jiralib-get-priorities)))
                    (cons 'description org-issue-description)
-                   (cons 'assignee (jiralib-get-user org-issue-assignee))
-                   (cons 'reporter (jiralib-get-user org-issue-reporter))
+                   (cons 'assignee (list (cons 'id (jiralib-get-user-account-id project org-issue-assignee))))
+                   (cons 'reporter (list (cons 'id (jiralib-get-user-account-id project org-issue-reporter))))
                    (cons 'summary (org-jira-strip-priority-tags (org-jira-get-issue-val-from-org 'summary)))
-                   (cons 'issuetype (org-jira-get-id-name-alist org-issue-type
-                                                        (jiralib-get-issue-types))))))
+                   (cons 'issuetype `((id . ,org-issue-type-id)
+      (name . ,org-issue-type))))))
+
 
         ;; If we enable duedate sync and we have a deadline present
         (when (and org-jira-deadline-duedate-sync-p
@@ -2137,6 +2153,8 @@ otherwise it should return:
               (-> cb-data list org-jira-get-issues))))
          ))
       )))
+
+
 
 (defun org-jira-parse-issue-id ()
   "Get issue id from org text."
@@ -2208,7 +2226,7 @@ it is a symbol, it will be converted to string."
    (org-jira-entry-put (point) "ID" comment-id)
    (search-forward ":END:" nil 1 1)
    (forward-line)
-   (org-jira-strip-string (buffer-substring-no-properties (point) (point-max)))))
+   (org-trim (buffer-substring-no-properties (point) (point-max)))))
 
 (defun org-jira-get-worklog-comment (&optional worklog-id)
   "Get the worklog comment of the worklog with id WORKLOG-ID."
@@ -2218,7 +2236,7 @@ it is a symbol, it will be converted to string."
    (org-jira-entry-put (point) "ID" worklog-id)
    (search-forward ":END:" nil 1 1)
    (forward-line)
-   (org-jira-strip-string (buffer-substring-no-properties (point) (point-max)))))
+   (org-trim (buffer-substring-no-properties (point) (point-max)))))
 
 (defun org-jira-id ()
   "Get the ID entry for the current heading."
@@ -2388,7 +2406,7 @@ boards -  list of `org-jira-sdk-board' records."
               (org-jira-entry-put (point) "ID"   id))))))))
 
 (defun org-jira--get-boards-file ()
-  (expand-file-name "boards-list.org" org-jira-working-dir))
+  (expand-file-name "boards-list.org" (org-jira--ensure-working-dir)))
 
 (defun org-jira--get-boards-buffer ()
   "Return buffer for list of agile boards. Create one if it does not exist."
@@ -2416,7 +2434,7 @@ boards -  list of `org-jira-sdk-board' records."
             (progn
               (goto-char pos)
               (apply 'org-jira-sdk-board
-                     (reduce
+                     (cl-reduce
                       #'(lambda (acc entry)
                           (let* ((pname   (car entry))
                                  (pval (cdr entry))

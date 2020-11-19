@@ -37,7 +37,6 @@
 
 (require 'jiralib)
 (require 'cl-lib)
-(require 's)
 (require 'eieio)
 (require 'dash)
 (require 'cl-generic)
@@ -111,6 +110,7 @@
    (status :type string :initarg :status)
    (summary :type string :initarg :summary)
    (type :type string :initarg :type)
+   (type-id :type string :initarg :type-id)
    (updated :type string :initarg :updated)
    (data :initarg :data :documentation "The remote Jira data object (alist).")
    (hydrate-fn :initform #'jiralib-get-issue :initarg :hydrate-fn))
@@ -145,7 +145,7 @@
 (cl-defmethod org-jira-sdk-from-data ((rec org-jira-sdk-issue))
   (cl-flet ((path (keys) (org-jira-sdk-path (oref rec data) keys)))
     (org-jira-sdk-issue
-     :assignee (path '(fields assignee name))
+     :assignee (path '(fields assignee displayName))
      :components (mapconcat (lambda (c) (org-jira-sdk-path c '(name))) (path '(fields components)) ", ")
      :labels (mapconcat (lambda (c) (format "%s" c)) (map 'list #'identity (path '(fields labels))) ", ")
      :created (path '(fields created))     ; confirm
@@ -158,12 +158,13 @@
      :issue-id-int (path '(id))
      :priority (path '(fields priority name))
      :proj-key (path '(fields project key))
-     :reporter (path '(fields reporter name)) ; reporter could be an object of its own slot values
+     :reporter (path '(fields reporter displayName)) ; reporter could be an object of its own slot values
      :resolution (path '(fields resolution name))  ; confirm
      :start-date (path '(fields start-date))  ; confirm
      :status (org-jira-decode (path '(fields status name)))
      :summary (path '(fields summary))
      :type (path '(fields issuetype name))
+     :type-id (path '(fields issuetype id))
      :updated (path '(fields updated))  ; confirm
      ;; TODO: Remove this
      ;; :data (oref rec data)

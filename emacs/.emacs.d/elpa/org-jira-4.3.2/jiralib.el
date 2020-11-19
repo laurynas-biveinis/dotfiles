@@ -190,9 +190,6 @@ The default value works if JIRA is located at a hostname named
 (defvar jiralib-token nil
   "JIRA token used for authentication.")
 
-(defvar jiralib-rest-auth-head nil
-  "JIRA restapi auth head.")
-
 (defvar jiralib-user-login-name nil
   "The name of the user logged into JIRA.
 This is maintained by `jiralib-login'.")
@@ -275,13 +272,13 @@ when invoking it through `jiralib-call', the call should be:
 CALLBACK should be the post processing function to run with the
 completed data from the request result, which can be accessed with:
 
-  (getf data :data)
+  (cl-getf data :data)
 
 as such, the CALLBACK should follow this type of form:
 
   (cl-function
     (lambda (&rest data &allow-other-keys)
-      (print (getf data :data))))
+      (print (cl-getf data :data))))
 
 If CALLBACK is set to nil then the request will occur with sync.
 This produces a noticeable slowdown and is not recommended by
@@ -313,10 +310,11 @@ request.el, so if at all possible, it should be avoided."
     (case (intern method)
       ('getStatuses (jiralib--rest-call-it "/rest/api/2/status"))
       ('getIssueTypes (jiralib--rest-call-it "/rest/api/2/issuetype"))
+      ('getSubTaskIssueTypes (jiralib--rest-call-it "/rest/api/2/issuetype"))
       ('getIssueTypesByProject
        (let ((response (jiralib--rest-call-it (format "/rest/api/2/project/%s" (first params)))))
          (cl-coerce (cdr (assoc 'issueTypes response)) 'list)))
-      ('getUser (jiralib--rest-call-it "/rest/api/2/user" :params `((username . ,(first params)))))
+      ('getUser (jiralib--rest-call-it "/rest/api/2/user" :params `((accountId . ,(first params)))))
       ('getVersions (jiralib--rest-call-it (format "/rest/api/2/project/%s/versions" (first params))))
 
       ;; Worklog calls
@@ -351,8 +349,13 @@ request.el, so if at all possible, it should be avoided."
                         :data (json-encode (first params)))))
          (jiralib--rest-call-it (cdr (assoc 'self response)) :type "GET")
          ))
-      ('createIssueWithParent (jiralib--rest-call-it
-                               ))
+      ('createIssueWithParent
+       (let ((response (jiralib--rest-call-it
+                        "/rest/api/2/issue"
+                        :type "POST"
+                        :data (json-encode (first params)))))
+         (jiralib--rest-call-it (cdr (assoc 'self response)) :type "GET")
+         ))
       ('editComment (jiralib--rest-call-it
                      (format "/rest/api/2/issue/%s/comment/%s" (first params) (second params))
                      :data (json-encode `((body . ,(third params))))
@@ -519,6 +522,7 @@ emacs-lisp"
               remote-field-values)))
 
     (apply 'vector (nreverse remote-field-values))))
+
 
 ;;;; Wrappers around JIRA methods
 
@@ -847,15 +851,26 @@ Return nil if the field is not found"
           (setf name (cdr (assoc 'name type)))))
     name))
 
-(defun jiralib-get-user-fullname (username)
-  "Return the full name (display name) of the user with USERNAME."
-  (if (assoc username jiralib-user-fullnames)
-      (cdr (assoc username jiralib-user-fullnames))
-    (progn
-      (let ((user (jiralib-get-user username)))
-        (setf jiralib-user-fullnames (append jiralib-user-fullnames (list (cons username (cdr (assoc 'fullname user))))))
-        (cdr (assoc 'fullname user))))))
+;; (defun jiralib-get-user-fullname (account-id)
+;;   "Return the full name (display name) of the user with USERNAME."
+  ;; (if (assoc account-id jiralib-user-fullnames)
+  ;;     (cdr (assoc account-id jiralib-user-fullnames))
+  ;;   (progn
+  ;;     (let ((user (jiralib-get-user account-id)))
+  ;;       (setf jiralib-user-fullnames (append jiralib-user-fullnames (list (cons account-id (cdr (assoc 'fullname user))))))
+  ;;       (cdr (assoc 'fullname user))))))
 
+(defun jiralib-get-user-fullname (account-id)
+  "Return the full name (displaName) of the user with accountId."
+  (loop for user in (jiralib-get-users nil)
+        when (rassoc account-id user)
+        return (cdr (assoc 'displayName user))))
+
+(defun jiralib-get-user-account-id (project full-name)
+    "Return the account-id (accountId) of the user with FULL-NAME (displayName) in PROJECT."
+  (loop for user in (jiralib-get-users project)
+        when (rassoc full-name user)
+        return (cdr (assoc 'accountId user))))
 
 (defun jiralib-get-filter (filter-id)
   "Return a filter given its FILTER-ID."
@@ -887,12 +902,11 @@ Return nil if the field is not found"
 ISSUE is a Hashtable object."
   (jiralib-call "createIssue" nil issue))
 
-(defun jiralib-create-subtask (subtask parent-issue-id)
+(defun jiralib-create-subtask (subtask)
   "Create SUBTASK for issue with PARENT-ISSUE-ID.
 
 SUBTASK is a Hashtable object."
-  (jiralib-call "createIssueWithParent" nil subtask parent-issue-id))
-
+  (jiralib-call "createIssueWithParent" nil subtask))
 
 (defvar jiralib-subtask-types-cache nil)
 
@@ -1008,10 +1022,10 @@ Return no more than MAX-NUM-RESULTS."
   "Return all visible subtask issue types in the system."
   (jiralib-call "getSubTaskIssueTypes" nil))
 
-(defun jiralib-get-user (username)
-  "Return a user's information given their USERNAME."
-  (cond ((eq 0 (length username)) nil) ;; Unassigned
-        (t (jiralib-call "getUser" nil username))))
+(defun jiralib-get-user (account-id)
+  "Return a user's information given their full name."
+  (cond ((eq 0 (length account-id)) nil) ;; Unassigned
+        (t (jiralib-call "getUser" nil account-id))))
 
 (defvar jiralib-users-cache nil "Cached list of users.")
 
@@ -1019,7 +1033,9 @@ Return no more than MAX-NUM-RESULTS."
   "Return assignable users information given the PROJECT-KEY."
   (unless jiralib-users-cache
     (setq jiralib-users-cache
-          (jiralib-call "getUsers" nil project-key)))
+          (jiralib-call "getUsers" nil project-key))
+    (loop for (name . id) in org-jira-users do
+          (setf jiralib-users-cache (append (list (jiralib-get-user id)) jiralib-users-cache))))
   jiralib-users-cache)
 
 (defun jiralib-get-versions (project-key)
@@ -1165,8 +1181,8 @@ PARAMS - extra parameters (as keyword arguments), the supported parameters are:
   (setq jiralib-complete-callback nil)
   (let ((not-last t)
         (start-at 0)
-	(limit (getf params :limit))
-	(query-params (getf params :query-params))
+	(limit (cl-getf params :limit))
+	(query-params (cl-getf params :query-params))
 	;; maximum page size, 50 is server side maximum
         (max-results jiralib-agile-page-size)
         (values ()))
@@ -1193,8 +1209,8 @@ PARAMS - extra parameters (as keyword arguments), the supported parameters are:
 limit - limit total number of retrieved entries."
   (lexical-let
       ((start-at 0)
-       (limit (getf params :limit))
-       (query-params (getf params :query-params))
+       (limit (cl-getf params :limit))
+       (query-params (cl-getf params :query-params))
        ;; maximum page size, 50 is server side maximum
        (max-results jiralib-agile-page-size)
        (values-list ())

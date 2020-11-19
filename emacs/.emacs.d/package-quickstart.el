@@ -666,10 +666,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20201117.1458/vterm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20201118.849/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20201117.1458/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20201118.849/vterm-autoloads.el") (car load-path))))
 
 
 
@@ -5249,10 +5249,10 @@ the reports is done using the TaskJuggler GUI.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-jira-4.3.1/org-jira-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-jira-4.3.2/org-jira-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-jira-4.3.1/org-jira-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-jira-4.3.2/org-jira-autoloads.el") (car load-path))))
 
 
 
@@ -5266,6 +5266,11 @@ With no argument, the mode is toggled on/off.
 Non-nil argument turns mode on.
 Nil argument turns mode off.
 
+If called interactively, enable Org-Jira mode if ARG is positive,
+and disable it if ARG is zero or negative.  If called from Lisp,
+also enable the mode if ARG is omitted or nil, and toggle it if
+ARG is `toggle'; disable the mode otherwise.
+
 Commands:
 \\{org-jira-entry-mode-map}
 
@@ -5274,9 +5279,7 @@ Entry to this mode calls the value of `org-jira-mode-hook'.
 \(fn &optional ARG)" t nil)
 
 (autoload 'org-jira-get-projects "org-jira" "\
-Get list of projects.
-
-\(fn)" t nil)
+Get list of projects." t nil)
 
 (autoload 'org-jira-get-issue-list "org-jira" "\
 Get list of issues, using jql (jira query language), invoke CALLBACK after.
@@ -5288,14 +5291,10 @@ jql.
 \(fn &optional CALLBACK)" nil nil)
 
 (autoload 'org-jira-get-summary "org-jira" "\
-Get issue summary from point and place next to issue id from jira
-
-\(fn)" t nil)
+Get issue summary from point and place next to issue id from jira" t nil)
 
 (autoload 'org-jira-get-summary-url "org-jira" "\
-Get issue summary from point and place next to issue id from jira, and make issue id a link
-
-\(fn)" t nil)
+Get issue summary from point and place next to issue id from jira, and make issue id a link" t nil)
 
 (autoload 'org-jira-get-issues-headonly "org-jira" "\
 Get list of ISSUES, head only.
@@ -5345,49 +5344,31 @@ ORG-JIRA-PROJ-KEY-OVERRIDE being set before and after running.
 \(fn &optional JQL-LIST)" t nil)
 
 (autoload 'org-jira-update-comment "org-jira" "\
-Update a comment for the current issue.
-
-\(fn)" t nil)
+Update a comment for the current issue." t nil)
 
 (autoload 'org-jira-update-worklogs-from-org-clocks "org-jira" "\
-Update or add a worklog based on the org clocks.
-
-\(fn)" t nil)
+Update or add a worklog based on the org clocks." t nil)
 
 (autoload 'org-jira-copy-current-issue-key "org-jira" "\
-Copy the current issue's key into clipboard.
-
-\(fn)" t nil)
+Copy the current issue's key into clipboard." t nil)
 
 (autoload 'org-jira-unassign-issue "org-jira" "\
-Update an issue to be unassigned.
-
-\(fn)" t nil)
+Update an issue to be unassigned." t nil)
 
 (autoload 'org-jira-set-issue-reporter "org-jira" "\
-Update an issue's reporter interactively.
-
-\(fn)" t nil)
+Update an issue's reporter interactively." t nil)
 
 (autoload 'org-jira-assign-issue "org-jira" "\
-Update an issue with interactive re-assignment.
-
-\(fn)" t nil)
+Update an issue with interactive re-assignment." t nil)
 
 (autoload 'org-jira-update-issue "org-jira" "\
-Update an issue.
-
-\(fn)" t nil)
+Update an issue." t nil)
 
 (autoload 'org-jira-todo-to-jira "org-jira" "\
-Convert an ordinary todo item to a jira ticket.
-
-\(fn)" t nil)
+Convert an ordinary todo item to a jira ticket." t nil)
 
 (autoload 'org-jira-get-subtasks "org-jira" "\
-Get subtasks for the current issue.
-
-\(fn)" t nil)
+Get subtasks for the current issue." t nil)
 
 (autoload 'org-jira-create-issue "org-jira" "\
 Create an issue in PROJECT, of type TYPE, with given SUMMARY and DESCRIPTION.
@@ -5400,29 +5381,19 @@ Create a subtask issue for PROJECT, of TYPE, with SUMMARY and DESCRIPTION.
 \(fn PROJECT TYPE SUMMARY DESCRIPTION)" t nil)
 
 (autoload 'org-jira-refresh-issue "org-jira" "\
-Refresh current issue from jira to org.
-
-\(fn)" t nil)
+Refresh current issue from jira to org." t nil)
 
 (autoload 'org-jira-progress-issue "org-jira" "\
-Progress issue workflow.
-
-\(fn)" t nil)
+Progress issue workflow." t nil)
 
 (autoload 'org-jira-progress-issue-next "org-jira" "\
-Progress issue workflow.
-
-\(fn)" t nil)
+Progress issue workflow." t nil)
 
 (autoload 'org-jira-browse-issue "org-jira" "\
-Open the current issue in external browser.
-
-\(fn)" t nil)
+Open the current issue in external browser." t nil)
 
 (autoload 'org-jira-download-attachment "org-jira" "\
-Download the attachment under cursor.
-
-\(fn)" t nil)
+Download the attachment under cursor." t nil)
 
 (autoload 'org-jira-get-issues-from-filter "org-jira" "\
 Get issues from the server-side stored filter named FILTER.
@@ -5439,21 +5410,15 @@ See `org-jira-get-issues-from-filter'.
 \(fn FILTER)" t nil)
 
 (autoload 'org-jira-get-issues-by-board "org-jira" "\
-Get list of ISSUES from agile board.
-
-\(fn)" t nil)
+Get list of ISSUES from agile board." t nil)
 
 (autoload 'org-jira-get-issues-by-board-headonly "org-jira" "\
-Get list of ISSUES from agile board, head only.
-
-\(fn)" t nil)
+Get list of ISSUES from agile board, head only." t nil)
 
 (autoload 'org-jira-get-boards "org-jira" "\
-Get list of boards and their properies.
+Get list of boards and their properies." t nil)
 
-\(fn)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-jira" '("org-jira-" "ensure-on-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-jira" '("ensure-on-" "org-jira-")))
 
 
 
@@ -11753,10 +11718,10 @@ don't actually start the search.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.19.0pre3/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.19.0/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.19.0pre3/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.19.0/cmake-mode-autoloads.el") (car load-path))))
 
 
 
