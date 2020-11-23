@@ -1,0 +1,2 @@
+;;; Generated package description from /Users/laurynas/.emacs.d/elpa/neuron-mode-20201121.1529/neuron-mode.el  -*- no-byte-compile: t -*-
+(define-package "neuron-mode" "20201121.1529" "Major mode for editing zettelkasten notes using neuron" '((emacs "26.3") (f "0.20.0") (s "1.12.0") (markdown-mode "2.3") (company "0.9.13")) :commit "965e543573bc61bb8806926a73db59e4d9ca2913" :keywords '("outlines") :authors '(("felko <http://github/felko>")) :maintainer '("felko <http://github/felko>") :url "https://github.com/felko/neuron-mode")
