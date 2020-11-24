@@ -9580,10 +9580,10 @@ Save keyfreq data now.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20201121.1331/iedit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20201123.751/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20201121.1331/iedit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20201123.751/iedit-autoloads.el") (car load-path))))
 
 
 
