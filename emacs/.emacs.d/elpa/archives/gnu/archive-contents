@@ -111,7 +111,7 @@
 	       ("David Gonzalez Gandara" . "dggandara@member.fsf.org"))
 	      (:maintainer "David Gonzalez Gandara" . "dggandara@member.fsf.org"))])
  (ascii-art-to-unicode .
-		       [(1 12)
+		       [(1 13)
 			nil "a small artist adjunct" single
 			((:keywords "ascii" "unicode" "box-drawing")
 			 (:authors
@@ -1111,7 +1111,7 @@
 		 (:maintainer "Clemens Radermacher" . "clemera@posteo.net")
 		 (:url . "https://github.com/clemera/ivy-explorer"))])
  (ivy-posframe .
-	       [(0 5 2)
+	       [(0 5 3)
 		((emacs
 		  (26 0))
 		 (posframe
