@@ -11,7 +11,7 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      software-properties-common colordiff valgrind linux-tools-generic \
      libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
      python3-numpy-dbg python-scipy-doc unattended-upgrades screen colordiff \
-     fzf fd-find
+     fzf fd-find clang
 # These two conflict with each other on 20.04:
 sudo apt-get install hexyl
 sudo apt-get install ripgrep
@@ -45,7 +45,7 @@ sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     liblua5.1-dev
 # MySQL development specific
 sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
-    libboost-doc clang clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck \
+    libboost-doc clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck \
     iwyu ncdu lcov ncurses-doc libaio-dev libssl-dev libreadline-dev \
     readline-doc liblz4-dev libre2-dev libicu-dev icu-doc zlib1g-dev \
     libevent-dev pkg-config libcurl4-gnutls-dev libcurl4-doc libpam0g-dev \
