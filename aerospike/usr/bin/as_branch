@@ -172,7 +172,8 @@ fi
 mkdir "$BRANCH"
 
 pushd "$EE_MASTER" || exit 1
-if [[ $COMMAND == "create" ]]; then
+# Support checking out CE-only branches
+if [[ $COMMAND == "create" || -z $(git branch --list "$BRANCH") ]]; then
     git worktree add "$BRANCH_ROOT/ee" -b "$BRANCH" \
         ${EE_START_POINT:+"$EE_START_POINT"}
 else
