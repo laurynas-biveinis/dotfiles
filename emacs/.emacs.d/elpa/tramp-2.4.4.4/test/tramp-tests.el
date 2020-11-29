@@ -2144,20 +2144,14 @@ properly.  BODY shall not contain a timeout."
       "/method:host:/:/~/path/file"))))
 
 ;; The following test is inspired by Bug#26911 and Bug#34834.  They
-;; are rather bugs in `expand-file-name', and it fails for all Emacs
-;; versions prior 28.1.  Test added for later, when they are fixed.
+;; were bugs in `expand-file-name'.
 (ert-deftest tramp-test05-expand-file-name-relative ()
   "Check `expand-file-name'."
-  :expected-result (if (>= emacs-major-version 28) :passed :failed)
   (skip-unless (tramp--test-enabled))
-
-  ;; These are the methods the test doesn't fail.
-  (when (or (tramp--test-adb-p) (tramp--test-ange-ftp-p) (tramp--test-gvfs-p)
-	    (tramp--test-rclone-p)
-	    (tramp-smb-file-name-p tramp-test-temporary-file-directory))
-    (setf (ert-test-expected-result-type
-	   (ert-get-test 'tramp-test05-expand-file-name-relative))
-	  :passed))
+  ;; The bugs are fixed in Emacs 28.1.
+  (skip-unless (tramp--test-emacs28-p))
+  ;; Methods with a share do not expand "/path/..".
+  (skip-unless (not (tramp--test-share-p)))
 
   (should
    (string-equal
@@ -2500,9 +2494,8 @@ This checks also `file-name-as-directory', `file-name-directory',
 
 	  ;; Copy file to directory.
 	  (unwind-protect
-	      ;; FIXME: This fails on my QNAP server, see
-	      ;; /share/Web/owncloud/data/owncloud.log
-	      (unless (or (tramp--test-ange-ftp-p) (tramp--test-nextcloud-p))
+	      ;; This doesn't work on FTP.
+	      (unless (tramp--test-ange-ftp-p)
 		(write-region "foo" nil source)
 		(should (file-exists-p source))
 		(make-directory target)
@@ -2526,9 +2519,8 @@ This checks also `file-name-as-directory', `file-name-directory',
 
 	  ;; Copy directory to existing directory.
 	  (unwind-protect
-	      ;; FIXME: This fails on my QNAP server, see
-	      ;; /share/Web/owncloud/data/owncloud.log
-	      (unless (or (tramp--test-ange-ftp-p) (tramp--test-nextcloud-p))
+	      ;; This doesn't work on FTP.
+	      (unless (tramp--test-ange-ftp-p)
 		(make-directory source)
 		(should (file-directory-p source))
 		(write-region "foo" nil (expand-file-name "foo" source))
@@ -2549,9 +2541,8 @@ This checks also `file-name-as-directory', `file-name-directory',
 
 	  ;; Copy directory/file to non-existing directory.
 	  (unwind-protect
-	      ;; FIXME: This fails on my QNAP server, see
-	      ;; /share/Web/owncloud/data/owncloud.log
-	      (unless (or (tramp--test-ange-ftp-p) (tramp--test-nextcloud-p))
+	      ;; This doesn't work on FTP.
+	      (unless (tramp--test-ange-ftp-p)
 		(make-directory source)
 		(should (file-directory-p source))
 		(write-region "foo" nil (expand-file-name "foo" source))
@@ -2644,9 +2635,8 @@ This checks also `file-name-as-directory', `file-name-directory',
 
 	  ;; Rename directory to existing directory.
 	  (unwind-protect
-	      ;; FIXME: This fails on my QNAP server, see
-	      ;; /share/Web/owncloud/data/owncloud.log
-	      (unless (or (tramp--test-ange-ftp-p) (tramp--test-nextcloud-p))
+	      ;; This doesn't work on FTP.
+	      (unless (tramp--test-ange-ftp-p)
 		(make-directory source)
 		(should (file-directory-p source))
 		(write-region "foo" nil (expand-file-name "foo" source))
@@ -2668,9 +2658,8 @@ This checks also `file-name-as-directory', `file-name-directory',
 
 	  ;; Rename directory/file to non-existing directory.
 	  (unwind-protect
-	      ;; FIXME: This fails on my QNAP server, see
-	      ;; /share/Web/owncloud/data/owncloud.log
-	      (unless (or (tramp--test-ange-ftp-p) (tramp--test-nextcloud-p))
+	      ;; This doesn't work on FTP.
+	      (unless (tramp--test-ange-ftp-p)
 		(make-directory source)
 		(should (file-directory-p source))
 		(write-region "foo" nil (expand-file-name "foo" source))
@@ -4295,7 +4284,9 @@ This tests also `make-symbolic-link', `file-truename' and `add-name-to-file'."
 	      (setq proc (start-file-process "test4" (current-buffer) nil))
 	      (should (processp proc))
 	      (should (equal (process-status proc) 'run))
-	      (should (stringp (process-tty-name proc)))))
+	      ;; On MS Windows, `process-tty-name' returns nil.
+	      (unless (tramp--test-windows-nt)
+		(should (stringp (process-tty-name proc))))))
 
 	;; Cleanup.
 	(ignore-errors (delete-process proc))))))
@@ -5517,6 +5508,13 @@ This does not support special file names."
   (eq
    (tramp-find-foreign-file-name-handler tramp-test-temporary-file-directory)
    'tramp-sh-file-name-handler))
+
+(defun tramp--test-share-p ()
+  "Check, whether the method needs a share."
+  (and (tramp--test-gvfs-p)
+       (string-match-p
+	"^\\(afp\\|davs?\\|smb\\)$"
+	(file-remote-p tramp-test-temporary-file-directory 'method))))
 
 (defun tramp--test-sudoedit-p ()
   "Check, whether the sudoedit method is used."

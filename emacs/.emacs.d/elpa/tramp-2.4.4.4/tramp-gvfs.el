@@ -800,14 +800,23 @@ file names."
 	  (with-tramp-progress-reporter
 	      v 0 (format "%s %s to %s" msg-operation filename newname)
 	    (unless
-		(apply
-		 #'tramp-gvfs-send-command v gvfs-operation
-		 (append
-		  (and (eq op 'copy) (or keep-date preserve-uid-gid)
-		       '("--preserve"))
-		  (list
-		   (tramp-gvfs-url-file-name filename)
-		   (tramp-gvfs-url-file-name newname))))
+		(and (apply
+		      #'tramp-gvfs-send-command v gvfs-operation
+		      (append
+		       (and (eq op 'copy) (or keep-date preserve-uid-gid)
+			    '("--preserve"))
+		       (list
+			(tramp-gvfs-url-file-name filename)
+			(tramp-gvfs-url-file-name newname))))
+		     ;; Some backends do not return a proper error
+		     ;; code in case of direct copy/move.  Apply sanity checks.
+		     (or (not equal-remote)
+			 (tramp-gvfs-send-command
+			  v "gvfs-info" (tramp-gvfs-url-file-name newname))
+			 (eq op 'copy)
+			 (not (tramp-gvfs-send-command
+			       v "gvfs-info"
+			       (tramp-gvfs-url-file-name filename)))))
 
 	      (if (or (not equal-remote)
 		      (and equal-remote
@@ -2091,7 +2100,10 @@ This uses \"avahi-browse\" in case D-Bus is not enabled in Avahi."
 ;; Add completion functions for AFP, DAV, DAVS, SFTP and SMB methods.
 (when tramp-gvfs-enabled
   ;; Suppress D-Bus error messages.
-  (let (tramp-gvfs-dbus-event-vector)
+  (let (tramp-gvfs-dbus-event-vector
+	;; Sometimes, it fails with "Variable binding depth exceeds
+	;; max-specpdl-size".  Shall be fixed in Emacs 27.
+	(max-specpdl-size (* 2 max-specpdl-size)))
     (zeroconf-init tramp-gvfs-zeroconf-domain)
     (if (zeroconf-list-service-types)
 	(progn
