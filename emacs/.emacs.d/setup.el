@@ -1462,7 +1462,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'lsp-mode-hook #'dotfiles--lsp-enable-which-key)
 
-;;; `lsp-mode' integration with Flycheck `sh-shellcheck' checker
+;;; `lsp-mode' integration with Flycheck `sh-shellcheck' checker. It will become
+;;; redundant if bash-language-server implements
+;;; https://github.com/bash-lsp/bash-language-server/issues/104
 (defun dotfiles--lsp-flycheck-enable-shellcheck ()
   "Enable Shellcheck for shell buffers under LSP."
   (when (derived-mode-p 'sh-mode)
