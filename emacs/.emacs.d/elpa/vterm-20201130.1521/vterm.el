@@ -137,9 +137,6 @@ the executable."
 
 ;;; Dependencies
 
-;; Silence compiler warnings by informing it of what functions are defined
-(declare-function display-line-numbers-update-width "display-line-numbers")
-
 ;; Generate this list with:
 ;; awk -F\" '/bind_function*/ {print "(declare-function", $2, "\"vterm-module\")"}' vterm-module.c
 (declare-function vterm--new "vterm-module")
@@ -477,13 +474,22 @@ of data.  If nil, never delay.  The units are seconds.")
     `(defun ,(intern (format "vterm-send-%s" key))()
        ,(format "Sends %s to the libvterm."  key)
        (interactive)
-       (vterm-send-key ,(char-to-string (get-byte (1- (length key)) key)) nil
-                       ,(string-prefix-p "M-" key)
-                       ,(string-prefix-p "C-" key))))
+       (vterm-send-key ,(char-to-string (get-byte (1- (length key)) key))
+                       ,(let ((case-fold-search nil))
+                          (or (string-match-p "[A-Z]$" key)
+                              (string-match-p "S-" key)))
+                       ,(string-match-p "M-" key)
+                       ,(string-match-p "C-" key))))
 
   (mapc (lambda (key)
           (eval `(vterm-define-key ,key)))
-        (cl-loop for prefix in '("C-" "M-")
+        (cl-loop for prefix in '("M-")
+                 append (cl-loop for char from ?A to ?Z
+                                 for key = (format "%s%c" prefix char)
+                                 collect key)))
+  (mapc (lambda (key)
+          (eval `(vterm-define-key ,key)))
+        (cl-loop for prefix in '("C-" "M-" "C-S-")
                  append (cl-loop for char from ?a to ?z
                                  for key = (format "%s%c" prefix char)
                                  collect key))))
@@ -505,7 +511,15 @@ Exceptions are defined by `vterm-keymap-exceptions'."
   (mapc (lambda (key)
           (define-key map (kbd key)
             (intern (format "vterm-send-%s" key))))
-        (cl-loop for prefix in '("C-" "M-")
+        (cl-loop for prefix in '("M-")
+                 append (cl-loop for char from ?A to ?Z
+                                 for key = (format "%s%c" prefix char)
+                                 unless (member key exceptions)
+                                 collect key)))
+  (mapc (lambda (key)
+          (define-key map (kbd key)
+            (intern (format "vterm-send-%s" key))))
+        (cl-loop for prefix in '("C-" "M-" "C-S-" )
                  append (cl-loop for char from ?a to ?z
                                  for key = (format "%s%c" prefix char)
                                  unless (member key exceptions)
@@ -969,13 +983,6 @@ Argument BUFFER the terminal buffer."
             (windows (get-buffer-window-list)))
         (setq vterm--redraw-timer nil)
         (when vterm--term
-          ;; Check is `display-line-numbers' is being used, in that case, update
-          ;; the width
-          (when (and (bound-and-true-p display-line-numbers)
-                     (require 'display-line-numbers nil 'noerror)
-                     (get-buffer-window buffer t)
-                     (ignore-errors (display-line-numbers-update-width)))
-            (window--adjust-process-windows))
           (vterm--redraw vterm--term)
           (unless (zerop (window-hscroll))
             (when (cl-member (selected-window) windows :test #'eq)
@@ -1100,9 +1107,11 @@ Argument EVENT process event."
 
 (defun vterm--get-margin-width ()
   "Get margin width of vterm buffer when `display-line-numbers-mode' is enabled."
-  (let ((width 0))
+  (let ((width 0)
+        (max-line-num (+ (frame-height) vterm-max-scrollback)))
     (when (bound-and-true-p display-line-numbers)
-      (setq width (+ width (or display-line-numbers-width 0) 4)))
+      (setq width (+ width 4
+                     (string-width (number-to-string max-line-num)))))
     width))
 
 (defun vterm--delete-lines (line-num count &optional delete-whole-line)
