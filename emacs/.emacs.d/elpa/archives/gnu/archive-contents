@@ -397,12 +397,12 @@
 	     (24 5))
 	    (swiper
 	     (0 13 1)))
-	   "Various completion functions using Ivy" single
-	   ((:keywords "convenience" "matching" "tools")
+	   "Various completion functions using Ivy" tar
+	   ((:url . "https://github.com/abo-abo/swiper")
+	    (:maintainer "Oleh Krehel" . "ohwoeowho@gmail.com")
 	    (:authors
 	     ("Oleh Krehel" . "ohwoeowho@gmail.com"))
-	    (:maintainer "Oleh Krehel" . "ohwoeowho@gmail.com")
-	    (:url . "https://github.com/abo-abo/swiper"))])
+	    (:keywords "convenience" "matching" "tools"))])
  (cpio-mode .
 	    [(0 17)
 	     ((emacs
@@ -2177,12 +2177,12 @@
 	    (24 5))
 	   (ivy
 	    (0 13 1)))
-	  "Isearch with an overview. Oh, man!" single
-	  ((:keywords "matching")
+	  "Isearch with an overview. Oh, man!" tar
+	  ((:url . "https://github.com/abo-abo/swiper")
+	   (:maintainer "Oleh Krehel" . "ohwoeowho@gmail.com")
 	   (:authors
 	    ("Oleh Krehel" . "ohwoeowho@gmail.com"))
-	   (:maintainer "Oleh Krehel" . "ohwoeowho@gmail.com")
-	   (:url . "https://github.com/abo-abo/swiper"))])
+	   (:keywords "matching"))])
  (system-packages .
 		  [(1 0 11)
 		   ((emacs
