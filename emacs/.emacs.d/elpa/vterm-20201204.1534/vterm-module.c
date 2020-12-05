@@ -1233,11 +1233,11 @@ emacs_value Fvterm_update(emacs_env *env, ptrdiff_t nargs, emacs_value args[],
     unsigned char key[len];
     env->copy_string_contents(env, args[1], (char *)key, &len);
     VTermModifier modifier = VTERM_MOD_NONE;
-    if (env->is_not_nil(env, args[2]))
+    if (nargs > 2 && env->is_not_nil(env, args[2]))
       modifier = modifier | VTERM_MOD_SHIFT;
-    if (env->is_not_nil(env, args[3]))
+    if (nargs > 3 && env->is_not_nil(env, args[3]))
       modifier = modifier | VTERM_MOD_ALT;
-    if (env->is_not_nil(env, args[4]))
+    if (nargs > 4 && env->is_not_nil(env, args[4]))
       modifier = modifier | VTERM_MOD_CTRL;
 
     // Ignore the final zero byte
@@ -1384,7 +1384,7 @@ int emacs_module_init(struct emacs_runtime *ert) {
   Flist = env->make_global_ref(env, env->intern(env, "list"));
   Fnth = env->make_global_ref(env, env->intern(env, "nth"));
   Ferase_buffer = env->make_global_ref(env, env->intern(env, "erase-buffer"));
-  Finsert = env->make_global_ref(env, env->intern(env, "insert"));
+  Finsert = env->make_global_ref(env, env->intern(env, "vterm--insert"));
   Fgoto_char = env->make_global_ref(env, env->intern(env, "goto-char"));
   Fput_text_property =
       env->make_global_ref(env, env->intern(env, "put-text-property"));

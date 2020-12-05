@@ -454,6 +454,10 @@ Only background is used."
 (defvar-local vterm--redraw-immididately nil)
 (defvar-local vterm--linenum-remapping nil)
 (defvar-local vterm--prompt-tracking-enabled-p nil)
+(defvar-local vterm--insert-function (symbol-function #'insert))
+(defvar-local vterm--delete-char-function (symbol-function #'delete-char))
+(defvar-local vterm--delete-region-function (symbol-function #'delete-region))
+
 
 (defvar vterm-timer-delay 0.1
   "Delay for refreshing the buffer after receiving updates from libvterm.
@@ -645,7 +649,7 @@ Exceptions are defined by `vterm-keymap-exceptions'."
            :command
            `("/bin/sh" "-c"
              ,(format
-	       "stty -nl sane %s erase ^? rows %d columns %d >/dev/null && exec %s"
+           "stty -nl sane %s erase ^? rows %d columns %d >/dev/null && exec %s"
                ;; Some stty implementations (i.e. that of *BSD) do not
                ;; support the iutf8 option.  to handle that, we run some
                ;; heuristics to work out if the system supports that
@@ -778,7 +782,8 @@ will invert `vterm-copy-exclude-prompt' for that call."
       (when (and (not (symbolp last-input-event)) shift (not meta) (not ctrl))
         (setq key (upcase key)))
       (vterm--update vterm--term key shift meta ctrl)
-      (setq vterm--redraw-immididately t))))
+      (setq vterm--redraw-immididately t)
+       (accept-process-output vterm--process vterm-timer-delay nil t))))
 
 (defun vterm-send (key)
   "Send KEY to libvterm.  KEY can be anything `kbd' understands."
@@ -913,18 +918,18 @@ prefix argument ARG or with \\[universal-argument]."
 
 Argument ARG is passed to `yank'."
   (interactive "P")
+  (vterm-goto-char (point))
   (let ((inhibit-read-only t))
-    (cl-letf (((symbol-function 'insert-for-yank)
-               #'(lambda (str) (vterm-send-string str t))))
+    (cl-letf (((symbol-function 'insert) #'vterm-insert))
       (yank arg))))
 
 (defun vterm-yank-primary ()
   "Yank text from the primary selection in vterm."
   (interactive)
+  (vterm-goto-char (point))
   (let ((inhibit-read-only t)
         (primary (gui-get-primary-selection)))
-    (cl-letf (((symbol-function 'insert-for-yank)
-               #'(lambda (str) (vterm-send-string str t))))
+    (cl-letf (((symbol-function 'insert) #'vterm-insert))
       (insert-for-yank primary))))
 
 (defun vterm-yank-pop (&optional arg)
@@ -932,10 +937,10 @@ Argument ARG is passed to `yank'."
 
 Argument ARG is passed to `yank'"
   (interactive "p")
+  (vterm-goto-char (point))
   (let ((inhibit-read-only t)
         (yank-undo-function #'(lambda (_start _end) (vterm-undo))))
-    (cl-letf (((symbol-function 'insert-for-yank)
-               #'(lambda (str) (vterm-send-string str t))))
+    (cl-letf (((symbol-function 'insert) #'vterm-insert))
       (yank-pop arg))))
 
 (defun vterm-send-string (string &optional paste-p)
@@ -943,14 +948,81 @@ Argument ARG is passed to `yank'"
 Optional argument PASTE-P paste-p."
   (when vterm--term
     (when paste-p
-      (vterm--update vterm--term "<start_paste>" nil nil nil))
+      (vterm--update vterm--term "<start_paste>" ))
     (dolist (char (string-to-list string))
-      (vterm--update vterm--term (char-to-string char) nil nil nil))
+      (vterm--update vterm--term (char-to-string char)))
     (when paste-p
-      (vterm--update vterm--term "<end_paste>" nil nil nil)))
-  (setq vterm--redraw-immididately t))
+      (vterm--update vterm--term "<end_paste>")))
+  (setq vterm--redraw-immididately t)
+  (accept-process-output vterm--process vterm-timer-delay nil t))
+
+(defun vterm-insert (&rest contents)
+  "Insert the arguments, either strings or characters, at point.
+
+Provide similar behavior as `insert' for vterm."
+  (when vterm--term
+    (vterm--update vterm--term "<start_paste>")
+    (dolist (c contents)
+      (if (characterp c)
+          (vterm--update vterm--term (char-to-string c))
+        (dolist (char (string-to-list c))
+          (vterm--update vterm--term (char-to-string char)))))
+    (vterm--update vterm--term "<end_paste>")
+    (setq vterm--redraw-immididately t)
+    (accept-process-output vterm--process vterm-timer-delay nil t)))
+
+(defun vterm-delete-region (start end)
+  "Delete the text between START and END for vterm. "
+  (when vterm--term
+    (if (vterm-goto-char start)
+        (cl-loop repeat (- end start) do
+                 (vterm-send-delete))
+      (let ((inhibit-read-only nil))
+        (vterm--delete-region start end)))))
+
+(defun vterm-goto-char (pos)
+  "Set point to POSITION for vterm.
+
+The return value is `t' when point moved successfully.
+It will reset to original position if it can't move there."
+  (when (and vterm--term
+             (vterm-cursor-in-command-buffer-p)
+             (vterm-cursor-in-command-buffer-p pos))
+    (let ((moved t)
+          (origin-point (point))
+          pt cursor-pos succ)
+      (vterm-reset-cursor-point)
+      (setq cursor-pos (point))
+      (setq pt cursor-pos)
+      (while (and (> pos pt) moved)
+        (vterm-send-right)
+        (setq moved (not (= pt (point))))
+        (setq pt (point)))
+      (setq pt (point))
+      (setq moved t)
+      (while (and (< pos pt) moved)
+        (vterm-send-left)
+        (setq moved (not (= pt (point))))
+        (setq pt (point)))
+      (setq succ (= pos (point)))
+      (unless succ
+        (vterm-goto-char cursor-pos)
+        (goto-char origin-point))
+      succ)))
 
 ;;; Internal
+
+(defun vterm--delete-region(start end)
+  "A wrapper for `delete-region'."
+  (funcall vterm--delete-region-function start end))
+
+(defun vterm--insert(&rest content)
+  "A wrapper for `insert'."
+  (apply vterm--insert-function content))
+
+(defun vterm--delete-char(n &optional killflag)
+  "A wrapper for `delete-char'."
+  (funcall vterm--delete-char-function n killflag))
 
 (defun vterm--invalidate ()
   "The terminal buffer is invalidated, the buffer needs redrawing."
@@ -1121,10 +1193,10 @@ If option DELETE-WHOLE-LINE is non-nil, then this command kills
 the whole line including its terminating newline"
   (save-excursion
     (when (vterm--goto-line line-num)
-      (delete-region (point) (point-at-eol count))
+      (vterm--delete-region (point) (point-at-eol count))
       (when (and delete-whole-line
                  (looking-at "\n"))
-        (delete-char 1)))))
+        (vterm--delete-char 1)))))
 
 (defun vterm--goto-line (n)
   "Go to line N and return true on success.
@@ -1303,6 +1375,17 @@ More information see `vterm--prompt-tracking-enabled-p' and
   "Return t if the cursor position is at shell prompt."
   (= (point) (or (vterm--get-prompt-point) 0)))
 
+(defun vterm-cursor-in-command-buffer-p (&optional pt)
+  "Check whether cursor in command buffer area."
+  (save-excursion
+    (vterm-reset-cursor-point)
+    (let ((promp-pt (vterm--get-prompt-point))
+          eol)
+      (when promp-pt
+        (goto-char promp-pt)
+        (setq eol (vterm--get-end-of-line))
+        (<= promp-pt (or pt (vterm--get-cursor-point)) eol)))))
+
 (defun vterm-beginning-of-line ()
   "Move point to the beginning of the line.
 
@@ -1344,14 +1427,16 @@ can find them and remove them."
       (goto-char fake-newline)
       (cl-assert (eq ?\n (char-after)))
       (let ((inhibit-read-only t))
-        (delete-char 1)))))
+        (vterm--delete-char 1)))))
+
 
 (defun vterm--filter-buffer-substring (content)
   "Filter string CONTENT of fake/injected newlines."
   (with-temp-buffer
-    (insert content)
+    (vterm--insert content)
     (vterm--remove-fake-newlines)
     (buffer-string)))
+
 
 (provide 'vterm)
 ;;; vterm.el ends here
