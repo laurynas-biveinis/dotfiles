@@ -5399,10 +5399,10 @@ Start org-analyzer.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.4/org-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.4.2/org-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.4/org-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.4.2/org-autoloads.el") (car load-path))))
 
 
 
@@ -11302,10 +11302,10 @@ enable the mode if ARG is omitted or nil, and toggle it if ARG is
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20201105.423/flycheck-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20201213.2234/flycheck-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20201105.423/flycheck-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20201213.2234/flycheck-autoloads.el") (car load-path))))
 
 
 
@@ -11949,7 +11949,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.0" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.4" "/Users/laurynas/.emacs.d/elpa/dash-2.17.0" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.0" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.4" "/Users/laurynas/.emacs.d/elpa/dash-2.17.0" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
          Info-directory-list)))
 
 ;; Local Variables:
