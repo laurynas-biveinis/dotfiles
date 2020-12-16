@@ -11302,10 +11302,10 @@ enable the mode if ARG is omitted or nil, and toggle it if ARG is
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20201213.2234/flycheck-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20201214.2154/flycheck-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20201213.2234/flycheck-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20201214.2154/flycheck-autoloads.el") (car load-path))))
 
 
 

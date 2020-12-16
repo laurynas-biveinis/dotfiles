@@ -5947,8 +5947,8 @@ STRING
      Return a unique temporary filename.  The file is *not*
      created.
 
-     To ignore the output of syntax checkers, try `null-device'
-     first.
+     To ignore the output of syntax checkers, try symbol
+     `null-device' first.
 
 `null-device'
      Return the value of `null-device', i.e the system null
@@ -10857,7 +10857,8 @@ See URL `https://github.com/igorshubovych/markdownlint-cli'."
             source)
   :error-patterns
   ((error line-start
-          (file-name) ":" line " " (id (one-or-more (not (any space))))
+          (file-name) ":" line
+          (? ":" column) " " (id (one-or-more (not (any space))))
           " " (message) line-end))
   :error-filter
   (lambda (errors)
