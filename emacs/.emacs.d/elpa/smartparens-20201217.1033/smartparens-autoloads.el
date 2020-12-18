@@ -328,6 +328,14 @@ Turn off `show-smartparens-mode'." t nil)
 
 ;;;***
 
+;;;### (autoloads nil "sp-sublimetext-like" "sp-sublimetext-like.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from sp-sublimetext-like.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "sp-sublimetext-like" '("sp-point-not-before-word")))
+
+;;;***
+
 ;;;### (autoloads nil nil ("smartparens-c.el" "smartparens-javascript.el"
 ;;;;;;  "smartparens-ml.el" "smartparens-pkg.el" "smartparens-racket.el")
 ;;;;;;  (0 0 0 0))

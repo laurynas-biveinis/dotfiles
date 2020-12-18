@@ -1833,10 +1833,10 @@ Alpha should be a float between 0 and 1.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/smartparens-20201128.2212/smartparens-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/smartparens-20201217.1033/smartparens-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/smartparens-20201128.2212/smartparens-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/smartparens-20201217.1033/smartparens-autoloads.el") (car load-path))))
 
 
 
@@ -2088,6 +2088,10 @@ Turn off `show-smartparens-mode'." t nil)
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-text" '("sp-text-mode-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "sp-sublimetext-like" '("sp-point-not-before-word")))
 
 
 
