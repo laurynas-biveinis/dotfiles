@@ -11,7 +11,7 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      software-properties-common colordiff valgrind linux-tools-generic \
      libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
      python3-numpy-dbg python-scipy-doc unattended-upgrades screen colordiff \
-     fzf fd-find clang moreutils
+     fzf fd-find clang moreutils psmisc
 # These two conflict with each other on 20.04:
 sudo apt-get install hexyl
 sudo apt-get install ripgrep
