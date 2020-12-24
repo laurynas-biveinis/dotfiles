@@ -2222,6 +2222,8 @@ Return non-nil if CHECKER may be used for the current buffer, and
 nil otherwise.  The result of the `:enabled' check, if any, is
 cached."
   (and
+   ;; May only enable valid checkers
+   (flycheck-valid-checker-p checker)
    ;; Don't run the :enabled check if the checker is already disabled…
    (not (flycheck-disabled-checker-p checker))
    (or
@@ -3584,9 +3586,10 @@ Also remove global hooks.  (If optional argument IGNORE-LOCAL is
 non-nil, then only do this and skip per-buffer teardown.)"
   (unless ignore-local
     (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when flycheck-mode
-          (flycheck-teardown 'ignore-global)))))
+      (when (buffer-live-p buffer)
+        (with-current-buffer buffer
+          (when flycheck-mode
+            (flycheck-teardown 'ignore-global))))))
   (remove-hook 'buffer-list-update-hook #'flycheck-handle-buffer-switch))
 
 ;; Clean up the entire state of Flycheck when Emacs is killed, to get rid of any
@@ -5624,7 +5627,7 @@ this error to produce the explanation to display."
            (flycheck-explain-error-mode))
          (cond
           ((functionp explanation) (funcall explanation))
-          ((stringp explanation) (insert explanation))
+          ((stringp explanation) (princ explanation))
           (t (error "Unsupported error explanation: %S" explanation)))
          (display-message-or-buffer standard-output nil 'not-this-window)))))
 
