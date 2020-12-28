@@ -991,6 +991,11 @@ event of an error or nonlocal exit."
 ;; org integration with Helm
 (setq org-outline-path-complete-in-steps nil)
 
+;;; neuron-mode
+;; Load it (autoload is not enough) so that it automatically overrides
+;; markdown-mode on qualifying buffers.
+(require 'neuron-mode)
+
 ;;; Solarized-dark color theme
 (load-theme 'solarized-dark t)
 
