@@ -996,6 +996,10 @@ event of an error or nonlocal exit."
 ;; markdown-mode on qualifying buffers.
 (require 'neuron-mode)
 
+(declare-function my-open-zettelkasten "secrets" nil)
+
+(global-set-key (kbd "<f12>") #'my-open-zettelkasten)
+
 ;;; Solarized-dark color theme
 (load-theme 'solarized-dark t)
 
