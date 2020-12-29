@@ -598,6 +598,9 @@ respectively."
 (setq sp-ignore-modes-list (delete 'minibuffer-inactive-mode
                                    sp-ignore-modes-list))
 
+;; But not the strict version
+(add-hook 'minibuffer-setup-hook #'turn-on-smartparens-mode)
+
 ;;; vterm
 (require 'vterm)
 (define-key vterm-mode-map (kbd "<S-prior>") #'scroll-down-command)
