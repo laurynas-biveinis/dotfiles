@@ -584,9 +584,30 @@ respectively."
 (define-key smartparens-mode-map (kbd "C-s-<left>") #'sp-backward-slurp-sexp)
 (define-key smartparens-mode-map (kbd "M-s-<left>") #'sp-backward-barf-sexp)
 
-(define-key smartparens-mode-map (kbd "C-M-t") #'sp-transpose-sexp)
 (define-key smartparens-mode-map (kbd "C-M-k") #'sp-kill-sexp)
 (define-key smartparens-mode-map (kbd "C-s-k") #'sp-backward-kill-sexp)
+
+;; Hybrid sexps
+
+(define-key smartparens-mode-map (kbd "C-M-t") #'sp-push-hybrid-sexp)
+
+;; Choose hybrid or pure sexp function depending on the major mode
+
+(defvar my-pure-sexp-modes '(emacs-lisp-mode) "List of pure sexp modes.")
+(defvar my-hybrid-sexp-modes '(c-mode c++-mode) "List of hybrid sexp modes.")
+
+(defun my-transpose-pure-or-hybrid-sexp (&optional arg)
+  "Transpose sexp or hybrid sexp depending on the major mode, forwarding ARG."
+  (interactive)
+  (cond ((seq-some #'derived-mode-p my-pure-sexp-modes) (sp-transpose-sexp arg))
+        ((seq-some #'derived-mode-p my-hybrid-sexp-modes)
+         (sp-transpose-hybrid-sexp arg))
+        (t (progn (message "Major mode `%s' not in `my-pure-sexp-modes' nor
+ `my-hybrid-sexp-modes'" major-mode)
+                  (sp-transpose-sexp arg)))))
+
+(define-key smartparens-mode-map (kbd "C-s-t")
+  #'my-transpose-pure-or-hybrid-sexp)
 
 (smartparens-global-strict-mode 1)
 (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
