@@ -284,7 +284,7 @@ Turn off `show-smartparens-mode'." t nil)
 ;;;;;;  (0 0 0 0))
 ;;; Generated autoloads from smartparens-python.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-python" '("sp-python-fix-tripple-quotes")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-python" '("sp-python-")))
 
 ;;;***
 

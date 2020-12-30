@@ -1833,10 +1833,10 @@ Alpha should be a float between 0 and 1.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/smartparens-20201217.1033/smartparens-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/smartparens-20201229.1937/smartparens-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/smartparens-20201217.1033/smartparens-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/smartparens-20201229.1937/smartparens-autoloads.el") (car load-path))))
 
 
 
@@ -2067,7 +2067,7 @@ Turn off `show-smartparens-mode'." t nil)
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-python" '("sp-python-fix-tripple-quotes")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smartparens-python" '("sp-python-")))
 
 
 
@@ -6755,10 +6755,10 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20201204.1517/neuron-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20201229.1005/neuron-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/neuron-mode-20201204.1517/neuron-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/neuron-mode-20201229.1005/neuron-mode-autoloads.el") (car load-path))))
 
 
 

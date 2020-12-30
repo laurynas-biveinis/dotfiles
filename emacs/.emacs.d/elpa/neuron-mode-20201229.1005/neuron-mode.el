@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: dad8804d050ce4532053b739dcecb1f4d97ea3e4
-;; Package-Version: 20201204.1517
+;; Package-Commit: 81ed1f3288eab9aed2cb0b1eb11af69f988b7d0b
+;; Package-Version: 20201229.1005
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (s "1.12.0") (markdown-mode "2.3") (company "0.9.13"))
 ;;
@@ -299,7 +299,7 @@ URI is expected to have a zquery:/ scheme."
 The command is executed as a synchronous process and the standard output is
 returned as a string."
   (let* ((result    (with-temp-buffer
-                      (list (call-process-shell-command cmd nil t) (buffer-string))))
+                      (list (call-process-shell-command cmd nil '(t nil)) (buffer-string))))
          (exit-code (nth 0 result))
          (output    (nth 1 result)))
     (if (equal exit-code 0)
