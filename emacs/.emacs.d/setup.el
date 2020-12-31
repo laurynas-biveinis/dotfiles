@@ -606,8 +606,22 @@ respectively."
  `my-hybrid-sexp-modes'" major-mode)
                   (sp-transpose-sexp arg)))))
 
+(defun my-slurp-pure-or-hybrid-sexp (&optional arg)
+  "Slurp sexp or hybrid sexp depending on the major mode, forwarding ARG."
+  (interactive)
+  (cond ((seq-some #'derived-mode-p my-pure-sexp-modes) (sp-forward-slurp-sexp
+                                                         arg))
+        ((seq-some #'derived-mode-p my-hybrid-sexp-modes)
+         (sp-slurp-hybrid-sexp))
+        (t (progn (message "Major mode `%s' not in `my-pure-sexp-modes' nor
+ `my-hybrid-sexp-modes'" major-mode)
+                  (sp-forward-slurp-sexp arg)))))
+
 (define-key smartparens-mode-map (kbd "C-s-t")
   #'my-transpose-pure-or-hybrid-sexp)
+
+(define-key smartparens-mode-map (kbd "C-s-<right>")
+  #'my-slurp-pure-or-hybrid-sexp)
 
 (smartparens-global-strict-mode 1)
 (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
