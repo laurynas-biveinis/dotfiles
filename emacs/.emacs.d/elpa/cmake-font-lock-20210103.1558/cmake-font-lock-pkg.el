@@ -1,0 +1,2 @@
+;;; Generated package description from /Users/laurynas/.emacs.d/elpa/cmake-font-lock-20210103.1558/cmake-font-lock.el  -*- no-byte-compile: t -*-
+(define-package "cmake-font-lock" "20210103.1558" "Advanced, type aware, highlight support for CMake" '((cmake-mode "0.0")) :commit "5e20ed32193c2c7ebae920a6a3cd711c8c950597" :authors '(("Anders Lindgren")) :maintainer '("Anders Lindgren") :keywords '("faces" "languages") :url "https://github.com/Lindydancer/cmake-font-lock")

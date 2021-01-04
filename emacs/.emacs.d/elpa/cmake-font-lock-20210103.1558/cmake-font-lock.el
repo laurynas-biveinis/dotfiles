@@ -1,13 +1,13 @@
 ;;; cmake-font-lock.el --- Advanced, type aware, highlight support for CMake
 
-;; Copyright (C) 2012-2020 Anders Lindgren
+;; Copyright (C) 2012-2021 Anders Lindgren
 
 ;; Author: Anders Lindgren
 ;; Keywords: faces, languages
-;; Package-Version: 20200914.1715
-;; Package-Commit: 47687b6ccd0e244691fb5907aaba609e5a42d787
+;; Package-Version: 20210103.1558
+;; Package-Commit: 5e20ed32193c2c7ebae920a6a3cd711c8c950597
 ;; Created: 2012-12-05
-;; Version: 0.1.9
+;; Version: 0.1.11
 ;; Package-Requires: ((cmake-mode "0.0"))
 ;; URL: https://github.com/Lindydancer/cmake-font-lock
 
@@ -233,6 +233,7 @@
                                         "RESULT"))
     ("cmake_language"               . ("CALL"
                                        "CODE"
+                                       "DEFER"
                                        "EVAL"))
     ("cmake_minimum_required"      . ("FATAL_ERROR"
                                       "VERSION"))
@@ -251,6 +252,7 @@
                                       "ESCAPE_QUOTES"
                                       "LF"
                                       "NEWLINE_STYLE"
+                                      "NO_SOURCE_PERMISSIONS"
                                       "UNIX"
                                       "WIN32"))
     ("create_test_sourcelist"      . ("EXTRA_INCLUDE"
@@ -271,9 +273,11 @@
                                       "OUTPUT_VARIABLE"
                                       "RETURN_VALUE"))
     ("execute_process"             . ("ANSI"
+                                      "ANY"
                                       "AUTO"
                                       "COMMAND"
                                       "COMMAND_ECHO"
+                                      "COMMAND_ERROR_IS_FATAL"
                                       "ECHO_ERROR_VARIABLE"
                                       "ECHO_OUTPUT_VARIABLE"
                                       "ENCODING"
@@ -282,6 +286,7 @@
                                       "ERROR_STRIP_TRAILING_WHITESPACE"
                                       "ERROR_VARIABLE"
                                       "INPUT_FILE"
+                                      "LAST"
                                       "NONE"
                                       "OEM"
                                       "OUTPUT_FILE"
@@ -309,9 +314,13 @@
                                       "APPEND"
                                       "ARCHIVE_CREATE"
                                       "ARCHIVE_EXTRACT"
+                                      "BASE_DIRECTORY"
                                       "BUNDLE_EXECUTABLE"
+                                      "CHMOD"
+                                      "CHMOD_RECURSE"
                                       "CONDITION"
                                       "COMPRESSION"
+                                      "COMPRESSION_LEVEL"
                                       "CONFLICTING_DEPENDENCIES_PREFIX"
                                       "CONFIGURE"
                                       "CONFIGURE_DEPENDS"
@@ -387,6 +396,7 @@
                                       "PROCESS"
                                       "READ"
                                       "READ_SYMLINK"
+                                      "REAL_PATH"
                                       "REGEX"
                                       "RELATIVE"
                                       "RELATIVE_PATH"
@@ -408,6 +418,7 @@
                                       "STATUS"
                                       "STRINGS"
                                       "SYMBOLIC"
+                                      "TARGET"
                                       "TIMEOUT"
                                       "TIMESTAMP"
                                       "TLS_VERIFY"
@@ -692,6 +703,8 @@
                                       "LANGUAGES"
                                       "VERSION"))
     ("separate_arguments"          . ("NATIVE_COMMAND"
+                                      "PROGRAM"
+                                      "SEPARATE_ARGS"
                                       "UNIX_COMMAND"
                                       "WINDOWS_COMMAND"))
     ("set"                         . ("BOOL"
@@ -731,13 +744,16 @@
                                       "CONCAT"
                                       "CONFIGURE"
                                       "EQUAL"
+                                      "ERROR_VARIABLE"
                                       "ESCAPE_QUOTES"
                                       "FIND"
                                       "GENEX_STRIP"
+                                      "GET"
                                       "GREATER"
                                       "GREATER_EQUAL"
                                       "HEX"
                                       "JOIN"
+                                      "JSON"
                                       "LENGTH"
                                       "LESS"
                                       "LESS_EQUAL"
@@ -746,6 +762,7 @@
                                       "MATCHALL"
                                       "MATCHES"
                                       "MD5"
+                                      "MEMBER"
                                       "NAME"
                                       "NAMESPACE"
                                       "NOTEQUAL"
@@ -753,9 +770,11 @@
                                       "RANDOM"
                                       "RANDOM_SEED"
                                       "REGEX"
+                                      "REMOVE"
                                       "REPEAT"
                                       "REPLACE"
                                       "REVERSE"
+                                      "SET"
                                       "SHA1"
                                       "SHA224"
                                       "SHA256"
@@ -896,7 +915,10 @@ This is used to keep down the size of
                                   ("ERROR_FILE"       :path)))
     ("export"                 () (("TARGETS" :repeat :tgt)))
     ("file"                   ()     (("LOCK"            :path)
+                                      ("CHMOD"           :repeat :path)
+                                      ("CHMOD_RECURSE"   :repeat :path)
                                       ("READ"            :path :var)
+                                      ("REAL_PATH"       :path :var)
                                       ("MD5"             :path :var)
                                       ("SHA1"            :path :var)
                                       ("SHA224"          :path :var)
@@ -1040,6 +1062,8 @@ This is used to keep down the size of
     ("site_name"              (:var))
     ("string"                 ()      (("CONCAT"    :var)
                                        ("GENEX_STRIP" nil :var)
+                                       ("JSON"      :var)
+                                       ("ERROR_VARIABLE" :var)
                                        ("MATCH"     nil :var)
                                        ("MATCHALL"  nil :var)
                                        ("REPLACE"   nil nil :var)
