@@ -1774,6 +1774,10 @@ underlying file."
             (basic-save-buffer)
             (kill-buffer buf)))))))
 
+;; wgrep-like bindings for deadgrep
+(define-key deadgrep-mode-map (kbd "C-c C-p") #'deadgrep-edit-mode)
+(define-key deadgrep-edit-mode-map (kbd "C-c C-e") #'deadgrep-mode)
+
 ;;; wgrep
 (require 'wgrep)
 (setq wgrep-auto-save-buffer t)
