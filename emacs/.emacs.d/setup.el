@@ -1784,6 +1784,17 @@ underlying file."
 (require 'wgrep)
 (setq wgrep-auto-save-buffer t)
 
+;;; beacon
+(require 'beacon)
+(setq beacon-blink-when-window-scrolls nil)
+(setq beacon-blink-when-window-changes t)
+(setq beacon-blink-when-point-moves-vertically nil)
+(setq beacon-blink-when-point-moves-horizontally nil)
+(setq beacon-blink-when-focused t)
+(setq beacon-blink-duration 0.2)
+(setq beacon-blink-delay 0.2)
+(beacon-mode)
+
 ;;; page-break-lines
 (require 'page-break-lines)
 (global-page-break-lines-mode)

@@ -90,6 +90,7 @@ Unfortunately, that is not always possible.
 [xterm-color](https://github.com/atomontage/xterm-color)
 [all-the-icons-dired](https://github.com/jtbm37/all-the-icons-dired)
 [cmake-font-lock](https://github.com/Lindydancer/cmake-font-lock)
+[beacon](https://github.com/Malabarba/beacon)
 
 #### Packages bundled with Emacs
 
