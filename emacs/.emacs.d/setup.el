@@ -146,6 +146,8 @@
 
 (global-so-long-mode 1)
 
+(global-hl-line-mode)
+
 ;; XXI century encodings
 (set-language-environment "UTF-8")
 

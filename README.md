@@ -151,3 +151,4 @@ Incomplete, will add to it.
 * <https://github.com/ryuta69/dotfiles/>
 * <https://ebzzry.io/en/emacs-pairs/>
 * <https://www.topbug.net/blog/2017/07/31/inputrc-for-humans/>
+* <https://github.com/snackon/Witchmacs>
