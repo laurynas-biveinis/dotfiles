@@ -3,7 +3,7 @@
 
 ;; Copyright (C) 2010 - 2019, 2020 Victor Ren
 
-;; Time-stamp: <2020-11-23 15:50:37 Victor Ren>
+;; Time-stamp: <2021-01-06 11:23:22 Victor Ren>
 ;; Author: Victor Ren <victorhge@gmail.com>
 ;; Keywords: occurrence region simultaneous rectangle refactoring
 ;; Version: 0.9.9.9
@@ -36,7 +36,7 @@
 ;; - Modify the occurrences
 ;; - Hide/show
 ;; - Other basic support APIs
-;; 
+;;
 ;; A few concepts that help you understand what this is about:
 ;;
 ;; Occurrence - one of the regions that are selected, highlighted, usually the
@@ -160,8 +160,9 @@ insertion against a zero-width occurrence.")
 (defvar iedit-aborting nil
   "This is buffer local variable which indicates Iedit mode is aborting.")
 
-(defvar iedit-aborting-hook nil
-  "Functions to call before iedit-abort.  Normally it should be mode exit function.")
+(defvar iedit-lib-quit-func nil
+  "Function to call to exit mode using `iedit-lib'.
+Should be set in `iedit-lib-start'.")
 
 (defvar iedit-post-undo-hook-installed nil
   "This is buffer local variable which indicated if
@@ -206,6 +207,7 @@ It replaces `inhibit-modification-hooks' which prevents calling
 (make-variable-buffer-local 'iedit-post-undo-hook-installed)
 (make-variable-buffer-local 'iedit-occurrence-context-lines)
 (make-variable-buffer-local 'iedit-occurrence-index)
+(make-variable-buffer-local 'iedit-lib-quit-func)
 
 (defconst iedit-occurrence-overlay-name 'iedit-occurrence-overlay-name)
 (defconst iedit-invisible-overlay-name 'iedit-invisible-overlay-name)
@@ -242,8 +244,8 @@ It replaces `inhibit-modification-hooks' which prevents calling
     (define-key map (kbd "M-<") 'iedit-goto-first-occurrence)
     (define-key map (kbd "M->") 'iedit-goto-last-occurrence)
     (define-key map (kbd "C-?") 'iedit-help-for-occurrences)
-    (define-key map [remap keyboard-escape-quit] 'iedit-quit)
-    (define-key map [remap keyboard-quit] 'iedit-quit)
+    (define-key map [remap keyboard-escape-quit] 'iedit--quit)
+    (define-key map [remap keyboard-quit] 'iedit--quit)
     map)
   "Default keymap used within occurrence overlays.")
 
@@ -267,7 +269,7 @@ cursors."
 		  (goto-char (+ (overlay-start occurrence) offset))
 		  (unless (= master (point))
 			(mc/create-fake-cursor-at-point))))
-      (run-hooks 'iedit-aborting-hook)
+      (iedit--quit)
       (multiple-cursors-mode 1)))
   ;; `multiple-cursors-mode' runs `post-command-hook' function on all the
   ;; cursors for updating them .  `iedit-switch-to-mc-mode' is not supposed to
@@ -294,10 +296,10 @@ It should be set before occurrence overlay is created.")
                    (substitute-command-keys "\\[iedit-goto-last-occurrence]") ":first/last "
                    )))
 
-(defun iedit-quit ()
-  "Quit the current mode."
+(defun iedit--quit ()
+  "Quit the current mode by calling mode exit function."
   (interactive)
-  (run-hooks 'iedit-aborting-hook))
+  (funcall iedit-lib-quit-func))
 
 (defun iedit-make-markers-overlays (markers)
   "Create occurrence overlays on a list of markers."
@@ -405,9 +407,13 @@ there are."
     (iedit-update-index)
     )) ;; todo test this function
 
-(defun iedit-lib-start ()
+(defun iedit-lib-start (mode-exit-func)
   "Initialize the hooks."
+  (setq iedit-lib-quit-func mode-exit-func)
   (add-hook 'post-command-hook 'iedit-update-occurrences-2 nil t)
+  (add-hook 'before-revert-hook iedit-lib-quit-func nil t)
+  (add-hook 'kbd-macro-termination-hook iedit-lib-quit-func nil t)
+  (add-hook 'change-major-mode-hook iedit-lib-quit-func nil t)
   (setq iedit-after-change-list nil))
 
 (defun iedit-lib-cleanup ()
@@ -415,6 +421,10 @@ there are."
   (remove-hook 'post-command-hook 'iedit-update-occurrences-2 t)
   (remove-overlays nil nil iedit-occurrence-overlay-name t)
   (iedit-show-all)
+  (remove-hook 'before-revert-hook iedit-lib-quit-func t)
+  (remove-hook 'kbd-macro-termination-hook iedit-lib-quit-func t)
+  (remove-hook 'change-major-mode-hook iedit-lib-quit-func t)
+  (setq iedit-lib-quit-func nil)
   (setq iedit-occurrences-overlays nil)
   (setq iedit-read-only-occurrences-overlays nil)
   (setq iedit-aborting nil)
@@ -463,7 +473,7 @@ This is added to `post-command-hook' when undo command is executed
 in occurrences."
   (if (iedit-same-length)
       nil
-    (run-hooks 'iedit-aborting-hook))
+    (iedit--quit))
   (remove-hook 'post-command-hook 'iedit-post-undo t)
   (setq iedit-post-undo-hook-installed nil))
 
@@ -471,10 +481,10 @@ in occurrences."
   "Turning Iedit mode off and reset `iedit-aborting'.
 
 This is added to `post-command-hook' when aborting Iedit mode is
-decided.  `iedit-aborting-hook' is postponed after the current
+decided.  `iedit-lib-quit-func' is postponed after the current
 command is executed for avoiding `iedit-update-occurrences'
 is called for a removed overlay."
-  (run-hooks 'iedit-aborting-hook)
+  (iedit--quit)
   (remove-hook 'post-command-hook 'iedit-reset-aborting t)
   (setq iedit-aborting nil))
 
@@ -553,7 +563,7 @@ part to apply it to all the other occurrences."
 		 endpos
 		 dellen)
 		(setq iedit-after-change-list nil)))))
-  
+
 (defun iedit-update-occurrences-3 (occurrence beg end &optional change)
   "The third part of updating occurrences.
 Apply the change to all the other occurrences. "
@@ -610,7 +620,7 @@ beginning of the buffer."
 		  (setq pos (next-single-char-property-change pos 'iedit-occurrence-overlay-name)))
 	  ;; from outside
 	  (setq pos (next-single-char-property-change pos 'iedit-occurrence-overlay-name)))
-	  
+
     (if (/= pos (point-max))
         (setq iedit-forward-success t)
       (if (and iedit-forward-success ov)
@@ -798,13 +808,13 @@ value of `iedit-occurrence-context-lines' is used for this time."
           (apply function (overlay-start occurrence) (overlay-end occurrence) args)))))
 
 (defun iedit-upcase-occurrences ()
-  "Covert occurrences to upper case."
+  "Convert occurrences to upper case."
   (interactive "*")
   (iedit-barf-if-buffering)
   (iedit-apply-on-occurrences 'upcase-region))
 
 (defun iedit-downcase-occurrences()
-  "Covert occurrences to lower case."
+  "Convert occurrences to lower case."
   (interactive "*")
   (iedit-barf-if-buffering)
   (iedit-apply-on-occurrences 'downcase-region))
@@ -832,7 +842,7 @@ FORMAT."
 	  (goto-char (iedit-first-occurrence))
 	  (cl-loop for counter from number
 			   for ov = (iedit-find-current-occurrence-overlay)
-			   while (/= (point) (point-max)) 
+			   while (/= (point) (point-max))
 			   do (progn
 		  (if (re-search-forward "\\\\#" (overlay-end ov) t)
 			  (replace-match (format format-string counter) t)
@@ -992,7 +1002,7 @@ modification is not going to be applied to other occurrences."
 				   (cl-case (overlay-get occurrence 'category)
 				     (all-caps
 				      (upcase modified-string))
-				     (cap-initial 
+				     (cap-initial
 				      (if (= 0 offset)
                                           (capitalize modified-string)
 					modified-string))
