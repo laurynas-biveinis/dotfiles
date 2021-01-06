@@ -470,6 +470,10 @@ loaded as such.)"
 
 (add-hook 'emacs-lisp-mode-hook #'dotfiles--emacs-lisp-mode-hook)
 
+;;; gnutls
+(require 'gnutls)
+(setq gnutls-verify-error t)
+
 ;;; gpg/epa/EasyPG
 (require 'epa)
 (setq epg-pinentry-mode 'loopback)
