@@ -1584,7 +1584,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK" " GCMH" " SP/s"))
+                     " WK" " GCMH" " SP/s" " (*)"))
 (rich-minority-mode)
 
 ;;; projectile
