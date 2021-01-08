@@ -16,6 +16,7 @@
 (defvar reftex-plug-into-AUCTeX)
 (defvar bib-cite-use-reftex-view-crossref)
 (defvar main-org-file)
+(defvar secrets-org-file)
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function start-erc-chats "" ())
@@ -1021,6 +1022,15 @@ event of an error or nonlocal exit."
 
 (advice-add 'org-mode-flyspell-verify :before-while
             #'dotfiles--org-mode-flyspell-verify-disable-for-org-crypt)
+
+(defun my-secrets ()
+  "Open my secrets."
+  (interactive)
+  (find-file secrets-org-file)
+  (org-decrypt-entries))
+
+(global-set-key (kbd "<f8>") #'my-secrets)
+
 
 ;; org-id
 (require 'org-id)
