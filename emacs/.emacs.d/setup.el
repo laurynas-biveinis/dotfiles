@@ -1479,6 +1479,18 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'prog-mode-hook #'lsp-deferred)
 
+;; Workaround a bug in lsp-mode 7.0.1, fixed later in
+;; https://github.com/emacs-lsp/lsp-mode/pull/2233 -
+;; `lsp-headerline--fix-image-background' erroring out on a nil image.
+(defun dotfiles--fix-lsp-headerline--fix-image-background (image)
+  "Workaround a bug in `lsp-headerline--fix-image-background' in lsp-mode 7.0.1.
+Pass IMAGE down."
+  (if (not image)
+      "" nil))
+
+(advice-add #'lsp-headerline--fix-image-background :before-until
+            #'dotfiles--fix-lsp-headerline--fix-image-background)
+
 ;;; lsp-mode clangd setup
 (defconst lsp-clients-clangd-tramp-executable "clangd")
 (defun lsp-clients--clangd-tramp-command ()
