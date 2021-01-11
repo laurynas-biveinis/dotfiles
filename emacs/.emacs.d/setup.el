@@ -1355,6 +1355,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
 (setq lsp-clients-clangd-args '("--cross-file-rename"))
 (setq lsp-enable-snippet t)
+;; TODO(laurynas): LSP-formatting yanked region is nice, but it formats
+;; surroundings of the region too, which is very annoying in case of i.e. C++
+;; and a missing semicolon at the end of the region.
+(setq lsp-enable-indentation nil)
 ;; TODO(laurynas): C and C++ docs render with interspersed random backslashes:
 ;; https://emacs.stackexchange.com/questions/55056/how-to-improve-eldoc-lsp-mode-output-with-c-c-comments
 ;; https://github.com/jrblevin/markdown-mode/issues/409
