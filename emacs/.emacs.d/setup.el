@@ -1031,6 +1031,16 @@ event of an error or nonlocal exit."
 
 (global-set-key (kbd "<f8>") #'my-secrets)
 
+;; A hack, it is surprising no official function for this exists. But then
+;; again, I need to `string-trim' it too.
+(defun my-copy-cell ()
+  "Copy the current org table cell to the kill ring."
+  (interactive)
+  (let ((p (point)))
+    (org-table-copy-region p p))
+  (kill-new (string-trim (caar org-table-clip))))
+
+(define-key org-mode-map (kbd "<f7>") #'my-copy-cell)
 
 ;; org-id
 (require 'org-id)
