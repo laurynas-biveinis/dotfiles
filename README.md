@@ -91,6 +91,7 @@ Unfortunately, that is not always possible.
 [all-the-icons-dired](https://github.com/jtbm37/all-the-icons-dired)
 [cmake-font-lock](https://github.com/Lindydancer/cmake-font-lock)
 [beacon](https://github.com/Malabarba/beacon)
+[flycheck-color-mode-line](https://github.com/flycheck/flycheck-color-mode-line)
 
 #### Packages bundled with Emacs
 
