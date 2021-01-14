@@ -644,9 +644,14 @@ respectively."
 
 (show-smartparens-global-mode 1)
 
-;; Regular not strict smartparens in diff-mode
+;; Regular not strict smartparens in `diff-mode'
 (add-hook 'diff-mode-hook #'turn-off-smartparens-strict-mode)
 (add-hook 'diff-mode-hook #'turn-on-smartparens-mode)
+
+;; And in `org-mode'
+(add-hook 'org-mode-hook #'turn-off-smartparens-strict-mode)
+(add-hook 'org-mode-hook #'turn-on-smartparens-mode)
+
 
 ;; Regular not strict smartparens in minibuffer
 (setq sp-ignore-modes-list (delete 'minibuffer-inactive-mode
