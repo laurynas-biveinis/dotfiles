@@ -1873,7 +1873,10 @@ find a search tool; by default, this uses \"find | grep\" in the
 (which-key-mode)
 
 ;;;; calfw
-(require 'calfw)
+;; Workaround warnings stemming from
+;; https://github.com/kiwanami/emacs-calfw/issues/101 - "Package `cl' is
+;; obsolete."
+(with-suppressed-warnings ((obsolete cl)) (require 'calfw))
 (require 'calfw-org)
 (require 'calfw-ical)
 
