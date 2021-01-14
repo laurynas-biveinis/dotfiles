@@ -20,6 +20,7 @@
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function start-erc-chats "" ())
+(declare-function lsp-headerline--fix-image-background "lsp-headerline" (image))
 
 ;;;; General settings
 
