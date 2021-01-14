@@ -21,7 +21,14 @@
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function start-erc-chats "" ())
 
-;;; General settings
+;;;; General settings
+
+;;; Autosave
+;; Autosave should be idle-based only, it is very annoying when it autosaves in
+;; the middle of typing, even more so with org-encrypted blocks.
+(setq auto-save-interval 0)
+(setq auto-save-timeout 30)
+
 ;; Keep all messages
 (setq message-log-max t)
 
