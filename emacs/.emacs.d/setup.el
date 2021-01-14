@@ -666,7 +666,9 @@ respectively."
 ;; duplicated sshx/scpx paths in lsp-mode cache.
 (setq tramp-copy-size-limit nil)
 (setq tramp-default-method "scpx")
-(setq tramp-completion-reread-directory-timeout t)
+;; Remove `with-suppressed-warnings' once upgraded to 27.2
+(with-suppressed-warnings ((obsolete tramp-completion-reread-directory-timeout))
+  (setq tramp-completion-reread-directory-timeout t))
 
 ;; TRAMP "integration" with VC: I only use git on remote hosts, handled by
 ;; Magit, thus disable VC over TRAMP
