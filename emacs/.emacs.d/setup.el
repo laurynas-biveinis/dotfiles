@@ -1220,6 +1220,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
+;; flycheck-color-mode
+(require 'flycheck-color-mode-line)
+(add-hook 'flycheck-mode-hook #'flycheck-color-mode-line-mode)
+
 ;;; Company mode
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)

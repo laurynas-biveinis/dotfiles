@@ -12087,6 +12087,33 @@ SYMBOL with `flycheck-def-executable-var'.
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-color-mode-line-0.3/flycheck-color-mode-line-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-color-mode-line-0.3/flycheck-color-mode-line-autoloads.el") (car load-path))))
+
+
+
+(autoload 'flycheck-color-mode-line-mode "flycheck-color-mode-line" "\
+Minor mode to color the mode line with the Flycheck status.
+ 
+When called interactively, toggle
+`flycheck-color-mode-line-mode'.  With prefix ARG, enable
+`flycheck-color-mode-line-mode' if ARG is positive, otherwise
+disable it.
+ 
+When called from Lisp, enable `flycheck-color-mode-line-mode' if ARG is omitted,
+nil or positive.  If ARG is `toggle', toggle `flycheck-color-mode-line-mode'.
+Otherwise behave as if called interactively.
+
+\(fn &optional ARG)" t nil)
+
+(custom-add-frequent-value 'flycheck-mode-hook 'flycheck-color-mode-line-mode)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "flycheck-color-mode-line" '("flycheck-color-mode-line-")))
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/exec-path-from-shell-1.12/exec-path-from-shell-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12480,7 +12507,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck exec-path-from-shell eldoc-cmake dispwatch deadgrep cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
