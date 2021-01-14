@@ -1799,8 +1799,7 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;; `deadgrep--propagate-change' support full `after-change-functions' contract:
 ;; delete the old region first, then insert the new region.
 (defun deadgrep--propagate-change (beg end length)
-  "Repeat the last modification to the results buffer in the
-underlying file."
+  "Propagate edits from BEG to END with LENGTH to the underlying buffer."
   ;; We should never be called outside an edit buffer, but be
   ;; defensive. Buggy functions in change hooks are painful.
   (when (eq major-mode 'deadgrep-edit-mode)
