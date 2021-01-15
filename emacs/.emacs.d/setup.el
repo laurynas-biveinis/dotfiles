@@ -1026,6 +1026,14 @@ event of an error or nonlocal exit."
 (advice-add #'org-ctrl-c-ctrl-c   :around #'dotfiles--org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'dotfiles--org-checkbox-toggle-advice)
 
+;;; Clocktables sorted by duration
+(defun my-org-clocktable-sorter (ipos tables params)
+  (setq tables
+        (cl-sort tables
+                 (lambda (table1 table2) (> (nth 1 table1) (nth 1 table2)))))
+  (funcall (or org-clock-clocktable-formatter 'org-clocktable-write-default)
+           ipos tables params))
+
 ;; org-mode encryption of selected subtrees
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
