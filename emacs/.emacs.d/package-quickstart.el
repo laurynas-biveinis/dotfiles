@@ -10032,10 +10032,10 @@ Save keyfreq data now.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20210114.1621/iedit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20210116.603/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20210114.1621/iedit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20210116.603/iedit-autoloads.el") (car load-path))))
 
 
 
