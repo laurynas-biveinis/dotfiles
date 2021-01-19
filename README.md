@@ -92,6 +92,7 @@ Unfortunately, that is not always possible.
 [cmake-font-lock](https://github.com/Lindydancer/cmake-font-lock)
 [beacon](https://github.com/Malabarba/beacon)
 [flycheck-color-mode-line](https://github.com/flycheck/flycheck-color-mode-line)
+[stripe-buffer](https://github.com/sabof/stripe-buffer)
 
 #### Packages bundled with Emacs
 

@@ -1647,6 +1647,49 @@ Add archive file name handler to `file-name-handler-alist'." (when tramp-archive
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/stripe-buffer-0.2.5/stripe-buffer-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/stripe-buffer-0.2.5/stripe-buffer-autoloads.el") (car load-path))))
+
+
+
+(autoload 'stripe-buffer-mode "stripe-buffer" "\
+Stripe buffer mode
+
+If called interactively, enable Stripe-Buffer mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'turn-on-stripe-buffer-mode "stripe-buffer" "\
+Turn on `stripe-buffer-mode'." t nil)
+
+(autoload 'stripe-table-mode "stripe-buffer" "\
+Stripe table mode
+
+If called interactively, enable Stripe-Table mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'turn-on-stripe-table-mode "stripe-buffer" "\
+Turn on `stripe-table-mode'." t nil)
+
+(autoload 'org-table-stripes-enable "stripe-buffer" "\
+Backward compatibility" t nil)
+
+(autoload 'stripe-listify-buffer "stripe-buffer" "\
+Turn on `stripe-buffer-mode' and `hl-line-mode'." t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "stripe-buffer" '("sb/" "stripe-")))
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20201223.1051/ssh-config-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12507,7 +12550,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)

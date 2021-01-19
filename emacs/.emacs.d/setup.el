@@ -1906,6 +1906,12 @@ find a search tool; by default, this uses \"find | grep\" in the
 
 (setq cfw:render-line-breaker #'cfw:render-line-breaker-wordwrap)
 
+;;; stripe-buffer
+(require 'stripe-buffer)
+(add-hook 'dired-mode-hook #'stripe-listify-buffer)
+(add-hook 'package-menu-mode-hook #'stripe-listify-buffer)
+(add-hook 'org-agenda-mode-hook #'stripe-listify-buffer)
+
 ;;;; Upgrade helper
 (defun my-recompile-packages ()
   "Force full recompilation of installed packages."
