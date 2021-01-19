@@ -1254,10 +1254,10 @@ result of `defhydra'.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ht-2.2/ht-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ht-2.3/ht-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ht-2.2/ht-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ht-2.3/ht-autoloads.el") (car load-path))))
 
 
 
