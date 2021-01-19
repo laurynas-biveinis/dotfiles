@@ -111,6 +111,10 @@
 
 (setq switch-to-prev-buffer-skip 'this)
 
+;; isearch
+(setq isearch-lazy-count t)
+(setq isearch-yank-on-move 'shift)
+
 ;;; Hook helpers
 ;; Display trailing whitespace
 (defun dotfiles--enable-show-trailing-ws ()

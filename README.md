@@ -155,3 +155,4 @@ Incomplete, will add to it.
 * <https://www.topbug.net/blog/2017/07/31/inputrc-for-humans/>
 * <https://github.com/snackon/Witchmacs>
 * <https://github.com/jhenahan/dots/tree/main/config/emacs>
+* <https://github.com/link0ff/emacs-init>
