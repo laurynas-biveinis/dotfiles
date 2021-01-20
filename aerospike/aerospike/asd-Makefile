@@ -29,4 +29,7 @@ clean :
 recreate-ee-cdb :
 	(cd ee && ln -sf "../ce/compile_commands.json" .)
 
+deb :
+	(cd ce && $(MAKE) deb+ee)
+
 .PHONY : build rebuild incremental clean community recreate-ee-cdb
