@@ -1643,7 +1643,7 @@ Pass IMAGE down."
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK" " GCMH" " SP/s" " (*)"))
+                     " WK" " GCMH" " SP/s" " (*)" " ColorIds"))
 (rich-minority-mode)
 
 ;;; projectile
@@ -1911,6 +1911,10 @@ find a search tool; by default, this uses \"find | grep\" in the
 (add-hook 'dired-mode-hook #'stripe-listify-buffer)
 (add-hook 'package-menu-mode-hook #'stripe-listify-buffer)
 (add-hook 'org-agenda-mode-hook #'stripe-listify-buffer)
+
+;;; color-identifiers-mode
+(require 'color-identifiers-mode)
+(global-color-identifiers-mode)
 
 ;;;; Upgrade helper
 (defun my-recompile-packages ()

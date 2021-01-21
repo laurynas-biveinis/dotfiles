@@ -93,6 +93,7 @@ Unfortunately, that is not always possible.
 [beacon](https://github.com/Malabarba/beacon)
 [flycheck-color-mode-line](https://github.com/flycheck/flycheck-color-mode-line)
 [stripe-buffer](https://github.com/sabof/stripe-buffer)
+[color-identifiers-mode](https://github.com/ankurdave/color-identifiers-mode)
 
 #### Packages bundled with Emacs
 
