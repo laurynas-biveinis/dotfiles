@@ -123,6 +123,7 @@ tramp erc cc-mode
   search-replace.
 * [Automatically update git gutter on Magit
   actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).
+* [Disable color-identifiers-mode under LSP with semantic highlighting](https://github.com/laurynas-biveinis/dotfiles/blob/ce044dab576c525f418a5383180d06c888a33599/emacs/.emacs.d/setup.el#L1924)
 
 ### Custom commands and functionality
 
