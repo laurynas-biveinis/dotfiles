@@ -1907,15 +1907,28 @@ find a search tool; by default, this uses \"find | grep\" in the
 
 (setq cfw:render-line-breaker #'cfw:render-line-breaker-wordwrap)
 
-;;; stripe-buffer
+;;; `stripe-buffer'
 (require 'stripe-buffer)
 (add-hook 'dired-mode-hook #'stripe-listify-buffer)
 (add-hook 'package-menu-mode-hook #'stripe-listify-buffer)
 (add-hook 'org-agenda-mode-hook #'stripe-listify-buffer)
 
-;;; color-identifiers-mode
+;;; `color-identifiers-mode'
 (require 'color-identifiers-mode)
 (global-color-identifiers-mode)
+
+;; Integrate `color-identifiers-mode' with `lsp-mode': if semantic highlighting
+;; is enabled, disable `color-identifiers-mode', because semantic highlighting
+;; overwrites any faces of the latter. I did not find a way to make the two
+;; interplay more nicely.
+(defun dotfiles--lsp-disable-color-identifiers-mode ()
+  "Disable `color-identifiers-mode' if semantic higlighting is enabled."
+  (if (and lsp-enable-semantic-highlighting (lsp--capability
+                                             :semanticTokensProvider))
+      (color-identifiers-mode -1)))
+
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-color-identifiers-mode)
+
 
 ;;;; Upgrade helper
 (defun my-recompile-packages ()
