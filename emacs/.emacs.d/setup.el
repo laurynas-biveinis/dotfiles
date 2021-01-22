@@ -1471,7 +1471,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   "Disable any electric keys if LSP on type formatting is enabled."
   ;; Using internal LSP symbols is not ideal but I don't see an alternative.
   (when (and lsp-enable-on-type-formatting (lsp--capability
-                                            "documentOnTypeFormattingProvider"))
+                                            :documentOnTypeFormattingProvider))
     (electric-layout-mode -1)
     ;; It seems it's OK to call this in non-cc-mode buffers too
     (c-toggle-electric-state -1)))
@@ -1481,7 +1481,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (when (and lsp-enable-indentation
              ;; Using internal LSP symbols is not ideal but I don't see an
              ;; alternative.
-             (or (lsp--capability "documentRangeFormattingProvider")
+             (or (lsp--capability :documentRangeFormattingProvider)
                  (lsp--registered-capability "textDocument/rangeFormatting")))
     (setq-local dotfiles--use-lsp-indent t)
     (advice-add #'c-indent-defun :around #'dotfiles--lsp-format-defun-advice)
