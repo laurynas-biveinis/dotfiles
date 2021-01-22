@@ -78,6 +78,7 @@ Unfortunately, that is not always possible.
 [ssh-config-mode](https://github.com/jhgorrell/ssh-config-mode-el)
 [bison-mode](https://github.com/Wilfred/bison-mode)
 [cmake-mode](https://github.com/Kitware/CMake/blob/master/Auxiliary/cmake-mode.el)
+[grab-mac-link](https://github.com/xuchunyang/grab-mac-link.el)
 
 #### Appearance
 

@@ -11712,6 +11712,38 @@ Bring up a `helm-dash' search interface with symbol at point.
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/grab-mac-link-0.3/grab-mac-link-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/grab-mac-link-0.3/grab-mac-link-autoloads.el") (car load-path))))
+
+
+
+(autoload 'grab-mac-link "grab-mac-link" "\
+Prompt for an application to grab a link from.
+When done, go grab the link, and insert it at point.
+
+With a prefix argument, instead of \"insert\", save it to
+kill-ring. For org link, save it to `org-stored-links', then
+later you can insert it via `org-insert-link'.
+
+If called from lisp, grab link from APP and return it (as a
+string) with LINK-TYPE.  APP is a symbol and must be one of
+'(chrome safari finder mail terminal), LINK-TYPE is also a symbol
+and must be one of '(plain markdown org), if LINK-TYPE is omitted
+or nil, plain link will be used.
+
+\(fn APP &optional LINK-TYPE)" t nil)
+
+(autoload 'grab-mac-link-dwim "grab-mac-link" "\
+
+
+\(fn APP)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "grab-mac-link" '("grab-mac-link-")))
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/google-c-style-20180130.1736/google-c-style-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12595,7 +12627,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)

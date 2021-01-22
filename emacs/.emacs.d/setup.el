@@ -1929,6 +1929,9 @@ find a search tool; by default, this uses \"find | grep\" in the
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-color-identifiers-mode)
 
+;;; `grab-mac-link'
+(require 'grab-mac-link)
+(setq grab-mac-link-dwim-favourite-app 'safari)
 
 ;;;; Upgrade helper
 (defun my-recompile-packages ()
