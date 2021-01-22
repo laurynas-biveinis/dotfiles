@@ -311,6 +311,7 @@ loaded as such.)"
 
 ;; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
+(put 'list-timers 'disabled nil)
 
 ;; No scollbars
 (set-scroll-bar-mode nil)
