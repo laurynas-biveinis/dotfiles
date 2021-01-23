@@ -10,9 +10,7 @@
 ;;; Generated autoloads from helm-icons.el
 
 (autoload 'helm-icons-enable "helm-icons" "\
-Enable `helm-icons'.
-
-\(fn)" t nil)
+Enable `helm-icons'." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-icons" '("helm-icons-")))
 

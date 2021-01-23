@@ -11557,17 +11557,15 @@ Show lsp code actions using helm.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20200719.1359/helm-icons-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20210122.1558/helm-icons-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20200719.1359/helm-icons-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20210122.1558/helm-icons-autoloads.el") (car load-path))))
 
 
 
 (autoload 'helm-icons-enable "helm-icons" "\
-Enable `helm-icons'.
-
-\(fn)" t nil)
+Enable `helm-icons'." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-icons" '("helm-icons-")))
 
