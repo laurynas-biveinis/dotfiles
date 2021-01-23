@@ -1525,6 +1525,18 @@ Pass IMAGE down."
 (advice-add #'lsp-headerline--fix-image-background :before-until
             #'dotfiles--fix-lsp-headerline--fix-image-background)
 
+;; Workaround another bug in lsp-mode 7.0.1 -
+;; https://github.com/emacs-lsp/lsp-mode/issues/2556 - Headerline on cloned
+;; buffers results in (wrong-type-argument stringp nil)
+(defun dotfiles--workaround-headerline-indirect-buffer (args)
+  "For indirect buffers, fix up ARGS to the base buffer file path."
+  (if (car args)
+      args
+    (list (buffer-file-name (buffer-base-buffer)))))
+
+(advice-add #'lsp-headerline--filename-with-icon :filter-args
+            #'dotfiles--workaround-headerline-indirect-buffer)
+
 ;;; lsp-mode clangd setup
 (defconst lsp-clients-clangd-tramp-executable "clangd")
 (defun lsp-clients--clangd-tramp-command ()
