@@ -10075,6 +10075,26 @@ Save keyfreq data now.
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/info-colors-0.2/info-colors-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/info-colors-0.2/info-colors-autoloads.el") (car load-path))))
+
+
+
+(let ((loads (get 'info-colors 'custom-loads))) (if (member '"info-colors" loads) nil (put 'info-colors 'custom-loads (cons '"info-colors" loads))))
+
+(autoload 'info-colors-fontify-lisp-code-blocks "info-colors" "\
+Fontify Lisp code blocks in an `info' node." nil nil)
+
+(autoload 'info-colors-fontify-reference-items "info-colors" "\
+Fontify reference items in an `info' node." nil nil)
+
+(autoload 'info-colors-fontify-node "info-colors" "\
+Fontify an `info' node." nil nil)
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20210116.603/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12625,7 +12645,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)

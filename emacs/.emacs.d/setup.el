@@ -1945,6 +1945,10 @@ find a search tool; by default, this uses \"find | grep\" in the
 (require 'grab-mac-link)
 (setq grab-mac-link-dwim-favourite-app 'safari)
 
+;;; `info-colors'
+(require 'info-colors)
+(add-hook 'Info-selection-hook #'info-colors-fontify-node)
+
 ;;;; Upgrade helper
 (defun my-recompile-packages ()
   "Force full recompilation of installed packages."
