@@ -12515,6 +12515,54 @@ Major mode for editing flex files. (bison-mode by any other name)
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/beginend-2.2.0/beginend-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/beginend-2.2.0/beginend-autoloads.el") (car load-path))))
+
+
+
+(autoload 'beginend-setup-all "beginend" "\
+Use beginend on all compatible modes.
+For example, this activates function `beginend-dired-mode' in `dired' and
+function `beginend-message-mode' in `message-mode'.  All affected minor
+modes are described in `beginend-modes'." nil nil)
+
+(autoload 'beginend-unsetup-all "beginend" "\
+Remove beginend from all compatible modes in `beginend-modes'." nil nil)
+
+(defvar beginend-global-mode nil "\
+Non-nil if Beginend-Global mode is enabled.
+See the `beginend-global-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `beginend-global-mode'.")
+
+(custom-autoload 'beginend-global-mode "beginend" nil)
+
+(autoload 'beginend-global-mode "beginend" "\
+Toggle beginend mode.
+Interactively with no argument, this command toggles the mode.  A positive
+prefix argument enables the mode, any other prefix argument disables it.
+From Lisp, argument omitted or nil enables the mode, `toggle' toggles the
+state.
+
+If called interactively, enable Beginend-Global mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+When beginend mode is enabled, modes such as `dired-mode', `message-mode'
+and `compilation-mode' will have their \\[beginning-of-buffer] and
+\\[end-of-buffer] keys adapted to go to meaningful places.
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "beginend" '("beginend-")))
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/beacon-1.3.4/beacon-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12691,7 +12739,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)

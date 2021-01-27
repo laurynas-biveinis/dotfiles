@@ -1860,6 +1860,10 @@ find a search tool; by default, this uses \"find | grep\" in the
 (require 'wgrep)
 (setq wgrep-auto-save-buffer t)
 
+;;; `beginend'
+(require 'beginend)
+(beginend-global-mode)
+
 ;;; beacon
 (require 'beacon)
 (setq beacon-blink-when-window-scrolls nil)

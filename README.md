@@ -80,6 +80,7 @@ Unfortunately, that is not always possible.
 [cmake-mode](https://github.com/Kitware/CMake/blob/master/Auxiliary/cmake-mode.el)
 [grab-mac-link](https://github.com/xuchunyang/grab-mac-link.el)
 [cheat-sh](https://github.com/davep/cheat-sh.el)
+[beginend](https://github.com/DamienCassou/beginend)
 
 #### Appearance
 
