@@ -79,6 +79,7 @@ Unfortunately, that is not always possible.
 [bison-mode](https://github.com/Wilfred/bison-mode)
 [cmake-mode](https://github.com/Kitware/CMake/blob/master/Auxiliary/cmake-mode.el)
 [grab-mac-link](https://github.com/xuchunyang/grab-mac-link.el)
+[cheat-sh](https://github.com/davep/cheat-sh.el)
 
 #### Appearance
 

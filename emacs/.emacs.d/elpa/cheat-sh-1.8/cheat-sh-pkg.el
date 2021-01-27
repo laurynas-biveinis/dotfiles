@@ -1,0 +1,2 @@
+;;; Generated package description from /Users/laurynas/.emacs.d/elpa/cheat-sh-1.8/cheat-sh.el  -*- no-byte-compile: t -*-
+(define-package "cheat-sh" "1.8" "Interact with cheat.sh" '((emacs "25.1")) :commit "bd970d7c576b8720d63a1e7fd88ea8a943f2160b" :authors '(("Dave Pearson" . "davep@davep.org")) :maintainer '("Dave Pearson" . "davep@davep.org") :keywords '("docs" "help") :url "https://github.com/davep/cheat-sh.el")
