@@ -1,4 +1,4 @@
-(define-package "ssh-config-mode" "20210123.1051" "Mode for fontification of ~/.ssh/config" 'nil :commit "3639241d0e435e622049e6e72866da6b8b201241" :authors
+(define-package "ssh-config-mode" "20210127.1051" "Mode for fontification of ~/.ssh/config" 'nil :commit "7539916b1eb4f44b2a682111424f3aca1233c482" :authors
   '(("Harley Gorrell" . "harley@panix.com"))
   :maintainer
   '("Harley Gorrell" . "harley@panix.com")
