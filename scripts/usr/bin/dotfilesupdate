@@ -7,9 +7,11 @@ readonly DOTFILES_SETUP_DIR=$DOTFILES_ROOT/dotfiles
 readonly MANDATORY_MODULES="bash git scripts"
 readonly EXTRA_MODULES_FILE=$DOTFILES_SETUP_DIR/extra_modules
 
-readonly IGNORE_FOR_SYMLINKS=("Library/Containers" \
-                              "Library/Caches/com.apple.bird" \
-                              "Library/Saved Application State")
+readonly IGNORE_FOR_SYMLINKS=(".nix-defexpr/channels" \
+                                  "Library/Caches/com.apple.bird" \
+                                  "Library/Containers" \
+                                  "Library/Logs/ims.log" \
+                                  "Library/Saved Application State")
 
 pushd $DOTFILES_ROOT || exit
 git pull origin-ro master
