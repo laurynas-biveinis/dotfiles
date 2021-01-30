@@ -1657,7 +1657,7 @@ Pass IMAGE down."
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK" " GCMH" " SP/s" " (*)" " ColorIds"))
+                     " WK" " GCMH" " SP/s" " (*)" " ColorIds" " be"))
 (rich-minority-mode)
 
 ;;; projectile
