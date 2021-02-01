@@ -5,9 +5,9 @@
 ;; Author: Justin Burkett <justin@burkett.cc>
 ;; Maintainer: Justin Burkett <justin@burkett.cc>
 ;; URL: https://github.com/justbur/emacs-which-key
-;; Package-Version: 3.5.0
-;; Package-Commit: ae59b7edb0d82aa0251803fdfbde6b865083c8b8
-;; Version: 3.5.0
+;; Package-Version: 3.5.1
+;; Package-Commit: c0608e812a8d1bc7aefeacdfaeb56a7272eabf44
+;; Version: 3.5.1
 ;; Keywords:
 ;; Package-Requires: ((emacs "24.4"))
 
@@ -679,12 +679,12 @@ update.")
 (defvar which-key--ignore-non-evil-keys-regexp
   (eval-when-compile
     (regexp-opt '("mouse-" "wheel-" "remap" "drag-" "scroll-bar"
-                  "select-window" "switch-frame" "which-key-"))))
+                  "select-window" "switch-frame" "which-key"))))
 (defvar which-key--ignore-keys-regexp
   (eval-when-compile
     (regexp-opt '("mouse-" "wheel-" "remap" "drag-" "scroll-bar"
                   "select-window" "switch-frame" "-state"
-                  "which-key-"))))
+                  "which-key"))))
 
 (make-obsolete-variable 'which-key-prefix-name-alist nil "2016-10-05")
 (make-obsolete-variable 'which-key-prefix-title-alist nil "2016-10-05")
@@ -1597,11 +1597,8 @@ which are strings. KEY is of the form produced by `key-binding'."
 (defun which-key--pseudo-key (key &optional prefix)
   "Replace the last key in the sequence KEY by a special symbol
 in order for which-key to allow looking up a description for the key."
-  (let* ((seq (listify-key-sequence key))
-         (final (intern (format "which-key-%s" (key-description (last seq))))))
-    (if prefix
-        (vconcat prefix (list final))
-      (vconcat (butlast seq) (list final)))))
+  (let ((seq (listify-key-sequence key)))
+    (vconcat (or prefix (butlast seq)) [which-key] (last seq))))
 
 (defun which-key--maybe-get-prefix-title (keys)
   "KEYS is a string produced by `key-description'.

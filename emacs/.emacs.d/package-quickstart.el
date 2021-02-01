@@ -386,10 +386,10 @@ else like the former.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.5.0/which-key-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.5.1/which-key-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/which-key-3.5.0/which-key-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/which-key-3.5.1/which-key-autoloads.el") (car load-path))))
 
 
 
@@ -10095,10 +10095,10 @@ Fontify an `info' node." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20210116.603/iedit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20210131.1507/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20210116.603/iedit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20210131.1507/iedit-autoloads.el") (car load-path))))
 
 
 
