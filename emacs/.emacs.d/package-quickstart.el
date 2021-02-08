@@ -11788,6 +11788,61 @@ Sets up preferred newline behavior. Not set by default. Meant
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.2.8/gitignore-mode-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.2.8/gitignore-mode-autoloads.el") (car load-path))))
+
+
+
+(autoload 'gitignore-mode "gitignore-mode" "\
+A major mode for editing .gitignore files.
+
+\(fn)" t nil)
+
+(dolist (pattern (list "/\\.gitignore\\'" "/info/exclude\\'" "/git/ignore\\'")) (add-to-list 'auto-mode-alist (cons pattern 'gitignore-mode)))
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "gitignore-mode" '("gitignore-mode-font-lock-keywords")))
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.2.8/gitconfig-mode-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.2.8/gitconfig-mode-autoloads.el") (car load-path))))
+
+
+
+(autoload 'gitconfig-mode "gitconfig-mode" "\
+A major mode for editing .gitconfig files.
+
+\(fn)" t nil)
+
+(dolist (pattern '("/\\.gitconfig\\'" "/\\.git/config\\'" "/modules/.*/config\\'" "/git/config\\'" "/\\.gitmodules\\'" "/etc/gitconfig\\'")) (add-to-list 'auto-mode-alist (cons pattern 'gitconfig-mode)))
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "gitconfig-mode" '("gitconfig-")))
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.2.8/gitattributes-mode-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.2.8/gitattributes-mode-autoloads.el") (car load-path))))
+
+
+
+(autoload 'gitattributes-mode "gitattributes-mode" "\
+A major mode for editing .gitattributes files.
+\\{gitattributes-mode-map}
+
+\(fn)" t nil)
+
+(dolist (pattern '("/\\.gitattributes\\'" "/info/attributes\\'" "/git/attributes\\'")) (add-to-list 'auto-mode-alist (cons pattern #'gitattributes-mode)))
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "gitattributes-mode" '("gitattributes-mode-")))
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-0.91/git-gutter-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12739,7 +12794,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color async with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree treepy dash s f avy ace-window pfuture lv hydra ht treemacs tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme smartparens rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock memoize magit-popup ghub git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)

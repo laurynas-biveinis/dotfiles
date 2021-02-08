@@ -81,6 +81,7 @@ Unfortunately, that is not always possible.
 [grab-mac-link](https://github.com/xuchunyang/grab-mac-link.el)
 [cheat-sh](https://github.com/davep/cheat-sh.el)
 [beginend](https://github.com/DamienCassou/beginend)
+[git-modes](https://github.com/magit/git-modes)
 
 #### Appearance
 

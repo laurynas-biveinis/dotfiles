@@ -1,0 +1,2 @@
+;;; Generated package description from /Users/laurynas/.emacs.d/elpa/gitignore-mode-1.2.8/gitignore-mode.el  -*- no-byte-compile: t -*-
+(define-package "gitignore-mode" "1.2.8" "Major mode for editing .gitignore files" 'nil :commit "55468314a5f6b77d2c96be62c7005ac94545e217" :authors '(("Sebastian Wiesner" . "lunaryorn@gmail.com")) :maintainer '("Jonas Bernoulli" . "jonas@bernoul.li") :keywords '("convenience" "vc" "git") :url "https://github.com/magit/git-modes")
