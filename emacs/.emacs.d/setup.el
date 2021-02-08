@@ -570,7 +570,7 @@ respectively."
                                 "wrap-with-"
                                 (prin1-to-string key)
                                 "s"))
-                     (&optional arg)
+                     (&optional _arg)
                    (interactive "p")
                    (sp-wrap-with-pair ,val)))))
 
