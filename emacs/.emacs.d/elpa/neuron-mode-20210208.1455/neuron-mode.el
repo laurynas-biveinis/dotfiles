@@ -6,8 +6,8 @@
 ;; Author: felko <http://github/felko>
 ;; Homepage: https://github.com/felko/neuron-mode
 ;; Keywords: outlines
-;; Package-Commit: f2560690b68d5c0cd65c49802c5c86bf17944b6a
-;; Package-Version: 20210130.2357
+;; Package-Commit: 02fbfca98b5dfb09f09159914682efea6d6afb5a
+;; Package-Version: 20210208.1455
 ;; Package-X-Original-Version: 0.1
 ;; Package-Requires: ((emacs "26.3") (f "0.20.0") (s "1.12.0") (markdown-mode "2.3") (company "0.9.13"))
 ;;
@@ -839,7 +839,7 @@ The path is relative to the neuron output directory."
   (neuron--open-zettel-from-id (funcall-interactively #'neuron--get-zettel-id)))
 
 (defconst neuron-link-regex
-  (concat "\\[\\{2,3\\}\\(z:" thing-at-point-url-path-regexp "\\|[A-Za-z0-9-_ ]+\\(?:\?[^][\t\n\\ {}]*\\)?\\)]]\\(]\\)*")
+  (concat "\\[\\{2,3\\}\\(z:" thing-at-point-url-path-regexp "\\|[[:alnum:]-_ ]+\\(?:\?[^][\t\n\\ {}]*\\)?\\)]]\\(]\\)*")
   "Regex matching zettel links like [[[URL/ID]]] or [[URL/ID]] .
 Group 1 is the matched ID or URL.")
 

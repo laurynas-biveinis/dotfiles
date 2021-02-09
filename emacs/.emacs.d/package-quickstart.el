@@ -6793,10 +6793,10 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210130.2357/neuron-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210208.1455/neuron-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210130.2357/neuron-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210208.1455/neuron-mode-autoloads.el") (car load-path))))
 
 
 
