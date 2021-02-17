@@ -20,6 +20,11 @@ optional argument topic will be appended to the argument list.
 
 \(fn TYPE &optional TOPIC BUFFER)" t nil)
 
+(autoload 'cmake-command-run-help "cmake-mode" "\
+`cmake-command-run' but rendered in `rst-mode'.
+
+\(fn TYPE &optional TOPIC BUFFER)" t nil)
+
 (autoload 'cmake-help-list-commands "cmake-mode" "\
 Prints out a list of the cmake commands." t nil)
 

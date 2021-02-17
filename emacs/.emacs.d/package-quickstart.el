@@ -12434,10 +12434,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.19.5/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.0pre1/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.19.5/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.0pre1/cmake-mode-autoloads.el") (car load-path))))
 
 
 
@@ -12449,6 +12449,11 @@ Major mode for editing CMake source files.
 (autoload 'cmake-command-run "cmake-mode" "\
 Runs the command cmake with the arguments specified.  The
 optional argument topic will be appended to the argument list.
+
+\(fn TYPE &optional TOPIC BUFFER)" t nil)
+
+(autoload 'cmake-command-run-help "cmake-mode" "\
+`cmake-command-run' but rendered in `rst-mode'.
 
 \(fn TYPE &optional TOPIC BUFFER)" t nil)
 
