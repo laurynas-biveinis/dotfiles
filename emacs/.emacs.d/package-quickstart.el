@@ -11621,10 +11621,10 @@ Show lsp code actions using helm.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20210125.1913/helm-icons-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20210219.1752/helm-icons-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20210125.1913/helm-icons-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20210219.1752/helm-icons-autoloads.el") (car load-path))))
 
 
 
