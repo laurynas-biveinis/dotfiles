@@ -12767,15 +12767,20 @@ When FAMILY is non-nil, limit the candidates to the icon set matching it.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20200403.1018/all-the-icons-dired-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20210211.1226/all-the-icons-dired-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20200403.1018/all-the-icons-dired-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20210211.1226/all-the-icons-dired-autoloads.el") (car load-path))))
 
 
 
 (autoload 'all-the-icons-dired-mode "all-the-icons-dired" "\
 Display all-the-icons icon for each files in a dired buffer.
+
+If called interactively, enable All-The-Icons-Dired mode if ARG
+is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 \(fn &optional ARG)" t nil)
 

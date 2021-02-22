@@ -4,7 +4,8 @@
 
 ;; Author: jtbm37
 ;; Version: 1.0
-;; Package-Version: 20200403.1018
+;; Package-Version: 20210211.1226
+;; Package-Commit: 2123f786bc824ef89306953939acbc312639f178
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/jtbm37/all-the-icons-dired
@@ -48,6 +49,11 @@
   :group 'all-the-icons
   :type 'number)
 
+(defcustom all-the-icons-dired-monochrome t
+  "Whether to show the icons as the same color as the text on the same line."
+  :group 'all-the-icons
+  :type 'boolean)
+
 (defvar all-the-icons-dired-mode)
 
 (defun all-the-icons-dired--add-overlay (pos string)
@@ -87,7 +93,11 @@
                             (all-the-icons-icon-for-dir file
                                                         :face 'all-the-icons-dired-dir-face
                                                         :v-adjust all-the-icons-dired-v-adjust)
-                          (all-the-icons-icon-for-file file :v-adjust all-the-icons-dired-v-adjust))))
+                          (apply 'all-the-icons-icon-for-file file
+                                 (append
+                                  `(:v-adjust ,all-the-icons-dired-v-adjust)
+                                  (when all-the-icons-dired-monochrome
+                                    `(:face ,(face-at-point))))))))
               (if (member file '("." ".."))
                   (all-the-icons-dired--add-overlay (point) "  \t")
                 (all-the-icons-dired--add-overlay (point) (concat icon "\t")))))))
@@ -99,34 +109,40 @@
   (when all-the-icons-dired-mode
     (all-the-icons-dired--refresh)))
 
+(defvar all-the-icons-dired-advice-alist
+  '((dired-aux     dired-create-directory       all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-do-create-files        all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-do-kill-lines          all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-do-rename              all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-insert-subdir          all-the-icons-dired--refresh-advice)
+    (dired         dired-internal-do-deletions  all-the-icons-dired--refresh-advice)
+    (dired-narrow  dired-narrow--internal       all-the-icons-dired--refresh-advice)
+    (dired         dired-readin                 all-the-icons-dired--refresh-advice)
+    (dired         dired-revert                 all-the-icons-dired--refresh-advice)
+    (find-dired    find-dired-sentinel          all-the-icons-dired--refresh-advice))
+  "A list of file, adviced function, and advice function.")
+
 (defun all-the-icons-dired--setup ()
   "Setup `all-the-icons-dired'."
-  (when (derived-mode-p 'dired-mode)
-    (setq-local tab-width 1)
-    (advice-add 'dired-readin :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-revert :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-internal-do-deletions :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-insert-subdir :around #'all-the-icons-dired--refresh-advice)
-    (advice-add 'dired-do-kill-lines :around #'all-the-icons-dired--refresh-advice)
-    (with-eval-after-load 'dired-narrow
-      (advice-add 'dired-narrow--internal :around #'all-the-icons-dired--refresh-advice))
-    (all-the-icons-dired--refresh)))
+  (setq-local tab-width 1)
+  (pcase-dolist (`(,file ,sym ,fn) all-the-icons-dired-advice-alist)
+    (with-eval-after-load file
+      (advice-add sym :around fn)))
+  (all-the-icons-dired--refresh))
 
 (defun all-the-icons-dired--teardown ()
   "Functions used as advice when redisplaying buffer."
-  (advice-remove 'dired-readin #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-revert #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-internal-do-deletions #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-narrow--internal #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-insert-subdir #'all-the-icons-dired--refresh-advice)
-  (advice-remove 'dired-do-kill-lines #'all-the-icons-dired--refresh-advice)
+  (kill-local-variable tab-width)
+  (pcase-dolist (`(,file ,sym ,fn) all-the-icons-dired-advice-alist)
+    (with-eval-after-load file
+      (advice-remove sym fn)))
   (all-the-icons-dired--remove-all-overlays))
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
   "Display all-the-icons icon for each files in a dired buffer."
   :lighter " all-the-icons-dired-mode"
-  (when (and (derived-mode-p 'dired-mode) (display-graphic-p))
+  (when (derived-mode-p 'dired-mode)
     (if all-the-icons-dired-mode
         (all-the-icons-dired--setup)
       (all-the-icons-dired--teardown))))
