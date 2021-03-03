@@ -779,10 +779,10 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-2.18.0/dash-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-2.18.1/dash-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-2.18.0/dash-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-2.18.1/dash-autoloads.el") (car load-path))))
 
 
 
@@ -1560,10 +1560,10 @@ ignore any prefix argument.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.4/tramp-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.2/tramp-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.4/tramp-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.2/tramp-autoloads.el") (car load-path))))
 
 
 
@@ -1595,17 +1595,14 @@ match file names at root of the underlying local file system,
 like \"/sys\" or \"/C:\".")
 
 (defun tramp-autoload-file-name-handler (operation &rest args) "\
-Load Tramp file name handler, and perform OPERATION." (tramp-unload-file-name-handlers) (if tramp-mode (let ((default-directory temporary-file-directory)) (load "tramp" 'noerror 'nomessage))) (apply operation args))
+Load Tramp file name handler, and perform OPERATION." (tramp-unload-file-name-handlers) (when tramp-mode (let ((default-directory temporary-file-directory)) (load "tramp" 'noerror 'nomessage))) (apply operation args))
 
 (defun tramp-register-autoload-file-name-handlers nil "\
-Add Tramp file name handlers to `file-name-handler-alist' during autoload." (add-to-list 'file-name-handler-alist (cons tramp-autoload-file-name-regexp 'tramp-autoload-file-name-handler)) (put 'tramp-autoload-file-name-handler 'safe-magic t))
+Add Tramp file name handlers to `file-name-handler-alist' during autoload." (add-to-list 'file-name-handler-alist (cons tramp-autoload-file-name-regexp 'tramp-autoload-file-name-handler)) (put #'tramp-autoload-file-name-handler 'safe-magic t))
  (tramp-register-autoload-file-name-handlers)
 
 (defun tramp-unload-file-name-handlers nil "\
 Unload Tramp file name handlers from `file-name-handler-alist'." (dolist (fnh file-name-handler-alist) (when (and (symbolp (cdr fnh)) (string-prefix-p "tramp-" (symbol-name (cdr fnh)))) (setq file-name-handler-alist (delq fnh file-name-handler-alist)))))
-
-(defvar tramp-completion-mode nil "\
-If non-nil, external packages signal that they are in file name completion.")
 
 (defun tramp-unload-tramp nil "\
 Discard Tramp from loading remote files." (interactive) (ignore-errors (unload-feature 'tramp 'force)))
@@ -1635,7 +1632,7 @@ Regular expression matching archive file names." '(concat "\\`" "\\(" ".+" "\\."
 (defalias 'tramp-archive-autoload-file-name-handler #'tramp-autoload-file-name-handler)
 
 (defun tramp-register-archive-file-name-handler nil "\
-Add archive file name handler to `file-name-handler-alist'." (when tramp-archive-enabled (add-to-list 'file-name-handler-alist (cons (tramp-archive-autoload-file-name-regexp) #'tramp-archive-autoload-file-name-handler)) (put 'tramp-archive-autoload-file-name-handler 'safe-magic t)))
+Add archive file name handler to `file-name-handler-alist'." (when tramp-archive-enabled (add-to-list 'file-name-handler-alist (cons (tramp-archive-autoload-file-name-regexp) #'tramp-archive-autoload-file-name-handler)) (put #'tramp-archive-autoload-file-name-handler 'safe-magic t)))
 
 (add-hook 'after-init-hook #'tramp-register-archive-file-name-handler)
 
@@ -1654,6 +1651,10 @@ Add archive file name handler to `file-name-handler-alist'." (when tramp-archive
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-compat" '("tramp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-crypt" '("tramp-crypt-")))
 
 
 
@@ -6841,10 +6842,10 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210208.1455/neuron-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210227.1737/neuron-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210208.1455/neuron-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210227.1737/neuron-mode-autoloads.el") (car load-path))))
 
 
 
@@ -6924,7 +6925,7 @@ and algebra/linear/theorem to math/theorem/algebra/linear.
 
 \(fn PATTERN REPL)" t nil)
 
-(autoload 'neuron-toggle-id-visiblity "neuron-mode" "\
+(autoload 'neuron-toggle-id-visibility "neuron-mode" "\
 Toggle the visibility of IDs in simple links.
 This can be useful to debug when searching for ID, explicitly seeing whether the
 link is a folgezettel of ordinary connection." t nil)
@@ -9687,10 +9688,10 @@ When called interactively, switch to the process buffer.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-functional-2.18.0/dash-functional-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-functional-2.18.1/dash-functional-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-functional-2.18.0/dash-functional-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-functional-2.18.1/dash-functional-autoloads.el") (car load-path))))
 
 
 )
@@ -12767,10 +12768,10 @@ When FAMILY is non-nil, limit the candidates to the icon set matching it.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20210211.1226/all-the-icons-dired-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20210302.1410/all-the-icons-dired-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20210211.1226/all-the-icons-dired-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20210302.1410/all-the-icons-dired-autoloads.el") (car load-path))))
 
 
 
@@ -12855,7 +12856,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.4.4.4" "/Users/laurynas/.emacs.d/elpa/dash-2.18.0" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.2" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
          Info-directory-list)))
 
 ;; Local Variables:
