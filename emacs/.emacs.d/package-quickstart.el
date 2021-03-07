@@ -12361,10 +12361,10 @@ Enable eldoc support for a CMake file.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20191130.52/dispwatch-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dispwatch-20191130.52/dispwatch-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el") (car load-path))))
 
 
 
