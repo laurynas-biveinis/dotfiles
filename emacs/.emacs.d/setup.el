@@ -875,7 +875,7 @@ respectively."
       '(("c" "Calls" tags-todo "@call-somedaymaybe/!TODO")
         ("p" "Projects" tags-todo "project-somedaymaybe/!TODO")
         ("l" "Checklists" tags "@checklist-somedaymaybe")
-        ("k" "Someday/maybe" tags-todo "somedaymaybe+LEVEL=2/!TODO"
+        ("k" "Someday/maybe" tags-todo "somedaymaybe+LEVEL=2"
          ((org-agenda-dim-blocked-tasks nil)))
         ("v" "Vilnius" tags-todo "@vilnius-somedaymaybe/!TODO")
         ("n" "Non-project tasks" tags-todo "-project-@waitingfor-somedaymaybe/!TODO"

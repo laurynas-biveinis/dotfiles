@@ -23,20 +23,40 @@ Optional argument RESET clears all the errors.
 \(fn N &optional RESET)" t nil)
 
 (autoload 'vterm "vterm" "\
-Create a new vterm.
+Create an interactive Vterm buffer.
+Start a new Vterm session, or switch to an already active
+session.  Return the buffer selected (or created).
 
-If called with an argument BUFFER-NAME, the name of the new buffer will
-be set to BUFFER-NAME, otherwise it will be `vterm'
+With a nonnumeric prefix arg, create a new session.
 
-\(fn &optional BUFFER-NAME)" t nil)
+With a string prefix arg, create a new session with arg as buffer name.
+
+With a numeric prefix arg (as in `C-u 42 M-x vterm RET'), switch
+to the session with that number, or create it if it doesn't
+already exist.
+
+The buffer name used for Vterm sessions is determined by the
+value of `vterm-buffer-name'.
+
+\(fn &optional ARG)" t nil)
 
 (autoload 'vterm-other-window "vterm" "\
-Create a new vterm in another window.
+Create an interactive Vterm buffer in another window.
+Start a new Vterm session, or switch to an already active
+session.  Return the buffer selected (or created).
 
-If called with an argument BUFFER-NAME, the name of the new buffer will
-be set to BUFFER-NAME, otherwise it will be `vterm'
+With a nonnumeric prefix arg, create a new session.
 
-\(fn &optional BUFFER-NAME)" t nil)
+With a string prefix arg, create a new session with arg as buffer name.
+
+With a numeric prefix arg (as in `C-u 42 M-x vterm RET'), switch
+to the session with that number, or create it if it doesn't
+already exist.
+
+The buffer name used for Vterm sessions is determined by the
+value of `vterm-buffer-name'.
+
+\(fn &optional ARG)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "vterm" '("vterm-")))
 
