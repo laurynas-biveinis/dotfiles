@@ -136,6 +136,12 @@ source_if_exists /usr/local/etc/profile.d/z.sh
 
 alias rmcores="rm -rf /cores/*"
 
+function strip_disas_offsets() {
+    local input="$1"
+    local output="$2"
+    cut -f 2- -d ':' "$input" | sed 's/^\s*//g' > "$output"
+}
+
 # shellcheck disable=SC1091
 # added by travis gem
 [ -f /Users/laurynas/.travis/travis.sh ] && source /Users/laurynas/.travis/travis.sh
