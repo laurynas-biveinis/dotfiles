@@ -1,6 +1,6 @@
-(define-package "vterm" "20210305.1522" "Fully-featured terminal emulator"
+(define-package "vterm" "20210308.1505" "Fully-featured terminal emulator"
   '((emacs "25.1"))
-  :commit "a86a1a9a92620a26edf5275f43ce0bf40f3b792f" :authors
+  :commit "21c0c0fe8baddf69043d3173f9fdcf790187f570" :authors
   '(("Lukas Fürmetz" . "fuermetz@mailbox.org"))
   :maintainer
   '("Lukas Fürmetz" . "fuermetz@mailbox.org")

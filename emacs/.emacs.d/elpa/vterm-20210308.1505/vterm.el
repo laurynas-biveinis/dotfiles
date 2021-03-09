@@ -1210,7 +1210,7 @@ value of `vterm-buffer-name'."
    "AnSiT[^\n]+\n\\|"
    ;; another Emacs specific control sequence for vterm.el
    ;; printf "\e]%s\e\\"
-   "\\][^\e]+\\|"
+   "\\][^\e]+\e\\\\\\|"
    ;; or an escape sequence (section 5.4 "Control Sequences"),
    "\\[\\([\x30-\x3F]*\\)[\x20-\x2F]*[\x40-\x7E]\\)\\)")
   "Regexp matching control sequences handled by term.el.")
