@@ -5,8 +5,8 @@
 ;; Author: Ivan Yonchovski <yyoncho@gmail.com>
 ;; Contributor: Ellis Kenyő <me@elken.dev>
 ;; Keywords: convenience
-;; Package-Version: 20210219.1752
-;; Package-Commit: 5a668ef21ba02bf1fce2db18950858c769bf5d05
+;; Package-Version: 20210315.1339
+;; Package-Commit: 7e8d1e213a164aa63b868e610ef8a4fd1ff58769
 
 ;; Version: 0.1
 ;; URL: https://github.com/yyoncho/helm-icons
@@ -149,9 +149,7 @@ NAME, CLASS and ARGS are the original params."
 (defun helm-icons--setup ()
   "Setup icons based on which provider is set."
   (cond ((eq helm-icons-provider 'all-the-icons)
-         (require 'all-the-icons)
-         (when (not (member "all-the-icons" (font-family-list)))
-           (all-the-icons-install-fonts)))
+         (require 'all-the-icons))
         ((eq helm-icons-provider 'treemacs)
          (require 'treemacs-themes)
          (require 'treemacs-icons)
