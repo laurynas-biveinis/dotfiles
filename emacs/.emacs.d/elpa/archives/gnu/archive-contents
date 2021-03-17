@@ -600,7 +600,7 @@
 	      ("Ben Gamari" . "ben@smart-cactus.org"))
 	     (:maintainer "Ben Gamari" . "ben@smart-cactus.org"))])
  (easy-kill .
-	    [(0 9 3)
+	    [(0 9 4)
 	     ((emacs
 	       (24))
 	      (cl-lib
@@ -724,7 +724,7 @@
 		      ("William Xu" . "william.xwl@gmail.com"))
 		     (:maintainer "William Xu" . "william.xwl@gmail.com"))])
  (elisp-benchmarks .
-		   [(1 10)
+		   [(1 11)
 		    nil "elisp benchmarks collection" tar
 		    ((:maintainer "Andrea Corallo" . "akrl@sdf.org")
 		     (:authors
@@ -1265,7 +1265,7 @@
 	      ("Terrence Brannon" . "metaperl@gmail.com"))
 	     (:maintainer nil . "emacs-devel@gnu.org"))])
  (leaf .
-       [(4 3 2)
+       [(4 4 0)
 	((emacs
 	  (24 1)))
 	"Simplify your init.el configuration, extended use-package" tar
@@ -1434,6 +1434,16 @@
 			  ("Protesilaos Stavrou" . "info@protesilaos.com"))
 			 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 			 (:url . "https://gitlab.com/protesilaos/modus-themes"))])
+ (modus-themes .
+	       [(1 2 4)
+		((emacs
+		  (26 1)))
+		"Highly accessible themes (WCAG AAA)" tar
+		((:url . "https://gitlab.com/protesilaos/modus-themes")
+		 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
+		 (:authors
+		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
+		 (:keywords "faces" "theme" "accessibility"))])
  (modus-vivendi-theme .
 		      [(0 12 0)
 		       ((emacs
@@ -2001,15 +2011,15 @@
 	     (:keywords "web")
 	     (:url . "https://elpa.gnu.org/packages/repology.html"))])
  (rich-minority .
-		[(1 0 1)
+		[(1 0 3)
 		 ((cl-lib
 		   (0 5)))
-		 "Clean-up and Beautify the list of minor-modes." single
-		 ((:keywords "mode-line" "faces")
+		 "Clean-up and Beautify the list of minor-modes." tar
+		 ((:url . "https://github.com/Malabarba/rich-minority")
+		  (:maintainer "Artur Malabarba" . "emacs@endlessparentheses.com")
 		  (:authors
 		   ("Artur Malabarba" . "emacs@endlessparentheses.com"))
-		  (:maintainer "Artur Malabarba" . "emacs@endlessparentheses.com")
-		  (:url . "https://github.com/Malabarba/rich-minority"))])
+		  (:keywords "mode-line" "faces"))])
  (rnc-mode .
 	   [(0 2)
 	    nil "Emacs mode to edit Relax-NG Compact files" single
@@ -2077,6 +2087,16 @@
 	 ("Nicolas Petton" . "nicolas@petton.fr"))
 	(:keywords "sequences")
 	(:url . "http://elpa.gnu.org/packages/seq.html"))])
+ (setup .
+	[(0 1 1)
+	 ((emacs
+	   (24 4)))
+	 "Helpful Configuration Macro" tar
+	 ((:maintainer "Philip K." . "philipk@posteo.net")
+	  (:authors
+	   ("Philip K." . "philipk@posteo.net"))
+	  (:keywords "lisp" "local")
+	  (:url . "https://elpa.gnu.org/packages/setup.html"))])
  (shelisp .
 	  [(0 9 1)
 	   nil "execute elisp in shell" single
@@ -2443,7 +2463,7 @@
 	      ("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	     (:maintainer "Artur Malabarba" . "emacs@endlessparentheses.com"))])
  (valign .
-	 [(3 1 0)
+	 [(3 1 1)
 	  ((emacs
 	    (26 0)))
 	  "Visually align tables" tar
@@ -2572,7 +2592,7 @@
 	       ("Andrew Hyatt" . "ahyatt@gmail.com"))
 	      (:keywords "communication" "websocket" "server"))])
  (which-key .
-	    [(3 3 2)
+	    [(3 5 1)
 	     ((emacs
 	       (24 4)))
 	     "Display available keybindings in popup" tar
