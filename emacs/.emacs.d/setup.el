@@ -1634,6 +1634,7 @@ Pass IMAGE down."
 ;;; yaml-mode
 (add-to-list 'auto-mode-alist '("/.clang-format\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("/.clangd\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/.oclint\\'" . yaml-mode))
 
 ;;; aggressive-indent-mode
 (require 'aggressive-indent)
