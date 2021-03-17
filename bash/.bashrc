@@ -99,9 +99,11 @@ if ! shopt -oq posix; then
         # shellcheck disable=SC1091
         . /etc/bash_completion
     fi
-    for script in /usr/local/etc/bash_completion.d/*; do
-        source "$script"
-    done
+    if [ -d /usr/local/etc/bash_completion.d/ ]; then
+        for script in /usr/local/etc/bash_completion.d/*; do
+            source "$script"
+        done
+    fi
 fi
 
 for script in ~/.bash.d/rc/*; do
