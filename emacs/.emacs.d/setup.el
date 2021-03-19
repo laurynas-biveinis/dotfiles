@@ -1390,8 +1390,15 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'lsp-mode)
 (require 'lsp-clients)
 (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
-(setq lsp-clients-clangd-args '("--cross-file-rename"
-                                "--header-insertion=never"))
+(setq lsp-clients-clangd-args '("--all-scopes-completion"
+                                "--background-index"
+                                "--clang-tidy"
+                                "--cross-file-rename"
+                                "--header-insertion=never"
+                                "--suggest-missing-includes"
+                                "--enable-config"
+                                "-j=5"
+                                "--pch-storage=memory"))
 (setq lsp-enable-snippet t)
 ;; TODO(laurynas): LSP-formatting yanked region is nice, but it formats
 ;; surroundings of the region too, which is very annoying in case of i.e. C++
