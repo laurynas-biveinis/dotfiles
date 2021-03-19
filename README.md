@@ -55,7 +55,6 @@ Unfortunately, that is not always possible.
 [neuron-mode](https://github.com/felko/neuron-mode)
 [wgrep](https://github.com/mhayashi1120/Emacs-wgrep)
 [google-c-style](https://github.com/google/styleguide/blob/gh-pages/google-c-style.el)
-[smartparens](https://github.com/Fuco1/smartparens)
 
 #### Nice-to-have, niche, & specific major modes
 
