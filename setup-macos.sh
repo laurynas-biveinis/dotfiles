@@ -111,6 +111,12 @@ sudo fdesetup enable
 # Reboot (required by fdsetup enable)
 sudo fdesetup remove -user admin # TODO(laurynas)
 sudo dscl . create /Users/admin IsHidden 1 # TODO(laurynas)
+sudo pmset -a DestroyFVKeyOnStandby 1
+#
+# Power Settings
+#
+sudo pmset -a hibernatemode 25
+sudo pmset -a standbydelay 0
 #
 # TimeMachine (set up manually)
 #
