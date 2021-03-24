@@ -24,7 +24,10 @@ community : clean
 	(cd ce && rm -f compile_commands.json && $(BEAR_MAKE) -j5)
 
 clean :
-	(cd ce && $(MAKE) -j5 -k clean+ee)
+	(cd ce && $(MAKE) -j5 -k cleanbasic)
+
+cleanfull :
+	(cd ce && $(MAKE) -j5 -k clean)
 
 recreate-ee-cdb :
 	(cd ee && ln -sf "../ce/compile_commands.json" .)
