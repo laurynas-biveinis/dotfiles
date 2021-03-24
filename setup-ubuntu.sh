@@ -12,6 +12,8 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
      python3-numpy-dbg python-scipy-doc unattended-upgrades screen colordiff \
      fzf fd-find clang moreutils psmisc
+# DeepState
+sudo apt-get install libc6-dev-i386
 # These two conflict with each other on 20.04:
 sudo apt-get install hexyl
 sudo apt-get install ripgrep
