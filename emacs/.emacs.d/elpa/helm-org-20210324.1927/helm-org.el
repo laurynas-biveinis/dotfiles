@@ -4,8 +4,8 @@
 ;; Author:      Thierry Volpiatto <thierry.volpiatto@gmail.com>
 
 ;; URL: https://github.com/emacs-helm/helm-org
-;; Package-Version: 20200311.633
-;; Package-Commit: b7a18dfc17e8b933956d61d68c435eee03a96c24
+;; Package-Version: 20210324.1927
+;; Package-Commit: d67186d3a64e610c03a5f3d583488f018fb032e4
 ;; Package-Requires: ((helm "3.3") (emacs "24.4"))
 ;; Version: 1.0
 
@@ -171,9 +171,11 @@ Note: [1] A separator can be a comma, a colon i.e. [,:] or a space.
 
 ** Commands
 \\<helm-org-headings-map>
-\\[helm-org-run-open-heading-in-indirect-buffer]\t\tOpen heading in indirect buffer.
-\\[helm-org-run-refile-heading-to]\t\tRefile current or marked headings to selection.
-\\[helm-org-run-insert-link-to-heading-at-marker]\t\tInsert link at point to selection."
+|Keys|Description
+|-----------+----------|
+|\\[helm-org-run-open-heading-in-indirect-buffer]|Open heading in indirect buffer.
+|\\[helm-org-run-refile-heading-to]|Refile current or marked headings to selection.
+|\\[helm-org-run-insert-link-to-heading-at-marker]|Insert link at point to selection."
   )
 
 ;;; Org capture templates

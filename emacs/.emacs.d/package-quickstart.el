@@ -11245,10 +11245,10 @@ If invoked outside of a project, displays a list of known projects to jump.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-org-20200311.633/helm-org-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-org-20210324.1927/helm-org-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-org-20200311.633/helm-org-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-org-20210324.1927/helm-org-autoloads.el") (car load-path))))
 
 
 
