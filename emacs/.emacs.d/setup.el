@@ -522,6 +522,17 @@ loaded as such.)"
 ;; Workaround header line covering the ispell choices window
 (setq ispell-choices-win-default-height 3)
 
+;;; Show matching parents
+(require 'paren)
+(setq show-paren-style 'mixed)
+(setq show-paren-when-point-inside-paren t)
+(setq show-paren-when-point-in-periphery t)
+(show-paren-mode 1)
+
+;;; electric-pair-mode
+(require 'elec-pair)
+(electric-pair-mode)
+
 ;; In Shell mode, do not echo passwords
 (require 'comint)
 (add-hook 'comint-output-filter-functions
@@ -1372,6 +1383,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                                             :documentOnTypeFormattingProvider))
     (electric-layout-mode -1)
     ;; It seems it's OK to call this in non-cc-mode buffers too
+    (electric-pair-local-mode -1)
     (c-toggle-electric-state -1)))
 
 (defun dotfiles--lsp-replace-cc-mode-indent ()
@@ -1398,6 +1410,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
   (electric-layout-mode)
   ;; It seems it's OK to call this in non-cc-mode buffers too
   (c-toggle-electric-state)
+  (electric-pair-local-mode)
   (eldoc-mode))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-cc-mode-indent)
@@ -1556,7 +1569,7 @@ Pass IMAGE down."
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK" " GCMH" " SP/s" " (*)" " ColorIds" " be"))
+                     " WK" " GCMH" " (*)" " ColorIds" " be"))
 (rich-minority-mode)
 
 ;;; projectile
