@@ -1,2 +1,0 @@
-;;; Generated package description from /Users/laurynas/.emacs.d/elpa/helm-icons-20210315.1339/helm-icons.el  -*- no-byte-compile: t -*-
-(define-package "helm-icons" "20210315.1339" "Helm icons" '((emacs "25.1") (dash "2.14.1") (f "0.20.0") (treemacs "2.7")) :commit "7e8d1e213a164aa63b868e610ef8a4fd1ff58769" :authors '(("Ivan Yonchovski" . "yyoncho@gmail.com")) :maintainer '("Ivan Yonchovski" . "yyoncho@gmail.com") :keywords '("convenience") :url "https://github.com/yyoncho/helm-icons")

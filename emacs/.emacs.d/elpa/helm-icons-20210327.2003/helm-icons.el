@@ -5,8 +5,8 @@
 ;; Author: Ivan Yonchovski <yyoncho@gmail.com>
 ;; Contributor: Ellis Kenyő <me@elken.dev>
 ;; Keywords: convenience
-;; Package-Version: 20210315.1339
-;; Package-Commit: 7e8d1e213a164aa63b868e610ef8a4fd1ff58769
+;; Package-Version: 20210327.2003
+;; Package-Commit: e4a2cd134213a075c3b8aed1631256887ad5c1c0
 
 ;; Version: 0.1
 ;; URL: https://github.com/yyoncho/helm-icons
@@ -33,7 +33,10 @@
 
 (require 'dash)
 (require 'seq)
-
+(require 'f)
+(require 'treemacs-icons nil t)
+(require 'treemacs-themes nil t)
+(require 'all-the-icons nil t)
 
 (defgroup helm-icons nil
   "Helm treemacs icons."
@@ -60,8 +63,11 @@
                  ((symbolp file) file)
                  ((f-dir? file) 'dir-closed)
                  ((f-file? file) (f-ext file)))))
-      (treemacs-get-icon-value icon nil (treemacs-theme->name (treemacs-current-theme))))))
-
+      (let* ((theme (treemacs--find-theme
+                     (treemacs-theme->name
+                      (treemacs-current-theme))))
+             (icons (treemacs-theme->gui-icons theme)))
+        (ht-get icons icon)))))
 
 (defun helm-icons--get-icon (file)
   "Get icon for FILE."
@@ -76,8 +82,6 @@
               (all-the-icons-icon-for-file file))
           " "))
         ((eq helm-icons-provider 'treemacs)
-         (require 'treemacs-icons)
-         (require 'treemacs-themes)
          (helm-icons--treemacs-icon file))))
 
 (defun helm-icons-buffers-add-icon (candidates _source)
