@@ -489,6 +489,9 @@ loaded as such.)"
 ;;; gnutls
 (require 'gnutls)
 (setq gnutls-verify-error t)
+;; Because macOS + Emacs + gnutls is broken:
+;; http://emacs.1067599.n8.nabble.com/bug-36017-27-0-50-TLS-1-3-on-macOS-exhibits-similar-issue-to-34341-td485542.html#a485721
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;;; gpg/epa/EasyPG
 (require 'epa)
