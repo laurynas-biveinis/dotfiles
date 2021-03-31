@@ -1580,10 +1580,10 @@ ignore any prefix argument.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.2/tramp-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.3/tramp-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.2/tramp-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.3/tramp-autoloads.el") (car load-path))))
 
 
 
@@ -1682,6 +1682,10 @@ Add archive file name handler to `file-name-handler-alist'." (when tramp-archive
 
 
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-fuse" '("tramp-fuse-")))
+
+
+
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-gvfs" '("tramp-" "with-tramp-dbus-")))
 
 
@@ -1699,6 +1703,10 @@ Add archive file name handler to `file-name-handler-alist'." (when tramp-archive
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-smb" '("tramp-smb-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-sshfs" '("tramp-sshfs-")))
 
 
 
@@ -11351,10 +11359,10 @@ Show lsp code actions using helm.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20210327.2003/helm-icons-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20210330.1216/helm-icons-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20210327.2003/helm-icons-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20210330.1216/helm-icons-autoloads.el") (car load-path))))
 
 
 
@@ -12585,7 +12593,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.2" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.3" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
          Info-directory-list)))
 
 ;; Local Variables:
