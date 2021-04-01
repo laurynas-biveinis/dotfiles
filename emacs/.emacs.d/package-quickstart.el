@@ -1767,10 +1767,10 @@ Turn on `stripe-buffer-mode' and `hl-line-mode'." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210217.1051/ssh-config-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210401.201/ssh-config-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210217.1051/ssh-config-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210401.201/ssh-config-mode-autoloads.el") (car load-path))))
 
 
 
