@@ -10,7 +10,9 @@
 
 (setq insert-directory-program "/usr/local/bin/gls")
 
-(setq ns-right-alternate-modifier 'none)
+(setq mac-right-option-modifier nil)
+(setq mac-command-modifier 'super)
+(setq mac-option-modifier 'meta)
 
 ;; s-t binding is very annoying: a popular combination in other apps which opens
 ;; a font panel popup in macOS Emacs, which I never use.
