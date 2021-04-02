@@ -244,13 +244,12 @@
          ())
         (t (dotfiles--diagnose-unknown-display-geometry display-geometry))))
 
-;; Use system font if under Gnome, otherwise use a specified font if one was
-;; specified
-(cond ((symbolp 'font-use-system-font)
-       (setq font-use-system-font t))
-      ((symbolp 'my-frame-font)
+;; Use specified font if any, otherwise use system font
+(cond ((symbolp 'my-frame-font)
        (add-to-list 'default-frame-alist `(font . ,my-frame-font))
-       (add-to-list 'initial-frame-alist `(font . ,my-frame-font))))
+       (add-to-list 'initial-frame-alist `(font . ,my-frame-font)))
+      ((symbolp 'font-use-system-font)
+       (setq font-use-system-font t)))
 
 ;;; files, directories, and similar things
 (defun dotfiles--treat-new-files-as-modified ()
