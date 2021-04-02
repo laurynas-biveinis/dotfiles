@@ -17,6 +17,7 @@
 (defvar bib-cite-use-reftex-view-crossref)
 (defvar main-org-file)
 (defvar secrets-org-file)
+(defvar my-frame-font)
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function start-erc-chats "" ())
