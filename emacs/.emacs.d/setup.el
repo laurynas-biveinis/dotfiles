@@ -578,6 +578,7 @@ loaded as such.)"
 (setq tramp-verbose 2)
 ;; Not sure I care about scp overhead in 2020. Also, maybe this will help with
 ;; duplicated sshx/scpx paths in lsp-mode cache.
+(require 'tramp-sh)
 (setq tramp-copy-size-limit nil)
 (setq tramp-default-method "scpx")
 ;; Remove `with-suppressed-warnings' once upgraded to 27.2
