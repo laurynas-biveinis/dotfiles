@@ -1193,10 +1193,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (global-set-key (kbd "C-x b") #'helm-mini)
 (substitute-key-definition #'apropos-command #'helm-apropos
                            (current-global-map))
-;; Workaround broken Unicode symbol rendering in modeline with some fonts (such
-;; as the ones I am using it seems) in Helm 3.6.4. Remove after the next Helm
-;; release.
-(setq helm-ff-cache-mode-lighter "")
 (helm-mode 1)
 
 ;; helm-buffers
