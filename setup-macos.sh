@@ -308,8 +308,10 @@ sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
 sudo easy_install pip
 sudo gem install mdl
-brew cask install emacs eve intel-power-gadget rescuetime slack vlc \
+brew cask install eve intel-power-gadget rescuetime slack vlc \
      disk-inventory-x google-chrome pdftotext dash blockblock
+brew tap railwaycat/emacsmacport
+brew install --cask emacs-mac
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
      /Library/Java/JavaVirtualMachines/openjdk.jdk
 # Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
