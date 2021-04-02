@@ -5,7 +5,7 @@
 ;;; Code:
 
 (defconst my-frame-font
-  "-apple-Menlo-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"
+  "-apple-SF Mono-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"
   "My default frame font on Darwin.")
 
 (setq insert-directory-program "/usr/local/bin/gls")
