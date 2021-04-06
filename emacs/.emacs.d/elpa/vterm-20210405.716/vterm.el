@@ -70,12 +70,12 @@
 Currently, vterm defines the following flags (in addition to the
 ones already available in CMake):
 
-`USE_SYSTEM_LIBVTERM'.  Set it to `yes' to use the version of
-libvterm installed on your system.
+`USE_SYSTEM_LIBVTERM'.  Set it to `Off' to use the vendored version of
+libvterm instead of the one installed on your system.
 
 This string is given verbatim to CMake, so it has to have the
 correct syntax.  An example of meaningful value for this variable
-is `-DUSE_SYSTEM_LIBVTERM=yes'."
+is `-DUSE_SYSTEM_LIBVTERM=Off'."
   :type 'string
   :group 'vterm)
 
@@ -117,7 +117,7 @@ the executable."
              "cd " vterm-directory "; \
              mkdir -p build; \
              cd build; \
-             cmake -G 'Unix Makefiles'"
+             cmake -G 'Unix Makefiles' "
              vterm-module-cmake-args
              " ..; \
              make; \
@@ -548,6 +548,13 @@ Exceptions are defined by `vterm-keymap-exceptions'."
           (define-key map (kbd key)
             (intern (format "vterm-send-%s" key))))
         (cl-loop for prefix in '("C-" "M-" "C-S-" )
+                 append (cl-loop for char from ?a to ?z
+                                 for key = (format "%s%c" prefix char)
+                                 unless (member key exceptions)
+                                 collect key)))
+  (mapc (lambda (key)
+          (define-key map (kbd key) 'ignore))
+        (cl-loop for prefix in '("C-M-" "C-M-S-")
                  append (cl-loop for char from ?a to ?z
                                  for key = (format "%s%c" prefix char)
                                  unless (member key exceptions)

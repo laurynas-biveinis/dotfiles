@@ -666,10 +666,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20210326.1458/vterm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20210405.716/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20210326.1458/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20210405.716/vterm-autoloads.el") (car load-path))))
 
 
 
@@ -6714,17 +6714,24 @@ A major mode to edit Zettelkasten notes with neuron.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/modern-cpp-font-lock-20200530.1010/modern-cpp-font-lock-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/modern-cpp-font-lock-20210405.1155/modern-cpp-font-lock-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/modern-cpp-font-lock-20200530.1010/modern-cpp-font-lock-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/modern-cpp-font-lock-20210405.1155/modern-cpp-font-lock-autoloads.el") (car load-path))))
 
 
 
 (autoload 'modern-c++-font-lock-mode "modern-cpp-font-lock" "\
 Provides font-locking as a Minor Mode for Modern C++
 
+If called interactively, enable Modern-C++-Font-Lock mode if ARG
+is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
 \(fn &optional ARG)" t nil)
+
+(put 'modern-c++-font-lock-global-mode 'globalized-minor-mode t)
 
 (defvar modern-c++-font-lock-global-mode nil "\
 Non-nil if Modern-C++-Font-Lock-Global mode is enabled.
@@ -6743,7 +6750,7 @@ otherwise, disable it.  If called from Lisp, enable the mode if
 ARG is omitted or nil.
 
 Modern-C++-Font-Lock mode is enabled in all buffers where
-`(lambda nil (when (apply (quote derived-mode-p) (quote (c++-mode))) (modern-c++-font-lock-mode 1)))' would do it.
+`(lambda nil (when (apply 'derived-mode-p '(c++-mode)) (modern-c++-font-lock-mode 1)))' would do it.
 See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mode.
 
 \(fn &optional ARG)" t nil)
