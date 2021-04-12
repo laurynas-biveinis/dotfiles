@@ -6,8 +6,8 @@
 ;; Author: jtbm37
 ;; Maintainer: Jimmy Yuen Ho Wong <wyuenho@gmail.com>
 ;; Version: 1.0
-;; Package-Version: 20210408.1546
-;; Package-Commit: 0b929d2b339058289d9239cc965d791ade21318c
+;; Package-Version: 20210411.1226
+;; Package-Commit: 07f035d2f6df4f1e840572784a96f5b407a74680
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/wyuenho/all-the-icons-dired
@@ -89,20 +89,20 @@
     (goto-char (point-min))
     (while (not (eobp))
       (when (dired-move-to-filename nil)
-        (let ((file (dired-get-filename 'relative 'noerror)))
-          (when file
-            (let ((icon (if (file-directory-p file)
-                            (all-the-icons-icon-for-dir file
-                                                        :face 'all-the-icons-dired-dir-face
-                                                        :v-adjust all-the-icons-dired-v-adjust)
-                          (apply 'all-the-icons-icon-for-file file
-                                 (append
-                                  `(:v-adjust ,all-the-icons-dired-v-adjust)
-                                  (when all-the-icons-dired-monochrome
-                                    `(:face ,(face-at-point))))))))
-              (if (member file '("." ".."))
-                  (all-the-icons-dired--add-overlay (point) "  \t")
-                (all-the-icons-dired--add-overlay (point) (concat icon "\t")))))))
+        (let ((case-fold-search t))
+          (when-let* ((file (dired-get-filename 'relative 'noerror))
+                      (icon (if (file-directory-p file)
+                                (all-the-icons-icon-for-dir file
+                                                            :face 'all-the-icons-dired-dir-face
+                                                            :v-adjust all-the-icons-dired-v-adjust)
+                              (apply 'all-the-icons-icon-for-file file
+                                     (append
+                                      `(:v-adjust ,all-the-icons-dired-v-adjust)
+                                      (when all-the-icons-dired-monochrome
+                                        `(:face ,(face-at-point))))))))
+            (if (member file '("." ".."))
+                (all-the-icons-dired--add-overlay (point) "  \t")
+              (all-the-icons-dired--add-overlay (point) (concat icon "\t"))))))
       (forward-line 1))))
 
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
