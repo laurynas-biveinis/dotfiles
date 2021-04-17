@@ -6,8 +6,8 @@
 ;; Author: jtbm37
 ;; Maintainer: Jimmy Yuen Ho Wong <wyuenho@gmail.com>
 ;; Version: 1.0
-;; Package-Version: 20210411.1226
-;; Package-Commit: 07f035d2f6df4f1e840572784a96f5b407a74680
+;; Package-Version: 20210416.2210
+;; Package-Commit: 82d09a39f74b4f46bdc9c27d9303f121c6a35e13
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/wyuenho/all-the-icons-dired
@@ -39,6 +39,7 @@
 (require 'cl-lib)
 (require 'dired)
 (require 'all-the-icons)
+(require 'subr-x)
 
 (defface all-the-icons-dired-dir-face
   '((((background dark)) :foreground "white")
