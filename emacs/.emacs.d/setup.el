@@ -1291,7 +1291,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
                                 "--clang-tidy"
                                 "--cross-file-rename"
                                 "--header-insertion=never"
-                                "--suggest-missing-includes"
                                 "--enable-config"
                                 "-j=5"
                                 "--pch-storage=memory"))
