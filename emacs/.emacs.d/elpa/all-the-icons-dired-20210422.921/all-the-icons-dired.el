@@ -6,8 +6,8 @@
 ;; Author: jtbm37
 ;; Maintainer: Jimmy Yuen Ho Wong <wyuenho@gmail.com>
 ;; Version: 1.0
-;; Package-Version: 20210416.2210
-;; Package-Commit: 82d09a39f74b4f46bdc9c27d9303f121c6a35e13
+;; Package-Version: 20210422.921
+;; Package-Commit: a294f45ec2c338e1255ae2dd98b19f3f143204e6
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/wyuenho/all-the-icons-dired
@@ -118,6 +118,7 @@
     (dired-aux     dired-do-kill-lines          all-the-icons-dired--refresh-advice)
     (dired-aux     dired-do-rename              all-the-icons-dired--refresh-advice)
     (dired-aux     dired-insert-subdir          all-the-icons-dired--refresh-advice)
+    (dired         wdired-abort-changes         all-the-icons-dired--refresh-advice)
     (dired         dired-internal-do-deletions  all-the-icons-dired--refresh-advice)
     (dired-narrow  dired-narrow--internal       all-the-icons-dired--refresh-advice)
     (dired         dired-readin                 all-the-icons-dired--refresh-advice)
@@ -143,7 +144,7 @@
 
 ;;;###autoload
 (define-minor-mode all-the-icons-dired-mode
-  "Display all-the-icons icon for each files in a dired buffer."
+  "Display all-the-icons icon for each file in a dired buffer."
   :lighter " all-the-icons-dired-mode"
   (when (derived-mode-p 'dired-mode)
     (if all-the-icons-dired-mode
