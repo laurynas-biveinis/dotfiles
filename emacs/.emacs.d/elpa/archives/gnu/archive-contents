@@ -141,7 +141,7 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:keywords "async"))])
  (auctex .
-	 [(13 0 8)
+	 [(13 0 9)
 	  ((emacs
 	    (24 3)))
 	  "Integrated environment for *TeX*" tar
