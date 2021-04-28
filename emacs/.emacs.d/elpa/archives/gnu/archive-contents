@@ -141,7 +141,7 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:keywords "async"))])
  (auctex .
-	 [(13 0 9)
+	 [(13 0 10)
 	  ((emacs
 	    (24 3)))
 	  "Integrated environment for *TeX*" tar
@@ -795,9 +795,11 @@
 		    ("Matthew L. Fidler" . "matthew.fidler@gmail.com"))
 		   (:keywords "convenience"))])
  (excorporate .
-	      [(0 9 5)
+	      [(0 9 6)
 	       ((emacs
 		 (24 1))
+		(cl-lib
+		 (0 6 1))
 		(fsm
 		 (0 2 1))
 		(soap-client
