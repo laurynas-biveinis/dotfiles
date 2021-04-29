@@ -386,10 +386,10 @@ else like the former.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.5.1/which-key-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.5.2/which-key-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/which-key-3.5.1/which-key-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/which-key-3.5.2/which-key-autoloads.el") (car load-path))))
 
 
 
@@ -475,8 +475,7 @@ In the second case, the second string is used to provide a longer
 name for the keys under a prefix.
 
 MORE allows you to specifcy additional KEY REPLACEMENT pairs.  All
-replacements are added to
-`which-key-key-based-description-replacement-alist'.
+replacements are added to `which-key-replacement-alist'.
 
 \(fn KEY-SEQUENCE REPLACEMENT &rest MORE)" nil nil)
 
@@ -1767,10 +1766,10 @@ Turn on `stripe-buffer-mode' and `hl-line-mode'." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210401.243/ssh-config-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210428.1752/ssh-config-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210401.243/ssh-config-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210428.1752/ssh-config-mode-autoloads.el") (car load-path))))
 
 
 
@@ -6783,10 +6782,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-3.5.1/ghub-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-3.5.2/ghub-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ghub-3.5.1/ghub-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ghub-3.5.2/ghub-autoloads.el") (car load-path))))
 
 
 
@@ -11577,10 +11576,10 @@ Sets up preferred newline behavior. Not set by default. Meant
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.2.8/gitignore-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.3.0/gitignore-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.2.8/gitignore-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.3.0/gitignore-mode-autoloads.el") (car load-path))))
 
 
 
@@ -11595,10 +11594,10 @@ A major mode for editing .gitignore files.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.2.8/gitconfig-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.3.0/gitconfig-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.2.8/gitconfig-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.3.0/gitconfig-mode-autoloads.el") (car load-path))))
 
 
 
@@ -11613,10 +11612,10 @@ A major mode for editing .gitconfig files.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.2.8/gitattributes-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.3.0/gitattributes-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.2.8/gitattributes-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.3.0/gitattributes-mode-autoloads.el") (car load-path))))
 
 
 
@@ -12179,10 +12178,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.0pre5/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.1/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.0pre5/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.1/cmake-mode-autoloads.el") (car load-path))))
 
 
 
@@ -12600,7 +12599,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.1" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.3" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.2" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.3" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
          Info-directory-list)))
 
 ;; Local Variables:

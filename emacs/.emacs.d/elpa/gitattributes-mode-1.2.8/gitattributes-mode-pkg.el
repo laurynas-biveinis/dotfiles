@@ -1,2 +1,0 @@
-;;; Generated package description from /Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.2.8/gitattributes-mode.el  -*- no-byte-compile: t -*-
-(define-package "gitattributes-mode" "1.2.8" "Major mode for editing .gitattributes files" 'nil :commit "55468314a5f6b77d2c96be62c7005ac94545e217" :authors '(("Rüdiger Sonderfeld" . "ruediger@c-plusplus.net")) :maintainer '("Jonas Bernoulli" . "jonas@bernoul.li") :keywords '("convenience" "vc" "git") :url "https://github.com/magit/git-modes")
