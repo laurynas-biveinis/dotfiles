@@ -1579,12 +1579,14 @@ ignore any prefix argument.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.3/tramp-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.4/tramp-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.3/tramp-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.4/tramp-autoloads.el") (car load-path))))
 
 
+ (when (featurep 'tramp-compat)
+  (load "tramp-compat" 'noerror 'nomessage))
 
 (defvar tramp-mode t "\
 Whether Tramp is enabled.
@@ -12178,10 +12180,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.1/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.2/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.1/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.2/cmake-mode-autoloads.el") (car load-path))))
 
 
 
@@ -12599,7 +12601,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.2" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.3" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-2.90.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.2" "/Users/laurynas/.emacs.d/elpa/magit-popup-2.13.3" "/Users/laurynas/.emacs.d/elpa/org-9.4.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.4" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.2")
          Info-directory-list)))
 
 ;; Local Variables:

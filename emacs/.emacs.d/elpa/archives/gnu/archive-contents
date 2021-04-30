@@ -1782,7 +1782,7 @@
 	      ("Feng Shu" . "tumashu@163.com"))
 	     (:keywords "convenience" "tooltip"))])
  (project .
-	  [(0 5 4)
+	  [(0 6 0)
 	   ((emacs
 	     (26 1))
 	    (xref
@@ -1807,7 +1807,7 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pyim .
-       [(3 7)
+       [(3 7 1)
 	((emacs
 	  (24 4))
 	 (async
@@ -2388,7 +2388,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tramp .
-	[(2 5 0 3)
+	[(2 5 0 4)
 	 ((emacs
 	   (25 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
@@ -2722,11 +2722,11 @@
 	("Mattias Engdegård" . "mattiase@acm.org"))
        (:keywords "lisp" "regexps"))])
  (xref .
-       [(1 0 4)
+       [(1 1 0)
 	((emacs
-	  (26 3)))
-	"Cross-referencing commands" single
-	((:url . "http://elpa.gnu.org/packages/xref.html"))])
+	  (26 1)))
+	"Cross-referencing commands" tar
+	((:url . "https://elpa.gnu.org/packages/xref.html"))])
  (yasnippet .
 	    [(0 14 0)
 	     ((cl-lib
