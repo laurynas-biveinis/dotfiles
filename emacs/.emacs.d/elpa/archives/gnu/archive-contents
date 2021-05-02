@@ -129,11 +129,9 @@
 			 (:maintainer "Thien-Thi Nguyen" . "ttn@gnu.org")
 			 (:url . "http://www.gnuvola.org/software/aa2u/"))])
  (async .
-	[(1 9 3)
-	 ((cl-lib
-	   (0 5))
-	  (nadvice
-	   (0 3)))
+	[(1 9 5)
+	 ((emacs
+	   (24 3)))
 	 "Asynchronous processing in Emacs" tar
 	 ((:url . "https://github.com/jwiegley/emacs-async")
 	  (:maintainer "John Wiegley" . "jwiegley@gmail.com")
