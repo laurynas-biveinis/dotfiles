@@ -33,16 +33,17 @@ sudo apt-get install g++-8 gcc-8-doc libstdc++6-8-dbg libstdc++-8-doc \
 sudo usermod -aG docker laurynas
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo add-apt-repository \
-     "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main"
-sudo apt-get install clangd-10 clang-format-10
-sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
+     "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main"
+sudo apt-get install clang-11 clang-tidy-11 llvm-11-dev lld-11 clangd-11 \
+     clang-format-11
+sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-11 100
 sudo update-alternatives --install /usr/bin/clang-format clang-format \
-     /usr/bin/clang-format-10 100
+     /usr/bin/clang-format-11 100
 # Work
 sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
-    maven clang-tools-10 clang-10-doc llvm-10-doc bear libcurl4-openssl-dev \
+    maven clang-tools-11 clang-11-doc llvm-11-doc bear libcurl4-openssl-dev \
     libcurl4-doc docker docker-doc python3-pip apparmor-profiles libuv1-dev \
     liblua5.1-dev
 # MySQL development specific
