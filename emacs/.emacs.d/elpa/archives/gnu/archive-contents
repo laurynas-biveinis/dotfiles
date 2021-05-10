@@ -1805,7 +1805,7 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pyim .
-       [(3 7 3)
+       [(3 7 4)
 	((emacs
 	  (24 4))
 	 (async
