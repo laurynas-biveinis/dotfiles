@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/bin/zsh
 
 set -euo pipefail
 
-source library.bash
+# shellcheck disable=SC1091
+source library.zsh
 
 softwareupdate --download --all
 

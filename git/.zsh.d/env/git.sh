@@ -1,0 +1,1 @@
+../../.bash.d/noninteractive_init/git.sh

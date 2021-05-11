@@ -2,7 +2,7 @@
 
 # dotfiles
 
-My dotfiles and scripts, and configuration. Specific for bash.
+My dotfiles and scripts, and configuration. Specific for zsh.
 
 ## Modularity
 

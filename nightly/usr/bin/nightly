@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/zsh
 
 set -euo pipefail
 
 # shellcheck source=/dev/null
-source ~/.noninteractive_init.bash
+source ~/.zshenv
 
 for nightly_script in "$HOME"/.nightly/*; do
     echo "Running nightly $nightly_script..."

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Manage Aerospike CE/EE branch pairs: create a set of branches, optionally with
 # a starting point; checkout a set of branches; fetch remotes; remove a set of

@@ -1,13 +1,16 @@
-#!/bin/bash
+#!/bin/zsh
 
 set -euo pipefail
 
 readonly DOTFILES_ROOT=~/dotfiles
 readonly DOTFILES_SETUP_DIR=$DOTFILES_ROOT/dotfiles
-readonly MANDATORY_MODULES="bash git scripts"
+IFS=" " read -r -A base_modules < $DOTFILES_SETUP_DIR/base_modules
 readonly EXTRA_MODULES_FILE=$DOTFILES_SETUP_DIR/extra_modules
 
 readonly IGNORE_FOR_SYMLINKS=(".nix-defexpr/channels" \
+                                  ".nix-defexpr/channels_root" \
+                                  "Library/Application Support/Slack/SingletonCookie" \
+                                  "Library/Application Support/Slack/SingletonLock" \
                                   "Library/Caches/com.apple.bird" \
                                   "Library/Containers" \
                                   "Library/Logs/ims.log" \
@@ -17,12 +20,12 @@ pushd $DOTFILES_ROOT || exit
 git pull origin-ro master
 git submodule update
 echo -n "Re-creating symlinks for:"
-for module in $MANDATORY_MODULES; do
+for module in "${base_modules[@]}"; do
     echo -n " $module"
     stow "$module"
 done
 # Extra modules, if defined
-IFS=" " read -r -a extra_modules < $EXTRA_MODULES_FILE
+IFS=" " read -r -A extra_modules < $EXTRA_MODULES_FILE
 for extra_module in "${extra_modules[@]}"; do
     echo -n " [$extra_module]"
     stow "$extra_module"

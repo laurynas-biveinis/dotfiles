@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 sudovi # enable wheel
 adduser laurynas

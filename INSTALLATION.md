@@ -1,45 +1,45 @@
 # Installation
 
-```bash
+```zsh
 cd
 git clone git@github.com:laurynas-biveinis/dotfiles.git
 cd dotfiles
 git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git
 ```
 
-Create `~/.noninteractive_init_private.bash`, if needed. Then `chmod 600` it.
+Create `~/.zshenv_private`, if needed. Then `chmod 600` it.
 
 Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 "emacs nightly".
 
 If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
 
-Check that existing .bashrc .profile .bash_profile files are OK to overwrite, rm
+Check that existing `~/.zshenv` and `~/.zshrc` files are OK to overwrite, rm
 them, and
 `cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
 
 On macOS:
 
-``` bash
+``` zsh
 ln -s ~/.gnupg/gpg-agent.conf.macOS ~/.gnupg/gpg-agent.conf
 ```
 
 On Linux:
 
-``` bash
+``` zsh
 ln -s ~/.gnupg/gpg-agent.conf.linux ~/.gnupg/gpg-agent.conf
 ```
 
 If "emacs" is enabled, then
 
-```bash
+```zsh
 ln -sf $HOME/Documents/secrets.el $HOME/secrets.el
 ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 ```
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
-If "wakatime" is enabled then
+If "wakatime" is enabled then TODO(laurynas): update for zsh
 
 ```bash
 sudo pip install wakatime

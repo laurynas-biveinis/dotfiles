@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/zsh
 
 set -euo pipefail
 
 # shellcheck disable=SC1091
-source library.bash
+source library.zsh
 
 function pull_repo () {
     local path=$1

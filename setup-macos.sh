@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Do applicable bits of [macOS Security and Privacy
 # Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide)
@@ -271,7 +271,7 @@ sudo chflags nohidden /Volumes
 #
 sudo diskutil apfs addVolume disk1 APFS 'Nix Store' -mountpoint /nix
 wget https://raw.githubusercontent.com/LnL7/nix/darwin-10.15-install/scripts/create-darwin-volume.sh
-bash create-darwin-volume.sh
+zsh create-darwin-volume.sh
 sh <(curl -L https://nixos.org/nix/install) --daemon
 nix-env -iA cachix -f https://cachix.org/api/v1/install
 echo "trusted-users = root laurynas" | sudo tee -a /etc/nix/nix.conf \
