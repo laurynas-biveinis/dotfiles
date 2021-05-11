@@ -1,8 +1,25 @@
 #!/bin/zsh
 
+setopt AUTO_CD
+setopt CORRECT_ALL
+
 bindkey " " magic-space
 
 ulimit -c unlimited
+
+#
+# History
+#
+setopt EXTENDED_HISTORY
+setopt SHARE_HISTORY
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY
+HISTSIZE=100000000000
+SAVEHIST=100000000000
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -20,11 +37,11 @@ export LSCOLORS=Exfxcxdxbxegedabagacad
 export CLICOLOR=1
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-setopt null_glob
+setopt NULL_GLOB
 for script in ~/.zsh.d/rc/*; do
     source "$script"
 done
-unsetopt null_glob
+unsetopt NULL_GLOB
 
 alias rmcores="rm -rf /cores/*"
 
