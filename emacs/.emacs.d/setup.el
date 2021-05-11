@@ -1731,36 +1731,6 @@ find a search tool; by default, this uses \"find | grep\" in the
 ;; https://github.com/bbatsov/projectile/issues/1282
 (advice-add #'deadgrep--project-root :before-until #'projectile-project-root)
 
-;; Fix the data corruption half of
-;; https://github.com/Wilfred/deadgrep/issues/60. Make
-;; `deadgrep--propagate-change' support full `after-change-functions' contract:
-;; delete the old region first, then insert the new region.
-(defun deadgrep--propagate-change (beg end length)
-  "Propagate edits from BEG to END with LENGTH to the underlying buffer."
-  ;; We should never be called outside an edit buffer, but be
-  ;; defensive. Buggy functions in change hooks are painful.
-  (when (eq major-mode 'deadgrep-edit-mode)
-    (save-mark-and-excursion
-      (goto-char beg)
-      (-let* ((column (+ (deadgrep--current-column) length))
-              (filename (deadgrep--filename))
-              (line-number (deadgrep--line-number))
-              ((buf . opened) (deadgrep--find-file filename))
-              (inserted (buffer-substring beg end)))
-        (with-current-buffer buf
-          (save-mark-and-excursion
-            (save-restriction
-              (widen)
-              (goto-char
-               (deadgrep--buffer-position line-number column))
-              (delete-char (- length))
-              (insert inserted)))
-          ;; If we weren't visiting this file before, just save it and
-          ;; close it.
-          (when opened
-            (basic-save-buffer)
-            (kill-buffer buf)))))))
-
 ;; wgrep-like bindings for deadgrep
 (define-key deadgrep-mode-map (kbd "C-c C-p") #'deadgrep-edit-mode)
 (define-key deadgrep-edit-mode-map (kbd "C-c C-e") #'deadgrep-mode)
