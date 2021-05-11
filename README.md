@@ -122,9 +122,6 @@ tramp erc cc-mode
   xref.
 * Integrate cmake-build.el with Projectile
 * Integrate deadgrep with Projectile
-* Fix [data corruption in
-  deadgrep](https://github.com/Wilfred/deadgrep/issues/60) writable buffers by
-  search-replace.
 * [Automatically update git gutter on Magit
   actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).
 * [Disable color-identifiers-mode under LSP with semantic
