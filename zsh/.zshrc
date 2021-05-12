@@ -3,6 +3,12 @@
 setopt AUTO_CD
 setopt CORRECT_ALL
 
+#
+# Completion
+#
+zstyle ':completion:*' list-suffixeszstyle ':completion:*' expand prefix suffix
+autoload -Uz compinit && compinit
+
 bindkey " " magic-space
 
 ulimit -c unlimited
