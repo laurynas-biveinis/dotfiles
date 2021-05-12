@@ -27,6 +27,12 @@ setopt HIST_VERIFY
 HISTSIZE=100000000000
 SAVEHIST=100000000000
 
+#
+# Prompt
+#
+export PROMPT='%(?.%F{green}√%f.%F{red}?%?%f) %n@%m %B%~%b %# '
+export RPROMPT='%*'
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     # shellcheck disable=SC2015
