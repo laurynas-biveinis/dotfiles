@@ -28,8 +28,11 @@ sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # So that I can have "gsed" as a GNU Sed on any platform
 sudo ln -sf /bin/sed /bin/gsed
 # Home
-sudo apt-get install g++-8 gcc-8-doc libstdc++6-8-dbg libstdc++-8-doc \
-    libboost-dev libboost-doc
+sudo apt-get install g++-10 gcc-10-doc libstdc++6-10-dbg libstdc++-10-doc \
+     libboost-dev libboost-doc
+# GCC 11
+sudo add-apt-repository -y 'ppa:ubuntu-toolchain-r/test'
+sudo apt-get install g++-11 gcc-11-doc libstdc++-11-doc
 sudo usermod -aG docker laurynas
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo add-apt-repository \
