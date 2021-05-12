@@ -12,10 +12,10 @@ fi
 less ~/nightly.out
 
 while true; do
-      read -rp "Delete $NIGHTLY? " yn
-      case $yn in
-          [Yy]* ) rm $NIGHTLY; break;;
-          [Nn]* ) exit;;
-          * ) echo "Please answer y or n";;
-      esac
+    read -r "?Delete $NIGHTLY? " yn
+    case $yn in
+        [Yy]* ) rm $NIGHTLY; break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer y or n";;
+    esac
 done
