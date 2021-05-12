@@ -11,7 +11,7 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      software-properties-common colordiff valgrind linux-tools-generic \
      libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
      python3-numpy-dbg python-scipy-doc unattended-upgrades screen colordiff \
-     fzf fd-find clang moreutils psmisc
+     fzf fd-find clang moreutils psmisc zsh zsh-doc
 # DeepState
 sudo apt-get install libc6-dev-i386
 # These two conflict with each other on 20.04:
