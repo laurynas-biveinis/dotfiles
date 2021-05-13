@@ -671,7 +671,7 @@
 	      (:maintainer "Markus Triska" . "triska@metalevel.at")
 	      (:url . "https://www.metalevel.at/ediprolog/"))])
  (eev .
-      [(20210506)
+      [(20210512)
        ((emacs
 	 (24 4)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -747,9 +747,11 @@
 		     (:keywords "languages" "lisp")
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html"))])
  (emms .
-       [(7 1)
+       [(7 2)
 	((cl-lib
 	  (0 5))
+	 (nadvice
+	  (0 3))
 	 (seq
 	  (0)))
 	"The Emacs Multimedia System" tar
@@ -1805,7 +1807,7 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pyim .
-       [(3 7 4)
+       [(3 7 5)
 	((emacs
 	  (24 4))
 	 (async
