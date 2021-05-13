@@ -1,9 +1,7 @@
-set -euo pipefail
-
 function is_on_ac() {
     local UNAME_OUT
     UNAME_OUT="$(uname -s)"
-    if [ "$UNAME_OUT" == "Darwin" ]; then
+    if [[ "$UNAME_OUT" == "Darwin" ]]; then
         if [[ $(pmset -g ps | head -1) =~ "AC Power" ]]; then
             true
         else
@@ -14,7 +12,7 @@ function is_on_ac() {
         # https://askubuntu.com/questions/386949/how-to-check-if-the-ac-laptop-adapter-is-plugged-or-not
         local ac_adapter
         ac_adapter=$(acpi -a | cut -d' ' -f3 | cut -d- -f1)
-        if [ "$ac_adapter" = "on" ]; then
+        if [[ "$ac_adapter" = "on" ]]; then
             true
         else
             false

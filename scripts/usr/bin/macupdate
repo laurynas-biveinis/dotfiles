@@ -2,15 +2,14 @@
 
 set -euo pipefail
 
-# shellcheck disable=SC1091
-source library.zsh
+autoload is_on_ac
 
 softwareupdate --download --all
 
 echo "Updating brew"
 brew update
 
-readonly outdated_formulae=$(brew outdated --quiet)
+IFS=$'\n' readonly outdated_formulae=($(brew outdated --quiet))
 for outdated_formula in $outdated_formulae; do
     if ! is_on_ac; then
         echo Laptop is on battery: skipping brew upgrade of "$outdated_formula"
@@ -18,7 +17,7 @@ for outdated_formula in $outdated_formulae; do
     fi
     echo "brew upgrade $outdated_formula"
     brew upgrade "$outdated_formula"
-    if [ "$outdated_formula" == "cmake" ]; then
+    if [[ "$outdated_formula" == "cmake" ]]; then
         echo "Not cleaning up older brew cmake versions"
     else
         echo "brew cleanup $outdated_formula"

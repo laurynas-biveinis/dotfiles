@@ -2,8 +2,7 @@
 
 set -euo pipefail
 
-# shellcheck disable=SC1091
-source library.zsh
+autoload is_on_ac
 
 function pull_repo () {
     local path=$1
