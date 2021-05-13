@@ -16,6 +16,8 @@ export PATH=~/usr/bin:/usr/local/bin:/usr/local/sbin:$PATH
 
 fpath+=~/.zsh.d/functions
 
+export ZINIT_HOME=~/.zsh.d/zinit
+
 setopt null_glob
 for script in ~/.zsh.d/env/*; do
     source "$script"
