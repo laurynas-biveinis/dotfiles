@@ -10,6 +10,8 @@ zstyle ':completion:*' list-suffixeszstyle ':completion:*' expand prefix suffix
 autoload -Uz compinit && compinit
 
 bindkey " " magic-space
+bindkey '^[[A' up-line-or-search
+bindkey '^[[B' down-line-or-search
 
 ulimit -c unlimited
 
