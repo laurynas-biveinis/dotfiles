@@ -1,6 +1,3 @@
 [submodule "emacs/.emacs.d/lib/cmake-build.el"]
 	path = emacs/.emacs.d/lib/cmake-build.el
 	url = https://github.com/rpav/cmake-build.el.git
-[submodule "zsh/.zinit/bin"]
-	path = zsh/.zinit/bin
-	url = https://github.com/zdharma/zinit.git
