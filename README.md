@@ -2,7 +2,8 @@
 
 # dotfiles
 
-My dotfiles and scripts, and configuration. Specific for zsh.
+My dotfiles and scripts, and configuration. The shell part is specific for zsh,
+using [zinit](https://github.com/zdharma/zinit)
 
 ## Modularity
 
