@@ -313,8 +313,9 @@ sudo easy_install pip
 sudo gem install mdl
 brew cask install eve intel-power-gadget rescuetime slack vlc \
      disk-inventory-x google-chrome pdftotext dash blockblock
-brew tap homebrew/cask-fonts
-brew install --cask font-sf-mono
+brew tap epk/epk
+brew install font-sf-mono-nerd-font
+# Set font in Terminal manually
 brew tap railwaycat/emacsmacport
 brew install --cask emacs-mac
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
