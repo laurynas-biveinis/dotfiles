@@ -167,8 +167,11 @@ defaults write com.apple.Safari AutoFillPasswords -bool false
 #
 # Terminal
 #
-defaults write com.apple.Terminal "Default Window Settings" -string "Homebrew"
-defaults write com.apple.Terminal "Startup Window Settings" -string "Homebrew"
+open ~/dotfiles/dotfiles/3rd_party/osx-terminal.app-colors/solarized/Solarized\ Dark.terminal
+defaults write com.apple.Terminal "Default Window Settings" \
+         -string "Solarized Dark"
+defaults write com.apple.Terminal "Startup Window Settings" \
+         -string "Solarized Dark"
 #
 # Dock
 #
