@@ -719,6 +719,7 @@ loaded as such.)"
 ;; Prerequisites: const main-org-file and list org-agenda-files, that must be
 ;; set elsewhere (i.e. secrets.el)
 (require 'org)
+(setq org-M-RET-may-split-line '((default . nil)))
 (require 'org-element)
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
