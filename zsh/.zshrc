@@ -35,6 +35,7 @@ setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY
 HISTSIZE=100000000000
 SAVEHIST=100000000000
+HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
