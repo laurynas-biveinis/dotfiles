@@ -1,2 +1,2 @@
 #!/bin/zsh
-zinit load wbingli/zsh-wakatime
+zinit load sobolevn/wakatime-zsh-plugin
