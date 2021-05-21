@@ -53,12 +53,6 @@ export LSCOLORS=Exfxcxdxbxegedabagacad
 export CLICOLOR=1
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-setopt NULL_GLOB
-for script in ~/.zsh.d/rc/*; do
-    source "$script"
-done
-unsetopt NULL_GLOB
-
 alias rmcores="rm -rf /cores/*"
 
 function strip_disas_offsets() {
@@ -98,6 +92,12 @@ zinit light-mode for \
     zinit-zsh/z-a-bin-gem-node
 
 ### End of Zinit's installer chunk
+
+setopt NULL_GLOB
+for script in ~/.zsh.d/rc/*; do
+    source "$script"
+done
+unsetopt NULL_GLOB
 
 #
 # Powerlevel10k
