@@ -1333,8 +1333,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'lsp-ui-doc)
 (setq lsp-ui-doc-header t)
 (setq lsp-ui-doc-include-signature t)
-(setq lsp-ui-doc-alignment 'window)
-(setq lsp-ui-doc-position 'top)
 
 ;; lsp-ui and lsp-ui-doc integration: avoid doc popups hiding reference popups
 ;; by hiding the former.
