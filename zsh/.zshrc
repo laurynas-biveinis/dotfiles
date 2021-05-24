@@ -97,6 +97,7 @@ zinit load willghatch/zsh-saneopt
 zinit load zsh-users/zsh-completions
 zinit load zsh-users/zsh-autosuggestions
 zinit load zdharma/fast-syntax-highlighting
+zinit load ael-code/zsh-colored-man-pages
 
 setopt NULL_GLOB
 for script in ~/.zsh.d/rc/*; do
