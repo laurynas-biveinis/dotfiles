@@ -94,6 +94,7 @@ zinit light-mode for \
 ### End of Zinit's installer chunk
 
 zinit load willghatch/zsh-saneopt
+zinit load zsh-users/zsh-completions
 
 setopt NULL_GLOB
 for script in ~/.zsh.d/rc/*; do
