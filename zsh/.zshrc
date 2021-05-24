@@ -95,6 +95,7 @@ zinit light-mode for \
 
 zinit load willghatch/zsh-saneopt
 zinit load zsh-users/zsh-completions
+zinit load zsh-users/zsh-autosuggestions
 
 setopt NULL_GLOB
 for script in ~/.zsh.d/rc/*; do
