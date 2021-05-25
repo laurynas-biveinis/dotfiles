@@ -92,6 +92,10 @@ zinit load zsh-users/zsh-completions
 zinit load zsh-users/zsh-autosuggestions
 zinit load ael-code/zsh-colored-man-pages
 zinit load djui/alias-tips
+if [[ `uname -s` == "Darwin" ]]; then
+    zinit snippet \
+          https://github.com/Homebrew/homebrew-command-not-found/blob/master/handler.sh
+fi
 
 setopt NULL_GLOB
 for script in ~/.zsh.d/rc/*; do
