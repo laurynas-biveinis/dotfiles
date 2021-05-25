@@ -39,10 +39,15 @@ ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
-If "wakatime" is enabled then TODO(laurynas): update for zsh
+If "wakatime" is enabled then
 
 ```bash
-sudo pip install wakatime
+sudo pip3 install wakatime
+```
+
+If using `zsh`, done. If using `bash`, then
+
+```bash
 mkdir -p ~/usr/src
 cd ~/usr/src
 git clone https://github.com/gjsheep/bash-wakatime.git
