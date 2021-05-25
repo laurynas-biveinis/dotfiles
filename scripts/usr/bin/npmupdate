@@ -1,7 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
 
 set -euo pipefail
 
 echo "Updating outdated global npm packages, if any"
 npm update -g
-
