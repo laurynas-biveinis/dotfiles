@@ -10,12 +10,6 @@ fi
 setopt AUTO_CD
 setopt CORRECT_ALL
 
-#
-# Completion
-#
-zstyle ':completion:*' list-suffixeszstyle ':completion:*' expand prefix suffix
-autoload -Uz compinit && compinit
-
 bindkey " " magic-space
 bindkey '^[[A' up-line-or-search
 bindkey '^[[B' down-line-or-search
@@ -113,5 +107,10 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-zinit load zdharma/fast-syntax-highlighting
+#
+# Completion
+#
+zstyle ':completion:*' list-suffixeszstyle ':completion:*' expand prefix suffix
+autoload -Uz compinit && compinit
 
+zinit load zdharma/fast-syntax-highlighting
