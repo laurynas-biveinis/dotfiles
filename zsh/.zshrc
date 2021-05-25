@@ -96,7 +96,6 @@ zinit light-mode for \
 zinit load willghatch/zsh-saneopt
 zinit load zsh-users/zsh-completions
 zinit load zsh-users/zsh-autosuggestions
-zinit load zdharma/fast-syntax-highlighting
 zinit load ael-code/zsh-colored-man-pages
 zinit load djui/alias-tips
 
@@ -113,3 +112,6 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+zinit load zdharma/fast-syntax-highlighting
+
