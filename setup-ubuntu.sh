@@ -67,9 +67,6 @@ sudo sysctl -w kernel.kptr_restrict=0
 sudo nano /etc/sysctl.conf
 sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
 sudo /etc/init.d/cpufrequtils restart
-# DOES NOT SURVIVE REBOOT
-sudo sh -c "echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo"
-sudo sh -c 'echo 0 > /proc/sys/kernel/randomize_va_space'
 # After each apt upgrade
 # (https://twitter.com/trav_downs/status/1280004737455271936):
 sudo ln -s /usr/lib/debug/lib/x86_64-linux-gnu/* /usr/lib/debug/usr/lib/x86_64-linux-gnu/
