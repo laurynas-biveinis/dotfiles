@@ -7,6 +7,7 @@
 [magit]
 	hideCampaign = true
 [diff]
+	colorMoved = default
 	renamelimit = 100000
 [fetch]
 	prune = true
