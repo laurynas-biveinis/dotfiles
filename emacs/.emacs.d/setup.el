@@ -1080,23 +1080,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
 
-;; Workaround https://github.com/magit/magit/issues/4098 - with 2.90.1, C-c C-d
-;; will fail over TRAMP if the repository is actually a worktree. With the trunk
-;; version the commit itself will fail as of 20200627.806. Workaround by
-;; prepending TRAMP prefix to `magit-toplevel' result if the input directory had
-;; it but the result dropped it.
-(defun dotfiles--magit-toplevel (orig-fun &optional directory)
-  "Wrap `magit-toplevel' as ORIG-FUN with DIRECTORY to prepend TRAMP prefix."
-  (let* ((dir (or directory default-directory))
-         (input-remote (file-remote-p dir))
-         (result (funcall orig-fun directory))
-         (output-remote (if result (file-remote-p result) nil)))
-    (if (and input-remote (not output-remote))
-        (concat input-remote result)
-      result)))
-
-(advice-add #'magit-toplevel :around #'dotfiles--magit-toplevel)
-
 ;;; git-gutter-fringe
 (require 'git-gutter-fringe)
 (global-git-gutter-mode +1)
