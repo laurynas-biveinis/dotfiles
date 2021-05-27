@@ -30,7 +30,7 @@ Major mode for editing flex files. (bison-mode by any other name)
 
 \(fn)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "bison-mode" '("bison-" "line-of-whitespace-p" "following-non-ws-p" "previous-" "just-no-space")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "bison-mode" '("bison-")))
 
 ;;;***
 
