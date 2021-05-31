@@ -1485,10 +1485,10 @@ See info node `(transient)Modifying Existing Transients'.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.4/tramp-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.5/tramp-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.4/tramp-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.5/tramp-autoloads.el") (car load-path))))
 
 
  (when (featurep 'tramp-compat)
@@ -1522,10 +1522,10 @@ match file names at root of the underlying local file system,
 like \"/sys\" or \"/C:\".")
 
 (defun tramp-autoload-file-name-handler (operation &rest args) "\
-Load Tramp file name handler, and perform OPERATION." (tramp-unload-file-name-handlers) (when tramp-mode (let ((default-directory temporary-file-directory)) (load "tramp" 'noerror 'nomessage))) (apply operation args))
+Load Tramp file name handler, and perform OPERATION." (tramp-unload-file-name-handlers) (when tramp-mode (let ((default-directory temporary-file-directory)) (when (bound-and-true-p tramp-archive-autoload) (load "tramp-archive" 'noerror 'nomessage)) (load "tramp" 'noerror 'nomessage))) (apply operation args))
 
 (defun tramp-register-autoload-file-name-handlers nil "\
-Add Tramp file name handlers to `file-name-handler-alist' during autoload." (add-to-list 'file-name-handler-alist (cons tramp-autoload-file-name-regexp 'tramp-autoload-file-name-handler)) (put #'tramp-autoload-file-name-handler 'safe-magic t))
+Add Tramp file name handlers to `file-name-handler-alist' during autoload." (add-to-list 'file-name-handler-alist (cons tramp-autoload-file-name-regexp #'tramp-autoload-file-name-handler)) (put #'tramp-autoload-file-name-handler 'safe-magic t))
  (tramp-register-autoload-file-name-handlers)
 
 (defun tramp-unload-file-name-handlers nil "\
@@ -1556,7 +1556,8 @@ It must be supported by libarchive(3).")
 (defmacro tramp-archive-autoload-file-name-regexp nil "\
 Regular expression matching archive file names." '(concat "\\`" "\\(" ".+" "\\." (regexp-opt tramp-archive-suffixes) "\\(?:" "\\." (regexp-opt tramp-archive-compression-suffixes) "\\)*" "\\)" "\\(" "/" ".*" "\\)" "\\'"))
 
-(defalias 'tramp-archive-autoload-file-name-handler #'tramp-autoload-file-name-handler)
+(defun tramp-archive-autoload-file-name-handler (operation &rest args) "\
+Load Tramp archive file name handler, and perform OPERATION." (when tramp-archive-enabled (let ((default-directory temporary-file-directory) (tramp-archive-autoload t)) tramp-archive-autoload (apply #'tramp-autoload-file-name-handler operation args))))
 
 (defun tramp-register-archive-file-name-handler nil "\
 Add archive file name handler to `file-name-handler-alist'." (when tramp-archive-enabled (add-to-list 'file-name-handler-alist (cons (tramp-archive-autoload-file-name-regexp) #'tramp-archive-autoload-file-name-handler)) (put #'tramp-archive-autoload-file-name-handler 'safe-magic t)))
@@ -11361,10 +11362,10 @@ Sets up preferred newline behavior. Not set by default. Meant
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.3.0/gitignore-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.3.1/gitignore-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.3.0/gitignore-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitignore-mode-1.3.1/gitignore-mode-autoloads.el") (car load-path))))
 
 
 
@@ -11379,10 +11380,10 @@ A major mode for editing .gitignore files.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.3.0/gitconfig-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.3.1/gitconfig-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.3.0/gitconfig-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitconfig-mode-1.3.1/gitconfig-mode-autoloads.el") (car load-path))))
 
 
 
@@ -11397,10 +11398,10 @@ A major mode for editing .gitconfig files.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.3.0/gitattributes-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.3.1/gitattributes-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.3.0/gitattributes-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/gitattributes-mode-1.3.1/gitattributes-mode-autoloads.el") (car load-path))))
 
 
 
@@ -12384,7 +12385,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.0.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.0.0" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.4" "/Users/laurynas/.emacs.d/elpa/transient-0.3.4" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.0.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.0.0" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.0.5" "/Users/laurynas/.emacs.d/elpa/transient-0.3.4" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
          Info-directory-list)))
 
 ;; Local Variables:
