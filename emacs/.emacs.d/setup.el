@@ -144,7 +144,8 @@
 (column-number-mode t)
 
 ;;; fill-column and other filling-related matters
-(setq-default fill-column 80)
+(defconst dotfiles--fill-column 80)
+(setq-default fill-column dotfiles--fill-column)
 
 (setq sentence-end-double-space nil)
 
@@ -153,8 +154,7 @@
 (global-whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail empty indentation big-intent
                               space-after-tab space-before-tab))
-;; Use fill-column value
-(setq whitespace-line-column nil)
+(setq whitespace-line-column (+ dotfiles--fill-column 1))
 (setq whitespace-global-modes '(not dired-mode erc-mode markdown-mode gfm-mode
                                     lisp-interaction-mode help-mode Info-mode
                                     magit-status-mode org-agenda-mode grep-mode
@@ -338,6 +338,7 @@ loaded as such.)"
 
 ;;; display-fill-column-indicator
 (require 'display-fill-column-indicator)
+(setq-default display-fill-column-indicator-column (+ dotfiles--fill-column 1))
 
 (global-display-fill-column-indicator-mode 1)
 
