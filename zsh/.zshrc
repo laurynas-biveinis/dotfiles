@@ -31,6 +31,11 @@ HISTSIZE=100000000000
 SAVEHIST=100000000000
 HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
 
+#
+# less
+#
+[ -x /usr/bin/lesspipe ] && eval `eval lesspipe`
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     # shellcheck disable=SC2015
