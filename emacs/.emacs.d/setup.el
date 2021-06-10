@@ -573,6 +573,7 @@ loaded as such.)"
 (require 'vterm)
 (define-key vterm-mode-map (kbd "<S-prior>") #'scroll-down-command)
 (setq vterm-max-scrollback 100000)
+(setq vterm-buffer-name-string "vterm %s")
 
 ;;; Tramp
 (require 'tramp)
