@@ -5,9 +5,9 @@
 
 ;; Author: jtbm37
 ;; Maintainer: Jimmy Yuen Ho Wong <wyuenho@gmail.com>
-;; Version: 1.0
-;; Package-Version: 20210422.921
-;; Package-Commit: a294f45ec2c338e1255ae2dd98b19f3f143204e6
+;; Version: 2.0
+;; Package-Version: 20210614.1350
+;; Package-Commit: a758766878b6e8b9eaaf41d68599a2df99e37f48
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/wyuenho/all-the-icons-dired
