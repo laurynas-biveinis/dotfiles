@@ -1649,6 +1649,18 @@ find a search tool; by default, this uses \"find | grep\" in the
           (project-roots pr)
           (project-external-roots pr)))))))
 
+;; Workaround https://github.com/bbatsov/projectile/issues/1673
+;; (CMakeSystemPresets.json should be CMakePresets.json). Remove after next
+;; projectile release to melpa-stable.
+(defun dotfiles--projectile--cmake-all-command-presets (command-type)
+  "Get CMake user and system COMMAND-TYPE presets."
+  (projectile-flatten
+   (mapcar (lambda (filename)
+             (projectile--cmake-command-presets filename command-type))
+           '("CMakeUserPresets.json" "CMakePresets.json"))))
+(advice-add #'projectile--cmake-all-command-presets :override
+            #'dotfiles--projectile--cmake-all-command-presets)
+
 ;;; cmake-build.el
 ;; Yet another not-completely integrated but very useful project management
 ;; package. If I continue using it, then:
