@@ -122,6 +122,9 @@ tramp erc cc-mode
 * Workaround [projectile not being integrated with
   project.el](https://github.com/bbatsov/projectile/issues/1282) at least for
   xref.
+* Workaround [a bug in projectile integration with CMake
+  presets](https://github.com/bbatsov/projectile/issues/1673) until the next
+  Projectile release in melpa-stable.
 * Integrate cmake-build.el with Projectile
 * Integrate deadgrep with Projectile
 * [Automatically update git gutter on Magit
