@@ -4,8 +4,8 @@
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
 ;; Version: 1.12.0
-;; Package-Version: 20210603.736
-;; Package-Commit: e1710af8d058faca32529d1129deb5d57871385a
+;; Package-Version: 20210616.619
+;; Package-Commit: 08661efb075d1c6b4fa812184c1e5e90c08795a9
 ;; Keywords: strings
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -625,9 +625,10 @@ transformation."
                               (funcall replacer var extra)
                             (funcall replacer var))))))
                    (if v (format "%s" v) (signal 's-format-resolve md)))
-               (set-match-data replacer-match-data)))) template
-               ;; Need literal to make sure it works
-               t t)
+               (set-match-data replacer-match-data))))
+         template
+         ;; Need literal to make sure it works
+         t t)
       (set-match-data saved-match-data))))
 
 (defvar s-lex-value-as-lisp nil
