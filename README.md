@@ -53,7 +53,6 @@ Unfortunately, that is not always possible.
 #### Major
 
 [GCMH](https://gitlab.com/koral/gcmh)
-[cmake-build.el](https://github.com/rpav/cmake-build.el)
 [neuron-mode](https://github.com/felko/neuron-mode)
 [wgrep](https://github.com/mhayashi1120/Emacs-wgrep)
 [google-c-style](https://github.com/google/styleguide/blob/gh-pages/google-c-style.el)
@@ -125,7 +124,6 @@ tramp erc cc-mode
 * Workaround [a bug in projectile integration with CMake
   presets](https://github.com/bbatsov/projectile/issues/1673) until the next
   Projectile release in melpa-stable.
-* Integrate cmake-build.el with Projectile
 * Integrate deadgrep with Projectile
 * [Automatically update git gutter on Magit
   actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).

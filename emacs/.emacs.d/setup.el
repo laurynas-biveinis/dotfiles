@@ -1661,62 +1661,6 @@ find a search tool; by default, this uses \"find | grep\" in the
 (advice-add #'projectile--cmake-all-command-presets :override
             #'dotfiles--projectile--cmake-all-command-presets)
 
-;;; cmake-build.el
-;; Yet another not-completely integrated but very useful project management
-;; package. If I continue using it, then:
-;; TODO(laurynas): advise projectile-compile-project to do cmake-build-current
-;; if cmake config exists in the current project.
-;; TODO(laurynas): make projectile-configure-project to do
-;; cmake-build-set-cmake-profile and cmake-build-clear-cache-and-configure if
-;; cmake config exists in the current project.
-;; TODO(laurynas): make projectile-test-project to run cmake test config?
-(require 'cmake-build)
-(setq cmake-build-options "-j 5")
-(setq cmake-build-never-split t)
-(setq cmake-build-export-compile-commands t)
-(global-set-key (kbd "<f9>") #'cmake-build-current)
-(global-set-key (kbd "<C-f9>") #'cmake-build-run)
-
-;; cmake-build.el integration with Projectile
-(defun dotfiles--cmake-build-projectile-mode-line-function ()
-  "Report current Projectile and cmake-build.el project info in the modeline."
-  (let ((project-name (projectile-project-name))
-        (project-type (projectile-project-type)))
-    (format "%s[%s%s%s]"
-            projectile-mode-line-prefix
-            (or project-name "-")
-            (if project-type
-                (format ":%s" project-type)
-              "")
-            ;; We want to report the project type when only CMake profile but
-            ;; not the run configuration is set. Unfortunately, the build
-            ;; configuration defaults to 'clang-release unconditionally. So
-            ;; assume that if it's indeed that value, that it's not has been
-            ;; set, unless cmake-run-config is set too.
-            (if (eq project-type 'cmake)
-                (let ((cmake-build-profile-string (symbol-name
-                                                   cmake-build-profile))
-                      (cmake-run-config (cmake-build-get-run-config-name)))
-                  (cond (cmake-run-config
-                         (format ":%s:%s" cmake-build-profile-string
-                                 cmake-run-config))
-                        ((not (eq cmake-build-profile 'clang-release))
-                         (format ":%s" cmake-build-profile-string))
-                        (t "")))
-              ""))))
-
-(setq projectile-mode-line-function
-      #'dotfiles--cmake-build-projectile-mode-line-function)
-
-(defun dotfiles--cmake-build-projectile-update-mode-line-1arg (_)
-  "Call projectile-update-mode-line, ignoring an argument."
-  (projectile-update-mode-line))
-
-(advice-add #'cmake-build-set-cmake-profile :after
-            #'dotfiles--cmake-build-projectile-update-mode-line-1arg)
-(advice-add #'cmake-build-set-config :after
-            #'dotfiles--cmake-build-projectile-update-mode-line-1arg)
-
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)

@@ -1,6 +1,3 @@
-[submodule "emacs/.emacs.d/lib/cmake-build.el"]
-	path = emacs/.emacs.d/lib/cmake-build.el
-	url = https://github.com/rpav/cmake-build.el.git
 [submodule "dotfiles/3rd_party/osx-terminal.app-colors-solarized"]
 	path = dotfiles/3rd_party/osx-terminal.app-colors-solarized
 	url = https://github.com/tomislav/osx-terminal.app-colors-solarized
