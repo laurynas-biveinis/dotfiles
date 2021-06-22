@@ -236,10 +236,10 @@ else like the former.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.5.2/which-key-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.5.3/which-key-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/which-key-3.5.2/which-key-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/which-key-3.5.3/which-key-autoloads.el") (car load-path))))
 
 
 
@@ -271,8 +271,7 @@ Apply suggested settings for side-window that opens on right
 if there is space and the bottom otherwise." t nil)
 
 (autoload 'which-key-setup-side-window-bottom "which-key" "\
-Apply suggested settings for side-window that opens on
-bottom." t nil)
+Apply suggested settings for side-window that opens on bottom." t nil)
 
 (autoload 'which-key-setup-minibuffer "which-key" "\
 Apply suggested settings for minibuffer.
@@ -411,8 +410,8 @@ Dispatch C-h commands by looking up key in
 prefix) if `which-key-use-C-h-commands' is non nil." t nil)
 
 (autoload 'which-key-show-keymap "which-key" "\
-Show the top-level bindings in KEYMAP using which-key. KEYMAP
-is selected interactively from all available keymaps.
+Show the top-level bindings in KEYMAP using which-key.
+KEYMAP is selected interactively from all available keymaps.
 
 If NO-PAGING is non-nil, which-key will not intercept subsequent
 keypresses for the paging functionality.
@@ -420,20 +419,22 @@ keypresses for the paging functionality.
 \(fn KEYMAP &optional NO-PAGING)" t nil)
 
 (autoload 'which-key-show-full-keymap "which-key" "\
-Show all bindings in KEYMAP using which-key. KEYMAP is
-selected interactively from all available keymaps.
+Show all bindings in KEYMAP using which-key.
+KEYMAP is selected interactively from all available keymaps.
 
 \(fn KEYMAP)" t nil)
 
 (autoload 'which-key-show-minor-mode-keymap "which-key" "\
-Show the top-level bindings in KEYMAP using which-key. KEYMAP
-is selected interactively by mode in `minor-mode-map-alist'.
+Show the top-level bindings in KEYMAP using which-key.
+KEYMAP is selected interactively by mode in
+`minor-mode-map-alist'.
 
 \(fn &optional ALL)" t nil)
 
 (autoload 'which-key-show-full-minor-mode-keymap "which-key" "\
-Show all bindings in KEYMAP using which-key. KEYMAP
-is selected interactively by mode in `minor-mode-map-alist'." t nil)
+Show all bindings in KEYMAP using which-key.
+KEYMAP is selected interactively by mode in
+`minor-mode-map-alist'." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "which-key" '("which-key-")))
 
@@ -11951,10 +11952,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.4/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.5/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.4/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.20.5/cmake-mode-autoloads.el") (car load-path))))
 
 
 
