@@ -21,10 +21,10 @@ END-INFO-DIR-ENTRY
 
 File: tramp.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
 
-TRAMP 2.5.0.5 User Manual
-*************************
+TRAMP 2.5.1 User Manual
+***********************
 
-This file documents TRAMP 2.5.0.5, a remote file editing package for
+This file documents TRAMP 2.5.1, a remote file editing package for
 Emacs.
 
    TRAMP stands for “Transparent Remote (file) Access, Multiple
@@ -2164,6 +2164,11 @@ files to the same directory as the original file.
    Alternatively, set the user option ‘tramp-auto-save-directory’ to
 direct all auto saves to that location.
 
+   Per default, TRAMP asks for confirmation if a ‘root’-owned backup or
+auto-save remote file has to be written to your local temporary
+directory.  If you want to suppress this confirmation question, set user
+option ‘tramp-allow-unsafe-temporary-files’ to ‘t’.
+
 
 File: tramp.info,  Node: Keeping files encrypted,  Next: Windows setup hints,  Prev: Auto-save and Backup,  Up: Configuration
 
@@ -3936,9 +3941,9 @@ its process sentinel with this code:
      (unless (memq (process-status proc) '(run open))
        (dired-uncache remote-directory))
 
-   Since TRAMP traverses subdirectories starting with the
-root-directory, it is most likely sufficient to make the
-‘default-directory’ of the process buffer as the root directory.
+   Since TRAMP traverses subdirectories starting with the root
+directory, it is most likely sufficient to make the ‘default-directory’
+of the process buffer as the root directory.
 
 8.2.3 Timers
 ------------
@@ -4622,6 +4627,8 @@ Variable Index
 * tramp-actions-before-shell:            Remote shell setup.  (line 146)
 * tramp-adb-connect-if-not-connected:    External methods.    (line 193)
 * tramp-adb-program:                     External methods.    (line 185)
+* tramp-allow-unsafe-temporary-files:    Auto-save and Backup.
+                                                              (line  71)
 * tramp-archive-all-gvfs-methods:        Archive file names.  (line  91)
 * tramp-archive-compression-suffixes:    Archive file names.  (line  83)
 * tramp-archive-enabled:                 Archive file names.  (line 117)
@@ -5053,67 +5060,67 @@ Concept Index
 
 Tag Table:
 Node: Top933
-Node: Overview5600
-Node: Obtaining TRAMP10956
-Node: Quick Start Guide13414
-Ref: Quick Start Guide File name syntax14195
-Ref: Quick Start Guide ssh and plink methods15291
-Ref: Quick Start Guide su, sudo, doas and sg methods15838
-Ref: Quick Start Guide Combining ssh, plink, su, sudo and doas methods16510
-Ref: Quick Start Guide sudoedit method17075
-Ref: Quick Start Guide smb method17485
-Ref: Quick Start Guide GVFS-based methods17816
-Ref: Quick Start Guide GNOME Online Accounts based methods18262
-Ref: Quick Start Guide FUSE-based methods18804
-Ref: Quick Start Guide Android19677
-Node: Configuration19911
-Node: Connection types22563
-Node: Inline methods23980
-Node: External methods29103
-Node: GVFS-based methods38243
-Node: FUSE-based methods42397
-Node: Default Method45349
-Node: Default User48366
-Node: Default Host49895
-Node: Multi-hops51027
-Node: Firewalls55219
-Node: Customizing Methods56688
-Node: Customizing Completion59030
-Node: Password handling62520
-Ref: Using an authentication file62990
-Ref: Caching passwords64835
-Node: Connection caching65353
-Node: Predefined connection information66283
-Node: Remote programs71092
-Node: Remote shell setup74024
-Node: FUSE setup84487
-Ref: Setup of rclone method85270
-Ref: Setup of sshfs method85853
-Node: Android shell setup86311
-Node: Auto-save and Backup88705
-Node: Keeping files encrypted91784
-Node: Windows setup hints96446
-Node: Usage98069
-Node: File name syntax99422
-Node: Change file name syntax101429
-Node: File name completion102860
-Node: Ad-hoc multi-hops105442
-Node: Remote processes107507
-Ref: Running a debugger on a remote host117259
-Ref: Improving performance of asynchronous remote processes119229
-Node: Cleanup remote connections121555
-Node: Renaming remote files123256
-Node: Archive file names127487
-Node: Bug Reports132001
-Node: Frequently Asked Questions134742
-Node: Files directories and localnames161898
-Node: Localname deconstruction162334
-Node: External packages162987
-Node: Traces and Profiles165611
-Node: GNU Free Documentation License167696
-Node: Function Index193069
-Node: Variable Index196371
-Node: Concept Index206130
+Node: Overview5594
+Node: Obtaining TRAMP10950
+Node: Quick Start Guide13408
+Ref: Quick Start Guide File name syntax14189
+Ref: Quick Start Guide ssh and plink methods15285
+Ref: Quick Start Guide su, sudo, doas and sg methods15832
+Ref: Quick Start Guide Combining ssh, plink, su, sudo and doas methods16504
+Ref: Quick Start Guide sudoedit method17069
+Ref: Quick Start Guide smb method17479
+Ref: Quick Start Guide GVFS-based methods17810
+Ref: Quick Start Guide GNOME Online Accounts based methods18256
+Ref: Quick Start Guide FUSE-based methods18798
+Ref: Quick Start Guide Android19671
+Node: Configuration19905
+Node: Connection types22557
+Node: Inline methods23974
+Node: External methods29097
+Node: GVFS-based methods38237
+Node: FUSE-based methods42391
+Node: Default Method45343
+Node: Default User48360
+Node: Default Host49889
+Node: Multi-hops51021
+Node: Firewalls55213
+Node: Customizing Methods56682
+Node: Customizing Completion59024
+Node: Password handling62514
+Ref: Using an authentication file62984
+Ref: Caching passwords64829
+Node: Connection caching65347
+Node: Predefined connection information66277
+Node: Remote programs71086
+Node: Remote shell setup74018
+Node: FUSE setup84481
+Ref: Setup of rclone method85264
+Ref: Setup of sshfs method85847
+Node: Android shell setup86305
+Node: Auto-save and Backup88699
+Node: Keeping files encrypted92052
+Node: Windows setup hints96714
+Node: Usage98337
+Node: File name syntax99690
+Node: Change file name syntax101697
+Node: File name completion103128
+Node: Ad-hoc multi-hops105710
+Node: Remote processes107775
+Ref: Running a debugger on a remote host117527
+Ref: Improving performance of asynchronous remote processes119497
+Node: Cleanup remote connections121823
+Node: Renaming remote files123524
+Node: Archive file names127755
+Node: Bug Reports132269
+Node: Frequently Asked Questions135010
+Node: Files directories and localnames162166
+Node: Localname deconstruction162602
+Node: External packages163255
+Node: Traces and Profiles165879
+Node: GNU Free Documentation License167964
+Node: Function Index193337
+Node: Variable Index196639
+Node: Concept Index206534
 
 End Tag Table
 
