@@ -1417,10 +1417,10 @@ ignore any prefix argument.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.3.5/transient-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20210701.1116/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-0.3.5/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20210701.1116/transient-autoloads.el") (car load-path))))
 
 
 
@@ -6669,10 +6669,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.0.0/magit-section-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.0/magit-section-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-section-3.0.0/magit-section-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.0/magit-section-autoloads.el") (car load-path))))
 
 
 
@@ -6682,10 +6682,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.0.0/git-commit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.1.0/git-commit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-commit-3.0.0/git-commit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-commit-3.1.0/git-commit-autoloads.el") (car load-path))))
 
 
 (put 'git-commit-major-mode 'safe-local-variable
@@ -6702,10 +6702,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.0.0/magit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.1.0/magit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-3.0.0/magit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-3.1.0/magit-autoloads.el") (car load-path))))
 
 
 
@@ -7228,6 +7228,9 @@ Create a squash commit, without editing the squash message.
 With a prefix argument the target COMMIT has to be confirmed.
 Otherwise the commit at point may be used without confirmation
 depending on the value of option `magit-commit-squash-confirm'.
+
+If you want to immediately add a message to the squash commit,
+then use `magit-commit-augment' instead of this command.
 
 \(fn &optional COMMIT ARGS)" t nil)
 
@@ -12313,10 +12316,10 @@ and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/aggressive-indent-1.9.0/aggressive-indent-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/aggressive-indent-1.10.0/aggressive-indent-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/aggressive-indent-1.9.0/aggressive-indent-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/aggressive-indent-1.10.0/aggressive-indent-autoloads.el") (car load-path))))
 
 
 
@@ -12329,19 +12332,24 @@ If L and R are provided, use them for finding the start and end of defun.
 
 (autoload 'aggressive-indent-indent-region-and-on "aggressive-indent" "\
 Indent region between L and R, and then some.
-Call `indent-region' between L and R, and then keep indenting
-until nothing more happens.
+Call `aggressive-indent-region-function' between L and R, and
+then keep indenting until nothing more happens.
 
 \(fn L R)" t nil)
 
 (autoload 'aggressive-indent-mode "aggressive-indent" "\
 Toggle Aggressive-Indent mode on or off.
-With a prefix argument ARG, enable Aggressive-Indent mode if ARG is
-positive, and disable it otherwise.  If called from Lisp, enable
-the mode if ARG is omitted or nil, and toggle it if ARG is `toggle'.
+
+If called interactively, enable Aggressive-Indent mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
 \\{aggressive-indent-mode-map}
 
 \(fn &optional ARG)" t nil)
+
+(put 'global-aggressive-indent-mode 'globalized-minor-mode t)
 
 (defvar global-aggressive-indent-mode nil "\
 Non-nil if Global Aggressive-Indent mode is enabled.
@@ -12380,7 +12388,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.0.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.0.0" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1" "/Users/laurynas/.emacs.d/elpa/transient-0.3.5" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.1.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.0" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1" "/Users/laurynas/.emacs.d/elpa/transient-20210701.1116" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
          Info-directory-list)))
 
 ;; Local Variables:
