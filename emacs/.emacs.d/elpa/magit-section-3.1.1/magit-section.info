@@ -33,7 +33,7 @@ packages that have nothing to do with Magit or Git.
 and user options see *note (magit)Sections::.  This manual documents how
 you can use sections in your own packages.
 
-This manual is for Magit-Section version 3.1.0.
+This manual is for Magit-Section version 3.1.1.
 
      Copyright (C) 2015-2021 Jonas Bernoulli <jonas@bernoul.li>
 

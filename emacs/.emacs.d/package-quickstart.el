@@ -1761,10 +1761,10 @@ how ssh X display tunelling interacts with frames on remote displays.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/spinner-1.7.3/spinner-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/spinner-1.7.4/spinner-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/spinner-1.7.3/spinner-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/spinner-1.7.4/spinner-autoloads.el") (car load-path))))
 
 
 
@@ -1781,7 +1781,7 @@ buffer, use that instead of current buffer.
 
 When started, in order to function properly, the spinner runs a
 timer which periodically calls `force-mode-line-update' in the
-curent buffer.  If BUFFER-LOCAL was set at creation time, then
+current buffer.  If BUFFER-LOCAL was set at creation time, then
 `force-mode-line-update' is called in that buffer instead.  When
 the spinner is stopped, the timer is deactivated.
 
@@ -1797,7 +1797,7 @@ Start a mode-line spinner of given TYPE-OR-OBJECT.
 If TYPE-OR-OBJECT is an object created with `make-spinner',
 simply activate it.  This method is designed for minor modes, so
 they can use the spinner as part of their lighter by doing:
-    \\='(:eval (spinner-print THE-SPINNER))
+    '(:eval (spinner-print THE-SPINNER))
 To stop this spinner, call `spinner-stop' on it.
 
 If TYPE-OR-OBJECT is anything else, a buffer-local spinner is
@@ -1819,7 +1819,9 @@ this time, in which case it won't display at all.
 
 \(fn &optional TYPE-OR-OBJECT FPS DELAY)" nil nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "spinner" '("spinner")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "spinner" '("spinner-")))
+
+
 
 
 )
@@ -6669,10 +6671,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.0/magit-section-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.1/magit-section-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.0/magit-section-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.1/magit-section-autoloads.el") (car load-path))))
 
 
 
@@ -6682,10 +6684,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.1.0/git-commit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.1.1/git-commit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-commit-3.1.0/git-commit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-commit-3.1.1/git-commit-autoloads.el") (car load-path))))
 
 
 (put 'git-commit-major-mode 'safe-local-variable
@@ -6699,13 +6701,11 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "git-commit" '("git-commit-" "global-git-commit-mode")))
 
 
-
-
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.1.0/magit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.1.1/magit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-3.1.0/magit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-3.1.1/magit-autoloads.el") (car load-path))))
 
 
 
@@ -12388,7 +12388,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.1.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.0" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1" "/Users/laurynas/.emacs.d/elpa/transient-20210701.1116" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.1.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.1" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1" "/Users/laurynas/.emacs.d/elpa/transient-20210701.1116" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
          Info-directory-list)))
 
 ;; Local Variables:
