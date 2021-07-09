@@ -638,10 +638,10 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-2.18.1/dash-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-2.19.0/dash-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-2.18.1/dash-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-2.19.0/dash-autoloads.el") (car load-path))))
 
 
 
@@ -9085,10 +9085,10 @@ When called interactively, switch to the process buffer.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-functional-2.18.1/dash-functional-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-functional-2.19.0/dash-functional-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-functional-2.18.1/dash-functional-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-functional-2.19.0/dash-functional-autoloads.el") (car load-path))))
 
 
 )
@@ -11521,10 +11521,10 @@ enable the mode if ARG is omitted or nil, and toggle it if ARG is
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20210321.852/flycheck-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20210708.1337/flycheck-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20210321.852/flycheck-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20210708.1337/flycheck-autoloads.el") (car load-path))))
 
 
 
@@ -11962,10 +11962,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.21.0pre2/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.21.0pre3/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.21.0pre2/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.21.0pre3/cmake-mode-autoloads.el") (car load-path))))
 
 
 
@@ -12388,7 +12388,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.1.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.1" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1" "/Users/laurynas/.emacs.d/elpa/transient-20210701.1116" "/Users/laurynas/.emacs.d/elpa/dash-2.18.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.1.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.1" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1" "/Users/laurynas/.emacs.d/elpa/transient-20210701.1116" "/Users/laurynas/.emacs.d/elpa/dash-2.19.0" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
          Info-directory-list)))
 
 ;; Local Variables:
