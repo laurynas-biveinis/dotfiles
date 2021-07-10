@@ -313,7 +313,7 @@ sudo ln -sf en_US.dic en_LT.dic
 sudo easy_install pip
 sudo gem install mdl
 brew cask install eve intel-power-gadget rescuetime slack vlc \
-     disk-inventory-x google-chrome pdftotext dash blockblock
+     disk-inventory-x google-chrome pdftotext dash blockblock mactex
 brew tap epk/epk
 brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
