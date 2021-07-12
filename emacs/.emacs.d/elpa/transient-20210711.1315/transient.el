@@ -7,7 +7,7 @@
 ;; Keywords: bindings
 
 ;; Package-Requires: ((emacs "25.1"))
-;; Package-Version: 0.3.5
+;; Package-Version: 0.3.6
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -239,6 +239,20 @@ and `transient-nonstandard-key'."
   :group 'transient
   :type 'boolean)
 
+(defcustom transient-highlight-higher-levels nil
+  "Whether to highlight suffixes on higher levels.
+
+This is primarily intended for package authors.
+
+When non-nil then highlight the description of suffixes whose
+level is above 4, the default of `transient-default-level'.
+Assuming you have set that variable to 7, this highlights all
+suffixes that won't be available to users without them making
+the same customization."
+  :package-version '(transient . "0.3.6")
+  :group 'transient
+  :type 'boolean)
+
 (defcustom transient-substitute-key-function nil
   "Function used to modify key bindings.
 
@@ -301,7 +315,20 @@ be remapped to `fixed-pitch' in that buffer."
   :group 'transient
   :type 'boolean)
 
-(defcustom transient-default-level 4
+(defcustom transient-force-single-column nil
+  "Whether to force use of a single column to display suffixes.
+
+This might be useful for users with low vision who use large
+text and might otherwise have to scroll in two dimensions."
+  :package-version '(transient . "0.3.6")
+  :group 'transient
+  :type 'boolean)
+
+(defconst transient--default-child-level 1)
+
+(defconst transient--default-prefix-level 4)
+
+(defcustom transient-default-level transient--default-prefix-level
   "Control what suffix levels are made available by default.
 
 Each suffix command is placed on a level and each prefix command
@@ -433,6 +460,11 @@ See info node `(transient)Enabling and Disabling Suffixes'."
   '((t :background "red" :foreground "black" :weight bold))
   "Face used for disabled levels while editing suffix levels.
 See info node `(transient)Enabling and Disabling Suffixes'."
+  :group 'transient-faces)
+
+(defface transient-higher-level '((t :underline t))
+  "Face optionally used to highlight suffixes on higher levels.
+Also see option `transient-highlight-higher-levels'."
   :group 'transient-faces)
 
 (defface transient-separator
@@ -571,12 +603,10 @@ the prototype is stored in the clone's `prototype' slot.")
 
 ;;;; Suffix
 
-(defconst transient--default-child-level 1)
-
 (defclass transient-child ()
   ((level
     :initarg :level
-    :initform transient--default-child-level
+    :initform (symbol-value 'transient--default-child-level)
     :documentation "Enable if level of prefix is equal or greater.")
    (if
     :initarg :if
@@ -1412,7 +1442,7 @@ to `transient-predicate-map'.")
 (defvar transient-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map transient-base-map)
-    (define-key map (kbd "C-p") 'universal-argument)
+    (define-key map (kbd "C-u") 'universal-argument)
     (define-key map (kbd "C--") 'negative-argument)
     (define-key map (kbd "C-t") 'transient-show)
     (define-key map (kbd "?")   'transient-help)
@@ -2179,7 +2209,18 @@ to `transient--do-warn'."
            (propertize "?"   'face 'transient-key)
            (propertize (symbol-name (transient--suffix-symbol
                                      this-original-command))
-                       'face 'font-lock-warning-face)))
+                       'face 'font-lock-warning-face))
+  (unless (and transient--transient-map
+               (memq transient--transient-map overriding-terminal-local-map))
+    (let ((transient--prefix (or transient--prefix 'sic)))
+      (transient--emergency-exit))
+    (view-lossage)
+    (other-window 1)
+    (display-warning 'transient "Inconsistent transient state detected.
+This should never happen.
+Please open an issue and post the shown command log.
+This is a heisenbug, so any additional details might help.
+Thanks!" :error)))
 
 (defun transient-toggle-common ()
   "Toggle whether common commands are always shown."
@@ -2926,13 +2967,21 @@ have a history of their own.")
          (cw (mapcar (lambda (col) (apply #'max (mapcar #'length col)))
                      columns))
          (cc (transient--seq-reductions-from (apply-partially #'+ 3) cw 0)))
-    (dotimes (r rs)
-      (dotimes (c cs)
-        (insert (make-string (- (nth c cc) (current-column)) ?\s))
-        (when-let ((cell (nth r (nth c columns))))
-          (insert cell))
-        (when (= c (1- cs))
-          (insert ?\n))))))
+    (if transient-force-single-column
+        (dotimes (c cs)
+          (dotimes (r rs)
+            (when-let ((cell (nth r (nth c columns))))
+              (unless (equal cell "")
+                (insert cell ?\n))))
+          (unless (= c (1- cs))
+            (insert ?\n)))
+      (dotimes (r rs)
+        (dotimes (c cs)
+          (insert (make-string (- (nth c cc) (current-column)) ?\s))
+          (when-let ((cell (nth r (nth c columns))))
+            (insert cell))
+          (when (= c (1- cs))
+            (insert ?\n)))))))
 
 (cl-defmethod transient--insert-group ((group transient-subgroups))
   (let* ((subgroups (oref group suffixes))
@@ -2987,9 +3036,7 @@ Optional support for popup buttons is also implemented here."
                                          'transient-disabled-suffix))))
               (cl-call-next-method obj))))
     (when (oref obj inapt)
-      (set-text-properties 0 (length str)
-                           (list 'face 'transient-inapt-suffix)
-                           str))
+      (add-face-text-property 0 (length str) 'transient-inapt-suffix nil str))
     (if transient-enable-popup-navigation
         (make-text-button str nil
                           'type 'transient-button
@@ -3101,9 +3148,15 @@ If the OBJ's `key' is currently unreachable, then apply the face
                        (funcall (oref transient--prefix suffix-description)
                                 obj))
                   (propertize "(BUG: no description)" 'face 'error))))
-    (if (transient--key-unreachable-p obj)
-        (propertize desc 'face 'transient-unreachable)
-      desc)))
+    (cond ((transient--key-unreachable-p obj)
+           (propertize desc 'face 'transient-unreachable))
+          ((and transient-highlight-higher-levels
+                (> (oref obj level) transient--default-prefix-level))
+           (add-face-text-property
+            0 (length desc) 'transient-higher-level nil desc)
+           desc)
+          (t
+           desc))))
 
 (cl-defgeneric transient-format-value (obj)
   "Format OBJ's value for display and return the result.")
@@ -3599,9 +3652,9 @@ we stop there."
 ;;;; `transient-lisp-variable'
 
 (defclass transient-lisp-variable (transient-variable)
-  ((reader :initform transient-lisp-variable--reader)
+  ((reader :initform #'transient-lisp-variable--reader)
    (always-read :initform t)
-   (set-value :initarg :set-value :initform set))
+   (set-value :initarg :set-value :initform #'set))
   "[Experimental] Class used for Lisp variables.")
 
 (cl-defmethod transient-init-value ((obj transient-lisp-variable))
