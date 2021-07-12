@@ -191,14 +191,14 @@ fi
 popd || exit 1
 
 pushd "$BRANCH/ee" || exit 1
-git submodule update --init
+git submodule update --init --recursive
 if [[ "$UNAME_OUT" == "Linux" ]]; then
     ln -sf "../ce/compile_commands.json" .
 fi
 popd || exit 1
 
 pushd "$BRANCH/ce" || exit 1
-git submodule update --init
+git submodule update --init --recursive
 popd || exit 1
 
 pushd "$BRANCH" || exit 1
