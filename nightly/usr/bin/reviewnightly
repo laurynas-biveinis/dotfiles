@@ -4,7 +4,7 @@ set -euo pipefail
 
 readonly NIGHTLY=~/nightly.out
 
-if [ ! -f $NIGHTLY ]; then
+if [[ ! -f $NIGHTLY ]]; then
     echo "$NIGHTLY not present"
     exit
 fi
