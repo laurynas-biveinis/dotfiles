@@ -1674,10 +1674,10 @@ Turn on `stripe-buffer-mode' and `hl-line-mode'." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210703.951/ssh-config-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210714.951/ssh-config-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210703.951/ssh-config-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20210714.951/ssh-config-mode-autoloads.el") (car load-path))))
 
 
 
@@ -11962,10 +11962,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.21.0pre3/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.21.0/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.21.0pre3/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.21.0/cmake-mode-autoloads.el") (car load-path))))
 
 
 
