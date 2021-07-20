@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+# FIXME(laurynas): a bash script. Does it work with zsh?
+
 set -euo pipefail
 
 readonly GREP_OPT=$1
