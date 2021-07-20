@@ -36,7 +36,7 @@
                              (replace-regexp-in-string "/ee/$" "/ce/" cur-dir))
                             (t nil))))
     (if sibling-dir
-        (magit-status-internal sibling-dir)
+        (magit-status-setup-buffer sibling-dir)
       (message "Not an Aerospike Server git directory: `%s'" cur-dir))))
 
 (global-set-key (kbd "C-x j") #'aerospike-sibling-magit-status)
