@@ -978,7 +978,8 @@ event of an error or nonlocal exit."
 (defun dotfiles--org-mode-hook ()
   "My configuration hook for 'org-mode'."
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
-  (setq fill-column 85))
+  (setq fill-column 85)
+  (setq whitespace-line-column 86))
 
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
