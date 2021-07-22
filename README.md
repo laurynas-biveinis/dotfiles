@@ -121,6 +121,8 @@ tramp erc cc-mode
 * Workaround [projectile not being integrated with
   project.el](https://github.com/bbatsov/projectile/issues/1282) at least for
   xref.
+* Add [Projectile reconfigure command for CMake
+  presets](https://github.com/bbatsov/projectile/issues/1676).
 * Workaround [a bug in projectile integration with CMake
   presets](https://github.com/bbatsov/projectile/issues/1673) until the next
   Projectile release in melpa-stable.
