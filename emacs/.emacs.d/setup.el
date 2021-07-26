@@ -1868,9 +1868,8 @@ with a prefix ARG."
 ;;; `rainbow-delimiters'
 (require 'rainbow-delimiters)
 ;; TODO(laurynas): add to more modes as appropriate
-(add-hook 'emacs-lisp-mode #'rainbow-delimiters-mode)
-(add-hook 'c-mode #'rainbow-delimiters-mode)
-(add-hook 'c++-mode #'rainbow-delimiters-mode)
+(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'c-mode-common-hook #'rainbow-delimiters-mode)
 
 ;;;; Upgrade helper
 (defun my-recompile-packages ()
