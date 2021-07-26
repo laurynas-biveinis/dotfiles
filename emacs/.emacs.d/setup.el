@@ -18,6 +18,7 @@
 (defvar main-org-file)
 (defvar secrets-org-file)
 (defvar my-frame-font)
+(defvar dotfiles--initial-file-name-handler-alist)
 (declare-function LaTeX-install-toolbar "tex-bar" ())
 (declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function start-erc-chats "" ())
@@ -1869,6 +1870,11 @@ with a prefix ARG."
   "Force full recompilation of installed packages."
   (interactive)
   (byte-recompile-directory package-user-dir nil 'force))
+
+;;; Restore temporarily swapped for startup duration variables
+(dolist (handler file-name-handler-alist)
+  (add-to-list 'dotfiles--initial-file-name-handler-alist handler))
+(setq file-name-handler-alist dotfiles--initial-file-name-handler-alist)
 
 ;;; GC tuning for interactive use. We already set `gc-cons-threshold' to
 ;;; `most-positive-fixnum' in early-init.el for startup.

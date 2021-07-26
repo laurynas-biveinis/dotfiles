@@ -172,3 +172,4 @@ Incomplete, will add to it.
 * <https://github.com/snackon/Witchmacs>
 * <https://github.com/jhenahan/dots/tree/main/config/emacs>
 * <https://github.com/link0ff/emacs-init>
+* <https://www.lucacambiaghi.com/vanilla-emacs/readme.html>

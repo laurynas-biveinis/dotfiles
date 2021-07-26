@@ -29,4 +29,8 @@
 ;; cursor color is concerned).
 (advice-add #'x-apply-session-resources :override #'ignore)
 
+(unless (daemonp)
+  (defvar dotfiles--initial-file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil))
+
 ;;; early-init.el ends here
