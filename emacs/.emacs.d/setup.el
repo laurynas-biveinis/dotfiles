@@ -1865,6 +1865,13 @@ with a prefix ARG."
 (require 'info-colors)
 (add-hook 'Info-selection-hook #'info-colors-fontify-node)
 
+;;; `rainbow-delimiters'
+(require 'rainbow-delimiters)
+;; TODO(laurynas): add to more modes as appropriate
+(add-hook 'emacs-lisp-mode #'rainbow-delimiters-mode)
+(add-hook 'c-mode #'rainbow-delimiters-mode)
+(add-hook 'c++-mode #'rainbow-delimiters-mode)
+
 ;;;; Upgrade helper
 (defun my-recompile-packages ()
   "Force full recompilation of installed packages."

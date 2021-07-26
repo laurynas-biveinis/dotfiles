@@ -1908,6 +1908,33 @@ the mode if ARG is omitted or nil, and toggle it if ARG is `toggle'.
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/rainbow-delimiters-2.1.5/rainbow-delimiters-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/rainbow-delimiters-2.1.5/rainbow-delimiters-autoloads.el") (car load-path))))
+
+
+
+(autoload 'rainbow-delimiters-mode "rainbow-delimiters" "\
+Highlight nested parentheses, brackets, and braces according to their depth.
+
+If called interactively, enable Rainbow-Delimiters mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rainbow-delimiters-mode-enable "rainbow-delimiters" "\
+Enable `rainbow-delimiters-mode'." nil nil)
+
+(autoload 'rainbow-delimiters-mode-disable "rainbow-delimiters" "\
+Disable `rainbow-delimiters-mode'." nil nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "rainbow-delimiters" '("rainbow-delimiters-")))
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/epl-0.9/epl-autoloads.el"))
 (add-to-list 'load-path (directory-file-name (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/epl-0.9/epl-autoloads.el") (car load-path))))
 
@@ -12381,7 +12408,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s f avy ace-window pfuture lv hydra ht treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s f avy ace-window pfuture lv hydra ht treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
