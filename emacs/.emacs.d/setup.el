@@ -1127,6 +1127,17 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'flycheck-color-mode-line)
 (add-hook 'flycheck-mode-hook #'flycheck-color-mode-line-mode)
 
+;; `flycheck-google-cpplint'
+(require 'flycheck-google-cpplint)
+;; TODO(laurynas): it can be enabled without LSP as well, but there is no C/C++
+;; checker chain in that case.
+(defun dotfiles--lsp-flycheck-enable-cpplint ()
+  "Enable cpplint for C and C++ buffers under LSP."
+  (when (derived-mode-p 'c-mode 'c++-mode)
+    (flycheck-add-next-checker 'lsp 'c/c++-googlelint)))
+
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-flycheck-enable-cpplint)
+
 ;;; Company mode
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)

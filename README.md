@@ -82,6 +82,7 @@ Unfortunately, that is not always possible.
 [cheat-sh](https://github.com/davep/cheat-sh.el)
 [beginend](https://github.com/DamienCassou/beginend)
 [git-modes](https://github.com/magit/git-modes)
+[flycheck-google-cpplint](https://github.com/flycheck/flycheck-google-cpplint/)
 
 #### Appearance
 
