@@ -139,7 +139,7 @@ tramp erc cc-mode
   1](https://github.com/laurynas-biveinis/dotfiles/blob/8aa6e94c5d23b43706740ce02982001759087743/emacs/.emacs.d/setup.el#L1482),
   [fix
   2](https://github.com/laurynas-biveinis/dotfiles/blob/1dece8ec3230144a6bb7ed96de2155e37c7bf047/emacs/.emacs.d/setup.el#L1528)
-* Reduce LSP info in the modeline.
+* [Reduce LSP info in the modeline](https://github.com/laurynas-biveinis/dotfiles/commit/d112f3f208a857435ebb6d2b8e0198fd85df2c39).
 
 ### Custom commands and functionality
 
