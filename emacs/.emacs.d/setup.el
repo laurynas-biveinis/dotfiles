@@ -1138,6 +1138,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-flycheck-enable-cpplint)
 
+;; `flycheck-status-emoji-mode'
+(require 'flycheck-status-emoji)
+(flycheck-status-emoji-mode)
+
 ;;; Company mode
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
