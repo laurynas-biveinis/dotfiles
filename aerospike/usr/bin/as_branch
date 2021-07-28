@@ -87,6 +87,7 @@ function do_init () {
     ln -sf "$SUPPORT_FILE_DIR/.clangd" .
     cp "$SUPPORT_FILE_DIR/asd-.dir-locals.el" .dir-locals.el
     ln -sf "$SUPPORT_FILE_DIR/asd-Makefile" Makefile
+    ln -sf "$SUPPORT_FILE_DIR/CPPLINT.cfg" CPPLINT.cfg
     if [[ "$UNAME_OUT" != "Linux" ]]; then
         cp "$SUPPORT_FILE_DIR/compile_flags.txt.in" compile_flags.txt
         sed -i.bak "s:\$LINUX_SYSROOT:$LINUX_SYSROOT:g" compile_flags.txt
