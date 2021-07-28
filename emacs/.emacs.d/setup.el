@@ -1361,6 +1361,17 @@ CANDIDATES is the list of candidates."
 (setq lsp-enable-semantic-highlighting t)
 (setq lsp-headerline-breadcrumb-enable t)
 
+;; Save some horizontal space in the mode line: drop language server name, PID,
+;; and "[Disconnected]" string. That information is accessible through
+;; `lsp-describe-session', if needed.
+(defun dotfiles--lsp-mode-line ()
+  "Construct the mode line text for `lsp-mode'."
+  (if (lsp-workspaces)
+      " LSP"
+    " !LSP"))
+
+(advice-add #'lsp-mode-line :override #'dotfiles--lsp-mode-line)
+
 ;;; lsp-diagnostics-mode
 (require 'lsp-diagnostics)
 (add-hook 'lsp-managed-mode-hook #'lsp-diagnostics-mode)
