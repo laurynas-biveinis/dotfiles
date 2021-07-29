@@ -1,3 +1,7 @@
+CompileFlags:
+  Add: -Wno-address-of-packed-member
+  Add: -Wno-typedef-redefinition
+---
 If:
   PathMatch: .*\.h
 CompileFlags:
