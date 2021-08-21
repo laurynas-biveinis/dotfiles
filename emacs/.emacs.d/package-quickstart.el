@@ -478,17 +478,24 @@ Setup wgrep preparation.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20200730.240/wakatime-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20210818.1556/wakatime-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20200730.240/wakatime-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20210818.1556/wakatime-mode-autoloads.el") (car load-path))))
 
 
 
 (autoload 'wakatime-mode "wakatime-mode" "\
 Toggle WakaTime (WakaTime mode).
 
+If called interactively, enable Wakatime mode if ARG is positive,
+and disable it if ARG is zero or negative.  If called from Lisp,
+also enable the mode if ARG is omitted or nil, and toggle it if
+ARG is `toggle'; disable the mode otherwise.
+
 \(fn &optional ARG)" t nil)
+
+(put 'global-wakatime-mode 'globalized-minor-mode t)
 
 (defvar global-wakatime-mode nil "\
 Non-nil if Global Wakatime mode is enabled.
@@ -512,19 +519,28 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 \(fn &optional ARG)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "wakatime-mode" '("wakatime-" "s-blank")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "wakatime-mode" '("s-blank" "wakatime-")))
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20210618.1922/vterm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20210804.405/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20210618.1922/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20210804.405/vterm-autoloads.el") (car load-path))))
 
 
 
 (autoload 'vterm-module-compile "vterm" "\
 Compile vterm-module." t nil)
+
+(autoload 'vterm--bookmark-handler "vterm" "\
+Handler to restore a vterm bookmark BMK.
+
+If a vterm buffer of the same name does not exist, the function will create a
+new vterm buffer of the name. It also checks the current directory and sets
+it to the bookmarked directory if needed.
+
+\(fn BMK)" nil nil)
 
 (autoload 'vterm-next-error-function "vterm" "\
 Advance to the next error message and visit the file where the error was.
@@ -1417,10 +1433,10 @@ ignore any prefix argument.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20210723.1601/transient-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20210819.2118/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20210723.1601/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20210819.2118/transient-autoloads.el") (car load-path))))
 
 
 
@@ -1935,127 +1951,10 @@ Disable `rainbow-delimiters-mode'." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/epl-0.9/epl-autoloads.el"))
-(add-to-list 'load-path (directory-file-name (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/epl-0.9/epl-autoloads.el") (car load-path))))
-
-
-
-)
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/pkg-info-0.6/pkg-info-autoloads.el"))
-(add-to-list 'load-path (directory-file-name (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/pkg-info-0.6/pkg-info-autoloads.el") (car load-path))))
-
-
-(autoload 'pkg-info-library-original-version "pkg-info" "\
-Get the original version in the header of LIBRARY.
-
-The original version is stored in the X-Original-Version header.
-This header is added by the MELPA package archive to preserve
-upstream version numbers.
-
-LIBRARY is either a symbol denoting a named feature, or a library
-name as string.
-
-If SHOW is non-nil, show the version in the minibuffer.
-
-Return the version from the header of LIBRARY as list.  Signal an
-error if the LIBRARY was not found or had no X-Original-Version
-header.
-
-See Info node `(elisp)Library Headers' for more information
-about library headers.
-
-\(fn LIBRARY &optional SHOW)" t nil)
-
-(autoload 'pkg-info-library-version "pkg-info" "\
-Get the version in the header of LIBRARY.
-
-LIBRARY is either a symbol denoting a named feature, or a library
-name as string.
-
-If SHOW is non-nil, show the version in the minibuffer.
-
-Return the version from the header of LIBRARY as list.  Signal an
-error if the LIBRARY was not found or had no proper header.
-
-See Info node `(elisp)Library Headers' for more information
-about library headers.
-
-\(fn LIBRARY &optional SHOW)" t nil)
-
-(autoload 'pkg-info-defining-library-original-version "pkg-info" "\
-Get the original version of the library defining FUNCTION.
-
-The original version is stored in the X-Original-Version header.
-This header is added by the MELPA package archive to preserve
-upstream version numbers.
-
-If SHOW is non-nil, show the version in mini-buffer.
-
-This function is mainly intended to find the version of a major
-or minor mode, i.e.
-
-   (pkg-info-defining-library-version 'flycheck-mode)
-
-Return the version of the library defining FUNCTION.  Signal an
-error if FUNCTION is not a valid function, if its defining
-library was not found, or if the library had no proper version
-header.
-
-\(fn FUNCTION &optional SHOW)" t nil)
-
-(autoload 'pkg-info-defining-library-version "pkg-info" "\
-Get the version of the library defining FUNCTION.
-
-If SHOW is non-nil, show the version in mini-buffer.
-
-This function is mainly intended to find the version of a major
-or minor mode, i.e.
-
-   (pkg-info-defining-library-version 'flycheck-mode)
-
-Return the version of the library defining FUNCTION.  Signal an
-error if FUNCTION is not a valid function, if its defining
-library was not found, or if the library had no proper version
-header.
-
-\(fn FUNCTION &optional SHOW)" t nil)
-
-(autoload 'pkg-info-package-version "pkg-info" "\
-Get the version of an installed PACKAGE.
-
-If SHOW is non-nil, show the version in the minibuffer.
-
-Return the version as list, or nil if PACKAGE is not installed.
-
-\(fn PACKAGE &optional SHOW)" t nil)
-
-(autoload 'pkg-info-version-info "pkg-info" "\
-Obtain complete version info for LIBRARY and PACKAGE.
-
-LIBRARY is a symbol denoting a named feature, or a library name
-as string.  PACKAGE is a symbol denoting an ELPA package.  If
-omitted or nil, default to LIBRARY.
-
-If SHOW is non-nil, show the version in the minibuffer.
-
-When called interactively, prompt for LIBRARY.  When called
-interactively with prefix argument, prompt for PACKAGE as well.
-
-Return a string with complete version information for LIBRARY.
-This version information contains the version from the headers of
-LIBRARY, and the version of the installed PACKAGE, the LIBRARY is
-part of.  If PACKAGE is not installed, or if the PACKAGE version
-is the same as the LIBRARY version, do not include a package
-version.
-
-\(fn LIBRARY &optional PACKAGE SHOW)" t nil)
-
-
-)
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.4.0/projectile-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.5.0/projectile-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/projectile-2.4.0/projectile-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/projectile-2.5.0/projectile-autoloads.el") (car load-path))))
 
 
 
@@ -2097,10 +1996,11 @@ Add the currently visited file to the cache." t nil)
 
 (autoload 'projectile-discover-projects-in-directory "projectile" "\
 Discover any projects in DIRECTORY and add them to the projectile cache.
-This function is not recursive and only adds projects with roots
-at the top level of DIRECTORY.
 
-\(fn DIRECTORY)" t nil)
+If DEPTH is non-nil recursively descend exactly DEPTH levels below DIRECTORY and
+discover projects there.
+
+\(fn DIRECTORY &optional DEPTH)" nil nil)
 
 (autoload 'projectile-discover-projects-in-search-path "projectile" "\
 Discover projects in `projectile-project-search-path'.
@@ -2358,10 +2258,14 @@ Find tag in project." t nil)
 Invoke `execute-extended-command' in the project's root." t nil)
 
 (autoload 'projectile-run-shell-command-in-root "projectile" "\
-Invoke `shell-command' in the project's root." t nil)
+Invoke `shell-command' in the project's root.
+
+\(fn COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER)" t nil)
 
 (autoload 'projectile-run-async-shell-command-in-root "projectile" "\
-Invoke `async-shell-command' in the project's root." t nil)
+Invoke `async-shell-command' in the project's root.
+
+\(fn COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER)" t nil)
 
 (autoload 'projectile-run-gdb "projectile" "\
 Invoke `gdb' in the project's root." t nil)
@@ -2640,6 +2544,123 @@ Otherwise behave as if called interactively.
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "popup" '("popup-")))
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/epl-0.9/epl-autoloads.el"))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/epl-0.9/epl-autoloads.el") (car load-path))))
+
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/pkg-info-0.6/pkg-info-autoloads.el"))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/pkg-info-0.6/pkg-info-autoloads.el") (car load-path))))
+
+
+(autoload 'pkg-info-library-original-version "pkg-info" "\
+Get the original version in the header of LIBRARY.
+
+The original version is stored in the X-Original-Version header.
+This header is added by the MELPA package archive to preserve
+upstream version numbers.
+
+LIBRARY is either a symbol denoting a named feature, or a library
+name as string.
+
+If SHOW is non-nil, show the version in the minibuffer.
+
+Return the version from the header of LIBRARY as list.  Signal an
+error if the LIBRARY was not found or had no X-Original-Version
+header.
+
+See Info node `(elisp)Library Headers' for more information
+about library headers.
+
+\(fn LIBRARY &optional SHOW)" t nil)
+
+(autoload 'pkg-info-library-version "pkg-info" "\
+Get the version in the header of LIBRARY.
+
+LIBRARY is either a symbol denoting a named feature, or a library
+name as string.
+
+If SHOW is non-nil, show the version in the minibuffer.
+
+Return the version from the header of LIBRARY as list.  Signal an
+error if the LIBRARY was not found or had no proper header.
+
+See Info node `(elisp)Library Headers' for more information
+about library headers.
+
+\(fn LIBRARY &optional SHOW)" t nil)
+
+(autoload 'pkg-info-defining-library-original-version "pkg-info" "\
+Get the original version of the library defining FUNCTION.
+
+The original version is stored in the X-Original-Version header.
+This header is added by the MELPA package archive to preserve
+upstream version numbers.
+
+If SHOW is non-nil, show the version in mini-buffer.
+
+This function is mainly intended to find the version of a major
+or minor mode, i.e.
+
+   (pkg-info-defining-library-version 'flycheck-mode)
+
+Return the version of the library defining FUNCTION.  Signal an
+error if FUNCTION is not a valid function, if its defining
+library was not found, or if the library had no proper version
+header.
+
+\(fn FUNCTION &optional SHOW)" t nil)
+
+(autoload 'pkg-info-defining-library-version "pkg-info" "\
+Get the version of the library defining FUNCTION.
+
+If SHOW is non-nil, show the version in mini-buffer.
+
+This function is mainly intended to find the version of a major
+or minor mode, i.e.
+
+   (pkg-info-defining-library-version 'flycheck-mode)
+
+Return the version of the library defining FUNCTION.  Signal an
+error if FUNCTION is not a valid function, if its defining
+library was not found, or if the library had no proper version
+header.
+
+\(fn FUNCTION &optional SHOW)" t nil)
+
+(autoload 'pkg-info-package-version "pkg-info" "\
+Get the version of an installed PACKAGE.
+
+If SHOW is non-nil, show the version in the minibuffer.
+
+Return the version as list, or nil if PACKAGE is not installed.
+
+\(fn PACKAGE &optional SHOW)" t nil)
+
+(autoload 'pkg-info-version-info "pkg-info" "\
+Obtain complete version info for LIBRARY and PACKAGE.
+
+LIBRARY is a symbol denoting a named feature, or a library name
+as string.  PACKAGE is a symbol denoting an ELPA package.  If
+omitted or nil, default to LIBRARY.
+
+If SHOW is non-nil, show the version in the minibuffer.
+
+When called interactively, prompt for LIBRARY.  When called
+interactively with prefix argument, prompt for PACKAGE as well.
+
+Return a string with complete version information for LIBRARY.
+This version information contains the version from the headers of
+LIBRARY, and the version of the installed PACKAGE, the LIBRARY is
+part of.  If PACKAGE is not installed, or if the PACKAGE version
+is the same as the LIBRARY version, do not include a package
+version.
+
+\(fn LIBRARY &optional PACKAGE SHOW)" t nil)
 
 
 )
@@ -6698,10 +6719,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.1/magit-section-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1/magit-section-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.1/magit-section-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1/magit-section-autoloads.el") (car load-path))))
 
 
 
@@ -6711,10 +6732,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.1.1/git-commit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.2.1/git-commit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-commit-3.1.1/git-commit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-commit-3.2.1/git-commit-autoloads.el") (car load-path))))
 
 
 (put 'git-commit-major-mode 'safe-local-variable
@@ -6728,11 +6749,13 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "git-commit" '("git-commit-" "global-git-commit-mode")))
 
 
+
+
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.1.1/magit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.2.1/magit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-3.1.1/magit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-3.2.1/magit-autoloads.el") (car load-path))))
 
 
 
@@ -6773,7 +6796,7 @@ C-x g           magit-status
 C-x M-g         magit-dispatch
 C-c M-g         magit-file-dispatch
 
-These bindings may be added when `after-init-hook' is called.
+These bindings may be added when `after-init-hook' is run.
 Each binding is added if and only if at that time no other key
 is bound to the same command and no other command is bound to
 the same key.  In other words we try to avoid adding bindings
@@ -6787,8 +6810,14 @@ is loaded or autoloaded) and to increase the likelihood that
 all the potentially conflicting user bindings have already
 been added.
 
-Setting this variable after the hook has already been called
-has no effect.
+To set this variable use either `setq' or the Custom interface.
+Do not use the function `customize-set-variable' because doing
+that would cause Magit to be loaded immediately when that form
+is evaluated (this differs from `custom-set-variables', which
+doesn't load the libraries that define the customized variables).
+
+Setting this variable to nil has no effect if that is done after
+the key bindings have already been added.
 
 We recommend that you bind \"C-c g\" instead of \"C-c M-g\" to
 `magit-file-dispatch'.  The former is a much better binding
@@ -9077,10 +9106,10 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/lua-mode-20201010/lua-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/lua-mode-20210802/lua-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lua-mode-20201010/lua-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lua-mode-20210802/lua-mode-autoloads.el") (car load-path))))
 
 
 
@@ -9564,10 +9593,10 @@ Fontify an `info' node." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20210612.546/iedit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20210812.735/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20210612.546/iedit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20210812.735/iedit-autoloads.el") (car load-path))))
 
 
 
@@ -12463,14 +12492,14 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s f avy ace-window pfuture lv hydra ht treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters epl pkg-info projectile popup page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s f avy ace-window pfuture lv hydra ht treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.1.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.1.1" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.1" "/Users/laurynas/.emacs.d/elpa/transient-20210723.1601" "/Users/laurynas/.emacs.d/elpa/dash-2.19.0" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.2.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.1" "/Users/laurynas/.emacs.d/elpa/transient-20210819.2118" "/Users/laurynas/.emacs.d/elpa/dash-2.19.0" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
          Info-directory-list)))
 
 ;; Local Variables:
