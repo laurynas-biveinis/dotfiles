@@ -127,9 +127,6 @@ tramp erc cc-mode
   xref.
 * Add [Projectile reconfigure command for CMake
   presets](https://github.com/bbatsov/projectile/issues/1676).
-* Workaround [a bug in projectile integration with CMake
-  presets](https://github.com/bbatsov/projectile/issues/1673) until the next
-  Projectile release in melpa-stable.
 * Integrate deadgrep with Projectile
 * [Automatically update git gutter on Magit
   actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).
