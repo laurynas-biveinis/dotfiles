@@ -3,7 +3,7 @@
 ;; Copyright (C) 2012-2021 Free Software Foundation, Inc.
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
-;; Version: 2.19.0
+;; Version: 2.19.1
 ;; Package-Requires: ((emacs "24"))
 ;; Keywords: extensions, lisp
 ;; Homepage: https://github.com/magnars/dash.el
@@ -2729,9 +2729,7 @@ Alias: `-is-prefix-p'."
 
 Alias: `-is-suffix-p'."
   (declare (pure t) (side-effect-free t))
-  (cond ((null suffix))
-        ((setq list (member (car suffix) list))
-         (equal (cdr suffix) (cdr list)))))
+  (equal suffix (last list (length suffix))))
 
 (defun -is-infix? (infix list)
   "Return non-nil if INFIX is infix of LIST.

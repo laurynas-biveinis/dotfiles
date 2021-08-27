@@ -1,6 +1,6 @@
 This is dash.info, produced by makeinfo version 6.7 from dash.texi.
 
-This manual is for Dash version 2.19.0.
+This manual is for Dash version 2.19.1.
 
    Copyright © 2012–2021 Free Software Foundation, Inc.
 
@@ -22,7 +22,7 @@ File: dash.info,  Node: Top,  Next: Installation,  Up: (dir)
 Dash
 ****
 
-This manual is for Dash version 2.19.0.
+This manual is for Dash version 2.19.1.
 
    Copyright © 2012–2021 Free Software Foundation, Inc.
 
@@ -110,7 +110,7 @@ File: dash.info,  Node: Using in a package,  Next: Fontification of special vari
 If you use Dash in your own package, be sure to list it as a dependency
 in the library’s headers as follows (*note (elisp)Library Headers::).
 
-     ;; Package-Requires: ((dash "2.19.0"))
+     ;; Package-Requires: ((dash "2.19.1"))
 
 
 File: dash.info,  Node: Fontification of special variables,  Next: Info symbol lookup,  Prev: Using in a package,  Up: Installation
