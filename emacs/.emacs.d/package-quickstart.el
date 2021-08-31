@@ -1500,10 +1500,10 @@ See info node `(transient)Modifying Existing Transients'.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.1/tramp-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.2/tramp-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.1/tramp-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.2/tramp-autoloads.el") (car load-path))))
 
 
  (when (featurep 'tramp-compat)
@@ -11278,10 +11278,10 @@ useful, yet they are listed for completeness.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-docs-20200516.1943/dash-docs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-docs-20210830.926/dash-docs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-docs-20200516.1943/dash-docs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-docs-20210830.926/dash-docs-autoloads.el") (car load-path))))
 
 
 
@@ -11331,6 +11331,20 @@ Given a string PATTERN, query docsets and retrieve result.
 \(fn PATTERN)" nil nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dash-docs" '("dash-docs-")))
+
+
+
+(autoload 'use-package-normalize/:dash "use-package-dash-docs" "\
+Normalize use-package customize keyword.
+
+\(fn NAME-SYMBOL KEYWORD ARG)" nil nil)
+
+(autoload 'use-package-handler/:dash "use-package-dash-docs" "\
+Generate use-package customize keyword code.
+
+\(fn NAME KEYWORD ARGS REST STATE)" nil nil)
+
+
 
 
 )
@@ -12499,7 +12513,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.2.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.1" "/Users/laurynas/.emacs.d/elpa/transient-20210819.2118" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.2.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1" "/Users/laurynas/.emacs.d/elpa/org-9.4.6" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20210819.2118" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
          Info-directory-list)))
 
 ;; Local Variables:
