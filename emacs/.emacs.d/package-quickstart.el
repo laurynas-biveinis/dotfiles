@@ -523,10 +523,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20210902.816/vterm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20210905.903/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20210902.816/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20210905.903/vterm-autoloads.el") (car load-path))))
 
 
 
@@ -9141,21 +9141,39 @@ When called interactively, switch to the process buffer.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-functional-2.19.1/dash-functional-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-mode-8.0.0/lsp-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/dash-functional-2.19.1/dash-functional-autoloads.el") (car load-path))))
-
-
-)
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-mode-7.0.1/lsp-mode-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lsp-mode-7.0.1/lsp-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lsp-mode-8.0.0/lsp-mode-autoloads.el") (car load-path))))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-clients" '("parse-rf-language-server-" "expand-start-command" "lsp-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-actionscript" '("lsp-actionscript-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ada" '("lsp-ada-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-angular" '("lsp-client")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-bash" '("lsp-bash-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-beancount" '("lsp-beancount-")))
+
+
+
+(autoload 'lsp-cpp-flycheck-clang-tidy-error-explainer "lsp-clangd" "\
+Explain a clang-tidy ERROR by scraping documentation from llvm.org.
+
+\(fn ERROR)" nil nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-clangd" '("lsp-c")))
 
 
 
@@ -9165,33 +9183,31 @@ When called interactively, switch to the process buffer.
 
 (define-obsolete-variable-alias 'lsp-prefer-capf 'lsp-completion-provider "lsp-mode 7.0.1")
 
-(autoload 'lsp-completion-at-point "lsp-completion" "\
-Get lsp completions.
+(define-obsolete-variable-alias 'lsp-enable-completion-at-point 'lsp-completion-enable "lsp-mode 7.0.1")
 
-\(fn)" nil nil)
+(autoload 'lsp-completion-at-point "lsp-completion" "\
+Get lsp completions." nil nil)
 
 (autoload 'lsp-completion--enable "lsp-completion" "\
-Enable LSP completion support.
-
-\(fn)" nil nil)
+Enable LSP completion support." nil nil)
 
 (autoload 'lsp-completion-mode "lsp-completion" "\
 Toggle LSP completion support.
+
+If called interactively, enable Lsp-Completion mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
 
 \(fn &optional ARG)" t nil)
 
 (add-hook 'lsp-configure-hook (lambda nil (when (and lsp-auto-configure lsp-completion-enable) (lsp-completion--enable))))
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-completion" '("lsp-completion-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-completion" '("lsp-")))
 
 
 
-(autoload 'lsp-cpp-flycheck-clang-tidy-error-explainer "lsp-cpp" "\
-Explain a clang-tidy ERROR by scraping documentation from llvm.org.
-
-\(fn ERROR)" nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-cpp" '("lsp-cpp-flycheck-clang-tidy--")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-crystal" '("lsp-clients-crystal-executable")))
 
 
 
@@ -9207,19 +9223,56 @@ Explain a clang-tidy ERROR by scraping documentation from llvm.org.
 
 (define-obsolete-variable-alias 'lsp-flycheck-default-level 'lsp-diagnostics-flycheck-default-level "lsp-mode 7.0.1")
 
-(autoload 'lsp-diagnostics--enable "lsp-diagnostics" "\
-Enable LSP checker support.
+(autoload 'lsp-diagnostics-lsp-checker-if-needed "lsp-diagnostics" nil nil nil)
 
-\(fn)" nil nil)
+(autoload 'lsp-diagnostics--enable "lsp-diagnostics" "\
+Enable LSP checker support." nil nil)
 
 (autoload 'lsp-diagnostics-mode "lsp-diagnostics" "\
 Toggle LSP diagnostics integration.
+
+If called interactively, enable Lsp-Diagnostics mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
 
 \(fn &optional ARG)" t nil)
 
 (add-hook 'lsp-configure-hook (lambda nil (when lsp-auto-configure (lsp-diagnostics--enable))))
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-diagnostics" '("lsp-diagnostics-")))
+
+
+
+(defvar lsp-dired-mode nil "\
+Non-nil if Lsp-Dired mode is enabled.
+See the `lsp-dired-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `lsp-dired-mode'.")
+
+(custom-autoload 'lsp-dired-mode "lsp-dired" nil)
+
+(autoload 'lsp-dired-mode "lsp-dired" "\
+Display `lsp-mode' icons for each file in a dired buffer.
+
+If called interactively, enable Lsp-Dired mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-dired" '("lsp-dired-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-dockerfile" '("lsp-dockerfile-language-server-command")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-elixir" '("lsp-elixir-")))
 
 
 
@@ -9232,6 +9285,10 @@ Toggle LSP diagnostics integration.
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-eslint" '("lsp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-fortran" '("lsp-clients-")))
 
 
 
@@ -9248,7 +9305,15 @@ Load all of the provided PROJECTS.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-go" '("lsp-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-go" '("lsp-go-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-groovy" '("lsp-groovy-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-hack" '("lsp-clients-hack-command")))
 
 
 
@@ -9258,6 +9323,11 @@ Load all of the provided PROJECTS.
 
 (autoload 'lsp-headerline-breadcrumb-mode "lsp-headerline" "\
 Toggle breadcrumb on headerline.
+
+If called interactively, enable Lsp-Headerline-Breadcrumb mode if
+ARG is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 \(fn &optional ARG)" t nil)
 
@@ -9279,7 +9349,39 @@ Narrow to the symbol range on breadcrumb at SYMBOL-POSITION.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-intelephense" '("lsp-intelephense-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-icons" '("lsp-")))
+
+
+
+(autoload 'lsp-ido-workspace-symbol "lsp-ido" "\
+`ido' for lsp workspace/symbol.
+When called with prefix ARG the default selection will be symbol at point.
+
+\(fn ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ido" '("lsp-ido-")))
+
+
+
+(autoload 'lsp-iedit-highlights "lsp-iedit" "\
+Start an `iedit' operation on the documentHighlights at point.
+This can be used as a primitive `lsp-rename' replacement if the
+language server doesn't support renaming.
+
+See also `lsp-enable-symbol-highlighting'." t nil)
+
+(autoload 'lsp-evil-multiedit-highlights "lsp-iedit" "\
+Start an `evil-multiedit' operation on the documentHighlights at point.
+This can be used as a primitive `lsp-rename' replacement if the
+language server doesn't support renaming.
+
+See also `lsp-enable-symbol-highlighting'." t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-iedit" '("lsp-iedit--on-ranges")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-javascript" '("lsp-")))
 
 
 
@@ -9287,31 +9389,66 @@ Narrow to the symbol range on breadcrumb at SYMBOL-POSITION.
 
 
 
-(autoload 'lsp-lens-show "lsp-lens" "\
-Display lenses in the buffer.
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-kotlin" '("lsp-")))
 
-\(fn)" t nil)
+
+
+(autoload 'lsp-lens--enable "lsp-lens" "\
+Enable lens mode." nil nil)
+
+(autoload 'lsp-lens-show "lsp-lens" "\
+Display lenses in the buffer." t nil)
 
 (autoload 'lsp-lens-hide "lsp-lens" "\
-Delete all lenses.
-
-\(fn)" t nil)
+Delete all lenses." t nil)
 
 (autoload 'lsp-lens-mode "lsp-lens" "\
 Toggle code-lens overlays.
 
+If called interactively, enable Lsp-Lens mode if ARG is positive,
+and disable it if ARG is zero or negative.  If called from Lisp,
+also enable the mode if ARG is omitted or nil, and toggle it if
+ARG is `toggle'; disable the mode otherwise.
+
 \(fn &optional ARG)" t nil)
 
 (autoload 'lsp-avy-lens "lsp-lens" "\
-Click lsp lens using `avy' package.
+Click lsp lens using `avy' package." t nil)
 
-\(fn)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-lens" '("lsp-")))
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-lens" '("lsp-lens-")))
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-lua" '("lsp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-markdown" '("lsp-markdown-")))
 
 
 (put 'lsp-enable-file-watchers 'safe-local-variable #'booleanp)
 (put 'lsp-file-watch-threshold 'safe-local-variable (lambda (i) (or (numberp i) (not i))))
+
+(autoload 'lsp-load-vscode-workspace "lsp-mode" "\
+Load vscode workspace from FILE
+
+\(fn FILE)" t nil)
+
+(autoload 'lsp-save-vscode-workspace "lsp-mode" "\
+Save vscode workspace to FILE
+
+\(fn FILE)" t nil)
+
+(autoload 'lsp-install-server "lsp-mode" "\
+Interactively install server.
+When prefix UPDATE? is t force installation even if the server is present.
+
+\(fn UPDATE\\=\\? &optional SERVER-ID)" t nil)
+
+(autoload 'lsp-ensure-server "lsp-mode" "\
+Ensure server SERVER-ID
+
+\(fn SERVER-ID)" nil nil)
 
 (autoload 'lsp "lsp-mode" "\
 Entry point for the server startup.
@@ -9319,18 +9456,16 @@ When ARG is t the lsp mode will start new language server even if
 there is language server which can handle current language. When
 ARG is nil current file will be opened in multi folder language
 server if there is such. When `lsp' is called with prefix
-argument ask the user to select which language server to start. 
+argument ask the user to select which language server to start.
 
 \(fn &optional ARG)" t nil)
 
 (autoload 'lsp-deferred "lsp-mode" "\
 Entry point that defers server startup until buffer is visible.
 `lsp-deferred' will wait until the buffer is visible before invoking `lsp'.
-This avoids overloading the server with many files when starting Emacs.
+This avoids overloading the server with many files when starting Emacs." nil nil)
 
-\(fn)" nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-mode" '("lsp-" "make-lsp-client" "with-lsp-workspace" "when-lsp-workspace")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-mode" '("lsp-" "make-lsp-client" "when-lsp-workspace" "with-lsp-workspace")))
 
 
 
@@ -9339,6 +9474,11 @@ This avoids overloading the server with many files when starting Emacs.
 (autoload 'lsp-modeline-code-actions-mode "lsp-modeline" "\
 Toggle code actions on modeline.
 
+If called interactively, enable Lsp-Modeline-Code-Actions mode if
+ARG is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
 \(fn &optional ARG)" t nil)
 
 (define-obsolete-function-alias 'lsp-diagnostics-modeline-mode 'lsp-modeline-diagnostics-mode "lsp-mode 7.0.1")
@@ -9346,9 +9486,33 @@ Toggle code actions on modeline.
 (autoload 'lsp-modeline-diagnostics-mode "lsp-modeline" "\
 Toggle diagnostics modeline.
 
+If called interactively, enable Lsp-Modeline-Diagnostics mode if
+ARG is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'lsp-modeline-workspace-status-mode "lsp-modeline" "\
+Toggle workspace status on modeline.
+
+If called interactively, enable Lsp-Modeline-Workspace-Status
+mode if ARG is positive, and disable it if ARG is zero or
+negative.  If called from Lisp, also enable the mode if ARG is
+omitted or nil, and toggle it if ARG is `toggle'; disable the
+mode otherwise.
+
 \(fn &optional ARG)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-modeline" '("lsp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-nix" '("lsp-nix-server-path")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ocaml" '("lsp-ocaml-l")))
 
 
 
@@ -9356,7 +9520,19 @@ Toggle diagnostics modeline.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-protocol" '("lsp" "dash-expand:&RangeToPoint")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-php" '("lsp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-prolog" '("lsp-prolog-server-command")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-protocol" '("dash-expand:&RangeToPoint" "lsp")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-purescript" '("lsp-purescript-")))
 
 
 
@@ -9368,11 +9544,52 @@ Toggle diagnostics modeline.
 
 
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-pylsp" '("lsp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-r" '("lsp-clients-r-server-command")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-racket" '("lsp-racket-lang")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-rf" '("expand-start-command" "lsp-rf-language-server-" "parse-rf-language-server-")))
+
+
+
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-rust" '("lsp-")))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-serenata" '("lsp-serenata-")))
+(autoload 'lsp--semantic-tokens-initialize-buffer "lsp-semantic-tokens" "\
+Initialize the buffer for semantic tokens.
+IS-RANGE-PROVIDER is non-nil when server supports range requests." nil nil)
+
+(autoload 'lsp--semantic-tokens-initialize-workspace "lsp-semantic-tokens" "\
+Initialize semantic tokens for WORKSPACE.
+
+\(fn WORKSPACE)" nil nil)
+
+(autoload 'lsp-semantic-tokens--warn-about-deprecated-setting "lsp-semantic-tokens" "\
+Warn about deprecated semantic highlighting variable." nil nil)
+
+(autoload 'lsp-semantic-tokens--enable "lsp-semantic-tokens" "\
+Enable semantic tokens mode." nil nil)
+
+(autoload 'lsp-semantic-tokens-mode "lsp-semantic-tokens" "\
+Toggle semantic-tokens support.
+
+If called interactively, enable Lsp-Semantic-Tokens mode if ARG
+is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-semantic-tokens" '("lsp-")))
 
 
 
@@ -9380,7 +9597,19 @@ Toggle diagnostics modeline.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-sqls" '("lsp-sqls-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-sorbet" '("lsp-sorbet-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-sqls" '("lsp-sql")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-steep" '("lsp-steep-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-svelte" '("lsp-svelte-plugin-")))
 
 
 
@@ -9388,7 +9617,19 @@ Toggle diagnostics modeline.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-verilog" '("lsp-clients-verilog-executable")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-tex" '("lsp-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-v" '("lsp-v-vls-executable")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-vala" '("lsp-clients-vala-ls-executable")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-verilog" '("lsp-clients-")))
 
 
 
@@ -9396,7 +9637,11 @@ Toggle diagnostics modeline.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-vhdl" '("lsp-vhdl-" "ghdl-ls-bin-name" "vhdl-" "hdl-checker-bin-name")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-vhdl" '("ghdl-ls-bin-name" "hdl-checker-bin-name" "lsp-vhdl-" "vhdl-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-vimscript" '("lsp-clients-vim-")))
 
 
 
@@ -9408,12 +9653,16 @@ Toggle diagnostics modeline.
 
 
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-zig" '("lsp-zig-zls-executable")))
+
+
+
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-7.0.1/lsp-ui-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.0/lsp-ui-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lsp-ui-7.0.1/lsp-ui-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.0/lsp-ui-autoloads.el") (car load-path))))
 
 
 
@@ -9443,7 +9692,7 @@ omitted or nil, and toggle it if ARG is ‘toggle’.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-peek" '("lsp-ui-peek-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-peek" '("lsp-")))
 
 
 
@@ -9451,34 +9700,26 @@ omitted or nil, and toggle it if ARG is ‘toggle’.
 
 
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-util" '("lsp-ui-util-")))
+
+
+
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-treemacs-0.3/lsp-treemacs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-treemacs-0.4/lsp-treemacs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lsp-treemacs-0.3/lsp-treemacs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lsp-treemacs-0.4/lsp-treemacs-autoloads.el") (car load-path))))
 
 
 
-(autoload 'lsp-treemacs-errors-list "lsp-treemacs" "\
-Display error list.
-
-\(fn)" t nil)
-
 (autoload 'lsp-treemacs-symbols "lsp-treemacs" "\
-Show symbols view.
-
-\(fn)" t nil)
+Show symbols view." t nil)
 
 (autoload 'lsp-treemacs-java-deps-list "lsp-treemacs" "\
-Display error list.
+Display java dependencies." t nil)
 
-\(fn)" t nil)
-
-(autoload 'lsp-treemacs-java-deps-follow "lsp-treemacs" "\
-
-
-\(fn)" t nil)
+(autoload 'lsp-treemacs-java-deps-follow "lsp-treemacs" nil t nil)
 
 (defvar lsp-treemacs-sync-mode nil "\
 Non-nil if Lsp-Treemacs-Sync mode is enabled.
@@ -9492,6 +9733,11 @@ or call the function `lsp-treemacs-sync-mode'.")
 
 (autoload 'lsp-treemacs-sync-mode "lsp-treemacs" "\
 Global minor mode for synchronizing lsp-mode workspace folders and treemacs projects.
+
+If called interactively, enable Lsp-Treemacs-Sync mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
 
 \(fn &optional ARG)" t nil)
 
@@ -9513,7 +9759,17 @@ With a prefix argument, show the outgoing call hierarchy.
 
 \(fn OUTGOING)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-treemacs" '("lsp-treemacs-")))
+(autoload 'lsp-treemacs-type-hierarchy "lsp-treemacs" "\
+Show the type hierarchy for the symbol at point.
+With prefix 0 show sub-types.
+With prefix 1 show super-types.
+With prefix 2 show both.
+
+\(fn DIRECTION)" t nil)
+
+(autoload 'lsp-treemacs-errors-list "lsp-treemacs" nil t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-treemacs" '("lsp-tree")))
 
 
 
@@ -12506,7 +12762,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s f avy ace-window pfuture lv hydra ht treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode dash-functional lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s f avy ace-window pfuture lv hydra ht treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)

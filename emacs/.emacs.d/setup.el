@@ -1341,7 +1341,7 @@ CANDIDATES is the list of candidates."
 
 ;;;; lsp-mode
 (require 'lsp-mode)
-(require 'lsp-clients)
+(require 'lsp-clangd)
 (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
 (setq lsp-clients-clangd-args '("--all-scopes-completion"
                                 "--background-index"
@@ -1362,19 +1362,8 @@ CANDIDATES is the list of candidates."
 (setq lsp-eldoc-render-all t)
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
-(setq lsp-enable-semantic-highlighting t)
+(setq lsp-semantic-tokens-enable t)
 (setq lsp-headerline-breadcrumb-enable t)
-
-;; Save some horizontal space in the mode line: drop language server name, PID,
-;; and "[Disconnected]" string. That information is accessible through
-;; `lsp-describe-session', if needed.
-(defun dotfiles--lsp-mode-line ()
-  "Construct the mode line text for `lsp-mode'."
-  (if (lsp-workspaces)
-      " LSP"
-    " !LSP"))
-
-(advice-add #'lsp-mode-line :override #'dotfiles--lsp-mode-line)
 
 ;;; lsp-diagnostics-mode
 (require 'lsp-diagnostics)
@@ -1382,7 +1371,7 @@ CANDIDATES is the list of candidates."
 
 ;;; lsp-modeline-diagnostics
 (require 'lsp-modeline)
-(setq lsp-modeline-diagnostics-scope :project)
+(setq lsp-modeline-diagnostics-scope :workspace)
 (add-hook 'lsp-managed-mode-hook #'lsp-modeline-diagnostics-mode)
 
 (require 'lsp-ui)
@@ -1485,31 +1474,12 @@ CANDIDATES is the list of candidates."
           #'dotfiles--lsp-restore-cc-mode-indent)
 (add-hook 'lsp-after-uninitialized-functions #'dotfiles--lsp-uninitialization)
 
-(add-hook 'prog-mode-hook #'lsp-deferred)
+(defun dotfiles--lsp-deferred-if-supported ()
+  "Run `lsp-deferred' if it's a supported mode."
+  (unless (derived-mode-p 'emacs-lisp-mode)
+    (lsp-deferred)))
 
-;; Workaround a bug in lsp-mode 7.0.1, fixed later in
-;; https://github.com/emacs-lsp/lsp-mode/pull/2233 -
-;; `lsp-headerline--fix-image-background' erroring out on a nil image.
-(defun dotfiles--fix-lsp-headerline--fix-image-background (image)
-  "Workaround a bug in `lsp-headerline--fix-image-background' in lsp-mode 7.0.1.
-Pass IMAGE down."
-  (if (not image)
-      "" nil))
-
-(advice-add #'lsp-headerline--fix-image-background :before-until
-            #'dotfiles--fix-lsp-headerline--fix-image-background)
-
-;; Workaround another bug in lsp-mode 7.0.1 -
-;; https://github.com/emacs-lsp/lsp-mode/issues/2556 - Headerline on cloned
-;; buffers results in (wrong-type-argument stringp nil)
-(defun dotfiles--workaround-headerline-indirect-buffer (args)
-  "For indirect buffers, fix up ARGS to the base buffer file path."
-  (if (car args)
-      args
-    (list (buffer-file-name (buffer-base-buffer)))))
-
-(advice-add #'lsp-headerline--filename-with-icon :filter-args
-            #'dotfiles--workaround-headerline-indirect-buffer)
+(add-hook 'prog-mode-hook #'dotfiles--lsp-deferred-if-supported)
 
 ;;; lsp-mode clangd setup
 (defconst lsp-clients-clangd-tramp-executable "clangd")
@@ -1865,8 +1835,7 @@ with a prefix ARG."
 ;; interplay more nicely.
 (defun dotfiles--lsp-disable-color-identifiers-mode ()
   "Disable `color-identifiers-mode' if semantic higlighting is enabled."
-  (if (and lsp-enable-semantic-highlighting (lsp--capability
-                                             :semanticTokensProvider))
+  (if (and lsp-semantic-tokens-enable (lsp--capability :semanticTokensProvider))
       (color-identifiers-mode -1)))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-color-identifiers-mode)

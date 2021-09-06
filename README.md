@@ -132,11 +132,6 @@ tramp erc cc-mode
   actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).
 * [Disable color-identifiers-mode under LSP with semantic
   highlighting](https://github.com/laurynas-biveinis/dotfiles/blob/ce044dab576c525f418a5383180d06c888a33599/emacs/.emacs.d/setup.el#L1924)
-* lsp-mode 7.0.1 headerline [fix
-  1](https://github.com/laurynas-biveinis/dotfiles/blob/8aa6e94c5d23b43706740ce02982001759087743/emacs/.emacs.d/setup.el#L1482),
-  [fix
-  2](https://github.com/laurynas-biveinis/dotfiles/blob/1dece8ec3230144a6bb7ed96de2155e37c7bf047/emacs/.emacs.d/setup.el#L1528)
-* [Reduce LSP info in the modeline](https://github.com/laurynas-biveinis/dotfiles/commit/d112f3f208a857435ebb6d2b8e0198fd85df2c39).
 
 ### Custom commands and functionality
 
