@@ -1362,6 +1362,9 @@ CANDIDATES is the list of candidates."
 (setq lsp-semantic-tokens-enable t)
 (setq lsp-headerline-breadcrumb-enable t)
 
+(require 'lsp-headerline)
+(setq lsp-headerline-breadcrumb-segments '(project file symbols))
+
 ;;; lsp-diagnostics-mode
 (require 'lsp-diagnostics)
 (add-hook 'lsp-managed-mode-hook #'lsp-diagnostics-mode)
