@@ -1362,6 +1362,15 @@ CANDIDATES is the list of candidates."
 (setq lsp-semantic-tokens-enable t)
 (setq lsp-headerline-breadcrumb-enable t)
 
+(defun dotfiles--lsp-mode-line ()
+  "Construct the mode line text for `lsp-mode'."
+  (if (lsp-workspaces)
+      " LSP"
+    " !LSP"))
+
+(setf (alist-get 'lsp-mode minor-mode-alist)
+      '((:eval (dotfiles--lsp-mode-line))))
+
 (require 'lsp-headerline)
 (setq lsp-headerline-breadcrumb-segments '(project file symbols))
 
