@@ -160,6 +160,8 @@ the executable."
 (require 'color)
 (require 'compile)
 (require 'face-remap)
+(require 'tramp)
+(require 'bookmark)
 
 ;;; Options
 
@@ -231,7 +233,7 @@ the point up."
   :group 'vterm)
 
 (defcustom vterm-keymap-exceptions
-  '("C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y")
+  '("C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-y" "M-y")
   "Exceptions for `vterm-keymap'.
 
 If you use a keybinding with a prefix-key, add that prefix-key to
@@ -305,14 +307,15 @@ demo: '(\"env1=v1\" \"env2=v2\")"
 
 Support copy text to emacs kill ring and system clipboard by using OSC 52.
 For example: send base64 encoded 'foo' to kill ring: echo -en '\e]52;c;Zm9v\a',
-tmux can share its copy buffer to terminals by supporting osc52(like iterm2 xterm),
-you can enable this feature for tmux by :
+tmux can share its copy buffer to terminals by supporting osc52(like iterm2
+ xterm) you can enable this feature for tmux by :
 set -g set-clipboard on         #osc 52 copy paste share with iterm
 set -ga terminal-overrides ',xterm*:XT:Ms=\E]52;%p1%s;%p2%s\007'
 set -ga terminal-overrides ',screen*:XT:Ms=\E]52;%p1%s;%p2%s\007'
 
-The clipboard querying/clearing functionality offered by OSC 52 is not implemented here,
-And for security reason, this feature is disabled by default."
+The clipboard querying/clearing functionality offered by OSC 52 is not
+implemented here,And for security reason, this feature is disabled
+by default."
   :type 'boolean
   :group 'vterm)
 
@@ -364,10 +367,11 @@ This means that vterm will render bold with the default face weight."
   :group 'vterm)
 
 (defcustom vterm-ignore-blink-cursor t
-  "When t, vterm will ignore request from application to turn on or off cursor blink.
+  "When t,vterm will ignore request from application to turn on/off cursor blink.
 
-If nil, cursor in any window may begin to blink or not blink because `blink-cursor-mode`
-is a global minor mode in Emacs, you can use `M-x blink-cursor-mode` to toggle."
+If nil, cursor in any window may begin to blink or not blink because
+`blink-cursor-mode`is a global minor mode in Emacs,
+you can use `M-x blink-cursor-mode` to toggle."
   :type 'boolean
   :group 'vterm)
 
@@ -889,7 +893,7 @@ will invert `vterm-copy-exclude-prompt' for that call."
         (when-let ((key (key-description (vector raw-key))))
           (vterm-send-key key shift meta ctrl))))))
 
-(defun vterm-send-key (key &optional shift meta ctrl)
+(defun vterm-send-key (key &optional shift meta ctrl accept-proc-output)
   "Send KEY to libvterm with optional modifiers SHIFT, META and CTRL."
   (deactivate-mark)
   (when vterm--term
@@ -899,7 +903,8 @@ will invert `vterm-copy-exclude-prompt' for that call."
         (setq key (upcase key)))
       (vterm--update vterm--term key shift meta ctrl)
       (setq vterm--redraw-immididately t)
-      (accept-process-output vterm--process vterm-timer-delay nil t))))
+      (when accept-proc-output
+        (accept-process-output vterm--process vterm-timer-delay nil t)))))
 
 (defun vterm-send (key)
   "Send KEY to libvterm.  KEY can be anything `kbd' understands."
@@ -1094,7 +1099,7 @@ Provide similar behavior as `insert' for vterm."
   (when vterm--term
     (if (vterm-goto-char start)
         (cl-loop repeat (- end start) do
-                 (vterm-send-delete))
+                 (vterm-send-key "<delete>" nil nil nil t))
       (let ((inhibit-read-only nil))
         (vterm--delete-region start end)))))
 
@@ -1113,13 +1118,13 @@ It will reset to original position if it can't move there."
       (setq cursor-pos (point))
       (setq pt cursor-pos)
       (while (and (> pos pt) moved)
-        (vterm-send-right)
+        (vterm-send-key "<right>" nil nil nil t)
         (setq moved (not (= pt (point))))
         (setq pt (point)))
       (setq pt (point))
       (setq moved t)
       (while (and (< pos pt) moved)
-        (vterm-send-left)
+        (vterm-send-key "<left>" nil nil nil t)
         (setq moved (not (= pt (point))))
         (setq pt (point)))
       (setq succ (= pos (point)))
