@@ -155,17 +155,34 @@ and
 
 # Dotfiles, Emacs distros, macOS defaults, etc. I have been stealing from
 
-Incomplete, will add to it.
-
 * [Doom Emacs](https://github.com/hlissner/doom-emacs)
-* [EmacsWiki: Dot Emacs Challenge](https://www.emacswiki.org/emacs/DotEmacsChallenge)
+* [EmacsWiki: Dot Emacs
+  Challenge](https://www.emacswiki.org/emacs/DotEmacsChallenge)
+* <https://sites.google.com/site/steveyegge2/my-dot-emacs-file>
 * <https://emacs.nasy.moe/>
-* <https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/>
-* <https://github.com/mathiasbynens/dotfiles/blob/master/.macos>
-* <https://github.com/ryuta69/dotfiles/>
 * <https://ebzzry.io/en/emacs-pairs/>
-* <https://www.topbug.net/blog/2017/07/31/inputrc-for-humans/>
 * <https://github.com/snackon/Witchmacs>
 * <https://github.com/jhenahan/dots/tree/main/config/emacs>
 * <https://github.com/link0ff/emacs-init>
 * <https://www.lucacambiaghi.com/vanilla-emacs/readme.html>
+* <https://emacs.stackexchange.com/a/17281/16376>
+* <https://github.com/Bassmann/emacs-config/>
+* <https://github.com/KaratasFurkan/.emacs.d/>
+* <https://stackoverflow.com/questions/23344540/emacs-update-git-gutter-annotations-when-staging-or-unstaging-changes-in-magit>
+* <https://www.reddit.com/r/emacs/comments/ja97xs/weekly_tipstricketc_thread/g985tg9>
+* <https://irreal.org/blog/?p=6297>
+* <https://www.reddit.com/r/emacs/comments/6iqtze/org_mreturn_annoyance/>
+* <https://github.com/kaushalmodi/.emacs.d>
+* <https://www.reddit.com/r/emacs/comments/74ruu0/how_to_copy_the_contents_of_a_single_cell_in_org/do0utjf/?context=3>
+* <https://gitlab.com/gSwag/emacs-configuration>
+
+* <https://github.com/michelegera/dotfiles>
+* <https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/>
+* <https://github.com/mathiasbynens/dotfiles>
+* <https://github.com/ryuta69/dotfiles/>
+* <https://twitter.com/nibroc/status/963088893758259200>
+
+* <https://metaredux.com/posts/2020/07/07/supercharge-your-bash-history.html>
+* <https://www.topbug.net/blog/2017/07/31/inputrc-for-humans/>
+
+* <https://twitter.com/trav_downs/status/1280004737455271936>
