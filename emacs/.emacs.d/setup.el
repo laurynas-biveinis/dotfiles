@@ -184,6 +184,20 @@
   (split-window-right)
   (balance-windows))
 
+(defun eight-windows ()
+  "Make frame contain 2x4 windows."
+  (interactive)
+  (delete-other-windows)
+  (split-window-below)
+  (split-window-right)
+  (split-window-right)
+  (split-window-right)
+  (windmove-down)
+  (split-window-right)
+  (split-window-right)
+  (split-window-right)
+  (balance-windows))
+
 (cl-defstruct dotfiles--frame-geometry top left height width)
 
 (defun dotfiles--add-frame-geometry-to-initial-alist (geometry)
@@ -237,7 +251,7 @@
           dotfiles--darkstar-external-geometry)
          (add-to-list 'initial-frame-alist '(fullscreen . fullboth))
          (add-to-list 'initial-frame-alist '(fullscreen-restore . maximized))
-         (six-windows))
+         (eight-windows))
         ((seq-position dotfiles--frame-geometries-to-ignore display-geometry)
          ())
         (t (dotfiles--diagnose-unknown-display-geometry display-geometry))))
@@ -1572,7 +1586,7 @@ CANDIDATES is the list of candidates."
         ((equal new-display-geometry dotfiles--darkstar-external-screen)
          (dotfiles--move-to-frame-geometry dotfiles--darkstar-external-geometry)
          (set-frame-parameter nil 'fullscreen 'fullboth)
-         (six-windows))
+         (eight-windows))
         ((seq-position dotfiles--frame-geometries-to-ignore
                        new-display-geometry) ())
         (t (dotfiles--diagnose-unknown-display-geometry new-display-geometry))))
