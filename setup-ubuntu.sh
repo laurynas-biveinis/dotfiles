@@ -11,7 +11,7 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      software-properties-common colordiff valgrind linux-tools-generic \
      libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
      python3-numpy-dbg python-scipy-doc unattended-upgrades screen colordiff \
-     fzf fd-find clang moreutils psmisc zsh zsh-doc
+     fzf fd-find clang moreutils psmisc zsh zsh-doc libjemalloc-dev
 # DeepState
 sudo apt-get install libc6-dev-i386
 # These two conflict with each other on 20.04:
@@ -47,7 +47,7 @@ sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
     maven clang-tools-11 clang-11-doc llvm-11-doc bear libcurl4-openssl-dev \
-    libcurl4-doc docker docker-doc python3-pip apparmor-profiles libuv1-dev \
+    libcurl4-doc docker.io docker-doc python3-pip apparmor-profiles libuv1-dev \
     liblua5.1-dev
 # MySQL development specific
 sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
