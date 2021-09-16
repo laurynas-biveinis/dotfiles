@@ -1499,7 +1499,8 @@ CANDIDATES is the list of candidates."
 
 (defun dotfiles--lsp-deferred-if-supported ()
   "Run `lsp-deferred' if it's a supported mode."
-  (unless (derived-mode-p 'emacs-lisp-mode 'makefile-bsdmake-mode)
+  (unless (derived-mode-p 'emacs-lisp-mode 'makefile-bsdmake-mode
+                          'makefile-gmake-mode)
     (lsp-deferred)))
 
 (add-hook 'prog-mode-hook #'dotfiles--lsp-deferred-if-supported)
