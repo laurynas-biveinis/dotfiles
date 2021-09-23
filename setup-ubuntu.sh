@@ -48,7 +48,7 @@ sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
     python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
     maven clang-tools-11 clang-11-doc llvm-11-doc bear libcurl4-openssl-dev \
     libcurl4-doc docker.io docker-doc python3-pip apparmor-profiles libuv1-dev \
-    liblua5.1-dev openvpn
+    liblua5.1-dev openvpn docker-compose
 # MySQL development specific
 sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
     libboost-doc clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck \
