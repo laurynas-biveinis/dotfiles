@@ -726,17 +726,6 @@ This allows Dash symbols to be looked up with \\[info-lookup-symbol]." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el") (car load-path))))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "f" '("f-")))
-
-
-)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/avy-0.5.0/avy-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -1186,27 +1175,198 @@ result of `defhydra'.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-2.8/treemacs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-0.8.5/posframe-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/treemacs-2.8/treemacs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-0.8.5/posframe-autoloads.el") (car load-path))))
+
+
+
+(autoload 'posframe-workable-p "posframe" "\
+Test posframe workable status." nil nil)
+
+(autoload 'posframe-show "posframe" "\
+Pop up a posframe and show STRING at POSITION.
+
+POSITION can be:
+1. An integer, meaning point position.
+2. A cons of two integers, meaning absolute X and Y coordinates.
+3. Other type, in which case the corresponding POSHANDLER should be
+   provided.
+
+POSHANDLER is a function of one argument returning an actual
+position.  Its argument is a plist of the following form:
+
+  (:position xxx
+   :position-info xxx
+   :poshandler xxx
+   :font-height xxx
+   :font-width xxx
+   :posframe xxx
+   :posframe-width xxx
+   :posframe-height xxx
+   :posframe-buffer xxx
+   :parent-frame xxx
+   :parent-window-left xxx
+   :parent-window-top xxx
+   :parent-frame-width xxx
+   :parent-frame-height xxx
+   :parent-window xxx
+   :parent-window-width  xxx
+   :parent-window-height xxx
+   :minibuffer-height xxx
+   :mode-line-height  xxx
+   :header-line-height xxx
+   :tab-line-height xxx
+   :x-pixel-offset xxx
+   :y-pixel-offset xxx)
+
+By default, poshandler is auto-selected based on the type of POSITION,
+but the selection can be overridden using the POSHANDLER argument.
+The builtin poshandler functions are listed below:
+
+1.  `posframe-poshandler-frame-center'
+2.  `posframe-poshandler-frame-top-center'
+3.  `posframe-poshandler-frame-top-left-corner'
+4.  `posframe-poshandler-frame-top-right-corner'
+5.  `posframe-poshandler-frame-bottom-center'
+6.  `posframe-poshandler-frame-bottom-left-corner'
+7.  `posframe-poshandler-frame-bottom-right-corner'
+8.  `posframe-poshandler-window-center'
+9.  `posframe-poshandler-window-top-center'
+10. `posframe-poshandler-window-top-left-corner'
+11. `posframe-poshandler-window-top-right-corner'
+12. `posframe-poshandler-window-bottom-center'
+13. `posframe-poshandler-window-bottom-left-corner'
+14. `posframe-poshandler-window-bottom-right-corner'
+15. `posframe-poshandler-point-top-left-corner'
+16. `posframe-poshandler-point-bottom-left-corner'
+17. `posframe-poshandler-point-bottom-left-corner-upward'
+18. `posframe-poshandler-point-window-center'
+
+by the way, poshandler can be used by other packages easily
+\(for example: mini-frame) with the help of function
+`posframe-poshandler-argbuilder'. like:
+
+   (let* ((info (posframe-poshandler-argbuilder child-frame))
+          (posn (posframe-poshandler-window-center info)))
+     `((left . ,(car posn))
+       (top . ,(cdr posn))))
+
+This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
+or a name of a (possibly nonexistent) buffer.
+
+If NO-PROPERTIES is non-nil, The STRING's properties will
+be removed before being shown in posframe.
+
+WIDTH, MIN-WIDTH, HEIGHT and MIN-HEIGHT, specify bounds on the
+new total size of posframe.  MIN-HEIGHT and MIN-WIDTH default to
+the values of ‘window-min-height’ and ‘window-min-width’
+respectively.  These arguments are specified in the canonical
+character width and height of posframe.
+
+If LEFT-FRINGE or RIGHT-FRINGE is a number, left fringe or
+right fringe with be shown with the specified width.
+
+By default, posframe shows no borders, but users can specify
+borders by setting BORDER-WIDTH to a positive number.  Border
+color can be specified by BORDER-COLOR.
+
+INTERNAL-BORDER-WIDTH and INTERNAL-BORDER-COLOR are same as
+BORDER-WIDTH and INTERNAL-BORDER-COLOR, but do not suggest to use
+for the reason:
+
+   Add distinct controls for child frames' borders (Bug#45620)
+   http://git.savannah.gnu.org/cgit/emacs.git/commit/?id=ff7b1a133bfa7f2614650f8551824ffaef13fadc
+
+Posframe's font as well as foreground and background colors are
+derived from the current frame by default, but can be overridden
+using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
+respectively.
+
+By default, posframe will display no header-line, mode-line and
+tab-line.  In case a header-line, mode-line or tab-line is
+desired, users can set RESPECT-HEADER-LINE and RESPECT-MODE-LINE
+to t.
+
+INITIALIZE is a function with no argument.  It will run when
+posframe buffer is first selected with `with-current-buffer'
+in `posframe-show', and only run once (for performance reasons).
+
+If LINES-TRUNCATE is non-nil, then lines will truncate in the
+posframe instead of wrap.
+
+OVERRIDE-PARAMETERS is very powful, *all* the frame parameters
+used by posframe's frame can be overridden by it.
+
+TIMEOUT can specify the number of seconds after which the posframe
+will auto-hide.
+
+If REFRESH is a number, posframe's frame-size will be re-adjusted
+every REFRESH seconds.
+
+When ACCEPT-FOCUS is non-nil, posframe will accept focus.
+be careful, you may face some bugs when set it to non-nil.
+
+HIDEHANDLER is a function, when it return t, posframe will be
+hide when `post-command-hook' is executed, this function has a
+plist argument:
+
+  (:posframe-buffer xxx
+   :posframe-parent-buffer xxx)
+
+The builtin hidehandler functions are listed below:
+
+1. `posframe-hidehandler-when-buffer-switch'
+
+
+You can use `posframe-delete-all' to delete all posframes.
+
+\(fn BUFFER-OR-NAME &key STRING POSITION POSHANDLER WIDTH HEIGHT MIN-WIDTH MIN-HEIGHT X-PIXEL-OFFSET Y-PIXEL-OFFSET LEFT-FRINGE RIGHT-FRINGE BORDER-WIDTH BORDER-COLOR INTERNAL-BORDER-WIDTH INTERNAL-BORDER-COLOR FONT FOREGROUND-COLOR BACKGROUND-COLOR RESPECT-HEADER-LINE RESPECT-MODE-LINE INITIALIZE NO-PROPERTIES KEEP-RATIO LINES-TRUNCATE OVERRIDE-PARAMETERS TIMEOUT REFRESH ACCEPT-FOCUS HIDEHANDLER &allow-other-keys)" nil nil)
+
+(autoload 'posframe-hide-all "posframe" "\
+Hide all posframe frames." t nil)
+
+(autoload 'posframe-delete-all "posframe" "\
+Delete all posframe frames and buffers." t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "posframe" '("posframe-")))
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.5.4/cfrs-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cfrs-1.5.4/cfrs-autoloads.el") (car load-path))))
+
+
+
+(autoload 'cfrs-read "cfrs" "\
+Read a string using a pos-frame with given PROMPT and INITIAL-INPUT.
+
+\(fn PROMPT &optional INITIAL-INPUT)" nil nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cfrs" '("cfrs-")))
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-2.9/treemacs-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/treemacs-2.9/treemacs-autoloads.el") (car load-path))))
 
 
 
 (autoload 'treemacs-version "treemacs" "\
-Return the `treemacs-version'.
-
-\(fn)" t nil)
+Return the `treemacs-version'." t nil)
 
 (autoload 'treemacs "treemacs" "\
-Initialize or toggle treemacs.
+Initialise or toggle treemacs.
 * If the treemacs window is visible hide it.
 * If a treemacs buffer exists, but is not visible show it.
 * If no treemacs buffer exists for the current frame create and show it.
 * If the workspace is empty additionally ask for the root path of the first
-  project to add.
-
-\(fn)" t nil)
+  project to add." t nil)
 
 (autoload 'treemacs-find-file "treemacs" "\
 Find and focus the current file in the treemacs window.
@@ -1219,41 +1379,42 @@ For the most part only useful when `treemacs-follow-mode' is not active.
 
 (autoload 'treemacs-find-tag "treemacs" "\
 Find and move point to the tag at point in the treemacs view.
-Most likley to be useful when `treemacs-tag-follow-mode' is not active.
+Most likely to be useful when `treemacs-tag-follow-mode' is not active.
 
 Will ask to change the treemacs root if the file to find is not under the
-root. If no treemacs buffer exists it will be created with the current file's
-containing directory as root. Will do nothing if the current buffer is not
-visiting a file or Emacs cannot find any tags for the current file.
-
-\(fn)" t nil)
+root.  If no treemacs buffer exists it will be created with the current file's
+containing directory as root.  Will do nothing if the current buffer is not
+visiting a file or Emacs cannot find any tags for the current file." t nil)
 
 (autoload 'treemacs-select-window "treemacs" "\
 Select the treemacs window if it is visible.
 Bring it to the foreground if it is not visible.
-Initialize a new treemacs buffer as calling `treemacs' would if there is no
+Initialise a new treemacs buffer as calling `treemacs' would if there is no
 treemacs buffer for this frame.
-
-\(fn)" t nil)
+Jump back to the previously used window if point is already in treemacs." t nil)
 
 (autoload 'treemacs-show-changelog "treemacs" "\
-Show the changelog of treemacs.
-
-\(fn)" t nil)
+Show the changelog of treemacs." t nil)
 
 (autoload 'treemacs-edit-workspaces "treemacs" "\
-Edit your treemacs workspaces and projects as an `org-mode' file.
+Edit your treemacs workspaces and projects as an `org-mode' file." t nil)
 
-\(fn)" t nil)
+(autoload 'treemacs-display-current-project-exclusively "treemacs" "\
+Display the current project, and *only* the current project.
+Like `treemacs-add-and-display-current-project' this will add the current
+project to treemacs based on either projectile, the built-in project.el, or the
+current working directory.
+
+However the 'exclusive' part means that it will make the current project the
+only project, all other projects *will be removed* from the current workspace." t nil)
 
 (autoload 'treemacs-add-and-display-current-project "treemacs" "\
 Open treemacs and add the current project root to the workspace.
 The project is determined first by projectile (if treemacs-projectile is
-installed), then by project.el.
-If the project is already registered with treemacs just move point to its root.
-An error message is displayed if the current buffer is not part of any project.
+installed), then by project.el, then by the current working directory.
 
-\(fn)" t nil)
+If the project is already registered with treemacs just move point to its root.
+An error message is displayed if the current buffer is not part of any project." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs" '("treemacs-version")))
 
@@ -1280,17 +1441,15 @@ Open Treemacs into a bookmark RECORD.
 
 (autoload 'treemacs-add-bookmark "treemacs-bookmarks" "\
 Add the current node to Emacs' list of bookmarks.
-For file and directory nodes their absolute path is saved. Tag nodes
-additionally also save the tag's position. A tag can only be bookmarked if the
-treemacs node is pointing to a valid buffer position.
-
-\(fn)" t nil)
+For file and directory nodes their absolute path is saved.  Tag nodes
+additionally also save the tag's position.  A tag can only be bookmarked if the
+treemacs node is pointing to a valid buffer position." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-bookmarks" '("treemacs--")))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-compatibility" '("treemacs--split-window-advice")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-compatibility" '("treemacs-")))
 
 
 
@@ -1326,6 +1485,34 @@ treemacs node is pointing to a valid buffer position.
 
 
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-header-line" '("treemacs-header-buttons-format")))
+
+
+
+(autoload 'treemacs-common-helpful-hydra "treemacs-hydras" "\
+Summon a helpful hydra to show you the treemacs keymap.
+
+This hydra will show the most commonly used keybinds for treemacs.  For the more
+advanced (probably rarely used keybinds) see `treemacs-advanced-helpful-hydra'.
+
+The keybinds shown in this hydra are not static, but reflect the actual
+keybindings currently in use (including evil mode).  If the hydra is unable to
+find the key a command is bound to it will show a blank instead." t nil)
+
+(autoload 'treemacs-advanced-helpful-hydra "treemacs-hydras" "\
+Summon a helpful hydra to show you the treemacs keymap.
+
+This hydra will show the more advanced (rarely used) keybinds for treemacs.  For
+the more commonly used keybinds see `treemacs-common-helpful-hydra'.
+
+The keybinds shown in this hydra are not static, but reflect the actual
+keybindings currently in use (including evil mode).  If the hydra is unable to
+find the key a command is bound to it will show a blank instead." t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-hydras" '("treemacs-helpful-hydra")))
+
+
+
 (autoload 'treemacs-resize-icons "treemacs-icons" "\
 Resize the current theme's icons to the given SIZE.
 
@@ -1335,8 +1522,9 @@ If SIZE is 'nil' the icons are not resized and will retain their default size of
 There is only one size, the icons are square and the aspect ratio will be
 preserved when resizing them therefore width and height are the same.
 
-Resizing the icons only works if Emacs was built with ImageMagick support. If
-this is not the case this function will report an error.
+Resizing the icons only works if Emacs was built with ImageMagick support, or if
+using Emacs >= 27.1,which has native image resizing support.  If this is not the
+case this function will not have any effect.
 
 Custom icons are not taken into account, only the size of treemacs' own icons
 png are changed.
@@ -1348,20 +1536,28 @@ Define a custom ICON for the current theme to use for FILE-EXTENSIONS.
 
 Note that treemacs has a very loose definition of what constitutes a file
 extension - it's either everything past the last period, or just the file's full
-name if there is no period. This makes it possible to match file names like
+name if there is no period.  This makes it possible to match file names like
 '.gitignore' and 'Makefile'.
 
 Additionally FILE-EXTENSIONS are also not case sensitive and will be stored in a
-downcased state.
+down-cased state.
 
 \(fn ICON &rest FILE-EXTENSIONS)" nil nil)
+
+(autoload 'treemacs-define-custom-image-icon "treemacs-icons" "\
+Same as `treemacs-define-custom-icon' but for image icons instead of strings.
+FILE is the path to an icon image (and not the actual icon string).
+FILE-EXTENSIONS are all the (not case-sensitive) file extensions the icon
+should be used for.
+
+\(fn FILE &rest FILE-EXTENSIONS)" nil nil)
 
 (autoload 'treemacs-map-icons-with-auto-mode-alist "treemacs-icons" "\
 Remaps icons for EXTENSIONS according to `auto-mode-alist'.
 EXTENSIONS should be a list of file extensions such that they match the regex
 stored in `auto-mode-alist', for example '(\".cc\").
 MODE-ICON-ALIST is an alist that maps which mode from `auto-mode-alist' should
-be assigned which treemacs icon, for exmaple
+be assigned which treemacs icon, for example
 '((c-mode . treemacs-icon-c)
   (c++-mode . treemacs-icon-cpp))
 
@@ -1372,6 +1568,10 @@ be assigned which treemacs icon, for exmaple
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-interface" '("treemacs-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-logging" '("treemacs-")))
 
 
 
@@ -1388,18 +1588,111 @@ A major mode for displaying the file system in a tree layout.
 
 
 
+(autoload 'treemacs-leftclick-action "treemacs-mouse-interface" "\
+Move focus to the clicked line.
+Must be bound to a mouse click, or EVENT will not be supplied.
+
+\(fn EVENT)" t nil)
+
+(autoload 'treemacs-doubleclick-action "treemacs-mouse-interface" "\
+Run the appropriate double-click action for the current node.
+In the default configuration this means to do the same as `treemacs-RET-action'.
+
+This function's exact configuration is stored in
+`treemacs-doubleclick-actions-config'.
+
+Must be bound to a mouse click, or EVENT will not be supplied.
+
+\(fn EVENT)" t nil)
+
+(autoload 'treemacs-single-click-expand-action "treemacs-mouse-interface" "\
+A modified single-leftclick action that expands the clicked nodes.
+Can be bound to <mouse1> if you prefer to expand nodes with a single click
+instead of a double click.  Either way it must be bound to a mouse click, or
+EVENT will not be supplied.
+
+Clicking on icons will expand a file's tags, just like
+`treemacs-leftclick-action'.
+
+\(fn EVENT)" t nil)
+
+(autoload 'treemacs-dragleftclick-action "treemacs-mouse-interface" "\
+Drag a file/dir node to be opened in a window.
+Must be bound to a mouse click, or EVENT will not be supplied.
+
+\(fn EVENT)" t nil)
+
+(autoload 'treemacs-define-doubleclick-action "treemacs-mouse-interface" "\
+Define the behaviour of `treemacs-doubleclick-action'.
+Determines that a button with a given STATE should lead to the execution of
+ACTION.
+
+The list of possible states can be found in `treemacs-valid-button-states'.
+ACTION should be one of the `treemacs-visit-node-*' commands.
+
+\(fn STATE ACTION)" nil nil)
+
 (autoload 'treemacs-node-buffer-and-position "treemacs-mouse-interface" "\
 Return source buffer or list of buffer and position for the current node.
-This information can be used for future display. Stay in the selected window and
-ignore any prefix argument.
+This information can be used for future display.  Stay in the selected window
+and ignore any prefix argument.
 
 \(fn &optional _)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-mouse-interface" '("treemacs-")))
+(autoload 'treemacs-rightclick-menu "treemacs-mouse-interface" "\
+Show a contextual right click menu based on click EVENT.
+
+\(fn EVENT)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-mouse-interface" '("treemacs--")))
 
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-persistence" '("treemacs-")))
+
+
+
+(defvar treemacs-project-follow-mode nil "\
+Non-nil if Treemacs-Project-Follow mode is enabled.
+See the `treemacs-project-follow-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `treemacs-project-follow-mode'.")
+
+(custom-autoload 'treemacs-project-follow-mode "treemacs-project-follow-mode" nil)
+
+(autoload 'treemacs-project-follow-mode "treemacs-project-follow-mode" "\
+Toggle `treemacs-only-current-project-mode'.
+
+If called interactively, enable Treemacs-Project-Follow mode if
+ARG is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
+This is a minor mode meant for those who do not care about treemacs' workspace
+features, or its preference to work with multiple projects simultaneously.  When
+enabled it will function as an automated version of
+`treemacs-display-current-project-exclusively', making sure that, after a small
+idle delay, the current project, and *only* the current project, is displayed in
+treemacs.
+
+The project detection is based on the current buffer, and will try to determine
+the project using the following methods, in the order they are listed:
+
+- the current projectile.el project, if `treemacs-projectile' is installed
+- the current project.el project
+- the current `default-directory'
+
+The update will only happen when treemacs is in the foreground, meaning a
+treemacs window must exist in the current scope.
+
+This mode requires at least Emacs version 27 since it relies on
+`window-buffer-change-functions' and `window-selection-change-functions'.
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-project-follow-mode" '("treemacs--")))
 
 
 
@@ -1411,9 +1704,106 @@ ignore any prefix argument.
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-tag-follow-mode" '("treemacs-")))
+(autoload 'treemacs--flatten&sort-imenu-index "treemacs-tag-follow-mode" "\
+Flatten current file's imenu index and sort it by tag position.
+The tags are sorted into the order in which they appear, regardless of section
+or nesting depth." nil nil)
+
+(defvar treemacs-tag-follow-mode nil "\
+Non-nil if Treemacs-Tag-Follow mode is enabled.
+See the `treemacs-tag-follow-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `treemacs-tag-follow-mode'.")
+
+(custom-autoload 'treemacs-tag-follow-mode "treemacs-tag-follow-mode" nil)
+
+(autoload 'treemacs-tag-follow-mode "treemacs-tag-follow-mode" "\
+Toggle `treemacs-tag-follow-mode'.
+
+If called interactively, enable Treemacs-Tag-Follow mode if ARG
+is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
+This acts as more fine-grained alternative to `treemacs-follow-mode' and will
+thus disable `treemacs-follow-mode' on activation.  When enabled treemacs will
+focus not only the file of the current buffer, but also the tag at point.
+
+The follow action is attached to Emacs' idle timer and will run
+`treemacs-tag-follow-delay' seconds of idle time.  The delay value is not an
+integer, meaning it accepts floating point values like 1.5.
+
+Every time a tag is followed a re--scan of the imenu index is forced by
+temporarily setting `imenu-auto-rescan' to t (though a cache is applied as long
+as the buffer is unmodified).  This is necessary to assure that creation or
+deletion of tags does not lead to errors and guarantees an always up-to-date tag
+view.
+
+Note that in order to move to a tag in treemacs the treemacs buffer's window
+needs to be temporarily selected, which will reset blink-cursor-mode's timer if
+it is enabled.  This will result in the cursor blinking seemingly pausing for a
+short time and giving the appearance of the tag follow action lasting much
+longer than it really does.
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-tag-follow-mode" '("treemacs--")))
 
 
+
+(autoload 'treemacs--expand-file-node "treemacs-tags" "\
+Open tag items for file BTN.
+Recursively open all tags below BTN when RECURSIVE is non-nil.
+
+\(fn BTN &optional RECURSIVE)" nil nil)
+
+(autoload 'treemacs--collapse-file-node "treemacs-tags" "\
+Close node given by BTN.
+Remove all open tag entries under BTN when RECURSIVE.
+
+\(fn BTN &optional RECURSIVE)" nil nil)
+
+(autoload 'treemacs--visit-or-expand/collapse-tag-node "treemacs-tags" "\
+Visit tag section BTN if possible, expand or collapse it otherwise.
+Pass prefix ARG on to either visit or toggle action.
+
+FIND-WINDOW is a special provision depending on this function's invocation
+context and decides whether to find the window to display in (if the tag is
+visited instead of the node being expanded).
+
+On the one hand it can be called based on `treemacs-RET-actions-config' (or
+TAB).  The functions in these configs are expected to find the windows they need
+to display in themselves, so FIND-WINDOW must be t. On the other hand this
+function is also called from the top level vist-node functions like
+`treemacs-visit-node-vertical-split' which delegates to the
+`treemacs--execute-button-action' macro which includes the determination of
+the display window.
+
+\(fn BTN ARG FIND-WINDOW)" nil nil)
+
+(autoload 'treemacs--expand-tag-node "treemacs-tags" "\
+Open tags node items for BTN.
+Open all tag section under BTN when call is RECURSIVE.
+
+\(fn BTN &optional RECURSIVE)" nil nil)
+
+(autoload 'treemacs--collapse-tag-node "treemacs-tags" "\
+Close tags node at BTN.
+Remove all open tag entries under BTN when RECURSIVE.
+
+\(fn BTN &optional RECURSIVE)" nil nil)
+
+(autoload 'treemacs--goto-tag "treemacs-tags" "\
+Go to the tag at BTN.
+
+\(fn BTN)" nil nil)
+
+(autoload 'treemacs--create-imenu-index-function "treemacs-tags" "\
+The `imenu-create-index-function' for treemacs buffers." nil nil)
+
+(function-put 'treemacs--create-imenu-index-function 'side-effect-free 't)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-tags" '("treemacs--")))
 
@@ -6233,6 +6623,17 @@ Inserted by installing Org or when a release is made." nil nil)
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-texinfo" '("org-texinfo-")))
 
 
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el") (car load-path))))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "f" '("f-")))
 
 
 )
@@ -12762,7 +13163,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s f avy ace-window pfuture lv hydra ht treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org-analyzer org markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org-analyzer org f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
