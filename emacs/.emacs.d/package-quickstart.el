@@ -148,10 +148,10 @@ comparisons/benchmarks with libraries that offer similar functionality.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4/with-editor-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5/with-editor-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4/with-editor-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5/with-editor-autoloads.el") (car load-path))))
 
 
 
@@ -14045,10 +14045,10 @@ When FAMILY is non-nil, limit the candidates to the icon set matching it.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20210614.1350/all-the-icons-dired-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20211001.1313/all-the-icons-dired-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20210614.1350/all-the-icons-dired-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20211001.1313/all-the-icons-dired-autoloads.el") (car load-path))))
 
 
 
@@ -14138,7 +14138,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.2.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1" "/Users/laurynas/.emacs.d/elpa/org-9.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20210920.1038" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.4")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.2.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1" "/Users/laurynas/.emacs.d/elpa/org-9.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20210920.1038" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
          Info-directory-list)))
 
 ;; Local Variables:
