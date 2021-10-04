@@ -17,9 +17,9 @@ Major mode for fontifiying ssh config files.
 
 \(fn)" t nil)
 
-(add-to-list 'auto-mode-alist '("/\\.ssh/config\\'" . ssh-config-mode))
+(add-to-list 'auto-mode-alist '("/\\.ssh/config\\(\\.d/.*\\.conf\\)?\\'" . ssh-config-mode))
 
-(add-to-list 'auto-mode-alist '("/sshd?_config\\'" . ssh-config-mode))
+(add-to-list 'auto-mode-alist '("/sshd?_config\\(\\.d/.*\\.conf\\)?\\'" . ssh-config-mode))
 
 (add-to-list 'auto-mode-alist '("/known_hosts\\'" . ssh-known-hosts-mode))
 
