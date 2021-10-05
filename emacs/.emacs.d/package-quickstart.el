@@ -2080,10 +2080,10 @@ Turn on `stripe-buffer-mode' and `hl-line-mode'." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20211003.1629/ssh-config-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20211003.2330/ssh-config-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20211003.1629/ssh-config-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ssh-config-mode-20211003.2330/ssh-config-mode-autoloads.el") (car load-path))))
 
 
 
@@ -8088,10 +8088,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1/magit-section-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0/magit-section-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1/magit-section-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0/magit-section-autoloads.el") (car load-path))))
 
 
 
@@ -8101,10 +8101,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.2.1/git-commit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.3.0/git-commit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-commit-3.2.1/git-commit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/git-commit-3.3.0/git-commit-autoloads.el") (car load-path))))
 
 
 (put 'git-commit-major-mode 'safe-local-variable
@@ -8121,10 +8121,10 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.2.1/magit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.3.0/magit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-3.2.1/magit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/magit-3.3.0/magit-autoloads.el") (car load-path))))
 
 
 
@@ -8549,6 +8549,32 @@ and also rename the respective reflog file.
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-branch" '("magit-")))
 
 
+ (autoload 'magit-bundle "magit-bundle" nil t)
+ (autoload 'magit-bundle-import "magit-bundle" nil t)
+
+(autoload 'magit-bundle-create-tracked "magit-bundle" "\
+Create and track a new bundle.
+
+\(fn FILE TAG BRANCH REFS ARGS)" t nil)
+
+(autoload 'magit-bundle-update-tracked "magit-bundle" "\
+Update a bundle that is being tracked using TAG.
+
+\(fn TAG)" t nil)
+
+(autoload 'magit-bundle-verify "magit-bundle" "\
+Check whether FILE is valid and applies to the current repository.
+
+\(fn FILE)" t nil)
+
+(autoload 'magit-bundle-list-heads "magit-bundle" "\
+List the refs in FILE.
+
+\(fn FILE)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-bundle" '("magit-")))
+
+
  (autoload 'magit-clone "magit-clone" nil t)
 
 (autoload 'magit-clone-regular "magit-clone" "\
@@ -8926,6 +8952,13 @@ Show log for all marked files, or the current file.
 
 \(fn &optional FOLLOW)" t nil)
 
+(autoload 'magit-dired-am-apply-patches "magit-extras" "\
+In Dired, apply the marked (or next ARG) files as patches.
+If inside a repository, then apply in that.  Otherwise prompt
+for a repository.
+
+\(fn REPO &optional ARG)" t nil)
+
 (autoload 'magit-do-async-shell-command "magit-extras" "\
 Open FILE with `dired-do-async-shell-command'.
 Interactively, open the file at point.
@@ -9112,6 +9145,27 @@ above.
 When `magit-copy-revision-abbreviated' is non-nil, save the
 abbreviated revision to the `kill-ring' and the
 `magit-revision-stack'." t nil)
+
+(autoload 'magit-display-repository-buffer "magit-extras" "\
+Display a Magit buffer belonging to the current Git repository.
+The buffer is displayed using `magit-display-buffer', which see.
+
+\(fn BUFFER)" t nil)
+
+(autoload 'magit-switch-to-repository-buffer "magit-extras" "\
+Switch to a Magit buffer belonging to the current Git repository.
+
+\(fn BUFFER)" t nil)
+
+(autoload 'magit-switch-to-repository-buffer-other-window "magit-extras" "\
+Switch to a Magit buffer belonging to the current Git repository.
+
+\(fn BUFFER)" t nil)
+
+(autoload 'magit-switch-to-repository-buffer-other-frame "magit-extras" "\
+Switch to a Magit buffer belonging to the current Git repository.
+
+\(fn BUFFER)" t nil)
 
 (autoload 'magit-abort-dwim "magit-extras" "\
 Abort current operation.
@@ -9758,6 +9812,14 @@ Unset the local representation of REMOTE's default branch.
 Delete the symbolic-ref \"refs/remotes/<remote>/HEAD\".
 
 \(fn REMOTE)" t nil)
+
+(autoload 'magit-remote-unshallow "magit-remote" "\
+Convert a shallow remote into a full one.
+If only a single refspec is set and it does not contain a
+wildcard, then also offer to replace it with the standard
+refspec.
+
+\(fn REMOTE)" t nil)
  (autoload 'magit-remote-configure "magit-remote" nil t)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-remote" '("magit-")))
@@ -10047,6 +10109,14 @@ while two prefix arguments are equivalent to `--all'.
 Apply a stash to the working tree.
 Try to preserve the stash index.  If that fails because there
 are staged changes, apply without preserving the stash index.
+
+\(fn STASH)" t nil)
+
+(autoload 'magit-stash-pop "magit-stash" "\
+Apply a stash to the working tree and remove it from stash list.
+Try to preserve the stash index.  If that fails because there
+are staged changes, apply without preserving the stash index
+and forgo removing the stash.
 
 \(fn STASH)" t nil)
 
@@ -14138,7 +14208,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.2.1" "/Users/laurynas/.emacs.d/elpa/magit-section-3.2.1" "/Users/laurynas/.emacs.d/elpa/org-9.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20210920.1038" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20210920.1038" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
          Info-directory-list)))
 
 ;; Local Variables:
