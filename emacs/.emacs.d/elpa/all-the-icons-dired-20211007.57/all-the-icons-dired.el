@@ -6,8 +6,8 @@
 ;; Author: jtbm37
 ;; Maintainer: Jimmy Yuen Ho Wong <wyuenho@gmail.com>
 ;; Version: 2.0
-;; Package-Version: 20211001.1313
-;; Package-Commit: 9eb119edcea12e9b7a06d888336abb0b8ea6502e
+;; Package-Version: 20211007.57
+;; Package-Commit: 83740338d9bda6e03451887dd310ae80b89004ac
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/wyuenho/all-the-icons-dired
@@ -118,6 +118,7 @@
     (dired-aux     dired-do-kill-lines          all-the-icons-dired--refresh-advice)
     (dired-aux     dired-do-rename              all-the-icons-dired--refresh-advice)
     (dired-aux     dired-insert-subdir          all-the-icons-dired--refresh-advice)
+    (dired-aux     dired-kill-subdir            all-the-icons-dired--refresh-advice)
     (dired         wdired-abort-changes         all-the-icons-dired--refresh-advice)
     (dired         dired-internal-do-deletions  all-the-icons-dired--refresh-advice)
     (dired-narrow  dired-narrow--internal       all-the-icons-dired--refresh-advice)
