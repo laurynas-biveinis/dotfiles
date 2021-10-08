@@ -6,8 +6,8 @@
 ;; Author: jtbm37
 ;; Maintainer: Jimmy Yuen Ho Wong <wyuenho@gmail.com>
 ;; Version: 2.0
-;; Package-Version: 20211007.57
-;; Package-Commit: 83740338d9bda6e03451887dd310ae80b89004ac
+;; Package-Version: 20211007.1729
+;; Package-Commit: 5e9b097f9950cc9f86de922b07903a4e5fefc733
 ;; Keywords: files icons dired
 ;; Package-Requires: ((emacs "24.4") (all-the-icons "2.2.0"))
 ;; URL: https://github.com/wyuenho/all-the-icons-dired
@@ -108,9 +108,9 @@
 
 (defun all-the-icons-dired--refresh-advice (fn &rest args)
   "Advice function for FN with ARGS."
-  (apply fn args)
-  (when all-the-icons-dired-mode
-    (all-the-icons-dired--refresh)))
+  (prog1 (apply fn args)
+    (when all-the-icons-dired-mode
+      (all-the-icons-dired--refresh))))
 
 (defvar all-the-icons-dired-advice-alist
   '((dired-aux     dired-create-directory       all-the-icons-dired--refresh-advice)
