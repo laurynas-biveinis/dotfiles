@@ -236,18 +236,18 @@
 	 (:maintainer "Tyler Grinn" . "tylergrinn@gmail.com")
 	 (:authors
 	  ("Tyler Grinn" . "tylergrinn@gmail.com")))])
- (boxy-headlines .
-		 [(1 0 2)
-		  ((emacs
-		    (26 1))
-		   (boxy
-		    (1 0)))
-		  "View org files in a boxy diagram" tar
-		  ((:url . "https://gitlab.com/tygrdev/boxy-headlines")
-		   (:keywords "tools")
-		   (:maintainer "Tyler Grinn" . "tylergrinn@gmail.com")
-		   (:authors
-		    ("Tyler Grinn" . "tylergrinn@gmail.com")))])
+ (boxy-headings .
+		[(2 0 0)
+		 ((emacs
+		   (26 1))
+		  (boxy
+		   (1 0)))
+		 "View org files in a boxy diagram" tar
+		 ((:url . "https://gitlab.com/tygrdev/boxy-headings")
+		  (:keywords "tools")
+		  (:maintainer "Tyler Grinn" . "tylergrinn@gmail.com")
+		  (:authors
+		   ("Tyler Grinn" . "tylergrinn@gmail.com")))])
  (brief .
 	[(5 87)
 	 nil "Brief Editor Emulator (Brief Mode)" tar
@@ -694,7 +694,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:keywords "killing" "convenience"))])
  (ebdb .
-       [(0 8 5)
+       [(0 8 6)
 	((emacs
 	  (25 1))
 	 (seq
