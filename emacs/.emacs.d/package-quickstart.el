@@ -1350,10 +1350,10 @@ Read a string using a pos-frame with given PROMPT and INITIAL-INPUT.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-2.9.1/treemacs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-2.9.2/treemacs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/treemacs-2.9.1/treemacs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/treemacs-2.9.2/treemacs-autoloads.el") (car load-path))))
 
 
 
