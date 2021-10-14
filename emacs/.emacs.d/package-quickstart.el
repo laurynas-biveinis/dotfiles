@@ -1823,10 +1823,10 @@ The `imenu-create-index-function' for treemacs buffers." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20210920.1038/transient-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20211013.2148/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20210920.1038/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20211013.2148/transient-autoloads.el") (car load-path))))
 
 
 
@@ -6683,10 +6683,10 @@ Return PDF file's name.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.2/org-contrib-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.3/org-contrib-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-contrib-0.2/org-contrib-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-contrib-0.3/org-contrib-autoloads.el") (car load-path))))
 
 
 
@@ -6876,10 +6876,6 @@ Execute a block of Spice code `BODY' with org-babel and `PARAMS'.
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-git-link" '("org-git")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-man" '("org-man-")))
 
 
 
@@ -14208,7 +14204,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20210920.1038" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20211013.2148" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
          Info-directory-list)))
 
 ;; Local Variables:

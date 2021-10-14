@@ -294,13 +294,6 @@ Execute a block of Spice code `BODY' with org-babel and `PARAMS'.
 
 ;;;***
 
-;;;### (autoloads nil "ol-man" "ol-man.el" (0 0 0 0))
-;;; Generated autoloads from ol-man.el
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-man" '("org-man-")))
-
-;;;***
-
 ;;;### (autoloads nil "ol-mew" "ol-mew.el" (0 0 0 0))
 ;;; Generated autoloads from ol-mew.el
 
