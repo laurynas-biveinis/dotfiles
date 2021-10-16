@@ -349,7 +349,7 @@ The difference between this and `treemacs-ignored-file-predicates' is that the
 functions in this list will be called on files just before they would be
 rendered, when the files' git status information is now available.  This for
 example allows to make files ignored by git invisible (however this particular
-use-case is already covered by `treemacs-show-gitignored-files').
+use-case is already covered by `treemacs-hide-gitignored-files-mode').
 
 The functions in this list are therefore expected to have a different signature:
 They must take two arguments - a file's absolute path and a hash table that maps
@@ -409,7 +409,11 @@ performance cap and to prevent too long directory names in the treemacs view.
 
 To minimise this option's impact on display performance the search for
 directories to collapse is done asynchronously in a python script and will thus
-only work when python installed.  The script should work both on python 2 and 3."
+only work when python installed.  The script should work both on python 2 and 3.
+
+If you experience incorrect display of CJK characters while using this feature
+you have to inform Emacs about your language environment using
+`set-language-environment'."
   :type 'integer
   :group 'treemacs)
 

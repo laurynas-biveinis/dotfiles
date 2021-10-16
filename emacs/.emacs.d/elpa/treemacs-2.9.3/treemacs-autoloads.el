@@ -156,6 +156,52 @@ treemacs node is pointing to a valid buffer position." t nil)
 
 ;;;***
 
+;;;### (autoloads nil "treemacs-file-management" "treemacs-file-management.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from treemacs-file-management.el
+
+(autoload 'treemacs-delete-file "treemacs-file-management" "\
+Delete node at point.
+A delete action must always be confirmed.  Directories are deleted recursively.
+By default files are deleted by moving them to the trash.  With a prefix ARG
+they will instead be wiped irreversibly.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'treemacs-move-file "treemacs-file-management" "\
+Move file (or directory) at point.
+Destination may also be a filename, in which case the moved file will also
+be renamed." t nil)
+
+(autoload 'treemacs-copy-file "treemacs-file-management" "\
+Copy file (or directory) at point.
+Destination may also be a filename, in which case the copied file will also
+be renamed." t nil)
+
+(autoload 'treemacs-rename-file "treemacs-file-management" "\
+Rename the currently selected node.
+Buffers visiting the renamed file or visiting a file inside a renamed directory
+and windows showing them will be reloaded.  The list of recent files will
+likewise be updated." t nil)
+
+(autoload 'treemacs-create-file "treemacs-file-management" "\
+Create a new file.
+Enter first the directory to create the new file in, then the new file's name.
+The pre-selection for what directory to create in is based on the \"nearest\"
+path to point - the containing directory for tags and files or the directory
+itself, using $HOME when there is no path at or near point to grab." t nil)
+
+(autoload 'treemacs-create-dir "treemacs-file-management" "\
+Create a new directory.
+Enter first the directory to create the new dir in, then the new dir's name.
+The pre-selection for what directory to create in is based on the \"nearest\"
+path to point - the containing directory for tags and files or the directory
+itself, using $HOME when there is no path at or near point to grab." t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-file-management" '("treemacs-")))
+
+;;;***
+
 ;;;### (autoloads nil "treemacs-filewatch-mode" "treemacs-filewatch-mode.el"
 ;;;;;;  (0 0 0 0))
 ;;; Generated autoloads from treemacs-filewatch-mode.el
