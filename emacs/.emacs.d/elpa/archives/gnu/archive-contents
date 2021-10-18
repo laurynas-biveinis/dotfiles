@@ -237,7 +237,7 @@
 	 (:authors
 	  ("Tyler Grinn" . "tylergrinn@gmail.com")))])
  (boxy-headings .
-		[(2 1 1)
+		[(2 1 2)
 		 ((emacs
 		   (26 1))
 		  (boxy
@@ -748,7 +748,7 @@
 	      (:maintainer "Markus Triska" . "triska@metalevel.at")
 	      (:url . "https://www.metalevel.at/ediprolog/"))])
  (eev .
-      [(20211011)
+      [(20211016)
        ((emacs
 	 (24 4)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
