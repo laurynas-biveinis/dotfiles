@@ -54,6 +54,7 @@
 
 (require 'cl-lib)
 (require 'eieio)
+(require 'edmacro)
 (require 'format-spec)
 (require 'seq)
 
@@ -1073,7 +1074,8 @@ example, sets a variable use `transient-define-infix' instead.
           (put cmd 'transient--infix-command
                (transient--default-infix-command))
         ;; This is not an anonymous infix argument.
-        (error "Suffix %s is not defined or autoloaded as a command" cmd)))))
+        (when (transient--use-suffix-p obj)
+          (error "Suffix %s is not defined or autoloaded as a command" cmd))))))
 
 (defun transient--derive-shortarg (arg)
   (save-match-data
@@ -2433,14 +2435,14 @@ Non-infix suffix commands usually don't have a value."
 
 (cl-defmethod transient-init-value :around ((obj transient-prefix))
   "If bound, then call OBJ's `init-value' function.
-Otherwise call the primary method according to objects class."
+Otherwise call the primary method according to object's class."
   (if (slot-boundp obj 'init-value)
       (funcall (oref obj init-value) obj)
     (cl-call-next-method obj)))
 
 (cl-defmethod transient-init-value :around ((obj transient-infix))
   "If bound, then call OBJ's `init-value' function.
-Otherwise call the primary method according to objects class."
+Otherwise call the primary method according to object's class."
   (if (slot-boundp obj 'init-value)
       (funcall (oref obj init-value) obj)
     (cl-call-next-method obj)))

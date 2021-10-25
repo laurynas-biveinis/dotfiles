@@ -163,7 +163,7 @@
 	((:url . "https://github.com/emacs-evil/evil")
 	 (:keywords "emulation" "vim"))])
  (flymake-kondor .
-		 [(0 1 0)
+		 [(0 1 2)
 		  ((emacs
 		    (26 1)))
 		  "Linter with clj-kondo" tar
@@ -370,6 +370,18 @@
 	      (:authors
 	       ("Bozhidar Batsov"))
 	      (:keywords "convenience"))])
+ (haml-mode .
+	    [(3 1 10)
+	     ((emacs
+	       (24))
+	      (cl-lib
+	       (0 5)))
+	     "Major mode for editing Haml files" tar
+	     ((:url . "https://github.com/nex3/haml-mode")
+	      (:keywords "markup" "languages" "html")
+	      (:maintainer "Natalie Weizenbaum")
+	      (:authors
+	       ("Natalie Weizenbaum")))])
  (haskell-mode .
 	       [(4 7 1)
 		nil "A Haskell editing mode" tar
