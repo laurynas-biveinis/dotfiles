@@ -44,7 +44,7 @@ reading a new value in the minibuffer.
    Calling a suffix command usually causes the transient to be exited
 but suffix commands can also be configured to not exit the transient.
 
-This manual is for Transient version 0.3.6 (v0.3.6-17-g2281d952+1).
+This manual is for Transient version 0.3.7.
 
      Copyright (C) 2018-2021 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -2495,63 +2495,63 @@ Appendix E Variable Index
 
 Tag Table:
 Node: Top751
-Node: Introduction3675
-Node: Usage9490
-Node: Invoking Transients9858
-Node: Aborting and Resuming Transients10935
-Node: Common Suffix Commands13594
-Node: Saving Values15428
-Ref: Saving Values-Footnote-116686
-Node: Using History16879
-Node: Getting Help for Suffix Commands18518
-Node: Enabling and Disabling Suffixes19911
-Node: Other Commands22949
-Node: Other Options23927
-Node: Modifying Existing Transients31641
-Node: Defining New Commands35035
-Node: Defining Transients35371
-Node: Binding Suffix and Infix Commands37802
-Node: Group Specifications38656
-Node: Suffix Specifications42985
-Node: Defining Suffix and Infix Commands47350
-Node: Using Infix Arguments50548
-Node: Transient State53380
-Ref: Pre-commands for Infixes57288
-Ref: Pre-commands for Suffixes57560
-Ref: Pre-commands for Non-Suffixes58079
-Ref: Special Pre-Commands58694
-Node: Classes and Methods59205
-Node: Group Classes61419
-Node: Group Methods63335
-Node: Prefix Classes64584
-Node: Suffix Classes65676
-Node: Suffix Methods67920
-Node: Suffix Value Methods68241
-Node: Suffix Format Methods71001
-Node: Prefix Slots72453
-Ref: Internal Prefix Slots73711
-Node: Suffix Slots74968
-Ref: Slots of transient-suffix75336
-Ref: Slots of transient-infix76033
-Ref: Slots of transient-variable77981
-Ref: Slots of transient-switches78083
-Node: Predicate Slots78446
-Node: Related Abstractions and Packages79694
-Node: Comparison With Prefix Keys and Prefix Arguments79981
-Ref: Regular Prefix Commands80669
-Ref: Regular Prefix Arguments81017
-Ref: Transients81986
-Node: Comparison With Other Packages90257
-Ref: Magit-Popup90488
-Ref: Hydra91387
-Node: FAQ94423
-Ref: Can I control how the popup buffer is displayed?94566
-Ref: Why did some of the key bindings change?94747
-Ref: Why does q not quit popups anymore?97064
-Node: Keystroke Index98157
-Node: Command Index99937
-Node: Function Index101870
-Node: Variable Index106374
+Node: Introduction3651
+Node: Usage9466
+Node: Invoking Transients9834
+Node: Aborting and Resuming Transients10911
+Node: Common Suffix Commands13570
+Node: Saving Values15404
+Ref: Saving Values-Footnote-116662
+Node: Using History16855
+Node: Getting Help for Suffix Commands18494
+Node: Enabling and Disabling Suffixes19887
+Node: Other Commands22925
+Node: Other Options23903
+Node: Modifying Existing Transients31617
+Node: Defining New Commands35011
+Node: Defining Transients35347
+Node: Binding Suffix and Infix Commands37778
+Node: Group Specifications38632
+Node: Suffix Specifications42961
+Node: Defining Suffix and Infix Commands47326
+Node: Using Infix Arguments50524
+Node: Transient State53356
+Ref: Pre-commands for Infixes57264
+Ref: Pre-commands for Suffixes57536
+Ref: Pre-commands for Non-Suffixes58055
+Ref: Special Pre-Commands58670
+Node: Classes and Methods59181
+Node: Group Classes61395
+Node: Group Methods63311
+Node: Prefix Classes64560
+Node: Suffix Classes65652
+Node: Suffix Methods67896
+Node: Suffix Value Methods68217
+Node: Suffix Format Methods70977
+Node: Prefix Slots72429
+Ref: Internal Prefix Slots73687
+Node: Suffix Slots74944
+Ref: Slots of transient-suffix75312
+Ref: Slots of transient-infix76009
+Ref: Slots of transient-variable77957
+Ref: Slots of transient-switches78059
+Node: Predicate Slots78422
+Node: Related Abstractions and Packages79670
+Node: Comparison With Prefix Keys and Prefix Arguments79957
+Ref: Regular Prefix Commands80645
+Ref: Regular Prefix Arguments80993
+Ref: Transients81962
+Node: Comparison With Other Packages90233
+Ref: Magit-Popup90464
+Ref: Hydra91363
+Node: FAQ94399
+Ref: Can I control how the popup buffer is displayed?94542
+Ref: Why did some of the key bindings change?94723
+Ref: Why does q not quit popups anymore?97040
+Node: Keystroke Index98133
+Node: Command Index99913
+Node: Function Index101846
+Node: Variable Index106350
 
 End Tag Table
 
