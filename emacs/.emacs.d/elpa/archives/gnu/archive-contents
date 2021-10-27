@@ -706,7 +706,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:keywords "killing" "convenience"))])
  (ebdb .
-       [(0 8 6)
+       [(0 8 8)
 	((emacs
 	  (25 1))
 	 (seq
@@ -971,7 +971,7 @@
 	     ("Pavel Kobyakov" . "pk_at_work@yahoo.com"))
 	    (:url . "https://elpa.gnu.org/packages/flymake.html"))])
  (flymake-proselint .
-		    [(0 2 2)
+		    [(0 2 3)
 		     ((emacs
 		       (26 1)))
 		     "Flymake backend for proselint" tar
@@ -2339,7 +2339,7 @@
 	      (:maintainer "Ralph Amissah" . "ralph.amissah@gmail.com")
 	      (:url . "http://www.sisudoc.org/"))])
  (sketch-mode .
-	      [(1 0 3)
+	      [(1 0 4)
 	       nil "Quickly create svg sketches using keyboard and mouse" tar
 	       ((:url . "https://github.com/dalanicolai/sketch-mode")
 		(:keywords "multimedia")
