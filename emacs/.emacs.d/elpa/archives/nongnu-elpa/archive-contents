@@ -242,17 +242,17 @@
 		   ("András Simonyi" . "andras.simonyi@gmail.com"))
 		  (:keywords "languages" "gauche" "scheme" "geiser"))])
  (geiser-guile .
-	       [(0 17)
+	       [(0 18)
 		((emacs
 		  (24 4))
 		 (geiser
 		  (0 16)))
 		"Guile's implementation of the geiser protocols" tar
 		((:url . "https://gitlab.com/emacs-geiser/guile")
+		 (:keywords "languages" "guile" "scheme" "geiser")
 		 (:maintainer "Jose Antonio Ortega Ruiz" . "jao@gnu.org")
 		 (:authors
-		  ("Jose Antonio Ortega Ruiz" . "jao@gnu.org"))
-		 (:keywords "languages" "guile" "scheme" "geiser"))])
+		  ("Jose Antonio Ortega Ruiz" . "jao@gnu.org")))])
  (geiser-kawa .
 	      [(0 0 1)
 	       ((emacs
@@ -642,7 +642,7 @@
 	     ("Bozhidar Batsov"))
 	    (:keywords "project" "convenience"))])
  (rust-mode .
-	    [(1 0 0)
+	    [(1 0 1)
 	     ((emacs
 	       (25 1)))
 	     "A major-mode for editing Rust source code" tar
@@ -711,14 +711,20 @@
 		    (:authors
 		     ("John Olsson" . "john@cryon.se")))])
  (swift-mode .
-	     [(8 4 1)
+	     [(8 4 2)
 	      ((emacs
 		(24 4))
 	       (seq
 		(2 3)))
 	      "Major-mode for Apple's Swift programming language" tar
 	      ((:url . "https://github.com/swift-emacs/swift-mode")
-	       (:keywords "languages" "swift"))])
+	       (:keywords "languages" "swift")
+	       (:maintainer "taku0 (http://github.com/taku0)")
+	       (:authors
+		("taku0 (http://github.com/taku0)")
+		("Chris Barrett" . "chris.d.barrett@me.com")
+		("Bozhidar Batsov" . "bozhidar@batsov.com")
+		("Arthur Evstifeev" . "lod@pisem.net")))])
  (systemd .
 	  [(1 6)
 	   ((emacs
