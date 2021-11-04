@@ -44,7 +44,7 @@ reading a new value in the minibuffer.
    Calling a suffix command usually causes the transient to be exited
 but suffix commands can also be configured to not exit the transient.
 
-This manual is for Transient version 0.3.7 (v0.3.7-8-gc9ab648e+1).
+This manual is for Transient version 0.3.7 (v0.3.7-9-g667488eb+1).
 
      Copyright (C) 2018-2021 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -1611,9 +1611,8 @@ File: transient.info,  Node: Suffix Classes,  Next: Suffix Methods,  Prev: Prefi
    • The ‘transient-switches’ class can be used for a set of mutually
      exclusive command-line switches.
 
-   • The ‘transient-files’ class is deprecated in favor of
-     ‘transient-option'’, which learned all the tricks of this class.
-     Just switch the class and you are ready to go.
+   • The ‘transient-files’ class can be used for a "–" argument that
+     indicates that all remaining arguments are files.
 
    • Classes used for infix commands that represent variables should
      derived from the abstract ‘transient-variables’ class.
@@ -2552,33 +2551,33 @@ Node: Group Classes61418
 Node: Group Methods63334
 Node: Prefix Classes64583
 Node: Suffix Classes65675
-Node: Suffix Methods67978
-Node: Suffix Value Methods68299
-Node: Suffix Format Methods71059
-Node: Prefix Slots72511
-Ref: Internal Prefix Slots73769
-Node: Suffix Slots75026
-Ref: Slots of transient-suffix75394
-Ref: Slots of transient-infix76091
-Ref: Slots of transient-variable79199
-Ref: Slots of transient-switches79301
-Node: Predicate Slots79664
-Node: Related Abstractions and Packages80912
-Node: Comparison With Prefix Keys and Prefix Arguments81199
-Ref: Regular Prefix Commands81887
-Ref: Regular Prefix Arguments82235
-Ref: Transients83204
-Node: Comparison With Other Packages91475
-Ref: Magit-Popup91706
-Ref: Hydra92605
-Node: FAQ95641
-Ref: Can I control how the popup buffer is displayed?95784
-Ref: Why did some of the key bindings change?95965
-Ref: Why does q not quit popups anymore?98282
-Node: Keystroke Index99375
-Node: Command Index101155
-Node: Function Index103088
-Node: Variable Index107592
+Node: Suffix Methods67919
+Node: Suffix Value Methods68240
+Node: Suffix Format Methods71000
+Node: Prefix Slots72452
+Ref: Internal Prefix Slots73710
+Node: Suffix Slots74967
+Ref: Slots of transient-suffix75335
+Ref: Slots of transient-infix76032
+Ref: Slots of transient-variable79140
+Ref: Slots of transient-switches79242
+Node: Predicate Slots79605
+Node: Related Abstractions and Packages80853
+Node: Comparison With Prefix Keys and Prefix Arguments81140
+Ref: Regular Prefix Commands81828
+Ref: Regular Prefix Arguments82176
+Ref: Transients83145
+Node: Comparison With Other Packages91416
+Ref: Magit-Popup91647
+Ref: Hydra92546
+Node: FAQ95582
+Ref: Can I control how the popup buffer is displayed?95725
+Ref: Why did some of the key bindings change?95906
+Ref: Why does q not quit popups anymore?98223
+Node: Keystroke Index99316
+Node: Command Index101096
+Node: Function Index103029
+Node: Variable Index107533
 
 End Tag Table
 

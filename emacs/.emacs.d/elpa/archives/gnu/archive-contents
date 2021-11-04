@@ -1340,7 +1340,7 @@
 	       ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	      (:keywords "convenience"))])
  (ivy-posframe .
-	       [(0 6 2)
+	       [(0 6 3)
 		((emacs
 		  (26 0))
 		 (posframe
@@ -1963,7 +1963,7 @@
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
 	    (:url . "http://elpa.gnu.org/packages/persist.html"))])
  (phps-mode .
-	    [(0 4 10)
+	    [(0 4 12)
 	     ((emacs
 	       (26)))
 	     "Major mode for PHP with Semantic integration" tar
@@ -2741,13 +2741,13 @@
 	    ("Yuan Fu" . "casouri@gmail.com"))
 	   (:keywords "convenience" "text" "table"))])
  (vc-backup .
-	    [(1 0 0)
+	    [(1 1 0)
 	     nil "VC backend for versioned backups" tar
 	     ((:url . "https://git.sr.ht/~pkal/vc-backup")
+	      (:keywords "vc")
 	      (:maintainer "Philip Kaludercic" . "philipk@posteo.net")
 	      (:authors
-	       ("Philip Kaludercic" . "philipk@posteo.net"))
-	      (:keywords "vc"))])
+	       ("Philip Kaludercic" . "philipk@posteo.net")))])
  (vc-got .
 	 [(1 0)
 	  ((emacs
