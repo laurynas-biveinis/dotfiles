@@ -3,7 +3,7 @@
 # dotfiles
 
 My dotfiles and scripts, and configuration. The shell part is specific for zsh,
-using [zinit](https://github.com/zdharma/zinit) &
+using [zinit](https://github.com/zdharma-continuum/zinit) &
 [powerlevel10k](https://github.com/romkatv/powerlevel10k).
 
 ## Modularity
