@@ -196,6 +196,8 @@ sudo defaults -currentHost write \
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write -g AppleShowAllExtensions -bool true
+# Allow text selection in Quick Look
+defaults write com.apple.finder QLEnableTextSelection -bool true
 killall Finder
 #
 # SSH
@@ -244,6 +246,7 @@ defaults write com.apple.Preview PVSidebarViewModeForNewDocuments -int 0
 #
 defaults write com.apple.screencapture location -string "$HOME/Downloads"
 defaults write com.apple.screencapture type -string "png"
+defaults write com.apple.screencapture disable-shadow -bool true
 #
 # Image Capture
 #
