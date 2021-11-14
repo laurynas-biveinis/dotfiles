@@ -11634,10 +11634,10 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.0/helm-core-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.1/helm-core-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.0/helm-core-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.1/helm-core-autoloads.el") (car load-path))))
 
 
 
@@ -11705,10 +11705,12 @@ on exit.
 For any other key pressed, run their assigned command as defined
 in MAP and then exit the loop running EXIT-FN, if specified.
 
+If DELAY an integer is specified exit after DELAY seconds.
+
 NOTE: SUBKEY and OTHER-SUBKEYS bindings support only char syntax
 and vectors, so don't use strings to define them.
 
-\(fn MAP KEY SUBKEY COMMAND &optional OTHER-SUBKEYS PROMPT EXIT-FN)" nil nil)
+\(fn MAP KEY SUBKEY COMMAND &optional OTHER-SUBKEYS PROMPT EXIT-FN DELAY)" nil nil)
 
 (function-put 'helm-define-key-with-subkeys 'lisp-indent-function '1)
 
@@ -11871,10 +11873,10 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.0/helm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.1/helm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.0/helm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.1/helm-autoloads.el") (car load-path))))
 
 
 
@@ -12092,11 +12094,9 @@ Preconfigured `helm' for `helm-source-calculation-result'." t nil)
 
 (autoload 'helm-run-external-command "helm-external" "\
 Preconfigured `helm' to run External PROGRAM asyncronously from Emacs.
-If program is already running exit with error.
-You can set your own list of commands with
-`helm-external-commands-list'.
-
-\(fn PROGRAM)" t nil)
+If program is already running try to run `helm-raise-command' if
+defined otherwise exit with error. You can set your own list of
+commands with `helm-external-commands-list'." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-external" '("helm-")))
 
@@ -12210,7 +12210,7 @@ Preconfigured `helm' for `recentf'." t nil)
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-global-bindings" '("helm-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-global-bindings" '("helm-command-")))
 
 
 
@@ -12338,6 +12338,27 @@ With a prefix arg reinitialize the cache.
 
 
 
+(defvar helm-minibuffer-history-mode nil "\
+Non-nil if Helm-Minibuffer-History mode is enabled.
+See the `helm-minibuffer-history-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `helm-minibuffer-history-mode'.")
+
+(custom-autoload 'helm-minibuffer-history-mode "helm-misc" nil)
+
+(autoload 'helm-minibuffer-history-mode "helm-misc" "\
+Bind `helm-minibuffer-history-key' in al minibuffer maps.
+This mode is enabled by `helm-mode', so there is no need to enable it directly.
+
+If called interactively, enable Helm-Minibuffer-History mode if
+ARG is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
 (autoload 'helm-world-time "helm-misc" "\
 Preconfigured `helm' to show world time.
 Default action change TZ environment variable locally to emacs." t nil)
@@ -12393,18 +12414,30 @@ Keys description:
 
 - REQUIRES-PATTERN: Same as helm attribute, default is 0.
 
-- HISTORY: A list containing specific history, default is nil.
-  When it is non--nil, all elements of HISTORY are displayed in
-  a special source before COLLECTION.
+- HISTORY: A symbol where each result will be saved.
+  If not specified as a symbol an error will popup.
+  When specified, all elements of HISTORY are displayed in
+  a special source before or after COLLECTION according to REVERSE-HISTORY.
+  The main difference with INPUT-HISTORY is that the result of the
+  completion is saved whereas in INPUT-HISTORY it is the minibuffer
+  contents which is saved when you exit.
+  Don't use the same symbol for INPUT-HISTORY and HISTORY.
+  NOTE: As mentionned above this has nothing to do with
+  `minibuffer-history-variable', therefore if you want to save this
+  history persistently, you will have to add this variable to the
+  relevant variable of your favorite tool for persistent emacs session
+  i.e. psession, desktop etc...
+
+- RAW-HISTORY: When non-nil do not remove backslashs if some in
+  HISTORY candidates.
 
 - INPUT-HISTORY: A symbol. The minibuffer input history will be
   stored there, if nil or not provided, `minibuffer-history'
-  will be used instead.
+  will be used instead.  You can navigate in this history with
+  `M-p' and `M-n'.
+  Don't use the same symbol for INPUT-HISTORY and HISTORY.
 
 - CASE-FOLD: Same as `helm-case-fold-search'.
-
-- DEL-INPUT: Boolean, when non--nil (default) remove the partial
-  minibuffer input from HISTORY is present.
 
 - PERSISTENT-ACTION: A function called with one arg i.e candidate.
 
@@ -12473,7 +12506,7 @@ in `helm-current-prefix-arg', otherwise if prefix args were given before
 That means you can pass prefix args before or after calling a command
 that use `helm-comp-read'.  See `helm-M-x' for example.
 
-\(fn PROMPT COLLECTION &key TEST INITIAL-INPUT DEFAULT PRESELECT (BUFFER \"*Helm Completions*\") MUST-MATCH FUZZY REVERSE-HISTORY (REQUIRES-PATTERN 0) HISTORY INPUT-HISTORY (CASE-FOLD helm-comp-read-case-fold-search) (DEL-INPUT t) (PERSISTENT-ACTION nil) (PERSISTENT-HELP \"DoNothing\") (MODE-LINE helm-comp-read-mode-line) HELP-MESSAGE (KEYMAP helm-comp-read-map) (NAME \"Helm Completions\") HEADER-NAME CANDIDATES-IN-BUFFER MATCH-PART MATCH-DYNAMIC EXEC-WHEN-ONLY-ONE QUIT-WHEN-NO-CAND (VOLATILE t) SORT FC-TRANSFORMER HIST-FC-TRANSFORMER (MARKED-CANDIDATES helm-comp-read-use-marked) NOMARK (ALISTP t) (CANDIDATE-NUMBER-LIMIT helm-candidate-number-limit) MULTILINE ALLOW-NEST COERCE (GROUP \\='helm))" nil nil)
+\(fn PROMPT COLLECTION &key TEST INITIAL-INPUT DEFAULT PRESELECT (BUFFER \"*Helm Completions*\") MUST-MATCH FUZZY REVERSE-HISTORY (REQUIRES-PATTERN 0) (HISTORY nil SHISTORY) RAW-HISTORY INPUT-HISTORY (CASE-FOLD helm-comp-read-case-fold-search) (PERSISTENT-ACTION nil) (PERSISTENT-HELP \"DoNothing\") (MODE-LINE helm-comp-read-mode-line) HELP-MESSAGE (KEYMAP helm-comp-read-map) (NAME \"Helm Completions\") HEADER-NAME CANDIDATES-IN-BUFFER MATCH-PART MATCH-DYNAMIC EXEC-WHEN-ONLY-ONE QUIT-WHEN-NO-CAND (VOLATILE t) SORT FC-TRANSFORMER HIST-FC-TRANSFORMER (MARKED-CANDIDATES helm-comp-read-use-marked) NOMARK (ALISTP t) (CANDIDATE-NUMBER-LIMIT helm-candidate-number-limit) MULTILINE ALLOW-NEST COERCE (GROUP \\='helm))" nil nil)
 
 (autoload 'helm-read-file-name "helm-mode" "\
 Read a file name with helm completion.
@@ -12485,7 +12518,7 @@ Keys description:
 
 - NAME: Source name, default to \"Read File Name\".
 
-- INITIAL-INPUT: Where to start reading file name, default to `default-directory'.
+- INITIAL-INPUT: Where to start reading file name, default to `default-directory' or $HOME.
 
 - BUFFER: `helm-buffer' name, defaults to \"*Helm Completions*\".
 
@@ -12516,7 +12549,7 @@ Keys description:
 
 - MODE-LINE: A mode line message, default is `helm-read-file-name-mode-line-string'.
 
-\(fn PROMPT &key (NAME \"Read File Name\") (INITIAL-INPUT default-directory) (BUFFER \"*Helm file completions*\") TEST NORET (CASE-FOLD helm-file-name-case-fold-search) PRESELECT HISTORY MUST-MATCH (FUZZY t) DEFAULT MARKED-CANDIDATES (CANDIDATE-NUMBER-LIMIT helm-ff-candidate-number-limit) NOMARK (ALISTP t) (PERSISTENT-ACTION-IF \\='helm-find-files-persistent-action-if) (PERSISTENT-HELP \"Hit1 Expand Candidate, Hit2 or (C-u) Find file\") (MODE-LINE helm-read-file-name-mode-line-string))" nil nil)
+\(fn PROMPT &key (NAME \"Read File Name\") INITIAL-INPUT (BUFFER \"*Helm file completions*\") TEST NORET (CASE-FOLD helm-file-name-case-fold-search) PRESELECT HISTORY MUST-MATCH (FUZZY t) DEFAULT MARKED-CANDIDATES (CANDIDATE-NUMBER-LIMIT helm-ff-candidate-number-limit) NOMARK (ALISTP t) (PERSISTENT-ACTION-IF \\='helm-find-files-persistent-action-if) (PERSISTENT-HELP \"Hit1 Expand Candidate, Hit2 or (C-u) Find file\") (MODE-LINE helm-read-file-name-mode-line-string))" nil nil)
 
 (defvar helm-mode nil "\
 Non-nil if Helm mode is enabled.
@@ -12591,7 +12624,7 @@ Browse URL with conkeror browser.
 \(fn URL &optional IGNORE)" t nil)
 
 (autoload 'helm-browse-url-nyxt "helm-net" "\
-Browse URL with next browser.
+Browse URL with nyxt browser.
 
 \(fn URL &optional IGNORE)" t nil)
 
@@ -13857,10 +13890,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.22.0pre2/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.22.0pre3/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.22.0pre2/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.22.0pre3/cmake-mode-autoloads.el") (car load-path))))
 
 
 
