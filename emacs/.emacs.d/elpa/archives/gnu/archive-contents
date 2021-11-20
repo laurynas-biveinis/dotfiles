@@ -1413,6 +1413,18 @@
 	  (:authors
 	   ("Ivan Kanis" . "ivan@kanis.fr"))
 	  (:maintainer "Ivan Kanis" . "ivan@kanis.fr"))])
+ (kind-icon .
+	    [(0 1 1)
+	     ((emacs
+	       (27 1))
+	      (svg-lib
+	       (0)))
+	     "Completion kind icons" tar
+	     ((:url . "https://github.com/jdtsmith/kind-icon")
+	      (:keywords "completion")
+	      (:maintainer "J.D. Smith" . "jdtsmith@gmail.com")
+	      (:authors
+	       ("J.D. Smith" . "jdtsmith@gmail.com")))])
  (kiwix .
 	[(1 1 4)
 	 ((emacs
@@ -1549,9 +1561,9 @@
 		      (:maintainer "Vitalie Spinu" . "spinuvit@gmail.com")
 		      (:url . "https://github.com/vspinu/math-symbol-lists"))])
  (mct .
-      [(0 2 0)
+      [(0 3 0)
        ((emacs
-	 (28 1)))
+	 (27 1)))
        "Minibuffer and Completions in Tandem" tar
        ((:url . "https://gitlab.com/protesilaos/mct")
 	(:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
