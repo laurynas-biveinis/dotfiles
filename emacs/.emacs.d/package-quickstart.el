@@ -5665,10 +5665,10 @@ Get list of boards and their properies." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.5/org-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.5.1/org-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.5/org-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.5.1/org-autoloads.el") (car load-path))))
 
 
 
@@ -5860,6 +5860,13 @@ Get list of boards and their properies." t nil)
 
 
 
+(autoload 'org-cite-insert "oc" "\
+Insert a citation at point.
+Insertion is done according to the processor set in `org-cite-insert-processor'.
+ARG is the prefix argument received when calling interactively the function.
+
+\(fn ARG)" t nil)
+
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "oc" '("org-cite-")))
 
 
@@ -5917,6 +5924,10 @@ Get list of boards and their properies." t nil)
 
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-irc" '("org-irc-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-man" '("org-man-")))
 
 
 
@@ -14316,7 +14327,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.4" "/Users/laurynas/.emacs.d/elpa/transient-20211105.100" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.1" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.4" "/Users/laurynas/.emacs.d/elpa/transient-20211105.100" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
          Info-directory-list)))
 
 ;; Local Variables:
