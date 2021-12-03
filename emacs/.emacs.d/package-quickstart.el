@@ -11645,10 +11645,10 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.1/helm-core-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.2/helm-core-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.1/helm-core-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.2/helm-core-autoloads.el") (car load-path))))
 
 
 
@@ -11884,10 +11884,10 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.1/helm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.2/helm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.1/helm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.2/helm-autoloads.el") (car load-path))))
 
 
 

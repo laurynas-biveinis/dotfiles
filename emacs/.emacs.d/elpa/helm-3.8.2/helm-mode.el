@@ -55,8 +55,8 @@
     (dired-do-relsymlink . helm-read-file-name-handler-1)
     (dired-do-hardlink . helm-read-file-name-handler-1)
     (basic-save-buffer . helm-read-file-name-handler-1)
-    (write-file . helm-read-file-name-handler-1)
-    (write-region . helm-read-file-name-handler-1))
+    (write-file . (default helm-read-file-name-handler-1))
+    (write-region . (default helm-read-file-name-handler-1)))
   "Completing read functions for specific Emacs commands.
 
 By default `helm-mode' use `helm-completing-read-default-handler' to
@@ -67,8 +67,20 @@ when needed.
 
 Each entry is a cons cell like (EMACS_COMMAND . COMPLETING-READ_HANDLER)
 where key and value are symbols.
+However if a command is using in its definition both a `completing-read' AND
+a `read-file-name' we may want to specify a handler for both of them,
+this can be done by specifying value as a list of two symbols instead of
+a single symbol where the 1st element of the list specify the handler for the
+`completing-read' and the second the handler for the `read-file-name'.
+Special symbol 'default' means use the default helm handler for either
+`completing-read' or `read-file-name'.
+e.g. (write-region . (default helm-read-file-name-handler-1))
+means helm will use `helm-completing-read-default-handler' when
+`write-region' calls `completing-read' and
+`helm-read-file-name-handler-1' when it calls `read-file-name'.  
 
-Each key is an Emacs command that use originaly `completing-read'.
+Each key is an Emacs command that use originaly `completing-read'
+or/and `read-file-name'.
 
 Each value maybe a helm function that takes same arguments as
 `completing-read' plus NAME and BUFFER, where NAME is the name of the new
@@ -321,7 +333,9 @@ NOT `setq'."
            (choice ,@(mapcar (lambda (x) (list 'const x))
                              helm-completion--all-styles))))
 
-(defcustom helm-completion-styles-alist '((gud-mode . helm))
+(defcustom helm-completion-styles-alist '((gud-mode . helm)
+                                          ;; See https://github.com/djcb/mu/issues/2181.
+                                          (mu4e-compose-mode . emacs))
   "Allow configuring `helm-completion-style' per mode.
 
 Each entry is a cons cell like (mode . style) where style must be a
@@ -861,8 +875,10 @@ that use `helm-comp-read'.  See `helm-M-x' for example."
         (remove-hook 'helm-after-update-hook 'helm-comp-read--move-to-first-real-candidate))
       ;; If `history' is a symbol save it.
       (when (and result history (symbolp history))
-        (set history (cons (substring-no-properties result)
-                           (delete result (symbol-value history)))))
+        (set history
+             ;; RESULT may be a a string or a list of strings bug #2461.
+             (delete-dups (append (mapcar #'substring-no-properties (helm-mklist result))
+                                  (symbol-value history)))))
       (or result (helm-mode--keyboard-quit)))))
 
 
@@ -1136,6 +1152,19 @@ Affects `switch-to-buffer' `kill-buffer' and related."
               (internal-complete-buffer "" nil t))
    predicate require-match nil nil default))
 
+(defun helm-mode--get-default-handler-for (comp-or-file entry)
+  ;; Use 'comp for completing-read and 'file for 'read-file-name as
+  ;; COMP-OR-FILE value.
+  (let ((val (cdr-safe entry))
+        (reading-file (eq comp-or-file 'file)))
+    (if (consp val)
+        (helm-acase (if reading-file (cadr val) (car val))
+          (default (if reading-file
+                       #'helm-read-file-name
+                     #'helm-completing-read-default-handler))
+          (t it))
+      val)))
+
 (cl-defun helm--completing-read-default
     (prompt collection &optional
                          predicate require-match
@@ -1154,7 +1183,7 @@ See documentation of `completing-read' and `all-completions' for details."
          (buf-name        (format "*helm-mode-%s*" str-command))
          (entry           (assq current-command
                                 helm-completing-read-handlers-alist))
-         (def-com         (cdr-safe entry))
+         (def-com         (helm-mode--get-default-handler-for 'comp entry))
          (str-defcom      (and def-com (helm-symbol-name def-com)))
          (def-args        (list prompt collection predicate require-match
                                 initial-input hist def inherit-input-method))
@@ -1456,7 +1485,7 @@ Don't use it directly, use instead `helm-read-file-name' in your programs."
          (buf-name (format "*helm-mode-%s*" str-command))
          (entry (assq current-command
                       helm-completing-read-handlers-alist))
-         (def-com  (cdr-safe entry))
+         (def-com    (helm-mode--get-default-handler-for 'file entry))
          (str-defcom (and def-com (helm-symbol-name def-com)))
          ;; Don't modify the original args list for emacs generic functions.
          (def-args (list prompt dir default-filename mustmatch initial predicate))
@@ -1523,7 +1552,13 @@ Don't use it directly, use instead `helm-read-file-name' in your programs."
                      ;; of INITIAL.
                      ((and def-com helm-mode
                            (not (eq def-com 'ido-read-file-name))
-                           (not (eq def-com 'incompatible)))
+                           (not (eq def-com 'incompatible))
+                           ;; The entry in
+                           ;; `helm-completing-read-handlers-alist' is
+                           ;; a cons cell specifying a completing-read
+                           ;; and a read-file-name handler default
+                           ;; e.g. (foo (default default)).
+                           (not (eq def-com 'helm-read-file-name)))
                       (apply def-com others-args))
                      (;; Def-com value is `ido-read-file-name'
                       ;; run it with default args.
