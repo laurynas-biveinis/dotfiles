@@ -21,3 +21,5 @@
         fetchJobs = 0
 [pull]
 	ff = only
+[merge]
+	conflictstyle = diff3
