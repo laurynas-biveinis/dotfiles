@@ -12983,10 +12983,10 @@ setting the buffer local variable `helm-make-build-dir'.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-lsp-0.2/helm-lsp-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-lsp-20210419.2014/helm-lsp-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-lsp-0.2/helm-lsp-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-lsp-20210419.2014/helm-lsp-autoloads.el") (car load-path))))
 
 
 
@@ -13003,9 +13003,12 @@ When called with prefix ARG the default selection will be symbol at point.
 \(fn ARG)" t nil)
 
 (autoload 'helm-lsp-code-actions "helm-lsp" "\
-Show lsp code actions using helm.
+Show lsp code actions using helm." t nil)
 
-\(fn)" t nil)
+(autoload 'helm-lsp-diagnostics "helm-lsp" "\
+Diagnostics using `helm'
+
+\(fn ARG)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-lsp" '("helm-lsp-")))
 
