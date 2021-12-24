@@ -1326,10 +1326,10 @@ Delete all posframe frames and buffers." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.5.4/cfrs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.5.6/cfrs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cfrs-1.5.4/cfrs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cfrs-1.5.6/cfrs-autoloads.el") (car load-path))))
 
 
 
@@ -11366,10 +11366,10 @@ Fontify an `info' node." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20211116.11/iedit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20211223.1607/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20211116.11/iedit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20211223.1607/iedit-autoloads.el") (car load-path))))
 
 
 

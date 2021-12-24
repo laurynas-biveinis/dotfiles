@@ -4,9 +4,9 @@
 
 ;; Author: Alexander Miller <alexanderm@web.de>
 ;; Package-Requires: ((emacs "26.1") (dash "2.11.0") (s "1.10.0") (posframe "0.6.0"))
-;; Package-Commit: 7c42f2c82c7ae689f3ef291b066688c58ab96298
-;; Package-Version: 1.5.4
-;; Package-X-Original-Version: 1.5.4
+;; Package-Commit: 8e9b79e38306b11411543d31cb483201131ba42a
+;; Package-Version: 1.5.6
+;; Package-X-Original-Version: 1.5.6
 ;; Homepage: https://github.com/Alexander-Miller/cfrs
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -57,10 +57,10 @@ Only the `:background' part is used."
   "Read a string using a pos-frame with given PROMPT and INITIAL-INPUT."
   (if (not (or (display-graphic-p)
                (not (fboundp #'display-buffer-in-side-window))))
-      (read-string prompt nil nil initial-input)
+      (read-string prompt initial-input)
     (let* ((buffer (get-buffer-create " *Pos-Frame-Read*"))
            (border-color (face-attribute 'cfrs-border-color :background nil t))
-           (cursor cursor-type)
+           (cursor (cfrs--determine-cursor-type))
            (frame (posframe-show
                    buffer
                    :min-height 1
@@ -68,29 +68,43 @@ Only the `:background' part is used."
                    :internal-border-width 2
                    :internal-border-color border-color
                    :string ""
+                   :accept-focus t
                    :override-parameters `(,@cfrs-frame-parameters
-                                          (cursor-type . ,cursor)
-                                          (no-accept-focus . nil)))))
+                                          (cursor-type . ,cursor)))))
       (with-selected-frame frame
+        (select-frame frame)
         (x-focus-frame frame)
         (add-hook 'delete-frame-functions #'cfrs--on-frame-kill nil :local)
         (with-current-buffer buffer
-          (setq-local cursor-type cursor)
           (cfrs-input-mode)
           (-each (overlays-in (point-min) (point-max)) #'delete-overlay)
           (erase-buffer)
           (-doto (make-overlay 1 2)
-            (overlay-put 'before-string (propertize (concat " " prompt) 'face 'minibuffer-prompt))
+            (overlay-put
+             'before-string
+             (propertize (concat " " prompt) 'face 'minibuffer-prompt))
             (overlay-put 'rear-nonsticky t)
             (overlay-put 'read-only t))
           (when initial-input
             (insert initial-input))
-          (when (fboundp 'evil-insert-state)
+          (when (and (bound-and-true-p evil-mode)
+                     (fboundp 'evil-insert-state))
             (evil-insert-state nil))
           (end-of-line)
           (recursive-edit)
           (cfrs--hide)
           (s-trim (buffer-string)))))))
+
+(defun cfrs--determine-cursor-type ()
+  "Determine the cursor type for the popup frame.
+Prevents showing an invisible cursor with a height or width of 0."
+  (let ((ct (if (memq cursor-type '(t nil))
+                (frame-parameter (selected-frame) 'cursor-type)
+              cursor-type)))
+    (pcase ct
+      (`(,_ . 0) ct)
+      (`nil 'hbar)
+      (_ ct))))
 
 (defun cfrs--hide ()
   "Hide the current cfrs frame."
@@ -135,7 +149,8 @@ Only the `:background' part is used."
 
 ;; https://github.com/Alexander-Miller/treemacs/issues/775
 (with-eval-after-load 'beacon
-  (add-to-list 'beacon-dont-blink-major-modes 'cfrs-input-mode))
+  (with-no-warnings
+    (add-to-list 'beacon-dont-blink-major-modes 'cfrs-input-mode)))
 
 (provide 'cfrs)
 
