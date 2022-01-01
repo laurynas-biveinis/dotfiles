@@ -515,10 +515,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20211209.58/vterm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20211226.817/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20211209.58/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20211226.817/vterm-autoloads.el") (car load-path))))
 
 
 
@@ -1041,10 +1041,10 @@ Minor mode for showing the ace window key in the mode line.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/pfuture-1.9/pfuture-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/pfuture-1.10.2/pfuture-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/pfuture-1.9/pfuture-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/pfuture-1.10.2/pfuture-autoloads.el") (car load-path))))
 
 
 
@@ -1894,10 +1894,10 @@ The `imenu-create-index-function' for treemacs buffers." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20211208.1819/transient-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20211226.738/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20211208.1819/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20211226.738/transient-autoloads.el") (car load-path))))
 
 
 
@@ -1961,10 +1961,10 @@ See info node `(transient)Modifying Existing Transients'.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.5/tramp-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2/tramp-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.5/tramp-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2/tramp-autoloads.el") (car load-path))))
 
 
  (when (featurep 'tramp-compat)
@@ -11366,10 +11366,10 @@ Fontify an `info' node." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20211223.1607/iedit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20211228.613/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20211223.1607/iedit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20211228.613/iedit-autoloads.el") (car load-path))))
 
 
 
@@ -13945,10 +13945,10 @@ Queries for any of the four available help topics and prints out the appropriate
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20210103.1558/cmake-font-lock-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20211224.2006/cmake-font-lock-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20210103.1558/cmake-font-lock-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20211224.2006/cmake-font-lock-autoloads.el") (car load-path))))
 
 
 
@@ -14322,7 +14322,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.1.5" "/Users/laurynas/.emacs.d/elpa/transient-20211208.1819" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2" "/Users/laurynas/.emacs.d/elpa/transient-20211226.738" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.0.5")
          Info-directory-list)))
 
 ;; Local Variables:

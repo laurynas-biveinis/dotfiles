@@ -137,13 +137,13 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:keywords "async"))])
  (auctex .
-	 [(13 0 14)
+	 [(13 0 15)
 	  ((emacs
 	    (24 3)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
-	   (:maintainer nil . "auctex-devel@gnu.org")
-	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex"))])
+	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
+	   (:maintainer nil . "auctex-devel@gnu.org"))])
  (aumix-mode .
 	     [(7)
 	      nil "run the aumix program in a buffer" single
@@ -201,6 +201,14 @@
 	    ("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	   (:maintainer "Artur Malabarba" . "emacs@endlessparentheses.com")
 	   (:url . "https://github.com/Malabarba/beacon"))])
+ (blist .
+	[(0 1)
+	 nil "Display bookmarks in an ibuffer way" tar
+	 ((:keywords "convenience")
+	  (:maintainer "Durand" . "mmemmew@gmail.com")
+	  (:authors
+	   ("Durand" . "mmemmew@gmail.com"))
+	  (:url . "https://elpa.gnu.org/packages/blist.html"))])
  (bluetooth .
 	    [(0 2)
 	     ((emacs
@@ -421,7 +429,7 @@
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:keywords "abbrev" "convenience" "matching"))])
  (consult .
-	  [(0 13)
+	  [(0 14)
 	   ((emacs
 	     (26 1)))
 	   "Consulting completing-read" tar
@@ -440,7 +448,7 @@
 		      ("Jackson Ray Hamilton" . "jackson@jacksonrayhamilton.com"))
 		     (:keywords "convenience" "faces" "tools"))])
  (corfu .
-	[(0 16)
+	[(0 17)
 	 ((emacs
 	   (27 1)))
 	 "Completion Overlay Region FUnction" tar
@@ -509,7 +517,7 @@
 		(:authors
 		 ("Theodor Thornhill" . "theo@thornhill.no")))])
  (csv-mode .
-	   [(1 17)
+	   [(1 18)
 	    ((emacs
 	      (24 1))
 	     (cl-lib
@@ -757,7 +765,7 @@
 	      (:maintainer "Markus Triska" . "triska@metalevel.at")
 	      (:url . "https://www.metalevel.at/ediprolog/"))])
  (eev .
-      [(20211216)
+      [(20211226)
        ((emacs
 	 (24 4)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -833,7 +841,7 @@
 		      ("Andrea Corallo" . "akrl@sdf.org"))
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html"))])
  (embark .
-	 [(0 13)
+	 [(0 14)
 	  ((emacs
 	    (26 1)))
 	  "Conveniently act on minibuffer completions" tar
@@ -843,7 +851,7 @@
 	   (:authors
 	    ("Omar Antolín Camarena" . "omar@matem.unam.mx")))])
  (embark-consult .
-		 [(0 2)
+		 [(0 3)
 		  ((emacs
 		    (26 1))
 		   (embark
@@ -1258,8 +1266,16 @@
 	      (:authors
 	       ("Bob Weiner"))
 	      (:keywords "comm" "convenience" "files" "frames" "hypermedia" "languages" "mail" "matching" "mouse" "multimedia" "outlines" "tools" "wp"))])
+ (ilist .
+	[(0 1)
+	 nil "Display a list in an ibuffer way." tar
+	 ((:keywords "convenience")
+	  (:maintainer "Durand" . "mmemmew@gmail.com")
+	  (:authors
+	   ("Durand" . "mmemmew@gmail.com"))
+	  (:url . "https://elpa.gnu.org/packages/ilist.html"))])
  (ioccur .
-	 [(2 5)
+	 [(2 6)
 	  ((emacs
 	    (24))
 	   (cl-lib
@@ -1373,19 +1389,19 @@
 		 ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
 		(:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca"))])
  (js2-mode .
-	   [(20201220)
+	   [(20211229)
 	    ((emacs
 	      (24 1))
 	     (cl-lib
 	      (0 5)))
 	    "Improved JavaScript editing mode" tar
 	    ((:url . "https://github.com/mooz/js2-mode/")
+	     (:keywords "languages" "javascript")
 	     (:maintainer "Steve Yegge" . "steve.yegge@gmail.com")
 	     (:authors
 	      ("Steve Yegge" . "steve.yegge@gmail.com")
 	      ("mooz" . "stillpedant@gmail.com")
-	      ("Dmitry Gutov" . "dgutov@yandex.ru"))
-	     (:keywords "languages" "javascript"))])
+	      ("Dmitry Gutov" . "dgutov@yandex.ru")))])
  (json-mode .
 	    [(0 2)
 	     ((emacs
@@ -1537,7 +1553,7 @@
 	 ("Nicolas Petton" . "nicolas@petton.fr"))
 	(:url . "https://elpa.gnu.org/packages/map.html"))])
  (marginalia .
-	     [(0 10)
+	     [(0 11)
 	      ((emacs
 		(26 1)))
 	      "Enrich existing commands with completion annotations" tar
@@ -1646,7 +1662,7 @@
 			  ("Protesilaos Stavrou" . "info@protesilaos.com"))
 			 (:keywords "faces" "theme" "accessibility"))])
  (modus-themes .
-	       [(1 7 0)
+	       [(2 0 0)
 		((emacs
 		  (27 1)))
 		"Highly accessible themes (WCAG AAA)" tar
@@ -1889,12 +1905,12 @@
 	     (:authors
 	      ("Tyler Grinn" . "tylergrinn@gmail.com")))])
  (org-transclusion .
-		   [(1 0 1)
+		   [(1 1 1)
 		    ((emacs
 		      (27 1))
 		     (org
 		      (9 4)))
-		    "transclude text contents of linked target" tar
+		    "Transclude text content via links" tar
 		    ((:url . "https://github.com/nobiot/org-transclusion")
 		     (:keywords "org-mode" "transclusion" "writing")
 		     (:maintainer "Noboru Ota" . "me@nobiot.com")
@@ -2067,7 +2083,7 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pyim .
-       [(3 9 7)
+       [(4 0 3)
 	((emacs
 	  (25 1))
 	 (async
@@ -2588,13 +2604,25 @@
 	       ("Ulf Jasper" . "ulf.jasper@web.de"))
 	      (:maintainer "Ulf Jasper" . "ulf.jasper@web.de"))])
  (svg-lib .
-	  [(0 2 2)
+	  [(0 2 4)
 	   ((emacs
 	     (27 1)))
 	   "SVG tags, progress bars & icons" tar
 	   ((:url . "https://github.com/rougier/svg-lib")
 	    (:keywords "svg" "icons" "tags" "convenience")
 	    (:maintainer "Nicolas P. Rougier" . "Nicolas.Rougier@inria.fr"))])
+ (svg-tag-mode .
+	       [(0 3 2)
+		((emacs
+		  (27 1))
+		 (svg-lib
+		  (0 2)))
+		"Replace keywords with SVG tags" tar
+		((:url . "https://github.com/rougier/svg-tag-mode")
+		 (:keywords "convenience")
+		 (:maintainer "Nicolas P. Rougier" . "Nicolas.Rougier@inria.fr")
+		 (:authors
+		  ("Nicolas P. Rougier" . "Nicolas.Rougier@inria.fr")))])
  (swiper .
 	 [(0 13 4)
 	  ((emacs
@@ -2676,7 +2704,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tramp .
-	[(2 5 1 5)
+	[(2 5 2)
 	 ((emacs
 	   (25 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
@@ -2851,7 +2879,7 @@
 		  ("Michael McNamara" . "mac@verilog.com")
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org")))])
  (vertico .
-	  [(0 17)
+	  [(0 18)
 	   ((emacs
 	     (27 1)))
 	   "VERTical Interactive COmpletion" tar
@@ -2860,7 +2888,7 @@
 	    (:authors
 	     ("Daniel Mendler" . "mail@daniel-mendler.de")))])
  (vertico-posframe .
-		   [(0 4 2)
+		   [(0 4 5)
 		    ((emacs
 		      (26 0))
 		     (posframe
