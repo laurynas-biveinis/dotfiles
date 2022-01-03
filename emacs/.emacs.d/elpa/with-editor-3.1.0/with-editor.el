@@ -1,6 +1,6 @@
 ;;; with-editor.el --- Use the Emacsclient as $EDITOR -*- lexical-binding: t -*-
 
-;; Copyright (C) 2014-2021  The Magit Project Contributors
+;; Copyright (C) 2014-2022  The Magit Project Contributors
 ;;
 ;; You should have received a copy of the AUTHORS.md file.  If not,
 ;; see https://github.com/magit/with-editor/blob/master/AUTHORS.md.
@@ -628,9 +628,9 @@ Give PROCESS the new FILTER but keep `with-editor-process-filter'
 if that was added earlier by the advised `start-file-process'.
 
 Do so by wrapping the two filter functions using a lambda, which
-becomes the actual filter.  It calls `with-editor-process-filter'
-first, passing t as NO-STANDARD-FILTER.  Then it calls FILTER,
-which may or may not insert the text into the PROCESS's buffer."
+becomes the actual filter.  It calls FILTER first, which may or
+may not insert the text into the PROCESS's buffer.  Then it calls
+`with-editor-process-filter', passing t as NO-STANDARD-FILTER."
   (set-process-filter
    process
    (if (eq (process-filter process) 'with-editor-process-filter)
@@ -641,33 +641,49 @@ which may or may not insert the text into the PROCESS's buffer."
 
 (defvar with-editor-filter-visit-hook nil)
 
-(defun with-editor-output-filter (string)
+(defconst with-editor-sleeping-editor-regexp
+  "^WITH-EDITOR: \\([0-9]+\\) OPEN \\([^]+?\\)\\(?: IN \\([^\r]+?\\)\\)?\r?$")
+
+(defvar with-editor--max-incomplete-length 1000)
+
+(defun with-editor-sleeping-editor-filter (process string)
+  (when-let ((incomplete (and process (process-get process 'incomplete))))
+    (setq string (concat incomplete string)))
   (save-match-data
-    (if (string-match "^WITH-EDITOR: \
-\\([0-9]+\\) OPEN \\([^]+?\\)\
-\\(?: IN \\([^\r]+?\\)\\)?\r?$" string)
-        (let ((pid  (match-string 1 string))
-              (file (match-string 2 string))
-              (dir  (match-string 3 string)))
-          (unless (file-name-absolute-p file)
-            (setq file (expand-file-name file dir)))
-          (when default-directory
-            (setq file (concat (file-remote-p default-directory) file)))
-          (with-current-buffer (find-file-noselect file)
-            (with-editor-mode 1)
-            (setq with-editor--pid pid)
-            (run-hooks 'with-editor-filter-visit-hook)
-            (funcall (or (with-editor-server-window) 'switch-to-buffer)
-                     (current-buffer))
-            (kill-local-variable 'server-window))
-          nil)
-      string)))
+    (cond
+     ((and process (not (string-match-p "\n\\'" string)))
+      (let ((length (length string)))
+        (when (> length with-editor--max-incomplete-length)
+          (setq string
+                (substring string
+                           (- length with-editor--max-incomplete-length)))))
+      (process-put process 'incomplete string)
+      nil)
+     ((string-match with-editor-sleeping-editor-regexp string)
+      (when process
+        (process-put process 'incomplete nil))
+      (let ((pid  (match-string 1 string))
+            (file (match-string 2 string))
+            (dir  (match-string 3 string)))
+        (unless (file-name-absolute-p file)
+          (setq file (expand-file-name file dir)))
+        (when default-directory
+          (setq file (concat (file-remote-p default-directory) file)))
+        (with-current-buffer (find-file-noselect file)
+          (with-editor-mode 1)
+          (setq with-editor--pid pid)
+          (run-hooks 'with-editor-filter-visit-hook)
+          (funcall (or (with-editor-server-window) 'switch-to-buffer)
+                   (current-buffer))
+          (kill-local-variable 'server-window)))
+      nil)
+     (t string))))
 
 (defun with-editor-process-filter
     (process string &optional no-default-filter)
   "Listen for edit requests by child processes."
   (let ((default-directory (process-get process 'default-dir)))
-    (with-editor-output-filter string))
+    (with-editor-sleeping-editor-filter process string))
   (unless no-default-filter
     (internal-default-process-filter process string)))
 
@@ -742,10 +758,16 @@ This works in `shell-mode', `term-mode', `eshell-mode' and
   (interactive)
   (with-editor-export-editor "HG_EDITOR"))
 
+(defun with-editor-output-filter (string)
+  "Handle edit requests on behalf of `comint-mode' and `eshell-mode'."
+  (with-editor-sleeping-editor-filter nil string))
+
 (defun with-editor-emulate-terminal (process string)
   "Like `term-emulate-terminal' but also handle edit requests."
-  (when (with-editor-output-filter string)
-    (term-emulate-terminal process string)))
+  (let ((with-editor-sleeping-editor-regexp
+         (substring with-editor-sleeping-editor-regexp 1)))
+    (with-editor-sleeping-editor-filter process string))
+  (term-emulate-terminal process string))
 
 (defvar with-editor-envvars '("EDITOR" "GIT_EDITOR" "HG_EDITOR"))
 

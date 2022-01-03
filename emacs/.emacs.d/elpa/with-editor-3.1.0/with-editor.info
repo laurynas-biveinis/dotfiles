@@ -1,7 +1,7 @@
 This is with-editor.info, produced by makeinfo version 6.7 from
 with-editor.texi.
 
-     Copyright (C) 2015-2021 Jonas Bernoulli <jonas@bernoul.li>
+     Copyright (C) 2015-2022 Jonas Bernoulli <jonas@bernoul.li>
 
      You can redistribute this document and/or modify it under the terms
      of the GNU General Public License as published by the Free Software
@@ -39,9 +39,9 @@ library is made available as a separate package.  It also defines some
 additional functionality which makes it useful even for end-users, who
 don’t use Magit or another package which uses it internally.
 
-This manual is for With-Editor version 3.0.5.
+This manual is for With-Editor version v3.1.0.
 
-     Copyright (C) 2015-2021 Jonas Bernoulli <jonas@bernoul.li>
+     Copyright (C) 2015-2022 Jonas Bernoulli <jonas@bernoul.li>
 
      You can redistribute this document and/or modify it under the terms
      of the GNU General Public License as published by the Free Software
@@ -58,8 +58,7 @@ This manual is for With-Editor version 3.0.5.
 * Using the With-Editor package::
 * Using With-Editor as a library::
 * Debugging::
-* Command Index::
-* Function Index::
+* Function and Command Index::
 * Variable Index::
 
 — The Detailed Node Listing —
@@ -103,7 +102,6 @@ Emacs (most likely on macOS) without putting the executable on ‘$PATH’,
 and we have to add another kludge to find it anyway.
 
  -- User Option: with-editor-emacsclient-executable
-
      The ‘emacsclient’ executable used as the editor by child process of
      this Emacs instance.  By using this executable, child processes can
      call home to their parent process.
@@ -132,7 +130,6 @@ and we have to add another kludge to find it anyway.
      add a kludge appropriate for you setup.
 
  -- Function: with-editor-locate-emacsclient
-
      The function used to set the initial value of the option
      ‘with-editor-emacsclient-executable’.  There’s a lot of voodoo
      here.
@@ -148,7 +145,6 @@ editor" because it is implemented as a shell script which sleeps until
 it receives a signal.
 
  -- User Option: with-editor-sleeping-editor
-
      The sleeping editor is a shell script used as the editor of child
      processes when the ‘emacsclient’ executable cannot be used.
 
@@ -205,12 +201,10 @@ instance as "the editor".  With a prefix argument these commands prompt
 for an alternative environment variable such as ‘$GIT_EDITOR’.
 
  -- Command: with-editor-async-shell-command
-
      This command is like ‘async-shell-command’, but it runs the shell
      command with the current Emacs instance exported as ‘$EDITOR’.
 
  -- Command: with-editor-shell-command
-
      This command is like ‘shell-command’, but if the shell command ends
      with ‘&’ and is therefore run asynchronously, then the current
      Emacs instance is exported as ‘$EDITOR’.
@@ -225,7 +219,6 @@ for an alternative environment variable such as ‘$GIT_EDITOR’.
    Alternatively use the global ‘shell-command-with-editor-mode’.
 
  -- Variable: shell-command-with-editor-mode
-
      When this mode is active, then ‘$EDITOR’ is exported whenever
      ultimately ‘shell-command’ is called to asynchronously run some
      shell command.  This affects most variants of that command, whether
@@ -250,18 +243,15 @@ appropriate mode hooks:
      (add-hook 'shell-mode-hook 'with-editor-export-git-editor)
 
  -- Command: with-editor-export-editor
-
      When invoked in a ‘shell-mode’, ‘eshell-mode’, ‘term-mode’ or
      ‘vterm-mode’ buffer, this command teaches shell commands to use the
      current Emacs instance as the editor, by exporting ‘$EDITOR’.
 
  -- Command: with-editor-export-git-editor
-
      This command is like ‘with-editor-export-editor’ but exports
      ‘$GIT_EDITOR’.
 
  -- Command: with-editor-export-hg-editor
-
      This command is like ‘with-editor-export-editor’ but exports
      ‘$HG_EDITOR’.
 
@@ -282,7 +272,6 @@ interactive and non-interactive use, see *note Using the With-Editor
 package::.
 
  -- Macro: with-editor &rest body
-
      This macro arranges for the ‘emacsclient’ or the sleeping editor to
      be used as the editor of child processes, effectively teaching them
      to call home to the current Emacs instance when they require that
@@ -298,21 +287,20 @@ package::.
      instead of ‘EDITOR’.
 
  -- Macro: with-editor envvar &rest body
-
      This macro is like ‘with-editor’ instead that the ENVVAR argument
      is required and that it is evaluated at run-time.
 
  -- Function: with-editor-set-process-filter process filter
-
      This function is like ‘set-process-filter’ but ensures that adding
      the new FILTER does not remove the ‘with-editor-process-filter’.
      This is done by wrapping the two filter functions using a lambda,
-     which becomes the actual filter.  It calls
-     ‘with-editor-process-filter’ first, passing ‘t’ as
-     NO-STANDARD-FILTER.  Then it calls FILTER.
+     which becomes the actual filter.  It calls FILTER first, which may
+     or may not insert the text into the PROCESS’s buffer.  Then it
+     calls ‘with-editor-process-filter’, passing t as
+     NO-STANDARD-FILTER.
 
 
-File: with-editor.info,  Node: Debugging,  Next: Command Index,  Prev: Using With-Editor as a library,  Up: Top
+File: with-editor.info,  Node: Debugging,  Next: Function and Command Index,  Prev: Using With-Editor as a library,  Up: Top
 
 3 Debugging
 ***********
@@ -331,30 +319,10 @@ about your Emacs installation.  Most importantly how did you install
 Emacs and what is the output of ‘M-x with-editor-debug RET’.
 
 
-File: with-editor.info,  Node: Command Index,  Next: Function Index,  Prev: Debugging,  Up: Top
+File: with-editor.info,  Node: Function and Command Index,  Next: Variable Index,  Prev: Debugging,  Up: Top
 
-Appendix A Command Index
-************************
-
- [index ]
-* Menu:
-
-* with-editor-async-shell-command:       Using With-Editor commands.
-                                                               (line 17)
-* with-editor-export-editor:             Using With-Editor commands.
-                                                               (line 62)
-* with-editor-export-git-editor:         Using With-Editor commands.
-                                                               (line 68)
-* with-editor-export-hg-editor:          Using With-Editor commands.
-                                                               (line 73)
-* with-editor-shell-command:             Using With-Editor commands.
-                                                               (line 22)
-
-
-File: with-editor.info,  Node: Function Index,  Next: Variable Index,  Prev: Command Index,  Up: Top
-
-Appendix B Function Index
-*************************
+Appendix A Function and Command Index
+*************************************
 
  [index ]
 * Menu:
@@ -362,50 +330,49 @@ Appendix B Function Index
 * with-editor:                           Using With-Editor as a library.
                                                                (line 16)
 * with-editor <1>:                       Using With-Editor as a library.
-                                                               (line 32)
+                                                               (line 31)
 * with-editor-async-shell-command:       Using With-Editor commands.
                                                                (line 17)
 * with-editor-export-editor:             Using With-Editor commands.
-                                                               (line 62)
+                                                               (line 59)
 * with-editor-export-git-editor:         Using With-Editor commands.
-                                                               (line 68)
+                                                               (line 64)
 * with-editor-export-hg-editor:          Using With-Editor commands.
-                                                               (line 73)
+                                                               (line 68)
 * with-editor-locate-emacsclient:        Configuring With-Editor.
-                                                               (line 42)
+                                                               (line 41)
 * with-editor-set-process-filter:        Using With-Editor as a library.
-                                                               (line 37)
+                                                               (line 35)
 * with-editor-shell-command:             Using With-Editor commands.
-                                                               (line 22)
+                                                               (line 21)
 
 
-File: with-editor.info,  Node: Variable Index,  Prev: Function Index,  Up: Top
+File: with-editor.info,  Node: Variable Index,  Prev: Function and Command Index,  Up: Top
 
-Appendix C Variable Index
+Appendix B Variable Index
 *************************
 
  [index ]
 * Menu:
 
 * shell-command-with-editor-mode:        Using With-Editor commands.
-                                                               (line 37)
+                                                               (line 35)
 * with-editor-emacsclient-executable:    Configuring With-Editor.
                                                                (line 13)
 * with-editor-sleeping-editor:           Configuring With-Editor.
-                                                               (line 58)
+                                                               (line 56)
 
 
 
 Tag Table:
 Node: Top773
-Node: Using the With-Editor package2569
-Node: Configuring With-Editor3155
-Node: Using With-Editor commands7704
-Node: Using With-Editor as a library10995
-Node: Debugging12958
-Node: Command Index13837
-Node: Function Index14719
-Node: Variable Index16185
+Node: Using the With-Editor package2564
+Node: Configuring With-Editor3150
+Node: Using With-Editor commands7696
+Node: Using With-Editor as a library10981
+Node: Debugging13006
+Node: Function and Command Index13898
+Node: Variable Index15396
 
 End Tag Table
 
