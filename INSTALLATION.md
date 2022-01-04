@@ -39,7 +39,11 @@ ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
-If "wakatime" is enabled then
+If "wakatime" is enabled then, on macOS
+```zsh
+brew install wakatime-cli
+```
+TODO wakatime-cli on Linux
 
 ```bash
 sudo pip3 install wakatime
