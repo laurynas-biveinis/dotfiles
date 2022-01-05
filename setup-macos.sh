@@ -304,7 +304,7 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac \
      findutils libtool npm fd delta unrar jq colordiff iwyu cppcheck infer \
-     creduce
+     creduce gnu-sed
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
@@ -334,9 +334,6 @@ duti -s org.videolan.vlc .m4a all
 npm i -g bash-language-server
 pip3 install cmake-language-server
 brew tap homebrew/command-not-found
-# Work
-brew install gnu-sed
-brew cask install tunnelblick
 # Play
 brew cask install banktivity beatunes lastfm steam xld loopback mono
 duti -s jp.tmkk.XLD .flac all
