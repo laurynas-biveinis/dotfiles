@@ -1356,7 +1356,7 @@ variable instead.")
 
 (defvar transient--stack nil)
 
-(defvar transient--minibuffer-depth nil)
+(defvar transient--minibuffer-depth 0)
 
 (defvar transient--buffer-name " *transient*"
   "Name of the transient buffer.")
@@ -1546,10 +1546,10 @@ to `transient-predicate-map'.  Also see `transient-base-map'.")
      'transient--layout
      (cl-mapcan
       (lambda (s) (transient--parse-child 'transient-common-commands s))
-      '([:hide (lambda ()
-                 (and (not (memq (car transient--redisplay-key)
-                                 transient--common-command-prefixes))
-                      (not transient-show-common-commands)))
+      `([:hide ,(lambda ()
+                  (and (not (memq (car transient--redisplay-key)
+                                  transient--common-command-prefixes))
+                       (not transient-show-common-commands)))
          ["Value commands"
           ("C-x s  " "Set"            transient-set)
           ("C-x C-s" "Save"           transient-save)
@@ -1564,10 +1564,10 @@ to `transient-predicate-map'.  Also see `transient-base-map'.")
           ("C-z" "Suspend transient stack"  transient-suspend)]
          ["Customize"
           ("C-x t" transient-toggle-common
-           :description (lambda ()
-                          (if transient-show-common-commands
-                              "Hide common commands"
-                            "Show common permanently")))
+           :description ,(lambda ()
+                           (if transient-show-common-commands
+                               "Hide common commands"
+                             "Show common permanently")))
           ("C-x l" "Show/hide suffixes" transient-set-level)]])))
 
 (defvar transient-predicate-map
@@ -2170,7 +2170,7 @@ value.  Otherwise return CHILDREN as is."
     (setq transient--exitp nil)
     (setq transient--helpp nil)
     (setq transient--editp nil)
-    (setq transient--minibuffer-depth nil)
+    (setq transient--minibuffer-depth 0)
     (run-hooks 'transient-exit-hook)
     (when resume
       (transient--stack-pop))))
