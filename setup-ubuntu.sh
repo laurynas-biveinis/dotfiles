@@ -30,18 +30,8 @@ sudo ln -sf /bin/sed /bin/gsed
 # Home
 sudo apt-get install g++-10 gcc-10-doc libstdc++6-10-dbg libstdc++-10-doc \
      libboost-dev libboost-doc
-# GCC 11
-sudo add-apt-repository -y 'ppa:ubuntu-toolchain-r/test'
-sudo apt-get install g++-11 gcc-11-doc libstdc++-11-doc
 sudo usermod -aG docker laurynas
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo add-apt-repository \
-     "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main"
-sudo apt-get install clang-11 clang-tidy-11 llvm-11-dev lld-11 clangd-11 \
-     clang-format-11
-sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-11 100
-sudo update-alternatives --install /usr/bin/clang-format clang-format \
-     /usr/bin/clang-format-11 100
 # MySQL development specific
 sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
     libboost-doc clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck \
