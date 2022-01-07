@@ -123,9 +123,10 @@ sudo pmset -a standbydelay 0
 # do not ask to use new hard drives for backup
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 #
-# Install XCode, start it once, accept EULA
+# XCode
 #
-#
+xcode-select --install
+sudo xcodebuild -licence accept
 #
 # Screensaver
 #
@@ -300,11 +301,19 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 #
 # brew
 #
-
 brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac \
      findutils libtool npm fd delta unrar jq colordiff iwyu cppcheck infer \
-     creduce gnu-sed
+     creduce gnu-sed mas
+#
+# App Store
+#
+mas install 497799835 # XCode
+mas install 409201541 # Pages
+mas install 409203825 # Numbers
+#
+# Spellchecking
+#
 sudo mkdir /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
