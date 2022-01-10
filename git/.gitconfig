@@ -4,6 +4,7 @@
 	signingkey = 790127ED9B02C534
 [core]
         excludesfile = ~/.gitignore
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [magit]
 	hideCampaign = true
 [diff]
@@ -11,15 +12,18 @@
 	renamelimit = 100000
 [fetch]
 	prune = true
+	jobs = 0
 [rerere]
 	enabled = false
 [commit]
 	gpgsign = true
-[fetch]
-        jobs = 0
 [submodule]
-        fetchJobs = 0
+	fetchJobs = 0
 [pull]
 	ff = only
 [merge]
 	conflictstyle = diff3
+[interactive]
+	diffFilter = diff-so-fancy --patch
+[color]
+	ui = true
