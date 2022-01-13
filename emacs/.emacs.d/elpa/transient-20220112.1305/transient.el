@@ -2229,7 +2229,7 @@ value.  Otherwise return CHILDREN as is."
   (when transient--debug
     (let ((inhibit-message (not (eq transient--debug 'message))))
       (if (symbolp arg)
-          (message "-- %-16s (cmd: %s, event: %S, exit: %s%s)"
+          (message "-- %-18s (cmd: %s, event: %S, exit: %s%s)"
                    arg
                    (or (ignore-errors (transient--suffix-symbol this-command))
                        (if (byte-code-function-p this-command)
@@ -3661,6 +3661,13 @@ resumes the suspended transient.")
 
 (define-minor-mode transient-resume-mode
   "Auxiliary minor-mode used to resume a transient after viewing help.")
+
+(defun transient-toggle-debug ()
+  "Toggle debugging statements for transient commands."
+  (interactive)
+  (setq transient--debug (not transient--debug))
+  (message "Debugging transient %s"
+           (if transient--debug "enabled" "disabled")))
 
 ;;; Compatibility
 ;;;; Popup Navigation
