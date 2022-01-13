@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Export a set of environment variable shortcuts for long MySQL CMake and MTR invocations:
 # MY55, MY56, MY57, MY80: CMake options for release build
