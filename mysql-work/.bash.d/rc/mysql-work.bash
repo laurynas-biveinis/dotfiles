@@ -1,5 +1,10 @@
 #!/bin/sh
 #
+# Dear Percona developers –
+# if you are still linking to this file on GitHub, I suggest you to use
+# https://github.com/laurynas-biveinis/dotfiles/blob/ab2de3f002442880fce8a631ca011cecc33dc774/mysql-work/.bash.d/rc/mysql-work.bash
+# – the last Percona version of this file.
+#
 # Export a set of environment variable shortcuts for long MySQL CMake and MTR invocations:
 # MY55, MY56, MY57, MY80: CMake options for release build
 # MY55D, MY56D, MY57D, MY80D: CMake options for debug build
