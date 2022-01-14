@@ -304,7 +304,7 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac \
      findutils libtool npm fd delta unrar jq colordiff iwyu cppcheck infer \
-     creduce gnu-sed mas bat diff-so-fancy fig
+     creduce gnu-sed mas bat diff-so-fancy fig bison
 #
 # App Store
 #
