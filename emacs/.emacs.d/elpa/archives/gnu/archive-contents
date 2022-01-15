@@ -137,13 +137,14 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:keywords "async"))])
  (auctex .
-	 [(13 0 15)
+	 [(13 0 16)
 	  ((emacs
 	    (24 3)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
 	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
-	   (:maintainer nil . "auctex-devel@gnu.org"))])
+	   (:maintainer nil . "auctex-devel@gnu.org")
+	   (:commit . "a24ec9d7cb9f43ef41b4207ab970617bc0e5a7ae"))])
  (aumix-mode .
 	     [(7)
 	      nil "run the aumix program in a buffer" single
@@ -2354,14 +2355,14 @@
 	      ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
 	     (:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca"))])
  (rt-liberation .
-		[(3)
+		[(4)
 		 nil "Emacs interface to RT" tar
 		 ((:url . "http://www.nongnu.org/rtliber/")
 		  (:keywords "rt" "tickets")
 		  (:maintainer "Yoni Rabkin" . "yrk@gnu.org")
 		  (:authors
 		   ("Yoni Rabkin" . "yrk@gnu.org"))
-		  (:commit . "d9342c68c3fd28d8a13738e2ac32a34f31f2debd"))])
+		  (:commit . "f9dbe356479c10c32a8f420e4f3d2c7a99edf9ce"))])
  (rudel .
 	[(0 3 2)
 	 ((emacs
