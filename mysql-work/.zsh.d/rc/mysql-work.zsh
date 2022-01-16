@@ -1,1 +1,0 @@
-../../.bash.d/rc/mysql-work.bash
