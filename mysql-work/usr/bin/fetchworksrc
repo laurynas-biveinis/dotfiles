@@ -5,8 +5,8 @@ set -euo pipefail
 autoload is_on_ac
 
 function pull_repo () {
-    local path=$1
-    local fullpath=$WORK_SRC_ROOT/$path
+    local repo=$1
+    local fullpath=$WORK_SRC_ROOT/$repo
     pushd "$fullpath" || return
     git fetch --all
     popd || return
