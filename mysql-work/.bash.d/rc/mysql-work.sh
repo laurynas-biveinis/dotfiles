@@ -5,74 +5,63 @@
 # https://github.com/laurynas-biveinis/dotfiles/blob/ab2de3f002442880fce8a631ca011cecc33dc774/mysql-work/.bash.d/rc/mysql-work.bash
 # – the last Percona version of this file.
 #
-# Export a set of environment variable shortcuts for long MySQL CMake and MTR invocations:
-# MY55, MY56, MY57, MY80: CMake options for release build
-# MY55D, MY56D, MY57D, MY80D: CMake options for debug build
-# MY56SAN, MY57SAN, MYSAN: CMake options to add maximum supported Sanitizer configuration
-# MYGCC7: CMake options to compile with GCC 7
+# Exported environment variables, CMake options:
+# MY80, MY80D: Oracle MySQL release & debug build
+# MARIA108, MARIA108D: MariaDB 10.8 release and debug build
+# FB80, FB80D: MySQL 8.0 Facebook Patch release and debug
 #
+# Extra CMake options:
+# MYSAN: add maximum supported Sanitizer configuration
+#
+# mysql-test-run options:
 # MTR_EMD: MTR options to preload libeatmydata
 #
 # Works on Linux and macOS.
 
 UNAME_OUT="$(uname -s)"
 
-if [ "$UNAME_OUT" == "Darwin" ]; then
+if [ "$UNAME_OUT" = "Darwin" ]; then
     export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=/usr/local/lib --mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1 --mysqld-env=DYLD_INSERT_LIBRARIES=/usr/local/lib/libeatmydata.dylib"
-    MY55_SSL="-DWITH_SSL=system -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/"
-    MY567_SSL="-DWITH_SSL=/usr/local/opt/openssl/"
-    # No point trying to build TokuDB until macOS fixes
-    MY568_EXTRA="-DWITHOUT_TOKUDB=ON"
-    # No point trying to build MyRocks until macOS fixes
-    MY578_EXTRA="-DWITH_ROCKSDB=OFF"
-    MY57_EXTRA="-DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf@3.1/"
-    # 8.0.17 fails to build with system protobuf (brew 3.7.1), otherwise -DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf/
-    MY80_EXTRA="-DWITH_MYSQLX=OFF -DWITH_ICU=/usr/local/opt/icu4c"
+    MY_EXTRA="-DWITH_ICU=/usr/local/opt/icu4c"
+    MARIA_EXTRA="-DCMAKE_C_FLAGS=\"-isystem /usr/local/include\" -DCMAKE_CXX_FLAGS=\"-isystem /usr/local/include\""
 else
     # Linux
     export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/local/lib/libeatmydata.so"
-    MY55_SSL="-DWITH_SSL=system"
-    MY567_SSL="$MY55_SSL"
-    MY568_EXTRA=""
-    MY578_EXTRA=""
-    MY57_EXTRA=""
-    MY80_EXTRA="-DUSE_LD_GOLD=OFF" # Or system protobuf crashes on Ubuntu 19.04
+    MY_EXTRA=""
+    MARIA_EXTRA=""
 fi
 
-MYALL="-DBUILD_CONFIG=mysql_release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DWITH_PAM=ON"
-MYALLD="-DDEBUG_EXTNAME=OFF -DWITH_DEBUG=ON"
-MY557="-DWITH_ZLIB=system"
-export MY55="$MYALL $MY557 $MY55_SSL"
-MY567="-DWITH_LIBEVENT=system $MY567_SSL"
-MY568="-DENABLE_DOWNLOADS=ON $MY568_EXTRA"
+CMAKE_COMMON="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+CMAKE_RELEASE="-DCMAKE_BUILD_TYPE=RelWithDebugInfo"
+CMAKE_DEBUG="-DCMAKE_BUILD_TYPE=Debug"
 
-export MY56="$MYALL $MY557 $MY567 $MY568"
-MY578="-DDOWNLOAD_BOOST=ON -DWITH_BOOST=~/percona/mysql-boost/ $MY578_EXTRA -DWITH_KEYRING_VAULT=ON"
-export MY56D="$MY56 $MYALLD"
+# -DWITH_MYSQLX=OFF on 8.0.23:
+# Undefined symbols for architecture x86_64:
+# "_u_cleanup_69", referenced from:
+# clean_up(bool) in libsql_main.a(mysqld.cc.o)
+MY80_COMMON="-DWITH_DEBUG=ON -DMYSQL_MAINTAINER_MODE=ON -DENABLE_DOWNLOADS=ON -DDOWNLOAD_BOOST=ON -DWITH_BOOST=~/vilniusdb/mysql-boost/ $MY_EXTRA -DWITH_SYSTEM_LIBS=ON -DWITH_RAPIDJSON=bundled -DWITH_LZ4=bundled -DWITH_ROUTER=OFF -DWITH_GROUP_REPLICATION=OFF -DCMAKE_C_FLAGS=-Wno-shadow-field -DCMAKE_CXX_FLAGS=-Wno-shadow-field -DCMAKE_C_FLAGS_DEBUG=-Wno-shadow-field -DCMAKE_CXX_FLAGS_DEBUG=-Wno-shadow-field"
 
-export MY57="$MYALL $MY557 $MY567 $MY568 $MY578 -DWITH_CURL=system -DWITH_LZ4=system -DWITH_MECAB=system -DWITH_PROTOBUF=system $MY57_EXTRA"
-export MY57D="$MY57 $MYALLD"
+FB_COMMON="-DMYSQL_GITHASH=0 -DMYSQL_GITDATE=2100-02-29 -DROCKSDB_GITHASH=0 -DROCKSDB_GITDATE=2100-02-29"
 
-export MY80="$MYALL $MY568 $MY578 -DWITH_AUTHENTICATION_LDAP=ON -DWITH_SYSTEM_LIBS=ON -DWITH_RAPIDJSON=bundled $MY80_EXTRA"
-export MY80D="$MY80 $MYALLD -DWITH_INNODB_EXTRA_DEBUG=ON"
+MARIA_COMMON="-DPLUGIN_MROONGA=NO -DPLUGIN_CONNECT=NO"
 
-export MY56SAN="-DWITH_ASAN=ON"
-export MY57SAN="$MY56SAN -DWITH_ASAN_SCOPE=ON"
-export MYSAN="$MY57SAN -DWITH_UBSAN=ON"
+export MY80="$CMAKE_COMMON $CMAKE_RELEASE $MY80_COMMON"
+export MY80D="$CMAKE_COMMON $CMAKE_DEBUG -DWITH_DEBUG=ON -DWITH_INNODB_EXTRA_DEBUG=ON -DDEBUG_EXTNAME=OFF $MY80_COMMON"
 
-export MYGCC6="-DCMAKE_C_COMPILER=gcc-6 -DCMAKE_CXX_COMPILER=g++-6"
-export MYGCC7="-DCMAKE_C_COMPILER=gcc-7 -DCMAKE_CXX_COMPILER=g++-7"
+export MY80SAN="-DWITH_ASAN=ON -DWITH_ASAN_SCOPE=ON -DWITH_UBSAN=ON"
+
+export FB80="$MY80 $FB_COMMON"
+export FB80D="$MY80 $FB_COMMON"
+
+export MARIA108="$CMAKE_COMMON $CMAKE_RELEASE $MARIA_COMMON $MARIA_EXTRA"
+export MARIA108D="$CMAKE_COMMON $CMAKE_DEBUG $MARIA_COMMON $MARIA_EXTRA"
 
 unset UNAME_OUT
-unset MY55_SSL
-unset MY568_SSL
-unset MY568_EXTRA
-unset MY578_EXTRA
-unset MY57_EXTRA
-unset MY80_EXTRA
-unset MYALL
-unset MYALLD
-unset MY557
-unset MY567
-unset MY568
-unset MY578
+unset MY_EXTRA
+unset MARIA_EXTRA
+unset CMAKE_COMMON
+unset CMAKE_RELEASE
+unset CMAKE_DEBUG
+unset MY80_COMMON
+unset MARIA_COMMON
+unset FB_COMMON
