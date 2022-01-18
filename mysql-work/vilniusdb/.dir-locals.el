@@ -6,4 +6,5 @@
                         ".ispell.dict"
                         (file-name-directory
                          (let ((d (dir-locals-find-file "./")))
-                           (if (stringp d) d (car d))))))))))
+                           (if (stringp d) d (car d)))))))))
+ (c++-mode . ((c-file-style . "google"))))
