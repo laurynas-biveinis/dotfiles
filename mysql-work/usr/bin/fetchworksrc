@@ -4,11 +4,12 @@ set -euo pipefail
 
 autoload is_on_ac
 
-function pull_repo () {
+function pull_and_maintain_repo () {
     local repo=$1
     local fullpath=$WORK_SRC_ROOT/$repo
     pushd "$fullpath" || return
     git fetch --all
+    git gc
     popd || return
 }
 
@@ -24,7 +25,7 @@ function update_worktree () {
 }
 
 for repo in $WORK_REPOS_TO_PULL; do
-    pull_repo "$repo"
+    pull_and_maintain_repo "$repo"
 done
 
 for worktree in $WORK_TREES_TO_UPDATE; do
