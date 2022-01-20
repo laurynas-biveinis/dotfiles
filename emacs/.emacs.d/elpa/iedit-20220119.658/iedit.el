@@ -130,7 +130,7 @@ from iedit mode."
   :type 'boolean
   :group 'iedit)
 
-(defvar iedit-is-narrowed-local nil
+(defvar-local iedit-is-narrowed nil
   "This is buffer local variable which indicates if the buffer is
   narrowed by iedit temporarily.")
 
