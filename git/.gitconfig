@@ -22,7 +22,7 @@
 [pull]
 	ff = only
 [merge]
-	conflictstyle = diff3
+	conflictstyle = zdiff3
 [interactive]
 	diffFilter = diff-so-fancy --patch
 [color]
