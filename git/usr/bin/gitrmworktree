@@ -1,0 +1,32 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+readonly WORKTREE_PATH="$1"
+
+WORKTREE_DIR="$WORKTREE_PATH:t"
+
+pushd "$WORKTREE_PATH" || exit 1
+
+cd "$(git rev-parse --git-dir)" || exit 1
+
+cd ../../../
+
+git pull
+
+git branch --contains "$WORKTREE_DIR" | grep -q master
+
+readonly branch_merged=$?
+
+if [ $branch_merged -ne 0 ]; then
+    echo "Branch $WORKTREE_DIR is not fully merged"
+    popd || exit 1
+    return 0
+fi
+
+rm -rf "../$WORKTREE_DIR"
+
+git worktree prune
+git branch -d "$WORKTREE_DIR"
+
+popd || exit 1
