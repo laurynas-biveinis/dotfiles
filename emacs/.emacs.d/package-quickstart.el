@@ -1326,10 +1326,10 @@ Delete all posframe frames and buffers." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.5.6/cfrs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.6.0/cfrs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cfrs-1.5.6/cfrs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cfrs-1.6.0/cfrs-autoloads.el") (car load-path))))
 
 
 
@@ -1894,10 +1894,10 @@ The `imenu-create-index-function' for treemacs buffers." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220126.1647/transient-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220129.22/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220126.1647/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220129.22/transient-autoloads.el") (car load-path))))
 
 
 
@@ -14332,7 +14332,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2" "/Users/laurynas/.emacs.d/elpa/transient-20220126.1647" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.1.1")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2" "/Users/laurynas/.emacs.d/elpa/transient-20220129.22" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.1.1")
          Info-directory-list)))
 
 ;; Local Variables:
