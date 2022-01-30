@@ -24,4 +24,4 @@ jobs:
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_NATURAL_LANGUAGE: false
+          FILTER_REGEX_EXCLUDE: .*emacs/.emacs.d/elpa/.*

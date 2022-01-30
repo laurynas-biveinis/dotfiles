@@ -1,3 +1,4 @@
+#!/bin/sh
 sudo apt-get install pkg-config libev-dev libssl-dev libssl-doc libldap2-dev \
      zlib1g-dev libreadline-dev readline-doc ncurses-doc pex python-pex-doc \
      python-secretstorage-doc python-setuptools-doc openjdk-8-jre openjdk-8-jdk \
