@@ -1626,7 +1626,8 @@ CANDIDATES is the list of candidates."
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"))
+                     " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
+                     " tree-sitter"))
 (rich-minority-mode)
 
 ;;; projectile
@@ -1877,6 +1878,14 @@ with a prefix ARG."
 ;; TODO(laurynas): add to more modes as appropriate
 (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'c-mode-common-hook #'rainbow-delimiters-mode)
+
+;;; `tree-sitter'
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+
+(global-tree-sitter-mode)
+
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 ;;;; Upgrade helper
 (defun my-recompile-packages ()

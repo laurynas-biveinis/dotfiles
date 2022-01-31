@@ -56,6 +56,7 @@ Unfortunately, that is not always possible.
 [neuron-mode](https://github.com/felko/neuron-mode)
 [wgrep](https://github.com/mhayashi1120/Emacs-wgrep)
 [google-c-style](https://github.com/google/styleguide/blob/gh-pages/google-c-style.el)
+[tree-sitter](https://emacs-tree-sitter.github.io)
 
 #### Nice-to-have, niche, & specific major modes
 

@@ -646,6 +646,23 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tsc-0.17.0/tsc-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tsc-0.17.0/tsc-autoloads.el") (car load-path))))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tsc" '("tsc-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tsc-dyn-get" '("tsc-")))
+
+
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/dash-2.19.1/dash-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -1891,6 +1908,253 @@ The `imenu-create-index-function' for treemacs buffers." nil nil)
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treemacs-workspaces" '("treemacs-")))
 
 
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.17.0/tree-sitter-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.17.0/tree-sitter-autoloads.el") (car load-path))))
+
+
+
+(autoload 'tree-sitter-mode "tree-sitter" "\
+Minor mode that keeps an up-to-date syntax tree using incremental parsing.
+
+If called interactively, enable Tree-Sitter mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'turn-on-tree-sitter-mode "tree-sitter" "\
+Turn on `tree-sitter-mode' in a buffer, if possible." nil nil)
+
+(put 'global-tree-sitter-mode 'globalized-minor-mode t)
+
+(defvar global-tree-sitter-mode nil "\
+Non-nil if Global Tree-Sitter mode is enabled.
+See the `global-tree-sitter-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-tree-sitter-mode'.")
+
+(custom-autoload 'global-tree-sitter-mode "tree-sitter" nil)
+
+(autoload 'global-tree-sitter-mode "tree-sitter" "\
+Toggle Tree-Sitter mode in all buffers.
+With prefix ARG, enable Global Tree-Sitter mode if ARG is positive;
+otherwise, disable it.  If called from Lisp, enable the mode if
+ARG is omitted or nil.
+
+Tree-Sitter mode is enabled in all buffers where
+`turn-on-tree-sitter-mode' would do it.
+See `tree-sitter-mode' for more information on Tree-Sitter mode.
+
+\(fn &optional ARG)" t nil)
+
+(define-obsolete-function-alias 'tree-sitter-node-at-point 'tree-sitter-node-at-pos "2021-08-30")
+
+(autoload 'tree-sitter-node-at-pos "tree-sitter" "\
+Return the smallest syntax node of type NODE-TYPE at POS.
+NODE-TYPE may be a symbol, corresponding to a named syntax node; a string,
+corresponding to an anonymous node, or a keyword, holding a special value. For
+the special value `:named', return the smallest named node at POS. For the
+special value `:anonymous', return the smallest anonymous node at POS. IF POS is
+nil, POS defaults to the point. Unless IGNORE-INVALID-TYPE is non-nil, signal an
+error when a specified named NODE-TYPE does not exist in the current grammar.
+Whenever NODE-TYPE is non-nil (other than `:named'), it is possible for the
+function to return nil.
+
+\(fn &optional NODE-TYPE POS IGNORE-INVALID-TYPE)" nil nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter" '("tree-sitter-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-cli" '("tree-sitter-cli-")))
+
+
+
+(autoload 'tree-sitter-debug-mode "tree-sitter-debug" "\
+Toggle syntax tree debugging for the current buffer.
+This mode displays the syntax tree in another buffer, and keeps it up-to-date.
+
+If called interactively, enable Tree-Sitter-Debug mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'tree-sitter-debug-query "tree-sitter-debug" "\
+Execute query PATTERNS against the current syntax tree and return captures.
+
+If the optional arg MATCHES is non-nil, matches (from `tsc-query-matches') are
+returned instead of captures (from `tsc-query-captures').
+
+If the optional arg TAG-ASSIGNER is non-nil, it is passed to `tsc-make-query' to
+assign custom tags to capture names.
+
+This function is primarily useful for debugging purpose. Other packages should
+build queries and cursors once, then reuse them.
+
+\(fn PATTERNS &optional MATCHES TAG-ASSIGNER)" nil nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-debug" '("tree-sitter-debug-")))
+
+
+
+(autoload 'tree-sitter-save-excursion "tree-sitter-extras" "\
+Save the current location within the syntax tree; execute BODY; restore it.
+
+If the original location cannot be restored due to the syntax tree changing too
+much, this macro behaves like `save-excursion', unless
+`tree-sitter-save-excursion-try-hard' is non-nil, in which case it tries to get
+as close as possible to the original location.
+
+After the location is restored, the buffer text is scrolled so that point stays
+at roughly the same vertical screen position. If `pixel-scroll' is available and
+`tree-sitter-save-excursion-pixelwise' is non-nil, pixelwise scrolling is used
+instead, to make this restoration exact.
+
+\(fn &rest BODY)" nil t)
+
+(function-put 'tree-sitter-save-excursion 'lisp-indent-function '0)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-extras" '("tree-sitter-")))
+
+
+
+(autoload 'tree-sitter-hl-add-patterns "tree-sitter-hl" "\
+Add custom syntax highlighting PATTERNS.
+If LANG-SYMBOL is non-nil, it identifies the language that PATTERNS should be
+applied to. If LANG-SYMBOL is nil, PATTERNS are applied to the current buffer,
+and are prioritized over language-specific patterns. Either way, PATTERNS are
+prioritized over `tree-sitter-hl-default-patterns'.
+
+This function should be used by minor modes and configuration code. Major modes
+should set `tree-sitter-hl-default-patterns' instead.
+
+\(fn LANG-SYMBOL PATTERNS)" nil nil)
+
+(function-put 'tree-sitter-hl-add-patterns 'lisp-indent-function '1)
+
+(autoload 'tree-sitter-hl-mode "tree-sitter-hl" "\
+Toggle syntax highlighting based on Tree-sitter's syntax tree.
+If `tree-sitter-hl-default-patterns' is nil, turning on this mode does nothing,
+and does not interfere with `font-lock-mode'.
+
+If called interactively, enable Tree-Sitter-Hl mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+Enabling this automatically enables `tree-sitter-mode' in the buffer.
+
+To enable this automatically whenever `tree-sitter-mode' is enabled:
+
+ (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-hl" '("tree-sitter-hl-")))
+
+
+
+(autoload 'tree-sitter-require "tree-sitter-load" "\
+Return the language object loaded and registered under the name LANG-SYMBOL.
+If the language has not been loaded yet, load it with `tree-sitter-load'.
+
+FILE should be the base name (without extension) of the native shared library
+that exports the language as the native symbol NATIVE-SYMBOL-NAME.
+
+If FILE is nil, the base name is assumed to be LANG-SYMBOL's name.
+
+If NATIVE-SYMBOL-NAME is nil, the name of the exported native symbol is assumed
+to be LANG-SYMBOL's name, prefixed with \"tree_sitter_\".
+
+\(fn LANG-SYMBOL &optional FILE NATIVE-SYMBOL-NAME)" nil nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-load" '("tree-sitter-l")))
+
+
+
+(autoload 'tree-sitter-query-builder "tree-sitter-query" "\
+Provide means for developers to write and test tree-sitter queries.
+
+The buffer on focus when the command is called is set as the target buffer." t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-query" '("tree-sitter-")))
+
+
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.0/tree-sitter-langs-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.0/tree-sitter-langs-autoloads.el") (car load-path))))
+
+
+
+(autoload 'tree-sitter-langs--init-load-path "tree-sitter-langs" "\
+Add the directory containing compiled grammars to `tree-sitter-load-path'.
+
+\(fn &rest ARGS)" nil nil)
+
+(advice-add 'tree-sitter-load :before #'tree-sitter-langs--init-load-path)
+
+(autoload 'tree-sitter-langs--init-major-mode-alist "tree-sitter-langs" "\
+Link known major modes to languages provided by the bundle.
+
+\(fn &rest ARGS)" nil nil)
+
+(advice-add 'tree-sitter--setup :before #'tree-sitter-langs--init-major-mode-alist)
+
+(autoload 'tree-sitter-langs--set-hl-default-patterns "tree-sitter-langs" "\
+Use syntax highlighting patterns provided by `tree-sitter-langs'.
+
+\(fn &rest ARGS)" nil nil)
+
+(advice-add 'tree-sitter-hl--setup :before #'tree-sitter-langs--set-hl-default-patterns)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-langs" '("tree-sitter-langs-")))
+
+
+
+(autoload 'tree-sitter-langs-install-grammars "tree-sitter-langs-build" "\
+Download and install the specified VERSION of the language grammar bundle.
+If VERSION or OS is not specified, use the default of
+`tree-sitter-langs--bundle-version' and `tree-sitter-langs--os'.
+
+This installs the grammar bundle even if the same version was already installed,
+unless SKIP-IF-INSTALLED is non-nil.
+
+The download bundle file is deleted after installation, unless KEEP-BUNDLE is
+non-nil.
+
+\(fn &optional SKIP-IF-INSTALLED VERSION OS KEEP-BUNDLE)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-langs-build" '("tree-sitter-langs-")))
+
+
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-indent-0.3/tree-sitter-indent-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-indent-0.3/tree-sitter-indent-autoloads.el") (car load-path))))
+
+
+
+(autoload 'tree-sitter-indent-line "tree-sitter-indent" "\
+Use Tree-sitter as backend to indent current line." nil nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-indent" '("tree-sitter-indent-")))
 
 
 )
@@ -12840,6 +13104,57 @@ toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-tree-sitter-20220124.2246/helm-tree-sitter-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-tree-sitter-20220124.2246/helm-tree-sitter-autoloads.el") (car load-path))))
+
+
+
+(autoload 'helm-tree-sitter-or-imenu "helm-tree-sitter" "\
+Helm interface for tree-sitter.
+If tree-sitter is enabled and we
+know how to deal with major mode, we'll use `helm-tree-sitter'.
+Otherwise we'll default to `helm-imenu'." t nil)
+
+(autoload 'helm-tree-sitter "helm-tree-sitter" "\
+Helm interface for tree-sitter." t nil)
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-c" '("helm-tree-sitter-c-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-core" '("helm-tree-sitter-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-cpp" '("helm-tree-sitter-cpp-")))
+
+
+
+(autoload 'helm-tree-sitter-debug "helm-tree-sitter-debug" "\
+Helm interface for tree-sitter with all elements shown." t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-debug" '("helm-tree-sitter-debug-elem")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-python" '("helm-tree-sitter-python-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-rust" '("helm-tree-sitter-rust-")))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-utils" '("helm-tree-sitter-utils-")))
+
+
+
+
+)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-projectile-1.0.0/helm-projectile-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -14325,7 +14640,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs tree-sitter-indent transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-tree-sitter helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
