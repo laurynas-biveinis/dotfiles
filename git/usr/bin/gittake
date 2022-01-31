@@ -1,6 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
 
-set -euo pipefail
+set -eu
 
 readonly BRANCH=$1
 readonly FILE=$2

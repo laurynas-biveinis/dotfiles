@@ -1,6 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
 
-set -euo pipefail
+set -eu
 
 # TODO(laurynas): alias
 ccache --show-stats

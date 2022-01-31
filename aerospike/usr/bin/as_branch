@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 # Manage Aerospike CE/EE branch pairs: create a set of branches, optionally with
 # a starting point; checkout a set of branches; fetch remotes; remove a set of
@@ -14,7 +14,7 @@
 #   a Linux installation
 #
 
-set -euo pipefail
+set -eu
 
 readonly COMMAND=${1-UNDEFINED}
 

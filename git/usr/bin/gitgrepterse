@@ -1,8 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
 
-# FIXME(laurynas): a bash script. Does it work with zsh?
-
-set -euo pipefail
+set -eu
 
 readonly GREP_OPT=$1
 IFS=" " read -r -a REST_ARGS <<< "${@:2}"
