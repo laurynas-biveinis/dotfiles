@@ -2,7 +2,7 @@
 
 set -eu
 
-readonly NIGHTLY_PLIST=$HOME/Library/LaunchAgents/nightly.plist
+readonly NIGHTLY_PLIST="$HOME/Library/LaunchAgents/nightly.plist"
 
 launchctl unload "$NIGHTLY_PLIST"
 echo "launchctl unload $NIGHTLY_PLIST returned $?"

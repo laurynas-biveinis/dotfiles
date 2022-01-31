@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 # Do applicable bits of [macOS Security and Privacy
 # Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide)
@@ -252,6 +252,7 @@ defaults write com.apple.screencapture disable-shadow -bool true
 # Image Capture
 #
 # Scan To path
+# shellcheck disable=SC2088
 defaults write com.apple.Image_Capture IK_Scanner_downloadURL -string "~/Downloads"
 defaults write com.apple.Image_Capture IK_Scanner_selectedPathType -int 2
 # PDF format
