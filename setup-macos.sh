@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 # Do applicable bits of [macOS Security and Privacy
 # Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide)

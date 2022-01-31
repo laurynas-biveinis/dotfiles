@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 # Manage Aerospike CE/EE branch pairs: create a set of branches, optionally with
 # a starting point; checkout a set of branches; fetch remotes; remove a set of
@@ -16,13 +16,13 @@
 
 set -eu
 
-readonly COMMAND=${1-UNDEFINED}
+readonly COMMAND="${1-UNDEFINED}"
 
-if [[ $COMMAND != "create" && $COMMAND != "checkout" && $COMMAND != "fetch" && \
-          $COMMAND != "init" && $COMMAND != "pull" && $COMMAND != "push" && \
-          $COMMAND != "rm" && $COMMAND != "status" && \
-          $COMMAND != "worktree" && $COMMAND != "rsync" || \
-              $COMMAND == "UNDEFINED" ]]
+if [[ "$COMMAND" != "create" && "$COMMAND" != "checkout" &&
+          "$COMMAND" != "fetch" && "$COMMAND" != "init" &&
+          "$COMMAND" != "pull" && "$COMMAND" != "push" && "$COMMAND" != "rm" &&
+          "$COMMAND" != "status" && "$COMMAND" != "worktree" &&
+          "$COMMAND" != "rsync" || "$COMMAND" == "UNDEFINED" ]]
 then
     echo "Usage: $0 checkout branch"
     echo "       $0 create branch starting_point [ee_starting_point]"
@@ -101,20 +101,20 @@ function do_init () {
 
 # Zero-arg commands
 
-if [[ $COMMAND == "pull" ]]; then
+if [[ "$COMMAND" == "pull" ]]; then
     cmd="git pull --all --ff-only --recurse-submodules=yes \
          && git submodule update --recursive"
     do_local_command
     exit 0
 fi
 
-if [[ $COMMAND == "push" ]]; then
+if [[ "$COMMAND" == "push" ]]; then
     cmd="git push"
     do_local_command
     exit 0
 fi
 
-if [[ $COMMAND == "status" ]]; then
+if [[ "$COMMAND" == "status" ]]; then
     cmd="git status"
     do_local_command
     exit 0
@@ -123,7 +123,7 @@ fi
 readonly CE_MASTER="$ASD_MASTER/ce"
 readonly EE_MASTER="$ASD_MASTER/ee"
 
-if [[ $COMMAND == "fetch" ]]; then
+if [[ "$COMMAND" == "fetch" ]]; then
     cmd="git fetch --all -p --recurse-submodules=yes -j 5"
     do_master_command
     exit 0
@@ -132,39 +132,38 @@ fi
 pushd "$ASD_BRANCHES" || exit 1
 
 # "worktree prune" where "prune" is not an arg but a subcommand
-if [[ $COMMAND == "worktree" && "$2" == "prune" ]]; then
+if [[ "$COMMAND" == "worktree" && "$2" == "prune" ]]; then
     do_worktree_prune
     exit 0
 fi
 
 # One or more-arg commands
 
-readonly BRANCH=$2
+readonly BRANCH="$2"
 
-readonly BRANCH_ROOT=$ASD_BRANCHES/$BRANCH
-
-if [[ $COMMAND == "rm" ]]; then
+if [[ "$COMMAND" == "rm" ]]; then
     do_rm
     popd || exit 0
     exit 0
 fi
 
-if [[ $COMMAND == "init" ]]; then
+if [[ "$COMMAND" == "init" ]]; then
     pushd "$BRANCH" || exit 1
     do_init
     popd || exit 1
     exit 0
 fi
 
-if [[ $COMMAND == "rsync" ]]; then
+if [[ "$COMMAND" == "rsync" ]]; then
+    readonly BRANCH_ROOT="$ASD_BRANCHES/$BRANCH"
     rsync -rzui "$BRANCH_ROOT" "$LINUX_VM:$LINUX_ASD_BRANCHES"
     exit 0
 fi
 
-if [[ $COMMAND == "create" && "$#" -gt 2 ]]; then
-    readonly START_POINT=$3
+if [[ "$COMMAND" == "create" && "$#" -gt 2 ]]; then
+    readonly START_POINT="$3"
     if [[ "$#" -gt 3 ]]; then
-        readonly EE_START_POINT=$4
+        readonly EE_START_POINT="$4"
     else
         readonly EE_START_POINT="$START_POINT"
     fi
@@ -174,7 +173,7 @@ mkdir "$BRANCH"
 
 pushd "$EE_MASTER" || exit 1
 # Support checking out CE-only branches
-if [[ $COMMAND == "create" || -z $(git branch --list "$BRANCH") ]]; then
+if [[ "$COMMAND" == "create" || -z $(git branch --list "$BRANCH") ]]; then
     git worktree add "$BRANCH_ROOT/ee" -b "$BRANCH" \
         ${EE_START_POINT:+"$EE_START_POINT"}
 else
@@ -183,7 +182,7 @@ fi
 popd || exit 1
 
 pushd "$CE_MASTER" || exit 1
-if [[ $COMMAND == "create" ]]; then
+if [[ "$COMMAND" == "create" ]]; then
     git worktree add "$BRANCH_ROOT/ce" -b "$BRANCH" \
         ${START_POINT:+"$START_POINT"}
 else
@@ -192,7 +191,7 @@ fi
 popd || exit 1
 
 pushd "$BRANCH/ee" || exit 1
-if [[ $COMMAND == "create" ]]; then
+if [[ "$COMMAND" == "create" ]]; then
     git branch -u "origin/$BRANCH"
 fi
 git submodule update --init --recursive
@@ -202,7 +201,7 @@ fi
 popd || exit 1
 
 pushd "$BRANCH/ce" || exit 1
-if [[ $COMMAND == "create" ]]; then
+if [[ "$COMMAND" == "create" ]]; then
     git branch -u "origin/$BRANCH"
 fi
 git submodule update --init --recursive

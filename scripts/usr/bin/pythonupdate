@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -euo pipefail
+set -eu
 
 echo "Updating outdated Python packages, if any"
 pip3 list --outdated --format=freeze | cut -d = -f 1 | xargs -n1 pip3 install -U

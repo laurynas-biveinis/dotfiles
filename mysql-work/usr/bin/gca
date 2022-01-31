@@ -14,7 +14,7 @@ else
     LOWEST_VERSION="$LOWEST_VERSION_ARG"
 fi
 
-if [[ "$LOWEST_VERSION" != "5.6" ] && [[ "$LOWEST_VERSION" != "5.7" ]]; then
+if [[ "$LOWEST_VERSION" != "5.6" ]] && [[ "$LOWEST_VERSION" != "5.7" ]]; then
     echo "Only 5.6 and 5.7 are valid lowest versions"
     exit 1
 fi
