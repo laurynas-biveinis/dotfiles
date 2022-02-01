@@ -13104,57 +13104,6 @@ toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-tree-sitter-20220124.2246/helm-tree-sitter-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-tree-sitter-20220124.2246/helm-tree-sitter-autoloads.el") (car load-path))))
-
-
-
-(autoload 'helm-tree-sitter-or-imenu "helm-tree-sitter" "\
-Helm interface for tree-sitter.
-If tree-sitter is enabled and we
-know how to deal with major mode, we'll use `helm-tree-sitter'.
-Otherwise we'll default to `helm-imenu'." t nil)
-
-(autoload 'helm-tree-sitter "helm-tree-sitter" "\
-Helm interface for tree-sitter." t nil)
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-c" '("helm-tree-sitter-c-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-core" '("helm-tree-sitter-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-cpp" '("helm-tree-sitter-cpp-")))
-
-
-
-(autoload 'helm-tree-sitter-debug "helm-tree-sitter-debug" "\
-Helm interface for tree-sitter with all elements shown." t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-debug" '("helm-tree-sitter-debug-elem")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-python" '("helm-tree-sitter-python-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-rust" '("helm-tree-sitter-rust-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-tree-sitter-utils" '("helm-tree-sitter-utils-")))
-
-
-
-
-)
 (let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-projectile-1.0.0/helm-projectile-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -14640,7 +14589,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs tree-sitter-indent transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-tree-sitter helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs tree-sitter-indent transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
