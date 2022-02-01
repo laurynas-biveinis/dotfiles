@@ -1253,6 +1253,8 @@ CANDIDATES is the list of candidates."
 (setq helm-ff-search-library-in-sexp t)
 (setq helm-net-prefer-curl t)
 (setq helm-list-directory-function #'helm-list-dir-external)
+;; So that `helm-imenu' shows everything for big source files.
+(setq helm-candidate-number-limit nil)
 (global-set-key (kbd "M-x") #'helm-M-x)
 (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
