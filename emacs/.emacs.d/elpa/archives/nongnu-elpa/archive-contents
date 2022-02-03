@@ -273,7 +273,7 @@
 		(:keywords "languages" "elixir")
 		(:commit . "1d94b525ddcc995b5a979de7b050c2309648ca6f"))])
  (elpher .
-	 [(3 2 2)
+	 [(3 3 1)
 	  ((emacs
 	    (27 1)))
 	  "A friendly gopher and gemini client" tar
@@ -282,7 +282,7 @@
 	   (:maintainer "Tim Vaughan" . "plugd@thelambdalab.xyz")
 	   (:authors
 	    ("Tim Vaughan" . "plugd@thelambdalab.xyz"))
-	   (:commit . "7b52709ddf798fe53db3855eef52ca8862e7700d"))])
+	   (:commit . "09f4d52c0f3ff9cdd4fbddbdc513c42f6650918a"))])
  (evil .
        [(1 14 0)
 	nil "extensible vi layer" tar
@@ -1328,13 +1328,13 @@
 		     ("John Olsson" . "john@cryon.se"))
 		    (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed .
-	[(1 0 1)
+	[(1 0 2)
 	 ((emacs
 	   (25 1)))
 	 "A major mode for editing subtitles" tar
 	 ((:url . "https://github.com/rndusr/subed")
 	  (:keywords "convenience" "files" "hypermedia" "multimedia")
-	  (:commit . "94c28993b77f79ec04db495ed4166212a55f9cb5"))])
+	  (:commit . "9a660ed88600e9aff741051c28a9e638cd5df5f5"))])
  (swift-mode .
 	     [(8 4 2)
 	      ((emacs
