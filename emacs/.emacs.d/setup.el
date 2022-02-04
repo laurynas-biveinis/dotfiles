@@ -518,14 +518,6 @@ loaded as such.)"
 (advice-add #'epg-decrypt-string :before
             #'dotfiles--set-epg-context-pinentry-mode)
 
-;; TODO(laurynas): would like set `epa-file-name-regexp' to exclude
-;; ".authinfo.gpg", but it's too much pain to write an excluding Emacs regexp,
-;; see i.e.
-;; https://stackoverflow.com/questions/2217928/how-do-i-write-a-regular-expression-that-excludes-rather-than-matches-e-g-not
-;; . I have also looked into advising `epa-file-name-regexp' users, but that
-;; immediately spills over to `epa-file-handler' to `file-name-handler-alist',
-;; making it non-viable.
-
 ;;; ispell
 (require 'ispell)
 (setq ispell-program-name "hunspell")
