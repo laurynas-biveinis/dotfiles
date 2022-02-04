@@ -499,6 +499,10 @@ loaded as such.)"
 
 (add-hook 'emacs-lisp-mode-hook #'dotfiles--emacs-lisp-mode-hook)
 
+;;; `auth-sources'
+(require 'auth-source)
+(setq auth-sources '("~/.authinfo.gpg"))
+
 ;;; gnutls
 (require 'gnutls)
 (setq gnutls-verify-error t)
