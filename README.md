@@ -40,7 +40,7 @@ Unfortunately, that is not always possible.
 
 #### The big ones
 
-[org](https://orgmode.org) [magit](https://magit.vc)
+[org](https://orgmode.org) [magit and forge](https://magit.vc)
 [lsp-mode](https://github.com/emacs-lsp/lsp-mode)
 [flycheck](https://www.flycheck.org)
 [company](https://github.com/company-mode/company-mode)
