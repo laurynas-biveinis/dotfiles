@@ -27,3 +27,5 @@
 	diffFilter = diff-so-fancy --patch
 [color]
 	ui = true
+[github]
+	user = laurynas-biveinis

@@ -1093,6 +1093,9 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 (add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
 
+;;; `forge'
+(require 'forge)
+
 ;;; git-gutter-fringe
 (require 'git-gutter-fringe)
 (global-git-gutter-mode +1)
