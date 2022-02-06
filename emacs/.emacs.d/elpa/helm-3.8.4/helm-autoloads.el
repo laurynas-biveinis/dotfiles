@@ -278,6 +278,11 @@ commands with `helm-external-commands-list'." t nil)
 ;;;### (autoloads nil "helm-files" "helm-files.el" (0 0 0 0))
 ;;; Generated autoloads from helm-files.el
 
+(autoload 'helm-ff-cleanup-image-dired-dir-and-cache "helm-files" "\
+Cleanup `image-dired-dir' directory.
+Delete all thumb files that are no more associated with an existing image file in
+`helm-ff-image-dired-thumbnails-cache'." t nil)
+
 (autoload 'helm-projects-history "helm-files" "\
 
 

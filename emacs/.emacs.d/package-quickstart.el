@@ -11919,10 +11919,10 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.2/helm-core-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.4/helm-core-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.2/helm-core-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.4/helm-core-autoloads.el") (car load-path))))
 
 
 
@@ -12158,10 +12158,10 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.2/helm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.4/helm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.2/helm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.4/helm-autoloads.el") (car load-path))))
 
 
 
@@ -12390,6 +12390,11 @@ commands with `helm-external-commands-list'." t nil)
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-fd" '("helm-fd-")))
 
 
+
+(autoload 'helm-ff-cleanup-image-dired-dir-and-cache "helm-files" "\
+Cleanup `image-dired-dir' directory.
+Delete all thumb files that are no more associated with an existing image file in
+`helm-ff-image-dired-thumbnails-cache'." t nil)
 
 (autoload 'helm-projects-history "helm-files" "\
 

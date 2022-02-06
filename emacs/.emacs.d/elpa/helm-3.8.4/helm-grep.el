@@ -74,8 +74,10 @@ don't specify the '%e' format spec.
 Helm also support ack-grep and git-grep.  The following is a
 default command example for ack-grep:
 
-\(setq helm-grep-default-command \"ack-grep -Hn --color --smart-case --no-group %e %p %f\"
-       helm-grep-default-recurse-command \"ack-grep -H --color --smart-case --no-group %e %p %f\")
+\(setq helm-grep-default-command
+       \"ack-grep -Hn --color --smart-case --no-group %e -- %p %f\"
+       helm-grep-default-recurse-command
+       \"ack-grep -H --color --smart-case --no-group %e -- %p %f\")
 
 You can ommit the %e spec if you don't want to be prompted for
 types.
@@ -241,7 +243,17 @@ doing."
   "A list of additional parameters to pass to grep-ag pipe command.
 Use parameters compatibles with the backend you are using
 \(i.e. AG for AG, PT for PT or RG for RG)
+Here are the commands where you may want to add switches:
 
+    ag -S --color
+    rg -N -S --color=?
+
+For RG the value of --color= is computed according to the --color=
+value used in `helm-grep-ag-command'.
+
+Note also that by default the \"--\" option is always used, you don't
+need to add it here.
+ 
 You probably don't need to use this unless you know what you are
 doing."
   :group 'helm-grep
@@ -1453,7 +1465,7 @@ non-file buffers."
 ;;  https://github.com/BurntSushi/ripgrep
 
 (defcustom helm-grep-ag-command
-  "ag --line-numbers -S --color --nogroup %s %s %s"
+  "ag --line-numbers -S --color --nogroup %s -- %s %s"
   "The default command for AG, PT or RG.
 
 Takes three format specs, the first for type(s), the second for
@@ -1468,12 +1480,12 @@ colorization of backend, however it is still supported.
 
 For ripgrep here is the command line to use:
 
-    rg --color=always --smart-case --no-heading --line-number %s %s %s
+    rg --color=always --smart-case --no-heading --line-number %s -- %s %s
 
 And to customize colors (always for ripgrep) use something like this:
 
     rg --color=always --colors 'match:bg:yellow' --colors 'match:fg:black'
-\--smart-case --no-heading --line-number %s %s %s
+\--smart-case --no-heading --line-number %s -- %s %s
 
 This will change color for matched items from foreground red (the
 default) to a yellow background with a black foreground.  Note
@@ -1545,7 +1557,7 @@ returns if available with current AG version."
                       (shell-quote-argument directory))))
     (helm-aif (cdr patterns)
         (concat cmd (cl-loop for p in it concat
-                             (format " | %s %s"
+                             (format " | %s -- %s"
                                      pipe-cmd (shell-quote-argument p))))
       cmd)))
 
@@ -1639,8 +1651,9 @@ returns if available with current AG version."
                  (assoc-default 'follow helm-source-grep-ag))
       (setf (slot-value source 'follow) it)))
 
-(defun helm-grep-ag-1 (directory &optional type)
-  "Start helm ag in DIRECTORY maybe searching in files of type TYPE."
+(defun helm-grep-ag-1 (directory &optional type input)
+  "Start helm ag in DIRECTORY maybe searching in files of type TYPE.
+If INPUT is provided, use it as the search string."
   (setq helm-source-grep-ag
         (helm-make-source (upcase (helm-grep--ag-command)) 'helm-grep-ag-class
           :header-name (lambda (name)
@@ -1652,6 +1665,7 @@ returns if available with current AG version."
   (helm :sources 'helm-source-grep-ag
         :keymap helm-grep-map
         :history 'helm-grep-ag-history
+        :input input
         :truncate-lines helm-grep-truncate-lines
         :buffer (format "*helm %s*" (helm-grep--ag-command))))
 

@@ -4815,7 +4815,7 @@ Special commands:
                               (("jpg" "jpeg") 'jpeg))
                  if type collect
                  (let ((thumbnail (plist-get
-                                   (cdr (image-dired-get-thumbnail-image img))
+                                   (cdr (helm-ff--image-dired-get-thumbnail-image img))
                                    :file)))
                    (cons (concat (propertize " "
                                              'display `(image
@@ -4827,6 +4827,29 @@ Special commands:
                          img))
                  else collect (cons disp img)))
     candidates))
+
+;; Same as `image-dired-get-thumbnail-image' but use
+;; `helm-ff--image-dired-thumb-name' which cache thumbnails for further use.
+(defun helm-ff--image-dired-get-thumbnail-image (file)
+  "Return the image descriptor for a thumbnail of image file FILE."
+  (unless (string-match-p (image-file-name-regexp) file)
+    (error "%s is not a valid image file" file))
+  (let* ((thumb-file (helm-ff--image-dired-thumb-name file))
+	 (thumb-attr (file-attributes thumb-file)))
+    (when (or (not thumb-attr)
+	      (time-less-p (file-attribute-modification-time thumb-attr)
+			   (file-attribute-modification-time
+			    (file-attributes file))))
+      (image-dired-create-thumb file thumb-file))
+    (create-image thumb-file)))
+
+(defvar helm-ff-image-dired-thumbnails-cache (make-hash-table :test 'equal)
+  "Store associations of image_file/thumbnail_file.")
+(defun helm-ff--image-dired-thumb-name (file)
+  (or (gethash file helm-ff-image-dired-thumbnails-cache)
+      (let ((thumb-name (image-dired-thumb-name file)))
+        (puthash file thumb-name helm-ff-image-dired-thumbnails-cache)
+        thumb-name)))
 
 (defun helm-ff-toggle-thumbnails ()
   (interactive)
@@ -4842,6 +4865,19 @@ Special commands:
                               "\\` *" "" (helm-get-selection nil t)))))
 (put 'helm-ff-toggle-thumbnails 'no-helm-mx t)
 
+;;;###autoload
+(defun helm-ff-cleanup-image-dired-dir-and-cache ()
+  "Cleanup `image-dired-dir' directory.
+Delete all thumb files that are no more associated with an existing image file in
+`helm-ff-image-dired-thumbnails-cache'."
+  (interactive)
+  (cl-loop for key being the hash-keys in helm-ff-image-dired-thumbnails-cache
+           using (hash-value val)
+           unless (file-exists-p key) do
+           (progn
+             (message "Deleting %s" val)
+             (delete-file val)
+             (remhash key helm-ff-image-dired-thumbnails-cache))))
 
 ;;; Recursive dirs completion
 ;;
@@ -5257,23 +5293,23 @@ source is `helm-source-find-files'."
 Find inside `require' and `declare-function' sexp."
   (require 'find-func)
   (let* ((beg-sexp (save-excursion (search-backward "(" (point-at-bol) t)))
-         (end-sexp (save-excursion (search-forward ")" (point-at-eol) t)))
+         (end-sexp (save-excursion (ignore-errors (end-of-defun)) (point)))
          (sexp     (and beg-sexp end-sexp
                         (buffer-substring-no-properties
                          (1+ beg-sexp) (1- end-sexp)))))
     (ignore-errors
-      (cond ((and sexp (string-match "require ['].+[^)]" sexp))
-             (find-library-name
-              (replace-regexp-in-string
-               "'\\|)\\|(" ""
-               ;; If require use third arg, ignore it,
-               ;; always use library path found in `load-path'.
-               (cl-second (split-string (match-string 0 sexp))))))
-            ((and sexp (string-match-p "^declare-function" sexp))
-             (find-library-name
-              (replace-regexp-in-string
-               "\"\\|ext:" ""
-               (cl-third (split-string sexp)))))
+      (cond (;; Should work only when point is on the use-package line
+             ;; i.e. first line of sexp otherwise it prevents matching
+             ;; urls with helm-find-files (bug #2469).
+             (and sexp (string-match "use-package +\\([^ )\n]+\\)" sexp))
+             (find-library-name (match-string 1 sexp)))
+            ((and sexp (string-match "require +[']\\([^ )]+\\)" sexp))
+              ;; If require use third arg, ignore it,
+              ;; always use library path found in `load-path'.
+             (find-library-name (match-string 1 sexp)))
+            ;; Assume declare-function sexps are on one line.
+            ((and sexp (string-match "declare-function .+? \"\\(?:ext:\\)?\\([^ )]+\\)\"" sexp))
+             (find-library-name (match-string 1 sexp)))
             (t nil)))))
 
 
