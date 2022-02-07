@@ -1,0 +1,13 @@
+(define-package "tree-sitter-langs" "0.11.1" "Grammar bundle for tree-sitter"
+  '((emacs "25.1")
+    (tree-sitter "0.15.0"))
+  :commit "25186cdebb7212d1c513e02ac145bf50f356d5db" :authors
+  '(("Tuấn-Anh Nguyễn" . "ubolonton@gmail.com"))
+  :maintainer
+  '("Tuấn-Anh Nguyễn" . "ubolonton@gmail.com")
+  :keywords
+  '("languages" "tools" "parsers" "tree-sitter")
+  :url "https://github.com/emacs-tree-sitter/tree-sitter-langs")
+;; Local Variables:
+;; no-byte-compile: t
+;; End:
