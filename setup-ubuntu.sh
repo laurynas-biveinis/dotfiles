@@ -39,7 +39,8 @@ sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
     readline-doc liblz4-dev libre2-dev libicu-dev icu-doc zlib1g-dev \
     libevent-dev pkg-config libcurl4-gnutls-dev libcurl4-doc libpam0g-dev \
     libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab \
-    libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev
+    libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev \
+    libgcrypt20-dev libfido2-dev
 # For CPU-intensive benchmarks
 sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"
 sudo sysctl -w vm.swappiness=0
