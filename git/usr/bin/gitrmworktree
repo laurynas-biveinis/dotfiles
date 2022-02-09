@@ -3,30 +3,27 @@
 set -euo pipefail
 
 readonly WORKTREE_PATH="$1"
-
-WORKTREE_DIR="$WORKTREE_PATH:t"
+readonly WORKTREE_DIR="$WORKTREE_PATH:t"
 
 pushd "$WORKTREE_PATH" || exit 1
 
-cd "$(git rev-parse --git-dir)" || exit 1
+readonly BRANCH_NAME=$(git branch --show-current)
 
+cd "$(git rev-parse --git-dir)" || exit 1
 cd ../../../
 
 git pull
+git branch --contains "$BRANCH_NAME" | grep -q master
+readonly BRANCH_MERGED=$?
 
-git branch --contains "$WORKTREE_DIR" | grep -q master
-
-readonly branch_merged=$?
-
-if [ $branch_merged -ne 0 ]; then
-    echo "Branch $WORKTREE_DIR is not fully merged"
+if [ $BRANCH_MERGED -ne 0 ]; then
+    echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
     popd || exit 1
     return 0
 fi
 
 rm -rf "../$WORKTREE_DIR"
-
 git worktree prune
-git branch -d "$WORKTREE_DIR"
+git branch -d "$BRANCH_NAME"
 
 popd || exit 1
