@@ -14626,10 +14626,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.22.2/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.0pre1/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.22.2/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.0pre1/cmake-mode-autoloads.el") (car load-path))))
 
 
 
