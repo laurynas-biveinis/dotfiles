@@ -1,7 +1,8 @@
 ;;; google-c-style.el --- Google's C/C++ style for c-mode
 
 ;; Keywords: c, tools
-;; Package-Version: 20180130.1736
+;; Package-Version: 20220210.1659
+;; Package-Commit: af78b49ac4fef8083094d5105f72528ee7d09073
 
 ;; google-c-style.el is Copyright (C) 2008 Google Inc. All Rights Reserved.
 ;;
@@ -40,7 +41,7 @@
 
 This implements title \"Function Declarations and Definitions\"
 of the Google C++ Style Guide for the case where the previous
-line ends with an open parenthese.
+line ends with an open parenthesis.
 
 \"Current C expression\", as per the Google Style Guide and as
 clarified by subsequent discussions, means the whole expression

@@ -13500,10 +13500,10 @@ or nil, plain link will be used.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/google-c-style-20180130.1736/google-c-style-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/google-c-style-20220210.1659/google-c-style-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/google-c-style-20180130.1736/google-c-style-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/google-c-style-20220210.1659/google-c-style-autoloads.el") (car load-path))))
 
 
 
@@ -13512,15 +13512,11 @@ Google C/C++ Programming Style.")
 
 (autoload 'google-set-c-style "google-c-style" "\
 Set the current buffer's c-style to Google C/C++ Programming
-  Style. Meant to be added to `c-mode-common-hook'.
-
-\(fn)" t nil)
+  Style. Meant to be added to `c-mode-common-hook'." t nil)
 
 (autoload 'google-make-newline-indent "google-c-style" "\
 Sets up preferred newline behavior. Not set by default. Meant
-  to be added to `c-mode-common-hook'.
-
-\(fn)" t nil)
+  to be added to `c-mode-common-hook'." t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "google-c-style" '("google-c-lineup-expression-plus-4")))
 
