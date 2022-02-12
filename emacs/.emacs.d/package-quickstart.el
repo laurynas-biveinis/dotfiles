@@ -159,10 +159,10 @@ comparisons/benchmarks with libraries that offer similar functionality.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.1.1/with-editor-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0/with-editor-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/with-editor-3.1.1/with-editor-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0/with-editor-autoloads.el") (car load-path))))
 
 
 
@@ -2115,10 +2115,10 @@ The buffer on focus when the command is called is set as the target buffer." t n
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.1/tree-sitter-langs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.3/tree-sitter-langs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.1/tree-sitter-langs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.3/tree-sitter-langs-autoloads.el") (car load-path))))
 
 
 
@@ -7955,10 +7955,10 @@ Start org-analyzer.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.4/markdown-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.4/markdown-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el") (car load-path))))
 
 
 
@@ -7987,9 +7987,14 @@ Major mode for viewing GitHub Flavored Markdown content.
 (autoload 'markdown-live-preview-mode "markdown-mode" "\
 Toggle native previewing on save for a specific markdown file.
 
+If called interactively, enable Markdown-Live-Preview mode if ARG
+is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
 \(fn &optional ARG)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "markdown-mode" '("gfm-" "markdown" "defun-markdown-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "markdown-mode" '("defun-markdown-" "gfm-" "markdown")))
 
 
 )
@@ -15048,7 +15053,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.4" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2.1" "/Users/laurynas/.emacs.d/elpa/transient-20220130.1941" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.1.1")
+         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.4" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2.1" "/Users/laurynas/.emacs.d/elpa/transient-20220130.1941" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
