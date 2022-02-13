@@ -657,10 +657,10 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tsc-0.17.0/tsc-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tsc-0.18.0/tsc-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tsc-0.17.0/tsc-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tsc-0.18.0/tsc-autoloads.el") (car load-path))))
 
 
 
@@ -1933,10 +1933,10 @@ The `imenu-create-index-function' for treemacs buffers." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.17.0/tree-sitter-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.18.0/tree-sitter-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.17.0/tree-sitter-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.18.0/tree-sitter-autoloads.el") (car load-path))))
 
 
 
