@@ -305,7 +305,7 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac \
      findutils libtool npm fd delta unrar jq colordiff iwyu cppcheck infer \
-     creduce gnu-sed mas bat diff-so-fancy fig bison libfido2 actionlint
+     creduce gnu-sed mas bat diff-so-fancy fig bison libfido2 actionlint rust
 #
 # App Store
 #
@@ -344,6 +344,8 @@ duti -s org.videolan.vlc .m4a all
 npm i -g bash-language-server
 pip3 install cmake-language-server
 brew tap homebrew/command-not-found
+# Rust
+cargo install difftastic
 # Play
 brew cask install banktivity beatunes lastfm steam xld loopback mono
 duti -s jp.tmkk.XLD .flac all

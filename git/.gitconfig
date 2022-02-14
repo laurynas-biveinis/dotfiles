@@ -10,6 +10,7 @@
 [diff]
 	colorMoved = default
 	renamelimit = 100000
+	external = difft
 [fetch]
 	prune = true
 	jobs = 0
