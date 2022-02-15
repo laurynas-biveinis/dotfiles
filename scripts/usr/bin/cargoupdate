@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/zsh
 
 set -eu
 
 echo "Updating outdated Cargo crates, if any"
 
-# https://stackoverflow.com/a/66049504/80458
-cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
+read -r -A crates < \
+     <(cargo install --list | grep -E '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
+cargo install "${crates[@]}"
