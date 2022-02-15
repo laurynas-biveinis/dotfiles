@@ -1,13 +1,13 @@
 ;;; which-key.el --- Display available keybindings in popup  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Free Software Foundation, Inc.
+;; Copyright (C) 2017-2021  Free Software Foundation, Inc.
 
 ;; Author: Justin Burkett <justin@burkett.cc>
 ;; Maintainer: Justin Burkett <justin@burkett.cc>
 ;; URL: https://github.com/justbur/emacs-which-key
-;; Package-Version: 3.5.4
-;; Package-Commit: 1bb1f723dab2fc8b88b7f7273d0a7fa11134b936
-;; Version: 3.5.1
+;; Package-Version: 3.6.0
+;; Package-Commit: 1217db8c6356659e67b35dedd9f5f260c06f6e99
+;; Version: 3.6.0
 ;; Keywords:
 ;; Package-Requires: ((emacs "24.4"))
 
@@ -95,6 +95,11 @@ Also adds \"..\". If nil, disable any truncation."
   :group 'which-key
   :type '(choice integer (const :tag "Disable truncation" nil)))
 
+(defcustom which-key-min-column-description-width 0
+  "Every column should at least have this width."
+  :group 'which-key
+  :type 'integer)
+
 (defcustom which-key-add-column-padding 0
   "Additional padding (number of spaces) to add to the left of
 each key column."
@@ -129,6 +134,15 @@ of the which-key popup."
 the default is \" : \"."
   :group 'which-key
   :type 'string)
+
+(defcustom which-key-ellipsis
+  (if which-key-dont-use-unicode ".." "…")
+  "Ellipsis to use when truncating. Default is \"…\", unless
+`which-key-dont-use-unicode' is non nil, in which case
+the default is \"..\"."
+  :group 'which-key
+  :type 'string)
+
 
 (defcustom which-key-prefix-prefix "+"
   "String to insert in front of prefix commands (i.e., commands
@@ -744,11 +758,10 @@ problems at github.")
 (defvar which-key--god-mode-key-string nil
   "Holds key string to use for god-mode support.")
 
-(defadvice god-mode-lookup-command
-    (around which-key--god-mode-lookup-command-advice disable)
-  (setq which-key--god-mode-key-string (ad-get-arg 0))
+(defun which-key--god-mode-lookup-command-advice (orig-fun arg1 &rest args)
+  (setq which-key--god-mode-key-string arg1)
   (unwind-protect
-      ad-do-it
+      (apply orig-fun arg1 args)
     (when (bound-and-true-p which-key-mode)
       (which-key--hide-popup))))
 
@@ -760,13 +773,10 @@ disable support."
   (interactive "P")
   (setq which-key--god-mode-support-enabled (null disable))
   (if disable
-      (ad-disable-advice
-       'god-mode-lookup-command
-       'around 'which-key--god-mode-lookup-command-advice)
-    (ad-enable-advice
-     'god-mode-lookup-command
-     'around 'which-key--god-mode-lookup-command-advice))
-  (ad-activate 'god-mode-lookup-command))
+      (advice-remove 'god-mode-lookup-command
+                     #'which-key--god-mode-lookup-command-advice)
+    (advice-add 'god-mode-lookup-command :around
+                #'which-key--god-mode-lookup-command-advice)))
 
 ;;; Mode
 
@@ -798,7 +808,7 @@ disable support."
           (add-hook 'pre-command-hook #'which-key--lighter-restore))
         (add-hook 'pre-command-hook #'which-key--hide-popup)
         (add-hook 'window-size-change-functions
-                  'which-key--hide-popup-on-frame-size-change)
+                  #'which-key--hide-popup-on-frame-size-change)
         (which-key--start-timer))
     (setq echo-keystrokes which-key--echo-keystrokes-backup)
     (when which-key--prefix-help-cmd-backup
@@ -807,7 +817,7 @@ disable support."
       (remove-hook 'pre-command-hook #'which-key--lighter-restore))
     (remove-hook 'pre-command-hook #'which-key--hide-popup)
     (remove-hook 'window-size-change-functions
-                 'which-key--hide-popup-on-frame-size-change)
+                 #'which-key--hide-popup-on-frame-size-change)
     (which-key--stop-timer)))
 
 (defun which-key--init-buffer ()
@@ -1563,8 +1573,9 @@ If KEY contains any \"special keys\" defined in
 `which-key-special-key-face'."
   (let ((key-w-face (which-key--propertize key 'face 'which-key-key-face))
         (regexp (concat "\\("
-                        (mapconcat 'identity which-key-special-keys
-                                   "\\|") "\\)"))
+                        (mapconcat #'identity which-key-special-keys
+                                   "\\|")
+                        "\\)"))
         case-fold-search)
     (save-match-data
       (if (and which-key-special-keys
@@ -1580,7 +1591,7 @@ If KEY contains any \"special keys\" defined in
 (defsubst which-key--truncate-description (desc)
   "Truncate DESC description to `which-key-max-description-length'."
   (let* ((last-face (get-text-property (1- (length desc)) 'face desc))
-         (dots (which-key--propertize ".." 'face last-face)))
+         (dots (which-key--propertize which-key-ellipsis 'face last-face)))
     (if (and which-key-max-description-length
              (> (length desc) which-key-max-description-length))
         (concat (substring desc 0 which-key-max-description-length) dots)
@@ -1848,12 +1859,12 @@ non-nil, then bindings are collected recursively for all prefixes."
          (rows (apply #'cl-mapcar #'list padded)))
     (mapconcat (lambda (row) (mapconcat #'identity row " ")) rows "\n")))
 
-(defsubst which-key--max-len (keys index)
+(defsubst which-key--max-len (keys index &optional initial-value)
   "Internal function for finding the max length of the INDEX
 element in each list element of KEYS."
   (cl-reduce
    (lambda (x y) (max x (which-key--string-width (nth index y))))
-   keys :initial-value 0))
+   keys :initial-value (if initial-value initial-value 0)))
 
 (defun which-key--pad-column (col-keys)
   "Take a column of (key separator description) COL-KEYS,
@@ -1862,7 +1873,8 @@ that width."
   (let* ((col-key-width  (+ which-key-add-column-padding
                             (which-key--max-len col-keys 0)))
          (col-sep-width  (which-key--max-len col-keys 1))
-         (col-desc-width (which-key--max-len col-keys 2))
+         (col-desc-width (which-key--max-len
+                          col-keys 2 which-key-min-column-description-width))
          (col-width      (+ 1 col-key-width col-sep-width col-desc-width)))
     (cons col-width
           (mapcar (lambda (k)
@@ -2027,7 +2039,7 @@ max-lines max-width avl-lines avl-width (which-key--pages-height result))
 (eval-and-compile
   (if (fboundp 'universal-argument--description)
       (defalias 'which-key--universal-argument--description
-        'universal-argument--description)
+        #'universal-argument--description)
     (defun which-key--universal-argument--description ()
       ;; Backport of the definition of universal-argument--description in
       ;; emacs25 on 2015-12-04
@@ -2315,7 +2327,7 @@ PREFIX should be a string suitable for `kbd'."
            (which-key--create-buffer-and-show (apply #'vector key-lst)))
           (t (setq which-key--automatic-display nil)
              (which-key-show-top-level)))))
-(defalias 'which-key-undo 'which-key-undo-key)
+(defalias 'which-key-undo #'which-key-undo-key)
 
 (defun which-key-abort (&optional _)
   "Abort key sequence."
@@ -2476,7 +2488,7 @@ KEYMAP is selected interactively by mode in
          (intern
           (completing-read
            "Minor Mode: "
-           (mapcar 'car
+           (mapcar #'car
                    (cl-remove-if-not
                     (lambda (entry)
                       (and (symbol-value (car entry))
@@ -2645,6 +2657,9 @@ Finally, show the buffer."
                         (not which-key--secondary-timer-active))
                (which-key--start-timer which-key-idle-secondary-delay t))))
           ((and which-key-show-transient-maps
+                ;; Assuming that if this is not true we're in
+                ;; `which-key-show-top-level', which would then be overwritten.
+                (> (length prefix-keys) 0)
                 (keymapp overriding-terminal-local-map)
                 ;; basic test for it being a hydra
                 (not (eq (lookup-key overriding-terminal-local-map "\C-u")

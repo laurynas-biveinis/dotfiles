@@ -247,10 +247,10 @@ else like the former.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.5.4/which-key-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.6.0/which-key-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/which-key-3.5.4/which-key-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/which-key-3.6.0/which-key-autoloads.el") (car load-path))))
 
 
 
