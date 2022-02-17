@@ -2166,10 +2166,10 @@ non-nil.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220130.1941/transient-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220216.2303/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220130.1941/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220216.2303/transient-autoloads.el") (car load-path))))
 
 
 
@@ -11643,10 +11643,10 @@ Fontify an `info' node." nil nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20220119.658/iedit-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20220216.717/iedit-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20220119.658/iedit-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/iedit-20220216.717/iedit-autoloads.el") (car load-path))))
 
 
 
@@ -13657,10 +13657,10 @@ Toggle to show diff information." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-3.5.4/ghub-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-3.5.5/ghub-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ghub-3.5.4/ghub-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ghub-3.5.5/ghub-autoloads.el") (car load-path))))
 
 
 
@@ -13771,10 +13771,10 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/closql-1.2.0/closql-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/closql-1.2.1/closql-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/closql-1.2.0/closql-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/closql-1.2.1/closql-autoloads.el") (car load-path))))
 
 
 
@@ -13782,14 +13782,20 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.3.0/forge-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.3.1/forge-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/forge-0.3.0/forge-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/forge-0.3.1/forge-autoloads.el") (car load-path))))
 
 
 
-(with-eval-after-load 'magit-mode (define-key magit-mode-map "'" 'forge-dispatch) (define-key magit-mode-map "N" 'forge-dispatch))
+(defvar forge-add-default-bindings t "\
+Whether to add Forge's bindings to various Magit keymaps.
+If you want to disable this, then you must set this to nil before
+`magit' is loaded.  If you do it before `forge' but after `magit'
+is loaded, then `magit-mode-map' ends up being modified anyway.")
+
+(with-eval-after-load 'magit-mode (when forge-add-default-bindings (define-key magit-mode-map "'" 'forge-dispatch) (define-key magit-mode-map "N" 'forge-dispatch)))
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge" '("forge-")))
 
@@ -13843,6 +13849,11 @@ Visit the url corresponding BRANCH using a browser.
 Visit the url corresponding to REMOTE using a browser.
 
 \(fn REMOTE)" t nil)
+
+(autoload 'forge-browse-repository "forge-commands" "\
+View the current repository in a separate buffer.
+
+\(fn REPO)" t nil)
 
 (autoload 'forge-browse-topic "forge-commands" "\
 Visit the current topic using a browser." t nil)
@@ -15053,7 +15064,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.4" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2.1" "/Users/laurynas/.emacs.d/elpa/transient-20220130.1941" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.5" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2.1" "/Users/laurynas/.emacs.d/elpa/transient-20220216.2303" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
