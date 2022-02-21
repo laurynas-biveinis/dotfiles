@@ -140,6 +140,8 @@ tramp erc cc-mode
 * [Set frame geometry after docking/undocking laptop automatically](https://www.reddit.com/r/emacs/comments/ev2q9q/weekly_tipstricketc_thread/fftpfj0?utm_source=share&utm_medium=web2x&context=3)
 * `my-recompile-packages`: force recompiling all the installed  packages, after
   a Emacs version upgrade or a borked package upgrade.
+* `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, kills all
+  buffers and executes `gitrmworktree.`
 
 # Installation
 

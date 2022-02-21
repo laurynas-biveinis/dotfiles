@@ -1759,6 +1759,26 @@ with a prefix ARG."
 
 (define-key projectile-command-map "w" #'projectile-reconfigure-project)
 
+;; Integrate projectile with my gitrmworktree
+(require 'projectile)
+(defun kill-buffers-rm-worktree ()
+  "Remove the git worktree and kill project buffers."
+  (interactive)
+  ;; TODO(laurynas): don't know whether `projectile-kill-buffers' prompt will be
+  ;; answered with 'y' or 'n' – assume that zero existing buffers means 'y.' For
+  ;; that, `projectile-kill-buffers-filter' must be set to 'kill-all.
+  (when (not (equal projectile-kill-buffers-filter 'kill-all))
+    (user-error "Unsupported projectile-kill-buffers-filter value %:S"
+                projectile-kill-buffers-filter))
+  (let ((project-root-path (projectile-acquire-root)))
+    (projectile-with-default-dir project-root-path
+      (projectile-kill-buffers)
+      (let ((buffers (projectile-project-buffers project-root-path)))
+        (when (null buffers)
+          (shell-command (concat "gitrmworktree " project-root-path)))))))
+
+(define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
+
 ;;; all-the-icons-dired
 (require 'all-the-icons-dired)
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
