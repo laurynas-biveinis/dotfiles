@@ -1118,9 +1118,6 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
              (not (memq major-mode git-gutter:disabled-modes)))
     (git-gutter-mode +1)))
 
-;; Integrate git-gutter with magit: update markings on magit refresh
-(add-hook 'magit-post-refresh-hook #'git-gutter:update-all-windows)
-
 ;;; undo-tree
 (require 'undo-tree)
 (add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
