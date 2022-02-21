@@ -178,6 +178,7 @@ and
 * <https://github.com/kaushalmodi/.emacs.d>
 * <https://www.reddit.com/r/emacs/comments/74ruu0/how_to_copy_the_contents_of_a_single_cell_in_org/do0utjf/?context=3>
 * <https://gitlab.com/gSwag/emacs-configuration>
+* <https://ianyepan.github.io/posts/emacs-git-gutter/>
 
 * <https://github.com/michelegera/dotfiles>
 * <https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/>

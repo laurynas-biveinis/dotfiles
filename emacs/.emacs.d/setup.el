@@ -1096,8 +1096,17 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 ;;; `forge'
 (require 'forge)
 
+;;; git-gutter
+(require 'git-gutter)
+(setq git-gutter:update-interval 0.02)
+
 ;;; git-gutter-fringe
 (require 'git-gutter-fringe)
+
+(define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
+(define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
+(define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom)
+
 (global-git-gutter-mode +1)
 
 ;; Disable git-gutter-fringe over TRAMP. Not the best option to replace an
