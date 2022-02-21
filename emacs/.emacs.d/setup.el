@@ -1781,6 +1781,7 @@ with a prefix ARG."
       (projectile-kill-buffers)
       (let ((buffers (projectile-project-buffers project-root-path)))
         (when (null buffers)
+          (projectile-remove-known-project project-root-path)
           (shell-command (concat "gitrmworktree " project-root-path)))))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
