@@ -1782,6 +1782,8 @@ with a prefix ARG."
       (let ((buffers (projectile-project-buffers project-root-path)))
         (when (null buffers)
           (projectile-remove-known-project project-root-path)
+          ;; TODO(laurynas): check gitrmworktree result code before removing the
+          ;; project from the project list.
           (shell-command (concat "gitrmworktree " project-root-path)))))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
