@@ -1763,7 +1763,7 @@ with a prefix ARG."
 
 (define-key projectile-command-map "w" #'projectile-reconfigure-project)
 
-;; Integrate projectile with my gitrmworktree
+;; Integrate projectile/lsp-mode with my gitrmworktree
 (require 'projectile)
 (defun kill-buffers-rm-worktree ()
   "Remove the git worktree and kill project buffers."
@@ -1782,7 +1782,8 @@ with a prefix ARG."
           (projectile-remove-known-project project-root-path)
           ;; TODO(laurynas): check gitrmworktree result code before removing the
           ;; project from the project list.
-          (shell-command (concat "gitrmworktree " project-root-path)))))))
+          (shell-command (concat "gitrmworktree " project-root-path))
+          (lsp-workspace-folders-remove project-root-path))))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
 

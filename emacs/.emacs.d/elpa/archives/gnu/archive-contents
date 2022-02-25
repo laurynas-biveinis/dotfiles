@@ -804,7 +804,7 @@
 	      (:maintainer "Markus Triska" . "triska@metalevel.at")
 	      (:url . "https://www.metalevel.at/ediprolog/"))])
  (eev .
-      [(20220218)
+      [(20220224)
        ((emacs
 	 (24 4)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -813,7 +813,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "b25aa1b3ad4026e3d1c23d8f5148a8bc3b0ada56"))])
+	(:commit . "a33e2d7edf6e1d22ecc0201402d344c727205f43"))])
  (eglot .
 	[(1 8)
 	 ((emacs
@@ -1333,15 +1333,16 @@
 	   (:authors
 	    ("Thierry Volpiatto" . "thievol@posteo.net")))])
  (isearch-mb .
-	     [(0 3)
+	     [(0 4)
 	      ((emacs
 		(27 1)))
 	      "Control isearch from the minibuffer" tar
 	      ((:url . "https://github.com/astoff/isearch-mb")
+	       (:keywords "matching")
 	       (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
 	       (:authors
 		("Augusto Stoffel" . "arstoffel@gmail.com"))
-	       (:keywords "matching"))])
+	       (:commit . "ee6a67c7e12eb3c49b96f9aeeaacda110b9d1208"))])
  (iterators .
 	    [(0 1 1)
 	     ((emacs
