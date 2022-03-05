@@ -14971,10 +14971,10 @@ When FAMILY is non-nil, limit the candidates to the icon set matching it.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20211007.1729/all-the-icons-dired-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220304.1638/all-the-icons-dired-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20211007.1729/all-the-icons-dired-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220304.1638/all-the-icons-dired-autoloads.el") (car load-path))))
 
 
 
