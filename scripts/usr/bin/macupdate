@@ -9,7 +9,7 @@ softwareupdate --download --all
 echo "Updating brew"
 brew update
 
-IFS=$'\n' readonly outdated_formulae=($(brew outdated --quiet))
+IFS=$'\n' readonly outdated_formulae=($(brew outdated --formula --quiet))
 for outdated_formula in $outdated_formulae; do
     if ! is_on_ac; then
         echo Laptop is on battery: skipping brew upgrade of "$outdated_formula"
