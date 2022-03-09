@@ -19,6 +19,8 @@ for outdated_formula in $outdated_formulae; do
     brew upgrade "$outdated_formula"
     if [[ "$outdated_formula" == "cmake" ]]; then
         echo "Not cleaning up older brew cmake versions"
+    elif [[ "$outdated_formula" == "icu4c" ]]; then
+        echo "Not cleaning up older ICU4C versions"
     else
         echo "brew cleanup $outdated_formula"
         brew cleanup "$outdated_formula"
