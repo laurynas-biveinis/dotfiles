@@ -597,10 +597,24 @@ value of `vterm-buffer-name'.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/undo-tree-0.7.5/undo-tree-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/queue-0.2/queue-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/undo-tree-0.7.5/undo-tree-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/queue-0.2/queue-autoloads.el") (car load-path))))
+
+
+
+(defalias 'make-queue 'queue-create "\
+Create an empty queue data structure.")
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "queue" '("queue")))
+
+
+)
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/undo-tree-0.8.2/undo-tree-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/undo-tree-0.8.2/undo-tree-autoloads.el") (car load-path))))
 
 
 
@@ -654,6 +668,8 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 \(fn &optional ARG)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "undo-tree" '("*undo-tree-id-counter*" "buffer-undo-tree" "turn-on-undo-tree-mode" "undo-")))
+
+
 
 
 )
@@ -14142,10 +14158,10 @@ Only Github is supported for now." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20210825.1804/flycheck-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20220314.27/flycheck-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20210825.1804/flycheck-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20220314.27/flycheck-autoloads.el") (car load-path))))
 
 
 
@@ -14638,10 +14654,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.0pre2/cmake-mode-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.0pre3/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.0pre2/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.0pre3/cmake-mode-autoloads.el") (car load-path))))
 
 
 
@@ -15057,7 +15073,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode yaml xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe ghub gcmh emacsql emacsql-sqlite closql forge flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode yaml xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient tramp stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe ghub gcmh emacsql emacsql-sqlite closql forge flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
