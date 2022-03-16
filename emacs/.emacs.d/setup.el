@@ -1118,6 +1118,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 
 ;;; undo-tree
 (require 'undo-tree)
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 (add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'Info-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'grep-mode)
