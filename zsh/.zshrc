@@ -2,8 +2,6 @@
 export PATH="${PATH}:${HOME}/.local/bin"
 eval "$(fig init zsh pre)"
 
-
-
 #!/bin/zsh
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -159,7 +157,6 @@ autoload -Uz compinit && compinit
 
 zinit load zdharma/fast-syntax-highlighting
 
-
-
 # Fig post block. Keep at the bottom of this file.
 eval "$(fig init zsh post)"
+
