@@ -2131,10 +2131,10 @@ The buffer on focus when the command is called is set as the target buffer." t n
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.3/tree-sitter-langs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.4/tree-sitter-langs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.3/tree-sitter-langs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.4/tree-sitter-langs-autoloads.el") (car load-path))))
 
 
 
@@ -11940,17 +11940,17 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.4/helm-core-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.5/helm-core-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.4/helm-core-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.5/helm-core-autoloads.el") (car load-path))))
 
 
 
-(autoload 'helm-configuration "helm" "\
+(autoload 'helm-configuration "helm-core" "\
 Customize Helm." t nil)
 
-(autoload 'helm-define-multi-key "helm" "\
+(autoload 'helm-define-multi-key "helm-core" "\
 In KEYMAP, define key sequence KEY for function list FUNCTIONS.
 Each function runs sequentially for each KEY press.
 If DELAY is specified, switch back to initial function of FUNCTIONS list
@@ -11975,7 +11975,7 @@ executing the first function on the next hit.
 
 \(fn KEYMAP KEY FUNCTIONS &optional DELAY)" nil nil)
 
-(autoload 'helm-multi-key-defun "helm" "\
+(autoload 'helm-multi-key-defun "helm-core" "\
 Define NAME as a multi-key command running FUNS.
 After DELAY seconds, the FUNS list is reinitialized.
 See `helm-define-multi-key'.
@@ -11984,7 +11984,7 @@ See `helm-define-multi-key'.
 
 (function-put 'helm-multi-key-defun 'lisp-indent-function '2)
 
-(autoload 'helm-define-key-with-subkeys "helm" "\
+(autoload 'helm-define-key-with-subkeys "helm-core" "\
 Define in MAP a KEY and SUBKEY to COMMAND.
 
 This allows typing KEY to call COMMAND the first time and
@@ -12020,10 +12020,10 @@ and vectors, so don't use strings to define them.
 
 (function-put 'helm-define-key-with-subkeys 'lisp-indent-function '1)
 
-(autoload 'helm-debug-open-last-log "helm" "\
+(autoload 'helm-debug-open-last-log "helm-core" "\
 Open Helm log file or buffer of last Helm session." t nil)
 
-(autoload 'helm "helm" "\
+(autoload 'helm "helm-core" "\
 Main function to execute helm sources.
 
 PLIST is a list like
@@ -12152,16 +12152,16 @@ However, the use of non-keyword args is deprecated.
 
 \(fn &key SOURCES INPUT PROMPT RESUME PRESELECT BUFFER KEYMAP DEFAULT HISTORY ALLOW-NEST OTHER-LOCAL-VARS)" nil nil)
 
-(autoload 'helm-cycle-resume "helm" "\
+(autoload 'helm-cycle-resume "helm-core" "\
 Cycle in `helm-buffers' list and resume when waiting more than 1.2s." t nil)
 
-(autoload 'helm-other-buffer "helm" "\
+(autoload 'helm-other-buffer "helm-core" "\
 Simplified Helm interface with other `helm-buffer'.
 Call `helm' only with SOURCES and BUFFER as args.
 
 \(fn SOURCES BUFFER)" nil nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm" '("helm-" "with-helm-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-core" '("helm-" "with-helm-")))
 
 
 
@@ -12179,10 +12179,10 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.4/helm-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.5/helm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.4/helm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.5/helm-autoloads.el") (car load-path))))
 
 
 
@@ -12412,6 +12412,30 @@ commands with `helm-external-commands-list'." t nil)
 
 
 
+(defvar helm-ff-icon-mode nil "\
+Non-nil if Helm-Ff-Icon mode is enabled.
+See the `helm-ff-icon-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `helm-ff-icon-mode'.")
+
+(custom-autoload 'helm-ff-icon-mode "helm-files" nil)
+
+(autoload 'helm-ff-icon-mode "helm-files" "\
+Display icons from `all-the-icons' package in HFF when enabled.
+
+If called interactively, enable Helm-Ff-Icon mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+NOTE: This mode is building `helm-source-find-files', so if you enable
+it from your init file, ensure to call it _after_ your defmethod's
+`helm-setup-user-source' definitions (if some) to ensure they are called.
+
+\(fn &optional ARG)" t nil)
+
 (autoload 'helm-ff-cleanup-image-dired-dir-and-cache "helm-files" "\
 Cleanup `image-dired-dir' directory.
 Delete all thumb files that are no more associated with an existing image file in
@@ -12530,6 +12554,13 @@ Go to previous file in Helm grep/etags buffers." t nil)
 
 (autoload 'helm-goto-next-file "helm-grep" "\
 Go to previous file in Helm grep/etags buffers." t nil)
+
+(autoload 'helm-revert-next-error-last-buffer "helm-grep" "\
+Revert last `next-error' buffer from `current-buffer'.
+
+Accept to revert only `helm-grep-mode' or `helm-occur-mode' buffers.
+Use this when you want to revert the `next-error' buffer after
+modifications in `current-buffer'." t nil)
 
 (autoload 'helm-do-grep-ag "helm-grep" "\
 Preconfigured `helm' for grepping with AG in `default-directory'.
