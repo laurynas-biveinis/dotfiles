@@ -349,5 +349,3 @@ cargo install difftastic
 # Play
 brew cask install banktivity beatunes lastfm steam xld loopback mono
 duti -s jp.tmkk.XLD .flac all
-# Optional: disable F8/play button launching Music.app
-launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist
