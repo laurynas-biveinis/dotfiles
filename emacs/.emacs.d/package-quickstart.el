@@ -2182,10 +2182,10 @@ non-nil.
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220314.1605/transient-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220325.1619/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220314.1605/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220325.1619/transient-autoloads.el") (car load-path))))
 
 
 
@@ -13704,10 +13704,10 @@ Toggle to show diff information." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-3.5.5/ghub-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6/ghub-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ghub-3.5.5/ghub-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6/ghub-autoloads.el") (car load-path))))
 
 
 
@@ -15111,7 +15111,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.5" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2.2" "/Users/laurynas/.emacs.d/elpa/transient-20220314.1605" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.2" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/tramp-2.5.2.2" "/Users/laurynas/.emacs.d/elpa/transient-20220325.1619" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:

@@ -131,20 +131,27 @@
                  (const  :tag "on demand (no summary)" 0)
                  (number :tag "after delay" 1)))
 
-(defcustom transient-enable-popup-navigation nil
+(defcustom transient-enable-popup-navigation t
   "Whether navigation commands are enabled in the transient popup.
 
 While a transient is active the transient popup buffer is not the
 current buffer, making it necessary to use dedicated commands to
-act on that buffer itself.  If this non-nil, then the following
-features are available:
+act on that buffer itself.  If this is non-nil, then the following
+bindings are available:
 
-- \"<up>\" moves the cursor to the previous suffix.
-  \"<down>\" moves the cursor to the next suffix.
-  \"RET\" invokes the suffix the cursor is on.
-- \"<mouse-1>\" invokes the clicked on suffix.
-- \"C-s\" and \"C-r\" start isearch in the popup buffer."
-  :package-version '(transient . "0.2.0")
+\\<transient-popup-navigation-map>\
+- \\[transient-backward-button] moves the cursor to the previous suffix.
+- \\[transient-forward-button] moves the cursor to the next suffix.
+\\<transient-button-map>\
+- \\[transient-push-button] invokes the suffix the cursor is on.
+- \\`<mouse-1>' and \\`<mouse-2>' invoke the clicked on suffix.
+\\<transient-popup-navigation-map>\
+- \\[transient-isearch-backward]\
+ and \\[transient-isearch-forward] start isearch in the popup buffer.
+
+Each of these bindings is defined in either `transient-button-map'
+or `transient-popup-navigation-map'."
+  :package-version '(transient . "0.4.0")
   :group 'transient
   :type 'boolean)
 
@@ -1439,7 +1446,7 @@ probably use this instead:
           transient-current-prefix)
       (cl-find-if (lambda (obj)
                     (eq (transient--suffix-command obj)
-                        (or command this-original-command)))
+                        (or command this-command)))
                   (or transient--suffixes
                       transient-current-suffixes))
     (when-let ((obj (get (or command this-command) 'transient--suffix))
@@ -1572,6 +1579,22 @@ to `transient-predicate-map'.  Also see `transient-base-map'.")
                              "Show common permanently")))
           ("C-x l" "Show/hide suffixes" transient-set-level)]])))
 
+(defvar transient-popup-navigation-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "<down-mouse-1>") #'transient-noop)
+    (define-key map (kbd "<up>")   #'transient-backward-button)
+    (define-key map (kbd "<down>") #'transient-forward-button)
+    (define-key map (kbd "C-r")    #'transient-isearch-backward)
+    (define-key map (kbd "C-s")    #'transient-isearch-forward)
+    map))
+
+(defvar transient-button-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "<mouse-1>") #'transient-push-button)
+    (define-key map (kbd "<mouse-2>") #'transient-push-button)
+    (define-key map (kbd "RET")       #'transient-push-button)
+    map))
+
 (defvar transient-predicate-map
   (let ((map (make-sparse-keymap)))
     (define-key map [transient-suspend]       #'transient--do-suspend)
@@ -1599,7 +1622,7 @@ to `transient-predicate-map'.  Also see `transient-base-map'.")
     (define-key map [scroll-bar-toolkit-scroll]   #'transient--do-stay)
     (define-key map [transient-noop]              #'transient--do-noop)
     (define-key map [transient-mouse-push-button] #'transient--do-move)
-    (define-key map [transient-push-button]       #'transient--do-move)
+    (define-key map [transient-push-button]       #'transient--do-push-button)
     (define-key map [transient-backward-button]   #'transient--do-move)
     (define-key map [transient-forward-button]    #'transient--do-move)
     (define-key map [transient-isearch-backward]  #'transient--do-move)
@@ -1627,8 +1650,6 @@ transient behavior of the respective command.
 For transient commands that are bound in individual transients,
 the transient behavior is specified using the `:transient' slot
 of the corresponding object.")
-
-(defvar transient-popup-navigation-map)
 
 (defvar transient--transient-map nil)
 (defvar transient--predicate-map nil)
@@ -1673,8 +1694,12 @@ of the corresponding object.")
                      cmd conflict)))
           (define-key map kbd cmd))))
     (when transient-enable-popup-navigation
-      (setq map
-            (make-composed-keymap (list map transient-popup-navigation-map))))
+      ;; `transient--make-redisplay-map' maps only over bindings that are
+      ;; directly in the base keymap, so that cannot be a composed keymap.
+      (set-keymap-parent
+       map (make-composed-keymap
+            (keymap-parent map)
+            transient-popup-navigation-map)))
     map))
 
 (defun transient--make-predicate-map ()
@@ -1989,20 +2014,21 @@ value.  Otherwise return CHILDREN as is."
       (setq this-command 'transient-set-level))
      (t
       (setq transient--exitp nil)
-      (when (eq (if-let ((fn (transient--get-predicate-for
-                              this-original-command)))
-                    (let ((action (funcall fn)))
-                      (when (eq action transient--exit)
-                        (setq transient--exitp (or transient--exitp t)))
-                      action)
-                  (if (let ((keys (this-command-keys-vector)))
-                        (eq (aref keys (1- (length keys))) ?\C-g))
-                      (setq this-command 'transient-noop)
-                    (unless (transient--edebug-command-p)
-                      (setq this-command 'transient-undefined)))
-                  transient--stay)
-                transient--exit)
+      (when (eq (transient--do-pre-command) transient--exit)
         (transient--pre-exit))))))
+
+(defun transient--do-pre-command ()
+  (if-let ((fn (transient--get-predicate-for this-command)))
+      (let ((action (funcall fn)))
+        (when (eq action transient--exit)
+          (setq transient--exitp (or transient--exitp t)))
+        action)
+    (if (let ((keys (this-command-keys-vector)))
+          (eq (aref keys (1- (length keys))) ?\C-g))
+        (setq this-command 'transient-noop)
+      (unless (transient--edebug-command-p)
+        (setq this-command 'transient-undefined)))
+    transient--stay))
 
 (defun transient--get-predicate-for (cmd)
   (or (ignore-errors
@@ -2313,6 +2339,21 @@ If there is no parent prefix, then behave like `transient--do-exit'."
   (transient--stack-zap)
   transient--exit)
 
+(defun transient--do-push-button ()
+  "Call the command represented by the activated button.
+Use that command's pre-command to determine transient behavior."
+  (if (and (mouse-event-p last-command-event)
+           (not (eq (posn-window (event-start last-command-event))
+                    transient--window)))
+      transient--stay
+    (setq this-command
+          (with-selected-window transient--window
+            (get-text-property (if (mouse-event-p last-command-event)
+                                   (posn-point (event-start last-command-event))
+                                 (point))
+                               'command)))
+    (transient--do-pre-command)))
+
 (defun transient--do-recurse ()
   "Call the transient prefix command, preparing for return to active transient.
 If there is no parent prefix, then just call the command."
@@ -2402,8 +2443,7 @@ to `transient--do-warn'."
                        'face 'font-lock-warning-face)
            (propertize "C-g" 'face 'transient-key)
            (propertize "?"   'face 'transient-key)
-           (propertize (symbol-name (transient--suffix-symbol
-                                     this-original-command))
+           (propertize (symbol-name (transient--suffix-symbol this-command))
                        'face 'font-lock-warning-face))
   (unless (and transient--transient-map
                (memq transient--transient-map overriding-terminal-local-map))
@@ -2507,7 +2547,8 @@ transient is active."
         (oset (transient-suffix-object command) level level))
       (setf (alist-get sym alist) level)
       (setf (alist-get prefix transient-levels) alist))
-    (transient-save-levels))
+    (transient-save-levels)
+    (transient--show))
    (t
     (transient-undefined))))
 
@@ -2566,6 +2607,10 @@ around `scroll-down-command' (which see)."
   (interactive "^P")
   (with-selected-window transient--window
     (scroll-down-command arg)))
+
+(defun transient-push-button ()
+  "Invoke the suffix command represented by this button."
+  (interactive))
 
 (defun transient-resume ()
   "Resume a previously suspended stack of transients."
@@ -3701,8 +3746,7 @@ resumes the suspended transient.")
   (message "Debugging transient %s"
            (if transient--debug "enabled" "disabled")))
 
-;;; Compatibility
-;;;; Popup Navigation
+;;; Popup Navigation
 
 (defun transient-popup-navigation-help ()
   "Inform the user how to enable popup navigation commands."
@@ -3712,37 +3756,7 @@ resumes the suspended transient.")
 
 (define-button-type 'transient-button
   'face nil
-  'action (lambda (button)
-            (let ((command (button-get button 'command)))
-              ;; Yes, I know that this is wrong(tm).
-              ;; Unfortunately it is also necessary.
-              (setq this-original-command command)
-              (transient--pre-command)
-              (call-interactively command))))
-
-(defvar transient-popup-navigation-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "<down-mouse-1>") #'transient-noop)
-    (define-key map (kbd "<mouse-1>") #'transient-mouse-push-button)
-    (define-key map (kbd "RET")       #'transient-push-button)
-    (define-key map (kbd "<up>")      #'transient-backward-button)
-    (define-key map (kbd "C-p")       #'transient-backward-button)
-    (define-key map (kbd "<down>")    #'transient-forward-button)
-    (define-key map (kbd "C-n")       #'transient-forward-button)
-    (define-key map (kbd "C-r")       #'transient-isearch-backward)
-    (define-key map (kbd "C-s")       #'transient-isearch-forward)
-    map))
-
-(defun transient-mouse-push-button (&optional pos)
-  "Invoke the suffix the user clicks on."
-  (interactive (list last-command-event))
-  (push-button pos))
-
-(defun transient-push-button ()
-  "Invoke the selected suffix command."
-  (interactive)
-  (with-selected-window transient--window
-    (push-button)))
+  'keymap transient-button-map)
 
 (defun transient-backward-button (n)
   "Move to the previous button in the transient popup buffer.
@@ -3777,6 +3791,7 @@ See `forward-button' for information about N."
           beg (next-single-property-change
                beg 'face nil (line-end-position))))))
 
+;;; Compatibility
 ;;;; Popup Isearch
 
 (defvar transient--isearch-mode-map
