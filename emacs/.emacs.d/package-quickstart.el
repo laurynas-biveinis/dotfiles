@@ -14189,10 +14189,10 @@ Only Github is supported for now." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20220328.1518/flycheck-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-32/flycheck-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20220328.1518/flycheck-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-32/flycheck-autoloads.el") (car load-path))))
 
 
 
@@ -14275,8 +14275,7 @@ The following PROPERTIES constitute an error level:
 `:severity SEVERITY'
      A number denoting the severity of this level.  The higher
      the number, the more severe is this level compared to other
-     levels.  Defaults to 0; info is -10, warning is 10, and
-     error is 100.
+     levels.  Defaults to 0.
 
      The severity is used by `flycheck-error-level-<' to
      determine the ordering of errors according to their levels.
