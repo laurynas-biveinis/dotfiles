@@ -2131,10 +2131,10 @@ The buffer on focus when the command is called is set as the target buffer." t n
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.4/tree-sitter-langs-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.6/tree-sitter-langs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.4/tree-sitter-langs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.11.6/tree-sitter-langs-autoloads.el") (car load-path))))
 
 
 
@@ -14189,10 +14189,10 @@ Only Github is supported for now." t nil)
 
 
 )
-(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20220314.27/flycheck-autoloads.el"))
+(let ((load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-20220328.1518/flycheck-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20220314.27/flycheck-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-20220328.1518/flycheck-autoloads.el") (car load-path))))
 
 
 
