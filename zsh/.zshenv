@@ -1,6 +1,13 @@
 #!/bin/zsh
 
-export LANG=en_US.UTF-8
+UNAME_OUT="$(uname -s)"
+
+if [ "$UNAME_OUT" = "Darwin" ]; then
+    export LANG=en_US.UTF-8
+else
+    export LANG=en_US.utf8
+fi
+
 
 if [ -f ~/.zshenv_private ]; then
     source ~/.zshenv_private
