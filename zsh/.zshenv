@@ -6,6 +6,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     export LANG=en_US.UTF-8
 else
     export LANG=en_US.utf8
+    export LC_CTYPE=en_US.utf8
 fi
 
 
