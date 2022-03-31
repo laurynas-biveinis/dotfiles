@@ -4762,7 +4762,9 @@ If UNSTABLE is non-nil, the test is tagged as `:unstable'."
 
 (ert-deftest tramp-test30-make-process ()
   "Check `make-process'."
-  :tags '(:expensive-test :tramp-asynchronous-processes)
+  :tags (append '(:expensive-test :tramp-asynchronous-processes)
+		(and (getenv "EMACS_EMBA_CI")
+                     '(:unstable)))
   (skip-unless (tramp--test-enabled))
   (skip-unless (tramp--test-supports-processes-p))
   ;; `make-process' supports file name handlers since Emacs 27.
@@ -6992,7 +6994,9 @@ This is needed in timer functions as well as process filters and sentinels."
 Such requests could arrive from timers, process filters and
 process sentinels.  They shall not disturb each other."
   :tags (append '(:expensive-test :tramp-asynchronous-processes)
-		(and (getenv "EMACS_HYDRA_CI") '(:unstable)))
+		(and (or (getenv "EMACS_HYDRA_CI")
+                         (getenv "EMACS_EMBA_CI"))
+                     '(:unstable)))
   (skip-unless (tramp--test-enabled))
   (skip-unless (tramp--test-supports-processes-p))
   ;; Prior Emacs 27, `shell-file-name' was hard coded as "/bin/sh" for
@@ -7306,7 +7310,6 @@ process sentinels.  They shall not disturb each other."
   "Check that Tramp and its subpackages unload completely.
 Since it unloads Tramp, it shall be the last test to run."
   :tags '(:expensive-test)
-  (skip-unless noninteractive)
   ;; The autoloaded Tramp objects are different since Emacs 26.1.  We
   ;; cannot test older Emacsen, therefore.
   (skip-unless (tramp--test-emacs26-p))
@@ -7376,7 +7379,13 @@ Since it unloads Tramp, it shall be the last test to run."
 	     (and (string-match-p "^tramp" (symbol-name fun))
 		  (ert-fail
 		   (format "Function `%s' still contains Tramp advice" x))))
-	   x)))))
+	   x))))
+
+  ;; Reload.
+  (require 'tramp)
+  (require 'tramp-archive)
+  (should (featurep 'tramp))
+  (should (featurep 'tramp-archive)))
 
 (defun tramp-test-all (&optional interactive)
   "Run all tests for \\[tramp].

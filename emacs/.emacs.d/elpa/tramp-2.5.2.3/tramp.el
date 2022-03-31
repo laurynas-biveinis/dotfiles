@@ -185,7 +185,7 @@ See the variable `tramp-encoding-shell' for more information."
 
 ;; Since Emacs 26.1, `system-name' can return nil at build time if
 ;; Emacs is compiled with "--no-build-details".  We do expect it to be
-;; a string.  (Bug#44481)
+;; a string.  (Bug#44481, Bug#54294)
 (defconst tramp-system-name (or (system-name) "")
   "The system name Tramp is running locally.")
 
@@ -1409,8 +1409,11 @@ calling HANDLER.")
 ;; internal data structure.  Convenience functions for internal
 ;; data structure.
 
-;; The basic structure for remote file names.  We use a list :type,
-;; in order to be compatible with Emacs 25.
+;; The basic structure for remote file names.  We use a list :type, in
+;; order to be compatible with Emacs 25.  We must autoload it in
+;; tramp-loaddefs.el, because some functions, which need it, wouldn't
+;; work otherwise when unloading / reloading Tramp.  (Bug#50869)
+;;;###tramp-autoload
 (cl-defstruct (tramp-file-name (:type list) :named)
   method user domain host port localname hop)
 
@@ -2688,10 +2691,11 @@ Falls back to normal file name handler if no Tramp file name handler exists."
 ;;;###autoload
 (progn (defun tramp-register-autoload-file-name-handlers ()
   "Add Tramp file name handlers to `file-name-handler-alist' during autoload."
-  (add-to-list 'file-name-handler-alist
-	       (cons tramp-autoload-file-name-regexp
-		     #'tramp-autoload-file-name-handler))
-  (put #'tramp-autoload-file-name-handler 'safe-magic t)))
+  (unless (rassq #'tramp-file-name-handler file-name-handler-alist)
+    (add-to-list 'file-name-handler-alist
+	         (cons tramp-autoload-file-name-regexp
+		       #'tramp-autoload-file-name-handler))
+    (put #'tramp-autoload-file-name-handler 'safe-magic t))))
 
 (put #'tramp-register-autoload-file-name-handlers 'tramp-autoload t)
 ;;;###autoload (tramp-register-autoload-file-name-handlers)
@@ -3933,7 +3937,7 @@ Do not set it manually, it is used buffer-local in `tramp-get-lock-pid'.")
 	     (match (string-match tramp-lock-file-info-regexp info)))
     (or ; Locked by me.
         (and (string-equal (match-string 1 info) (user-login-name))
-	     (string-equal (match-string 2 info) (system-name))
+	     (string-equal (match-string 2 info) tramp-system-name)
 	     (string-equal (match-string 3 info) (tramp-get-lock-pid file)))
 	; User name.
 	(match-string 1 info))))
@@ -3964,7 +3968,7 @@ Do not set it manually, it is used buffer-local in `tramp-get-lock-pid'.")
 	         ;; USER@HOST.PID[:BOOT_TIME]
 	         (info
 	          (format
-	           "%s@%s.%s" (user-login-name) (system-name)
+	           "%s@%s.%s" (user-login-name) tramp-system-name
 	           (tramp-get-lock-pid file))))
 
 	;; Protect against security hole.
@@ -4901,8 +4905,9 @@ performed successfully.  Any other value means an error."
 	  (tramp-message vec 6 "\n%s" (buffer-string)))
 	(if (eq exit 'ok)
 	    (ignore-errors
-	      (and (functionp tramp-password-save-function)
-		   (funcall tramp-password-save-function)))
+	      (when (functionp tramp-password-save-function)
+		(funcall tramp-password-save-function)
+                (setq tramp-password-save-function nil)))
 	  ;; Not successful.
 	  (tramp-clear-passwd vec)
 	  (delete-process proc)

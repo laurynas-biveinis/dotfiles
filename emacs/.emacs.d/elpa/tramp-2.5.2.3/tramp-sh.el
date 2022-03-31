@@ -2664,7 +2664,9 @@ The method used must be an out-of-band method."
 	  ;; Try to insert the amount of free space.
 	  (goto-char (point-min))
 	  ;; First find the line to put it on.
-	  (when (re-search-forward "^\\([[:space:]]*total\\)" nil t)
+	  (when (and (re-search-forward "^\\([[:space:]]*total\\)" nil t)
+		     ;; Emacs 29.1 or later.
+		     (not (fboundp 'dired--insert-disk-space)))
 	    (when-let ((available (get-free-disk-space ".")))
 	      ;; Replace "total" with "total used", to avoid confusion.
 	      (replace-match "\\1 used in directory")
@@ -2818,8 +2820,10 @@ implementation will be used."
 			       (string-match-p "sh$" program)
 			       (= (length args) 2)
 			       (string-equal "-c" (car args))
-			       ;; Don't if there is a string.
-			       (not (string-match-p "'\\|\"" (cadr args)))))
+			       ;; Don't if there is a quoted string.
+			       (not (string-match-p "'\\|\"" (cadr args)))
+			       ;; Check, that /dev/tty is usable.
+			       (tramp-get-remote-dev-tty v)))
 		 ;; When PROGRAM is nil, we just provide a tty.
 		 (args (if (not heredoc) args
 			 (let ((i 250))
@@ -4094,13 +4098,10 @@ file exists and nonzero exit status otherwise."
     ;; The algorithm is as follows: we try a list of several commands.
     ;; For each command, we first run `$cmd /' -- this should return
     ;; true, as the root directory always exists.  And then we run
-    ;; `$cmd /this\ file\ does\ not\ exist ', hoping that the file indeed
-    ;; does not exist.  This should return false.  We use the first
-    ;; command we find that seems to work.
+    ;; `$cmd /\ this\ file\ does\ not\ exist\ ', hoping that the file
+    ;; indeed does not exist.  This should return false.  We use the
+    ;; first command we find that seems to work.
     ;; The list of commands to try is as follows:
-    ;; `ls -d'            This works on most systems, but NetBSD 1.4
-    ;;                    has a bug: `ls' always returns zero exit
-    ;;                    status, even for files which don't exist.
     ;; `test -e'          Some Bourne shells have a `test' builtin
     ;;                    which does not know the `-e' option.
     ;; `/bin/test -e'     For those, the `test' binary on disk normally
@@ -4108,6 +4109,10 @@ file exists and nonzero exit status otherwise."
     ;;                    is sometimes `/bin/test' and sometimes it's
     ;;                    `/usr/bin/test'.
     ;; `/usr/bin/test -e' In case `/bin/test' does not exist.
+    ;; `ls -d'            This works on most systems, but NetBSD 1.4
+    ;;                    has a bug: `ls' always returns zero exit
+    ;;                    status, even for files which don't exist.
+
     (unless (or
 	     (ignore-errors
 	       (and (setq result (format "%s -e" (tramp-get-test-command vec)))
@@ -4840,6 +4845,7 @@ connection if a previous connection has died for some reason."
     ;; If Tramp opens the same connection within a short time frame,
     ;; there is a problem.  We shall signal this.
     (unless (or (process-live-p p)
+                (and (processp p) (not non-essential))
 		(not (tramp-file-name-equal-p
 		      vec (car tramp-current-connection)))
 		(time-less-p
@@ -5815,6 +5821,12 @@ This command is returned only if `delete-by-moving-to-trash' is non-nil."
 		    vec (format command (tramp-file-local-name tmpfile)))
 		   command))
 	(delete-file tmpfile)))))
+
+(defun tramp-get-remote-dev-tty (vec)
+  "Check, whether remote /dev/tty is usable."
+  (with-tramp-connection-property vec "dev-tty"
+    (tramp-send-command-and-check
+     vec "echo </dev/tty")))
 
 ;; Some predefined connection properties.
 (defun tramp-get-inline-compress (vec prop size)

@@ -3,6 +3,43 @@
 ;;; Code:
 
 
+;;;### (autoloads nil "tramp" "tramp.el" (0 0 0 0))
+;;; Generated autoloads from tramp.el
+
+(defvar cl-struct-tramp-file-name-tags)
+
+(cl-defsubst tramp-file-name-p (cl-x) (declare (side-effect-free error-free)) (and (memq (car-safe cl-x) cl-struct-tramp-file-name-tags) t))
+
+(put 'tramp-file-name 'cl-deftype-satisfies 'tramp-file-name-p)
+
+(cl-defsubst tramp-file-name-method (cl-x) "\
+Access slot \"method\" of `tramp-file-name' struct CL-X." (declare (side-effect-free t)) (progn (or (tramp-file-name-p cl-x) (signal 'wrong-type-argument (list 'tramp-file-name cl-x))) (nth 1 cl-x)))
+
+(cl-defsubst tramp-file-name-user (cl-x) "\
+Access slot \"user\" of `tramp-file-name' struct CL-X." (declare (side-effect-free t)) (progn (or (tramp-file-name-p cl-x) (signal 'wrong-type-argument (list 'tramp-file-name cl-x))) (nth 2 cl-x)))
+
+(cl-defsubst tramp-file-name-domain (cl-x) "\
+Access slot \"domain\" of `tramp-file-name' struct CL-X." (declare (side-effect-free t)) (progn (or (tramp-file-name-p cl-x) (signal 'wrong-type-argument (list 'tramp-file-name cl-x))) (nth 3 cl-x)))
+
+(cl-defsubst tramp-file-name-host (cl-x) "\
+Access slot \"host\" of `tramp-file-name' struct CL-X." (declare (side-effect-free t)) (progn (or (tramp-file-name-p cl-x) (signal 'wrong-type-argument (list 'tramp-file-name cl-x))) (nth 4 cl-x)))
+
+(cl-defsubst tramp-file-name-port (cl-x) "\
+Access slot \"port\" of `tramp-file-name' struct CL-X." (declare (side-effect-free t)) (progn (or (tramp-file-name-p cl-x) (signal 'wrong-type-argument (list 'tramp-file-name cl-x))) (nth 5 cl-x)))
+
+(cl-defsubst tramp-file-name-localname (cl-x) "\
+Access slot \"localname\" of `tramp-file-name' struct CL-X." (declare (side-effect-free t)) (progn (or (tramp-file-name-p cl-x) (signal 'wrong-type-argument (list 'tramp-file-name cl-x))) (nth 6 cl-x)))
+
+(cl-defsubst tramp-file-name-hop (cl-x) "\
+Access slot \"hop\" of `tramp-file-name' struct CL-X." (declare (side-effect-free t)) (progn (or (tramp-file-name-p cl-x) (signal 'wrong-type-argument (list 'tramp-file-name cl-x))) (nth 7 cl-x)))
+
+(autoload 'copy-tramp-file-name "tramp" nil nil nil)
+
+(cl-defsubst make-tramp-file-name (&cl-defs (nil (cl-tag-slot) (method) (user) (domain) (host) (port) (localname) (hop)) &key method user domain host port localname hop) "\
+Constructor for objects of type `tramp-file-name'." (declare (side-effect-free t)) (list 'tramp-file-name method user domain host port localname hop))
+
+;;;***
+
 ;;;### (autoloads nil "tramp-adb" "tramp-adb.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-adb.el
 
@@ -528,7 +565,7 @@ arguments to pass to the OPERATION.
 (defconst tramp-sshfs-method "sshfs" "\
 Tramp method for sshfs mounts.")
 
-(tramp--with-startup (add-to-list 'tramp-methods `(,tramp-sshfs-method (tramp-mount-args (("-C") ("-p" "%p") ("-o" "transform_symlinks") ("-o" "idmap=user,reconnect"))) (tramp-login-program "ssh") (tramp-login-args (("-q") ("-l" "%u") ("-p" "%p") ("-e" "none") ("-t" "-t") ("%h") ("%l"))) (tramp-direct-async t) (tramp-remote-shell ,tramp-default-remote-shell) (tramp-remote-shell-login ("-l")) (tramp-remote-shell-args ("-c")))) (add-to-list 'tramp-connection-properties `(,(format "/%s:" tramp-sshfs-method) "direct-async-process" t)) (tramp-set-completion-function tramp-sshfs-method tramp-completion-function-alist-ssh))
+(tramp--with-startup (add-to-list 'tramp-methods `(,tramp-sshfs-method (tramp-mount-args (("-C") ("-p" "%p") ("-o" "dir_cache=no") ("-o" "transform_symlinks") ("-o" "idmap=user,reconnect"))) (tramp-login-program "ssh") (tramp-login-args (("-q") ("-l" "%u") ("-p" "%p") ("-e" "none") ("-t" "-t") ("%h") ("%l"))) (tramp-direct-async t) (tramp-remote-shell ,tramp-default-remote-shell) (tramp-remote-shell-login ("-l")) (tramp-remote-shell-args ("-c")))) (add-to-list 'tramp-connection-properties `(,(format "/%s:" tramp-sshfs-method) "direct-async-process" t)) (tramp-set-completion-function tramp-sshfs-method tramp-completion-function-alist-ssh))
 
 (defconst tramp-sshfs-file-name-handler-alist '((access-file . tramp-handle-access-file) (add-name-to-file . tramp-handle-add-name-to-file) (copy-directory . tramp-handle-copy-directory) (copy-file . tramp-sshfs-handle-copy-file) (delete-directory . tramp-fuse-handle-delete-directory) (delete-file . tramp-fuse-handle-delete-file) (directory-file-name . tramp-handle-directory-file-name) (directory-files . tramp-fuse-handle-directory-files) (directory-files-and-attributes . tramp-handle-directory-files-and-attributes) (dired-compress-file . ignore) (dired-uncache . tramp-handle-dired-uncache) (exec-path . tramp-sshfs-handle-exec-path) (expand-file-name . tramp-handle-expand-file-name) (file-accessible-directory-p . tramp-handle-file-accessible-directory-p) (file-acl . ignore) (file-attributes . tramp-fuse-handle-file-attributes) (file-directory-p . tramp-handle-file-directory-p) (file-equal-p . tramp-handle-file-equal-p) (file-executable-p . tramp-fuse-handle-file-executable-p) (file-exists-p . tramp-handle-file-exists-p) (file-in-directory-p . tramp-handle-file-in-directory-p) (file-local-copy . tramp-handle-file-local-copy) (file-locked-p . tramp-handle-file-locked-p) (file-modes . tramp-handle-file-modes) (file-name-all-completions . tramp-fuse-handle-file-name-all-completions) (file-name-as-directory . tramp-handle-file-name-as-directory) (file-name-case-insensitive-p . tramp-handle-file-name-case-insensitive-p) (file-name-completion . tramp-handle-file-name-completion) (file-name-directory . tramp-handle-file-name-directory) (file-name-nondirectory . tramp-handle-file-name-nondirectory) (file-newer-than-file-p . tramp-handle-file-newer-than-file-p) (file-notify-add-watch . tramp-handle-file-notify-add-watch) (file-notify-rm-watch . tramp-handle-file-notify-rm-watch) (file-notify-valid-p . tramp-handle-file-notify-valid-p) (file-ownership-preserved-p . ignore) (file-readable-p . tramp-handle-file-readable-p) (file-regular-p . tramp-handle-file-regular-p) (file-remote-p . tramp-handle-file-remote-p) (file-selinux-context . tramp-handle-file-selinux-context) (file-symlink-p . tramp-handle-file-symlink-p) (file-system-info . tramp-sshfs-handle-file-system-info) (file-truename . tramp-handle-file-truename) (file-writable-p . tramp-sshfs-handle-file-writable-p) (find-backup-file-name . tramp-handle-find-backup-file-name) (insert-directory . tramp-handle-insert-directory) (insert-file-contents . tramp-sshfs-handle-insert-file-contents) (load . tramp-handle-load) (lock-file . tramp-handle-lock-file) (make-auto-save-file-name . tramp-handle-make-auto-save-file-name) (make-directory . tramp-fuse-handle-make-directory) (make-directory-internal . ignore) (make-lock-file-name . tramp-handle-make-lock-file-name) (make-nearby-temp-file . tramp-handle-make-nearby-temp-file) (make-process . tramp-handle-make-process) (make-symbolic-link . tramp-handle-make-symbolic-link) (process-file . tramp-sshfs-handle-process-file) (rename-file . tramp-sshfs-handle-rename-file) (set-file-acl . ignore) (set-file-modes . tramp-sshfs-handle-set-file-modes) (set-file-selinux-context . ignore) (set-file-times . tramp-sshfs-handle-set-file-times) (set-visited-file-modtime . tramp-handle-set-visited-file-modtime) (shell-command . tramp-handle-shell-command) (start-file-process . tramp-handle-start-file-process) (substitute-in-file-name . tramp-handle-substitute-in-file-name) (temporary-file-directory . tramp-handle-temporary-file-directory) (tramp-get-remote-gid . ignore) (tramp-get-remote-uid . ignore) (tramp-set-file-uid-gid . ignore) (unhandled-file-name-directory . ignore) (unlock-file . tramp-handle-unlock-file) (vc-registered . ignore) (verify-visited-file-modtime . tramp-handle-verify-visited-file-modtime) (write-region . tramp-sshfs-handle-write-region)) "\
 Alist of handler functions for Tramp SSHFS method.
@@ -587,7 +624,7 @@ UU-encode the region between BEG and END.
 ;;;### (autoloads nil "trampver" "trampver.el" (0 0 0 0))
 ;;; Generated autoloads from trampver.el
 
-(defconst tramp-version "2.5.2.2" "\
+(defconst tramp-version "2.5.2.3" "\
 This version of Tramp.")
 
 (defconst tramp-bug-report-address "tramp-devel@gnu.org" "\
@@ -595,8 +632,8 @@ Email address to send bug reports to.")
 
 ;;;***
 
-;;;### (autoloads nil nil ("tramp-compat.el" "tramp-fuse.el" "tramp-integration.el"
-;;;;;;  "tramp.el") (0 0 0 0))
+;;;### (autoloads nil nil ("tramp-compat.el" "tramp-fuse.el" "tramp-integration.el")
+;;;;;;  (0 0 0 0))
 
 ;;;***
 
