@@ -1,3 +1,4 @@
+# -*- mode: gitconfig -*-
 [user]
 	name = Laurynas Biveinis
 	email = laurynas.biveinis@gmail.com
@@ -22,8 +23,6 @@
 	fetchJobs = 0
 [pull]
 	ff = only
-[merge]
-	conflictstyle = zdiff3
 [interactive]
 	diffFilter = diff-so-fancy --patch
 [color]
