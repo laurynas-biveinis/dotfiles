@@ -63,3 +63,7 @@ sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
 sudo add-apt-repository ppa:aos1/diff-so-fancy
 sudo apt-get update
 sudo apt-get install diff-so-fancy
+
+# Rust
+sudo apt-get install cargo cargo-doc
+cargo install difftastic
