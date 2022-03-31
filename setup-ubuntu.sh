@@ -58,3 +58,8 @@ sudo ln -s /usr/lib/debug/lib/x86_64-linux-gnu/* /usr/lib/debug/usr/lib/x86_64-l
 # Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 
 sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
+
+# diff-so-fancy
+sudo add-apt-repository ppa:aos1/diff-so-fancy
+sudo apt-get update
+sudo apt-get install diff-so-fancy
