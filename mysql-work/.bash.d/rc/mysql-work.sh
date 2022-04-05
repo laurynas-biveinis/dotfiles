@@ -46,7 +46,7 @@ MY8026_EXTRA="-DENABLE_DOWNLOADS=ON"
 # Undefined symbols for architecture x86_64:
 # "_u_cleanup_69", referenced from:
 # clean_up(bool) in libsql_main.a(mysqld.cc.o)
-MY80_COMMON="-DWITH_DEBUG=ON -DMYSQL_MAINTAINER_MODE=ON -DDOWNLOAD_BOOST=ON -DWITH_BOOST=~/vilniusdb/mysql-boost/ $MY_EXTRA -DWITH_SYSTEM_LIBS=ON -DWITH_RAPIDJSON=bundled -DWITH_LZ4=bundled -DWITH_ROUTER=OFF -DWITH_GROUP_REPLICATION=OFF -DCMAKE_CXX_FLAGS=$EXTRA_CXX_FLAGS -DCMAKE_C_FLAGS_DEBUG='-Wno-deprecated-declarations -Wno-unused-but-set-variable -g' -DCMAKE_CXX_FLAGS_DEBUG='$EXTRA_CXX_FLAGS -Wno-deprecated-declarations -Wno-unused-but-set-variable -Wno-deprecated-copy -g' -DWITH_UNIT_TESTS=OFF"
+MY80_COMMON="-DWITH_DEBUG=ON -DMYSQL_MAINTAINER_MODE=ON -DDOWNLOAD_BOOST=ON -DWITH_BOOST=~/vilniusdb/mysql-boost/ $MY_EXTRA -DWITH_SYSTEM_LIBS=ON -DWITH_RAPIDJSON=bundled -DWITH_LZ4=bundled -DWITH_ROUTER=OFF -DWITH_GROUP_REPLICATION=OFF -DCMAKE_CXX_FLAGS=$EXTRA_CXX_FLAGS -DCMAKE_C_FLAGS_DEBUG='-Wno-deprecated-declarations -Wno-unused-but-set-variable -g' -DCMAKE_CXX_FLAGS_DEBUG='$EXTRA_CXX_FLAGS -Wno-deprecated-declarations -Wno-unused-but-set-variable -g' -DWITH_UNIT_TESTS=OFF"
 
 # Workaround Facebook tooling incompatibility with git worktrees
 FB_COMMON="-DMYSQL_GITHASH=0 -DMYSQL_GITDATE=2100-02-29 -DROCKSDB_GITHASH=0 -DROCKSDB_GITDATE=2100-02-29 $FB_EXTRA"
