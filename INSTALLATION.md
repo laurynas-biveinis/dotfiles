@@ -43,10 +43,9 @@ If "wakatime" is enabled then, on macOS
 ```zsh
 brew install wakatime-cli
 ```
-TODO wakatime-cli on Linux
 
 ```bash
-sudo pip3 install wakatime
+sudo pip install wakatime
 ```
 
 If using `zsh`, done. If using `bash`, then
