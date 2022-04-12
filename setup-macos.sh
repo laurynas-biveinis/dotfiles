@@ -333,7 +333,9 @@ brew tap epk/epk
 brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
 brew tap railwaycat/emacsmacport
-brew install --cask emacs-mac
+brew install emacs-mac --with-native-comp
+osascript -e \
+          'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
      /Library/Java/JavaVirtualMachines/openjdk.jdk
 # Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
