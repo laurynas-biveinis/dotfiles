@@ -94,7 +94,8 @@
 
 (setq scroll-error-top-bottom t)
 
-(setq fast-but-imprecise-scrolling t)
+(setq fast-but-imprecise-scrolling nil)
+(setq redisplay-skip-fontification-on-input t)
 
 (setq recenter-redisplay t)
 
@@ -111,6 +112,11 @@
 (setq what-cursor-show-names t)
 
 (setq switch-to-prev-buffer-skip 'this)
+
+(setq next-error-message-highlight t)
+
+(require 'help-fns)
+(setq help-enable-symbol-autoload t)
 
 ;; isearch
 (setq isearch-lazy-count t)
@@ -354,6 +360,8 @@ loaded as such.)"
 
 (global-display-fill-column-indicator-mode 1)
 
+;; 28.1 introduces `global-display-fill-column-indicator-modes' but it is not
+;; enough to replace this.
 (defun dotfiles--maybe-disable-fci ()
   "Selectively disable `display-fill-column-indicator' in some buffers."
   (let ((buf-name (buffer-name)))
@@ -387,6 +395,9 @@ loaded as such.)"
 (add-hook 'prog-mode-hook #'dotfiles--enable-show-trailing-ws)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'prog-mode-hook #'electric-layout-mode)
+;; We could use `global-goto-address-mode' to turn on `goto-address-mode'
+;; everywhere but unfortunately it does not seem to turn on
+;; `goto-address-prog-mode'.
 (add-hook 'prog-mode-hook #'goto-address-prog-mode)
 
 ;;; text-mode
@@ -433,11 +444,7 @@ loaded as such.)"
 (require 'dired-aux)
 (setq dired-create-destination-dirs 'ask)
 
-(defun dotfiles--load-dired-x ()
-  "Load dired-x."
-  (load "dired-x"))
-
-(add-hook 'dired-load-hook #'dotfiles--load-dired-x)
+(with-eval-after-load "dired" (load "dired-x"))
 
 (add-hook 'Man-mode-hook #'goto-address)
 
@@ -967,7 +974,7 @@ event of an error or nonlocal exit."
 ;; again, I need to `string-trim' it too.
 (defun my-copy-cell ()
   "Copy the current org table cell to the kill ring."
-  (interactive)
+  (interactive "p" org-mode)
   (let ((p (point)))
     (org-table-copy-region p p))
   (kill-new (string-trim (caar org-table-clip))))
@@ -1446,7 +1453,7 @@ CANDIDATES is the list of candidates."
 
 (defun lsp-format-defun ()
   "Format the current cc-mode defun using LSP."
-  (interactive)
+  (interactive "p" prog-mode)
   (save-mark-and-excursion
     (c-mark-function)
     (lsp-format-region (region-beginning) (region-end))))
@@ -1457,7 +1464,7 @@ CANDIDATES is the list of candidates."
     (funcall orig-fun)))
 
 (defun dotfiles--lsp-format-region-advice (orig-fun &rest args)
-  "Format the region (ARGS) using LSP with a fallback to ORIG-FUN (‘c-indent-region’)."
+  "Format the region (ARGS) using LSP with a fallback to ORIG-FUN."
   (if dotfiles--use-lsp-indent (apply #'lsp-format-region args)
     (apply orig-fun args)))
 
@@ -1730,7 +1737,7 @@ find a search tool; by default, this uses \"find | grep\" in the
          (list pr)
        (let ((pr (project-current t)))
          (append
-          (project-roots pr)
+          (project-root pr)
           (project-external-roots pr)))))))
 
 ;; Implement https://github.com/bbatsov/projectile/issues/1676 (Unable to
