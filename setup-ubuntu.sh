@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # Common
-
+sudo apt-get update
+sudo apt-get dist-upgrade
 sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      build-essential gdb manpages-dev binutils binutils-doc cpp g++ gcc \
      libasan5 liblsan0 libtsan0 libubsan1 libc6-dev cpp-doc gcc-doc autoconf \
@@ -11,36 +12,34 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      software-properties-common colordiff valgrind linux-tools-generic \
      libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
      python3-numpy-dbg python-scipy-doc unattended-upgrades screen colordiff \
-     fzf fd-find clang moreutils psmisc zsh zsh-doc libjemalloc-dev
+     fzf fd-find clang moreutils psmisc zsh zsh-doc libjemalloc-dev bzip2-doc \
+     libstdc++-11-doc valgrind-dbg hexyl ripgrep icu-doc ncurses-doc pkg-config \
+     lcov cpufrequtils
 # DeepState
 sudo apt-get install libc6-dev-i386
-# These two conflict with each other on 20.04:
-sudo apt-get install hexyl
-sudo apt-get install ripgrep
-# If above failed due to '/usr/.crates2.json', then
-sudo apt-get -o Dpkg::Options::="--force-overwrite" install ripgrep
 # Not found on AWS EC2
-sudo apt-get install acpi python-pip libasan5-dbg liblsan0-dbg libtsan0-dbg \
-     libubsan1-dbg libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg \
-     libmpx2-dbg libquadmath0-dbg python-doc
+sudo apt-get install acpi python3-pip python3-doc
 # Not named fd by default because fdclone (which I don't use) was first
 sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # So that I can have "gsed" as a GNU Sed on any platform
 sudo ln -sf /bin/sed /bin/gsed
 # Home
-sudo apt-get install g++-10 gcc-10-doc libstdc++6-10-dbg libstdc++-10-doc \
-     libboost-dev libboost-doc
-sudo usermod -aG docker laurynas
+sudo apt-get install libboost-dev libboost-doc
+# sudo usermod -aG docker laurynas
+# LLVM
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+echo 'deb http://apt.llvm.org/impish/ llvm-toolchain-impish-13 main' \
+    | sudo tee -a /etc/apt/sources.list
+sudo apt-get install clang-13 libomp5-13 llvm-13 lld-13 clang-tools-13 \
+     clang-tidy-13 clang-13-doc llvm-13-doc clang-format-13
 # MySQL development specific
-sudo apt-get install ccache rapidjson-dev valgrind-dbg libboost-container-dev \
-    libboost-doc clang-8-doc llvm-8-doc clang-format clang-tidy cppcheck \
-    iwyu ncdu lcov ncurses-doc libaio-dev libssl-dev libreadline-dev \
-    readline-doc liblz4-dev libre2-dev libicu-dev icu-doc zlib1g-dev \
-    libevent-dev pkg-config libcurl4-gnutls-dev libcurl4-doc libpam0g-dev \
-    libtirpc-dev libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab \
-    libprotoc-dev doxygen doxygen-doc graphviz graphviz-doc libedit-dev \
-    libgcrypt20-dev libfido2-dev
+sudo apt-get install ccache rapidjson-dev libboost-container-dev cppcheck \
+     iwyu ncdu lcov ncurses-doc libaio-dev libssl-dev libreadline-dev \
+     readline-doc liblz4-dev libre2-dev libicu-dev zlib1g-dev libevent-dev \
+     libcurl4-gnutls-dev libcurl4-doc libpam0g-dev libtirpc-dev \
+     libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab libprotoc-dev \
+     doxygen doxygen-doc graphviz graphviz-doc libedit-dev libgcrypt20-dev \
+     libfido2-dev libssl-doc rapidjson-doc libeatmydata1
 # For CPU-intensive benchmarks
 sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"
 sudo sysctl -w vm.swappiness=0
@@ -61,7 +60,6 @@ sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
 
 # diff-so-fancy
 sudo add-apt-repository ppa:aos1/diff-so-fancy
-sudo apt-get update
 sudo apt-get install diff-so-fancy
 
 # Rust
