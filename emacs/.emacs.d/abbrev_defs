@@ -1,0 +1,7 @@
+;;-*-coding: utf-8;-*-
+(define-abbrev-table 'c++-mode-abbrev-table
+  '(
+    ("fml" "  // FIXME(laurynas): " nil :count 1)
+    ("tdl" "  // TODO(laurynas): " nil :count 1)
+   ))
+
