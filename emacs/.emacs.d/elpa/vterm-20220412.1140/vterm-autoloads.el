@@ -1,4 +1,4 @@
-;;; vterm-autoloads.el --- automatically extracted autoloads
+;;; vterm-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
 ;;
 ;;; Code:
 
@@ -67,7 +67,7 @@ value of `vterm-buffer-name'.
 
 \(fn &optional ARG)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "vterm" '("vterm-")))
+(register-definition-prefixes "vterm" '("vterm-"))
 
 ;;;***
 
