@@ -476,7 +476,7 @@
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:keywords "abbrev" "convenience" "matching"))])
  (compat .
-	 [(28 1 0 3)
+	 [(28 1 0 5)
 	  ((emacs
 	    (24 3))
 	   (nadvice
@@ -487,7 +487,7 @@
 	   (:maintainer "Compat Development" . "~pkal/compat-devel@lists.sr.ht")
 	   (:authors
 	    ("Philip Kaludercic" . "philipk@posteo.net"))
-	   (:commit . "7a97ee1860e15ff9657d94dc15d03bc5e47d1773"))])
+	   (:commit . "cbf00556174d324ea81181fbb8b5be06c0ee2daa"))])
  (consult .
 	  [(0 16)
 	   ((emacs
@@ -2012,7 +2012,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "92008e762b30cb445a2227e458cbb9a5e1b1d4e8"))])
  (org .
-      [(9 5 2)
+      [(9 5 3)
        ((emacs
 	 (25 1)))
        "Outline-based notes management and organizer" tar
@@ -2020,7 +2020,8 @@
 	(:keywords "outlines" "hypermedia" "calendar" "wp")
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
-	 ("Carsten Dominik" . "carsten.dominik@gmail.com")))])
+	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
+	(:commit . "69c588947d1be9bca1eb8c773f2a8ff117d264ba"))])
  (org-edna .
 	   [(1 1 2)
 	    ((emacs
