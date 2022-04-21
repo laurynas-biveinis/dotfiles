@@ -134,6 +134,7 @@ tramp erc cc-mode
 * [Disable color-identifiers-mode under LSP with semantic
   highlighting](https://github.com/laurynas-biveinis/dotfiles/blob/ce044dab576c525f418a5383180d06c888a33599/emacs/.emacs.d/setup.el#L1924)
 * [Reduce LSP info in the modeline](https://github.com/laurynas-biveinis/dotfiles/commit/be71cb57292e3cda3759a373a0b7c38688780ab0)
+* [Show git ignored files in `dired-ignored` face](https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/?utm_source=share&utm_medium=web2x&context=3)
 
 ### Custom commands and functionality
 
