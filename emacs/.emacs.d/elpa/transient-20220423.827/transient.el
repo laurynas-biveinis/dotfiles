@@ -1,15 +1,17 @@
-;;; transient.el --- Transient commands          -*- lexical-binding: t; -*-
+;;; transient.el --- Transient commands  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2018-2022  Free Software Foundation, Inc.
+;; Copyright (C) 2018-2022 Free Software Foundation, Inc.
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Homepage: https://github.com/magit/transient
-;; Keywords: bindings
+;; Keywords: extensions
 
-;; Package-Requires: ((emacs "25.1"))
 ;; Package-Version: 0.3.7-git
+;; Package-Requires: ((emacs "25.1") (compat "28.1.1.0"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
+
+;; This file is part of GNU Emacs.
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published
@@ -23,8 +25,6 @@
 ;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-;; This file is part of GNU Emacs.
 
 ;;; Commentary:
 
@@ -53,19 +53,20 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'compat)
 (require 'eieio)
 (require 'edmacro)
 (require 'format-spec)
 (require 'seq)
 
-(eval-when-compile
-  (require 'subr-x))
+(eval-when-compile (require 'subr-x))
 
 (declare-function info 'info)
 (declare-function Man-find-section 'man)
 (declare-function Man-next-section 'man)
 (declare-function Man-getpage-in-background 'man)
 
+(defvar display-line-numbers) ; since Emacs 26.1
 (defvar Man-notify-method)
 
 (define-obsolete-function-alias 'define-transient-command
@@ -1015,8 +1016,8 @@ example, sets a variable use `transient-define-infix' instead.
                             (vectorp (car value))))
                    (cl-mapcan (lambda (s) (transient--parse-child prefix s)) value)
                  (transient--parse-child prefix value))))
-    (vector  (when-let ((c (transient--parse-group  prefix spec))) (list c)))
-    (list    (when-let ((c (transient--parse-suffix prefix spec))) (list c)))
+    (vector  (and-let* ((c (transient--parse-group  prefix spec))) (list c)))
+    (list    (and-let* ((c (transient--parse-suffix prefix spec))) (list c)))
     (string  (list spec))))
 
 (defun transient--parse-group (prefix spec)
@@ -1313,7 +1314,7 @@ See info node `(transient)Modifying Existing Transients'."
          (plist-get plist :command)))))
 
 (defun transient--command-key (cmd)
-  (when-let ((obj (get cmd 'transient--suffix)))
+  (and-let* ((obj (get cmd 'transient--suffix)))
     (cond ((slot-boundp obj 'key)
            (oref obj key))
           ((slot-exists-p obj 'shortarg)
@@ -1449,8 +1450,9 @@ probably use this instead:
                         (or command this-command)))
                   (or transient--suffixes
                       transient-current-suffixes))
-    (when-let ((obj (get (or command this-command) 'transient--suffix))
-               (obj (clone obj)))
+    (when-let* ((obj (get (or command this-command) 'transient--suffix))
+                (obj (clone obj)))
+      ;; Cannot use and-let* because of debbugs#31840.
       (transient-init-scope obj)
       (transient-init-value obj)
       obj)))
@@ -1719,12 +1721,12 @@ of the corresponding object.")
           (define-key map (vector sym)
             (let ((do (oref obj transient)))
               (pcase (list do sub-prefix)
-                (`(t     t) #'transient--do-recurse)
-                (`(t   nil) (if (cl-typep obj 'transient-infix)
+                ('(t     t) #'transient--do-recurse)
+                ('(t   nil) (if (cl-typep obj 'transient-infix)
                                 #'transient--do-stay
                               #'transient--do-call))
-                (`(nil   t) #'transient--do-replace)
-                (`(nil nil) #'transient--do-exit)
+                ('(nil   t) #'transient--do-replace)
+                ('(nil nil) #'transient--do-exit)
                 (_          do)))))
          ((not (lookup-key transient-predicate-map (vector sym)))
           (define-key map (vector sym)
@@ -1862,14 +1864,14 @@ value.  Otherwise return CHILDREN as is."
 
 (defun transient--init-group (levels spec)
   (pcase-let ((`(,level ,class ,args ,children) (append spec nil)))
-    (when (transient--use-level-p level)
-      (let ((obj (apply class :level level args)))
-        (when (transient--use-suffix-p obj)
-          (when-let ((suffixes
-                      (cl-mapcan (lambda (c) (transient--init-child levels c))
-                                 (transient-setup-children obj children))))
-            (oset obj suffixes suffixes)
-            (list obj)))))))
+    (when-let* ((- (transient--use-level-p level))
+                (obj (apply class :level level args))
+                (- (transient--use-suffix-p obj))
+                (suffixes (cl-mapcan (lambda (c) (transient--init-child levels c))
+                                     (transient-setup-children obj children))))
+      ;; Cannot use and-let* because of debbugs#31840.
+      (oset obj suffixes suffixes)
+      (list obj))))
 
 (defun transient--init-suffix (levels spec)
   (pcase-let* ((`(,level ,class ,args) spec)
@@ -1965,7 +1967,7 @@ value.  Otherwise return CHILDREN as is."
 (defun transient--suffix-predicate (spec)
   (let ((plist (nth 2 spec)))
     (seq-some (lambda (prop)
-                (when-let ((pred (plist-get plist prop)))
+                (and-let* ((pred (plist-get plist prop)))
                   (list prop pred)))
               '( :if :if-not
                  :if-nil :if-non-nil
@@ -2045,8 +2047,8 @@ value.  Otherwise return CHILDREN as is."
       (and (not suffix-only)
            (let ((pred (oref transient--prefix transient-non-suffix)))
              (pcase pred
-               (`t   #'transient--do-stay)
-               (`nil #'transient--do-warn)
+               ('t   #'transient--do-stay)
+               ('nil #'transient--do-warn)
                (_    pred))))))
 
 (defun transient--pre-exit ()
@@ -2931,11 +2933,11 @@ prompt."
         (if (stringp prompt)
             prompt
           "(BUG: no prompt): "))
-    (or (when-let ((arg (and (slot-boundp obj 'argument) (oref obj argument))))
+    (or (and-let* ((arg (and (slot-boundp obj 'argument) (oref obj argument))))
           (if (and (stringp arg) (string-suffix-p "=" arg))
               arg
             (concat arg ": ")))
-        (when-let ((var (and (slot-boundp obj 'variable) (oref obj variable))))
+        (and-let* ((var (and (slot-boundp obj 'variable) (oref obj variable))))
           (and (stringp var)
                (concat var ": ")))
         "(BUG: no prompt): ")))
@@ -3033,7 +3035,7 @@ the set, saved or default value for PREFIX."
                transient-current-suffixes)))
 
 (defun transient--get-wrapped-value (obj)
-  (when-let ((value (transient-infix-value obj)))
+  (and-let* ((value (transient-infix-value obj)))
     (cl-ecase (and (slot-exists-p obj 'multi-value)
                    (oref obj multi-value))
       ((nil)    (list value))
@@ -3071,7 +3073,7 @@ does nothing." nil)
 
 (cl-defmethod transient-infix-value ((obj transient-option))
   "Return ARGUMENT and VALUE as a unit or nil if the latter is nil."
-  (when-let ((value (oref obj value)))
+  (and-let* ((value (oref obj value)))
     (let ((arg (oref obj argument)))
       (cl-ecase (oref obj multi-value)
         ((nil)    (concat arg value))
@@ -3094,9 +3096,9 @@ contribute to the value of the transient."
 For a switch return a boolean.  For an option return the value as
 a string, using the empty string for the empty value, or nil if
 the option does not appear in ARGS."
-  (if (string-match-p "=\\'" arg)
+  (if (string-suffix-p "=" arg)
       (save-match-data
-        (when-let ((match (let ((case-fold-search nil)
+        (and-let* ((match (let ((case-fold-search nil)
                                 (re (format "\\`%s\\(?:=\\(.+\\)\\)?\\'"
                                             (substring arg 0 -1))))
                             (cl-find-if (lambda (a)
@@ -3180,6 +3182,7 @@ have a history of their own.")
       (setq window-size-fixed t)
       (when (bound-and-true-p tab-line-format)
         (setq tab-line-format nil))
+      (setq header-line-format nil)
       (setq mode-line-format (if (eq transient-mode-line-format 'line)
                                  nil
                                transient-mode-line-format))
@@ -3273,7 +3276,7 @@ have a history of their own.")
              (let ((rows (mapcar #'transient-format (oref column suffixes))))
                (when-let ((desc (transient-format-description column)))
                  (push desc rows))
-               rows))
+               (flatten-tree rows)))
            (oref group suffixes)))
          (vp (or (oref transient--prefix variable-pitch)
                  transient-align-variable-pitch))
@@ -3412,18 +3415,18 @@ Optional support for popup buttons is also implemented here."
            ((equal (seq-take seq len) transient--redisplay-key)
             (let ((pre (key-description (vconcat (seq-take seq len))))
                   (suf (key-description (vconcat (seq-drop seq len)))))
-              (setq pre (replace-regexp-in-string "RET" "C-m" pre t))
-              (setq pre (replace-regexp-in-string "TAB" "C-i" pre t))
-              (setq suf (replace-regexp-in-string "RET" "C-m" suf t))
-              (setq suf (replace-regexp-in-string "TAB" "C-i" suf t))
+              (setq pre (string-replace "RET" "C-m" pre))
+              (setq pre (string-replace "TAB" "C-i" pre))
+              (setq suf (string-replace "RET" "C-m" suf))
+              (setq suf (string-replace "TAB" "C-i" suf))
               ;; We use e.g. "-k" instead of the more correct "- k",
               ;; because the former is prettier.  If we did that in
               ;; the definition, then we want to drop the space that
               ;; is reinserted above.  False-positives are possible
               ;; for silly bindings like "-C-c C-c".
-              (unless (string-match-p " " key)
-                (setq pre (replace-regexp-in-string " " "" pre))
-                (setq suf (replace-regexp-in-string " " "" suf)))
+              (unless (string-search " " key)
+                (setq pre (string-replace " " "" pre))
+                (setq suf (string-replace " " "" suf)))
               (concat (propertize pre 'face 'transient-unreachable-key)
                       (and (string-prefix-p (concat pre " ") key) " ")
                       (transient--colorize-key suf cmd)
@@ -3461,7 +3464,7 @@ Optional support for popup buttons is also implemented here."
   "The `description' slot may be a function, in which case that is
 called inside the correct buffer (see `transient-insert-group')
 and its value is returned to the caller."
-  (when-let ((desc (oref obj description)))
+  (and-let* ((desc (oref obj description)))
     (if (functionp desc)
         (with-current-buffer transient--original-buffer
           (funcall desc))
@@ -3471,7 +3474,7 @@ and its value is returned to the caller."
   "Format the description by calling the next method.  If the result
 doesn't use the `face' property at all, then apply the face
 `transient-heading' to the complete string."
-  (when-let ((desc (cl-call-next-method obj)))
+  (and-let* ((desc (cl-call-next-method obj)))
     (if (text-property-not-all 0 (length desc) 'face nil desc)
         desc
       (propertize desc 'face 'transient-heading))))
@@ -3882,11 +3885,11 @@ search instead."
                      'transient-blue))))
     (pcase (list suffix nonsuf)
       (`(transient-purple ,_)           'transient-purple)
-      (`(transient-red  disallow)       'transient-amaranth)
-      (`(transient-blue disallow)       'transient-teal)
-      (`(transient-red  transient-red)  'transient-pink)
-      (`(transient-red  transient-blue) 'transient-red)
-      (`(transient-blue transient-blue) 'transient-blue))))
+      ('(transient-red  disallow)       'transient-amaranth)
+      ('(transient-blue disallow)       'transient-teal)
+      ('(transient-red  transient-red)  'transient-pink)
+      ('(transient-red  transient-blue) 'transient-red)
+      ('(transient-blue transient-blue) 'transient-blue))))
 
 ;;;; Edebug
 

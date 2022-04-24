@@ -2182,10 +2182,27 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220413.2332/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220413.2332/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.0/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.0/compat-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220413.2332/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.0/compat-autoloads.el") (car load-path))))
+
+
+
+(register-definition-prefixes "compat-help" '("compat---describe"))
+
+
+
+(register-definition-prefixes "compat-macs" '("compat-"))
+
+
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220423.827/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220423.827/transient-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220423.827/transient-autoloads.el") (car load-path))))
 
 
 
@@ -14808,14 +14825,14 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode yaml xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe ghub gcmh emacsql emacsql-sqlite closql forge flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode yaml xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe ghub gcmh emacsql emacsql-sqlite closql forge flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.3" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/transient-20220413.2332" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.3" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/transient-20220423.827" "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.0" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
