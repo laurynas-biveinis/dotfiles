@@ -32,6 +32,7 @@ echo 'deb http://apt.llvm.org/impish/ llvm-toolchain-impish-13 main' \
     | sudo tee -a /etc/apt/sources.list
 sudo apt-get install clang-13 libomp5-13 llvm-13 lld-13 clang-tools-13 \
      clang-tidy-13 clang-13-doc llvm-13-doc clang-format-13
+pip install pandas
 # MySQL development specific
 sudo apt-get install ccache rapidjson-dev libboost-container-dev cppcheck \
      iwyu ncdu lcov ncurses-doc libaio-dev libssl-dev libreadline-dev \
