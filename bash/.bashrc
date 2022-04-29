@@ -1,7 +1,5 @@
 # Fig pre block. Keep at the top of this file.
-export PATH="${PATH}:${HOME}/.local/bin"
-eval "$(fig init bash pre)"
-
+. "$HOME/.fig/shell/bashrc.pre.bash"
 # shellcheck disable=SC1090
 source ~/.noninteractive_init.bash
 
@@ -167,5 +165,4 @@ fi
 source_if_exists ~/.nix-profile/etc/profile.d/nix.sh
 
 # Fig post block. Keep at the bottom of this file.
-eval "$(fig init bash post)"
-
+. "$HOME/.fig/shell/bashrc.post.bash"
