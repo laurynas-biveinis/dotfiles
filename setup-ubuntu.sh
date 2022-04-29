@@ -11,10 +11,10 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      libtool-doc m4-doc cmake cmake-doc diffstat unzip pinentry-doc zip \
      software-properties-common colordiff valgrind linux-tools-generic \
      libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
-     python3-numpy-dbg python-scipy-doc unattended-upgrades screen colordiff \
-     fzf fd-find clang moreutils psmisc zsh zsh-doc libjemalloc-dev bzip2-doc \
-     libstdc++-11-doc valgrind-dbg hexyl ripgrep icu-doc ncurses-doc pkg-config \
-     lcov cpufrequtils
+     python-scipy-doc unattended-upgrades screen fzf fd-find clang moreutils \
+     psmisc zsh zsh-doc libjemalloc-dev bzip2-doc libstdc++-11-doc \
+     valgrind-dbg hexyl ripgrep icu-doc ncurses-doc pkg-config lcov \
+     cpufrequtils libboost-dev libboost-doc cppcheck iwyu
 # DeepState
 sudo apt-get install libc6-dev-i386
 # Not found on AWS EC2
@@ -23,8 +23,6 @@ sudo apt-get install acpi python3-pip python3-doc
 sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # So that I can have "gsed" as a GNU Sed on any platform
 sudo ln -sf /bin/sed /bin/gsed
-# Home
-sudo apt-get install libboost-dev libboost-doc
 # sudo usermod -aG docker laurynas
 # LLVM
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -34,10 +32,9 @@ sudo apt-get install clang-13 libomp5-13 llvm-13 lld-13 clang-tools-13 \
      clang-tidy-13 clang-13-doc llvm-13-doc clang-format-13
 pip install pandas
 # MySQL development specific
-sudo apt-get install ccache rapidjson-dev libboost-container-dev cppcheck \
-     iwyu ncdu lcov ncurses-doc libaio-dev libssl-dev libreadline-dev \
-     readline-doc liblz4-dev libre2-dev libicu-dev zlib1g-dev libevent-dev \
-     libcurl4-gnutls-dev libcurl4-doc libpam0g-dev libtirpc-dev \
+sudo apt-get install ccache rapidjson-dev ncdu libaio-dev libssl-dev \
+     libreadline-dev readline-doc liblz4-dev libre2-dev libicu-dev zlib1g-dev \
+     libevent-dev libcurl4-gnutls-dev libcurl4-doc libpam0g-dev libtirpc-dev \
      libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab libprotoc-dev \
      doxygen doxygen-doc graphviz graphviz-doc libedit-dev libgcrypt20-dev \
      libfido2-dev libssl-doc rapidjson-doc libeatmydata1
@@ -51,9 +48,9 @@ sudo sysctl -w kernel.kptr_restrict=0
 sudo nano /etc/sysctl.conf
 sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
 sudo /etc/init.d/cpufrequtils restart
-# After each apt upgrade
-# (https://twitter.com/trav_downs/status/1280004737455271936):
-sudo ln -s /usr/lib/debug/lib/x86_64-linux-gnu/* /usr/lib/debug/usr/lib/x86_64-linux-gnu/
+# # After each apt upgrade
+# # (https://twitter.com/trav_downs/status/1280004737455271936):
+# sudo ln -s /usr/lib/debug/lib/x86_64-linux-gnu/* /usr/lib/debug/usr/lib/x86_64-linux-gnu/
 
 # Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 
