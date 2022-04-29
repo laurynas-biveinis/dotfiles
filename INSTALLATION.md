@@ -14,6 +14,8 @@ Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 
 If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
 
+`mkdir .gnupg`
+
 Check that existing `~/.zshenv` and `~/.zshrc` files are OK to overwrite, rm
 them, and
 `cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
@@ -45,7 +47,7 @@ brew install wakatime-cli
 ```
 
 ```bash
-sudo pip install wakatime
+pip install wakatime
 ```
 
 If using `zsh`, done. If using `bash`, then
@@ -57,3 +59,8 @@ git clone https://github.com/gjsheep/bash-wakatime.git
 ```
 
 put .wakatime.cfg into $HOME, `chmod 600` it.
+
+Change shell:
+```bash
+chsh
+```
