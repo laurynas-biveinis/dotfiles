@@ -526,10 +526,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20220427.1536/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20220427.1536/vterm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20220429.21/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20220429.21/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20220427.1536/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20220429.21/vterm-autoloads.el") (car load-path))))
 
 
 
