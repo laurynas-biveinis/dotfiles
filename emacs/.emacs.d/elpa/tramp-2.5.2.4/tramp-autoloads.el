@@ -1,4 +1,4 @@
-;;; tramp-autoloads.el --- automatically extracted autoloads
+;;; tramp-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
 ;;
 ;;; Code:
 
@@ -51,14 +51,14 @@ Unload Tramp file name handlers from `file-name-handler-alist'." (dolist (fnh fi
 (defun tramp-unload-tramp nil "\
 Discard Tramp from loading remote files." (interactive) (ignore-errors (unload-feature 'tramp 'force)))
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp" '("tramp-" "with-")))
+(register-definition-prefixes "tramp" '("tramp-" "with-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-adb" "tramp-adb.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-adb.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-adb" '("tramp-")))
+(register-definition-prefixes "tramp-adb" '("tramp-"))
 
 ;;;***
 
@@ -80,7 +80,7 @@ It must be supported by libarchive(3).")
 Regular expression matching archive file names." '(concat "\\`" "\\(" ".+" "\\." (regexp-opt tramp-archive-suffixes) "\\(?:" "\\." (regexp-opt tramp-archive-compression-suffixes) "\\)*" "\\)" "\\(" "/" ".*" "\\)" "\\'"))
 
 (defun tramp-archive-autoload-file-name-handler (operation &rest args) "\
-Load Tramp archive file name handler, and perform OPERATION." (defvar tramp-archive-autoload) (when tramp-archive-enabled (let ((default-directory temporary-file-directory) (tramp-archive-autoload t)) (apply #'tramp-autoload-file-name-handler operation args))))
+Load Tramp archive file name handler, and perform OPERATION." (defvar tramp-archive-autoload) (let ((default-directory temporary-file-directory) (tramp-archive-autoload tramp-archive-enabled)) (apply #'tramp-autoload-file-name-handler operation args)))
 
 (defun tramp-register-archive-file-name-handler nil "\
 Add archive file name handler to `file-name-handler-alist'." (when (and tramp-archive-enabled (not (rassq #'tramp-archive-file-name-handler file-name-handler-alist))) (add-to-list 'file-name-handler-alist (cons (tramp-archive-autoload-file-name-regexp) #'tramp-archive-autoload-file-name-handler)) (put #'tramp-archive-autoload-file-name-handler 'safe-magic t)))
@@ -89,56 +89,56 @@ Add archive file name handler to `file-name-handler-alist'." (when (and tramp-ar
 
 (add-hook 'tramp-archive-unload-hook (lambda nil (remove-hook 'after-init-hook #'tramp-register-archive-file-name-handler)))
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-archive" '("tramp-" "with-parsed-tramp-archive-file-name")))
+(register-definition-prefixes "tramp-archive" '("tramp-" "with-parsed-tramp-archive-file-name"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-cache" "tramp-cache.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-cache.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-cache" '("tramp-")))
+(register-definition-prefixes "tramp-cache" '("tramp-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-cmds" "tramp-cmds.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-cmds.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-cmds" '("tramp-")))
+(register-definition-prefixes "tramp-cmds" '("tramp-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-compat" "tramp-compat.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-compat.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-compat" '("tramp-")))
+(register-definition-prefixes "tramp-compat" '("tramp-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-crypt" "tramp-crypt.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-crypt.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-crypt" '("tramp-crypt-")))
+(register-definition-prefixes "tramp-crypt" '("tramp-crypt-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-ftp" "tramp-ftp.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-ftp.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-ftp" '("tramp-")))
+(register-definition-prefixes "tramp-ftp" '("tramp-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-fuse" "tramp-fuse.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-fuse.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-fuse" '("tramp-fuse-")))
+(register-definition-prefixes "tramp-fuse" '("tramp-fuse-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-gvfs" "tramp-gvfs.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-gvfs.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-gvfs" '("tramp-" "with-tramp-dbus-")))
+(register-definition-prefixes "tramp-gvfs" '("tramp-" "with-tramp-dbus-"))
 
 ;;;***
 
@@ -146,35 +146,35 @@ Add archive file name handler to `file-name-handler-alist'." (when (and tramp-ar
 ;;;;;;  (0 0 0 0))
 ;;; Generated autoloads from tramp-integration.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-integration" '("tramp-")))
+(register-definition-prefixes "tramp-integration" '("tramp-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-rclone" "tramp-rclone.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-rclone.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-rclone" '("tramp-rclone-")))
+(register-definition-prefixes "tramp-rclone" '("tramp-rclone-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-sh" "tramp-sh.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-sh.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-sh" '("tramp-")))
+(register-definition-prefixes "tramp-sh" '("tramp-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-smb" "tramp-smb.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-smb.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-smb" '("tramp-smb-")))
+(register-definition-prefixes "tramp-smb" '("tramp-smb-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-sshfs" "tramp-sshfs.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-sshfs.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-sshfs" '("tramp-sshfs-")))
+(register-definition-prefixes "tramp-sshfs" '("tramp-sshfs-"))
 
 ;;;***
 
@@ -182,21 +182,21 @@ Add archive file name handler to `file-name-handler-alist'." (when (and tramp-ar
 ;;;;;;  0))
 ;;; Generated autoloads from tramp-sudoedit.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-sudoedit" '("tramp-sudoedit-")))
+(register-definition-prefixes "tramp-sudoedit" '("tramp-sudoedit-"))
 
 ;;;***
 
 ;;;### (autoloads nil "tramp-uu" "tramp-uu.el" (0 0 0 0))
 ;;; Generated autoloads from tramp-uu.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tramp-uu" '("tramp-uu")))
+(register-definition-prefixes "tramp-uu" '("tramp-uu"))
 
 ;;;***
 
 ;;;### (autoloads nil "trampver" "trampver.el" (0 0 0 0))
 ;;; Generated autoloads from trampver.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "trampver" '("tramp-")))
+(register-definition-prefixes "trampver" '("tramp-"))
 
 ;;;***
 
