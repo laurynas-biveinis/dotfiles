@@ -510,7 +510,7 @@
 		      ("Jackson Ray Hamilton" . "jackson@jacksonrayhamilton.com"))
 		     (:keywords "convenience" "faces" "tools"))])
  (corfu .
-	[(0 22)
+	[(0 23)
 	 ((emacs
 	   (27 1)))
 	 "Completion Overlay Region FUnction" tar
@@ -518,7 +518,7 @@
 	  (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	  (:authors
 	   ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	  (:commit . "8591833f7dc76233dbe94b59c4eea9be6b4540f9"))])
+	  (:commit . "bf9bb725f70fb3165e2831c5926217bd6a8bc68d"))])
  (coterm .
 	 [(1 5)
 	  ((emacs
@@ -554,6 +554,15 @@
 	       ("Douglas Lewan" . "d.lewan2000@gmail.com"))
 	      (:keywords "files")
 	      (:url . "http://elpa.gnu.org/packages/cpio-mode.html"))])
+ (cpupower .
+	   [(1 0 4)
+	    nil "cpupower command interface" tar
+	    ((:url . "https://gitlab.com/steve-emacs-stuff/cpupower-el")
+	     (:keywords "hardware" "cpupower" "cpu" "frequency-scaling")
+	     (:maintainer "Stephen Meister" . "pallagun@gmail.com")
+	     (:authors
+	      ("Stephen Meister" . "pallagun@gmail.com"))
+	     (:commit . "36520f1fa7bbfdbfd525a4c729b3fd067f7a05f1"))])
  (crdt .
        [(0 2 7)
 	nil "Collaborative editing using Conflict-free Replicated Data Types" tar
