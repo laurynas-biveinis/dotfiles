@@ -1340,7 +1340,7 @@ This is an object representing that transient, use
 (defvar transient-current-command nil
   "The transient from which this suffix command was invoked.
 This is a symbol representing that transient, use
-`current-transient-object' to get the respective object.")
+`transient-current-prefix' to get the respective object.")
 
 (defvar transient-current-suffixes nil
   "The suffixes of the transient from which this suffix command was invoked.
@@ -2105,8 +2105,13 @@ value.  Otherwise return CHILDREN as is."
 
 (defun transient--suspend-override (&optional nohide)
   (transient--debug 'suspend-override)
-  (when (and (not nohide) transient-hide-during-minibuffer-read)
-    (transient--delete-window))
+  (transient--timer-cancel)
+  (cond ((and (not nohide) transient-hide-during-minibuffer-read)
+         (transient--delete-window))
+        ((and transient--prefix transient--redisplay-key)
+         (setq transient--redisplay-key nil)
+         (when transient--showp
+           (transient--show))))
   (transient--pop-keymap 'transient--transient-map)
   (transient--pop-keymap 'transient--redisplay-map)
   (remove-hook 'pre-command-hook  #'transient--pre-command)
@@ -2164,8 +2169,13 @@ value.  Otherwise return CHILDREN as is."
     (unless abort-only
       (setq post-command
             (lambda () "@transient--delay-post-command"
-              (let ((act (and (eq this-command command)
-                              (not (eq (this-command-keys-vector) [])))))
+              (let ((act (and (not (eq (this-command-keys-vector) []))
+                              (or (eq this-command command)
+                                  ;; `execute-extended-command' was
+                                  ;; used to call another command
+                                  ;; that also uses the minibuffer.
+                                  (equal (this-command-keys)
+                                         (format "\M-x%s\r" this-command))))))
                 (transient--debug 'post-command-hook "act: %s" act)
                 (when act
                   (remove-hook 'transient--post-command-hook post-command)

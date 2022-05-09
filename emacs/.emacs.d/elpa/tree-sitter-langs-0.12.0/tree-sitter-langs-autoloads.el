@@ -1,4 +1,4 @@
-;;; tree-sitter-langs-autoloads.el --- automatically extracted autoloads
+;;; tree-sitter-langs-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
 ;;
 ;;; Code:
 
@@ -31,7 +31,7 @@ Use syntax highlighting patterns provided by `tree-sitter-langs'.
 
 (advice-add 'tree-sitter-hl--setup :before #'tree-sitter-langs--set-hl-default-patterns)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-langs" '("tree-sitter-langs-")))
+(register-definition-prefixes "tree-sitter-langs" '("tree-sitter-langs-"))
 
 ;;;***
 
@@ -52,7 +52,7 @@ non-nil.
 
 \(fn &optional SKIP-IF-INSTALLED VERSION OS KEEP-BUNDLE)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-langs-build" '("tree-sitter-langs-")))
+(register-definition-prefixes "tree-sitter-langs-build" '("tree-sitter-langs-"))
 
 ;;;***
 
