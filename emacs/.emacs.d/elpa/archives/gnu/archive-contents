@@ -556,14 +556,14 @@
 	      (:keywords "files")
 	      (:url . "http://elpa.gnu.org/packages/cpio-mode.html"))])
  (cpupower .
-	   [(1 0 4)
+	   [(1 0 5)
 	    nil "cpupower command interface" tar
 	    ((:url . "https://gitlab.com/steve-emacs-stuff/cpupower-el")
 	     (:keywords "hardware" "cpupower" "cpu" "frequency-scaling")
 	     (:maintainer "Stephen Meister" . "pallagun@gmail.com")
 	     (:authors
 	      ("Stephen Meister" . "pallagun@gmail.com"))
-	     (:commit . "36520f1fa7bbfdbfd525a4c729b3fd067f7a05f1"))])
+	     (:commit . "fa979dfafa1beb374bf42e937f0b5b99ed06222e"))])
  (crdt .
        [(0 2 7)
 	nil "Collaborative editing using Conflict-free Replicated Data Types" tar
@@ -2108,7 +2108,7 @@
 	      ("Tyler Grinn" . "tylergrinn@gmail.com"))
 	     (:commit . "435f6361207cf98bb1c5f4c8e8a987005ba21d41"))])
  (org-remark .
-	     [(1 0 4)
+	     [(1 0 5)
 	      ((emacs
 		(27 1))
 	       (org
@@ -2119,7 +2119,7 @@
 	       (:maintainer "Noboru Ota" . "me@nobiot.com")
 	       (:authors
 		("Noboru Ota" . "me@nobiot.com"))
-	       (:commit . "e78cdff25edffc74bfe4c65f3a02777d454f6d96"))])
+	       (:commit . "576e5680682bfb80a50b057b8752e0674d766f8d"))])
  (org-transclusion .
 		   [(1 2 0)
 		    ((emacs
