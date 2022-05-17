@@ -441,11 +441,11 @@ loaded as such.)"
 (require 'dired)
 (setq dired-recursive-copies 'always)
 
+(require 'vc)
 ;; https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/?utm_source=share&utm_medium=web2x&context=3
 (defun dotfiles--dired-dim-git-ignores ()
-  "Dim out .gitignore contents"
-  (when-let ((_ (require 'vc))
-             (ignores (vc-default-ignore-completion-table 'git ".gitignore"))
+  "Dim out .gitignore contents."
+  (when-let ((ignores (vc-default-ignore-completion-table 'git ".gitignore"))
              (exts (make-local-variable 'completion-ignored-extensions)))
     (dolist (item ignores) (add-to-list exts item))))
 (add-hook 'dired-mode-hook #'dotfiles--dired-dim-git-ignores)
