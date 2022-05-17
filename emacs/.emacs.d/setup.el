@@ -5,22 +5,11 @@
 (require 'cl-lib)
 
 ;; Variables and functions defined elsewhere we'll be using
-(defvar bookmark-save-flag)
 (defvar font-use-system-font)
-(defvar wdired-allow-to-change-permissions)
-(defvar TeX-auto-save)
-(defvar TeX-parse-self)
-(defvar TeX-expand-list)
-(defvar TeX-command-list)
-(defvar TeX-source-correlate-start-server)
-(defvar reftex-plug-into-AUCTeX)
-(defvar bib-cite-use-reftex-view-crossref)
 (defvar main-org-file)
 (defvar secrets-org-file)
 (defvar my-frame-font)
 (defvar dotfiles--initial-file-name-handler-alist)
-(declare-function LaTeX-install-toolbar "tex-bar" ())
-(declare-function TeX-source-correlate-mode "tex" (&optional arg))
 (declare-function start-erc-chats "" ())
 
 ;;;; General settings
@@ -39,9 +28,6 @@
 
 ;; Do not store duplicate kills
 (setq kill-do-not-save-duplicates t)
-
-;; Bookmarks are saved automatically
-(setq bookmark-save-flag 1)
 
 ;; Raw bytes in hexadecimal not octal
 (setq display-raw-bytes-as-hex t)
@@ -167,6 +153,12 @@
 (global-so-long-mode 1)
 
 (global-hl-line-mode)
+
+;;; bookmark
+(require 'bookmark)
+
+;; Save bookmarks automatically
+(setq bookmark-save-flag 1)
 
 ;; XXI century encodings
 (set-language-environment "UTF-8")
@@ -459,6 +451,7 @@ loaded as such.)"
 
 (put 'dired-find-alternate-file 'disabled nil)
 
+(require 'wdired)
 (setq wdired-allow-to-change-permissions t)
 
 ;;; cc-mode
