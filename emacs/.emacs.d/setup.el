@@ -937,7 +937,7 @@ event of an error or nonlocal exit."
 ;; again, I need to `string-trim' it too.
 (defun my-copy-cell ()
   "Copy the current org table cell to the kill ring."
-  (interactive "p" org-mode)
+  (interactive nil org-mode)
   (let ((p (point)))
     (org-table-copy-region p p))
   (kill-new (string-trim (caar org-table-clip))))
