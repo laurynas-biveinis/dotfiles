@@ -324,6 +324,7 @@ loaded as such.)"
 ;; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
 (put 'list-timers 'disabled nil)
+(put 'set-goal-column 'disabled nil)
 
 ;; No scollbars
 (set-scroll-bar-mode nil)
