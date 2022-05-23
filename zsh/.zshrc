@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Fig pre block. Keep at the top of this file.
-if [ -x "$HOME/.fig/shell/zshrc.pre.zsh" ]; then
+if [ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]; then
     . "$HOME/.fig/shell/zshrc.pre.zsh"
 fi
 
@@ -168,6 +168,6 @@ autoload -Uz compinit && compinit
 zinit load zdharma/fast-syntax-highlighting
 
 # Fig post block. Keep at the bottom of this file.
-if [ -x "$HOME/.fig/shell/zshrc.post.zsh" ]; then
+if [ -f "$HOME/.fig/shell/zshrc.post.zsh" ]; then
     "$HOME/.fig/shell/zshrc.post.zsh"
 fi
