@@ -843,12 +843,22 @@ transients can be further modified non-interactively.
 that tree are not objects but have the form ‘(LEVEL CLASS PLIST)’, where
 plist should set at least ‘:key’, ‘:description’ and ‘:command’.
 
- -- Function: transient-insert-suffix prefix loc suffix
-     This function inserts suffix or group SUFFIX into PREFIX before
-     LOC.
+ -- Function: transient-insert-suffix prefix loc suffix &optional
+          keep-other
+ -- Function: transient-append-suffix prefix loc suffix &optional
+          keep-other
+     These functions insert the suffix or group SUFFIX into PREFIX
+     before or after LOC.
 
- -- Function: transient-append-suffix prefix loc suffix
-     This function inserts suffix or group SUFFIX into PREFIX after LOC.
+     Conceptually adding a binding to a transient prefix is similar to
+     adding a binding to a keymap, but this is complicated by the fact
+     that multiple suffix commands can be bound to the same key,
+     provided they are never active at the same time, see *note
+     Predicate Slots::.
+
+     Unfortunately both false-positives and false-negatives are
+     possible.  To deal with the former use non-nil KEEP-OTHER.  To deal
+     with the latter remove the conflicting binding explicitly.
 
  -- Function: transient-replace-suffix prefix loc suffix
      This function replaces the suffix or group at LOC in PREFIX with
@@ -2419,7 +2429,7 @@ Appendix C Command and Function Index
 * transient--history-init:               Prefix Classes.      (line  10)
 * transient--insert-group:               Group Methods.       (line  19)
 * transient-append-suffix:               Modifying Existing Transients.
-                                                              (line  46)
+                                                              (line  44)
 * transient-arg-value:                   Using Infix Arguments.
                                                               (line  31)
 * transient-args:                        Using Infix Arguments.
@@ -2440,7 +2450,7 @@ Appendix C Command and Function Index
 * transient-format-value:                Suffix Format Methods.
                                                               (line  22)
 * transient-get-suffix:                  Modifying Existing Transients.
-                                                              (line  56)
+                                                              (line  66)
 * transient-help:                        Getting Help for Suffix Commands.
                                                               (line  11)
 * transient-history-next:                Using History.       (line  18)
@@ -2466,9 +2476,9 @@ Appendix C Command and Function Index
 * transient-quit-seq:                    Aborting and Resuming Transients.
                                                               (line  27)
 * transient-remove-suffix:               Modifying Existing Transients.
-                                                              (line  53)
+                                                              (line  63)
 * transient-replace-suffix:              Modifying Existing Transients.
-                                                              (line  49)
+                                                              (line  59)
 * transient-resume:                      Aborting and Resuming Transients.
                                                               (line  53)
 * transient-save:                        Saving Values.       (line  25)
@@ -2482,7 +2492,7 @@ Appendix C Command and Function Index
 * transient-show-help:                   Suffix Format Methods.
                                                               (line  26)
 * transient-suffix-put:                  Modifying Existing Transients.
-                                                              (line  60)
+                                                              (line  70)
 * transient-suffixes:                    Using Infix Arguments.
                                                               (line  38)
 * transient-suspend:                     Aborting and Resuming Transients.
@@ -2595,50 +2605,50 @@ Ref: Accessibility Options27829
 Ref: Auxiliary Options28152
 Ref: Developer Options32871
 Node: Modifying Existing Transients34119
-Node: Defining New Commands37508
-Node: Defining Transients37844
-Node: Binding Suffix and Infix Commands40276
-Node: Group Specifications41130
-Node: Suffix Specifications45473
-Node: Defining Suffix and Infix Commands49731
-Node: Using Infix Arguments52925
-Node: Transient State55753
-Ref: Pre-commands for Infixes59660
-Ref: Pre-commands for Suffixes59931
-Ref: Pre-commands for Non-Suffixes61700
-Ref: Special Pre-Commands62313
-Node: Classes and Methods62821
-Node: Group Classes65035
-Node: Group Methods66951
-Node: Prefix Classes68204
-Node: Suffix Classes69295
-Node: Suffix Methods71539
-Node: Suffix Value Methods71860
-Node: Suffix Format Methods74614
-Node: Prefix Slots76063
-Ref: Internal Prefix Slots77338
-Node: Suffix Slots78595
-Ref: Slots of transient-suffix78963
-Ref: Slots of transient-infix79817
-Ref: Slots of transient-variable82937
-Ref: Slots of transient-switches83039
-Node: Predicate Slots83402
-Node: Related Abstractions and Packages84657
-Node: Comparison With Prefix Keys and Prefix Arguments84944
-Ref: Regular Prefix Commands85629
-Ref: Regular Prefix Arguments85977
-Ref: Transients86946
-Node: Comparison With Other Packages95217
-Ref: Magit-Popup95448
-Ref: Hydra96347
-Node: FAQ99383
-Ref: Can I control how the popup buffer is displayed?99526
-Ref: Why did some of the key bindings change?99707
-Ref: Why does q not quit popups anymore?102025
-Node: Keystroke Index103118
-Node: Command and Function Index104836
-Node: Variable Index111135
-Node: Concept Index113408
+Node: Defining New Commands38008
+Node: Defining Transients38344
+Node: Binding Suffix and Infix Commands40776
+Node: Group Specifications41630
+Node: Suffix Specifications45973
+Node: Defining Suffix and Infix Commands50231
+Node: Using Infix Arguments53425
+Node: Transient State56253
+Ref: Pre-commands for Infixes60160
+Ref: Pre-commands for Suffixes60431
+Ref: Pre-commands for Non-Suffixes62200
+Ref: Special Pre-Commands62813
+Node: Classes and Methods63321
+Node: Group Classes65535
+Node: Group Methods67451
+Node: Prefix Classes68704
+Node: Suffix Classes69795
+Node: Suffix Methods72039
+Node: Suffix Value Methods72360
+Node: Suffix Format Methods75114
+Node: Prefix Slots76563
+Ref: Internal Prefix Slots77838
+Node: Suffix Slots79095
+Ref: Slots of transient-suffix79463
+Ref: Slots of transient-infix80317
+Ref: Slots of transient-variable83437
+Ref: Slots of transient-switches83539
+Node: Predicate Slots83902
+Node: Related Abstractions and Packages85157
+Node: Comparison With Prefix Keys and Prefix Arguments85444
+Ref: Regular Prefix Commands86129
+Ref: Regular Prefix Arguments86477
+Ref: Transients87446
+Node: Comparison With Other Packages95717
+Ref: Magit-Popup95948
+Ref: Hydra96847
+Node: FAQ99883
+Ref: Can I control how the popup buffer is displayed?100026
+Ref: Why did some of the key bindings change?100207
+Ref: Why does q not quit popups anymore?102525
+Node: Keystroke Index103618
+Node: Command and Function Index105336
+Node: Variable Index111635
+Node: Concept Index113908
 
 End Tag Table
 
