@@ -1814,8 +1814,8 @@ with a prefix ARG."
 (setq highlight-indent-guides-delay 0)
 (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 
-;;; iedit
-;; The default binding of C-; conflicts with flyspell. TODO(laurynas):
+;;; `iedit'
+;; The default binding of C-; conflicts with `flyspell'. TODO(laurynas):
 ;; M-I/M-{/M-} could be useful but the keybindings seem to conflict.
 ;; iedit seems to be configured in an... unorthodox way. TODO(laurynas): report
 ;; a bug.
