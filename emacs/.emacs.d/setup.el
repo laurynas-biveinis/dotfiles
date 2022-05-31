@@ -20,6 +20,8 @@
 (setq auto-save-interval 0)
 (setq auto-save-timeout 30)
 
+(setq-default cursor-in-non-selected-windows nil)
+
 ;; Keep all messages
 (setq message-log-max t)
 
