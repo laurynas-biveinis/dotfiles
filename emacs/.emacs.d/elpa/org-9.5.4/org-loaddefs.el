@@ -1361,7 +1361,7 @@ Set `org-capture-templates' to be similar to `org-remember-templates'." t nil)
 
 ;;;***
 
-;;;### (autoloads nil "org-clock" "org-clock.el" "5c0d6c39a5b0f2793ed040a9204ce84b")
+;;;### (autoloads nil "org-clock" "org-clock.el" "69e9f3416c7305700f8a4f6d18ac4655")
 ;;; Generated autoloads from org-clock.el
 
 (autoload 'org-resolve-clocks "org-clock" "\
