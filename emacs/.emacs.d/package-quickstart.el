@@ -6951,158 +6951,74 @@ Return PDF file's name.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.3/org-contrib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.3/org-contrib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4/org-contrib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4/org-contrib-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-contrib-0.3/org-contrib-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4/org-contrib-autoloads.el") (car load-path))))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-J" '("obj-" "org-babel-")))
+(register-definition-prefixes "ob-J" '("obj-" "org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-abc" '("org-babel-")))
+(register-definition-prefixes "ob-abc" '("org-babel-"))
 
 
 
-(autoload 'org-babel-execute:arduino "ob-arduino" "\
-org-babel arduino hook.
-
-\(fn BODY PARAMS)" nil nil)
-
-(eval-after-load 'org '(add-to-list 'org-src-lang-modes '("arduino" . arduino)))
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-arduino" '("ob-arduino:" "org-babel-default-header-args:sclang")))
+(register-definition-prefixes "ob-asymptote" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-asymptote" '("org-babel-")))
+(register-definition-prefixes "ob-coq" '("coq-program-name" "org-babel-"))
 
 
 
-(defvar ob-clojure-literate-auto-jackin-p nil "\
-Auto jack in ob-clojure project.
-Don't auto jack in by default for not rude.")
-
-(custom-autoload 'ob-clojure-literate-auto-jackin-p "ob-clojure-literate" t)
-
-(autoload 'ob-clojure-literate-specify-session "ob-clojure-literate" "\
-Specify ob-clojure header argument :session with value selected from a list of available sessions." t nil)
-
-(autoload 'ob-clojure-literate-auto-jackin "ob-clojure-literate" "\
-Auto setup ob-clojure-literate scaffold and jack-in Clojure project." t nil)
-
-(autoload 'ob-clojure-literate-enable "ob-clojure-literate" "\
-Enable Org-mode buffer locally for `ob-clojure-literate'." nil nil)
-
-(autoload 'ob-clojure-literate-disable "ob-clojure-literate" "\
-Disable Org-mode buffer locally for `ob-clojure-literate'." nil nil)
-
-(if ob-clojure-literate-auto-jackin-p (ob-clojure-literate-auto-jackin))
-
-(autoload 'ob-clojure-literate-mode "ob-clojure-literate" "\
-A minor mode to toggle `ob-clojure-literate'.
-
-If called interactively, enable Ob-Clojure-Literate mode if ARG
-is positive, and disable it if ARG is zero or negative.  If
-called from Lisp, also enable the mode if ARG is omitted or nil,
-and toggle it if ARG is `toggle'; disable the mode otherwise.
-
-\(fn &optional ARG)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-clojure-literate" '("ob-clojure-literate-")))
+(register-definition-prefixes "ob-csharp" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-coq" '("coq-program-name" "org-babel-")))
+(register-definition-prefixes "ob-ebnf" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-csharp" '("org-babel-")))
+(register-definition-prefixes "ob-eukleides" '("org-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-ebnf" '("org-babel-")))
+(register-definition-prefixes "ob-fomus" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-eukleides" '("org-")))
+(register-definition-prefixes "ob-hledger" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-fomus" '("org-babel-")))
+(register-definition-prefixes "ob-io" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-hledger" '("org-babel-")))
+(register-definition-prefixes "ob-ledger" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-io" '("org-babel-")))
+(register-definition-prefixes "ob-mathomatic" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-ledger" '("org-babel-")))
+(register-definition-prefixes "ob-mscgen" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-mathematica" '("org-babel-")))
+(register-definition-prefixes "ob-oz" '("org-babel-" "oz-send-string-expression"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-mathomatic" '("org-babel-")))
+(register-definition-prefixes "ob-picolisp" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-mscgen" '("org-babel-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-oz" '("org-babel-" "oz-send-string-expression")))
-
-
-
-(autoload 'org-babel-execute:php "ob-php" "\
-Orgmode Babel PHP evaluate function for `BODY' with `PARAMS'.
-
-\(fn BODY PARAMS)" nil nil)
-
-(eval-after-load 'org '(add-to-list 'org-src-lang-modes '("php" . php)))
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-php" '("ob-php:inf-php-buffer" "org-babel-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-picolisp" '("org-babel-")))
-
-
-
-(autoload 'org-babel-execute:redis "ob-redis" "\
-org-babel redis hook.
-
-\(fn BODY PARAMS)" nil nil)
-
-(eval-after-load 'org '(add-to-list 'org-src-lang-modes '("redis" . redis)))
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-redis" '("ob-redis:default-db")))
-
-
-
-(autoload 'org-babel-execute:sclang "ob-sclang" "\
-Org-mode Babel sclang hook for evaluate `BODY' with `PARAMS'.
-
-\(fn BODY PARAMS)" nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-sclang" '("org-babel-default-header-args:sclang")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-shen" '("org-babel-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-smiles" '("molecule-" "org-babel-execute:smiles")))
+(register-definition-prefixes "ob-shen" '("org-babel-"))
 
 
 
@@ -7111,55 +7027,47 @@ Execute a block of Spice code `BODY' with org-babel and `PARAMS'.
 
 \(fn BODY PARAMS)" nil nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-spice" '("ob-spice-concat" "org-babel-expand-body:spice")))
+(register-definition-prefixes "ob-spice" '("ob-spice-concat" "org-babel-expand-body:spice"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-stan" '("org-babel-")))
+(register-definition-prefixes "ob-stata" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-stata" '("org-babel-")))
+(register-definition-prefixes "ob-tcl" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-tcl" '("org-babel-")))
+(register-definition-prefixes "ob-vala" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-vala" '("org-babel-")))
+(register-definition-prefixes "ob-vbnet" '("org-babel-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ob-vbnet" '("org-babel-")))
+(register-definition-prefixes "ol-bookmark" '("org-bookmark-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-bookmark" '("org-bookmark-")))
+(register-definition-prefixes "ol-elisp-symbol" '("org-elisp-symbol-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-elisp-symbol" '("org-elisp-symbol-")))
+(register-definition-prefixes "ol-git-link" '("org-git"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-git-link" '("org-git")))
+(register-definition-prefixes "ol-mew" '("org-mew-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-mew" '("org-mew-")))
+(register-definition-prefixes "ol-vm" '("org-vm-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-notmuch" '("org-notmuch-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-vm" '("org-vm-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ol-wl" '("org-wl-")))
+(register-definition-prefixes "ol-wl" '("org-wl-"))
 
 
 
@@ -7175,47 +7083,31 @@ The annotation will link to ANNOTATED-BUFFER if specified,
 
 \(fn STORAGE-FILE &optional ANNOTATED-BUFFER)" nil nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-annotate-file" '("org-annotate-file-")))
+(register-definition-prefixes "org-annotate-file" '("org-annotate-file-"))
 
 
 
-(autoload 'org-attach-embedded-images-in-subtree "org-attach-embedded-images" "\
-Save the displayed images as attachments and insert links to them." t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-attach-embedded-images" '("org-attach-embedded-images--")))
+(register-definition-prefixes "org-bibtex-extras" '("obe-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-bibtex-extras" '("obe-")))
+(register-definition-prefixes "org-checklist" '("org-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-checklist" '("org-")))
+(register-definition-prefixes "org-choose" '("org-choose-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-choose" '("org-choose-")))
+(register-definition-prefixes "org-collector" '("and-rest" "org-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-collector" '("and-rest" "org-")))
+(register-definition-prefixes "org-depend" '("org-depend-"))
 
 
 
-(autoload 'org-contacts "org-contacts" "\
-Create agenda view for contacts matching NAME.
-
-\(fn NAME)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-contacts" '("erc-nicknames-list" "org-co")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-depend" '("org-depend-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-effectiveness" '("org-effectiveness-")))
+(register-definition-prefixes "org-effectiveness" '("org-effectiveness-"))
 
 
 
@@ -7224,284 +7116,47 @@ Set up org-eldoc documentation function." t nil)
 
 (add-hook 'org-mode-hook #'org-eldoc-load)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-eldoc" '("org-eldoc-")))
+(register-definition-prefixes "org-eldoc" '("org-eldoc-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-eval" '("org-eval-")))
+(register-definition-prefixes "org-eval" '("org-eval-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-eval-light" '("org-eval-light-")))
+(register-definition-prefixes "org-eval-light" '("org-eval-light-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-expiry" '("org-expiry-")))
+(register-definition-prefixes "org-expiry" '("org-expiry-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-interactive-query" '("org-agenda-query-")))
+(register-definition-prefixes "org-interactive-query" '("org-agenda-query-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-invoice" '("org-")))
+(register-definition-prefixes "org-invoice" '("org-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-learn" '("calculate-new-optimal-factor" "determine-next-interval" "get-optimal-factor" "initial-" "inter-repetition-interval" "modify-" "org-" "set-optimal-factor")))
+(register-definition-prefixes "org-learn" '("calculate-new-optimal-factor" "determine-next-interval" "get-optimal-factor" "initial-" "inter-repetition-interval" "modify-" "org-" "set-optimal-factor"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-license" '("org-license-")))
+(register-definition-prefixes "org-license" '("org-license-"))
 
 
 
-(autoload 'org-link-edit-forward-slurp "org-link-edit" "\
-Slurp N trailing blobs into link's description.
-
-  The [[https://orgmode.org/][Org mode]] site
-
-                        |
-                        v
-
-  The [[https://orgmode.org/][Org mode site]]
-
-A blob is a block of non-whitespace characters.  When slurping
-forward, trailing punctuation characters are not considered part
-of a blob.
-
-After slurping, return the slurped text and move point to the
-beginning of the link.
-
-If N is negative, slurp leading blobs instead of trailing blobs.
-
-\(fn &optional N)" t nil)
-
-(autoload 'org-link-edit-backward-slurp "org-link-edit" "\
-Slurp N leading blobs into link's description.
-
-  The [[https://orgmode.org/][Org mode]] site
-
-                        |
-                        v
-
-  [[https://orgmode.org/][The Org mode]] site
-
-A blob is a block of non-whitespace characters.
-
-After slurping, return the slurped text and move point to the
-beginning of the link.
-
-If N is negative, slurp trailing blobs instead of leading blobs.
-
-\(fn &optional N)" t nil)
-
-(autoload 'org-link-edit-forward-barf "org-link-edit" "\
-Barf N trailing blobs from link's description.
-
-  The [[https://orgmode.org/][Org mode]] site
-
-                        |
-                        v
-
-  The [[https://orgmode.org/][Org]] mode site
-
-A blob is a block of non-whitespace characters.
-
-After barfing, return the barfed text and move point to the
-beginning of the link.
-
-If N is negative, barf leading blobs instead of trailing blobs.
-
-\(fn &optional N)" t nil)
-
-(autoload 'org-link-edit-backward-barf "org-link-edit" "\
-Barf N leading blobs from link's description.
-
-  The [[https://orgmode.org/][Org mode]] site
-
-                        |
-                        v
-
-  The Org [[https://orgmode.org/][mode]] site
-
-A blob is a block of non-whitespace characters.
-
-After barfing, return the barfed text and move point to the
-beginning of the link.
-
-If N is negative, barf trailing blobs instead of leading blobs.
-
-\(fn &optional N)" t nil)
-
-(autoload 'org-link-edit-transport-next-link "org-link-edit" "\
-Move the next link to point.
-
-If the region is active, use the selected text as the link's
-description.  Otherwise, use the word at point.
-
-With prefix argument PREVIOUS, move the previous link instead of
-the next link.
-
-Non-interactively, use the text between BEG and END as the
-description, moving the next (or previous) link relative to BEG
-and END.  By default, refuse to overwrite an existing
-description.  If OVERWRITE is `ask', prompt for confirmation
-before overwriting; for any other non-nil value, overwrite
-without asking.
-
-\(fn &optional PREVIOUS BEG END OVERWRITE)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-link-edit" '("org-link-edit--")))
+(register-definition-prefixes "org-mac-iCal" '("omi-" "org-mac-iCal"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-mac-iCal" '("omi-" "org-mac-iCal")))
+(register-definition-prefixes "org-mairix" '("org-"))
 
 
 
-(autoload 'org-mac-grab-link "org-mac-link" "\
-Prompt for an application to grab a link from.
-When done, go grab the link, and insert it at point." t nil)
-
-(autoload 'org-mac-firefox-get-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-firefox-insert-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-vimperator-get-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-vimperator-insert-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-chrome-get-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-chrome-insert-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-brave-get-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-brave-insert-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-safari-get-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-safari-insert-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-together-get-selected "org-mac-link" nil t nil)
-
-(autoload 'org-mac-together-insert-selected "org-mac-link" nil t nil)
-
-(autoload 'org-mac-finder-item-get-selected "org-mac-link" nil t nil)
-
-(autoload 'org-mac-finder-insert-selected "org-mac-link" nil t nil)
-
-(autoload 'org-mac-addressbook-item-get-selected "org-mac-link" nil t nil)
-
-(autoload 'org-mac-addressbook-insert-selected "org-mac-link" nil t nil)
-
-(autoload 'org-mac-skim-get-page "org-mac-link" nil t nil)
-
-(autoload 'org-mac-skim-insert-page "org-mac-link" nil t nil)
-
-(autoload 'org-mac-acrobat-get-page "org-mac-link" nil t nil)
-
-(autoload 'org-mac-acrobat-insert-page "org-mac-link" nil t nil)
-
-(autoload 'org-mac-outlook-message-get-links "org-mac-link" "\
-Create links to the messages currently selected or flagged in Microsoft Outlook.app.
-This will use AppleScript to get the message-id and the subject of the
-messages in Microsoft Outlook.app and make a link out of it.
-When SELECT-OR-FLAG is \"s\", get the selected messages (this is also
-the default).  When SELECT-OR-FLAG is \"f\", get the flagged messages.
-The Org-syntax text will be pushed to the kill ring, and also returned.
-
-\(fn &optional SELECT-OR-FLAG)" t nil)
-
-(autoload 'org-mac-outlook-message-insert-selected "org-mac-link" "\
-Insert a link to the messages currently selected in Microsoft Outlook.app.
-This will use AppleScript to get the message-id and the subject
-of the active mail in Microsoft Outlook.app and make a link out
-of it." t nil)
-
-(autoload 'org-mac-outlook-message-insert-flagged "org-mac-link" "\
-Asks for an org buffer and a heading within it, and replace message links.
-If heading exists, delete all mac-outlook:// links within
-heading's first level.  If heading doesn't exist, create it at
-point-max.  Insert list of mac-outlook:// links to flagged mail
-after heading.
-
-\(fn ORG-BUFFER ORG-HEADING)" t nil)
-
-(autoload 'org-mac-evernote-note-insert-selected "org-mac-link" "\
-Insert a link to the notes currently selected in Evernote.app.
-This will use AppleScript to get the note id and the title of the
-note(s) in Evernote.app and make a link out of it/them." t nil)
-
-(autoload 'org-mac-devonthink-item-insert-selected "org-mac-link" "\
-Insert a link to the item(s) currently selected in DEVONthink Pro Office.
-This will use AppleScript to get the `uuid'(s) and the name(s) of the
-selected items in DEVONthink Pro Office and make link(s) out of it/them." t nil)
-
-(autoload 'org-mac-message-get-links "org-mac-link" "\
-Create links to the messages currently selected or flagged in Mail.app.
-This will use AppleScript to get the message-id and the subject of the
-messages in Mail.app and make a link out of it.
-When SELECT-OR-FLAG is \"s\", get the selected messages (this is also
-the default).  When SELECT-OR-FLAG is \"f\", get the flagged messages.
-The Org-syntax text will be pushed to the kill ring, and also returned.
-
-\(fn &optional SELECT-OR-FLAG)" t nil)
-
-(autoload 'org-mac-message-insert-selected "org-mac-link" "\
-Insert a link to the messages currently selected in Mail.app.
-This will use AppleScript to get the message-id and the subject of the
-active mail in Mail.app and make a link out of it." t nil)
-
-(autoload 'org-mac-message-insert-flagged "org-mac-link" "\
-Asks for an org buffer and a heading within it, and replace message links.
-If heading exists, delete all message:// links within heading's first
-level.  If heading doesn't exist, create it at point-max.  Insert
-list of message:// links to flagged mail after heading.
-
-\(fn ORG-BUFFER ORG-HEADING)" t nil)
-
-(autoload 'org-mac-qutebrowser-get-frontmost-url "org-mac-link" nil t nil)
-
-(autoload 'org-mac-qutebrowser-insert-frontmost-url "org-mac-link" nil t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-mac-link" '("as-get-s" "org-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-mairix" '("org-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-notify" '("org-notify-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-panel" '("orgpan-")))
-
-
-
-(autoload 'org-passwords-mode "org-passwords" "\
-Mode for storing passwords
-
-\(fn)" t nil)
-
-(autoload 'org-passwords "org-passwords" "\
-Open the password file. Open the password file defined by the
-variable `org-password-file' in read-only mode and kill that
-buffer later according to the value of the variable
-`org-passwords-time-opened'. It also adds the `org-password-file'
-to the auto-mode-alist so that it is opened with its mode being
-`org-passwords-mode'.
-
-With prefix arg ARG, the command does not set up a timer to kill the buffer.
-
-With a double prefix arg \\[universal-argument] \\[universal-argument], open the file for editing.
-
-\(fn &optional ARG)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-passwords" '("org-passwords-")))
+(register-definition-prefixes "org-panel" '("orgpan-"))
 
 
 
@@ -7531,11 +7186,11 @@ Use with caution.  This could slow down things a bit." t nil)
 (autoload 'org-registry-update "org-registry" "\
 Update the registry for the current Org file." t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-registry" '("org-registry-")))
+(register-definition-prefixes "org-registry" '("org-registry-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-screen" '("org-screen")))
+(register-definition-prefixes "org-screen" '("org-screen"))
 
 
 
@@ -7575,19 +7230,19 @@ in the other direction
 (autoload 'org-screenshot-show-unused "org-screenshot" "\
 Open A Dired buffer with unused screenshots marked" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-screenshot" '("org-screenshot-")))
+(register-definition-prefixes "org-screenshot" '("org-screenshot-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-secretary" '("join" "org-sec-")))
+(register-definition-prefixes "org-secretary" '("join" "org-sec-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-static-mathjax" '("org-static-mathjax-")))
+(register-definition-prefixes "org-static-mathjax" '("org-static-mathjax-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-sudoku" '("org-sudoku-")))
+(register-definition-prefixes "org-sudoku" '("org-sudoku-"))
 
 
 
@@ -7596,7 +7251,7 @@ Show the table of contents of the current Org-mode buffer.
 
 \(fn &optional DEPTH POSITION)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-toc" '("org-")))
+(register-definition-prefixes "org-toc" '("org-"))
 
 
 
@@ -7616,35 +7271,31 @@ DIRECTORY is where the directory org-mode/ lives (i.e. the
 
 \(fn &optional DIRECTORY)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-track" '("org-track-")))
+(register-definition-prefixes "org-track" '("org-track-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-velocity" '("org-velocity")))
+(register-definition-prefixes "org-wikinodes" '("org-wikinodes-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-wikinodes" '("org-wikinodes-")))
+(register-definition-prefixes "orgtbl-sqlinsert" '("orgtbl-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "orgtbl-sqlinsert" '("orgtbl-")))
+(register-definition-prefixes "ox-bibtex" '("org-bibtex-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-bibtex" '("org-bibtex-")))
+(register-definition-prefixes "ox-confluence" '("org-confluence-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-confluence" '("org-confluence-")))
+(register-definition-prefixes "ox-deck" '("org-deck-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-deck" '("org-deck-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-extra" '("org-" "ox-extras")))
+(register-definition-prefixes "ox-extra" '("org-" "ox-extras"))
 
 
 
@@ -7678,78 +7329,15 @@ Return output file's name.
 
 \(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-freemind" '("org-freemind-")))
+(register-definition-prefixes "ox-freemind" '("org-freemind-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-groff" '("org-groff-")))
+(register-definition-prefixes "ox-groff" '("org-groff-"))
 
 
 
-(autoload 'org-rss-export-as-rss "ox-rss" "\
-Export current buffer to an RSS buffer.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting buffer should be accessible
-through the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-Export is done in a buffer named \"*Org RSS Export*\", which will
-be displayed when `org-export-show-temporary-export-buffer' is
-non-nil.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t nil)
-
-(autoload 'org-rss-export-to-rss "ox-rss" "\
-Export current buffer to an RSS file.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting file should be accessible through
-the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-Return output file's name.
-
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t nil)
-
-(autoload 'org-rss-publish-to-rss "ox-rss" "\
-Publish an org file to RSS.
-
-FILENAME is the filename of the Org file to be published.  PLIST
-is the property list for the given project.  PUB-DIR is the
-publishing directory.
-
-Return output file name.
-
-\(fn PLIST FILENAME PUB-DIR)" nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-rss" '("org-rss-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-s5" '("org-s5-")))
+(register-definition-prefixes "ox-s5" '("org-s5-"))
 
 
 
@@ -7834,7 +7422,7 @@ the reports is done using the TaskJuggler GUI.
 
 \(fn &optional SUBTREEP VISIBLE-ONLY)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ox-taskjuggler" '("org-taskjuggler-")))
+(register-definition-prefixes "ox-taskjuggler" '("org-taskjuggler-"))
 
 
 
