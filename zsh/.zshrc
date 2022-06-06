@@ -169,5 +169,5 @@ zinit load zdharma/fast-syntax-highlighting
 
 # Fig post block. Keep at the bottom of this file.
 if [ -f "$HOME/.fig/shell/zshrc.post.zsh" ]; then
-    "$HOME/.fig/shell/zshrc.post.zsh"
+    . "$HOME/.fig/shell/zshrc.post.zsh"
 fi
