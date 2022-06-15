@@ -526,77 +526,6 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20220613.1614/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20220613.1614/vterm-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20220613.1614/vterm-autoloads.el") (car load-path))))
-
-
-
-(autoload 'vterm-module-compile "vterm" "\
-Compile vterm-module." t nil)
-
-(autoload 'vterm--bookmark-handler "vterm" "\
-Handler to restore a vterm bookmark BMK.
-
-If a vterm buffer of the same name does not exist, the function will create a
-new vterm buffer of the name. It also checks the current directory and sets
-it to the bookmarked directory if needed.
-
-\(fn BMK)" nil nil)
-
-(autoload 'vterm-next-error-function "vterm" "\
-Advance to the next error message and visit the file where the error was.
-This is the value of `next-error-function' in Compilation
-buffers.  Prefix arg N says how many error messages to move
-forwards (or backwards, if negative).
-
-Optional argument RESET clears all the errors.
-
-\(fn N &optional RESET)" t nil)
-
-(autoload 'vterm "vterm" "\
-Create an interactive Vterm buffer.
-Start a new Vterm session, or switch to an already active
-session.  Return the buffer selected (or created).
-
-With a nonnumeric prefix arg, create a new session.
-
-With a string prefix arg, create a new session with arg as buffer name.
-
-With a numeric prefix arg (as in `C-u 42 M-x vterm RET'), switch
-to the session with that number, or create it if it doesn't
-already exist.
-
-The buffer name used for Vterm sessions is determined by the
-value of `vterm-buffer-name'.
-
-\(fn &optional ARG)" t nil)
-
-(autoload 'vterm-other-window "vterm" "\
-Create an interactive Vterm buffer in another window.
-Start a new Vterm session, or switch to an already active
-session.  Return the buffer selected (or created).
-
-With a nonnumeric prefix arg, create a new session.
-
-With a string prefix arg, create a new session with arg as buffer name.
-
-With a numeric prefix arg (as in `C-u 42 M-x vterm RET'), switch
-to the session with that number, or create it if it doesn't
-already exist.
-
-The buffer name used for Vterm sessions is determined by the
-value of `vterm-buffer-name'.
-
-\(fn &optional ARG)" t nil)
-
-(register-definition-prefixes "vterm" '("vterm-"))
-
-
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/queue-0.2/queue-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/queue-0.2/queue-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -14182,10 +14111,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.2/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.2/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre1/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.23.2/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre1/cmake-mode-autoloads.el") (car load-path))))
 
 
 
@@ -14601,7 +14530,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode yaml xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe ghub gcmh emacsql emacsql-sqlite closql forge flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode yaml xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe ghub gcmh emacsql emacsql-sqlite closql forge flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
