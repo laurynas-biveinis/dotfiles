@@ -1,10 +1,10 @@
-;;; compat.el --- Compatibility Library              -*- lexical-binding: t; -*-
+;;; compat.el --- Emacs Lisp Compatibility Library -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
-;; Version: 28.1.1.1
+;; Version: 28.1.1.2
 ;; URL: https://sr.ht/~pkal/compat
 ;; Package-Requires: ((emacs "24.3") (nadvice "0.3"))
 ;; Keywords: lisp
@@ -49,6 +49,7 @@
 ;; separately, by explicitly requiring the feature that defines them.
 (eval-when-compile
   (defvar compat--generate-function)
+  (defvar compat--entwine-version)
   (defmacro compat-entwine (version)
     (cond
      ((or (not (eq compat--generate-function 'compat--generate-minimal))
@@ -58,11 +59,24 @@
              (file (expand-file-name
                     (format "compat-%d.el" version)
                     (file-name-directory
-                     (or (if (fboundp 'macroexp-file-name)
-                             (macroexp-file-name)
-                           (or (bound-and-true-p byte-compile-current-file)
-                               load-file-name))
-                         (buffer-file-name)))))
+                     (or
+                      ;; Some third-party library, which requires
+                      ;; compat.el, is being compiled, loaded or
+                      ;; evaluated, and compat.el hasn't been compiled
+                      ;; yet.
+                      ;;   cd compat && make clean && cd ../other && \
+                      ;;   make clean all
+                      ;;
+                      ;; Or compat.el is being evaluated.
+                      ;;   cd compat && make clean && emacs -Q -L . compat.el
+                      ;;   M-x eval-buffer
+                      ;;
+                      ;; (Like `macroexp-file-name' from Emacs 28.1.)
+                      (let ((file (car (last current-load-list))))
+                        (and (stringp file) file))
+                      ;; compat.el is being compiled.
+                      ;;   cd compat && make clean all
+                      (bound-and-true-p byte-compile-current-file)))))
              defs)
         (with-temp-buffer
           (insert-file-contents file)
@@ -70,11 +84,7 @@
           (while (progn
                    (forward-comment 1)
                    (not (eobp)))
-            ;; We bind `byte-compile-current-file' before
-            ;; macro-expanding, so that `compat--generate-function'
-            ;; can correctly infer the compatibility version currently
-            ;; being processed.
-            (let ((byte-compile-current-file file)
+            (let ((compat--entwine-version (format "%d.1" version))
                   (form (read (current-buffer))))
               (cond
                ((memq (car-safe form)

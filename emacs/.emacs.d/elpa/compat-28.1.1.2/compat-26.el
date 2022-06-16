@@ -25,7 +25,15 @@
 ;; Find here the functionality added in Emacs 26.1, needed by older
 ;; versions.
 ;;
-;; Do NOT load this library manually.  Instead require `compat'.
+;; Only load this library if you need to use one of the following
+;; functions:
+;;
+;; - `compat-sort'
+;; - `line-number-at-pos'
+;; - `compat-alist-get'
+;; - `string-trim-left'
+;; - `string-trim-right'
+;; - `string-trim'
 
 ;;; Code:
 
@@ -38,8 +46,8 @@
   "Return minimum and maximum number of args allowed for FUNC.
 FUNC must be a function of some kind.
 The returned value is a cons cell (MIN . MAX).  MIN is the minimum number
-of args.  MAX is the maximum number, or the symbol ‘many’, for a
-function with ‘&rest’ args, or ‘unevalled’ for a special form."
+of args.  MAX is the maximum number, or the symbol `many', for a
+function with `&rest' args, or `unevalled' for a special form."
   :realname compat--func-arity
   (cond
    ((or (null func) (and (symbolp func) (not (fboundp func))))
@@ -110,7 +118,7 @@ function with ‘&rest’ args, or ‘unevalled’ for a special form."
 (compat-defun assoc (key alist &optional testfn)
   "Handle the optional argument TESTFN.
 Equality is defined by the function TESTFN, defaulting to
-‘equal’.  TESTFN is called with 2 arguments: a car of an alist
+`equal'.  TESTFN is called with 2 arguments: a car of an alist
 element and KEY.  With no optional argument, the function behaves
 just like `assoc'."
   :prefix t
