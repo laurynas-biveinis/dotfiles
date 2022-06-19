@@ -2577,10 +2577,10 @@ this time, in which case it won't display at all.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-1.3.1/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-1.3.1/solarized-theme-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.0/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.0/solarized-theme-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/solarized-theme-1.3.1/solarized-theme-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.0/solarized-theme-autoloads.el") (car load-path))))
 
 
 
@@ -2592,23 +2592,81 @@ triplet strings (e.g. \"#ff12ec\").
 
 Alpha should be a float between 0 and 1.
 
-\(fn COLOR1 COLOR2 ALPHA)" nil nil)
+Optional argument DIGITS-PER-COMPONENT can be either 4 (the default) or 2;
+use the latter if you need a 24-bit specification of a color.
+
+\(fn COLOR1 COLOR2 ALPHA &optional DIGITS-PER-COMPONENT)" nil nil)
+
+(autoload 'solarized-create-color-palette "solarized" "\
+Create color-palette from CORE-PALETTE.
+
+The Returned color-palette has the same format as `solarized-color-palette'
+
+\(fn CORE-PALETTE)" nil nil)
 
 (when (and (boundp 'custom-theme-load-path) load-file-name) (add-to-list 'custom-theme-load-path (file-name-as-directory (file-name-directory load-file-name))))
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "solarized" '("create-solarized-theme" "solarized-")))
+(register-definition-prefixes "solarized" '("solarized-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "solarized-dark-theme" '("solarized-dark")))
+(register-definition-prefixes "solarized-dark-high-contrast-theme" '("solarized-dark-high-contrast"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "solarized-light-theme" '("solarized-light")))
+(register-definition-prefixes "solarized-dark-theme" '("solarized-dark"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "solarized-theme-utils" '("solarized-import-faces")))
+(register-definition-prefixes "solarized-faces" '("solarized-definition"))
+
+
+
+(register-definition-prefixes "solarized-gruvbox-dark-theme" '("solarized-gruvbox-dark"))
+
+
+
+(register-definition-prefixes "solarized-gruvbox-light-theme" '("solarized-gruvbox-light"))
+
+
+
+(register-definition-prefixes "solarized-light-high-contrast-theme" '("solarized-light-high-contrast"))
+
+
+
+(register-definition-prefixes "solarized-light-theme" '("solarized-light"))
+
+
+
+(register-definition-prefixes "solarized-palettes" '("solarized-"))
+
+
+
+(register-definition-prefixes "solarized-selenized-black-theme" '("solarized-selenized-black"))
+
+
+
+(register-definition-prefixes "solarized-selenized-dark-theme" '("solarized-selenized-dark"))
+
+
+
+(register-definition-prefixes "solarized-selenized-light-theme" '("solarized-selenized-light"))
+
+
+
+(register-definition-prefixes "solarized-selenized-white-theme" '("solarized-selenized-white"))
+
+
+
+(register-definition-prefixes "solarized-theme-utils" '("solarized-import-faces"))
+
+
+
+(register-definition-prefixes "solarized-wombat-dark-theme" '("solarized-wombat-dark"))
+
+
+
+(register-definition-prefixes "solarized-zenburn-theme" '("solarized-zenburn"))
 
 
 
