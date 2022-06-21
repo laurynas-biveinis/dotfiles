@@ -14502,24 +14502,34 @@ When FAMILY is non-nil, limit the candidates to the icon set matching it.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220304.1638/all-the-icons-dired-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220304.1638/all-the-icons-dired-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220620.1939/all-the-icons-dired-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220620.1939/all-the-icons-dired-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220304.1638/all-the-icons-dired-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220620.1939/all-the-icons-dired-autoloads.el") (car load-path))))
 
 
 
 (autoload 'all-the-icons-dired-mode "all-the-icons-dired" "\
 Display all-the-icons icon for each file in a dired buffer.
 
-If called interactively, enable All-The-Icons-Dired mode if ARG
-is positive, and disable it if ARG is zero or negative.  If
-called from Lisp, also enable the mode if ARG is omitted or nil,
-and toggle it if ARG is `toggle'; disable the mode otherwise.
+This is a minor mode.  If called interactively, toggle the
+`All-The-Icons-Dired mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `all-the-icons-dired-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
 
 \(fn &optional ARG)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "all-the-icons-dired" '("all-the-icons-dired-")))
+(register-definition-prefixes "all-the-icons-dired" '("all-the-icons-dired-"))
 
 
 )
