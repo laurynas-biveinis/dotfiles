@@ -4,8 +4,8 @@
 
 ;; Author: Zachary Romero <zkry@posteo.org>
 ;; Version: 0.1.0
-;; Package-Version: 0.4.1
-;; Package-Commit: c07cc6d0f3af7cbacb08f0596bdd831f8a1ae5dd
+;; Package-Version: 0.4.2
+;; Package-Commit: cb1cc42bd13285cf2029b5a5dcd65e46e4e1f5af
 ;; Homepage: https://github.com/zkry/yaml.el
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: tools
@@ -1066,8 +1066,9 @@ then check EXPR at the current position."
      ((equal 'list sequence-type)
       (setq yaml--parsing-sequence-type 'list))
      (t (error "Invalid sequence-type.  sequence-type must be list or array")))
-    (when string-values
-      (setq yaml--string-values t))))
+    (if string-values
+        (setq yaml--string-values t)
+      (setq yaml--string-values nil))))
 
 (defun yaml-parse-string (string &rest args)
   "Parse the YAML value in STRING.  Keyword ARGS are as follows:
@@ -1116,7 +1117,10 @@ value.  It defaults to the symbol :false."
     res))
 
 (defun yaml-parse-string-with-pos (string)
-  "Parse the YAML value in STRING, storing positions as text properties."
+  "Parse the YAML value in STRING, storing positions as text properties.
+
+NOTE: This is an experimental feature and may experience API
+changes in the future."
   (let ((yaml--parsing-store-position t))
     (yaml-parse-string string
                        :object-type 'alist
