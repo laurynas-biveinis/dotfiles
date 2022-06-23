@@ -442,9 +442,6 @@ loaded as such.)"
             #'dotfiles--no-flyspell-overlay-on-goto-address)
 
 ;;; dired
-(require 'files)
-(setq insert-directory-program "gls")
-
 ;; Copy recursively
 (require 'dired)
 (setq dired-recursive-copies 'always)

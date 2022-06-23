@@ -8,7 +8,12 @@
   "-*-SFMono Nerd Font-normal-normal-normal-*-12-*-*-*-p-0-iso10646-1"
   "My default frame font on Darwin.")
 
-(setq insert-directory-program "/usr/local/bin/gls")
+(defvar dotfiles--homebrew-root)
+(if (string-prefix-p "aarch64" system-configuration)
+    (setq dotfiles--homebrew-root "/opt/homebrew/")
+  (setq dotfiles--homebrew-root "/usr/local/"))
+
+(setq insert-directory-program (concat dotfiles--homebrew-root "bin/gls"))
 
 (setq mac-right-option-modifier nil)
 (setq mac-command-modifier 'super)
