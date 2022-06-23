@@ -42,6 +42,8 @@ sudo defaults write -g KeyRepeat -int 2
 sudo defaults write -g InitialKeyRepeat -int 35
 defaults write KeyRepeat -int 2
 defaults write InitialKeyRepeat -int 35
+# Go to System Preferences -> Keyboard -> Shortcuts -> Input Sources, uncheck
+# "Select the previous input source" and "Select next source in Input menu"
 # The commands below do:
 # - "Keyboard" group: uncheck "Turn keyboard access on or off ^F1"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 12 \
