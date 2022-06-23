@@ -14,7 +14,13 @@ Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 
 If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
 
-`mkdir .gnupg`
+```
+mkdir .gnupg
+chmod 700 .gnupg
+mkdir -p usr
+mkdir -p usr/bin
+mkdir -p usr/src
+```
 
 Check that existing `~/.zshenv` and `~/.zshrc` files are OK to overwrite, rm
 them, and
@@ -47,7 +53,7 @@ brew install wakatime-cli
 ```
 
 ```bash
-pip install wakatime
+pip3 install wakatime
 ```
 
 If using `zsh`, done. If using `bash`, then
