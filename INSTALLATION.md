@@ -26,15 +26,11 @@ Check that existing `~/.zshenv` and `~/.zshrc` files are OK to overwrite, rm
 them, and
 `cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
 
-On macOS:
+Execute one of the following commands, depending on the OS and the CPU:
 
-``` zsh
-ln -s ~/.gnupg/gpg-agent.conf.macOS ~/.gnupg/gpg-agent.conf
-```
-
-On Linux:
-
-``` zsh
+```zsh
+ln -s ~/.gnupg/gpg-agent.conf.macOS.intel ~/.gnupg/gpg-agent.conf
+ln -s ~/.gnupg/gpg-agent.conf.macOS.apple-silicon ~/.gnupg/gpg-agent.conf
 ln -s ~/.gnupg/gpg-agent.conf.linux ~/.gnupg/gpg-agent.conf
 ```
 
@@ -48,6 +44,7 @@ ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
 If "wakatime" is enabled then, on macOS
+
 ```zsh
 brew install wakatime-cli
 ```
@@ -67,6 +64,7 @@ git clone https://github.com/gjsheep/bash-wakatime.git
 put .wakatime.cfg into $HOME, `chmod 600` it.
 
 Change shell:
+
 ```bash
 chsh
 ```
