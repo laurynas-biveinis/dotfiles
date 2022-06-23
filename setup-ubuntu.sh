@@ -55,7 +55,3 @@ sudo /etc/init.d/cpufrequtils restart
 # Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
 
 sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
-
-# Rust
-sudo apt-get install cargo cargo-doc
-cargo install difftastic

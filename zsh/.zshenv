@@ -22,7 +22,7 @@ fi
 
 export HOMEBREW_NO_INSTALL_CLEANUP=y
 
-export PATH=~/.cargo/bin:~/usr/bin:/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=~/usr/bin:/usr/local/bin:/usr/local/sbin:$PATH
 
 fpath+=~/.zsh.d/functions
 
