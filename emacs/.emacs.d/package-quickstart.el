@@ -73,17 +73,6 @@ Simple mode to edit YAML.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/yaml-0.4.2/yaml-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-0.4.2/yaml-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/yaml-0.4.2/yaml-autoloads.el") (car load-path))))
-
-
-
-(register-definition-prefixes "yaml" '("yaml-"))
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/xterm-color-2.0/xterm-color-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/xterm-color-2.0/xterm-color-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -700,17 +689,6 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tsc-dyn-get" '("tsc-")))
 
 
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treepy-0.1.2/treepy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treepy-0.1.2/treepy-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/treepy-0.1.2/treepy-autoloads.el") (car load-path))))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "treepy" '("treepy-")))
 
 
 )
@@ -13273,53 +13251,6 @@ Toggle to show diff information." t nil)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6/ghub-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6/ghub-autoloads.el") (car load-path))))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "buck" '("buck-default-host")))
-
-
-
-(autoload 'ghub-clear-caches "ghub" "\
-Clear all caches that might negatively affect Ghub.
-
-If a library that is used by Ghub caches incorrect information
-such as a mistyped password, then that can prevent Ghub from
-asking the user for the correct information again.
-
-Set `url-http-real-basic-auth-storage' to nil
-and call `auth-source-forget+'." t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ghub" '("ghub-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ghub-graphql" '("ghub-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "glab" '("glab-default-host")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "gogs" '("gogs-default-host")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "gsexp" '("gsexp-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "gtea" '("gtea-default-host")))
-
-
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/gcmh-20201116.2251/gcmh-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/gcmh-20201116.2251/gcmh-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -13348,413 +13279,6 @@ enable the mode if ARG is omitted or nil, and toggle it if ARG is
 \(fn &optional ARG)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "gcmh" '("gcmh-")))
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-3.0.0/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-3.0.0/emacsql-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/emacsql-3.0.0/emacsql-autoloads.el") (car load-path))))
-
-
-
-(autoload 'emacsql-show-last-sql "emacsql" "\
-Display the compiled SQL of the s-expression SQL expression before point.
-A prefix argument causes the SQL to be printed into the current buffer.
-
-\(fn &optional PREFIX)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "emacsql" '("emacsql-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "emacsql-compiler" '("emacsql-")))
-
-
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.0.0/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.0.0/emacsql-sqlite-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.0.0/emacsql-sqlite-autoloads.el") (car load-path))))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "emacsql-sqlite" '("emacsql-sqlite-")))
-
-
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-1.2.1/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-1.2.1/closql-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/closql-1.2.1/closql-autoloads.el") (car load-path))))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "closql" '("closql-" "eieio-")))
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.3.1/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.3.1/forge-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/forge-0.3.1/forge-autoloads.el") (car load-path))))
-
-
-
-(defvar forge-add-default-bindings t "\
-Whether to add Forge's bindings to various Magit keymaps.
-If you want to disable this, then you must set this to nil before
-`magit' is loaded.  If you do it before `forge' but after `magit'
-is loaded, then `magit-mode-map' ends up being modified anyway.")
-
-(with-eval-after-load 'magit-mode (when forge-add-default-bindings (define-key magit-mode-map "'" 'forge-dispatch) (define-key magit-mode-map "N" 'forge-dispatch)))
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-bitbucket" '("forge-bitbucket-repository")))
-
-
- (autoload 'forge-dispatch "forge-commands" nil t)
-
-(autoload 'forge-pull "forge-commands" "\
-Pull topics from the forge repository.
-
-With a prefix argument and if the repository has not been fetched
-before, then read a date from the user and limit pulled topics to
-those that have been updated since then.
-
-If pulling is too slow, then also consider setting the Git variable
-`forge.omitExpensive' to `true'.
-
-\(fn &optional REPO UNTIL)" t nil)
-
-(autoload 'forge-pull-notifications "forge-commands" "\
-Fetch notifications for all repositories from the current forge." t nil)
-
-(autoload 'forge-pull-topic "forge-commands" "\
-Pull the API data for the current topic.
-If there is no current topic or with a prefix argument read a
-TOPIC to pull instead.
-
-\(fn TOPIC)" t nil)
-
-(autoload 'forge-browse-dwim "forge-commands" "\
-Visit a topic, branch or commit using a browser.
-Prefer a topic over a branch and that over a commit." t nil)
-
-(autoload 'forge-browse-commit "forge-commands" "\
-Visit the url corresponding to REV using a browser.
-
-\(fn REV)" t nil)
-
-(autoload 'forge-copy-url-at-point-as-kill "forge-commands" "\
-Copy the url of the thing at point." t nil)
-
-(autoload 'forge-browse-branch "forge-commands" "\
-Visit the url corresponding BRANCH using a browser.
-
-\(fn BRANCH)" t nil)
-
-(autoload 'forge-browse-remote "forge-commands" "\
-Visit the url corresponding to REMOTE using a browser.
-
-\(fn REMOTE)" t nil)
-
-(autoload 'forge-browse-repository "forge-commands" "\
-View the current repository in a separate buffer.
-
-\(fn REPO)" t nil)
-
-(autoload 'forge-browse-topic "forge-commands" "\
-Visit the current topic using a browser." t nil)
-
-(autoload 'forge-browse-pullreqs "forge-commands" "\
-Visit the pull-requests of the current repository using a browser." t nil)
-
-(autoload 'forge-browse-pullreq "forge-commands" "\
-Visit the url corresponding to PULLREQ using a browser.
-
-\(fn PULLREQ)" t nil)
-
-(autoload 'forge-browse-issues "forge-commands" "\
-Visit the issues of the current repository using a browser." t nil)
-
-(autoload 'forge-browse-issue "forge-commands" "\
-Visit the current issue using a browser.
-If there is no current issue or with a prefix argument
-read an ISSUE to visit.
-
-\(fn ISSUE)" t nil)
-
-(autoload 'forge-browse-post "forge-commands" "\
-Visit the current post using a browser." t nil)
-
-(autoload 'forge-visit-topic "forge-commands" "\
-View the current topic in a separate buffer.
-If there is no current topic or with a prefix argument
-read a topic to visit instead.
-
-\(fn TOPIC)" t nil)
-
-(autoload 'forge-visit-pullreq "forge-commands" "\
-View the current pull-request in a separate buffer.
-If there is no current pull-request or with a prefix argument
-read a PULLREQ to visit instead.
-
-\(fn PULLREQ)" t nil)
-
-(autoload 'forge-visit-issue "forge-commands" "\
-Visit the current issue in a separate buffer.
-If there is no current issue or with a prefix argument
-read an ISSUE to visit instead.
-
-\(fn ISSUE)" t nil)
-
-(autoload 'forge-visit-repository "forge-commands" "\
-View the current repository in a separate buffer.
-
-\(fn REPO)" t nil)
-
-(autoload 'forge-branch-pullreq "forge-commands" "\
-Create and configure a new branch from a pull-request.
-Please see the manual for more information.
-
-\(fn PULLREQ)" t nil)
-
-(autoload 'forge-checkout-pullreq "forge-commands" "\
-Create, configure and checkout a new branch from a pull-request.
-Please see the manual for more information.
-
-\(fn PULLREQ)" t nil)
-
-(autoload 'forge-checkout-worktree "forge-commands" "\
-Create, configure and checkout a new worktree from a pull-request.
-This is like `forge-checkout-pullreq', except that it also
-creates a new worktree. Please see the manual for more
-information.
-
-\(fn PATH PULLREQ)" t nil)
-
-(autoload 'forge-fork "forge-commands" "\
-Fork the current repository to FORK and add it as a REMOTE.
-If the fork already exists, then that isn't an error; the remote
-is added anyway.  Currently this only supports Github and Gitlab.
-
-\(fn FORK REMOTE)" t nil)
-
-(autoload 'forge-list-notifications "forge-commands" "\
-List notifications." t nil)
-
-(autoload 'forge-add-pullreq-refspec "forge-commands" "\
-Configure Git to fetch all pull-requests.
-This is done by adding \"+refs/pull/*/head:refs/pullreqs/*\"
-to the value of `remote.REMOTE.fetch', where REMOTE is the
-upstream remote.  Also fetch from REMOTE." t nil)
-
-(autoload 'forge-add-repository "forge-commands" "\
-Add a repository to the database.
-Offer to either pull topics (now and in the future) or to only
-pull individual topics when the user invokes `forge-pull-topic'.
-
-\(fn URL)" t nil)
-
-(function-put 'forge-add-repository 'interactive-only 't)
-
-(autoload 'forge-add-user-repositories "forge-commands" "\
-Add all of USER's repositories from HOST to the database.
-This may take a while.  Only Github is supported at the moment.
-
-\(fn HOST USER)" t nil)
-
-(autoload 'forge-add-organization-repositories "forge-commands" "\
-Add all of ORGANIZATION's repositories from HOST to the database.
-This may take a while.  Only Github is supported at the moment.
-
-\(fn HOST ORGANIZATION)" t nil)
-
-(autoload 'forge-merge "forge-commands" "\
-Merge the current pull-request using METHOD using the forge's API.
-
-If there is no current pull-request or with a prefix argument,
-then read pull-request PULLREQ to visit instead.
-
-Use of this command is discouraged.  Unless the remote repository
-is configured to disallow that, you should instead merge locally
-and then push the target branch.  Forges detect that you have
-done that and respond by automatically marking the pull-request
-as merged.
-
-\(fn PULLREQ METHOD)" t nil)
-
-(autoload 'forge-remove-repository "forge-commands" "\
-Remove a repository from the database.
-
-\(fn HOST OWNER NAME)" t nil)
-
-(autoload 'forge-remove-topic-locally "forge-commands" "\
-Remove a topic from the local database only.
-Due to how the supported APIs work, it would be too expensive to
-automatically remove topics from the local datbase that were
-removed from the forge.  The purpose of this command is to allow
-you to manually clean up the local database.
-
-\(fn TOPIC)" t nil)
-
-(autoload 'forge-reset-database "forge-commands" "\
-Move the current database file to the trash.
-This is useful after the database scheme has changed, which will
-happen a few times while the forge functionality is still under
-heavy development." t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-commands" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-core" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-db" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-gitea" '("forge-gitea-repository")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-github" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-gitlab" '("forge-gitlab-repository")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-gogs" '("forge-gogs-repository")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-issue" '("forge-")))
-
-
-
-(autoload 'forge-list-topics "forge-list" "\
-List topics of the current repository in a separate buffer.
-
-\(fn ID)" t nil)
-
-(autoload 'forge-list-issues "forge-list" "\
-List issues of the current repository in a separate buffer.
-
-\(fn ID)" t nil)
-
-(autoload 'forge-list-labeled-issues "forge-list" "\
-List issues of the current repository that have LABEL.
-List them in a separate buffer.
-
-\(fn ID LABEL)" t nil)
-
-(autoload 'forge-list-assigned-issues "forge-list" "\
-List issues of the current repository that are assigned to you.
-List them in a separate buffer.
-
-\(fn ID)" t nil)
-
-(autoload 'forge-list-owned-issues "forge-list" "\
-List open issues from all your Github repositories.
-Options `forge-owned-accounts' and `forge-owned-ignored'
-controls which repositories are considered to be owned by you.
-Only Github is supported for now." t nil)
-
-(autoload 'forge-list-pullreqs "forge-list" "\
-List pull-requests of the current repository in a separate buffer.
-
-\(fn ID)" t nil)
-
-(autoload 'forge-list-labeled-pullreqs "forge-list" "\
-List pull-requests of the current repository that have LABEL.
-List them in a separate buffer.
-
-\(fn ID LABEL)" t nil)
-
-(autoload 'forge-list-assigned-pullreqs "forge-list" "\
-List pull-requests of the current repository that are assigned to you.
-List them in a separate buffer.
-
-\(fn ID)" t nil)
-
-(autoload 'forge-list-requested-reviews "forge-list" "\
-List pull-requests of the current repository that are awaiting your review.
-List them in a separate buffer.
-
-\(fn ID)" t nil)
-
-(autoload 'forge-list-owned-pullreqs "forge-list" "\
-List open pull-requests from all your Github repositories.
-Options `forge-owned-accounts' and `forge-owned-ignored'
-controls which repositories are considered to be owned by you.
-Only Github is supported for now." t nil)
-
-(autoload 'forge-list-authored-pullreqs "forge-list" "\
-List open pull-requests of the current repository that are authored by you.
-List them in a separate buffer.
-
-\(fn ID)" t nil)
-
-(autoload 'forge-list-authored-issues "forge-list" "\
-List open issues from the current repository that are authored by you.
-List them in a separate buffer.
-
-\(fn ID)" t nil)
-
-(autoload 'forge-list-repositories "forge-list" "\
-List known repositories in a separate buffer.
-Here \"known\" means that an entry exists in the local database." t nil)
-
-(autoload 'forge-list-owned-repositories "forge-list" "\
-List your own known repositories in a separate buffer.
-Here \"known\" means that an entry exists in the local database
-and options `forge-owned-accounts' and `forge-owned-ignored'
-controls which repositories are considered to be owned by you.
-Only Github is supported for now." t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-list" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-notify" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-post" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-pullreq" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-repo" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-revnote" '("forge-revnote")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-semi" '("forge-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "forge-topic" '("forge-")))
-
-
 
 
 )
@@ -14682,14 +14206,14 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode yaml xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe ghub gcmh emacsql emacsql-sqlite closql forge flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority request rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org-jira org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/forge-0.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-3.5.6" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/transient-20220527.2213" "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.3" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/transient-20220527.2213" "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.3" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
