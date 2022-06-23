@@ -5,13 +5,11 @@
 	signingkey = 790127ED9B02C534
 [core]
         excludesfile = ~/.gitignore
-	pager = diff-so-fancy | less --tabs=4 -RFX
 [magit]
 	hideCampaign = true
 [diff]
 	colorMoved = default
 	renamelimit = 100000
-	external = difft
 [fetch]
 	prune = true
 	jobs = 0
@@ -23,8 +21,6 @@
 	fetchJobs = 0
 [pull]
 	ff = only
-[interactive]
-	diffFilter = diff-so-fancy --patch
 [color]
 	ui = true
 [github]
