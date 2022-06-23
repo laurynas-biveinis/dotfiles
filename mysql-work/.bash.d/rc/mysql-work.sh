@@ -24,6 +24,12 @@ UNAME_OUT="$(uname -s)"
 # Common building blocks
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
+    if [ "$(arch)" = "arm64" ]; then
+        MY8028_OS_EXTRA="-DWITH_SSL=/opt/homebrew/opt/openssl@1.1 \
+-DWITH_ICU=/opt/homebrew/opt/icu4c"
+    else
+        MY8028_OS_EXTRA="-DWITH_ICU=/usr/local/opt/icu4c"
+    fi
     MARIA_EXTRA="-DCMAKE_C_FLAGS=\"-isystem /usr/local/include\" \
 -DCMAKE_CXX_FLAGS=\"-isystem /usr/local/include\""
     FB_EXTRA=""
@@ -32,6 +38,7 @@ else
     MARIA_EXTRA=""
     FB_EXTRA="-DWITH_ZSTD=bundled -DWITH_PROTOBUF=bundled"
     MY8028_EXTRA_CXX_FLAGS=""
+    MY8028_OS_EXTRA=""
 fi
 
 CMAKE_COMMON="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
@@ -57,8 +64,9 @@ unset MARIA_EXTRA
 
 # Version-specific building blocks, descending order
 
-MY8028_EXTRA=\
-"-DWITH_RAPIDJSON=bundled -DWITH_LZ4=bundled \
+MY8027_28_EXTRA="-DWITH_FIDO=bundled"
+
+MY8028_EXTRA="-DWITH_RAPIDJSON=bundled -DWITH_LZ4=bundled $MY8028_OS_EXTRA \
 -DCMAKE_CXX_FLAGS=$MY8028_EXTRA_CXX_FLAGS \
 -DCMAKE_C_FLAGS_DEBUG='-Wno-deprecated-declarations \
 -Wno-unused-but-set-variable -g' \
@@ -67,21 +75,20 @@ MY8028_EXTRA=\
 
 unset MY8028_EXTRA_CXX_FLAGS
 
-if [ "$UNAME_OUT" = "Darwin" ]; then
-    MY8027_EXTRA="-DWITH_ICU=/usr/local/opt/icu4c $MY8028_EXTRA"
-else
-    MY8027_EXTRA="$MY8028_EXTRA"
-fi
+MY8027_EXTRA="$MY8028_EXTRA"
 
 MY8026_EXTRA="-DENABLE_DOWNLOADS=ON $MY8027_EXTRA"
 
 # Paydirt!
 
 export MY8029D="$CMAKE_DEBUG $MY80"
+
+export MY8028D="$CMAKE_DEBUG $MY80 $MY8028_EXTRA $MY8027_28_EXTRA"
 unset MY8028_EXTRA
 
-export MY8027D="$CMAKE_DEBUG $MY80 $MY8027_EXTRA -DWITH_FIDO=bundled"
+export MY8027D="$CMAKE_DEBUG $MY80 $MY8027_EXTRA $MY8027_28_EXTRA"
 unset MY8027_EXTRA
+unset MY8027_28_EXTRA
 
 export MY8026="$CMAKE_RELEASE $MY80 $MY8026_EXTRA"
 export MY8026D="$CMAKE_DEBUG -DDEBUG_EXTNAME=OFF $MY80 $MY8026_EXTRA"
