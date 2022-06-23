@@ -227,6 +227,10 @@
 (defconst dotfiles--darkstar-external-geometry
   (make-dotfiles--frame-geometry :top 4 :left 3011 :height 117 :width 426))
 
+(defconst dotfiles--m1star-laptop-screen '(1728 . 1117))
+(defconst dotfiles--m1star-laptop-geometry
+  (make-dotfiles--frame-geometry :top 1 :left 1 :height 67 :width 242))
+
 (defconst dotfiles--frame-geometries-to-ignore
   [(3600 . 1080) (5520 . 1080) (4688 . 1692) (3600 . 1692) (3008 . 1692)]
   "Possible interim screen resolutions while docking/undocking to be ignored.")
@@ -243,6 +247,12 @@
          ;; top left corner
          (dotfiles--add-frame-geometry-to-initial-alist
           dotfiles--darkstar-laptop-geometry)
+         (two-windows))
+        ((equal display-geometry dotfiles--m1star-laptop-screen)
+         ;; m1star without external screens: initial frame positioned in the top
+         ;; left corner
+         (dotfiles--add-frame-geometry-to-initial-alist
+          dotfiles--m1star-laptop-geometry)
          (two-windows))
         ((equal display-geometry dotfiles--darkstar-external-screen)
          ;; darkstar with external screens: initial frame maximized in the
@@ -1563,7 +1573,11 @@ CANDIDATES is the list of candidates."
 (defun dotfiles--display-changed-hook (new-display-geometry)
   "Reconfigure windows on screen resolution change to NEW-DISPLAY-GEOMETRY."
   (message "Resizing for %s" new-display-geometry)
-  (cond ((equal new-display-geometry dotfiles--darkstar-laptop-screen)
+  (cond ((equal new-display-geometry dotfiles--m1star-laptop-screen)
+         (dotfiles--move-to-frame-geometry dotfiles--m1star-laptop-screen)
+         (set-frame-parameter nil 'fullscreen 'maximized)
+         (two-windows))
+        ((equal new-display-geometry dotfiles--darkstar-laptop-screen)
          (dotfiles--move-to-frame-geometry dotfiles--darkstar-laptop-geometry)
          (set-frame-parameter nil 'fullscreen 'maximized)
          (two-windows))
