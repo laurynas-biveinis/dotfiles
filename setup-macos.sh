@@ -3,11 +3,12 @@
 # Do applicable bits of [macOS Security and Privacy
 # Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide)
 
-# Command-R, reboot, Disk Utility, Erase root partition, format as a APFS (not
+# Boot into recovery mode: Command-R on Intel, hold power button on Apple
+# Silicon, Disk Utility, Erase root partition, format as a APFS (not
 # encrypted, that will be enabled later). In the recovery mode terminal:
 # csrutil enable --without dtrace
 
-# Command-Option-P-R on the first boot
+# On Intel: Command-Option-P-R on the first boot
 
 # Add Terminal.app to System Preferences -> Privacy -> Full Disk Access
 #
@@ -41,10 +42,8 @@ sudo defaults write -g KeyRepeat -int 2
 sudo defaults write -g InitialKeyRepeat -int 35
 defaults write KeyRepeat -int 2
 defaults write InitialKeyRepeat -int 35
-# In System Preferences -> Keyboard -> Shortcuts:
-# - actually uncheck Ctrl-Space and Ctrl-Alt-Space, they don't seem to be in
-# AppleSymbolicHotKeys
-# - uncheck "Turn keyboard access on or off ^F1"
+# The commands below do:
+# - "Keyboard" group: uncheck "Turn keyboard access on or off ^F1"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 12 \
          "{enabled = 0; value = { parameters = (65535, 97, 8650752); type = 'standard'; }; }"
 # - uncheck "Mission Control ^-up" and "Application windows ^-down"
@@ -71,7 +70,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 81 \
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 82 \
          "{enabled = 0; value = { parameters = (65535, 124, 8781824); type = 'standard'; }; }"
 
-# Esc closes autocompletion1
+# Esc closes autocompletion
 defaults write -g NSUseSpellCheckerForCompletions -bool false
 #
 # Mouse
@@ -109,14 +108,7 @@ sudo pkill -HUP socketfilterfw
 sudo fdesetup enable
 # Save the recovery key
 # Reboot (required by fdsetup enable)
-sudo fdesetup remove -user admin # TODO(laurynas)
-sudo dscl . create /Users/admin IsHidden 1 # TODO(laurynas)
 sudo pmset -a DestroyFVKeyOnStandby 1
-#
-# Power Settings
-#
-sudo pmset -a hibernatemode 25
-sudo pmset -a standbydelay 0
 #
 # TimeMachine (set up manually)
 #
@@ -126,7 +118,6 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # XCode
 #
 xcode-select --install
-sudo xcodebuild -licence accept
 #
 # Screensaver
 #
@@ -146,8 +137,8 @@ defaults write com.apple.menuextra.clock DateFormat -string "HH:mm:ss EEE"
 #
 # Safari
 #
-defaults write
-~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari \
+defaults write \
+    ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari \
     AutoOpenSafeDownloads -bool false
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
     WarnAboutFraudulentWebsites -bool true
@@ -304,19 +295,21 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 #
 brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac \
-     findutils libtool npm fd delta unrar jq colordiff iwyu cppcheck infer \
-     creduce gnu-sed mas bat diff-so-fancy fig bison libfido2 actionlint rust \
-     circleci imagemagick rapidjson doxygen graphviz
+     findutils libtool npm fd delta jq colordiff iwyu cppcheck infer creduce \
+     gnu-sed mas bat diff-so-fancy fig bison libfido2 actionlint rust circleci \
+     imagemagick rapidjson doxygen graphviz
 #
 # App Store
 #
 mas install 497799835 # XCode
+sudo xcodebuild -license accept
 mas install 409201541 # Pages
 mas install 409203825 # Numbers
 #
 # Spellchecking
 #
 sudo mkdir /Library/Spelling
+cd /Library/Spelling
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
 sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.aff
@@ -324,18 +317,26 @@ sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.d
 # The 51st State
 sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
-sudo easy_install pip
+# sudo easy_install pip
+python3 -m ensurepip
 sudo gem install mdl
-brew cask install eve intel-power-gadget rescuetime slack vlc \
-     disk-inventory-x google-chrome pdftotext dash blockblock mactex telegram \
-     keycombiner
+brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
+     mactex telegram keycombiner
+# Intel
+brew install --cask intel-power-gadget
+# Apple Silicon
+brew install --cask mx-power-gadget
 brew tap epk/epk
 brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
 brew tap railwaycat/emacsmacport
 brew install emacs-mac --with-native-comp
+# Intel
 osascript -e \
           'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
+# Apple Silicon
+osascript -e \
+          'tell application "Finder" to make alias file to POSIX file "/opt/homebrew/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
      /Library/Java/JavaVirtualMachines/openjdk.jdk
 # Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
@@ -350,5 +351,5 @@ brew tap homebrew/command-not-found
 # Rust
 cargo install difftastic
 # Play
-brew cask install banktivity beatunes lastfm steam xld loopback mono
+brew install --cask banktivity beatunes lastfm steam xld loopback mono
 duti -s jp.tmkk.XLD .flac all
