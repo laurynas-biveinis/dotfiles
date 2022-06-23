@@ -1574,7 +1574,7 @@ CANDIDATES is the list of candidates."
   "Reconfigure windows on screen resolution change to NEW-DISPLAY-GEOMETRY."
   (message "Resizing for %s" new-display-geometry)
   (cond ((equal new-display-geometry dotfiles--m1star-laptop-screen)
-         (dotfiles--move-to-frame-geometry dotfiles--m1star-laptop-screen)
+         (dotfiles--move-to-frame-geometry dotfiles--m1star-laptop-geometry)
          (set-frame-parameter nil 'fullscreen 'maximized)
          (two-windows))
         ((equal new-display-geometry dotfiles--darkstar-laptop-screen)
