@@ -14,7 +14,7 @@ Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 
 If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
 
-```
+```zsh
 mkdir .gnupg
 chmod 700 .gnupg
 mkdir -p usr
