@@ -1566,24 +1566,29 @@ CANDIDATES is the list of candidates."
 
 ;;; dispwatch
 (require 'dispwatch)
+(defvar dotfiles--old-display-geometry nil)
 (defun dotfiles--display-changed-hook (new-display-geometry)
   "Reconfigure windows on screen resolution change to NEW-DISPLAY-GEOMETRY."
-  (message "Resizing for %s" new-display-geometry)
-  (cond ((equal new-display-geometry dotfiles--m1star-laptop-screen)
-         (dotfiles--move-to-frame-geometry dotfiles--m1star-laptop-geometry)
-         (set-frame-parameter nil 'fullscreen 'maximized)
-         (two-windows))
-        ((equal new-display-geometry dotfiles--darkstar-laptop-screen)
-         (dotfiles--move-to-frame-geometry dotfiles--darkstar-laptop-geometry)
-         (set-frame-parameter nil 'fullscreen 'maximized)
-         (two-windows))
-        ((equal new-display-geometry dotfiles--darkstar-external-screen)
-         (dotfiles--move-to-frame-geometry dotfiles--darkstar-external-geometry)
-         (set-frame-parameter nil 'fullscreen 'fullboth)
-         (eight-windows))
-        ((seq-position dotfiles--frame-geometries-to-ignore
-                       new-display-geometry) ())
-        (t (dotfiles--diagnose-unknown-display-geometry new-display-geometry))))
+  (unless (equal dotfiles--old-display-geometry new-display-geometry)
+    (message "Resizing from %s to %s" dotfiles--old-display-geometry
+             new-display-geometry)
+    (setq dotfiles--old-display-geometry new-display-geometry)
+    (cond ((equal new-display-geometry dotfiles--m1star-laptop-screen)
+           (dotfiles--move-to-frame-geometry dotfiles--m1star-laptop-geometry)
+           (set-frame-parameter nil 'fullscreen 'maximized)
+           (two-windows))
+          ((equal new-display-geometry dotfiles--darkstar-laptop-screen)
+           (dotfiles--move-to-frame-geometry dotfiles--darkstar-laptop-geometry)
+           (set-frame-parameter nil 'fullscreen 'maximized)
+           (two-windows))
+          ((equal new-display-geometry dotfiles--darkstar-external-screen)
+           (dotfiles--move-to-frame-geometry dotfiles--darkstar-external-geometry)
+           (set-frame-parameter nil 'fullscreen 'fullboth)
+           (eight-windows))
+          ((seq-position dotfiles--frame-geometries-to-ignore
+                         new-display-geometry) ())
+          (t (dotfiles--diagnose-unknown-display-geometry
+              new-display-geometry)))))
 
 (add-hook 'dispwatch-display-change-hooks #'dotfiles--display-changed-hook)
 (dispwatch-mode 1)
