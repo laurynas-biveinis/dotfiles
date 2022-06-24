@@ -1343,7 +1343,6 @@ CANDIDATES is the list of candidates."
 ;;;; lsp-mode
 (require 'lsp-mode)
 (require 'lsp-clangd)
-(setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")
 (setq lsp-clients-clangd-args '("--all-scopes-completion"
                                 "--background-index"
                                 "--clang-tidy"

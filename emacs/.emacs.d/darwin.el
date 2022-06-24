@@ -15,6 +15,10 @@
 
 (setq insert-directory-program (concat dotfiles--homebrew-root "bin/gls"))
 
+(require 'lsp-clangd)
+(setq lsp-clients-clangd-executable (concat dotfiles--homebrew-root
+                                            "opt/llvm/bin/clangd"))
+
 (setq mac-right-option-modifier nil)
 (setq mac-command-modifier 'super)
 (setq mac-option-modifier 'meta)
