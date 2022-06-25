@@ -22,7 +22,11 @@ fi
 
 export HOMEBREW_NO_INSTALL_CLEANUP=y
 
-export PATH=~/usr/bin:/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=/usr/local/bin:/usr/local/bin:$PATH
+if [ -d /opt/homebrew/bin ]; then
+    export PATH=/opt/homebrew/bin:$PATH
+fi
+export PATH=~/usr/bin:$PATH
 
 fpath+=~/.zsh.d/functions
 
