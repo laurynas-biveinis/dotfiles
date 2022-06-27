@@ -120,6 +120,9 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # XCode
 #
 xcode-select --install
+# /cores is root:wheel by default, where the default user is admin not wheel
+sudo chown root:admin /cores
+sudo chmod 775 /cores
 #
 # Screensaver
 #
