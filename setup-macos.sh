@@ -324,6 +324,7 @@ python3 -m ensurepip
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
      mactex telegram keycombiner
+# Start RescueTime, login
 # Intel
 brew install --cask intel-power-gadget
 # Apple Silicon
