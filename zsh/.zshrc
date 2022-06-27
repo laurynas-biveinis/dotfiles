@@ -64,6 +64,16 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 
 alias rmcores="rm -rf /cores/*"
 
+# https://developer.apple.com/forums/thread/694233
+function enable_core() {
+    local input="$1"
+    tmpfile=$(mktemp)
+    /usr/libexec/PlistBuddy \
+        -c "Add :com.apple.security.get-task-allow bool true" "$tmpfile"
+    codesign -s - -f --entitlements "$tmpfile" "$input"
+    rm "$tmpfile"
+}
+
 function strip_disas_offsets() {
     local input="$1"
     local output="$2"
