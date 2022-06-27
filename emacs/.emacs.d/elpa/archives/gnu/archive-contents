@@ -604,7 +604,7 @@
 		(:authors
 		 ("Theodor Thornhill" . "theo@thornhill.no")))])
  (csv-mode .
-	   [(1 20)
+	   [(1 21)
 	    ((emacs
 	      (27 1))
 	     (cl-lib
@@ -615,7 +615,7 @@
 	     (:authors
 	      ("\"Francis J. Wright\"" . "F.J.Wright@qmul.ac.uk"))
 	     (:url . "https://elpa.gnu.org/packages/csv-mode.html")
-	     (:commit . "51580d5bf7095eff429029cd8d4b79214faf6b48"))])
+	     (:commit . "d10d68c382e17960fc9aaef072fd18a23ea92a86"))])
  (cursory .
 	  [(0 1 4)
 	   ((emacs
@@ -907,7 +907,7 @@
 	      (:maintainer "Markus Triska" . "triska@metalevel.at")
 	      (:url . "https://www.metalevel.at/ediprolog/"))])
  (eev .
-      [(20220605)
+      [(20220626)
        ((emacs
 	 (24 4)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -916,7 +916,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "afc2a0cfe4fe462e74e5c6fe17282f46bf3dbdec"))])
+	(:commit . "3ef1f6af7e9d07c0ad2e330ae161061e57fd2a87"))])
  (eglot .
 	[(1 8)
 	 ((emacs
