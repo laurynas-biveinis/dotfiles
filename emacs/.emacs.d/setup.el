@@ -1350,7 +1350,8 @@ CANDIDATES is the list of candidates."
                                 "--header-insertion=never"
                                 "--enable-config"
                                 "-j=5"
-                                "--pch-storage=memory"))
+                                "--pch-storage=memory"
+                                "-use-dirty-headers"))
 (setq lsp-enable-snippet t)
 ;; TODO(laurynas): LSP-formatting yanked region is nice, but it formats
 ;; surroundings of the region too, which is very annoying in case of i.e. C++
