@@ -326,7 +326,7 @@ sudo ln -sf en_US.dic en_LT.dic
 python3 -m ensurepip
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner
+     telegram keycombiner michaelvillar-timer skype
 # Start RescueTime, login
 # Intel
 brew install --cask intel-power-gadget
