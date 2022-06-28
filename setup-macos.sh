@@ -110,6 +110,10 @@ sudo pkill -HUP socketfilterfw
 sudo fdesetup enable
 # Save the recovery key
 # Reboot (required by fdsetup enable)
+#
+# Power Management
+#
+sudo pmset -c sleep 0
 sudo pmset -a DestroyFVKeyOnStandby 1
 #
 # TimeMachine (set up manually)
