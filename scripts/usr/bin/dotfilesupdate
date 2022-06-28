@@ -14,7 +14,11 @@ readonly IGNORE_FOR_SYMLINKS=(".nix-defexpr/channels" \
                                   "Library/Caches/com.apple.bird" \
                                   "Library/Containers" \
                                   "Library/Logs/ims.log" \
-                                  "Library/Saved Application State")
+                                  "Library/Saved Application State" \
+                                  "*/plugin_output_directory/libfido2.1.dylib" \
+                                  "*/plugin_output_directory/plugin/libfido2.1.dylib" \
+                                  "*/rqg/data/source" \
+                                  "Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/*")
 
 pushd $DOTFILES_ROOT || exit
 git pull origin-ro master
