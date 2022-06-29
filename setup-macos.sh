@@ -156,11 +156,18 @@ defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
     TreatSHA1CertificatesAsInsecure -bool true
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 # Cmd-W should only close tab, never window
-defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' '<string>@w</string></dict>'
+defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' \
+         '<string>@w</string></dict>'
 defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add \
     '<string>com.apple.Safari</string>'
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari ShowFavoritesBar -bool false
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey \
+         -bool truedefaults write com.apple.Safari ShowFavoritesBar -bool false
+defaults write com.apple.Safari \
+         com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled \
+         -bool true
+defaults write -g WebKitDeveloperExtras -bool true
 # Enable continuous spellchecking, stolen from https://github.com/mathiasbynens/dotfiles
 defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
 # Disable auto-correct
