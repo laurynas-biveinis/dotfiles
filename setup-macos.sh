@@ -142,7 +142,8 @@ defaults write -g AppleMeasurementUnits -string "Centimeters"
 sudo systemsetup -settimezone "Europe/Vilnius"
 sudo systemsetup -setnetworktimeserver "time.euro.apple.com"
 sudo systemsetup -setusingnetworktime on
-defaults write com.apple.menuextra.clock DateFormat -string "HH:mm:ss EEE"
+sudo defaults write com.apple.menuextra.clock DateFormat -string \
+     "EEE d MMM HH:mm:ss"
 #
 # Safari
 #
