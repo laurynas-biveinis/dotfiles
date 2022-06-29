@@ -1,0 +1,7 @@
+# -*- mode: gitconfig -*-
+[include]
+	path = ~/.gitconfig.common
+[core]
+	fsmonitor = true
+[merge]
+	conflictstyle = zdiff3
