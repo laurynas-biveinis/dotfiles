@@ -116,7 +116,7 @@ sudo fdesetup enable
 sudo pmset -c sleep 0
 sudo pmset -a DestroyFVKeyOnStandby 1
 #
-# TimeMachine (set up manually)
+# Time Machine (set up manually)
 #
 # do not ask to use new hard drives for backup
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
