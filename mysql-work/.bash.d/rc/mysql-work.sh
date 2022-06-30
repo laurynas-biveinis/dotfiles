@@ -108,6 +108,7 @@ unset CMAKE_DEBUG
 
 # Addons, environment helpers
 export MY_CLANG="-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
+export MY_CLANG13="-DCMAKE_C_COMPILER=clang-13 -DCMAKE_CXX_COMPILER=clang++-13"
 export MY80SAN="-DWITH_ASAN=ON -DWITH_ASAN_SCOPE=ON -DWITH_UBSAN=ON"
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
