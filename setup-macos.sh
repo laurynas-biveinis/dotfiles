@@ -321,6 +321,9 @@ mas install 497799835 # XCode
 sudo xcodebuild -license accept
 mas install 409201541 # Pages
 mas install 409203825 # Numbers
+mas install 1376402589 # StopTheMadness
+mas install 1365531024 # 1Blocker
+# Open App Store, login there
 #
 # Spellchecking
 #
