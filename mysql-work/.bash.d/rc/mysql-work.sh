@@ -115,7 +115,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
 --mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1 \
 --mysqld-env=DYLD_INSERT_LIBRARIES=/usr/local/lib/libeatmydata.dylib"
 else
-    export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/local/lib/libeatmydata.so"
+    export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so"
 fi
 
 unset UNAME_OUT
