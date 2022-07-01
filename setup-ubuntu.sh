@@ -37,7 +37,7 @@ sudo apt-get install ccache rapidjson-dev ncdu libaio-dev libssl-dev \
      libevent-dev libcurl4-gnutls-dev libcurl4-doc libpam0g-dev libtirpc-dev \
      libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab libprotoc-dev \
      doxygen doxygen-doc graphviz graphviz-doc libedit-dev libgcrypt20-dev \
-     libfido2-dev libssl-doc rapidjson-doc libeatmydata1
+     libfido2-dev libssl-doc rapidjson-doc libeatmydata1 libudev-dev clang-12
 # For CPU-intensive benchmarks
 sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"
 sudo sysctl -w vm.swappiness=0
