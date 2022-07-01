@@ -27,8 +27,12 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     if [ "$(arch)" = "arm64" ]; then
         MY8028_OS_EXTRA="-DWITH_SSL=/opt/homebrew/opt/openssl@1.1 \
 -DWITH_ICU=/opt/homebrew/opt/icu4c"
+        export MYCLANG12="-DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm@12/bin/clang-12 \
+ -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm@12/bin/clang++"
     else
         MY8028_OS_EXTRA="-DWITH_ICU=/usr/local/opt/icu4c"
+        export MYCLANG12="-DCMAKE_C_COMPILER=/usr/local/opt/llvm@12/bin/clang-12 \
+ -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm@12/bin/clang++"
     fi
     MARIA_EXTRA="-DCMAKE_C_FLAGS=\"-isystem /usr/local/include\" \
 -DCMAKE_CXX_FLAGS=\"-isystem /usr/local/include\""
@@ -39,6 +43,8 @@ else
     FB_EXTRA="-DWITH_ZSTD=bundled -DWITH_PROTOBUF=bundled"
     MY8028_EXTRA_CXX_FLAGS=""
     MY8028_OS_EXTRA=""
+    export MYCLANG12="-DCMAKE_C_COMPILER=clang-12 \
+-DCMAKE_CXX_COMPILER=clang++-12"
 fi
 
 CMAKE_COMMON="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
@@ -107,8 +113,8 @@ unset CMAKE_RELEASE
 unset CMAKE_DEBUG
 
 # Addons, environment helpers
-export MY_CLANG="-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
-export MY_CLANG13="-DCMAKE_C_COMPILER=clang-13 -DCMAKE_CXX_COMPILER=clang++-13"
+export MYCLANG="-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
+export MYCLANG13="-DCMAKE_C_COMPILER=clang-13 -DCMAKE_CXX_COMPILER=clang++-13"
 export MY80SAN="-DWITH_ASAN=ON -DWITH_ASAN_SCOPE=ON -DWITH_UBSAN=ON"
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
