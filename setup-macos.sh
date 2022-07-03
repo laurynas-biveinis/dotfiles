@@ -274,6 +274,7 @@ defaults write com.apple.Image_Capture IK_scannerDisplayMode -int 1
 #
 # Printer
 #
+defaults write -g PMPrintingExpandedStateForPrint -bool TRUE
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 #
