@@ -14,7 +14,8 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      python-scipy-doc unattended-upgrades screen fzf fd-find clang moreutils \
      psmisc zsh zsh-doc libjemalloc-dev bzip2-doc libstdc++-11-doc \
      valgrind-dbg hexyl ripgrep icu-doc ncurses-doc pkg-config lcov \
-     cpufrequtils libboost-dev libboost-doc cppcheck iwyu
+     cpufrequtils libboost-dev libboost-doc cppcheck iwyu clang-12 clang-12-doc \
+     llvm-12-doc lld-12 clang-11 clang-11-doc llvm-11-doc lld-11
 # DeepState
 sudo apt-get install libc6-dev-i386
 # Not found on AWS EC2
@@ -37,7 +38,7 @@ sudo apt-get install ccache rapidjson-dev ncdu libaio-dev libssl-dev \
      libevent-dev libcurl4-gnutls-dev libcurl4-doc libpam0g-dev libtirpc-dev \
      libprotobuf-dev libldap2-dev libsasl2-dev libnuma-dev mecab libprotoc-dev \
      doxygen doxygen-doc graphviz graphviz-doc libedit-dev libgcrypt20-dev \
-     libfido2-dev libssl-doc rapidjson-doc libeatmydata1 libudev-dev clang-12
+     libfido2-dev libssl-doc rapidjson-doc libeatmydata1 libudev-dev
 # For CPU-intensive benchmarks
 sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"
 sudo sysctl -w vm.swappiness=0
