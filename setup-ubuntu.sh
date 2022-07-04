@@ -15,7 +15,7 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      psmisc zsh zsh-doc libjemalloc-dev bzip2-doc libstdc++-11-doc \
      valgrind-dbg hexyl ripgrep icu-doc ncurses-doc pkg-config lcov \
      cpufrequtils libboost-dev libboost-doc cppcheck iwyu clang-12 clang-12-doc \
-     llvm-12-doc lld-12 clang-11 clang-11-doc llvm-11-doc lld-11
+     llvm-12-doc lld-12 clang-11 clang-11-doc llvm-11-doc lld-11 cpuset
 # DeepState
 sudo apt-get install libc6-dev-i386
 # Not found on AWS EC2
