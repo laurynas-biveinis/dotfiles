@@ -339,6 +339,7 @@ sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
 # sudo easy_install pip
 python3 -m ensurepip
+pip install asitop
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
      telegram keycombiner michaelvillar-timer skype
