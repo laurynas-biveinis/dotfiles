@@ -2357,10 +2357,10 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.3/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.3/compat-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-28.1.2.0/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-28.1.2.0/compat-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.3/compat-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/compat-28.1.2.0/compat-autoloads.el") (car load-path))))
 
 
 
@@ -2374,10 +2374,10 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220527.2213/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220527.2213/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220717.1713/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20220717.1713/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220527.2213/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20220717.1713/transient-autoloads.el") (car load-path))))
 
 
 
@@ -5873,14 +5873,14 @@ the reports is done using the TaskJuggler GUI.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-jira-4.3.2/org-jira-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-jira-4.3.2/org-jira-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-jira-4.4.0/org-jira-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-jira-4.4.0/org-jira-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-jira-4.3.2/org-jira-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-jira-4.4.0/org-jira-autoloads.el") (car load-path))))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "jiralib" '("jiralib-")))
+(register-definition-prefixes "jiralib" '("jiralib-"))
 
 
 
@@ -5890,10 +5890,19 @@ With no argument, the mode is toggled on/off.
 Non-nil argument turns mode on.
 Nil argument turns mode off.
 
-If called interactively, enable Org-Jira mode if ARG is positive,
-and disable it if ARG is zero or negative.  If called from Lisp,
-also enable the mode if ARG is omitted or nil, and toggle it if
-ARG is `toggle'; disable the mode otherwise.
+This is a minor mode.  If called interactively, toggle the
+`Org-jira mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `org-jira-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
 
 Commands:
 \\{org-jira-entry-mode-map}
@@ -6036,17 +6045,20 @@ See `org-jira-get-issues-from-filter'.
 (autoload 'org-jira-get-issues-by-board "org-jira" "\
 Get list of ISSUES from agile board." t nil)
 
+(autoload 'org-jira-get-issues-by-sprint "org-jira" "\
+Get list of ISSUES from sprint." t nil)
+
 (autoload 'org-jira-get-issues-by-board-headonly "org-jira" "\
 Get list of ISSUES from agile board, head only." t nil)
 
 (autoload 'org-jira-get-boards "org-jira" "\
 Get list of boards and their properies." t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-jira" '("ensure-on-" "org-jira-")))
+(register-definition-prefixes "org-jira" '("ensure-on-" "org-jira-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "org-jira-sdk" '("org-jira-sdk-")))
+(register-definition-prefixes "org-jira-sdk" '("org-jira-sdk-"))
 
 
 
@@ -7841,10 +7853,10 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210227.1737/neuron-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210227.1737/neuron-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20220718.827/neuron-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/neuron-mode-20220718.827/neuron-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/neuron-mode-20210227.1737/neuron-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/neuron-mode-20220718.827/neuron-mode-autoloads.el") (car load-path))))
 
 
 
@@ -7945,7 +7957,7 @@ A major mode to edit Zettelkasten notes with neuron.
 
 \(fn)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "neuron-mode" '("company-neuron--" "neuron-")))
+(register-definition-prefixes "neuron-mode" '("company-neuron--" "neuron-"))
 
 
 )
@@ -11004,10 +11016,10 @@ and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.0/lsp-ui-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.0/lsp-ui-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.1/lsp-ui-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.1/lsp-ui-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.0/lsp-ui-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.1/lsp-ui-autoloads.el") (car load-path))))
 
 
 
@@ -11021,31 +11033,31 @@ omitted or nil, and toggle it if ARG is ‘toggle’.
 
 \(fn &optional ARG)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui" '("lsp-ui-")))
+(register-definition-prefixes "lsp-ui" '("lsp-ui-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-doc" '("lsp-ui-doc-")))
+(register-definition-prefixes "lsp-ui-doc" '("lsp-ui-doc-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-flycheck" '("lsp-ui-flycheck-")))
+(register-definition-prefixes "lsp-ui-flycheck" '("lsp-ui-flycheck-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-imenu" '("lsp-ui-imenu")))
+(register-definition-prefixes "lsp-ui-imenu" '("lsp-ui-imenu" "overlay-priority"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-peek" '("lsp-")))
+(register-definition-prefixes "lsp-ui-peek" '("lsp-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-sideline" '("lsp-ui-sideline")))
+(register-definition-prefixes "lsp-ui-sideline" '("lsp-ui-sideline"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lsp-ui-util" '("lsp-ui-util-")))
+(register-definition-prefixes "lsp-ui-util" '("lsp-ui-util-"))
 
 
 
@@ -13829,10 +13841,10 @@ See `color-identifiers-mode' for more information on Color-Identifiers mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre2/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre2/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre4/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre4/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre2/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.24.0pre4/cmake-mode-autoloads.el") (car load-path))))
 
 
 
@@ -14265,7 +14277,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/transient-20220527.2213" "/Users/laurynas/.emacs.d/elpa/compat-28.1.1.3" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.5.4" "/Users/laurynas/.emacs.d/elpa/org-plus-contrib-20191203" "/Users/laurynas/.emacs.d/elpa/transient-20220717.1713" "/Users/laurynas/.emacs.d/elpa/compat-28.1.2.0" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
