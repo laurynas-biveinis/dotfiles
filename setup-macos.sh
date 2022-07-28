@@ -40,8 +40,6 @@ defaults write -g AppleKeyboardUIMode -int 3
 #
 sudo defaults write -g KeyRepeat -int 2
 sudo defaults write -g InitialKeyRepeat -int 35
-defaults write KeyRepeat -int 2
-defaults write InitialKeyRepeat -int 35
 # Go to System Preferences -> Keyboard -> Shortcuts -> Input Sources, uncheck
 # "Select the previous input source" and "Select next source in Input menu"
 # The commands below do:
@@ -77,7 +75,8 @@ defaults write -g NSUseSpellCheckerForCompletions -bool false
 #
 # Mouse
 #
-sudo defaults write -g com.apple.mouse.scaling -float 2
+# TODO(laurynas): test after reboot
+sudo defaults write -g com.apple.mouse.scaling -float 3
 defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string "TwoButton"
 defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode \
          -string "TwoButton"
