@@ -27,10 +27,12 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     if [ "$(arch)" = "arm64" ]; then
         MY8028_OS_EXTRA="-DWITH_SSL=/opt/homebrew/opt/openssl@1.1 \
 -DWITH_ICU=/opt/homebrew/opt/icu4c"
+        MY8030_OS_EXTRA="-DWITH_DEVELOPER_ENTITLEMENTS=ON"
         export MYCLANG12="-DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm@12/bin/clang-12 \
  -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm@12/bin/clang++"
     else
         MY8028_OS_EXTRA="-DWITH_ICU=/usr/local/opt/icu4c"
+        MY8030_OS_EXTRA=""
         export MYCLANG12="-DCMAKE_C_COMPILER=/usr/local/opt/llvm@12/bin/clang-12 \
  -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm@12/bin/clang++"
     fi
@@ -43,6 +45,7 @@ else
     FB_EXTRA="-DWITH_ZSTD=bundled -DWITH_PROTOBUF=bundled"
     MY8028_EXTRA_CXX_FLAGS=""
     MY8028_OS_EXTRA=""
+    MY8030_OS_EXTRA=""
     export MYCLANG12="-DCMAKE_C_COMPILER=clang-12 \
 -DCMAKE_CXX_COMPILER=clang++-12"
 fi
@@ -71,6 +74,9 @@ unset MARIA_EXTRA
 
 # Version-specific building blocks, descending order
 
+MY8030_EXTRA="-DWITH_MYSQLX=OFF $MY8030_OS_EXTRA"
+unset MY8030_OS_EXTRA
+
 MY8027_28_EXTRA="-DWITH_FIDO=bundled"
 
 MY8028_EXTRA="-DWITH_RAPIDJSON=bundled -DWITH_LZ4=bundled $MY8028_OS_EXTRA \
@@ -89,6 +95,9 @@ MY8027_EXTRA="$MY8028_EXTRA"
 MY8026_EXTRA="-DENABLE_DOWNLOADS=ON $MY8027_EXTRA"
 
 # Paydirt!
+
+export MY8030D="$CMAKE_DEBUG $MY80 $MY8030_EXTRA"
+unset MY8030_EXTRA
 
 export MY8029D="$CMAKE_DEBUG $MY80"
 
