@@ -132,9 +132,9 @@ export MYCLANG13="-DCMAKE_C_COMPILER=clang-13 -DCMAKE_CXX_COMPILER=clang++-13"
 export MY80SAN="-DWITH_ASAN=ON -DWITH_ASAN_SCOPE=ON -DWITH_UBSAN=ON"
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
-    export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=/usr/local/lib \
+    export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=/opt/homebrew/opt/libeatmydata/lib/ \
 --mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1 \
---mysqld-env=DYLD_INSERT_LIBRARIES=/usr/local/lib/libeatmydata.dylib"
+--mysqld-env=DYLD_INSERT_LIBRARIES=/opt/homebrew/opt/libeatmydata/lib/libeatmydata.dylib"
 else
     export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so"
 fi
