@@ -504,14 +504,10 @@ loaded as such.)"
 ;; Compilation
 (require 'compile)
 (setq compilation-scroll-output 'first-error)
-(setq compilation-environment '("LANG=C" "TERM=xterm-256color"))
+(setq compilation-environment '("LANG=C"))
 
-(require 'xterm-color)
-(defun dotfiles--compilation-filter-advice (f proc string)
-  "Compilation filter for xterm-256color, taking F, PROC, & STRING."
-  (funcall f proc (xterm-color-filter string)))
-
-(advice-add #'compilation-filter :around #'dotfiles--compilation-filter-advice)
+(require 'fancy-compilation)
+(with-eval-after-load 'compile (fancy-compilation-mode))
 
 ;;; elisp-mode
 (defun dotfiles--emacs-lisp-mode-hook ()
@@ -585,6 +581,8 @@ loaded as such.)"
       (remove #'ansi-color-process-output comint-output-filter-functions))
 
 (require 'font-core)
+(require 'xterm-color)
+
 (defun dotfiles--shell-mode-hook ()
   "My hook for shell-mode."
   (font-lock-mode -1)

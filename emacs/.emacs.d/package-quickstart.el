@@ -13511,6 +13511,47 @@ Otherwise behave as if called interactively.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20220725.2313/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20220725.2313/fancy-compilation-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20220725.2313/fancy-compilation-autoloads.el") (car load-path))))
+
+
+
+(defvar fancy-compilation-mode nil "\
+Non-nil if Fancy-Compilation mode is enabled.
+See the `fancy-compilation-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `fancy-compilation-mode'.")
+
+(custom-autoload 'fancy-compilation-mode "fancy-compilation" nil)
+
+(autoload 'fancy-compilation-mode "fancy-compilation" "\
+Enable enhanced compilation.
+
+This is a minor mode.  If called interactively, toggle the
+`Fancy-Compilation mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='fancy-compilation-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+\(fn &optional ARG)" t nil)
+
+(register-definition-prefixes "fancy-compilation" '("fancy-compilation-"))
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/exec-path-from-shell-1.12/exec-path-from-shell-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/exec-path-from-shell-1.12/exec-path-from-shell-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -14068,7 +14109,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines org-plus-contrib org org-contrib org-analyzer f markdown-mode company neuron-mode modern-cpp-font-lock magit-section git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
