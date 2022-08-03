@@ -9,6 +9,8 @@ softwareupdate --download --all
 echo "Updating brew"
 brew update
 
+readonly keep_old_package_list=(cmake icu4c protobuf)
+
 IFS=$'\n' readonly outdated_formulae=($(brew outdated --formula --quiet))
 for outdated_formula in $outdated_formulae; do
     if ! is_on_ac; then
@@ -17,10 +19,8 @@ for outdated_formula in $outdated_formulae; do
     fi
     echo "brew upgrade $outdated_formula"
     brew upgrade "$outdated_formula"
-    if [[ "$outdated_formula" == "cmake" ]]; then
-        echo "Not cleaning up older brew cmake versions"
-    elif [[ "$outdated_formula" == "icu4c" ]]; then
-        echo "Not cleaning up older ICU4C versions"
+    if (($keep_old_package_list[(Ie)$outdated_formula])); then
+        echo "Not cleaning up older brew $outdated_formula versions"
     else
         echo "brew cleanup $outdated_formula"
         brew cleanup "$outdated_formula"
