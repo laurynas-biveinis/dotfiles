@@ -169,7 +169,8 @@ defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add \
 defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
 defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey \
-         -bool truedefaults write com.apple.Safari ShowFavoritesBar -bool false
+         -bool true
+defaults write com.apple.Safari ShowFavoritesBar -bool false
 defaults write com.apple.Safari \
          com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled \
          -bool true
