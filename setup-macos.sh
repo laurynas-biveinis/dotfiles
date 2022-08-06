@@ -95,6 +95,13 @@ sudo scutil --set ComputerName new-computer-name
 sudo scutil --set LocalHostName new-computer-name
 sudo scutil --set HostName new-computer-name
 #
+# Volume icon
+#
+defaults write com.apple.controlcenter.plist Sound -int 18
+defaults write com.apple.systemuiserver menuExtras -array \
+         "/System/Library/CoreServices/Menu Extras/Volume.menu"
+killall SystemUIServer
+#
 # Application Firewall
 #
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
