@@ -14,7 +14,7 @@
 #
 # Lithuanian Standard Keyboard Layout (http://ims.mii.lt/klav/tvarkyk.html)
 #
-curl http://ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
+curl http://www.ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
 # Verify the downloaded file (note that lack of https above!)
 unzip macOS.zip
 sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
