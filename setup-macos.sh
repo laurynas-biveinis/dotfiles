@@ -346,17 +346,21 @@ sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.d
 # The 51st State
 sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
-# sudo easy_install pip
-python3 -m ensurepip
-pip install asitop scipy pandas
+#
+# Python
+#
+python3 -m pip install --upgrade pip
+pip3 install asitop scipy pandas cmake-language-server
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
      telegram keycombiner michaelvillar-timer skype
 # Start RescueTime, login
+
 # Intel
 brew install --cask intel-power-gadget
 # Apple Silicon
 brew install --cask mx-power-gadget
+
 brew tap epk/epk
 brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
@@ -377,7 +381,6 @@ duti -s org.videolan.vlc .MP4 all
 duti -s org.videolan.vlc .mp3 all
 duti -s org.videolan.vlc .m4a all
 npm i -g bash-language-server
-pip3 install cmake-language-server
 brew tap homebrew/command-not-found
 # Play
 brew install --cask banktivity beatunes lastfm steam xld loopback mono
