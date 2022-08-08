@@ -383,5 +383,7 @@ duti -s org.videolan.vlc .m4a all
 npm i -g bash-language-server
 brew tap homebrew/command-not-found
 # Play
-brew install --cask banktivity beatunes lastfm steam xld loopback mono
+brew install mono
+brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
+     guitar-pro transcribe
 duti -s jp.tmkk.XLD .flac all
