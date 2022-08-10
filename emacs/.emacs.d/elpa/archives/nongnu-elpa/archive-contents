@@ -28,13 +28,13 @@
 		(:authors
 		 ("Jordon Biondo" . "jordonbiondo@gmail.com")))])
  (annotate .
-	   [(1 7 0)
+	   [(1 7 1)
 	    nil "annotate files without changing them" tar
 	    ((:url . "https://github.com/bastibe/annotate.el")
 	     (:maintainer "Bastian Bechtold <bastibe.dev@mailbox.org>, cage" . "cage-dev@twistfold.it")
 	     (:authors
 	      ("Bastian Bechtold"))
-	     (:commit . "9bfa065a4e14f7e96c8ac487c4e54b084a02133c"))])
+	     (:commit . "7aadf4b9838ad83da9f4e6128aa9a450c66220ad"))])
  (anti-zenburn-theme .
 		     [(2 5 1)
 		      nil "Low-contrast Zenburn-inverted theme" tar
@@ -78,7 +78,7 @@
 		 (:maintainer "stardiviner" . "numbchild@gmail.com")
 		 (:keywords "languages" "arduino"))])
  (autothemer .
-	     [(0 2 3)
+	     [(0 2 5)
 	      ((dash
 		(2 10 0))
 	       (emacs
@@ -86,10 +86,11 @@
 	       (cl-lib
 		(0 5)))
 	      "Conveniently define themes." tar
-	      ((:url . "https://github.com/sebastiansturm/autothemer")
-	       (:maintainer "Sebastian Sturm")
+	      ((:url . "https://github.com/jasonm23/autothemer")
+	       (:maintainer "Jason Milkins" . "jasonm23@gmail.com")
 	       (:authors
-		("Sebastian Sturm")))])
+		("Sebastian Sturm"))
+	       (:commit . "3223cd8867fb75a109e41ccce98ab0e89d0a4f1b"))])
  (better-jumper .
 		[(1 0 1)
 		 ((emacs
