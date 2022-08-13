@@ -753,14 +753,14 @@ This allows Dash symbols to be looked up with \\[info-lookup-symbol]." t nil)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/s-20210616.619/s-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/s-20210616.619/s-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/s-20220812.1014/s-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/s-20220812.1014/s-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/s-20210616.619/s-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/s-20220812.1014/s-autoloads.el") (car load-path))))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "s" '("s-")))
+(register-definition-prefixes "s" '("s-"))
 
 
 )

@@ -4,8 +4,8 @@
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
 ;; Version: 1.12.0
-;; Package-Version: 20210616.619
-;; Package-Commit: 08661efb075d1c6b4fa812184c1e5e90c08795a9
+;; Package-Version: 20220812.1014
+;; Package-Commit: 078c2b118dbe2f171f671b4739d8834f4c563524
 ;; Keywords: strings
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -43,8 +43,8 @@
 
 (defun s-trim-right (s)
   "Remove whitespace at the end of S."
+  (declare (pure t) (side-effect-free t))
   (save-match-data
-    (declare (pure t) (side-effect-free t))
     (if (string-match "[ \t\n\r]+\\'" s)
         (replace-match "" t t s)
       s)))
@@ -119,6 +119,18 @@ See also `s-split'."
   "Concatenate S and SUFFIX."
   (declare (pure t) (side-effect-free t))
   (concat s suffix))
+
+(defun s-splice (needle n s)
+  "Splice NEEDLE into S at position N.
+0 is the beginning of the string, -1 is the end."
+  (if (< n 0)
+      (let ((left (substring s 0 (+ 1 n (length s))))
+            (right (s-right (- -1 n) s)))
+        (concat left needle right))
+    (let ((left (s-left n s))
+          (right (substring s n (length s))))
+        (concat left needle right))))
+
 
 (defun s-repeat (num s)
   "Make a string of S repeated NUM times."
@@ -255,6 +267,20 @@ When not specified, ELLIPSIS defaults to ‘...’."
     (if (> l len)
         (substring s (- l len) l)
       s)))
+
+(defun s-chop-left (len s)
+  "Remove the first LEN chars from S."
+  (let ((l (length s)))
+    (if (> l len)
+        (substring s len l)
+      "")))
+
+(defun s-chop-right (len s)
+  "Remove the last LEN chars from S."
+  (let ((l (length s)))
+    (if (> l len)
+        (substring s 0 (- l len))
+      "")))
 
 (defun s-ends-with? (suffix s &optional ignore-case)
   "Does S end with SUFFIX?
@@ -491,7 +517,12 @@ SUBEXP-DEPTH is 0 by default."
 (defun s-match (regexp s &optional start)
   "When the given expression matches the string, this function returns a list
 of the whole matching string and a string for each matched subexpressions.
-If it did not match the returned value is an empty list (nil).
+Subexpressions that didn't match are represented by nil elements
+in the list, except that non-matching subexpressions at the end
+of REGEXP might not appear at all in the list.  That is, the
+returned list can be shorter than the number of subexpressions in
+REGEXP plus one.  If REGEXP did not match the returned value is
+an empty list (nil).
 
 When START is non-nil the search will start at that index."
   (declare (side-effect-free t))
