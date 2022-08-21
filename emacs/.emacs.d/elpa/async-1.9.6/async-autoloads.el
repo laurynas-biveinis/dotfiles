@@ -1,4 +1,4 @@
-;;; async-autoloads.el --- automatically extracted autoloads
+;;; async-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
 ;;
 ;;; Code:
 
@@ -10,7 +10,7 @@
 ;;; Generated autoloads from async.el
 
 (autoload 'async-start-process "async" "\
-Start the executable PROGRAM asynchronously.  See `async-start'.
+Start the executable PROGRAM asynchronously named NAME.  See `async-start'.
 PROGRAM is passed PROGRAM-ARGS, calling FINISH-FUNC with the
 process object when done.  If FINISH-FUNC is nil, the future
 object will return the process object when the program is
@@ -59,7 +59,18 @@ will leave *emacs* process buffers hanging around):
     (async-start
      (lambda ()
        (delete-file \"a remote file on a slow link\" nil))
-     'ignore)
+     \\='ignore)
+
+Special case:
+If the output of START-FUNC is a string with properties
+e.g. (buffer-string) RESULT will be transformed in a list where the
+car is the string itself (without props) and the cdr the rest of
+properties, this allows using in FINISH-FUNC the string without
+properties and then apply the properties in cdr to this string (if
+needed).
+Properties handling special objects like markers are returned as
+list to allow restoring them later.
+See <https://github.com/jwiegley/emacs-async/issues/145> for more infos.
 
 Note: Even when FINISH-FUNC is present, a future is still
 returned except that it yields no value (since the value is
@@ -69,7 +80,7 @@ returns nil.  It can still be useful, however, as an argument to
 
 \(fn START-FUNC &optional FINISH-FUNC)" nil nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "async" '("async-")))
+(register-definition-prefixes "async" '("async-"))
 
 ;;;***
 
@@ -98,6 +109,21 @@ Byte compile asynchronously packages installed with package.el.
 Async compilation of packages can be controlled by
 `async-bytecomp-allowed-packages'.
 
+This is a minor mode.  If called interactively, toggle the
+`Async-Bytecomp-Package mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='async-bytecomp-package-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
 \(fn &optional ARG)" t nil)
 
 (autoload 'async-byte-compile-file "async-bytecomp" "\
@@ -107,7 +133,7 @@ Same as `byte-compile-file' but asynchronous.
 
 \(fn FILE)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "async-bytecomp" '("async-byte")))
+(register-definition-prefixes "async-bytecomp" '("async-"))
 
 ;;;***
 
@@ -126,6 +152,20 @@ or call the function `dired-async-mode'.")
 
 (autoload 'dired-async-mode "dired-async" "\
 Do dired actions asynchronously.
+
+This is a minor mode.  If called interactively, toggle the
+`Dired-Async mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='dired-async-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
 
 \(fn &optional ARG)" t nil)
 
@@ -149,7 +189,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 \(fn &optional ARG)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dired-async" '("dired-async-")))
+(register-definition-prefixes "dired-async" '("dired-async-"))
 
 ;;;***
 
@@ -157,7 +197,7 @@ Run ‘dired-do-rename’ asynchronously.
 ;;;;;;  0))
 ;;; Generated autoloads from smtpmail-async.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "smtpmail-async" '("async-smtpmail-")))
+(register-definition-prefixes "smtpmail-async" '("async-smtpmail-"))
 
 ;;;***
 
