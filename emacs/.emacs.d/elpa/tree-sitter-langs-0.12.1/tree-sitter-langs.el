@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.0
+;; Version: 0.12.1
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -135,6 +135,7 @@ See `tree-sitter-langs-repos'."
                 (swift-mode      . swift)
                 (tuareg-mode     . ocaml)
                 (typescript-mode . typescript)
+                (verilog-mode    . verilog)
                 (zig-mode        . zig))))
     (cl-pushnew entry tree-sitter-major-mode-language-alist
                 :key #'car))
