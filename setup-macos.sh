@@ -353,7 +353,7 @@ python3 -m pip install --upgrade pip
 pip3 install asitop scipy pandas cmake-language-server
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner michaelvillar-timer skype
+     telegram keycombiner michaelvillar-timer skype utm
 # Start RescueTime, login
 
 # Intel
