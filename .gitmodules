@@ -8,3 +8,6 @@
 [submodule "emacs/.emacs.d/elpa/vterm-20220820.1602"]
 	path = emacs/.emacs.d/elpa/vterm-20220820.1602
 	url = https://github.com/akermu/emacs-libvterm.git
+[submodule "emacs/.emacs.d/elpa/vterm-20220822.1158"]
+	path = emacs/.emacs.d/elpa/vterm-20220822.1158
+	url = https://github.com/akermu/emacs-libvterm.git
