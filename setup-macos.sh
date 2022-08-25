@@ -319,7 +319,7 @@ nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
 # brew
 #
 brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
-     shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac \
+     shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac htop \
      findutils libtool npm fd delta jq colordiff iwyu cppcheck infer creduce \
      gnu-sed mas bat fig bison libfido2 actionlint circleci imagemagick \
      rapidjson doxygen graphviz cmake protobuf ripgrep lz4 boost cpplint \
