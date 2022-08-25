@@ -41,6 +41,8 @@
 
 (eval-when-compile (require 'compat-macs))
 
+(compat-declare-version "27.1")
+
 ;;;; Defined in fns.c
 
 (compat-defun proper-list-p (object)
@@ -342,6 +344,44 @@ A nil value for either argument stands for the current time."
                  (float-time (or t2 now))))
          1e-5)))))
 
+;;;; Defined in fileio.c
+
+(compat-defun file-name-absolute-p (filename)
+  "Return t if FILENAME is an absolute file name.
+On Unix, absolute file names start with `/'.  In Emacs, an absolute
+file name can also start with an initial `~' or `~USER' component,
+where USER is a valid login name."
+  ;; See definitions in filename.h
+  (let ((seperator
+         (eval-when-compile
+           (if (memq system-type '(cygwin windows-nt ms-dos))
+               "[\\/]" "/")))
+        (drive
+         (eval-when-compile
+           (cond
+            ((memq system-type '(windows-nt ms-dos))
+             "\\`[A-Za-z]:[\\/]")
+            ((eq system-type 'cygwin)
+             "\\`\\([\\/]\\|[A-Za-z]:\\)")
+            ("\\`/"))))
+        (home
+         (eval-when-compile
+           (if (memq system-type '(cygwin windows-nt ms-dos))
+               "\\`~[\\/]" "\\`~/")))
+        (user-home
+         (eval-when-compile
+           (format "\\`\\(~.*?\\)\\(%s.*\\)?$"
+                   (if (memq system-type '(cygwin windows-nt ms-dos))
+                       "[\\/]" "/")))))
+    (or (and (string-match-p drive filename) t)
+        (and (string-match-p home filename) t)
+        (save-excursion
+          (when (string-match user-home filename)
+            (let ((init (match-string 1 filename)))
+              (not (string=
+                    (file-name-base (expand-file-name init))
+                    init))))))))
+
 ;;;; Defined in subr.el
 
 (compat-defmacro setq-local (&rest pairs)
@@ -358,6 +398,29 @@ A nil value for either argument stands for the current time."
         (push `(set (make-local-variable ,sym) ,val)
               body)))
     (cons 'progn (nreverse body))))
+
+(compat-defun provided-mode-derived-p (mode &rest modes)
+  "Non-nil if MODE is derived from one of MODES.
+Uses the `derived-mode-parent' property of the symbol to trace backwards.
+If you just want to check `major-mode', use `derived-mode-p'."
+  :realname compat--provided-mode-derived-p
+  ;; If MODE is an alias, then look up the real mode function first.
+  (let ((alias (symbol-function mode)))
+    (when (and alias (symbolp alias))
+      (setq mode alias)))
+  (while
+      (and
+       (not (memq mode modes))
+       (let* ((parent (get mode 'derived-mode-parent))
+              (parentfn (symbol-function parent)))
+         (setq mode (if (and parentfn (symbolp parentfn)) parentfn parent)))))
+  mode)
+
+;;* UNTESTED
+(defun derived-mode-p (&rest modes)
+  "Non-nil if the current major mode is derived from one of MODES.
+Uses the `derived-mode-parent' property of the symbol to trace backwards."
+  (apply #'compat--provided-mode-derived-p major-mode modes))
 
 ;;* UNTESTED
 (compat-defmacro ignore-error (condition &rest body)

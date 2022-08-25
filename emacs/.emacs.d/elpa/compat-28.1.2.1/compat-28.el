@@ -41,6 +41,8 @@
 
 (eval-when-compile (require 'compat-macs))
 
+(compat-declare-version "28.1")
+
 ;;;; Defined in fns.c
 
 ;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions
@@ -285,22 +287,23 @@ and BLUE, is normalized to have its value in [0,65535]."
        ;; [0] http://www.nic.funet.fi/pub/X11/X11R4/DOCS/color/Xcms.text
        ;; [1] https://gitlab.freedesktop.org/xorg/lib/libx11/-/blob/master/src/xcms/LRGB.c#L1392
        ((string-match
-         (rx bos "rgbi:" (* space)
-             (group (? (or "-" "+"))
-                    (or (: (+ digit) (? "." (* digit)))
-                        (: "." (+ digit)))
-                    (? "e" (? (or "-" "+")) (+ digit)))
-             "/" (* space)
-             (group (? (or "-" "+"))
-                    (or (: (+ digit) (? "." (* digit)))
-                        (: "." (+ digit)))
-                    (? "e" (? (or "-" "+")) (+ digit)))
-             "/" (* space)
-             (group (? (or "-" "+"))
-                    (or (: (+ digit) (? "." (* digit)))
-                        (: "." (+ digit)))
-                    (? "e" (? (or "-" "+")) (+ digit)))
-             eos)
+         ;; (rx bos "rgbi:" (* space)
+         ;;     (group (? (or "-" "+"))
+         ;;            (or (: (+ digit) (? "." (* digit)))
+         ;;                (: "." (+ digit)))
+         ;;            (? "e" (? (or "-" "+")) (+ digit)))
+         ;;     "/" (* space)
+         ;;     (group (? (or "-" "+"))
+         ;;            (or (: (+ digit) (? "." (* digit)))
+         ;;                (: "." (+ digit)))
+         ;;            (? "e" (? (or "-" "+")) (+ digit)))
+         ;;     "/" (* space)
+         ;;     (group (? (or "-" "+"))
+         ;;            (or (: (+ digit) (? "." (* digit)))
+         ;;                (: "." (+ digit)))
+         ;;            (? "e" (? (or "-" "+")) (+ digit)))
+         ;;     eos)
+         "\\`rgbi:[[:space:]]*\\([+-]?\\(?:[[:digit:]]+\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\)\\(?:e[+-]?[[:digit:]]+\\)?\\)/[[:space:]]*\\([+-]?\\(?:[[:digit:]]+\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\)\\(?:e[+-]?[[:digit:]]+\\)?\\)/[[:space:]]*\\([+-]?\\(?:[[:digit:]]+\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\)\\(?:e[+-]?[[:digit:]]+\\)?\\)\\'"
          spec)
         (let ((r (round (* (string-to-number (match-string 1 spec)) 65535)))
               (g (round (* (string-to-number (match-string 2 spec)) 65535)))

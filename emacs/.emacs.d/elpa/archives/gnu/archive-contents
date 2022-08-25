@@ -494,7 +494,7 @@
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:keywords "abbrev" "convenience" "matching"))])
  (compat .
-	 [(28 1 2 0)
+	 [(28 1 2 1)
 	  ((emacs
 	    (24 3))
 	   (nadvice
@@ -505,7 +505,7 @@
 	   (:maintainer "Compat Development" . "~pkal/compat-devel@lists.sr.ht")
 	   (:authors
 	    ("Philip Kaludercic" . "philipk@posteo.net"))
-	   (:commit . "6b70229adf1ad7c2227789061dd1b2fc00d36ad8"))])
+	   (:commit . "ce2fecf94eb3f27851567237a65251dbb419de4b"))])
  (consult .
 	  [(0 18)
 	   ((emacs
@@ -3189,7 +3189,7 @@
 	    ("Kaushal Modi" . "kaushal.modi@gmail.com"))
 	   (:commit . "670e0a08f625175fd80137cf69e799619bf8a381"))])
  (topspace .
-	   [(0 3 0)
+	   [(0 3 1)
 	    ((emacs
 	      (25 1)))
 	    "Recenter line 1 with scrollable upper margin/padding" tar
@@ -3198,7 +3198,7 @@
 	     (:maintainer "Trevor Edwin Pogue" . "trevor.pogue@gmail.com")
 	     (:authors
 	      ("Trevor Edwin Pogue" . "trevor.pogue@gmail.com"))
-	     (:commit . "851737dfe3dbd6ea5186d6d421d9d0c9197831ec"))])
+	     (:commit . "33c2a6f0a11d1d88cdb2065c5a897e33507f4c86"))])
  (tramp .
 	[(2 5 3 1)
 	 ((emacs

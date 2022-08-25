@@ -6,6 +6,13 @@
                          (or (file-name-directory #$) (car load-path))))
 
 
+;;;### (autoloads nil "compat-27" "compat-27.el" (0 0 0 0))
+;;; Generated autoloads from compat-27.el
+
+(register-definition-prefixes "compat-27" '("derived-mode-p"))
+
+;;;***
+
 ;;;### (autoloads nil "compat-help" "compat-help.el" (0 0 0 0))
 ;;; Generated autoloads from compat-help.el
 
@@ -21,8 +28,8 @@
 ;;;***
 
 ;;;### (autoloads nil nil ("compat-24.el" "compat-25.el" "compat-26.el"
-;;;;;;  "compat-27.el" "compat-28.el" "compat-font-lock.el" "compat-pkg.el"
-;;;;;;  "compat.el") (0 0 0 0))
+;;;;;;  "compat-28.el" "compat-font-lock.el" "compat-pkg.el" "compat.el")
+;;;;;;  (0 0 0 0))
 
 ;;;***
 

@@ -4,7 +4,7 @@
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
-;; Version: 28.1.2.0
+;; Version: 28.1.2.1
 ;; URL: https://sr.ht/~pkal/compat
 ;; Package-Requires: ((emacs "24.3") (nadvice "0.3"))
 ;; Keywords: lisp
@@ -33,19 +33,12 @@
 ;;
 ;; Not every function provided in newer versions of Emacs is provided
 ;; here.  Some depend on new features from the core, others cannot be
-;; implemented to a meaningful degree.  The main audience for this
-;; library are not regular users, but package maintainers.  Therefore
-;; commands and user options are usually not implemented here.
+;; implemented to a meaningful degree.  Please consult the Compat
+;; manual for details.  The main audience for this library are not
+;; regular users, but package maintainers.  Therefore commands and
+;; user options are usually not implemented here.
 
 ;;; Code:
-
-(eval-when-compile (require 'compat-macs))
-
-;; We load all the components of Compat with a copied value of
-;; `features' list, that will prevent the list being modified, and all
-;; the files can be loaded again.  This is done so that
-;; `compat--inhibit-prefixed' can take effect when loading `compat',
-;; and do nothing when loading each sub-feature manually.
 
 (defvar compat--inhibit-prefixed)
 (let ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing))))
