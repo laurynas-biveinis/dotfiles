@@ -12,10 +12,11 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      software-properties-common colordiff valgrind linux-tools-generic \
      libjemalloc2 python3-scipy python-numpy-doc python3-pytest \
      python-scipy-doc unattended-upgrades screen fzf fd-find clang moreutils \
-     psmisc zsh zsh-doc libjemalloc-dev bzip2-doc libstdc++-11-doc \
-     valgrind-dbg hexyl ripgrep icu-doc ncurses-doc pkg-config lcov \
-     cpufrequtils libboost-dev libboost-doc cppcheck iwyu clang-12 clang-12-doc \
-     llvm-12-doc lld-12 clang-11 clang-11-doc llvm-11-doc lld-11 cpuset
+     psmisc zsh zsh-doc libjemalloc-dev bzip2-doc valgrind-dbg hexyl ripgrep \
+     icu-doc ncurses-doc pkg-config lcov cpufrequtils libboost-dev \
+     libboost-doc cppcheck iwyu clang-12 clang-12-doc llvm-12-doc lld-12 \
+     clang-11 clang-11-doc llvm-11-doc lld-11 cpuset python3-pip g++-12 \
+     gcc-12-doc libstdc++-12-doc
 # DeepState
 sudo apt-get install libc6-dev-i386
 # Not found on AWS EC2
