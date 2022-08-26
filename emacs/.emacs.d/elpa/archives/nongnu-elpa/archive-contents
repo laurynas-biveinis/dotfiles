@@ -78,7 +78,7 @@
 		 (:maintainer "stardiviner" . "numbchild@gmail.com")
 		 (:keywords "languages" "arduino"))])
  (autothemer .
-	     [(0 2 8)
+	     [(0 2 9)
 	      ((dash
 		(2 10 0))
 	       (emacs
@@ -88,7 +88,7 @@
 	       (:maintainer "Jason Milkins" . "jasonm23@gmail.com")
 	       (:authors
 		("Sebastian Sturm"))
-	       (:commit . "07c4d891cc8b824b391831e73b8dd44d3a7b17c5"))])
+	       (:commit . "378f8707bdd944f19b6fd4544359e993c9113752"))])
  (better-jumper .
 		[(1 0 1)
 		 ((emacs
@@ -546,7 +546,7 @@
 	       ("Matus Goljer" . "matus.goljer@gmail.com"))
 	      (:commit . "6f9172376af4d399c7853cbdfdd7425348a878f9"))])
  (geiser .
-	 [(0 25 1)
+	 [(0 26)
 	  ((emacs
 	    (25 1))
 	   (transient
@@ -559,7 +559,7 @@
 	   (:maintainer "Jose Antonio Ortega Ruiz" . "jao@gnu.org")
 	   (:authors
 	    ("Jose Antonio Ortega Ruiz" . "jao@gnu.org"))
-	   (:commit . "ecfbef1c771f3a5c34f46fb2b387b9669c661d2f"))])
+	   (:commit . "40f03bbad917a16ffda0e4b5d5795a2875bc0428"))])
  (geiser-chez .
 	      [(0 17)
 	       ((emacs
