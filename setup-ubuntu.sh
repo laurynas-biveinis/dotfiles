@@ -44,16 +44,19 @@ sudo apt-get install ccache rapidjson-dev ncdu libaio-dev libssl-dev \
 sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"
 sudo sysctl -w vm.swappiness=0
 sudo sysctl -w kernel.kptr_restrict=0
+
 # kernel.perf_event_paranoid = -1
 # kernel.kptr_restrict = 0
 # vm.swappiness = 0
 sudo nano /etc/sysctl.conf
+
 sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
 sudo /etc/init.d/cpufrequtils restart
 # # After each apt upgrade
 # # (https://twitter.com/trav_downs/status/1280004737455271936):
 # sudo ln -s /usr/lib/debug/lib/x86_64-linux-gnu/* /usr/lib/debug/usr/lib/x86_64-linux-gnu/
 
-# Edit `/etc/sysctl.d/10-ptrace.conf` for `kernel.yama.ptrace_scope = 0`
+# kernel.yama.ptrace_scope = 0
+sudo nano /etc/sysctl.d/10-ptrace.conf
 
 sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
