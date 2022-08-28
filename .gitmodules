@@ -15,3 +15,7 @@
 	path = emacs/.emacs.d/elpa/vterm-20220827.239
 	url = https://github.com/akermu/emacs-libvterm.git
 	ignore = dirty
+[submodule "emacs/.emacs.d/elpa/vterm-20220827.1455"]
+	path = emacs/.emacs.d/elpa/vterm-20220827.1455
+	url = https://github.com/akermu/emacs-libvterm.git
+	ignore = dirty
