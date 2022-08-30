@@ -1,11 +1,12 @@
 ;;; s.el --- The long lost Emacs string manipulation library.
 
-;; Copyright (C) 2012-2015 Magnar Sveen
+;; Copyright (C) 2012-2022 Magnar Sveen
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
-;; Version: 1.12.0
-;; Package-Version: 20220816.956
-;; Package-Commit: 7f25ead4b0deac6f49d07e0c3b8859adedb28207
+;; Maintainer: Jason Milkins <jasonm23@gmail.com>
+;; Version: 1.13.0
+;; Package-Version: 1.13.0
+;; Package-Commit: 4d7d83122850cf70dc60662a73124f0be41ad186
 ;; Keywords: strings
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -401,15 +402,17 @@ This is a simple wrapper around the built-in `string-match-p'."
 (defalias 's-replace-regexp 'replace-regexp-in-string)
 
 (defun s--aget (alist key)
+  "Get the value of KEY in ALIST."
   (declare (pure t) (side-effect-free t))
   (cdr (assoc-string key alist)))
 
 (defun s-replace-all (replacements s)
   "REPLACEMENTS is a list of cons-cells. Each `car` is replaced with `cdr` in S."
   (declare (pure t) (side-effect-free t))
-  (replace-regexp-in-string (regexp-opt (mapcar 'car replacements))
-                            (lambda (it) (s--aget replacements it))
-                            s t t))
+  (let ((case-fold-search nil))
+   (replace-regexp-in-string (regexp-opt (mapcar 'car replacements))
+                             (lambda (it) (s--aget replacements it))
+                             s t t)))
 
 (defun s-downcase (s)
   "Convert S to lower case.
