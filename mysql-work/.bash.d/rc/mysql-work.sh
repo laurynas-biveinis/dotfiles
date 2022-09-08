@@ -56,10 +56,6 @@ CMAKE_RELEASE="$CMAKE_COMMON -DBUILD_CONFIG=mysql_release \
 CMAKE_DEBUG="$CMAKE_COMMON -DCMAKE_BUILD_TYPE=Debug -DWITH_DEBUG=ON"
 unset CMAKE_COMMON
 
-# -DWITH_MYSQLX=OFF on 8.0.23-8.0.29:
-# Undefined symbols for architecture x86_64:
-# "_u_cleanup_69", referenced from:
-# clean_up(bool) in libsql_main.a(mysqld.cc.o)
 MY80="-DMYSQL_MAINTAINER_MODE=ON -DDOWNLOAD_BOOST=ON \
 -DWITH_BOOST=~/vilniusdb/mysql-boost/ -DWITH_SYSTEM_LIBS=ON -DWITH_ROUTER=OFF \
 -DWITH_GROUP_REPLICATION=OFF -DWITH_UNIT_TESTS=OFF"
@@ -74,7 +70,7 @@ unset MARIA_EXTRA
 
 # Version-specific building blocks, descending order
 
-MY8030_EXTRA="-DWITH_MYSQLX=OFF $MY8030_OS_EXTRA"
+MY8030_EXTRA="$MY8030_OS_EXTRA"
 unset MY8030_OS_EXTRA
 
 MY8027_28_EXTRA="-DWITH_FIDO=bundled"
