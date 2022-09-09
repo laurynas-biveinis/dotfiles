@@ -10,3 +10,5 @@ for nightly_script in "$HOME"/.nightly/*; do
     # shellcheck source=/dev/null
     source "$nightly_script"
 done
+
+echo "Nightly completed!"
