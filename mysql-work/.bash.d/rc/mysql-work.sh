@@ -25,17 +25,16 @@ UNAME_OUT="$(uname -s)"
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
     if [ "$(arch)" = "arm64" ]; then
-        MY8028_OS_EXTRA="-DWITH_SSL=/opt/homebrew/opt/openssl@1.1 \
--DWITH_ICU=/opt/homebrew/opt/icu4c"
+        BREW="/opt/homebrew/opt"
+        MY8028_OS_EXTRA="-DWITH_SSL=$BREW/openssl@1.1"
         MY8030_OS_EXTRA="-DWITH_DEVELOPER_ENTITLEMENTS=ON"
-        export MYCLANG12="-DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm@12/bin/clang-12 \
- -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm@12/bin/clang++"
     else
-        MY8028_OS_EXTRA="-DWITH_ICU=/usr/local/opt/icu4c"
+        MY8028_OS_EXTRA=""
         MY8030_OS_EXTRA=""
-        export MYCLANG12="-DCMAKE_C_COMPILER=/usr/local/opt/llvm@12/bin/clang-12 \
- -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm@12/bin/clang++"
     fi
+    MY8028_OS_EXTRA="$MY8028_OS_EXTRA -DWITH_ICU=$BREW/icu4c"
+    export MYCLANG12="-DCMAKE_C_COMPILER=$BREW/llvm@12/bin/clang-12 \
+ -DCMAKE_CXX_COMPILER=$BREW/llvm@12/bin/clang++"
     MARIA_EXTRA="-DCMAKE_C_FLAGS=\"-isystem /usr/local/include\" \
 -DCMAKE_CXX_FLAGS=\"-isystem /usr/local/include\""
     FB_EXTRA=""
@@ -128,9 +127,10 @@ export MYCLANG13="-DCMAKE_C_COMPILER=clang-13 -DCMAKE_CXX_COMPILER=clang++-13"
 export MY80SAN="-DWITH_ASAN=ON -DWITH_ASAN_SCOPE=ON -DWITH_UBSAN=ON"
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
-    export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=/opt/homebrew/opt/libeatmydata/lib/ \
+    export MTR_EMD="--mysqld-env=DYLD_LIBRARY_PATH=$BREW/libeatmydata/lib/ \
 --mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1 \
---mysqld-env=DYLD_INSERT_LIBRARIES=/opt/homebrew/opt/libeatmydata/lib/libeatmydata.dylib"
+--mysqld-env=DYLD_INSERT_LIBRARIES=$BREW/libeatmydata/lib/libeatmydata.dylib"
+    unset BREW
 else
     export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so"
 fi
