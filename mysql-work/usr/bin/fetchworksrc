@@ -7,6 +7,7 @@ autoload is_on_ac
 function pull_and_maintain_repo () {
     local repo=$1
     local fullpath=$WORK_SRC_ROOT/$repo
+    echo "Pulling & GCing $fullpath..."
     pushd "$fullpath" || return
     git fetch --all
     git gc --quiet
