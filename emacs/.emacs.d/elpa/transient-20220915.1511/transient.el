@@ -1448,7 +1448,10 @@ probably use this instead:
           transient-current-prefix)
       (cl-find-if (lambda (obj)
                     (eq (transient--suffix-command obj)
-                        (or command this-command)))
+                        ;; When `this-command' is `transient-set-level',
+                        ;; its reader needs to know what command is being
+                        ;; configured.
+                        (or command this-original-command)))
                   (or transient--suffixes
                       transient-current-suffixes))
     (when-let* ((obj (get (or command this-command) 'transient--suffix))
@@ -3670,12 +3673,13 @@ manpage, then try to jump to the correct location."
 (defun transient--describe-function (fn)
   (describe-function (if (symbolp fn) fn 'transient--anonymous-infix-argument))
   (unless (derived-mode-p 'help-mode)
-    (when-let ((bw (or (get-buffer "*Help*")
-                       (cl-find-if (lambda (win)
-                                     (with-current-buffer (window-buffer win)
-                                       (derived-mode-p 'help-mode)))
-                                   (window-list)))))
-      (select-window (if (windowp bw) bw (get-buffer-window bw))))))
+    (when-let* ((buf (get-buffer "*Help*"))
+                (win (or (and buf (get-buffer-window buf))
+                         (cl-find-if (lambda (win)
+                                       (with-current-buffer (window-buffer win)
+                                         (derived-mode-p 'help-mode)))
+                                     (window-list)))))
+      (select-window win))))
 
 (defun transient--anonymous-infix-argument ()
   "Cannot show any documentation for this anonymous infix command.
