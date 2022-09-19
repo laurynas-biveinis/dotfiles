@@ -1124,7 +1124,7 @@ only argument that is mandatory in all cases.
      with it (as would be the case if ‘transient-define-suffix’ or
      ‘transient-define-infix’ were used to define it).
 
-     Anonymous, dynamically defined suffix commands are also support.
+     Anonymous, dynamically defined suffix commands are also supported.
      See information about the ‘:setup-children’ function in *note Group
      Specifications::.
 
@@ -1663,7 +1663,7 @@ File: transient.info,  Node: Suffix Classes,  Next: Suffix Methods,  Prev: Prefi
      indicates that all remaining arguments are files.
 
    • Classes used for infix commands that represent variables should
-     derived from the abstract ‘transient-variables’ class.
+     derived from the abstract ‘transient-variable’ class.
 
    Magit defines additional classes, which can serve as examples for the
 fancy things you can do without modifying Transient.  Some of these
@@ -1880,7 +1880,7 @@ Slots of ‘transient-suffix’
      is called with no argument and returns a string.
 
    • ‘show-help’ A function used to display help for the suffix.  If
-     unspecified, the prefix controls how hlep is displayed for its
+     unspecified, the prefix controls how help is displayed for its
      suffixes.
 
 Slots of ‘transient-infix’
@@ -3328,46 +3328,46 @@ Node: Defining Transients38457
 Node: Binding Suffix and Infix Commands40893
 Node: Group Specifications41751
 Node: Suffix Specifications46094
-Node: Defining Suffix and Infix Commands50368
-Node: Using Infix Arguments53574
-Node: Transient State56408
-Ref: Pre-commands for Infixes60371
-Ref: Pre-commands for Suffixes60642
-Ref: Pre-commands for Non-Suffixes62415
-Ref: Special Pre-Commands63030
-Node: Classes and Methods63538
-Node: Group Classes65752
-Node: Group Methods67679
-Node: Prefix Classes68932
-Node: Suffix Classes70023
-Node: Suffix Methods72270
-Node: Suffix Value Methods72591
-Node: Suffix Format Methods75349
-Node: Prefix Slots76798
-Ref: Internal Prefix Slots78077
-Node: Suffix Slots79334
-Ref: Slots of transient-suffix79702
-Ref: Slots of transient-infix80556
-Ref: Slots of transient-variable83676
-Ref: Slots of transient-switches83778
-Node: Predicate Slots84141
-Node: Related Abstractions and Packages85406
-Node: Comparison With Prefix Keys and Prefix Arguments85693
-Ref: Regular Prefix Commands86378
-Ref: Regular Prefix Arguments86726
-Ref: Transients87695
-Node: Comparison With Other Packages95966
-Ref: Magit-Popup96197
-Ref: Hydra97104
-Node: FAQ100160
-Ref: Can I control how the popup buffer is displayed?100303
-Ref: Why did some of the key bindings change?100484
-Ref: Why does q not quit popups anymore?102837
-Node: Keystroke Index103930
-Node: Command and Function Index105648
-Node: Variable Index111947
-Node: Concept Index114220
-Node: GNU General Public License116964
+Node: Defining Suffix and Infix Commands50370
+Node: Using Infix Arguments53576
+Node: Transient State56410
+Ref: Pre-commands for Infixes60373
+Ref: Pre-commands for Suffixes60644
+Ref: Pre-commands for Non-Suffixes62417
+Ref: Special Pre-Commands63032
+Node: Classes and Methods63540
+Node: Group Classes65754
+Node: Group Methods67681
+Node: Prefix Classes68934
+Node: Suffix Classes70025
+Node: Suffix Methods72271
+Node: Suffix Value Methods72592
+Node: Suffix Format Methods75350
+Node: Prefix Slots76799
+Ref: Internal Prefix Slots78078
+Node: Suffix Slots79335
+Ref: Slots of transient-suffix79703
+Ref: Slots of transient-infix80557
+Ref: Slots of transient-variable83677
+Ref: Slots of transient-switches83779
+Node: Predicate Slots84142
+Node: Related Abstractions and Packages85407
+Node: Comparison With Prefix Keys and Prefix Arguments85694
+Ref: Regular Prefix Commands86379
+Ref: Regular Prefix Arguments86727
+Ref: Transients87696
+Node: Comparison With Other Packages95967
+Ref: Magit-Popup96198
+Ref: Hydra97105
+Node: FAQ100161
+Ref: Can I control how the popup buffer is displayed?100304
+Ref: Why did some of the key bindings change?100485
+Ref: Why does q not quit popups anymore?102838
+Node: Keystroke Index103931
+Node: Command and Function Index105649
+Node: Variable Index111948
+Node: Concept Index114221
+Node: GNU General Public License116965
 
 End Tag Table
 
