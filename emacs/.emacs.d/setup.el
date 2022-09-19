@@ -188,6 +188,7 @@
   "Make frame contain 2x4 windows."
   (interactive)
   (delete-other-windows)
+  (switch-to-buffer "*scratch*")
   (split-window-below)
   (split-window-right)
   (split-window-right)
