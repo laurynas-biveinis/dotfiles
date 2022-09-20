@@ -135,4 +135,8 @@ else
     export MTR_EMD="--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so"
 fi
 
+mtr_emd() {
+    ./mtr $MTR_EMD "$@"
+}
+
 unset UNAME_OUT
