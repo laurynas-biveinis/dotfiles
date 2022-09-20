@@ -9,8 +9,8 @@ function pull_and_maintain_repo () {
     local fullpath=$WORK_SRC_ROOT/$repo
     echo "Pulling & GCing $fullpath..."
     pushd "$fullpath" || return
-    git fetch --all
-    git gc --quiet
+    git fetch --all -v
+    git gc
     popd || return
 }
 
