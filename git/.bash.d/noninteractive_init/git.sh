@@ -1,4 +1,9 @@
 #!/bin/sh
 
-export CF_ON="git config --local include.path ../.gitconfig"
-export CF_OFF="git config --local --unset include.path"
+cf_on() {
+    git config --local include.path ../.gitconfig
+}
+
+cf_off() {
+    git config --local --unset include.path
+}
