@@ -4,43 +4,44 @@ set -euo pipefail
 
 autoload is_on_ac
 
-function pull_and_maintain_repo () {
-    local repo=$1
-    local fullpath=$WORK_SRC_ROOT/$repo
-    echo "Pulling & GCing $fullpath..."
+function fetch_and_maintain_repo () {
+    local repo="$1"
+    local fullpath="$WORK_SRC_ROOT/$repo"
+    echo "Fetching & GCing $fullpath..."
     pushd "$fullpath" || return
     git fetch --all
     git gc --quiet
     popd || return
 }
 
-function update_worktree () {
-    local worktree=$1
-    local fullpath=$WORK_SRC_ROOT/$worktree
+function pull_worktree () {
+    local worktree="$1"
+    local fullpath="$WORK_SRC_ROOT/$worktree"
+    echo "Pulling $fullpath..."
     pushd "$fullpath" || return
-    $CF_OFF
+    cf_off
     git pull
     git submodule update
-    $CF_ON
+    cf_on
     popd || return
 }
 
-for repo in $WORK_REPOS_TO_PULL; do
-    pull_and_maintain_repo "$repo"
-done
+# for repo in $WORK_REPOS_TO_PULL; do
+#     fetch_and_maintain_repo "$repo"
+# done
+
+# for worktree in $WORK_TREES_TO_UPDATE; do
+#     pull_worktree "$worktree"
+# done
 
 for worktree in $WORK_TREES_TO_UPDATE; do
-    update_worktree "$worktree"
-done
-
-for worktree in $WORK_TREES_TO_UPDATE; do
-    for buildtree in "$WORK_SRC_ROOT"/obj-"$worktree"*; do
-        [[ -e "$buildtree" && -d "$buildtree" ]] || continue
+    for buildtree in "$WORK_SRC_ROOT/$worktree"/_build-*(/); do
         if ! is_on_ac; then
-            echo Laptop is on battery: skipping incremental rebuild of "$buildtree"
+            echo Laptop is on battery: skipping build of "$buildtree"
             continue
         fi
         pushd "$buildtree" || return
+        echo "Building $buildtree..."
         time make -j "$MAKE_J"
         date
         popd || return
