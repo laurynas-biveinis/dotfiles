@@ -1,13 +1,16 @@
 ;;; popup.el --- Visual Popup User Interface
 
 ;; Copyright (C) 2009-2015  Tomohiro Matsuyama
+;; Copyright (c) 2020-2022 Jen-Chieh Shen
 
 ;; Author: Tomohiro Matsuyama <m2ym.pub@gmail.com>
+;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
+;; URL: https://github.com/auto-complete/popup-el
+;; Package-Version: 0.5.9
+;; Package-Commit: 20ce6cbd2f06423be35b3b700c698f0e109e880c
 ;; Keywords: lisp
-;; Package-Version: 0.5.8
-;; Package-Commit: 9d104d4bbbcb37bbc9d9ce762e74d41174683f86
-;; Version: 0.5.8
-;; Package-Requires: ((cl-lib "0.5"))
+;; Version: 0.5.9
+;; Package-Requires: ((emacs "24.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -32,15 +35,16 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'mule)
 
-(defconst popup-version "0.5.8")
+(defconst popup-version "0.5.9")
 
 
 
 ;;; Utilities
 
 (defun popup-calculate-max-width (max-width)
-  "Determines whether the width with MAX-WIDTH desired is character or window \
+  "Determines whether the width with MAX-WIDTH desired is character or window
 proportion based, And return the result."
   (cl-typecase max-width
     (integer max-width)
@@ -236,6 +240,21 @@ existed value with `nil' property."
 ITEM is not string."
   (if (stringp item)
       (get-text-property 0 property item)))
+
+(defun popup-replace-displayable (str &optional rep)
+  "Replace non-displayable character from STR.
+
+Optional argument REP is the replacement string of
+non-displayable character."
+  (let ((rep (or rep ""))
+        (results (list)))
+    (dolist (string (split-string str ""))
+      (let* ((char (string-to-char string))
+             (string (if (char-displayable-p char)
+                         string
+                       rep)))
+        (push string results)))
+    (string-join (reverse results))))
 
 (cl-defun popup-make-item (name
                            &key
@@ -1035,6 +1054,8 @@ HELP-DELAY is a delay of displaying helps."
                      nowait
                      nostrip
                      prompt
+                     face
+                     &allow-other-keys
                      &aux tip lines)
   "Show a tooltip of STRING at POINT. This function is
 synchronized unless NOWAIT specified. Almost all arguments are
@@ -1048,13 +1069,17 @@ tooltip instance without entering event loop.
 
 If `NOSTRIP` is non-nil, `STRING` properties are not stripped.
 
-PROMPT is a prompt string when reading events during event loop."
+PROMPT is a prompt string when reading events during event loop.
+
+If FACE is non-nil, it will be used instead of face `popup-tip-face'."
   (if (bufferp string)
       (setq string (with-current-buffer string (buffer-string))))
 
   (unless nostrip
     ;; TODO strip text (mainly face) properties
     (setq string (substring-no-properties string)))
+
+  (setq string (popup-replace-displayable string))
 
   (and (eq margin t) (setq margin 1))
   (or margin-left (setq margin-left margin))
@@ -1071,7 +1096,7 @@ PROMPT is a prompt string when reading events during event loop."
                           :margin-left margin-left
                           :margin-right margin-right
                           :scroll-bar scroll-bar
-                          :face 'popup-tip-face
+                          :face (or face 'popup-tip-face)
                           :parent parent
                           :parent-offset parent-offset))
 
@@ -1332,6 +1357,7 @@ PROMPT is a prompt string when reading events during event loop."
                        (isearch-keymap popup-isearch-keymap)
                        isearch-callback
                        initial-index
+                       &allow-other-keys
                        &aux menu event)
   "Show a popup menu of LIST at POINT. This function returns a
 value of the selected item. Almost all arguments are the same as in
