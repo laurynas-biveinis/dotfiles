@@ -1,7 +1,0 @@
-#!/bin/zsh
-
-set -eu
-
-readonly GREP_OPT="$1"
-
-git log --oneline --grep "$GREP_OPT" "${@:2}"
