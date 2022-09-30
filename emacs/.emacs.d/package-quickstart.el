@@ -10486,10 +10486,10 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.7/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.7/helm-core-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.8/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.8/helm-core-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.7/helm-core-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.8/helm-core-autoloads.el") (car load-path))))
 
 
 
@@ -10727,10 +10727,10 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.7/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.7/helm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.8/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.8/helm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.7/helm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.8/helm-autoloads.el") (car load-path))))
 
 
 
@@ -13216,15 +13216,15 @@ When FAMILY is non-nil, limit the candidates to the icon set matching it.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220620.1939/all-the-icons-dired-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220620.1939/all-the-icons-dired-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220929.1135/all-the-icons-dired-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220929.1135/all-the-icons-dired-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220620.1939/all-the-icons-dired-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220929.1135/all-the-icons-dired-autoloads.el") (car load-path))))
 
 
 
 (autoload 'all-the-icons-dired-mode "all-the-icons-dired" "\
-Display all-the-icons icon for each file in a dired buffer.
+Display all-the-icons icon for each file in a Dired buffer.
 
 This is a minor mode.  If called interactively, toggle the
 `All-The-Icons-Dired mode' mode.  If the prefix argument is
