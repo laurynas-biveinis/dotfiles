@@ -1,0 +1,7 @@
+# -*- mode: gitconfig -*-
+[include]
+	path = ~/.gitconfig.common
+[merge]
+	conflictstyle = zdiff3
+[rebase]
+	updateRefs = true
