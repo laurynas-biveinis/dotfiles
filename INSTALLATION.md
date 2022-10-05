@@ -26,14 +26,6 @@ Check that existing `~/.zshenv` and `~/.zshrc` files are OK to overwrite, rm
 them, and
 `cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
 
-Execute one of the following commands, depending on the OS and the CPU:
-
-```zsh
-ln -s ~/.gnupg/gpg-agent.conf.macOS.intel ~/.gnupg/gpg-agent.conf
-ln -s ~/.gnupg/gpg-agent.conf.macOS.apple-silicon ~/.gnupg/gpg-agent.conf
-ln -s ~/.gnupg/gpg-agent.conf.linux ~/.gnupg/gpg-agent.conf
-```
-
 If "emacs" is enabled, then
 
 ```zsh
