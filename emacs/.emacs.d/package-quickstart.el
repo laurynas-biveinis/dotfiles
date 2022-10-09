@@ -1213,10 +1213,10 @@ result of `defhydra'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.1.7/posframe-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.1.7/posframe-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.1.8/posframe-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.1.8/posframe-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-1.1.7/posframe-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-1.1.8/posframe-autoloads.el") (car load-path))))
 
 
 
@@ -1323,15 +1323,15 @@ the help of function `posframe-poshandler-argbuilder'.  like:
  (3) POSHANDLER-EXTRA-INFO
 
 POSHANDLER-EXTRA-INFO is a plist, which will prepend to the
-argument of poshandler function: 'info', it will *OVERRIDE* the
-exist key in 'info'.
+argument of poshandler function: `info', it will *OVERRIDE* the
+exist key in `info'.
 
  (4) BUFFER-OR-NAME
 
 This posframe's buffer is BUFFER-OR-NAME, which can be a buffer
 or a name of a (possibly nonexistent) buffer.
 
-buffer name can prefix with space, for example ' *mybuffer*', so
+buffer name can prefix with space, for example \" *mybuffer*\", so
 the buffer name will hide for ibuffer and `list-buffers'.
 
  (5) NO-PROPERTIES
