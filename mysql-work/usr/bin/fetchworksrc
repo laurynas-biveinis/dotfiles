@@ -26,13 +26,13 @@ function pull_worktree () {
     popd || return
 }
 
-# for repo in $WORK_REPOS_TO_PULL; do
-#     fetch_and_maintain_repo "$repo"
-# done
+for repo in $WORK_REPOS_TO_PULL; do
+     fetch_and_maintain_repo "$repo"
+done
 
-# for worktree in $WORK_TREES_TO_UPDATE; do
-#     pull_worktree "$worktree"
-# done
+for worktree in $WORK_TREES_TO_UPDATE; do
+     pull_worktree "$worktree"
+done
 
 for worktree in $WORK_TREES_TO_UPDATE; do
     for buildtree in "$WORK_SRC_ROOT/$worktree"/_build-*(/); do
