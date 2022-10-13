@@ -1,8 +1,8 @@
 ;;; cmake-mode.el --- major-mode for editing CMake sources
 
 ;; Package-Requires: ((emacs "24.1"))
-;; Package-Version: 3.24.2
-;; Package-Commit: 31f835410efeea50acd43512eb9e5646a26ea177
+;; Package-Version: 3.25.0pre1
+;; Package-Commit: ed084886b7c1feb1ac663063d753d49f4fafcd0b
 
 ; Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
 ; file Copyright.txt or https://cmake.org/licensing for details.
@@ -43,8 +43,8 @@ set the path with these commands:
   :group 'cmake)
 
 ;; Keywords
-(defconst cmake-keywords-block-open '("IF" "MACRO" "FOREACH" "ELSE" "ELSEIF" "WHILE" "FUNCTION"))
-(defconst cmake-keywords-block-close '("ENDIF" "ENDFOREACH" "ENDMACRO" "ELSE" "ELSEIF" "ENDWHILE" "ENDFUNCTION"))
+(defconst cmake-keywords-block-open '("BLOCK" "IF" "MACRO" "FOREACH" "ELSE" "ELSEIF" "WHILE" "FUNCTION"))
+(defconst cmake-keywords-block-close '("ENDBLOCK" "ENDIF" "ENDFOREACH" "ENDMACRO" "ELSE" "ELSEIF" "ENDWHILE" "ENDFUNCTION"))
 (defconst cmake-keywords
   (let ((kwds (append cmake-keywords-block-open cmake-keywords-block-close nil)))
     (delete-dups kwds)))
@@ -290,6 +290,39 @@ This puts the mark at the end, and point at the beginning."
 
 ;------------------------------------------------------------------------------
 
+(defun cmake--syntax-propertize-until-bracket-close (syntax)
+  ;; This function assumes that a previous search has matched the
+  ;; beginning of a bracket_comment or bracket_argument and that the
+  ;; second capture group has matched the equal signs between the two
+  ;; opening brackets
+  (let* ((mb (match-beginning 2))
+         (me (match-end 2))
+         (cb (format "]%s]" (buffer-substring mb me))))
+    (save-match-data
+      (if (search-forward cb end 'move)
+          (progn
+            (setq me (match-end 0))
+            (put-text-property
+             (1- me)
+             me
+             'syntax-table
+             (string-to-syntax syntax)))
+        (setq me end)))
+    (put-text-property
+     (match-beginning 1)
+     me
+     'syntax-multiline
+     t)))
+
+(defconst cmake--syntax-propertize-function
+  (syntax-propertize-rules
+   ("\\(#\\)\\[\\(=*\\)\\["
+    (1
+     (prog1 "!" (cmake--syntax-propertize-until-bracket-close "!"))))
+   ("\\(\\[\\)\\(=*\\)\\["
+    (1
+     (prog1 "|" (cmake--syntax-propertize-until-bracket-close "|"))))))
+
 ;; Syntax table for this mode.
 (defvar cmake-mode-syntax-table nil
   "Syntax table for CMake mode.")
@@ -320,7 +353,10 @@ This puts the mark at the end, and point at the beginning."
   ; Setup indentation function.
   (set (make-local-variable 'indent-line-function) 'cmake-indent)
   ; Setup comment syntax.
-  (set (make-local-variable 'comment-start) "#"))
+  (set (make-local-variable 'comment-start) "#")
+  ;; Setup syntax propertization
+  (set (make-local-variable 'syntax-propertize-function) cmake--syntax-propertize-function)
+  (add-hook 'syntax-propertize-extend-region-functions #'syntax-propertize-multiline nil t))
 
 ;; Default cmake-mode key bindings
 (define-key cmake-mode-map "\e\C-a" #'cmake-beginning-of-defun)
