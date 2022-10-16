@@ -19,10 +19,10 @@ function pull_worktree () {
     local fullpath="$WORK_SRC_ROOT/$worktree"
     echo "Pulling $fullpath..."
     pushd "$fullpath" || return
-    cf_off
+    cf_off || true
     git pull
     git submodule update
-    cf_on
+    cf_on || true
     popd || return
 }
 
