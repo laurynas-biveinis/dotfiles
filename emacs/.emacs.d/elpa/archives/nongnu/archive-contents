@@ -465,7 +465,7 @@
 		  ("Chen Bin" . "chenbin.sh@gmail.com"))
 		 (:commit . "7a2a7384b6e752a805d6fbb78cf9425e54c2b18b"))])
  (evil-nerd-commenter .
-		      [(3 5 7)
+		      [(3 5 8)
 		       ((emacs
 			 (25 1)))
 		       "Comment/uncomment lines efficiently. Like Nerd Commenter in Vim" tar
@@ -474,7 +474,7 @@
 			(:maintainer "Chen Bin" . "chenbin.sh@gmail.com")
 			(:authors
 			 ("Chen Bin" . "chenbin.sh@gmail.com"))
-			(:commit . "29ced6fda6a76771a8a054ef55c13a1330793d4d"))])
+			(:commit . "9609fb170da00aeca1716b022d93e1cb68464a34"))])
  (evil-numbers .
 	       [(0 7)
 		((emacs
@@ -557,7 +557,7 @@
 	       ("Matus Goljer" . "matus.goljer@gmail.com"))
 	      (:commit . "6f9172376af4d399c7853cbdfdd7425348a878f9"))])
  (geiser .
-	 [(0 26 1)
+	 [(0 27)
 	  ((emacs
 	    (25 1))
 	   (transient
@@ -570,7 +570,7 @@
 	   (:maintainer "Jose Antonio Ortega Ruiz" . "jao@gnu.org")
 	   (:authors
 	    ("Jose Antonio Ortega Ruiz" . "jao@gnu.org"))
-	   (:commit . "d0a54c942839a561032b4bc41ca65ff4481bd073"))])
+	   (:commit . "af81e4fb1088d9ccbd36dcd541e29eb2770e4d87"))])
  (geiser-chez .
 	      [(0 17)
 	       ((emacs
@@ -1349,6 +1349,20 @@
 	       (:authors
 		("Jonathan Waltman" . "jonathan.waltman@gmail.com"))
 	       (:commit . "5f2943fd70d94065496c52d21f05eb89028637cc"))])
+ (pcre2el .
+	  [(1 9)
+	   ((emacs
+	     (25 1))
+	    (cl-lib
+	     (0 3))
+	    (a
+	     (1 0 0)))
+	   "regexp syntax converter" tar
+	   ((:url . "https://github.com/joddie/pcre2el")
+	    (:maintainer "joddie <jonxfield at gmail.com>")
+	    (:authors
+	     ("joddie <jonxfield at gmail.com>"))
+	    (:commit . "ffa53a7c78c55bfb068cdfb68ca8b1705c119f82"))])
  (pdf-tools .
 	    [(1 0)
 	     ((emacs
@@ -1638,7 +1652,7 @@
 	   ("Random User"))
 	  (:commit . "b10ab60a4e567a1fb7d7702d146ed7055b203113"))])
  (sweeprolog .
-	     [(0 6 1)
+	     [(0 6 2)
 	      ((emacs
 		(28)))
 	      "Embedded SWI-Prolog" tar
@@ -1647,7 +1661,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "539b2829085a31f2f14ec0f2ffb72ed7edc3da49"))])
+	       (:commit . "c6ac1105d83b132e1b485d1324f69ad6a757bf42"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs
