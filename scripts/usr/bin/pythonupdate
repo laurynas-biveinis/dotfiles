@@ -3,7 +3,5 @@
 set -eu
 
 echo "Updating outdated Python packages, if any"
-# shellcheck disable=SC2266
-# shellcheck disable=SC2205
-pip3 list --outdated --format=freeze | (grep "==" || [ $? = 1 ]) |
-    cut -d = -f 1 | xargs -n1 pip3 install -U
+pip3 list --outdated | tail -n +3 | (grep " " || [ $? = 1 ]) | cut -d " " -f 1 \
+    | xargs -n1 pip3 install -U
