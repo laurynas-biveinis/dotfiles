@@ -2905,10 +2905,10 @@ Disable `rainbow-delimiters-mode'." nil nil)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.5.0/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.5.0/projectile-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.6.0/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.6.0/projectile-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/projectile-2.5.0/projectile-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/projectile-2.6.0/projectile-autoloads.el") (car load-path))))
 
 
 
@@ -2954,7 +2954,7 @@ Discover any projects in DIRECTORY and add them to the projectile cache.
 If DEPTH is non-nil recursively descend exactly DEPTH levels below DIRECTORY and
 discover projects there.
 
-\(fn DIRECTORY &optional DEPTH)" nil nil)
+\(fn DIRECTORY &optional DEPTH)" t nil)
 
 (autoload 'projectile-discover-projects-in-search-path "projectile" "\
 Discover projects in `projectile-project-search-path'.
@@ -2985,21 +2985,26 @@ With a prefix argument, show NLINES of context.
 (autoload 'projectile-find-other-file "projectile" "\
 Switch between files with the same name but different extensions.
 With FLEX-MATCHING, match any file that contains the base name of current file.
-Other file extensions can be customized with the variable `projectile-other-file-alist'.
+Other file extensions can be customized with the variable
+`projectile-other-file-alist'.
 
 \(fn &optional FLEX-MATCHING)" t nil)
 
 (autoload 'projectile-find-other-file-other-window "projectile" "\
-Switch between files with the same name but different extensions in other window.
-With FLEX-MATCHING, match any file that contains the base name of current file.
-Other file extensions can be customized with the variable `projectile-other-file-alist'.
+Switch between files with different extensions in other window.
+Switch between files with the same name but different extensions in other
+window.  With FLEX-MATCHING, match any file that contains the base name of
+current file.  Other file extensions can be customized with the variable
+`projectile-other-file-alist'.
 
 \(fn &optional FLEX-MATCHING)" t nil)
 
 (autoload 'projectile-find-other-file-other-frame "projectile" "\
+Switch between files with different extensions in other frame.
 Switch between files with the same name but different extensions in other frame.
-With FLEX-MATCHING, match any file that contains the base name of current file.
-Other file extensions can be customized with the variable `projectile-other-file-alist'.
+With FLEX-MATCHING, match any file that contains the base name of current
+file.  Other file extensions can be customized with the variable
+`projectile-other-file-alist'.
 
 \(fn &optional FLEX-MATCHING)" t nil)
 
@@ -3011,19 +3016,21 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 If point is on a filename, Projectile first tries to search for that
 file in project:
 
-- If it finds just a file, it switches to that file instantly.  This works even
-if the filename is incomplete, but there's only a single file in the current project
-that matches the filename at point.  For example, if there's only a single file named
-\"projectile/projectile.el\" but the current filename is \"projectile/proj\" (incomplete),
-`projectile-find-file-dwim' still switches to \"projectile/projectile.el\" immediately
- because this is the only filename that matches.
+- If it finds just a file, it switches to that file instantly.  This works
+even if the filename is incomplete, but there's only a single file in the
+current project that matches the filename at point.  For example, if
+there's only a single file named \"projectile/projectile.el\" but the
+current filename is \"projectile/proj\" (incomplete),
+`projectile-find-file-dwim' still switches to \"projectile/projectile.el\"
+immediately because this is the only filename that matches.
 
-- If it finds a list of files, the list is displayed for selecting.  A list of
-files is displayed when a filename appears more than one in the project or the
-filename at point is a prefix of more than two files in a project.  For example,
-if `projectile-find-file-dwim' is executed on a filepath like \"projectile/\", it lists
-the content of that directory.  If it is executed on a partial filename like
- \"projectile/a\", a list of files with character 'a' in that directory is presented.
+- If it finds a list of files, the list is displayed for selecting.  A list
+of files is displayed when a filename appears more than one in the project
+or the filename at point is a prefix of more than two files in a project.
+For example, if `projectile-find-file-dwim' is executed on a filepath like
+\"projectile/\", it lists the content of that directory.  If it is executed
+on a partial filename like \"projectile/a\", a list of files with character
+\"a\" in that directory is presented.
 
 - If it finds nothing, display a list of all files in project for selecting.
 
@@ -3037,20 +3044,22 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 If point is on a filename, Projectile first tries to search for that
 file in project:
 
-- If it finds just a file, it switches to that file instantly.  This works even
-if the filename is incomplete, but there's only a single file in the current project
-that matches the filename at point.  For example, if there's only a single file named
-\"projectile/projectile.el\" but the current filename is \"projectile/proj\" (incomplete),
-`projectile-find-file-dwim-other-window' still switches to \"projectile/projectile.el\"
-immediately because this is the only filename that matches.
+- If it finds just a file, it switches to that file instantly.  This works
+even if the filename is incomplete, but there's only a single file in the
+current project that matches the filename at point.  For example, if
+there's only a single file named \"projectile/projectile.el\" but the
+current filename is \"projectile/proj\" (incomplete),
+`projectile-find-file-dwim-other-window' still switches to
+\"projectile/projectile.el\" immediately because this is the only filename
+that matches.
 
-- If it finds a list of files, the list is displayed for selecting.  A list of
-files is displayed when a filename appears more than one in the project or the
-filename at point is a prefix of more than two files in a project.  For example,
-if `projectile-find-file-dwim-other-window' is executed on a filepath like \"projectile/\", it lists
-the content of that directory.  If it is executed on a partial filename
-like \"projectile/a\", a list of files with character 'a' in that directory
-is presented.
+- If it finds a list of files, the list is displayed for selecting.  A list
+of files is displayed when a filename appears more than one in the project
+or the filename at point is a prefix of more than two files in a project.
+For example, if `projectile-find-file-dwim-other-window' is executed on a
+filepath like \"projectile/\", it lists the content of that directory.  If
+it is executed on a partial filename like \"projectile/a\", a list of files
+with character \"a\" in that directory is presented.
 
 - If it finds nothing, display a list of all files in project for selecting.
 
@@ -3064,20 +3073,22 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 If point is on a filename, Projectile first tries to search for that
 file in project:
 
-- If it finds just a file, it switches to that file instantly.  This works even
-if the filename is incomplete, but there's only a single file in the current project
-that matches the filename at point.  For example, if there's only a single file named
-\"projectile/projectile.el\" but the current filename is \"projectile/proj\" (incomplete),
-`projectile-find-file-dwim-other-frame' still switches to \"projectile/projectile.el\"
-immediately because this is the only filename that matches.
+- If it finds just a file, it switches to that file instantly.  This works
+even if the filename is incomplete, but there's only a single file in the
+current project that matches the filename at point.  For example, if
+there's only a single file named \"projectile/projectile.el\" but the
+current filename is \"projectile/proj\" (incomplete),
+`projectile-find-file-dwim-other-frame' still switches to
+\"projectile/projectile.el\" immediately because this is the only filename
+that matches.
 
-- If it finds a list of files, the list is displayed for selecting.  A list of
-files is displayed when a filename appears more than one in the project or the
-filename at point is a prefix of more than two files in a project.  For example,
-if `projectile-find-file-dwim-other-frame' is executed on a filepath like \"projectile/\", it lists
-the content of that directory.  If it is executed on a partial filename
-like \"projectile/a\", a list of files with character 'a' in that directory
-is presented.
+- If it finds a list of files, the list is displayed for selecting.  A list
+of files is displayed when a filename appears more than one in the project
+or the filename at point is a prefix of more than two files in a project.
+For example, if `projectile-find-file-dwim-other-frame' is executed on a
+filepath like \"projectile/\", it lists the content of that directory.  If
+it is executed on a partial filename like \"projectile/a\", a list of files
+with character \"a\" in that directory is presented.
 
 - If it finds nothing, display a list of all files in project for selecting.
 
@@ -3154,12 +3165,14 @@ Generate a related-files-fn which relates as KIND for files having EXTENSIONS.
 \(fn KIND EXTENSIONS)" nil nil)
 
 (autoload 'projectile-related-files-fn-test-with-prefix "projectile" "\
-Generate a related-files-fn which relates tests and impl for files with EXTENSION based on TEST-PREFIX.
+Generate a related-files-fn which relates tests and impl.
+Use files with EXTENSION based on TEST-PREFIX.
 
 \(fn EXTENSION TEST-PREFIX)" nil nil)
 
 (autoload 'projectile-related-files-fn-test-with-suffix "projectile" "\
-Generate a related-files-fn which relates tests and impl for files with EXTENSION based on TEST-SUFFIX.
+Generate a related-files-fn which relates tests and impl.
+Use files with EXTENSION based on TEST-SUFFIX.
 
 \(fn EXTENSION TEST-SUFFIX)" nil nil)
 
@@ -3167,13 +3180,26 @@ Generate a related-files-fn which relates tests and impl for files with EXTENSIO
 Display info for current project." t nil)
 
 (autoload 'projectile-find-implementation-or-test-other-window "projectile" "\
-Open matching implementation or test file in other window." t nil)
+Open matching implementation or test file in other window.
+
+See the documentation of `projectile--find-matching-file' and
+`projectile--find-matching-test' for how implementation and test files
+are determined." t nil)
 
 (autoload 'projectile-find-implementation-or-test-other-frame "projectile" "\
-Open matching implementation or test file in other frame." t nil)
+Open matching implementation or test file in other frame.
+
+See the documentation of `projectile--find-matching-file' and
+`projectile--find-matching-test' for how implementation and test files
+are determined." t nil)
 
 (autoload 'projectile-toggle-between-implementation-and-test "projectile" "\
-Toggle between an implementation file and its test file." t nil)
+Toggle between an implementation file and its test file.
+
+
+See the documentation of `projectile--find-matching-file' and
+`projectile--find-matching-test' for how implementation and test files
+are determined." t nil)
 
 (autoload 'projectile-grep "projectile" "\
 Perform rgrep in the project.
@@ -3195,10 +3221,13 @@ regular expression.
 \(fn SEARCH-TERM &optional ARG)" t nil)
 
 (autoload 'projectile-ripgrep "projectile" "\
-Run a Ripgrep search with `SEARCH-TERM' at current project root.
+Run a ripgrep (rg) search with `SEARCH-TERM' at current project root.
 
 With an optional prefix argument ARG SEARCH-TERM is interpreted as a
 regular expression.
+
+This command depends on of the Emacs packages ripgrep or rg being
+installed to work.
 
 \(fn SEARCH-TERM &optional ARG)" t nil)
 
@@ -3272,8 +3301,8 @@ Use a prefix argument ARG to indicate creation of a new process instead.
 (autoload 'projectile-replace "projectile" "\
 Replace literal string in project using non-regexp `tags-query-replace'.
 
-With a prefix argument ARG prompts you for a directory on which
-to run the replacement.
+With a prefix argument ARG prompts you for a directory and file name patterns
+on which to run the replacement.
 
 \(fn &optional ARG)" t nil)
 
@@ -3486,7 +3515,7 @@ Otherwise behave as if called interactively.
 
 (define-obsolete-function-alias 'projectile-global-mode 'projectile-mode "1.0")
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "projectile" '("??" "compilation-find-file-projectile-find-compilation-buffer" "def-projectile-commander-method" "delete-file-projectile-remove-from-cache" "projectile-")))
+(register-definition-prefixes "projectile" '("??" "compilation-find-file-projectile-find-compilation-buffer" "def-projectile-commander-method" "delete-file-projectile-remove-from-cache" "projectile-"))
 
 
 )
