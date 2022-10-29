@@ -69,26 +69,6 @@
 (defvar display-line-numbers) ; since Emacs 26.1
 (defvar Man-notify-method)
 
-(define-obsolete-function-alias 'define-transient-command
-  'transient-define-prefix "Transient 0.3.0")
-(define-obsolete-function-alias 'define-suffix-command
-  'transient-define-suffix "Transient 0.3.0")
-(define-obsolete-function-alias 'define-infix-command
-  'transient-define-infix "Transient 0.3.0")
-(define-obsolete-function-alias 'define-infix-argument
-  #'transient-define-argument "Transient 0.3.0")
-
-(define-obsolete-variable-alias 'transient--source-buffer
-  'transient--original-buffer "Transient 0.2.0")
-(define-obsolete-variable-alias 'current-transient-prefix
-  'transient-current-prefix "Transient 0.3.0")
-(define-obsolete-variable-alias 'current-transient-command
-  'transient-current-command "Transient 0.3.0")
-(define-obsolete-variable-alias 'current-transient-suffixes
-  'transient-current-suffixes "Transient 0.3.0")
-(define-obsolete-variable-alias 'post-transient-hook
-  'transient-exit-hook "Transient 0.3.0")
-
 (defmacro transient--with-emergency-exit (&rest body)
   (declare (indent defun))
   `(condition-case err
@@ -1049,10 +1029,10 @@ example, sets a variable use `transient-define-infix' instead.
         (let ((key pop)
               (val pop))
           (cond ((eq key :class)
-                 (setq class (list 'quote val)))
+                 (setq class (macroexp-quote val)))
                 ((or (symbolp val)
                      (and (listp val) (not (eq (car val) 'lambda))))
-                 (setq args (plist-put args key (list 'quote val))))
+                 (setq args (plist-put args key (macroexp-quote val))))
                 ((setq args (plist-put args key val))))))
       (list 'vector
             (or level transient--default-child-level)
@@ -1082,12 +1062,12 @@ example, sets a variable use `transient-define-infix' instead.
        ((and (symbolp car)
              (not (commandp car))
              (commandp (cadr spec)))
-        (setq args (plist-put args :description (list 'quote pop)))))
+        (setq args (plist-put args :description (macroexp-quote pop)))))
       (cond
        ((keywordp car)
         (error "Need command, got %S" car))
        ((symbolp car)
-        (setq args (plist-put args :command (list 'quote pop))))
+        (setq args (plist-put args :command (macroexp-quote pop))))
        ((and (commandp car)
              (not (stringp car)))
         (let ((cmd pop)
@@ -1096,7 +1076,7 @@ example, sets a variable use `transient-define-infix' instead.
                                    (or (plist-get args :description)
                                        (plist-get args :key))))))
           (defalias sym cmd)
-          (setq args (plist-put args :command (list 'quote sym)))))
+          (setq args (plist-put args :command (macroexp-quote sym)))))
        ((or (stringp car)
             (and car (listp car)))
         (let ((arg pop))
@@ -1114,10 +1094,7 @@ example, sets a variable use `transient-define-infix' instead.
                                                              prefix arg)))))
           (cond ((and car (not (keywordp car)))
                  (setq class 'transient-option)
-                 (setq args (plist-put args :reader
-                                       (if (symbolp car)
-                                           (list 'quote pop)
-                                         pop))))
+                 (setq args (plist-put args :reader (macroexp-quote pop))))
                 ((not (string-suffix-p "=" arg))
                  (setq class 'transient-switch))
                 (t
@@ -1127,20 +1104,20 @@ example, sets a variable use `transient-define-infix' instead.
       (while (keywordp car)
         (let ((key pop)
               (val pop))
-          (cond ((eq key :class) (setq class (list 'quote val)))
+          (cond ((eq key :class) (setq class val))
                 ((eq key :level) (setq level val))
                 ((eq (car-safe val) '\,)
                  (setq args (plist-put args key (cadr val))))
                 ((or (symbolp val)
                      (and (listp val) (not (eq (car val) 'lambda))))
-                 (setq args (plist-put args key (list 'quote val))))
+                 (setq args (plist-put args key (macroexp-quote val))))
                 ((setq args (plist-put args key val)))))))
     (unless (plist-get args :key)
       (when-let ((shortarg (plist-get args :shortarg)))
         (setq args (plist-put args :key shortarg))))
     (list 'list
           (or level transient--default-child-level)
-          (list 'quote (or class 'transient-suffix))
+          (macroexp-quote (or class 'transient-suffix))
           (cons 'list args))))
 
 (defun transient--default-infix-command ()
@@ -1167,6 +1144,22 @@ example, sets a variable use `transient-define-infix' instead.
   (save-match-data
     (and (string-match "\\`\\(-[a-zA-Z]\\)\\(\\'\\|=\\)" arg)
          (match-string 1 arg))))
+
+(defun transient-parse-suffix (prefix suffix)
+  "Parse SUFFIX, to be added to PREFIX.
+PREFIX is a prefix command, a symbol.
+SUFFIX is a suffix command or a group specification (of
+  the same forms as expected by `transient-define-prefix').
+Intended for use in PREFIX's `:setup-children' function."
+  (eval (car (transient--parse-child prefix suffix))))
+
+(defun transient-parse-suffixes (prefix suffixes)
+  "Parse SUFFIXES, to be added to PREFIX.
+PREFIX is a prefix command, a symbol.
+SUFFIXES is a list of suffix command or a group specification
+  (of the same forms as expected by `transient-define-prefix').
+Intended for use in PREFIX's `:setup-children' function."
+  (mapcar (apply-partially #'transient-parse-suffix prefix) suffixes))
 
 ;;; Edit
 
@@ -3383,7 +3376,7 @@ have a history of their own.")
                     (insert ?\n)
                   (insert (propertize " " 'display
                                       `(space :align-to (,(nth (1+ c) cc)))))))
-            (insert (make-string (- (nth c cc) (current-column)) ?\s))
+            (insert (make-string (max 1 (- (nth c cc) (current-column))) ?\s))
             (when-let ((cell (nth r (nth c columns))))
               (insert cell))
             (when (= c (1- cs))
@@ -3542,7 +3535,7 @@ Optional support for popup buttons is also implemented here."
 
 (cl-defmethod transient-format-description ((obj transient-child))
   "The `description' slot may be a function, in which case that is
-called inside the correct buffer (see `transient-insert-group')
+called inside the correct buffer (see `transient--insert-group')
 and its value is returned to the caller."
   (and-let* ((desc (oref obj description)))
     (if (functionp desc)

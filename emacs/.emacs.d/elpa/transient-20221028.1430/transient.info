@@ -1053,33 +1053,42 @@ constructor of that class.
                 ?\C-c)) ; the prefix key shared by all bindings
 
    • The value of ‘:setup-children’, if non-‘nil’, is a function that
-     takes two arguments the group object itself and a list of children.
-     The children are given as a (potentially empty) list consisting of
-     either group or suffix specifications.  It can make arbitrary
-     changes to the children including constructing new children from
-     scratch.  Also see ‘transient-setup-children’.
+     takes one argument, a potentially list of children, and must return
+     a list of children or an empty list.  This can either be used to
+     somehow transform the group’s children that were defined the normal
+     way, or to dynamically create the children from scratch.
+
+     The returned children must have the same form as stored in the
+     prefix’s ‘transient--layout’ property, but it is often more
+     convenient to use the same form as understood by
+     ‘transient-define-prefix’, described below.  If you use the latter
+     approach, you can use the ‘transient-parse-child’ and
+     ‘transient-parse-children’ functions to transform them from the
+     convenient to the expected form.
 
    • The boolean ‘:pad-keys’ argument controls whether keys of all
      suffixes contained in a group are right padded, effectively
      aligning the descriptions.
 
-   The ELEMENTs are either all subgroups (vectors), or all suffixes
-(lists) and strings.  (At least currently no group type exists that
-would allow mixing subgroups with commands at the same level, though in
-principle there is nothing that prevents that.)
+   The ELEMENTs are either all subgroups, or all suffixes and strings.
+(At least currently no group type exists that would allow mixing
+subgroups with commands at the same level, though in principle there is
+nothing that prevents that.)
 
    If the ELEMENTs are not subgroups, then they can be a mixture of
-lists that specify commands and strings.  Strings are inserted verbatim.
-The empty string can be used to insert gaps between suffixes, which is
-particularly useful if the suffixes are outlined as a table.
+lists that specify commands and strings.  Strings are inserted verbatim
+into the buffer.  The empty string can be used to insert gaps between
+suffixes, which is particularly useful if the suffixes are outlined as a
+table.
 
-   Inside group specifications, including contained suffix
-specifications, nothing has to be quoted.  How symbols are treated,
-depends on context.  In most places they are expected to name functions.
-However if they appear in a place where a group vector is expected, then
-they are treated as indirect group specifications.  Such a symbol must
-have an associated group specification, created using
-‘transient-define-groups’.
+   Inside group specifications, including inside contained suffix
+specifications, nothing has to be quoted and quoting anyway is invalid.
+
+   How symbols are treated, depends on context.  Inside suffix
+specifications they often name functions.  However if they appear in a
+place where a group is expected, then they are treated as indirect group
+specifications.  Such a symbol must have an associated group
+specification, created using ‘transient-define-groups’.
 
    Likewise a symbol can appear in a place where a suffix specification
 is expected.  The value of the ‘transient--layout’ property of that
@@ -3349,47 +3358,47 @@ Node: Defining New Commands38123
 Node: Defining Transients38459
 Node: Binding Suffix and Infix Commands41433
 Node: Group Specifications42291
-Node: Suffix Specifications47107
-Node: Defining Suffix and Infix Commands51383
-Node: Using Infix Arguments54589
-Node: Transient State57423
-Ref: Pre-commands for Infixes61386
-Ref: Pre-commands for Suffixes61657
-Ref: Pre-commands for Non-Suffixes63430
-Ref: Special Pre-Commands64045
-Node: Classes and Methods64553
-Node: Group Classes66767
-Node: Group Methods68694
-Node: Prefix Classes69947
-Node: Suffix Classes71038
-Node: Suffix Methods73284
-Node: Suffix Value Methods73605
-Node: Suffix Format Methods76363
-Node: Prefix Slots77812
-Ref: Internal Prefix Slots79091
-Node: Suffix Slots80348
-Ref: Slots of transient-suffix80716
-Ref: Slots of transient-infix81570
-Ref: Slots of transient-variable84690
-Ref: Slots of transient-switches84792
-Node: Predicate Slots85155
-Node: Related Abstractions and Packages86420
-Node: Comparison With Prefix Keys and Prefix Arguments86707
-Ref: Regular Prefix Commands87392
-Ref: Regular Prefix Arguments87740
-Ref: Transients88709
-Node: Comparison With Other Packages96980
-Ref: Magit-Popup97211
-Ref: Hydra98118
-Node: FAQ101174
-Ref: Can I control how the popup buffer is displayed?101317
-Ref: Why did some of the key bindings change?101498
-Ref: Why does q not quit popups anymore?103851
-Node: Keystroke Index104944
-Node: Command and Function Index106662
-Node: Variable Index113034
-Node: Concept Index115307
-Node: GNU General Public License118051
+Node: Suffix Specifications47529
+Node: Defining Suffix and Infix Commands51805
+Node: Using Infix Arguments55011
+Node: Transient State57845
+Ref: Pre-commands for Infixes61808
+Ref: Pre-commands for Suffixes62079
+Ref: Pre-commands for Non-Suffixes63852
+Ref: Special Pre-Commands64467
+Node: Classes and Methods64975
+Node: Group Classes67189
+Node: Group Methods69116
+Node: Prefix Classes70369
+Node: Suffix Classes71460
+Node: Suffix Methods73706
+Node: Suffix Value Methods74027
+Node: Suffix Format Methods76785
+Node: Prefix Slots78234
+Ref: Internal Prefix Slots79513
+Node: Suffix Slots80770
+Ref: Slots of transient-suffix81138
+Ref: Slots of transient-infix81992
+Ref: Slots of transient-variable85112
+Ref: Slots of transient-switches85214
+Node: Predicate Slots85577
+Node: Related Abstractions and Packages86842
+Node: Comparison With Prefix Keys and Prefix Arguments87129
+Ref: Regular Prefix Commands87814
+Ref: Regular Prefix Arguments88162
+Ref: Transients89131
+Node: Comparison With Other Packages97402
+Ref: Magit-Popup97633
+Ref: Hydra98540
+Node: FAQ101596
+Ref: Can I control how the popup buffer is displayed?101739
+Ref: Why did some of the key bindings change?101920
+Ref: Why does q not quit popups anymore?104273
+Node: Keystroke Index105366
+Node: Command and Function Index107084
+Node: Variable Index113456
+Node: Concept Index115729
+Node: GNU General Public License118473
 
 End Tag Table
 
