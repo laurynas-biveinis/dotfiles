@@ -1,7 +1,7 @@
 [submodule "dotfiles/3rd_party/osx-terminal.app-colors-solarized"]
 	path = dotfiles/3rd_party/osx-terminal.app-colors-solarized
 	url = https://github.com/tomislav/osx-terminal.app-colors-solarized
-[submodule "emacs/.emacs.d/elpa/vterm-20221019.641"]
-	path = emacs/.emacs.d/elpa/vterm-20221019.641
+[submodule "emacs/.emacs.d/elpa/vterm-20221102.1407"]
+	path = emacs/.emacs.d/elpa/vterm-20221102.1407
 	url = https://github.com/akermu/emacs-libvterm.git
 	ignore = dirty
