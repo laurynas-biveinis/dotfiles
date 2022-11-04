@@ -10325,10 +10325,10 @@ and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20221014.2225/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20221014.2225/async-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20221103.638/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20221103.638/async-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/async-20221014.2225/async-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/async-20221103.638/async-autoloads.el") (car load-path))))
 
 
 
