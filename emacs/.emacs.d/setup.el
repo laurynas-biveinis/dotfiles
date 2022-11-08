@@ -1062,6 +1062,8 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'magit)
 (global-set-key (kbd "C-x g") #'magit-status)
 
+(setq magit-display-buffer-function
+      #'magit-display-buffer-same-window-except-diff-v1)
 (setq magit-status-goto-file-position t)
 
 ;; Magit "integration" with VC
