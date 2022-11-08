@@ -1065,6 +1065,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (setq magit-display-buffer-function
       #'magit-display-buffer-same-window-except-diff-v1)
 (setq magit-status-goto-file-position t)
+(setq magit-diff-refine-hunk t)
 
 ;; Magit "integration" with VC
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
