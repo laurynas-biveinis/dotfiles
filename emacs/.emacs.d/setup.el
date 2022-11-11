@@ -965,9 +965,11 @@ event of an error or nonlocal exit."
 ;; Save org buffers automatically
 (add-hook 'auto-save-hook #'org-save-all-org-buffers)
 
+(require 'org-roam-node)
 (defun dotfiles--org-mode-hook ()
   "My configuration hook for 'org-mode'."
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
+  (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
   (setq fill-column 85)
   (setq whitespace-line-column 86))
 
