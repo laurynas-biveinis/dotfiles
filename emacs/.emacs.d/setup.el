@@ -716,6 +716,8 @@ loaded as such.)"
 (require 'org-element)
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
+(require 'org-keys)
+(setq org-return-follows-link t)
 ;; Bendra
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (require 'org-agenda)
