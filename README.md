@@ -53,7 +53,7 @@ Unfortunately, that is not always possible.
 #### Major
 
 [GCMH](https://gitlab.com/koral/gcmh)
-[neuron-mode](https://github.com/felko/neuron-mode)
+[org-roam](https://github.com/org-roam/org-roam)
 [wgrep](https://github.com/mhayashi1120/Emacs-wgrep)
 [google-c-style](https://github.com/google/styleguide/blob/gh-pages/google-c-style.el)
 [tree-sitter](https://emacs-tree-sitter.github.io)
