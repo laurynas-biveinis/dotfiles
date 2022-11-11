@@ -470,6 +470,17 @@ Setup wgrep preparation.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/websocket-1.13/websocket-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/websocket-1.13/websocket-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/websocket-1.13/websocket-autoloads.el") (car load-path))))
+
+
+
+(register-definition-prefixes "websocket" '("websocket-"))
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20221110.1632/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20221110.1632/wakatime-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -2843,6 +2854,33 @@ The Returned color-palette has the same format as `solarized-color-palette'
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20191103.1446/simple-httpd-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20191103.1446/simple-httpd-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/simple-httpd-20191103.1446/simple-httpd-autoloads.el") (car load-path))))
+
+
+
+(autoload 'httpd-start "simple-httpd" "\
+Start the web server process. If the server is already
+running, this will restart the server. There is only one server
+instance per Emacs instance." t nil)
+
+(autoload 'httpd-stop "simple-httpd" "\
+Stop the web server if it is currently running, otherwise do nothing." t nil)
+
+(autoload 'httpd-running-p "simple-httpd" "\
+Return non-nil if the simple-httpd server is running." nil nil)
+
+(autoload 'httpd-serve-directory "simple-httpd" "\
+Start the web server with given `directory' as `httpd-root'.
+
+\(fn DIRECTORY)" t nil)
+
+(register-definition-prefixes "simple-httpd" '("defservlet" "httpd" "with-httpd-buffer"))
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rich-minority-1.0.3/rich-minority-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rich-minority-1.0.3/rich-minority-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -4066,6 +4104,111 @@ Interactively, or when MESSAGE is non-nil, show in the echo area.
 Collect and print info for `org-roam' issues." t nil)
 
 (register-definition-prefixes "org-roam-utils" '("org-roam-"))
+
+
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-ui-20221105.1040/org-roam-ui-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-ui-20221105.1040/org-roam-ui-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-roam-ui-20221105.1040/org-roam-ui-autoloads.el") (car load-path))))
+
+
+
+(defvar org-roam-ui-mode nil "\
+Non-nil if org-roam-ui mode is enabled.
+See the `org-roam-ui-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `org-roam-ui-mode'.")
+
+(custom-autoload 'org-roam-ui-mode "org-roam-ui" nil)
+
+(autoload 'org-roam-ui-mode "org-roam-ui" "\
+Enable org-roam-ui.
+This serves the web-build and API over HTTP.
+
+This is a minor mode.  If called interactively, toggle the
+`org-roam-ui mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='org-roam-ui-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'org-roam-ui-open "org-roam-ui" "\
+Ensure `org-roam-ui' is running, then open the `org-roam-ui' webpage." t nil)
+
+(autoload 'org-roam-ui-node-zoom "org-roam-ui" "\
+Move the view of the graph to current node.
+or optionally a node of your choosing.
+Optionally takes three arguments:
+The ID of the node you want to travel to.
+The SPEED in ms it takes to make the transition.
+The PADDING around the nodes in the viewport.
+
+\(fn &optional ID SPEED PADDING)" t nil)
+
+(autoload 'org-roam-ui-node-local "org-roam-ui" "\
+Open the local graph view of the current node.
+Optionally with ID (string), SPEED (number, ms) and PADDING (number, px).
+
+\(fn &optional ID SPEED PADDING)" t nil)
+
+(autoload 'org-roam-ui-add-to-local-graph "org-roam-ui" "\
+Add current node to the local graph. If not in local mode, open local-graph for this node.
+
+\(fn &optional ID)" t nil)
+
+(autoload 'org-roam-ui-remove-from-local-graph "org-roam-ui" "\
+Remove current node from the local graph. If not in local mode, open local-graph for this node.
+
+\(fn &optional ID)" t nil)
+
+(autoload 'org-roam-ui-sync-theme "org-roam-ui" "\
+Sync your current Emacs theme with org-roam-ui." t nil)
+
+(defvar org-roam-ui-follow-mode nil "\
+Non-nil if org-roam-ui-Follow mode is enabled.
+See the `org-roam-ui-follow-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `org-roam-ui-follow-mode'.")
+
+(custom-autoload 'org-roam-ui-follow-mode "org-roam-ui" nil)
+
+(autoload 'org-roam-ui-follow-mode "org-roam-ui" "\
+Set whether ORUI should follow your every move in Emacs.
+
+This is a minor mode.  If called interactively, toggle the
+`org-roam-ui-Follow mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='org-roam-ui-follow-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+\(fn &optional ARG)" t nil)
+
+(register-definition-prefixes "org-roam-ui" '("img/:file" "node/:id" "org-roam-ui-"))
 
 
 
@@ -11297,7 +11440,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines emacsql emacsql-sqlite magit-section org-roam org-contrib org-analyzer modern-cpp-font-lock markdown-mode git-commit magit lua-mode f lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock markdown-mode git-commit magit lua-mode f lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
