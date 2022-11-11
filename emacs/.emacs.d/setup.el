@@ -978,6 +978,8 @@ event of an error or nonlocal exit."
 (require 'org-roam-db)
 (org-roam-db-autosync-mode)
 
+(global-set-key (kbd "C-c n f") #'org-roam-node-find)
+
 ;;; Solarized-dark color theme
 (load-theme 'solarized-dark t)
 
