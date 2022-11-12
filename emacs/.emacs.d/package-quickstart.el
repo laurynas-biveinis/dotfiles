@@ -8316,10 +8316,10 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.8/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.8/helm-core-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.9/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.9/helm-core-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.8/helm-core-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-core-3.8.9/helm-core-autoloads.el") (car load-path))))
 
 
 
@@ -8557,10 +8557,10 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.8/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.8/helm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.9/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.8.9/helm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.8/helm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-3.8.9/helm-autoloads.el") (car load-path))))
 
 
 
@@ -8577,19 +8577,18 @@ or call the function `helm-adaptive-mode'.")
 (autoload 'helm-adaptive-mode "helm-adaptive" "\
 Toggle adaptive sorting in all sources.
 
-This is a minor mode.  If called interactively, toggle the
-`Helm-Adaptive mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the `Helm-Adaptive mode'
+mode.  If the prefix argument is positive, enable the mode, and if it is zero or
+negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the mode if ARG
+is nil, omitted, or is a positive number.  Disable the mode if ARG is a negative
+number.
 
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='helm-adaptive-mode)'.
+To check whether the minor mode is enabled in the current buffer, evaluate
+`(default-value \\='helm-adaptive-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is disabled.
 
 \(fn &optional ARG)" t nil)
 
@@ -8739,19 +8738,18 @@ or call the function `helm-epa-mode'.")
 (autoload 'helm-epa-mode "helm-epa" "\
 Enable helm completion on gpg keys in epa functions.
 
-This is a minor mode.  If called interactively, toggle the
-`Helm-Epa mode' mode.  If the prefix argument is positive, enable
-the mode, and if it is zero or negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the `Helm-Epa mode' mode.
+If the prefix argument is positive, enable the mode, and if it is zero or
+negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the mode if ARG
+is nil, omitted, or is a positive number.  Disable the mode if ARG is a negative
+number.
 
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='helm-epa-mode)'.
+To check whether the minor mode is enabled in the current buffer, evaluate
+`(default-value \\='helm-epa-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is disabled.
 
 \(fn &optional ARG)" t nil)
 
@@ -8821,25 +8819,30 @@ or call the function `helm-ff-icon-mode'.")
 (autoload 'helm-ff-icon-mode "helm-files" "\
 Display icons from `all-the-icons' package in HFF when enabled.
 
-This is a minor mode.  If called interactively, toggle the
-`Helm-Ff-Icon mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the `Helm-Ff-Icon mode'
+mode.  If the prefix argument is positive, enable the mode, and if it is zero or
+negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the mode if ARG
+is nil, omitted, or is a positive number.  Disable the mode if ARG is a negative
+number.
 
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='helm-ff-icon-mode)'.
+To check whether the minor mode is enabled in the current buffer, evaluate
+`(default-value \\='helm-ff-icon-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is disabled.
 
 NOTE: This mode is building `helm-source-find-files', so if you enable
 it from your init file, ensure to call it _after_ your defmethod's
 `helm-setup-user-source' definitions (if some) to ensure they are called.
 
 \(fn &optional ARG)" t nil)
+
+(autoload 'helm-ff-clear-image-dired-thumbnails-cache "helm-files" "\
+Clear `helm-ff-image-dired-thumbnails-cache'.
+You may want to do this after customizing
+`image-dired-thumbnail-storage' which may change the place where
+thumbnail files are stored." t nil)
 
 (autoload 'helm-ff-cleanup-image-dired-dir-and-cache "helm-files" "\
 Cleanup `image-dired-dir' directory.
@@ -9091,19 +9094,17 @@ Bind `helm-minibuffer-history-key' in al minibuffer maps.
 This mode is enabled by `helm-mode', so there is no need to enable it directly.
 
 This is a minor mode.  If called interactively, toggle the
-`Helm-Minibuffer-History mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
+`Helm-Minibuffer-History mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the mode if ARG
+is nil, omitted, or is a positive number.  Disable the mode if ARG is a negative
+number.
 
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='helm-minibuffer-history-mode)'.
+To check whether the minor mode is enabled in the current buffer, evaluate
+`(default-value \\='helm-minibuffer-history-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is disabled.
 
 \(fn &optional ARG)" t nil)
 
@@ -9509,19 +9510,18 @@ or call the function `helm-top-poll-mode'.")
 (autoload 'helm-top-poll-mode "helm-sys" "\
 Refresh automatically helm top buffer once enabled.
 
-This is a minor mode.  If called interactively, toggle the
-`Helm-Top-Poll mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the `Helm-Top-Poll mode'
+mode.  If the prefix argument is positive, enable the mode, and if it is zero or
+negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the mode if ARG
+is nil, omitted, or is a positive number.  Disable the mode if ARG is a negative
+number.
 
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='helm-top-poll-mode)'.
+To check whether the minor mode is enabled in the current buffer, evaluate
+`(default-value \\='helm-top-poll-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is disabled.
 
 \(fn &optional ARG)" t nil)
 
@@ -9573,19 +9573,18 @@ or call the function `helm-popup-tip-mode'.")
 (autoload 'helm-popup-tip-mode "helm-utils" "\
 Show help-echo informations in a popup tip at end of line.
 
-This is a minor mode.  If called interactively, toggle the
-`Helm-Popup-Tip mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the `Helm-Popup-Tip mode'
+mode.  If the prefix argument is positive, enable the mode, and if it is zero or
+negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the mode if ARG
+is nil, omitted, or is a positive number.  Disable the mode if ARG is a negative
+number.
 
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='helm-popup-tip-mode)'.
+To check whether the minor mode is enabled in the current buffer, evaluate
+`(default-value \\='helm-popup-tip-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is disabled.
 
 \(fn &optional ARG)" t nil)
 
