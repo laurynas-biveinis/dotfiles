@@ -889,6 +889,8 @@ loaded as such.)"
 (setq org-tags-column -85)
 (setq org-agenda-tags-column 'auto)
 
+(setq org-table-header-line-p t)
+
 ;;; org-checklist
 ;; Comes from org-contrib
 (require 'org-checklist)
@@ -1634,7 +1636,7 @@ CANDIDATES is the list of candidates."
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
                      " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
-                     " tree-sitter" " Abbrev" " org-roam-ui"))
+                     " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"))
 (rich-minority-mode)
 
 ;;; projectile
