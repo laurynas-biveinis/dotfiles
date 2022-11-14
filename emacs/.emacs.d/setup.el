@@ -979,6 +979,10 @@ event of an error or nonlocal exit."
 (setq org-outline-path-complete-in-steps nil)
 
 ;;; org-roam
+(setq org-roam-mode-sections
+      (list #'org-roam-backlinks-section #'org-roam-reflinks-section
+            #'org-roam-unlinked-references-section))
+
 (require 'org-roam-db)
 (org-roam-db-autosync-mode)
 
