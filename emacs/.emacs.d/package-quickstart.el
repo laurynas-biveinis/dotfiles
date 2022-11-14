@@ -2881,6 +2881,550 @@ Start the web server with given `directory' as `httpd-root'.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.5/rust-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.5/rust-mode-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.5/rust-mode-autoloads.el") (car load-path))))
+
+
+
+(register-definition-prefixes "rust-cargo" '("rust-"))
+
+
+
+(register-definition-prefixes "rust-compile" '("cargo-compilation-regexps" "rustc-"))
+
+
+
+(autoload 'rust-mode "rust-mode" "\
+Major mode for Rust code.
+
+\\{rust-mode-map}
+
+\(fn)" t nil)
+
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+
+(register-definition-prefixes "rust-mode" '("rust-"))
+
+
+
+(register-definition-prefixes "rust-playpen" '("rust-"))
+
+
+
+(register-definition-prefixes "rust-rustfmt" '("rust-"))
+
+
+
+(autoload 'rust-dbg-wrap-or-unwrap "rust-utils" "\
+Either remove or add the dbg! macro." t nil)
+
+(register-definition-prefixes "rust-utils" '("rust-"))
+
+
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el") (car load-path))))
+
+
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "f" '("f-")))
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el") (car load-path))))
+
+
+
+(autoload 'markdown-mode "markdown-mode" "\
+Major mode for editing Markdown files.
+
+\(fn)" t nil)
+
+(add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
+
+(autoload 'gfm-mode "markdown-mode" "\
+Major mode for editing GitHub Flavored Markdown files.
+
+\(fn)" t nil)
+
+(autoload 'markdown-view-mode "markdown-mode" "\
+Major mode for viewing Markdown content.
+
+\(fn)" t nil)
+
+(autoload 'gfm-view-mode "markdown-mode" "\
+Major mode for viewing GitHub Flavored Markdown content.
+
+\(fn)" t nil)
+
+(autoload 'markdown-live-preview-mode "markdown-mode" "\
+Toggle native previewing on save for a specific markdown file.
+
+If called interactively, enable Markdown-Live-Preview mode if ARG
+is positive, and disable it if ARG is zero or negative.  If
+called from Lisp, also enable the mode if ARG is omitted or nil,
+and toggle it if ARG is `toggle'; disable the mode otherwise.
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "markdown-mode" '("defun-markdown-" "gfm-" "markdown")))
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rustic-3.4/rustic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rustic-3.4/rustic-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/rustic-3.4/rustic-autoloads.el") (car load-path))))
+
+
+
+(autoload 'rustic-mode "rustic" "\
+Major mode for Rust code.
+
+\\{rustic-mode-map}
+
+\(fn)" t nil)
+
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rustic-mode))
+
+(register-definition-prefixes "rustic" '("rustic-"))
+
+
+
+(register-definition-prefixes "rustic-babel" '("cargo-toml-dependencies" "crate-dependencies" "org-babel-execute:rust" "rustic-"))
+
+
+
+(autoload 'rustic-cargo-test-run "rustic-cargo" "\
+Start compilation process for 'cargo test' with optional TEST-ARGS.
+
+\(fn &optional TEST-ARGS)" t nil)
+
+(autoload 'rustic-cargo-test "rustic-cargo" "\
+Run 'cargo test'.
+
+If ARG is not nil, use value as argument and store it in `rustic-test-arguments'.
+When calling this function from `rustic-popup-mode', always use the value of
+`rustic-test-arguments'.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-test-rerun "rustic-cargo" "\
+Run 'cargo test' with `rustic-test-arguments'." t nil)
+
+(autoload 'rustic-cargo-current-test "rustic-cargo" "\
+Run 'cargo test' for the test near point." t nil)
+
+(autoload 'rustic-cargo-test-dwim "rustic-cargo" "\
+Run test or mod at point. Otherwise run `rustic-cargo-test'." t nil)
+
+(autoload 'rustic-cargo-outdated "rustic-cargo" "\
+Use 'cargo outdated' to list outdated packages in `tabulated-list-mode'.
+Execute process in PATH.
+
+\(fn &optional PATH)" t nil)
+
+(autoload 'rustic-cargo-reload-outdated "rustic-cargo" "\
+Update list of outdated packages." t nil)
+
+(autoload 'rustic-cargo-mark-upgrade "rustic-cargo" "\
+Mark an upgradable package." t nil)
+
+(autoload 'rustic-cargo-mark-latest-upgrade "rustic-cargo" "\
+Mark an upgradable package to the latest available version." t nil)
+
+(autoload 'rustic-cargo-mark-all-upgrades-latest "rustic-cargo" "\
+Mark all packages in the Package Menu to latest version." t nil)
+
+(autoload 'rustic-cargo-mark-all-upgrades "rustic-cargo" "\
+Mark all upgradable packages in the Package Menu." t nil)
+
+(autoload 'rustic-cargo-menu-mark-unmark "rustic-cargo" "\
+Clear any marks on a package." t nil)
+
+(autoload 'rustic-cargo-upgrade-execute "rustic-cargo" "\
+Perform marked menu actions." t nil)
+
+(autoload 'rustic-cargo-new "rustic-cargo" "\
+Run 'cargo new' to start a new package in the path specified by PROJECT-PATH.
+If BIN is not nil, create a binary application, otherwise a library.
+
+\(fn PROJECT-PATH &optional BIN)" t nil)
+
+(autoload 'rustic-cargo-init "rustic-cargo" "\
+Run 'cargo init' to initialize a directory in the path specified by PROJECT-PATH.
+If BIN is not nil, create a binary application, otherwise a library.
+
+\(fn PROJECT-PATH &optional BIN)" t nil)
+
+(autoload 'rustic-cargo-run-command "rustic-cargo" "\
+Start compilation process for 'cargo run' with optional RUN-ARGS.
+
+\(fn &optional RUN-ARGS)" t nil)
+
+(autoload 'rustic-cargo-run "rustic-cargo" "\
+Run 'cargo run'.
+
+If ARG is not nil, use value as argument and store it in `rustic-run-arguments'.
+When calling this function from `rustic-popup-mode', always use the value of
+`rustic-run-arguments'.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-run-rerun "rustic-cargo" "\
+Run 'cargo run' with `rustic-run-arguments'." t nil)
+
+(autoload 'rustic-run-shell-command "rustic-cargo" "\
+Run an arbitrary shell command using ARG for the current project.
+Example: use it to provide an environment variable to your
+application like this `env MYVAR=1 cargo run' so that it can read
+it at the runtime.  As a byproduct, you can run any shell command
+in your project like `pwd'
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-build "rustic-cargo" "\
+Run 'cargo build' for the current project, allow configuring
+`rustic-cargo-build-arguments' when prefix argument (C-u) is enabled.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-clean "rustic-cargo" "\
+Run 'cargo clean' for the current project.
+
+If ARG is not nil, use value as argument and store it in `rustic-clean-arguments'.
+When calling this function from `rustic-popup-mode', always use the value of
+`rustic-clean-arguments'.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-check "rustic-cargo" "\
+Run 'cargo check' for the current project, allow configuring
+`rustic-cargo-check-arguments' when prefix argument (C-u) is enabled.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-bench "rustic-cargo" "\
+Run 'cargo bench' for the current project." t nil)
+
+(autoload 'rustic-cargo-build-doc "rustic-cargo" "\
+Build the documentation for the current project." t nil)
+
+(autoload 'rustic-cargo-doc "rustic-cargo" "\
+Open the documentation for the current project in a browser.
+The documentation is built if necessary." t nil)
+
+(autoload 'rustic-cargo-add "rustic-cargo" "\
+Add crate to Cargo.toml using 'cargo add'.
+If running with prefix command `C-u', read whole command from minibuffer.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-rm "rustic-cargo" "\
+Remove crate from Cargo.toml using 'cargo rm'.
+If running with prefix command `C-u', read whole command from minibuffer.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-upgrade "rustic-cargo" "\
+Upgrade dependencies as specified in the local manifest file using 'cargo upgrade'.
+If running with prefix command `C-u', read whole command from minibuffer.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-update "rustic-cargo" "\
+Update dependencies as recorded in the local lock file.
+If running with prefix command `C-u', use ARG by reading whole
+command from minibuffer.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-login "rustic-cargo" "\
+Add crates.io API token using `cargo login'.
+
+`TOKEN' the token for interacting with crates.io. Visit [1] for
+        how to get one
+
+\[1] https://doc.rust-lang.org/cargo/reference/publishing.html#before-your-first-publish
+
+\(fn TOKEN)" t nil)
+
+(autoload 'rustic-cargo-install-rerun "rustic-cargo" "\
+Run 'cargo install' with `rustic-install-arguments'." t nil)
+
+(autoload 'rustic-cargo-install "rustic-cargo" "\
+Install rust binary using 'cargo install'.
+If running with prefix command `C-u', read whole command from minibuffer.
+
+\(fn &optional ARG)" t nil)
+
+(register-definition-prefixes "rustic-cargo" '("rustic-"))
+
+
+
+(autoload 'rustic-cargo-clippy-run "rustic-clippy" "\
+Run `cargo clippy' with optional ARGS.
+
+\(fn &rest ARGS)" t nil)
+
+(autoload 'rustic-cargo-lints "rustic-clippy" "\
+Run cargo-lints with optional ARGS." t nil)
+
+(autoload 'rustic-cargo-clippy "rustic-clippy" "\
+Run 'cargo clippy'.
+
+If ARG is not nil, use value as argument and store it in `rustic-clippy-arguments'.
+When calling this function from `rustic-popup-mode', always use the value of
+`rustic-clippy-arguments'.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-clippy-rerun "rustic-clippy" "\
+Run 'cargo clippy' with `rustic-clippy-arguments'." t nil)
+
+(register-definition-prefixes "rustic-clippy" '("rustic-"))
+
+
+
+(autoload 'rustic-cargo-comint-run "rustic-comint" "\
+Run 'cargo run' but for interactive programs.
+
+If ARG is not nil, use value as argument and store it in `rustic-run-arguments'.
+When calling this function from `rustic-popup-mode', always use the value of
+`rustic-run-arguments'.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-comint-run-rerun "rustic-comint" "\
+Run 'cargo run' with `rustic-run-comint-arguments'." t nil)
+
+(autoload 'rustic-cargo-plain-run "rustic-comint" "\
+Run 'cargo run' for the current project.
+If running with prefix command `C-u', read whole command from minibuffer.
+
+\(fn &optional ARG)" t nil)
+
+(register-definition-prefixes "rustic-comint" '("poly-rustic-cargo-comint-switch-buffer-hook" "rustic-"))
+
+
+
+(autoload 'rustic-compile "rustic-compile" "\
+Compile rust project.
+
+If `compilation-read-command' is non-nil or if called with prefix
+argument ARG then read the command in the minibuffer.  Otherwise
+use `rustic-compile-command'.
+
+In either store the used command in `compilation-arguments'.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-recompile "rustic-compile" "\
+Re-compile the program using `compilation-arguments'." t nil)
+
+(register-definition-prefixes "rustic-compile" '("rust"))
+
+
+
+(autoload 'rustic-doc-dumb-search "rustic-doc" "\
+Search all projects and std for SEARCH-TERM.
+Use this when `rustic-doc-search' does not find what you're looking for.
+Add `universal-argument' to only search level 1 headers.
+See `rustic-doc-search' for more information.
+
+\(fn SEARCH-TERM)" t nil)
+
+(autoload 'rustic-doc-search "rustic-doc" "\
+Search the rust documentation for SEARCH-TERM.
+Only searches in headers (structs, functions, traits, enums, etc)
+to limit the number of results.
+To limit search results to only level 1 headers, add `universal-argument'
+Level 1 headers are things like struct or enum names.
+if ROOT is non-nil the search is performed from the root dir.
+This function tries to be smart and limits the search results
+as much as possible. If it ends up being so smart that
+it doesn't manage to find what you're looking for, try `rustic-doc-dumb-search'.
+
+\(fn SEARCH-TERM &optional ROOT)" t nil)
+
+(autoload 'rustic-doc-convert-current-package "rustic-doc" "\
+Convert the documentation for a project and its dependencies." t nil)
+
+(autoload 'rustic-doc-setup "rustic-doc" "\
+Setup or update rustic-doc filter and convert script. Convert std.
+If NO-DL is non-nil, will not try to re-download
+the pandoc filter and bash script.
+NO-DL is primarily used for development of the filters.
+If NOCONFIRM is non-nil, install all dependencies without prompting user.
+
+\(fn &optional NO-DL NOCONFIRM)" t nil)
+
+(autoload 'rustic-doc-mode "rustic-doc" "\
+Convert rust html docs to .org, and browse the converted docs.
+
+This is a minor mode.  If called interactively, toggle the
+`Rustic-Doc mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `rustic-doc-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+\(fn &optional ARG)" t nil)
+
+(register-definition-prefixes "rustic-doc" '("rustic-doc-"))
+
+
+
+(autoload 'rustic-cargo-expand "rustic-expand" "\
+Run 'cargo expand'.
+
+If ARG is not nil, use value as argument and store it in
+`rustic-expand-arguments'.  When calling this function from
+`rustic-popup-mode', always use the value of
+`rustic-expand-arguments'.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-expand-rerun "rustic-expand" "\
+Run 'cargo expand' with `rustic-expand-arguments'." t nil)
+
+(register-definition-prefixes "rustic-expand" '("rustic-"))
+
+
+
+(autoload 'rustic-flycheck-setup "rustic-flycheck" "\
+Setup Rust in Flycheck.
+
+If the current file is part of a Cargo project, configure
+Flycheck according to the Cargo project layout." t nil)
+
+(register-definition-prefixes "rustic-flycheck" '("rustic-flycheck-"))
+
+
+
+(autoload 'rustic-open-dependency-file "rustic-interaction" "\
+Open the 'Cargo.toml' file at the project root if the current buffer is
+visiting a project." t nil)
+
+(register-definition-prefixes "rustic-interaction" '("rustic-"))
+
+
+
+(autoload 'rustic-analyzer-macro-expand "rustic-lsp" "\
+Default method for displaying macro expansion results.
+
+\(fn RESULT)" t nil)
+
+(register-definition-prefixes "rustic-lsp" '("rustic-"))
+
+
+
+(autoload 'rustic-playpen "rustic-playpen" "\
+Create a shareable URL for the contents of the current region,
+src-block or buffer on the Rust playpen.
+
+\(fn BEGIN END)" t nil)
+
+(register-definition-prefixes "rustic-playpen" '("rustic-"))
+
+
+
+(autoload 'rustic-popup "rustic-popup" "\
+Setup popup.
+If directory is not in a rust project call `read-directory-name'.
+
+\(fn &optional ARGS)" t nil)
+
+(autoload 'rustic-popup-invoke-popup-action "rustic-popup" "\
+Execute commands which are listed in `rustic-popup-commands'.
+
+\(fn EVENT)" t nil)
+
+(autoload 'rustic-popup-default-action "rustic-popup" "\
+Change backtrace and `compilation-arguments' when executed on
+corresponding line." t nil)
+
+(autoload 'rustic-popup-cargo-command-help "rustic-popup" "\
+Display help buffer for cargo command at point." t nil)
+
+(autoload 'rustic-popup-kill-help-buffer "rustic-popup" "\
+Kill popup help buffer and switch to popup buffer." t nil)
+
+(register-definition-prefixes "rustic-popup" '("rustic-"))
+
+
+
+(autoload 'rustic-racer-describe "rustic-racer" "\
+Show a *Racer Help* buffer for the function or type at point." t nil)
+
+(register-definition-prefixes "rustic-racer" '("racer-src-button" "rustic-racer-"))
+
+
+
+(autoload 'rustic-rustfix "rustic-rustfix" "\
+Run 'cargo fix'." t nil)
+
+(register-definition-prefixes "rustic-rustfix" '("rustic-rustfix-"))
+
+
+
+(autoload 'rustic-cargo-fmt "rustic-rustfmt" "\
+Use rustfmt via cargo." t nil)
+
+(autoload 'rustic-format-region "rustic-rustfmt" "\
+Format the current active region using rustfmt.
+
+This operation requires a nightly version of rustfmt.
+
+\(fn BEGIN END)" t nil)
+
+(autoload 'rustic-format-buffer "rustic-rustfmt" "\
+Format the current buffer using rustfmt." t nil)
+
+(autoload 'rustic-format-file "rustic-rustfmt" "\
+Unlike `rustic-format-buffer' format file directly and revert the buffer.
+
+\(fn &optional FILE)" t nil)
+
+(register-definition-prefixes "rustic-rustfmt" '("rustic-"))
+
+
+
+(autoload 'rustic-cargo-spellcheck "rustic-spellcheck" "\
+Run 'cargo spellcheck'.
+
+If ARG is not nil, use value as argument and store it in
+`rustic-spellcheck-arguments'.  When calling this function from
+`rustic-popup-mode', always use the value of
+`rustic-spellcheck-arguments'.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'rustic-cargo-spellcheck-rerun "rustic-spellcheck" "\
+Run 'cargo spellcheck' with `rustic-spellcheck-arguments'." t nil)
+
+(register-definition-prefixes "rustic-spellcheck" '("rustic-"))
+
+
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rich-minority-1.0.3/rich-minority-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rich-minority-1.0.3/rich-minority-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -4751,49 +5295,6 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 \(fn &optional ARG)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "modern-cpp-font-lock" '("modern-c++-")))
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el") (car load-path))))
-
-
-
-(autoload 'markdown-mode "markdown-mode" "\
-Major mode for editing Markdown files.
-
-\(fn)" t nil)
-
-(add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
-
-(autoload 'gfm-mode "markdown-mode" "\
-Major mode for editing GitHub Flavored Markdown files.
-
-\(fn)" t nil)
-
-(autoload 'markdown-view-mode "markdown-mode" "\
-Major mode for viewing Markdown content.
-
-\(fn)" t nil)
-
-(autoload 'gfm-view-mode "markdown-mode" "\
-Major mode for viewing GitHub Flavored Markdown content.
-
-\(fn)" t nil)
-
-(autoload 'markdown-live-preview-mode "markdown-mode" "\
-Toggle native previewing on save for a specific markdown file.
-
-If called interactively, enable Markdown-Live-Preview mode if ARG
-is positive, and disable it if ARG is zero or negative.  If
-called from Lisp, also enable the mode if ARG is omitted or nil,
-and toggle it if ARG is `toggle'; disable the mode otherwise.
-
-\(fn &optional ARG)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "markdown-mode" '("defun-markdown-" "gfm-" "markdown")))
 
 
 )
@@ -7273,17 +7774,6 @@ When called interactively, switch to the process buffer.
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "lua-mode" '("lua-")))
 
 
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/f-0.20.0/f-autoloads.el") (car load-path))))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "f" '("f-")))
 
 
 )
@@ -11439,7 +11929,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock markdown-mode git-commit magit lua-mode f lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)

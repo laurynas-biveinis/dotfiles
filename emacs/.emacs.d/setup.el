@@ -116,6 +116,11 @@
   "Enable showing of trailing whitespace."
   (setq show-trailing-whitespace t))
 
+;; Use spaces for indentation
+(defun dotfiles--disable-indent-tabs-mode ()
+  "Disable `indent-tabs-mode' in the case the default will change."
+  (setq indent-tabs-mode nil))
+
 ;;;; Bundled modes
 ;;; header-line-format
 ;; which-function-mode
@@ -511,12 +516,7 @@ loaded as such.)"
 (with-eval-after-load 'compile (fancy-compilation-mode))
 
 ;;; elisp-mode
-(defun dotfiles--emacs-lisp-mode-hook ()
-  "Configuration for 'emacs-lisp-mode'."
-  ;; Should the global default ever change, elisp should stay with spaces
-  (setq indent-tabs-mode nil))
-
-(add-hook 'emacs-lisp-mode-hook #'dotfiles--emacs-lisp-mode-hook)
+(add-hook 'emacs-lisp-mode-hook #'dotfiles--disable-indent-tabs-mode)
 
 ;;; `auth-sources'
 (require 'auth-source)
@@ -1914,6 +1914,15 @@ with a prefix ARG."
 (global-tree-sitter-mode)
 
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
+;;;; Rust
+;;; `rust-mode'
+(require 'rust-mode)
+
+(add-hook 'rust-mode-hook #'dotfiles--disable-indent-tabs-mode)
+
+;;; `rustic'
+(require 'rustic)
 
 ;;;; Upgrade helper
 (defun my-recompile-packages ()
