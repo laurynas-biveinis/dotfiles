@@ -154,8 +154,8 @@
 (setq whitespace-line-column (+ dotfiles--fill-column 1))
 (setq whitespace-global-modes '(not dired-mode erc-mode markdown-mode gfm-mode
                                     lisp-interaction-mode help-mode Info-mode
-                                    magit-status-mode org-agenda-mode grep-mode
-                                    package-menu-mode vterm-mode))
+                                    magit-status-mode org-mode org-agenda-mode
+                                    grep-mode package-menu-mode vterm-mode))
 
 (global-so-long-mode 1)
 
