@@ -35,3 +35,5 @@ for script in ~/.zsh.d/env/*; do
     source "$script"
 done
 unsetopt null_glob
+
+. "$HOME/.cargo/env"
