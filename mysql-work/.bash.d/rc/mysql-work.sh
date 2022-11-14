@@ -85,7 +85,7 @@ MY8027_28_EXTRA="-DWITH_FIDO=bundled"
 MY8028_EXTRA="-DWITH_RAPIDJSON=bundled -DWITH_LZ4=bundled $MY8028_OS_EXTRA \
 -DCMAKE_CXX_FLAGS=$MY8028_EXTRA_CXX_FLAGS \
 -DCMAKE_C_FLAGS_DEBUG='$MY8028_EXTRA_CXX_FLAGS -Wno-unknown-warning-option \
--Wno-unused-but-set-variable -g' \
+-Wno-unused-but-set-variable -Wno-discarded-qualifiers -g' \
 -DCMAKE_CXX_FLAGS_DEBUG='$MY8028_EXTRA_CXX_FLAGS -Wno-unknown-warning-option \
 -Wno-unused-but-set-variable \
 -g' \
