@@ -740,7 +740,7 @@ loaded as such.)"
 (setq org-catch-invisible-edits 'smart)
 (setq org-fontify-todo-headline t)
 (setq org-fontify-done-headline t)
-(setq org-adapt-indentation t)
+(setq org-adapt-indentation nil)
 
 ;; Tags
 (setq org-tag-alist '((:startgroup . nil)
