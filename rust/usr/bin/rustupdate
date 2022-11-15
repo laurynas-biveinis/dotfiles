@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -eu
+
+echo "Updating Rust"
+rustup update
