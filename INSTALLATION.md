@@ -33,6 +33,8 @@ ln -sf $HOME/Documents/secrets.el $HOME/secrets.el
 ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 ```
 
+In Emacs, do `(all-the-icons-install-fonts)`.
+
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
 If "wakatime" is enabled then, on macOS
