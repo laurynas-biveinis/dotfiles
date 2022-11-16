@@ -1,4 +1,4 @@
-;;; all-the-icons-autoloads.el --- automatically extracted autoloads
+;;; all-the-icons-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
 ;;
 ;;; Code:
 
@@ -57,7 +57,7 @@ When FAMILY is non-nil, limit the candidates to the icon set matching it.
 
 \(fn &optional ARG FAMILY)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "all-the-icons" '("all-the-icons-")))
+(register-definition-prefixes "all-the-icons" '("all-the-icons-"))
 
 ;;;***
 
