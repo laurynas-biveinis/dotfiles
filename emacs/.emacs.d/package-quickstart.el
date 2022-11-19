@@ -539,10 +539,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20221102.1407/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20221102.1407/vterm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20221118.1354/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20221118.1354/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20221102.1407/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20221118.1354/vterm-autoloads.el") (car load-path))))
 
 
 
@@ -1224,10 +1224,10 @@ result of `defhydra'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.1.8/posframe-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.1.8/posframe-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.2.0/posframe-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.2.0/posframe-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-1.1.8/posframe-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-1.2.0/posframe-autoloads.el") (car load-path))))
 
 
 
@@ -1278,30 +1278,7 @@ position.  Its argument is a plist of the following form:
 By default, poshandler is auto-selected based on the type of POSITION,
 but the selection can be overridden using the POSHANDLER argument.
 
-The names of poshandler functions are like:
-
-   `posframe-poshandler-p0.5p0-to-w0.5p1'
-
-which mean align posframe(0.5, 0) to a position(a, b)
-
-1. a = x of window(0.5, 0)
-2. b = y of point(1, 1)
-
-    posframe(p), frame(f), window(w), point(p), mouse(m)
-
-         (0,0)      (0.5,0)      (1,0)
-          +------------+-----------+
-          |                        |
-          |                        |
-          |                        |
- (0, 0.5) +                        + (1, 0.5)
-          |                        |
-          |                        |
-          |                        |
-          +------------+-----------+
-         (0,1)      (0.5,1)      (1,1)
-
-The alias of builtin poshandler functions are listed below:
+The builtin poshandler functions are listed below:
 
 1.  `posframe-poshandler-frame-center'
 2.  `posframe-poshandler-frame-top-center'
@@ -1321,6 +1298,7 @@ The alias of builtin poshandler functions are listed below:
 16. `posframe-poshandler-point-bottom-left-corner'
 17. `posframe-poshandler-point-bottom-left-corner-upward'
 18. `posframe-poshandler-point-window-center'
+19. `posframe-poshandler-point-frame-center'
 
 by the way, poshandler can be used by other packages easily with
 the help of function `posframe-poshandler-argbuilder'.  like:
@@ -2494,10 +2472,10 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20221028.1430/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20221028.1430/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20221118.1443/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20221118.1443/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20221028.1430/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20221118.1443/transient-autoloads.el") (car load-path))))
 
 
 
@@ -11936,7 +11914,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/transient-20221028.1430" "/Users/laurynas/.emacs.d/elpa/compat-28.1.2.2" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/transient-20221118.1443" "/Users/laurynas/.emacs.d/elpa/compat-28.1.2.2" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
