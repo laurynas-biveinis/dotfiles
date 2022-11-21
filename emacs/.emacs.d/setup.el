@@ -972,8 +972,16 @@ event of an error or nonlocal exit."
   "My configuration hook for 'org-mode'."
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
   (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
+  (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
   (setq fill-column 85)
   (setq whitespace-line-column 86))
+
+(setq org-roam-capture-templates
+      '(("d" "default" plain "%?" :target
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}
+Created: %U
+")
+         :unnarrowed t)))
 
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
