@@ -745,20 +745,20 @@ loaded as such.)"
 ;; Tags
 (setq org-tag-alist '((:startgroup . nil)
                       ("@agenda" . ?a)
-                      ("@anywhere" . ?w)
                       ("@call" . ?t)
-                      ("@internet" . ?i)
+                      ("@checklist" . ?l)
                       ("@computer" . ?c)
                       ("@home" . ?h)
-                      ("@readreview" . ?r)
+                      ("@internet" . ?i)
+                      ("@phone" . ?w)
                       ("@vilnius" . ?v)
                       ("@waitingfor" . ?f)
-                      ("@checklist" . ?l)
+                      ("@watchlisten(z)" . ?z)
                       (:endgroup . nil)
                       ("project" . ?p)
                       ("somedaymaybe" . ?s)
                       ("crypt" . ?k)))
-(setq org-use-tag-inheritance '("somedaymaybe" "@readreview"))
+(setq org-use-tag-inheritance '("somedaymaybe" "@watchlisten"))
 (setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-fast-tag-selection-single-key 'expert)
 ;; Build agenda buffers faster
@@ -776,7 +776,7 @@ loaded as such.)"
          ((org-use-tag-inheritance '("project" "somedaymaybe"))))
         ("A" "Agenda"
          ((agenda "" nil)
-          (tags-todo "@anywhere-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe/!TODO"
+          (tags-todo "@phone-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Common next actions")
                       (org-agenda-dim-blocked-tasks 'invisible)))
           (tags-todo "@agenda-somedaymaybe/!TODO"
@@ -791,8 +791,8 @@ loaded as such.)"
           (tags-todo "@vilnius-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Errands")
                       (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags-todo "@readreview-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Read/review")
+          (tags-todo "@watchlisten-somedaymaybe/!TODO"
+                     ((org-agenda-overriding-header "Watch/listen")
                       (org-agenda-dim-blocked-tasks 'invisible)))
           (todo "LOGTIME"
                 ((org-agenda-overriding-header "Time log actions")
@@ -800,7 +800,7 @@ loaded as such.)"
           (tags "-project/+DONE|+CANCELLED"
                 ((org-agenda-overriding-header "Archivable tasks")
                  (org-use-tag-inheritance '("project"))))
-          (todo "-@agenda-@anywhere-@call-@internet-@computer-@home-@readreview-@vilnius-@waitingfor-@checklist-project-somedaymaybe"
+          (todo "-@agenda-@phone-@call-@internet-@computer-@home-@watchlisten-@vilnius-@waitingfor-@checklist-project-somedaymaybe"
                 ((org-agenda-overriding-header "Contextless tasks")))))))
 
 (setq org-agenda-start-on-weekday nil)
