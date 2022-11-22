@@ -419,10 +419,6 @@ loaded as such.)"
 
 (global-visual-line-mode 1)
 
-;; Nice unique buffer names
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward)
-
 ;; Automatically show images as images
 (auto-image-file-mode 1)
 
