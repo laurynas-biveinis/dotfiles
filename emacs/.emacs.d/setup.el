@@ -357,9 +357,6 @@ loaded as such.)"
 ;; Typing or <Delete> will remove selected text
 (delete-selection-mode 1)
 
-;; Mouse avoidance.
-(setq make-pointer-invisible t)
-
 ;; Recent files menu
 (recentf-mode)
 
