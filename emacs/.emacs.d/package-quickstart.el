@@ -2400,10 +2400,10 @@ The buffer on focus when the command is called is set as the target buffer." t n
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.5/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.5/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.6/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.6/tree-sitter-langs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.5/tree-sitter-langs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.6/tree-sitter-langs-autoloads.el") (car load-path))))
 
 
 
@@ -3465,10 +3465,10 @@ Disable `rainbow-delimiters-mode'." nil nil)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.6.0/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.6.0/projectile-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.7.0/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.7.0/projectile-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/projectile-2.6.0/projectile-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/projectile-2.7.0/projectile-autoloads.el") (car load-path))))
 
 
 
@@ -3676,6 +3676,21 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 (autoload 'projectile-toggle-project-read-only "projectile" "\
 Toggle project read only." t nil)
+
+(autoload 'projectile-add-dir-local-variable "projectile" "\
+Run `add-dir-local-variable' with .dir-locals.el in root of project.
+
+Parameters MODE VARIABLE VALUE are passed directly to `add-dir-local-variable'.
+
+\(fn MODE VARIABLE VALUE)" nil nil)
+
+(autoload 'projectile-delete-dir-local-variable "projectile" "\
+Run `delete-dir-local-variable' with .dir-locals.el in root of project.
+
+Parameters MODE VARIABLE VALUE are passed directly to
+`delete-dir-local-variable'.
+
+\(fn MODE VARIABLE)" nil nil)
 
 (autoload 'projectile-find-dir "projectile" "\
 Jump to a project's directory using completion.
@@ -4075,7 +4090,7 @@ Otherwise behave as if called interactively.
 
 (define-obsolete-function-alias 'projectile-global-mode 'projectile-mode "1.0")
 
-(register-definition-prefixes "projectile" '("??" "compilation-find-file-projectile-find-compilation-buffer" "def-projectile-commander-method" "delete-file-projectile-remove-from-cache" "projectile-"))
+(register-definition-prefixes "projectile" '("??" "compilation-find-file-projectile-find-compilation-buffer" "def-projectile-commander-method" "delete-file-projectile-remove-from-cache" "project"))
 
 
 )

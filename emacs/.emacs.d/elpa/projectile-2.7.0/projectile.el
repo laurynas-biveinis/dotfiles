@@ -4,10 +4,10 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.dev>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 2.6.0
-;; Package-Commit: e3bae8c91bb69c501dcc2e74f9ea14e89cf0a09c
+;; Package-Version: 2.7.0
+;; Package-Commit: 14beeaee7a77601aee4d4982811f6a27f696403c
 ;; Keywords: project, convenience
-;; Version: 2.6.0
+;; Version: 2.7.0
 ;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -323,8 +323,7 @@ See `projectile-register-project-type'."
   :type '(repeat string))
 
 (defcustom projectile-project-root-files-bottom-up
-  '(".projectile" ; projectile project marker
-    ".git"        ; Git VCS root dir
+  '(".git"        ; Git VCS root dir
     ".hg"         ; Mercurial VCS root dir
     ".fslckout"   ; Fossil VCS root dir
     "_FOSSIL_"    ; Fossil VCS root DB on Windows
@@ -353,6 +352,7 @@ containing a root file."
 
 (defcustom projectile-project-root-functions
   '(projectile-root-local
+    projectile-root-marked
     projectile-root-bottom-up
     projectile-root-top-down
     projectile-root-top-down-recurring)
@@ -363,9 +363,17 @@ algorithm."
   :group 'projectile
   :type '(repeat function))
 
+(defcustom projectile-dirconfig-file
+  ".projectile"
+  "The file which serves both as a project marker and configuration file.
+This should _not_ be set via .dir-locals.el."
+  :group 'projectile
+  :type 'file
+  :package-version '(projectile . "2.7.0"))
+
 (defcustom projectile-dirconfig-comment-prefix
   nil
-  "Projectile config file (.projectile) comment start marker.
+  "`projectile-dirconfig-file` comment start marker.
 If specified, starting a line in a project's .projectile file with this
 character marks that line as a comment instead of a pattern.
 Similar to '#' in .gitignore files."
@@ -457,7 +465,9 @@ it for functions working with buffers."
   :group 'projectile
   :type '(repeat string))
 
-(defcustom projectile-globally-ignored-buffers nil
+(defcustom projectile-globally-ignored-buffers
+  '("*scratch*"
+    "*lsp-log*")
   "A list of buffer-names ignored by projectile.
 
 You can use either exact buffer names or regular expressions.
@@ -852,7 +862,7 @@ Should be set via .dir-locals.el.")
 
 ;;; Version information
 
-(defconst projectile-version "2.6.0"
+(defconst projectile-version "2.7.0"
   "The current version of Projectile.")
 
 (defun projectile--pkg-version ()
@@ -1173,7 +1183,7 @@ which we're looking."
                     (null file)
                     (string-match locate-dominating-stop-dir-regexp file)))
       (setq try (if (stringp name)
-                    (projectile-file-exists-p (expand-file-name name file))
+                    (projectile-file-exists-p (projectile-expand-file-name-wildcard name file))
                   (funcall name file)))
       (cond (try (setq root file))
             ((equal file (setq file (file-name-directory
@@ -1196,15 +1206,23 @@ Return the first (topmost) matched directory or nil if not found."
   (projectile-locate-dominating-file
    dir
    (lambda (dir)
-     (cl-find-if (lambda (f) (projectile-file-exists-p (expand-file-name f dir)))
+     (cl-find-if (lambda (f) (projectile-file-exists-p (projectile-expand-file-name-wildcard f dir)))
                  (or list projectile-project-root-files)))))
+
+(defun projectile-root-marked (dir)
+  "Identify a project root in DIR by search for `projectile-dirconfig-file`."
+  (projectile-root-bottom-up dir (list projectile-dirconfig-file)))
 
 (defun projectile-root-bottom-up (dir &optional list)
   "Identify a project root in DIR by bottom-up search for files in LIST.
 If LIST is nil, use `projectile-project-root-files-bottom-up' instead.
 Return the first (bottommost) matched directory or nil if not found."
-  (cl-some (lambda (name) (projectile-locate-dominating-file dir name))
-           (or list projectile-project-root-files-bottom-up)))
+  (projectile-locate-dominating-file
+   dir
+   (lambda (directory)
+     (let ((files (mapcar (lambda (file) (expand-file-name file directory))
+                          (or list projectile-project-root-files-bottom-up))))
+       (cl-some (lambda (file) (and file (file-exists-p file))) files)))))
 
 (defun projectile-root-top-down-recurring (dir &optional list)
   "Identify a project root in DIR by recurring top-down search for files in LIST.
@@ -1216,9 +1234,9 @@ topmost sequence of matched directories.  Nil otherwise."
      (projectile-locate-dominating-file
       dir
       (lambda (dir)
-        (and (projectile-file-exists-p (expand-file-name f dir))
+        (and (projectile-file-exists-p (projectile-expand-file-name-wildcard f dir))
              (or (string-match locate-dominating-stop-dir-regexp (projectile-parent dir))
-                 (not (projectile-file-exists-p (expand-file-name f (projectile-parent dir)))))))))
+                 (not (projectile-file-exists-p (projectile-expand-file-name-wildcard f (projectile-parent dir)))))))))
    (or list projectile-project-root-files-top-down-recurring)))
 
 (defun projectile-project-root (&optional dir)
@@ -1942,7 +1960,7 @@ Unignored files/directories are not included."
 
 (defun projectile-dirconfig-file ()
   "Return the absolute path to the project's dirconfig file."
-  (expand-file-name ".projectile" (projectile-project-root)))
+  (expand-file-name projectile-dirconfig-file (projectile-project-root)))
 
 (defun projectile-parse-dirconfig-file ()
   "Parse project ignore file and return directories to ignore and keep.
@@ -1980,12 +1998,14 @@ prefix the string will be assumed to be an ignore string."
             (mapcar #'string-trim
                     (delete "" (reverse ensure)))))))
 
-(defun projectile-expand-root (name)
+(defun projectile-expand-root (name &optional dir)
   "Expand NAME to project root.
+When DIR is specified it uses DIR's project, otherwise it acts
+on the current project.
 
 Never use on many files since it's going to recalculate the
 project-root for every file."
-  (expand-file-name name (projectile-project-root)))
+  (expand-file-name name (projectile-project-root dir)))
 
 (cl-defun projectile-completing-read (prompt choices &key initial-input action)
   "Present a project tailored PROMPT with CHOICES."
@@ -2423,6 +2443,29 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
       (read-only-mode (if val +1 -1))
       (message "[%s] read-only-mode is %s" (projectile-project-name) (if val "on" "off")))))
 
+;;;###autoload
+(defun projectile-add-dir-local-variable (mode variable value)
+  "Run `add-dir-local-variable' with .dir-locals.el in root of project.
+
+Parameters MODE VARIABLE VALUE are passed directly to `add-dir-local-variable'."
+  (let ((inhibit-read-only t)
+        (default-directory (projectile-acquire-root)))
+    (add-dir-local-variable mode variable value)
+    (save-buffer)
+    (kill-buffer)))
+
+;;;###autoload
+(defun projectile-delete-dir-local-variable (mode variable)
+  "Run `delete-dir-local-variable' with .dir-locals.el in root of project.
+
+Parameters MODE VARIABLE VALUE are passed directly to
+`delete-dir-local-variable'."
+  (let ((inhibit-read-only t)
+        (default-directory (projectile-acquire-root)))
+    (delete-dir-local-variable mode variable)
+    (save-buffer)
+    (kill-buffer)))
+
 
 ;;;; Sorting project files
 (defun projectile-sort-files (files)
@@ -2571,7 +2614,7 @@ PROJECT-ROOT is the project root."
          (when (or paths (null predicates))
            (list :paths (cl-remove-if-not
                          (lambda (f)
-                           (projectile-file-exists-p (expand-file-name f project-root)))
+                           (projectile-file-exists-p (projectile-expand-file-name-wildcard f project-root)))
                          paths)))
          (when predicates
            (list :predicate (if (= 1 (length predicates))
@@ -2765,9 +2808,13 @@ files such as test/impl/other files as below:
                              'test-command test
                              'install-command install
                              'package-command package
-                             'run-command run)))
-    (when (and project-file (not (member project-file projectile-project-root-files)))
-      (add-to-list 'projectile-project-root-files project-file))
+                             'run-command run))
+        (project-files (if (listp project-file)
+                           project-file
+                         (list project-file))))
+    (dolist (project-file project-files)
+      (when (and project-file (not (member project-file projectile-project-root-files)))
+        (add-to-list 'projectile-project-root-files project-file)))
     (when test-suffix
       (plist-put project-plist 'test-suffix test-suffix))
     (when test-prefix
@@ -2915,20 +2962,43 @@ files such as test/impl/other files as below:
                           (t (error "Precedence must be one of '(high low)"))))
                 (mapcar #'project-map projectile-project-types))))))
 
-(defun projectile-cabal-project-p ()
-  "Check if a project contains *.cabal files but no stack.yaml file."
-  (and (projectile-verify-file-wildcard "?*.cabal")
-       (not (projectile-verify-file "stack.yaml"))))
+(defun projectile-eldev-project-p (&optional dir)
+  "Check if a project contains eldev files.
+When DIR is specified it checks DIR's project, otherwise
+it acts on the current project."
+  (or (projectile-verify-file "Eldev" dir)
+      (projectile-verify-file "Eldev-local" dir)))
 
-(defun projectile-dotnet-project-p ()
-  "Check if a project contains a .NET project marker."
-  (or (projectile-verify-file-wildcard "?*.csproj")
-      (projectile-verify-file-wildcard "?*.fsproj")))
+(defun projectile-expand-file-name-wildcard (name-pattern dir)
+  "Expand the maybe-wildcard-containing NAME-PATTERN in DIR.
+If there are results expanding a wildcard, get the first result,
+otherwise expand NAME-PATTERN in DIR ignoring wildcards."
+  (let ((expanded (expand-file-name name-pattern dir)))
+    (or (if (string-match-p "[[*?]" name-pattern)
+            (car
+             (file-expand-wildcards expanded)))
+        expanded)))
 
-(defun projectile-go-project-p ()
-  "Check if a project contains Go source files."
-  (or (projectile-verify-file "go.mod")
-      (projectile-verify-file-wildcard "*.go")))
+(defun projectile-cabal-project-p (&optional dir)
+  "Check if a project contains *.cabal files but no stack.yaml file.
+When DIR is specified it checks DIR's project, otherwise
+it acts on the current project."
+  (and (projectile-verify-file-wildcard "?*.cabal" dir)
+       (not (projectile-verify-file "stack.yaml" dir))))
+
+(defun projectile-dotnet-project-p (&optional dir)
+  "Check if a project contains a .NET project marker.
+When DIR is specified it checks DIR's project, otherwise
+it acts on the current project."
+  (or (projectile-verify-file-wildcard "?*.csproj" dir)
+      (projectile-verify-file-wildcard "?*.fsproj" dir)))
+
+(defun projectile-go-project-p (&optional dir)
+  "Check if a project contains Go source files.
+When DIR is specified it checks DIR's project, otherwise
+it acts on the current project."
+  (or (projectile-verify-file "go.mod" dir)
+      (projectile-verify-file-wildcard "*.go" dir)))
 
 (defcustom projectile-go-project-test-function #'projectile-go-project-p
   "Function to determine if project's type is go."
@@ -3106,6 +3176,12 @@ a manual COMMAND-TYPE command is created with
                                   :run "cabal run"
                                   :test-suffix "Spec")
 (projectile-register-project-type 'dotnet #'projectile-dotnet-project-p
+                                  :project-file '("?*.csproj" "?*.fsproj")
+                                  :compile "dotnet build"
+                                  :run "dotnet run"
+                                  :test "dotnet test")
+(projectile-register-project-type 'dotnet-sln '("src")
+                                  :project-file "?*.sln"
                                   :compile "dotnet build"
                                   :run "dotnet run"
                                   :test "dotnet test")
@@ -3355,8 +3431,7 @@ a manual COMMAND-TYPE command is created with
                                   :compile "cask install"
                                   :test-prefix "test-"
                                   :test-suffix "-test")
-(projectile-register-project-type 'emacs-eldev (lambda () (or (projectile-verify-file "Eldev")
-                                                              (projectile-verify-file "Eldev-local")))
+(projectile-register-project-type 'emacs-eldev #'projectile-eldev-project-p
                                   :project-file "Eldev"
                                   :compile "eldev compile"
                                   :test "eldev test"
@@ -3409,8 +3484,11 @@ a manual COMMAND-TYPE command is created with
 Normally you'd set this from .dir-locals.el.")
 (put 'projectile-project-type 'safe-local-variable #'symbolp)
 
-(defun projectile-detect-project-type ()
-  "Detect the type of the current project.
+(defun projectile-detect-project-type (&optional dir)
+  "Detect the type of the project.
+When DIR is specified it detects its project type, otherwise it acts
+on the current project.
+
 Fallsback to a generic project type when the type can't be determined."
   (let ((project-type
          (or (car (cl-find-if
@@ -3418,11 +3496,11 @@ Fallsback to a generic project type when the type can't be determined."
                      (let ((project-type (car project-type-record))
                            (marker (plist-get (cdr project-type-record) 'marker-files)))
                        (if (functionp marker)
-                           (and (funcall marker) project-type)
-                         (and (projectile-verify-files marker) project-type))))
+                           (and (funcall marker dir) project-type)
+                         (and (projectile-verify-files marker dir) project-type))))
                    projectile-project-types))
              'generic)))
-    (puthash (projectile-project-root) project-type projectile-project-type-cache)
+    (puthash (projectile-project-root dir) project-type projectile-project-type-cache)
     project-type))
 
 (defun projectile-project-type (&optional dir)
@@ -3431,15 +3509,10 @@ When DIR is specified it checks it, otherwise it acts
 on the current project.
 
 The project type is cached for improved performance."
-  (if projectile-project-type
-      projectile-project-type
-    (let* ((dir (or dir default-directory))
-           (project-root (projectile-project-root dir)))
-      (if project-root
+  (or (and (not dir) projectile-project-type)
+      (if-let ((project-root (projectile-project-root dir)))
           (or (gethash project-root projectile-project-type-cache)
-              (projectile-detect-project-type))
-        ;; if we're not in a project we just return nil
-        nil))))
+              (projectile-detect-project-type dir)))))
 
 ;;;###autoload
 (defun projectile-project-info ()
@@ -3450,18 +3523,24 @@ The project type is cached for improved performance."
            (projectile-project-vcs)
            (projectile-project-type)))
 
-(defun projectile-verify-files (files)
-  "Check whether all FILES exist in the current project."
-  (cl-every #'projectile-verify-file files))
+(defun projectile-verify-files (files &optional dir)
+  "Check whether all FILES exist in the project.
+When DIR is specified it checks DIR's project, otherwise
+it acts on the current project."
+  (cl-every #'(lambda (file) (projectile-verify-file file dir)) files))
 
-(defun projectile-verify-file (file)
-  "Check whether FILE exists in the current project."
-  (file-exists-p (projectile-expand-root file)))
-
-(defun projectile-verify-file-wildcard (file)
+(defun projectile-verify-file (file &optional dir)
   "Check whether FILE exists in the current project.
+When DIR is specified it checks DIR's project, otherwise
+it acts on the current project."
+  (file-exists-p (projectile-expand-root file dir)))
+
+(defun projectile-verify-file-wildcard (file &optional dir)
+  "Check whether FILE exists in the current project.
+When DIR is specified it checks DIR's project, otherwise
+it acts on the current project.
 Expands wildcards using `file-expand-wildcards' before checking."
-  (file-expand-wildcards (projectile-expand-root file)))
+  (file-expand-wildcards (projectile-expand-root file dir)))
 
 (defun projectile-project-vcs (&optional project-root)
   "Determine the VCS used by the project if any.
@@ -4186,6 +4265,17 @@ installed to work."
                    nil                       ;; no need to confirm
                    args))
           (t (error "Packages `ripgrep' and `rg' are not available")))))
+
+(defun projectile-find-references (&optional symbol)
+  "Find all references to SYMBOL in the current project.
+
+A thin wrapper around `xref-references-in-directory'."
+  (interactive)
+  (when (and (fboundp 'xref-references-in-directory)
+             (fboundp 'xref--show-xrefs))
+    (let ((project-root (projectile-acquire-root))
+          (symbol (or symbol (read-from-minibuffer "Lookup in project: " (projectile-symbol-at-point)))))
+      (xref--show-xrefs (xref-references-in-directory symbol project-root) nil))))
 
 (defun projectile-tags-exclude-patterns ()
   "Return a string with exclude patterns for ctags."
@@ -5194,8 +5284,9 @@ An open project is a project with any open buffers."
    (delq nil
          (mapcar (lambda (buffer)
                    (with-current-buffer buffer
-                     (when (projectile-project-p)
-                       (abbreviate-file-name (projectile-project-root)))))
+                     (when-let ((project-root (projectile-project-root)))
+                       (when (projectile-project-buffer-p buffer project-root)
+                         (abbreviate-file-name project-root)))))
                  (buffer-list)))))
 
 (defun projectile--remove-current-project (projects)
@@ -5785,6 +5876,7 @@ thing shown in the mode line otherwise."
     (define-key map (kbd "5 t") #'projectile-find-implementation-or-test-other-frame)
     (define-key map (kbd "!") #'projectile-run-shell-command-in-root)
     (define-key map (kbd "&") #'projectile-run-async-shell-command-in-root)
+    (define-key map (kbd "?") #'projectile-find-references)
     (define-key map (kbd "a") #'projectile-find-other-file)
     (define-key map (kbd "b") #'projectile-switch-to-buffer)
     (define-key map (kbd "d") #'projectile-find-dir)
@@ -5808,6 +5900,7 @@ thing shown in the mode line otherwise."
     (define-key map (kbd "s g") #'projectile-grep)
     (define-key map (kbd "s r") #'projectile-ripgrep)
     (define-key map (kbd "s s") #'projectile-ag)
+    (define-key map (kbd "s x") #'projectile-find-references)
     (define-key map (kbd "S") #'projectile-save-project-buffers)
     (define-key map (kbd "t") #'projectile-toggle-between-implementation-and-test)
     (define-key map (kbd "T") #'projectile-find-test-file)
@@ -5821,13 +5914,14 @@ thing shown in the mode line otherwise."
     (define-key map (kbd "L") #'projectile-install-project)
     (define-key map (kbd "P") #'projectile-test-project)
     (define-key map (kbd "u") #'projectile-run-project)
-    ;; utilities
+    ;; integration with utilities
     (define-key map (kbd "x e") #'projectile-run-eshell)
     (define-key map (kbd "x i") #'projectile-run-ielm)
     (define-key map (kbd "x t") #'projectile-run-term)
     (define-key map (kbd "x s") #'projectile-run-shell)
     (define-key map (kbd "x g") #'projectile-run-gdb)
     (define-key map (kbd "x v") #'projectile-run-vterm)
+    ;; misc
     (define-key map (kbd "z") #'projectile-cache-current-file)
     (define-key map (kbd "<left>") #'projectile-previous-project-buffer)
     (define-key map (kbd "<right>") #'projectile-next-project-buffer)
@@ -5863,6 +5957,7 @@ thing shown in the mode line otherwise."
          ["Switch to open project" projectile-switch-open-project]
          "--"
          ["Discover projects in directory" projectile-discover-projects-in-directory]
+         ["Discover projects in search path" projectile-discover-projects-in-search-path]
          ["Clear known projects" projectile-clear-known-projects]
          ["Reset known projects" projectile-reset-known-projects]
          "--"
@@ -5882,7 +5977,8 @@ thing shown in the mode line otherwise."
          ["Search with ag" projectile-ag]
          ["Search with ripgrep" projectile-ripgrep]
          ["Replace in project" projectile-replace]
-         ["Multi-occur in project" projectile-multi-occur])
+         ["Multi-occur in project" projectile-multi-occur]
+         ["Find references in project" projectile-find-references])
         ("Run..."
          ["Run shell" projectile-run-shell]
          ["Run eshell" projectile-run-eshell]
@@ -5988,6 +6084,38 @@ Otherwise behave as if called interactively.
 
 ;;;###autoload
 (define-obsolete-function-alias 'projectile-global-mode 'projectile-mode "1.0")
+
+;;;; project.el integration
+;;
+;; Projectile will become the default provider for
+;; project.el project and project files lookup.
+;; See https://github.com/bbatsov/projectile/issues/1591 for
+;; more details.
+
+;; it's safe to require this directly, as it was added in Emacs 25.1
+(require 'project)
+
+(cl-defmethod project-root ((project (head projectile)))
+  (cdr project))
+
+(cl-defmethod project-files ((project (head projectile)) &optional _dirs)
+  (let ((root (project-root project)))
+    ;; Make paths absolute and ignore the optional dirs argument,
+    ;; see https://github.com/bbatsov/projectile/issues/1591#issuecomment-896423965
+    ;; That's needed because Projectile uses relative paths for project files
+    ;; and project.el expects them to be absolute.
+    ;; FIXME: That's probably going to be very slow in large projects.
+    (mapcar (lambda (f)
+              (concat root f))
+            (projectile-project-files root))))
+
+(defun project-projectile (dir)
+  "Return Projectile project of form ('projectile . root-dir) for DIR."
+  (let ((root (projectile-project-root dir)))
+    (when root
+      (cons 'projectile root))))
+
+(add-hook 'project-find-functions #'project-projectile)
 
 (provide 'projectile)
 
