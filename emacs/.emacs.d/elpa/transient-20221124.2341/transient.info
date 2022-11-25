@@ -1416,7 +1416,18 @@ function that makes sense for infixes.
 Pre-commands for Suffixes
 -------------------------
 
-The default for suffixes is ‘transient--do-exit’.
+By default, invoking a suffix causes the transient to be exited.
+
+   If you want a different default behavior for a certain transient
+prefix command, then set its ‘:transient-suffix’ slot.  The value can be
+a boolean, answering the question "does the transient stay active, when
+a suffix command is invoked?"  ‘t’ means that the transient stays
+active, while ‘nil’ means that invoking a suffix exits the transient.
+In either case, the exact behavior depends on whether the suffix is
+itself a prefix (i.e., a sub-prefix), an infix or a regular suffix.
+
+   The behavior for an individual suffix command can be changed by
+setting its ‘transient’ slot to one of the following pre-commands.
 
  -- Function: transient--do-exit
      Call the command after exporting variables and exit the transient.
@@ -1462,20 +1473,32 @@ slot.
 Pre-commands for Non-Suffixes
 -----------------------------
 
-The default for non-suffixes, i.e., commands that are bound in other
-keymaps beside the transient keymap, is ‘transient--do-warn’.  Silently
-ignoring the user-error is also an option, though probably not a good
-one.
+By default, non-suffixes (commands that are bound in other keymaps
+beside the transient keymap) cannot be invoked.  Trying to invoke such a
+command results in a warning and the transient stays active.
 
-   If you want to let the user invoke non-suffix commands, then use
-‘transient--do-stay’ as the value of the prefix’s ‘transient-non-suffix’
-slot.
+   If you want a different behavior, then set the
+‘:transient-non-suffix’ slot of the transient prefix command.  The value
+can be a boolean, answering the question, "is it allowed to invoke
+non-suffix commands?"
+
+   If the value is ‘t’ or ‘transient--do-stay’, then non-suffixes can be
+invoked, when it is ‘nil’ or ‘transient--do-warn’ (the default) then
+they cannot be invoked.
+
+   The only other recommended value is ‘transient--do-leave’.  If that
+is used, then non-suffixes can be invoked, but if one is invoked, then
+that exits the transient.
 
  -- Function: transient--do-warn
      Call ‘transient-undefined’ and stay transient.
 
- -- Function: transient--do-noop
-     Call ‘transient-noop’ and stay transient.
+ -- Function: transient--do-stay
+     Call the command without exporting variables and stay transient.
+
+ -- Function: transient--do-leave
+     Call the command without exporting variables and exit the
+     transient.
 
 Special Pre-Commands
 --------------------
@@ -2446,18 +2469,19 @@ Appendix C Command and Function Index
  [index ]
 * Menu:
 
-* transient--do-call:                    Transient State.     (line  99)
-* transient--do-exit:                    Transient State.     (line  91)
-* transient--do-noop:                    Transient State.     (line 147)
-* transient--do-quit-all:                Transient State.     (line 158)
-* transient--do-quit-one:                Transient State.     (line 153)
-* transient--do-recurse:                 Transient State.     (line 106)
-* transient--do-replace:                 Transient State.     (line 118)
-* transient--do-return:                  Transient State.     (line  94)
+* transient--do-call:                    Transient State.     (line 110)
+* transient--do-exit:                    Transient State.     (line 102)
+* transient--do-leave:                   Transient State.     (line 169)
+* transient--do-quit-all:                Transient State.     (line 181)
+* transient--do-quit-one:                Transient State.     (line 176)
+* transient--do-recurse:                 Transient State.     (line 117)
+* transient--do-replace:                 Transient State.     (line 129)
+* transient--do-return:                  Transient State.     (line 105)
 * transient--do-stay:                    Transient State.     (line  83)
-* transient--do-suspend:                 Transient State.     (line 125)
-* transient--do-suspend <1>:             Transient State.     (line 163)
-* transient--do-warn:                    Transient State.     (line 144)
+* transient--do-stay <1>:                Transient State.     (line 166)
+* transient--do-suspend:                 Transient State.     (line 136)
+* transient--do-suspend <1>:             Transient State.     (line 186)
+* transient--do-warn:                    Transient State.     (line 163)
 * transient--history-init:               Prefix Classes.      (line  10)
 * transient--insert-group:               Group Methods.       (line  19)
 * transient-append-suffix:               Modifying Existing Transients.
@@ -3364,41 +3388,41 @@ Node: Using Infix Arguments55011
 Node: Transient State57845
 Ref: Pre-commands for Infixes61808
 Ref: Pre-commands for Suffixes62079
-Ref: Pre-commands for Non-Suffixes63852
-Ref: Special Pre-Commands64467
-Node: Classes and Methods64975
-Node: Group Classes67189
-Node: Group Methods69116
-Node: Prefix Classes70369
-Node: Suffix Classes71460
-Node: Suffix Methods73706
-Node: Suffix Value Methods74027
-Node: Suffix Format Methods76785
-Node: Prefix Slots78234
-Ref: Internal Prefix Slots79513
-Node: Suffix Slots80770
-Ref: Slots of transient-suffix81138
-Ref: Slots of transient-infix81992
-Ref: Slots of transient-variable85112
-Ref: Slots of transient-switches85214
-Node: Predicate Slots85577
-Node: Related Abstractions and Packages86842
-Node: Comparison With Prefix Keys and Prefix Arguments87129
-Ref: Regular Prefix Commands87814
-Ref: Regular Prefix Arguments88162
-Ref: Transients89131
-Node: Comparison With Other Packages97402
-Ref: Magit-Popup97633
-Ref: Hydra98540
-Node: FAQ101596
-Ref: Can I control how the popup buffer is displayed?101739
-Ref: Why did some of the key bindings change?101920
-Ref: Why does q not quit popups anymore?104273
-Node: Keystroke Index105366
-Node: Command and Function Index107084
-Node: Variable Index113456
-Node: Concept Index115729
-Node: GNU General Public License118473
+Ref: Pre-commands for Non-Suffixes64500
+Ref: Special Pre-Commands65644
+Node: Classes and Methods66152
+Node: Group Classes68366
+Node: Group Methods70293
+Node: Prefix Classes71546
+Node: Suffix Classes72637
+Node: Suffix Methods74883
+Node: Suffix Value Methods75204
+Node: Suffix Format Methods77962
+Node: Prefix Slots79411
+Ref: Internal Prefix Slots80690
+Node: Suffix Slots81947
+Ref: Slots of transient-suffix82315
+Ref: Slots of transient-infix83169
+Ref: Slots of transient-variable86289
+Ref: Slots of transient-switches86391
+Node: Predicate Slots86754
+Node: Related Abstractions and Packages88019
+Node: Comparison With Prefix Keys and Prefix Arguments88306
+Ref: Regular Prefix Commands88991
+Ref: Regular Prefix Arguments89339
+Ref: Transients90308
+Node: Comparison With Other Packages98579
+Ref: Magit-Popup98810
+Ref: Hydra99717
+Node: FAQ102773
+Ref: Can I control how the popup buffer is displayed?102916
+Ref: Why did some of the key bindings change?103097
+Ref: Why does q not quit popups anymore?105450
+Node: Keystroke Index106543
+Node: Command and Function Index108261
+Node: Variable Index114706
+Node: Concept Index116979
+Node: GNU General Public License119723
 
 End Tag Table
 
