@@ -1532,7 +1532,7 @@ CANDIDATES is the list of candidates."
 (require 'lsp-treemacs)
 (lsp-treemacs-sync-mode 1)
 
-;;; Integrate lsp-mode with projectile
+;;; Integrate `lsp-mode' with `project.el' / `projectile'
 (setq lsp-auto-guess-root t)
 
 ;;; helm-lsp
@@ -1748,10 +1748,10 @@ with a prefix ARG."
   "Remove the git worktree and kill project buffers."
   (interactive)
   ;; TODO(laurynas): don't know whether `projectile-kill-buffers' prompt will be
-  ;; answered with 'y' or 'n' – assume that zero existing buffers means 'y.' For
-  ;; that, `projectile-kill-buffers-filter' must be set to 'kill-all.
+  ;; answered with 'y' or 'n' – assume that zero existing buffers means 'y'. For
+  ;; that, `projectile-kill-buffers-filter' must be set to `'kill-all'.
   (when (not (equal projectile-kill-buffers-filter 'kill-all))
-    (user-error "Unsupported projectile-kill-buffers-filter value %:S"
+    (user-error "Unsupported `projectile-kill-buffers-filter' value %:S"
                 projectile-kill-buffers-filter))
   (let ((project-root-path (projectile-acquire-root)))
     (projectile-with-default-dir project-root-path
