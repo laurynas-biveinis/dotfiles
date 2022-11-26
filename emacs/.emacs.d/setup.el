@@ -1707,32 +1707,6 @@ CANDIDATES is the list of candidates."
 (advice-add #'projectile-find-file-hook-function :after
             #'dotfiles--projectile-find-file-hook-function)
 
-;; Workaround https://github.com/bbatsov/projectile/issues/1282 (project.el and
-;; projectile are not integrated) some more, so that xref uses projectile
-;; project roots.
-
-;; I don't know how to advice generic method default body nor how to write
-;; cl-defmethod that would replace it in all cases so ended up redefining it.
-;; I have a feeling I am going to regret this.
-(cl-defgeneric xref-backend-references (_backend identifier)
-  "Find references of IDENTIFIER.
-The result must be a list of xref objects.  If no references can
-be found, return nil.
-
-The default implementation uses `semantic-symref-tool-alist' to
-find a search tool; by default, this uses \"find | grep\" in the
-`project-current' roots."
-  (cl-mapcan
-   (lambda (dir)
-     (xref-references-in-directory identifier dir))
-   (let ((pr (projectile-project-root)))
-     (if pr
-         (list pr)
-       (let ((pr (project-current t)))
-         (append
-          (project-root pr)
-          (project-external-roots pr)))))))
-
 ;; Implement https://github.com/bbatsov/projectile/issues/1676 (Unable to
 ;; completing-read CMake preset the second time) by adding a new command for
 ;; reconfigure.
@@ -1800,12 +1774,6 @@ with a prefix ARG."
 ;;; deadgrep. Alternatives: rg.el, ripgrep.el, counsel/helm, etc.
 (require 'deadgrep)
 (global-set-key (kbd "<f5>") #'deadgrep)
-;; Integrate deadgrep with projectile by using the latter's project root, if
-;; available. Deadgrep used to have a hard dependency on projectile but they
-;; removed it altogether instead of making it a soft one. Projectile itself
-;; should integrate with project.el but I am not holding my breath having read
-;; https://github.com/bbatsov/projectile/issues/1282
-(advice-add #'deadgrep--project-root :before-until #'projectile-project-root)
 
 ;; wgrep-like bindings for deadgrep
 (define-key deadgrep-mode-map (kbd "C-c C-p") #'deadgrep-edit-mode)
