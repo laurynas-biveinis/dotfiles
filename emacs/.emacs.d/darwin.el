@@ -43,4 +43,8 @@
 (add-to-list 'exec-path-from-shell-variables "LANG")
 (exec-path-from-shell-initialize)
 
+;; Fix native compilation warnings: "Warning (comp): ld: warning: -undefined
+;; dynamic_lookup may not work with chained fixups"
+(setq native-comp-driver-options '("-Wl,-w"))
+
 ;;; darwin.el ends here
