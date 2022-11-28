@@ -19,7 +19,7 @@ readonly BRANCH_MERGED=$?
 if [ $BRANCH_MERGED -ne 0 ]; then
     echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
     popd || exit 1
-    return 0
+    return 2
 fi
 
 rm -rf "../$WORKTREE_DIR"
