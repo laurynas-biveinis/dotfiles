@@ -1,10 +1,5 @@
 #!/bin/sh
 #
-# Dear Percona developers –
-# if you are still linking to this file on GitHub, I suggest you to use
-# https://github.com/laurynas-biveinis/dotfiles/blob/ab2de3f002442880fce8a631ca011cecc33dc774/mysql-work/.bash.d/rc/mysql-work.bash
-# – the last Percona version of this file.
-#
 # Exported environment variables, CMake options:
 # MY80xy, MY80xyD: Oracle MySQL release & debug build, for xy patchlevel version
 # MARIA108, MARIA108D: MariaDB 10.8 release and debug build
