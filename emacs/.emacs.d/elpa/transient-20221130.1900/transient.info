@@ -225,7 +225,7 @@ Using History::.
 
    After a transient prefix command is invoked, ‘C-h KEY’ can be used to
 show the documentation for the infix or suffix command that KEY is bound
-to (see *note Getting Help for Suffix Commands::) and infixes and
+to (see *note Getting Help for Suffix Commands::), and infixes and
 suffixes can be removed from the transient using ‘C-x l KEY’.  Infixes
 and suffixes that are disabled by default can be enabled the same way.
 See *note Enabling and Disabling Suffixes::.
@@ -645,8 +645,8 @@ Also see *note Common Suffix Commands::.
      This displays the window at the bottom of the selected frame.
      Another useful FUNCTION is ‘display-buffer-below-selected’, which
      is what ‘magit-popup’ used by default.  For more alternatives see
-     *note (elisp)Display Action Functions:: and *note (elisp)Buffer
-     Display Action Alists::.
+     *note (elisp)Buffer Display Action Functions::, and *note
+     (elisp)Buffer Display Action Alists::.
 
      Note that the buffer that was current before the transient buffer
      is shown should remain the current buffer.  Many suffix commands
@@ -858,8 +858,8 @@ PLIST should set at least ‘:key’, ‘:description’ and ‘:command’.
      Predicate Slots::.
 
      Unfortunately both false-positives and false-negatives are
-     possible.  To deal with the former use non-nil KEEP-OTHER.  To deal
-     with the latter remove the conflicting binding explicitly.
+     possible.  To deal with the former use non-‘nil’ KEEP-OTHER.  To
+     deal with the latter remove the conflicting binding explicitly.
 
  -- Function: transient-replace-suffix prefix loc suffix
      This function replaces the suffix or group at LOC in PREFIX with
@@ -1859,7 +1859,7 @@ File: transient.info,  Node: Prefix Slots,  Next: Suffix Slots,  Prev: Suffix Me
 
    • ‘transient-suffix’ and ‘transient-non-suffix’ play a part when
      determining whether the currently active transient prefix command
-     remains active/transient when a suffix or abitrary non-suffix
+     remains active/transient when a suffix or arbitrary non-suffix
      command is invoked.  See *note Transient State::.
 
    • ‘incompatible’ A list of lists.  Each sub-list specifies a set of
@@ -3362,67 +3362,67 @@ please read <https://www.gnu.org/licenses/why-not-lgpl.html>.
 Tag Table:
 Node: Top761
 Node: Introduction3710
-Node: Usage9551
-Node: Invoking Transients9919
-Node: Aborting and Resuming Transients10998
-Node: Common Suffix Commands13609
-Node: Saving Values15445
-Ref: Saving Values-Footnote-116816
-Node: Using History17009
-Node: Getting Help for Suffix Commands18583
-Node: Enabling and Disabling Suffixes19951
-Node: Other Commands23019
-Node: Configuration23995
-Ref: Essential Options24275
-Ref: Accessibility Options27928
-Ref: Auxiliary Options28251
-Ref: Developer Options32978
-Node: Modifying Existing Transients34226
-Node: Defining New Commands38126
-Node: Defining Transients38462
-Node: Binding Suffix and Infix Commands41436
-Node: Group Specifications42294
-Node: Suffix Specifications47532
-Node: Defining Suffix and Infix Commands51808
-Node: Using Infix Arguments55014
-Node: Transient State57848
-Ref: Pre-commands for Infixes61811
-Ref: Pre-commands for Suffixes62082
-Ref: Pre-commands for Non-Suffixes64503
-Ref: Special Pre-Commands65647
-Node: Classes and Methods66155
-Node: Group Classes68369
-Node: Group Methods70296
-Node: Prefix Classes71549
-Node: Suffix Classes72640
-Node: Suffix Methods74886
-Node: Suffix Value Methods75207
-Node: Suffix Format Methods77965
-Node: Prefix Slots79414
-Ref: Internal Prefix Slots80693
-Node: Suffix Slots81950
-Ref: Slots of transient-suffix82318
-Ref: Slots of transient-infix83172
-Ref: Slots of transient-variable86292
-Ref: Slots of transient-switches86394
-Node: Predicate Slots86757
-Node: Related Abstractions and Packages88022
-Node: Comparison With Prefix Keys and Prefix Arguments88309
-Ref: Regular Prefix Commands88994
-Ref: Regular Prefix Arguments89342
-Ref: Transients90311
-Node: Comparison With Other Packages98582
-Ref: Magit-Popup98813
-Ref: Hydra99720
-Node: FAQ102776
-Ref: Can I control how the popup buffer is displayed?102919
-Ref: Why did some of the key bindings change?103100
-Ref: Why does q not quit popups anymore?105453
-Node: Keystroke Index106546
-Node: Command and Function Index108264
-Node: Variable Index114709
-Node: Concept Index116982
-Node: GNU General Public License119726
+Node: Usage9552
+Node: Invoking Transients9920
+Node: Aborting and Resuming Transients10999
+Node: Common Suffix Commands13610
+Node: Saving Values15446
+Ref: Saving Values-Footnote-116817
+Node: Using History17010
+Node: Getting Help for Suffix Commands18584
+Node: Enabling and Disabling Suffixes19952
+Node: Other Commands23020
+Node: Configuration23996
+Ref: Essential Options24276
+Ref: Accessibility Options27937
+Ref: Auxiliary Options28260
+Ref: Developer Options32987
+Node: Modifying Existing Transients34235
+Node: Defining New Commands38141
+Node: Defining Transients38477
+Node: Binding Suffix and Infix Commands41451
+Node: Group Specifications42309
+Node: Suffix Specifications47547
+Node: Defining Suffix and Infix Commands51823
+Node: Using Infix Arguments55029
+Node: Transient State57863
+Ref: Pre-commands for Infixes61826
+Ref: Pre-commands for Suffixes62097
+Ref: Pre-commands for Non-Suffixes64518
+Ref: Special Pre-Commands65662
+Node: Classes and Methods66170
+Node: Group Classes68384
+Node: Group Methods70311
+Node: Prefix Classes71564
+Node: Suffix Classes72655
+Node: Suffix Methods74901
+Node: Suffix Value Methods75222
+Node: Suffix Format Methods77980
+Node: Prefix Slots79429
+Ref: Internal Prefix Slots80709
+Node: Suffix Slots81966
+Ref: Slots of transient-suffix82334
+Ref: Slots of transient-infix83188
+Ref: Slots of transient-variable86308
+Ref: Slots of transient-switches86410
+Node: Predicate Slots86773
+Node: Related Abstractions and Packages88038
+Node: Comparison With Prefix Keys and Prefix Arguments88325
+Ref: Regular Prefix Commands89010
+Ref: Regular Prefix Arguments89358
+Ref: Transients90327
+Node: Comparison With Other Packages98598
+Ref: Magit-Popup98829
+Ref: Hydra99736
+Node: FAQ102792
+Ref: Can I control how the popup buffer is displayed?102935
+Ref: Why did some of the key bindings change?103116
+Ref: Why does q not quit popups anymore?105469
+Node: Keystroke Index106562
+Node: Command and Function Index108280
+Node: Variable Index114725
+Node: Concept Index116998
+Node: GNU General Public License119742
 
 End Tag Table
 
