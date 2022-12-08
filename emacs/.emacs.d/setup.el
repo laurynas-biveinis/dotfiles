@@ -1637,7 +1637,8 @@ CANDIDATES is the list of candidates."
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
                      " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
-                     " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"))
+                     " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"
+                     " Habit" " :ARCHIVE:"))
 (rich-minority-mode)
 
 ;;; projectile
