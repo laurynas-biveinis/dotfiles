@@ -1,0 +1,2 @@
+;;; Generated package description from fancy-compilation.el  -*- no-byte-compile: t -*-
+(define-package "fancy-compilation" "20221212.2307" "Enhanced compilation output" '((emacs "26.1")) :commit "d205260849edabd037cb5a788ea806cdf7d9cfc4" :authors '(("Campbell Barton" . "ideasman42@gmail.com")) :maintainer '("Campbell Barton" . "ideasman42@gmail.com") :url "https://codeberg.org/ideasman42/emacs-fancy-compilation")

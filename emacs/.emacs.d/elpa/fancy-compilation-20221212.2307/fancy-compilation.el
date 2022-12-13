@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-fancy-compilation
-;; Package-Version: 20221129.402
-;; Package-Commit: aa47f5a58626c80ff2bc2fc417b321fb51b76cc2
+;; Package-Version: 20221212.2307
+;; Package-Commit: d205260849edabd037cb5a788ea806cdf7d9cfc4
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -64,28 +64,22 @@ Use this to set or override defaults."
   (list (list t :background "black" :inherit 'ansi-color-grey))
   "Face used to render black color.")
 
-(defface fancy-compilation-function-name-face
-  (list (list t :foreground "cyan3"))
+(defface fancy-compilation-function-name-face (list (list t :foreground "cyan3"))
   "Face used to show function names.")
 
-(defface fancy-compilation-line-number-face
-  (list (list t :foreground "cyan3"))
+(defface fancy-compilation-line-number-face (list (list t :foreground "cyan3"))
   "Face used to show line numbers.")
 
-(defface fancy-compilation-column-number-face
-  (list (list t :foreground "cyan3"))
+(defface fancy-compilation-column-number-face (list (list t :foreground "cyan3"))
   "Face used to show column numbers.")
 
-(defface fancy-compilation-info-face
-  (list (list t :foreground "cyan3"))
+(defface fancy-compilation-info-face (list (list t :foreground "cyan3"))
   "Face used to show info text.")
 
-(defface fancy-compilation-warning-face
-  (list (list t :foreground "yellow3"))
+(defface fancy-compilation-warning-face (list (list t :foreground "yellow3"))
   "Face used to show error text.")
 
-(defface fancy-compilation-error-face
-  (list (list t :foreground "dark orange"))
+(defface fancy-compilation-error-face (list (list t :foreground "dark orange"))
   "Face used to show error text.")
 
 (defface fancy-compilation-complete-success-face
@@ -175,7 +169,8 @@ Use this to set or override defaults."
   (setq fancy-compilation--window nil)
 
   (let ((compile-buf nil))
-    (fancy-compilation--with-temp-hook 'compilation-start-hook
+    (fancy-compilation--with-temp-hook
+      'compilation-start-hook
       (lambda (proc) (setq compile-buf (process-buffer proc)))
 
       (prog1 (apply fn args)
