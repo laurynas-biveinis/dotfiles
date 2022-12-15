@@ -1224,10 +1224,10 @@ result of `defhydra'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.2.0/posframe-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.2.0/posframe-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.3.0/posframe-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.3.0/posframe-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-1.2.0/posframe-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-1.3.0/posframe-autoloads.el") (car load-path))))
 
 
 
@@ -1299,15 +1299,6 @@ The builtin poshandler functions are listed below:
 17. `posframe-poshandler-point-bottom-left-corner-upward'
 18. `posframe-poshandler-point-window-center'
 19. `posframe-poshandler-point-frame-center'
-
-by the way, poshandler can be used by other packages easily with
-the help of function `posframe-poshandler-argbuilder'.  like:
-
-   (let* ((info (posframe-poshandler-argbuilder *MY-CHILD-FRAME*))
-          (posn (posframe-poshandler-window-center
-                 `(:posframe-width 800 :posframe-height 400 ,@info))))
-     `((left . ,(car posn))
-       (top . ,(cdr posn))))
 
  (3) POSHANDLER-EXTRA-INFO
 
