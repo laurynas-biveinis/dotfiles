@@ -103,6 +103,7 @@ Unfortunately, that is not always possible.
 [color-identifiers-mode](https://github.com/ankurdave/color-identifiers-mode)
 [info-colors](https://github.com/ubolonton/info-colors)
 [topsy.el](https://github.com/alphapapa/topsy.el)
+[org-sticky-header](https://github.com/alphapapa/org-sticky-header)
 
 #### Packages bundled with Emacs
 

@@ -971,6 +971,10 @@ Created: %U
 ;; org integration with Helm
 (setq org-outline-path-complete-in-steps nil)
 
+;;; `org-sticky-header'
+(require 'org-sticky-header)
+(add-hook 'org-mode-hook #'org-sticky-header-mode)
+
 ;;; org-roam
 (setq org-roam-mode-sections
       (list #'org-roam-backlinks-section #'org-roam-reflinks-section

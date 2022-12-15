@@ -5252,6 +5252,24 @@ Return PDF file's name.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el") (car load-path))))
+
+
+
+(autoload 'org-sticky-header-mode "org-sticky-header" "\
+Minor mode to show the current Org heading in the header line.
+With prefix argument ARG, turn on if positive, otherwise off.
+Return non-nil if the minor mode is enabled.
+
+\(fn &optional ARG)" t nil)
+
+(register-definition-prefixes "org-sticky-header" '("org-sticky-header-"))
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-3.1.1/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-3.1.1/emacsql-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12899,7 +12917,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines org emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)
