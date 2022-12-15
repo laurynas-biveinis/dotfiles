@@ -102,6 +102,7 @@ Unfortunately, that is not always possible.
 [stripe-buffer](https://github.com/sabof/stripe-buffer)
 [color-identifiers-mode](https://github.com/ankurdave/color-identifiers-mode)
 [info-colors](https://github.com/ubolonton/info-colors)
+[topsy.el](https://github.com/alphapapa/topsy.el)
 
 #### Packages bundled with Emacs
 

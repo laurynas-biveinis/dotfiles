@@ -122,16 +122,6 @@
   (setq indent-tabs-mode nil))
 
 ;;;; Bundled modes
-;;; header-line-format
-;; which-function-mode
-(which-function-mode)
-
-(setq-default header-line-format
-              '((which-func-mode ("" which-func-format " "))))
-
-(setq mode-line-misc-info (assq-delete-all 'which-function-mode
-                                           mode-line-misc-info))
-
 ;;; modeline
 
 ;; size-indication-mode
@@ -1498,13 +1488,17 @@ CANDIDATES is the list of candidates."
           #'dotfiles--lsp-restore-cc-mode-indent)
 (add-hook 'lsp-after-uninitialized-functions #'dotfiles--lsp-uninitialization)
 
-(defun dotfiles--lsp-deferred-if-supported ()
-  "Run `lsp-deferred' if it's a supported mode."
-  (unless (derived-mode-p 'emacs-lisp-mode 'makefile-bsdmake-mode
-                          'makefile-gmake-mode 'asm-mode)
+;;; Setup `topsy', make `lsp-mode' play nicely with it.
+(require 'topsy)
+
+(defun dotfiles--lsp-deferred-or-topsy ()
+  "Run `lsp-deferred' if it's a supported mode, otherwise enable `topsy-mode'."
+  (if (derived-mode-p 'emacs-lisp-mode 'makefile-bsdmake-mode
+                      'makefile-gmake-mode 'asm-mode)
+      (topsy-mode)
     (lsp-deferred)))
 
-(add-hook 'prog-mode-hook #'dotfiles--lsp-deferred-if-supported)
+(add-hook 'prog-mode-hook #'dotfiles--lsp-deferred-or-topsy)
 
 ;;; lsp-mode clangd setup
 (defconst lsp-clients-clangd-tramp-executable "clangd")
