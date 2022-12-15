@@ -1878,7 +1878,7 @@ with a prefix ARG."
 (require 'rustic)
 
 ;;; `prism'
-(require 'prism-mode)
+(require 'prism)
 (add-hook 'c-mode-common-hook #'prism-mode)
 (add-hook 'emacs-lisp-mode-hook #'prism-mode)
 (add-hook 'rust-mode-hook #'prism-mode)
