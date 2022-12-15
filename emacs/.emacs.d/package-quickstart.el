@@ -3447,33 +3447,6 @@ the mode if ARG is omitted or nil, and toggle it if ARG is `toggle'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rainbow-delimiters-2.1.5/rainbow-delimiters-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rainbow-delimiters-2.1.5/rainbow-delimiters-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/rainbow-delimiters-2.1.5/rainbow-delimiters-autoloads.el") (car load-path))))
-
-
-
-(autoload 'rainbow-delimiters-mode "rainbow-delimiters" "\
-Highlight nested parentheses, brackets, and braces according to their depth.
-
-If called interactively, enable Rainbow-Delimiters mode if ARG is
-positive, and disable it if ARG is zero or negative.  If called
-from Lisp, also enable the mode if ARG is omitted or nil, and
-toggle it if ARG is `toggle'; disable the mode otherwise.
-
-\(fn &optional ARG)" t nil)
-
-(autoload 'rainbow-delimiters-mode-enable "rainbow-delimiters" "\
-Enable `rainbow-delimiters-mode'." nil nil)
-
-(autoload 'rainbow-delimiters-mode-disable "rainbow-delimiters" "\
-Disable `rainbow-delimiters-mode'." nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "rainbow-delimiters" '("rainbow-delimiters-")))
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.7.0/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.7.0/projectile-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -4100,6 +4073,60 @@ Otherwise behave as if called interactively.
 (define-obsolete-function-alias 'projectile-global-mode 'projectile-mode "1.0")
 
 (register-definition-prefixes "projectile" '("??" "compilation-find-file-projectile-find-compilation-buffer" "def-projectile-commander-method" "delete-file-projectile-remove-from-cache" "project"))
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.2.3/prism-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.2.3/prism-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/prism-0.2.3/prism-autoloads.el") (car load-path))))
+
+
+
+(autoload 'prism-mode "prism" "\
+Disperse lisp forms (and other non-whitespace-sensitive syntax) into a spectrum of colors according to depth.
+Depth is determined by list nesting.  Suitable for Lisp, C-like
+languages, etc.
+
+This is a minor mode.  If called interactively, toggle the `Prism
+mode' mode.  If the prefix argument is positive, enable the mode,
+and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `prism-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'prism-whitespace-mode "prism" "\
+Disperse whitespace-sensitive syntax into a spectrum of colors according to depth.
+Depth is determined by indentation and list nesting.  Suitable
+for Python, Haskell, etc.
+
+This is a minor mode.  If called interactively, toggle the
+`Prism-Whitespace mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `prism-whitespace-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+\(fn &optional ARG)" t nil)
+
+(register-definition-prefixes "prism" '("prism-"))
 
 
 )
@@ -12443,51 +12470,6 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/color-identifiers-mode-1.0.0/color-identifiers-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/color-identifiers-mode-1.0.0/color-identifiers-mode-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/color-identifiers-mode-1.0.0/color-identifiers-mode-autoloads.el") (car load-path))))
-
-
-
-(autoload 'color-identifiers-mode "color-identifiers-mode" "\
-Color the identifiers in the current buffer based on their names.
-
-If called interactively, enable Color-Identifiers mode if ARG is
-positive, and disable it if ARG is zero or negative.  If called
-from Lisp, also enable the mode if ARG is omitted or nil, and
-toggle it if ARG is `toggle'; disable the mode otherwise.
-
-\(fn &optional ARG)" t nil)
-
-(put 'global-color-identifiers-mode 'globalized-minor-mode t)
-
-(defvar global-color-identifiers-mode nil "\
-Non-nil if Global Color-Identifiers mode is enabled.
-See the `global-color-identifiers-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `global-color-identifiers-mode'.")
-
-(custom-autoload 'global-color-identifiers-mode "color-identifiers-mode" nil)
-
-(autoload 'global-color-identifiers-mode "color-identifiers-mode" "\
-Toggle Color-Identifiers mode in all buffers.
-With prefix ARG, enable Global Color-Identifiers mode if ARG is positive;
-otherwise, disable it.  If called from Lisp, enable the mode if
-ARG is omitted or nil.
-
-Color-Identifiers mode is enabled in all buffers where
-`color-identifiers-mode-maybe' would do it.
-See `color-identifiers-mode' for more information on Color-Identifiers mode.
-
-\(fn &optional ARG)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "color-identifiers-mode" '("color-identifiers")))
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.25.1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.25.1/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12917,7 +12899,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority rainbow-delimiters projectile popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company color-identifiers-mode cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
        package-activated-list))
 (progn
   (require 'info)

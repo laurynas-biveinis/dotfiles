@@ -100,7 +100,7 @@ Unfortunately, that is not always possible.
 [flycheck-color-mode-line](https://github.com/flycheck/flycheck-color-mode-line)
 [flycheck-status-emoji](https://github.com/liblit/flycheck-status-emoji)
 [stripe-buffer](https://github.com/sabof/stripe-buffer)
-[color-identifiers-mode](https://github.com/ankurdave/color-identifiers-mode)
+[prism.el](https://github.com/alphapapa/prism.el)
 [info-colors](https://github.com/ubolonton/info-colors)
 [topsy.el](https://github.com/alphapapa/topsy.el)
 [org-sticky-header](https://github.com/alphapapa/org-sticky-header)

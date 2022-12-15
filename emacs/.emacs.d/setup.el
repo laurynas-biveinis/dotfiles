@@ -1852,21 +1852,6 @@ with a prefix ARG."
 (add-hook 'package-menu-mode-hook #'stripe-listify-buffer)
 (add-hook 'org-agenda-mode-hook #'stripe-listify-buffer)
 
-;;; `color-identifiers-mode'
-(require 'color-identifiers-mode)
-(global-color-identifiers-mode)
-
-;; Integrate `color-identifiers-mode' with `lsp-mode': if semantic highlighting
-;; is enabled, disable `color-identifiers-mode', because semantic highlighting
-;; overwrites any faces of the latter. I did not find a way to make the two
-;; interplay more nicely.
-(defun dotfiles--lsp-disable-color-identifiers-mode ()
-  "Disable `color-identifiers-mode' if semantic higlighting is enabled."
-  (if (and lsp-semantic-tokens-enable (lsp--capability :semanticTokensProvider))
-      (color-identifiers-mode -1)))
-
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-color-identifiers-mode)
-
 ;;; `grab-mac-link'
 (require 'grab-mac-link)
 (setq grab-mac-link-dwim-favourite-app 'safari)
@@ -1874,12 +1859,6 @@ with a prefix ARG."
 ;;; `info-colors'
 (require 'info-colors)
 (add-hook 'Info-selection-hook #'info-colors-fontify-node)
-
-;;; `rainbow-delimiters'
-(require 'rainbow-delimiters)
-;; TODO(laurynas): add to more modes as appropriate
-(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'c-mode-common-hook #'rainbow-delimiters-mode)
 
 ;;; `tree-sitter'
 (require 'tree-sitter)
@@ -1897,6 +1876,15 @@ with a prefix ARG."
 
 ;;; `rustic'
 (require 'rustic)
+
+;;; `prism'
+(require 'prism-mode)
+(add-hook 'c-mode-common-hook #'prism-mode)
+(add-hook 'emacs-lisp-mode-hook #'prism-mode)
+(add-hook 'rust-mode-hook #'prism-mode)
+
+(add-hook 'python-mode-hook #'prism-whitespace-mode)
+(add-hook 'yaml-mode #'prism-whitespace-mode)
 
 ;;;; Upgrade helper
 (defun my-recompile-packages ()
