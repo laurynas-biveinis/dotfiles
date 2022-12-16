@@ -5773,10 +5773,10 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4/org-contrib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4/org-contrib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4.1/org-contrib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4.1/org-contrib-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4/org-contrib-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4.1/org-contrib-autoloads.el") (car load-path))))
 
 
 
