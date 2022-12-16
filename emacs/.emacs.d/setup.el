@@ -1109,6 +1109,7 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'undo-tree-incompatible-major-modes #'grep-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'package-menu-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'messages-buffer-mode)
 (global-undo-tree-mode)
 
 ;;; Wakatime
