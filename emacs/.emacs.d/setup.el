@@ -10,6 +10,7 @@
 (defvar secrets-org-file)
 (defvar my-frame-font)
 (defvar dotfiles--initial-file-name-handler-alist)
+(defvar no-undo-tree-file-names)
 (declare-function start-erc-chats "" ())
 
 ;;;; General settings
@@ -1110,6 +1111,17 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'package-menu-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'messages-buffer-mode)
+
+(defun dotfiles--disable-undo-tree-by-name (&optional _print-message)
+  "Return nil if the buffer file name is in `dotfiles--no-undo-tree-names'."
+  (let ((file-name (buffer-file-name)))
+    (if file-name (not (member (file-name-nondirectory (buffer-file-name))
+                               no-undo-tree-file-names))
+      t)))
+
+(advice-add 'turn-on-undo-tree-mode :before-while
+            #'dotfiles--disable-undo-tree-by-name)
+
 (global-undo-tree-mode)
 
 ;;; Wakatime
