@@ -1115,8 +1115,11 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (defun dotfiles--disable-undo-tree-by-name (&optional _print-message)
   "Return nil if the buffer file name is in `dotfiles--no-undo-tree-names'."
   (let ((file-name (buffer-file-name)))
-    (if file-name (not (member (file-name-nondirectory (buffer-file-name))
-                               no-undo-tree-file-names))
+    ;; TODO(laurynas): replace special-casing of suffix and exact match against
+    ;; `no-undo-tree-file-names' with a glob match.
+    (if file-name (not (or (string-suffix-p "autoloads.el" file-name)
+                           (member (file-name-nondirectory (buffer-file-name))
+                                   no-undo-tree-file-names)))
       t)))
 
 (advice-add 'turn-on-undo-tree-mode :before-while
