@@ -311,7 +311,7 @@ brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      findutils libtool npm fd delta jq colordiff iwyu cppcheck infer creduce \
      gnu-sed mas bat fig bison libfido2 actionlint circleci imagemagick \
      rapidjson doxygen graphviz cmake protobuf ripgrep lz4 boost cpplint \
-     libeatmydata duf
+     libeatmydata duf exa
 #
 # App Store
 #
