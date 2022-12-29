@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-fancy-compilation
-;; Package-Version: 20221228.317
-;; Package-Commit: c1baaf645ea0415958a502295db563d51d832c4d
+;; Package-Version: 20221228.438
+;; Package-Commit: 11b899f5381dff2e23fed2d28d0521b2ccb9ec59
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -197,9 +197,8 @@ Use this to set or override defaults."
             (goto-char trim-beg)
             (insert "\n")
             (save-match-data
-              (when (or
-                     (looking-at "[[:alnum:]]+ [[:alnum:]]+\\( at .*\\)")
-                     (re-search-forward "\\( at .*\\)"))
+              (when (or (looking-at "[[:alnum:]]+ [[:alnum:]]+\\( at .*\\)")
+                        (re-search-forward "\\( at .*\\)"))
                 (delete-region (match-beginning 1) (match-end 1))))
 
             (let ((tail (car (fancy-compilation--bounds-of-space-at-point (point-max)))))
