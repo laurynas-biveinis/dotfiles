@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-fancy-compilation
-;; Package-Version: 20221228.438
-;; Package-Commit: 11b899f5381dff2e23fed2d28d0521b2ccb9ec59
+;; Package-Version: 20221230.1032
+;; Package-Commit: cad90d4e1a2f357a55094b2ba6669b40693a3709
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -104,9 +104,10 @@ Use this to set or override defaults."
   "Execute BODY with hook FN-ADVICE temporarily added to HOOK-SYM."
   (declare (indent 2))
   `(let ((fn-advice-var ,fn-advice))
-     (unwind-protect (progn
-                       (add-hook ,hook-sym fn-advice-var)
-                       ,@body)
+     (unwind-protect
+         (progn
+           (add-hook ,hook-sym fn-advice-var)
+           ,@body)
        (remove-hook ,hook-sym fn-advice-var))))
 
 (defun fancy-compilation--bounds-of-space-at-point (pos)
@@ -155,9 +156,7 @@ Use this to set or override defaults."
           ((string-empty-p fancy-compilation-term)
            compilation-environment)
           (t
-           (cons
-            (concat "TERM=" fancy-compilation-term)
-            compilation-environment)))))
+           (cons (concat "TERM=" fancy-compilation-term) compilation-environment)))))
     (apply fn args)))
 
 
