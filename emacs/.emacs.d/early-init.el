@@ -13,7 +13,7 @@
 
 (setq x-stretch-cursor t)
 
-;; https://github.com/hlissner/doom-emacs/blob/develop/early-init.el -
+;; https://github.com/doomemacs/doomemacs/blob/master/lisp/doom-start.el -
 ;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
