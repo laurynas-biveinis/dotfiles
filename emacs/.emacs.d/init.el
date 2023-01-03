@@ -7,9 +7,7 @@
 (defconst home-dir (concat (replace-regexp-in-string "\\\\" "/"
                                                      (getenv "HOME")) "/"))
 (defconst private-elisp (concat home-dir ".emacs.d/"))
-(defconst private-elisp-lib (concat private-elisp "lib/"))
 (defconst dotfiles-elisp (concat private-elisp "dotfiles/*.el"))
-(defconst cmake-build.el-lib (concat private-elisp-lib "cmake-build.el/"))
 
 (load (concat home-dir "secrets"))
 
@@ -31,8 +29,6 @@
 (setq package-archive-priorities
       '(("melpa-stable" . 15)
         ("melpa"        . 10)))
-
-(add-to-list 'load-path cmake-build.el-lib)
 
 ;; Load system-specific library and setup system-specific things that
 ;; must be setup before main setup
