@@ -142,6 +142,8 @@ else
 fi
 
 mtr_emd() {
+    # The correct way would be to use arrays, but those don't exist in POSIX sh.
+    # shellcheck disable=SC2086
     ./mtr $MTR_EMD "$@"
 }
 
