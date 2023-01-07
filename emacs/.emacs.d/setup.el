@@ -1542,6 +1542,10 @@ CANDIDATES is the list of candidates."
 
 (add-hook 'c-mode-common-hook #'dotfiles--lsp-turn-off-on-type-formatting)
 
+;;; Rust in `lsp-mode'
+(require 'lsp-rust)
+(setq lsp-rust-analyzer-cargo-watch-command "clippy")
+
 ;;; lsp-treemacs
 (require 'lsp-treemacs)
 (lsp-treemacs-sync-mode 1)
