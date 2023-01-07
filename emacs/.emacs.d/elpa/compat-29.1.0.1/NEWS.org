@@ -1,5 +1,36 @@
-#+options: toc:nil num:nil
-#+link:    compat https://todo.sr.ht/~pkal/compat/
+#+title: compat.el - Changelog
+
+* Release of "Compat" Version 29.1.0.1
+
+- Add multiple new tests for existing APIs.
+- Fix bugs in compatibility functions: ~setq-local~, ~proper-list-p, prop-match-p~,
+  ~file-name-concat~, ~replace-regexp-in-region~, ~replace-string-in-region~.
+- Add new Emacs 29 APIs. Some of them are still untested and may change. If you
+  intend to use an Emacs 29 API please be careful and if possible contribute
+  test cases. All untested functions are marked as ~<UNTESTED>~ in the Compat
+  code. Over time tests for all functions will be added gradually.
+- Add the macros ~compat-call~ and ~compat-function~ to call compatibility
+  functions. Since Compat avoids overwriting already existing functions, we must
+  define separate compatibility function definitions for functions which changed
+  their calling convention or behavior. These compatibility definitions can be
+  looked up using ~compat-function~ and called with ~compat-call~. For example ~assoc~
+  can be called with a ~TESTFN~ since Emacs 29. In Emacs 28 and older the calling
+  convention was ~(assoc KEY ALIST)~. In order to use the new calling convention
+  you can use ~(compat-call assoc KEY ALIST TESTFN)~.
+- Deprecate all ~compat-*~ prefixed functions. Instead use the aforementioned
+  ~compat-call~ or ~compat-function~ macros.
+- Deprecate ~compat-help.el~ and ~compat-font-lock.el.~
+- Development moved to GitHub.
+- BREAKING: Drop broken function ~func-arity~. Using ~func-arity~ is generally
+  discouraged and the function is hard to implement properly due to all the
+  various function types. There it is unlikely that the function will get
+  reintroduced in Compat.
+- BREAKING: Drop broken function ~directory-files-recursively~. In case you need
+  this function, a patch including tests is welcome.
+- BREAKING: Drop support for Emacs 24.3. Emacs 24.4 is required now. In case you
+  still need Emacs 24.3 support, you can rely on Compat 28.1.2.2.
+
+(Release <2023-01-05 Thu>)
 
 * Release of "Compat" Version 28.1.2.2
 
@@ -104,5 +135,3 @@ General problems, questions, etc. are still better discussed on the
 development mailing list: https://lists.sr.ht/~pkal/compat-devel.
 
 (Released <2022-04-22 Fri>)
-
-
