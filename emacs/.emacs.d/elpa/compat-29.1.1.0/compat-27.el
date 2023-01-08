@@ -22,7 +22,6 @@
 
 ;;; Code:
 
-(require 'compat-26)
 (eval-when-compile (load "compat-macs.el" nil t t))
 (compat-declare-version "27.1")
 
@@ -89,7 +88,7 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in window.c
 
-(compat-defun recenter (&optional arg redisplay) ;; <UNTESTED>
+(compat-defun recenter (&optional arg redisplay) ;; <OK>
   "Handle optional argument REDISPLAY."
   :explicit t
   (recenter arg)
@@ -110,199 +109,6 @@ Letter-case is significant, but text properties are ignored."
         (let ((fn (lookup-key map key accept-default)))
           (when fn (throw 'found fn))))))
    ((signal 'wrong-type-argument (list 'keymapp keymap)))))
-
-;;;; Defined in json.c
-
-(declare-function json-encode "json" (object))
-(declare-function json-read-from-string "json" (string))
-(declare-function json-read "json" ())
-(defvar json-encoding-pretty-print)
-(defvar json-object-type)
-(defvar json-array-type)
-(defvar json-false)
-(defvar json-null)
-
-;; The function is declared to satisfy the byte compiler while testing
-;; if native JSON parsing is available.;
-(declare-function json-serialize nil (object &rest args))
-(compat-defun json-serialize (object &rest args) ;; <UNTESTED>
-  "Return the JSON representation of OBJECT as a string.
-
-OBJECT must be t, a number, string, vector, hashtable, alist, plist,
-or the Lisp equivalents to the JSON null and false values, and its
-elements must recursively consist of the same kinds of values.  t will
-be converted to the JSON true value.  Vectors will be converted to
-JSON arrays, whereas hashtables, alists and plists are converted to
-JSON objects.  Hashtable keys must be strings without embedded null
-characters and must be unique within each object.  Alist and plist
-keys must be symbols; if a key is duplicate, the first instance is
-used.
-
-The Lisp equivalents to the JSON null and false values are
-configurable in the arguments ARGS, a list of keyword/argument pairs:
-
-The keyword argument `:null-object' specifies which object to use
-to represent a JSON null value.  It defaults to `:null'.
-
-The keyword argument `:false-object' specifies which object to use to
-represent a JSON false value.  It defaults to `:false'.
-
-In you specify the same value for `:null-object' and `:false-object',
-a potentially ambiguous situation, the JSON output will not contain
-any JSON false values."
-  :cond (not (condition-case nil
-                 (equal (json-serialize '()) "{}")
-               (:success t)
-               (void-function nil)
-               (json-unavailable nil)))
-  (unless (fboundp 'json-encode)
-    (require 'json))
-  (letrec ((fix (lambda (obj)
-                  (cond
-                   ((hash-table-p obj)
-                    (let ((ht (copy-hash-table obj)))
-                      (maphash
-                       (lambda (key val)
-                         (unless (stringp key)
-                           (signal
-                            'wrong-type-argument
-                            (list 'stringp key)))
-                         (puthash key (funcall fix val) ht))
-                       obj)
-                      ht))
-                   ((and (listp obj) (consp (car obj))) ;alist
-                    (mapcar
-                     (lambda (ent)
-                       (cons (symbol-name (car ent))
-                             (funcall fix (cdr ent))))
-                     obj))
-                   ((listp obj) ;plist
-                    (let (alist)
-                      (while obj
-                        (push (cons (cond
-                                     ((keywordp (car obj))
-                                      (substring
-                                       (symbol-name (car obj))
-                                       1))
-                                     ((symbolp (car obj))
-                                      (symbol-name (car obj)))
-                                     ((signal
-                                       'wrong-type-argument
-                                       (list 'symbolp (car obj)))))
-                                    (funcall fix (cadr obj)))
-                              alist)
-                        (unless (consp (cdr obj))
-                          (signal 'wrong-type-argument '(consp nil)))
-                        (setq obj (cddr obj)))
-                      (nreverse alist)))
-                   ((vectorp obj)
-                    (let ((vec (make-vector (length obj) nil)))
-                      (dotimes (i (length obj))
-                        (aset vec i (funcall fix (aref obj i))))
-                      vec))
-                   (obj))))
-           (json-encoding-pretty-print nil)
-           (json-false (or (plist-get args :false-object) :false))
-           (json-null (or (plist-get args :null-object) :null)))
-    (json-encode (funcall fix object))))
-
-(compat-defun json-insert (object &rest args) ;; <UNTESTED>
-  "Insert the JSON representation of OBJECT before point.
-This is the same as (insert (json-serialize OBJECT)), but potentially
-faster.  See the function `json-serialize' for allowed values of
-OBJECT."
-  :cond (not (condition-case nil
-                 (equal (json-serialize '()) "{}")
-               (:success t)
-               (void-function nil)
-               (json-unavailable nil)))
-  (insert (apply #'json-serialize object args)))
-
-(compat-defun json-parse-string (string &rest args) ;; <UNTESTED>
-  "Parse the JSON STRING into a Lisp object.
-This is essentially the reverse operation of `json-serialize', which
-see.  The returned object will be the JSON null value, the JSON false
-value, t, a number, a string, a vector, a list, a hashtable, an alist,
-or a plist.  Its elements will be further objects of these types.  If
-there are duplicate keys in an object, all but the last one are
-ignored.  If STRING doesn't contain a valid JSON object, this function
-signals an error of type `json-parse-error'.
-
-The arguments ARGS are a list of keyword/argument pairs:
-
-The keyword argument `:object-type' specifies which Lisp type is used
-to represent objects; it can be `hash-table', `alist' or `plist'.  It
-defaults to `hash-table'.
-
-The keyword argument `:array-type' specifies which Lisp type is used
-to represent arrays; it can be `array' (the default) or `list'.
-
-The keyword argument `:null-object' specifies which object to use
-to represent a JSON null value.  It defaults to `:null'.
-
-The keyword argument `:false-object' specifies which object to use to
-represent a JSON false value.  It defaults to `:false'."
-  :cond (not (condition-case nil
-                 (equal (json-serialize '()) "{}")
-               (:success t)
-               (void-function nil)
-               (json-unavailable nil)))
-  (unless (fboundp 'json-read-from-string)
-    (require 'json))
-  (condition-case err
-      (let ((json-object-type (or (plist-get args :object-type) 'hash-table))
-            (json-array-type (or (plist-get args :array-type) 'vector))
-            (json-false (or (plist-get args :false-object) :false))
-            (json-null (or (plist-get args :null-object) :null)))
-        (when (eq json-array-type 'array)
-          (setq json-array-type 'vector))
-        (json-read-from-string string))
-    (json-error (signal 'json-parse-error err))))
-
-(compat-defun json-parse-buffer (&rest args) ;; <UNTESTED>
-  "Read JSON object from current buffer starting at point.
-Move point after the end of the object if parsing was successful.
-On error, don't move point.
-
-The returned object will be a vector, list, hashtable, alist, or
-plist.  Its elements will be the JSON null value, the JSON false
-value, t, numbers, strings, or further vectors, lists, hashtables,
-alists, or plists.  If there are duplicate keys in an object, all
-but the last one are ignored.
-
-If the current buffer doesn't contain a valid JSON object, the
-function signals an error of type `json-parse-error'.
-
-The arguments ARGS are a list of keyword/argument pairs:
-
-The keyword argument `:object-type' specifies which Lisp type is used
-to represent objects; it can be `hash-table', `alist' or `plist'.  It
-defaults to `hash-table'.
-
-The keyword argument `:array-type' specifies which Lisp type is used
-to represent arrays; it can be `array' (the default) or `list'.
-
-The keyword argument `:null-object' specifies which object to use
-to represent a JSON null value.  It defaults to `:null'.
-
-The keyword argument `:false-object' specifies which object to use to
-represent a JSON false value.  It defaults to `:false'."
-  :cond (not (condition-case nil
-                 (equal (json-serialize '()) "{}")
-               (:success t)
-               (void-function nil)
-               (json-unavailable nil)))
-  (unless (fboundp 'json-read)
-    (require 'json))
-  (condition-case err
-      (let ((json-object-type (or (plist-get args :object-type) 'hash-table))
-            (json-array-type (or (plist-get args :array-type) 'vector))
-            (json-false (or (plist-get args :false-object) :false))
-            (json-null (or (plist-get args :null-object) :null)))
-        (when (eq json-array-type 'array)
-          (setq json-array-type 'vector))
-        (json-read))
-    (json-error (signal 'json-parse-buffer err))))
 
 ;;;; Defined in timefns.c
 
@@ -457,15 +263,12 @@ return nil."
   (cond ((not cond1) cond2)
         ((not cond2) cond1)))
 
-(compat-defvar regexp-unmatchable "\\`a\\`"
+(compat-defvar regexp-unmatchable "\\`a\\`" ;; <OK>
   "Standard regexp guaranteed not to match any string at all."
   :constant t)
 
 (compat-defun assoc-delete-all (key alist &optional test) ;; <OK>
-  "Delete from ALIST all elements whose car is KEY.
-Compare keys with TEST.  Defaults to `equal'.
-Return the modified alist.
-Elements of ALIST that are not conses are ignored."
+  "Handle optional argument TEST."
   :explicit t
   (unless test (setq test #'equal))
   (while (and (consp (car alist))
@@ -528,12 +331,37 @@ This is an integer indicating the UTC offset in seconds, i.e.,
 the number of seconds east of Greenwich."
   (nth 8 time))
 
-;; TODO define gv-setters
+;; TODO define gv-setters for decoded-time-*
+
+;;;; Defined in image.el
+
+(compat-defun image--set-property (image property value) ;; <OK>
+  "Set PROPERTY in IMAGE to VALUE.
+Internal use only."
+  :explicit t
+  :feature image
+  (if (null value)
+      (while (cdr image)
+        (if (eq (cadr image) property)
+            (setcdr image (cdddr image))
+          (setq image (cddr image))))
+    (setcdr image (plist-put (cdr image) property value)))
+  value)
+
+(if (eval-when-compile (version< emacs-version "26.1"))
+    (with-eval-after-load 'image
+      (gv-define-simple-setter image-property image--set-property))
+  ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
+  ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
+  ;; override the gv expander until Emacs 27.1.
+  (when (eval-when-compile (version< emacs-version "27.1"))
+    (with-eval-after-load 'image
+      (gv-define-simple-setter image-property compat--image--set-property))))
 
 ;;;; Defined in files.el
 
 (compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <OK>
-  "Handle the optional third and forth argument:
+  "Handle the optional arguments SPACE and UNIT.
 
 Optional third argument SPACE is a string put between the number and unit.
 It defaults to the empty string.  We recommend a single space or
@@ -628,7 +456,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 ;;;; Defined in regexp-opt.el
 
 (compat-defun regexp-opt (strings &optional paren) ;; <OK>
-  "Handle an empty list of strings."
+  "Handle an empty list of STRINGS."
   :explicit t
   (if (null strings)
       (let ((re "\\`a\\`"))
@@ -687,7 +515,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun dired-get-marked-files ;; <UNTESTED>
     (&optional localp arg filter distinguish-one-marked error)
-  "Return the marked files’ names as list of strings."
+  "Handle optional argument ERROR."
   :feature dired
   :explicit t
   (let ((result (dired-get-marked-files localp arg filter distinguish-one-marked)))

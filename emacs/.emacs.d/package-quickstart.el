@@ -2442,10 +2442,10 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.0.1/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.0.1/compat-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.1.0/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.1.0/compat-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/compat-29.1.0.1/compat-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/compat-29.1.1.0/compat-autoloads.el") (car load-path))))
 
 
 
@@ -2459,10 +2459,10 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20221202.1727/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20221202.1727/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230107.1528/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230107.1528/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20221202.1727/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20230107.1528/transient-autoloads.el") (car load-path))))
 
 
 
@@ -12902,7 +12902,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6" "/Users/laurynas/.emacs.d/elpa/transient-20221202.1727" "/Users/laurynas/.emacs.d/elpa/compat-29.1.0.1" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6" "/Users/laurynas/.emacs.d/elpa/transient-20230107.1528" "/Users/laurynas/.emacs.d/elpa/compat-29.1.1.0" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:

@@ -22,7 +22,6 @@
 
 ;;; Code:
 
-(require 'compat-27)
 (eval-when-compile (load "compat-macs.el" nil t t))
 (compat-declare-version "28.1")
 
@@ -113,8 +112,7 @@ inserted before contatenating."
 ;;;; Defined in filelock.c
 
 (compat-defun unlock-buffer () ;; <UNTESTED>
-  "Handle `file-error' conditions:
-
+  "Handle `file-error' conditions.
 Handles file system errors by calling ‘display-warning’ and
 continuing as if the error did not occur."
   :explicit t
@@ -129,8 +127,7 @@ continuing as if the error did not occur."
 ;;;; Defined in characters.c
 
 (compat-defun string-width (string &optional from to) ;; <OK>
-  "Handle optional arguments FROM and TO:
-
+  "Handle optional arguments FROM and TO.
 Optional arguments FROM and TO specify the substring of STRING to
 consider, and are interpreted as in `substring'."
   :explicit t
@@ -144,8 +141,7 @@ consider, and are interpreted as in `substring'."
 ;;;; Defined in dired.c
 
 (compat-defun directory-files (directory &optional full match nosort count) ;; <UNTESTED>
-  "Handle additional optional argument COUNT:
-
+  "Handle additional optional argument COUNT.
 If COUNT is non-nil and a natural number, the function will
  return COUNT number of file names (if so many are present)."
   :explicit t
@@ -156,29 +152,27 @@ If COUNT is non-nil and a natural number, the function will
 
 ;;;; Defined in json.c
 
+;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-serialize (object &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values."
+  "Handle top-level JSON values (RFC 8259)."
   :explicit t
   :min-version "27"
   (if (or (listp object) (vectorp object))
       (apply #'json-serialize object args)
     (substring (json-serialize (list object)) 1 -1)))
 
+;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-insert (object &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values."
+  "Handle top-level JSON values (RFC 8259)."
   :explicit t
   :min-version "27"
   (if (or (listp object) (vectorp object))
       (apply #'json-insert object args)
-    ;; `compat-json-serialize' is not sharp-quoted as the byte
-    ;; compiled doesn't always know that the function has been
-    ;; defined, but it will only be used in this function if the
-    ;; prefixed definition of `json-serialize' (see above) has also
-    ;; been defined.
-    (insert (apply 'compat-json-serialize object args))))
+    (insert (apply #'compat--json-serialize object args))))
 
+;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-parse-string (string &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values."
+  "Handle top-level JSON values (RFC 8259)."
   :explicit t
   :min-version "27"
   (if (string-match-p "\\`[[:space:]]*[[{]" string)
@@ -188,8 +182,9 @@ If COUNT is non-nil and a natural number, the function will
     ;; is we can access the first element.
     (elt (apply #'json-parse-string (concat "[" string "]") args) 0)))
 
+;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-parse-buffer (&rest args) ;; <UNTESTED>
-  "Handle top-level JSON values."
+  "Handle top-level JSON values (RFC 8259)."
   :explicit t
   :min-version "27"
   (if (looking-at-p "[[:space:]]*[[{]")
@@ -385,22 +380,21 @@ Also see `local-variable-p'."
       (void-variable nil (throw 'fail nil)))
     t))
 
-(compat-defmacro with-existing-directory (&rest body) ;; <UNTESTED>
+(compat-defmacro with-existing-directory (&rest body) ;; <OK>
   "Execute BODY with `default-directory' bound to an existing directory.
 If `default-directory' is already an existing directory, it's not changed."
   (declare (indent 0) (debug t))
-  (let ((quit (make-symbol "with-existing-directory-quit")))
-    `(catch ',quit
-       (dolist (dir (list default-directory
-                          (expand-file-name "~/")
-                          (getenv "TMPDIR")
-                          "/tmp/"
-                          ;; XXX: check if "/" works on non-POSIX
-                          ;; system.
-                          "/"))
-         (when (and dir (file-exists-p dir))
-           (throw ',quit (let ((default-directory dir))
-                           ,@body)))))))
+  `(let ((default-directory
+          (or (catch 'quit
+                (dolist (dir (list default-directory
+                                   (expand-file-name "~/")
+                                   temporary-file-directory
+                                   (getenv "TMPDIR")
+                                   "/tmp/"))
+                  (when (and dir (file-exists-p dir))
+                    (throw 'quit dir))))
+              "/")))
+     ,@body))
 
 (compat-defmacro dlet (binders &rest body) ;; <UNTESTED>
   "Like `let' but using dynamic scoping."
@@ -710,8 +704,7 @@ is included in the return value."
 ;;;; Defined in windows.el
 
 (compat-defun count-windows (&optional minibuf all-frames) ;; <UNTESTED>
-  "Handle optional argument ALL-FRAMES:
-
+  "Handle optional argument ALL-FRAMES.
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."
   :explicit t
@@ -752,7 +745,7 @@ Other uses risk returning non-nil value that point to the wrong file."
 
 ;;;; Defined in env.el
 
-(compat-defmacro with-environment-variables (variables &rest body) ;; <UNTESTED>
+(compat-defmacro with-environment-variables (variables &rest body) ;; <OK>
   "Set VARIABLES in the environent and execute BODY.
 VARIABLES is a list of variable settings of the form (VAR VALUE),
 where VAR is the name of the variable (a string) and VALUE
@@ -784,29 +777,6 @@ itself will be used instead as the function argument."
               'button-data data
               'keymap button-map
               'action callback))
-
-;;;; Defined in autoload.el
-
-(defvar generated-autoload-file)
-
-(compat-defun make-directory-autoloads (dir output-file) ;; <UNTESTED>
-  "Update autoload definitions for Lisp files in the directories DIRS.
-DIR can be either a single directory or a list of
-directories.  (The latter usage is discouraged.)
-
-The autoloads will be written to OUTPUT-FILE.  If any Lisp file
-binds `generated-autoload-file' as a file-local variable, write
-its autoloads into the specified file instead.
-
-The function does NOT recursively descend into subdirectories of the
-directory or directories specified."
-  (let ((generated-autoload-file output-file))
-    ;; We intentionally don't sharp-quote
-    ;; `update-directory-autoloads', because it was deprecated in
-    ;; Emacs 28 and we don't want to trigger the byte compiler for
-    ;; newer versions.
-    (apply 'update-directory-autoloads
-           (if (listp dir) dir (list dir)))))
 
 ;;;; Defined in time-data.el
 

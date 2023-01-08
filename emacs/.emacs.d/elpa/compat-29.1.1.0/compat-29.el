@@ -22,7 +22,6 @@
 
 ;;; Code:
 
-(require 'compat-28)
 (eval-when-compile (load "compat-macs.el" nil t t))
 ;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
 (compat-declare-version "29.0")
@@ -56,28 +55,6 @@ the properties at POSITION."
          (eq (car properties) prop))
     (cadr properties))))
 
-(compat-defun buffer-text-pixel-size ;; <UNTESTED>
-    (&optional buffer-or-name window x-limit y-limit)
-  "Return size of whole text of BUFFER-OR-NAME in WINDOW.
-BUFFER-OR-NAME must specify a live buffer or the name of a live buffer
-and defaults to the current buffer.  WINDOW must be a live window and
-defaults to the selected one.  The return value is a cons of the maximum
-pixel-width of any text line and the pixel-height of all the text lines
-of the buffer specified by BUFFER-OR-NAME.
-
-The optional arguments X-LIMIT and Y-LIMIT have the same meaning as with
-`window-text-pixel-size'.
-
-Do not use this function if the buffer specified by BUFFER-OR-NAME is
-already displayed in WINDOW.  `window-text-pixel-size' is cheaper in
-that case because it does not have to temporarily show that buffer in
-WINDOW."
-  (setq buffer-or-name (or buffer-or-name (current-buffer)))
-  (setq window (or window (selected-window)))
-  (save-window-excursion
-    (set-window-buffer window buffer-or-name)
-    (window-text-pixel-size window nil nil x-limit y-limit)))
-
 ;;;; Defined in fns.c
 
 (compat-defun ntake (n list) ;; <OK>
@@ -108,15 +85,7 @@ Unibyte strings are converted to multibyte for comparison."
   (eq t (compare-strings string1 0 nil string2 0 nil t)))
 
 (compat-defun plist-get (plist prop &optional predicate) ;; <OK>
-  "Extract a value from a property list.
-PLIST is a property list, which is a list of the form
-\(PROP1 VALUE1 PROP2 VALUE2...).
-
-This function returns the value corresponding to the given PROP, or
-nil if PROP is not one of the properties on the list.  The comparison
-with PROP is done using PREDICATE, which defaults to `eq'.
-
-This function doesn't signal an error if PLIST is invalid."
+  "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-get plist prop)
@@ -127,16 +96,7 @@ This function doesn't signal an error if PLIST is invalid."
         (setq plist (cddr plist))))))
 
 (compat-defun plist-put (plist prop val &optional predicate) ;; <OK>
-  "Change value in PLIST of PROP to VAL.
-PLIST is a property list, which is a list of the form
-\(PROP1 VALUE1 PROP2 VALUE2 ...).
-
-The comparison with PROP is done using PREDICATE, which defaults to `eq'.
-
-If PROP is already a property on the list, its value is set to VAL,
-otherwise the new PROP VAL pair is added.  The new plist is returned;
-use `(setq x (plist-put x prop val))' to be sure to use the new value.
-The PLIST is modified by side effects."
+  "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-put plist prop val)
@@ -150,16 +110,7 @@ The PLIST is modified by side effects."
       (nconc plist (list prop val)))))
 
 (compat-defun plist-member (plist prop &optional predicate) ;; <OK>
-  "Return non-nil if PLIST has the property PROP.
-PLIST is a property list, which is a list of the form
-\(PROP1 VALUE1 PROP2 VALUE2 ...).
-
-The comparison with PROP is done using PREDICATE, which defaults to
-`eq'.
-
-Unlike `plist-get', this allows you to distinguish between a missing
-property and a property with the value nil.
-The value is actually the tail of PLIST whose car is PROP."
+  "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-member plist prop)
@@ -169,49 +120,41 @@ The value is actually the tail of PLIST whose car is PROP."
           (throw 'found plist))
         (setq plist (cddr plist))))))
 
+;;;; Defined in editfns.c
+
+(compat-defun pos-bol (&optional n) ;; <OK>
+  "Return the position of the first character on the current line.
+With optional argument N, scan forward N - 1 lines first.
+If the scan reaches the end of the buffer, return that position.
+
+This function ignores text display directionality; it returns the
+position of the first character in logical order, i.e. the smallest
+character position on the logical line.  See `vertical-motion' for
+movement by screen lines.
+
+This function does not move point.  Also see `line-beginning-position'."
+  (declare (side-effect-free t))
+  (let ((inhibit-field-text-motion t))
+    (line-beginning-position n)))
+
+(compat-defun pos-eol (&optional n) ;; <OK>
+  "Return the position of the last character on the current line.
+With argument N not nil or 1, move forward N - 1 lines first.
+If scan reaches end of buffer, return that position.
+
+This function ignores text display directionality; it returns the
+position of the last character in logical order, i.e. the largest
+character position on the line.
+
+This function does not move point.  Also see `line-end-position'."
+  (declare (side-effect-free t))
+  (let ((inhibit-field-text-motion t))
+    (line-end-position n)))
+
 ;;;; Defined in keymap.c
 
 (compat-defun define-key (keymap key def &optional remove) ;; <UNTESTED>
-  "In KEYMAP, define key sequence KEY as DEF.
-This is a legacy function; see `keymap-set' for the recommended
-function to use instead.
-
-KEYMAP is a keymap.
-
-KEY is a string or a vector of symbols and characters, representing a
-sequence of keystrokes and events.  Non-ASCII characters with codes
-above 127 (such as ISO Latin-1) can be represented by vectors.
-Two types of vector have special meanings:
- [remap COMMAND] remaps any key binding for COMMAND.
- [t] creates a default definition, which applies to any event with no
-    other definition in KEYMAP.
-
-DEF is anything that can be a key's definition:
- nil (means key is undefined in this keymap),
- a command (a Lisp function suitable for interactive calling),
- a string (treated as a keyboard macro),
- a keymap (to define a prefix key),
- a symbol (when the key is looked up, the symbol will stand for its
-    function definition, which should at that time be one of the above,
-    or another symbol whose function definition is used, etc.),
- a cons (STRING . DEFN), meaning that DEFN is the definition
-    (DEFN should be a valid definition in its own right) and
-    STRING is the menu item name (which is used only if the containing
-    keymap has been created with a menu name, see `make-keymap'),
- or a cons (MAP . CHAR), meaning use definition of CHAR in keymap MAP,
- or an extended menu item definition.
- (See info node `(elisp)Extended Menu Items'.)
-
-If REMOVE is non-nil, the definition will be removed.  This is almost
-the same as setting the definition to nil, but makes a difference if
-the KEYMAP has a parent, and KEY is shadowing the same binding in the
-parent.  With REMOVE, subsequent lookups will return the binding in
-the parent, and with a nil DEF, the lookups will return nil.
-
-If KEYMAP is a sparse keymap with a binding for KEY, the existing
-binding is altered.  If there is no binding for KEY, the new pair
-binding KEY to DEF is added at the front of KEYMAP."
-  :realname compat--define-key-with-remove
+  "Handle optional argument REMOVE."
   :explicit t
   (if remove
       (let ((prev (lookup-key keymap key))
@@ -236,7 +179,7 @@ binding KEY to DEF is added at the front of KEYMAP."
 
 (compat-defalias string-split split-string) ;; <OK>
 
-(compat-defun function-alias-p (func &optional noerror) ;; <UNTESTED>
+(compat-defun function-alias-p (func &optional noerror) ;; <OK>
   "Return nil if FUNC is not a function alias.
 If FUNC is a function alias, return the function alias chain.
 
@@ -302,13 +245,13 @@ CONDITION is either:
                        (buffer-local-value 'major-mode buffer)
                        (cdr condition)))
                      ((eq (car-safe condition) 'not)
-                      (not (funcall match (cadr condition))))
+                      (not (funcall match (cdr condition))))
                      ((eq (car-safe condition) 'or)
                       (funcall match (cdr condition)))
                      ((eq (car-safe condition) 'and)
                       (catch 'fail
-                        (dolist (c (cdr conditions))
-                          (unless (funcall match c)
+                        (dolist (c (cdr condition))
+                          (unless (funcall match (list c))
                             (throw 'fail nil)))
                         t)))
                 (throw 'match t)))))))
@@ -328,98 +271,6 @@ CONDITION."
     bufs))
 
 ;;;; Defined in subr-x.el
-
-(compat-defun string-limit (string length &optional end coding-system) ;; <UNTESTED>
-  "Return a substring of STRING that is (up to) LENGTH characters long.
-If STRING is shorter than or equal to LENGTH characters, return the
-entire string unchanged.
-
-If STRING is longer than LENGTH characters, return a substring
-consisting of the first LENGTH characters of STRING.  If END is
-non-nil, return the last LENGTH characters instead.
-
-If CODING-SYSTEM is non-nil, STRING will be encoded before
-limiting, and LENGTH is interpreted as the number of bytes to
-limit the string to.  The result will be a unibyte string that is
-shorter than LENGTH, but will not contain \"partial\" characters,
-even if CODING-SYSTEM encodes characters with several bytes per
-character.
-
-When shortening strings for display purposes,
-`truncate-string-to-width' is almost always a better alternative
-than this function."
-  (unless (natnump length)
-    (signal 'wrong-type-argument (list 'natnump length)))
-  (if coding-system
-      (let ((result nil)
-            (result-length 0)
-            (index (if end (1- (length string)) 0)))
-        (while (let ((encoded (encode-coding-char
-                               (aref string index) coding-system)))
-                 (and (<= (+ (length encoded) result-length) length)
-                      (progn
-                        (push encoded result)
-                        (setq result-length
-                              (+ result-length (length encoded)))
-                        (setq index (if end (1- index)
-                                      (1+ index))))
-                      (if end (> index -1)
-                        (< index (length string)))))
-          ;; No body.
-          )
-        (apply #'concat (if end result (nreverse result))))
-    (cond
-     ((<= (length string) length) string)
-     (end (substring string (- (length string) length)))
-     (t (substring string 0 length)))))
-
-(compat-defun string-pixel-width (string) ;; <UNTESTED>
-  "Return the width of STRING in pixels."
-  (if (zerop (length string))
-      0
-    ;; Keeping a work buffer around is more efficient than creating a
-    ;; new temporary buffer.
-    (with-current-buffer (get-buffer-create " *string-pixel-width*")
-      (delete-region (point-min) (point-max))
-      (insert string)
-      (car (buffer-text-pixel-size nil nil t)))))
-
-(compat-defmacro with-buffer-unmodified-if-unchanged (&rest body) ;; <UNTESTED>
-  "Like `progn', but change buffer-modified status only if buffer text changes.
-If the buffer was unmodified before execution of BODY, and
-buffer text after execution of BODY is identical to what it was
-before, ensure that buffer is still marked unmodified afterwards.
-For example, the following won't change the buffer's modification
-status:
-
-  (with-buffer-unmodified-if-unchanged
-    (insert \"a\")
-    (delete-char -1))
-
-Note that only changes in the raw byte sequence of the buffer text,
-as stored in the internal representation, are monitored for the
-purpose of detecting the lack of changes in buffer text.  Any other
-changes that are normally perceived as \"buffer modifications\", such
-as changes in text properties, `buffer-file-coding-system', buffer
-multibyteness, etc. -- will not be noticed, and the buffer will still
-be marked unmodified, effectively ignoring those changes."
-  (declare (debug t) (indent 0))
-  (let ((hash (make-symbol "hash"))
-        (buffer (make-symbol "buffer")))
-    `(let ((,hash (and (not (buffer-modified-p))
-                       (buffer-hash)))
-           (,buffer (current-buffer)))
-       (prog1
-           (progn
-             ,@body)
-         ;; If we didn't change anything in the buffer (and the buffer
-         ;; was previously unmodified), then flip the modification status
-         ;; back to "unchanged".
-         (when (and ,hash (buffer-live-p ,buffer))
-           (with-current-buffer ,buffer
-             (when (and (buffer-modified-p)
-                        (equal ,hash (buffer-hash)))
-               (restore-buffer-modified-p nil))))))))
 
 (compat-defun add-display-text-property (start end prop value ;; <OK>
                                                &optional object)
@@ -538,7 +389,8 @@ to `default-directory', and the result will also be relative."
      (t
       parent))))
 
-(compat-defvar file-has-changed-p--hash-table (make-hash-table :test #'equal)
+(compat-defvar file-has-changed-p--hash-table ;; <UNTESTED>
+               (make-hash-table :test #'equal)
   "Internal variable used by `file-has-changed-p'.")
 
 (compat-defun file-has-changed-p (file &optional tag) ;; <UNTESTED>
@@ -759,7 +611,7 @@ parent keymap.  Removing the binding will allow the key in the
 parent keymap to be used."
   (unless (key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
-  (compat--define-key-with-remove keymap (key-parse key) nil remove))
+  (compat--define-key keymap (key-parse key) nil remove))
 
 (compat-defun keymap-global-set (key command) ;; <UNTESTED>
   "Give KEY a global binding as COMMAND.
