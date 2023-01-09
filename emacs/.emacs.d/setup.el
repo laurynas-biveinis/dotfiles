@@ -951,14 +951,19 @@ event of an error or nonlocal exit."
 ;; Save org buffers automatically
 (add-hook 'auto-save-hook #'org-save-all-org-buffers)
 
+(defun dotfiles--set-fill-column (column)
+  "Set `fill-column' and related vars to COLUMN."
+  (setq fill-column column)
+  (setq whitespace-line-column (+ column 1))
+  (setq display-fill-column-indicator-column (+ column 1)))
+
 (require 'org-roam-node)
 (defun dotfiles--org-mode-hook ()
   "My configuration hook for 'org-mode'."
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
   (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
   (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
-  (setq fill-column 85)
-  (setq whitespace-line-column 86))
+  (dotfiles--set-fill-column 85))
 
 (setq org-roam-capture-templates
       '(("d" "default" plain "%?" :target
@@ -1892,6 +1897,11 @@ with a prefix ARG."
 ;;; `rust-mode'
 (require 'rust-mode)
 
+(defun dotfiles--rust-set-fill-column ()
+  "Set the correct `fill-column' for `rust-mode'."
+  (dotfiles--set-fill-column 100))
+
+(add-hook 'rust-mode-hook #'dotfiles--rust-set-fill-column)
 (add-hook 'rust-mode-hook #'dotfiles--disable-indent-tabs-mode)
 
 ;;; `rustic'
