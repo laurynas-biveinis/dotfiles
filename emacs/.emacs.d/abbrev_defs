@@ -5,3 +5,9 @@
     ("tdl" "  // TODO(laurynas): " nil :count 1)
    ))
 
+(define-abbrev-table 'rustic-mode-abbrev-table
+  '(
+    ("fml" "// FIXME(laurynas): " nil :count 1)
+    ("tdl" "// TODO(laurynas): " nil :count 1)
+   ))
+
