@@ -12044,10 +12044,10 @@ Otherwise behave as if called interactively.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20221230.1032/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20221230.1032/fancy-compilation-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230109.536/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230109.536/fancy-compilation-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20221230.1032/fancy-compilation-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230109.536/fancy-compilation-autoloads.el") (car load-path))))
 
 
 
@@ -12064,20 +12064,18 @@ or call the function `fancy-compilation-mode'.")
 (autoload 'fancy-compilation-mode "fancy-compilation" "\
 Enable enhanced compilation.
 
-This is a minor mode.  If called interactively, toggle the
-`Fancy-Compilation mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
+This is a minor mode.  If called interactively, toggle the `Fancy-Compilation
+mode' mode.  If the prefix argument is positive, enable the mode, and if it is
+zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the mode if ARG
+is nil, omitted, or is a positive number.  Disable the mode if ARG is a negative
+number.
 
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='fancy-compilation-mode)'.
+To check whether the minor mode is enabled in the current buffer, evaluate
+`(default-value \\='fancy-compilation-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is disabled.
 
 \(fn &optional ARG)" t nil)
 

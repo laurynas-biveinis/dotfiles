@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-fancy-compilation
-;; Package-Version: 20221230.1032
-;; Package-Commit: cad90d4e1a2f357a55094b2ba6669b40693a3709
+;; Package-Version: 20230109.536
+;; Package-Commit: 889e77c899cbf28673915b7b0161d45734bfdcb7
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -19,7 +19,7 @@
 
 ;;; Usage
 
-;; (fancy-compilation-mode) ;; Activate for future compilation.
+;; (fancy-compilation-mode) ; Activate for future compilation.
 
 
 ;;; Code:
@@ -237,7 +237,7 @@ Use this to set or override defaults."
              ((window-live-p fancy-compilation--window)
               (unless (zerop (window-hscroll))
                 (set-window-hscroll fancy-compilation--window 0)))
-             (t ;; Don't further check this window.
+             (t ; Don't further check this window.
               (setq fancy-compilation--window nil)))))))))
 
 
@@ -280,6 +280,7 @@ Use this to set or override defaults."
 
 (provide 'fancy-compilation)
 ;; Local Variables:
+;; fill-column: 99
 ;; indent-tabs-mode: nil
 ;; End:
 ;;; fancy-compilation.el ends here
