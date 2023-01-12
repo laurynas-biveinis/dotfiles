@@ -4,12 +4,15 @@
 	email = laurynas.biveinis@gmail.com
 	signingkey = 790127ED9B02C534
 [core]
-        excludesfile = ~/.gitignore
+	excludesfile = ~/.gitignore
+	attributesfile = ~/.gitattributes
 [magit]
 	hideCampaign = true
 [diff]
 	colorMoved = default
 	renamelimit = 100000
+[diff "elisp"]
+	xfuncname="^\\((((def\\S+)|use-package)\\s+\\S+)"
 [fetch]
 	prune = true
 	jobs = 0
