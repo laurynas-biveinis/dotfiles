@@ -19,11 +19,13 @@
 	 ("Leo Liu" . "sdl.web@gmail.com"))
 	(:commit . "90c90a80322aa9f26ce88f2f24a224afc4c994b8"))])
  (ada-mode .
-	   [(7 3 1)
+	   [(8 0 3)
 	    ((uniquify-files
 	      (1 0 1))
 	     (wisi
-	      (4 0 0))
+	      (4 1 1))
+	     (gnat-compiler
+	      (1 0 0))
 	     (emacs
 	      (25 3)))
 	    "major-mode for editing Ada sources" tar
@@ -32,7 +34,7 @@
 	     (:maintainer "Stephen Leake" . "stephen_leake@stephe-leake.org")
 	     (:authors
 	      ("Stephen Leake" . "stephen_leake@stephe-leake.org"))
-	     (:commit . "64acce8bda65d3409166a63be26fd21100ef54ce"))])
+	     (:commit . "6daaf0ccbe572ef1a9e7355d5c4bbf86a9e4ae75"))])
  (ada-ref-man .
 	      [(2020 1)
 	       nil "Ada Reference Manual 2012" tar
@@ -2069,12 +2071,13 @@
 	   ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
 	  (:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca"))])
  (nadvice .
-	  [(0 3)
-	   nil "Forward compatibility for Emacs-24.4's nadvice" single
-	   ((:url . "http://elpa.gnu.org/packages/nadvice.html")
+	  [(0 4)
+	   nil "Forward compatibility for Emacs-24.4's nadvice" tar
+	   ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
 	    (:authors
 	     ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
-	    (:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca"))])
+	    (:url . "https://elpa.gnu.org/packages/nadvice.html")
+	    (:commit . "d19e9ae649374a0f2fab1baa045ed192e0851750"))])
  (nameless .
 	   [(1 0 2)
 	    ((emacs
@@ -2252,7 +2255,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "847694e78c12d903d5e3f6cb365a5d3b984db537"))])
  (org .
-      [(9 6)
+      [(9 6 1)
        ((emacs
 	 (25 1)))
        "Outline-based notes management and organizer" tar
@@ -2261,7 +2264,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "b3da427ebb1c401355aa4cba9baeaa92f87ccb2f"))])
+	(:commit . "630f86dfc42472aafd9a4f305e1965cbe92b2891"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
