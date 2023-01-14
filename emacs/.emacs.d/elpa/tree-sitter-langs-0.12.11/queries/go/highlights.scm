@@ -1,6 +1,10 @@
 ; Function calls
 
 (call_expression
+  function: (identifier) @function.builtin
+  (.match? @function.builtin "^(append|cap|close|complex|copy|delete|imag|len|make|new|panic|print|println|real|recover)$"))
+
+(call_expression
   function: (identifier) @function.call)
 
 (call_expression
@@ -19,11 +23,8 @@
 
 (type_identifier) @type
 (field_identifier) @property
-(short_var_declaration left: (expression_list (identifier) @variable))
-(var_declaration (var_spec name: (identifier) @variable))
 (parameter_declaration (identifier) @variable.parameter)
-(const_declaration (const_spec name: (identifier) @variable))
-(range_clause left: (expression_list (identifier) @variable))
+(identifier) @variable
 
 ; Operators
 
