@@ -177,6 +177,18 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
+(compat-defmacro with-memoization (place &rest code) ;; <OK>
+  "Return the value of CODE and stash it in PLACE.
+If PLACE's value is non-nil, then don't bother evaluating CODE
+and return the value found in PLACE instead."
+  (declare (indent 1))
+  (gv-letplace (getter setter) place
+    `(or ,getter
+         ,(macroexp-let2 nil val (macroexp-progn code)
+            `(progn
+               ,(funcall setter val)
+               ,val)))))
+
 (compat-defalias string-split split-string) ;; <OK>
 
 (compat-defun function-alias-p (func &optional noerror) ;; <OK>
@@ -314,24 +326,23 @@ this defaults to the current buffer."
           (put-text-property sub-start sub-end 'display disp object)))
       (setq sub-start sub-end))))
 
-(compat-defmacro while-let (spec &rest body) ;; <UNTESTED>
+(compat-defmacro while-let (spec &rest body) ;; <OK>
   "Bind variables according to SPEC and conditionally evaluate BODY.
 Evaluate each binding in turn, stopping if a binding value is nil.
 If all bindings are non-nil, eval BODY and repeat.
 
 The variable list SPEC is the same as in `if-let'."
   (declare (indent 1) (debug if-let))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var spec)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(if (cdr var) (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(while (let* ,(nreverse list)
-              (and ,(caar list)
-                   (progn ,(macroexp-progn (or body '(t))) t))))))
+  (when (and (<= (length spec) 2) (not (listp (car spec))))
+    ;; Adjust the single binding case
+    (setq spec (list spec)))
+  (let ((done (gensym "done")))
+    `(catch ',done
+       (while t
+         (if-let* ,spec
+             (progn
+               ,@body)
+           (throw ',done nil))))))
 
 ;;;; Defined in files.el
 
@@ -479,7 +490,12 @@ which is
                (throw 'exit nil)))
            t))))))
 
-(compat-defun key-parse (keys) ;; <UNTESTED>
+(compat-defun keymap--check (key) ;; <OK>
+  "Signal an error if KEY doesn't have a valid syntax."
+  (unless (key-valid-p key)
+    (error "%S is not a valid key definition; see `key-valid-p'" key)))
+
+(compat-defun key-parse (keys) ;; <OK>
   "Convert KEYS to the internal Emacs key representation.
 See `kbd' for a descripion of KEYS."
   (declare (pure t) (side-effect-free t))
@@ -571,7 +587,7 @@ See `kbd' for a descripion of KEYS."
               (setq res (vconcat res key))))))
       res)))
 
-(compat-defun keymap-set (keymap key definition) ;; <UNTESTED>
+(compat-defun keymap-set (keymap key definition) ;; <OK>
   "Set KEY to DEFINITION in KEYMAP.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -590,13 +606,9 @@ DEFINITION is anything that can be a key's definition:
  or a cons (MAP . CHAR), meaning use definition of CHAR in keymap MAP,
  or an extended menu item definition.
  (See info node `(elisp)Extended Menu Items'.)"
-  (unless (key-valid-p key)
-    (error "%S is not a valid key definition; see `key-valid-p'" key))
-  ;; If we're binding this key to another key, then parse that other
-  ;; key, too.
+  (keymap--check key)
   (when (stringp definition)
-    (unless (key-valid-p key)
-      (error "%S is not a valid key definition; see `key-valid-p'" key))
+    (keymap--check definition)
     (setq definition (key-parse definition)))
   (define-key keymap (key-parse key) definition))
 
@@ -609,11 +621,10 @@ makes a difference when there's a parent keymap.  When unsetting
 a key in a child map, it will still shadow the same key in the
 parent keymap.  Removing the binding will allow the key in the
 parent keymap to be used."
-  (unless (key-valid-p key)
-    (error "%S is not a valid key definition; see `key-valid-p'" key))
+  (keymap--check key)
   (compat--define-key keymap (key-parse key) nil remove))
 
-(compat-defun keymap-global-set (key command) ;; <UNTESTED>
+(compat-defun keymap-global-set (key command) ;; <OK>
   "Give KEY a global binding as COMMAND.
 COMMAND is the command definition to use; usually it is
 a symbol naming an interactively-callable function.
@@ -627,7 +638,7 @@ that you make with this function.
 NOTE: The compatibility version is not a command."
   (keymap-set (current-global-map) key command))
 
-(compat-defun keymap-local-set (key command) ;; <UNTESTED>
+(compat-defun keymap-local-set (key command) ;; <OK>
   "Give KEY a local binding as COMMAND.
 COMMAND is the command definition to use; usually it is
 a symbol naming an interactively-callable function.
@@ -709,15 +720,13 @@ Bindings are always added before any inherited map.
 
 The order of bindings in a keymap matters only when it is used as
 a menu, so this function is not useful for non-menu keymaps."
-  (unless (key-valid-p key)
-    (error "%S is not a valid key definition; see `key-valid-p'" key))
+  (keymap--check key)
   (when after
-    (unless (key-valid-p key)
-      (error "%S is not a valid key definition; see `key-valid-p'" key)))
+    (keymap--check after))
   (define-key-after keymap (key-parse key) definition
     (and after (key-parse after))))
 
-(compat-defun keymap-lookup ;; <UNTESTED>
+(compat-defun keymap-lookup ;; <OK>
     (keymap key &optional accept-default no-remap position)
   "Return the binding for command KEY.
 KEY is a string that satisfies `key-valid-p'.
@@ -750,8 +759,7 @@ position as returned by `event-start' and `event-end', and the lookup
 occurs in the keymaps associated with it instead of KEY.  It can also
 be a number or marker, in which case the keymap properties at the
 specified buffer position instead of point are used."
-  (unless (key-valid-p key)
-    (error "%S is not a valid key definition; see `key-valid-p'" key))
+  (keymap--check key)
   (when (and keymap position)
     (error "Can't pass in both keymap and position"))
   (if keymap
@@ -762,7 +770,7 @@ specified buffer position instead of point are used."
           value))
     (key-binding (kbd key) accept-default no-remap position)))
 
-(compat-defun keymap-local-lookup (keys &optional accept-default) ;; <UNTESTED>
+(compat-defun keymap-local-lookup (keys &optional accept-default) ;; <OK>
   "Return the binding for command KEYS in current local keymap only.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -771,11 +779,10 @@ The binding is probably a symbol with a function definition.
 If optional argument ACCEPT-DEFAULT is non-nil, recognize default
 bindings; see the description of `keymap-lookup' for more details
 about this."
-  (let ((map (current-local-map)))
-    (when map
-      (keymap-lookup map keys accept-default))))
+  (when-let ((map (current-local-map)))
+    (keymap-lookup map keys accept-default)))
 
-(compat-defun keymap-global-lookup (keys &optional accept-default _message) ;; <UNTESTED>
+(compat-defun keymap-global-lookup (keys &optional accept-default _message) ;; <OK>
   "Return the binding for command KEYS in current global keymap only.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -952,6 +959,51 @@ command exists in this specific map, but it doesn't have the
              ,defvar-form
              ,@(nreverse props))
         defvar-form))))
+
+;;;; Defined in button.el
+
+(compat-defun button--properties (callback data help-echo) ;; <OK>
+  "Helper function."
+  (list 'font-lock-face 'button
+        'mouse-face 'highlight
+        'help-echo help-echo
+        'button t
+        'follow-link t
+        'category t
+        'button-data data
+        'keymap button-map
+        'action callback))
+
+(compat-defun buttonize (string callback &optional data help-echo) ;; <OK>
+  "Make STRING into a button and return it.
+When clicked, CALLBACK will be called with the DATA as the
+function argument.  If DATA isn't present (or is nil), the button
+itself will be used instead as the function argument.
+
+If HELP-ECHO, use that as the `help-echo' property.
+
+Also see `buttonize-region'."
+  (let ((string
+         (apply #'propertize string
+                (button--properties callback data help-echo))))
+    ;; Add the face to the end so that it can be overridden.
+    (add-face-text-property 0 (length string) 'button t string)
+    string))
+
+(compat-defun buttonize-region (start end callback &optional data help-echo) ;; <OK>
+  "Make the region between START and END into a button.
+When clicked, CALLBACK will be called with the DATA as the
+function argument.  If DATA isn't present (or is nil), the button
+itself will be used instead as the function argument.
+
+If HELP-ECHO, use that as the `help-echo' property.
+
+Also see `buttonize'."
+  (add-text-properties start end (button--properties callback data help-echo))
+  (add-face-text-property start end 'button t))
+
+;; Obsolete Alias since 29
+(compat-defalias button-buttonize buttonize :obsolete t)
 
 (provide 'compat-29)
 ;;; compat-29.el ends here

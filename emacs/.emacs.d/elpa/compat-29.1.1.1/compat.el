@@ -4,7 +4,7 @@
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>, Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>, Compat Development <~pkal/compat-devel@lists.sr.ht>
-;; Version: 29.1.1.0
+;; Version: 29.1.1.1
 ;; URL: https://github.com/emacs-compat/compat
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: lisp
@@ -51,7 +51,12 @@
   "Return compatibility function symbol for FUN.
 
 If the Emacs version provides a sufficiently recent version of
-FUN, the symbol FUN is returned itself."
+FUN, the symbol FUN is returned itself. Otherwise the macro
+returns the symbol of a compatibility function which supports the
+behavior and calling convention of the current stable Emacs
+version. For example Compat 29.1 will provide compatibility
+functions which implement the behavior and calling convention of
+Emacs 29.1."
   (let ((compat (intern (format "compat--%s" fun))))
     `#',(if (fboundp compat) compat fun)))
 

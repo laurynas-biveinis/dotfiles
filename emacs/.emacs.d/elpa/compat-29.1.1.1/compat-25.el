@@ -49,10 +49,12 @@ usage: (bool-vector &rest OBJECTS)"
    ((listp seq)
     (sort seq predicate))
    ((vectorp seq)
-    (let ((cseq (sort (append seq nil) predicate)))
-      (dotimes (i (length cseq))
-        (setf (aref seq i) (nth i cseq)))
-      (apply #'vector cseq)))
+    (let* ((list (sort (append seq nil) predicate))
+           (p list) (i 0))
+      (while p
+        (aset seq i (car p))
+        (setq i (1+ i) p (cdr p)))
+      (apply #'vector list)))
    ((signal 'wrong-type-argument 'list-or-vector-p))))
 
 ;;;; Defined in editfns.c
@@ -118,8 +120,7 @@ with an old syntax that accepted only one binding."
            (debug ([&or (symbolp form)
                         (&rest [&or symbolp (symbolp form) (form)])]
                    body)))
-  (when (and (<= (length spec) 2)
-             (not (listp (car spec))))
+  (when (and (<= (length spec) 2) (not (listp (car spec))))
     ;; Adjust the single binding case
     (setq spec (list spec)))
   (let ((empty (make-symbol "s"))
@@ -139,24 +140,8 @@ Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
 
 The variable list SPEC is the same as in `if-let'."
-  (declare (indent 1)
-           (debug ([&or (symbolp form)
-                        (&rest [&or symbolp (symbolp form) (form)])]
-                   body)))
-  (when (and (<= (length spec) 2)
-             (not (listp (car spec))))
-    ;; Adjust the single binding case
-    (setq spec (list spec)))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var spec)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(if (cdr var) (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* ,(nreverse list)
-       (if ,(caar list) ,(macroexp-progn body)))))
+  (declare (indent 1) (debug if-let))
+  (list 'if-let spec (macroexp-progn body)))
 
 ;;;; Defined in subr-x.el
 
@@ -209,7 +194,6 @@ threading."
 
 (compat-defun macroexpand-1 (form &optional environment) ;; <OK>
   "Perform (at most) one step of macro expansion."
-  :feature macroexp
   (cond
    ((consp form)
     (let* ((head (car form))

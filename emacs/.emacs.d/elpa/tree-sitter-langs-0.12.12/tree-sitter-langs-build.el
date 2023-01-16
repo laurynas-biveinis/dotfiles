@@ -226,7 +226,7 @@ latest commit."
 ;; ---------------------------------------------------------------------------
 ;;; Building language grammars.
 
-(defconst tree-sitter-langs--bundle-version "0.12.11"
+(defconst tree-sitter-langs--bundle-version "0.12.12"
   "Version of the grammar bundle.
 This should be bumped whenever a language submodule is updated, which should be
 infrequent (grammar-only changes). It is different from the version of
@@ -245,7 +245,7 @@ infrequent (grammar-only changes). It is different from the version of
   "List of suffixes for shared libraries that define tree-sitter languages.")
 
 (defconst tree-sitter-langs--langs-with-deps
-  '(cpp typescript)
+  '(cpp typescript toml)
   "Languages that depend on another, thus requiring 'npm install'.")
 
 (defun tree-sitter-langs--bundle-file (&optional ext version os)

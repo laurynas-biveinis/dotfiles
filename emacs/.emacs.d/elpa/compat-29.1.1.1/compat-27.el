@@ -121,13 +121,12 @@ NOTE: This function is not as accurate as the actual `time-equal-p'."
    ((eq t1 t2))
    ((and (consp t1) (consp t2))
     (equal t1 t2))
-   ((let ((now (current-time)))
-      ;; Due to inaccuracies and the relatively slow evaluating of
-      ;; Emacs Lisp compared to C, we allow for slight inaccuracies
-      ;; (less than a millisecond) when comparing time values.
-      (< (abs (- (float-time (or t1 now))
-                 (float-time (or t2 now))))
-         1e-5)))))
+   (t
+    ;; Due to inaccuracies and the relatively slow evaluating of
+    ;; Emacs Lisp compared to C, we allow for slight inaccuracies
+    ;; (less than a millisecond) when comparing time values.
+    (< (abs (- (float-time t1) (float-time t2)))
+       (if (and t1 t2) 1e-6 1e-5)))))
 
 ;;;; Defined in fileio.c
 
@@ -230,7 +229,7 @@ print the reporter message followed by the word \"done\".
            (,count 0)
            (,list ,(cadr spec)))
        (when (stringp ,prep)
-         (setq ,prep (make-progress-reporter ,prep 0 (1- (length ,list)))))
+         (setq ,prep (make-progress-reporter ,prep 0 (length ,list))))
        (dolist (,(car spec) ,list)
          ,@body
          (progress-reporter-update ,prep (setq ,count (1+ ,count))))
@@ -509,7 +508,6 @@ The return value is a string (or nil in case we can’t find it)."
             (insert-file-contents mainfile)
             (or (lm-header "package-version")
                 (lm-header "version")))))))))
-
 
 ;;;; Defined in dired.el
 
