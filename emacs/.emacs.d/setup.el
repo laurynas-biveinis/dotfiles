@@ -228,8 +228,12 @@
 (defconst dotfiles--m1star-laptop-geometry
   (make-dotfiles--frame-geometry :top 1 :left 1 :height 67 :width 242))
 
+(defconst dotfiles--m1star-external-screen '(3008 . 1692))
+(defconst dotfiles--m1star-external-geometry
+  (make-dotfiles--frame-geometry :top 0 :left 3008 :height 117 :width 427))
+
 (defconst dotfiles--frame-geometries-to-ignore
-  [(3600 . 1080) (5520 . 1080) (4688 . 1692) (3600 . 1692) (3008 . 1692)]
+  [(3600 . 1080) (5520 . 1080) (4688 . 1692) (3600 . 1692)]
   "Possible interim screen resolutions while docking/undocking to be ignored.")
 
 (defun dotfiles--diagnose-unknown-display-geometry (display-geometry)
@@ -251,6 +255,14 @@
          (dotfiles--add-frame-geometry-to-initial-alist
           dotfiles--m1star-laptop-geometry)
          (two-windows))
+        ((equal display-geometry dotfiles--m1star-external-screen)
+         ;; m1star with external screens: initial frame maximized in the middle
+         ;; screen
+         (dotfiles--add-frame-geometry-to-initial-alist
+          dotfiles--m1star-external-geometry)
+         (add-to-list 'initial-frame-alist '(fullscreen . fullboth))
+         (add-to-list 'initial-frame-alist '(fullscreen-restore . maximized))
+         (eight-windows))
         ((equal display-geometry dotfiles--darkstar-external-screen)
          ;; darkstar with external screens: initial frame maximized in the
          ;; middle screen
@@ -1618,6 +1630,10 @@ CANDIDATES is the list of candidates."
            (two-windows))
           ((equal new-display-geometry dotfiles--darkstar-external-screen)
            (dotfiles--move-to-frame-geometry dotfiles--darkstar-external-geometry)
+           (set-frame-parameter nil 'fullscreen 'fullboth)
+           (eight-windows))
+          ((equal new-display-geometry dotfiles--m1star-external-screen)
+           (dotfiles--move-to-frame-geometry dotfiles--m1star-external-geometry)
            (set-frame-parameter nil 'fullscreen 'fullboth)
            (eight-windows))
           ((seq-position dotfiles--frame-geometries-to-ignore
