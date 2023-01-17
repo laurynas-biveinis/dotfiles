@@ -27,34 +27,30 @@
 
 ;;;; Defined in fns.c
 
-(compat-defun proper-list-p (object) ;; <OK>
+(compat-defun proper-list-p (object) ;; <compat-tests:proper-list-p>
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
-  :min-version "26" ;; Errors on 26.1 and newer
-  (and (listp object) (ignore-errors (length object))))
+  (if (eval-when-compile (< emacs-major-version 26))
+      ;; On older Emacs than 26.1 use Tortoise and Hare algorithm
+      (when (listp object)
+        (catch 'cycle
+          (let ((hare object) (tortoise object)
+                (max 2) (q 2))
+            (while (consp hare)
+              (setq hare (cdr hare))
+              (when (and (or (/= 0 (setq q (1- q)))
+                             (ignore
+                              (setq max (ash max 1)
+                                    q max
+                                    tortoise hare)))
+                         (eq hare tortoise))
+                (throw 'cycle nil)))
+            (and (null hare) (length object)))))
+    ;; Errors on 26.1 and newer
+    (and (listp object) (ignore-errors (length object)))))
 
-(compat-defun proper-list-p (object) ;; <OK>
-  "Return OBJECT's length if it is a proper list, nil otherwise.
-A proper list is neither circular nor dotted (i.e., its last cdr
-is nil)."
-  :max-version "26" ;; On older Emacs than 26.1 use Tortoise and Hare algorithm
-  (when (listp object)
-    (catch 'cycle
-      (let ((hare object) (tortoise object)
-            (max 2) (q 2))
-        (while (consp hare)
-          (setq hare (cdr hare))
-          (when (and (or (/= 0 (setq q (1- q)))
-                         (ignore
-                          (setq max (ash max 1)
-                                q max
-                                tortoise hare)))
-                     (eq hare tortoise))
-            (throw 'cycle nil)))
-        (and (null hare) (length object))))))
-
-(compat-defun string-distance (string1 string2 &optional bytecompare) ;; <OK>
+(compat-defun string-distance (string1 string2 &optional bytecompare) ;; <compat-tests:string-distance>
   "Return Levenshtein distance between STRING1 and STRING2.
 The distance is the number of deletions, insertions, and substitutions
 required to transform STRING1 into STRING2.
@@ -88,7 +84,7 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in window.c
 
-(compat-defun recenter (&optional arg redisplay) ;; <OK>
+(compat-defun recenter (&optional arg redisplay) ;; <compat-tests:recenter>
   "Handle optional argument REDISPLAY."
   :explicit t
   (recenter arg)
@@ -97,7 +93,7 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in keymap.c
 
-(compat-defun lookup-key (keymap key &optional accept-default) ;; <OK>
+(compat-defun lookup-key (keymap key &optional accept-default) ;; <compat-tests:lookup-key>
   "Allow for KEYMAP to be a list of keymaps."
   :explicit t
   (cond
@@ -112,7 +108,7 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in timefns.c
 
-(compat-defun time-equal-p (t1 t2) ;; <OK>
+(compat-defun time-equal-p (t1 t2) ;; <compat-tests:time-equal-p>
   "Return non-nil if time value T1 is equal to time value T2.
 A nil value for either argument stands for the current time.
 
@@ -130,7 +126,7 @@ NOTE: This function is not as accurate as the actual `time-equal-p'."
 
 ;;;; Defined in fileio.c
 
-(compat-defun file-name-absolute-p (filename) ;; <OK>
+(compat-defun file-name-absolute-p (filename) ;; <compat-tests:file-name-absolute-p>
   "Return t if FILENAME is an absolute file name.
 On Unix, absolute file names start with `/'.  In Emacs, an absolute
 file name can also start with an initial `~' or `~USER' component,
@@ -164,7 +160,10 @@ where USER is a valid login name."
 
 ;;;; Defined in subr.el
 
-(compat-defmacro setq-local (&rest pairs) ;; <OK>
+(compat-defalias fixnump integerp) ;; <compat-tests:fixnump>
+(compat-defalias bignump ignore) ;; <compat-tests:bignump>
+
+(compat-defmacro setq-local (&rest pairs) ;; <compat-tests:setq-local>
   "Handle multiple assignments."
   :explicit t
   (unless (zerop (mod (length pairs) 2))
@@ -179,7 +178,7 @@ where USER is a valid login name."
               body)))
     (cons 'progn (nreverse body))))
 
-(compat-defun provided-mode-derived-p (mode &rest modes) ;; <OK>
+(compat-defun provided-mode-derived-p (mode &rest modes) ;; <compat-tests:derived-mode-p>
   "Non-nil if MODE is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards.
 If you just want to check `major-mode', use `derived-mode-p'."
@@ -195,12 +194,12 @@ If you just want to check `major-mode', use `derived-mode-p'."
          (setq mode (if (and parentfn (symbolp parentfn)) parentfn parent)))))
   mode)
 
-(compat-defun derived-mode-p (&rest modes) ;; <OK>
+(compat-defun derived-mode-p (&rest modes) ;; <compat-tests:derived-mode-p>
   "Non-nil if the current major mode is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards."
   (apply #'provided-mode-derived-p major-mode modes))
 
-(compat-defmacro ignore-error (condition &rest body) ;; <OK>
+(compat-defmacro ignore-error (condition &rest body) ;; <compat-tests:ignore-error>
   "Execute BODY; if the error CONDITION occurs, return nil.
 Otherwise, return result of last form in BODY.
 
@@ -208,7 +207,7 @@ CONDITION can also be a list of error conditions."
   (declare (debug t) (indent 1))
   `(condition-case nil (progn ,@body) (,condition nil)))
 
-(compat-defmacro dolist-with-progress-reporter (spec reporter-or-message &rest body) ;; <UNTESTED>
+(compat-defmacro dolist-with-progress-reporter (spec reporter-or-message &rest body) ;; <compat-tests:dolist-with-progress-reporter>
   "Loop over a list and report progress in the echo area.
 Evaluate BODY with VAR bound to each car from LIST, in turn.
 Then evaluate RESULT to get return value, default nil.
@@ -236,7 +235,7 @@ print the reporter message followed by the word \"done\".
        (progress-reporter-done ,prep)
        (or ,@(cdr (cdr spec)) nil))))
 
-(compat-defun flatten-tree (tree) ;; <OK>
+(compat-defun flatten-tree (tree) ;; <compat-tests:flatten-tree>
   "Return a \"flattened\" copy of TREE.
 In other words, return a list of the non-nil terminal nodes, or
 leaves, of the tree of cons cells rooted at TREE.  Leaves in the
@@ -254,7 +253,7 @@ returned list are in the same order as in TREE.
     (if tree (push tree elems))
     (nreverse elems)))
 
-(compat-defun xor (cond1 cond2) ;; <OK>
+(compat-defun xor (cond1 cond2) ;; <compat-tests:xor>
   "Return the boolean exclusive-or of COND1 and COND2.
 If only one of the arguments is non-nil, return it; otherwise
 return nil."
@@ -262,11 +261,11 @@ return nil."
   (cond ((not cond1) cond2)
         ((not cond2) cond1)))
 
-(compat-defvar regexp-unmatchable "\\`a\\`" ;; <OK>
+(compat-defvar regexp-unmatchable "\\`a\\`" ;; <compat-tests:regexp-unmatchable>
   "Standard regexp guaranteed not to match any string at all."
   :constant t)
 
-(compat-defun assoc-delete-all (key alist &optional test) ;; <OK>
+(compat-defun assoc-delete-all (key alist &optional test) ;; <compat-tests:assoc-delete-all>
   "Handle optional argument TEST."
   :explicit t
   (unless test (setq test #'equal))
@@ -283,58 +282,79 @@ return nil."
 
 ;;;; Defined in simple.el
 
-(compat-defun decoded-time-second (time) ;; <OK>
+(compat-defun decoded-time-second (time) ;; <compat-tests:decoded-time-accessors>
   "The seconds in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 60 (inclusive).  (60 is a leap
 second, which only some operating systems support.)"
   (nth 0 time))
 
-(compat-defun decoded-time-minute (time) ;; <OK>
+(compat-defun decoded-time-minute (time) ;; <compat-tests:decoded-time-accessors>
   "The minutes in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 59 (inclusive)."
   (nth 1 time))
 
-(compat-defun decoded-time-hour (time) ;; <OK>
+(compat-defun decoded-time-hour (time) ;; <compat-tests:decoded-time-accessors>
   "The hours in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 23 (inclusive)."
   (nth 2 time))
 
-(compat-defun decoded-time-day (time) ;; <OK>
+(compat-defun decoded-time-day (time) ;; <compat-tests:decoded-time-accessors>
   "The day-of-the-month in TIME, which is a value returned by `decode-time'.
 This is an integer between 1 and 31 (inclusive)."
   (nth 3 time))
 
-(compat-defun decoded-time-month (time) ;; <OK>
+(compat-defun decoded-time-month (time) ;; <compat-tests:decoded-time-accessors>
   "The month in TIME, which is a value returned by `decode-time'.
 This is an integer between 1 and 12 (inclusive).  January is 1."
   (nth 4 time))
 
-(compat-defun decoded-time-year (time) ;; <OK>
+(compat-defun decoded-time-year (time) ;; <compat-tests:decoded-time-accessors>
   "The year in TIME, which is a value returned by `decode-time'.
 This is a four digit integer."
   (nth 5 time))
 
-(compat-defun decoded-time-weekday (time) ;; <OK>
+(compat-defun decoded-time-weekday (time) ;; <compat-tests:decoded-time-accessors>
   "The day-of-the-week in TIME, which is a value returned by `decode-time'.
 This is a number between 0 and 6, and 0 is Sunday."
   (nth 6 time))
 
-(compat-defun decoded-time-dst (time) ;; <OK>
+(compat-defun decoded-time-dst (time) ;; <compat-tests:decoded-time-accessors>
   "The daylight saving time in TIME, which is a value returned by `decode-time'.
 This is t if daylight saving time is in effect, and nil if not."
   (nth 7 time))
 
-(compat-defun decoded-time-zone (time) ;; <OK>
+(compat-defun decoded-time-zone (time) ;; <compat-tests:decoded-time-accessors>
   "The time zone in TIME, which is a value returned by `decode-time'.
 This is an integer indicating the UTC offset in seconds, i.e.,
 the number of seconds east of Greenwich."
   (nth 8 time))
 
-;; TODO define gv-setters for decoded-time-*
+(when (eval-when-compile (< emacs-major-version 27))
+  (gv-define-setter decoded-time-second (v x)  `(setcar (nthcdr 0 ,x) ,v)) ;; <compat-tests:decoded-time-accessors>
+  (gv-define-setter decoded-time-minute (v x)  `(setcar (nthcdr 1 ,x) ,v))
+  (gv-define-setter decoded-time-hour (v x)    `(setcar (nthcdr 2 ,x) ,v))
+  (gv-define-setter decoded-time-day (v x)     `(setcar (nthcdr 3 ,x) ,v))
+  (gv-define-setter decoded-time-month (v x)   `(setcar (nthcdr 4 ,x) ,v))
+  (gv-define-setter decoded-time-year (v x)    `(setcar (nthcdr 5 ,x) ,v))
+  (gv-define-setter decoded-time-weekday (v x) `(setcar (nthcdr 6 ,x) ,v))
+  (gv-define-setter decoded-time-dst (v x)     `(setcar (nthcdr 7 ,x) ,v))
+  (gv-define-setter decoded-time-zone (v x)    `(setcar (nthcdr 8 ,x) ,v)))
+
+;;;; Defined in minibuffer.el
+
+(compat-defmacro with-minibuffer-selected-window (&rest body) ;; <compat-tests:with-minibuffer-selected-window>
+  "Execute the forms in BODY from the minibuffer in its original window.
+When used in a minibuffer window, select the window selected just before
+the minibuffer was activated, and execute the forms."
+  (declare (indent 0) (debug t))
+  `(let ((window (minibuffer-selected-window)))
+     (when window
+       (with-selected-window window
+         ,@body))))
 
 ;;;; Defined in image.el
 
-(compat-defun image--set-property (image property value) ;; <OK>
+(compat-defun image--set-property (image property value) ;; <compat-tests:image-property>
   "Set PROPERTY in IMAGE to VALUE.
 Internal use only."
   :explicit t
@@ -347,19 +367,19 @@ Internal use only."
     (setcdr image (plist-put (cdr image) property value)))
   value)
 
-(if (eval-when-compile (version< emacs-version "26.1"))
+(if (eval-when-compile (< emacs-major-version 26))
     (with-eval-after-load 'image
-      (gv-define-simple-setter image-property image--set-property))
+      (gv-define-simple-setter image-property image--set-property)) ;; <compat-tests:image-property>
   ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
   ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
   ;; override the gv expander until Emacs 27.1.
-  (when (eval-when-compile (version< emacs-version "27.1"))
+  (when (eval-when-compile (< emacs-major-version 27))
     (with-eval-after-load 'image
-      (gv-define-simple-setter image-property compat--image--set-property))))
+      (gv-define-simple-setter image-property compat--image--set-property)))) ;; <compat-tests:image-property>
 
 ;;;; Defined in files.el
 
-(compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <OK>
+(compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <compat-tests:file-size-human-readable>
   "Handle the optional arguments SPACE and UNIT.
 
 Optional third argument SPACE is a string put between the number and unit.
@@ -393,39 +413,21 @@ in all cases, since that is the standard symbol for byte."
               (if (string= prefixed-unit "") "" (or space ""))
               prefixed-unit))))
 
-(compat-defun exec-path () ;; <UNTESTED>
+(compat-defun exec-path () ;; <compat-tests:exec-path>
   "Return list of directories to search programs to run in remote subprocesses.
 The remote host is identified by `default-directory'.  For remote
 hosts that do not support subprocesses, this returns nil.
 If `default-directory' is a local directory, this function returns
 the value of the variable `exec-path'."
-  (cond
-   ((let ((handler (find-file-name-handler default-directory 'exec-path)))
-      ;; FIXME: The handler was added in 27.1, and this compatibility
-      ;; function only applies to versions of Emacs before that.
-      (when handler
-        (condition-case nil
-            (funcall handler 'exec-path)
-          (error nil)))))
-   ((file-remote-p default-directory)
-    ;; TODO: This is not completely portable, even if "sh" and
-    ;; "getconf" should be provided on every POSIX system, the chance
-    ;; of this not working are greater than zero.
-    ;;
-    ;; FIXME: This invokes a shell process every time exec-path is
-    ;; called.  It should instead be cached on a host-local basis.
-    (with-temp-buffer
-      (if (condition-case nil
-              (zerop (process-file "sh" nil t nil "-c" "getconf PATH"))
-            (file-missing t))
-          (list "/bin" "/usr/bin")
-        (let (path)
-          (while (re-search-forward "\\([^:]+?\\)[\n:]" nil t)
-            (push (match-string 1) path))
-          (nreverse path)))))
-   (exec-path)))
+  (let ((handler (find-file-name-handler default-directory 'exec-path)))
+    ;; NOTE: The handler may fail since it was added in 27.1.
+    (or (and handler (ignore-errors (funcall handler 'exec-path)))
+        (if (file-remote-p default-directory)
+            ;; FIXME: Just return some standard path on remote
+            '("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin")
+          exec-path))))
 
-(compat-defun executable-find (command &optional remote) ;; <UNTESTED>
+(compat-defun executable-find (command &optional remote) ;; <compat-tests:executable-find>
   "Search for COMMAND in `exec-path' and return the absolute file name.
 Return nil if COMMAND is not found anywhere in `exec-path'.  If
 REMOTE is non-nil, search on the remote host indicated by
@@ -442,7 +444,7 @@ REMOTE is non-nil, search on the remote host indicated by
         (when (stringp res) (file-local-name res)))
     (executable-find command)))
 
-(compat-defun make-empty-file (filename &optional parents) ;; <UNTESTED>
+(compat-defun make-empty-file (filename &optional parents) ;; <compat-tests:make-empty-file>
   "Create an empty file FILENAME.
 Optional arg PARENTS, if non-nil then creates parent dirs as needed."
   (when (and (file-exists-p filename) (null parents))
@@ -454,7 +456,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 
 ;;;; Defined in regexp-opt.el
 
-(compat-defun regexp-opt (strings &optional paren) ;; <OK>
+(compat-defun regexp-opt (strings &optional paren) ;; <compat-tests:regexp-opt>
   "Handle an empty list of STRINGS."
   :explicit t
   (if (null strings)
@@ -473,21 +475,19 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 ;;;; Defined in package.el
 
 (declare-function lm-header "lisp-mnt")
+(declare-function macroexp-file-name nil)
 
-(compat-defun package-get-version () ;; <UNTESTED>
+(compat-defun package-get-version () ;; <compat-tests:package-get-version>
   "Return the version number of the package in which this is used.
 Assumes it is used from an Elisp file placed inside the top-level directory
 of an installed ELPA package.
 The return value is a string (or nil in case we can’t find it)."
-  :feature package
+  ;; No :feature since the function is autoloaded.
   ;; In a sense, this is a lie, but it does just what we want: precompute
   ;; the version at compile time and hardcodes it into the .elc file!
   (declare (pure t))
   ;; Hack alert!
-  (let ((file
-         (or (and (boundp 'byte-compile-current-file) byte-compile-current-file)
-             load-file-name
-             buffer-file-name)))
+  (let ((file (or (macroexp-file-name) buffer-file-name)))
     (cond
      ((null file) nil)
      ;; Packages are normally installed into directories named "<pkg>-<vers>",
@@ -511,7 +511,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in dired.el
 
-(compat-defun dired-get-marked-files ;; <UNTESTED>
+(compat-defun dired-get-marked-files ;; <compat-tests:dired-get-marked-files>
     (&optional localp arg filter distinguish-one-marked error)
   "Handle optional argument ERROR."
   :feature dired
@@ -523,7 +523,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in time-date.el
 
-(compat-defun date-days-in-month (year month) ;; <OK>
+(compat-defun date-days-in-month (year month) ;; <compat-tests:date-days-in-month>
   "The number of days in MONTH in YEAR."
   :feature time-date
   (unless (and (numberp month)
@@ -540,54 +540,42 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in text-property-search.el
 
-(compat-defun make-prop-match (&rest attr) ;; <OK>
+(compat-defun make-prop-match (&rest attr) ;; <compat-tests:make-prop-match>
   "Constructor for objects of type ‘prop-match’."
-  :max-version "26"
   :feature text-property-search
-  (vector 'prop-match ;; Vector for older than 26.1
-          (plist-get attr :beginning)
-          (plist-get attr :end)
-          (plist-get attr :value)))
+  ;; Vector for older than 26.1, Record on newer Emacs.
+  (funcall (eval-when-compile (if (< emacs-major-version 26) 'vector 'record))
+           'prop-match
+           (plist-get attr :beginning)
+           (plist-get attr :end)
+           (plist-get attr :value)))
 
-(compat-defun make-prop-match (&rest attr) ;; <OK>
-  "Constructor for objects of type ‘prop-match’."
-  :min-version "26"
-  :feature text-property-search
-  (record 'prop-match ;; record was introduced with 26.1
-          (plist-get attr :beginning)
-          (plist-get attr :end)
-          (plist-get attr :value)))
-
-(compat-defun prop-match-p (match) ;; <OK>
+(compat-defun prop-match-p (match) ;; <compat-tests:make-prop-match>
   "Return non-nil if MATCH is a `prop-match' object."
-  :max-version "26" ;; Vector before 26.1
   :feature text-property-search
-  (and (vectorp match)
-       (> (length match) 0)
-       (eq (aref match 0) 'prop-match)))
+  ;; Vector for older than 26.1, Record on newer Emacs.
+  (if (eval-when-compile (< emacs-major-version 26))
+      (and (vectorp match)
+           (> (length match) 0)
+           (eq (aref match 0) 'prop-match))
+    (eq (type-of match) 'prop-match)))
 
-(compat-defun prop-match-p (match) ;; <OK>
-  "Return non-nil if MATCH is a `prop-match' object."
-  :min-version "26" ;; Record for 26.1 and newer
-  :feature text-property-search
-  (eq (type-of match) 'prop-match))
-
-(compat-defun prop-match-beginning (match) ;; <OK>
+(compat-defun prop-match-beginning (match) ;; <compat-tests:make-prop-match>
   "Retrieve the position where MATCH begins."
   :feature text-property-search
   (aref match 1))
 
-(compat-defun prop-match-end (match) ;; <OK>
+(compat-defun prop-match-end (match) ;; <compat-tests:make-prop-match>
   "Retrieve the position where MATCH ends."
   :feature text-property-search
   (aref match 2))
 
-(compat-defun prop-match-value (match) ;; <OK>
+(compat-defun prop-match-value (match) ;; <compat-tests:make-prop-match>
   "Retrieve the value that MATCH holds."
   :feature text-property-search
   (aref match 3))
 
-(compat-defun text-property-search-forward ;; <OK>
+(compat-defun text-property-search-forward ;; <compat-tests:text-property-search-forward>
     (property &optional value predicate not-current)
   "Search for the next region of text where PREDICATE is true.
 PREDICATE is used to decide whether a value of PROPERTY should be
@@ -692,7 +680,7 @@ the buffer positions that limit the region, and
         (and (not (eq ended t))
              ended))))))
 
-(compat-defun text-property-search-backward ;; <OK>
+(compat-defun text-property-search-backward ;; <compat-tests:text-property-search-backward>
     (property &optional value predicate not-current)
   "Search for the previous region of text whose PROPERTY matches VALUE.
 

@@ -28,7 +28,7 @@
 
 ;;;; Defined in xdisp.c
 
-(compat-defun get-display-property (position prop &optional object properties) ;; <OK>
+(compat-defun get-display-property (position prop &optional object properties) ;; <compat-tests:get-display-property>
   "Get the value of the `display' property PROP at POSITION.
 If OBJECT, this should be a buffer or string where the property is
 fetched from.  If omitted, OBJECT defaults to the current buffer.
@@ -57,7 +57,7 @@ the properties at POSITION."
 
 ;;;; Defined in fns.c
 
-(compat-defun ntake (n list) ;; <OK>
+(compat-defun ntake (n list) ;; <compat-tests:ntake>
   "Modify LIST to keep only the first N elements.
 If N is zero or negative, return nil.
 If N is greater or equal to the length of LIST, return LIST unmodified.
@@ -66,7 +66,7 @@ Otherwise, return LIST after truncating it."
                  (when cons (setcdr cons nil))
                  list)))
 
-(compat-defun take (n list) ;; <OK>
+(compat-defun take (n list) ;; <compat-tests:take>
   "Return the first N elements of LIST.
 If N is zero or negative, return nil.
 If N is greater or equal to the length of LIST, return LIST (or a copy)."
@@ -77,14 +77,14 @@ If N is greater or equal to the length of LIST, return LIST (or a copy)."
       (setq n (1- n)))
     (nreverse copy)))
 
-(compat-defun string-equal-ignore-case (string1 string2) ;; <OK>
+(compat-defun string-equal-ignore-case (string1 string2) ;; <compat-tests:string-equal-ignore-case>
   "Like `string-equal', but case-insensitive.
 Upper-case and lower-case letters are treated as equal.
 Unibyte strings are converted to multibyte for comparison."
   (declare (pure t) (side-effect-free t))
   (eq t (compare-strings string1 0 nil string2 0 nil t)))
 
-(compat-defun plist-get (plist prop &optional predicate) ;; <OK>
+(compat-defun plist-get (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
@@ -95,7 +95,7 @@ Unibyte strings are converted to multibyte for comparison."
           (throw 'found (cadr plist)))
         (setq plist (cddr plist))))))
 
-(compat-defun plist-put (plist prop val &optional predicate) ;; <OK>
+(compat-defun plist-put (plist prop val &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
@@ -109,7 +109,7 @@ Unibyte strings are converted to multibyte for comparison."
           (setq tail (cddr tail))))
       (nconc plist (list prop val)))))
 
-(compat-defun plist-member (plist prop &optional predicate) ;; <OK>
+(compat-defun plist-member (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
@@ -122,7 +122,7 @@ Unibyte strings are converted to multibyte for comparison."
 
 ;;;; Defined in editfns.c
 
-(compat-defun pos-bol (&optional n) ;; <OK>
+(compat-defun pos-bol (&optional n) ;; <compat-tests:pos-bol>
   "Return the position of the first character on the current line.
 With optional argument N, scan forward N - 1 lines first.
 If the scan reaches the end of the buffer, return that position.
@@ -137,7 +137,7 @@ This function does not move point.  Also see `line-beginning-position'."
   (let ((inhibit-field-text-motion t))
     (line-beginning-position n)))
 
-(compat-defun pos-eol (&optional n) ;; <OK>
+(compat-defun pos-eol (&optional n) ;; <compat-tests:pos-bol>
   "Return the position of the last character on the current line.
 With argument N not nil or 1, move forward N - 1 lines first.
 If scan reaches end of buffer, return that position.
@@ -151,33 +151,9 @@ This function does not move point.  Also see `line-end-position'."
   (let ((inhibit-field-text-motion t))
     (line-end-position n)))
 
-;;;; Defined in keymap.c
-
-(compat-defun define-key (keymap key def &optional remove) ;; <UNTESTED>
-  "Handle optional argument REMOVE."
-  :explicit t
-  (if remove
-      (let ((prev (lookup-key keymap key))
-            (parent (memq 'key (cdr keymap)))
-            fresh entry)
-        (when prev
-          ;; IMPROVEME: Kind of a hack to avoid relying on the specific
-          ;; behaviour of how `define-key' changes KEY before inserting
-          ;; it into the map.
-          (define-key keymap key (setq fresh (make-symbol "fresh")))
-          (setq entry (rassq fresh (cdr keymap)))
-          (if (> (length (memq entry (cdr keymap)))
-                 (length parent))
-              ;; Ensure that we only remove an element in the current
-              ;; keymap and not a parent, by ensuring that `entry' is
-              ;; located before `parent'.
-              (ignore (setcdr keymap (delq entry (cdr keymap))))
-            (define-key keymap key prev))))
-    (define-key keymap key def)))
-
 ;;;; Defined in subr.el
 
-(compat-defmacro with-memoization (place &rest code) ;; <OK>
+(compat-defmacro with-memoization (place &rest code) ;; <compat-tests:with-memoization>
   "Return the value of CODE and stash it in PLACE.
 If PLACE's value is non-nil, then don't bother evaluating CODE
 and return the value found in PLACE instead."
@@ -189,9 +165,9 @@ and return the value found in PLACE instead."
                ,(funcall setter val)
                ,val)))))
 
-(compat-defalias string-split split-string) ;; <OK>
+(compat-defalias string-split split-string) ;; <compat-tests:string-split>
 
-(compat-defun function-alias-p (func &optional noerror) ;; <OK>
+(compat-defun function-alias-p (func &optional noerror) ;; <compat-tests:function-alias-p>
   "Return nil if FUNC is not a function alias.
 If FUNC is a function alias, return the function alias chain.
 
@@ -213,7 +189,7 @@ signalled.  If NOERROR, the non-loop parts of the chain is returned."
          (push func chain))
        chain))))
 
-(compat-defun buffer-match-p (condition buffer-or-name &optional arg) ;; <UNTESTED>
+(compat-defun buffer-match-p (condition buffer-or-name &optional arg) ;; <compat-tests:buffer-match-p>
   "Return non-nil if BUFFER-OR-NAME matches CONDITION.
 CONDITION is either:
 - the symbol t, to always match,
@@ -269,7 +245,7 @@ CONDITION is either:
                 (throw 'match t)))))))
     (funcall match (list condition))))
 
-(compat-defun match-buffers (condition &optional buffers arg) ;; <UNTESTED>
+(compat-defun match-buffers (condition &optional buffers arg) ;; <compat-tests:match-buffers>
   "Return a list of buffers that match CONDITION.
 See `buffer-match' for details on CONDITION.  By default all
 buffers are checked, this can be restricted by passing an
@@ -284,7 +260,44 @@ CONDITION."
 
 ;;;; Defined in subr-x.el
 
-(compat-defun add-display-text-property (start end prop value ;; <OK>
+(compat-defmacro with-buffer-unmodified-if-unchanged (&rest body) ;; <compat-tests:with-buffer-unmodified-if-unchanged>
+  "Like `progn', but change buffer-modified status only if buffer text changes.
+If the buffer was unmodified before execution of BODY, and
+buffer text after execution of BODY is identical to what it was
+before, ensure that buffer is still marked unmodified afterwards.
+For example, the following won't change the buffer's modification
+status:
+
+  (with-buffer-unmodified-if-unchanged
+    (insert \"a\")
+    (delete-char -1))
+
+Note that only changes in the raw byte sequence of the buffer text,
+as stored in the internal representation, are monitored for the
+purpose of detecting the lack of changes in buffer text.  Any other
+changes that are normally perceived as \"buffer modifications\", such
+as changes in text properties, `buffer-file-coding-system', buffer
+multibyteness, etc. -- will not be noticed, and the buffer will still
+be marked unmodified, effectively ignoring those changes."
+  (declare (debug t) (indent 0))
+  (let ((hash (gensym))
+        (buffer (gensym)))
+    `(let ((,hash (and (not (buffer-modified-p))
+                       (buffer-hash)))
+           (,buffer (current-buffer)))
+       (prog1
+           (progn
+             ,@body)
+         ;; If we didn't change anything in the buffer (and the buffer
+         ;; was previously unmodified), then flip the modification status
+         ;; back to "unchanged".
+         (when (and ,hash (buffer-live-p ,buffer))
+           (with-current-buffer ,buffer
+             (when (and (buffer-modified-p)
+                        (equal ,hash (buffer-hash)))
+               (restore-buffer-modified-p nil))))))))
+
+(compat-defun add-display-text-property (start end prop value ;; <compat-tests:add-display-text-property>
                                                &optional object)
   "Add display property PROP with VALUE to the text from START to END.
 If any text in the region has a non-nil `display' property, those
@@ -326,16 +339,13 @@ this defaults to the current buffer."
           (put-text-property sub-start sub-end 'display disp object)))
       (setq sub-start sub-end))))
 
-(compat-defmacro while-let (spec &rest body) ;; <OK>
+(compat-defmacro while-let (spec &rest body) ;; <compat-tests:while-let>
   "Bind variables according to SPEC and conditionally evaluate BODY.
 Evaluate each binding in turn, stopping if a binding value is nil.
 If all bindings are non-nil, eval BODY and repeat.
 
-The variable list SPEC is the same as in `if-let'."
+The variable list SPEC is the same as in `if-let*'."
   (declare (indent 1) (debug if-let))
-  (when (and (<= (length spec) 2) (not (listp (car spec))))
-    ;; Adjust the single binding case
-    (setq spec (list spec)))
   (let ((done (gensym "done")))
     `(catch ',done
        (while t
@@ -346,7 +356,7 @@ The variable list SPEC is the same as in `if-let'."
 
 ;;;; Defined in files.el
 
-(compat-defun file-name-split (filename) ;; <OK>
+(compat-defun file-name-split (filename) ;; <compat-tests:file-name-split>
   "Return a list of all the components of FILENAME.
 On most systems, this will be true:
 
@@ -373,14 +383,14 @@ On most systems, this will be true:
           (setq filename nil))))
     components))
 
-(compat-defun file-attribute-file-identifier (attributes) ;; <OK>
+(compat-defun file-attribute-file-identifier (attributes) ;; <compat-tests:file-attribute-getters>
   "The inode and device numbers in ATTRIBUTES returned by `file-attributes'.
 The value is a list of the form (INODENUM DEVICE), where DEVICE could be
 either a single number or a cons cell of two numbers.
 This tuple of numbers uniquely identifies the file."
   (nthcdr 10 attributes))
 
-(compat-defun file-name-parent-directory (filename) ;; <OK>
+(compat-defun file-name-parent-directory (filename) ;; <compat-tests:file-name-parent-directory>
   "Return the directory name of the parent directory of FILENAME.
 If FILENAME is at the root of the filesystem, return nil.
 If FILENAME is relative, it is interpreted to be relative
@@ -400,11 +410,11 @@ to `default-directory', and the result will also be relative."
      (t
       parent))))
 
-(compat-defvar file-has-changed-p--hash-table ;; <UNTESTED>
+(compat-defvar file-has-changed-p--hash-table ;; <compat-tests:file-has-changed-p>
                (make-hash-table :test #'equal)
   "Internal variable used by `file-has-changed-p'.")
 
-(compat-defun file-has-changed-p (file &optional tag) ;; <UNTESTED>
+(compat-defun file-has-changed-p (file &optional tag) ;; <compat-tests:file-has-changed-p>
   "Return non-nil if FILE has changed.
 The size and modification time of FILE are compared to the size
 and modification time of the same FILE during a previous
@@ -421,12 +431,12 @@ the symbol of the calling function, for example."
                           (file-attribute-modification-time fileattr))))
          (sym (concat (symbol-name tag) "@" file))
          (cachedattr (gethash sym file-has-changed-p--hash-table)))
-     (when (not (equal attr cachedattr))
-       (puthash sym attr file-has-changed-p--hash-table))))
+    (when (not (equal attr cachedattr))
+      (puthash sym attr file-has-changed-p--hash-table))))
 
 ;;;; Defined in keymap.el
 
-(compat-defun key-valid-p (keys) ;; <OK>
+(compat-defun key-valid-p (keys) ;; <compat-tests:key-valid-p>
   "Say whether KEYS is a valid key.
 A key is a string consisting of one or more key strokes.
 The key strokes are separated by single space characters.
@@ -490,12 +500,12 @@ which is
                (throw 'exit nil)))
            t))))))
 
-(compat-defun keymap--check (key) ;; <OK>
+(compat-defun keymap--check (key) ;; <compat-tests:keymap--check>
   "Signal an error if KEY doesn't have a valid syntax."
   (unless (key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key)))
 
-(compat-defun key-parse (keys) ;; <OK>
+(compat-defun key-parse (keys) ;; <compat-tests:key-parse>
   "Convert KEYS to the internal Emacs key representation.
 See `kbd' for a descripion of KEYS."
   (declare (pure t) (side-effect-free t))
@@ -587,7 +597,7 @@ See `kbd' for a descripion of KEYS."
               (setq res (vconcat res key))))))
       res)))
 
-(compat-defun keymap-set (keymap key definition) ;; <OK>
+(compat-defun keymap-set (keymap key definition) ;; <compat-tests:defvar-keymap>
   "Set KEY to DEFINITION in KEYMAP.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -612,7 +622,7 @@ DEFINITION is anything that can be a key's definition:
     (setq definition (key-parse definition)))
   (define-key keymap (key-parse key) definition))
 
-(compat-defun keymap-unset (keymap key &optional remove) ;; <UNTESTED>
+(compat-defun keymap-unset (keymap key &optional remove) ;; <compat-tests:keymap-unset>
   "Remove key sequence KEY from KEYMAP.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -624,7 +634,7 @@ parent keymap to be used."
   (keymap--check key)
   (compat--define-key keymap (key-parse key) nil remove))
 
-(compat-defun keymap-global-set (key command) ;; <OK>
+(compat-defun keymap-global-set (key command) ;; <compat-tests:keymap-global-set>
   "Give KEY a global binding as COMMAND.
 COMMAND is the command definition to use; usually it is
 a symbol naming an interactively-callable function.
@@ -638,7 +648,7 @@ that you make with this function.
 NOTE: The compatibility version is not a command."
   (keymap-set (current-global-map) key command))
 
-(compat-defun keymap-local-set (key command) ;; <OK>
+(compat-defun keymap-local-set (key command) ;; <compat-tests:keymap-local-set>
   "Give KEY a local binding as COMMAND.
 COMMAND is the command definition to use; usually it is
 a symbol naming an interactively-callable function.
@@ -654,7 +664,7 @@ NOTE: The compatibility version is not a command."
       (use-local-map (setq map (make-sparse-keymap))))
     (keymap-set map key command)))
 
-(compat-defun keymap-global-unset (key &optional remove) ;; <UNTESTED>
+(compat-defun keymap-global-unset (key &optional remove) ;; <compat-tests:keymap-global-unset>
   "Remove global binding of KEY (if any).
 KEY is a string that satisfies `key-valid-p'.
 
@@ -664,7 +674,7 @@ instead of unsetting it.  See `keymap-unset' for details.
 NOTE: The compatibility version is not a command."
   (keymap-unset (current-global-map) key remove))
 
-(compat-defun keymap-local-unset (key &optional remove) ;; <UNTESTED>
+(compat-defun keymap-local-unset (key &optional remove) ;; <compat-tests:keymap-local-unset>
   "Remove local binding of KEY (if any).
 KEY is a string that satisfies `key-valid-p'.
 
@@ -675,7 +685,7 @@ NOTE: The compatibility version is not a command."
   (when (current-local-map)
     (keymap-unset (current-local-map) key remove)))
 
-(compat-defun keymap-substitute (keymap olddef newdef &optional oldmap prefix) ;; <UNTESTED>
+(compat-defun keymap-substitute (keymap olddef newdef &optional oldmap prefix) ;; <compat-tests:keymap-substitute>
   "Replace OLDDEF with NEWDEF for any keys in KEYMAP now defined as OLDDEF.
 In other words, OLDDEF is replaced with NEWDEF wherever it appears.
 Alternatively, if optional fourth argument OLDMAP is specified, we redefine
@@ -706,7 +716,7 @@ in a cleaner way with command remapping, like this:
        (substitute-key-definition-key defn olddef newdef prefix1 keymap))
      scan)))
 
-(compat-defun keymap-set-after (keymap key definition &optional after) ;; <UNTESTED>
+(compat-defun keymap-set-after (keymap key definition &optional after) ;; <compat-tests:keymap-set-after>
   "Add binding in KEYMAP for KEY => DEFINITION, right after AFTER's binding.
 This is like `keymap-set' except that the binding for KEY is placed
 just after the binding for the event AFTER, instead of at the beginning
@@ -726,7 +736,7 @@ a menu, so this function is not useful for non-menu keymaps."
   (define-key-after keymap (key-parse key) definition
     (and after (key-parse after))))
 
-(compat-defun keymap-lookup ;; <OK>
+(compat-defun keymap-lookup ;; <compat-tests:keymap-lookup>
     (keymap key &optional accept-default no-remap position)
   "Return the binding for command KEY.
 KEY is a string that satisfies `key-valid-p'.
@@ -770,7 +780,7 @@ specified buffer position instead of point are used."
           value))
     (key-binding (kbd key) accept-default no-remap position)))
 
-(compat-defun keymap-local-lookup (keys &optional accept-default) ;; <OK>
+(compat-defun keymap-local-lookup (keys &optional accept-default) ;; <compat-tests:keymap-local-lookup>
   "Return the binding for command KEYS in current local keymap only.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -782,7 +792,7 @@ about this."
   (when-let ((map (current-local-map)))
     (keymap-lookup map keys accept-default)))
 
-(compat-defun keymap-global-lookup (keys &optional accept-default _message) ;; <OK>
+(compat-defun keymap-global-lookup (keys &optional accept-default _message) ;; <compat-tests:keymap-global-lookup>
   "Return the binding for command KEYS in current global keymap only.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -797,7 +807,7 @@ about this.
 NOTE: The compatibility version is not a command."
   (keymap-lookup (current-global-map) keys accept-default))
 
-(compat-defun define-keymap (&rest definitions) ;; <OK>
+(compat-defun define-keymap (&rest definitions) ;; <compat-tests:defvar-keymap>
   "Create a new keymap and define KEY/DEFINITION pairs as key bindings.
 The new keymap is returned.
 
@@ -880,7 +890,7 @@ should be a MENU form as accepted by `easy-menu-define'.
               (keymap-set keymap key def)))))
       keymap)))
 
-(compat-defmacro defvar-keymap (variable-name &rest defs) ;; <OK>
+(compat-defmacro defvar-keymap (variable-name &rest defs) ;; <compat-tests:defvar-keymap>
   "Define VARIABLE-NAME as a variable with a keymap definition.
 See `define-keymap' for an explanation of the keywords and KEY/DEFINITION.
 
@@ -960,9 +970,37 @@ command exists in this specific map, but it doesn't have the
              ,@(nreverse props))
         defvar-form))))
 
+;;;; Defined in keymap.c
+
+(compat-defun define-key (keymap key def &optional remove) ;; <compat-tests:define-key>
+  "Handle optional argument REMOVE."
+  :explicit t
+  (if (not remove)
+      (define-key keymap key def)
+    ;; Canonicalize key
+    (setq key (key-parse (key-description key)))
+    (define-key keymap key nil)
+    ;; Split M-key in ESC key
+    (setq key (mapcan (lambda (k)
+                        (if (and (integerp k) (/= (logand k ?\M-\0) 0))
+                            (list ?\e (logxor k ?\M-\0))
+                          (list k)))
+                      key))
+    ;; Delete single keys directly
+    (if (length= key 1)
+        (delete key keymap)
+      ;; Lookup submap and delete key from there
+      (let ((submap (lookup-key keymap (vconcat (butlast key)))))
+        (unless (keymapp submap)
+          (error "Not a keymap for %s" key))
+        (when (symbolp submap)
+          (setq submap (symbol-function submap)))
+        (delete (last key) submap)))
+    def))
+
 ;;;; Defined in button.el
 
-(compat-defun button--properties (callback data help-echo) ;; <OK>
+(compat-defun button--properties (callback data help-echo) ;; <compat-tests:buttonize>
   "Helper function."
   (list 'font-lock-face 'button
         'mouse-face 'highlight
@@ -974,7 +1012,7 @@ command exists in this specific map, but it doesn't have the
         'keymap button-map
         'action callback))
 
-(compat-defun buttonize (string callback &optional data help-echo) ;; <OK>
+(compat-defun buttonize (string callback &optional data help-echo) ;; <compat-tests:buttonize>
   "Make STRING into a button and return it.
 When clicked, CALLBACK will be called with the DATA as the
 function argument.  If DATA isn't present (or is nil), the button
@@ -990,7 +1028,7 @@ Also see `buttonize-region'."
     (add-face-text-property 0 (length string) 'button t string)
     string))
 
-(compat-defun buttonize-region (start end callback &optional data help-echo) ;; <OK>
+(compat-defun buttonize-region (start end callback &optional data help-echo) ;; <compat-tests:buttonize-region>
   "Make the region between START and END into a button.
 When clicked, CALLBACK will be called with the DATA as the
 function argument.  If DATA isn't present (or is nil), the button
@@ -1003,7 +1041,7 @@ Also see `buttonize'."
   (add-face-text-property start end 'button t))
 
 ;; Obsolete Alias since 29
-(compat-defalias button-buttonize buttonize :obsolete t)
+(compat-defalias button-buttonize buttonize :obsolete t) ;; <compat-tests:button-buttonize>
 
 (provide 'compat-29)
 ;;; compat-29.el ends here
