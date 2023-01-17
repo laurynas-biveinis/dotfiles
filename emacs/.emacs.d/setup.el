@@ -67,6 +67,9 @@
 ;; Do not backup
 (setq make-backup-files nil)
 
+;; Do not create lockfiles
+(setq create-lockfiles nil)
+
 ;; But if we did backup, do not break macOS file metadata
 (setq backup-by-copying t)
 

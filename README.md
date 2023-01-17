@@ -186,6 +186,7 @@ and
 * <https://twitter.com/nibroc/status/963088893758259200>
 * <https://github.com/geerlingguy/dotfiles>
 * <https://github.com/caarlos0/dotfiles>
+* <https://gitlab.com/bkhl/dotfiles>
 
 * <https://metaredux.com/posts/2020/07/07/supercharge-your-bash-history.html>
 * <https://www.topbug.net/blog/2017/07/31/inputrc-for-humans/>
