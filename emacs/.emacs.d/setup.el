@@ -233,7 +233,8 @@
   (make-dotfiles--frame-geometry :top 0 :left 3008 :height 117 :width 427))
 
 (defconst dotfiles--frame-geometries-to-ignore
-  [(3600 . 1080) (5520 . 1080) (4688 . 1692) (3600 . 1692)]
+  [(3600 . 1080) (5520 . 1080) (4688 . 1692) (3600 . 1692) (7744 . 1692)
+   (1920 . 1080)]
   "Possible interim screen resolutions while docking/undocking to be ignored.")
 
 (defun dotfiles--diagnose-unknown-display-geometry (display-geometry)
