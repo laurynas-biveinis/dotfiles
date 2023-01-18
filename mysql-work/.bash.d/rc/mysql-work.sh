@@ -144,9 +144,10 @@ else
 fi
 
 mtr_emd() {
+    mtr_emd_tmp_dir=$(mktemp -d /tmp/mtr-XXXX)
     # The correct way would be to use arrays, but those don't exist in POSIX sh.
     # shellcheck disable=SC2086
-    ./mtr $MTR_EMD "$@"
+    ./mtr $MTR_EMD --tmpdir=$mtr_emd_tmp_dir "$@"
 }
 
 unset UNAME_OUT
