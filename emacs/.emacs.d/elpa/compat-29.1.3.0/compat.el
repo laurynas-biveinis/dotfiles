@@ -4,7 +4,7 @@
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>, Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>, Compat Development <~pkal/compat-devel@lists.sr.ht>
-;; Version: 29.1.2.0
+;; Version: 29.1.3.0
 ;; URL: https://github.com/emacs-compat/compat
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: lisp
@@ -36,34 +36,47 @@
 ;; Not every function provided in newer versions of Emacs is provided
 ;; here.  Some depend on new features from the core, others cannot be
 ;; implemented to a meaningful degree.  Please consult the Compat
-;; manual for details.  The main audience for this library are not
-;; regular users, but package maintainers.  Therefore commands and
-;; user options are usually not implemented here.
+;; manual for details regarding the usage of the Compat library and
+;; the provided functionality.  The main audience for this library are
+;; not regular users, but package maintainers.  Therefore no commands,
+;; user-facing modes or user options are implemented here.
 
 ;;; Code:
 
 (when (eval-when-compile (< emacs-major-version 29))
   (require 'compat-29))
 
-;;;; Macros for explicit compatibility function calls
+;;;; Macros for extended compatibility function calls
 
 (defmacro compat-function (fun)
   "Return compatibility function symbol for FUN.
 
 If the Emacs version provides a sufficiently recent version of
-FUN, the symbol FUN is returned itself. Otherwise the macro
+FUN, the symbol FUN is returned itself.  Otherwise the macro
 returns the symbol of a compatibility function which supports the
 behavior and calling convention of the current stable Emacs
-version. For example Compat 29.1 will provide compatibility
+version.  For example Compat 29.1 will provide compatibility
 functions which implement the behavior and calling convention of
-Emacs 29.1."
+Emacs 29.1.
+
+See also `compat-call' to directly call compatibility functions."
   (let ((compat (intern (format "compat--%s" fun))))
     `#',(if (fboundp compat) compat fun)))
 
 (defmacro compat-call (fun &rest args)
   "Call compatibility function or macro FUN with ARGS.
 
-See `compat-function' for the compatibility function resolution."
+A good example function is `plist-get' which was extended with an
+additional predicate argument in Emacs 29.1.  The compatibility
+function, which supports this additional argument, can be
+obtained via (compat-function plist-get) and called
+via (compat-call plist-get plist prop predicate).  It is not
+possible to directly call (plist-get plist prop predicate) on
+Emacs older than 29.1, since the original `plist-get' function
+does not yet support the predicate argument.  Note that the
+Compat library never overrides existing functions.
+
+See also `compat-function' to lookup compatibility functions."
   (let ((compat (intern (format "compat--%s" fun))))
     `(,(if (fboundp compat) compat fun) ,@args)))
 

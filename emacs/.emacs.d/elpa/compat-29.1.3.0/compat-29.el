@@ -1,4 +1,4 @@
-;;; compat-29.el --- Compatibility Layer for Emacs 29.1  -*- lexical-binding: t; -*-
+;;; compat-29.el --- Functionality added in Emacs 29.1 -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
@@ -17,8 +17,7 @@
 
 ;;; Commentary:
 
-;; Find here the functionality added in Emacs 29.1, needed by older
-;; versions.
+;; Functionality added in Emacs 29.1, needed by older Emacs versions.
 
 ;;; Code:
 
@@ -86,7 +85,7 @@ Unibyte strings are converted to multibyte for comparison."
 
 (compat-defun plist-get (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
-  :explicit t
+  :extended t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-get plist prop)
     (catch 'found
@@ -97,7 +96,7 @@ Unibyte strings are converted to multibyte for comparison."
 
 (compat-defun plist-put (plist prop val &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
-  :explicit t
+  :extended t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-put plist prop val)
     (catch 'found
@@ -111,7 +110,7 @@ Unibyte strings are converted to multibyte for comparison."
 
 (compat-defun plist-member (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
-  :explicit t
+  :extended t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-member plist prop)
     (catch 'found
@@ -119,6 +118,24 @@ Unibyte strings are converted to multibyte for comparison."
         (when (funcall predicate prop (car plist))
           (throw 'found plist))
         (setq plist (cddr plist))))))
+
+;;;; Defined in gv.el
+
+(compat-guard t
+  (gv-define-expander compat--plist-get ;; <compat-tests:plist-get-gv>
+    (lambda (do plist prop &optional predicate)
+      (macroexp-let2 macroexp-copyable-p key prop
+        (gv-letplace (getter setter) plist
+          (macroexp-let2 nil p `(cdr (compat--plist-member ,getter ,key ,predicate))
+            (funcall do
+                     `(car ,p)
+                     (lambda (val)
+                       `(if ,p
+                            (setcar ,p ,val)
+                          ,(funcall setter
+                                    `(cons ,key (cons ,val ,getter)))))))))))
+  (unless (get 'plist-get 'gv-expander)
+    (put 'plist-get 'gv-expander (get 'compat--plist-get 'gv-expander))))
 
 ;;;; Defined in editfns.c
 
@@ -153,6 +170,83 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
+(compat-defun readablep (object) ;; <compat-tests:readablep>
+  "Say whether OBJECT has a readable syntax.
+This means that OBJECT can be printed out and then read back
+again by the Lisp reader.  This function returns nil if OBJECT is
+unreadable, and the printed representation (from `prin1') of
+OBJECT if it is readable."
+  (declare (side-effect-free error-free))
+  (ignore-errors (equal object (read (prin1-to-string object)))))
+
+(compat-defun buffer-local-restore-state (states) ;; <compat-tests:buffer-local-set-state>
+  "Restore values of buffer-local variables recorded in STATES.
+STATES should be an object returned by `buffer-local-set-state'."
+  (dolist (state states)
+    (if (cadr state)
+        (set (car state) (caddr state))
+      (kill-local-variable (car state)))))
+
+(compat-defun buffer-local-set-state--get (pairs) ;; <compat-tests:buffer-local-set-state>
+  "Internal helper function."
+  (let ((states nil))
+    (while pairs
+      (push (list (car pairs)
+                  (and (boundp (car pairs))
+                       (local-variable-p (car pairs)))
+                  (and (boundp (car pairs))
+                       (symbol-value (car pairs))))
+            states)
+      (setq pairs (cddr pairs)))
+    (nreverse states)))
+
+(compat-defmacro buffer-local-set-state (&rest pairs) ;; <compat-tests:buffer-local-set-state>
+  "Like `setq-local', but allow restoring the previous state of locals later.
+This macro returns an object that can be passed to `buffer-local-restore-state'
+in order to restore the state of the local variables set via this macro.
+
+\(fn [VARIABLE VALUE]...)"
+  (declare (debug setq))
+  (unless (zerop (mod (length pairs) 2))
+    (error "PAIRS must have an even number of variable/value members"))
+  `(prog1
+       (buffer-local-set-state--get ',pairs)
+     (,(if (fboundp 'compat--setq-local) 'compat--setq-local 'setq-local)
+      ,@pairs)))
+
+(compat-defun list-of-strings-p (object) ;; <compat-tests:lists-of-strings-p>
+  "Return t if OBJECT is nil or a list of strings."
+  (declare (pure t) (side-effect-free t))
+  (while (and (consp object) (stringp (car object)))
+    (setq object (cdr object)))
+  (null object))
+
+(compat-defun plistp (object) ;; <compat-tests:plistp>
+  "Non-nil if and only if OBJECT is a valid plist."
+  (let ((len (proper-list-p object)))
+    (and len (zerop (% len 2)))))
+
+(compat-defun delete-line () ;; <compat-tests:delete-line>
+  "Delete the current line."
+  (delete-region (pos-bol) (pos-bol 2)))
+
+(compat-defmacro with-narrowing (start end &rest rest) ;; <compat-tests:with-narrowing>
+  "Execute BODY with restrictions set to START and END.
+
+The current restrictions, if any, are restored upon return.
+
+With the optional :locked TAG argument, inside BODY,
+`narrow-to-region' and `widen' can be used only within the START
+and END limits, unless the restrictions are unlocked by calling
+`narrowing-unlock' with TAG.  See `narrowing-lock' for a more
+detailed description.
+
+\(fn START END [:locked TAG] BODY)"
+  `(save-restriction
+     (narrow-to-region ,start ,end)
+     ;; Locking is ignored
+     ,@(if (eq (car rest) :locked) (cddr rest) rest)))
+
 (compat-defmacro with-memoization (place &rest code) ;; <compat-tests:with-memoization>
   "Return the value of CODE and stash it in PLACE.
 If PLACE's value is non-nil, then don't bother evaluating CODE
@@ -166,6 +260,12 @@ and return the value found in PLACE instead."
                ,val)))))
 
 (compat-defalias string-split split-string) ;; <compat-tests:string-split>
+
+(compat-defun compiled-function-p (object) ;; <compat-tests:compiled-function-p>
+  "Return non-nil if OBJECT is a function that has been compiled.
+Does not distinguish between functions implemented in machine code
+or byte-code."
+  (or (subrp object) (byte-code-function-p object)))
 
 (compat-defun function-alias-p (func &optional noerror) ;; <compat-tests:function-alias-p>
   "Return nil if FUNC is not a function alias.
@@ -257,6 +357,33 @@ CONDITION."
       (when (buffer-match-p condition (get-buffer buf) arg)
         (push buf bufs)))
     bufs))
+
+;;;; Defined in simple.el
+
+(compat-defun use-region-noncontiguous-p () ;; <compat-tests:region-noncontiguous-p>
+  "Return non-nil for a non-contiguous region if `use-region-p'."
+  (and (use-region-p) (region-noncontiguous-p)))
+
+(compat-defun use-region-beginning () ;; <compat-tests:use-region>
+  "Return the start of the region if `use-region-p'."
+  (and (use-region-p) (region-beginning)))
+
+(compat-defun use-region-end () ;; <compat-tests:use-region>
+  "Return the end of the region if `use-region-p'."
+  (and (use-region-p) (region-end)))
+
+(compat-defun get-scratch-buffer-create () ;; <compat-tests:get-scratch-buffer-create>
+  "Return the *scratch* buffer, creating a new one if needed."
+  (or (get-buffer "*scratch*")
+      (let ((scratch (get-buffer-create "*scratch*")))
+        ;; Don't touch the buffer contents or mode unless we know that
+        ;; we just created it.
+        (with-current-buffer scratch
+          (when initial-scratch-message
+            (insert (substitute-command-keys initial-scratch-message))
+            (set-buffer-modified-p nil))
+          (funcall initial-major-mode))
+        scratch)))
 
 ;;;; Defined in subr-x.el
 
@@ -431,7 +558,7 @@ the symbol of the calling function, for example."
                           (file-attribute-modification-time fileattr))))
          (sym (concat (symbol-name tag) "@" file))
          (cachedattr (gethash sym file-has-changed-p--hash-table)))
-    (when (not (equal attr cachedattr))
+    (unless (equal attr cachedattr)
       (puthash sym attr file-has-changed-p--hash-table))))
 
 ;;;; Defined in keymap.el
@@ -731,10 +858,17 @@ Bindings are always added before any inherited map.
 The order of bindings in a keymap matters only when it is used as
 a menu, so this function is not useful for non-menu keymaps."
   (keymap--check key)
-  (when after
-    (keymap--check after))
+  (when (eq after t) (setq after nil)) ; nil and t are treated the same
+  (when (stringp after)
+    (keymap--check after)
+    (setq after (key-parse after)))
+  ;; If we're binding this key to another key, then parse that other
+  ;; key, too.
+  (when (stringp definition)
+    (keymap--check definition)
+    (setq definition (key-parse definition)))
   (define-key-after keymap (key-parse key) definition
-    (and after (key-parse after))))
+    after))
 
 (compat-defun keymap-lookup ;; <compat-tests:keymap-lookup>
     (keymap key &optional accept-default no-remap position)
@@ -778,7 +912,7 @@ specified buffer position instead of point are used."
                    (symbolp value))
             (or (command-remapping value) value)
           value))
-    (key-binding (kbd key) accept-default no-remap position)))
+    (key-binding (key-parse key) accept-default no-remap position)))
 
 (compat-defun keymap-local-lookup (keys &optional accept-default) ;; <compat-tests:keymap-local-lookup>
   "Return the binding for command KEYS in current local keymap only.
@@ -942,7 +1076,7 @@ command exists in this specific map, but it doesn't have the
       (while defs
         (setq key (pop defs))
         (pop defs)
-        (when (not (eq key :menu))
+        (unless (eq key :menu)
           (if (member key seen-keys)
               (error "Duplicate definition for key '%s' in keymap '%s'"
                      key variable-name)
@@ -974,7 +1108,7 @@ command exists in this specific map, but it doesn't have the
 
 (compat-defun define-key (keymap key def &optional remove) ;; <compat-tests:define-key>
   "Handle optional argument REMOVE."
-  :explicit t
+  :extended t
   (if (not remove)
       (define-key keymap key def)
     ;; Canonicalize key
@@ -997,6 +1131,20 @@ command exists in this specific map, but it doesn't have the
           (setq submap (symbol-function submap)))
         (delete (last key) submap)))
     def))
+
+;;;; Defined in help.el
+
+(compat-defun substitute-quotes (string) ;; <compat-tests:substitute-quotes>
+  "Substitute quote characters for display.
+Each grave accent \\=` is replaced by left quote, and each
+apostrophe \\=' is replaced by right quote.  Left and right quote
+characters are specified by `text-quoting-style'."
+  (cond ((eq (text-quoting-style) 'curve)
+         (string-replace "`" "‘"
+                         (string-replace "'" "’" string)))
+        ((eq (text-quoting-style) 'straight)
+         (string-replace "`" "'" string))
+        (t string)))
 
 ;;;; Defined in button.el
 
@@ -1040,8 +1188,40 @@ Also see `buttonize'."
   (add-text-properties start end (button--properties callback data help-echo))
   (add-face-text-property start end 'button t))
 
-;; Obsolete Alias since 29
-(compat-defalias button-buttonize buttonize :obsolete t) ;; <compat-tests:button-buttonize>
+;;;; Defined in rmc.el
+
+(compat-defun read-multiple-choice  ;; <compat-tests:read-multiple-choice>
+    (prompt choices &optional _help-str _show-help long-form)
+    "Handle LONG-FORM argument."
+  :extended t
+  (if (not long-form)
+      (read-multiple-choice prompt choices)
+    (let ((answer
+           (completing-read
+            (concat prompt " ("
+                    (mapconcat #'identity (mapcar #'cadr choices) "/")
+                    ") ")
+            (mapcar #'cadr choices) nil t)))
+      (catch 'found
+        (dolist (c choices)
+          (when (equal answer (cadr c))
+            (throw 'found c)))))))
+
+;;;; Defined in paragraphs.el
+
+(compat-defun count-sentences (start end) ;; <compat-tests:count-sentences>
+  "Count sentences in current buffer from START to END."
+  (let ((sentences 0)
+        (inhibit-field-text-motion t))
+    (save-excursion
+      (save-restriction
+        (narrow-to-region start end)
+        (goto-char (point-min))
+        (while (ignore-errors (forward-sentence))
+          (setq sentences (1+ sentences)))
+        (when (/= (skip-chars-backward " \t\n") 0)
+          (setq sentences (1- sentences)))
+        sentences))))
 
 (provide 'compat-29)
 ;;; compat-29.el ends here

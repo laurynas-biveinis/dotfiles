@@ -1,0 +1,2 @@
+;; Generated package description from compat.el  -*- no-byte-compile: t -*-
+(define-package "compat" "29.1.3.0" "Emacs Lisp Compatibility Library" '((emacs "24.4")) :commit "7e23c64bd74b8564a361961b58e08d43ca3dc616" :authors '(("Philip Kaludercic <philipk@posteo.net>, Daniel Mendler" . "mail@daniel-mendler.de")) :maintainer '("Daniel Mendler <mail@daniel-mendler.de>, Compat Development" . "~pkal/compat-devel@lists.sr.ht") :keywords '("lisp") :url "https://github.com/emacs-compat/compat")

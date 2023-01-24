@@ -1,4 +1,4 @@
-;;; compat-28.el --- Compatibility Layer for Emacs 28.1  -*- lexical-binding: t; -*-
+;;; compat-28.el --- Functionality added in Emacs 28.1 -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
@@ -17,8 +17,7 @@
 
 ;;; Commentary:
 
-;; Find here the functionality added in Emacs 28.1, needed by older
-;; versions.
+;; Functionality added in Emacs 28.1, needed by older Emacs versions.
 
 ;;; Code:
 
@@ -112,10 +111,8 @@ inserted before contatenating."
 ;;;; Defined in characters.c
 
 (compat-defun string-width (string &optional from to) ;; <compat-tests:string-width>
-  "Handle optional arguments FROM and TO.
-Optional arguments FROM and TO specify the substring of STRING to
-consider, and are interpreted as in `substring'."
-  :explicit t
+  "Handle optional arguments FROM and TO."
+  :extended t
   (let* ((len (length string))
          (from (or from 0))
          (to (or to len)))
@@ -126,11 +123,17 @@ consider, and are interpreted as in `substring'."
 ;;;; Defined in dired.c
 
 (compat-defun directory-files (directory &optional full match nosort count) ;; <compat-tests:directory-files>
-  "Handle additional optional argument COUNT.
-If COUNT is non-nil and a natural number, the function will
- return COUNT number of file names (if so many are present)."
-  :explicit t
+  "Handle additional optional argument COUNT."
+  :extended t
   (let ((files (directory-files directory full match nosort)))
+    (when (natnump count)
+      (setf (nthcdr count files) nil))
+    files))
+
+(compat-defun directory-files-and-attributes (directory &optional full match nosort id-format count) ;; <compat-tests:directory-files-and-attributs>
+  "Handle additional optional argument COUNT."
+  :extended t
+  (let ((files (directory-files-and-attributes directory full match nosort id-format)))
     (when (natnump count)
       (setf (nthcdr count files) nil))
     files))
@@ -496,10 +499,9 @@ as the new values of the bound variables in the recursive invocation."
                             sets))
                     (cons 'setq (apply #'nconc (nreverse sets)))))
                  (`(throw ',quit ,expr))))))
-      (let ((tco-body (funcall tco (macroexpand-all (macroexp-progn body)))))
-        (when tco-body
-          (setq body `((catch ',quit
-                         (while t (let ,rargs ,@(macroexp-unprogn tco-body))))))))
+      (when-let ((tco-body (funcall tco (macroexpand-all (macroexp-progn body)))))
+        (setq body `((catch ',quit
+                       (while t (let ,rargs ,@(macroexp-unprogn tco-body)))))))
       (let ((expand (macroexpand-all (macroexp-progn body) (list (cons name macro)))))
         (if total-tco
             `(let ,bindings ,expand)
@@ -635,13 +637,56 @@ is included in the return value."
                   default)))
    ": "))
 
-;;;; Defined in windows.el
+;;;; Defined in faces.el
+
+(compat-defvar color-luminance-dark-limit 0.325 ;; <compat-tests:color-dark-p>
+  "The relative luminance below which a color is considered \"dark\".
+A \"dark\" color in this sense provides better contrast with white
+than with black; see `color-dark-p'.
+This value was determined experimentally."
+  :constant t)
+
+(compat-defun color-dark-p (rgb) ;; <compat-tests:color-dark-p>
+  "Whether RGB is more readable against white than black.
+RGB is a 3-element list (R G B), each component in the range [0,1].
+This predicate can be used both for determining a suitable (black or white)
+contrast color with RGB as background and as foreground."
+  (unless (<= 0 (apply #'min rgb) (apply #'max rgb) 1)
+    (error "RGB components %S not in [0,1]" rgb))
+  ;; Compute the relative luminance after gamma-correcting (assuming sRGB),
+  ;; and compare to a cut-off value determined experimentally.
+  ;; See https://en.wikipedia.org/wiki/Relative_luminance for details.
+  (let* ((sr (nth 0 rgb))
+         (sg (nth 1 rgb))
+         (sb (nth 2 rgb))
+         ;; Gamma-correct the RGB components to linear values.
+         ;; Use the power 2.2 as an approximation to sRGB gamma;
+         ;; it should be good enough for the purpose of this function.
+         (r (expt sr 2.2))
+         (g (expt sg 2.2))
+         (b (expt sb 2.2))
+         (y (+ (* r 0.2126) (* g 0.7152) (* b 0.0722))))
+    (< y color-luminance-dark-limit)))
+
+;;;; Defined in window.el
+
+(compat-defmacro with-window-non-dedicated (window &rest body) ;; <compat-tests:with-window-non-dedicated>
+  "Evaluate BODY with WINDOW temporarily made non-dedicated.
+If WINDOW is nil, use the selected window.  Return the value of
+the last form in BODY."
+  (declare (indent 1) (debug t))
+  (let ((window-dedicated-sym (gensym))
+        (window-sym (gensym)))
+    `(let* ((,window-sym (window-normalize-window ,window t))
+            (,window-dedicated-sym (window-dedicated-p ,window-sym)))
+       (set-window-dedicated-p ,window-sym nil)
+       (unwind-protect
+           (progn ,@body)
+         (set-window-dedicated-p ,window-sym ,window-dedicated-sym)))))
 
 (compat-defun count-windows (&optional minibuf all-frames) ;; <compat-tests:count-windows>
-  "Handle optional argument ALL-FRAMES.
-If ALL-FRAMES is non-nil, count the windows in all frames instead
-just the selected frame."
-  :explicit t
+  "Handle optional argument ALL-FRAMES."
+  :extended t
   (if all-frames
       (let ((sum 0))
         (dolist (frame (frame-list))
@@ -727,6 +772,29 @@ are 30 days long."
      (* (or (decoded-time-day time) 0) 60 60 24)
      (* (or (decoded-time-month time) 0) 60 60 24 30)
      (* (or (decoded-time-year time) 0) 60 60 24 365)))
+
+;;;; Defined in doc.c
+
+(compat-defun text-quoting-style () ;; <compat-tests:text-quoting-style>
+  "Return the current effective text quoting style.
+If the variable `text-quoting-style' is `grave', `straight' or
+`curve', just return that value.  If it is nil (the default), return
+`grave' if curved quotes cannot be displayed (for instance, on a
+terminal with no support for these characters), otherwise return
+`quote'.  Any other value is treated as `grave'.
+
+Note that in contrast to the variable `text-quoting-style', this
+function will never return nil."
+  (cond
+   ((memq text-quoting-style '(grave straight curve))
+    text-quoting-style)
+   ((not text-quoting-style) 'grave)
+   (t 'curve)))
+
+;;;; Defined in button.el
+
+;; Obsolete Alias since 29
+(compat-defalias button-buttonize buttonize :obsolete t) ;; <compat-tests:button-buttonize>
 
 (provide 'compat-28)
 ;;; compat-28.el ends here

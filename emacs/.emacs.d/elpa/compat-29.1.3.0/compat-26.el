@@ -1,4 +1,4 @@
-;;; compat-26.el --- Compatibility Layer for Emacs 26.1  -*- lexical-binding: t; -*-
+;;; compat-26.el --- Functionality added in Emacs 26.1 -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
@@ -17,8 +17,7 @@
 
 ;;; Commentary:
 
-;; Find here the functionality added in Emacs 26.1, needed by older
-;; versions.
+;; Functionality added in Emacs 26.1, needed by older Emacs versions.
 
 ;;; Code:
 
@@ -44,16 +43,6 @@ It should not be used for anything security-related.  See
        (widen)
        (sha1 (current-buffer) (point-min) (point-max)))))
 
-(compat-defun assoc (key alist &optional testfn) ;; <compat-tests:assoc>
-  "Handle the optional TESTFN."
-  :explicit t
-  (if testfn
-      (catch 'found
-        (dolist (ent alist)
-          (when (funcall testfn (car ent) key)
-            (throw 'found ent))))
-    (assoc key alist)))
-
 (compat-defun mapcan (func sequence) ;; <compat-tests:mapcan>
   "Apply FUNC to each element of SEQUENCE.
 Concatenate the results by altering them (using `nconc').
@@ -62,34 +51,69 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
 
 (compat-defun line-number-at-pos (&optional position absolute) ;; <compat-tests:line-number-at-pos>
   "Handle optional argument ABSOLUTE."
-  :explicit t
+  :extended t
   (if absolute
       (save-restriction
         (widen)
         (line-number-at-pos position))
     (line-number-at-pos position)))
 
+;;;; Defined in simple.el
+
+(compat-defun region-bounds () ;; <compat-tests:region-bounds>
+  "Return the boundaries of the region.
+Value is a list of one or more cons cells of the form (START . END).
+It will have more than one cons cell when the region is non-contiguous,
+see `region-noncontiguous-p' and `extract-rectangle-bounds'."
+  (if (eval-when-compile (< emacs-major-version 25))
+      ;; FIXME: The `region-extract-function' of Emacs 24 has no support for the
+      ;; bounds argument.
+      (list (cons (region-beginning) (region-end)))
+    (funcall region-extract-function 'bounds)))
+
 ;;;; Defined in subr.el
+
+(compat-defun provided-mode-derived-p (mode &rest modes) ;; <compat-tests:provided-derived-mode-p>
+  "Non-nil if MODE is derived from one of MODES.
+Uses the `derived-mode-parent' property of the symbol to trace backwards.
+If you just want to check `major-mode', use `derived-mode-p'."
+  ;; If MODE is an alias, then look up the real mode function first.
+  (let ((alias (symbol-function mode)))
+    (when (and alias (symbolp alias))
+      (setq mode alias)))
+  (while
+      (and
+       (not (memq mode modes))
+       (let* ((parent (get mode 'derived-mode-parent))
+              (parentfn (symbol-function parent)))
+         (setq mode (if (and parentfn (symbolp parentfn)) parentfn parent)))))
+  mode)
+
+(compat-defun assoc (key alist &optional testfn) ;; <compat-tests:assoc>
+  "Handle the optional TESTFN."
+  :extended t
+  (cond
+   ((or (eq testfn #'eq)
+        (and (not testfn) (or (symbolp key) (integerp key)))) ;; eq_comparable_value
+    (assq key alist))
+   ((or (eq testfn #'equal) (not testfn))
+    (assoc key alist))
+   (t
+    (catch 'found
+      (dolist (ent alist)
+        (when (funcall testfn (car ent) key)
+          (throw 'found ent)))))))
 
 (compat-defun alist-get (key alist &optional default remove testfn) ;; <compat-tests:alist-get>
   "Handle optional argument TESTFN."
-  :explicit t
-  (if testfn
-      (let (entry)
-        (cond
-         ((eq testfn 'eq)
-          (setq entry (assq key alist)))
-         ((eq testfn 'equal)
-          (setq entry (assoc key alist)))
-         ((catch 'found
-            (dolist (ent alist)
-              (when (and (consp ent) (funcall testfn (car ent) key))
-                (throw 'found (setq entry ent)))))))
-        (if entry (cdr entry) default))
-    (alist-get key alist default remove)))
+  :extended "25.1"
+  (ignore remove)
+  (let ((x (if (not testfn)
+               (assq key alist)
+             (compat--assoc key alist testfn))))
+    (if x (cdr x) default)))
 
-;; NOTE: Define gv expander only if `compat--alist-get' is defined.
-(when (eval-when-compile (< emacs-major-version 26))
+(compat-guard t
   (gv-define-expander compat--alist-get ;; <compat-tests:alist-get-gv>
     (lambda (do key alist &optional default remove testfn)
       (macroexp-let2 macroexp-copyable-p k key
@@ -117,18 +141,20 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
                                    ((not (eql ,default ,v)) ,set-exp)
                                    (,p ,(funcall setter
                                                  `(delq ,p ,getter))))))
-                              ,v)))))))))))
+                              ,v))))))))))
+    (unless (get 'alist-get 'gv-expander)
+      (put 'alist-get 'gv-expander (get 'compat--alist-get 'gv-expander))))
 
 (compat-defun string-trim-left (string &optional regexp) ;; <compat-tests:string-trim-left>
   "Handle optional argument REGEXP."
-  :explicit t
+  :extended t
   (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
       (substring string (match-end 0))
     string))
 
 (compat-defun string-trim-right (string &optional regexp) ;; <compat-tests:string-trim-right>
   "Handle optional argument REGEXP."
-  :explicit t
+  :extended t
   (let ((i (string-match-p
             (concat "\\(?:" (or regexp "[ \t\n\r]+") "\\)\\'")
             string)))
@@ -136,7 +162,7 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
 
 (compat-defun string-trim (string &optional trim-left trim-right) ;; <compat-tests:string-trim>
   "Handle optional arguments TRIM-LEFT and TRIM-RIGHT."
-  :explicit t
+  :extended t
   (compat--string-trim-left
    (compat--string-trim-right
     string
@@ -336,20 +362,6 @@ identifies FILE locally on the remote system.
 The returned file name can be used directly as argument of
 `process-file', `start-file-process', or `shell-command'."
   (or (file-remote-p file 'localname) file))
-
-(compat-defun file-name-quoted-p (name &optional top) ;; <compat-tests:file-name-quoted-p>
-  "Handle optional argument TOP."
-  :explicit t
-  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
-    (string-prefix-p "/:" (file-local-name name))))
-
-(compat-defun file-name-quote (name &optional top) ;; <compat-tests:file-name-quote>
-  "Handle optional argument TOP."
-  :explicit t
-  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
-    (if (string-prefix-p "/:" (file-local-name name))
-        name
-      (concat (file-remote-p name) "/:" (file-local-name name)))))
 
 (compat-defun temporary-file-directory () ;; <compat-tests:temporary-file-directory>
   "The directory for writing temporary files.
