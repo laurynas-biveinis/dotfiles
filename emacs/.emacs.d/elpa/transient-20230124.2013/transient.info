@@ -817,7 +817,14 @@ File: transient.info,  Node: Modifying Existing Transients,  Next: Defining New 
 
 To an extent, transients can be customized interactively, see *note
 Enabling and Disabling Suffixes::.  This section explains how existing
-transients can be further modified non-interactively.
+transients can be further modified non-interactively.  Let’s begin with
+an example:
+
+     (transient-append-suffix 'magit-patch-apply "-3"
+       '("-R" "Apply in reverse" "--reverse"))
+
+   This inserts a new infix argument to toggle the ‘--reverse’ argument
+after the infix argument that toggles ‘-3’ in ‘magit-patch-apply’.
 
    The following functions share a few arguments:
 
@@ -2492,7 +2499,7 @@ Appendix C Command and Function Index
 * transient--history-init:               Prefix Classes.      (line  10)
 * transient--insert-group:               Group Methods.       (line  19)
 * transient-append-suffix:               Modifying Existing Transients.
-                                                              (line  44)
+                                                              (line  51)
 * transient-arg-value:                   Using Infix Arguments.
                                                               (line  31)
 * transient-args:                        Using Infix Arguments.
@@ -2514,7 +2521,7 @@ Appendix C Command and Function Index
 * transient-format-value:                Suffix Format Methods.
                                                               (line  22)
 * transient-get-suffix:                  Modifying Existing Transients.
-                                                              (line  66)
+                                                              (line  73)
 * transient-help:                        Getting Help for Suffix Commands.
                                                               (line  11)
 * transient-history-next:                Using History.       (line  18)
@@ -2530,7 +2537,7 @@ Appendix C Command and Function Index
 * transient-init-value:                  Suffix Value Methods.
                                                               (line   6)
 * transient-insert-suffix:               Modifying Existing Transients.
-                                                              (line  42)
+                                                              (line  49)
 * transient-prompt:                      Suffix Value Methods.
                                                               (line  32)
 * transient-quit-all:                    Aborting and Resuming Transients.
@@ -2540,9 +2547,9 @@ Appendix C Command and Function Index
 * transient-quit-seq:                    Aborting and Resuming Transients.
                                                               (line  27)
 * transient-remove-suffix:               Modifying Existing Transients.
-                                                              (line  63)
+                                                              (line  70)
 * transient-replace-suffix:              Modifying Existing Transients.
-                                                              (line  59)
+                                                              (line  66)
 * transient-reset:                       Saving Values.       (line  29)
 * transient-resume:                      Aborting and Resuming Transients.
                                                               (line  53)
@@ -2556,7 +2563,7 @@ Appendix C Command and Function Index
 * transient-show-help:                   Suffix Format Methods.
                                                               (line  26)
 * transient-suffix-put:                  Modifying Existing Transients.
-                                                              (line  70)
+                                                              (line  77)
 * transient-suffixes:                    Using Infix Arguments.
                                                               (line  38)
 * transient-suspend:                     Aborting and Resuming Transients.
@@ -3385,51 +3392,51 @@ Ref: Accessibility Options28300
 Ref: Auxiliary Options28623
 Ref: Developer Options33350
 Node: Modifying Existing Transients34598
-Node: Defining New Commands38504
-Node: Defining Transients38840
-Node: Binding Suffix and Infix Commands41814
-Node: Group Specifications42672
-Node: Suffix Specifications47910
-Node: Defining Suffix and Infix Commands52186
-Node: Using Infix Arguments55392
-Node: Transient State58226
-Ref: Pre-commands for Infixes62189
-Ref: Pre-commands for Suffixes62460
-Ref: Pre-commands for Non-Suffixes64881
-Ref: Special Pre-Commands66025
-Node: Classes and Methods66533
-Node: Group Classes68747
-Node: Group Methods70674
-Node: Prefix Classes71927
-Node: Suffix Classes73018
-Node: Suffix Methods75264
-Node: Suffix Value Methods75585
-Node: Suffix Format Methods78343
-Node: Prefix Slots79792
-Ref: Internal Prefix Slots81072
-Node: Suffix Slots82329
-Ref: Slots of transient-suffix82697
-Ref: Slots of transient-infix83551
-Ref: Slots of transient-variable86671
-Ref: Slots of transient-switches86773
-Node: Predicate Slots87136
-Node: Related Abstractions and Packages88401
-Node: Comparison With Prefix Keys and Prefix Arguments88688
-Ref: Regular Prefix Commands89373
-Ref: Regular Prefix Arguments89721
-Ref: Transients90690
-Node: Comparison With Other Packages98961
-Ref: Magit-Popup99192
-Ref: Hydra100099
-Node: FAQ103155
-Ref: Can I control how the popup buffer is displayed?103298
-Ref: Why did some of the key bindings change?103479
-Ref: Why does q not quit popups anymore?105832
-Node: Keystroke Index106925
-Node: Command and Function Index108643
-Node: Variable Index115088
-Node: Concept Index117361
-Node: GNU General Public License120105
+Node: Defining New Commands38790
+Node: Defining Transients39126
+Node: Binding Suffix and Infix Commands42100
+Node: Group Specifications42958
+Node: Suffix Specifications48196
+Node: Defining Suffix and Infix Commands52472
+Node: Using Infix Arguments55678
+Node: Transient State58512
+Ref: Pre-commands for Infixes62475
+Ref: Pre-commands for Suffixes62746
+Ref: Pre-commands for Non-Suffixes65167
+Ref: Special Pre-Commands66311
+Node: Classes and Methods66819
+Node: Group Classes69033
+Node: Group Methods70960
+Node: Prefix Classes72213
+Node: Suffix Classes73304
+Node: Suffix Methods75550
+Node: Suffix Value Methods75871
+Node: Suffix Format Methods78629
+Node: Prefix Slots80078
+Ref: Internal Prefix Slots81358
+Node: Suffix Slots82615
+Ref: Slots of transient-suffix82983
+Ref: Slots of transient-infix83837
+Ref: Slots of transient-variable86957
+Ref: Slots of transient-switches87059
+Node: Predicate Slots87422
+Node: Related Abstractions and Packages88687
+Node: Comparison With Prefix Keys and Prefix Arguments88974
+Ref: Regular Prefix Commands89659
+Ref: Regular Prefix Arguments90007
+Ref: Transients90976
+Node: Comparison With Other Packages99247
+Ref: Magit-Popup99478
+Ref: Hydra100385
+Node: FAQ103441
+Ref: Can I control how the popup buffer is displayed?103584
+Ref: Why did some of the key bindings change?103765
+Ref: Why does q not quit popups anymore?106118
+Node: Keystroke Index107211
+Node: Command and Function Index108929
+Node: Variable Index115374
+Node: Concept Index117647
+Node: GNU General Public License120391
 
 End Tag Table
 
