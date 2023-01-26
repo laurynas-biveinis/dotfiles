@@ -390,11 +390,6 @@ removed."
       (fill-region (point-min) (point-max)))
     (buffer-string)))
 
-(compat-defun string-lines (string &optional omit-nulls) ;; <compat-tests:string-lines>
-  "Split STRING into a list of lines.
-If OMIT-NULLS, empty lines will be removed from the results."
-  (split-string string "\n" omit-nulls))
-
 (compat-defun string-pad (string length &optional padding start) ;; <compat-tests:string-pad>
   "Pad STRING to LENGTH using PADDING.
 If PADDING is nil, the space character is used.  If not nil, it
@@ -714,6 +709,17 @@ where the mouse button is clicked to find the thing nearby."
   (save-excursion
     (mouse-set-point event)
     (bounds-of-thing-at-point thing)))
+
+;;;; Defined in mouse.el
+
+(compat-defun mark-thing-at-mouse (click thing) ;; <compat-tests:thing-at-mouse>
+  "Activate the region around THING found near the mouse CLICK."
+  (when-let ((bounds (bounds-of-thing-at-mouse click thing)))
+    (goto-char (if mouse-select-region-move-to-beginning
+                   (car bounds) (cdr bounds)))
+    (push-mark (if mouse-select-region-move-to-beginning
+                   (cdr bounds) (car bounds))
+               t 'activate)))
 
 ;;;; Defined in macroexp.el
 
