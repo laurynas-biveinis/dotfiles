@@ -2555,6 +2555,16 @@
 	(:authors
 	 ("Adam Porter" . "adam@alphapapa.net"))
 	(:commit . "ecd1de2a7967bd8bc61737078d717d0ee050b344"))])
+ (poke .
+       [(3 0)
+	((emacs
+	  (25)))
+	"Emacs meets GNU poke!" tar
+	((:url . "https://www.jemarch.net/poke")
+	 (:maintainer "Jose E. Marchesi" . "jemarch@gnu.org")
+	 (:authors
+	  ("Jose E. Marchesi" . "jemarch@gnu.org"))
+	 (:commit . "bc0bd9e618a468bbb0d0a68cdc2462db43b5b689"))])
  (poker .
 	[(0 2)
 	 nil "Texas hold 'em poker" single
@@ -2875,6 +2885,15 @@
 		  (:authors
 		   ("Yoni Rabkin" . "yrk@gnu.org"))
 		  (:commit . "b76ae2828b12efc5f45f51ba873489e049a70924"))])
+ (ruby-end .
+	   [(0 4 3)
+	    nil "Automatic insertion of end blocks for Ruby" tar
+	    ((:url . "http://github.com/rejeep/ruby-end")
+	     (:keywords "speed" "convenience" "ruby")
+	     (:maintainer "Dmitry Gutov" . "dgutov@yandex.ru")
+	     (:authors
+	      ("Johan Andersson" . "johan.rejeep@gmail.com"))
+	     (:commit . "fe39d34ba7a43d522c7bdc47406935611e782ca3"))])
  (rudel .
 	[(0 3 2)
 	 ((emacs
@@ -3791,19 +3810,20 @@
 	  ("Stephen Leake" . "stephen_leake@stephe-leake.org"))
 	 (:commit . "a12d5248783d9c98d46c66c8fd3607fceb47b36d"))])
  (wisitoken-grammar-mode .
-			 [(1 2 0)
+			 [(1 3 0)
 			  ((wisi
-			    (3 1 1))
+			    (4 2 2))
 			   (emacs
-			    (25 0))
+			    (25 3))
 			   (mmm-mode
 			    (0 5 7)))
 			  "Major mode for editing WisiToken grammar files" tar
-			  ((:url . "http://www.nongnu.org/ada-mode/")
+			  ((:url . "https://www.nongnu.org/ada-mode/")
+			   (:keywords "languages")
 			   (:maintainer "Stephen Leake" . "stephen_leake@stephe-leake.org")
 			   (:authors
 			    ("Stephen Leake" . "stephen_leake@stephe-leake.org"))
-			   (:keywords "languages"))])
+			   (:commit . "2d58879cea26b8a3b573d084d149dea94f93dfb8"))])
  (wpuzzle .
 	  [(1 1)
 	   nil "find as many word in a given time" single
