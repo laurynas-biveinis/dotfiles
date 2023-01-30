@@ -799,8 +799,8 @@ They become the value of this argument.")
 (defclass transient-columns (transient-group) ()
   "Group class that displays elements organized in columns.
 Direct elements have to be groups whose elements have to be
-commands or string.  Each subgroup represents a column.  This
-class takes care of inserting the subgroups' elements.")
+commands or strings.  Each subgroup represents a column.
+This class takes care of inserting the subgroups' elements.")
 
 (defclass transient-subgroups (transient-group) ()
   "Group class that wraps other groups.
@@ -1152,7 +1152,7 @@ example, sets a variable use `transient-define-infix' instead.
 PREFIX is a prefix command, a symbol.
 SUFFIX is a suffix command or a group specification (of
   the same forms as expected by `transient-define-prefix').
-Intended for use in PREFIX's `:setup-children' function."
+Intended for use in a group's `:setup-children' function."
   (eval (car (transient--parse-child prefix suffix))))
 
 (defun transient-parse-suffixes (prefix suffixes)
@@ -1160,7 +1160,7 @@ Intended for use in PREFIX's `:setup-children' function."
 PREFIX is a prefix command, a symbol.
 SUFFIXES is a list of suffix command or a group specification
   (of the same forms as expected by `transient-define-prefix').
-Intended for use in PREFIX's `:setup-children' function."
+Intended for use in a group's `:setup-children' function."
   (mapcar (apply-partially #'transient-parse-suffix prefix) suffixes))
 
 ;;; Edit
