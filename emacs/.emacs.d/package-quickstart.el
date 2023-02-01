@@ -539,10 +539,10 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20230130.257/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20230130.257/vterm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20230130.745/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20230130.745/vterm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20230130.257/vterm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/vterm-20230130.745/vterm-autoloads.el") (car load-path))))
 
 
 
@@ -2459,10 +2459,10 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230129.923/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230129.923/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230130.2043/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230130.2043/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20230129.923/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20230130.2043/transient-autoloads.el") (car load-path))))
 
 
 
@@ -9627,10 +9627,10 @@ and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20221228.1315/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20221228.1315/async-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20230130.1815/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20230130.1815/async-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/async-20221228.1315/async-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/async-20230130.1815/async-autoloads.el") (car load-path))))
 
 
 
@@ -12900,7 +12900,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.1" "/Users/laurynas/.emacs.d/elpa/transient-20230129.923" "/Users/laurynas/.emacs.d/elpa/compat-29.1.3.1" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.1" "/Users/laurynas/.emacs.d/elpa/transient-20230130.2043" "/Users/laurynas/.emacs.d/elpa/compat-29.1.3.1" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
