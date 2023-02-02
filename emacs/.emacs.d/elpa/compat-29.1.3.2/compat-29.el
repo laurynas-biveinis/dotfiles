@@ -170,6 +170,35 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
+(compat-defmacro with-delayed-message (_args &rest body) ;; <compat-tests:with-delayed-message>
+  "Like `progn', but display MESSAGE if BODY takes longer than TIMEOUT seconds.
+The MESSAGE form will be evaluated immediately, but the resulting
+string will be displayed only if BODY takes longer than TIMEOUT seconds.
+
+NOTE: The compatibility function never displays the message,
+which is not problematic since the only effect of the function is
+to display a progress message to the user.  Backporting this
+feature is not possible, since the implementation is directly
+baked into the Elisp interpreter.
+
+\(fn (timeout message) &rest body)"
+  (declare (indent 1))
+  (macroexp-progn body))
+
+(compat-defun funcall-with-delayed-message (timeout message function) ;; <compat-tests:with-delayed-message>
+  "Like `funcall', but display MESSAGE if FUNCTION takes longer than TIMEOUT.
+TIMEOUT is a number of seconds, and can be an integer or a
+floating point number.  If FUNCTION takes less time to execute
+than TIMEOUT seconds, MESSAGE is not displayed.
+
+NOTE: The compatibility function never displays the message,
+which is not problematic since the only effect of the function is
+to display a progress message to the user.  Backporting this
+feature is not possible, since the implementation is directly
+baked into the Elisp interpreter."
+  (ignore timeout message)
+  (funcall function))
+
 (compat-defun string-lines (string &optional omit-nulls keep-newlines) ;; <compat-tests:string-lines>
   "Handle additional KEEP-NEWLINES argument."
   :extended "28.1"
@@ -386,6 +415,65 @@ CONDITION."
       (when (buffer-match-p condition (get-buffer buf) arg)
         (push buf bufs)))
     bufs))
+
+(compat-defvar set-transient-map-timeout nil ;; <compat-tests:set-transient-map>
+  "Timeout in seconds for deactivation of a transient keymap.
+If this is a number, it specifies the amount of idle time
+after which to deactivate the keymap set by `set-transient-map',
+thus overriding the value of the TIMEOUT argument to that function.")
+
+(compat-defvar set-transient-map-timer nil ;; <compat-tests:set-transient-map>
+  "Timer for `set-transient-map-timeout'.")
+
+(declare-function format-spec "format-spec")
+(compat-defun set-transient-map (map &optional keep-pred on-exit message timeout) ;; <compat-tests:set-transient-map>
+  "Handle the optional arguments MESSAGE and TIMEOUT."
+  :extended t
+  (unless (fboundp 'format-spec)
+    (require 'format-spec))
+  (let* ((timeout (or set-transient-map-timeout timeout))
+         (message
+          (when message
+            (let (keys)
+              (map-keymap (lambda (key cmd) (and cmd (push key keys))) map)
+              (format-spec (if (stringp message) message "Repeat with %k")
+                           `((?k . ,(mapconcat
+                                     (lambda (key)
+                                       (substitute-command-keys
+                                        (format "\\`%s'"
+                                                (key-description (vector key)))))
+                                     keys ", ")))))))
+         (clearfun (make-symbol "clear-transient-map"))
+         (exitfun
+          (lambda ()
+            (internal-pop-keymap map 'overriding-terminal-local-map)
+            (remove-hook 'pre-command-hook clearfun)
+            (when message (message ""))
+            (when set-transient-map-timer (cancel-timer set-transient-map-timer))
+            (when on-exit (funcall on-exit)))))
+    (fset clearfun
+          (lambda ()
+            (with-demoted-errors "set-transient-map PCH: %S"
+              (if (cond
+                       ((null keep-pred) nil)
+                       ((and (not (eq map (cadr overriding-terminal-local-map)))
+                             (memq map (cddr overriding-terminal-local-map)))
+                        t)
+                       ((eq t keep-pred)
+                        (let ((mc (lookup-key map (this-command-keys-vector))))
+                          (when (and mc (symbolp mc))
+                            (setq mc (or (command-remapping mc) mc)))
+                          (and mc (eq this-command mc))))
+                       (t (funcall keep-pred)))
+                  (when message (message "%s" message))
+                (funcall exitfun)))))
+    (add-hook 'pre-command-hook clearfun)
+    (internal-push-keymap map 'overriding-terminal-local-map)
+    (when timeout
+      (when set-transient-map-timer (cancel-timer set-transient-map-timer))
+      (setq set-transient-map-timer (run-with-idle-timer timeout nil exitfun)))
+    (when message (message "%s" message))
+    exitfun))
 
 ;;;; Defined in simple.el
 
@@ -1251,6 +1339,112 @@ Also see `buttonize'."
         (when (/= (skip-chars-backward " \t\n") 0)
           (setq sentences (1- sentences)))
         sentences))))
+
+;;;; Defined in ert-x.el
+
+(compat-defmacro ert-with-temp-file (name &rest body) ;; <compat-tests:ert-with-temp-file>
+  "Bind NAME to the name of a new temporary file and evaluate BODY.
+Delete the temporary file after BODY exits normally or
+non-locally.  NAME will be bound to the file name of the temporary
+file.
+
+The following keyword arguments are supported:
+
+:prefix STRING  If non-nil, pass STRING to `make-temp-file' as
+                the PREFIX argument.  Otherwise, use the value of
+                `ert-temp-file-prefix'.
+
+:suffix STRING  If non-nil, pass STRING to `make-temp-file' as the
+                SUFFIX argument.  Otherwise, use the value of
+                `ert-temp-file-suffix'; if the value of that
+                variable is nil, generate a suffix based on the
+                name of the file that `ert-with-temp-file' is
+                called from.
+
+:text STRING    If non-nil, pass STRING to `make-temp-file' as
+                the TEXT argument.
+
+:buffer SYMBOL  Open the temporary file using `find-file-noselect'
+                and bind SYMBOL to the buffer.  Kill the buffer
+                after BODY exits normally or non-locally.
+
+:coding CODING  If non-nil, bind `coding-system-for-write' to CODING
+                when executing BODY.  This is handy when STRING includes
+                non-ASCII characters or the temporary file must have a
+                specific encoding or end-of-line format.
+
+See also `ert-with-temp-directory'."
+  :feature ert-x
+  (declare (indent 1) (debug (symbolp body)))
+  (cl-check-type name symbol)
+  (let (keyw prefix suffix directory text extra-keywords buffer coding)
+    (while (keywordp (setq keyw (car body)))
+      (setq body (cdr body))
+      (pcase keyw
+        (:prefix (setq prefix (pop body)))
+        (:suffix (setq suffix (pop body)))
+        ;; This is only for internal use by `ert-with-temp-directory'
+        ;; and is therefore not documented.
+        (:directory (setq directory (pop body)))
+        (:text (setq text (pop body)))
+        (:buffer (setq buffer (pop body)))
+        (:coding (setq coding (pop body)))
+        (_ (push keyw extra-keywords) (pop body))))
+    (when extra-keywords
+      (error "Invalid keywords: %s" (mapconcat #'symbol-name extra-keywords " ")))
+    (let ((temp-file (make-symbol "temp-file"))
+          (prefix (or prefix "emacs-test-"))
+          (suffix (or suffix
+                      (thread-last
+                        (file-name-base (or (macroexp-file-name) buffer-file-name))
+                        (replace-regexp-in-string (rx string-start
+                                                      (group (+? not-newline))
+                                                      (regexp "-?tests?")
+                                                      string-end)
+                                                  "\\1")
+                        (concat "-")))))
+      `(let* ((coding-system-for-write ,(or coding coding-system-for-write))
+              (,temp-file (,(if directory 'file-name-as-directory 'identity)
+                           (,(if (fboundp 'compat--make-temp-file)
+                                 'compat--make-temp-file 'make-temp-file)
+                            ,prefix ,directory ,suffix ,text)))
+              (,name ,(if directory
+                          `(file-name-as-directory ,temp-file)
+                        temp-file))
+              ,@(when buffer
+                  (list `(,buffer (find-file-literally ,temp-file)))))
+         (unwind-protect
+             (progn ,@body)
+           (ignore-errors
+             ,@(when buffer
+                 (list `(with-current-buffer ,buffer
+                          (set-buffer-modified-p nil))
+                       `(kill-buffer ,buffer))))
+           (ignore-errors
+             ,(if directory
+                  `(delete-directory ,temp-file :recursive)
+                `(delete-file ,temp-file))))))))
+
+(compat-defmacro ert-with-temp-directory (name &rest body) ;; <compat-tests:ert-with-temp-directory>
+  "Bind NAME to the name of a new temporary directory and evaluate BODY.
+Delete the temporary directory after BODY exits normally or
+non-locally.
+
+NAME is bound to the directory name, not the directory file
+name.  (In other words, it will end with the directory delimiter;
+on Unix-like systems, it will end with \"/\".)
+
+The same keyword arguments are supported as in
+`ert-with-temp-file' (which see), except for :text."
+  :feature ert-x
+  (declare (indent 1) (debug (symbolp body)))
+  (let ((tail body) keyw)
+    (while (keywordp (setq keyw (car tail)))
+      (setq tail (cddr tail))
+      (pcase keyw (:text (error "Invalid keyword for directory: :text")))))
+  `(ert-with-temp-file ,name
+     :directory t
+     ,@body))
 
 (provide 'compat-29)
 ;;; compat-29.el ends here
