@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -eu
+
+# TODO(laurynas): check git status
+git add --all
+git commit -m "Emacs package metadata update"
+git push

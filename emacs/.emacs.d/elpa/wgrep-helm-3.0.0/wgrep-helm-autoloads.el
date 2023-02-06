@@ -1,4 +1,4 @@
-;;; wgrep-helm-autoloads.el --- automatically extracted autoloads
+;;; wgrep-helm-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
 ;;
 ;;; Code:
 
@@ -9,16 +9,13 @@
 ;;;### (autoloads nil "wgrep-helm" "wgrep-helm.el" (0 0 0 0))
 ;;; Generated autoloads from wgrep-helm.el
 
-(autoload 'wgrep-helm-setup "wgrep-helm" "\
-
-
-\(fn)" nil nil)
+(autoload 'wgrep-helm-setup "wgrep-helm" nil nil nil)
 
 (add-hook 'helm-grep-mode-hook 'wgrep-helm-setup)
 
 (add-hook 'helm-occur-mode-hook 'wgrep-helm-setup)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "wgrep-helm" '("wgrep-helm-")))
+(register-definition-prefixes "wgrep-helm" '("wgrep-helm-"))
 
 ;;;***
 

@@ -432,41 +432,38 @@ KEYMAP is selected interactively by mode in
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-2.3.2/wgrep-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-2.3.2/wgrep-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-3.0.0/wgrep-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-3.0.0/wgrep-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/wgrep-2.3.2/wgrep-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/wgrep-3.0.0/wgrep-autoloads.el") (car load-path))))
 
 
 
 (autoload 'wgrep-setup "wgrep" "\
-Setup wgrep preparation.
-
-\(fn)" nil nil)
+Setup wgrep preparation." nil nil)
 
 (add-hook 'grep-setup-hook 'wgrep-setup)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "wgrep" '("wgrep-")))
+(register-definition-prefixes "wgrep" '("wgrep-"))
+
+
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-helm-2.3.2/wgrep-helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-helm-2.3.2/wgrep-helm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-helm-3.0.0/wgrep-helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-helm-3.0.0/wgrep-helm-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/wgrep-helm-2.3.2/wgrep-helm-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/wgrep-helm-3.0.0/wgrep-helm-autoloads.el") (car load-path))))
 
 
 
-(autoload 'wgrep-helm-setup "wgrep-helm" "\
-
-
-\(fn)" nil nil)
+(autoload 'wgrep-helm-setup "wgrep-helm" nil nil nil)
 
 (add-hook 'helm-grep-mode-hook 'wgrep-helm-setup)
 
 (add-hook 'helm-occur-mode-hook 'wgrep-helm-setup)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "wgrep-helm" '("wgrep-helm-")))
+(register-definition-prefixes "wgrep-helm" '("wgrep-helm-"))
 
 
 )
@@ -2391,10 +2388,10 @@ The buffer on focus when the command is called is set as the target buffer." t n
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.15/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.15/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.16/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.16/tree-sitter-langs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.15/tree-sitter-langs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.16/tree-sitter-langs-autoloads.el") (car load-path))))
 
 
 

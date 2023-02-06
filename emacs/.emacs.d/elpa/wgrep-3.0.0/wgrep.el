@@ -1,13 +1,16 @@
-;;; wgrep.el --- Writable grep buffer and apply the changes to files
+;;; wgrep.el --- Writable grep buffer -*- lexical-binding: t -*-
 
-;; Copyright (C) 2010-2020 Masahiro Hayashi
+;; Copyright (C) 2010-2020,2023 Masahiro Hayashi
+;; Copyright (C) 2002-2009 Matsushita Akihisa <akihisa@mail.ne.jp>
 
 ;; Author: Masahiro Hayashi <mhayashi1120@gmail.com>
 ;; Keywords: grep edit extensions
-;; Package-Version: 2.3.2
+;; Package-Version: 3.0.0
+;; Package-Commit: b4d69280d8a6a5ded1597e02afbaa811a160383b
 ;; URL: http://github.com/mhayashi1120/Emacs-wgrep/raw/master/wgrep.el
 ;; Emacs: GNU Emacs 25 or later
-;; Version: 2.3.2
+;; Package-Requires: ((emacs "25.1"))
+;; Version: 3.0.0
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -23,8 +26,6 @@
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
-
-;; Copyright (C) 2002-2009 Matsushita Akihisa <akihisa@mail.ne.jp>
 
 ;;; Commentary:
 
@@ -81,7 +82,7 @@
 ;; - Can handle newline insertion in *grep* buffer.
 ;; - Delete whole line include newline.
 
-;; ### Similar softwares:
+;; ### Similar software:
 
 ;; [GNU sed](https://www.gnu.org/software/sed/)
 ;; [helm-ag](https://github.com/syohex/emacs-helm-ag) has a similar feature.
@@ -124,9 +125,9 @@
 ;;; Variable / Constant
 ;;;
 
-;;
-;; Customize
-;;
+;;;;
+;;;; Customize
+;;;;
 
 (defcustom wgrep-change-readonly-file nil
   "Non-nil means to enable change read-only files."
@@ -154,9 +155,9 @@ Key to enable `wgrep-mode'."
 
 (defvar wgrep-mode-map nil)
 
-;;
-;; Internal variable
-;;
+;;;;
+;;;; Internal variable
+;;;;
 
 (defvar wgrep-readonly-state nil)
 (make-variable-buffer-local 'wgrep-readonly-state)
@@ -182,9 +183,9 @@ Key to enable `wgrep-mode'."
 ;; GNU Emacs have this variable at least version 21 or later
 (defvar auto-coding-regexp-alist)
 
-;;
-;; Constant
-;;
+;;;;
+;;;; Constant
+;;;;
 
 ;; These regexp come from `grep-regexp-alist' at grep.el
 (eval-and-compile
@@ -208,15 +209,15 @@ Key to enable `wgrep-mode'."
      wgrep-colon-file-separator-header-regexp
      "\\)")))
 
-;;
-;; Error
-;;
+;;;;
+;;;; Error
+;;;;
 
 (define-error 'wgrep-error "wgrep error")
 
-;;
-;; Overridable functions / regexp
-;;
+;;;;
+;;;; Overridable functions / regexp
+;;;;
 
 (defvar wgrep-line-file-regexp wgrep-default-line-header-regexp
   "Regexp that match to line header of grep result.
@@ -231,9 +232,11 @@ End of this match equals start of file contents.
 `wgrep-construct-filename-property' function construct the property name with
 `wgrep-line-filename' and the value is same. This property is used for searching
  correct point of filename.
-Not like `wgrep-header/footer-parser' should not set `read-only' property.")
+Not like `wgrep-header&footer-parser' should not set `read-only' property.")
 
-(defvar wgrep-header/footer-parser 'wgrep-prepare-header/footer
+;; Previously named `wgrep-header/footer-parser` this name violate `package-lint`
+;; conventions.
+(defvar wgrep-header&footer-parser 'wgrep-prepare-header&footer
   "This function should set text properties `read-only' and `wgrep-header' to
 non editable region.")
 
@@ -241,9 +244,9 @@ non editable region.")
 ;;; Basic utilities
 ;;;
 
-;;
-;; misc
-;;
+;;;;
+;;;; misc
+;;;;
 
 ;;Hack function
 (defun wgrep-string-replace-bom (string cs)
@@ -263,7 +266,8 @@ non editable region.")
       string)))
 
 (defun wgrep-delete-whole-line ()
-  (delete-region (point-at-bol) (point-at-bol 2)))
+  (delete-region (line-beginning-position)
+                 (line-beginning-position 2)))
 
 (defun wgrep-goto-line (line)
   (goto-char (point-min))
@@ -274,9 +278,9 @@ non editable region.")
     (or (null proc)
         (eq (process-status proc) 'exit))))
 
-;;
-;; error
-;;
+;;;;
+;;;; error
+;;;;
 
 (defun wgrep-check-file (file)
   (unless (file-exists-p file)
@@ -284,9 +288,9 @@ non editable region.")
   (unless (file-writable-p file)
     (signal 'wgrep-error (list "File is not writable."))))
 
-;;
-;; overlay
-;;
+;;;;
+;;;; overlay
+;;;;
 
 (defun wgrep-cleanup-overlays (beg end)
   (dolist (ov (overlays-in beg end))
@@ -339,7 +343,7 @@ non editable region.")
         (goto-char next)
         (while (and (not (eobp))
                     (or (null (setq fn (get-text-property
-                                        (point-at-bol)
+                                        (line-beginning-position)
                                         'wgrep-line-filename)))
                         (string= fn file)))
           (when fn
@@ -358,7 +362,7 @@ non editable region.")
     (with-current-buffer wgrep-sibling-buffer
       (when (wgrep-goto-grep-line file number)
         (buffer-substring-no-properties
-         (point) (point-at-eol))))))
+         (point) (line-end-position))))))
 
 ;;;
 ;;; Prepare and parse grep <-> wgrep
@@ -470,8 +474,8 @@ non editable region.")
     (while (looking-at (format "^%s[-\0]%d-" fregexp next))
       (let ((start (match-beginning 0))
             (end (match-end 0))
-            (bol (point-at-bol))
-            (eol (point-at-eol)))
+            (bol (line-beginning-position))
+            (eol (line-end-position)))
         (put-text-property start end 'wgrep-line-filename filename)
         (put-text-property start end 'wgrep-line-number next)
         (put-text-property start (+ start flen) fprop filename)
@@ -488,10 +492,6 @@ non editable region.")
                (line (string-to-number (match-string 3)))
                (start (match-beginning 0))
                (end (match-end 0))
-               (fstart (match-beginning 1))
-               (fend (match-end 1))
-               (lstart (match-beginning 3))
-               (lend (match-end 3))
                (fprop (wgrep-construct-filename-property fn))
                (flen (length fn)))
           ;; check relative path grep result
@@ -514,9 +514,9 @@ non editable region.")
             (forward-line -1))))
        (t
         ;; Add property but this may be removed by `wgrep-prepare-context-while'
-        (put-text-property
-         (point-at-bol) (point-at-eol)
-         'wgrep-ignore t)))
+        (put-text-property (line-beginning-position)
+                           (line-end-position)
+                           'wgrep-ignore t)))
       (forward-line 1))))
 
 (defun wgrep-current-file-and-linum ()
@@ -559,11 +559,14 @@ non editable region.")
       (let ((inhibit-read-only t)
             (wgrep-inhibit-modification-hook t)
             buffer-read-only)
-        (funcall wgrep-header/footer-parser)
+        (funcall (or wgrep-header&footer-parser
+                     ;; TODO FIXME: workaround compat for previous code.
+                     (and (boundp 'wgrep-header/footer-parser)
+                          wgrep-header/footer-parser)))
         (wgrep-prepare-context)
         (setq wgrep-prepared t)))))
 
-(defun wgrep-prepare-header/footer ()
+(defun wgrep-prepare-header&footer ()
   (let (beg end)
     ;; Set read-only grep result header
     (goto-char (point-min))
@@ -583,7 +586,7 @@ non editable region.")
         (put-text-property beg end 'read-only t)
         (put-text-property beg end 'wgrep-footer t)))))
 
-(defun wgrep-set-header/footer-read-only (state)
+(defun wgrep-set-header&footer-read-only (state)
   (let ((inhibit-read-only t)
         (wgrep-inhibit-modification-hook t))
     ;; header
@@ -601,15 +604,15 @@ non editable region.")
 
 ;; get overlay BEG and END is passed by `after-change-functions'
 (defun wgrep-editing-overlay (&optional start end)
-  (let ((beg (or start (point-at-bol)))
-        (fin (or end (point-at-eol)))
+  (let ((beg (or start (line-beginning-position)))
+        (fin (or end (line-end-position)))
         ov bol eol
         ;; beginning/end of grep
         bog eog)
     (goto-char beg)
-    (setq bol (point-at-bol))
+    (setq bol (line-beginning-position))
     (goto-char fin)
-    (setq eol (point-at-eol))
+    (setq eol (line-end-position))
     (catch 'done
       (dolist (o (overlays-in bol eol))
         ;; find overlay that have changed by user.
@@ -651,7 +654,7 @@ non editable region.")
         (overlay-put ov 'wgrep-edit-text value))))
     ov))
 
-(defun wgrep-after-change-function (beg end leng-before)
+(defun wgrep-after-change-function (beg end _leng-before)
   (cond
    (wgrep-inhibit-modification-hook nil)
    ((= (point-min) (point-max))
@@ -729,15 +732,14 @@ non editable region.")
   (dolist (prop '(modification-hooks insert-in-front-hooks insert-behind-hooks))
     (overlay-put
      ov prop
-     `((lambda (ov after-p &rest ignore)
-         (when after-p
-           (delete-overlay ov)))))))
+     `(,(lambda (ov after-p &rest _ignore)
+          (when after-p
+            (delete-overlay ov)))))))
 
 (defun wgrep-replace-to-new-line (new-text)
   ;; delete grep extracted region (restricted to a line)
-  (delete-region (point-at-bol) (point-at-eol))
-  (let ((beg (point))
-        end)
+  (delete-region (line-beginning-position) (line-end-position))
+  (let ((beg (point)))
     (insert new-text)
     (let* ((end (point))
            ;; highlight the changed line
@@ -747,7 +749,7 @@ non editable region.")
 
 (defun wgrep-flush-whole-line ()
   (wgrep-put-overlay-to-file-buffer
-   (point-at-bol) (point-at-eol))
+   (line-beginning-position) (line-end-position))
   (wgrep-delete-whole-line))
 
 ;; EDITOR ::= FILE (absolute-path) . EDITS
@@ -765,9 +767,8 @@ non editable region.")
         (let* ((name (get-text-property (point) 'wgrep-line-filename))
                (linum (get-text-property (point) 'wgrep-line-number))
                (start (next-single-property-change
-                       (point) 'wgrep-line-filename nil (point-at-eol)))
+                       (point) 'wgrep-line-filename nil (line-end-position)))
                (file (expand-file-name name default-directory))
-               (file-error nil)
                (old (overlay-get edit-field 'wgrep-old-text))
                (new (overlay-get edit-field 'wgrep-edit-text))
                result)
@@ -859,7 +860,6 @@ non editable region.")
   ;; Apply EDITOR to file/buffer. See `wgrep-compute-transaction'.
   ;; Return succeeded count and first result overlay in *grep* buffer.
   (let* ((file (car editor))
-         (edits (cdr editor))
          (open-buffer (get-file-buffer file))
          (buffer
           (cond
@@ -906,7 +906,7 @@ NEW may be nil this means deleting whole line."
     ;; Check buffer line was modified after execute grep.
     (unless (string= old
                      (buffer-substring-no-properties
-                      (point-at-bol) (point-at-eol)))
+                      (line-beginning-position) (line-end-position)))
       (signal 'wgrep-error (list "Buffer was changed after grep.")))
     (cond
      (new
@@ -983,8 +983,8 @@ a file."
 (defun wgrep-maybe-echo-error-at-point ()
   (when (null (current-message))
     (let ((ov (catch 'found
-                (dolist (o (overlays-in
-                            (point-at-bol) (point-at-eol)))
+                (dolist (o (overlays-in (line-beginning-position)
+                                        (line-end-position)))
                   (when (overlay-get o 'wgrep-reject-message)
                     (throw 'found o))))))
       (when ov
@@ -1010,7 +1010,7 @@ These changes are not immediately saved to disk unless
      ((> all-length wgrep-too-many-file-length)
       (when (y-or-n-p (eval-when-compile
                         (concat
-                         "Edited files are too many." 
+                         "Edited files are too many."
                          " Apply the changes to disk with non-confirmation?")))
         (setq wgrep-auto-apply-disk t))))
     (while tran
@@ -1088,7 +1088,7 @@ Example:
   (let ((modified (buffer-modified-p))
         (read-only (not wgrep-readonly-state)))
     (wgrep-set-readonly-area read-only)
-    (wgrep-set-header/footer-read-only read-only)
+    (wgrep-set-header&footer-read-only read-only)
     (set-buffer-modified-p modified)
     (if wgrep-readonly-state
         (message "Removing the whole line is now disabled.")
@@ -1167,7 +1167,6 @@ This change will be applied when \\[wgrep-finish-edit]."
     (define-key map "\C-c\C-r" 'wgrep-remove-change)
     (define-key map "\C-x\C-s" 'wgrep-finish-edit)
     (define-key map "\C-c\C-u" 'wgrep-remove-all-change)
-    (define-key map "\C-c\C-[" 'wgrep-remove-all-change)
     (define-key map "\C-c\C-k" 'wgrep-abort-changes)
     (define-key map "\C-x\C-q" 'wgrep-exit)
 

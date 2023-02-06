@@ -1,4 +1,4 @@
-;;; wgrep-autoloads.el --- automatically extracted autoloads
+;;; wgrep-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
 ;;
 ;;; Code:
 
@@ -10,13 +10,15 @@
 ;;; Generated autoloads from wgrep.el
 
 (autoload 'wgrep-setup "wgrep" "\
-Setup wgrep preparation.
-
-\(fn)" nil nil)
+Setup wgrep preparation." nil nil)
 
 (add-hook 'grep-setup-hook 'wgrep-setup)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "wgrep" '("wgrep-")))
+(register-definition-prefixes "wgrep" '("wgrep-"))
+
+;;;***
+
+;;;### (autoloads nil nil ("wgrep-pkg.el") (0 0 0 0))
 
 ;;;***
 

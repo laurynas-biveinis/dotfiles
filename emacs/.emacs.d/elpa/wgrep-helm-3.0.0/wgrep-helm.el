@@ -1,14 +1,15 @@
-;;; wgrep-helm.el --- Writable helm-grep-mode buffer and apply the changes to files
+;;; wgrep-helm.el --- Writable helm-grep-mode buffer -*- lexical-binding: t -*-
 
-;; Copyright (C) 2010-2020 Masahiro Hayashi
+;; Copyright (C) 2010-2020,2023 Masahiro Hayashi
 
 ;; Author: Masahiro Hayashi <mhayashi1120@gmail.com>
 ;; Keywords: grep edit extensions
-;; Package-Version: 2.3.2
-;; Package-Requires: ((wgrep "2.1.1"))
+;; Package-Version: 3.0.0
+;; Package-Commit: b4d69280d8a6a5ded1597e02afbaa811a160383b
+;; Package-Requires: ((emacs "25.1") (wgrep "3.0.0"))
 ;; URL: http://github.com/mhayashi1120/Emacs-wgrep/raw/master/wgrep-helm.el
 ;; Emacs: GNU Emacs 25 or later
-;; Version: 2.3.2
+;; Version: 3.0.0
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -49,13 +50,13 @@
 
 ;;;###autoload
 (defun wgrep-helm-setup ()
-  (set (make-local-variable 'wgrep-header/footer-parser)
-       'wgrep-helm-prepare-header/footer)
+  (set (make-local-variable 'wgrep-header&footer-parser)
+       'wgrep-helm-prepare-header&footer)
   (set (make-local-variable 'wgrep-results-parser)
        'wgrep-helm-parse-command-results)
   (wgrep-setup-internal))
 
-(defun wgrep-helm-prepare-header/footer ()
+(defun wgrep-helm-prepare-header&footer ()
   (let (beg end)
     ;; Set read-only grep result header
     (setq beg (point-min))
@@ -76,7 +77,8 @@
         (let* ((value (get-text-property (point) 'helm-realvalue))
                (data  (when (eq major-mode 'helm-grep-mode)
                         (helm-grep-split-line value)))
-               (fn    (or (get-text-property (point) 'buffer-name)
+               (bufname (get-text-property (point) 'buffer-name))
+               (fn    (or (and bufname (buffer-file-name (get-buffer bufname)))
                           (get-text-property (point) 'helm-grep-fname)))
                (line  (if data
                           (string-to-number (nth 1 data))
