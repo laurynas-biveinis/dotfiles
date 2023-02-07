@@ -1,9 +1,10 @@
 #!/bin/sh
 
-set -eux
+set -eu
 
-# Must be no changes outside Emacs
-git_status=$(git status -s -u -- ':!emacs')
+# Must be no changes outside Emacs ELPA
+# TODO(laurynas): check that no changes in elisp
+git_status=$(git status -s -u -- ':!emacs/.emacs.d/elpa')
 readonly git_status
 if [ -n "$git_status" ]; then
     echo "Cannot commit Emacs package metadata update: changes outside emacs"
