@@ -26,6 +26,9 @@ export PATH=/usr/local/bin:/usr/local/bin:$PATH
 if [ -d /opt/homebrew/bin ]; then
     export PATH=/opt/homebrew/bin:$PATH
 fi
+if [ -d /opt/homebrew/opt/bison/bin ]; then
+    export PATH=/opt/homebrew/opt/bison/bin:$PATH
+fi
 export PATH=~/usr/bin:$PATH
 
 fpath+=~/.zsh.d/functions
