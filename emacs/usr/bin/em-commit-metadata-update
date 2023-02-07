@@ -2,7 +2,13 @@
 
 set -eu
 
-# TODO(laurynas): check git status
+# Must be no changes outside Emacs
+git_status=$(git status -s -u -- ':!emacs')
+readonly git_status
+if [ -n "$git_status" ]; then
+    echo "Cannot commit Emacs package metadata update: changes outside emacs"
+    exit 1
+fi
 git add --all
 git commit -m "Emacs package metadata update"
 git push
