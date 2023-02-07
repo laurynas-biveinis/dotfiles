@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -eux
 
 # Must be no changes outside Emacs
 git_status=$(git status -s -u -- ':!emacs')
