@@ -4,7 +4,7 @@ set -eu
 
 # Must be no changes outside Emacs ELPA
 # TODO(laurynas): check that changes in elisp exist
-git_status=$(git status -s -u -- ':!emacs/.emacs.d/elpa')
+git_status=$(git status -s -u -- ':!emacs/.emacs.d/')
 readonly git_status
 if [ -n "$git_status" ]; then
     echo "Cannot commit Emacs package metadata update: changes outside emacs"
