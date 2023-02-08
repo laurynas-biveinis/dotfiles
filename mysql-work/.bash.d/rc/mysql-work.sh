@@ -38,7 +38,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
 else
     MARIA_EXTRA=""
     FB_EXTRA="-DWITH_ZSTD=bundled -DWITH_PROTOBUF=bundled"
-    MY8028_EXTRA_CXX_FLAGS=""
+    MY8028_EXTRA_CXX_FLAGS="-Wno-deprecated-declarations"
     MY8031_EXTRA_CXX_FLAGS=""
     MY8028_OS_EXTRA=""
     MY8030_OS_EXTRA=""
