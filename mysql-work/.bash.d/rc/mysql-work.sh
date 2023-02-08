@@ -33,12 +33,12 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     MARIA_EXTRA="-DCMAKE_C_FLAGS=\"-isystem /usr/local/include\" \
 -DCMAKE_CXX_FLAGS=\"-isystem /usr/local/include\""
     FB_EXTRA=""
-    MY8028_EXTRA_CXX_FLAGS="-Wno-shadow-field -Wno-deprecated-declarations"
+    MY8028_EXTRA_CXX_FLAGS="-Wno-shadow-field"
     MY8031_EXTRA_CXX_FLAGS="-Wno-deprecated-declarations"
 else
     MARIA_EXTRA=""
     FB_EXTRA="-DWITH_ZSTD=bundled -DWITH_PROTOBUF=bundled"
-    MY8028_EXTRA_CXX_FLAGS="-Wno-deprecated-declarations"
+    MY8028_EXTRA_CXX_FLAGS="-Wno-unused-label"
     MY8031_EXTRA_CXX_FLAGS=""
     MY8028_OS_EXTRA=""
     MY8030_OS_EXTRA=""
@@ -80,10 +80,10 @@ MY8027_28_EXTRA="-DWITH_FIDO=bundled"
 MY8028_EXTRA="-DWITH_RAPIDJSON=bundled -DWITH_LZ4=bundled $MY8028_OS_EXTRA \
 -DCMAKE_CXX_FLAGS=$MY8028_EXTRA_CXX_FLAGS \
 -DCMAKE_C_FLAGS_DEBUG='$MY8028_EXTRA_CXX_FLAGS -Wno-unknown-warning-option \
--Wno-unused-but-set-variable -Wno-discarded-qualifiers -g' \
+-Wno-unused-but-set-variable -Wno-discarded-qualifiers
+-Wno-deprecated-declarations -g' \
 -DCMAKE_CXX_FLAGS_DEBUG='$MY8028_EXTRA_CXX_FLAGS -Wno-unknown-warning-option \
--Wno-unused-but-set-variable \
--g' \
+-Wno-unused-but-set-variable -Wno-deprecated-declarations -g' \
 -DCMAKE_CXX_FLAGS_RELEASE='$MY8028_EXTRA_CXX_FLAGS -O2 -g -DNDEBUG'"
 
 unset MY8028_EXTRA_CXX_FLAGS
