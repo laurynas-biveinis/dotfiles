@@ -968,17 +968,6 @@ that is used to invoke that transient.
      For example, the scope of the ‘magit-branch-configure’ transient is
      the branch whose variables are being configured.
 
-   It is possible to define one or more groups independently of a prefix
-definition, which is useful when those groups are to be used by more
-than just one prefix command.
-
- -- Macro: transient-define-groups name group...
-     This macro defines one or more groups of infix and suffix commands
-     and stores them in a property of the symbol NAME.  GROUP has the
-     same form as for ‘transient-define-prefix’.  Subsequently NAME can
-     be used in a GROUP of ‘transient-define-prefix’, as described in
-     the next section.
-
 
 File: transient.info,  Node: Binding Suffix and Infix Commands,  Next: Defining Suffix and Infix Commands,  Prev: Defining Transients,  Up: Defining New Commands
 
@@ -1097,21 +1086,8 @@ table.
 
    Inside group specifications, including inside contained suffix
 specifications, nothing has to be quoted and quoting anyway is invalid.
-
-   How symbols are treated, depends on context.  Inside suffix
-specifications they often name functions.  However if they appear in a
-place where a group is expected, then they are treated as indirect group
-specifications.  Such a symbol must have an associated group
-specification, created using ‘transient-define-groups’.
-
-   Likewise a symbol can appear in a place where a suffix specification
-is expected.  The value of the ‘transient--layout’ property of that
-symbol must be a single suffix specification or a list of such
-specifications.  Currently no macro exist that would create such a
-symbol, and this feature should usually not be used.
-
-   The value following a keyword, can be explicitly unquoted using ‘,’.
-This feature is experimental and should be avoided as well.
+The value following a keyword, can be explicitly unquoted using ‘,’.
+This feature is experimental and should be avoided.
 
    The form of suffix specifications is documented in the next node.
 
@@ -2506,7 +2482,6 @@ Appendix C Command and Function Index
                                                               (line  22)
 * transient-define-argument:             Defining Suffix and Infix Commands.
                                                               (line  61)
-* transient-define-groups:               Defining Transients. (line  59)
 * transient-define-infix:                Defining Suffix and Infix Commands.
                                                               (line  26)
 * transient-define-prefix:               Defining Transients. (line  13)
@@ -3394,49 +3369,49 @@ Ref: Developer Options33354
 Node: Modifying Existing Transients34602
 Node: Defining New Commands38794
 Node: Defining Transients39130
-Node: Binding Suffix and Infix Commands42104
-Node: Group Specifications42962
-Node: Suffix Specifications48200
-Node: Defining Suffix and Infix Commands52476
-Node: Using Infix Arguments55682
-Node: Transient State58516
-Ref: Pre-commands for Infixes62479
-Ref: Pre-commands for Suffixes62750
-Ref: Pre-commands for Non-Suffixes65171
-Ref: Special Pre-Commands66315
-Node: Classes and Methods66823
-Node: Group Classes69037
-Node: Group Methods70964
-Node: Prefix Classes72217
-Node: Suffix Classes73308
-Node: Suffix Methods75554
-Node: Suffix Value Methods75875
-Node: Suffix Format Methods78633
-Node: Prefix Slots80082
-Ref: Internal Prefix Slots81362
-Node: Suffix Slots82619
-Ref: Slots of transient-suffix82987
-Ref: Slots of transient-infix83841
-Ref: Slots of transient-variable86961
-Ref: Slots of transient-switches87063
-Node: Predicate Slots87426
-Node: Related Abstractions and Packages88691
-Node: Comparison With Prefix Keys and Prefix Arguments88978
-Ref: Regular Prefix Commands89663
-Ref: Regular Prefix Arguments90011
-Ref: Transients90980
-Node: Comparison With Other Packages99251
-Ref: Magit-Popup99482
-Ref: Hydra100389
-Node: FAQ103445
-Ref: Can I control how the popup buffer is displayed?103588
-Ref: Why did some of the key bindings change?103769
-Ref: Why does q not quit popups anymore?106122
-Node: Keystroke Index107215
-Node: Command and Function Index108933
-Node: Variable Index115378
-Node: Concept Index117651
-Node: GNU General Public License120395
+Node: Binding Suffix and Infix Commands41566
+Node: Group Specifications42424
+Node: Suffix Specifications46993
+Node: Defining Suffix and Infix Commands51269
+Node: Using Infix Arguments54475
+Node: Transient State57309
+Ref: Pre-commands for Infixes61272
+Ref: Pre-commands for Suffixes61543
+Ref: Pre-commands for Non-Suffixes63964
+Ref: Special Pre-Commands65108
+Node: Classes and Methods65616
+Node: Group Classes67830
+Node: Group Methods69757
+Node: Prefix Classes71010
+Node: Suffix Classes72101
+Node: Suffix Methods74347
+Node: Suffix Value Methods74668
+Node: Suffix Format Methods77426
+Node: Prefix Slots78875
+Ref: Internal Prefix Slots80155
+Node: Suffix Slots81412
+Ref: Slots of transient-suffix81780
+Ref: Slots of transient-infix82634
+Ref: Slots of transient-variable85754
+Ref: Slots of transient-switches85856
+Node: Predicate Slots86219
+Node: Related Abstractions and Packages87484
+Node: Comparison With Prefix Keys and Prefix Arguments87771
+Ref: Regular Prefix Commands88456
+Ref: Regular Prefix Arguments88804
+Ref: Transients89773
+Node: Comparison With Other Packages98044
+Ref: Magit-Popup98275
+Ref: Hydra99182
+Node: FAQ102238
+Ref: Can I control how the popup buffer is displayed?102381
+Ref: Why did some of the key bindings change?102562
+Ref: Why does q not quit popups anymore?104915
+Node: Keystroke Index106008
+Node: Command and Function Index107726
+Node: Variable Index114098
+Node: Concept Index116371
+Node: GNU General Public License119115
 
 End Tag Table
 

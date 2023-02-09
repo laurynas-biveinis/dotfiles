@@ -1,4 +1,4 @@
-This is docYGWB3F.info, produced by makeinfo version 6.7 from
+This is docp3LwKf.info, produced by makeinfo version 6.7 from
 compat.texi.
 
 Copyright © 2022-2023 Free Software Foundation, Inc.
@@ -20,14 +20,14 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docYGWB3F.info,  Node: Top,  Next: Introduction,  Up: (dir)
+File: docp3LwKf.info,  Node: Top,  Next: Introduction,  Up: (dir)
 
 "Compat" Manual
 ***************
 
 This manual documents the usage of the "Compat" Emacs lisp library, the
 forward-compatibility library for Emacs Lisp, corresponding to version
-29.1.3.2.
+29.1.3.3.
 
    Copyright © 2022-2023 Free Software Foundation, Inc.
 
@@ -68,7 +68,7 @@ Support
 
 
 
-File: docYGWB3F.info,  Node: Introduction,  Next: Support,  Prev: Top,  Up: Top
+File: docp3LwKf.info,  Node: Introduction,  Next: Support,  Prev: Top,  Up: Top
 
 1 Introduction
 **************
@@ -80,7 +80,7 @@ File: docYGWB3F.info,  Node: Introduction,  Next: Support,  Prev: Top,  Up: Top
 * Limitations::
 
 
-File: docYGWB3F.info,  Node: Overview,  Next: Usage,  Up: Introduction
+File: docp3LwKf.info,  Node: Overview,  Next: Usage,  Up: Introduction
 
 1.1 Overview
 ============
@@ -95,7 +95,7 @@ audience are package developers that are interested in using newer
 developments, without having to break compatibility.
 
 
-File: docYGWB3F.info,  Node: Usage,  Next: Limitations,  Prev: Overview,  Up: Introduction
+File: docp3LwKf.info,  Node: Usage,  Next: Limitations,  Prev: Overview,  Up: Introduction
 
 1.2 Usage
 =========
@@ -103,7 +103,7 @@ File: docYGWB3F.info,  Node: Usage,  Next: Limitations,  Prev: Overview,  Up: In
 The intended use-case for this library is for package developers to add
 as a dependency in the header:
 
-     ;; Package-Requires: ((emacs "24.4") (compat "29.1.3.2"))
+     ;; Package-Requires: ((emacs "24.4") (compat "29.1.3.3"))
 
    There is no need to depend on ‘emacs’ 24.4 specifically.  One can
 choose to any newer version, if features not provided by Compat
@@ -118,10 +118,11 @@ itself, the noerror flag should be specified.
 
      (require 'compat nil 'noerror)
 
-   This will load all necessary Compat definitions.  Note that if Compat
-is installed on a recent version of Emacs, all of the definitions are
-disabled at compile time, such that no negative performance impact is
-incurred.
+   This will load all necessary Compat definitions.  Compat also loads
+the ‘seq’ library which is preloaded by default on Emacs 29.  Note that
+if Compat is installed on a recent version of Emacs, all of the
+definitions are disabled at compile time, such that no negative
+performance impact is incurred.
 
    Note that Compat provides replacement functions with extended
 functionality for functions that are already defined (‘sort’, ‘assoc’,
@@ -172,7 +173,7 @@ provide a development mailing list
 <~pkal/compat-devel@lists.sr.ht>).
 
 
-File: docYGWB3F.info,  Node: Limitations,  Prev: Usage,  Up: Introduction
+File: docp3LwKf.info,  Node: Limitations,  Prev: Usage,  Up: Introduction
 
 1.3 Limitations
 ===============
@@ -208,8 +209,8 @@ belong here, a *note report: Development. would be much appreciated.
      The macro ‘setopt’ is such an example.
 
    • The added or extended function belongs to the “application level”
-     and not the “library level”.  Features which not preloaded often
-     belong to the “application level”.  Application examples are
+     and not the “library level”.  Features which are not preloaded
+     often belong to the “application level”.  Application examples are
      programming modes or modes like Dired, IRC and Gnus.  If these
      modes are extended with new functions, these are not ported back.
 
@@ -219,8 +220,13 @@ belong here, a *note report: Development. would be much appreciated.
      overhead, even when the new feature is not used, Compat does not
      use advices.  As a compromise, compatibility functions and macros
      with a changed calling convention or behavior can be accessed via
-     the ‘compat-function’ and ‘compat-call’ macros.  An example is the
-     function ‘plist-get’.
+     the ‘compat-function’ and ‘compat-call’ macros.  In this manual we
+     call such definitions “Extended Definitions”.  An example is the
+     function ‘plist-get’.  Note that extended functions are subject to
+     closer scrutiny, since their usage via ‘compat-call’ is not
+     completely painless.  If a particular extended function does not
+     see much usage or the extension yields only marginal benefits, we
+     may not provide it as part of Compat.
 
    • Bug fixes are usually not ported back as part of Compat.  Sometimes
      library functions show wrong behavior for edge cases.  In those
@@ -230,32 +236,32 @@ belong here, a *note report: Development. would be much appreciated.
      the benefits would be small given that Compat does not override
      existing definitions.
 
-   • New functionality depends on an entire new, non-trivial library.
-     Sometimes these are provided via ELPA (xref, project, seq, map,
-     ...), but other times it would be infeasible to duplicate an entire
-     library within Compat while also providing the necessary backwards
-     compatibility.
+   • The definition belongs to an Emacs core package, which is also
+     distributed via ELPA. Compat does not have to provide backward
+     compatibility for core packages since the updated package can be
+     installed directly from ELPA. Examples include the libraries xref,
+     project, seq, map and transient.
 
-   • New functionality was implemented in the C core, and depends on
+   • New functionality depends on an entire new, non-trivial core
+     library, which is infeasible to duplicate within Compat.  If a
+     backport of such a library is required, the preferred approach is
+     to either release the library separately on GNU ELPA as a core
+     package or as a separately maintained GNU ELPA package.  An example
+     is the iso8601 library.
+
+   • New functionality was implemented in the C core, or depends on
      external libraries that cannot be reasonably duplicated in the
-     scope of a compatibility library.  For example a missing libxml
+     scope of a compatibility library.  Sometimes new functions on the C
+     level rely on internal data structures, which we cannot access,
+     rendering a backport impossible.  For example a missing libxml
      cannot be emulated.
 
    • The semantics of Elisp changed on a deep level.  For example the
      addition of Bigint support in Emacs 27.1 cannot be replicated on
      the level of Compat.
 
-   • Backported functions would introduce performance bugs.  Sometimes
-     functions provided by newer Emacs versions are implemented on the C
-     level, relying on internal data structures, which we cannot access.
-     In this case a backport may still be possible but would be
-     significantly slower than the newer functionality, such that
-     downstream packages would observe performance bugs.  Examples are
-     the ‘string-pixel-width’ function and the ‘json-parse-string’
-     function provided by libjansson.
-
 
-File: docYGWB3F.info,  Node: Support,  Next: Development,  Prev: Introduction,  Up: Top
+File: docp3LwKf.info,  Node: Support,  Next: Development,  Prev: Introduction,  Up: Top
 
 2 Support
 *********
@@ -272,7 +278,7 @@ manage to provide for each Emacs version.
 * Emacs 29.1::                   Compatibility support for Emacs 29.1
 
 
-File: docYGWB3F.info,  Node: Emacs 25.1,  Next: Emacs 26.1,  Up: Support
+File: docp3LwKf.info,  Node: Emacs 25.1,  Next: Emacs 26.1,  Up: Support
 
 2.1 Emacs 25.1
 ==============
@@ -500,9 +506,10 @@ implemented in 25.1:
    • The function ‘window-max-chars-per-line’.
    • The function ‘set-binary-mode’.
    • The functions ‘bufferpos-to-filepos’ and ‘filepos-to-bufferpos’.
+   • The ‘thunk’ library.
 
 
-File: docYGWB3F.info,  Node: Emacs 26.1,  Next: Emacs 27.1,  Prev: Emacs 25.1,  Up: Support
+File: docp3LwKf.info,  Node: Emacs 26.1,  Next: Emacs 27.1,  Prev: Emacs 25.1,  Up: Support
 
 2.2 Emacs 26.1
 ==============
@@ -909,9 +916,11 @@ implemented in 26.1:
    • All changes related to ‘display-buffer’.
    • The function ‘window-swap-states’.
    • The function ‘string-version-lessp’.
+   • The ‘svg’ library.
+   • The ‘xdg’ library.
 
 
-File: docYGWB3F.info,  Node: Emacs 27.1,  Next: Emacs 28.1,  Prev: Emacs 26.1,  Up: Support
+File: docp3LwKf.info,  Node: Emacs 27.1,  Next: Emacs 28.1,  Prev: Emacs 26.1,  Up: Support
 
 2.3 Emacs 27.1
 ==============
@@ -974,6 +983,17 @@ functions are made available by Compat on Emacs versions older than
      This predicate tests whether its argument is a small integer, and
      returns ‘t’ if so, ‘nil’ otherwise.  Small integers can be compared
      with ‘eq’.
+
+ -- Special Form: with-suppressed-warnings warnings body...
+     In execution, this is equivalent to ‘(progn BODY...)’, but the
+     compiler does not issue warnings for the specified conditions in
+     BODY.  WARNINGS is an association list of warning symbols and
+     function/variable symbols they apply to.  For instance, if you wish
+     to call an obsolete function called ‘foo’, but want to suppress the
+     compilation warning, say:
+
+          (with-suppressed-warnings ((obsolete foo))
+            (foo ...))
 
  -- Function: proper-list-p object
      This function returns the length of OBJECT if it is a proper list,
@@ -1354,20 +1374,22 @@ implemented in 27.1:
    • The function ‘decoded-time-add’.
    • The function ‘decoded-time-set-defaults’.
    • The function ‘time-convert’.
-   • All ‘iso8601-*’ functions.
    • The macro ‘benchmark-progn’.
-   • The macro ‘with-suppressed-warnings’.
    • Support for ‘condition-case’ to handle t.
    • The function ‘file-system-info’.
    • The function ‘group-name’.
+   • The function ‘face-extend-p’ and ‘set-face-extend’.
    • Additional ‘format-spec’ modifiers.
    • Support for additional body forms for
      ‘define-globalized-minor-mode’.
    • The macro ‘with-connection-local-variables’ and related
      functionality.
+   • The ‘iso8601’ library.
+   • The ‘exif’ library.
+   • The ‘image-converter’ library.
 
 
-File: docYGWB3F.info,  Node: Emacs 28.1,  Next: Emacs 29.1,  Prev: Emacs 27.1,  Up: Support
+File: docp3LwKf.info,  Node: Emacs 28.1,  Next: Emacs 29.1,  Prev: Emacs 27.1,  Up: Support
 
 2.4 Emacs 28.1
 ==============
@@ -1727,6 +1749,11 @@ functions are made available by Compat on Emacs versions older than
      native compilation is not available, this function always returns
      ‘nil’.
 
+ -- Macro: with-window-non-dedicated window &rest body
+     Evaluate BODY with WINDOW temporarily made non-dedicated.  If
+     WINDOW is nil, use the selected window.  Return the value of the
+     last form in BODY.
+
 2.4.2 Extended Definitions
 --------------------------
 
@@ -1761,11 +1788,6 @@ calling convention or behavior was extended in Emacs 28.1:
 
      This compatibility version handles the optional argument
      ALL-FRAMES.
-
- -- Macro: with-window-non-dedicated window &rest body
-     Evaluate BODY with WINDOW temporarily made non-dedicated.  If
-     WINDOW is nil, use the selected window.  Return the value of the
-     last form in BODY.
 
 2.4.3 Missing Definitions
 -------------------------
@@ -1804,10 +1826,10 @@ implemented in 28.1:
    • The function ‘innermost-minibuffer-p’.
    • The function ‘max-mini-window-lines’.
    • The function ‘lock-file’ and ‘unlock-file’.
-   • Any ‘multisession’ functionality.
+   • The ‘multisession’ library.
 
 
-File: docYGWB3F.info,  Node: Emacs 29.1,  Prev: Emacs 28.1,  Up: Support
+File: docp3LwKf.info,  Node: Emacs 29.1,  Prev: Emacs 28.1,  Up: Support
 
 2.5 Emacs 29.1
 ==============
@@ -2375,6 +2397,71 @@ will be the need for changes, so use these functions with care.
      The same keyword arguments are supported as in ‘ert-with-temp-file’
      (which see), except for ‘:text’.
 
+ -- Macro: cl-with-gensyms names... body
+     This macro expands to code that executes BODY with each of the
+     variables in NAMES bound to a fresh uninterned symbol, or “gensym”,
+     in Common Lisp parlance.  For macros requiring more than one
+     gensym, use of ‘cl-with-gensyms’ shortens the code and renders
+     one’s intentions clearer.  Compare:
+
+          (defmacro my-macro (foo)
+            (let ((bar (gensym "bar"))
+                  (baz (gensym "baz"))
+                  (quux (gensym "quux")))
+              `(let ((,bar (+ ...)))
+                 ...)))
+
+          (defmacro my-macro (foo)
+            (cl-with-gensyms (bar baz quux)
+              `(let ((,bar (+ ...)))
+                 ...)))
+
+ -- Macro: cl-once-only ((variable form)...) body
+     This macro is primarily to help the macro programmer ensure that
+     forms supplied by the user of the macro are evaluated just once by
+     its expansion even though the result of evaluating the form is to
+     occur more than once.  Less often, this macro is used to ensure
+     that forms supplied by the macro programmer are evaluated just
+     once.
+
+     Each VARIABLE may be used to refer to the result of evaluating FORM
+     in BODY.  ‘cl-once-only’ binds each VARIABLE to a fresh uninterned
+     symbol during the evaluation of BODY.  Then, ‘cl-once-only’ wraps
+     the final expansion in code to evaluate each FORM and bind the
+     result to the corresponding uninterned symbol.  Thus, when the
+     macro writer substitutes the value for VARIABLE into the expansion
+     they are effectively referring to the result of evaluating FORM,
+     rather than FORM itself.  Another way to put this is that each
+     VARIABLE is bound to an expression for the (singular) result of
+     evaluating FORM.
+
+     The most common case is where VARIABLE is one of the arguments to
+     the macro being written, so ‘(variable variable)’ may be
+     abbreviated to just ‘variable’.
+
+     For example, consider this macro:
+
+          (defmacro my-list (x y &rest forms)
+            (let ((x-result (gensym))
+                  (y-result (gensym)))
+              `(let ((,x-result ,x)
+                     (,y-result ,y))
+                 (list ,x-result ,y-result ,x-result ,y-result
+                       (progn ,@forms))))
+
+     In a call like ‘(my-list (pop foo) ...)’ the intermediate binding
+     to ‘x-result’ ensures that the ‘pop’ is not done twice.  But as a
+     result the code is rather complex: the reader must keep track of
+     how ‘x-result’ really just means the first parameter of the call to
+     the macro, and the required use of multiple gensyms to avoid
+     variable capture by ‘(progn ,@forms)’ obscures things further.
+     ‘cl-once-only’ takes care of these details:
+
+          (defmacro my-list (x y &rest forms)
+            (cl-once-only (x y)
+              `(list ,x ,y ,x ,y
+                     (progn ,@forms))))
+
 2.5.2 Extended Definitions
 --------------------------
 
@@ -2484,20 +2571,26 @@ Compat does not provide support for the following Lisp features
 implemented in 29.1:
 
    • The function ‘imagep’.
+   • The function ‘image-at-point-p’.
    • The function ‘function-documentation’.
-   • The command ‘string-edit’ and ‘read-string-from-buffer’.
    • The macro ‘with-undo-amalgamate’.
    • The function ‘string-glyph-split’.
    • The function ‘string-limit’.
-   • The function ‘string-pixel-width’.
-   • The function ‘buffer-text-pixel-size’.
+   • The function ‘string-pixel-width’ and ‘buffer-text-pixel-size’.
    • The function ‘pixel-fill-region’.
-   • The function ‘textsec-suspicious-p’.
    • The function ‘minibuffer-lazy-highlight-setup’.
    • The function ‘pp-emacs-lisp-code’.
+   • The functions ‘xdg-state-home’, ‘xdg-current-desktop’ and
+     ‘xdg-session-type’.
+   • The macro ‘setopt’.
+   • The ‘oclosure’ library.
+   • The ‘textsec’ library.
+   • The ‘range’ library.
+   • The ‘string-edit’ library.
+   • The ‘vtable’ library.
 
 
-File: docYGWB3F.info,  Node: Development,  Next: Function Index,  Prev: Support,  Up: Top
+File: docp3LwKf.info,  Node: Development,  Next: Function Index,  Prev: Support,  Up: Top
 
 3 Development
 *************
@@ -2521,7 +2614,7 @@ continuous integration to check if patches preserve existing
 functionality.
 
 
-File: docYGWB3F.info,  Node: Function Index,  Next: Variable Index,  Prev: Development,  Up: Top
+File: docp3LwKf.info,  Node: Function Index,  Next: Variable Index,  Prev: Development,  Up: Top
 
 Appendix A Function Index
 *************************
@@ -2544,56 +2637,58 @@ Appendix A Function Index
 * buffer-match-p:                        Emacs 29.1.          (line 205)
 * buttonize:                             Emacs 29.1.          (line 103)
 * buttonize-region:                      Emacs 29.1.          (line 112)
+* cl-once-only:                          Emacs 29.1.          (line 588)
+* cl-with-gensyms:                       Emacs 29.1.          (line 569)
 * color-dark-p:                          Emacs 28.1.          (line 308)
 * color-values-from-color-spec:          Emacs 28.1.          (line 314)
-* compat-call:                           Usage.               (line  41)
+* compat-call:                           Usage.               (line  42)
 * compat-call <1>:                       Emacs 26.1.          (line 278)
 * compat-call alist-get:                 Emacs 26.1.          (line 344)
 * compat-call assoc:                     Emacs 26.1.          (line 316)
-* compat-call assoc-delete-all:          Emacs 27.1.          (line 406)
-* compat-call count-windows:             Emacs 28.1.          (line 385)
-* compat-call define-key:                Emacs 29.1.          (line 620)
-* compat-call executable-find:           Emacs 27.1.          (line 418)
-* compat-call file-size-human-readable:  Emacs 27.1.          (line 386)
+* compat-call assoc-delete-all:          Emacs 27.1.          (line 417)
+* compat-call count-windows:             Emacs 28.1.          (line 390)
+* compat-call define-key:                Emacs 29.1.          (line 685)
+* compat-call executable-find:           Emacs 27.1.          (line 429)
+* compat-call file-size-human-readable:  Emacs 27.1.          (line 397)
 * compat-call line-number-at-pos:        Emacs 26.1.          (line 330)
-* compat-call lookup-key:                Emacs 27.1.          (line 345)
-* compat-call plist-get:                 Emacs 29.1.          (line 636)
-* compat-call plist-member:              Emacs 29.1.          (line 660)
-* compat-call plist-put:                 Emacs 29.1.          (line 648)
-* compat-call recenter:                  Emacs 27.1.          (line 335)
-* compat-call regexp-opt:                Emacs 27.1.          (line 374)
-* compat-call set-transient-map:         Emacs 29.1.          (line 575)
-* compat-call setq-local:                Emacs 27.1.          (line 359)
+* compat-call lookup-key:                Emacs 27.1.          (line 356)
+* compat-call plist-get:                 Emacs 29.1.          (line 701)
+* compat-call plist-member:              Emacs 29.1.          (line 725)
+* compat-call plist-put:                 Emacs 29.1.          (line 713)
+* compat-call recenter:                  Emacs 27.1.          (line 346)
+* compat-call regexp-opt:                Emacs 27.1.          (line 385)
+* compat-call set-transient-map:         Emacs 29.1.          (line 640)
+* compat-call setq-local:                Emacs 27.1.          (line 370)
 * compat-call sort:                      Emacs 25.1.          (line 190)
-* compat-call string-lines:              Emacs 29.1.          (line 611)
+* compat-call string-lines:              Emacs 29.1.          (line 676)
 * compat-call string-trim:               Emacs 26.1.          (line 375)
 * compat-call string-trim-left:          Emacs 26.1.          (line 359)
 * compat-call string-trim-right:         Emacs 26.1.          (line 367)
-* compat-call string-width:              Emacs 28.1.          (line 368)
-* compat-function:                       Usage.               (line  49)
+* compat-call string-width:              Emacs 28.1.          (line 373)
+* compat-function:                       Usage.               (line  50)
 * compiled-function-p:                   Emacs 29.1.          (line 173)
 * count-sentences:                       Emacs 29.1.          (line  14)
 * cXXXr:                                 Emacs 26.1.          (line  66)
 * cXXXXr:                                Emacs 26.1.          (line  67)
-* date-days-in-month:                    Emacs 27.1.          (line 202)
-* date-ordinal-to-time:                  Emacs 27.1.          (line 209)
-* decoded-time-day:                      Emacs 27.1.          (line 164)
-* decoded-time-dst:                      Emacs 27.1.          (line 184)
-* decoded-time-hour:                     Emacs 27.1.          (line 159)
-* decoded-time-minute:                   Emacs 27.1.          (line 154)
-* decoded-time-month:                    Emacs 27.1.          (line 169)
+* date-days-in-month:                    Emacs 27.1.          (line 213)
+* date-ordinal-to-time:                  Emacs 27.1.          (line 220)
+* decoded-time-day:                      Emacs 27.1.          (line 175)
+* decoded-time-dst:                      Emacs 27.1.          (line 195)
+* decoded-time-hour:                     Emacs 27.1.          (line 170)
+* decoded-time-minute:                   Emacs 27.1.          (line 165)
+* decoded-time-month:                    Emacs 27.1.          (line 180)
 * decoded-time-period:                   Emacs 28.1.          (line 345)
-* decoded-time-second:                   Emacs 27.1.          (line 149)
-* decoded-time-weekday:                  Emacs 27.1.          (line 179)
-* decoded-time-year:                     Emacs 27.1.          (line 174)
-* decoded-time-zone:                     Emacs 27.1.          (line 189)
+* decoded-time-second:                   Emacs 27.1.          (line 160)
+* decoded-time-weekday:                  Emacs 27.1.          (line 190)
+* decoded-time-year:                     Emacs 27.1.          (line 185)
+* decoded-time-zone:                     Emacs 27.1.          (line 200)
 * define-keymap:                         Emacs 29.1.          (line 457)
 * defvar-keymap:                         Emacs 29.1.          (line 525)
 * delete-line:                           Emacs 29.1.          (line  48)
 * directory-empty-p:                     Emacs 28.1.          (line 228)
 * directory-name-p:                      Emacs 25.1.          (line  56)
 * dlet:                                  Emacs 28.1.          (line 128)
-* dolist-with-progress-reporter:         Emacs 27.1.          (line 108)
+* dolist-with-progress-reporter:         Emacs 27.1.          (line 119)
 * ensure-list:                           Emacs 28.1.          (line 143)
 * ert-with-temp-directory:               Emacs 29.1.          (line 557)
 * ert-with-temp-file:                    Emacs 29.1.          (line 551)
@@ -2621,9 +2716,9 @@ Appendix A Function Index
 * file-name-split:                       Emacs 29.1.          (line 292)
 * file-name-unquote:                     Emacs 26.1.          (line  90)
 * file-name-with-extension:              Emacs 28.1.          (line 210)
-* file-size-human-readable-iec:          Emacs 27.1.          (line 240)
+* file-size-human-readable-iec:          Emacs 27.1.          (line 251)
 * fixnump:                               Emacs 27.1.          (line  60)
-* flatten-tree:                          Emacs 27.1.          (line 121)
+* flatten-tree:                          Emacs 27.1.          (line 132)
 * format-message:                        Emacs 25.1.          (line  44)
 * format-prompt:                         Emacs 28.1.          (line 239)
 * funcall-with-delayed-message:          Emacs 29.1.          (line  95)
@@ -2635,7 +2730,7 @@ Appendix A Function Index
 * hash-table-empty:                      Emacs 25.1.          (line 120)
 * if-let:                                Emacs 25.1.          (line  97)
 * if-let*:                               Emacs 26.1.          (line 149)
-* ignore-errors:                         Emacs 27.1.          (line  95)
+* ignore-errors:                         Emacs 27.1.          (line 106)
 * image-property:                        Emacs 26.1.          (line 198)
 * insert-into-buffer:                    Emacs 28.1.          (line  77)
 * key-parse:                             Emacs 29.1.          (line 358)
@@ -2660,7 +2755,7 @@ Appendix A Function Index
 * macroexpand-1:                         Emacs 25.1.          (line 165)
 * major-mode-restore:                    Emacs 27.1.          (line  22)
 * major-mode-suspend:                    Emacs 27.1.          (line  13)
-* make-empty-file:                       Emacs 27.1.          (line 243)
+* make-empty-file:                       Emacs 27.1.          (line 254)
 * make-lock-file-name:                   Emacs 28.1.          (line 341)
 * make-nearby-temp-file:                 Emacs 26.1.          (line 120)
 * make-separator-line:                   Emacs 28.1.          (line  73)
@@ -2670,12 +2765,12 @@ Appendix A Function Index
 * minibuffer-history-value:              Emacs 27.1.          (line  32)
 * named-let:                             Emacs 28.1.          (line 192)
 * ntake:                                 Emacs 29.1.          (line 160)
-* package-get-version:                   Emacs 27.1.          (line 194)
+* package-get-version:                   Emacs 27.1.          (line 205)
 * plistp:                                Emacs 29.1.          (line  54)
 * pos-bol:                               Emacs 29.1.          (line  70)
 * pos-eol:                               Emacs 29.1.          (line  74)
-* proper-list-p:                         Emacs 27.1.          (line  65)
-* provided-mode-derived-p:               Emacs 27.1.          (line 236)
+* proper-list-p:                         Emacs 27.1.          (line  76)
+* provided-mode-derived-p:               Emacs 27.1.          (line 247)
 * read-answer:                           Emacs 26.1.          (line  17)
 * read-char-from-minibuffer:             Emacs 27.1.          (line  44)
 * read-multiple-choice:                  Emacs 26.1.          (line 185)
@@ -2688,7 +2783,7 @@ Appendix A Function Index
 * save-mark-and-excursion:               Emacs 25.1.          (line  39)
 * string-chop-newline:                   Emacs 28.1.          (line 187)
 * string-clean-whitespace:               Emacs 28.1.          (line 156)
-* string-distance:                       Emacs 27.1.          (line  75)
+* string-distance:                       Emacs 27.1.          (line  86)
 * string-equal-ignore-case:              Emacs 29.1.          (line 193)
 * string-fill:                           Emacs 28.1.          (line 163)
 * string-glyph-split:                    Emacs 29.1.          (line 248)
@@ -2703,13 +2798,13 @@ Appendix A Function Index
 * substitute-quotes:                     Emacs 29.1.          (line  23)
 * take:                                  Emacs 29.1.          (line 146)
 * temporary-file-directory:              Emacs 26.1.          (line 137)
-* text-property-search-backward:         Emacs 27.1.          (line 321)
-* text-property-search-forward:          Emacs 27.1.          (line 249)
+* text-property-search-backward:         Emacs 27.1.          (line 332)
+* text-property-search-forward:          Emacs 27.1.          (line 260)
 * text-quoting-style:                    Emacs 28.1.          (line  13)
 * thing-at-mouse:                        Emacs 28.1.          (line 270)
 * thread-first:                          Emacs 25.1.          (line 123)
 * thread-last:                           Emacs 25.1.          (line 144)
-* time-equal-p:                          Emacs 27.1.          (line 197)
+* time-equal-p:                          Emacs 27.1.          (line 208)
 * use-region-beginning:                  Emacs 29.1.          (line  36)
 * use-region-end:                        Emacs 29.1.          (line  33)
 * use-region-noncontiguous-p:            Emacs 29.1.          (line  30)
@@ -2724,11 +2819,12 @@ Appendix A Function Index
 * with-memoization:                      Emacs 29.1.          (line  57)
 * with-minibuffer-selected-window:       Emacs 27.1.          (line  38)
 * with-narrowing:                        Emacs 29.1.          (line  62)
-* with-window-non-dedicated:             Emacs 28.1.          (line 397)
-* xor:                                   Emacs 27.1.          (line 131)
+* with-suppressed-warnings:              Emacs 27.1.          (line  65)
+* with-window-non-dedicated:             Emacs 28.1.          (line 362)
+* xor:                                   Emacs 27.1.          (line 142)
 
 
-File: docYGWB3F.info,  Node: Variable Index,  Prev: Function Index,  Up: Top
+File: docp3LwKf.info,  Node: Variable Index,  Prev: Function Index,  Up: Top
 
 Appendix B Variable Index
 *************************
@@ -2736,11 +2832,11 @@ Appendix B Variable Index
  [index ]
 * Menu:
 
-* exec-path:                             Emacs 27.1.          (line 217)
+* exec-path:                             Emacs 27.1.          (line 228)
 * gensym-counter:                        Emacs 26.1.          (line  77)
 * mounted-file-systems:                  Emacs 26.1.          (line 133)
-* regexp-unmatchable:                    Emacs 27.1.          (line 141)
-* set-transient-map-timeout:             Emacs 29.1.          (line 601)
+* regexp-unmatchable:                    Emacs 27.1.          (line 152)
+* set-transient-map-timeout:             Emacs 29.1.          (line 666)
 * text-quoting-style:                    Emacs 25.1.          (line  13)
 
 
@@ -2750,16 +2846,16 @@ Node: Top829
 Node: Introduction2258
 Node: Overview2421
 Node: Usage2947
-Node: Limitations6369
-Node: Support10622
-Node: Emacs 25.111207
-Node: Emacs 26.120577
-Node: Emacs 27.137769
-Node: Emacs 28.157551
-Node: Emacs 29.176595
-Node: Development107665
-Node: Function Index108685
-Node: Variable Index123241
+Node: Limitations6453
+Node: Support11078
+Node: Emacs 25.111663
+Node: Emacs 26.121065
+Node: Emacs 27.138317
+Node: Emacs 28.158714
+Node: Emacs 29.177752
+Node: Development112000
+Node: Function Index113020
+Node: Variable Index127795
 
 End Tag Table
 

@@ -349,8 +349,8 @@ There is no need to explicitly add `help-char' to CHARS;
 
 ;;;; Defined in simple.el
 
-(compat-guard (not (fboundp 'decoded-time-second))
-  (cl-defstruct (decoded-time ;; <compat-tests:decoded-time>
+(compat-guard (not (fboundp 'decoded-time-second)) ;; <compat-tests:decoded-time>
+  (cl-defstruct (decoded-time
                  (:constructor nil)
                  (:copier nil)
                  (:type list))
@@ -393,6 +393,13 @@ the minibuffer was activated, and execute the forms."
      (with-selected-window window
        ,@body)))
 
+;;;; Defined in byte-run.el
+
+(compat-defmacro with-suppressed-warnings (_warnings &rest body) ;; <compat-tests:with-suppressed-warnings>
+  "Like `progn', but prevents compiler WARNINGS in BODY.
+NOTE: The compatibility version behaves like `with-no-warnings'."
+  `(with-no-warnings ,@body))
+
 ;;;; Defined in image.el
 
 (compat-defun image--set-property (image property value) ;; <compat-tests:image-property>
@@ -410,9 +417,10 @@ the minibuffer was activated, and execute the forms."
 ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
 ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
 ;; override the gv expander until Emacs 27.1.
-(compat-guard (or (= emacs-major-version 26) (not (get 'image-property 'gv-expander)))
+(compat-guard ;; <compat-tests:image-property>
+    (or (= emacs-major-version 26) (not (get 'image-property 'gv-expander)))
   :feature image
-  (gv-define-setter image-property (value image prop) ;; <compat-tests:image-property>
+  (gv-define-setter image-property (value image prop)
     `(,(if (< emacs-major-version 26) 'image--set-property 'compat--image--set-property)
       ,image ,prop ,value)))
 
@@ -613,8 +621,8 @@ January 1st being 1."
 ;;;; Defined in text-property-search.el
 
 (declare-function make-prop-match nil)
-(compat-guard (not (fboundp 'make-prop-match))
-  (cl-defstruct (prop-match) beginning end value)) ;; <compat-tests:prop-match>
+(compat-guard (not (fboundp 'make-prop-match)) ;; <compat-tests:prop-match>
+  (cl-defstruct (prop-match) beginning end value))
 
 (compat-defun text-property-search-forward ;; <compat-tests:text-property-search-forward>
     (property &optional value predicate not-current)
