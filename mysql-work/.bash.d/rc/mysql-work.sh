@@ -156,4 +156,8 @@ mtr_emd() {
     ./mtr $MTR_EMD --tmpdir=$mtr_emd_tmp_dir "$@"
 }
 
+rm_tmp_mtr() {
+    rm -rf /tmp/mtr-*
+}
+
 unset UNAME_OUT
