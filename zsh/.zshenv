@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+export DOTFILES_ROOT=~/dotfiles
+
 UNAME_OUT="$(uname -s)"
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
