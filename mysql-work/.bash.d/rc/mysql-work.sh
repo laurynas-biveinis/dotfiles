@@ -160,4 +160,49 @@ rm_tmp_mtr() {
     rm -rf /tmp/mtr-*
 }
 
+# shellcheck disable=SC2120
+mysql_cmake() {
+    if [ -f ../MYSQL_VERSION ]; then
+        major_ver_str=$(grep MYSQL_VERSION_MAJOR ../MYSQL_VERSION)
+        major_ver=$(echo "$major_ver_str" | sed 's/[^0-9]//g')
+        if [ "$major_ver" != 8 ]; then
+            echo "Only MySQL version 8 is supported"
+            return
+        fi
+        patch_level_str=$(grep MYSQL_VERSION_PATCH ../MYSQL_VERSION)
+        patch_level=$(echo "$patch_level_str" | sed 's/[^0-9]//g')
+
+        echo "Configuring MySQL $major_ver.0.$patch_level"
+        case $patch_level in
+            32)
+                release_flags=$MY8032
+                debug_flags=$MY8032D
+                ;;
+        esac
+    elif [ -f ../VERSION ]; then
+        echo "Configuring MariaDB"
+    else
+        echo "Neither MariaDB nor MySQL source tree"
+        return
+    fi
+
+    build_dir="$(basename "$PWD")"
+    case "$build_dir" in
+        *debug*)
+            # The correct way would be to use arrays, but those don't exist in POSIX sh.
+            # shellcheck disable=SC2086
+            eval cmake .. $debug_flags "$@"
+            ;;
+        *release*)
+            # shellcheck disable=SC2086
+            eval cmake .. $release_flags "$@"
+            ;;
+    esac
+}
+
+mysql_build() {
+    mysql_cmake
+    make -j "$MAKE_J"
+}
+
 unset UNAME_OUT
