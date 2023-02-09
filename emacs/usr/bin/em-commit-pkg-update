@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/zsh
 
-set -eu
+set -euo pipefail
+
+pushd $DOTFILES_ROOT || exit
 
 # Must be no changes outside Emacs ELPA
 # TODO(laurynas): check that changes in elisp exist
@@ -13,3 +15,5 @@ fi
 git add --all
 git commit -m "Emacs package update"
 git push
+
+popd || exit
