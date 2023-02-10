@@ -172,15 +172,33 @@ mysql_cmake() {
         patch_level_str=$(grep MYSQL_VERSION_PATCH ../MYSQL_VERSION)
         patch_level=$(echo "$patch_level_str" | sed 's/[^0-9]//g')
 
-        echo "Configuring MySQL $major_ver.0.$patch_level"
-        case $patch_level in
-            32)
-                release_flags=$MY8032
-                debug_flags=$MY8032D
-                ;;
-        esac
+        if [ -d ../rocksdb ]; then
+            echo "Configuring Facebook MySQL $major_ver.0.$patch_level"
+            case $patch_level in
+                28)
+                    release_flags=$FB8028
+                    debug_flags=$FB8028D
+                    ;;
+                *)
+                    echo "Unsupported version, please add"
+                    return
+                    ;;
+            esac
+        else
+            echo "Configuring MySQL $major_ver.0.$patch_level"
+            case $patch_level in
+                32)
+                    release_flags=$MY8032
+                    debug_flags=$MY8032D
+                    ;;
+                *)
+                    echo "Unsupported version, please add"
+                    return
+                    ;;
+            esac
+        fi
     elif [ -f ../VERSION ]; then
-        echo "Configuring MariaDB"
+        echo "Configuring MariaDB, not implemented yet"
     else
         echo "Neither MariaDB nor MySQL source tree"
         return
