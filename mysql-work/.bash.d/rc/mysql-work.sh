@@ -190,11 +190,11 @@ mysql_cmake() {
     case "$build_dir" in
         *debug*)
             # The correct way would be to use arrays, but those don't exist in POSIX sh.
-            # shellcheck disable=SC2086
+            # shellcheck disable=SC2086,SC2294
             eval cmake .. $debug_flags "$@"
             ;;
         *release*)
-            # shellcheck disable=SC2086
+            # shellcheck disable=SC2086,SC2294
             eval cmake .. $release_flags "$@"
             ;;
     esac
