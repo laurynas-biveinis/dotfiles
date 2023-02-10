@@ -205,6 +205,14 @@ mysql_cmake() {
     fi
 
     build_dir="$(basename "$PWD")"
+
+    case "$build_dir" in
+        *llvm-12*)
+            debug_flags=$debug_flags $MYCLANG12
+            release_flags=$release_flags $MYCLANG12
+            ;;
+    esac
+
     case "$build_dir" in
         *debug*)
             # The correct way would be to use arrays, but those don't exist in POSIX sh.
