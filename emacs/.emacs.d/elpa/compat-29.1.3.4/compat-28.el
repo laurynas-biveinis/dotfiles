@@ -21,8 +21,10 @@
 
 ;;; Code:
 
-(eval-when-compile (load "compat-macs.el" nil t t))
-(compat-declare-version "28.1")
+(eval-when-compile (require 'compat-macs))
+(compat-require compat-27 "27.1")
+
+(compat-version "28.1")
 
 ;;;; Defined in fns.c
 
@@ -224,6 +226,35 @@ If LENGTH is nil, use the window width."
             "\n"))
 
 ;;;; Defined in subr.el
+
+(compat-defun process-lines-handling-status (program status-handler &rest args) ;; <compat-tests:process-lines-handling-status>
+  "Execute PROGRAM with ARGS, returning its output as a list of lines.
+If STATUS-HANDLER is non-nil, it must be a function with one
+argument, which will be called with the exit status of the
+program before the output is collected.  If STATUS-HANDLER is
+nil, an error is signaled if the program returns with a non-zero
+exit status."
+  (with-temp-buffer
+    (let ((status (apply #'call-process program nil (current-buffer) nil args)))
+      (if status-handler
+          (funcall status-handler status)
+        (unless (eq status 0)
+          (error "%s exited with status %s" program status)))
+      (goto-char (point-min))
+      (let (lines)
+        (while (not (eobp))
+          (setq lines (cons (buffer-substring-no-properties
+                             (line-beginning-position)
+                             (line-end-position))
+                            lines))
+          (forward-line 1))
+        (nreverse lines)))))
+
+(compat-defun process-lines-ignore-status (program &rest args) ;; <compat-tests:process-lines-ignore-status>
+  "Execute PROGRAM with ARGS, returning its output as a list of lines.
+The exit status of the program is ignored.
+Also see `process-lines'."
+  (apply 'process-lines-handling-status program #'ignore args))
 
 ;; FIXME Should handle multibyte regular expressions
 (compat-defun string-replace (fromstring tostring instring) ;; <compat-tests:string-replace>

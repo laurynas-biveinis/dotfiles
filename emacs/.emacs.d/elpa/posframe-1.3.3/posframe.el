@@ -5,7 +5,7 @@
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
-;; Version: 1.3.2
+;; Version: 1.3.3
 ;; Keywords: convenience, tooltip
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -409,6 +409,7 @@ You can use `posframe-delete-all' to delete all posframes."
       (setq posframe
             (posframe--create-posframe
              buffer
+             :position position
              :font font
              :parent-frame
              (unless ref-position
@@ -541,6 +542,7 @@ You can use `posframe-delete-all' to delete all posframes."
 
 (cl-defun posframe--create-posframe (buffer-or-name
                                      &key
+                                     position
                                      parent-frame
                                      foreground-color
                                      background-color
@@ -666,6 +668,8 @@ ACCEPT-FOCUS."
                        (visibility . nil)
                        (cursor-type . nil)
                        (minibuffer . nil)
+                       (left . ,(if (consp position) (car position) 0))
+                       (top . ,(if (consp position) (cdr position) 0))
                        (width . 1)
                        (height . 1)
                        (no-special-glyphs . t)

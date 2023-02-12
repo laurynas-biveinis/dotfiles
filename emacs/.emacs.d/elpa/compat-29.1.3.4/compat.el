@@ -4,7 +4,7 @@
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>, Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>, Compat Development <~pkal/compat-devel@lists.sr.ht>
-;; Version: 29.1.3.3
+;; Version: 29.1.3.4
 ;; URL: https://github.com/emacs-compat/compat
 ;; Package-Requires: ((emacs "24.4") (seq "2.3"))
 ;; Keywords: lisp
@@ -46,8 +46,14 @@
 
 ;;; Code:
 
-(when (eval-when-compile (< emacs-major-version 29))
-  (require 'compat-29))
+;; Ensure that the newest compatibility layer is required at compile
+;; time and runtime, but only if needed.
+(eval-when-compile
+  (defmacro compat--maybe-require-29 ()
+    (when (< emacs-major-version 29)
+      (require 'compat-29)
+      '(require 'compat-29))))
+(compat--maybe-require-29)
 
 ;;;; Macros for extended compatibility function calls
 
