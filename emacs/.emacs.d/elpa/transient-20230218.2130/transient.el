@@ -1037,7 +1037,9 @@ example, sets a variable, use `transient-define-infix' instead.
                              spec))))))
 
 (defun transient--parse-suffix (prefix spec)
-  (let (level class args)
+  (let ((args (list :key nil :command nil :description nil))
+        (level nil)
+        (class nil))
     (cl-symbol-macrolet
         ((car (car spec))
          (pop (pop spec)))
@@ -1048,24 +1050,29 @@ example, sets a variable, use `transient-define-infix' instead.
         (setq args (plist-put args :key pop)))
       (cond
        ((or (stringp car)
-            (eq (car-safe car) 'lambda))
+            (and (eq (car-safe car) 'lambda)
+                 (not (commandp car))))
         (setq args (plist-put args :description pop)))
        ((and (symbolp car)
+             (not (keywordp car))
              (not (commandp car))
              (commandp (cadr spec)))
         (setq args (plist-put args :description (macroexp-quote pop)))))
       (cond
        ((keywordp car)
-        (error "Need command, got %S" car))
+        (error "Need command, got `%s'" car))
        ((symbolp car)
         (setq args (plist-put args :command (macroexp-quote pop))))
        ((and (commandp car)
              (not (stringp car)))
         (let ((cmd pop)
-              (sym (intern (format "transient:%s:%s"
-                                   prefix
-                                   (or (plist-get args :description)
-                                       (plist-get args :key))))))
+              (sym (intern
+                    (format "transient:%s:%s"
+                            prefix
+                            (let ((desc (plist-get args :description)))
+                              (if (and desc (or (stringp desc) (symbolp desc)))
+                                  desc
+                                (plist-get args :key)))))))
           (defalias sym cmd)
           (setq args (plist-put args :command (macroexp-quote sym)))))
        ((or (stringp car)

@@ -1113,7 +1113,7 @@ Here it means the former.
 
    Suffix specifications have this form:
 
-     ([LEVEL] [KEY] [DESCRIPTION] COMMAND|ARGUMENT [KEYWORD VALUE]...)
+     ([LEVEL] [KEY [DESCRIPTION]] COMMAND|ARGUMENT [KEYWORD VALUE]...)
 
    LEVEL, KEY and DESCRIPTION can also be specified using the KEYWORDs
 ‘:level’, ‘:key’ and ‘:description’.  If the object that is associated
@@ -1144,9 +1144,7 @@ only argument that is mandatory in all cases.
      with it (as would be the case if ‘transient-define-suffix’ or
      ‘transient-define-infix’ were used to define it).
 
-     Anonymous, dynamically defined suffix commands are also supported.
-     See information about the ‘:setup-children’ function in *note Group
-     Specifications::.
+     COMMAND can also be a ‘lambda’ expression.
 
      As mentioned above, the object that is associated with a command
      can be used to set the default for certain values that otherwise
@@ -3372,46 +3370,46 @@ Node: Defining Transients39130
 Node: Binding Suffix and Infix Commands41566
 Node: Group Specifications42424
 Node: Suffix Specifications46993
-Node: Defining Suffix and Infix Commands51269
-Node: Using Infix Arguments54475
-Node: Transient State57309
-Ref: Pre-commands for Infixes61272
-Ref: Pre-commands for Suffixes61543
-Ref: Pre-commands for Non-Suffixes63964
-Ref: Special Pre-Commands65108
-Node: Classes and Methods65616
-Node: Group Classes67830
-Node: Group Methods69757
-Node: Prefix Classes71010
-Node: Suffix Classes72101
-Node: Suffix Methods74347
-Node: Suffix Value Methods74668
-Node: Suffix Format Methods77426
-Node: Prefix Slots78875
-Ref: Internal Prefix Slots80155
-Node: Suffix Slots81412
-Ref: Slots of transient-suffix81780
-Ref: Slots of transient-infix82634
-Ref: Slots of transient-variable85754
-Ref: Slots of transient-switches85856
-Node: Predicate Slots86219
-Node: Related Abstractions and Packages87484
-Node: Comparison With Prefix Keys and Prefix Arguments87771
-Ref: Regular Prefix Commands88456
-Ref: Regular Prefix Arguments88804
-Ref: Transients89773
-Node: Comparison With Other Packages98044
-Ref: Magit-Popup98275
-Ref: Hydra99182
-Node: FAQ102238
-Ref: Can I control how the popup buffer is displayed?102381
-Ref: Why did some of the key bindings change?102562
-Ref: Why does q not quit popups anymore?104915
-Node: Keystroke Index106008
-Node: Command and Function Index107726
-Node: Variable Index114098
-Node: Concept Index116371
-Node: GNU General Public License119115
+Node: Defining Suffix and Infix Commands51149
+Node: Using Infix Arguments54355
+Node: Transient State57189
+Ref: Pre-commands for Infixes61152
+Ref: Pre-commands for Suffixes61423
+Ref: Pre-commands for Non-Suffixes63844
+Ref: Special Pre-Commands64988
+Node: Classes and Methods65496
+Node: Group Classes67710
+Node: Group Methods69637
+Node: Prefix Classes70890
+Node: Suffix Classes71981
+Node: Suffix Methods74227
+Node: Suffix Value Methods74548
+Node: Suffix Format Methods77306
+Node: Prefix Slots78755
+Ref: Internal Prefix Slots80035
+Node: Suffix Slots81292
+Ref: Slots of transient-suffix81660
+Ref: Slots of transient-infix82514
+Ref: Slots of transient-variable85634
+Ref: Slots of transient-switches85736
+Node: Predicate Slots86099
+Node: Related Abstractions and Packages87364
+Node: Comparison With Prefix Keys and Prefix Arguments87651
+Ref: Regular Prefix Commands88336
+Ref: Regular Prefix Arguments88684
+Ref: Transients89653
+Node: Comparison With Other Packages97924
+Ref: Magit-Popup98155
+Ref: Hydra99062
+Node: FAQ102118
+Ref: Can I control how the popup buffer is displayed?102261
+Ref: Why did some of the key bindings change?102442
+Ref: Why does q not quit popups anymore?104795
+Node: Keystroke Index105888
+Node: Command and Function Index107606
+Node: Variable Index113978
+Node: Concept Index116251
+Node: GNU General Public License118995
 
 End Tag Table
 
