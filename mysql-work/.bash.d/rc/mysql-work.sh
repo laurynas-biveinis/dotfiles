@@ -267,4 +267,6 @@ mysql_cmake() {
 mysql_build() {
     mysql_cmake "$@"
     make -j "$MAKE_J"
+    build_dir="$(basename "$PWD")"
+    (cd .. && ln -sf "$build_dir/compile_commands.json" .)
 }
