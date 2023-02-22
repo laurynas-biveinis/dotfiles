@@ -5,7 +5,7 @@
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
-;; Version: 1.3.3
+;; Version: 1.4.0
 ;; Keywords: convenience, tooltip
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -149,6 +149,8 @@ effect.")
                          internal-border-width
                          internal-border-color
                          font
+                         cursor
+                         window-point
                          foreground-color
                          background-color
                          respect-header-line
@@ -279,25 +281,34 @@ derived from the current frame by default, but can be overridden
 using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
 respectively.
 
- (10) RESPECT-HEADER-LINE and RESPECT-MODE-LINE
+ (10) CURSOR and WINDOW-POINT
+
+By default, cursor is not showed in posframe, user can let cursor
+showed with this argument help by set its value to a `cursor-type'.
+
+When cursor need to be showed in posframe, user may need to set
+WINDOW-POINT to the point of BUFFER, which can let cursor showed
+at this point.
+
+ (11) RESPECT-HEADER-LINE and RESPECT-MODE-LINE
 
 By default, posframe will display no header-line, mode-line and
 tab-line.  In case a header-line, mode-line or tab-line is
 desired, users can set RESPECT-HEADER-LINE and RESPECT-MODE-LINE
 to t.
 
- (11) INITIALIZE
+ (12) INITIALIZE
 
 INITIALIZE is a function with no argument.  It will run when
 posframe buffer is first selected with `with-current-buffer'
 in `posframe-show', and only run once (for performance reasons).
 
- (12) LINES-TRUNCATE
+ (13) LINES-TRUNCATE
 
 If LINES-TRUNCATE is non-nil, then lines will truncate in the
 posframe instead of wrap.
 
- (13) OVERRIDE-PARAMETERS
+ (14) OVERRIDE-PARAMETERS
 
 OVERRIDE-PARAMETERS is very powful, *all* the valid frame parameters
 used by posframe's frame can be overridden by it.
@@ -305,7 +316,7 @@ used by posframe's frame can be overridden by it.
 NOTE: some `posframe-show' arguments are not frame parameters, so they
 can not be overrided by this argument.
 
- (14) TIMEOUT
+ (15) TIMEOUT
 
 TIMEOUT can specify the number of seconds after which the posframe
 will auto-hide.
@@ -315,12 +326,12 @@ will auto-hide.
 If REFRESH is a number, posframe's frame-size will be re-adjusted
 every REFRESH seconds.
 
- (16) ACCEPT-FOCUS
+ (17) ACCEPT-FOCUS
 
 When ACCEPT-FOCUS is non-nil, posframe will accept focus.
 be careful, you may face some bugs when set it to non-nil.
 
- (17) HIDEHANDLER
+ (18) HIDEHANDLER
 
 HIDEHANDLER is a function, when it return t, posframe will be
 hide, this function has a plist argument:
@@ -332,7 +343,7 @@ The builtin hidehandler functions are listed below:
 
 1. `posframe-hidehandler-when-buffer-switch'
 
- (18) REFPOSHANDLER
+ (19) REFPOSHANDLER
 
 REFPOSHANDLER is a function, a reference position (most is
 top-left of current frame) will be returned when call this
@@ -369,6 +380,7 @@ You can use `posframe-delete-all' to delete all posframes."
                    (min (max height min-height) max-height)))
          (x-pixel-offset (or x-pixel-offset 0))
          (y-pixel-offset (or y-pixel-offset 0))
+         (window-point (or window-point 0))
          ;;-----------------------------------------------------
          (buffer (get-buffer-create buffer-or-name))
          (parent-window (selected-window))
@@ -411,6 +423,7 @@ You can use `posframe-delete-all' to delete all posframes."
              buffer
              :position position
              :font font
+             :cursor cursor
              :parent-frame
              (unless ref-position
                parent-frame)
@@ -486,7 +499,7 @@ You can use `posframe-delete-all' to delete all posframes."
       ;; Make sure not hide buffer's content for scroll down.
       (let ((window (frame-root-window posframe--frame)))
         (when (window-live-p window)
-          (set-window-point window 0)))
+          (set-window-point window window-point)))
 
       ;; Hide posframe when switch buffer
       (let* ((parent-buffer (window-buffer parent-window))
@@ -553,6 +566,7 @@ You can use `posframe-delete-all' to delete all posframes."
                                      internal-border-width
                                      internal-border-color
                                      font
+                                     cursor
                                      keep-ratio
                                      lines-truncate
                                      override-parameters
@@ -602,18 +616,23 @@ ACCEPT-FOCUS."
       (setq-local right-fringe-width nil)
       (setq-local fringes-outside-margins 0)
       (setq-local fringe-indicator-alist nil)
-      ;; Need to use `lines-truncate' as our keyword variable instead of
-      ;; `truncate-lines' so we don't shadow the variable that we are trying to
-      ;; set.
+      ;; Need to use `lines-truncate' as our keyword variable instead
+      ;; of `truncate-lines' so we don't shadow the variable that we
+      ;; are trying to set.
       (setq-local truncate-lines lines-truncate)
-      (setq-local cursor-type nil)
-      (setq-local cursor-in-non-selected-windows nil)
       (setq-local show-trailing-whitespace nil)
       (setq-local posframe--accept-focus accept-focus)
       (unless respect-mode-line
         (setq-local mode-line-format nil))
       (unless respect-header-line
         (setq-local header-line-format nil))
+
+      (if cursor
+          (progn
+            (setq-local cursor-type cursor)
+            (setq-local cursor-in-non-selected-windows cursor))
+        (setq-local cursor-type nil)
+        (setq-local cursor-in-non-selected-windows nil))
 
       ;; Find existing posframe: buffer-local variables used by
       ;; posframe can be cleaned by other packages, so we should find
