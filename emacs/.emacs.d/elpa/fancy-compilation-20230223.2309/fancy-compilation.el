@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-fancy-compilation
-;; Package-Version: 20230109.536
-;; Package-Commit: 889e77c899cbf28673915b7b0161d45734bfdcb7
+;; Package-Version: 20230223.2309
+;; Package-Commit: d5d790dee6b07f866d203c5c174440ec8a2b2215
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -56,6 +56,13 @@
   "Hooks run just after the fancy-compilation buffer has been initialized.
 Use this to set or override defaults."
   :type 'hook)
+
+(defcustom fancy-compilation-scroll-output t
+  "Like `compilation-scroll-output`, but defaults to `t` and specific to `fancy-compilation`."
+  :type '(choice (const :tag "No scrolling" nil)
+		 (const :tag "Scroll compilation output" t)
+		 (const :tag "Stop scrolling at the first error" first-error)))
+
 
 ;; ---------------------------------------------------------------------------
 ;; Faces
@@ -141,7 +148,7 @@ Use this to set or override defaults."
   ;; Needed so `ansi-text' isn't converted to [...].
   (setq-local compilation-max-output-line-length nil)
   ;; Auto-scroll output.
-  (setq-local compilation-scroll-output t)
+  (setq-local compilation-scroll-output fancy-compilation-scroll-output)
   ;; Avoid jumping past the last line when correcting scroll.
   (setq-local scroll-conservatively most-positive-fixnum)
   ;; A margin doesn't make sense for compilation output.

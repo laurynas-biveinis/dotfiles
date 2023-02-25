@@ -231,6 +231,16 @@
 	   (:authors
 	    ("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	   (:commit . "0cf8b60f62876f3e75653a5fb30d5d5cdd74c586"))])
+ (beframe .
+	  [(0 1 7)
+	   ((emacs
+	     (28 1)))
+	   "Isolate buffers per frame" tar
+	   ((:url . "https://git.sr.ht/~protesilaos/beframe")
+	    (:maintainer "Protesilaos Stavrou General Issues" . "~protesilaos/general-issues@lists.sr.ht")
+	    (:authors
+	     ("Protesilaos Stavrou" . "info@protesilaos.com"))
+	    (:commit . "287a5cbdfe346ddd09c4e5d988820779f4668f28"))])
  (bind-key .
 	   [(2 4 1)
 	    nil "A simple way to manage personal keybindings" tar
@@ -2079,7 +2089,7 @@
 	      ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
 	     (:commit . "d1c85e5e2cfc0cff3f63409b0ac15dd230568609"))])
  (modus-themes .
-	       [(3 0 0)
+	       [(4 1 1)
 		((emacs
 		  (27 1)))
 		"Elegant, highly legible and customizable themes" tar
@@ -2088,7 +2098,7 @@
 		 (:maintainer "Modus-Themes Development" . "~protesilaos/modus-themes@lists.sr.ht")
 		 (:authors
 		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		 (:commit . "1e7710d00f909900c9934d61113c43cb2229530f"))])
+		 (:commit . "2942c77e30d8b89b609ff639e527e67813b6b067"))])
  (multi-mode .
 	     [(1 14)
 	      nil "support for multiple major modes" tar
@@ -2544,7 +2554,7 @@
 	    (:url . "https://elpa.gnu.org/packages/persist.html")
 	    (:commit . "25d675307c03f720e592c3dc9a5a0ae8db0836eb"))])
  (phps-mode .
-	    [(0 4 39)
+	    [(0 4 41)
 	     ((emacs
 	       (26)))
 	     "Major mode for PHP with code intelligence" tar
@@ -2553,7 +2563,7 @@
 	      (:maintainer "Christian Johansson" . "christian@cvj.se")
 	      (:authors
 	       ("Christian Johansson" . "christian@cvj.se"))
-	      (:commit . "9106e593743aa592643f57ec375e848f74cf680a"))])
+	      (:commit . "5c0414fa94078b4f3e0dbb1acd0a7f06694aee9e"))])
  (pinentry .
 	   [(0 1)
 	    nil "GnuPG Pinentry server implementation" single
@@ -3330,7 +3340,7 @@
 	  ("Adam Porter" . "adam@alphapapa.net"))
 	 (:commit . "b27fa67ecf3f8954ce0d5c2747d1de4dc94ff09f"))])
  (taxy-magit-section .
-		     [(0 12 1)
+		     [(0 12 2)
 		      ((emacs
 			(26 3))
 		       (magit-section
@@ -3343,7 +3353,7 @@
 		       (:maintainer "Adam Porter" . "adam@alphapapa.net")
 		       (:authors
 			("Adam Porter" . "adam@alphapapa.net"))
-		       (:commit . "1a209a60516a955ffbe80a03158c961d35e237b7"))])
+		       (:commit . "594531569c03206cbc83b74d679ffd0e93edb4d0"))])
  (temp-buffer-browse .
 		     [(1 5)
 		      ((emacs
