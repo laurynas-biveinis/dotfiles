@@ -2465,10 +2465,10 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230220.1425/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230220.1425/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230304.1149/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230304.1149/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20230220.1425/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20230304.1149/transient-autoloads.el") (car load-path))))
 
 
 
@@ -12519,10 +12519,10 @@ Queries for any of the four available help topics and prints out the appropriate
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20211224.2006/cmake-font-lock-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20211224.2006/cmake-font-lock-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20230304.2223/cmake-font-lock-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20230304.2223/cmake-font-lock-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20211224.2006/cmake-font-lock-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20230304.2223/cmake-font-lock-autoloads.el") (car load-path))))
 
 
 
@@ -12540,7 +12540,7 @@ To activate this every time a CMake file is opened, use the following:
 
 (add-hook 'change-major-mode-after-body-hook (lambda nil (when (apply #'derived-mode-p cmake-font-lock-modes) (cmake-font-lock-activate))))
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cmake-font-lock" '("cmake-font-lock-")))
+(register-definition-prefixes "cmake-font-lock" '("cmake-font-lock-"))
 
 
 )
@@ -12655,10 +12655,10 @@ Major mode for editing flex files. (bison-mode by any other name)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/beginend-2.3.0/beginend-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/beginend-2.3.0/beginend-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/beginend-2.4.0/beginend-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/beginend-2.4.0/beginend-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/beginend-2.3.0/beginend-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/beginend-2.4.0/beginend-autoloads.el") (car load-path))))
 
 
 
@@ -12672,7 +12672,7 @@ modes are described in `beginend-modes'." nil nil)
 Remove beginend from all compatible modes in `beginend-modes'." nil nil)
 
 (defvar beginend-global-mode nil "\
-Non-nil if Beginend-Global mode is enabled.
+Non-nil if beginend-Global mode is enabled.
 See the `beginend-global-mode' command
 for a description of this minor mode.
 Setting this variable directly does not take effect;
@@ -12688,10 +12688,19 @@ prefix argument enables the mode, any other prefix argument disables it.
 From Lisp, argument omitted or nil enables the mode, `toggle' toggles the
 state.
 
-If called interactively, enable Beginend-Global mode if ARG is
-positive, and disable it if ARG is zero or negative.  If called
-from Lisp, also enable the mode if ARG is omitted or nil, and
-toggle it if ARG is `toggle'; disable the mode otherwise.
+This is a minor mode.  If called interactively, toggle the
+`beginend-Global mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='beginend-global-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
 
 When beginend mode is enabled, modes such as `dired-mode', `message-mode'
 and `compilation-mode' will have their \\[beginning-of-buffer] and
@@ -12699,7 +12708,7 @@ and `compilation-mode' will have their \\[beginning-of-buffer] and
 
 \(fn &optional ARG)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "beginend" '("beginend-")))
+(register-definition-prefixes "beginend" '("beginend-"))
 
 
 )
@@ -12906,7 +12915,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.1" "/Users/laurynas/.emacs.d/elpa/transient-20230220.1425" "/Users/laurynas/.emacs.d/elpa/compat-29.1.3.4" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.1" "/Users/laurynas/.emacs.d/elpa/transient-20230304.1149" "/Users/laurynas/.emacs.d/elpa/compat-29.1.3.4" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:

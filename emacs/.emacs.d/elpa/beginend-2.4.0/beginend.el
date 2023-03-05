@@ -1,12 +1,12 @@
 ;;; beginend.el --- Redefine M-< and M-> for some modes   -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015-2022 Damien Cassou
+;; Copyright (C) 2015-2023 Damien Cassou
 
 ;; Authors: Damien Cassou <damien@cassou.me>
 ;;          Matus Goljer <matus.goljer@gmail.com>
-;; Version: 2.3.0
-;; Package-Version: 2.3.0
-;; Package-Commit: 62c75804ba7d74f4c01c0629722c061c11bed393
+;; Version: 2.4.0
+;; Package-Version: 2.4.0
+;; Package-Commit: 61f1eb22718fcd9796b47a98702d161ff323a532
 ;; URL: https://github.com/DamienCassou/beginend
 ;; Package-Requires: ((emacs "25.3"))
 ;; Created: 01 Jun 2015
@@ -45,8 +45,6 @@
 ;;
 ;;; Code:
 
-
-(require 'cl-lib) ; for (setf (point) …)
 
 (defgroup beginend nil
   "Customization group for beginend."
@@ -272,6 +270,12 @@ BEGIN-BODY and END-BODY are two `progn' expressions passed to respectively
   (progn
     (forward-line -1)))
 
+(beginend-define-mode elfeed-show-mode
+  (progn
+    (re-search-forward "^Link:")
+    (forward-line))
+  (progn))
+
 (declare-function prodigy-first "prodigy")
 (declare-function prodigy-last "prodigy")
 
@@ -303,9 +307,9 @@ BEGIN-BODY and END-BODY are two `progn' expressions passed to respectively
     (condition-case nil
         (while (not (or (eobp) (magit-section-match 'magit-file-section)))
           (magit-section-forward-sibling))
-      (user-error (setf (point) (point-min)))))
+      (user-error (goto-char (point-min)))))
   (progn
-    (setf (point) (line-beginning-position))))
+    (goto-char (line-beginning-position))))
 
 (beginend-define-mode deft-mode
   (progn
@@ -325,9 +329,9 @@ If optional argument P is present test at that point instead of `point'."
           (eq (char-syntax (char-after p)) ?<)
           (let ((s (car (syntax-after p))))
             (when s
-              (or (and (/= 0 (logand (lsh 1 16) s))
+              (or (and (/= 0 (logand (ash 1 16) s))
                        (nth 4 (syntax-ppss (+ p 2))))
-                  (and (/= 0 (logand (lsh 1 17) s))
+                  (and (/= 0 (logand (ash 1 17) s))
                        (nth 4 (syntax-ppss (+ p 1)))))))))))
 
 (defun beginend--prog-mode-code-position-p ()
@@ -364,7 +368,7 @@ If optional argument P is present test at that point instead of `point'."
     (while (and (not (org-on-heading-p)) (not (eobp)))
       (forward-line))
     (when (eobp)
-      (setf (point) (point-min))))
+      (goto-char (point-min))))
   (progn))
 
 (declare-function nroam-goto "nroam")
@@ -373,7 +377,7 @@ If optional argument P is present test at that point instead of `point'."
   (progn
     (if (search-forward "#+title:" nil t)
         (forward-line)
-      (setf (point) (point-min))))
+      (goto-char (point-min))))
   (progn
     (nroam-goto)))
 

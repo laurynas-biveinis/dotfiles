@@ -2353,7 +2353,19 @@ A.1 Can I control how the popup buffer is displayed?
 
 Yes, see ‘transient-display-buffer-action’ in *note Configuration::.
 
-A.2 Why did some of the key bindings change?
+A.2 How can I copy text from the popup buffer?
+==============================================
+
+To be able to mark text in any transient popup buffer using the mouse,
+you have to add the following binding.  Note that the region won’t be
+visualized, while doing so.  After you have quit the transient popup,
+you will be able to yank it another buffer.
+
+     (keymap-set transient-predicate-map
+                 "<mouse-set-region>"
+                 #'transient--do-stay)
+
+A.3 Why did some of the key bindings change?
 ============================================
 
 You may have noticed that the bindings for some of the common commands
@@ -2396,7 +2408,7 @@ and also using that for a common command would prevent me from doing so.
 
    (Also see the next question.)
 
-A.3 Why does ‘q’ not quit popups anymore?
+A.4 Why does ‘q’ not quit popups anymore?
 =========================================
 
 I agree that ‘q’ is a good binding for commands that quit something.
@@ -3403,13 +3415,14 @@ Ref: Magit-Popup98155
 Ref: Hydra99062
 Node: FAQ102118
 Ref: Can I control how the popup buffer is displayed?102261
-Ref: Why did some of the key bindings change?102442
-Ref: Why does q not quit popups anymore?104795
-Node: Keystroke Index105888
-Node: Command and Function Index107606
-Node: Variable Index113978
-Node: Concept Index116251
-Node: GNU General Public License118995
+Ref: How can I copy text from the popup buffer?102442
+Ref: Why did some of the key bindings change?102914
+Ref: Why does q not quit popups anymore?105267
+Node: Keystroke Index106360
+Node: Command and Function Index108078
+Node: Variable Index114450
+Node: Concept Index116723
+Node: GNU General Public License119467
 
 End Tag Table
 

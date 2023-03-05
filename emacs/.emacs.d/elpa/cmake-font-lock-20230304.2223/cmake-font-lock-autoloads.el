@@ -1,4 +1,4 @@
-;;; cmake-font-lock-autoloads.el --- automatically extracted autoloads
+;;; cmake-font-lock-autoloads.el --- automatically extracted autoloads  -*- lexical-binding: t -*-
 ;;
 ;;; Code:
 
@@ -24,7 +24,7 @@ To activate this every time a CMake file is opened, use the following:
 
 (add-hook 'change-major-mode-after-body-hook (lambda nil (when (apply #'derived-mode-p cmake-font-lock-modes) (cmake-font-lock-activate))))
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cmake-font-lock" '("cmake-font-lock-")))
+(register-definition-prefixes "cmake-font-lock" '("cmake-font-lock-"))
 
 ;;;***
 
