@@ -21,7 +21,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'compat-macs))
+(eval-when-compile (load "compat-macs.el" nil t t))
 (compat-require compat-27 "27.1")
 
 (compat-version "28.1")
@@ -832,6 +832,17 @@ function will never return nil."
 
 ;; Obsolete Alias since 29
 (compat-defalias button-buttonize buttonize :obsolete t) ;; <compat-tests:button-buttonize>
+
+;;;; Defined in wid-edit.el
+
+(compat-guard t ;; <compat-tests:widget-natnum>
+  :feature wid-edit
+  (define-widget 'natnum 'restricted-sexp
+    "A nonnegative integer."
+    :tag "Integer (positive)"
+    :value 0
+    :type-error "This field should contain a nonnegative integer"
+    :match-alternatives '(natnump)))
 
 (provide 'compat-28)
 ;;; compat-28.el ends here

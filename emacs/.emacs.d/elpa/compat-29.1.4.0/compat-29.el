@@ -21,7 +21,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'compat-macs))
+(eval-when-compile (load "compat-macs.el" nil t t))
 (compat-require compat-28 "28.1")
 
 ;; Preloaded in loadup.el
@@ -294,22 +294,37 @@ in order to restore the state of the local variables set via this macro.
   "Delete the current line."
   (delete-region (pos-bol) (pos-bol 2)))
 
-(compat-defmacro with-narrowing (start end &rest rest) ;; <compat-tests:with-narrowing>
+(compat-defmacro with-restriction (start end &rest rest) ;; <compat-tests:with-restriction>
   "Execute BODY with restrictions set to START and END.
 
 The current restrictions, if any, are restored upon return.
 
-With the optional :locked TAG argument, inside BODY,
-`narrow-to-region' and `widen' can be used only within the START
-and END limits, unless the restrictions are unlocked by calling
-`narrowing-unlock' with TAG.  See `narrowing-lock' for a more
-detailed description.
+When the optional :label LABEL argument is present, in which
+LABEL is a symbol, inside BODY, `narrow-to-region' and `widen'
+can be used only within the START and END limits.  To gain access
+to other portions of the buffer, use `without-restriction' with the
+same LABEL argument.
 
-\(fn START END [:locked TAG] BODY)"
+\(fn START END [:label LABEL] BODY)"
   `(save-restriction
      (narrow-to-region ,start ,end)
      ;; Locking is ignored
-     ,@(if (eq (car rest) :locked) (cddr rest) rest)))
+     ,@(if (eq (car rest) :label) (cddr rest) rest)))
+
+(compat-defmacro without-restriction (&rest rest) ;; <compat-tests:without-restriction>
+  "Execute BODY without restrictions.
+
+The current restrictions, if any, are restored upon return.
+
+When the optional :label LABEL argument is present, the
+restrictions set by `with-restriction' with the same LABEL argument
+are lifted.
+
+\(fn [:label LABEL] BODY)"
+  `(save-restriction
+     (widen)
+     ;; Locking is ignored
+     ,@(if (eq (car rest) :label) (cddr rest) rest)))
 
 (compat-defmacro with-memoization (place &rest code) ;; <compat-tests:with-memoization>
   "Return the value of CODE and stash it in PLACE.
@@ -1346,6 +1361,13 @@ Also see `buttonize'."
           (setq sentences (1- sentences)))
         sentences))))
 
+;;;; Defined in cl-lib.el
+
+(compat-defun cl-constantly (value) ;; <compat-tests:cl-constantly>
+  "Return a function that takes any number of arguments, but returns VALUE."
+  :feature cl-lib
+  (lambda (&rest _) value))
+
 ;;;; Defined in cl-macs.el
 
 (compat-defmacro cl-with-gensyms (names &rest body) ;; <compat-tests:cl-with-gensyms>
@@ -1498,6 +1520,30 @@ The same keyword arguments are supported as in
   `(ert-with-temp-file ,name
      :directory t
      ,@body))
+
+;;;; Defined in wid-edit.el
+
+(compat-guard (not (fboundp 'widget-key-validate)) ;; <compat-tests:widget-key>
+  :feature wid-edit
+  (defvar widget-key-prompt-value-history nil
+    "History of input to `widget-key-prompt-value'.")
+  (define-widget 'key 'editable-field
+    "A key sequence."
+    :prompt-value 'widget-field-prompt-value
+    :match 'widget-key-valid-p
+    :format "%{%t%}: %v"
+    :validate 'widget-key-validate
+    :keymap widget-key-sequence-map
+    :help-echo "C-q: insert KEY, EVENT, or CODE; RET: enter value"
+    :tag "Key")
+  (defun widget-key-valid-p (_widget value)
+    (key-valid-p value))
+  (defun widget-key-validate (widget)
+    (unless (and (stringp (widget-value widget))
+                 (key-valid-p (widget-value widget)))
+      (widget-put widget :error (format "Invalid key: %S"
+                                        (widget-value widget)))
+      widget)))
 
 (provide 'compat-29)
 ;;; compat-29.el ends here
