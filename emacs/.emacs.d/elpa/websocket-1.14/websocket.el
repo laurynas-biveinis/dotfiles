@@ -5,14 +5,14 @@
 ;; Author: Andrew Hyatt <ahyatt@gmail.com>
 ;; Homepage: https://github.com/ahyatt/emacs-websocket
 ;; Keywords: Communication, Websocket, Server
-;; Package-Version: 1.13
-;; Package-Commit: 34e11124fdd9d73e431499ba8a6b6a8023519664
-;; Version: 1.13
+;; Package-Version: 1.14
+;; Package-Commit: 1f086f14f0f55f55eafd09f404f48e924157c1d1
+;; Version: 1.14
 ;; Package-Requires: ((cl-lib "0.5"))
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
-;; published by the Free Software Foundation; either version 2 of the
+;; published by the Free Software Foundation; either version 3 of the
 ;; License, or (at your option) any later version.
 ;;
 ;; This program is distributed in the hope that it will be useful, but
@@ -722,6 +722,7 @@ to the websocket protocol.
 
           (when (and (member status '(closed failed exit signal))
                      (not (eq 'closed (websocket-ready-state websocket))))
+            (setf (websocket-ready-state websocket) 'closed)
             (websocket-try-callback 'websocket-on-close 'on-close websocket))))))
 
 (defun websocket-ensure-handshake (url conn key protocols extensions custom-header-alist nowait)
