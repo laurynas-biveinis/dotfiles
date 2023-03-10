@@ -9633,10 +9633,10 @@ and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20230216.559/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20230216.559/async-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20230309.1248/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20230309.1248/async-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/async-20230216.559/async-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/async-20230309.1248/async-autoloads.el") (car load-path))))
 
 
 
@@ -9665,6 +9665,16 @@ When done, the return value is passed to FINISH-FUNC.  Example:
        (lambda (result)
          (message \"Async process done, result should be 222: %s\"
                   result)))
+
+If you call `async-send' from a child process, the message will
+be also passed to the FINISH-FUNC.  You can test RESULT to see if
+it is a message by using `async-message-p'.  If nil, it means
+this is the final result.  Example of the FINISH-FUNC:
+
+    (lambda (result)
+      (if (async-message-p result)
+          (message \"Received a message from child process: %s\" result)
+        (message \"Async process done, result: %s\" result)))
 
 If FINISH-FUNC is nil or missing, a future is returned that can
 be inspected using `async-get', blocking until the value is
