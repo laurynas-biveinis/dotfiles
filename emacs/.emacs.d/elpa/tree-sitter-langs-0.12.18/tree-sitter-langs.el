@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.16
+;; Version: 0.12.18
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -129,6 +129,7 @@ See `tree-sitter-langs-repos'."
                 (jsonc-mode      . json)
                 (julia-mode      . julia)
                 (lua-mode        . lua)
+                (meson-mode      . meson)
                 (ocaml-mode      . ocaml)
                 (perl-mode       . perl)
                 (php-mode        . php)
@@ -140,6 +141,7 @@ See `tree-sitter-langs-repos'."
                 (rust-mode       . rust)
                 (rustic-mode     . rust)
                 (scala-mode      . scala)
+                (scheme-mode     . scheme)
                 (swift-mode      . swift)
                 (toml-mode       . toml)
                 (tuareg-mode     . ocaml)

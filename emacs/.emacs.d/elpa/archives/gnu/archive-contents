@@ -533,17 +533,17 @@
 	    ("Philip Kaludercic <philipk@posteo.net>, Daniel Mendler" . "mail@daniel-mendler.de"))
 	   (:commit . "7a9c37f1b371b2c144b9d76e1f6333032d9f9179"))])
  (consult .
-	  [(0 32)
+	  [(0 33)
 	   ((emacs
 	     (27 1))
 	    (compat
-	     (29 1 3 2)))
+	     (29 1 4 0)))
 	   "Consulting completing-read" tar
 	   ((:url . "https://github.com/minad/consult")
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:authors
 	     ("Daniel Mendler and Consult contributors"))
-	    (:commit . "0759dd12bb2290480644a7ec34118f67718074ad"))])
+	    (:commit . "fd00979d2fbfad66960c621e9fc140eb8c6a06f3"))])
  (consult-recoll .
 		 [(0 8)
 		  ((emacs
@@ -1643,7 +1643,7 @@
 	   ("Durand" . "mmemmew@gmail.com"))
 	  (:url . "https://elpa.gnu.org/packages/ilist.html"))])
  (inspector .
-	    [(0 22)
+	    [(0 27)
 	     ((emacs
 	       (27 1)))
 	     "Tool for inspection of Emacs Lisp objects" tar
@@ -1652,7 +1652,7 @@
 	      (:maintainer "Mariano Montone" . "marianomontone@gmail.com")
 	      (:authors
 	       ("Mariano Montone" . "marianomontone@gmail.com"))
-	      (:commit . "37be751ada1f20c6d725ac8f570499b84b9b2eaf"))])
+	      (:commit . "d6f462d8eae8895deb01ecd649628a295791e6de"))])
  (ioccur .
 	 [(2 6)
 	  ((emacs
@@ -1779,7 +1779,7 @@
 		 ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
 		(:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca"))])
  (jit-spell .
-	    [(0 1)
+	    [(0 2)
 	     ((emacs
 	       (27 1))
 	      (compat
@@ -1790,7 +1790,7 @@
 	      (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
 	      (:authors
 	       ("Augusto Stoffel" . "arstoffel@gmail.com"))
-	      (:commit . "0411d64169b5cef74c7b1c404dd1661596a7d1f8"))])
+	      (:commit . "c0340baa13ec381f88191bfa9f95d6f4199503fc"))])
  (js2-mode .
 	   [(20220710)
 	    ((emacs
@@ -2387,15 +2387,17 @@
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:keywords "convenience" "text" "org"))])
  (org-modern .
-	     [(0 8)
+	     [(0 9)
 	      ((emacs
-		(27 1)))
+		(27 1))
+	       (compat
+		(29 1 4 0)))
 	      "Modern looks for Org" tar
 	      ((:url . "https://github.com/minad/org-modern")
 	       (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	       (:authors
 		("Daniel Mendler" . "mail@daniel-mendler.de"))
-	       (:commit . "42fdbd2d27f5a8652593577a200eeea96555d018"))])
+	       (:commit . "b614ad31d72c49f9eb29d3836995fd7fb0d1fd4a"))])
  (org-notify .
 	     [(0 1 0)
 	      ((emacs
@@ -3719,17 +3721,17 @@
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org"))
 		 (:commit . "2c2ecb46b0ad3e841ac9551e3a80d02893cdf6ec"))])
  (vertico .
-	  [(1 1)
+	  [(1 2)
 	   ((emacs
 	     (27 1))
 	    (compat
-	     (29 1 3 4)))
+	     (29 1 4 0)))
 	   "VERTical Interactive COmpletion" tar
 	   ((:url . "https://github.com/minad/vertico")
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:authors
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	    (:commit . "01f0fc07d1831f00ebc64550867a0fa6eedb1fb7"))])
+	    (:commit . "3386763b717415840fd58929cc2ca056e0eb10d5"))])
  (vertico-posframe .
 		   [(0 7 2)
 		    ((emacs
