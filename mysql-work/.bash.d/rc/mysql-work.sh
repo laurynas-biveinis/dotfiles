@@ -238,8 +238,24 @@ mysql_cmake() {
     case "$build_dir" in
         *san*)
             echo "Using sanitizers"
+            sanitizers=1
             debug_flags+=("${MY80SAN[@]}")
             release_flags+=("${MY80SAN[@]}")
+            ;;
+        *)
+            sanitizers=0
+            ;;
+    esac
+
+    case "$build_dir" in
+        *valgrind*)
+            echo "Using Valgrind"
+            if [ "$sanitizers" == 1 ]; then
+                echo "Valgrind is incompatible with sanitizers"
+                return
+            fi
+            debug_flags+=("-DWITH_VALGRIND=ON")
+            release_flags+=("-DWITH_VALGRIND=ON")
             ;;
     esac
 
