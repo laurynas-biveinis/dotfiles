@@ -2640,7 +2640,7 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(1 4 0)
+	   [(1 4 1)
 	    ((emacs
 	      (26 1)))
 	    "Pop a posframe (just a frame) at point" tar
@@ -2649,7 +2649,7 @@
 	     (:maintainer "Feng Shu" . "tumashu@163.com")
 	     (:authors
 	      ("Feng Shu" . "tumashu@163.com"))
-	     (:commit . "dace2dcf105e9685b4085836645b3392dc7e2211"))])
+	     (:commit . "b00f1386ca4e251a5c3d8985d313217e56e42a7e"))])
  (project .
 	  [(0 9 8)
 	   ((emacs
@@ -2881,6 +2881,20 @@
 		      (:maintainer "Rocky Bernstein" . "rocky@gnu.org")
 		      (:authors
 		       ("Rocky Bernstein" . "rocky@gnu.org")))])
+ (realgud-trepan-xpy .
+		     [(1 0 0)
+		      ((realgud
+			(1 5 0))
+		       (load-relative
+			(1 3 1))
+		       (emacs
+			(25)))
+		      "Realgud front-end to trepan-xpy" tar
+		      ((:url . "http://github.com/rocky/realgud-trepan-xpy")
+		       (:maintainer "Rocky Bernstein" . "rocky@gnu.org")
+		       (:authors
+			("Rocky Bernstein" . "rocky@gnu.org"))
+		       (:commit . "7b3e08006f6232e021a4894e13aada64c3715d78"))])
  (rec-mode .
 	   [(1 9 1)
 	    ((emacs
@@ -3264,7 +3278,7 @@
 	   (:keywords "stream" "laziness" "sequences")
 	   (:url . "http://elpa.gnu.org/packages/stream.html"))])
  (substitute .
-	     [(0 1 6)
+	     [(0 1 7)
 	      ((emacs
 		(27 1)))
 	      "Efficiently replace targets in the buffer or context" tar
@@ -3272,7 +3286,7 @@
 	       (:maintainer "Protesilaos Stavrou General Issues" . "~protesilaos/general-issues@lists.sr.ht")
 	       (:authors
 		("Protesilaos Stavrou" . "info@protesilaos.com"))
-	       (:commit . "0605b995b60048a5eeb12edcc7e1d20663f019f6"))])
+	       (:commit . "d7dcd3b1ae4d910ce5d698f5bc09fa8b9a638398"))])
  (svg .
       [(1 1)
        ((emacs
