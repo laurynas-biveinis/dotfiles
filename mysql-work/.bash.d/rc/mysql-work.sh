@@ -219,6 +219,10 @@ mysql_cmake() {
                     release_flags=("${MY8032[@]}")
                     debug_flags=("${MY8032D[@]}")
                     ;;
+                28)
+                    release_flags=("${MY8028[@]}")
+                    debug_flags=("${MY8028D[@]}")
+                    ;;
                 *)
                     echo "Unsupported version, please add"
                     return
