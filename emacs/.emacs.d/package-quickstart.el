@@ -4313,10 +4313,10 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.2/org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.2/org-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.3/org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.3/org-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.6.2/org-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.6.3/org-autoloads.el") (car load-path))))
 
 
 
@@ -12925,7 +12925,7 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.2" "/Users/laurynas/.emacs.d/elpa/transient-20230315.1520" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.1" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.3" "/Users/laurynas/.emacs.d/elpa/transient-20230315.1520" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.1" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
