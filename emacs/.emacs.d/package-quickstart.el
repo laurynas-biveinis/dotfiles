@@ -1469,10 +1469,10 @@ Read a string using a pos-frame with given PROMPT and INITIAL-INPUT.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-3.0/treemacs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-3.0/treemacs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-3.1/treemacs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-3.1/treemacs-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/treemacs-3.0/treemacs-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/treemacs-3.1/treemacs-autoloads.el") (car load-path))))
 
 
 
@@ -1858,7 +1858,7 @@ Define a custom ICON for the current theme to use for FILE-EXTENSIONS.
 Note that treemacs has a very loose definition of what constitutes a file
 extension - it's either everything past the last period, or just the file's full
 name if there is no period.  This makes it possible to match file names like
-'.gitignore' and 'Makefile'.
+\\='.gitignore' and \\='Makefile'.
 
 Additionally FILE-EXTENSIONS are also not case sensitive and will be stored in a
 down-cased state.
