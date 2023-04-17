@@ -86,7 +86,7 @@
 			    ("Michal Nazarewicz" . "mina86@mina86.com"))
 			   (:commit . "33b5f88b799a17947c266b04ad59462c5aeb4ed7"))])
  (autothemer .
-	     [(0 2 14)
+	     [(0 2 18)
 	      ((dash
 		(2 10 0))
 	       (emacs
@@ -94,7 +94,7 @@
 	      "Conveniently define themes" tar
 	      ((:url . "https://github.com/jasonm23/autothemer")
 	       (:maintainer "Jason Milkins" . "jasonm23@gmail.com")
-	       (:commit . "87a21019ed4f41a487a8af34467e0ebff19f365e"))])
+	       (:commit . "8f72afc6dba5ad7cc3a201a084fd20571f945d2e"))])
  (bash-completion .
 		  [(3 1 1)
 		   ((emacs
@@ -386,7 +386,7 @@
 		 ("Arne Jørgensen" . "arne@arnested.dk"))
 		(:commit . "ed90b0c4d808365e9ae9f16cc8a96eff17815621"))])
  (eat .
-      [(0 7)
+      [(0 8)
        ((emacs
 	 (28 1)))
        "Emulate A Terminal, in a region, in a buffer and in Eshell" tar
@@ -395,7 +395,7 @@
 	(:maintainer "Akib Azmain Turja" . "akib@disroot.org")
 	(:authors
 	 ("Akib Azmain Turja" . "akib@disroot.org"))
-	(:commit . "a20c01e012351cec8a94974835e7aa2c0d5afade"))])
+	(:commit . "092bdd9b9535f9d21bf7b2e15e8ecd1a33089735"))])
  (edit-indirect .
 		[(0 1 10)
 		 ((emacs
@@ -1303,7 +1303,7 @@
 	  ("Shi Tianshu"))
 	 (:commit . "57656a69d3c29ddb0d18697491f80674e1097eaf"))])
  (minibar .
-	  [(0 2)
+	  [(0 3)
 	   ((emacs
 	     (27 2)))
 	   "Modular status bar in minibuffer" tar
@@ -1312,7 +1312,7 @@
 	    (:maintainer "Akib Azmain Turja" . "akib@disroot.org")
 	    (:authors
 	     ("Akib Azmain Turja" . "akib@disroot.org"))
-	    (:commit . "2f059a8f8a49495e611065bc01c94803c322fa86"))])
+	    (:commit . "22831489d3bbc22aef315c0f003bf3756b8889fa"))])
  (moe-theme .
 	    [(1 0 2)
 	     nil "A colorful eye-candy theme. Moe, moe, kyun!" tar
@@ -1886,7 +1886,7 @@
 		     ("John Olsson" . "john@cryon.se"))
 		    (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed .
-	[(1 2 1)
+	[(1 2 2)
 	 ((emacs
 	   (25 1)))
 	 "A major mode for editing subtitles" tar
@@ -1895,7 +1895,7 @@
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
 	  (:authors
 	   ("Random User"))
-	  (:commit . "0519eb16ad618880fbc9cfd272ebb13e2ceab619"))])
+	  (:commit . "260620850615f694d946415f12801c78237e2205"))])
  (sweeprolog .
 	     [(0 17 0)
 	      ((emacs
@@ -2216,7 +2216,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(23 10 20230404113004)
+	       [(23 10 20230407101020)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -2225,7 +2225,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "8f176955197762c9d7cdd4aaf8ed4d6530d2ba04"))])
+		 (:commit . "ea78f41156cade5f2cb79a6d80f7f9864e6b64ab"))])
  (xkcd .
        [(1 1)
 	((json
