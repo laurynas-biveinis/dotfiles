@@ -5,7 +5,7 @@
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
-;; Version: 1.4.1
+;; Version: 1.4.2
 ;; Keywords: convenience, tooltip
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -190,6 +190,8 @@ position.  Its argument is a plist of the following form:
    :posframe-height xxx
    :posframe-buffer xxx
    :parent-frame xxx
+   :parent-window-start xxx
+   :parent-window-end xxx
    :parent-window-left xxx
    :parent-window-top xxx
    :parent-frame-width xxx
@@ -384,6 +386,8 @@ You can use `posframe-delete-all' to delete all posframes."
          ;;-----------------------------------------------------
          (buffer (get-buffer-create buffer-or-name))
          (parent-window (selected-window))
+         (parent-window-start (window-start parent-window))
+         (parent-window-end (window-end parent-window))
          (parent-window-top (window-pixel-top parent-window))
          (parent-window-left (window-pixel-left parent-window))
          (parent-window-width (window-pixel-width parent-window))
@@ -476,6 +480,8 @@ You can use `posframe-delete-all' to delete all posframes."
                        :parent-frame-height parent-frame-height
                        :ref-position ref-position
                        :parent-window parent-window
+                       :parent-window-start parent-window-start
+                       :parent-window-end parent-window-end
                        :parent-window-top parent-window-top
                        :parent-window-left parent-window-left
                        :parent-window-width parent-window-width

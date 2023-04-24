@@ -5,8 +5,8 @@
 ;; Author: Ivan Yonchovski <yyoncho@gmail.com>
 ;; Contributor: Ellis Kenyő <me@elken.dev>
 ;; Keywords: convenience
-;; Package-Version: 20230412.1425
-;; Package-Commit: 9c816279b1a4206b42a71f41de080a0a306b5cc2
+;; Package-Version: 20230423.1237
+;; Package-Commit: 43f73c1199d012ab1875137a4a0bb050aac64e2b
 
 ;; Version: 0.1
 ;; URL: https://github.com/yyoncho/helm-icons
@@ -34,6 +34,7 @@
 (require 'dash)
 (require 'seq)
 (require 'f)
+(require 'treemacs-faces nil t)
 (require 'treemacs-icons nil t)
 (require 'treemacs-themes nil t)
 (require 'all-the-icons nil t)

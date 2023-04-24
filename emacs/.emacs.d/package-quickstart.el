@@ -1221,10 +1221,10 @@ result of `defhydra'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.4.1/posframe-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.4.1/posframe-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.4.2/posframe-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/posframe-1.4.2/posframe-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-1.4.1/posframe-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/posframe-1.4.2/posframe-autoloads.el") (car load-path))))
 
 
 
@@ -1256,6 +1256,8 @@ position.  Its argument is a plist of the following form:
    :posframe-height xxx
    :posframe-buffer xxx
    :parent-frame xxx
+   :parent-window-start xxx
+   :parent-window-end xxx
    :parent-window-left xxx
    :parent-window-top xxx
    :parent-frame-width xxx
@@ -11299,10 +11301,10 @@ Diagnostics using `helm'
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230412.1425/helm-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230412.1425/helm-icons-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230423.1237/helm-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230423.1237/helm-icons-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20230412.1425/helm-icons-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20230423.1237/helm-icons-autoloads.el") (car load-path))))
 
 
 
