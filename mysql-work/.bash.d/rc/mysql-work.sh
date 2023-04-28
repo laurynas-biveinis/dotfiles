@@ -178,6 +178,7 @@ MY8026_EXTRA=("-DENABLE_DOWNLOADS=ON")
 # Paydirt!
 
 export MY8033D=("${MY80D[@]}" "${MY8033_EXTRA[@]}" "${MY8030_33_EXTRA[@]}")
+export MY8033=("${MY80R[@]}" "${MY8033_EXTRA[@]}" "${MY8030_33_EXTRA[@]}")
 unset MY8033_EXTRA
 
 export MY8032D=("${MY80D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_33_EXTRA[@]}")
