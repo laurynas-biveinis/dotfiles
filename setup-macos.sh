@@ -311,7 +311,7 @@ brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      findutils libtool npm fd delta jq colordiff iwyu cppcheck infer creduce \
      gnu-sed mas bat fig bison libfido2 actionlint circleci imagemagick \
      rapidjson doxygen graphviz cmake protobuf ripgrep lz4 boost cpplint \
-     libeatmydata duf exa clang-build-analyzer recode
+     libeatmydata duf exa clang-build-analyzer recode ninja
 #
 # App Store
 #
@@ -341,7 +341,7 @@ python3 -m pip install --upgrade pip
 pip3 install asitop scipy pandas cmake-language-server cmakelang cppclean
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner michaelvillar-timer utm
+     telegram keycombiner michaelvillar-timer utm activitywatch
 # Start RescueTime, login
 
 # Intel
