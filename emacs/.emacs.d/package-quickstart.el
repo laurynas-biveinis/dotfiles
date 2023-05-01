@@ -3451,6 +3451,17 @@ the mode if ARG is omitted or nil, and toggle it if ARG is `toggle'.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/request-0.3.2/request-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/request-0.3.2/request-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/request-0.3.2/request-autoloads.el") (car load-path))))
+
+
+
+(register-definition-prefixes "request" '("request-"))
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.7.0/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.7.0/projectile-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -12918,9 +12929,70 @@ See `aggressive-indent-mode' for more information on Aggressive-Indent mode.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.4.0/activity-watch-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.4.0/activity-watch-mode-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.4.0/activity-watch-mode-autoloads.el") (car load-path))))
+
+
+
+(autoload 'activity-watch-refresh-project-name "activity-watch-mode" "\
+Recompute the name of the project for the current file." t nil)
+
+(autoload 'activity-watch-mode "activity-watch-mode" "\
+Toggle Activity-Watch (Activity-Watch mode).
+
+This is a minor mode.  If called interactively, toggle the
+`activity-watch mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `activity-watch-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+\(fn &optional ARG)" t nil)
+
+(put 'global-activity-watch-mode 'globalized-minor-mode t)
+
+(defvar global-activity-watch-mode nil "\
+Non-nil if Global Activity-Watch mode is enabled.
+See the `global-activity-watch-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-activity-watch-mode'.")
+
+(custom-autoload 'global-activity-watch-mode "activity-watch-mode" nil)
+
+(autoload 'global-activity-watch-mode "activity-watch-mode" "\
+Toggle Activity-Watch mode in all buffers.
+With prefix ARG, enable Global Activity-Watch mode if ARG is positive;
+otherwise, disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Activity-Watch mode is enabled in all buffers where `(lambda nil
+\(activity-watch-mode 1))' would do it.
+
+See `activity-watch-mode' for more information on Activity-Watch mode.
+
+\(fn &optional ARG)" t nil)
+
+(register-definition-prefixes "activity-watch-mode" '("activity-watch-"))
+
+
+)
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+       '(yasnippet yaml-mode xterm-color with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs compat transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
        package-activated-list))
 (progn
   (require 'info)

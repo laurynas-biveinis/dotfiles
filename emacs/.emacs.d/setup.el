@@ -1152,6 +1152,10 @@ BUFFER, TARGET, NICK, SERVER, and PORT are ERC-provided."
 (require 'wakatime-mode)
 (global-wakatime-mode)
 
+;;; ActivityWatch
+(require 'activity-watch-mode)
+(global-activity-watch-mode)
+
 ;;; Flycheck. 26.1+ flymake works too.
 (require 'flycheck)
 (setq flycheck-global-modes '(not org-agenda-mode vterm-mode erc-mode))
@@ -1681,7 +1685,7 @@ CANDIDATES is the list of candidates."
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
                      " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
                      " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"
-                     " Habit" " :ARCHIVE:"))
+                     " Habit" " :ARCHIVE:" " activity-watch"))
 (rich-minority-mode)
 
 ;;; projectile
