@@ -50,8 +50,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
 
     FB_COMMON=()
     # TODO(laurynas): fix the sources
-    FB8028_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
-                            "-Wno-unqualified-std-cast-call"
+    FB8028_EXTRA_CXX_FLAGS=("-Wno-unqualified-std-cast-call"
                             "-Wno-deprecated-declarations")
     FB8028_EXTRA=("-DWITH_UNIT_TESTS=OFF")
 
