@@ -2750,10 +2750,10 @@ this time, in which case it won't display at all.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.0/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.0/solarized-theme-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.1/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.1/solarized-theme-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.0/solarized-theme-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.1/solarized-theme-autoloads.el") (car load-path))))
 
 
 
@@ -11312,10 +11312,10 @@ Diagnostics using `helm'
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230423.1237/helm-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230423.1237/helm-icons-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230506.432/helm-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230506.432/helm-icons-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20230423.1237/helm-icons-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20230506.432/helm-icons-autoloads.el") (car load-path))))
 
 
 
