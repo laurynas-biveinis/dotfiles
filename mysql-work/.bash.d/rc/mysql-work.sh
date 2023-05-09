@@ -350,9 +350,9 @@ mysql_cmake() {
 
 mysql_build() {
     mysql_cmake "$@"
+    (cd .. && ln -sf "$build_dir/compile_commands.json" .)
     make -j "$MAKE_J"
     build_dir="$(basename "$PWD")"
-    (cd .. && ln -sf "$build_dir/compile_commands.json" .)
 }
 
 # Workaround P10K going crazy
