@@ -49,9 +49,6 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
                   "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
 
     FB_COMMON=()
-    # TODO(laurynas): fix the sources
-    FB8028_EXTRA_CXX_FLAGS=("-Wno-unqualified-std-cast-call"
-                            "-Wno-deprecated-declarations")
     FB8028_EXTRA=("-DWITH_UNIT_TESTS=OFF")
 
     export MYCLANG12=("-DCMAKE_C_COMPILER=$BREW/llvm@12/bin/clang-12"
@@ -66,7 +63,6 @@ else
     MARIA_COMMON=()
 
     FB_COMMON=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
-    FB8028_EXTRA_CXX_FLAGS=()
     FB8028_EXTRA=("-DWITH_UNIT_TESTS=OFF")
 
     export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
@@ -160,17 +156,8 @@ unset MY8026_28_C_FLAGS_DEBUG
 unset MY8026_28_CXX_FLAGS_DEBUG
 unset MY8026_28_CXX_FLAGS_RELEASE
 unset MY8026_28_EXTRA_CXX_FLAGS
-
-FB8028_CXX_FLAGS_DEBUG=("${FB8028_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
-FB8028_CXX_FLAGS_RELEASE=("${FB8028_EXTRA_CXX_FLAGS[@]}"
-                          "${CXX_FLAGS_RELEASE[@]}")
-FB8028_EXTRA+=("-DCMAKE_CXX_FLAGS=${FB8028_EXTRA_CXX_FLAGS[*]}"
-               "-DCMAKE_C_FLAGS_DEBUG=${FB8028_CXX_FLAGS_DEBUG[*]}"
-               "-DCMAKE_CXX_FLAGS_DEBUG=${FB8028_CXX_FLAGS_DEBUG[*]}"
-               "-DCMAKE_CXX_FLAGS_RELEASE=${FB8028_CXX_FLAGS_RELEASE[*]}")
 unset CXX_FLAGS_DEBUG
 unset CXX_FLAGS_RELEASE
-unset FB8028_EXTRA_CXX_FLAGS
 
 MY8026_EXTRA=("-DENABLE_DOWNLOADS=ON")
 
