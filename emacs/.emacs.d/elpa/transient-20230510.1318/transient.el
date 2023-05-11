@@ -6,8 +6,8 @@
 ;; Homepage: https://github.com/magit/transient
 ;; Keywords: extensions
 
-;; Package-Version: 0.3.7.50-git
-;; Package-Requires: ((emacs "25.1") (compat "29.1.3.4"))
+;; Package-Version: 0.4.0
+;; Package-Requires: ((emacs "25.1") (compat "29.1.4.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 

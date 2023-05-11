@@ -51,7 +51,7 @@ but suffix commands can also be configured to not exit the transient.
      available at
      <https://github.com/positron-solutions/transient-showcase>.
 
-This manual is for Transient version 0.3.7.50-git.
+This manual is for Transient version 0.4.0.
 
      Copyright (C) 2018–2023 Free Software Foundation, Inc.
 
@@ -3360,69 +3360,69 @@ please read <https://www.gnu.org/licenses/why-not-lgpl.html>.
 
 Tag Table:
 Node: Top763
-Node: Introduction4077
-Node: Usage9919
-Node: Invoking Transients10287
-Node: Aborting and Resuming Transients11366
-Node: Common Suffix Commands13977
-Node: Saving Values15813
-Ref: Saving Values-Footnote-117184
-Node: Using History17377
-Node: Getting Help for Suffix Commands18951
-Node: Enabling and Disabling Suffixes20319
-Node: Other Commands23387
-Node: Configuration24363
-Ref: Essential Options24643
-Ref: Accessibility Options28304
-Ref: Auxiliary Options28627
-Ref: Developer Options33354
-Node: Modifying Existing Transients34602
-Node: Defining New Commands38794
-Node: Defining Transients39130
-Node: Binding Suffix and Infix Commands41566
-Node: Group Specifications42424
-Node: Suffix Specifications46993
-Node: Defining Suffix and Infix Commands51149
-Node: Using Infix Arguments54355
-Node: Transient State57189
-Ref: Pre-commands for Infixes61152
-Ref: Pre-commands for Suffixes61423
-Ref: Pre-commands for Non-Suffixes63844
-Ref: Special Pre-Commands64988
-Node: Classes and Methods65496
-Node: Group Classes67710
-Node: Group Methods69637
-Node: Prefix Classes70890
-Node: Suffix Classes71981
-Node: Suffix Methods74227
-Node: Suffix Value Methods74548
-Node: Suffix Format Methods77306
-Node: Prefix Slots78755
-Ref: Internal Prefix Slots80035
-Node: Suffix Slots81292
-Ref: Slots of transient-suffix81660
-Ref: Slots of transient-infix82514
-Ref: Slots of transient-variable85634
-Ref: Slots of transient-switches85736
-Node: Predicate Slots86099
-Node: Related Abstractions and Packages87364
-Node: Comparison With Prefix Keys and Prefix Arguments87651
-Ref: Regular Prefix Commands88336
-Ref: Regular Prefix Arguments88684
-Ref: Transients89653
-Node: Comparison With Other Packages97924
-Ref: Magit-Popup98155
-Ref: Hydra99062
-Node: FAQ102118
-Ref: Can I control how the popup buffer is displayed?102261
-Ref: How can I copy text from the popup buffer?102442
-Ref: Why did some of the key bindings change?102914
-Ref: Why does q not quit popups anymore?105267
-Node: Keystroke Index106360
-Node: Command and Function Index108078
-Node: Variable Index114450
-Node: Concept Index116723
-Node: GNU General Public License119467
+Node: Introduction4070
+Node: Usage9912
+Node: Invoking Transients10280
+Node: Aborting and Resuming Transients11359
+Node: Common Suffix Commands13970
+Node: Saving Values15806
+Ref: Saving Values-Footnote-117177
+Node: Using History17370
+Node: Getting Help for Suffix Commands18944
+Node: Enabling and Disabling Suffixes20312
+Node: Other Commands23380
+Node: Configuration24356
+Ref: Essential Options24636
+Ref: Accessibility Options28297
+Ref: Auxiliary Options28620
+Ref: Developer Options33347
+Node: Modifying Existing Transients34595
+Node: Defining New Commands38787
+Node: Defining Transients39123
+Node: Binding Suffix and Infix Commands41559
+Node: Group Specifications42417
+Node: Suffix Specifications46986
+Node: Defining Suffix and Infix Commands51142
+Node: Using Infix Arguments54348
+Node: Transient State57182
+Ref: Pre-commands for Infixes61145
+Ref: Pre-commands for Suffixes61416
+Ref: Pre-commands for Non-Suffixes63837
+Ref: Special Pre-Commands64981
+Node: Classes and Methods65489
+Node: Group Classes67703
+Node: Group Methods69630
+Node: Prefix Classes70883
+Node: Suffix Classes71974
+Node: Suffix Methods74220
+Node: Suffix Value Methods74541
+Node: Suffix Format Methods77299
+Node: Prefix Slots78748
+Ref: Internal Prefix Slots80028
+Node: Suffix Slots81285
+Ref: Slots of transient-suffix81653
+Ref: Slots of transient-infix82507
+Ref: Slots of transient-variable85627
+Ref: Slots of transient-switches85729
+Node: Predicate Slots86092
+Node: Related Abstractions and Packages87357
+Node: Comparison With Prefix Keys and Prefix Arguments87644
+Ref: Regular Prefix Commands88329
+Ref: Regular Prefix Arguments88677
+Ref: Transients89646
+Node: Comparison With Other Packages97917
+Ref: Magit-Popup98148
+Ref: Hydra99055
+Node: FAQ102111
+Ref: Can I control how the popup buffer is displayed?102254
+Ref: How can I copy text from the popup buffer?102435
+Ref: Why did some of the key bindings change?102907
+Ref: Why does q not quit popups anymore?105260
+Node: Keystroke Index106353
+Node: Command and Function Index108071
+Node: Variable Index114443
+Node: Concept Index116716
+Node: GNU General Public License119460
 
 End Tag Table
 
