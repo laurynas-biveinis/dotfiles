@@ -418,7 +418,7 @@
 		   ("Fanael Linithien" . "fanael4@gmail.com"))
 		  (:commit . "f80f63822ffae78de38dbe72cacaeb1aaa96c732"))])
  (editorconfig .
-	       [(0 10 0)
+	       [(0 10 1)
 		((emacs
 		  (26 1))
 		 (nadvice
@@ -429,7 +429,7 @@
 		 (:maintainer "EditorConfig Team" . "editorconfig@googlegroups.com")
 		 (:authors
 		  ("EditorConfig Team" . "editorconfig@googlegroups.com"))
-		 (:commit . "a8b31c925e5cdee4b26b10a43094787937fe441e"))])
+		 (:commit . "ed760770ed5397120b3d68b69afc0778c48d3a47"))])
  (elixir-mode .
 	      [(2 4 0)
 	       ((emacs
@@ -2095,7 +2095,7 @@
 	     ("Campbell Barton" . "ideasman42@gmail.com"))
 	    (:commit . "57615408f9bd70247d2b2844a1946a00300ef5bb"))])
  (undo-fu-session .
-		  [(0 5)
+		  [(0 6)
 		   ((emacs
 		     (28 1)))
 		   "Persistent undo, available between sessions" tar
@@ -2104,7 +2104,7 @@
 		    (:maintainer "Campbell Barton" . "ideasman42@gmail.com")
 		    (:authors
 		     ("Campbell Barton" . "ideasman42@gmail.com"))
-		    (:commit . "6a306462ee1fa3a7c6303561f9ddf510e448b731"))])
+		    (:commit . "27b688e02d5f5bb7a939f3e312b0219aebe24afc"))])
  (vc-fossil .
 	    [(20230504)
 	     nil "VC backend for the fossil sofware configuraiton management system" tar
