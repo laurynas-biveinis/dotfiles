@@ -2477,10 +2477,10 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230510.1318/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230510.1318/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230519.1940/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230519.1940/transient-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20230510.1318/transient-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20230519.1940/transient-autoloads.el") (car load-path))))
 
 
 
@@ -4101,15 +4101,15 @@ Otherwise behave as if called interactively.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.2.3/prism-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.2.3/prism-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.3/prism-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.3/prism-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/prism-0.2.3/prism-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/prism-0.3/prism-autoloads.el") (car load-path))))
 
 
 
 (autoload 'prism-mode "prism" "\
-Disperse lisp forms (and other non-whitespace-sensitive syntax) into a spectrum of colors according to depth.
+Disperse code into a spectrum of colors according to depth.
 Depth is determined by list nesting.  Suitable for Lisp, C-like
 languages, etc.
 
@@ -4130,9 +4130,10 @@ it is disabled.
 \(fn &optional ARG)" t nil)
 
 (autoload 'prism-whitespace-mode "prism" "\
-Disperse whitespace-sensitive syntax into a spectrum of colors according to depth.
+Disperse code into a spectrum of colors according to depth.
 Depth is determined by indentation and list nesting.  Suitable
-for Python, Haskell, etc.
+for whitespace-sensitive languages like Python, Haskell, shell,
+etc.
 
 This is a minor mode.  If called interactively, toggle the
 `Prism-Whitespace mode' mode.  If the prefix argument is
@@ -13009,7 +13010,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.6" "/Users/laurynas/.emacs.d/elpa/transient-20230510.1318" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.1")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.6" "/Users/laurynas/.emacs.d/elpa/transient-20230519.1940" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.1")
          Info-directory-list)))
 
 ;; Local Variables:

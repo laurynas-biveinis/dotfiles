@@ -1,2 +1,0 @@
-;;; Generated package description from prism.el  -*- no-byte-compile: t -*-
-(define-package "prism" "0.2.3" "Customizable, depth-based syntax coloring" '((emacs "26.1") (dash "2.14.1")) :commit "d1d8121eb552a7c29c25cfa9ace19cba4ae1902c" :authors '(("Adam Porter" . "adam@alphapapa.net")) :maintainer '("Adam Porter" . "adam@alphapapa.net") :keywords '("faces" "lisp") :url "https://github.com/alphapapa/prism.el")
