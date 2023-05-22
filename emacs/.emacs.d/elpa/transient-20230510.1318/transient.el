@@ -1643,7 +1643,6 @@ of the corresponding object."
   "<transient-history-prev>"      #'transient--do-stay
   "<transient-history-next>"      #'transient--do-stay
   "<universal-argument>"          #'transient--do-stay
-  "<universal-argument-more>"     #'transient--do-stay
   "<negative-argument>"           #'transient--do-minus
   "<digit-argument>"              #'transient--do-stay
   "<top-level>"                   #'transient--do-quit-all

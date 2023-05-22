@@ -4,9 +4,9 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; URL: https://github.com/alphapapa/prism.el
-;; Package-Version: 0.3
-;; Package-Commit: 8d4b7726632eac8850b2509239ad0283a80afc93
-;; Version: 0.3
+;; Package-Version: 0.2.3
+;; Package-Commit: d1d8121eb552a7c29c25cfa9ace19cba4ae1902c
+;; Version: 0.2.3
 ;; Package-Requires: ((emacs "26.1") (dash "2.14.1"))
 ;; Keywords: faces lisp
 
@@ -111,9 +111,6 @@
 (defvar prism-faces-strings nil
   "Alist mapping depth levels to string faces.")
 
-(defvar prism-faces-parens nil
-  "Alist mapping depth levels to parens faces.")
-
 (defvar prism-face nil
   "Set by `prism-match' during fontification.")
 
@@ -139,8 +136,6 @@ for `python-mode'.")
 (defvar prism-num-faces)
 (defvar prism-comments-fn)
 (defvar prism-comments)
-(defvar prism-parens)
-(defvar prism-parens-fn)
 (defvar prism-strings-fn)
 (defvar prism-strings)
 (defvar prism-whitespace-mode-indents)
@@ -219,26 +214,24 @@ Intended for use as the DESATURATIONS and LIGHTENS arguments to
 
 ;;;; Minor mode
 
-(defun prism-active-mode ()
-  "Return any already-active `prism' modes in this buffer.
-There should only ever be one, but the return value is a list of
-modes."
-  (cl-loop for mode in '(prism-mode prism-whitespace-mode)
+(defun prism-active-mode (without-mode)
+  "Return any already-active `prism' modes in this buffer, not including WITHOUT-MODE."
+  (cl-loop for mode in (remove without-mode '(prism-mode prism-whitespace-mode))
            when (symbol-value mode)
-           collect mode))
+           return mode))
 
 ;;;###autoload
 (define-minor-mode prism-mode
-  "Disperse code into a spectrum of colors according to depth.
+  "Disperse lisp forms (and other non-whitespace-sensitive syntax) into a spectrum of colors according to depth.
 Depth is determined by list nesting.  Suitable for Lisp, C-like
 languages, etc."
   :global nil
   (let ((keywords '((prism-match 0 prism-face prepend))))
     (if prism-mode
         (progn
-          (dolist (mode (cl-remove 'prism-mode (prism-active-mode)))
-            ;; Deactivate alternative mode so this one can be enabled.
-            (funcall mode -1))
+          (when-let* ((active-mode (prism-active-mode 'prism-mode)))
+            (setf prism-mode nil)
+            (user-error "%s is already active in this buffer" active-mode))
           (unless prism-faces
             (prism-set-colors))
           (setq prism-syntax-table (prism-syntax-table (syntax-table)))
@@ -258,22 +251,20 @@ languages, etc."
         ;; Don't remove advice if `prism' is still active in any buffers.
         (advice-remove #'load-theme #'prism-after-theme)
         (advice-remove #'disable-theme #'prism-after-theme))
-      (remove-hook 'font-lock-extend-region-functions #'prism-extend-region 'local)
-      (font-lock-flush))))
+      (remove-hook 'font-lock-extend-region-functions #'prism-extend-region 'local))))
 
 ;;;###autoload
 (define-minor-mode prism-whitespace-mode
-  "Disperse code into a spectrum of colors according to depth.
+  "Disperse whitespace-sensitive syntax into a spectrum of colors according to depth.
 Depth is determined by indentation and list nesting.  Suitable
-for whitespace-sensitive languages like Python, Haskell, shell,
-etc."
+for Python, Haskell, etc."
   :global nil
   (let ((keywords '((prism-match-whitespace 0 prism-face prepend))))
     (if prism-whitespace-mode
         (progn
-          (dolist (mode (cl-remove 'prism-whitespace-mode (prism-active-mode)))
-            ;; Deactivate alternative mode so this one can be enabled.
-            (funcall mode -1))
+          (when-let* ((active-mode (prism-active-mode 'prism-whitespace-mode)))
+            (setf prism-whitespace-mode nil)
+            (user-error "%s is already active in this buffer" active-mode))
           (unless prism-faces
             (prism-set-colors))
           (setf prism-syntax-table (prism-syntax-table (syntax-table))
@@ -298,8 +289,7 @@ etc."
         ;; Don't remove advice if `prism' is still active in any buffers.
         (advice-remove #'load-theme #'prism-after-theme)
         (advice-remove #'disable-theme #'prism-after-theme))
-      (remove-hook 'font-lock-extend-region-functions #'prism-extend-region 'local)
-      (font-lock-flush))))
+      (remove-hook 'font-lock-extend-region-functions #'prism-extend-region 'local))))
 
 ;;;; Functions
 
@@ -362,19 +352,14 @@ For `font-lock-extend-region-functions'."
 Matches up to LIMIT."
   ;;  (prism-debug (current-buffer) (point) limit)
   (cl-macrolet ((parse-syntax ()
-                              `(-setq (depth _ _ in-string-p comment-level-p  _ _ _ comment-or-string-start)
+                              `(-setq (depth _ _ in-string-p comment-level-p)
                                  (syntax-ppss)))
                 (comment-p ()
                            ;; This macro should only be used after `parse-syntax'.
                            `(or comment-level-p (looking-at-p (rx (syntax comment-start)))))
-                (looking-at-paren-p
-                 () `(looking-at-p (rx (or (syntax open-parenthesis)
-                                           (syntax close-parenthesis)))))
                 (face-at ()
                          ;; Return face to apply.  Should be called with point at `start'.
-                         `(cond ((and prism-parens (looking-at-paren-p))
-                                 (alist-get depth prism-faces-parens))
-                                ((comment-p)
+                         `(cond ((comment-p)
                                  (pcase depth
                                    (0 'font-lock-comment-face)
                                    (_ (if prism-faces-comments
@@ -465,27 +450,7 @@ Matches up to LIMIT."
                                ;; buffer before, which might mean that Emacs can handle that.
                                ;; I think the important thing is not to hang Emacs, to always
                                ;; either return nil or advance point to `limit'.
-                               limit))
-                         (or (unless found-string-p
-                               ;; This additional form is regrettable, but it seems necessary
-                               ;; to fix <https://github.com/alphapapa/prism.el/issues/18>.
-                               ;; However, there might be a better way to refactor this whole
-                               ;; calculation of the END position, so someday that should be
-                               ;; tried.  (Or maybe just use tree-sitter in Emacs 29+.)
-                               (save-excursion
-                                 (when (ignore-errors
-                                         (re-search-forward (rx (or (syntax string-quote)
-                                                                    (syntax comment-start)))
-                                                            (scan-lists (point) 1 1) t))
-                                   ;; Found string or comment in current list: stop at beginning of it.
-                                   (pcase (syntax-after (match-beginning 0))
-                                     ('(11)
-                                      (setf found-comment-p t)
-                                      (match-beginning 0))
-                                     (`(7 . ,_)
-                                      (setf found-string-p t)
-                                      (match-beginning 0))))))
-                             limit)))
+                               limit))))
           (when (< end start)
             ;; Set search bound properly when `start' is greater than
             ;; `end' (i.e. when `start' is moved past `limit', I think).
@@ -496,33 +461,17 @@ Matches up to LIMIT."
               (or (unless (or in-string-p found-string-p found-comment-p)
                     ;; Neither in a string nor looking at nor in a
                     ;; comment: set `end' to any comment found before it.
-                    (when (re-search-forward (rx (or (seq (not (syntax escape)) (syntax string-quote))
-                                                     (syntax comment-start)))
-                                             end t)
-                      (unless (equal '(7) (syntax-after (match-beginning 0)))
-                        ;; Not in a string: set end to the beginning
-                        ;; of the comment (this avoids stopping at
-                        ;; comment-starts inside strings).
-                        (setf end (match-beginning 0)))))
+                    (when (re-search-forward (rx (syntax comment-start)) end t)
+                      (setf end (match-beginning 0))))
                   (unless (or found-comment-p found-string-p)
                     ;; Neither in nor looking at a comment: set `end'
                     ;; to any string or comment found before it.
                     (when (re-search-forward (rx (syntax string-quote)) end t)
                       (setf end (match-beginning 0))))))
-            (when prism-parens
-              (unless (= 1 (- end start))
-                ;; Not fontifying a single open paren (i.e. we are trying to fontify more
-                ;; than just an open paren): so if we are looking at one, fontify only it.
-                (when (eq 4 (syntax-class (syntax-after (1- end))))
-                  ;; End is past an open paren: back up one character.
-                  (cl-decf end))))
             (if (and (comment-p) (= 0 depth))
                 (setf prism-face nil)
               (setf prism-face (face-at)))
             (goto-char end)
-            (unless (> (point) start)
-              ;; Prevent end-of-buffer error in `font-lock-fontify-keywords-region'.
-              (cl-decf start))
             (set-match-data (list start end (current-buffer)))
             ;;  (prism-debug (current-buffer) "END" start end)
             ;; Be sure to return non-nil!
@@ -565,21 +514,13 @@ appropriately, e.g. to `python-indent-offset' for `python-mode'."
                              ;; character-delimited list and indented on a new line within that
                              ;; list to match the list's opening indentation (e.g. in Python,
                              ;; when an if's condition is parenthesized and split across lines).
-                             (_ (let* ((current-depth (car (syntax-ppss)))  ;; This `syntax-ppss' call *is* necessary!
+                             (_ (let* ((current-depth (car (syntax-ppss)))  ; This `syntax-ppss' call *is* necessary!
                                        (enclosing-list-depth
                                         (pcase current-depth
                                           (0 0)
                                           (_ (save-excursion
                                                ;; Escape current list and return the level of
                                                ;; the enclosing list plus its indent depth.
-
-                                               ;; FIXME: When a preceding comment contains an apostrophe, this
-                                               ;; call to `scan-lists' interprets the apostrophe as delimiting a
-                                               ;; list, and it skips back to another preceding apostrophe, even
-                                               ;; inside a different top-level form, which causes the wrong
-                                               ;; depth to be calculated. ... Well, good news, I guess: this
-                                               ;; happens on Emacs 26.3 but not on Emacs 27.1.  I guess
-                                               ;; something was fixed, which means that it's not a bug in Prism.
                                                (goto-char (scan-lists (point) -1 current-depth))
                                                (+ (indent-depth) (car (syntax-ppss))))))))
                                   (pcase enclosing-list-depth
@@ -709,9 +650,6 @@ appropriately, e.g. to `python-indent-offset' for `python-mode'."
                 (setf prism-face nil)
               (setf prism-face (face-at)))
             (goto-char end)
-            (unless (> (point) start)
-              ;; Prevent end-of-buffer error in `font-lock-fontify-keywords-region'.
-              (cl-decf start))
             (set-match-data (list start end (current-buffer)))
             ;; Be sure to return non-nil!
             t))))))
@@ -747,14 +685,12 @@ removed."
           (desaturations prism-desaturations) (lightens prism-lightens)
           (comments-fn (lambda (color)
                          (--> color
-                           (color-desaturate-name it 30)
-                           (color-lighten-name it -10))))
+                              (color-desaturate-name it 30)
+                              (color-lighten-name it -10))))
           (strings-fn (lambda (color)
                         (--> color
-                          (color-desaturate-name it 20)
-                          (color-lighten-name it 10))))
-          (parens-fn (lambda (color)
-                       (prism-blend color (face-attribute 'default :background) 0.5))))
+                             (color-desaturate-name it 20)
+                             (color-lighten-name it 10)))))
   "Set `prism' faces.  Call after loading a new theme.
 Call also when COLORS has been set to a list of faces and those
 faces have been modified.
@@ -778,10 +714,9 @@ DESATURATIONS and LIGHTENS are lists of integer percentages
 applied to colors as depth increases; they need not be as long as
 NUM, because they are extrapolated automatically.
 
-COMMENTS-FN, PARENS-FN, and STRINGS-FN are functions of one
-argument, a color name or hex RGB string, which return the color
-having been modified as desired for comments, parens, or strings,
-respectively."
+COMMENTS-FN and STRINGS-FN are functions of one argument, a color
+name or hex RGB string, which return the color having been
+modified as desired for comments or strings, respectively."
   (declare (indent defun))
   (interactive)
   (when (called-interactively-p 'any)
@@ -816,24 +751,24 @@ respectively."
                           (--when-let (alist-get face face-remapping-alist)
                             (face-remap-remove-relative (cons (-last-item it) (car (butlast it)))))))
     (let* ((colors (->> colors
-                     (--map (pcase-exhaustive it
-                              ((pred facep) (face-attribute it :foreground nil 'default))
-                              ((pred stringp) it)
-                              ((pred functionp) (funcall it))
-                              (`(themed ,color) (prism-theme-color color))))
-                     (--remove (string-prefix-p "unspecified-" it))
-                     -cycle
-                     (prism-modify-colors :num num
-                                          :desaturations desaturations
-                                          :lightens lightens
-                                          :colors)
-                     ;; Use only two digits per component.  HTML export of code (e.g. with Org
-                     ;; Export, htmlize, etc.)  doesn't work well with colors like "#01234567890a",
-                     ;; even if Emacs can handle them internally.  Maybe it's Web browsers that
-                     ;; can't handle them.  Anyway, we shouldn't use them if it breaks that.
-                     (--map (--> (color-name-to-rgb it)
-                              (-let (((r g b) it))
-                                (color-rgb-to-hex r g b 2)))))))
+                        (--map (pcase-exhaustive it
+                                 ((pred facep) (face-attribute it :foreground nil 'default))
+                                 ((pred stringp) it)
+                                 ((pred functionp) (funcall it))
+                                 (`(themed ,color) (prism-theme-color color))))
+                        (--remove (string-prefix-p "unspecified-" it))
+                        -cycle
+                        (prism-modify-colors :num num
+                                             :desaturations desaturations
+                                             :lightens lightens
+                                             :colors)
+                        ;; Use only two digits per component.  HTML export of code (e.g. with Org
+                        ;; Export, htmlize, etc.)  doesn't work well with colors like "#01234567890a",
+                        ;; even if Emacs can handle them internally.  Maybe it's Web browsers that
+                        ;; can't handle them.  Anyway, we shouldn't use them if it breaks that.
+                        (--map (--> (color-name-to-rgb it)
+                                    (-let (((r g b) it))
+                                      (color-rgb-to-hex r g b 2)))))))
       (cl-macrolet ((set-vars (&rest pairs)
                               `(progn
                                  ,@(cl-loop for (var val) on pairs by #'cddr
@@ -846,8 +781,7 @@ respectively."
                                                         (set (make-local-variable ',var) ,val)))))))
         (set-vars prism-faces (faces colors)
                   prism-faces-strings (faces colors "strings" strings-fn)
-                  prism-faces-comments (faces colors "comments" comments-fn)
-                  prism-faces-parens (faces colors "parens" parens-fn)))
+                  prism-faces-comments (faces colors "comments" comments-fn)))
       (when (and save (not local))
         ;; Save arguments for later saving as customized variables,
         ;; including the unmodified (but shuffled) colors.
@@ -856,8 +790,7 @@ respectively."
               prism-lightens lightens
               prism-num-faces num
               prism-comments-fn comments-fn
-              prism-strings-fn strings-fn
-              prism-parens-fn parens-fn)
+              prism-strings-fn strings-fn)
         (prism-save-colors)))))
 
 (defun prism-randomize-colors (&optional arg)
@@ -870,9 +803,9 @@ unique colors from `font-lock' faces)."
 	       (name) (propertize name 'face (list :foreground name)))
               (faces  ;; Return list of used colors with foreground color face applied.
 	       () (->> (face-list)
-                    (--select (and (string-prefix-p "prism-level" (symbol-name it))
-                                   (string-match-p (rx digit eos) (symbol-name it))))
-                    nreverse (-map #'face-foreground) (-map #'colorize)))
+                       (--select (and (string-prefix-p "prism-level" (symbol-name it))
+                                      (string-match-p (rx digit eos) (symbol-name it))))
+                       nreverse (-map #'face-foreground) (-map #'colorize)))
               (select-colors (colors threshold)
                              ;; Return shuffled list of COLORS ensuring that the
                              ;; distance between each one meets THRESHOLD.
@@ -898,10 +831,10 @@ unique colors from `font-lock' faces)."
     (let* ((faces (--select (string-prefix-p "font-lock-" (symbol-name it))
                             (face-list)))
            (colors (->> faces
-                     (--map (face-attribute it :foreground))
-                     (--remove (eq 'unspecified it))
-                     (-remove #'color-gray-p)
-                     (-select #'background-contrast-p)))
+                        (--map (face-attribute it :foreground))
+                        (--remove (eq 'unspecified it))
+                        (-remove #'color-gray-p)
+			(-select #'background-contrast-p)))
 	   (colors (pcase arg
 		     ((pred integerp) (-take arg (prism-shuffle (-uniq colors))))
 		     ('(4) colors)
@@ -923,10 +856,10 @@ unique colors from `font-lock' faces)."
                          prism-comments-fn
                        (lambda (color)
                          (--> color
-                           ;; The default function desaturates by 30%, but 40%
-                           ;; seems to help a bit when using random colors.
-                           (color-desaturate-name it 40)
-                           (color-lighten-name it -10)))))
+                              ;; The default function desaturates by 30%, but 40%
+                              ;; seems to help a bit when using random colors.
+                              (color-desaturate-name it 40)
+                              (color-lighten-name it -10)))))
       (message "Randomized%s colors: %s\nFaces: %s"
                (pcase arg
 		 ('(4) "")
@@ -940,7 +873,6 @@ Function `prism-set-colors' does not save its argument values
 permanently.  This command saves them using the customization
 system so that `prism-set-colors' can then be called without
 arguments to set the same faces."
-  ;; FIXME: Make this interactive.
   (cl-letf (((symbol-function 'custom-save-all)
              (symbol-function 'ignore)))
     ;; Avoid saving the file for each variable, which is very slow.
@@ -954,17 +886,17 @@ arguments to set the same faces."
   "Return list of NUM colors modified according to DESATURATIONS and LIGHTENS."
   (cl-flet ((modify-color (color desaturate lighten)
                           (--> color
-                            (if (> desaturate 0)
-                                (color-desaturate-name it desaturate)
-                              it)
-                            (if (> lighten 0)
-                                (color-lighten-name it lighten)
-                              it)
-                            ;; FIXME: It seems that these two functions called in sequence
-                            ;; always modify the color, e.g. #ff2afc becomes #fe29fb.
-                            (color-name-to-rgb it)
-                            (-let (((r g b) it))
-                              (color-rgb-to-hex r g b 2)))))
+                               (if (> desaturate 0)
+                                   (color-desaturate-name it desaturate)
+                                 it)
+                               (if (> lighten 0)
+                                   (color-lighten-name it lighten)
+                                 it)
+                               ;; FIXME: It seems that these two functions called in sequence
+                               ;; always modify the color, e.g. #ff2afc becomes #fe29fb.
+                               (color-name-to-rgb it)
+                               (-let (((r g b) it))
+                                 (color-rgb-to-hex r g b 2)))))
     (when (< (length desaturations) num)
       (setf desaturations (prism-expand-list num desaturations)))
     (when (< (length lightens) num)
@@ -1005,8 +937,8 @@ necessary."
                                    (1- length))))
          (final-element-p (not (zerop (mod new-length length))))
          (new-list (->> list
-                     (--map (-repeat repeat-n it))
-                     (-flatten))))
+                        (--map (-repeat repeat-n it))
+                        (-flatten))))
     (if final-element-p
         (-snoc new-list (-last-item list))
       new-list)))
@@ -1109,15 +1041,6 @@ Receives one argument, a color name or hex RGB string."
   "Function which adjusts colors for strings.
 Receives one argument, a color name or hex RGB string."
   :type 'function
-  :set #'prism-customize-set)
-
-(defcustom prism-parens nil
-  "Whether to colorize parens separately.
-When disabled, parens are colorized with the same face as the
-other elements at their depth.  When enabled, parens may be
-colorized distinctly, e.g. to make them fade away or stand out.
-See the PARENS-FN argument to the `prism-set-colors' function."
-  :type 'boolean
   :set #'prism-customize-set)
 
 (defcustom prism-colors
