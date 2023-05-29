@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# Not actually meant for running as an invoked script, but rather as a sequence
+# of steps to consult and copy and paste into the terminal, and to do some
+# unscripted steps manually.
+
 # Do applicable bits of [macOS Security and Privacy
 # Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide)
 
@@ -15,7 +19,8 @@
 # Lithuanian Standard Keyboard Layout (http://ims.mii.lt/klav/tvarkyk.html)
 #
 curl http://www.ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
-# Verify the downloaded file (note that lack of https above!)
+# Verify the downloaded file (note that lack of https above, which the server
+# admins have not solved yet as of 2023)
 unzip macOS.zip
 sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
 # Global and login screen setting
@@ -107,7 +112,8 @@ killall SystemUIServer
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
-defaults -currentHost write ~/Library/Preferences/com.apple.alf -bool true
+defaults -currentHost write ~/Library/Preferences/com.apple.alf globalstate \
+         -bool true
 defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
 sudo pkill -HUP socketfilterfw
 #
@@ -306,6 +312,7 @@ sudo chflags nohidden /Volumes
 #
 # brew
 #
+brew update
 brew install stow git ncdu gnupg coreutils fzf hexyl tldr lynis curl java \
      shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac htop \
      findutils libtool npm fd delta jq colordiff iwyu cppcheck infer creduce \

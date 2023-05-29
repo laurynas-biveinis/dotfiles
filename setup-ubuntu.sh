@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Not actually meant for running as an invoked script, but rather as a sequence
+# of steps to consult and copy and paste into the terminal, and to do some
+# unscripted steps manually.
+
 # Common
 sudo apt-get update
 sudo apt-get dist-upgrade
