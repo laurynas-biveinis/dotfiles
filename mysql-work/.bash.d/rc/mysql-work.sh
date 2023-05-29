@@ -315,6 +315,11 @@ mysql_cmake() {
     esac
 
     case "$build_dir" in
+        *llvm*)
+            echo "Using LLVM"
+            debug_flags+=("${MYCLANG[@]}")
+            release_flags+=("${MYCLANG[@]}")
+            ;;
         *llvm-12*)
             echo "Using LLVM 12"
             debug_flags+=("${MYCLANG12[@]}")
