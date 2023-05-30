@@ -18,7 +18,7 @@
 # - mysql_cmake: in a build directory, figure out CMake options & run it
 # - mysql_build: in a build directory, CMake and make
 #
-# Works on Linux and macOS.
+# Works on Linux and macOS (both Intel and Apple Silicon).
 
 set -o errexit
 set -o nounset
