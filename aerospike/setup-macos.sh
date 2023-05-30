@@ -1,2 +1,2 @@
 #!/bin/sh
-brew cask install tunnelblick
+brew install --cask tunnelblick
