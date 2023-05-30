@@ -7,7 +7,7 @@ ifdef BEAR
 	BEAR_MAKE_APPEND:=bear -a $(MAKE)
 else
 	BEAR_MAKE:=$(MAKE)
-	BEAR_MAKE_APPEMND:=$(MAKE)
+	BEAR_MAKE_APPEND:=$(MAKE)
 endif
 
 build :
