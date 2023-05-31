@@ -162,7 +162,5 @@ if [ -f /usr/local/bin/vault ]; then
     complete -C /usr/local/bin/vault vault
 fi
 
-source_if_exists ~/.nix-profile/etc/profile.d/nix.sh
-
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/bashrc.post.bash" ]] && . "$HOME/.fig/shell/bashrc.post.bash"

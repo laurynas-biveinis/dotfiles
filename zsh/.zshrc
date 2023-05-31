@@ -83,8 +83,6 @@ else
     source_if_exists /usr/share/doc/fzf/examples/key-bindings.zsh
 fi
 
-source_if_exists ~/.nix-profile/etc/profile.d/nix.sh
-
 #
 # vterm integration
 #
