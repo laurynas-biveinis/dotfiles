@@ -14,4 +14,7 @@ sudo dnf install git stow stow-doc python-pip gdb man-pages binutils cpp \
      zip colordiff wget zlib-devel libzstd-devel util-linux-user zsh \
      openssl-devel cyrus-sasl-devel openldap-devel libedit-devel \
      libevent-devel libicu-devel libcurl-devel rpcgen clang lz4-devel \
-     protobuf-devel libfido2-devel protobuf-lite-devel libtirpc-devel -y
+     protobuf-devel libfido2-devel protobuf-lite-devel libtirpc-devel \
+     gcc-toolset-12-libasan-devel ncdu lynis shellcheck ghostscript htop \
+     fd-find jq cppcheck bat doxygen graphviz ripgrep libeatmydata exa \
+     ninja-build recode -y
