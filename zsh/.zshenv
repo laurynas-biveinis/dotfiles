@@ -24,7 +24,7 @@ fi
 
 export HOMEBREW_NO_INSTALL_CLEANUP=y
 
-export PATH=/usr/local/bin:/usr/local/bin:$PATH
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 if [ -d /opt/homebrew/bin ]; then
     export PATH=/opt/homebrew/bin:$PATH
 fi
