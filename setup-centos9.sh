@@ -17,4 +17,18 @@ sudo dnf install git stow stow-doc python-pip gdb man-pages binutils cpp \
      protobuf-devel libfido2-devel protobuf-lite-devel libtirpc-devel \
      gcc-toolset-12-libasan-devel ncdu lynis shellcheck ghostscript htop \
      fd-find jq cppcheck bat doxygen graphviz ripgrep libeatmydata exa \
-     ninja-build recode -y
+     ninja-build recode golang -y
+
+# TODO(laurynas): fix paths
+go install github.com/rhysd/actionlint/cmd/actionlint@latest
+
+# TODO(laurynas): fix paths
+pip install cpplint
+
+# TODO(laurynas): fzf
+# TODO(laurynas): include-what-you-use
+# TODO(laurynas): infer
+# TODO(laurynas): creduce
+# TODO(laurynas): circleci
+# TODO(laurynas): duf
+# TODO(laurynas): delta
