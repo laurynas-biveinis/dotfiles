@@ -1,20 +1,28 @@
 ;;;; early-init.el --- my Emacs early init.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
+;; This file contains settings that are set early in the startup
+;; process of Emacs, before package and UI initialization takes place.
+
 ;;; Code:
 
-;; GC less during initialization
+;; Increase the garbage collection threshold to maximum to minimize the impact
+;; of garbage collection during startup. This will be reset to a reasonable
+;; default after initialization.
 (setq gc-cons-threshold most-positive-fixnum)
 
 ;;; General early settings
+
 (setq load-prefer-newer t)
 
+;; The cursor should blink forever
 (setq blink-cursor-blinks -1)
 
 (setq x-stretch-cursor t)
 
 ;; https://github.com/doomemacs/doomemacs/blob/master/lisp/doom-start.el -
-;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
+;; Prevent the glimpse of un-styled Emacs by disabling these UI elements (menu
+;; bar, tool bar, and vertical scroll bars) early.
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
@@ -29,6 +37,8 @@
 ;; cursor color is concerned).
 (advice-add #'x-apply-session-resources :override #'ignore)
 
+;; Temporarily unset the file name handler alist for faster startup. It's restored
+;; after initialization.
 (unless (daemonp)
   (defvar dotfiles--initial-file-name-handler-alist file-name-handler-alist)
   (setq file-name-handler-alist nil))
