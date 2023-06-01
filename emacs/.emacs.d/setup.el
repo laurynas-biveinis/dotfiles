@@ -794,10 +794,10 @@ loaded as such.)"
           (tags-todo "@watchlisten-somedaymaybe/!TODO"
                      ((org-agenda-overriding-header "Watch/listen")
                       (org-agenda-dim-blocked-tasks 'invisible)))
-          (todo "LOGTIME"
+          (todo "TIME"
                 ((org-agenda-overriding-header "Time log actions")
                  (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags "-project/+DONE|+CANCELLED"
+          (tags "-project/+DONE|+KILL"
                 ((org-agenda-overriding-header "Archivable tasks")
                  (org-use-tag-inheritance '("project"))))
           (todo "-@agenda-@phone-@call-@internet-@computer-@home-@watchlisten-@vilnius-@waitingfor-@checklist-project-somedaymaybe"
@@ -866,12 +866,12 @@ loaded as such.)"
          "** %?\n  %i\n  %a")
         ("c" "Current" plain (clock) "" :clock-in :clock-keep)))
 (setq org-todo-keywords
-      '((sequence "WAITING(w)" "TODO(t)" "LOGTIME(l)"
-                  "|" "DONE(d)" "CANCELLED(c)")))
+      '((sequence "WAIT(w!)" "TODO(t!)" "|" "DONE(d!)" "KILL(k!)")
+        (sequence "TIME(l!)" "|")))
 
 (setq org-todo-keyword-faces
-      '(("WAITING" . (:foreground "OrangeRed" :weight bold))
-        ("LOGTIME" . (:foreground "OrangeRed" :weight bold))
+      '(("WAIT" . (:foreground "OrangeRed" :weight bold))
+        ("TIME" . (:foreground "OrangeRed" :weight bold))
         ("TODO" . (:foreground "Red" :weight bold))))
 
 (require 'org-habit)
@@ -882,6 +882,7 @@ loaded as such.)"
 (setq org-stuck-projects
       '("+project-somedaymaybe/!TODO" ("TODO") nil ""))
 (setq org-todo-repeat-to-state "TODO")
+(setq org-use-fast-todo-selection 'expert)
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
 (setq org-cycle-separator-lines 1)
