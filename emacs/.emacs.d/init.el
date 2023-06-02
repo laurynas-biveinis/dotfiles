@@ -12,7 +12,9 @@
 (defconst private-elisp (expand-file-name ".emacs.d" home-dir))
 (defconst dotfiles-elisp (concat private-elisp "/dotfiles/*.el"))
 
-(load (expand-file-name "secrets" home-dir))
+;; The absence of secrets.el is not an error, but the user needs to be notified.
+(unless (load (expand-file-name "secrets" home-dir) 'noerror)
+  (display-warning 'dotfiles "Failed to load secrets.el" :info))
 
 ;;; Setup packages
 (require 'package)
@@ -34,7 +36,7 @@
         ("melpa"        . 10)))
 
 ;; Load system-specific library and setup system-specific things that
-;; must be setup before main setup
+;; must be setup before main setup. All of these must exist.
 (cond ((eq system-type 'windows-nt) (load (expand-file-name "ntemacs-cygwin"
                                                             private-elisp)))
       ((eq system-type 'gnu/linux) (load (expand-file-name "linux"
@@ -51,8 +53,12 @@
 ;; Load all other setup files from the dotfiles directory
 (mapc #'load (file-expand-wildcards dotfiles-elisp))
 
-(server-start)
+(require 'server)
+(if (server-running-p)
+    (display-warning 'dotfiles "Emacs server is already running" :warning)
+  (server-start))
 
+;; This file is committed to the dotfiles repo too. Its absence is an error.
 (setq custom-file (expand-file-name "custom.el" private-elisp))
 (load custom-file)
 
