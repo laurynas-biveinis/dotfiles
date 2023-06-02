@@ -4,22 +4,42 @@
 ;;; Code:
 
 ;;; Variables and functions defined elsewhere we'll be using
-(defvar font-use-system-font)
+;; Defined in secrets.el:
 (defvar main-org-file)
 (defvar secrets-org-file)
-(defvar my-frame-font)
-(defvar dotfiles--initial-file-name-handler-alist)
 (defvar no-undo-tree-file-names)
 (declare-function start-erc-chats "" ())
+;; Defined in system-specific config files:
+(defvar my-frame-font)
+;; Defined in early-init.el:
+(defvar dotfiles--initial-file-name-handler-alist)
 
 ;;;; General settings
+
+;;; Encodings
+
+(set-language-environment "UTF-8")
+;; Use Unix-style line endings.
+(setq-default buffer-file-coding-system 'utf-8-unix)
+
+;;; Backups
+(setq make-backup-files nil  ;; Do not backup
+      create-lockfiles nil   ;; Do not create lockfiles
+      ;; But if we did backup, do not break macOS file metadata
+      backup-by-copying t
+      ;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge -
+      ;; Preserve hard links to the file you are editing
+      backup-by-copying-when-linked t
+      ;; Preserve the owner and group of the file you are editing
+      ;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
+      backup-by-copying-when-mismatch t)
 
 ;;; Autosave
 
 ;; Autosave should be idle-based only, it is very annoying when it autosaves in
 ;; the middle of typing, even more so with org-encrypted blocks.
-(setq auto-save-interval 0)
-(setq auto-save-timeout 30)
+(setq auto-save-interval 0
+      auto-save-timeout 30)
 
 ;;; Whitespace settings and hook helpers
 
@@ -34,34 +54,35 @@
   "Enable showing of trailing whitespace."
   (setq show-trailing-whitespace t))
 
-;; Use spaces for indentation
-(defun dotfiles--disable-indent-tabs-mode ()
-  "Disable `indent-tabs-mode' in the case the default will change."
-  (setq indent-tabs-mode nil))
-
 ;;; Cursor settings
 (setq-default cursor-in-non-selected-windows nil)
 (setq what-cursor-show-names t)
 
-;; Keep all messages
-(setq message-log-max t)
+;;; Message settings
+(setq message-log-max t  ;; Keep all messages
+      inhibit-startup-message t)  ;; No startup message
 
-;; C-k kills line including its newline
-(setq kill-whole-line t)
+;;; Kill settings
+(setq kill-whole-line t  ;; C-k kills line including its newline
+      kill-do-not-save-duplicates t  ;; Do not store duplicate kills
+      kill-read-only-ok t)
 
-;; Do not store duplicate kills
-(setq kill-do-not-save-duplicates t)
+;;; Display settings
+(setq display-raw-bytes-as-hex t  ;; Raw bytes in hexadecimal not octal
+      visible-bell t  ;; No annoying beeps
+      fast-but-imprecise-scrolling nil
+      redisplay-skip-fontification-on-input t
+      recenter-redisplay t)
 
-;; Raw bytes in hexadecimal not octal
-(setq display-raw-bytes-as-hex t)
+(setq-default indicate-buffer-boundaries t)
+
+;;; Misc settings
 
 ;; Enter quoted chars in hex
 (setq read-quoted-char-radix 16)
 
-;; No annoying beeps
-(setq visible-bell t)
-
-;; Indentation can only insert spaces by default
+;; Indentation can only insert spaces by default. If this ever changes, add
+;; reset to `emacs-lisp-mode' and `rust-mode' hooks.
 (setq-default indent-tabs-mode nil)
 
 ;; If already indented, complete
@@ -70,42 +91,10 @@
 ;; Diff options
 (setq diff-switches "-u -p")
 
-;; Preserve hard links to the file you are editing
-;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
-(setq backup-by-copying-when-linked t)
-
-;; Preserve the owner and group of the file you are editing
-;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
-(setq backup-by-copying-when-mismatch t)
-
-;; Do not backup
-(setq make-backup-files nil)
-
-;; Do not create lockfiles
-(setq create-lockfiles nil)
-
-;; But if we did backup, do not break macOS file metadata
-(setq backup-by-copying t)
-
-;; Use Unix-style line endings.
-(setq-default buffer-file-coding-system 'utf-8-unix)
-
 ;; Enable visual feedback on selections
 (setq transient-mark-mode t)
 
-;; No startup message
-(setq inhibit-startup-message t)
-
-(setq kill-read-only-ok t)
-
 (setq scroll-error-top-bottom t)
-
-(setq fast-but-imprecise-scrolling nil)
-(setq redisplay-skip-fontification-on-input t)
-
-(setq recenter-redisplay t)
-
-(setq-default indicate-buffer-boundaries t)
 
 (setq delete-by-moving-to-trash t)
 
@@ -161,9 +150,6 @@
 
 ;; Save bookmarks automatically
 (setq bookmark-save-flag 1)
-
-;; XXI century encodings
-(set-language-environment "UTF-8")
 
 ;;; Window and frame geometry
 (defun two-windows ()
@@ -280,12 +266,10 @@
          ())
         (t (dotfiles--diagnose-unknown-display-geometry display-geometry))))
 
-;; Use specified font if any, otherwise use system font
-(cond ((symbolp 'my-frame-font)
-       (add-to-list 'default-frame-alist `(font . ,my-frame-font))
-       (add-to-list 'initial-frame-alist `(font . ,my-frame-font)))
-      ((symbolp 'font-use-system-font)
-       (setq font-use-system-font t)))
+;; Use specified font if any
+(when (symbolp 'my-frame-font)
+  (add-to-list 'default-frame-alist `(font . ,my-frame-font))
+  (add-to-list 'initial-frame-alist `(font . ,my-frame-font)))
 
 ;;; files, directories, and similar things
 (defun dotfiles--treat-new-files-as-modified ()
@@ -515,9 +499,6 @@ loaded as such.)"
 
 (require 'fancy-compilation)
 (with-eval-after-load 'compile (fancy-compilation-mode))
-
-;;; elisp-mode
-(add-hook 'emacs-lisp-mode-hook #'dotfiles--disable-indent-tabs-mode)
 
 ;;; `auth-sources'
 (require 'auth-source)
@@ -1928,7 +1909,6 @@ with a prefix ARG."
   (dotfiles--set-fill-column 100))
 
 (add-hook 'rust-mode-hook #'dotfiles--rust-set-fill-column)
-(add-hook 'rust-mode-hook #'dotfiles--disable-indent-tabs-mode)
 
 ;;; `rustic'
 (require 'rustic)
