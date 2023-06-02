@@ -2,34 +2,38 @@
 
 ;;; Commentary:
 
-;;; Code:
+;; This file contains Emacs initialization settings that are specific to
+;; the Darwin operating system (macOS).
 
-(defun dotfiles--warn-if-not-exe (name path)
-  "Display a warning if NAME under PATH is not an executable."
-  (unless (file-executable-p path)
-    (display-warning 'dotfiles (format "Executable %s not found at %s" name
-                                       path) :warning)))
+;;; Code:
 
 (defconst my-frame-font
   "-*-SFMono Nerd Font-normal-normal-normal-*-12-*-*-*-p-0-iso10646-1"
   "My default frame font on Darwin.")
 
-(defvar dotfiles--homebrew-root)
-(if (string-prefix-p "aarch64" system-configuration)
-    (setq dotfiles--homebrew-root "/opt/homebrew/")
-  (setq dotfiles--homebrew-root "/usr/local/"))
-(unless (file-directory-p dotfiles--homebrew-root)
-  (display-warning 'dotfiles (format "Homebrew root not found at %s"
-                                     dotfiles--homebrew-root) :warning))
+(defconst dotfiles--homebrew-root
+  (string-trim-right (shell-command-to-string "brew --prefix"))
+  "Homebrew installation prefix.")
 
-(setq insert-directory-program (concat dotfiles--homebrew-root "bin/gls"))
-(dotfiles--warn-if-not-exe "gls" insert-directory-program)
+(unless dotfiles--homebrew-root
+  (display-warning 'dotfiles "Homebrew not found" :warning))
+
+(defun dotfiles--set-exe-var (var name path)
+  "Set VAR to PATH and warn if it is not an executable NAME."
+  (set var path)
+  (unless (file-executable-p path)
+    (display-warning
+     'dotfiles
+     (format "Executable %s not found at %s" name path) :warning)))
+
+(dotfiles--set-exe-var 'insert-directory-program "gls"
+                       (concat dotfiles--homebrew-root "/bin/gls"))
 
 (require 'lsp-clangd)
-(setq lsp-clients-clangd-executable (concat dotfiles--homebrew-root
-                                            "opt/llvm/bin/clangd"))
-(dotfiles--warn-if-not-exe "clangd" lsp-clients-clangd-executable)
+(dotfiles--set-exe-var 'lsp-clients-clangd-executable "clangd"
+                       (concat dotfiles--homebrew-root "/opt/llvm/bin/clangd"))
 
+;; The right option modifier is used by the keyboard layout third level instead.
 (setq mac-right-option-modifier nil)
 (setq mac-command-modifier 'super)
 (setq mac-option-modifier 'meta)
@@ -41,13 +45,28 @@
 ;;; woman
 ;; Integrate `woman' with macOS XCode some better by adding the missing man
 ;; paths.
+
+(defconst dotfiles--xcode-dev-dir
+  (string-trim-right (shell-command-to-string "xcode-select -p"))
+  "The currently active XCode developer directory.")
+
+(unless dotfiles--xcode-dev-dir
+  (display-warning 'dotfiles "XCode not found" :warning))
+
 (require 'woman)
-(add-to-list 'woman-manpath
-             "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man")
-(add-to-list 'woman-manpath
-             "/Applications/Xcode.app/Contents/Developer/usr/share/man")
-(add-to-list 'woman-manpath
-             "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man")
+(defun dotfiles--add-xcode-man-subdir-to-woman (subdir)
+  "Add SUBDIR below XCode dev dir `woman-manpath' if it exists, warn otherwise."
+  (let ((dir (concat dotfiles--xcode-dev-dir subdir)))
+    (if (file-directory-p dir)
+        (add-to-list 'woman-manpath dir)
+      (display-warning
+       'dotfiles (format "Directory %s not found" dir) :warning))))
+
+(dotfiles--add-xcode-man-subdir-to-woman
+ "/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man")
+(dotfiles--add-xcode-man-subdir-to-woman "/usr/share/man")
+(dotfiles--add-xcode-man-subdir-to-woman
+ "/Toolchains/XcodeDefault.xctoolchain/usr/share/man")
 
 (require 'exec-path-from-shell)
 (setq exec-path-from-shell-check-startup-files nil)
