@@ -6,14 +6,24 @@
 
 ;;; Code:
 
+;;; Performance tuning
+
 ;; Increase the garbage collection threshold to maximum to minimize the impact
 ;; of garbage collection during startup. This will be reset to a reasonable
 ;; default after initialization.
 (setq gc-cons-threshold most-positive-fixnum)
 
+;; Temporarily unset the file name handler alist for faster startup. It's
+;; restored after initialization.
+(unless (daemonp)
+  (defvar dotfiles--initial-file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil))
+
 ;;; General early settings
 
 (setq load-prefer-newer t)
+
+;;; UI settings that are good to set before the first GUI window appears.
 
 ;; The cursor should blink forever
 (setq blink-cursor-blinks -1)
@@ -37,13 +47,8 @@
 ;; cursor color is concerned).
 (advice-add #'x-apply-session-resources :override #'ignore)
 
-;; Temporarily unset the file name handler alist for faster startup. It's restored
-;; after initialization.
-(unless (daemonp)
-  (defvar dotfiles--initial-file-name-handler-alist file-name-handler-alist)
-  (setq file-name-handler-alist nil))
-
 ;;; Configure `package' before it is loaded.
+
 (require 'package)
 
 (setq package-native-compile t)
