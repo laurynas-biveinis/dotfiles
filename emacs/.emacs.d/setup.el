@@ -2,9 +2,8 @@
 ;;; Commentary:
 
 ;;; Code:
-(require 'cl-lib)
 
-;; Variables and functions defined elsewhere we'll be using
+;;; Variables and functions defined elsewhere we'll be using
 (defvar font-use-system-font)
 (defvar main-org-file)
 (defvar secrets-org-file)
@@ -16,12 +15,33 @@
 ;;;; General settings
 
 ;;; Autosave
+
 ;; Autosave should be idle-based only, it is very annoying when it autosaves in
 ;; the middle of typing, even more so with org-encrypted blocks.
 (setq auto-save-interval 0)
 (setq auto-save-timeout 30)
 
+;;; Whitespace settings and hook helpers
+
+;; Trailing newlines are highlighted
+(setq-default indicate-empty-lines t)
+
+;; Should files end with newline?
+(setq-default require-final-newline 'query)
+
+;; Display trailing whitespace
+(defun dotfiles--enable-show-trailing-ws ()
+  "Enable showing of trailing whitespace."
+  (setq show-trailing-whitespace t))
+
+;; Use spaces for indentation
+(defun dotfiles--disable-indent-tabs-mode ()
+  "Disable `indent-tabs-mode' in the case the default will change."
+  (setq indent-tabs-mode nil))
+
+;;; Cursor settings
 (setq-default cursor-in-non-selected-windows nil)
+(setq what-cursor-show-names t)
 
 ;; Keep all messages
 (setq message-log-max t)
@@ -37,12 +57,6 @@
 
 ;; Enter quoted chars in hex
 (setq read-quoted-char-radix 16)
-
-;; Trailing newlines are highlighted
-(setq-default indicate-empty-lines t)
-
-;; Should files end with newline?
-(setq-default require-final-newline 'query)
 
 ;; No annoying beeps
 (setq visible-bell t)
@@ -101,8 +115,6 @@
 
 (setq read-process-output-max (* 1024 1024))
 
-(setq what-cursor-show-names t)
-
 (setq switch-to-prev-buffer-skip 'this)
 
 (setq next-error-message-highlight t)
@@ -113,17 +125,6 @@
 ;; isearch
 (setq isearch-lazy-count t)
 (setq isearch-yank-on-move 'shift)
-
-;;; Hook helpers
-;; Display trailing whitespace
-(defun dotfiles--enable-show-trailing-ws ()
-  "Enable showing of trailing whitespace."
-  (setq show-trailing-whitespace t))
-
-;; Use spaces for indentation
-(defun dotfiles--disable-indent-tabs-mode ()
-  "Disable `indent-tabs-mode' in the case the default will change."
-  (setq indent-tabs-mode nil))
 
 ;;;; Bundled modes
 ;;; modeline
