@@ -1,13 +1,13 @@
-;;;; .emacs --- my initialization file for Emacs.  -*- lexical-binding: t; -*-
+;;;; init.el --- my initialization file for Emacs.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;; This prepares for the main setup of my Emacs configuration. It sets up
-;; various paths, loads secret configurations, initializes packages, loads
-;; system-specific settings and finally loads the main setup.
+;; various paths, loads secret configurations, loads system-specific settings
+;; and finally loads the main setup.
 
 ;;; Code:
 
-;;; Various paths
+;;; Various path constants
 (defconst home-dir (expand-file-name "~"))
 (defconst private-elisp (expand-file-name ".emacs.d" home-dir))
 (defconst dotfiles-elisp (concat private-elisp "/dotfiles/*.el"))
@@ -39,7 +39,8 @@
     (display-warning 'dotfiles "Emacs server is already running" :warning)
   (server-start))
 
-;; This file is committed to the dotfiles repo too. Its absence is an error.
+;; Load custom file with settings from `customize' interface. This file is
+;; committed to the dotfiles repo too. Its absence is an error.
 (setq custom-file (expand-file-name "custom.el" private-elisp))
 (load custom-file)
 
