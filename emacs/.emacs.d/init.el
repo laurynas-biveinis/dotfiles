@@ -16,14 +16,14 @@
 (unless (load (expand-file-name "secrets" home-dir) 'noerror)
   (display-warning 'dotfiles "Failed to load secrets.el" :info))
 
-;; Load system-specific library and setup system-specific things that
-;; must be setup before main setup. All of these must exist.
-(cond ((eq system-type 'windows-nt) (load (expand-file-name "ntemacs-cygwin"
-                                                            private-elisp)))
-      ((eq system-type 'gnu/linux) (load (expand-file-name "linux"
-                                                           private-elisp)))
-      ((eq system-type 'darwin) (load (expand-file-name "darwin"
-                                                        private-elisp))))
+;; Load optional system-specific library and setup system-specific things that
+;; must be setup before main setup. All of these must exist and their absence
+;; would be a fatal error.
+(load (expand-file-name
+       (cond ((eq system-type 'windows-nt) "nt-emacs-cygwin")
+             ((eq system-type 'gnu/linux) "linux")
+             ((eq system-type 'darwin) "darwin"))
+       private-elisp))
 
 ;; Load the main setup
 (load (expand-file-name "setup" private-elisp))
