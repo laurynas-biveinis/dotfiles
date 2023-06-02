@@ -1975,7 +1975,7 @@ They are defined here anyway to allow sharing certain methods.
      "f2"))’.
 
    • ‘always-read’ For options, whether to read a value on every
-     invocation.  If this is nil, then options that have a value are
+     invocation.  If this is ‘nil’, then options that have a value are
      simply unset and have to be invoked a second time to set a new
      value.
 
@@ -3402,27 +3402,27 @@ Ref: Internal Prefix Slots80028
 Node: Suffix Slots81285
 Ref: Slots of transient-suffix81653
 Ref: Slots of transient-infix82507
-Ref: Slots of transient-variable85627
-Ref: Slots of transient-switches85729
-Node: Predicate Slots86092
-Node: Related Abstractions and Packages87357
-Node: Comparison With Prefix Keys and Prefix Arguments87644
-Ref: Regular Prefix Commands88329
-Ref: Regular Prefix Arguments88677
-Ref: Transients89646
-Node: Comparison With Other Packages97917
-Ref: Magit-Popup98148
-Ref: Hydra99055
-Node: FAQ102111
-Ref: Can I control how the popup buffer is displayed?102254
-Ref: How can I copy text from the popup buffer?102435
-Ref: Why did some of the key bindings change?102907
-Ref: Why does q not quit popups anymore?105260
-Node: Keystroke Index106353
-Node: Command and Function Index108071
-Node: Variable Index114443
-Node: Concept Index116716
-Node: GNU General Public License119460
+Ref: Slots of transient-variable85633
+Ref: Slots of transient-switches85735
+Node: Predicate Slots86098
+Node: Related Abstractions and Packages87363
+Node: Comparison With Prefix Keys and Prefix Arguments87650
+Ref: Regular Prefix Commands88335
+Ref: Regular Prefix Arguments88683
+Ref: Transients89652
+Node: Comparison With Other Packages97923
+Ref: Magit-Popup98154
+Ref: Hydra99061
+Node: FAQ102117
+Ref: Can I control how the popup buffer is displayed?102260
+Ref: How can I copy text from the popup buffer?102441
+Ref: Why did some of the key bindings change?102913
+Ref: Why does q not quit popups anymore?105266
+Node: Keystroke Index106359
+Node: Command and Function Index108077
+Node: Variable Index114449
+Node: Concept Index116722
+Node: GNU General Public License119466
 
 End Tag Table
 
