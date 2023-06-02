@@ -4,6 +4,12 @@
 
 ;;; Code:
 
+(defun dotfiles--warn-if-not-exe (name path)
+  "Display a warning if NAME under PATH is not an executable."
+  (unless (file-executable-p path)
+    (display-warning 'dotfiles (format "Executable %s not found at %s" name
+                                       path) :warning)))
+
 (defconst my-frame-font
   "-*-SFMono Nerd Font-normal-normal-normal-*-12-*-*-*-p-0-iso10646-1"
   "My default frame font on Darwin.")
@@ -12,12 +18,17 @@
 (if (string-prefix-p "aarch64" system-configuration)
     (setq dotfiles--homebrew-root "/opt/homebrew/")
   (setq dotfiles--homebrew-root "/usr/local/"))
+(unless (file-directory-p dotfiles--homebrew-root)
+  (display-warning 'dotfiles (format "Homebrew root not found at %s"
+                                     dotfiles--homebrew-root) :warning))
 
 (setq insert-directory-program (concat dotfiles--homebrew-root "bin/gls"))
+(dotfiles--warn-if-not-exe "gls" insert-directory-program)
 
 (require 'lsp-clangd)
 (setq lsp-clients-clangd-executable (concat dotfiles--homebrew-root
                                             "opt/llvm/bin/clangd"))
+(dotfiles--warn-if-not-exe "clangd" lsp-clients-clangd-executable)
 
 (setq mac-right-option-modifier nil)
 (setq mac-command-modifier 'super)
