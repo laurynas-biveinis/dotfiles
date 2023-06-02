@@ -16,25 +16,6 @@
 (unless (load (expand-file-name "secrets" home-dir) 'noerror)
   (display-warning 'dotfiles "Failed to load secrets.el" :info))
 
-;;; Setup packages
-(require 'package)
-
-(setq package-native-compile t)
-
-;; TODO(laurynas): `package-quickstart-file', which is committed to dotfiles
-;; repo, contains absolute paths. This is not a problem for me right now since
-;; the paths actually match on my machines. This might change in the future.
-(setq package-quickstart t)
-
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("nongnu-elpa" .
-                                 "https://elpa.nongnu.org/nongnu/"))
-(setq package-archive-priorities
-      '(("melpa-stable" . 15)
-        ("melpa"        . 10)))
-
 ;; Load system-specific library and setup system-specific things that
 ;; must be setup before main setup. All of these must exist.
 (cond ((eq system-type 'windows-nt) (load (expand-file-name "ntemacs-cygwin"

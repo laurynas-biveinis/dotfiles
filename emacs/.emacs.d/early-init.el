@@ -43,4 +43,26 @@
   (defvar dotfiles--initial-file-name-handler-alist file-name-handler-alist)
   (setq file-name-handler-alist nil))
 
+;;; Configure `package' before it is loaded.
+(require 'package)
+
+(setq package-native-compile t)
+
+;; TODO(laurynas): `package-quickstart-file', which is committed to dotfiles
+;; repo, contains absolute paths. This is not a problem for me right now since
+;; the paths actually match on my machines. This might change in the future.
+(setq package-quickstart t)
+
+;; melpa-stable is higher priority than melpa because I always prefer stable
+;; package versions. Unfortunately, the majority of package maintainers neglect
+;; melpa-stable or ignore it completely.
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("nongnu-elpa" .
+                                 "https://elpa.nongnu.org/nongnu/"))
+(setq package-archive-priorities
+      '(("melpa-stable" . 15)
+        ("melpa"        . 10)))
+
 ;;; early-init.el ends here
