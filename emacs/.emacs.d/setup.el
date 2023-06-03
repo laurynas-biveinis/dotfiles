@@ -21,6 +21,39 @@
 ;; Use Unix-style line endings.
 (setq-default buffer-file-coding-system 'utf-8-unix)
 
+;;; Keybindings
+(global-set-key (kbd "<home>") #'move-beginning-of-line)
+(global-set-key (kbd "<end>") #'move-end-of-line)
+
+(global-set-key [(control shift up)] #'enlarge-window)
+(global-set-key [(control shift down)] #'shrink-window)
+(global-set-key [(control shift left)] #'enlarge-window-horizontally)
+(global-set-key [(control shift right)] #'shrink-window-horizontally)
+
+;;; Editing settings
+
+(defconst dotfiles--fill-column 80
+  "The column for line filling and any indicator showing.")
+
+(setq-default indent-tabs-mode nil
+              ;; Indentation can only insert spaces by default. If this ever
+              ;; changes, add reset to `emacs-lisp-mode' and `rust-mode' hooks.
+              fill-column dotfiles--fill-column)
+
+;; Enter quoted chars in hex
+(setq read-quoted-char-radix 16)
+
+;;; Visiting files
+
+(setq enable-remote-dir-locals t)
+
+(defun dotfiles--treat-new-files-as-modified ()
+  "Treat new (empty) files as modified."
+  (unless (file-exists-p (buffer-file-name))
+    (set-buffer-modified-p t)))
+
+(add-hook 'find-file-hook #'dotfiles--treat-new-files-as-modified)
+
 ;;; Backups
 (setq make-backup-files nil  ;; Do not backup
       create-lockfiles nil   ;; Do not create lockfiles
@@ -33,7 +66,11 @@
       ;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
       backup-by-copying-when-mismatch t)
 
-;;; Autosave
+;;; Saving files
+
+;; Mark executable files as executable on save
+(add-hook 'after-save-hook
+          #'executable-make-buffer-file-executable-if-script-p)
 
 ;; Autosave should be idle-based only, it is very annoying when it autosaves in
 ;; the middle of typing, even more so with org-encrypted blocks.
@@ -42,11 +79,8 @@
 
 ;;; Whitespace settings and hook helpers
 
-;; Trailing newlines are highlighted
-(setq-default indicate-empty-lines t)
-
-;; Should files end with newline?
-(setq-default require-final-newline 'query)
+(setq-default indicate-empty-lines t  ;; Trailing newlines are highlighted
+              require-final-newline 'query)  ;; Should files end with newline?
 
 ;; Display trailing whitespace
 (defun dotfiles--enable-show-trailing-ws ()
@@ -75,59 +109,46 @@
 
 (setq-default indicate-buffer-boundaries t)
 
-;;; Misc settings
+;; isearch
+(setq isearch-lazy-count t
+      isearch-yank-on-move 'shift)
 
-;; Enter quoted chars in hex
-(setq read-quoted-char-radix 16)
+;;; bookmark
+(require 'bookmark)
 
-;; Indentation can only insert spaces by default. If this ever changes, add
-;; reset to `emacs-lisp-mode' and `rust-mode' hooks.
-(setq-default indent-tabs-mode nil)
+;; Save bookmarks automatically
+(setq bookmark-save-flag 1)
 
-;; If already indented, complete
-(setq tab-always-indent 'complete)
-
-;; Diff options
-(setq diff-switches "-u -p")
-
-;; Enable visual feedback on selections
-(setq transient-mark-mode t)
-
-(setq scroll-error-top-bottom t)
-
-(setq delete-by-moving-to-trash t)
+;;; UI settings
 
 (setq use-dialog-box nil)
 
-(setq history-delete-duplicates t)
+;; Use specified font if any
+(when (boundp 'my-frame-font)
+  (add-to-list 'default-frame-alist `(font . ,my-frame-font))
+  (add-to-list 'initial-frame-alist `(font . ,my-frame-font)))
 
-(setq read-process-output-max (* 1024 1024))
+;;; Misc settings
 
-(setq switch-to-prev-buffer-skip 'this)
-
-(setq next-error-message-highlight t)
+(setq transient-mark-mode t  ;; Enable visual feedback on selections
+      tab-always-indent 'complete  ;; If already indented, complete
+      diff-switches "-u -p"
+      scroll-error-top-bottom t
+      delete-by-moving-to-trash t
+      history-delete-duplicates t
+      read-process-output-max (* 1024 1024)
+      switch-to-prev-buffer-skip 'this
+      next-error-message-highlight t
+      sentence-end-double-space nil)
 
 (require 'help-fns)
 (setq help-enable-symbol-autoload t)
 
-;; isearch
-(setq isearch-lazy-count t)
-(setq isearch-yank-on-move 'shift)
-
 ;;;; Bundled modes
 ;;; modeline
 
-;; size-indication-mode
 (size-indication-mode)
-
-;; Show column number
 (column-number-mode t)
-
-;;; fill-column and other filling-related matters
-(defconst dotfiles--fill-column 80)
-(setq-default fill-column dotfiles--fill-column)
-
-(setq sentence-end-double-space nil)
 
 ;;; whitespace-mode
 (require 'whitespace)
@@ -135,7 +156,7 @@
 (setq whitespace-style '(face trailing lines-tail empty indentation big-intent
                               space-after-tab space-before-tab))
 (setq whitespace-line-column (+ dotfiles--fill-column 1))
-(setq whitespace-global-modes '(not dired-mode erc-mode markdown-mode gfm-mode
+(setq whitespace-global-modes '(not dired-mode markdown-mode gfm-mode
                                     lisp-interaction-mode help-mode Info-mode
                                     magit-status-mode org-mode org-agenda-mode
                                     grep-mode package-menu-mode vterm-mode))
@@ -143,12 +164,6 @@
 (global-so-long-mode 1)
 
 (global-hl-line-mode)
-
-;;; bookmark
-(require 'bookmark)
-
-;; Save bookmarks automatically
-(setq bookmark-save-flag 1)
 
 ;;; Window and frame geometry
 (defun two-windows ()
@@ -226,7 +241,7 @@
    (1920 . 1080)]
   "Possible interim screen resolutions while docking/undocking to be ignored.")
 
-(defun dotfiles--diagnose-unknown-display-geometry (display-geometry)
+(defun dotfiles--warn-abount-unknown-display-geometry (display-geometry)
   "Diagnose unknown DISPLAY-GEOMETRY."
   (message "Unknown display size %sx%s"
            (car display-geometry) (cdr display-geometry)))
@@ -263,54 +278,7 @@
          (eight-windows))
         ((seq-position dotfiles--frame-geometries-to-ignore display-geometry)
          ())
-        (t (dotfiles--diagnose-unknown-display-geometry display-geometry))))
-
-;; Use specified font if any
-(when (symbolp 'my-frame-font)
-  (add-to-list 'default-frame-alist `(font . ,my-frame-font))
-  (add-to-list 'initial-frame-alist `(font . ,my-frame-font)))
-
-;;; files, directories, and similar things
-(defun dotfiles--treat-new-files-as-modified ()
-  "Treat new (empty) files as modified."
-  (unless (file-exists-p (buffer-file-name))
-    (set-buffer-modified-p t)))
-
-(add-hook 'find-file-hook #'dotfiles--treat-new-files-as-modified)
-
-(defun dotfiles--follow-cygwin-symlinks ()
-  "Follow Cygwin symlinks.
-Handles old-style (text file) and new-style (.lnk file) symlinks.
-\(Non-Cygwin-symlink .lnk files, such as desktop shortcuts, are still
-loaded as such.)"
-  (save-excursion
-    (goto-char 0)
-    (if (looking-at
-         "L\x000\x000\x000\x001\x014\x002\x000\x000\x000\x000\x000\x0C0\x000\x000\x000\x000\x000\x000\x046\x00C")
-        (progn
-          (re-search-forward
-           "\x000\\([-A-Za-z0-9_\\.\\\\\\$%@(){}~!#^'`][-A-Za-z0-9_\\.\\\\\\$%@(){}~!#^'`]+\\)")
-          (find-alternate-file (match-string 1)))
-      (when (looking-at "!<symlink>")
-        (re-search-forward "!<symlink>\\(.*\\)\0")
-        (find-alternate-file (match-string 1))))))
-
-(add-hook 'find-file-hook #'dotfiles--follow-cygwin-symlinks)
-
-;; Mark executable files as executable on save
-(add-hook 'after-save-hook
-          #'executable-make-buffer-file-executable-if-script-p)
-
-(setq enable-remote-dir-locals t)
-
-;;; Keybindings
-(global-set-key (kbd "<home>") #'move-beginning-of-line)
-(global-set-key (kbd "<end>") #'move-end-of-line)
-
-(global-set-key [(control shift up)] #'enlarge-window)
-(global-set-key [(control shift down)] #'shrink-window)
-(global-set-key [(control shift left)] #'enlarge-window-horizontally)
-(global-set-key [(control shift right)] #'shrink-window-horizontally)
+        (t (dotfiles--warn-abount-unknown-display-geometry display-geometry))))
 
 (defun end-of-line-and-newline-and-indent ()
   "Go to the end of line, insert a new line, and indent."
@@ -1556,7 +1524,7 @@ CANDIDATES is the list of candidates."
            (eight-windows))
           ((seq-position dotfiles--frame-geometries-to-ignore
                          new-display-geometry) ())
-          (t (dotfiles--diagnose-unknown-display-geometry
+          (t (dotfiles--warn-abount-unknown-display-geometry
               new-display-geometry)))))
 
 (add-hook 'dispwatch-display-change-hooks #'dotfiles--display-changed-hook)
