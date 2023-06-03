@@ -10,7 +10,9 @@
 ;;; Various path constants
 (defconst home-dir (expand-file-name "~"))
 (defconst private-elisp (expand-file-name ".emacs.d" home-dir))
+(defconst my-elisp (expand-file-name "lisp" private-elisp))
 (defconst dotfiles-elisp (concat private-elisp "/dotfiles/*.el"))
+(add-to-list 'load-path my-elisp)
 
 ;; The absence of secrets.el is not an error, but the user needs to be notified.
 (unless (load (expand-file-name "secrets" home-dir) 'noerror)
