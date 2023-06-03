@@ -241,7 +241,7 @@
    (1920 . 1080)]
   "Possible interim screen resolutions while docking/undocking to be ignored.")
 
-(defun dotfiles--warn-abount-unknown-display-geometry (display-geometry)
+(defun dotfiles--warn-about-unknown-display-geometry (display-geometry)
   "Diagnose unknown DISPLAY-GEOMETRY."
   (message "Unknown display size %sx%s"
            (car display-geometry) (cdr display-geometry)))
@@ -278,7 +278,7 @@
          (eight-windows))
         ((seq-position dotfiles--frame-geometries-to-ignore display-geometry)
          ())
-        (t (dotfiles--warn-abount-unknown-display-geometry display-geometry))))
+        (t (dotfiles--warn-about-unknown-display-geometry display-geometry))))
 
 (defun end-of-line-and-newline-and-indent ()
   "Go to the end of line, insert a new line, and indent."
@@ -1524,7 +1524,7 @@ CANDIDATES is the list of candidates."
            (eight-windows))
           ((seq-position dotfiles--frame-geometries-to-ignore
                          new-display-geometry) ())
-          (t (dotfiles--warn-abount-unknown-display-geometry
+          (t (dotfiles--warn-about-unknown-display-geometry
               new-display-geometry)))))
 
 (add-hook 'dispwatch-display-change-hooks #'dotfiles--display-changed-hook)
