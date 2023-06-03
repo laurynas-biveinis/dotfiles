@@ -32,13 +32,13 @@
 
 ;;; Editing settings
 
-(defconst dotfiles--fill-column 80
+(defconst dotfiles--column-limit 80
   "The column for line filling and any indicator showing.")
 
 (setq-default indent-tabs-mode nil
               ;; Indentation can only insert spaces by default. If this ever
               ;; changes, add reset to `emacs-lisp-mode' and `rust-mode' hooks.
-              fill-column dotfiles--fill-column)
+              fill-column dotfiles--column-limit)
 
 ;; Enter quoted chars in hex
 (setq read-quoted-char-radix 16)
@@ -155,7 +155,7 @@
 (global-whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail empty indentation big-intent
                               space-after-tab space-before-tab))
-(setq whitespace-line-column (+ dotfiles--fill-column 1))
+(setq whitespace-line-column (+ dotfiles--column-limit 1))
 (setq whitespace-global-modes '(not dired-mode markdown-mode gfm-mode
                                     lisp-interaction-mode help-mode Info-mode
                                     magit-status-mode org-mode org-agenda-mode
@@ -210,7 +210,7 @@
 
 ;;; display-fill-column-indicator
 (require 'display-fill-column-indicator)
-(setq-default display-fill-column-indicator-column (+ dotfiles--fill-column 1))
+(setq-default display-fill-column-indicator-column (+ dotfiles--column-limit 1))
 
 (global-display-fill-column-indicator-mode 1)
 
