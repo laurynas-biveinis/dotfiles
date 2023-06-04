@@ -1,4 +1,4 @@
-;;; setup.el --- Main Emacs configuration.  -*- lexical-binding: t; -*-
+;;; my-setup.el --- Main Emacs configuration.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:
@@ -47,12 +47,12 @@
 
 (setq enable-remote-dir-locals t)
 
-(defun dotfiles--treat-new-files-as-modified ()
+(defun dotfiles--mark-new-files-as-modified ()
   "Treat new (empty) files as modified."
   (unless (file-exists-p (buffer-file-name))
     (set-buffer-modified-p t)))
 
-(add-hook 'find-file-hook #'dotfiles--treat-new-files-as-modified)
+(add-hook 'find-file-hook #'dotfiles--mark-new-files-as-modified)
 
 ;;; Backups
 (setq make-backup-files nil  ;; Do not backup
@@ -83,7 +83,7 @@
               require-final-newline 'query)  ;; Should files end with newline?
 
 ;; Display trailing whitespace
-(defun dotfiles--enable-show-trailing-ws ()
+(defun dotfiles--enable-trailing-whitespace ()
   "Enable showing of trailing whitespace."
   (setq show-trailing-whitespace t))
 
@@ -165,7 +165,7 @@
 
 (global-hl-line-mode)
 
-(require 'ui-geometry)
+(require 'my-ui-geometry)
 
 (defun end-of-line-and-newline-and-indent ()
   "Go to the end of line, insert a new line, and indent."
@@ -246,7 +246,7 @@
 
 ;;; common programming modes
 (add-hook 'prog-mode-hook #'turn-on-auto-fill)
-(add-hook 'prog-mode-hook #'dotfiles--enable-show-trailing-ws)
+(add-hook 'prog-mode-hook #'dotfiles--enable-trailing-whitespace)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'prog-mode-hook #'electric-layout-mode)
 ;; We could use `global-goto-address-mode' to turn on `goto-address-mode'
@@ -256,7 +256,7 @@
 
 ;;; text-mode
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
-(add-hook 'text-mode-hook #'dotfiles--enable-show-trailing-ws)
+(add-hook 'text-mode-hook #'dotfiles--enable-trailing-whitespace)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
 (add-hook 'text-mode-hook #'goto-address-mode)
 
@@ -1381,7 +1381,7 @@ CANDIDATES is the list of candidates."
 
 ;;;; SSH config mode
 (add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
-(add-hook 'ssh-config-mode-hook #'dotfiles--enable-show-trailing-ws)
+(add-hook 'ssh-config-mode-hook #'dotfiles--enable-trailing-whitespace)
 (add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
 
 ;;; yaml-mode
@@ -1688,4 +1688,5 @@ with a prefix ARG."
 (require 'gcmh)
 (gcmh-mode)
 
+(provide 'my-setup)
 ;;; setup.el ends here

@@ -1,4 +1,4 @@
-;;;; ui-geometry.el --- my UI geometry.  -*- lexical-binding: t; -*-
+;;;; my-ui-geometry.el --- my UI geometry.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;; This provides commands for setting up windows in my preferred ways, as well
@@ -160,5 +160,5 @@
 (add-hook 'dispwatch-display-change-hooks #'dotfiles--display-changed-hook)
 (dispwatch-mode 1)
 
-(provide 'ui-geometry)
-;;; ui-geometry.el ends here
+(provide 'my-ui-geometry)
+;;; my-ui-geometry.el ends here

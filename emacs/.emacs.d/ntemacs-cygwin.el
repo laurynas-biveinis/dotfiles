@@ -4,8 +4,7 @@
 ;;; Code:
 
 ;; Variables and functions defined elsewhere we'll be using
-(defvar private-elisp-lib)
-(defvar home-dir)
+(defvar dotfiles--home-dir)
 (defvar python-python-command)
 
 (require 'comint)
@@ -13,7 +12,7 @@
 (require 'term)
 
 (defconst dotfiles--cygwin-root "c:/cygwin/")
-(defconst dotfiles--private-bin (concat home-dir "/usr/bin"))
+(defconst dotfiles--private-bin (concat dotfiles--home-dir "usr/bin"))
 
 ;; Setup paths
 (setq exec-path (cons dotfiles--private-bin exec-path))

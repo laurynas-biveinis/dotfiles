@@ -8,14 +8,19 @@
 ;;; Code:
 
 ;;; Various path constants
-(defconst home-dir (expand-file-name "~"))
-(defconst private-elisp (expand-file-name ".emacs.d" home-dir))
-(defconst my-elisp (expand-file-name "lisp" private-elisp))
-(defconst dotfiles-elisp (concat private-elisp "/dotfiles/*.el"))
-(add-to-list 'load-path my-elisp)
+(defconst dotfiles--home-dir (file-name-as-directory (expand-file-name "~")))
+(defconst dotfiles--my-elisp (file-name-as-directory
+                              (expand-file-name "my" user-emacs-directory))
+  "My Emacs configuration code directory.")
+(defconst dotfiles--modules-elisp (concat user-emacs-directory "dotfiles/*.el")
+  "Emacs configuration added by other dotfiles modules.")
+
+(add-to-list 'load-path dotfiles--my-elisp)
 
 ;; The absence of secrets.el is not an error, but the user needs to be notified.
-(unless (load (expand-file-name "secrets" home-dir) 'noerror)
+;; This file is not stored under dotfiles so that it does not get checked into
+;; their repo.
+(unless (load (expand-file-name "secrets" dotfiles--home-dir) 'noerror)
   (display-warning 'dotfiles "Failed to load secrets.el" :info))
 
 ;; Load optional system-specific library and setup system-specific things that
@@ -25,16 +30,17 @@
        (cond ((eq system-type 'windows-nt) "nt-emacs-cygwin")
              ((eq system-type 'gnu/linux) "linux")
              ((eq system-type 'darwin) "darwin"))
-       private-elisp))
+       user-emacs-directory))
 
 ;; Load the main setup
-(load (expand-file-name "setup" private-elisp))
+(require 'my-setup)
 
 ;; Call system-specific setup function if it is defined
 (when (fboundp 'system-specific-setup) (system-specific-setup))
 
-;; Load all other setup files from the dotfiles directory
-(mapc #'load (file-expand-wildcards dotfiles-elisp))
+;; Load all other setup files from the dotfiles directory. The order is
+;; irrelevant.
+(mapc #'load (file-expand-wildcards dotfiles--modules-elisp))
 
 (require 'server)
 (if (server-running-p)
@@ -43,7 +49,7 @@
 
 ;; Load custom file with settings from `customize' interface. This file is
 ;; committed to the dotfiles repo too. Its absence is an error.
-(setq custom-file (expand-file-name "custom.el" private-elisp))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
 ;;; init.el ends here

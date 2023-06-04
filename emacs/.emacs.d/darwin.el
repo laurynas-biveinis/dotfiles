@@ -12,7 +12,8 @@
   "My default frame font on Darwin.")
 
 (defconst dotfiles--homebrew-root
-  (string-trim-right (shell-command-to-string "brew --prefix"))
+  (file-name-as-directory
+   (string-trim-right (shell-command-to-string "brew --prefix")))
   "Homebrew installation prefix.")
 
 (unless dotfiles--homebrew-root
@@ -27,11 +28,11 @@
      (format "Executable %s not found at %s" name path) :warning)))
 
 (dotfiles--set-exe-var 'insert-directory-program "gls"
-                       (concat dotfiles--homebrew-root "/bin/gls"))
+                       (concat dotfiles--homebrew-root "bin/gls"))
 
 (require 'lsp-clangd)
 (dotfiles--set-exe-var 'lsp-clients-clangd-executable "clangd"
-                       (concat dotfiles--homebrew-root "/opt/llvm/bin/clangd"))
+                       (concat dotfiles--homebrew-root "opt/llvm/bin/clangd"))
 
 ;; The right option modifier is used by the keyboard layout third level instead.
 (setq mac-right-option-modifier nil)
@@ -47,7 +48,8 @@
 ;; paths.
 
 (defconst dotfiles--xcode-dev-dir
-  (string-trim-right (shell-command-to-string "xcode-select -p"))
+  (file-name-as-directory
+   (string-trim-right (shell-command-to-string "xcode-select -p")))
   "The currently active XCode developer directory.")
 
 (unless dotfiles--xcode-dev-dir
@@ -56,17 +58,17 @@
 (require 'woman)
 (defun dotfiles--add-xcode-man-subdir-to-woman (subdir)
   "Add SUBDIR below XCode dev dir `woman-manpath' if it exists, warn otherwise."
-  (let ((dir (concat dotfiles--xcode-dev-dir subdir)))
+  (let ((dir (file-name-as-directory (concat dotfiles--xcode-dev-dir subdir))))
     (if (file-directory-p dir)
         (add-to-list 'woman-manpath dir)
       (display-warning
        'dotfiles (format "Directory %s not found" dir) :warning))))
 
 (dotfiles--add-xcode-man-subdir-to-woman
- "/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man")
-(dotfiles--add-xcode-man-subdir-to-woman "/usr/share/man")
+ "Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man")
+(dotfiles--add-xcode-man-subdir-to-woman "usr/share/man")
 (dotfiles--add-xcode-man-subdir-to-woman
- "/Toolchains/XcodeDefault.xctoolchain/usr/share/man")
+ "Toolchains/XcodeDefault.xctoolchain/usr/share/man")
 
 (require 'exec-path-from-shell)
 (setq exec-path-from-shell-check-startup-files nil)
