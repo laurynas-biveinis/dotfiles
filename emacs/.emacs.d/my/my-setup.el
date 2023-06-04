@@ -30,6 +30,14 @@
 (global-set-key [(control shift left)] #'enlarge-window-horizontally)
 (global-set-key [(control shift right)] #'shrink-window-horizontally)
 
+(defun end-of-line-and-newline-and-indent ()
+  "Go to the end of line, insert a new line, and indent."
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+(global-set-key (kbd "<M-RET>") #'end-of-line-and-newline-and-indent)
+
 ;;; Editing settings
 
 (defconst dotfiles--column-limit 80
@@ -95,10 +103,20 @@
 (setq message-log-max t  ;; Keep all messages
       inhibit-startup-message t)  ;; No startup message
 
-;;; Kill settings
+;;; Kill and yank settings
 (setq kill-whole-line t  ;; C-k kills line including its newline
       kill-do-not-save-duplicates t  ;; Do not store duplicate kills
       kill-read-only-ok t)
+
+;; Yank should indent in programming modes
+(defun indent-if-prog-mode (&optional _ARG)
+  "Indent current region if in programming mode and no prefix arg."
+  (interactive)
+  (if (and (not current-prefix-arg) (derived-mode-p 'prog-mode))
+      (indent-region (region-beginning) (region-end) nil)))
+
+(advice-add #'yank :after #'indent-if-prog-mode)
+(advice-add #'yank-pop :after #'indent-if-prog-mode)
 
 ;;; Display settings
 (setq display-raw-bytes-as-hex t  ;; Raw bytes in hexadecimal not octal
@@ -166,24 +184,6 @@
 (global-hl-line-mode)
 
 (require 'my-ui-geometry)
-
-(defun end-of-line-and-newline-and-indent ()
-  "Go to the end of line, insert a new line, and indent."
-  (interactive)
-  (end-of-line)
-  (newline-and-indent))
-
-(global-set-key (kbd "<M-RET>") #'end-of-line-and-newline-and-indent)
-
-;; Yank should indent in programming modes
-(defun indent-if-prog-mode (&optional _ARG)
-  "Indent current region if in programming mode and no prefix arg."
-  (interactive)
-  (if (and (not current-prefix-arg) (derived-mode-p 'prog-mode))
-      (indent-region (region-beginning) (region-end) nil)))
-
-(advice-add #'yank :after #'indent-if-prog-mode)
-(advice-add #'yank-pop :after #'indent-if-prog-mode)
 
 ;; Enable some disabled commands
 (put 'narrow-to-region 'disabled nil)
