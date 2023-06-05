@@ -1,6 +1,10 @@
 ;;; my-setup.el --- Main Emacs configuration.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
+;; This is the main part of my non-system-specific Emacs setup. Sets the
+;; configuration variables, configures the built-in modes, installed packages,
+;; and my own code.
+
 ;;; Code:
 
 ;;; Variables and functions defined elsewhere we'll be using
@@ -170,10 +174,14 @@
 (put 'set-goal-column 'disabled nil)
 
 ;;;; Bundled modes
-;;; modeline
 
-(size-indication-mode)
-(column-number-mode t)
+;;; Editing
+(global-so-long-mode 1)
+(delete-selection-mode 1)  ;; Typing or <Delete> will remove selected text
+
+;;; Visiting files
+(recentf-mode)
+;; Recent files menu
 
 ;;; whitespace-mode
 (require 'whitespace)
@@ -186,19 +194,17 @@
                                     magit-status-mode org-mode org-agenda-mode
                                     grep-mode package-menu-mode vterm-mode))
 
-(global-so-long-mode 1)
-
+;;; Cursor
 (global-hl-line-mode)
 
-(require 'my-ui-geometry)
-
-;; Typing or <Delete> will remove selected text
-(delete-selection-mode 1)
-
-;; Recent files menu
-(recentf-mode)
-
+;;; UI
 (global-font-lock-mode 1)
+
+;; modeline
+(size-indication-mode)
+(column-number-mode t)
+
+(require 'my-ui-geometry)
 
 ;;; display-fill-column-indicator
 (require 'display-fill-column-indicator)
