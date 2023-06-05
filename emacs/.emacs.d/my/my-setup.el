@@ -1689,4 +1689,4 @@ with a prefix ARG."
 (gcmh-mode)
 
 (provide 'my-setup)
-;;; setup.el ends here
+;;; my-setup.el ends here
