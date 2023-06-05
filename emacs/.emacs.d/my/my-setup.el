@@ -129,7 +129,9 @@
 
 ;; isearch
 (setq isearch-lazy-count t
-      isearch-yank-on-move 'shift)
+      isearch-yank-on-move 'shift
+      search-nonincremental-instead nil
+      query-replace-skip-read-only t)
 
 ;;; bookmark
 (require 'bookmark)
@@ -162,6 +164,11 @@
 (require 'help-fns)
 (setq help-enable-symbol-autoload t)
 
+;;; Enable some disabled commands
+(put 'narrow-to-region 'disabled nil)
+(put 'list-timers 'disabled nil)
+(put 'set-goal-column 'disabled nil)
+
 ;;;; Bundled modes
 ;;; modeline
 
@@ -184,21 +191,6 @@
 (global-hl-line-mode)
 
 (require 'my-ui-geometry)
-
-;; Enable some disabled commands
-(put 'narrow-to-region 'disabled nil)
-(put 'list-timers 'disabled nil)
-(put 'set-goal-column 'disabled nil)
-
-;; No scollbars
-(set-scroll-bar-mode nil)
-
-(setq search-nonincremental-instead nil)
-
-(setq query-replace-skip-read-only t)
-
-;; No toolbar
-(tool-bar-mode -1)
 
 ;; Typing or <Delete> will remove selected text
 (delete-selection-mode 1)
