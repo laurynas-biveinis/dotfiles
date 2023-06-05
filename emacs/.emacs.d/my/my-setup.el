@@ -25,10 +25,10 @@
 (global-set-key (kbd "<home>") #'move-beginning-of-line)
 (global-set-key (kbd "<end>") #'move-end-of-line)
 
-(global-set-key [(control shift up)] #'enlarge-window)
-(global-set-key [(control shift down)] #'shrink-window)
-(global-set-key [(control shift left)] #'enlarge-window-horizontally)
-(global-set-key [(control shift right)] #'shrink-window-horizontally)
+(global-set-key (kbd "C-S-<up>") #'enlarge-window)
+(global-set-key (kbd "C-S-<down>") #'shrink-window)
+(global-set-key (kbd "C-S-<right>") #'enlarge-window-horizontally)
+(global-set-key (kbd "C-S-<left>") #'shrink-window-horizontally)
 
 (defun end-of-line-and-newline-and-indent ()
   "Go to the end of line, insert a new line, and indent."
