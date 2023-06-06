@@ -44,16 +44,17 @@
 
 ;;; Editing settings
 
-(defconst dotfiles--column-limit 80
-  "The column for line filling and any indicator showing.")
-
-(setq-default indent-tabs-mode nil
-              ;; Indentation can only insert spaces by default. If this ever
-              ;; changes, add reset to `emacs-lisp-mode' and `rust-mode' hooks.
-              fill-column dotfiles--column-limit)
+;; Indentation can only insert spaces by default. If this ever
+;; changes, add reset to `emacs-lisp-mode' and `rust-mode' hooks.
+(setq-default indent-tabs-mode nil)
 
 ;; Enter quoted chars in hex
 (setq read-quoted-char-radix 16)
+
+;;; Completion at point
+(setq completion-styles '(flex)
+      ;; Remove the default `tags-completion-at-point', I never use tags.
+      completion-at-point-functions nil)
 
 ;;; Visiting files
 
@@ -180,19 +181,22 @@
 (delete-selection-mode 1)  ;; Typing or <Delete> will remove selected text
 
 ;;; Visiting files
-(recentf-mode)
-;; Recent files menu
+(recentf-mode)  ;; Recent files menu
+;; autorevert
+(require 'autorevert)
+(setq global-auto-revert-non-file-buffers t)
 
 ;;; whitespace-mode
 (require 'whitespace)
 (global-whitespace-mode)
-(setq whitespace-style '(face trailing lines-tail empty indentation big-intent
+(setq whitespace-style '(face trailing empty indentation big-intent
                               space-after-tab space-before-tab))
-(setq whitespace-line-column (+ dotfiles--column-limit 1))
 (setq whitespace-global-modes '(not dired-mode markdown-mode gfm-mode
                                     lisp-interaction-mode help-mode Info-mode
                                     magit-status-mode org-mode org-agenda-mode
                                     grep-mode package-menu-mode vterm-mode))
+
+(require 'my-column-limit)
 
 ;;; Cursor
 (global-hl-line-mode)
@@ -205,42 +209,6 @@
 (column-number-mode t)
 
 (require 'my-ui-geometry)
-
-;;; display-fill-column-indicator
-(require 'display-fill-column-indicator)
-(setq-default display-fill-column-indicator-column (+ dotfiles--column-limit 1))
-
-(global-display-fill-column-indicator-mode 1)
-
-;; 28.1 introduces `global-display-fill-column-indicator-modes' but it is not
-;; enough to replace this.
-(defun dotfiles--maybe-disable-fci ()
-  "Selectively disable `display-fill-column-indicator' in some buffers."
-  (let ((buf-name (buffer-name)))
-    (if (or buffer-read-only (derived-mode-p 'org-agenda-mode)
-            (equal " *Agenda Commands*" buf-name)
-            (equal " *Org Select*" buf-name)
-            (string-prefix-p "*helm" buf-name))
-        (setq-local display-fill-column-indicator nil))))
-
-(add-hook 'display-fill-column-indicator-mode-hook
-          #'dotfiles--maybe-disable-fci)
-
-;;; minibuffer
-;; All config made redundant by Helm:
-;; (require 'setup-icomplete)
-;; (require 'setup-ido)
-;; (require 'setup-minibuf-eldef)
-;; (require 'setup-minibuffer)
-
-;;; autorevert
-(require 'autorevert)
-(setq global-auto-revert-non-file-buffers t)
-
-;;; Completion at point
-(setq completion-styles '(flex))
-;; Remove the default `tags-completion-at-point', I never use tags.
-(setq completion-at-point-functions nil)
 
 ;;; common programming modes
 (add-hook 'prog-mode-hook #'turn-on-auto-fill)
