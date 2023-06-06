@@ -132,7 +132,7 @@
 
 (setq-default indicate-buffer-boundaries t)
 
-;; isearch
+;;; isearch
 (setq isearch-lazy-count t
       isearch-yank-on-move 'shift
       search-nonincremental-instead nil
