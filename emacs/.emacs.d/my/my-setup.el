@@ -51,6 +51,8 @@
 ;; Enter quoted chars in hex
 (setq read-quoted-char-radix 16)
 
+(add-hook 'prog-mode-hook #'electric-layout-mode)
+
 ;;; Completion at point
 (setq completion-styles '(flex)
       ;; Remove the default `tags-completion-at-point', I never use tags.
@@ -186,7 +188,7 @@
 (require 'autorevert)
 (setq global-auto-revert-non-file-buffers t)
 
-;;; whitespace-mode
+;;; whitespace
 (require 'whitespace)
 (global-whitespace-mode)
 (setq whitespace-style '(face trailing empty indentation big-intent
@@ -196,6 +198,9 @@
                                     magit-status-mode org-mode org-agenda-mode
                                     grep-mode package-menu-mode vterm-mode))
 
+(add-hook 'prog-mode-hook #'dotfiles--enable-trailing-whitespace)
+(add-hook 'text-mode-hook #'dotfiles--enable-trailing-whitespace)
+
 (require 'my-column-limit)
 
 ;;; Cursor
@@ -203,28 +208,21 @@
 
 ;;; UI
 (global-font-lock-mode 1)
+;; We could use `global-goto-address-mode' to turn on `goto-address-mode'
+;; everywhere but unfortunately it does not seem to turn on
+;; `goto-address-prog-mode'.
+(add-hook 'prog-mode-hook #'goto-address-prog-mode)
+(add-hook 'text-mode-hook #'goto-address-mode)
 
 ;; modeline
 (size-indication-mode)
 (column-number-mode t)
 
-(require 'my-ui-geometry)
-
-;;; common programming modes
-(add-hook 'prog-mode-hook #'turn-on-auto-fill)
-(add-hook 'prog-mode-hook #'dotfiles--enable-trailing-whitespace)
+;; Spellchecking
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
-(add-hook 'prog-mode-hook #'electric-layout-mode)
-;; We could use `global-goto-address-mode' to turn on `goto-address-mode'
-;; everywhere but unfortunately it does not seem to turn on
-;; `goto-address-prog-mode'.
-(add-hook 'prog-mode-hook #'goto-address-prog-mode)
-
-;;; text-mode
-(add-hook 'text-mode-hook #'turn-on-auto-fill)
-(add-hook 'text-mode-hook #'dotfiles--enable-trailing-whitespace)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
-(add-hook 'text-mode-hook #'goto-address-mode)
+
+(require 'my-ui-geometry)
 
 ;; Soft word wrap
 (setq visual-line-fringe-indicators '(nil right-curly-arrow))

@@ -15,7 +15,8 @@
 
 (setq-default fill-column dotfiles--column-limit)
 
-;;; whitespace-mode
+;;; `whitespace-mode', whose main configuration is elsewhere. Here we only add
+;;; too-long line stuff.
 (require 'whitespace)
 (setq whitespace-line-column dotfiles--long-line-warning-column)
 (add-to-list 'whitespace-style 'face)
@@ -41,6 +42,9 @@
 
 (add-hook 'display-fill-column-indicator-mode-hook
           #'dotfiles--maybe-disable-fci)
+
+(add-hook 'prog-mode-hook #'turn-on-auto-fill)
+(add-hook 'text-mode-hook #'turn-on-auto-fill)
 
 (provide 'my-column-limit)
 ;;; my-column-limit.el ends here
