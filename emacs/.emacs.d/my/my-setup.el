@@ -175,6 +175,7 @@
 (put 'narrow-to-region 'disabled nil)
 (put 'list-timers 'disabled nil)
 (put 'set-goal-column 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;;;; Bundled modes
 
@@ -184,6 +185,7 @@
 
 ;;; Visiting files
 (recentf-mode)  ;; Recent files menu
+(auto-image-file-mode 1)  ;; Automatically show images as images
 ;; autorevert
 (require 'autorevert)
 (setq global-auto-revert-non-file-buffers t)
@@ -203,6 +205,10 @@
 
 (require 'my-column-limit)
 
+;;; Long line handling
+(global-visual-line-mode 1)
+(setq visual-line-fringe-indicators '(nil right-curly-arrow))
+
 ;;; Cursor
 (global-hl-line-mode)
 
@@ -214,23 +220,13 @@
 (add-hook 'prog-mode-hook #'goto-address-prog-mode)
 (add-hook 'text-mode-hook #'goto-address-mode)
 
-;; modeline
+;;; modeline
 (size-indication-mode)
 (column-number-mode t)
 
-;; Spellchecking
+;;; Spellchecking
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
-
-(require 'my-ui-geometry)
-
-;; Soft word wrap
-(setq visual-line-fringe-indicators '(nil right-curly-arrow))
-
-(global-visual-line-mode 1)
-
-;; Automatically show images as images
-(auto-image-file-mode 1)
 
 ;; `goto-address-mode' integration with `flyspell': do not create `flypsell'
 ;; overlays, if a `goto-address' one already exists at the location. Otherwise
@@ -250,13 +246,14 @@
 (advice-add #'make-flyspell-overlay :before-while
             #'dotfiles--no-flyspell-overlay-on-goto-address)
 
-;;; dired
-;; Copy recursively
+
+;;; File management with `dired'
+
 (require 'dired)
-(setq dired-recursive-copies 'always)
+(setq dired-recursive-copies 'always) ;; Copy recursively
 
 (require 'vc)
-;; https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/?utm_source=share&utm_medium=web2x&context=3
+;; https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/
 (defun dotfiles--dired-dim-git-ignores ()
   "Dim out .gitignore contents."
   (when-let ((ignores (vc-default-ignore-completion-table 'git ".gitignore"))
@@ -269,12 +266,12 @@
 
 (with-eval-after-load "dired" (load "dired-x"))
 
-(add-hook 'Man-mode-hook #'goto-address)
-
-(put 'dired-find-alternate-file 'disabled nil)
-
 (require 'wdired)
 (setq wdired-allow-to-change-permissions t)
+
+(require 'my-ui-geometry)
+
+(add-hook 'Man-mode-hook #'goto-address)
 
 ;;; cc-mode
 (require 'cc-mode)
