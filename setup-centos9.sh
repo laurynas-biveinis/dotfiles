@@ -17,7 +17,8 @@ sudo dnf install git stow stow-doc python-pip gdb man-pages binutils cpp \
      protobuf-devel libfido2-devel protobuf-lite-devel libtirpc-devel \
      gcc-toolset-12-libasan-devel ncdu lynis shellcheck ghostscript htop \
      fd-find jq cppcheck bat doxygen graphviz ripgrep libeatmydata exa \
-     ninja-build recode golang -y
+     ninja-build recode golang perl-Memoize perl-English perl-Time \
+     perl-Time-HiRes perl-Sys-Hostname -y
 
 # TODO(laurynas): fix paths
 go install github.com/rhysd/actionlint/cmd/actionlint@latest
