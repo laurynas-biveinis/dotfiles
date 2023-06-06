@@ -6,7 +6,7 @@
 ;; Homepage: https://github.com/magit/transient
 ;; Keywords: extensions
 
-;; Package-Version: 0.4.0
+;; Package-Version: 0.4.1
 ;; Package-Requires: ((emacs "25.1") (compat "29.1.4.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -3256,6 +3256,8 @@ have a history of their own.")
     (with-current-buffer buf
       (when transient-enable-popup-navigation
         (setq focus (or (button-get (point) 'command)
+                        (and (not (bobp))
+                             (button-get (1- (point)) 'command))
                         (transient--heading-at-point))))
       (erase-buffer)
       (setq window-size-fixed t)
