@@ -21,9 +21,7 @@ Create potentially-empty directories so that `stow` does not symlink them:
 ```zsh
 mkdir .gnupg
 chmod 700 .gnupg
-mkdir -p usr
-mkdir -p usr/bin
-mkdir -p usr/src
+mkdir -p usr usr/bin usr/src vilniusdb
 ```
 
 Check that existing `~/.zshenv` and `~/.zshrc` files are OK to overwrite, rm
@@ -56,7 +54,6 @@ pip3 install wakatime
 If using `zsh`, done. If using `bash`, then
 
 ```bash
-mkdir -p ~/usr/src
 cd ~/usr/src
 git clone https://github.com/gjsheep/bash-wakatime.git
 ```
