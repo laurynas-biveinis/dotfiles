@@ -4,6 +4,8 @@
 # of steps to consult and copy and paste into the terminal, and to do some
 # unscripted steps manually.
 
+sudo apt-get install net-tools
+
 # Common
 sudo apt-get update
 sudo apt-get dist-upgrade
@@ -20,7 +22,9 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      icu-doc ncurses-doc pkg-config lcov cpufrequtils libboost-dev \
      libboost-doc cppcheck iwyu clang-12 clang-12-doc llvm-12-doc lld-12 \
      clang-11 clang-11-doc llvm-11-doc lld-11 cpuset python3-pip g++-12 \
-     gcc-12-doc libstdc++-12-doc g++-10 gcc-10-doc
+     gcc-12-doc libstdc++-12-doc g++-10 gcc-10-doc clang-14-doc ninja-build \
+     cmake-format clang-tidy neovim man-db lynis shellcheck htop jq bat \
+     cpplint duf exa
 # DeepState
 sudo apt-get install libc6-dev-i386
 # Not found on AWS EC2
@@ -32,10 +36,10 @@ sudo ln -sf /bin/sed /bin/gsed
 # sudo usermod -aG docker laurynas
 # LLVM
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-echo 'deb http://apt.llvm.org/impish/ llvm-toolchain-impish-13 main' \
+echo 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main' \
     | sudo tee -a /etc/apt/sources.list
-sudo apt-get install clang-13 libomp5-13 llvm-13 lld-13 clang-tools-13 \
-     clang-tidy-13 clang-13-doc llvm-13-doc clang-format-13
+sudo apt-get install clang-16 libomp5-16 llvm-16 lld-16 clang-tools-16 \
+     clang-tidy-16 clang-16-doc llvm-16-doc clang-format-16
 pip install pandas
 # MySQL development specific
 sudo apt-get install ccache rapidjson-dev ncdu libaio-dev libssl-dev \
