@@ -12,15 +12,17 @@
 
 (require 'my-column-limit)
 
+;; Needs to be set before `org' is loaded
+(defvar org-enforce-todo-checkbox-dependencies)
+(setq org-enforce-todo-checkbox-dependencies t)
+
 (require 'org)
 (setq org-M-RET-may-split-line '((default . nil)))
 (require 'org-element)
-(setq org-enforce-todo-dependencies t
-      org-enforce-todo-checkbox-dependencies t)
+(setq org-enforce-todo-dependencies t)
 (require 'org-keys)
 (setq org-return-follows-link t)
 ;; Common
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (require 'org-agenda)
 (require 'org-clock)
 (require 'org-capture)
