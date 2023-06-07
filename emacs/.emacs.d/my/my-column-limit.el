@@ -6,6 +6,8 @@
 ;; too-long lines.
 
 ;;; Code:
+(require 'whitespace)
+(require 'display-fill-column-indicator)
 
 (defconst dotfiles--column-limit 80
   "The column for line filling and any indicator showing.")
@@ -15,15 +17,19 @@
 
 (setq-default fill-column dotfiles--column-limit)
 
+(defun dotfiles--set-fill-column (column)
+  "Set `fill-column' and related vars to COLUMN."
+  (setq fill-column column)
+  (setq whitespace-line-column (+ column 1))
+  (setq display-fill-column-indicator-column (+ column 1)))
+
 ;;; `whitespace-mode', whose main configuration is elsewhere. Here we only add
 ;;; too-long line stuff.
-(require 'whitespace)
 (setq whitespace-line-column dotfiles--long-line-warning-column)
 (add-to-list 'whitespace-style 'face)
 (add-to-list 'whitespace-style 'lines-tail)
 
 ;; display-fill-column-indicator
-(require 'display-fill-column-indicator)
 (setq-default display-fill-column-indicator-column
               dotfiles--long-line-warning-column)
 

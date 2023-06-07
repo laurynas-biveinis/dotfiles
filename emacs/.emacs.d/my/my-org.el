@@ -10,31 +10,33 @@
 (defvar main-org-file)
 (defvar secrets-org-file)
 
+(require 'my-column-limit)
+
 (require 'org)
 (setq org-M-RET-may-split-line '((default . nil)))
 (require 'org-element)
-(setq org-enforce-todo-dependencies t)
-(setq org-enforce-todo-checkbox-dependencies t)
+(setq org-enforce-todo-dependencies t
+      org-enforce-todo-checkbox-dependencies t)
 (require 'org-keys)
 (setq org-return-follows-link t)
-;; Bendra
+;; Common
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (require 'org-agenda)
 (require 'org-clock)
 (require 'org-capture)
-(setq org-use-speed-commands t)
-(setq org-log-done t)
-(setq org-default-notes-file main-org-file)
-;; org-mobile
+(setq org-use-speed-commands t
+      org-log-done t
+      org-default-notes-file main-org-file)
+;; `org-mobile'
 (require 'org-mobile)
-(setq org-mobile-inbox-for-pull main-org-file)
-(setq org-ctrl-k-protect-subtree t)
-(setq org-support-shift-select t)
-(setq org-yank-adjusted-subtrees t)
-(setq org-fold-catch-invisible-edits 'smart)
-(setq org-fontify-todo-headline t)
-(setq org-fontify-done-headline t)
-(setq org-adapt-indentation nil)
+(setq org-mobile-inbox-for-pull main-org-file
+      org-ctrl-k-protect-subtree t
+      org-support-shift-select t
+      org-yank-adjusted-subtrees t
+      org-fold-catch-invisible-edits 'smart
+      org-fontify-todo-headline t
+      org-fontify-done-headline t
+      org-adapt-indentation nil)
 
 ;; Tags
 (setq org-tag-alist '((:startgroup . nil)
@@ -52,11 +54,11 @@
                       ("project" . ?p)
                       ("somedaymaybe" . ?s)
                       ("crypt" . ?k)))
-(setq org-use-tag-inheritance '("somedaymaybe" "@watchlisten"))
-(setq org-agenda-tags-todo-honor-ignore-options t)
-(setq org-fast-tag-selection-single-key 'expert)
-;; Build agenda buffers faster
-(setq org-agenda-dim-blocked-tasks nil)
+
+(setq org-use-tag-inheritance '("somedaymaybe" "@watchlisten")
+      org-agenda-tags-todo-honor-ignore-options t
+      org-fast-tag-selection-single-key 'expert
+      org-agenda-dim-blocked-tasks nil) ;; Build agenda buffers faster
 
 ;; Agendas
 (setq org-agenda-custom-commands
@@ -97,14 +99,14 @@
           (todo "-@agenda-@phone-@call-@internet-@computer-@home-@watchlisten-@vilnius-@waitingfor-@checklist-project-somedaymaybe"
                 ((org-agenda-overriding-header "Contextless tasks")))))))
 
-(setq org-agenda-start-on-weekday nil)
-(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
-(setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-(setq org-agenda-skip-deadline-if-done t)
-(setq org-agenda-skip-scheduled-if-done t)
-(setq org-agenda-todo-ignore-scheduled 'all)
-(setq org-agenda-todo-ignore-deadlines 'all)
-(setq org-agenda-todo-ignore-timestamp 'all)
+(setq org-agenda-start-on-weekday nil
+      org-agenda-skip-deadline-prewarning-if-scheduled t
+      org-agenda-skip-scheduled-if-deadline-is-shown t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-scheduled-if-done t
+      org-agenda-todo-ignore-scheduled 'all
+      org-agenda-todo-ignore-deadlines 'all
+      org-agenda-todo-ignore-timestamp 'all)
 
 (setq org-agenda-clock-consistency-checks
       (list
@@ -112,8 +114,9 @@
        :min-duration "0:00"
        :max-gap "0:05"
        :gap-ok-around (list "2:00" "12:30")))
-(setq org-agenda-sticky t)
-(setq org-agenda-window-setup 'current-window)
+
+(setq org-agenda-sticky t
+      org-agenda-window-setup 'current-window)
 
 ;; Scheduling and deadlines
 (setq org-deadline-warning-days 30)
@@ -133,16 +136,16 @@
        :tcolumns 0))
 
 ;; Logging
-(setq org-log-into-drawer t)
-(setq org-clock-into-drawer t)
-(setq org-closed-keep-when-no-todo t)
+(setq org-log-into-drawer t
+      org-clock-into-drawer t
+      org-closed-keep-when-no-todo t)
 
 ;; Refiling
-(setq org-refile-targets '((org-agenda-files :maxlevel . 9)))
-;; or 'buffer-name starting with 9.1, not much difference in my setup
-(setq org-refile-use-outline-path 'file)
-(setq org-refile-allow-creating-parent-nodes 'confirm)
-(setq org-log-refile 'time)
+(setq org-refile-targets '((org-agenda-files :maxlevel . 9))
+      ;; or `'buffer-name' starting with 9.1, not much difference in my setup
+      org-refile-use-outline-path 'file
+      org-refile-allow-creating-parent-nodes 'confirm
+      org-log-refile 'time)
 
 ;; Borrowed from https://emacs.nasy.moe/
 (defun dotfiles--org-verify-refile-target ()
@@ -150,8 +153,8 @@
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function #'dotfiles--org-verify-refile-target)
 
-(setq org-clock-display-default-range 'untilnow)
-(setq org-clock-persist 'history)
+(setq org-clock-display-default-range 'untilnow
+      org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-capture-templates
       '(("t" "TODO" entry (file+headline main-org-file "Tasks")
@@ -171,20 +174,18 @@
 (require 'org-habit)
 (setq org-habit-graph-column 50)
 
-(setq org-log-redeadline t)
-(setq org-log-reschedule t)
-(setq org-stuck-projects
-      '("+project-somedaymaybe/!TODO" ("TODO") nil ""))
-(setq org-todo-repeat-to-state "TODO")
-(setq org-use-fast-todo-selection 'expert)
-(setq org-special-ctrl-a/e t)
-(setq org-special-ctrl-k t)
-(setq org-cycle-separator-lines 1)
-;; TODO(laurynas): compute these columns from the frame size calculations above.
-(setq org-tags-column -85)
-(setq org-agenda-tags-column 'auto)
-
-(setq org-table-header-line-p t)
+(setq org-log-redeadline t
+      org-log-reschedule t
+      org-stuck-projects '("+project-somedaymaybe/!TODO" ("TODO") nil "")
+      org-todo-repeat-to-state "TODO"
+      org-use-fast-todo-selection 'expert
+      org-special-ctrl-a/e t
+      org-special-ctrl-k t
+      org-cycle-separator-lines 1
+      ;; TODO(laurynas): compute these columns automatically
+      org-tags-column -85
+      org-agenda-tags-column 'auto
+      org-table-header-line-p t)
 
 ;;; org-checklist
 ;; Comes from org-contrib
@@ -254,12 +255,6 @@ event of an error or nonlocal exit."
 
 ;; Save org buffers automatically
 (add-hook 'auto-save-hook #'org-save-all-org-buffers)
-
-(defun dotfiles--set-fill-column (column)
-  "Set `fill-column' and related vars to COLUMN."
-  (setq fill-column column)
-  (setq whitespace-line-column (+ column 1))
-  (setq display-fill-column-indicator-column (+ column 1)))
 
 (require 'org-roam-node)
 (defun dotfiles--org-mode-hook ()
