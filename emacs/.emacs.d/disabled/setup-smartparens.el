@@ -1,6 +1,9 @@
 ;;; setup-smartparens.el --- smartparens config. -*- lexical-binding: t; -*-
+
 ;;; Commentary:
-;; I tried, but it didn't stick.
+;; I tried, but it didn't stick. Performance issues, strict mode getting in
+;; the way, etc.
+
 ;;; Code:
 
 (require 'smartparens-config)
