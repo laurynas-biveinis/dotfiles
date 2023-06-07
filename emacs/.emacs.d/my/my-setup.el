@@ -49,6 +49,20 @@
 
 (add-hook 'prog-mode-hook #'electric-layout-mode)
 
+(global-so-long-mode 1)
+(delete-selection-mode 1)  ;; Typing or <Delete> will remove selected text
+
+(require 'elec-pair)
+(electric-pair-mode)
+
+;; `iedit': the default binding of C-; conflicts with `flyspell'.
+;; TODO(laurynas): M-I/M-{/M-} could be useful but the keybindings seem to
+;; conflict. iedit seems to be configured in an... unorthodox way.
+;; TODO(laurynas): report a bug.
+(defvar iedit-toggle-key-default)
+(setq iedit-toggle-key-default (kbd "<f6>"))
+(require 'iedit)
+
 ;;; Kill and yank
 
 (setq kill-whole-line t  ;; C-k kills line including its newline
@@ -65,12 +79,39 @@
 (advice-add #'yank :after #'indent-if-prog-mode)
 (advice-add #'yank-pop :after #'indent-if-prog-mode)
 
+;;; Undo
+
+(require 'undo-tree)
+(require 'magit-status)
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+(add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'Info-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'grep-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'package-menu-mode)
+(add-to-list 'undo-tree-incompatible-major-modes #'messages-buffer-mode)
+
+(defun dotfiles--disable-undo-tree-by-name (&optional _print-message)
+  "Return nil if the buffer file name is in `dotfiles--no-undo-tree-names'."
+  (let ((file-name (buffer-file-name)))
+    ;; TODO(laurynas): replace special-casing of suffix and exact match against
+    ;; `no-undo-tree-file-names' with a glob match.
+    (if file-name (not (or (string-suffix-p "autoloads.el" file-name)
+                           (member (file-name-nondirectory (buffer-file-name))
+                                   no-undo-tree-file-names)))
+      t)))
+
+(advice-add 'turn-on-undo-tree-mode :before-while
+            #'dotfiles--disable-undo-tree-by-name)
+
+(global-undo-tree-mode)
+
 ;;; Completion at point
 (setq completion-styles '(flex)
       ;; Remove the default `tags-completion-at-point', I never use tags.
       completion-at-point-functions nil)
 
-;;; Whitespace settings and hook helpers
+;;; Whitespace
 
 (setq-default indicate-empty-lines t  ;; Trailing newlines are highlighted
               require-final-newline 'query)  ;; Should files end with newline?
@@ -80,17 +121,35 @@
   "Enable showing of trailing whitespace."
   (setq show-trailing-whitespace t))
 
+(require 'whitespace)
+(global-whitespace-mode)
+(setq whitespace-style '(face trailing empty indentation big-intent
+                              space-after-tab space-before-tab))
+(setq whitespace-global-modes '(not dired-mode markdown-mode gfm-mode
+                                    lisp-interaction-mode help-mode Info-mode
+                                    magit-status-mode org-mode org-agenda-mode
+                                    grep-mode package-menu-mode vterm-mode))
+
+(add-hook 'prog-mode-hook #'dotfiles--enable-trailing-whitespace)
+(add-hook 'text-mode-hook #'dotfiles--enable-trailing-whitespace)
+
+;;; Long line handling
+(global-visual-line-mode 1)
+(setq visual-line-fringe-indicators '(nil right-curly-arrow))
+
+(require 'my-column-limit)
 (require 'my-files)
 
 ;;; Cursor settings
 (setq-default cursor-in-non-selected-windows nil)
 (setq what-cursor-show-names t)
+(global-hl-line-mode)
 
 ;;; Message settings
 (setq message-log-max t  ;; Keep all messages
       inhibit-startup-message t)  ;; No startup message
 
-;;; Display settings
+;;; Display
 (setq display-raw-bytes-as-hex t  ;; Raw bytes in hexadecimal not octal
       visible-bell t  ;; No annoying beeps
       fast-but-imprecise-scrolling nil
@@ -99,19 +158,79 @@
 
 (setq-default indicate-buffer-boundaries t)
 
+(global-font-lock-mode 1)
+
+;; Show matching parents
+(require 'paren)
+(setq show-paren-style 'mixed)
+(setq show-paren-when-point-inside-paren t)
+(setq show-paren-when-point-in-periphery t)
+(show-paren-mode 1)
+
+;; `stripe-buffer'
+(require 'stripe-buffer)
+(add-hook 'dired-mode-hook #'stripe-listify-buffer)
+(add-hook 'package-menu-mode-hook #'stripe-listify-buffer)
+(add-hook 'org-agenda-mode-hook #'stripe-listify-buffer)
+
+;; `page-break-lines'
+(require 'page-break-lines)
+(global-page-break-lines-mode)
+
+;; `highlight-indent-guides'
+(require 'highlight-indent-guides)
+(setq highlight-indent-guides-method 'character)
+(setq highlight-indent-guides-responsive 'stack)
+(setq highlight-indent-guides-delay 0)
+(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
+
 ;;; isearch
 (setq isearch-lazy-count t
       isearch-yank-on-move 'shift
       search-nonincremental-instead nil
       query-replace-skip-read-only t)
 
-;;; bookmark
+;;; Spellchecking
+
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+(add-hook 'text-mode-hook #'turn-on-flyspell)
+;; `ispell'
+(require 'ispell)
+(setq ispell-program-name "hunspell")
+(setq ispell-really-hunspell t)
+(setq ispell-dictionary "en_US,lt")
+(ispell-set-spellchecker-params)
+(ispell-hunspell-add-multi-dic "en_US,lt")
+(add-to-list 'ispell-skip-region-alist
+             '("^-----BEGIN PGP MESSAGE-----$" . "^-----END PGP MESSAGE-----$"))
+;; Workaround header line covering the ispell choices window
+(setq ispell-choices-win-default-height 3)
+
+;; `goto-address-mode' integration with `flyspell': do not create `flypsell'
+;; overlays, if a `goto-address' one already exists at the location. Otherwise
+;; a mouse click would offer spelling corrections instead of going to the URL.
+(require 'flyspell)
+
+(defun dotfiles--goto-address-overlay-p (o)
+  "Return t if O is an overlay used by `goto-address'."
+  (and (overlayp o) (overlay-get o 'goto-address)))
+
+(defun dotfiles--no-flyspell-overlay-on-goto-address (beg _end _face
+                                                          _mouse-face)
+  "Do not create a `flyspell' overlay if a `goto-address' one exists at BEG."
+  (seq-every-p #'null (mapcar #'dotfiles--goto-address-overlay-p (overlays-at
+                                                                  beg))))
+
+(advice-add #'make-flyspell-overlay :before-while
+            #'dotfiles--no-flyspell-overlay-on-goto-address)
+
+;;; `bookmark'
 (require 'bookmark)
 
 ;; Save bookmarks automatically
 (setq bookmark-save-flag 1)
 
-;;; UI settings
+;;; UI
 
 (setq use-dialog-box nil)
 
@@ -119,6 +238,27 @@
 (when (boundp 'my-frame-font)
   (add-to-list 'default-frame-alist `(font . ,my-frame-font))
   (add-to-list 'initial-frame-alist `(font . ,my-frame-font)))
+
+;; We could use `global-goto-address-mode' to turn on `goto-address-mode'
+;; everywhere but unfortunately it does not seem to turn on
+;; `goto-address-prog-mode'.
+(add-hook 'prog-mode-hook #'goto-address-prog-mode)
+(add-hook 'text-mode-hook #'goto-address-mode)
+(add-hook 'Man-mode-hook #'goto-address-mode)
+
+;;; modeline
+(size-indication-mode)
+(column-number-mode t)
+
+;; rich-minority-mode
+(require 'rich-minority)
+(setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
+                     " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
+                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
+                     " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
+                     " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"
+                     " Habit" " :ARCHIVE:" " activity-watch"))
+(rich-minority-mode)
 
 ;;; Misc settings
 
@@ -142,69 +282,7 @@
 (put 'set-goal-column 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
-;;; Editing
-(global-so-long-mode 1)
-(delete-selection-mode 1)  ;; Typing or <Delete> will remove selected text
-
-;;; whitespace
-(require 'whitespace)
-(global-whitespace-mode)
-(setq whitespace-style '(face trailing empty indentation big-intent
-                              space-after-tab space-before-tab))
-(setq whitespace-global-modes '(not dired-mode markdown-mode gfm-mode
-                                    lisp-interaction-mode help-mode Info-mode
-                                    magit-status-mode org-mode org-agenda-mode
-                                    grep-mode package-menu-mode vterm-mode))
-
-(add-hook 'prog-mode-hook #'dotfiles--enable-trailing-whitespace)
-(add-hook 'text-mode-hook #'dotfiles--enable-trailing-whitespace)
-
-(require 'my-column-limit)
-
-;;; Long line handling
-(global-visual-line-mode 1)
-(setq visual-line-fringe-indicators '(nil right-curly-arrow))
-
-;;; Cursor
-(global-hl-line-mode)
-
-;;; UI
-(global-font-lock-mode 1)
-;; We could use `global-goto-address-mode' to turn on `goto-address-mode'
-;; everywhere but unfortunately it does not seem to turn on
-;; `goto-address-prog-mode'.
-(add-hook 'prog-mode-hook #'goto-address-prog-mode)
-(add-hook 'text-mode-hook #'goto-address-mode)
-
-;;; modeline
-(size-indication-mode)
-(column-number-mode t)
-
-;;; Spellchecking
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
-(add-hook 'text-mode-hook #'turn-on-flyspell)
-
-;; `goto-address-mode' integration with `flyspell': do not create `flypsell'
-;; overlays, if a `goto-address' one already exists at the location. Otherwise
-;; a mouse click would offer spelling corrections instead of going to the URL.
-(require 'flyspell)
-
-(defun dotfiles--goto-address-overlay-p (o)
-  "Return t if O is an overlay used by `goto-address'."
-  (and (overlayp o) (overlay-get o 'goto-address)))
-
-(defun dotfiles--no-flyspell-overlay-on-goto-address (beg _end _face
-                                                          _mouse-face)
-  "Do not create a `flyspell' overlay if a `goto-address' one exists at BEG."
-  (seq-every-p #'null (mapcar #'dotfiles--goto-address-overlay-p (overlays-at
-                                                                  beg))))
-
-(advice-add #'make-flyspell-overlay :before-while
-            #'dotfiles--no-flyspell-overlay-on-goto-address)
-
 (require 'my-ui-geometry)
-
-(add-hook 'Man-mode-hook #'goto-address)
 
 ;;; cc-mode
 (require 'cc-mode)
@@ -270,29 +348,6 @@
 
 (advice-add #'epg-decrypt-string :before
             #'dotfiles--set-epg-context-pinentry-mode)
-
-;;; ispell
-(require 'ispell)
-(setq ispell-program-name "hunspell")
-(setq ispell-really-hunspell t)
-(setq ispell-dictionary "en_US,lt")
-(ispell-set-spellchecker-params)
-(ispell-hunspell-add-multi-dic "en_US,lt")
-(add-to-list 'ispell-skip-region-alist
-             '("^-----BEGIN PGP MESSAGE-----$" . "^-----END PGP MESSAGE-----$"))
-;; Workaround header line covering the ispell choices window
-(setq ispell-choices-win-default-height 3)
-
-;;; Show matching parents
-(require 'paren)
-(setq show-paren-style 'mixed)
-(setq show-paren-when-point-inside-paren t)
-(setq show-paren-when-point-in-periphery t)
-(show-paren-mode 1)
-
-;;; electric-pair-mode
-(require 'elec-pair)
-(electric-pair-mode)
 
 ;; In Shell mode, do not echo passwords
 (require 'comint)
@@ -781,31 +836,6 @@ Created: %U
              (not (file-remote-p (buffer-file-name)))
              (not (memq major-mode git-gutter:disabled-modes)))
     (git-gutter-mode +1)))
-
-;;; undo-tree
-(require 'undo-tree)
-(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-(add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'Info-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'grep-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'magit-status-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'package-menu-mode)
-(add-to-list 'undo-tree-incompatible-major-modes #'messages-buffer-mode)
-
-(defun dotfiles--disable-undo-tree-by-name (&optional _print-message)
-  "Return nil if the buffer file name is in `dotfiles--no-undo-tree-names'."
-  (let ((file-name (buffer-file-name)))
-    ;; TODO(laurynas): replace special-casing of suffix and exact match against
-    ;; `no-undo-tree-file-names' with a glob match.
-    (if file-name (not (or (string-suffix-p "autoloads.el" file-name)
-                           (member (file-name-nondirectory (buffer-file-name))
-                                   no-undo-tree-file-names)))
-      t)))
-
-(advice-add 'turn-on-undo-tree-mode :before-while
-            #'dotfiles--disable-undo-tree-by-name)
-
-(global-undo-tree-mode)
 
 ;;; Wakatime
 (require 'wakatime-mode)
@@ -1303,16 +1333,6 @@ CANDIDATES is the list of candidates."
 ;; https://github.com/Malabarba/aggressive-indent-mode/issues/140
 (add-to-list 'aggressive-indent-excluded-modes #'makefile-bsdmake-mode)
 
-;;; rich-minority-mode
-(require 'rich-minority)
-(setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
-                     " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
-                     " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"
-                     " Habit" " :ARCHIVE:" " activity-watch"))
-(rich-minority-mode)
-
 ;;; projectile
 (require 'projectile)
 (setq projectile-completion-system 'helm)
@@ -1471,26 +1491,6 @@ with a prefix ARG."
 (setq beacon-blink-delay 0.2)
 (beacon-mode)
 
-;;; page-break-lines
-(require 'page-break-lines)
-(global-page-break-lines-mode)
-
-;;; highlight-indent-guides
-(require 'highlight-indent-guides)
-(setq highlight-indent-guides-method 'character)
-(setq highlight-indent-guides-responsive 'stack)
-(setq highlight-indent-guides-delay 0)
-(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-
-;;; `iedit'
-;; The default binding of C-; conflicts with `flyspell'. TODO(laurynas):
-;; M-I/M-{/M-} could be useful but the keybindings seem to conflict.
-;; iedit seems to be configured in an... unorthodox way. TODO(laurynas): report
-;; a bug.
-(defvar iedit-toggle-key-default)
-(setq iedit-toggle-key-default (kbd "<f6>"))
-(require 'iedit)
-
 ;;; keyfreq
 (require 'keyfreq)
 (keyfreq-mode 1)
@@ -1519,12 +1519,6 @@ with a prefix ARG."
       cfw:fchar-top-right-corner ?┓)
 
 (setq cfw:render-line-breaker #'cfw:render-line-breaker-wordwrap)
-
-;;; `stripe-buffer'
-(require 'stripe-buffer)
-(add-hook 'dired-mode-hook #'stripe-listify-buffer)
-(add-hook 'package-menu-mode-hook #'stripe-listify-buffer)
-(add-hook 'org-agenda-mode-hook #'stripe-listify-buffer)
 
 ;;; `grab-mac-link'
 (require 'grab-mac-link)
