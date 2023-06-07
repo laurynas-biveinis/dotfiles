@@ -14,13 +14,14 @@
 
 (defun dotfiles--mark-new-files-as-modified ()
   "Treat new (empty) files as modified."
-  (unless (file-exists-p (buffer-file-name))
+  (when (and (buffer-file-name)
+             (not (file-exists-p (buffer-file-name))))
     (set-buffer-modified-p t)))
 
 (add-hook 'find-file-hook #'dotfiles--mark-new-files-as-modified)
 
 (recentf-mode)  ;; Recent files menu
-(auto-image-file-mode 1)  ;; Automatically show images as images
+(auto-image-file-mode 1)  ;; Show images as images and not binary files
 ;; autorevert
 (require 'autorevert)
 (setq global-auto-revert-non-file-buffers t)
