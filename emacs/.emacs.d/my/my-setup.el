@@ -17,13 +17,9 @@
 ;; Defined in early-init.el:
 (defvar dotfiles--initial-file-name-handler-alist)
 
-;;;; General settings
-
 ;;; Encodings
 
 (set-language-environment "UTF-8")
-;; Use Unix-style line endings.
-(setq-default buffer-file-coding-system 'utf-8-unix)
 
 ;;; Keybindings
 (global-set-key (kbd "<home>") #'move-beginning-of-line)
@@ -42,7 +38,7 @@
 
 (global-set-key (kbd "<M-RET>") #'end-of-line-and-newline-and-indent)
 
-;;; Editing settings
+;;; Editing
 
 ;; Indentation can only insert spaces by default. If this ever
 ;; changes, add reset to `emacs-lisp-mode' and `rust-mode' hooks.
@@ -53,64 +49,8 @@
 
 (add-hook 'prog-mode-hook #'electric-layout-mode)
 
-;;; Completion at point
-(setq completion-styles '(flex)
-      ;; Remove the default `tags-completion-at-point', I never use tags.
-      completion-at-point-functions nil)
+;;; Kill and yank
 
-;;; Visiting files
-
-(setq enable-remote-dir-locals t)
-
-(defun dotfiles--mark-new-files-as-modified ()
-  "Treat new (empty) files as modified."
-  (unless (file-exists-p (buffer-file-name))
-    (set-buffer-modified-p t)))
-
-(add-hook 'find-file-hook #'dotfiles--mark-new-files-as-modified)
-
-;;; Backups
-(setq make-backup-files nil  ;; Do not backup
-      create-lockfiles nil   ;; Do not create lockfiles
-      ;; But if we did backup, do not break macOS file metadata
-      backup-by-copying t
-      ;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge -
-      ;; Preserve hard links to the file you are editing
-      backup-by-copying-when-linked t
-      ;; Preserve the owner and group of the file you are editing
-      ;; From http://www.emacswiki.org/cgi-bin/wiki/DotEmacsChallenge
-      backup-by-copying-when-mismatch t)
-
-;;; Saving files
-
-;; Mark executable files as executable on save
-(add-hook 'after-save-hook
-          #'executable-make-buffer-file-executable-if-script-p)
-
-;; Autosave should be idle-based only, it is very annoying when it autosaves in
-;; the middle of typing, even more so with org-encrypted blocks.
-(setq auto-save-interval 0
-      auto-save-timeout 30)
-
-;;; Whitespace settings and hook helpers
-
-(setq-default indicate-empty-lines t  ;; Trailing newlines are highlighted
-              require-final-newline 'query)  ;; Should files end with newline?
-
-;; Display trailing whitespace
-(defun dotfiles--enable-trailing-whitespace ()
-  "Enable showing of trailing whitespace."
-  (setq show-trailing-whitespace t))
-
-;;; Cursor settings
-(setq-default cursor-in-non-selected-windows nil)
-(setq what-cursor-show-names t)
-
-;;; Message settings
-(setq message-log-max t  ;; Keep all messages
-      inhibit-startup-message t)  ;; No startup message
-
-;;; Kill and yank settings
 (setq kill-whole-line t  ;; C-k kills line including its newline
       kill-do-not-save-duplicates t  ;; Do not store duplicate kills
       kill-read-only-ok t)
@@ -124,6 +64,31 @@
 
 (advice-add #'yank :after #'indent-if-prog-mode)
 (advice-add #'yank-pop :after #'indent-if-prog-mode)
+
+;;; Completion at point
+(setq completion-styles '(flex)
+      ;; Remove the default `tags-completion-at-point', I never use tags.
+      completion-at-point-functions nil)
+
+;;; Whitespace settings and hook helpers
+
+(setq-default indicate-empty-lines t  ;; Trailing newlines are highlighted
+              require-final-newline 'query)  ;; Should files end with newline?
+
+;; Display trailing whitespace
+(defun dotfiles--enable-trailing-whitespace ()
+  "Enable showing of trailing whitespace."
+  (setq show-trailing-whitespace t))
+
+(require 'my-files)
+
+;;; Cursor settings
+(setq-default cursor-in-non-selected-windows nil)
+(setq what-cursor-show-names t)
+
+;;; Message settings
+(setq message-log-max t  ;; Keep all messages
+      inhibit-startup-message t)  ;; No startup message
 
 ;;; Display settings
 (setq display-raw-bytes-as-hex t  ;; Raw bytes in hexadecimal not octal
@@ -177,18 +142,9 @@
 (put 'set-goal-column 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
-;;;; Bundled modes
-
 ;;; Editing
 (global-so-long-mode 1)
 (delete-selection-mode 1)  ;; Typing or <Delete> will remove selected text
-
-;;; Visiting files
-(recentf-mode)  ;; Recent files menu
-(auto-image-file-mode 1)  ;; Automatically show images as images
-;; autorevert
-(require 'autorevert)
-(setq global-auto-revert-non-file-buffers t)
 
 ;;; whitespace
 (require 'whitespace)
@@ -245,29 +201,6 @@
 
 (advice-add #'make-flyspell-overlay :before-while
             #'dotfiles--no-flyspell-overlay-on-goto-address)
-
-
-;;; File management with `dired'
-
-(require 'dired)
-(setq dired-recursive-copies 'always) ;; Copy recursively
-
-(require 'vc)
-;; https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/
-(defun dotfiles--dired-dim-git-ignores ()
-  "Dim out .gitignore contents."
-  (when-let ((ignores (vc-default-ignore-completion-table 'git ".gitignore"))
-             (exts (make-local-variable 'completion-ignored-extensions)))
-    (dolist (item ignores) (add-to-list exts item))))
-(add-hook 'dired-mode-hook #'dotfiles--dired-dim-git-ignores)
-
-(require 'dired-aux)
-(setq dired-create-destination-dirs 'ask)
-
-(with-eval-after-load "dired" (load "dired-x"))
-
-(require 'wdired)
-(setq wdired-allow-to-change-permissions t)
 
 (require 'my-ui-geometry)
 
