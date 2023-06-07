@@ -49,7 +49,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
                   "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
 
     FB_COMMON=()
-    FB8028_EXTRA=("-DWITH_UNIT_TESTS=OFF")
+    FB8028_EXTRA=("-DWITH_PROTOBUF=bundled")
 
     export MYCLANG12=("-DCMAKE_C_COMPILER=$BREW/llvm@12/bin/clang-12"
                       "-DCMAKE_CXX_COMPILER=$BREW/llvm@12/bin/clang++")
@@ -63,7 +63,7 @@ else
     MARIA_COMMON=()
 
     FB_COMMON=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
-    FB8028_EXTRA=("-DWITH_UNIT_TESTS=OFF")
+    FB8028_EXTRA=()
 
     export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
                       "-DCMAKE_CXX_COMPILER=clang++-12")
@@ -133,6 +133,8 @@ MY8028_29_CXX_FLAGS_DEBUG=("${CXX_FLAGS_DEBUG[@]}"
 MY8028_29_EXTRA=("-DCMAKE_C_FLAGS_DEBUG=${MY8028_29_CXX_FLAGS_DEBUG[*]}"
                  "-DCMAKE_CXX_FLAGS_DEBUG=${MY8028_29_CXX_FLAGS_DEBUG[*]}")
 unset MY8028_29_CXX_FLAGS_DEBUG
+
+FB_8028_EXTRA+=("-DWITH_UNIT_TESTS=OFF")
 
 MY8027_28_EXTRA=("-DWITH_FIDO=bundled")
 
