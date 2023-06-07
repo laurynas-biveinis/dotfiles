@@ -4,6 +4,8 @@
 ;; This is the main part of my non-system-specific Emacs setup. Sets the
 ;; configuration variables, configures the built-in modes, installed packages,
 ;; and my own code.
+;; All features are assumed to exist, because this is a part of my dotfiles repo
+;; where the needed packages are committed too.
 
 ;;; Code:
 
@@ -17,35 +19,16 @@
 ;; Defined in early-init.el:
 (defvar dotfiles--initial-file-name-handler-alist)
 
+(require 'my-global-keys)
+
 ;;; Encodings
 
 (set-language-environment "UTF-8")
 
-;;; Keybindings
-(global-set-key (kbd "<home>") #'move-beginning-of-line)
-(global-set-key (kbd "<end>") #'move-end-of-line)
-
-(global-set-key (kbd "C-S-<up>") #'enlarge-window)
-(global-set-key (kbd "C-S-<down>") #'shrink-window)
-(global-set-key (kbd "C-S-<right>") #'enlarge-window-horizontally)
-(global-set-key (kbd "C-S-<left>") #'shrink-window-horizontally)
-
-(defun end-of-line-and-newline-and-indent ()
-  "Go to the end of line, insert a new line, and indent."
-  (interactive)
-  (end-of-line)
-  (newline-and-indent))
-
-(global-set-key (kbd "<M-RET>") #'end-of-line-and-newline-and-indent)
-
 ;;; Editing
 
-;; Indentation can only insert spaces by default. If this ever
-;; changes, add reset to `emacs-lisp-mode' and `rust-mode' hooks.
-(setq-default indent-tabs-mode nil)
-
-;; Enter quoted chars in hex
-(setq read-quoted-char-radix 16)
+(setq read-quoted-char-radix 16  ;; Enter quoted chars in hex
+      sentence-end-double-space nil)
 
 (add-hook 'prog-mode-hook #'electric-layout-mode)
 
@@ -62,6 +45,37 @@
 (defvar iedit-toggle-key-default)
 (setq iedit-toggle-key-default (kbd "<f6>"))
 (require 'iedit)
+
+;;; Indentation
+
+;; Indentation can only insert spaces by default. If this ever
+;; changes, add reset to `emacs-lisp-mode' and `rust-mode' hooks.
+(setq-default indent-tabs-mode nil)
+
+;; `aggressive-indent-mode'
+(require 'aggressive-indent)
+(setq aggressive-indent-comments-too t)
+(global-aggressive-indent-mode 1)
+(add-to-list 'aggressive-indent-excluded-modes #'help-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'Info-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'magit-status-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'org-agenda-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'grep-mode)
+;; Incompatible (corrupts buffer) and redundant anyway with LSP server-provided
+;; formatting
+(add-to-list 'aggressive-indent-excluded-modes #'c-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'c++-mode)
+(require 'term)
+(add-to-list 'aggressive-indent-excluded-modes #'term-mode)
+(add-to-list 'aggressive-indent-excluded-modes #'package-menu-mode)
+;; https://github.com/Malabarba/aggressive-indent-mode/issues/140
+(add-to-list 'aggressive-indent-excluded-modes #'makefile-bsdmake-mode)
+
+(defun end-of-line-and-newline-and-indent ()
+  "Go to the end of line, insert a new line, and indent."
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
 
 ;;; Kill and yank
 
@@ -81,6 +95,7 @@
 
 ;;; Undo
 
+;; The tree-shaped edit history provided by this package is the winner.
 (require 'undo-tree)
 (require 'magit-status)
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
@@ -111,6 +126,28 @@
       ;; Remove the default `tags-completion-at-point', I never use tags.
       completion-at-point-functions nil)
 
+;;; Navigation
+(setq scroll-error-top-bottom t)
+
+;; `imenu'
+(require 'imenu)
+(setq imenu-auto-rescan t)
+(setq imenu-auto-rescan-maxout 6000000)
+
+;; We could use `global-goto-address-mode' to turn on `goto-address-mode'
+;; everywhere but unfortunately it does not seem to turn on
+;; `goto-address-prog-mode'.
+(add-hook 'prog-mode-hook #'goto-address-prog-mode)
+(add-hook 'text-mode-hook #'goto-address-mode)
+(add-hook 'Man-mode-hook #'goto-address-mode)
+
+;; `beginend'
+(require 'beginend)
+(beginend-global-mode)
+
+(windmove-default-keybindings 'super)
+;; If I ever move to two frames or more setup, look into `framemove'.
+
 ;;; Whitespace
 
 (setq-default indicate-empty-lines t  ;; Trailing newlines are highlighted
@@ -140,17 +177,29 @@
 (require 'my-column-limit)
 (require 'my-files)
 
-;;; Cursor settings
+;;; Cursor
 (setq-default cursor-in-non-selected-windows nil)
 (setq what-cursor-show-names t)
 (global-hl-line-mode)
+
+;; `beacon'
+(require 'beacon)
+(setq beacon-blink-when-window-scrolls nil)
+(setq beacon-blink-when-window-changes t)
+(setq beacon-blink-when-point-moves-vertically nil)
+(setq beacon-blink-when-point-moves-horizontally nil)
+(setq beacon-blink-when-focused t)
+(setq beacon-blink-duration 0.2)
+(setq beacon-blink-delay 0.2)
+(beacon-mode)
 
 ;;; Message settings
 (setq message-log-max t  ;; Keep all messages
       inhibit-startup-message t)  ;; No startup message
 
 ;;; Display
-(setq display-raw-bytes-as-hex t  ;; Raw bytes in hexadecimal not octal
+(setq transient-mark-mode t  ;; Enable visual feedback on selections
+      display-raw-bytes-as-hex t  ;; Raw bytes in hexadecimal not octal
       visible-bell t  ;; No annoying beeps
       fast-but-imprecise-scrolling nil
       redisplay-skip-fontification-on-input t
@@ -232,19 +281,14 @@
 
 ;;; UI
 
+(load-theme 'solarized-dark t)
+
 (setq use-dialog-box nil)
 
 ;; Use specified font if any
 (when (boundp 'my-frame-font)
   (add-to-list 'default-frame-alist `(font . ,my-frame-font))
   (add-to-list 'initial-frame-alist `(font . ,my-frame-font)))
-
-;; We could use `global-goto-address-mode' to turn on `goto-address-mode'
-;; everywhere but unfortunately it does not seem to turn on
-;; `goto-address-prog-mode'.
-(add-hook 'prog-mode-hook #'goto-address-prog-mode)
-(add-hook 'text-mode-hook #'goto-address-mode)
-(add-hook 'Man-mode-hook #'goto-address-mode)
 
 ;;; modeline
 (size-indication-mode)
@@ -262,16 +306,11 @@
 
 ;;; Misc settings
 
-(setq transient-mark-mode t  ;; Enable visual feedback on selections
-      tab-always-indent 'complete  ;; If already indented, complete
-      diff-switches "-u -p"
-      scroll-error-top-bottom t
-      delete-by-moving-to-trash t
+(setq tab-always-indent 'complete  ;; If already indented, complete
       history-delete-duplicates t
       read-process-output-max (* 1024 1024)
       switch-to-prev-buffer-skip 'this
-      next-error-message-highlight t
-      sentence-end-double-space nil)
+      next-error-message-highlight t)
 
 (require 'help-fns)
 (setq help-enable-symbol-autoload t)
@@ -284,7 +323,108 @@
 
 (require 'my-ui-geometry)
 
-;;; cc-mode
+;;; Diffing
+(setq diff-switches "-u -p")
+
+;; `ediff'
+(require 'ediff-wind)
+(setq ediff-window-setup-function #'ediff-setup-windows-plain)
+(setq ediff-split-window-function #'split-window-horizontally)
+(setq ediff-merge-split-window-function #'split-window-horizontally)
+(setq ediff-quit-widened nil)
+
+(defvar dotfiles--pre-ediff-window-config nil)
+
+(defun dotfiles--save-pre-ediff-window-config ()
+  "Save the current window configuration, to be used as an ediff pre-setup hook."
+  (setq dotfiles--pre-ediff-window-config (current-window-configuration)))
+
+(defun dotfiles--restore-pre-ediff-window-config ()
+  "Restore the current window configuration, to be used as an ediff exit hook."
+  (set-window-configuration dotfiles--pre-ediff-window-config))
+
+(add-hook 'ediff-before-setup-hook #'dotfiles--save-pre-ediff-window-config)
+(add-hook 'ediff-quit-hook #'dotfiles--restore-pre-ediff-window-config)
+
+;;; Version control
+
+;; `magit'
+(require 'magit)
+
+(setq magit-display-buffer-function
+      #'magit-display-buffer-same-window-except-diff-v1)
+(setq magit-status-goto-file-position t)
+(setq magit-diff-refine-hunk t)
+(setq magit-process-popup-time 10)
+
+;; Magit "integration" with VC
+(setq vc-handled-backends (delq 'Git vc-handled-backends))
+
+(defun dotfiles--turn-off-size-indication-mode ()
+  "Turn off function `size-indication-mode' unconditionally."
+  (size-indication-mode -1))
+
+(add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
+
+;; `git-gutter'
+(require 'git-gutter)
+(setq git-gutter:update-interval 0.02)
+
+;; `git-gutter-fringe'
+(require 'git-gutter-fringe)
+
+(define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
+(define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
+(define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom)
+
+(global-git-gutter-mode +1)
+
+;; Disable git-gutter-fringe over TRAMP. Not the best option to replace an
+;; internal function but oh well. Not much to be gained by advising neither.
+(defun git-gutter--turn-on ()
+  "Upstream git-gutter--turn-on replacement to disable git-gutter for TRAMP."
+  (when (and (buffer-file-name)
+             (not (file-remote-p (buffer-file-name)))
+             (not (memq major-mode git-gutter:disabled-modes)))
+    (git-gutter-mode +1)))
+
+;;; Programming
+
+;; Grand Unified Debugger
+(gud-tooltip-mode t)
+
+;; `xref': do not initialize `xref-backend-functions' to `etags--xref-backend',
+;; we never use etags and let major modes (LSP, elisp) define useful backends
+;; themselves.
+(remove-hook 'xref-backend-functions #'etags--xref-backend)
+
+;; `tree-sitter'
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
+;; `prism'
+(require 'prism)
+(add-hook 'c-mode-common-hook #'prism-mode)
+(add-hook 'emacs-lisp-mode-hook #'prism-mode)
+(add-hook 'rust-mode-hook #'prism-mode)
+
+(add-hook 'python-mode-hook #'prism-whitespace-mode)
+(add-hook 'yaml-mode #'prism-whitespace-mode)
+
+;; Compilation
+(require 'compile)
+(setq compilation-scroll-output 'first-error)
+(setq compilation-environment '("LANG=C"))
+
+(require 'fancy-compilation)
+(with-eval-after-load 'compile (fancy-compilation-mode))
+
+;;; C and C++ programming
+
+;; `cc-mode'
 (require 'cc-mode)
 (require 'cc-vars)
 
@@ -306,48 +446,15 @@
 
 (add-hook 'c-initialization-hook #'dotfiles--c-mode-common-hook)
 
-;;; modern-cpp-font-lock
+;; `modern-cpp-font-lock'
 (require 'modern-cpp-font-lock)
 (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
 
-;; Grand Unified Debugger
-(gud-tooltip-mode t)
+;; Google C style
+(require 'google-c-style)
+(c-add-style "google" google-c-style)
 
-;;; windmove
-(windmove-default-keybindings 'super)
-;; TODO(laurynas): if I ever move to two frames or more setup, look into
-;; framemove
-
-;; Compilation
-(require 'compile)
-(setq compilation-scroll-output 'first-error)
-(setq compilation-environment '("LANG=C"))
-
-(require 'fancy-compilation)
-(with-eval-after-load 'compile (fancy-compilation-mode))
-
-;;; `auth-sources'
-(require 'auth-source)
-(setq auth-sources '("~/.authinfo.gpg"))
-
-;;; gnutls
-(require 'gnutls)
-(setq gnutls-verify-error t)
-;; Because macOS + Emacs + gnutls is broken:
-;; http://emacs.1067599.n8.nabble.com/bug-36017-27-0-50-TLS-1-3-on-macOS-exhibits-similar-issue-to-34341-td485542.html#a485721
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
-;;; gpg/epa/EasyPG
-(require 'epa)
-(setq epg-pinentry-mode 'loopback)
-
-;; TODO(laurynas): report this bug upstream
-(defun dotfiles--set-epg-context-pinentry-mode (context _cipher)
-  "Fix epg CONTEXT to the correct pinentry mode."
-  (setf (epg-context-pinentry-mode context) epg-pinentry-mode))
-
-(advice-add #'epg-decrypt-string :before
-            #'dotfiles--set-epg-context-pinentry-mode)
+;;; Shell and terminal emulation
 
 ;; In Shell mode, do not echo passwords
 (require 'comint)
@@ -378,38 +485,36 @@
 
 (add-hook 'shell-mode-hook #'dotfiles--shell-mode-hook)
 
-;;; smartparens
-;; I tried it, but it didn't stick. Performance issues, strict mode getting in
-;; the way, etc.
-;; (require 'setup-smartparens)
-
-;;; vterm
+;; `vterm'
 (require 'vterm)
 (define-key vterm-mode-map (kbd "<S-prior>") #'scroll-down-command)
 (setq vterm-max-scrollback 100000)
 (setq vterm-buffer-name-string "vterm %s")
 
-;;; Tramp
-(require 'tramp)
-;; The default level 3 is too noisy with showing each file shipped
-(setq tramp-verbose 2)
-;; Not sure I care about scp overhead in 2020. Also, maybe this will help with
-;; duplicated sshx/scpx paths in lsp-mode cache.
-(require 'tramp-sh)
-(setq tramp-copy-size-limit nil)
-(setq tramp-default-method "scpx")
-(setq remote-file-name-inhibit-cache t)
+;;; Cryptography
 
-;; TRAMP "integration" with VC: I only use git on remote hosts, handled by
-;; Magit, thus disable VC over TRAMP
-(setq vc-ignore-dir-regexp
-      (format "\\(%s\\)\\|\\(%s\\)"
-              vc-ignore-dir-regexp
-              tramp-file-name-regexp))
+;; `auth-sources'
+(require 'auth-source)
+(setq auth-sources '("~/.authinfo.gpg"))
 
-;; epa "integration" with TRAMP: avoid choking trying to gpg-decrypt
-;; non-encrypted ~/.authinfo.gpg.
-(setq tramp-completion-use-auth-sources nil)
+;; `gnutls'
+(require 'gnutls)
+(setq gnutls-verify-error t)
+;; Because macOS + Emacs + gnutls is broken:
+;; http://emacs.1067599.n8.nabble.com/bug-36017-27-0-50-TLS-1-3-on-macOS-exhibits-similar-issue-to-34341-td485542.html#a485721
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+;; gpg/epa/EasyPG
+(require 'epa)
+(setq epg-pinentry-mode 'loopback)
+
+;; TODO(laurynas): report this bug upstream
+(defun dotfiles--set-epg-context-pinentry-mode (context _cipher)
+  "Fix epg CONTEXT to the correct pinentry mode."
+  (setf (epg-context-pinentry-mode context) epg-pinentry-mode))
+
+(advice-add #'epg-decrypt-string :before
+            #'dotfiles--set-epg-context-pinentry-mode)
 
 
 ;;; calendar
@@ -429,26 +534,6 @@
 ;;; calculator
 (require 'calculator)
 (setq calculator-electric-mode t)
-
-;;; ediff
-(require 'ediff-wind)
-(setq ediff-window-setup-function #'ediff-setup-windows-plain)
-(setq ediff-split-window-function #'split-window-horizontally)
-(setq ediff-merge-split-window-function #'split-window-horizontally)
-(setq ediff-quit-widened nil)
-
-(defvar dotfiles--pre-ediff-window-config nil)
-
-(defun dotfiles--save-pre-ediff-window-config ()
-  "Save the current window configuration, to be used as an ediff pre-setup hook."
-  (setq dotfiles--pre-ediff-window-config (current-window-configuration)))
-
-(defun dotfiles--restore-pre-ediff-window-config ()
-  "Restore the current window configuration, to be used as an ediff exit hook."
-  (set-window-configuration dotfiles--pre-ediff-window-config))
-
-(add-hook 'ediff-before-setup-hook #'dotfiles--save-pre-ediff-window-config)
-(add-hook 'ediff-quit-hook #'dotfiles--restore-pre-ediff-window-config)
 
 ;;; printing
 (setq ps-print-color-p 'black-white)
@@ -476,15 +561,6 @@
   (balance-windows)
   (global-display-line-numbers-mode -1))
 
-;; Google C style
-(require 'google-c-style)
-(c-add-style "google" google-c-style)
-
-;;; `imenu'
-(require 'imenu)
-(setq imenu-auto-rescan t)
-(setq imenu-auto-rescan-maxout 6000000)
-
 ;; ssh mode on the top of shell
 (require 'ssh)
 
@@ -508,11 +584,6 @@
 (require 'org-agenda)
 (require 'org-clock)
 (require 'org-capture)
-(define-key global-map "\C-cl" #'org-store-link)
-(define-key global-map "\C-ca" #'org-agenda)
-(define-key global-map "\C-cc" #'org-capture)
-(define-key global-map "\C-c\C-x\C-o" #'org-clock-out)
-(define-key global-map "\C-c\C-x\C-j" #'org-clock-goto)
 (setq org-use-speed-commands t)
 (setq org-log-done t)
 (setq org-default-notes-file main-org-file)
@@ -727,13 +798,6 @@ event of an error or nonlocal exit."
 (advice-add 'org-mode-flyspell-verify :before-while
             #'dotfiles--org-mode-flyspell-verify-disable-for-org-crypt)
 
-(defun my-secrets ()
-  "Open my secrets."
-  (interactive)
-  (find-file secrets-org-file)
-  (org-decrypt-entries))
-
-(global-set-key (kbd "<f8>") #'my-secrets)
 
 ;; A hack, it is surprising no official function for this exists. But then
 ;; again, I need to `string-trim' it too.
@@ -790,52 +854,6 @@ Created: %U
 
 (require 'org-roam-db)
 (org-roam-db-autosync-mode)
-
-(global-set-key (kbd "C-c n f") #'org-roam-node-find)
-
-;;; Solarized-dark color theme
-(load-theme 'solarized-dark t)
-
-;;; Magit
-(require 'magit)
-(global-set-key (kbd "C-x g") #'magit-status)
-
-(setq magit-display-buffer-function
-      #'magit-display-buffer-same-window-except-diff-v1)
-(setq magit-status-goto-file-position t)
-(setq magit-diff-refine-hunk t)
-(setq magit-process-popup-time 10)
-
-;; Magit "integration" with VC
-(setq vc-handled-backends (delq 'Git vc-handled-backends))
-
-(defun dotfiles--turn-off-size-indication-mode ()
-  "Turn off function `size-indication-mode' unconditionally."
-  (size-indication-mode -1))
-
-(add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
-
-;;; git-gutter
-(require 'git-gutter)
-(setq git-gutter:update-interval 0.02)
-
-;;; git-gutter-fringe
-(require 'git-gutter-fringe)
-
-(define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
-(define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
-(define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom)
-
-(global-git-gutter-mode +1)
-
-;; Disable git-gutter-fringe over TRAMP. Not the best option to replace an
-;; internal function but oh well. Not much to be gained by advising neither.
-(defun git-gutter--turn-on ()
-  "Upstream git-gutter--turn-on replacement to disable git-gutter for TRAMP."
-  (when (and (buffer-file-name)
-             (not (file-remote-p (buffer-file-name)))
-             (not (memq major-mode git-gutter:disabled-modes)))
-    (git-gutter-mode +1)))
 
 ;;; Wakatime
 (require 'wakatime-mode)
@@ -978,13 +996,6 @@ CANDIDATES is the list of candidates."
 (setq helm-list-directory-function #'helm-list-dir-external)
 ;; So that `helm-imenu' shows everything for big source files.
 (setq helm-candidate-number-limit nil)
-(global-set-key (kbd "M-x") #'helm-M-x)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-(global-set-key (kbd "M-y") #'helm-show-kill-ring)
-(global-set-key (kbd "C-x b") #'helm-mini)
-(substitute-key-definition #'apropos-command #'helm-apropos
-                           (current-global-map))
 (helm-mode 1)
 
 ;; helm-buffers
@@ -1018,7 +1029,6 @@ CANDIDATES is the list of candidates."
 ;; with `helm-dash'. If it becomes too annoying, look into dash-at-point instead.
 (require 'helm-dash)
 (setq helm-dash-browser-func 'eww)
-(define-key global-map (kbd "<C-f1>") #'helm-dash-at-point)
 ;; TODO(laurynas): `thing-at-point' at "std::foo" returns "foo" whereas for
 ;; `helm-dash' std:: prefix would be useful too.
 
@@ -1069,11 +1079,6 @@ CANDIDATES is the list of candidates."
 ;;; flyspell-correct-helm nor helm-flyspell replace ispell-word.
 
 ;;; TODO(laurynas): integrate Helm with rg?
-
-;;;; xref
-;; Do not initialize `xref-backend-functions' to `etags--xref-backend', we never
-;; use etags and let major modes (LSP, elisp) define useful backends themselves.
-(remove-hook 'xref-backend-functions #'etags--xref-backend)
 
 ;;;; lsp-mode
 (require 'lsp-mode)
@@ -1283,9 +1288,6 @@ CANDIDATES is the list of candidates."
 (add-hook 'lsp-after-uninitialized-functions
           #'dotfiles--lsp-unbind-helm-lsp-workspace-symbol)
 
-(define-key global-map [remap xref-find-apropos]
-  #'helm-lsp-global-workspace-symbol)
-
 ;;; lsp-mode integration with which-key
 (defun dotfiles--lsp-enable-which-key ()
   "Enable `lsp-mode' integration with `which-key' for all major modes."
@@ -1313,25 +1315,6 @@ CANDIDATES is the list of candidates."
 (add-to-list 'auto-mode-alist '("/.clang-tidy\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("/.clangd\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("/.oclint\\'" . yaml-mode))
-
-;;; aggressive-indent-mode
-(require 'aggressive-indent)
-(setq aggressive-indent-comments-too t)
-(global-aggressive-indent-mode 1)
-(add-to-list 'aggressive-indent-excluded-modes #'help-mode)
-(add-to-list 'aggressive-indent-excluded-modes #'Info-mode)
-(add-to-list 'aggressive-indent-excluded-modes #'magit-status-mode)
-(add-to-list 'aggressive-indent-excluded-modes #'org-agenda-mode)
-(add-to-list 'aggressive-indent-excluded-modes #'grep-mode)
-;; Incompatible (corrupts buffer) and redundant anyway with LSP server-provided
-;; formatting
-(add-to-list 'aggressive-indent-excluded-modes #'c-mode)
-(add-to-list 'aggressive-indent-excluded-modes #'c++-mode)
-(require 'term)
-(add-to-list 'aggressive-indent-excluded-modes #'term-mode)
-(add-to-list 'aggressive-indent-excluded-modes #'package-menu-mode)
-;; https://github.com/Malabarba/aggressive-indent-mode/issues/140
-(add-to-list 'aggressive-indent-excluded-modes #'makefile-bsdmake-mode)
 
 ;;; projectile
 (require 'projectile)
@@ -1466,7 +1449,6 @@ with a prefix ARG."
 
 ;;; deadgrep. Alternatives: rg.el, ripgrep.el, counsel/helm, etc.
 (require 'deadgrep)
-(global-set-key (kbd "<f5>") #'deadgrep)
 
 ;; wgrep-like bindings for deadgrep
 (define-key deadgrep-mode-map (kbd "C-c C-p") #'deadgrep-edit-mode)
@@ -1475,21 +1457,6 @@ with a prefix ARG."
 ;;; wgrep
 (require 'wgrep)
 (setq wgrep-auto-save-buffer t)
-
-;;; `beginend'
-(require 'beginend)
-(beginend-global-mode)
-
-;;; beacon
-(require 'beacon)
-(setq beacon-blink-when-window-scrolls nil)
-(setq beacon-blink-when-window-changes t)
-(setq beacon-blink-when-point-moves-vertically nil)
-(setq beacon-blink-when-point-moves-horizontally nil)
-(setq beacon-blink-when-focused t)
-(setq beacon-blink-duration 0.2)
-(setq beacon-blink-delay 0.2)
-(beacon-mode)
 
 ;;; keyfreq
 (require 'keyfreq)
@@ -1528,14 +1495,6 @@ with a prefix ARG."
 (require 'info-colors)
 (add-hook 'Info-selection-hook #'info-colors-fontify-node)
 
-;;; `tree-sitter'
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
-
-(global-tree-sitter-mode)
-
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-
 ;;;; Rust
 ;;; `rust-mode'
 (require 'rust-mode)
@@ -1548,15 +1507,6 @@ with a prefix ARG."
 
 ;;; `rustic'
 (require 'rustic)
-
-;;; `prism'
-(require 'prism)
-(add-hook 'c-mode-common-hook #'prism-mode)
-(add-hook 'emacs-lisp-mode-hook #'prism-mode)
-(add-hook 'rust-mode-hook #'prism-mode)
-
-(add-hook 'python-mode-hook #'prism-whitespace-mode)
-(add-hook 'yaml-mode #'prism-whitespace-mode)
 
 ;;;; Upgrade helper
 (defun my-recompile-packages ()

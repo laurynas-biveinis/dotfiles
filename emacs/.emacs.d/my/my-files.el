@@ -2,14 +2,15 @@
 
 ;;; Commentary:
 
-;; This configures visiting, saving, backups, file management, and everything
-;; else related to files.
+;; This configures visiting, saving, backups, file management, TRAMP remote
+;; access, and everything else related to files.
 
 ;;; Code:
 
 ;;; Visiting files
 
-(setq enable-remote-dir-locals t)
+(setq enable-remote-dir-locals t
+      delete-by-moving-to-trash t)
 
 (defun dotfiles--mark-new-files-as-modified ()
   "Treat new (empty) files as modified."
@@ -71,6 +72,28 @@
 
 (require 'wdired)
 (setq wdired-allow-to-change-permissions t)
+
+;;; TRAMP
+(require 'tramp)
+;; The default level 3 is too noisy with showing each file shipped
+(setq tramp-verbose 2)
+;; Not sure I care about scp overhead in 2020. Also, maybe this will help with
+;; duplicated sshx/scpx paths in lsp-mode cache.
+(require 'tramp-sh)
+(setq tramp-copy-size-limit nil)
+(setq tramp-default-method "scpx")
+(setq remote-file-name-inhibit-cache t)
+
+;; "Integration" with `vc': I only use git on remote hosts, handled by Magit,
+;; thus disable VC over TRAMP
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+
+;; "Integration" with `epa': avoid choking trying to gpg-decrypt non-encrypted
+;; ~/.authinfo.gpg.
+(setq tramp-completion-use-auth-sources nil)
 
 (provide 'my-files)
 ;;; my-files.el ends here
