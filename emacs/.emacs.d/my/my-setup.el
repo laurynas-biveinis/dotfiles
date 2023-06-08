@@ -119,11 +119,6 @@
 
 (global-undo-tree-mode)
 
-;;; Completion at point
-(setq completion-styles '(flex)
-      ;; Remove the default `tags-completion-at-point', I never use tags.
-      completion-at-point-functions nil)
-
 ;;; Navigation
 (setq scroll-error-top-bottom t)
 
@@ -304,8 +299,7 @@
 
 ;;; Misc settings
 
-(setq tab-always-indent 'complete  ;; If already indented, complete
-      history-delete-duplicates t
+(setq history-delete-duplicates t
       read-process-output-max (* 1024 1024)
       switch-to-prev-buffer-skip 'this
       next-error-message-highlight t
@@ -387,6 +381,54 @@
              (not (memq major-mode git-gutter:disabled-modes)))
     (git-gutter-mode +1)))
 
+;;; Structured format file editing
+
+;; XML
+(require 'nxml-mode)
+(setq nxml-slash-auto-complete-flag t)  ;; Autocomplete closing tags
+
+;; SSH configuration
+(add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
+(add-hook 'ssh-config-mode-hook #'dotfiles--enable-trailing-whitespace)
+(add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
+
+;; YAML
+(add-to-list 'auto-mode-alist '("/.clang-format\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/.clang-tidy\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/.clangd\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/.oclint\\'" . yaml-mode))
+
+;; `prism'
+(require 'prism)
+(add-hook 'c-mode-common-hook #'prism-mode)
+(add-hook 'emacs-lisp-mode-hook #'prism-mode)
+(add-hook 'rust-mode-hook #'prism-mode)
+
+(add-hook 'python-mode-hook #'prism-whitespace-mode)
+(add-hook 'yaml-mode #'prism-whitespace-mode)
+
+;;; Syntax checking
+
+;; The syntax checker is `flycheck'. 26.1+ flymake would work too.
+(require 'flycheck)
+(setq flycheck-global-modes '(not org-agenda-mode vterm-mode erc-mode))
+(setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc
+                                                       c/c++-cppcheck))
+(setq flycheck-check-syntax-automatically '(save idle-change idle-buffer-switch
+                                                 new-line mode-enabled))
+(setq flycheck-buffer-switch-check-intermediate-buffers t)
+
+(global-flycheck-mode)
+(setq flycheck-emacs-lisp-load-path 'inherit)
+
+;; `flycheck-color-mode'
+(require 'flycheck-color-mode-line)
+(add-hook 'flycheck-mode-hook #'flycheck-color-mode-line-mode)
+
+;; `flycheck-status-emoji-mode'
+(require 'flycheck-status-emoji)
+(flycheck-status-emoji-mode)
+
 ;;; Programming
 
 ;; Grand Unified Debugger
@@ -403,15 +445,6 @@
 
 (global-tree-sitter-mode)
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-
-;; `prism'
-(require 'prism)
-(add-hook 'c-mode-common-hook #'prism-mode)
-(add-hook 'emacs-lisp-mode-hook #'prism-mode)
-(add-hook 'rust-mode-hook #'prism-mode)
-
-(add-hook 'python-mode-hook #'prism-whitespace-mode)
-(add-hook 'yaml-mode #'prism-whitespace-mode)
 
 ;; Compilation
 (require 'compile)
@@ -453,22 +486,16 @@
 (require 'google-c-style)
 (c-add-style "google" google-c-style)
 
-;;; Structured format file editing
+;; `flycheck-google-cpplint'
+(require 'flycheck-google-cpplint)
+;; TODO(laurynas): it can be enabled without LSP as well, but there is no C/C++
+;; checker chain in that case.
+(defun dotfiles--lsp-flycheck-enable-cpplint ()
+  "Enable cpplint for C and C++ buffers under LSP."
+  (when (derived-mode-p 'c-mode 'c++-mode)
+    (flycheck-add-next-checker 'lsp 'c/c++-googlelint)))
 
-;; XML
-(require 'nxml-mode)
-(setq nxml-slash-auto-complete-flag t)  ;; Autocomplete closing tags
-
-;; SSH configuration
-(add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
-(add-hook 'ssh-config-mode-hook #'dotfiles--enable-trailing-whitespace)
-(add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
-
-;; YAML
-(add-to-list 'auto-mode-alist '("/.clang-format\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("/.clang-tidy\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("/.clangd\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("/.oclint\\'" . yaml-mode))
+(add-hook 'lsp-after-open-hook #'dotfiles--lsp-flycheck-enable-cpplint)
 
 ;;; Shell and terminal emulation
 
@@ -534,230 +561,7 @@
 
 (require 'my-org)
 
-;;; Wakatime
-(require 'wakatime-mode)
-(global-wakatime-mode)
-
-;;; ActivityWatch
-(require 'activity-watch-mode)
-(global-activity-watch-mode)
-
-;;; Flycheck. 26.1+ flymake works too.
-(require 'flycheck)
-(setq flycheck-global-modes '(not org-agenda-mode vterm-mode erc-mode))
-(setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc
-                                                       c/c++-cppcheck))
-(setq flycheck-check-syntax-automatically '(save idle-change idle-buffer-switch
-                                                 new-line mode-enabled))
-(setq flycheck-buffer-switch-check-intermediate-buffers t)
-
-(global-flycheck-mode)
-(setq flycheck-emacs-lisp-load-path 'inherit)
-
-;; flycheck-color-mode
-(require 'flycheck-color-mode-line)
-(add-hook 'flycheck-mode-hook #'flycheck-color-mode-line-mode)
-
-;; `flycheck-google-cpplint'
-(require 'flycheck-google-cpplint)
-;; TODO(laurynas): it can be enabled without LSP as well, but there is no C/C++
-;; checker chain in that case.
-(defun dotfiles--lsp-flycheck-enable-cpplint ()
-  "Enable cpplint for C and C++ buffers under LSP."
-  (when (derived-mode-p 'c-mode 'c++-mode)
-    (flycheck-add-next-checker 'lsp 'c/c++-googlelint)))
-
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-flycheck-enable-cpplint)
-
-;; `flycheck-status-emoji-mode'
-(require 'flycheck-status-emoji)
-(flycheck-status-emoji-mode)
-
-;;; Company mode
-(require 'company)
-(add-hook 'after-init-hook #'global-company-mode)
-
-;; Remove `company-semantic', `company-bbdb', `company-eclim', `company-clang',
-;; `company-xcode', `company-oddmuse', (`company-gtags', `company-etags'), and
-;; `company-dabbrev' from company backends.
-(setq company-backends '(company-capf company-files
-                                      (company-dabbrev-code company-keywords)))
-
-(setq company-global-modes '(not Info-mode help-mode magit-status-mode
-                                 org-agenda-mode grep-mode package-menu-mode
-                                 vterm-mode))
-
-(setq company-abort-manual-when-too-short t)
-(setq company-idle-delay 0.1)
-(setq company-minimum-prefix-length 1)
-(setq company-tooltip-idle-delay .3)
-(setq company-selection-wrap-around t)
-
-;;; company-box
-;; I would like to use it, but solarized dark theme and company-box are not
-;; integrated, resulting in too bright highlights. Maybe I will fix it myself
-;; later.
-;; (require 'setup-company-box)
-
-;;; company-quickhelp-mode
-;; I would like to use it, but pos-tip results in ugly tooltips on macOS:
-;; https://github.com/pitkali/pos-tip/issues/11.
-;; (require 'setup-company-quickhelp)
-
-;;;; Helm
-
-;;; helm-icons
-(require 'helm-icons)
-(setq helm-icons-provider 'all-the-icons)
-(helm-icons-enable)
-
-;; Workaround https://github.com/yyoncho/helm-icons/issues/16 (Bringing up
-;; helm-buffers-list breaks when using all-the-icons provider.)
-
-(defun dotfiles--helm-icons--get-icon (file)
-  "Get icon for FILE."
-  (cond ((eq helm-icons-provider 'all-the-icons)
-         (require 'all-the-icons)
-         (concat
-          (or (cond ((not (stringp file)) (all-the-icons-octicon "gear"))
-                    ((or
-                      (member (f-base file) '("." ".."))
-                      (f-dir? file))
-                     (all-the-icons-octicon "file-directory")))
-              (all-the-icons-icon-for-file file))
-          " "))
-        ((eq helm-icons-provider 'treemacs)
-         (helm-icons--treemacs-icon file))))
-
-(advice-add #'helm-icons--get-icon :override #'dotfiles--helm-icons--get-icon)
-
-(defun dotfiles--helm-icons--get-icon-for-mode (mode)
-  "Get icon for MODE.
-First it will use the customized helm-icons-mode->icon to resolve the icon,
-otherwise it tries to use the provider."
-  (or (-some->> (assoc major-mode helm-icons-mode->icon)
-        (cl-rest)
-        helm-icons--get-icon)
-      (cond ((eq helm-icons-provider 'all-the-icons)
-             (-let ((icon (all-the-icons-icon-for-mode mode)))
-               (when (stringp icon) (concat icon " "))))
-            (t nil))))
-
-
-(defun dotfiles--helm-icons-buffers-add-icon (candidates _source)
-  "Add icon to buffers source.
-CANDIDATES is the list of candidates."
-  (-map (-lambda ((display . buffer))
-          (cons (concat
-                 (with-current-buffer buffer
-                   (or (dotfiles--helm-icons--get-icon-for-mode major-mode)
-                       (-some->> (buffer-file-name)
-                         helm-icons--get-icon)
-                       (helm-icons--get-icon 'fallback)))
-                 display)
-                buffer))
-        candidates))
-
-(advice-add #'helm-icons-buffers-add-icon :override
-            #'dotfiles--helm-icons-buffers-add-icon)
-
-
-;;; Core
-(require 'helm-config)
-(require 'helm)
-(require 'helm-files)
-(require 'helm-for-files)
-(setq helm-split-window-inside-p t)
-(setq helm-echo-input-in-header-line t)
-(setq helm-move-to-line-cycle-in-source t)
-(setq helm-ff-search-library-in-sexp t)
-(setq helm-net-prefer-curl t)
-(setq helm-list-directory-function #'helm-list-dir-external)
-;; So that `helm-imenu' shows everything for big source files.
-(setq helm-candidate-number-limit nil)
-(helm-mode 1)
-
-;; helm-buffers
-(require 'helm-buffers)
-(setq helm-buffers-favorite-modes '(text-mode))
-
-;; helm-autoresize-mode
-(helm-autoresize-mode)
-
-;; Helm integration with recentf
-(setq helm-ff-file-name-history-use-recentf t)
-(setq helm-recentf-fuzzy-match t)
-
-;;; helm-descbinds
-(require 'helm-descbinds)
-(helm-descbinds-mode)
-
-;;; helm-imenu
-(require 'helm-imenu)
-(setq helm-imenu-fuzzy-match t)
-
-;;; helm-grep
-(require 'helm-grep)
-(setq helm-grep-default-command "grep --color-always -d skip %e -n%cH -e %p %f")
-(setq helm-grep-default-recurse-command
-      "grep --color=always -d recurse %e -n%cH -e %p %f")
-(setq helm-grep-file-path-style 'relative)
-
-;;; helm-dash
-;; It's a shame Man_Pages documentation set is a dummy one and cannot be browsed
-;; with `helm-dash'. If it becomes too annoying, look into dash-at-point instead.
-(require 'helm-dash)
-(setq helm-dash-browser-func 'eww)
-;; TODO(laurynas): `thing-at-point' at "std::foo" returns "foo" whereas for
-;; `helm-dash' std:: prefix would be useful too.
-
-;; helm-dash integration with sh-mode
-(defun dotfiles--helm-dash-sh-mode-hook ()
-  "Integrate `helm-dash' with `sh-mode'."
-  ;; We do not want to have (defvar dash-docs-docsets), it should be a local
-  ;; variable only
-  (with-suppressed-warnings ((free-vars dash-docs-docsets))
-    (setq-local dash-docs-docsets '("Bash"))))
-(add-hook 'sh-mode-hook #'dotfiles--helm-dash-sh-mode-hook)
-
-;; helm-dash integration with c-mode
-(defun dotfiles--helm-dash-c-mode-hook ()
-  "Integrate `helm-dash' with `c-mode'.."
-  (with-suppressed-warnings ((free-vars dash-docs-docsets))
-    (setq-local dash-docs-docsets '("C"))))
-(add-hook 'c-mode-hook #'dotfiles--helm-dash-c-mode-hook)
-
-;; helm-dash integration with c++-mode
-(defun dotfiles--helm-dash-c++-mode-hook ()
-  "Integrate `helm-dash' with `c++-mode'.."
-  (with-suppressed-warnings ((free-vars dash-docs-docsets))
-    (setq-local dash-docs-docsets '("Boost" "C" "C++" "CMake"))))
-(add-hook 'c++-mode-hook #'dotfiles--helm-dash-c++-mode-hook)
-
-;; helm-dash integration with emacs-lisp-mode
-(defun dotfiles--helm-dash-emacs-lisp-mode-hook ()
-  "Integrate `helm-dash' with `emacs-lisp-mode'.."
-  (with-suppressed-warnings ((free-vars dash-docs-docsets))
-    (setq-local dash-docs-docsets '("Emacs Lisp"))))
-(add-hook 'emacs-lisp-mode-hook #'dotfiles--helm-dash-emacs-lisp-mode-hook)
-
-;; helm-dash integration with markdown-mode
-(defun dotfiles--helm-dash-markdown-mode-hook ()
-  "Integrate `helm-dash' with `markdown-mode'.."
-  (with-suppressed-warnings ((free-vars dash-docs-docsets))
-    (setq-local dash-docs-docsets '("Markdown"))))
-(add-hook 'markdown-mode-hook #'dotfiles--helm-dash-markdown-mode-hook)
-
-;;; helm-org integration
-(require 'helm-mode)
-(require 'helm-org)
-(setq helm-org-headings-fontify t)
-(setq helm-org-format-outline-path t)
-
-;;; TODO(laurynas): integrate Helm with flyspell? Neither flyspell-correct /
-;;; flyspell-correct-helm nor helm-flyspell replace ispell-word.
-
-;;; TODO(laurynas): integrate Helm with rg?
+(require 'my-complete)
 
 ;;;; lsp-mode
 (require 'lsp-mode)
@@ -1189,6 +993,14 @@ with a prefix ARG."
 (setq calendar-latitude 54.7)
 (setq calendar-longitude 25.3)
 (setq calendar-location-name "Vilnius, Lithuania")
+
+;;; Features: Wakatime
+(require 'wakatime-mode)
+(global-wakatime-mode)
+
+;;; Features: ActivityWatch
+(require 'activity-watch-mode)
+(global-activity-watch-mode)
 
 ;;; Utilities
 
