@@ -125,14 +125,15 @@ with a prefix ARG."
   (let ((project-root-path (projectile-acquire-root)))
     (projectile-with-default-dir project-root-path
       (projectile-kill-buffers)
-      (let ((buffers (projectile-project-buffers project-root-path)))
-        (when (null buffers)
-          (projectile-remove-known-project project-root-path)
-          ;; TODO(laurynas): check gitrmworktree result code before removing the
-          ;; project from the project list.
-          (shell-command (concat "gitrmworktree " project-root-path))
-          ;; TODO(laurynas): remove the project from treemacs
-          (lsp-workspace-folders-remove project-root-path))))))
+      (when (null (projectile-project-buffers))
+        (let ((grmwt-ret-code
+               (shell-command (concat "gitrmworktree " project-root-path))))
+          (if (= grmwt-ret-code 0)
+              (progn
+                (projectile-remove-known-project project-root-path)
+                ;; TODO(laurynas): remove the project from treemacs
+                (lsp-workspace-folders-remove project-root-path))
+            (user-error "'gitrmworktree %s' failed" project-root-path)))))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
 
