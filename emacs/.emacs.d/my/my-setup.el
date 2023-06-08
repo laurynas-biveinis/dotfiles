@@ -567,10 +567,6 @@
 
 (require 'my-project)
 
-;;; all-the-icons-dired
-(require 'all-the-icons-dired)
-(add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
-
 ;;; deadgrep. Alternatives: rg.el, ripgrep.el, counsel/helm, etc.
 (require 'deadgrep)
 
