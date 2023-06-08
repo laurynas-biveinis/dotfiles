@@ -6,6 +6,10 @@
 ;; which is also integrated with Helm through `helm-projectile', extended with
 ;; project reconfiguration command for CMake projects, and integrated with my
 ;; dotfiles "gitrmworktree" utility.
+;;
+;; Like in the rest of configuration, all
+;; features are assumed to exist, because this is a part of my dotfiles repo
+;; where the needed packages are committed too.
 
 ;;; Code:
 
@@ -131,8 +135,11 @@ with a prefix ARG."
           (if (= grmwt-ret-code 0)
               (progn
                 (projectile-remove-known-project project-root-path)
-                ;; TODO(laurynas): remove the project from treemacs
-                (lsp-workspace-folders-remove project-root-path))
+                ;; TODO(laurynas): remove the project from treemacs. ChatGPT
+                ;; suggested to use `tremacs-remove-project-from-workspace', but
+                ;; I am not sure this is the right function.
+                (lsp-workspace-folders-remove project-root-path)
+                )
             (user-error "'gitrmworktree %s' failed" project-root-path)))))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
