@@ -10,20 +10,22 @@
 ;;; Code:
 
 (require 'projectile)
-(setq projectile-completion-system 'helm)
-(setq projectile-switch-project-action #'helm-projectile)
-(setq projectile-use-git-grep t)
-(setq projectile-enable-cmake-presets t)
-;; Steal s-p from `ns-print-buffer'. I never print buffers
-(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-;; Save mode line space
-(setq projectile-mode-line-prefix " ")
-;; Only use xref for cross-references
-(setq projectile-tags-backend 'xref)
+
+(setq projectile-completion-system 'helm
+      projectile-switch-project-action #'helm-projectile
+      projectile-use-git-grep t
+      projectile-enable-cmake-presets t
+      projectile-mode-line-prefix " "  ;; Save mode line space
+      projectile-tags-backend 'xref)  ;; Only use `xref' for cross-references
+
 ;; Exclude some more modes from projectile
 (add-to-list 'projectile-globally-ignored-modes "lisp-interaction-mode")
 (add-to-list 'projectile-globally-ignored-modes "org-agenda-mode")
 (add-to-list 'projectile-globally-ignored-modes "package-menu-mode")
+
+;; Steal s-p from `ns-print-buffer'. I never print buffers
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+
 (projectile-mode +1)
 
 (require 'helm-projectile)
