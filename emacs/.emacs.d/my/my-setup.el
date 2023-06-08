@@ -567,22 +567,6 @@
 
 (require 'my-project)
 
-;;; deadgrep. Alternatives: rg.el, ripgrep.el, counsel/helm, etc.
-(require 'deadgrep)
-
-;; wgrep-like bindings for deadgrep
-(define-key deadgrep-mode-map (kbd "C-c C-p") #'deadgrep-edit-mode)
-(define-key deadgrep-edit-mode-map (kbd "C-c C-e") #'deadgrep-mode)
-
-;;; wgrep
-(require 'wgrep)
-(setq wgrep-auto-save-buffer t)
-
-;;; keyfreq
-(require 'keyfreq)
-(keyfreq-mode 1)
-(keyfreq-autosave-mode 1)
-
 ;;; which-key
 (require 'which-key)
 (which-key-mode)
@@ -683,6 +667,22 @@
   (set-face-attribute 'default nil :height screen-sharing-default-height)
   (balance-windows)
   (global-display-line-numbers-mode -1))
+
+;;; Statistics and internals
+
+;; `keyfreq'
+(require 'keyfreq)
+(setq keyfreq-excluded-commands
+      '(self-insert-command next-line lsp-ui-doc--handle-mouse-movement
+                            org-self-insert-command previous-line
+                            magit-next-line gud-tooltip-mouse-motion left-char
+                            org-delete-backward-char isearch-printing-char
+                            magit-previous-line right-char forward-word
+                            delete-backward-char scroll-up-command
+                            c-electric-backspace org-agenda-next-line
+                            mouse-drag-region mac-mwheel-scroll))
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
 
 ;;; Finish initialization
 ;; Restore temporarily swapped for startup duration variables

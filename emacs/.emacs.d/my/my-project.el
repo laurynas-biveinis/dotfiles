@@ -5,7 +5,7 @@
 ;; Configure everything related to projects. The core package is `projectile',
 ;; which is also integrated with Helm through `helm-projectile', extended with
 ;; project reconfiguration command for CMake projects, and integrated with my
-;; dotfiles "gitrmworktree" utility.
+;; dotfiles "gitrmworktree" utility. Other packages are `deadgrep' and `wgrep'.
 ;;
 ;; Like in the rest of configuration, all
 ;; features are assumed to exist, because this is a part of my dotfiles repo
@@ -143,6 +143,16 @@ with a prefix ARG."
             (user-error "'gitrmworktree %s' failed" project-root-path)))))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
+
+;; `deadgrep' alternatives: rg.el, ripgrep.el, counsel/helm, etc.
+(require 'deadgrep)
+
+;; wgrep-like bindings for deadgrep
+(define-key deadgrep-mode-map (kbd "C-c C-p") #'deadgrep-edit-mode)
+(define-key deadgrep-edit-mode-map (kbd "C-c C-e") #'deadgrep-mode)
+
+(require 'wgrep)
+(setq wgrep-auto-save-buffer t)
 
 (provide 'my-project)
 ;;; my-project.el ends here
