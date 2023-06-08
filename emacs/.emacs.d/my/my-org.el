@@ -2,7 +2,9 @@
 
 ;;; Commentary:
 
-;; This configures Org, `org-roam', and everything related.
+;; This configures Org, `org-roam', and everything related. Expects that
+;; `org-tag-alist', `org-agenda-custom-commands', `org-capture-templates',
+;; `org-todo-keywords', `org-roam-capture-templates' are set elsewhere.
 
 ;;; Code:
 
@@ -17,115 +19,85 @@
 (setq org-enforce-todo-checkbox-dependencies t)
 
 (require 'org)
-(setq org-M-RET-may-split-line '((default . nil)))
 (require 'org-element)
-(setq org-enforce-todo-dependencies t)
 (require 'org-keys)
-(setq org-return-follows-link t)
-;; Common
 (require 'org-agenda)
 (require 'org-clock)
 (require 'org-capture)
-(setq org-use-speed-commands t
-      org-log-done t
-      org-default-notes-file main-org-file)
-;; `org-mobile'
 (require 'org-mobile)
-(setq org-mobile-inbox-for-pull main-org-file
-      org-ctrl-k-protect-subtree t
+(require 'org-habit)
+(require 'org-crypt)
+(require 'org-id)
+(require 'org-sticky-header)
+(require 'org-roam-node)
+
+;;; Setup hook: keyboard shortcuts and fill column setting
+(defun dotfiles--org-mode-hook ()
+  "My configuration hook for 'org-mode'."
+  (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
+  (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
+  (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+  (dotfiles--set-fill-column 85))
+(add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
+
+;;; Editing, navigation, folding
+(setq org-use-speed-commands t
+      org-M-RET-may-split-line '((default . nil))
       org-support-shift-select t
+      org-special-ctrl-a/e t
+      org-special-ctrl-k t
+      org-ctrl-k-protect-subtree t
       org-yank-adjusted-subtrees t
-      org-fold-catch-invisible-edits 'smart
-      org-fontify-todo-headline t
+      org-cycle-separator-lines 0)
+
+;;; Saving
+(add-hook 'auto-save-hook #'org-save-all-org-buffers)  ;; Save automatically
+
+;;; Display
+(setq org-fontify-todo-headline t
       org-fontify-done-headline t
-      org-adapt-indentation nil)
+      org-tags-column -85  ;; TODO(laurynas): compute automatically
+      org-habit-graph-column 50)  ;; TODO(laurynas): compute automatically
+(add-hook 'org-mode-hook #'org-sticky-header-mode)
 
-;; Tags
-(setq org-tag-alist '((:startgroup . nil)
-                      ("@agenda" . ?a)
-                      ("@call" . ?t)
-                      ("@checklist" . ?l)
-                      ("@computer" . ?c)
-                      ("@home" . ?h)
-                      ("@internet" . ?i)
-                      ("@phone" . ?f)
-                      ("@vilnius" . ?v)
-                      ("@waitingfor" . ?w)
-                      ("@watchlisten" . ?z)
-                      (:endgroup . nil)
-                      ("project" . ?p)
-                      ("somedaymaybe" . ?s)
-                      ("crypt" . ?k)))
+;;; TODO state changes
+(setq org-enforce-todo-dependencies t
+      org-use-fast-todo-selection 'expert)
 
-(setq org-use-tag-inheritance '("somedaymaybe" "@watchlisten")
-      org-agenda-tags-todo-honor-ignore-options t
-      org-fast-tag-selection-single-key 'expert
-      org-agenda-dim-blocked-tasks nil) ;; Build agenda buffers faster
+;;; Tags
+(setq org-fast-tag-selection-single-key 'expert)
 
-;; Agendas
-(setq org-agenda-custom-commands
-      '(("c" "Calls" tags-todo "@call-somedaymaybe/!TODO")
-        ("p" "Projects" tags-todo "project-somedaymaybe/!TODO")
-        ("l" "Checklists" tags "@checklist-somedaymaybe")
-        ("k" "Someday/maybe" tags-todo "somedaymaybe+LEVEL=2"
-         ((org-agenda-dim-blocked-tasks nil)))
-        ("v" "Vilnius" tags-todo "@vilnius-somedaymaybe/!TODO")
-        ("n" "Non-project tasks" tags-todo "-project-@waitingfor-somedaymaybe/!TODO"
-         ((org-use-tag-inheritance '("project" "somedaymaybe"))))
-        ("A" "Agenda"
-         ((agenda "" nil)
-          (tags-todo "@phone-somedaymaybe|@call-somedaymaybe|@internet-somedaymaybe|@computer-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Common next actions")
-                      (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags-todo "@agenda-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Agendas")
-                      (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags-todo "@home-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Home actions")
-                      (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags-todo "@waitingfor-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Waiting for")
-                      (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags-todo "@vilnius-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Errands")
-                      (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags-todo "@watchlisten-somedaymaybe/!TODO"
-                     ((org-agenda-overriding-header "Watch/listen")
-                      (org-agenda-dim-blocked-tasks 'invisible)))
-          (todo "TIME"
-                ((org-agenda-overriding-header "Time log actions")
-                 (org-agenda-dim-blocked-tasks 'invisible)))
-          (tags "-project/+DONE|+KILL"
-                ((org-agenda-overriding-header "Archivable tasks")
-                 (org-use-tag-inheritance '("project"))))
-          (todo "-@agenda-@phone-@call-@internet-@computer-@home-@watchlisten-@vilnius-@waitingfor-@checklist-project-somedaymaybe"
-                ((org-agenda-overriding-header "Contextless tasks")))))))
-
-(setq org-agenda-start-on-weekday nil
+;;; Agenda
+(setq org-agenda-tags-todo-honor-ignore-options t
+      org-agenda-dim-blocked-tasks nil  ;; Build agenda buffers faster
+      org-agenda-start-on-weekday nil
       org-agenda-skip-deadline-prewarning-if-scheduled t
       org-agenda-skip-scheduled-if-deadline-is-shown t
       org-agenda-skip-deadline-if-done t
       org-agenda-skip-scheduled-if-done t
       org-agenda-todo-ignore-scheduled 'all
       org-agenda-todo-ignore-deadlines 'all
-      org-agenda-todo-ignore-timestamp 'all)
-
-(setq org-agenda-clock-consistency-checks
-      (list
-       :max-duration "6:00"
-       :min-duration "0:00"
-       :max-gap "0:05"
-       :gap-ok-around (list "2:00" "12:30")))
-
-(setq org-agenda-sticky t
+      org-agenda-todo-ignore-timestamp 'all
+      org-agenda-sticky t
       org-agenda-window-setup 'current-window)
 
-;; Scheduling and deadlines
-(setq org-deadline-warning-days 30)
+;;; Logging
+(setq org-log-done 'time)
 
-;; Drawers
+;;; Capture
+(setq org-default-notes-file main-org-file)
 
-;; Clock tables
+;;; Scheduling and deadlines
+(setq org-deadline-warning-days 30
+      org-log-redeadline 'time
+      org-log-reschedule 'time)
+
+;;; Clocking
+(setq org-clock-display-default-range 'untilnow
+      org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+
+;;; Clock tables
 (setq org-clocktable-defaults
       (list
        :maxlevel 99
@@ -137,12 +109,15 @@
        :indent t
        :tcolumns 0))
 
-;; Logging
+;;; Logging
 (setq org-log-into-drawer t
-      org-clock-into-drawer t
       org-closed-keep-when-no-todo t)
 
-;; Refiling
+;;; Linking
+(setq org-return-follows-link t
+      org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+
+;;; Refiling
 (setq org-refile-targets '((org-agenda-files :maxlevel . 9))
       ;; or `'buffer-name' starting with 9.1, not much difference in my setup
       org-refile-use-outline-path 'file
@@ -155,42 +130,36 @@
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function #'dotfiles--org-verify-refile-target)
 
-(setq org-clock-display-default-range 'untilnow
-      org-clock-persist 'history)
-(org-clock-persistence-insinuate)
-(setq org-capture-templates
-      '(("t" "TODO" entry (file+headline main-org-file "Tasks")
-         "** TODO %?\n  %i\n  %a")
-        ("i" "Inbox" entry (file+headline main-org-file "Inbox")
-         "** %?\n  %i\n  %a")
-        ("c" "Current" plain (clock) "" :clock-in :clock-keep)))
-(setq org-todo-keywords
-      '((sequence "WAIT(w!)" "TODO(t!)" "|" "DONE(d!)" "KILL(k!)")
-        (sequence "TIME(l!)" "|")))
+;;; Mobile
+(setq org-mobile-inbox-for-pull main-org-file)
 
-(setq org-todo-keyword-faces
-      '(("WAIT" . (:foreground "OrangeRed" :weight bold))
-        ("TIME" . (:foreground "OrangeRed" :weight bold))
-        ("TODO" . (:foreground "Red" :weight bold))))
+;;; Tables
+(setq org-table-header-line-p t)
 
-(require 'org-habit)
-(setq org-habit-graph-column 50)
+;; A hack, it is surprising no official function for this exists. But then
+;; again, I need to `string-trim' it too.
+(defun my-copy-cell ()
+  "Copy the current org table cell to the kill ring."
+  (interactive nil org-mode)
+  (let ((p (point)))
+    (org-table-copy-region p p))
+  (kill-new (string-trim (caar org-table-clip))))
 
-(setq org-log-redeadline t
-      org-log-reschedule t
-      org-stuck-projects '("+project-somedaymaybe/!TODO" ("TODO") nil "")
-      org-todo-repeat-to-state "TODO"
-      org-use-fast-todo-selection 'expert
-      org-special-ctrl-a/e t
-      org-special-ctrl-k t
-      org-cycle-separator-lines 1
-      ;; TODO(laurynas): compute these columns automatically
-      org-tags-column -85
-      org-agenda-tags-column 'auto
-      org-table-header-line-p t)
+(define-key org-mode-map (kbd "<f7>") #'my-copy-cell)
 
-;;; org-checklist
-;; Comes from org-contrib
+;;; Encryption
+(org-crypt-use-before-save-magic)
+(setq org-crypt-disable-auto-save 'encrypt)
+
+;; Integrate with `flyspell' by disabling it over encrypted blocks
+(defun dotfiles--org-mode-flyspell-verify-disable-for-org-crypt ()
+  "Do not flyspell blocks encrypted by `org-crypt'."
+  (not (org-at-encrypted-entry-p)))
+(advice-add 'org-mode-flyspell-verify :before-while
+            #'dotfiles--org-mode-flyspell-verify-disable-for-org-crypt)
+
+
+;;; `org-checklist' from org-contrib
 (require 'org-checklist)
 
 ;; Make C-c C-c on a checkbox item check it and move point to the next unchecked
@@ -227,62 +196,10 @@ event of an error or nonlocal exit."
 (advice-add #'org-ctrl-c-ctrl-c   :around #'dotfiles--org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'dotfiles--org-checkbox-toggle-advice)
 
-;; org-mode encryption of selected subtrees
-(require 'org-crypt)
-(org-crypt-use-before-save-magic)
-(setq org-crypt-disable-auto-save 'encrypt)
-
-(defun dotfiles--org-mode-flyspell-verify-disable-for-org-crypt ()
-  "Do not flyspell blocks encrypted by `org-crypt'."
-  (not (org-at-encrypted-entry-p)))
-
-(advice-add 'org-mode-flyspell-verify :before-while
-            #'dotfiles--org-mode-flyspell-verify-disable-for-org-crypt)
-
-
-;; A hack, it is surprising no official function for this exists. But then
-;; again, I need to `string-trim' it too.
-(defun my-copy-cell ()
-  "Copy the current org table cell to the kill ring."
-  (interactive nil org-mode)
-  (let ((p (point)))
-    (org-table-copy-region p p))
-  (kill-new (string-trim (caar org-table-clip))))
-
-(define-key org-mode-map (kbd "<f7>") #'my-copy-cell)
-
-;; org-id
-(require 'org-id)
-(setq org-id-link-to-org-use-id t)
-
-;; Save org buffers automatically
-(add-hook 'auto-save-hook #'org-save-all-org-buffers)
-
-(require 'org-roam-node)
-(defun dotfiles--org-mode-hook ()
-  "My configuration hook for 'org-mode'."
-  (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
-  (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
-  (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
-  (dotfiles--set-fill-column 85))
-
-(setq org-roam-capture-templates
-      '(("d" "default" plain "%?" :target
-         (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}
-Created: %U
-")
-         :unnarrowed t)))
-
-(add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
-
-;; org integration with Helm
+;;; Integration with Helm
 (setq org-outline-path-complete-in-steps nil)
 
-;;; `org-sticky-header'
-(require 'org-sticky-header)
-(add-hook 'org-mode-hook #'org-sticky-header-mode)
-
-;;; org-roam
+;;; `org-roam'
 (setq org-roam-mode-sections
       (list #'org-roam-backlinks-section #'org-roam-reflinks-section
             #'org-roam-unlinked-references-section))
