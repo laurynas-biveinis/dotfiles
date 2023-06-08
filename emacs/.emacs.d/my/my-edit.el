@@ -99,7 +99,7 @@
 (add-to-list 'undo-tree-incompatible-major-modes #'package-menu-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'messages-buffer-mode)
 
-(defun dotfiles--disable-undo-tree-by-name (&optional _print-message)
+(defun dotfiles--disable-undo-tree-by-buffer-name (&optional _print-message)
   "Return nil if the buffer file name is in `dotfiles--no-undo-tree-names'."
   (let ((file-name (buffer-file-name)))
     ;; TODO(laurynas): replace special-casing of suffix and exact match against
@@ -110,7 +110,7 @@
       t)))
 
 (advice-add 'turn-on-undo-tree-mode :before-while
-            #'dotfiles--disable-undo-tree-by-name)
+            #'dotfiles--disable-undo-tree-by-buffer-name)
 
 (global-undo-tree-mode)
 
