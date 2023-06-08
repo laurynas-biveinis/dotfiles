@@ -44,6 +44,10 @@
 (setq iedit-toggle-key-default (kbd "<f6>"))
 (require 'iedit)
 
+;; `grab-mac-link'
+(require 'grab-mac-link)
+(setq grab-mac-link-dwim-favourite-app 'safari)
+
 ;;; Indentation
 
 ;; Indentation can only insert spaces by default. If this ever
@@ -226,6 +230,10 @@
 (setq highlight-indent-guides-delay 0)
 (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 
+;; `info-colors'
+(require 'info-colors)
+(add-hook 'Info-selection-hook #'info-colors-fontify-node)
+
 ;;; isearch
 (setq isearch-lazy-count t
       isearch-yank-on-move 'shift
@@ -271,6 +279,12 @@
 
 ;; Save bookmarks automatically
 (setq bookmark-save-flag 1)
+
+;;; Help
+
+;; `which-key'
+(require 'which-key)
+(which-key-mode)
 
 ;;; UI
 
@@ -497,6 +511,20 @@
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-flycheck-enable-cpplint)
 
+;;; Rust programming
+
+;; `rust-mode'
+(require 'rust-mode)
+
+(defun dotfiles--rust-set-fill-column ()
+  "Set the correct `fill-column' for `rust-mode'."
+  (dotfiles--set-fill-column 100))
+
+(add-hook 'rust-mode-hook #'dotfiles--rust-set-fill-column)
+
+;; `rustic'
+(require 'rustic)
+
 ;;; Shell and terminal emulation
 
 ;; In Shell mode, do not echo passwords
@@ -567,11 +595,22 @@
 
 (require 'my-project)
 
-;;; which-key
-(require 'which-key)
-(which-key-mode)
+;;; Features: `calculator'
+(require 'calculator)
+(setq calculator-electric-mode t)
 
-;;;; calfw
+;;; Features: calendar
+;; `calendar'
+(require 'calendar)
+(require 'solar)
+(setq calendar-week-start-day 1)
+(setq calendar-date-style 'iso)
+;; Vilnius!
+(setq calendar-latitude 54.7)
+(setq calendar-longitude 25.3)
+(setq calendar-location-name "Vilnius, Lithuania")
+
+;; `calfw'
 ;; Workaround warnings stemming from
 ;; https://github.com/kiwanami/emacs-calfw/issues/101 - "Package `cl' is
 ;; obsolete."
@@ -590,41 +629,6 @@
       cfw:fchar-top-right-corner ?┓)
 
 (setq cfw:render-line-breaker #'cfw:render-line-breaker-wordwrap)
-
-;;; `grab-mac-link'
-(require 'grab-mac-link)
-(setq grab-mac-link-dwim-favourite-app 'safari)
-
-;;; `info-colors'
-(require 'info-colors)
-(add-hook 'Info-selection-hook #'info-colors-fontify-node)
-
-;;;; Rust
-;;; `rust-mode'
-(require 'rust-mode)
-
-(defun dotfiles--rust-set-fill-column ()
-  "Set the correct `fill-column' for `rust-mode'."
-  (dotfiles--set-fill-column 100))
-
-(add-hook 'rust-mode-hook #'dotfiles--rust-set-fill-column)
-
-;;; `rustic'
-(require 'rustic)
-
-;;; Features: `calculator'
-(require 'calculator)
-(setq calculator-electric-mode t)
-
-;;; Features: `calendar'
-(require 'calendar)
-(require 'solar)
-(setq calendar-week-start-day 1)
-(setq calendar-date-style 'iso)
-;; Vilnius!
-(setq calendar-latitude 54.7)
-(setq calendar-longitude 25.3)
-(setq calendar-location-name "Vilnius, Lithuania")
 
 ;;; Features: Wakatime
 (require 'wakatime-mode)
@@ -685,15 +689,15 @@
 (keyfreq-autosave-mode 1)
 
 ;;; Finish initialization
+
 ;; Restore temporarily swapped for startup duration variables
 (dolist (handler file-name-handler-alist)
   (add-to-list 'dotfiles--initial-file-name-handler-alist handler))
 (setq file-name-handler-alist dotfiles--initial-file-name-handler-alist)
 
-;;; GC tuning for interactive use.
-
-;; `gcmh'. The setup used to disable GC on entering the minibuffer and to do GC
-;; on frame becoming inactive, but `gcmh' should handle those cases too.
+;; GC tuning for interactive use: `gcmh'. The setup used to disable GC on
+;; entering the minibuffer and to do GC on frame becoming inactive, but `gcmh'
+;; should handle those cases too.
 (require 'gcmh)
 (gcmh-mode)
 
