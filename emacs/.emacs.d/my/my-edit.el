@@ -10,7 +10,8 @@
 ;;; Code:
 
 ;;; Variables and functions defined elsewhere we'll be using
-;; Defined in secrets.el:
+;; Defined in secrets.el: a list of strings of file names for which `undo-tree'
+;; should be disabled.
 (defvar no-undo-tree-file-names)
 
 (setq read-quoted-char-radix 16  ;; Enter quoted chars in hex
