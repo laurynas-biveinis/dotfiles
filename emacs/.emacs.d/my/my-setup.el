@@ -302,7 +302,6 @@
 (setq nxml-slash-auto-complete-flag t)  ;; Autocomplete closing tags
 
 ;; SSH configuration
-(add-hook 'ssh-config-mode-hook #'turn-on-font-lock)
 (add-hook 'ssh-config-mode-hook #'dotfiles--enable-trailing-whitespace)
 (add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
 
