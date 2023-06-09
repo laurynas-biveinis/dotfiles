@@ -44,6 +44,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
                             "-Wno-deprecated-copy-with-dtor")
     MY8033_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
                             "-Wno-deprecated-copy-with-dtor")
+    MY8033_EXTRA=("-DWITH_PROTOBUF=bundled")
 
     MARIA_COMMON=("-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
                   "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
@@ -60,6 +61,7 @@ else
     MY8032_EXTRA_CXX_FLAGS=()
     MY8033_EXTRA_CXX_FLAGS=()
     MY8030_33_EXTRA=()
+    MY8033_EXTRA=()
     MARIA_COMMON=()
 
     FB_COMMON=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
@@ -92,16 +94,14 @@ MARIA_COMMON+=("-DPLUGIN_MROONGA=NO" "-DPLUGIN_CONNECT=NO")
 
 # Version-specific building blocks, descending order
 
-MY8033_EXTRA=()
-
 MY8033_CXX_FLAGS_DEBUG=("${MY8033_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
 MY8033_CXX_FLAGS_RELEASE=("${MY8033_EXTRA_CXX_FLAGS[@]}"
                           "${CXX_FLAGS_RELEASE[@]}")
-MY8033_EXTRA=("-DWITH_RAPIDJSON=bundled" "-DFORCE_COLORED_OUTPUT=ON"
-              "-DCMAKE_CXX_FLAGS=${MY8033_EXTRA_CXX_FLAGS[*]}"
-              "-DCMAKE_C_FLAGS_DEBUG=${MY8033_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8033_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8033_CXX_FLAGS_RELEASE[*]}")
+MY8033_EXTRA+=("-DWITH_RAPIDJSON=bundled" "-DFORCE_COLORED_OUTPUT=ON"
+               "-DCMAKE_CXX_FLAGS=${MY8033_EXTRA_CXX_FLAGS[*]}"
+               "-DCMAKE_C_FLAGS_DEBUG=${MY8033_CXX_FLAGS_DEBUG[*]}"
+               "-DCMAKE_CXX_FLAGS_DEBUG=${MY8033_CXX_FLAGS_DEBUG[*]}"
+               "-DCMAKE_CXX_FLAGS_RELEASE=${MY8033_CXX_FLAGS_RELEASE[*]}")
 unset MY8033_EXTRA_CXX_FLAGS
 unset MY8033_CXX_FLAGS_DEBUG
 unset MY8033_CXX_FLAGS_RELEASE
