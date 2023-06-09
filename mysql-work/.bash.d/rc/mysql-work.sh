@@ -343,7 +343,6 @@ mysql_cmake() {
 }
 
 mysql_build() {
-    git submodule update --init
     mysql_cmake "$@"
     build_dir="$(basename "$PWD")"
     (cd .. && ln -sf "$build_dir/compile_commands.json" .)
