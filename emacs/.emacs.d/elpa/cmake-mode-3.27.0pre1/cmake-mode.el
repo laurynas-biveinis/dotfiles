@@ -1,8 +1,8 @@
 ;;; cmake-mode.el --- major-mode for editing CMake sources
 
 ;; Package-Requires: ((emacs "24.1"))
-;; Package-Version: 3.26.4
-;; Package-Commit: 0926ed1f69aee7fdb454e10d9b98016c3dfc4e7e
+;; Package-Version: 3.27.0pre1
+;; Package-Commit: 5b39465ff1eaf8fa5be072cb6a52f53aa1e599a8
 
 ; Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
 ; file Copyright.txt or https://cmake.org/licensing for details.
@@ -374,7 +374,7 @@ optional argument topic will be appended to the argument list."
   (interactive "s")
   (let* ((bufname (if buffer buffer (concat "*CMake" type (if topic "-") topic "*")))
          (buffer  (if (get-buffer bufname) (get-buffer bufname) (generate-new-buffer bufname)))
-         (command (concat cmake-mode-cmake-executable " " type " " topic))
+         (command (concat cmake-mode-cmake-executable " " type " " (if topic (shell-quote-argument topic) topic)))
          ;; Turn of resizing of mini-windows for shell-command.
          (resize-mini-windows nil)
          )
@@ -393,7 +393,7 @@ optional argument topic will be appended to the argument list."
   (interactive "s")
   (let* ((bufname (if buffer buffer (concat "*CMake" type (if topic "-") topic "*")))
          (buffer  (if (get-buffer bufname) (get-buffer bufname) (generate-new-buffer bufname)))
-         (command (concat cmake-mode-cmake-executable " " type " " topic))
+         (command (concat cmake-mode-cmake-executable " " type " " (if topic (shell-quote-argument topic) topic)))
          ;; Turn of resizing of mini-windows for shell-command.
          (resize-mini-windows nil)
          )
