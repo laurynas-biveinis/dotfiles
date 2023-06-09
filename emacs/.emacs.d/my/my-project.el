@@ -168,12 +168,11 @@ with a prefix ARG."
 ;; `deadgrep' alternatives: rg.el, ripgrep.el, counsel/helm, etc.
 (require 'deadgrep)
 
-;; wgrep-like bindings for deadgrep
-(define-key deadgrep-mode-map (kbd "C-c C-p") #'deadgrep-edit-mode)
-(define-key deadgrep-edit-mode-map (kbd "C-c C-e") #'deadgrep-mode)
-
 (require 'wgrep)
 (setq wgrep-auto-save-buffer t)
+
+(require 'wgrep-deadgrep)
+(add-hook 'deadgrep-finished-hook #'wgrep-deadgrep-setup)
 
 (provide 'my-project)
 ;;; my-project.el ends here

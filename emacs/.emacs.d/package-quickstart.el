@@ -494,6 +494,22 @@ Setup wgrep preparation." nil nil)
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-deadgrep-2.3.0/wgrep-deadgrep-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wgrep-deadgrep-2.3.0/wgrep-deadgrep-autoloads.el"))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/wgrep-deadgrep-2.3.0/wgrep-deadgrep-autoloads.el") (car load-path))))
+
+
+
+(autoload 'wgrep-deadgrep-setup "wgrep-deadgrep" "\
+Setup `wgrep-deadgrep' for `deadgrep'." nil nil)
+
+(add-hook 'deadgrep-finished-hook 'wgrep-deadgrep-setup)
+
+(register-definition-prefixes "wgrep-deadgrep" '("wgrep-deadgrep-"))
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/websocket-1.14/websocket-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/websocket-1.14/websocket-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -13003,7 +13019,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color compat with-editor which-key wgrep wgrep-helm websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+       '(yasnippet yaml-mode xterm-color compat with-editor which-key wgrep wgrep-helm wgrep-deadgrep websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
        package-activated-list))
 (progn
   (require 'info)
