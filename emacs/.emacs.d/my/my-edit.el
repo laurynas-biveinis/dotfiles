@@ -92,7 +92,7 @@
 (require 'undo-tree)
 (require 'magit-status)
 (setq undo-tree-history-directory-alist
-      '(("." . (expand-file-name "undo" user-emacs-directory))))
+      `(("." . ,(expand-file-name "undo" user-emacs-directory))))
 (add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'Info-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'grep-mode)
