@@ -208,7 +208,7 @@
                      " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
                      " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
                      " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"
-                     " Habit" " :ARCHIVE:" " activity-watch"))
+                     " Habit" " :ARCHIVE:" " activity-watch" " Async"))
 (rich-minority-mode)
 
 ;;; Misc settings

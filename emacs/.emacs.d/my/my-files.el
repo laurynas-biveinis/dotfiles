@@ -75,6 +75,9 @@
 
 (with-eval-after-load "dired" (load "dired-x"))
 
+(require 'dired-async)
+(dired-async-mode 1)
+
 (require 'wdired)
 (setq wdired-allow-to-change-permissions t)
 
