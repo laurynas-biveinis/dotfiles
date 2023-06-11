@@ -340,6 +340,16 @@
 
 ;; `flycheck-status-emoji-mode'
 (require 'flycheck-status-emoji)
+;; FIXME(laurynas): modeline height jumpy between these
+(setq flycheck-status-emoji-indicator-running ?⧗)
+(setq flycheck-status-emoji-indicator-finished-ok ?✔)
+(setq flycheck-status-emoji-indicator-finished-error ?ⓧ)
+(setq flycheck-status-emoji-indicator-finished-warning ?⚠)
+(setq flycheck-status-emoji-indicator-finished-info ?ℹ)
+(setq flycheck-status-emoji-indicator-no-checker ??)
+(setq flycheck-status-emoji-indicator-errored ?ⓧ)
+(setq flycheck-status-emoji-indicator-interrupted ??)
+(setq flycheck-status-emoji-indicator-suspicious ?⚠)
 (flycheck-status-emoji-mode)
 
 ;;; Programming
