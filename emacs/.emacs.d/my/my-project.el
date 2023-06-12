@@ -150,7 +150,7 @@ with a prefix ARG."
   (let ((project-root-path (projectile-acquire-root)))
     (projectile-with-default-dir project-root-path
       (projectile-kill-buffers)
-      (when (null (projectile-project-buffers))
+      (when (null (projectile-project-buffers project-root-path))
         (let ((grmwt-ret-code
                (shell-command (concat "gitrmworktree " project-root-path))))
           (if (= grmwt-ret-code 0)
