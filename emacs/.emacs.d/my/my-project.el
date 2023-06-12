@@ -70,19 +70,24 @@
   "Discover the build dir and command for a `projectile' project if not set.
 
 The current implementation uses the presence of a compilation database symlink
-in the project root to point to the build directory. If found, sets the
-compilation command too, which depends on my MAKE_J environment variable."
-  (unless (or (local-variable-p 'projectile-project-compilation-dir)
-              (local-variable-p 'projectile-project-compilation-cmd))
-    (let* ((project-root (projectile-project-root))
-           (cdb-path (expand-file-name "compile_commands.json" project-root)))
-      (when (file-symlink-p cdb-path)
-        (let* ((resolved-cdb-path (file-truename cdb-path))
-               (resolved-cdb-dir (file-name-directory resolved-cdb-path)))
-          (setq-local projectile-project-compilation-dir
-                      (file-relative-name resolved-cdb-dir project-root))
-          (setq-local projectile-project-compilation-cmd
-                      (format "make -j%s" (or (getenv "MAKE_J") "1"))))))))
+in the project root (and absence of CMakePresets.json) to point to the build
+directory. If found, sets the compilation command too, which depends on my
+MAKE_J environment variable."
+  (let* ((project-root (projectile-project-root))
+         (cmake-presets-path (expand-file-name "CMakePresets.json" project-root))
+         (cdb-path (expand-file-name "compile_commands.json" project-root)))
+    (when (and (file-symlink-p cdb-path)
+               (not (file-exists-p cmake-presets-path)))
+      (let ((resolved-cdb-path (file-truename cdb-path)))
+        (when (file-exists-p resolved-cdb-path)
+          (let ((resolved-cdb-dir (file-name-directory resolved-cdb-path))
+                (make_j (or (getenv "MAKE_J") "1")))
+            (setq-local projectile-project-compilation-dir
+                        (file-relative-name resolved-cdb-dir project-root))
+            (setq-local projectile-project-compilation-cmd
+                        (format "make -j%s" make_j))
+            (setq-local projectile-project-test-cmd
+                        (format "ctest -j%s" make_j))))))))
 
 (advice-add 'projectile-compilation-dir :before
             #'dotfiles--projectile-set-build-dir-and-command)
