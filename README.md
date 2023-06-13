@@ -97,7 +97,6 @@ Unfortunately, that is not always possible.
 [all-the-icons-dired](https://github.com/jtbm37/all-the-icons-dired)
 [cmake-font-lock](https://github.com/Lindydancer/cmake-font-lock)
 [beacon](https://github.com/Malabarba/beacon)
-[flycheck-color-mode-line](https://github.com/flycheck/flycheck-color-mode-line)
 [flycheck-status-emoji](https://github.com/liblit/flycheck-status-emoji)
 [stripe-buffer](https://github.com/sabof/stripe-buffer)
 [prism.el](https://github.com/alphapapa/prism.el)

@@ -337,10 +337,6 @@
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
-;; `flycheck-color-mode'
-(require 'flycheck-color-mode-line)
-(add-hook 'flycheck-mode-hook #'flycheck-color-mode-line-mode)
-
 ;; `flycheck-status-emoji-mode'
 (require 'flycheck-status-emoji)
 ;; Since I spent way too much time measuring, here's the height in pixels

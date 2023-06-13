@@ -12073,33 +12073,6 @@ or offer suggestions for improvement.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-color-mode-line-0.3/flycheck-color-mode-line-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-color-mode-line-0.3/flycheck-color-mode-line-autoloads.el"))
-
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/flycheck-color-mode-line-0.3/flycheck-color-mode-line-autoloads.el") (car load-path))))
-
-
-
-(autoload 'flycheck-color-mode-line-mode "flycheck-color-mode-line" "\
-Minor mode to color the mode line with the Flycheck status.
- 
-When called interactively, toggle
-`flycheck-color-mode-line-mode'.  With prefix ARG, enable
-`flycheck-color-mode-line-mode' if ARG is positive, otherwise
-disable it.
- 
-When called from Lisp, enable `flycheck-color-mode-line-mode' if ARG is omitted,
-nil or positive.  If ARG is `toggle', toggle `flycheck-color-mode-line-mode'.
-Otherwise behave as if called interactively.
-
-\(fn &optional ARG)" t nil)
-
-(custom-add-frequent-value 'flycheck-mode-hook 'flycheck-color-mode-line-mode)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "flycheck-color-mode-line" '("flycheck-color-mode-line-")))
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230601.204/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230601.204/fancy-compilation-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
@@ -13019,7 +12992,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 )
 (setq package-activated-list
       (append
-       '(yasnippet yaml-mode xterm-color compat with-editor which-key wgrep wgrep-helm wgrep-deadgrep websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint flycheck-color-mode-line fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+       '(yasnippet yaml-mode xterm-color compat with-editor which-key wgrep wgrep-helm wgrep-deadgrep websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell eldoc-cmake dispwatch deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
        package-activated-list))
 (progn
   (require 'info)
