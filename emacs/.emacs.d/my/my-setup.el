@@ -190,6 +190,9 @@
 
 (load-theme 'solarized-dark t)
 
+;; Fix modeline by showing its lower line below the whole letter height
+(setq x-underline-at-descent-line t)
+
 (setq use-dialog-box nil)
 
 ;; Use specified font if any
