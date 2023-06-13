@@ -343,16 +343,27 @@
 
 ;; `flycheck-status-emoji-mode'
 (require 'flycheck-status-emoji)
-;; FIXME(laurynas): modeline height jumpy between these
-(setq flycheck-status-emoji-indicator-running ?⧗)
-(setq flycheck-status-emoji-indicator-finished-ok ?✔)
-(setq flycheck-status-emoji-indicator-finished-error ?ⓧ)
-(setq flycheck-status-emoji-indicator-finished-warning ?⚠)
-(setq flycheck-status-emoji-indicator-finished-info ?ℹ)
-(setq flycheck-status-emoji-indicator-no-checker ??)
-(setq flycheck-status-emoji-indicator-errored ?ⓧ)
-(setq flycheck-status-emoji-indicator-interrupted ??)
-(setq flycheck-status-emoji-indicator-suspicious ?⚠)
+;; Since I spent way too much time measuring, here's the height in pixels
+;; (`line-pixel-height') for some symbols in my font. Note that combined symbols
+;; such as yellow warning triangle are not usable in `flycheck-status-emoji'.
+;; "running": ⧗: 17, ⌛: 20
+;; "finished ok": ✔: 16, ✓: 14, ✅: 20
+;; "finished error": Ⓧ: 16, ⦸: 17, ✖: 16, ❌: 20
+;; "finished warning": ⚠: 15, ⚠️: 20, ❗: 20, ‼: 14
+;; "finished info": ℹ: 17,ℹ️: 20, ⓘ: 16, 🅘: 17, ⒤: 16, 🄘: 17, 💁: 20, 🄸: 17
+;; "no checker"/"suspicious": ?: 20, ？: 16, ?: 14, ❓: 20, ❔: 20
+;;
+;; All of these have height of 20, except for the "finished info" one, which is
+;; rarely shown, but makes modeline height jumpy.
+(setq flycheck-status-emoji-indicator-running ?⌛
+      flycheck-status-emoji-indicator-finished-ok ?✅
+      flycheck-status-emoji-indicator-finished-error ?❌
+      flycheck-status-emoji-indicator-finished-warning ?❗
+      flycheck-status-emoji-indicator-finished-info ?ℹ
+      flycheck-status-emoji-indicator-no-checker ?❔
+      flycheck-status-emoji-indicator-errored ?❌
+      flycheck-status-emoji-indicator-interrupted ?❗
+      flycheck-status-emoji-indicator-suspicious ?❔)
 (flycheck-status-emoji-mode)
 
 ;;; Programming
