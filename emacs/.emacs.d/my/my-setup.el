@@ -142,8 +142,6 @@
 
 ;;; Spellchecking
 
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
-(add-hook 'text-mode-hook #'turn-on-flyspell)
 ;; `ispell'
 (require 'ispell)
 (setq ispell-program-name "hunspell")
@@ -156,10 +154,18 @@
 ;; Workaround header line covering the ispell choices window
 (setq ispell-choices-win-default-height 3)
 
+;; `flyspell'
+(require 'flyspell)
+
+;; Pixel height is 20, compatible with `flycheck-status-emoji-mode' settings.
+(setq flyspell-mode-line-string " ✏️")
+
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+(add-hook 'text-mode-hook #'turn-on-flyspell)
+
 ;; `goto-address-mode' integration with `flyspell': do not create `flypsell'
 ;; overlays, if a `goto-address' one already exists at the location. Otherwise
 ;; a mouse click would offer spelling corrections instead of going to the URL.
-(require 'flyspell)
 
 (defun dotfiles--goto-address-overlay-p (o)
   "Return t if O is an overlay used by `goto-address'."
