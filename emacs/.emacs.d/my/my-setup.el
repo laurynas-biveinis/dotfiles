@@ -327,9 +327,9 @@
 
 ;; The syntax checker is `flycheck'. 26.1+ flymake would work too.
 (require 'flycheck)
-(setq flycheck-global-modes '(not org-agenda-mode vterm-mode erc-mode))
-(setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc
-                                                       c/c++-cppcheck))
+(setq flycheck-global-modes '(not org-mode org-agenda-mode vterm-mode erc-mode))
+(setq-default flycheck-disabled-checkers
+              '(c/c++-clang c/c++-gcc c/c++-cppcheck textlint))
 (setq flycheck-check-syntax-automatically '(save idle-change idle-buffer-switch
                                                  new-line mode-enabled))
 (setq flycheck-buffer-switch-check-intermediate-buffers t)
