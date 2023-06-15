@@ -25,6 +25,7 @@
 ;; Exclude some more modes from projectile
 (add-to-list 'projectile-globally-ignored-modes "lisp-interaction-mode")
 (add-to-list 'projectile-globally-ignored-modes "org-agenda-mode")
+(add-to-list 'projectile-globally-ignored-modes "org-mode")
 (add-to-list 'projectile-globally-ignored-modes "package-menu-mode")
 
 ;; Steal s-p from `ns-print-buffer'. I never print buffers
@@ -32,15 +33,17 @@
 
 (defun dotfiles--projectile-mode-line ()
   "Report project name and type (if it is not generic) in the modeline."
-  (let ((project-name (projectile-project-name))
-        (project-type (projectile-project-type)))
-    (format "%s[%s%s]"
-            projectile-mode-line-prefix
-            (or project-name "-")
-            (if (not (eq project-type 'generic))
-                (format ":%s" project-type)
-              ""))))
+  (let ((project-name (projectile-project-name)))
+    (if (string= project-name "-")
+        ""
+      (let ((project-type (projectile-project-type)))
+        (concat projectile-mode-line-prefix "["
+                project-name
+                (unless (eq project-type 'generic)
+                  (concat ":" (symbol-name project-type)))
+                "]")))))
 (setq projectile-mode-line-function #'dotfiles--projectile-mode-line)
+
 
 (projectile-mode +1)
 
