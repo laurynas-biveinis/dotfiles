@@ -30,6 +30,18 @@
 ;; Steal s-p from `ns-print-buffer'. I never print buffers
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 
+(defun dotfiles--projectile-mode-line ()
+  "Report project name and type (if it is not generic) in the modeline."
+  (let ((project-name (projectile-project-name))
+        (project-type (projectile-project-type)))
+    (format "%s[%s%s]"
+            projectile-mode-line-prefix
+            (or project-name "-")
+            (if (not (eq project-type 'generic))
+                (format ":%s" project-type)
+              ""))))
+(setq projectile-mode-line-function #'dotfiles--projectile-mode-line)
+
 (projectile-mode +1)
 
 (require 'helm-projectile)
