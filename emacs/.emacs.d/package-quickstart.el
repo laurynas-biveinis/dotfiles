@@ -12493,10 +12493,10 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.27.0pre1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.27.0pre1/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230422.828/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230422.828/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.27.0pre1/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230422.828/cmake-mode-autoloads.el") (car load-path))))
 
 
 
@@ -12539,6 +12539,8 @@ Queries for any of the four available help topics and prints out the appropriate
 (add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
 
 (register-definition-prefixes "cmake-mode" '("cmake-"))
+
+
 
 
 )

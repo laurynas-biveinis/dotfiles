@@ -51,6 +51,10 @@ Queries for any of the four available help topics and prints out the appropriate
 
 ;;;***
 
+;;;### (autoloads nil nil ("cmake-mode-pkg.el") (0 0 0 0))
+
+;;;***
+
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
