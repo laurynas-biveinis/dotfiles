@@ -8,15 +8,17 @@ IFS=" " read -r -A base_modules < $DOTFILES_SETUP_DIR/base_modules
 readonly EXTRA_MODULES_FILE=$DOTFILES_SETUP_DIR/extra_modules
 
 readonly IGNORE_FOR_SYMLINKS=("Library/Application Support/Slack/SingletonCookie" \
-                                  "Library/Application Support/Slack/SingletonLock" \
-                                  "Library/Caches/com.apple.bird" \
-                                  "Library/Containers" \
-                                  "Library/Logs/ims.log" \
-                                  "Library/Saved Application State" \
-                                  "*/plugin_output_directory/libfido2.1.dylib" \
-                                  "*/plugin_output_directory/plugin/libfido2.1.dylib" \
-                                  "*/rqg/data/source" \
-                                  "Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/*")
+                              "Library/Application Support/Slack/SingletonLock" \
+                              "Library/Caches/com.apple.bird" \
+                              "Library/Application Support/discord/SingletonCookie"
+                              "Library/Application Support/discord/SingletonLock"
+                              "Library/Containers" \
+                              "Library/Logs/ims.log" \
+                              "Library/Saved Application State" \
+                              "*/plugin_output_directory/libfido2.1.dylib" \
+                              "*/plugin_output_directory/plugin/libfido2.1.dylib" \
+                              "*/rqg/data/source" \
+                              "Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/*")
 
 pushd $DOTFILES_ROOT || exit
 git pull origin-ro master
