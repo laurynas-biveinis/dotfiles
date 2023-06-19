@@ -32,14 +32,16 @@
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 
 (defun dotfiles--projectile-mode-line ()
-  "Report project name and type (if it is not generic) in the modeline."
+  "Report project name and, if needed, type in the modeline.
+
+The type is not displayed if it is generic or rust-cargo."
   (let ((project-name (projectile-project-name)))
     (if (string= project-name "-")
         ""
       (let ((project-type (projectile-project-type)))
         (concat projectile-mode-line-prefix "["
                 project-name
-                (unless (eq project-type 'generic)
+                (unless (memq project-type '(generic rust-cargo))
                   (concat ":" (symbol-name project-type)))
                 "]")))))
 (setq projectile-mode-line-function #'dotfiles--projectile-mode-line)
