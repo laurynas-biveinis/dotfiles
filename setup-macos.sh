@@ -372,6 +372,7 @@ sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
      /Library/Java/JavaVirtualMachines/openjdk.jdk
 # Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
 # non-main Dash docsets through the app
+em-regen-info-dir
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
 duti -s org.videolan.vlc .mp3 all
