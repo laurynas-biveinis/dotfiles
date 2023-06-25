@@ -4,8 +4,6 @@
 
 ;; Author: Christopher Wellons <wellons@nullprogram.com>
 ;; URL: https://github.com/skeeto/emacs-http-server
-;; Package-Version: 20191103.1446
-;; Package-Commit: 22ce66ea43e0eadb9ec1d691a35d9695fc29cee6
 ;; Version: 1.5.1
 ;; Package-Requires: ((cl-lib "0.3"))
 
@@ -223,6 +221,7 @@
     ("pdf"  . "application/pdf")
     ("tar"  . "application/x-tar")
     ("zip"  . "application/zip")
+    ("wasm" . "application/wasm")
     ("mp3"  . "audio/mpeg")
     ("wav"  . "audio/x-wav")
     ("flac" . "audio/flac")

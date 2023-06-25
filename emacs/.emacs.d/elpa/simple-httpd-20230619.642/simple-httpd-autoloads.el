@@ -29,6 +29,10 @@ Start the web server with given `directory' as `httpd-root'.
 
 ;;;***
 
+;;;### (autoloads nil nil ("simple-httpd-pkg.el") (0 0 0 0))
+
+;;;***
+
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t

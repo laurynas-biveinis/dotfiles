@@ -2871,10 +2871,10 @@ The Returned color-palette has the same format as `solarized-color-palette'
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20191103.1446/simple-httpd-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20191103.1446/simple-httpd-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20230619.642/simple-httpd-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20230619.642/simple-httpd-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/simple-httpd-20191103.1446/simple-httpd-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/simple-httpd-20230619.642/simple-httpd-autoloads.el") (car load-path))))
 
 
 
@@ -2895,6 +2895,8 @@ Start the web server with given `directory' as `httpd-root'.
 \(fn DIRECTORY)" t nil)
 
 (register-definition-prefixes "simple-httpd" '("defservlet" "httpd" "with-httpd-buffer"))
+
+
 
 
 )
