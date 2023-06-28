@@ -1925,7 +1925,7 @@
 	   ("Random User"))
 	  (:commit . "6ce7de37f21e123467ef1191db7a37cd99881c00"))])
  (sweeprolog .
-	     [(0 20 0)
+	     [(0 21 0)
 	      ((emacs
 		(28 1)))
 	      "Embedded SWI-Prolog" tar
@@ -1934,7 +1934,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "82b5e31aa3b742bfac1eba7b9995904f2b905f4e"))])
+	       (:commit . "0e05fa9545c43b377fbfc38b9611e10018a65812"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs
@@ -2246,7 +2246,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(23 11 20230609124049)
+	       [(23 11 20230626152352)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -2255,7 +2255,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "dd172475f46e12b0c8523e2ad27dd72c640cb4ac"))])
+		 (:commit . "08dd08d0fec3914072f99daf2b1304bfba21aa30"))])
  (xkcd .
        [(1 1)
 	((json
