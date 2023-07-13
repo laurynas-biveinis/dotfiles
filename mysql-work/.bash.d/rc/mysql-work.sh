@@ -271,6 +271,18 @@ mysql_cmake() {
                     release_flags=("${MY8032[@]}")
                     debug_flags=("${MY8032D[@]}")
                     ;;
+                31)
+                    release_flags=("${MY8031[@]}")
+                    debug_flags=("${MY8031D[@]}")
+                    ;;
+                30)
+                    release_flags=("${MY8030[@]}")
+                    debug_flags=("${MY8030D[@]}")
+                    ;;
+                29)
+                    release_flags=("${MY8029[@]}")
+                    debug_flags=("${MY8029D[@]}")
+                    ;;
                 28)
                     release_flags=("${MY8028[@]}")
                     debug_flags=("${MY8028D[@]}")
