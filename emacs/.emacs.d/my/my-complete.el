@@ -94,7 +94,6 @@ CANDIDATES is the list of candidates."
             #'dotfiles--helm-icons-buffers-add-icon)
 
 ;; Helm core configuration
-(require 'helm-config)
 (require 'helm)
 (require 'helm-files)
 (require 'helm-for-files)
