@@ -32,10 +32,10 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     if [ "$(arch)" = "arm64" ]; then
         BREW="/opt/homebrew/opt"
         MY8026_28_EXTRA=("-DWITH_SSL=$BREW/openssl@1.1")
-        MY8030_33_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
+        MY8030_34_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
     else
         MY8026_28_EXTRA=()
-        MY8030_33_EXTRA=()
+        MY8030_34_EXTRA=()
     fi
     MY8026_28_EXTRA+=("-DWITH_ICU=$BREW/icu4c")
     MY8026_28_EXTRA_CXX_FLAGS=("-Wno-shadow-field")
@@ -59,7 +59,7 @@ else
     MY8031_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA_CXX_FLAGS=()
     MY8033_EXTRA_CXX_FLAGS=()
-    MY8030_33_EXTRA=()
+    MY8030_34_EXTRA=()
     MARIA_COMMON=()
 
     FB_COMMON=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
@@ -91,8 +91,6 @@ FB_COMMON+=("-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
 MARIA_COMMON+=("-DPLUGIN_MROONGA=NO" "-DPLUGIN_CONNECT=NO")
 
 # Version-specific building blocks, descending order
-
-MY8033_EXTRA=()
 
 MY8033_CXX_FLAGS_DEBUG=("${MY8033_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
 MY8033_CXX_FLAGS_RELEASE=("${MY8033_EXTRA_CXX_FLAGS[@]}"
@@ -163,19 +161,22 @@ MY8026_EXTRA=("-DENABLE_DOWNLOADS=ON")
 
 # Paydirt!
 
-export MY8033D=("${MY80D[@]}" "${MY8033_EXTRA[@]}" "${MY8030_33_EXTRA[@]}")
-export MY8033=("${MY80R[@]}" "${MY8033_EXTRA[@]}" "${MY8030_33_EXTRA[@]}")
+export MY8034D=("${MY80D[@]}" "${MY8030_34_EXTRA[@]}")
+export MY8034=("${MY80R[@]}" "${MY8030_34_EXTRA[@]}")
+
+export MY8033D=("${MY80D[@]}" "${MY8033_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
+export MY8033=("${MY80R[@]}" "${MY8033_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
 unset MY8033_EXTRA
 
-export MY8032D=("${MY80D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_33_EXTRA[@]}")
-export MY8032=("${MY80R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_33_EXTRA[@]}")
+export MY8032D=("${MY80D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
+export MY8032=("${MY80R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
 unset MY8032_EXTRA
 
-export MY8031D=("${MY80D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_33_EXTRA[@]}")
+export MY8031D=("${MY80D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
 unset MY8031_EXTRA
 
-export MY8030D=("${MY80D[@]}" "${MY8030_33_EXTRA[@]}")
-unset MY8030_33_EXTRA
+export MY8030D=("${MY80D[@]}" "${MY8030_34_EXTRA[@]}")
+unset MY8030_34_EXTRA
 
 export MY8029D=("${MY80D[@]}" "${MY8028_29_EXTRA[@]}")
 
@@ -263,6 +264,10 @@ mysql_cmake() {
         else
             echo "Configuring MySQL $major_ver.0.$patch_level"
             case $patch_level in
+                34)
+                    release_flags=("${MY8034[@]}")
+                    debug_flags=("${MY8034D[@]}")
+                    ;;
                 33)
                     release_flags=("${MY8033[@]}")
                     debug_flags=("${MY8033D[@]}")
