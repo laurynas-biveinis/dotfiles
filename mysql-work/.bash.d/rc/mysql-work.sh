@@ -7,7 +7,7 @@
 #
 # Extra CMake options:
 # MYCLANG, MYCLANG12, MYCLANG12: set compiler to clang for CMake
-# MY80SAN: add maximum supported Sanitizer configuration
+# MY8SAN: add maximum supported Sanitizer configuration
 #
 # mysql-test-run options:
 # MTR_EMD: MTR options to preload libeatmydata
@@ -32,10 +32,10 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     if [ "$(arch)" = "arm64" ]; then
         BREW="/opt/homebrew/opt"
         MY8026_28_EXTRA=("-DWITH_SSL=$BREW/openssl@1.1")
-        MY8030_34_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
+        MY8030_810_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
     else
         MY8026_28_EXTRA=()
-        MY8030_34_EXTRA=()
+        MY8030_810_EXTRA=()
     fi
     MY8026_28_EXTRA+=("-DWITH_ICU=$BREW/icu4c")
     MY8026_28_EXTRA_CXX_FLAGS=("-Wno-shadow-field")
@@ -59,7 +59,7 @@ else
     MY8031_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA_CXX_FLAGS=()
     MY8033_EXTRA_CXX_FLAGS=()
-    MY8030_34_EXTRA=()
+    MY8030_810_EXTRA=()
     MARIA_COMMON=()
 
     FB_COMMON=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
@@ -78,11 +78,11 @@ CMAKE_RELEASE=("${CMAKE_COMMON[@]}"
 CMAKE_DEBUG=("${CMAKE_COMMON[@]}" "-DCMAKE_BUILD_TYPE=Debug" "-DWITH_DEBUG=ON")
 unset CMAKE_COMMON
 
-MY80=("-DMYSQL_MAINTAINER_MODE=ON" "-DDOWNLOAD_BOOST=ON"
-      "-DWITH_BOOST=~/vilniusdb/mysql-boost/" "-DWITH_SYSTEM_LIBS=ON")
-MY80D=("${CMAKE_DEBUG[@]}" "${MY80[@]}")
-MY80R=("${CMAKE_RELEASE[@]}" "${MY80[@]}")
-unset MY80
+MY8=("-DMYSQL_MAINTAINER_MODE=ON" "-DDOWNLOAD_BOOST=ON"
+     "-DWITH_BOOST=~/vilniusdb/mysql-boost/" "-DWITH_SYSTEM_LIBS=ON")
+MY8D=("${CMAKE_DEBUG[@]}" "${MY8[@]}")
+MY8R=("${CMAKE_RELEASE[@]}" "${MY8[@]}")
+unset MY8
 
 # Workaround Facebook tooling incompatibility with git worktrees
 FB_COMMON+=("-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
@@ -161,28 +161,31 @@ MY8026_EXTRA=("-DENABLE_DOWNLOADS=ON")
 
 # Paydirt!
 
-export MY8034D=("${MY80D[@]}" "${MY8030_34_EXTRA[@]}")
-export MY8034=("${MY80R[@]}" "${MY8030_34_EXTRA[@]}")
+export MY810D=("${MY8D[@]}" "${MY8030_810_EXTRA[@]}")
+export MY810=("${MY8R[@]}" "${MY8030_810_EXTRA[@]}")
 
-export MY8033D=("${MY80D[@]}" "${MY8033_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
-export MY8033=("${MY80R[@]}" "${MY8033_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
+export MY8034D=("${MY8D[@]}" "${MY8030_810_EXTRA[@]}")
+export MY8034=("${MY8R[@]}" "${MY8030_810_EXTRA[@]}")
+
+export MY8033D=("${MY8D[@]}" "${MY8033_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
+export MY8033=("${MY8R[@]}" "${MY8033_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 unset MY8033_EXTRA
 
-export MY8032D=("${MY80D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
-export MY8032=("${MY80R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
+export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
+export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 unset MY8032_EXTRA
 
-export MY8031D=("${MY80D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_34_EXTRA[@]}")
+export MY8031D=("${MY8D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 unset MY8031_EXTRA
 
-export MY8030D=("${MY80D[@]}" "${MY8030_34_EXTRA[@]}")
-unset MY8030_34_EXTRA
+export MY8030D=("${MY8D[@]}" "${MY8030_810_EXTRA[@]}")
+unset MY8030_810_EXTRA
 
-export MY8029D=("${MY80D[@]}" "${MY8028_29_EXTRA[@]}")
+export MY8029D=("${MY8D[@]}" "${MY8028_29_EXTRA[@]}")
 
-export MY8028=("${MY80R[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}"
+export MY8028=("${MY8R[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}"
                "${MY8028_29_EXTRA[@]}")
-export MY8028D=("${MY80D[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}"
+export MY8028D=("${MY8D[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}"
                 "${MY8028_29_EXTRA[@]}")
 unset MY8028_29_EXTRA
 unset MY8028_EXTRA
@@ -191,14 +194,14 @@ export FB8028=("${MY8028[@]}" "${FB_COMMON[@]}" "${FB8028_EXTRA[@]}")
 export FB8028D=("${MY8028D[@]}" "${FB_COMMON[@]}" "${FB8028_EXTRA[@]}")
 unset FB8028_EXTRA
 
-export MY8027D=("${MY80D[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}")
+export MY8027D=("${MY8D[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}")
 unset MY8027_28_EXTRA
 
-export MY8026=("${MY80R[@]}" "${MY8026_28_EXTRA[@]}")
-export MY8026D=("${MY80D[@]}" "-DDEBUG_EXTNAME=OFF" "${MY8026_28_EXTRA[@]}")
+export MY8026=("${MY8R[@]}" "${MY8026_28_EXTRA[@]}")
+export MY8026D=("${MY8D[@]}" "-DDEBUG_EXTNAME=OFF" "${MY8026_28_EXTRA[@]}")
 unset MY8026_28_EXTRA
-unset MY80D
-unset MY80R
+unset MY8D
+unset MY8R
 
 export FB8026=("${MY8026[@]}" "${FB_COMMON[@]}")
 export FB8026D=("${MY8026D[@]}" "${FB_COMMON[@]}")
@@ -213,7 +216,7 @@ unset CMAKE_DEBUG
 export MYCLANG=("-DCMAKE_C_COMPILER=clang" "-DCMAKE_CXX_COMPILER=clang++")
 export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
                   "-DCMAKE_CXX_COMPILER=clang++-13")
-export MY80SAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
+export MY8SAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
     EMD_LIBDIR="$BREW/libeatmydata/lib/"
@@ -246,13 +249,15 @@ mysql_cmake() {
             echo "Only MySQL version 8 is supported"
             return
         fi
+        minor_ver_str=$(grep MYSQL_VERSION_MINOR ../MYSQL_VERSION)
+        minor_ver="${minor_ver_str//[^0-9]/}"
         patch_level_str=$(grep MYSQL_VERSION_PATCH ../MYSQL_VERSION)
         patch_level="${patch_level_str//[^0-9]/}"
 
         if [ -d ../rocksdb ]; then
-            echo "Configuring Facebook MySQL $major_ver.0.$patch_level"
-            case $patch_level in
-                28)
+            echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
+            case "$minor_ver.$patch_level" in
+                0.28)
                     release_flags=("${FB8028[@]}")
                     debug_flags=("${FB8028D[@]}")
                     ;;
@@ -262,33 +267,37 @@ mysql_cmake() {
                     ;;
             esac
         else
-            echo "Configuring MySQL $major_ver.0.$patch_level"
-            case $patch_level in
-                34)
+            echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
+            case "$minor_ver.$patch_level" in
+                1.0)
+                    release_flags=("${MY810[@]}")
+                    debug_flags=("${MY810D[@]}")
+                    ;;
+                0.34)
                     release_flags=("${MY8034[@]}")
                     debug_flags=("${MY8034D[@]}")
                     ;;
-                33)
+                0.33)
                     release_flags=("${MY8033[@]}")
                     debug_flags=("${MY8033D[@]}")
                     ;;
-                32)
+                0.32)
                     release_flags=("${MY8032[@]}")
                     debug_flags=("${MY8032D[@]}")
                     ;;
-                31)
+                0.31)
                     release_flags=("${MY8031[@]}")
                     debug_flags=("${MY8031D[@]}")
                     ;;
-                30)
+                0.30)
                     release_flags=("${MY8030[@]}")
                     debug_flags=("${MY8030D[@]}")
                     ;;
-                29)
+                0.29)
                     release_flags=("${MY8029[@]}")
                     debug_flags=("${MY8029D[@]}")
                     ;;
-                28)
+                0.28)
                     release_flags=("${MY8028[@]}")
                     debug_flags=("${MY8028D[@]}")
                     ;;
@@ -311,8 +320,8 @@ mysql_cmake() {
         *san*)
             echo "Using sanitizers"
             sanitizers=1
-            debug_flags+=("${MY80SAN[@]}")
-            release_flags+=("${MY80SAN[@]}")
+            debug_flags+=("${MY8SAN[@]}")
+            release_flags+=("${MY8SAN[@]}")
             ;;
         *)
             sanitizers=0
