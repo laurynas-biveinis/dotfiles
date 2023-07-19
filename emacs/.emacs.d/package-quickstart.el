@@ -12081,10 +12081,10 @@ or offer suggestions for improvement.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230601.204/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230601.204/fancy-compilation-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230718.2326/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230718.2326/fancy-compilation-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230601.204/fancy-compilation-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230718.2326/fancy-compilation-autoloads.el") (car load-path))))
 
 
 
@@ -12117,6 +12117,8 @@ The mode's hook is called both when the mode is enabled and when it is disabled.
 \(fn &optional ARG)" t nil)
 
 (register-definition-prefixes "fancy-compilation" '("fancy-compilation-"))
+
+
 
 
 )
@@ -12501,10 +12503,10 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230422.828/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230422.828/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230718.1752/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230718.1752/cmake-mode-autoloads.el"))
 
 (add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230422.828/cmake-mode-autoloads.el") (car load-path))))
+                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230718.1752/cmake-mode-autoloads.el") (car load-path))))
 
 
 

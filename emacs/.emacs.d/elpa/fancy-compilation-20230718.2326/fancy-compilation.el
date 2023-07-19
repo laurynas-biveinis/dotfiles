@@ -6,8 +6,6 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-fancy-compilation
-;; Package-Version: 20230601.204
-;; Package-Commit: 5104912ed98f803f2504a8d5cacc341a76bc29cf
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -36,7 +34,8 @@
   "Options to configure enhanced compilation settings."
   :group 'convenience)
 
-(defcustom fancy-compilation-term "tmux-256color"
+;; Follow the default for `ansi-term'.
+(defcustom fancy-compilation-term "eterm-color"
   "The TERM environment variable to use (use an empty string to disable)."
   :type 'string)
 
@@ -59,9 +58,10 @@ Use this to set or override defaults."
 
 (defcustom fancy-compilation-scroll-output t
   "Like `compilation-scroll-output`, but defaults to `t` and specific to `fancy-compilation`."
-  :type '(choice (const :tag "No scrolling" nil)
-		 (const :tag "Scroll compilation output" t)
-		 (const :tag "Stop scrolling at the first error" first-error)))
+  :type
+  '(choice (const :tag "No scrolling" nil)
+           (const :tag "Scroll compilation output" t)
+           (const :tag "Stop scrolling at the first error" first-error)))
 
 
 ;; ---------------------------------------------------------------------------
@@ -289,5 +289,6 @@ Use this to set or override defaults."
 ;; Local Variables:
 ;; fill-column: 99
 ;; indent-tabs-mode: nil
+;; elisp-autofmt-format-quoted: nil
 ;; End:
 ;;; fancy-compilation.el ends here
