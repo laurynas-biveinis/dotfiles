@@ -690,7 +690,7 @@
 		("Akib Azmain Turja" . "akib@disroot.org"))
 	       (:commit . "ce2ea016a67b200862788e81f0ff1f8f7e4e0454"))])
  (geiser .
-	 [(0 28 2)
+	 [(0 29)
 	  ((emacs
 	    (25 1))
 	   (project
@@ -701,7 +701,7 @@
 	   (:maintainer "Jose Antonio Ortega Ruiz" . "jao@gnu.org")
 	   (:authors
 	    ("Jose Antonio Ortega Ruiz" . "jao@gnu.org"))
-	   (:commit . "bfc9cce54b7ac1cb036911965198b5cbe2f43f4c"))])
+	   (:commit . "761c65be5763a0cac161f2d9ea9dec510f58b83d"))])
  (geiser-chez .
 	      [(0 18)
 	       ((emacs
@@ -1927,7 +1927,7 @@
 	   ("Random User"))
 	  (:commit . "6ce7de37f21e123467ef1191db7a37cd99881c00"))])
  (sweeprolog .
-	     [(0 21 0)
+	     [(0 22 0)
 	      ((emacs
 		(28 1)))
 	      "Embedded SWI-Prolog" tar
@@ -1936,7 +1936,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "0e05fa9545c43b377fbfc38b9611e10018a65812"))])
+	       (:commit . "1553d9392686b6827ffcc6c870635a19a2818863"))])
  (swift-mode .
 	     [(9 0 0)
 	      ((emacs
