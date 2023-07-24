@@ -222,13 +222,13 @@ different arguments without the user having to remember anything.  When
 using Transient, one can call a command with arguments that are just as
 complex as when calling the same function non-interactively from Lisp.
 
-   Invoking a transient command with arguments is similar to invoking a
-command in a shell with command-line completion and history enabled.
-One benefit of the Transient interface is that it remembers history not
-only on a global level (“this command was invoked using these arguments,
-and previously it was invoked using those other arguments”), but also
-remembers the values of individual arguments independently.  See *note
-Using History::.
+   Invoking a transient suffix command with arguments is similar to
+invoking a command in a shell with command-line completion and history
+enabled.  One benefit of the Transient interface is that it remembers
+history not only on a global level (“this command was invoked using
+these arguments, and previously it was invoked using those other
+arguments”), but also remembers the values of individual arguments
+independently.  See *note Using History::.
 
    After a transient prefix command is invoked, ‘C-h KEY’ can be used to
 show the documentation for the infix or suffix command that KEY is bound
@@ -243,6 +243,23 @@ has different needs than a command that merely toggles a boolean flag.
 Additionally, Transient provides abstractions for defining new types,
 which the author of Transient did not anticipate (or didn’t get around
 to implementing yet).
+
+   Note that suffix commands also support regular prefix arguments.  A
+suffix command may even be called with both infix and prefix arguments
+at the same time.  If you invoke a command as a suffix of a transient
+prefix command, but also want to pass prefix arguments to it, then first
+invoke the prefix command, and only after doing that invoke the prefix
+arguments, before finally invoking the suffix command.  If you instead
+began by providing the prefix arguments, then those would apply to the
+prefix command, not the suffix command.  Likewise, if you want to change
+infix arguments before invoking a suffix command with prefix arguments,
+then change the infix arguments before invoking the prefix arguments.
+In other words, regular prefix arguments always apply to the next
+command, and since transient prefix, infix and suffix commands are just
+regular commands, the same applies to them.  (Regular prefix keys behave
+differently because they are not commands at all, instead they are just
+incomplete key sequences, and those cannot be interrupted with prefix
+commands.)
 
 
 File: transient.info,  Node: Usage,  Next: Modifying Existing Transients,  Prev: Introduction,  Up: Top
@@ -3361,68 +3378,68 @@ please read <https://www.gnu.org/licenses/why-not-lgpl.html>.
 Tag Table:
 Node: Top763
 Node: Introduction4070
-Node: Usage9912
-Node: Invoking Transients10280
-Node: Aborting and Resuming Transients11359
-Node: Common Suffix Commands13970
-Node: Saving Values15806
-Ref: Saving Values-Footnote-117177
-Node: Using History17370
-Node: Getting Help for Suffix Commands18944
-Node: Enabling and Disabling Suffixes20312
-Node: Other Commands23380
-Node: Configuration24356
-Ref: Essential Options24636
-Ref: Accessibility Options28297
-Ref: Auxiliary Options28620
-Ref: Developer Options33347
-Node: Modifying Existing Transients34595
-Node: Defining New Commands38787
-Node: Defining Transients39123
-Node: Binding Suffix and Infix Commands41559
-Node: Group Specifications42417
-Node: Suffix Specifications46986
-Node: Defining Suffix and Infix Commands51142
-Node: Using Infix Arguments54348
-Node: Transient State57182
-Ref: Pre-commands for Infixes61145
-Ref: Pre-commands for Suffixes61416
-Ref: Pre-commands for Non-Suffixes63837
-Ref: Special Pre-Commands64981
-Node: Classes and Methods65489
-Node: Group Classes67703
-Node: Group Methods69630
-Node: Prefix Classes70883
-Node: Suffix Classes71974
-Node: Suffix Methods74220
-Node: Suffix Value Methods74541
-Node: Suffix Format Methods77299
-Node: Prefix Slots78748
-Ref: Internal Prefix Slots80028
-Node: Suffix Slots81285
-Ref: Slots of transient-suffix81653
-Ref: Slots of transient-infix82507
-Ref: Slots of transient-variable85633
-Ref: Slots of transient-switches85735
-Node: Predicate Slots86098
-Node: Related Abstractions and Packages87363
-Node: Comparison With Prefix Keys and Prefix Arguments87650
-Ref: Regular Prefix Commands88335
-Ref: Regular Prefix Arguments88683
-Ref: Transients89652
-Node: Comparison With Other Packages97923
-Ref: Magit-Popup98154
-Ref: Hydra99061
-Node: FAQ102117
-Ref: Can I control how the popup buffer is displayed?102260
-Ref: How can I copy text from the popup buffer?102441
-Ref: Why did some of the key bindings change?102913
-Ref: Why does q not quit popups anymore?105266
-Node: Keystroke Index106359
-Node: Command and Function Index108077
-Node: Variable Index114449
-Node: Concept Index116722
-Node: GNU General Public License119466
+Node: Usage10998
+Node: Invoking Transients11366
+Node: Aborting and Resuming Transients12445
+Node: Common Suffix Commands15056
+Node: Saving Values16892
+Ref: Saving Values-Footnote-118263
+Node: Using History18456
+Node: Getting Help for Suffix Commands20030
+Node: Enabling and Disabling Suffixes21398
+Node: Other Commands24466
+Node: Configuration25442
+Ref: Essential Options25722
+Ref: Accessibility Options29383
+Ref: Auxiliary Options29706
+Ref: Developer Options34433
+Node: Modifying Existing Transients35681
+Node: Defining New Commands39873
+Node: Defining Transients40209
+Node: Binding Suffix and Infix Commands42645
+Node: Group Specifications43503
+Node: Suffix Specifications48072
+Node: Defining Suffix and Infix Commands52228
+Node: Using Infix Arguments55434
+Node: Transient State58268
+Ref: Pre-commands for Infixes62231
+Ref: Pre-commands for Suffixes62502
+Ref: Pre-commands for Non-Suffixes64923
+Ref: Special Pre-Commands66067
+Node: Classes and Methods66575
+Node: Group Classes68789
+Node: Group Methods70716
+Node: Prefix Classes71969
+Node: Suffix Classes73060
+Node: Suffix Methods75306
+Node: Suffix Value Methods75627
+Node: Suffix Format Methods78385
+Node: Prefix Slots79834
+Ref: Internal Prefix Slots81114
+Node: Suffix Slots82371
+Ref: Slots of transient-suffix82739
+Ref: Slots of transient-infix83593
+Ref: Slots of transient-variable86719
+Ref: Slots of transient-switches86821
+Node: Predicate Slots87184
+Node: Related Abstractions and Packages88449
+Node: Comparison With Prefix Keys and Prefix Arguments88736
+Ref: Regular Prefix Commands89421
+Ref: Regular Prefix Arguments89769
+Ref: Transients90738
+Node: Comparison With Other Packages99009
+Ref: Magit-Popup99240
+Ref: Hydra100147
+Node: FAQ103203
+Ref: Can I control how the popup buffer is displayed?103346
+Ref: How can I copy text from the popup buffer?103527
+Ref: Why did some of the key bindings change?103999
+Ref: Why does q not quit popups anymore?106352
+Node: Keystroke Index107445
+Node: Command and Function Index109163
+Node: Variable Index115535
+Node: Concept Index117808
+Node: GNU General Public License120552
 
 End Tag Table
 
