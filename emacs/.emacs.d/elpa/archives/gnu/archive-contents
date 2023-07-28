@@ -1196,7 +1196,7 @@
 	   ("Adam Porter" . "adam@alphapapa.net"))
 	  (:commit . "fba18f941289e607ad5e296783fc410e58f5d07e"))])
  (emms .
-       [(15)
+       [(16)
 	((cl-lib
 	  (0 5))
 	 (nadvice
@@ -1209,7 +1209,7 @@
 	 (:maintainer "Yoni Rabkin" . "yrk@gnu.org")
 	 (:authors
 	  ("Jorgen Schäfer" . "forcer@forcix.cx"))
-	 (:commit . "0a35f30e9aedd09977412a459162eaf6736febac"))])
+	 (:commit . "8ad5cf981b24cd9c7748232a843fafd2d62f6e15"))])
  (engrave-faces .
 		[(0 3 1)
 		 ((emacs
@@ -2388,7 +2388,7 @@
 		(nil . "<johnh@isi.edu>."))
 	       (:url . "http://elpa.gnu.org/packages/notes-mode.html"))])
  (notmuch-indicator .
-		    [(1 0 0)
+		    [(1 0 1)
 		     ((emacs
 		       (27 1)))
 		     "Display mode line indicator with notmuch-count(1) output" tar
@@ -2397,7 +2397,7 @@
 		      (:maintainer "notmuch-indicator Development" . "~protesilaos/notmuch-indicator@lists.sr.ht")
 		      (:authors
 		       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		      (:commit . "3a1f47081e712667a2de0ebd124435309cfdb6db"))])
+		      (:commit . "8c242eab4cc0fd7e70bf2bc0f5d361f573eb40cd"))])
  (ntlm .
        [(2 1 0)
 	nil "NTLM (NT LanManager) authentication support" single
@@ -3755,7 +3755,7 @@
 	  ("Toby Cubitt" . "toby-predictive@dr-qubit.org"))
 	 (:keywords "extensions" "matching" "data structures trie" "ternary search tree" "tree" "completion" "regexp"))])
  (triples .
-	  [(0 3 3)
+	  [(0 3 4)
 	   ((seq
 	     (2 0))
 	    (emacs
@@ -3766,7 +3766,7 @@
 	    (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	    (:authors
 	     ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	    (:commit . "b5439fea7e5fbc9f2f7a6b2ef2a065c026371b46"))])
+	    (:commit . "1136da92b901a4922b47076a3dae9d5ef502275e"))])
  (typo .
        [(1 0 1)
 	((emacs
