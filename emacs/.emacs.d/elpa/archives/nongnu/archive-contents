@@ -337,7 +337,7 @@
 	     ("Akib Azmain Turja" . "akib@disroot.org"))
 	    (:commit . "bebdb6a165bdc3bb6b357706d0ce58f57271d137"))])
  (devil .
-	[(0 5 0)
+	[(0 6 0)
 	 ((emacs
 	   (24 4)))
 	 "Minor mode for translating key sequences" tar
@@ -346,7 +346,7 @@
 	  (:maintainer "Susam Pal" . "susam@susam.net")
 	  (:authors
 	   ("Susam Pal" . "susam@susam.net"))
-	  (:commit . "20b44174c3c0f5c46ea15b463dc67c14e6f57681"))])
+	  (:commit . "1985300ce84abd712be93b271b27c3bdb164231d"))])
  (diff-ansi .
 	    [(0 2)
 	     ((emacs
@@ -1009,7 +1009,7 @@
 	  ("Thierry Volpiatto" . "thievol@posteo.net"))
 	 (:commit . "1b411786346f1df38af3d37c389975db3a103353"))])
  (helm-core .
-	    [(3 9 1)
+	    [(3 9 2)
 	     ((emacs
 	       (25 1))
 	      (async
@@ -1019,7 +1019,7 @@
 	      (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
 	      (:authors
 	       ("Thierry Volpiatto" . "thievol@posteo.net"))
-	      (:commit . "1b411786346f1df38af3d37c389975db3a103353"))])
+	      (:commit . "c859db76283068a38270cd833d1b84e2fec3683c"))])
  (highlight-parentheses .
 			[(2 1 1)
 			 ((emacs
@@ -2237,7 +2237,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(24 3 20230725110700)
+	       [(24 4 20230729142604)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -2246,7 +2246,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "b6d77f9ac3fc6d8b2ebe8f29dcdbdd446e40da82"))])
+		 (:commit . "d0df56a6052aa6457650c5b18f3418de843b8f97"))])
  (xkcd .
        [(1 1)
 	((json

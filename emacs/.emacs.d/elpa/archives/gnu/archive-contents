@@ -564,18 +564,18 @@
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:keywords "abbrev" "convenience" "matching"))])
  (compat .
-	 [(29 1 4 1)
+	 [(29 1 4 2)
 	  ((emacs
 	    (24 4))
 	   (seq
 	    (2 3)))
 	  "Emacs Lisp Compatibility Library" tar
 	  ((:url . "https://github.com/emacs-compat/compat")
-	   (:keywords "lisp")
+	   (:keywords "lisp" "maint")
 	   (:maintainer "Daniel Mendler <mail@daniel-mendler.de>, Compat Development" . "~pkal/compat-devel@lists.sr.ht")
 	   (:authors
 	    ("Philip Kaludercic <philipk@posteo.net>, Daniel Mendler" . "mail@daniel-mendler.de"))
-	   (:commit . "cb09942868d50e654f159f9614fe3f22af96e547"))])
+	   (:commit . "74300f16a1630a33a86710aa20c1fc26f5f89f75"))])
  (consult .
 	  [(0 35)
 	   ((emacs
@@ -3667,7 +3667,7 @@
 	      ("Trevor Edwin Pogue" . "trevor.pogue@gmail.com"))
 	     (:commit . "33c2a6f0a11d1d88cdb2065c5a897e33507f4c86"))])
  (tramp .
-	[(2 6 1)
+	[(2 6 1 1)
 	 ((emacs
 	   (26 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
@@ -3676,7 +3676,7 @@
 	  (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
 	  (:authors
 	   ("Kai Großjohann" . "kai.grossjohann@gmx.net"))
-	  (:commit . "b04c8bfc49d4c41b8db461b837452887f4c259fe"))])
+	  (:commit . "ee53c26a61540d3ddf01af95d6508e9493377106"))])
  (tramp-nspawn .
 	       [(1 0 1)
 		((emacs
