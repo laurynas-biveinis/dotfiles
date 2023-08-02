@@ -4214,7 +4214,7 @@
 	(:authors
 	 ("Thien-Thi Nguyen" . "ttn@gnu.org")))])
  (xr .
-     [(1 23)
+     [(1 24)
       ((emacs
 	(26 1)))
       "Convert string regexp to rx notation" tar
@@ -4223,7 +4223,7 @@
        (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
        (:authors
 	("Mattias Engdegård" . "mattiase@acm.org"))
-       (:commit . "74906f6d104b7daae162dc32684e0443e80fdb03"))])
+       (:commit . "2d7bedc104deb9c39ddf53da7afbd7274d7ca274"))])
  (xref .
        [(1 6 3)
 	((emacs
