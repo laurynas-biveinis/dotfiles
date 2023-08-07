@@ -33,7 +33,7 @@
 
 ;;; Setup hook: keyboard shortcuts and fill column setting
 (defun dotfiles--org-mode-hook ()
-  "My configuration hook for 'org-mode'."
+  "My configuration hook for `org-mode'."
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
   (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
   (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
