@@ -2705,7 +2705,7 @@
 	(:url . "https://elpa.gnu.org/packages/peg.html")
 	(:commit . "90c9004a8347209f94a37c8d9506425721098402"))])
  (perl-doc .
-	   [(0 8)
+	   [(0 81)
 	    ((emacs
 	      (27)))
 	    "Read Perl documentation" tar
@@ -2714,7 +2714,7 @@
 	     (:maintainer "Harald Jörg" . "haj@posteo.de")
 	     (:authors
 	      ("Harald Jörg" . "haj@posteo.de"))
-	     (:commit . "050df667a6d2eda08e8c7628772d4e12fc632064"))])
+	     (:commit . "638009f98a144790ea85fd0fa311d7499fdac94f"))])
  (persist .
 	  [(0 5)
 	   nil "Persist Variables between Emacs Sessions" tar
@@ -3531,14 +3531,15 @@
 		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
 		 (:commit . "112970f8d2355c0cfa0269bb92cd1ecc18790bc9"))])
  (system-packages .
-		  [(1 0 11)
+		  [(1 0 12)
 		   ((emacs
 		     (24 3)))
 		   "functions to manage system packages" tar
 		   ((:url . "https://gitlab.com/jabranham/system-packages")
 		    (:maintainer "J. Alexander Branham" . "alex.branham@gmail.com")
 		    (:authors
-		     ("J. Alexander Branham" . "alex.branham@gmail.com")))])
+		     ("J. Alexander Branham" . "alex.branham@gmail.com"))
+		    (:commit . "14b2cc3d54cc26692fb4a71ae4befee1f0b15e1b"))])
  (tNFA .
        [(0 1 1)
 	((queue
