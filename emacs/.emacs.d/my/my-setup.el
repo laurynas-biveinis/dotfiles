@@ -117,6 +117,7 @@
 (setq show-paren-style 'mixed)
 (setq show-paren-when-point-inside-paren t)
 (setq show-paren-when-point-in-periphery t)
+(setq show-paren-predicate t)
 (show-paren-mode 1)
 
 ;; `stripe-buffer'
