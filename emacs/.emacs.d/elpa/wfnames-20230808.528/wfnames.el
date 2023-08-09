@@ -4,8 +4,8 @@
 ;; Copyright (C) 2022 Thierry Volpiatto, all rights reserved.
 ;; URL: https://github.com/thierryvolpiatto/wfnames
 
-;; Compatibility: GNU Emacs 24.3+"
-;; Package-Requires: ((emacs "24.3"))
+;; Compatibility: GNU Emacs 24.4+"
+;; Package-Requires: ((emacs "24.4"))
 ;; Version: 1.1
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -34,20 +34,20 @@
 
 ;; Usage:
 ;; Once in the Wfnames buffer, edit your filenames and hit C-c C-c to
-;; save your changes. You have completion on filenames and directories
+;; save your changes.  You have completion on filenames and directories
 ;; with TAB but if you are using Iedit package and it is in action use =M-TAB=.
 
 ;;; Code:
 
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib))
 
 ;; Internal.
-(defvar wfnames-buffer "*Wfnames*")
-(defvar wfnames--modified nil)
+(defconst wfnames-buffer "*Wfnames*")
+(defvar-local wfnames--modified nil)
 
 (defgroup wfnames nil
   "A mode to edit filenames."
-  :group 'wfnames)
+  :group 'convenience)
 
 (defcustom wfnames-create-parent-directories t
   "Create parent directories when non nil."
@@ -57,14 +57,16 @@
   "Ask confirmation when overwriting."
   :type 'boolean)
 
-(defvar wfnames-after-commit-hook nil)
+(defcustom wfnames-after-commit-hook nil
+  "Hook that run after `wfnames-commit-buffer'."
+  :type 'hook)
 
 (defcustom wfnames-after-commit-function #'kill-buffer
   "A function to call on `wfnames-buffer' when done."
   :type 'function)
 
 (defcustom wfnames-make-backup nil
-  "Backup files before overwriting when non nil."
+  "Non-nil means files are backed up before overwriting."
   :type 'boolean)
 
 (defface wfnames-modified
@@ -104,22 +106,22 @@
   "Provide filename completion in wfnames buffer."
   (let ((beg (line-beginning-position))
         (end (point)))
+    ;; FIXME: Does it make sense to extend beyond END to allow completing
+    ;; file names mid-string?
     (list beg end #'completion-file-name-table
           :exit-function (lambda (str _status)
                              (when (and (stringp str)
                                         (eq (char-after) ?/))
                                (delete-char -1))))))
 
-(define-derived-mode wfnames-mode
-    text-mode "wfnames"
+(define-derived-mode wfnames-mode text-mode "wfnames"
     "Major mode to edit filenames.
 
 Special commands:
 \\{wfnames-mode-map}"
   (add-hook 'after-change-functions #'wfnames-after-change-hook nil t)
-  (make-local-variable 'wfnames--modified)
-  (set (make-local-variable 'completion-at-point-functions) #'wfnames-capf)
-  (set (make-local-variable 'revert-buffer-function) #'wfnames-revert-changes))
+  (setq-local completion-at-point-functions #'wfnames-capf)
+  (setq-local revert-buffer-function #'wfnames-revert-changes))
 
 (defun wfnames-abort ()
   "Quit and kill wfnames buffer."
@@ -137,9 +139,10 @@ Args BEG and END delimit changes on line."
                (eol (line-end-position))
                (old (get-text-property bol 'old-name))
                (new (buffer-substring-no-properties bol eol))
-               ov face)
-          (setq face (if (file-exists-p new)
-                         'wfnames-modified-exists 'wfnames-modified))
+               (face (if (file-exists-p new)
+                         'wfnames-modified-exists
+		       'wfnames-modified))
+	       ov)
           (setq-local wfnames--modified
                       (cons old (delete old wfnames--modified)))
           (cl-loop for o in (overlays-in bol eol)
@@ -187,7 +190,7 @@ When APPEND is specified, append FILES to existing `wfnames-buffer'."
       (when append (delete-duplicate-lines (point-min) (point-max))))
     (unless append
       ;; Go to beginning of basename on first line.
-      (while (re-search-forward "/" (line-end-position) t))
+      (re-search-forward "\\(?:/[^/]*\\)*/" (line-end-position) t)
       (wfnames-mode)
       (funcall display-fn wfnames-buffer))))
 
@@ -252,7 +255,7 @@ When APPEND is specified, append FILES to existing `wfnames-buffer'."
                                    (let ((basedir (file-name-directory
                                                    (directory-file-name new))))
                                      (unless (file-directory-p basedir)
-                                       (mkdir basedir 'parents))))
+                                       (make-directory basedir 'parents))))
                                  (if (and ow (wfnames-ask-for-overwrite new))
                                      ;; Direct overwrite i.e. first loop.
                                      (progn
@@ -300,21 +303,22 @@ With a numeric prefix ARG, revert the ARG next lines."
     (wfnames-revert-current-line-1)
     (when (eobp) (forward-line -1))
     (goto-char (line-beginning-position))
-    (while (re-search-forward "/" (line-end-position) t))))
+    (re-search-forward "\\(?:/[^/]*\\)*/" (line-end-position) t)))
 
 (defun wfnames-revert-changes (_ignore-auto _no-confirm)
   "Revert wfnames buffer to its initial state.
 
 This is used as `revert-buffer-function' for `wfnames-mode'."
   (with-current-buffer wfnames-buffer
-    (cl-loop for o in (overlays-in (point-min) (point-max))
-             when (overlay-get o 'hff-changed)
-             do (delete-overlay o))
+    (dolist (o (overlays-in (point-min) (point-max)))
+      (when (overlay-get o 'hff-changed)
+	(delete-overlay o)))
     (goto-char (point-min))
     (save-excursion
       (while (not (eobp))
         (wfnames-revert-current-line-1)))
-    (while (re-search-forward "/" (line-end-position) t))))
+    (re-search-forward "\\(?:/[^/]*\\)*/" (line-end-position) t)))
+
 
 (provide 'wfnames)
 

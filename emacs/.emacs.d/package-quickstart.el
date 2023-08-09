@@ -510,7 +510,7 @@ Setup `wgrep-deadgrep' for `deadgrep'." nil nil)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230805.1952/wfnames-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230805.1952/wfnames-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230808.528/wfnames-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230808.528/wfnames-autoloads.el"))
 
 
 
