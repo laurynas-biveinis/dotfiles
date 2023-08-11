@@ -2516,10 +2516,12 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230723.1411/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230723.1411/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230810.1716/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230810.1716/transient-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/transient-20230723.1411/transient-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -2535,10 +2537,8 @@ Remove a conflicting binding unless optional KEEP-OTHER is
   non-nil.
 See info node `(transient)Modifying Existing Transients'.
 
-\(fn PREFIX LOC SUFFIX &optional KEEP-OTHER)" nil nil)
-
+(fn PREFIX LOC SUFFIX &optional KEEP-OTHER)")
 (function-put 'transient-insert-suffix 'lisp-indent-function 'defun)
-
 (autoload 'transient-append-suffix "transient" "\
 Insert a SUFFIX into PREFIX after LOC.
 PREFIX is a prefix command, a symbol.
@@ -2551,10 +2551,8 @@ Remove a conflicting binding unless optional KEEP-OTHER is
   non-nil.
 See info node `(transient)Modifying Existing Transients'.
 
-\(fn PREFIX LOC SUFFIX &optional KEEP-OTHER)" nil nil)
-
+(fn PREFIX LOC SUFFIX &optional KEEP-OTHER)")
 (function-put 'transient-append-suffix 'lisp-indent-function 'defun)
-
 (autoload 'transient-replace-suffix "transient" "\
 Replace the suffix at LOC in PREFIX with SUFFIX.
 PREFIX is a prefix command, a symbol.
@@ -2565,10 +2563,8 @@ LOC is a command, a key vector, a key description (a string
   (whose last element may also be a command or key).
 See info node `(transient)Modifying Existing Transients'.
 
-\(fn PREFIX LOC SUFFIX)" nil nil)
-
+(fn PREFIX LOC SUFFIX)")
 (function-put 'transient-replace-suffix 'lisp-indent-function 'defun)
-
 (autoload 'transient-remove-suffix "transient" "\
 Remove the suffix or group at LOC in PREFIX.
 PREFIX is a prefix command, a symbol.
@@ -2577,15 +2573,14 @@ LOC is a command, a key vector, a key description (a string
   (whose last element may also be a command or key).
 See info node `(transient)Modifying Existing Transients'.
 
-\(fn PREFIX LOC)" nil nil)
-
+(fn PREFIX LOC)")
 (function-put 'transient-remove-suffix 'lisp-indent-function 'defun)
-
 (register-definition-prefixes "transient" '("transient"))
-
 
 
-
+(provide 'transient-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/topsy-20230414.1738/topsy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/topsy-20230414.1738/topsy-autoloads.el"))
 
@@ -12475,56 +12470,48 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230725.1758/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230725.1758/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230810.1530/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230810.1530/cmake-mode-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230725.1758/cmake-mode-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (autoload 'cmake-mode "cmake-mode" "\
 Major mode for editing CMake source files.
 
-\(fn)" t nil)
-
+(fn)" t)
 (autoload 'cmake-command-run "cmake-mode" "\
 Runs the command cmake with the arguments specified.  The
 optional argument topic will be appended to the argument list.
 
-\(fn TYPE &optional TOPIC BUFFER)" t nil)
-
+(fn TYPE &optional TOPIC BUFFER)" t)
 (autoload 'cmake-command-run-help "cmake-mode" "\
 `cmake-command-run' but rendered in `rst-mode'.
 
-\(fn TYPE &optional TOPIC BUFFER)" t nil)
-
+(fn TYPE &optional TOPIC BUFFER)" t)
 (autoload 'cmake-help-list-commands "cmake-mode" "\
-Prints out a list of the cmake commands." t nil)
-
+Prints out a list of the cmake commands." t)
 (autoload 'cmake-help-command "cmake-mode" "\
-Prints out the help message for the command the cursor is on." t nil)
-
+Prints out the help message for the command the cursor is on." t)
 (autoload 'cmake-help-module "cmake-mode" "\
-Prints out the help message for the module the cursor is on." t nil)
-
+Prints out the help message for the module the cursor is on." t)
 (autoload 'cmake-help-variable "cmake-mode" "\
-Prints out the help message for the variable the cursor is on." t nil)
-
+Prints out the help message for the variable the cursor is on." t)
 (autoload 'cmake-help-property "cmake-mode" "\
-Prints out the help message for the property the cursor is on." t nil)
-
+Prints out the help message for the property the cursor is on." t)
 (autoload 'cmake-help "cmake-mode" "\
-Queries for any of the four available help topics and prints out the appropriate page." t nil)
-
+Queries for any of the four available help topics and prints out the appropriate page." t)
 (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
-
 (add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
-
 (register-definition-prefixes "cmake-mode" '("cmake-"))
-
 
 
-
+(provide 'cmake-mode-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20230304.2223/cmake-font-lock-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-font-lock-20230304.2223/cmake-font-lock-autoloads.el"))
 
@@ -12985,7 +12972,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.7" "/Users/laurynas/.emacs.d/elpa/transient-20230723.1411" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.7" "/Users/laurynas/.emacs.d/elpa/transient-20230810.1716" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
