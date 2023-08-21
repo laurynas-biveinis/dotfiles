@@ -510,7 +510,7 @@ Setup `wgrep-deadgrep' for `deadgrep'." nil nil)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230808.528/wfnames-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230808.528/wfnames-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230819.1122/wfnames-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230819.1122/wfnames-autoloads.el"))
 
 
 
@@ -2516,7 +2516,7 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230810.1716/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230810.1716/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142/transient-autoloads.el"))
 
 
 
@@ -2794,7 +2794,7 @@ this time, in which case it won't display at all.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.2/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.2/solarized-theme-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.3/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.3/solarized-theme-autoloads.el"))
 
 
 
@@ -2889,34 +2889,33 @@ The Returned color-palette has the same format as `solarized-color-palette'
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20230619.642/simple-httpd-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20230619.642/simple-httpd-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20230821.1458/simple-httpd-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/simple-httpd-20230821.1458/simple-httpd-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/simple-httpd-20230619.642/simple-httpd-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (autoload 'httpd-start "simple-httpd" "\
 Start the web server process. If the server is already
 running, this will restart the server. There is only one server
-instance per Emacs instance." t nil)
-
+instance per Emacs instance." t)
 (autoload 'httpd-stop "simple-httpd" "\
-Stop the web server if it is currently running, otherwise do nothing." t nil)
-
+Stop the web server if it is currently running, otherwise do nothing." t)
 (autoload 'httpd-running-p "simple-httpd" "\
-Return non-nil if the simple-httpd server is running." nil nil)
-
+Return non-nil if the simple-httpd server is running.")
 (autoload 'httpd-serve-directory "simple-httpd" "\
 Start the web server with given `directory' as `httpd-root'.
 
-\(fn DIRECTORY)" t nil)
-
+(fn DIRECTORY)" t)
 (register-definition-prefixes "simple-httpd" '("defservlet" "httpd" "with-httpd-buffer"))
-
 
 
-
+(provide 'simple-httpd-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.5/rust-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.5/rust-mode-autoloads.el"))
 
@@ -9936,7 +9935,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.3/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.3/helm-core-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.4/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.4/helm-core-autoloads.el"))
 
 
 
@@ -10170,7 +10169,7 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.3/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.3/helm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.4/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.4/helm-autoloads.el"))
 
 
 
@@ -10304,22 +10303,6 @@ Preconfigured `helm' for timers." t)
 (autoload 'helm-complex-command-history "helm-elisp" "\
 Preconfigured `helm' for complex command history." t)
 (register-definition-prefixes "helm-elisp" '("helm-" "with-helm-show-completion"))
-
-
-
-(autoload 'helm-list-elisp-packages "helm-elisp-package" "\
-Preconfigured `helm' for listing and handling Emacs packages.
-
-(fn ARG)" t)
-(autoload 'helm-list-elisp-packages-no-fetch "helm-elisp-package" "\
-Preconfigured Helm for Emacs packages.
-
-Same as `helm-list-elisp-packages' but don't fetch packages on
-remote.  Called with a prefix ARG always fetch packages on
-remote.
-
-(fn ARG)" t)
-(register-definition-prefixes "helm-elisp-package" '("helm-"))
 
 
 
@@ -10963,6 +10946,19 @@ The prefix arg can be set before calling
 
 To use this bind it to a key in `isearch-mode-map'." t)
 (register-definition-prefixes "helm-occur" '("helm-"))
+
+
+
+(autoload 'helm-packages "helm-packages" "\
+Helm interface to manage packages.
+
+With a prefix arg ARG refresh package list.
+
+When installing ensure to refresh the package list to avoid errors with outdated
+packages no more availables.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "helm-packages" '("helm-packages-"))
 
 
 
@@ -12470,7 +12466,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230810.1530/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230810.1530/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230816.1746/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230816.1746/cmake-mode-autoloads.el"))
 
 
 
@@ -12972,7 +12968,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.7" "/Users/laurynas/.emacs.d/elpa/transient-20230810.1716" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.7" "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
