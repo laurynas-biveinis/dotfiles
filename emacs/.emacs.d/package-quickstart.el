@@ -2465,34 +2465,30 @@ The buffer on focus when the command is called is set as the target buffer." t n
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.22/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.22/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.24/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.24/tree-sitter-langs-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.22/tree-sitter-langs-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (autoload 'tree-sitter-langs--init-load-path "tree-sitter-langs" "\
 Add the directory containing compiled grammars to `tree-sitter-load-path'.
 
-\(fn &rest ARGS)" nil nil)
-
+(fn &rest ARGS)")
 (advice-add 'tree-sitter-load :before #'tree-sitter-langs--init-load-path)
-
 (autoload 'tree-sitter-langs--init-major-mode-alist "tree-sitter-langs" "\
 Link known major modes to languages provided by the bundle.
 
-\(fn &rest ARGS)" nil nil)
-
+(fn &rest ARGS)")
 (advice-add 'tree-sitter--setup :before #'tree-sitter-langs--init-major-mode-alist)
-
 (autoload 'tree-sitter-langs--set-hl-default-patterns "tree-sitter-langs" "\
 Use syntax highlighting patterns provided by `tree-sitter-langs'.
 
-\(fn &rest ARGS)" nil nil)
-
+(fn &rest ARGS)")
 (advice-add 'tree-sitter-hl--setup :before #'tree-sitter-langs--set-hl-default-patterns)
-
 (register-definition-prefixes "tree-sitter-langs" '("tree-sitter-langs-"))
 
 
@@ -2508,13 +2504,13 @@ unless SKIP-IF-INSTALLED is non-nil.
 The download bundle file is deleted after installation, unless KEEP-BUNDLE is
 non-nil.
 
-\(fn &optional SKIP-IF-INSTALLED VERSION OS KEEP-BUNDLE)" t nil)
-
+(fn &optional SKIP-IF-INSTALLED VERSION OS KEEP-BUNDLE)" t)
 (register-definition-prefixes "tree-sitter-langs-build" '("tree-sitter-langs-"))
-
 
 
-
+(provide 'tree-sitter-langs-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142/transient-autoloads.el"))
 
@@ -4385,10 +4381,12 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.7/org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.7/org-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.8/org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.8/org-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/org-9.6.7/org-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -4413,6 +4411,10 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 (register-definition-prefixes "ob-comint" '("org-babel-comint-"))
+
+
+
+(register-definition-prefixes "ob-core" '("org-"))
 
 
 
@@ -4485,6 +4487,10 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 (register-definition-prefixes "ob-lisp" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-lob" '("org-babel-"))
 
 
 
@@ -4568,13 +4574,16 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 
+(register-definition-prefixes "ob-tangle" '("org-babel-"))
+
+
+
 (autoload 'org-cite-insert "oc" "\
 Insert a citation at point.
 Insertion is done according to the processor set in `org-cite-insert-processor'.
 ARG is the prefix argument received when calling interactively the function.
 
-\(fn ARG)" t nil)
-
+(fn ARG)" t)
 (register-definition-prefixes "oc" '("org-cite-"))
 
 
@@ -4596,6 +4605,14 @@ ARG is the prefix argument received when calling interactively the function.
 
 
 (register-definition-prefixes "oc-natbib" '("org-cite-natbib-"))
+
+
+
+(register-definition-prefixes "ol" '("org-"))
+
+
+
+(register-definition-prefixes "ol-bbdb" '("org-bbdb-"))
 
 
 
@@ -4627,6 +4644,10 @@ ARG is the prefix argument received when calling interactively the function.
 
 
 
+(register-definition-prefixes "ol-irc" '("org-irc-"))
+
+
+
 (register-definition-prefixes "ol-man" '("org-man-"))
 
 
@@ -4646,8 +4667,7 @@ ARG is the prefix argument received when calling interactively the function.
 (autoload 'org-babel-do-load-languages "org" "\
 Load the languages defined in `org-babel-load-languages'.
 
-\(fn SYM VALUE)" nil nil)
-
+(fn SYM VALUE)")
 (autoload 'org-babel-load-file "org" "\
 Load Emacs Lisp source code blocks in the Org FILE.
 This function exports the source code using `org-babel-tangle'
@@ -4655,8 +4675,7 @@ and then loads the resulting file using `load-file'.  With
 optional prefix argument COMPILE, the tangled Emacs Lisp file is
 byte-compiled before it is loaded.
 
-\(fn FILE &optional COMPILE)" t nil)
-
+(fn FILE &optional COMPILE)" t)
 (autoload 'org-version "org" "\
 Show the Org version.
 Interactively, or when MESSAGE is non-nil, show it in echo area.
@@ -4664,16 +4683,13 @@ With prefix argument, or when HERE is non-nil, insert it at point.
 In non-interactive uses, a reduced version string is output unless
 FULL is given.
 
-\(fn &optional HERE FULL MESSAGE)" t nil)
-
+(fn &optional HERE FULL MESSAGE)" t)
 (autoload 'org-load-modules-maybe "org" "\
 Load all extensions listed in `org-modules'.
 
-\(fn &optional FORCE)" nil nil)
-
+(fn &optional FORCE)")
 (autoload 'org-clock-persistence-insinuate "org" "\
-Set up hooks for clock persistence." nil nil)
-
+Set up hooks for clock persistence.")
 (autoload 'org-mode "org" "\
 Outline-based notes management and organizer, alias
 \"Carsten's outline-mode for keeping track of everything.\"
@@ -4693,16 +4709,14 @@ The following commands are available:
 
 \\{org-mode-map}
 
-\(fn)" t nil)
-
+(fn)" t)
 (autoload 'org-run-like-in-org-mode "org" "\
 Run a command, pretending that the current buffer is in Org mode.
 This will temporarily bind local variables that are typically bound in
 Org mode to the values they have in Org mode, and then interactively
 call CMD.
 
-\(fn CMD)" nil nil)
-
+(fn CMD)")
 (autoload 'org-open-file "org" "\
 Open the file at PATH.
 First, this expands any special file name abbreviations.  Then the
@@ -4725,16 +4739,14 @@ link, please customize `org-link-frame-setup'.
 
 If the file does not exist, throw an error.
 
-\(fn PATH &optional IN-EMACS LINE SEARCH)" nil nil)
-
+(fn PATH &optional IN-EMACS LINE SEARCH)")
 (autoload 'org-open-at-point-global "org" "\
 Follow a link or a time-stamp like Org mode does.
 Also follow links and emails as seen by `thing-at-point'.
 This command can be called in any mode to follow an external
 link or a time-stamp that has Org mode syntax.  Its behavior
 is undefined when called on internal links like fuzzy links.
-Raise a user error when there is nothing to follow." t nil)
-
+Raise a user error when there is nothing to follow." t)
 (autoload 'org-offer-links-in-entry "org" "\
 Offer links in the current entry and return the selected link.
 If there is only one link, return it.
@@ -4742,8 +4754,13 @@ If NTH is an integer, return the NTH link found.
 If ZERO is a string, check also this string for a link, and if
 there is one, return it.
 
-\(fn BUFFER MARKER &optional NTH ZERO)" nil nil)
+(fn BUFFER MARKER &optional NTH ZERO)")
+(autoload 'org-dynamic-block-define "org" "\
+Define dynamic block TYPE with FUNC.
+TYPE is a string.  FUNC is the function creating the dynamic
+block of such type.
 
+(fn TYPE FUNC)")
 (autoload 'org-switchb "org" "\
 Switch between Org buffers.
 
@@ -4751,13 +4768,11 @@ With `\\[universal-argument]' prefix, restrict available buffers to files.
 
 With `\\[universal-argument] \\[universal-argument]' prefix, restrict available buffers to agenda files.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'org-cycle-agenda-files "org" "\
 Cycle through the files in `org-agenda-files'.
 If the current buffer visits an agenda file, find the next one in the list.
-If the current buffer does not, find the first agenda file." t nil)
-
+If the current buffer does not, find the first agenda file." t)
 (autoload 'org-submit-bug-report "org" "\
 Submit a bug report on Org via mail.
 
@@ -4765,17 +4780,14 @@ Don't hesitate to report any problems or inaccurate documentation.
 
 If you don't have setup sending mail from (X)Emacs, please copy the
 output buffer into your mail program, as it gives us important
-information about your Org version and configuration." t nil)
-
+information about your Org version and configuration." t)
 (autoload 'org-reload "org" "\
 Reload all Org Lisp files.
 With prefix arg UNCOMPILED, load the uncompiled versions.
 
-\(fn &optional UNCOMPILED)" t nil)
-
+(fn &optional UNCOMPILED)" t)
 (autoload 'org-customize "org" "\
-Call the customize function with org as argument." t nil)
-
+Call the customize function with org as argument." t)
 (register-definition-prefixes "org" '("org-" "turn-on-org-cdlatex"))
 
 
@@ -4783,8 +4795,7 @@ Call the customize function with org as argument." t nil)
 (autoload 'org-toggle-sticky-agenda "org-agenda" "\
 Toggle `org-agenda-sticky'.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'org-agenda "org-agenda" "\
 Dispatch agenda commands to collect entries to the agenda buffer.
 Prompts for a command to execute.  Any prefix arg will be passed
@@ -4815,12 +4826,11 @@ searches can be pre-defined in this way.
 
 If the current buffer is in Org mode and visiting a file, you can also
 first press `<' once to indicate that the agenda should be temporarily
-\(until the next use of `\\[org-agenda]') restricted to the current file.
+(until the next use of `\\[org-agenda]') restricted to the current file.
 Pressing `<' twice means to restrict to the current subtree or region
-\(if active).
+(if active).
 
-\(fn &optional ARG KEYS RESTRICTION)" t nil)
-
+(fn &optional ARG KEYS RESTRICTION)" t)
 (autoload 'org-batch-agenda "org-agenda" "\
 Run an agenda command in batch mode and send the result to STDOUT.
 If CMD-KEY is a string of length 1, it is used as a key in
@@ -4829,8 +4839,7 @@ longer string it is used as a tags/todo match string.
 Parameters are alternating variable names and values that will be bound
 before running the agenda command.
 
-\(fn CMD-KEY &rest PARAMETERS)" nil t)
-
+(fn CMD-KEY &rest PARAMETERS)" nil t)
 (autoload 'org-batch-agenda-csv "org-agenda" "\
 Run an agenda command in batch mode and send the result to STDOUT.
 If CMD-KEY is a string of length 1, it is used as a key in
@@ -4866,18 +4875,15 @@ priority-l   The priority letter if any was given
 priority-n   The computed numerical priority
 agenda-day   The day in the agenda where this is listed
 
-\(fn CMD-KEY &rest PARAMETERS)" nil t)
-
+(fn CMD-KEY &rest PARAMETERS)" nil t)
 (autoload 'org-store-agenda-views "org-agenda" "\
 Store agenda views.
 
-\(fn &rest PARAMETERS)" t nil)
-
+(fn &rest PARAMETERS)" t)
 (autoload 'org-batch-store-agenda-views "org-agenda" "\
 Run all custom agenda commands that have a file argument.
 
-\(fn &rest PARAMETERS)" nil t)
-
+(fn &rest PARAMETERS)" nil t)
 (autoload 'org-agenda-list "org-agenda" "\
 Produce a daily/weekly view from all files in variable `org-agenda-files'.
 The view will be for the current day or week, but from the overview buffer
@@ -4893,8 +4899,7 @@ given in `org-agenda-start-on-weekday'.
 When WITH-HOUR is non-nil, only include scheduled and deadline
 items if they have an hour specification like [h]h:mm.
 
-\(fn &optional ARG START-DAY SPAN WITH-HOUR)" t nil)
-
+(fn &optional ARG START-DAY SPAN WITH-HOUR)" t)
 (autoload 'org-search-view "org-agenda" "\
 Show all entries that contain a phrase or words or regular expressions.
 
@@ -4940,8 +4945,7 @@ This command searches the agenda files, and in addition the files
 listed in `org-agenda-text-search-extra-files' unless a restriction lock
 is active.
 
-\(fn &optional TODO-ONLY STRING EDIT-AT)" t nil)
-
+(fn &optional TODO-ONLY STRING EDIT-AT)" t)
 (autoload 'org-todo-list "org-agenda" "\
 Show all (not done) TODO entries from all agenda files in a single list.
 The prefix arg can be used to select a specific TODO keyword and limit
@@ -4949,22 +4953,19 @@ the list to these.  When using `\\[universal-argument]', you will be prompted
 for a keyword.  A numeric prefix directly selects the Nth keyword in
 `org-todo-keywords-1'.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'org-tags-view "org-agenda" "\
 Show all headlines for all `org-agenda-files' matching a TAGS criterion.
 The prefix arg TODO-ONLY limits the search to TODO entries.
 
-\(fn &optional TODO-ONLY MATCH)" t nil)
-
+(fn &optional TODO-ONLY MATCH)" t)
 (autoload 'org-agenda-list-stuck-projects "org-agenda" "\
 Create agenda view for projects that are stuck.
 Stuck projects are project that have no next actions.  For the definitions
 of what a project is and how to check if it stuck, customize the variable
 `org-stuck-projects'.
 
-\(fn &rest IGNORE)" t nil)
-
+(fn &rest IGNORE)" t)
 (autoload 'org-diary "org-agenda" "\
 Return diary information from org files.
 This function can be used in a \"sexp\" diary entry in the Emacs calendar.
@@ -4992,13 +4993,11 @@ The function expects the lisp variables `entry' and `date' to be provided
 by the caller, because this is how the calendar works.  Don't use this
 function from a program - use `org-agenda-get-day-entries' instead.
 
-\(fn &rest ARGS)" nil nil)
-
+(fn &rest ARGS)")
 (autoload 'org-agenda-check-for-timestamp-as-reason-to-ignore-todo-item "org-agenda" "\
 Do we have a reason to ignore this TODO entry because it has a time stamp?
 
-\(fn &optional END)" nil nil)
-
+(fn &optional END)")
 (autoload 'org-agenda-set-restriction-lock "org-agenda" "\
 Set restriction lock for agenda to current subtree or file.
 When in a restricted subtree, remove it.
@@ -5008,12 +5007,10 @@ or if TYPE is (4), or if the cursor is before the first headline
 in the file.  Otherwise, only apply the restriction to the current
 subtree.
 
-\(fn &optional TYPE)" t nil)
-
+(fn &optional TYPE)" t)
 (autoload 'org-calendar-goto-agenda "org-agenda" "\
 Compute the Org agenda for the calendar date displayed at the cursor.
-This is a command that has to be installed in `calendar-mode-map'." t nil)
-
+This is a command that has to be installed in `calendar-mode-map'." t)
 (autoload 'org-agenda-to-appt "org-agenda" "\
 Activate appointments found in `org-agenda-files'.
 
@@ -5040,16 +5037,23 @@ belonging to the \"Work\" category.
 
 ARGS are symbols indicating what kind of entries to consider.
 By default `org-agenda-to-appt' will use :deadline*, :scheduled*
-\(i.e., deadlines and scheduled items with a hh:mm specification)
+(i.e., deadlines and scheduled items with a hh:mm specification)
 and :timestamp entries.  See the docstring of `org-diary' for
 details and examples.
 
 If an entry has a APPT_WARNTIME property, its value will be used
 to override `appt-message-warning-time'.
 
-\(fn &optional REFRESH FILTER &rest ARGS)" t nil)
-
+(fn &optional REFRESH FILTER &rest ARGS)" t)
 (register-definition-prefixes "org-agenda" '("org-"))
+
+
+
+(register-definition-prefixes "org-archive" '("org-a"))
+
+
+
+(register-definition-prefixes "org-attach" '("org-attach-"))
 
 
 
@@ -5060,8 +5064,7 @@ to override `appt-message-warning-time'.
 (autoload 'org-capture-string "org-capture" "\
 Capture STRING with the template selected by KEYS.
 
-\(fn STRING &optional KEYS)" t nil)
-
+(fn STRING &optional KEYS)" t)
 (autoload 'org-capture "org-capture" "\
 Capture something.
 \\<org-capture-mode-map>
@@ -5091,30 +5094,35 @@ agenda will use the date at point as the default date.  Then, a
 `C-1' prefix will tell the capture process to use the HH:MM time
 of the day at point (if any) or the current HH:MM time.
 
-\(fn &optional GOTO KEYS)" t nil)
-
+(fn &optional GOTO KEYS)" t)
 (autoload 'org-capture-import-remember-templates "org-capture" "\
-Set `org-capture-templates' to be similar to `org-remember-templates'." t nil)
-
+Set `org-capture-templates' to be similar to `org-remember-templates'." t)
 (register-definition-prefixes "org-capture" '("org-capture-"))
 
 
 
+(register-definition-prefixes "org-clock" '("org-"))
+
+
+
+(register-definition-prefixes "org-colview" '("org-"))
+
+
+
+(register-definition-prefixes "org-compat" '("org-" "outline-"))
+
+
+
 (autoload 'org-encrypt-entry "org-crypt" "\
-Encrypt the content of the current headline." t nil)
-
+Encrypt the content of the current headline." t)
 (autoload 'org-decrypt-entry "org-crypt" "\
-Decrypt the content of the current headline." t nil)
-
+Decrypt the content of the current headline." t)
 (autoload 'org-encrypt-entries "org-crypt" "\
-Encrypt all top-level entries in the current buffer." t nil)
-
+Encrypt all top-level entries in the current buffer." t)
 (autoload 'org-decrypt-entries "org-crypt" "\
-Decrypt all entries in the current buffer." t nil)
-
+Decrypt all entries in the current buffer." t)
 (autoload 'org-crypt-use-before-save-magic "org-crypt" "\
-Add a hook to automatically encrypt entries before a file is saved to disk." nil nil)
-
+Add a hook to automatically encrypt entries before a file is saved to disk.")
 (register-definition-prefixes "org-crypt" '("org-"))
 
 
@@ -5173,16 +5181,26 @@ there is no headline there, and if the variable `org-cycle-global-at-bob'
 is non-nil, this function acts as if called with prefix argument (`\\[universal-argument] TAB',
 same as `S-TAB') also when called without prefix argument.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'org-cycle-global "org-cycle" "\
 Cycle the global visibility.  For details see `org-cycle'.
 With `\\[universal-argument]' prefix ARG, switch to startup visibility.
 With a numeric prefix, show all headlines up to that level.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (register-definition-prefixes "org-cycle" '("org-cycle-"))
+
+
+
+(register-definition-prefixes "org-datetree" '("org-datetree-"))
+
+
+
+(register-definition-prefixes "org-duration" '("org-duration-"))
+
+
+
+(register-definition-prefixes "org-element" '("org-element-"))
 
 
 
@@ -5194,6 +5212,10 @@ With a numeric prefix, show all headlines up to that level.
 
 
 
+(register-definition-prefixes "org-feed" '("org-feed-"))
+
+
+
 (register-definition-prefixes "org-fold" '("org-fold-"))
 
 
@@ -5202,7 +5224,23 @@ With a numeric prefix, show all headlines up to that level.
 
 
 
+(register-definition-prefixes "org-footnote" '("org-footnote-"))
+
+
+
+(register-definition-prefixes "org-goto" '("org-goto-"))
+
+
+
 (register-definition-prefixes "org-habit" '("org-"))
+
+
+
+(register-definition-prefixes "org-id" '("org-id-"))
+
+
+
+(register-definition-prefixes "org-indent" '("org-indent-"))
 
 
 
@@ -5210,11 +5248,35 @@ With a numeric prefix, show all headlines up to that level.
 
 
 
+(register-definition-prefixes "org-keys" '("org-"))
+
+
+
+(register-definition-prefixes "org-lint" '("org-lint-"))
+
+
+
+(register-definition-prefixes "org-list" '("org-"))
+
+
+
 (register-definition-prefixes "org-macro" '("org-macro-"))
 
 
 
+(register-definition-prefixes "org-macs" '("org-"))
+
+
+
+(register-definition-prefixes "org-mobile" '("org-mobile-"))
+
+
+
 (register-definition-prefixes "org-mouse" '("org-"))
+
+
+
+(register-definition-prefixes "org-num" '("org-num-"))
 
 
 
@@ -5226,7 +5288,15 @@ With a numeric prefix, show all headlines up to that level.
 
 
 
+(register-definition-prefixes "org-plot" '("org-"))
+
+
+
 (register-definition-prefixes "org-protocol" '("org-"))
+
+
+
+(register-definition-prefixes "org-refile" '("org-"))
 
 
 
@@ -5234,17 +5304,44 @@ With a numeric prefix, show all headlines up to that level.
 
 
 
+(register-definition-prefixes "org-table" '("org"))
+
+
+
 (register-definition-prefixes "org-tempo" '("org-tempo-"))
+
+
+
+(register-definition-prefixes "org-timer" '("org-timer-"))
 
 
 
 (autoload 'org-release "org-version" "\
 The release version of Org.
-Inserted by installing Org mode or when a release is made." nil nil)
-
+Inserted by installing Org mode or when a release is made.")
 (autoload 'org-git-version "org-version" "\
 The Git version of Org mode.
-Inserted by installing Org or when a release is made." nil nil)
+Inserted by installing Org or when a release is made.")
+
+
+
+(register-definition-prefixes "ox" '("org-"))
+
+
+
+(register-definition-prefixes "ox-ascii" '("org-ascii-"))
+
+
+
+(register-definition-prefixes "ox-beamer" '("org-beamer-"))
+
+
+
+(register-definition-prefixes "ox-html" '("org-html-"))
+
+
+
+(register-definition-prefixes "ox-icalendar" '("org-icalendar-"))
 
 
 
@@ -5278,8 +5375,7 @@ Export is done in a buffer named \"*Org KOMA-LETTER Export*\".  It
 will be displayed if `org-export-show-temporary-export-buffer' is
 non-nil.
 
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t nil)
-
+(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t)
 (autoload 'org-koma-letter-export-to-latex "ox-koma-letter" "\
 Export current buffer as a KOMA Scrlttr2 letter (tex).
 
@@ -5311,8 +5407,7 @@ directory.
 
 Return output file's name.
 
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t nil)
-
+(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t)
 (autoload 'org-koma-letter-export-to-pdf "ox-koma-letter" "\
 Export current buffer as a KOMA Scrlttr2 letter (pdf).
 
@@ -5341,9 +5436,12 @@ file-local settings.
 
 Return PDF file's name.
 
-\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t nil)
-
+(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t)
 (register-definition-prefixes "ox-koma-letter" '("org-koma-letter-"))
+
+
+
+(register-definition-prefixes "ox-latex" '("org-"))
 
 
 
@@ -5351,7 +5449,28 @@ Return PDF file's name.
 
 
 
+(register-definition-prefixes "ox-md" '("org-md-"))
+
 
+
+(register-definition-prefixes "ox-odt" '("org-odt-"))
+
+
+
+(register-definition-prefixes "ox-org" '("org-org-"))
+
+
+
+(register-definition-prefixes "ox-publish" '("org-publish-"))
+
+
+
+(register-definition-prefixes "ox-texinfo" '("org-texinfo-"))
+
+
+(provide 'org-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el"))
 
@@ -12968,7 +13087,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.7" "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.8" "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
