@@ -1,0 +1,2 @@
+;; Generated package description from soap-client.el  -*- no-byte-compile: t -*-
+(define-package "soap-client" "3.2.3" "Access SOAP web services" '((emacs "24.1") (cl-lib "0.6.1")) :commit "6234c3e0411a1d70bed2c85bbfb438d4479be51b" :authors '(("Alexandru Harsanyi" . "AlexHarsanyi@gmail.com")) :maintainer '("Alexandru Harsanyi" . "AlexHarsanyi@gmail.com") :keywords '("soap" "web-services" "comm" "hypermedia") :url "https://github.com/alex-hhh/emacs-soap-client")
