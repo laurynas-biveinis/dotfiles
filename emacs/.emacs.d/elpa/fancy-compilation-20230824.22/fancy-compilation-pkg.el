@@ -1,6 +1,6 @@
-(define-package "fancy-compilation" "20230718.2326" "Enhanced compilation output"
+(define-package "fancy-compilation" "20230824.22" "Enhanced compilation output"
   '((emacs "26.1"))
-  :commit "a200d2ac5d7aa7ad04dfcf255d199415e7105702" :authors
+  :commit "32dc801a921428e4abaeb826449c86fc3c96c0f8" :authors
   '(("Campbell Barton" . "ideasman42@gmail.com"))
   :maintainers
   '(("Campbell Barton" . "ideasman42@gmail.com"))

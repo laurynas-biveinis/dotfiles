@@ -204,7 +204,7 @@ Use this to set or override defaults."
             (insert "\n")
             (save-match-data
               (when (or (looking-at "[[:alnum:]]+ [[:alnum:]]+\\( at .*\\)")
-                        (re-search-forward "\\( at .*\\)"))
+                        (re-search-forward "\\( at .*\\)" nil t))
                 (delete-region (match-beginning 1) (match-end 1))))
 
             (let ((tail (car (fancy-compilation--bounds-of-space-at-point (point-max)))))

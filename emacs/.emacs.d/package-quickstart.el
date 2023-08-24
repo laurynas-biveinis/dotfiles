@@ -12146,10 +12146,12 @@ or offer suggestions for improvement.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230718.2326/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230718.2326/fancy-compilation-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230824.22/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230824.22/fancy-compilation-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230718.2326/fancy-compilation-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -12160,32 +12162,32 @@ for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `fancy-compilation-mode'.")
-
 (custom-autoload 'fancy-compilation-mode "fancy-compilation" nil)
-
 (autoload 'fancy-compilation-mode "fancy-compilation" "\
 Enable enhanced compilation.
 
-This is a minor mode.  If called interactively, toggle the `Fancy-Compilation
-mode' mode.  If the prefix argument is positive, enable the mode, and if it is
-zero or negative, disable the mode.
+This is a global minor mode.  If called interactively, toggle the
+`Fancy-Compilation mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the mode if ARG
-is nil, omitted, or is a positive number.  Disable the mode if ARG is a negative
-number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
 
-To check whether the minor mode is enabled in the current buffer, evaluate
-`(default-value \\='fancy-compilation-mode)'.
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='fancy-compilation-mode)'.
 
-The mode's hook is called both when the mode is enabled and when it is disabled.
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (register-definition-prefixes "fancy-compilation" '("fancy-compilation-"))
-
 
 
-
+(provide 'fancy-compilation-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/exec-path-from-shell-2.1/exec-path-from-shell-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/exec-path-from-shell-2.1/exec-path-from-shell-autoloads.el"))
 
@@ -12585,7 +12587,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230816.1746/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230816.1746/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230823.1325/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230823.1325/cmake-mode-autoloads.el"))
 
 
 
