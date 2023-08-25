@@ -356,11 +356,11 @@ mysql_cmake() {
     case "$build_dir" in
         *debug*)
             echo "Debug build"
-            cmake .. "${debug_flags[@]}" "$@"
+            cmake -G Ninja .. "${debug_flags[@]}" "$@"
             ;;
         *release*)
             echo "Release build"
-            cmake .. "${release_flags[@]}" "$@"
+            cmake -G Ninja .. "${release_flags[@]}" "$@"
             ;;
     esac
     set +x
@@ -370,7 +370,7 @@ mysql_build() {
     mysql_cmake "$@"
     build_dir="$(basename "$PWD")"
     (cd .. && ln -sf "$build_dir/compile_commands.json" .)
-    make -j "$MAKE_J"
+    ninja
 }
 
 # Workaround P10K going crazy
