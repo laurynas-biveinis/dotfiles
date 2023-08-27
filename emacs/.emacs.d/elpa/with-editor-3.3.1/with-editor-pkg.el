@@ -1,15 +1,15 @@
-(define-package "transient" "20230812.2142" "Transient commands"
+(define-package "with-editor" "3.3.1" "Use the Emacsclient as $EDITOR"
   '((emacs "25.1")
     (compat "29.1.4.1"))
-  :commit "226db67b3680acbeb74cb0403e1a302917054174" :authors
+  :commit "2dc557b668203e718502e28573c45659cc8c0a78" :authors
   '(("Jonas Bernoulli" . "jonas@bernoul.li"))
   :maintainers
   '(("Jonas Bernoulli" . "jonas@bernoul.li"))
   :maintainer
   '("Jonas Bernoulli" . "jonas@bernoul.li")
   :keywords
-  '("extensions")
-  :url "https://github.com/magit/transient")
+  '("processes" "terminals")
+  :url "https://github.com/magit/with-editor")
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; End:

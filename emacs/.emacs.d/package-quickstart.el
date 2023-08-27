@@ -165,10 +165,12 @@ comparisons/benchmarks with libraries that offer similar functionality.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.1/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.1/with-editor-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0/with-editor-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -182,38 +184,18 @@ commands to use the current Emacs instance as \"the editor\".
 This works in `shell-mode', `term-mode', `eshell-mode' and
 `vterm'.
 
-\(fn &optional (ENVVAR \"EDITOR\"))" t nil)
-
+(fn &optional (ENVVAR \"EDITOR\"))" t)
 (autoload 'with-editor-export-git-editor "with-editor" "\
-Like `with-editor-export-editor' but always set `$GIT_EDITOR'." t nil)
-
+Like `with-editor-export-editor' but always set `$GIT_EDITOR'." t)
 (autoload 'with-editor-export-hg-editor "with-editor" "\
-Like `with-editor-export-editor' but always set `$HG_EDITOR'." t nil)
-
+Like `with-editor-export-editor' but always set `$HG_EDITOR'." t)
 (defvar shell-command-with-editor-mode nil "\
 Non-nil if Shell-Command-With-Editor mode is enabled.
 See the `shell-command-with-editor-mode' command
 for a description of this minor mode.")
-
 (custom-autoload 'shell-command-with-editor-mode "with-editor" nil)
-
 (autoload 'shell-command-with-editor-mode "with-editor" "\
 Teach `shell-command' to use current Emacs instance as editor.
-
-This is a minor mode.  If called interactively, toggle the
-`Shell-Command-With-Editor mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='shell-command-with-editor-mode)'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
 
 Teach `shell-command', and all commands that ultimately call that
 command, to use the current Emacs instance as editor by executing
@@ -229,8 +211,22 @@ Alternatively you can use the `with-editor-async-shell-command',
 which also allows the use of another variable instead of
 \"EDITOR\".
 
-\(fn &optional ARG)" t nil)
+This is a global minor mode.  If called interactively, toggle the
+`Shell-Command-With-Editor mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
 
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='shell-command-with-editor-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
 (autoload 'with-editor-async-shell-command "with-editor" "\
 Like `async-shell-command' but with `$EDITOR' set.
 
@@ -248,20 +244,19 @@ with arguments, or a script which also works over Tramp.
 
 Also see `async-shell-command' and `shell-command'.
 
-\(fn COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER ENVVAR)" t nil)
-
+(fn COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER ENVVAR)" t)
 (autoload 'with-editor-shell-command "with-editor" "\
 Like `shell-command' or `with-editor-async-shell-command'.
 If COMMAND ends with \"&\" behave like the latter,
 else like the former.
 
-\(fn COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER ENVVAR)" t nil)
-
+(fn COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER ENVVAR)" t)
 (register-definition-prefixes "with-editor" '("server-" "shell-command--shell-command-with-editor-mode" "start-file-process--with-editor-process-filter" "with-editor"))
-
 
 
-
+(provide 'with-editor-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.6.0/which-key-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/which-key-3.6.0/which-key-autoloads.el"))
 
@@ -2846,7 +2841,7 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230825.2019/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230825.2019/transient-autoloads.el"))
 
 
 
@@ -14786,7 +14781,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.8" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.1.1" "/Users/laurynas/.emacs.d/elpa/transient-20230812.2142" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.0" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.8" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.1.1" "/Users/laurynas/.emacs.d/elpa/transient-20230825.2019" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.1" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
