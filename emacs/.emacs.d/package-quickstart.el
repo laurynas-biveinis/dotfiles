@@ -165,7 +165,7 @@ comparisons/benchmarks with libraries that offer similar functionality.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.1/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.1/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.2/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.2/with-editor-autoloads.el"))
 
 
 
@@ -14781,7 +14781,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.8" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.1.1" "/Users/laurynas/.emacs.d/elpa/transient-20230825.2019" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.1" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.8" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.1.1" "/Users/laurynas/.emacs.d/elpa/transient-20230825.2019" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.2" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:

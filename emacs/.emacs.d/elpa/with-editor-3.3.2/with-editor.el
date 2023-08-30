@@ -6,7 +6,7 @@
 ;; Homepage: https://github.com/magit/with-editor
 ;; Keywords: processes terminals
 
-;; Package-Version: 3.3.1
+;; Package-Version: 3.3.2
 ;; Package-Requires: ((emacs "25.1") (compat "29.1.4.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -117,9 +117,10 @@ please see https://github.com/magit/magit/wiki/Emacsclient."))))
   (let* ((version-lst (cl-subseq (split-string emacs-version "\\.") 0 depth))
          (version-reg (concat "^" (mapconcat #'identity version-lst "\\."))))
     (or (locate-file
-         (if (equal (downcase invocation-name) "remacs")
-             "remacsclient"
-           "emacsclient")
+         (cond ((equal (downcase invocation-name) "remacs")
+                "remacsclient")
+               ((bound-and-true-p emacsclient-program-name))
+               ("emacsclient"))
          path
          (cl-mapcan
           (lambda (v) (cl-mapcar (lambda (e) (concat v e)) exec-suffixes))
