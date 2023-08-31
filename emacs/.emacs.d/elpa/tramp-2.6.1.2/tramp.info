@@ -1,4 +1,4 @@
-This is tramp.info, produced by makeinfo version 6.7 from tramp.texi.
+This is tramp.info, produced by makeinfo version 6.8 from tramp.texi.
 
 Copyright © 1999–2023 Free Software Foundation, Inc.
 
@@ -21,10 +21,10 @@ END-INFO-DIR-ENTRY
 
 File: tramp.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
 
-TRAMP 2.6.1.1a User Manual
-**************************
+TRAMP 2.6.1.2 User Manual
+*************************
 
-This file documents TRAMP 2.6.1.1a, a remote file editing package for
+This file documents TRAMP 2.6.1.2, a remote file editing package for
 Emacs.
 
    TRAMP stands for “Transparent Remote (file) Access, Multiple
@@ -4926,12 +4926,12 @@ Function Index
  [index ]
 * Menu:
 
-* list-system-processes:                 Remote processes.    (line 322)
-* make-process:                          Remote processes.    (line 383)
+* list-system-processes:                 Remote processes.    (line 321)
+* make-process:                          Remote processes.    (line 382)
 * my-tramp-parse:                        Customizing Completion.
                                                               (line  89)
-* process-attributes:                    Remote processes.    (line 322)
-* start-file-process:                    Remote processes.    (line 383)
+* process-attributes:                    Remote processes.    (line 321)
+* start-file-process:                    Remote processes.    (line 382)
 * tramp-bug:                             Bug Reports.         (line  24)
 * tramp-change-syntax:                   Change file name syntax.
                                                               (line  10)
@@ -4997,12 +4997,12 @@ Variable Index
 * COLUMNS, environment variable:         Remote processes.    (line 180)
 * ControlPath, ssh option:               Ssh setup.           (line  53)
 * ControlPersist, ssh option:            Ssh setup.           (line  53)
-* customize-package-emacs-version-alist: Obtaining TRAMP.     (line  21)
+* customize-package-emacs-version-alist: Obtaining TRAMP.     (line  20)
 * debug-ignored-errors:                  Frequently Asked Questions.
-                                                              (line 613)
+                                                              (line 612)
 * DISPLAY, environment variable:         Remote processes.    (line 108)
 * EDITOR, environment variable:          Frequently Asked Questions.
-                                                              (line 554)
+                                                              (line 553)
 * enable-remote-dir-locals:              Configuration.       (line  28)
 * ENV, environment variable:             Remote processes.    (line  79)
 * ESHELL, environment variable:          Remote shell setup.  (line 204)
@@ -5010,12 +5010,12 @@ Variable Index
 * ForwardX11Trusted, ssh option:         Remote processes.    (line 121)
 * HGPLAIN, environment variable:         Remote processes.    (line  97)
 * HISTFILE, environment variable:        Frequently Asked Questions.
-                                                              (line 275)
+                                                              (line 274)
 * HISTFILESIZE, environment variable:    Frequently Asked Questions.
-                                                              (line 275)
+                                                              (line 274)
 * HISTORY, environment variable:         Remote processes.    (line  67)
 * HISTSIZE, environment variable:        Frequently Asked Questions.
-                                                              (line 275)
+                                                              (line 274)
 * Include, ssh option:                   Ssh setup.           (line  13)
 * INSIDE_EMACS, environment variable:    Remote shell setup.  (line 117)
 * INSIDE_EMACS, environment variable <1>: Remote shell setup. (line 204)
@@ -5027,24 +5027,24 @@ Variable Index
 * password-cache-expiry:                 Password handling.   (line  73)
 * password-word-equivalents:             Remote shell setup.  (line  94)
 * PATH, environment variable:            External methods.    (line 185)
-* proced-show-remote-processes:          Remote processes.    (line 375)
-* process-connection-type:               Remote processes.    (line 277)
+* proced-show-remote-processes:          Remote processes.    (line 374)
+* process-connection-type:               Remote processes.    (line 276)
 * process-file-return-signal-string:     Remote processes.    (line  21)
 * process-file-side-effects:             External packages.   (line  26)
 * ProxyCommand, ssh option:              Firewalls.           (line  17)
 * ProxyCommand, ssh option <1>:          Ssh setup.           (line  90)
 * ProxyJump, ssh option:                 Ssh setup.           (line  90)
 * remote-file-error:                     Frequently Asked Questions.
-                                                              (line 613)
+                                                              (line 612)
 * remote-file-error <1>:                 External packages.   (line  57)
 * remote-file-name-inhibit-auto-save-visited: Auto-save File Lock and Backup.
                                                               (line  71)
 * remote-file-name-inhibit-cache:        Frequently Asked Questions.
-                                                              (line  50)
+                                                              (line  49)
 * remote-file-name-inhibit-locks:        Auto-save File Lock and Backup.
                                                               (line  86)
 * remote-file-name-inhibit-locks <1>:    Frequently Asked Questions.
-                                                              (line  68)
+                                                              (line  67)
 * RemoteCommand, ssh option:             Remote shell setup.  (line  36)
 * ServerAliveCountMax, ssh option:       Ssh setup.           (line  38)
 * ServerAliveInterval, ssh option:       Ssh setup.           (line  38)
@@ -5057,9 +5057,9 @@ Variable Index
 * tramp-actions-before-shell:            Remote shell setup.  (line 147)
 * tramp-adb-connect-if-not-connected:    External methods.    (line 193)
 * tramp-adb-connection-local-default-ps-profile: Remote processes.
-                                                              (line 358)
+                                                              (line 357)
 * tramp-adb-connection-local-default-ps-variables: Remote processes.
-                                                              (line 358)
+                                                              (line 357)
 * tramp-adb-program:                     External methods.    (line 185)
 * tramp-allow-unsafe-temporary-files:    Auto-save File Lock and Backup.
                                                               (line  89)
@@ -5079,15 +5079,15 @@ Variable Index
                                                               (line  41)
 * tramp-confirm-rename-file-names:       Renaming remote files.
                                                               (line  88)
-* tramp-connection-local-bsd-ps-profile: Remote processes.    (line 358)
-* tramp-connection-local-bsd-ps-variables: Remote processes.  (line 358)
+* tramp-connection-local-bsd-ps-profile: Remote processes.    (line 357)
+* tramp-connection-local-bsd-ps-variables: Remote processes.  (line 357)
 * tramp-connection-local-busybox-ps-profile: Remote processes.
-                                                              (line 358)
+                                                              (line 357)
 * tramp-connection-local-busybox-ps-variables: Remote processes.
-                                                              (line 358)
-* tramp-connection-local-darwin-ps-profile: Remote processes. (line 358)
+                                                              (line 357)
+* tramp-connection-local-darwin-ps-profile: Remote processes. (line 357)
 * tramp-connection-local-darwin-ps-variables: Remote processes.
-                                                              (line 358)
+                                                              (line 357)
 * tramp-connection-properties:           Predefined connection information.
                                                               (line   9)
 * tramp-crypt-encfs-option:              Keeping files encrypted.
@@ -5111,21 +5111,21 @@ Variable Index
 * tramp-fuse-unmount-on-cleanup:         FUSE setup.          (line  20)
 * tramp-gvfs-methods:                    GVFS-based methods.  (line  80)
 * tramp-histfile-override:               Frequently Asked Questions.
-                                                              (line 275)
+                                                              (line 274)
 * tramp-ignored-file-name-regexp:        Frequently Asked Questions.
-                                                              (line 676)
+                                                              (line 675)
 * tramp-inline-compress-commands:        Inline methods.      (line  25)
 * tramp-inline-compress-start-size:      Inline methods.      (line  25)
 * tramp-local-host-regexp:               Frequently Asked Questions.
-                                                              (line 176)
+                                                              (line 175)
 * tramp-methods:                         Customizing Methods. (line   6)
 * tramp-mode:                            Frequently Asked Questions.
-                                                              (line 670)
+                                                              (line 669)
 * tramp-own-remote-path:                 Remote programs.     (line  32)
 * tramp-password-prompt-regexp:          Remote shell setup.  (line  73)
 * tramp-persistency-file-name:           Connection caching.  (line   6)
-* tramp-process-attributes-ps-args:      Remote processes.    (line 327)
-* tramp-process-attributes-ps-format:    Remote processes.    (line 331)
+* tramp-process-attributes-ps-args:      Remote processes.    (line 326)
+* tramp-process-attributes-ps-format:    Remote processes.    (line 330)
 * tramp-rclone-program:                  FUSE-based methods.  (line  15)
 * tramp-remote-coding-commands:          Inline methods.      (line  16)
 * tramp-remote-path:                     Remote programs.     (line  15)
@@ -5136,14 +5136,14 @@ Variable Index
 * tramp-shell-prompt-pattern:            Remote shell setup.  (line  65)
 * tramp-show-ad-hoc-proxies:             Ad-hoc multi-hops.   (line  26)
 * tramp-smb-options:                     Frequently Asked Questions.
-                                                              (line 192)
+                                                              (line 191)
 * tramp-ssh-controlmaster-options:       Ssh setup.           (line  59)
 * tramp-sshfs-program:                   FUSE-based methods.  (line  46)
 * tramp-temp-name-prefix:                Frequently Asked Questions.
-                                                              (line 323)
+                                                              (line 322)
 * tramp-terminal-type:                   Remote shell setup.  (line 103)
 * tramp-theme-face-remapping-alist:      Frequently Asked Questions.
-                                                              (line 255)
+                                                              (line 254)
 * tramp-use-scp-direct-remote-copying:   Ssh setup.           (line 120)
 * tramp-use-ssh-controlmaster-options:   Ssh setup.           (line  72)
 * tramp-verbose:                         Traces and Profiles. (line   6)
@@ -5175,8 +5175,8 @@ Concept Index
 * ar file archive suffix:                Archive file names.  (line  39)
 * archive file names:                    Archive file names.  (line   6)
 * archive method:                        Archive file names.  (line   6)
-* Asynchronous remote processes:         Remote processes.    (line 300)
-* Asynchronous remote processes <1>:     Remote processes.    (line 383)
+* Asynchronous remote processes:         Remote processes.    (line 299)
+* Asynchronous remote processes <1>:     Remote processes.    (line 382)
 * auto-save:                             Auto-save File Lock and Backup.
                                                               (line   6)
 * backup:                                Auto-save File Lock and Backup.
@@ -5228,7 +5228,7 @@ Concept Index
 * Encrypt remote directories:            Keeping files encrypted.
                                                               (line   6)
 * epub file archive suffix:              Archive file names.  (line  51)
-* eshell:                                Remote processes.    (line 191)
+* eshell:                                Remote processes.    (line 190)
 * exe file archive suffix:               Archive file names.  (line  53)
 * external methods:                      External methods.    (line   6)
 * fakecygpty and cygwin:                 Ssh setup.           (line 170)
@@ -5290,7 +5290,7 @@ Concept Index
 * ftp method:                            External methods.    (line 118)
 * fuse-based methods:                    Quick Start Guide.   (line 116)
 * fuse-based methods <1>:                FUSE-based methods.  (line   6)
-* gdb:                                   Remote processes.    (line 224)
+* gdb:                                   Remote processes.    (line 223)
 * gdrive method:                         Quick Start Guide.   (line 105)
 * gdrive method <1>:                     GVFS-based methods.  (line  34)
 * git method:                            Customizing Methods. (line  25)
@@ -5299,7 +5299,7 @@ Concept Index
 * GNU ELPA:                              Obtaining TRAMP.     (line   6)
 * google drive:                          Quick Start Guide.   (line 105)
 * google drive <1>:                      GVFS-based methods.  (line  34)
-* gud.el:                                Remote processes.    (line 224)
+* gud.el:                                Remote processes.    (line 223)
 * gvfs-based methods:                    Quick Start Guide.   (line  95)
 * gvfs-based methods <1>:                GVFS-based methods.  (line   6)
 * hdfs method:                           Customizing Methods. (line  31)
@@ -5422,7 +5422,7 @@ Concept Index
 * overview:                              Overview.            (line   6)
 * passwords:                             Password handling.   (line   6)
 * pax file archive suffix:               Archive file names.  (line  68)
-* perldb:                                Remote processes.    (line 224)
+* perldb:                                Remote processes.    (line 223)
 * plink (with pscp method):              External methods.    (line  62)
 * plink (with psftp method):             External methods.    (line  62)
 * plink method:                          Quick Start Guide.   (line  43)
@@ -5430,8 +5430,8 @@ Concept Index
 * plink method <2>:                      Inline methods.      (line 114)
 * plinkx method:                         Inline methods.      (line 126)
 * podman method:                         Inline methods.      (line 141)
-* powershell:                            Remote processes.    (line 255)
-* proced:                                Remote processes.    (line 375)
+* powershell:                            Remote processes.    (line 254)
+* proced:                                Remote processes.    (line 374)
 * proxy hosts:                           Multi-hops.          (line   6)
 * proxy hosts, ad-hoc:                   Ad-hoc multi-hops.   (line   6)
 * proxy hosts, http tunnel:              Firewalls.           (line   6)
@@ -5501,8 +5501,8 @@ Concept Index
 * tgz file archive suffix:               Archive file names.  (line  77)
 * tlz file archive suffix:               Archive file names.  (line  77)
 * TRAMP theme:                           Frequently Asked Questions.
-                                                              (line 255)
-* tramp-process-connection-type:         Remote processes.    (line 277)
+                                                              (line 254)
+* tramp-process-connection-type:         Remote processes.    (line 276)
 * tset unix command:                     Remote shell setup.  (line 137)
 * txz file archive suffix:               Archive file names.  (line  77)
 * type-ahead:                            Usage.               (line  12)
@@ -5515,7 +5515,7 @@ Concept Index
 * vagrant method:                        Customizing Methods. (line  44)
 * warc file archive suffix:              Archive file names.  (line  79)
 * WebDAV:                                GVFS-based methods.  (line  24)
-* winexe:                                Remote processes.    (line 255)
+* winexe:                                Remote processes.    (line 254)
 * xar file archive suffix:               Archive file names.  (line  81)
 * xpi file archive suffix:               Archive file names.  (line  83)
 * xps file archive suffix:               Archive file names.  (line  85)
@@ -5527,70 +5527,70 @@ Concept Index
 
 Tag Table:
 Node: Top933
-Node: Overview5632
-Node: Obtaining TRAMP10990
-Node: Quick Start Guide13454
-Ref: Quick Start Guide File name syntax14235
-Ref: Quick Start Guide ssh and plink methods15331
-Ref: Quick Start Guide su, sudo, doas and sg methods15878
-Ref: Quick Start Guide Combining ssh, plink, su, sudo and doas methods16550
-Ref: Quick Start Guide sudoedit method17115
-Ref: Quick Start Guide smb method17525
-Ref: Quick Start Guide GVFS-based methods17856
-Ref: Quick Start Guide GNOME Online Accounts based methods18302
-Ref: Quick Start Guide FUSE-based methods18844
-Ref: Quick Start Guide Android19717
-Node: Configuration19951
-Node: Connection types22835
-Node: Inline methods24252
-Node: External methods29869
-Node: GVFS-based methods39009
-Node: FUSE-based methods43163
-Node: Default Method46115
-Ref: Default Method-Footnote-149334
-Node: Default User49444
-Node: Default Host50973
-Node: Multi-hops52105
-Node: Firewalls56298
-Node: Customizing Methods57772
-Node: Customizing Completion60006
-Node: Password handling63496
-Ref: Using an authentication file63966
-Ref: Caching passwords66350
-Node: Connection caching66868
-Node: Predefined connection information67798
-Node: Remote programs72899
-Node: Remote shell setup75812
-Node: Ssh setup86357
-Ref: Using ssh connection sharing88258
-Node: FUSE setup94467
-Ref: Setup of rclone method95412
-Ref: Setup of sshfs method95995
-Node: Android shell setup96453
-Node: Auto-save File Lock and Backup99767
-Node: Keeping files encrypted104105
-Node: Usage108748
-Node: File name syntax110170
-Node: Change file name syntax112178
-Node: File name completion113608
-Node: Ad-hoc multi-hops116299
-Node: Home directories118607
-Node: Remote processes120338
-Ref: Running a debugger on a remote host130057
-Ref: Improving performance of asynchronous remote processes137011
-Node: Cleanup remote connections139431
-Node: Renaming remote files141132
-Node: Archive file names145363
-Node: Bug Reports150115
-Node: Frequently Asked Questions153394
-Node: Files directories and localnames180428
-Node: Localname deconstruction180864
-Node: External packages181517
-Node: Traces and Profiles184319
-Node: GNU Free Documentation License186404
-Node: Function Index211777
-Node: Variable Index215371
-Node: Concept Index227338
+Node: Overview5629
+Node: Obtaining TRAMP10987
+Node: Quick Start Guide13451
+Ref: Quick Start Guide File name syntax14232
+Ref: Quick Start Guide ssh and plink methods15328
+Ref: Quick Start Guide su, sudo, doas and sg methods15875
+Ref: Quick Start Guide Combining ssh, plink, su, sudo and doas methods16547
+Ref: Quick Start Guide sudoedit method17112
+Ref: Quick Start Guide smb method17522
+Ref: Quick Start Guide GVFS-based methods17853
+Ref: Quick Start Guide GNOME Online Accounts based methods18299
+Ref: Quick Start Guide FUSE-based methods18841
+Ref: Quick Start Guide Android19714
+Node: Configuration19948
+Node: Connection types22832
+Node: Inline methods24249
+Node: External methods29866
+Node: GVFS-based methods39006
+Node: FUSE-based methods43160
+Node: Default Method46112
+Ref: Default Method-Footnote-149331
+Node: Default User49441
+Node: Default Host50970
+Node: Multi-hops52102
+Node: Firewalls56295
+Node: Customizing Methods57769
+Node: Customizing Completion60003
+Node: Password handling63493
+Ref: Using an authentication file63963
+Ref: Caching passwords66347
+Node: Connection caching66865
+Node: Predefined connection information67795
+Node: Remote programs72896
+Node: Remote shell setup75809
+Node: Ssh setup86354
+Ref: Using ssh connection sharing88255
+Node: FUSE setup94464
+Ref: Setup of rclone method95409
+Ref: Setup of sshfs method95992
+Node: Android shell setup96450
+Node: Auto-save File Lock and Backup99764
+Node: Keeping files encrypted104102
+Node: Usage108745
+Node: File name syntax110167
+Node: Change file name syntax112175
+Node: File name completion113605
+Node: Ad-hoc multi-hops116296
+Node: Home directories118604
+Node: Remote processes120335
+Ref: Running a debugger on a remote host130054
+Ref: Improving performance of asynchronous remote processes137008
+Node: Cleanup remote connections139428
+Node: Renaming remote files141129
+Node: Archive file names145360
+Node: Bug Reports150112
+Node: Frequently Asked Questions153391
+Node: Files directories and localnames180425
+Node: Localname deconstruction180861
+Node: External packages181514
+Node: Traces and Profiles184316
+Node: GNU Free Documentation License186401
+Node: Function Index211774
+Node: Variable Index215368
+Node: Concept Index227335
 
 End Tag Table
 

@@ -953,7 +953,7 @@ UU-encode the region between BEG and END.
 
 ;;; Generated autoloads from trampver.el
 
-(defconst tramp-version "2.6.1.1a" "\
+(defconst tramp-version "2.6.1.2" "\
 This version of Tramp.")
 (defconst tramp-bug-report-address "tramp-devel@gnu.org" "\
 Email address to send bug reports to.")

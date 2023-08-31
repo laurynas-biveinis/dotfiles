@@ -2841,7 +2841,7 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230825.2019/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230825.2019/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230830.1638/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230830.1638/transient-autoloads.el"))
 
 
 
@@ -2907,7 +2907,7 @@ See info node `(transient)Modifying Existing Transients'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.1.1/tramp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.1.1/tramp-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2/tramp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2/tramp-autoloads.el"))
 
 
 
@@ -3840,7 +3840,7 @@ UU-encode the region between BEG and END.
 
 
 
-(defconst tramp-version "2.6.1.1a" "\
+(defconst tramp-version "2.6.1.2" "\
 This version of Tramp.")
 (defconst tramp-bug-report-address "tramp-devel@gnu.org" "\
 Email address to send bug reports to.")
@@ -4262,48 +4262,57 @@ Either remove or add the dbg! macro." t nil)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.6/markdown-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.6/markdown-mode-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/markdown-mode-2.5/markdown-mode-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (autoload 'markdown-mode "markdown-mode" "\
 Major mode for editing Markdown files.
 
-\(fn)" t nil)
-
+(fn)" t)
 (add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
-
 (autoload 'gfm-mode "markdown-mode" "\
 Major mode for editing GitHub Flavored Markdown files.
 
-\(fn)" t nil)
-
+(fn)" t)
 (autoload 'markdown-view-mode "markdown-mode" "\
 Major mode for viewing Markdown content.
 
-\(fn)" t nil)
-
+(fn)" t)
 (autoload 'gfm-view-mode "markdown-mode" "\
 Major mode for viewing GitHub Flavored Markdown content.
 
-\(fn)" t nil)
-
+(fn)" t)
 (autoload 'markdown-live-preview-mode "markdown-mode" "\
 Toggle native previewing on save for a specific markdown file.
 
-If called interactively, enable Markdown-Live-Preview mode if ARG
-is positive, and disable it if ARG is zero or negative.  If
-called from Lisp, also enable the mode if ARG is omitted or nil,
-and toggle it if ARG is `toggle'; disable the mode otherwise.
+This is a minor mode.  If called interactively, toggle the
+`Markdown-Live-Preview mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
 
-\(fn &optional ARG)" t nil)
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "markdown-mode" '("defun-markdown-" "gfm-" "markdown")))
+To check whether the minor mode is enabled in the current buffer,
+evaluate `markdown-live-preview-mode'.
 
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "markdown-mode" '("defun-markdown-" "gfm-" "markdown"))
 
+
+(provide 'markdown-mode-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rustic-3.4/rustic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rustic-3.4/rustic-autoloads.el"))
 
@@ -14781,7 +14790,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.8" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.1.1" "/Users/laurynas/.emacs.d/elpa/transient-20230825.2019" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.2" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.8" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20230830.1638" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.2" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:

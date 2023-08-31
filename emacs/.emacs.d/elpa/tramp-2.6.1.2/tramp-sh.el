@@ -2825,7 +2825,8 @@ the result will be a local, non-Tramp, file name."
     (with-parsed-tramp-file-name name nil
       ;; If connection is not established yet, run the real handler.
       (if (not (tramp-connectable-p v))
-	  (tramp-run-real-handler #'expand-file-name (list name))
+	  (tramp-drop-volume-letter
+	   (tramp-run-real-handler #'expand-file-name (list name)))
 	(unless (tramp-run-real-handler #'file-name-absolute-p (list localname))
 	  (setq localname (concat "~/" localname)))
 	;; Tilde expansion if necessary.  This needs a shell which
@@ -3446,15 +3447,6 @@ implementation will be used."
 
 	(let* ((modes (tramp-default-file-modes
 		       filename (and (eq mustbenew 'excl) 'nofollow)))
-	       ;; We use this to save the value of
-	       ;; `last-coding-system-used' after writing the tmp
-	       ;; file.  At the end of the function, we set
-	       ;; `last-coding-system-used' to this saved value.  This
-	       ;; way, any intermediary coding systems used while
-	       ;; talking to the remote shell or suchlike won't hose
-	       ;; this variable.  This approach was snarfed from
-	       ;; ange-ftp.el.
-	       coding-system-used
 	       ;; Write region into a tmp file.  This isn't really
 	       ;; needed if we use an encoding function, but currently
 	       ;; we use it always because this makes the logic
@@ -3484,11 +3476,11 @@ implementation will be used."
 	      ((error quit)
 	       (setq tramp-temp-buffer-file-name nil)
 	       (delete-file tmpfile)
-	       (signal (car err) (cdr err))))
+	       (signal (car err) (cdr err)))))
 
-	    ;; Now, `last-coding-system-used' has the right value.
-	    ;; Remember it.
-	    (setq coding-system-used last-coding-system-used))
+	  ;; Now, `last-coding-system-used' has the right value.
+	  ;; Remember it.
+	  (setq coding-system-used last-coding-system-used)
 
 	  ;; The permissions of the temporary file should be set.  If
 	  ;; FILENAME does not exist (eq modes nil) it has been
@@ -3618,11 +3610,7 @@ implementation will be used."
 	       v 'file-error
 	       (concat "Method `%s' should specify both encoding and "
 		       "decoding command or an scp program")
-	       method))))
-
-	  ;; Make `last-coding-system-used' have the right value.
-	  (when coding-system-used
-	    (setq last-coding-system-used coding-system-used)))))))
+	       method)))))))))
 
 (defvar tramp-vc-registered-file-names nil
   "List used to collect file names, which are checked during `vc-registered'.")
