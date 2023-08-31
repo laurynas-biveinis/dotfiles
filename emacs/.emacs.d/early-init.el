@@ -47,6 +47,10 @@
 ;; cursor color is concerned).
 (advice-add #'x-apply-session-resources :override #'ignore)
 
+(require 'comp)
+
+(setq native-comp-async-report-warnings-errors nil)
+
 ;;; Configure `package' before it is loaded.
 
 (require 'package)
