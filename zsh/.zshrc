@@ -163,5 +163,7 @@ zinit load zdharma/fast-syntax-highlighting
 
 alias cargo='nocorrect cargo'
 
+source ~/.zsh.d/paths
+
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
