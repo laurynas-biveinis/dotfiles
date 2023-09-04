@@ -9,15 +9,22 @@ function prepend_to_path_if_exists()
     export PATH="$path_entry:$PATH"
 }
 
+function prepend_to_manpath_if_exists()
+{
+    local path_entry=$1
+    export MANPATH="$path_entry:$MANPATH"
+}
+
 prepend_to_path_if_exists /usr/lib/ccache
 prepend_to_path_if_exists /usr/local/bin
 prepend_to_path_if_exists /usr/local/sbin
 prepend_to_path_if_exists /opt/homebrew/opt/bison/bin
 
 prepend_to_path_if_exists /opt/homebrew/opt/coreutils/libexec/gnubin/
-if [ -d /opt/homebrew/opt/coreutils/libexec/gnuman/ ]; then
-    export MANPATH=/opt/homebrew/opt/coreutils/libexec/gnuman/:$MANPATH
-fi
+prepend_to_manpath_if_exists /opt/homebrew/opt/coreutils/libexec/gnuman/
+
+prepend_to_path_if_exists /opt/homebrew/opt/gnu-sed/libexec/gnubin/
+prepend_to_manpath_if_exists /opt/homebrew/opt/gnu-sed/libexec/gnuman/
 
 prepend_to_path_if_exists ~/usr/bin
 
