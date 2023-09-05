@@ -1,4 +1,15 @@
 (1
+ (adoc-mode .
+	    [(0 7 0)
+	     ((emacs
+	       (26)))
+	     "a major-mode for editing AsciiDoc files" tar
+	     ((:url . "https://github.com/bbatsov/adoc-mode")
+	      (:keywords "docs" "wp")
+	      (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
+	      (:authors
+	       ("Florian Kaufmann" . "sensorflo@gmail.com"))
+	      (:commit . "66b9adc97d8702de47140092cbae3a2f5563a297"))])
  (afternoon-theme .
 		  [(0 1)
 		   ((emacs
@@ -386,14 +397,13 @@
 		    (:keywords "docker")
 		    (:commit . "74ed3dfd1584298a0ea9881115d33ba1808a4c3f"))])
  (dracula-theme .
-		[(1 7 0)
+		[(1 8 1)
 		 ((emacs
 		   (24 3)))
 		 "Dracula Theme" tar
 		 ((:url . "https://github.com/dracula/emacs")
-		  (:maintainer "Étienne Deparis" . "etienne@depar.is")
-		  (:authors
-		   ("film42")))])
+		  (:maintainer "tienne Deparis" . "etienne@depar.is")
+		  (:commit . "8e73c675816faadcf4d052b1ba09dc1b00aa1509"))])
  (drupal-mode .
 	      [(0 7 4)
 	       ((php-mode
@@ -1065,6 +1075,22 @@
 	    (:authors
 	     ("Hrvoje Niksic" . "hniksic@gmail.com"))
 	    (:keywords "hypermedia" "extensions"))])
+ (hyperdrive .
+	     [(0 1 0)
+	      ((emacs
+		(27 1))
+	       (map
+		(3 0))
+	       (compat
+		(29 1 4 0))
+	       (plz
+		(0 7))
+	       (persist
+		(0 5)))
+	      "P2P filesystem" tar
+	      ((:url . "https://git.sr.ht/~ushin/hyperdrive.el")
+	       (:maintainer "Joseph Turner" . "joseph@ushin.org")
+	       (:commit . "91ea0fac623dfee497644d7f105180dc737ee749"))])
  (idle-highlight-mode .
 		      [(1 1 4)
 		       ((emacs
