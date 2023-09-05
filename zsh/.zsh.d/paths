@@ -19,6 +19,7 @@ prepend_to_path_if_exists /usr/lib/ccache
 prepend_to_path_if_exists /usr/local/bin
 prepend_to_path_if_exists /usr/local/sbin
 prepend_to_path_if_exists /opt/homebrew/opt/bison/bin
+prepend_to_path_if_exists /opt/homebrew/bin
 
 prepend_to_path_if_exists /opt/homebrew/opt/coreutils/libexec/gnubin/
 prepend_to_manpath_if_exists /opt/homebrew/opt/coreutils/libexec/gnuman/
