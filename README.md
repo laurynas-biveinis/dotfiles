@@ -84,6 +84,7 @@ Unfortunately, that is not always possible.
 [beginend](https://github.com/DamienCassou/beginend)
 [git-modes](https://github.com/magit/git-modes)
 [flycheck-google-cpplint](https://github.com/flycheck/flycheck-google-cpplint/)
+[difftastic.el](https://github.com/pkryger/difftastic.el)
 
 #### Appearance
 
