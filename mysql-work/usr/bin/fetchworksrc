@@ -42,7 +42,7 @@ for worktree in $WORK_TREES_TO_UPDATE; do
         fi
         pushd "$buildtree" || return
         echo "Building $buildtree..."
-        time make -j "$MAKE_J"
+        time ninja
         date
         popd || return
     done
