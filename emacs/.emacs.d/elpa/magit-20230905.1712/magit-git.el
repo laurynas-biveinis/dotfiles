@@ -2507,19 +2507,32 @@ and this option only controls what face is used.")
           "\\([^.][^ \t]*\\)?\\'"))     ; revB
 
 (defun magit-split-range (range)
+  (pcase-let ((`(,beg ,end ,sep) (magit--split-range-raw range)))
+    (and sep
+         (let ((beg (or beg "HEAD"))
+               (end (or end "HEAD")))
+           (if (string-equal (match-string 2 range) "...")
+               (and-let* ((base (magit-git-string "merge-base" beg end)))
+                 (cons base end))
+             (cons beg end))))))
+
+(defun magit--split-range-raw (range)
   (and (string-match magit-range-re range)
-       (let ((beg (or (match-string 1 range) "HEAD"))
-             (end (or (match-string 3 range) "HEAD")))
-         (cons (if (string-equal (match-string 2 range) "...")
-                   (magit-git-string "merge-base" beg end)
-                 beg)
-               end))))
+       (let ((beg (match-string 1 range))
+             (end (match-string 3 range)))
+         (and (or beg end)
+              (list beg end (match-string 2 range))))))
 
 (defun magit-hash-range (range)
   (if (string-match magit-range-re range)
-      (concat (magit-rev-hash (match-string 1 range))
-              (match-string 2 range)
-              (magit-rev-hash (match-string 3 range)))
+      (let ((beg (match-string 1 range))
+            (end (match-string 3 range)))
+        (and (or beg end)
+             (let ((beg-hash (and beg (magit-rev-hash (match-string 1 range))))
+                   (end-hash (and end (magit-rev-hash (match-string 3 range)))))
+               (and (or (not beg) beg-hash)
+                    (or (not end) end-hash)
+                    (concat beg-hash (match-string 2 range) end-hash)))))
     (magit-rev-hash range)))
 
 (defvar magit-revision-faces
@@ -2538,27 +2551,66 @@ and this option only controls what face is used.")
     magit-refname-pullreq))
 
 (put 'git-revision 'thing-at-point #'magit-thingatpt--git-revision)
-(defun magit-thingatpt--git-revision ()
+(defun magit-thingatpt--git-revision (&optional disallow)
+  ;; Support hashes and references.
   (and-let* ((bounds
-              (let ((c "\s\n\t~^:?*[\\"))
-                (cl-letf (((get 'git-revision 'beginning-op)
-                           (lambda ()
-                             (if (re-search-backward (format "[%s]" c) nil t)
-                                 (forward-char)
-                               (goto-char (point-min)))))
-                          ((get 'git-revision 'end-op)
-                           (lambda ()
-                             (re-search-forward (format "\\=[^%s]*" c) nil t))))
+              (let ((c (concat "\s\n\t~^:?*[\\" disallow)))
+                (cl-letf
+                    (((get 'git-revision 'beginning-op)
+                      (lambda ()
+                        (if (re-search-backward (format "[%s]" c) nil t)
+                            (forward-char)
+                          (goto-char (point-min)))))
+                     ((get 'git-revision 'end-op)
+                      (lambda ()
+                        (re-search-forward (format "\\=[^%s]*" c) nil t))))
                   (bounds-of-thing-at-point 'git-revision))))
-             (string (buffer-substring-no-properties (car bounds) (cdr bounds))))
-    (and (or (and (>= (length string) 7)
-                  (string-match-p "[a-z]" string)
-                  (magit-commit-p string))
-             (and (magit-ref-p string)
-                  (let ((face (get-text-property (point) 'face)))
-                    (or (not face)
-                        (member face magit-revision-faces)))))
-         string)))
+             (string (buffer-substring-no-properties (car bounds) (cdr bounds)))
+             ;; References are allowed to contain most parentheses and
+             ;; most punctuation, but if those characters appear at the
+             ;; edges of a possible reference in arbitrary text, then
+             ;; they are much more likely to be intended as just that:
+             ;; punctuation and delimiters.
+             (string (thread-first string
+                       (string-trim-left  "[(</]")
+                       (string-trim-right "[])>/.,;!]"))))
+    (let (disallow)
+      (when (or (string-match-p "\\.\\." string)
+                (string-match-p "/\\." string))
+        (setq disallow (concat disallow ".")))
+      (when (string-match-p "@{" string)
+        (setq disallow (concat disallow "@{")))
+      (if disallow
+          ;; These additional restrictions overcompensate,
+          ;; but that only matters in rare cases.
+          (magit-thingatpt--git-revision disallow)
+        (and (not (equal string "@"))
+             (or (and (>= (length string) 7)
+                      (string-match-p "[a-z]" string)
+                      (magit-commit-p string))
+                 (and (magit-ref-p string)
+                      (let ((face (get-text-property (point) 'face)))
+                        (or (not face)
+                            (member face magit-revision-faces)))))
+             string)))))
+
+(put 'git-revision-range 'thing-at-point #'magit-thingatpt--git-revision-range)
+(defun magit-thingatpt--git-revision-range ()
+  ;; Support hashes but no references.
+  (and-let* ((bounds
+              (cl-letf (((get 'git-revision 'beginning-op)
+                         (lambda ()
+                           (if (re-search-backward "[^a-z0-9.]" nil t)
+                               (forward-char)
+                             (goto-char (point-min)))))
+                        ((get 'git-revision 'end-op)
+                         (lambda ()
+                           (and (re-search-forward "[^a-z0-9.]" nil t)
+                                (backward-char)))))
+                (bounds-of-thing-at-point 'git-revision)))
+             (range (buffer-substring-no-properties (car bounds) (cdr bounds))))
+    ;; Validate but return as-is.
+    (and (magit-hash-range range) range)))
 
 ;;; Completion
 
@@ -2568,7 +2620,8 @@ and this option only controls what face is used.")
   (let ((fn minibuffer-default-add-function))
     (lambda ()
       (if-let ((commit (with-selected-window (minibuffer-selected-window)
-                         (magit-commit-at-point))))
+                         (or (magit-thing-at-point 'git-revision-range t)
+                             (magit-commit-at-point)))))
           (let ((rest (cons commit (delete commit (funcall fn))))
                 (def minibuffer-default))
             (if (listp def)
@@ -2595,9 +2648,10 @@ and this option only controls what face is used.")
 (defun magit-read-range-or-commit (prompt &optional secondary-default)
   (magit-read-range
    prompt
-   (or (when-let ((revs (magit-region-values '(commit branch) t)))
-         (deactivate-mark)
-         (concat (car (last revs)) ".." (car revs)))
+   (or (and-let* ((revs (magit-region-values '(commit branch) t)))
+         (progn ; work around debbugs#31840
+           (deactivate-mark)
+           (concat (car (last revs)) ".." (car revs))))
        (magit-branch-or-commit-at-point)
        secondary-default
        (magit-get-current-branch))))
