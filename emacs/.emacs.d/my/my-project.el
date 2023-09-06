@@ -88,8 +88,7 @@ The type is not displayed if it is generic or rust-cargo."
 
 The current implementation uses the presence of a compilation database symlink
 in the project root (and absence of CMakePresets.json) to point to the build
-directory. If found, sets the compilation command too, which depends on my
-MAKE_J environment variable."
+directory. If found, sets the compilation and test commands too."
   (let* ((project-root (projectile-project-root))
          (cmake-presets-path (expand-file-name "CMakePresets.json" project-root))
          (cdb-path (expand-file-name "compile_commands.json" project-root)))
@@ -101,8 +100,7 @@ MAKE_J environment variable."
                 (make_j (or (getenv "MAKE_J") "1")))
             (setq-local projectile-project-compilation-dir
                         (file-relative-name resolved-cdb-dir project-root))
-            (setq-local projectile-project-compilation-cmd
-                        (format "make -j%s" make_j))
+            (setq-local projectile-project-compilation-cmd "ninja")
             (setq-local projectile-project-test-cmd
                         (format "ctest -j%s" make_j))))))))
 
