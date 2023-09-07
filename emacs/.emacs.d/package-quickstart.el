@@ -2944,7 +2944,7 @@ The buffer on focus when the command is called is set as the target buffer." t n
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.43/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.43/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.44/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.44/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -4461,6 +4461,250 @@ it is disabled.
 
 
 (provide 'markdown-mode-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/project-0.10.0/project-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/project-0.10.0/project-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'project-current "project" "\
+Return the project instance in DIRECTORY, defaulting to `default-directory'.
+
+When no project is found in that directory, the result depends on
+the value of MAYBE-PROMPT: if it is nil or omitted, return nil,
+else prompt the user for the project to use.  To prompt for a
+project, call the function specified by `project-prompter', which
+returns the directory in which to look for the project.  If no
+project is found in that directory, return a \"transient\"
+project instance.
+
+The \"transient\" project instance is a special kind of value
+which denotes a project rooted in that directory and includes all
+the files under the directory except for those that match entries
+in `vc-directory-exclusion-list' or `grep-find-ignored-files'.
+
+See the doc string of `project-find-functions' for the general form
+of the project instance object.
+
+(fn &optional MAYBE-PROMPT DIRECTORY)")
+(put 'project-vc-ignores 'safe-local-variable (lambda (val) (and (listp val) (not (memq nil (mapcar #'stringp val))))))
+(put 'project-vc-merge-submodules 'safe-local-variable #'booleanp)
+(put 'project-vc-include-untracked 'safe-local-variable #'booleanp)
+(put 'project-vc-name 'safe-local-variable #'stringp)
+(put 'project-vc-extra-root-markers 'safe-local-variable (lambda (val) (and (listp val) (not (memq nil (mapcar #'stringp val))))))
+(defvar project-prefix-map (let ((map (make-sparse-keymap))) (define-key map "!" 'project-shell-command) (define-key map "&" 'project-async-shell-command) (define-key map "f" 'project-find-file) (define-key map "F" 'project-or-external-find-file) (define-key map "b" 'project-switch-to-buffer) (define-key map "s" 'project-shell) (define-key map "d" 'project-find-dir) (define-key map "D" 'project-dired) (define-key map "v" 'project-vc-dir) (define-key map "c" 'project-compile) (define-key map "e" 'project-eshell) (define-key map "k" 'project-kill-buffers) (define-key map "p" 'project-switch-project) (define-key map "g" 'project-find-regexp) (define-key map "G" 'project-or-external-find-regexp) (define-key map "r" 'project-query-replace-regexp) (define-key map "x" 'project-execute-extended-command) (define-key map "\2" 'project-list-buffers) map) "\
+Keymap for project commands.")
+ (define-key ctl-x-map "p" project-prefix-map)
+(autoload 'project-other-window-command "project" "\
+Run project command, displaying resultant buffer in another window.
+
+The following commands are available:
+
+\\{project-prefix-map}
+\\{project-other-window-map}" t)
+ (define-key ctl-x-4-map "p" #'project-other-window-command)
+(autoload 'project-other-frame-command "project" "\
+Run project command, displaying resultant buffer in another frame.
+
+The following commands are available:
+
+\\{project-prefix-map}
+\\{project-other-frame-map}" t)
+ (define-key ctl-x-5-map "p" #'project-other-frame-command)
+(autoload 'project-other-tab-command "project" "\
+Run project command, displaying resultant buffer in a new tab.
+
+The following commands are available:
+
+\\{project-prefix-map}" t)
+(when (bound-and-true-p tab-prefix-map) (define-key tab-prefix-map "p" #'project-other-tab-command))
+(autoload 'project-find-regexp "project" "\
+Find all matches for REGEXP in the current project's roots.
+With \\[universal-argument] prefix, you can specify the directory
+to search in, and the file name pattern to search for.  The
+pattern may use abbreviations defined in `grep-files-aliases',
+e.g. entering `ch' is equivalent to `*.[ch]'.  As whitespace
+triggers completion when entering a pattern, including it
+requires quoting, e.g. `\\[quoted-insert]<space>'.
+
+(fn REGEXP)" t)
+(autoload 'project-or-external-find-regexp "project" "\
+Find all matches for REGEXP in the project roots or external roots.
+With \\[universal-argument] prefix, you can specify the file name
+pattern to search for.
+
+(fn REGEXP)" t)
+(autoload 'project-find-file "project" "\
+Visit a file (with completion) in the current project.
+
+The filename at point (determined by `thing-at-point'), if any,
+is available as part of \"future history\".  If none, the current
+buffer's file name is used.
+
+If INCLUDE-ALL is non-nil, or with prefix argument when called
+interactively, include all files under the project root, except
+for VCS directories listed in `vc-directory-exclusion-list'.
+
+(fn &optional INCLUDE-ALL)" t)
+(autoload 'project-or-external-find-file "project" "\
+Visit a file (with completion) in the current project or external roots.
+
+The filename at point (determined by `thing-at-point'), if any,
+is available as part of \"future history\".  If none, the current
+buffer's file name is used.
+
+If INCLUDE-ALL is non-nil, or with prefix argument when called
+interactively, include all files under the project root, except
+for VCS directories listed in `vc-directory-exclusion-list'.
+
+(fn &optional INCLUDE-ALL)" t)
+(autoload 'project-find-dir "project" "\
+Start Dired in a directory inside the current project.
+
+The current buffer's `default-directory' is available as part of
+\"future history\"." t)
+(autoload 'project-dired "project" "\
+Start Dired in the current project's root." t)
+(autoload 'project-vc-dir "project" "\
+Run VC-Dir in the current project's root." t)
+(autoload 'project-shell "project" "\
+Start an inferior shell in the current project's root directory.
+If a buffer already exists for running a shell in the project's root,
+switch to it.  Otherwise, create a new shell buffer.
+With \\[universal-argument] prefix arg, create a new inferior shell buffer even
+if one already exists." t)
+(autoload 'project-eshell "project" "\
+Start Eshell in the current project's root directory.
+If a buffer already exists for running Eshell in the project's root,
+switch to it.  Otherwise, create a new Eshell buffer.
+With \\[universal-argument] prefix arg, create a new Eshell buffer even
+if one already exists." t)
+(autoload 'project-async-shell-command "project" "\
+Run `async-shell-command' in the current project's root directory." t)
+(function-put 'project-async-shell-command 'interactive-only 'async-shell-command)
+(autoload 'project-shell-command "project" "\
+Run `shell-command' in the current project's root directory." t)
+(function-put 'project-shell-command 'interactive-only 'shell-command)
+(autoload 'project-search "project" "\
+Search for REGEXP in all the files of the project.
+Stops when a match is found.
+To continue searching for the next match, use the
+command \\[fileloop-continue].
+
+(fn REGEXP)" t)
+(autoload 'project-query-replace-regexp "project" "\
+Query-replace REGEXP in all the files of the project.
+Stops when a match is found and prompts for whether to replace it.
+At that prompt, the user must type a character saying what to do
+with the match.  Type SPC or `y' to replace the match,
+DEL or `n' to skip and go to the next match.  For more directions,
+type \\[help-command] at that time.
+If you exit the `query-replace', you can later continue the
+`query-replace' loop using the command \\[fileloop-continue].
+
+(fn FROM TO)" t)
+(autoload 'project-compile "project" "\
+Run `compile' in the project root." t)
+(function-put 'project-compile 'interactive-only 'compile)
+(autoload 'project-switch-to-buffer "project" "\
+Display buffer BUFFER-OR-NAME in the selected window.
+When called interactively, prompts for a buffer belonging to the
+current project.  Two buffers belong to the same project if their
+project instances, as reported by `project-current' in each
+buffer, are identical.
+
+(fn BUFFER-OR-NAME)" t)
+(autoload 'project-display-buffer "project" "\
+Display BUFFER-OR-NAME in some window, without selecting it.
+When called interactively, prompts for a buffer belonging to the
+current project.  Two buffers belong to the same project if their
+project instances, as reported by `project-current' in each
+buffer, are identical.
+
+This function uses `display-buffer' as a subroutine, which see
+for how it is determined where the buffer will be displayed.
+
+(fn BUFFER-OR-NAME)" t)
+(autoload 'project-display-buffer-other-frame "project" "\
+Display BUFFER-OR-NAME preferably in another frame.
+When called interactively, prompts for a buffer belonging to the
+current project.  Two buffers belong to the same project if their
+project instances, as reported by `project-current' in each
+buffer, are identical.
+
+This function uses `display-buffer-other-frame' as a subroutine,
+which see for how it is determined where the buffer will be
+displayed.
+
+(fn BUFFER-OR-NAME)" t)
+(autoload 'project-list-buffers "project" "\
+Display a list of project buffers.
+The list is displayed in a buffer named \"*Buffer List*\".
+
+By default, all project buffers are listed except those whose names
+start with a space (which are for internal use).  With prefix argument
+ARG, show only buffers that are visiting files.
+
+(fn &optional ARG)" t)
+(put 'project-kill-buffers-display-buffer-list 'safe-local-variable #'booleanp)
+(autoload 'project-kill-buffers "project" "\
+Kill the buffers belonging to the current project.
+Two buffers belong to the same project if their project
+instances, as reported by `project-current' in each buffer, are
+identical.  Only the buffers that match a condition in
+`project-kill-buffer-conditions' will be killed.  If NO-CONFIRM
+is non-nil, the command will not ask the user for confirmation.
+NO-CONFIRM is always nil when the command is invoked
+interactively.
+
+Also see the `project-kill-buffers-display-buffer-list' variable.
+
+(fn &optional NO-CONFIRM)" t)
+(autoload 'project-remember-project "project" "\
+Add project PR to the front of the project list.
+Save the result in `project-list-file' if the list of projects
+has changed, and NO-WRITE is nil.
+
+(fn PR &optional NO-WRITE)")
+(autoload 'project-forget-project "project" "\
+Remove directory PROJECT-ROOT from the project list.
+PROJECT-ROOT is the root directory of a known project listed in
+the project list.
+
+(fn PROJECT-ROOT)" t)
+(autoload 'project-known-project-roots "project" "\
+Return the list of root directories of all known projects.")
+(autoload 'project-execute-extended-command "project" "\
+Execute an extended command in project root." t)
+(function-put 'project-execute-extended-command 'interactive-only 'command-execute)
+(autoload 'project-switch-project "project" "\
+\"Switch\" to another project by running an Emacs command.
+The available commands are presented as a dispatch menu
+made from `project-switch-commands'.
+
+When called in a program, it will use the project corresponding
+to directory DIR.
+
+(fn DIR)" t)
+(autoload 'project-uniquify-dirname-transform "project" "\
+Uniquify name of directory DIRNAME using `project-name', if in a project.
+
+If you set `uniquify-dirname-transform' to this function,
+slash-separated components from `project-name' will be appended to
+the buffer's directory name when buffers from two different projects
+would otherwise have the same name.
+
+(fn DIRNAME)")
+(register-definition-prefixes "project" '("project-"))
+
+
+(provide 'project-autoloads)
 
 
 )
@@ -7008,7 +7252,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20230805.1908/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20230805.1908/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20230905.1720/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20230905.1720/magit-section-autoloads.el"))
 
 
 
@@ -14740,14 +14984,14 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode xterm-color seq compat with-editor which-key wgrep wgrep-helm wgrep-deadgrep wfnames websocket wakatime-mode vterm verilog-mode system-packages use-package-ensure-system-package queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient tramp topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme soap-client simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq jsonrpc info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh eldoc flymake flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation faceup exec-path-from-shell emacsql-sqlite-builtin eldoc-cmake eglot dispwatch difftastic deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode bind-key beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode xterm-color seq compat with-editor which-key wgrep wgrep-helm wgrep-deadgrep wfnames websocket wakatime-mode vterm verilog-mode system-packages use-package-ensure-system-package queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient tramp topsy stripe-buffer ssh-config-mode ssh spinner solarized-theme soap-client simple-httpd rust-mode f markdown-mode project rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib org-analyzer modern-cpp-font-lock git-commit magit lua-mode lsp-mode lsp-ui lsp-treemacs keyfreq jsonrpc info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-org helm-make helm-lsp helm-icons helm-descbinds dash-docs helm-dash grab-mac-link google-c-style gitignore-mode gitconfig-mode gitattributes-mode git-gutter fringe-helper git-gutter-fringe gcmh eldoc flymake flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation faceup exec-path-from-shell emacsql-sqlite-builtin eldoc-cmake eglot dispwatch difftastic deadgrep company cmake-mode cmake-font-lock cheat-sh calfw-org calfw-ical calfw bison-mode bind-key beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-20230905.1712" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230805.1908" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20230903.1835" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230829.1917" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-20230905.1712" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230905.1720" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20230903.1835" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230829.1917" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
