@@ -1,8 +1,8 @@
-(define-package "magit-section" "20230905.1720" "Sections for read-only buffers."
+(define-package "magit-section" "20230907.2217" "Sections for read-only buffers."
   '((emacs "25.1")
     (compat "29.1.3.4")
     (dash "20221013"))
-  :commit "ee0b557a94876cf89f9b8116ab9e9012c5d1404a" :authors
+  :commit "986515d93f2214895e73e1066e9101b1d371fb62" :authors
   '(("Jonas Bernoulli" . "jonas@bernoul.li"))
   :maintainer
   '("Jonas Bernoulli" . "jonas@bernoul.li")
