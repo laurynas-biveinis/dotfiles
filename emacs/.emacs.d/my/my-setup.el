@@ -379,7 +379,10 @@
 ;; themselves.
 (remove-hook 'xref-backend-functions #'etags--xref-backend)
 
-;; `tree-sitter'
+;; `tree-sitter'. Migrate to Emacs 29 `treesit' once `c++-ts-mode' supports at
+;; least
+;; - Google C style
+;; - Documentation comment font lock (`c-doc-comment-style')
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 
