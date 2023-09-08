@@ -2764,26 +2764,34 @@ The `imenu-create-index-function' for treemacs buffers." nil nil)
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.18.0/tree-sitter-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.18.0/tree-sitter-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/tree-sitter-0.18.0/tree-sitter-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (autoload 'tree-sitter-mode "tree-sitter" "\
 Minor mode that keeps an up-to-date syntax tree using incremental parsing.
 
-If called interactively, enable Tree-Sitter mode if ARG is
-positive, and disable it if ARG is zero or negative.  If called
-from Lisp, also enable the mode if ARG is omitted or nil, and
-toggle it if ARG is `toggle'; disable the mode otherwise.
+This is a minor mode.  If called interactively, toggle the
+`tree-sitter mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
 
-\(fn &optional ARG)" t nil)
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
 
+To check whether the minor mode is enabled in the current buffer,
+evaluate `tree-sitter-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
 (autoload 'turn-on-tree-sitter-mode "tree-sitter" "\
-Turn on `tree-sitter-mode' in a buffer, if possible." nil nil)
-
+Turn on `tree-sitter-mode' in a buffer, if possible.")
 (put 'global-tree-sitter-mode 'globalized-minor-mode t)
-
 (defvar global-tree-sitter-mode nil "\
 Non-nil if Global Tree-Sitter mode is enabled.
 See the `global-tree-sitter-mode' command
@@ -2791,23 +2799,23 @@ for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `global-tree-sitter-mode'.")
-
 (custom-autoload 'global-tree-sitter-mode "tree-sitter" nil)
-
 (autoload 'global-tree-sitter-mode "tree-sitter" "\
 Toggle Tree-Sitter mode in all buffers.
-With prefix ARG, enable Global Tree-Sitter mode if ARG is positive;
-otherwise, disable it.  If called from Lisp, enable the mode if
-ARG is omitted or nil.
+With prefix ARG, enable Global Tree-Sitter mode if ARG is positive; otherwise,
+disable it.
 
-Tree-Sitter mode is enabled in all buffers where
-`turn-on-tree-sitter-mode' would do it.
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Tree-Sitter mode is enabled in all buffers where `turn-on-tree-sitter-mode'
+would do it.
+
 See `tree-sitter-mode' for more information on Tree-Sitter mode.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (define-obsolete-function-alias 'tree-sitter-node-at-point 'tree-sitter-node-at-pos "2021-08-30")
-
 (autoload 'tree-sitter-node-at-pos "tree-sitter" "\
 Return the smallest syntax node of type NODE-TYPE at POS.
 NODE-TYPE may be a symbol, corresponding to a named syntax node; a string,
@@ -2819,27 +2827,36 @@ error when a specified named NODE-TYPE does not exist in the current grammar.
 Whenever NODE-TYPE is non-nil (other than `:named'), it is possible for the
 function to return nil.
 
-\(fn &optional NODE-TYPE POS IGNORE-INVALID-TYPE)" nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter" '("tree-sitter-")))
+(fn &optional NODE-TYPE POS IGNORE-INVALID-TYPE)")
+(register-definition-prefixes "tree-sitter" '("tree-sitter-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-cli" '("tree-sitter-cli-")))
+(register-definition-prefixes "tree-sitter-cli" '("tree-sitter-cli-"))
 
 
 
 (autoload 'tree-sitter-debug-mode "tree-sitter-debug" "\
 Toggle syntax tree debugging for the current buffer.
+
 This mode displays the syntax tree in another buffer, and keeps it up-to-date.
 
-If called interactively, enable Tree-Sitter-Debug mode if ARG is
-positive, and disable it if ARG is zero or negative.  If called
-from Lisp, also enable the mode if ARG is omitted or nil, and
-toggle it if ARG is `toggle'; disable the mode otherwise.
+This is a minor mode.  If called interactively, toggle the
+`Tree-Sitter-Debug mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
 
-\(fn &optional ARG)" t nil)
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
 
+To check whether the minor mode is enabled in the current buffer,
+evaluate `tree-sitter-debug-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
 (autoload 'tree-sitter-debug-query "tree-sitter-debug" "\
 Execute query PATTERNS against the current syntax tree and return captures.
 
@@ -2852,9 +2869,8 @@ assign custom tags to capture names.
 This function is primarily useful for debugging purpose. Other packages should
 build queries and cursors once, then reuse them.
 
-\(fn PATTERNS &optional MATCHES TAG-ASSIGNER)" nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-debug" '("tree-sitter-debug-")))
+(fn PATTERNS &optional MATCHES TAG-ASSIGNER)")
+(register-definition-prefixes "tree-sitter-debug" '("tree-sitter-debug-"))
 
 
 
@@ -2871,11 +2887,9 @@ at roughly the same vertical screen position. If `pixel-scroll' is available and
 `tree-sitter-save-excursion-pixelwise' is non-nil, pixelwise scrolling is used
 instead, to make this restoration exact.
 
-\(fn &rest BODY)" nil t)
-
-(function-put 'tree-sitter-save-excursion 'lisp-indent-function '0)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-extras" '("tree-sitter-")))
+(fn &rest BODY)" nil t)
+(function-put 'tree-sitter-save-excursion 'lisp-indent-function 0)
+(register-definition-prefixes "tree-sitter-extras" '("tree-sitter-"))
 
 
 
@@ -2889,19 +2903,13 @@ prioritized over `tree-sitter-hl-default-patterns'.
 This function should be used by minor modes and configuration code. Major modes
 should set `tree-sitter-hl-default-patterns' instead.
 
-\(fn LANG-SYMBOL PATTERNS)" nil nil)
-
-(function-put 'tree-sitter-hl-add-patterns 'lisp-indent-function '1)
-
+(fn LANG-SYMBOL PATTERNS)")
+(function-put 'tree-sitter-hl-add-patterns 'lisp-indent-function 1)
 (autoload 'tree-sitter-hl-mode "tree-sitter-hl" "\
 Toggle syntax highlighting based on Tree-sitter's syntax tree.
+
 If `tree-sitter-hl-default-patterns' is nil, turning on this mode does nothing,
 and does not interfere with `font-lock-mode'.
-
-If called interactively, enable Tree-Sitter-Hl mode if ARG is
-positive, and disable it if ARG is zero or negative.  If called
-from Lisp, also enable the mode if ARG is omitted or nil, and
-toggle it if ARG is `toggle'; disable the mode otherwise.
 
 Enabling this automatically enables `tree-sitter-mode' in the buffer.
 
@@ -2909,9 +2917,22 @@ To enable this automatically whenever `tree-sitter-mode' is enabled:
 
  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
-\(fn &optional ARG)" t nil)
+This is a minor mode.  If called interactively, toggle the
+`Tree-Sitter-Hl mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-hl" '("tree-sitter-hl-")))
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `tree-sitter-hl-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "tree-sitter-hl" '("tree-sitter-hl-"))
 
 
 
@@ -2927,24 +2948,23 @@ If FILE is nil, the base name is assumed to be LANG-SYMBOL's name.
 If NATIVE-SYMBOL-NAME is nil, the name of the exported native symbol is assumed
 to be LANG-SYMBOL's name, prefixed with \"tree_sitter_\".
 
-\(fn LANG-SYMBOL &optional FILE NATIVE-SYMBOL-NAME)" nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-load" '("tree-sitter-l")))
+(fn LANG-SYMBOL &optional FILE NATIVE-SYMBOL-NAME)")
+(register-definition-prefixes "tree-sitter-load" '("tree-sitter-l"))
 
 
 
 (autoload 'tree-sitter-query-builder "tree-sitter-query" "\
 Provide means for developers to write and test tree-sitter queries.
 
-The buffer on focus when the command is called is set as the target buffer." t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "tree-sitter-query" '("tree-sitter-")))
-
+The buffer on focus when the command is called is set as the target buffer." t)
+(register-definition-prefixes "tree-sitter-query" '("tree-sitter-"))
 
 
-
+(provide 'tree-sitter-autoloads)
+
+
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.44/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.44/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.45/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.45/tree-sitter-langs-autoloads.el"))
 
 
 
