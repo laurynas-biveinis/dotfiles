@@ -1,4 +1,4 @@
 #!/bin/sh
 
-export EDITOR="emacsclient -c"
-export VISUAL="emacsclient -c"
+export EDITOR="emacsclient -c -r"
+export VISUAL="emacsclient -c -r"
