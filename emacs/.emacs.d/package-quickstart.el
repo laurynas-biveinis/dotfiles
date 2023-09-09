@@ -2964,7 +2964,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.45/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.45/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.47/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.47/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -11542,7 +11542,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.4/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.4/helm-core-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.5/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.5/helm-core-autoloads.el"))
 
 
 
@@ -11776,7 +11776,7 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.4/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.4/helm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.5/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.5/helm-autoloads.el"))
 
 
 
@@ -11840,16 +11840,6 @@ Preconfigured `helm' displaying `helm-mini-default-sources'." t)
 (autoload 'helm-colors "helm-color" "\
 Preconfigured `helm' for color." t)
 (register-definition-prefixes "helm-color" '("helm-"))
-
-
-
-(autoload 'helm-comint-prompts "helm-comint" "\
-Pre-configured `helm' to browse the prompts of the current comint buffer." t)
-(autoload 'helm-comint-prompts-all "helm-comint" "\
-Pre-configured `helm' to browse the prompts of all comint sessions." t)
-(autoload 'helm-comint-input-ring "helm-comint" "\
-Preconfigured `helm' that provide completion of `comint' history." t)
-(register-definition-prefixes "helm-comint" '("helm-"))
 
 
 
@@ -12561,8 +12551,8 @@ Helm interface to manage packages.
 
 With a prefix arg ARG refresh package list.
 
-When installing ensure to refresh the package list to avoid errors with outdated
-packages no more availables.
+When installing or upgrading ensure to refresh the package list
+to avoid errors with outdated packages no more availables.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "helm-packages" '("helm-packages-"))
@@ -12615,11 +12605,6 @@ Fill in the symbol at point by default.
 
 (fn ARG)" t)
 (register-definition-prefixes "helm-semantic" '("helm-s"))
-
-
-
-(defalias 'helm-shell-prompts 'helm-comint-prompts)
-(defalias 'helm-shell-prompts-all 'helm-comint-prompts-all)
 
 
 
@@ -14845,10 +14830,12 @@ When FAMILY is non-nil, limit the candidates to the icon set matching it.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220929.1135/all-the-icons-dired-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220929.1135/all-the-icons-dired-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20230908.2208/all-the-icons-dired-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20230908.2208/all-the-icons-dired-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/all-the-icons-dired-20220929.1135/all-the-icons-dired-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -14870,11 +14857,13 @@ evaluate `all-the-icons-dired-mode'.
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (register-definition-prefixes "all-the-icons-dired" '("all-the-icons-dired-"))
-
 
+
+(provide 'all-the-icons-dired-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/aggressive-indent-1.10.0/aggressive-indent-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/aggressive-indent-1.10.0/aggressive-indent-autoloads.el"))
 
