@@ -118,6 +118,7 @@
 (setq show-paren-when-point-inside-paren t)
 (setq show-paren-when-point-in-periphery t)
 (setq show-paren-predicate t)
+(setq show-paren-context-when-offscreen t)
 (show-paren-mode 1)
 
 ;; `stripe-buffer'
