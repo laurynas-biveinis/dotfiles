@@ -38,7 +38,11 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
         MY8030_810_EXTRA=()
     fi
     MY8026_28_EXTRA+=("-DWITH_ICU=$BREW/icu4c")
-    MY8026_28_EXTRA_CXX_FLAGS=("-Wno-shadow-field")
+    MY8026_28_EXTRA_CXX_FLAGS=("-Wno-shadow-field"
+                               "-Wno-unqualified-std-cast-call"
+                               "-Wno-deprecated-copy-with-dtor"
+                               "-Wno-bitwise-instead-of-logical"
+                               "-Wno-unused-label")
     MY8031_EXTRA_CXX_FLAGS=("-Wno-deprecated-declarations")
     MY8032_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
                             "-Wno-deprecated-copy-with-dtor")
@@ -92,6 +96,8 @@ MARIA_COMMON+=("-DPLUGIN_MROONGA=NO" "-DPLUGIN_CONNECT=NO")
 
 # Version-specific building blocks, descending order
 
+# 8.0.33
+
 MY8033_CXX_FLAGS_DEBUG=("${MY8033_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
 MY8033_CXX_FLAGS_RELEASE=("${MY8033_EXTRA_CXX_FLAGS[@]}"
                           "${CXX_FLAGS_RELEASE[@]}")
@@ -104,6 +110,8 @@ unset MY8033_EXTRA_CXX_FLAGS
 unset MY8033_CXX_FLAGS_DEBUG
 unset MY8033_CXX_FLAGS_RELEASE
 
+# 8.0.32
+
 MY8032_CXX_FLAGS_DEBUG=("${MY8032_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
 MY8032_CXX_FLAGS_RELEASE=("${MY8032_EXTRA_CXX_FLAGS[@]}"
                           "${CXX_FLAGS_RELEASE[@]}")
@@ -114,6 +122,8 @@ MY8032_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8032_EXTRA_CXX_FLAGS[*]}"
 unset MY8032_EXTRA_CXX_FLAGS
 unset MY8032_CXX_FLAGS_DEBUG
 unset MY8032_CXX_FLAGS_RELEASE
+
+# 8.0.31
 
 MY8031_CXX_FLAGS_DEBUG=("${MY8031_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
 MY8031_CXX_FLAGS_RELEASE=("${MY8031_EXTRA_CXX_FLAGS[@]}"
@@ -126,30 +136,80 @@ unset MY8031_EXTRA_CXX_FLAGS
 unset MY8031_CXX_FLAGS_DEBUG
 unset MY8031_CXX_FLAGS_RELEASE
 
-MY8028_29_CXX_FLAGS_DEBUG=("${CXX_FLAGS_DEBUG[@]}"
-                           "-Wno-deprecated-declarations")
-MY8028_29_EXTRA=("-DCMAKE_C_FLAGS_DEBUG=${MY8028_29_CXX_FLAGS_DEBUG[*]}"
-                 "-DCMAKE_CXX_FLAGS_DEBUG=${MY8028_29_CXX_FLAGS_DEBUG[*]}")
-unset MY8028_29_CXX_FLAGS_DEBUG
+# 8.0.30
+
+# 8.0.29--8.0.28
+
+MY8028_29_EXTRA_CXX_FLAGS_DEBUG=("-Wno-deprecated-declarations")
+
+# 8.0.29
+
+MY8029_CXX_FLAGS_DEBUG=("${MY8028_29_EXTRA_CXX_FLAGS_DEBUG[@]}"
+                        "${CXX_FLAGS_DEBUG[@]}")
+MY8029_CXX_FLAGS_RELEASE=("${CXX_FLAGS_RELEASE[@]}")
+MY8029_EXTRA=("-DCMAKE_C_FLAGS_DEBUG=${MY8029_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8029_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8029_CXX_FLAGS_RELEASE[*]}")
+unset MY8029_CXX_FLAGS_DEBUG
+unset MY8029_CXX_FLAGS_RELEASE
+
+# 8.0.28--8.0.27
 
 MY8027_28_EXTRA=("-DWITH_FIDO=bundled")
 
-MY8026_28_C_FLAGS_DEBUG=("${MY8026_28_EXTRA_CXX_FLAGS[@]}"
-                         "${CXX_FLAGS_DEBUG[@]}"
-                         "-Wno-unknown-warning-option"
-                         "-Wno-unused-but-set-variable"
-                         "-Wno-discarded-qualifiers")
+# 8.0.28--8.0.26
+
 MY8026_28_CXX_FLAGS_DEBUG=("${MY8026_28_EXTRA_CXX_FLAGS[@]}"
-                           "${CXX_FLAGS_DEBUG[@]}"
                            "-Wno-unknown-warning-option"
-                           "-Wno-unused-but-set-variable")
-MY8026_28_CXX_FLAGS_RELEASE=("${MY8026_28_EXTRA_CXX_FLAGS[@]}"
-                             "${CXX_FLAGS_RELEASE[@]}")
-MY8026_28_EXTRA+=("-DWITH_RAPIDJSON=bundled" "-DWITH_LZ4=bundled"
-                  "-DCMAKE_CXX_FLAGS=${MY8026_28_EXTRA_CXX_FLAGS[*]}"
-                  "-DCMAKE_C_FLAGS_DEBUG=${MY8026_28_C_FLAGS_DEBUG[*]}"
-                  "-DCMAKE_CXX_FLAGS_DEBUG=${MY8026_28_CXX_FLAGS_DEBUG[*]}"
-                  "-DCMAKE_CXX_FLAGS_RELEASE=${MY8026_28_CXX_FLAGS_RELEASE[*]}")
+                           "-Wno-unused-but-set-variable"
+                           "-Wno-discarded-qualifiers")
+MY8026_28_CXX_FLAGS_RELEASE=("${MY8026_28_EXTRA_CXX_FLAGS[@]}")
+
+MY8026_28_EXTRA+=("-DWITH_RAPIDJSON=bundled" "-DWITH_LZ4=bundled")
+
+# 8.0.28
+
+MY8028_CXX_FLAGS=("${MY8026_28_EXTRA_CXX_FLAGS[*]}")
+MY8028_CXX_FLAGS_DEBUG=("${MY8028_29_EXTRA_CXX_FLAGS_DEBUG[@]}"
+                        "${MY8026_28_CXX_FLAGS_DEBUG[*]}"
+                        "${CXX_FLAGS_DEBUG[@]}")
+MY8028_CXX_FLAGS_RELEASE=("${MY8026_28_CXX_FLAGS_RELEASE[*]}"
+                          "${CXX_FLAGS_RELEASE[@]}")
+MY8028_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8028_CXX_FLAGS[*]}"
+              "-DCMAKE_C_FLAGS_DEBUG=${MY8028_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8028_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8028_CXX_FLAGS_RELEASE[*]}")
+unset MY8028_29_EXTRA_CXX_FLAGS_DEBUG
+unset MY8028_CXX_FLAGS
+unset MY8028_CXX_FLAGS_DEBUG
+unset MY8028_CXX_FLAGS_RELEASE
+
+# 8.0.27
+
+MY8027_CXX_FLAGS=("${MY8026_28_EXTRA_CXX_FLAGS[*]}")
+MY8027_CXX_FLAGS_DEBUG=("${MY8026_28_EXTRA_CXX_FLAGS[*]}"
+                        "${CXX_FLAGS_DEBUG[@]}")
+MY8027_CXX_FLAGS_RELEASE=("${MY8026_28_EXTRA_CXX_FLAGS[*]}"
+                          "${CXX_FLAGS_RELEASE[@]}")
+MY8027_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8027_CXX_FLAGS[*]}"
+              "-DCMAKE_C_FLAGS_DEBUG=${MY8027_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8027_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8027_CXX_FLAGS_RELEASE[*]}")
+unset MY8027_CXX_FLAGS
+unset MY8027_CXX_FLAGS_DEBUG
+unset MY8027_CXX_FLAGS_RELEASE
+
+# 8.0.26
+
+MY8026_CXX_FLAGS=("${MY8026_28_EXTRA_CXX_FLAGS[*]}")
+MY8026_CXX_FLAGS_DEBUG=("${MY8026_28_EXTRA_CXX_FLAGS[*]}"
+                        "${CXX_FLAGS_DEBUG[@]}")
+MY8026_CXX_FLAGS_RELEASE=("${MY8026_28_EXTRA_CXX_FLAGS[*]}"
+                          "${CXX_FLAGS_RELEASE[@]}")
+MY8026_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8026_CXX_FLAGS[*]}"
+              "-DCMAKE_C_FLAGS_DEBUG=${MY8026_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8026_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8026_CXX_FLAGS_RELEASE[*]}")
 unset MY8026_28_C_FLAGS_DEBUG
 unset MY8026_28_CXX_FLAGS_DEBUG
 unset MY8026_28_CXX_FLAGS_RELEASE
@@ -181,12 +241,12 @@ unset MY8031_EXTRA
 export MY8030D=("${MY8D[@]}" "${MY8030_810_EXTRA[@]}")
 unset MY8030_810_EXTRA
 
-export MY8029D=("${MY8D[@]}" "${MY8028_29_EXTRA[@]}")
+export MY8029D=("${MY8D[@]}" "${MY8029_EXTRA[@]}")
 
-export MY8028=("${MY8R[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}"
-               "${MY8028_29_EXTRA[@]}")
-export MY8028D=("${MY8D[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}"
-                "${MY8028_29_EXTRA[@]}")
+export MY8028=("${MY8R[@]}" "${MY8028_EXTRA[@]}" "${MY8026_28_EXTRA[@]}"
+               "${MY8027_28_EXTRA[@]}")
+export MY8028D=("${MY8D[@]}" "${MY8028_EXTRA[@]}" "${MY8026_28_EXTRA[@]}"
+                "${MY8027_28_EXTRA[@]}")
 unset MY8028_29_EXTRA
 unset MY8028_EXTRA
 
@@ -194,11 +254,13 @@ export FB8028=("${MY8028[@]}" "${FB_COMMON[@]}" "${FB8028_EXTRA[@]}")
 export FB8028D=("${MY8028D[@]}" "${FB_COMMON[@]}" "${FB8028_EXTRA[@]}")
 unset FB8028_EXTRA
 
-export MY8027D=("${MY8D[@]}" "${MY8026_28_EXTRA[@]}" "${MY8027_28_EXTRA[@]}")
+export MY8027D=("${MY8D[@]}" "${MY8027_EXTRA[@]}" "${MY8026_28_EXTRA[@]}"
+                "${MY8027_28_EXTRA[@]}")
 unset MY8027_28_EXTRA
 
-export MY8026=("${MY8R[@]}" "${MY8026_28_EXTRA[@]}")
-export MY8026D=("${MY8D[@]}" "-DDEBUG_EXTNAME=OFF" "${MY8026_28_EXTRA[@]}")
+export MY8026=("${MY8R[@]}" "${MY8026_EXTRA[@]}" "${MY8026_28_EXTRA[@]}")
+export MY8026D=("${MY8D[@]}" "-DDEBUG_EXTNAME=OFF" "${MY8026_EXTRA[@]}"
+                "${MY8026_28_EXTRA[@]}")
 unset MY8026_28_EXTRA
 unset MY8D
 unset MY8R
