@@ -93,6 +93,7 @@
 (require 'tramp-sh)
 (setq tramp-copy-size-limit nil)
 (setq tramp-default-method "scpx")
+(setq tramp-use-scp-direct-remote-copying t)
 (setq remote-file-name-inhibit-cache t)
 
 ;; "Integration" with `vc': I only use git on remote hosts, handled by Magit,
