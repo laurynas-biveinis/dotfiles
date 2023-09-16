@@ -1016,7 +1016,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:commit . "f155d19c528e27f8f6c72f0d75f652edbdcab37f"))])
  (ebdb .
-       [(0 8 17)
+       [(0 8 18)
 	((emacs
 	  (25 1))
 	 (seq
@@ -1027,7 +1027,7 @@
 	 (:maintainer "Eric Abrahamsen" . "eric@ericabrahamsen.net")
 	 (:authors
 	  ("Eric Abrahamsen" . "eric@ericabrahamsen.net"))
-	 (:commit . "610d1ed5d4095936836102e1e48dc4416d0d260b"))])
+	 (:commit . "18de048be8a560b367e7839b19c873b9753f3ec1"))])
  (ebdb-gnorb .
 	     [(1 0 2)
 	      ((gnorb
@@ -1194,7 +1194,7 @@
 		    ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 		   (:commit . "127492fac048cecfdba145d496a902022a68d1d5"))])
  (ement .
-	[(0 11)
+	[(0 12)
 	 ((emacs
 	   (27 1))
 	  (map
@@ -1217,7 +1217,7 @@
 	  (:maintainer "Adam Porter" . "adam@alphapapa.net")
 	  (:authors
 	   ("Adam Porter" . "adam@alphapapa.net"))
-	  (:commit . "d2b7a8484033e16b6f196b6525124d5ebdf4c0d7"))])
+	  (:commit . "a4fc3d1ab6df424bc1296b8ca480a8c55c542dc2"))])
  (emms .
        [(16)
 	((cl-lib
@@ -1640,7 +1640,7 @@
 	     ("Sean Allred" . "code@seanallred.com"))
 	    (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader .
-	  [(0 2 1)
+	  [(0 3 0)
 	   ((emacs
 	     (25)))
 	   "gnamù reader, send buffer contents to a speech engine." tar
@@ -1649,7 +1649,7 @@
 	    (:authors
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
 	    (:url . "https://elpa.gnu.org/packages/greader.html")
-	    (:commit . "dd528739b9bc828b31fe0edf3ce3d671fe9c2d55"))])
+	    (:commit . "230c54be6c82c4c7de6afa8ce04ec57d8c26d468"))])
  (greenbar .
 	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" single
@@ -1772,7 +1772,7 @@
 	   ("Durand" . "mmemmew@gmail.com"))
 	  (:url . "https://elpa.gnu.org/packages/ilist.html"))])
  (inspector .
-	    [(0 33)
+	    [(0 34)
 	     ((emacs
 	       (27 1)))
 	     "Tool for inspection of Emacs Lisp objects" tar
@@ -1781,7 +1781,7 @@
 	      (:maintainer "Mariano Montone" . "marianomontone@gmail.com")
 	      (:authors
 	       ("Mariano Montone" . "marianomontone@gmail.com"))
-	      (:commit . "daff792202d36638033f83902fc0849130270d39"))])
+	      (:commit . "430329ab99317c3d28b592f8d1ff7b07bdce332d"))])
  (ioccur .
 	 [(2 6)
 	  ((emacs

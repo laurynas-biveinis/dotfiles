@@ -2476,6 +2476,8 @@ If there is no parent prefix, then just call the command."
          (setq transient--editp nil)
          (transient-setup)
          transient--stay)
+        (prefix-arg
+         transient--stay)
         (t transient--exit)))
 
 (defun transient--do-quit-all ()
@@ -2583,8 +2585,7 @@ transient is active."
 (defun transient-update ()
   "Redraw the transient's state in the popup buffer."
   (interactive)
-  (when (equal this-original-command 'negative-argument)
-    (setq prefix-arg current-prefix-arg)))
+  (setq prefix-arg current-prefix-arg))
 
 (defun transient-show ()
   "Show the transient's state in the popup buffer."
