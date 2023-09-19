@@ -1,7 +1,7 @@
-(define-package "all-the-icons-dired" "20230908.2208" "Shows icons for each file in dired mode"
+(define-package "all-the-icons-dired" "20230918.1245" "Shows icons for each file in dired mode"
   '((emacs "26.1")
     (all-the-icons "2.2.0"))
-  :commit "28f6f6c478f230c27526ef7a91afdf82d472c24b" :authors
+  :commit "83821b5cf3e221c2b00df2cee253a295983d1a28" :authors
   '(("jtbm37"))
   :maintainers
   '(("Jimmy Yuen Ho Wong" . "wyuenho@gmail.com"))
