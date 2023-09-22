@@ -2964,7 +2964,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.49/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.49/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.50/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.50/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -3011,7 +3011,7 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230915.1911/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230915.1911/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146/transient-autoloads.el"))
 
 
 
@@ -7272,7 +7272,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20230909.1052/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20230909.1052/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20230919.2039/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20230919.2039/magit-section-autoloads.el"))
 
 
 
@@ -8252,7 +8252,7 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20230914.1251/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20230914.1251/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20230921.2037/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20230921.2037/magit-autoloads.el"))
 
 
 
@@ -14409,7 +14409,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230914.1713/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230914.1713/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230920.1433/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230920.1433/cmake-mode-autoloads.el"))
 
 
 
@@ -15000,7 +15000,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-20230914.1251" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230909.1052" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20230915.1911" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-20230921.2037" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230919.2039" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
