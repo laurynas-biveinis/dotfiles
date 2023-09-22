@@ -10,7 +10,6 @@
 	hideCampaign = true
 [diff]
 	colorMoved = default
-	external = difft
 	renamelimit = 100000
 [diff "elisp"]
 	xfuncname="^\\((((def\\S+)|use-package)\\s+\\S+)"
