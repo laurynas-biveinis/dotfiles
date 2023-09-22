@@ -36,10 +36,11 @@ sudo ln -sf /bin/sed /bin/gsed
 # sudo usermod -aG docker laurynas
 # LLVM
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-echo 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main' \
+echo 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-17 main' \
     | sudo tee -a /etc/apt/sources.list
-sudo apt-get install clang-16 libomp5-16 llvm-16 lld-16 clang-tools-16 \
-     clang-tidy-16 clang-16-doc llvm-16-doc clang-format-16
+sudo apt-get update
+sudo apt-get install clang-17 libomp5-17 llvm-17 lld-17 clang-tools-17 \
+     clang-tidy-17 clang-17-doc llvm-17-doc clang-format-17
 pip install pandas
 # MySQL development specific
 sudo apt-get install ccache rapidjson-dev ncdu libaio-dev libssl-dev \
