@@ -46,6 +46,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     MY8031_EXTRA_CXX_FLAGS=("-Wno-deprecated-declarations")
     MY8032_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
                             "-Wno-deprecated-copy-with-dtor")
+    MY8032_EXTRA=("-DWITH_UNIT_TESTS=OFF")
     MY8033_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
                             "-Wno-deprecated-copy-with-dtor")
 
@@ -62,6 +63,7 @@ else
     MY8026_28_EXTRA_CXX_FLAGS=("-Wno-unused-label")
     MY8031_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA_CXX_FLAGS=()
+    MY8032_EXTRA=()
     MY8033_EXTRA_CXX_FLAGS=()
     MY8030_810_EXTRA=()
     MARIA_COMMON=()
@@ -115,10 +117,10 @@ unset MY8033_CXX_FLAGS_RELEASE
 MY8032_CXX_FLAGS_DEBUG=("${MY8032_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
 MY8032_CXX_FLAGS_RELEASE=("${MY8032_EXTRA_CXX_FLAGS[@]}"
                           "${CXX_FLAGS_RELEASE[@]}")
-MY8032_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8032_EXTRA_CXX_FLAGS[*]}"
-              "-DCMAKE_C_FLAGS_DEBUG=${MY8032_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8032_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8032_CXX_FLAGS_RELEASE[*]}")
+MY8032_EXTRA+=("-DCMAKE_CXX_FLAGS=${MY8032_EXTRA_CXX_FLAGS[*]}"
+               "-DCMAKE_C_FLAGS_DEBUG=${MY8032_CXX_FLAGS_DEBUG[*]}"
+               "-DCMAKE_CXX_FLAGS_DEBUG=${MY8032_CXX_FLAGS_DEBUG[*]}"
+               "-DCMAKE_CXX_FLAGS_RELEASE=${MY8032_CXX_FLAGS_RELEASE[*]}")
 unset MY8032_EXTRA_CXX_FLAGS
 unset MY8032_CXX_FLAGS_DEBUG
 unset MY8032_CXX_FLAGS_RELEASE
@@ -235,6 +237,8 @@ export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 unset MY8032_EXTRA
 
+export FB8032D=("${MY8032D[@]}" "${FB_COMMON[@]}")
+
 export MY8031D=("${MY8D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 unset MY8031_EXTRA
 
@@ -319,6 +323,9 @@ mysql_cmake() {
         if [ -d ../rocksdb ]; then
             echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
             case "$minor_ver.$patch_level" in
+                0.32)
+                    debug_flags=("${FB8032D[@]}")
+                    ;;
                 0.28)
                     release_flags=("${FB8028[@]}")
                     debug_flags=("${FB8028D[@]}")
