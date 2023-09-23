@@ -4,8 +4,8 @@
 
 ;; Author: Przemyslaw Kryger <pkryger@gmail.com>
 ;; Keywords: tools diff
-;; Homepage: https://github.com/pkryger/difftastic.el.git
-;; Package-Requires: ((emacs "28.1") (magit "20220326"))
+;; Homepage: https://github.com/pkryger/difftastic.el
+;; Package-Requires: ((emacs "27.1") (compat "29.1.4.2") (magit "20220326"))
 ;; Version: 0.0.0
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -79,6 +79,30 @@
 (require 'font-lock)
 (require 'magit)
 
+(eval-when-compile
+  (require 'compat)
+  (require 'fringe))
+
+(defgroup difftastic nil
+  "Integration with difftastic."
+  :group 'tools)
+
+(defun difftastic--ansi-color-face (vector offset name)
+  "Get face from VECTOR with OFFSET or make a new one with NAME suffix.
+
+New face is made when VECTOR is not bound."
+  ;;This is for backward compatibility with Emacs-27.  When dropping
+  ;; compatibility, calls should be replaced with `(aref VECTOR offset)'.
+  (if (version< emacs-version "28")
+      (custom-declare-face
+       `,(intern (concat "difftastic--ansi-color-" name))
+       `((t :foreground ,(cdr (aref (with-no-warnings
+                                      (ansi-color-make-color-map))
+                                    (+ 30 offset)))))
+       (concat "Face used to render " name " color code.")
+       :group 'difftastic)
+    (aref (eval vector) offset)))
+
 (defun difftastic-requested-window-width ()
   "Get a window width for difftastic call."
   (- (if (< 1 (count-windows))
@@ -100,14 +124,22 @@ display buffer at bottom."
   (with-current-buffer buffer-or-name
     ;; difftastic diffs are usually 2-column side-by-side,
     ;; so ensure our window is wide enough.
-    (pop-to-buffer
-     (current-buffer)
-     `(,(when (< requested-width (cadr (buffer-line-statistics)))
-          #'display-buffer-at-bottom)))))
-
-(defgroup difftastic nil
-  "Integration with difftastic."
-  :group 'tools)
+    (let ((actual-width (if (fboundp 'buffer-line-statistics)
+                            ;; since Emacs-28
+                            (cadr (buffer-line-statistics))
+                          (save-excursion
+                            (goto-char (point-min))
+                            (let ((max 0)
+                                  (to (point-max)))
+                              (while (< (point) to)
+                                (end-of-line)
+                                (setq max (max max (current-column)))
+                                (forward-line))
+                              max)))))
+      (pop-to-buffer
+       (current-buffer)
+       `(,(when (< requested-width actual-width)
+            #'display-buffer-at-bottom))))))
 
 (defcustom difftastic-executable "difft"
   "Location of difftastic executable."
@@ -116,14 +148,14 @@ display buffer at bottom."
 
 (defcustom difftastic-normal-colors-vector
   (vector
-   (aref ansi-color-normal-colors-vector 0)
+   (difftastic--ansi-color-face 'ansi-color-normal-colors-vector 0 "black")
    'magit-diff-removed
    'magit-diff-added
    'magit-diff-file-heading
    font-lock-comment-face
    font-lock-string-face
    font-lock-warning-face
-   (aref ansi-color-normal-colors-vector 7))
+   (difftastic--ansi-color-face 'ansi-color-normal-colors-vector 7 "white"))
   "Faces to use for colors on difftastic output (normal).
 
 N.B. only foreground and background properties will be used."
@@ -132,14 +164,14 @@ N.B. only foreground and background properties will be used."
 
 (defcustom difftastic-bright-colors-vector
   (vector
-   (aref ansi-color-bright-colors-vector 0)
+   (difftastic--ansi-color-face 'ansi-color-bright-colors-vector 0 "black")
    'magit-diff-removed
    'magit-diff-added
    'magit-diff-file-heading
    font-lock-comment-face
    font-lock-string-face
    font-lock-warning-face
-   (aref ansi-color-bright-colors-vector 7))
+   (difftastic--ansi-color-face 'ansi-color-bright-colors-vector 7 "white"))
   "Faces to use for colors on difftastic output (bright).
 
 N.B. only foreground and background properties will be used."
@@ -189,6 +221,10 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
        (advice-remove ,symbol fn-advice-var))))
 
 (define-derived-mode difftastic-mode fundamental-mode "difftastic"
+  "Major mode to display output of difftastic.
+
+It uses `view-mode' to provide a familiar behaviour to view diffs."
+  :group 'difftastic
   (view-mode)
   (setq buffer-read-only t))
 
@@ -218,9 +254,9 @@ conses."
     (cond
      ((vectorp tree)
       (let ((i (length (setq tree (copy-sequence tree)))))
-        (while (>= (setq i (1- i)) 0)
-          (aset tree i (difftastic--copy-tree (aref tree i))))
-        tree))
+	    (while (>= (setq i (1- i)) 0)
+	      (aset tree i (difftastic--copy-tree (aref tree i))))
+	    tree))
      ;; Optimisation: bool vector doesn't need a deep copy
      ((bool-vector-p tree)
       (copy-sequence tree))
@@ -333,6 +369,8 @@ perform cleanup."
                 difftastic-normal-colors-vector)
                (ansi-color-bright-colors-vector
                 difftastic-bright-colors-vector))
+           (ignore ansi-color-normal-colors-vector
+                   ansi-color-bright-colors-vector)
            (if (fboundp 'ansi-color--face-vec-face) ;; since Emacs-29
                ( difftastic--with-temp-advice
                  'ansi-color--face-vec-face
@@ -463,7 +501,8 @@ when it is a temporary file."
    '("Text")
    (cl-remove-if (lambda (line)
                    (string-match-p "^ \\*" line))
-                 (split-string
+                 (compat-call ;; since Emacs-29
+                  string-split
                   (shell-command-to-string
                    (concat difftastic-executable " --list-languages"))
                   "\n" t))))
@@ -479,7 +518,8 @@ when it is a temporary file."
                       major-mode)))))
     (cl-find-if (lambda (language)
                   (string= (downcase language)
-                           (downcase (string-replace
+                           (downcase (compat-call ;; since Emacs-28
+                                      string-replace
                                       "-" " "
                                       (replace-regexp-in-string
                                        "-mode$" ""
