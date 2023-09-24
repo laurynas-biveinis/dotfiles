@@ -8252,7 +8252,7 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20230923.1526/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20230923.1526/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20230923.1851/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20230923.1851/magit-autoloads.el"))
 
 
 
@@ -15000,7 +15000,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-20230923.1526" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230922.1332" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-20230923.1851" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230922.1332" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
