@@ -12,7 +12,8 @@
 ;; Package-Requires: (
 ;;     (emacs "25.1")
 ;;     (compat "29.1.3.4")
-;;     (dash "2.19.1"))
+;;     (dash "2.19.1")
+;;     (seq "2.24"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -45,8 +46,15 @@
 (require 'compat)
 (require 'dash)
 (require 'eieio)
-(require 'seq)
 (require 'subr-x)
+
+;; For older Emacs releases we depend on an updated `seq' release from GNU
+;; ELPA, for `seq-keep'.  Unfortunately something else may require `seq'
+;; before `package' had a chance to put this version on the `load-path'.
+(when (and (featurep' seq)
+           (not (fboundp 'seq-keep)))
+  (unload-feature 'seq 'force))
+(require 'seq)
 
 (require 'cursor-sensor)
 (require 'format-spec)

@@ -15,6 +15,7 @@
 ;; Package-Requires: (
 ;;     (emacs "25.1")
 ;;     (compat "29.1.3.4")
+;;     (seq "2.24")
 ;;     (transient "0.3.6")
 ;;     (with-editor "3.0.5"))
 
@@ -119,6 +120,12 @@
 
 (require 'compat)
 (require 'subr-x)
+
+(when (and (featurep' seq)
+           (not (fboundp 'seq-keep)))
+  (unload-feature 'seq 'force))
+(require 'seq)
+
 (require 'log-edit)
 (require 'ring)
 (require 'rx)

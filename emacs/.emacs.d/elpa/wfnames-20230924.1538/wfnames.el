@@ -327,7 +327,7 @@ ARG can be 1 for down or -1 for up."
          (line (buffer-substring (point) next)))
     (delete-region (point) next)
     (forward-line arg)
-    (insert line)
+    (insert-before-markers line)
     (forward-line -1)))
 
 (defun wfnames-move-line-down ()

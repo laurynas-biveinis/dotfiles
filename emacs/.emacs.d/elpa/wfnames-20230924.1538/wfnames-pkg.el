@@ -1,6 +1,6 @@
-(define-package "wfnames" "20230819.1122" "Edit filenames"
+(define-package "wfnames" "20230924.1538" "Edit filenames"
   '((emacs "24.4"))
-  :commit "ea336972227a5ffe29fed0aaa1ccaadf90743db3" :authors
+  :commit "19b452fb698a5ba3b0f1d6e7d69a5e19af2c83e7" :authors
   '(("Thierry Volpiatto" . "thievol@posteo.net"))
   :maintainers
   '(("Thierry Volpiatto" . "thievol@posteo.net"))
