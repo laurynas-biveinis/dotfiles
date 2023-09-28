@@ -45,11 +45,9 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
                                "-Wno-bitwise-instead-of-logical"
                                "-Wno-unused-label")
     MY8031_EXTRA_CXX_FLAGS=("-Wno-deprecated-declarations")
-    MY8032_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
-                            "-Wno-deprecated-copy-with-dtor")
+    MY8032_34_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
+                               "-Wno-deprecated-copy-with-dtor")
     MY8032_EXTRA=("-DWITH_UNIT_TESTS=OFF")
-    MY8033_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
-                            "-Wno-deprecated-copy-with-dtor")
 
     MARIA_COMMON=("-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
                   "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
@@ -61,9 +59,8 @@ else
     MY8018_28_EXTRA=()
     MY8018_28_EXTRA_CXX_FLAGS=("-Wno-unused-label")
     MY8031_EXTRA_CXX_FLAGS=()
-    MY8032_EXTRA_CXX_FLAGS=()
+    MY8032_34_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA=()
-    MY8033_EXTRA_CXX_FLAGS=()
     MY8030_810_EXTRA=()
     MARIA_COMMON=()
 
@@ -94,30 +91,45 @@ MARIA_COMMON+=("-DPLUGIN_MROONGA=NO" "-DPLUGIN_CONNECT=NO")
 
 # Version-specific building blocks, descending order
 
+# 8.0.34--8.0.33
+
+MY8033_34_EXTRA=("-DFORCE_COLORED_OUTPUT=ON")
+
+# 8.0.34
+
+MY8034_CXX_FLAGS_DEBUG=("${MY8032_34_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
+MY8034_CXX_FLAGS_RELEASE=("${MY8032_34_EXTRA_CXX_FLAGS[@]}"
+                          "${CXX_FLAGS_RELEASE[@]}")
+MY8034_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8032_34_EXTRA_CXX_FLAGS[*]}"
+              "-DCMAKE_C_FLAGS_DEBUG=${MY8034_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8034_CXX_FLAGS_DEBUG[*]}"
+              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8034_CXX_FLAGS_RELEASE[*]}")
+unset MY8034_CXX_FLAGS_DEBUG
+unset MY8034_CXX_FLAGS_RELEASE
+
 # 8.0.33
 
-MY8033_CXX_FLAGS_DEBUG=("${MY8033_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
-MY8033_CXX_FLAGS_RELEASE=("${MY8033_EXTRA_CXX_FLAGS[@]}"
+MY8033_CXX_FLAGS_DEBUG=("${MY8032_34_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
+MY8033_CXX_FLAGS_RELEASE=("${MY8032_34_EXTRA_CXX_FLAGS[@]}"
                           "${CXX_FLAGS_RELEASE[@]}")
-MY8033_EXTRA=("-DWITH_RAPIDJSON=bundled" "-DFORCE_COLORED_OUTPUT=ON"
-              "-DCMAKE_CXX_FLAGS=${MY8033_EXTRA_CXX_FLAGS[*]}"
+MY8033_EXTRA=("-DWITH_RAPIDJSON=bundled"
+              "-DCMAKE_CXX_FLAGS=${MY8032_34_EXTRA_CXX_FLAGS[*]}"
               "-DCMAKE_C_FLAGS_DEBUG=${MY8033_CXX_FLAGS_DEBUG[*]}"
               "-DCMAKE_CXX_FLAGS_DEBUG=${MY8033_CXX_FLAGS_DEBUG[*]}"
               "-DCMAKE_CXX_FLAGS_RELEASE=${MY8033_CXX_FLAGS_RELEASE[*]}")
-unset MY8033_EXTRA_CXX_FLAGS
 unset MY8033_CXX_FLAGS_DEBUG
 unset MY8033_CXX_FLAGS_RELEASE
 
 # 8.0.32
 
-MY8032_CXX_FLAGS_DEBUG=("${MY8032_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
-MY8032_CXX_FLAGS_RELEASE=("${MY8032_EXTRA_CXX_FLAGS[@]}"
+MY8032_CXX_FLAGS_DEBUG=("${MY8032_34_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
+MY8032_CXX_FLAGS_RELEASE=("${MY8032_34_EXTRA_CXX_FLAGS[@]}"
                           "${CXX_FLAGS_RELEASE[@]}")
-MY8032_EXTRA+=("-DCMAKE_CXX_FLAGS=${MY8032_EXTRA_CXX_FLAGS[*]}"
+MY8032_EXTRA+=("-DCMAKE_CXX_FLAGS=${MY8032_34_EXTRA_CXX_FLAGS[*]}"
                "-DCMAKE_C_FLAGS_DEBUG=${MY8032_CXX_FLAGS_DEBUG[*]}"
                "-DCMAKE_CXX_FLAGS_DEBUG=${MY8032_CXX_FLAGS_DEBUG[*]}"
                "-DCMAKE_CXX_FLAGS_RELEASE=${MY8032_CXX_FLAGS_RELEASE[*]}")
-unset MY8032_EXTRA_CXX_FLAGS
+unset MY8032_34_EXTRA_CXX_FLAGS
 unset MY8032_CXX_FLAGS_DEBUG
 unset MY8032_CXX_FLAGS_RELEASE
 
@@ -241,12 +253,18 @@ unset CXX_FLAGS_RELEASE
 export MY810D=("${MY8D[@]}" "${MY8030_810_EXTRA[@]}")
 export MY810=("${MY8R[@]}" "${MY8030_810_EXTRA[@]}")
 
-export MY8034D=("${MY8D[@]}" "${MY8030_810_EXTRA[@]}")
-export MY8034=("${MY8R[@]}" "${MY8030_810_EXTRA[@]}")
+export MY8034D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+                "${MY8034_EXTRA[@]}")
+export MY8034=("${MY8R[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+               "${MY8034_EXTRA[@]}")
+unset MY8034_EXTRA
 
-export MY8033D=("${MY8D[@]}" "${MY8033_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
-export MY8033=("${MY8R[@]}" "${MY8033_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
+export MY8033D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+                "${MY8033_EXTRA[@]}")
+export MY8033=("${MY8R[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+               "${MY8033_EXTRA[@]}")
 unset MY8033_EXTRA
+unset MY8033_34_EXTRA
 
 export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
