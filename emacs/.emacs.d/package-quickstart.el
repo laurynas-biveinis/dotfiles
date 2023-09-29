@@ -14042,7 +14042,7 @@ Update Eglot.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20230922.1520/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20230922.1520/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20230928.923/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20230928.923/difftastic-autoloads.el"))
 
 
 
@@ -14053,19 +14053,16 @@ Update Eglot.
 
 (autoload 'difftastic-magit-show "difftastic" "\
 Show the result of \\='git show REV\\=' with difftastic.
-
 When REV couldn't be guessed or called with prefix arg ask for REV.
 
 (fn REV)" t)
 (autoload 'difftastic-magit-diff "difftastic" "\
 Show the result of \\='git diff ARG\\=' with difftastic.
-
 When ARG couldn't be guessed or called with prefix arg ask for ARG.
 
 (fn ARG)" t)
 (autoload 'difftastic-buffers "difftastic" "\
 Run difftastic on a pair of buffers, BUFFER-A and BUFFER-B.
-
 Optionally, provide a LANG-OVERRIDE to override language used.
 See \\='difft --list-languages\\=' for language list.
 
@@ -14079,7 +14076,6 @@ then ask for language before running difftastic.
 (fn BUFFER-A BUFFER-B &optional LANG-OVERRIDE)" t)
 (autoload 'difftastic-files "difftastic" "\
 Run difftastic on a pair of files, FILE-A and FILE-B.
-
 Optionally, provide a LANG-OVERRIDE to override language used.
 See \\='difft --list-languages\\=' for language list.  When
 function is called with a prefix arg then ask for language before
