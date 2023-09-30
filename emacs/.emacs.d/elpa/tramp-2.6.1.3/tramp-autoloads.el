@@ -59,9 +59,9 @@ pair of the form (KEY VALUE).  The following KEYs are defined:
     \"%\" followed by a letter are expanded in the arguments as
     follows:
 
-    - \"%h\" is replaced by the host name
-    - \"%u\" is replaced by the user name
-    - \"%p\" is replaced by the port number
+    - \"%h\" is replaced by the host name.
+    - \"%u\" is replaced by the user name.
+    - \"%p\" is replaced by the port number.
     - \"%%\" can be used to obtain a literal percent character.
 
     If a sub-list containing \"%h\", \"%u\" or \"%p\" is
@@ -90,6 +90,8 @@ pair of the form (KEY VALUE).  The following KEYs are defined:
     - \"%z\" is replaced by the `tramp-scp-direct-remote-copying'
       argument if it is supported.
     - \"%d\" is replaced by the device detected by `tramp-adb-get-device'.
+    - \"%a\" adds the pseudo-terminal allocation argument \"-t\" in
+       asynchronous processes, if the connection type is not `pipe'.
 
     The existence of `tramp-login-args', combined with the
     absence of `tramp-copy-args', is an indication that the
@@ -953,7 +955,7 @@ UU-encode the region between BEG and END.
 
 ;;; Generated autoloads from trampver.el
 
-(defconst tramp-version "2.6.1.2" "\
+(defconst tramp-version "2.6.1.3" "\
 This version of Tramp.")
 (defconst tramp-bug-report-address "tramp-devel@gnu.org" "\
 Email address to send bug reports to.")

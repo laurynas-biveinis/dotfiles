@@ -252,9 +252,9 @@ pair of the form (KEY VALUE).  The following KEYs are defined:
     \"%\" followed by a letter are expanded in the arguments as
     follows:
 
-    - \"%h\" is replaced by the host name
-    - \"%u\" is replaced by the user name
-    - \"%p\" is replaced by the port number
+    - \"%h\" is replaced by the host name.
+    - \"%u\" is replaced by the user name.
+    - \"%p\" is replaced by the port number.
     - \"%%\" can be used to obtain a literal percent character.
 
     If a sub-list containing \"%h\", \"%u\" or \"%p\" is
@@ -283,6 +283,8 @@ pair of the form (KEY VALUE).  The following KEYs are defined:
     - \"%z\" is replaced by the `tramp-scp-direct-remote-copying'
       argument if it is supported.
     - \"%d\" is replaced by the device detected by `tramp-adb-get-device'.
+    - \"%a\" adds the pseudo-terminal allocation argument \"-t\" in
+       asynchronous processes, if the connection type is not `pipe'.
 
     The existence of `tramp-login-args', combined with the
     absence of `tramp-copy-args', is an indication that the
@@ -677,6 +679,16 @@ instead of altering this variable.
 
 The `sudo' program appears to insert a `^@' character into the prompt."
   :version "29.1"
+  :type 'regexp)
+
+(defcustom tramp-otp-password-prompt-regexp
+  (rx bol (* nonl)
+      ;; JumpCloud.
+      (group (| "Verification code"))
+      (* nonl) (any ":：៖") (* blank))
+  "Regexp matching one-time password prompts.
+The regexp should match at end of buffer."
+  :version "29.2"
   :type 'regexp)
 
 (defcustom tramp-wrong-passwd-regexp
@@ -3724,7 +3736,7 @@ BODY is the backend specific code."
 			(let ((inhibit-file-name-handlers
 			       `(tramp-file-name-handler
 				 tramp-crypt-file-name-handler
-				 . inhibit-file-name-handlers))
+				 . ,inhibit-file-name-handlers))
 			      (inhibit-file-name-operation 'write-region))
 			  (find-file-name-handler ,visit 'write-region))))
 	  ;; We use this to save the value of
@@ -5023,6 +5035,7 @@ substitution.  SPEC-LIST is a list of char/value pairs used for
 		  (when adb-file-name-handler-p
 		    (tramp-compat-funcall
 		     'tramp-adb-get-device v)))
+                 (pta (unless (eq connection-type 'pipe) "-t"))
 		 login-args p)
 
 	    ;; Replace `login-args' place holders.  Split
@@ -5039,7 +5052,7 @@ substitution.  SPEC-LIST is a list of char/value pairs used for
 		 v 'tramp-login-args
 		 ?h (or host "") ?u (or user "") ?p (or port "")
 		 ?c (format-spec (or options "") (format-spec-make ?t tmpfile))
-		 ?d (or device "") ?l ""))))
+		 ?d (or device "") ?a (or pta "") ?l ""))))
 	     p (make-process
 		:name name :buffer buffer
 		:command (append `(,login-program) login-args command)
@@ -5534,6 +5547,25 @@ of."
 	     #'tramp-read-passwd-without-cache #'tramp-read-passwd)
 	 proc)
 	tramp-local-end-of-line))
+      ;; Hide password prompt.
+      (narrow-to-region (point-max) (point-max))))
+  t)
+
+(defun tramp-action-otp-password (proc vec)
+  "Query the user for a one-time password."
+  (with-current-buffer (process-buffer proc)
+    (let ((case-fold-search t)
+	  prompt)
+      (goto-char (point-min))
+      (tramp-check-for-regexp proc tramp-process-action-regexp)
+      (setq prompt (concat (match-string 1) " "))
+      (tramp-message vec 3 "Sending %s" (match-string 1))
+      ;; We don't call `tramp-send-string' in order to hide the
+      ;; password from the debug buffer and the traces.
+      (process-send-string
+       proc
+       (concat
+	(tramp-read-passwd-without-cache proc prompt) tramp-local-end-of-line))
       ;; Hide password prompt.
       (narrow-to-region (point-max) (point-max))))
   t)

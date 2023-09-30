@@ -3077,7 +3077,7 @@ See info node `(transient)Modifying Existing Transients'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2/tramp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2/tramp-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3/tramp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3/tramp-autoloads.el"))
 
 
 
@@ -3134,9 +3134,9 @@ pair of the form (KEY VALUE).  The following KEYs are defined:
     \"%\" followed by a letter are expanded in the arguments as
     follows:
 
-    - \"%h\" is replaced by the host name
-    - \"%u\" is replaced by the user name
-    - \"%p\" is replaced by the port number
+    - \"%h\" is replaced by the host name.
+    - \"%u\" is replaced by the user name.
+    - \"%p\" is replaced by the port number.
     - \"%%\" can be used to obtain a literal percent character.
 
     If a sub-list containing \"%h\", \"%u\" or \"%p\" is
@@ -3165,6 +3165,8 @@ pair of the form (KEY VALUE).  The following KEYs are defined:
     - \"%z\" is replaced by the `tramp-scp-direct-remote-copying'
       argument if it is supported.
     - \"%d\" is replaced by the device detected by `tramp-adb-get-device'.
+    - \"%a\" adds the pseudo-terminal allocation argument \"-t\" in
+       asynchronous processes, if the connection type is not `pipe'.
 
     The existence of `tramp-login-args', combined with the
     absence of `tramp-copy-args', is an indication that the
@@ -4010,7 +4012,7 @@ UU-encode the region between BEG and END.
 
 
 
-(defconst tramp-version "2.6.1.2" "\
+(defconst tramp-version "2.6.1.3" "\
 This version of Tramp.")
 (defconst tramp-bug-report-address "tramp-devel@gnu.org" "\
 Email address to send bug reports to.")
@@ -14996,7 +14998,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-20230924.1834" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230924.1834" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.2" "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/magit-20230924.1834" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230924.1834" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:

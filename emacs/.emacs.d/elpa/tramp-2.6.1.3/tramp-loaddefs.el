@@ -108,7 +108,7 @@ Default list of (FUNCTION FILE) pairs to be examined for sg methods.")
 
 ;;; Generated autoloads from tramp-sshfs.el
 
-(tramp--with-startup (add-to-list 'tramp-methods `(,tramp-sshfs-method (tramp-mount-args (("-C") ("-p" "%p") ("-o" "dir_cache=no") ("-o" "transform_symlinks") ("-o" "idmap=user,reconnect"))) (tramp-login-program "ssh") (tramp-login-args (("-q") ("-l" "%u") ("-p" "%p") ("-e" "none") ("-t" "-t") ("%h") ("%l"))) (tramp-direct-async t) (tramp-remote-shell ,tramp-default-remote-shell) (tramp-remote-shell-login ("-l")) (tramp-remote-shell-args ("-c")))) (add-to-list 'tramp-connection-properties `(,(format "/%s:" tramp-sshfs-method) "direct-async-process" t)) (tramp-set-completion-function tramp-sshfs-method tramp-completion-function-alist-ssh))
+(tramp--with-startup (add-to-list 'tramp-methods `(,tramp-sshfs-method (tramp-mount-args (("-C") ("-p" "%p") ("-o" "dir_cache=no") ("-o" "transform_symlinks") ("-o" "idmap=user,reconnect"))) (tramp-login-program "ssh") (tramp-login-args (("-q") ("-l" "%u") ("-p" "%p") ("-e" "none") ("%a" "%a") ("%h") ("%l"))) (tramp-direct-async t) (tramp-remote-shell ,tramp-default-remote-shell) (tramp-remote-shell-login ("-l")) (tramp-remote-shell-args ("-c")))) (add-to-list 'tramp-connection-properties `(,(format "/%s:" tramp-sshfs-method) "direct-async-process" t)) (tramp-set-completion-function tramp-sshfs-method tramp-completion-function-alist-ssh))
 
 ;;; End of scraped data
 
