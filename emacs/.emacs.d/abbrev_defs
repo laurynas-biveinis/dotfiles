@@ -1,6 +1,8 @@
 ;;-*-coding: utf-8;-*-
 (define-abbrev-table 'c++-mode-abbrev-table
   '(
+    ("callctr" "static std::atomic<int> call_ctr;
+const auto call_i = call_ctr.fetch_add(1, std::memory_order_relaxed);" nil :count 1)
     ("fml" "  // FIXME(laurynas): " nil :count 1)
     ("tdl" "  // TODO(laurynas): " nil :count 1)
    ))
