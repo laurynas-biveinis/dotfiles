@@ -33,9 +33,12 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
         BREW="/opt/homebrew/opt"
         MY8018_28_EXTRA=("-DWITH_SSL=$BREW/openssl@1.1")
         MY8030_810_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
+        # Workaround https://jira.percona.com/browse/PS-8949
+        PS8034_EXTRA=("-DROCKSDB_BUILD_ARCH=armv8.5-a+crypto")
     else
         MY8018_28_EXTRA=()
         MY8030_810_EXTRA=()
+        PS8034_EXTRA=()
     fi
     MY8018_EXTRA=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
     MY8018_28_EXTRA+=("-DWITH_ICU=$BREW/icu4c")
@@ -61,6 +64,7 @@ else
     MY8031_EXTRA_CXX_FLAGS=()
     MY8032_34_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA=()
+    PS8034_EXTRA=()
     MY8030_810_EXTRA=()
     MARIA_COMMON=()
 
@@ -257,7 +261,11 @@ export MY8034D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
                 "${MY8034_EXTRA[@]}")
 export MY8034=("${MY8R[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
                "${MY8034_EXTRA[@]}")
+
+export PS8034D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+                "${MY8034_EXTRA[@]}" "${PS8034_EXTRA[@]}")
 unset MY8034_EXTRA
+unset PS8034_EXTRA
 
 export MY8033D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
                 "${MY8033_EXTRA[@]}")
@@ -350,7 +358,12 @@ mysql_cmake() {
         if [ -d ../rocksdb ]; then
             flavor="facebook"
         else
-            flavor="mysql"
+            version_extra=$(grep MYSQL_VERSION_EXTRA ../MYSQL_VERSION)
+            if [ -z $version_extra ]; then
+                flavor="mysql"
+            else
+                flavor="percona"
+            fi
         fi
     elif [ -f ../VERSION ]; then
         version_file="../VERSION"
@@ -432,6 +445,18 @@ mysql_cmake() {
                 8.0.28)
                     release_flags=("${FB8028[@]}")
                     debug_flags=("${FB8028D[@]}")
+                    ;;
+                *)
+                    echo "Unsupported version, please add"
+                    return
+                    ;;
+            esac
+            ;;
+        "percona")
+            echo "Configuring Percona Server $major_ver.$minor_ver.$patch_level"
+            case "$major_ver.$minor_ver.$patch_level" in
+                8.0.34)
+                    debug_flags=("${PS8034D[@]}")
                     ;;
                 *)
                     echo "Unsupported version, please add"
