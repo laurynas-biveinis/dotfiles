@@ -34,10 +34,12 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
         MY8018_28_EXTRA=("-DWITH_SSL=$BREW/openssl@1.1")
         MY8030_810_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         # Workaround https://jira.percona.com/browse/PS-8949
+        FB8032_EXTRA=("-DROCKSDB_BUILD_ARCH=native+crypto")
         PS8034_EXTRA=("-DROCKSDB_BUILD_ARCH=native+crypto")
     else
         MY8018_28_EXTRA=()
         MY8030_810_EXTRA=()
+        FB8032_EXTRA=()
         PS8034_EXTRA=()
     fi
     MY8018_EXTRA=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
@@ -64,6 +66,7 @@ else
     MY8031_EXTRA_CXX_FLAGS=()
     MY8032_34_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA=()
+    FB8032_EXTRA=()
     PS8034_EXTRA=()
     MY8030_810_EXTRA=()
     MARIA_COMMON=()
@@ -278,7 +281,7 @@ export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 unset MY8032_EXTRA
 
-export FB8032D=("${MY8032D[@]}" "${FB_COMMON[@]}")
+export FB8032D=("${MY8032D[@]}" "${FB_COMMON[@]}" "${FB8032_EXTRA[@]}")
 
 export MY8031D=("${MY8D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
 unset MY8031_EXTRA
