@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.50
+;; Version: 0.12.51
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -148,6 +148,7 @@ See `tree-sitter-langs-repos'."
                 (latex-mode      . latex)
                 (lua-mode        . lua)
                 (matlab-mode     . matlab)
+                (mermaid-mode    . mermaid)
                 (meson-mode      . meson)
                 (noir-mode       . noir)
                 (ocaml-mode      . ocaml)
