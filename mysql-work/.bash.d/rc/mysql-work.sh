@@ -34,7 +34,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
         MY8018_28_EXTRA=("-DWITH_SSL=$BREW/openssl@1.1")
         MY8030_810_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         # Workaround https://jira.percona.com/browse/PS-8949
-        PS8034_EXTRA=("-DROCKSDB_BUILD_ARCH=armv8.5-a+crypto")
+        PS8034_EXTRA=("-DROCKSDB_BUILD_ARCH=native+crypto")
     else
         MY8018_28_EXTRA=()
         MY8030_810_EXTRA=()
