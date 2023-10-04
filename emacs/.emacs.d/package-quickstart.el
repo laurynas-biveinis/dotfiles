@@ -51,27 +51,30 @@ See `yas-minor-mode' for more information on Yas minor mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.15/yaml-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.15/yaml-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.16/yaml-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.16/yaml-mode-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/yaml-mode-0.0.15/yaml-mode-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
-(let ((loads (get 'yaml 'custom-loads))) (if (member '"yaml-mode" loads) nil (put 'yaml 'custom-loads (cons '"yaml-mode" loads))))
-
+(let ((loads (get 'yaml 'custom-loads))) (if (member '"yaml-mode" loads) nil (put 'yaml 'custom-loads (cons '"yaml-mode" loads)) (put 'languages 'custom-loads (cons 'yaml (get 'languages 'custom-loads)))))
 (autoload 'yaml-mode "yaml-mode" "\
 Simple mode to edit YAML.
 
 \\{yaml-mode-map}
 
-\(fn)" t nil)
-
+(fn)" t)
 (add-to-list 'auto-mode-alist '("\\.\\(e?ya?\\|ra\\)ml\\'" . yaml-mode))
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "yaml-mode" '("yaml-")))
-
+(add-to-list 'magic-mode-alist '("^%YAML\\s-+[0-9]+\\.[0-9]+\\(\\s-+#\\|\\s-*$\\)" . yaml-mode))
+(register-definition-prefixes "yaml-mode" '("yaml-"))
 
+
+(provide 'yaml-mode-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/xterm-color-2.0/xterm-color-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/xterm-color-2.0/xterm-color-autoloads.el"))
 

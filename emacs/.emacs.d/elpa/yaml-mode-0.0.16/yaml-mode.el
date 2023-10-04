@@ -1,31 +1,29 @@
-;;; yaml-mode.el --- Major mode for editing YAML files
+;;; yaml-mode.el --- Major mode for editing YAML files -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2010-2014 Yoshiki Kurihara
 
 ;; Author: Yoshiki Kurihara <clouder@gmail.com>
 ;;         Marshall T. Vandegrift <llasram@gmail.com>
 ;; Maintainer: Vasilij Schneidermann <mail@vasilij.de>
+;; URL: https://github.com/yoshiki/yaml-mode
 ;; Package-Requires: ((emacs "24.1"))
-;; Package-Version: 0.0.15
-;; Package-Commit: fc5e1c58f94472944c4aa838f00f6adcac6fa992
 ;; Keywords: data yaml
-;; Version: 0.0.15
+;; Version: 0.0.16
 
 ;; This file is not part of Emacs
 
-;; This file is free software; you can redistribute it and/or modify
+;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
 
-;; This file is distributed in the hope that it will be useful,
+;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
-;; You should have received a copy of the GNU General Public License along
-;; with this program; if not, write to the Free Software Foundation, Inc.,
-;; 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -104,8 +102,8 @@ that key is pressed to begin a block literal."
   :group 'yaml)
 
 (defface yaml-tab-face
-   '((((class color)) (:background "red" :foreground "red" :bold t))
-     (t (:reverse-video t)))
+  '((((class color)) (:background "red" :foreground "red" :bold t))
+    (t (:reverse-video t)))
   "Face to use for highlighting tabs in YAML files."
   :group 'faces
   :group 'yaml)
@@ -125,7 +123,7 @@ that key is pressed to begin a block literal."
   "Regexp matching a line containing only (valid) whitespace.")
 
 (defconst yaml-directive-re "^\\(?:--- \\)? *%\\(\\w+\\)"
-  "Regexp matching a line contatining a YAML directive.")
+  "Regexp matching a line containing a YAML directive.")
 
 (defconst yaml-document-delimiter-re "^\\(?:---\\|[.][.][.]\\)"
   "Rexexp matching a YAML document delimiter line.")
@@ -180,7 +178,7 @@ that key is pressed to begin a block literal."
              "y" "Y" "yes" "Yes" "YES" "n" "N" "no" "No" "NO"
              "true" "True" "TRUE" "false" "False" "FALSE"
              "on" "On" "ON" "off" "Off" "OFF") t)
-          " *$")
+          "\\_>")
   "Regexp matching certain scalar constants in scalar context.")
 
 
@@ -244,7 +242,7 @@ that key is pressed to begin a block literal."
     (,yaml-document-delimiter-re . (0 font-lock-comment-face))
     (,yaml-directive-re . (1 font-lock-builtin-face))
     ("^[\t]+" 0 'yaml-tab-face t))
-   "Additional expressions to highlight in YAML mode.")
+  "Additional expressions to highlight in YAML mode.")
 
 (defun yaml-mode-syntax-propertize-function (beg end)
   "Override buffer's syntax table for special syntactic constructs."
@@ -308,8 +306,8 @@ artificially limited to the value of
   (if (eolp) (goto-char (1+ (point))))
   (unless (or (eobp) (>= (point) bound))
     (let ((begin (point))
-          (end (min (1+ (point-at-eol)) bound)))
-      (goto-char (point-at-bol))
+          (end (min (1+ (line-end-position)) bound)))
+      (goto-char (line-beginning-position))
       (while (and (looking-at yaml-blank-line-re)
                   (not (bobp)))
         (forward-line -1))
@@ -368,14 +366,11 @@ back-dent the line by `yaml-indent-offset' spaces.  On reaching column
 0, it will cycle back to the maximum sensible indentation."
   (interactive "*")
   (let ((ci (current-indentation))
-        (cc (current-column))
         (need (yaml-compute-indentation)))
     (save-excursion
-      (beginning-of-line)
-      (delete-horizontal-space)
       (if (and (equal last-command this-command) (/= ci 0))
-          (indent-to (* (/ (- ci 1) yaml-indent-offset) yaml-indent-offset))
-        (indent-to need)))
+          (indent-line-to (* (/ (- ci 1) yaml-indent-offset) yaml-indent-offset))
+        (indent-line-to need)))
     (if (< (current-column) (current-indentation))
         (forward-to-indentation 0))))
 
@@ -429,31 +424,31 @@ margin."
 otherwise do nothing."
   (interactive)
   (save-excursion
-    (goto-char (point-at-bol))
+    (goto-char (line-beginning-position))
     (while (and (looking-at-p yaml-blank-line-re) (not (bobp)))
       (forward-line -1))
     (let ((nlines yaml-block-literal-search-lines)
-	  (min-level (current-indentation))
-	  beg)
+          (min-level (current-indentation))
+          beg)
       (forward-line -1)
       (while (and (/= nlines 0)
-		  (/= min-level 0)
-		  (not (looking-at-p yaml-block-literal-re))
-		  (not (bobp)))
-	(setq nlines (1- nlines))
-	(unless (looking-at-p yaml-blank-line-re)
-	  (setq min-level (min min-level (current-indentation))))
-	(forward-line -1))
+                  (/= min-level 0)
+                  (not (looking-at-p yaml-block-literal-re))
+                  (not (bobp)))
+        (setq nlines (1- nlines))
+        (unless (looking-at-p yaml-blank-line-re)
+          (setq min-level (min min-level (current-indentation))))
+        (forward-line -1))
       (when (and (< (current-indentation) min-level)
                  (looking-at-p yaml-block-literal-re))
-	(setq min-level (current-indentation))
-	(forward-line)
-	(setq beg (point))
-	(while (and (not (eobp))
-		    (or (looking-at-p yaml-blank-line-re)
-			(> (current-indentation) min-level)))
-	  (forward-line))
-	(narrow-to-region beg (point))))))
+        (setq min-level (current-indentation))
+        (forward-line)
+        (setq beg (point))
+        (while (and (not (eobp))
+                    (or (looking-at-p yaml-blank-line-re)
+                        (> (current-indentation) min-level)))
+          (forward-line))
+        (narrow-to-region beg (point))))))
 
 (defun yaml-fill-paragraph (&optional justify region)
   "Fill paragraph.
@@ -484,6 +479,10 @@ this will do usual adaptive fill behaviors."
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.\\(e?ya?\\|ra\\)ml\\'" . yaml-mode))
+
+;;;###autoload
+(add-to-list 'magic-mode-alist
+             '("^%YAML\\s-+[0-9]+\\.[0-9]+\\(\\s-+#\\|\\s-*$\\)" . yaml-mode))
 
 (provide 'yaml-mode)
 
