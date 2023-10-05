@@ -2967,7 +2967,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.51/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.51/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.55/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.55/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -14118,15 +14118,18 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/company-0.9.13/company-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/company-0.9.13/company-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/company-0.10.0/company-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/company-0.10.0/company-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/company-0.9.13/company-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (autoload 'company-mode "company" "\
 \"complete anything\"; is an in-buffer completion framework.
+
 Completion starts automatically, depending on the values
 `company-idle-delay' and `company-minimum-prefix-length'.
 
@@ -14153,8 +14156,22 @@ keymap during active completions (`company-active-map'):
 
 \\{company-active-map}
 
-\(fn &optional ARG)" t nil)
+This is a minor mode.  If called interactively, toggle the
+`Company mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
 
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `company-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(put 'global-company-mode 'globalized-minor-mode t)
 (defvar global-company-mode nil "\
 Non-nil if Global Company mode is enabled.
 See the `global-company-mode' command
@@ -14162,83 +14179,72 @@ for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `global-company-mode'.")
-
 (custom-autoload 'global-company-mode "company" nil)
-
 (autoload 'global-company-mode "company" "\
 Toggle Company mode in all buffers.
-With prefix ARG, enable Global Company mode if ARG is positive;
-otherwise, disable it.  If called from Lisp, enable the mode if
-ARG is omitted or nil.
+With prefix ARG, enable Global Company mode if ARG is positive; otherwise,
+disable it.
 
-Company mode is enabled in all buffers where
-`company-mode-on' would do it.
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Company mode is enabled in all buffers where `company-mode-on' would do it.
+
 See `company-mode' for more information on Company mode.
 
-\(fn &optional ARG)" t nil)
-
-(autoload 'company-manual-begin "company" "\
-
-
-\(fn)" t nil)
-
+(fn &optional ARG)" t)
+(autoload 'company-manual-begin "company" nil t)
 (autoload 'company-complete "company" "\
 Insert the common part of all candidates or the current selection.
 The first time this is called, the common part is inserted, the second
 time, or when the selection has been changed, the selected candidate is
-inserted.
-
-\(fn)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company" '("company-")))
+inserted." t)
+(register-definition-prefixes "company" '("company-"))
 
 
 
 (autoload 'company-abbrev "company-abbrev" "\
 `company-mode' completion backend for abbrev.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-abbrev" '("company-abbrev-insert")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-abbrev" '("company-abbrev-insert"))
 
 
 
 (autoload 'company-bbdb "company-bbdb" "\
 `company-mode' completion backend for BBDB.
 
-\(fn COMMAND &optional ARG &rest IGNORE)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-bbdb" '("company-bbdb-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-capf" '("company-")))
+(fn COMMAND &optional ARG &rest IGNORE)" t)
+(register-definition-prefixes "company-bbdb" '("company-bbdb-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-clang" '("company-clang")))
+(register-definition-prefixes "company-capf" '("company-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-cmake" '("company-cmake")))
+(register-definition-prefixes "company-clang" '("company-clang"))
+
+
+
+(register-definition-prefixes "company-cmake" '("company-cmake"))
 
 
 
 (autoload 'company-css "company-css" "\
 `company-mode' completion backend for `css-mode'.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-css" '("company-css-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-css" '("company-css-"))
 
 
 
 (autoload 'company-dabbrev "company-dabbrev" "\
 dabbrev-like `company-mode' completion backend.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-dabbrev" '("company-dabbrev-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-dabbrev" '("company-dabbrev-"))
 
 
 
@@ -14247,31 +14253,24 @@ dabbrev-like `company-mode' backend for code.
 The backend looks for all symbols in the current buffer that aren't in
 comments or strings.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-dabbrev-code" '("company-dabbrev-code-")))
-
-
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-eclim" '("company-eclim")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-dabbrev-code" '("company-dabbrev-code-"))
 
 
 
 (autoload 'company-elisp "company-elisp" "\
 `company-mode' completion backend for Emacs Lisp.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-elisp" '("company-elisp-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-elisp" '("company-elisp-"))
 
 
 
 (autoload 'company-etags "company-etags" "\
 `company-mode' completion backend for etags.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-etags" '("company-etags-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-etags" '("company-etags-"))
 
 
 
@@ -14280,76 +14279,68 @@ comments or strings.
 Completions works for proper absolute and relative files paths.
 File paths with spaces are only supported inside strings.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-files" '("company-file")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-files" '("company-file"))
 
 
 
 (autoload 'company-gtags "company-gtags" "\
 `company-mode' completion backend for GNU Global.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-gtags" '("company-gtags-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-gtags" '("company-gtags-"))
 
 
 
 (autoload 'company-ispell "company-ispell" "\
 `company-mode' completion backend using Ispell.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-ispell" '("company-ispell-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-ispell" '("company-ispell-"))
 
 
 
 (autoload 'company-keywords "company-keywords" "\
 `company-mode' backend for programming language keywords.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-keywords" '("company-keywords-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-keywords" '("company-keywords-"))
 
 
 
 (autoload 'company-nxml "company-nxml" "\
 `company-mode' completion backend for `nxml-mode'.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-nxml" '("company-nxml-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-nxml" '("company-nxml-"))
 
 
 
 (autoload 'company-oddmuse "company-oddmuse" "\
 `company-mode' completion backend for `oddmuse-mode'.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-oddmuse" '("company-oddmuse-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-oddmuse" '("company-oddmuse-"))
 
 
 
 (autoload 'company-semantic "company-semantic" "\
 `company-mode' completion backend using CEDET Semantic.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-semantic" '("company-semantic-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-semantic" '("company-semantic-"))
 
 
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-template" '("company-template-")))
+(register-definition-prefixes "company-template" '("company-template-"))
 
 
 
 (autoload 'company-tempo "company-tempo" "\
 `company-mode' completion backend for tempo.
 
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-tempo" '("company-tempo-")))
+(fn COMMAND &optional ARG &rest IGNORED)" t)
+(register-definition-prefixes "company-tempo" '("company-tempo-"))
 
 
 
@@ -14359,23 +14350,35 @@ frontend will display the candidate in the buffer as if it's
 already there and any key outside of `company-active-map' will
 confirm the selection and finish the completion.
 
-\(fn COMMAND)" nil nil)
+(fn COMMAND)")
+(define-obsolete-function-alias 'company-tng-configure-default 'company-tng-mode "0.9.14" "Applies the default configuration to enable company-tng.")
+(defvar company-tng-mode nil "\
+Non-nil if Company-Tng mode is enabled.
+See the `company-tng-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `company-tng-mode'.")
+(custom-autoload 'company-tng-mode "company-tng" nil)
+(autoload 'company-tng-mode "company-tng" "\
+This minor mode enables `company-tng-frontend'.
 
-(autoload 'company-tng-configure-default "company-tng" "\
-Applies the default configuration to enable company-tng.
+This is a global minor mode.  If called interactively, toggle the
+`Company-Tng mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
 
-\(fn)" nil nil)
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-tng" '("company-tng--")))
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='company-tng-mode)'.
 
-
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
 
-(autoload 'company-xcode "company-xcode" "\
-`company-mode' completion backend for Xcode projects.
-
-\(fn COMMAND &optional ARG &rest IGNORED)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-xcode" '("company-xcode-")))
+(fn &optional ARG)" t)
+(register-definition-prefixes "company-tng" '("company-tng-"))
 
 
 
@@ -14389,26 +14392,26 @@ shadow backends that come after it.  Recommended usages:
 * In a buffer-local value of `company-backends', grouped with a backend or
   several that provide actual text completions.
 
-  (add-hook 'js-mode-hook
+  (add-hook \\='js-mode-hook
             (lambda ()
-              (set (make-local-variable 'company-backends)
-                   '((company-dabbrev-code company-yasnippet)))))
+              (set (make-local-variable \\='company-backends)
+                   \\='((company-dabbrev-code company-yasnippet)))))
 
 * After keyword `:with', grouped with other backends.
 
-  (push '(company-semantic :with company-yasnippet) company-backends)
+  (push \\='(company-semantic :with company-yasnippet) company-backends)
 
 * Not in `company-backends', just bound to a key.
 
-  (global-set-key (kbd \"C-c y\") 'company-yasnippet)
+  (global-set-key (kbd \"C-c y\") \\='company-yasnippet)
 
-\(fn COMMAND &optional ARG &rest IGNORE)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-yasnippet" '("company-yasnippet-")))
-
+(fn COMMAND &optional ARG &rest IGNORE)" t)
+(register-definition-prefixes "company-yasnippet" '("company-yasnippet-"))
 
 
-
+(provide 'company-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230920.1433/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20230920.1433/cmake-mode-autoloads.el"))
 
@@ -15001,7 +15004,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/magit-20230924.1834" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230924.1834" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.0" "/Users/laurynas/.emacs.d/elpa/magit-20230924.1834" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20230924.1834" "/Users/laurynas/.emacs.d/elpa/org-9.6.9" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20230919.2146" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
