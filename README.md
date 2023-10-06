@@ -15,7 +15,7 @@ files, as described in the [installation](#installation) section.
 
 ## Emacs
 
-The biggest part of configuration is for Emacs, currently version 27.1. The
+The biggest part of configuration is for Emacs, currently version 29.1. The
 focus is on seamless integration between all the different packages, avoiding
 surprises, and adding polish here and there. Of course, that is very much a work
 in progress.
