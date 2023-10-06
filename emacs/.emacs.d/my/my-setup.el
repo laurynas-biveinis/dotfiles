@@ -81,6 +81,7 @@
 (require 'my-files)
 
 ;;; Cursor
+(setq-default cursor-type 'bar)
 (setq-default cursor-in-non-selected-windows nil)
 (setq what-cursor-show-names t)
 (global-hl-line-mode)
