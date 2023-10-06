@@ -1,7 +1,7 @@
 This is company.info, produced by makeinfo version 6.7 from
 company.texi.
 
-This user manual is for Company version 0.9.14snapshot (16 April 2023).
+This user manual is for Company version 0.10.0 (16 April 2023).
 
 Copyright © 2021-2023 Free Software Foundation, Inc.
 
@@ -26,7 +26,7 @@ The goal of this document is to lay out the foundational knowledge of
 the package, so that the readers of the manual could competently start
 adapting Company to their needs and preferences.
 
-This user manual is for Company version 0.9.14snapshot (16 April 2023).
+This user manual is for Company version 0.10.0 (16 April 2023).
 
 Copyright © 2021-2023 Free Software Foundation, Inc.
 
@@ -1659,45 +1659,45 @@ Concept Index
 
 
 Tag Table:
-Node: Top571
-Node: Overview1998
-Node: Terminology2406
-Ref: Terminology-Footnote-13393
-Node: Structure3599
-Node: Getting Started5095
-Node: Installation5373
-Node: Initial Setup5756
-Node: Usage Basics6602
-Node: Commands7365
-Ref: Commands-Footnote-19800
-Node: Customization9967
-Node: Customization Interface10439
-Node: Configuration File10972
-Node: Frontends15638
-Node: Tooltip Frontends16607
-Ref: Tooltip Frontends-Footnote-127374
-Node: Preview Frontends27611
-Ref: Preview Frontends-Footnote-128867
-Node: Echo Frontends28994
-Node: Candidates Search30527
-Node: Filter Candidates31861
-Node: Quick Access a Candidate32641
-Node: Backends34259
-Node: Backends Usage Basics35357
-Ref: Backends Usage Basics-Footnote-136572
-Node: Grouped Backends36656
-Node: Package Backends38285
-Node: Code Completion39214
-Node: Text Completion41583
-Node: File Name Completion46017
-Node: Template Expansion47565
-Node: Candidates Post-Processing48284
-Node: Troubleshooting49761
-Node: Index51434
-Node: Key Index51597
-Node: Variable Index53096
-Node: Function Index57219
-Node: Concept Index61700
+Node: Top563
+Node: Overview1982
+Node: Terminology2390
+Ref: Terminology-Footnote-13377
+Node: Structure3583
+Node: Getting Started5079
+Node: Installation5357
+Node: Initial Setup5740
+Node: Usage Basics6586
+Node: Commands7349
+Ref: Commands-Footnote-19784
+Node: Customization9951
+Node: Customization Interface10423
+Node: Configuration File10956
+Node: Frontends15622
+Node: Tooltip Frontends16591
+Ref: Tooltip Frontends-Footnote-127358
+Node: Preview Frontends27595
+Ref: Preview Frontends-Footnote-128851
+Node: Echo Frontends28978
+Node: Candidates Search30511
+Node: Filter Candidates31845
+Node: Quick Access a Candidate32625
+Node: Backends34243
+Node: Backends Usage Basics35341
+Ref: Backends Usage Basics-Footnote-136556
+Node: Grouped Backends36640
+Node: Package Backends38269
+Node: Code Completion39198
+Node: Text Completion41567
+Node: File Name Completion46001
+Node: Template Expansion47549
+Node: Candidates Post-Processing48268
+Node: Troubleshooting49745
+Node: Index51418
+Node: Key Index51581
+Node: Variable Index53080
+Node: Function Index57203
+Node: Concept Index61684
 
 End Tag Table
 

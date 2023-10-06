@@ -255,7 +255,7 @@ already there and any key outside of `company-active-map' will
 confirm the selection and finish the completion.
 
 (fn COMMAND)")
-(define-obsolete-function-alias 'company-tng-configure-default 'company-tng-mode "0.9.14" "Applies the default configuration to enable company-tng.")
+(define-obsolete-function-alias 'company-tng-configure-default 'company-tng-mode "0.10.0" "Applies the default configuration to enable company-tng.")
 (defvar company-tng-mode nil "\
 Non-nil if Company-Tng mode is enabled.
 See the `company-tng-mode' command
