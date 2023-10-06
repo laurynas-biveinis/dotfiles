@@ -195,6 +195,12 @@ defaults write com.apple.Terminal "Default Window Settings" \
          -string "Solarized Dark"
 defaults write com.apple.Terminal "Startup Window Settings" \
          -string "Solarized Dark"
+defaults export com.apple.Terminal /tmp/foo
+plutil -remove "Window Settings.Solarized Dark.CursorBlink" /tmp/foo
+plutil -remove "Window Settings.Solarized Dark.CursorType" /tmp/foo
+plutil -insert "Window Settings.Solarized Dark.CursorBlink" -integer 1 /tmp/foo
+plutil -insert "Window Settings.Solarized Dark.CursorType" -integer 2 /tmp/foo
+defaults import com.apple.Terminal /tmp/foo
 #
 # Dock
 #
