@@ -316,13 +316,15 @@ brew update
 # gnupg@2.2 because gnugp (which was 2.4.2 at the time of writing this) hangs
 # when called from Emacs EasyPG.
 brew install stow git ncdu gnupg@2.2 coreutils fzf hexyl tldr lynis curl java \
-     shellcheck wget hunspell llvm duti grep ghostscript pinentry-mac htop \
-     findutils libtool npm fd delta jq colordiff iwyu cppcheck infer creduce \
-     gnu-sed mas bat fig bison libfido2 actionlint circleci imagemagick \
+     shellcheck wget hunspell llvm llvm@16 duti grep ghostscript pinentry-mac \
+     htop findutils libtool npm fd delta jq colordiff iwyu cppcheck infer \
+     creduce gnu-sed mas bat fig bison libfido2 actionlint circleci imagemagick \
      rapidjson doxygen graphviz cmake protobuf@21 ripgrep lz4 boost cpplint \
      libeatmydata duf exa clang-build-analyzer recode ninja difftastic
 brew link protobuf@21
 brew link gnupg@2.2
+sudo ln -sf /opt/homebrew/opt/llvm@16/bin/clang-format \
+     /usr/local/bin/clang-format
 #
 # App Store
 #
