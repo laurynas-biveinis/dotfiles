@@ -530,14 +530,14 @@
 		       (:maintainer "Clément Pit-Claudel" . "clement.pitclaudel@live.com")
 		       (:url . "https://github.com/cpitclaudel/compact-docstrings"))])
  (company .
-	  [(0 10 0)
+	  [(0 10 1)
 	   ((emacs
 	     (25 1)))
 	   "Modular text completion framework" tar
 	   ((:url . "http://company-mode.github.io/")
 	    (:keywords "abbrev" "convenience" "matching")
 	    (:maintainer "Dmitry Gutov" . "dmitry@gutov.dev")
-	    (:commit . "b59662293cc9bd52bf6c7a4c3f70393351b52d71"))])
+	    (:commit . "d832d886d0dce655b44de8c5e1eec749b2bea3a3"))])
  (company-ebdb .
 	       [(1 1)
 		((company
@@ -1341,7 +1341,7 @@
 			(:url . "https://elpa.gnu.org/packages/external-completion.html")
 			(:commit . "4bc9c8972ac0a3dfa237a9c5704de89ef24ad82b"))])
  (exwm .
-       [(0 27)
+       [(0 28)
 	((xelb
 	  (0 18)))
 	"Emacs X Window Manager" tar
@@ -1350,7 +1350,7 @@
 	 (:maintainer "Adrián Medraño Calvo" . "adrian@medranocalvo.com")
 	 (:authors
 	  ("Chris Feng" . "chris.w.feng@gmail.com"))
-	 (:commit . "e9cc0962cc478640afe3001e39ff32577d73d6a0"))])
+	 (:commit . "86f43494ebd056cd732fb1d10d440e0eba547228"))])
  (f90-interface-browser .
 			[(1 1)
 			 nil "Parse and browse f90 interfaces" single
@@ -3109,9 +3109,9 @@
 		   ("Bastien Guerry" . "bzg@gnu.org"))
 		  (:maintainer "Bastien Guerry" . "bzg@gnu.org"))])
  (relint .
-	 [(1 23)
+	 [(1 24)
 	  ((xr
-	    (1 24))
+	    (1 25))
 	   (emacs
 	    (26 1)))
 	  "Elisp regexp mistake finder" tar
@@ -3120,7 +3120,7 @@
 	   (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
 	   (:authors
 	    ("Mattias Engdegård" . "mattiase@acm.org"))
-	   (:commit . "380754be9c288ee0baeb40c2a4773737f8aebcd9"))])
+	   (:commit . "a88d83f420e2fdcfff4408cf967df2b2f9176ba1"))])
  (repology .
 	   [(1 2 3)
 	    ((emacs
