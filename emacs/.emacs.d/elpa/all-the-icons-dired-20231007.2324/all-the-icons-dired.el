@@ -43,8 +43,7 @@
 (require 'font-lock)
 
 (defface all-the-icons-dired-dir-face
-  '((((background dark)) :foreground "white")
-    (((background light)) :foreground "black"))
+  '((t (:inherit dired-directory)))
   "Face for the directory icon."
   :group 'all-the-icons-faces)
 
