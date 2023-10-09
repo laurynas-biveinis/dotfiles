@@ -24,13 +24,13 @@ curl http://www.ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
 unzip macOS.zip
 sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
 # Global and login screen setting
-sudo defaults delete /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources
-sudo defaults write /Library/Preferences/com.apple.HIToolbox \
-    AppleEnabledInputSources -array-add \
-    '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+defaults delete /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources
+defaults write /Library/Preferences/com.apple.HIToolbox \
+         AppleEnabledInputSources -array-add \
+         '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 # Show language menu in the login screen
-sudo defaults write /Library/Preferences/com.apple.loginwindow \
-    showInputMenu -bool true
+defaults write /Library/Preferences/com.apple.loginwindow \
+         showInputMenu -bool true
 # Current user setting
 defaults delete com.apple.HIToolbox AppleEnabledInputSources
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
@@ -43,8 +43,8 @@ defaults write -g AppleKeyboardUIMode -int 3
 #
 # Keyboard
 #
-sudo defaults write -g KeyRepeat -int 2
-sudo defaults write -g InitialKeyRepeat -int 35
+defaults write -g KeyRepeat -int 2
+defaults write -g InitialKeyRepeat -int 35
 # Go to System Preferences -> Keyboard -> Shortcuts -> Input Sources, uncheck
 # "Select the previous input source" and "Select next source in Input menu"
 # The commands below do:
@@ -81,7 +81,7 @@ defaults write -g NSUseSpellCheckerForCompletions -bool false
 # Mouse
 #
 # TODO(laurynas): test after reboot
-sudo defaults write -g com.apple.mouse.scaling -float 3
+defaults write -g com.apple.mouse.scaling -float 3
 defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string "TwoButton"
 defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode \
          -string "TwoButton"
@@ -160,18 +160,18 @@ sudo defaults write com.apple.menuextra.clock DateFormat -string \
 # Safari
 #
 defaults write \
-    ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari \
-    AutoOpenSafeDownloads -bool false
+         ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari \
+         AutoOpenSafeDownloads -bool false
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
-    WarnAboutFraudulentWebsites -bool true
+         WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
-    TreatSHA1CertificatesAsInsecure -bool true
+         TreatSHA1CertificatesAsInsecure -bool true
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 # Cmd-W should only close tab, never window
 defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' \
          '<string>@w</string></dict>'
 defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add \
-    '<string>com.apple.Safari</string>'
+         '<string>com.apple.Safari</string>'
 defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
 defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey \
@@ -218,9 +218,9 @@ defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
 # Show POSIX path in the window title
 defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
-sudo defaults -currentHost write \
-     /Library/Preferences/SystemConfiguration/com.apple.finder \
-     AppleShowAllFiles -bool true
+defaults -currentHost write \
+         /Library/Preferences/SystemConfiguration/com.apple.finder \
+         AppleShowAllFiles -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write -g AppleShowAllExtensions -bool true
@@ -294,7 +294,7 @@ defaults write com.apple.Image_Capture IK_scannerDisplayMode -int 1
 #
 # Printer
 #
-defaults write -g PMPrintingExpandedStateForPrint -bool TRUE
+defaults write -g PMPrintingExpandedStateForPrint -bool true
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 #
