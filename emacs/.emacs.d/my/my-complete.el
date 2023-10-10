@@ -105,7 +105,7 @@ CANDIDATES is the list of candidates."
       helm-net-prefer-curl t
       helm-list-directory-function #'helm-list-dir-external
       ;; So that `helm-imenu' shows everything for big source files.
-      helm-candidate-number-limit nil)
+      helm-candidate-number-limit 100)
 
 (helm-mode 1)
 
