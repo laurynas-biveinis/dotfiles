@@ -346,7 +346,7 @@ fi
 
 unset UNAME_OUT
 
-mtr_emd() {
+mtr() {
     mtr_emd_tmp_dir=$(mktemp -d /tmp/mtr-XXXX)
     ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@"
 }
