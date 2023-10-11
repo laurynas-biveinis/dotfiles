@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.61
+;; Version: 0.12.65
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -110,6 +110,8 @@ See `tree-sitter-langs-repos'."
                 (c-mode                 . c)
                 (caml-mode              . ocaml)
                 (clojure-mode           . clojure)
+                (lisp-mode              . commonlisp)
+                (lisp-interaction-mode  . commonlisp)
                 (csharp-mode            . c-sharp)
                 (c++-mode               . cpp)
                 (cmake-mode             . cmake)
@@ -130,10 +132,12 @@ See `tree-sitter-langs-repos'."
                 (git-rebase-mode        . git-rebase)
                 (gitattributes-mode     . gitattributes)
                 (gitignore-mode         . gitignore)
+                (glsl-mode              . glsl)
                 (go-mode                . go)
                 (haskell-mode           . haskell)
                 (hcl-mode               . hcl)
                 (terraform-mode         . hcl)
+                (hlsl-mode              . hlsl)
                 (html-mode              . html)
                 (markdown-mode          . markdown)
                 (mhtml-mode             . html)
@@ -216,10 +220,11 @@ Return nil if there are no bundled patterns."
         ;; TODO: Make this less ad-hoc.
         (dolist (sym (cons lang-symbol
                            (pcase lang-symbol
-                             ('cpp '(c))
+                             ('cpp        '(c))
+                             ('hlsl       '(cpp c))
                              ('typescript '(javascript))
-                             ('tsx '(typescript javascript))
-                             (_ nil))))
+                             ('tsx        '(typescript javascript))
+                             (_           nil))))
           (when mode
             (ignore-error 'file-missing
               (insert-file-contents (tree-sitter-langs--hl-query-path sym mode))

@@ -19,6 +19,7 @@
       projectile-switch-project-action #'helm-projectile
       projectile-use-git-grep t
       projectile-enable-cmake-presets t
+      projectile-enable-caching t
       projectile-mode-line-prefix " "  ;; Save mode line space
       projectile-tags-backend 'xref)  ;; Only use `xref' for cross-references
 
