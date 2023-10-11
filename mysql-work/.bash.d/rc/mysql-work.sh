@@ -13,7 +13,8 @@
 # MTR_EMD: MTR options to preload libeatmydata
 #
 # Shell functions:
-# - mtr_emd: call mtr with libeatmydata and some tmpdir
+# - mtr: call mtr with libeatmydata and some tmpdir
+# - rmtr: rebuild and then call mtr
 # - rm_tmp_mtr: cleanup all tmpdir from the above
 # - mysql_cmake: in a build directory, figure out CMake options & run it
 # - mysql_build: in a build directory, CMake and make
@@ -349,6 +350,11 @@ unset UNAME_OUT
 mtr() {
     mtr_emd_tmp_dir=$(mktemp -d /tmp/mtr-XXXX)
     ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@"
+}
+
+rmtr() {
+    ninja -C ..
+    mtr "$@"
 }
 
 rm_tmp_mtr() {
