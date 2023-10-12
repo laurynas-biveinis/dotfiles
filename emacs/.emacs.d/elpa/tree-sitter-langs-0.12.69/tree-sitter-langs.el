@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.65
+;; Version: 0.12.69
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -101,6 +101,8 @@ See `tree-sitter-langs-repos'."
               '((ada-mode               . ada)
                 (agda-mode              . agda)
                 (agda2-mode             . agda)
+                (arduino-mode           . arduino)
+                (astro-mode             . astro)
                 (fasm-mode              . asm)
                 (masm-mode              . asm)
                 (nasm-mode              . asm)
@@ -137,6 +139,7 @@ See `tree-sitter-langs-repos'."
                 (haskell-mode           . haskell)
                 (hcl-mode               . hcl)
                 (terraform-mode         . hcl)
+                (heex-mode              . heex)
                 (hlsl-mode              . hlsl)
                 (html-mode              . html)
                 (markdown-mode          . markdown)
@@ -185,6 +188,7 @@ See `tree-sitter-langs-repos'."
                 (swift-mode             . swift)
                 (toml-mode              . toml)
                 (conf-toml-mode         . toml)
+                (tcl-mode               . tcl)
                 (tuareg-mode            . ocaml)
                 (typescript-mode        . typescript)
                 (verilog-mode           . verilog)
@@ -220,6 +224,8 @@ Return nil if there are no bundled patterns."
         ;; TODO: Make this less ad-hoc.
         (dolist (sym (cons lang-symbol
                            (pcase lang-symbol
+                             ('arduino    '(cpp c))
+                             ('astro      '(html))
                              ('cpp        '(c))
                              ('hlsl       '(cpp c))
                              ('typescript '(javascript))

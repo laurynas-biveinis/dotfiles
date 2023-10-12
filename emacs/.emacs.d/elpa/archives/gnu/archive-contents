@@ -164,14 +164,14 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:commit . "53addd02fbad33765f508f8e6254ebd44e1f81e5"))])
  (auctex .
-	 [(13 2 1)
+	 [(13 2 2)
 	  ((emacs
-	    (25 1)))
+	    (26 1)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
 	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
 	   (:maintainer nil . "auctex-devel@gnu.org")
-	   (:commit . "1c3360b1621a524e14fa0067dc7e138630c2267f"))])
+	   (:commit . "bc75884db3d173fe5656aefd7543990aaaac49e6"))])
  (aumix-mode .
 	     [(7)
 	      nil "run the aumix program in a buffer" single
@@ -1882,14 +1882,14 @@
 		  ("Feng Shu" . "tumashu@163.com")
 		  ("Naoya Yamashita" . "conao3@gmail.com")))])
  (jarchive .
-	   [(0 10 0)
+	   [(0 11 0)
 	    ((emacs
 	      (26 1)))
 	    "Open project dependencies in jar archives" tar
 	    ((:url . "https://git.sr.ht/~dannyfreeman/jarchive")
 	     (:keywords "tools" "languages" "jvm" "java" "clojure")
 	     (:maintainer "Danny Freeman" . "danny@dfreeman.email")
-	     (:commit . "2e4a4bee2ad2715f4c364706acd10c25009d8df5"))])
+	     (:commit . "2c27714a72543bd115cb164ab25647b656c65b2d"))])
  (javaimp .
 	  [(0 9 1)
 	   nil "Add and reorder Java import statements in Maven/Gradle projects" tar
