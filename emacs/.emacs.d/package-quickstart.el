@@ -682,10 +682,12 @@ When APPEND is specified, append FILES to existing `wfnames-buffer'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20221110.1632/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20221110.1632/wakatime-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20231012.1227/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20231012.1227/wakatime-mode-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20221110.1632/wakatime-mode-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -706,10 +708,8 @@ evaluate `wakatime-mode'.
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (put 'global-wakatime-mode 'globalized-minor-mode t)
-
 (defvar global-wakatime-mode nil "\
 Non-nil if Global Wakatime mode is enabled.
 See the `global-wakatime-mode' command
@@ -717,9 +717,7 @@ for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `global-wakatime-mode'.")
-
 (custom-autoload 'global-wakatime-mode "wakatime-mode" nil)
-
 (autoload 'global-wakatime-mode "wakatime-mode" "\
 Toggle Wakatime mode in all buffers.
 With prefix ARG, enable Global Wakatime mode if ARG is positive; otherwise,
@@ -734,11 +732,13 @@ would do it.
 
 See `wakatime-mode' for more information on Wakatime mode.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (register-definition-prefixes "wakatime-mode" '("s-blank" "wakatime-"))
-
 
+
+(provide 'wakatime-mode-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20230417.424/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20230417.424/vterm-autoloads.el"))
 
@@ -2967,7 +2967,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.69/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.69/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.70/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.70/tree-sitter-langs-autoloads.el"))
 
 
 
