@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.70
+;; Version: 0.12.72
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -122,6 +122,7 @@ See `tree-sitter-langs-repos'."
                 (dart-mode              . dart)
                 (dockerfile-mode        . dockerfile)
                 (css-mode               . css)
+                (csv-mode               . csv)
                 (elm-mode               . elm)
                 (elixir-mode            . elixir)
                 (emacs-lisp-mode        . elisp)
@@ -228,6 +229,7 @@ Return nil if there are no bundled patterns."
                              ('arduino    '(cpp c))
                              ('astro      '(html))
                              ('cpp        '(c))
+                             ('csv        '(tsv))
                              ('hlsl       '(cpp c))
                              ('typescript '(javascript))
                              ('tsx        '(typescript javascript))
