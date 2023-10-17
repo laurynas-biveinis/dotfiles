@@ -311,6 +311,12 @@
 (require 'difftastic)
 (require 'magit-diff)
 
+(defun my--difftastic-window-width ()
+  "Return the target window width for `difftastic'."
+  180)
+
+(setq difftastic-requested-window-width-function #'my--difftastic-window-width)
+
 (transient-append-suffix 'magit-diff '(-1 -1)
   [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
    ("S" "Difftastic show" difftastic-magit-show)])
