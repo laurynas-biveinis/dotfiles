@@ -307,6 +307,21 @@
              (not (memq major-mode git-gutter:disabled-modes)))
     (git-gutter-mode +1)))
 
+;; `difftastic'
+(require 'difftastic)
+(require 'magit-diff)
+
+(transient-append-suffix 'magit-diff '(-1 -1)
+  [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
+   ("S" "Difftastic show" difftastic-magit-show)])
+
+(defun my--magit-blame-difftastic ()
+  "Integrate `difftastic' with `magit-blame'."
+  (keymap-set magit-blame-read-only-mode-map "D" #'difftastic-magit-show)
+  (keymap-set magit-blame-read-only-mode-map "S" #'difftastic-magit-show))
+
+(add-hook 'magit-blame-read-only-mode-hook #'my--magit-blame-difftastic)
+
 ;;; Structured format file editing
 
 ;; XML
