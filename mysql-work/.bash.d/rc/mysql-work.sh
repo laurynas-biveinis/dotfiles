@@ -36,12 +36,10 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
         MY8030_810_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         # Workaround https://jira.percona.com/browse/PS-8949
         FB8032_EXTRA=("-DROCKSDB_BUILD_ARCH=native+crypto")
-        PS8034_EXTRA=("-DROCKSDB_BUILD_ARCH=native+crypto")
     else
         MY8018_28_EXTRA=()
         MY8030_810_EXTRA=()
         FB8032_EXTRA=()
-        PS8034_EXTRA=()
     fi
     MY8018_EXTRA=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
     MY8018_28_EXTRA+=("-DWITH_ICU=$BREW/icu4c")
@@ -68,7 +66,6 @@ else
     MY8032_34_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA=()
     FB8032_EXTRA=()
-    PS8034_EXTRA=()
     MY8030_810_EXTRA=()
     MARIA_COMMON=()
 
@@ -267,9 +264,8 @@ export MY8034=("${MY8R[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
                "${MY8034_EXTRA[@]}")
 
 export PS8034D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
-                "${MY8034_EXTRA[@]}" "${PS8034_EXTRA[@]}")
+                "${MY8034_EXTRA[@]}")
 unset MY8034_EXTRA
-unset PS8034_EXTRA
 
 export MY8033D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
                 "${MY8033_EXTRA[@]}")
