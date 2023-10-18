@@ -53,6 +53,9 @@ export CLICOLOR=1
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 alias rmcores="rm -rf /cores/*"
+alias cargo='nocorrect cargo'
+alias heic2jpg='magick mogrify -monitor -format jpg *.HEIC'
+
 
 # https://developer.apple.com/forums/thread/694233
 function enable_core() {
@@ -160,8 +163,6 @@ zstyle ':completion:*' list-suffixeszstyle ':completion:*' expand prefix suffix
 autoload -Uz compinit && compinit
 
 zinit load zdharma/fast-syntax-highlighting
-
-alias cargo='nocorrect cargo'
 
 source ~/.zsh.d/paths
 
