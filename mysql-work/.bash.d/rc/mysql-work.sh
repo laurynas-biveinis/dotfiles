@@ -363,7 +363,8 @@ mysql_cmake() {
         if [ -d ../rocksdb ]; then
             flavor="facebook"
         else
-            version_extra=$(grep MYSQL_VERSION_EXTRA ../MYSQL_VERSION)
+            version_extra_str=$(grep MYSQL_VERSION_EXTRA ../MYSQL_VERSION)
+            version_extra="${version_extra_str/MYSQL_VERSION_EXTRA=/}"
             if [ -z $version_extra ]; then
                 flavor="mysql"
             else
