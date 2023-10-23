@@ -372,7 +372,8 @@ brew tap epk/epk
 brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
 brew tap railwaycat/emacsmacport
-brew install emacs-mac --with-native-comp
+brew install emacs-mac --with-native-compilation --with-unlimited-select \
+     --with-librsvg --with-mac-metal  --with-natural-title-bar
 # Intel
 osascript -e \
           'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
