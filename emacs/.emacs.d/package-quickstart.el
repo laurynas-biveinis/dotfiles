@@ -12708,35 +12708,31 @@ If invoked outside of a project, displays a list of known projects to jump.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-org-20210324.1927/helm-org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-org-20210324.1927/helm-org-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-org-20231022.620/helm-org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-org-20231022.620/helm-org-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-org-20210324.1927/helm-org-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (require 'helm-easymenu)
-
 (easy-menu-add-item nil '("Tools" "Helm") '("Org" ["Org headlines in org agenda files" helm-org-agenda-files-headings t] ["Org headlines in buffer" helm-org-in-buffer-headings t]) "Elpa")
-
 (autoload 'helm-org-agenda-files-headings "helm-org" "\
 Preconfigured helm for org files headings.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'helm-org-in-buffer-headings "helm-org" "\
 Preconfigured helm for org buffer headings.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'helm-org-parent-headings "helm-org" "\
 Preconfigured helm for org headings that are parents of the current heading.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'helm-org-capture-templates "helm-org" "\
-Preconfigured helm for org templates." t nil)
-
+Preconfigured helm for org templates." t)
 (autoload 'helm-org-completing-read-tags "helm-org" "\
 Completing read function for Org tags.
 
@@ -12747,11 +12743,13 @@ This function is used as a `completing-read' function in
 NOTE: Org tag completion will work only if you disable org fast tag
 selection, see (info \"(org) setting tags\").
 
-\(fn PROMPT COLLECTION PRED REQ INITIAL HIST DEF INHERIT-INPUT-METHOD NAME BUFFER)" nil nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "helm-org" '("helm-")))
-
+(fn PROMPT COLLECTION PRED REQ INITIAL HIST DEF INHERIT-INPUT-METHOD NAME BUFFER)")
+(register-definition-prefixes "helm-org" '("helm-"))
 
+
+(provide 'helm-org-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-make-20200620.27/helm-make-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-make-20200620.27/helm-make-autoloads.el"))
 

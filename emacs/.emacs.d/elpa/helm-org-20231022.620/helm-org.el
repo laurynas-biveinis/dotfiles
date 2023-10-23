@@ -4,8 +4,6 @@
 ;; Author:      Thierry Volpiatto <thierry.volpiatto@gmail.com>
 
 ;; URL: https://github.com/emacs-helm/helm-org
-;; Package-Version: 20210324.1927
-;; Package-Commit: d67186d3a64e610c03a5f3d583488f018fb032e4
 ;; Package-Requires: ((helm "3.3") (emacs "24.4"))
 ;; Version: 1.0
 
@@ -251,6 +249,9 @@ Note: [1] A separator can be a comma, a colon i.e. [,:] or a space.
                                                       #'helm-generic-sort-fn))))
                               nil helm-org-completion-styles)
                  :match-dynamic t
+                 :find-file-target (lambda (source)
+                                     (let ((marker (helm-get-selection nil nil source)))
+                                       (buffer-file-name (marker-buffer marker))))
                  :filtered-candidate-transformer
                  #'helm-org-indent-headings
                  :action 'helm-org-headings-actions
