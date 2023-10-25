@@ -231,7 +231,7 @@
 	 ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	(:keywords "point" "location"))])
  (bbdb .
-       [(3 2 2 2)
+       [(3 2 2 4)
 	((emacs
 	  (24))
 	 (cl-lib
@@ -239,7 +239,7 @@
 	"Big Brother DataBase" tar
 	((:maintainer "Roland Winkler" . "winkler@gnu.org")
 	 (:url . "https://elpa.gnu.org/packages/bbdb.html")
-	 (:commit . "715f35b5f53d6bcdcb3754b4f98933df01b57c15"))])
+	 (:commit . "641ff1f309e65ac8bd9794bd5f72cfc9ffc297a4"))])
  (beacon .
 	 [(1 3 4)
 	  ((emacs
@@ -2599,20 +2599,20 @@
 		("Peter Münster" . "pm@a16n.net"))
 	       (:commit . "c08cf5b931960bc12eb782c1fe1ec82266cb4bc8"))])
  (org-real .
-	   [(1 0 6)
+	   [(1 0 7)
 	    ((emacs
 	      (26 1))
 	     (boxy
-	      (1 0))
+	      (1 1))
 	     (org
 	      (9 3)))
 	    "Keep track of real things as org-mode links" tar
 	    ((:url . "https://gitlab.com/tygrdev/org-real")
 	     (:keywords "tools")
-	     (:maintainer "Taylor Grinn" . "grinntaylor@gmail.com")
+	     (:maintainer "Amy Grinn" . "grinn.amy@gmail.com")
 	     (:authors
-	      ("Taylor Grinn" . "grinntaylor@gmail.com"))
-	     (:commit . "9ae5d4a2c576671e8f7ab20d202eefa65af51b25"))])
+	      ("Amy Grinn" . "grinn.amy@gmail.com"))
+	     (:commit . "f88f005fc9527fb318ec802d7bb31aadf0c71c26"))])
  (org-remark .
 	     [(1 2 1)
 	      ((emacs
@@ -3910,17 +3910,20 @@
 	   (:keywords "grep" "search")
 	   (:commit . "4a034d9b2ec90fcdbd1d4539c1bfb9555020f0e3"))])
  (url-http-ntlm .
-		[(2 0 4)
+		[(2 0 5)
 		 ((cl-lib
 		   (0 5))
 		  (ntlm
-		   (2 1 0)))
-		 "NTLM authentication for the url library" single
-		 ((:keywords "comm" "data" "processes" "hypermedia")
+		   (2 1 0))
+		  (nadvice
+		   (0 3)))
+		 "NTLM authentication for the url library" tar
+		 ((:url . "https://code.google.com/p/url-http-ntlm/")
+		  (:keywords "comm" "data" "processes" "hypermedia")
+		  (:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
 		  (:authors
 		   ("Tom Schutzer-Weissmann" . "tom.weissmann@gmail.com"))
-		  (:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
-		  (:url . "https://code.google.com/p/url-http-ntlm/"))])
+		  (:commit . "2c76d9491304e485a91c9d457fc25130279e1324"))])
  (url-http-oauth .
 		 [(0 8 3)
 		  nil "OAuth 2.0 for URL library" tar

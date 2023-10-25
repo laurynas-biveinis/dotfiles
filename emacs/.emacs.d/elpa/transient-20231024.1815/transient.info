@@ -1723,6 +1723,21 @@ File: transient.info,  Node: Suffix Classes,  Next: Suffix Methods,  Prev: Prefi
    • Classes used for infix commands that represent variables should
      derived from the abstract ‘transient-variable’ class.
 
+   • The ‘transient-information’ class is special in that suffixes that
+     use this class are not associated with a command and thus also not
+     with any key binding.  Such suffixes are only used to display
+     arbitrary information, and that anywhere a suffix can appear.
+     Display-only suffix specifications take this form:
+
+          ([LEVEL] :info DESCRIPTION [KEYWORD VALUE]...)
+
+     The ‘:info’ keyword argument replaces the ‘:description’ keyword
+     used for other suffix classes.  Other keyword arguments that you
+     might want to set, include ‘:face’, predicate keywords (such as
+     ‘:if’), and ‘:format’.  By default the value of ‘:format’ includes
+     ‘%k’, which for this class is replaced with the empty string or
+     spaces, if keys are being padded in the containing group.
+
    Magit defines additional classes, which can serve as examples for the
 fancy things you can do without modifying Transient.  Some of these
 classes will likely get generalized and added to Transient.  For now
@@ -1944,6 +1959,11 @@ Slots of ‘transient-suffix’
 
    • ‘description’ The description, either a string or a function that
      is called with no argument and returns a string.
+
+   • ‘face’ Face used for the description.  In simple cases it is easier
+     to use this instead of using a function as ‘description’ and adding
+     the styling there.  ‘face’ is appended using
+     ‘add-face-text-property’.
 
    • ‘show-help’ A function used to display help for the suffix.  If
      unspecified, the prefix controls how help is displayed for its
@@ -3423,35 +3443,35 @@ Node: Group Classes68795
 Node: Group Methods70722
 Node: Prefix Classes71975
 Node: Suffix Classes73066
-Node: Suffix Methods75312
-Node: Suffix Value Methods75633
-Node: Suffix Format Methods78391
-Node: Prefix Slots79840
-Ref: Internal Prefix Slots81572
-Node: Suffix Slots82829
-Ref: Slots of transient-suffix83197
-Ref: Slots of transient-infix84051
-Ref: Slots of transient-variable87177
-Ref: Slots of transient-switches87279
-Node: Predicate Slots87642
-Node: Related Abstractions and Packages89077
-Node: Comparison With Prefix Keys and Prefix Arguments89364
-Ref: Regular Prefix Commands90049
-Ref: Regular Prefix Arguments90397
-Ref: Transients91366
-Node: Comparison With Other Packages99637
-Ref: Magit-Popup99868
-Ref: Hydra100775
-Node: FAQ103831
-Ref: Can I control how the popup buffer is displayed?103974
-Ref: How can I copy text from the popup buffer?104155
-Ref: Why did some of the key bindings change?104627
-Ref: Why does q not quit popups anymore?106980
-Node: Keystroke Index108073
-Node: Command and Function Index109791
-Node: Variable Index116163
-Node: Concept Index118436
-Node: GNU General Public License121180
+Node: Suffix Methods76153
+Node: Suffix Value Methods76474
+Node: Suffix Format Methods79232
+Node: Prefix Slots80681
+Ref: Internal Prefix Slots82413
+Node: Suffix Slots83670
+Ref: Slots of transient-suffix84038
+Ref: Slots of transient-infix85138
+Ref: Slots of transient-variable88264
+Ref: Slots of transient-switches88366
+Node: Predicate Slots88729
+Node: Related Abstractions and Packages90164
+Node: Comparison With Prefix Keys and Prefix Arguments90451
+Ref: Regular Prefix Commands91136
+Ref: Regular Prefix Arguments91484
+Ref: Transients92453
+Node: Comparison With Other Packages100724
+Ref: Magit-Popup100955
+Ref: Hydra101862
+Node: FAQ104918
+Ref: Can I control how the popup buffer is displayed?105061
+Ref: How can I copy text from the popup buffer?105242
+Ref: Why did some of the key bindings change?105714
+Ref: Why does q not quit popups anymore?108067
+Node: Keystroke Index109160
+Node: Command and Function Index110878
+Node: Variable Index117250
+Node: Concept Index119523
+Node: GNU General Public License122267
 
 End Tag Table
 
