@@ -33,10 +33,10 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     if [ "$(arch)" = "arm64" ]; then
         BREW="/opt/homebrew/opt"
         MY8018_28_EXTRA=("-DWITH_SSL=$BREW/openssl@1.1")
-        MY8030_820_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
+        export MY8030_820_CORE_DUMP_FLAGS=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
     else
         MY8018_28_EXTRA=()
-        MY8030_820_EXTRA=()
+        export MY8030_820_CORE_DUMP_FLAGS=()
     fi
     MY8018_EXTRA=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
     MY8018_28_EXTRA+=("-DWITH_ICU=$BREW/icu4c")
@@ -62,9 +62,9 @@ else
     MY8031_EXTRA_CXX_FLAGS=()
     MY8032_34_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA=()
-    MY8030_820_EXTRA=()
     MARIA_COMMON=()
 
+    export MY8030_820_CORE_DUMP_FLAGS=()
     export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
                       "-DCMAKE_CXX_COMPILER=clang++-12")
 fi
@@ -251,42 +251,37 @@ unset CXX_FLAGS_RELEASE
 
 # Paydirt!
 
-export MY820D=("${MY8D[@]}" "${MY8030_820_EXTRA[@]}" "${MY8033_820_EXTRA[@]}")
-export MY820=("${MY8R[@]}" "${MY8030_820_EXTRA[@]}" "${MY8033_820_EXTRA[@]}")
+export MY820D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}")
+export MY820=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}")
 
-export MY810D=("${MY8D[@]}" "${MY8030_820_EXTRA[@]}" "${MY8033_820_EXTRA[@]}")
-export MY810=("${MY8R[@]}" "${MY8030_820_EXTRA[@]}" "${MY8033_820_EXTRA[@]}")
+export MY810D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}")
+export MY810=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}")
 
-export MY8035D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
-export MY8035=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
+export MY8035D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}")
+export MY8035=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}")
 
-export MY8034D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
+export MY8034D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}"
                 "${MY8034_EXTRA[@]}")
-export MY8034=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
-               "${MY8034_EXTRA[@]}")
+export MY8034=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8034_EXTRA[@]}")
 
-export PS8034D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
-                "${MY8034_EXTRA[@]}")
+export PS8034D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8034_EXTRA[@]}")
 unset MY8034_EXTRA
 
-export MY8033D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
-                "${MY8033_EXTRA[@]}")
-export MY8033=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
-               "${MY8033_EXTRA[@]}")
+export MY8033D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8033_EXTRA[@]}")
+export MY8033=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8033_EXTRA[@]}")
 unset MY8033_EXTRA
 unset MY8033_820_EXTRA
 
-export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
-export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
+export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}")
+export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}")
 unset MY8032_EXTRA
 
 export FB8032D=("${MY8032D[@]}" "${FB_COMMON[@]}")
 
-export MY8031D=("${MY8D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
+export MY8031D=("${MY8D[@]}" "${MY8031_EXTRA[@]}")
 unset MY8031_EXTRA
 
-export MY8030D=("${MY8D[@]}" "${MY8030_820_EXTRA[@]}")
-unset MY8030_820_EXTRA
+export MY8030D=("${MY8D[@]}")
 
 export MY8029D=("${MY8D[@]}" "${MY8029_EXTRA[@]}")
 
@@ -408,46 +403,57 @@ mysql_cmake() {
                 8.2.0)
                     release_flags=("${MY820[@]}")
                     debug_flags=("${MY820D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.1.0)
                     release_flags=("${MY810[@]}")
                     debug_flags=("${MY810D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.35)
                     release_flags=("${MY8035[@]}")
                     debug_flags=("${MY8035D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.34)
                     release_flags=("${MY8034[@]}")
                     debug_flags=("${MY8034D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.33)
                     release_flags=("${MY8033[@]}")
                     debug_flags=("${MY8033D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.32)
                     release_flags=("${MY8032[@]}")
                     debug_flags=("${MY8032D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.31)
                     release_flags=("${MY8031[@]}")
                     debug_flags=("${MY8031D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.30)
                     release_flags=("${MY8030[@]}")
                     debug_flags=("${MY8030D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.29)
                     release_flags=("${MY8029[@]}")
                     debug_flags=("${MY8029D[@]}")
+                    core_dump_flags=()
                     ;;
                 8.0.28)
                     release_flags=("${MY8028[@]}")
                     debug_flags=("${MY8028D[@]}")
+                    core_dump_flags=()
                     ;;
                 8.0.18)
                     release_flags=("${MY8018[@]}")
                     debug_flags=("${MY8018D[@]}")
+                    core_dump_flags=()
                     ;;
                 *)
                     echo "Unsupported version, please implement"
@@ -460,10 +466,12 @@ mysql_cmake() {
             case "$major_ver.$minor_ver.$patch_level" in
                 8.0.32)
                     debug_flags=("${FB8032D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.28)
                     release_flags=("${FB8028[@]}")
                     debug_flags=("${FB8028D[@]}")
+                    core_dump_flags=()
                     ;;
                 *)
                     echo "Unsupported version, please add"
@@ -476,6 +484,7 @@ mysql_cmake() {
             case "$major_ver.$minor_ver.$patch_level" in
                 8.0.34)
                     debug_flags=("${PS8034D[@]}")
+                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 *)
                     echo "Unsupported version, please add"
@@ -503,7 +512,10 @@ mysql_cmake() {
             release_flags+=("${MY8SAN[@]}")
             ;;
         *)
+            echo "Not using sanitizers, enabling macOS core dumps if needed"
             sanitizers=0
+            debug_flags+=("${core_dump_flags[@]}")
+            release_flags+=("${core_dump_flags[@]}")
             ;;
     esac
 
