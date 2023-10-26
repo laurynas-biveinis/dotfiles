@@ -346,7 +346,10 @@ fi
 unset UNAME_OUT
 
 mtr() {
-    mtr_emd_tmp_dir=$(mktemp -d /tmp/mtr-XXXX) || return 1
+    declare -r mktemp_template="/tmp/mtr-XXXX"
+    declare -r mtr_emd_tmp_dir=$(mktemp -d $mktemp_template) ||
+        { echo "Failed to create a temp dir like $mktemp_template"; return 1; }
+
     ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@"
 }
 
