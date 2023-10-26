@@ -33,10 +33,10 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     if [ "$(arch)" = "arm64" ]; then
         BREW="/opt/homebrew/opt"
         MY8018_28_EXTRA=("-DWITH_SSL=$BREW/openssl@1.1")
-        MY8030_810_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
+        MY8030_820_EXTRA=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
     else
         MY8018_28_EXTRA=()
-        MY8030_810_EXTRA=()
+        MY8030_820_EXTRA=()
     fi
     MY8018_EXTRA=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
     MY8018_28_EXTRA+=("-DWITH_ICU=$BREW/icu4c")
@@ -62,7 +62,7 @@ else
     MY8031_EXTRA_CXX_FLAGS=()
     MY8032_34_EXTRA_CXX_FLAGS=()
     MY8032_EXTRA=()
-    MY8030_810_EXTRA=()
+    MY8030_820_EXTRA=()
     MARIA_COMMON=()
 
     export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
@@ -92,9 +92,9 @@ MARIA_COMMON+=("-DPLUGIN_MROONGA=NO" "-DPLUGIN_CONNECT=NO")
 
 # Version-specific building blocks, descending order
 
-# 8.0.34--8.0.33
+# 8.2.0--8.0.33
 
-MY8033_34_EXTRA=("-DFORCE_COLORED_OUTPUT=ON")
+MY8033_820_EXTRA=("-DFORCE_COLORED_OUTPUT=ON")
 
 # 8.0.34
 
@@ -233,16 +233,16 @@ MY8018_EXTRA_CXX_FLAGS=("-Wno-deprecated-declarations" "-Wno-unused-result"
 
 MY8018_CXX_FLAGS=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
                   "${MY8018_EXTRA_CXX_FLAGS[*]}")
-MY8026_CXX_FLAGS_DEBUG=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
+MY8018_CXX_FLAGS_DEBUG=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
                         "${MY8018_28_CXX_FLAGS_DEBUG[*]}"
                         "${MY8018_EXTRA_CXX_FLAGS[*]}" "${CXX_FLAGS_DEBUG[@]}")
 MY8018_CXX_FLAGS_RELEASE=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
                           "${MY8018_EXTRA_CXX_FLAGS[*]}"
                           "${CXX_FLAGS_RELEASE[@]}")
-MY8018_EXTRA+=("-DCMAKE_CXX_FLAGS=${MY8026_CXX_FLAGS[*]}"
-               "-DCMAKE_C_FLAGS_DEBUG=${MY8026_CXX_FLAGS_DEBUG[*]}"
-               "-DCMAKE_CXX_FLAGS_DEBUG=${MY8026_CXX_FLAGS_DEBUG[*]}"
-               "-DCMAKE_CXX_FLAGS_RELEASE=${MY8026_CXX_FLAGS_RELEASE[*]}")
+MY8018_EXTRA+=("-DCMAKE_CXX_FLAGS=${MY8018_CXX_FLAGS[*]}"
+               "-DCMAKE_C_FLAGS_DEBUG=${MY8018_CXX_FLAGS_DEBUG[*]}"
+               "-DCMAKE_CXX_FLAGS_DEBUG=${MY8018_CXX_FLAGS_DEBUG[*]}"
+               "-DCMAKE_CXX_FLAGS_RELEASE=${MY8018_CXX_FLAGS_RELEASE[*]}")
 
 unset MY8018_28_CXX_FLAGS_DEBUG
 unset MY8018_28_EXTRA_CXX_FLAGS
@@ -251,36 +251,42 @@ unset CXX_FLAGS_RELEASE
 
 # Paydirt!
 
-export MY810D=("${MY8D[@]}" "${MY8030_810_EXTRA[@]}")
-export MY810=("${MY8R[@]}" "${MY8030_810_EXTRA[@]}")
+export MY820D=("${MY8D[@]}" "${MY8030_820_EXTRA[@]}" "${MY8033_820_EXTRA[@]}")
+export MY820=("${MY8R[@]}" "${MY8030_820_EXTRA[@]}" "${MY8033_820_EXTRA[@]}")
 
-export MY8034D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+export MY810D=("${MY8D[@]}" "${MY8030_820_EXTRA[@]}" "${MY8033_820_EXTRA[@]}")
+export MY810=("${MY8R[@]}" "${MY8030_820_EXTRA[@]}" "${MY8033_820_EXTRA[@]}")
+
+export MY8035D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
+export MY8035=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
+
+export MY8034D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
                 "${MY8034_EXTRA[@]}")
-export MY8034=("${MY8R[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+export MY8034=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
                "${MY8034_EXTRA[@]}")
 
-export PS8034D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+export PS8034D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
                 "${MY8034_EXTRA[@]}")
 unset MY8034_EXTRA
 
-export MY8033D=("${MY8D[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+export MY8033D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
                 "${MY8033_EXTRA[@]}")
-export MY8033=("${MY8R[@]}" "${MY8033_34_EXTRA[@]}" "${MY8030_810_EXTRA[@]}"
+export MY8033=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8030_820_EXTRA[@]}"
                "${MY8033_EXTRA[@]}")
 unset MY8033_EXTRA
-unset MY8033_34_EXTRA
+unset MY8033_820_EXTRA
 
-export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
-export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
+export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
+export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
 unset MY8032_EXTRA
 
 export FB8032D=("${MY8032D[@]}" "${FB_COMMON[@]}")
 
-export MY8031D=("${MY8D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_810_EXTRA[@]}")
+export MY8031D=("${MY8D[@]}" "${MY8031_EXTRA[@]}" "${MY8030_820_EXTRA[@]}")
 unset MY8031_EXTRA
 
-export MY8030D=("${MY8D[@]}" "${MY8030_810_EXTRA[@]}")
-unset MY8030_810_EXTRA
+export MY8030D=("${MY8D[@]}" "${MY8030_820_EXTRA[@]}")
+unset MY8030_820_EXTRA
 
 export MY8029D=("${MY8D[@]}" "${MY8029_EXTRA[@]}")
 
@@ -340,12 +346,12 @@ fi
 unset UNAME_OUT
 
 mtr() {
-    mtr_emd_tmp_dir=$(mktemp -d /tmp/mtr-XXXX)
+    mtr_emd_tmp_dir=$(mktemp -d /tmp/mtr-XXXX) || return 1
     ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@"
 }
 
 rmtr() {
-    ninja -C ..
+    ninja -C .. || return 1
     mtr "$@"
 }
 
@@ -361,7 +367,7 @@ mysql_cmake() {
         else
             version_extra_str=$(grep MYSQL_VERSION_EXTRA ../MYSQL_VERSION)
             version_extra="${version_extra_str/MYSQL_VERSION_EXTRA=/}"
-            if [ -z $version_extra ]; then
+            if [ -z "$version_extra" ]; then
                 flavor="mysql"
             else
                 flavor="percona"
@@ -370,19 +376,19 @@ mysql_cmake() {
     elif [ -f ../VERSION ]; then
         version_file="../VERSION"
         server_maturity=$(grep SERVER_MATURITY ../VERSION)
-        if [ -z $server_maturity ]; then
+        if [ -z "$server_maturity" ]; then
             flavor="mysql"
         else
             flavor="mariadb"
         fi
     else
         echo "Neither MYSQL_VERSION nor VERSION found"
-        return
+        return 1
     fi
 
     if [ -z $flavor ]; then
         echo "Unknown source tree flavor"
-        return
+        return 1
     fi
 
     major_ver_str=$(grep MYSQL_VERSION_MAJOR $version_file)
@@ -396,9 +402,17 @@ mysql_cmake() {
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                8.2.0)
+                    release_flags=("${MY820[@]}")
+                    debug_flags=("${MY820D[@]}")
+                    ;;
                 8.1.0)
                     release_flags=("${MY810[@]}")
                     debug_flags=("${MY810D[@]}")
+                    ;;
+                8.0.35)
+                    release_flags=("${MY8035[@]}")
+                    debug_flags=("${MY8035D[@]}")
                     ;;
                 8.0.34)
                     release_flags=("${MY8034[@]}")
@@ -434,7 +448,7 @@ mysql_cmake() {
                     ;;
                 *)
                     echo "Unsupported version, please implement"
-                    return
+                    return 1
                     ;;
             esac
             ;;
@@ -450,7 +464,7 @@ mysql_cmake() {
                     ;;
                 *)
                     echo "Unsupported version, please add"
-                    return
+                    return 1
                     ;;
             esac
             ;;
@@ -462,17 +476,17 @@ mysql_cmake() {
                     ;;
                 *)
                     echo "Unsupported version, please add"
-                    return
+                    return 1
                     ;;
             esac
             ;;
         "mariadb")
             echo "MariaDB unsupported, please add"
-            return
+            return 1
             ;;
         *)
             echo "Unsupported flavor, should have caught sooner"
-            return
+            return 1
             ;;
     esac
 
@@ -495,7 +509,7 @@ mysql_cmake() {
             echo "Using Valgrind"
             if [ "$sanitizers" == 1 ]; then
                 echo "Valgrind is incompatible with sanitizers"
-                return
+                return 1
             fi
             debug_flags+=("-DWITH_VALGRIND=ON")
             release_flags+=("-DWITH_VALGRIND=ON")
@@ -518,17 +532,17 @@ mysql_cmake() {
     case "$build_dir" in
         *debug*)
             echo "Debug build"
-            cmake -G Ninja .. "${debug_flags[@]}" "$@"
+            cmake -G Ninja .. "${debug_flags[@]}" "$@" || return 1
             ;;
         *release*)
             echo "Release build"
-            cmake -G Ninja .. "${release_flags[@]}" "$@"
+            cmake -G Ninja .. "${release_flags[@]}" "$@" || return 1
             ;;
     esac
 }
 
 mysql_build() {
-    mysql_cmake "$@"
+    mysql_cmake "$@" || return 1
     build_dir="$(basename "$PWD")"
     (cd .. && ln -sf "$build_dir/compile_commands.json" .)
     ninja
