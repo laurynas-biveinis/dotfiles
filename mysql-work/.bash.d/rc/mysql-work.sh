@@ -340,23 +340,6 @@ fi
 
 unset UNAME_OUT
 
-mtr() {
-    declare -r mktemp_template="/tmp/mtr-XXXX"
-    declare -r mtr_emd_tmp_dir=$(mktemp -d $mktemp_template) ||
-        { echo "Failed to create a temp dir like $mktemp_template"; return 1; }
-
-    ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@"
-}
-
-rmtr() {
-    ninja -C .. || return 1
-    mtr "$@"
-}
-
-rm_tmp_mtr() {
-    rm -rf /tmp/mtr-*
-}
-
 mysql_find_version_file() {
     if [ -f ../MYSQL_VERSION ]; then
         echo "../MYSQL_VERSION"
@@ -584,6 +567,23 @@ mysql_build() {
     build_dir="$(basename "$PWD")"
     (cd .. && ln -sf "$build_dir/compile_commands.json" .)
     ninja
+}
+
+mtr() {
+    declare -r mktemp_template="/tmp/mtr-XXXX"
+    declare -r mtr_emd_tmp_dir=$(mktemp -d $mktemp_template) ||
+        { echo "Failed to create a temp dir like $mktemp_template"; return 1; }
+
+    ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@"
+}
+
+rmtr() {
+    ninja -C .. || return 1
+    mtr "$@"
+}
+
+rm_tmp_mtr() {
+    rm -rf /tmp/mtr-*
 }
 
 # Workaround P10K going crazy
