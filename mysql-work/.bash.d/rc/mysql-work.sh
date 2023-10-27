@@ -19,326 +19,294 @@
 # - mysql_cmake: in a build directory, figure out CMake options & run it
 # - mysql_build: in a build directory, CMake and make
 #
-# Works on Linux and macOS (both Intel and Apple Silicon).
+# Works on Linux and macOS (both Intel and Apple Silicon), XCode Command Line
+# Tools 15.0.1.
 
 set -o errexit
 set -o nounset
 set -o pipefail
 
-UNAME_OUT="$(uname -s)"
+mysql_export_environment_helpers() {
+    declare -r uname_out="$(uname -s)"
 
-# Common building blocks
+    # Common building blocks
 
-if [ "$UNAME_OUT" = "Darwin" ]; then
-    if [ "$(arch)" = "arm64" ]; then
-        BREW="/opt/homebrew/opt"
-        MY8018_28_EXTRA=("-DWITH_SSL=$BREW/openssl@1.1")
-        export MY8030_820_CORE_DUMP_FLAGS=("-DWITH_DEVELOPER_ENTITLEMENTS=ON")
+    if [ "$uname_out" = "Darwin" ]; then
+        declare -r brew="$(brew --prefix)/opt"
+        if [ "$(arch)" = "arm64" ]; then
+            declare -a my8018_28=("-DWITH_SSL=$brew/openssl@1.1")
+            export MY8030_820_CORE_DUMP_FLAGS=(
+                "-DWITH_DEVELOPER_ENTITLEMENTS=ON")
+        else
+            declare -a my8018_28=()
+            export MY8030_820_CORE_DUMP_FLAGS=()
+        fi
+        declare -a my8018_extra=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
+        my8018_28+=("-DWITH_ICU=$brew/icu4c")
+        declare -a -r my8018_28_cxx_flags=(
+            "-Wno-shadow-field" "-Wno-unqualified-std-cast-call"
+            "-Wno-deprecated-copy-with-dtor" "-Wno-bitwise-instead-of-logical"
+            "-Wno-unused-label")
+        declare -a -r my8031_extra_cxx_flags=("-Wno-deprecated-declarations")
+        declare -a -r my8032_34_extra_cxx_flags=(
+            "-Wno-unused-but-set-variable" "-Wno-deprecated-copy-with-dtor")
+        declare -a my8032_extra=("-DWITH_UNIT_TESTS=OFF")
+
+        declare -a maria_common=(
+            "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
+            "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
+
+        export MYCLANG12=("-DCMAKE_C_COMPILER=$brew/llvm@12/bin/clang-12"
+                          "-DCMAKE_CXX_COMPILER=$brew/llvm@12/bin/clang++")
     else
-        MY8018_28_EXTRA=()
+        declare -a my8018_extra=()
+        declare -a my8018_28=()
+        declare -a -r my8018_28_cxx_flags=("-Wno-unused-label")
+        declare -a -r my8031_extra_cxx_flags=()
+        declare -a -r my8032_34_extra_cxx_flags=()
+        declare -a my8032_extra=()
+        declare -a maria_common=()
+
         export MY8030_820_CORE_DUMP_FLAGS=()
+        export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
+                          "-DCMAKE_CXX_COMPILER=clang++-12")
     fi
-    MY8018_EXTRA=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
-    MY8018_28_EXTRA+=("-DWITH_ICU=$BREW/icu4c")
-    MY8018_28_EXTRA_CXX_FLAGS=("-Wno-shadow-field"
-                               "-Wno-unqualified-std-cast-call"
-                               "-Wno-deprecated-copy-with-dtor"
-                               "-Wno-bitwise-instead-of-logical"
-                               "-Wno-unused-label")
-    MY8031_EXTRA_CXX_FLAGS=("-Wno-deprecated-declarations")
-    MY8032_34_EXTRA_CXX_FLAGS=("-Wno-unused-but-set-variable"
-                               "-Wno-deprecated-copy-with-dtor")
-    MY8032_EXTRA=("-DWITH_UNIT_TESTS=OFF")
-
-    MARIA_COMMON=("-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
-                  "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
-
-    export MYCLANG12=("-DCMAKE_C_COMPILER=$BREW/llvm@12/bin/clang-12"
-                      "-DCMAKE_CXX_COMPILER=$BREW/llvm@12/bin/clang++")
-else
-    MY8018_EXTRA=()
-    MY8018_28_EXTRA=()
-    MY8018_28_EXTRA_CXX_FLAGS=("-Wno-unused-label")
-    MY8031_EXTRA_CXX_FLAGS=()
-    MY8032_34_EXTRA_CXX_FLAGS=()
-    MY8032_EXTRA=()
-    MARIA_COMMON=()
-
-    export MY8030_820_CORE_DUMP_FLAGS=()
-    export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
-                      "-DCMAKE_CXX_COMPILER=clang++-12")
-fi
-
-CXX_FLAGS_DEBUG=("-g")
-CXX_FLAGS_RELEASE=("-O2" "-g" "-DNDEBUG")
-
-CMAKE_COMMON=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
-CMAKE_RELEASE=("${CMAKE_COMMON[@]}"
-               "-DBUILD_CONFIG=mysql_release" "-DCMAKE_BUILD_TYPE=Release")
-CMAKE_DEBUG=("${CMAKE_COMMON[@]}" "-DCMAKE_BUILD_TYPE=Debug" "-DWITH_DEBUG=ON")
-unset CMAKE_COMMON
-
-MY8=("-DMYSQL_MAINTAINER_MODE=ON" "-DDOWNLOAD_BOOST=ON"
-     "-DWITH_BOOST=~/vilniusdb/mysql-boost/" "-DWITH_SYSTEM_LIBS=ON")
-MY8D=("${CMAKE_DEBUG[@]}" "${MY8[@]}")
-MY8R=("${CMAKE_RELEASE[@]}" "${MY8[@]}")
-unset MY8
-
-# Workaround Facebook tooling incompatibility with git worktrees
-FB_COMMON=("-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
-           "-DROCKSDB_GITHASH=0" "-DROCKSDB_GITDATE=2100-02-29")
-
-MARIA_COMMON+=("-DPLUGIN_MROONGA=NO" "-DPLUGIN_CONNECT=NO")
-
-# Version-specific building blocks, descending order
-
-# 8.2.0--8.0.33
-
-MY8033_820_EXTRA=("-DFORCE_COLORED_OUTPUT=ON")
-
-# 8.0.34
-
-MY8034_CXX_FLAGS_DEBUG=("${MY8032_34_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
-MY8034_CXX_FLAGS_RELEASE=("${MY8032_34_EXTRA_CXX_FLAGS[@]}"
-                          "${CXX_FLAGS_RELEASE[@]}")
-MY8034_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8032_34_EXTRA_CXX_FLAGS[*]}"
-              "-DCMAKE_C_FLAGS_DEBUG=${MY8034_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8034_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8034_CXX_FLAGS_RELEASE[*]}")
-unset MY8034_CXX_FLAGS_DEBUG
-unset MY8034_CXX_FLAGS_RELEASE
-
-# 8.0.33
-
-MY8033_CXX_FLAGS_DEBUG=("${MY8032_34_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
-MY8033_CXX_FLAGS_RELEASE=("${MY8032_34_EXTRA_CXX_FLAGS[@]}"
-                          "${CXX_FLAGS_RELEASE[@]}")
-MY8033_EXTRA=("-DWITH_RAPIDJSON=bundled"
-              "-DCMAKE_CXX_FLAGS=${MY8032_34_EXTRA_CXX_FLAGS[*]}"
-              "-DCMAKE_C_FLAGS_DEBUG=${MY8033_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8033_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8033_CXX_FLAGS_RELEASE[*]}")
-unset MY8033_CXX_FLAGS_DEBUG
-unset MY8033_CXX_FLAGS_RELEASE
-
-# 8.0.32
-
-MY8032_CXX_FLAGS_DEBUG=("${MY8032_34_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
-MY8032_CXX_FLAGS_RELEASE=("${MY8032_34_EXTRA_CXX_FLAGS[@]}"
-                          "${CXX_FLAGS_RELEASE[@]}")
-MY8032_EXTRA+=("-DCMAKE_CXX_FLAGS=${MY8032_34_EXTRA_CXX_FLAGS[*]}"
-               "-DCMAKE_C_FLAGS_DEBUG=${MY8032_CXX_FLAGS_DEBUG[*]}"
-               "-DCMAKE_CXX_FLAGS_DEBUG=${MY8032_CXX_FLAGS_DEBUG[*]}"
-               "-DCMAKE_CXX_FLAGS_RELEASE=${MY8032_CXX_FLAGS_RELEASE[*]}")
-unset MY8032_34_EXTRA_CXX_FLAGS
-unset MY8032_CXX_FLAGS_DEBUG
-unset MY8032_CXX_FLAGS_RELEASE
-
-# 8.0.31
-
-MY8031_CXX_FLAGS_DEBUG=("${MY8031_EXTRA_CXX_FLAGS[@]}" "${CXX_FLAGS_DEBUG[@]}")
-MY8031_CXX_FLAGS_RELEASE=("${MY8031_EXTRA_CXX_FLAGS[@]}"
-                          "${CXX_FLAGS_RELEASE[@]}")
-MY8031_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8031_EXTRA_CXX_FLAGS[*]}"
-              "-DCMAKE_C_FLAGS_DEBUG=${MY8031_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8031_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8031_CXX_FLAGS_RELEASE[*]}")
-unset MY8031_EXTRA_CXX_FLAGS
-unset MY8031_CXX_FLAGS_DEBUG
-unset MY8031_CXX_FLAGS_RELEASE
-
-# 8.0.30
-
-# 8.0.29--8.0.28
-
-MY8028_29_EXTRA_CXX_FLAGS_DEBUG=("-Wno-deprecated-declarations")
-
-# 8.0.29
-
-MY8029_CXX_FLAGS_DEBUG=("${MY8028_29_EXTRA_CXX_FLAGS_DEBUG[@]}"
-                        "${CXX_FLAGS_DEBUG[@]}")
-MY8029_CXX_FLAGS_RELEASE=("${CXX_FLAGS_RELEASE[@]}")
-MY8029_EXTRA=("-DCMAKE_C_FLAGS_DEBUG=${MY8029_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8029_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8029_CXX_FLAGS_RELEASE[*]}")
-unset MY8029_CXX_FLAGS_DEBUG
-unset MY8029_CXX_FLAGS_RELEASE
-
-# 8.0.28--8.0.27
-
-MY8027_28_EXTRA=("-DWITH_FIDO=bundled")
-
-# 8.0.28--8.0.18
-
-MY8018_28_CXX_FLAGS_DEBUG=("${MY8018_28_EXTRA_CXX_FLAGS[@]}"
-                           "-Wno-unknown-warning-option"
-                           "-Wno-unused-but-set-variable"
-                           "-Wno-discarded-qualifiers")
-
-MY8018_28_EXTRA+=("-DWITH_RAPIDJSON=bundled" "-DWITH_LZ4=bundled")
-
-# 8.0.28
-
-FB8028_EXTRA=("-DWITH_UNIT_TESTS=OFF")
-
-MY8028_CXX_FLAGS=("${MY8018_28_EXTRA_CXX_FLAGS[*]}")
-MY8028_CXX_FLAGS_DEBUG=("${MY8028_29_EXTRA_CXX_FLAGS_DEBUG[@]}"
-                        "${MY8018_28_CXX_FLAGS_DEBUG[*]}"
-                        "${CXX_FLAGS_DEBUG[@]}")
-MY8028_CXX_FLAGS_RELEASE=("${CXX_FLAGS_RELEASE[@]}")
-MY8028_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8028_CXX_FLAGS[*]}"
-              "-DCMAKE_C_FLAGS_DEBUG=${MY8028_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8028_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8028_CXX_FLAGS_RELEASE[*]}")
-unset MY8028_29_EXTRA_CXX_FLAGS_DEBUG
-unset MY8028_CXX_FLAGS
-unset MY8028_CXX_FLAGS_DEBUG
-unset MY8028_CXX_FLAGS_RELEASE
-
-# 8.0.27
-
-MY8027_CXX_FLAGS=("${MY8018_28_EXTRA_CXX_FLAGS[*]}")
-MY8027_CXX_FLAGS_DEBUG=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
-                        "${CXX_FLAGS_DEBUG[@]}")
-MY8027_CXX_FLAGS_RELEASE=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
-                          "${CXX_FLAGS_RELEASE[@]}")
-MY8027_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8027_CXX_FLAGS[*]}"
-              "-DCMAKE_C_FLAGS_DEBUG=${MY8027_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8027_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8027_CXX_FLAGS_RELEASE[*]}")
-unset MY8027_CXX_FLAGS
-unset MY8027_CXX_FLAGS_DEBUG
-unset MY8027_CXX_FLAGS_RELEASE
-
-# 8.0.26
-
-MY8026_CXX_FLAGS=("${MY8018_28_EXTRA_CXX_FLAGS[*]}")
-MY8026_CXX_FLAGS_DEBUG=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
-                        "${CXX_FLAGS_DEBUG[@]}")
-MY8026_CXX_FLAGS_RELEASE=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
-                          "${CXX_FLAGS_RELEASE[@]}")
-MY8026_EXTRA=("-DCMAKE_CXX_FLAGS=${MY8026_CXX_FLAGS[*]}"
-              "-DCMAKE_C_FLAGS_DEBUG=${MY8026_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_DEBUG=${MY8026_CXX_FLAGS_DEBUG[*]}"
-              "-DCMAKE_CXX_FLAGS_RELEASE=${MY8026_CXX_FLAGS_RELEASE[*]}")
-unset MY8026_28_C_FLAGS_DEBUG
-
-MY8026_EXTRA=("-DENABLE_DOWNLOADS=ON")
-
-# 8.0.18
-
-MY8018_EXTRA_CXX_FLAGS=("-Wno-deprecated-declarations" "-Wno-unused-result"
-                        "-Wno-range-loop-construct"
-                        "-Wno-non-c-typedef-for-linkage")
-
-MY8018_CXX_FLAGS=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
-                  "${MY8018_EXTRA_CXX_FLAGS[*]}")
-MY8018_CXX_FLAGS_DEBUG=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
-                        "${MY8018_28_CXX_FLAGS_DEBUG[*]}"
-                        "${MY8018_EXTRA_CXX_FLAGS[*]}" "${CXX_FLAGS_DEBUG[@]}")
-MY8018_CXX_FLAGS_RELEASE=("${MY8018_28_EXTRA_CXX_FLAGS[*]}"
-                          "${MY8018_EXTRA_CXX_FLAGS[*]}"
-                          "${CXX_FLAGS_RELEASE[@]}")
-MY8018_EXTRA+=("-DCMAKE_CXX_FLAGS=${MY8018_CXX_FLAGS[*]}"
-               "-DCMAKE_C_FLAGS_DEBUG=${MY8018_CXX_FLAGS_DEBUG[*]}"
-               "-DCMAKE_CXX_FLAGS_DEBUG=${MY8018_CXX_FLAGS_DEBUG[*]}"
-               "-DCMAKE_CXX_FLAGS_RELEASE=${MY8018_CXX_FLAGS_RELEASE[*]}")
-
-unset MY8018_28_CXX_FLAGS_DEBUG
-unset MY8018_28_EXTRA_CXX_FLAGS
-unset CXX_FLAGS_DEBUG
-unset CXX_FLAGS_RELEASE
-
-# Paydirt!
-
-export MY820D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}")
-export MY820=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}")
-
-export MY810D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}")
-export MY810=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}")
-
-export MY8035D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}")
-export MY8035=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}")
-
-export MY8034D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}"
-                "${MY8034_EXTRA[@]}")
-export MY8034=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8034_EXTRA[@]}")
-
-export PS8034D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8034_EXTRA[@]}")
-unset MY8034_EXTRA
-
-export MY8033D=("${MY8D[@]}" "${MY8033_820_EXTRA[@]}" "${MY8033_EXTRA[@]}")
-export MY8033=("${MY8R[@]}" "${MY8033_820_EXTRA[@]}" "${MY8033_EXTRA[@]}")
-unset MY8033_EXTRA
-unset MY8033_820_EXTRA
-
-export MY8032D=("${MY8D[@]}" "${MY8032_EXTRA[@]}")
-export MY8032=("${MY8R[@]}" "${MY8032_EXTRA[@]}")
-unset MY8032_EXTRA
-
-export FB8032D=("${MY8032D[@]}" "${FB_COMMON[@]}")
-
-export MY8031D=("${MY8D[@]}" "${MY8031_EXTRA[@]}")
-unset MY8031_EXTRA
-
-export MY8030D=("${MY8D[@]}")
-
-export MY8029D=("${MY8D[@]}" "${MY8029_EXTRA[@]}")
-
-export MY8028=("${MY8R[@]}" "${MY8028_EXTRA[@]}" "${MY8018_28_EXTRA[@]}"
-               "${MY8027_28_EXTRA[@]}")
-export MY8028D=("${MY8D[@]}" "${MY8028_EXTRA[@]}" "${MY8018_28_EXTRA[@]}"
-                "${MY8027_28_EXTRA[@]}")
-unset MY8028_29_EXTRA
-unset MY8028_EXTRA
-
-export FB8028=("${MY8028[@]}" "${FB_COMMON[@]}" "${FB8028_EXTRA[@]}")
-export FB8028D=("${MY8028D[@]}" "${FB_COMMON[@]}" "${FB8028_EXTRA[@]}")
-unset FB8028_EXTRA
-
-export MY8027D=("${MY8D[@]}" "${MY8027_EXTRA[@]}" "${MY8018_28_EXTRA[@]}"
-                "${MY8027_28_EXTRA[@]}")
-unset MY8027_28_EXTRA
-
-export MY8026=("${MY8R[@]}" "${MY8026_EXTRA[@]}" "${MY8018_28_EXTRA[@]}")
-export MY8026D=("${MY8D[@]}" "-DDEBUG_EXTNAME=OFF" "${MY8026_EXTRA[@]}"
-                "${MY8018_28_EXTRA[@]}")
-
-export MY8018=("${MY8R[@]}" "${MY8018_EXTRA[@]}" "${MY8018_28_EXTRA[@]}")
-export MY8018D=("${MY8D[@]}" "${MY8018_EXTRA[@]}" "${MY8018_28_EXTRA[@]}")
-
-unset MY8018_28_EXTRA
-unset MY8D
-unset MY8R
-
-export FB8026=("${MY8026[@]}" "${FB_COMMON[@]}")
-export FB8026D=("${MY8026D[@]}" "${FB_COMMON[@]}")
-
-export MARIA108=("${CMAKE_RELEASE[@]}" "${MARIA_COMMON[@]}")
-export MARIA108D=("${CMAKE_DEBUG[@]}" "${MARIA_COMMON[@]}")
-
-unset CMAKE_RELEASE
-unset CMAKE_DEBUG
-
-# Addons, environment helpers
-export MYCLANG=("-DCMAKE_C_COMPILER=clang" "-DCMAKE_CXX_COMPILER=clang++")
-export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
-                  "-DCMAKE_CXX_COMPILER=clang++-13")
-export MY8SAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
-
-if [ "$UNAME_OUT" = "Darwin" ]; then
-    EMD_LIBDIR="$BREW/libeatmydata/lib/"
-    unset BREW
-    export MTR_EMD=(
-        "--mysqld-env=DYLD_LIBRARY_PATH=$EMD_LIBDIR"
-        "--mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1"
-        "--mysqld-env=DYLD_INSERT_LIBRARIES=$EMD_LIBDIR/libeatmydata.dylib")
-else
-    export MTR_EMD=(
-        "--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so")
-fi
-
-unset UNAME_OUT
+
+    declare -a -r cxx_flags_debug=("-g")
+    declare -a -r cxx_flags_release=("-O2" "-g" "-DNDEBUG")
+
+    declare -a -r cmake_common=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
+    declare -a -r cmake_release=("${cmake_common[@]}"
+                                 "-DBUILD_CONFIG=mysql_release"
+                                 "-DCMAKE_BUILD_TYPE=Release")
+    declare -a -r cmake_debug=("${cmake_common[@]}" "-DCMAKE_BUILD_TYPE=Debug"
+                               "-DWITH_DEBUG=ON")
+
+    declare -a -r my8=("-DMYSQL_MAINTAINER_MODE=ON" "-DDOWNLOAD_BOOST=ON"
+                       "-DWITH_BOOST=~/vilniusdb/mysql-boost/"
+                       "-DWITH_SYSTEM_LIBS=ON")
+    declare -a -r my8d=("${cmake_debug[@]}" "${my8[@]}")
+    declare -a -r my8r=("${cmake_release[@]}" "${my8[@]}")
+
+    # Workaround Facebook tooling incompatibility with git worktrees
+    declare -a -r fb_common=(
+        "-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
+        "-DROCKSDB_GITHASH=0" "-DROCKSDB_GITDATE=2100-02-29")
+
+    maria_common+=("-DPLUGIN_MROONGA=NO" "-DPLUGIN_CONNECT=NO")
+
+    # Version-specific building blocks, descending order
+
+    # 8.2.0--8.0.33
+
+    declare -a -r my8033_820=("-DFORCE_COLORED_OUTPUT=ON")
+
+    # 8.0.34
+
+    declare -a -r my8034_cxx_flags_debug=("${my8032_34_extra_cxx_flags[@]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8034_cxx_flags_release=("${my8032_34_extra_cxx_flags[@]}"
+                                            "${cxx_flags_release[@]}")
+    declare -a -r my8034_extra=(
+        "-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my8034_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8034_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8034_cxx_flags_release[*]}")
+
+    # 8.0.33
+
+    declare -a -r my8033_cxx_flags_debug=("${my8032_34_extra_cxx_flags[@]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8033_cxx_flags_release=("${my8032_34_extra_cxx_flags[@]}"
+                                            "${cxx_flags_release[@]}")
+    declare -a -r my8033_extra=(
+        "-DWITH_RAPIDJSON=bundled"
+        "-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my8033_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8033_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8033_cxx_flags_release[*]}")
+
+    # 8.0.32
+
+    declare -a -r my8032_cxx_flags_debug=("${my8032_34_extra_cxx_flags[@]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8032_cxx_flags_release=("${my8032_34_extra_cxx_flags[@]}"
+                                            "${cxx_flags_release[@]}")
+    my8032_extra+=("-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]}"
+                   "-DCMAKE_C_FLAGS_DEBUG=${my8032_cxx_flags_debug[*]}"
+                   "-DCMAKE_CXX_FLAGS_DEBUG=${my8032_cxx_flags_debug[*]}"
+                   "-DCMAKE_CXX_FLAGS_RELEASE=${my8032_cxx_flags_release[*]}")
+
+    # 8.0.31
+
+    declare -a -r my8031_cxx_flags_debug=("${my8031_extra_cxx_flags[@]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8031_cxx_flags_release=("${my8031_extra_cxx_flags[@]}"
+                                            "${cxx_flags_release[@]}")
+    declare -a -r my8031_extra=(
+        "-DCMAKE_CXX_FLAGS=${my8031_extra_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my8031_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8031_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8031_cxx_flags_release[*]}")
+
+    # 8.0.29--8.0.28
+
+    declare -a -r my8028_29_cxx_flags_debug=("-Wno-deprecated-declarations")
+
+    # 8.0.29
+
+    declare -a -r my8029_cxx_flags_debug=("${my8028_29_cxx_flags_debug[@]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8029_extra=(
+        "-DCMAKE_C_FLAGS_DEBUG=${my8029_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8029_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${cxx_flags_release[*]}")
+
+    # 8.0.28--8.0.27
+
+    declare -a -r my8027_28=("-DWITH_FIDO=bundled")
+
+    # 8.0.28--8.0.18
+
+    declare -a -r my8018_28_cxx_flags_debug=("${my8018_28_cxx_flags[@]}"
+                                             "-Wno-unknown-warning-option"
+                                             "-Wno-unused-but-set-variable"
+                                             "-Wno-discarded-qualifiers")
+
+    my8018_28+=("-DWITH_RAPIDJSON=bundled" "-DWITH_LZ4=bundled")
+
+    # 8.0.28
+
+    declare -a -r fb8028_extra=("-DWITH_UNIT_TESTS=OFF")
+
+    declare -a -r my8028_cxx_flags_debug=("${my8028_29_cxx_flags_debug[@]}"
+                                          "${my8018_28_cxx_flags_debug[*]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8028_extra=(
+        "-DCMAKE_CXX_FLAGS=${my8018_28_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my8028_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8028_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${cxx_flags_release[*]}")
+
+    # 8.0.27
+
+    declare -a -r my8027_cxx_flags_debug=("${my8018_28_cxx_flags[*]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8027_cxx_flags_release=("${my8018_28_cxx_flags[*]}"
+                                            "${cxx_flags_release[@]}")
+    declare -a -r my8027_extra=(
+        "-DCMAKE_CXX_FLAGS=${my8018_28_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my8027_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8027_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8027_cxx_flags_release[*]}")
+
+    # 8.0.26
+
+    declare -a -r my8026_cxx_flags_debug=("${my8018_28_cxx_flags[*]}"
+                                          "${my8018_28_cxx_flags_debug[*]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8026_cxx_flags_release=("${my8018_28_cxx_flags[*]}"
+                                            "${cxx_flags_release[@]}")
+    declare -a -r my8026_extra=(
+        "-DENABLE_DOWNLOADS=ON"
+        "-DCMAKE_CXX_FLAGS=${my8018_28_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my8026_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8026_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8026_cxx_flags_release[*]}")
+
+    # 8.0.18
+
+    declare -a -r my8018_extra_cxx_flags=("-Wno-deprecated-declarations"
+                                          "-Wno-unused-result"
+                                          "-Wno-range-loop-construct"
+                                          "-Wno-non-c-typedef-for-linkage")
+
+    declare -a -r my8018_cxx_flags=("${my8018_28_cxx_flags[*]}"
+                                    "${my8018_extra_cxx_flags[*]}")
+    declare -a -r my8018_cxx_flags_debug=("${my8018_28_cxx_flags[*]}"
+                                          "${my8018_28_cxx_flags_debug[*]}"
+                                          "${my8018_extra_cxx_flags[*]}"
+                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8018_cxx_flags_release=("${my8018_28_cxx_flags[*]}"
+                                            "${my8018_extra_cxx_flags[*]}"
+                                            "${cxx_flags_release[@]}")
+    my8018_extra+=(
+        "-DCMAKE_CXX_FLAGS=${my8018_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my8018_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8018_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8018_cxx_flags_release[*]}")
+
+    # Paydirt!
+
+    export MY820D=("${my8d[@]}" "${my8033_820[@]}")
+    export MY820=("${my8r[@]}" "${my8033_820[@]}")
+
+    export MY810D=("${my8d[@]}" "${my8033_820[@]}")
+    export MY810=("${my8r[@]}" "${my8033_820[@]}")
+
+    export MY8035D=("${my8d[@]}" "${my8033_820[@]}")
+    export MY8035=("${my8r[@]}" "${my8033_820[@]}")
+
+    export MY8034D=("${my8d[@]}" "${my8033_820[@]}" "${my8034_extra[@]}")
+    export MY8034=("${my8r[@]}" "${my8033_820[@]}" "${my8034_extra[@]}")
+
+    export PS8034D=("${my8d[@]}" "${my8033_820[@]}" "${my8034_extra[@]}")
+
+    export MY8033D=("${my8d[@]}" "${my8033_820[@]}" "${my8033_extra[@]}")
+    export MY8033=("${my8r[@]}" "${my8033_820[@]}" "${my8033_extra[@]}")
+
+    export MY8032D=("${my8d[@]}" "${my8032_extra[@]}")
+    export MY8032=("${my8r[@]}" "${my8032_extra[@]}")
+
+    export FB8032D=("${MY8032D[@]}" "${fb_common[@]}")
+
+    export MY8031D=("${my8d[@]}" "${my8031_extra[@]}")
+
+    export MY8030D=("${my8d[@]}")
+
+    export MY8029D=("${my8d[@]}" "${my8029_extra[@]}")
+
+    export MY8028=("${my8r[@]}" "${my8028_extra[@]}" "${my8018_28[@]}"
+                   "${my8027_28[@]}")
+    export MY8028D=("${my8d[@]}" "${my8028_extra[@]}" "${my8018_28[@]}"
+                    "${my8027_28[@]}")
+
+    export FB8028=("${MY8028[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
+    export FB8028D=("${MY8028D[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
+
+    export MY8027D=("${my8d[@]}" "${my8027_extra[@]}" "${my8018_28[@]}"
+                    "${my8027_28[@]}")
+
+    export MY8026=("${my8r[@]}" "${my8026_extra[@]}" "${my8018_28[@]}")
+    export MY8026D=("${my8d[@]}" "-DDEBUG_EXTNAME=OFF" "${my8026_extra[@]}"
+                    "${my8018_28[@]}")
+
+    export MY8018=("${my8r[@]}" "${my8018_extra[@]}" "${my8018_28[@]}")
+    export MY8018D=("${my8d[@]}" "${my8018_extra[@]}" "${my8018_28[@]}")
+
+    export FB8026=("${MY8026[@]}" "${fb_common[@]}")
+    export FB8026D=("${MY8026D[@]}" "${fb_common[@]}")
+
+    export MARIA108=("${cmake_release[@]}" "${maria_common[@]}")
+    export MARIA108D=("${cmake_debug[@]}" "${maria_common[@]}")
+
+    # Addons, environment helpers
+    export MYCLANG=("-DCMAKE_C_COMPILER=clang" "-DCMAKE_CXX_COMPILER=clang++")
+    export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
+                      "-DCMAKE_CXX_COMPILER=clang++-13")
+    export MY8SAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
+
+    if [ "$uname_out" = "Darwin" ]; then
+        declare -r emd_libdir="$brew/libeatmydata/lib/"
+        export MTR_EMD=(
+            "--mysqld-env=DYLD_LIBRARY_PATH=$emd_libdir"
+            "--mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1"
+            "--mysqld-env=DYLD_INSERT_LIBRARIES=$emd_libdir/libeatmydata.dylib")
+    else
+        export MTR_EMD=(
+            "--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so")
+    fi
+}
 
 mysql_find_version_file() {
     if [ -f ../MYSQL_VERSION ]; then
@@ -585,6 +553,8 @@ rmtr() {
 rm_tmp_mtr() {
     rm -rf /tmp/mtr-*
 }
+
+mysql_export_environment_helpers
 
 # Workaround P10K going crazy
 set +o errexit
