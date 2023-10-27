@@ -365,67 +365,67 @@ mysql_cmake() {
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
                 8.2.0)
-                    declare release_flags=("${MY820[@]}")
-                    declare debug_flags=("${MY820D[@]}")
-                    declare -r \
+                    declare -a release_flags=("${MY820[@]}")
+                    declare -a debug_flags=("${MY820D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.1.0)
-                    declare release_flags=("${MY810[@]}")
-                    declare debug_flags=("${MY810D[@]}")
-                    declare -r \
+                    declare -a release_flags=("${MY810[@]}")
+                    declare -a debug_flags=("${MY810D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.35)
-                    declare release_flags=("${MY8035[@]}")
-                    declare debug_flags=("${MY8035D[@]}")
-                    declare -r \
+                    declare -a release_flags=("${MY8035[@]}")
+                    declare -a debug_flags=("${MY8035D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.34)
-                    declare release_flags=("${MY8034[@]}")
-                    declare debug_flags=("${MY8034D[@]}")
-                    declare -r \
+                    declare -a release_flags=("${MY8034[@]}")
+                    declare -a debug_flags=("${MY8034D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.33)
-                    declare release_flags=("${MY8033[@]}")
-                    declare debug_flags=("${MY8033D[@]}")
-                    declare -r \
+                    declare -a release_flags=("${MY8033[@]}")
+                    declare -a debug_flags=("${MY8033D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.32)
-                    declare release_flags=("${MY8032[@]}")
-                    declare debug_flags=("${MY8032D[@]}")
-                    declare -r \
+                    declare -a release_flags=("${MY8032[@]}")
+                    declare -a debug_flags=("${MY8032D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.31)
-                    declare release_flags=("${MY8031[@]}")
-                    declare debug_flags=("${MY8031D[@]}")
-                    declare -r \
+                    declare -a release_flags=("${MY8031[@]}")
+                    declare -a debug_flags=("${MY8031D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.30)
-                    declare release_flags=("${MY8030[@]}")
-                    declare debug_flags=("${MY8030D[@]}")
-                    declare -r \
+                    declare -a release_flags=("${MY8030[@]}")
+                    declare -a debug_flags=("${MY8030D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.29)
-                    declare release_flags=("${MY8029[@]}")
-                    declare debug_flags=("${MY8029D[@]}")
-                    declare -r core_dump_flags=()
+                    declare -a release_flags=("${MY8029[@]}")
+                    declare -a debug_flags=("${MY8029D[@]}")
+                    declare -a -r core_dump_flags=()
                     ;;
                 8.0.28)
-                    declare release_flags=("${MY8028[@]}")
-                    declare debug_flags=("${MY8028D[@]}")
-                    declare -r core_dump_flags=()
+                    declare -a release_flags=("${MY8028[@]}")
+                    declare -a debug_flags=("${MY8028D[@]}")
+                    declare -a -r core_dump_flags=()
                     ;;
                 8.0.18)
-                    declare release_flags=("${MY8018[@]}")
-                    declare debug_flags=("${MY8018D[@]}")
-                    declare -r core_dump_flags=()
+                    declare -a release_flags=("${MY8018[@]}")
+                    declare -a debug_flags=("${MY8018D[@]}")
+                    declare -a -r core_dump_flags=()
                     ;;
                 *)
                     echo "Unsupported version, please implement"
@@ -437,14 +437,14 @@ mysql_cmake() {
             echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
                 8.0.32)
-                    declare debug_flags=("${FB8032D[@]}")
-                    declare -r \
+                    declare -a debug_flags=("${FB8032D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.28)
-                    declare release_flags=("${FB8028[@]}")
-                    declare debug_flags=("${FB8028D[@]}")
-                    declare -r core_dump_flags=()
+                    declare -a release_flags=("${FB8028[@]}")
+                    declare -a debug_flags=("${FB8028D[@]}")
+                    declare -a -r core_dump_flags=()
                     ;;
                 *)
                     echo "Unsupported version, please add"
@@ -456,8 +456,8 @@ mysql_cmake() {
             echo "Configuring Percona Server $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
                 8.0.34)
-                    declare debug_flags=("${PS8034D[@]}")
-                    declare -r \
+                    declare -a debug_flags=("${PS8034D[@]}")
+                    declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 *)
