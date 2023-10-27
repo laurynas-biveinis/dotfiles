@@ -357,103 +357,124 @@ rm_tmp_mtr() {
     rm -rf /tmp/mtr-*
 }
 
-mysql_cmake() {
+mysql_find_version_file() {
     if [ -f ../MYSQL_VERSION ]; then
-        version_file="../MYSQL_VERSION"
-        if [ -d ../rocksdb ]; then
-            flavor="facebook"
-        else
-            version_extra_str=$(grep MYSQL_VERSION_EXTRA ../MYSQL_VERSION)
-            version_extra="${version_extra_str/MYSQL_VERSION_EXTRA=/}"
-            if [ -z "$version_extra" ]; then
-                flavor="mysql"
-            else
-                flavor="percona"
-            fi
-        fi
+        echo "../MYSQL_VERSION"
+        return 0
     elif [ -f ../VERSION ]; then
-        version_file="../VERSION"
-        server_maturity=$(grep SERVER_MATURITY ../VERSION)
-        if [ -z "$server_maturity" ]; then
-            flavor="mysql"
-        else
-            flavor="mariadb"
-        fi
+        echo "../VERSION"
+        return 0
     else
-        echo "Neither MYSQL_VERSION nor VERSION found"
+        >&2 echo "Neither MYSQL_VERSION nor VERSION found"
+        return 1
+    fi
+}
+
+mysql_determine_flavor() {
+    declare -r version_file="$1"
+
+    if [ -d ../rocksdb ]; then
+        echo "facebook"
+        return 0
+    fi
+
+    declare -r version_extra_str=$(grep MYSQL_VERSION_EXTRA "$version_file")
+    declare -r version_extra="${version_extra_str/MYSQL_VERSION_EXTRA=/}"
+    if [ -n "$version_extra" ]; then
+        echo "percona"
+        return 0
+    fi
+
+    declare -r server_maturity=$(grep SERVER_MATURITY "$version_file")
+    if [ -n "$server_maturity" ]; then
+        echo "mariadb"
+        return 0
+    fi
+
+    echo "mysql"
+    return 0
+}
+
+mysql_cmake() {
+    if ! declare -r version_file=$(mysql_find_version_file); then
         return 1
     fi
 
-    if [ -z $flavor ]; then
-        echo "Unknown source tree flavor"
-        return 1
-    fi
+    declare -r major_ver_str=$(grep MYSQL_VERSION_MAJOR "$version_file")
+    declare -i -r major_ver="${major_ver_str//[^0-9]/}"
+    declare -r minor_ver_str=$(grep MYSQL_VERSION_MINOR "$version_file")
+    declare -i -r minor_ver="${minor_ver_str//[^0-9]/}"
+    declare -r patch_level_str=$(grep MYSQL_VERSION_PATCH "$version_file")
+    declare -i -r patch_level="${patch_level_str//[^0-9]/}"
 
-    major_ver_str=$(grep MYSQL_VERSION_MAJOR $version_file)
-    major_ver="${major_ver_str//[^0-9]/}"
-    minor_ver_str=$(grep MYSQL_VERSION_MINOR $version_file)
-    minor_ver="${minor_ver_str//[^0-9]/}"
-    patch_level_str=$(grep MYSQL_VERSION_PATCH $version_file)
-    patch_level="${patch_level_str//[^0-9]/}"
+    declare -r flavor=$(mysql_determine_flavor "$version_file")
 
     case "$flavor" in
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
                 8.2.0)
-                    release_flags=("${MY820[@]}")
-                    debug_flags=("${MY820D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare release_flags=("${MY820[@]}")
+                    declare debug_flags=("${MY820D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.1.0)
-                    release_flags=("${MY810[@]}")
-                    debug_flags=("${MY810D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare release_flags=("${MY810[@]}")
+                    declare debug_flags=("${MY810D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.35)
-                    release_flags=("${MY8035[@]}")
-                    debug_flags=("${MY8035D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare release_flags=("${MY8035[@]}")
+                    declare debug_flags=("${MY8035D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.34)
-                    release_flags=("${MY8034[@]}")
-                    debug_flags=("${MY8034D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare release_flags=("${MY8034[@]}")
+                    declare debug_flags=("${MY8034D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.33)
-                    release_flags=("${MY8033[@]}")
-                    debug_flags=("${MY8033D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare release_flags=("${MY8033[@]}")
+                    declare debug_flags=("${MY8033D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.32)
-                    release_flags=("${MY8032[@]}")
-                    debug_flags=("${MY8032D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare release_flags=("${MY8032[@]}")
+                    declare debug_flags=("${MY8032D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.31)
-                    release_flags=("${MY8031[@]}")
-                    debug_flags=("${MY8031D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare release_flags=("${MY8031[@]}")
+                    declare debug_flags=("${MY8031D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.30)
-                    release_flags=("${MY8030[@]}")
-                    debug_flags=("${MY8030D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare release_flags=("${MY8030[@]}")
+                    declare debug_flags=("${MY8030D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.29)
-                    release_flags=("${MY8029[@]}")
-                    debug_flags=("${MY8029D[@]}")
-                    core_dump_flags=()
+                    declare release_flags=("${MY8029[@]}")
+                    declare debug_flags=("${MY8029D[@]}")
+                    declare -r core_dump_flags=()
                     ;;
                 8.0.28)
-                    release_flags=("${MY8028[@]}")
-                    debug_flags=("${MY8028D[@]}")
-                    core_dump_flags=()
+                    declare release_flags=("${MY8028[@]}")
+                    declare debug_flags=("${MY8028D[@]}")
+                    declare -r core_dump_flags=()
                     ;;
                 8.0.18)
-                    release_flags=("${MY8018[@]}")
-                    debug_flags=("${MY8018D[@]}")
-                    core_dump_flags=()
+                    declare release_flags=("${MY8018[@]}")
+                    declare debug_flags=("${MY8018D[@]}")
+                    declare -r core_dump_flags=()
                     ;;
                 *)
                     echo "Unsupported version, please implement"
@@ -465,13 +486,14 @@ mysql_cmake() {
             echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
                 8.0.32)
-                    debug_flags=("${FB8032D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare debug_flags=("${FB8032D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.28)
-                    release_flags=("${FB8028[@]}")
-                    debug_flags=("${FB8028D[@]}")
-                    core_dump_flags=()
+                    declare release_flags=("${FB8028[@]}")
+                    declare debug_flags=("${FB8028D[@]}")
+                    declare -r core_dump_flags=()
                     ;;
                 *)
                     echo "Unsupported version, please add"
@@ -483,8 +505,9 @@ mysql_cmake() {
             echo "Configuring Percona Server $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
                 8.0.34)
-                    debug_flags=("${PS8034D[@]}")
-                    core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    declare debug_flags=("${PS8034D[@]}")
+                    declare -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 *)
                     echo "Unsupported version, please add"
@@ -507,13 +530,13 @@ mysql_cmake() {
     case "$build_dir" in
         *san*)
             echo "Using sanitizers"
-            sanitizers=1
+            declare -i -r sanitizers=1
             debug_flags+=("${MY8SAN[@]}")
             release_flags+=("${MY8SAN[@]}")
             ;;
         *)
             echo "Not using sanitizers, enabling macOS core dumps if needed"
-            sanitizers=0
+            declare -i -r sanitizers=0
             debug_flags+=("${core_dump_flags[@]}")
             release_flags+=("${core_dump_flags[@]}")
             ;;
