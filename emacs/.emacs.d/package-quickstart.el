@@ -3014,7 +3014,7 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231024.1815/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231024.1815/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231026.1048/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231026.1048/transient-autoloads.el"))
 
 
 
@@ -12815,19 +12815,23 @@ Diagnostics using `helm'
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230506.432/helm-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20230506.432/helm-icons-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20231027.616/helm-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-icons-20231027.616/helm-icons-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/helm-icons-20230506.432/helm-icons-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (autoload 'helm-icons-enable "helm-icons" "\
-Enable `helm-icons'." t nil)
-
+Enable `helm-icons'." t)
 (register-definition-prefixes "helm-icons" '("helm-icons-"))
-
 
+
+(provide 'helm-icons-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-descbinds-1.13/helm-descbinds-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-descbinds-1.13/helm-descbinds-autoloads.el"))
 
@@ -13279,7 +13283,7 @@ See `eldoc-documentation-strategy' for more detail.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flymake-1.3.6/flymake-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flymake-1.3.6/flymake-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flymake-1.3.7/flymake-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flymake-1.3.7/flymake-autoloads.el"))
 
 
 
@@ -14928,7 +14932,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231024.1845" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.10" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20231024.1815" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231024.1845" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.10" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20231026.1048" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:

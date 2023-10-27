@@ -1145,10 +1145,11 @@ transient.
    • KEY is the key binding, either a vector or key description string.
 
    • DESCRIPTION is the description, either a string or a function that
-     returns a string.  The function should be a lambda expression to
-     avoid ambiguity.  In some cases a symbol that is bound as a
-     function would also work but to be safe you should use
-     ‘:description’ in that case.
+     takes zero or one arguments (the suffix object) and returns a
+     string.  The function should be a lambda expression to avoid
+     ambiguity.  In some cases a symbol that is bound as a function
+     would also work but to be safe you should use ‘:description’ in
+     that case.
 
    The next element is either a command or an argument.  This is the
 only argument that is mandatory in all cases.
@@ -1957,8 +1958,9 @@ Slots of ‘transient-suffix’
         • ‘%v’ For the infix value.  Non-infix suffixes don’t have a
           value.
 
-   • ‘description’ The description, either a string or a function that
-     is called with no argument and returns a string.
+   • ‘description’ The description, either a string or a function, which
+     is called with zero or one argument (the suffix object), and
+     returns a string.
 
    • ‘face’ Face used for the description.  In simple cases it is easier
      to use this instead of using a function as ‘description’ and adding
@@ -2039,8 +2041,10 @@ They are defined here anyway to allow sharing certain methods.
      a function that takes the object as the only argument and which
      returns a prompt string.
 
-   • ‘choices’ A list of valid values.  How exactly that is used depends
-     on the class of the object.
+   • ‘choices’ A list of valid values, or a function that returns such a
+     list.  The latter is not implemented for ‘transient-switches’,
+     because I couldn’t think of a use-case.  How exactly the choices
+     are used varies depending on the class of the suffix.
 
 Slots of ‘transient-variable’
 -----------------------------
@@ -3431,47 +3435,47 @@ Node: Defining Transients40215
 Node: Binding Suffix and Infix Commands42651
 Node: Group Specifications43509
 Node: Suffix Specifications48078
-Node: Defining Suffix and Infix Commands52234
-Node: Using Infix Arguments55440
-Node: Transient State58274
-Ref: Pre-commands for Infixes62237
-Ref: Pre-commands for Suffixes62508
-Ref: Pre-commands for Non-Suffixes64929
-Ref: Special Pre-Commands66073
-Node: Classes and Methods66581
-Node: Group Classes68795
-Node: Group Methods70722
-Node: Prefix Classes71975
-Node: Suffix Classes73066
-Node: Suffix Methods76153
-Node: Suffix Value Methods76474
-Node: Suffix Format Methods79232
-Node: Prefix Slots80681
-Ref: Internal Prefix Slots82413
-Node: Suffix Slots83670
-Ref: Slots of transient-suffix84038
-Ref: Slots of transient-infix85138
-Ref: Slots of transient-variable88264
-Ref: Slots of transient-switches88366
-Node: Predicate Slots88729
-Node: Related Abstractions and Packages90164
-Node: Comparison With Prefix Keys and Prefix Arguments90451
-Ref: Regular Prefix Commands91136
-Ref: Regular Prefix Arguments91484
-Ref: Transients92453
-Node: Comparison With Other Packages100724
-Ref: Magit-Popup100955
-Ref: Hydra101862
-Node: FAQ104918
-Ref: Can I control how the popup buffer is displayed?105061
-Ref: How can I copy text from the popup buffer?105242
-Ref: Why did some of the key bindings change?105714
-Ref: Why does q not quit popups anymore?108067
-Node: Keystroke Index109160
-Node: Command and Function Index110878
-Node: Variable Index117250
-Node: Concept Index119523
-Node: GNU General Public License122267
+Node: Defining Suffix and Infix Commands52291
+Node: Using Infix Arguments55497
+Node: Transient State58331
+Ref: Pre-commands for Infixes62294
+Ref: Pre-commands for Suffixes62565
+Ref: Pre-commands for Non-Suffixes64986
+Ref: Special Pre-Commands66130
+Node: Classes and Methods66638
+Node: Group Classes68852
+Node: Group Methods70779
+Node: Prefix Classes72032
+Node: Suffix Classes73123
+Node: Suffix Methods76210
+Node: Suffix Value Methods76531
+Node: Suffix Format Methods79289
+Node: Prefix Slots80738
+Ref: Internal Prefix Slots82470
+Node: Suffix Slots83727
+Ref: Slots of transient-suffix84095
+Ref: Slots of transient-infix85232
+Ref: Slots of transient-variable88528
+Ref: Slots of transient-switches88630
+Node: Predicate Slots88993
+Node: Related Abstractions and Packages90428
+Node: Comparison With Prefix Keys and Prefix Arguments90715
+Ref: Regular Prefix Commands91400
+Ref: Regular Prefix Arguments91748
+Ref: Transients92717
+Node: Comparison With Other Packages100988
+Ref: Magit-Popup101219
+Ref: Hydra102126
+Node: FAQ105182
+Ref: Can I control how the popup buffer is displayed?105325
+Ref: How can I copy text from the popup buffer?105506
+Ref: Why did some of the key bindings change?105978
+Ref: Why does q not quit popups anymore?108331
+Node: Keystroke Index109424
+Node: Command and Function Index111142
+Node: Variable Index117514
+Node: Concept Index119787
+Node: GNU General Public License122531
 
 End Tag Table
 

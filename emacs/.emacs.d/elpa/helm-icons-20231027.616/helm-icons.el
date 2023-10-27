@@ -5,8 +5,6 @@
 ;; Author: Ivan Yonchovski <yyoncho@gmail.com>
 ;; Contributor: Ellis Kenyő <me@elken.dev>
 ;; Keywords: convenience
-;; Package-Version: 20230506.432
-;; Package-Commit: dfefdb41c63217a1d6f57d4c8761b68f3def1a31
 
 ;; Version: 0.1
 ;; URL: https://github.com/yyoncho/helm-icons
@@ -184,8 +182,7 @@ NAME, CLASS and ARGS are the original params."
          (require 'nerd-icons))
         ((eq helm-icons-provider 'treemacs)
          (require 'treemacs-themes)
-         (require 'treemacs-icons)
-         (treemacs--setup-icon-background-colors))))
+         (require 'treemacs-icons))))
 
 ;;;###autoload
 (defun helm-icons-enable ()
