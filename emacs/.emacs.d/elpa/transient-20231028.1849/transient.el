@@ -2496,7 +2496,8 @@ If there is no parent prefix, then behave like `transient--do-exit'."
 
 (defun transient--do-leave ()
   "Call the command without exporting variables and exit the transient."
-  transient--stay)
+  (transient--stack-zap)
+  transient--exit)
 
 (defun transient--do-push-button ()
   "Call the command represented by the activated button.
@@ -2628,18 +2629,16 @@ prefix argument and pivot to `transient-update'."
     (other-window 1)
     (display-warning 'transient "Inconsistent transient state detected.
 This should never happen.
-Please open an issue and post the shown command log.
-This is a heisenbug, so any additional details might help.
-Thanks!" :error)))
+Please open an issue and post the shown command log." :error)))
 
 (defun transient-toggle-common ()
-  "Toggle whether common commands are always shown."
+  "Toggle whether common commands are permanently shown."
   (interactive)
   (setq transient-show-common-commands (not transient-show-common-commands)))
 
 (defun transient-suspend ()
   "Suspend the current transient.
-It can later be resumed using `transient-resume' while no other
+It can later be resumed using `transient-resume', while no other
 transient is active."
   (interactive))
 
@@ -2648,7 +2647,7 @@ transient is active."
   (interactive))
 
 (defun transient-quit-one ()
-  "Exit the current transients, possibly returning to the previous."
+  "Exit the current transients, returning to outer transient, if any."
   (interactive))
 
 (defun transient-quit-seq ()

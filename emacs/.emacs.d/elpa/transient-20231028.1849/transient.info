@@ -72,7 +72,6 @@ This manual is for Transient version 0.4.3.
 * Modifying Existing Transients::
 * Defining New Commands::
 * Classes and Methods::
-* Related Abstractions and Packages::
 * FAQ::
 * Keystroke Index::
 * Command and Function Index::
@@ -124,11 +123,6 @@ Suffix Methods
 * Suffix Value Methods::
 * Suffix Format Methods::
 
-
-Related Abstractions and Packages
-
-* Comparison With Prefix Keys and Prefix Arguments::
-* Comparison With Other Packages::
 
 
 
@@ -1525,7 +1519,7 @@ Special Pre-Commands
      This is used when the user pressed ‘C-z’.
 
 
-File: transient.info,  Node: Classes and Methods,  Next: Related Abstractions and Packages,  Prev: Defining New Commands,  Up: Top
+File: transient.info,  Node: Classes and Methods,  Next: FAQ,  Prev: Defining New Commands,  Up: Top
 
 5 Classes and Methods
 *********************
@@ -2092,311 +2086,7 @@ depending on user preference.  See *note Enabling and Disabling
 Suffixes::.
 
 
-File: transient.info,  Node: Related Abstractions and Packages,  Next: FAQ,  Prev: Classes and Methods,  Up: Top
-
-6 Related Abstractions and Packages
-***********************************
-
-* Menu:
-
-* Comparison With Prefix Keys and Prefix Arguments::
-* Comparison With Other Packages::
-
-
-File: transient.info,  Node: Comparison With Prefix Keys and Prefix Arguments,  Next: Comparison With Other Packages,  Up: Related Abstractions and Packages
-
-6.1 Comparison With Prefix Keys and Prefix Arguments
-====================================================
-
-While transient commands were inspired by regular prefix keys and prefix
-arguments, they are also quite different and much more complex.
-
-   The following diagrams illustrate some of the differences.
-
-   • ‘(c)’ represents a return to the command loop.
-   • ‘(+)’ represents the user’s choice to press one key or another.
-   • ‘{WORD}’ are possible behaviors.
-   • ‘{NUMBER}’ is a footnote.
-
-Regular Prefix Commands
------------------------
-
-See *note (elisp)Prefix Keys::.
-
-                                       ,--> command1 --> (c)
-                                       |
-     (c)-(+)-> prefix command or key --+--> command2 --> (c)
-                                       |
-                                       `--> command3 --> (c)
-
-Regular Prefix Arguments
-------------------------
-
-See *note (elisp)Prefix Command Arguments::.
-
-             ,----------------------------------,
-             |                                  |
-             v                                  |
-     (c)-(+)---> prefix argument command --(c)-(+)-> any command --> (c)
-                    |                                        ^        |
-                    |                                        |        |
-                    `-- sets or changes --, ,-- maybe used --'        |
-                                          | |                         |
-                                          v |                         |
-                               prefix argument state                  |
-                                           ^                          |
-                                           |                          |
-                                           `-------- discards --------'
-
-Transients
-----------
-
-(∩｀-´)⊃━☆ﾟ.*･｡ﾟ
-
-   This diagram ignores the infix value and external state:
-
-     (c)
-      |        ,- {stay} ------<-,-<------------<-,-<---,
-     (+)       |                 |                |     |
-      |        |                 |                |     |
-      |        |   ,--> infix1 --|                |     |
-      |        |   |             |                |     |
-      |        |   |--> infix2 --|                |     |
-      v        v   |             |                |     |
-      prefix -(c)-(+)-> infix3 --'                ^     |
-                   |                              |     |
-                   |---------------> suffix1 -->--|     |
-                   |                              |     |
-                   |---------------> suffix2 ----{1}------> {exit} --> (c)
-                   |                                    |
-                   |---------------> suffix3 -------------> {exit} --> (c)
-                   |                                    |
-                   `--> any command --{2}-> {warn} -->--|
-                                       |                |
-                                       |--> {noop} -->--|
-                                       |                |
-                                       |--> {call} -->--'
-                                       |
-                                       `------------------> {exit} --> (c)
-
-   This diagram takes the infix value into account to an extend, while
-still ignoring external state:
-
-     (c)
-      |        ,- {stay} ------<-,-<------------<-,-<---,
-     (+)       |                 |                |     |
-      |        |                 |                |     |
-      |        |   ,--> infix1 --|                |     |
-      |        |   |    |        |                |     |
-      |        |   ,--> infix2 --|                |     |
-      v        v   |    |        |                |     |
-      prefix -(c)-(+)-> infix3 --'                |     |
-                   |    |                         ^     |
-                   |    |                         |     |
-                   |---------------> suffix1 -->--|     |
-                   |    |             ^           |     |
-                   |    |             |           |     |
-                   |---------------> suffix2 ----{1}------> {exit} --> (c)
-                   |    |             ^                 |     |
-                   |    |             |                 |     v
-                   |    |             |                 |     |
-                   |---------------> suffix3 -------------> {exit} --> (c)
-                   |    |             ^                 |     |
-                   | sets             |                 |     v
-                   |    |             maybe             |     |
-                   |    |             used              |     |
-                   |    |             |                 |     |
-                   |    |     infix --'                 |     |
-                   |    `---> value                     |     |
-                   |           ^                        |     |
-                   |           |                        |     |
-                   |       hides                        |     |
-                   |           |                        |     |
-                   |           `--------------------------<---|
-                   |                                    |     |
-                   `--> any command --{2}-> {warn} -->--|     |
-                                       |                |     |
-                                       |--> {noop} -->--|     |
-                                       |                |     |
-                                       |--> {call} -->--'     ^
-                                       |                      |
-                                       `------------------> {exit} --> (c)
-
-   This diagram provides more information about the infix value and also
-takes external state into account.
-
-                                            ,----sets--- "anything"
-                                            |
-                                            v
-                           ,---------> external
-                           |           state
-                           |            | |
-                           |  initialized |                      ☉‿⚆
-                        sets         from |
-                           |            | maybe
-                           | ,----------' used
-                           | |            |
-     (c)                   | |            v
-      |        ,- {stay} --|---<-,-<------|-----<-,-<---,
-     (+)       |           | |   |        |       |     |
-      |        |           | v   |        |       |     |
-      |        |   ,--> infix1 --|        |       |     |
-      |        |   |       | |   |        |       |     |
-      |        |   |       | v   |        |       |     |
-      |        |   ,--> infix2 --|        |       |     |
-      |        |   |    | ^      |        |       |     |
-      v        v   |    | |      |        |       |     |
-      prefix -(c)-(+)-> infix3 --'        |       |     |
-                   |    | ^               |       ^     |
-                   |    | |               v       |     |
-                   |---------------> suffix1 -->--|     |
-                   |    | |            ^  |       |     |
-                   |    | |            |  v       |     |
-                   |---------------> suffix2 ----{1}------> {exit} --> (c)
-                   |    | |            ^  |             |     |
-                   |    | |            |  |             |     v
-                   |    | |            |  v             |     |
-                   |---------------> suffix3 -------------> {exit} --> (c)
-                   |    | |            ^                |     |
-                   | sets |            |                |     v
-                   |    | initialized  maybe            |     |
-                   |    | from         used             |     |
-                   |    | |            |                |     |
-                   |    | `-- infix ---'                |     |
-                   |    `---> value -----------------------------> persistent
-                   |           ^ ^                      |     |    across
-                   |           | |                      |     |    invocations -,
-                   |       hides |                      |     |                 |
-                   |           | `----------------------------------------------'
-                   |           |                        |     |
-                   |           `--------------------------<---|
-                   |                                    |     |
-                   `--> any command --{2}-> {warn} -->--|     |
-                                       |                |     |
-                                       |--> {noop} -->--|     |
-                                       |                |     |
-                                       |--> {call} -->--'     ^
-                                       |                      |
-                                       `------------------> {exit} --> (c)
-
-   • ‘{1}’ Transients can be configured to be exited when a suffix
-     command is invoked.  The default is to do so for all suffixes
-     except for those that are common to all transients and which are
-     used to perform tasks such as providing help and saving the value
-     of the infix arguments for future invocations.  The behavior can
-     also be specified for individual suffix commands and may even
-     depend on state.
-
-   • ‘{2}’ Transients can be configured to allow the user to invoke
-     non-suffix commands.  The default is to not allow that and instead
-     warn the user.
-
-   Despite already being rather complex, even the last diagram leaves
-out many details.  Most importantly it implies that the decision whether
-to remain transient is made later than it actually is made (for the most
-part a function on ‘pre-command-hook’ is responsible).  But such
-implementation details are of little relevance to users and are covered
-elsewhere.
-
-
-File: transient.info,  Node: Comparison With Other Packages,  Prev: Comparison With Prefix Keys and Prefix Arguments,  Up: Related Abstractions and Packages
-
-6.2 Comparison With Other Packages
-==================================
-
-Magit-Popup
------------
-
-Transient is the successor to Magit-Popup (see *note
-(magit-popup)Top::).
-
-   One major difference between these two implementations of the same
-ideas is that while Transient uses transient keymaps and embraces the
-command-loop, Magit-Popup implemented an inferior mechanism that does
-not use transient keymaps and that instead of using the command-loop
-implements a naive alternative based on ‘read-char’.
-
-   Magit-Popup does not use classes and generic functions and defining a
-new command type is near impossible as it involves adding hard-coded
-special-cases to many functions.  Because of that only a single new type
-was added, which was not already part of Magit-Popup’s initial release.
-
-   A lot of things are hard-coded in Magit-Popup.  One random example is
-that the key bindings for switches must begin with ‘-’ and those for
-options must begin with ‘=’.
-
-Hydra
------
-
-Hydra (see <https://github.com/abo-abo/hydra>) is another package that
-provides features similar to those of Transient.
-
-   Both packages use transient keymaps to make a set of commands
-temporarily available and show the available commands in a popup buffer.
-
-   A Hydra “body” is equivalent to a Transient “prefix” and a Hydra
-“head” is equivalent to a Transient “suffix”.  Hydra has no equivalent
-of a Transient “infix”.
-
-   Both hydras and transients can be used as simple command dispatchers.
-Used like this they are similar to regular prefix commands and prefix
-keys, except that the available commands are shown in the popup buffer.
-
-   (Another package that does this is ‘which-key’.  It does so
-automatically for any incomplete key sequence.  The advantage of that
-approach is that no additional work is necessary; the disadvantage is
-that the available commands are not organized semantically.)
-
-   Both Hydra and Transient provide features that go beyond simple
-command dispatchers:
-
-   • Invoking a command from a hydra does not necessarily exit the
-     hydra.  That makes it possible to invoke the same command again,
-     but using a shorter key sequence (i.e., the key that was used to
-     enter the hydra does not have to be pressed again).
-
-     Transient supports that too, but for now this feature is not a
-     focus and the interface is a bit more complicated.  A very basic
-     example using the current interface:
-
-          (transient-define-prefix outline-navigate ()
-            :transient-suffix     'transient--do-stay
-            :transient-non-suffix 'transient--do-warn
-            [("p" "previous visible heading" outline-previous-visible-heading)
-             ("n" "next visible heading" outline-next-visible-heading)])
-
-   • Transient supports infix arguments; values that are set by infix
-     commands and then consumed by the invoked suffix command(s).
-
-     To my knowledge, Hydra does not support that.
-
-   Both packages make it possible to specify how exactly the available
-commands are outlined:
-
-   • With Hydra this is often done using an explicit format string,
-     which gives authors a lot of flexibility and makes it possible to
-     do fancy things.
-
-     The downside of this is that it becomes harder for a user to add
-     additional commands to an existing hydra and to change key
-     bindings.
-
-   • Transient allows the author of a transient to organize the commands
-     into groups and the use of generic functions allows authors of
-     transients to control exactly how a certain command type is
-     displayed.
-
-     However while Transient supports giving sections a heading it does
-     not currently support giving the displayed information more
-     structure by, for example, using box-drawing characters.
-
-     That could be implemented by defining a new group class, which lets
-     the author specify a format string.  It should be possible to
-     implement that without modifying any existing code, but it does not
-     currently exist.
-
-
-File: transient.info,  Node: FAQ,  Next: Keystroke Index,  Prev: Related Abstractions and Packages,  Up: Top
+File: transient.info,  Node: FAQ,  Next: Keystroke Index,  Prev: Classes and Methods,  Up: Top
 
 Appendix A FAQ
 **************
@@ -2418,7 +2108,19 @@ you will be able to yank it another buffer.
                  "<mouse-set-region>"
                  #'transient--do-stay)
 
-A.3 Why did some of the key bindings change?
+A.3 How does Transient compare to prefix keys and universal arguments?
+======================================================================
+
+See
+<https://github.com/magit/transient/wiki/Comparison-with-prefix-keys-and-universal-arguments>.
+
+A.4 How does Transient compare to Magit-Popup and Hydra?
+========================================================
+
+See
+<https://github.com/magit/transient/wiki/Comparison-with-other-packages>.
+
+A.5 Why did some of the key bindings change?
 ============================================
 
 You may have noticed that the bindings for some of the common commands
@@ -2461,7 +2163,7 @@ and also using that for a common command would prevent me from doing so.
 
    (Also see the next question.)
 
-A.4 Why does ‘q’ not quit popups anymore?
+A.6 Why does ‘q’ not quit popups anymore?
 =========================================
 
 I agree that ‘q’ is a good binding for commands that quit something.
@@ -3413,69 +3115,63 @@ please read <https://www.gnu.org/licenses/why-not-lgpl.html>.
 
 Tag Table:
 Node: Top763
-Node: Introduction4070
-Node: Usage11004
-Node: Invoking Transients11372
-Node: Aborting and Resuming Transients12451
-Node: Common Suffix Commands15062
-Node: Saving Values16898
-Ref: Saving Values-Footnote-118269
-Node: Using History18462
-Node: Getting Help for Suffix Commands20036
-Node: Enabling and Disabling Suffixes21404
-Node: Other Commands24472
-Node: Configuration25448
-Ref: Essential Options25728
-Ref: Accessibility Options29389
-Ref: Auxiliary Options29712
-Ref: Developer Options34439
-Node: Modifying Existing Transients35687
-Node: Defining New Commands39879
-Node: Defining Transients40215
-Node: Binding Suffix and Infix Commands42651
-Node: Group Specifications43509
-Node: Suffix Specifications48078
-Node: Defining Suffix and Infix Commands52291
-Node: Using Infix Arguments55497
-Node: Transient State58331
-Ref: Pre-commands for Infixes62294
-Ref: Pre-commands for Suffixes62565
-Ref: Pre-commands for Non-Suffixes64986
-Ref: Special Pre-Commands66130
-Node: Classes and Methods66638
-Node: Group Classes68852
-Node: Group Methods70779
-Node: Prefix Classes72032
-Node: Suffix Classes73123
-Node: Suffix Methods76210
-Node: Suffix Value Methods76531
-Node: Suffix Format Methods79289
-Node: Prefix Slots80738
-Ref: Internal Prefix Slots82470
-Node: Suffix Slots83727
-Ref: Slots of transient-suffix84095
-Ref: Slots of transient-infix85232
-Ref: Slots of transient-variable88528
-Ref: Slots of transient-switches88630
-Node: Predicate Slots88993
-Node: Related Abstractions and Packages90428
-Node: Comparison With Prefix Keys and Prefix Arguments90715
-Ref: Regular Prefix Commands91400
-Ref: Regular Prefix Arguments91748
-Ref: Transients92717
-Node: Comparison With Other Packages100988
-Ref: Magit-Popup101219
-Ref: Hydra102126
-Node: FAQ105182
-Ref: Can I control how the popup buffer is displayed?105325
-Ref: How can I copy text from the popup buffer?105506
-Ref: Why did some of the key bindings change?105978
-Ref: Why does q not quit popups anymore?108331
-Node: Keystroke Index109424
-Node: Command and Function Index111142
-Node: Variable Index117514
-Node: Concept Index119787
-Node: GNU General Public License122531
+Node: Introduction3908
+Node: Usage10842
+Node: Invoking Transients11210
+Node: Aborting and Resuming Transients12289
+Node: Common Suffix Commands14900
+Node: Saving Values16736
+Ref: Saving Values-Footnote-118107
+Node: Using History18300
+Node: Getting Help for Suffix Commands19874
+Node: Enabling and Disabling Suffixes21242
+Node: Other Commands24310
+Node: Configuration25286
+Ref: Essential Options25566
+Ref: Accessibility Options29227
+Ref: Auxiliary Options29550
+Ref: Developer Options34277
+Node: Modifying Existing Transients35525
+Node: Defining New Commands39717
+Node: Defining Transients40053
+Node: Binding Suffix and Infix Commands42489
+Node: Group Specifications43347
+Node: Suffix Specifications47916
+Node: Defining Suffix and Infix Commands52129
+Node: Using Infix Arguments55335
+Node: Transient State58169
+Ref: Pre-commands for Infixes62132
+Ref: Pre-commands for Suffixes62403
+Ref: Pre-commands for Non-Suffixes64824
+Ref: Special Pre-Commands65968
+Node: Classes and Methods66476
+Node: Group Classes68660
+Node: Group Methods70587
+Node: Prefix Classes71840
+Node: Suffix Classes72931
+Node: Suffix Methods76018
+Node: Suffix Value Methods76339
+Node: Suffix Format Methods79097
+Node: Prefix Slots80546
+Ref: Internal Prefix Slots82278
+Node: Suffix Slots83535
+Ref: Slots of transient-suffix83903
+Ref: Slots of transient-infix85040
+Ref: Slots of transient-variable88336
+Ref: Slots of transient-switches88438
+Node: Predicate Slots88801
+Node: FAQ90236
+Ref: Can I control how the popup buffer is displayed?90365
+Ref: How can I copy text from the popup buffer?90546
+Ref: How does Transient compare to prefix keys and universal arguments?91018
+Ref: How does Transient compare to Magit-Popup and Hydra?91261
+Ref: Why did some of the key bindings change?91455
+Ref: Why does q not quit popups anymore?93808
+Node: Keystroke Index94901
+Node: Command and Function Index96619
+Node: Variable Index102991
+Node: Concept Index105264
+Node: GNU General Public License108008
 
 End Tag Table
 
