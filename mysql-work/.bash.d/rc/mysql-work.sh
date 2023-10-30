@@ -428,7 +428,7 @@ mysql_cmake() {
                     declare -a -r core_dump_flags=()
                     ;;
                 *)
-                    echo "Unsupported version, please implement"
+                    2>&1 echo "Unsupported version, please implement"
                     return 1
                     ;;
             esac
@@ -447,7 +447,7 @@ mysql_cmake() {
                     declare -a -r core_dump_flags=()
                     ;;
                 *)
-                    echo "Unsupported version, please add"
+                    2>&1 echo "Unsupported version, please add"
                     return 1
                     ;;
             esac
@@ -461,17 +461,17 @@ mysql_cmake() {
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
                 *)
-                    echo "Unsupported version, please add"
+                    2>&1 echo "Unsupported version, please add"
                     return 1
                     ;;
             esac
             ;;
         "mariadb")
-            echo "MariaDB unsupported, please add"
+            2>&1 echo "MariaDB unsupported, please add"
             return 1
             ;;
         *)
-            echo "Unsupported flavor, should have caught sooner"
+            2>&1 echo "Unsupported flavor, should have caught sooner"
             return 1
             ;;
     esac
@@ -497,7 +497,7 @@ mysql_cmake() {
         *valgrind*)
             echo "Using Valgrind"
             if [ "$sanitizers" == 1 ]; then
-                echo "Valgrind is incompatible with sanitizers"
+                2>&1 echo "Valgrind is incompatible with sanitizers"
                 return 1
             fi
             debug_flags+=("-DWITH_VALGRIND=ON")
@@ -532,7 +532,7 @@ mysql_cmake() {
 
 mysql_build() {
     mysql_cmake "$@" || return 1
-    build_dir="$(basename "$PWD")"
+    declare -r build_dir="$(basename "$PWD")"
     (cd .. && ln -sf "$build_dir/compile_commands.json" .)
     ninja
 }
@@ -540,7 +540,8 @@ mysql_build() {
 mtr() {
     declare -r mktemp_template="/tmp/mtr-XXXX"
     declare -r mtr_emd_tmp_dir=$(mktemp -d $mktemp_template) ||
-        { echo "Failed to create a temp dir like $mktemp_template"; return 1; }
+        { 2>&1 echo "Failed to create a temp dir like $mktemp_template";
+          return 1; }
 
     ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@"
 }
