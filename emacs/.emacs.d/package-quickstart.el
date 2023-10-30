@@ -690,16 +690,21 @@ When APPEND is specified, append FILES to existing `wfnames-buffer'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/websocket-1.14/websocket-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/websocket-1.14/websocket-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/websocket-1.15/websocket-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/websocket-1.15/websocket-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/websocket-1.14/websocket-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
 (register-definition-prefixes "websocket" '("websocket-"))
-
 
+
+(provide 'websocket-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20231012.1227/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20231012.1227/wakatime-mode-autoloads.el"))
 
@@ -8202,7 +8207,7 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231028.959/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231028.959/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231029.1759/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231029.1759/magit-autoloads.el"))
 
 
 
@@ -14951,7 +14956,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231028.959" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.10" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20231028.1849" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231029.1759" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.10" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20231028.1849" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
