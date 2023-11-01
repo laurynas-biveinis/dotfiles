@@ -1412,6 +1412,19 @@
 	     ("Pavel Kobyakov" . "pk_at_work@yahoo.com"))
 	    (:url . "https://elpa.gnu.org/packages/flymake.html")
 	    (:commit . "309823ff7796416414cee8c6f4d2650615c19f64"))])
+ (flymake-codespell .
+		    [(0 1)
+		     ((emacs
+		       (26 1))
+		      (compat
+		       (29 1 4 2)))
+		     "Flymake backend for codespell" tar
+		     ((:url . "https://www.github.com/skangas/flymake-codespell")
+		      (:keywords "extensions")
+		      (:maintainer "Stefan Kangas" . "stefankangas@gmail.com")
+		      (:authors
+		       ("Stefan Kangas" . "stefankangas@gmail.com"))
+		      (:commit . "d72e3ad4cdfd5cea1509a241d55e18f54ae2aeca"))])
  (flymake-proselint .
 		    [(0 3 0)
 		     ((emacs
@@ -2537,7 +2550,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "847694e78c12d903d5e3f6cb365a5d3b984db537"))])
  (org .
-      [(9 6 10)
+      [(9 6 11)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -2546,7 +2559,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "e54c7e604be3c5932fc8ea2b45d6906d2d9a49a2"))])
+	(:commit . "cdd73bc955781d59c079f6af3c8fa3fcb497b7d3"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -3745,7 +3758,7 @@
 	      ("Trevor Edwin Pogue" . "trevor.pogue@gmail.com"))
 	     (:commit . "33c2a6f0a11d1d88cdb2065c5a897e33507f4c86"))])
  (tramp .
-	[(2 6 1 3)
+	[(2 6 1 4)
 	 ((emacs
 	   (26 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
@@ -3754,7 +3767,7 @@
 	  (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
 	  (:authors
 	   ("Kai Großjohann" . "kai.grossjohann@gmx.net"))
-	  (:commit . "e9e0062d8aaa245a24e2c246346cde97e48407d0"))])
+	  (:commit . "9a32fb3d225a070cd1f6e5e74b9bed8944b3acb5"))])
  (tramp-nspawn .
 	       [(1 0 1)
 		((emacs

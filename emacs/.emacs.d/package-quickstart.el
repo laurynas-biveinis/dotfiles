@@ -2991,7 +2991,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.72/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.72/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.74/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.74/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -3038,7 +3038,7 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231028.1849/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231028.1849/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231030.1943/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231030.1943/transient-autoloads.el"))
 
 
 
@@ -3104,7 +3104,7 @@ See info node `(transient)Modifying Existing Transients'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3/tramp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3/tramp-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4/tramp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4/tramp-autoloads.el"))
 
 
 
@@ -4039,7 +4039,7 @@ UU-encode the region between BEG and END.
 
 
 
-(defconst tramp-version "2.6.1.3" "\
+(defconst tramp-version "2.6.1.4" "\
 This version of Tramp.")
 (defconst tramp-bug-report-address "tramp-devel@gnu.org" "\
 Email address to send bug reports to.")
@@ -6052,7 +6052,7 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.10/org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.10/org-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.11/org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.11/org-autoloads.el"))
 
 
 
@@ -8184,7 +8184,7 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20231028.959/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20231028.959/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20231030.2243/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20231030.2243/git-commit-autoloads.el"))
 
 
 
@@ -14956,7 +14956,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231029.1759" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.10" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.3" "/Users/laurynas/.emacs.d/elpa/transient-20231028.1849" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231029.1759" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.11" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4" "/Users/laurynas/.emacs.d/elpa/transient-20231030.1943" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
          Info-directory-list)))
 
 ;; Local Variables:
