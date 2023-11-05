@@ -39,13 +39,13 @@
 		(:authors
 		 ("Jordon Biondo" . "jordonbiondo@gmail.com")))])
  (annotate .
-	   [(2 0 3)
+	   [(2 1 0)
 	    nil "annotate files without changing them" tar
 	    ((:url . "https://github.com/bastibe/annotate.el")
 	     (:maintainer
 	      ("Bastian Bechtold" . "bastibe.dev@mailbox.org")
 	      ("cage" . "cage-dev@twistfold.it"))
-	     (:commit . "b2767cdba2cd7c4520811d75154b2489ff1e4d9f"))])
+	     (:commit . "866fa6d3c05baeace4e8906049a356c9ea913a23"))])
  (anti-zenburn-theme .
 		     [(2 5 1)
 		      nil "Low-contrast Zenburn-inverted theme" tar
@@ -935,7 +935,7 @@
 		("Florian Ragwitz" . "rafl@debian.org")
 		("Marius Vollmer" . "marius.vollmer@gmail.com")))])
  (git-modes .
-	    [(1 4 1)
+	    [(1 4 2)
 	     ((emacs
 	       (25 1))
 	      (compat
@@ -948,7 +948,7 @@
 	       ("Sebastian Wiesner" . "lunaryorn@gmail.com")
 	       ("Rüdiger Sonderfeld" . "ruediger@c-plusplus.net")
 	       ("Jonas Bernoulli" . "jonas@bernoul.li"))
-	      (:commit . "44d536ba637235c9dd203410281397417a3e60b6"))])
+	      (:commit . "399b1b446644afce8d0949ff85a882bfdbbfb7bf"))])
  (gnu-apl-mode .
 	       [(1 5 1)
 		nil "Emacs mode for GNU APL" tar
@@ -1657,13 +1657,15 @@
 	   ("Jonas Bernoulli" . "jonas@bernoul.li"))
 	  (:commit . "4a585029875a1dbbe96d8ac157bd2fd02875f289"))])
  (package-lint .
-	       [(0 19)
+	       [(0 20)
 		((cl-lib
 		  (0 5))
 		 (emacs
-		  (24 1))
+		  (24 4))
 		 (let-alist
-		     (1 0 6)))
+		     (1 0 6))
+		 (compat
+		  (29 1)))
 		"A linting library for elisp package authors" tar
 		((:url . "https://github.com/purcell/package-lint")
 		 (:keywords "lisp")
@@ -1673,7 +1675,7 @@
 		 (:authors
 		  ("Steve Purcell" . "steve@sanityinc.com")
 		  ("Fanael Linithien" . "fanael4@gmail.com"))
-		 (:commit . "91d0f1077c78753e09973d63fb3e571413a4c206"))])
+		 (:commit . "5eba825d657b490c320b2ea2c302b1fa0c999610"))])
  (pacmacs .
 	  [(0 1 1)
 	   ((emacs
@@ -2406,14 +2408,14 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(24 13 20231025112537)
+	       [(24 15 20231102161602)
 		((emacs
 		  (29)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "emulations" "vim" "ergoemacs")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "d96d5a936a606446eaf29e8b3569a2f3cef94b9a"))])
+		 (:commit . "9637e144a0a9349ce11f82cd61b413fb95de9659"))])
  (xkcd .
        [(1 1)
 	((json

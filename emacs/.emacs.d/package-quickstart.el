@@ -310,10 +310,12 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2/compat-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.3/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.3/compat-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2/compat-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -322,10 +324,11 @@ Signal an error if SEQUENCE is empty.
 
 
 (register-definition-prefixes "compat-macs" '("compat-"))
-
 
 
-
+(provide 'compat-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958/with-editor-autoloads.el"))
 
@@ -2991,7 +2994,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.74/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.74/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.76/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.76/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -3038,7 +3041,7 @@ non-nil.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231030.1943/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231030.1943/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231103.2312/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231103.2312/transient-autoloads.el"))
 
 
 
@@ -8207,7 +8210,7 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231029.1759/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231029.1759/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231103.1516/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231103.1516/magit-autoloads.el"))
 
 
 
@@ -11297,10 +11300,12 @@ and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20230528.622/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20230528.622/async-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20231105.721/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20231105.721/async-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/async-20230528.622/async-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -11312,8 +11317,7 @@ object will return the process object when the program is
 finished.  Set DEFAULT-DIRECTORY to change PROGRAM's current
 working directory.
 
-\(fn NAME PROGRAM FINISH-FUNC &rest PROGRAM-ARGS)" nil nil)
-
+(fn NAME PROGRAM FINISH-FUNC &rest PROGRAM-ARGS)")
 (autoload 'async-start "async" "\
 Execute START-FUNC (often a lambda) in a subordinate Emacs process.
 When done, the return value is passed to FINISH-FUNC.  Example:
@@ -11383,8 +11387,7 @@ passed to FINISH-FUNC).  Call `async-get' on such a future always
 returns nil.  It can still be useful, however, as an argument to
 `async-ready' or `async-wait'.
 
-\(fn START-FUNC &optional FINISH-FUNC)" nil nil)
-
+(fn START-FUNC &optional FINISH-FUNC)")
 (register-definition-prefixes "async" '("async-"))
 
 
@@ -11393,8 +11396,7 @@ returns nil.  It can still be useful, however, as an argument to
 Compile all *.el files in DIRECTORY asynchronously.
 All *.elc files are systematically deleted before proceeding.
 
-\(fn DIRECTORY &optional QUIET)" nil nil)
-
+(fn DIRECTORY &optional QUIET)")
 (defvar async-bytecomp-package-mode nil "\
 Non-nil if Async-Bytecomp-Package mode is enabled.
 See the `async-bytecomp-package-mode' command
@@ -11402,15 +11404,14 @@ for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `async-bytecomp-package-mode'.")
-
 (custom-autoload 'async-bytecomp-package-mode "async-bytecomp" nil)
-
 (autoload 'async-bytecomp-package-mode "async-bytecomp" "\
 Byte compile asynchronously packages installed with package.el.
+
 Async compilation of packages can be controlled by
 `async-bytecomp-allowed-packages'.
 
-This is a minor mode.  If called interactively, toggle the
+This is a global minor mode.  If called interactively, toggle the
 `Async-Bytecomp-Package mode' mode.  If the prefix argument is
 positive, enable the mode, and if it is zero or negative, disable
 the mode.
@@ -11425,15 +11426,13 @@ evaluate `(default-value \\='async-bytecomp-package-mode)'.
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'async-byte-compile-file "async-bytecomp" "\
 Byte compile Lisp code FILE asynchronously.
 
 Same as `byte-compile-file' but asynchronous.
 
-\(fn FILE)" t nil)
-
+(fn FILE)" t)
 (register-definition-prefixes "async-bytecomp" '("async-"))
 
 
@@ -11445,13 +11444,11 @@ for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `dired-async-mode'.")
-
 (custom-autoload 'dired-async-mode "dired-async" nil)
-
 (autoload 'dired-async-mode "dired-async" "\
 Do dired actions asynchronously.
 
-This is a minor mode.  If called interactively, toggle the
+This is a global minor mode.  If called interactively, toggle the
 `Dired-Async mode' mode.  If the prefix argument is positive,
 enable the mode, and if it is zero or negative, disable the mode.
 
@@ -11465,37 +11462,33 @@ evaluate `(default-value \\='dired-async-mode)'.
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'dired-async-do-copy "dired-async" "\
 Run ‘dired-do-copy’ asynchronously.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'dired-async-do-symlink "dired-async" "\
 Run ‘dired-do-symlink’ asynchronously.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'dired-async-do-hardlink "dired-async" "\
 Run ‘dired-do-hardlink’ asynchronously.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (autoload 'dired-async-do-rename "dired-async" "\
 Run ‘dired-do-rename’ asynchronously.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (register-definition-prefixes "dired-async" '("dired-async-"))
 
 
 
 (register-definition-prefixes "smtpmail-async" '("async-smtpmail-"))
-
 
 
-
+(provide 'async-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.5/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.5/helm-core-autoloads.el"))
 
@@ -14956,7 +14949,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231029.1759" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.11" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4" "/Users/laurynas/.emacs.d/elpa/transient-20231030.1943" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.2")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231103.1516" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.11" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4" "/Users/laurynas/.emacs.d/elpa/transient-20231103.2312" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.3")
          Info-directory-list)))
 
 ;; Local Variables:

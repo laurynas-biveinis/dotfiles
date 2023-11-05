@@ -575,7 +575,7 @@
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:keywords "abbrev" "convenience" "matching"))])
  (compat .
-	 [(29 1 4 2)
+	 [(29 1 4 3)
 	  ((emacs
 	    (24 4))
 	   (seq
@@ -583,10 +583,13 @@
 	  "Emacs Lisp Compatibility Library" tar
 	  ((:url . "https://github.com/emacs-compat/compat")
 	   (:keywords "lisp" "maint")
-	   (:maintainer "Daniel Mendler <mail@daniel-mendler.de>, Compat Development" . "~pkal/compat-devel@lists.sr.ht")
+	   (:maintainer
+	    ("Daniel Mendler" . "mail@daniel-mendler.de")
+	    ("Compat Development" . "~pkal/compat-devel@lists.sr.ht"))
 	   (:authors
-	    ("Philip Kaludercic <philipk@posteo.net>, Daniel Mendler" . "mail@daniel-mendler.de"))
-	   (:commit . "74300f16a1630a33a86710aa20c1fc26f5f89f75"))])
+	    ("Philip Kaludercic" . "philipk@posteo.net")
+	    ("Daniel Mendler" . "mail@daniel-mendler.de"))
+	   (:commit . "14f5f74dd98dcd0410559942aae4d8ed49e36154"))])
  (consult .
 	  [(0 35)
 	   ((emacs
@@ -1650,7 +1653,7 @@
 	     ("Sean Allred" . "code@seanallred.com"))
 	    (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader .
-	  [(0 5 0)
+	  [(0 6 0)
 	   ((emacs
 	     (25)))
 	   "gnamù reader, send buffer contents to a speech engine." tar
@@ -1659,7 +1662,7 @@
 	    (:authors
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
 	    (:url . "https://elpa.gnu.org/packages/greader.html")
-	    (:commit . "c87373438efacfd3e7e81189aa58e5a2a65c5167"))])
+	    (:commit . "8f6cf791ad02579346ee078cf929c0044ff3e46d"))])
  (greenbar .
 	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" single
@@ -2088,7 +2091,7 @@
 	 ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	(:commit . "09cf249c78385502a2ead30c4fa1468cf96939f7"))])
  (llm .
-      [(0 5 0)
+      [(0 5 1)
        ((emacs
 	 (28 1)))
        "Interface to pluggable llm backends" tar
@@ -2096,7 +2099,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "8f431fad9e4dd173fe12d7f9849dff934ea0331d"))])
+	(:commit . "a3b4ba46f926a53ec8c35893c21f6273b22ec4d8"))])
  (lmc .
       [(1 4)
        ((emacs
@@ -2816,6 +2819,19 @@
 	(:authors
 	 ("Adam Porter" . "adam@alphapapa.net"))
 	(:commit . "70ebd6edea2b5c376776cd747bc378b07f0e6646"))])
+ (plz-see .
+	  [(0 1)
+	   ((emacs
+	     (29 1))
+	    (plz
+	     (0 7)))
+	   "Interactive HTTP client" tar
+	   ((:url . "https://github.com/astoff/plz-see.el")
+	    (:keywords "comm" "network" "http")
+	    (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
+	    (:authors
+	     ("Augusto Stoffel" . "arstoffel@gmail.com"))
+	    (:commit . "c55e6aa2971caad582df1d449e0f57604250cae1"))])
  (poke .
        [(3 2)
 	((emacs
@@ -3472,18 +3488,18 @@
 		("Alex Harsanyi" . "AlexHarsanyi@gmail.com"))
 	       (:commit . "323ece64acaac7f27b7806db9dba0757d6e57885"))])
  (srht .
-       [(0 2)
+       [(0 3)
 	((emacs
 	  (27 1))
 	 (plz
-	  (0 1)))
+	  (0 7)))
 	"Sourcehut" tar
 	((:url . "https://sr.ht/~akagi/srht.el/")
 	 (:keywords "comm" "vc")
 	 (:maintainer "Aleksandr Vityazev" . "avityazev@posteo.org")
 	 (:authors
 	  ("Aleksandr Vityazev" . "avityazev@posteo.org"))
-	 (:commit . "5605a75111a9b1a1e67bd012bbf78fc6cb54f96b"))])
+	 (:commit . "8cab1e48bcb5b8ee70c498a712fb6f52eddc95ab"))])
  (ssh-deploy .
 	     [(3 1 16)
 	      ((emacs
