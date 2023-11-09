@@ -1,18 +1,25 @@
 #!/bin/zsh
-# Setup PATH. In its own file because on macOS it has to be sourced twice for
-# both non-interactive and interactive shells due to the OS adjusting PATH
-# between .zshenv and .zshrc.
+# Setup PATH and MANPATH. In its own file because on macOS it has to be sourced
+# twice for both non-interactive and interactive shells due to the OS adjusting
+# PATH between .zshenv and .zshrc.
+
+typeset -U path
+typeset -U manpath
 
 function prepend_to_path_if_exists()
 {
     local path_entry=$1
-    export PATH="$path_entry:$PATH"
+    if [[ -d "$path_entry" ]]; then
+        path=("$path_entry" $path)
+    fi
 }
 
 function prepend_to_manpath_if_exists()
 {
     local path_entry=$1
-    export MANPATH="$path_entry:$MANPATH"
+    if [[ -d "$path_entry" ]]; then
+        manpath=("$path_entry" $manpath)
+    fi
 }
 
 prepend_to_path_if_exists /usr/lib/ccache
@@ -28,5 +35,3 @@ prepend_to_path_if_exists /opt/homebrew/opt/gnu-sed/libexec/gnubin/
 prepend_to_manpath_if_exists /opt/homebrew/opt/gnu-sed/libexec/gnuman/
 
 prepend_to_path_if_exists ~/usr/bin
-
-typeset -U path
