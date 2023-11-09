@@ -21,6 +21,8 @@
 #
 # Works on Linux and macOS (both Intel and Apple Silicon), XCode Command Line
 # Tools 15.0.1.
+# TODO(laurynas): var names that include version ranges should be consistent
+# whether the lower or the higher version number goes first.
 
 set -o errexit
 set -o nounset
