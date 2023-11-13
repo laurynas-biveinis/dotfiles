@@ -221,7 +221,7 @@
 	    (:url . "https://elpa.nongnu.org/nongnu/cdlatex.html")
 	    (:commit . "7521fa1b39de735dcbd32bca92a792d5261e9ce2"))])
  (cider .
-	[(1 11 0)
+	[(1 11 1)
 	 ((emacs
 	   (26))
 	  (clojure-mode
@@ -249,7 +249,7 @@
 	   ("Artur Malabarba" . "bruce.connor.am@gmail.com")
 	   ("Hugo Duncan" . "hugo@hugoduncan.org")
 	   ("Steve Purcell" . "steve@sanityinc.com"))
-	  (:commit . "6e5294624959736c486f7a466bd5e78ce6183ab9"))])
+	  (:commit . "9c605cd4938c0055c2766c55606f19ecbf664e8e"))])
  (clojure-mode .
 	       [(5 18 0)
 		((emacs
@@ -1833,7 +1833,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:keywords "convenience"))])
  (racket-mode .
-	      [(1 0 20231110 100840)
+	      [(1 0 20231111 185421)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2088,7 +2088,7 @@
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
 	  (:commit . "c9e3ec9963fcc95050fe8a73ce978bebe2ac41ac"))])
  (sweeprolog .
-	     [(0 26 2)
+	     [(0 27 0)
 	      ((emacs
 		(27 1))
 	       (compat
@@ -2099,7 +2099,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "f87507029ff45096384358619724bb97b5491865"))])
+	       (:commit . "05020e1269600caa155b5c9705ef5f02869cfcd4"))])
  (swift-mode .
 	     [(9 1 0)
 	      ((emacs
@@ -2408,14 +2408,14 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(24 16 20231111103752)
+	       [(24 17 20231111131112)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "728a8da5940ca4bf129b4bd608c2f14c88f6dc28"))])
+		 (:commit . "7fc6afdbe1a7ebf632f1a45df3d120d939fc0725"))])
  (xkcd .
        [(1 1)
 	((json
