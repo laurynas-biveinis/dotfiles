@@ -33,7 +33,7 @@
 
 (setq company-abort-manual-when-too-short t
       company-idle-delay 0.1
-      company-minimum-prefix-length 1
+      company-minimum-prefix-length 2
       company-tooltip-idle-delay .3
       company-selection-wrap-around t)
 

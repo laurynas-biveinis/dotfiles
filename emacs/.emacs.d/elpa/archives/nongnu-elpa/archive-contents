@@ -1657,7 +1657,7 @@
 	   ("Jonas Bernoulli" . "jonas@bernoul.li"))
 	  (:commit . "4a585029875a1dbbe96d8ac157bd2fd02875f289"))])
  (package-lint .
-	       [(0 20)
+	       [(0 21)
 		((cl-lib
 		  (0 5))
 		 (emacs
@@ -1675,7 +1675,7 @@
 		 (:authors
 		  ("Steve Purcell" . "steve@sanityinc.com")
 		  ("Fanael Linithien" . "fanael4@gmail.com"))
-		 (:commit . "5eba825d657b490c320b2ea2c302b1fa0c999610"))])
+		 (:commit . "dd81a5b9224cc6e6dc4bbb6b4a2928df89c01317"))])
  (pacmacs .
 	  [(0 1 1)
 	   ((emacs
@@ -1833,7 +1833,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:keywords "convenience"))])
  (racket-mode .
-	      [(1 0 20231111 185421)
+	      [(1 0 20231113 94505)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2408,14 +2408,14 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(24 17 20231111131112)
+	       [(24 18 20231112185021)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "7fc6afdbe1a7ebf632f1a45df3d120d939fc0725"))])
+		 (:commit . "708199618a1e84b8e11ae468f71291e3e1c66daf"))])
  (xkcd .
        [(1 1)
 	((json

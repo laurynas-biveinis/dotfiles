@@ -586,21 +586,19 @@
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:keywords "abbrev" "convenience" "matching"))])
  (compat .
-	 [(29 1 4 3)
+	 [(29 1 4 4)
 	  ((emacs
 	    (24 4))
 	   (seq
-	    (2 3)))
+	    (2 23)))
 	  "Emacs Lisp Compatibility Library" tar
 	  ((:url . "https://github.com/emacs-compat/compat")
 	   (:keywords "lisp" "maint")
-	   (:maintainer
-	    ("Daniel Mendler" . "mail@daniel-mendler.de")
-	    ("Compat Development" . "~pkal/compat-devel@lists.sr.ht"))
+	   (:maintainer "Compat Development" . "~pkal/compat-devel@lists.sr.ht")
 	   (:authors
 	    ("Philip Kaludercic" . "philipk@posteo.net")
 	    ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	   (:commit . "14f5f74dd98dcd0410559942aae4d8ed49e36154"))])
+	   (:commit . "3809be4d24a301c78d40bd00fc15bb763e0a3a2a"))])
  (consult .
 	  [(0 35)
 	   ((emacs
@@ -2588,7 +2586,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "847694e78c12d903d5e3f6cb365a5d3b984db537"))])
  (org .
-      [(9 6 11)
+      [(9 6 12)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -2597,7 +2595,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "cdd73bc955781d59c079f6af3c8fa3fcb497b7d3"))])
+	(:commit . "b55e38863136b40bfdbfaede05b45a773a001fc4"))])
  (org-contacts .
 	       [(1 1)
 		((emacs

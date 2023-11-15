@@ -310,7 +310,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.3/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.3/compat-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4/compat-autoloads.el"))
 
 
 
@@ -2994,7 +2994,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.77/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.77/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.78/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.78/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -3034,6 +3034,14 @@ The download bundle file is deleted after installation, unless KEEP-BUNDLE is
 non-nil.
 
 (fn &optional SKIP-IF-INSTALLED VERSION OS KEEP-BUNDLE)" t)
+(autoload 'tree-sitter-langs-install-latest-grammar "tree-sitter-langs-build" "\
+Install the latest version of the tree-sitter-langs grammar bundle.
+Automatically retrieves the latest version tag from GitHub.
+If SKIP-IF-INSTALLED is non-nil, skips if the latest version is already installed.
+OS specifies the operating system.
+If KEEP-BUNDLE is non-nil, the downloaded bundle file is not deleted after installation.
+
+(fn &optional SKIP-IF-INSTALLED OS KEEP-BUNDLE)" t)
 (register-definition-prefixes "tree-sitter-langs-build" '("tree-sitter-langs-"))
 
 
@@ -6055,7 +6063,7 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.11/org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.11/org-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.12/org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-9.6.12/org-autoloads.el"))
 
 
 
@@ -14949,7 +14957,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231112.914" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.11" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4" "/Users/laurynas/.emacs.d/elpa/transient-20231112.923" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.3")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231112.914" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.12" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4" "/Users/laurynas/.emacs.d/elpa/transient-20231112.923" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
