@@ -1,5 +1,8 @@
 #!/bin/sh
 
+sudo locale-gen en_US.utf8
+sudo update-locale
+
 # Not actually meant for running as an invoked script, but rather as a sequence
 # of steps to consult and copy and paste into the terminal, and to do some
 # unscripted steps manually.
