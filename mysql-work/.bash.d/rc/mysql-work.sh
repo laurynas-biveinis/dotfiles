@@ -554,7 +554,7 @@ rmtr() {
 }
 
 rm_tmp_mtr() {
-    rm -rf /tmp/mtr-*
+    rm -rf /tmp/mtr-* /tmp/router-* /tmp/mysqld-* /tmp/mysql-unique-ids
 }
 
 mysql_export_environment_helpers
