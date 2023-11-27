@@ -439,6 +439,7 @@ mysql_cmake() {
             echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
                 8.0.32)
+                    declare -a release_flags=("${FB8032[@]}")
                     declare -a debug_flags=("${FB8032D[@]}")
                     declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
