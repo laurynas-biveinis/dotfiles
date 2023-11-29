@@ -3,10 +3,14 @@
 set -euo pipefail
 
 autoload is_on_ac
+autoload mysql_find_version_file
+autoload mysql_get_major_version
+autoload mysql_get_minor_version
 
 function fetch_and_maintain_repo () {
-    local repo="$1"
-    local fullpath="$WORK_SRC_ROOT/$repo"
+    declare -r repo="$1"
+
+    declare -r fullpath="$WORK_SRC_ROOT/$repo"
     echo "Fetching & GCing $fullpath..."
     pushd "$fullpath" || return
     git fetch --all
@@ -15,8 +19,9 @@ function fetch_and_maintain_repo () {
 }
 
 function pull_worktree () {
-    local worktree="$1"
-    local fullpath="$WORK_SRC_ROOT/$worktree"
+    declare -r worktree="$1"
+
+    declare -r fullpath="$WORK_SRC_ROOT/$worktree"
     echo "Pulling $fullpath..."
     pushd "$fullpath" || return
     cf_off || true
@@ -26,24 +31,83 @@ function pull_worktree () {
     popd || return
 }
 
+function build_tree () {
+    declare -r build_dir="$1"
+
+    if ! is_on_ac; then
+        echo Laptop is on battery: skipping build of "$build_dir"
+        return 0
+    fi
+    pushd "$build_dir" || return 1
+    echo "Building $build_dir..."
+    time ninja
+    date
+    popd || return 1
+    return 0
+}
+
 for repo in $WORK_REPOS_TO_PULL; do
-     fetch_and_maintain_repo "$repo"
+    fetch_and_maintain_repo "$repo"
 done
 
 for worktree in $WORK_TREES_TO_UPDATE; do
-     pull_worktree "$worktree"
+    pull_worktree "$worktree"
 done
 
 for worktree in $WORK_TREES_TO_UPDATE; do
-    for buildtree in "$WORK_SRC_ROOT/$worktree"/_build-*(/); do
-        if ! is_on_ac; then
-            echo Laptop is on battery: skipping build of "$buildtree"
-            continue
+    declare full_worktree_path="$WORK_SRC_ROOT/$worktree"
+    pushd "$full_worktree_path" || return
+
+    if ! declare version_file=$(mysql_find_version_file); then
+        popd
+        return 1
+    fi
+
+    if ! declare -i major_ver=$(mysql_get_major_version "$version_file"); then
+        popd
+        return 1
+    fi
+
+    if ! declare -i minor_ver=$(mysql_get_minor_version "$version_file"); then
+        popd
+        return 1
+    fi
+
+    if [ "$major_ver" -le 8 ] && [ "$minor_ver" -le 32 ]; then
+        # MySQL versions <= 8.0.32 will fail to build if both OpenSSL 1.1 and
+        # OpenSSL 3 from Homebrew are installed, because system wide-installed
+        # version 3 headers will take precedence over version 1.1 headers.
+        #
+        # The relevant patches in MySQL 8.0.33 are:
+        # 19b8d5478e7 Bug#35057542 Create INTERFACE libraries for bundled/system
+        # zlib/zstd/lz4
+        # 486ff96e325 Bug#35057542 Create INTERFACE libraries for bundled/system
+        # zlib/zstd/lz4
+        # bbf1d64b728 Bug#35057542 Create INTERFACE libraries for bundled/system
+        # zlib/zstd/lz4
+        # 1f2b9d62feb Bug#35057542 Create INTERFACE libraries for bundled/system
+        # zlib/zstd/lz4
+        declare -i workaround_ssl3=1
+    else
+        declare -i workaround_ssl3=0
+    fi
+
+    if [ "$workaround_ssl3" -eq 1 ]; then
+        brew uninstall --ignore-dependencies -q openssl@3
+    fi
+
+    for build_dir in "$full_worktree_path"/_build-*(/); do
+        if ! build_tree $build_dir; then
+            if [ "$workaround_ssl3" -eq 1 ]; then
+                brew install -q openssl@3;
+            fi
+            return
         fi
-        pushd "$buildtree" || return
-        echo "Building $buildtree..."
-        time ninja
-        date
-        popd || return
     done
+
+    if [ "$workaround_ssl3" -eq 1 ]; then
+        brew install -q openssl@3
+    fi
+
+    popd || return
 done
