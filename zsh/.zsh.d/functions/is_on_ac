@@ -1,3 +1,5 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
 function is_on_ac() {
     local UNAME_OUT
     UNAME_OUT="$(uname -s)"
