@@ -1,0 +1,14 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
+mysql_find_version_file() {
+    if [ -f ./MYSQL_VERSION ]; then
+        echo "./MYSQL_VERSION"
+        return 0
+    elif [ -f ./VERSION ]; then
+        echo "./VERSION"
+        return 0
+    else
+        >&2 echo "Neither MYSQL_VERSION nor VERSION found"
+        return 1
+    fi
+}

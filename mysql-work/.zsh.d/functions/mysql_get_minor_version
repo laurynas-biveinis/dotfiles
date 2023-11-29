@@ -1,0 +1,7 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
+mysql_get_minor_version() {
+    autoload mysql_get_single_version_number
+
+    mysql_get_single_version_number "$1" MYSQL_VERSION_MINOR
+}

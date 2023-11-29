@@ -28,6 +28,10 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+autoload mysql_find_version_file
+autoload mysql_get_major_version
+autoload mysql_get_minor_version
+
 mysql_export_environment_helpers() {
     declare -r uname_out="$(uname -s)"
 
@@ -310,23 +314,10 @@ mysql_export_environment_helpers() {
     fi
 }
 
-mysql_find_version_file() {
-    if [ -f ../MYSQL_VERSION ]; then
-        echo "../MYSQL_VERSION"
-        return 0
-    elif [ -f ../VERSION ]; then
-        echo "../VERSION"
-        return 0
-    else
-        >&2 echo "Neither MYSQL_VERSION nor VERSION found"
-        return 1
-    fi
-}
-
 mysql_determine_flavor() {
     declare -r version_file="$1"
 
-    if [ -d ../rocksdb ]; then
+    if [ -d ./rocksdb ]; then
         echo "facebook"
         return 0
     fi
@@ -349,18 +340,31 @@ mysql_determine_flavor() {
 }
 
 mysql_cmake() {
+    pushd .. || return 1
+
     if ! declare -r version_file=$(mysql_find_version_file); then
+        popd
         return 1
     fi
 
-    declare -r major_ver_str=$(grep MYSQL_VERSION_MAJOR "$version_file")
-    declare -i -r major_ver="${major_ver_str//[^0-9]/}"
-    declare -r minor_ver_str=$(grep MYSQL_VERSION_MINOR "$version_file")
-    declare -i -r minor_ver="${minor_ver_str//[^0-9]/}"
+    if ! declare -i -r major_ver=$(mysql_get_major_version "$version_file");
+    then
+        popd
+        return 1
+    fi
+
+    if ! declare -i -r minor_ver=$(mysql_get_minor_version "$version_file");
+    then
+        popd
+        return 1
+    fi
+
     declare -r patch_level_str=$(grep MYSQL_VERSION_PATCH "$version_file")
     declare -i -r patch_level="${patch_level_str//[^0-9]/}"
 
     declare -r flavor=$(mysql_determine_flavor "$version_file")
+
+    popd || return 1
 
     case "$flavor" in
         "mysql")
