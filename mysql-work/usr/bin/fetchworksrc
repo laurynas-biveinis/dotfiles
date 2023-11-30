@@ -75,8 +75,9 @@ for worktree in $WORK_TREES_TO_UPDATE; do
 
     if [ "$major_ver" -le 8 ] && [ "$minor_ver" -le 32 ]; then
         # MySQL versions <= 8.0.32 will fail to build if both OpenSSL 1.1 and
-        # OpenSSL 3 from Homebrew are installed, because system wide-installed
-        # version 3 headers will take precedence over version 1.1 headers.
+        # OpenSSL 3 from Homebrew are installed and linked, because system
+        # wide-installed version 3 headers will take precedence over version 1.1
+        # headers.
         #
         # The relevant patches in MySQL 8.0.33 are:
         # 19b8d5478e7 Bug#35057542 Create INTERFACE libraries for bundled/system
@@ -93,20 +94,20 @@ for worktree in $WORK_TREES_TO_UPDATE; do
     fi
 
     if [ "$workaround_ssl3" -eq 1 ]; then
-        brew uninstall --ignore-dependencies -q openssl@3
+        brew unlink openssl@3
     fi
 
     for build_dir in "$full_worktree_path"/_build-*(/); do
         if ! build_tree $build_dir; then
             if [ "$workaround_ssl3" -eq 1 ]; then
-                brew install -q openssl@3;
+                brew link openssl@3;
             fi
             return
         fi
     done
 
     if [ "$workaround_ssl3" -eq 1 ]; then
-        brew install -q openssl@3
+        brew link openssl@3
     fi
 
     popd || return
