@@ -58,7 +58,15 @@ mysql_export_environment_helpers() {
         declare -a -r my8018_28_cxx_flags=(
             "-Wno-shadow-field" "-Wno-unqualified-std-cast-call"
             "-Wno-deprecated-copy-with-dtor" "-Wno-bitwise-instead-of-logical"
-            "-Wno-unused-label")
+            "-Wno-unused-label"
+            # LLVM 14:
+            "-Wno-error=unused-variable" "-Wno-error=missing-noreturn"
+            "-Wno-error=extra-semi"
+            # LLVM 14 RocksDB:
+            "-Wno-error=invalid-offsetof"
+            "-Wno-error=conditional-uninitialized"
+            # LLVM 17:
+            "-Wno-error=implicit-const-int-float-conversion")
         declare -a -r my8031_extra_cxx_flags=("-Wno-deprecated-declarations")
         declare -a -r my8032_34_extra_cxx_flags=(
             "-Wno-unused-but-set-variable" "-Wno-deprecated-copy-with-dtor")
