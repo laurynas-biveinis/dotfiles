@@ -326,7 +326,8 @@ brew install stow git ncdu gnupg@2.2 coreutils fzf hexyl tldr lynis curl java \
      htop findutils libtool npm fd delta jq colordiff iwyu cppcheck infer \
      creduce gnu-sed mas bat fig bison libfido2 actionlint circleci imagemagick \
      rapidjson doxygen graphviz cmake protobuf@21 ripgrep lz4 boost cpplint \
-     libeatmydata duf exa clang-build-analyzer recode ninja difftastic
+     libeatmydata duf exa clang-build-analyzer recode ninja difftastic git-lfs
+git lfs install
 brew link protobuf@21
 brew link gnupg@2.2
 sudo ln -sf /opt/homebrew/opt/llvm@16/bin/clang-format \
