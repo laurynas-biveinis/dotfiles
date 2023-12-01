@@ -37,8 +37,7 @@ autoload mysql_get_minor_version
 mysql_export_environment_helpers() {
     declare -r uname_out="$(uname -s)"
 
-    # Common building blocks
-
+    # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
         declare -r brew="$(brew --prefix)/opt"
         if [ "$(arch)" = "arm64" ]; then
@@ -99,6 +98,12 @@ mysql_export_environment_helpers() {
                         "-DCMAKE_CXX_COMPILER=$brew/llvm/bin/clang++")
         export MYGCC13=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-13"
                         "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-13")
+
+        declare -r emd_libdir="$brew/libeatmydata/lib/"
+        export MTR_EMD=(
+            "--mysqld-env=DYLD_LIBRARY_PATH=$emd_libdir"
+            "--mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1"
+            "--mysqld-env=DYLD_INSERT_LIBRARIES=$emd_libdir/libeatmydata.dylib")
     else
         declare -a my8018_extra=()
         declare -a my8018_28=()
@@ -123,7 +128,18 @@ mysql_export_environment_helpers() {
                         "-DCMAKE_CXX_COMPILER=clang++")
         export MYGCC13=("-DCMAKE_C_COMPILER=gcc-13"
                         "-DCMAKE_CXX_COMPILER=g++-13")
+
+        export MTR_EMD=(
+            "--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so")
     fi
+
+    # Platform-independent helpers
+
+    export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
+                      "-DCMAKE_CXX_COMPILER=clang++-13")
+    export MY8SAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
+
+    # Common building blocks
 
     declare -a -r cxx_flags_debug=("${my8_cxx_flags[@]}" "-g")
     declare -a -r cxx_flags_release=("${my8_cxx_flags[@]}" "-O2" "-g"
@@ -364,22 +380,6 @@ mysql_export_environment_helpers() {
 
     export MARIA108=("${cmake_release[@]}" "${maria_common[@]}")
     export MARIA108D=("${cmake_debug[@]}" "${maria_common[@]}")
-
-    # Addons, environment helpers
-    export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
-                      "-DCMAKE_CXX_COMPILER=clang++-13")
-    export MY8SAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
-
-    if [ "$uname_out" = "Darwin" ]; then
-        declare -r emd_libdir="$brew/libeatmydata/lib/"
-        export MTR_EMD=(
-            "--mysqld-env=DYLD_LIBRARY_PATH=$emd_libdir"
-            "--mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1"
-            "--mysqld-env=DYLD_INSERT_LIBRARIES=$emd_libdir/libeatmydata.dylib")
-    else
-        export MTR_EMD=(
-            "--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so")
-    fi
 }
 
 mysql_determine_flavor() {
