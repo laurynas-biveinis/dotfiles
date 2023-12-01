@@ -13,7 +13,8 @@
  '(package-selected-packages
    '(project seq difftastic bind-key eglot eldoc faceup flymake jsonrpc soap-client tramp use-package use-package-ensure-system-package verilog-mode wgrep-deadgrep activity-watch-mode prism org-sticky-header topsy rustic rust-mode org-roam-ui org-roam fancy-compilation tree-sitter tree-sitter-langs org-contrib flycheck-status-emoji flycheck-google-cpplint gitattributes-mode gitconfig-mode gitignore-mode git-messenger beginend cheat-sh info-colors grab-mac-link stripe-buffer beacon lua-mode helm-icons wgrep-helm wgrep lsp-treemacs s calfw-ical calfw calfw-org helm-make gcmh which-key keyfreq helm-dash helm-org helm-lsp helm-descbinds helm-projectile helm company-box yasnippet iedit modern-cpp-font-lock highlight-indent-guides page-break-lines xterm-color eldoc-cmake projectile vterm deadgrep all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent lsp-ui lsp-mode company flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode ssh ssh-config-mode bison-mode cmake-font-lock cmake-mode google-c-style solarized-theme wakatime-mode exec-path-from-shell magit org))
  '(safe-local-variable-values
-   '((eval setq-local ispell-personal-dictionary
+   '((org-emphasis-alist)
+     (eval setq-local ispell-personal-dictionary
            (expand-file-name ".ispell.dict"
                              (file-name-directory
                               (let

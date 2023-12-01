@@ -2994,7 +2994,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.78/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.78/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.81/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.81/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -3049,7 +3049,7 @@ If KEEP-BUNDLE is non-nil, the downloaded bundle file is not deleted after insta
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231112.923/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231112.923/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231129.1714/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231129.1714/transient-autoloads.el"))
 
 
 
@@ -3108,14 +3108,14 @@ See info node `(transient)Modifying Existing Transients'.
 
 (fn PREFIX LOC)")
 (function-put 'transient-remove-suffix 'lisp-indent-function 'defun)
-(register-definition-prefixes "transient" '("transient"))
+(register-definition-prefixes "transient" '("static-if" "transient"))
 
 
 (provide 'transient-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4/tramp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4/tramp-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5/tramp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5/tramp-autoloads.el"))
 
 
 
@@ -4050,7 +4050,7 @@ UU-encode the region between BEG and END.
 
 
 
-(defconst tramp-version "2.6.1.4" "\
+(defconst tramp-version "2.6.1.5" "\
 This version of Tramp.")
 (defconst tramp-bug-report-address "tramp-devel@gnu.org" "\
 Email address to send bug reports to.")
@@ -7238,7 +7238,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20231130.523/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20231130.523/magit-section-autoloads.el"))
 
 
 
@@ -8218,7 +8218,7 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231112.914/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231112.914/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231120.2359/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231120.2359/magit-autoloads.el"))
 
 
 
@@ -11141,7 +11141,7 @@ Save keyfreq data now.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.17/jsonrpc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.17/jsonrpc-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.18/jsonrpc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.18/jsonrpc-autoloads.el"))
 
 
 
@@ -11308,7 +11308,7 @@ and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20231105.1713/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20231105.1713/async-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20231128.1813/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20231128.1813/async-autoloads.el"))
 
 
 
@@ -11498,7 +11498,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.5/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.5/helm-core-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.6/helm-core-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-core-3.9.6/helm-core-autoloads.el"))
 
 
 
@@ -11538,6 +11538,7 @@ See `helm-define-multi-key'.
 
 (fn NAME DOCSTRING FUNS &optional DELAY)" nil t)
 (function-put 'helm-multi-key-defun 'lisp-indent-function 2)
+(function-put 'helm-multi-key-defun 'doc-string-elt 2)
 (autoload 'helm-define-key-with-subkeys "helm-core" "\
 Define in MAP a KEY and SUBKEY to COMMAND.
 
@@ -11732,7 +11733,7 @@ Call `helm' only with SOURCES and BUFFER as args.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.5/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.5/helm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.6/helm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/helm-3.9.6/helm-autoloads.el"))
 
 
 
@@ -11785,6 +11786,10 @@ if external addressbook-bookmark package is installed." t)
 
 
 
+(autoload 'helm-buffers-quit-and-find-file-fn "helm-buffers" "\
+
+
+(fn SOURCE)")
 (autoload 'helm-buffers-list "helm-buffers" "\
 Preconfigured `helm' to list buffers." t)
 (autoload 'helm-mini "helm-buffers" "\
@@ -11837,10 +11842,6 @@ Preconfigured Helm to complete file name at point.
 
 (fn &optional FORCE)" t)
 (autoload 'helm-lisp-indent "helm-elisp" nil t)
-(autoload 'helm-lisp-completion-or-file-name-at-point "helm-elisp" "\
-Preconfigured Helm to complete Lisp symbol or filename at point.
-Filename completion happens if string start after or between a
-double quote." t)
 (autoload 'helm-apropos "helm-elisp" "\
 Preconfigured Helm to describe commands, functions, variables and faces.
 In non interactives calls DEFAULT argument should be provided as
@@ -11850,7 +11851,23 @@ a string, i.e. the `symbol-name' of any existing symbol.
 (autoload 'helm-manage-advice "helm-elisp" "\
 Preconfigured `helm' to disable/enable function advices." t)
 (autoload 'helm-locate-library "helm-elisp" "\
-Preconfigured helm to locate elisp libraries." t)
+Preconfigured helm to locate elisp libraries.
+
+When `completions-detailed' or `helm-completions-detailed' is non
+nil, a description of libraries is provided. The libraries are
+partially cached in the variables
+`helm--locate-library-doc-cache' and
+`helm--locate-library-cache'.  TIP: You can make these vars
+persistent for faster start with the psession package, using M-x
+psession-make-persistent-variable.  NOTE: The caches affect as
+well `find-libray' and `locate-library' when `helm-mode' is
+enabled and `completions-detailed' is non nil.  There is no need
+to refresh the caches, they will be updated automatically if some
+new libraries are found, however when a library update its
+headers and the description change you can reset the caches with
+a prefix arg.
+
+(fn &optional ARG)" t)
 (autoload 'helm-timers "helm-elisp" "\
 Preconfigured `helm' for timers." t)
 (autoload 'helm-complex-command-history "helm-elisp" "\
@@ -11965,9 +11982,9 @@ Cleanup `image-dired-dir' directory.
 Delete all thumb files that are no more associated with an existing
 image file in `helm-ff-image-dired-thumbnails-cache'." t)
 (autoload 'helm-projects-history "helm-files" "\
+Jump to project already visisted with `helm-browse-project'.
 
-
-(fn ARG)" t)
+(fn &optional ARG)" t)
 (autoload 'helm-browse-project "helm-files" "\
 Preconfigured helm to browse projects.
 Browse files and see status of project with its VCS.
@@ -14366,7 +14383,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20231006.1308/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20231006.1308/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20231128.1452/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20231128.1452/cmake-mode-autoloads.el"))
 
 
 
@@ -14957,7 +14974,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231112.914" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231014.1405" "/Users/laurynas/.emacs.d/elpa/org-9.6.12" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.4" "/Users/laurynas/.emacs.d/elpa/transient-20231112.923" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231120.2359" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231130.523" "/Users/laurynas/.emacs.d/elpa/org-9.6.12" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5" "/Users/laurynas/.emacs.d/elpa/transient-20231129.1714" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
