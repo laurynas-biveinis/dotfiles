@@ -504,7 +504,7 @@ mysql_cmake() {
     case "$build_dir" in
         *valgrind*)
             echo "Using Valgrind"
-            if [ "$sanitizers" == 1 ]; then
+            if [ "$sanitizers" -eq 1 ]; then
                 2>&1 echo "Valgrind is incompatible with sanitizers"
                 return 1
             fi
