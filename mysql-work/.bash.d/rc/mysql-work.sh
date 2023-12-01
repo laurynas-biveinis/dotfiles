@@ -6,7 +6,9 @@
 # FB80xy, FB80xyD: MySQL 8.0 Facebook Patch release and debug
 #
 # Extra CMake options:
-# MYCLANG, MYCLANG12, MYCLANG12: set compiler to clang for CMake
+# MYCLANG, MYCLANG12, MYCLANG14, MYCLANG15, MYCLANG16, MYCLANG17: set compiler
+# to clang for CMake, optionally with a version
+# MYGCC13: set compiler to GCC 13 for CMake
 # MY8SAN: add maximum supported Sanitizer configuration
 #
 # mysql-test-run options:
