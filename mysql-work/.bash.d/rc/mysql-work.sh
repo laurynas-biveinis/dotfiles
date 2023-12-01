@@ -265,6 +265,7 @@ mysql_export_environment_helpers() {
     export MY8032=("${my8r[@]}" "${my8032_extra[@]}")
 
     export FB8032D=("${MY8032D[@]}" "${fb_common[@]}")
+    export FB8032=("${MY8032[@]}" "${fb_common[@]}")
 
     export MY8031D=("${my8d[@]}" "${my8031_extra[@]}")
 
