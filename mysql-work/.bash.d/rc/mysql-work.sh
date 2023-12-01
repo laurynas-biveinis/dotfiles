@@ -631,6 +631,7 @@ mysql_cmake() {
 }
 
 mysql_build() {
+    git submodule update --init --recursive
     mysql_cmake "$@" || return 1
     declare -r build_dir="$(basename "$PWD")"
     (cd .. && ln -sf "$build_dir/compile_commands.json" .)
