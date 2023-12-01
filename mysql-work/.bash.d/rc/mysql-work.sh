@@ -40,10 +40,16 @@ mysql_export_environment_helpers() {
     if [ "$uname_out" = "Darwin" ]; then
         declare -r brew="$(brew --prefix)/opt"
         if [ "$(arch)" = "arm64" ]; then
+            # Workaround https://bugs.mysql.com/bug.php?id=113047 (MTR test
+            # main.derived_limit fails with small cost differences) and
+            # https://bugs.mysql.com/bug.php?id=113048 (MTR test
+            # gis.gis_bugs_crashes fails with a result difference)
+            declare -a -r my8_cxx_flags=("-ffp-contract=off")
             declare -a my8018_28=("-DWITH_SSL=$brew/openssl@1.1")
             export MY8030_820_CORE_DUMP_FLAGS=(
                 "-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         else
+            declare -a -r my8_cxx_flags=()
             declare -a my8018_28=()
             export MY8030_820_CORE_DUMP_FLAGS=()
         fi
@@ -62,8 +68,27 @@ mysql_export_environment_helpers() {
             "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
             "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
 
-        export MYCLANG12=("-DCMAKE_C_COMPILER=$brew/llvm@12/bin/clang-12"
+        export MYCLANG12=("-DCMAKE_C_COMPILER=$brew/llvm@12/bin/clang"
                           "-DCMAKE_CXX_COMPILER=$brew/llvm@12/bin/clang++")
+        # CMAKE_AR settings below workaround
+        # https://bugs.mysql.com/bug.php?id=113113 (Build failure with Homebrew
+        # LLVM 14-17 on macOS)
+        export MYCLANG14=("-DCMAKE_C_COMPILER=$brew/llvm@14/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew/llvm@14/bin/clang++"
+                          "-DCMAKE_AR=$brew/llvm@14/bin/llvm-ar")
+        export MYCLANG15=("-DCMAKE_C_COMPILER=$brew/llvm@15/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew/llvm@15/bin/clang++"
+                          "-DCMAKE_AR=$brew/llvm@15/bin/llvm-ar")
+        export MYCLANG16=("-DCMAKE_C_COMPILER=$brew/llvm@16/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew/llvm@16/bin/clang++"
+                          "-DCMAKE_AR=$brew/llvm@16/bin/llvm-ar")
+        export MYCLANG17=("-DCMAKE_C_COMPILER=$brew/llvm@17/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew/llvm@17/bin/clang++"
+                          "-DCMAKE_AR=$brew/llvm@17/bin/llvm-ar")
+        export MYCLANG=("-DCMAKE_C_COMPILER=$brew/llvm/bin/clang"
+                        "-DCMAKE_CXX_COMPILER=$brew/llvm/bin/clang++")
+        export MYGCC13=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-13"
+                        "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-13")
     else
         declare -a my8018_extra=()
         declare -a my8018_28=()
@@ -76,10 +101,23 @@ mysql_export_environment_helpers() {
         export MY8030_820_CORE_DUMP_FLAGS=()
         export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
                           "-DCMAKE_CXX_COMPILER=clang++-12")
+        export MYCLANG14=("-DCMAKE_C_COMPILER=clang-14"
+                          "-DCMAKE_CXX_COMPILER=clang++-14")
+        export MYCLANG15=("-DCMAKE_C_COMPILER=clang-15"
+                          "-DCMAKE_CXX_COMPILER=clang++-15")
+        export MYCLANG16=("-DCMAKE_C_COMPILER=clang-16"
+                          "-DCMAKE_CXX_COMPILER=clang++-16")
+        export MYCLANG17=("-DCMAKE_C_COMPILER=clang-17"
+                          "-DCMAKE_CXX_COMPILER=clang++-17")
+        export MYCLANG=("-DCMAKE_C_COMPILER=clang"
+                        "-DCMAKE_CXX_COMPILER=clang++")
+        export MYGCC13=("-DCMAKE_C_COMPILER=gcc-13"
+                        "-DCMAKE_CXX_COMPILER=g++-13")
     fi
 
-    declare -a -r cxx_flags_debug=("-g")
-    declare -a -r cxx_flags_release=("-O2" "-g" "-DNDEBUG")
+    declare -a -r cxx_flags_debug=("${my8_cxx_flags[@]}" "-g")
+    declare -a -r cxx_flags_release=("${my8_cxx_flags[@]}" "-O2" "-g"
+                                     "-DNDEBUG")
 
     declare -a -r cmake_common=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
     declare -a -r cmake_release=("${cmake_common[@]}"
@@ -106,6 +144,26 @@ mysql_export_environment_helpers() {
     # 8.2.0--8.0.33
 
     declare -a -r my8033_820=("-DFORCE_COLORED_OUTPUT=ON")
+
+    # 8.2.0
+
+    declare -a -r my820_cxx_flags_debug=("${cxx_flags_debug[@]}")
+    declare -a -r my820_cxx_flags_release=("${cxx_flags_release[@]}")
+    declare -a -r my820_extra=(
+        "-DCMAKE_CXX_FLAGS=${my8_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my820_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my820_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my820_cxx_flags_release[*]}")
+
+    # 8.0.35
+
+    declare -a -r my8035_cxx_flags_debug=("${cxx_flags_debug[@]}")
+    declare -a -r my8035_cxx_flags_release=("${cxx_flags_release[@]}")
+    declare -a -r my8035_extra=(
+        "-DCMAKE_CXX_FLAGS=${my8_cxx_flags[*]}"
+        "-DCMAKE_C_FLAGS_DEBUG=${my8035_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${my8035_cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8035_cxx_flags_release[*]}")
 
     # 8.0.34
 
@@ -244,14 +302,14 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
-    export MY820D=("${my8d[@]}" "${my8033_820[@]}")
-    export MY820=("${my8r[@]}" "${my8033_820[@]}")
+    export MY820D=("${my8d[@]}" "${my8033_820[@]}" "${my820_extra[@]}")
+    export MY820=("${my8r[@]}" "${my8033_820[@]}" "${my820_extra[@]}")
 
     export MY810D=("${my8d[@]}" "${my8033_820[@]}")
     export MY810=("${my8r[@]}" "${my8033_820[@]}")
 
-    export MY8035D=("${my8d[@]}" "${my8033_820[@]}")
-    export MY8035=("${my8r[@]}" "${my8033_820[@]}")
+    export MY8035D=("${my8d[@]}" "${my8033_820[@]}" "${my8035_extra[@]}")
+    export MY8035=("${my8r[@]}" "${my8033_820[@]}" "${my8035_extra[@]}")
 
     export MY8034D=("${my8d[@]}" "${my8033_820[@]}" "${my8034_extra[@]}")
     export MY8034=("${my8r[@]}" "${my8033_820[@]}" "${my8034_extra[@]}")
@@ -298,7 +356,6 @@ mysql_export_environment_helpers() {
     export MARIA108D=("${cmake_debug[@]}" "${maria_common[@]}")
 
     # Addons, environment helpers
-    export MYCLANG=("-DCMAKE_C_COMPILER=clang" "-DCMAKE_CXX_COMPILER=clang++")
     export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
                       "-DCMAKE_CXX_COMPILER=clang++-13")
     export MY8SAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
@@ -519,10 +576,35 @@ mysql_cmake() {
             debug_flags+=("${MYCLANG12[@]}")
             release_flags+=("${MYCLANG12[@]}")
             ;;
+        *llvm-14*)
+            echo "Using LLVM 14"
+            debug_flags+=("${MYCLANG14[@]}")
+            release_flags+=("${MYCLANG14[@]}")
+            ;;
+        *llvm-15*)
+            echo "Using LLVM 15"
+            debug_flags+=("${MYCLANG15[@]}")
+            release_flags+=("${MYCLANG15[@]}")
+            ;;
+        *llvm-16*)
+            echo "Using LLVM 16"
+            debug_flags+=("${MYCLANG16[@]}")
+            release_flags+=("${MYCLANG16[@]}")
+            ;;
+        *llvm-17*)
+            echo "Using LLVM 17"
+            debug_flags+=("${MYCLANG17[@]}")
+            release_flags+=("${MYCLANG17[@]}")
+            ;;
         *llvm*)
             echo "Using LLVM"
             debug_flags+=("${MYCLANG[@]}")
             release_flags+=("${MYCLANG[@]}")
+            ;;
+        *gcc-13*)
+            echo "Using GCC 13"
+            debug_flags+=("${MYGCC13[@]}")
+            release_flags+=("${MYGCC13[@]}")
             ;;
     esac
 
