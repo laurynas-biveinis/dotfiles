@@ -1,0 +1,9 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
+mysql_maybe_workaround_openssl3() {
+    declare -i -r workaround=$1
+
+    if [ "$workaround" -eq 1 ]; then
+        brew unlink openssl@3
+    fi
+}

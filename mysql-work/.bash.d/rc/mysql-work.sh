@@ -33,6 +33,9 @@ set -o pipefail
 autoload mysql_find_version_file
 autoload mysql_get_major_version
 autoload mysql_get_minor_version
+autoload mysql_need_openssl3_workaround
+autoload mysql_maybe_workaround_openssl3
+autoload mysql_undo_openssl3_workaround
 
 mysql_export_environment_helpers() {
     declare -r uname_out="$(uname -s)"
@@ -633,9 +636,22 @@ mysql_cmake() {
 mysql_build() {
     git submodule update --init --recursive
     mysql_cmake "$@" || return 1
+
     declare -r build_dir="$(basename "$PWD")"
-    (cd .. && ln -sf "$build_dir/compile_commands.json" .)
+    pushd .. || return 1
+
+    ln -sf "$build_dir/compile_commands.json" .
+
+    if ! declare -i workaround_ssl3=$(mysql_need_openssl3_workaround); then
+        popd
+        return 1
+    fi
+
+    popd || return 1
+
+    mysql_maybe_workaround_openssl3 $workaround_ssl3
     ninja
+    mysql_undo_openssl3_workaround $workaround_ssl3
 }
 
 mtr() {
