@@ -498,8 +498,10 @@ See info node `(transient)Enabling and Disabling Suffixes'."
   :group 'transient-faces)
 
 (defface transient-higher-level
-  `((t (:box ( :line-width -1
-               :color ,(face-attribute 'shadow :foreground nil t)))))
+  `((t :box ( :line-width ,(if (>= emacs-major-version 28) (cons -1 -1) -1)
+              :color ,(let ((color (face-attribute 'shadow :foreground nil t)))
+                        (or (and (not (eq color 'unspecified)) color)
+                            "grey60")))))
   "Face optionally used to highlight suffixes on higher levels.
 Also see option `transient-highlight-higher-levels'."
   :group 'transient-faces)
@@ -560,13 +562,15 @@ character used to separate possible values from each other."
   :group 'transient-faces)
 
 (defface transient-nonstandard-key
-  '((t (:box (:line-width -1 :color "cyan"))))
+  `((t :box ( :line-width ,(if (>= emacs-major-version 28) (cons -1 -1) -1)
+              :color "cyan")))
   "Face optionally used to highlight keys conflicting with short-argument.
 Also see option `transient-highlight-mismatched-keys'."
   :group 'transient-faces)
 
 (defface transient-mismatched-key
-  '((t (:box (:line-width -1 :color "magenta"))))
+  `((t :box ( :line-width ,(if (>= emacs-major-version 28) (cons -1 -1) -1)
+              :color "magenta")))
   "Face optionally used to highlight keys without a short-argument.
 Also see option `transient-highlight-mismatched-keys'."
   :group 'transient-faces)
@@ -2877,7 +2881,7 @@ transient is active."
      (transient--all-levels-p
       (format "Hide suffix %s"
               (propertize
-               (format "levels > %s" (oref transient--prefix level))
+               (format "levels > %s" (oref (transient-prefix-object) level))
                'face 'transient-higher-level)))
      ("Show all suffix levels")))
   :inapt-if (lambda () (= transient-default-level transient--max-level))
@@ -2891,7 +2895,7 @@ transient is active."
 (defun transient-set ()
   "Set active transient's value for this Emacs session."
   (interactive)
-  (transient-set-value (or transient--prefix transient-current-prefix)))
+  (transient-set-value (transient-prefix-object)))
 
 (defalias 'transient-set-and-exit 'transient-set
   "Set active transient's value for this Emacs session and exit.")
@@ -2899,7 +2903,7 @@ transient is active."
 (defun transient-save ()
   "Save active transient's value for this and future Emacs sessions."
   (interactive)
-  (transient-save-value (or transient--prefix transient-current-prefix)))
+  (transient-save-value (transient-prefix-object)))
 
 (defalias 'transient-save-and-exit 'transient-save
   "Save active transient's value for this and future Emacs sessions and exit.")
@@ -2907,7 +2911,7 @@ transient is active."
 (defun transient-reset ()
   "Clear the set and saved values of the active transient."
   (interactive)
-  (transient-reset-value (or transient--prefix transient-current-prefix)))
+  (transient-reset-value (transient-prefix-object)))
 
 (defun transient-history-next ()
   "Switch to the next value used for the active transient."
