@@ -285,6 +285,25 @@
 
 (add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
 
+(defun dotfiles--read-non-existing-branch-name (prompt)
+  "Read a non-existing branch with PROMPT, stolen from `magit-branch-read-args'."
+  (let ((branch (magit-read-string-ns (concat prompt " named"))))
+    (if (magit-branch-p branch)
+        (dotfiles--read-non-existing-branch-name
+         (format "Branch `%s' already exists; pick another name" branch)))
+    branch))
+
+(defun my-magit-worktree-branch ()
+  "Create a new git branch and its worktree in a sibling dir."
+  (interactive
+   (let* ((name (dotfiles--read-non-existing-branch-name
+                 "Create branch and worktree"))
+          (absolute-path (file-truename (concat "../" name))))
+     (magit-worktree-branch absolute-path name (magit-get-current-branch)))))
+
+(transient-append-suffix 'magit-worktree '(0 0 -1)
+  '("C" "Create a branch in a sibling worktree" my-magit-worktree-branch))
+
 ;; `git-gutter'
 (require 'git-gutter)
 (setq git-gutter:update-interval 0.02)
