@@ -11,7 +11,7 @@
 ;; Package-Version: 3.3.0.50-git
 ;; Package-Requires: (
 ;;     (emacs "25.1")
-;;     (compat "29.1.3.4")
+;;     (compat "29.1.4.4")
 ;;     (dash "2.19.1")
 ;;     (seq "2.24"))
 
@@ -74,7 +74,7 @@ Once you have done that, you have to explicitly upgrade `seq':
   \\[package-upgrade] seq \\`RET'
 
 Then you also must make sure the updated version is loaded,
-by evaluating this form
+by evaluating this form:
 
   (progn (unload-feature 'seq t) (require 'seq))
 
@@ -82,7 +82,7 @@ Until you do this, you will get random errors about `seq-keep'
 being undefined while using Magit.
 
 If you don't use the `package' package manager but still get
-this warning, then that other package manager likely has a
+this warning, then your chosen package manager likely has a
 similar defect.") :emergency))
 
 (require 'cursor-sensor)

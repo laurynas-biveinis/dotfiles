@@ -3049,7 +3049,7 @@ If KEEP-BUNDLE is non-nil, the downloaded bundle file is not deleted after insta
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231204.33/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231204.33/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231204.2005/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231204.2005/transient-autoloads.el"))
 
 
 
@@ -4273,7 +4273,7 @@ this time, in which case it won't display at all.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.3/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.3/solarized-theme-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.4/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.4/solarized-theme-autoloads.el"))
 
 
 
@@ -7238,7 +7238,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20231202.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20231202.0/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20231204.1903/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20231204.1903/magit-section-autoloads.el"))
 
 
 
@@ -8195,7 +8195,7 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20231030.2243/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20231030.2243/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20231204.1839/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20231204.1839/git-commit-autoloads.el"))
 
 
 
@@ -8218,7 +8218,7 @@ See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock mod
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231202.1551/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231202.1551/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231204.1839/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20231204.1839/magit-autoloads.el"))
 
 
 
@@ -14974,7 +14974,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231202.1551" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231202.0" "/Users/laurynas/.emacs.d/elpa/org-9.6.12" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5" "/Users/laurynas/.emacs.d/elpa/transient-20231204.33" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231204.1839" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231204.1903" "/Users/laurynas/.emacs.d/elpa/org-9.6.12" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5" "/Users/laurynas/.emacs.d/elpa/transient-20231204.2005" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
