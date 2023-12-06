@@ -633,11 +633,12 @@ mysql_cmake() {
     esac
 }
 
-mysql_build() {
+mysql_build_in_build_dir() {
     git submodule update --init --recursive
     mysql_cmake "$@" || return 1
 
     declare -r build_dir="$(basename "$PWD")"
+
     pushd .. || return 1
 
     ln -sf "$build_dir/compile_commands.json" .
@@ -652,6 +653,18 @@ mysql_build() {
     mysql_maybe_workaround_openssl3 $workaround_ssl3
     ninja
     mysql_undo_openssl3_workaround $workaround_ssl3
+}
+
+mysql_build() {
+    declare -r build_type=$1
+
+    if [ -n "$build_type" ]; then
+        declare -r build_dir="_build-$build_type"
+        mkdir -p "$build_dir"
+        cd "$build_dir" || return 1
+    fi
+
+    mysql_build_in_build_dir
 }
 
 mtr() {
