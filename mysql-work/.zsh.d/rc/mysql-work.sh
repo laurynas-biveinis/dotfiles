@@ -633,6 +633,19 @@ mysql_cmake() {
     esac
 }
 
+mysql_build_with_openssl3_workaround() {
+    pushd .. || return 1
+    if ! declare -i workaround_ssl3=$(mysql_need_openssl3_workaround); then
+        popd
+        return 1
+    fi
+    popd || return 1
+
+    mysql_maybe_workaround_openssl3 $workaround_ssl3
+    ninja
+    mysql_undo_openssl3_workaround $workaround_ssl3
+}
+
 mysql_build_in_build_dir() {
     git submodule update --init --recursive
     mysql_cmake "$@" || return 1
@@ -643,16 +656,9 @@ mysql_build_in_build_dir() {
 
     ln -sf "$build_dir/compile_commands.json" .
 
-    if ! declare -i workaround_ssl3=$(mysql_need_openssl3_workaround); then
-        popd
-        return 1
-    fi
-
     popd || return 1
 
-    mysql_maybe_workaround_openssl3 $workaround_ssl3
-    ninja
-    mysql_undo_openssl3_workaround $workaround_ssl3
+    mysql_build_with_openssl3_workaround
 }
 
 mysql_build() {
@@ -677,7 +683,10 @@ mtr() {
 }
 
 rmtr() {
-    ninja -C .. || return 1
+    pushd .. || return 1
+    mysql_build_with_openssl3_workaround
+    popd || return 1
+
     mtr "$@"
 }
 
