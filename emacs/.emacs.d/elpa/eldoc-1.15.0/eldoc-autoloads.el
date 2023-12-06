@@ -66,7 +66,6 @@ See `eldoc-mode' for more information on Eldoc mode.
 Turn on `eldoc-mode' if the buffer has ElDoc support enabled.
 See `eldoc-documentation-strategy' for more detail.")
 (register-definition-prefixes "eldoc" '("eldoc"))
-
 
 ;;; End of scraped data
 

@@ -3049,7 +3049,7 @@ If KEEP-BUNDLE is non-nil, the downloaded bundle file is not deleted after insta
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231204.2005/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231204.2005/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231205.1848/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231205.1848/transient-autoloads.el"))
 
 
 
@@ -13254,7 +13254,7 @@ enable the mode if ARG is omitted or nil, and toggle it if ARG is
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/eldoc-1.14.0/eldoc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/eldoc-1.14.0/eldoc-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/eldoc-1.15.0/eldoc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/eldoc-1.15.0/eldoc-autoloads.el"))
 
 
 
@@ -13318,7 +13318,6 @@ See `eldoc-mode' for more information on Eldoc mode.
 Turn on `eldoc-mode' if the buffer has ElDoc support enabled.
 See `eldoc-documentation-strategy' for more detail.")
 (register-definition-prefixes "eldoc" '("eldoc"))
-
 
 
 (provide 'eldoc-autoloads)
@@ -14974,7 +14973,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231204.1839" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231204.1903" "/Users/laurynas/.emacs.d/elpa/org-9.6.12" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5" "/Users/laurynas/.emacs.d/elpa/transient-20231204.2005" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231204.1839" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231204.1903" "/Users/laurynas/.emacs.d/elpa/org-9.6.12" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5" "/Users/laurynas/.emacs.d/elpa/transient-20231205.1848" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:

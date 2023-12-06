@@ -5,7 +5,7 @@
 ;; Author: Noah Friedman <friedman@splode.com>
 ;; Keywords: extensions
 ;; Created: 1995-10-06
-;; Version: 1.14.0
+;; Version: 1.15.0
 ;; Package-Requires: ((emacs "26.3"))
 
 ;; This is a GNU ELPA :core package.  Avoid functionality that is not
@@ -65,7 +65,8 @@ If this variable is set to 0, display the documentation without any delay."
 (defcustom eldoc-print-after-edit nil
   "If non-nil, eldoc info is only shown after editing commands.
 Changing the value requires toggling `eldoc-mode'."
-  :type 'boolean)
+  :type 'boolean
+  :version "24.4")
 
 (defcustom eldoc-echo-area-display-truncation-message t
   "If non-nil, provide verbose help when a message has been truncated.
@@ -132,7 +133,10 @@ documentation in the echo area if the dedicated documentation
 buffer (displayed by `eldoc-doc-buffer') is already displayed in
 some window.  If the value is the symbol `maybe', then the echo area
 is only skipped if the documentation needs to be truncated there."
-  :type 'boolean)
+  :type '(choice (const :tag "Prefer ElDoc's documentation buffer" t)
+                 (const :tag "Prefer echo area" nil)
+                 (const :tag "Skip echo area if truncating" maybe))
+  :version "28.1")
 
 (defface eldoc-highlight-function-argument
   '((t (:inherit bold)))
@@ -601,25 +605,29 @@ known to be truncated."
                     'maybe)))
        (get-buffer-window eldoc--doc-buffer t)))
 
-(defun eldoc-display-in-echo-area (docs _interactive)
+(defun eldoc-display-in-echo-area (docs interactive)
   "Display DOCS in echo area.
-Honor `eldoc-echo-area-use-multiline-p' and
+INTERACTIVE is non-nil if user explictly invoked ElDoc.  Honor
+`eldoc-echo-area-use-multiline-p' and
 `eldoc-echo-area-prefer-doc-buffer'."
   (cond
-   (;; Check if we have permission to mess with echo area at all.  For
-    ;; example, if this-command is non-nil while running via an idle
-    ;; timer, we're still in the middle of executing a command, e.g. a
-    ;; query-replace where it would be annoying to overwrite the echo
-    ;; area.
-    (or
-     (not (eldoc-display-message-no-interference-p))
-     this-command
-     (not (eldoc--message-command-p last-command))))
-   (;; If we do but nothing to report, clear the echo area.
+   ((and (not interactive)
+         ;; When called non-interactively, check if we have permission
+         ;; to mess with echo area at all.  For example, if
+         ;; this-command is non-nil while running via an idle timer,
+         ;; we're still in the middle of executing a command, e.g. a
+         ;; query-replace where it would be annoying to overwrite the
+         ;; echo area.
+         (or
+          (not (eldoc-display-message-no-interference-p))
+          this-command
+          (not (eldoc--message-command-p last-command)))))
+   (;; If nothing to report, clear the echo area.
     (null docs)
     (eldoc--message nil))
    (t
-    ;; Otherwise, establish some parameters.
+    ;; Otherwise, proceed to change the echo area.  Start by
+    ;; establishing some parameters.
     (let*
         ((width (1- (window-width (minibuffer-window))))
          (val (if (and (symbolp eldoc-echo-area-use-multiline-p)
@@ -681,29 +689,34 @@ This is the default value for `eldoc-documentation-strategy'."
                     (lambda (f)
                       (funcall f (eldoc--make-callback :eager f)))))
 
-(defun eldoc--documentation-compose-1 (eagerlyp)
-  "Helper function for composing multiple doc strings.
-If EAGERLYP is non-nil show documentation as soon as possible,
-else wait for all doc strings."
-  (run-hook-wrapped 'eldoc-documentation-functions
-                    (lambda (f)
-                      (let* ((callback (eldoc--make-callback
-                                        (if eagerlyp :eager :patient)
-                                        f))
-                             (str (funcall f callback)))
-                        (if (or (null str) (stringp str)) (funcall callback str))
-                        nil)))
-  t)
-
 (defun eldoc-documentation-compose ()
   "Show multiple documentation strings together after waiting for all of them.
 This is meant to be used as a value for `eldoc-documentation-strategy'."
-  (eldoc--documentation-compose-1 nil))
+  (let (fns-and-callbacks)
+    ;; Make all the callbacks, setting up state inside
+    ;; `eldoc--invoke-strategy' to know how many callbacks to wait for
+    ;; before displaying the result (bug#62816).
+    (run-hook-wrapped 'eldoc-documentation-functions
+                      (lambda (f)
+                        (push (cons f (eldoc--make-callback :patient f))
+                              fns-and-callbacks)
+                        nil))
+    ;; Now call them.  The last one will trigger the display.
+    (cl-loop for (f . callback) in fns-and-callbacks
+             for str = (funcall f callback)
+             when (or (null str) (stringp str)) do (funcall callback str)))
+  t)
 
 (defun eldoc-documentation-compose-eagerly ()
   "Show multiple documentation strings one by one as soon as possible.
 This is meant to be used as a value for `eldoc-documentation-strategy'."
-  (eldoc--documentation-compose-1 t))
+  (run-hook-wrapped 'eldoc-documentation-functions
+                    (lambda (f)
+                      (let* ((callback (eldoc--make-callback :eager f))
+                             (str (funcall f callback)))
+                        (if (or (null str) (stringp str)) (funcall callback str))
+                        nil)))
+  t)
 
 (defun eldoc-documentation-enthusiast ()
   "Show most important documentation string produced so far.
@@ -986,7 +999,8 @@ the docstrings eventually produced, using
  "mark-paragraph" "mouse-set-point" "move-" "move-beginning-of-"
  "move-end-of-" "newline" "next-" "other-window" "pop-global-mark"
  "previous-" "recenter" "right-" "scroll-" "self-insert-command"
- "split-window-" "up-list")
+ "split-window-" "up-list" "touch-screen-handle-touch"
+ "analyze-text-conversion")
 
 (provide 'eldoc)
 

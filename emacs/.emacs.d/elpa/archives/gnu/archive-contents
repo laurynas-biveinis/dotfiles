@@ -753,6 +753,14 @@
 		  ("Simen Heggestøyl" . "simenheg@gmail.com"))
 		 (:keywords "convenience")
 		 (:url . "http://elpa.gnu.org/packages/cycle-quotes.html"))])
+ (dape .
+       [(0 2 2)
+	((emacs
+	  (29 1)))
+	"Debug Adapter Protocol for Emacs" tar
+	((:url . "https://github.com/svaante/dape")
+	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
+	 (:commit . "a8e56d3767e1b063f6c49a6081ca4e22afdfaaaf"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -1157,7 +1165,7 @@
 	      (:keywords "lisp")
 	      (:url . "http://elpa.gnu.org/packages/el-search.html"))])
  (eldoc .
-	[(1 14 0)
+	[(1 15 0)
 	 ((emacs
 	   (26 3)))
 	 "Show function arglist or variable docstring in echo area" tar
@@ -1166,7 +1174,7 @@
 	  (:authors
 	   ("Noah Friedman" . "friedman@splode.com"))
 	  (:url . "https://elpa.gnu.org/packages/eldoc.html")
-	  (:commit . "f2357df91f0262949618bd4da571d3267c1b1dfa"))])
+	  (:commit . "dc744fe6f3cd185bd9d29f61b08cd4c524e3969e"))])
  (electric-spacing .
 		   [(5 0)
 		    nil "Insert operators with surrounding spaces smartly" single
@@ -3221,14 +3229,14 @@
 	     (:url . "https://elpa.gnu.org/packages/rnc-mode.html")
 	     (:commit . "dfee31d83208b734ed1d1fdc523565d7056db850"))])
  (rt-liberation .
-		[(5)
+		[(6)
 		 nil "Emacs interface to RT" tar
 		 ((:url . "http://www.nongnu.org/rtliber/")
 		  (:keywords "rt" "tickets")
 		  (:maintainer "Yoni Rabkin" . "yrk@gnu.org")
 		  (:authors
 		   ("Yoni Rabkin" . "yrk@gnu.org"))
-		  (:commit . "b76ae2828b12efc5f45f51ba873489e049a70924"))])
+		  (:commit . "c97eff6716c2438f9052b4641fa6128bf759af96"))])
  (ruby-end .
 	   [(0 4 3)
 	    nil "Automatic insertion of end blocks for Ruby" tar
@@ -3860,7 +3868,7 @@
 		("David Gonzalez Gandara" . "dggandara@member.fsf.org"))
 	       (:maintainer "David Gonzalez Gandara" . "dggandara@member.fsf.org"))])
  (transient .
-	    [(0 5 0)
+	    [(0 5 2)
 	     ((emacs
 	       (26 1))
 	      (compat
@@ -3873,7 +3881,7 @@
 	      (:maintainer "Jonas Bernoulli" . "jonas@bernoul.li")
 	      (:authors
 	       ("Jonas Bernoulli" . "jonas@bernoul.li"))
-	      (:commit . "9050a0d058041e5e54d4e16359fd061e779c2ecb"))])
+	      (:commit . "2c8b50231b11d354b60709c361f2dfbc4cb8163d"))])
  (transient-cycles .
 		   [(1 0)
 		    ((emacs
