@@ -554,7 +554,7 @@ mysql_cmake() {
             ;;
     esac
 
-    build_dir="$(basename "$PWD")"
+    declare -r build_dir="$(basename "$PWD")"
 
     case "$build_dir" in
         *san*)
