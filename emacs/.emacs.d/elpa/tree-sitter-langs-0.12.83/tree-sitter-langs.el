@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.82
+;; Version: 0.12.83
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -162,6 +162,7 @@ See `tree-sitter-langs-repos'."
                 (julia-mode             . julia)
                 (kotlin-mode            . kotlin)
                 (latex-mode             . latex)
+                (llvm-mode              . llvm)
                 (lua-mode               . lua)
                 (makefile-mode          . make)
                 (makefile-automake-mode . make)
