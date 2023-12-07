@@ -5,6 +5,11 @@ mysql_need_openssl3_workaround() {
     autoload mysql_get_major_version
     autoload mysql_get_minor_version
 
+    if [ "$(uname s)" != "Darwin" ]; then
+        echo 0
+        return 0
+    fi
+
     if ! declare -r version_file=$(mysql_find_version_file); then
         return 1
     fi
