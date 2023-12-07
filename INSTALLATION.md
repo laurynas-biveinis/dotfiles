@@ -9,7 +9,7 @@ git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git
 
 Create `~/.zshenv_private`, if needed for any environment variables whose names
 or values should be private or just different between systems, i.e. `NAME`,
-`ORGANIZATION`, `MAKE_J`. Then `chmod 600` it.
+`ORGANIZATION`. Then `chmod 600` it.
 
 Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 "emacs nightly".
@@ -19,13 +19,14 @@ If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
 Create potentially-empty directories so that `stow` does not symlink them:
 
 ```zsh
+cd
 mkdir .gnupg
 chmod 700 .gnupg
 mkdir -p usr usr/bin usr/src vilniusdb
 ```
 
-Check that existing `~/.zshenv` and `~/.zshrc` files are OK to overwrite, rm
-them, and
+Check that existing `~/.ssh/config`, `~/.zshenv` & `~/.zshrc` files are OK to
+overwrite, rm them, and
 `cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
 
 If "emacs" is enabled in `dotfiles/extra_modules`, then
@@ -48,10 +49,10 @@ brew install wakatime-cli
 On Linux
 
 ```bash
-pip3 install wakatime
+pipx install wakatime
 ```
 
-If using `zsh`, done. If using `bash`, then
+If using `bash`, then
 
 ```bash
 cd ~/usr/src
