@@ -108,6 +108,7 @@ mysql_export_environment_helpers() {
             "--mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1"
             "--mysqld-env=DYLD_INSERT_LIBRARIES=$emd_libdir/libeatmydata.dylib")
     else
+        declare -a -r my8_cxx_flags=()
         declare -a my8018_extra=()
         declare -a my8018_28=()
         declare -a -r my8018_28_cxx_flags=("-Wno-unused-label")
