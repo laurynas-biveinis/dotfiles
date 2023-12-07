@@ -633,7 +633,7 @@ mysql_cmake() {
     esac
 }
 
-mysql_build_with_openssl3_workaround() {
+mysql_rebuild() {
     pushd .. || return 1
     if ! declare -i workaround_ssl3=$(mysql_need_openssl3_workaround); then
         popd
@@ -658,7 +658,7 @@ mysql_build_in_build_dir() {
 
     popd || return 1
 
-    mysql_build_with_openssl3_workaround
+    mysql_rebuild
 }
 
 mysql_build() {
@@ -684,7 +684,7 @@ mtr() {
 
 rmtr() {
     pushd .. || return 1
-    mysql_build_with_openssl3_workaround
+    mysql_rebuild
     popd || return 1
 
     mtr "$@"
