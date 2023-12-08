@@ -41,6 +41,7 @@
 (require 'jit-lock)
 (require 'font-core)
 (require 'font-lock)
+(require 'map)
 
 (defface all-the-icons-dired-dir-face
   '((t (:inherit dired-directory)))
