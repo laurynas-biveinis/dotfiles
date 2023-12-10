@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.83
+;; Version: 0.12.86
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -98,7 +98,8 @@ See `tree-sitter-langs-repos'."
   "Link known major modes to languages provided by the bundle."
   (dolist
       (entry (reverse
-              '((ada-mode               . ada)
+              '((actionscript-mode      . actionscript)
+                (ada-mode               . ada)
                 (agda-mode              . agda)
                 (agda2-mode             . agda)
                 (arduino-mode           . arduino)
@@ -163,6 +164,7 @@ See `tree-sitter-langs-repos'."
                 (kotlin-mode            . kotlin)
                 (latex-mode             . latex)
                 (llvm-mode              . llvm)
+                (llvm-mir-mode          . llvm-mir)
                 (lua-mode               . lua)
                 (makefile-mode          . make)
                 (makefile-automake-mode . make)
@@ -179,9 +181,11 @@ See `tree-sitter-langs-repos'."
                 (pascal-mode            . pascal)
                 (perl-mode              . perl)
                 (php-mode               . php)
+                (qss-mode               . css)
                 (prisma-mode            . prisma)
                 (python-mode            . python)
                 (pygn-mode              . pgn)
+                (racket-mode            . racket)
                 (rjsx-mode              . javascript)
                 (rst-mode               . rst)
                 (ruby-mode              . ruby)
@@ -193,12 +197,14 @@ See `tree-sitter-langs-repos'."
                 (smithy-mode            . smithy)
                 (sql-mode               . sql)
                 (swift-mode             . swift)
+                (tablegen-mode          . tablegen)
                 (toml-mode              . toml)
                 (conf-toml-mode         . toml)
                 (tcl-mode               . tcl)
                 (tuareg-mode            . ocaml)
                 (twig-mode              . twig)
                 (typescript-mode        . typescript)
+                (typescript-tsx-mode    . tsx)
                 (typst-mode             . typst)
                 (verilog-mode           . verilog)
                 (vhdl-mode              . vhdl)
