@@ -962,7 +962,15 @@ nothing else.
 
 If invoked outside any log buffer, then display the log buffer
 of the current repository first; creating it if necessary."
-  (interactive (list (magit-read-branch-or-commit "In log, jump to")))
+  (interactive
+   (list (or (magit-completing-read
+              "In log, jump to"
+              (magit-list-refnames nil t)
+              nil nil nil 'magit-revision-history
+              (or (and-let* ((rev (magit-commit-at-point)))
+                    (magit-rev-fixup-target rev))
+                  (magit-get-current-branch)))
+             (user-error "Nothing selected"))))
   (with-current-buffer
       (cond ((derived-mode-p 'magit-log-mode)
              (current-buffer))
@@ -1788,7 +1796,6 @@ Type \\[magit-cherry-pick] to apply the commit at point.
     (magit-buffer-range (concat upstream ".." head))))
 
 (defun magit-cherry-refresh-buffer ()
-  (setq magit-section-inhibit-markers t)
   (setq magit-section-insert-in-reverse t)
   (magit-insert-section (cherry)
     (magit-run-section-hook 'magit-cherry-sections-hook)))
