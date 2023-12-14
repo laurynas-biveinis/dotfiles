@@ -666,6 +666,11 @@ mysql_build() {
     declare -r build_type=$1
 
     if [ -n "$build_type" ]; then
+        declare -r cur_dir_name="$(basename "$PWD")"
+        if [[ $cur_dir_name == "_build-"* ]]; then
+            2>&1 echo "Build type given but already in a build dir"
+            return 1
+        fi
         declare -r build_dir="_build-$build_type"
         mkdir -p "$build_dir"
         cd "$build_dir" || return 1
