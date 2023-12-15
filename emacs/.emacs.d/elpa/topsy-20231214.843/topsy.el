@@ -4,10 +4,8 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; URL: https://github.com/alphapapa/topsy.el
-;; Package-Version: 20230414.1738
-;; Package-Commit: 149ee929dad667fd7668728d9b59dedb0183dfe5
 ;; Version: 0.1-pre
-;; Package-Requires: ((emacs "26.3"))
+;; Package-Requires: ((emacs "26.3") (compat "29.1"))
 ;; Keywords: convenience
 
 ;;;; License:
@@ -27,9 +25,10 @@
 
 ;;; Commentary:
 
-;; This library shows a sticky header at the top of the window.  The
-;; header shows which definition the top line of the window is within.
-;; Intended as a simple alternative to `semantic-stickyfunc-mode`.
+;; This library shows a sticky header at the top of the window,
+;; intended as a simple alternative to `semantic-stickyfunc-mode'.
+;; The header shows which top-level definition or form the top line of
+;; the window is within.
 
 ;; Mode-specific functions may be added to `topsy-mode-functions'.
 
@@ -40,7 +39,14 @@
 
 ;;;; Requirements
 
+(require 'cl-lib)
 (require 'subr-x)
+
+(eval-when-compile
+  (require 'eieio)
+  (require 'magit-section nil t))
+
+(require 'compat)
 
 ;;;; Variables
 
@@ -112,32 +118,36 @@ Return non-nil if the minor mode is enabled."
     (save-excursion
       (goto-char (window-start))
       (beginning-of-defun)
-      (font-lock-ensure (point) (point-at-eol))
-      (buffer-substring (point) (point-at-eol)))))
+      (font-lock-ensure (point) (pos-eol))
+      (buffer-substring (point) (pos-eol)))))
 
+(declare-function magit-current-section "magit-section" nil t)
+(declare-function magit-section-ident "magit-section" nil t)
+(declare-function magit-section-up "magit-section" nil t)
+(declare-function eieio-oref "eieio-core" nil t)
 (defun topsy--magit-section ()
   "Return the header line in a `magit-section-mode' buffer."
-  (cl-labels ((level-of
-               (section) (length (magit-section-ident section)))
-              (parent-of
-               (section) (save-excursion
-                           (goto-char (oref section start))
-                           (let ((old-level (level-of section))
-                                 (old-pos (point)))
-                             (magit-section-up)
-                             (when (and (/= old-level (level-of (magit-current-section)))
-                                        (/= old-pos (point)))
-                               (magit-current-section))))))
+  (cl-labels ((level-of (section)
+                (length (magit-section-ident section)))
+              (parent-of (section)
+                (save-excursion
+                  (goto-char (eieio-oref section 'start))
+                  (let ((old-level (level-of section))
+                        (old-pos (point)))
+                    (magit-section-up)
+                    (when (and (/= old-level (level-of (magit-current-section)))
+                               (/= old-pos (point)))
+                      (magit-current-section))))))
     (save-excursion
       (goto-char (window-start))
       (when-let (strings
 		 (cl-loop with current-section = (magit-current-section)
                           when (and (oref current-section content)
-                                    (/= (window-start) (oref current-section start)))
+                                    (/= (window-start) (eieio-oref current-section 'start)))
                           collect (string-trim
 				   (buffer-substring
-				    (oref current-section start)
-				    (oref current-section content)))
+				    (eieio-oref current-section 'start)
+				    (eieio-oref current-section 'content)))
                           for parent-section = (parent-of current-section)
                           while parent-section
                           do (setf current-section parent-section)))

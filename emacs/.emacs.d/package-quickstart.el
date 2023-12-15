@@ -4061,10 +4061,12 @@ Email address to send bug reports to.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/topsy-20230414.1738/topsy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/topsy-20230414.1738/topsy-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/topsy-20231214.843/topsy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/topsy-20231214.843/topsy-autoloads.el"))
 
-(add-to-list 'load-path (directory-file-name
-                         (or (file-name-directory "/Users/laurynas/.emacs.d/elpa/topsy-20230414.1738/topsy-autoloads.el") (car load-path))))
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
 
 
 
@@ -4073,11 +4075,13 @@ Minor mode to show a simple sticky header.
 With prefix argument ARG, turn on if positive, otherwise off.
 Return non-nil if the minor mode is enabled.
 
-\(fn &optional ARG)" t nil)
-
+(fn &optional ARG)" t)
 (register-definition-prefixes "topsy" '("topsy-"))
-
 
+
+(provide 'topsy-autoloads)
+
+
 )
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/stripe-buffer-0.2.5/stripe-buffer-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/stripe-buffer-0.2.5/stripe-buffer-autoloads.el"))
 
@@ -11141,7 +11145,7 @@ Save keyfreq data now.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.18/jsonrpc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.18/jsonrpc-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.19/jsonrpc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.19/jsonrpc-autoloads.el"))
 
 
 
@@ -14382,7 +14386,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20231206.1357/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20231206.1357/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20231214.1547/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-20231214.1547/cmake-mode-autoloads.el"))
 
 
 
