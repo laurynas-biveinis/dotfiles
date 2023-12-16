@@ -555,6 +555,9 @@ mysql_cmake() {
             ;;
     esac
 
+    # build directory can be named arbitrarily as long as it starts with a
+    # "_build-" prefix. The build type is determined by the presence of certain
+    # substrings in the name.
     declare -r build_dir="$(basename "$PWD")"
 
     case "$build_dir" in
