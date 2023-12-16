@@ -647,12 +647,15 @@ mysql_rebuild() {
 
     mysql_maybe_workaround_openssl3 $workaround_ssl3
     ninja
+    declare -i -r ninja_status=$?
     mysql_undo_openssl3_workaround $workaround_ssl3
+
+    return ninja_status
 }
 
 mysql_build_in_build_dir() {
-    git submodule update --init --recursive
-    mysql_cmake "$@" || return 1
+    git submodule update --init --recursive || return $?
+    mysql_cmake "$@" || return $?
 
     declare -r build_dir="$(basename "$PWD")"
 
@@ -694,7 +697,11 @@ mtr() {
 rmtr() {
     pushd .. || return 1
     mysql_rebuild
+    declare -i -r build_status=$?
     popd || return 1
+    if [ $build_status -ne 0 ]; then
+        return $build_status
+    fi
 
     mtr "$@"
 }
