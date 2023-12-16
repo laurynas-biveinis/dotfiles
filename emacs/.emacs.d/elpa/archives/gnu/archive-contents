@@ -1064,7 +1064,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:commit . "f155d19c528e27f8f6c72f0d75f652edbdcab37f"))])
  (ebdb .
-       [(0 8 18)
+       [(0 8 19)
 	((emacs
 	  (25 1))
 	 (seq
@@ -1075,7 +1075,7 @@
 	 (:maintainer "Eric Abrahamsen" . "eric@ericabrahamsen.net")
 	 (:authors
 	  ("Eric Abrahamsen" . "eric@ericabrahamsen.net"))
-	 (:commit . "18de048be8a560b367e7839b19c873b9753f3ec1"))])
+	 (:commit . "afb649a7ddde1b45ca3855038ee1bb7673160b7a"))])
  (ebdb-gnorb .
 	     [(1 0 2)
 	      ((gnorb
@@ -2020,7 +2020,7 @@
 	       ("Simen Heggestøyl" . "simenheg@gmail.com"))
 	      (:maintainer "Simen Heggestøyl" . "simenheg@gmail.com"))])
  (jsonrpc .
-	  [(1 0 19)
+	  [(1 0 20)
 	   ((emacs
 	     (25 2)))
 	   "JSON-RPC library" tar
@@ -2029,7 +2029,7 @@
 	    (:authors
 	     ("João Távora" . "joaotavora@gmail.com"))
 	    (:url . "https://elpa.gnu.org/packages/jsonrpc.html")
-	    (:commit . "ea29a48da13d6e6b87a3b017bcf92689bc18ca54"))])
+	    (:commit . "9e24cde227a1bf2e1f0c005ca16b2a70e704ff5c"))])
  (jumpc .
 	[(3 1)
 	 nil "jump to previous insertion points" tar

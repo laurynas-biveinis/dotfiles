@@ -11145,7 +11145,7 @@ Save keyfreq data now.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.19/jsonrpc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.19/jsonrpc-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.20/jsonrpc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.20/jsonrpc-autoloads.el"))
 
 
 
