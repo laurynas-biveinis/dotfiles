@@ -3049,7 +3049,7 @@ If KEEP-BUNDLE is non-nil, the downloaded bundle file is not deleted after insta
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231205.1848/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231205.1848/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231216.1908/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20231216.1908/transient-autoloads.el"))
 
 
 
@@ -14977,7 +14977,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231213.2338" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231213.48" "/Users/laurynas/.emacs.d/elpa/org-9.6.13" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5" "/Users/laurynas/.emacs.d/elpa/transient-20231205.1848" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20231213.2338" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20231213.48" "/Users/laurynas/.emacs.d/elpa/org-9.6.13" "/Users/laurynas/.emacs.d/elpa/tramp-2.6.1.5" "/Users/laurynas/.emacs.d/elpa/transient-20231216.1908" "/Users/laurynas/.emacs.d/elpa/dash-20230714.723" "/Users/laurynas/.emacs.d/elpa/with-editor-20230917.958" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
