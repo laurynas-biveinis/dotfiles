@@ -4,6 +4,7 @@ mysql_need_openssl3_workaround() {
     autoload mysql_find_version_file
     autoload mysql_get_major_version
     autoload mysql_get_minor_version
+    autoload mysql_get_patch_level
 
     if [ "$(uname -s)" != "Darwin" ]; then
         echo 0
@@ -22,7 +23,13 @@ mysql_need_openssl3_workaround() {
         return 1
     fi
 
-    if [ "$major_ver" -le 8 ] && [ "$minor_ver" -le 32 ]; then
+    if ! declare -i -r patch_level=$(mysql_get_patch_level "$version_file"); then
+        return 1
+    fi
+
+    if [ "$major_ver" -lt 8 ] ||
+           [ "$major_ver" -eq 8 ] && [ "$minor_ver" -eq 0 ] &&
+               [ "$patch_level" -le 32 ]; then
         # MySQL versions <= 8.0.32 will fail to build if both OpenSSL 1.1 and
         # OpenSSL 3 from Homebrew are installed and linked, because system
         # wide-installed version 3 headers will take precedence over version 1.1

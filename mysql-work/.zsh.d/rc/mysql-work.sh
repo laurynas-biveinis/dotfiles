@@ -33,6 +33,7 @@ set -o pipefail
 autoload mysql_find_version_file
 autoload mysql_get_major_version
 autoload mysql_get_minor_version
+autoload mysql_get_patch_level
 autoload mysql_need_openssl3_workaround
 autoload mysql_maybe_workaround_openssl3
 autoload mysql_undo_openssl3_workaround
@@ -431,8 +432,11 @@ mysql_cmake() {
         return 1
     fi
 
-    declare -r patch_level_str=$(grep MYSQL_VERSION_PATCH "$version_file")
-    declare -i -r patch_level="${patch_level_str//[^0-9]/}"
+    if ! declare -i -r patch_level=$(mysql_get_patch_level "$version_file");
+    then
+        popd
+        return 1
+    fi
 
     declare -r flavor=$(mysql_determine_flavor "$version_file")
 
