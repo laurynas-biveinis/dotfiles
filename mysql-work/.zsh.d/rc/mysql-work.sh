@@ -420,6 +420,7 @@ mysql_determine_flavor() {
     return 0
 }
 
+# Any arguments will passed through to CMake
 mysql_cmake() {
     pushd .. || return 1
 
