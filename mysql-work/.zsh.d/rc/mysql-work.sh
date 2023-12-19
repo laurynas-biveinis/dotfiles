@@ -100,6 +100,8 @@ mysql_export_environment_helpers() {
                           "-DCMAKE_AR=$brew/llvm@17/bin/llvm-ar")
         export MYCLANG=("-DCMAKE_C_COMPILER=$brew/llvm/bin/clang"
                         "-DCMAKE_CXX_COMPILER=$brew/llvm/bin/clang++")
+        export MYGCC11=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-11"
+                        "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-11")
         export MYGCC12=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-12"
                         "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-12")
         export MYGCC13=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-13"
@@ -133,6 +135,8 @@ mysql_export_environment_helpers() {
                           "-DCMAKE_CXX_COMPILER=clang++-17")
         export MYCLANG=("-DCMAKE_C_COMPILER=clang"
                         "-DCMAKE_CXX_COMPILER=clang++")
+        export MYGCC11=("-DCMAKE_C_COMPILER=gcc-11"
+                        "-DCMAKE_CXX_COMPILER=g++-11")
         export MYGCC12=("-DCMAKE_C_COMPILER=gcc-12"
                         "-DCMAKE_CXX_COMPILER=g++-12")
         export MYGCC13=("-DCMAKE_C_COMPILER=gcc-13"
@@ -625,6 +629,11 @@ mysql_cmake() {
             echo "Using LLVM"
             debug_flags+=("${MYCLANG[@]}")
             release_flags+=("${MYCLANG[@]}")
+            ;;
+        *gcc-11*)
+            echo "Using GCC 11"
+            debug_flags+=("${MYGCC11[@]}")
+            release_flags+=("${MYGCC11[@]}")
             ;;
         *gcc-12*)
             echo "Using GCC 12"
