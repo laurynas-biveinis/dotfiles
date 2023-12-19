@@ -26,13 +26,16 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      lcov cpufrequtils libboost-dev libboost-doc cppcheck iwyu cpuset \
      python3-pip g++-12 gcc-12-doc libstdc++-12-doc g++-10 gcc-10-doc \
      clang-14-doc ninja-build cmake-format clang-tidy neovim man-db lynis \
-     shellcheck htop jq bat cpplint duf exa clang-16-doc clang-17 clang-17-doc \
+     shellcheck htop jq bat cpplint duf exa python3-pandas pipx gcc-11 g++-11 \
+     gcc-11-doc
+# Ubuntu 23.04
+sudo apt-get install clang-16-doc clang-17 clang-17-doc \
      clang-format-17 clang-tidy-17 clang-tools-17 clangd-17 lld-17 llvm-17 \
-     llvm-17-doc llvm-17-tools python3-pandas pipx
+     llvm-17-doc llvm-17-tools
 # DeepState
 sudo apt-get install libc6-dev-i386
 # Not found on AWS EC2
-sudo apt-get install acpi python3-pip python3-doc
+sudo apt-get install acpi python3-doc
 # Not named fd by default because fdclone (which I don't use) was first
 sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # So that I can have "gsed" as a GNU Sed on any platform

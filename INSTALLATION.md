@@ -1,6 +1,6 @@
 # Installation
 
-```zsh
+```sh
 cd
 git clone --recurse-submodules git@github.com:laurynas-biveinis/dotfiles.git
 cd dotfiles
@@ -16,9 +16,31 @@ Create `~/dotfiles/dotfiles/extra_modules` with extra modules to include, e.g.
 
 If "nightly" is one of those modules, `mkdir -p ~/Library/LaunchAgents`
 
+If "wakatime" is enabled then, on macOS
+
+```sh
+brew install wakatime-cli
+```
+
+On Linux
+
+```sh
+pipx install wakatime
+```
+
+If using `bash`, then
+
+```sh
+cd ~/usr/src
+git clone https://github.com/gjsheep/bash-wakatime.git
+```
+
+put .wakatime.cfg into $HOME, `chmod 600` it.
+
+
 Create potentially-empty directories so that `stow` does not symlink them:
 
-```zsh
+```sh
 cd
 mkdir .gnupg
 chmod 700 .gnupg
@@ -31,7 +53,7 @@ overwrite, rm them, and
 
 If "emacs" is enabled in `dotfiles/extra_modules`, then
 
-```zsh
+```sh
 ln -sf $HOME/Documents/secrets.el $HOME/secrets.el
 ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 ```
@@ -40,29 +62,9 @@ In Emacs, do `(all-the-icons-install-fonts)`.
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
-If "wakatime" is enabled then, on macOS
-
-```zsh
-brew install wakatime-cli
-```
-
-On Linux
-
-```bash
-pipx install wakatime
-```
-
-If using `bash`, then
-
-```bash
-cd ~/usr/src
-git clone https://github.com/gjsheep/bash-wakatime.git
-```
-
-put .wakatime.cfg into $HOME, `chmod 600` it.
 
 Change shell:
 
-```bash
+```sh
 chsh
 ```
