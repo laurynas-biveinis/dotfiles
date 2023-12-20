@@ -319,8 +319,6 @@ sudo chflags nohidden /Volumes
 # brew
 #
 brew update
-# gnupg@2.2 because gnugp (which was 2.4.2 at the time of writing this) hangs
-# when called from Emacs EasyPG.
 brew install stow git ncdu gnupg@2.2 coreutils fzf hexyl tldr lynis curl java \
      shellcheck wget hunspell llvm llvm@16 duti grep ghostscript pinentry-mac \
      htop findutils libtool npm fd delta jq colordiff iwyu cppcheck infer \
@@ -329,9 +327,14 @@ brew install stow git ncdu gnupg@2.2 coreutils fzf hexyl tldr lynis curl java \
      libeatmydata duf exa clang-build-analyzer recode ninja difftastic git-lfs
 git lfs install
 brew link protobuf@21
-brew link gnupg@2.2
 sudo ln -sf /opt/homebrew/opt/llvm@16/bin/clang-format \
      /usr/local/bin/clang-format
+
+# gnupg@2.2.41 because newer versions up to 2.4.3 inclusive hang when called
+# from Emacs EasyPG.
+brew tap pgpbpadilla/pgpb
+brew install gnupg@2.2.41
+
 #
 # App Store
 #
