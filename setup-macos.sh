@@ -45,35 +45,24 @@ defaults write -g AppleKeyboardUIMode -int 3
 #
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 35
-# Go to System Preferences -> Keyboard -> Shortcuts -> Input Sources, uncheck
-# "Select the previous input source" and "Select next source in Input menu"
-# The commands below do:
-# - "Keyboard" group: uncheck "Turn keyboard access on or off ^F1"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 12 \
-         "{enabled = 0; value = { parameters = (65535, 97, 8650752); type = 'standard'; }; }"
-# - uncheck "Mission Control ^-up" and "Application windows ^-down"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 32 \
-         "{enabled = 0; value = { parameters = (65535, 126, 8650752); type = 'standard'; }; }"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 33 \
-         "{enabled = 0; value = { parameters = (65535, 125, 8650752); type = 'standard'; }; }"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 34 \
-         "{enabled = 0; value = { parameters = (65535, 126, 8781824); type = 'standard'; }; }"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 35 \
-         "{enabled = 0; value = { parameters = (65535, 125, 8781824); type = 'standard'; }; }"
-# - uncheck "Mission Control": "Move left a space", "Move right a space", and
-# next/previous keyboard input source
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 60 \
-         "{enabled = 0; value = { parameters = (32, 49, 262144); type = 'standard'; }; }"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 61 \
-         "{enabled = 0; value = { parameters = (32, 49, 786432); type = 'standard'; }; }"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 79 \
-         "{enabled = 0; value = { parameters = (65535, 123, 8650752); type = 'standard'; }; }"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 80 \
-         "{enabled = 0; value = { parameters = (65535, 123, 8781824); type = 'standard'; }; }"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 81 \
-         "{enabled = 0; value = { parameters = (65535, 124, 8650752); type = 'standard'; }; }"
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 82 \
-         "{enabled = 0; value = { parameters = (65535, 124, 8781824); type = 'standard'; }; }"
+
+# Go to System Preferences -> Keyboard -> Keyboard Shortcuts:
+# - Input Sources: uncheck:
+#   - "Select the previous input source"
+#   - "Select next source in Input menu"
+# - Keyboard: uncheck:
+#   - "Turn keyboard access on or off ^F1"
+# - Mission Control: uncheck
+#   - "Mission Control ^-up"
+#   - "Application windows ^-down"
+#   - "Move left a space"
+#   - "Move right a space",
+#   - next/previous keyboard input source
+#   - "Show Desktop"
+# There used to some defaults write ... -dict-add commands here, but they will
+# not work without removing old dictionary entries too, which "defaults" cannot
+# do. It should be possible to do that through XML plist, but I haven't gotten
+# around that yet.
 
 # Esc closes autocompletion
 defaults write -g NSUseSpellCheckerForCompletions -bool false
