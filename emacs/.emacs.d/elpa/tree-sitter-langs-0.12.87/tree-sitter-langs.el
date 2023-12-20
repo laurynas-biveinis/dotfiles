@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.86
+;; Version: 0.12.87
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -104,10 +104,12 @@ See `tree-sitter-langs-repos'."
                 (agda2-mode             . agda)
                 (arduino-mode           . arduino)
                 (astro-mode             . astro)
-                (fasm-mode              . asm)
                 (fish-mode              . fish)
+                (asm-mode               . asm)
+                (fasm-mode              . asm)
                 (masm-mode              . asm)
                 (nasm-mode              . asm)
+                (gas-mode               . asm)
                 (sh-mode                . bash)
                 (beancount-mode         . beancount)
                 (bibtex-mode            . bibtex)
