@@ -11286,7 +11286,7 @@ and toggle it if ARG is `toggle'; disable the mode otherwise.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20231206.600/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20231206.600/async-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-20231222.1139/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-20231222.1139/async-autoloads.el"))
 
 
 
