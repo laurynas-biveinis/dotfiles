@@ -428,6 +428,10 @@
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 
+;; Do not enable `tree-sitter' on `org-mode' due to a large performance penalty
+;; on large buffers.
+(assoc-delete-all 'org-mode tree-sitter-major-mode-language-alist)
+
 (global-tree-sitter-mode)
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
