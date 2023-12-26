@@ -160,13 +160,15 @@
 ;; `flyspell'
 (require 'flyspell)
 
+(setq flyspell-issue-message-flag nil)
+
 ;; Pixel height is 20, compatible with `flycheck-status-emoji-mode' settings.
 (setq flyspell-mode-line-string " ✏️")
 
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'text-mode-hook #'turn-on-flyspell)
 
-;; `goto-address-mode' integration with `flyspell': do not create `flypsell'
+;; `goto-address-mode' integration with `flyspell': do not create `flyspell'
 ;; overlays, if a `goto-address' one already exists at the location. Otherwise
 ;; a mouse click would offer spelling corrections instead of going to the URL.
 
