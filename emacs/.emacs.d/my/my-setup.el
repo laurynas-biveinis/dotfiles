@@ -113,6 +113,12 @@
 
 (global-font-lock-mode 1)
 
+;; For scrolling, as of 29.1, `pixel-scroll-precision-mode' should not be
+;; enabled. Maybe it's due to macOS-specific patches in the port I'm using?
+
+;; Minibuffer
+(push #'set-multi-message set-message-functions)
+
 ;; Show matching parents
 (require 'paren)
 (setq show-paren-style 'mixed)
