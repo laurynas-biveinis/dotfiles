@@ -73,8 +73,6 @@
 (require 'dired-aux)
 (setq dired-create-destination-dirs 'ask)
 
-(with-eval-after-load "dired" (load "dired-x"))
-
 (require 'dired-async)
 (dired-async-mode 1)
 
