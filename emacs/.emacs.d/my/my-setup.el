@@ -158,6 +158,8 @@
 (setq ispell-choices-win-default-height 3)
 
 ;; `flyspell'
+;; TODO(laurynas): slow scrolling in `org-mode' buffers. Profiler shows
+;; significant CPU spent in `flyspell-post-command-hook'.
 (require 'flyspell)
 
 (setq flyspell-issue-message-flag nil)
