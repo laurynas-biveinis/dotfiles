@@ -38,6 +38,14 @@ autoload mysql_need_openssl3_workaround
 autoload mysql_maybe_workaround_openssl3
 autoload mysql_undo_openssl3_workaround
 
+mysql_export_build_defaults() {
+    # The default build type for mysql_build if not in a build dir and no build
+    # type was passed
+    export MY_DEFAULT_BUILD_TYPE="debug"
+    # The prefix for the build directories
+    export MY_BUILD_DIR_PREFIX="_build-"
+}
+
 mysql_export_environment_helpers() {
     declare -r uname_out="$(uname -s)"
 
@@ -569,8 +577,8 @@ mysql_cmake() {
     esac
 
     # build directory can be named arbitrarily as long as it starts with a
-    # "_build-" prefix. The build type is determined by the presence of certain
-    # substrings in the name.
+    # $MY_BUILD_DIR_PREFIX. The build type is determined by the presence of
+    # certain substrings in the name.
     declare -r build_dir="$(basename "$PWD")"
 
     case "$build_dir" in
@@ -691,18 +699,25 @@ mysql_build_in_build_dir() {
     mysql_rebuild
 }
 
-mysql_build() {
+mysql_cd_into_build_dir() {
     declare -r build_type=$1
+    declare -r build_dir="$MY_BUILD_DIR_PREFIX-$build_type"
+    mkdir -p "$build_dir"
+    cd "$build_dir" || return 1
+}
 
-    if [ -n "$build_type" ]; then
-        declare -r cur_dir_name="$(basename "$PWD")"
-        if [[ $cur_dir_name == "_build-"* ]]; then
+mysql_build() {
+    declare -r build_type_arg=$1
+    declare -r cur_dir_name="$(basename "$PWD")"
+
+    if [ -n "$build_type_arg" ]; then
+        if [[ $cur_dir_name == "$MY_BUILD_DIR_PREFIX"* ]]; then
             2>&1 echo "Build type given but already in a build dir"
             return 1
         fi
-        declare -r build_dir="_build-$build_type"
-        mkdir -p "$build_dir"
-        cd "$build_dir" || return 1
+        mysql_cd_into_build_dir "$build_type_arg" || return 1
+    elif [[ $cur_dir_name != "$MY_BUILD_DIR_PREFIX"* ]]; then
+        mysql_cd_into_build_dir "$MY_DEFAULT_BUILD_TYPE" || return 1
     fi
 
     mysql_build_in_build_dir
@@ -733,6 +748,7 @@ rm_tmp_mtr() {
     rm -rf /tmp/mtr-* /tmp/router-* /tmp/mysqld-* /tmp/mysql-unique-ids
 }
 
+mysql_export_build_defaults
 mysql_export_environment_helpers
 
 # Workaround P10K going crazy
