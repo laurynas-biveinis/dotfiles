@@ -10,6 +10,8 @@ sudo update-locale
 
 sudo apt-get install net-tools
 
+# On the first SSH login allow Fig to install!
+
 # Common
 sudo apt-get update
 sudo apt-get dist-upgrade
@@ -33,7 +35,7 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
 sudo apt-get install clang-16-doc clang-17 clang-17-doc \
      clang-format-17 clang-tidy-17 clang-tools-17 clangd-17 lld-17 llvm-17 \
      llvm-17-doc llvm-17-tools
-# DeepState
+# DeepState (x86_64 only)
 sudo apt-get install libc6-dev-i386
 # Not found on AWS EC2
 sudo apt-get install acpi python3-doc
@@ -62,6 +64,7 @@ sudo sysctl -w kernel.kptr_restrict=0
 # vm.swappiness = 0
 sudo nano /etc/sysctl.conf
 
+# x86_64 only:
 sudo nano /etc/default/cpufrequtils # GOVERNOR="performance"
 sudo /etc/init.d/cpufrequtils restart
 # # After each apt upgrade
