@@ -2994,7 +2994,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.89/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.89/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.90/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.90/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -11119,7 +11119,7 @@ Save keyfreq data now.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.22/jsonrpc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.22/jsonrpc-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.23/jsonrpc-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/jsonrpc-1.0.23/jsonrpc-autoloads.el"))
 
 
 
@@ -13917,7 +13917,7 @@ Enable eldoc support for a CMake file.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/eglot-1.15/eglot-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/eglot-1.15/eglot-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/eglot-1.16/eglot-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/eglot-1.16/eglot-autoloads.el"))
 
 
 
@@ -13926,6 +13926,7 @@ Enable eldoc support for a CMake file.
 
 
 
+(define-obsolete-function-alias 'eglot-update 'eglot-upgrade-eglot "29.1")
 (autoload 'eglot "eglot" "\
 Start LSP server for PROJECT's buffers under MANAGED-MAJOR-MODES.
 
@@ -13968,9 +13969,20 @@ INTERACTIVE is ignored and provided for backward compatibility.
 
 (fn MANAGED-MAJOR-MODES PROJECT CLASS CONTACT LANGUAGE-IDS &optional INTERACTIVE)" t)
 (autoload 'eglot-ensure "eglot" "\
-Start Eglot session for current buffer if there isn't one.")
-(autoload 'eglot-update "eglot" "\
-Update Eglot.
+Start Eglot session for current buffer if there isn't one.
+
+Only use this function (in major mode hooks, etc) if you are
+confident that Eglot can be started safely and efficiently for
+*every* buffer visited where these hooks may execute.
+
+Since it is difficult to establish this confidence fully, it's
+often wise to use the interactive command `eglot' instead.  This
+command only needs to be invoked once per project, as all other
+files of a given major mode visited within the same project will
+automatically become managed with no further user intervention
+needed.")
+(autoload 'eglot-upgrade-eglot "eglot" "\
+Update Eglot to latest version.
 
 (fn &rest _)" t)
 (put 'eglot-workspace-configuration 'safe-local-variable 'listp)

@@ -11,6 +11,7 @@
 
 ;;; Generated autoloads from eglot.el
 
+(define-obsolete-function-alias 'eglot-update 'eglot-upgrade-eglot "29.1")
 (autoload 'eglot "eglot" "\
 Start LSP server for PROJECT's buffers under MANAGED-MAJOR-MODES.
 
@@ -53,9 +54,20 @@ INTERACTIVE is ignored and provided for backward compatibility.
 
 (fn MANAGED-MAJOR-MODES PROJECT CLASS CONTACT LANGUAGE-IDS &optional INTERACTIVE)" t)
 (autoload 'eglot-ensure "eglot" "\
-Start Eglot session for current buffer if there isn't one.")
-(autoload 'eglot-update "eglot" "\
-Update Eglot.
+Start Eglot session for current buffer if there isn't one.
+
+Only use this function (in major mode hooks, etc) if you are
+confident that Eglot can be started safely and efficiently for
+*every* buffer visited where these hooks may execute.
+
+Since it is difficult to establish this confidence fully, it's
+often wise to use the interactive command `eglot' instead.  This
+command only needs to be invoked once per project, as all other
+files of a given major mode visited within the same project will
+automatically become managed with no further user intervention
+needed.")
+(autoload 'eglot-upgrade-eglot "eglot" "\
+Update Eglot to latest version.
 
 (fn &rest _)" t)
 (put 'eglot-workspace-configuration 'safe-local-variable 'listp)
