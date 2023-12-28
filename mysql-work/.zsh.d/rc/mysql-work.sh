@@ -701,7 +701,7 @@ mysql_build_in_build_dir() {
 
 mysql_cd_into_build_dir() {
     declare -r build_type=$1
-    declare -r build_dir="$MY_BUILD_DIR_PREFIX-$build_type"
+    declare -r build_dir="$MY_BUILD_DIR_PREFIX$build_type"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
 }
