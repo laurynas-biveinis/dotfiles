@@ -27,7 +27,8 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
      python3-pip g++-12 gcc-12-doc libstdc++-12-doc g++-10 gcc-10-doc \
      clang-14-doc ninja-build cmake-format clang-tidy neovim man-db lynis \
      shellcheck htop jq bat cpplint duf exa python3-pandas pipx gcc-11 g++-11 \
-     gcc-11-doc
+     gcc-11-doc clang-12 clang-12-doc clang-tools-12 lld-12 llvm-12 llvm-12-doc \
+     llvm-12-tools
 # Ubuntu 23.04
 sudo apt-get install clang-16-doc clang-17 clang-17-doc \
      clang-format-17 clang-tidy-17 clang-tools-17 clangd-17 lld-17 llvm-17 \
