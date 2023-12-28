@@ -3,8 +3,8 @@
 ```sh
 cd
 git clone --recurse-submodules git@github.com:laurynas-biveinis/dotfiles.git
-cd dotfiles
-git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git
+(cd dotfiles && \
+    git remote add origin-ro https://github.com/laurynas-biveinis/dotfiles.git)
 ```
 
 Create `~/.zshenv_private`, if needed for any environment variables whose names
@@ -37,14 +37,12 @@ git clone https://github.com/gjsheep/bash-wakatime.git
 
 put .wakatime.cfg into $HOME, `chmod 600` it.
 
-
 Create potentially-empty directories so that `stow` does not symlink them:
 
 ```sh
 cd
-mkdir .gnupg
+mkdir -p .gnupg usr usr/bin usr/src vilniusdb
 chmod 700 .gnupg
-mkdir -p usr usr/bin usr/src vilniusdb
 ```
 
 Check that existing `~/.ssh/config`, `~/.zshenv` & `~/.zshrc` files are OK to
@@ -62,9 +60,11 @@ In Emacs, do `(all-the-icons-install-fonts)`.
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
 
-
 Change shell:
 
 ```sh
 chsh
 ```
+
+log out, log in again.
+
