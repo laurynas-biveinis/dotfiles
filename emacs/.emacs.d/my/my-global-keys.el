@@ -18,7 +18,7 @@
 (require 'helm-lsp)
 (require 'deadgrep)
 (declare-function my-secrets "secrets" ())
-(declare-function end-of-line-and-newline-and-indent "my-setup" ())
+(declare-function end-of-line-and-newline-and-indent "my-edit" ())
 
 ;; Editing
 (global-set-key (kbd "<M-RET>") #'end-of-line-and-newline-and-indent)
