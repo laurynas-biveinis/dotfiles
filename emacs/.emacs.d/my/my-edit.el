@@ -88,7 +88,13 @@
 
 ;;; Undo
 
-;; The tree-shaped edit history provided by this package is the winner.
+;; The tree-shaped edit history provided by `undo-tree' is the winner.
+;;
+;; TODO(laurynas): how to cleanup old persistent undo history files? For git
+;; worktree-based source code workflow keeping them in or close to the original
+;; directory would help. This could be possible to implement with
+;; `undo-tree-history-directory-alist' with pattern matching, but need to
+;; consider .gitignore for those worktrees too.
 (require 'undo-tree)
 (require 'magit-status)
 (setq undo-tree-history-directory-alist
