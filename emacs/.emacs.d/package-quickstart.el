@@ -13761,7 +13761,7 @@ or offer suggestions for improvement.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230824.22/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20230824.22/fancy-compilation-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20231228.2247/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20231228.2247/fancy-compilation-autoloads.el"))
 
 
 

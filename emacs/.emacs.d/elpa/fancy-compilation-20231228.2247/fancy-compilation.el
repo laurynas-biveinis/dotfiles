@@ -68,7 +68,7 @@ Use this to set or override defaults."
 ;; Faces
 
 (defface fancy-compilation-default-face
-  (list (list t :background "black" :inherit 'ansi-color-grey))
+  (list (list t :background "black" :inherit 'ansi-color-white))
   "Face used to render black color.")
 
 (defface fancy-compilation-function-name-face (list (list t :foreground "cyan3"))
