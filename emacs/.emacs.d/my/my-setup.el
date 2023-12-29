@@ -630,6 +630,11 @@
   (interactive)
   (byte-recompile-directory package-user-dir nil 'force))
 
+(defun my-switch-to-scratch ()
+  "Switch the current window to the *scratch* buffer."
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
 ;; Change appearance for screen sharing
 
 (require 'display-line-numbers)
