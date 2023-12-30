@@ -2154,7 +2154,7 @@
 	 ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	(:commit . "09cf249c78385502a2ead30c4fa1468cf96939f7"))])
  (llm .
-      [(0 7 0)
+      [(0 8 0)
        ((emacs
 	 (28 1)))
        "Interface to pluggable llm backends" tar
@@ -2162,7 +2162,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "384e04d471b8bbba2cb0644c25f4ba8dd0528a02"))])
+	(:commit . "dac199a3dd43cf70d69f9cb042191ca89ef07445"))])
  (lmc .
       [(1 4)
        ((emacs
@@ -3635,14 +3635,14 @@
 	       ("Ulf Jasper" . "ulf.jasper@web.de"))
 	      (:maintainer "Ulf Jasper" . "ulf.jasper@web.de"))])
  (svg-lib .
-	  [(0 2 8)
+	  [(0 3)
 	   ((emacs
 	     (27 1)))
 	   "SVG tags, progress bars & icons" tar
 	   ((:url . "https://github.com/rougier/svg-lib")
 	    (:keywords "svg" "icons" "tags" "convenience")
 	    (:maintainer "Nicolas P. Rougier" . "Nicolas.Rougier@inria.fr")
-	    (:commit . "710803c3bea1a25d6d47475c6e1eee734e7144ae"))])
+	    (:commit . "f2cc9615ef3a052747135d34f31c423a26592f14"))])
  (svg-tag-mode .
 	       [(0 3 2)
 		((emacs
