@@ -1,4 +1,5 @@
-This is tramp.info, produced by makeinfo version 6.8 from tramp.texi.
+This is docrsgZWN.info, produced by makeinfo version 6.8 from
+tramp.texi.
 
 Copyright © 1999–2023 Free Software Foundation, Inc.
 
@@ -19,12 +20,12 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: tramp.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
+File: docrsgZWN.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
 
-TRAMP 2.6.1.5 User Manual
+TRAMP 2.6.2.0 User Manual
 *************************
 
-This file documents TRAMP 2.6.1.5, a remote file editing package for
+This file documents TRAMP 2.6.2.0, a remote file editing package for
 Emacs.
 
    TRAMP stands for “Transparent Remote (file) Access, Multiple
@@ -126,7 +127,7 @@ How file names, directories and localnames are mangled and managed
 
 
 
-File: tramp.info,  Node: Overview,  Next: Obtaining TRAMP,  Up: Top
+File: docrsgZWN.info,  Node: Overview,  Next: Obtaining TRAMP,  Up: Top
 
 1 An overview of TRAMP
 **********************
@@ -245,7 +246,7 @@ to that host, here’s what happens:
 behind the scenes when you open a file with TRAMP.
 
 
-File: tramp.info,  Node: Obtaining TRAMP,  Next: Quick Start Guide,  Prev: Overview,  Up: Top
+File: docrsgZWN.info,  Node: Obtaining TRAMP,  Next: Quick Start Guide,  Prev: Overview,  Up: Top
 
 2 Obtaining TRAMP
 *****************
@@ -313,7 +314,7 @@ Run ‘autoconf’ as follows to generate an up-to-date ‘configure’ script:
 how to install TRAMP.
 
 
-File: tramp.info,  Node: Quick Start Guide,  Next: Configuration,  Prev: Obtaining TRAMP,  Up: Top
+File: docrsgZWN.info,  Node: Quick Start Guide,  Next: Configuration,  Prev: Obtaining TRAMP,  Up: Top
 
 3 Short introduction how to use TRAMP
 *************************************
@@ -451,7 +452,7 @@ accessed via the ‘adb’ command.  No user or host name is needed.  The
 file name syntax is ‘/adb::/path/to/file’.
 
 
-File: tramp.info,  Node: Configuration,  Next: Usage,  Prev: Quick Start Guide,  Up: Top
+File: docrsgZWN.info,  Node: Configuration,  Next: Usage,  Prev: Quick Start Guide,  Up: Top
 
 4 Configuring TRAMP
 *******************
@@ -513,7 +514,7 @@ non-‘nil’, *Note (emacs)Directory Variables::.
 * Keeping files encrypted::     Protect remote files by encryption.
 
 
-File: tramp.info,  Node: Connection types,  Next: Inline methods,  Up: Configuration
+File: docrsgZWN.info,  Node: Connection types,  Next: Inline methods,  Up: Configuration
 
 4.1 Types of connections to remote hosts
 ========================================
@@ -541,7 +542,7 @@ should consider *note Password handling::, otherwise you will be
 prompted for a password for every copy action.
 
 
-File: tramp.info,  Node: Inline methods,  Next: External methods,  Prev: Connection types,  Up: Configuration
+File: docrsgZWN.info,  Node: Inline methods,  Next: External methods,  Prev: Connection types,  Up: Configuration
 
 4.2 Inline methods
 ==================
@@ -694,7 +695,7 @@ usability of one of the commands defined in
      This method does not support user names.
 
 
-File: tramp.info,  Node: External methods,  Next: GVFS-based methods,  Prev: Inline methods,  Up: Configuration
+File: docrsgZWN.info,  Node: External methods,  Next: GVFS-based methods,  Prev: Inline methods,  Up: Configuration
 
 4.3 External methods
 ====================
@@ -907,7 +908,7 @@ files smaller than ‘tramp-copy-size-limit’ still use inline methods.
      applicable to Android devices connected through USB.
 
 
-File: tramp.info,  Node: GVFS-based methods,  Next: FUSE-based methods,  Prev: External methods,  Up: Configuration
+File: docrsgZWN.info,  Node: GVFS-based methods,  Next: FUSE-based methods,  Prev: External methods,  Up: Configuration
 
 4.4 GVFS-based external methods
 ===============================
@@ -1003,7 +1004,7 @@ have the message bus system, D-Bus integration active, *note D-Bus:
           (customize-set-variable 'tramp-ftp-method nil)
 
 
-File: tramp.info,  Node: FUSE-based methods,  Next: Default Method,  Prev: GVFS-based methods,  Up: Configuration
+File: docrsgZWN.info,  Node: FUSE-based methods,  Next: Default Method,  Prev: GVFS-based methods,  Up: Configuration
 
 4.5 FUSE-based external methods
 ===============================
@@ -1070,7 +1071,7 @@ this is not possible, TRAMP emulates those operations otherwise.
      properties, *Note Setup of sshfs method::.
 
 
-File: tramp.info,  Node: Default Method,  Next: Default User,  Prev: FUSE-based methods,  Up: Configuration
+File: docrsgZWN.info,  Node: Default Method,  Next: Default User,  Prev: FUSE-based methods,  Up: Configuration
 
 4.6 Selecting a default method
 ==============================
@@ -1151,7 +1152,7 @@ faster than ‘plink’.  But this speed improvement is not always true.
 Windows.  Use method ‘sshx’.
 
 
-File: tramp.info,  Node: Default User,  Next: Default Host,  Prev: Default Method,  Up: Configuration
+File: docrsgZWN.info,  Node: Default User,  Next: Default Host,  Prev: Default Method,  Up: Configuration
 
 4.7 Selecting a default user
 ============================
@@ -1189,7 +1190,7 @@ File: tramp.info,  Node: Default User,  Next: Default Host,  Prev: Default Metho
                        '(nil nil "jonas") t)
 
 
-File: tramp.info,  Node: Default Host,  Next: Multi-hops,  Prev: Default User,  Up: Configuration
+File: docrsgZWN.info,  Node: Default Host,  Next: Multi-hops,  Prev: Default User,  Up: Configuration
 
 4.8 Selecting a default host
 ============================
@@ -1216,7 +1217,7 @@ File: tramp.info,  Node: Default Host,  Next: Multi-hops,  Prev: Default User,  
      like ‘adb’, require defaults overwritten.
 
 
-File: tramp.info,  Node: Multi-hops,  Next: Firewalls,  Prev: Default Host,  Up: Configuration
+File: docrsgZWN.info,  Node: Multi-hops,  Next: Firewalls,  Prev: Default Host,  Up: Configuration
 
 4.9 Connecting to a remote host using multiple hops
 ===================================================
@@ -1310,7 +1311,7 @@ only.
                        "\\`bastion\\.your\\.domain\\'")
 
 
-File: tramp.info,  Node: Firewalls,  Next: Customizing Methods,  Prev: Multi-hops,  Up: Configuration
+File: docrsgZWN.info,  Node: Firewalls,  Next: Customizing Methods,  Prev: Multi-hops,  Up: Configuration
 
 4.10 Passing firewalls
 ======================
@@ -1350,7 +1351,7 @@ option, and add ‘proxy.your.domain’ as ‘Proxy hostname’, and 3128 as
 ‘proxy.your.domain’ on port 3128.
 
 
-File: tramp.info,  Node: Customizing Methods,  Next: Customizing Completion,  Prev: Firewalls,  Up: Configuration
+File: docrsgZWN.info,  Node: Customizing Methods,  Next: Customizing Completion,  Prev: Firewalls,  Up: Configuration
 
 4.11 Using Non-Standard Methods
 ===============================
@@ -1398,7 +1399,7 @@ They can be installed with Emacs’s Package Manager.  This includes
      where ‘box’ is the name of the vagrant box.
 
 
-File: tramp.info,  Node: Customizing Completion,  Next: Password handling,  Prev: Customizing Methods,  Up: Configuration
+File: docrsgZWN.info,  Node: Customizing Completion,  Next: Password handling,  Prev: Customizing Methods,  Up: Configuration
 
 4.12 Selecting config files for user/host name completion
 =========================================================
@@ -1497,7 +1498,7 @@ following conventions:
                ⇒ ((nil "toto") ("daniel" "melancholia"))
 
 
-File: tramp.info,  Node: Password handling,  Next: Connection caching,  Prev: Customizing Completion,  Up: Configuration
+File: docrsgZWN.info,  Node: Password handling,  Next: Connection caching,  Prev: Customizing Completion,  Up: Configuration
 
 4.13 Reusing passwords for several connections
 ==============================================
@@ -1577,7 +1578,7 @@ extend beyond the lifetime of the current Emacs session.  Set
    Set ‘password-cache’ to ‘nil’ to disable password caching.
 
 
-File: tramp.info,  Node: Connection caching,  Next: Predefined connection information,  Prev: Password handling,  Up: Configuration
+File: docrsgZWN.info,  Node: Connection caching,  Next: Predefined connection information,  Prev: Password handling,  Up: Configuration
 
 4.14 Reusing connection related information
 ===========================================
@@ -1601,7 +1602,7 @@ remote host (via the command ‘uname -sr’), it flushes all connection
 related information for that host and creates a new entry.
 
 
-File: tramp.info,  Node: Predefined connection information,  Next: Remote programs,  Prev: Connection caching,  Up: Configuration
+File: docrsgZWN.info,  Node: Predefined connection information,  Next: Remote programs,  Prev: Connection caching,  Up: Configuration
 
 4.15 Setting own connection related information
 ===============================================
@@ -1729,7 +1730,7 @@ properties are listed here:
      want to change their values.
 
 
-File: tramp.info,  Node: Remote programs,  Next: Remote shell setup,  Prev: Predefined connection information,  Up: Configuration
+File: docrsgZWN.info,  Node: Remote programs,  Next: Remote shell setup,  Prev: Predefined connection information,  Up: Configuration
 
 4.16 How TRAMP finds and uses programs on the remote host
 =========================================================
@@ -1794,7 +1795,7 @@ tramp-cleanup-this-connection <RET>’ or friends (*note Cleanup remote
 connections::).
 
 
-File: tramp.info,  Node: Remote shell setup,  Next: Ssh setup,  Prev: Remote programs,  Up: Configuration
+File: docrsgZWN.info,  Node: Remote shell setup,  Next: Ssh setup,  Prev: Remote programs,  Up: Configuration
 
 4.17 Remote shell setup hints
 =============================
@@ -2044,7 +2045,7 @@ Interactive shell prompt
      connection information::).
 
 
-File: tramp.info,  Node: Ssh setup,  Next: FUSE setup,  Prev: Remote shell setup,  Up: Configuration
+File: docrsgZWN.info,  Node: Ssh setup,  Next: FUSE setup,  Prev: Remote shell setup,  Up: Configuration
 
 4.18 Ssh setup hints
 ====================
@@ -2237,7 +2238,7 @@ Suite of tools.
    The fallback is to start Emacs from a shell.
 
 
-File: tramp.info,  Node: FUSE setup,  Next: Android shell setup,  Prev: Ssh setup,  Up: Configuration
+File: docrsgZWN.info,  Node: FUSE setup,  Next: Android shell setup,  Prev: Ssh setup,  Up: Configuration
 
 4.19 FUSE setup hints
 =====================
@@ -2287,7 +2288,7 @@ of strings, and can be overwritten by the connection property
 processes, using the ‘ssh’ command.  These don’t need to be changed.
 
 
-File: tramp.info,  Node: Android shell setup,  Next: Auto-save File Lock and Backup,  Prev: FUSE setup,  Up: Configuration
+File: docrsgZWN.info,  Node: Android shell setup,  Next: Auto-save File Lock and Backup,  Prev: FUSE setup,  Up: Configuration
 
 4.20 Android shell setup hints
 ==============================
@@ -2366,7 +2367,7 @@ provided these settings are adjusted:
      /ssh:android: <RET>’.
 
 
-File: tramp.info,  Node: Auto-save File Lock and Backup,  Next: Keeping files encrypted,  Prev: Android shell setup,  Up: Configuration
+File: docrsgZWN.info,  Node: Auto-save File Lock and Backup,  Next: Keeping files encrypted,  Prev: Android shell setup,  Up: Configuration
 
 4.21 Auto-save, File Lock and Backup configuration
 ==================================================
@@ -2460,7 +2461,7 @@ directory.  If you want to suppress this confirmation question, set user
 option ‘tramp-allow-unsafe-temporary-files’ to ‘t’.
 
 
-File: tramp.info,  Node: Keeping files encrypted,  Prev: Auto-save File Lock and Backup,  Up: Configuration
+File: docrsgZWN.info,  Node: Keeping files encrypted,  Prev: Auto-save File Lock and Backup,  Up: Configuration
 
 4.22 Protect remote files by encryption
 =======================================
@@ -2554,7 +2555,7 @@ directory.
      subdirectories will remain encrypted.
 
 
-File: tramp.info,  Node: Usage,  Next: Bug Reports,  Prev: Configuration,  Up: Top
+File: docrsgZWN.info,  Node: Usage,  Next: Bug Reports,  Prev: Configuration,  Up: Top
 
 5 Using TRAMP
 *************
@@ -2585,7 +2586,7 @@ Emacs that may cause missed prompts when using TRAMP.
 * Archive file names::          Access to files in file archives.
 
 
-File: tramp.info,  Node: File name syntax,  Next: Change file name syntax,  Up: Usage
+File: docrsgZWN.info,  Node: File name syntax,  Next: Change file name syntax,  Up: Usage
 
 5.1 TRAMP file name conventions
 ===============================
@@ -2633,7 +2634,7 @@ Default Host::.  For syntactical reasons, the default method must be
 indicated by the pseudo method ‘-’.
 
 
-File: tramp.info,  Node: Change file name syntax,  Next: File name completion,  Prev: File name syntax,  Up: Usage
+File: docrsgZWN.info,  Node: Change file name syntax,  Next: File name completion,  Prev: File name syntax,  Up: Usage
 
 5.2 Alternative file name syntax
 ================================
@@ -2668,7 +2669,7 @@ changed.
      more appropriate.  *note (elisp)Magic File Names::.
 
 
-File: tramp.info,  Node: File name completion,  Next: Ad-hoc multi-hops,  Prev: Change file name syntax,  Up: Usage
+File: docrsgZWN.info,  Node: File name completion,  Next: Ad-hoc multi-hops,  Prev: Change file name syntax,  Up: Usage
 
 5.3 File name completion
 ========================
@@ -2734,7 +2735,7 @@ Example:
           ⊣ /etc
 
 
-File: tramp.info,  Node: Ad-hoc multi-hops,  Next: Home directories,  Prev: File name completion,  Up: Usage
+File: docrsgZWN.info,  Node: Ad-hoc multi-hops,  Next: Home directories,  Prev: File name completion,  Up: Usage
 
 5.4 Declaring multiple hops in the file name
 ============================================
@@ -2755,7 +2756,7 @@ name and file name.  For example, hopping over a single proxy
 methods::).
 
    TRAMP adds the ad-hoc definitions on the fly to
-‘tramp-default-proxies-alist’ and is available for re-use during that
+‘tramp-default-proxies-alist’ and is available for reuse during that
 Emacs session.  Subsequent TRAMP connections to the same remote host can
 then use the shortcut form: ‘/ssh:you@remotehost:/path’.
 
@@ -2786,7 +2787,7 @@ the host name of the previous hop is reused.  Therefore, the following
 file name is equivalent to the previous example: ‘/ssh:remotehost|su::’.
 
 
-File: tramp.info,  Node: Home directories,  Next: Remote processes,  Prev: Ad-hoc multi-hops,  Up: Usage
+File: docrsgZWN.info,  Node: Home directories,  Next: Remote processes,  Prev: Ad-hoc multi-hops,  Up: Usage
 
 5.5 Expanding ‘~’ to home directory
 ===================================
@@ -2831,7 +2832,7 @@ Example:
 connection property "~" must be used instead.
 
 
-File: tramp.info,  Node: Remote processes,  Next: Cleanup remote connections,  Prev: Home directories,  Up: Usage
+File: docrsgZWN.info,  Node: Remote processes,  Next: Cleanup remote connections,  Prev: Home directories,  Up: Usage
 
 5.6 Integration with other Emacs packages
 =========================================
@@ -3263,7 +3264,7 @@ TRAMP’s handling of the ‘ControlMaster’ options, and use your own
 settings in ‘~/.ssh/config’, *note Using ssh connection sharing::.
 
 
-File: tramp.info,  Node: Cleanup remote connections,  Next: Renaming remote files,  Prev: Remote processes,  Up: Usage
+File: docrsgZWN.info,  Node: Cleanup remote connections,  Next: Renaming remote files,  Prev: Remote processes,  Up: Usage
 
 5.7 Cleanup remote connections
 ==============================
@@ -3301,7 +3302,7 @@ TRAMP provides several ways to flush remote connections.
      all buffers related to remote connections.
 
 
-File: tramp.info,  Node: Renaming remote files,  Next: Archive file names,  Prev: Cleanup remote connections,  Up: Usage
+File: docrsgZWN.info,  Node: Renaming remote files,  Next: Archive file names,  Prev: Cleanup remote connections,  Up: Usage
 
 5.8 Renaming remote files
 =========================
@@ -3393,7 +3394,7 @@ anymore.
      ‘tramp-rename-these-files’ must be confirmed.
 
 
-File: tramp.info,  Node: Archive file names,  Prev: Renaming remote files,  Up: Usage
+File: docrsgZWN.info,  Node: Archive file names,  Prev: Renaming remote files,  Up: Usage
 
 5.9 Archive file names
 ======================
@@ -3522,7 +3523,7 @@ to your init file:
      (customize-set-variable 'tramp-archive-enabled nil)
 
 
-File: tramp.info,  Node: Bug Reports,  Next: Frequently Asked Questions,  Prev: Usage,  Up: Top
+File: docrsgZWN.info,  Node: Bug Reports,  Next: Frequently Asked Questions,  Prev: Usage,  Up: Top
 
 6 Reporting Bugs and Problems
 *****************************
@@ -3595,7 +3596,7 @@ of files and directories will be included in the debug buffer.
 Passwords typed in TRAMP will never be included there.
 
 
-File: tramp.info,  Node: Frequently Asked Questions,  Next: Files directories and localnames,  Prev: Bug Reports,  Up: Top
+File: docrsgZWN.info,  Node: Frequently Asked Questions,  Next: Files directories and localnames,  Prev: Bug Reports,  Up: Top
 
 7 Frequently Asked Questions
 ****************************
@@ -4273,7 +4274,7 @@ File: tramp.info,  Node: Frequently Asked Questions,  Next: Files directories an
      combination of ‘ssh’ and ‘scp’ or other work-alike programs.
 
 
-File: tramp.info,  Node: Files directories and localnames,  Next: Traces and Profiles,  Prev: Frequently Asked Questions,  Up: Top
+File: docrsgZWN.info,  Node: Files directories and localnames,  Next: Traces and Profiles,  Prev: Frequently Asked Questions,  Up: Top
 
 8 How file names, directories and localnames are mangled and managed
 ********************************************************************
@@ -4284,7 +4285,7 @@ File: tramp.info,  Node: Files directories and localnames,  Next: Traces and Pro
 * External packages::           Integrating with external Lisp packages.
 
 
-File: tramp.info,  Node: Localname deconstruction,  Next: External packages,  Up: Files directories and localnames
+File: docrsgZWN.info,  Node: Localname deconstruction,  Next: External packages,  Up: Files directories and localnames
 
 8.1 Splitting a localname into its component parts
 ==================================================
@@ -4299,7 +4300,7 @@ By relying on the original handlers for localnames, TRAMP benefits from
 platform specific hacks to the original handlers.
 
 
-File: tramp.info,  Node: External packages,  Prev: Localname deconstruction,  Up: Files directories and localnames
+File: docrsgZWN.info,  Node: External packages,  Prev: Localname deconstruction,  Up: Files directories and localnames
 
 8.2 Integrating with external Lisp packages
 ===========================================
@@ -4368,7 +4369,7 @@ as follows:
        ...)
 
 
-File: tramp.info,  Node: Traces and Profiles,  Next: GNU Free Documentation License,  Prev: Files directories and localnames,  Up: Top
+File: docrsgZWN.info,  Node: Traces and Profiles,  Next: GNU Free Documentation License,  Prev: Files directories and localnames,  Up: Top
 
 9 How to Customize Traces
 *************************
@@ -4425,7 +4426,7 @@ with care, because it could decrease the performance of TRAMP actions.
 call traces are written to a TRAMP trace buffer.
 
 
-File: tramp.info,  Node: GNU Free Documentation License,  Next: Function Index,  Prev: Traces and Profiles,  Up: Top
+File: docrsgZWN.info,  Node: GNU Free Documentation License,  Next: Function Index,  Prev: Traces and Profiles,  Up: Top
 
 Appendix A GNU Free Documentation License
 *****************************************
@@ -4907,7 +4908,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: tramp.info,  Node: Function Index,  Next: Variable Index,  Prev: GNU Free Documentation License,  Up: Top
+File: docrsgZWN.info,  Node: Function Index,  Next: Variable Index,  Prev: GNU Free Documentation License,  Up: Top
 
 Function Index
 **************
@@ -4966,7 +4967,7 @@ Function Index
 * tramp-set-completion-function <1>:     Ssh setup.           (line  13)
 
 
-File: tramp.info,  Node: Variable Index,  Next: Concept Index,  Prev: Function Index,  Up: Top
+File: docrsgZWN.info,  Node: Variable Index,  Next: Concept Index,  Prev: Function Index,  Up: Top
 
 Variable Index
 **************
@@ -5124,6 +5125,7 @@ Variable Index
 * tramp-persistency-file-name:           Connection caching.  (line   6)
 * tramp-process-attributes-ps-args:      Remote processes.    (line 326)
 * tramp-process-attributes-ps-format:    Remote processes.    (line 330)
+* tramp-process-connection-type:         Remote processes.    (line 276)
 * tramp-rclone-program:                  FUSE-based methods.  (line  15)
 * tramp-remote-coding-commands:          Inline methods.      (line  16)
 * tramp-remote-path:                     Remote programs.     (line  15)
@@ -5149,7 +5151,7 @@ Variable Index
 * tramp-wrong-passwd-regexp:             Remote shell setup.  (line  74)
 
 
-File: tramp.info,  Node: Concept Index,  Prev: Variable Index,  Up: Top
+File: docrsgZWN.info,  Node: Concept Index,  Prev: Variable Index,  Up: Top
 
 Concept Index
 *************
@@ -5500,7 +5502,6 @@ Concept Index
 * tlz file archive suffix:               Archive file names.  (line  77)
 * TRAMP theme:                           Frequently Asked Questions.
                                                               (line 239)
-* tramp-process-connection-type:         Remote processes.    (line 276)
 * tset unix command:                     Remote shell setup.  (line 142)
 * txz file archive suffix:               Archive file names.  (line  77)
 * type-ahead:                            Usage.               (line  12)
@@ -5524,71 +5525,71 @@ Concept Index
 
 
 Tag Table:
-Node: Top933
-Node: Overview5629
-Node: Obtaining TRAMP10987
-Node: Quick Start Guide13451
-Ref: Quick Start Guide File name syntax14232
-Ref: Quick Start Guide ssh and plink methods15328
-Ref: Quick Start Guide su, sudo, doas and sg methods15875
-Ref: Quick Start Guide Combining ssh, plink, su, sudo and doas methods16547
-Ref: Quick Start Guide sudoedit method17112
-Ref: Quick Start Guide smb method17522
-Ref: Quick Start Guide GVFS-based methods17853
-Ref: Quick Start Guide GNOME Online Accounts based methods18299
-Ref: Quick Start Guide FUSE-based methods18841
-Ref: Quick Start Guide Android19714
-Node: Configuration19948
-Node: Connection types22832
-Node: Inline methods24249
-Node: External methods29866
-Node: GVFS-based methods39006
-Node: FUSE-based methods43160
-Node: Default Method46112
-Ref: Default Method-Footnote-149331
-Node: Default User49441
-Node: Default Host50970
-Node: Multi-hops52102
-Node: Firewalls56295
-Node: Customizing Methods57769
-Node: Customizing Completion60003
-Node: Password handling63493
-Ref: Using an authentication file63963
-Ref: Caching passwords66347
-Node: Connection caching66865
-Node: Predefined connection information67795
-Node: Remote programs72896
-Node: Remote shell setup75809
-Node: Ssh setup86567
-Ref: Using ssh connection sharing88468
-Node: FUSE setup94677
-Ref: Setup of rclone method95622
-Ref: Setup of sshfs method96204
-Node: Android shell setup96662
-Node: Auto-save File Lock and Backup99976
-Node: Keeping files encrypted104314
-Node: Usage108957
-Node: File name syntax110379
-Node: Change file name syntax112387
-Node: File name completion113817
-Node: Ad-hoc multi-hops116508
-Node: Home directories118816
-Node: Remote processes120547
-Ref: Running a debugger on a remote host130266
-Ref: Improving performance of asynchronous remote processes137220
-Node: Cleanup remote connections139640
-Node: Renaming remote files141341
-Node: Archive file names145572
-Node: Bug Reports150324
-Node: Frequently Asked Questions153603
-Node: Files directories and localnames180102
-Node: Localname deconstruction180538
-Node: External packages181191
-Node: Traces and Profiles183993
-Node: GNU Free Documentation License186121
-Node: Function Index211494
-Node: Variable Index215088
-Node: Concept Index227696
+Node: Top937
+Node: Overview5637
+Node: Obtaining TRAMP10999
+Node: Quick Start Guide13467
+Ref: Quick Start Guide File name syntax14252
+Ref: Quick Start Guide ssh and plink methods15348
+Ref: Quick Start Guide su, sudo, doas and sg methods15895
+Ref: Quick Start Guide Combining ssh, plink, su, sudo and doas methods16567
+Ref: Quick Start Guide sudoedit method17132
+Ref: Quick Start Guide smb method17542
+Ref: Quick Start Guide GVFS-based methods17873
+Ref: Quick Start Guide GNOME Online Accounts based methods18319
+Ref: Quick Start Guide FUSE-based methods18861
+Ref: Quick Start Guide Android19734
+Node: Configuration19968
+Node: Connection types22856
+Node: Inline methods24277
+Node: External methods29898
+Node: GVFS-based methods39042
+Node: FUSE-based methods43200
+Node: Default Method46156
+Ref: Default Method-Footnote-149379
+Node: Default User49489
+Node: Default Host51022
+Node: Multi-hops52158
+Node: Firewalls56355
+Node: Customizing Methods57833
+Node: Customizing Completion60071
+Node: Password handling63565
+Ref: Using an authentication file64039
+Ref: Caching passwords66423
+Node: Connection caching66941
+Node: Predefined connection information67875
+Node: Remote programs72980
+Node: Remote shell setup75897
+Node: Ssh setup86659
+Ref: Using ssh connection sharing88564
+Node: FUSE setup94773
+Ref: Setup of rclone method95722
+Ref: Setup of sshfs method96304
+Node: Android shell setup96762
+Node: Auto-save File Lock and Backup100080
+Node: Keeping files encrypted104422
+Node: Usage109069
+Node: File name syntax110495
+Node: Change file name syntax112507
+Node: File name completion113941
+Node: Ad-hoc multi-hops116636
+Node: Home directories118947
+Node: Remote processes120682
+Ref: Running a debugger on a remote host130405
+Ref: Improving performance of asynchronous remote processes137359
+Node: Cleanup remote connections139779
+Node: Renaming remote files141484
+Node: Archive file names145719
+Node: Bug Reports150475
+Node: Frequently Asked Questions153758
+Node: Files directories and localnames180261
+Node: Localname deconstruction180701
+Node: External packages181358
+Node: Traces and Profiles184164
+Node: GNU Free Documentation License186296
+Node: Function Index211673
+Node: Variable Index215271
+Node: Concept Index227956
 
 End Tag Table
 
