@@ -626,6 +626,33 @@
   (interactive)
   (byte-recompile-directory package-user-dir nil 'force))
 
+;; Written mostly by ChatGPT
+(defun my-find-duplicate-packages ()
+  "Find and list duplicate package installations."
+  (interactive)
+  (let ((seen-packages (make-hash-table :test 'equal))
+        duplicates)
+    (dolist (pkg package-alist)
+      (let* ((pkg-name (symbol-name (car pkg)))
+             (pkg-desc (car (cdr pkg)))
+             (pkg-version (package-version-join (package-desc-version pkg-desc)))
+             (existing (gethash pkg-name seen-packages)))
+        (if existing
+            ;; If already seen, add to duplicates if different version
+            (unless (member pkg-version existing)
+              (push pkg-name duplicates))
+          ;; Mark as seen
+          (puthash pkg-name (list pkg-version) seen-packages))))
+    ;; Display results
+    (if duplicates
+        (with-current-buffer (get-buffer-create "*Duplicate Packages*")
+          (erase-buffer)
+          (insert "Duplicate packages found:\n")
+          (dolist (dup duplicates)
+            (insert (format "%s\n" dup)))
+          (display-buffer (current-buffer)))
+      (message "No duplicate packages found."))))
+
 (defun my-switch-to-scratch ()
   "Switch the current window to the *scratch* buffer."
   (interactive)
