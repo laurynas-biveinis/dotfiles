@@ -92,7 +92,7 @@ Unfortunately, that is not always possible.
 [git-gutter-fringe](https://github.com/emacsorphanage/git-gutter-fringe)
 [helm-icons](https://github.com/yyoncho/helm-icons)
 [company-box](https://github.com/sebastiencs/company-box)
-[modern-cpp-font-lock](https://github.com/ludwigpacifici/modern-cpp-font-lock) [highlight-indent-guides](https://github.com/DarthFennec/highlight-indent-guides)
+[highlight-indent-guides](https://github.com/DarthFennec/highlight-indent-guides)
 [page-break-lines](https://github.com/purcell/page-break-lines)
 [xterm-color](https://github.com/atomontage/xterm-color)
 [all-the-icons-dired](https://github.com/jtbm37/all-the-icons-dired)

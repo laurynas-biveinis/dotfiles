@@ -477,10 +477,6 @@
 
 (add-hook 'c-initialization-hook #'dotfiles--c-mode-common-hook)
 
-;; `modern-cpp-font-lock'
-(require 'modern-cpp-font-lock)
-(add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
-
 ;; Google C style
 (require 'google-c-style)
 (c-add-style "google" google-c-style)

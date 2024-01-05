@@ -5210,67 +5210,6 @@ the reports is done using the TaskJuggler GUI.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/modern-cpp-font-lock-0.1.3/modern-cpp-font-lock-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/modern-cpp-font-lock-0.1.3/modern-cpp-font-lock-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'modern-c++-font-lock-mode "modern-cpp-font-lock" "\
-Provides font-locking as a Minor Mode for Modern C++
-
-This is a minor mode.  If called interactively, toggle the
-`Modern-C++-Font-Lock mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `modern-c++-font-lock-mode'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(put 'modern-c++-font-lock-global-mode 'globalized-minor-mode t)
-(defvar modern-c++-font-lock-global-mode nil "\
-Non-nil if Modern-C++-Font-Lock-Global mode is enabled.
-See the `modern-c++-font-lock-global-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `modern-c++-font-lock-global-mode'.")
-(custom-autoload 'modern-c++-font-lock-global-mode "modern-cpp-font-lock" nil)
-(autoload 'modern-c++-font-lock-global-mode "modern-cpp-font-lock" "\
-Toggle Modern-C++-Font-Lock mode in all buffers.
-With prefix ARG, enable Modern-C++-Font-Lock-Global mode if ARG is positive;
-otherwise, disable it.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.
-Enable the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-Modern-C++-Font-Lock mode is enabled in all buffers where `(lambda nil (when
-(apply 'derived-mode-p '(c++-mode)) (modern-c++-font-lock-mode 1)))' would do
-it.
-
-See `modern-c++-font-lock-mode' for more information on Modern-C++-Font-Lock
-mode.
-
-(fn &optional ARG)" t)
-(register-definition-prefixes "modern-cpp-font-lock" '("modern-c++-"))
-
-
-(provide 'modern-cpp-font-lock-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.3.0/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.3.0/git-commit-autoloads.el"))
 
 
@@ -11406,7 +11345,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib modern-cpp-font-lock git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)
