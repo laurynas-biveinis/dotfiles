@@ -5,8 +5,6 @@
 ;; Authors: Damien Cassou <damien@cassou.me>
 ;;          Matus Goljer <matus.goljer@gmail.com>
 ;; Version: 2.4.0
-;; Package-Version: 2.4.0
-;; Package-Commit: 61f1eb22718fcd9796b47a98702d161ff323a532
 ;; URL: https://github.com/DamienCassou/beginend
 ;; Package-Requires: ((emacs "25.3"))
 ;; Created: 01 Jun 2015

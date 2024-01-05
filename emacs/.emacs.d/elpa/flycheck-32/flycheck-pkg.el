@@ -6,6 +6,8 @@
     (emacs "24.3"))
   :commit "3b5b4248074f016922c2674789d4a242528cf4c7" :authors
   '(("Sebastian Wiesner" . "swiesner@lunaryorn.com"))
+  :maintainers
+  '(("Clément Pit-Claudel" . "clement.pitclaudel@live.com"))
   :maintainer
   '("Clément Pit-Claudel" . "clement.pitclaudel@live.com")
   :keywords

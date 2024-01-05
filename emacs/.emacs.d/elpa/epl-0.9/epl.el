@@ -7,7 +7,6 @@
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>
 ;;     Sebastian Wiesner <swiesner@lunaryorn.com>
 ;; Version: 0.9
-;; Package-Version: 0.9
 ;; Package-Requires: ((cl-lib "0.3"))
 ;; Keywords: convenience
 ;; URL: http://github.com/cask/epl

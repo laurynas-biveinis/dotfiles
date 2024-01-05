@@ -1,8 +1,6 @@
 ;;; google-c-style.el --- Google's C/C++ style for c-mode
 
 ;; Keywords: c, tools
-;; Package-Version: 20220210.1659
-;; Package-Commit: af78b49ac4fef8083094d5105f72528ee7d09073
 
 ;; google-c-style.el is Copyright (C) 2008 Google Inc. All Rights Reserved.
 ;;

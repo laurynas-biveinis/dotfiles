@@ -1,2 +1,0 @@
-;;; Generated package description from wgrep-helm.el  -*- no-byte-compile: t -*-
-(define-package "wgrep-helm" "3.0.0" "Writable helm-grep-mode buffer" '((emacs "25.1") (wgrep "3.0.0")) :commit "b4d69280d8a6a5ded1597e02afbaa811a160383b" :authors '(("Masahiro Hayashi" . "mhayashi1120@gmail.com")) :maintainer '("Masahiro Hayashi" . "mhayashi1120@gmail.com") :keywords '("grep" "edit" "extensions") :url "http://github.com/mhayashi1120/Emacs-wgrep/raw/master/wgrep-helm.el")

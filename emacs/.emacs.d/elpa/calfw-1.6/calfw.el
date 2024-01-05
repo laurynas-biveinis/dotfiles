@@ -4,7 +4,6 @@
 
 ;; Author: SAKURAI Masashi <m.sakurai at kiwanami.net>
 ;; Version: 1.6
-;; Package-Version: 1.6
 ;; Keywords: calendar
 ;; URL: https://github.com/kiwanami/emacs-calfw
 

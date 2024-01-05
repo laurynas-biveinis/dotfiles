@@ -55,8 +55,7 @@
 
 (require 'package)
 
-(setq package-native-compile t
-      package-install-upgrade-built-in t)
+(setq package-native-compile t)
 
 ;; TODO(laurynas): `package-quickstart-file', which is committed to dotfiles
 ;; repo, contains absolute paths. This is not a problem for me right now since

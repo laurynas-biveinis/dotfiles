@@ -6,8 +6,6 @@
 ;; Author: Tomohiro Matsuyama <m2ym.pub@gmail.com>
 ;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/auto-complete/popup-el
-;; Package-Version: 0.5.9
-;; Package-Commit: 20ce6cbd2f06423be35b3b700c698f0e109e880c
 ;; Keywords: lisp
 ;; Version: 0.5.9
 ;; Package-Requires: ((emacs "24.3"))

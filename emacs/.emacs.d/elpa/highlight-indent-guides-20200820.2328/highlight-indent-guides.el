@@ -22,8 +22,6 @@
 ;;
 ;; Author: DarthFennec <darthfennec@derpymail.org>
 ;; Version: 0.9.2
-;; Package-Version: 20200820.2328
-;; Package-Commit: cf352c85cd15dd18aa096ba9d9ab9b7ab493e8f6
 ;; Package-Requires: ((emacs "24.1"))
 ;; URL: https://github.com/DarthFennec/highlight-indent-guides
 

@@ -2,6 +2,8 @@
   '((emacs "26.1"))
   :commit "3b97dc180b03498103cfcc7f44e64150df440bf0" :authors
   '(("Feng Shu" . "tumashu@163.com"))
+  :maintainers
+  '(("Feng Shu" . "tumashu@163.com"))
   :maintainer
   '("Feng Shu" . "tumashu@163.com")
   :keywords

@@ -175,12 +175,6 @@ CANDIDATES is the list of candidates."
     (setq-local dash-docs-docsets '("Markdown"))))
 (add-hook 'markdown-mode-hook #'dotfiles--helm-dash-markdown-mode-hook)
 
-;;; Integration with `helm-org'
-(require 'helm-mode)
-(require 'helm-org)
-(setq helm-org-headings-fontify t)
-(setq helm-org-format-outline-path t)
-
 ;;; TODO(laurynas): integrate Helm with flyspell? Neither flyspell-correct /
 ;;; flyspell-correct-helm nor helm-flyspell replace ispell-word.
 

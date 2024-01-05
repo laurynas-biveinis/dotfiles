@@ -5,6 +5,8 @@
     (websocket "1.13"))
   :commit "5ac74960231db0bf7783c2ba7a19a60f582e91ab" :authors
   '(("Kirill Rogovoy, Thomas Jorna"))
+  :maintainers
+  '(("Kirill Rogovoy, Thomas Jorna"))
   :maintainer
   '("Kirill Rogovoy, Thomas Jorna")
   :keywords

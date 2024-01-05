@@ -1,5 +1,4 @@
 ;;; lv.el --- Other echo area
-;; Package-Version: 0.15.0
 
 ;; Copyright (C) 2015  Free Software Foundation, Inc.
 

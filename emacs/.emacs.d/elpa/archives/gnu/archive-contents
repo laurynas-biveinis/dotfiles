@@ -1130,11 +1130,11 @@
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	      (:commit . "abe9503a693e5561db7049606b47459236c2699f"))])
  (eglot .
-	[(1 15)
+	[(1 16)
 	 ((emacs
 	   (26 3))
 	  (jsonrpc
-	   (1 0 16))
+	   (1 0 23))
 	  (flymake
 	   (1 2 1))
 	  (project
@@ -1153,7 +1153,7 @@
 	  (:maintainer "João Távora" . "joaotavora@gmail.com")
 	  (:authors
 	   ("João Távora" . "joaotavora@gmail.com"))
-	  (:commit . "30892cbd330ace125454a056ca86d85e2a860bf5"))])
+	  (:commit . "c5a4366b3f3c6ee4178d954e58eb226441d1d2ee"))])
  (el-search .
 	    [(1 12 6 1)
 	     ((emacs
@@ -2057,7 +2057,7 @@
 	  (:url . "https://elpa.gnu.org/packages/jumpc.html")
 	  (:commit . "ab83a2a5416f83405361e25df8cbd8aab35cb8b3"))])
  (kind-icon .
-	    [(0 2 1)
+	    [(0 2 2)
 	     ((emacs
 	       (27 1))
 	      (svg-lib
@@ -2068,7 +2068,7 @@
 	      (:maintainer "J.D. Smith" . "jdtsmith@gmail.com")
 	      (:authors
 	       ("J.D. Smith" . "jdtsmith@gmail.com"))
-	      (:commit . "d432c947b218414621c9673b4ba8910ac129eef6"))])
+	      (:commit . "d8e73fea45cba968de0deed4b7985f5fdaafadfe"))])
  (kiwix .
 	[(1 1 5)
 	 ((emacs
@@ -2619,7 +2619,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "847694e78c12d903d5e3f6cb365a5d3b984db537"))])
  (org .
-      [(9 6 14)
+      [(9 6 15)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -2628,7 +2628,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "58c91cbf9f2510700fbbdaaa166efcb1a5582cf7"))])
+	(:commit . "478b40d99e0526edc54acfe723bcdff8354d504a"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -4176,7 +4176,7 @@
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	    (:commit . "f7aeda39df860ba1d82d0d94396f8bdeb13c4c8c"))])
  (vertico-posframe .
-		   [(0 7 5)
+		   [(0 7 6)
 		    ((emacs
 		      (26 0))
 		     (posframe
@@ -4189,7 +4189,7 @@
 		     (:maintainer "Feng Shu" . "tumashu@163.com")
 		     (:authors
 		      ("Feng Shu" . "tumashu@163.com"))
-		     (:commit . "15168c92ca06a39fbf84ac27d4e2ae02216300b5"))])
+		     (:commit . "bc0e67cbbba4daaf6ce7b8701a0dc7797d468752"))])
  (vigenere .
 	   [(1 0)
 	    ((emacs
@@ -4225,7 +4225,7 @@
 	(:maintainer "Andrey Kotlarski" . "m00naticus@gmail.com")
 	(:keywords "large files" "utilities"))])
  (vundo .
-	[(2 1 0)
+	[(2 2 0)
 	 ((emacs
 	   (28 1)))
 	 "Visual undo tree" tar
@@ -4234,7 +4234,7 @@
 	  (:maintainer "Yuan Fu" . "casouri@gmail.com")
 	  (:authors
 	   ("Yuan Fu" . "casouri@gmail.com"))
-	  (:commit . "ce986105a7819b288f57b381168605791aa4fcec"))])
+	  (:commit . "9f47232c6a5d357478bc979ef0908b307b08d1da"))])
  (wcheck-mode .
 	      [(2021)
 	       nil "General interface for text checkers" tar

@@ -7,8 +7,6 @@
 ;; Package: gcmh
 ;; Homepage: https://gitlab.com/koral/gcmh
 ;; Version: 0.2.1
-;; Package-Version: 20201116.2251
-;; Package-Commit: 0089f9c3a6d4e9a310d0791cf6fa8f35642ecfd9
 ;; Package-Requires: ((emacs "24"))
 ;; Keywords: internal
 

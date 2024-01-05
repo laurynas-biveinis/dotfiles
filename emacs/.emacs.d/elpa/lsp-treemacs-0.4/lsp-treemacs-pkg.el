@@ -7,6 +7,8 @@
     (lsp-mode "6.0"))
   :commit "d82df44d632f331a46eaf1f7a37eb6b1ada0c69b" :authors
   '(("Ivan Yonchovski"))
+  :maintainers
+  '(("Ivan Yonchovski"))
   :maintainer
   '("Ivan Yonchovski")
   :keywords

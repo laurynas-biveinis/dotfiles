@@ -5,8 +5,6 @@
 ;; Author: Magnar Sveen <magnars@gmail.com>
 ;; Maintainer: Jason Milkins <jasonm23@gmail.com>
 ;; Version: 1.13.0
-;; Package-Version: 1.13.0
-;; Package-Commit: 4d7d83122850cf70dc60662a73124f0be41ad186
 ;; Keywords: strings
 
 ;; This program is free software; you can redistribute it and/or modify

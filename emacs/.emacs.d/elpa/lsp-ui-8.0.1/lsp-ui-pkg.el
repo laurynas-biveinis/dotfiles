@@ -5,6 +5,8 @@
     (markdown-mode "2.3"))
   :commit "9a8983d95d823ae62e5f842a4bd433c860131398" :authors
   '(("Sebastien Chapuis <sebastien@chapu.is>, Fangrui Song" . "i@maskray.me"))
+  :maintainers
+  '(("Sebastien Chapuis <sebastien@chapu.is>, Fangrui Song" . "i@maskray.me"))
   :maintainer
   '("Sebastien Chapuis <sebastien@chapu.is>, Fangrui Song" . "i@maskray.me")
   :keywords

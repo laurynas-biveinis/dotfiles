@@ -204,6 +204,7 @@ Provide means for developers to write and test tree-sitter queries.
 
 The buffer on focus when the command is called is set as the target buffer." t)
 (register-definition-prefixes "tree-sitter-query" '("tree-sitter-"))
+
 
 ;;; End of scraped data
 

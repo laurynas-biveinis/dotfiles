@@ -5,11 +5,9 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Author: Drew Adams
 ;; Keywords: faces
-;; Package-Commit: 13dd9b6a7288e6bb692b210bcb9cd72016658dae
 ;; URL: https://github.com/ubolonton/info-colors
 ;; Package-Requires: ((emacs "24"))
 ;; Package-Version: 0.2
-;; Package-X-Original-Version: 0.2
 ;; Package-X-Original-Version: 0
 
 ;; This program is free software; you can redistribute it and/or modify

@@ -4,7 +4,6 @@
 ;; All rights reserved
 
 ;; Version: 2.0 - 2020-05-10
-;; Package-Version: 2.0
 ;; Author: xristos <xristos@sdf.org>
 ;; URL: https://github.com/atomontage/xterm-color
 ;; Package-Requires: ((emacs "24.4"))

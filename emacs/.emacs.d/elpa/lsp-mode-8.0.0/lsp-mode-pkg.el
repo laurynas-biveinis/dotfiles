@@ -8,6 +8,8 @@
     (lv "0"))
   :commit "5e0524cc9a4e21c4fe5b35153ad33e7b8a4f9117" :authors
   '(("Vibhav Pant, Fangrui Song, Ivan Yonchovski"))
+  :maintainers
+  '(("Vibhav Pant, Fangrui Song, Ivan Yonchovski"))
   :maintainer
   '("Vibhav Pant, Fangrui Song, Ivan Yonchovski")
   :keywords
