@@ -20,7 +20,8 @@
       projectile-use-git-grep t
       projectile-enable-cmake-presets t
       projectile-mode-line-prefix " "  ;; Save mode line space
-      projectile-tags-backend 'xref)  ;; Only use `xref' for cross-references
+      projectile-tags-backend 'xref  ;; Only use `xref' for cross-references
+      projectile-enable-caching t)
 
 ;; Exclude some more modes from projectile
 (add-to-list 'projectile-globally-ignored-modes "lisp-interaction-mode")
