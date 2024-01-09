@@ -10987,6 +10987,49 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.1/cmake-mode-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'cmake-mode "cmake-mode" "\
+Major mode for editing CMake source files.
+
+(fn)" t)
+(autoload 'cmake-command-run "cmake-mode" "\
+Runs the command cmake with the arguments specified.  The
+optional argument topic will be appended to the argument list.
+
+(fn TYPE &optional TOPIC BUFFER)" t)
+(autoload 'cmake-command-run-help "cmake-mode" "\
+`cmake-command-run' but rendered in `rst-mode'.
+
+(fn TYPE &optional TOPIC BUFFER)" t)
+(autoload 'cmake-help-list-commands "cmake-mode" "\
+Prints out a list of the cmake commands." t)
+(autoload 'cmake-help-command "cmake-mode" "\
+Prints out the help message for the command the cursor is on." t)
+(autoload 'cmake-help-module "cmake-mode" "\
+Prints out the help message for the module the cursor is on." t)
+(autoload 'cmake-help-variable "cmake-mode" "\
+Prints out the help message for the variable the cursor is on." t)
+(autoload 'cmake-help-property "cmake-mode" "\
+Prints out the help message for the property the cursor is on." t)
+(autoload 'cmake-help "cmake-mode" "\
+Queries for any of the four available help topics and prints out the appropriate page." t)
+(add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
+(add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
+(register-definition-prefixes "cmake-mode" '("cmake-"))
+
+
+(provide 'cmake-mode-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/calfw-org-1.6/calfw-org-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/calfw-org-1.6/calfw-org-autoloads.el"))
 
 
@@ -11370,7 +11413,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yaml-mode xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yaml-mode xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup epl pkg-info page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)
