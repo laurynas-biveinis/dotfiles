@@ -18,6 +18,7 @@
 (require 'helm-lsp)
 (require 'deadgrep)
 (declare-function my-secrets "secrets" ())
+(declare-function my-gtd "secrets" ())
 (declare-function end-of-line-and-newline-and-indent "my-edit" ())
 (declare-function my-switch-to-scratch "my-setup" ())
 
@@ -47,6 +48,7 @@
 ;; Invoking functionality
 (global-set-key (kbd "<f5>") #'deadgrep)
 (global-set-key (kbd "<f8>") #'my-secrets)
+(global-set-key (kbd "<f9>") #'my-gtd)
 (global-set-key (kbd "<f12>") #'my-switch-to-scratch)
 
 ;; `magit'
