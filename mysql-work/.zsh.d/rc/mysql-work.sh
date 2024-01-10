@@ -89,6 +89,8 @@ mysql_export_environment_helpers() {
             "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
             "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
 
+        declare -a fb_common=()
+
         export MYCLANG12=("-DCMAKE_C_COMPILER=$brew/llvm@12/bin/clang"
                           "-DCMAKE_CXX_COMPILER=$brew/llvm@12/bin/clang++")
         # CMAKE_AR settings below workaround
@@ -129,6 +131,9 @@ mysql_export_environment_helpers() {
         declare -a -r my8032_34_extra_cxx_flags=()
         declare -a my8032_extra=()
         declare -a maria_common=()
+        # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
+        # configuration failure on Linux virtualized on M1 Mac)
+        declare -a fb_common=("-DROCKSDB_BUILD_ARCH=armv8.1-a+crypto")
 
         export MY8030_820_CORE_DUMP_FLAGS=()
         export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
@@ -180,9 +185,8 @@ mysql_export_environment_helpers() {
     declare -a -r my8r=("${cmake_release[@]}" "${my8[@]}")
 
     # Workaround Facebook tooling incompatibility with git worktrees
-    declare -a -r fb_common=(
-        "-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
-        "-DROCKSDB_GITHASH=0" "-DROCKSDB_GITDATE=2100-02-29")
+    fb_common+=("-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
+                "-DROCKSDB_GITHASH=0" "-DROCKSDB_GITDATE=2100-02-29")
 
     maria_common+=("-DPLUGIN_MROONGA=NO" "-DPLUGIN_CONNECT=NO")
 
