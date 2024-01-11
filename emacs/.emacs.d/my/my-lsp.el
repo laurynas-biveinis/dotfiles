@@ -55,11 +55,6 @@
 (setq lsp-ui-peek-peek-height 30)
 (setq lsp-ui-sideline-actions-kind-regex ".*")
 
-(define-key lsp-ui-mode-map [remap xref-find-definitions]
-  #'lsp-ui-peek-find-definitions)
-(define-key lsp-ui-mode-map [remap xref-find-references]
-  #'lsp-ui-peek-find-references)
-
 (require 'lsp-ui-doc)
 (setq lsp-ui-doc-header t)
 (setq lsp-ui-doc-include-signature t)
