@@ -57,7 +57,9 @@
 (setq org-fontify-todo-headline t
       org-fontify-done-headline t
       org-tags-column -85  ;; TODO(laurynas): compute automatically
-      org-habit-graph-column 50)  ;; TODO(laurynas): compute automatically
+      org-habit-graph-column 50  ;; TODO(laurynas): compute automatically
+      org-image-actual-width 720 ;; TODO(laurynas): compute automatically
+      org-startup-with-inline-images t)
 (add-hook 'org-mode-hook #'org-sticky-header-mode)
 
 ;;; TODO state changes
