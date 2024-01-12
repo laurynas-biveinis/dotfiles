@@ -697,7 +697,10 @@
                             magit-previous-line right-char forward-word
                             delete-backward-char scroll-up-command
                             c-electric-backspace org-agenda-next-line
-                            mouse-drag-region mac-mwheel-scroll))
+                            mouse-drag-region mac-mwheel-scroll mouse-set-point
+                            org-cycle helm-next-line backward-word save-buffer
+                            isearch-repeat-forward scroll-down-command
+                            beginning-of-visual-line windmove-right))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
