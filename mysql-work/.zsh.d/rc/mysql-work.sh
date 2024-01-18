@@ -749,7 +749,8 @@ rmtr() {
 }
 
 rm_tmp_mtr() {
-    rm -rf /tmp/mtr-* /tmp/router-* /tmp/mysqld-* /tmp/mysql-unique-ids
+    rm -rf /tmp/mtr-* /tmp/router-* /tmp/mysqld-* /tmp/mysql-unique-ids \
+       /tmp/mysqlx.sock /tmp/mysqlx.sock.lock
 }
 
 mysql_export_build_defaults
