@@ -749,6 +749,8 @@ rmtr() {
 }
 
 rm_tmp_mtr() {
+    killall -9 mysql_server_mock
+    killall -9 mysqlrouter
     rm -rf /tmp/mtr-* /tmp/router-* /tmp/mysqld-* /tmp/mysql-unique-ids \
        /tmp/mysqlx.sock /tmp/mysqlx.sock.lock
 }
