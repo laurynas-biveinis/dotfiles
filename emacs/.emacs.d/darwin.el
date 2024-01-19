@@ -79,4 +79,9 @@
 ;; dynamic_lookup may not work with chained fixups"
 (setq native-comp-driver-options '("-Wl,-w"))
 
+;;; plantuml
+(require 'ob-plantuml)
+(setq org-plantuml-jar-path
+      (concat dotfiles--homebrew-root "opt/plantuml/libexec/plantuml.jar"))
+
 ;;; darwin.el ends here

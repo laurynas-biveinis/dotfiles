@@ -161,6 +161,11 @@
             #'dotfiles--org-mode-flyspell-verify-disable-for-org-crypt)
 
 
+;;; `org-babel'
+(org-babel-do-load-languages 'org-babel-load-languages
+                             (append org-babel-load-languages
+                                     '((plantuml . t))))
+
 ;;; `org-checklist' from org-contrib
 (require 'org-checklist)
 
