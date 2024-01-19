@@ -32,9 +32,9 @@
                                  vterm-mode))
 
 (setq company-abort-manual-when-too-short t
-      company-idle-delay 0.1
+      company-idle-delay 0.2
       company-minimum-prefix-length 3
-      company-tooltip-idle-delay .3
+      company-tooltip-idle-delay 0.5
       company-selection-wrap-around t)
 
 ;;; Helm
