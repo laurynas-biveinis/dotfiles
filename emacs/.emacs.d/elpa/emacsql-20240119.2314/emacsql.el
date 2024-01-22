@@ -104,6 +104,9 @@ may return `process', `user-ptr' or `sqlite' for this value.")
   "A connection to a SQL database."
   :abstract t)
 
+(make-obsolete 'emacsql-log-buffer "use (oref obj log-buffer) instead."
+               "EmacSQL 4.0.0")
+
 (cl-defgeneric emacsql-close (connection)
   "Close CONNECTION and free all resources.")
 
@@ -127,14 +130,13 @@ SQL expression.")
 
 (cl-defmethod emacsql-enable-debugging ((connection emacsql-connection))
   "Enable debugging on CONNECTION."
-  (unless (buffer-live-p (emacsql-log-buffer connection))
-    (setf (emacsql-log-buffer connection)
-          (generate-new-buffer " *emacsql-log*"))))
+  (unless (buffer-live-p (oref connection log-buffer))
+    (oset connection log-buffer (generate-new-buffer " *emacsql-log*"))))
 
 (cl-defmethod emacsql-log ((connection emacsql-connection) message)
   "Log MESSAGE into CONNECTION's log.
 MESSAGE should not have a newline on the end."
-  (let ((buffer (emacsql-log-buffer connection)))
+  (let ((buffer (oref connection log-buffer)))
     (when buffer
       (unless (buffer-live-p buffer)
         (setq buffer (emacsql-enable-debugging connection)))
@@ -147,11 +149,11 @@ MESSAGE should not have a newline on the end."
 Using this function to do it anyway, means additionally using a
 misnamed and obsolete accessor function."
   (and (slot-boundp this 'handle)
-       (eieio-oref this 'handle)))
+       (oref this handle)))
 (cl-defmethod (setf emacsql-process) (value (this emacsql-connection))
-  (eieio-oset this 'handle value))
+  (oset this handle value))
 (make-obsolete 'emacsql-process "underlying slot is for internal use only."
-               "Emacsql 4.0.0")
+               "EmacSQL 4.0.0")
 
 (cl-defmethod slot-missing ((connection emacsql-connection)
                             slot-name operation &optional new-value)
@@ -187,7 +189,7 @@ misnamed and obsolete accessor function."
 (cl-defmethod emacsql-wait ((connection emacsql-connection) &optional timeout)
   "Block until CONNECTION is waiting for further input."
   (let* ((real-timeout (or timeout emacsql-global-timeout))
-         (end (when real-timeout (+ (float-time) real-timeout))))
+         (end (and real-timeout (+ (float-time) real-timeout))))
     (while (and (or (null real-timeout) (< (float-time) end))
                 (not (emacsql-waiting-p connection)))
       (save-match-data
@@ -200,7 +202,7 @@ misnamed and obsolete accessor function."
 
 (defun emacsql-compile (connection sql &rest args)
   "Compile s-expression SQL for CONNECTION into a string."
-  (let* ((mask (when connection (emacsql-types connection)))
+  (let* ((mask (and connection (emacsql-types connection)))
          (emacsql-type-map (or mask emacsql-type-map)))
     (concat (apply #'emacsql-format (emacsql-prepare sql) args) ";")))
 
@@ -258,9 +260,9 @@ specific error conditions."
 
 (defun emacsql-register (connection)
   "Register CONNECTION for automatic cleanup and return CONNECTION."
-  (let ((finalizer (make-finalizer (lambda () (emacsql-close connection)))))
-    (prog1 connection
-      (setf (slot-value connection 'finalizer) finalizer))))
+  (prog1 connection
+    (oset connection finalizer
+          (make-finalizer (lambda () (emacsql-close connection))))))
 
 ;;; Useful macros
 
@@ -301,10 +303,10 @@ multiple times before the changes are committed."
                  (when (= 1 emacsql--transaction-level)
                    (emacsql emacsql--connection [:begin]))
                  (let ((result (progn ,@body)))
-                   (setf emacsql--result result)
+                   (setq emacsql--result result)
                    (when (= 1 emacsql--transaction-level)
                      (emacsql emacsql--connection [:commit]))
-                   (setf emacsql--completed t)))
+                   (setq emacsql--completed t)))
              (emacsql-locked (emacsql emacsql--connection [:rollback])
                              (sleep-for 0.05))))
        (when (and (= 1 emacsql--transaction-level)
@@ -344,7 +346,7 @@ compile time. For example, in the expression below the variables
 Each column must be a plain symbol, no expressions allowed here."
   (declare (indent 2))
   (let ((sql (if (vectorp sql-and-args) sql-and-args (car sql-and-args)))
-        (args (unless (vectorp sql-and-args) (cdr sql-and-args))))
+        (args (and (not (vectorp sql-and-args)) (cdr sql-and-args))))
     (cl-assert (eq :select (elt sql 0)))
     (let ((vars (elt sql 1)))
       (when (eq '* vars)
@@ -353,7 +355,7 @@ Each column must be a plain symbol, no expressions allowed here."
       `(let ((emacsql--results (emacsql ,connection ,sql ,@args))
              (emacsql--final nil))
          (dolist (emacsql--result emacsql--results emacsql--final)
-           (setf emacsql--final
+           (setq emacsql--final
                  (cl-destructuring-bind ,(cl-coerce vars 'list) emacsql--result
                    ,@body)))))))
 
@@ -432,9 +434,9 @@ A prefix argument causes the SQL to be printed into the current buffer."
     (save-excursion
       (beginning-of-defun)
       (let ((containing-sexp (elt (parse-partial-sexp (point) start) 1)))
-        (when containing-sexp
-          (goto-char containing-sexp)
-          (looking-at "\\["))))))
+        (and containing-sexp
+             (progn (goto-char containing-sexp)
+                    (looking-at "\\[")))))))
 
 (defun emacsql--calculate-vector-indent (fn &optional parse-start)
   "Don't indent vectors in `emacs-lisp-mode' like lists."

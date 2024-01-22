@@ -20,8 +20,8 @@
   (let ((conditions (cl-remove-duplicates
                      (append parents (list symbol 'emacsql-error 'error)))))
     `(prog1 ',symbol
-       (setf (get ',symbol 'error-conditions) ',conditions
-             (get ',symbol 'error-message) ,message))))
+       (put ',symbol 'error-conditions ',conditions)
+       (put ',symbol 'error-message ,message))))
 
 (emacsql-deferror emacsql-error () ;; parent condition for all others
   "EmacSQL had an unhandled condition")
@@ -210,16 +210,16 @@
 A parameter is a symbol that looks like $i1, $s2, $v3, etc. The
 letter refers to the type: identifier (i), scalar (s),
 vector (v), raw string (r), schema (S)."
-  (when (symbolp thing)
-    (let ((name (symbol-name thing)))
-      (when (string-match-p "^\\$[isvrS][0-9]+$" name)
-        (cons (1- (read (substring name 2)))
-              (cl-ecase (aref name 1)
-                (?i :identifier)
-                (?s :scalar)
-                (?v :vector)
-                (?r :raw)
-                (?S :schema)))))))
+  (and (symbolp thing)
+       (let ((name (symbol-name thing)))
+         (and (string-match-p "^\\$[isvrS][0-9]+$" name)
+              (cons (1- (read (substring name 2)))
+                    (cl-ecase (aref name 1)
+                      (?i :identifier)
+                      (?s :scalar)
+                      (?v :vector)
+                      (?r :raw)
+                      (?S :schema)))))))
 
 (defmacro emacsql-with-params (prefix &rest body)
   "Evaluate BODY, collecting parameters.
@@ -236,7 +236,7 @@ string, which will be combined with variable definitions."
                 (svector (thing) (combine (emacsql--*vector thing)))
                 (expr (thing) (combine (emacsql--*expr thing)))
                 (subsql (thing)
-                        (format "(%s)" (combine (emacsql-prepare thing)))))
+                  (format "(%s)" (combine (emacsql-prepare thing)))))
        (cons (concat ,prefix (progn ,@body)) emacsql--vars))))
 
 (defun emacsql--!param (thing &optional kind)
@@ -244,9 +244,9 @@ string, which will be combined with variable definitions."
 If optional KIND is not specified, then try to guess it.
 Only use within `emacsql-with-params'!"
   (cl-flet ((check (param)
-                   (when (and kind (not (eq kind (cdr param))))
-                     (emacsql-error
-                      "Invalid parameter type %s, expecting %s" thing kind))))
+              (when (and kind (not (eq kind (cdr param))))
+                (emacsql-error
+                 "Invalid parameter type %s, expecting %s" thing kind))))
     (let ((param (emacsql-param thing)))
       (if (null param)
           (emacsql-escape-format
@@ -264,7 +264,7 @@ Only use within `emacsql-with-params'!"
                (emacsql-escape-scalar thing))))
         (prog1 (if (eq (cdr param) :schema) "(%s)" "%s")
           (check param)
-          (setf emacsql--vars (nconc emacsql--vars (list param))))))))
+          (setq emacsql--vars (nconc emacsql--vars (list param))))))))
 
 (defun emacsql--*vector (vector)
   "Prepare VECTOR."
@@ -275,8 +275,7 @@ Only use within `emacsql-with-params'!"
       (vector (format "(%s)" (mapconcat #'scalar vector ", ")))
       (otherwise (emacsql-error "Invalid vector: %S" vector)))))
 
-(defmacro emacsql--generate-op-lookup-defun (name
-                                             operator-precedence-groups)
+(defmacro emacsql--generate-op-lookup-defun (name operator-precedence-groups)
   "Generate function to look up predefined SQL operator metadata.
 
 The generated function is bound to NAME and accepts two
@@ -349,20 +348,18 @@ See `emacsql--generate-op-lookup-defun' for details."
   "Create format-string for an SQL operator.
 The format-string returned is intended to be used with `format'
 to create an SQL expression."
-  (when expr
-    (cl-labels ((replace-operand (x) (if (eq x :operand)
-                                         "%s"
-                                       x))
-                (to-format-string (e) (mapconcat #'replace-operand e "")))
-      (cond
-       ((and (eq arity :unary) (eql argument-count 1))
-        (to-format-string expr))
-       ((and (eq arity :binary) (>= argument-count 2))
-        (let ((result (reverse expr)))
-          (dotimes (_ (- argument-count 2))
-            (setf result (nconc (reverse expr) (cdr result))))
-          (to-format-string (nreverse result))))
-       (t (emacsql-error "Wrong number of operands for %s" op))))))
+  (and expr
+       (cl-labels ((replace-operand (x) (if (eq x :operand) "%s" x))
+                   (to-format-string (e) (mapconcat #'replace-operand e "")))
+         (cond
+          ((and (eq arity :unary) (eql argument-count 1))
+           (to-format-string expr))
+          ((and (eq arity :binary) (>= argument-count 2))
+           (let ((result (reverse expr)))
+             (dotimes (_ (- argument-count 2))
+               (setq result (nconc (reverse expr) (cdr result))))
+             (to-format-string (nreverse result))))
+          (t (emacsql-error "Wrong number of operands for %s" op))))))
 
 (defun emacsql--get-op-info (op argument-count parent-precedence-value)
   "Lookup SQL operator information for generating an SQL expression.
@@ -373,10 +370,12 @@ equal to the identified operator's precedence, then the format
 string returned is wrapped with parentheses."
   (cl-destructuring-bind (format-string arity precedence-value)
       (emacsql--get-op op argument-count)
-    (let ((expanded-format-string (emacsql--expand-format-string op
-                                                                 format-string
-                                                                 arity
-                                                                 argument-count)))
+    (let ((expanded-format-string
+           (emacsql--expand-format-string
+            op
+            format-string
+            arity
+            argument-count)))
       (cl-values (cond
                   ((null format-string) nil)
                   ((>= parent-precedence-value
@@ -397,10 +396,11 @@ string returned is wrapped with parentheses."
             (emacsql--get-op-info op
                                   (length args)
                                   (or parent-precedence-value 0))
-          (cl-flet ((recur (n) (combine (emacsql--*expr (nth n args)
-                                                        (or precedence-value 0))))
+          (cl-flet ((recur (n)
+                      (combine (emacsql--*expr (nth n args)
+                                               (or precedence-value 0))))
                     (nops (op)
-                          (emacsql-error "Wrong number of operands for %s" op)))
+                      (emacsql-error "Wrong number of operands for %s" op)))
             (cl-case op
               ;; Special cases <= >=
               ((<= >=)
@@ -466,7 +466,7 @@ string returned is wrapped with parentheses."
   "Append parameters from PREPARED to `emacsql--vars', return the string.
 Only use within `emacsql-with-params'!"
   (cl-destructuring-bind (string . vars) prepared
-    (setf emacsql--vars (nconc emacsql--vars vars))
+    (setq emacsql--vars (nconc emacsql--vars vars))
     string))
 
 (defun emacsql-prepare--string (string)
@@ -506,7 +506,7 @@ Only use within `emacsql-with-params'!"
                 (emacsql-escape-format
                  (emacsql-escape-scalar item))))
              into parts
-             do (setf last item)
+             do (setq last item)
              finally (cl-return
                       (mapconcat #'identity parts " ")))))
 

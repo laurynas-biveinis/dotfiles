@@ -167,14 +167,14 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:commit . "00e07e060218fbd1e16faaf10116c03b12e62580"))])
  (auctex .
-	 [(13 2 4)
+	 [(13 3 0)
 	  ((emacs
 	    (26 1)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
 	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
 	   (:maintainer nil . "auctex-devel@gnu.org")
-	   (:commit . "62befc2176987f202770b974cbda89314abc254e"))])
+	   (:commit . "ea4210718993bc7726080bc7d7442f5c22e823b4"))])
  (aumix-mode .
 	     [(7)
 	      nil "run the aumix program in a buffer" single
@@ -264,6 +264,15 @@
 	    (:authors
 	     ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	    (:commit . "1709059b8ac33c76107da178cf2d0dc875dff14e"))])
+ (bicep-ts-mode .
+		[(0 1)
+		 nil "tree-sitter support for Bicep" tar
+		 ((:keywords "bicep" "languages" "tree-sitter")
+		  (:maintainer "Jostein Kjønigsen" . "jostein@kjonigsen.net")
+		  (:authors
+		   ("Jostein Kjønigsen" . "jostein@kjonigsen.net"))
+		  (:url . "https://elpa.gnu.org/packages/bicep-ts-mode.html")
+		  (:commit . "197ccf3d4b8b7bb89eb379b90e701429275d58ee"))])
  (bind-key .
 	   [(2 4 1)
 	    nil "A simple way to manage personal keybindings" tar
@@ -761,13 +770,15 @@
 		 (:keywords "convenience")
 		 (:url . "http://elpa.gnu.org/packages/cycle-quotes.html"))])
  (dape .
-       [(0 3 0)
+       [(0 4 0)
 	((emacs
-	  (29 1)))
+	  (29 1))
+	 (jsonrpc
+	  (1 0 21)))
 	"Debug Adapter Protocol for Emacs" tar
 	((:url . "https://github.com/svaante/dape")
 	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
-	 (:commit . "53560932c3cf11aecd17bb247743e4352c0ddf20"))])
+	 (:commit . "3b39d3739f9671536e33ae52a405812ba2cdec61"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -1078,7 +1089,7 @@
 	       ("Leo Liu" . "sdl.web@gmail.com"))
 	      (:commit . "f155d19c528e27f8f6c72f0d75f652edbdcab37f"))])
  (ebdb .
-       [(0 8 21)
+       [(0 8 22)
 	((emacs
 	  (25 1))
 	 (seq
@@ -1089,7 +1100,7 @@
 	 (:maintainer "Eric Abrahamsen" . "eric@ericabrahamsen.net")
 	 (:authors
 	  ("Eric Abrahamsen" . "eric@ericabrahamsen.net"))
-	 (:commit . "a03d36f847c9384215638be1180f1690d76f6b30"))])
+	 (:commit . "b96e5470c54503eab2159e69c822648ad55e6915"))])
  (ebdb-gnorb .
 	     [(1 0 2)
 	      ((gnorb
@@ -1210,7 +1221,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "70e38dbfa8f4acbdebfd0f417410d99f5031e05f"))])
  (ellama .
-	 [(0 5 7)
+	 [(0 7 0)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1223,7 +1234,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "08cfa5440d95d00747eb3e078a4bc67972e1bfe3"))])
+	   (:commit . "8bab25150a054c67bd49ca9707ccdedcadcbcd2b"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -1362,6 +1373,27 @@
 		    ("David Capello" . "davidcapello@gmail.com")
 		    ("Matthew L. Fidler" . "matthew.fidler@gmail.com"))
 		   (:keywords "convenience"))])
+ (ess .
+      [(24 1 0)
+       ((emacs
+	 (25 1)))
+       "Emacs Speaks Statistics" tar
+       ((:url . "https://ess.r-project.org/")
+	(:maintainer "ESS Core Team" . "ESS-core@r-project.org")
+	(:authors
+	 ("David Smith" . "dsmith@stats.adelaide.edu.au")
+	 ("A.J. Rossini" . "blindglobe@gmail.com")
+	 ("Richard M. Heiberger" . "rmh@temple.edu")
+	 ("Kurt Hornik" . "Kurt.Hornik@R-project.org")
+	 ("Martin Maechler" . "maechler@stat.math.ethz.ch")
+	 ("Rodney A. Sparapani" . "rsparapa@mcw.edu")
+	 ("Stephen Eglen" . "stephen@gnu.org")
+	 ("Sebastian P. Luque" . "spluque@gmail.com")
+	 ("Henning Redestig" . "henning.red@googlemail.com")
+	 ("Vitalie Spinu" . "spinuvit@gmail.com")
+	 ("Lionel Henry" . "lionel.hry@gmail.com")
+	 ("J. Alexander Branham" . "alex.branham@gmail.com"))
+	(:commit . "88d611c6833d521d0fbb2ef9c638bf6b3525a622"))])
  (excorporate .
 	      [(1 1 1)
 	       ((emacs
@@ -2168,7 +2200,7 @@
 	 ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	(:commit . "09cf249c78385502a2ead30c4fa1468cf96939f7"))])
  (llm .
-      [(0 8 0)
+      [(0 9 0)
        ((emacs
 	 (28 1)))
        "Interface to pluggable llm backends" tar
@@ -2176,7 +2208,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "dac199a3dd43cf70d69f9cb042191ca89ef07445"))])
+	(:commit . "8fc2d1cb41ed8850696ee1ce549158496e437cda"))])
  (lmc .
       [(1 4)
        ((emacs
