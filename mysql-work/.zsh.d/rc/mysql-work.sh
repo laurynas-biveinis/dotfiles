@@ -57,12 +57,14 @@ mysql_export_environment_helpers() {
             # main.derived_limit fails with small cost differences) and
             # https://bugs.mysql.com/bug.php?id=113048 (MTR test
             # gis.gis_bugs_crashes fails with a result difference)
-            declare -a -r my8_cxx_flags=("-ffp-contract=off")
+            declare -a -r my810_820_extra_cxx_flags=("-ffp-contract=off")
+            declare -a -r my8018_35_extra_cxx_flags=("-ffp-contract=off")
             declare -a my8018_28=("-DWITH_SSL=$brew/openssl@1.1")
             export MY8030_820_CORE_DUMP_FLAGS=(
                 "-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         else
-            declare -a -r my8_cxx_flags=()
+            declare -a -r my810_820_extra_cxx_flags=()
+            declare -a -r my8018_35_extra_cxx_flags=()
             declare -a my8018_28=()
             export MY8030_820_CORE_DUMP_FLAGS=()
         fi
@@ -84,6 +86,7 @@ mysql_export_environment_helpers() {
         declare -a -r my8032_34_extra_cxx_flags=(
             "-Wno-unused-but-set-variable" "-Wno-deprecated-copy-with-dtor")
         declare -a my8032_extra=("-DWITH_UNIT_TESTS=OFF")
+        declare -a -r my8036_extra_cxx_release_flags=("-Wno-unused-variable")
 
         declare -a maria_common=(
             "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
@@ -123,13 +126,15 @@ mysql_export_environment_helpers() {
             "--mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1"
             "--mysqld-env=DYLD_INSERT_LIBRARIES=$emd_libdir/libeatmydata.dylib")
     else
-        declare -a -r my8_cxx_flags=()
+        declare -a -r my810_820_extra_cxx_flags=()
         declare -a my8018_extra=()
         declare -a my8018_28=()
         declare -a -r my8018_28_cxx_flags=("-Wno-unused-label")
+        declare -a -r my8018_35_extra_cxx_flags=()
         declare -a -r my8031_extra_cxx_flags=()
         declare -a -r my8032_34_extra_cxx_flags=()
         declare -a my8032_extra=()
+        declare -a my8036_extra_cxx_release_flags=()
         declare -a maria_common=()
         # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
         # configuration failure on Linux virtualized on M1 Mac)
@@ -167,9 +172,8 @@ mysql_export_environment_helpers() {
 
     # Common building blocks
 
-    declare -a -r cxx_flags_debug=("${my8_cxx_flags[@]}" "-g")
-    declare -a -r cxx_flags_release=("${my8_cxx_flags[@]}" "-O2" "-g"
-                                     "-DNDEBUG")
+    declare -a -r cxx_flags_debug=("-g")
+    declare -a -r cxx_flags_release=("-O2" "-g" "-DNDEBUG")
 
     declare -a -r cmake_common=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
     declare -a -r cmake_release=("${cmake_common[@]}"
@@ -198,68 +202,93 @@ mysql_export_environment_helpers() {
 
     # 8.2.0
 
-    declare -a -r my820_cxx_flags_debug=("${cxx_flags_debug[@]}")
-    declare -a -r my820_cxx_flags_release=("${cxx_flags_release[@]}")
+    declare -a -r my820_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                         "${my810_820_extra_cxx_flags[@]}")
+    declare -a -r my820_cxx_flags_release=("${cxx_flags_release[@]}"
+                                           "${my810_820_extra_cxx_flags[@]}")
     declare -a -r my820_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8_cxx_flags[*]}"
+        "-DCMAKE_CXX_FLAGS=${my810_820_extra_cxx_flags[*]}}"
         "-DCMAKE_C_FLAGS_DEBUG=${my820_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my820_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_RELEASE=${my820_cxx_flags_release[*]}")
 
+    # 8.0.36
+
+    declare -a -r my8036_cxx_flags_release=(
+        "${cxx_flags_release[@]}" "${my8036_extra_cxx_release_flags[@]}")
+    declare -a -r my8036_extra=(
+        "-DCMAKE_C_FLAGS_DEBUG=${cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_DEBUG=${cxx_flags_debug[*]}"
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8036_cxx_flags_release[*]}")
+
     # 8.0.35
 
-    declare -a -r my8035_cxx_flags_debug=("${cxx_flags_debug[@]}")
-    declare -a -r my8035_cxx_flags_release=("${cxx_flags_release[@]}")
+    declare -a -r my8035_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}")
+    declare -a -r my8035_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}")
     declare -a -r my8035_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8_cxx_flags[*]}"
+        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8035_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my8035_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_RELEASE=${my8035_cxx_flags_release[*]}")
 
     # 8.0.34
 
-    declare -a -r my8034_cxx_flags_debug=("${my8032_34_extra_cxx_flags[@]}"
-                                          "${cxx_flags_debug[@]}")
-    declare -a -r my8034_cxx_flags_release=("${my8032_34_extra_cxx_flags[@]}"
-                                            "${cxx_flags_release[@]}")
+    declare -a -r my8034_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8032_34_extra_cxx_flags[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}")
+    declare -a -r my8034_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8032_34_extra_cxx_flags[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}")
     declare -a -r my8034_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]}"
+        "-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]} \
+                           ${my8018_35_extra_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8034_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my8034_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_RELEASE=${my8034_cxx_flags_release[*]}")
 
     # 8.0.33
 
-    declare -a -r my8033_cxx_flags_debug=("${my8032_34_extra_cxx_flags[@]}"
-                                          "${cxx_flags_debug[@]}")
-    declare -a -r my8033_cxx_flags_release=("${my8032_34_extra_cxx_flags[@]}"
-                                            "${cxx_flags_release[@]}")
+    declare -a -r my8033_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8032_34_extra_cxx_flags[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}")
+    declare -a -r my8033_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8032_34_extra_cxx_flags[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}")
     declare -a -r my8033_extra=(
         "-DWITH_RAPIDJSON=bundled"
-        "-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]}"
+        "-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]} \
+                           ${my8018_35_extra_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8033_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my8033_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_RELEASE=${my8033_cxx_flags_release[*]}")
 
     # 8.0.32
 
-    declare -a -r my8032_cxx_flags_debug=("${my8032_34_extra_cxx_flags[@]}"
-                                          "${cxx_flags_debug[@]}")
-    declare -a -r my8032_cxx_flags_release=("${my8032_34_extra_cxx_flags[@]}"
-                                            "${cxx_flags_release[@]}")
-    my8032_extra+=("-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]}"
+    declare -a -r my8032_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8032_34_extra_cxx_flags[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}")
+    declare -a -r my8032_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8032_34_extra_cxx_flags[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}")
+    my8032_extra+=("-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]} \
+                                      ${my8018_35_extra_cxx_flags[*]}"
                    "-DCMAKE_C_FLAGS_DEBUG=${my8032_cxx_flags_debug[*]}"
                    "-DCMAKE_CXX_FLAGS_DEBUG=${my8032_cxx_flags_debug[*]}"
                    "-DCMAKE_CXX_FLAGS_RELEASE=${my8032_cxx_flags_release[*]}")
 
     # 8.0.31
 
-    declare -a -r my8031_cxx_flags_debug=("${my8031_extra_cxx_flags[@]}"
-                                          "${cxx_flags_debug[@]}")
-    declare -a -r my8031_cxx_flags_release=("${my8031_extra_cxx_flags[@]}"
-                                            "${cxx_flags_release[@]}")
+    declare -a -r my8031_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8031_extra_cxx_flags[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}")
+    declare -a -r my8031_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8031_extra_cxx_flags[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}")
     declare -a -r my8031_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8031_extra_cxx_flags[*]}"
+        "-DCMAKE_CXX_FLAGS=${my8031_extra_cxx_flags[*]} \
+                           ${my8018_35_extra_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8031_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my8031_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_RELEASE=${my8031_cxx_flags_release[*]}")
@@ -270,12 +299,16 @@ mysql_export_environment_helpers() {
 
     # 8.0.29
 
-    declare -a -r my8029_cxx_flags_debug=("${my8028_29_cxx_flags_debug[@]}"
-                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8029_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8028_29_cxx_flags_debug[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}")
+    declare -a -r my8029_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}")
     declare -a -r my8029_extra=(
+        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8029_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my8029_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${cxx_flags_release[*]}")
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8029_cxx_flags_release[*]}")
 
     # 8.0.28--8.0.27
 
@@ -294,37 +327,47 @@ mysql_export_environment_helpers() {
 
     declare -a -r fb8028_extra=("-DWITH_UNIT_TESTS=OFF")
 
-    declare -a -r my8028_cxx_flags_debug=("${my8028_29_cxx_flags_debug[@]}"
-                                          "${my8018_28_cxx_flags_debug[*]}"
-                                          "${cxx_flags_debug[@]}")
+    declare -a -r my8028_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8028_29_cxx_flags_debug[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}"
+                                          "${my8018_28_cxx_flags_debug[@]}")
+    declare -a -r my8028_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}")
     declare -a -r my8028_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8018_28_cxx_flags[*]}"
+        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]} \
+                           ${my8018_28_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8028_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my8028_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${cxx_flags_release[*]}")
+        "-DCMAKE_CXX_FLAGS_RELEASE=${my8028_cxx_flags_release[*]}")
 
     # 8.0.27
 
-    declare -a -r my8027_cxx_flags_debug=("${my8018_28_cxx_flags[*]}"
-                                          "${cxx_flags_debug[@]}")
-    declare -a -r my8027_cxx_flags_release=("${my8018_28_cxx_flags[*]}"
-                                            "${cxx_flags_release[@]}")
+    declare -a -r my8027_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}"
+                                          "${my8018_28_cxx_flags[*]}")
+    declare -a -r my8027_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}"
+                                            "${my8018_28_cxx_flags[@]}")
     declare -a -r my8027_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8018_28_cxx_flags[*]}"
+        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]} \
+                           ${my8018_28_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8027_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my8027_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_RELEASE=${my8027_cxx_flags_release[*]}")
 
     # 8.0.26
 
-    declare -a -r my8026_cxx_flags_debug=("${my8018_28_cxx_flags[*]}"
-                                          "${my8018_28_cxx_flags_debug[*]}"
-                                          "${cxx_flags_debug[@]}")
-    declare -a -r my8026_cxx_flags_release=("${my8018_28_cxx_flags[*]}"
-                                            "${cxx_flags_release[@]}")
+    declare -a -r my8026_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}"
+                                          "${my8018_28_cxx_flags[@]}"
+                                          "${my8018_28_cxx_flags_debug[@]}")
+    declare -a -r my8026_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}"
+                                            "${my8018_28_cxx_flags[@]}")
     declare -a -r my8026_extra=(
         "-DENABLE_DOWNLOADS=ON"
-        "-DCMAKE_CXX_FLAGS=${my8018_28_cxx_flags[*]}"
+        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]} \
+                           ${my8018_28_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8026_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my8026_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_RELEASE=${my8026_cxx_flags_release[*]}")
@@ -336,15 +379,18 @@ mysql_export_environment_helpers() {
                                           "-Wno-range-loop-construct"
                                           "-Wno-non-c-typedef-for-linkage")
 
-    declare -a -r my8018_cxx_flags=("${my8018_28_cxx_flags[*]}"
-                                    "${my8018_extra_cxx_flags[*]}")
-    declare -a -r my8018_cxx_flags_debug=("${my8018_28_cxx_flags[*]}"
-                                          "${my8018_28_cxx_flags_debug[*]}"
-                                          "${my8018_extra_cxx_flags[*]}"
-                                          "${cxx_flags_debug[@]}")
-    declare -a -r my8018_cxx_flags_release=("${my8018_28_cxx_flags[*]}"
-                                            "${my8018_extra_cxx_flags[*]}"
-                                            "${cxx_flags_release[@]}")
+    declare -a -r my8018_cxx_flags=("${my8018_35_extra_cxx_flags[@]}"
+                                    "${my8018_28_cxx_flags[@]}"
+                                    "${my8018_extra_cxx_flags[@]}")
+    declare -a -r my8018_cxx_flags_debug=("${cxx_flags_debug[@]}"
+                                          "${my8018_35_extra_cxx_flags[@]}"
+                                          "${my8018_28_cxx_flags[@]}"
+                                          "${my8018_28_cxx_flags_debug[@]}"
+                                          "${my8018_extra_cxx_flags[@]}")
+    declare -a -r my8018_cxx_flags_release=("${cxx_flags_release[@]}"
+                                            "${my8018_35_extra_cxx_flags[@]}"
+                                            "${my8018_28_cxx_flags[@]}"
+                                            "${my8018_extra_cxx_flags[@]}")
     my8018_extra+=(
         "-DCMAKE_CXX_FLAGS=${my8018_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my8018_cxx_flags_debug[*]}"
@@ -358,6 +404,9 @@ mysql_export_environment_helpers() {
 
     export MY810D=("${my8d[@]}" "${my8033_820[@]}")
     export MY810=("${my8r[@]}" "${my8033_820[@]}")
+
+    export MY8036D=("${my8d[@]}" "${my8033_820[@]}" "${my8036_extra[@]}")
+    export MY8036=("${my8r[@]}" "${my8033_820[@]}" "${my8036_extra[@]}")
 
     export MY8035D=("${my8d[@]}" "${my8033_820[@]}" "${my8035_extra[@]}")
     export MY8035=("${my8r[@]}" "${my8033_820[@]}" "${my8035_extra[@]}")
@@ -476,6 +525,12 @@ mysql_cmake() {
                 8.1.0)
                     declare -a release_flags=("${MY810[@]}")
                     declare -a debug_flags=("${MY810D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                    ;;
+                8.0.36)
+                    declare -a release_flags=("${MY8036[@]}")
+                    declare -a debug_flags=("${MY8036D[@]}")
                     declare -a -r \
                             core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
                     ;;
