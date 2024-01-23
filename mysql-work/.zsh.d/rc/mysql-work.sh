@@ -60,13 +60,13 @@ mysql_export_environment_helpers() {
             declare -a -r my810_820_extra_cxx_flags=("-ffp-contract=off")
             declare -a -r my8018_35_extra_cxx_flags=("-ffp-contract=off")
             declare -a my8018_28=("-DWITH_SSL=$brew/openssl@1.1")
-            export MY8030_820_CORE_DUMP_FLAGS=(
+            export MY8030_830_CORE_DUMP_FLAGS=(
                 "-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         else
             declare -a -r my810_820_extra_cxx_flags=()
             declare -a -r my8018_35_extra_cxx_flags=()
             declare -a my8018_28=()
-            export MY8030_820_CORE_DUMP_FLAGS=()
+            export MY8030_830_CORE_DUMP_FLAGS=()
         fi
         declare -a my8018_extra=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
         my8018_28+=("-DWITH_ICU=$brew/icu4c")
@@ -87,6 +87,7 @@ mysql_export_environment_helpers() {
             "-Wno-unused-but-set-variable" "-Wno-deprecated-copy-with-dtor")
         declare -a my8032_extra=("-DWITH_UNIT_TESTS=OFF")
         declare -a -r my8036_extra_cxx_release_flags=("-Wno-unused-variable")
+        declare -a -r my830_extra=("-DWITH_ZLIB=bundled")
 
         declare -a maria_common=(
             "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
@@ -135,12 +136,13 @@ mysql_export_environment_helpers() {
         declare -a -r my8032_34_extra_cxx_flags=()
         declare -a my8032_extra=()
         declare -a my8036_extra_cxx_release_flags=()
+        declare -a -r my830_extra=()
         declare -a maria_common=()
         # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
         # configuration failure on Linux virtualized on M1 Mac)
         declare -a fb_common=("-DROCKSDB_BUILD_ARCH=armv8.1-a+crypto")
 
-        export MY8030_820_CORE_DUMP_FLAGS=()
+        export MY8030_830_CORE_DUMP_FLAGS=()
         export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
                           "-DCMAKE_CXX_COMPILER=clang++-12")
         export MYCLANG14=("-DCMAKE_C_COMPILER=clang-14"
@@ -182,9 +184,7 @@ mysql_export_environment_helpers() {
     declare -a -r cmake_debug=("${cmake_common[@]}" "-DCMAKE_BUILD_TYPE=Debug"
                                "-DWITH_DEBUG=ON")
 
-    declare -a -r my8=("-DMYSQL_MAINTAINER_MODE=ON" "-DDOWNLOAD_BOOST=ON"
-                       "-DWITH_BOOST=~/vilniusdb/mysql-boost/"
-                       "-DWITH_SYSTEM_LIBS=ON")
+    declare -a -r my8=("-DMYSQL_MAINTAINER_MODE=ON" "-DWITH_SYSTEM_LIBS=ON")
     declare -a -r my8d=("${cmake_debug[@]}" "${my8[@]}")
     declare -a -r my8r=("${cmake_release[@]}" "${my8[@]}")
 
@@ -196,9 +196,14 @@ mysql_export_environment_helpers() {
 
     # Version-specific building blocks, descending order
 
-    # 8.2.0--8.0.33
+    # 8.3.0--8.0.33
 
-    declare -a -r my8033_820=("-DFORCE_COLORED_OUTPUT=ON")
+    declare -a -r my8033_830=("-DFORCE_COLORED_OUTPUT=ON")
+
+    # 8.2.0--8.0.18
+
+    declare -a -r my8018_820=("-DDOWNLOAD_BOOST=ON"
+                              "-DWITH_BOOST=~/vilniusdb/mysql-boost/")
 
     # 8.2.0
 
@@ -399,58 +404,75 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
-    export MY820D=("${my8d[@]}" "${my8033_820[@]}" "${my820_extra[@]}")
-    export MY820=("${my8r[@]}" "${my8033_820[@]}" "${my820_extra[@]}")
+    export MY830D=("${my8d[@]}" "${my8033_830[@]}" "${my830_extra[@]}")
+    export MY830=("${my8r[@]}" "${my8033_830[@]}" "${my830_extra[@]}")
 
-    export MY810D=("${my8d[@]}" "${my8033_820[@]}")
-    export MY810=("${my8r[@]}" "${my8033_820[@]}")
+    export MY820D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                   "${my820_extra[@]}")
+    export MY820=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                  "${my820_extra[@]}")
 
-    export MY8036D=("${my8d[@]}" "${my8033_820[@]}" "${my8036_extra[@]}")
-    export MY8036=("${my8r[@]}" "${my8033_820[@]}" "${my8036_extra[@]}")
+    export MY810D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}")
+    export MY810=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}")
 
-    export MY8035D=("${my8d[@]}" "${my8033_820[@]}" "${my8035_extra[@]}")
-    export MY8035=("${my8r[@]}" "${my8033_820[@]}" "${my8035_extra[@]}")
+    export MY8036D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                    "${my8036_extra[@]}")
+    export MY8036=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                   "${my8036_extra[@]}")
 
-    export MY8034D=("${my8d[@]}" "${my8033_820[@]}" "${my8034_extra[@]}")
-    export MY8034=("${my8r[@]}" "${my8033_820[@]}" "${my8034_extra[@]}")
+    export MY8035D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                    "${my8035_extra[@]}")
+    export MY8035=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                   "${my8035_extra[@]}")
 
-    export PS8034D=("${my8d[@]}" "${my8033_820[@]}" "${my8034_extra[@]}")
+    export MY8034D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                    "${my8034_extra[@]}")
+    export MY8034=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                   "${my8034_extra[@]}")
 
-    export MY8033D=("${my8d[@]}" "${my8033_820[@]}" "${my8033_extra[@]}")
-    export MY8033=("${my8r[@]}" "${my8033_820[@]}" "${my8033_extra[@]}")
+    export PS8034D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                    "${my8034_extra[@]}")
 
-    export MY8032D=("${my8d[@]}" "${my8032_extra[@]}")
-    export MY8032=("${my8r[@]}" "${my8032_extra[@]}")
+    export MY8033D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                    "${my8033_extra[@]}")
+    export MY8033=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+                   "${my8033_extra[@]}")
+
+    export MY8032D=("${my8d[@]}" "${my8018_820[@]}" "${my8032_extra[@]}")
+    export MY8032=("${my8r[@]}" "${my8018_820[@]}" "${my8032_extra[@]}")
 
     export FB8032D=("${MY8032D[@]}" "${fb_common[@]}")
     export FB8032=("${MY8032[@]}" "${fb_common[@]}")
 
-    export MY8031D=("${my8d[@]}" "${my8031_extra[@]}")
+    export MY8031D=("${my8d[@]}" "${my8018_820[@]}" "${my8031_extra[@]}")
 
-    export MY8030D=("${my8d[@]}")
+    export MY8030D=("${my8d[@]}" "${my8018_820[@]}")
 
-    export MY8029D=("${my8d[@]}" "${my8029_extra[@]}")
+    export MY8029D=("${my8d[@]}" "${my8018_820[@]}" "${my8029_extra[@]}")
 
-    export MY8028=("${my8r[@]}" "${my8028_extra[@]}" "${my8018_28[@]}"
-                   "${my8027_28[@]}")
-    export MY8028D=("${my8d[@]}" "${my8028_extra[@]}" "${my8018_28[@]}"
-                    "${my8027_28[@]}")
+    export MY8028=("${my8r[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
+                   "${my8018_28[@]}" "${my8028_extra[@]}")
+    export MY8028D=("${my8d[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
+                    "${my8018_28[@]}" "${my8028_extra[@]}")
 
     export FB8028=("${MY8028[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
     export FB8028D=("${MY8028D[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
 
-    export MY8027D=("${my8d[@]}" "${my8027_extra[@]}" "${my8018_28[@]}"
-                    "${my8027_28[@]}")
+    export MY8027D=("${my8d[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
+                    "${my8018_28[@]}" "${my8027_extra[@]}")
 
-    export MY8026=("${my8r[@]}" "${my8026_extra[@]}" "${my8018_28[@]}")
-    export MY8026D=("${my8d[@]}" "-DDEBUG_EXTNAME=OFF" "${my8026_extra[@]}"
-                    "${my8018_28[@]}")
-
-    export MY8018=("${my8r[@]}" "${my8018_extra[@]}" "${my8018_28[@]}")
-    export MY8018D=("${my8d[@]}" "${my8018_extra[@]}" "${my8018_28[@]}")
+    export MY8026=("${my8r[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
+                   "${my8026_extra[@]}")
+    export MY8026D=("${my8d[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
+                    "${my8026_extra[@]}" "-DDEBUG_EXTNAME=OFF")
 
     export FB8026=("${MY8026[@]}" "${fb_common[@]}")
     export FB8026D=("${MY8026D[@]}" "${fb_common[@]}")
+
+    export MY8018=("${my8r[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
+                   "${my8018_extra[@]}")
+    export MY8018D=("${my8d[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
+                    "${my8018_extra[@]}")
 
     export MARIA108=("${cmake_release[@]}" "${maria_common[@]}")
     export MARIA108D=("${cmake_debug[@]}" "${maria_common[@]}")
@@ -516,59 +538,65 @@ mysql_cmake() {
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                8.3.0)
+                    declare -a release_flags=("${MY830[@]}")
+                    declare -a debug_flags=("${MY830D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 8.2.0)
                     declare -a release_flags=("${MY820[@]}")
                     declare -a debug_flags=("${MY820D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.1.0)
                     declare -a release_flags=("${MY810[@]}")
                     declare -a debug_flags=("${MY810D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.36)
                     declare -a release_flags=("${MY8036[@]}")
                     declare -a debug_flags=("${MY8036D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.35)
                     declare -a release_flags=("${MY8035[@]}")
                     declare -a debug_flags=("${MY8035D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.34)
                     declare -a release_flags=("${MY8034[@]}")
                     declare -a debug_flags=("${MY8034D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.33)
                     declare -a release_flags=("${MY8033[@]}")
                     declare -a debug_flags=("${MY8033D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.32)
                     declare -a release_flags=("${MY8032[@]}")
                     declare -a debug_flags=("${MY8032D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.31)
                     declare -a release_flags=("${MY8031[@]}")
                     declare -a debug_flags=("${MY8031D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.30)
                     declare -a release_flags=("${MY8030[@]}")
                     declare -a debug_flags=("${MY8030D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.29)
                     declare -a release_flags=("${MY8029[@]}")
@@ -598,7 +626,7 @@ mysql_cmake() {
                     declare -a release_flags=("${FB8032[@]}")
                     declare -a debug_flags=("${FB8032D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.28)
                     declare -a release_flags=("${FB8028[@]}")
@@ -617,7 +645,7 @@ mysql_cmake() {
                 8.0.34)
                     declare -a debug_flags=("${PS8034D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_820_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
                     ;;
                 *)
                     2>&1 echo "Unsupported version, please add"
