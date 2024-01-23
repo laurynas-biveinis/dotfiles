@@ -212,7 +212,7 @@ mysql_export_environment_helpers() {
     declare -a -r my820_cxx_flags_release=("${cxx_flags_release[@]}"
                                            "${my810_820_extra_cxx_flags[@]}")
     declare -a -r my820_extra=(
-        "-DCMAKE_CXX_FLAGS=${my810_820_extra_cxx_flags[*]}}"
+        "-DCMAKE_CXX_FLAGS=${my810_820_extra_cxx_flags[*]}"
         "-DCMAKE_C_FLAGS_DEBUG=${my820_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_DEBUG=${my820_cxx_flags_debug[*]}"
         "-DCMAKE_CXX_FLAGS_RELEASE=${my820_cxx_flags_release[*]}")
