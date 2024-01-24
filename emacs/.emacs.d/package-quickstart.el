@@ -322,7 +322,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.2/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.2/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226/with-editor-autoloads.el"))
 
 
 
@@ -409,7 +409,6 @@ else like the former.
 
 (fn COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER ENVVAR)" t)
 (register-definition-prefixes "with-editor" '("server-" "shell-command--shell-command-with-editor-mode" "start-file-process--with-editor-process-filter" "with-editor"))
-
 
 
 (provide 'with-editor-autoloads)
@@ -916,7 +915,7 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dash-2.19.1/dash-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dash-2.19.1/dash-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301/dash-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301/dash-autoloads.el"))
 
 
 
@@ -981,7 +980,6 @@ See `dash-fontify-mode' for more information on Dash-Fontify mode.
 Register the Dash Info manual with `info-lookup-symbol'.
 This allows Dash symbols to be looked up with \\[info-lookup-symbol]." t)
 (register-definition-prefixes "dash" '("!cdr" "!cons" "--" "->" "-a" "-butlast" "-c" "-d" "-e" "-f" "-gr" "-i" "-juxt" "-keep" "-l" "-m" "-no" "-o" "-p" "-r" "-s" "-t" "-u" "-value-to-list" "-when-let" "-zip" "dash-"))
-
 
 
 (provide 'dash-autoloads)
@@ -4396,7 +4394,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240119.2314/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240119.2314/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240121.1735/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240121.1735/emacsql-autoloads.el"))
 
 
 
@@ -4465,7 +4463,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240114.13/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240114.13/magit-section-autoloads.el"))
 
 
 
@@ -4475,7 +4473,6 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 (register-definition-prefixes "magit-section" '("isearch-clean-overlays@magit-mode" "magit-"))
-
 
 
 (provide 'magit-section-autoloads)
@@ -5328,7 +5325,7 @@ the reports is done using the TaskJuggler GUI.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.3.0/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-3.3.0/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240123.1358/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240123.1358/git-commit-autoloads.el"))
 
 
 
@@ -5345,14 +5342,13 @@ the reports is done using the TaskJuggler GUI.
                   fundamental-mode
                   git-commit-elisp-text-mode))))
 (register-definition-prefixes "git-commit" '("git-commit-" "global-git-commit-mode"))
-
 
 
 (provide 'git-commit-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.3.0/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-3.3.0/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240112.2212/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240112.2212/magit-autoloads.el"))
 
 
 
@@ -5368,64 +5364,69 @@ instance with all nil values is returned.")
 (autoload 'git-rebase-mode "git-rebase" "\
 Major mode for editing of a Git rebase file.
 
-Rebase files are generated when you run 'git rebase -i' or run
+Rebase files are generated when you run \"git rebase -i\" or run
 `magit-interactive-rebase'.  They describe how Git should perform
 the rebase.  See the documentation for git-rebase (e.g., by
-running 'man git-rebase' at the command line) for details.
+running \"man git-rebase\" at the command line) for details.
 
 (fn)" t)
 (defconst git-rebase-filename-regexp "/git-rebase-todo\\'")
-(add-to-list 'auto-mode-alist (cons git-rebase-filename-regexp 'git-rebase-mode))
-(register-definition-prefixes "git-rebase" '("git-rebase-"))
+(add-to-list 'auto-mode-alist (cons git-rebase-filename-regexp #'git-rebase-mode))
+(register-definition-prefixes "git-rebase" '("git-rebase-" "magit-imenu--rebase-"))
 
 
 
-(define-obsolete-variable-alias 'global-magit-file-mode 'magit-define-global-key-bindings "\
-Magit 3.0.0")
-(defvar magit-define-global-key-bindings t "\
-Whether to bind some Magit commands in the global keymap.
+(defvar magit-define-global-key-bindings 'default "\
+Which set of key bindings to add to the global keymap, if any.
 
-If this variable is non-nil, then the following bindings may
-be added to the global keymap.  The default is t.
+This option controls which set of Magit key bindings, if any, may
+be added to the global keymap, even before Magit is first used in
+the current Emacs session.
 
-key             binding
----             -------
-C-x g           magit-status
-C-x M-g         magit-dispatch
-C-c M-g         magit-file-dispatch
+If the value is nil, no bindings are added.
 
-These bindings may be added when `after-init-hook' is run.
-Each binding is added if and only if at that time no other key
-is bound to the same command and no other command is bound to
-the same key.  In other words we try to avoid adding bindings
-that are unnecessary, as well as bindings that conflict with
-other bindings.
+If `default', maybe add:
 
-Adding the above bindings is delayed until `after-init-hook'
-is called to allow users to set the variable anywhere in their
-init file (without having to make sure to do so before `magit'
-is loaded or autoloaded) and to increase the likelihood that
-all the potentially conflicting user bindings have already
-been added.
+    C-x g     `magit-status'
+    C-x M-g   `magit-dispatch'
+    C-c M-g   `magit-file-dispatch'
+
+If `recommended', maybe add:
+
+    C-x g     `magit-status'
+    C-c g     `magit-dispatch'
+    C-c f     `magit-file-dispatch'
+
+    These bindings are strongly recommended, but we cannot use
+    them by default, because the \"C-c <LETTER>\" namespace is
+    strictly reserved for bindings added by the user.
+
+The bindings in the chosen set may be added when
+`after-init-hook' is run.  Each binding is added if, and only
+if, at that time no other key is bound to the same command,
+and no other command is bound to the same key.  In other words
+we try to avoid adding bindings that are unnecessary, as well
+as bindings that conflict with other bindings.
+
+Adding these bindings is delayed until `after-init-hook' is
+run to allow users to set the variable anywhere in their init
+file (without having to make sure to do so before `magit' is
+loaded or autoloaded) and to increase the likelihood that all
+the potentially conflicting user bindings have already been
+added.
 
 To set this variable use either `setq' or the Custom interface.
 Do not use the function `customize-set-variable' because doing
-that would cause Magit to be loaded immediately when that form
+that would cause Magit to be loaded immediately, when that form
 is evaluated (this differs from `custom-set-variables', which
 doesn't load the libraries that define the customized variables).
 
-Setting this variable to nil has no effect if that is done after
-the key bindings have already been added.
-
-We recommend that you bind \"C-c g\" instead of \"C-c M-g\" to
-`magit-file-dispatch'.  The former is a much better binding
-but the \"C-c <letter>\" namespace is strictly reserved for
-users; preventing Magit from using it by default.
-
-Also see info node `(magit)Commands for Buffers Visiting Files'.")
+Setting this variable has no effect if `after-init-hook' has
+already been run.")
 (custom-autoload 'magit-define-global-key-bindings "magit" t)
-(defun magit-maybe-define-global-key-bindings nil (when magit-define-global-key-bindings (let ((map (current-global-map))) (dolist (elt '(("C-x g" . magit-status) ("C-x M-g" . magit-dispatch) ("C-c M-g" . magit-file-dispatch))) (let ((key (kbd (car elt))) (def (cdr elt))) (unless (or (lookup-key map key) (where-is-internal def (make-sparse-keymap) t)) (define-key map key def)))))))
-(if after-init-time (magit-maybe-define-global-key-bindings) (add-hook 'after-init-hook 'magit-maybe-define-global-key-bindings t))
+(defun magit-maybe-define-global-key-bindings (&optional force) "\
+See variable `magit-define-global-key-bindings'." (when magit-define-global-key-bindings (let ((map (current-global-map))) (pcase-dolist (`(,key \, def) (cond ((eq magit-define-global-key-bindings 'recommended) '(("C-x g" . magit-status) ("C-c g" . magit-dispatch) ("C-c f" . magit-file-dispatch))) ('(("C-x g" . magit-status) ("C-x M-g" . magit-dispatch) ("C-c M-g" . magit-file-dispatch))))) (when (or force (not (or (lookup-key map (kbd key)) (where-is-internal def (make-sparse-keymap) t)))) (define-key map (kbd key) def))))))
+(if after-init-time (magit-maybe-define-global-key-bindings) (add-hook 'after-init-hook #'magit-maybe-define-global-key-bindings t))
  (autoload 'magit-dispatch "magit" nil t)
  (autoload 'magit-run "magit" nil t)
 (autoload 'magit-git-command "magit" "\
@@ -5465,23 +5466,25 @@ is run in the top-level directory of the current working tree.
 (fn COMMAND)" t)
 (autoload 'magit-version "magit" "\
 Return the version of Magit currently in use.
-If optional argument PRINT-DEST is non-nil, output
-stream (interactively, the echo area, or the current buffer with
-a prefix argument), also print the used versions of Magit, Git,
-and Emacs to it.
+
+If optional argument PRINT-DEST is non-nil, also print the used
+versions of Magit, Transient, Git and Emacs to the output stream
+selected by that argument.  Interactively use the echo area, or
+with a prefix argument use the current buffer.  Additionally put
+the output in the kill ring.
 
 (fn &optional PRINT-DEST)" t)
 (register-definition-prefixes "magit" '("magit-"))
 
 
 
+(autoload 'magit-stage-buffer-file "magit-apply" "\
+Stage all changes to the file being visited in the current buffer." t)
 (autoload 'magit-stage-file "magit-apply" "\
-Stage all changes to FILE.
-With a prefix argument or when there is no file at point ask for
-the file to be staged.  Otherwise stage the file at point without
-requiring confirmation.
+Read one or more files and stage all changes in those files.
+With prefix argument FORCE, offer ignored files for completion.
 
-(fn FILE)" t)
+(fn FILES &optional FORCE)" t)
 (autoload 'magit-stage-modified "magit-apply" "\
 Stage all changes to files modified in the worktree.
 Stage all new content of tracked files and remove tracked files
@@ -5490,13 +5493,12 @@ With a prefix argument also stage previously untracked (but not
 ignored) files.
 
 (fn &optional ALL)" t)
+(autoload 'magit-unstage-buffer-file "magit-apply" "\
+Unstage all changes to the file being visited in the current buffer." t)
 (autoload 'magit-unstage-file "magit-apply" "\
-Unstage all changes to FILE.
-With a prefix argument or when there is no file at point ask for
-the file to be unstaged.  Otherwise unstage the file at point
-without requiring confirmation.
+Read one or more files and unstage all changes to those files.
 
-(fn FILE)" t)
+(fn FILES)" t)
 (autoload 'magit-unstage-all "magit-apply" "\
 Remove all changes from the staging area." t)
 (register-definition-prefixes "magit-apply" '("magit-"))
@@ -5528,6 +5530,23 @@ See `auto-revert-mode' for more information on Auto-Revert mode.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "magit-autorevert" '("auto-revert-buffer" "magit-"))
+
+
+
+(autoload 'magit-emacs-Q-command "magit-base" "\
+Show a shell command that runs an uncustomized Emacs with only Magit loaded.
+See info node `(magit)Debugging Tools' for more information." t)
+(autoload 'Info-follow-nearest-node--magit-gitman "magit-base" "\
+
+
+(fn FN &optional FORK)")
+(advice-add 'Info-follow-nearest-node :around #'Info-follow-nearest-node--magit-gitman)
+(advice-add 'org-man-export :around #'org-man-export--magit-gitman)
+(autoload 'org-man-export--magit-gitman "magit-base" "\
+
+
+(fn FN LINK DESCRIPTION FORMAT)")
+(register-definition-prefixes "magit-base" '("magit-"))
 
 
 
@@ -5584,17 +5603,6 @@ bisect run'.
 
 
 
-(autoload 'magit--handle-bookmark "magit-bookmark" "\
-Open a bookmark created by `magit--make-bookmark'.
-Call the `magit-*-setup-buffer' function of the the major-mode
-with the variables' values as arguments, which were recorded by
-`magit--make-bookmark'.  Ignore `magit-display-buffer-function'.
-
-(fn BOOKMARK)")
-(register-definition-prefixes "magit-bookmark" '("magit--make-bookmark"))
-
-
-
  (autoload 'magit-branch "magit" nil t)
 (autoload 'magit-checkout "magit-branch" "\
 Checkout REVISION, updating the index and the working tree.
@@ -5606,14 +5614,17 @@ changes.
 (git checkout REVISION).
 
 (fn REVISION &optional ARGS)" t)
+(function-put 'magit-checkout 'interactive-only 'magit--checkout)
 (autoload 'magit-branch-create "magit-branch" "\
 Create BRANCH at branch or revision START-POINT.
 
 (fn BRANCH START-POINT)" t)
+(function-put 'magit-branch-create 'interactive-only 'magit-call-git)
 (autoload 'magit-branch-and-checkout "magit-branch" "\
 Create and checkout BRANCH at branch or revision START-POINT.
 
 (fn BRANCH START-POINT &optional ARGS)" t)
+(function-put 'magit-branch-and-checkout 'interactive-only 'magit-call-git)
 (autoload 'magit-branch-or-checkout "magit-branch" "\
 Hybrid between `magit-checkout' and `magit-branch-and-checkout'.
 
@@ -5627,6 +5638,7 @@ branch.  This is similar to what `magit-branch-and-checkout'
 does.
 
 (fn ARG &optional START-POINT)" t)
+(function-put 'magit-branch-or-checkout 'interactive-only 'magit-call-git)
 (autoload 'magit-branch-checkout "magit-branch" "\
 Checkout an existing or new local branch.
 
@@ -5652,6 +5664,7 @@ value of `magit-branch-adjust-remote-upstream-alist', just like
 when using `magit-branch-and-checkout'.
 
 (fn BRANCH &optional START-POINT)" t)
+(function-put 'magit-branch-checkout 'interactive-only 'magit-call-git)
 (autoload 'magit-branch-orphan "magit-branch" "\
 Create and checkout an orphan BRANCH with contents from revision START-POINT.
 
@@ -5711,9 +5724,16 @@ that is being reset.
 (fn BRANCH TO &optional SET-UPSTREAM)" t)
 (autoload 'magit-branch-delete "magit-branch" "\
 Delete one or multiple branches.
+
 If the region marks multiple branches, then offer to delete
 those, otherwise prompt for a single branch to be deleted,
 defaulting to the branch at point.
+
+Require confirmation when deleting branches is dangerous in some
+way.  Option `magit-no-confirm' can be customized to not require
+confirmation in certain cases.  See its docstring to learn why
+confirmation is required by default in certain cases or if a
+prompt is confusing.
 
 (fn BRANCHES &optional FORCE)" t)
 (autoload 'magit-branch-rename "magit-branch" "\
@@ -5804,7 +5824,11 @@ Create a mirror of REPOSITORY in DIRECTORY.
 Then show the status buffer for the new repository.
 
 (fn REPOSITORY DIRECTORY ARGS)" t)
-(register-definition-prefixes "magit-clone" '("magit-clone-"))
+(autoload 'magit-clone-sparse "magit-clone" "\
+Clone REPOSITORY into DIRECTORY and create a sparse checkout.
+
+(fn REPOSITORY DIRECTORY ARGS)" t)
+(register-definition-prefixes "magit-clone" '("magit-"))
 
 
 
@@ -5827,9 +5851,9 @@ Amend the last commit, without editing the message.
 
 With a prefix argument keep the committer date, otherwise change
 it.  The option `magit-commit-extend-override-date' can be used
-to inverse the meaning of the prefix argument.  
-(git commit
---amend --no-edit)
+to inverse the meaning of the prefix argument.
+
+(git commit --amend --no-edit)
 
 (fn &optional ARGS OVERRIDE-DATE)" t)
 (autoload 'magit-commit-reword "magit-commit" "\
@@ -5887,7 +5911,7 @@ The current time is used as the initial minibuffer input and the
 original author or committer date is available as the previous
 history element.
 
-Both the author and the committer dates are changes, unless one
+Both the author and the committer dates are changed, unless one
 of the following is true, in which case only the committer date
 is updated:
 - You are not the author of the commit that is being reshelved.
@@ -5950,14 +5974,12 @@ Show changes that are being merged.
 While committing, show the changes that are about to be committed.
 While amending, invoking the command again toggles between
 showing just the new changes or all the changes that will
-be committed.
-
-(fn &optional ARGS)" t)
+be committed." t)
 (autoload 'magit-diff-buffer-file "magit-diff" "\
 Show diff for the blob or file visited in the current buffer.
 
 When the buffer visits a blob, then show the respective commit.
-When the buffer visits a file, then show the differenced between
+When the buffer visits a file, then show the differences between
 `HEAD' and the working tree.  In both cases limit the diff to
 the file or blob." t)
 (autoload 'magit-diff-paths "magit-diff" "\
@@ -5975,13 +5997,24 @@ for a revision.
 
 
  (autoload 'magit-ediff "magit-ediff" nil)
-(autoload 'magit-ediff-resolve "magit-ediff" "\
-Resolve outstanding conflicts in FILE using Ediff.
-FILE has to be relative to the top directory of the repository.
+(autoload 'magit-ediff-resolve-all "magit-ediff" "\
+Resolve all conflicts in the FILE at point using Ediff.
 
-In the rare event that you want to manually resolve all
-conflicts, including those already resolved by Git, use
-`ediff-merge-revisions-with-ancestor'.
+If there is no file at point or if it doesn't have any unmerged
+changes, then prompt for a file.
+
+See info node `(magit) Ediffing' for more information about this
+and alternative commands.
+
+(fn FILE)" t)
+(autoload 'magit-ediff-resolve-rest "magit-ediff" "\
+Resolve outstanding conflicts in the FILE at point using Ediff.
+
+If there is no file at point or if it doesn't have any unmerged
+changes, then prompt for a file.
+
+See info node `(magit) Ediffing' for more information about this
+and alternative commands.
 
 (fn FILE)" t)
 (autoload 'magit-ediff-stage "magit-ediff" "\
@@ -6050,8 +6083,7 @@ stash that were staged.
 
 
 
-(autoload 'magit-run-git-gui "magit-extras" "\
-Run `git gui' for the current git repository." t)
+ (autoload 'magit-git-mergetool "magit-extras" nil t)
 (autoload 'magit-run-git-gui-blame "magit-extras" "\
 Run `git gui blame' on the given FILENAME and COMMIT.
 Interactively run it for the current file and the `HEAD', with a
@@ -6060,6 +6092,8 @@ choose.  When the current buffer is visiting FILENAME instruct
 blame to center around the line point is on.
 
 (fn COMMIT FILENAME &optional LINENUM)" t)
+(autoload 'magit-run-git-gui "magit-extras" "\
+Run `git gui' for the current git repository." t)
 (autoload 'magit-run-gitk "magit-extras" "\
 Run `gitk' in the current repository." t)
 (autoload 'magit-run-gitk-branches "magit-extras" "\
@@ -6077,15 +6111,15 @@ To make this command available use something like:
 
   (add-hook \\='ido-setup-hook
             (lambda ()
-              (define-key ido-completion-map
-                (kbd \"C-x g\") \\='ido-enter-magit-status)))
+              (keymap-set ido-completion-map
+                          \"C-x g\" \\='ido-enter-magit-status)))
 
 Starting with Emacs 25.1 the Ido keymaps are defined just once
 instead of every time Ido is invoked, so now you can modify it
 like pretty much every other keymap:
 
-  (define-key ido-common-completion-map
-    (kbd \"C-x g\") \\='ido-enter-magit-status)" t)
+  (keymap-set ido-common-completion-map
+              \"C-x g\" \\='ido-enter-magit-status)" t)
 (autoload 'magit-project-status "magit-extras" "\
 Run `magit-status' in the current project's root." t)
 (autoload 'magit-dired-jump "magit-extras" "\
@@ -6143,6 +6177,14 @@ with two prefix arguments remove ignored files only.
 (git clean -f -d [-x|-X])
 
 (fn &optional ARG)" t)
+(autoload 'magit-generate-changelog "magit-extras" "\
+Insert ChangeLog entries into the current buffer.
+
+The entries are generated from the diff being committed.
+If prefix argument, AMENDING, is non-nil, include changes
+in HEAD as well as staged changes in the diff to check.
+
+(fn &optional AMENDING)" t)
 (autoload 'magit-add-change-log-entry "magit-extras" "\
 Find change log file and add date entry and item for current change.
 This differs from `add-change-log-entry' (which see) in that
@@ -6183,7 +6225,7 @@ to be visited.
 
 Neither the blob nor the file buffer are killed when finishing
 the rebase.  If that is undesirable, then it might be better to
-use `magit-rebase-edit-command' instead of this command.
+use `magit-rebase-edit-commit' instead of this command.
 
 (fn FILE)" t)
 (autoload 'magit-reshelve-since "magit-extras" "\
@@ -6219,8 +6261,8 @@ stack.
 
 When reading the revision from the minibuffer, then it might not
 be possible to guess the correct repository.  When this command
-is called inside a repository (e.g. while composing a commit
-message), then that repository is used.  Otherwise (e.g. while
+is called inside a repository (e.g., while composing a commit
+message), then that repository is used.  Otherwise (e.g., while
 composing an email) then the repository recorded for the top
 element of the stack is used (even though we insert another
 revision).  If not called inside a repository and with an empty
@@ -6327,15 +6369,7 @@ Prune remote tracking branches for branches that have been
 removed on the respective remote." t)
 (autoload 'magit-fetch-all-no-prune "magit-fetch" "\
 Fetch from all remotes." t)
-(autoload 'magit-fetch-modules "magit-fetch" "\
-Fetch all submodules.
-
-Option `magit-fetch-modules-jobs' controls how many submodules
-are being fetched in parallel.  Also fetch the super-repository,
-because `git-fetch' does not support not doing that.  With a
-prefix argument fetch all remotes.
-
-(fn &optional ALL)" t)
+ (autoload 'magit-fetch-modules "magit-fetch" nil t)
 (register-definition-prefixes "magit-fetch" '("magit-"))
 
 
@@ -6426,82 +6460,23 @@ Call \"git update-index --no-assume-unchanged -- FILE\".
 
 
 
-(autoload 'magit-imenu--log-prev-index-position-function "magit-imenu" "\
-Move point to previous line in current buffer.
-This function is used as a value for
-`imenu-prev-index-position-function'.")
-(autoload 'magit-imenu--log-extract-index-name-function "magit-imenu" "\
-Return imenu name for line at point.
-This function is used as a value for
-`imenu-extract-index-name-function'.  Point should be at the
-beginning of the line.")
-(autoload 'magit-imenu--diff-prev-index-position-function "magit-imenu" "\
-Move point to previous file line in current buffer.
-This function is used as a value for
-`imenu-prev-index-position-function'.")
-(autoload 'magit-imenu--diff-extract-index-name-function "magit-imenu" "\
-Return imenu name for line at point.
-This function is used as a value for
-`imenu-extract-index-name-function'.  Point should be at the
-beginning of the line.")
-(autoload 'magit-imenu--status-create-index-function "magit-imenu" "\
-Return an alist of all imenu entries in current buffer.
-This function is used as a value for
-`imenu-create-index-function'.")
-(autoload 'magit-imenu--refs-create-index-function "magit-imenu" "\
-Return an alist of all imenu entries in current buffer.
-This function is used as a value for
-`imenu-create-index-function'.")
-(autoload 'magit-imenu--cherry-create-index-function "magit-imenu" "\
-Return an alist of all imenu entries in current buffer.
-This function is used as a value for
-`imenu-create-index-function'.")
-(autoload 'magit-imenu--submodule-prev-index-position-function "magit-imenu" "\
-Move point to previous line in magit-submodule-list buffer.
-This function is used as a value for
-`imenu-prev-index-position-function'.")
-(autoload 'magit-imenu--submodule-extract-index-name-function "magit-imenu" "\
-Return imenu name for line at point.
-This function is used as a value for
-`imenu-extract-index-name-function'.  Point should be at the
-beginning of the line.")
-(autoload 'magit-imenu--repolist-prev-index-position-function "magit-imenu" "\
-Move point to previous line in magit-repolist buffer.
-This function is used as a value for
-`imenu-prev-index-position-function'.")
-(autoload 'magit-imenu--repolist-extract-index-name-function "magit-imenu" "\
-Return imenu name for line at point.
-This function is used as a value for
-`imenu-extract-index-name-function'.  Point should be at the
-beginning of the line.")
-(autoload 'magit-imenu--process-prev-index-position-function "magit-imenu" "\
-Move point to previous process in magit-process buffer.
-This function is used as a value for
-`imenu-prev-index-position-function'.")
-(autoload 'magit-imenu--process-extract-index-name-function "magit-imenu" "\
-Return imenu name for line at point.
-This function is used as a value for
-`imenu-extract-index-name-function'.  Point should be at the
-beginning of the line.")
-(autoload 'magit-imenu--rebase-prev-index-position-function "magit-imenu" "\
-Move point to previous commit in git-rebase buffer.
-This function is used as a value for
-`imenu-prev-index-position-function'.")
-(autoload 'magit-imenu--rebase-extract-index-name-function "magit-imenu" "\
-Return imenu name for line at point.
-This function is used as a value for
-`imenu-extract-index-name-function'.  Point should be at the
-beginning of the line.")
-(register-definition-prefixes "magit-imenu" '("magit-imenu--index-function"))
-
-
-
  (autoload 'magit-log "magit-log" nil t)
  (autoload 'magit-log-refresh "magit-log" nil t)
 (autoload 'magit-log-current "magit-log" "\
 Show log for the current branch.
 When `HEAD' is detached or with a prefix argument show log for
 one or more revs read from the minibuffer.
+
+(fn REVS &optional ARGS FILES)" t)
+(autoload 'magit-log-head "magit-log" "\
+Show log for `HEAD'.
+
+(fn &optional ARGS FILES)" t)
+(autoload 'magit-log-related "magit-log" "\
+Show log for the current branch, its upstream and its push target.
+When the upstream is a local branch, then also show its own
+upstream.  When `HEAD' is detached, then show log for that, the
+previously checked out branch and its upstream and push-target.
 
 (fn REVS &optional ARGS FILES)" t)
 (autoload 'magit-log-other "magit-log" "\
@@ -6512,10 +6487,6 @@ representation of the commit at point, are available as
 completion candidates.
 
 (fn REVS &optional ARGS FILES)" t)
-(autoload 'magit-log-head "magit-log" "\
-Show log for `HEAD'.
-
-(fn &optional ARGS FILES)" t)
 (autoload 'magit-log-branches "magit-log" "\
 Show log for all local branches and `HEAD'.
 
@@ -6551,9 +6522,9 @@ Show log for the definition at point.
 Show log for the merge of COMMIT into BRANCH.
 
 More precisely, find merge commit M that brought COMMIT into
-BRANCH, and show the log of the range \"M^1..M\".  If COMMIT is
-directly on BRANCH, then show approximately twenty surrounding
-commits instead.
+BRANCH, and show the log of the range \"M^1..M\". If COMMIT is
+directly on BRANCH, then show approximately
+`magit-log-merged-commit-count' surrounding commits instead.
 
 This command requires git-when-merged, which is available from
 https://github.com/mhagger/git-when-merged.
@@ -6621,7 +6592,7 @@ provided the respective remote branch already exists, ensuring
 that the respective pull-request (if any) won't get stuck on some
 obsolete version of the commits that are being merged.  Finally
 if `forge-branch-pullreq' was used to create the merged branch,
-branch, then also remove the respective remote branch.
+then also remove the respective remote branch.
 
 (fn BRANCH &optional ARGS)" t)
 (autoload 'magit-merge-absorb "magit-merge" "\
@@ -6653,16 +6624,14 @@ Abort the current merge operation.
 
 
 
-(register-definition-prefixes "magit-mode" '("disable-magit-save-buffers" "magit-"))
+(autoload 'magit-info "magit-mode" "\
+Visit the Magit manual." t)
+(register-definition-prefixes "magit-mode" '("magit-"))
 
 
 
  (autoload 'magit-notes "magit" nil t)
 (register-definition-prefixes "magit-notes" '("magit-notes-"))
-
-
-
-(register-definition-prefixes "magit-obsolete" '("magit--magit-popup-warning"))
 
 
 
@@ -6763,18 +6732,7 @@ Push a notes ref to another repository.
 
 (fn REF REMOTE &optional ARGS)" t)
  (autoload 'magit-push-implicitly "magit-push" nil t)
-(autoload 'magit-push-to-remote "magit-push" "\
-Push to REMOTE without using an explicit refspec.
-The REMOTE is read in the minibuffer.
-
-This command simply runs \"git push -v [ARGS] REMOTE\".  ARGS
-are the arguments specified in the popup buffer.  No refspec
-arguments are used.  Instead the behavior depends on at least
-these Git variables: `push.default', `remote.pushDefault',
-`branch.<branch>.pushRemote', `branch.<branch>.remote',
-`branch.<branch>.merge', and `remote.<remote>.push'.
-
-(fn REMOTE ARGS)" t)
+ (autoload 'magit-push-to-remote "magit-push" nil t)
 (register-definition-prefixes "magit-push" '("magit-"))
 
 
@@ -6857,6 +6815,7 @@ Unset the local representation of REMOTE's default branch.
 Delete the symbolic-ref \"refs/remotes/<remote>/HEAD\".
 
 (fn REMOTE)" t)
+ (autoload 'magit-update-default-branch "magit-remote" nil t)
 (autoload 'magit-remote-unshallow "magit-remote" "\
 Convert a shallow remote into a full one.
 If only a single refspec is set and it does not contain a
@@ -6872,7 +6831,7 @@ refspec.
 (autoload 'magit-list-repositories "magit-repos" "\
 Display a list of repositories.
 
-Use the options `magit-repository-directories' to control which
+Use the option `magit-repository-directories' to control which
 repositories are displayed." t)
 (register-definition-prefixes "magit-repos" '("magit-"))
 
@@ -6960,7 +6919,7 @@ process manually.
 Move COMMITS from the current branch onto another existing BRANCH.
 Remove COMMITS from the current branch and stay on that branch.
 If a conflict occurs, then you have to fix that and finish the
-process manually.
+process manually.  `HEAD' is allowed to be detached initially.
 
 (fn COMMITS BRANCH &optional ARGS)" t)
 (autoload 'magit-cherry-spinout "magit-sequence" "\
@@ -7059,6 +7018,37 @@ Abort the current rebase operation, restoring the original branch." t)
 
 
 
+ (autoload 'magit-sparse-checkout "magit-sparse-checkout" nil t)
+(autoload 'magit-sparse-checkout-enable "magit-sparse-checkout" "\
+Convert the working tree to a sparse checkout.
+
+(fn &optional ARGS)" t)
+(autoload 'magit-sparse-checkout-set "magit-sparse-checkout" "\
+Restrict working tree to DIRECTORIES.
+To extend rather than override the currently configured
+directories, call `magit-sparse-checkout-add' instead.
+
+(fn DIRECTORIES)" t)
+(autoload 'magit-sparse-checkout-add "magit-sparse-checkout" "\
+Add DIRECTORIES to the working tree.
+To override rather than extend the currently configured
+directories, call `magit-sparse-checkout-set' instead.
+
+(fn DIRECTORIES)" t)
+(autoload 'magit-sparse-checkout-reapply "magit-sparse-checkout" "\
+Reapply the sparse checkout rules to the working tree.
+Some operations such as merging or rebasing may need to check out
+files that aren't included in the sparse checkout.  Call this
+command to reset to the sparse checkout state." t)
+(autoload 'magit-sparse-checkout-disable "magit-sparse-checkout" "\
+Convert sparse checkout to full checkout.
+Note that disabling the sparse checkout does not clear the
+configured directories.  Call `magit-sparse-checkout-enable' to
+restore the previous sparse checkout." t)
+(register-definition-prefixes "magit-sparse-checkout" '("magit-sparse-checkout-"))
+
+
+
  (autoload 'magit-stash "magit-stash" nil t)
 (autoload 'magit-stash-both "magit-stash" "\
 Create a stash of the index and working tree.
@@ -7106,17 +7096,45 @@ One prefix argument is equivalent to `--include-untracked'
 while two prefix arguments are equivalent to `--all'.
 
 (fn &optional INCLUDE-UNTRACKED)" t)
+ (autoload 'magit-stash-push "magit-stash" nil t)
 (autoload 'magit-stash-apply "magit-stash" "\
 Apply a stash to the working tree.
-Try to preserve the stash index.  If that fails because there
-are staged changes, apply without preserving the stash index.
+
+First try \"git stash apply --index\", which tries to preserve
+the index stored in the stash, if any.  This may fail because
+applying the stash could result in conflicts and those have to
+be stored in the index, making it impossible to also store the
+stash's index there as well.
+
+If the above failed, then try \"git stash apply\".  This fails
+(with or without \"--index\") if there are any uncommitted
+changes to files that are also modified in the stash.
+
+If both of the above failed, then apply using \"git apply\".
+If there are no conflicting files, use \"--3way\".  If there are
+conflicting files, then using \"--3way\" requires that those
+files are staged first, which may be undesirable, so prompt
+the user whether to use \"--3way\" or \"--reject\".
 
 (fn STASH)" t)
 (autoload 'magit-stash-pop "magit-stash" "\
-Apply a stash to the working tree and remove it from stash list.
-Try to preserve the stash index.  If that fails because there
-are staged changes, apply without preserving the stash index
-and forgo removing the stash.
+Apply a stash to the working tree, on success remove it from stash list.
+
+First try \"git stash pop --index\", which tries to preserve
+the index stored in the stash, if any.  This may fail because
+applying the stash could result in conflicts and those have to
+be stored in the index, making it impossible to also store the
+stash's index there as well.
+
+If the above failed, then try \"git stash apply\".  This fails
+(with or without \"--index\") if there are any uncommitted
+changes to files that are also modified in the stash.
+
+If both of the above failed, then apply using \"git apply\".
+If there are no conflicting files, use \"--3way\".  If there are
+conflicting files, then using \"--3way\" requires that those
+files are staged first, which may be undesirable, so prompt
+the user whether to use \"--3way\" or \"--reject\".
 
 (fn STASH)" t)
 (autoload 'magit-stash-drop "magit-stash" "\
@@ -7129,13 +7147,15 @@ Remove all stashes saved in REF's reflog by deleting REF.
 
 (fn REF)" t)
 (autoload 'magit-stash-branch "magit-stash" "\
-Create and checkout a new BRANCH from STASH.
+Create and checkout a new BRANCH from an existing STASH.
+The new branch starts at the commit that was current when the
+stash was created.  If the stash applies cleanly, then drop it.
 
 (fn STASH BRANCH)" t)
 (autoload 'magit-stash-branch-here "magit-stash" "\
-Create and checkout a new BRANCH and apply STASH.
-The branch is created using `magit-branch-and-checkout', using the
-current branch or `HEAD' as the start-point.
+Create and checkout a new BRANCH from an existing STASH.
+Use the current branch or `HEAD' as the starting-point of BRANCH.
+Then apply STASH, dropping it if it applies cleanly.
 
 (fn STASH BRANCH)" t)
 (autoload 'magit-stash-format-patch "magit-stash" "\
@@ -7197,8 +7217,10 @@ prefix arguments:
   arguments.
 
 (fn &optional DIRECTORY CACHE)" t)
-(defalias 'magit 'magit-status "\
-An alias for `magit-status' for better discoverability.
+(defalias 'magit #'magit-status "\
+Begin using Magit.
+
+This alias for `magit-status' exists for better discoverability.
 
 Instead of invoking this alias for `magit-status' using
 \"M-x magit RET\", you should bind a key to `magit-status'
@@ -7206,6 +7228,21 @@ and read the info node `(magit)Getting Started', which
 also contains other useful hints.")
 (autoload 'magit-status-here "magit-status" "\
 Like `magit-status' but with non-nil `magit-status-goto-file-position'." t)
+(autoload 'magit-status-quick "magit-status" "\
+Show the status of the current Git repository, maybe without refreshing.
+
+If the status buffer of the current Git repository exists but
+isn't being displayed in the selected frame, then display it
+without refreshing it.
+
+If the status buffer is being displayed in the selected frame,
+then also refresh it.
+
+Prefix arguments have the same meaning as for `magit-status',
+and additionally cause the buffer to be refresh.
+
+To use this function instead of `magit-status', add this to your
+init file: (global-set-key (kbd \"C-x g\") \\='magit-status-quick)." t)
 (autoload 'magit-status-setup-buffer "magit-status" "\
 
 
@@ -7262,7 +7299,7 @@ These sections can be expanded to show the respective commits.")
 Insert sections for modules that haven't been pushed to the push-remote.
 These sections can be expanded to show the respective commits.")
 (autoload 'magit-list-submodules "magit-submodule" "\
-Display a list of the current repository's submodules." t)
+Display a list of the current repository's populated submodules." t)
 (register-definition-prefixes "magit-submodule" '("magit-"))
 
 
@@ -7320,13 +7357,15 @@ Offer to delete tags missing locally from REMOTE, and vice versa.
 
 (fn TAGS REMOTE-TAGS REMOTE)" t)
 (autoload 'magit-tag-release "magit-tag" "\
-Create a release tag.
+Create a release tag for `HEAD'.
 
 Assume that release tags match `magit-release-tag-regexp'.
 
-First prompt for the name of the new tag using the highest
-existing tag as initial input and leaving it to the user to
-increment the desired part of the version string.
+If `HEAD's message matches `magit-release-commit-regexp', then
+base the tag on the version string specified by that.  Otherwise
+prompt for the name of the new tag using the highest existing
+tag as initial input and leaving it to the user to increment the
+desired part of the version string.
 
 If `--annotate' is enabled, then prompt for the message of the
 new tag.  Base the proposed tag message on the message of the
@@ -7345,23 +7384,6 @@ like \"/path/to/foo-bar\".
 
 
 
-(autoload 'magit-emacs-Q-command "magit-utils" "\
-Show a shell command that runs an uncustomized Emacs with only Magit loaded.
-See info node `(magit)Debugging Tools' for more information." t)
-(autoload 'Info-follow-nearest-node--magit-gitman "magit-utils" "\
-
-
-(fn FN &optional FORK)")
-(advice-add 'Info-follow-nearest-node :around 'Info-follow-nearest-node--magit-gitman)
-(autoload 'org-man-export--magit-gitman "magit-utils" "\
-
-
-(fn FN LINK DESCRIPTION FORMAT)")
-(advice-add 'org-man-export :around 'org-man-export--magit-gitman)
-(register-definition-prefixes "magit-utils" '("magit-"))
-
-
-
 (defvar magit-wip-mode nil "\
 Non-nil if Magit-Wip mode is enabled.
 See the `magit-wip-mode' command
@@ -7373,7 +7395,7 @@ or call the function `magit-wip-mode'.")
 (autoload 'magit-wip-mode "magit-wip" "\
 Save uncommitted changes to work-in-progress refs.
 
-Whenever appropriate (i.e. when dataloss would be a possibility
+Whenever appropriate (i.e., when dataloss would be a possibility
 otherwise) this mode causes uncommitted changes to be committed
 to dedicated work-in-progress refs.
 
@@ -7520,7 +7542,6 @@ Move WORKTREE to PATH.
 
 (fn WORKTREE PATH)" t)
 (register-definition-prefixes "magit-worktree" '("magit-"))
-
 
 
 (provide 'magit-autoloads)
@@ -10710,7 +10731,7 @@ values used in the user's shell." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20231211.1045/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20231211.1045/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240123.931/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240123.931/difftastic-autoloads.el"))
 
 
 
@@ -10719,16 +10740,22 @@ values used in the user's shell." t)
 
 
 
+(autoload 'difftastic-git-diff-range "difftastic" "\
+Show difference between two commits using difftastic.
+The meaning of REV-OR-RANGE, ARGS, and FILES is like in
+`magit-diff-range', but ARGS are adjusted for difftastic with
+`difftastic--transform-diff-arguments'.
+
+(fn &optional REV-OR-RANGE ARGS FILES)" t)
+(autoload 'difftastic-magit-diff "difftastic" "\
+Show the result of \\='git diff ARGS -- FILES\\=' with difftastic.
+
+(fn &optional ARGS FILES)" t)
 (autoload 'difftastic-magit-show "difftastic" "\
 Show the result of \\='git show REV\\=' with difftastic.
 When REV couldn't be guessed or called with prefix arg ask for REV.
 
 (fn REV)" t)
-(autoload 'difftastic-magit-diff "difftastic" "\
-Show the result of \\='git diff ARG\\=' with difftastic.
-When ARG couldn't be guessed or called with prefix arg ask for ARG.
-
-(fn ARG)" t)
 (autoload 'difftastic-buffers "difftastic" "\
 Run difftastic on a pair of buffers, BUFFER-A and BUFFER-B.
 Optionally, provide a LANG-OVERRIDE to override language used.
@@ -11513,7 +11540,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-3.3.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-3.3.0" "/Users/laurynas/.emacs.d/elpa/transient-20240121.2000" "/Users/laurynas/.emacs.d/elpa/dash-2.19.1" "/Users/laurynas/.emacs.d/elpa/with-editor-3.3.2" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20240112.2212" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20240114.13" "/Users/laurynas/.emacs.d/elpa/transient-20240121.2000" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
