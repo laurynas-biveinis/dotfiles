@@ -755,9 +755,13 @@ mysql_cmake() {
     esac
 }
 
+# Incremental rebuild command, should be called from the build directory one
+# level below the source tree.
+# TODO(laurynas): make it work from two levels below the source tree too (for
+# example _build-debug/mysql-test)
 mysql_rebuild() {
     pushd .. || return 1
-    if ! declare -i workaround_ssl3=$(mysql_need_openssl3_workaround); then
+    if ! declare -i -r workaround_ssl3=$(mysql_need_openssl3_workaround); then
         popd
         return 1
     fi
