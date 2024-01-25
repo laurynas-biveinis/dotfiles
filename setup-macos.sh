@@ -40,6 +40,8 @@ defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
 #
 # Full keyboard control (e.g. Tab over buttons in modal dialogs)
 defaults write -g AppleKeyboardUIMode -int 3
+# Do not ask to enable Dictation
+defaults write com.apple.HIToolbox AppleDictationAutoEnable -int 1
 #
 # Keyboard
 #
