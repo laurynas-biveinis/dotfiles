@@ -426,7 +426,9 @@
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
 
-;; `xref': do not initialize `xref-backend-functions' to `etags--xref-backend',
+;; `xref'
+(setq xref-prompt-for-identifier nil)
+;; Do not initialize `xref-backend-functions' to `etags--xref-backend',
 ;; we never use etags and let major modes (LSP, elisp) define useful backends
 ;; themselves.
 (remove-hook 'xref-backend-functions #'etags--xref-backend)
