@@ -1,0 +1,23 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+declare -r input=$(cat)
+
+# Process the diffstat of the input:
+# - for each "mysql-test/t/foo.test" or "mysql-test/r/foo.result", print
+# "main.foo".
+# - for each "mysql-test/suite/foo/t/bar.test" or its result counterpart, print
+# "foo.bar"
+# Finally, deduplicate and print on a single line.
+echo "$input" | diffstat -l -p 1 | awk -F '/' '
+    /^mysql-test\/t\/.*\.test$/ || /^mysql-test\/r\/.*\.result$/ {
+        split($NF, a, ".");
+        print "main." a[1]
+    }
+    /^mysql-test\/suite\/.*\/t\/.*\.test$/ \
+    || /^mysql-test\/suite\/.*\/r\/.*\.result$/ {
+        split($NF, a, ".");
+        print $(NF-2) "." a[1]
+    }
+' | sort | uniq | tr '\n' ' '
