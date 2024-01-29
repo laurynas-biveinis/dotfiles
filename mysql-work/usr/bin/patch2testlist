@@ -39,7 +39,7 @@ if [[ -n "$dir" ]]; then
                                    "./mysql-test"); then
                 # Remove ./ prefixes from the paths in grep output to match the
                 # format in the diffstat output
-                inc_file_references+=$(echo "$grep_results" | sed 's|^./||')$'\n'
+                inc_file_references+=${grep_results//^.\//}$'\n'
             fi
         done < <(printf '%s' "$new_inc_files")
         sorted_inc_file_references=$(echo "$inc_file_references" | sort | uniq)
