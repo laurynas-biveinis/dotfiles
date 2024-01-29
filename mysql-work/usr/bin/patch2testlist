@@ -2,15 +2,74 @@
 
 set -euo pipefail
 
-declare -r input=$(cat)
+diff=$(cat)
 
-# Process the diffstat of the input:
-# - for each "mysql-test/t/foo.test" or "mysql-test/r/foo.result", print
-# "main.foo".
-# - for each "mysql-test/suite/foo/t/bar.test" or its result counterpart, print
-# "foo.bar"
-# Finally, deduplicate and print on a single line.
-echo "$input" | diffstat -l -p 1 | awk -F '/' '
+# Optional argument for the source tree directory, for include file processing
+declare -r dir="${1-}"
+
+# Process the diffstat of the diff. Make the diffstat print only the list of
+# files with the first path component stripped, which "a/" & "b/".
+diffstat=$(echo "$diff" | diffstat -l -p 1)
+
+if [[ -n "$dir" ]]; then
+    # Collect any include and test files from the diff to find the tests
+    # including them
+    all_inc_files=$(echo "$diffstat" \
+                        | awk -F '/' \
+                              '/^mysql-test\/.*\.(inc|test)$/ { print $0 }' \
+                        | sort)
+
+    declare new_inc_files="$all_inc_files"
+
+    # Iterate until no new files are found
+    while : ; do
+        declare inc_file_references=""
+        # Find references to $new_inc_files in include and test files
+        # The loop is stolen from https://superuser.com/a/284226/437
+        while IFS= read -r inc_file || [[ -n "$inc_file" ]]; do
+            if [[ -z "$inc_file" ]]; then
+                continue
+            fi
+            inc_file_basename=$(basename "$inc_file")
+            if grep_results=$(grep -ERl \
+                                   --include="*.test" --include="*.inc" \
+                                   "^[^#].*source.*$inc_file_basename" \
+                                   "$dir/mysql-test"); then
+                # Remove ./ prefixes from the paths in grep output to match the
+                # format in the diffstat output
+                inc_file_references+=$(echo "$grep_results" | sed 's|^./||')$'\n'
+            fi
+        done < <(printf '%s' "$new_inc_files")
+        sorted_inc_file_references=$(echo "$inc_file_references" | sort | uniq)
+        # Find what references are new in this iteration
+        new_references=$(comm -23 <(echo "$sorted_inc_file_references") \
+                              <(echo "$all_inc_files"))
+        if [[ -n "$new_references" ]]; then
+            # Add the new references to the result file list and set the next
+            # iteration input
+            all_inc_files+=$'\n'$new_references
+            all_inc_files=$(echo "$all_inc_files" | sort)
+            new_inc_files=$new_references
+        else
+            # No new files found, stop
+            break
+        fi
+    done
+    # Make the combined file list from any files including .inc and .test files
+    # from the diffstat and the diffstat itself
+    declare -r combined_file_list=$(echo "$diffstat"$'\n'"$all_inc_files" \
+                                        | sort | uniq)
+else
+    declare -r combined_file_list="$diffstat"
+fi
+
+# For the combined file list:
+# - For each "mysql-test/t/foo.test" or "mysql-test/r/foo.result", print
+#   "main.foo".
+# - For each "mysql-test/suite/foo/t/bar.test" or its result counterpart, print
+#   "foo.bar"
+# And deduplicate.
+test_list=$(echo "$combined_file_list" | awk -F '/' '
     /^mysql-test\/t\/.*\.test$/ || /^mysql-test\/r\/.*\.result$/ {
         split($NF, a, ".");
         print "main." a[1]
@@ -20,4 +79,7 @@ echo "$input" | diffstat -l -p 1 | awk -F '/' '
         split($NF, a, ".");
         print $(NF-2) "." a[1]
     }
-' | sort | uniq | tr '\n' ' '
+' | sort | uniq)
+
+# Finally, concat to a single line.
+echo "$test_list" | tr '\n' ' '
