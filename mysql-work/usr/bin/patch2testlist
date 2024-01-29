@@ -62,8 +62,7 @@ if [[ -n "$dir" ]]; then
 
     # Make the combined file list from any files including .inc and .test files
     # from the diffstat and the diffstat itself
-    declare -r combined_file_list=$(echo "$diffstat"$'\n'"$all_inc_files" \
-                                        | sort | uniq)
+    combined_file_list=$(echo "$diffstat"$'\n'"$all_inc_files" | sort | uniq)
 else
     declare -r combined_file_list="$diffstat"
 fi
