@@ -1,5 +1,18 @@
 #!/bin/zsh
 
+# Extract a list of MySQL MTR tests to run from a diff.
+#
+# This script has two modes of operation:
+# - if no command line argument is given, any changed .test and .result files
+#   under mysql-test/ are converted to their suite and test names, suitable for
+#   passing to mysql-test-run.pl
+# - Additionally a path may be provided, pointing to the root of the source tree
+#   the patch applies to. Then, mysql-test/ directory there will be iteratively
+#   grepped for any includes of the changed .test and .inc files in the patch,
+#   and they will be added to the list of tests to run.
+#
+# Written with some help from ChatGPT.
+
 set -euo pipefail
 
 diff=$(cat)
