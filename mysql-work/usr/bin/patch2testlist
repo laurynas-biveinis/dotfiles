@@ -88,4 +88,4 @@ test_list=$(echo "$combined_file_list" | awk -F '/' '
 ' | sort | uniq)
 
 # Finally, concat to a single line.
-echo "$test_list" | tr '\n' ' '
+echo "${test_list//$'\n'/ }"
