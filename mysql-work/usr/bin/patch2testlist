@@ -15,18 +15,16 @@ if [[ -n "$dir" ]]; then
     pushd "$dir" || exit 1
     # Collect any include and test files from the diff to find the tests
     # including them
-    all_inc_files=$(echo "$diffstat" \
-                        | awk -F '/' \
-                              '/^mysql-test\/.*\.(inc|test)$/ { print $0 }' \
+    all_inc_files=$(echo "$diffstat" | grep -E '^mysql-test/.*\.(inc|test)$' \
                         | sort)
-
     declare new_inc_files="$all_inc_files"
 
     # Iterate until no new files are found
     while : ; do
         declare inc_file_references=""
         # Find references to $new_inc_files in include and test files
-        # The loop is stolen from https://superuser.com/a/284226/437
+        # The loop header (and trailer) is stolen from
+        # https://superuser.com/a/284226/437
         while IFS= read -r inc_file || [[ -n "$inc_file" ]]; do
             if [[ -z "$inc_file" ]]; then
                 continue
