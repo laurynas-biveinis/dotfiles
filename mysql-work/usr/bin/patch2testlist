@@ -33,6 +33,8 @@ if [[ -n "$dir" ]]; then
             fi
             inc_file_basename=$(basename "$inc_file")
 
+            # Grep for approximately uncommented MTR language "source"
+            # directives referencing this basename
             if grep_results=$(grep -ERl \
                                    --include="*.test" --include="*.inc" \
                                    "^[^#].*source.*$inc_file_basename" \
