@@ -21,7 +21,7 @@ diff=$(cat)
 declare -r dir="${1-}"
 
 # Process the diffstat of the diff. Make the diffstat print only the list of
-# files with the first path component stripped, which "a/" & "b/".
+# files with the first path component stripped, which are "a/" & "b/".
 diffstat=$(echo "$diff" | diffstat -l -p 1)
 
 if [[ -n "$dir" ]]; then
