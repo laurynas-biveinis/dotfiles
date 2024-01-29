@@ -12,6 +12,7 @@ declare -r dir="${1-}"
 diffstat=$(echo "$diff" | diffstat -l -p 1)
 
 if [[ -n "$dir" ]]; then
+    pushd "$dir" || exit 1
     # Collect any include and test files from the diff to find the tests
     # including them
     all_inc_files=$(echo "$diffstat" \
@@ -31,10 +32,11 @@ if [[ -n "$dir" ]]; then
                 continue
             fi
             inc_file_basename=$(basename "$inc_file")
+
             if grep_results=$(grep -ERl \
                                    --include="*.test" --include="*.inc" \
                                    "^[^#].*source.*$inc_file_basename" \
-                                   "$dir/mysql-test"); then
+                                   "./mysql-test"); then
                 # Remove ./ prefixes from the paths in grep output to match the
                 # format in the diffstat output
                 inc_file_references+=$(echo "$grep_results" | sed 's|^./||')$'\n'
@@ -55,6 +57,9 @@ if [[ -n "$dir" ]]; then
             break
         fi
     done
+
+    popd "$dir" || exit 1
+
     # Make the combined file list from any files including .inc and .test files
     # from the diffstat and the diffstat itself
     declare -r combined_file_list=$(echo "$diffstat"$'\n'"$all_inc_files" \
