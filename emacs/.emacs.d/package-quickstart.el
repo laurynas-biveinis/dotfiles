@@ -676,7 +676,7 @@ When APPEND is specified, append FILES to existing `wfnames-buffer'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20231012.1227/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20231012.1227/wakatime-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20240126.1424/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20240126.1424/wakatime-mode-autoloads.el"))
 
 
 
@@ -2629,7 +2629,7 @@ If KEEP-BUNDLE is non-nil, the downloaded bundle file is not deleted after insta
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240121.2000/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240121.2000/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240127.1753/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240127.1753/transient-autoloads.el"))
 
 
 
@@ -5348,7 +5348,7 @@ the reports is done using the TaskJuggler GUI.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240112.2212/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240112.2212/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240125.1835/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240125.1835/magit-autoloads.el"))
 
 
 
@@ -11107,7 +11107,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.1/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.2/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.2/cmake-mode-autoloads.el"))
 
 
 
@@ -11540,7 +11540,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20240112.2212" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20240114.13" "/Users/laurynas/.emacs.d/elpa/transient-20240121.2000" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20240125.1835" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20240114.13" "/Users/laurynas/.emacs.d/elpa/transient-20240127.1753" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
