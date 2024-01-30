@@ -319,6 +319,7 @@
 (setq git-gutter:update-interval 0.02)
 
 ;; `git-gutter-fringe'
+;; TODO(laurynas): the fringe markings get stuck sometimes
 (require 'git-gutter-fringe)
 
 (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
