@@ -19,18 +19,18 @@
 	 ("Leo Liu" . "sdl.web@gmail.com"))
 	(:commit . "90c90a80322aa9f26ce88f2f24a224afc4c994b8"))])
  (activities .
-	     [(0 3)
+	     [(0 3 3)
 	      ((emacs
 		(29 1))
 	       (persist
 		(0 6)))
-	      "Suspend/resume sets of windows, frames, and buffers" tar
-	      ((:keywords "convenience")
+	      "Save/restore sets of windows, tabs/frames, and their buffers" tar
+	      ((:url . "https://github.com/alphapapa/activities.el")
+	       (:keywords "convenience")
 	       (:maintainer "Adam Porter" . "adam@alphapapa.net")
 	       (:authors
 		("Adam Porter" . "adam@alphapapa.net"))
-	       (:url . "https://elpa.gnu.org/packages/activities.html")
-	       (:commit . "ee788599ba0e6046376680641214670cdbcf649d"))])
+	       (:commit . "5409872e5c64285de987b95d15ad6497f28ca4ab"))])
  (ada-mode .
 	   [(8 1 0)
 	    ((uniquify-files
@@ -1389,7 +1389,7 @@
 		    ("Matthew L. Fidler" . "matthew.fidler@gmail.com"))
 		   (:keywords "convenience"))])
  (ess .
-      [(24 1 0)
+      [(24 1 1)
        ((emacs
 	 (25 1)))
        "Emacs Speaks Statistics" tar
@@ -1408,7 +1408,7 @@
 	 ("Vitalie Spinu" . "spinuvit@gmail.com")
 	 ("Lionel Henry" . "lionel.hry@gmail.com")
 	 ("J. Alexander Branham" . "alex.branham@gmail.com"))
-	(:commit . "88d611c6833d521d0fbb2ef9c638bf6b3525a622"))])
+	(:commit . "d8472e00da8fde3224d4512641093b526601af39"))])
  (excorporate .
 	      [(1 1 1)
 	       ((emacs
@@ -1774,7 +1774,7 @@
 	     ("Sean Allred" . "code@seanallred.com"))
 	    (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader .
-	  [(0 8 0)
+	  [(0 8 2)
 	   ((emacs
 	     (25)))
 	   "gnamù reader, send buffer contents to a speech engine." tar
@@ -1783,7 +1783,7 @@
 	    (:authors
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
 	    (:url . "https://elpa.gnu.org/packages/greader.html")
-	    (:commit . "fe5df5a83932acccf3407d67c59c131be058d6c4"))])
+	    (:commit . "c53edf4f808ac68d8a2a2af5e0181a39c9aea5a5"))])
  (greenbar .
 	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" single
