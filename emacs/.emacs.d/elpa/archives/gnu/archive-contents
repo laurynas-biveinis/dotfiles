@@ -278,14 +278,14 @@
 	     ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	    (:commit . "1709059b8ac33c76107da178cf2d0dc875dff14e"))])
  (bicep-ts-mode .
-		[(0 1)
+		[(0 1 1)
 		 nil "tree-sitter support for Bicep" tar
-		 ((:keywords "bicep" "languages" "tree-sitter")
+		 ((:url . "https://github.com/josteink/bicep-ts-mode")
+		  (:keywords "bicep" "languages" "tree-sitter")
 		  (:maintainer "Jostein Kjønigsen" . "jostein@kjonigsen.net")
 		  (:authors
 		   ("Jostein Kjønigsen" . "jostein@kjonigsen.net"))
-		  (:url . "https://elpa.gnu.org/packages/bicep-ts-mode.html")
-		  (:commit . "197ccf3d4b8b7bb89eb379b90e701429275d58ee"))])
+		  (:commit . "da121357d71912b4bfa50d7a001a8b097cc40abb"))])
  (bind-key .
 	   [(2 4 1)
 	    nil "A simple way to manage personal keybindings" tar

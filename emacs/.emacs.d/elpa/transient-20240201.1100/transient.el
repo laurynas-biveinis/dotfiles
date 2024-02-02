@@ -674,6 +674,7 @@ If `transient-save-history' is nil, then do nothing."
    (incompatible         :initarg :incompatible         :initform nil)
    (suffix-description   :initarg :suffix-description)
    (variable-pitch       :initarg :variable-pitch       :initform nil)
+   (column-widths        :initarg :column-widths        :initform nil)
    (unwind-suffix        :documentation "Internal use." :initform nil))
   "Transient prefix command.
 
@@ -1099,10 +1100,11 @@ this case, because the `man-page' slot was not set in this case."
                 ((setq args (plist-put args key val))))))
       (list 'vector
             (or level transient--default-child-level)
-            (or class
-                (if (vectorp car)
-                    (quote 'transient-columns)
-                  (quote 'transient-column)))
+            (cond (class)
+                  ((or (vectorp car)
+                       (symbolp car))
+                   (quote 'transient-columns))
+                  ((quote 'transient-column)))
             (and args (cons 'list args))
             (cons 'list
                   (cl-mapcan (lambda (s) (transient--parse-child prefix s))
@@ -1797,7 +1799,10 @@ of the corresponding object."
   ;; an unbound key, then Emacs calls the `undefined' command
   ;; but does not set `this-command', `this-original-command'
   ;; or `real-this-command' accordingly.  Instead they are nil.
-  "<nil>"                         #'transient--do-warn)
+  "<nil>"                         #'transient--do-warn
+  ;; Bound to the `mouse-movement' event, this command is similar
+  ;; to `ignore'.
+  "<ignore-preserving-kill-region>" #'transient--do-noop)
 
 (defvar transient--transient-map nil)
 (defvar transient--predicate-map nil)
@@ -2346,7 +2351,7 @@ value.  Otherwise return CHILDREN as is."
              (remove-hook 'minibuffer-exit-hook ,exit)))
        ,@body)))
 
-(static-if (>= emacs-major-version 30)
+(static-if (>= emacs-major-version 30) ;transient--wrap-command
     (defun transient--wrap-command ()
       (cl-assert
        (>= emacs-major-version 30) nil
@@ -2377,7 +2382,8 @@ value.  Otherwise return CHILDREN as is."
                   (funcall unwind suffix))
                 (advice-remove suffix advice)
                 (oset prefix unwind-suffix nil)))))
-        (advice-add suffix :around advice '((depth . -99)))))
+        (when (symbolp this-command)
+          (advice-add suffix :around advice '((depth . -99))))))
 
   (defun transient--wrap-command ()
     (let* ((prefix transient--prefix)
@@ -2409,7 +2415,8 @@ value.  Otherwise return CHILDREN as is."
       (setq advice `(lambda (fn &rest args)
                       (interactive ,advice-interactive)
                       (apply ',advice-body fn args)))
-      (advice-add suffix :around advice '((depth . -99))))))
+      (when (symbolp this-command)
+        (advice-add suffix :around advice '((depth . -99)))))))
 
 (defun transient--premature-post-command ()
   (and (equal (this-command-keys-vector) [])
@@ -2591,6 +2598,7 @@ exit."
 
 (defun transient--get-pre-command (&optional cmd enforce-type)
   (or (and (not (eq enforce-type 'non-suffix))
+           (symbolp cmd)
            (lookup-key transient--predicate-map (vector cmd)))
       (and (not (eq enforce-type 'suffix))
            (transient--resolve-pre-command
@@ -3679,10 +3687,15 @@ have a history of their own.")
                  transient-align-variable-pitch))
          (rs (apply #'max (mapcar #'length columns)))
          (cs (length columns))
-         (cw (mapcar (lambda (col)
-                       (apply #'max
-                              (mapcar (if vp #'transient--pixel-width #'length)
-                                      col)))
+         (cw (mapcar (let ((widths (oref transient--prefix column-widths)))
+                       (lambda (col)
+                         (apply
+                          #'max
+                          (if-let ((min (pop widths)))
+                              (if vp (* min (transient--pixel-width " ")) min)
+                            0)
+                          (mapcar (if vp #'transient--pixel-width #'length)
+                                  col))))
                      columns))
          (cc (transient--seq-reductions-from
               (apply-partially #'+ (* 3 (if vp (transient--pixel-width " ") 1)))
