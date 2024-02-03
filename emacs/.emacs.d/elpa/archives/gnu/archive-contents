@@ -19,7 +19,7 @@
 	 ("Leo Liu" . "sdl.web@gmail.com"))
 	(:commit . "90c90a80322aa9f26ce88f2f24a224afc4c994b8"))])
  (activities .
-	     [(0 3 3)
+	     [(0 4)
 	      ((emacs
 		(29 1))
 	       (persist
@@ -30,7 +30,7 @@
 	       (:maintainer "Adam Porter" . "adam@alphapapa.net")
 	       (:authors
 		("Adam Porter" . "adam@alphapapa.net"))
-	       (:commit . "5409872e5c64285de987b95d15ad6497f28ca4ab"))])
+	       (:commit . "3e1ba4e12531f2e01a1b29ac5d53ff543a210d03"))])
  (ada-mode .
 	   [(8 1 0)
 	    ((uniquify-files
@@ -4249,7 +4249,7 @@
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	    (:commit . "cf8b2abf5207696c054c33214c86e3969d415054"))])
  (vertico-posframe .
-		   [(0 7 6)
+		   [(0 7 7)
 		    ((emacs
 		      (26 0))
 		     (posframe
@@ -4262,7 +4262,7 @@
 		     (:maintainer "Feng Shu" . "tumashu@163.com")
 		     (:authors
 		      ("Feng Shu" . "tumashu@163.com"))
-		     (:commit . "bc0e67cbbba4daaf6ce7b8701a0dc7797d468752"))])
+		     (:commit . "2e0e09e5bbd6ec576ddbe566ab122575ef051fab"))])
  (vigenere .
 	   [(1 0)
 	    ((emacs
