@@ -2113,7 +2113,7 @@
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
 	  (:commit . "e73c0a38039eb32fd43911023ff35007e324c733"))])
  (sweeprolog .
-	     [(0 27 3)
+	     [(0 27 4)
 	      ((emacs
 		(27 1))
 	       (compat
@@ -2124,7 +2124,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "52f506b3a3dd7e7003a44ad3ae5257b3d22025d2"))])
+	       (:commit . "799e1aebfd280ed6d00fb1034a3fed60de21c8d7"))])
  (swift-mode .
 	     [(9 1 0)
 	      ((emacs

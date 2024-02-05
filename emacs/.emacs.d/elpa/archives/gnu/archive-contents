@@ -1234,7 +1234,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "70e38dbfa8f4acbdebfd0f417410d99f5031e05f"))])
  (ellama .
-	 [(0 7 2)
+	 [(0 7 6)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1249,7 +1249,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "636f74600c7c1812d6c01e72a16817a69dc30ce0"))])
+	   (:commit . "81dc7414cbd637fb61c6541ce71ebb8092db9498"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -2017,7 +2017,7 @@
 		  ("Feng Shu" . "tumashu@163.com")
 		  ("Naoya Yamashita" . "conao3@gmail.com")))])
  (jami-bot .
-	   [(0 0 3)
+	   [(0 0 4)
 	    ((emacs
 	      (27 1)))
 	    "An extendable chat bot for the private messenger GNU Jami" tar
@@ -2025,8 +2025,8 @@
 	     (:keywords "comm" "jami" "messenger" "chat bot" "dbus")
 	     (:maintainer "Hanno Perrey" . "hanno@hoowl.se")
 	     (:authors
-	      ("Hanno Perrey" . "http://gitlab.com/hperrey"))
-	     (:commit . "6823b52b3f598a863065b71dc51cec359fbc2955"))])
+	      ("Hanno Perrey" . "hanno@hoowl.se"))
+	     (:commit . "c2ad37e2ada14b5551a83211cc4692b39be4e5fb"))])
  (jarchive .
 	   [(0 11 0)
 	    ((emacs
@@ -2226,7 +2226,7 @@
 	 ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	(:commit . "09cf249c78385502a2ead30c4fa1468cf96939f7"))])
  (llm .
-      [(0 9 0)
+      [(0 9 1)
        ((emacs
 	 (28 1)))
        "Interface to pluggable llm backends" tar
@@ -2234,7 +2234,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "8fc2d1cb41ed8850696ee1ce549158496e437cda"))])
+	(:commit . "bed2cb774d2836a8992ad7cbf821e613d7d14ce1"))])
  (lmc .
       [(1 4)
        ((emacs
@@ -2691,7 +2691,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "847694e78c12d903d5e3f6cb365a5d3b984db537"))])
  (org .
-      [(9 6 17)
+      [(9 6 18)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -2700,7 +2700,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "25c786f0fb5e49af27ed1790f966b3958e210d7f"))])
+	(:commit . "97f4ae0c2d43384d8b03addcafbc7fe0738ab2b7"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -2728,6 +2728,19 @@
 	     (:authors
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:keywords "convenience" "text" "org"))])
+ (org-jami-bot .
+	       [(0 0 5)
+		((emacs
+		  (28 1))
+		 (jami-bot
+		  (0 0 4)))
+		"Capture GNU Jami messages as notes and todos in Org mode" tar
+		((:url . "https://gitlab.com/hperrey/org-jami-bot")
+		 (:keywords "comm" "outlines" "org-capture" "jami")
+		 (:maintainer "Hanno Perrey" . "hanno@hoowl.se")
+		 (:authors
+		  ("Hanno Perrey" . "hanno@hoowl.se"))
+		 (:commit . "020b03f299dad438f65d7bcbf93553b273fd7c33"))])
  (org-modern .
 	     [(1 1)
 	      ((emacs

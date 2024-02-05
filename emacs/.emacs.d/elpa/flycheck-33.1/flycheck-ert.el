@@ -352,7 +352,8 @@ ERROR is a Flycheck error object."
           ;; Overlays of errors from other files are on the first line
           (if (flycheck-relevant-error-other-file-p error)
               (cons (point-min)
-                    (save-excursion (goto-char (point-min)) (point-at-eol)))
+                    (save-excursion (goto-char (point-min))
+                                    (line-end-position)))
             (flycheck-error-region-for-mode error 'symbols)))
          (level (flycheck-error-level error))
          (category (flycheck-error-level-overlay-category level))
@@ -373,6 +374,10 @@ ERROR is a Flycheck error object."
                                                               'flycheck-error))
                    (flycheck-error-without-group error)))))
 
+(defun flycheck-ert-sort-errors (errors)
+  "Sort ERRORS by `flycheck-error-<'."
+  (seq-sort #'flycheck-error-< errors))
+
 (defun flycheck-ert-should-errors (&rest errors)
   "Test that the current buffers has ERRORS.
 
@@ -387,18 +392,22 @@ With ERRORS, test that each error in ERRORS is present in the
 current buffer, and that the number of errors in the current
 buffer is equal to the number of given ERRORS.  In other words,
 check that the buffer has all ERRORS, and no other errors."
-  (let ((expected (mapcar (apply-partially #'apply #'flycheck-error-new-at)
-                          errors)))
+  (let ((expected (flycheck-ert-sort-errors
+                   (mapcar (apply-partially #'apply #'flycheck-error-new-at)
+                           errors)))
+        (current (flycheck-ert-sort-errors flycheck-current-errors)))
     (should (equal (mapcar #'flycheck-error-without-group expected)
-                   (mapcar #'flycheck-error-without-group
-                           flycheck-current-errors)))
+                   (mapcar #'flycheck-error-without-group current)))
     ;; Check that related errors are the same
-    (cl-mapcar (lambda (err1 err2)
-                 (should (equal (mapcar #'flycheck-error-without-group
-                                        (flycheck-related-errors err1 expected))
-                                (mapcar #'flycheck-error-without-group
-                                        (flycheck-related-errors err2)))))
-               expected flycheck-current-errors)
+    (cl-mapcar
+     (lambda (err1 err2)
+       (should (equal (flycheck-ert-sort-errors
+                       (mapcar #'flycheck-error-without-group
+                               (flycheck-related-errors err1 expected)))
+                      (flycheck-ert-sort-errors
+                       (mapcar #'flycheck-error-without-group
+                               (flycheck-related-errors err2))))))
+     expected current)
     (mapc #'flycheck-ert-should-overlay expected))
   (should (= (length errors)
              (length (flycheck-overlays-in (point-min) (point-max))))))
@@ -484,7 +493,11 @@ current buffer.  Otherwise return nil."
         (format "Expected to be at error %s, but no error at point %s"
                 n (point))
       (let ((pos (cl-position (car errors) flycheck-current-errors)))
-        (format "Expected to be at error %s, but point %s is at error %s"
+        (format "Expected to be at point %s and error %s, \
+but point %s is at error %s"
+                (car (flycheck-error-region-for-mode
+                      (nth (1- n) flycheck-current-errors)
+                      flycheck-highlighting-mode))
                 n (point) (1+ pos))))))
 
 (put 'flycheck-ert-at-nth-error 'ert-explainer
