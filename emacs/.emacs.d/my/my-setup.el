@@ -428,7 +428,10 @@
 (gud-tooltip-mode t)
 
 ;; `xref'
-(setq xref-prompt-for-identifier nil)
+(setq xref-prompt-for-identifier nil
+      ;; If only one reference, jump to it directly instead of creating the
+      ;; reference buffer
+      xref-show-xrefs-function #'xref-show-definitions-buffer)
 ;; Do not initialize `xref-backend-functions' to `etags--xref-backend',
 ;; we never use etags and let major modes (LSP, elisp) define useful backends
 ;; themselves.
