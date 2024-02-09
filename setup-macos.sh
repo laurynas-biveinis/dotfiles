@@ -316,7 +316,7 @@ brew install stow git ncdu gnupg@2.2 coreutils fzf hexyl tldr lynis curl java \
      creduce gnu-sed mas bat fig bison libfido2 actionlint circleci imagemagick \
      rapidjson doxygen graphviz cmake protobuf@21 ripgrep lz4 boost cpplint \
      libeatmydata duf exa clang-build-analyzer recode ninja difftastic git-lfs \
-     plantuml
+     plantuml gh
 git lfs install
 brew link protobuf@21
 sudo ln -sf /opt/homebrew/opt/llvm@16/bin/clang-format \
