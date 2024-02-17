@@ -2574,7 +2574,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.92/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.92/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.124/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.124/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -4175,137 +4175,6 @@ Shortcuts             Command Name
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/epl-0.9/epl-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/epl-0.9/epl-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "epl" '("epl-"))
-
-
-(provide 'epl-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pkg-info-0.6/pkg-info-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pkg-info-0.6/pkg-info-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'pkg-info-library-original-version "pkg-info" "\
-Get the original version in the header of LIBRARY.
-
-The original version is stored in the X-Original-Version header.
-This header is added by the MELPA package archive to preserve
-upstream version numbers.
-
-LIBRARY is either a symbol denoting a named feature, or a library
-name as string.
-
-If SHOW is non-nil, show the version in the minibuffer.
-
-Return the version from the header of LIBRARY as list.  Signal an
-error if the LIBRARY was not found or had no X-Original-Version
-header.
-
-See Info node `(elisp)Library Headers' for more information
-about library headers.
-
-(fn LIBRARY &optional SHOW)" t)
-(autoload 'pkg-info-library-version "pkg-info" "\
-Get the version in the header of LIBRARY.
-
-LIBRARY is either a symbol denoting a named feature, or a library
-name as string.
-
-If SHOW is non-nil, show the version in the minibuffer.
-
-Return the version from the header of LIBRARY as list.  Signal an
-error if the LIBRARY was not found or had no proper header.
-
-See Info node `(elisp)Library Headers' for more information
-about library headers.
-
-(fn LIBRARY &optional SHOW)" t)
-(autoload 'pkg-info-defining-library-original-version "pkg-info" "\
-Get the original version of the library defining FUNCTION.
-
-The original version is stored in the X-Original-Version header.
-This header is added by the MELPA package archive to preserve
-upstream version numbers.
-
-If SHOW is non-nil, show the version in mini-buffer.
-
-This function is mainly intended to find the version of a major
-or minor mode, i.e.
-
-   (pkg-info-defining-library-version 'flycheck-mode)
-
-Return the version of the library defining FUNCTION.  Signal an
-error if FUNCTION is not a valid function, if its defining
-library was not found, or if the library had no proper version
-header.
-
-(fn FUNCTION &optional SHOW)" t)
-(autoload 'pkg-info-defining-library-version "pkg-info" "\
-Get the version of the library defining FUNCTION.
-
-If SHOW is non-nil, show the version in mini-buffer.
-
-This function is mainly intended to find the version of a major
-or minor mode, i.e.
-
-   (pkg-info-defining-library-version 'flycheck-mode)
-
-Return the version of the library defining FUNCTION.  Signal an
-error if FUNCTION is not a valid function, if its defining
-library was not found, or if the library had no proper version
-header.
-
-(fn FUNCTION &optional SHOW)" t)
-(autoload 'pkg-info-package-version "pkg-info" "\
-Get the version of an installed PACKAGE.
-
-If SHOW is non-nil, show the version in the minibuffer.
-
-Return the version as list, or nil if PACKAGE is not installed.
-
-(fn PACKAGE &optional SHOW)" t)
-(autoload 'pkg-info-version-info "pkg-info" "\
-Obtain complete version info for LIBRARY and PACKAGE.
-
-LIBRARY is a symbol denoting a named feature, or a library name
-as string.  PACKAGE is a symbol denoting an ELPA package.  If
-omitted or nil, default to LIBRARY.
-
-If SHOW is non-nil, show the version in the minibuffer.
-
-When called interactively, prompt for LIBRARY.  When called
-interactively with prefix argument, prompt for PACKAGE as well.
-
-Return a string with complete version information for LIBRARY.
-This version information contains the version from the headers of
-LIBRARY, and the version of the installed PACKAGE, the LIBRARY is
-part of.  If PACKAGE is not installed, or if the PACKAGE version
-is the same as the LIBRARY version, do not include a package
-version.
-
-(fn LIBRARY &optional PACKAGE SHOW)" t)
-(register-definition-prefixes "pkg-info" '("pkg-info-"))
-
-
-(provide 'pkg-info-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/page-break-lines-0.15/page-break-lines-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/page-break-lines-0.15/page-break-lines-autoloads.el"))
 
 
@@ -4463,7 +4332,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240114.13/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240114.13/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319/magit-section-autoloads.el"))
 
 
 
@@ -5368,7 +5237,7 @@ the reports is done using the TaskJuggler GUI.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240206.2256/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240206.2256/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240211.1712/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240211.1712/magit-autoloads.el"))
 
 
 
@@ -10292,7 +10161,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-33.1/flycheck-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-33.1/flycheck-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.0/flycheck-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.0/flycheck-autoloads.el"))
 
 
 
@@ -10752,7 +10621,7 @@ values used in the user's shell." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240209.901/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240209.901/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240217.1141/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240217.1141/difftastic-autoloads.el"))
 
 
 
@@ -11554,14 +11423,14 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup plantuml-mode epl pkg-info page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib ob-rust git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup plantuml-mode page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib ob-rust git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20240206.2256" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20240114.13" "/Users/laurynas/.emacs.d/elpa/transient-20240201.1100" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20240211.1712" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319" "/Users/laurynas/.emacs.d/elpa/transient-20240201.1100" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:

@@ -106,6 +106,17 @@
 	      ((:url . "https://github.com/jasonm23/autothemer")
 	       (:maintainer "Jason Milkins" . "jasonm23@gmail.com")
 	       (:commit . "8f72afc6dba5ad7cc3a201a084fd20571f945d2e"))])
+ (base32 .
+	 [(1 0)
+	  ((emacs
+	    (27 1)))
+	  "Base32 support" tar
+	  ((:url . "https://gitlab.com/fledermaus/totp.el")
+	   (:keywords "tools")
+	   (:maintainer "Vivek Das Mohapatra" . "vivek@etla.org")
+	   (:authors
+	    ("Vivek Das Mohapatra" . "vivek@etla.org"))
+	   (:commit . "v1.0"))])
  (bash-completion .
 		  [(3 1 1)
 		   ((emacs
@@ -260,14 +271,14 @@
 		 (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
 		 (:commit . "25d713a67d8e0209ee74bfc0153fdf677697b43f"))])
  (clojure-ts-mode .
-		  [(0 2 0)
+		  [(0 2 2)
 		   ((emacs
-		     (29)))
+		     (29 1)))
 		   "Major mode for Clojure code" tar
 		   ((:url . "http://github.com/clojure-emacs/clojure-ts-mode")
 		    (:keywords "languages" "clojure" "clojurescript" "lisp")
 		    (:maintainer "Danny Freeman" . "danny@dfreeman.email")
-		    (:commit . "8e61fe8ff4795975ec9e225af931d3a514c99445"))])
+		    (:commit . "a923aa83a61751a588ed3afc133d45898995762e"))])
  (coffee-mode .
 	      [(0 6 3)
 	       ((emacs
@@ -473,7 +484,7 @@
 		(:keywords "languages" "elixir")
 		(:commit . "00d6580a040a750e019218f9392cf9a4c2dac23a"))])
  (elpher .
-	 [(3 5 0)
+	 [(3 5 1)
 	  ((emacs
 	    (27 1)))
 	  "A friendly gopher and gemini client" tar
@@ -482,7 +493,7 @@
 	   (:maintainer "Tim Vaughan" . "plugd@thelambdalab.xyz")
 	   (:authors
 	    ("Tim Vaughan" . "plugd@thelambdalab.xyz"))
-	   (:commit . "81f2883614c303184116449ec3583ef5c136ec2f"))])
+	   (:commit . "3f53ed5b6550d25a66bc83f6f26d8cfb06b1dcce"))])
  (engine-mode .
 	      [(2 2 4)
 	       ((cl-lib
@@ -603,7 +614,7 @@
 		    (:authors
 		     ("Sylvain Benner" . "sylvain.benner@gmail.com")))])
  (evil-matchit .
-	       [(3 0 2)
+	       [(3 0 4)
 		((emacs
 		  (25 1)))
 		"Vim matchit ported to Evil" tar
@@ -612,7 +623,7 @@
 		 (:maintainer "Chen Bin" . "chenbin.sh@gmail.com")
 		 (:authors
 		  ("Chen Bin" . "chenbin.sh@gmail.com"))
-		 (:commit . "f27b2a87bab75e3b8a87c277049a4363cdfcbf61"))])
+		 (:commit . "1c4fefa9bb11cc4b1d7f10614d2021c12ed12e89"))])
  (evil-nerd-commenter .
 		      [(3 6 1)
 		       ((emacs
@@ -1160,13 +1171,14 @@
 	       ("Akib Azmain Turja" . "akib@disroot.org"))
 	      (:commit . "2d3a3f551b52c07a11b9ea0f842ef39915911c55"))])
  (htmlize .
-	  [(1 57)
+	  [(1 56)
 	   nil "Convert buffer text and decorations to HTML." tar
-	   ((:url . "https://github.com/hniksic/emacs-htmlize")
+	   ((:keywords "hypermedia" "extensions")
 	    (:maintainer "Hrvoje Niksic" . "hniksic@gmail.com")
 	    (:authors
 	     ("Hrvoje Niksic" . "hniksic@gmail.com"))
-	    (:keywords "hypermedia" "extensions"))])
+	    (:url . "https://elpa.nongnu.org/nongnu/htmlize.html")
+	    (:commit . "7b63aa058c3dd0d9f8c07706cd8bb4e56aaa1fb3"))])
  (hyperdrive .
 	     [(0 3)
 	      ((emacs
@@ -1452,13 +1464,13 @@
 	    ("Stefan Kangas" . "stefankangas@gmail.com"))
 	   (:commit . "480602f2ec5467aa2418ee98b328fb85d3b58d0c"))])
  (meow .
-       [(1 4 4)
+       [(1 4 5)
 	((emacs
 	  (27 1)))
 	"Yet Another modal editing" tar
 	((:url . "https://www.github.com/DogLooksGood/meow")
 	 (:keywords "convenience" "modal-editing")
-	 (:commit . "f553db183a47b23d037b1a7f1cab48b0b4798a37"))])
+	 (:commit . "54d4e933039827c158a4f593a94681a64e0d8042"))])
  (minibar .
 	  [(0 3)
 	   ((emacs
@@ -1959,16 +1971,18 @@
 	       ("Natalie Weizenbaum"))
 	      (:keywords "markup" "language" "css"))])
  (scad-mode .
-	    [(93 2)
+	    [(93 3)
 	     ((emacs
-	       (27 1)))
+	       (27 1))
+	      (compat
+	       (29 1 4 4)))
 	     "A major mode for editing OpenSCAD code" tar
 	     ((:url . "https://github.com/openscad/emacs-scad-mode")
 	      (:keywords "languages")
-	      (:maintainer "Len Trigg <lenbok@gmail.com>, Daniel Mendler" . "mail@daniel-mendler.de")
-	      (:authors
-	       ("Len Trigg, Łukasz Stelmach, zk_phi, Daniel Mendler"))
-	      (:commit . "749b11df1d3041aa0a90542cba0fe5d9563c3a1f"))])
+	      (:maintainer
+	       ("Len Trigg" . "lenbok@gmail.com")
+	       ("Daniel Mendler" . "mail@daniel-mendler.de"))
+	      (:commit . "8d5650c5cfee96c42d64427bfcadb89f6bda66be"))])
  (scala-mode .
 	     [(0 23)
 	      nil "Major mode for editing Scala" tar
@@ -2227,6 +2241,19 @@
 	    (:maintainer "Sergei Nosov <sergei.nosov [at] gmail.com>")
 	    (:authors
 	     ("Sergei Nosov <sergei.nosov [at] gmail.com>")))])
+ (totp-auth .
+	    [(1 0)
+	     ((emacs
+	       (27 1))
+	      (base32
+	       (0 1)))
+	     "RFC6238 TOTP" tar
+	     ((:url . "https://gitlab.com/fledermaus/totp.el")
+	      (:keywords "2fa" "two-factor" "totp" "otp" "password" "comm")
+	      (:maintainer "Vivek Das Mohapatra" . "vivek@etla.org")
+	      (:authors
+	       ("Vivek Das Mohapatra" . "vivek@etla.org"))
+	      (:commit . "v1.0"))])
  (treeview .
 	   [(1 2 0)
 	    ((emacs
@@ -2433,14 +2460,14 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(24 20 20240120121202)
+	       [(24 21 20240213125545)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "0e5aa069fe7fc32c40c5ebd7272e31d70ebeb4dc"))])
+		 (:commit . "56af7d65896cd285fe46c53828087f4d727387f3"))])
  (xkcd .
        [(1 1)
 	((json
