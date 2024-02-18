@@ -2574,7 +2574,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.124/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.124/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.125/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.125/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -5237,7 +5237,7 @@ the reports is done using the TaskJuggler GUI.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240211.1712/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240211.1712/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240218.530/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240218.530/magit-autoloads.el"))
 
 
 
@@ -11430,7 +11430,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20240211.1712" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319" "/Users/laurynas/.emacs.d/elpa/transient-20240201.1100" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/magit-20240218.530" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319" "/Users/laurynas/.emacs.d/elpa/transient-20240201.1100" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
