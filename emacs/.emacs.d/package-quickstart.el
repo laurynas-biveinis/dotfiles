@@ -2574,7 +2574,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.125/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.125/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.133/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.133/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -10161,7 +10161,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.0/flycheck-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.0/flycheck-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.1/flycheck-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.1/flycheck-autoloads.el"))
 
 
 

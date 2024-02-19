@@ -10,8 +10,8 @@
 ;;             Bozhidar Batsov <bozhidar@batsov.dev>
 ;; URL: http://www.flycheck.org
 ;; Keywords: convenience, languages, tools
-;; Version: 34.0
-;; Package-Requires: ((emacs "26.1") (seq "2.24"))
+;; Version: 34.1
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -80,6 +80,7 @@
 (require 'find-func)             ; `find-function-regexp-alist'
 (require 'json)                  ; `flycheck-parse-json'
 (require 'ansi-color)            ; `flycheck-parse-with-patterns-without-color'
+(require 'lisp-mnt)              ; `lm-version'
 
 
 ;; Declare a bunch of dynamic variables that we need from other modes
@@ -1233,7 +1234,9 @@ Only has effect when variable `global-flycheck-mode' is non-nil."
 
 
 
-(defconst flycheck-version "34.0"
+(defconst flycheck-version
+  (eval-when-compile
+    (lm-version (or load-file-name buffer-file-name)))
   "The current version of Flycheck.")
 
 (defun flycheck--pkg-version ()
