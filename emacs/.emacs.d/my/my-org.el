@@ -99,12 +99,17 @@
       org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 
-(defun my--org-clock-in-open-urls ()
-  "Open all URLs associated with the task being clocked in."
-  (let ((urls (org-entry-get-multivalued-property (point) "URL")))
+(defun my--org-clock-in-actions ()
+  "Open all URLs and macOS apps associated with the task being clocked in."
+  (let ((urls (org-entry-get-multivalued-property (point) "URL"))
+        (apps (org-entry-get-multivalued-property (point) "APP")))
+    ;; Open URLs
     (dolist (url urls)
-      (browse-url url))))
-(add-hook 'org-clock-in-hook #'my--org-clock-in-open-urls)
+      (browse-url url))
+    ;; Open macOS applications
+    (dolist (app apps)
+      (shell-command (concat "open -a \"" app "\"")))))
+(add-hook 'org-clock-in-hook #'my--org-clock-in-actions)
 
 ;;; Clock tables
 (setq org-clocktable-defaults
