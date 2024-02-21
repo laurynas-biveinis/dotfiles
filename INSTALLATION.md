@@ -56,6 +56,8 @@ ln -sf $HOME/Documents/secrets.el $HOME/secrets.el
 ln -sf $HOME/Documents/.hunspell_en_US $HOME/.hunspell_en_US
 ```
 
+and put `authinfo.gpg` in $HOME. `chmod 600` it.
+
 In Emacs, do `(all-the-icons-install-fonts)`.
 
 If "nightly" is enabled, then `launchctl load ~/Library/LaunchAgents/nightly.plist`
