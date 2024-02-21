@@ -314,6 +314,9 @@
 (transient-append-suffix 'magit-worktree '(0 0 -1)
   '("C" "Create a branch in a sibling worktree" my-magit-worktree-branch))
 
+;; `forge'
+(require 'forge)
+
 ;; `git-gutter'
 (require 'git-gutter)
 (setq git-gutter:update-interval 0.02)
