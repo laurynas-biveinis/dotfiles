@@ -3,3 +3,5 @@
 	path = ~/.gitconfig.common
 [merge]
 	conflictstyle = zdiff3
+[github]
+	user = laurynas-biveinis

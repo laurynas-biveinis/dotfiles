@@ -10,3 +10,5 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[github]
+	user = laurynas-biveinis

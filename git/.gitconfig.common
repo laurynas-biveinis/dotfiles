@@ -28,5 +28,5 @@
 	ui = true
 [alias]
 	grepterse = log --oneline --grep
-[github]
-	user = laurynas-biveinis
+# Do not move github.user here from the top-level files, because it is ignored
+# if given here for some reason
