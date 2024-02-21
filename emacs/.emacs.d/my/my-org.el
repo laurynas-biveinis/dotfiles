@@ -100,15 +100,19 @@
 (org-clock-persistence-insinuate)
 
 (defun my--org-clock-in-actions ()
-  "Open all URLs and a macOS app associated with the task being clocked in."
+  "Open all URLs, a macOS app, and visit a file for the clocked-in task."
   (let ((urls (org-entry-get-multivalued-property (point) "URL"))
-        (app (org-entry-get (point) "APP")))
+        (app (org-entry-get (point) "APP"))
+        (visit (org-entry-get (point) "VISIT")))
     ;; Open all URLs
     (dolist (url urls)
       (browse-url url))
     ;; Open one macOS application, if any
     (when app
-      (shell-command (concat "open -a " app)))))
+      (shell-command (concat "open -a " app)))
+    ;; Visit a file, if any
+    (when visit
+      (find-file visit))))
 (add-hook 'org-clock-in-hook #'my--org-clock-in-actions)
 
 ;;; Clock tables
