@@ -1,10 +1,12 @@
-;;; my-org.el --- everything related to org.  -*- lexical-binding: t; -*-
+;;; my-org.el --- everything related to `org'.  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
-;; This configures Org, `org-roam', and everything related. Expects that
-;; `org-tag-alist', `org-agenda-custom-commands', `org-capture-templates',
-;; `org-todo-keywords', `org-roam-capture-templates' are set elsewhere.
+;; This configures `org', `org-babel', `org-roam', and everything related.
+;; Expects that `org-tag-alist', `org-agenda-custom-commands',
+;; `org-capture-templates', `org-todo-keywords', and
+;; `org-roam-capture-templates' are set elsewhere, in secrets.el in my setup.
+;; That file must be loaded first.
 
 ;;; Code:
 
@@ -33,10 +35,13 @@
 
 ;;; Setup hook: keyboard shortcuts and fill column setting
 (defun dotfiles--org-mode-hook ()
-  "My configuration hook for `org-mode'."
+  "My configuration hook for `org-mode'.
+Sets up keybindings and adjusts the fill column."
+  ;; Keybindings
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
   (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
   (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+  ;; Fill column
   (dotfiles--set-fill-column 85))
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
@@ -94,13 +99,19 @@
       org-log-redeadline 'time
       org-log-reschedule 'time)
 
-;;; Clocking
+;;; Time tracking (clocking)
 (setq org-clock-display-default-range 'untilnow
       org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 
 (defun my--org-clock-in-actions ()
-  "Open all URLs, a macOS app, and visit a file for the clocked-in task."
+  "Open all URLs, a macOS app, and visit a file for the clocked-in task.
+All of them are optional. The URLs are expected to be provided by
+any number of `URL' properties on the task. The macOS app should
+be specified by a single `APP' property, it may be quoted with
+double quotes if necessary and will be passed to shell without
+further quoting. A file to visit should be specified by a single
+`VISIT' property. The file does not have to exist."
   (let ((urls (org-entry-get-multivalued-property (point) "URL"))
         (app (org-entry-get (point) "APP"))
         (visit (org-entry-get (point) "VISIT")))
@@ -169,7 +180,8 @@
 (org-crypt-use-before-save-magic)
 (setq org-crypt-disable-auto-save 'encrypt)
 
-;; Integrate with `flyspell' by disabling it over encrypted blocks
+;; Integrate with `flyspell' by disabling it over encrypted blocks to avoid
+;; random wiggles under random passwords.
 (defun dotfiles--org-mode-flyspell-verify-disable-for-org-crypt ()
   "Do not flyspell blocks encrypted by `org-crypt'."
   (not (org-at-encrypted-entry-p)))
