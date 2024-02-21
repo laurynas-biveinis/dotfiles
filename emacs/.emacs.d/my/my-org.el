@@ -108,7 +108,7 @@
       (browse-url url))
     ;; Open macOS applications
     (dolist (app apps)
-      (shell-command (concat "open -a \"" app "\"")))))
+      (shell-command (concat "open -a " app)))))
 (add-hook 'org-clock-in-hook #'my--org-clock-in-actions)
 
 ;;; Clock tables
