@@ -10023,6 +10023,46 @@ Sets up preferred newline behavior. Not set by default. Meant
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.2/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.2/git-modes-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'gitattributes-mode "gitattributes-mode" "\
+A major mode for editing .gitattributes files.
+\\{gitattributes-mode-map}
+
+(fn)" t)
+(dolist (pattern '("/\\.gitattributes\\'" "/info/attributes\\'" "/git/attributes\\'")) (add-to-list 'auto-mode-alist (cons pattern #'gitattributes-mode)))
+(register-definition-prefixes "gitattributes-mode" '("gitattributes-mode-"))
+
+
+
+(autoload 'gitconfig-mode "gitconfig-mode" "\
+A major mode for editing .gitconfig files.
+
+(fn)" t)
+(dolist (pattern '("/\\.gitconfig\\'" "/\\.git/config\\'" "/modules/.*/config\\'" "/git/config\\'" "/\\.gitmodules\\'" "/etc/gitconfig\\'")) (add-to-list 'auto-mode-alist (cons pattern 'gitconfig-mode)))
+(register-definition-prefixes "gitconfig-mode" '("gitconfig-"))
+
+
+
+(autoload 'gitignore-mode "gitignore-mode" "\
+A major mode for editing .gitignore files.
+
+(fn)" t)
+(dolist (pattern (list "/\\.gitignore\\'" "/info/exclude\\'" "/git/ignore\\'")) (add-to-list 'auto-mode-alist (cons pattern 'gitignore-mode)))
+(register-definition-prefixes "gitignore-mode" '("gitignore-mode-font-lock-keywords"))
+
+
+(provide 'git-modes-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20220922.256/git-gutter-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20220922.256/git-gutter-autoloads.el"))
 
 
@@ -11423,7 +11463,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup plantuml-mode page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib ob-rust git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup plantuml-mode page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib ob-rust git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-modes git-gutter fringe-helper git-gutter-fringe gcmh flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)
