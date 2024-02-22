@@ -3,15 +3,27 @@
 ;;; Commentary:
 
 ;; Configure everything related to projects. The core package is `projectile',
-;; which is also integrated with Helm through `helm-projectile', extended with
-;; project reconfiguration command for CMake projects, and integrated with my
-;; dotfiles "gitrmworktree" utility. Other packages are `deadgrep' and `wgrep'.
+;; which is also integrated with `lsp-mode', integrated with Helm through
+;; `helm-projectile', extended with project reconfiguration command for CMake
+;; projects, and integrated with my dotfiles "gitrmworktree" utility. Other
+;; packages are `deadgrep' and `wgrep'. Additionally there are custom commands
+;; for CMake project management.
 ;;
-;; Like in the rest of configuration, all features are assumed to exist, because
-;; this is a part of my dotfiles repo where the needed packages are committed
-;; too.
+;; Like in the rest of my personal configuration, all features (packages and
+;; external tools) are assumed to exist, because this is a part of my dotfiles
+;; repo where the needed packages are committed too. Thus, no error handling,
+;; and no need to ensure compatibility with different Emacs or package versions.
+;;
+;; Custom keybindings:
+;; s-p:   - Projectile command map
+;; s-p g: - Projectile grep
+;; s-p h: - Projectile grep using Helm
+;; s-p w: - Projectile reconfigure CMake project
+;; s-p y: - Projectile kill all buffers and remove the worktree
 
 ;;; Code:
+
+;;; `projectile'
 
 (require 'projectile)
 
@@ -20,7 +32,11 @@
       projectile-use-git-grep t
       projectile-enable-cmake-presets t
       projectile-mode-line-prefix " "  ;; Save mode line space
-      projectile-tags-backend 'xref  ;; Only use `xref' for cross-references
+      ;; Only use `xref' for cross-references. Any regex-based tooling is
+      ;; inaccurate.
+      projectile-tags-backend 'xref
+      ;; Browsing project files without caching is prohibitively slow on large
+      ;; projects such as MySQL.
       projectile-enable-caching t)
 
 ;; Exclude some more modes from projectile
@@ -29,13 +45,15 @@
 (add-to-list 'projectile-globally-ignored-modes "org-mode")
 (add-to-list 'projectile-globally-ignored-modes "package-menu-mode")
 
-;; Steal s-p from `ns-print-buffer'. I never print buffers
+;; For the global binding of Projectile command map, steal s-p from
+;; `ns-print-buffer'. I never print buffers.
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 
 (defun dotfiles--projectile-mode-line ()
-  "Report project name and, if needed, type in the modeline.
-
-The type is not displayed if it is generic or rust-cargo."
+  "Report `projectile' project name and, if needed, type in the modeline.
+The type is not displayed if it is generic or rust-cargo. This function is meant
+to be set as the value of `projectile-mode-line-function' to replace the default
+behavior."
   (let ((project-name (projectile-project-name)))
     (if (string= project-name "-")
         ""
@@ -87,9 +105,18 @@ The type is not displayed if it is generic or rust-cargo."
 (defun dotfiles--projectile-set-build-dir-and-command ()
   "Discover the build dir and command for a `projectile' project if not set.
 
-The current implementation uses the presence of a compilation database symlink
-in the project root (and absence of CMakePresets.json) to point to the build
-directory. If found, sets the compilation and test commands too."
+The current implementation tries to discover the build directory looking for a
+symlink to a compilation database ('compile_commands.json') in the project root.
+If found, it assumes the symlink points to the actual build directory. If,
+additionally, 'CMakePresets.json' is absent, indicating that CMake presets are
+not used for this project, this function configures the build and test commands
+for the project to use Ninja and CTest, respectively. For the the latter, the
+'MAKE_J' environment variable is used for setting the CTest parallelism level,
+defaulting to 1 if not set.
+
+This function is meant to be used as before-advice for
+`projectile-compilation-dir', handling the case if the CDB symlink exists,
+leaving other cases for that function."
   (let* ((project-root (projectile-project-root))
          (cmake-presets-path (expand-file-name "CMakePresets.json" project-root))
          (cdb-path (expand-file-name "compile_commands.json" project-root)))
@@ -128,13 +155,14 @@ directory. If found, sets the compilation and test commands too."
 (defun dotfiles--projectile-reconfigure-command (compile-dir)
   "Retrieve the configure command for COMPILE-DIR without considering history.
 
+Not considering the history is what it makes it different from
+`projectile-configure-command'.
+
 The command is determined like this:
-
 - first we check for `projectile-project-configure-cmd' supplied
-via .dir-locals.el
-
+  via .dir-locals.el
 - finally we check for the default configure command for a
-project of that type"
+  project of that type"
   (or projectile-project-configure-cmd
       (let ((cmd-format-string (projectile-default-configure-command
                                 (projectile-project-type))))
@@ -157,7 +185,7 @@ with a prefix ARG."
 
 (define-key projectile-command-map "w" #'projectile-reconfigure-project)
 
-;; Integrate projectile/lsp-mode with my gitrmworktree
+;; Integrate `projectile' and `lsp-mode' with my gitrmworktree
 (require 'lsp-mode)
 (defun kill-buffers-rm-worktree ()
   "Remove the git worktree and kill project buffers."
