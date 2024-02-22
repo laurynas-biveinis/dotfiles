@@ -7,9 +7,9 @@
 ;; project reconfiguration command for CMake projects, and integrated with my
 ;; dotfiles "gitrmworktree" utility. Other packages are `deadgrep' and `wgrep'.
 ;;
-;; Like in the rest of configuration, all
-;; features are assumed to exist, because this is a part of my dotfiles repo
-;; where the needed packages are committed too.
+;; Like in the rest of configuration, all features are assumed to exist, because
+;; this is a part of my dotfiles repo where the needed packages are committed
+;; too.
 
 ;;; Code:
 

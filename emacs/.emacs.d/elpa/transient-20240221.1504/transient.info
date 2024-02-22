@@ -495,7 +495,7 @@ if the user lowers the transient level.
      state, you have to make sure that that state is currently active.
 
 ‘C-x a’ (‘transient-toggle-level-limit’)
-     This command toggle whether suffixes that are on levels lower than
+     This command toggle whether suffixes that are on levels higher than
      the level specified by ‘transient-default-level’ are temporarily
      available anyway.
 
@@ -3197,54 +3197,54 @@ Ref: Saving Values-Footnote-113975
 Node: Using History14168
 Node: Getting Help for Suffix Commands15742
 Node: Enabling and Disabling Suffixes17120
-Node: Other Commands20407
-Node: Configuration21383
-Ref: Essential Options21663
-Ref: Accessibility Options25324
-Ref: Auxiliary Options25647
-Ref: Developer Options30610
-Node: Modifying Existing Transients31858
-Node: Defining New Commands36050
-Node: Technical Introduction36413
-Node: Defining Transients42114
-Node: Binding Suffix and Infix Commands44581
-Node: Group Specifications45439
-Node: Suffix Specifications50008
-Node: Defining Suffix and Infix Commands54221
-Node: Using Infix Arguments57427
-Node: Transient State60261
-Ref: Pre-commands for Infixes65076
-Ref: Pre-commands for Suffixes65596
-Ref: Pre-commands for Non-Suffixes68050
-Ref: Special Pre-Commands69186
-Node: Classes and Methods69694
-Node: Group Classes71878
-Node: Group Methods73805
-Node: Prefix Classes75058
-Node: Suffix Classes76149
-Node: Suffix Methods79236
-Node: Suffix Value Methods79557
-Node: Suffix Format Methods82315
-Node: Prefix Slots83794
-Ref: Internal Prefix Slots85929
-Node: Suffix Slots87186
-Ref: Slots of transient-suffix87554
-Ref: Slots of transient-infix88691
-Ref: Slots of transient-variable91987
-Ref: Slots of transient-switches92089
-Node: Predicate Slots92452
-Node: FAQ93887
-Ref: Can I control how the popup buffer is displayed?94016
-Ref: How can I copy text from the popup buffer?94197
-Ref: How does Transient compare to prefix keys and universal arguments?94691
-Ref: How does Transient compare to Magit-Popup and Hydra?94934
-Ref: Why did some of the key bindings change?95128
-Ref: Why does q not quit popups anymore?97481
-Node: Keystroke Index98584
-Node: Command and Function Index100449
-Node: Variable Index107041
-Node: Concept Index109314
-Node: GNU General Public License112050
+Node: Other Commands20408
+Node: Configuration21384
+Ref: Essential Options21664
+Ref: Accessibility Options25325
+Ref: Auxiliary Options25648
+Ref: Developer Options30611
+Node: Modifying Existing Transients31859
+Node: Defining New Commands36051
+Node: Technical Introduction36414
+Node: Defining Transients42115
+Node: Binding Suffix and Infix Commands44582
+Node: Group Specifications45440
+Node: Suffix Specifications50009
+Node: Defining Suffix and Infix Commands54222
+Node: Using Infix Arguments57428
+Node: Transient State60262
+Ref: Pre-commands for Infixes65077
+Ref: Pre-commands for Suffixes65597
+Ref: Pre-commands for Non-Suffixes68051
+Ref: Special Pre-Commands69187
+Node: Classes and Methods69695
+Node: Group Classes71879
+Node: Group Methods73806
+Node: Prefix Classes75059
+Node: Suffix Classes76150
+Node: Suffix Methods79237
+Node: Suffix Value Methods79558
+Node: Suffix Format Methods82316
+Node: Prefix Slots83795
+Ref: Internal Prefix Slots85930
+Node: Suffix Slots87187
+Ref: Slots of transient-suffix87555
+Ref: Slots of transient-infix88692
+Ref: Slots of transient-variable91988
+Ref: Slots of transient-switches92090
+Node: Predicate Slots92453
+Node: FAQ93888
+Ref: Can I control how the popup buffer is displayed?94017
+Ref: How can I copy text from the popup buffer?94198
+Ref: How does Transient compare to prefix keys and universal arguments?94692
+Ref: How does Transient compare to Magit-Popup and Hydra?94935
+Ref: Why did some of the key bindings change?95129
+Ref: Why does q not quit popups anymore?97482
+Node: Keystroke Index98585
+Node: Command and Function Index100450
+Node: Variable Index107042
+Node: Concept Index109315
+Node: GNU General Public License112051
 
 End Tag Table
 

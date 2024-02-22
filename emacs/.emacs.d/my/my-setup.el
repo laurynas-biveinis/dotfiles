@@ -4,8 +4,9 @@
 ;; This is the main part of my non-system-specific Emacs setup. Sets the
 ;; configuration variables, configures the built-in modes, installed packages,
 ;; and my own code.
-;; All features are assumed to exist, because this is a part of my dotfiles repo
-;; where the needed packages are committed too.
+;; All packages and external programs (i.e. hunspell) are assumed to exist,
+;; because this is a part of my dotfiles repo where the needed packages are
+;; committed too. Thus there is no error handling for other setups.
 
 ;;; Code:
 
