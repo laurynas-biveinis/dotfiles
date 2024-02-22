@@ -4167,203 +4167,6 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/popup-0.5.9/popup-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/popup-0.5.9/popup-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "popup" '("popup-"))
-
-
-(provide 'popup-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.4.1/plantuml-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.4.1/plantuml-mode-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(add-to-list 'auto-mode-alist '("\\.\\(plantuml\\|pum\\|plu\\)\\'" . plantuml-mode))
-(autoload 'plantuml-mode "plantuml-mode" "\
-Major mode for plantuml.
-
-Shortcuts             Command Name
-\\[plantuml-complete-symbol]      `plantuml-complete-symbol'
-
-(fn)" t)
-(register-definition-prefixes "plantuml-mode" '("plantuml-"))
-
-
-(provide 'plantuml-mode-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/page-break-lines-0.15/page-break-lines-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/page-break-lines-0.15/page-break-lines-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'page-break-lines-mode "page-break-lines" "\
-Toggle Page Break Lines mode.
-
-In Page Break mode, page breaks (^L characters) are displayed as a
-horizontal line of `page-break-lines-char' characters.
-
-This is a minor mode.  If called interactively, toggle the
-`Page-Break-Lines mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `page-break-lines-mode'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(autoload 'page-break-lines-mode-maybe "page-break-lines" "\
-Enable `page-break-lines-mode' in the current buffer if desired.
-When `major-mode' is listed in `page-break-lines-modes', then
-`page-break-lines-mode' will be enabled.")
-(put 'global-page-break-lines-mode 'globalized-minor-mode t)
-(defvar global-page-break-lines-mode nil "\
-Non-nil if Global Page-Break-Lines mode is enabled.
-See the `global-page-break-lines-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `global-page-break-lines-mode'.")
-(custom-autoload 'global-page-break-lines-mode "page-break-lines" nil)
-(autoload 'global-page-break-lines-mode "page-break-lines" "\
-Toggle Page-Break-Lines mode in all buffers.
-With prefix ARG, enable Global Page-Break-Lines mode if ARG is positive;
-otherwise, disable it.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.
-Enable the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-Page-Break-Lines mode is enabled in all buffers where
-`page-break-lines-mode-maybe' would do it.
-
-See `page-break-lines-mode' for more information on Page-Break-Lines mode.
-
-(fn &optional ARG)" t)
-(register-definition-prefixes "page-break-lines" '("page-break-lines-"))
-
-
-(provide 'page-break-lines-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'org-sticky-header-mode "org-sticky-header" "\
-Minor mode to show the current Org heading in the header line.
-With prefix argument ARG, turn on if positive, otherwise off.
-Return non-nil if the minor mode is enabled.
-
-(fn &optional ARG)" t)
-(register-definition-prefixes "org-sticky-header" '("org-sticky-header-"))
-
-
-(provide 'org-sticky-header-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240124.1601/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240124.1601/emacsql-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'emacsql-show-last-sql "emacsql" "\
-Display the compiled SQL of the s-expression SQL expression before point.
-A prefix argument causes the SQL to be printed into the current buffer.
-
-(fn &optional PREFIX)" t)
-(register-definition-prefixes "emacsql" '("emacsql-"))
-
-
-
-(register-definition-prefixes "emacsql-compiler" '("emacsql-"))
-
-
-
-(register-definition-prefixes "emacsql-mysql" '("emacsql-mysql-"))
-
-
-
-(register-definition-prefixes "emacsql-pg" '("emacsql-pg-connection"))
-
-
-
-(register-definition-prefixes "emacsql-psql" '("emacsql-psql-"))
-
-
-
-(register-definition-prefixes "emacsql-sqlite" '("emacsql-sqlite-"))
-
-
-
-(register-definition-prefixes "emacsql-sqlite-builtin" '("emacsql-sqlite-builtin-connection"))
-
-
-
-(register-definition-prefixes "emacsql-sqlite-common" '("emacsql-"))
-
-
-
-(register-definition-prefixes "emacsql-sqlite-module" '("emacsql-sqlite-module-connection"))
-
-
-(provide 'emacsql-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.1.1/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.1.1/emacsql-sqlite-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "emacsql-sqlite" '("emacsql-sqlite-"))
-
-
-(provide 'emacsql-sqlite-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319/magit-section-autoloads.el"))
 
 
@@ -4377,872 +4180,6 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 (provide 'magit-section-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2/org-roam-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "org-roam" '("org-roam-"))
-
-
-
-(autoload 'org-roam-capture- "org-roam-capture" "\
-Main entry point of `org-roam-capture' module.
-GOTO and KEYS correspond to `org-capture' arguments.
-INFO is a plist for filling up Org-roam's capture templates.
-NODE is an `org-roam-node' construct containing information about the node.
-PROPS is a plist containing additional Org-roam properties for each template.
-TEMPLATES is a list of org-roam templates.
-
-(fn &key GOTO KEYS NODE INFO PROPS TEMPLATES)")
-(autoload 'org-roam-capture "org-roam-capture" "\
-Launches an `org-capture' process for a new or existing node.
-This uses the templates defined at `org-roam-capture-templates'.
-Arguments GOTO and KEYS see `org-capture'.
-FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
-and when nil is returned the node will be filtered out.
-The TEMPLATES, if provided, override the list of capture templates (see
-`org-roam-capture-'.)
-The INFO, if provided, is passed along to the underlying `org-roam-capture-'.
-
-(fn &optional GOTO KEYS &key FILTER-FN TEMPLATES INFO)" t)
-(register-definition-prefixes "org-roam-capture" '("org-roam-capture-"))
-
-
-
-(register-definition-prefixes "org-roam-compat" '("org-roam--"))
-
-
-
-(autoload 'org-roam-dailies-capture-today "org-roam-dailies" "\
-Create an entry in the daily-note for today.
-When GOTO is non-nil, go the note without creating an entry.
-
-ELisp programs can set KEYS to a string associated with a template.
-In this case, interactive selection will be bypassed.
-
-(fn &optional GOTO KEYS)" t)
-(autoload 'org-roam-dailies-goto-today "org-roam-dailies" "\
-Find the daily-note for today, creating it if necessary.
-
-ELisp programs can set KEYS to a string associated with a template.
-In this case, interactive selection will be bypassed.
-
-(fn &optional KEYS)" t)
-(autoload 'org-roam-dailies-capture-tomorrow "org-roam-dailies" "\
-Create an entry in the daily-note for tomorrow.
-
-With numeric argument N, use the daily-note N days in the future.
-
-With a `C-u' prefix or when GOTO is non-nil, go the note without
-creating an entry.
-
-ELisp programs can set KEYS to a string associated with a template.
-In this case, interactive selection will be bypassed.
-
-(fn N &optional GOTO KEYS)" t)
-(autoload 'org-roam-dailies-goto-tomorrow "org-roam-dailies" "\
-Find the daily-note for tomorrow, creating it if necessary.
-
-With numeric argument N, use the daily-note N days in the
-future.
-
-ELisp programs can set KEYS to a string associated with a template.
-In this case, interactive selection will be bypassed.
-
-(fn N &optional KEYS)" t)
-(autoload 'org-roam-dailies-capture-yesterday "org-roam-dailies" "\
-Create an entry in the daily-note for yesteday.
-
-With numeric argument N, use the daily-note N days in the past.
-
-When GOTO is non-nil, go the note without creating an entry.
-
-ELisp programs can set KEYS to a string associated with a template.
-In this case, interactive selection will be bypassed.
-
-(fn N &optional GOTO KEYS)" t)
-(autoload 'org-roam-dailies-goto-yesterday "org-roam-dailies" "\
-Find the daily-note for yesterday, creating it if necessary.
-
-With numeric argument N, use the daily-note N days in the
-future.
-
-ELisp programs can set KEYS to a string associated with a template.
-In this case, interactive selection will be bypassed.
-
-(fn N &optional KEYS)" t)
-(autoload 'org-roam-dailies-capture-date "org-roam-dailies" "\
-Create an entry in the daily-note for a date using the calendar.
-Prefer past dates, unless PREFER-FUTURE is non-nil.
-With a `C-u' prefix or when GOTO is non-nil, go the note without
-creating an entry.
-
-ELisp programs can set KEYS to a string associated with a template.
-In this case, interactive selection will be bypassed.
-
-(fn &optional GOTO PREFER-FUTURE KEYS)" t)
-(autoload 'org-roam-dailies-goto-date "org-roam-dailies" "\
-Find the daily-note for a date using the calendar, creating it if necessary.
-Prefer past dates, unless PREFER-FUTURE is non-nil.
-
-ELisp programs can set KEYS to a string associated with a template.
-In this case, interactive selection will be bypassed.
-
-(fn &optional PREFER-FUTURE KEYS)" t)
-(autoload 'org-roam-dailies-find-directory "org-roam-dailies" "\
-Find and open `org-roam-dailies-directory'." t)
-(register-definition-prefixes "org-roam-dailies" '("org-roam-dailies-"))
-
-
-
-(autoload 'org-roam-db-sync "org-roam-db" "\
-Synchronize the cache state with the current Org files on-disk.
-If FORCE, force a rebuild of the cache from scratch.
-
-(fn &optional FORCE)" t)
-(defvar org-roam-db-autosync-mode nil "\
-Non-nil if Org-Roam-Db-Autosync mode is enabled.
-See the `org-roam-db-autosync-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `org-roam-db-autosync-mode'.")
-(custom-autoload 'org-roam-db-autosync-mode "org-roam-db" nil)
-(autoload 'org-roam-db-autosync-mode "org-roam-db" "\
-Global minor mode to keep your Org-roam session automatically synchronized.
-
-Through the session this will continue to setup your
-buffers (that are Org-roam file visiting), keep track of the
-related changes, maintain cache consistency and incrementally
-update the currently active database.
-
-If you need to manually trigger resync of the currently active
-database, see `org-roam-db-sync' command.
-
-This is a global minor mode.  If called interactively, toggle the
-`Org-Roam-Db-Autosync mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='org-roam-db-autosync-mode)'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(autoload 'org-roam-db-autosync-enable "org-roam-db" "\
-Activate `org-roam-db-autosync-mode'.")
-(register-definition-prefixes "org-roam-db" '("emacsql-constraint" "org-roam-d"))
-
-
-
-(register-definition-prefixes "org-roam-export" '("org-roam-export--org-html--reference"))
-
-
-
-(autoload 'org-roam-graph "org-roam-graph" "\
-Build and possibly display a graph for NODE.
-ARG may be any of the following values:
-  - nil       show the graph.
-  - `\\[universal-argument]'     show the graph for NODE.
-  - `\\[universal-argument]' N   show the graph for NODE limiting nodes to N steps.
-
-(fn &optional ARG NODE)" t)
-(register-definition-prefixes "org-roam-graph" '("org-roam-"))
-
-
-
-(autoload 'org-roam-update-org-id-locations "org-roam-id" "\
-Scan Org-roam files to update `org-id' related state.
-This is like `org-id-update-id-locations', but will automatically
-use the currently bound `org-directory' and `org-roam-directory'
-along with DIRECTORIES (if any), where the lookup for files in
-these directories will be always recursive.
-
-Note: Org-roam doesn't have hard dependency on
-`org-id-locations-file' to lookup IDs for nodes that are stored
-in the database, but it still tries to properly integrates with
-`org-id'. This allows the user to cross-reference IDs outside of
-the current `org-roam-directory', and also link with \"id:\"
-links to headings/files within the current `org-roam-directory'
-that are excluded from identification in Org-roam as
-`org-roam-node's, e.g. with \"ROAM_EXCLUDE\" property.
-
-(fn &rest DIRECTORIES)" t)
-(register-definition-prefixes "org-roam-id" '("org-roam-id-"))
-
-
-
-(register-definition-prefixes "org-roam-log" '("org-roam-log-"))
-
-
-
-(autoload 'org-roam-migrate-wizard "org-roam-migrate" "\
-Migrate all notes from to be compatible with Org-roam v2.
-1. Convert all notes from v1 format to v2.
-2. Rebuild the cache.
-3. Replace all file links with ID links." t)
-(register-definition-prefixes "org-roam-migrate" '("org-roam-migrate-"))
-
-
-
-(autoload 'org-roam-buffer-display-dedicated "org-roam-mode" "\
-Launch NODE dedicated Org-roam buffer.
-Unlike the persistent `org-roam-buffer', the contents of this
-buffer won't be automatically changed and will be held in place.
-
-In interactive calls prompt to select NODE, unless called with
-`universal-argument', in which case NODE will be set to
-`org-roam-node-at-point'.
-
-(fn NODE)" t)
-(register-definition-prefixes "org-roam-mode" '("org-roam-"))
-
-
-
-(autoload 'org-roam-node-find "org-roam-node" "\
-Find and open an Org-roam node by its title or alias.
-INITIAL-INPUT is the initial input for the prompt.
-FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
-and when nil is returned the node will be filtered out.
-If OTHER-WINDOW, visit the NODE in another window.
-The TEMPLATES, if provided, override the list of capture templates (see
-`org-roam-capture-'.)
-
-(fn &optional OTHER-WINDOW INITIAL-INPUT FILTER-FN &key TEMPLATES)" t)
-(autoload 'org-roam-node-random "org-roam-node" "\
-Find and open a random Org-roam node.
-With prefix argument OTHER-WINDOW, visit the node in another
-window instead.
-FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
-and when nil is returned the node will be filtered out.
-
-(fn &optional OTHER-WINDOW FILTER-FN)" t)
-(autoload 'org-roam-node-insert "org-roam-node" "\
-Find an Org-roam node and insert (where the point is) an \"id:\" link to it.
-FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
-and when nil is returned the node will be filtered out.
-The TEMPLATES, if provided, override the list of capture templates (see
-`org-roam-capture-'.)
-The INFO, if provided, is passed to the underlying `org-roam-capture-'.
-
-(fn &optional FILTER-FN &key TEMPLATES INFO)" t)
-(autoload 'org-roam-refile "org-roam-node" "\
-Refile node at point to an Org-roam node.
-If region is active, then use it instead of the node at point." t)
-(autoload 'org-roam-extract-subtree "org-roam-node" "\
-Convert current subtree at point to a node, and extract it into a new file." t)
-(autoload 'org-roam-ref-find "org-roam-node" "\
-Find and open an Org-roam node that's dedicated to a specific ref.
-INITIAL-INPUT is the initial input to the prompt.
-FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
-and when nil is returned the node will be filtered out.
-
-(fn &optional INITIAL-INPUT FILTER-FN)" t)
-(register-definition-prefixes "org-roam-node" '("org-roam-"))
-
-
-
-(register-definition-prefixes "org-roam-overlay" '("org-roam-overlay-"))
-
-
-
-(register-definition-prefixes "org-roam-protocol" '("org-roam-"))
-
-
-
-(autoload 'org-roam-version "org-roam-utils" "\
-Return `org-roam' version.
-Interactively, or when MESSAGE is non-nil, show in the echo area.
-
-(fn &optional MESSAGE)" t)
-(autoload 'org-roam-diagnostics "org-roam-utils" "\
-Collect and print info for `org-roam' issues." t)
-(register-definition-prefixes "org-roam-utils" '("org-roam-"))
-
-
-(provide 'org-roam-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-ui-20221105.1040/org-roam-ui-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-ui-20221105.1040/org-roam-ui-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(defvar org-roam-ui-mode nil "\
-Non-nil if org-roam-ui mode is enabled.
-See the `org-roam-ui-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `org-roam-ui-mode'.")
-(custom-autoload 'org-roam-ui-mode "org-roam-ui" nil)
-(autoload 'org-roam-ui-mode "org-roam-ui" "\
-Enable org-roam-ui.
-
-This serves the web-build and API over HTTP.
-
-This is a global minor mode.  If called interactively, toggle the
-`org-roam-ui mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='org-roam-ui-mode)'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(autoload 'org-roam-ui-open "org-roam-ui" "\
-Ensure `org-roam-ui' is running, then open the `org-roam-ui' webpage." t)
-(autoload 'org-roam-ui-node-zoom "org-roam-ui" "\
-Move the view of the graph to current node.
-or optionally a node of your choosing.
-Optionally takes three arguments:
-The ID of the node you want to travel to.
-The SPEED in ms it takes to make the transition.
-The PADDING around the nodes in the viewport.
-
-(fn &optional ID SPEED PADDING)" t)
-(autoload 'org-roam-ui-node-local "org-roam-ui" "\
-Open the local graph view of the current node.
-Optionally with ID (string), SPEED (number, ms) and PADDING (number, px).
-
-(fn &optional ID SPEED PADDING)" t)
-(autoload 'org-roam-ui-add-to-local-graph "org-roam-ui" "\
-Add current node to the local graph. If not in local mode, open local-graph for this node.
-
-(fn &optional ID)" t)
-(autoload 'org-roam-ui-remove-from-local-graph "org-roam-ui" "\
-Remove current node from the local graph. If not in local mode, open local-graph for this node.
-
-(fn &optional ID)" t)
-(autoload 'org-roam-ui-sync-theme "org-roam-ui" "\
-Sync your current Emacs theme with org-roam-ui." t)
-(defvar org-roam-ui-follow-mode nil "\
-Non-nil if org-roam-ui-Follow mode is enabled.
-See the `org-roam-ui-follow-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `org-roam-ui-follow-mode'.")
-(custom-autoload 'org-roam-ui-follow-mode "org-roam-ui" nil)
-(autoload 'org-roam-ui-follow-mode "org-roam-ui" "\
-Set whether ORUI should follow your every move in Emacs.
-
-This is a global minor mode.  If called interactively, toggle the
-`org-roam-ui-Follow mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `(default-value \\='org-roam-ui-follow-mode)'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(register-definition-prefixes "org-roam-ui" '("img/:file" "node/:id" "org-roam-ui-"))
-
-
-(provide 'org-roam-ui-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4.2/org-contrib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4.2/org-contrib-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "ob-J" '("obj-" "org-babel-"))
-
-
-
-(register-definition-prefixes "ob-abc" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-asymptote" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-coq" '("coq-program-name" "org-babel-"))
-
-
-
-(register-definition-prefixes "ob-csharp" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-ebnf" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-eukleides" '("org-"))
-
-
-
-(register-definition-prefixes "ob-fomus" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-hledger" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-io" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-ledger" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-mathomatic" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-mscgen" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-oz" '("org-babel-" "oz-send-string-expression"))
-
-
-
-(register-definition-prefixes "ob-picolisp" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-shen" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-stata" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-tcl" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-vala" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ob-vbnet" '("org-babel-"))
-
-
-
-(register-definition-prefixes "ol-bookmark" '("org-bookmark-"))
-
-
-
-(register-definition-prefixes "ol-elisp-symbol" '("org-elisp-symbol-"))
-
-
-
-(register-definition-prefixes "ol-git-link" '("org-git"))
-
-
-
-(register-definition-prefixes "ol-mew" '("org-mew-"))
-
-
-
-(register-definition-prefixes "ol-vm" '("org-vm-"))
-
-
-
-(register-definition-prefixes "ol-wl" '("org-wl-"))
-
-
-
-(autoload 'org-annotate-file "org-annotate-file" "\
-Visit `org-annotate-file-storage-file` and add a new annotation section.
-The annotation is opened at the new section which will be referencing
-the point in the current file." t)
-(autoload 'org-annotate-file-show-section "org-annotate-file" "\
-Add or show annotation entry in STORAGE-FILE and return the buffer.
-The annotation will link to ANNOTATED-BUFFER if specified,
-  otherwise the current buffer is used.
-
-(fn STORAGE-FILE &optional ANNOTATED-BUFFER)")
-(register-definition-prefixes "org-annotate-file" '("org-annotate-file-"))
-
-
-
-(register-definition-prefixes "org-bibtex-extras" '("obe-"))
-
-
-
-(register-definition-prefixes "org-checklist" '("org-"))
-
-
-
-(register-definition-prefixes "org-choose" '("org-choose-"))
-
-
-
-(register-definition-prefixes "org-collector" '("and-rest" "org-"))
-
-
-
-(register-definition-prefixes "org-depend" '("org-depend-"))
-
-
-
-(register-definition-prefixes "org-effectiveness" '("org-effectiveness-"))
-
-
-
-(autoload 'org-eldoc-load "org-eldoc" "\
-Set up org-eldoc documentation function." t)
-(add-hook 'org-mode-hook #'org-eldoc-load)
-(register-definition-prefixes "org-eldoc" '("org-eldoc-"))
-
-
-
-(register-definition-prefixes "org-eval" '("org-eval-"))
-
-
-
-(register-definition-prefixes "org-eval-light" '("org-eval-light-"))
-
-
-
-(register-definition-prefixes "org-expiry" '("org-expiry-"))
-
-
-
-(register-definition-prefixes "org-interactive-query" '("org-agenda-query-"))
-
-
-
-(register-definition-prefixes "org-invoice" '("org-"))
-
-
-
-(register-definition-prefixes "org-learn" '("calculate-new-optimal-factor" "determine-next-interval" "get-optimal-factor" "initial-" "inter-repetition-interval" "modify-" "org-" "set-optimal-factor"))
-
-
-
-(register-definition-prefixes "org-license" '("org-license-"))
-
-
-
-(register-definition-prefixes "org-mac-iCal" '("omi-" "org-mac-iCal"))
-
-
-
-(register-definition-prefixes "org-mairix" '("org-"))
-
-
-
-(register-definition-prefixes "org-panel" '("orgpan-"))
-
-
-
-(autoload 'org-registry-show "org-registry" "\
-Show Org files where there are links pointing to the current
-buffer.
-
-(fn &optional VISIT)" t)
-(autoload 'org-registry-visit "org-registry" "\
-If an Org file contains a link to the current location, visit
-this file." t)
-(autoload 'org-registry-initialize "org-registry" "\
-Initialize `org-registry-alist'.
-If FROM-SCRATCH is non-nil or the registry does not exist yet,
-create a new registry from scratch and eval it. If the registry
-exists, eval `org-registry-file' and make it the new value for
-`org-registry-alist'.
-
-(fn &optional FROM-SCRATCH)" t)
-(autoload 'org-registry-insinuate "org-registry" "\
-Call `org-registry-update' after saving in Org-mode.
-Use with caution.  This could slow down things a bit." t)
-(autoload 'org-registry-update "org-registry" "\
-Update the registry for the current Org file." t)
-(register-definition-prefixes "org-registry" '("org-registry-"))
-
-
-
-(register-definition-prefixes "org-screen" '("org-screen"))
-
-
-
-(autoload 'org-screenshot-take "org-screenshot" "\
-Take a screenshot and insert link to it at point, if image
-display is already on (see \\[org-toggle-inline-images])
-screenshot will be displayed as an image
-
-Screen area for the screenshot is selected with the mouse, left
-click on a window screenshots that window, while left click and
-drag selects a region. Pressing any key cancels the screen shot
-
-With `C-u' universal argument waits one second after target is
-selected before taking the screenshot. With double `C-u' wait two
-seconds.
-
-With triple `C-u' wait 3 seconds, and also rings the bell when
-screenshot is done, any more `C-u' after that increases delay by
-2 seconds
-
-(fn &optional DELAY)" t)
-(autoload 'org-screenshot-rotate-prev "org-screenshot" "\
-Rotate last screenshot with one of the previously taken
-screenshots from the same directory. If DIR is negative, rotate
-in the other direction
-
-(fn DIR)" t)
-(autoload 'org-screenshot-rotate-next "org-screenshot" "\
-Rotate last screenshot with one of the previously taken
-screenshots from the same directory. If DIR is negative, rotate
-in the other direction
-
-(fn DIR)" t)
-(autoload 'org-screenshot-show-unused "org-screenshot" "\
-Open A Dired buffer with unused screenshots marked" t)
-(register-definition-prefixes "org-screenshot" '("org-screenshot-"))
-
-
-
-(register-definition-prefixes "org-secretary" '("join" "org-sec-"))
-
-
-
-(register-definition-prefixes "org-static-mathjax" '("org-static-mathjax-"))
-
-
-
-(register-definition-prefixes "org-sudoku" '("org-sudoku-"))
-
-
-
-(autoload 'org-toc-show "org-toc" "\
-Show the table of contents of the current Org-mode buffer.
-
-(fn &optional DEPTH POSITION)" t)
-(register-definition-prefixes "org-toc" '("org-"))
-
-
-
-(autoload 'org-track-fetch-package "org-track" "\
-Fetch Org package depending on `org-track-fetch-package-extension'.
-If DIRECTORY is defined, unpack the package there, i.e. add the
-subdirectory org-mode/ to DIRECTORY.
-
-(fn &optional DIRECTORY)" t)
-(autoload 'org-track-compile-org "org-track" "\
-Compile all *.el files that come with org-mode.
-Generate the autoloads file `org-loaddefs.el'.
-
-DIRECTORY is where the directory org-mode/ lives (i.e. the
-          parent directory of your local repo.
-
-(fn &optional DIRECTORY)" t)
-(register-definition-prefixes "org-track" '("org-track-"))
-
-
-
-(register-definition-prefixes "org-wikinodes" '("org-wikinodes-"))
-
-
-
-(register-definition-prefixes "orgtbl-sqlinsert" '("orgtbl-"))
-
-
-
-(register-definition-prefixes "ox-bibtex" '("org-bibtex-"))
-
-
-
-(register-definition-prefixes "ox-confluence" '("org-confluence-"))
-
-
-
-(register-definition-prefixes "ox-deck" '("org-deck-"))
-
-
-
-(register-definition-prefixes "ox-extra" '("org-" "ox-extras"))
-
-
-
-(autoload 'org-freemind-export-to-freemind "ox-freemind" "\
-Export current buffer to a Freemind Mindmap file.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting file should be accessible through
-the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-When optional argument BODY-ONLY is non-nil, only write code
-between \"<body>\" and \"</body>\" tags.
-
-EXT-PLIST, when provided, is a property list with external
-parameters overriding Org default settings, but still inferior to
-file-local settings.
-
-Return output file's name.
-
-(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t)
-(register-definition-prefixes "ox-freemind" '("org-freemind-"))
-
-
-
-(register-definition-prefixes "ox-groff" '("org-groff-"))
-
-
-
-(register-definition-prefixes "ox-s5" '("org-s5-"))
-
-
-
-(autoload 'org-taskjuggler-export "ox-taskjuggler" "\
-Export current buffer to a TaskJuggler file.
-
-The exporter looks for a tree with tag that matches
-`org-taskjuggler-project-tag' and takes this as the tasks for
-this project.  The first node of this tree defines the project
-properties such as project name and project period.
-
-If there is a tree with tag that matches
-`org-taskjuggler-resource-tag' this tree is taken as resources
-for the project.  If no resources are specified, a default
-resource is created and allocated to the project.
-
-Also the TaskJuggler project will be created with default reports
-as defined in `org-taskjuggler-default-reports'.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting file should be accessible through
-the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-Return output file's name.
-
-(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t)
-(autoload 'org-taskjuggler-export-and-process "ox-taskjuggler" "\
-Export current buffer to a TaskJuggler file and process it.
-
-The exporter looks for a tree with tag that matches
-`org-taskjuggler-project-tag' and takes this as the tasks for
-this project.  The first node of this tree defines the project
-properties such as project name and project period.
-
-If there is a tree with tag that matches
-`org-taskjuggler-resource-tag' this tree is taken as resources
-for the project.  If no resources are specified, a default
-resource is created and allocated to the project.
-
-Also the TaskJuggler project will be created with default reports
-as defined in `org-taskjuggler-default-reports'.
-
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-Return a list of reports.
-
-(fn &optional SUBTREEP VISIBLE-ONLY)" t)
-(autoload 'org-taskjuggler-export-process-and-open "ox-taskjuggler" "\
-Export current buffer to a TaskJuggler file, process and open it.
-
-Export and process the file using
-`org-taskjuggler-export-and-process' and open the generated
-reports with a browser.
-
-If you are targeting TaskJuggler 2.4 (see
-`org-taskjuggler-target-version') the processing and display of
-the reports is done using the TaskJuggler GUI.
-
-(fn &optional SUBTREEP VISIBLE-ONLY)" t)
-(register-definition-prefixes "ox-taskjuggler" '("org-taskjuggler-"))
-
-
-(provide 'org-contrib-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ob-rust-20220824.1923/ob-rust-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ob-rust-20220824.1923/ob-rust-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "ob-rust" '("org-babel-"))
-
-
-
-(register-definition-prefixes "test-ob-rust" '("ob-rust-test-" "org-"))
-
-
-(provide 'ob-rust-autoloads)
 
 
 )
@@ -7466,6 +6403,1209 @@ Move WORKTREE to PATH.
 
 
 (provide 'magit-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240218.2101/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240218.2101/ghub-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "buck" '("buck-default-host"))
+
+
+
+(autoload 'ghub-clear-caches "ghub" "\
+Clear all caches that might negatively affect Ghub.
+
+If a library that is used by Ghub caches incorrect information
+such as a mistyped password, then that can prevent Ghub from
+asking the user for the correct information again.
+
+Set `url-http-real-basic-auth-storage' to nil
+and call `auth-source-forget+'." t)
+(register-definition-prefixes "ghub" '("ghub-"))
+
+
+
+(register-definition-prefixes "ghub-graphql" '("ghub-"))
+
+
+
+(register-definition-prefixes "glab" '("glab-default-host"))
+
+
+
+(register-definition-prefixes "gogs" '("gogs-default-host"))
+
+
+
+(register-definition-prefixes "gsexp" '("gsexp-"))
+
+
+
+(register-definition-prefixes "gtea" '("gtea-default-host"))
+
+
+(provide 'ghub-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20240206.414/pr-review-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20240206.414/pr-review-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'pr-review-url-parse "pr-review" "\
+Return pr path (repo-owner repo-name pr-id) for URL, or nil on error.
+
+(fn URL)")
+(autoload 'pr-review-open "pr-review" "\
+Open review buffer for REPO-OWNER/REPO-NAME PR-ID (number).
+Open in current window if NEW-WINDOW is nil, in other window otherwise.
+ANCHOR is a database id that may be present in the url fragment
+of a github pr notification, if it's not nil, try to jump to specific
+location after open.
+LAST-READ-TIME is the time when the PR is last read (in ISO string, mostly from notification buffer),
+if it's not nil, newer comments will be highlighted, and it will jump to first unread comment
+if ANCHOR is nil.
+
+(fn REPO-OWNER REPO-NAME PR-ID &optional NEW-WINDOW ANCHOR LAST-READ-TIME)")
+(autoload 'pr-review "pr-review" "\
+Open Pr Review with URL (which is a link to github pr).
+This is the main entrypoint of `pr-review'.
+If NEW-WINDOW is not nil, open it in a new window.
+When called interactively, user will be prompted to enter a PR url
+and new window will be used when called with prefix.
+
+(fn URL &optional NEW-WINDOW)" t)
+(autoload 'pr-review-open-url "pr-review" "\
+Open Pr Review with URL, in a new window if NEW-WINDOW is not nil.
+This function is the same as `pr-review',
+but it can be used in `browse-url-handlers' with `pr-review-url-parse'.
+
+(fn URL &optional NEW-WINDOW &rest _)")
+(register-definition-prefixes "pr-review" '("pr-review-"))
+
+
+
+(register-definition-prefixes "pr-review-action" '("pr-review-"))
+
+
+
+(register-definition-prefixes "pr-review-api" '("pr-review-"))
+
+
+
+(register-definition-prefixes "pr-review-common" '("pr-review-"))
+
+
+
+(register-definition-prefixes "pr-review-input" '("pr-review-"))
+
+
+
+(register-definition-prefixes "pr-review-listview" '("pr-review-"))
+
+
+
+(autoload 'pr-review-notification "pr-review-notification" "\
+Show github notifications in a new buffer." t)
+(register-definition-prefixes "pr-review-notification" '("pr-review-"))
+
+
+
+(register-definition-prefixes "pr-review-render" '("pr-review-"))
+
+
+
+(autoload 'pr-review-search "pr-review-search" "\
+Search PRs using a custom QUERY and list result in buffer.
+See github docs for syntax of QUERY.
+When called interactively, you will be asked to enter the QUERY.
+
+(fn QUERY)" t)
+(autoload 'pr-review-search-open "pr-review-search" "\
+Search PRs using a custom QUERY and open one of them.
+See github docs for syntax of QUERY.
+When called interactively, you will be asked to enter the QUERY.
+
+(fn QUERY)" t)
+(register-definition-prefixes "pr-review-search" '("pr-review-"))
+
+
+(provide 'pr-review-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/popup-0.5.9/popup-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/popup-0.5.9/popup-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "popup" '("popup-"))
+
+
+(provide 'popup-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.4.1/plantuml-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.4.1/plantuml-mode-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(add-to-list 'auto-mode-alist '("\\.\\(plantuml\\|pum\\|plu\\)\\'" . plantuml-mode))
+(autoload 'plantuml-mode "plantuml-mode" "\
+Major mode for plantuml.
+
+Shortcuts             Command Name
+\\[plantuml-complete-symbol]      `plantuml-complete-symbol'
+
+(fn)" t)
+(register-definition-prefixes "plantuml-mode" '("plantuml-"))
+
+
+(provide 'plantuml-mode-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/page-break-lines-0.15/page-break-lines-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/page-break-lines-0.15/page-break-lines-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'page-break-lines-mode "page-break-lines" "\
+Toggle Page Break Lines mode.
+
+In Page Break mode, page breaks (^L characters) are displayed as a
+horizontal line of `page-break-lines-char' characters.
+
+This is a minor mode.  If called interactively, toggle the
+`Page-Break-Lines mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `page-break-lines-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(autoload 'page-break-lines-mode-maybe "page-break-lines" "\
+Enable `page-break-lines-mode' in the current buffer if desired.
+When `major-mode' is listed in `page-break-lines-modes', then
+`page-break-lines-mode' will be enabled.")
+(put 'global-page-break-lines-mode 'globalized-minor-mode t)
+(defvar global-page-break-lines-mode nil "\
+Non-nil if Global Page-Break-Lines mode is enabled.
+See the `global-page-break-lines-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-page-break-lines-mode'.")
+(custom-autoload 'global-page-break-lines-mode "page-break-lines" nil)
+(autoload 'global-page-break-lines-mode "page-break-lines" "\
+Toggle Page-Break-Lines mode in all buffers.
+With prefix ARG, enable Global Page-Break-Lines mode if ARG is positive;
+otherwise, disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Page-Break-Lines mode is enabled in all buffers where
+`page-break-lines-mode-maybe' would do it.
+
+See `page-break-lines-mode' for more information on Page-Break-Lines mode.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "page-break-lines" '("page-break-lines-"))
+
+
+(provide 'page-break-lines-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'org-sticky-header-mode "org-sticky-header" "\
+Minor mode to show the current Org heading in the header line.
+With prefix argument ARG, turn on if positive, otherwise off.
+Return non-nil if the minor mode is enabled.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "org-sticky-header" '("org-sticky-header-"))
+
+
+(provide 'org-sticky-header-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240124.1601/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240124.1601/emacsql-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'emacsql-show-last-sql "emacsql" "\
+Display the compiled SQL of the s-expression SQL expression before point.
+A prefix argument causes the SQL to be printed into the current buffer.
+
+(fn &optional PREFIX)" t)
+(register-definition-prefixes "emacsql" '("emacsql-"))
+
+
+
+(register-definition-prefixes "emacsql-compiler" '("emacsql-"))
+
+
+
+(register-definition-prefixes "emacsql-mysql" '("emacsql-mysql-"))
+
+
+
+(register-definition-prefixes "emacsql-pg" '("emacsql-pg-connection"))
+
+
+
+(register-definition-prefixes "emacsql-psql" '("emacsql-psql-"))
+
+
+
+(register-definition-prefixes "emacsql-sqlite" '("emacsql-sqlite-"))
+
+
+
+(register-definition-prefixes "emacsql-sqlite-builtin" '("emacsql-sqlite-builtin-connection"))
+
+
+
+(register-definition-prefixes "emacsql-sqlite-common" '("emacsql-"))
+
+
+
+(register-definition-prefixes "emacsql-sqlite-module" '("emacsql-sqlite-module-connection"))
+
+
+(provide 'emacsql-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.1.1/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.1.1/emacsql-sqlite-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "emacsql-sqlite" '("emacsql-sqlite-"))
+
+
+(provide 'emacsql-sqlite-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2/org-roam-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "org-roam" '("org-roam-"))
+
+
+
+(autoload 'org-roam-capture- "org-roam-capture" "\
+Main entry point of `org-roam-capture' module.
+GOTO and KEYS correspond to `org-capture' arguments.
+INFO is a plist for filling up Org-roam's capture templates.
+NODE is an `org-roam-node' construct containing information about the node.
+PROPS is a plist containing additional Org-roam properties for each template.
+TEMPLATES is a list of org-roam templates.
+
+(fn &key GOTO KEYS NODE INFO PROPS TEMPLATES)")
+(autoload 'org-roam-capture "org-roam-capture" "\
+Launches an `org-capture' process for a new or existing node.
+This uses the templates defined at `org-roam-capture-templates'.
+Arguments GOTO and KEYS see `org-capture'.
+FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
+and when nil is returned the node will be filtered out.
+The TEMPLATES, if provided, override the list of capture templates (see
+`org-roam-capture-'.)
+The INFO, if provided, is passed along to the underlying `org-roam-capture-'.
+
+(fn &optional GOTO KEYS &key FILTER-FN TEMPLATES INFO)" t)
+(register-definition-prefixes "org-roam-capture" '("org-roam-capture-"))
+
+
+
+(register-definition-prefixes "org-roam-compat" '("org-roam--"))
+
+
+
+(autoload 'org-roam-dailies-capture-today "org-roam-dailies" "\
+Create an entry in the daily-note for today.
+When GOTO is non-nil, go the note without creating an entry.
+
+ELisp programs can set KEYS to a string associated with a template.
+In this case, interactive selection will be bypassed.
+
+(fn &optional GOTO KEYS)" t)
+(autoload 'org-roam-dailies-goto-today "org-roam-dailies" "\
+Find the daily-note for today, creating it if necessary.
+
+ELisp programs can set KEYS to a string associated with a template.
+In this case, interactive selection will be bypassed.
+
+(fn &optional KEYS)" t)
+(autoload 'org-roam-dailies-capture-tomorrow "org-roam-dailies" "\
+Create an entry in the daily-note for tomorrow.
+
+With numeric argument N, use the daily-note N days in the future.
+
+With a `C-u' prefix or when GOTO is non-nil, go the note without
+creating an entry.
+
+ELisp programs can set KEYS to a string associated with a template.
+In this case, interactive selection will be bypassed.
+
+(fn N &optional GOTO KEYS)" t)
+(autoload 'org-roam-dailies-goto-tomorrow "org-roam-dailies" "\
+Find the daily-note for tomorrow, creating it if necessary.
+
+With numeric argument N, use the daily-note N days in the
+future.
+
+ELisp programs can set KEYS to a string associated with a template.
+In this case, interactive selection will be bypassed.
+
+(fn N &optional KEYS)" t)
+(autoload 'org-roam-dailies-capture-yesterday "org-roam-dailies" "\
+Create an entry in the daily-note for yesteday.
+
+With numeric argument N, use the daily-note N days in the past.
+
+When GOTO is non-nil, go the note without creating an entry.
+
+ELisp programs can set KEYS to a string associated with a template.
+In this case, interactive selection will be bypassed.
+
+(fn N &optional GOTO KEYS)" t)
+(autoload 'org-roam-dailies-goto-yesterday "org-roam-dailies" "\
+Find the daily-note for yesterday, creating it if necessary.
+
+With numeric argument N, use the daily-note N days in the
+future.
+
+ELisp programs can set KEYS to a string associated with a template.
+In this case, interactive selection will be bypassed.
+
+(fn N &optional KEYS)" t)
+(autoload 'org-roam-dailies-capture-date "org-roam-dailies" "\
+Create an entry in the daily-note for a date using the calendar.
+Prefer past dates, unless PREFER-FUTURE is non-nil.
+With a `C-u' prefix or when GOTO is non-nil, go the note without
+creating an entry.
+
+ELisp programs can set KEYS to a string associated with a template.
+In this case, interactive selection will be bypassed.
+
+(fn &optional GOTO PREFER-FUTURE KEYS)" t)
+(autoload 'org-roam-dailies-goto-date "org-roam-dailies" "\
+Find the daily-note for a date using the calendar, creating it if necessary.
+Prefer past dates, unless PREFER-FUTURE is non-nil.
+
+ELisp programs can set KEYS to a string associated with a template.
+In this case, interactive selection will be bypassed.
+
+(fn &optional PREFER-FUTURE KEYS)" t)
+(autoload 'org-roam-dailies-find-directory "org-roam-dailies" "\
+Find and open `org-roam-dailies-directory'." t)
+(register-definition-prefixes "org-roam-dailies" '("org-roam-dailies-"))
+
+
+
+(autoload 'org-roam-db-sync "org-roam-db" "\
+Synchronize the cache state with the current Org files on-disk.
+If FORCE, force a rebuild of the cache from scratch.
+
+(fn &optional FORCE)" t)
+(defvar org-roam-db-autosync-mode nil "\
+Non-nil if Org-Roam-Db-Autosync mode is enabled.
+See the `org-roam-db-autosync-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `org-roam-db-autosync-mode'.")
+(custom-autoload 'org-roam-db-autosync-mode "org-roam-db" nil)
+(autoload 'org-roam-db-autosync-mode "org-roam-db" "\
+Global minor mode to keep your Org-roam session automatically synchronized.
+
+Through the session this will continue to setup your
+buffers (that are Org-roam file visiting), keep track of the
+related changes, maintain cache consistency and incrementally
+update the currently active database.
+
+If you need to manually trigger resync of the currently active
+database, see `org-roam-db-sync' command.
+
+This is a global minor mode.  If called interactively, toggle the
+`Org-Roam-Db-Autosync mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='org-roam-db-autosync-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(autoload 'org-roam-db-autosync-enable "org-roam-db" "\
+Activate `org-roam-db-autosync-mode'.")
+(register-definition-prefixes "org-roam-db" '("emacsql-constraint" "org-roam-d"))
+
+
+
+(register-definition-prefixes "org-roam-export" '("org-roam-export--org-html--reference"))
+
+
+
+(autoload 'org-roam-graph "org-roam-graph" "\
+Build and possibly display a graph for NODE.
+ARG may be any of the following values:
+  - nil       show the graph.
+  - `\\[universal-argument]'     show the graph for NODE.
+  - `\\[universal-argument]' N   show the graph for NODE limiting nodes to N steps.
+
+(fn &optional ARG NODE)" t)
+(register-definition-prefixes "org-roam-graph" '("org-roam-"))
+
+
+
+(autoload 'org-roam-update-org-id-locations "org-roam-id" "\
+Scan Org-roam files to update `org-id' related state.
+This is like `org-id-update-id-locations', but will automatically
+use the currently bound `org-directory' and `org-roam-directory'
+along with DIRECTORIES (if any), where the lookup for files in
+these directories will be always recursive.
+
+Note: Org-roam doesn't have hard dependency on
+`org-id-locations-file' to lookup IDs for nodes that are stored
+in the database, but it still tries to properly integrates with
+`org-id'. This allows the user to cross-reference IDs outside of
+the current `org-roam-directory', and also link with \"id:\"
+links to headings/files within the current `org-roam-directory'
+that are excluded from identification in Org-roam as
+`org-roam-node's, e.g. with \"ROAM_EXCLUDE\" property.
+
+(fn &rest DIRECTORIES)" t)
+(register-definition-prefixes "org-roam-id" '("org-roam-id-"))
+
+
+
+(register-definition-prefixes "org-roam-log" '("org-roam-log-"))
+
+
+
+(autoload 'org-roam-migrate-wizard "org-roam-migrate" "\
+Migrate all notes from to be compatible with Org-roam v2.
+1. Convert all notes from v1 format to v2.
+2. Rebuild the cache.
+3. Replace all file links with ID links." t)
+(register-definition-prefixes "org-roam-migrate" '("org-roam-migrate-"))
+
+
+
+(autoload 'org-roam-buffer-display-dedicated "org-roam-mode" "\
+Launch NODE dedicated Org-roam buffer.
+Unlike the persistent `org-roam-buffer', the contents of this
+buffer won't be automatically changed and will be held in place.
+
+In interactive calls prompt to select NODE, unless called with
+`universal-argument', in which case NODE will be set to
+`org-roam-node-at-point'.
+
+(fn NODE)" t)
+(register-definition-prefixes "org-roam-mode" '("org-roam-"))
+
+
+
+(autoload 'org-roam-node-find "org-roam-node" "\
+Find and open an Org-roam node by its title or alias.
+INITIAL-INPUT is the initial input for the prompt.
+FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
+and when nil is returned the node will be filtered out.
+If OTHER-WINDOW, visit the NODE in another window.
+The TEMPLATES, if provided, override the list of capture templates (see
+`org-roam-capture-'.)
+
+(fn &optional OTHER-WINDOW INITIAL-INPUT FILTER-FN &key TEMPLATES)" t)
+(autoload 'org-roam-node-random "org-roam-node" "\
+Find and open a random Org-roam node.
+With prefix argument OTHER-WINDOW, visit the node in another
+window instead.
+FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
+and when nil is returned the node will be filtered out.
+
+(fn &optional OTHER-WINDOW FILTER-FN)" t)
+(autoload 'org-roam-node-insert "org-roam-node" "\
+Find an Org-roam node and insert (where the point is) an \"id:\" link to it.
+FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
+and when nil is returned the node will be filtered out.
+The TEMPLATES, if provided, override the list of capture templates (see
+`org-roam-capture-'.)
+The INFO, if provided, is passed to the underlying `org-roam-capture-'.
+
+(fn &optional FILTER-FN &key TEMPLATES INFO)" t)
+(autoload 'org-roam-refile "org-roam-node" "\
+Refile node at point to an Org-roam node.
+If region is active, then use it instead of the node at point." t)
+(autoload 'org-roam-extract-subtree "org-roam-node" "\
+Convert current subtree at point to a node, and extract it into a new file." t)
+(autoload 'org-roam-ref-find "org-roam-node" "\
+Find and open an Org-roam node that's dedicated to a specific ref.
+INITIAL-INPUT is the initial input to the prompt.
+FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
+and when nil is returned the node will be filtered out.
+
+(fn &optional INITIAL-INPUT FILTER-FN)" t)
+(register-definition-prefixes "org-roam-node" '("org-roam-"))
+
+
+
+(register-definition-prefixes "org-roam-overlay" '("org-roam-overlay-"))
+
+
+
+(register-definition-prefixes "org-roam-protocol" '("org-roam-"))
+
+
+
+(autoload 'org-roam-version "org-roam-utils" "\
+Return `org-roam' version.
+Interactively, or when MESSAGE is non-nil, show in the echo area.
+
+(fn &optional MESSAGE)" t)
+(autoload 'org-roam-diagnostics "org-roam-utils" "\
+Collect and print info for `org-roam' issues." t)
+(register-definition-prefixes "org-roam-utils" '("org-roam-"))
+
+
+(provide 'org-roam-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-ui-20221105.1040/org-roam-ui-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-ui-20221105.1040/org-roam-ui-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(defvar org-roam-ui-mode nil "\
+Non-nil if org-roam-ui mode is enabled.
+See the `org-roam-ui-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `org-roam-ui-mode'.")
+(custom-autoload 'org-roam-ui-mode "org-roam-ui" nil)
+(autoload 'org-roam-ui-mode "org-roam-ui" "\
+Enable org-roam-ui.
+
+This serves the web-build and API over HTTP.
+
+This is a global minor mode.  If called interactively, toggle the
+`org-roam-ui mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='org-roam-ui-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(autoload 'org-roam-ui-open "org-roam-ui" "\
+Ensure `org-roam-ui' is running, then open the `org-roam-ui' webpage." t)
+(autoload 'org-roam-ui-node-zoom "org-roam-ui" "\
+Move the view of the graph to current node.
+or optionally a node of your choosing.
+Optionally takes three arguments:
+The ID of the node you want to travel to.
+The SPEED in ms it takes to make the transition.
+The PADDING around the nodes in the viewport.
+
+(fn &optional ID SPEED PADDING)" t)
+(autoload 'org-roam-ui-node-local "org-roam-ui" "\
+Open the local graph view of the current node.
+Optionally with ID (string), SPEED (number, ms) and PADDING (number, px).
+
+(fn &optional ID SPEED PADDING)" t)
+(autoload 'org-roam-ui-add-to-local-graph "org-roam-ui" "\
+Add current node to the local graph. If not in local mode, open local-graph for this node.
+
+(fn &optional ID)" t)
+(autoload 'org-roam-ui-remove-from-local-graph "org-roam-ui" "\
+Remove current node from the local graph. If not in local mode, open local-graph for this node.
+
+(fn &optional ID)" t)
+(autoload 'org-roam-ui-sync-theme "org-roam-ui" "\
+Sync your current Emacs theme with org-roam-ui." t)
+(defvar org-roam-ui-follow-mode nil "\
+Non-nil if org-roam-ui-Follow mode is enabled.
+See the `org-roam-ui-follow-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `org-roam-ui-follow-mode'.")
+(custom-autoload 'org-roam-ui-follow-mode "org-roam-ui" nil)
+(autoload 'org-roam-ui-follow-mode "org-roam-ui" "\
+Set whether ORUI should follow your every move in Emacs.
+
+This is a global minor mode.  If called interactively, toggle the
+`org-roam-ui-Follow mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='org-roam-ui-follow-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "org-roam-ui" '("img/:file" "node/:id" "org-roam-ui-"))
+
+
+(provide 'org-roam-ui-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4.2/org-contrib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-contrib-0.4.2/org-contrib-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "ob-J" '("obj-" "org-babel-"))
+
+
+
+(register-definition-prefixes "ob-abc" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-asymptote" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-coq" '("coq-program-name" "org-babel-"))
+
+
+
+(register-definition-prefixes "ob-csharp" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-ebnf" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-eukleides" '("org-"))
+
+
+
+(register-definition-prefixes "ob-fomus" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-hledger" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-io" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-ledger" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-mathomatic" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-mscgen" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-oz" '("org-babel-" "oz-send-string-expression"))
+
+
+
+(register-definition-prefixes "ob-picolisp" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-shen" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-stata" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-tcl" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-vala" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ob-vbnet" '("org-babel-"))
+
+
+
+(register-definition-prefixes "ol-bookmark" '("org-bookmark-"))
+
+
+
+(register-definition-prefixes "ol-elisp-symbol" '("org-elisp-symbol-"))
+
+
+
+(register-definition-prefixes "ol-git-link" '("org-git"))
+
+
+
+(register-definition-prefixes "ol-mew" '("org-mew-"))
+
+
+
+(register-definition-prefixes "ol-vm" '("org-vm-"))
+
+
+
+(register-definition-prefixes "ol-wl" '("org-wl-"))
+
+
+
+(autoload 'org-annotate-file "org-annotate-file" "\
+Visit `org-annotate-file-storage-file` and add a new annotation section.
+The annotation is opened at the new section which will be referencing
+the point in the current file." t)
+(autoload 'org-annotate-file-show-section "org-annotate-file" "\
+Add or show annotation entry in STORAGE-FILE and return the buffer.
+The annotation will link to ANNOTATED-BUFFER if specified,
+  otherwise the current buffer is used.
+
+(fn STORAGE-FILE &optional ANNOTATED-BUFFER)")
+(register-definition-prefixes "org-annotate-file" '("org-annotate-file-"))
+
+
+
+(register-definition-prefixes "org-bibtex-extras" '("obe-"))
+
+
+
+(register-definition-prefixes "org-checklist" '("org-"))
+
+
+
+(register-definition-prefixes "org-choose" '("org-choose-"))
+
+
+
+(register-definition-prefixes "org-collector" '("and-rest" "org-"))
+
+
+
+(register-definition-prefixes "org-depend" '("org-depend-"))
+
+
+
+(register-definition-prefixes "org-effectiveness" '("org-effectiveness-"))
+
+
+
+(autoload 'org-eldoc-load "org-eldoc" "\
+Set up org-eldoc documentation function." t)
+(add-hook 'org-mode-hook #'org-eldoc-load)
+(register-definition-prefixes "org-eldoc" '("org-eldoc-"))
+
+
+
+(register-definition-prefixes "org-eval" '("org-eval-"))
+
+
+
+(register-definition-prefixes "org-eval-light" '("org-eval-light-"))
+
+
+
+(register-definition-prefixes "org-expiry" '("org-expiry-"))
+
+
+
+(register-definition-prefixes "org-interactive-query" '("org-agenda-query-"))
+
+
+
+(register-definition-prefixes "org-invoice" '("org-"))
+
+
+
+(register-definition-prefixes "org-learn" '("calculate-new-optimal-factor" "determine-next-interval" "get-optimal-factor" "initial-" "inter-repetition-interval" "modify-" "org-" "set-optimal-factor"))
+
+
+
+(register-definition-prefixes "org-license" '("org-license-"))
+
+
+
+(register-definition-prefixes "org-mac-iCal" '("omi-" "org-mac-iCal"))
+
+
+
+(register-definition-prefixes "org-mairix" '("org-"))
+
+
+
+(register-definition-prefixes "org-panel" '("orgpan-"))
+
+
+
+(autoload 'org-registry-show "org-registry" "\
+Show Org files where there are links pointing to the current
+buffer.
+
+(fn &optional VISIT)" t)
+(autoload 'org-registry-visit "org-registry" "\
+If an Org file contains a link to the current location, visit
+this file." t)
+(autoload 'org-registry-initialize "org-registry" "\
+Initialize `org-registry-alist'.
+If FROM-SCRATCH is non-nil or the registry does not exist yet,
+create a new registry from scratch and eval it. If the registry
+exists, eval `org-registry-file' and make it the new value for
+`org-registry-alist'.
+
+(fn &optional FROM-SCRATCH)" t)
+(autoload 'org-registry-insinuate "org-registry" "\
+Call `org-registry-update' after saving in Org-mode.
+Use with caution.  This could slow down things a bit." t)
+(autoload 'org-registry-update "org-registry" "\
+Update the registry for the current Org file." t)
+(register-definition-prefixes "org-registry" '("org-registry-"))
+
+
+
+(register-definition-prefixes "org-screen" '("org-screen"))
+
+
+
+(autoload 'org-screenshot-take "org-screenshot" "\
+Take a screenshot and insert link to it at point, if image
+display is already on (see \\[org-toggle-inline-images])
+screenshot will be displayed as an image
+
+Screen area for the screenshot is selected with the mouse, left
+click on a window screenshots that window, while left click and
+drag selects a region. Pressing any key cancels the screen shot
+
+With `C-u' universal argument waits one second after target is
+selected before taking the screenshot. With double `C-u' wait two
+seconds.
+
+With triple `C-u' wait 3 seconds, and also rings the bell when
+screenshot is done, any more `C-u' after that increases delay by
+2 seconds
+
+(fn &optional DELAY)" t)
+(autoload 'org-screenshot-rotate-prev "org-screenshot" "\
+Rotate last screenshot with one of the previously taken
+screenshots from the same directory. If DIR is negative, rotate
+in the other direction
+
+(fn DIR)" t)
+(autoload 'org-screenshot-rotate-next "org-screenshot" "\
+Rotate last screenshot with one of the previously taken
+screenshots from the same directory. If DIR is negative, rotate
+in the other direction
+
+(fn DIR)" t)
+(autoload 'org-screenshot-show-unused "org-screenshot" "\
+Open A Dired buffer with unused screenshots marked" t)
+(register-definition-prefixes "org-screenshot" '("org-screenshot-"))
+
+
+
+(register-definition-prefixes "org-secretary" '("join" "org-sec-"))
+
+
+
+(register-definition-prefixes "org-static-mathjax" '("org-static-mathjax-"))
+
+
+
+(register-definition-prefixes "org-sudoku" '("org-sudoku-"))
+
+
+
+(autoload 'org-toc-show "org-toc" "\
+Show the table of contents of the current Org-mode buffer.
+
+(fn &optional DEPTH POSITION)" t)
+(register-definition-prefixes "org-toc" '("org-"))
+
+
+
+(autoload 'org-track-fetch-package "org-track" "\
+Fetch Org package depending on `org-track-fetch-package-extension'.
+If DIRECTORY is defined, unpack the package there, i.e. add the
+subdirectory org-mode/ to DIRECTORY.
+
+(fn &optional DIRECTORY)" t)
+(autoload 'org-track-compile-org "org-track" "\
+Compile all *.el files that come with org-mode.
+Generate the autoloads file `org-loaddefs.el'.
+
+DIRECTORY is where the directory org-mode/ lives (i.e. the
+          parent directory of your local repo.
+
+(fn &optional DIRECTORY)" t)
+(register-definition-prefixes "org-track" '("org-track-"))
+
+
+
+(register-definition-prefixes "org-wikinodes" '("org-wikinodes-"))
+
+
+
+(register-definition-prefixes "orgtbl-sqlinsert" '("orgtbl-"))
+
+
+
+(register-definition-prefixes "ox-bibtex" '("org-bibtex-"))
+
+
+
+(register-definition-prefixes "ox-confluence" '("org-confluence-"))
+
+
+
+(register-definition-prefixes "ox-deck" '("org-deck-"))
+
+
+
+(register-definition-prefixes "ox-extra" '("org-" "ox-extras"))
+
+
+
+(autoload 'org-freemind-export-to-freemind "ox-freemind" "\
+Export current buffer to a Freemind Mindmap file.
+
+If narrowing is active in the current buffer, only export its
+narrowed part.
+
+If a region is active, export that region.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously.  The resulting file should be accessible through
+the `org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+When optional argument BODY-ONLY is non-nil, only write code
+between \"<body>\" and \"</body>\" tags.
+
+EXT-PLIST, when provided, is a property list with external
+parameters overriding Org default settings, but still inferior to
+file-local settings.
+
+Return output file's name.
+
+(fn &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST)" t)
+(register-definition-prefixes "ox-freemind" '("org-freemind-"))
+
+
+
+(register-definition-prefixes "ox-groff" '("org-groff-"))
+
+
+
+(register-definition-prefixes "ox-s5" '("org-s5-"))
+
+
+
+(autoload 'org-taskjuggler-export "ox-taskjuggler" "\
+Export current buffer to a TaskJuggler file.
+
+The exporter looks for a tree with tag that matches
+`org-taskjuggler-project-tag' and takes this as the tasks for
+this project.  The first node of this tree defines the project
+properties such as project name and project period.
+
+If there is a tree with tag that matches
+`org-taskjuggler-resource-tag' this tree is taken as resources
+for the project.  If no resources are specified, a default
+resource is created and allocated to the project.
+
+Also the TaskJuggler project will be created with default reports
+as defined in `org-taskjuggler-default-reports'.
+
+If narrowing is active in the current buffer, only export its
+narrowed part.
+
+If a region is active, export that region.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously.  The resulting file should be accessible through
+the `org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+Return output file's name.
+
+(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t)
+(autoload 'org-taskjuggler-export-and-process "ox-taskjuggler" "\
+Export current buffer to a TaskJuggler file and process it.
+
+The exporter looks for a tree with tag that matches
+`org-taskjuggler-project-tag' and takes this as the tasks for
+this project.  The first node of this tree defines the project
+properties such as project name and project period.
+
+If there is a tree with tag that matches
+`org-taskjuggler-resource-tag' this tree is taken as resources
+for the project.  If no resources are specified, a default
+resource is created and allocated to the project.
+
+Also the TaskJuggler project will be created with default reports
+as defined in `org-taskjuggler-default-reports'.
+
+If narrowing is active in the current buffer, only export its
+narrowed part.
+
+If a region is active, export that region.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+Return a list of reports.
+
+(fn &optional SUBTREEP VISIBLE-ONLY)" t)
+(autoload 'org-taskjuggler-export-process-and-open "ox-taskjuggler" "\
+Export current buffer to a TaskJuggler file, process and open it.
+
+Export and process the file using
+`org-taskjuggler-export-and-process' and open the generated
+reports with a browser.
+
+If you are targeting TaskJuggler 2.4 (see
+`org-taskjuggler-target-version') the processing and display of
+the reports is done using the TaskJuggler GUI.
+
+(fn &optional SUBTREEP VISIBLE-ONLY)" t)
+(register-definition-prefixes "ox-taskjuggler" '("org-taskjuggler-"))
+
+
+(provide 'org-contrib-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ob-rust-20220824.1923/ob-rust-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ob-rust-20220824.1923/ob-rust-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "ob-rust" '("org-babel-"))
+
+
+
+(register-definition-prefixes "test-ob-rust" '("ob-rust-test-" "org-"))
+
+
+(provide 'ob-rust-autoloads)
 
 
 )
@@ -10191,55 +10331,6 @@ Toggle to show diff information." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240218.2101/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240218.2101/ghub-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "buck" '("buck-default-host"))
-
-
-
-(autoload 'ghub-clear-caches "ghub" "\
-Clear all caches that might negatively affect Ghub.
-
-If a library that is used by Ghub caches incorrect information
-such as a mistyped password, then that can prevent Ghub from
-asking the user for the correct information again.
-
-Set `url-http-real-basic-auth-storage' to nil
-and call `auth-source-forget+'." t)
-(register-definition-prefixes "ghub" '("ghub-"))
-
-
-
-(register-definition-prefixes "ghub-graphql" '("ghub-"))
-
-
-
-(register-definition-prefixes "glab" '("glab-default-host"))
-
-
-
-(register-definition-prefixes "gogs" '("gogs-default-host"))
-
-
-
-(register-definition-prefixes "gsexp" '("gsexp-"))
-
-
-
-(register-definition-prefixes "gtea" '("gtea-default-host"))
-
-
-(provide 'ghub-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/gcmh-20201116.2251/gcmh-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/gcmh-20201116.2251/gcmh-autoloads.el"))
 
 
@@ -11834,14 +11925,14 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism popup plantuml-mode page-break-lines org-sticky-header emacsql emacsql-sqlite magit-section org-roam org-roam-ui org-contrib ob-rust git-commit magit lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-modes git-gutter fringe-helper git-gutter-fringe ghub gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui org-contrib ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240219.1113" "/Users/laurynas/.emacs.d/elpa/ghub-20240218.2101" "/Users/laurynas/.emacs.d/elpa/magit-20240218.530" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319" "/Users/laurynas/.emacs.d/elpa/transient-20240221.1504" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240219.1113" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240218.2101" "/Users/laurynas/.emacs.d/elpa/magit-20240218.530" "/Users/laurynas/.emacs.d/elpa/magit-section-20240211.1319" "/Users/laurynas/.emacs.d/elpa/transient-20240221.1504" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:

@@ -85,6 +85,7 @@ Unfortunately, that is not always possible.
 [git-modes](https://github.com/magit/git-modes)
 [flycheck-google-cpplint](https://github.com/flycheck/flycheck-google-cpplint/)
 [difftastic.el](https://github.com/pkryger/difftastic.el)
+[pr-review](https://github.com/blahgeek/emacs-pr-review)
 
 #### Appearance
 

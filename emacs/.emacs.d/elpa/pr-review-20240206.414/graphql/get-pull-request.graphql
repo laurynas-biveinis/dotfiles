@@ -1,0 +1,314 @@
+# Type queries into this side of the screen, and you will 
+# see intelligent typeaheads aware of the current GraphQL type schema, 
+# live syntax, and validation errors highlighted within the text.
+
+# We'll get you started with a simple query showing your username!
+query($repo_owner:String!, $repo_name:String!, $pr_id:Int!) { 
+  repository(owner: $repo_owner, name: $repo_name) {
+    pullRequest(number: $pr_id) {
+      id
+      url
+      state
+      mergeable
+      headRefName
+      headRefOid
+      baseRefName
+      baseRefOid
+      
+      createdAt
+      title
+      body
+      bodyHTML
+      author {
+        login
+      }
+      viewerCanUpdate
+
+      viewerCanSubscribe
+      viewerSubscription
+
+      baseRef {
+        refUpdateRule {
+          requiredStatusCheckContexts
+        }
+      }
+
+      labels(first: 100) {
+        nodes {
+          name
+          color
+        }
+      }
+
+      files(first: 100) {
+        nodes {
+          path
+          additions
+          deletions
+        }
+      }
+      
+      reviewRequests(first: 100) {
+        nodes {
+          requestedReviewer {
+            __typename
+            ... on User {
+              login
+            }
+          }
+        }
+      }
+      
+      comments(first: 100) {
+        nodes {
+          id
+          databaseId
+          viewerCanUpdate
+          author {
+            login
+          }
+          body
+          bodyHTML
+          createdAt
+        }
+      }
+      
+      latestOpinionatedReviews(first: 100) {
+        nodes {
+          author {
+            login
+          }
+          body
+          bodyHTML
+          createdAt
+          state
+        }
+      }
+      
+      reviews(first: 100) {
+        nodes {
+          id
+          databaseId
+          viewerCanUpdate
+          body
+          bodyHTML
+          state
+          author {
+            login
+          }
+          createdAt
+          
+          comments(first: 100) {
+            nodes {
+              id
+              databaseId
+              diffHunk
+              path
+              author {
+                login
+              }
+              createdAt
+            }
+          }
+        }
+      }
+      
+      reviewThreads(first: 100) {
+        nodes {
+          isCollapsed
+          isResolved
+          isOutdated
+          path
+          diffSide
+          line
+          startDiffSide
+          startLine
+          id
+          comments(first: 100) {
+            nodes {
+              id
+              databaseId
+              viewerCanUpdate
+              author {
+                login
+              }
+              body
+              bodyHTML
+              createdAt
+            }
+          }
+        }
+      }
+      
+      assignees(first: 100) {
+        nodes {
+          login
+        }
+      }
+
+      commits(first: 100) {
+        nodes {
+          commit {
+            abbreviatedOid
+            messageHeadline
+          }
+        }
+      }
+
+      latestCommits : commits(last: 1) {
+        nodes {
+          commit {
+            oid
+            statusCheckRollup {
+              state
+              contexts(first: 100) {
+                nodes {
+                  __typename
+                  ... on CheckRun {
+                    name
+                    status
+                    conclusion
+                    title
+                    annotations(first: 100) {
+                      nodes {
+                        annotationLevel
+                        location {
+                          start { line }
+                          end { line }
+                        }
+                        message
+                        path
+                        title
+                      }
+                    }
+                  }
+                  ... on StatusContext {
+                    context
+                    description
+                    state
+                    targetUrl
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      timelineItems(first: 100, itemTypes: [ASSIGNED_EVENT, MERGED_EVENT, CLOSED_EVENT, HEAD_REF_FORCE_PUSHED_EVENT, PULL_REQUEST_COMMIT, REVIEW_REQUESTED_EVENT, REVIEW_REQUEST_REMOVED_EVENT, UNASSIGNED_EVENT, REOPENED_EVENT, CROSS_REFERENCED_EVENT]) {
+        nodes {
+          __typename
+          ... on AssignedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+            assignee {
+              ... on User {
+                login
+              }
+            }
+          }
+          ... on UnassignedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+            assignee {
+              ... on User {
+                login
+              }
+            }
+          }
+          ... on MergedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+            mergeRefName
+          }
+          ... on ClosedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+          }
+          ... on ReopenedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+          }
+          ... on HeadRefForcePushedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+            beforeCommit {
+              abbreviatedOid
+            }
+            afterCommit {
+              abbreviatedOid
+            }
+          }
+          ... on PullRequestCommit {
+            id
+            commit {
+              abbreviatedOid
+              messageHeadline
+              pushedDate
+            }
+          }
+          ... on ReviewRequestedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+            requestedReviewer {
+              ... on User {
+                login
+              }
+            }
+          }
+          ... on ReviewRequestRemovedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+            requestedReviewer {
+              ... on User {
+                login
+              }
+            }
+          }
+          ... on CrossReferencedEvent {
+            id
+            createdAt
+            actor {
+              login
+            }
+            source {
+              ... on Issue {
+                url
+                title
+              }
+              ... on PullRequest {
+                url
+                title
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+}

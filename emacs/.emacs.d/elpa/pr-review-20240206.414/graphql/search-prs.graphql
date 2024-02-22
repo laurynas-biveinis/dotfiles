@@ -1,0 +1,25 @@
+query($query:String!) {
+  search(query: $query, type: ISSUE, first: 100) {
+    nodes {
+      __typename
+      ... on PullRequest {
+        createdAt
+        url
+        title
+        state
+        author { login }
+        assignees(last: 10) { nodes { login }}
+        reviewRequests(last: 10) { nodes { requestedReviewer {
+          ... on User { login }
+        } } }
+        participants(last: 10) { nodes { login }}
+        repository {
+          name
+          owner { login }
+          nameWithOwner
+        }
+        number
+      }
+    }
+  }
+}
