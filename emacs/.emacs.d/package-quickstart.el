@@ -692,6 +692,216 @@ When APPEND is specified, append FILES to existing `wfnames-buffer'.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301/dash-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301/dash-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'dash-fontify-mode "dash" "\
+Toggle fontification of Dash special variables.
+
+Dash-Fontify mode is a buffer-local minor mode intended for Emacs
+Lisp buffers.  Enabling it causes the special variables bound in
+anaphoric Dash macros to be fontified.  These anaphoras include
+`it', `it-index', `acc', and `other'.  In older Emacs versions
+which do not dynamically detect macros, Dash-Fontify mode
+additionally fontifies Dash macro calls.
+
+See also `dash-fontify-mode-lighter' and
+`global-dash-fontify-mode'.
+
+This is a minor mode.  If called interactively, toggle the
+`Dash-Fontify mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `dash-fontify-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(put 'global-dash-fontify-mode 'globalized-minor-mode t)
+(defvar global-dash-fontify-mode nil "\
+Non-nil if Global Dash-Fontify mode is enabled.
+See the `global-dash-fontify-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-dash-fontify-mode'.")
+(custom-autoload 'global-dash-fontify-mode "dash" nil)
+(autoload 'global-dash-fontify-mode "dash" "\
+Toggle Dash-Fontify mode in all buffers.
+With prefix ARG, enable Global Dash-Fontify mode if ARG is positive; otherwise,
+disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Dash-Fontify mode is enabled in all buffers where `dash--turn-on-fontify-mode'
+would do it.
+
+See `dash-fontify-mode' for more information on Dash-Fontify mode.
+
+(fn &optional ARG)" t)
+(autoload 'dash-register-info-lookup "dash" "\
+Register the Dash Info manual with `info-lookup-symbol'.
+This allows Dash symbols to be looked up with \\[info-lookup-symbol]." t)
+(register-definition-prefixes "dash" '("!cdr" "!cons" "--" "->" "-a" "-butlast" "-c" "-d" "-e" "-f" "-gr" "-i" "-juxt" "-keep" "-l" "-m" "-no" "-o" "-p" "-r" "-s" "-t" "-u" "-value-to-list" "-when-let" "-zip" "dash-"))
+
+
+(provide 'dash-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/s-1.13.0/s-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/s-1.13.0/s-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "s" '("s-"))
+
+
+(provide 's-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/web-20141231.2001/web-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/web-20141231.2001/web-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'web-http-call "web" "\
+Make an HTTP method to the URL or the HOST, PORT, PATH and send DATA.
+
+If URL is specified then it takes precedence over SECURE, HOST,
+PORT and PATH.  URL may be HTTP or HTTPS.
+
+Important note: any query in URL is currently IGNORED!
+
+SECURE is `nil' by default but if `t' then SSL is used.
+
+PORT is 80 by default.  Even if SECURE it `t'.  If you manually
+specify SECURE you should manually specify PORT to be 443.  Using
+URL negates the need for that, an SSL URL will work correctly.
+
+The URL connected to (whether specified by URL or by the HOST and
+PORT) is recorded on the resulting connection as the process
+property `:web-url'.
+
+EXTRA-HEADERS is an alist or a hash-table of extra headers to
+send to the server.
+
+The full set of headers sent to the server is recorded on the
+connection with the process property `:web-headers'.
+
+DATA is of MIME-TYPE.  We try to interpret DATA and MIME-TYPE
+usefully:
+
+If MIME-TYPE is `application/form-www-url-encoded' then
+`web-to-query-string' is used to to format the DATA into a POST
+body.
+
+If MIME-TYPE is `multipart/form-data' then `web-to-multipart' is
+called to get a POST body.
+
+Any data sent to the server is recorded on the connection with
+the process property `:web-sent'.
+
+When the request comes back the CALLBACK is called.  CALLBACK is
+always passed 3 arguments: the HTTP connection which is a process
+object, the HTTP header which is a `hash-table' and `data', which
+is normally a string.  `data' depends somewhat on the context.
+See below.
+
+MODE defines what it means for the request to cause the CALLBACK
+to be fired.  When MODE is `stream' then the CALLBACK is called
+for every chunk of data received after the header has arrived.
+This allows streaming data to somewhere else; hence `stream'
+mode.  In this mode CALLBACK's `data' argument is a single chunk
+of the stream or `:done' when the stream ends.
+
+The default MODE is `batch' which collects all the data from the
+response before calling CALLBACK with all the data as a string.
+
+(fn METHOD CALLBACK &key URL (HOST \"localhost\") (PORT 80) SECURE (PATH \"/\") EXTRA-HEADERS DATA (MIME-TYPE web/request-mimetype) (MODE \\='batch) LOGGING)")
+(autoload 'web-http-get "web" "\
+Make a GET calling CALLBACK with the result.
+
+For information on URL or PATH, HOST, PORT and also EXTRA-HEADERS
+and MODE see `web-http-call'.
+
+The callback probably won't work unless you set `lexical-binding'
+to `t'.
+
+(fn CALLBACK &key URL (HOST \"localhost\") (PORT 80) (PATH \"/\") EXTRA-HEADERS (MODE \\='batch) (LOGGING t))")
+(autoload 'web-http-post "web" "\
+Make a POST and call CALLBACK with the result.
+
+For information on URL or PATH, HOST, PORT and also MODE see
+`web-http-call'.
+
+The callback probably won't work unless you set `lexical-binding'
+to `t'.
+
+(fn CALLBACK &key URL (HOST \"localhost\") (PORT 80) (PATH \"/\") EXTRA-HEADERS DATA (MIME-TYPE web/request-mimetype) (MODE \\='batch) (LOGGING t))")
+(autoload 'web-json-post "web" "\
+POST DATA to URL expecting a JSON response sent to CALLBACK.
+
+See `web-json-expected-mimetypes-list' for the list of Mime Types
+we accept JSON for.  This may be let bound.  If the expectation
+is not met then EXPECTATION-FAILURE-CALLBACK is called being
+passed the CALLBACK parameters.  By default
+EXPECTATION-FAILURE-CALLBACK is
+`web-json-default-expectation-failure'.
+
+The CALLBACK is called as:
+
+  CALLBACK RESPONSE-DATA HTTPCON RESPONSE-HEADER
+
+so the function may be defined like this:
+
+  (lambda (data &rest stuff) ...)
+
+HEADERS may be specified, these are treated as extra-headers to
+be sent with the request.
+
+The DATA is sent as `application/x-www-form-urlencoded' by
+default, MIME-TYPE can change that.
+
+JSON-ARRAY-TYPE, JSON-OBJECT-TYPE and JSON-KEY-TYPE, if present,
+are used to let bind the `json-read' variables of the same name
+affecting the resulting lisp structure.
+
+(fn CALLBACK &key URL DATA HEADERS (MIME-TYPE web/request-mimetype) (LOGGING t) (JSON-ARRAY-TYPE json-array-type) (JSON-OBJECT-TYPE json-object-type) (JSON-KEY-TYPE json-key-type) (EXPECTATION-FAILURE-CALLBACK \\='web-json-default-expectation-failure))")
+(autoload 'web-get "web" "\
+Get the specified URL into the BUFFER.
+
+(fn URL &optional BUFFER)" t)
+(register-definition-prefixes "web" '("web"))
+
+
+(provide 'web-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20240203.1221/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20240203.1221/wakatime-mode-autoloads.el"))
 
 
@@ -944,93 +1154,6 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 
 
 (provide 'treepy-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301/dash-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301/dash-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'dash-fontify-mode "dash" "\
-Toggle fontification of Dash special variables.
-
-Dash-Fontify mode is a buffer-local minor mode intended for Emacs
-Lisp buffers.  Enabling it causes the special variables bound in
-anaphoric Dash macros to be fontified.  These anaphoras include
-`it', `it-index', `acc', and `other'.  In older Emacs versions
-which do not dynamically detect macros, Dash-Fontify mode
-additionally fontifies Dash macro calls.
-
-See also `dash-fontify-mode-lighter' and
-`global-dash-fontify-mode'.
-
-This is a minor mode.  If called interactively, toggle the
-`Dash-Fontify mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `dash-fontify-mode'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(put 'global-dash-fontify-mode 'globalized-minor-mode t)
-(defvar global-dash-fontify-mode nil "\
-Non-nil if Global Dash-Fontify mode is enabled.
-See the `global-dash-fontify-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `global-dash-fontify-mode'.")
-(custom-autoload 'global-dash-fontify-mode "dash" nil)
-(autoload 'global-dash-fontify-mode "dash" "\
-Toggle Dash-Fontify mode in all buffers.
-With prefix ARG, enable Global Dash-Fontify mode if ARG is positive; otherwise,
-disable it.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.
-Enable the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-Dash-Fontify mode is enabled in all buffers where `dash--turn-on-fontify-mode'
-would do it.
-
-See `dash-fontify-mode' for more information on Dash-Fontify mode.
-
-(fn &optional ARG)" t)
-(autoload 'dash-register-info-lookup "dash" "\
-Register the Dash Info manual with `info-lookup-symbol'.
-This allows Dash symbols to be looked up with \\[info-lookup-symbol]." t)
-(register-definition-prefixes "dash" '("!cdr" "!cons" "--" "->" "-a" "-butlast" "-c" "-d" "-e" "-f" "-gr" "-i" "-juxt" "-keep" "-l" "-m" "-no" "-o" "-p" "-r" "-s" "-t" "-u" "-value-to-list" "-when-let" "-zip" "dash-"))
-
-
-(provide 'dash-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/s-1.13.0/s-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/s-1.13.0/s-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "s" '("s-"))
-
-
-(provide 's-autoloads)
 
 
 )
@@ -3536,6 +3659,22 @@ it is disabled.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/deferred-0.5.1/deferred-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/deferred-0.5.1/deferred-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "deferred" '("deferred:"))
+
+
+(provide 'deferred-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/request-0.3.2/request-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/request-0.3.2/request-autoloads.el"))
 
 
@@ -3549,6 +3688,22 @@ it is disabled.
 
 
 (provide 'request-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/request-deferred-20220614.1604/request-deferred-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/request-deferred-20220614.1604/request-deferred-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "request-deferred" '("request-deferred"))
+
+
+(provide 'request-deferred-autoloads)
 
 
 )
@@ -6586,6 +6741,22 @@ Shortcuts             Command Name
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.6/persist-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.6/persist-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "persist" '("persist-"))
+
+
+(provide 'persist-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/page-break-lines-0.15/page-break-lines-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/page-break-lines-0.15/page-break-lines-autoloads.el"))
 
 
@@ -7135,6 +7306,731 @@ it is disabled.
 
 
 (provide 'org-roam-ui-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/aio-1.0/aio-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/aio-1.0/aio-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "aio" '("aio-"))
+
+
+(provide 'aio-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/gntp-0.1/gntp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/gntp-0.1/gntp-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'gntp-notify "gntp" "\
+Send notification NAME with TITLE, TEXT, PRIORITY and ICON to SERVER:PORT.
+PORT defaults to `gntp-server-port'
+
+(fn NAME TITLE TEXT SERVER &optional PORT PRIORITY ICON)")
+(register-definition-prefixes "gntp" '("gntp-"))
+
+
+(provide 'gntp-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/log4e-0.4.1/log4e-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/log4e-0.4.1/log4e-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'log4e-mode "log4e" "\
+Major mode for browsing a buffer made by log4e.
+
+\\<log4e-mode-map>
+\\{log4e-mode-map}
+
+(fn)" t)
+(autoload 'log4e:insert-start-log-quickly "log4e" "\
+Insert logging statment for trace level log at start of current function/macro." t)
+(register-definition-prefixes "log4e" '("log4e"))
+
+
+(provide 'log4e-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/alert-1.3/alert-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/alert-1.3/alert-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'alert-add-rule "alert" "\
+Programmatically add an alert configuration rule.
+
+Normally, users should custoimze `alert-user-configuration'.
+This facility is for module writers and users that need to do
+things the Lisp way.
+
+Here is a rule the author currently uses with ERC, so that the
+fringe gets colored whenever people chat on BitlBee:
+
+(alert-add-rule :status   \\='(buried visible idle)
+                :severity \\='(moderate high urgent)
+                :mode     \\='erc-mode
+                :predicate
+                #\\='(lambda (info)
+                    (string-match (concat \"\\\\`[^&].*@BitlBee\\\\\\='\")
+                                  (erc-format-target-and/or-network)))
+                :persistent
+                #\\='(lambda (info)
+                    ;; If the buffer is buried, or the user has been
+                    ;; idle for `alert-reveal-idle-time' seconds,
+                    ;; make this alert persistent.  Normally, alerts
+                    ;; become persistent after
+                    ;; `alert-persist-idle-time' seconds.
+                    (memq (plist-get info :status) \\='(buried idle)))
+                :style \\='fringe
+                :continue t)
+
+(fn &key SEVERITY STATUS MODE CATEGORY TITLE MESSAGE PREDICATE ICON (STYLE alert-default-style) PERSISTENT CONTINUE NEVER-PERSIST APPEND)")
+(autoload 'alert "alert" "\
+Alert the user that something has happened.
+MESSAGE is what the user will see.  You may also use keyword
+arguments to specify additional details.  Here is a full example:
+
+(alert \"This is a message\"
+       :severity \\='high          ;; The default severity is `normal'
+       :title \"Title\"           ;; An optional title
+       :category \\='example       ;; A symbol to identify the message
+       :mode \\='text-mode         ;; Normally determined automatically
+       :buffer (current-buffer) ;; This is the default
+       :data nil                ;; Unused by alert.el itself
+       :persistent nil          ;; Force the alert to be persistent;
+                                ;; it is best not to use this
+       :never-persist nil       ;; Force this alert to never persist
+       :id \\='my-id)              ;; Used to replace previous message of
+                                ;; the same id in styles that support it
+       :style \\='fringe)          ;; Force a given style to be used;
+                                ;; this is only for debugging!
+
+If no :title is given, the buffer-name of :buffer is used.  If
+:buffer is nil, it is the current buffer at the point of call.
+
+:data is an opaque value which modules can pass through to their
+own styles if they wish.
+
+Here are some more typical examples of usage:
+
+  ;; This is the most basic form usage
+  (alert \"This is an alert\")
+
+  ;; You can adjust the severity for more important messages
+  (alert \"This is an alert\" :severity \\='high)
+
+  ;; Or decrease it for purely informative ones
+  (alert \"This is an alert\" :severity \\='trivial)
+
+  ;; Alerts can have optional titles.  Otherwise, the title is the
+  ;; buffer-name of the (current-buffer) where the alert originated.
+  (alert \"This is an alert\" :title \"My Alert\")
+
+  ;; Further, alerts can have categories.  This allows users to
+  ;; selectively filter on them.
+  (alert \"This is an alert\" :title \"My Alert\"
+         :category \\='some-category-or-other)
+
+(fn MESSAGE &key (SEVERITY \\='normal) TITLE ICON CATEGORY BUFFER MODE DATA STYLE PERSISTENT NEVER-PERSIST ID)")
+(register-definition-prefixes "alert" '("alert-" "x-urgen"))
+
+
+(provide 'alert-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/noflet-20141102.1454/noflet-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/noflet-20141102.1454/noflet-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "noflet" '("letn" "ntake-all"))
+
+
+(provide 'noflet-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/kv-20140108.1534/kv-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/kv-20140108.1534/kv-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "kv" '("dotass" "keyword->symbol" "map-bind"))
+
+
+(provide 'kv-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/creole-20140924.1500/creole-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/creole-20140924.1500/creole-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'creole-wiki "creole" "\
+Export WikiCreole SOURCE into HTML.
+
+Returns the buffer where the HTML was exported. This could be a
+user supplied buffer (see DESTINATION) or a buffer created based
+on the filename of the source (or just automatically created).
+
+SOURCE can be a buffer or plain text or something we might
+recognize as a file.  A file-name is detected by a leading
+'~' (meaning expand from the user root) or '/' (meaning rooted)
+or './' (meaning expand from the root of the source creole file).
+
+If SOURCE is a filename it is loaded with `creole/get-file'.
+
+
+Keyword arguments are supported to change the way the HTML is
+produced.
+
+DESTINATION can be a buffer or a buffer name to write the HTML
+into or it can be 't' to indicate the default output stream.  In
+the latter case an automatic buffer is still created and the HTML
+is sent to the default output stream when the export is done.
+
+The DESTINATION buffer is always returned.
+
+STRUCTURE-TRANSFORM-FN is a structure transformation function or
+list of functions, see `creole-html' for details.
+
+HTMLFONTIFY - use 'htmlfontify' to fontify any code blocks; this
+is true by default.
+
+Code blocks are marked up like pre-formatted areas but must begin
+with a line stating the Emacs mode to fontify the text as; for
+example:
+
+ {{{
+ ##! emacs-lisp
+ (let ((x 1)) x)
+ }}}
+
+would cause Emacs Lisp to be fontified.
+
+HTMLFONTIFY-STYLE - add an HTML-STYLE block for 'htmlfontify'
+code blocks. If this is nil an HTML-STYLE block is NOT added.
+
+BODY-HEADER - a string or a file-name with HTML code to be
+inserted in the BODY of the HTML document before the Creole
+markup export.  A file-name is detected in the same way as for
+SOURCE.
+
+BODY-FOOTER - a string or a file-name with HTML code to be
+inserted in the BODY of the HTML document after the Creole markup
+export.  A file-name is detected in the same way as for SOURCE.
+
+The BODY-HEADER and the BODY-FOOTER are treated as moustache
+templates and expanded before being inserted.  See
+'creole-moustache' for a description.  Variables passed to
+'creole-moustache' with the template are:
+
+  text - the creole source text of the page
+
+or any variable in VARIABLES, which is an alist of
+symbols -> values.
+
+DOCROOT - base any files to be served.  Any file-name reference
+for CSS or JavaScript, if residing under this docroot, will be
+linked to the document rather than embedded.
+
+DOCROOT-ALIAS - is the docroot path to use in any links as an
+alias for the docroot.
+
+CSS - a list of cascading style sheets, each entry can either be
+a file-name (a file-name is detected in the same way as
+for SOURCE) or a string with W3C-CSS statements in it.
+
+If a DOCROOT is specified then any cascading style sheets
+file-name is LINKed into the resulting document, if not then the
+statements are embedded directly.
+
+JAVASCRIPT - a list of JavaScript, as for CSS, each entry can
+be either a string of the JavaScript to be directly embedded or a
+file-name reference (as in SOURCE).  As for :CSS if
+a :DOCROOT is specified then the scripts will be loaded as links
+but otherwise will be embedded.
+
+META - a list of strings specifying resulting HTML-META elements.
+For example:
+
+ :meta '(\"name='description'
+          content='Free Web tutorials on HTML, CSS, XML'\")
+
+:OTHER-LINK - a list of string specifying resulting HTML-LINK
+elements, for example:
+
+ :other-link '(\"rel='alternate' href='/my-feed.rss'\")
+
+:DOCTYPE may be nil, in which case nothing is added or it may be
+a string in which case it is inserted directly before the <html>
+element, or it may be one of the symbols 'xhtml or 'html5 in
+which case the right doctype is added.
+
+All, any or none of these keys may be specified.
+
+(fn SOURCE &key DESTINATION STRUCTURE-TRANSFORM-FN (HTMLFONTIFY t) (HTMLFONTIFY-STYLE t) BODY-HEADER BODY-FOOTER VARIABLES DOCROOT DOCROOT-ALIAS CSS JAVASCRIPT META OTHER-LINK DOCTYPE)" '("fCreole file: "))
+(register-definition-prefixes "creole" '("creole" "when1"))
+
+
+(provide 'creole-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fakir-20140729.1652/fakir-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fakir-20140729.1652/fakir-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "fakir" '("fakir"))
+
+
+(provide 'fakir-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/db-20140421.2111/db-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/db-20140421.2111/db-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "db" '("db-" "db/"))
+
+
+(provide 'db-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elnode-20190702.1509/elnode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elnode-20190702.1509/elnode-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(defconst elnode-config-directory (expand-file-name (concat user-emacs-directory "elnode/")) "\
+The config directory for elnode to store peripheral files.
+
+This is used as a base for other constant directory or file
+names (the elnode auth database is a file in this directory, the
+elnode webserver has a docroot directory in this directory).
+
+It is based on the `user-emacs-directory' which always seems to
+be set, even when emacs is started with -Q.")
+(autoload 'elnode-app "elnode" "\
+A macro that sets up the boring boilerplate for Elnode apps.
+
+This sets up lexical binding, captures the module's parent
+directory in DIR-VAR, requires `cl' and any other features you
+list.  Use it like this:
+
+ (elnode-app my-app-dir esxml mongo-elnode)
+
+Once used you can access the variable `my-app-dir' as the dirname
+of your module (which is useful for serving files and such).
+
+(fn DIR-VAR &rest FEATURES)" nil t)
+(function-put 'elnode-app 'lisp-indent-function 1)
+(autoload 'elnode-start "elnode" "\
+Start a server using REQUEST-HANDLER.
+
+REQUEST-HANDLER will handle requests on PORT on HOST (which is
+'localhost' by default).
+
+REQUEST-HANDLER is a function which is called with the request.
+The function is called with one argument, which is the
+http-connection.
+
+You can use functions such as `elnode-http-start' and
+`elnode-http-send-body' to send the http response.
+
+Example:
+
+  (defun nic-server (httpcon)
+    (elnode-http-start httpcon 200 '(\"Content-Type\" . \"text/html\"))
+    (elnode-http-return httpcon \"<html><b>BIG!</b></html>\"))
+  (elnode-start 'nic-server)
+
+Now visit http://127.0.0.1:8000
+
+If PORT is non-nil, then run server on PORT, otherwise default to
+8000.
+
+If HOST is non-nil, then run the server on the specified local IP
+address, otherwise use localhost.  A few names are predefined:
+
+  \"localhost\" is 127.0.0.1
+  \"*\" is 0.0.0.0
+
+Additionally, you may specifiy an IP address, e.g \"1.2.3.4\"
+
+Note that although HOST may be specified, elnode does not
+disambiguate on running servers by HOST.  So you cannot start two
+elnode servers on the same port on different hosts.
+
+DEFER-MODE may be used to control how deferred handlers are
+managed for this server.
+
+SERVICE-MAPPINGS is an alist of service resource symbols mapped
+to integer port numbers.  This can be supplied to elnode-start to
+allow it to map service resources defined by handlers to
+different TCP ports and therefore different Emacs instances.
+
+The list of SERVICE-MAPPINGS is also used to start ancilliary
+port servers.  Ancilliary port servers should be automatically
+stopped when the main server is stopped.
+
+(fn REQUEST-HANDLER &key PORT (HOST \"localhost\") (DEFER-MODE :managed) SERVICE-MAPPINGS)" '((let ((handler (completing-read "Handler function: " obarray 'fboundp t nil nil)) (port (read-number "Port: " 8000)) (host (read-string "Host: " "localhost" 'elnode-host-history))) (list (intern handler) :port port :host host))))
+(defvar elnode-hostpath-default-table '(("[^/]+//wiki/\\(.*\\)" . elnode-wikiserver) ("[^/]+//\\(.*\\)" . elnode-webserver)) "\
+Defines mappings for `elnode-hostpath-default-handler'.
+
+This is the default mapping table for Elnode, out of the box. If
+you customize this then elnode will serve these hostpath mappings
+by just loading Elnode.
+
+By default the table maps everything to
+`elnode-webserver'. Unless you're happy with the default you
+should probably get rid of the everything path because it will
+interfere with any other mappings you add.")
+(custom-autoload 'elnode-hostpath-default-table "elnode" t)
+(defconst elnode-config-directory (expand-file-name (concat user-emacs-directory "elnode/")) "\
+The config directory for elnode to store peripheral files.
+
+This is used as a base for other constant directory or file
+names (the elnode auth database is a file in this directory, the
+elnode webserver has a docroot directory in this directory).
+
+It is based on the `user-emacs-directory' which always seems to
+be set, even when emacs is started with -Q.")
+(autoload 'elnode--webserver-handler-proc "elnode" "\
+Actual webserver implementation.
+
+Do webserving to HTTPCON from the DOCROOT using the MIME-TYPES
+for meta information.
+
+This is not a real handler (because it takes more than the
+HTTPCON) but it is called directly by the real webserver
+handlers.
+
+(fn HTTPCON DOCROOT MIME-TYPES)")
+(autoload 'elnode-make-webserver "elnode" "\
+Make a webserver interactively, for DOCROOT on PORT.
+
+An easy way for a user to make a webserver for a particular
+directory.
+
+(fn DOCROOT PORT &optional HOST)" t)
+(autoload 'elnode-webserver "elnode" "\
+A simple webserver that serves documents out of `elnode-webserver-docroot'.
+
+This is just an example of an elnode webserver, but it may be all
+that is needed most of the time.
+
+See `elnode-webserver-handler-maker' for more possibilities for
+making webserver functions.
+
+HTTPCON is the HTTP connection to the user agent.
+
+(fn HTTPCON)")
+(autoload 'elnode-init "elnode" "\
+Bootstraps the elnode environment when the Lisp is loaded.
+
+It's useful to have elnode start automatically... on Lisp
+load.  If the variable `elnode-init-port' is set then this
+function will launch a server on it.
+
+The server is started with `elnode-hostpath-default-handler' as
+the handler and listening on `elnode-init-host'" t)
+(defvar elnode-do-init nil "\
+Should elnode start a server on load?
+
+The server that is started is controlled by more elnode
+customizations.
+
+`elnode-hostpath-default-table' defines the mappings from
+hostpath regexs to handler functions. By default elnode ships
+with this customization setup to serve the document root defined
+in `elnode-webserver-docroot', which by default is ~/public_html.")
+(custom-autoload 'elnode-do-init "elnode" t)
+(eval-after-load 'elnode '(if (and (boundp 'elnode-do-init) elnode-do-init (or (not (boundp 'elnode--inited)) (not elnode--inited))) (progn (elnode-init) (setq elnode--inited nil))))
+(register-definition-prefixes "elnode" '("ELNODE-FORM-DATA-TYPE" "elnode" "http-referrer" "if-elnode-auth" "should-" "with-"))
+
+
+
+(autoload 'elnode-deferred-queue "elnode-lists" "\
+Message the length of the deferred queue.
+
+(fn ARG)" t)
+(autoload 'elnode-deferred-list "elnode-lists" "\
+List the currently deferred Elnode handlers.
+
+(fn &optional PREFIX)" t)
+(defalias 'list-elnode-deferreds 'elnode-deferred-list)
+(autoload 'elnode-server-list "elnode-lists" "\
+List the currently running Elnode servers.
+
+(fn &optional PREFIX)" t)
+(defalias 'list-elnode-servers 'elnode-server-list)
+(register-definition-prefixes "elnode-lists" '("elnode-"))
+
+
+
+(autoload 'elnode-log-mode "elnode-log-mode" "\
+Elnode log viewing mode.
+
+For viewing access log files from Elnode.
+
+(fn)" t)
+
+
+
+(autoload 'elnode-make-proxy "elnode-proxy" "\
+Make a proxy handler sending requests to URL.
+
+See `elnode-proxy-do' for how URL is handled.
+
+An HTTP user-agent with a specified HTTP proxy sends the full
+request as the path, eg:
+
+  GET http://somehost:port/path?query HTTP/1.1
+
+So `elnode-make-proxy' can make (something like) a full proxy
+server with:
+
+  (elnode-make-proxy \"${path}${query}\")
+
+There may be many things that a full proxy does that this does
+not do however.
+
+Reverse proxying is a simpler and perhaps more useful.
+
+(fn URL)")
+(autoload 'elnode-make-proxy-server "elnode-proxy" "\
+Make a proxy server on the specified PORT.
+
+Optionally have requests go to URL.  If URL is not specified it
+is \"${path}${query}\".
+
+Interactively use C-u to specify the URL.
+
+(fn PORT &optional URL)" t)
+(register-definition-prefixes "elnode-proxy" '("elnode"))
+
+
+
+(register-definition-prefixes "elnode-rle" '("elnode-" "with-elnode-rle-wait"))
+
+
+
+(register-definition-prefixes "elnode-testsupport" '("elnode-"))
+
+
+
+(defconst elnode-wikiserver-wikiroot-default (expand-file-name (concat elnode-config-directory "wiki/")) "\
+The default location of the wiki root.
+
+This is used to detect whether elnode needs to create this
+directory or not.")
+(defvar elnode-wikiserver-wikiroot elnode-wikiserver-wikiroot-default "\
+The root for the Elnode wiki files.
+
+This is where elnode-wikiserver serves wiki files from.")
+(custom-autoload 'elnode-wikiserver-wikiroot "elnode-wiki" t)
+(autoload 'elnode-wikiserver-test "elnode-wiki" "\
+Test whether we should serve Wiki or not.")
+(autoload 'elnode-wikiserver "elnode-wiki" "\
+Serve Wiki pages from `elnode-wikiserver-wikiroot'.
+
+HTTPCON is the request.
+
+The Wiki server is only available if the `creole' package is
+provided. Otherwise it will just error.
+
+(fn HTTPCON)")
+(register-definition-prefixes "elnode-wiki" '("elnode-wiki"))
+
+
+(provide 'elnode-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-gcal-20221212.1817/org-gcal-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-gcal-20221212.1817/org-gcal-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'oauth2-auto-plist-sync "oauth2-auto" "\
+Synchronously call ‘oauth2-auto-plist’ and return result.
+For USERNAME and PROVIDER, see.
+
+(fn USERNAME PROVIDER)")
+(autoload 'oauth2-auto-access-token-sync "oauth2-auto" "\
+Synchronously call ‘oauth2-auto-access-token’ and return result.
+For USERNAME and PROVIDER, see.
+
+(fn USERNAME PROVIDER)")
+(register-definition-prefixes "oauth2-auto" '("oauth2-auto-"))
+
+
+
+(autoload 'org-gcal-sync "org-gcal" "\
+Import events from calendars.
+Export the ones to the calendar if unless
+SKIP-EXPORT.  Set SILENT to non-nil to inhibit notifications.
+
+(fn &optional SKIP-EXPORT SILENT)" t)
+(autoload 'org-gcal-fetch "org-gcal" "\
+Fetch event data from google calendar." t)
+(autoload 'org-gcal-sync-buffer "org-gcal" "\
+Sync entries with Calendar events in currently-visible portion of buffer.
+
+Updates events on the server unless SKIP-EXPORT is set. In this case, events
+modified on the server will overwrite entries in the buffer.
+Set SILENT to non-nil to inhibit notifications.
+Set FILTER-DATE to only update events scheduled for later than
+‘org-gcal-up-days' and earlier than ‘org-gcal-down-days'.
+Set FILTER-MAANGED to only update events with ‘org-gcal-managed-property’ set
+to “org”.
+
+(fn &optional SKIP-EXPORT SILENT FILTER-DATE FILTER-MANAGED)" t)
+(autoload 'org-gcal-fetch-buffer "org-gcal" "\
+Fetch changes to events in the currently-visible portion of the buffer
+
+Unlike ‘org-gcal-sync-buffer’, this will not push any changes to Google
+Calendar. For SILENT and FILTER-DATE see ‘org-gcal-sync-buffer’.
+
+(fn &optional SILENT FILTER-DATE)" t)
+(autoload 'org-gcal-toggle-debug "org-gcal" "\
+Toggle debugging flags for ‘org-gcal'." t)
+(autoload 'org-gcal-post-at-point "org-gcal" "\
+Post entry at point to current calendar.
+
+This overwrites the event on the server with the data from the entry, except if
+the ‘org-gcal-etag-property’ is present and is out of sync with the server, in
+which case the entry is overwritten with data from the server instead.
+
+If SKIP-IMPORT is not nil, don’t overwrite the entry with data from the server.
+If SKIP-EXPORT is not nil, don’t overwrite the event on the server.
+For valid values of EXISTING-MODE see
+‘org-gcal-managed-post-at-point-update-existing'.
+
+(fn &optional SKIP-IMPORT SKIP-EXPORT EXISTING-MODE)" t)
+(autoload 'org-gcal-delete-at-point "org-gcal" "\
+Delete entry at point to current calendar.
+
+If called with prefix or with CLEAR-GCAL-INFO non-nil, will clear calendar info
+from the entry even if deleting the event from the server fails.  Use this to
+delete calendar info from events on calendars you no longer have access to.
+
+(fn &optional CLEAR-GCAL-INFO)" t)
+(autoload 'org-gcal-sync-tokens-clear "org-gcal" "\
+Clear all Calendar API sync tokens.
+
+  Use this to force retrieving all events in ‘org-gcal-sync’ or
+  ‘org-gcal-fetch’." t)
+(register-definition-prefixes "org-gcal" '("org-gcal-"))
+
+
+
+(autoload 'org-generic-id-get "org-generic-id" "\
+Get the ID-PROP property of the entry at point-or-marker POM.
+If POM is nil, refer to the entry at point.
+If the entry does not have an ID, the function returns nil.
+In any case, the ID of the entry is returned.
+
+(fn &optional ID-PROP POM)")
+(autoload 'org-generic-id-find "org-generic-id" "\
+Return the location of the entry with property ID-PROP, value ID.
+The return value is a cons cell (file-name . position), or nil
+if there is no entry with that ID.
+With optional argument MARKERP, return the position as a new marker.
+
+Normally, if an entry with ID is not found, this function will run
+‘org-generic-id-update-id-locations' in order to pick up any updates to the
+files, and then search again, before concluding an ID can’t be found. If
+CACHED is passed, that function will not be run.
+
+Normally the ID will be searched for in the current buffer before updating ID
+locations. This behavior can be disabled with NO-FALLBACK.
+
+(fn ID-PROP ID &optional MARKERP CACHED NO-FALLBACK)")
+(autoload 'org-generic-id-update-id-locations "org-generic-id" "\
+Scan relevant files for IDs.
+Store the relation between files and corresponding IDs.
+This will scan all agenda files, all associated archives, and all
+files currently mentioned in `org-generic-id-locations'.
+When FILES is given, scan also these files.
+
+(fn ID-PROP &optional FILES SILENT)" t)
+(autoload 'org-generic-id-locations-load "org-generic-id" "\
+Read the data from `org-generic-id-locations-file'.")
+(autoload 'org-generic-id-add-location "org-generic-id" "\
+Add the ID with location FILE to the database of ID locations.
+
+(fn ID-PROP ID FILE)")
+(autoload 'org-generic-id-find-id-file "org-generic-id" "\
+Query the id database for the file in which this ID is located.
+
+If NO-FALLBACK is set, don’t fall back to current buffer if not found in
+‘org-generic-id-locations’.
+
+(fn ID-PROP ID &optional NO-FALLBACK)")
+(register-definition-prefixes "org-generic-id" '("org-generic-id-"))
+
+
+(provide 'org-gcal-autoloads)
 
 
 )
@@ -11925,7 +12821,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket wakatime-mode vterm queue undo-tree tsc treepy dash s avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority request projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui org-contrib ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree tsc treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-contrib ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)

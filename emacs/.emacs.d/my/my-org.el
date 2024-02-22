@@ -254,5 +254,8 @@ event of an error or nonlocal exit."
 (require 'org-roam-db)
 (org-roam-db-autosync-mode)
 
+;;; `org-gcal'
+(require 'org-gcal)
+
 (provide 'my-org)
 ;;; my-org.el ends here
