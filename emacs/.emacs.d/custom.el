@@ -26,7 +26,6 @@
                                   (car d))))))
      (org-fontify-emphasized-text)
      (c-tab-always-indent t)
-     (TeX-master . t)
      (compilation-read-command)
      (projectile-generic-command . "(cd ce && git ls-files -zc --exclude-standard --recurse-submodules | gsed -z 's/^/ce\\//g'); (cd ee && git ls-files -zc --exclude-standard --recurse-submodules | gsed -z 's/^/ee\\//g')"))))
 (custom-set-faces
