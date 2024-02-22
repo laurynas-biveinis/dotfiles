@@ -8,6 +8,11 @@
 ;;   too bright highlights.
 ;; - `company-quickhelp-mode': `pos-tip' results in ugly tooltips on macOS:
 ;; https://github.com/pitkali/pos-tip/issues/11.
+;;
+;; Like in the rest of my personal configuration, all features (packages and
+;; external tools) are assumed to exist, because this is a part of my dotfiles
+;; repo where the needed packages are committed too. Thus, no error handling,
+;; and no need to ensure compatibility with different Emacs or package versions.
 
 ;;; Code:
 
@@ -23,7 +28,7 @@
 
 ;; Remove `company-semantic', `company-bbdb', `company-eclim', `company-clang',
 ;; `company-xcode', `company-oddmuse', (`company-gtags', `company-etags'), and
-;; `company-dabbrev' from company backends.
+;; `company-dabbrev' from company backends, because I never use them.
 (setq company-backends '(company-capf company-files
                                       (company-dabbrev-code company-keywords)))
 
@@ -175,8 +180,8 @@ CANDIDATES is the list of candidates."
     (setq-local dash-docs-docsets '("Markdown"))))
 (add-hook 'markdown-mode-hook #'dotfiles--helm-dash-markdown-mode-hook)
 
-;;; TODO(laurynas): integrate Helm with flyspell? Neither flyspell-correct /
-;;; flyspell-correct-helm nor helm-flyspell replace ispell-word.
+;;; TODO(laurynas): integrate Helm with `flyspell'? Neither `flyspell-correct' /
+;;; `flyspell-correct-helm' nor `helm-flyspell' replace `ispell-word'.
 
 ;;; TODO(laurynas): integrate Helm with rg?
 

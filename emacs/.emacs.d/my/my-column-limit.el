@@ -2,8 +2,11 @@
 
 ;;; Commentary:
 
-;; This configure fill column and all the related things, such as indicating
+;; This configures fill column and all the related things, such as indicating
 ;; too-long lines.
+;;
+;; This is a part of my personal configuration. No need to ensure compatibility
+;; with different Emacs or package versions.
 
 ;;; Code:
 (require 'whitespace)

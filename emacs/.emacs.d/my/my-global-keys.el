@@ -1,9 +1,15 @@
 ;;; my-global-keys.el --- global keybindings.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
-;; My global personal user keybindings. Like in the rest of configuration, all
-;; features are assumed to exist, because this is a part of my dotfiles repo
-;; where the needed packages are committed too.
+;; My global personal user keybindings.
+;;
+;; Like in the rest of my personal configuration, all features (packages and
+;; external tools) are assumed to exist, because this is a part of my dotfiles
+;; repo where the needed packages are committed too. Thus, no error handling,
+;; and no need to ensure compatibility with different Emacs or package versions.
+;;
+;; Some keybindings are declared elsewhere when it was not practical to collect
+;; them here.
 
 ;;; Code:
 

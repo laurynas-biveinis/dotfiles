@@ -7,6 +7,17 @@
 ;; `org-capture-templates', `org-todo-keywords', and
 ;; `org-roam-capture-templates' are set elsewhere, in secrets.el in my setup.
 ;; That file must be loaded first.
+;;
+;; Like in the rest of my personal configuration, all features (packages and
+;; external tools) are assumed to exist, because this is a part of my dotfiles
+;; repo where the needed packages are committed too. Thus, no error handling,
+;; and no need to ensure compatibility with different Emacs or package versions.
+;;
+;; Custom keybindings:
+;; C-c C-x C-k - Decrypt encrypted org entry
+;; C-c n i     - Insert a link to `org-roam' entry
+;; C-c n l     - Toggle the `org-roam' buffer
+;; <f7>        - Copy org table cell contents
 
 ;;; Code:
 

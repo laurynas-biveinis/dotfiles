@@ -2,8 +2,14 @@
 
 ;;; Commentary:
 
-;; Configure `lsp-mode' and related packages, as well as `topsy', which, while
+;; Configure `lsp-mode'. This includes setup for 'clangd' for C++ development
+;; and `lsp-ui' package. It also includes configuration for `topsy', which, while
 ;; not related to LSP, shares the same window header line space.
+;;
+;; Like in the rest of my personal configuration, all features (packages and
+;; external tools) are assumed to exist, because this is a part of my dotfiles
+;; repo where the needed packages are committed too. Thus, no error handling,
+;; and no need to ensure compatibility with different Emacs or package versions.
 
 ;;; Code:
 
@@ -17,6 +23,8 @@
                                 "--enable-config"
                                 "-j=5"
                                 "--pch-storage=memory"
+                                ;; So that edited but not yet saved header
+                                ;; contents are used instead of the disk version
                                 "-use-dirty-headers"))
 ;; TODO(laurynas): LSP-formatting yanked region is nice, but it formats
 ;; surroundings of the region too, which is very annoying in case of i.e. C++
@@ -63,7 +71,7 @@
 ;; popups by hiding the former.
 (advice-add #'lsp-ui-peek-find-references :before #'lsp-ui-doc-hide)
 
-;; Integration with TRAMP: do not flycheck too eagerly
+;; Integration with TRAMP: do not flycheck too eagerly to improve responsiveness
 (defun dotfiles--lsp-tramp-flycheck-reduce ()
   "Tune down Flycheck eagerness in `lsp-mode' for TRAMP buffers."
   (setq-local flycheck-check-syntax-automatically '(save idle-change new-line)))
@@ -99,6 +107,8 @@
   (if dotfiles--use-lsp-indent (apply #'lsp-format-region args)
     (apply orig-fun args)))
 
+;; Implementation of the next two functions uses internal symbols from
+;; `lsp-mode', not ideal, but I haven't found an alternative.
 (defun dotfiles--lsp-disable-electric-keys ()
   "Disable any electric keys if LSP on type formatting is enabled."
   ;; Using internal LSP symbols is not ideal but I don't see an alternative.

@@ -4,9 +4,16 @@
 ;; This is the main part of my non-system-specific Emacs setup. Sets the
 ;; configuration variables, configures the built-in modes, installed packages,
 ;; and my own code.
-;; All packages and external programs (i.e. hunspell) are assumed to exist,
-;; because this is a part of my dotfiles repo where the needed packages are
-;; committed too. Thus there is no error handling for other setups.
+;;
+;; Like in the rest of my personal configuration, all features (packages and
+;; external tools) are assumed to exist, because this is a part of my dotfiles
+;; repo where the needed packages are committed too. Thus, no error handling,
+;; and no need to ensure compatibility with different Emacs or package versions.
+;;
+;; Not using `use-package', because a big part of my setup is cross-package
+;; integration, where it would not be as useful. Lazy package loading to reduce
+;; startup times is of secondary importance because I rarely start new Emacs
+;; instances. I may change my mind in the future.
 
 ;;; Code:
 

@@ -15,11 +15,11 @@
 ;; and no need to ensure compatibility with different Emacs or package versions.
 ;;
 ;; Custom keybindings:
-;; s-p:   - Projectile command map
-;; s-p g: - Projectile grep
-;; s-p h: - Projectile grep using Helm
-;; s-p w: - Projectile reconfigure CMake project
-;; s-p y: - Projectile kill all buffers and remove the worktree
+;; s-p    - Projectile command map
+;; s-p g  - Projectile grep
+;; s-p h  - Projectile grep using Helm
+;; s-p w  - Projectile reconfigure CMake project
+;; s-p y  - Projectile kill all buffers and remove the worktree
 
 ;;; Code:
 
