@@ -112,6 +112,7 @@ CANDIDATES is the list of candidates."
       ;; So that `helm-imenu' shows everything for big source files.
       helm-candidate-number-limit 900)
 
+(require 'helm-mode)
 (helm-mode 1)
 
 (require 'helm-buffers)
