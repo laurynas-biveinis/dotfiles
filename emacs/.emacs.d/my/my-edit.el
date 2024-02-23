@@ -9,7 +9,7 @@
 ;; and no need to ensure compatibility with different Emacs or package versions.
 ;;
 ;; Custom keybindings:
-;; <f6> - edit all occurrences of a keyword
+;; <f6> - edit all occurrences of a symbol
 
 ;;; Code:
 

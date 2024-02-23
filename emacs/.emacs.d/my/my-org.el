@@ -17,7 +17,7 @@
 ;; C-c C-x C-k - Decrypt encrypted org entry
 ;; C-c n i     - Insert a link to `org-roam' entry
 ;; C-c n l     - Toggle the `org-roam' buffer
-;; <f7>        - Copy org table cell contents
+;; C-c c       - Copy org table cell contents
 
 ;;; Code:
 
@@ -185,7 +185,7 @@ further quoting. A file to visit should be specified by a single
     (org-table-copy-region p p))
   (kill-new (string-trim (caar org-table-clip))))
 
-(define-key org-mode-map (kbd "<f7>") #'my-copy-cell)
+(define-key org-mode-map (kbd "C-c c") #'my-copy-cell)
 
 ;;; Encryption
 (org-crypt-use-before-save-magic)
