@@ -57,6 +57,7 @@ Unfortunately, that is not always possible.
 [wgrep](https://github.com/mhayashi1120/Emacs-wgrep)
 [google-c-style](https://github.com/google/styleguide/blob/gh-pages/google-c-style.el)
 [tree-sitter](https://emacs-tree-sitter.github.io)
+[org-gcal](https://github.com/kidd/org-gcal.el)
 
 #### Nice-to-have, niche, & specific major modes
 

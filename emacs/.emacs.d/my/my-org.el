@@ -256,6 +256,8 @@ event of an error or nonlocal exit."
 
 ;;; `org-gcal'
 (require 'org-gcal)
+;; TODO(laurynas): fetch automatically?
+;; TODO(laurynas): key binding for `org-gcal-post-at-point'?
 
 (provide 'my-org)
 ;;; my-org.el ends here
