@@ -258,6 +258,8 @@ event of an error or nonlocal exit."
 (require 'org-gcal)
 ;; TODO(laurynas): fetch automatically?
 ;; TODO(laurynas): key binding for `org-gcal-post-at-point'?
+;; TODO(laurynas): key binding (and some command) to create a new event? How to
+;; check for scheduling conflicts?
 
 (provide 'my-org)
 ;;; my-org.el ends here
