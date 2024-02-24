@@ -48,6 +48,18 @@ function is called with a prefix arg then ask for language before
 running difftastic.
 
 (fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
+(autoload 'difftastic-rerun "difftastic" "\
+Rerun difftastic in the current buffer.
+Optionally, provide a LANG-OVERRIDE to override language used.
+See \\='difft --list-languages\\=' for language list.  When
+function is called with a prefix arg then ask for language before
+running difftastic.
+
+In order to determine requested width for difftastic a call to
+`difftastic-rerun-requested-window-width-function' is made.
+
+(fn &optional LANG-OVERRIDE)" t)
+(function-put 'difftastic-rerun 'command-modes '(difftastic-mode))
 (register-definition-prefixes "difftastic" '("difftastic-"))
 
 ;;; End of scraped data

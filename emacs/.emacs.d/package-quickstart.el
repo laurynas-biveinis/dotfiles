@@ -2729,7 +2729,7 @@ The buffer on focus when the command is called is set as the target buffer." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.137/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.137/tree-sitter-langs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.139/tree-sitter-langs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/tree-sitter-langs-0.12.139/tree-sitter-langs-autoloads.el"))
 
 
 
@@ -12019,7 +12019,7 @@ values used in the user's shell." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240217.1141/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240217.1141/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240223.1630/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240223.1630/difftastic-autoloads.el"))
 
 
 
@@ -12065,6 +12065,18 @@ function is called with a prefix arg then ask for language before
 running difftastic.
 
 (fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
+(autoload 'difftastic-rerun "difftastic" "\
+Rerun difftastic in the current buffer.
+Optionally, provide a LANG-OVERRIDE to override language used.
+See \\='difft --list-languages\\=' for language list.  When
+function is called with a prefix arg then ask for language before
+running difftastic.
+
+In order to determine requested width for difftastic a call to
+`difftastic-rerun-requested-window-width-function' is made.
+
+(fn &optional LANG-OVERRIDE)" t)
+(function-put 'difftastic-rerun 'command-modes '(difftastic-mode))
 (register-definition-prefixes "difftastic" '("difftastic-"))
 
 
@@ -12757,7 +12769,7 @@ mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.4.0/activity-watch-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.4.0/activity-watch-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.5.0/activity-watch-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.5.0/activity-watch-mode-autoloads.el"))
 
 
 

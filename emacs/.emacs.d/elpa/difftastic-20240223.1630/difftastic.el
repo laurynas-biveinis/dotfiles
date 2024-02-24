@@ -32,8 +32,8 @@
 ;;
 ;; Configuration
 ;;
-;; To configure the `difftastic` commands in `magit-diff` prefix, use the
-;; following code snippet in your Emacs configuration:
+;; To configure `difftastic` commands in `magit-diff` prefix, use the following
+;; code snippet in your Emacs configuration:
 ;;
 ;; (require 'difftastic)
 ;;
@@ -64,7 +64,9 @@
 ;;
 ;; Usage
 ;;
-;; The following commands are meant to help to interact with difftastic:
+;; The following commands are meant to help to interact with
+;; difftastic.  Commands are followed by their default keybindings in
+;; `difftastic-mode' (in parenthesis).
 ;;
 ;; - `difftastic-magit-diff' - show the result of 'git diff ARGS -- FILES' with
 ;;   difftastic.  This is the main entry point for DWIM action, so it tries to
@@ -81,6 +83,20 @@
 ;; - `difftastic-buffers' - show the result of 'difft BUFFER-A BUFFER-B'.
 ;;   Language is guessed based on buffers modes.  When called with prefix
 ;;   argument it will ask for language to use.
+;;
+;; - `difftastic-rerun' ('g') - rerun difftastic for the current buffer.  It
+;;   runs difftastic again in the current buffer, but respects the window
+;;   configuration.  It uses `difftastic-rerun-requested-window-width-function'
+;;   which, by default, returns current window width (instead of
+;;   `difftastic-requested-window-width-function').  It will also reuse current
+;;   buffer and will not call `difftastic-display-buffer-function'.  When
+;;   called with prefix argument it will ask for language to use.
+;;
+;; - `difftastic-next-chunk' ('n'), `difftastic-next-file' ('N') - move point
+;;   to a next logical chunk or a next file respectively.
+;;
+;; - `difftastic-previous-chunk' ('p'), `difftastic-previous-file' ('P') - move
+;;   point to a next logical chunk or a previous file respectively.
 ;;
 ;; - `difftastic-git-diff-range' - transform ARGS for difftastic and show the
 ;;   result of 'git diff ARGS REV-OR-RANGE -- FILES' with difftastic.
@@ -118,17 +134,31 @@ New face is made when VECTOR is not bound."
     (aref (eval vector) offset)))
 
 (defun difftastic-requested-window-width ()
-  "Get a window width for difftastic call."
+  "Get a window width for a first difftastic call.
+It returns a number that will let difftastic to fit content
+into (in the following order):
+ - other window if such exists,
+ - side by side by inspecting `split-width-threshold',
+ - current window."
   (- (if (< 1 (count-windows))
          (save-window-excursion
            (other-window 1)
            (window-width))
        (if (and split-width-threshold
-                (< split-width-threshold (window-width)))
+                (< split-width-threshold (- (window-width)
+                                            (fringe-columns 'left)
+                                            (fringe-columns 'right))))
            (/ (window-width) 2)
          (window-width)))
      (fringe-columns 'left)
      (fringe-columns 'rigth)))
+
+(defun difftastic-rerun-requested-window-width ()
+  "Get a window width for a rerun of difftastic call.
+It returns the current window width, to let difftastic fit content into it."
+  (- (window-width)
+     (fringe-columns 'left)
+     (fringe-columns 'right)))
 
 (defun difftastic-pop-to-buffer (buffer-or-name requested-width)
   "Display BUFFER-OR-NAME with REQUESTED-WIDTH and select its window.
@@ -205,7 +235,13 @@ N.B. only foreground and background properties will be used."
 
 (defcustom difftastic-requested-window-width-function
   #'difftastic-requested-window-width
-  "Function used to calculate a requested width for difftastic call."
+  "Function used to calculate a requested width for a first difftastic call."
+  :type 'function
+  :group 'difftastic)
+
+(defcustom difftastic-rerun-requested-window-width-function
+  #'difftastic-rerun-requested-window-width
+  "Function used to calculate a requested width for a rerun of a difftastic call."
   :type 'function
   :group 'difftastic)
 
@@ -274,6 +310,7 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
   "N"     #'difftastic-next-file
   "p"     #'difftastic-previous-chunk
   "P"     #'difftastic-previous-file
+  "g"     #'difftastic-rerun
   ;; some keys from `view-mode'
   "C"     #'difftastic-quit-all
   "c"     #'difftastic-leave
@@ -291,7 +328,7 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
   "@"     #'View-back-to-mark
   "."     #'set-mark-command
   "%"     #'View-goto-percent
-  "g"     #'View-goto-line
+  "G"     #'View-goto-line
   "="     #'what-line
   "F"     #'View-revert-buffer-scroll-page-forward
   "y"     #'View-scroll-line-backward
@@ -338,7 +375,8 @@ When FILE-CHUNK is t the regexp contains optional chunk match
 data."
   (let ((chunk-regexp (if file-chunk
                           'difftastic--chunk-regexp-file
-                        'difftastic--chunk-regexp-chunk)))
+                        'difftastic--chunk-regexp-chunk))
+        (languages (difftastic--languages)))
     (or (eval chunk-regexp)
         (set chunk-regexp
              (rx-to-string
@@ -351,13 +389,12 @@ data."
                     '((optional " --- " (group (1+ digit)) "/" (1+ digit))))
                 ;; language or error at the end
                 (or
-                 (seq " --- " (or ,@(cl-remove "Text"
-                                               (difftastic--languages)
-                                               :test #'string=)))
+                 (seq " --- " (or ,@languages))
                  (seq " --- Text ("
                       (or
                        (seq (1+ digit)
-                               " " (or ,@(difftastic--languages))
+                               " " (or ,@(cl-remove "Text" languages
+                                          :test #'string=))
                                " parse error" (? "s")
                                ", exceeded DFT_PARSE_ERROR_LIMIT")
                        (seq "exceeded "
@@ -546,29 +583,46 @@ Utilise `difftastic--ansi-color-add-background-cache' to cache
             difftastic--ansi-color-add-background-cache)
       face)))
 
-(defun difftastic--git-with-difftastic (buffer command &optional difftastic-args)
+(defvar-local difftastic--rerun-alist nil)
+
+(defun difftastic--build-git-process-environment (requested-width
+                                                  &optional difftastic-args)
+  "Build a difftastic git command with REQUESTED-WIDTH.
+The DIFFTASTIC-ARGS is a list of extra arguments to pass to
+`difftastic-executable'."
+  (cons (format "GIT_EXTERNAL_DIFF=%s --width %s --background %s%s"
+                difftastic-executable
+                requested-width
+                (frame-parameter nil 'background-mode)
+                (if difftastic-args
+                    (mapconcat #'identity
+                               (cons "" difftastic-args)
+                               " ")
+                  ""))
+        process-environment))
+
+(defun difftastic--git-with-difftastic (buffer command
+                                               &optional difftastic-args)
   "Run COMMAND with GIT_EXTERNAL_DIFF then show result in BUFFER.
 The DIFFTASTIC-ARGS is a list of extra arguments to pass to
 `difftastic-executable'."
   (let* ((requested-width (funcall difftastic-requested-window-width-function))
-         (process-environment
-          (cons (format "GIT_EXTERNAL_DIFF=%s --width %s --background %s%s"
-                        difftastic-executable
-                        requested-width
-                        (frame-parameter nil 'background-mode)
-                        (if difftastic-args
-                            (mapconcat #'identity
-                                       (cons "" difftastic-args)
-                                       " ")
-                          ""))
-                process-environment)))
+         (process-environment (difftastic--build-git-process-environment
+                               requested-width
+                               difftastic-args))
+         (difftastic-display-buffer-function difftastic-display-buffer-function))
     (difftastic--run-command
      buffer
      command
      (lambda ()
+       (with-current-buffer buffer
+           (setq difftastic--rerun-alist
+                 `((default-directory . ,default-directory)
+                   (git-command . ,command)
+                   (difftastic-args . ,difftastic-args))))
        (funcall difftastic-display-buffer-function buffer requested-width)))))
 
-(defun difftastic--run-command (buffer command action)
+(defun difftastic--run-command (buffer command &optional action)
   "Run COMMAND, show its results in BUFFER, then execute ACTION.
 The ACTION is meant to display the BUFFER in some window and, optionally,
 perform cleanup."
@@ -615,11 +669,12 @@ perform cleanup."
        (when (eq (process-status proc) 'exit)
          (with-current-buffer (process-buffer proc)
            (difftastic-mode)
+           (set-buffer-modified-p nil)
            (goto-char (point-min))
            (setq output (not (eq (point-min) (point-max)))))
          (if output
              (progn
-               (funcall action)
+               (when action (funcall action))
                (message nil))
            (message "Process %s returned no output"
                     (mapconcat #'identity command " "))))))))
@@ -774,7 +829,7 @@ When REV couldn't be guessed or called with prefix arg ask for REV."
      (list "git" "--no-pager" "show" "--ext-diff" rev))))
 
 (defun difftastic---make-temp-file (prefix buffer)
-  "Make a temp file for BUFFER content that with PREFIX included in file name."
+  "Make a temporary file for BUFFER content with PREFIX included in file name."
   ;; adapted from `make-auto-save-file-name'
   (with-current-buffer buffer
     (let ((buffer-name (buffer-name))
@@ -792,25 +847,25 @@ When REV couldn't be guessed or called with prefix arg ask for REV."
 
 (defun difftastic--get-file (prefix buffer)
   "If BUFFER visits a file return it else create a temporary file with PREFIX.
-The return value is a cons where car is the file and cdr is non
-nil if a temporary file has been created."
-  (let* (temp
+The return value is a cons in a form of (FILE . BUF) where FILE
+is the file and BUF either is  nil if this is non temporary file,
+or BUF is set to BUFFER if this is a temporary file."
+  (let* (buf
          (file
           (if-let ((buffer-file (buffer-file-name buffer)))
               (progn
                 (save-buffer buffer)
                 buffer-file)
-            (setq temp
-                  (difftastic---make-temp-file prefix buffer)))))
-    (cons file temp)))
+            (setq buf buffer)
+            (difftastic---make-temp-file prefix buffer))))
+    (cons file buf)))
 
-(defun difftastic--delete-temp-file (file-temp)
-  "Delete FILE-TEMP when it is a temporary file.
-The FILE-TEMP is a cons where car is the file and cdr is non nil
-when it is a temporary file."
-  (let ((file (car file-temp))
-        (temp (cdr file-temp)))
-    (when (and temp (stringp file) (file-exists-p file))
+(defun difftastic--delete-temp-file (file-buf)
+  "Delete FILE-BUF when it is a temporary file.
+The FILE-BUF is a cons where car is the file and cdr is a buffer
+when it is a temporary file or nil otherwise."
+  (when-let ((file (car file-buf)))
+    (when (and (cdr file-buf) (stringp file) (file-exists-p file))
       (delete-file file))))
 
 (defun difftastic--languages ()
@@ -840,29 +895,63 @@ when it is a temporary file."
                                       string-replace
                                       "-" " "
                                       (replace-regexp-in-string
-                                       "-mode$" ""
+                                       "\\(?:-ts\\)?-mode$" ""
                                        (symbol-name mode))))))
                 languages)))
 
-(defun difftastic--files-internal (buffer file-temp-A file-temp-B &optional lang-override)
-  "Run difftastic on files FILE-TEMP-A and FILE-TEMP-B and show results in BUFFER.
-The FILE-TEMP-A and FILE-TEMB-B are conses where car is the file
-and cdr is non nil when it is a temporary file.  LANG-OVERRIDE is
-passed to difftastic as \\='--override\\=' argument."
-  (let ((requested-width (funcall difftastic-requested-window-width-function)))
-    (difftastic--run-command
-     buffer
-     `(,difftastic-executable
+(defun difftastic--build-files-command (file-buf-A file-buf-B requested-width
+                                                    &optional lang-override)
+  "Build a difftastic command to compare files from FILE-BUF-A and FILE-BUF-B.
+The FILE-BUF-A and FILE-BUF-B are conses where car is the file
+and cdr is a buffer when it is a temporary file and nil otherwise.
+REQUESTED-WIDTH is passed to difftastic as \\='--width\\=' argument.
+LANG-OVERRIDE is passed to difftastic as \\='--override\\=' argument."
+  `(,difftastic-executable
        "--width" ,(number-to-string requested-width)
        "--background" ,(format "%s" (frame-parameter nil 'background-mode))
        ,@(when lang-override (list "--override"
                                    (format "*:%s" lang-override)))
-       ,(car file-temp-A)
-       ,(car file-temp-B))
+       ,(car file-buf-A)
+       ,(car file-buf-B)))
+
+(defun difftastic--files-internal (buffer file-buf-A file-buf-B
+                                          &optional lang-override)
+  "Run difftastic on FILE-BUF-A and FILE-BUF-B and show results in BUFFER.
+The FILE-BUF-A and FILE-BUF-B are conses where car is the file
+and cdr is a buffer when it is a temporary file and nil otherwise.
+LANG-OVERRIDE is passed to difftastic as \\='--override\\='
+argument."
+  (let ((requested-width (funcall difftastic-requested-window-width-function))
+        (difftastic-display-buffer-function difftastic-display-buffer-function))
+    (difftastic--run-command
+     buffer
+     (difftastic--build-files-command file-buf-A
+                                      file-buf-B
+                                      requested-width
+                                      lang-override)
      (lambda ()
+       (with-current-buffer buffer
+         (setq difftastic--rerun-alist
+               `((default-directory . ,default-directory)
+                 (lang-override . ,lang-override)
+                 (file-buf-A . ,file-buf-A)
+                 (file-buf-B . ,file-buf-B))))
        (funcall difftastic-display-buffer-function buffer requested-width)
-       (difftastic--delete-temp-file file-temp-A)
-       (difftastic--delete-temp-file file-temp-B)))))
+       (difftastic--delete-temp-file file-buf-A)
+       (difftastic--delete-temp-file file-buf-B)))))
+
+(defmacro difftastic--with-temp-files (file-bufs &rest body)
+  "Exectue the forms in BODY with each symbol in FILE-BUFS list `let'-bound to nil.
+If any form in BODY signals an error each element in FILE-BUFS will be passed
+to `difftastic--delete-temp-file'."
+  (declare (indent 1) (debug t))
+  `(let ,file-bufs
+     (condition-case err
+         (progn ,@body)
+       ((error debug)
+        (dolist (file-buf (list ,@file-bufs))
+          (difftastic--delete-temp-file file-buf))
+        (signal (car err) (cdr err))))))
 
 ;;;###autoload
 (defun difftastic-buffers (buffer-A buffer-B &optional lang-override)
@@ -898,21 +987,15 @@ then ask for language before running difftastic."
                                 (get-buffer bf-B))))
                (completing-read "Language: " languages nil t suggested))))))
 
-  (let (file-temp-A file-temp-B)
-    (condition-case err
-        (progn
-          (setq file-temp-A (difftastic--get-file "A" (get-buffer buffer-A))
-                file-temp-B (difftastic--get-file "B" (get-buffer buffer-B)))
-          (difftastic--files-internal
-           (get-buffer-create
-            (concat "*difftastic " buffer-A " " buffer-B "*"))
-           file-temp-A
-           file-temp-B
-           lang-override))
-      ((error debug)
-       (difftastic--delete-temp-file file-temp-A)
-       (difftastic--delete-temp-file file-temp-B)
-       (signal (car err) (cdr err))))))
+  (difftastic--with-temp-files (file-buf-A file-buf-B)
+    (setq file-buf-A (difftastic--get-file "A" (get-buffer buffer-A))
+          file-buf-B (difftastic--get-file "B" (get-buffer buffer-B)))
+    (difftastic--files-internal
+     (get-buffer-create
+      (concat "*difftastic " buffer-A " " buffer-B "*"))
+     file-buf-A
+     file-buf-B
+     lang-override)))
 
 ;;;###autoload
 (defun difftastic-files (file-A file-B &optional lang-override)
@@ -956,6 +1039,73 @@ running difftastic."
    (cons file-A nil)
    (cons file-B nil)
    lang-override))
+
+(defun difftastic--rerun-file-buf (prefix file-buf rerun-alist)
+  "Create a new temporary file for the FILE-BUF with PREFIX if needed.
+The new FILE-BUF is additionally set in RERUN-ALIST.  The FILE-BUF
+is a cons where car is the file and cdr is a buffer when it is a
+temporary file or nil otherwise."
+  (if-let ((buffer (cdr file-buf)))
+      (if (buffer-live-p buffer)
+          (setf (alist-get (intern (concat "file-buf-" prefix)) rerun-alist)
+                (difftastic--get-file prefix buffer))
+        (user-error "Buffer %s [%s] doesn't exist anymore" prefix buffer))
+    file-buf))
+
+;;;###autoload
+(defun difftastic-rerun (&optional lang-override)
+  "Rerun difftastic in the current buffer.
+Optionally, provide a LANG-OVERRIDE to override language used.
+See \\='difft --list-languages\\=' for language list.  When
+function is called with a prefix arg then ask for language before
+running difftastic.
+
+In order to determine requested width for difftastic a call to
+`difftastic-rerun-requested-window-width-function' is made."
+  ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
+  (declare (modes difftastic-mode))
+  (interactive (list
+                (or (when current-prefix-arg
+                      (completing-read "Language: "
+                                       (difftastic--languages) nil t)))))
+  (if-let (((eq major-mode 'difftastic-mode))
+           (rerun-alist (copy-tree difftastic--rerun-alist)))
+      (difftastic--with-temp-files (file-buf-A file-buf-B)
+        (let-alist rerun-alist
+          (setq file-buf-A
+                (difftastic--rerun-file-buf "A" .file-buf-A rerun-alist)
+                file-buf-B
+                (difftastic--rerun-file-buf "B" .file-buf-B rerun-alist))
+          (let* ((default-directory .default-directory)
+                 (lang-override (or lang-override
+                                    (alist-get 'lang-override rerun-alist)))
+                 (requested-width
+                  (funcall difftastic-rerun-requested-window-width-function))
+                 (process-environment
+                  (if .git-command
+                      (difftastic--build-git-process-environment
+                       requested-width
+                       (append .difftastic-args
+                               (when lang-override
+                                 (list "--override"
+                                       (format "*:%s" lang-override)))))
+                    process-environment))
+                 (command (or .git-command
+                              (difftastic--build-files-command
+                               file-buf-A
+                               file-buf-B
+                               requested-width
+                               lang-override)))
+                 (buffer (current-buffer)))
+            (difftastic--run-command
+             buffer
+             command
+             (lambda ()
+               (with-current-buffer buffer
+                 (setq difftastic--rerun-alist rerun-alist))
+               (difftastic--delete-temp-file file-buf-A)
+               (difftastic--delete-temp-file file-buf-B))))))
+    (user-error "Nothing to rerun")))
 
 (provide 'difftastic)
 ;;; difftastic.el ends here

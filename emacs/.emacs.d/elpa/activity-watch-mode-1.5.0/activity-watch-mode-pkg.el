@@ -1,9 +1,9 @@
-(define-package "activity-watch-mode" "1.4.0" "Automatic time tracking extension."
+(define-package "activity-watch-mode" "1.5.0" "Automatic time tracking extension."
   '((emacs "25")
     (request "0")
     (json "0")
     (cl-lib "0"))
-  :commit "89902927023781e23f09d033a780fbed546c53e1" :authors
+  :commit "0189963cb60a0efdbb1cfd17641c06d16a74a974" :authors
   '(("Gabor Torok <gabor@20y.hu>, Alan Hamlett" . "alan@wakatime.com"))
   :maintainers
   '(("Paul d'Hubert" . "paul.dhubert@ya.ru"))
