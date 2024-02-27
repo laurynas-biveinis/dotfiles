@@ -824,6 +824,23 @@ mysql_build() {
     mysql_build_in_build_dir
 }
 
+# Must be called from the directory containing all the build directories
+mysql_rebuild_all() {
+    for build_dir in "$MY_BUILD_DIR_PREFIX"*; do
+        if [ ! -d "$build_dir" ]; then
+            continue
+        fi
+
+        pushd "$build_dir" || return 1
+        mysql_rebuild
+        declare -i build_status=$?
+        popd || return 1
+        if [ $build_status -ne 0 ]; then
+            return $build_status
+        fi
+    done
+}
+
 mtr() {
     declare -r mktemp_template="/tmp/mtr-XXXX"
     declare -r mtr_emd_tmp_dir=$(mktemp -d $mktemp_template) ||
