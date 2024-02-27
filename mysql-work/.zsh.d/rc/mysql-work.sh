@@ -754,10 +754,12 @@ mysql_cmake() {
     case "$build_dir" in
         *debug*)
             echo "Debug build"
+            echo "CMake options: ${debug_flags[@]} $@"
             cmake -G Ninja .. "${debug_flags[@]}" "$@"
             ;;
         *release*)
             echo "Release build"
+            echo "CMake options: ${release_flags[@]} $@"
             cmake -G Ninja .. "${release_flags[@]}" "$@"
             ;;
     esac
