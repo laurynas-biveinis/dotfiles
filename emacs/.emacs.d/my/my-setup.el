@@ -706,6 +706,7 @@
 
 ;; `keyfreq'
 (require 'keyfreq)
+(setq keyfreq-file "~/.emacs.d/.emacs.keyfreq")
 (setq keyfreq-excluded-commands
       '(self-insert-command next-line lsp-ui-doc--handle-mouse-movement
                             org-self-insert-command previous-line
