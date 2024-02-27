@@ -1,7 +1,7 @@
 #!/bin/zsh
 #
 # Exported environment variables, CMake options:
-# MY80xy, MY80xyD: Oracle MySQL release & debug build, for xy patchlevel version
+# MY8xyz, MY8xyzD: Oracle MySQL release & debug build, for xy patchlevel version
 # MARIA108, MARIA108D: MariaDB 10.8 release and debug build
 # FB80xy, FB80xyD: MySQL 8.0 Facebook Patch release and debug
 #
@@ -14,12 +14,15 @@
 # mysql-test-run options:
 # MTR_EMD: MTR options to preload libeatmydata
 #
-# Shell functions:
+# User shell functions:
 # - mtr: call mtr with libeatmydata and some tmpdir
 # - rmtr: rebuild and then call mtr
 # - rm_tmp_mtr: cleanup all tmpdir from the above
-# - mysql_cmake: in a build directory, figure out CMake options & run it
-# - mysql_build: in a build directory, CMake and make
+# - mysql_cmake: in a build directory, figure out CMake options & run it. Any
+#   arguments will be passed through to CMake
+# - mysql_build: in a build directory, CMake and build
+# - mysql_rebuild: in a build directory, build
+# - mysql_rebuild_all: rebuild all build dirs below
 #
 # Works on Linux and macOS (both Intel and Apple Silicon), XCode Command Line
 # Tools 15.0.1.
