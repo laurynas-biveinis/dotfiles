@@ -1085,7 +1085,8 @@ commands are aliases for."
             args))))
 
 (defun transient--parse-child (prefix spec)
-  (cl-etypecase spec
+  (cl-typecase spec
+    (null    (error "Invalid transient--parse-child spec: %s" spec))
     (symbol  (let ((value (symbol-value spec)))
                (if (and (listp value)
                         (or (listp (car value))
@@ -1094,7 +1095,8 @@ commands are aliases for."
                  (transient--parse-child prefix value))))
     (vector  (and-let* ((c (transient--parse-group  prefix spec))) (list c)))
     (list    (and-let* ((c (transient--parse-suffix prefix spec))) (list c)))
-    (string  (list spec))))
+    (string  (list spec))
+    (t       (error "Invalid transient--parse-child spec: %s" spec))))
 
 (defun transient--parse-group (prefix spec)
   (setq spec (append spec nil))
@@ -1115,11 +1117,14 @@ commands are aliases for."
                      (and (listp val) (not (eq (car val) 'lambda))))
                  (setq args (plist-put args key (macroexp-quote val))))
                 ((setq args (plist-put args key val))))))
+      (unless (or spec class (not (plist-get args :setup-children)))
+        (message "WARNING: %s: When %s is used, %s must also be specified"
+                 'transient-define-prefix :setup-children :class))
       (list 'vector
             (or level transient--default-child-level)
             (cond (class)
                   ((or (vectorp car)
-                       (symbolp car))
+                       (and car (symbolp car)))
                    (quote 'transient-columns))
                   ((quote 'transient-column)))
             (and args (cons 'list args))
@@ -1255,6 +1260,7 @@ PREFIX is a prefix command, a symbol.
 SUFFIX is a suffix command or a group specification (of
   the same forms as expected by `transient-define-prefix').
 Intended for use in a group's `:setup-children' function."
+  (cl-assert (and prefix (symbolp prefix)))
   (eval (car (transient--parse-child prefix suffix))))
 
 (defun transient-parse-suffixes (prefix suffixes)
@@ -1263,6 +1269,7 @@ PREFIX is a prefix command, a symbol.
 SUFFIXES is a list of suffix command or a group specification
   (of the same forms as expected by `transient-define-prefix').
 Intended for use in a group's `:setup-children' function."
+  (cl-assert (and prefix (symbolp prefix)))
   (mapcar (apply-partially #'transient-parse-suffix prefix) suffixes))
 
 ;;; Edit

@@ -1111,9 +1111,19 @@ constructor of that class.
      prefix’s ‘transient--layout’ property, but it is often more
      convenient to use the same form as understood by
      ‘transient-define-prefix’, described below.  If you use the latter
-     approach, you can use the ‘transient-parse-child’ and
-     ‘transient-parse-children’ functions to transform them from the
+     approach, you can use the ‘transient-parse-suffixes’ and
+     ‘transient-parse-suffix’ functions to transform them from the
      convenient to the expected form.
+
+     If you explicitly specify children and then transform them using
+     ‘:setup-chilren’, then the class of the group is determined as
+     usual, based on explicitly specified children.
+
+     If you do not explicitly specify children and thus rely solely on
+     ‘:setup-children’, then you must specify the class using ‘:class’.
+     For backward compatibility, if you fail to do so,
+     ‘transient-column’ is used and a warning is displayed.  This
+     warning will eventually be replaced with an error.
 
    • The boolean ‘:pad-keys’ argument controls whether keys of all
      suffixes contained in a group are right padded, effectively
@@ -1125,10 +1135,10 @@ subgroups with commands at the same level, though in principle there is
 nothing that prevents that.)
 
    If the ELEMENTs are not subgroups, then they can be a mixture of
-lists that specify commands and strings.  Strings are inserted verbatim
-into the buffer.  The empty string can be used to insert gaps between
-suffixes, which is particularly useful if the suffixes are outlined as a
-table.
+lists, which specify commands, and strings.  Strings are inserted
+verbatim into the buffer.  The empty string can be used to insert gaps
+between suffixes, which is particularly useful if the suffixes are
+outlined as a table.
 
    Inside group specifications, including inside contained suffix
 specifications, nothing has to be quoted and quoting anyway is invalid.
@@ -3209,42 +3219,42 @@ Node: Technical Introduction36414
 Node: Defining Transients42115
 Node: Binding Suffix and Infix Commands44582
 Node: Group Specifications45440
-Node: Suffix Specifications50009
-Node: Defining Suffix and Infix Commands54222
-Node: Using Infix Arguments57428
-Node: Transient State60262
-Ref: Pre-commands for Infixes65077
-Ref: Pre-commands for Suffixes65597
-Ref: Pre-commands for Non-Suffixes68051
-Ref: Special Pre-Commands69187
-Node: Classes and Methods69695
-Node: Group Classes71879
-Node: Group Methods73806
-Node: Prefix Classes75059
-Node: Suffix Classes76150
-Node: Suffix Methods79237
-Node: Suffix Value Methods79558
-Node: Suffix Format Methods82316
-Node: Prefix Slots83795
-Ref: Internal Prefix Slots85930
-Node: Suffix Slots87187
-Ref: Slots of transient-suffix87555
-Ref: Slots of transient-infix88692
-Ref: Slots of transient-variable91988
-Ref: Slots of transient-switches92090
-Node: Predicate Slots92453
-Node: FAQ93888
-Ref: Can I control how the popup buffer is displayed?94017
-Ref: How can I copy text from the popup buffer?94198
-Ref: How does Transient compare to prefix keys and universal arguments?94692
-Ref: How does Transient compare to Magit-Popup and Hydra?94935
-Ref: Why did some of the key bindings change?95129
-Ref: Why does q not quit popups anymore?97482
-Node: Keystroke Index98585
-Node: Command and Function Index100450
-Node: Variable Index107042
-Node: Concept Index109315
-Node: GNU General Public License112051
+Node: Suffix Specifications50541
+Node: Defining Suffix and Infix Commands54754
+Node: Using Infix Arguments57960
+Node: Transient State60794
+Ref: Pre-commands for Infixes65609
+Ref: Pre-commands for Suffixes66129
+Ref: Pre-commands for Non-Suffixes68583
+Ref: Special Pre-Commands69719
+Node: Classes and Methods70227
+Node: Group Classes72411
+Node: Group Methods74338
+Node: Prefix Classes75591
+Node: Suffix Classes76682
+Node: Suffix Methods79769
+Node: Suffix Value Methods80090
+Node: Suffix Format Methods82848
+Node: Prefix Slots84327
+Ref: Internal Prefix Slots86462
+Node: Suffix Slots87719
+Ref: Slots of transient-suffix88087
+Ref: Slots of transient-infix89224
+Ref: Slots of transient-variable92520
+Ref: Slots of transient-switches92622
+Node: Predicate Slots92985
+Node: FAQ94420
+Ref: Can I control how the popup buffer is displayed?94549
+Ref: How can I copy text from the popup buffer?94730
+Ref: How does Transient compare to prefix keys and universal arguments?95224
+Ref: How does Transient compare to Magit-Popup and Hydra?95467
+Ref: Why did some of the key bindings change?95661
+Ref: Why does q not quit popups anymore?98014
+Node: Keystroke Index99117
+Node: Command and Function Index100982
+Node: Variable Index107574
+Node: Concept Index109847
+Node: GNU General Public License112583
 
 End Tag Table
 
