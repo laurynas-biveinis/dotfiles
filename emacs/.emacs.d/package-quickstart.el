@@ -3707,6 +3707,96 @@ it is disabled.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pyvenv-1.21/pyvenv-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pyvenv-1.21/pyvenv-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'pyvenv-activate "pyvenv" "\
+Activate the virtual environment in DIRECTORY.
+
+(fn DIRECTORY)" t)
+(autoload 'pyvenv-deactivate "pyvenv" "\
+Deactivate any current virtual environment." t)
+(autoload 'pyvenv-workon "pyvenv" "\
+Activate a virtual environment from $WORKON_HOME.
+
+If the virtual environment NAME is already active, this function
+does not try to reactivate the environment.
+
+(fn NAME)" t)
+(defvar pyvenv-mode nil "\
+Non-nil if Pyvenv mode is enabled.
+See the `pyvenv-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `pyvenv-mode'.")
+(custom-autoload 'pyvenv-mode "pyvenv" nil)
+(autoload 'pyvenv-mode "pyvenv" "\
+Global minor mode for pyvenv.
+
+Will show the current virtualenv in the mode line, and respect a
+`pyvenv-workon' setting in files.
+
+This is a global minor mode.  If called interactively, toggle the
+`Pyvenv mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='pyvenv-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(defvar pyvenv-tracking-mode nil "\
+Non-nil if Pyvenv-Tracking mode is enabled.
+See the `pyvenv-tracking-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `pyvenv-tracking-mode'.")
+(custom-autoload 'pyvenv-tracking-mode "pyvenv" nil)
+(autoload 'pyvenv-tracking-mode "pyvenv" "\
+Global minor mode to track the current virtualenv.
+
+When this mode is active, pyvenv will activate a buffer-specific
+virtualenv whenever the user switches to a buffer with a
+buffer-local `pyvenv-workon' or `pyvenv-activate' variable.
+
+This is a global minor mode.  If called interactively, toggle the
+`Pyvenv-Tracking mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='pyvenv-tracking-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(autoload 'pyvenv-restart-python "pyvenv" "\
+Restart Python inferior processes." t)
+(register-definition-prefixes "pyvenv" '("pyvenv-"))
+
+
+(provide 'pyvenv-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.8.0/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.8.0/projectile-autoloads.el"))
 
 
@@ -9397,6 +9487,68 @@ Commands:
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/highlight-indentation-0.7.0/highlight-indentation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/highlight-indentation-0.7.0/highlight-indentation-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'highlight-indentation-mode "highlight-indentation" "\
+Highlight indentation minor mode highlights indentation based on spaces
+
+This is a minor mode.  If called interactively, toggle the
+`Highlight-Indentation mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `highlight-indentation-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(autoload 'highlight-indentation-set-offset "highlight-indentation" "\
+Set indentation offset localy in buffer, will prevent
+highlight-indentation from trying to guess indentation offset
+from major mode
+
+(fn OFFSET)" t)
+(autoload 'highlight-indentation-current-column-mode "highlight-indentation" "\
+Hilight Indentation minor mode displays a vertical bar
+
+corresponding to the indentation of the current line
+
+This is a minor mode.  If called interactively, toggle the
+`Highlight-Indentation-Current-Column mode' mode.  If the prefix
+argument is positive, enable the mode, and if it is zero or
+negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `highlight-indentation-current-column-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "highlight-indentation" '("highlight-indentation-"))
+
+
+(provide 'highlight-indentation-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/highlight-indent-guides-20200820.2328/highlight-indent-guides-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/highlight-indent-guides-20200820.2328/highlight-indent-guides-autoloads.el"))
 
 
@@ -12003,115 +12155,6 @@ values used in the user's shell." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "dispwatch" '("dispwatch-"))
-
-
-(provide 'dispwatch-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240223.1630/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240223.1630/difftastic-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'difftastic-git-diff-range "difftastic" "\
-Show difference between two commits using difftastic.
-The meaning of REV-OR-RANGE, ARGS, and FILES is like in
-`magit-diff-range', but ARGS are adjusted for difftastic with
-`difftastic--transform-diff-arguments'.
-
-(fn &optional REV-OR-RANGE ARGS FILES)" t)
-(autoload 'difftastic-magit-diff "difftastic" "\
-Show the result of \\='git diff ARGS -- FILES\\=' with difftastic.
-
-(fn &optional ARGS FILES)" t)
-(autoload 'difftastic-magit-show "difftastic" "\
-Show the result of \\='git show REV\\=' with difftastic.
-When REV couldn't be guessed or called with prefix arg ask for REV.
-
-(fn REV)" t)
-(autoload 'difftastic-buffers "difftastic" "\
-Run difftastic on a pair of buffers, BUFFER-A and BUFFER-B.
-Optionally, provide a LANG-OVERRIDE to override language used.
-See \\='difft --list-languages\\=' for language list.
-
-When:
-- either LANG-OVERRIDE is nil and neither of BUFFER-A nor
-BUFFER-B is a file buffer,
-- or function is called with a prefix arg,
-
-then ask for language before running difftastic.
-
-(fn BUFFER-A BUFFER-B &optional LANG-OVERRIDE)" t)
-(autoload 'difftastic-files "difftastic" "\
-Run difftastic on a pair of files, FILE-A and FILE-B.
-Optionally, provide a LANG-OVERRIDE to override language used.
-See \\='difft --list-languages\\=' for language list.  When
-function is called with a prefix arg then ask for language before
-running difftastic.
-
-(fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
-(autoload 'difftastic-rerun "difftastic" "\
-Rerun difftastic in the current buffer.
-Optionally, provide a LANG-OVERRIDE to override language used.
-See \\='difft --list-languages\\=' for language list.  When
-function is called with a prefix arg then ask for language before
-running difftastic.
-
-In order to determine requested width for difftastic a call to
-`difftastic-rerun-requested-window-width-function' is made.
-
-(fn &optional LANG-OVERRIDE)" t)
-(function-put 'difftastic-rerun 'command-modes '(difftastic-mode))
-(register-definition-prefixes "difftastic" '("difftastic-"))
-
-
-(provide 'difftastic-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/deadgrep-0.12/deadgrep-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/deadgrep-0.12/deadgrep-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'deadgrep "deadgrep" "\
-Start a ripgrep search for SEARCH-TERM in DIRECTORY.
-
-If not provided, DIR defaults to the directory as determined by
-`deadgrep-project-root-function'.
-
-See also `deadgrep-project-root-overrides'.
-
-If called with a prefix argument, create the results buffer but
-don't actually start the search.
-
-(fn SEARCH-TERM &optional DIRECTORY)" t)
-(register-definition-prefixes "deadgrep" '("deadgrep-"))
-
-
-(provide 'deadgrep-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/company-0.10.1/company-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/company-0.10.1/company-autoloads.el"))
 
 
@@ -12404,6 +12447,187 @@ shadow backends that come after it.  Recommended usages:
 
 
 (provide 'company-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elpy-1.35.0/elpy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elpy-1.35.0/elpy-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'elpy-enable "elpy" "\
+Enable Elpy in all future Python buffers.
+
+(fn &optional IGNORED)" t)
+(autoload 'elpy-mode "elpy" "\
+Minor mode in Python buffers for the Emacs Lisp Python Environment.
+
+This mode fully supports virtualenvs. Once you switch a
+virtualenv using \\[pyvenv-workon], you can use
+\\[elpy-rpc-restart] to make the elpy Python process use your
+virtualenv.
+
+\\{elpy-mode-map}
+
+This is a minor mode.  If called interactively, toggle the `Elpy
+mode' mode.  If the prefix argument is positive, enable the mode,
+and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `elpy-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(autoload 'elpy-config "elpy" "\
+Configure Elpy.
+
+This function will pop up a configuration buffer, which is mostly
+a customize buffer, but has some more options." t)
+(autoload 'elpy-version "elpy" "\
+Display the version of Elpy." t)
+(register-definition-prefixes "elpy" '("elpy-"))
+
+
+
+(register-definition-prefixes "elpy-django" '("elpy-"))
+
+
+
+(register-definition-prefixes "elpy-profile" '("elpy-profile-"))
+
+
+
+(register-definition-prefixes "elpy-refactor" '("elpy-refactor"))
+
+
+
+(register-definition-prefixes "elpy-rpc" '("elpy-" "with-elpy-rpc-virtualenv-activated"))
+
+
+
+(register-definition-prefixes "elpy-shell" '("elpy-"))
+
+
+(provide 'elpy-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "dispwatch" '("dispwatch-"))
+
+
+(provide 'dispwatch-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240223.1630/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240223.1630/difftastic-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'difftastic-git-diff-range "difftastic" "\
+Show difference between two commits using difftastic.
+The meaning of REV-OR-RANGE, ARGS, and FILES is like in
+`magit-diff-range', but ARGS are adjusted for difftastic with
+`difftastic--transform-diff-arguments'.
+
+(fn &optional REV-OR-RANGE ARGS FILES)" t)
+(autoload 'difftastic-magit-diff "difftastic" "\
+Show the result of \\='git diff ARGS -- FILES\\=' with difftastic.
+
+(fn &optional ARGS FILES)" t)
+(autoload 'difftastic-magit-show "difftastic" "\
+Show the result of \\='git show REV\\=' with difftastic.
+When REV couldn't be guessed or called with prefix arg ask for REV.
+
+(fn REV)" t)
+(autoload 'difftastic-buffers "difftastic" "\
+Run difftastic on a pair of buffers, BUFFER-A and BUFFER-B.
+Optionally, provide a LANG-OVERRIDE to override language used.
+See \\='difft --list-languages\\=' for language list.
+
+When:
+- either LANG-OVERRIDE is nil and neither of BUFFER-A nor
+BUFFER-B is a file buffer,
+- or function is called with a prefix arg,
+
+then ask for language before running difftastic.
+
+(fn BUFFER-A BUFFER-B &optional LANG-OVERRIDE)" t)
+(autoload 'difftastic-files "difftastic" "\
+Run difftastic on a pair of files, FILE-A and FILE-B.
+Optionally, provide a LANG-OVERRIDE to override language used.
+See \\='difft --list-languages\\=' for language list.  When
+function is called with a prefix arg then ask for language before
+running difftastic.
+
+(fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
+(autoload 'difftastic-rerun "difftastic" "\
+Rerun difftastic in the current buffer.
+Optionally, provide a LANG-OVERRIDE to override language used.
+See \\='difft --list-languages\\=' for language list.  When
+function is called with a prefix arg then ask for language before
+running difftastic.
+
+In order to determine requested width for difftastic a call to
+`difftastic-rerun-requested-window-width-function' is made.
+
+(fn &optional LANG-OVERRIDE)" t)
+(function-put 'difftastic-rerun 'command-modes '(difftastic-mode))
+(register-definition-prefixes "difftastic" '("difftastic-"))
+
+
+(provide 'difftastic-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/deadgrep-0.12/deadgrep-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/deadgrep-0.12/deadgrep-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'deadgrep "deadgrep" "\
+Start a ripgrep search for SEARCH-TERM in DIRECTORY.
+
+If not provided, DIR defaults to the directory as determined by
+`deadgrep-project-root-function'.
+
+See also `deadgrep-project-root-overrides'.
+
+If called with a prefix argument, create the results buffer but
+don't actually start the search.
+
+(fn SEARCH-TERM &optional DIRECTORY)" t)
+(register-definition-prefixes "deadgrep" '("deadgrep-"))
+
+
+(provide 'deadgrep-autoloads)
 
 
 )
@@ -12833,7 +13057,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree tsc treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-contrib ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin dispwatch difftastic deadgrep company cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree tsc treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs tree-sitter tree-sitter-langs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-contrib ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indentation highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link google-c-style git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)
