@@ -196,6 +196,11 @@ supports range formatting."
 (require 'lsp-rust)
 (setq lsp-rust-analyzer-cargo-watch-command "clippy")
 
+;;; Python in `lsp-mode'
+(require 'lsp-pylsp)
+(setq lsp-pylsp-plugins-pylint-enabled t)
+(setq lsp-pylsp-plugins-pycodestyle-enabled t)
+
 (require 'lsp-treemacs)
 (lsp-treemacs-sync-mode 1)
 

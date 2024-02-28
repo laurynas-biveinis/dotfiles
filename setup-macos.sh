@@ -353,7 +353,9 @@ sudo ln -sf en_US.dic en_LT.dic
 # Python
 #
 python3 -m pip install --upgrade pip
-pip3 install asitop scipy pandas cmake-language-server cmakelang cppclean
+pip3 install asitop scipy pandas cmake-language-server cmakelang cppclean \
+     "python-lsp-server[all]" pylsp-mypy python-lsp-isort pyls-memestra \
+     pylsp-rope python-lsp-ruff python-lsp-black pylint pycodestyle pyflakes
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
      telegram keycombiner michaelvillar-timer utm activitywatch
