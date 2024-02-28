@@ -1,0 +1,196 @@
+#!/usr/bin/env python3
+"""Convert CAMT.053 XML to QIF
+
+Currently tested banks are Citadele and Luminor. The QIFs are produced with the
+intent to import them to Banktivity.
+
+For each transaction, the creditor field, if existing, is attempted to match
+against all configured rules. If none match, or if the field does not exist,
+then the unstructured info field is used.
+
+TODO(laurynas): transactions import to Banktivity in Cleared status,
+regardless of whether QIF "Cleared status" is present and with what value.
+Banktivity QIF exports omit it altogether.
+
+TODO(laurynas): transfers between accounts do not work, but could be cleared
+up with import rules
+"""
+
+import argparse
+import configparser
+import os
+import re
+import xml.etree.ElementTree as ET
+from datetime import datetime
+from enum import Enum, auto
+
+CONFIG_FN = "~/.xml2qifrc"
+
+NS = {"ns": "urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"}
+# XPaths inside a document:
+XPATH_TRANSACTIONS = "ns:BkToCstmrStmt/ns:Stmt/ns:Ntry"
+# XPaths inside a transaction:
+XPATH_AMOUNT = ".//ns:Amt"
+XPATH_BOOKING_DATE = ".//ns:BookgDt/ns:Dt"
+XPATH_VALUE_DATE = ".//ns:ValDt/ns:Dt"
+XPATH_TYPE_INDICATOR = ".//ns:CdtDbtInd"
+XPATH_CREDITOR = ".//ns:NtryDtls/ns:TxDtls/ns:RltdPties/ns:Cdtr/ns:Nm"
+XPATH_UNSTRUCTURED = ".//ns:NtryDtls/ns:TxDtls/ns:RmtInf/ns:Ustrd"
+
+US_DATE_PREFIX = re.compile("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
+
+
+class TransactionType(Enum):
+    """A transaction type in the XML file"""
+
+    DEPOSIT = auto()
+    WITHDRAWAL = auto()
+
+    @classmethod
+    def from_string(cls, string):
+        """Return transaction type from a given string in XML."""
+        if string == "CRDT":
+            return cls.DEPOSIT
+        if string == "DBIT":
+            return cls.WITHDRAWAL
+        raise ValueError(f"Transaction type {string} not recognized")
+
+
+def collect_rules(config):
+    """Collect transaction rewrite rules from the config file"""
+    rules = []
+    for section in config.sections():
+        regex = config[section]["match"]
+        pattern = re.compile(regex)
+        payee = config[section]["payee"]
+        category = config[section]["category"]
+
+        rules.append({"pattern": pattern, "payee": payee,
+                      "category": category})
+    return rules
+
+
+def find_matching_rule(rules, text):
+    """Find the rule whose regex matches text"""
+    for rule in rules:
+        if rule["pattern"].match(text):
+            return rule
+
+    return None
+
+
+def get_transaction_unstructured_info(txn):
+    """Get the unstructured information from the transcation"""
+    unstructured_info_obj = txn.find(XPATH_UNSTRUCTURED, NS)
+    if unstructured_info_obj is None:
+        raise ValueError("Unable to find unstructured info in the transaction")
+    return unstructured_info_obj.text
+
+
+def get_transaction_date(txn):
+    """Get the transaction date from the transaction"""
+    value_date = txn.find(XPATH_VALUE_DATE, NS)
+    if value_date is not None:
+        return value_date.text
+
+    unstructured_info = get_transaction_unstructured_info(txn)
+    if US_DATE_PREFIX.match(unstructured_info):
+        date_substr = unstructured_info[:10]
+        date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
+        return date_obj.strftime("%Y-%m-%d")
+
+    booking_date = txn.find(XPATH_BOOKING_DATE, NS)
+    if booking_date is not None:
+        return booking_date.text
+
+    raise ValueError("Don't know how to get the transaction date from the "
+                     "transaction")
+
+
+def get_transaction_amount(txn):
+    """Get the transaction amount from the transaction"""
+    amount_node = txn.find(XPATH_AMOUNT)
+    if amount_node is None:
+        raise ValueError("Unable to find amount in the transaction")
+    return amount_node.text
+
+
+def get_creditor(txn):
+    """Get the creditor or empty string from the transaction"""
+    creditor_node = txn.find(XPATH_CREDITOR, NS)
+    return creditor_node.text if creditor_node is not None else ""
+
+
+def get_transaction_type(txn):
+    """Get the transaction type from the transaction"""
+    type_indicator_obj = txn.find(XPATH_TYPE_INDICATOR, NS)
+    if type_indicator_obj is None:
+        raise ValueError("Unable to find transaction type indicator")
+    type_indicator_str = type_indicator_obj.text
+    return TransactionType.from_string(type_indicator_str)
+
+
+def process_transactions(root, rules):
+    """Convert all the transactions in the given XML document root"""
+    for txn in root.findall(XPATH_TRANSACTIONS, NS):
+        date = get_transaction_date(txn)
+        amount = get_transaction_amount(txn)
+        creditor = get_creditor(txn)
+        unstructured_info = get_transaction_unstructured_info(txn)
+        transaction_type = get_transaction_type(txn)
+
+        print(
+            f"Before: date: {date}, amount: {amount}, creditor: {creditor}, "
+            "unstructured_info: {unstructured_info}, type: {transaction_type}"
+        )
+
+        if creditor:
+            rewrite_rule = find_matching_rule(rules, creditor)
+        if rewrite_rule is None:
+            rewrite_rule = find_matching_rule(rules, unstructured_info)
+        if rewrite_rule is None:
+            raise ValueError(f"Please add a rule for {creditor} or "
+                             "{unstructured_info}")
+        payee = rewrite_rule["payee"]
+        category = rewrite_rule["category"]
+
+        print(f"After: payee: {payee}, category: {category}")
+
+        output_file.write(f"D{date}\n")
+        if transaction_type == TransactionType.DEPOSIT:
+            output_file.write(f"T{amount}\n")
+        elif transaction_type == TransactionType.WITHDRAWAL:
+            output_file.write(f"T-{amount}\n")
+        else:
+            raise ValueError(f"Unknown transaction type {transaction_type}")
+        output_file.write(f"P{payee}\n")
+        output_file.write(f"L{category}\n")
+        output_file.write("^\n")
+
+
+arg_parser = argparse.ArgumentParser(
+    description="Convert bank statement in XML format (camt.053) to QIF for "
+    "importing to Banktivity."
+)
+
+arg_parser.add_argument("input", type=str, help="The input file")
+arg_parser.add_argument("output", type=str, help="The output file")
+
+args = arg_parser.parse_args()
+
+rule_config = configparser.ConfigParser()
+rule_config.read(os.path.expanduser(CONFIG_FN))
+
+rewrite_rules = collect_rules(rule_config)
+
+print(f"Rules loaded from {CONFIG_FN}: {len(rewrite_rules)}")
+
+print(f"Processing {args.input} to {args.output}")
+
+tree = ET.parse(args.input)
+
+xml_root = tree.getroot()
+
+with open(args.output, "w", encoding="utf-8") as output_file:
+    output_file.write("!Type:Bank\n")
+    process_transactions(xml_root, rewrite_rules)
