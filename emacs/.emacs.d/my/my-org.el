@@ -132,9 +132,11 @@ further quoting. A file to visit should be specified by a single
     ;; Open one macOS application, if any
     (when app
       (shell-command (concat "open -a " app)))
-    ;; Visit a file, if any
+    ;; Visit a file, if any. TODO(laurynas): if visiting a file without going to
+    ;; its end is needed, rename this one to VISIT_END.
     (when visit
-      (find-file visit))))
+      (find-file visit)
+      (goto-char (point-max)))))
 (add-hook 'org-clock-in-hook #'my--org-clock-in-actions)
 
 ;;; Clock tables
