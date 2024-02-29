@@ -4,9 +4,18 @@
 Currently tested banks are Citadele and Luminor. The QIFs are produced with the
 intent to import them to Banktivity.
 
-For each transaction, the creditor field, if existing, is attempted to match
-against all configured rules. If none match, or if the field does not exist,
-then the unstructured info field is used.
+This is configured by a configuration file (currently non-configurable:
+~/.xml2qifrc) which contains a section per rule. Each rule must have some input
+and output keys.
+Input keys:
+- match (required): a regex to match the creditor field, if this field is
+  present in the transaction. If the field is not present or no rules match,
+  then the same regex is used to match the unstructured information field.
+- amount (optional): if present, then must be equal.
+- type (optional): if present, then must be equal. Currently supported
+Output keys:
+- payee (required)
+- category (required).
 
 TODO(laurynas): transactions import to Banktivity in Cleared status,
 regardless of whether QIF "Cleared status" is present and with what value.
@@ -34,45 +43,123 @@ XPATH_AMOUNT = ".//ns:Amt"
 XPATH_BOOKING_DATE = ".//ns:BookgDt/ns:Dt"
 XPATH_VALUE_DATE = ".//ns:ValDt/ns:Dt"
 XPATH_TYPE_INDICATOR = ".//ns:CdtDbtInd"
+XPATH_DOMAIN = ".//ns:BkTxCd/ns:Domn/ns:Cd"
+XPATH_FAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:Cd"
+XPATH_SUBFAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:SubFmlyCd"
 XPATH_CREDITOR = ".//ns:NtryDtls/ns:TxDtls/ns:RltdPties/ns:Cdtr/ns:Nm"
 XPATH_UNSTRUCTURED = ".//ns:NtryDtls/ns:TxDtls/ns:RmtInf/ns:Ustrd"
 
 US_DATE_PREFIX = re.compile("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
 
 
-class TransactionType(Enum):
-    """A transaction type in the XML file"""
+def add_from_string(mapping):
+    """Add a from_string method to an enum class that maps the CAMT.053 strings
+    in XML to enum values"""
+    def decorator(enum_class):
+        # Construct the reverse mapping once and store it as a class attribute
+        reverse_mapping = {str_val: getattr(enum_class, enum_key) for str_val,
+                           enum_key in mapping.items()}
+        setattr(enum_class, '_str_to_enum', reverse_mapping)
 
+        @classmethod
+        def from_string(cls, string):
+            return cls._str_to_enum[string]  # pylint: disable=E1101
+
+        enum_class.from_string = from_string
+        return enum_class
+    return decorator
+
+
+@add_from_string({'CRDT': 'DEPOSIT', 'DBIT': 'WITHDRAWAL'})
+class TransactionType(Enum):
+    """A CAMT.053 transaction type"""
     DEPOSIT = auto()
     WITHDRAWAL = auto()
 
-    @classmethod
-    def from_string(cls, string):
-        """Return transaction type from a given string in XML."""
-        if string == "CRDT":
-            return cls.DEPOSIT
-        if string == "DBIT":
-            return cls.WITHDRAWAL
-        raise ValueError(f"Transaction type {string} not recognized")
+
+@add_from_string({'PMNT': 'PAYMENTS', 'LDAS': 'LOANS_DEPOSITS_SYNDICATIONS'})
+class TransactionDomain(Enum):
+    """A CAMT.053 transaction domain"""
+    PAYMENTS = auto()
+    LOANS_DEPOSITS_SYNDICATIONS = auto()
+
+
+@add_from_string({'CCRD': 'CUSTOMER_CARD_TRANSACTION',
+                  'ICDT': 'ISSUED_CREDIT_TRANSFER', 'OTHR': 'OTHER'})
+class PaymentsTransactionFamily(Enum):
+    """A CAMT.053 transaction family in the Payments domain"""
+    CUSTOMER_CARD_TRANSACTION = auto()
+    ISSUED_CREDIT_TRANSFER = auto()
+    OTHER = auto()
+
+
+@add_from_string({'FTLN': 'FIXED_TERM_LOANS', 'MDOP': 'MISC_DEBIT_OPS'})
+class LDASTransactionFamily(Enum):
+    """A CAMT.053 transaction family in the Loans, Deposits & Syndications
+    domain"""
+    FIXED_TERM_LOANS = auto()
+    MISC_DEBIT_OPS = auto()
+
+
+@add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD'})
+class CCRDTransactionSubfamily(Enum):
+    """A CAMT.053 transaction subfamily in a Customer Card Transaction (CCRD)
+    family."""
+    POS_PAYMENT_DEBIT_CARD = auto()
+
+
+@add_from_string({'ESCT': 'SEPA_CREDIT_TRANSFER'})
+class ICDTTransactionSubfamily(Enum):
+    """A CAMT.053 transaction subfamily in an Issued Credit Transfer (ICDT)
+    family."""
+    SEPA_CREDIT_TRANSFER = auto()
+
+
+@add_from_string({'OTHR': 'OTHER'})
+class OtherTransactionSubfamily(Enum):
+    """A CAMT.053 transaction subfamily in an Other family"""
+    OTHER = auto()
+
+
+@add_from_string({'INTR': 'INTEREST'})
+class MiscDebitOpsTransactionSubfamily(Enum):
+    """A CAMT.053 transaction subfamily in a Miscellaneous Debit Operations
+    family"""
+    INTEREST = auto()
+
+
+@add_from_string({'RIMB': 'REIMBURSEMENT'})
+class FixedTermLoanTransactionSubfamily(Enum):
+    """A CAMT.053 transaction subfamily in a Fixed Term Loans family"""
+    REIMBURSEMENT = auto()  # Absolutely incorrect yet Luminor returns this
 
 
 def collect_rules(config):
     """Collect transaction rewrite rules from the config file"""
     rules = []
     for section in config.sections():
+        # Input
+        type_key = config.get(section, "type", fallback="")
+        amount = config.get(section, "amount", fallback="")
         regex = config[section]["match"]
         pattern = re.compile(regex)
+        # Output
         payee = config[section]["payee"]
         category = config[section]["category"]
 
-        rules.append({"pattern": pattern, "payee": payee,
-                      "category": category})
+        rules.append({"type": type_key, "amount": amount, "pattern": pattern,
+                      "payee": payee, "category": category})
     return rules
 
 
-def find_matching_rule(rules, text):
-    """Find the rule whose regex matches text"""
+def find_matching_rule(rules, amount, type_key, text):
+    """Find the rule whose whose amount and/or type, if present match the
+    transaction and the regex matches the text."""
     for rule in rules:
+        if rule["type"] and type_key != rule["type"]:
+            continue
+        if rule["amount"] and amount != rule["amount"]:
+            continue
         if rule["pattern"].match(text):
             return rule
 
@@ -83,7 +170,7 @@ def get_transaction_unstructured_info(txn):
     """Get the unstructured information from the transcation"""
     unstructured_info_obj = txn.find(XPATH_UNSTRUCTURED, NS)
     if unstructured_info_obj is None:
-        raise ValueError("Unable to find unstructured info in the transaction")
+        return ""
     return unstructured_info_obj.text
 
 
@@ -94,7 +181,7 @@ def get_transaction_date(txn):
         return value_date.text
 
     unstructured_info = get_transaction_unstructured_info(txn)
-    if US_DATE_PREFIX.match(unstructured_info):
+    if unstructured_info and US_DATE_PREFIX.match(unstructured_info):
         date_substr = unstructured_info[:10]
         date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
         return date_obj.strftime("%Y-%m-%d")
@@ -109,7 +196,7 @@ def get_transaction_date(txn):
 
 def get_transaction_amount(txn):
     """Get the transaction amount from the transaction"""
-    amount_node = txn.find(XPATH_AMOUNT)
+    amount_node = txn.find(XPATH_AMOUNT, NS)
     if amount_node is None:
         raise ValueError("Unable to find amount in the transaction")
     return amount_node.text
@@ -127,7 +214,66 @@ def get_transaction_type(txn):
     if type_indicator_obj is None:
         raise ValueError("Unable to find transaction type indicator")
     type_indicator_str = type_indicator_obj.text
+    # pylint: disable=E1101
     return TransactionType.from_string(type_indicator_str)
+    # pylint: enable=E1101
+
+
+def get_transaction_domain(txn):
+    """Get the transaction domain from the transaction"""
+    domain_obj = txn.find(XPATH_DOMAIN, NS)
+    if domain_obj is None:
+        raise ValueError("Unable to find transaction domain code")
+    domain_str = domain_obj.text
+    return TransactionDomain.from_string(domain_str)  # pylint: disable=E1101
+
+
+def get_transaction_family_string(txn):
+    """Get the transaction family string."""
+    family_obj = txn.find(XPATH_FAMILY, NS)
+    if family_obj is None:
+        raise ValueError("Unable to find transaction family code")
+    return family_obj.text
+
+
+def get_transaction_subfamily_string(txn):
+    """Get the transaction subfamily string."""
+    subfamily_obj = txn.find(XPATH_SUBFAMILY, NS)
+    if subfamily_obj is None:
+        raise ValueError("Unable to find transaction subfamily code")
+    return subfamily_obj.text
+
+
+def parse_transaction_codes(txn):
+    """Parse the transaction codes to return domain, family, & subfamily"""
+    domain = get_transaction_domain(txn)
+    family_str = get_transaction_family_string(txn)
+    subfamily_str = get_transaction_subfamily_string(txn)
+    # pylint: disable=E1101
+    if domain == TransactionDomain.PAYMENTS:
+        family = PaymentsTransactionFamily.from_string(family_str)
+        if family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION:
+            subfamily = CCRDTransactionSubfamily.from_string(subfamily_str)
+        elif family == PaymentsTransactionFamily.ISSUED_CREDIT_TRANSFER:
+            subfamily = ICDTTransactionSubfamily.from_string(subfamily_str)
+        elif family == PaymentsTransactionFamily.OTHER:
+            subfamily = OtherTransactionSubfamily.from_string(subfamily_str)
+        else:
+            subfamily = ""
+    elif domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
+        family = LDASTransactionFamily.from_string(family_str)
+        if family == LDASTransactionFamily.MISC_DEBIT_OPS:
+            subfamily = MiscDebitOpsTransactionSubfamily.from_string(
+                subfamily_str)
+        elif family == LDASTransactionFamily.FIXED_TERM_LOANS:
+            subfamily = FixedTermLoanTransactionSubfamily.from_string(
+                subfamily_str)
+        else:
+            subfamily = ""
+    else:
+        family = ""
+    # pylint: enable=E1101
+    return domain, family, subfamily
 
 
 def process_transactions(root, rules):
@@ -138,19 +284,30 @@ def process_transactions(root, rules):
         creditor = get_creditor(txn)
         unstructured_info = get_transaction_unstructured_info(txn)
         transaction_type = get_transaction_type(txn)
+        domain, family, subfamily = parse_transaction_codes(txn)
 
         print(
             f"Before: date: {date}, amount: {amount}, creditor: {creditor}, "
-            "unstructured_info: {unstructured_info}, type: {transaction_type}"
+            f"unstructured_info: {unstructured_info}, "
+            f"type: {transaction_type}, domain: {domain}, family: {family}, "
+            f"subfamily: {subfamily}"
         )
 
+        # Map type to rule type
+        if domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
+            rule_type = "loan"
+        else:
+            rule_type = ""
+
         if creditor:
-            rewrite_rule = find_matching_rule(rules, creditor)
-        if rewrite_rule is None:
-            rewrite_rule = find_matching_rule(rules, unstructured_info)
+            rewrite_rule = find_matching_rule(rules, amount, rule_type,
+                                              creditor)
+        if rewrite_rule is None and creditor:
+            rewrite_rule = find_matching_rule(rules, amount, rule_type,
+                                              unstructured_info)
         if rewrite_rule is None:
             raise ValueError(f"Please add a rule for {creditor} or "
-                             "{unstructured_info}")
+                             f"{unstructured_info}")
         payee = rewrite_rule["payee"]
         category = rewrite_rule["category"]
 
