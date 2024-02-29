@@ -369,20 +369,10 @@ brew install --cask mx-power-gadget
 brew tap epk/epk
 brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
-brew tap railwaycat/emacsmacport
-brew install emacs-mac --with-native-compilation --with-unlimited-select \
-     --with-librsvg --with-mac-metal  --with-natural-title-bar
-# Intel
-osascript -e \
-          'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
-# Apple Silicon
-osascript -e \
-          'tell application "Finder" to make alias file to POSIX file "/opt/homebrew/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
+
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
      /Library/Java/JavaVirtualMachines/openjdk.jdk
-# Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
-# non-main Dash docsets through the app
-em-regen-info-dir
+
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
 duti -s org.videolan.vlc .mp3 all
@@ -394,11 +384,4 @@ brew install mono
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
      guitar-pro transcribe
 duti -s jp.tmkk.XLD .flac all
-#
-# Rust
-#
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup component add rust-src
-rustup component add rust-analyzer
-rustup component add llvm-tools-preview
-cargo install grcov
+
