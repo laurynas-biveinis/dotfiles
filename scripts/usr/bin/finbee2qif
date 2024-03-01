@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+"""Convert CSV from FinBee to QIF
+
+The QIFs are produced with the intent to import them to Banktivity.
+
+This is configured by a configuration file (~/.finbee2qif) which contains a
+single section 'payer map', containing arbitrary many keys that map CSV loan
+IDs to Banktivity securities.
+
+TODO(laurynas): transactions import to Banktivity in Cleared status,
+regardless of whether QIF "Cleared status" is present and with what value.
+"""
+
+import argparse
+import configparser
+import csv
+import os
+
+CONFIG_FN = "~/.finbee2qif"
+CONFIG_MAPPING_SECTION = "payer map"
+
+
+class CaseSensitiveConfigParser(configparser.ConfigParser):
+    """A ConfigParser that preserves the key and value cases."""
+
+    def optionxform(self, optionstr):
+        return optionstr
+
+
+def get_qif_investment_action(payment_type):
+    """Return a QIF investment action string for a given CSV payment type
+    value"""
+    if payment_type == "Principal repaid":
+        return "Sell"
+    if payment_type == "Interest earned":
+        return "IntInc"
+    if payment_type == "Overdue interest earned":
+        return "IntInc"
+    raise ValueError(f"Unknown type {payment_type}")
+
+
+arg_parser = argparse.ArgumentParser(
+    description="Convert FinBee CSV statement to QIF for importing to "
+    "Banktivity."
+)
+
+arg_parser.add_argument("input", type=str, help="The input file")
+arg_parser.add_argument("output", type=str, help="The output file")
+
+args = arg_parser.parse_args()
+
+mapping_config = CaseSensitiveConfigParser()
+mapping_config.read(os.path.expanduser(CONFIG_FN))
+
+if CONFIG_MAPPING_SECTION not in mapping_config:
+    raise ValueError(f"Config file {CONFIG_FN} does not have "
+                     f"{CONFIG_MAPPING_SECTION} section")
+
+payer_mapping = dict(mapping_config.items(CONFIG_MAPPING_SECTION))
+print(payer_mapping)
+
+with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
+     open(args.output, "w", encoding='utf-8') as output_file:
+    csv_reader = csv.DictReader(input_file, delimiter=';')
+    output_file.write("!Type:Invst\n")
+    for row in csv_reader:
+        # print(row)
+        date = row['Date']
+        # The last line is the total, breaking the schema
+        if date == "Total amount":
+            break
+        amount = row['Amount']
+        purpose = row['Purpose']
+        csv_payment_type = row['Type']
+        print(f"Before: Date: {date}, amount: {amount}, purpose: {purpose}, "
+              f"payment_type: {csv_payment_type}")
+
+        # pylint: disable=C0103
+        investment_action = get_qif_investment_action(csv_payment_type)
+        # pulint: enable=C0103
+
+        payer = payer_mapping[purpose]
+
+        print(f"After: investment_action: {investment_action}, payer: {payer}")
+
+        output_file.write(f"D{date}\n")
+        output_file.write(f"N{investment_action}\n")
+        output_file.write(f"Y{payer}\n")
+        output_file.write("O0.0\n")
+        output_file.write(f"T{amount}\n")
+        if investment_action == "Sell":
+            output_file.write("I1.0\n")
+            output_file.write(f"Q{amount}\n")
+        output_file.write("^\n")
