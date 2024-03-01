@@ -12450,7 +12450,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elpy-1.35.0/elpy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elpy-1.35.0/elpy-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20240109.1445/elpy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20240109.1445/elpy-autoloads.el"))
 
 
 
@@ -12507,7 +12507,7 @@ Display the version of Elpy." t)
 
 
 
-(register-definition-prefixes "elpy-refactor" '("elpy-refactor"))
+(register-definition-prefixes "elpy-refactor" '("elpy-refactor-"))
 
 
 
