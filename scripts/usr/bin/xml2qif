@@ -1,24 +1,23 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Convert CAMT.053 XML to QIF
 
 Currently tested banks are Citadele and Luminor. The QIFs are produced with the
 intent to import them to Banktivity.
 
-This is configured by a configuration file (currently non-configurable:
-~/.xml2qifrc) which contains a section per rule. Each rule must have some input
-and output keys. All the input keys are optional but at least one has to be
-present. All the output keys are required.
+This is configured by a configuration file ~/.xml2qifrc which contains a section
+per rule. Each rule must have some input and output keys.
 Input keys:
-- match: a regex to match one of the text fields. The following fields are
-  attempted to match in this order, if present: creditor, debitor, unstructured
-  information.
-- amount: if present, then must be equal.
-- type: if present, then must be equal. Currently supported types are:
+- match (required): a regex to match one of the text fields. The following
+  fields are attempted to match in this order, if present: creditor, debitor,
+  unstructured information.
+- amount (optional): if present, then must be equal.
+- type (optional): if present, then must be equal. Currently supported types
+  are:
   - loan: domain is "Loans, Deposits, & Syndications"
   - card_fee: domain is "Payments", family is "Customer Card Transaction", &
     subfamily is "Fees"
   - deposit: type is deposit.
-Output keys:
+Output keys, all of which are required:
 - payee
 - category
 
