@@ -527,9 +527,9 @@
 
 ;; `elpy'
 (require 'elpy)
-(setq elpy-rpc-python-command "python3")
 (setq elpy-modules (delq #'elpy-module-flymake elpy-modules))
 (add-hook 'elpy-mode-hook #'flycheck-mode)
+(setq elpy-rpc-virtualenv-path 'system)
 (elpy-enable)
 
 ;;; Shell and terminal emulation

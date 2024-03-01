@@ -352,10 +352,48 @@ sudo ln -sf en_US.dic en_LT.dic
 #
 # Python
 #
-python3 -m pip install --upgrade pip
-pip3 install asitop scipy pandas cmake-language-server cmakelang cppclean \
-     "python-lsp-server[all]" pylsp-mypy python-lsp-isort pyls-memestra \
-     pylsp-rope python-lsp-ruff python-lsp-black pylint pycodestyle pyflakes
+asdf plugin add python
+asdf install python latest
+asdf global python 3.12.2  # Take from the output above
+python -m pip install --upgrade pip setuptools
+python -m pip install virtualenv
+asdf reshim python
+sudo mkdir /opt/virtualenvs
+sudo chown `whoami` /opt/virtualenvs
+
+virtualenv /opt/virtualenvs/asitop
+source /opt/virtualenvs/asitop/bin/activate
+pip install asitop
+sudo ln -sf /opt/virtualenvs/asitop/bin/asitop /usr/local/bin/asitop
+deactivate
+
+virtualenv /opt/virtualenvs/cmake-language-server
+source /opt/virtualenvs/cmake-language-server/bin/activate
+pip install cmake-language-server
+sudo ln -sf /opt/virtualenvs/cmake-language-server/bin/cmake-language-server \
+     /usr/local/bin/cmake-language-server
+deactivate
+
+virtualenv /opt/virtualenvs/cmakelang
+source /opt/virtualenvs/cmakelang/bin/activate
+pip install cmakelang
+sudo ln -sf /opt/virtualenvs/cmakelang/bin/cmakelang /usr/local/bin/cmakelang
+deactivate
+
+virtualenv /opt/virtualenvs/cppclean
+source /opt/virtualenvs/cppclean/bin/activate
+pip install cppclean
+sudo ln -sf /opt/virtualenvs/cppclean/bin/cppclean /usr/local/bin/cppclean
+deactivate
+
+# Try to install Python development tools outside any virtualenv. If this
+# breaks, then install per-project.
+pip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
+    pyls-memestra jedi pylsp-rope python-lsp-ruff python-lsp-black pylint \
+    pycodestyle pyflakes
+
+# Leftovers from the old-and-broken installation method: scipy pandas
+
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
      telegram keycombiner michaelvillar-timer utm activitywatch

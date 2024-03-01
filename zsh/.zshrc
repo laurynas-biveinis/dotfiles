@@ -73,6 +73,10 @@ function strip_disas_offsets() {
     cut -f 2- -d ':' "$input" | sed 's/^\s*//g' > "$output"
 }
 
+function gpip() {
+    PIP_REQUIRE_VIRTUALENV="0" pip "$@"
+}
+
 function source_if_exists()
 {
     local file=$1

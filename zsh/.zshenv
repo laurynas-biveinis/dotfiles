@@ -16,6 +16,10 @@ if [ -f ~/.zshenv_private ]; then
     source ~/.zshenv_private
 fi
 
+if [ -f /opt/homebrew/opt/asdf/libexec/asdf.sh ]; then
+    source /opt/homebrew/opt/asdf/libexec/asdf.sh
+fi
+
 export ZINIT_HOME=~/.zsh.d/zinit
 
 source ~/.zsh.d/paths
