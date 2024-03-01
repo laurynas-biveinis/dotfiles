@@ -6,16 +6,21 @@ intent to import them to Banktivity.
 
 This is configured by a configuration file (currently non-configurable:
 ~/.xml2qifrc) which contains a section per rule. Each rule must have some input
-and output keys.
+and output keys. All the input keys are optional but at least one has to be
+present. All the output keys are required.
 Input keys:
-- match (required): a regex to match the creditor field, if this field is
-  present in the transaction. If the field is not present or no rules match,
-  then the same regex is used to match the unstructured information field.
-- amount (optional): if present, then must be equal.
-- type (optional): if present, then must be equal. Currently supported
+- match: a regex to match one of the text fields. The following fields are
+  attempted to match in this order, if present: creditor, debitor, unstructured
+  information.
+- amount: if present, then must be equal.
+- type: if present, then must be equal. Currently supported types are:
+  - loan: domain is "Loans, Deposits, & Syndications"
+  - card_fee: domain is "Payments", family is "Customer Card Transaction", &
+    subfamily is "Fees"
+  - deposit: type is deposit.
 Output keys:
-- payee (required)
-- category (required).
+- payee
+- category
 
 TODO(laurynas): transactions import to Banktivity in Cleared status,
 regardless of whether QIF "Cleared status" is present and with what value.
@@ -47,6 +52,7 @@ XPATH_DOMAIN = ".//ns:BkTxCd/ns:Domn/ns:Cd"
 XPATH_FAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:Cd"
 XPATH_SUBFAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:SubFmlyCd"
 XPATH_CREDITOR = ".//ns:NtryDtls/ns:TxDtls/ns:RltdPties/ns:Cdtr/ns:Nm"
+XPATH_DEBITOR = ".//ns:NtryDtls/ns:TxDtls/ns:RltdPties/ns:Dbtr/ns:Nm"
 XPATH_UNSTRUCTURED = ".//ns:NtryDtls/ns:TxDtls/ns:RmtInf/ns:Ustrd"
 
 US_DATE_PREFIX = re.compile("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
@@ -101,11 +107,14 @@ class LDASTransactionFamily(Enum):
     MISC_DEBIT_OPS = auto()
 
 
-@add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD'})
+@add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD', 'FEES': 'FEES',
+                  'NTAV': 'NOT_AVAILABLE'})
 class CCRDTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in a Customer Card Transaction (CCRD)
     family."""
     POS_PAYMENT_DEBIT_CARD = auto()
+    FEES = auto()
+    NOT_AVAILABLE = auto()
 
 
 @add_from_string({'ESCT': 'SEPA_CREDIT_TRANSFER'})
@@ -208,6 +217,12 @@ def get_creditor(txn):
     return creditor_node.text if creditor_node is not None else ""
 
 
+def get_debitor(txn):
+    """Get the debitor or empty string from the transaction"""
+    debitor_node = txn.find(XPATH_DEBITOR, NS)
+    return debitor_node.text if debitor_node is not None else ""
+
+
 def get_transaction_type(txn):
     """Get the transaction type from the transaction"""
     type_indicator_obj = txn.find(XPATH_TYPE_INDICATOR, NS)
@@ -282,31 +297,42 @@ def process_transactions(root, rules):
         date = get_transaction_date(txn)
         amount = get_transaction_amount(txn)
         creditor = get_creditor(txn)
+        debitor = get_debitor(txn)
         unstructured_info = get_transaction_unstructured_info(txn)
         transaction_type = get_transaction_type(txn)
         domain, family, subfamily = parse_transaction_codes(txn)
 
-        print(
-            f"Before: date: {date}, amount: {amount}, creditor: {creditor}, "
-            f"unstructured_info: {unstructured_info}, "
-            f"type: {transaction_type}, domain: {domain}, family: {family}, "
-            f"subfamily: {subfamily}"
-        )
-
-        # Map type to rule type
-        if domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
+        # Map transaction type, domain, family & subfamily to rule type
+        if transaction_type == TransactionType.DEPOSIT:
+            rule_type = "deposit"
+        elif domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
             rule_type = "loan"
+        elif (domain == TransactionDomain.PAYMENTS and
+              family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION and
+              subfamily == CCRDTransactionSubfamily.FEES):
+            rule_type = "card_fee"
         else:
             rule_type = ""
 
-        if creditor:
+        print(
+            f"Before: date: {date}, amount: {amount}, creditor: {creditor}, "
+            f"debitor: {debitor}, unstructured_info: {unstructured_info}, "
+            f"type: {transaction_type}, domain: {domain}, family: {family}, "
+            f"subfamily: {subfamily}, rule_type: {rule_type}"
+        )
+
+        rewrite_rule = None
+        if debitor:
+            rewrite_rule = find_matching_rule(rules, amount, rule_type,
+                                              debitor)
+        if rewrite_rule is None and creditor:
             rewrite_rule = find_matching_rule(rules, amount, rule_type,
                                               creditor)
-        if rewrite_rule is None and creditor:
+        if rewrite_rule is None:
             rewrite_rule = find_matching_rule(rules, amount, rule_type,
                                               unstructured_info)
         if rewrite_rule is None:
-            raise ValueError(f"Please add a rule for {creditor} or "
+            raise ValueError(f"Please add a rule for {creditor}, {debitor} or "
                              f"{unstructured_info}")
         payee = rewrite_rule["payee"]
         category = rewrite_rule["category"]
