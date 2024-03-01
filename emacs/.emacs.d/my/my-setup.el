@@ -727,7 +727,15 @@
                             mouse-drag-region mac-mwheel-scroll mouse-set-point
                             org-cycle helm-next-line backward-word save-buffer
                             isearch-repeat-forward scroll-down-command
-                            beginning-of-visual-line windmove-right))
+                            beginning-of-visual-line windmove-right
+                            org-agenda-previous-line windmove-left
+                            backward-delete-char-untabify org-ctrl-c-ctrl-c
+                            org-beginning-of-line delete-forward-char
+                            set-mark-command backward-kill-word
+                            python-indent-dedent-line-backspace
+                            end-of-visual-line windmove-up kill-buffer
+                            markdown-outdent-or-delete newline org-agenda-goto
+                            windmove-down org-agenda-redo org-return))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
