@@ -15,9 +15,11 @@ import argparse
 import configparser
 import csv
 import os
+import re
 
 CONFIG_FN = "~/.finbee2qif"
 CONFIG_MAPPING_SECTION = "payer map"
+FINBEE_FEE_TYPE = re.compile("^Account fee for period .*$")
 
 
 class CaseSensitiveConfigParser(configparser.ConfigParser):
@@ -30,6 +32,8 @@ class CaseSensitiveConfigParser(configparser.ConfigParser):
 def get_qif_investment_action(payment_type):
     """Return a QIF investment action string for a given CSV payment type
     value"""
+    if FINBEE_FEE_TYPE.match(payment_type):
+        return "Cash"
     if payment_type == "Principal repaid":
         return "Sell"
     if payment_type == "Interest earned":
@@ -85,9 +89,13 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
 
         output_file.write(f"D{date}\n")
         output_file.write(f"N{investment_action}\n")
-        output_file.write(f"Y{payer}\n")
         output_file.write("O0.0\n")
         output_file.write(f"T{amount}\n")
+        if investment_action == "Cash":
+            output_file.write(f"P{payer}\n")
+            output_file.write("LBank Charges:Account Charge\n")
+        else:
+            output_file.write(f"Y{payer}\n")
         if investment_action == "Sell":
             output_file.write("I1.0\n")
             output_file.write(f"Q{amount}\n")
