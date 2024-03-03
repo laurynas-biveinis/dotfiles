@@ -9,7 +9,7 @@ if [[ ! -f $NIGHTLY ]]; then
     exit
 fi
 
-less ~/nightly.out
+less $NIGHTLY
 
 while true; do
     read -r "?Delete $NIGHTLY? " yn
