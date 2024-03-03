@@ -310,17 +310,13 @@ sudo chflags nohidden /Volumes
 # brew
 #
 brew update
-brew install stow git ncdu gnupg@2.2 coreutils fzf hexyl tldr lynis curl java \
-     shellcheck wget hunspell llvm llvm@16 duti grep ghostscript pinentry-mac \
-     htop findutils libtool npm fd delta jq colordiff iwyu cppcheck infer \
-     creduce gnu-sed mas bat fig bison libfido2 actionlint circleci imagemagick \
-     rapidjson doxygen graphviz cmake protobuf@21 ripgrep lz4 boost cpplint \
-     libeatmydata duf exa clang-build-analyzer recode ninja difftastic git-lfs \
-     plantuml gh gcalcli
+
+brew install stow git ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
+     hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
+     colordiff iwyu cppcheck infer creduce gnu-sed mas bat fig actionlint \
+     circleci imagemagick cmake ripgrep boost cpplint duf exa \
+     clang-build-analyzer recode ninja difftastic git-lfs plantuml gcalcli asdf
 git lfs install
-brew link protobuf@21
-sudo ln -sf /opt/homebrew/opt/llvm@16/bin/clang-format \
-     /usr/local/bin/clang-format
 
 # gnupg@2.2.41 because newer versions up to 2.4.3 inclusive hang when called
 # from Emacs EasyPG.
