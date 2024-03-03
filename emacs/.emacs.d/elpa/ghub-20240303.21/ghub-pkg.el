@@ -1,9 +1,9 @@
-(define-package "ghub" "20240218.2101" "Client libraries for Git forge APIs."
+(define-package "ghub" "20240303.21" "Client libraries for Git forge APIs."
   '((emacs "25.1")
     (compat "29.1.4.4")
     (let-alist "1.0.6")
     (treepy "0.1.2"))
-  :commit "c59de91717c2343ccba3adb9047d846edc35bc36" :authors
+  :commit "2dc1cee5d474476ae43be89d989f4c81e6c7bf23" :authors
   '(("Jonas Bernoulli" . "jonas@bernoul.li"))
   :maintainer
   '("Jonas Bernoulli" . "jonas@bernoul.li")

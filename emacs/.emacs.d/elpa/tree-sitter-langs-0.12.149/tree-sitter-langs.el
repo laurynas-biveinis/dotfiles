@@ -5,7 +5,7 @@
 ;; Author: Tuấn-Anh Nguyễn <ubolonton@gmail.com>
 ;; Keywords: languages tools parsers tree-sitter
 ;; Homepage: https://github.com/emacs-tree-sitter/tree-sitter-langs
-;; Version: 0.12.148
+;; Version: 0.12.149
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
 ;; SPDX-License-Identifier: MIT
 
@@ -185,6 +185,7 @@ See `tree-sitter-langs-repos'."
                 (org-mode               . org)
                 (pascal-mode            . pascal)
                 (perl-mode              . perl)
+                (cperl-mode             . perl)
                 (php-mode               . php)
                 (qss-mode               . css)
                 (prisma-mode            . prisma)
