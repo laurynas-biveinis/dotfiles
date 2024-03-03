@@ -94,6 +94,9 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
         if investment_action == "Cash":
             output_file.write(f"P{payer}\n")
             output_file.write("LBank Charges:Account Charge\n")
+        elif investment_action == "IntInc":
+            output_file.write(f"Y{payer}\n")
+            output_file.write("LInterest Income\n")
         else:
             output_file.write(f"Y{payer}\n")
         if investment_action == "Sell":
