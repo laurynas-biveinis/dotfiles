@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+source ~/.zshenv
+
+mbsync -a
+
+echo "Mail sync completed at $(date)!"

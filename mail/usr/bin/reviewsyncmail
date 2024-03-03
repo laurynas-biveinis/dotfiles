@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+readonly LOG=~/syncmail.out
+
+if [[ ! -f $LOG ]]; then
+    echo "$LOG not present"
+    exit
+fi
+
+less $LOG
+
+while true; do
+    read -r "?Delete $LOG? " yn
+    case $yn in
+        [Yy]* ) rm $LOG; break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer y or n";;
+    esac
+done
