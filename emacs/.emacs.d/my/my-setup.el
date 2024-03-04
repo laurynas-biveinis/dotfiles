@@ -602,6 +602,62 @@
 
 (require 'my-project)
 
+;;; Features: email
+;; `mu4e'
+;; `mu4e-attachment-dir', `mu4e-contexts', `mu4e-bookmarks', &
+;; `mu4e-maildir-shortcuts' are defined elsewhere.
+(require 'mu4e)
+;; Do not take the whole frame, use the existing window
+(add-to-list 'display-buffer-alist
+             `(,(regexp-quote mu4e-main-buffer-name)
+               display-buffer-same-window))
+(setq mu4e-mu-binary (executable-find "mu"))
+(setq mu4e-get-mail-command (concat (executable-find "mbsync") " -a"))
+(setq mu4e-change-filenames-when-moving t)
+(setq mu4e-confirm-quit nil)
+(setq mu4e-context-policy 'pick-first)
+(setq mu4e-compose-context-policy 'ask)
+;; GMail-specific behavior. Make it per-context if adding a non-GMail acocunt
+(setq mu4e-sent-messages-behavior 'delete)
+;; FIXME(laurynas): why the default of using the locale results in incorrect
+;; formatting?
+(setq mu4e-headers-date-format "%F")
+(setq mu4e-headers-fields '((:human-date . 10)
+                            (:flags . 3)
+                            (:mailing-list . 10)
+                            (:from . 22)
+                            (:thread-subject)))
+;; Move point to first unread e-mail:
+;; https://emacs.stackexchange.com/a/51807/16376
+(defun dotfiles--m4e-move-to-first-unread ()
+  "Move point to the first unread message in the m4e headers view buffer."
+  (mu4e-headers-find-if
+   (lambda (msg)
+     (let ((flags (mu4e-message-field msg :flags)))
+       (member 'unread flags))))
+  (when (get-buffer-window mu4e-headers-buffer-name)
+    (switch-to-buffer mu4e-headers-buffer-name))
+  (recenter 0))
+(add-hook 'mu4e-headers-found-hook #'dotfiles--m4e-move-to-first-unread)
+;; GMail-like setup
+;; TODO(laurynas): remove 'List' from `mu4e-headers-fields'?
+;; TODO(laurynas): solve misalignment issues with the SFMono font and enabled
+;; fancy chars
+(setq mu4e-use-fancy-chars t)
+(add-hook 'mu4e-thread-mode-hook #'mu4e-thread-fold-apply-all)
+(setq mu4e-eldoc-support t)
+;; TODO(laurynas): iCalendar support
+;; (https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html)
+;; TODO(laurynas): `dired' integration
+;; (https://www.djcbsoftware.nl/code/mu/mu4e/Dired.html)
+
+;; Integrate `mu4e' with the rest of Emacs
+(setq mail-user-agent 'mu4e-user-agent)
+(set-variable 'read-mail-command 'mu4e)
+
+;; `smtpmail'
+(require 'smtpmail)
+
 ;;; Features: `calculator'
 (require 'calculator)
 (setq calculator-electric-mode t)
