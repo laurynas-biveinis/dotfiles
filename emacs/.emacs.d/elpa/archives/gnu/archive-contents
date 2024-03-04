@@ -168,6 +168,18 @@
 			  ("Thien-Thi Nguyen" . "ttn@gnu.org"))
 			 (:maintainer "Thien-Thi Nguyen" . "ttn@gnu.org")
 			 (:url . "http://www.gnuvola.org/software/aa2u/"))])
+ (assess .
+	 [(0 7)
+	  ((emacs
+	    (24 4))
+	   (m-buffer
+	    (0 15)))
+	  "Test support functions" tar
+	  ((:maintainer "Phillip Lord" . "phillip.lord@russet.org.uk")
+	   (:authors
+	    ("Phillip Lord" . "phillip.lord@russet.org.uk"))
+	   (:url . "https://elpa.gnu.org/packages/assess.html")
+	   (:commit . "cadeb24a5d8261fad4bdfdc09e7d571cc395a6ca"))])
  (async .
 	[(1 9 8)
 	 ((emacs
@@ -2226,6 +2238,20 @@
 	 (:authors
 	  ("Naoya Yamashita" . "conao3@gmail.com"))
 	 (:commit . "7cc38f9739eadc569b1179fabe7f7893167105da"))])
+ (lentic .
+	 [(0 12)
+	  ((emacs
+	    (25))
+	   (m-buffer
+	    (0 13))
+	   (dash
+	    (2 5 0)))
+	  "One buffer as a view of another" tar
+	  ((:maintainer "Phillip Lord" . "phillip.lord@russet.org.uk")
+	   (:authors
+	    ("Phillip Lord" . "phillip.lord@russet.org.uk"))
+	   (:url . "https://elpa.gnu.org/packages/lentic.html")
+	   (:commit . "180c1082c016de790f9e6596b63329657c83ce20"))])
  (let-alist .
    [(1 0 6)
     ((emacs
@@ -2357,6 +2383,16 @@
 	("Oleh Krehel"))
        (:url . "https://elpa.gnu.org/packages/lv.html")
        (:commit . "54e9db2b023e03b6f6b46aeec48ea74fd51d4e11"))])
+ (m-buffer .
+	   [(0 16)
+	    ((seq
+	      (2 14)))
+	    "List-Oriented, Functional Buffer Manipulation" tar
+	    ((:maintainer "Phillip Lord" . "phillip.lord@russet.rg.uk")
+	     (:authors
+	      ("Phillip Lord" . "phillip.lord@russet.org.uk"))
+	     (:url . "https://elpa.gnu.org/packages/m-buffer.html")
+	     (:commit . "8a51de3366599e7fa52e37b596c9ce226b6f04c5"))])
  (map .
       [(3 3 1)
        ((emacs
