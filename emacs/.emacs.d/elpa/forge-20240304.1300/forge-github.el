@@ -47,7 +47,7 @@
 ;;; Query
 
 (defun forge--get-github-repository ()
-  (forge-github-repository-p (forge-get-repository 'maybe)))
+  (forge-github-repository-p (forge-get-repository :stub?)))
 
 ;;; Pull
 ;;;; Repository
@@ -406,7 +406,7 @@
                            (list githost
                                  .repository.owner.login
                                  .repository.name)
-                           nil 'create))
+                           nil :insert!))
                   (repoid (oref repo id))
                   (owner  (oref repo owner))
                   (name   (oref repo name))
@@ -511,7 +511,7 @@
   (let ((repos (cl-mapcan (lambda (name)
                             (let ((repo (forge-get-repository
                                          (list host owner name)
-                                         nil 'create)))
+                                         nil :insert!)))
                               (and (oref repo sparse-p)
                                    (list repo))))
                           names))
@@ -541,7 +541,7 @@
                 (magit-split-branch-name target))
                (`(,head-remote . ,head-branch)
                 (magit-split-branch-name source))
-               (head-repo (forge-get-repository 'stub head-remote)))
+               (head-repo (forge-get-repository :stub head-remote)))
     (forge--ghub-post repo "/repos/:owner/:repo/pulls"
       `((issue . ,(oref issue number))
         (base  . ,base-branch)
@@ -564,7 +564,7 @@
                   (magit-split-branch-name forge--buffer-base-branch))
                  (`(,head-remote . ,head-branch)
                   (magit-split-branch-name forge--buffer-head-branch))
-                 (head-repo (forge-get-repository 'stub head-remote))
+                 (head-repo (forge-get-repository :stub head-remote))
                  (url-mime-accept-string
                   ;; Support draft pull-requests.
                   "application/vnd.github.shadow-cat-preview+json"))

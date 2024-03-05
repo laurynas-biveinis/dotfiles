@@ -408,7 +408,7 @@ an error.  If NOT-THINGATPT is non-nil, then don't use
       (and-let* ((topic (forge-topic-at-point nil 'not-thingatpt)))
         (forge-get-repository topic))
       (and (not forge-buffer-unassociated-p)
-           (forge-get-repository nil))))
+           (forge-get-repository :known?))))
 
 (defun forge-region-topics ()
   (cond
@@ -500,7 +500,7 @@ can be selected from the start."
 
 (defun forge--read-topic (prompt current active all)
   (let* ((current (funcall current))
-         (repo    (forge-get-repository (or current t)))
+         (repo    (forge-get-repository (or current :tracked)))
          (default (and current (forge--format-topic-choice current)))
          (choices (mapcar #'forge--format-topic-choice (funcall active repo)))
          (choices (if (and default (not (member default choices)))
@@ -574,7 +574,7 @@ can be selected from the start."
     (and (looking-back "[!#][0-9]*" bol)
          (or (not bug-reference-prog-mode)
              (nth 8 (syntax-ppss))) ; inside comment or string
-         (setq repo (forge-get-repository t))
+         (setq repo (forge-get-repository :tracked))
          (looking-back (if (forge--childp repo 'forge-gitlab-repository)
                            "\\(?3:[!#]\\)\\(?2:[0-9]*\\)"
                          "#\\(?2:[0-9]*\\)")
@@ -619,7 +619,7 @@ can be selected from the start."
 (defun forge-read-topic-label (&optional prompt repository)
   (magit-completing-read (or prompt "Label")
                          (forge--format-topic-label-choices
-                          (or repository (forge-get-repository t)))
+                          (or repository (forge-get-repository :tracked)))
                          nil t))
 
 (defun forge-read-topic-labels (topic)
@@ -905,7 +905,7 @@ can be selected from the start."
   (and (forge-db t)
        (or forge-display-in-status-buffer
            (not (eq major-mode 'magit-status-mode)))
-       (and-let* ((repo (forge-get-repository nil)))
+       (and-let* ((repo (forge-get-repository :known?)))
          (and (not (oref repo sparse-p))
               (or (not issues-p)
                   (oref repo issues-p))
@@ -964,7 +964,7 @@ This mode itself is never used directly."
   (let* ((repo (forge-get-repository topic))
          (name (format "*forge: %s %s*" (oref repo slug) (oref topic slug)))
          (magit-generate-buffer-name-function (lambda (_mode _value) name))
-         (current-repo (forge-get-repository nil))
+         (current-repo (forge-get-repository :known?))
          (default-directory (if (and current-repo
                                      (eq (oref current-repo id)
                                          (oref repo id)))
@@ -1404,7 +1404,7 @@ Return a value between 0 and 1."
 (defun forge--markdown-translate-filename-function (file)
   (if (string-match-p "\\`https?://" file)
       file
-    (let ((host (oref (forge-get-repository t) githost)))
+    (let ((host (oref (forge-get-repository :tracked) githost)))
       (concat (if (member host ghub-insecure-hosts) "http://" "https://")
               host
               (and (not (string-prefix-p "/" file)) "/")
@@ -1572,7 +1572,7 @@ modify `bug-reference-bug-regexp' if appropriate."
               ;; TODO Allow use in this mode again.
               (derived-mode-p 'forge-notifications-mode))
     (magit--with-safe-default-directory nil
-      (when-let ((repo (forge-get-repository 'full)))
+      (when-let ((repo (forge-get-repository :tracked?)))
         (if (>= emacs-major-version 28)
             (when (derived-mode-p 'magit-status-mode
                                   'forge-notifications-mode)

@@ -55,7 +55,7 @@ Takes the pull-request as only argument and must return a directory."
 ;;;###autoload (autoload 'forge-dispatch "forge-commands" nil t)
 (transient-define-prefix forge-dispatch ()
   "Dispatch a forge command."
-  [:if forge--get-full-repository
+  [:if forge--get-repository:tracked?
    ["Create"
     ("c i" "issue"             forge-create-issue)
     ("c p" "pull-request"      forge-create-pullreq)
@@ -63,7 +63,7 @@ Takes the pull-request as only argument and must return a directory."
      forge-create-pullreq-from-issue
      :if forge--get-github-repository)
     ("c f" "fork or remote"    forge-fork)]]
-  [:if forge--get-full-repository
+  [:if forge--get-repository:tracked?
    ["List"
     ("t" "topics...         "  forge-topics-menu        :transient replace)
     ("n" "notifications...  "  forge-notifications-menu :transient replace)
@@ -73,9 +73,9 @@ Takes the pull-request as only argument and must return a directory."
     ("f t" "one topic        " forge-pull-topic)
     ("f n" "notifications    " forge-pull-notifications)]
    ["API Commands"
-    :if forge--get-full-repository
+    :if forge--get-repository:tracked?
     (7 "M" "merge" forge-merge)]]
-  [:if forge--get-full-repository
+  [:if forge--get-repository:tracked?
    ["Visit"
     ("v t" "topic"         forge-visit-topic)
     ("v i" "issue"         forge-visit-issue)
@@ -89,7 +89,7 @@ Takes the pull-request as only argument and must return a directory."
     ("b I" "issues"        forge-browse-issues)
     ("b P" "pull-requests" forge-browse-pullreqs)]]
   [["Configure"
-    :if forge--get-full-repository
+    :if forge--get-repository:tracked?
     ("a  " forge-add-repository)
     ("R  " forge-add-pullreq-refspec)
     ("s r" forge-forge.remote)
@@ -100,7 +100,7 @@ Takes the pull-request as only argument and must return a directory."
                    (if (magit-gitdir)
                        "Forge doesn't know about this Git repository yet"
                      "Not inside a Git repository"))
-    :if-not forge--get-full-repository
+    :if-not forge--get-repository:tracked?
     ("a" "add repository to database" forge-add-repository)
     ("f" "fetch notifications"        forge-pull-notifications)
     ("l" "list notifications"         forge-list-notifications)]])
@@ -129,7 +129,7 @@ If pulling is too slow, then also consider setting the Git variable
     (when (or (not repo) (oref repo sparse-p))
       (setq repo (forge-current-repository))
       (unless repo
-        (setq repo (forge-get-repository 'create))
+        (setq repo (forge-get-repository :insert!))
         (setq create t)))
     (when (or create interactive (magit-git-config-p "forge.autoPull" t))
       (when (and interactive
@@ -185,7 +185,7 @@ If pulling is too slow, then also consider setting the Git variable
 (defun forge-pull-notifications ()
   "Fetch notifications for all repositories from the current forge."
   (interactive)
-  (if-let ((repo (forge-get-repository 'maybe)))
+  (if-let ((repo (forge-get-repository :stub?)))
       (let ((class (eieio-object-class repo)))
         (if (eq class 'forge-github-repository)
             (forge--pull-notifications class (oref repo githost))
@@ -201,7 +201,7 @@ If pulling is too slow, then also consider setting the Git variable
    (list (read-number "Pull topic: "
                       (and-let* ((topic (forge-current-topic)))
                         (oref topic number)))))
-  (let ((repo (forge-get-repository t)))
+  (let ((repo (forge-get-repository :tracked)))
     (forge--pull-topic
      repo (forge-issue :repository (oref repo id) :number number))))
 
@@ -224,14 +224,14 @@ If pulling is too slow, then also consider setting the Git variable
 (defun forge-browse-issues ()
   "Visit the current repository's issues using a browser."
   (interactive)
-  (browse-url (forge--format (forge-get-repository 'stub)
+  (browse-url (forge--format (forge-get-repository :stub)
                              'issues-url-format)))
 
 ;;;###autoload
 (defun forge-browse-pullreqs ()
   "Visit the current repository's pull-requests using a browser."
   (interactive)
-  (browse-url (forge--format (forge-get-repository 'stub)
+  (browse-url (forge--format (forge-get-repository :stub)
                              'pullreqs-url-format)))
 
 ;;;###autoload
@@ -357,12 +357,12 @@ argument also offer closed pull-requests."
   (forge--format repo 'remote-url-format))
 
 (cl-defmethod forge-get-url ((_(eql :commit)) commit)
-  (let ((repo (forge-get-repository 'stub)))
+  (let ((repo (forge-get-repository :stub)))
     (unless (magit-list-containing-branches
              commit "-r" (concat (oref repo remote) "/*"))
       (if-let* ((branch (car (magit-list-containing-branches commit "-r")))
                 (remote (cdr (magit-split-branch-name branch))))
-          (setq repo (forge-get-repository 'stub remote))
+          (setq repo (forge-get-repository :stub remote))
         (message "%s does not appear to be available on any remote.  %s"
                  commit "You might have to push it first.")))
     (forge--format repo 'commit-url-format
@@ -377,12 +377,12 @@ argument also offer closed pull-requests."
       (unless (setq remote (or (magit-get-push-remote branch)
                                (magit-get-upstream-remote branch)))
         (user-error "Cannot determine remote for %s" branch)))
-    (forge--format (forge-get-repository 'stub remote)
+    (forge--format (forge-get-repository :stub remote)
                    'branch-url-format
                    `((?r . ,branch)))))
 
 (cl-defmethod forge-get-url ((_(eql :remote)) remote)
-  (forge--format (forge-get-repository 'stub remote) 'remote-url-format))
+  (forge--format (forge-get-repository :stub remote) 'remote-url-format))
 
 (cl-defmethod forge-get-url ((post forge-post))
   (forge--format post (let ((topic (forge-get-parent post)))
@@ -447,7 +447,7 @@ with a prefix argument also closed topics."
 (defun forge-create-issue ()
   "Create a new issue for the current repository."
   (interactive)
-  (let* ((repo (forge-get-repository t))
+  (let* ((repo (forge-get-repository :tracked))
          (buf (forge--prepare-post-buffer
                "new-issue"
                (forge--format repo "Create new issue on %p"))))
@@ -460,7 +460,7 @@ with a prefix argument also closed topics."
 (defun forge-create-pullreq (source target)
   "Create a new pull-request for the current repository."
   (interactive (forge-create-pullreq--read-args))
-  (let* ((repo (forge-get-repository t))
+  (let* ((repo (forge-get-repository :tracked))
          (buf (forge--prepare-post-buffer
                "new-pullreq"
                (forge--format repo "Create new pull-request on %p")
@@ -499,7 +499,7 @@ with a prefix argument also closed topics."
                          (if (magit-remote-branch-p d)
                              d
                            (magit-get-push-branch d t))))))
-         (repo    (forge-get-repository t))
+         (repo    (forge-get-repository :tracked))
          (remote  (oref repo remote))
          (targets (delete source (magit-list-remote-branch-names remote)))
          (target  (magit-completing-read
@@ -606,7 +606,7 @@ point is currently on."
   (interactive)
   (let ((comment (forge-comment-at-point t)))
     (when (yes-or-no-p "Really delete the current comment? ")
-      (forge--delete-comment (forge-get-repository t) comment))))
+      (forge--delete-comment (forge-get-repository :tracked) comment))))
 
 ;;; Branch
 
@@ -871,7 +871,7 @@ is added anyway.  Currently this only supports Github and Gitlab."
                         (or (plist-get (cdr (assoc fork forge-owned-accounts))
                                        'remote-name)
                             fork)))))
-  (let ((repo (forge-get-repository 'stub)))
+  (let ((repo (forge-get-repository :stub)))
     (forge--fork-repository repo fork)
     (magit-remote-add remote
                       (magit-clone--format-url (oref repo githost) fork
@@ -892,7 +892,8 @@ done that and respond by automatically marking the pull-request
 as merged."
   (interactive
    (list (forge-read-pullreq "Merge pull-request")
-         (if (forge--childp (forge-get-repository t) 'forge-gitlab-repository)
+         (if (forge--childp (forge-get-repository :tracked)
+                            'forge-gitlab-repository)
              (magit-read-char-case "Merge method " t
                (?m "[m]erge"  'merge)
                (?s "[s]quash" 'squash))
@@ -914,7 +915,7 @@ as merged."
 Change the name on the upstream remote and locally, and update
 the upstream remotes of local branches accordingly."
   (interactive)
-  (let* ((repo (forge-get-repository 'full))
+  (let* ((repo (forge-get-repository :tracked?))
          (_ (unless (forge-github-repository-p repo)
               (user-error "Updating default branch not supported for forge `%s'"
                           (oref repo forge))))
@@ -964,7 +965,7 @@ the upstream remotes of local branches accordingly."
   "Toggle whether to display topics in the current status buffer."
   :inapt-if-not (lambda ()
                   (and (eq major-mode 'magit-status-mode)
-                       (forge-get-repository nil)))
+                       (forge-get-repository :known?)))
   :description (lambda ()
                  (if forge-display-in-status-buffer
                      "hide all topics"
@@ -980,7 +981,7 @@ This only affect the current status buffer."
   :inapt-if-not (lambda ()
                   (and forge-display-in-status-buffer
                        (eq major-mode 'magit-status-mode)
-                       (forge-get-repository nil)))
+                       (forge-get-repository :known?)))
   :description (lambda ()
                  (if (or (atom forge-topic-list-limit)
                          (> (cdr forge-topic-list-limit) 0))
@@ -1003,7 +1004,7 @@ upstream remote.  Also fetch from REMOTE."
   :if-not 'forge--pullreq-refspec
   :description "add pull-request refspec"
   (interactive)
-  (let* ((repo    (forge-get-repository 'stub))
+  (let* ((repo    (forge-get-repository :stub))
          (remote  (oref repo remote))
          (fetch   (magit-get-all "remote" remote "fetch"))
          (refspec (oref repo pullreq-refspec)))
@@ -1015,7 +1016,7 @@ upstream remote.  Also fetch from REMOTE."
       (magit-git-fetch remote (magit-fetch-arguments)))))
 
 (defun forge--pullreq-refspec ()
-  (let* ((repo    (forge-get-repository 'stub))
+  (let* ((repo    (forge-get-repository :stub))
          (remote  (oref repo remote))
          (fetch   (magit-get-all "remote" remote "fetch"))
          (refspec (oref repo pullreq-refspec)))
@@ -1030,19 +1031,19 @@ Offer to either pull topics (now and in the future) or to only
 pull individual topics when the user invokes `forge-pull-topic'."
   :description (lambda ()
                  (format "add %srepository to database"
-                         (if (forge-get-repository nil) "another " "")))
+                         (if (forge-get-repository :known?) "another " "")))
   (interactive
    (let ((str (magit-read-string-ns
                "Add repository to database (url or name)"
-               (and-let* ((repo (forge-get-repository 'stub))
+               (and-let* ((repo (forge-get-repository :stub))
                           (remote (oref repo remote)))
                  (magit-git-string "remote" "get-url" remote)))))
      (if (string-match-p "\\(://\\|@\\)" str)
          (list str)
        (list (magit-clone--name-to-url str)))))
-  (if (forge-get-repository url nil 'full)
+  (if (forge-get-repository url nil :tracked?)
       (user-error "%s is already tracked in Forge database" url)
-    (let ((repo (forge-get-repository url nil 'create)))
+    (let ((repo (forge-get-repository url nil :insert!)))
       (oset repo sparse-p nil)
       (magit-read-char-case "Pull " nil
         (?a "[a]ll topics"
