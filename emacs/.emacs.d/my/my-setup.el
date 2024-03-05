@@ -613,6 +613,7 @@
                display-buffer-same-window))
 (setq mu4e-mu-binary (executable-find "mu"))
 (setq mu4e-get-mail-command (concat (executable-find "mbsync") " -a"))
+(setq mu4e-update-interval 1200)
 (setq mu4e-change-filenames-when-moving t)
 (setq mu4e-confirm-quit nil)
 (setq mu4e-context-policy 'pick-first)
