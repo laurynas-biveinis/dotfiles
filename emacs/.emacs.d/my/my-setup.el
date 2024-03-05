@@ -640,12 +640,12 @@
     (switch-to-buffer mu4e-headers-buffer-name))
   (recenter 0))
 (add-hook 'mu4e-headers-found-hook #'dotfiles--m4e-move-to-first-unread)
-;; GMail-like setup
 ;; TODO(laurynas): remove 'List' from `mu4e-headers-fields'?
 ;; TODO(laurynas): solve misalignment issues with the SFMono font and enabled
 ;; fancy chars
 (setq mu4e-use-fancy-chars t)
 (add-hook 'mu4e-thread-mode-hook #'mu4e-thread-fold-apply-all)
+(setq mu4e-headers-include-related nil)
 (setq mu4e-eldoc-support t)
 ;; TODO(laurynas): iCalendar support
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html)
@@ -654,10 +654,19 @@
 
 ;; Integrate `mu4e' with the rest of Emacs
 (setq mail-user-agent 'mu4e-user-agent)
-(set-variable 'read-mail-command 'mu4e)
+(set-variable 'read-mail-command #'mu4e)
 
 ;; `smtpmail'
 (require 'smtpmail)
+
+;; `message'
+(setq message-kill-buffer-on-exit t)
+(setq message-send-mail-function #'message-send-mail-with-sendmail)
+(setq message-sendmail-envelope-from 'header)
+
+;; `sendmail'
+(setq sendmail-program (executable-find "msmtp"))
+(setq send-mail-function #'message-send-mail-with-sendmail)
 
 ;;; Features: `calculator'
 (require 'calculator)
