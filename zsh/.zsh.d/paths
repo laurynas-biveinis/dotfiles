@@ -22,6 +22,7 @@ function prepend_to_manpath_if_exists()
     fi
 }
 
+prepend_to_path_if_exists /usr/local/texlive/2023basic/bin/universal-darwin
 prepend_to_path_if_exists /usr/lib/ccache
 prepend_to_path_if_exists /usr/local/bin
 prepend_to_path_if_exists /usr/local/sbin

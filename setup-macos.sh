@@ -392,7 +392,9 @@ pip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
 
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner michaelvillar-timer utm activitywatch
+     telegram keycombiner michaelvillar-timer utm activitywatch basictex
+# TeX
+sudo tlmgr install dvipng
 # Start RescueTime, login
 
 # Intel
@@ -418,4 +420,3 @@ brew install mono
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
      guitar-pro transcribe
 duti -s jp.tmkk.XLD .flac all
-
