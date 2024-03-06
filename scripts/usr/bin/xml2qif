@@ -293,6 +293,22 @@ def parse_transaction_codes(txn):
     return domain, family, subfamily
 
 
+def get_rule(transaction_type, domain, family, subfamily):
+    """Get the ad-hoc rule type from the transaction parameters."""
+    if transaction_type == TransactionType.DEPOSIT:
+        return "deposit"
+    if domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
+        return "loan"
+    if domain == TransactionDomain.PAYMENTS:
+        if (family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION
+                and subfamily == CCRDTransactionSubfamily.FEES):
+            return "card_fee"
+        if (family == PaymentsTransactionFamily.OTHER
+                and subfamily == OtherTransactionSubfamily.OTHER):
+            return "bank_service"
+    return ""
+
+
 def process_transactions(root, rules):
     """Convert all the transactions in the given XML document root"""
     for txn in root.findall(XPATH_TRANSACTIONS, NS):
@@ -303,20 +319,7 @@ def process_transactions(root, rules):
         unstructured_info = get_transaction_unstructured_info(txn)
         transaction_type = get_transaction_type(txn)
         domain, family, subfamily = parse_transaction_codes(txn)
-
-        # Map transaction type, domain, family & subfamily to rule type
-        rule_type = ""
-        if transaction_type == TransactionType.DEPOSIT:
-            rule_type = "deposit"
-        elif domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
-            rule_type = "loan"
-        elif domain == TransactionDomain.PAYMENTS:
-            if (family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION
-                    and subfamily == CCRDTransactionSubfamily.FEES):
-                rule_type = "card_fee"
-            elif (family == PaymentsTransactionFamily.OTHER
-                    and subfamily == OtherTransactionSubfamily.OTHER):
-                rule_type = "bank_service"
+        rule_type = get_rule(transaction_type, domain, family, subfamily)
 
         print(
             f"Before: date: {date}, amount: {amount}, creditor: {creditor}, "
