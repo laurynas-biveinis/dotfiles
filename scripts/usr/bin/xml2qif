@@ -4,8 +4,8 @@
 Currently tested banks are Citadele and Luminor. The QIFs are produced with the
 intent to import them to Banktivity.
 
-This is configured by a configuration file ~/.xml2qifrc which contains a section
-per rule. Each rule must have some input and output keys.
+This is configured by a configuration file ~/.xml2qifrc which contains a
+section per rule. Each rule must have some input and output keys.
 Input keys:
 - match (required): a regex to match one of the text fields. The following
   fields are attempted to match in this order, if present: creditor, debitor,
