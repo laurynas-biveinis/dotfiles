@@ -21,7 +21,8 @@ surprises, and adding polish here and there. Of course, that is very much a work
 in progress.
 
 The bulk of configuration is in
-[setup.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/setup.el),
+[my-setup.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/my/my-setup.el),
+along with some parts split into its own files in the same directory,
 there is also
 [early-init.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/early-init.el)
 and
