@@ -16,6 +16,8 @@ Input keys:
   - loan: domain is "Loans, Deposits, & Syndications"
   - card_fee: domain is "Payments", family is "Customer Card Transaction", &
     subfamily is "Fees"
+  - bank_service: domain is "Payments", family is "Other", & subfamily is
+    "Other".
   - deposit: type is deposit.
 Output keys, all of which are required:
 - payee
@@ -107,12 +109,13 @@ class LDASTransactionFamily(Enum):
 
 
 @add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD', 'FEES': 'FEES',
-                  'NTAV': 'NOT_AVAILABLE'})
+                  'DAJT': 'CREDIT_ADJUSTMENT', 'NTAV': 'NOT_AVAILABLE'})
 class CCRDTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in a Customer Card Transaction (CCRD)
     family."""
     POS_PAYMENT_DEBIT_CARD = auto()
     FEES = auto()
+    CREDIT_ADJUSTMENT = auto()
     NOT_AVAILABLE = auto()
 
 
@@ -302,16 +305,18 @@ def process_transactions(root, rules):
         domain, family, subfamily = parse_transaction_codes(txn)
 
         # Map transaction type, domain, family & subfamily to rule type
+        rule_type = ""
         if transaction_type == TransactionType.DEPOSIT:
             rule_type = "deposit"
         elif domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
             rule_type = "loan"
-        elif (domain == TransactionDomain.PAYMENTS and
-              family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION and
-              subfamily == CCRDTransactionSubfamily.FEES):
-            rule_type = "card_fee"
-        else:
-            rule_type = ""
+        elif domain == TransactionDomain.PAYMENTS:
+            if (family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION
+                    and subfamily == CCRDTransactionSubfamily.FEES):
+                rule_type = "card_fee"
+            elif (family == PaymentsTransactionFamily.OTHER
+                    and subfamily == OtherTransactionSubfamily.OTHER):
+                rule_type = "bank_service"
 
         print(
             f"Before: date: {date}, amount: {amount}, creditor: {creditor}, "
