@@ -177,6 +177,86 @@ def find_matching_rule(rules, amount, type_key, text):
     return None
 
 
+class Transaction:
+    """A parsed and later converted transaction."""
+
+    def __init__(self, xml_txn):
+        self._unstructured_info = get_transaction_unstructured_info(xml_txn)
+        self._date = get_transaction_date(xml_txn)
+        self._amount = get_transaction_amount(xml_txn)
+        self._creditor = get_creditor(xml_txn)
+        self._debitor = get_debitor(xml_txn)
+        self._transaction_type = get_transaction_type(xml_txn)
+        self._domain, self._family, self._subfamily = parse_txn_codes(xml_txn)
+        self._rule_type = get_rule(self._transaction_type, self._domain,
+                                   self._family, self._subfamily)
+        self._payee = ""
+        self._category = ""
+
+    def __str__(self):
+        return (
+            f"Transaction(date: {self._date}, amount: {self._amount}, "
+            f"creditor: {self._creditor}, debitor: {self._debitor}, "
+            f"unstructured_info: {self._unstructured_info}, "
+            f"type: {self._transaction_type}, domain: {self._domain}, "
+            f"family: {self._family}, subfamily: {self._subfamily}, "
+            f"rule_type: {self._rule_type}, payee: {self._payee}, "
+            f"category: {self._category})"
+        )
+
+    def add_fields_by_rule(self, rules):
+        """Find a matching rule for transaction processing and apply it"""
+        rewrite_rule = None
+        if self._debitor:
+            rewrite_rule = find_matching_rule(rules, self._amount,
+                                              self._rule_type, self._debitor)
+        if rewrite_rule is None and self._creditor:
+            rewrite_rule = find_matching_rule(rules, self._amount,
+                                              self._rule_type, self._creditor)
+        if rewrite_rule is None:
+            rewrite_rule = find_matching_rule(rules, self._amount,
+                                              self._rule_type,
+                                              self._unstructured_info)
+        if rewrite_rule is None:
+            raise ValueError(f"Please add a rule for {self._creditor}, "
+                             f"{self._debitor} or {self._unstructured_info}")
+
+        self._payee = rewrite_rule["payee"]
+        self._category = rewrite_rule["category"]
+
+    def rule_fields(self):
+        """Get a string with processed fields only"""
+        return (
+            f"Transaction rule fields(payee: {self._payee}, "
+            f"category: {self._category})"
+        )
+
+    @property
+    def date(self):
+        """Get the transaction date."""
+        return self._date
+
+    @property
+    def type(self):
+        """Get the transactino type."""
+        return self._transaction_type
+
+    @property
+    def amount(self):
+        """Get the transaction amount."""
+        return self._amount
+
+    @property
+    def payee(self):
+        """Get the transaction payee."""
+        return self._payee
+
+    @property
+    def category(self):
+        """Get the transaction category."""
+        return self._category
+
+
 def get_transaction_unstructured_info(txn):
     """Get the unstructured information from the transcation"""
     unstructured_info_obj = txn.find(XPATH_UNSTRUCTURED, NS)
@@ -261,7 +341,7 @@ def get_transaction_subfamily_string(txn):
     return subfamily_obj.text
 
 
-def parse_transaction_codes(txn):
+def parse_txn_codes(txn):
     """Parse the transaction codes to return domain, family, & subfamily"""
     domain = get_transaction_domain(txn)
     family_str = get_transaction_family_string(txn)
@@ -311,50 +391,24 @@ def get_rule(transaction_type, domain, family, subfamily):
 
 def process_transactions(root, rules):
     """Convert all the transactions in the given XML document root"""
-    for txn in root.findall(XPATH_TRANSACTIONS, NS):
-        date = get_transaction_date(txn)
-        amount = get_transaction_amount(txn)
-        creditor = get_creditor(txn)
-        debitor = get_debitor(txn)
-        unstructured_info = get_transaction_unstructured_info(txn)
-        transaction_type = get_transaction_type(txn)
-        domain, family, subfamily = parse_transaction_codes(txn)
-        rule_type = get_rule(transaction_type, domain, family, subfamily)
+    for xml_txn in root.findall(XPATH_TRANSACTIONS, NS):
+        transaction = Transaction(xml_txn)
 
-        print(
-            f"Before: date: {date}, amount: {amount}, creditor: {creditor}, "
-            f"debitor: {debitor}, unstructured_info: {unstructured_info}, "
-            f"type: {transaction_type}, domain: {domain}, family: {family}, "
-            f"subfamily: {subfamily}, rule_type: {rule_type}"
-        )
+        print(f"Before: {transaction}")
 
-        rewrite_rule = None
-        if debitor:
-            rewrite_rule = find_matching_rule(rules, amount, rule_type,
-                                              debitor)
-        if rewrite_rule is None and creditor:
-            rewrite_rule = find_matching_rule(rules, amount, rule_type,
-                                              creditor)
-        if rewrite_rule is None:
-            rewrite_rule = find_matching_rule(rules, amount, rule_type,
-                                              unstructured_info)
-        if rewrite_rule is None:
-            raise ValueError(f"Please add a rule for {creditor}, {debitor} or "
-                             f"{unstructured_info}")
-        payee = rewrite_rule["payee"]
-        category = rewrite_rule["category"]
+        transaction.add_fields_by_rule(rules)
 
-        print(f"After: payee: {payee}, category: {category}")
+        print(f"After: {transaction.rule_fields()}")
 
-        output_file.write(f"D{date}\n")
-        if transaction_type == TransactionType.DEPOSIT:
-            output_file.write(f"T{amount}\n")
-        elif transaction_type == TransactionType.WITHDRAWAL:
-            output_file.write(f"T-{amount}\n")
+        output_file.write(f"D{transaction.date}\n")
+        if transaction.type == TransactionType.DEPOSIT:
+            output_file.write(f"T{transaction.amount}\n")
+        elif transaction.type == TransactionType.WITHDRAWAL:
+            output_file.write(f"T-{transaction.amount}\n")
         else:
-            raise ValueError(f"Unknown transaction type {transaction_type}")
-        output_file.write(f"P{payee}\n")
-        output_file.write(f"L{category}\n")
+            raise ValueError(f"Unknown transaction type {transaction.type}")
+        output_file.write(f"P{transaction.payee}\n")
+        output_file.write(f"L{transaction.category}\n")
         output_file.write("^\n")
 
 
