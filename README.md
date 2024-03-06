@@ -47,9 +47,7 @@ Unfortunately, that is not always possible.
 [company](https://github.com/company-mode/company-mode)
 [helm](https://emacs-helm.github.io/helm/)
 [projectile](https://github.com/bbatsov/helm-projectile)
-[vterm](https://github.com/akermu/emacs-libvterm)
-[deadgrep](https://github.com/Wilfred/deadgrep)
-[undo-tree](http://www.dr-qubit.org/undo-tree.html)
+[m4e](https://djcbsoftware.nl/code/mu/)
 
 #### Major
 
@@ -59,6 +57,9 @@ Unfortunately, that is not always possible.
 [google-c-style](https://github.com/google/styleguide/blob/gh-pages/google-c-style.el)
 [tree-sitter](https://emacs-tree-sitter.github.io)
 [org-gcal](https://github.com/kidd/org-gcal.el)
+[vterm](https://github.com/akermu/emacs-libvterm)
+[deadgrep](https://github.com/Wilfred/deadgrep)
+[undo-tree](http://www.dr-qubit.org/undo-tree.html)
 
 #### Nice-to-have, niche, & specific major modes
 
