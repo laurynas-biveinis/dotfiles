@@ -628,18 +628,6 @@
                             (:mailing-list . 10)
                             (:from . 22)
                             (:thread-subject)))
-;; Move point to first unread e-mail:
-;; https://emacs.stackexchange.com/a/51807/16376
-(defun dotfiles--m4e-move-to-first-unread ()
-  "Move point to the first unread message in the m4e headers view buffer."
-  (mu4e-headers-find-if
-   (lambda (msg)
-     (let ((flags (mu4e-message-field msg :flags)))
-       (member 'unread flags))))
-  (when (get-buffer-window mu4e-headers-buffer-name)
-    (switch-to-buffer mu4e-headers-buffer-name))
-  (recenter 0))
-(add-hook 'mu4e-headers-found-hook #'dotfiles--m4e-move-to-first-unread)
 ;; TODO(laurynas): remove 'List' from `mu4e-headers-fields'?
 ;; TODO(laurynas): solve misalignment issues with the SFMono font and enabled
 ;; fancy chars
@@ -647,6 +635,8 @@
 (add-hook 'mu4e-thread-mode-hook #'mu4e-thread-fold-apply-all)
 (setq mu4e-headers-include-related nil)
 (setq mu4e-eldoc-support t)
+;; TODO(laurynas): context switching not fully automatic
+;; TODO(laurynas): make window background white for HTML emails to match GMail?
 ;; TODO(laurynas): iCalendar support
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html)
 ;; TODO(laurynas): `dired' integration
