@@ -258,7 +258,10 @@ event of an error or nonlocal exit."
 
 ;;; `org-gcal'
 (require 'org-gcal)
-;; TODO(laurynas): fetch automatically?
+;; TODO(laurynas): fetch automatically? But resolve
+;; "~/.emacs.d/oauth2-auto.plist does not end in newline. Add one? (y or n)" to
+;; add the newline automatically first.
+;; TODO(laurynas): Can `org-gcal-local-timezeone' be automated?
 ;; TODO(laurynas): key binding for `org-gcal-post-at-point'?
 ;; TODO(laurynas): key binding (and some command) to create a new event? How to
 ;; check for scheduling conflicts?
