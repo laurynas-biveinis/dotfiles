@@ -315,7 +315,8 @@ brew install stow git ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
      hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
      colordiff iwyu cppcheck infer creduce gnu-sed mas bat fig actionlint \
      circleci imagemagick cmake ripgrep boost cpplint duf exa \
-     clang-build-analyzer recode ninja difftastic git-lfs plantuml gcalcli asdf
+     clang-build-analyzer recode ninja difftastic git-lfs plantuml gcalcli \
+     asdf watch
 git lfs install
 
 # gnupg@2.2.41 because newer versions up to 2.4.3 inclusive hang when called
