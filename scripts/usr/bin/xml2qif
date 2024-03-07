@@ -92,10 +92,12 @@ class TransactionDomain(Enum):
 
 
 @add_from_string({'CCRD': 'CUSTOMER_CARD_TRANSACTION',
+                  'RCDT': 'RECEIVED_CREDIT_TRANSFER',
                   'ICDT': 'ISSUED_CREDIT_TRANSFER', 'OTHR': 'OTHER'})
 class PaymentsTransactionFamily(Enum):
     """A CAMT.053 transaction family in the Payments domain"""
     CUSTOMER_CARD_TRANSACTION = auto()
+    RECEIVED_CREDIT_TRANSFER = auto()
     ISSUED_CREDIT_TRANSFER = auto()
     OTHER = auto()
 
