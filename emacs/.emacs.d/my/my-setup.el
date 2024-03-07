@@ -433,7 +433,7 @@
       flycheck-status-emoji-indicator-suspicious ?❔)
 (flycheck-status-emoji-mode)
 
-;;; Programming
+;;;; Programming
 
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
@@ -448,19 +448,17 @@
 ;; themselves.
 (remove-hook 'xref-backend-functions #'etags--xref-backend)
 
-;; `tree-sitter'. Migrate to Emacs 29 `treesit' once `c++-ts-mode' supports at
-;; least
-;; - Google C style
-;; - Documentation comment font lock (`c-doc-comment-style')
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
+;;; tree-sitter
+;; TODO(laurynas): add more supported languages
+;; TODO(laurynas): if adding org support, confirm there is no large performance
+;; penalty on large buffers, like it was with the external tree-sitter.
+(setq treesit-language-source-alist
+      '((c "https://github.com/tree-sitter/tree-sitter-c/")
+        (c++ "https://github.com/tree-sitter/tree-sitter-cpp/")))
 
-;; Do not enable `tree-sitter' on `org-mode' due to a large performance penalty
-;; on large buffers.
-(assoc-delete-all 'org-mode tree-sitter-major-mode-language-alist)
-
-(global-tree-sitter-mode)
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+(add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+(add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+(add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
 
 ;; Compilation
 (require 'compile)
@@ -472,31 +470,33 @@
 
 ;;; C and C++ programming
 
-;; `cc-mode'
-(require 'cc-mode)
-(require 'cc-vars)
+;; Google C/C++ style for tree-sitter. Source:
+;; https://www.reddit.com/r/emacs/comments/16zhgrd/weekly_tips_tricks_c_thread/k48j8f5/
+;; TODO(laurynas): TAB still behaves interestingly in clang-format'ed sources
+(defun google-c-style-ts-indent-style ()
+  "Configure Google C++ style indentation."
+  `(
+    ;; align function arguments to the start of the first one, offset if standalone
+    ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+    ((parent-is "argument_list") (nth-sibling 1) 0)
+    ;; same for parameters
+    ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+    ((parent-is "parameter_list") (nth-sibling 1) 0)
+    ;; indent inside case blocks
+    ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
+    ;; do not indent preprocessor statements
+    ((node-is "preproc") column-0 0)
+    ;; Don't indent inside namespaces
+    ((n-p-gp nil nil "namespace_definition") grand-parent 0)
+    ;; append to bsd style
+    ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
+(setq c-ts-mode-indent-style #'google-c-style-ts-indent-style)
 
-;; TAB indents only if point in the beginning of the line
-(setq c-tab-always-indent 1)
-
-;; Typing # moves it to the first column, when not under LSP
-(setq c-electric-pound-behavior '(alignleft))
-
-(setq c-doc-comment-style
-      '((c-mode . javadoc)
-        (c++-mode . javadoc)))
-
-(defun dotfiles--c-mode-common-hook ()
-  "My customization of cc-mode init."
-  (define-key c-mode-base-map (kbd "<RET>") #'c-context-line-break)
-  (define-key c-mode-base-map (kbd "C-o") #'c-context-open-line)
-  (c-toggle-auto-hungry-state 1))
-
-(add-hook 'c-initialization-hook #'dotfiles--c-mode-common-hook)
-
-;; Google C style
-(require 'google-c-style)
-(c-add-style "google" google-c-style)
+;; TODO(laurynas): restore documentation comment font locking
+;; (`c-doc-comment-style' in the non-TS `c-mode'). Check
+;; https://github.com/Lindydancer/highlight-doxygen and
+;; https://emacs.stackexchange.com/q/78274/16376
+;; TODO(laurynas): the equivalent of `c-tab-always-indent' in `c-ts-mode'
 
 ;; `flycheck-google-cpplint'
 (require 'flycheck-google-cpplint)

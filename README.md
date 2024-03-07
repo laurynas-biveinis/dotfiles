@@ -54,8 +54,6 @@ Unfortunately, that is not always possible.
 [GCMH](https://gitlab.com/koral/gcmh)
 [org-roam](https://github.com/org-roam/org-roam)
 [wgrep](https://github.com/mhayashi1120/Emacs-wgrep)
-[google-c-style](https://github.com/google/styleguide/blob/gh-pages/google-c-style.el)
-[tree-sitter](https://emacs-tree-sitter.github.io)
 [org-gcal](https://github.com/kidd/org-gcal.el)
 [vterm](https://github.com/akermu/emacs-libvterm)
 [deadgrep](https://github.com/Wilfred/deadgrep)
@@ -111,12 +109,11 @@ Unfortunately, that is not always possible.
 
 #### Packages bundled with Emacs
 
-tramp erc cc-mode
+tramp ts
 
 ### Improvements, fixed annoyances, and bug workarounds
 
 * [Disable global-display-fill-column-indicator in read-only buffers](https://www.reddit.com/r/emacs/comments/ja97xs/weekly_tipstricketc_thread/g903xa3?utm_source=share&utm_medium=web2x&context=3)
-* [Replace some cc-mode formatting commands with lsp-mode ones](https://www.reddit.com/r/emacs/comments/ikgfxd/weekly_tipstricketc_thread/g3z9rcb?utm_source=share&utm_medium=web2x&context=3)
 * [macOS: add the missing man page paths for woman](https://www.reddit.com/r/emacs/comments/ig7zzo/weekly_tipstricketc_thread/g34s8dl?utm_source=share&utm_medium=web2x&context=3)
 * [Re-enable Shellcheck if using lsp-mode with bash-language-server](https://www.reddit.com/r/emacs/comments/hqxm5v/weekly_tipstricketc_thread/fy4pvr8?utm_source=share&utm_medium=web2x&context=3)
 * [Clicking on URLs should open them instead of spellchecking them](https://www.reddit.com/r/emacs/comments/it4m2w/weekly_tipstricketc_thread/g5pff92?utm_source=share&utm_medium=web2x&context=3)

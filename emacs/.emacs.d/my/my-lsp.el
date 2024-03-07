@@ -26,10 +26,6 @@
                                 ;; So that edited but not yet saved header
                                 ;; contents are used instead of the disk version
                                 "-use-dirty-headers"))
-;; TODO(laurynas): LSP-formatting yanked region is nice, but it formats
-;; surroundings of the region too, which is very annoying in case of i.e. C++
-;; and a missing semicolon at the end of the region.
-(setq lsp-enable-indentation nil)
 ;; TODO(laurynas): C and C++ docs render with interspersed random backslashes:
 ;; https://emacs.stackexchange.com/questions/55056/how-to-improve-eldoc-lsp-mode-output-with-c-c-comments
 ;; https://github.com/jrblevin/markdown-mode/issues/409
@@ -38,6 +34,9 @@
 (setq lsp-restart 'auto-restart)
 (setq lsp-semantic-tokens-enable t)
 (setq lsp-headerline-breadcrumb-enable t)
+
+(add-to-list 'lsp-language-id-configuration '(c-ts-mode . "c"))
+(add-to-list 'lsp-language-id-configuration '(c++-ts-mode . "cpp"))
 
 (defun dotfiles--lsp-mode-line ()
   "Construct the mode line text for `lsp-mode'."
@@ -78,65 +77,6 @@
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-tramp-flycheck-reduce)
 
-;; Breaks idempotence of this file, which I am not using anyway.
-(if (fboundp #'lsp-format-defun)
-    (display-warning
-     'dotfiles
-     "‘lsp-format-defun’ defined by ‘lsp-mode’: fix it in setup.el!"
-     :warning))
-
-(defvar-local dotfiles--use-lsp-indent nil
-  "If t, use LSP instead of cc-mode for indentation in this buffer.")
-
-(require 'cc-cmds)
-
-(defun lsp-format-defun ()
-  "Format the current `cc-mode' defun using LSP."
-  (interactive "p" prog-mode)
-  (save-mark-and-excursion
-    (c-mark-function)
-    (lsp-format-region (region-beginning) (region-end))))
-
-(defun dotfiles--lsp-format-defun-advice (orig-fun)
-  "Format the defun using LSP with a fallback to ORIG-FUN (‘c-indent-defun’)."
-  (if dotfiles--use-lsp-indent (lsp-format-defun)
-    (funcall orig-fun)))
-
-(defun dotfiles--lsp-format-region-advice (orig-fun &rest args)
-  "Format the region (ARGS) using LSP with a fallback to ORIG-FUN."
-  (if dotfiles--use-lsp-indent (apply #'lsp-format-region args)
-    (apply orig-fun args)))
-
-;; Implementation of the next two functions uses internal symbols from
-;; `lsp-mode', not ideal, but I haven't found an alternative.
-(defun dotfiles--lsp-disable-electric-keys ()
-  "Disable any electric keys if LSP on type formatting is enabled."
-  ;; Using internal LSP symbols is not ideal but I don't see an alternative.
-  (when (and lsp-enable-on-type-formatting (lsp--capability
-                                            :documentOnTypeFormattingProvider))
-    (electric-layout-mode -1)
-    ;; It seems it's OK to call this in non-cc-mode buffers too
-    (electric-pair-local-mode -1)
-    (c-toggle-electric-state -1)))
-
-(defun dotfiles--lsp-replace-cc-mode-indent ()
-  "Make ‘c-indent-defun’ and ‘c-indent-region’ use LSP.
-
-This is only done if LSP is configured to indent and the language server
-supports range formatting."
-  (when (and lsp-enable-indentation
-             ;; Using internal LSP symbols is not ideal but I don't see an
-             ;; alternative.
-             (or (lsp--capability :documentRangeFormattingProvider)
-                 (lsp--registered-capability "textDocument/rangeFormatting")))
-    (setq-local dotfiles--use-lsp-indent t)
-    (advice-add #'c-indent-defun :around #'dotfiles--lsp-format-defun-advice)
-    (advice-add #'c-indent-region :around #'dotfiles--lsp-format-region-advice)))
-
-(defun dotfiles--lsp-restore-cc-mode-indent (_lsp_workspace)
-  "Make ‘c-indent-defun’ and ‘c-indent-region’ no longer use LSP."
-  (setq-local dotfiles--use-lsp-indent nil))
-
 (defun dotfiles--lsp-disable-eldoc ()
   "Disable eldoc for LSP."
   (eldoc-mode -1))
@@ -144,18 +84,12 @@ supports range formatting."
 (defun dotfiles--lsp-uninitialization (_lsp_workspace)
   "General cleanup after LSP uninitialization."
   (electric-layout-mode)
-  ;; It seems it's OK to call this in non-cc-mode buffers too
-  (c-toggle-electric-state)
   (electric-pair-local-mode)
   (eldoc-mode))
 
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-replace-cc-mode-indent)
 (add-hook 'lsp-after-open-hook #'yas-minor-mode-on)
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-electric-keys)
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-eldoc)
 
-(add-hook 'lsp-after-uninitialized-functions
-          #'dotfiles--lsp-restore-cc-mode-indent)
 (add-hook 'lsp-after-uninitialized-functions #'dotfiles--lsp-uninitialization)
 
 ;;; Setup `topsy', make `lsp-mode' play nicely with it.
