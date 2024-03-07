@@ -452,6 +452,7 @@
 ;; TODO(laurynas): add more supported languages
 ;; TODO(laurynas): if adding org support, confirm there is no large performance
 ;; penalty on large buffers, like it was with the external tree-sitter.
+(require 'treesit)
 (setq treesit-language-source-alist
       '((c "https://github.com/tree-sitter/tree-sitter-c/")
         (c++ "https://github.com/tree-sitter/tree-sitter-cpp/")))
@@ -469,6 +470,8 @@
 (with-eval-after-load 'compile (fancy-compilation-mode))
 
 ;;; C and C++ programming
+
+(require 'c-ts-mode)
 
 ;; Google C/C++ style for tree-sitter. Source:
 ;; https://www.reddit.com/r/emacs/comments/16zhgrd/weekly_tips_tricks_c_thread/k48j8f5/
