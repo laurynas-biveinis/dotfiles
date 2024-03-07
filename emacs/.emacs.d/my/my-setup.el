@@ -641,6 +641,9 @@
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html)
 ;; TODO(laurynas): `dired' integration
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/Dired.html)
+;; TODO(laurynas): remove "mu4e:main", "mu4e:headers", & "mu4e:view" from the
+;; modeline. Simply adding these string to `rich-minority' settings does not
+;; appear to work. Maybe because these are major modes.
 
 ;; Integrate `mu4e' with the rest of Emacs
 (setq mail-user-agent 'mu4e-user-agent)
