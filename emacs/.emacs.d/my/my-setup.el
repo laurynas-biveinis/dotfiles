@@ -657,6 +657,11 @@
 (setq message-send-mail-function #'message-send-mail-with-sendmail)
 (setq message-sendmail-envelope-from 'header)
 
+;; `mml'
+;; TODO(laurynas): this one is new in 29.1. Confirm that it has effect in
+;; `mu4e'.
+(setq mml-attach-file-at-the-end t)
+
 ;; `sendmail'
 (setq sendmail-program (executable-find "msmtp"))
 (setq send-mail-function #'message-send-mail-with-sendmail)
