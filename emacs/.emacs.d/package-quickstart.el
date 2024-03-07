@@ -6651,7 +6651,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240303.21/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240303.21/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240306.1814/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240306.1814/ghub-autoloads.el"))
 
 
 
@@ -11437,7 +11437,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240305.2237/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240305.2237/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240305.2250/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240305.2250/forge-autoloads.el"))
 
 
 
@@ -13064,7 +13064,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240305.2237" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240303.21" "/Users/laurynas/.emacs.d/elpa/magit-20240228.2349" "/Users/laurynas/.emacs.d/elpa/magit-section-20240221.1835" "/Users/laurynas/.emacs.d/elpa/transient-20240226.2332" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240305.2250" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240306.1814" "/Users/laurynas/.emacs.d/elpa/magit-20240228.2349" "/Users/laurynas/.emacs.d/elpa/magit-section-20240221.1835" "/Users/laurynas/.emacs.d/elpa/transient-20240226.2332" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
