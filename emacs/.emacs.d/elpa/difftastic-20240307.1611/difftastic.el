@@ -84,6 +84,9 @@
 ;;   Language is guessed based on buffers modes.  When called with prefix
 ;;   argument it will ask for language to use.
 ;;
+;; - `difftastic-dired-diff' - same as `dired-diff', but with
+;;   `difftastic-files' instead of the built-in `diff'.
+;;
 ;; - `difftastic-rerun' ('g') - rerun difftastic for the current buffer.  It
 ;;   runs difftastic again in the current buffer, but respects the window
 ;;   configuration.  It uses `difftastic-rerun-requested-window-width-function'
@@ -105,6 +108,7 @@
 
 (require 'ansi-color)
 (require 'cl-lib)
+(require 'dired)
 (require 'ediff)
 (require 'font-lock)
 (require 'magit)
@@ -241,7 +245,9 @@ N.B. only foreground and background properties will be used."
 
 (defcustom difftastic-rerun-requested-window-width-function
   #'difftastic-rerun-requested-window-width
-  "Function used to calculate a requested width for a rerun of a difftastic call."
+  "Function used to calculate a requested width for a rerun of a difftastic call.
+When it is set to nil, the value of
+`difftastic-requested-window-width-function' is used."
   :type 'function
   :group 'difftastic)
 
@@ -277,6 +283,8 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
 
 (defun difftastic-next-file ()
   "Move to the next file."
+  ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
+  (declare (modes difftastic-mode))
   (interactive)
   (if-let ((next (difftastic--next-chunk t)))
       (goto-char next)
@@ -284,6 +292,8 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
 
 (defun difftastic-next-chunk ()
   "Move to the next chunk."
+  ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
+  (declare (modes difftastic-mode))
   (interactive)
   (if-let ((next (difftastic--next-chunk)))
       (goto-char next)
@@ -291,6 +301,8 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
 
 (defun difftastic-previous-file ()
   "Move to the previous file."
+  ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
+  (declare (modes difftastic-mode))
   (interactive)
   (if-let ((previous (difftastic--prev-chunk t)))
       (goto-char previous)
@@ -298,6 +310,8 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
 
 (defun difftastic-previous-chunk ()
   "Move to the previous chunk."
+  ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
+  (declare (modes difftastic-mode))
   (interactive)
   (if-let ((previous (difftastic--prev-chunk)))
       (goto-char previous)
@@ -376,7 +390,7 @@ data."
   (let ((chunk-regexp (if file-chunk
                           'difftastic--chunk-regexp-file
                         'difftastic--chunk-regexp-chunk))
-        (languages (difftastic--languages)))
+        (languages (difftastic--get-languages)))
     (or (eval chunk-regexp)
         (set chunk-regexp
              (rx-to-string
@@ -393,13 +407,15 @@ data."
                  (seq " --- Text ("
                       (or
                        (seq (1+ digit)
-                               " " (or ,@(cl-remove "Text" languages
-                                          :test #'string=))
-                               " parse error" (? "s")
-                               ", exceeded DFT_PARSE_ERROR_LIMIT")
-                       (seq "exceeded "
-                            (or "DFT_GRAPH_LIMIT"
-                                "DFT_BYTE_LIMIT")))
+                            " " (or ,@(cl-remove "Text" languages
+                                                 :test #'string=))
+                            " parse error" (? "s")
+                            ", exceeded DFT_PARSE_ERROR_LIMIT")
+                       (seq "exceeded DFT_GRAPH_LIMIT")
+                       (seq (1+ digit)
+                            (or (seq "." (= 2 digit) " " (any "KMGTPE") "iB")
+                                (seq " " (? (any "KMGTPE") "i") "B"))
+                            " exceeded DFT_BYTE_LIMIT"))
                       ")"))
                 eol))))))
 
@@ -430,18 +446,19 @@ for.  Return nil when no chunk is found."
             (cl-return-from searching-next-chunk chunk-bol)))))))
 
 (defun difftastic--prev-chunk (&optional file-chunk)
-"Find line beginning position of previous chunk.
+  "Find line beginning position of previous chunk.
 When FILE-CHUNK is t only first file chunks are searched
 for.  Return nil when no chunk is found."
   (let ((chunk-regexp (difftastic--chunk-regexp file-chunk)))
     (save-excursion
       (goto-char (line-beginning-position))
-      (backward-char)
-      (cl-block searching-prev-chunk
-        (while (re-search-backward chunk-regexp nil t)
-          (when-let ((chunk-bol
-                      (difftastic--chunk-bol file-chunk)))
-            (cl-return-from searching-prev-chunk chunk-bol)))))))
+      (when (> (point) (point-min))
+        (backward-char)
+        (cl-block searching-prev-chunk
+          (while (re-search-backward chunk-regexp nil t)
+            (when-let ((chunk-bol
+                        (difftastic--chunk-bol file-chunk)))
+              (cl-return-from searching-prev-chunk chunk-bol))))))))
 
 ;; From `view-mode'
 
@@ -471,6 +488,8 @@ current buffer."
 
 (defun difftastic-leave ()
   "Quit difftastic mode and maybe switch buffers, but don't kill this buffer."
+  ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
+  (declare (modes difftastic-mode))
   (interactive)
   (difftastic-mode--do-exit))
 
@@ -478,6 +497,8 @@ current buffer."
   "Quit difftastic mode, kill current buffer trying to restore window and buffer.
 Try to restore selected window to previous state and go to
 previous buffer or window."
+  ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
+  (declare (modes difftastic-mode))
   (interactive)
   (difftastic-mode--do-exit 'kill-buffer))
 
@@ -485,6 +506,8 @@ previous buffer or window."
   "Quit difftastic mode, kill current buffer trying to restore windows and buffers.
 Try to restore all windows viewing buffer to previous state and
 go to previous buffer or window."
+  ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
+  (declare (modes difftastic-mode))
   (interactive)
   (difftastic-mode--do-exit 'kill-buffer t))
 
@@ -702,11 +725,11 @@ Each argument is matched as regexp.")
 (defun difftastic--transform-diff-arguments (args)
   "Transform \\='git diff\\=' ARGS to be compatible with difftastic.
 This removes arguments converts some arguments to be compatible
-with difftastic (i.e., \\='-U\\=' to \\='--context\\=')and
+with difftastic (i.e., \\='-U\\=' to \\='--context\\=') and
 removes some that are incompatible (i.e., \\='--stat\\=',
 \\='--no-ext-diff\\=').  The return value is a list in a form
 of (GIT-ARGS DIFFT-ARGS), where GIT-ARGS are arguments to be
-passed to \\='git\\', and DIFFT-ARGS are arguments to be passed
+passed to \\='git\\=', and DIFFT-ARGS are arguments to be passed
 to difftastic."
   (let (case-fold-search)
     (list
@@ -828,7 +851,7 @@ When REV couldn't be guessed or called with prefix arg ask for REV."
      (get-buffer-create (concat "*difftastic git show " rev "*"))
      (list "git" "--no-pager" "show" "--ext-diff" rev))))
 
-(defun difftastic---make-temp-file (prefix buffer)
+(defun difftastic--make-temp-file (prefix buffer)
   "Make a temporary file for BUFFER content with PREFIX included in file name."
   ;; adapted from `make-auto-save-file-name'
   (with-current-buffer buffer
@@ -845,7 +868,7 @@ When REV couldn't be guessed or called with prefix arg ask for REV."
       (make-temp-file (format "difftastic-%s-%s-" prefix buffer-name)
                       nil nil (buffer-string)))))
 
-(defun difftastic--get-file (prefix buffer)
+(defun difftastic--get-file-buf (prefix buffer)
   "If BUFFER visits a file return it else create a temporary file with PREFIX.
 The return value is a cons in a form of (FILE . BUF) where FILE
 is the file and BUF either is  nil if this is non temporary file,
@@ -857,18 +880,18 @@ or BUF is set to BUFFER if this is a temporary file."
                 (save-buffer buffer)
                 buffer-file)
             (setq buf buffer)
-            (difftastic---make-temp-file prefix buffer))))
+            (difftastic--make-temp-file prefix buffer))))
     (cons file buf)))
 
-(defun difftastic--delete-temp-file (file-buf)
+(defun difftastic--delete-temp-file-buf (file-buf)
   "Delete FILE-BUF when it is a temporary file.
-The FILE-BUF is a cons where car is the file and cdr is a buffer
-when it is a temporary file or nil otherwise."
+The FILE-BUF is a cons where car is the file and cdr is non-nil
+when it is a temporary or nil otherwise."
   (when-let ((file (car file-buf)))
     (when (and (cdr file-buf) (stringp file) (file-exists-p file))
       (delete-file file))))
 
-(defun difftastic--languages ()
+(defun difftastic--get-languages ()
   "Return list of language overrides supported by difftastic."
   (append
    '("Text")
@@ -937,20 +960,20 @@ argument."
                  (file-buf-A . ,file-buf-A)
                  (file-buf-B . ,file-buf-B))))
        (funcall difftastic-display-buffer-function buffer requested-width)
-       (difftastic--delete-temp-file file-buf-A)
-       (difftastic--delete-temp-file file-buf-B)))))
+       (difftastic--delete-temp-file-buf file-buf-A)
+       (difftastic--delete-temp-file-buf file-buf-B)))))
 
-(defmacro difftastic--with-temp-files (file-bufs &rest body)
+(defmacro difftastic--with-file-bufs (file-bufs &rest body)
   "Exectue the forms in BODY with each symbol in FILE-BUFS list `let'-bound to nil.
 If any form in BODY signals an error each element in FILE-BUFS will be passed
-to `difftastic--delete-temp-file'."
+to `difftastic--delete-temp-file-buf'."
   (declare (indent 1) (debug t))
   `(let ,file-bufs
      (condition-case err
          (progn ,@body)
-       ((error debug)
+       (error
         (dolist (file-buf (list ,@file-bufs))
-          (difftastic--delete-temp-file file-buf))
+          (difftastic--delete-temp-file-buf file-buf))
         (signal (car err) (cdr err))))))
 
 ;;;###autoload
@@ -980,16 +1003,16 @@ then ask for language before running difftastic."
            (when (or current-prefix-arg
                      (and (not (buffer-file-name (get-buffer bf-A)))
                           (not (buffer-file-name (get-buffer bf-B)))))
-             (let* ((languages (difftastic--languages))
+             (let* ((languages (difftastic--get-languages))
                     (suggested (difftastic--make-suggestion
                                 languages
                                 (get-buffer bf-A)
                                 (get-buffer bf-B))))
                (completing-read "Language: " languages nil t suggested))))))
 
-  (difftastic--with-temp-files (file-buf-A file-buf-B)
-    (setq file-buf-A (difftastic--get-file "A" (get-buffer buffer-A))
-          file-buf-B (difftastic--get-file "B" (get-buffer buffer-B)))
+  (difftastic--with-file-bufs (file-buf-A file-buf-B)
+    (setq file-buf-A (difftastic--get-file-buf "A" (get-buffer buffer-A))
+          file-buf-B (difftastic--get-file-buf "B" (get-buffer buffer-B)))
     (difftastic--files-internal
      (get-buffer-create
       (concat "*difftastic " buffer-A " " buffer-B "*"))
@@ -1029,7 +1052,7 @@ running difftastic."
                                       dir-B)))
                                    (ediff-get-default-file-name f 1)))
            (when current-prefix-arg
-             (completing-read "Language: " (difftastic--languages) nil t)))))
+             (completing-read "Language: " (difftastic--get-languages) nil t)))))
   (difftastic--files-internal
    (get-buffer-create (concat "*difftastic "
                               (file-name-nondirectory file-A)
@@ -1040,6 +1063,27 @@ running difftastic."
    (cons file-B nil)
    lang-override))
 
+;;;###autoload
+(defun difftastic-dired-diff (file &optional lang-override)
+  "Compare file at point with FILE using difftastic.
+
+The behavior is the same as `dired-diff', except for the prefix argument, which
+makes the function prompt for LANG-OVERRIDE.  See \\='difft
+--list-languages\\=' for language list."
+  ;; since Emacs-28 the `dired-mode' can be moved to interactive
+  (declare (modes dired-mode))
+  (interactive
+   (list 'interactive
+         (when current-prefix-arg
+           (completing-read "Language: " (difftastic--get-languages) nil t))))
+  (cl-letf (((symbol-function 'diff)
+             (lambda (current file _switches)
+               (difftastic-files current file lang-override)))
+            (current-prefix-arg nil))
+    (if (eq file 'interactive)
+        (call-interactively #'dired-diff))
+    (funcall #'dired-diff file)))
+
 (defun difftastic--rerun-file-buf (prefix file-buf rerun-alist)
   "Create a new temporary file for the FILE-BUF with PREFIX if needed.
 The new FILE-BUF is additionally set in RERUN-ALIST.  The FILE-BUF
@@ -1048,7 +1092,7 @@ temporary file or nil otherwise."
   (if-let ((buffer (cdr file-buf)))
       (if (buffer-live-p buffer)
           (setf (alist-get (intern (concat "file-buf-" prefix)) rerun-alist)
-                (difftastic--get-file prefix buffer))
+                (difftastic--get-file-buf prefix buffer))
         (user-error "Buffer %s [%s] doesn't exist anymore" prefix buffer))
     file-buf))
 
@@ -1061,16 +1105,18 @@ function is called with a prefix arg then ask for language before
 running difftastic.
 
 In order to determine requested width for difftastic a call to
-`difftastic-rerun-requested-window-width-function' is made."
+`difftastic-rerun-requested-window-width-function' is made.  When
+the latter is set to nil the call is made to
+`difftastic-requested-window-width-function'."
   ;; since Emacs-28 the `difftastic-mode' can be moved to interactive
   (declare (modes difftastic-mode))
   (interactive (list
                 (or (when current-prefix-arg
                       (completing-read "Language: "
-                                       (difftastic--languages) nil t)))))
+                                       (difftastic--get-languages) nil t)))))
   (if-let (((eq major-mode 'difftastic-mode))
            (rerun-alist (copy-tree difftastic--rerun-alist)))
-      (difftastic--with-temp-files (file-buf-A file-buf-B)
+      (difftastic--with-file-bufs (file-buf-A file-buf-B)
         (let-alist rerun-alist
           (setq file-buf-A
                 (difftastic--rerun-file-buf "A" .file-buf-A rerun-alist)
@@ -1080,7 +1126,9 @@ In order to determine requested width for difftastic a call to
                  (lang-override (or lang-override
                                     (alist-get 'lang-override rerun-alist)))
                  (requested-width
-                  (funcall difftastic-rerun-requested-window-width-function))
+                  (funcall (or
+                            difftastic-rerun-requested-window-width-function
+                            difftastic-requested-window-width-function)))
                  (process-environment
                   (if .git-command
                       (difftastic--build-git-process-environment
@@ -1103,8 +1151,8 @@ In order to determine requested width for difftastic a call to
              (lambda ()
                (with-current-buffer buffer
                  (setq difftastic--rerun-alist rerun-alist))
-               (difftastic--delete-temp-file file-buf-A)
-               (difftastic--delete-temp-file file-buf-B))))))
+               (difftastic--delete-temp-file-buf file-buf-A)
+               (difftastic--delete-temp-file-buf file-buf-B))))))
     (user-error "Nothing to rerun")))
 
 (provide 'difftastic)

@@ -48,6 +48,15 @@ function is called with a prefix arg then ask for language before
 running difftastic.
 
 (fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
+(autoload 'difftastic-dired-diff "difftastic" "\
+Compare file at point with FILE using difftastic.
+
+The behavior is the same as `dired-diff', except for the prefix argument, which
+makes the function prompt for LANG-OVERRIDE.  See \\='difft
+--list-languages\\=' for language list.
+
+(fn FILE &optional LANG-OVERRIDE)" t)
+(function-put 'difftastic-dired-diff 'command-modes '(dired-mode))
 (autoload 'difftastic-rerun "difftastic" "\
 Rerun difftastic in the current buffer.
 Optionally, provide a LANG-OVERRIDE to override language used.
@@ -56,7 +65,9 @@ function is called with a prefix arg then ask for language before
 running difftastic.
 
 In order to determine requested width for difftastic a call to
-`difftastic-rerun-requested-window-width-function' is made.
+`difftastic-rerun-requested-window-width-function' is made.  When
+the latter is set to nil the call is made to
+`difftastic-requested-window-width-function'.
 
 (fn &optional LANG-OVERRIDE)" t)
 (function-put 'difftastic-rerun 'command-modes '(difftastic-mode))
