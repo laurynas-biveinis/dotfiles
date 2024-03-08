@@ -390,7 +390,7 @@ class QIFTransaction(Transaction):
     def __init__(self, xml_txn, rules):
         super().__init__(xml_txn.date, xml_txn.transaction_type,
                          xml_txn.amount)
-        self._rule_type = xml_txn.get_rule()
+        self._rule_type = xml_txn.get_rule_type()
         self._payee, self._category = xml_txn.get_rule_fields(rules,
                                                               self._rule_type)
 
