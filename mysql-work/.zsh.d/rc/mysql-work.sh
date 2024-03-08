@@ -21,6 +21,7 @@
 # - mysql_cmake: in a build directory, figure out CMake options & run it. Any
 #   arguments will be passed through to CMake
 # - mysql_build: in a build directory, CMake and build
+# - mysql_build_all: build all build dirs below
 # - mysql_rebuild: in a build directory, build
 # - mysql_rebuild_all: rebuild all build dirs below
 #
@@ -828,20 +829,33 @@ mysql_build() {
 }
 
 # Must be called from the directory containing all the build directories
-mysql_rebuild_all() {
+for_all_build_dirs() {
+    local command="$1"
     for build_dir in "$MY_BUILD_DIR_PREFIX"*; do
         if [ ! -d "$build_dir" ]; then
             continue
         fi
 
         pushd "$build_dir" || return 1
-        mysql_rebuild
+
+        $command
+
         declare -i build_status=$?
         popd || return 1
         if [ $build_status -ne 0 ]; then
             return $build_status
         fi
     done
+}
+
+# Must be called from the directory containing all the build directories
+mysql_rebuild_all() {
+    for_all_build_dirs mysql_rebuild
+}
+
+# Must be called from the directory containing all the build directories
+mysql_build_all() {
+    for_all_build_dirs mysql_build
 }
 
 mtr() {

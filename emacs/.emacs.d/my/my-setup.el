@@ -435,6 +435,14 @@
 
 ;;;; Programming
 
+;; Compilation
+(require 'compile)
+(setq compilation-scroll-output 'first-error)
+(setq compilation-environment '("LANG=C"))
+
+(require 'fancy-compilation)
+(with-eval-after-load 'compile (fancy-compilation-mode))
+
 ;; Grand Unified Debugger
 (gud-tooltip-mode t)
 
@@ -461,17 +469,12 @@
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
 
-;; Compilation
-(require 'compile)
-(setq compilation-scroll-output 'first-error)
-(setq compilation-environment '("LANG=C"))
-
-(require 'fancy-compilation)
-(with-eval-after-load 'compile (fancy-compilation-mode))
-
 ;;; C and C++ programming
 
 (require 'c-ts-mode)
+;; Not an Emacs developer. If I ever become one, use project- or directory-local
+;; variables to set it.
+(setq c-ts-mode-emacs-source-suppport nil)
 
 ;; Google C/C++ style for tree-sitter. Source:
 ;; https://www.reddit.com/r/emacs/comments/16zhgrd/weekly_tips_tricks_c_thread/k48j8f5/
