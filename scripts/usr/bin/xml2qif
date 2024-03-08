@@ -14,6 +14,8 @@ Input keys:
 - type (optional): if present, then must be equal. Currently supported types
   are:
   - loan: domain is "Loans, Deposits, & Syndications"
+  - cash_from_card: domain is "Payments", family is "Customer Card
+    Transaction", & subfamily is "Cash Withdrawal"
   - card_fee: domain is "Payments", family is "Customer Card Transaction", &
     subfamily is "Fees"
   - bank_service: domain is "Payments", family is "Other", & subfamily is
@@ -97,12 +99,14 @@ class LDASTransactionFamily(Enum):
     MISC_DEBIT_OPS = auto()
 
 
-@add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD', 'FEES': 'FEES',
-                  'DAJT': 'CREDIT_ADJUSTMENT', 'NTAV': 'NOT_AVAILABLE'})
+@add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD', 'CWDL': 'CASH_WITHDRAWAL',
+                  'FEES': 'FEES', 'DAJT': 'CREDIT_ADJUSTMENT',
+                  'NTAV': 'NOT_AVAILABLE'})
 class CCRDTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in a Customer Card Transaction (CCRD)
     family."""
     POS_PAYMENT_DEBIT_CARD = auto()
+    CASH_WITHDRAWAL = auto()
     FEES = auto()
     CREDIT_ADJUSTMENT = auto()
     NOT_AVAILABLE = auto()
@@ -238,12 +242,14 @@ class XMLTransaction(Transaction):
             return "loan"
         if self._domain == TransactionDomain.PAYMENTS:
             if (self._family
-                    == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION
-                    and self._subfamily == CCRDTransactionSubfamily.FEES):
-                return "card_fee"
-        if (self._family == PaymentsTransactionFamily.OTHER
-                and self._subfamily == OtherTransactionSubfamily.OTHER):
-            return "bank_service"
+                    == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION):
+                if self._subfamily == CCRDTransactionSubfamily.CASH_WITHDRAWAL:
+                    return "cash_from_card"
+                if self._subfamily == CCRDTransactionSubfamily.FEES:
+                    return "card_fee"
+            if (self._family == PaymentsTransactionFamily.OTHER
+                    and self._subfamily == OtherTransactionSubfamily.OTHER):
+                return "bank_service"
         return ""
 
     def get_rule_fields(self, rules, rule_type):
