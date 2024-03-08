@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 brew install cmake cmake-language-server ninja
 
