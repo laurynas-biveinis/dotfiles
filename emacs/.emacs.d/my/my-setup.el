@@ -641,7 +641,7 @@
 ;; fancy chars
 (setq mu4e-use-fancy-chars t)
 (add-hook 'mu4e-thread-mode-hook #'mu4e-thread-fold-apply-all)
-(setq mu4e-headers-include-related nil)
+(setq mu4e-search-include-related nil)
 (setq mu4e-eldoc-support t)
 ;; TODO(laurynas): context switching not fully automatic
 ;; TODO(laurynas): make window background white for HTML emails to match GMail?
