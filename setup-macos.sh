@@ -314,9 +314,8 @@ brew update
 brew install stow git ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
      hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
      colordiff iwyu cppcheck infer creduce gnu-sed mas bat fig actionlint \
-     circleci imagemagick cmake ripgrep boost cpplint duf exa \
-     clang-build-analyzer recode ninja difftastic git-lfs plantuml gcalcli \
-     asdf watch
+     circleci imagemagick ripgrep boost cpplint duf exa clang-build-analyzer \
+     recode difftastic git-lfs plantuml gcalcli asdf watch
 git lfs install
 
 # gnupg@2.2.41 because newer versions up to 2.4.3 inclusive hang when called
@@ -362,19 +361,6 @@ virtualenv /opt/virtualenvs/asitop
 source /opt/virtualenvs/asitop/bin/activate
 pip install asitop
 sudo ln -sf /opt/virtualenvs/asitop/bin/asitop /usr/local/bin/asitop
-deactivate
-
-virtualenv /opt/virtualenvs/cmake-language-server
-source /opt/virtualenvs/cmake-language-server/bin/activate
-pip install cmake-language-server
-sudo ln -sf /opt/virtualenvs/cmake-language-server/bin/cmake-language-server \
-     /usr/local/bin/cmake-language-server
-deactivate
-
-virtualenv /opt/virtualenvs/cmakelang
-source /opt/virtualenvs/cmakelang/bin/activate
-pip install cmakelang
-sudo ln -sf /opt/virtualenvs/cmakelang/bin/cmakelang /usr/local/bin/cmakelang
 deactivate
 
 virtualenv /opt/virtualenvs/cppclean
