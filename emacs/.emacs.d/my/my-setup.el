@@ -463,11 +463,13 @@
 (require 'treesit)
 (setq treesit-language-source-alist
       '((c "https://github.com/tree-sitter/tree-sitter-c/")
-        (c++ "https://github.com/tree-sitter/tree-sitter-cpp/")))
+        (c++ "https://github.com/tree-sitter/tree-sitter-cpp/")
+        (python "https://github.com/tree-sitter/tree-sitter-python")))
 
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
+(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
 ;;; C and C++ programming
 

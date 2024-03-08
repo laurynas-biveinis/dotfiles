@@ -37,6 +37,7 @@
 
 (add-to-list 'lsp-language-id-configuration '(c-ts-mode . "c"))
 (add-to-list 'lsp-language-id-configuration '(c++-ts-mode . "cpp"))
+(add-to-list 'lsp-language-id-configuration '(python-ts-mode . "python"))
 
 (defun dotfiles--lsp-mode-line ()
   "Construct the mode line text for `lsp-mode'."
