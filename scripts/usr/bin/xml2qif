@@ -44,19 +44,6 @@ CONFIG_FN = "~/.xml2qifrc"
 NS = {"ns": "urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"}
 # XPaths inside a document:
 XPATH_TRANSACTIONS = "ns:BkToCstmrStmt/ns:Stmt/ns:Ntry"
-# XPaths inside a transaction:
-XPATH_AMOUNT = ".//ns:Amt"
-XPATH_BOOKING_DATE = ".//ns:BookgDt/ns:Dt"
-XPATH_VALUE_DATE = ".//ns:ValDt/ns:Dt"
-XPATH_TYPE_INDICATOR = ".//ns:CdtDbtInd"
-XPATH_DOMAIN = ".//ns:BkTxCd/ns:Domn/ns:Cd"
-XPATH_FAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:Cd"
-XPATH_SUBFAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:SubFmlyCd"
-XPATH_CREDITOR = ".//ns:NtryDtls/ns:TxDtls/ns:RltdPties/ns:Cdtr/ns:Nm"
-XPATH_DEBITOR = ".//ns:NtryDtls/ns:TxDtls/ns:RltdPties/ns:Dbtr/ns:Nm"
-XPATH_UNSTRUCTURED = ".//ns:NtryDtls/ns:TxDtls/ns:RmtInf/ns:Ustrd"
-
-US_DATE_PREFIX = re.compile("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
 
 
 def add_from_string(mapping):
@@ -180,58 +167,16 @@ def find_matching_rule(rules, amount, type_key, text):
 
 
 class Transaction:
-    """A parsed and later converted transaction."""
+    """Fields common to both XML and QIF transactions."""
 
-    def __init__(self, xml_txn):
-        self._unstructured_info = get_transaction_unstructured_info(xml_txn)
-        self._date = get_transaction_date(xml_txn)
-        self._amount = get_transaction_amount(xml_txn)
-        self._creditor = get_creditor(xml_txn)
-        self._debitor = get_debitor(xml_txn)
-        self._transaction_type = get_transaction_type(xml_txn)
-        self._domain, self._family, self._subfamily = parse_txn_codes(xml_txn)
-        self._rule_type = get_rule(self._transaction_type, self._domain,
-                                   self._family, self._subfamily)
-        self._payee = ""
-        self._category = ""
+    def __init__(self, date, transaction_type, amount):
+        self._date = date
+        self._type = transaction_type
+        self._amount = amount
 
     def __str__(self):
-        return (
-            f"Transaction(date: {self._date}, amount: {self._amount}, "
-            f"creditor: {self._creditor}, debitor: {self._debitor}, "
-            f"unstructured_info: {self._unstructured_info}, "
-            f"type: {self._transaction_type}, domain: {self._domain}, "
-            f"family: {self._family}, subfamily: {self._subfamily}, "
-            f"rule_type: {self._rule_type}, payee: {self._payee}, "
-            f"category: {self._category})"
-        )
-
-    def add_fields_by_rule(self, rules):
-        """Find a matching rule for transaction processing and apply it"""
-        rewrite_rule = None
-        if self._debitor:
-            rewrite_rule = find_matching_rule(rules, self._amount,
-                                              self._rule_type, self._debitor)
-        if rewrite_rule is None and self._creditor:
-            rewrite_rule = find_matching_rule(rules, self._amount,
-                                              self._rule_type, self._creditor)
-        if rewrite_rule is None:
-            rewrite_rule = find_matching_rule(rules, self._amount,
-                                              self._rule_type,
-                                              self._unstructured_info)
-        if rewrite_rule is None:
-            raise ValueError(f"Please add a rule for {self._creditor}, "
-                             f"{self._debitor} or {self._unstructured_info}")
-
-        self._payee = rewrite_rule["payee"]
-        self._category = rewrite_rule["category"]
-
-    def rule_fields(self):
-        """Get a string with processed fields only"""
-        return (
-            f"Transaction rule fields(payee: {self._payee}, "
-            f"category: {self._category})"
-        )
+        return (f"Transaction(date: {self._date}, type: {self._type}, "
+                f"amount: {self._amount})")
 
     @property
     def date(self):
@@ -239,185 +184,254 @@ class Transaction:
         return self._date
 
     @property
-    def type(self):
-        """Get the transactino type."""
-        return self._transaction_type
+    def transaction_type(self):
+        """Get the transaction type."""
+        return self._type
 
     @property
     def amount(self):
         """Get the transaction amount."""
         return self._amount
 
-    @property
-    def payee(self):
-        """Get the transaction payee."""
-        return self._payee
 
-    @property
-    def category(self):
-        """Get the transaction category."""
-        return self._category
+class XMLTransaction(Transaction):
+    """A transaction from XML file."""
 
+    _US_DATE_PREFIX = re.compile(
+        "^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
 
-def get_transaction_unstructured_info(txn):
-    """Get the unstructured information from the transcation"""
-    unstructured_info_obj = txn.find(XPATH_UNSTRUCTURED, NS)
-    if unstructured_info_obj is None:
-        return ""
-    return unstructured_info_obj.text
+    _XPATH_UNSTRUCTURED = ".//ns:NtryDtls/ns:TxDtls/ns:RmtInf/ns:Ustrd"
+    _XPATH_VALUE_DATE = ".//ns:ValDt/ns:Dt"
+    _XPATH_BOOKING_DATE = ".//ns:BookgDt/ns:Dt"
+    _XPATH_AMOUNT = ".//ns:Amt"
+    _XPATH_CREDITOR = ".//ns:NtryDtls/ns:TxDtls/ns:RltdPties/ns:Cdtr/ns:Nm"
+    _XPATH_DEBITOR = ".//ns:NtryDtls/ns:TxDtls/ns:RltdPties/ns:Dbtr/ns:Nm"
+    _XPATH_TYPE_INDICATOR = ".//ns:CdtDbtInd"
+    _XPATH_DOMAIN = ".//ns:BkTxCd/ns:Domn/ns:Cd"
+    _XPATH_FAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:Cd"
+    _XPATH_SUBFAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:SubFmlyCd"
 
+    def __init__(self, xml_obj):
+        self._unstructured_info = self._get_unstructured_info(xml_obj)
+        super().__init__(self._get_transaction_date(xml_obj),
+                         self._get_transaction_type(xml_obj),
+                         self._get_transaction_amount(xml_obj))
+        self._creditor = self._get_creditor(xml_obj)
+        self._debitor = self._get_debitor(xml_obj)
+        self._domain, self._family, self._subfamily = self._parse_txn_codes(
+            xml_obj)
 
-def get_transaction_date(txn):
-    """Get the transaction date from the transaction"""
-    value_date = txn.find(XPATH_VALUE_DATE, NS)
-    if value_date is not None:
-        return value_date.text
+    def __str__(self):
+        return (
+            f"XMLTransaction({super().__str__()}, creditor: {self._creditor}, "
+            f"debitor: {self._debitor}, "
+            f"unstructured_info: {self._unstructured_info}, "
+            f"domain: {self._domain}, "
+            f"family: {self._family}, subfamily: {self._subfamily})"
+        )
 
-    unstructured_info = get_transaction_unstructured_info(txn)
-    if unstructured_info and US_DATE_PREFIX.match(unstructured_info):
-        date_substr = unstructured_info[:10]
-        date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
-        return date_obj.strftime("%Y-%m-%d")
-
-    booking_date = txn.find(XPATH_BOOKING_DATE, NS)
-    if booking_date is not None:
-        return booking_date.text
-
-    raise ValueError("Don't know how to get the transaction date from the "
-                     "transaction")
-
-
-def get_transaction_amount(txn):
-    """Get the transaction amount from the transaction"""
-    amount_node = txn.find(XPATH_AMOUNT, NS)
-    if amount_node is None:
-        raise ValueError("Unable to find amount in the transaction")
-    return amount_node.text
-
-
-def get_creditor(txn):
-    """Get the creditor or empty string from the transaction"""
-    creditor_node = txn.find(XPATH_CREDITOR, NS)
-    return creditor_node.text if creditor_node is not None else ""
-
-
-def get_debitor(txn):
-    """Get the debitor or empty string from the transaction"""
-    debitor_node = txn.find(XPATH_DEBITOR, NS)
-    return debitor_node.text if debitor_node is not None else ""
-
-
-def get_transaction_type(txn):
-    """Get the transaction type from the transaction"""
-    type_indicator_obj = txn.find(XPATH_TYPE_INDICATOR, NS)
-    if type_indicator_obj is None:
-        raise ValueError("Unable to find transaction type indicator")
-    type_indicator_str = type_indicator_obj.text
-    # pylint: disable=E1101
-    return TransactionType.from_string(type_indicator_str)
-    # pylint: enable=E1101
-
-
-def get_transaction_domain(txn):
-    """Get the transaction domain from the transaction"""
-    domain_obj = txn.find(XPATH_DOMAIN, NS)
-    if domain_obj is None:
-        raise ValueError("Unable to find transaction domain code")
-    domain_str = domain_obj.text
-    return TransactionDomain.from_string(domain_str)  # pylint: disable=E1101
-
-
-def get_transaction_family_string(txn):
-    """Get the transaction family string."""
-    family_obj = txn.find(XPATH_FAMILY, NS)
-    if family_obj is None:
-        raise ValueError("Unable to find transaction family code")
-    return family_obj.text
-
-
-def get_transaction_subfamily_string(txn):
-    """Get the transaction subfamily string."""
-    subfamily_obj = txn.find(XPATH_SUBFAMILY, NS)
-    if subfamily_obj is None:
-        raise ValueError("Unable to find transaction subfamily code")
-    return subfamily_obj.text
-
-
-def parse_txn_codes(txn):
-    """Parse the transaction codes to return domain, family, & subfamily"""
-    domain = get_transaction_domain(txn)
-    family_str = get_transaction_family_string(txn)
-    subfamily_str = get_transaction_subfamily_string(txn)
-    # pylint: disable=E1101
-    if domain == TransactionDomain.PAYMENTS:
-        family = PaymentsTransactionFamily.from_string(family_str)
-        if family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION:
-            subfamily = CCRDTransactionSubfamily.from_string(subfamily_str)
-        elif family == PaymentsTransactionFamily.ISSUED_CREDIT_TRANSFER:
-            subfamily = ICDTTransactionSubfamily.from_string(subfamily_str)
-        elif family == PaymentsTransactionFamily.OTHER:
-            subfamily = OtherTransactionSubfamily.from_string(subfamily_str)
-        else:
-            subfamily = ""
-    elif domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
-        family = LDASTransactionFamily.from_string(family_str)
-        if family == LDASTransactionFamily.MISC_DEBIT_OPS:
-            subfamily = MiscDebitOpsTransactionSubfamily.from_string(
-                subfamily_str)
-        elif family == LDASTransactionFamily.FIXED_TERM_LOANS:
-            subfamily = FixedTermLoanTransactionSubfamily.from_string(
-                subfamily_str)
-        else:
-            subfamily = ""
-    else:
-        family = ""
-    # pylint: enable=E1101
-    return domain, family, subfamily
-
-
-def get_rule(transaction_type, domain, family, subfamily):
-    """Get the ad-hoc rule type from the transaction parameters."""
-    if transaction_type == TransactionType.DEPOSIT:
-        return "deposit"
-    if domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
-        return "loan"
-    if domain == TransactionDomain.PAYMENTS:
-        if (family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION
-                and subfamily == CCRDTransactionSubfamily.FEES):
-            return "card_fee"
-        if (family == PaymentsTransactionFamily.OTHER
-                and subfamily == OtherTransactionSubfamily.OTHER):
+    def get_rule_type(self):
+        """Get the ad-hoc rule type from the transaction parameters."""
+        if self.transaction_type == TransactionType.DEPOSIT:
+            return "deposit"
+        if self._domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
+            return "loan"
+        if self._domain == TransactionDomain.PAYMENTS:
+            if (self._family
+                    == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION
+                    and self._subfamily == CCRDTransactionSubfamily.FEES):
+                return "card_fee"
+        if (self._family == PaymentsTransactionFamily.OTHER
+                and self._subfamily == OtherTransactionSubfamily.OTHER):
             return "bank_service"
-    return ""
+        return ""
+
+    def get_rule_fields(self, rules, rule_type):
+        """Find a matching rule and and return its fields."""
+        rewrite_rule = None
+        if self._debitor:
+            rewrite_rule = find_matching_rule(rules, self.amount,
+                                              rule_type, self._debitor)
+        if rewrite_rule is None and self._creditor:
+            rewrite_rule = find_matching_rule(rules, self.amount,
+                                              rule_type, self._creditor)
+        if rewrite_rule is None:
+            rewrite_rule = find_matching_rule(rules, self.amount,
+                                              rule_type,
+                                              self._unstructured_info)
+        if rewrite_rule is None:
+            raise ValueError(f"Please add a rule for {self._creditor}, "
+                             f"{self._debitor} or {self._unstructured_info}")
+
+        return rewrite_rule["payee"], rewrite_rule["category"]
+
+    @classmethod
+    def _get_unstructured_info(cls, xml_obj):
+        """Get the unstructured information from the XML."""
+        result_node = xml_obj.find(cls._XPATH_UNSTRUCTURED, NS)
+        if result_node is None:
+            return ""
+        return result_node.text
+
+    def _get_transaction_date(self, xml_obj):
+        """Get the transaction date from the XML."""
+        value_date = xml_obj.find(self._XPATH_VALUE_DATE, NS)
+        if value_date is not None:
+            return value_date.text
+
+        if (self._unstructured_info and
+                self._US_DATE_PREFIX.match(self._unstructured_info)):
+            date_substr = self._unstructured_info[:10]
+            date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
+            return date_obj.strftime("%Y-%m-%d")
+
+        booking_date = xml_obj.find(self._XPATH_BOOKING_DATE, NS)
+        if booking_date is not None:
+            return booking_date.text
+
+        raise ValueError("Don't know how to get the transaction date from the "
+                         "transaction")
+
+    @classmethod
+    def _get_transaction_amount(cls, xml_obj):
+        """Get the transaction amount from the XML."""
+        amount_node = xml_obj.find(cls._XPATH_AMOUNT, NS)
+        if amount_node is None:
+            raise ValueError("Unable to find amount in the transaction")
+        return amount_node.text
+
+    @classmethod
+    def _get_creditor(cls, xml_obj):
+        """Get the creditor or empty string from the transaction"""
+        creditor_node = xml_obj.find(cls._XPATH_CREDITOR, NS)
+        return creditor_node.text if creditor_node is not None else ""
+
+    @classmethod
+    def _get_debitor(cls, xml_obj):
+        """Get the debitor or empty string from the transaction"""
+        debitor_node = xml_obj.find(cls._XPATH_DEBITOR, NS)
+        return debitor_node.text if debitor_node is not None else ""
+
+    @classmethod
+    def _get_transaction_type(cls, xml_obj):
+        """Get the transaction type from the transaction"""
+        type_indicator_obj = xml_obj.find(cls._XPATH_TYPE_INDICATOR, NS)
+        if type_indicator_obj is None:
+            raise ValueError("Unable to find transaction type indicator")
+        type_indicator_str = type_indicator_obj.text
+        # pylint: disable=E1101
+        return TransactionType.from_string(type_indicator_str)
+        # pylint: enable=E1101
+
+    @classmethod
+    def _get_transaction_domain(cls, xml_obj):
+        """Get the transaction domain from the transaction"""
+        domain_obj = xml_obj.find(cls._XPATH_DOMAIN, NS)
+        if domain_obj is None:
+            raise ValueError("Unable to find transaction domain code")
+        domain_str = domain_obj.text
+        # pylint: disable=E1101
+        return TransactionDomain.from_string(domain_str)
+        # pylint: enable=E1101
+
+    @classmethod
+    def _get_transaction_family_string(cls, xml_obj):
+        """Get the transaction family string."""
+        family_obj = xml_obj.find(cls._XPATH_FAMILY, NS)
+        if family_obj is None:
+            raise ValueError("Unable to find transaction family code")
+        return family_obj.text
+
+    @classmethod
+    def _get_transaction_subfamily_string(cls, xml_obj):
+        """Get the transaction subfamily string."""
+        subfamily_obj = xml_obj.find(cls._XPATH_SUBFAMILY, NS)
+        if subfamily_obj is None:
+            raise ValueError("Unable to find transaction subfamily code")
+        return subfamily_obj.text
+
+    @classmethod
+    def _parse_txn_codes(cls, xml_obj):
+        """Parse the transaction codes to return domain, family, & subfamily"""
+        domain = cls._get_transaction_domain(xml_obj)
+        family_str = cls._get_transaction_family_string(xml_obj)
+        subfamily_str = cls._get_transaction_subfamily_string(xml_obj)
+        # pylint: disable=E1101
+        if domain == TransactionDomain.PAYMENTS:
+            family = PaymentsTransactionFamily.from_string(family_str)
+            if family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION:
+                subfamily = CCRDTransactionSubfamily.from_string(subfamily_str)
+            elif family == PaymentsTransactionFamily.ISSUED_CREDIT_TRANSFER:
+                subfamily = ICDTTransactionSubfamily.from_string(subfamily_str)
+            elif family == PaymentsTransactionFamily.OTHER:
+                subfamily = OtherTransactionSubfamily.from_string(
+                    subfamily_str)
+            else:
+                subfamily = ""
+        elif domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
+            family = LDASTransactionFamily.from_string(family_str)
+            if family == LDASTransactionFamily.MISC_DEBIT_OPS:
+                subfamily = MiscDebitOpsTransactionSubfamily.from_string(
+                    subfamily_str)
+            elif family == LDASTransactionFamily.FIXED_TERM_LOANS:
+                subfamily = FixedTermLoanTransactionSubfamily.from_string(
+                    subfamily_str)
+            else:
+                subfamily = ""
+        else:
+            family = ""
+        # pylint: enable=E1101
+        return domain, family, subfamily
+
+
+class QIFTransaction(Transaction):
+    """A QIF transaction."""
+
+    def __init__(self, xml_txn, rules):
+        super().__init__(xml_txn.date, xml_txn.transaction_type,
+                         xml_txn.amount)
+        self._rule_type = xml_txn.get_rule()
+        self._payee, self._category = xml_txn.get_rule_fields(rules,
+                                                              self._rule_type)
+
+    def __str__(self):
+        return (
+            f"QIFTransaction({super().__str__()}, "
+            f"rule_type: {self._rule_type}, payee: {self._payee}, "
+            f"category: {self._category})"
+        )
+
+    def write(self, f):
+        """Serialize this transaction to QIF."""
+        f.write(f"D{self.date}\n")
+        if self.transaction_type == TransactionType.DEPOSIT:
+            f.write(f"T{self.amount}\n")
+        elif self.transaction_type == TransactionType.WITHDRAWAL:
+            f.write(f"T-{self.amount}\n")
+        else:
+            raise ValueError(
+                f"Unknown transaction type {self.transaction_type}")
+        f.write(f"P{self._payee}\n")
+        f.write(f"L{self._category}\n")
+        f.write("^\n")
 
 
 def process_transactions(root, rules):
     """Convert all the transactions in the given XML document root"""
-    for xml_txn in root.findall(XPATH_TRANSACTIONS, NS):
-        transaction = Transaction(xml_txn)
+    for xml_obj in root.findall(XPATH_TRANSACTIONS, NS):
+        xml_transaction = XMLTransaction(xml_obj)
+        print(f"Before: {xml_transaction}")
 
-        print(f"Before: {transaction}")
+        qif_transaction = QIFTransaction(xml_transaction, rules)
+        print(f"After: {qif_transaction}")
 
-        transaction.add_fields_by_rule(rules)
-
-        print(f"After: {transaction.rule_fields()}")
-
-        output_file.write(f"D{transaction.date}\n")
-        if transaction.type == TransactionType.DEPOSIT:
-            output_file.write(f"T{transaction.amount}\n")
-        elif transaction.type == TransactionType.WITHDRAWAL:
-            output_file.write(f"T-{transaction.amount}\n")
-        else:
-            raise ValueError(f"Unknown transaction type {transaction.type}")
-        output_file.write(f"P{transaction.payee}\n")
-        output_file.write(f"L{transaction.category}\n")
-        output_file.write("^\n")
+        qif_transaction.write(output_file)
 
 
 arg_parser = argparse.ArgumentParser(
     description="Convert bank statement in XML format (camt.053) to QIF for "
     "importing to Banktivity."
-)
+   )
 
 arg_parser.add_argument("input", type=str, help="The input file")
 arg_parser.add_argument("output", type=str, help="The output file")
