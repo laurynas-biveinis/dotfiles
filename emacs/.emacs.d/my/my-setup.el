@@ -474,28 +474,165 @@
 (require 'c-ts-mode)
 ;; Not an Emacs developer. If I ever become one, use project- or directory-local
 ;; variables to set it.
-(setq c-ts-mode-emacs-source-suppport nil)
+(setq c-ts-mode-emacs-sources-support nil)
 
-;; Google C/C++ style for tree-sitter. Source:
-;; https://www.reddit.com/r/emacs/comments/16zhgrd/weekly_tips_tricks_c_thread/k48j8f5/
-;; TODO(laurynas): TAB still behaves interestingly in clang-format'ed sources
+;; Google C/C++ style for tree-sitter. Stolen from
+;; https://github.com/ankurdave/dotfiles/blob/master/.emacs.d/packages.el#L673
+
+(defun ankurdave--treesit-left-child-while (node pred)
+  "Return the deepest left child of NODE that satisfies PRED."
+  (let ((last nil))
+    (while (and node (funcall pred node))
+      (setq last node
+            node (treesit-node-child-by-field-name node "left")))
+    last))
+
+(defun ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator
+    (_n parent &rest _)
+  "Anchor to the `<<' operator of the deepest binary expression within PARENT."
+  (save-excursion
+    (treesit-node-start
+     (treesit-node-child-by-field-name
+      (ankurdave--treesit-left-child-while
+       parent
+       (lambda (node)
+         (and node
+              (string-match-p "binary_expression" (treesit-node-type node))
+              (string-match-p "<<" (treesit-node-string
+                                    (treesit-node-child-by-field-name
+                                     node "operator"))))))
+      "operator"))))
+
+(defun ankurdave--c-ts-mode--parent-operator-is-left-shift (node parent _bol
+                                                                 &rest _)
+  "Check if the PARENT for NODE at BOL operator is <<."
+  (and
+   (string-match-p "binary_expression" (treesit-node-type parent))
+   (string-match-p "<<" (treesit-node-string
+                         (treesit-node-child-by-field-name parent "operator")))
+   (not (equal
+         (treesit-node-start node)
+         (ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator
+          node parent)))))
+
 (defun google-c-style-ts-indent-style ()
   "Configure Google C++ style indentation."
   `(
-    ;; align function arguments to the start of the first one, offset if standalone
-    ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+    ;;
+    ;; Similar to BSD style, but use `standalone-parent' instead of
+    ;; `parent-bol'. This handles cases like the third line below:
+    ;;
+    ;;   int main(
+    ;;       int a) {
+    ;;   }    ((node-is "}") standalone-parent 0)
+    ((node-is "labeled_statement") standalone-parent c-ts-mode-indent-offset)
+
+    ;; Align function arguments and parameters to the start of the first one,
+    ;; offset if standalone. For example:
+    ;;
+    ;;   int foo(int a,
+    ;;           int b) {}
+    ;;   int foo(
+    ;;       int a, int b) {}
+    ((and (match nil "argument_list" nil 1 1)
+          (not (node-is ")")))
+     parent-bol ,(* c-ts-mode-indent-offset 2))
     ((parent-is "argument_list") (nth-sibling 1) 0)
-    ;; same for parameters
-    ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
-    ((parent-is "parameter_list") (nth-sibling 1) 0)
-    ;; indent inside case blocks
+    ((and (match nil "parameter_list" nil 1 1)
+          (not (node-is ")")))
+     parent-bol ,(* c-ts-mode-indent-offset 2))
+
+    ;; The ":" in field initializer lists should be offset. For example:
+    ;;
+    ;;   Foo::Foo(int bar)
+    ;;       : bar_(bar) {}
+    ((node-is "field_initializer_list")
+     standalone-parent ,(* c-ts-mode-indent-offset 2))
+    ;; Field initializers should line up, or should be offset if standalone. For
+    ;;example:
+    ;;
+    ;;   Foo::Foo(int bar, int baz) :
+    ;;       bar_(bar),
+    ;;       baz_(baz) {}
+    ((match nil "field_initializer_list" nil 1 1)
+     standalone-parent ,(* c-ts-mode-indent-offset 2))
+    ((parent-is "field_initializer_list") (nth-sibling 1) 0)
+
+    ;; Class/struct members should be indented one step. Access specifiers
+    ;; should be indented half a step. For example:
+    ((and (node-is "access_specifier")
+          (parent-is "field_declaration_list"))
+     standalone-parent ,(/ c-ts-mode-indent-offset 2))
+    ((parent-is "field_declaration_list") standalone-parent
+     c-ts-mode-indent-offset)
+
+    ;; Indent inside case blocks. For example:
+    ;;
+    ;;  switch (a) {
+    ;;    case 0:
+    ;;      123;
+    ;;    case 1: {
+    ;;      456;
+    ;;    }
+    ;;    default:
+    ;;  }
     ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
-    ;; do not indent preprocessor statements
+
+    ;; Do not indent preprocessor statements
     ((node-is "preproc") column-0 0)
+
     ;; Don't indent inside namespaces
     ((n-p-gp nil nil "namespace_definition") grand-parent 0)
-    ;; append to bsd style
-    ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
+
+    ;; Offset line continuations. For example, indent the second line as follows:
+    ;;
+    ;;   int64_t foo =
+    ;;       bar - baz;
+    ;;   foo =
+    ;;       bar - baz;
+    ((parent-is "init_declarator") parent-bol ,(* c-ts-mode-indent-offset 2))
+    ((parent-is "assignment_expression") parent-bol ,(* c-ts-mode-indent-offset 2))
+    ((parent-is "conditional_expression") parent 0)
+
+    ;; For the left-shift operator as used with iostreams, line up the operators.
+    ;;
+    ;;   LOG(INFO) << "hello"
+    ;;             << "world" << "foo" << "bar";
+    (ankurdave--c-ts-mode--parent-operator-is-left-shift
+     ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator 0)
+
+    ;; Offset children of standalone binary expressions. For example:
+    ;;   DCHECK(foo ||
+    ;;          bar)
+    ;;       << "Failed";
+    (ankurdave--c-ts-mode--parent-is-standalone-binary-expression
+     parent ,(* c-ts-mode-indent-offset 2))
+
+    ;; Align non-standalone binary expressions to their parent. For example:
+    ;;
+    ;;   foo + (bar *
+    ;;          baz);
+    ;;   abc = b + c
+    ;;         + d + e;
+    ((parent-is "binary_expression") parent 0)
+
+    ((parent-is "labeled_statement") standalone-parent c-ts-mode-indent-offset)
+    ((parent-is "compound_statement") standalone-parent c-ts-mode-indent-offset)
+    ((parent-is "if_statement") standalone-parent c-ts-mode-indent-offset)
+    ((parent-is "for_statement") standalone-parent c-ts-mode-indent-offset)
+    ((parent-is "while_statement") standalone-parent c-ts-mode-indent-offset)
+    ((parent-is "switch_statement") standalone-parent c-ts-mode-indent-offset)
+    ((parent-is "do_statement") standalone-parent c-ts-mode-indent-offset)
+
+    ;; For example, indents the third line as follows:
+    ;;   void foo(
+    ;;       int bar) {
+    ;;     baz();
+    ;;   }
+    ((or (match nil "compound_statement" nil 1 1)
+         (match null "compound_statement"))
+     standalone-parent c-ts-mode-indent-offset)
+    ,@(alist-get 'common (c-ts-mode--indent-styles 'cpp))))
 (setq c-ts-mode-indent-style #'google-c-style-ts-indent-style)
 
 ;; TODO(laurynas): restore documentation comment font locking
