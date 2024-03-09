@@ -771,11 +771,9 @@
 ;; formatting?
 (setq mu4e-headers-date-format "%F")
 (setq mu4e-headers-fields '((:human-date . 10)
-                            (:flags . 3)
-                            (:mailing-list . 10)
+                            (:flags . 4)
                             (:from . 22)
                             (:thread-subject)))
-;; TODO(laurynas): remove 'List' from `mu4e-headers-fields'?
 ;; TODO(laurynas): solve misalignment issues with the SFMono font and enabled
 ;; fancy chars
 (setq mu4e-use-fancy-chars t)
