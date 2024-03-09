@@ -11135,7 +11135,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240305.2250/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240305.2250/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240308.1516/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240308.1516/forge-autoloads.el"))
 
 
 
@@ -12236,7 +12236,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240307.1611/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240307.1611/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240308.1548/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240308.1548/difftastic-autoloads.el"))
 
 
 
@@ -12289,8 +12289,7 @@ The behavior is the same as `dired-diff', except for the prefix argument, which
 makes the function prompt for LANG-OVERRIDE.  See \\='difft
 --list-languages\\=' for language list.
 
-(fn FILE &optional LANG-OVERRIDE)" t)
-(function-put 'difftastic-dired-diff 'command-modes '(dired-mode))
+(fn FILE &optional LANG-OVERRIDE)" '(dired-mode))
 (autoload 'difftastic-rerun "difftastic" "\
 Rerun difftastic in the current buffer.
 Optionally, provide a LANG-OVERRIDE to override language used.
@@ -12303,8 +12302,7 @@ In order to determine requested width for difftastic a call to
 the latter is set to nil the call is made to
 `difftastic-requested-window-width-function'.
 
-(fn &optional LANG-OVERRIDE)" t)
-(function-put 'difftastic-rerun 'command-modes '(difftastic-mode))
+(fn &optional LANG-OVERRIDE)" '(difftastic-mode))
 (register-definition-prefixes "difftastic" '("difftastic-"))
 
 
@@ -12773,7 +12771,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240305.2250" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240306.1814" "/Users/laurynas/.emacs.d/elpa/magit-20240307.2052" "/Users/laurynas/.emacs.d/elpa/magit-section-20240307.2052" "/Users/laurynas/.emacs.d/elpa/transient-20240226.2332" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240308.1516" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240306.1814" "/Users/laurynas/.emacs.d/elpa/magit-20240307.2052" "/Users/laurynas/.emacs.d/elpa/magit-section-20240307.2052" "/Users/laurynas/.emacs.d/elpa/transient-20240226.2332" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
          Info-directory-list)))
 
 ;; Local Variables:
