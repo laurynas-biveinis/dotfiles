@@ -40,6 +40,8 @@ def get_qif_investment_action(payment_type):
         return "IntInc"
     if payment_type == "Overdue interest earned":
         return "IntInc"
+    if payment_type == "Deposit":
+        return "Cash"
     raise ValueError(f"Unknown type {payment_type}")
 
 
