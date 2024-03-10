@@ -652,11 +652,9 @@
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:commit . "0eab65fe3273c97a422c99ee426eef7f2d2dffa4"))])
  (consult-hoogle .
-		 [(0 1 1)
+		 [(0 2 0)
 		  ((emacs
 		    (27 1))
-		   (consult
-		    (0 18))
 		   (haskell-mode
 		    (16 1)))
 		  "Hoogle frontend using consult" tar
@@ -665,7 +663,7 @@
 		   (:maintainer "rahguzar" . "rahguzar@zohomail.eu")
 		   (:authors
 		    ("rahguzar" . "rahguzar@zohomail.eu"))
-		   (:commit . "77e4294e438afcc0fcfca2cce30a69d584cea603"))])
+		   (:commit . "9fde989e79c23b331198ccf788c02d702cb60f57"))])
  (consult-recoll .
 		 [(0 8 1)
 		  ((emacs
@@ -1173,7 +1171,7 @@
 	       ("Markus Triska" . "triska@metalevel.at"))
 	      (:commit . "cfcdf9e42821d246b7fbc84877aa4ecacc184a1c"))])
  (eev .
-      [(20240205)
+      [(20240309)
        ((emacs
 	 (25 1)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -1182,7 +1180,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "d8261dc70acdd78aa2c32c6a9916630ed90a0423"))])
+	(:commit . "eda749bc689591a8f43a98e002d63b4ef2d4602d"))])
  (ef-themes .
 	    [(1 5 1)
 	     ((emacs
@@ -1519,7 +1517,7 @@
 		("Philip Kaludercic" . "philipk@posteo.net"))
 	       (:commit . "671e53fdef9ed3fdb9ee768216d05b90e3ce592a"))])
  (filechooser .
-	      [(0 1 2)
+	      [(0 2 0)
 	       ((emacs
 		 (28 1))
 		(compat
@@ -1530,7 +1528,7 @@
 		(:maintainer "rahguzar" . "rahguzar@zohomail.eu")
 		(:authors
 		 ("rahguzar" . "rahguzar@zohomail.eu"))
-		(:commit . "4cdcf6017912d1b0825de27d18c5896746bcaf26"))])
+		(:commit . "36b9c20d725ee1df0c96be90a8c339aa0f466cfa"))])
  (filladapt .
 	    [(2 12 2)
 	     ((emacs
@@ -1969,7 +1967,7 @@
 	   (:authors
 	    ("Thierry Volpiatto" . "thievol@posteo.net")))])
  (isearch-mb .
-	     [(0 7)
+	     [(0 8)
 	      ((emacs
 		(27 1)))
 	      "Control isearch from the minibuffer" tar
@@ -1978,7 +1976,7 @@
 	       (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
 	       (:authors
 		("Augusto Stoffel" . "arstoffel@gmail.com"))
-	       (:commit . "bf8f11dfeb532e186d9807394104741c7d7a1f1f"))])
+	       (:commit . "927ea1790bd0c474be5f63bd9c23874e6c61fb48"))])
  (iterators .
 	    [(0 1 1)
 	     ((emacs
@@ -2282,7 +2280,7 @@
 	 ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	(:commit . "09cf249c78385502a2ead30c4fa1468cf96939f7"))])
  (listen .
-	 [(0 5)
+	 [(0 6)
 	  ((emacs
 	    (29 1))
 	   (persist
@@ -2297,7 +2295,7 @@
 	   (:maintainer "Adam Porter" . "adam@alphapapa.net")
 	   (:authors
 	    ("Adam Porter" . "adam@alphapapa.net"))
-	   (:commit . "903990570a19e054f9d7b5878503495955d224a3"))])
+	   (:commit . "644996b00acd09a62c204d68fde3917fe19de189"))])
  (llm .
       [(0 10 0)
        ((emacs

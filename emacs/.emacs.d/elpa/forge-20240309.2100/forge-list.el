@@ -39,6 +39,13 @@
   :type 'hook
   :options '(hl-line-mode))
 
+(defcustom forge-repository-list-mode-hook '(hl-line-mode)
+  "Hook run after entering Forge-Repository-List mode."
+  :package-version '(forge . "0.4.0")
+  :group 'forge
+  :type 'hook
+  :options '(hl-line-mode))
+
 (defconst forge--tablist-columns-type
   '(repeat
     (list :tag "Column"
@@ -183,6 +190,33 @@ forges web interface."
 (defvar-local forge--buffer-list-global nil)
 
 ;;; Modes
+;;;; Common
+
+(defun forge--tablist-refresh ()
+  (setq tabulated-list-format
+        (vconcat (mapcar (pcase-lambda (`(,name ,_get ,width ,sort ,props))
+                           `(,name ,width ,sort . ,props))
+                         forge--tabulated-list-columns)))
+  (tabulated-list-init-header)
+  (setq tabulated-list-entries
+        (mapcar
+         (lambda (obj)
+           (list (oref obj id)
+                 (vconcat
+                  (mapcar (pcase-lambda (`(,_name ,get ,_width ,_sort ,_props))
+                            (let ((val (cond
+                                        ((functionp get)
+                                         (funcall get obj))
+                                        ((eq (car-safe get) 'repository)
+                                         (eieio-oref (forge-get-repository obj)
+                                                     (cadr get)))
+                                        ((eieio-oref obj get)))))
+                              (cond ((stringp val) val)
+                                    ((null val) "")
+                                    ((format "%s" val)))))
+                          forge--tabulated-list-columns))))
+         (funcall forge--tabulated-list-query))))
+
 ;;;; Topics
 
 (defvar-keymap forge-topic-list-mode-map
@@ -211,9 +245,9 @@ Must be set before `forge-list' is loaded.")
 (define-derived-mode forge-topic-list-mode tabulated-list-mode
   forge-topic-list-mode-name
   "Major mode for browsing a list of topics."
-  (setq-local x-stretch-cursor  nil)
   (setq-local hl-line-face 'forge-tablist-hl-line)
-  (setq tabulated-list-padding  0)
+  (setq-local x-stretch-cursor nil)
+  (setq tabulated-list-padding 0)
   (setq tabulated-list-sort-key (cons "#" nil)))
 
 (defun forge-topic-get-buffer (&optional repo create)
@@ -251,36 +285,12 @@ Must be set before `forge-list' is loaded.")
       (setq forge--buffer-list-type type)
       (setq forge--buffer-list-filter filter)
       (setq forge--buffer-list-global global)
-      (forge-topic-list-refresh)
-      (add-hook 'tabulated-list-revert-hook
-                #'forge-topic-list-refresh nil t)
-      (tabulated-list-init-header)
+      (forge--tablist-refresh)
+      (add-hook 'tabulated-list-revert-hook #'forge--tablist-refresh nil t)
       (tabulated-list-print)
       (when hl-line-mode
         (hl-line-highlight)))
     (switch-to-buffer buffer)))
-
-(defun forge-topic-list-refresh ()
-  (setq tabulated-list-format
-        (vconcat (mapcar (pcase-lambda (`(,name ,_get ,width ,sort ,props))
-                           `(,name ,width ,sort . ,props))
-                         forge--tabulated-list-columns)))
-  (tabulated-list-init-header)
-  (setq tabulated-list-entries
-        (mapcar
-         (lambda (topic)
-           (list (oref topic id)
-                 (vconcat
-                  (mapcar (pcase-lambda (`(,_name ,get ,_width ,_sort ,_props))
-                            (cond
-                             ((functionp get)
-                              (funcall get topic))
-                             ((eq (car-safe get) 'repository)
-                              (eieio-oref (forge-get-repository topic)
-                                          (cadr get)))
-                             ((eieio-oref topic get))))
-                          forge--tabulated-list-columns))))
-         (funcall forge--tabulated-list-query))))
 
 ;;;; Repository
 
@@ -311,50 +321,27 @@ Must be set before `forge-list' is loaded.")
 (define-derived-mode forge-repository-list-mode tabulated-list-mode
   forge-repository-list-mode-name
   "Major mode for browsing a list of repositories."
-  (setq-local x-stretch-cursor  nil)
-  (setq forge--tabulated-list-columns forge-repository-list-columns)
-  (setq tabulated-list-padding  0)
-  (setq tabulated-list-sort-key (cons "Owner" nil))
-  (setq tabulated-list-format
-        (vconcat (mapcar (pcase-lambda (`(,name ,_get ,width ,sort ,props))
-                           `(,name ,width ,sort . ,props))
-                         forge--tabulated-list-columns)))
-  (tabulated-list-init-header))
+  (setq-local x-stretch-cursor nil)
+  (setq tabulated-list-padding 0)
+  (setq tabulated-list-sort-key (cons "Owner" nil)))
 
 (defun forge-repository-list-setup (filter fn)
   (let ((buffer (get-buffer-create forge-repository-list-buffer-name)))
     (with-current-buffer buffer
       (setq default-directory "/")
+      (setq forge--tabulated-list-columns forge-repository-list-columns)
+      (setq forge--tabulated-list-query fn)
       (cl-letf (((symbol-function #'tabulated-list-revert) #'ignore)) ; see #229
         (forge-repository-list-mode))
-      (funcall fn)
       (setq forge--buffer-list-type 'repo)
       (setq forge--buffer-list-filter filter)
       (setq forge--buffer-list-global t)
-      (add-hook 'tabulated-list-revert-hook fn nil t)
-      (tabulated-list-print))
+      (forge--tablist-refresh)
+      (add-hook 'tabulated-list-revert-hook #'forge--tablist-refresh nil t)
+      (tabulated-list-print)
+      (when hl-line-mode
+        (hl-line-highlight)))
     (switch-to-buffer buffer)))
-
-(defun forge-repository-list-refresh ()
-  (forge-repository--tabulate-entries))
-
-(defun forge-repository-list-owned-refresh ()
-  (forge-repository--tabulate-entries
-   [:where (and (in owner $v2) (not (in name $v3)))]
-   (vconcat (mapcar #'car forge-owned-accounts))
-   (vconcat forge-owned-ignored)))
-
-(defun forge-repository--tabulate-entries (&optional where &rest args)
-  (setq tabulated-list-entries
-        (mapcar
-         (pcase-lambda (`(,id . ,row))
-           (list id (vconcat (mapcar (lambda (v) (if v (format "%s" v) "")) row))))
-         (apply #'forge-sql
-                (vconcat [:select $i1 :from repository]
-                         where
-                         [:order-by [(asc owner) (asc name)]])
-                (vconcat [id] (mapcar #'cadr forge--tabulated-list-columns))
-                args))))
 
 ;;; Commands
 ;;;; Menus
@@ -668,7 +655,7 @@ Only Github is supported for now."
 Here \"known\" means that an entry exists in the local database."
   :class 'forge--topic-list-command :type 'repo :global t
   (interactive)
-  (forge-repository-list-setup nil #'forge-repository-list-refresh))
+  (forge-repository-list-setup nil #'forge--ls-repos))
 
 ;;;###autoload (autoload 'forge-list-owned-repositories "forge-list" nil t)
 (transient-define-suffix forge-list-owned-repositories ()
@@ -679,7 +666,7 @@ controls which repositories are considered to be owned by you.
 Only Github is supported for now."
   :class 'forge--topic-list-command :type 'repo :filter 'owned :global t
   (interactive)
-  (forge-repository-list-setup 'owned #'forge-repository-list-owned-refresh))
+  (forge-repository-list-setup 'owned #'forge--ls-owned-repos))
 
 ;;; _
 (provide 'forge-list)
