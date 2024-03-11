@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+"""Convert CSV from Interactive Brokers to QIF
+
+The QIFs are produced with the intent to import them to Banktivity.
+"""
+
+import argparse
+import csv
+
+arg_parser = argparse.ArgumentParser(
+    description="Convert Interactive Brokers CSV statement to QIF for "
+    "importing to Banktivity."
+)
+
+arg_parser.add_argument("input", type=str, help="The input file")
+arg_parser.add_argument("output", type=str, help="The output file")
+
+args = arg_parser.parse_args()
+
+with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
+     open(args.output, "w", encoding='utf-8') as output_file:
+    output_file.write("!Type:Invst\n")
+    # Skip the "Statement," lines
+    while True:
+        current_pos = input_file.tell()
+        line = input_file.readline()
+        if not line.startswith("Statement,"):
+            input_file.seek(current_pos)
+            break
+    # Process "Trades," lines
+    csv_reader = csv.DictReader(input_file)
+    for row in csv_reader:
+        if row['Header'] == 'SubTotal':
+            continue
+        if row['Header'] == 'Total':
+            break
+        timestamp = row['Date/Time']
+        security = row['Symbol']
+        quantity = row['Quantity']
+        price = row['T. Price']
+        fee = row['Comm/Fee'].strip('-')
+        total = row['Proceeds']
+        print(f"{row}")
+        print(f"timestamp = {timestamp}, security = {security}, "
+              f"quantity = {quantity}, price = {price}, fee = {fee}, "
+              f"total = {total}\n")
+
+        output_file.write(f"D{timestamp}\n")
+        output_file.write(f"Y{security}\n")
+        output_file.write("NBuy\n")
+        # output_file.write(f"T{total}\n")
+        output_file.write(f"O{fee}\n")
+        output_file.write(f"I{price}\n")
+        output_file.write(f"Q{quantity}\n")
+        output_file.write("^\n")
