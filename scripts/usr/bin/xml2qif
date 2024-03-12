@@ -112,11 +112,13 @@ class CCRDTransactionSubfamily(Enum):
     NOT_AVAILABLE = auto()
 
 
-@add_from_string({'ESCT': 'SEPA_CREDIT_TRANSFER'})
+@add_from_string({'ESCT': 'SEPA_CREDIT_TRANSFER',
+                  'SALA': 'PAYROLL_SALARY_PAYMENT'})
 class ICDTTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in an Issued Credit Transfer (ICDT)
     family."""
     SEPA_CREDIT_TRANSFER = auto()
+    PAYROLL_SALARY_PAYMENT = auto()
 
 
 @add_from_string({'OTHR': 'OTHER'})
