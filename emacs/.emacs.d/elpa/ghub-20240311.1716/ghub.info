@@ -981,7 +981,7 @@ package in personal scripts.
 
    When the ‘AUTH’ argument is not specified, then a request is made on
 behalf of the ‘ghub’ package itself.  Like for any other package you
-have to create a dedicated token of coures.
+have to create a dedicated token of course.
 
 
 File: ghub.info,  Node: Using Ghub in Your Own Package,  Next: Forge Limitations and Notes,  Prev: Using Ghub in Personal Scripts,  Up: Notes

@@ -1343,8 +1343,21 @@ but all you need to get started are the next two.
 ‘<TAB>’ (‘magit-section-toggle’)
      Toggle the visibility of the body of the current section.
 
+‘C-c <TAB>’ (‘magit-section-cycle’)
 ‘C-<tab>’ (‘magit-section-cycle’)
      Cycle the visibility of current section and its children.
+
+     If this command is invoked using ‘C-<tab>’ and that is globally
+     bound to ‘tab-next’, then this command pivots to behave like that
+     command, and you must instead use ‘C-c TAB’ to cycle section
+     visibility.
+
+     If you would like to keep using ‘C-<tab>’ to cycle section
+     visibility but also want to use ‘tab-bar-mode’, then you have to
+     prevent that mode from using this key and instead bind another key
+     to ‘tab-next’.  Because ‘tab-bar-mode’ does not use a mode map but
+     instead manipulates the global map, this involves advising
+     ‘tab-bar--define-keys’.
 
 ‘M-<tab>’ (‘magit-section-cycle-diffs’)
      Cycle the visibility of diff-related sections in the current
@@ -9810,10 +9823,10 @@ Appendix C Keystroke Index
 * -:                                     Log Buffer.          (line  67)
 * - <1>:                                 Refreshing Diffs.    (line  62)
 * 0:                                     Refreshing Diffs.    (line  68)
-* 1:                                     Section Visibility.  (line  26)
-* 2:                                     Section Visibility.  (line  26)
-* 3:                                     Section Visibility.  (line  26)
-* 4:                                     Section Visibility.  (line  26)
+* 1:                                     Section Visibility.  (line  39)
+* 2:                                     Section Visibility.  (line  39)
+* 3:                                     Section Visibility.  (line  39)
+* 4:                                     Section Visibility.  (line  39)
 * 5:                                     Repository List.     (line 115)
 * ::                                     Running Git Manually.
                                                               (line  25)
@@ -9881,7 +9894,7 @@ Appendix C Keystroke Index
 * c w:                                   Initiating a Commit. (line  30)
 * C-<return>:                            Visiting Files and Blobs from a Diff.
                                                               (line  50)
-* C-<tab>:                               Section Visibility.  (line  13)
+* C-<tab>:                               Section Visibility.  (line  14)
 * C-c C-a:                               Commit Pseudo Headers.
                                                               (line  16)
 * C-c C-b:                               Log Buffer.          (line  20)
@@ -10053,6 +10066,7 @@ Appendix C Keystroke Index
                                                               (line  35)
 * C-c M-s:                               Editing Commit Messages.
                                                               (line  33)
+* C-c TAB:                               Section Visibility.  (line  14)
 * C-w:                                   Common Commands.     (line  22)
 * C-x g:                                 Status Buffer.       (line  23)
 * C-x M-g:                               Transient Commands.  (line  20)
@@ -10169,11 +10183,11 @@ Appendix C Keystroke Index
 * M r:                                   Remote Commands.     (line  52)
 * m s:                                   Merging.             (line  67)
 * M u:                                   Remote Commands.     (line  56)
-* M-1:                                   Section Visibility.  (line  32)
-* M-2:                                   Section Visibility.  (line  32)
-* M-3:                                   Section Visibility.  (line  32)
-* M-4:                                   Section Visibility.  (line  32)
-* M-<tab>:                               Section Visibility.  (line  16)
+* M-1:                                   Section Visibility.  (line  45)
+* M-2:                                   Section Visibility.  (line  45)
+* M-3:                                   Section Visibility.  (line  45)
+* M-4:                                   Section Visibility.  (line  45)
+* M-<tab>:                               Section Visibility.  (line  29)
 * M-n:                                   Section Movement.    (line  24)
 * M-n <1>:                               Editing Commit Messages.
                                                               (line  41)
@@ -10266,7 +10280,7 @@ Appendix C Keystroke Index
                                                               (line  36)
 * s <1>:                                 Editing Rebase Sequences.
                                                               (line  49)
-* S-<tab>:                               Section Visibility.  (line  20)
+* S-<tab>:                               Section Visibility.  (line  33)
 * SPC:                                   Log Buffer.          (line  41)
 * SPC <1>:                               Commands Available in Diffs.
                                                               (line  53)
@@ -10995,29 +11009,29 @@ Appendix D Function and Command Index
 * magit-section-backward:                Section Movement.    (line  11)
 * magit-section-backward-siblings:       Section Movement.    (line  19)
 * magit-section-case:                    Matching Sections.   (line  66)
-* magit-section-cycle:                   Section Visibility.  (line  13)
-* magit-section-cycle-diffs:             Section Visibility.  (line  16)
-* magit-section-cycle-global:            Section Visibility.  (line  20)
+* magit-section-cycle:                   Section Visibility.  (line  14)
+* magit-section-cycle-diffs:             Section Visibility.  (line  29)
+* magit-section-cycle-global:            Section Visibility.  (line  33)
 * magit-section-forward:                 Section Movement.    (line  16)
 * magit-section-forward-siblings:        Section Movement.    (line  24)
-* magit-section-hide:                    Section Visibility.  (line  42)
-* magit-section-hide-children:           Section Visibility.  (line  54)
+* magit-section-hide:                    Section Visibility.  (line  55)
+* magit-section-hide-children:           Section Visibility.  (line  67)
 * magit-section-ident:                   Matching Sections.   (line  10)
 * magit-section-match:                   Matching Sections.   (line  18)
 * magit-section-set-window-start:        Section Movement.    (line  52)
-* magit-section-show:                    Section Visibility.  (line  39)
-* magit-section-show-children:           Section Visibility.  (line  49)
-* magit-section-show-headings:           Section Visibility.  (line  45)
-* magit-section-show-level-1:            Section Visibility.  (line  26)
-* magit-section-show-level-1-all:        Section Visibility.  (line  32)
-* magit-section-show-level-2:            Section Visibility.  (line  26)
-* magit-section-show-level-2-all:        Section Visibility.  (line  32)
-* magit-section-show-level-3:            Section Visibility.  (line  26)
-* magit-section-show-level-3-all:        Section Visibility.  (line  32)
-* magit-section-show-level-4:            Section Visibility.  (line  26)
-* magit-section-show-level-4-all:        Section Visibility.  (line  32)
+* magit-section-show:                    Section Visibility.  (line  52)
+* magit-section-show-children:           Section Visibility.  (line  62)
+* magit-section-show-headings:           Section Visibility.  (line  58)
+* magit-section-show-level-1:            Section Visibility.  (line  39)
+* magit-section-show-level-1-all:        Section Visibility.  (line  45)
+* magit-section-show-level-2:            Section Visibility.  (line  39)
+* magit-section-show-level-2-all:        Section Visibility.  (line  45)
+* magit-section-show-level-3:            Section Visibility.  (line  39)
+* magit-section-show-level-3-all:        Section Visibility.  (line  45)
+* magit-section-show-level-4:            Section Visibility.  (line  39)
+* magit-section-show-level-4-all:        Section Visibility.  (line  45)
 * magit-section-toggle:                  Section Visibility.  (line  10)
-* magit-section-toggle-children:         Section Visibility.  (line  57)
+* magit-section-toggle-children:         Section Visibility.  (line  70)
 * magit-section-up:                      Section Movement.    (line  28)
 * magit-section-value-if:                Matching Sections.   (line  57)
 * magit-sequence-abort:                  Cherry Picking.      (line  91)
@@ -11351,12 +11365,12 @@ Appendix E Variable Index
 * magit-root-section:                    Matching Sections.   (line  81)
 * magit-save-repository-buffers:         Automatic Saving of File-Visiting Buffers.
                                                               (line  13)
-* magit-section-cache-visibility:        Section Visibility.  (line  82)
-* magit-section-initial-visibility-alist: Section Visibility. (line  66)
+* magit-section-cache-visibility:        Section Visibility.  (line  95)
+* magit-section-initial-visibility-alist: Section Visibility. (line  79)
 * magit-section-movement-hook:           Section Movement.    (line  41)
-* magit-section-set-visibility-hook:     Section Visibility.  (line  92)
+* magit-section-set-visibility-hook:     Section Visibility.  (line 105)
 * magit-section-show-child-count:        Section Options.     (line   9)
-* magit-section-visibility-indicator:    Section Visibility.  (line 109)
+* magit-section-visibility-indicator:    Section Visibility.  (line 122)
 * magit-shell-command-verbose-prompt:    Running Git Manually.
                                                               (line  43)
 * magit-stashes-margin:                  Stashing.            (line 123)
@@ -11422,155 +11436,155 @@ Node: Risk of Reverting Automatically43446
 Node: Sections45828
 Node: Section Movement46754
 Node: Section Visibility51628
-Node: Section Hooks57643
-Node: Section Types and Values60049
-Node: Section Options61464
-Node: Transient Commands61935
-Node: Transient Arguments and Buffer Variables63411
-Node: Completion Confirmation and the Selection70428
-Node: Action Confirmation70874
-Node: Completion and Confirmation79379
-Node: The Selection82564
-Node: The hunk-internal region85462
-Node: Support for Completion Frameworks86551
-Node: Additional Completion Options91454
-Node: Mouse Support92052
-Node: Running Git92628
-Node: Viewing Git Output92873
-Node: Git Process Status95577
-Node: Running Git Manually96542
-Node: Git Executable99232
-Node: Global Git Arguments102240
-Node: Inspecting103045
-Node: Status Buffer104202
-Node: Status Sections109213
-Node: Status Header Sections114740
-Node: Status Module Sections117359
-Node: Status Options119856
-Node: Repository List121219
-Node: Logging125997
-Node: Refreshing Logs128839
-Node: Log Buffer130260
-Node: Log Margin135083
-Node: Select from Log138236
-Node: Reflog140446
-Node: Cherries142083
-Node: Diffing143921
-Node: Refreshing Diffs146955
-Node: Commands Available in Diffs150644
-Node: Diff Options153157
-Node: Revision Buffer158620
-Node: Ediffing161940
-Node: References Buffer167990
-Node: References Sections178584
-Node: Bisecting179441
-Node: Visiting Files and Blobs181752
-Node: General-Purpose Visit Commands182280
-Node: Visiting Files and Blobs from a Diff183233
-Node: Blaming186677
-Node: Manipulating193665
-Node: Creating Repository194007
-Node: Cloning Repository194544
-Node: Staging and Unstaging200985
-Node: Staging from File-Visiting Buffers204966
-Node: Applying206072
-Node: Committing208145
-Node: Initiating a Commit208728
-Node: Editing Commit Messages213918
-Node: Using the Revision Stack216691
-Node: Commit Pseudo Headers219736
-Node: Commit Mode and Hooks221031
-Node: Commit Message Conventions223889
-Node: Branching225876
-Node: The Two Remotes226102
-Node: Branch Commands228755
-Node: Branch Git Variables241605
-Node: Auxiliary Branch Commands246979
-Node: Merging248095
-Node: Resolving Conflicts252251
-Node: Rebasing257625
-Node: Editing Rebase Sequences262414
-Node: Information About In-Progress Rebase266630
-Ref: Information About In-Progress Rebase-Footnote-1275743
-Node: Cherry Picking276339
-Node: Reverting280673
-Node: Resetting282092
-Node: Stashing283918
-Node: Transferring290299
-Node: Remotes290521
-Node: Remote Commands290673
-Node: Remote Git Variables294712
-Node: Fetching295983
-Node: Pulling298429
-Node: Pushing299455
-Node: Plain Patches303746
-Node: Maildir Patches305217
-Node: Miscellaneous306696
-Node: Tagging307042
-Node: Notes308935
-Node: Submodules311270
-Node: Listing Submodules311488
-Node: Submodule Transient313636
-Node: Subtree316123
-Node: Worktree318054
-Node: Sparse checkouts319130
-Node: Bundle321906
-Node: Common Commands322281
-Node: Wip Modes324909
-Node: Wip Graph329800
-Node: Legacy Wip Modes332113
-Node: Commands for Buffers Visiting Files335000
-Node: Minor Mode for Buffers Visiting Blobs343228
-Node: Customizing344026
-Node: Per-Repository Configuration345622
-Node: Essential Settings347876
-Node: Safety348222
-Node: Performance349983
-Ref: Log Performance352946
-Ref: Diff Performance354251
-Ref: Refs Buffer Performance355592
-Ref: Committing Performance356167
-Node: Microsoft Windows Performance357149
-Node: MacOS Performance358340
-Ref: MacOS Performance-Footnote-1359363
-Node: Global Bindings359445
-Node: Plumbing361673
-Node: Calling Git362502
-Node: Getting a Value from Git364027
-Node: Calling Git for Effect367755
-Node: Section Plumbing373649
-Node: Creating Sections373877
-Node: Section Selection377773
-Node: Matching Sections379569
-Node: Refreshing Buffers385490
-Node: Conventions388634
-Node: Theming Faces388826
-Node: FAQ396931
-Node: FAQ - How to ...?397369
-Node: How to pronounce Magit?397726
-Node: How to show git's output?398529
-Node: How to install the gitman info manual?399315
-Node: How to show diffs for gpg-encrypted files?400285
-Node: How does branching and pushing work?400881
-Node: Should I disable VC?401214
-Node: FAQ - Issues and Errors401817
-Node: Magit is slow402762
-Node: I changed several thousand files at once and now Magit is unusable403055
-Node: I am having problems committing403781
-Node: I am using MS Windows and cannot push with Magit404262
-Node: I am using macOS and SOMETHING works in shell but not in Magit404880
-Node: Expanding a file to show the diff causes it to disappear405714
-Node: Point is wrong in the COMMIT_EDITMSG buffer406302
-Node: The mode-line information isn't always up-to-date407347
-Node: A branch and tag sharing the same name breaks SOMETHING408410
-Node: My Git hooks work on the command-line but not inside Magit409297
-Node: git-commit-mode isn't used when committing from the command-line410143
-Node: Point ends up inside invisible text when jumping to a file-visiting buffer412414
-Node: I am no longer able to save popup defaults413263
-Node: Debugging Tools414244
-Node: Keystroke Index417418
-Node: Function and Command Index458959
-Node: Variable Index517160
+Node: Section Hooks58315
+Node: Section Types and Values60721
+Node: Section Options62136
+Node: Transient Commands62607
+Node: Transient Arguments and Buffer Variables64083
+Node: Completion Confirmation and the Selection71100
+Node: Action Confirmation71546
+Node: Completion and Confirmation80051
+Node: The Selection83236
+Node: The hunk-internal region86134
+Node: Support for Completion Frameworks87223
+Node: Additional Completion Options92126
+Node: Mouse Support92724
+Node: Running Git93300
+Node: Viewing Git Output93545
+Node: Git Process Status96249
+Node: Running Git Manually97214
+Node: Git Executable99904
+Node: Global Git Arguments102912
+Node: Inspecting103717
+Node: Status Buffer104874
+Node: Status Sections109885
+Node: Status Header Sections115412
+Node: Status Module Sections118031
+Node: Status Options120528
+Node: Repository List121891
+Node: Logging126669
+Node: Refreshing Logs129511
+Node: Log Buffer130932
+Node: Log Margin135755
+Node: Select from Log138908
+Node: Reflog141118
+Node: Cherries142755
+Node: Diffing144593
+Node: Refreshing Diffs147627
+Node: Commands Available in Diffs151316
+Node: Diff Options153829
+Node: Revision Buffer159292
+Node: Ediffing162612
+Node: References Buffer168662
+Node: References Sections179256
+Node: Bisecting180113
+Node: Visiting Files and Blobs182424
+Node: General-Purpose Visit Commands182952
+Node: Visiting Files and Blobs from a Diff183905
+Node: Blaming187349
+Node: Manipulating194337
+Node: Creating Repository194679
+Node: Cloning Repository195216
+Node: Staging and Unstaging201657
+Node: Staging from File-Visiting Buffers205638
+Node: Applying206744
+Node: Committing208817
+Node: Initiating a Commit209400
+Node: Editing Commit Messages214590
+Node: Using the Revision Stack217363
+Node: Commit Pseudo Headers220408
+Node: Commit Mode and Hooks221703
+Node: Commit Message Conventions224561
+Node: Branching226548
+Node: The Two Remotes226774
+Node: Branch Commands229427
+Node: Branch Git Variables242277
+Node: Auxiliary Branch Commands247651
+Node: Merging248767
+Node: Resolving Conflicts252923
+Node: Rebasing258297
+Node: Editing Rebase Sequences263086
+Node: Information About In-Progress Rebase267302
+Ref: Information About In-Progress Rebase-Footnote-1276415
+Node: Cherry Picking277011
+Node: Reverting281345
+Node: Resetting282764
+Node: Stashing284590
+Node: Transferring290971
+Node: Remotes291193
+Node: Remote Commands291345
+Node: Remote Git Variables295384
+Node: Fetching296655
+Node: Pulling299101
+Node: Pushing300127
+Node: Plain Patches304418
+Node: Maildir Patches305889
+Node: Miscellaneous307368
+Node: Tagging307714
+Node: Notes309607
+Node: Submodules311942
+Node: Listing Submodules312160
+Node: Submodule Transient314308
+Node: Subtree316795
+Node: Worktree318726
+Node: Sparse checkouts319802
+Node: Bundle322578
+Node: Common Commands322953
+Node: Wip Modes325581
+Node: Wip Graph330472
+Node: Legacy Wip Modes332785
+Node: Commands for Buffers Visiting Files335672
+Node: Minor Mode for Buffers Visiting Blobs343900
+Node: Customizing344698
+Node: Per-Repository Configuration346294
+Node: Essential Settings348548
+Node: Safety348894
+Node: Performance350655
+Ref: Log Performance353618
+Ref: Diff Performance354923
+Ref: Refs Buffer Performance356264
+Ref: Committing Performance356839
+Node: Microsoft Windows Performance357821
+Node: MacOS Performance359012
+Ref: MacOS Performance-Footnote-1360035
+Node: Global Bindings360117
+Node: Plumbing362345
+Node: Calling Git363174
+Node: Getting a Value from Git364699
+Node: Calling Git for Effect368427
+Node: Section Plumbing374321
+Node: Creating Sections374549
+Node: Section Selection378445
+Node: Matching Sections380241
+Node: Refreshing Buffers386162
+Node: Conventions389306
+Node: Theming Faces389498
+Node: FAQ397603
+Node: FAQ - How to ...?398041
+Node: How to pronounce Magit?398398
+Node: How to show git's output?399201
+Node: How to install the gitman info manual?399987
+Node: How to show diffs for gpg-encrypted files?400957
+Node: How does branching and pushing work?401553
+Node: Should I disable VC?401886
+Node: FAQ - Issues and Errors402489
+Node: Magit is slow403434
+Node: I changed several thousand files at once and now Magit is unusable403727
+Node: I am having problems committing404453
+Node: I am using MS Windows and cannot push with Magit404934
+Node: I am using macOS and SOMETHING works in shell but not in Magit405552
+Node: Expanding a file to show the diff causes it to disappear406386
+Node: Point is wrong in the COMMIT_EDITMSG buffer406974
+Node: The mode-line information isn't always up-to-date408019
+Node: A branch and tag sharing the same name breaks SOMETHING409082
+Node: My Git hooks work on the command-line but not inside Magit409969
+Node: git-commit-mode isn't used when committing from the command-line410815
+Node: Point ends up inside invisible text when jumping to a file-visiting buffer413086
+Node: I am no longer able to save popup defaults413935
+Node: Debugging Tools414916
+Node: Keystroke Index418090
+Node: Function and Command Index459704
+Node: Variable Index517905
 
 End Tag Table
 
