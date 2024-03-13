@@ -514,32 +514,31 @@ the key for ‘git@github.com:magit/forge.git’ is ‘github.com’.
  -- User Option: forge-alist
      This option defines forge hosts known to Forge.
 
-     Each entry has the form ‘(GITHOST APIHOST ID CLASS)’.
+     Each entry has the form ‘(GITHOST APIHOST WEBHOST CLASS)’.
 
-     GITHOST is the host used to access repositories on the forge using
-     Git.
+        • GITHOST is the host used to access repositories on the forge
+          using Git.
 
-     APIHOST is the host used to access the forge’s API.  For some
-     forges the isn’t just a host, but a host followed by the path to
-     the API’s endpoint.
+        • APIHOST is the host used to access the forge’s API.  For some
+          forges the isn’t just a host, but a host followed by the path
+          to the API’s endpoint.
 
-     WEBHOST is the host used to access repositories on this forge using
-     a browser.  The IDs used to identify repositories from the forge in
-     the local database also derives from this value.
+        • WEBHOST is the host used to access repositories on this forge
+          using a browser.  The IDs used to identify repositories from
+          the forge in the local database also derives from this value.
 
-     CLASS is the class to be used for repositories from the forge.
+        • CLASS is the class to be used for repositories from the forge.
 
-   Complications:
+     Complications:
 
-   • When connecting to a Github Enterprise edition whose REST API’s end
-     point is "<host>/v3" and whose GraphQL API’s end point is
-     "<host>/graphql", then use "<host>/v3" as APIHOST.  This is a
-     historic accident.  See issue #174.
+        • When connecting to a Github Enterprise edition whose REST
+          API’s end point is "<host>/v3" and whose GraphQL API’s end
+          point is "<host>/graphql", then use "<host>/v3" as APIHOST.
+          This is a historic accident.  See issue #174.
 
-   • WEBHOST and CLASS cannot be changed once you have added one or more
-     repositories from a forge.  Changing GITHOST and/or APIHOST may be
-     possible, but should seldom be necessary."  :package-version
-     ’(forge .  "0.1.0")
+        • WEBHOST and CLASS cannot be changed once you have added one or
+          more repositories from a forge.  Changing GITHOST and/or
+          APIHOST may be possible, but should seldom be necessary.
 
 
 File: forge.info,  Node: Caveats,  Prev: Repository Detection,  Up: Getting Started
@@ -1511,22 +1510,22 @@ Node: Loading Forge10214
 Node: Token Creation10609
 Node: Initial Pull11888
 Node: Repository Detection13283
-Node: Caveats18602
-Node: Usage19528
-Node: Pulling21000
-Node: Branching23683
-Node: Working with Topics30078
-Node: Visiting Topics30451
-Node: Listing Topics and Notifications32528
-Node: Creating Topics37842
-Node: Editing Topics and Posts38331
-Node: Miscellaneous42858
-Node: FAQ45481
-Node: Is it possible to create a single pull-request without pulling everything?45949
-Node: error in process filter HTTP Error 502 "Bad gateway"46415
-Node: Keystroke Index48786
-Node: Function and Command Index54476
-Node: Variable Index62434
+Node: Caveats18650
+Node: Usage19576
+Node: Pulling21048
+Node: Branching23731
+Node: Working with Topics30126
+Node: Visiting Topics30499
+Node: Listing Topics and Notifications32576
+Node: Creating Topics37890
+Node: Editing Topics and Posts38379
+Node: Miscellaneous42906
+Node: FAQ45529
+Node: Is it possible to create a single pull-request without pulling everything?45997
+Node: error in process filter HTTP Error 502 "Bad gateway"46463
+Node: Keystroke Index48834
+Node: Function and Command Index54524
+Node: Variable Index62482
 
 End Tag Table
 
