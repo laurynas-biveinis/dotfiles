@@ -42,6 +42,8 @@ def get_qif_investment_action(payment_type):
         return "IntInc"
     if payment_type == "Deposit":
         return "Cash"
+    if payment_type == "Loan disbursal":
+        return "Buy"
     raise ValueError(f"Unknown type {payment_type}")
 
 
@@ -85,6 +87,9 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
         investment_action = get_qif_investment_action(csv_payment_type)
         # pulint: enable=C0103
 
+        if investment_action == 'Buy':
+            amount = amount.strip('-')
+
         payer = payer_mapping[purpose]
 
         print(f"After: investment_action: {investment_action}, payer: {payer}")
@@ -101,7 +106,7 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
             output_file.write("LInterest Income\n")
         else:
             output_file.write(f"Y{payer}\n")
-        if investment_action == "Sell":
+        if investment_action in ('Sell', 'Buy'):
             output_file.write("I1.0\n")
             output_file.write(f"Q{amount}\n")
         output_file.write("^\n")
