@@ -716,9 +716,14 @@
 
 ;;; Cryptography
 
-;; `auth-sources'
-(require 'auth-source)
-(setq auth-sources '("~/.authinfo.gpg"))
+;; `plstore'
+(require 'plstore)
+
+(defun dotfiles--with-auto-trailing-newline (orig-fun &rest args)
+  "Enable `require-final-newline' while calling ORIG-FUN with ARGS."
+  (let ((require-final-newline t))
+    (apply orig-fun args)))
+(advice-add 'plstore-save :around #'dotfiles--with-auto-trailing-newline)
 
 ;; `gnutls'
 (require 'gnutls)
