@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+"""Convert XLSX from GoIndex to QIF
+
+The QIFs are produced with the intent to import them to Banktivity.
+
+This is configured by a configuration file (~/.goindex2qif) which should look as
+follows:
+[preceding trx]
+payer = foo
+category = bar
+
+[goindex trx]
+match_fund_source = blah
+security = baz
+"""
+
+import argparse
+import configparser
+import os
+import pandas as pd
+
+CONFIG_FN = "~/.goindex2qif"
+
+config = configparser.ConfigParser()
+config.read(os.path.expanduser(CONFIG_FN))
+
+preceding_trx_payer = config['preceding trx']['payer']
+preceding_trx_category = config['preceding trx']['category']
+
+match_fund_source = config['goindex trx']['match_fund_source']
+security = config['goindex trx']['security']
+
+arg_parser = argparse.ArgumentParser(
+    description="Convert GoIndex XLSX statement to QIF for importing to "
+    "Banktivity."
+)
+
+arg_parser.add_argument("input", type=str, help="The input file")
+arg_parser.add_argument("output", type=str, help="The output file")
+
+args = arg_parser.parse_args()
+
+input_xlsx = pd.read_excel(args.input)
+
+with open(args.output, "w", encoding='utf-8') as output_file:
+    output_file.write("!Type:Invst\n")
+    for index, row in input_xlsx.iterrows():
+        date = row['Data']
+        op = row['Fondo vnt. operacija']
+        if op != match_fund_source:
+            raise ValueError(f"Unknown match_fund_source {op}")
+        amount = row['Įmokos/Išmokos']
+        unit_price = row['Fondo vieneto kaina']
+        count = row['Vnt. kiekis']
+        fee = row['Mokestis']
+        print(f"Date: {date}, amount: {amount}, unit price: {unit_price}, "
+              f"count: {count}, fee: {fee}")
+
+        amount = amount.replace(",", ".")
+        unit_price = unit_price.replace(",", ".")
+        count = count.replace(",", ".")
+
+        output_file.write(f"D{date}\n")
+        output_file.write("NCash\n")
+        output_file.write(f"T{amount}\n")
+        output_file.write("O0.00\n")
+        output_file.write(f"P{preceding_trx_payer}\n")
+        output_file.write(f"L{preceding_trx_category}\n")
+        output_file.write("^\n")
+
+        output_file.write(f"D{date}\n")
+        output_file.write(f"Y{security}\n")
+        output_file.write("NBuy\n")
+        output_file.write(f"O{fee}\n")
+        output_file.write(f"T{amount}\n")
+        output_file.write(f"I{unit_price}\n")
+        output_file.write(f"Q{count}\n")
+        output_file.write("^\n")
