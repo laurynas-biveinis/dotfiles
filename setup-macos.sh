@@ -373,7 +373,7 @@ deactivate
 # breaks, then install per-project.
 pip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
     pyls-memestra jedi pylsp-rope python-lsp-ruff python-lsp-black pylint \
-    pycodestyle pyflakes pandas openpyxl
+    pycodestyle pyflakes pandas openpyxl pandas-stubs
 
 # Leftovers from the old-and-broken installation method: scipy pandas
 
