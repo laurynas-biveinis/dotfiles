@@ -768,7 +768,7 @@
 (setq mu4e-update-interval 1200)
 (setq mu4e-change-filenames-when-moving t)
 (setq mu4e-confirm-quit nil)
-(setq mu4e-context-policy 'pick-first)
+(setq mu4e-context-policy 'ask)
 (setq mu4e-compose-context-policy 'ask)
 ;; GMail-specific behavior. Make it per-context if adding a non-GMail acocunt
 (setq mu4e-sent-messages-behavior 'delete)
