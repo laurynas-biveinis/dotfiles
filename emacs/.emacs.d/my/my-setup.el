@@ -772,8 +772,15 @@
 (setq mu4e-compose-context-policy 'ask)
 ;; GMail-specific behavior. Make it per-context if adding a non-GMail acocunt
 (setq mu4e-sent-messages-behavior 'delete)
-;; FIXME(laurynas): why the default of using the locale results in incorrect
-;; formatting?
+;; Locales on macOS are, uhm, interesting:
+;; - System settings -> General -> Language & Region does not propagate to the
+;;   POSIX shell variables, and a setting of date format to YYYY-MM-DD there
+;;   remains ignored in Emacs.
+;; - Out of all POSIX locales available by default at least on macOS 14.4, only
+;;   two format the date as YYYY-MM-DD: sv_SE.ISO8859-1 & sv_SE.ISO8859-15. But
+;;   these, being Swedish, carry Swedish weekday and month names, which I don't
+;;   want to see randomly in other contexts.
+;; Thus, override date format to YYYY-MM-DD manually.
 (setq mu4e-headers-date-format "%F")
 (setq mu4e-headers-fields '((:human-date . 10)
                             (:from . 22)
