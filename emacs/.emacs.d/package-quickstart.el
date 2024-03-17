@@ -318,7 +318,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4/compat-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5/compat-autoloads.el"))
 
 
 
@@ -4173,7 +4173,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240311.1442/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240311.1442/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240316.1907/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240316.1907/magit-autoloads.el"))
 
 
 
@@ -12771,7 +12771,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240312.1335" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240311.1716" "/Users/laurynas/.emacs.d/elpa/magit-20240311.1442" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240311.1638" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.4")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240312.1335" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240311.1716" "/Users/laurynas/.emacs.d/elpa/magit-20240316.1907" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240311.1638" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
