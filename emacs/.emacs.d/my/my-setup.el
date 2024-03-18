@@ -62,7 +62,7 @@
 ;;; Whitespace
 
 (setq-default indicate-empty-lines t  ;; Trailing newlines are highlighted
-              require-final-newline 'query)  ;; Should files end with newline?
+              require-final-newline t)  ;; Should files end with newline?
 
 ;; Display trailing whitespace
 (defun dotfiles--enable-trailing-whitespace ()
@@ -715,15 +715,6 @@
 (setq vterm-buffer-name-string "vterm %s")
 
 ;;; Cryptography
-
-;; `plstore'
-(require 'plstore)
-
-(defun dotfiles--with-auto-trailing-newline (orig-fun &rest args)
-  "Enable `require-final-newline' while calling ORIG-FUN with ARGS."
-  (let ((require-final-newline t))
-    (apply orig-fun args)))
-(advice-add 'plstore-save :around #'dotfiles--with-auto-trailing-newline)
 
 ;; `gnutls'
 (require 'gnutls)
