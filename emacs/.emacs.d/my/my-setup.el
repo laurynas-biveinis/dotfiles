@@ -792,6 +792,10 @@
 ;; modeline. Simply adding these string to `rich-minority' settings does not
 ;; appear to work. Maybe because these are major modes.
 
+;; Add automation, which is defined elsewhere
+(add-to-list 'mu4e-view-actions
+             '("Execute automation" . dotfiles--mu4e-email-automation) t)
+
 ;; Integrate `mu4e' with the rest of Emacs
 (setq mail-user-agent 'mu4e-user-agent)
 (set-variable 'read-mail-command #'mu4e)
