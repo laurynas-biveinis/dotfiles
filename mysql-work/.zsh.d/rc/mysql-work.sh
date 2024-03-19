@@ -142,9 +142,13 @@ mysql_export_environment_helpers() {
         declare -a my8036_extra_cxx_release_flags=()
         declare -a -r my830_extra=()
         declare -a maria_common=()
-        # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
-        # configuration failure on Linux virtualized on M1 Mac)
-        declare -a fb_common=("-DROCKSDB_BUILD_ARCH=armv8.1-a+crypto")
+        if [ "$(arch)" = "aarch64" ]; then
+            # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
+            # configuration failure on Linux virtualized on M1 Mac)
+            declare -a fb_common=("-DROCKSDB_BUILD_ARCH=armv8.1-a+crypto")
+        else
+            declare -a fb_common=()
+        fi
 
         export MY8030_830_CORE_DUMP_FLAGS=()
         export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
