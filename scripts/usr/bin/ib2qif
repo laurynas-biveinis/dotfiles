@@ -6,6 +6,7 @@ The QIFs are produced with the intent to import them to Banktivity.
 
 import argparse
 import csv
+import os
 
 arg_parser = argparse.ArgumentParser(
     description="Convert Interactive Brokers CSV statement to QIF for "
@@ -17,9 +18,10 @@ arg_parser.add_argument("output", type=str, help="The output file")
 
 args = arg_parser.parse_args()
 
+header_printed = False
+
 with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
      open(args.output, "w", encoding='utf-8') as output_file:
-    output_file.write("!Type:Invst\n")
     # Skip the "Statement," lines
     while True:
         current_pos = input_file.tell()
@@ -40,6 +42,10 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
         price = row['T. Price']
         fee = row['Comm/Fee'].strip('-')
         total = row['Proceeds']
+        if not header_printed:
+            header_printed = True
+            output_file.write("!Type:Invst\n")
+
         print(f"{row}")
         print(f"timestamp = {timestamp}, security = {security}, "
               f"quantity = {quantity}, price = {price}, fee = {fee}, "
@@ -48,8 +54,11 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
         output_file.write(f"D{timestamp}\n")
         output_file.write(f"Y{security}\n")
         output_file.write("NBuy\n")
-        # output_file.write(f"T{total}\n")
         output_file.write(f"O{fee}\n")
         output_file.write(f"I{price}\n")
         output_file.write(f"Q{quantity}\n")
         output_file.write("^\n")
+
+if os.path.getsize(args.output) == 0:
+    os.remove(args.output)
+    print("No transactions, removing output file")
