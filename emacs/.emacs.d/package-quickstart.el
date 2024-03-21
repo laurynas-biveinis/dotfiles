@@ -4150,7 +4150,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240229.1416/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240229.1416/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240320.2311/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240320.2311/git-commit-autoloads.el"))
 
 
 
@@ -4173,7 +4173,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240316.1907/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240316.1907/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240320.2336/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240320.2336/magit-autoloads.el"))
 
 
 
@@ -11135,7 +11135,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240312.1335/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240312.1335/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240320.2049/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240320.2049/forge-autoloads.el"))
 
 
 
@@ -11176,7 +11176,7 @@ those that have been updated since then.
 If pulling is too slow, then also consider setting the Git variable
 `forge.omitExpensive' to `true'.
 
-(fn &optional REPO UNTIL)" t)
+(fn &optional REPO SINCE)" t)
 (autoload 'forge-pull-notifications "forge-commands" "\
 Fetch notifications for all repositories from the current forge." t)
  (autoload 'forge-pull-topic "forge-commands" nil t)
@@ -12338,7 +12338,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.3/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.3/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.4/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.28.4/cmake-mode-autoloads.el"))
 
 
 
@@ -12771,7 +12771,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240312.1335" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240311.1716" "/Users/laurynas/.emacs.d/elpa/magit-20240316.1907" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240311.1638" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.1" "/Users/laurynas/.emacs.d/elpa/forge-20240320.2049" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240311.1716" "/Users/laurynas/.emacs.d/elpa/magit-20240320.2336" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240311.1638" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
