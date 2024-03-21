@@ -2,28 +2,60 @@
 
 set -euo pipefail
 
-readonly WORKTREE_PATH="$1"
+declare -i FORCE=0
+
+while (( $# > 0 )); do
+    case "$1" in
+        --force)
+            FORCE=1
+            shift
+            ;;
+        *)
+            if [[ -z "${WORKTREE_PATH}" ]]; then
+                readonly WORKTREE_PATH="$1"
+            fi
+            shift
+            ;;
+    esac
+done
+
+if [ -z "${WORKTREE_PATH+x}" ]; then
+    echo "Usage: $0 [--force] <worktree-path>"
+    exit 3
+fi
+
 readonly WORKTREE_DIR="$WORKTREE_PATH:t"
 
 pushd "$WORKTREE_PATH" || exit 1
 
 readonly BRANCH_NAME=$(git branch --show-current)
+# TODO(laurynas): might need to consider other push remotes
+readonly REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote)
 
 cd "$(git rev-parse --git-dir)" || exit 1
 cd ../../../
 
 git pull
-git branch --contains "$BRANCH_NAME" | grep -q master
-readonly BRANCH_MERGED=$?
 
-if [ $BRANCH_MERGED -ne 0 ]; then
-    echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
-    popd || exit 1
-    return 2
+if [ $FORCE -ne 1 ]; then
+    git branch --contains "$BRANCH_NAME" | grep -q master
+    readonly BRANCH_MERGED=$?
+
+    if [ $BRANCH_MERGED -ne 0 ]; then
+        echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
+        popd || exit 1
+        exit 2
+    fi
 fi
 
 rm -rf "../$WORKTREE_DIR"
 git worktree prune
-git branch -d "$BRANCH_NAME"
+git push "$REMOTE_NAME" -d "$BRANCH_NAME"
+if [ $FORCE -ne 1 ]; then
+    git branch -d "$BRANCH_NAME"
+else
+    git branch -D "$BRANCH_NAME"
+fi
+git fetch --all -p
 
 popd || exit 1
