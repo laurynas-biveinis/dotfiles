@@ -187,21 +187,25 @@ with a prefix ARG."
 
 ;; Integrate `projectile' and `lsp-mode' with my gitrmworktree
 (require 'lsp-mode)
-(defun kill-buffers-rm-worktree ()
-  "Remove the git worktree and kill project buffers."
-  (interactive)
+(defun kill-buffers-rm-worktree (force)
+  "Remove the git worktree and kill project buffers, optionally with FORCE.
+The prefix argument enables FORCE."
+  (interactive "P")
   ;; TODO(laurynas): don't know whether `projectile-kill-buffers' prompt will be
   ;; answered with 'y' or 'n' – assume that zero existing buffers means 'y'. For
   ;; that, `projectile-kill-buffers-filter' must be set to `'kill-all'.
   (when (not (equal projectile-kill-buffers-filter 'kill-all))
     (user-error "Unsupported `projectile-kill-buffers-filter' value %:S"
                 projectile-kill-buffers-filter))
-  (let ((project-root-path (projectile-acquire-root)))
+  (let ((project-root-path (projectile-acquire-root))
+        (force-arg (if force "--force " "")))
     (projectile-with-default-dir project-root-path
       (projectile-kill-buffers)
       (when (null (projectile-project-buffers project-root-path))
         (let ((grmwt-ret-code
-               (shell-command (concat "gitrmworktree " project-root-path))))
+               ;; FIXME(laurynas): in the case of failure capture output
+               (shell-command (concat "gitrmworktree " force-arg
+                                      project-root-path))))
           (if (= grmwt-ret-code 0)
               (progn
                 (projectile-remove-known-project project-root-path)
