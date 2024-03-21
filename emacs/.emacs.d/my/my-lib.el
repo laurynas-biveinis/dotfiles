@@ -9,11 +9,17 @@
 (require 'seq)
 (require 'mu4e-mime-parts)
 
+(defun dotfiles--get-qp-encoded-html-part ()
+  "For a `mu4e' message, get its first quoted-printable-encoded HTML part."
+  (seq-find (lambda (part)
+              (and (string= "text/html" (plist-get part :mime-type))
+                   (eq 'quoted-printable (plist-get part :encoding))))
+            (mu4e-view-mime-parts)))
+
 (defun dotfiles--get-mu4e-msg-csv-part ()
   "For a `mu4e' message, get its first .csv attachment part, if any."
   (seq-find (lambda (part)
-              (and (plist-member part :filename)
-                   (string-suffix-p ".csv" (plist-get part :filename) t)))
+              (string-suffix-p ".csv" (plist-get part :filename) t))
             (mu4e-view-mime-parts)))
 
 (defun dotfiles--save-mu4e-msg-part-file (part)
