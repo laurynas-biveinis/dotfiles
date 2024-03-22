@@ -311,14 +311,24 @@
          (format "Branch `%s' already exists; pick another name" branch)))
     branch))
 
-;; TODO(laurynas): add this project to `projectile'
+(defun dotfiles--magit-worktree-branch ()
+  "Create a new git branch and its worktree in a sibling dir, return its path."
+  (let* ((name (dotfiles--read-non-existing-branch-name
+                "Create branch and worktree"))
+         (absolute-path (file-truename (concat "../" name))))
+    (magit-worktree-branch absolute-path name (magit-get-current-branch))
+    absolute-path))
+
+(require 'projectile)
+
 (defun my-magit-worktree-branch ()
-  "Create a new git branch and its worktree in a sibling dir."
-  (interactive
-   (let* ((name (dotfiles--read-non-existing-branch-name
-                 "Create branch and worktree"))
-          (absolute-path (file-truename (concat "../" name))))
-     (magit-worktree-branch absolute-path name (magit-get-current-branch)))))
+  "Branch a new project."
+  (interactive)
+  (let ((path (dotfiles--magit-worktree-branch)))
+    (projectile-add-known-project path)
+    ;; Make `projectile' initialize its file cache for this project
+    (when projectile-enable-caching
+      (projectile-project-files path))))
 
 (transient-append-suffix 'magit-worktree '(0 0 -1)
   '("C" "Create a branch in a sibling worktree" my-magit-worktree-branch))
