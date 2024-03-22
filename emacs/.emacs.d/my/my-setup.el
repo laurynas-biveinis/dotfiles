@@ -311,6 +311,7 @@
          (format "Branch `%s' already exists; pick another name" branch)))
     branch))
 
+;; TODO(laurynas): add this project to `projectile'
 (defun my-magit-worktree-branch ()
   "Create a new git branch and its worktree in a sibling dir."
   (interactive
