@@ -1182,7 +1182,7 @@
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
 	(:commit . "eda749bc689591a8f43a98e002d63b4ef2d4602d"))])
  (ef-themes .
-	    [(1 6 0)
+	    [(1 6 1)
 	     ((emacs
 	       (27 1)))
 	     "Colorful and legible themes" tar
@@ -1191,7 +1191,7 @@
 	      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	      (:authors
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	      (:commit . "965053727ace036c4feb6bf2dc80d1b40e8a7965"))])
+	      (:commit . "96aaab126510bfd303558e2a9b85a745dab32f41"))])
  (eglot .
 	[(1 17)
 	 ((emacs
@@ -2304,7 +2304,7 @@
 	    ("Adam Porter" . "adam@alphapapa.net"))
 	   (:commit . "372a2fe873fb7082e6e5afd682c4ee7cfdc920f5"))])
  (llm .
-      [(0 12 0)
+      [(0 12 1)
        ((emacs
 	 (28 1)))
        "Interface to pluggable llm backends" tar
@@ -2312,7 +2312,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "5fb10b9bdbfc6bb384c14fbfc8caf09fdb4b99e8"))])
+	(:commit . "144edd99441314a88294e9c3457a42cc8351d564"))])
  (lmc .
       [(1 4)
        ((emacs
@@ -2792,7 +2792,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "3847f311077efa17951a786d2759f2639c5f43c8"))])
  (org .
-      [(9 6 21)
+      [(9 6 22)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -2801,7 +2801,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "28dc5dd1ac1325ecb6bdec3e9f72997c35eebfa0"))])
+	(:commit . "50c51b9ad129ccd4d87cf5f2d64089a687383113"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -4102,7 +4102,7 @@
 		("David Gonzalez Gandara" . "dggandara@member.fsf.org"))
 	       (:maintainer "David Gonzalez Gandara" . "dggandara@member.fsf.org"))])
  (transient .
-	    [(0 5 3)
+	    [(0 6 0)
 	     ((emacs
 	       (26 1))
 	      (compat
@@ -4115,7 +4115,7 @@
 	      (:maintainer "Jonas Bernoulli" . "jonas@bernoul.li")
 	      (:authors
 	       ("Jonas Bernoulli" . "jonas@bernoul.li"))
-	      (:commit . "72cf67d7e047a4f82e0e18bd016c7826bf2efde0"))])
+	      (:commit . "55d5d41b48d7f7bc1ecf1f90c012d7821dff5724"))])
  (transient-cycles .
 		   [(1 0)
 		    ((emacs

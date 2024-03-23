@@ -5,7 +5,7 @@
 ;; Author: Nikolaj Schumacher
 ;; Maintainer: Dmitry Gutov <dmitry@gutov.dev>
 ;; URL: http://company-mode.github.io/
-;; Version: 0.10.1
+;; Version: 0.10.2
 ;; Keywords: abbrev, convenience, matching
 ;; Package-Requires: ((emacs "25.1"))
 
@@ -2231,8 +2231,10 @@ For more details see `company-insertion-on-trigger' and
                 (company-call-frontends 'post-command)
                 (when company-auto-update-doc
                   (condition-case nil
-                      (company-show-doc-buffer)
-                    (user-error nil))))
+                      (unless (company--electric-command-p)
+                        (company-show-doc-buffer))
+                    (user-error nil)
+                    (quit nil))))
             (let ((delay (company--idle-delay)))
              (and (numberp delay)
                   (not defining-kbd-macro)
@@ -2835,16 +2837,19 @@ from the candidates list.")
   '(scroll-other-window scroll-other-window-down mwheel-scroll)
   "List of Commands that won't break out of electric commands.")
 
+(defun company--electric-command-p ()
+  (memq this-command company--electric-commands))
+
 (defun company--electric-restore-window-configuration ()
   "Restore window configuration (after electric commands)."
   (when (and company--electric-saved-window-configuration
-             (not (memq this-command company--electric-commands)))
+             (not (company--electric-command-p)))
     (set-window-configuration company--electric-saved-window-configuration)
     (setq company--electric-saved-window-configuration nil)))
 
 (defmacro company--electric-do (&rest body)
   (declare (indent 0) (debug t))
-  `(when (company-manual-begin)
+  `(when company-candidates
      (cl-assert (null company--electric-saved-window-configuration))
      (setq company--electric-saved-window-configuration (current-window-configuration))
      (let ((height (window-height))
