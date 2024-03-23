@@ -40,6 +40,16 @@
     (mm-save-part-to-file (plist-get part :handle) file-path)
     file-path))
 
+(defun dotfiles--download-mu4e-all-jpgs ()
+  "Download all .jpg attachments from a `mu4e' message."
+  (let ((mime-parts (mu4e-view-mime-parts)))
+    (dolist (part mime-parts)
+      (let ((filename (plist-get part :filename)))
+        (when (string-suffix-p ".jpg" filename t)
+          (let ((file-path (mu4e-join-paths (plist-get part :target-dir)
+                                            filename)))
+            (mm-save-part-to-file (plist-get part :handle) file-path)))))))
+
 (require 'org-element)
 
 (defun dotfiles--org-headline-has-url (headline url)
