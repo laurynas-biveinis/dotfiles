@@ -32,11 +32,6 @@
 
 (defvar bug-reference-auto-setup-functions)
 
-(defvar vertico-mode)
-(defvar vertico--input)
-
-(declare-function vertico--exhibit "vertico" ())
-
 ;;; Options
 
 (defcustom forge-topic-list-order '(updated . string>)
@@ -456,11 +451,16 @@ can be selected from the start."
   (let* ((current (funcall current))
          (repo    (forge-get-repository (or current :tracked)))
          (default (and current (forge--format-topic-line current)))
-         (alist   (forge--topic-collection (funcall active repo)))
+         (alist   (forge--topic-collection
+                   (funcall (if forge-limit-topic-choices active all)
+                            repo)))
          (choices (mapcar #'car alist))
-         (choices (if (and default (not (member default choices)))
-                      (cons default choices)
-                    choices))
+         (choices (cond ((and forge-limit-topic-choices
+                              default
+                              (not (member default choices)))
+                         (push (cons default (oref current id)) alist)
+                         (cons default choices))
+                        (choices)))
          (choice
           (if forge-limit-topic-choices
               (minibuffer-with-setup-hook
@@ -502,7 +502,9 @@ can be selected from the start."
   (when (and (minibufferp)
              forge-limit-topic-choices)
     (setq-local forge-limit-topic-choices nil)
-    (when vertico-mode
+    (when (and (bound-and-true-p vertico-mode)
+               (boundp 'vertico--input)
+               (fboundp 'vertico--exhibit))
       (setq vertico--input t)
       (vertico--exhibit))))
 
