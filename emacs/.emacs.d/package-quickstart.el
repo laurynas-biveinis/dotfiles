@@ -960,7 +960,7 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20240318.1617/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20240318.1617/vterm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20240325.1551/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20240325.1551/vterm-autoloads.el"))
 
 
 
@@ -12236,7 +12236,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240308.1548/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240308.1548/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240325.809/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240325.809/difftastic-autoloads.el"))
 
 
 
