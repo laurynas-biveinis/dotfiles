@@ -78,7 +78,16 @@
           (setq found (list :buffer buffer :headline node)))))
     found))
 
+(defun dotfiles--gh-get (args)
+  "Run gh with ARGS, return its output with the final newline trimmed."
+  (substring (shell-command-to-string (concat "gh " args)) 0 -1))
+
 (require 'org-clock)
+
+(defun dotfiles--require-org-clock ()
+  "Return user error if no `org' task is currently clocked in."
+  (unless (org-clocking-p)
+    (user-error "No org task is clocked-in")))
 
 (defun dotfiles--with-different-org-clock (func &rest args)
   "Save the current org clock, clock-in, call FUNC with ARGS, restore clock.
