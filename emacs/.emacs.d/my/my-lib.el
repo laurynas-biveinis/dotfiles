@@ -95,16 +95,20 @@ The marker must be at the new clock position."
             (org-clock-in))
         (org-clock-out)))))
 
-(defun dotfiles--run-program (program success-fn &rest args)
-  "Run PROGRAM, do actions on its zero exit, display errors otherwise.
-ARGS are passed to PROGRAM, SUCCESS-FN is executed on zero exit with zero
-arguments, otherwise show its output."
+(defun dotfiles--run-program (program args success-fn)
+  "Run PROGRAM with ARGS, executing SUCCESS-FN on zero exit..
+ARGS must be a vector of strings passed to PROGRAM.
+SUCCESS-FN is executed on zero exit with a single string argument containing the
+output of execution.
+In the case of non-zero exit code it is printed as user error together with any
+output."
   (with-temp-buffer
     (let ((exit-code (apply #'call-process program nil t nil args)))
       (when (/= 0 exit-code)
         (user-error "%s %s failed with exit code %d and output %s" program
-                    (mapconcat 'identity args " ") exit-code (buffer-string)))
-      (funcall success-fn))))
+                    (mapconcat 'identity (append args nil) " ") exit-code
+                    (buffer-string)))
+      (funcall success-fn (buffer-string)))))
 
 (provide 'my-lib)
 ;;; my-lib.el ends here
