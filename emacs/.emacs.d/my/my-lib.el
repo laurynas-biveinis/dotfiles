@@ -6,6 +6,8 @@
 
 ;;; Code:
 
+;;; Regexps for looking up information in e-mails
+
 (defconst dotfiles--muspy-album-release-date-and-title
   "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\): \\(.*? - .*?\\) (Album)")
 
@@ -16,6 +18,8 @@
 (defconst dotfiles--gh-org-and-project
   (concat dotfiles--gh-url-prefix "\\(.*\\)/pull/[0-9]+"))
 (defconst dotfiles--gh-repo "\\(https://github.com/.*/.*\\)/pull/[0-9]+")
+
+;;; `mu4e' helpers
 
 (require 'seq)
 (require 'mu4e-mime-parts)
@@ -77,6 +81,8 @@
         (when node
           (setq found (list :buffer buffer :headline node)))))
     found))
+
+;;; Command-line "gh" utility helper
 
 (defun dotfiles--gh-get (args)
   "Run gh with ARGS, return its output with the final newline trimmed."
