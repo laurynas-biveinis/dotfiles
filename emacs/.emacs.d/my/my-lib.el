@@ -44,15 +44,32 @@
     (mm-save-part-to-file (plist-get part :handle) file-path)
     file-path))
 
-(defun dotfiles--download-mu4e-all-jpgs ()
-  "Download all .jpg attachments from a `mu4e' message."
+(defun dotfiles--for-each-attachment (fn)
+  "Call FN for each attachment with its handle and path."
   (let ((mime-parts (mu4e-view-mime-parts)))
     (dolist (part mime-parts)
-      (let ((filename (plist-get part :filename)))
-        (when (string-suffix-p ".jpg" filename t)
-          (let ((file-path (mu4e-join-paths (plist-get part :target-dir)
-                                            filename)))
-            (mm-save-part-to-file (plist-get part :handle) file-path)))))))
+      (let* ((attachment-handle (plist-get part :handle))
+             (file-name (plist-get part :filename))
+             (file-path (mu4e-join-paths (plist-get part :target-dir)
+                                         file-name)))
+        (funcall fn attachment-handle file-path)))))
+
+(defun dotfiles--download-and-open-mu4e-all-attachments (suffix)
+  "Download all attachments with file name SUFFIX from a `mu4e' message."
+  (dotfiles--for-each-attachment
+   (lambda (handle path)
+     (when (string-suffix-p suffix path t)
+       (mm-save-part-to-file handle path)
+       (shell-command (concat "open " path))))))
+
+(defun dotfiles--download-mu4e-all-jpgs ()
+  "Download all .jpg attachments from a `mu4e' message."
+  (dotfiles--for-each-attachment
+   (lambda (handle path)
+     (when (string-suffix-p ".jpg" path t)
+       (mm-save-part-to-file handle path)))))
+
+;;; `org' helpers
 
 (require 'org-element)
 
