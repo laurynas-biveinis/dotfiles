@@ -271,6 +271,17 @@ See `forge-alist' for valid Git hosts."
 (defun forge--get-repository:tracked? ()
   (forge-get-repository :tracked?))
 
+(defun forge-get-worktree (repo)
+  "Validate and return the worktree recorded for REPO.
+If no worktree is recorded, return nil.  If a worktree is recorded but
+that doesn't exist anymore, then discard the recorded value and return
+nil."
+  (and-let* ((worktree (oref repo worktree)))
+    (if (file-directory-p worktree)
+        worktree
+      (oset repo worktree nil)
+      nil)))
+
 ;;;; Current
 
 (defun forge-current-repository ()
@@ -471,7 +482,7 @@ forges and hosts."
 (cl-defmethod ghub--username ((repo forge-repository))
   (let ((default-directory default-directory))
     (unless (forge-repository-equal (forge-get-repository :stub?) repo)
-      (when-let ((worktree (oref repo worktree)))
+      (when-let ((worktree (forge-get-worktree repo)))
         (setq default-directory worktree)))
     (cl-call-next-method (oref repo apihost)
                          (forge--ghub-type-symbol (eieio-object-class repo)))))
