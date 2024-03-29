@@ -99,12 +99,6 @@
           (setq found (list :buffer buffer :headline node)))))
     found))
 
-;;; Command-line "gh" utility helper
-
-(defun dotfiles--gh-get (args)
-  "Run gh with ARGS, return its output with the final newline trimmed."
-  (substring (shell-command-to-string (concat "gh " args)) 0 -1))
-
 (require 'org-clock)
 
 (defun dotfiles--require-org-clock ()
@@ -127,6 +121,8 @@ The marker must be at the new clock position."
             (org-clock-in))
         (org-clock-out)))))
 
+;;; Command-line program helper
+
 (defun dotfiles--run-program (program args success-fn)
   "Run PROGRAM with ARGS, executing SUCCESS-FN on zero exit..
 ARGS must be a vector of strings passed to PROGRAM.
@@ -141,6 +137,12 @@ output."
                     (mapconcat 'identity (append args nil) " ") exit-code
                     (buffer-string)))
       (funcall success-fn (buffer-string)))))
+
+;;; Command-line "gh" utility helper
+
+(defun dotfiles--gh-get (args)
+  "Run gh with ARGS, return its output with the final newline trimmed."
+  (substring (shell-command-to-string (concat "gh " args)) 0 -1))
 
 (provide 'my-lib)
 ;;; my-lib.el ends here
