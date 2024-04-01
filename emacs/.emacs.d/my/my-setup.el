@@ -961,7 +961,14 @@
                             python-indent-dedent-line-backspace
                             end-of-visual-line windmove-up kill-buffer
                             markdown-outdent-or-delete newline org-agenda-goto
-                            windmove-down org-agenda-redo org-return))
+                            windmove-down org-agenda-redo org-return
+                            xwidget-webkit-scroll-up-line
+                            mu4e-view-mark-for-refile xwidget-webkit-scroll-up
+                            mu4e-view-headers-next magit-section-toggle
+                            helm-maybe-exit-minibuffer isearch-forward
+                            helm-delete-char-backward mu4e-headers-next
+                            yank mu4e-view-marked-execute mu4e-view-action
+                            helm-mini))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 

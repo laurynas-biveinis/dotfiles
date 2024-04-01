@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+import argparse
+import pandas as pd
+
+arg_parser = argparse.ArgumentParser(
+    description="Convert ŠB pension fund XLSX statement to QIF for importing "
+    "to Banktivity."
+)
+
+arg_parser.add_argument("input", type=str, help="The input file")
+arg_parser.add_argument("output", type=str, help="The output file")
+
+args = arg_parser.parse_args()
+
+source = df.read_excel(args.input)
