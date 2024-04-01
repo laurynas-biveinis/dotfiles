@@ -1,7 +1,25 @@
 #!/usr/bin/env python
+"""Convert XLSX from ŠB to QIF
+
+The QIFs are produced with the intent to import them to Banktivity.
+
+This is configured by a configuration file (~/.invl2qif) which should have a
+single section named '3PF' with a single key 'security':
+[3PF]
+security = foo
+"""
 
 import argparse
+import configparser
+import os
 import pandas as pd
+
+CONFIG_FN = "~/.invl2qif"
+
+config = configparser.ConfigParser()
+config.read(os.path.expanduser(CONFIG_FN))
+
+security = config['3PF']['security']
 
 arg_parser = argparse.ArgumentParser(
     description="Convert ŠB pension fund XLSX statement to QIF for importing "
@@ -13,4 +31,24 @@ arg_parser.add_argument("output", type=str, help="The output file")
 
 args = arg_parser.parse_args()
 
-source = df.read_excel(args.input)
+source = pd.read_excel(args.input)
+
+with open(args.output, "w", encoding='utf-8') as output_file:
+    output_file.write("!Type:Invst\n")
+    for index, row in source.iterrows():
+        date = row['Data']
+        amount = row['Įmoka/išmoka'].strip(" €")
+        unit_price = row['Vnt. kaina'].strip(" €")
+        count = row['Vnt.'].strip(" €")
+        fee = row['Mokestis'].strip(" €")
+        print(f"Date: {date}, amount: {amount}, unit price: {unit_price}, "
+              f"count: {count}, fee: {fee}")
+
+        output_file.write(f"D{date}\n")
+        output_file.write(f"Y{security}\n")
+        output_file.write("NBuy\n")
+        output_file.write(f"O{fee}\n")
+        output_file.write(f"T{amount}\n")
+        output_file.write(f"I{unit_price}\n")
+        output_file.write(f"Q{count}\n")
+        output_file.write("^\n")
