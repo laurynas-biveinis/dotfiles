@@ -13,9 +13,11 @@ class QIFInvestmentTransaction:
         self._count = count
 
     def __str__(self):
-        return (f"QIFInvestmentTransaction(Date: {self._date}, "
-                f"amount: {self._amount}, unit price: {self._unit_price}, "
-                f"count: {self._count}, fee: {self._fee})")
+        return (
+            f"QIFInvestmentTransaction(Date: {self._date}, "
+            f"amount: {self._amount}, unit price: {self._unit_price}, "
+            f"count: {self._count}, fee: {self._fee})"
+        )
 
     def write(self, f):
         """Serialize this transaction to QIF."""
