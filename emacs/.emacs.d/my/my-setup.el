@@ -319,11 +319,12 @@
     (magit-worktree-branch absolute-path name (magit-get-current-branch))
     absolute-path))
 
-(defun dotfiles--magit-commit-require-org-clock (&rest _args)
+(defun dotfiles--magit-require-org-clock (&rest _args)
   "Block Magit commit operation if no `org' task is clocked in."
   (dotfiles--require-org-clock))
 
-(advice-add 'magit-commit :before #'dotfiles--magit-commit-require-org-clock)
+(advice-add 'magit-commit :before #'dotfiles--magit-require-org-clock)
+(advice-add 'magit-push :before #'dotfiles--magit-require-org-clock)
 
 (require 'projectile)
 
