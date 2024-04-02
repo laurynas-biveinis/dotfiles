@@ -19,6 +19,10 @@ import configparser
 import os
 import pandas as pd
 
+sys.path.append(os.path.expanduser('~/usr/lib/python'))
+
+import common
+
 CONFIG_FN = "~/.goindex2qif"
 
 config = configparser.ConfigParser()
@@ -49,16 +53,13 @@ with open(args.output, "w", encoding='utf-8') as output_file:
         op = row['Fondo vnt. operacija']
         if op != match_fund_source:
             raise ValueError(f"Unknown match_fund_source {op}")
-        amount = row['Įmokos/Išmokos']
-        unit_price = row['Fondo vieneto kaina']
-        count = row['Vnt. kiekis']
+        amount = row['Įmokos/Išmokos'].replace(",", ".")
+        unit_price = row['Fondo vieneto kaina'].replace(",", ".")
+        count = row['Vnt. kiekis'].replace(",", ".")
         fee = row['Mokestis']
-        print(f"Date: {date}, amount: {amount}, unit price: {unit_price}, "
-              f"count: {count}, fee: {fee}")
-
-        amount = amount.replace(",", ".")
-        unit_price = unit_price.replace(",", ".")
-        count = count.replace(",", ".")
+        qif_trx = QIFInvestmentTransaction(date, amount, unit_price, count,
+                                           fee)
+        print(qif_trx)
 
         output_file.write(f"D{date}\n")
         output_file.write("NCash\n")
@@ -68,11 +69,4 @@ with open(args.output, "w", encoding='utf-8') as output_file:
         output_file.write(f"L{preceding_trx_category}\n")
         output_file.write("^\n")
 
-        output_file.write(f"D{date}\n")
-        output_file.write(f"Y{security}\n")
-        output_file.write("NBuy\n")
-        output_file.write(f"O{fee}\n")
-        output_file.write(f"T{amount}\n")
-        output_file.write(f"I{unit_price}\n")
-        output_file.write(f"Q{count}\n")
-        output_file.write("^\n")
+        qif_trx.write(output_file)
