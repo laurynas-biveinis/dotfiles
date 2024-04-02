@@ -11,6 +11,8 @@
 (defconst dotfiles--muspy-album-release-date-and-title
   "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\): \\(.*? - .*?\\) (Album)")
 
+(defconst dotfiles--gh-view-run-results "^View results: \\(.*\\)")
+
 (defconst dotfiles--gh-pr-in-subject "^.*\(PR #\\([0-9]+\\)\)$")
 (defconst dotfiles--gh-url-prefix "https://github.com/")
 (defconst dotfiles--gh-closed-pr-url-format
@@ -23,6 +25,12 @@
 
 (require 'seq)
 (require 'mu4e-mime-parts)
+(require 'mu4e-message)
+
+(defun dotfiles--get-raw-message (msg)
+  "Get the raw `mu4e' message MSG as string."
+  (with-temp-buffer (insert-file-contents (mu4e-message-readable-path msg))
+                    (buffer-string)))
 
 (defun dotfiles--get-qp-encoded-html-part ()
   "For a `mu4e' message, get its first quoted-printable-encoded HTML part."
