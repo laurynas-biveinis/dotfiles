@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 
-;; This contains internal helpers used elsewhere.
+;; This contains internal helpers used elsewhere. Very much personalized.
 
 ;;; Code:
 
