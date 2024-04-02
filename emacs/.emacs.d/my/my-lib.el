@@ -133,7 +133,7 @@ The marker must be at the new clock position."
 
 (defun dotfiles--run-program (program args success-fn)
   "Run PROGRAM with ARGS, executing SUCCESS-FN on zero exit..
-ARGS must be a vector of strings passed to PROGRAM.
+ARGS must be a list of strings passed to PROGRAM.
 SUCCESS-FN is executed on zero exit with a single string argument containing the
 output of execution.
 In the case of non-zero exit code it is printed as user error together with any
@@ -142,8 +142,7 @@ output."
     (let ((exit-code (apply #'call-process program nil t nil args)))
       (when (/= 0 exit-code)
         (user-error "%s %s failed with exit code %d and output %s" program
-                    (mapconcat 'identity (append args nil) " ") exit-code
-                    (buffer-string)))
+                    (mapconcat 'identity args " ") exit-code (buffer-string)))
       (funcall success-fn (buffer-string)))))
 
 ;;; Command-line "gh" utility helper
