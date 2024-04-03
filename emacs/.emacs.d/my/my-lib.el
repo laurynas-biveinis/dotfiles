@@ -68,7 +68,7 @@
    (lambda (handle path)
      (when (string-suffix-p suffix path t)
        (mm-save-part-to-file handle path)
-       (shell-command (concat "open " path))))))
+       (shell-command (concat "open " (shell-quote-argument path)))))))
 
 (defun dotfiles--download-mu4e-all-jpgs ()
   "Download all .jpg attachments from a `mu4e' message."
@@ -148,7 +148,8 @@ output."
 ;;; Command-line "gh" utility helper
 
 (defun dotfiles--gh-get (args)
-  "Run gh with ARGS, return its output with the final newline trimmed."
+  "Run gh with ARGS, return its output with the final newline trimmed.
+ARGS must be properly quoted if needed."
   (substring (shell-command-to-string (concat "gh " args)) 0 -1))
 
 (provide 'my-lib)
