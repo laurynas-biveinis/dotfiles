@@ -11,7 +11,7 @@ while (( $# > 0 )); do
             shift
             ;;
         *)
-            if [[ -z "${WORKTREE_PATH}" ]]; then
+            if [[ -z "${WORKTREE_PATH:-}" ]]; then
                 readonly WORKTREE_PATH="$1"
             fi
             shift
@@ -19,7 +19,7 @@ while (( $# > 0 )); do
     esac
 done
 
-if [ -z "${WORKTREE_PATH+x}" ]; then
+if [ -z "${WORKTREE_PATH:-}" ]; then
     echo "Usage: $0 [--force] <worktree-path>"
     exit 3
 fi
