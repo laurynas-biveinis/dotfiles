@@ -28,16 +28,22 @@ readonly WORKTREE_DIR="$WORKTREE_PATH:t"
 
 pushd "$WORKTREE_PATH" || exit 1
 
-readonly BRANCH_NAME=$(git branch --show-current)
+BRANCH_NAME=$(git branch --show-current)
+readonly BRANCH_NAME
 # TODO(laurynas): might need to consider other push remotes
-readonly REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote)
+REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote)
+readonly REMOTE_NAME
 
-cd "$(git rev-parse --git-dir)" || exit 1
+popd || exit 1
+
+pushd "$(git rev-parse --git-dir)" || exit 1
 cd ../../../
 
 git pull
 
 if [ $FORCE -ne 1 ]; then
+    # TODO(laurynas): replace hardcoded "master" with the default branch check,
+    # i.e. git remote show [remote-name] | grep 'HEAD branch'
     git branch --contains "$BRANCH_NAME" | grep -q master
     readonly BRANCH_MERGED=$?
 
