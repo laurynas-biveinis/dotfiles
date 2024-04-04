@@ -191,30 +191,24 @@ with a prefix ARG."
   "Remove the git worktree and kill project buffers, optionally with FORCE.
 The prefix argument enables FORCE."
   (interactive "P")
-  ;; TODO(laurynas): don't know whether `projectile-kill-buffers' prompt will be
-  ;; answered with 'y' or 'n' – assume that zero existing buffers means 'y'. For
-  ;; that, `projectile-kill-buffers-filter' must be set to `'kill-all'.
-  (when (not (equal projectile-kill-buffers-filter 'kill-all))
-    (user-error "Unsupported `projectile-kill-buffers-filter' value %:S"
-                projectile-kill-buffers-filter))
-  (let ((project-root-path (projectile-acquire-root))
+  ;; We don't know whether `projectile-kill-buffers' prompt will be answered
+  ;; with 'y' or 'n' – assume that zero existing buffers means 'y'. For that to
+  ;; work, `projectile-kill-buffers-filter' must be set to `'kill-all'.
+  (let ((projectile-kill-buffers-filter 'kill-all)
+        (project-root-path (projectile-acquire-root))
         (force-arg (if force "--force " "")))
     (projectile-with-default-dir project-root-path
       (projectile-kill-buffers)
       (when (null (projectile-project-buffers project-root-path))
-        (let ((grmwt-ret-code
-               ;; FIXME(laurynas): in the case of failure capture output
-               (shell-command (concat "gitrmworktree " force-arg
-                                      project-root-path))))
-          (if (= grmwt-ret-code 0)
-              (progn
-                (projectile-remove-known-project project-root-path)
-                ;; TODO(laurynas): remove the project from treemacs. ChatGPT
-                ;; suggested to use `tremacs-remove-project-from-workspace', but
-                ;; I am not sure this is the right function.
-                (lsp-workspace-folders-remove project-root-path)
-                )
-            (user-error "'gitrmworktree %s' failed" project-root-path)))))))
+        (let* ((cmd (concat "gitrmworktree " force-arg project-root-path))
+               (ret-code (shell-command cmd)))
+          (when (\= ret-code 0)
+            (user-error "'%s' failed, check `shell-command-buffer-name'" cmd))
+          (projectile-remove-known-project project-root-path)
+          ;; TODO(laurynas): remove the project from treemacs. ChatGPT
+          ;; suggested to use `tremacs-remove-project-from-workspace', but
+          ;; I am not sure this is the right function.
+          (lsp-workspace-folders-remove project-root-path))))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
 
