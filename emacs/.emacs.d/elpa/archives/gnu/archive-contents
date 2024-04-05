@@ -837,7 +837,7 @@
 		 (:url . "https://elpa.gnu.org/packages/cycle-quotes.html")
 		 (:commit . "836b19b39651419876e65cdb1a91e3eef83cc4e7"))])
  (dape .
-       [(0 9 0)
+       [(0 10 0)
 	((emacs
 	  (29 1))
 	 (jsonrpc
@@ -845,7 +845,7 @@
 	"Debug Adapter Protocol for Emacs" tar
 	((:url . "https://github.com/svaante/dape")
 	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
-	 (:commit . "623fb82ccf680400f897a36646b0ea6ee6436137"))])
+	 (:commit . "a5c9d468c1e49e533f1146980fa86488bbe3a54e"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -1118,7 +1118,7 @@
 	    (:url . "https://elpa.gnu.org/packages/docbook.html")
 	    (:commit . "a59f87c0dc04bcfcf9f55a124658c2e7a585dbd2"))])
  (drepl .
-	[(0 1)
+	[(0 2)
 	 ((emacs
 	   (29 1))
 	  (comint-mime
@@ -1129,7 +1129,7 @@
 	  (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
 	  (:authors
 	   ("Augusto Stoffel" . "arstoffel@gmail.com"))
-	  (:commit . "0f3cb40bab1ef42d080c1e2cd5eae124f7e5cf80"))])
+	  (:commit . "fc0b28b8b281899c2f00461bf9e83caf13330b54"))])
  (dts-mode .
 	   [(1 0)
 	    ((emacs
@@ -2151,7 +2151,7 @@
 		(:url . "https://elpa.gnu.org/packages/jgraph-mode.html")
 		(:commit . "4e13f89fe8837b84d40b969e6a5431816180a747"))])
  (jinx .
-       [(1 4)
+       [(1 5)
 	((emacs
 	  (27 1))
 	 (compat
@@ -2162,7 +2162,7 @@
 	 (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	 (:authors
 	  ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	 (:commit . "b2ef3af2857896e20cff0488c46a4bfcfee39ecc"))])
+	 (:commit . "a3d69abcb44555ddf5dbf03eee3c6188a456eceb"))])
  (jit-spell .
 	    [(0 4)
 	     ((emacs
@@ -2470,7 +2470,7 @@
 	(:url . "https://elpa.gnu.org/packages/map.html")
 	(:commit . "9da2efb670574b473ab864ae0456b4f1b38e680b"))])
  (marginalia .
-	     [(1 5)
+	     [(1 6)
 	      ((emacs
 		(27 1))
 	       (compat
@@ -2484,7 +2484,7 @@
 	       (:authors
 		("Omar Antolín Camarena" . "omar@matem.unam.mx")
 		("Daniel Mendler" . "mail@daniel-mendler.de"))
-	       (:commit . "98f6e58c12d57283bd7c1cb241664c966dc38ac3"))])
+	       (:commit . "58eb5fd6e5cc21b12c5455ae69e7ae93579647bc"))])
  (markchars .
 	    [(0 2 2)
 	     nil "Mark chars fitting certain characteristics" tar
@@ -3714,13 +3714,13 @@
 		     (:url . "https://elpa.gnu.org/packages/slime-volleyball.html")
 		     (:commit . "361d22bba0b03cd81331439c97f84583dd87c752"))])
  (sm-c-mode .
-	    [(1 1)
+	    [(1 2)
 	     nil "C major mode based on SMIE" tar
 	     ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
 	      (:authors
 	       ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
 	      (:url . "https://elpa.gnu.org/packages/sm-c-mode.html")
-	      (:commit . "3ef465d3ebed319fdaa3bd650bc19eb11c786fe5"))])
+	      (:commit . "a56142cb82d3390faa3dbd0658d65fe06822206d"))])
  (smalltalk-mode .
 		 [(4 0)
 		  nil "Major mode for the GNU Smalltalk programming language" tar
