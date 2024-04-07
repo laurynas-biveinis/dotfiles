@@ -817,8 +817,10 @@
 RULE is a plist containing either :subject-exact or :subject-regex."
   (let ((subject-exact (plist-get rule :subject-exact))
         (subject-regex (plist-get rule :subject-regex)))
-    (or (null (and subject-exact subject-regex))
-        (and subject-exact (string= subject-exact subject))
+    (when (and subject-exact subject-regex)
+      (user-error "Both :subject-exact and :subject-regex set in %s, fix your dotfiles--email-automations"
+                  rule))
+    (or (and subject-exact (string= subject-exact subject))
         (and subject-regex (string-match subject-regex subject)))))
 
 ;; `dotfiles--email-automations' is defined elsewhere.
