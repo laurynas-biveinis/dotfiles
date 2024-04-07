@@ -829,10 +829,15 @@ RULE is a plist containing either :subject-exact or :subject-regex."
   "Run any matching email automation for a `mu4e' MSG."
   (dotfiles--require-org-clock)
   (let ((sender (car (cdr (car (mu4e-message-field msg :from)))))
-        (subject (mu4e-message-field msg :subject)))
+        (subject (mu4e-message-field msg :subject))
+        (already-matched nil))
     (dolist (rule dotfiles--email-automations)
       (when (and (string= sender (plist-get rule :sender-exact))
                  (dotfiles--subject-matches-rule rule subject))
+        (when already-matched
+          (user-error "A second rule %s matches on this message, fix your dotfiles--email-automations"
+                      rule))
+        (setq already-matched t)
         (funcall (plist-get rule :action-fn) msg)))))
 
 (add-to-list 'mu4e-view-actions
