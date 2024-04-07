@@ -838,7 +838,9 @@ RULE is a plist containing either :subject-exact or :subject-regex."
           (user-error "A second rule %s matches on this message, fix your dotfiles--email-automations"
                       rule))
         (setq already-matched t)
-        (funcall (plist-get rule :action-fn) msg)))))
+        (funcall (plist-get rule :action-fn) msg)))
+    (unless already-matched
+      (message "No automation rule matched for this message"))))
 
 (add-to-list 'mu4e-view-actions
              '("Execute automation" . dotfiles--mu4e-email-automation) t)
