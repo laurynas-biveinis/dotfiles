@@ -46,6 +46,12 @@
                 (mu4e-view-mime-parts))
       (user-error "The expected .CSV attachment not found")))
 
+(defun dotfiles--get-mu4e-msg-pdf-part ()
+  "For a `mu4e' message, get its first .pdf attachment part, if any."
+  (seq-find (lambda (part)
+              (string-suffix-p ".pdf" (plist-get part :filename) t))
+            (mu4e-view-mime-parts)))
+
 (defun dotfiles--save-mu4e-msg-part-file (part)
   "For a `mu4e' message PART, save it as a file and return its path."
   (let* ((base-dir (plist-get part :target-dir))
