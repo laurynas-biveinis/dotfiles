@@ -21,6 +21,35 @@
   (concat dotfiles--gh-url-prefix "\\(.*\\)/pull/[0-9]+"))
 (defconst dotfiles--gh-repo "\\(https://github.com/.*/.*\\)/pull/[0-9]+")
 
+;;; External program helpers
+
+(defun dotfiles--open-file (file)
+  "Open the FILE in its default app."
+  (shell-command (concat "open " (shell-quote-argument file))))
+
+;; Command-line program helper
+
+(defun dotfiles--run-program (program args success-fn)
+  "Run PROGRAM with ARGS, executing SUCCESS-FN on zero exit..
+ARGS must be a list of strings passed to PROGRAM.
+SUCCESS-FN is executed on zero exit with a single string argument containing the
+output of execution.
+In the case of non-zero exit code it is printed as user error together with any
+output."
+  (with-temp-buffer
+    (let ((exit-code (apply #'call-process program nil t nil args)))
+      (when (/= 0 exit-code)
+        (user-error "%s %s failed with exit code %d and output %s" program
+                    (mapconcat 'identity args " ") exit-code (buffer-string)))
+      (funcall success-fn (buffer-string)))))
+
+;; Command-line "gh" utility helper
+
+(defun dotfiles--gh-get (args)
+  "Run gh with ARGS, return its output with the final newline trimmed.
+ARGS must be properly quoted if needed."
+  (substring (shell-command-to-string (concat "gh " args)) 0 -1))
+
 ;;; `mu4e' helpers
 
 (require 'seq)
@@ -75,7 +104,7 @@
    (lambda (handle path)
      (when (string-suffix-p suffix path t)
        (mm-save-part-to-file handle path)
-       (shell-command (concat "open " (shell-quote-argument path)))))))
+       (dotfiles--open-file path)))))
 
 (defun dotfiles--download-mu4e-all-jpgs ()
   "Download all .jpg attachments from a `mu4e' message."
@@ -135,29 +164,6 @@ The marker must be at the new clock position."
           (org-with-point-at current-clock-marker
             (org-clock-in))
         (org-clock-out)))))
-
-;;; Command-line program helper
-
-(defun dotfiles--run-program (program args success-fn)
-  "Run PROGRAM with ARGS, executing SUCCESS-FN on zero exit..
-ARGS must be a list of strings passed to PROGRAM.
-SUCCESS-FN is executed on zero exit with a single string argument containing the
-output of execution.
-In the case of non-zero exit code it is printed as user error together with any
-output."
-  (with-temp-buffer
-    (let ((exit-code (apply #'call-process program nil t nil args)))
-      (when (/= 0 exit-code)
-        (user-error "%s %s failed with exit code %d and output %s" program
-                    (mapconcat 'identity args " ") exit-code (buffer-string)))
-      (funcall success-fn (buffer-string)))))
-
-;;; Command-line "gh" utility helper
-
-(defun dotfiles--gh-get (args)
-  "Run gh with ARGS, return its output with the final newline trimmed.
-ARGS must be properly quoted if needed."
-  (substring (shell-command-to-string (concat "gh " args)) 0 -1))
 
 (provide 'my-lib)
 ;;; my-lib.el ends here
