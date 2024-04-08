@@ -814,14 +814,14 @@
 
 (defun dotfiles--subject-matches-rule (rule subject)
   "Check if the email SUBJECT matches the criteria defined in RULE.
-RULE is a plist containing either :subject-exact or :subject-regex."
+RULE is a plist containing either :subject-exact or :subject-match."
   (let ((subject-exact (plist-get rule :subject-exact))
-        (subject-regex (plist-get rule :subject-regex)))
-    (when (and subject-exact subject-regex)
-      (user-error "Both :subject-exact and :subject-regex set in %s, fix your dotfiles--email-automations"
+        (subject-match (plist-get rule :subject-match)))
+    (when (and subject-exact subject-match)
+      (user-error "Both :subject-exact and :subject-match set in %s, fix your dotfiles--email-automations"
                   rule))
     (or (and subject-exact (string= subject-exact subject))
-        (and subject-regex (string-match subject-regex subject)))))
+        (and subject-match (string-match subject-match subject)))))
 
 ;; `dotfiles--email-automations' is defined elsewhere.
 
