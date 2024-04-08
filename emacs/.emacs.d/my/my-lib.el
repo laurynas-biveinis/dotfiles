@@ -165,5 +165,14 @@ The marker must be at the new clock position."
             (org-clock-in))
         (org-clock-out)))))
 
+(defun dotfiles--read-org-headline ()
+  "Get the target `org' headline for the capture."
+  (let* ((refile-target (org-refile-get-location "File link to this under"))
+         (file (nth 1 refile-target))
+         (pos (nth 3 refile-target)))
+    (switch-to-buffer (find-file-noselect file))
+    (goto-char pos)
+    (org-end-of-subtree)))
+
 (provide 'my-lib)
 ;;; my-lib.el ends here
