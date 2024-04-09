@@ -480,14 +480,33 @@
 ;; penalty on large buffers, like it was with the external tree-sitter.
 (require 'treesit)
 (setq treesit-language-source-alist
-      '((c "https://github.com/tree-sitter/tree-sitter-c/")
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (c "https://github.com/tree-sitter/tree-sitter-c/")
         (c++ "https://github.com/tree-sitter/tree-sitter-cpp/")
-        (python "https://github.com/tree-sitter/tree-sitter-python")))
+        (cmake "https://github.com/uyha/tree-sitter-cmake")
+        (make "https://github.com/tree-sitter-grammars/tree-sitter-make")
+        (markdown
+         "https://github.com/tree-sitter-grammars/tree-sitter-markdown")
+        (org "https://github.com/milisims/tree-sitter-org")
+        (perl "https://github.com/ganezdragon/tree-sitter-perl")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (rust "https://github.com/tree-sitter/tree-sitter-rust")
+        (sql "https://github.com/DerekStride/tree-sitter-sql")
+        (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
 
+(add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+(add-to-list 'major-mode-remap-alist '(cmake-mode . cmake-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
+(add-to-list 'major-mode-remap-alist '(makefile-mode . makefile-ts-mode))
+(add-to-list 'major-mode-remap-alist '(markdown-mode . markdown-ts-mode))
+(add-to-list 'major-mode-remap-alist '(org-mode . org-ts-mode))
+(add-to-list 'major-mode-remap-alist '(perl-mode . perl-ts-mode))
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+(add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
+(add-to-list 'major-mode-remap-alist '(sql-mode . sql-ts-mode))
+(add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
 
 ;;; C and C++ programming
 
