@@ -692,7 +692,7 @@ When APPEND is specified, append FILES to existing `wfnames-buffer'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301/dash-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301/dash-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240405.946/dash-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240405.946/dash-autoloads.el"))
 
 
 
@@ -2506,7 +2506,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240404.1910/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240404.1910/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240405.1443/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240405.1443/transient-autoloads.el"))
 
 
 
@@ -6373,7 +6373,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240311.1716/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240311.1716/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356/ghub-autoloads.el"))
 
 
 
@@ -8317,7 +8317,7 @@ the reports is done using the TaskJuggler GUI.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/lsp-mode-8.0.0/lsp-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-mode-8.0.0/lsp-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/lsp-mode-9.0.0/lsp-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-mode-9.0.0/lsp-mode-autoloads.el"))
 
 
 
@@ -8338,11 +8338,39 @@ the reports is done using the TaskJuggler GUI.
 
 
 
+(register-definition-prefixes "lsp-ansible" '("lsp-ansible-"))
+
+
+
+(register-definition-prefixes "lsp-asm" '("lsp-asm-"))
+
+
+
+(register-definition-prefixes "lsp-astro" '("lsp-astro--get-initialization-options"))
+
+
+
+(register-definition-prefixes "lsp-autotools" '("lsp-autotools-"))
+
+
+
+(register-definition-prefixes "lsp-awk" '("lsp-awk-executable"))
+
+
+
 (register-definition-prefixes "lsp-bash" '("lsp-bash-"))
 
 
 
 (register-definition-prefixes "lsp-beancount" '("lsp-beancount-"))
+
+
+
+(register-definition-prefixes "lsp-bufls" '("lsp-bufls-"))
+
+
+
+(register-definition-prefixes "lsp-camel" '("lsp-camel-"))
 
 
 
@@ -8354,7 +8382,27 @@ Explain a clang-tidy ERROR by scraping documentation from llvm.org.
 
 
 
+(autoload 'lsp-clojure-show-test-tree "lsp-clojure" "\
+Show a test tree and focus on it if IGNORE-FOCUS? is nil.
+
+(fn IGNORE-FOCUS?)" t)
+(autoload 'lsp-clojure-show-project-tree "lsp-clojure" "\
+Show a project tree with source-paths and dependencies.
+Focus on it if IGNORE-FOCUS? is nil.
+
+(fn IGNORE-FOCUS?)" t)
 (register-definition-prefixes "lsp-clojure" '("lsp-clojure-"))
+
+
+
+(register-definition-prefixes "lsp-cmake" '("lsp-cmake-"))
+
+
+
+(add-hook 'cobol-mode-hook #'lsp-cobol-start-ls)
+(autoload 'lsp-cobol-start-ls "lsp-cobol" "\
+Start the COBOL language service." t)
+(register-definition-prefixes "lsp-cobol" '("lsp-cobol-"))
 
 
 
@@ -8389,6 +8437,10 @@ it is disabled.
 
 
 
+(register-definition-prefixes "lsp-credo" '("lsp-credo-"))
+
+
+
 (register-definition-prefixes "lsp-crystal" '("lsp-clients-crystal-executable"))
 
 
@@ -8398,6 +8450,14 @@ it is disabled.
 
 
 (register-definition-prefixes "lsp-css" '("lsp-css-"))
+
+
+
+(register-definition-prefixes "lsp-cucumber" '("lsp-cucumber-"))
+
+
+
+(register-definition-prefixes "lsp-cypher" '("lsp-client--cypher-ls-server-command"))
 
 
 
@@ -8465,6 +8525,10 @@ it is disabled.
 
 
 
+(register-definition-prefixes "lsp-dot" '("lsp-dot--dot-ls-server-command"))
+
+
+
 (register-definition-prefixes "lsp-elixir" '("lsp-elixir-"))
 
 
@@ -8473,7 +8537,11 @@ it is disabled.
 
 
 
-(register-definition-prefixes "lsp-erlang" '("lsp-erlang-server-"))
+(register-definition-prefixes "lsp-emmet" '("lsp-emmet-ls-command"))
+
+
+
+(register-definition-prefixes "lsp-erlang" '("lsp-erlang-"))
 
 
 
@@ -8497,7 +8565,23 @@ Load all of the provided PROJECTS.
 
 
 
+(register-definition-prefixes "lsp-gleam" '("lsp-gleam-executable"))
+
+
+
+(register-definition-prefixes "lsp-glsl" '("lsp-glsl-executable"))
+
+
+
 (register-definition-prefixes "lsp-go" '("lsp-go-"))
+
+
+
+(register-definition-prefixes "lsp-golangci-lint" '("lsp-golangci-lint-"))
+
+
+
+(register-definition-prefixes "lsp-graphql" '("lsp-"))
 
 
 
@@ -8548,6 +8632,10 @@ Narrow to the symbol range on breadcrumb at SYMBOL-POSITION.
 
 
 
+(register-definition-prefixes "lsp-hy" '("lsp-clients-hy-server-executable"))
+
+
+
 (register-definition-prefixes "lsp-icons" '("lsp-"))
 
 
@@ -8561,18 +8649,30 @@ When called with prefix ARG the default selection will be symbol at point.
 
 
 
+(register-definition-prefixes "lsp-idris" '("lsp-idris2-lsp-"))
+
+
+
 (autoload 'lsp-iedit-highlights "lsp-iedit" "\
 Start an `iedit' operation on the documentHighlights at point.
 This can be used as a primitive `lsp-rename' replacement if the
 language server doesn't support renaming.
 
 See also `lsp-enable-symbol-highlighting'." t)
+(autoload 'lsp-iedit-linked-ranges "lsp-iedit" "\
+Start an `iedit' for `textDocument/linkedEditingRange'" t)
 (autoload 'lsp-evil-multiedit-highlights "lsp-iedit" "\
 Start an `evil-multiedit' operation on the documentHighlights at point.
 This can be used as a primitive `lsp-rename' replacement if the
 language server doesn't support renaming.
 
 See also `lsp-enable-symbol-highlighting'." t)
+(autoload 'lsp-evil-multiedit-linked-ranges "lsp-iedit" "\
+Start an `evil-multiedit' for `textDocument/linkedEditingRange'" t)
+(autoload 'lsp-evil-state-highlights "lsp-iedit" "\
+Start `iedit-mode'. for `textDocument/documentHighlight'" t)
+(autoload 'lsp-evil-state-linked-ranges "lsp-iedit" "\
+Start `iedit-mode'. for `textDocument/linkedEditingRange'" t)
 (register-definition-prefixes "lsp-iedit" '("lsp-iedit--on-ranges"))
 
 
@@ -8581,7 +8681,15 @@ See also `lsp-enable-symbol-highlighting'." t)
 
 
 
+(register-definition-prefixes "lsp-jq" '("lsp-clients-jq-server-executable"))
+
+
+
 (register-definition-prefixes "lsp-json" '("lsp-"))
+
+
+
+(register-definition-prefixes "lsp-jsonnet" '("lsp-clients-jsonnet-server-executable"))
 
 
 
@@ -8619,7 +8727,17 @@ Click lsp lens using `avy' package." t)
 
 
 
+(autoload 'lsp-lisp-alive-start-ls "lsp-lisp" "\
+Start the alive-lsp." t)
+(register-definition-prefixes "lsp-lisp" '("lsp-lisp-a"))
+
+
+
 (register-definition-prefixes "lsp-lua" '("lsp-"))
+
+
+
+(register-definition-prefixes "lsp-magik" '("lsp-magik-"))
 
 
 
@@ -8627,8 +8745,26 @@ Click lsp lens using `avy' package." t)
 
 
 
+(register-definition-prefixes "lsp-marksman" '("lsp-marksman-"))
+
+
+
+(register-definition-prefixes "lsp-mdx" '("lsp-mdx-server-command"))
+
+
+
+(register-definition-prefixes "lsp-mint" '("lsp-clients-mint-executable"))
+
+
+
 (put 'lsp-enable-file-watchers 'safe-local-variable #'booleanp)
+(put 'lsp-file-watch-ignored-directories 'safe-local-variable 'lsp--string-listp)
+(put 'lsp-file-watch-ignored-files 'safe-local-variable 'lsp--string-listp)
 (put 'lsp-file-watch-threshold 'safe-local-variable (lambda (i) (or (numberp i) (not i))))
+(autoload 'lsp--string-listp "lsp-mode" "\
+Return t if all elements of SEQUENCE are strings, else nil.
+
+(fn SEQUENCE)")
 (autoload 'lsp-load-vscode-workspace "lsp-mode" "\
 Load vscode workspace from FILE
 
@@ -8638,10 +8774,22 @@ Save vscode workspace to FILE
 
 (fn FILE)" t)
 (autoload 'lsp-install-server "lsp-mode" "\
-Interactively install server.
+Interactively install or re-install server.
 When prefix UPDATE? is t force installation even if the server is present.
 
 (fn UPDATE? &optional SERVER-ID)" t)
+(autoload 'lsp-uninstall-server "lsp-mode" "\
+Delete a LSP server from `lsp-server-install-dir'.
+
+(fn DIR)" t)
+(autoload 'lsp-uninstall-servers "lsp-mode" "\
+Uninstall all installed servers." t)
+(autoload 'lsp-update-server "lsp-mode" "\
+Interactively update (reinstall) a server.
+
+(fn &optional SERVER-ID)" t)
+(autoload 'lsp-update-servers "lsp-mode" "\
+Update (reinstall) all installed servers." t)
 (autoload 'lsp-ensure-server "lsp-mode" "\
 Ensure server SERVER-ID
 
@@ -8659,7 +8807,12 @@ argument ask the user to select which language server to start.
 Entry point that defers server startup until buffer is visible.
 `lsp-deferred' will wait until the buffer is visible before invoking `lsp'.
 This avoids overloading the server with many files when starting Emacs.")
-(register-definition-prefixes "lsp-mode" '("lsp-" "make-lsp-client" "when-lsp-workspace" "with-lsp-workspace"))
+(autoload 'lsp-start-plain "lsp-mode" "\
+Start `lsp-mode' using minimal configuration using the latest `melpa' version
+of the packages.
+
+In case the major-mode that you are using for " t)
+(register-definition-prefixes "lsp-mode" '("defcustom-lsp" "lsp-" "make-lsp-client" "when-lsp-workspace" "with-lsp-workspace"))
 
 
 
@@ -8727,11 +8880,35 @@ it is disabled.
 
 
 
-(register-definition-prefixes "lsp-nix" '("lsp-nix-server-path"))
+(register-definition-prefixes "lsp-mojo" '("lsp-mojo-executable"))
 
 
 
-(register-definition-prefixes "lsp-ocaml" '("lsp-ocaml-l"))
+(register-definition-prefixes "lsp-move" '("lsp-clients-"))
+
+
+
+(register-definition-prefixes "lsp-nginx" '("lsp-nginx-"))
+
+
+
+(register-definition-prefixes "lsp-nim" '("lsp-nim-l"))
+
+
+
+(register-definition-prefixes "lsp-nix" '("lsp-nix-"))
+
+
+
+(register-definition-prefixes "lsp-nushell" '("lsp-nushell-language-server-command"))
+
+
+
+(register-definition-prefixes "lsp-ocaml" '("lsp-"))
+
+
+
+(register-definition-prefixes "lsp-openscad" '("lsp-openscad-"))
 
 
 
@@ -8739,7 +8916,15 @@ it is disabled.
 
 
 
+(register-definition-prefixes "lsp-perlnavigator" '("lsp-perlnavigator-"))
+
+
+
 (register-definition-prefixes "lsp-php" '("lsp-"))
+
+
+
+(register-definition-prefixes "lsp-pls" '("lsp-pls-"))
 
 
 
@@ -8767,6 +8952,10 @@ it is disabled.
 
 
 
+(register-definition-prefixes "lsp-qml" '("lsp-qml-server-command"))
+
+
+
 (register-definition-prefixes "lsp-r" '("lsp-clients-r-server-command"))
 
 
@@ -8775,7 +8964,31 @@ it is disabled.
 
 
 
+(register-definition-prefixes "lsp-remark" '("lsp-remark-server-command"))
+
+
+
 (register-definition-prefixes "lsp-rf" '("expand-start-command" "lsp-rf-language-server-" "parse-rf-language-server-"))
+
+
+
+(register-definition-prefixes "lsp-rpm-spec" '("lsp-rpm-spec-"))
+
+
+
+(register-definition-prefixes "lsp-rubocop" '("lsp-rubocop-"))
+
+
+
+(register-definition-prefixes "lsp-ruby-lsp" '("lsp-ruby-lsp-"))
+
+
+
+(register-definition-prefixes "lsp-ruby-syntax-tree" '("lsp-ruby-syntax-tree-"))
+
+
+
+(register-definition-prefixes "lsp-ruff-lsp" '("lsp-ruff-lsp-"))
 
 
 
@@ -8783,6 +8996,18 @@ it is disabled.
 
 
 
+(defvar-local semantic-token-modifier-cache (make-hash-table) "\
+A cache of modifier values to the selected fonts.
+This allows whole-bitmap lookup instead of checking each bit. The
+expectation is that usage of modifiers will tend to cluster, so
+we will not have the full range of possible usages, hence a
+tractable hash map.
+
+This is set as buffer-local. It should probably be shared in a
+given workspace/language-server combination.
+
+This cache should be flushed every time any modifier
+configuration changes.")
 (autoload 'lsp--semantic-tokens-initialize-buffer "lsp-semantic-tokens" "\
 Initialize the buffer for semantic tokens.
 IS-RANGE-PROVIDER is non-nil when server supports range requests.")
@@ -8817,7 +9042,19 @@ it is disabled.
 
 
 
+(register-definition-prefixes "lsp-semgrep" '("lsp-semgrep-" "semgrep-"))
+
+
+
+(register-definition-prefixes "lsp-sml" '("lsp-sml-millet-"))
+
+
+
 (register-definition-prefixes "lsp-solargraph" '("lsp-solargraph-"))
+
+
+
+(register-definition-prefixes "lsp-solidity" '("lsp-client--solidity-"))
 
 
 
@@ -8837,11 +9074,27 @@ it is disabled.
 
 
 
-(register-definition-prefixes "lsp-terraform" '("lsp-terraform-"))
+(register-definition-prefixes "lsp-terraform" '("construct-tf-package" "lsp-t"))
 
 
 
 (register-definition-prefixes "lsp-tex" '("lsp-"))
+
+
+
+(register-definition-prefixes "lsp-toml" '("lsp-toml-"))
+
+
+
+(register-definition-prefixes "lsp-trunk" '("lsp-trunk-"))
+
+
+
+(register-definition-prefixes "lsp-ttcn3" '("lsp-ttcn3-lsp-server-command"))
+
+
+
+(register-definition-prefixes "lsp-typeprof" '("lsp-typeprof-"))
 
 
 
@@ -8857,7 +9110,7 @@ it is disabled.
 
 
 
-(register-definition-prefixes "lsp-vetur" '("lsp-"))
+(register-definition-prefixes "lsp-vetur" '("lsp-vetur-"))
 
 
 
@@ -8869,6 +9122,14 @@ it is disabled.
 
 
 
+(register-definition-prefixes "lsp-volar" '("lsp-volar-"))
+
+
+
+(register-definition-prefixes "lsp-wgsl" '("lsp-wgsl-"))
+
+
+
 (register-definition-prefixes "lsp-xml" '("lsp-xml-"))
 
 
@@ -8877,14 +9138,18 @@ it is disabled.
 
 
 
-(register-definition-prefixes "lsp-zig" '("lsp-zig-zls-executable"))
+(register-definition-prefixes "lsp-yang" '("lsp-yang-"))
+
+
+
+(register-definition-prefixes "lsp-zig" '("lsp-z"))
 
 
 (provide 'lsp-mode-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.1/lsp-ui-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-8.0.1/lsp-ui-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-9.0.0/lsp-ui-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-ui-9.0.0/lsp-ui-autoloads.el"))
 
 
 
@@ -8933,7 +9198,7 @@ omitted or nil, and toggle it if ARG is ‘toggle’.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/lsp-treemacs-0.4/lsp-treemacs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-treemacs-0.4/lsp-treemacs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/lsp-treemacs-0.5/lsp-treemacs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/lsp-treemacs-0.5/lsp-treemacs-autoloads.el"))
 
 
 
@@ -8956,7 +9221,9 @@ either customize it (see the info node `Easy Customization')
 or call the function `lsp-treemacs-sync-mode'.")
 (custom-autoload 'lsp-treemacs-sync-mode "lsp-treemacs" nil)
 (autoload 'lsp-treemacs-sync-mode "lsp-treemacs" "\
-Global minor mode for synchronizing lsp-mode workspace folders and treemacs projects.
+Global minor mode for synchronizing lsp-mode workspace folders and
+
+treemacs projects.
 
 This is a global minor mode.  If called interactively, toggle the
 `Lsp-Treemacs-Sync mode' mode.  If the prefix argument is
@@ -8976,12 +9243,14 @@ it is disabled.
 (fn &optional ARG)" t)
 (autoload 'lsp-treemacs-references "lsp-treemacs" "\
 Show the references for the symbol at point.
-With a prefix argument, select the new window and expand the tree of references automatically.
+With a prefix argument, select the new window and expand the tree of
+references automatically.
 
 (fn ARG)" t)
 (autoload 'lsp-treemacs-implementations "lsp-treemacs" "\
 Show the implementations for the symbol at point.
-With a prefix argument, select the new window expand the tree of implementations automatically.
+With a prefix argument, select the new window expand the tree of
+implementations automatically.
 
 (fn ARG)" t)
 (autoload 'lsp-treemacs-call-hierarchy "lsp-treemacs" "\
@@ -8997,7 +9266,11 @@ With prefix 2 show both.
 
 (fn DIRECTION)" t)
 (autoload 'lsp-treemacs-errors-list "lsp-treemacs" nil t)
-(register-definition-prefixes "lsp-treemacs" '("lsp-tree"))
+(register-definition-prefixes "lsp-treemacs" '("lsp-treemacs-"))
+
+
+
+(register-definition-prefixes "lsp-treemacs-generic" '("lsp-treemacs-"))
 
 
 
@@ -11119,7 +11392,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240216.1729/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240216.1729/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240405.1948/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240405.1948/closql-autoloads.el"))
 
 
 
@@ -11129,13 +11402,14 @@ it is disabled.
 
 
 (register-definition-prefixes "closql" '("closql-" "eieio-"))
+
 
 
 (provide 'closql-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240404.1610/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240404.1610/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240408.2159/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240408.2159/forge-autoloads.el"))
 
 
 
@@ -11162,16 +11436,9 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
 
  (autoload 'forge-dispatch "forge-commands" nil t)
 (autoload 'forge-pull "forge-commands" "\
-Pull topics from the forge repository.
-
-With a prefix argument and if the repository has not been fetched
-before, then read a date from the user and limit pulled topics to
-those that have been updated since then.
-
-If pulling is too slow, then also consider setting the Git variable
-`forge.omitExpensive' to `true'.
-
-(fn &optional REPO SINCE)" t)
+Pull forge topics for the current repository if it is already tracked.
+If the current repository is still untracked locally, or the current
+repository cannot be determined, instead invoke `forge-add-repository'." t)
 (autoload 'forge-pull-notifications "forge-commands" "\
 Fetch notifications for all repositories from the current forge." t)
  (autoload 'forge-pull-topic "forge-commands" nil t)
@@ -12766,7 +13033,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240404.1610" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240311.1716" "/Users/laurynas/.emacs.d/elpa/magit-20240404.1901" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240404.1910" "/Users/laurynas/.emacs.d/elpa/dash-20240103.1301" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240408.2159" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356" "/Users/laurynas/.emacs.d/elpa/magit-20240404.1901" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240405.1443" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
