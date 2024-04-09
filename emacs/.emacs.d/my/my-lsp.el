@@ -35,10 +35,6 @@
 (setq lsp-semantic-tokens-enable t)
 (setq lsp-headerline-breadcrumb-enable t)
 
-(add-to-list 'lsp-language-id-configuration '(c-ts-mode . "c"))
-(add-to-list 'lsp-language-id-configuration '(c++-ts-mode . "cpp"))
-(add-to-list 'lsp-language-id-configuration '(python-ts-mode . "python"))
-
 (defun dotfiles--lsp-mode-line ()
   "Construct the mode line text for `lsp-mode'."
   (if (lsp-workspaces)
@@ -71,13 +67,6 @@
 ;; popups by hiding the former.
 (advice-add #'lsp-ui-peek-find-references :before #'lsp-ui-doc-hide)
 
-;; Integration with TRAMP: do not flycheck too eagerly to improve responsiveness
-(defun dotfiles--lsp-tramp-flycheck-reduce ()
-  "Tune down Flycheck eagerness in `lsp-mode' for TRAMP buffers."
-  (setq-local flycheck-check-syntax-automatically '(save idle-change new-line)))
-
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-tramp-flycheck-reduce)
-
 (defun dotfiles--lsp-disable-eldoc ()
   "Disable eldoc for LSP."
   (eldoc-mode -1))
@@ -104,20 +93,6 @@
     (lsp-deferred)))
 
 (add-hook 'prog-mode-hook #'dotfiles--lsp-deferred-or-topsy)
-
-;;; lsp-mode clangd setup
-(defconst lsp-clients-clangd-tramp-executable "clangd")
-(defun lsp-clients--clangd-tramp-command ()
-  "Generate the clangd over Tramp startup command."
-  `(,lsp-clients-clangd-tramp-executable ,@lsp-clients-clangd-args))
-
-(lsp-register-client
- (make-lsp-client :new-connection (lsp-tramp-connection
-                                   'lsp-clients--clangd-tramp-command)
-                  :major-modes '(c-mode c++-mode objc-mode)
-                  :priority -1
-                  :server-id 'clangd-tramp
-                  :remote? t))
 
 ;; https://clang.llvm.org/extra/clangd/Features.html#formatting -
 ;; "Format-as-you-type is experimental and doesn’t work well yet."
