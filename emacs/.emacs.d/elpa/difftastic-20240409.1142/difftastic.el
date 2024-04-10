@@ -126,7 +126,7 @@
   "Get a window width for a first difftastic call.
 It returns a number that will let difftastic to fit content
 into (in the following order):
- - other window if such exists,
+ - other window if it exists,
  - side by side by inspecting `split-width-threshold',
  - current window."
   (- (if (< 1 (count-windows))
@@ -143,7 +143,7 @@ into (in the following order):
      (fringe-columns 'rigth)))
 
 (defun difftastic-rerun-requested-window-width ()
-  "Get a window width for a rerun of difftastic call.
+  "Get a window width for a rerun of a difftastic call.
 It returns the current window width, to let difftastic fit content into it."
   (- (window-width)
      (fringe-columns 'left)
@@ -173,9 +173,9 @@ display buffer at bottom."
    'magit-diff-removed
    'magit-diff-added
    'magit-diff-file-heading
-   font-lock-comment-face
-   font-lock-string-face
-   font-lock-warning-face
+   'font-lock-comment-face
+   'font-lock-string-face
+   'font-lock-warning-face
    (aref ansi-color-normal-colors-vector 7))
   "Faces to use for colors on difftastic output (normal).
 
@@ -189,9 +189,9 @@ N.B. only foreground and background properties will be used."
    'magit-diff-removed
    'magit-diff-added
    'magit-diff-file-heading
-   font-lock-comment-face
-   font-lock-string-face
-   font-lock-warning-face
+   'font-lock-comment-face
+   'font-lock-string-face
+   'font-lock-warning-face
    (aref ansi-color-bright-colors-vector 7))
   "Faces to use for colors on difftastic output (bright).
 
@@ -509,45 +509,50 @@ conses."
 N.B.  This is meant to filter-result of either
 `ansi-color--face-vec-face' or `ansi-color-get-face-1' by
 adding background to faces if they have a foreground set."
-  (if-let ((difftastic-face
-            (and (listp face)
-                 (cl-find-if
-                  (lambda (difftastic-face)
-                    (and (string=
-                          (face-foreground difftastic-face)
-                          (or
-                           (plist-get face :foreground)
-                           (plist-get
-                            (cl-find-if (lambda (elt)
-                                          (and (listp elt)
-                                               (plist-get elt :foreground)))
-                                        face)
-                            :foreground)))
-                         ;; ansi-color-* faces have the same
-                         ;; foreground and background - don't use them
-                         (not (string= (face-foreground difftastic-face)
-                                       (face-background difftastic-face)))
-                         (face-background difftastic-face)))
-                  (vconcat difftastic-normal-colors-vector
-                           difftastic-bright-colors-vector)))))
-      ;; difftastic uses underline to highlight some changes;
-      ;; it uses bold as well, but it's not as unambiguous as underline
-      (if-let ((highlight-face (and (cl-member 'ansi-color-underline face)
-                                    (alist-get difftastic-face
-                                               difftastic-highlight-alist))))
-          (append (cl-remove-if (lambda (elt)
-                                  (and (listp elt)
-                                       (plist-get elt :foreground)))
-                                (cl-remove 'ansi-color-underline
-                                           (cl-remove 'ansi-color-bold face)))
-                  (list :background
-                        (face-background highlight-face nil 'default))
-                  (list :foreground
-                        (face-foreground highlight-face nil 'default)))
-        (append face
-                (list :background
-                      (face-background difftastic-face nil 'default))))
-    face))
+  (when-let ((difftastic-face
+              (and (listp face)
+                   (cl-find-if
+                    (lambda (difftastic-face)
+                      (and (string=
+                            (face-foreground difftastic-face)
+                            (or
+                             (plist-get face :foreground)
+                             (car (alist-get :foreground face))))
+                           ;; ansi-color-* faces have the same
+                           ;; foreground and background - don't use them
+                           (not (string= (face-foreground difftastic-face)
+                                         (face-background difftastic-face)))
+                           (face-background difftastic-face)))
+                    (vconcat difftastic-normal-colors-vector
+                             difftastic-bright-colors-vector)))))
+    ;; difftastic uses underline to highlight some changes.
+    ;; It uses bold as well, but it's not as unambiguous as underline.
+    ;; Use underline to detect highlight, but remove both: bold and underline.
+    (if-let ((highlight-face (and (cl-member 'ansi-color-underline face)
+                                  (alist-get difftastic-face
+                                             difftastic-highlight-alist))))
+        (progn
+          (cl-remf face :foreground)
+          (setq face (cl-delete 'ansi-color-underline face))
+          (setq face (cl-delete 'ansi-color-bold face))
+          (setq face
+                (cl-delete-if (lambda (elt)
+                                (and (listp elt)
+                                     (plist-get elt :foreground)))
+                              face))
+          (push `(:foreground
+                  ,(face-foreground highlight-face nil 'default))
+                face)
+          (push `(:background
+                  ,(face-background highlight-face nil 'default))
+                face))
+      (when-let ((fg (plist-get face :foreground)))
+        (cl-remf face :foreground)
+        (push `(:foreground ,fg) face))
+      (push `(:background
+              ,(face-background difftastic-face nil 'default))
+            face)))
+  face)
 
 ;; In practice there are only dozens or so different faces used,
 ;; so we can cache them each time anew.
@@ -599,17 +604,60 @@ The DIFFTASTIC-ARGS is a list of extra arguments to pass to
      buffer
      command
      (lambda ()
-       (with-current-buffer buffer
-           (setq difftastic--rerun-alist
-                 `((default-directory . ,default-directory)
-                   (git-command . ,command)
-                   (difftastic-args . ,difftastic-args))))
+       (setq difftastic--rerun-alist
+             `((default-directory . ,default-directory)
+               (git-command . ,command)
+               (difftastic-args . ,difftastic-args)))
        (funcall difftastic-display-buffer-function buffer requested-width)))))
+
+(defun difftastic--run-command-filter (process string)
+  "A process filter for `difftastic--run-command'.
+It applies ANSI colors with `apply-ansi-colors' using difftastic
+custom colors vectors.  The PROCESS and STRING are filter
+arguments, like in `make-process''s filter."
+  (when-let ((buffer (and string
+                          (process-buffer process))))
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t)
+            (ansi-color-normal-colors-vector
+             difftastic-normal-colors-vector)
+            (ansi-color-bright-colors-vector
+             difftastic-bright-colors-vector))
+        (ignore ansi-color-normal-colors-vector
+                ansi-color-bright-colors-vector)
+        (if (fboundp 'ansi-color--face-vec-face) ;; since Emacs-29
+            (difftastic--with-temp-advice
+                'ansi-color--face-vec-face
+                :around
+                #'difftastic--ansi-color-add-background-cached
+              (insert (ansi-color-apply string)))
+          (difftastic--with-temp-advice
+              'ansi-color-get-face-1
+              :filter-return
+              #'difftastic--ansi-color-add-background
+            (insert (ansi-color-apply string))))))))
+
+(defun difftastic--run-command-sentinel (process action command)
+  "A sentinel for `difftastic--run-command'.
+When PROCESS\\=' status is `exit' and there's output in
+PROCESS\\=' buffer it calls the ACTION with current buffer set to
+the PROCESS\\=' buffer.  The COMMAND is the original PROCESS\\='
+command."
+  (when (eq (process-status process) 'exit)
+    (with-current-buffer (process-buffer process)
+      (difftastic-mode)
+      (set-buffer-modified-p nil)
+      (goto-char (point-min))
+      (if (eq (point-min) (point-max))
+          (message "Process '%s' returned no output"
+                   (mapconcat #'identity command " "))
+        (when action (funcall action))
+        (message nil)))))
 
 (defun difftastic--run-command (buffer command &optional action)
   "Run COMMAND, show its results in BUFFER, then execute ACTION.
 The ACTION is meant to display the BUFFER in some window and, optionally,
-perform cleanup."
+perform cleanup.  It returns a process created by `make-process'."
   ;; Clear the result buffer (we might regenerate a diff, e.g., for
   ;; the current changes in our working directory).
   (with-current-buffer buffer
@@ -622,46 +670,10 @@ perform cleanup."
    :buffer buffer
    :command command
    :noquery t
-   :filter
-   ;; Apply ANSI color sequences as they come
-   (lambda (process string)
-     (when-let ((buffer (and string
-                             (process-buffer process))))
-       (with-current-buffer buffer
-         (let ((inhibit-read-only t)
-               (ansi-color-normal-colors-vector
-                difftastic-normal-colors-vector)
-               (ansi-color-bright-colors-vector
-                difftastic-bright-colors-vector))
-           (ignore ansi-color-normal-colors-vector
-                   ansi-color-bright-colors-vector)
-           (if (fboundp 'ansi-color--face-vec-face) ;; since Emacs-29
-               (difftastic--with-temp-advice
-                   'ansi-color--face-vec-face
-                   :around
-                   #'difftastic--ansi-color-add-background-cached
-                 (insert (ansi-color-apply string)))
-             (difftastic--with-temp-advice
-                 'ansi-color-get-face-1
-                 :filter-return
-                 #'difftastic--ansi-color-add-background
-               (insert (ansi-color-apply string))))))))
-   ;; Disable write access and call `action' when process is finished.
+   :filter #'difftastic--run-command-filter
    :sentinel
-   (lambda (proc _event)
-     (let (output)
-       (when (eq (process-status proc) 'exit)
-         (with-current-buffer (process-buffer proc)
-           (difftastic-mode)
-           (set-buffer-modified-p nil)
-           (goto-char (point-min))
-           (setq output (not (eq (point-min) (point-max)))))
-         (if output
-             (progn
-               (when action (funcall action))
-               (message nil))
-           (message "Process %s returned no output"
-                    (mapconcat #'identity command " "))))))))
+   (lambda (process _event)
+     (difftastic--run-command-sentinel process action command))))
 
 (defvar difftastic--transform-git-to-difft
   '(("^-\\(?:U\\|-unified=\\)\\([0-9]+\\)$" . "--context \\1"))
@@ -914,12 +926,11 @@ argument."
                                       requested-width
                                       lang-override)
      (lambda ()
-       (with-current-buffer buffer
-         (setq difftastic--rerun-alist
-               `((default-directory . ,default-directory)
-                 (lang-override . ,lang-override)
-                 (file-buf-A . ,file-buf-A)
-                 (file-buf-B . ,file-buf-B))))
+       (setq difftastic--rerun-alist
+             `((default-directory . ,default-directory)
+               (lang-override . ,lang-override)
+               (file-buf-A . ,file-buf-A)
+               (file-buf-B . ,file-buf-B)))
        (funcall difftastic-display-buffer-function buffer requested-width)
        (difftastic--delete-temp-file-buf file-buf-A)
        (difftastic--delete-temp-file-buf file-buf-B)))))
@@ -1027,7 +1038,6 @@ running difftastic."
 ;;;###autoload
 (defun difftastic-dired-diff (file &optional lang-override)
   "Compare file at point with FILE using difftastic.
-
 The behavior is the same as `dired-diff', except for the prefix argument, which
 makes the function prompt for LANG-OVERRIDE.  See \\='difft
 --list-languages\\=' for language list."
@@ -1108,8 +1118,7 @@ the latter is set to nil the call is made to
              buffer
              command
              (lambda ()
-               (with-current-buffer buffer
-                 (setq difftastic--rerun-alist rerun-alist))
+               (setq difftastic--rerun-alist rerun-alist)
                (difftastic--delete-temp-file-buf file-buf-A)
                (difftastic--delete-temp-file-buf file-buf-B))))))
     (user-error "Nothing to rerun")))

@@ -4173,7 +4173,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240404.1901/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240404.1901/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240409.1558/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240409.1558/magit-autoloads.el"))
 
 
 
@@ -11409,7 +11409,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240408.2159/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240408.2159/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240409.1643/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240409.1643/forge-autoloads.el"))
 
 
 
@@ -12498,7 +12498,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240326.1551/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240326.1551/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240409.1142/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240409.1142/difftastic-autoloads.el"))
 
 
 
@@ -12546,7 +12546,6 @@ running difftastic.
 (fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
 (autoload 'difftastic-dired-diff "difftastic" "\
 Compare file at point with FILE using difftastic.
-
 The behavior is the same as `dired-diff', except for the prefix argument, which
 makes the function prompt for LANG-OVERRIDE.  See \\='difft
 --list-languages\\=' for language list.
@@ -13033,7 +13032,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240408.2159" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356" "/Users/laurynas/.emacs.d/elpa/magit-20240404.1901" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240405.1443" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240409.1643" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356" "/Users/laurynas/.emacs.d/elpa/magit-20240409.1558" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240405.1443" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
