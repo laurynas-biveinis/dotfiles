@@ -485,8 +485,6 @@
         (c++ "https://github.com/tree-sitter/tree-sitter-cpp/")
         (cmake "https://github.com/uyha/tree-sitter-cmake")
         (make "https://github.com/tree-sitter-grammars/tree-sitter-make")
-        (markdown
-         "https://github.com/tree-sitter-grammars/tree-sitter-markdown")
         (perl "https://github.com/ganezdragon/tree-sitter-perl")
         (python "https://github.com/tree-sitter/tree-sitter-python")
         (rust "https://github.com/tree-sitter/tree-sitter-rust")
@@ -499,7 +497,6 @@
 (add-to-list 'major-mode-remap-alist '(cmake-mode . cmake-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
 (add-to-list 'major-mode-remap-alist '(makefile-mode . makefile-ts-mode))
-(add-to-list 'major-mode-remap-alist '(markdown-mode . markdown-ts-mode))
 (add-to-list 'major-mode-remap-alist '(perl-mode . perl-ts-mode))
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
