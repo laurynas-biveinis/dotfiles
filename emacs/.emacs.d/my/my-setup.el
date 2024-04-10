@@ -303,6 +303,13 @@
 
 (add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
 
+(defun dotfiles--magit-require-org-clock (&rest _args)
+  "Block Magit operation if no `org' task is clocked in."
+  (dotfiles--require-org-clock))
+
+(advice-add 'magit-commit :before #'dotfiles--magit-require-org-clock)
+(advice-add 'magit-push :before #'dotfiles--magit-require-org-clock)
+
 (defun dotfiles--read-non-existing-branch-name (prompt)
   "Read a non-existing branch with PROMPT, stolen from `magit-branch-read-args'."
   (let ((branch (magit-read-string-ns (concat prompt " named"))))
@@ -319,23 +326,22 @@
     (magit-worktree-branch absolute-path name (magit-get-current-branch))
     absolute-path))
 
-(defun dotfiles--magit-require-org-clock (&rest _args)
-  "Block Magit commit operation if no `org' task is clocked in."
-  (dotfiles--require-org-clock))
-
-(advice-add 'magit-commit :before #'dotfiles--magit-require-org-clock)
-(advice-add 'magit-push :before #'dotfiles--magit-require-org-clock)
-
 (require 'projectile)
 
 (defun my-magit-worktree-branch ()
   "Branch a new project."
   (interactive)
+  (dotfiles--require-org-clock)
   (let ((path (dotfiles--magit-worktree-branch)))
     (projectile-add-known-project path)
     ;; Make `projectile' initialize its file cache for this project
     (when projectile-enable-caching
-      (projectile-project-files path))))
+      (projectile-project-files path))
+    ;; TODO(laurynas): install https://github.com/magit/orgit, add a property
+    ;; with link to the magit-status buffer of this project to the currently
+    ;; clocked-in task. Set up that clocking-in with this property existing goes
+    ;; to that link, similar to existing =URL= handling.
+    ))
 
 (transient-append-suffix 'magit-worktree '(0 0 -1)
   '("C" "Create a branch in a sibling worktree" my-magit-worktree-branch))
