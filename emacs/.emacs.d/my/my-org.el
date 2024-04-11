@@ -117,15 +117,18 @@ Sets up keybindings and adjusts the fill column."
 
 (defun my--org-clock-in-actions ()
   "Open URLs, a macOS app, visit a file, execute elisp for the clocked-in task.
-All of them are optional. The URLs are expected to be provided by any number of
-`URL' properties on the  task. The macOS app should be specified by a single
-`APP' property, it may be  quoted with double quotes if necessary and will be
-passed to shell without further quoting. A file to visit should be specified by
-a single `VISIT' property. The file does not have to exist. Elisp code to
-execute is specified by a single `EVAL' property. The user is responsible for
-the safety of its contents."
+The possible actions are opening of multiple URLs, of a macOS app, executing a
+shell command, visiting a file, and executing Elisp code. All actions are
+optional and specified by the following properties on the task being clocked-in:
+- `URL': multiple properties may be speicfied to open multiple URLs
+- `APP': the macOS app to open. It may be quoted with double quotes if necessary
+  and will be passed to shell without further quoting.
+- `SHELL': the shell command to execute. The user is responsbile for its safety.
+- `VISIT': the file to visit in Emacs. It does not have to exist.
+- `EVAL': Elisp code to execute. The user is responsible for its safety."
   (let ((urls (org-entry-get-multivalued-property (point) "URL"))
         (app (org-entry-get (point) "APP"))
+        (shell-command (org-entry-get (point) "SHELL"))
         (visit (org-entry-get (point) "VISIT"))
         (elisp (org-entry-get (point) "EVAL")))
     ;; Open all URLs
@@ -134,6 +137,9 @@ the safety of its contents."
     ;; Open one macOS application, if any
     (when app
       (shell-command (concat "open -a " app)))
+    ;; Execute a shell command, if any
+    (when shell-command
+      (shell-command shell-command))
     ;; Visit a file, if any. TODO(laurynas): if visiting a file without going to
     ;; its end is needed, rename this one to VISIT_END.
     (when visit
