@@ -309,6 +309,8 @@
 
 (advice-add 'magit-commit :before #'dotfiles--magit-require-org-clock)
 (advice-add 'magit-push :before #'dotfiles--magit-require-org-clock)
+(advice-add 'magit-stage :before #'dotfiles--magit-require-org-clock)
+(advice-add 'magit-unstage :before #'dotfiles--magit-require-org-clock)
 
 (defun dotfiles--read-non-existing-branch-name (prompt)
   "Read a non-existing branch with PROMPT, stolen from `magit-branch-read-args'."
