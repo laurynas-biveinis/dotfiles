@@ -116,16 +116,18 @@ Sets up keybindings and adjusts the fill column."
 (org-clock-persistence-insinuate)
 
 (defun my--org-clock-in-actions ()
-  "Open all URLs, a macOS app, and visit a file for the clocked-in task.
-All of them are optional. The URLs are expected to be provided by
-any number of `URL' properties on the task. The macOS app should
-be specified by a single `APP' property, it may be quoted with
-double quotes if necessary and will be passed to shell without
-further quoting. A file to visit should be specified by a single
-`VISIT' property. The file does not have to exist."
+  "Open URLs, a macOS app, visit a file, execute elisp for the clocked-in task.
+All of them are optional. The URLs are expected to be provided by any number of
+`URL' properties on the  task. The macOS app should be specified by a single
+`APP' property, it may be  quoted with double quotes if necessary and will be
+passed to shell without further quoting. A file to visit should be specified by
+a single `VISIT' property. The file does not have to exist. Elisp code to
+execute is specified by a single `EVAL' property. The user is responsible for
+the safety of its contents."
   (let ((urls (org-entry-get-multivalued-property (point) "URL"))
         (app (org-entry-get (point) "APP"))
-        (visit (org-entry-get (point) "VISIT")))
+        (visit (org-entry-get (point) "VISIT"))
+        (elisp (org-entry-get (point) "EVAL")))
     ;; Open all URLs
     (dolist (url urls)
       (browse-url url))
@@ -136,7 +138,9 @@ further quoting. A file to visit should be specified by a single
     ;; its end is needed, rename this one to VISIT_END.
     (when visit
       (find-file visit)
-      (goto-char (point-max)))))
+      (goto-char (point-max)))
+    (when elisp
+      (eval (read elisp)))))
 (add-hook 'org-clock-in-hook #'my--org-clock-in-actions)
 
 ;;; Clock tables
