@@ -307,6 +307,7 @@
   "Block Magit operation if no `org' task is clocked in."
   (dotfiles--require-org-clock))
 
+(advice-add 'magit-status :before #'dotfiles--magit-require-org-clock)
 (advice-add 'magit-commit :before #'dotfiles--magit-require-org-clock)
 (advice-add 'magit-push :before #'dotfiles--magit-require-org-clock)
 (advice-add 'magit-stage :before #'dotfiles--magit-require-org-clock)
