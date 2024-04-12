@@ -832,6 +832,20 @@
 ;; modeline. Simply adding these string to `rich-minority' settings does not
 ;; appear to work. Maybe because these are major modes.
 
+;; Allow some external images in emails. Uses
+;; `dotfiles--mu4e-allowed-image-email-regexps', which is defined elsewhere.
+
+(require 'gnus-art)
+
+(defun dotfiles--mu4e-block-external-images(&optional _ignore)
+  "Decides what external image links to allow."
+  (let* ((from-email (mu4e-message-field (mu4e-message-at-point t) :from))
+         (allow-images (seq-find (lambda (email-regexp)
+                                   (string-match email-regexp from-email))
+                                 dotfiles--mu4e-allowed-image-email-regexps)))
+    (if allow-images nil ".*")))
+(setq gnus-blocked-images #'dotfiles--mu4e-block-external-images)
+
 ;; `mu4e' automation
 
 (defun dotfiles--subject-matches-rule (rule subject)
