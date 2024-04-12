@@ -823,7 +823,6 @@
 (add-hook 'mu4e-thread-mode-hook #'mu4e-thread-fold-apply-all)
 (setq mu4e-search-include-related nil)
 (setq mu4e-eldoc-support t)
-;; TODO(laurynas): context switching not fully automatic
 ;; TODO(laurynas): make window background white for HTML emails to match GMail?
 ;; TODO(laurynas): iCalendar support
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html)
