@@ -28,15 +28,16 @@ readonly WORKTREE_DIR="$WORKTREE_PATH:t"
 
 pushd "$WORKTREE_PATH" || exit 1
 
+WORKTREE_ABSOLUTE_PATH=$(pwd)
+readonly WORKTREE_ABSOLUTE_PATH
+
 BRANCH_NAME=$(git branch --show-current)
 readonly BRANCH_NAME
 # TODO(laurynas): might need to consider other push remotes
 REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote)
 readonly REMOTE_NAME
 
-popd || exit 1
-
-pushd "$(git rev-parse --git-dir)" || exit 1
+cd "$(git rev-parse --git-dir)"
 cd ../../../
 
 git pull
@@ -54,7 +55,7 @@ if [ $FORCE -ne 1 ]; then
     fi
 fi
 
-rm -rf "../$WORKTREE_DIR"
+rm -rf "$WORKTREE_ABSOLUTE_PATH"
 git worktree prune
 git push "$REMOTE_NAME" -d "$BRANCH_NAME"
 if [ $FORCE -ne 1 ]; then
