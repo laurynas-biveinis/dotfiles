@@ -106,7 +106,8 @@ CANDIDATES is the list of candidates."
 (setq helm-split-window-inside-p t
       helm-echo-input-in-header-line t
       helm-move-to-line-cycle-in-source t
-      helm-ff-search-library-in-sexp t
+      ;; Emacs 29.1 treesit crashes on C++ projects
+      helm-ff-search-library-in-sexp nil
       helm-net-prefer-curl t
       helm-list-directory-function #'helm-list-dir-external
       ;; So that `helm-imenu' shows everything for big source files.
