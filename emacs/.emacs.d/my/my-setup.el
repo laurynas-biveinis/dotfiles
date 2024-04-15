@@ -481,6 +481,10 @@
 ;; TODO(laurynas): if adding org support, confirm there is no large performance
 ;; penalty on large buffers, like it was with the external tree-sitter.
 (require 'treesit)
+
+;; ~10x more than the largest source code buffer size
+(setq treesit-max-buffer-size (* 80 1024 1024))
+
 (setq treesit-language-source-alist
       '((bash "https://github.com/tree-sitter/tree-sitter-bash")
         (c "https://github.com/tree-sitter/tree-sitter-c/")
