@@ -146,13 +146,6 @@
 (require 'page-break-lines)
 (global-page-break-lines-mode)
 
-;; `highlight-indent-guides'
-(require 'highlight-indent-guides)
-(setq highlight-indent-guides-method 'character)
-(setq highlight-indent-guides-responsive 'stack)
-(setq highlight-indent-guides-delay 0)
-(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-
 ;; `info-colors'
 (require 'info-colors)
 (add-hook 'Info-selection-hook #'info-colors-fontify-node)

@@ -2506,7 +2506,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240405.1443/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240405.1443/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240414.1359/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240414.1359/transient-autoloads.el"))
 
 
 
@@ -4134,7 +4134,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240412.1459/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240412.1459/magit-section-autoloads.el"))
 
 
 
@@ -9544,46 +9544,6 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/highlight-indent-guides-20200820.2328/highlight-indent-guides-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/highlight-indent-guides-20200820.2328/highlight-indent-guides-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'highlight-indent-guides-auto-set-faces "highlight-indent-guides" "\
-Automatically calculate indent guide faces.
-If this feature is enabled, calculate reasonable values for the indent guide
-colors based on the current theme's colorscheme, and set them appropriately.
-This runs whenever a theme is loaded, but it can also be run interactively." t)
-(autoload 'highlight-indent-guides-mode "highlight-indent-guides" "\
-Display indent guides in a buffer.
-
-This is a minor mode.  If called interactively, toggle the
-`Highlight-Indent-Guides mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `highlight-indent-guides-mode'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(register-definition-prefixes "highlight-indent-guides" '("highlight-indent-guides-"))
-
-
-(provide 'highlight-indent-guides-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-1.9.8/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-1.9.8/async-autoloads.el"))
 
 
@@ -12503,7 +12463,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240409.1142/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240409.1142/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240412.850/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240412.850/difftastic-autoloads.el"))
 
 
 
@@ -13030,14 +12990,14 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-contrib ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indentation highlight-indent-guides async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-contrib ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indentation async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240409.1643" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356" "/Users/laurynas/.emacs.d/elpa/magit-20240409.1558" "/Users/laurynas/.emacs.d/elpa/magit-section-20240311.1407" "/Users/laurynas/.emacs.d/elpa/transient-20240405.1443" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240409.1643" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356" "/Users/laurynas/.emacs.d/elpa/magit-20240409.1558" "/Users/laurynas/.emacs.d/elpa/magit-section-20240412.1459" "/Users/laurynas/.emacs.d/elpa/transient-20240414.1359" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
