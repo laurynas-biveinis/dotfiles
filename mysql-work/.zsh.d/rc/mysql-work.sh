@@ -97,7 +97,10 @@ mysql_export_environment_helpers() {
             "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
             "-DCMAKE_CXX_FLAGS='-isystem /usr/local/include'")
 
-        declare -a fb_common=()
+        # For -DWITH_FB_VECTORDB=ON below. If that one becomes
+        # version-dependent, fix this too.
+        declare -a fb_common=("-DWITH_OPENMP=$brew/libomp"
+                              "-DWITH_OPENBLAS=$brew/openblas")
 
         export MYCLANG12=("-DCMAKE_C_COMPILER=$brew/llvm@12/bin/clang"
                           "-DCMAKE_CXX_COMPILER=$brew/llvm@12/bin/clang++")
@@ -195,6 +198,11 @@ mysql_export_environment_helpers() {
     declare -a -r my8=("-DMYSQL_MAINTAINER_MODE=ON" "-DWITH_SYSTEM_LIBS=ON")
     declare -a -r my8d=("${cmake_debug[@]}" "${my8[@]}")
     declare -a -r my8r=("${cmake_release[@]}" "${my8[@]}")
+
+    # Only recognized starting from 8.0.32, make it version-dependent if that
+    # becomes a problem, in which case adjust the platform-specific fb_common
+    # values
+    fb_common+=("-DWITH_FB_VECTORDB=ON")
 
     # Workaround Facebook tooling incompatibility with git worktrees
     fb_common+=("-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
