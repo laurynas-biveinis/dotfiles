@@ -830,19 +830,24 @@
 ;; appear to work. Maybe because these are major modes.
 
 ;; Allow some external images in emails. Uses
-;; `dotfiles--mu4e-allowed-image-email-regexps', which is defined elsewhere.
 
 (require 'gnus-art)
 
+;; `dotfiles--mu4e-allowed-image-email-regexps' is defined elsewhere.
 (defun dotfiles--mu4e-block-external-images(&optional _ignore)
-  "Decides what external image links to allow."
-  (let* ((from-email
-          (plist-get
-           (car (mu4e-message-field (mu4e-message-at-point t) :from)) :email))
-         (allow-images (seq-find (lambda (email-regexp)
-                                   (string-match email-regexp from-email))
-                                 dotfiles--mu4e-allowed-image-email-regexps)))
-    (if allow-images nil ".*")))
+  "Decides what external image links to allow.
+The decision is made using `dotfiles--mu4e-allowed-image-email-regexps', which
+should be a list of regexp strings to check the e-mail addresses for match. In
+the case there is no current message but this function is still called, return
+decision to block all the images."
+  (let ((msg (mu4e-message-at-point t)))
+    (if (not msg)
+        ".*"
+      (let* ((from-email (plist-get (car (mu4e-message-field msg :from)) :email))
+             (allow-images (seq-find (lambda (email-regexp)
+                                       (string-match email-regexp from-email))
+                                     dotfiles--mu4e-allowed-image-email-regexps)))
+        (if allow-images nil ".*")))))
 (setq gnus-blocked-images #'dotfiles--mu4e-block-external-images)
 
 ;; `mu4e' automation
