@@ -836,7 +836,9 @@
 
 (defun dotfiles--mu4e-block-external-images(&optional _ignore)
   "Decides what external image links to allow."
-  (let* ((from-email (mu4e-message-field (mu4e-message-at-point t) :from))
+  (let* ((from-email
+          (plist-get
+           (car (mu4e-message-field (mu4e-message-at-point t) :from)) :email))
          (allow-images (seq-find (lambda (email-regexp)
                                    (string-match email-regexp from-email))
                                  dotfiles--mu4e-allowed-image-email-regexps)))
