@@ -287,7 +287,8 @@
 (setq magit-diff-refine-hunk t)
 (setq magit-process-popup-time 10)
 
-;; Magit "integration" with VC
+;; Magit "integration" with VC. Note that this would break `package-vc-install',
+;; if that ever gets used.
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
 (defun dotfiles--turn-off-size-indication-mode ()
