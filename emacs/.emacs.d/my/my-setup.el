@@ -794,6 +794,9 @@
 
 ;;; Features: email
 ;; `mu4e'
+;; Known issues: the headers buffer can get misaligned:
+;; https://www.djcbsoftware.nl/code/mu/mu4e/Known-issues.html#Headers_002dbuffer-can-get-mis_002daligned
+;; The suggested partial fix in the manual does not appear to work.
 ;; `mu4e-attachment-dir', `mu4e-contexts', `mu4e-bookmarks', &
 ;; `mu4e-maildir-shortcuts' are defined elsewhere.
 (require 'mu4e)
@@ -825,8 +828,6 @@
 (setq mu4e-headers-fields '((:human-date . 10)
                             (:from . 22)
                             (:thread-subject)))
-;; TODO(laurynas): solve misalignment issues with the SFMono font and enabled
-;; fancy chars
 (setq mu4e-use-fancy-chars t)
 (add-hook 'mu4e-thread-mode-hook #'mu4e-thread-fold-apply-all)
 (setq mu4e-search-include-related nil)
