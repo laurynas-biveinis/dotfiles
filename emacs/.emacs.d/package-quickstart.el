@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558/with-editor-autoloads.el"))
 
 
 
@@ -2506,7 +2506,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240414.1359/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240414.1359/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240415.1548/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240415.1548/transient-autoloads.el"))
 
 
 
@@ -4134,7 +4134,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240412.1459/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240412.1459/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240415.1557/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240415.1557/magit-section-autoloads.el"))
 
 
 
@@ -4150,7 +4150,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240320.2311/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240320.2311/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240415.1544/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240415.1544/git-commit-autoloads.el"))
 
 
 
@@ -4173,7 +4173,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240409.1558/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240409.1558/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240415.1557/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240415.1557/magit-autoloads.el"))
 
 
 
@@ -6373,7 +6373,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555/ghub-autoloads.el"))
 
 
 
@@ -6422,7 +6422,7 @@ and call `auth-source-forget+'." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20240206.414/pr-review-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20240206.414/pr-review-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20240415.1328/pr-review-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20240415.1328/pr-review-autoloads.el"))
 
 
 
@@ -6657,7 +6657,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240124.1601/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240124.1601/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240415.1535/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240415.1535/emacsql-autoloads.el"))
 
 
 
@@ -11357,7 +11357,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240405.1948/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240405.1948/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240415.1534/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240415.1534/closql-autoloads.el"))
 
 
 
@@ -11367,14 +11367,13 @@ it is disabled.
 
 
 (register-definition-prefixes "closql" '("closql-" "eieio-"))
-
 
 
 (provide 'closql-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240409.1643/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240409.1643/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240415.1603/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240415.1603/forge-autoloads.el"))
 
 
 
@@ -12064,7 +12063,7 @@ values used in the user's shell." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-builtin-20240119.2314/emacsql-sqlite-builtin-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-builtin-20240119.2314/emacsql-sqlite-builtin-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-builtin-20240415.1535/emacsql-sqlite-builtin-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-builtin-20240415.1535/emacsql-sqlite-builtin-autoloads.el"))
 
 
 
@@ -12997,7 +12996,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240409.1643" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240408.1356" "/Users/laurynas/.emacs.d/elpa/magit-20240409.1558" "/Users/laurynas/.emacs.d/elpa/magit-section-20240412.1459" "/Users/laurynas/.emacs.d/elpa/transient-20240414.1359" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240101.2226" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240415.1603" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240415.1557" "/Users/laurynas/.emacs.d/elpa/magit-section-20240415.1557" "/Users/laurynas/.emacs.d/elpa/transient-20240415.1548" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
