@@ -345,6 +345,16 @@
 ;; `forge'
 (require 'forge)
 
+(defun my-pull-all-forge-repos ()
+  "Pull everything for all known `forge' repos."
+  (dolist (row (forge-sql [:select * :from repository]))
+    ;; Dependency on the internal `forge' schema. I haven't found a better way
+    ;; to get this information.
+    (let ((worktree-path (nth 33 row)))
+      (when worktree-path
+        (let ((default-directory worktree-path))
+          (forge-pull))))))
+
 ;; `git-gutter'
 (require 'git-gutter)
 (setq git-gutter:update-interval 0.02)
