@@ -22,10 +22,24 @@
 (setq read-quoted-char-radix 16  ;; Enter quoted chars in hex
       sentence-end-double-space nil)
 
+(defun dotfiles--warn-if-no-ts ()
+  "Warn if `treesit'-based major modes are not configured.
+This is checked through `major-mode-remap-alist' being empty."
+  (when (null major-mode-remap-alist)
+    (warn "Config bug: treesit must be configured before this point.")))
+
+(defun dotfiles--ts-major-mode-p ()
+  "Check whether the current mode is a `treesit'-based one.
+It is assumed that all the `treesit'-based modes, and only them, are values in
+the `major-mode-remap-alist'."
+  (member major-mode (mapcar #'cdr major-mode-remap-alist)))
+
 (defun dotfiles--maybe-enable-electric-layout-mode ()
-  "Enable `electric-layout-mode' if the major mode is not `treesit'-based."
-  (message "Mode: %s, " major-mode)
-  (unless (member major-mode (mapcar #'cdr major-mode-remap-alist))
+  "Enable `electric-layout-mode' if the major mode is not `treesit'-based.
+For `treesit'-based modes, formatting-as-you-type is provided by the modes
+themselves."
+  (dotfiles--warn-if-no-ts)
+  (unless (dotfiles--ts-major-mode-p)
     (electric-layout-local-mode 1)))
 
 (add-hook 'prog-mode-hook #'dotfiles--maybe-enable-electric-layout-mode)
@@ -76,10 +90,11 @@
 (add-to-list 'aggressive-indent-excluded-modes #'makefile-bsdmake-mode)
 
 (defun dotfiles--add-remap-modes-to-aggressive-indent-exclusion ()
-  "Add modes in `major-mode-remap-alist' to `aggressive-indent-excluded-modes'."
-  (when (null major-mode-remap-alist)
-    (warn
-     "Config bug: treesit must be configured before aggressive-indent-mode"))
+  "Add modes in `major-mode-remap-alist' to `aggressive-indent-excluded-modes'.
+The modes in `major-mode-remap-alist' are assumed to be `treesit'-based ones,
+where the functionality of indentation on every change is provided by the modes
+themselves."
+  (dotfiles--warn-if-no-ts)
   (dolist (pair major-mode-remap-alist)
     (let ((remapped-mode (cdr pair)))
       (add-to-list 'aggressive-indent-excluded-modes remapped-mode))))
@@ -98,11 +113,11 @@
       kill-do-not-save-duplicates t  ;; Do not store duplicate kills
       kill-read-only-ok t)
 
-;; Yank should indent in programming modes
 (defun dotfiles--indent-if-prog-mode (&optional _ARG)
   "Indent current region if in programming mode and no prefix arg."
   (interactive)
-  (if (and (not current-prefix-arg) (derived-mode-p 'prog-mode))
+  (if (and (not current-prefix-arg)
+           (derived-mode-p 'prog-mode))
       (indent-region (region-beginning) (region-end) nil)))
 
 (advice-add #'yank :after #'dotfiles--indent-if-prog-mode)
