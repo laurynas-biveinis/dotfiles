@@ -2,6 +2,7 @@
 ;;; Commentary:
 
 ;; Configure Emacs editing features, including indentation, kill & yank, undo.
+;; Depends on `major-mode-remap-alist' being already configured.
 ;;
 ;; Like in the rest of my personal configuration, all features (packages and
 ;; external tools) are assumed to exist, because this is a part of my dotfiles
