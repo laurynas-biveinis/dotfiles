@@ -29,8 +29,6 @@
 
 (set-language-environment "UTF-8")
 
-(require 'my-edit)
-
 ;;; Navigation
 (setq scroll-error-top-bottom t)
 
@@ -519,6 +517,10 @@
 (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
 (add-to-list 'major-mode-remap-alist '(sql-mode . sql-ts-mode))
 (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
+
+;; Ideally this should come earlier but need to have `major-mode-remap-alist'
+;; configured first.
+(require 'my-edit)
 
 ;;; C and C++ programming
 

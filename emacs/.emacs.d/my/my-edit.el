@@ -68,6 +68,17 @@
 ;; https://github.com/Malabarba/aggressive-indent-mode/issues/140
 (add-to-list 'aggressive-indent-excluded-modes #'makefile-bsdmake-mode)
 
+(defun dotfiles--add-remap-modes-to-aggressive-indent-exclusion ()
+  "Add modes in `major-mode-remap-alist' to `aggressive-indent-excluded-modes'."
+  (when (null major-mode-remap-alist)
+    (warn
+     "Config bug: treesit must be configured before aggressive-indent-mode"))
+  (dolist (pair major-mode-remap-alist)
+    (let ((remapped-mode (cdr pair)))
+      (add-to-list 'aggressive-indent-excluded-modes remapped-mode))))
+
+(dotfiles--add-remap-modes-to-aggressive-indent-exclusion)
+
 (defun end-of-line-and-newline-and-indent ()
   "Go to the end of line, insert a new line, and indent."
   (interactive)
