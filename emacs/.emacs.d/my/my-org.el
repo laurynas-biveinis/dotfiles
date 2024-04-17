@@ -75,7 +75,8 @@ Sets up keybindings and adjusts the fill column."
       org-tags-column -85  ;; TODO(laurynas): compute automatically
       org-habit-graph-column 65  ;; TODO(laurynas): compute automatically
       org-image-actual-width 720 ;; TODO(laurynas): compute automatically
-      org-startup-with-inline-images t)
+      org-startup-with-inline-images t
+      org-startup-folded 'showall)
 (add-hook 'org-mode-hook #'org-sticky-header-mode)
 
 ;;; TODO state changes
