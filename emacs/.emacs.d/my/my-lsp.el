@@ -68,19 +68,17 @@
 (advice-add #'lsp-ui-peek-find-references :before #'lsp-ui-doc-hide)
 
 (defun dotfiles--lsp-disable-eldoc ()
-  "Disable eldoc for LSP."
+  "Disable `eldoc-mode' for LSP."
   (eldoc-mode -1))
 
-(defun dotfiles--lsp-uninitialization (_lsp_workspace)
-  "General cleanup after LSP uninitialization."
-  (electric-layout-mode)
-  (electric-pair-local-mode)
+(defun dotfiles--lsp-enable-eldoc (_lsp_workspace)
+  "Re-enable `eldoc-mode' after LSP uninitialization."
   (eldoc-mode))
 
 (add-hook 'lsp-after-open-hook #'yas-minor-mode-on)
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-eldoc)
 
-(add-hook 'lsp-after-uninitialized-functions #'dotfiles--lsp-uninitialization)
+(add-hook 'lsp-after-uninitialized-functions #'dotfiles--lsp-enable-eldoc)
 
 ;;; Setup `topsy', make `lsp-mode' play nicely with it.
 (require 'topsy)
