@@ -22,7 +22,13 @@
 (setq read-quoted-char-radix 16  ;; Enter quoted chars in hex
       sentence-end-double-space nil)
 
-(add-hook 'prog-mode-hook #'electric-layout-mode)
+(defun dotfiles--maybe-enable-electric-layout-mode ()
+  "Enable `electric-layout-mode' if the major mode is not `treesit'-based."
+  (message "Mode: %s, " major-mode)
+  (unless (member major-mode (mapcar #'cdr major-mode-remap-alist))
+    (electric-layout-local-mode 1)))
+
+(add-hook 'prog-mode-hook #'dotfiles--maybe-enable-electric-layout-mode)
 
 (global-so-long-mode 1)
 (delete-selection-mode 1)  ;; Typing or <Delete> will remove selected text

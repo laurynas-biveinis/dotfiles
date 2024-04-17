@@ -529,6 +529,13 @@
 ;; variables to set it.
 (setq c-ts-mode-emacs-sources-support nil)
 
+;; For the life of me I can't figure out what is enabling `electric-indent-mode'
+;; locally in these buffers, so let's just disable it.
+(defun dotfiles--disable-electric-indent-locally ()
+  "Disable electric indentation in the current buffer."
+  (electric-indent-local-mode -1))
+(add-hook 'c-ts-base-mode-hook #'dotfiles--disable-electric-indent-locally)
+
 ;; Google C/C++ style for tree-sitter. Stolen from
 ;; https://github.com/ankurdave/dotfiles/blob/master/.emacs.d/packages.el#L673
 
