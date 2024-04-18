@@ -141,8 +141,8 @@ optional and specified by the following properties on the task being clocked-in:
     ;; Execute a shell command, if any
     (when shell-command
       (shell-command shell-command))
-    ;; Visit a file, if any. TODO(laurynas): if visiting a file without going to
-    ;; its end is needed, rename this one to VISIT_END.
+    ;; Visit a file, if any. If visiting a file without going to its end is
+    ;; needed, rename this one to VISIT_END.
     (when visit
       (find-file visit)
       (goto-char (point-max)))
@@ -269,9 +269,7 @@ event of an error or nonlocal exit."
 
 ;;; `org-gcal'
 (require 'org-gcal)
-;; TODO(laurynas): fetch automatically? But resolve
-;; "~/.emacs.d/oauth2-auto.plist does not end in newline. Add one? (y or n)" to
-;; add the newline automatically first.
+;; TODO(laurynas): fetch automatically?
 ;; TODO(laurynas): Can `org-gcal-local-timezeone' be automated?
 ;; TODO(laurynas): key binding for `org-gcal-post-at-point'?
 ;; TODO(laurynas): key binding (and some command) to create a new event? How to
