@@ -205,9 +205,10 @@ The prefix argument enables FORCE."
           (when (\= ret-code 0)
             (user-error "'%s' failed, check `shell-command-buffer-name'" cmd))
           (projectile-remove-known-project project-root-path)
-          ;; TODO(laurynas): remove the project from treemacs. ChatGPT
-          ;; suggested to use `tremacs-remove-project-from-workspace', but
-          ;; I am not sure this is the right function.
+          ;; TODO(laurynas): remove the project from `treemacs'. For that
+          ;; package it is actually a 'workspace' that needs to be removed and
+          ;; probably `treemacs-remove-workspace' is the right function, but
+          ;; need figure out how to get from path to workspace name first.
           (lsp-workspace-folders-remove project-root-path))))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
