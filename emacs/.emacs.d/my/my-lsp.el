@@ -26,9 +26,6 @@
                                 ;; So that edited but not yet saved header
                                 ;; contents are used instead of the disk version
                                 "-use-dirty-headers"))
-;; TODO(laurynas): C and C++ docs render with interspersed random backslashes:
-;; https://emacs.stackexchange.com/questions/55056/how-to-improve-eldoc-lsp-mode-output-with-c-c-comments
-;; https://github.com/jrblevin/markdown-mode/issues/409
 (setq lsp-eldoc-render-all t)
 (setq lsp-before-save-edits nil)
 (setq lsp-restart 'auto-restart)
@@ -67,18 +64,7 @@
 ;; popups by hiding the former.
 (advice-add #'lsp-ui-peek-find-references :before #'lsp-ui-doc-hide)
 
-(defun dotfiles--lsp-disable-eldoc ()
-  "Disable `eldoc-mode' for LSP."
-  (eldoc-mode -1))
-
-(defun dotfiles--lsp-enable-eldoc (_lsp_workspace)
-  "Re-enable `eldoc-mode' after LSP uninitialization."
-  (eldoc-mode))
-
 (add-hook 'lsp-after-open-hook #'yas-minor-mode-on)
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-disable-eldoc)
-
-(add-hook 'lsp-after-uninitialized-functions #'dotfiles--lsp-enable-eldoc)
 
 ;;; Setup `topsy', make `lsp-mode' play nicely with it.
 (require 'topsy)
