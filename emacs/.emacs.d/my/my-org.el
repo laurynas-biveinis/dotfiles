@@ -218,6 +218,8 @@ optional and specified by the following properties on the task being clocked-in:
                              (append org-babel-load-languages
                                      '((plantuml . t))))
 
+(add-hook 'org-todo-repeat-hook #'org-reset-checkbox-state-subtree)
+
 ;; Make C-c C-c on a checkbox item check it and move point to the next unchecked
 ;; item. It's magic from Internet:
 ;; https://emacs.stackexchange.com/a/17281/16376

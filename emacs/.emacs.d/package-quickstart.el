@@ -653,7 +653,7 @@ Setup `wgrep-deadgrep' for `deadgrep'.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230924.1538/wfnames-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20230924.1538/wfnames-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20240418.1005/wfnames-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wfnames-20240418.1005/wfnames-autoloads.el"))
 
 
 
