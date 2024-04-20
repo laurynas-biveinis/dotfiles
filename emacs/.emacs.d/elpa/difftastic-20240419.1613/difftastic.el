@@ -138,6 +138,10 @@
 ;;   to a next logical chunk or a next file respectively.
 ;; - `difftastic-previous-chunk' (`p'), `difftastic-previous-file' (`P') -
 ;;   move point to a previous logical chunk or a previous file respectively.
+;; - `difftastic-toggle-chunk' (`TAB' or `C-i') - toggle visibility of a chunk
+;;   at point.  The point has to be in a chunk header.  When called with a
+;;   prefix all file chunks from the header to the end of the file.  See also
+;;   `difftastic-hide-chunk' and `difftastic=show-chunk'.
 ;; - `difftastic-git-diff-range' - transform `ARGS' for difftastic and show
 ;;   the result of `git diff ARGS REV-OR-RANGE -- FILES' with `difftastic'.
 ;;
@@ -331,6 +335,15 @@ N.B. only foreground and background properties will be used."
   :type '(alist :key-type face :value-type face)
   :group 'difftastic)
 
+(defcustom difftastic-highlight-strip-face-properties '(:bold :underline)
+  "Face properties to be stripped in highlights.
+Difftastic uses underline, and sometimes bold, face properties to
+highlight.  When a distinct highlight face is used (i.e., defined
+in `difftastic-highlight-alist'), then some of these properties
+may be cluttering output."
+  :type '(set (const :bold) (const :underline) (const :italic) (const :faint))
+  :group 'difftastic)
+
 (defcustom difftastic-requested-window-width-function
   #'difftastic-requested-window-width
   "Function used to calculate a requested width for a first difftastic call."
@@ -411,6 +424,7 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
   "p"     #'difftastic-previous-chunk
   "P"     #'difftastic-previous-file
   "g"     #'difftastic-rerun
+  "TAB"   #'difftastic-toggle-chunk
   ;; some keys from `view-mode'
   "C"     #'difftastic-quit-all
   "c"     #'difftastic-leave
@@ -464,7 +478,8 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
 It uses many keybindings from `view-mode' to provide a familiar
 behaviour to view diffs."
   :group 'difftastic
-  (setq buffer-read-only t))
+  (setq buffer-read-only t)
+  (add-to-invisibility-spec '(difftastic . t)))
 
 (defvar-local difftastic--chunk-regexp-chunk nil)
 (defvar-local difftastic--chunk-regexp-file nil)
@@ -509,7 +524,7 @@ data."
   "Find line beginning position.
 When FILE-CHUNK is t the line beginning position is only found
 when match data indicates this is the chunk number 1.  This
-function must be called with match data set by searching for a
+function can be called only after a successfull searching for a
 regexp from `difftastic--chunk-regexp'."
   (if file-chunk
       (when (let ((chunk-no (match-string 1)))
@@ -528,7 +543,8 @@ for.  Return nil when no chunk is found."
       (cl-block searching-next-chunk
         (while (re-search-forward chunk-regexp nil t)
           (when-let ((chunk-bol
-                      (difftastic--chunk-bol file-chunk)))
+                      (difftastic--chunk-bol file-chunk))
+                     ((not (get-text-property chunk-bol 'invisible))))
             (cl-return-from searching-next-chunk chunk-bol)))))))
 
 (defun difftastic--prev-chunk (&optional file-chunk)
@@ -543,8 +559,83 @@ for.  Return nil when no chunk is found."
         (cl-block searching-prev-chunk
           (while (re-search-backward chunk-regexp nil t)
             (when-let ((chunk-bol
-                        (difftastic--chunk-bol file-chunk)))
+                        (difftastic--chunk-bol file-chunk))
+                       ((not (get-text-property chunk-bol 'invisible))))
               (cl-return-from searching-prev-chunk chunk-bol))))))))
+
+(defun difftastic--point-at-chunk-header-p (&optional file-chunk)
+  "Return whether a point is in a chunk header.
+When FILE-CHUNK is non nil the header has to be a file header."
+  (when (not (eq (line-beginning-position) (line-end-position)))
+    (save-excursion
+      (goto-char (line-beginning-position))
+      (looking-at (difftastic--chunk-regexp file-chunk)))))
+
+(defun difftastic-hide-chunk (&optional file-chunk)
+  "Hide chunk at point.
+The point needs to be in chunk header.  When called with
+FILE-CHUNK prefix hide all file chunks from the header to the end
+of the file."
+  (interactive "P")
+  (when (difftastic--point-at-chunk-header-p file-chunk)
+    (let ((inhibit-read-only t))
+      (add-text-properties
+       (line-beginning-position)
+       (line-end-position)
+       `(difftastic (:hidden ,(if file-chunk :file :chunk))))
+      (add-text-properties
+       (line-end-position)
+       (if-let  ((next-chunk
+                  (difftastic--next-chunk file-chunk)))
+           (save-excursion
+             (goto-char next-chunk)
+             (line-end-position -1))
+         (point-max))
+       '(invisible difftastic)))))
+
+(defun difftastic-show-chunk ()
+  "Show chunk at point.
+The point needs to be in chunk header."
+  (interactive)
+  ;; @todo: fringe - from magit-diff
+  ;; (overlay-put
+  ;;  ov 'before-string
+  ;;  (propertize "fringe" 'display
+  ;;              (list 'left-fringe
+  ;;                    (if (oref section hidden)
+  ;;                        (car magit-section-visibility-indicator)
+  ;;                      (cdr magit-section-visibility-indicator))
+  ;;                    'fringe)))
+  (when (difftastic--point-at-chunk-header-p)
+    (let ((inhibit-read-only t)
+          (file-chunk
+           (member :file
+                   (get-text-property (line-beginning-position) 'difftastic))))
+      ;; This is not ideal as it doesn't just undo how the chunk has been
+      ;; hidden, but it bluntly shows everything when showing a file.  But it
+      ;; allows to show all chunks that were hidden twice - first time as a
+      ;; chunk, second as a file.
+      (remove-list-of-text-properties
+       (line-beginning-position)
+       (if-let ((next-chunk
+                 (difftastic--next-chunk file-chunk)))
+           (save-excursion
+             (goto-char next-chunk)
+             (line-end-position -1))
+         (point-max))
+       '(invisible difftastic)))))
+
+(defun difftastic-toggle-chunk (&optional file-chunk)
+  "Toggle visibility of chunk at point.
+The point needs to be in chunk header.  When called with
+FILE-CHUNK prefix hide all file chunks from the header to the end
+of the file."
+  (interactive "P")
+  (when (difftastic--point-at-chunk-header-p file-chunk)
+    (if (member :hidden
+                (get-text-property (line-beginning-position) 'difftastic))
+        (difftastic-show-chunk)
+      (difftastic-hide-chunk file-chunk))))
 
 ;; From `view-mode'
 
@@ -634,43 +725,50 @@ adding background to faces if they have a foreground set."
                    (cl-find-if
                     (lambda (difftastic-face)
                       (and (string=
-                            (face-foreground difftastic-face)
+                            (face-foreground difftastic-face nil t)
                             (or
                              (plist-get face :foreground)
                              (car (alist-get :foreground face))))
+                           (face-background difftastic-face nil t)
                            ;; ansi-color-* faces have the same
                            ;; foreground and background - don't use them
-                           (not (string= (face-foreground difftastic-face)
-                                         (face-background difftastic-face)))
-                           (face-background difftastic-face)))
+                           (not (string=
+                                 (face-foreground difftastic-face nil t)
+                                 (face-background difftastic-face nil t)))))
                     (vconcat difftastic-normal-colors-vector
                              difftastic-bright-colors-vector)))))
-    ;; difftastic uses underline to highlight some changes.
-    ;; It uses bold as well, but it's not as unambiguous as underline.
-    ;; Use underline to detect highlight, but remove both: bold and underline.
+    ;; difftastic uses underline to highlight some changes.  It uses bold as
+    ;; well, but it's not as unambiguous as underline.  Use underline to detect
+    ;; highlight, but remove all attributes that are in
+    ;; `difftastic-highlight-strip-face-properties'.
     (if-let ((highlight-face (and (cl-member 'ansi-color-underline face)
                                   (alist-get difftastic-face
                                              difftastic-highlight-alist))))
         (progn
+          (dolist (prop-face '((:underline . ansi-color-underline)
+                               (:bold . ansi-color-bold)
+                               (:italic . ansi-color-italic)
+                               (:faint . ansi-color-faint)))
+            (when (member (car prop-face)
+                          difftastic-highlight-strip-face-properties)
+              (setq face (cl-delete (cdr prop-face) face))))
           (cl-remf face :foreground)
-          (setq face (cl-delete 'ansi-color-underline face))
-          (setq face (cl-delete 'ansi-color-bold face))
           (setq face
                 (cl-delete-if (lambda (elt)
                                 (and (listp elt)
                                      (plist-get elt :foreground)))
                               face))
           (push `(:foreground
-                  ,(face-foreground highlight-face nil 'default))
+                  ,(face-foreground highlight-face nil t))
                 face)
           (push `(:background
-                  ,(face-background highlight-face nil 'default))
+                  ,(face-background highlight-face nil t))
                 face))
       (when-let ((fg (plist-get face :foreground)))
         (cl-remf face :foreground)
         (push `(:foreground ,fg) face))
       (push `(:background
-              ,(face-background difftastic-face nil 'default))
+              ,(face-background difftastic-face nil t))
             face)))
   face)
 
