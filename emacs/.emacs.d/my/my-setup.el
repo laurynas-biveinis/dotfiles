@@ -815,9 +815,9 @@
                display-buffer-same-window))
 (setq mu4e-mu-binary (executable-find "mu"))
 (setq mu4e-get-mail-command (concat (executable-find "mbsync") " -a"))
-;; Each update takes about 5 minutes, thus doing it every 20 minutes seems
-;; reasonable.
-(setq mu4e-update-interval 1200)
+;; If updating the value below, keep in mind that each update takes about 5
+;; minutes.
+(setq mu4e-update-interval 3600)
 (setq mu4e-change-filenames-when-moving t)
 (setq mu4e-confirm-quit nil)
 (setq mu4e-context-policy 'ask-if-none)
