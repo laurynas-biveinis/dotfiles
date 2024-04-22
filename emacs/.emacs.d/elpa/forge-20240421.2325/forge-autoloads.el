@@ -212,31 +212,6 @@ heavy development." t)
 (register-definition-prefixes "forge-issue" '("forge-"))
 
 
-;;; Generated autoloads from forge-list.el
-
- (autoload 'forge-topics-menu "forge-list" nil t)
- (autoload 'forge-repositories-menu "forge-list" nil t)
- (autoload 'forge-list-topics "forge-list" nil t)
- (autoload 'forge-list-labeled-topics "forge-list" nil t)
- (autoload 'forge-list-assigned-topics "forge-list" nil t)
- (autoload 'forge-list-authored-topics "forge-list" nil t)
- (autoload 'forge-list-owned-topics "forge-list" nil t)
- (autoload 'forge-list-issues "forge-list" nil t)
- (autoload 'forge-list-labeled-issues "forge-list" nil t)
- (autoload 'forge-list-assigned-issues "forge-list" nil t)
- (autoload 'forge-list-authored-issues "forge-list" nil t)
- (autoload 'forge-list-owned-issues "forge-list" nil t)
- (autoload 'forge-list-pullreqs "forge-list" nil t)
- (autoload 'forge-list-labeled-pullreqs "forge-list" nil t)
- (autoload 'forge-list-assigned-pullreqs "forge-list" nil t)
- (autoload 'forge-list-requested-reviews "forge-list" nil t)
- (autoload 'forge-list-authored-pullreqs "forge-list" nil t)
- (autoload 'forge-list-owned-pullreqs "forge-list" nil t)
- (autoload 'forge-list-repositories "forge-list" nil t)
- (autoload 'forge-list-owned-repositories "forge-list" nil t)
-(register-definition-prefixes "forge-list" '("forge-"))
-
-
 ;;; Generated autoloads from forge-notify.el
 
 (autoload 'forge-list-notifications "forge-notify" "\
@@ -259,6 +234,14 @@ List notifications." t)
 (register-definition-prefixes "forge-repo" '("forge-"))
 
 
+;;; Generated autoloads from forge-repos.el
+
+ (autoload 'forge-repositories-menu "forge-repos" nil t)
+ (autoload 'forge-list-repositories "forge-repos" nil t)
+ (autoload 'forge-list-owned-repositories "forge-repos" nil t)
+(register-definition-prefixes "forge-repos" '("forge-"))
+
+
 ;;; Generated autoloads from forge-revnote.el
 
 (register-definition-prefixes "forge-revnote" '("forge-revnote"))
@@ -269,12 +252,39 @@ List notifications." t)
 (register-definition-prefixes "forge-semi" '("forge-"))
 
 
+;;; Generated autoloads from forge-tablist.el
+
+(register-definition-prefixes "forge-tablist" '("forge--"))
+
+
 ;;; Generated autoloads from forge-topic.el
 
  (autoload 'forge-topic-menu "forge-topic" nil t)
  (autoload 'forge-topic-state-menu "forge-topic" nil t)
  (autoload 'forge-topic-status-menu "forge-topic" nil t)
 (register-definition-prefixes "forge-topic" '("forge-"))
+
+
+;;; Generated autoloads from forge-topics.el
+
+ (autoload 'forge-topics-menu "forge-list" nil t)
+ (autoload 'forge-list-topics "forge-list" nil t)
+ (autoload 'forge-list-labeled-topics "forge-list" nil t)
+ (autoload 'forge-list-assigned-topics "forge-list" nil t)
+ (autoload 'forge-list-authored-topics "forge-list" nil t)
+ (autoload 'forge-list-owned-topics "forge-list" nil t)
+ (autoload 'forge-list-issues "forge-list" nil t)
+ (autoload 'forge-list-labeled-issues "forge-list" nil t)
+ (autoload 'forge-list-assigned-issues "forge-list" nil t)
+ (autoload 'forge-list-authored-issues "forge-list" nil t)
+ (autoload 'forge-list-owned-issues "forge-list" nil t)
+ (autoload 'forge-list-pullreqs "forge-list" nil t)
+ (autoload 'forge-list-labeled-pullreqs "forge-list" nil t)
+ (autoload 'forge-list-assigned-pullreqs "forge-list" nil t)
+ (autoload 'forge-list-requested-reviews "forge-list" nil t)
+ (autoload 'forge-list-authored-pullreqs "forge-list" nil t)
+ (autoload 'forge-list-owned-pullreqs "forge-list" nil t)
+(register-definition-prefixes "forge-topics" '("forge-"))
 
 ;;; End of scraped data
 

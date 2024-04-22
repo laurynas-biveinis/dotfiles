@@ -119,6 +119,7 @@ Use this to set or override defaults."
 
 (defun fancy-compilation--bounds-of-space-at-point (pos)
   "Return the range of space characters surrounding POS."
+  (declare (important-return-value t))
   (save-excursion
     (let ((skip "[:blank:]\n"))
       (goto-char pos)
@@ -134,6 +135,7 @@ Use this to set or override defaults."
 
 (defun fancy-compilation--compilation-mode ()
   "Mode hook to set buffer local defaults."
+  (declare (important-return-value nil))
   (when fancy-compilation-override-colors
     (setq-local face-remapping-alist
                 (list
@@ -158,6 +160,7 @@ Use this to set or override defaults."
 
 (defun fancy-compilation--compile (fn &rest args)
   "Wrap the `compile' command (FN ARGS)."
+  (declare (important-return-value nil))
   (let ((compilation-environment
          (cond
           ((string-empty-p fancy-compilation-term)
@@ -169,6 +172,7 @@ Use this to set or override defaults."
 
 (defun fancy-compilation--compilation-start (fn &rest args)
   "Wrap `compilation-start' (FN ARGS)."
+  (declare (important-return-value nil))
   ;; Lazily load when not compiling.
   (require 'ansi-color)
   (setq fancy-compilation--window nil)
@@ -190,6 +194,7 @@ Use this to set or override defaults."
 
 (defun fancy-compilation--compilation-handle-exit (fn process-status exit-status msg)
   "Wrap `compilation-handle-exit' (FN PROCESS-STATUS, EXIT-STATUS & MSG)."
+  (declare (important-return-value nil))
   (cond
    (fancy-compilation-quiet-prolog
     (let ((eof-orig (point-max)))
@@ -228,6 +233,7 @@ Use this to set or override defaults."
 
 (defun fancy-compilation--compilation-filter (fn proc string)
   "Wrap `compilation-filter' (FN PROC STRING) to support `ansi-color'."
+  (declare (important-return-value nil))
   (let ((buf (process-buffer proc)))
     (when (buffer-live-p buf)
       (with-current-buffer buf
@@ -253,6 +259,7 @@ Use this to set or override defaults."
 
 (defun fancy-compilation--mode-enable ()
   "Turn on `fancy-compilation-mode' for the current buffer."
+  (declare (important-return-value nil))
   (advice-add 'compile :around #'fancy-compilation--compile)
   (advice-add 'compilation-filter :around #'fancy-compilation--compilation-filter)
   (advice-add 'compilation-start :around #'fancy-compilation--compilation-start)
@@ -261,6 +268,7 @@ Use this to set or override defaults."
 
 (defun fancy-compilation--mode-disable ()
   "Turn off `fancy-compilation-mode' for the current buffer."
+  (declare (important-return-value nil))
   (advice-remove 'compile #'fancy-compilation--compile)
   (advice-remove 'compilation-filter #'fancy-compilation--compilation-filter)
   (advice-remove 'compilation-start #'fancy-compilation--compilation-start)
