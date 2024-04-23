@@ -8929,6 +8929,46 @@ Fontify an `info' node.")
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars/indent-bars-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'indent-bars-mode "indent-bars" "\
+Indicate indentation with configurable bars.
+
+This is a minor mode.  If called interactively, toggle the
+`Indent-Bars mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `indent-bars-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "indent-bars" '("indent-bars-"))
+
+
+
+(autoload 'indent-bars-ts-setup "indent-bars-ts" "\
+Setup indent-bars for using with treesiter.")
+(register-definition-prefixes "indent-bars-ts" '("ibtcs" "indent-bars-"))
+
+
+(provide 'indent-bars-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/iedit-0.9.9.9.9/iedit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-0.9.9.9.9/iedit-autoloads.el"))
 
 
@@ -12546,7 +12586,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors iedit highlight-indentation async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
         package-activated-list)))
 (progn
   (require 'info)

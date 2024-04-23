@@ -101,6 +101,23 @@ themselves."
 
 (dotfiles--add-remap-modes-to-aggressive-indent-exclusion)
 
+;; `indent-bars'
+(require 'indent-bars)
+(require 'indent-bars-ts)
+(setq indent-bars-color '(highlight :face-bg t :blend 0.15))
+(setq indent-bars-pattern ".")
+(setq indent-bars-width-frac 0.1)
+(setq indent-bars-pad-frac 0.1)
+(setq indent-bars-zigzag nil)
+;; blend=1: blend with BG only
+(setq indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 1))
+;; pump up the BG blend on current
+(setq indent-bars-highlight-current-depth '(:blend 0.5))
+(setq indent-bars-display-on-blank-lines t)
+(setq indent-bars-treesit-support t)
+(setq indent-bars-treesit-ignore-blank-lines-types '("module"))
+(add-hook 'prog-mode-hook #'indent-bars-mode)
+
 (defun end-of-line-and-newline-and-indent ()
   "Go to the end of line, insert a new line, and indent."
   (interactive)

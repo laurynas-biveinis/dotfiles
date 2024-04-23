@@ -285,8 +285,16 @@
 (setq magit-diff-refine-hunk t)
 (setq magit-process-popup-time 10)
 
-;; Magit "integration" with VC. Note that this would break `package-vc-install',
-;; if that ever gets used.
+;; Since Git is handled by `magit', remove it from the built-in `vc' backends,
+;; except for `package-vc-install'.
+
+(defun dotfiles--add-git-to-vc-backends (original-func &rest args)
+  "Add `Git' to `vc-handled-backends' for calling ORIGINAL-FUNC with ARGS."
+  (let ((vc-handled-backends (cons 'Git vc-handled-backends)))
+    (apply original-func args)))
+
+(advice-add 'package-vc-install :around #'dotfiles--add-git-to-vc-backends)
+
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
 (defun dotfiles--turn-off-size-indication-mode ()
