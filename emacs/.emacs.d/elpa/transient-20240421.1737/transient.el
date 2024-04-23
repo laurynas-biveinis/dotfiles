@@ -779,8 +779,13 @@ slot is non-nil."
 (defclass transient-information (transient-suffix)
   ((format :initform " %k %d")
    (key    :initform " "))
-  "Display-only information.
-A suffix object with no associated command.")
+  "Display-only information, aligned with suffix keys.
+Technically a suffix object with no associated command.")
+
+(defclass transient-information* (transient-information)
+  ((format :initform " %d"))
+  "Display-only information, aligned with suffix descriptions.
+Technically a suffix object with no associated command.")
 
 (defclass transient-infix (transient-suffix)
   ((transient                         :initform t)
@@ -837,6 +842,7 @@ They become the value of this argument.")
    (hide           :initarg :hide           :initform nil)
    (description    :initarg :description    :initform nil)
    (pad-keys       :initarg :pad-keys       :initform nil)
+   (info-format    :initarg :info-format    :initform nil)
    (setup-children :initarg :setup-children))
   "Abstract superclass of all group classes."
   :abstract t)
@@ -910,7 +916,7 @@ to the setup function:
                     [&optional ("interactive" interactive) def-body]))
            (indent defun)
            (doc-string 3))
-  (pcase-let ((`(,class ,slots ,suffixes ,docstr ,body)
+  (pcase-let ((`(,class ,slots ,suffixes ,docstr ,body ,interactive-only)
                (transient--expand-define-args args arglist)))
     `(progn
        (defalias ',name
@@ -919,7 +925,7 @@ to the setup function:
             `(lambda ()
                (interactive)
                (transient-setup ',name))))
-       (put ',name 'interactive-only t)
+       (put ',name 'interactive-only ,interactive-only)
        (put ',name 'function-documentation ,docstr)
        (put ',name 'transient--prefix
             (,(or class 'transient-prefix) :command ',name ,@slots))
@@ -943,22 +949,21 @@ The BODY must begin with an `interactive' form that matches
 ARGLIST.  The infix arguments are usually accessed by using
 `transient-args' inside `interactive'.
 
-\(fn NAME ARGLIST [DOCSTRING] [KEYWORD VALUE]... BODY...)"
+\(fn NAME ARGLIST [DOCSTRING] [KEYWORD VALUE]... [BODY...])"
   (declare (debug ( &define name lambda-list
                     [&optional lambda-doc]
                     [&rest keywordp sexp]
-                    ("interactive" interactive)
-                    def-body))
+                    [&optional ("interactive" interactive) def-body]))
            (indent defun)
            (doc-string 3))
-  (pcase-let ((`(,class ,slots ,_ ,docstr ,body)
+  (pcase-let ((`(,class ,slots ,_ ,docstr ,body ,interactive-only)
                (transient--expand-define-args args arglist)))
     `(progn
        (defalias ',name
          ,(if (and (not body) class (oref-default class definition))
               `(oref-default ',class definition)
             `(lambda ,arglist ,@body)))
-       (put ',name 'interactive-only t)
+       (put ',name 'interactive-only ,interactive-only)
        (put ',name 'function-documentation ,docstr)
        (put ',name 'transient--suffix
             (,(or class 'transient-suffix) :command ',name ,@slots)))))
@@ -969,16 +974,12 @@ ARGLIST.  The infix arguments are usually accessed by using
 ARGLIST is always ignored and reserved for future use.
 DOCSTRING is the documentation string and is optional.
 
-The key-value pairs are mandatory.  All transient infix commands
-are equal to each other (but not eq), so it is meaningless to
-define an infix command without also setting at least `:class'
-and one other keyword (which it is depends on the used class,
-usually `:argument' or `:variable').
-
-Each key has to be a keyword symbol, either `:class' or a keyword
-argument supported by the constructor of that class.  The
-`transient-switch' class is used if the class is not specified
-explicitly.
+At least one key-value pair is required.  All transient infix
+commands are equal to each other (but not eq).  It is meaning-
+less to define an infix command, without providing at least one
+keyword argument (usually `:argument' or `:variable', depending
+on the class).  The suffix class defaults to `transient-switch'
+and can be set using the `:class' keyword.
 
 The function definitions is always:
 
@@ -997,17 +998,18 @@ that case you have to use `transient-define-suffix' to define
 the infix command and use t as the value of the `:transient'
 keyword.
 
-\(fn NAME ARGLIST [DOCSTRING] [KEYWORD VALUE]...)"
+\(fn NAME ARGLIST [DOCSTRING] KEYWORD VALUE [KEYWORD VALUE]...)"
   (declare (debug ( &define name lambda-list
                     [&optional lambda-doc]
+                    keywordp sexp
                     [&rest keywordp sexp]))
            (indent defun)
            (doc-string 3))
-  (pcase-let ((`(,class ,slots ,_ ,docstr ,_)
-               (transient--expand-define-args args arglist)))
+  (pcase-let ((`(,class ,slots ,_ ,docstr ,_ ,interactive-only)
+               (transient--expand-define-args args arglist t)))
     `(progn
        (defalias ',name #'transient--default-infix-command)
-       (put ',name 'interactive-only t)
+       (put ',name 'interactive-only ,interactive-only)
        (put ',name 'completion-predicate #'transient--suffix-only)
        (put ',name 'function-documentation ,docstr)
        (put ',name 'transient--suffix
@@ -1059,10 +1061,10 @@ commands are aliases for."
             #'transient--find-function-advised-original)
 
 (eval-and-compile
-  (defun transient--expand-define-args (args &optional arglist)
+  (defun transient--expand-define-args (args &optional arglist nobody)
     (unless (listp arglist)
       (error "Mandatory ARGLIST is missing"))
-    (let (class keys suffixes docstr)
+    (let (class keys suffixes docstr declare (interactive-only t))
       (when (stringp (car args))
         (setq docstr (pop args)))
       (while (keywordp (car args))
@@ -1076,13 +1078,28 @@ commands are aliases for."
                (or (vectorp arg)
                    (and arg (symbolp arg))))
         (push (pop args) suffixes))
+      (when (eq (car-safe (car args)) 'declare)
+        (setq declare (car args))
+        (setq args (cdr args))
+        (when-let ((int (assq 'interactive-only declare)))
+          (setq interactive-only (cadr int))
+          (delq int declare))
+        (unless (cdr declare)
+          (setq declare nil)))
+      (cond
+       ((not args))
+       (nobody
+        (error "transient-define-infix: No function body allowed"))
+       ((not (eq (car-safe (nth (if declare 1 0) args)) 'interactive))
+        (error "transient-define-*: Interactive form missing")))
       (list (if (eq (car-safe class) 'quote)
                 (cadr class)
               class)
             (nreverse keys)
             (nreverse suffixes)
             docstr
-            args))))
+            (if declare (cons declare args) args)
+            interactive-only))))
 
 (defun transient--parse-child (prefix spec)
   (cl-typecase spec
@@ -1153,9 +1170,9 @@ commands are aliases for."
              (commandp (cadr spec)))
         (setq args (plist-put args :description (macroexp-quote pop)))))
       (cond
-       ((eq car :info))
+       ((memq car '(:info :info*)))
        ((keywordp car)
-        (error "Need command or `:info', got `%s'" car))
+        (error "Need command, `:info' or `:info*', got `%s'" car))
        ((symbolp car)
         (setq args (plist-put args :command (macroexp-quote pop))))
        ((and (commandp car)
@@ -1214,6 +1231,9 @@ commands are aliases for."
                 ((eq key :level) (setq level val))
                 ((eq key :info)
                  (setq class 'transient-information)
+                 (setq args (plist-put args :description val)))
+                ((eq key :info*)
+                 (setq class 'transient-information*)
                  (setq args (plist-put args :description val)))
                 ((eq (car-safe val) '\,)
                  (setq args (plist-put args key (cadr val))))

@@ -2506,7 +2506,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240421.1327/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240421.1327/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737/transient-autoloads.el"))
 
 
 
@@ -12553,7 +12553,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240421.2325" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240420.901" "/Users/laurynas/.emacs.d/elpa/magit-section-20240420.901" "/Users/laurynas/.emacs.d/elpa/transient-20240421.1327" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240421.2325" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240420.901" "/Users/laurynas/.emacs.d/elpa/magit-section-20240420.901" "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

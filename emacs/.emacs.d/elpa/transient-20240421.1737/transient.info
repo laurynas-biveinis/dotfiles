@@ -1275,16 +1275,12 @@ Note that an infix is a special kind of suffix.  Depending on context
      reserved for future use.  DOCSTRING is the documentation string and
      is optional.
 
-     The keyword-value pairs are mandatory.  All transient infix
-     commands are ‘equal’ to each other (but not ‘eq’), so it is
-     meaningless to define an infix command without also setting at
-     least ‘:class’ and one other keyword (which it is depends on the
-     used class, usually ‘:argument’ or ‘:variable’).
-
-     Each keyword has to be a keyword symbol, either ‘:class’ or a
-     keyword argument supported by the constructor of that class.  The
-     ‘transient-switch’ class is used if the class is not specified
-     explicitly.
+     At least one key-value pair is required.  All transient infix
+     commands are ‘equal’ to each other (but not ‘eq’).  It is
+     meaningless to define an infix command, without providing at least
+     one keyword argument (usually ‘:argument’ or ‘:variable’, depending
+     on the class).  The suffix class defaults to ‘transient-switch’ and
+     can be set using the ‘:class’ keyword.
 
      The function definition is always:
 
@@ -2323,7 +2319,7 @@ Appendix C Command and Function Index
 * transient-args:                        Using Infix Arguments.
                                                               (line  22)
 * transient-define-argument:             Defining Suffix and Infix Commands.
-                                                              (line  61)
+                                                              (line  57)
 * transient-define-infix:                Defining Suffix and Infix Commands.
                                                               (line  26)
 * transient-define-prefix:               Defining Transients. (line  13)
@@ -3221,40 +3217,40 @@ Node: Binding Suffix and Infix Commands44582
 Node: Group Specifications45440
 Node: Suffix Specifications50541
 Node: Defining Suffix and Infix Commands54754
-Node: Using Infix Arguments57960
-Node: Transient State60794
-Ref: Pre-commands for Infixes65609
-Ref: Pre-commands for Suffixes66129
-Ref: Pre-commands for Non-Suffixes68583
-Ref: Special Pre-Commands69719
-Node: Classes and Methods70227
-Node: Group Classes72411
-Node: Group Methods74338
-Node: Prefix Classes75591
-Node: Suffix Classes76682
-Node: Suffix Methods79769
-Node: Suffix Value Methods80090
-Node: Suffix Format Methods82848
-Node: Prefix Slots84327
-Ref: Internal Prefix Slots86462
-Node: Suffix Slots87719
-Ref: Slots of transient-suffix88087
-Ref: Slots of transient-infix89224
-Ref: Slots of transient-variable92520
-Ref: Slots of transient-switches92622
-Node: Predicate Slots92985
-Node: FAQ94420
-Ref: Can I control how the popup buffer is displayed?94549
-Ref: How can I copy text from the popup buffer?94730
-Ref: How does Transient compare to prefix keys and universal arguments?95224
-Ref: How does Transient compare to Magit-Popup and Hydra?95467
-Ref: Why did some of the key bindings change?95661
-Ref: Why does q not quit popups anymore?98014
-Node: Keystroke Index99117
-Node: Command and Function Index100982
-Node: Variable Index107574
-Node: Concept Index109847
-Node: GNU General Public License112583
+Node: Using Infix Arguments57802
+Node: Transient State60636
+Ref: Pre-commands for Infixes65451
+Ref: Pre-commands for Suffixes65971
+Ref: Pre-commands for Non-Suffixes68425
+Ref: Special Pre-Commands69561
+Node: Classes and Methods70069
+Node: Group Classes72253
+Node: Group Methods74180
+Node: Prefix Classes75433
+Node: Suffix Classes76524
+Node: Suffix Methods79611
+Node: Suffix Value Methods79932
+Node: Suffix Format Methods82690
+Node: Prefix Slots84169
+Ref: Internal Prefix Slots86304
+Node: Suffix Slots87561
+Ref: Slots of transient-suffix87929
+Ref: Slots of transient-infix89066
+Ref: Slots of transient-variable92362
+Ref: Slots of transient-switches92464
+Node: Predicate Slots92827
+Node: FAQ94262
+Ref: Can I control how the popup buffer is displayed?94391
+Ref: How can I copy text from the popup buffer?94572
+Ref: How does Transient compare to prefix keys and universal arguments?95066
+Ref: How does Transient compare to Magit-Popup and Hydra?95309
+Ref: Why did some of the key bindings change?95503
+Ref: Why does q not quit popups anymore?97856
+Node: Keystroke Index98959
+Node: Command and Function Index100824
+Node: Variable Index107416
+Node: Concept Index109689
+Node: GNU General Public License112425
 
 End Tag Table
 
