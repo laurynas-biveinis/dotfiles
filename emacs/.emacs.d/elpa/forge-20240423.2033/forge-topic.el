@@ -122,7 +122,7 @@ This face is not directly, instead several faces inherit from it
 either directly or via an intermediate face.  This face should
 only specify the `:foreground' attribute, which is why this face
 does not inherit from `magit-dimmed'."
-  :group 'magit-faces)
+  :group 'forge-faces)
 
 (defface forge-topic-header-line
   `((t :inherit magit-header-line
@@ -797,7 +797,6 @@ can be selected from the start."
                                           'magit-section-heading)
                   (magit--propertize-face (format "(%s)" (length topics))
                                           'magit-section-child-count)))
-        (magit-make-margin-overlay nil t)
         (magit-insert-section-body
           (dolist (topic topics)
             (forge--insert-topic topic width))
@@ -1026,7 +1025,7 @@ This mode itself is never used directly."
   :format #'forge--format-topic-review-requests)
 
 ;;; Commands
-;;;; Menus
+;;;; Groups
 
 (defconst forge--topic-set-state-group
   ["Set state"
@@ -1057,6 +1056,8 @@ This mode itself is never used directly."
    ("l s" forge-topic-toggle-saved)
    ("l m" forge-topic-set-marks)
    ("l n" forge-edit-topic-note)])
+
+;;;; Menus
 
 (defconst forge--topic-menus-column-widths '(19))
 

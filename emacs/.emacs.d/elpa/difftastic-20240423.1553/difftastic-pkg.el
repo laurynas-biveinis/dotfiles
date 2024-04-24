@@ -1,8 +1,8 @@
-(define-package "difftastic" "20240419.1613" "Wrapper for difftastic"
+(define-package "difftastic" "20240423.1553" "Wrapper for difftastic"
   '((emacs "28.1")
     (compat "29.1.4.2")
     (magit "20220326"))
-  :commit "9b68fe2e18b0eebfad5c7165dd7d6d0ec264bf58" :authors
+  :commit "56ec9ba861b132a96220837d711f6e79c26c268d" :authors
   '(("Przemyslaw Kryger" . "pkryger@gmail.com"))
   :maintainers
   '(("Przemyslaw Kryger" . "pkryger@gmail.com"))

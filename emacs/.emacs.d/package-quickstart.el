@@ -4173,7 +4173,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240420.901/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240420.901/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240423.2030/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240423.2030/magit-autoloads.el"))
 
 
 
@@ -10962,7 +10962,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240421.2325/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240421.2325/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240423.2033/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240423.2033/forge-autoloads.el"))
 
 
 
@@ -11208,23 +11208,23 @@ List notifications." t)
 
 
 
- (autoload 'forge-topics-menu "forge-list" nil t)
- (autoload 'forge-list-topics "forge-list" nil t)
- (autoload 'forge-list-labeled-topics "forge-list" nil t)
- (autoload 'forge-list-assigned-topics "forge-list" nil t)
- (autoload 'forge-list-authored-topics "forge-list" nil t)
- (autoload 'forge-list-owned-topics "forge-list" nil t)
- (autoload 'forge-list-issues "forge-list" nil t)
- (autoload 'forge-list-labeled-issues "forge-list" nil t)
- (autoload 'forge-list-assigned-issues "forge-list" nil t)
- (autoload 'forge-list-authored-issues "forge-list" nil t)
- (autoload 'forge-list-owned-issues "forge-list" nil t)
- (autoload 'forge-list-pullreqs "forge-list" nil t)
- (autoload 'forge-list-labeled-pullreqs "forge-list" nil t)
- (autoload 'forge-list-assigned-pullreqs "forge-list" nil t)
- (autoload 'forge-list-requested-reviews "forge-list" nil t)
- (autoload 'forge-list-authored-pullreqs "forge-list" nil t)
- (autoload 'forge-list-owned-pullreqs "forge-list" nil t)
+ (autoload 'forge-topics-menu "forge-topics" nil t)
+ (autoload 'forge-list-topics "forge-topics" nil t)
+ (autoload 'forge-list-labeled-topics "forge-topics" nil t)
+ (autoload 'forge-list-assigned-topics "forge-topics" nil t)
+ (autoload 'forge-list-authored-topics "forge-topics" nil t)
+ (autoload 'forge-list-owned-topics "forge-topics" nil t)
+ (autoload 'forge-list-issues "forge-topics" nil t)
+ (autoload 'forge-list-labeled-issues "forge-topics" nil t)
+ (autoload 'forge-list-assigned-issues "forge-topics" nil t)
+ (autoload 'forge-list-authored-issues "forge-topics" nil t)
+ (autoload 'forge-list-owned-issues "forge-topics" nil t)
+ (autoload 'forge-list-pullreqs "forge-topics" nil t)
+ (autoload 'forge-list-labeled-pullreqs "forge-topics" nil t)
+ (autoload 'forge-list-assigned-pullreqs "forge-topics" nil t)
+ (autoload 'forge-list-requested-reviews "forge-topics" nil t)
+ (autoload 'forge-list-authored-pullreqs "forge-topics" nil t)
+ (autoload 'forge-list-owned-pullreqs "forge-topics" nil t)
 (register-definition-prefixes "forge-topics" '("forge-"))
 
 
@@ -12059,7 +12059,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240419.1613/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240419.1613/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240423.1553/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20240423.1553/difftastic-autoloads.el"))
 
 
 
@@ -12593,7 +12593,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240421.2325" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240420.901" "/Users/laurynas/.emacs.d/elpa/magit-section-20240420.901" "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240423.2033" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240423.2030" "/Users/laurynas/.emacs.d/elpa/magit-section-20240420.901" "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

@@ -1028,6 +1028,7 @@ upstream remote.  Also fetch from REMOTE."
        forge-add-user-repositories)
     (7 "O" "Add all source repositories belonging to an organization"
        forge-add-organization-repositories)]]
+  (declare (interactive-only nil))
   (interactive)
   (cond
    ((not repo)
@@ -1038,7 +1039,7 @@ upstream remote.  Also fetch from REMOTE."
                      :scope (forge-get-repository repo nil :stub?)))
    (t
     (when-let*
-        ((not (eq limit :selective))
+        (((not (eq limit :selective)))
          ((magit-git-config-p "forge.autoPull" t))
          (remote  (oref repo remote))
          (refspec (oref repo pullreq-refspec))
@@ -1050,12 +1051,10 @@ upstream remote.  Also fetch from REMOTE."
                       (format "remote.%s.fetch" remote)
                       refspec))
     (setq repo (forge-get-repository repo nil :insert!))
-    (when (eq limit 'selective)
+    (when (eq limit :selective)
       (oset repo selective-p t)
       (setq limit nil))
     (forge--pull repo nil limit))))
-
-(put 'forge-add-repository 'interactive-only nil)
 
 (defun forge-add-some-repository (url)
   "Read a repository and add it to the database."
