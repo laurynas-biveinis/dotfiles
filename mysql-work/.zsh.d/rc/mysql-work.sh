@@ -793,6 +793,7 @@ mysql_rebuild() {
     fi
     popd || return 1
 
+    rm -f dev.entitlements
     mysql_maybe_workaround_openssl3 $workaround_ssl3
     ninja
     declare -i -r ninja_status=$?
