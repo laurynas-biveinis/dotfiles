@@ -767,6 +767,11 @@ mysql_cmake() {
             ;;
     esac
 
+    # TODO(laurynas): we might want to brew unlink boost temporarily for
+    # configuration and build, but each of these functions may be called
+    # independently. Re-linking at the end of configuration just to unlink again
+    # at the start of the build would work, but it is not nice.
+
     case "$build_dir" in
         *debug*)
             echo "Debug build"
