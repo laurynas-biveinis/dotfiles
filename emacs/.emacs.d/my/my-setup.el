@@ -285,17 +285,8 @@
 (setq magit-diff-refine-hunk t)
 (setq magit-process-popup-time 10)
 
-;; Since Git is handled by `magit', remove it from the built-in `vc' backends,
-;; except for `package-vc-install'.
-
-(defun dotfiles--add-git-to-vc-backends (original-func &rest args)
-  "Add `Git' to `vc-handled-backends' for calling ORIGINAL-FUNC with ARGS."
-  (let ((vc-handled-backends (cons 'Git vc-handled-backends)))
-    (apply original-func args)))
-
-(advice-add 'package-vc-install :around #'dotfiles--add-git-to-vc-backends)
-
-(setq vc-handled-backends (delq 'Git vc-handled-backends))
+;; I used to remove Git from `vc-handled-backends', but 29.1 package
+;; installation from VC feature expects it.
 
 (defun dotfiles--turn-off-size-indication-mode ()
   "Turn off function `size-indication-mode' unconditionally."
