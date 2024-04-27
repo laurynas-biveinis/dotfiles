@@ -24,10 +24,11 @@ curl http://www.ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
 unzip macOS.zip
 sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
 # Global and login screen setting
-defaults delete /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources
-defaults write /Library/Preferences/com.apple.HIToolbox \
-         AppleEnabledInputSources -array-add \
-         '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+sudo defaults delete /Library/Preferences/com.apple.HIToolbox \
+     AppleEnabledInputSources
+sudo defaults write /Library/Preferences/com.apple.HIToolbox \
+     AppleEnabledInputSources -array-add \
+     '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 # Show language menu in the login screen
 defaults write /Library/Preferences/com.apple.loginwindow \
          showInputMenu -bool true
