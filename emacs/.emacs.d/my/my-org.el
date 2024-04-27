@@ -17,7 +17,7 @@
 ;; C-c C-x C-k - Decrypt encrypted org entry
 ;; C-c n i     - Insert a link to `org-roam' entry
 ;; C-c n l     - Toggle the `org-roam' buffer
-;; C-c c       - Copy org table cell contents
+;; C-c x       - Copy org table cell contents
 
 ;;; Code:
 
@@ -198,7 +198,7 @@ optional and specified by the following properties on the task being clocked-in:
     (org-table-copy-region p p))
   (kill-new (string-trim (caar org-table-clip))))
 
-(define-key org-mode-map (kbd "C-c c") #'my-copy-cell)
+(define-key org-mode-map (kbd "C-c x") #'my-copy-cell)
 
 ;;; Encryption
 (org-crypt-use-before-save-magic)
