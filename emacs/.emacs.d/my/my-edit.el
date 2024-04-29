@@ -89,18 +89,6 @@ themselves."
 ;; https://github.com/Malabarba/aggressive-indent-mode/issues/140
 (add-to-list 'aggressive-indent-excluded-modes #'makefile-bsdmake-mode)
 
-(defun dotfiles--add-remap-modes-to-aggressive-indent-exclusion ()
-  "Add modes in `major-mode-remap-alist' to `aggressive-indent-excluded-modes'.
-The modes in `major-mode-remap-alist' are assumed to be `treesit'-based ones,
-where the functionality of indentation on every change is provided by the modes
-themselves."
-  (dotfiles--warn-if-no-ts)
-  (dolist (pair major-mode-remap-alist)
-    (let ((remapped-mode (cdr pair)))
-      (add-to-list 'aggressive-indent-excluded-modes remapped-mode))))
-
-(dotfiles--add-remap-modes-to-aggressive-indent-exclusion)
-
 ;; `indent-bars'
 (require 'indent-bars)
 (require 'indent-bars-ts)
