@@ -203,7 +203,9 @@ The prefix argument enables FORCE."
         (let* ((cmd (concat "gitrmworktree " force-arg project-root-path))
                (ret-code (shell-command cmd)))
           (when (\= ret-code 0)
-            (user-error "'%s' failed, check `shell-command-buffer-name'" cmd))
+            (user-error
+             "'%s' failed with exit code %d, check `shell-command-buffer-name'"
+             cmd ret-code))
           (projectile-remove-known-project project-root-path)
           ;; TODO(laurynas): remove the project from `treemacs'. For that
           ;; package it is actually a 'workspace' that needs to be removed and
