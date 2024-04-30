@@ -17,7 +17,7 @@ import pandas as pd
 
 sys.path.append(os.path.expanduser('~/usr/lib/python'))
 
-import common
+from common import QIFInvestmentTransaction
 
 CONFIG_FN = "~/.invl2qif"
 
@@ -46,7 +46,7 @@ with open(args.output, "w", encoding='utf-8') as output_file:
         unit_price = row['Vnt. kaina'].strip(" €")
         count = row['Vnt.'].strip(" €")
         fee = row['Mokestis'].strip(" €")
-        qif_trx = QIFInvestmentTransaction(date, amount, unit_price, count,
-                                           fee)
+        qif_trx = QIFInvestmentTransaction(date, security, fee, amount,
+                                           unit_price, count)
         print(qif_trx)
         qif_trx.write(output_file)
