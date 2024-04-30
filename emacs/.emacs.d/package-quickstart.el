@@ -4319,7 +4319,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240428.800/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240428.800/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240429.2011/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240429.2011/magit-section-autoloads.el"))
 
 
 
@@ -4335,7 +4335,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240415.1544/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240415.1544/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240429.2011/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240429.2011/git-commit-autoloads.el"))
 
 
 
@@ -4352,13 +4352,14 @@ it is disabled.
                   fundamental-mode
                   git-commit-elisp-text-mode))))
 (register-definition-prefixes "git-commit" '("git-commit-" "global-git-commit-mode"))
+
 
 
 (provide 'git-commit-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240428.1821/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240428.1821/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240429.2011/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240429.2011/magit-autoloads.el"))
 
 
 
@@ -5113,23 +5114,14 @@ Run `gitk --all' in the current repository." t)
 (autoload 'ido-enter-magit-status "magit-extras" "\
 Drop into `magit-status' from file switching.
 
-This command does not work in Emacs 26.1.
-See https://github.com/magit/magit/issues/3634
-and https://debbugs.gnu.org/cgi/bugreport.cgi?bug=31707.
-
 To make this command available use something like:
 
-  (add-hook \\='ido-setup-hook
-            (lambda ()
-              (keymap-set ido-completion-map
-                          \"C-x g\" \\='ido-enter-magit-status)))
-
-Starting with Emacs 25.1 the Ido keymaps are defined just once
-instead of every time Ido is invoked, so now you can modify it
-like pretty much every other keymap:
-
   (keymap-set ido-common-completion-map
-              \"C-x g\" \\='ido-enter-magit-status)" t)
+              \"C-x g\" \\='ido-enter-magit-status)
+
+This command does not work in Emacs 26.1.
+See https://github.com/magit/magit/issues/3634
+and https://debbugs.gnu.org/cgi/bugreport.cgi?bug=31707." t)
 (autoload 'magit-project-status "magit-extras" "\
 Run `magit-status' in the current project's root." t)
 (autoload 'magit-dired-jump "magit-extras" "\
@@ -12778,7 +12770,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240428.1815" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240428.1821" "/Users/laurynas/.emacs.d/elpa/magit-section-20240428.800" "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240428.1815" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240429.2011" "/Users/laurynas/.emacs.d/elpa/magit-section-20240429.2011" "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

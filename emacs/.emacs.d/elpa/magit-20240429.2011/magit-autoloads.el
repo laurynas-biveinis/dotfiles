@@ -770,23 +770,14 @@ Run `gitk --all' in the current repository." t)
 (autoload 'ido-enter-magit-status "magit-extras" "\
 Drop into `magit-status' from file switching.
 
-This command does not work in Emacs 26.1.
-See https://github.com/magit/magit/issues/3634
-and https://debbugs.gnu.org/cgi/bugreport.cgi?bug=31707.
-
 To make this command available use something like:
 
-  (add-hook \\='ido-setup-hook
-            (lambda ()
-              (keymap-set ido-completion-map
-                          \"C-x g\" \\='ido-enter-magit-status)))
-
-Starting with Emacs 25.1 the Ido keymaps are defined just once
-instead of every time Ido is invoked, so now you can modify it
-like pretty much every other keymap:
-
   (keymap-set ido-common-completion-map
-              \"C-x g\" \\='ido-enter-magit-status)" t)
+              \"C-x g\" \\='ido-enter-magit-status)
+
+This command does not work in Emacs 26.1.
+See https://github.com/magit/magit/issues/3634
+and https://debbugs.gnu.org/cgi/bugreport.cgi?bug=31707." t)
 (autoload 'magit-project-status "magit-extras" "\
 Run `magit-status' in the current project's root." t)
 (autoload 'magit-dired-jump "magit-extras" "\

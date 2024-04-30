@@ -13,10 +13,10 @@
 
 ;; Package-Version: 3.3.0.50-git
 ;; Package-Requires: (
-;;     (emacs "25.1")
-;;     (compat "29.1.4.4")
+;;     (emacs "26.1")
+;;     (compat "29.1.4.5")
 ;;     (seq "2.24")
-;;     (transient "0.5.0")
+;;     (transient "0.6.0")
 ;;     (with-editor "3.3.2"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -212,6 +212,10 @@ The major mode configured here is turned on by the minor mode
 ;;;###autoload                   org-mode
 ;;;###autoload                   fundamental-mode
 ;;;###autoload                   git-commit-elisp-text-mode))))
+
+(defvaralias 'git-commit-mode-hook 'git-commit-setup-hook
+  "This variable is an alias for `git-commit-setup-hook' (which see).
+Also note that `git-commit-mode' (which see) is not a major-mode.")
 
 (defcustom git-commit-setup-hook
   '(git-commit-save-message
@@ -644,24 +648,21 @@ Used as the local value of `header-line-format', in buffer using
       (magit-wip-maybe-add-commit-hook)))
   (setq with-editor-cancel-message
         #'git-commit-cancel-message)
-  (git-commit-mode 1)
   (git-commit-setup-font-lock)
   (git-commit-prepare-message-ring)
   (when (boundp 'save-place)
     (setq save-place nil))
-  (save-excursion
-    (goto-char (point-min))
-    (when (looking-at "\\`\\(\\'\\|\n[^\n]\\)")
-      (open-line 1)))
+  (let ((git-commit-mode-hook nil))
+    (git-commit-mode 1))
   (with-demoted-errors "Error running git-commit-setup-hook: %S"
     (run-hooks 'git-commit-setup-hook))
-  (when git-commit-usage-message
-    (setq with-editor-usage-message git-commit-usage-message))
-  (with-editor-usage-message)
+  (set-buffer-modified-p nil)
   (when-let ((format git-commit-header-line-format))
     (setq header-line-format
           (if (stringp format) (substitute-command-keys format) format)))
-  (set-buffer-modified-p nil))
+  (when git-commit-usage-message
+    (setq with-editor-usage-message git-commit-usage-message))
+  (with-editor-usage-message))
 
 (defun git-commit-run-post-finish-hook (previous)
   (when (and git-commit-post-finish-hook
@@ -682,7 +683,9 @@ Used as the local value of `header-line-format', in buffer using
 (define-minor-mode git-commit-mode
   "Auxiliary minor mode used when editing Git commit messages.
 This mode is only responsible for setting up some key bindings.
-Don't use it directly, instead enable `global-git-commit-mode'."
+Don't use it directly; instead enable `global-git-commit-mode'.
+Variable `git-commit-major-mode' controls which major-mode is
+used."
   :lighter "")
 
 (put 'git-commit-mode 'permanent-local t)
@@ -808,9 +811,8 @@ With a numeric prefix ARG, go forward ARG comments."
   "Search backward through message history for a match for STRING.
 Save current message first."
   (interactive
-   ;; Avoid `format-prompt' because it isn't available until Emacs 28.
-   (list (read-string (format "Comment substring (default %s): "
-                              log-edit-last-comment-match)
+   (list (read-string (format-prompt "Comment substring"
+                                     log-edit-last-comment-match)
                       nil nil log-edit-last-comment-match)))
   (cl-letf (((symbol-function #'log-edit-previous-comment)
              (symbol-function #'git-commit-prev-message)))
@@ -820,9 +822,8 @@ Save current message first."
   "Search forward through message history for a match for STRING.
 Save current message first."
   (interactive
-   ;; Avoid `format-prompt' because it isn't available until Emacs 28.
-   (list (read-string (format "Comment substring (default %s): "
-                              log-edit-last-comment-match)
+   (list (read-string (format-prompt "Comment substring"
+                                     log-edit-last-comment-match)
                       nil nil log-edit-last-comment-match)))
   (cl-letf (((symbol-function #'log-edit-previous-comment)
              (symbol-function #'git-commit-prev-message)))
