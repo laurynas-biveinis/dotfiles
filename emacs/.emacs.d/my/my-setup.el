@@ -1067,7 +1067,10 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             helm-maybe-exit-minibuffer isearch-forward
                             helm-delete-char-backward mu4e-headers-next
                             yank mu4e-view-marked-execute mu4e-view-action
-                            helm-mini))
+                            helm-mini kill-ring-save mu4e-headers-view-message
+                            magit-stage org-todo goto-line mu4e-view-quit
+                            org-agenda-clock-in balance-windows
+                            isearch-delete-char helm-M-x xref-find-definitions))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
