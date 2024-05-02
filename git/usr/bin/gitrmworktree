@@ -59,10 +59,15 @@ rm -rf "$WORKTREE_ABSOLUTE_PATH"
 popd -n
 
 git worktree prune
-git push "$REMOTE_NAME" -d "$BRANCH_NAME"
+
+if ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
+    echo "Failed to delete the remote branch, perhaps it was already deleted"
+fi
+
 if [ $FORCE -ne 1 ]; then
     git branch -d "$BRANCH_NAME"
 else
     git branch -D "$BRANCH_NAME"
 fi
+
 git fetch --all -p
