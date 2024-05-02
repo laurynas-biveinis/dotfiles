@@ -4319,7 +4319,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240429.2011/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240429.2011/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240502.15/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240502.15/magit-section-autoloads.el"))
 
 
 
@@ -4335,7 +4335,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240429.2011/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240429.2011/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240502.15/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240502.15/git-commit-autoloads.el"))
 
 
 
@@ -4352,14 +4352,13 @@ it is disabled.
                   fundamental-mode
                   git-commit-elisp-text-mode))))
 (register-definition-prefixes "git-commit" '("git-commit-" "global-git-commit-mode"))
-
 
 
 (provide 'git-commit-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240429.2011/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240429.2011/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240502.15/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240502.15/magit-autoloads.el"))
 
 
 
@@ -12770,7 +12769,7 @@ See `activity-watch-mode' for more information on Activity-Watch mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240428.1815" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240429.2011" "/Users/laurynas/.emacs.d/elpa/magit-section-20240429.2011" "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240428.1815" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240415.1555" "/Users/laurynas/.emacs.d/elpa/magit-20240502.15" "/Users/laurynas/.emacs.d/elpa/magit-section-20240502.15" "/Users/laurynas/.emacs.d/elpa/transient-20240421.1737" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
