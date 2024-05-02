@@ -202,7 +202,7 @@ The prefix argument enables FORCE."
       (when (null (projectile-project-buffers project-root-path))
         (let* ((cmd (concat "gitrmworktree " force-arg project-root-path))
                (ret-code (shell-command cmd)))
-          (when (\= ret-code 0)
+          (when (/= ret-code 0)
             (user-error
              "'%s' failed with exit code %d, check `shell-command-buffer-name'"
              cmd ret-code))
