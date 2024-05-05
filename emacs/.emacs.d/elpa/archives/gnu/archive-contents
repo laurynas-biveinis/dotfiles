@@ -853,7 +853,7 @@
 		 (:url . "https://elpa.gnu.org/packages/cycle-quotes.html")
 		 (:commit . "836b19b39651419876e65cdb1a91e3eef83cc4e7"))])
  (dape .
-       [(0 10 0)
+       [(0 11 0)
 	((emacs
 	  (29 1))
 	 (jsonrpc
@@ -861,7 +861,7 @@
 	"Debug Adapter Protocol for Emacs" tar
 	((:url . "https://github.com/svaante/dape")
 	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
-	 (:commit . "a5c9d468c1e49e533f1146980fa86488bbe3a54e"))])
+	 (:commit . "f1224ebcc54305fe8cc40b545feedabcc032b3bd"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -2887,7 +2887,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "3847f311077efa17951a786d2759f2639c5f43c8"))])
  (org .
-      [(9 6 28)
+      [(9 6 29)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -2896,7 +2896,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "0e743d0bfca7eb9861795791b9d3b5f05b777723"))])
+	(:commit . "3d0deadf41e51d9b1ad5aeb5d45861df84c579c6"))])
  (org-contacts .
 	       [(1 1)
 		((emacs

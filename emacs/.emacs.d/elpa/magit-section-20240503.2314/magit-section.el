@@ -384,7 +384,7 @@ no effect.  This also has no effect for Emacs >= 28, where
    (start    :initform nil)
    (content  :initform nil)
    (end      :initform nil)
-   (hidden   :initform nil)
+   (hidden)
    (washer   :initform nil :initarg :washer)
    (inserter :initform (symbol-value 'magit--current-section-hook))
    (heading-highlight-face :initform nil :initarg :heading-highlight-face)
@@ -921,6 +921,7 @@ With a prefix argument also expand it." heading)
     (oset section washer nil)
     (let ((inhibit-read-only t)
           (magit-insert-section--parent section)
+          (magit-insert-section--current section)
           (content (oref section content)))
       (save-excursion
         (if (and content (< content (oref section end)))
@@ -1410,23 +1411,23 @@ anything this time around.
       (oset obj value value)
       (oset obj parent magit-insert-section--parent)
       (oset obj start (if magit-section-inhibit-markers (point) (point-marker)))
-      (oset obj hidden
-            (if-let ((value (run-hook-with-args-until-success
-                             'magit-section-set-visibility-hook obj)))
-                (eq value 'hide)
-              (if-let ((incarnation
-                        (and (not magit-section-preserve-visibility)
-                             magit-insert-section--oldroot
-                             (magit-get-section
-                              (magit-section-ident obj)
-                              magit-insert-section--oldroot))))
-                  (oref incarnation hidden)
-                (if-let ((value (magit-section-match-assoc
-                                 obj magit-section-initial-visibility-alist)))
-                    (progn (when (functionp value)
-                             (setq value (funcall value obj)))
-                           (eq value 'hide))
-                  hide))))
+      (unless (slot-boundp obj 'hidden)
+        (oset obj hidden
+              (let (set old)
+                (cond
+                 ((setq set (run-hook-with-args-until-success
+                             'magit-section-set-visibility-hook obj))
+                  (eq set 'hide))
+                 ((setq old (and (not magit-section-preserve-visibility)
+                                 magit-insert-section--oldroot
+                                 (magit-get-section
+                                  (magit-section-ident obj)
+                                  magit-insert-section--oldroot)))
+                  (oref old hidden))
+                 ((setq set (magit-section-match-assoc
+                             obj magit-section-initial-visibility-alist))
+                  (eq (if (functionp set) (funcall set obj) set) 'hide))
+                 (hide)))))
       (unless (oref obj keymap)
         (let ((type (oref obj type)))
           (oset obj keymap
@@ -1438,45 +1439,47 @@ anything this time around.
 
 (defun magit-insert-section--finish (obj)
   (run-hooks 'magit-insert-section-hook)
-  (magit-insert-child-count obj)
-  (unless magit-section-inhibit-markers
-    (set-marker-insertion-type (oref obj start) t))
-  (let ((end (oset obj end
+  (let ((beg (oref obj start))
+        (end (oset obj end
                    (if magit-section-inhibit-markers
                        (point)
                      (point-marker))))
-        (map (symbol-value (oref obj keymap))))
-    (save-excursion
-      (goto-char (oref obj start))
-      (while (< (point) end)
-        (let ((next (or (next-single-property-change
-                         (point) 'magit-section)
-                        end)))
-          (unless (magit-section-at)
-            (put-text-property (point) next 'magit-section obj)
-            (when map
-              (put-text-property (point) next 'keymap map)))
-          (magit-section-maybe-add-heading-map obj)
-          (goto-char next)))))
-  (cond
-   ((eq obj magit-root-section)
-    (when (eq magit-section-inhibit-markers 'delay)
-      (setq magit-section-inhibit-markers nil)
-      (magit-map-sections
-       (lambda (section)
-         (oset section start (copy-marker (oref section start) t))
-         (oset section end   (copy-marker (oref section end) t)))))
-    (let ((magit-section-cache-visibility nil))
-      (magit-section-show obj)))
-   (magit-section-insert-in-reverse
-    (push obj (oref (oref obj parent) children)))
-   ((let ((parent (oref obj parent)))
-      (oset parent children
-            (nconc (oref parent children)
-                   (list obj))))))
-  (when magit-section-insert-in-reverse
-    (setq magit-section-insert-in-reverse nil)
-    (oset obj children (nreverse (oref obj children)))))
+        (props `( magit-section ,obj
+                  ,@(and-let* ((map (symbol-value (oref obj keymap))))
+                      (list 'keymap map))))
+        (children (oref obj children)))
+    (unless magit-section-inhibit-markers
+      (set-marker-insertion-type beg t))
+    (cond ((eq obj magit-root-section))
+          (children
+           (magit-insert-child-count obj)
+           (magit-section-maybe-add-heading-map obj)
+           (save-excursion
+             (goto-char beg)
+             (while (< (point) end)
+               (let ((next (or (next-single-property-change
+                                (point) 'magit-section)
+                               end)))
+                 (unless (magit-section-at)
+                   (add-text-properties (point) next props))
+                 (goto-char next)))))
+          ((add-text-properties beg end props)))
+    (cond ((eq obj magit-root-section)
+           (when (eq magit-section-inhibit-markers 'delay)
+             (setq magit-section-inhibit-markers nil)
+             (magit-map-sections (lambda (section)
+                                   (oset section start (copy-marker beg t))
+                                   (oset section end   (copy-marker end t)))))
+           (let ((magit-section-cache-visibility nil))
+             (magit-section-show obj)))
+          (magit-section-insert-in-reverse
+           (push obj (oref (oref obj parent) children)))
+          ((let ((parent (oref obj parent)))
+             (oset parent children
+                   (nconc (oref parent children)
+                          (list obj))))))
+    (when magit-section-insert-in-reverse
+      (oset obj children (nreverse children)))))
 
 (defun magit-cancel-section (&optional if-empty)
   "Cancel inserting the section that is currently being inserted.
@@ -1550,19 +1553,19 @@ is explicitly expanded."
   (let ((f (cl-gensym))
         (s (cl-gensym))
         (l (cl-gensym)))
-    `(let ((,f (lambda () ,@body))
-           (,s magit-insert-section--current))
-       (if (oref ,s hidden)
-           (oset ,s washer
-                 (lambda ()
-                   (let ((,l (magit-section-lineage ,s t)))
-                     (dolist (s ,l)
-                       (set-marker-insertion-type (oref s end) t))
-                     (funcall ,f)
-                     (dolist (s ,l)
-                       (set-marker-insertion-type (oref s end) nil))
-                     (magit-section-maybe-remove-heading-map ,s)
-                     (magit-section-maybe-remove-visibility-indicator ,s))))
+    `(let ((,f (lambda () ,@body)))
+       (if (oref magit-insert-section--current hidden)
+           (oset magit-insert-section--current washer
+                 (let ((,s magit-insert-section--current))
+                   (lambda ()
+                     (let ((,l (magit-section-lineage ,s t)))
+                       (dolist (s ,l)
+                         (set-marker-insertion-type (oref s end) t))
+                       (funcall ,f)
+                       (dolist (s ,l)
+                         (set-marker-insertion-type (oref s end) nil))
+                       (magit-section-maybe-remove-heading-map ,s)
+                       (magit-section-maybe-remove-visibility-indicator ,s)))))
          (funcall ,f)))))
 
 (defun magit-insert-headers (hook)
