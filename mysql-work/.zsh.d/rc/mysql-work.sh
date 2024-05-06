@@ -91,7 +91,7 @@ mysql_export_environment_helpers() {
             "-Wno-unused-but-set-variable" "-Wno-deprecated-copy-with-dtor")
         declare -a my8032_extra=("-DWITH_UNIT_TESTS=OFF")
         declare -a -r my8036_extra_cxx_release_flags=("-Wno-unused-variable")
-        declare -a -r my830_extra=("-DWITH_ZLIB=bundled")
+        declare -a -r my830_840_extra=("-DWITH_ZLIB=bundled")
 
         declare -a maria_common=(
             "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
@@ -143,7 +143,7 @@ mysql_export_environment_helpers() {
         declare -a -r my8032_34_extra_cxx_flags=()
         declare -a my8032_extra=()
         declare -a my8036_extra_cxx_release_flags=()
-        declare -a -r my830_extra=()
+        declare -a -r my830_840_extra=()
         declare -a maria_common=()
         if [ "$(arch)" = "aarch64" ]; then
             # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
@@ -212,9 +212,9 @@ mysql_export_environment_helpers() {
 
     # Version-specific building blocks, descending order
 
-    # 8.3.0--8.0.33
+    # 8.4.0--8.0.33
 
-    declare -a -r my8033_830=("-DFORCE_COLORED_OUTPUT=ON")
+    declare -a -r my8033_840=("-DFORCE_COLORED_OUTPUT=ON")
 
     # 8.2.0--8.0.18
 
@@ -420,44 +420,47 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
-    export MY830D=("${my8d[@]}" "${my8033_830[@]}" "${my830_extra[@]}")
-    export MY830=("${my8r[@]}" "${my8033_830[@]}" "${my830_extra[@]}")
+    export MY840D=("${my8d[@]}" "${my8033_840[@]}" "${my830_840_extra[@]}")
+    export MY840=("${my8r[@]}" "${my8033_840[@]}" "${my830_840_extra[@]}")
 
-    export MY820D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY830D=("${my8d[@]}" "${my8033_840[@]}" "${my830_840_extra[@]}")
+    export MY830=("${my8r[@]}" "${my8033_840[@]}" "${my830_840_extra[@]}")
+
+    export MY820D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                    "${my820_extra[@]}")
-    export MY820=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY820=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                   "${my820_extra[@]}")
 
-    export MY810D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}")
-    export MY810=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}")
+    export MY810D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}")
+    export MY810=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}")
 
-    export MY8037D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}")
-    export MY8037=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}")
+    export MY8037D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}")
+    export MY8037=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}")
 
-    export MY8036D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY8036D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8036_extra[@]}")
-    export MY8036=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY8036=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                    "${my8036_extra[@]}")
 
-    export MY8035D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY8035D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8035_extra[@]}")
-    export MY8035=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY8035=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                    "${my8035_extra[@]}")
 
-    export MY8034D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY8034D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8034_extra[@]}")
-    export MY8034=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY8034=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                    "${my8034_extra[@]}")
 
-    export PS8035D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export PS8035D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8035_extra[@]}")
 
-    export PS8034D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export PS8034D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8034_extra[@]}")
 
-    export MY8033D=("${my8d[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY8033D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8033_extra[@]}")
-    export MY8033=("${my8r[@]}" "${my8033_830[@]}" "${my8018_820[@]}"
+    export MY8033=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                    "${my8033_extra[@]}")
 
     export MY8032D=("${my8d[@]}" "${my8018_820[@]}" "${my8032_extra[@]}")
@@ -560,6 +563,12 @@ mysql_cmake() {
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                8.4.0)
+                    declare -a release_flags=("${MY840[@]}")
+                    declare -a debug_flags=("${MY840D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_840_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 8.3.0)
                     declare -a release_flags=("${MY830[@]}")
                     declare -a debug_flags=("${MY830D[@]}")
