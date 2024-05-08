@@ -179,6 +179,7 @@ and
 * <https://ianyepan.github.io/posts/emacs-git-gutter/>
 * <https://github.com/diamondBond/emacs>
 * <https://github.com/aadi58002/stow-dotfiles/blob/main/.config/emacs/init.org>
+* <https://github.com/thornjad/aero>
 
 * <https://github.com/michelegera/dotfiles>
 * <https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/>

@@ -23,6 +23,8 @@
 
 (setq load-prefer-newer t)
 
+(setq site-run-file nil)
+
 ;;; UI settings that are good to set before the first GUI window appears.
 
 ;; The cursor should blink forever
