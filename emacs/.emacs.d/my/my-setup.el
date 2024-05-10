@@ -966,10 +966,6 @@ RULE is a plist containing either :subject-exact or :subject-match."
 (require 'wakatime-mode)
 (global-wakatime-mode)
 
-;;; Features: ActivityWatch
-(require 'activity-watch-mode)
-(global-activity-watch-mode)
-
 ;;; Utilities
 
 (defun my-recompile-packages ()

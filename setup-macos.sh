@@ -380,7 +380,7 @@ pip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
 
 sudo gem install mdl
 brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner michaelvillar-timer utm activitywatch basictex
+     telegram keycombiner michaelvillar-timer utm basictex
 # TeX
 sudo tlmgr install dvipng
 # Start RescueTime, login

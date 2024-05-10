@@ -12698,71 +12698,11 @@ mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.5.0/activity-watch-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/activity-watch-mode-1.5.0/activity-watch-mode-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'activity-watch-refresh-project-name "activity-watch-mode" "\
-Recompute the name of the project for the current file." t)
-(autoload 'activity-watch-mode "activity-watch-mode" "\
-Toggle Activity-Watch (Activity-Watch mode).
-
-This is a minor mode.  If called interactively, toggle the
-`activity-watch mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `activity-watch-mode'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(put 'global-activity-watch-mode 'globalized-minor-mode t)
-(defvar global-activity-watch-mode nil "\
-Non-nil if Global Activity-Watch mode is enabled.
-See the `global-activity-watch-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `global-activity-watch-mode'.")
-(custom-autoload 'global-activity-watch-mode "activity-watch-mode" nil)
-(autoload 'global-activity-watch-mode "activity-watch-mode" "\
-Toggle Activity-Watch mode in all buffers.
-With prefix ARG, enable Global Activity-Watch mode if ARG is positive;
-otherwise, disable it.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.
-Enable the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-Activity-Watch mode is enabled in all buffers where `(lambda nil
-(activity-watch-mode 1))' would do it.
-
-See `activity-watch-mode' for more information on Activity-Watch mode.
-
-(fn &optional ARG)" t)
-(register-definition-prefixes "activity-watch-mode" '("activity-watch-"))
-
-
-(provide 'activity-watch-mode-autoloads)
-
-
-)
 (defvar package-activated-list)
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent activity-watch-mode)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review popup plantuml-mode persist page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation async helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
