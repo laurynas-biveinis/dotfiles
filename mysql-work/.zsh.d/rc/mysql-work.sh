@@ -127,6 +127,8 @@ mysql_export_environment_helpers() {
                         "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-12")
         export MYGCC13=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-13"
                         "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-13")
+        export MYGCC14=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-14"
+                        "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-14")
 
         declare -r emd_libdir="$brew/libeatmydata/lib/"
         export MTR_EMD=(
@@ -172,6 +174,8 @@ mysql_export_environment_helpers() {
                         "-DCMAKE_CXX_COMPILER=g++-12")
         export MYGCC13=("-DCMAKE_C_COMPILER=gcc-13"
                         "-DCMAKE_CXX_COMPILER=g++-13")
+        export MYGCC14=("-DCMAKE_C_COMPILER=gcc-14"
+                        "-DCMAKE_CXX_COMPILER=g++-14")
 
         export MTR_EMD=(
             "--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so")
@@ -782,6 +786,11 @@ mysql_cmake() {
             echo "Using GCC 13"
             debug_flags+=("${MYGCC13[@]}")
             release_flags+=("${MYGCC13[@]}")
+            ;;
+        *gcc-14*)
+            echo "Using GCC 14"
+            debug_flags+=("${MYGCC14[@]}")
+            release_flags+=("${MYGCC14[@]}")
             ;;
     esac
 
