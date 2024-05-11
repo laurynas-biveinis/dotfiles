@@ -1,1 +1,2 @@
-export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
+#!/bin/sh
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
