@@ -3933,7 +3933,7 @@ information on how to use Ediff itself, see *note (ediff)Top::.
      already resolved some conflicts, that means that these buffers may
      not contain the actual versions from the respective blobs.
 
-‘E m’ (‘magit-ediff-resolve-all’)
+‘E M’ (‘magit-ediff-resolve-all’)
      This command allows you to resolve all conflicts in the file at
      point using Ediff.  If there is no file at point or if it doesn’t
      have any unmerged changes, then this command prompts for a file.
@@ -10102,7 +10102,7 @@ Appendix C Keystroke Index
 * E c:                                   Ediffing.            (line 100)
 * E i:                                   Ediffing.            (line  94)
 * E m:                                   Ediffing.            (line  33)
-* E m <1>:                               Ediffing.            (line  48)
+* E M:                                   Ediffing.            (line  48)
 * E r:                                   Ediffing.            (line  25)
 * E s:                                   Ediffing.            (line  87)
 * E t:                                   Ediffing.            (line  79)

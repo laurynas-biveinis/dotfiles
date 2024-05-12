@@ -692,7 +692,7 @@ When APPEND is specified, append FILES to existing `wfnames-buffer'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240405.946/dash-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240405.946/dash-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327/dash-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327/dash-autoloads.el"))
 
 
 
@@ -4358,7 +4358,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240509.906/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240509.906/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240510.1701/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240510.1701/magit-autoloads.el"))
 
 
 
@@ -12709,7 +12709,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240507.2046" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647" "/Users/laurynas/.emacs.d/elpa/magit-20240509.906" "/Users/laurynas/.emacs.d/elpa/magit-section-20240508.2349" "/Users/laurynas/.emacs.d/elpa/transient-20240509.1849" "/Users/laurynas/.emacs.d/elpa/dash-20240405.946" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240507.2046" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647" "/Users/laurynas/.emacs.d/elpa/magit-20240510.1701" "/Users/laurynas/.emacs.d/elpa/magit-section-20240508.2349" "/Users/laurynas/.emacs.d/elpa/transient-20240509.1849" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

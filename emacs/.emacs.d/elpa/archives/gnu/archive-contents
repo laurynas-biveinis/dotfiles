@@ -1148,7 +1148,7 @@
 	    (:url . "https://elpa.gnu.org/packages/docbook.html")
 	    (:commit . "a59f87c0dc04bcfcf9f55a124658c2e7a585dbd2"))])
  (drepl .
-	[(0 2)
+	[(0 3)
 	 ((emacs
 	   (29 1))
 	  (comint-mime
@@ -1159,7 +1159,7 @@
 	  (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
 	  (:authors
 	   ("Augusto Stoffel" . "arstoffel@gmail.com"))
-	  (:commit . "fc0b28b8b281899c2f00461bf9e83caf13330b54"))])
+	  (:commit . "07c4503763b5880f163b417194d580677f37a819"))])
  (dts-mode .
 	   [(1 0)
 	    ((emacs
@@ -1912,13 +1912,13 @@
 	     (:url . "https://elpa.gnu.org/packages/greenbar.html")
 	     (:commit . "9526f29d073c533c3e54f0a7597eef1587ffb99e"))])
  (gtags-mode .
-	     [(1 5)
+	     [(1 6)
 	      ((emacs
 		(28)))
 	      "GNU Global integration with xref, project and imenu." tar
 	      ((:url . "https://github.com/Ergus/gtags-mode")
 	       (:keywords "xref" "project" "imenu" "gtags" "global")
-	       (:commit . "627b2d458af9d72cc5bc638f133764e7a209333c"))])
+	       (:commit . "a4346a0d771442af39ac77895e5e22b4c72df9b3"))])
  (guess-language .
 		 [(0 0 1)
 		  ((cl-lib
@@ -2786,16 +2786,16 @@
 		("John Heidemann" . "johnh@isi.edu"))
 	       (:commit . "2a25d79f7e5d9ab7298ba40e11e78d1f2ded06d2"))])
  (notmuch-indicator .
-		    [(1 1 0)
+		    [(1 2 0)
 		     ((emacs
 		       (27 1)))
 		     "Display mode line indicator with notmuch-count(1) output" tar
-		     ((:url . "https://git.sr.ht/~protesilaos/notmuch-indicator")
+		     ((:url . "https://github.com/protesilaos/notmuch-indicator")
 		      (:keywords "convenience" "mail")
-		      (:maintainer "notmuch-indicator Development" . "~protesilaos/general-issues@lists.sr.ht")
+		      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		      (:authors
 		       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		      (:commit . "c50cf91ff137ef07db3b0ce4410fca7a3bc94452"))])
+		      (:commit . "7aa1da708aeb9f729e8e0a99ef65341b7344815e"))])
  (ntlm .
        [(2 1 0)
 	nil "NTLM (NT LanManager) authentication support" tar
@@ -2901,7 +2901,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "3847f311077efa17951a786d2759f2639c5f43c8"))])
  (org .
-      [(9 6 29)
+      [(9 6 30)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -2910,7 +2910,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "3d0deadf41e51d9b1ad5aeb5d45861df84c579c6"))])
+	(:commit . "071c6e986c424d2e496be7d0815d6e9cd83ae4e6"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -4356,7 +4356,7 @@
 		   (:url . "https://elpa.gnu.org/packages/uniquify-files.html")
 		   (:commit . "1d76b4f0e283afaff2be053d85f8726ffc3abd6e"))])
  (urgrep .
-	 [(0 4 1)
+	 [(0 5 0)
 	  ((emacs
 	    (27 1))
 	   (compat
@@ -4366,7 +4366,7 @@
 	  "Universal recursive grep" tar
 	  ((:url . "https://github.com/jimporter/urgrep")
 	   (:keywords "grep" "search")
-	   (:commit . "8169f5b5646b606d1273e1230aaf827cdd44a770"))])
+	   (:commit . "df0bb61b3b99c9d1dabec42cb560a84230d20a4e"))])
  (url-http-ntlm .
 		[(2 0 5)
 		 ((cl-lib
