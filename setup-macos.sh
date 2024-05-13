@@ -373,17 +373,16 @@ deactivate
 # Try to install Python development tools outside any virtualenv. If this
 # breaks, then install per-project.
 pip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
-    pyls-memestra jedi pylsp-rope python-lsp-ruff python-lsp-black pylint \
-    pycodestyle pyflakes pandas openpyxl pandas-stubs
+	pyls-memestra jedi pylsp-rope python-lsp-ruff python-lsp-black pylint \
+	pycodestyle pyflakes pandas openpyxl pandas-stubs
 
 # Leftovers from the old-and-broken installation method: scipy pandas
 
 sudo gem install mdl
-brew install --cask rescuetime slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner michaelvillar-timer utm basictex
+brew install --cask slack vlc disk-inventory-x google-chrome dash \
+	telegram keycombiner michaelvillar-timer utm basictex
 # TeX
 sudo tlmgr install dvipng
-# Start RescueTime, login
 
 # Intel
 brew install --cask intel-power-gadget
