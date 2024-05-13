@@ -25,17 +25,17 @@ unzip macOS.zip
 sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
 # Global and login screen setting
 sudo defaults delete /Library/Preferences/com.apple.HIToolbox \
-     AppleEnabledInputSources
+	AppleEnabledInputSources
 sudo defaults write /Library/Preferences/com.apple.HIToolbox \
-     AppleEnabledInputSources -array-add \
-     '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+	AppleEnabledInputSources -array-add \
+	'<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 # Show language menu in the login screen
 defaults write /Library/Preferences/com.apple.loginwindow \
-         showInputMenu -bool true
+	showInputMenu -bool true
 # Current user setting
 defaults delete com.apple.HIToolbox AppleEnabledInputSources
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
-    '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+	'<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 #
 # UI Controls
 #
@@ -76,7 +76,7 @@ defaults write -g NSUseSpellCheckerForCompletions -bool false
 defaults write -g com.apple.mouse.scaling -float 3
 defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string "TwoButton"
 defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode \
-         -string "TwoButton"
+	-string "TwoButton"
 # Drag windows at any point with Ctrl-Opt-Cmd click, from
 # https://twitter.com/nibroc/status/963088893758259200
 defaults write -g NSWindowShouldDragOnGesture YES
@@ -96,7 +96,7 @@ sudo scutil --set HostName new-computer-name
 #
 defaults write com.apple.controlcenter.plist Sound -int 18
 defaults write com.apple.systemuiserver menuExtras -array \
-         "/System/Library/CoreServices/Menu Extras/Volume.menu"
+	"/System/Library/CoreServices/Menu Extras/Volume.menu"
 killall SystemUIServer
 #
 # Application Firewall
@@ -105,7 +105,7 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
 defaults -currentHost write ~/Library/Preferences/com.apple.alf globalstate \
-         -bool true
+	-bool true
 defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
 sudo pkill -HUP socketfilterfw
 #
@@ -147,31 +147,31 @@ sudo systemsetup -settimezone "Europe/Vilnius"
 sudo systemsetup -setnetworktimeserver "time.euro.apple.com"
 sudo systemsetup -setusingnetworktime on
 sudo defaults write com.apple.menuextra.clock DateFormat -string \
-     "EEE d MMM HH:mm:ss"
+	"EEE d MMM HH:mm:ss"
 #
 # Safari
 #
 defaults write \
-         ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari \
-         AutoOpenSafeDownloads -bool false
+	~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari \
+	AutoOpenSafeDownloads -bool false
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
-         WarnAboutFraudulentWebsites -bool true
+	WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
-         TreatSHA1CertificatesAsInsecure -bool true
+	TreatSHA1CertificatesAsInsecure -bool true
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 # Cmd-W should only close tab, never window
 defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' \
-         '<string>@w</string></dict>'
+	'<string>@w</string></dict>'
 defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add \
-         '<string>com.apple.Safari</string>'
+	'<string>com.apple.Safari</string>'
 defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
 defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey \
-         -bool true
+	-bool true
 defaults write com.apple.Safari ShowFavoritesBar -bool false
 defaults write com.apple.Safari \
-         com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled \
-         -bool true
+	com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled \
+	-bool true
 defaults write -g WebKitDeveloperExtras -bool true
 # Enable continuous spellchecking, stolen from https://github.com/mathiasbynens/dotfiles
 defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
@@ -182,11 +182,11 @@ defaults write com.apple.Safari AutoFillPasswords -bool false
 # Terminal
 #
 open \
-    ~/dotfiles/dotfiles/3rd_party/osx-terminal.app-colors-solarized/Solarized\ Dark.terminal
+	~/dotfiles/dotfiles/3rd_party/osx-terminal.app-colors-solarized/Solarized\ Dark.terminal
 defaults write com.apple.Terminal "Default Window Settings" \
-         -string "Solarized Dark"
+	-string "Solarized Dark"
 defaults write com.apple.Terminal "Startup Window Settings" \
-         -string "Solarized Dark"
+	-string "Solarized Dark"
 defaults export com.apple.Terminal /tmp/foo
 plutil -remove "Window Settings.Solarized Dark.CursorBlink" /tmp/foo
 plutil -remove "Window Settings.Solarized Dark.CursorType" /tmp/foo
@@ -211,8 +211,8 @@ defaults write com.apple.finder ShowStatusBar -bool true
 # Show POSIX path in the window title
 defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 defaults -currentHost write \
-         /Library/Preferences/SystemConfiguration/com.apple.finder \
-         AppleShowAllFiles -bool true
+	/Library/Preferences/SystemConfiguration/com.apple.finder \
+	AppleShowAllFiles -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write -g AppleShowAllExtensions -bool true
@@ -227,7 +227,7 @@ sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 # Screen Sharing
 #
 sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist \
-     com.apple.screensharing -dict Disabled -bool false
+	com.apple.screensharing -dict Disabled -bool false
 sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
 #
 # Activity Monitor
@@ -313,10 +313,10 @@ sudo chflags nohidden /Volumes
 brew update
 
 brew install stow git ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
-     hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
-     colordiff iwyu cppcheck infer creduce gnu-sed mas bat fig actionlint \
-     circleci imagemagick ripgrep boost cpplint duf exa clang-build-analyzer \
-     recode difftastic git-lfs plantuml gcalcli asdf watch shfmt
+	hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
+	colordiff iwyu cppcheck infer creduce gnu-sed mas bat fig actionlint \
+	circleci imagemagick ripgrep boost cpplint duf exa clang-build-analyzer \
+	recode difftastic git-lfs plantuml gcalcli asdf watch shfmt
 git lfs install
 
 # gnupg@2.2.41 because newer versions up to 2.4.3 inclusive hang when called
@@ -329,8 +329,8 @@ brew install gnupg@2.2.41
 #
 mas install 497799835 # XCode
 sudo xcodebuild -license accept
-mas install 409201541 # Pages
-mas install 409203825 # Numbers
+mas install 409201541  # Pages
+mas install 409203825  # Numbers
 mas install 1376402589 # StopTheMadness
 mas install 1365531024 # 1Blocker
 # Open App Store, login there
@@ -351,12 +351,12 @@ sudo ln -sf en_US.dic en_LT.dic
 #
 asdf plugin add python
 asdf install python latest
-asdf global python 3.12.2  # Take from the output above
+asdf global python 3.12.2 # Take from the output above
 python -m pip install --upgrade pip setuptools
 python -m pip install virtualenv
 asdf reshim python
 sudo mkdir /opt/virtualenvs
-sudo chown `whoami` /opt/virtualenvs
+sudo chown $(whoami) /opt/virtualenvs
 
 virtualenv /opt/virtualenvs/asitop
 source /opt/virtualenvs/asitop/bin/activate
@@ -394,7 +394,7 @@ brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
 
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
-     /Library/Java/JavaVirtualMachines/openjdk.jdk
+	/Library/Java/JavaVirtualMachines/openjdk.jdk
 
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
@@ -405,5 +405,5 @@ brew tap homebrew/command-not-found
 # Play
 brew install mono
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
-     guitar-pro transcribe
+	guitar-pro transcribe
 duti -s jp.tmkk.XLD .flac all
