@@ -106,6 +106,9 @@ themselves."
 (setq indent-bars-treesit-ignore-blank-lines-types '("module"))
 (add-hook 'prog-mode-hook #'indent-bars-mode)
 
+;; `shfmt'
+(require 'shfmt)
+
 (defun end-of-line-and-newline-and-indent ()
   "Go to the end of line, insert a new line, and indent."
   (interactive)
