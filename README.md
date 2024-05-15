@@ -118,9 +118,6 @@ tramp ts
 * [Clicking on URLs should open them instead of spellchecking them](https://www.reddit.com/r/emacs/comments/it4m2w/weekly_tipstricketc_thread/g5pff92?utm_source=share&utm_medium=web2x&context=3)
 * Workaround [helm-buffers-list error if all-the-icons is used and a dired
   buffer is present](https://github.com/yyoncho/helm-icons/issues/16).
-* Workaround the [emacs-wgrep
-  issue](https://github.com/mhayashi1120/Emacs-wgrep/issues/75) of edited
-  helm-grep buffers over TRAMP not applying their changes.
 * Workaround the [projectile
   issue](https://github.com/bbatsov/projectile/issues/347) of remote projects
   not being added to Projectile project list.

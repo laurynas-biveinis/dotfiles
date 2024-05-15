@@ -16,8 +16,6 @@
 ;;
 ;; Custom keybindings:
 ;; s-p    - Projectile command map
-;; s-p g  - Projectile grep
-;; s-p h  - Projectile grep using Helm
 ;; s-p w  - Projectile reconfigure CMake project
 ;; s-p y  - Projectile kill all buffers and remove the worktree
 
@@ -69,32 +67,6 @@ behavior."
 (projectile-mode +1)
 
 (require 'helm-projectile)
-
-;; Workaround https://github.com/mhayashi1120/Emacs-wgrep/issues/75 by having
-;; both projectile-grep and helm-projectile-grep available in projectile keymap,
-;; so that the plain version can be used if it's going to be edited with wgrep.
-(defun dotfiles--helm-projectile-commander-bindings ()
-  "Map both projectile-grep and helm-projectile-grep to own keys."
-
-  (def-projectile-commander-method ?g
-    "Run grep on project."
-    (projectile-grep))
-
-  (def-projectile-commander-method ?h
-    "Run grep on project using Helm."
-    (helm-projectile-grep)))
-
-(defun dotfiles--helm-projectile-toggle (toggle)
-  "Remap helm-projectile-grep to a separate key, depending on TOGGLE."
-  (if (> toggle 0)
-      (progn
-        (define-key projectile-mode-map [remap projectile-grep] nil)
-        (define-key projectile-command-map (kbd "s h") #'helm-projectile-grep))
-    (define-key projectile-command-map (kbd "s h") nil)))
-
-(advice-add #'helm-projectile-commander-bindings :after
-            #'dotfiles--helm-projectile-commander-bindings)
-(advice-add #'helm-projectile-toggle :after #'dotfiles--helm-projectile-toggle)
 
 (helm-projectile-on)
 
