@@ -28,6 +28,8 @@ export HOMEBREW_NO_INSTALL_CLEANUP=y
 
 fpath+=~/.zsh.d/functions
 
+export LIBRARY_PATH=/usr/local/lib
+
 setopt null_glob
 for script in ~/.zsh.d/env/*; do
     source "$script"
