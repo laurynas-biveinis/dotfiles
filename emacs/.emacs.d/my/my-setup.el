@@ -360,6 +360,10 @@
         (let ((default-directory worktree-path))
           (forge-pull))))))
 
+;; `magit-todos'
+(require 'magit-todos)
+(magit-todos-mode 1)
+
 ;; `git-gutter'
 (require 'git-gutter)
 (setq git-gutter:update-interval 0.02)
