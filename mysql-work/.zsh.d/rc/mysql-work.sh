@@ -446,18 +446,21 @@ mysql_export_environment_helpers() {
     export MY8036=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                    "${my8036_extra[@]}")
 
+    export PS8036D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
+                    "${my8036_extra[@]}")
+
     export MY8035D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8035_extra[@]}")
     export MY8035=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                    "${my8035_extra[@]}")
 
+    export PS8035D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
+                    "${my8035_extra[@]}")
+
     export MY8034D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8034_extra[@]}")
     export MY8034=("${my8r[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                    "${my8034_extra[@]}")
-
-    export PS8035D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
-                    "${my8035_extra[@]}")
 
     export PS8034D=("${my8d[@]}" "${my8033_840[@]}" "${my8018_820[@]}"
                     "${my8034_extra[@]}")
@@ -683,6 +686,11 @@ mysql_cmake() {
         "percona")
             echo "Configuring Percona Server $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                8.0.36)
+                    declare -a debug_flags=("${PS8036D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_830_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 8.0.35)
                     declare -a debug_flags=("${PS8035D[@]}")
                     declare -a -r \
