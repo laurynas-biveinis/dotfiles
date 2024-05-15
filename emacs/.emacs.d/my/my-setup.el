@@ -198,6 +198,9 @@
 ;; Save bookmarks automatically
 (setq bookmark-save-flag 1)
 
+;;; Persistence
+
+
 ;;; Help
 
 ;; `which-key'
