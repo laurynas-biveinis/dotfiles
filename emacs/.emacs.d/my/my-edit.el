@@ -107,6 +107,9 @@ themselves."
 (add-hook 'prog-mode-hook #'indent-bars-mode)
 
 ;; `shfmt'
+;; For now leave `shfmt-buffer' and `shfmt-region' unbound, because
+;; bash-language-server provides the same functionality. We could use the LSP
+;; shortcuts ("S-l = =" and "S-l = r") for zsh buffers though.
 (require 'shfmt)
 
 (defun end-of-line-and-newline-and-indent ()
