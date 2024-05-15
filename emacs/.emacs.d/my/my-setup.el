@@ -192,14 +192,19 @@
 (advice-add #'make-flyspell-overlay :before-while
             #'dotfiles--no-flyspell-overlay-on-goto-address)
 
+;;; History
+(setq history-length t
+      history-delete-duplicates t)
+
+;; History persistence
+(require 'savehist)
+(setq savehist-additional-variables '(search-ring regexp-search-ring))
+(savehist-mode 1)
+
 ;;; `bookmark'
 (require 'bookmark)
-
 ;; Save bookmarks automatically
 (setq bookmark-save-flag 1)
-
-;;; Persistence
-
 
 ;;; Help
 
@@ -237,8 +242,7 @@
 
 ;;; Misc settings
 
-(setq history-delete-duplicates t
-      read-process-output-max (* 1024 1024)
+(setq read-process-output-max (* 1024 1024)
       switch-to-prev-buffer-skip 'this
       next-error-message-highlight t
       ps-print-color-p 'black-white)
