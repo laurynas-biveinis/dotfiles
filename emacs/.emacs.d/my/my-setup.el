@@ -362,6 +362,8 @@
 
 ;; `magit-todos'
 (require 'magit-todos)
+(setq magit-todos-group-by '(magit-todos-item-suffix magit-todos-item-keyword
+                                                     magit-todos-item-filename))
 (magit-todos-mode 1)
 
 ;; `git-gutter'
