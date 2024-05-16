@@ -7,4 +7,6 @@
                               (file-name-directory
                                (let ((d (dir-locals-find-file "./")))
                                  (if (stringp d) d (car d)))))))))
- (c++-mode . ((c-file-style . "google"))))
+ (c++-mode . ((c-file-style . "google")))
+ (magit-status-mode . ((magit-todos-exclude-globs . (".git/" "arcanist/"
+                                                     "extra/")))))
