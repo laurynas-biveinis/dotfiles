@@ -163,8 +163,10 @@ optional and specified by the following properties on the task being clocked-in:
        :tcolumns 0))
 
 ;;; Logging
-(setq org-log-into-drawer t
-      org-closed-keep-when-no-todo t)
+;; Since tasks start out in "WAIT", this setting logs the time of the change to
+;; "TODO", roughly serving as the task creation timestamp.
+(setq org-log-into-drawer t)
+(setq org-closed-keep-when-no-todo t)
 
 ;;; Linking
 (setq org-return-follows-link t
