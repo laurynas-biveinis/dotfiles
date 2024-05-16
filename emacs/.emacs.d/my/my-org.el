@@ -256,6 +256,28 @@ event of an error or nonlocal exit."
 (advice-add #'org-ctrl-c-ctrl-c   :around #'dotfiles--org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'dotfiles--org-checkbox-toggle-advice)
 
+;; Change task to DONE if all checkboxes are checked off, taken from
+;; https://orgmode.org/worg/org-hacks.html#mark-done-when-all-checkboxes-checked
+(defun dotfiles--checkbox-list-complete ()
+  "Mark heading done when all checkboxes are completed."
+  (save-excursion
+    (org-back-to-heading t)
+    (let ((beg (point)) end)
+      (end-of-line)
+      (setq end (point))
+      (goto-char beg)
+      (if (re-search-forward "\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]" end t)
+          (if (match-end 1)
+              (if (equal (match-string 1) "100%")
+                  ;; all done - do the state change
+                  (org-todo 'done)
+                (org-todo 'todo))
+            (if (and (> (match-end 2) (match-beginning 2))
+                     (equal (match-string 2) (match-string 3)))
+                (org-todo 'done)
+              (org-todo 'todo)))))))
+(add-hook 'org-checkbox-statistics-hook #'dotfiles--checkbox-list-complete)
+
 ;;; Integration with Helm
 (setq org-outline-path-complete-in-steps nil)
 
