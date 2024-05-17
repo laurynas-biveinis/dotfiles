@@ -44,6 +44,8 @@ themselves."
 
 (add-hook 'prog-mode-hook #'dotfiles--maybe-enable-electric-layout-mode)
 
+(add-hook 'prog-mode-hook #'abbrev-mode)
+
 (global-so-long-mode 1)
 (delete-selection-mode 1)  ;; Typing or <Delete> will remove selected text
 
