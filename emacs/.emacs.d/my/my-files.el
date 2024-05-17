@@ -80,6 +80,19 @@
 (require 'wdired)
 (setq wdired-allow-to-change-permissions t)
 
+(defun dotfiles--turn-on-highlight-changes ()
+  "Turn on `highlight-changes-mode'."
+  (highlight-changes-mode 1))
+
+(defun dotfiles--turn-off-highlight-changes ()
+  "Turn on `highlight-changes-mode'."
+  (highlight-changes-mode -1))
+
+(add-hook 'wdired-mode-hook #'dotfiles--turn-on-highlight-changes)
+(advice-add #'wdired-finish-edit :before #'dotfiles--turn-off-highlight-changes)
+(advice-add #'wdired-abort-changes :before
+            #'dotfiles--turn-off-highlight-changes)
+
 (require 'all-the-icons-dired)
 (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
 
