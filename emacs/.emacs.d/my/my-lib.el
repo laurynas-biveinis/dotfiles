@@ -15,11 +15,22 @@
 
 (defconst dotfiles--gh-pr-in-subject "^.*\(PR #\\([0-9]+\\)\)$")
 (defconst dotfiles--gh-url-prefix "https://github.com/")
+(defconst dotfiles--gh-url-format
+  (concat "\\(" dotfiles--gh-url-prefix ".*/.*/pull/%s\\)"))
 (defconst dotfiles--gh-closed-pr-url-format
-  (concat "Closed .*\\(" dotfiles--gh-url-prefix ".*/.*/pull/%s\\)"))
+  (concat "Closed .*" dotfiles--gh-url-format))
+(defconst dotfiles--gh-commented-pr-url-format
+  (concat dotfiles--gh-url-format "#.*"))
 (defconst dotfiles--gh-org-and-project
   (concat dotfiles--gh-url-prefix "\\(.*\\)/pull/[0-9]+"))
 (defconst dotfiles--gh-repo "\\(https://github.com/.*/.*\\)/pull/[0-9]+")
+
+;;; regex helpers
+
+(defun dotfiles--string-match-string (regex string)
+  "Return the 1st match for REGEX in STRING, nil otherwise."
+  (when (string-match regex string)
+    (match-string 1 string)))
 
 ;;; External program helpers
 
@@ -113,6 +124,19 @@ ARGS must be properly quoted if needed."
      (when (string-suffix-p ".jpg" path t)
        (mm-save-part-to-file handle path)))))
 
+;;; GitHub helpers
+
+(defun dotfiles--get-closed-pr-url (pr-id html-content)
+  "Return the URL of a closed GitHub PR with PR-ID in HTML-CONTENT or nil."
+  (let ((closed-pr-url-regex (format dotfiles--gh-closed-pr-url-format pr-id)))
+    (dotfiles--string-match-string closed-pr-url-regex html-content)))
+
+(defun dotfiles--get-commented-pr-url (pr-id html-content)
+  "Return the URL of a commented GitHub PR with PR-ID in HTML-CONTENT or nil."
+  (let ((commented-pr-url-regex
+         (format dotfiles--gh-commented-pr-url-format pr-id)))
+    (dotfiles--string-match-string commented-pr-url-regex html-content)))
+
 ;;; `org' helpers
 
 (require 'org-element)
@@ -142,6 +166,19 @@ ARGS must be properly quoted if needed."
         (when node
           (setq found (list :buffer buffer :headline node)))))
     found))
+
+(defmacro dotfiles--with-org-node-with-url (url &rest body)
+  "Go to the Org node with the URL property value, execute the forms of BODY."
+  (declare (indent 1) (debug t))
+  `(let ((org-info (dotfiles--find-org-node-with-url-property ,url)))
+     (when (not org-info)
+       (user-error "URL %s not found in Org!" ,url))
+     (let* ((org-buffer (plist-get org-info :buffer))
+            (org-headline (plist-get org-info :headline))
+            (headline-pos (org-element-property :begin org-headline)))
+       (with-current-buffer org-buffer
+         (goto-char headline-pos)
+         ,@body))))
 
 (require 'org-clock)
 
