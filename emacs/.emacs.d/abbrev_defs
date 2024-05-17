@@ -24,6 +24,12 @@ const auto call_i = call_ctr.fetch_add(1, std::memory_order_relaxed);" nil :coun
     ("usize" "std::size_t" nil :count 0)
    ))
 
+(define-abbrev-table 'emacs-lisp-mode-abbrev-table
+  '(
+    ("fml" ";; FIXME(laurynas): " nil :count 2)
+    ("tdl" ";; TODO(laurynas): " nil :count 2)
+   ))
+
 (define-abbrev-table 'rustic-mode-abbrev-table
   '(
     ("fml" "// FIXME(laurynas): " nil :count 1)
