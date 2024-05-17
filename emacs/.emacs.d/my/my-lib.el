@@ -187,6 +187,7 @@ ARGS must be properly quoted if needed."
   (unless (org-clocking-p)
     (user-error "No org task is clocked-in")))
 
+;; TODO(laurynas): convert to `defmacro' taking forms to execute
 (defun dotfiles--with-different-org-clock (func &rest args)
   "Save the current org clock, clock-in, call FUNC with ARGS, restore clock.
 
