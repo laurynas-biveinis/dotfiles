@@ -22,7 +22,7 @@ import sys
 
 sys.path.append(os.path.expanduser('~/usr/lib/python'))
 
-import common
+from common import QIFInvestmentTransaction
 
 CONFIG_FN = "~/.goindex2qif"
 
@@ -58,8 +58,8 @@ with open(args.output, "w", encoding='utf-8') as output_file:
         unit_price = row['Fondo vieneto kaina'].replace(",", ".")
         count = row['Vnt. kiekis'].replace(",", ".")
         fee = row['Mokestis']
-        qif_trx = QIFInvestmentTransaction(date, amount, unit_price, count,
-                                           fee)
+        qif_trx = QIFInvestmentTransaction(date, security, fee, amount,
+                                           unit_price, count)
         print(qif_trx)
 
         output_file.write(f"D{date}\n")
