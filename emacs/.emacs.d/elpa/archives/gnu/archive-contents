@@ -1321,14 +1321,14 @@
 		     (:url . "https://elpa.gnu.org/packages/electric-spacing.html")
 		     (:commit . "122ac5d08c3d3d91251752136abab9721d90e36c"))])
  (elisp-benchmarks .
-		   [(1 15)
+		   [(1 16)
 		    nil "elisp benchmarks collection" tar
 		    ((:keywords "languages" "lisp")
 		     (:maintainer "Andrea Corallo" . "acorallo@gnu.org")
 		     (:authors
 		      ("Andrea Corallo" . "acorallo@gnu.org"))
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
-		     (:commit . "869a51d70200b2e86e0b78793f4a99c8e690b996"))])
+		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
 	 [(0 9 4)
 	  ((emacs
@@ -2401,7 +2401,7 @@
 	    ("Adam Porter" . "adam@alphapapa.net"))
 	   (:commit . "61c511541af474027c012de7063ddfdb3f8cc780"))])
  (llm .
-      [(0 14 3)
+      [(0 15 0)
        ((emacs
 	 (28 1))
 	(plz
@@ -2411,7 +2411,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "0f25d08218bdd3ea808d6d15328482327a551471"))])
+	(:commit . "ebb7b6e4cddfd33429440bdc7387a11aac20a153"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
@@ -4730,14 +4730,14 @@
 	    (:url . "https://elpa.gnu.org/packages/wpuzzle.html")
 	    (:commit . "9373cbc013b978b31e38822bfdcc9a7fc5e0ed99"))])
  (wrap-search .
-	      [(4 15 11)
+	      [(4 16 13)
 	       nil "wrapped, non-incremental search" tar
 	       ((:url . "https://dataswamp.org/~incal/emacs-init/wrap-search.el")
 		(:keywords "matching")
 		(:maintainer "Emanuel Berg" . "incal@dataswamp.org")
 		(:authors
 		 ("Emanuel Berg" . "incal@dataswamp.org"))
-		(:commit . "ca5f1d62f6b96fbe34788b9d8929c14b06fc49ef"))])
+		(:commit . "d4f73decdf1c624bb2bb3e0bf2292bae4b660fde"))])
  (xclip .
 	[(1 11)
 	 nil "Copy&paste GUI clipboard from text terminal" tar
