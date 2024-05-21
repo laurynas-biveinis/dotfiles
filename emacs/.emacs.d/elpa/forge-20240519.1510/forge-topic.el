@@ -327,19 +327,17 @@ Likewise those faces should not set `:weight' or `:slant'."
 If there is no such topic and DEMAND is non-nil, then signal
 an error."
   (or (forge-topic-at-point)
-      (and (derived-mode-p 'forge-topic-mode)
-           forge-buffer-topic)
+      forge-buffer-topic
       (and demand (user-error "No current topic"))))
 
-(defun forge-topic-at-point (&optional demand not-thingatpt)
+(defun forge-topic-at-point (&optional demand)
   "Return the topic at point.
 If there is no such topic and DEMAND is non-nil, then signal
 an error.  If NOT-THINGATPT is non-nil, then don't use
 `thing-at-point'."
-  (or (and (not not-thingatpt)
-           (thing-at-point 'forge-topic))
+  (or (thing-at-point 'forge-topic)
       (magit-section-value-if '(issue pullreq))
-      (forge-get-pullreq :branch (magit-branch-at-point))
+      (forge-get-pullreq :branch)
       (and (derived-mode-p 'forge-topic-list-mode)
            (and-let* ((id (tabulated-list-get-id)))
              (forge-get-topic id)))
@@ -356,13 +354,6 @@ an error.  If NOT-THINGATPT is non-nil, then don't use
                       #'forge-get-pullreq
                     #'forge-get-topic)
                   repo (string-to-number (match-string-no-properties 1))))))
-
-(defun forge--repo-for-thingatpt ()
-  (or (forge-repository-at-point)
-      (and-let* ((topic (forge-topic-at-point nil 'not-thingatpt)))
-        (forge-get-repository topic))
-      (and (not forge-buffer-unassociated-p)
-           (forge-get-repository :known?))))
 
 (defun forge-region-topics ()
   (cond

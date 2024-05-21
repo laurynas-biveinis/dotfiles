@@ -130,7 +130,7 @@ then return that repository.
 Otherwise return the repository for `default-directory', if that
 exists and satisfies DEMAND.  If that fails too, then return nil
 or signal an error, depending on DEMAND."
-  (or (and-let* ((repo (or forge-buffer-repository
+  (or (and-let* ((repo (or (forge-buffer-repository)
                            (and forge-buffer-topic
                                 (forge-get-repository forge-buffer-topic)))))
         (forge-get-repository repo 'noerror demand))
@@ -295,22 +295,38 @@ nil."
 
 ;;;; Current
 
-(defun forge-current-repository ()
-  "Return the repository at point or being visited."
+(defun forge-current-repository (&optional demand)
+  "Return the repository at point or being visited.
+If there is no such repository and DEMAND is non-nil, then signal
+an error."
   (or (forge-repository-at-point)
-      (forge-get-repository :known?)))
+      (forge-buffer-repository)
+      (forge-get-repository :known?)
+      (and demand (user-error "No current repository"))))
 
 (defun forge-repository-at-point (&optional demand)
   "Return the repository at point.
 If there is no such repository and DEMAND is non-nil, then signal
 an error."
   (or (magit-section-value-if 'forge-repo)
-      (and-let* ((topic (forge-topic-at-point nil 'not-thingatpt)))
+      (and-let* ((topic (forge-topic-at-point)))
         (forge-get-repository topic))
       (and (derived-mode-p 'forge-repository-list-mode)
            (and-let* ((id (tabulated-list-get-id)))
              (forge-get-repository :id id)))
       (and demand (user-error "No repository at point"))))
+
+(defun forge--repo-for-thingatpt ()
+  (or (magit-section-value-if 'forge-repo)
+      (and-let* ((topic (magit-section-value-if '(issue pullreq))))
+        (forge-get-repository topic))
+      (and (not forge-buffer-unassociated-p)
+           (or (forge-buffer-repository)
+               (forge-get-repository :known?)))))
+
+(defun forge-buffer-repository ()
+  (and-let* ((id forge-buffer-repository))
+    (forge-get-repository id)))
 
 ;;;; List
 
@@ -379,7 +395,7 @@ forges and hosts."
                (or their-id path)))))
 
 (cl-defmethod forge--repository-ids ((_class (subclass forge-noapi-repository))
-                                     host owner name &optional _stub)
+                                     host owner name &optional _stub _noerror)
   (let ((their-id (if owner (concat owner "/" name) name)))
     (cons (base64-encode-string
            (format "%s:%s"
