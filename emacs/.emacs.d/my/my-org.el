@@ -270,12 +270,12 @@ event of an error or nonlocal exit."
           (if (match-end 1)
               (if (equal (match-string 1) "100%")
                   ;; all done - do the state change
-                  (org-todo 'done)
-                (org-todo 'todo))
+                  (org-todo "DONE")
+                (org-todo "TODO"))
             (if (and (> (match-end 2) (match-beginning 2))
                      (equal (match-string 2) (match-string 3)))
-                (org-todo 'done)
-              (org-todo 'todo)))))))
+                (org-todo "DONE")
+              (org-todo "TODO")))))))
 (add-hook 'org-checkbox-statistics-hook #'dotfiles--checkbox-list-complete)
 
 ;;; Integration with Helm
