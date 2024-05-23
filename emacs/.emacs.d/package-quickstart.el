@@ -4488,7 +4488,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240514.1843/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240514.1843/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240522.204/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240522.204/magit-autoloads.el"))
 
 
 
@@ -11634,7 +11634,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240519.1510/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240519.1510/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240522.1627/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240522.1627/forge-autoloads.el"))
 
 
 
@@ -11660,6 +11660,7 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
 
 
  (autoload 'forge-dispatch "forge-commands" nil t)
+ (autoload 'forge-configure "forge-commands" nil t)
 (autoload 'forge-pull "forge-commands" "\
 Pull forge topics for the current repository if it is already tracked.
 If the current repository is still untracked locally, or the current
@@ -13205,7 +13206,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240519.1510" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647" "/Users/laurynas/.emacs.d/elpa/magit-20240514.1843" "/Users/laurynas/.emacs.d/elpa/magit-section-20240508.2349" "/Users/laurynas/.emacs.d/elpa/transient-20240509.1849" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240522.1627" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647" "/Users/laurynas/.emacs.d/elpa/magit-20240522.204" "/Users/laurynas/.emacs.d/elpa/magit-section-20240508.2349" "/Users/laurynas/.emacs.d/elpa/transient-20240509.1849" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240415.1558" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

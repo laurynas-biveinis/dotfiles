@@ -30,6 +30,7 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
 ;;; Generated autoloads from forge-commands.el
 
  (autoload 'forge-dispatch "forge-commands" nil t)
+ (autoload 'forge-configure "forge-commands" nil t)
 (autoload 'forge-pull "forge-commands" "\
 Pull forge topics for the current repository if it is already tracked.
 If the current repository is still untracked locally, or the current
