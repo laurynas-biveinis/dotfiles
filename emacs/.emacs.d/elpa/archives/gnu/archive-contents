@@ -682,7 +682,7 @@
 	    ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	   (:commit . "8d4e8a366681def88751f5e9975738ecd3180deb"))])
  (consult .
-	  [(1 6)
+	  [(1 7)
 	   ((emacs
 	     (27 1))
 	    (compat
@@ -691,7 +691,7 @@
 	   ((:url . "https://github.com/minad/consult")
 	    (:keywords "matching" "files" "completion")
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
-	    (:commit . "6eba1a3fa8e13681091a30b2490a03bdce5f243a"))])
+	    (:commit . "fe4852280006e61be7f1374d021ee06155ce5a26"))])
  (consult-denote .
 		 [(0 0 0)
 		  ((emacs
@@ -744,7 +744,7 @@
 		      ("Jackson Ray Hamilton" . "jackson@jacksonrayhamilton.com"))
 		     (:commit . "1b30a28857727202d1f6a027f83ad66151fb1e92"))])
  (corfu .
-	[(1 3)
+	[(1 4)
 	 ((emacs
 	   (27 1))
 	  (compat
@@ -755,7 +755,7 @@
 	  (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	  (:authors
 	   ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	  (:commit . "6088f0550dc8f10f5bcf6f24d35ce24159b01b43"))])
+	  (:commit . "cdc3e13ad312f5f12b3f78f842fff0b398eb4473"))])
  (coterm .
 	 [(1 6)
 	  ((emacs
@@ -2016,6 +2016,13 @@
 	      (:keywords "comm" "convenience" "files" "frames" "hypermedia" "languages" "mail" "matching" "mouse" "multimedia" "outlines" "tools" "wp")
 	      (:maintainer "Mats Lidell" . "matsl@gnu.org")
 	      (:commit . "23b118ddb6e0595e3b0668dbce8fa4e8bcec5e71"))])
+ (idlwave .
+	  [(6 5 1)
+	   nil "IDL editing mode for GNU Emacs" tar
+	   ((:keywords "languages")
+	    (:maintainer "J.D. Smith" . "jdtsmith@gmail.com")
+	    (:url . "https://elpa.gnu.org/packages/idlwave.html")
+	    (:commit . "e1fcd7244cb32df1e90b09729e53474e50a2e808"))])
  (ilist .
 	[(0 3)
 	 nil "Display a list in an ibuffer way." tar
@@ -4770,18 +4777,19 @@
 	  ("Yuan Fu" . "casouri@gmail.com"))
 	 (:commit . "ea4fa859c1129243b15f259a10e67ea274c5ef63"))])
  (xelb .
-       [(0 18)
+       [(0 19)
 	((emacs
-	  (24 4))
-	 (cl-generic
-	  (0 2)))
+	  (27 1)))
 	"X protocol Emacs Lisp Binding" tar
-	((:url . "https://github.com/ch11ng/xelb")
+	((:url . "https://github.com/emacs-exwm/xelb")
 	 (:keywords "unix")
-	 (:maintainer "Chris Feng" . "chris.w.feng@gmail.com")
+	 (:maintainer
+	  ("Adrián Medraño Calvo" . "adrian@medranocalvo.com")
+	  ("Steven Allen" . "steven@stebalien.com")
+	  ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	 (:authors
 	  ("Chris Feng" . "chris.w.feng@gmail.com"))
-	 (:commit . "0f10c956349515b17bf1b5ac1fb7c65a736d401d"))])
+	 (:commit . "3546afe73ef7c65181624da3a99ee6d7d7278582"))])
  (xpm .
       [(1 0 5)
        ((cl-lib
