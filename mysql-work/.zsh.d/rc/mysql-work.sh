@@ -818,6 +818,10 @@ mysql_cmake() {
             echo "CMake options: ${release_flags[@]} $@"
             cmake -G Ninja .. "${release_flags[@]}" "$@"
             ;;
+        *)
+            2>&1 echo "Must choose either debug or release build"
+            return 1
+            ;;
     esac
 }
 
