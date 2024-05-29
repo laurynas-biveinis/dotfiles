@@ -946,15 +946,9 @@ to difftastic."
               (replace-match (cdr regexp-replacement) t nil arg)))))
        args)))))
 
-;;;###autoload
-(defun difftastic-git-diff-range (&optional rev-or-range args files)
-  "Show difference between two commits using difftastic.
-The meaning of REV-OR-RANGE, ARGS, and FILES is like in
-`magit-diff-range', but ARGS are adjusted for difftastic with
-`difftastic--transform-diff-arguments'."
-  (interactive (cons (magit-diff-read-range-or-commit "Diff for range"
-                                                      nil current-prefix-arg)
-                     (magit-diff-arguments)))
+(defun difftastic--git-diff-range (rev-or-range args files)
+  "Implementation for `difftastic-git-diff-range'.
+See the original function documentation for REV-OR-RANGE, ARGS, and FILES."
   (pcase-let* ((`(,git-args ,difftastic-args)
                 (difftastic--transform-diff-arguments args))
                (buffer-name
@@ -976,6 +970,17 @@ The meaning of REV-OR-RANGE, ARGS, and FILES is like in
        ,@(when rev-or-range (list rev-or-range))
        ,@(when files (cons "--" files)))
      difftastic-args)))
+
+;;;###autoload
+(defun difftastic-git-diff-range (&optional rev-or-range args files)
+  "Show difference between two commits using difftastic.
+The meaning of REV-OR-RANGE, ARGS, and FILES is like in
+`magit-diff-range', but ARGS are adjusted for difftastic with
+`difftastic--transform-diff-arguments'."
+  (interactive (cons (magit-diff-read-range-or-commit "Diff for range"
+                                                      nil current-prefix-arg)
+                     (magit-diff-arguments)))
+  (difftastic--git-diff-range rev-or-range args files))
 
 ;;;###autoload
 (defun difftastic-magit-diff (&optional args files)
@@ -1026,6 +1031,15 @@ The meaning of REV-OR-RANGE, ARGS, and FILES is like in
         (_
          (call-interactively #'difftastic-git-diff-range)))))))
 
+(defun difftastic--magit-show (rev)
+  "Implementation for `difftastic-magit-show'.
+See the original function documentation for REV."
+  (if (not rev)
+      (user-error "No revision specified")
+    (difftastic--git-with-difftastic
+     (get-buffer-create (concat "*difftastic git show " rev "*"))
+     (list "git" "--no-pager" "show" "--ext-diff" rev))))
+
 ;;;###autoload
 (defun difftastic-magit-show (rev)
   "Show the result of \\='git show REV\\=' with difftastic.
@@ -1039,11 +1053,7 @@ When REV couldn't be guessed or called with prefix arg ask for REV."
                    (magit-branch-or-commit-at-point)))
           ;; Otherwise, query the user.
           (magit-read-branch-or-commit "Revision"))))
-  (if (not rev)
-      (error "No revision specified")
-    (difftastic--git-with-difftastic
-     (get-buffer-create (concat "*difftastic git show " rev "*"))
-     (list "git" "--no-pager" "show" "--ext-diff" rev))))
+  (difftastic--magit-show rev))
 
 (defun difftastic--make-temp-file (prefix buffer)
   "Make a temporary file for BUFFER content with PREFIX included in file name."
@@ -1287,23 +1297,9 @@ temporary file or nil otherwise."
         (user-error "Buffer %s [%s] doesn't exist anymore" prefix buffer))
     file-buf))
 
-;;;###autoload
-(defun difftastic-rerun (&optional lang-override)
-  "Rerun difftastic in the current buffer.
-Optionally, provide a LANG-OVERRIDE to override language used.
-See \\='difft --list-languages\\=' for language list.  When
-function is called with a prefix arg then ask for language before
-running difftastic.
-
-In order to determine requested width for difftastic a call to
-`difftastic-rerun-requested-window-width-function' is made.  When
-the latter is set to nil the call is made to
-`difftastic-requested-window-width-function'."
-  (interactive (list
-                (when current-prefix-arg
-                  (completing-read "Language: "
-                                   (difftastic--get-languages) nil t)))
-               difftastic-mode)
+(defun difftastic--rerun (lang-override)
+  "Implementation for `difftastic-rerun'.
+See the original function documentation for LANG-OVERRIDE."
   (if-let (((eq major-mode 'difftastic-mode))
            (rerun-alist (copy-tree difftastic--rerun-alist)))
       (difftastic--with-file-bufs (file-buf-A file-buf-B)
@@ -1343,6 +1339,25 @@ the latter is set to nil the call is made to
                (difftastic--delete-temp-file-buf file-buf-A)
                (difftastic--delete-temp-file-buf file-buf-B))))))
     (user-error "Nothing to rerun")))
+
+;;;###autoload
+(defun difftastic-rerun (&optional lang-override)
+  "Rerun difftastic in the current buffer.
+Optionally, provide a LANG-OVERRIDE to override language used.
+See \\='difft --list-languages\\=' for language list.  When
+function is called with a prefix arg then ask for language before
+running difftastic.
+
+In order to determine requested width for difftastic a call to
+`difftastic-rerun-requested-window-width-function' is made.  When
+the latter is set to nil the call is made to
+`difftastic-requested-window-width-function'."
+  (interactive (list
+                (when current-prefix-arg
+                  (completing-read "Language: "
+                                   (difftastic--get-languages) nil t)))
+               difftastic-mode)
+  (difftastic--rerun lang-override))
 
 (provide 'difftastic)
 ;;; difftastic.el ends here
