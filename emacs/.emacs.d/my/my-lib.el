@@ -187,21 +187,21 @@ ARGS must be properly quoted if needed."
   (unless (org-clocking-p)
     (user-error "No org task is clocked-in")))
 
-;; TODO(laurynas): convert to `defmacro' taking forms to execute
-(defun dotfiles--with-different-org-clock (func &rest args)
-  "Save the current org clock, clock-in, call FUNC with ARGS, restore clock.
+(defmacro dotfiles--with-different-org-clock (&rest body)
+  "Save the current org clock, clock-in, execute the forms of BODY.
 
 The marker must be at the new clock position."
-  (let ((current-clock-marker (when (org-clocking-p)
-                                (copy-marker org-clock-marker))))
-    (unwind-protect
-        (progn
-          (org-clock-in)
-          (apply func args))
-      (if current-clock-marker
-          (org-with-point-at current-clock-marker
-            (org-clock-in))
-        (org-clock-out)))))
+  (declare (indent 1) (debug t))
+  `(let ((current-clock-marker (when (org-clocking-p)
+                                 (copy-marker org-clock-marker))))
+     (unwind-protect
+         (progn
+           (org-clock-in)
+           ,@body)
+       (if current-clock-marker
+           (org-with-point-at current-clock-marker
+             (org-clock-in))
+         (org-clock-out)))))
 
 (defun dotfiles--read-org-headline ()
   "Get the target `org' headline for the capture."
