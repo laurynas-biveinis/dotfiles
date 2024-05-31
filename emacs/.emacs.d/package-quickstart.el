@@ -9822,9 +9822,26 @@ it is disabled.
 
 
 
-(autoload 'indent-bars-ts-setup "indent-bars-ts" "\
-Setup indent-bars for using with treesiter.")
+(autoload 'indent-bars-ts-mode "indent-bars-ts" "\
+Minor mode for indent-bars using treesitter.
+
+This is a minor mode.  If called interactively, toggle the
+`Indent-Bars-Ts mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `indent-bars-ts-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
 (register-definition-prefixes "indent-bars-ts" '("ibtcs" "indent-bars-"))
+
 
 
 (provide 'indent-bars-autoloads)
