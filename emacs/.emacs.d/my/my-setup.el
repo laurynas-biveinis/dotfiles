@@ -1079,7 +1079,19 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             helm-mini kill-ring-save mu4e-headers-view-message
                             magit-stage org-todo goto-line mu4e-view-quit
                             org-agenda-clock-in balance-windows
-                            isearch-delete-char helm-M-x xref-find-definitions))
+                            isearch-delete-char helm-M-x xref-find-definitions
+                            beginend-prog-mode-goto-beginning kill-region
+                            lsp-execute-code-action back-to-indentation
+                            kill-word org-end-of-line
+                            deadgrep-toggle-file-results helm-ff-RET
+                            exit-minibuffer magit-status
+                            beginend-org-mode-goto-beginning flycheck-next-error
+                            isearch-forward-thing-at-point kill-visual-line
+                            isearch-repeat-backward beginend-prog-mode-goto-end
+                            undo-tree-undo helm-projectile-switch-project
+                            xref-go-back helm-previous-line keyboard-quit
+                            beginend-org-agenda-mode-goto-beginning
+                            helm-keyboard-quit deadgrep))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
