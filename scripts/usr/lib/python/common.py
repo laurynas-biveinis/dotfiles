@@ -6,6 +6,7 @@ class QIFInvestmentTransaction:
 
     # pylint: disable-next=too-many-arguments
     def __init__(self, date, security, fee, amount, unit_price, count):
+        """Create a QIF investment transaction."""
         self._date = date
         self._security = security
         self._fee = fee
@@ -14,6 +15,7 @@ class QIFInvestmentTransaction:
         self._count = count
 
     def __str__(self):
+        """Return a string representation of this transaction."""
         return (
             f"QIFInvestmentTransaction(Date: {self._date}, "
             f"amount: {self._amount}, unit price: {self._unit_price}, "
