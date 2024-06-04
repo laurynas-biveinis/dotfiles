@@ -228,9 +228,10 @@ Likewise those faces should not set `:weight' or `:slant'."
 ;;;; Labels
 
 (defface forge-topic-label
-  `((t :box ( :line-width ,(if (>= emacs-major-version 28) (cons -1 -1) -1)
+  `((t :inherit secondary-selection
+       :box ( :line-width ,(if (>= emacs-major-version 28) (cons -1 -1) -1)
               :style released-button)))
-  "Face used for topic labels."
+  "Face used for topic labels, marks and milestones."
   :group 'forge-faces)
 
 ;;;; Post Details
@@ -786,14 +787,14 @@ can be selected from the start."
       (funcall forge-format-avatar-function person)
     ""))
 
-(defun forge--format-boolean (slot name)
+(defun forge--format-boolean (slot name &optional obj)
   ;; Booleans are formatted differently in transients and headers.
   ;; Use this to format the (complete) description of suffix commands.
-  (let ((topic (forge-current-topic)))
-    (if (and topic (slot-exists-p topic slot))
+  (let ((obj (or obj (forge-current-topic))))
+    (if (and obj (slot-exists-p obj slot))
         (format (propertize "[%s]" 'face 'transient-delimiter)
                 (propertize name 'face
-                            (if (eieio-oref topic slot)
+                            (if (eieio-oref obj slot)
                                 'transient-value
                               'transient-inactive-value)))
       (format "[%s]" name))))

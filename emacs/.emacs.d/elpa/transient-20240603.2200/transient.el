@@ -2513,7 +2513,7 @@ value.  Otherwise return CHILDREN as is."
                   ;; We cannot use `current-prefix-arg' because it is set
                   ;; too late (in `command-execute'), and if it were set
                   ;; earlier, then we likely still would not be able to
-                  ;; rely on it and `prefix-command-preserve-state-hook'
+                  ;; rely on it, and `prefix-command-preserve-state-hook'
                   ;; would have to be used to record that a universal
                   ;; argument is in effect.
                   (not prefix-arg)))
@@ -3752,9 +3752,9 @@ have a history of their own.")
              (transient-with-shadowed-buffer
                (let* ((transient--pending-group column)
                       (rows (mapcar #'transient-format (oref column suffixes))))
-                 (when-let ((desc (transient-format-description column)))
-                   (push desc rows))
-                 (flatten-tree rows))))
+                 (if-let ((desc (transient-format-description column)))
+                     (cons desc rows)
+                   rows))))
            (oref group suffixes)))
          (vp (or (oref transient--prefix variable-pitch)
                  transient-align-variable-pitch))
@@ -3771,7 +3771,7 @@ have a history of their own.")
                                   col))))
                      columns))
          (cc (transient--seq-reductions-from
-              (apply-partially #'+ (* 3 (if vp (transient--pixel-width " ") 1)))
+              (apply-partially #'+ (* 2 (if vp (transient--pixel-width " ") 1)))
               cw 0)))
     (if transient-force-single-column
         (dotimes (c cs)

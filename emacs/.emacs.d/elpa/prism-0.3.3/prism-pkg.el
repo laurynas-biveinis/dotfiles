@@ -1,7 +1,8 @@
-(define-package "prism" "0.3.2" "Customizable, depth-based syntax coloring"
-  '((emacs "26.1")
+(define-package "prism" "0.3.3" "Customizable, depth-based syntax coloring"
+  '((emacs "27.1")
+    (compat "29.1.4.5")
     (dash "2.14.1"))
-  :commit "169b49afa91e69d35b8756df49ed3ca06f418d35" :authors
+  :commit "f64f9811b80a80956ddfb4a017254389b378ab3f" :authors
   '(("Adam Porter" . "adam@alphapapa.net"))
   :maintainers
   '(("Adam Porter" . "adam@alphapapa.net"))

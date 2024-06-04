@@ -57,46 +57,43 @@ Takes the pull-request as only argument and must return a directory."
   "Dispatch a forge command."
   [:if forge--get-repository:tracked?
    ["Create"
-    ("c i" "issue"             forge-create-issue)
-    ("c p" "pull-request"      forge-create-pullreq)
-    ("c u" "pull-request from issue"
-     forge-create-pullreq-from-issue
-     :if forge--get-github-repository)
-    ("c f" "fork or remote"    forge-fork)]]
+    ("c i" "issue"          forge-create-issue)
+    ("c p" "pull-request"   forge-create-pullreq)
+    ("c u" "pr from issue"  forge-create-pullreq-from-issue)
+    ("c f" "fork or remote" forge-fork)]]
   [:if forge--get-repository:tracked?
    ["List"
-    ("t" "topics...         "  forge-topics-menu        :transient replace)
-    ("n" "notifications...  "  forge-notifications-menu :transient replace)
-    ("r" "repositories...   "  forge-repositories-menu  :transient replace)]
+    ("l t" "topics"         forge-topics-menu        :transient replace)
+    ("l n" "notifications"  forge-notifications-menu :transient replace)
+    ("l r" "repositories"   forge-repositories-menu  :transient replace)]
    ["Fetch"
-    ("f f" "all topics       " forge-pull)
-    ("f t" "one topic        " forge-pull-topic)
-    ("f n" "notifications    " forge-pull-notifications)]
-   ["Do"
+    ("f f" "all topics"     forge-pull)
+    ("f t" "one topic"      forge-pull-topic)
+    ("f n" "notifications"  forge-pull-notifications)]
+   ["Misc"
     :if forge--get-repository:tracked?
-    ("C" "configure"       forge-configure)
-    ("M" "merge w/api"     forge-merge :level 7)]]
+    ("/C" "configure"       forge-configure)
+    ("/M" "merge w/api"     forge-merge :level 7)]]
   [:if forge--get-repository:tracked?
    ["Visit"
-    ("v t" "topic"         forge-visit-topic)
-    ("v i" "issue"         forge-visit-issue)
-    ("v p" "pull-request"  forge-visit-pullreq)]
+    ("v t" "topic"          forge-visit-topic)
+    ("v i" "issue"          forge-visit-issue)
+    ("v p" "pull-request"   forge-visit-pullreq)]
    ["Browse"
-    ("b t" "topic"         forge-browse-topic)
-    ("b i" "issue"         forge-browse-issue)
-    ("b p" "pull-request"  forge-browse-pullreq)]
-   ["Browse"
-    ("b r" "remote"        forge-browse-remote)
-    ("b I" "issues"        forge-browse-issues)
-    ("b P" "pull-requests" forge-browse-pullreqs)]]
+    ("b t" "topic"          forge-browse-topic)
+    ("b i" "issue"          forge-browse-issue)
+    ("b p" "pull-request"   forge-browse-pullreq)
+    ("b r" "remote"         forge-browse-remote)
+    ("b I" "issues"         forge-browse-issues)
+    ("b P" "pull-requests"  forge-browse-pullreqs)]]
   [[:description (lambda ()
                    (if (magit-gitdir)
                        "Forge doesn't know about this Git repository yet"
                      "Not inside a Git repository"))
     :if-not forge--get-repository:tracked?
-    ("a" "add repository to database" forge-add-repository)
-    ("f" "fetch notifications"        forge-pull-notifications)
-    ("l" "list notifications"         forge-list-notifications)]])
+    ("a  " "add repository to database" forge-add-repository)
+    ("f n" "fetch notifications"        forge-pull-notifications)
+    ("l n" "list notifications"         forge-list-notifications)]])
 
 ;;;###autoload (autoload 'forge-configure "forge-commands" nil t)
 (transient-define-prefix forge-configure ()
@@ -450,9 +447,10 @@ with a prefix argument also closed topics."
   "Convert an existing ISSUE into a pull-request."
   :description "convert to pull-request"
   :if (lambda ()
-        (let ((issue (forge-current-issue)))
-          (and issue (eq (oref issue state) 'open)
-               issue)))
+        (and (forge--get-github-repository)
+             (let ((issue (forge-current-issue)))
+               (and issue (eq (oref issue state) 'open)
+                    issue))))
   (interactive (cons (forge-read-open-issue "Convert issue")
                      (forge-create-pullreq--read-args)))
   (setq issue (forge-get-issue issue))

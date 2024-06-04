@@ -2178,19 +2178,31 @@ transient popup, you will be able to yank it in another buffer.
                  "<mouse-set-region>"
                  #'transient--do-stay)
 
-A.3 How does Transient compare to prefix keys and universal arguments?
+A.3 How can I autoload prefix and suffix commands?
+==================================================
+
+If your package only supports Emacs 30, just prefix the definition with
+‘;;;###autoload’.  If your package supports released versions of Emacs,
+you unfortunately have to use a long form autoload comment as described
+in *note (elisp)Autoload::.
+
+     ;;;###autoload (autoload 'magit-dispatch "magit" nil t)
+     (transient-define-prefix magit-dispatch ()
+       ...)
+
+A.4 How does Transient compare to prefix keys and universal arguments?
 ======================================================================
 
 See
 <https://github.com/magit/transient/wiki/Comparison-with-prefix-keys-and-universal-arguments>.
 
-A.4 How does Transient compare to Magit-Popup and Hydra?
+A.5 How does Transient compare to Magit-Popup and Hydra?
 ========================================================
 
 See
 <https://github.com/magit/transient/wiki/Comparison-with-other-packages>.
 
-A.5 Why did some of the key bindings change?
+A.6 Why did some of the key bindings change?
 ============================================
 
 You may have noticed that the bindings for some of the common commands
@@ -2233,7 +2245,7 @@ and also using that for a common command would prevent me from doing so.
 
    (Also see the next question.)
 
-A.6 Why does ‘q’ not quit popups anymore?
+A.7 Why does ‘q’ not quit popups anymore?
 =========================================
 
 I agree that ‘q’ is a good binding for commands that quit something.
@@ -3242,15 +3254,16 @@ Node: Predicate Slots92827
 Node: FAQ94262
 Ref: Can I control how the popup buffer is displayed?94391
 Ref: How can I copy text from the popup buffer?94572
-Ref: How does Transient compare to prefix keys and universal arguments?95066
-Ref: How does Transient compare to Magit-Popup and Hydra?95309
-Ref: Why did some of the key bindings change?95503
-Ref: Why does q not quit popups anymore?97856
-Node: Keystroke Index98959
-Node: Command and Function Index100824
-Node: Variable Index107416
-Node: Concept Index109689
-Node: GNU General Public License112425
+Ref: How can I autoload prefix and suffix commands?95066
+Ref: How does Transient compare to prefix keys and universal arguments?95540
+Ref: How does Transient compare to Magit-Popup and Hydra?95783
+Ref: Why did some of the key bindings change?95977
+Ref: Why does q not quit popups anymore?98330
+Node: Keystroke Index99433
+Node: Command and Function Index101298
+Node: Variable Index107890
+Node: Concept Index110163
+Node: GNU General Public License112899
 
 End Tag Table
 
