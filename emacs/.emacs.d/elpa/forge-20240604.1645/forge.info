@@ -774,10 +774,9 @@ check out branches and work trees in a more generic fashion
      Additionally it checks out the new branch using a new working tree.
 
  -- User Option: forge-checkout-worktree-read-directory-function
-     This function is used by ‘forge-checkout-worktree’ to read read the
-     new worktree directory where it checks out to pull-request.  It
-     takes the pull-request as the only argument and must return a
-     directory.
+     This function is used by ‘forge-checkout-worktree’ to read the new
+     worktree directory where it checks out the pull-request.  It takes
+     the pull-request as the only argument and must return a directory.
 
    When you delete a pull-request branch, which was created using one of
 the above three commands, then ‘magit-branch-delete’ usually offers to
@@ -1516,18 +1515,18 @@ Node: Caveats18690
 Node: Usage19616
 Node: Pulling21088
 Node: Branching23771
-Node: Working with Topics30166
-Node: Visiting Topics30539
-Node: Listing Topics and Notifications32616
-Node: Creating Topics37930
-Node: Editing Topics and Posts38419
-Node: Miscellaneous42946
-Node: FAQ45569
-Node: Is it possible to create a single pull-request without pulling everything?46037
-Node: error in process filter HTTP Error 502 "Bad gateway"46503
-Node: Keystroke Index48874
-Node: Function and Command Index54564
-Node: Variable Index62522
+Node: Working with Topics30157
+Node: Visiting Topics30530
+Node: Listing Topics and Notifications32607
+Node: Creating Topics37921
+Node: Editing Topics and Posts38410
+Node: Miscellaneous42937
+Node: FAQ45560
+Node: Is it possible to create a single pull-request without pulling everything?46028
+Node: error in process filter HTTP Error 502 "Bad gateway"46494
+Node: Keystroke Index48865
+Node: Function and Command Index54555
+Node: Variable Index62513
 
 End Tag Table
 

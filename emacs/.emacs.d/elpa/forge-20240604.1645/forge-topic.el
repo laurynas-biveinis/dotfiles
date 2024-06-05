@@ -334,8 +334,7 @@ an error."
 (defun forge-topic-at-point (&optional demand)
   "Return the topic at point.
 If there is no such topic and DEMAND is non-nil, then signal
-an error.  If NOT-THINGATPT is non-nil, then don't use
-`thing-at-point'."
+an error."
   (or (thing-at-point 'forge-topic)
       (magit-section-value-if '(issue pullreq))
       (forge-get-pullreq :branch)
@@ -1076,9 +1075,9 @@ This mode itself is never used directly."
    ("l m" forge-topic-set-marks)
    ("l n" forge-edit-topic-note)])
 
-;;;; Menus
-
 (defconst forge--topic-menus-column-widths '(19))
+
+;;;; Menus
 
 ;;;###autoload (autoload 'forge-topic-menu "forge-topic" nil t)
 (transient-define-prefix forge-topic-menu ()
