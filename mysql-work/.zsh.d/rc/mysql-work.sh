@@ -730,12 +730,10 @@ mysql_cmake() {
             release_flags+=("${MY8SAN[@]}")
             ;;
         *)
+            echo "Not using sanitizers, enabling macOS core dumps if needed"
             declare -i -r sanitizers=0
-            if [ ${#core_dump_flags[@]} -gt 0 ]; then
-                echo "Not using sanitizers, enabling core dumps if needed"
-                debug_flags+=("${core_dump_flags[@]}")
-                release_flags+=("${core_dump_flags[@]}");
-            fi
+            debug_flags+=("${core_dump_flags[@]}")
+            release_flags+=("${core_dump_flags[@]}")
             ;;
     esac
 
