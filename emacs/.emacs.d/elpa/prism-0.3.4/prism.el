@@ -4,7 +4,7 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; URL: https://github.com/alphapapa/prism.el
-;; Version: 0.3.3
+;; Version: 0.3.4
 ;; Package-Requires: ((emacs "27.1") (compat "29.1.4.5") (dash "2.14.1"))
 ;; Keywords: faces lisp
 
@@ -1080,16 +1080,17 @@ necessary."
   (when (and (--all? (and (boundp it) (symbol-value it))
                      '( prism-num-faces prism-color-attribute prism-desaturations
                         prism-lightens prism-comments-fn prism-strings-fn prism-colors))
-             (->> value
-                  ;; Ensure some values with specified colors are present (when
-                  ;; linting indentation, it seems that the font-lock faces
-                  ;; aren't fully loaded somehow, which causes a useless error).
-                  (--map (pcase-exhaustive it
-                           ((pred facep) (face-attribute it :foreground nil 'default))
-                           ((pred stringp) it)
-                           ((pred functionp) (funcall it))
-                           (`(themed ,color) (prism-theme-color color))))
-                  (--remove (string-prefix-p "unspecified-" it))))
+             (or (not (eq 'prism-colors option))
+                 (->> value
+                      ;; Ensure some values with specified colors are present (when
+                      ;; linting indentation, it seems that the font-lock faces
+                      ;; aren't fully loaded somehow, which causes a useless error).
+                      (--map (pcase-exhaustive it
+                               ((pred facep) (face-attribute it :foreground nil 'default))
+                               ((pred stringp) it)
+                               ((pred functionp) (funcall it))
+                               (`(themed ,color) (prism-theme-color color))))
+                      (--remove (string-prefix-p "unspecified-" it)))))
     ;; We can't call `prism-set-colors' until *all* relevant options
     ;; have been set.
     (prism-set-colors)))
