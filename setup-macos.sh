@@ -315,7 +315,7 @@ brew update
 brew install stow git ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
 	hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
 	colordiff iwyu cppcheck infer creduce gnu-sed mas bat fig actionlint \
-	circleci imagemagick ripgrep boost cpplint duf exa clang-build-analyzer \
+	circleci imagemagick ripgrep boost cpplint duf eza clang-build-analyzer \
 	recode difftastic git-lfs plantuml gcalcli asdf watch shfmt
 git lfs install
 
@@ -380,7 +380,7 @@ pip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
 
 sudo gem install mdl
 brew install --cask slack vlc disk-inventory-x google-chrome dash \
-	telegram keycombiner michaelvillar-timer utm basictex
+     telegram keycombiner michaelvillar-timer utm basictex signal
 # TeX
 sudo tlmgr install dvipng
 
