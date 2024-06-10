@@ -61,7 +61,7 @@ See info node `(transient)Modifying Existing Transients'.
 
 (fn PREFIX LOC)")
 (function-put 'transient-remove-suffix 'lisp-indent-function 'defun)
-(register-definition-prefixes "transient" '("static-if" "transient"))
+(register-definition-prefixes "transient" '("find-function-advised-original" "static-if" "transient"))
 
 ;;; End of scraped data
 

@@ -41,7 +41,7 @@
 (require 'format-spec)
 
 (eval-and-compile
-  (when (and (featurep' seq)
+  (when (and (featurep 'seq)
              (not (fboundp 'seq-keep)))
     (unload-feature 'seq 'force)))
 (require 'seq)
@@ -919,8 +919,9 @@ to the setup function:
                     [&optional ("interactive" interactive) def-body]))
            (indent defun)
            (doc-string 3))
-  (pcase-let ((`(,class ,slots ,suffixes ,docstr ,body ,interactive-only)
-               (transient--expand-define-args args arglist)))
+  (pcase-let
+      ((`(,class ,slots ,suffixes ,docstr ,body ,interactive-only)
+        (transient--expand-define-args args arglist 'transient-define-prefix)))
     `(progn
        (defalias ',name
          ,(if body
@@ -959,8 +960,9 @@ ARGLIST.  The infix arguments are usually accessed by using
                     [&optional ("interactive" interactive) def-body]))
            (indent defun)
            (doc-string 3))
-  (pcase-let ((`(,class ,slots ,_ ,docstr ,body ,interactive-only)
-               (transient--expand-define-args args arglist)))
+  (pcase-let
+      ((`(,class ,slots ,_ ,docstr ,body ,interactive-only)
+        (transient--expand-define-args args arglist 'transient-define-suffix)))
     `(progn
        (defalias ',name
          ,(if (and (not body) class (oref-default class definition))
@@ -970,6 +972,18 @@ ARGLIST.  The infix arguments are usually accessed by using
        (put ',name 'function-documentation ,docstr)
        (put ',name 'transient--suffix
             (,(or class 'transient-suffix) :command ',name ,@slots)))))
+
+(defmacro transient-augment-suffix (name &rest args)
+  "Augment existing command NAME with a new transient suffix object.
+Similar to `transient-define-suffix' but define a suffix object only.
+\n\(fn NAME [KEYWORD VALUE]...)"
+  (declare (debug (&define name [&rest keywordp sexp]))
+           (indent defun))
+  (pcase-let
+      ((`(,class ,slots)
+        (transient--expand-define-args args nil 'transient-augment-suffix t)))
+    `(put ',name 'transient--suffix
+          (,(or class 'transient-suffix) :command ',name ,@slots))))
 
 (defmacro transient-define-infix (name arglist &rest args)
   "Define NAME as a transient infix command.
@@ -1008,8 +1022,9 @@ keyword.
                     [&rest keywordp sexp]))
            (indent defun)
            (doc-string 3))
-  (pcase-let ((`(,class ,slots ,_ ,docstr ,_ ,interactive-only)
-               (transient--expand-define-args args arglist t)))
+  (pcase-let
+      ((`(,class ,slots ,_ ,docstr ,_ ,interactive-only)
+        (transient--expand-define-args args arglist 'transient-define-infix t)))
     `(progn
        (defalias ',name #'transient--default-infix-command)
        (put ',name 'interactive-only ,interactive-only)
@@ -1052,7 +1067,8 @@ falling back to that of the same aliased command."
 (put 'transient--default-infix-command 'completion-predicate
      #'transient--suffix-only)
 
-(defun transient--find-function-advised-original (fn func)
+(define-advice find-function-advised-original
+    (:around (fn func) transient-default-infix)
   "Return nil instead of `transient--default-infix-command'.
 When using `find-function' to jump to the definition of a transient
 infix command/argument, then we want to actually jump to that, not to
@@ -1060,11 +1076,9 @@ the definition of `transient--default-infix-command', which all infix
 commands are aliases for."
   (let ((val (funcall fn func)))
     (and val (not (eq val 'transient--default-infix-command)) val)))
-(advice-add 'find-function-advised-original :around
-            #'transient--find-function-advised-original)
 
-(eval-and-compile
-  (defun transient--expand-define-args (args &optional arglist nobody)
+(eval-and-compile ;transient--expand-define-args
+  (defun transient--expand-define-args (args arglist form &optional nobody)
     (unless (listp arglist)
       (error "Mandatory ARGLIST is missing"))
     (let (class keys suffixes docstr declare (interactive-only t))
@@ -1092,9 +1106,9 @@ commands are aliases for."
       (cond
        ((not args))
        (nobody
-        (error "transient-define-infix: No function body allowed"))
+        (error "%s: No function body allowed" form))
        ((not (eq (car-safe (nth (if declare 1 0) args)) 'interactive))
-        (error "transient-define-*: Interactive form missing")))
+        (error "%s: Interactive form missing" form)))
       (list (if (eq (car-safe class) 'quote)
                 (cadr class)
               class)

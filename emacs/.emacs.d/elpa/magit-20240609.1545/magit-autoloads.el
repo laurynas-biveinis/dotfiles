@@ -194,16 +194,23 @@ See `auto-revert-mode' for more information on Auto-Revert mode.
 (autoload 'magit-emacs-Q-command "magit-base" "\
 Show a shell command that runs an uncustomized Emacs with only Magit loaded.
 See info node `(magit)Debugging Tools' for more information." t)
-(autoload 'Info-follow-nearest-node--magit-gitman "magit-base" "\
-
-
-(fn FN &optional FORK)")
-(advice-add 'Info-follow-nearest-node :around #'Info-follow-nearest-node--magit-gitman)
-(advice-add 'org-man-export :around #'org-man-export--magit-gitman)
-(autoload 'org-man-export--magit-gitman "magit-base" "\
-
-
-(fn FN LINK DESCRIPTION FORMAT)")
+(define-advice Info-follow-nearest-node (:around (fn &optional fork) gitman) (let ((node (Info-get-token (point) "\\*note[ 
+	]+" "\\*note[ 
+	]+\\([^:]*\\):\\(:\\|[ 
+	]*(\\)?"))) (if (and node (string-match "^(gitman)\\(.+\\)" node)) (pcase magit-view-git-manual-method ('info (funcall fn fork)) ('man (require 'man) (man (match-string 1 node))) ('woman (require 'woman) (woman (match-string 1 node))) (_ (user-error "Invalid value for `magit-view-git-manual-method'"))) (funcall fn fork))))
+(define-advice org-man-export (:around (fn link description format) gitman) (if (and (eq format 'texinfo) (string-prefix-p "git" link)) (string-replace "%s" link "
+@ifinfo
+@ref{%s,,,gitman,}.
+@end ifinfo
+@ifhtml
+@html
+the <a href=\"http://git-scm.com/docs/%s\">%s(1)</a> manpage.
+@end html
+@end ifhtml
+@iftex
+the %s(1) manpage.
+@end iftex
+") (funcall fn link description format)))
 (register-definition-prefixes "magit-base" '("magit-"))
 
 
@@ -1067,7 +1074,7 @@ the same location in the respective file in the working tree." t)
 Checkout FILE from REV.
 
 (fn REV FILE)" t)
-(register-definition-prefixes "magit-files" '("magit-"))
+(register-definition-prefixes "magit-files" '("lsp" "magit-"))
 
 
 ;;; Generated autoloads from magit-git.el

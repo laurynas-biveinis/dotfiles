@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240607.1827/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240607.1827/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240609.1518/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240609.1518/with-editor-autoloads.el"))
 
 
 
@@ -424,7 +424,7 @@ If COMMAND ends with \"&\" behave like the latter,
 else like the former.
 
 (fn COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER ENVVAR)" t)
-(register-definition-prefixes "with-editor" '("server-" "shell-command--shell-command-with-editor-mode" "start-file-process--with-editor-process-filter" "with-editor"))
+(register-definition-prefixes "with-editor" '("server-" "shell-command" "start-file-process" "with-editor"))
 
 
 (provide 'with-editor-autoloads)
@@ -2506,7 +2506,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240607.1832/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240607.1832/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240609.2020/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240609.2020/transient-autoloads.el"))
 
 
 
@@ -2565,7 +2565,7 @@ See info node `(transient)Modifying Existing Transients'.
 
 (fn PREFIX LOC)")
 (function-put 'transient-remove-suffix 'lisp-indent-function 'defun)
-(register-definition-prefixes "transient" '("static-if" "transient"))
+(register-definition-prefixes "transient" '("find-function-advised-original" "static-if" "transient"))
 
 
 (provide 'transient-autoloads)
@@ -4449,7 +4449,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240508.2349/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240508.2349/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240609.1545/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240609.1545/magit-section-autoloads.el"))
 
 
 
@@ -4458,7 +4458,7 @@ it is disabled.
 
 
 
-(register-definition-prefixes "magit-section" '("isearch-clean-overlays@magit-mode" "magit-"))
+(register-definition-prefixes "magit-section" '("context-menu-region" "isearch-clean-overlays" "magit-"))
 
 
 (provide 'magit-section-autoloads)
@@ -4488,7 +4488,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240605.1500/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240605.1500/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240609.1545/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240609.1545/magit-autoloads.el"))
 
 
 
@@ -4676,16 +4676,23 @@ See `auto-revert-mode' for more information on Auto-Revert mode.
 (autoload 'magit-emacs-Q-command "magit-base" "\
 Show a shell command that runs an uncustomized Emacs with only Magit loaded.
 See info node `(magit)Debugging Tools' for more information." t)
-(autoload 'Info-follow-nearest-node--magit-gitman "magit-base" "\
-
-
-(fn FN &optional FORK)")
-(advice-add 'Info-follow-nearest-node :around #'Info-follow-nearest-node--magit-gitman)
-(advice-add 'org-man-export :around #'org-man-export--magit-gitman)
-(autoload 'org-man-export--magit-gitman "magit-base" "\
-
-
-(fn FN LINK DESCRIPTION FORMAT)")
+(define-advice Info-follow-nearest-node (:around (fn &optional fork) gitman) (let ((node (Info-get-token (point) "\\*note[ 
+	]+" "\\*note[ 
+	]+\\([^:]*\\):\\(:\\|[ 
+	]*(\\)?"))) (if (and node (string-match "^(gitman)\\(.+\\)" node)) (pcase magit-view-git-manual-method ('info (funcall fn fork)) ('man (require 'man) (man (match-string 1 node))) ('woman (require 'woman) (woman (match-string 1 node))) (_ (user-error "Invalid value for `magit-view-git-manual-method'"))) (funcall fn fork))))
+(define-advice org-man-export (:around (fn link description format) gitman) (if (and (eq format 'texinfo) (string-prefix-p "git" link)) (string-replace "%s" link "
+@ifinfo
+@ref{%s,,,gitman,}.
+@end ifinfo
+@ifhtml
+@html
+the <a href=\"http://git-scm.com/docs/%s\">%s(1)</a> manpage.
+@end html
+@end ifhtml
+@iftex
+the %s(1) manpage.
+@end iftex
+") (funcall fn link description format)))
 (register-definition-prefixes "magit-base" '("magit-"))
 
 
@@ -5538,7 +5545,7 @@ the same location in the respective file in the working tree." t)
 Checkout FILE from REV.
 
 (fn REV FILE)" t)
-(register-definition-prefixes "magit-files" '("magit-"))
+(register-definition-prefixes "magit-files" '("lsp" "magit-"))
 
 
 
@@ -13210,7 +13217,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240604.1645" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647" "/Users/laurynas/.emacs.d/elpa/magit-20240605.1500" "/Users/laurynas/.emacs.d/elpa/magit-section-20240508.2349" "/Users/laurynas/.emacs.d/elpa/transient-20240607.1832" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240607.1827" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240604.1645" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647" "/Users/laurynas/.emacs.d/elpa/magit-20240609.1545" "/Users/laurynas/.emacs.d/elpa/magit-section-20240609.1545" "/Users/laurynas/.emacs.d/elpa/transient-20240609.2020" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240609.1518" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

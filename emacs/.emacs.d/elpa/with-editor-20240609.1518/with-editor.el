@@ -540,8 +540,9 @@ at run-time.
                             with-editor-server-window-alist)))
       server-window))
 
-(defun server-switch-buffer--with-editor-server-window-alist
-    (fn &optional next-buffer &rest args)
+(define-advice server-switch-buffer
+    (:around (fn &optional next-buffer &rest args)
+             with-editor-server-window-alist)
   "Honor `with-editor-server-window-alist' (which see)."
   (let ((server-window (with-current-buffer
                            (or next-buffer (current-buffer))
@@ -551,11 +552,9 @@ at run-time.
                          (with-editor-server-window))))
     (apply fn next-buffer args)))
 
-(advice-add 'server-switch-buffer :around
-            #'server-switch-buffer--with-editor-server-window-alist)
-
-(defun start-file-process--with-editor-process-filter
-    (fn name buffer program &rest program-args)
+(define-advice start-file-process
+    (:around (fn name buffer program &rest program-args)
+             with-editor-process-filter)
   "When called inside a `with-editor' form and the Emacsclient
 cannot be used, then give the process the filter function
 `with-editor-process-filter'.  To avoid overriding the filter
@@ -578,10 +577,9 @@ the appropriate editor environment variable."
       (process-put process 'default-dir default-directory)
       process)))
 
-(advice-add 'start-file-process :around
-            #'start-file-process--with-editor-process-filter)
-
-(cl-defun make-process--with-editor-process-filter
+(advice-add #'make-process :around
+            #'make-process@with-editor-process-filter)
+(cl-defun make-process@with-editor-process-filter
     (fn &rest keys &key name buffer command coding noquery stop
         connection-type filter sentinel stderr file-handler
         &allow-other-keys)
@@ -620,8 +618,6 @@ to set the appropriate editor environment variable."
                              :file-handler file-handler)))
       (process-put process 'default-dir default-directory)
       process)))
-
-(advice-add #'make-process :around #'make-process--with-editor-process-filter)
 
 (defun with-editor-set-process-filter (process filter)
   "Like `set-process-filter' but keep `with-editor-process-filter'.
@@ -714,11 +710,12 @@ OPEN \\([^]+?\\)\
   (unless no-default-filter
     (internal-default-process-filter process string)))
 
-(advice-add 'server-visit-files :after
-            #'server-visit-files--with-editor-file-name-history-exclude)
-
-(defun server-visit-files--with-editor-file-name-history-exclude
-    (files _proc &optional _nowait)
+(define-advice server-visit-files
+    (:after (files _proc &optional _nowait)
+            with-editor-file-name-history-exclude)
+  "Prevent certain files from being added to `file-name-history'.
+Files matching a regexp in `with-editor-file-name-history-exclude'
+are prevented from being added to that list."
   (pcase-dolist (`(,file . ,_) files)
     (when (cl-find-if (lambda (regexp)
                         (string-match-p regexp file))
@@ -877,14 +874,15 @@ else like the former."
           shell-command-default-error-buffer
           (and async current-prefix-arg (with-editor-read-envvar)))))
 
-(defun shell-command--shell-command-with-editor-mode
-    (fn command &optional output-buffer error-buffer)
-  ;; `shell-mode' and its hook are intended for buffers in which an
-  ;; interactive shell is running, but `shell-command' also turns on
-  ;; that mode, even though it only runs the shell to run a single
-  ;; command.  The `with-editor-export-editor' hook function is only
-  ;; intended to be used in buffers in which an interactive shell is
-  ;; running, so it has to be removed here.
+(define-advice shell-command
+    (:around (fn command &optional output-buffer error-buffer)
+             shell-command-with-editor-mode)
+  "`shell-mode' and its hook are intended for buffers in which an
+interactive shell is running, but `shell-command' also turns on
+that mode, even though it only runs the shell to run a single
+command.  The `with-editor-export-editor' hook function is only
+intended to be used in buffers in which an interactive shell is
+running, so it has to be removed here."
   (let ((shell-mode-hook (remove 'with-editor-export-editor shell-mode-hook)))
     (cond ((or (not (or with-editor--envvar shell-command-with-editor-mode))
                (not (string-suffix-p "&" command)))
@@ -908,9 +906,6 @@ else like the former."
                           (comint-output-filter proc str)
                           (with-editor-process-filter proc str t)))
                process))))))
-
-(advice-add 'shell-command :around
-            #'shell-command--shell-command-with-editor-mode)
 
 ;;; _
 
