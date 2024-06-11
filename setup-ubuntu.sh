@@ -20,15 +20,15 @@ sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
 	libasan5 liblsan0 libtsan0 libubsan1 libc6-dev cpp-doc gcc-doc autoconf \
 	automake libtool flex bison glibc-doc make-doc autoconf-archive \
 	gnu-standards autoconf-doc gettext bison-doc flex-doc gdb-doc \
-        gettext-doc libtool-doc m4-doc cmake cmake-doc diffstat unzip \
-        pinentry-doc zip software-properties-common colordiff valgrind \
-        linux-tools-generic libjemalloc2 python3-scipy python3-pytest \
-        python-scipy-doc unattended-upgrades screen fzf fd-find clang \
-        moreutils psmisc zsh zsh-doc libjemalloc-dev bzip2-doc hexyl ripgrep \
-        icu-doc ncurses-doc pkg-config lcov cpufrequtils libboost-dev \
-        libboost-doc cppcheck iwyu cpuset python3-pip ninja-build cmake-format \
-        clang-tidy neovim man-db lynis shellcheck htop jq bat cpplint duf eza \
-        python3-pandas pipx strace lsof libstdc++-doc pipx libgfortran-dev
+	gettext-doc libtool-doc m4-doc cmake cmake-doc diffstat unzip \
+	pinentry-doc zip software-properties-common colordiff valgrind \
+	linux-tools-generic libjemalloc2 python3-scipy python3-pytest \
+	python-scipy-doc unattended-upgrades screen fzf fd-find clang \
+	moreutils psmisc zsh zsh-doc libjemalloc-dev bzip2-doc hexyl ripgrep \
+	icu-doc ncurses-doc pkg-config lcov cpufrequtils libboost-dev \
+	libboost-doc cppcheck iwyu cpuset python3-pip ninja-build cmake-format \
+	clang-tidy neovim man-db lynis shellcheck htop jq bat cpplint duf eza \
+	python3-pandas pipx strace lsof libstdc++-doc pipx libgfortran-dev
 # Compiler versions
 sudo apt-get install g++-10 gcc-10-doc libgfortran-10-dev
 sudo apt-get install g++-11 gcc-11-doc libgfortran-11-dev
@@ -37,17 +37,17 @@ sudo apt-get install g++-12 cpp-12-doc gcc-12-doc libgfortran-12-dev
 sudo apt-get install libstdc++-13-doc
 # Absent in 24.04
 sudo apt-get install clang-12 clang-12-doc clang-tools-12 lld-12 llvm-12 \
-     llvm-12-doc llvm-12-tools
+	llvm-12-doc llvm-12-tools
 sudo apt-get install clang-14 clang-14-doc clang-tools-14 lld-14 llvm-14 \
-     llvm-14-doc llvm-14-tools
+	llvm-14-doc llvm-14-tools
 sudo apt-get install clang-15 clang-15-doc clang-tools-15 lld-15 llvm-15 \
-     llvm-15-doc llvm-15-tools
+	llvm-15-doc llvm-15-tools
 sudo apt-get install clang-16 clang-16-doc clang-tools-16 lld-16 llvm-16 \
-     llvm-16-doc llvm-16-tools
+	llvm-16-doc llvm-16-tools
 sudo apt-get install clang-17 clang-17-doc clang-tools-17 lld-17 llvm-17 \
-     llvm-17-doc llvm-17-tools
+	llvm-17-doc llvm-17-tools
 sudo apt-get install clang-18 clang-18-doc clang-format-18 clang-tidy-18 \
-     clang-tools-18 clangd-18 lld-18 llvm-18 llvm-18-doc llvm-18-tools
+	clang-tools-18 clangd-18 lld-18 llvm-18 llvm-18-doc llvm-18-tools
 # DeepState (x86_64 only)
 sudo apt-get install libc6-dev-i386
 # Not found on AWS EC2
