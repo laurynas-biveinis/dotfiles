@@ -39,13 +39,13 @@ sudo apt-get install libstdc++-13-doc
 sudo apt-get install clang-12 clang-12-doc clang-tools-12 lld-12 llvm-12 \
      llvm-12-doc llvm-12-tools
 sudo apt-get install clang-14 clang-14-doc clang-tools-14 lld-14 llvm-14 \
-     llvm-14-doc llvm-14-doc
+     llvm-14-doc llvm-14-tools
 sudo apt-get install clang-15 clang-15-doc clang-tools-15 lld-15 llvm-15 \
-     llvm-15-doc llvm-15-doc
+     llvm-15-doc llvm-15-tools
 sudo apt-get install clang-16 clang-16-doc clang-tools-16 lld-16 llvm-16 \
-     llvm-16-doc llvm-16-doc
+     llvm-16-doc llvm-16-tools
 sudo apt-get install clang-17 clang-17-doc clang-tools-17 lld-17 llvm-17 \
-     llvm-17-doc llvm-17-doc
+     llvm-17-doc llvm-17-tools
 sudo apt-get install clang-18 clang-18-doc clang-format-18 clang-tidy-18 \
      clang-tools-18 clangd-18 lld-18 llvm-18 llvm-18-doc llvm-18-tools
 # DeepState (x86_64 only)
