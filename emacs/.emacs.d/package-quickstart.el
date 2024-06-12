@@ -4389,7 +4389,7 @@ Otherwise behave as if called interactively.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.3.4/prism-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.3.4/prism-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.3.5/prism-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/prism-0.3.5/prism-autoloads.el"))
 
 
 
@@ -7164,7 +7164,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240415.1535/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240415.1535/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240611.2032/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240611.2032/emacsql-autoloads.el"))
 
 
 

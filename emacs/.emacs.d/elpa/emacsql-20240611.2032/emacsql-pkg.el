@@ -1,6 +1,6 @@
-(define-package "emacsql" "20240415.1535" "High-level SQL database front-end"
+(define-package "emacsql" "20240611.2032" "High-level SQL database front-end"
   '((emacs "25.1"))
-  :commit "5108c16c5e1d5bfdd41fcc0807241e28886ab763" :authors
+  :commit "601b3a5f6bdaf5b7c7c5889053b8191bcc89a8ff" :authors
   '(("Christopher Wellons" . "wellons@nullprogram.com"))
   :maintainers
   '(("Jonas Bernoulli" . "emacs.emacsql@jonas.bernoulli.dev"))
