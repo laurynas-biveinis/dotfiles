@@ -1,0 +1,5 @@
+# TODO(laurynas): impossible to enable without fixing its errors first
+# Diagnostics:
+#   MissingIncludes: Strict
+Style:
+  FullyQualifiedNamespaces: ["myrocks"]
