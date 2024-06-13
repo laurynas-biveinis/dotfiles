@@ -47,6 +47,10 @@
 (require 'lsp-diagnostics)
 (add-hook 'lsp-managed-mode-hook #'lsp-diagnostics-mode)
 
+;; TODO(laurynas): once the inlay display becomes less jerky, enable it.
+;; (setq lsp-inlay-hint-enable t)
+;; (add-hook 'lsp-managed-mode-hook #'lsp-inlay-hints-mode)
+
 (require 'lsp-modeline)
 (add-hook 'lsp-managed-mode-hook #'lsp-modeline-diagnostics-mode)
 
