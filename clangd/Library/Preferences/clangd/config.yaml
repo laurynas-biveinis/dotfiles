@@ -1,0 +1,7 @@
+Index:
+  StandardLibrary: Yes
+# TODO(laurynas): re-enable once Emacs lsp-mode becomes less jerky
+# InlayHints:
+#   Enabled: Yes
+Hover:
+  ShowAKA: Yes
