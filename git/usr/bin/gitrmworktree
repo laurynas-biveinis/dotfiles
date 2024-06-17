@@ -33,9 +33,19 @@ readonly WORKTREE_ABSOLUTE_PATH
 
 BRANCH_NAME=$(git branch --show-current)
 readonly BRANCH_NAME
-# TODO(laurynas): might need to consider other push remotes
-REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote)
+
+REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote || echo "")
+if [ -z "${REMOTE_NAME}" ]; then
+    REMOTE_NAME=$(git config branch."${BRANCH_NAME}".remote || echo "")
+fi
 readonly REMOTE_NAME
+
+if [ -z "${REMOTE_NAME}" ]; then
+    2>&1 echo "Failed to find push remote name for branch $BRANCH_NAME"
+    popd || exit 1
+    exit 3
+fi
+
 
 cd "$(git rev-parse --git-dir)"
 cd ../../../
