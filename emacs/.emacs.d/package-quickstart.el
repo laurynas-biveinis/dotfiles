@@ -4449,7 +4449,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240609.1545/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240609.1545/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240613.2254/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240613.2254/magit-section-autoloads.el"))
 
 
 
@@ -4488,7 +4488,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240609.1545/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240609.1545/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240616.1902/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240616.1902/magit-autoloads.el"))
 
 
 
@@ -6686,7 +6686,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240616.1956/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240616.1956/ghub-autoloads.el"))
 
 
 
@@ -6850,7 +6850,7 @@ Shortcuts             Command Name
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.6/persist-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.6/persist-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.6.1/persist-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.6.1/persist-autoloads.el"))
 
 
 
@@ -11645,7 +11645,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240604.1645/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240604.1645/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240617.2245/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240617.2245/forge-autoloads.el"))
 
 
 
@@ -11727,24 +11727,30 @@ Copy the url of the thing at point." t)
 Visit the thing at point using a browser." t)
 (autoload 'forge-visit-topic "forge-commands" "\
 Read a TOPIC and visit it.
-By default only offer open topics for completion;
-with a prefix argument also closed topics.
+By default only offer active topics for completion.  With a prefix
+argument offer all topics.  While completion is in progress, \\<forge-read-topic-minibuffer-map>\\[forge-read-topic-lift-limit] lifts
+the limitation to active topics.
 
 (fn TOPIC)" t)
 (autoload 'forge-visit-issue "forge-commands" "\
 Read an ISSUE and visit it.
-By default only offer open topics for completion;
-with a prefix argument also closed topics.
+By default only offer active issues for completion.  With a prefix
+argument offer all topics.  While completion is in progress, \\<forge-read-topic-minibuffer-map>\\[forge-read-topic-lift-limit] lifts
+the limitation to active issues.
 
 (fn ISSUE)" t)
 (autoload 'forge-visit-pullreq "forge-commands" "\
 Read a PULL-REQUEST and visit it.
-By default only offer open topics for completion;
-with a prefix argument also closed topics.
+By default only offer active pull-requests for completion.  With a
+prefix argument offer all topics.  While completion is in progress,
+\\<forge-read-topic-minibuffer-map>\\[forge-read-topic-lift-limit] lifts the limitation to active pull-requests.
 
 (fn PULL-REQUEST)" t)
 (autoload 'forge-visit-this-topic "forge-commands" "\
-Visit the topic at point." t)
+Visit the topic at point.
+With prefix argument MENU, also show the topic menu.
+
+(fn &optional MENU)" t)
 (autoload 'forge-visit-this-repository "forge-commands" "\
 Visit the repository at point." t)
 (autoload 'forge-branch-pullreq "forge-commands" "\
@@ -11848,8 +11854,8 @@ heavy development." t)
 
 
 
-(autoload 'forge-list-notifications "forge-notify" "\
-List notifications." t)
+(transient-define-suffix forge-list-notifications nil "\
+List notifications." :inapt-if-mode 'forge-notifications-mode :inapt-face 'forge-suffix-active (declare (interactive-only nil)) (interactive) (forge-notifications-setup-buffer) (transient-setup 'forge-notifications-menu))
 (register-definition-prefixes "forge-notify" '("forge-"))
 
 
@@ -11881,7 +11887,7 @@ List notifications." t)
 
 
 
-(register-definition-prefixes "forge-tablist" '("forge--"))
+(register-definition-prefixes "forge-tablist" '("forge--tab"))
 
 
 
@@ -11894,21 +11900,11 @@ List notifications." t)
 
  (autoload 'forge-topics-menu "forge-topics" nil t)
  (autoload 'forge-list-topics "forge-topics" nil t)
- (autoload 'forge-list-labeled-topics "forge-topics" nil t)
- (autoload 'forge-list-assigned-topics "forge-topics" nil t)
- (autoload 'forge-list-authored-topics "forge-topics" nil t)
- (autoload 'forge-list-owned-topics "forge-topics" nil t)
  (autoload 'forge-list-issues "forge-topics" nil t)
- (autoload 'forge-list-labeled-issues "forge-topics" nil t)
- (autoload 'forge-list-assigned-issues "forge-topics" nil t)
- (autoload 'forge-list-authored-issues "forge-topics" nil t)
- (autoload 'forge-list-owned-issues "forge-topics" nil t)
  (autoload 'forge-list-pullreqs "forge-topics" nil t)
- (autoload 'forge-list-labeled-pullreqs "forge-topics" nil t)
- (autoload 'forge-list-assigned-pullreqs "forge-topics" nil t)
- (autoload 'forge-list-requested-reviews "forge-topics" nil t)
- (autoload 'forge-list-authored-pullreqs "forge-topics" nil t)
- (autoload 'forge-list-owned-pullreqs "forge-topics" nil t)
+ (autoload 'forge-list-global-topics "forge-topics" nil t)
+ (autoload 'forge-list-global-issues "forge-topics" nil t)
+ (autoload 'forge-list-global-pullreqs "forge-topics" nil t)
 (register-definition-prefixes "forge-topics" '("forge-"))
 
 
@@ -12844,7 +12840,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.29.5/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.29.5/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.29.6/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.29.6/cmake-mode-autoloads.el"))
 
 
 
@@ -12932,6 +12928,37 @@ Queries for any of the four available help topics and prints out the appropriate
 
 
 (provide 'calfw-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/bison-mode-0.3/bison-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/bison-mode-0.3/bison-mode-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(add-to-list 'auto-mode-alist '("\\.y\\'" . bison-mode))
+(add-to-list 'auto-mode-alist '("\\.l\\'" . flex-mode))
+(add-to-list 'auto-mode-alist '("\\.jison\\'" . jison-mode))
+(autoload 'bison-mode "bison-mode" "\
+Major mode for editing bison/yacc files.
+
+(fn)" t)
+(autoload 'jison-mode "bison-mode" "\
+Major mode for editing jison files.
+
+(fn)" t)
+(autoload 'flex-mode "bison-mode" "\
+Major mode for editing flex files. (bison-mode by any other name)
+
+(fn)" t)
+(register-definition-prefixes "bison-mode" '("bison-"))
+
+
+(provide 'bison-mode-autoloads)
 
 
 )
@@ -13210,14 +13237,14 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep wfnames websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation helm-core helm helm-projectile helm-lsp helm-icons helm-descbinds helm-dash grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240604.1645" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240507.1647" "/Users/laurynas/.emacs.d/elpa/magit-20240609.1545" "/Users/laurynas/.emacs.d/elpa/magit-section-20240609.1545" "/Users/laurynas/.emacs.d/elpa/transient-20240609.2020" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240609.1518" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240617.2245" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240616.1956" "/Users/laurynas/.emacs.d/elpa/magit-20240616.1902" "/Users/laurynas/.emacs.d/elpa/magit-section-20240613.2254" "/Users/laurynas/.emacs.d/elpa/transient-20240609.2020" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240609.1518" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

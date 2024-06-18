@@ -2917,7 +2917,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "3847f311077efa17951a786d2759f2639c5f43c8"))])
  (org .
-      [(9 7 3)
+      [(9 7 4)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -2926,7 +2926,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "2f184485bfba4a192ed10ceabb26bbec2154b099"))])
+	(:commit . "1387e361350794610ac1d5e5629381652713197b"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -3046,16 +3046,16 @@
 		  (:url . "https://elpa.gnu.org/packages/org-translate.html")
 		  (:commit . "bdc5d169ef0c502f46aa673918ccf34fcc8415f2"))])
  (orgalist .
-	   [(1 14)
+	   [(1 15)
 	    ((emacs
-	      (24 4)))
+	      (26 1)))
 	    "Manage Org-like lists in non-Org buffers" tar
 	    ((:keywords "convenience")
 	     (:maintainer "Nicolas Goaziou" . "mail@nicolasgoaziou.fr")
 	     (:authors
 	      ("Nicolas Goaziou" . "mail@nicolasgoaziou.fr"))
 	     (:url . "https://elpa.gnu.org/packages/orgalist.html")
-	     (:commit . "06c62e23c7bdeb743ac4d2fc38a25720f2598ff6"))])
+	     (:commit . "6b97873be78dba574f4753104c8f2da3c8bfb5ee"))])
  (osc .
       [(0 4)
        nil "Open Sound Control protocol library" tar
@@ -3167,13 +3167,15 @@
 	      ("Harald Jörg" . "haj@posteo.de"))
 	     (:commit . "638009f98a144790ea85fd0fa311d7499fdac94f"))])
  (persist .
-	  [(0 6)
-	   nil "Persist Variables between Emacs Sessions" tar
+	  [(0 6 1)
+	   ((emacs
+	     (26 1)))
+	   "Persist Variables between Emacs Sessions" tar
 	   ((:maintainer "Joseph Turner" . "persist-el@breatheoutbreathe.in")
 	    (:authors
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
 	    (:url . "https://elpa.gnu.org/packages/persist.html")
-	    (:commit . "737d095b4504436e6d870923ed471687f16b992e"))])
+	    (:commit . "5ea8f32ef50ce2b444d6918e17eedce9f74629af"))])
  (phps-mode .
 	    [(0 4 49)
 	     ((emacs
@@ -3278,14 +3280,14 @@
 	("Tom Gillespie" . "tgbugs@gmail.com"))
        (:commit . "4dad5fcdbbb362a0dc2dfa7b5a38dd5be1551c68"))])
  (project .
-	  [(0 11 0)
+	  [(0 11 1)
 	   ((emacs
 	     (26 1))
 	    (xref
 	     (1 7 0)))
 	   "Operations on the current project" tar
 	   ((:url . "https://elpa.gnu.org/packages/project.html")
-	    (:commit . "56871dbd4c1a1af3f0d1624f4858e9be67a89f7e"))])
+	    (:commit . "08e38818f6ff4e514ac291bc5a7686f4390759b0"))])
  (psgml .
 	[(1 3 5)
 	 nil "SGML-editing mode with parsing support" tar
