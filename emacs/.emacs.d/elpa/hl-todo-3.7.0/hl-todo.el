@@ -1,12 +1,12 @@
 ;;; hl-todo.el --- Highlight TODO and similar keywords  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2013-2023 Jonas Bernoulli
+;; Copyright (C) 2013-2024 Jonas Bernoulli
 
-;; Author: Jonas Bernoulli <jonas@bernoul.li>
+;; Author: Jonas Bernoulli <emacs.hl-todo@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/tarsius/hl-todo
 ;; Keywords: convenience
 
-;; Package-Requires: ((emacs "25.1") (compat "29.1.4.2"))
+;; Package-Requires: ((emacs "25.1") (compat "29.1.4.5"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -70,14 +70,14 @@ foreground color."
 (define-obsolete-variable-alias 'hl-todo-activate-in-modes
   'hl-todo-include-modes "hl-todo 3.1.0")
 
-(defcustom hl-todo-include-modes '(prog-mode text-mode)
+(defcustom hl-todo-include-modes '(prog-mode text-mode conf-mode)
   "Major-modes in which `hl-todo-mode' is activated.
 
 This is used by `global-hl-todo-mode', which activates the local
 `hl-todo-mode' in all buffers whose major-mode derive from one
 of the modes listed here, but not from one of the modes listed
 in `hl-todo-exclude-modes'."
-  :package-version '(hl-todo . "2.1.0")
+  :package-version '(hl-todo . "3.7.0")
   :group 'hl-todo
   :type '(repeat function))
 
@@ -113,6 +113,7 @@ located inside a string."
     ("FAIL"   . "#8c5353")
     ("DONE"   . "#afd8af")
     ("NOTE"   . "#d0bf8f")
+    ("MAYBE"  . "#d0bf8f")
     ("KLUDGE" . "#d0bf8f")
     ("HACK"   . "#d0bf8f")
     ("TEMP"   . "#d0bf8f")
@@ -147,7 +148,16 @@ a Grep implementation other than GNU's, then that may break
   :type '(repeat (cons (string :tag "Keyword")
                        (choice :tag "Face   "
                                (string :tag "Color")
-                               (sexp :tag "Face")))))
+                               (sexp :tag "Face"))))
+  :set (lambda (symbol value)
+         (set-default-toplevel-value symbol value)
+         (dolist (buf (buffer-list))
+	   (with-current-buffer buf
+             (when (and (bound-and-true-p hl-todo-mode)
+                        (boundp 'hl-todo--regexp))
+               (setq hl-todo--regexp nil)
+               (hl-todo-mode -1)
+               (hl-todo-mode 1))))))
 
 (defcustom hl-todo-color-background nil
   "Whether to emphasize keywords using the background color.
@@ -248,9 +258,9 @@ function `hl-todo--regexp'."
   (let ((keyword (match-string 2)))
     (hl-todo--combine-face
      (cdr (or
-           ;; Fast allocation free lookup for literal keywords
+           ;; Fast allocation free lookup for literal keywords.
            (assoc keyword hl-todo-keyword-faces)
-           ;; Slower regexp lookup
+           ;; Slower regexp lookup.
            (compat-call assoc keyword hl-todo-keyword-faces
                         (lambda (a b)
                           (string-match-p (format "\\`%s\\'" a) b))))))))
@@ -398,16 +408,16 @@ enabling `flymake-mode'."
               (let ((beg (match-beginning 0))
                     (end (pos-eol))
                     (bol (pos-bol)))
-                ;; Take whole line when keyword is not at the start of comment
+                ;; Take whole line when keyword is not at the start of comment.
                 (save-excursion
                   (goto-char beg)
                   (unless (looking-back comment bol)
                     (goto-char bol)
-                    ;; Skip whitespace at the beginning of line
+                    ;; Skip whitespace at the beginning of line.
                     (when (and (not (looking-at-p "\\S-"))
                                (re-search-forward "\\S-" beg t))
                       (forward-char -1))
-                    ;; Skip comment
+                    ;; Skip comment.
                     (re-search-forward comment beg t)
                     (setq beg (point))))
                 (push (flymake-make-diagnostic
@@ -418,12 +428,17 @@ enabling `flymake-mode'."
 
 ;;;###autoload
 (defun hl-todo-insert (keyword)
-  "Insert TODO or similar keyword.
+  "Read a TODO or similar keyword and insert it at point.
+
 If point is not inside a string or comment, then insert a new
 comment.  If point is at the end of the line, then insert the
 comment there, otherwise insert it as a new line before the
-current line.  When called interactively the KEYWORD is read via
-`completing-read'."
+current line.  When called interactively the KEYWORD is read
+via `completing-read'.
+
+If `hl-todo-require-punctuation' is non-nil and
+`hl-todo-highlight-punctuation' contains a single character,
+then append that character to the inserted string."
   (interactive
    (list (completing-read
           "Insert keyword: "
@@ -432,26 +447,30 @@ current line.  When called interactively the KEYWORD is read via
                          (list (propertize keyword 'face
                                            (hl-todo--combine-face face)))))
                   hl-todo-keyword-faces))))
-  (cond
-   ((hl-todo--inside-comment-or-string-p)
-    (insert (concat (and (not (memq (char-before) '(?\s ?\t))) " ")
-                    keyword
-                    (and (not (memq (char-after) '(?\s ?\t ?\n))) " "))))
-   ((and (eolp)
-         (not (looking-back "^[\s\t]*" (line-beginning-position) t)))
-    (insert (concat (and (not (memq (char-before) '(?\s ?\t))) " ")
-                    (format "%s %s " comment-start keyword))))
-   (t
-    (goto-char (line-beginning-position))
-    (insert (cond ((derived-mode-p 'lisp-mode 'emacs-lisp-mode)
-                   (format "%s%s %s" comment-start comment-start keyword))
-                  ((string-suffix-p " " comment-start)
-                   (format "%s%s" comment-start keyword))
-                  (t
-                   (format "%s %s" comment-start keyword))))
-    (unless (looking-at "[\s\t]*$")
-      (save-excursion (insert "\n")))
-    (indent-region (line-beginning-position) (line-end-position)))))
+  (let ((keyword (if (and hl-todo-require-punctuation
+                          (length= hl-todo-highlight-punctuation 1))
+                     (concat keyword hl-todo-highlight-punctuation)
+                   keyword)))
+    (cond
+     ((hl-todo--inside-comment-or-string-p)
+      (insert (concat (and (not (memq (char-before) '(?\s ?\t))) " ")
+                      keyword
+                      (and (not (memq (char-after) '(?\s ?\t ?\n))) " "))))
+     ((and (eolp)
+           (not (looking-back "^[\s\t]*" (line-beginning-position) t)))
+      (insert (concat (and (not (memq (char-before) '(?\s ?\t))) " ")
+                      (format "%s %s " comment-start keyword))))
+     (t
+      (goto-char (line-beginning-position))
+      (insert (cond ((derived-mode-p 'lisp-mode 'emacs-lisp-mode)
+                     (format "%s%s %s" comment-start comment-start keyword))
+                    ((string-suffix-p " " comment-start)
+                     (format "%s%s" comment-start keyword))
+                    (t
+                     (format "%s %s" comment-start keyword))))
+      (unless (looking-at "[\s\t]*$")
+        (save-excursion (insert "\n")))
+      (indent-region (line-beginning-position) (line-end-position))))))
 
 (define-obsolete-function-alias 'hl-todo-insert-keyword
   #'hl-todo-insert "hl-todo 3.0.0")

@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240609.1518/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240609.1518/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240618.1840/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240618.1840/with-editor-autoloads.el"))
 
 
 
@@ -2506,7 +2506,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240609.2020/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240609.2020/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240618.1413/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240618.1413/transient-autoloads.el"))
 
 
 
@@ -4465,7 +4465,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240520.1135/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240520.1135/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240618.1142/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240618.1142/git-commit-autoloads.el"))
 
 
 
@@ -6686,7 +6686,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240616.1956/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240616.1956/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527/ghub-autoloads.el"))
 
 
 
@@ -8563,7 +8563,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.6.0/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.6.0/hl-todo-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.7.0/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.7.0/hl-todo-autoloads.el"))
 
 
 
@@ -8588,6 +8588,8 @@ evaluate `hl-todo-mode'.
 
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
+
+\\{hl-todo-mode-map}
 
 (fn &optional ARG)" t)
 (put 'global-hl-todo-mode 'globalized-minor-mode t)
@@ -8652,12 +8654,17 @@ enabling `flymake-mode'.
 
 (fn REPORT-FN &rest PLIST)")
 (autoload 'hl-todo-insert "hl-todo" "\
-Insert TODO or similar keyword.
+Read a TODO or similar keyword and insert it at point.
+
 If point is not inside a string or comment, then insert a new
 comment.  If point is at the end of the line, then insert the
 comment there, otherwise insert it as a new line before the
-current line.  When called interactively the KEYWORD is read via
-`completing-read'.
+current line.  When called interactively the KEYWORD is read
+via `completing-read'.
+
+If `hl-todo-require-punctuation' is non-nil and
+`hl-todo-highlight-punctuation' contains a single character,
+then append that character to the inserted string.
 
 (fn KEYWORD)" t)
 (register-definition-prefixes "hl-todo" '("hl-todo-"))
@@ -11451,7 +11458,7 @@ or nil, plain link will be used.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.2/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.2/git-modes-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.3/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.3/git-modes-autoloads.el"))
 
 
 
@@ -13244,7 +13251,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240617.2245" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240616.1956" "/Users/laurynas/.emacs.d/elpa/magit-20240616.1902" "/Users/laurynas/.emacs.d/elpa/magit-section-20240613.2254" "/Users/laurynas/.emacs.d/elpa/transient-20240609.2020" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240609.1518" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240617.2245" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240616.1902" "/Users/laurynas/.emacs.d/elpa/magit-section-20240613.2254" "/Users/laurynas/.emacs.d/elpa/transient-20240618.1413" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240618.1840" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
