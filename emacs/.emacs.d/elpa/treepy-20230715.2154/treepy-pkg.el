@@ -1,6 +1,6 @@
-(define-package "treepy" "0.1.2" "Generic tree traversal tools"
+(define-package "treepy" "20230715.2154" "Generic tree traversal tools"
   '((emacs "25.1"))
-  :commit "3ac940e97f3d03e48ca9d7fcd74916a9b01c72f3" :authors
+  :commit "75fe3ec37e6f9b2bdfd6d0584efd984d0c00a43e" :authors
   '(("Daniel Barreto" . "daniel.barreto.n@gmail.com"))
   :maintainers
   '(("Daniel Barreto" . "daniel.barreto.n@gmail.com"))

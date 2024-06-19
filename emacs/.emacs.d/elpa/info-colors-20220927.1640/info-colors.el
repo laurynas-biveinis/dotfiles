@@ -6,8 +6,8 @@
 ;; Author: Drew Adams
 ;; Keywords: faces
 ;; URL: https://github.com/ubolonton/info-colors
-;; Package-Requires: ((emacs "24"))
-;; Package-Version: 0.2
+;; Package-Requires: ((emacs "24") (cl-lib "0.5"))
+;; Package-Version: 0.2.2
 ;; Package-X-Original-Version: 0
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -35,9 +35,8 @@
 ;;; Code:
 
 (require 'info)
+(require 'cl-lib)
 
-(eval-when-compile
-  (require 'cl))
 
 ;;;###autoload
 (defgroup info-colors nil
@@ -105,13 +104,32 @@
 (defun info-colors-fontify-lisp-code-blocks ()
   "Fontify Lisp code blocks in an `info' node."
   (goto-char (point-min))
+  ;; @nerton: Find code blocks by looking for two newlines followed by at least 5 spaces and
+  ;; check if the line before the two newlines (the previous paragraph) has a 5 space less indent
+  ;; than the found line. See https://github.com/ubolonton/info-colors/issues/2
   (while (re-search-forward
-          "^ \\{5,\\}(.*\
-\\(\n \\{5\\}.*\\)*\
-\\()\\|\n\\)$"
+          "\\(.+\\)\n\n\\( \\{5,\\}\\)"
           nil t)
-    (put-text-property (match-beginning 0) (match-end 0)
-                       'font-lock-face 'info-colors-lisp-code-block)))
+    (let* ((prev-line (match-string 1))
+           (start (match-beginning 2))
+           (indent (length (match-string 2)))
+           (prev-indent (if (string-match "^ +" prev-line)
+                            (length (match-string 0 prev-line))
+                          0))
+           ;; Example: ‘C-x l’     (‘transient-set-level’)
+           (prev-is-kb-desc? (string-prefix-p "‘" prev-line))
+           (small-indent-change? (< (- indent prev-indent) 5)))
+      (if (or prev-is-kb-desc? small-indent-change?)
+          ;; Not the begin of a code block. Continue.
+          (beginning-of-line)
+        ;; Look for the end of the code block.
+        (while (progn
+                 (re-search-forward "\n\n")
+                 (and (not (eobp))
+                      (looking-at " *")
+                      (= (length (match-string 0)) indent))))
+        (put-text-property (1- start) (point)
+                           'font-lock-face 'info-colors-lisp-code-block)))))
 
 ;;; TODO: Use syntax table or something?
 ;;;###autoload
@@ -129,15 +147,15 @@
                          'font-lock-face 'info-colors-ref-item-type)
       (put-text-property
        (match-beginning 2) (match-end 2)
-       'font-lock-face (case sym
-                         ('Constant      'info-colors-ref-item-constant)
-                         ('Variable      'info-colors-ref-item-variable)
-                         ('User\ Option  'info-colors-ref-item-user-option)
-                         ('Special\ Form 'info-colors-ref-item-special-form)
-                         ('Macro         'info-colors-ref-item-macro)
-                         ('Function      'info-colors-ref-item-function)
-                         ('Command       'info-colors-ref-item-command)
-                         ('Syntax\ class 'info-colors-ref-item-syntax-class)))
+       'font-lock-face (cl-case sym
+                         (Constant      'info-colors-ref-item-constant)
+                         (Variable      'info-colors-ref-item-variable)
+                         (User\ Option  'info-colors-ref-item-user-option)
+                         (Special\ Form 'info-colors-ref-item-special-form)
+                         (Macro         'info-colors-ref-item-macro)
+                         (Function      'info-colors-ref-item-function)
+                         (Command       'info-colors-ref-item-command)
+                         (Syntax\ class 'info-colors-ref-item-syntax-class)))
       (when (match-beginning 3)
         (put-text-property (match-beginning 3) (match-end 3)
                            'font-lock-face 'info-colors-ref-item-other)))))

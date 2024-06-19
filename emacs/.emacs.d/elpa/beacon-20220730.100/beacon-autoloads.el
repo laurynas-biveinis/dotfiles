@@ -15,7 +15,7 @@
 Blink the beacon at the position of the cursor.
 Unlike `beacon-blink-automated', the beacon will blink
 unconditionally (even if `beacon-mode' is disabled), and this can
-be invoked as a user command or called from lisp code." t)
+be invoked as a user command or called from Lisp code." t)
 (defvar beacon-mode nil "\
 Non-nil if Beacon mode is enabled.
 See the `beacon-mode' command
