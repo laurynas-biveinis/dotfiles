@@ -981,11 +981,6 @@ RULE is a plist containing either :subject-exact or :subject-match."
 
 ;;; Utilities
 
-(defun my-recompile-packages ()
-  "Force full recompilation of installed packages."
-  (interactive)
-  (byte-recompile-directory package-user-dir nil 'force))
-
 ;; Written mostly by ChatGPT
 (defun my-find-duplicate-packages ()
   "Find and list duplicate package installations."
