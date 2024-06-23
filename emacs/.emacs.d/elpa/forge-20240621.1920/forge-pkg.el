@@ -1,4 +1,4 @@
-(define-package "forge" "20240617.2245" "Access Git forges from Magit."
+(define-package "forge" "20240621.1920" "Access Git forges from Magit."
   '((emacs "26.3")
     (compat "29.1.4.5")
     (closql "20240405")
@@ -11,7 +11,7 @@
     (seq "2.24")
     (transient "20240421")
     (yaml "0.5.5"))
-  :commit "17f5fa39db99167a2dd9f1f0e53868c14fd3f25f" :authors
+  :commit "f8a7e8a678c2e379aff91596a05a49678a3ebd84" :authors
   '(("Jonas Bernoulli" . "emacs.forge@jonas.bernoulli.dev"))
   :maintainer
   '("Jonas Bernoulli" . "emacs.forge@jonas.bernoulli.dev")

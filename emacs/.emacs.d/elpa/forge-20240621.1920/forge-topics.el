@@ -233,7 +233,7 @@ Must be set before `forge-topics' is loaded.")
 (defun forge-menu-quit-list ()
   "From a transient menu, quit the list buffer and the menu.
 
-If quitting the list buffer causes another topic, repository or
+If quitting the list buffer causes another topic, repository list or
 notification list buffer to become current in the selected window,
 then display the respective menu, otherwise display no menu."
   (interactive)
@@ -280,9 +280,12 @@ then display the respective menu, otherwise display no menu."
   "List topics of the current repository."
   :class 'forge--topics-list-command :global nil :type nil
   :description "topics"
-  :inapt-if (lambda () (and (eq major-mode 'forge-topics-mode)
-                       (not (oref forge--buffer-topics-spec global))))
-  :inapt-face 'forge-suffix-active
+  :inapt-if (lambda () (or (not (forge--get-repository:tracked?))
+                      (and (eq major-mode 'forge-topics-mode)
+                           (not (oref forge--buffer-topics-spec global)))))
+  :inapt-face (lambda () (if (not (forge--get-repository:tracked?))
+                        'transient-inapt-suffix
+                      'forge-suffix-active))
   (declare (interactive-only nil)))
 
 ;;;###autoload (autoload 'forge-list-issues "forge-topics" nil t)
@@ -381,7 +384,9 @@ then display the respective menu, otherwise display no menu."
                          (oset spec state want))
                         ((equal (oref spec state) want)
                          (oset spec state nil))
-                        ((oset spec state want))))
+                        (t
+                         (oset spec active nil)
+                         (oset spec state want))))
                 (forge-refresh-buffer)))
    (description
     :initform (lambda (suffix)

@@ -1121,7 +1121,7 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treepy-0.1.2/treepy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treepy-0.1.2/treepy-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treepy-20230715.2154/treepy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treepy-20230715.2154/treepy-autoloads.el"))
 
 
 
@@ -2506,7 +2506,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240618.1413/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240618.1413/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240622.1240/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240622.1240/transient-autoloads.el"))
 
 
 
@@ -4449,7 +4449,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240613.2254/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240613.2254/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240621.2229/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240621.2229/magit-section-autoloads.el"))
 
 
 
@@ -4488,7 +4488,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240616.1902/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240616.1902/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240622.2136/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240622.2136/magit-autoloads.el"))
 
 
 
@@ -9767,7 +9767,7 @@ Save keyfreq data now." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/info-colors-0.2/info-colors-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/info-colors-0.2/info-colors-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/info-colors-20220927.1640/info-colors-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/info-colors-20220927.1640/info-colors-autoloads.el"))
 
 
 
@@ -9839,14 +9839,13 @@ it is disabled.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "indent-bars-ts" '("ibtcs" "indent-bars-"))
-
 
 
 (provide 'indent-bars-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/iedit-0.9.9.9.9/iedit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-0.9.9.9.9/iedit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20220216.717/iedit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/iedit-20220216.717/iedit-autoloads.el"))
 
 
 
@@ -11652,7 +11651,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240617.2245/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240617.2245/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240621.1920/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240621.1920/forge-autoloads.el"))
 
 
 
@@ -11679,10 +11678,7 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
 
  (autoload 'forge-dispatch "forge-commands" nil t)
  (autoload 'forge-configure "forge-commands" nil t)
-(autoload 'forge-pull "forge-commands" "\
-Pull forge topics for the current repository if it is already tracked.
-If the current repository is still untracked locally, or the current
-repository cannot be determined, instead invoke `forge-add-repository'." t)
+ (autoload 'forge-pull "forge-commands" nil t)
 (autoload 'forge-pull-notifications "forge-commands" "\
 Fetch notifications for all repositories from the current forge." t)
  (autoload 'forge-pull-topic "forge-commands" nil t)
@@ -11783,19 +11779,7 @@ If the fork already exists, then that isn't an error; the remote
 is added anyway.  Currently this only supports Github and Gitlab.
 
 (fn FORK REMOTE)" t)
-(autoload 'forge-merge "forge-commands" "\
-Merge the current pull-request using METHOD using the forge's API.
-
-If there is no current pull-request or with a prefix argument,
-then read pull-request PULLREQ to visit instead.
-
-Use of this command is discouraged.  Unless the remote repository
-is configured to disallow that, you should instead merge locally
-and then push the target branch.  Forges detect that you have
-done that and respond by automatically marking the pull-request
-as merged.
-
-(fn PULLREQ METHOD)" t)
+ (autoload 'forge-merge "forge-commands" nil t)
 (autoload 'forge-rename-default-branch "forge-commands" "\
 Rename the default branch to NEWNAME.
 Change the name on the upstream remote and locally, and update
@@ -11861,8 +11845,7 @@ heavy development." t)
 
 
 
-(transient-define-suffix forge-list-notifications nil "\
-List notifications." :inapt-if-mode 'forge-notifications-mode :inapt-face 'forge-suffix-active (declare (interactive-only nil)) (interactive) (forge-notifications-setup-buffer) (transient-setup 'forge-notifications-menu))
+ (autoload 'forge-list-notifications "forge-notify" nil t)
 (register-definition-prefixes "forge-notify" '("forge-"))
 
 
@@ -13027,7 +13010,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/beacon-1.3.4/beacon-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/beacon-1.3.4/beacon-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/beacon-20220730.100/beacon-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/beacon-20220730.100/beacon-autoloads.el"))
 
 
 
@@ -13040,7 +13023,7 @@ it is disabled.
 Blink the beacon at the position of the cursor.
 Unlike `beacon-blink-automated', the beacon will blink
 unconditionally (even if `beacon-mode' is disabled), and this can
-be invoked as a user command or called from lisp code." t)
+be invoked as a user command or called from Lisp code." t)
 (defvar beacon-mode nil "\
 Non-nil if Beacon mode is enabled.
 See the `beacon-mode' command
@@ -13074,7 +13057,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-5.0.0/all-the-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-5.0.0/all-the-icons-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20240108.559/all-the-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20240108.559/all-the-icons-autoloads.el"))
 
 
 
@@ -13251,7 +13234,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240617.2245" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240616.1902" "/Users/laurynas/.emacs.d/elpa/magit-section-20240613.2254" "/Users/laurynas/.emacs.d/elpa/transient-20240618.1413" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240618.1840" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240621.1920" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240622.2136" "/Users/laurynas/.emacs.d/elpa/magit-section-20240621.2229" "/Users/laurynas/.emacs.d/elpa/transient-20240622.1240" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240618.1840" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

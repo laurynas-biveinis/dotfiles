@@ -809,8 +809,12 @@ can be selected from the start."
            (`(forge-pullreq rejected)  'forge-pullreq-rejected)))))))
 
 (defun forge--format-topic-milestone (topic)
-  (and-let* ((id (oref topic milestone)))
-    (caar (forge-sql [:select [title] :from milestone :where (= id $s1)] id))))
+  (and-let* ((id (oref topic milestone))
+             (str (caar (forge-sql [:select [title]
+                                    :from milestone
+                                    :where (= id $s1)]
+                                   id))))
+    (magit--propertize-face str 'forge-topic-label)))
 
 (defun forge--format-topic-labels (topic)
   (and-let* ((labels (closql--iref topic 'labels)))
@@ -1024,15 +1028,12 @@ This mode itself is never used directly."
 (defun forge-topic-setup-buffer (topic)
   (let* ((repo (forge-get-repository topic))
          (name (format "*forge: %s %s*" (oref repo slug) (oref topic slug)))
-         (magit-generate-buffer-name-function (lambda (_mode _value) name))
-         (current-repo (forge-get-repository :known?))
-         (default-directory (if (forge-repository-equal current-repo repo)
-                                default-directory
-                              (or (forge-get-worktree repo)
-                                  default-directory))))
+         (magit-generate-buffer-name-function (lambda (_mode _value) name)))
     (magit-setup-buffer-internal
      (if (forge-issue-p topic) #'forge-issue-mode #'forge-pullreq-mode)
-     t `((forge-buffer-topic ,topic)) name)
+     t `((forge-buffer-topic ,topic)
+         (default-directory ,(or (forge-get-worktree repo) "/")))
+     name)
     (forge-topic-mark-read topic)))
 
 (defun forge-topic-refresh-buffer ()

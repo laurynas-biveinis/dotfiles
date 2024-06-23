@@ -31,10 +31,7 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
 
  (autoload 'forge-dispatch "forge-commands" nil t)
  (autoload 'forge-configure "forge-commands" nil t)
-(autoload 'forge-pull "forge-commands" "\
-Pull forge topics for the current repository if it is already tracked.
-If the current repository is still untracked locally, or the current
-repository cannot be determined, instead invoke `forge-add-repository'." t)
+ (autoload 'forge-pull "forge-commands" nil t)
 (autoload 'forge-pull-notifications "forge-commands" "\
 Fetch notifications for all repositories from the current forge." t)
  (autoload 'forge-pull-topic "forge-commands" nil t)
@@ -135,19 +132,7 @@ If the fork already exists, then that isn't an error; the remote
 is added anyway.  Currently this only supports Github and Gitlab.
 
 (fn FORK REMOTE)" t)
-(autoload 'forge-merge "forge-commands" "\
-Merge the current pull-request using METHOD using the forge's API.
-
-If there is no current pull-request or with a prefix argument,
-then read pull-request PULLREQ to visit instead.
-
-Use of this command is discouraged.  Unless the remote repository
-is configured to disallow that, you should instead merge locally
-and then push the target branch.  Forges detect that you have
-done that and respond by automatically marking the pull-request
-as merged.
-
-(fn PULLREQ METHOD)" t)
+ (autoload 'forge-merge "forge-commands" nil t)
 (autoload 'forge-rename-default-branch "forge-commands" "\
 Rename the default branch to NEWNAME.
 Change the name on the upstream remote and locally, and update
@@ -221,8 +206,7 @@ heavy development." t)
 
 ;;; Generated autoloads from forge-notify.el
 
-(transient-define-suffix forge-list-notifications nil "\
-List notifications." :inapt-if-mode 'forge-notifications-mode :inapt-face 'forge-suffix-active (declare (interactive-only nil)) (interactive) (forge-notifications-setup-buffer) (transient-setup 'forge-notifications-menu))
+ (autoload 'forge-list-notifications "forge-notify" nil t)
 (register-definition-prefixes "forge-notify" '("forge-"))
 
 

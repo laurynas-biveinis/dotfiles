@@ -31,6 +31,7 @@
 (require 'magit-base)
 (require 'magit-git)
 
+(require 'benchmark)
 (require 'browse-url)
 (require 'format-spec)
 (require 'help-mode)
@@ -1008,7 +1009,7 @@ Run hooks `magit-pre-refresh-hook' and `magit-post-refresh-hook'."
             (let* ((c (caar magit--refresh-cache))
                    (a (+ c (cdar magit--refresh-cache))))
               (message "Refreshing magit...done (%.3fs, cached %s/%s (%.0f%%))"
-                       (float-time (time-subtract (current-time) start))
+                       (float-time (time-since start))
                        c a (* (/ c (* a 1.0)) 100)))))
       (run-hooks 'magit-unwind-refresh-hook))))
 
@@ -1075,8 +1076,7 @@ Run hooks `magit-pre-refresh-hook' and `magit-post-refresh-hook'."
         (set-buffer-modified-p nil))
       (when magit-refresh-verbose
         (message "Refreshing buffer `%s'...done (%.3fs)" (buffer-name)
-                 (float-time (time-subtract (current-time)
-                                            magit-refresh-start-time)))))))
+                 (float-time (time-since magit-refresh-start-time)))))))
 
 (defun magit-profile-refresh-buffer ()
   "Profile refreshing the current Magit buffer."
@@ -1453,14 +1453,17 @@ The additional output can be found in the *Messages* buffer."
            (if magit-refresh-verbose "Enabled" "Disabled")))
 
 (defun magit-run-hook-with-benchmark (hook)
-  (when hook
-    (if magit-refresh-verbose
-        (let ((start (current-time)))
-          (message "Running %s..." hook)
-          (run-hooks hook)
-          (message "Running %s...done (%.3fs)" hook
-                   (float-time (time-subtract (current-time) start))))
-      (run-hooks hook))))
+  (cond
+   ((not hook))
+   (magit-refresh-verbose
+    (message "Running %s..." hook)
+    (message "Running %s...done (%.3fs)" hook
+             (benchmark-elapse
+               (run-hook-wrapped
+                hook
+                (lambda (fn)
+                  (message "  %-50s %f" fn (benchmark-elapse (funcall fn))))))))
+   ((run-hooks hook))))
 
 ;;; _
 (provide 'magit-mode)
