@@ -46,6 +46,8 @@ def get_qif_investment_action(payment_type):
         return "Buy"
     if payment_type == "Termination":
         return "Sell"
+    if payment_type == "Early repayment":
+        return "Sell"
     raise ValueError(f"Unknown type {payment_type}")
 
 
