@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240618.1840/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240618.1840/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240623.1757/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240623.1757/with-editor-autoloads.el"))
 
 
 
@@ -902,7 +902,7 @@ Get the specified URL into the BUFFER.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20240203.1221/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20240203.1221/wakatime-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20240623.653/wakatime-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/wakatime-mode-20240623.653/wakatime-mode-autoloads.el"))
 
 
 
@@ -2506,7 +2506,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240622.1240/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240622.1240/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240623.1341/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240623.1341/transient-autoloads.el"))
 
 
 
@@ -4465,7 +4465,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240618.1142/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240618.1142/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240623.1335/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240623.1335/git-commit-autoloads.el"))
 
 
 
@@ -4488,7 +4488,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240622.2136/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240622.2136/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240623.1335/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240623.1335/magit-autoloads.el"))
 
 
 
@@ -7164,7 +7164,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240611.2032/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240611.2032/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240623.1340/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240623.1340/emacsql-autoloads.el"))
 
 
 
@@ -11635,7 +11635,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240601.1727/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240601.1727/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240623.2020/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240623.2020/closql-autoloads.el"))
 
 
 
@@ -11651,7 +11651,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240621.1920/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240621.1920/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240623.1337/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240623.1337/forge-autoloads.el"))
 
 
 
@@ -13057,7 +13057,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20240108.559/all-the-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20240108.559/all-the-icons-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20240623.1800/all-the-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20240623.1800/all-the-icons-autoloads.el"))
 
 
 
@@ -13234,7 +13234,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240621.1920" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240622.2136" "/Users/laurynas/.emacs.d/elpa/magit-section-20240621.2229" "/Users/laurynas/.emacs.d/elpa/transient-20240622.1240" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240618.1840" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240623.1337" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240623.1335" "/Users/laurynas/.emacs.d/elpa/magit-section-20240621.2229" "/Users/laurynas/.emacs.d/elpa/transient-20240623.1341" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240623.1757" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
