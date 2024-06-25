@@ -407,3 +407,8 @@ brew install mono
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
 	guitar-pro transcribe
 duti -s jp.tmkk.XLD .flac all
+#
+# Backup and Spotlight exclusions
+#
+mkdir ~/donotindex.noIndex
+sudo tmutil addexclusion -p ~/donotindex.noIndex
