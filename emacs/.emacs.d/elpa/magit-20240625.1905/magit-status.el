@@ -342,38 +342,22 @@ init file: (global-set-key (kbd \"C-x g\") \\='magit-status-quick)."
 
 (transient-define-prefix magit-status-jump ()
   "In a Magit-Status buffer, jump to a section."
-  ["Jump to"
-   [("z " "Stashes" magit-jump-to-stashes
-     :if (lambda () (memq 'magit-insert-stashes magit-status-sections-hook)))
-    ("t " "Tracked" magit-jump-to-tracked
-     :if (lambda () (memq 'magit-insert-tracked-files magit-status-sections-hook)))
-    ("n " "Untracked" magit-jump-to-untracked
-     :if (lambda () (memq 'magit-insert-untracked-files magit-status-sections-hook)))
-    ("u " "Unstaged" magit-jump-to-unstaged
-     :if (lambda () (memq 'magit-insert-unstaged-changes magit-status-sections-hook)))
-    ("s " "Staged" magit-jump-to-staged
-     :if (lambda () (memq 'magit-insert-staged-changes magit-status-sections-hook)))]
-   [("fu" "Unpulled from upstream" magit-jump-to-unpulled-from-upstream
-     :if (lambda () (memq 'magit-insert-unpulled-from-upstream magit-status-sections-hook)))
-    ("fp" "Unpulled from pushremote" magit-jump-to-unpulled-from-pushremote
-     :if (lambda () (memq 'magit-insert-unpulled-from-pushremote magit-status-sections-hook)))
-    ("pu" magit-jump-to-unpushed-to-upstream
-     :if (lambda ()
-           (or (memq 'magit-insert-unpushed-to-upstream-or-recent magit-status-sections-hook)
-               (memq 'magit-insert-unpushed-to-upstream magit-status-sections-hook)))
-     :description (lambda ()
-                    (let ((upstream (magit-get-upstream-branch)))
-                      (if (or (not upstream)
-                              (magit-rev-ancestor-p "HEAD" upstream))
-                          "Recent commits"
-                        "Unmerged into upstream"))))
-    ("pp" "Unpushed to pushremote" magit-jump-to-unpushed-to-pushremote
-     :if (lambda () (memq 'magit-insert-unpushed-to-pushremote magit-status-sections-hook)))
-    ("a " "Assumed unstaged" magit-jump-to-assume-unchanged
-     :if (lambda () (memq 'magit-insert-assume-unchanged-files magit-status-sections-hook)))
-    ("w " "Skip worktree" magit-jump-to-skip-worktree
-     :if (lambda () (memq 'magit-insert-skip-worktree-files magit-status-sections-hook)))]
-   [("i" "Using Imenu" imenu)]])
+  [["Jump to"
+    ("z " magit-jump-to-stashes)
+    ("t " magit-jump-to-tracked)
+    ("n " magit-jump-to-untracked)
+    ("i " magit-jump-to-ignored)
+    ("u " magit-jump-to-unstaged)
+    ("s " magit-jump-to-staged)]
+   [""
+    ("fu" magit-jump-to-unpulled-from-upstream)
+    ("fp" magit-jump-to-unpulled-from-pushremote)
+    ("pu" magit-jump-to-unpushed-to-upstream)
+    ("pp" magit-jump-to-unpushed-to-pushremote)
+    ("a " magit-jump-to-assume-unchanged)
+    ("w " magit-jump-to-skip-worktree)]
+   ["Jump using"
+    ("j"  "Imenu" imenu)]])
 
 (define-derived-mode magit-status-mode magit-mode "Magit"
   "Mode for looking at Git status.
@@ -705,7 +689,20 @@ remote in alphabetic order."
   "<1>" (magit-menu-item "Stage files"   #'magit-stage))
 
 (magit-define-section-jumper magit-jump-to-untracked
-  "Untracked files" untracked)
+  "Untracked files" untracked nil magit-insert-untracked-files)
+
+(magit-define-section-jumper magit-jump-to-tracked
+  "Tracked files" tracked nil magit-insert-tracked-files)
+
+(magit-define-section-jumper magit-jump-to-ignored
+  "Ignored files" ignored nil magit-insert-ignored-files)
+
+(magit-define-section-jumper magit-jump-to-skip-worktree
+  "Skip-worktree files" skip-worktree nil magit-insert-skip-worktree-files)
+
+(magit-define-section-jumper magit-jump-to-assume-unchanged
+  "Assume-unchanged files" assume-unchanged nil
+  magit-insert-assume-unchanged-files)
 
 (defun magit-insert-untracked-files ()
   "Maybe insert a list or tree of untracked files.
@@ -718,30 +715,14 @@ be expanded using \"TAB\".
 If the first element of `magit-buffer-diff-files' is a
 directory, then limit the list to files below that.  The value
 value of that variable can be set using \"D -- DIRECTORY RET g\"."
-  (let* ((show (or (magit-get "status.showUntrackedFiles") "normal"))
-         (base (car magit-buffer-diff-files))
-         (base (and base (file-directory-p base) base)))
+  (let ((show (or (magit-get "status.showUntrackedFiles") "normal")))
     (unless (equal show "no")
-      (if (equal show "all")
-          (when-let ((files (magit-untracked-files nil base)))
-            (magit-insert-section (untracked)
-              (magit-insert-heading "Untracked files:")
-              (magit-insert-files files base)
-              (insert ?\n)))
-        (when-let ((files
-                    (--mapcat (and (eq (aref it 0) ??)
-                                   (list (substring it 3)))
-                              (magit-git-items "status" "-z" "--porcelain"
-                                               (magit-ignore-submodules-p t)
-                                               "--" base))))
-          (magit-insert-section (untracked)
-            (magit-insert-heading "Untracked files:")
-            (dolist (file files)
-              (magit-insert-section (file file)
-                (insert (propertize file 'font-lock-face 'magit-filename) ?\n)))
-            (insert ?\n)))))))
-
-(magit-define-section-jumper magit-jump-to-tracked "Tracked files" tracked)
+      (let* ((all (equal show "all"))
+             (base (car magit-buffer-diff-files))
+             (base (and base (file-directory-p base) base)))
+        (magit-insert-files 'untracked
+                            (lambda () (magit-untracked-files nil base (not all)))
+                            (not all))))))
 
 (defun magit-insert-tracked-files ()
   "Insert a tree of tracked files.
@@ -749,13 +730,7 @@ value of that variable can be set using \"D -- DIRECTORY RET g\"."
 If the first element of `magit-buffer-diff-files' is a
 directory, then limit the list to files below that.  The value
 value of that variable can be set using \"D -- DIRECTORY RET g\"."
-  (when-let ((files (magit-list-files)))
-    (let* ((base (car magit-buffer-diff-files))
-           (base (and base (file-directory-p base) base)))
-      (magit-insert-section (tracked nil t)
-        (magit-insert-heading "Tracked files:")
-        (magit-insert-files files base)
-        (insert ?\n)))))
+  (magit-insert-files 'tracked #'magit-list-files))
 
 (defun magit-insert-ignored-files ()
   "Insert a tree of ignored files.
@@ -763,16 +738,7 @@ value of that variable can be set using \"D -- DIRECTORY RET g\"."
 If the first element of `magit-buffer-diff-files' is a
 directory, then limit the list to files below that.  The value
 of that variable can be set using \"D -- DIRECTORY RET g\"."
-  (when-let ((files (magit-ignored-files)))
-    (let* ((base (car magit-buffer-diff-files))
-           (base (and base (file-directory-p base) base)))
-      (magit-insert-section (tracked nil t)
-        (magit-insert-heading "Ignored files:")
-        (magit-insert-files files base)
-        (insert ?\n)))))
-
-(magit-define-section-jumper magit-jump-to-skip-worktree
-  "Skip-worktree files" skip-worktree)
+  (magit-insert-files 'ignored #'magit-ignored-files))
 
 (defun magit-insert-skip-worktree-files ()
   "Insert a tree of skip-worktree files.
@@ -780,16 +746,7 @@ of that variable can be set using \"D -- DIRECTORY RET g\"."
 If the first element of `magit-buffer-diff-files' is a
 directory, then limit the list to files below that.  The value
 of that variable can be set using \"D -- DIRECTORY RET g\"."
-  (when-let ((files (magit-skip-worktree-files)))
-    (let* ((base (car magit-buffer-diff-files))
-           (base (and base (file-directory-p base) base)))
-      (magit-insert-section (skip-worktree nil t)
-        (magit-insert-heading "Skip-worktree files:")
-        (magit-insert-files files base)
-        (insert ?\n)))))
-
-(magit-define-section-jumper magit-jump-to-assume-unchanged
-  "Assume-unchanged files" assume-unchanged)
+  (magit-insert-files 'skip-worktree #'magit-skip-worktree-files))
 
 (defun magit-insert-assume-unchanged-files ()
   "Insert a tree of files that are assumed to be unchanged.
@@ -797,25 +754,34 @@ of that variable can be set using \"D -- DIRECTORY RET g\"."
 If the first element of `magit-buffer-diff-files' is a
 directory, then limit the list to files below that.  The value
 of that variable can be set using \"D -- DIRECTORY RET g\"."
-  (when-let ((files (magit-assume-unchanged-files)))
+  (magit-insert-files 'assume-unchanged #'magit-assume-unchanged-files))
+
+(defun magit-insert-files (type fn &optional nogroup)
+  (when-let ((files (funcall fn)))
     (let* ((base (car magit-buffer-diff-files))
-           (base (and base (file-directory-p base) base)))
-      (magit-insert-section (assume-unchanged nil t)
-        (magit-insert-heading "Assume-unchanged files:")
-        (magit-insert-files files base)
+           (base (and base (file-directory-p base) base))
+           (title (symbol-name type)))
+      (magit-insert-section ((eval type) nil t)
+        (magit-insert-heading (length files)
+          (format "%c%s files"
+                  (capitalize (aref title 0))
+                  (substring title 1)))
+        (magit-insert-files-1 files base nogroup)
         (insert ?\n)))))
 
-(defun magit-insert-files (files directory)
-  (while (and files (string-prefix-p (or directory "") (car files)))
+(defun magit-insert-files-1 (files directory &optional nogroup)
+  (while (and files (or nogroup
+                        (not directory)
+                        (string-prefix-p directory (car files))))
     (let ((dir (file-name-directory (car files))))
-      (if (equal dir directory)
+      (if (or nogroup (equal dir directory))
           (let ((file (pop files)))
             (magit-insert-section (file file)
               (insert (propertize file 'font-lock-face 'magit-filename) ?\n)))
         (magit-insert-section (file dir t)
           (insert (propertize dir 'file 'magit-filename) ?\n)
           (magit-insert-heading)
-          (setq files (magit-insert-files files dir))))))
+          (setq files (magit-insert-files-1 files dir))))))
   files)
 
 ;;; _

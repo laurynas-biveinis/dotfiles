@@ -1832,7 +1832,7 @@ Type \\[magit-cherry-pick] to apply the commit at point.
 (defun magit-insert-cherry-commits ()
   "Insert commit sections into a `magit-cherry-mode' buffer."
   (magit-insert-section (cherries)
-    (magit-insert-heading "Cherry commits:")
+    (magit-insert-heading t "Cherry commits")
     (magit-git-wash (apply-partially #'magit-log-wash-log 'cherry)
       "cherry" "-v" "--abbrev"
       magit-buffer-upstream
@@ -1859,7 +1859,8 @@ in the pushremote case."
     (if (equal value "..@{upstream}") value "..@{push}")))
 
 (magit-define-section-jumper magit-jump-to-unpulled-from-upstream
-  "Unpulled from @{upstream}" unpulled "..@{upstream}")
+  "Unpulled from @{upstream}" unpulled "..@{upstream}"
+  magit-insert-unpulled-from-upstream)
 
 (defun magit-insert-unpulled-from-upstream ()
   "Insert commits that haven't been pulled from the upstream yet."
@@ -1873,7 +1874,8 @@ in the pushremote case."
       (magit-log-insert-child-count))))
 
 (magit-define-section-jumper magit-jump-to-unpulled-from-pushremote
-  "Unpulled from <push-remote>" unpulled "..@{push}")
+  "Unpulled from <push-remote>" unpulled "..@{push}"
+  magit-insert-unpulled-from-pushremote)
 
 (defun magit-insert-unpulled-from-pushremote ()
   "Insert commits that haven't been pulled from the push-remote yet."
@@ -1898,7 +1900,18 @@ in the pushremote case."
     (if (equal value "@{upstream}..") value "@{push}..")))
 
 (magit-define-section-jumper magit-jump-to-unpushed-to-upstream
-  "Unpushed to @{upstream}" unpushed "@{upstream}..")
+  "Unpushed to @{upstream}" unpushed "@{upstream}.." nil
+  :if (lambda ()
+        (or (memq 'magit-insert-unpushed-to-upstream-or-recent
+                  magit-status-sections-hook)
+            (memq 'magit-insert-unpushed-to-upstream
+                  magit-status-sections-hook)))
+  :description (lambda ()
+                 (let ((upstream (magit-get-upstream-branch)))
+                   (if (or (not upstream)
+                           (magit-rev-ancestor-p "HEAD" upstream))
+                       "Recent commits"
+                     "Unmerged into upstream"))))
 
 (defun magit-insert-unpushed-to-upstream-or-recent ()
   "Insert section showing unpushed or other recent commits.
@@ -1940,7 +1953,8 @@ Show the last `magit-log-section-commit-count' commits."
                         magit-buffer-log-args))))))
 
 (magit-define-section-jumper magit-jump-to-unpushed-to-pushremote
-  "Unpushed to <push-remote>" unpushed "@{push}..")
+  "Unpushed to <push-remote>" unpushed "@{push}.."
+  magit-insert-unpushed-to-pushremote)
 
 (defun magit-insert-unpushed-to-pushremote ()
   "Insert commits that haven't been pushed to the push-remote yet."
@@ -1986,7 +2000,7 @@ not shared with any local commit) with \"+\", and all others with
 \"-\"."
   (when (magit-git-success "rev-parse" "@{upstream}")
     (magit-insert-section (unpulled "..@{upstream}")
-      (magit-insert-heading "Unpulled commits:")
+      (magit-insert-heading t "Unpulled commits")
       (magit-git-wash (apply-partially #'magit-log-wash-log 'cherry)
         "cherry" "-v" (magit-abbrev-arg)
         (magit-get-current-branch) "@{upstream}"))))
@@ -1999,7 +2013,7 @@ a patch-id not shared with any upstream commit) with \"+\", and
 all others with \"-\"."
   (when (magit-git-success "rev-parse" "@{upstream}")
     (magit-insert-section (unpushed "@{upstream}..")
-      (magit-insert-heading "Unpushed commits:")
+      (magit-insert-heading t "Unpushed commits")
       (magit-git-wash (apply-partially #'magit-log-wash-log 'cherry)
         "cherry" "-v" (magit-abbrev-arg) "@{upstream}"))))
 

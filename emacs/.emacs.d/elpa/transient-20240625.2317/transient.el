@@ -2528,7 +2528,11 @@ value.  Otherwise return CHILDREN as is."
          t)))
 
 (defun transient--post-command ()
-  (unless (transient--premature-post-command)
+  (transient--debug 'clear-current)
+  (setq transient-current-command nil)
+  (setq transient-current-suffixes nil)
+  (unless (prog1 (transient--premature-post-command)
+            (setq transient-current-prefix nil))
     (transient--debug 'post-command)
     (transient--with-emergency-exit :post-command
       (cond (transient--exitp (transient--post-exit))
@@ -2576,9 +2580,6 @@ value.  Otherwise return CHILDREN as is."
     (remove-hook 'pre-command-hook  #'transient--pre-command)
     (remove-hook 'post-command-hook #'transient--post-command)
     (advice-remove 'recursive-edit #'transient--recursive-edit))
-  (setq transient-current-prefix nil)
-  (setq transient-current-command nil)
-  (setq transient-current-suffixes nil)
   (let ((resume (and transient--stack
                      (not (memq transient--exitp '(replace suspend))))))
     (unless (or resume (eq transient--exitp 'replace))

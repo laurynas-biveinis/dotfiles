@@ -2655,99 +2655,49 @@ or a ref which is not a branch, then it inserts nothing."
   (magit-insert-section
       ( commit-message nil nil
         :heading-highlight-face 'magit-diff-revision-summary-highlight)
-    (let ((beg (point))
-          (rev magit-buffer-revision))
-      (insert (with-temp-buffer
-                (magit-rev-insert-format "%B" rev)
-                (magit-revision--wash-message)))
-      (if (= (point) (+ beg 2))
-          (progn (delete-char -2)
-                 (insert "(no message)\n"))
-        (goto-char beg)
-        (save-excursion
-          (while (search-forward "\r\n" nil t) ; Remove trailing CRs.
-            (delete-region (match-beginning 0) (1+ (match-beginning 0)))))
-        (when magit-revision-fill-summary-line
-          (let ((fill-column (min magit-revision-fill-summary-line
-                                  (window-width (get-buffer-window nil t)))))
-            (fill-region (point) (line-end-position))))
-        (when magit-revision-use-hash-sections
+    (if-let* ((rev magit-buffer-revision)
+              (msg (with-temp-buffer
+                     (save-excursion (magit-rev-insert-format "%B" rev))
+                     (magit-revision--wash-message))))
+        (progn
+          (save-excursion (insert msg))
+          (magit-revision--wash-message-hashes)
           (save-excursion
-            ;; Start after beg to prevent a (commit text) section from
-            ;; starting at the same point as the (commit-message)
-            ;; section.
-            (goto-char (1+ beg))
-            (while (not (eobp))
-              (re-search-forward "\\_<" nil 'move)
-              (let ((beg (point)))
-                (re-search-forward "\\_>" nil t)
-                (when (> (point) beg)
-                  (let ((text (buffer-substring-no-properties beg (point))))
-                    (when (pcase magit-revision-use-hash-sections
-                            ('quickest ; false negatives and positives
-                             (and (>= (length text) 7)
-                                  (string-match-p "[0-9]" text)
-                                  (string-match-p "[a-z]" text)))
-                            ('quicker  ; false negatives (number-less hashes)
-                             (and (>= (length text) 7)
-                                  (string-match-p "[0-9]" text)
-                                  (magit-commit-p text)))
-                            ('quick    ; false negatives (short hashes)
-                             (and (>= (length text) 7)
-                                  (magit-commit-p text)))
-                            ('slow
-                             (magit-commit-p text)))
-                      (put-text-property beg (point)
-                                         'font-lock-face 'magit-hash)
-                      (let ((end (point)))
-                        (goto-char beg)
-                        (magit-insert-section (commit text)
-                          (goto-char end))))))))))
-        (save-excursion
-          (forward-line)
-          (magit--add-face-text-property
-           beg (point) 'magit-diff-revision-summary)
-          (magit-insert-heading))
-        (when magit-diff-highlight-keywords
-          (save-excursion
-            (while (re-search-forward "\\[[^[]*\\]" nil t)
-              (let ((beg (match-beginning 0))
-                    (end (match-end 0)))
-                (put-text-property
-                 beg end 'font-lock-face
-                 (if-let ((face (get-text-property beg 'font-lock-face)))
-                     (list face 'magit-keyword)
-                   'magit-keyword))))))
-        (goto-char (point-max))))))
+            (magit--add-face-text-property (point)
+                                           (progn (forward-line) (point))
+                                           'magit-diff-revision-summary)
+            (magit-insert-heading))
+          (goto-char (point-max)))
+      (insert "(no message)\n"))))
 
 (defun magit-insert-revision-notes ()
   "Insert commit notes into a revision buffer."
-  (let* ((var "core.notesRef")
-         (def (or (magit-get var) "refs/notes/commits")))
+  (let ((default (or (magit-get "core.notesRef") "refs/notes/commits")))
     (dolist (ref (magit-list-active-notes-refs))
-      (magit-insert-section
-          ( notes ref (not (equal ref def))
+      (when-let* ((rev magit-buffer-revision)
+                  (msg (with-temp-buffer
+                         (save-excursion
+                           (magit-git-insert "-c" (concat "core.notesRef=" ref)
+                                             "notes" "show" rev))
+                         (magit-revision--wash-message))))
+        (magit-insert-section
+          ( notes ref (not (equal ref default))
             :heading-highlight-face 'magit-diff-hunk-heading-highlight)
-        (let ((beg (point))
-              (rev magit-buffer-revision))
-          (insert (with-temp-buffer
-                    (magit-git-insert "-c" (concat "core.notesRef=" ref)
-                                      "notes" "show" rev)
-                    (magit-revision--wash-message)))
-          (if (= (point) beg)
-              (magit-cancel-section)
-            (goto-char beg)
+          (save-excursion (insert msg))
+          (magit-revision--wash-message-hashes)
+          (save-excursion
             (end-of-line)
             (insert (format " (%s)"
                             (propertize (if (string-prefix-p "refs/notes/" ref)
                                             (substring ref 11)
                                           ref)
-                                        'font-lock-face 'magit-refname)))
-            (forward-char)
-            (magit--add-face-text-property beg (point) 'magit-diff-hunk-heading)
-            (magit-insert-heading)
-            (goto-char (point-max))
-            (insert ?\n)))))))
+                                        'font-lock-face 'magit-refname))))
+          (magit--add-face-text-property (point)
+                                         (progn (forward-line) (point))
+                                         'magit-diff-revision-summary)
+          (magit-insert-heading)
+          (goto-char (point-max))
+          (insert ?\n))))))
 
 (defun magit-revision--wash-message ()
   (let ((major-mode 'git-commit-mode))
@@ -2756,7 +2706,56 @@ or a ref which is not a branch, then it inserts nothing."
   (unless (memq git-commit-major-mode '(nil text-mode))
     (funcall git-commit-major-mode)
     (font-lock-ensure))
-  (buffer-string))
+  (when (> (point-max) (point-min))
+    (save-excursion
+      (while (search-forward "\r\n" nil t) ; Remove trailing CRs.
+        (delete-region (match-beginning 0) (1+ (match-beginning 0)))))
+    (when magit-revision-fill-summary-line
+      (let ((fill-column (min magit-revision-fill-summary-line
+                              (window-width (get-buffer-window nil t)))))
+        (fill-region (point) (line-end-position))))
+    (when magit-diff-highlight-keywords
+      (save-excursion
+        (while (re-search-forward "\\[[^[]*\\]" nil t)
+          (put-text-property (match-beginning 0)
+                             (match-end 0)
+                             'font-lock-face 'magit-keyword))))
+    (run-hook-wrapped 'magit-wash-message-hook
+                      (lambda (fn) (save-excursion (funcall fn))))
+    (buffer-string)))
+
+(defun magit-revision--wash-message-hashes ()
+  (when magit-revision-use-hash-sections
+    (save-excursion
+      ;; Start after beg to prevent a (commit text) section from
+      ;; starting at the same point as the (commit-message)
+      ;; section.
+      (while (not (eobp))
+        (re-search-forward "\\_<" nil 'move)
+        (let ((beg (point)))
+          (re-search-forward "\\_>" nil t)
+          (when (> (point) beg)
+            (let ((text (buffer-substring-no-properties beg (point))))
+              (when (pcase magit-revision-use-hash-sections
+                      ('quickest ; false negatives and positives
+                       (and (>= (length text) 7)
+                            (string-match-p "[0-9]" text)
+                            (string-match-p "[a-z]" text)))
+                      ('quicker  ; false negatives (number-less hashes)
+                       (and (>= (length text) 7)
+                            (string-match-p "[0-9]" text)
+                            (magit-commit-p text)))
+                      ('quick    ; false negatives (short hashes)
+                       (and (>= (length text) 7)
+                            (magit-commit-p text)))
+                      ('slow
+                       (magit-commit-p text)))
+                (put-text-property beg (point)
+                                   'font-lock-face 'magit-hash)
+                (let ((end (point)))
+                  (goto-char beg)
+                  (magit-insert-section (commit text)
+                    (goto-char end)))))))))))
 
 (defun magit-insert-revision-headers ()
   "Insert headers about the commit into a revision buffer."
@@ -2989,12 +2988,13 @@ It the SECTION has a different type, then do nothing."
   "<2>" (magit-menu-item "Stage all"   #'magit-stage)
   "<1>" (magit-menu-item "Visit diff"  #'magit-diff-unstaged))
 
-(magit-define-section-jumper magit-jump-to-unstaged "Unstaged changes" unstaged)
+(magit-define-section-jumper magit-jump-to-unstaged
+  "Unstaged changes" unstaged nil magit-insert-unstaged-changes)
 
 (defun magit-insert-unstaged-changes ()
   "Insert section showing unstaged changes."
   (magit-insert-section (unstaged)
-    (magit-insert-heading "Unstaged changes:")
+    (magit-insert-heading t "Unstaged changes")
     (magit--insert-diff nil
       "diff" magit-buffer-diff-args "--no-prefix"
       "--" magit-buffer-diff-files)))
@@ -3010,14 +3010,15 @@ It the SECTION has a different type, then do nothing."
   "<2>" (magit-menu-item "Unstage all" #'magit-unstage)
   "<1>" (magit-menu-item "Visit diff"  #'magit-diff-staged))
 
-(magit-define-section-jumper magit-jump-to-staged "Staged changes" staged)
+(magit-define-section-jumper magit-jump-to-staged
+  "Staged changes" staged nil magit-insert-staged-changes)
 
 (defun magit-insert-staged-changes ()
   "Insert section showing staged changes."
   ;; Avoid listing all files as deleted when visiting a bare repo.
   (unless (magit-bare-repo-p)
     (magit-insert-section (staged)
-      (magit-insert-heading "Staged changes:")
+      (magit-insert-heading t "Staged changes")
       (magit--insert-diff nil
         "diff" "--cached" magit-buffer-diff-args "--no-prefix"
         "--" magit-buffer-diff-files))))

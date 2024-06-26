@@ -467,7 +467,7 @@ Then apply STASH, dropping it if it applies cleanly."
   "<1>" (magit-menu-item "Visit %v"  #'magit-stash-show))
 
 (magit-define-section-jumper magit-jump-to-stashes
-  "Stashes" stashes "refs/stash")
+  "Stashes" stashes "refs/stash" magit-insert-stashes)
 
 (cl-defun magit-insert-stashes (&optional (ref   "refs/stash")
                                           (heading "Stashes:"))
@@ -520,9 +520,10 @@ instead of \"Stashes:\"."
 
 (defun magit-stashes-refresh-buffer ()
   (magit-insert-section (stashesbuf)
-    (magit-insert-heading (if (equal magit-buffer-refname "refs/stash")
-                              "Stashes:"
-                            (format "Stashes [%s]:" magit-buffer-refname)))
+    (magit-insert-heading t
+      (if (equal magit-buffer-refname "refs/stash")
+          "Stashes"
+        (format "Stashes [%s]" magit-buffer-refname)))
     (magit-git-wash (apply-partially #'magit-log-wash-log 'stash)
       "reflog" "--format=%gd%x00%aN%x00%at%x00%gs" magit-buffer-refname)))
 
@@ -608,7 +609,7 @@ If there is no stash buffer in the same frame, then do nothing."
 This shows the notes for stash@{N} but not for the other commits
 that make up the stash."
   (magit-insert-section (note)
-    (magit-insert-heading "Notes")
+    (magit-insert-heading t "Notes")
     (magit-git-insert "notes" "show" magit-buffer-revision)
     (magit-cancel-section 'if-empty)
     (insert "\n")))
