@@ -202,6 +202,8 @@ mysql_export_environment_helpers() {
     declare -a -r cmake_debug=("${cmake_common[@]}" "-DCMAKE_BUILD_TYPE=Debug"
                                "-DWITH_DEBUG=ON")
 
+    # If reducing build time is very important, then consider
+    # -DWITH_NDBCLUSTER_STORAGE_ENGINE=OFF
     declare -a -r my8=("-DMYSQL_MAINTAINER_MODE=ON" "-DWITH_SYSTEM_LIBS=ON")
     declare -a -r my8d=("${cmake_debug[@]}" "${my8[@]}")
     declare -a -r my8r=("${cmake_release[@]}" "${my8[@]}")
