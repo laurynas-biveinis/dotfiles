@@ -2528,11 +2528,7 @@ value.  Otherwise return CHILDREN as is."
          t)))
 
 (defun transient--post-command ()
-  (transient--debug 'clear-current)
-  (setq transient-current-command nil)
-  (setq transient-current-suffixes nil)
-  (unless (prog1 (transient--premature-post-command)
-            (setq transient-current-prefix nil))
+  (unless (transient--premature-post-command)
     (transient--debug 'post-command)
     (transient--with-emergency-exit :post-command
       (cond (transient--exitp (transient--post-exit))
@@ -2557,7 +2553,11 @@ value.  Otherwise return CHILDREN as is."
                  (transient--pop-keymap 'transient--redisplay-map)
                  (setq transient--redisplay-map new)
                  (transient--push-keymap 'transient--redisplay-map))
-               (transient--redisplay)))))))
+               (transient--redisplay))))))
+  (transient--debug 'clear-current)
+  (setq transient-current-prefix nil)
+  (setq transient-current-command nil)
+  (setq transient-current-suffixes nil))
 
 (defun transient--post-exit (&optional command)
   (transient--debug 'post-exit)
