@@ -295,7 +295,7 @@ Type \\[magit-reset] to reset `HEAD' to the commit at point.
 
 \\{magit-refs-mode-map}"
   :group 'magit-refs
-  (hack-dir-local-variables-non-file-buffer)
+  (magit-hack-dir-local-variables)
   (setq magit--imenu-group-types '(local remote tags)))
 
 (defun magit-refs-setup-buffer (ref args)
@@ -639,7 +639,7 @@ line is inserted at all."
 %(upstream:short)%00%(upstream)%00%(upstream:track)%00"
                                   (if magit-refs-show-push-remote "\
 %(push:remotename)%00%(push)%00%(push:track)%00%(subject)"
-                                 "%00%00%00%(subject)"))
+                                    "%00%00%00%(subject)"))
                           "refs/heads"
                           magit-buffer-arguments))))
     (unless (magit-get-current-branch)

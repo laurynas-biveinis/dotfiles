@@ -1959,7 +1959,7 @@ Staging and applying changes is documented in info node
 
 \\{magit-diff-mode-map}"
   :group 'magit-diff
-  (hack-dir-local-variables-non-file-buffer)
+  (magit-hack-dir-local-variables)
   (setq magit--imenu-item-types 'file))
 
 (put 'magit-diff-mode 'magit-diff-default-arguments
@@ -2554,7 +2554,7 @@ Staging and applying changes is documented in info node
 
 \\{magit-revision-mode-map}"
   :group 'magit-revision
-  (hack-dir-local-variables-non-file-buffer))
+  (magit-hack-dir-local-variables))
 
 (put 'magit-revision-mode 'magit-diff-default-arguments
      '("--stat" "--no-ext-diff"))
@@ -2681,8 +2681,8 @@ or a ref which is not a branch, then it inserts nothing."
                                              "notes" "show" rev))
                          (magit-revision--wash-message))))
         (magit-insert-section
-          ( notes ref (not (equal ref default))
-            :heading-highlight-face 'magit-diff-hunk-heading-highlight)
+            ( notes ref (not (equal ref default))
+              :heading-highlight-face 'magit-diff-hunk-heading-highlight)
           (save-excursion (insert msg))
           (magit-revision--wash-message-hashes)
           (save-excursion
@@ -2900,7 +2900,7 @@ Refer to user option `magit-revision-insert-related-refs-display-alist'."
 (define-derived-mode magit-merge-preview-mode magit-diff-mode "Magit Merge"
   "Mode for previewing a merge."
   :group 'magit-diff
-  (hack-dir-local-variables-non-file-buffer))
+  (magit-hack-dir-local-variables))
 
 (put 'magit-merge-preview-mode 'magit-diff-default-arguments
      '("--no-ext-diff"))
