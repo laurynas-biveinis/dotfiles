@@ -72,6 +72,7 @@ mysql_export_environment_helpers() {
             declare -a my8018_28=()
             export MY8030_840_CORE_DUMP_FLAGS=()
         fi
+        declare -a cmake_release=()
         declare -a my8018_extra=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
         my8018_28+=("-DWITH_ICU=$brew/icu4c")
         declare -a -r my8018_28_cxx_flags=(
@@ -138,6 +139,8 @@ mysql_export_environment_helpers() {
             "--mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1"
             "--mysqld-env=DYLD_INSERT_LIBRARIES=$emd_libdir/libeatmydata.dylib")
     else
+        # Linux-only because of https://bugs.mysql.com/bug.php?id=115471
+        declare -a cmake_release=("-DWITH_LTO=ON")
         declare -a -r my810_820_extra_cxx_flags=()
         declare -a my8018_extra=()
         declare -a my8018_28=()
@@ -196,15 +199,14 @@ mysql_export_environment_helpers() {
     declare -a -r cxx_flags_release=("-O2" "-g" "-DNDEBUG")
 
     declare -a -r cmake_common=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
-    declare -a -r cmake_release=("${cmake_common[@]}"
-                                 "-DBUILD_CONFIG=mysql_release"
-                                 "-DCMAKE_BUILD_TYPE=Release")
+    cmake_release+=("${cmake_common[@]}" "-DBUILD_CONFIG=mysql_release"
+                    "-DCMAKE_BUILD_TYPE=Release")
     declare -a -r cmake_debug=("${cmake_common[@]}" "-DCMAKE_BUILD_TYPE=Debug"
                                "-DWITH_DEBUG=ON")
 
-    # If reducing build time is very important, then consider
-    # -DWITH_NDBCLUSTER_STORAGE_ENGINE=OFF
-    declare -a -r my8=("-DMYSQL_MAINTAINER_MODE=ON" "-DWITH_SYSTEM_LIBS=ON")
+    declare -a -r my8=("-DMYSQL_MAINTAINER_MODE=ON"
+                       "-DWITH_SYSTEM_LIBS=ON"
+                       "-DWITH_NDBCLUSTER_STORAGE_ENGINE=OFF")
     declare -a -r my8d=("${cmake_debug[@]}" "${my8[@]}")
     declare -a -r my8r=("${cmake_release[@]}" "${my8[@]}")
 
