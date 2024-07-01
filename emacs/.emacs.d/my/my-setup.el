@@ -1086,7 +1086,22 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             undo-tree-undo helm-projectile-switch-project
                             xref-go-back helm-previous-line keyboard-quit
                             beginend-org-agenda-mode-goto-beginning
-                            helm-keyboard-quit deadgrep))
+                            helm-keyboard-quit deadgrep
+                            company-select-next-or-abort
+                            org-agenda-do-date-later org-shiftright lsp-rename
+                            deadgrep-visit-result-other-window
+                            beginning-of-buffer xwidget-webkit-scroll-down-line
+                            lsp-format-buffer mouse-set-region shr-browse-url
+                            mu4e-search-maildir company-complete-selection
+                            beginend-magit-status-mode-goto-beginning
+                            mu4e~headers-quit-buffer org-shifttab
+                            magit-commit-create beginend-org-mode-goto-end
+                            dired-next-line helm-find-files
+                            helm-find-files-up-one-level mu4e-search-rerun
+                            quit-window org-clock-in org-clock-out
+                            helm-helm-ff-delete-char-backward-with-subkeys
+                            dired-previous-line xwidget-webkit-scroll-down
+                            org-clock-goto org-shiftleft org-yank))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
