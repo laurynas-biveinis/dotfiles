@@ -206,14 +206,14 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:commit . "00e07e060218fbd1e16faaf10116c03b12e62580"))])
  (auctex .
-	 [(14 0 5)
+	 [(14 0 6)
 	  ((emacs
 	    (27 1)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
 	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
 	   (:maintainer nil . "auctex-devel@gnu.org")
-	   (:commit . "73edb3731e4bdbe3760fb4c12f94ae1aa075458f"))])
+	   (:commit . "be36aa96c813125a1f3849e13223fc68cd09e847"))])
  (auctex-cont-latexmk .
 		      [(0 2)
 		       ((emacs
@@ -893,7 +893,7 @@
 		 (:url . "https://elpa.gnu.org/packages/cycle-quotes.html")
 		 (:commit . "836b19b39651419876e65cdb1a91e3eef83cc4e7"))])
  (dape .
-       [(0 12 0)
+       [(0 13 0)
 	((emacs
 	  (29 1))
 	 (jsonrpc
@@ -901,7 +901,7 @@
 	"Debug Adapter Protocol for Emacs" tar
 	((:url . "https://github.com/svaante/dape")
 	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
-	 (:commit . "51fad7df7473778fbc4bac703317de7f7713b307"))])
+	 (:commit . "985ff97c448b313ef3585cd4aae9dce4518a2136"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -962,7 +962,7 @@
 	     ("Phil Sainty" . "psainty@orcon.net.nz"))
 	    (:commit . "a763ec1e5c2987efea3ce2ee6d9c979f56ab6528"))])
  (denote .
-	 [(2 3 5)
+	 [(3 0 1)
 	  ((emacs
 	    (28 1)))
 	  "Simple notes with an efficient file-naming scheme" tar
@@ -970,7 +970,7 @@
 	   (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	   (:authors
 	    ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	   (:commit . "914e5be6c1ad319cf924aaddc3515aaffe1d4bcc"))])
+	   (:commit . "67f5a7bcead3103013bdb48ee69af690c1baa7ed"))])
  (denote-menu .
 	      [(1 2 0)
 	       ((emacs
@@ -1356,7 +1356,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(0 9 11)
+	 [(0 10 2)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1369,7 +1369,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "968b8631d102c7fd051dbe9eb077755964bb47a2"))])
+	   (:commit . "500f40b81bc5b538017fce91a39b9ab038215f91"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -1925,16 +1925,20 @@
 	     ("Sean Allred" . "code@seanallred.com"))
 	    (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader .
-	  [(0 9 20)
+	  [(0 11 10)
 	   ((emacs
-	     (25)))
-	   "gnamù reader, send buffer contents to a speech engine." tar
-	   ((:keywords "tools" "accessibility")
+	     (26 1))
+	    (seq
+	     (2 24))
+	    (compat
+	     (29 1 4 5)))
+	   "Gnamù reader, send buffer contents to a speech engine" tar
+	   ((:url . "https://gitlab.com/michelangelo-rodriguez/greader")
+	    (:keywords "tools" "accessibility")
 	    (:maintainer "Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com")
 	    (:authors
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
-	    (:url . "https://elpa.gnu.org/packages/greader.html")
-	    (:commit . "524ec7c80038a7f38ab6968cec4e357394e58e66"))])
+	    (:commit . "f73ace20ff1ded3432652d9fc3ddd57c8281f7d2"))])
  (greenbar .
 	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" tar
@@ -2221,7 +2225,7 @@
 		(:url . "https://elpa.gnu.org/packages/jgraph-mode.html")
 		(:commit . "4e13f89fe8837b84d40b969e6a5431816180a747"))])
  (jinx .
-       [(1 8)
+       [(1 9)
 	((emacs
 	  (27 1))
 	 (compat
@@ -2232,7 +2236,7 @@
 	 (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	 (:authors
 	  ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	 (:commit . "d053303b54d8ceb15ee496bf7019837e70876410"))])
+	 (:commit . "4580aad8a0267bf30c98d210b6bdc1a08b1aad75"))])
  (jit-spell .
 	    [(0 4)
 	     ((emacs
@@ -4214,7 +4218,7 @@
 	      ("Paul D. Nelson" . "nelson.paul.david@gmail.com"))
 	     (:commit . "ee1957f3bce6ed04627b985e95a17db190781e06"))])
  (tex-parens .
-	     [(0 2)
+	     [(0 4)
 	      ((emacs
 		(27 1))
 	       (auctex
@@ -4225,7 +4229,7 @@
 	       (:maintainer "Paul D. Nelson" . "nelson.paul.david@gmail.com")
 	       (:authors
 		("Paul D. Nelson" . "nelson.paul.david@gmail.com"))
-	       (:commit . "d2f88832651ae2271b0267dae08b5d01c063cce1"))])
+	       (:commit . "6972f5127ad96aca7ed6025526e72e4b72841835"))])
  (theme-buffet .
 	       [(0 1 2)
 		((emacs
@@ -4306,16 +4310,16 @@
 		  (:url . "https://elpa.gnu.org/packages/track-changes.html")
 		  (:commit . "44036b32ba398cf284320285b60be35874b6eea5"))])
  (tramp .
-	[(2 6 3)
+	[(2 7 1)
 	 ((emacs
-	   (26 1)))
+	   (27 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
 	 ((:url . "https://www.gnu.org/software/tramp/")
 	  (:keywords "comm" "processes")
 	  (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
 	  (:authors
 	   ("Kai Großjohann" . "kai.grossjohann@gmx.net"))
-	  (:commit . "3d3b95bd87d858092ee33ed4f5c7acfbf44a48f2"))])
+	  (:commit . "fe5699e6627f883fa50964ea01b7d23555832ec4"))])
  (tramp-nspawn .
 	       [(1 0 1)
 		((emacs

@@ -1113,7 +1113,10 @@ constructor of that class.
      ‘transient-define-prefix’, described below.  If you use the latter
      approach, you can use the ‘transient-parse-suffixes’ and
      ‘transient-parse-suffix’ functions to transform them from the
-     convenient to the expected form.
+     convenient to the expected form.  Depending on the used group
+     class, ‘transient-parse-suffixes’’s SUFFIXES must be a list of
+     group vectors (for ‘transient-columns’) or a list of suffix lists
+     (for all other group classes).
 
      If you explicitly specify children and then transform them using
      ‘:setup-children’, then the class of the group is determined as
@@ -1124,6 +1127,30 @@ constructor of that class.
      For backward compatibility, if you fail to do so,
      ‘transient-column’ is used and a warning is displayed.  This
      warning will eventually be replaced with an error.
+
+          (transient-define-prefix my-finder-by-keyword ()
+            "Select a keyword and list matching packages."
+            ;; The real `finder-by-keyword' is more convenient
+            ;; of course, but that is not the point here.
+            [:class transient-columns
+             :setup-children
+             (lambda (_)
+               (transient-parse-suffixes
+                'my-finder-by-keyword
+                (let ((char (1- ?A)))
+                  (mapcar                  ; a list ...
+                   (lambda (partition)
+                     (vconcat              ; of group vectors ...
+                      (mapcar (lambda (elt)
+                                (let ((keyword (symbol-name (car elt))))
+                                           ; ... where each suffix is a list
+                                  (list (format "%c" (cl-incf char))
+                                        keyword
+                                        (lambda ()
+                                          (interactive)
+                                          (finder-list-matches keyword)))))
+                              partition)))
+                   (seq-partition finder-known-keywords 7)))))])
 
    • The boolean ‘:pad-keys’ argument controls whether keys of all
      suffixes contained in a group are right padded, effectively
@@ -3227,43 +3254,43 @@ Node: Technical Introduction36414
 Node: Defining Transients42115
 Node: Binding Suffix and Infix Commands44582
 Node: Group Specifications45440
-Node: Suffix Specifications50542
-Node: Defining Suffix and Infix Commands54755
-Node: Using Infix Arguments57803
-Node: Transient State60637
-Ref: Pre-commands for Infixes65452
-Ref: Pre-commands for Suffixes65972
-Ref: Pre-commands for Non-Suffixes68426
-Ref: Special Pre-Commands69562
-Node: Classes and Methods70070
-Node: Group Classes72254
-Node: Group Methods74181
-Node: Prefix Classes75434
-Node: Suffix Classes76525
-Node: Suffix Methods79612
-Node: Suffix Value Methods79933
-Node: Suffix Format Methods82691
-Node: Prefix Slots84170
-Ref: Internal Prefix Slots86305
-Node: Suffix Slots87562
-Ref: Slots of transient-suffix87930
-Ref: Slots of transient-infix89067
-Ref: Slots of transient-variable92363
-Ref: Slots of transient-switches92465
-Node: Predicate Slots92828
-Node: FAQ94263
-Ref: Can I control how the popup buffer is displayed?94392
-Ref: How can I copy text from the popup buffer?94573
-Ref: How can I autoload prefix and suffix commands?95067
-Ref: How does Transient compare to prefix keys and universal arguments?95541
-Ref: How does Transient compare to Magit-Popup and Hydra?95784
-Ref: Why did some of the key bindings change?95978
-Ref: Why does q not quit popups anymore?98331
-Node: Keystroke Index99434
-Node: Command and Function Index101299
-Node: Variable Index107891
-Node: Concept Index110164
-Node: GNU General Public License112900
+Node: Suffix Specifications51968
+Node: Defining Suffix and Infix Commands56181
+Node: Using Infix Arguments59229
+Node: Transient State62063
+Ref: Pre-commands for Infixes66878
+Ref: Pre-commands for Suffixes67398
+Ref: Pre-commands for Non-Suffixes69852
+Ref: Special Pre-Commands70988
+Node: Classes and Methods71496
+Node: Group Classes73680
+Node: Group Methods75607
+Node: Prefix Classes76860
+Node: Suffix Classes77951
+Node: Suffix Methods81038
+Node: Suffix Value Methods81359
+Node: Suffix Format Methods84117
+Node: Prefix Slots85596
+Ref: Internal Prefix Slots87731
+Node: Suffix Slots88988
+Ref: Slots of transient-suffix89356
+Ref: Slots of transient-infix90493
+Ref: Slots of transient-variable93789
+Ref: Slots of transient-switches93891
+Node: Predicate Slots94254
+Node: FAQ95689
+Ref: Can I control how the popup buffer is displayed?95818
+Ref: How can I copy text from the popup buffer?95999
+Ref: How can I autoload prefix and suffix commands?96493
+Ref: How does Transient compare to prefix keys and universal arguments?96967
+Ref: How does Transient compare to Magit-Popup and Hydra?97210
+Ref: Why did some of the key bindings change?97404
+Ref: Why does q not quit popups anymore?99757
+Node: Keystroke Index100860
+Node: Command and Function Index102725
+Node: Variable Index109317
+Node: Concept Index111590
+Node: GNU General Public License114326
 
 End Tag Table
 
