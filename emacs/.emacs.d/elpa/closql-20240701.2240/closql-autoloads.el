@@ -12,6 +12,7 @@
 ;;; Generated autoloads from closql.el
 
 (register-definition-prefixes "closql" '("closql-" "eieio-"))
+
 
 ;;; End of scraped data
 

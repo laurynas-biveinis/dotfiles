@@ -962,7 +962,7 @@
 	     ("Phil Sainty" . "psainty@orcon.net.nz"))
 	    (:commit . "a763ec1e5c2987efea3ce2ee6d9c979f56ab6528"))])
  (denote .
-	 [(3 0 1)
+	 [(3 0 2)
 	  ((emacs
 	    (28 1)))
 	  "Simple notes with an efficient file-naming scheme" tar
@@ -970,7 +970,7 @@
 	   (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	   (:authors
 	    ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	   (:commit . "67f5a7bcead3103013bdb48ee69af690c1baa7ed"))])
+	   (:commit . "51cb46b6b26fd63fc22cbc52baf7471ba0f22936"))])
  (denote-menu .
 	      [(1 2 0)
 	       ((emacs
@@ -1925,7 +1925,7 @@
 	     ("Sean Allred" . "code@seanallred.com"))
 	    (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader .
-	  [(0 11 10)
+	  [(0 11 11)
 	   ((emacs
 	     (26 1))
 	    (seq
@@ -1938,7 +1938,7 @@
 	    (:maintainer "Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com")
 	    (:authors
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
-	    (:commit . "f73ace20ff1ded3432652d9fc3ddd57c8281f7d2"))])
+	    (:commit . "0be62cf9d8acc57126f5e2e7a441e7ca22e29513"))])
  (greenbar .
 	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" tar
