@@ -35,7 +35,8 @@ Prints out the help message for the variable the cursor is on." t)
 (autoload 'cmake-help-property "cmake-mode" "\
 Prints out the help message for the property the cursor is on." t)
 (autoload 'cmake-help "cmake-mode" "\
-Queries for any of the four available help topics and prints out the appropriate page." t)
+Queries for any of the four available help topics and prints out the
+appropriate page." t)
 (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
 (add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
 (register-definition-prefixes "cmake-mode" '("cmake-"))

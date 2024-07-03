@@ -671,21 +671,21 @@ can be selected from the start."
    nil t
    (and topic (forge--format-topic-milestone topic))))
 
-(defun forge-read-topic-labels (&optional topic)
-  (let* ((repo (forge-get-repository (or topic :tracked)))
-         (crm-separator ","))
+(defun forge-read-topic-labels (&optional obj)
+  (let ((crm-separator ","))
     (magit-completing-read-multiple
      "Labels: "
-     (mapcar #'cadr (oref repo labels))
+     (forge--format-labels (and obj (forge-get-repository obj)))
      nil t
-     (and topic (mapconcat #'cadr (oref topic labels) ",")))))
+     (and (forge-topic-p obj)
+          (forge--format-labels obj crm-separator)))))
 
-(defun forge-read-topic-marks (&optional topic)
-  (let ((marks (mapcar #'car (forge-sql [:select name :from mark])))
-        (crm-separator ","))
+(defun forge-read-topic-marks (&optional obj)
+  (let ((crm-separator ","))
     (magit-completing-read-multiple
-     "Marks: " marks nil t
-     (and topic (mapconcat #'cadr (oref topic marks) ",")))))
+     "Marks: " (forge--format-marks) nil t
+     (and (forge-topic-p obj)
+          (forge--format-marks obj crm-separator)))))
 
 (defun forge-read-topic-assignees (&optional topic)
   (let* ((repo (forge-get-repository (or topic :tracked)))
@@ -816,23 +816,56 @@ can be selected from the start."
                                    id))))
     (magit--propertize-face str 'forge-topic-label)))
 
-(defun forge--format-topic-labels (topic)
-  (and-let* ((labels (oref topic labels)))
-    (mapconcat (pcase-lambda (`(,_id ,name ,color ,_description))
-                 (let* ((background (forge--sanitize-color color))
-                        (foreground (forge--contrast-color background)))
-                   (magit--propertize-face
-                    name `(( :background ,background
-                             :foreground ,foreground)
-                           forge-topic-label))))
-               labels " ")))
+(defun forge--format-labels (&optional arg concat)
+  (and-let*
+      ((local t)
+       (labels (cond
+                ((eieio-object-p arg)
+                 (oref arg labels))
+                ((forge-buffer-repository)
+                 (forge-sql-cdr `[:select label:* :from label :where
+                                  ,(if arg
+                                       '(and (= repository $s1)
+                                             (in name $v2))
+                                     '(= repository $s1))
+                                  :order-by [(asc name)]]
+                                forge-buffer-repository
+                                (vconcat arg)))
+                (t
+                 (setq local nil)
+                 (forge-sql `[:select :distinct name :from label
+                             ,@(and arg '(:where (in name $v1)))
+                              :order-by [(asc name)]]
+                            (vconcat arg)))))
+       (format (if local
+                   (pcase-lambda (`(,_id ,name ,color ,_description))
+                     (let* ((background (forge--sanitize-color color))
+                            (foreground (forge--contrast-color background)))
+                       (magit--propertize-face
+                        name `(( :background ,background
+                                 :foreground ,foreground)
+                               forge-topic-label))))
+                 (pcase-lambda (`(,name))
+                   (magit--propertize-face name 'forge-topic-label)))))
+    (if concat
+        (mapconcat format labels (if (stringp concat) concat " "))
+      (mapcar format labels))))
 
-(defun forge--format-topic-marks (topic)
-  (and-let* ((marks (oref topic marks)))
-    (mapconcat (pcase-lambda (`(,_id ,name ,face ,_description))
-                 (magit--propertize-face
-                  name (list 'forge-topic-label face)))
-               marks " ")))
+(defun forge--format-marks (&optional arg concat)
+  (and-let* ((marks (if (forge-topic--eieio-childp arg)
+                        (oref arg marks)
+                      ;; Unlike labels, marks are not repo-specific.
+                      (when (forge-repository-p arg) (setq arg nil))
+                      (forge-sql-cdr `[:select * :from mark
+                                       ,@(and arg '(:where (in name $v1)))
+                                       :order-by [(asc name)]]
+                                     (vconcat arg))))
+             (format (pcase-lambda (`(,_id ,name ,face ,_description))
+                       (magit--propertize-face
+                        name (list face 'forge-topic-label)))))
+    (if concat
+        (mapconcat format marks (if (stringp concat) concat " "))
+      (mapcar format marks))))
 
 (defun forge--format-topic-state (topic)
   (with-slots (state) topic
@@ -1412,11 +1445,13 @@ This mode itself is never used directly."
 
 (transient-define-suffix forge-topic-set-labels (labels)
   "Edit the LABELS of the current topic."
-  :class 'forge--topic-set-slot-command :slot 'labels)
+  :class 'forge--topic-set-slot-command :slot 'labels
+  :formatter (lambda (topic) (forge--format-labels topic t)))
 
 (transient-define-suffix forge-topic-set-marks (marks)
   "Edit the MARKS of the current topic."
-  :class 'forge--topic-set-slot-command :slot 'marks)
+  :class 'forge--topic-set-slot-command :slot 'marks
+  :formatter (lambda (topic) (forge--format-marks topic t)))
 
 (transient-define-suffix forge-topic-set-assignees (assignees)
   "Edit the ASSIGNEES of the current topic."

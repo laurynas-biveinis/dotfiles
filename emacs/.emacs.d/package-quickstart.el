@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240623.1757/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240623.1757/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240702.1952/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240702.1952/with-editor-autoloads.el"))
 
 
 
@@ -11652,7 +11652,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240701.2012/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240701.2012/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240702.1601/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240702.1601/forge-autoloads.el"))
 
 
 
@@ -12831,7 +12831,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.29.6/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.29.6/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.30.0/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.30.0/cmake-mode-autoloads.el"))
 
 
 
@@ -12864,7 +12864,8 @@ Prints out the help message for the variable the cursor is on." t)
 (autoload 'cmake-help-property "cmake-mode" "\
 Prints out the help message for the property the cursor is on." t)
 (autoload 'cmake-help "cmake-mode" "\
-Queries for any of the four available help topics and prints out the appropriate page." t)
+Queries for any of the four available help topics and prints out the
+appropriate page." t)
 (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
 (add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
 (register-definition-prefixes "cmake-mode" '("cmake-"))
@@ -13235,7 +13236,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240701.2012" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240701.1831" "/Users/laurynas/.emacs.d/elpa/magit-section-20240628.1638" "/Users/laurynas/.emacs.d/elpa/transient-20240629.1508" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240623.1757" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240702.1601" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240701.1831" "/Users/laurynas/.emacs.d/elpa/magit-section-20240628.1638" "/Users/laurynas/.emacs.d/elpa/transient-20240629.1508" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240702.1952" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:
