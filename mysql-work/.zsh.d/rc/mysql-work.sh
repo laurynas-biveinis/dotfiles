@@ -200,7 +200,8 @@ mysql_export_environment_helpers() {
     declare -a -r cxx_flags_debug=("-g")
     declare -a -r cxx_flags_release=("-O2" "-g" "-DNDEBUG")
 
-    declare -a -r cmake_common=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
+    declare -a -r cmake_common=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+                                "-DFORCE_UNSUPPORTED_COMPILER=ON")
     cmake_release+=("${cmake_common[@]}" "-DBUILD_CONFIG=mysql_release"
                     "-DCMAKE_BUILD_TYPE=Release")
     declare -a -r cmake_debug=("${cmake_common[@]}" "-DCMAKE_BUILD_TYPE=Debug"
