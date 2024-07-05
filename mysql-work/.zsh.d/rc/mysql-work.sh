@@ -125,14 +125,14 @@ mysql_export_environment_helpers() {
                           "-DCMAKE_AR=$brew/llvm@17/bin/llvm-ar")
         export MYCLANG=("-DCMAKE_C_COMPILER=$brew/llvm/bin/clang"
                         "-DCMAKE_CXX_COMPILER=$brew/llvm/bin/clang++")
-        export MYGCC11=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-11"
-                        "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-11")
-        export MYGCC12=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-12"
-                        "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-12")
-        export MYGCC13=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-13"
-                        "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-13")
-        export MYGCC14=("-DCMAKE_C_COMPILER=$brew/gcc/bin/gcc-14"
-                        "-DCMAKE_CXX_COMPILER=$brew/gcc/bin/g++-14")
+        export MYGCC11=("-DCMAKE_C_COMPILER=$brew/bin/gcc-11"
+                        "-DCMAKE_CXX_COMPILER=$brew/bin/g++-11")
+        export MYGCC12=("-DCMAKE_C_COMPILER=$brew/bin/gcc-12"
+                        "-DCMAKE_CXX_COMPILER=$brew/bin/g++-12")
+        export MYGCC13=("-DCMAKE_C_COMPILER=$brew/bin/gcc-13"
+                        "-DCMAKE_CXX_COMPILER=$brew/bin/g++-13")
+        export MYGCC14=("-DCMAKE_C_COMPILER=$brew/bin/gcc-14"
+                        "-DCMAKE_CXX_COMPILER=$brew/bin/g++-14")
 
         declare -r emd_libdir="$brew/libeatmydata/lib/"
         export MTR_EMD=(
