@@ -515,7 +515,6 @@
         (perl "https://github.com/ganezdragon/tree-sitter-perl")
         (python "https://github.com/tree-sitter/tree-sitter-python")
         (rust "https://github.com/tree-sitter/tree-sitter-rust")
-        (sql "https://github.com/DerekStride/tree-sitter-sql")
         (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
 
 (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
@@ -527,7 +526,6 @@
 (add-to-list 'major-mode-remap-alist '(perl-mode . perl-ts-mode))
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
-(add-to-list 'major-mode-remap-alist '(sql-mode . sql-ts-mode))
 (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
 
 ;; Ideally this should come earlier but need to have `major-mode-remap-alist'
