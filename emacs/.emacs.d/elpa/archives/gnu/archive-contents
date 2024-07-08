@@ -962,7 +962,7 @@
 	     ("Phil Sainty" . "psainty@orcon.net.nz"))
 	    (:commit . "a763ec1e5c2987efea3ce2ee6d9c979f56ab6528"))])
  (denote .
-	 [(3 0 3)
+	 [(3 0 6)
 	  ((emacs
 	    (28 1)))
 	  "Simple notes with an efficient file-naming scheme" tar
@@ -970,7 +970,7 @@
 	   (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	   (:authors
 	    ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	   (:commit . "aaa9c837404f27a50242d481abae851084fe1634"))])
+	   (:commit . "b1e3db3e6115f3c2fc9c37a6f0a7321b95573601"))])
  (denote-menu .
 	      [(1 2 0)
 	       ((emacs
@@ -1356,7 +1356,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(0 11 0)
+	 [(0 11 2)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1369,7 +1369,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "b1f8bf1842b92b7b2a9d7111fcb7be6866b0cfba"))])
+	   (:commit . "b2ebd3ccfb30a12aafdd70c31bbf14adf582e6c4"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -1621,7 +1621,7 @@
 		("Philip Kaludercic" . "philipk@posteo.net"))
 	       (:commit . "671e53fdef9ed3fdb9ee768216d05b90e3ce592a"))])
  (filechooser .
-	      [(0 2 0)
+	      [(0 2 1)
 	       ((emacs
 		 (28 1))
 		(compat
@@ -1632,7 +1632,7 @@
 		(:maintainer "rahguzar" . "rahguzar@zohomail.eu")
 		(:authors
 		 ("rahguzar" . "rahguzar@zohomail.eu"))
-		(:commit . "36b9c20d725ee1df0c96be90a8c339aa0f466cfa"))])
+		(:commit . "62a9ef588331b06c818ea5db5a73e756f20fd13d"))])
  (filladapt .
 	    [(2 12 2)
 	     ((emacs
@@ -1925,7 +1925,7 @@
 	     ("Sean Allred" . "code@seanallred.com"))
 	    (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader .
-	  [(0 11 11)
+	  [(0 11 12)
 	   ((emacs
 	     (26 1))
 	    (seq
@@ -1938,7 +1938,7 @@
 	    (:maintainer "Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com")
 	    (:authors
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
-	    (:commit . "0be62cf9d8acc57126f5e2e7a441e7ca22e29513"))])
+	    (:commit . "fb84922af2098f630fdd5978c7204ef10e44d9e0"))])
  (greenbar .
 	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" tar

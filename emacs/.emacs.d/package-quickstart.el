@@ -960,7 +960,7 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20240520.231/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20240520.231/vterm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20240705.1533/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20240705.1533/vterm-autoloads.el"))
 
 
 
@@ -4488,7 +4488,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240701.1831/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240701.1831/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240704.2248/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240704.2248/magit-autoloads.el"))
 
 
 
@@ -8563,7 +8563,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.7.0/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.7.0/hl-todo-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.0/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.0/hl-todo-autoloads.el"))
 
 
 
@@ -13236,7 +13236,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240702.1601" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240701.1831" "/Users/laurynas/.emacs.d/elpa/magit-section-20240628.1638" "/Users/laurynas/.emacs.d/elpa/transient-20240629.1508" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240702.1952" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240702.1601" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240618.1527" "/Users/laurynas/.emacs.d/elpa/magit-20240704.2248" "/Users/laurynas/.emacs.d/elpa/magit-section-20240628.1638" "/Users/laurynas/.emacs.d/elpa/transient-20240629.1508" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240702.1952" "/Users/laurynas/.emacs.d/elpa/compat-29.1.4.5")
          Info-directory-list)))
 
 ;; Local Variables:

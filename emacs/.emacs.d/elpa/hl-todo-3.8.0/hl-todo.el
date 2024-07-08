@@ -6,7 +6,8 @@
 ;; Homepage: https://github.com/tarsius/hl-todo
 ;; Keywords: convenience
 
-;; Package-Requires: ((emacs "25.1") (compat "29.1.4.5"))
+;; Package-Version: 3.8.0
+;; Package-Requires: ((emacs "26.1") (compat "29.1.4.5"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -66,9 +67,6 @@ created by inheriting this face and using the appropriate
 color specified using the option `hl-todo-keyword-faces' as
 foreground color."
   :group 'hl-todo)
-
-(define-obsolete-variable-alias 'hl-todo-activate-in-modes
-  'hl-todo-include-modes "hl-todo 3.1.0")
 
 (defcustom hl-todo-include-modes '(prog-mode text-mode conf-mode)
   "Major-modes in which `hl-todo-mode' is activated.
@@ -152,7 +150,7 @@ a Grep implementation other than GNU's, then that may break
   :set (lambda (symbol value)
          (set-default-toplevel-value symbol value)
          (dolist (buf (buffer-list))
-	   (with-current-buffer buf
+           (with-current-buffer buf
              (when (and (bound-and-true-p hl-todo-mode)
                         (boundp 'hl-todo--regexp))
                (setq hl-todo--regexp nil)
@@ -228,8 +226,6 @@ See the function `hl-todo--regexp'."
                 "\\)")))
 
 (defvar hl-todo--syntax-table (copy-syntax-table text-mode-syntax-table))
-
-(defvar syntax-ppss-table) ; Silence Emacs 25's byte-compiler.
 
 (defun hl-todo--search (&optional regexp bound backward)
   "Search for keyword REGEXP, optionally up to BOUND and BACKWARD.
@@ -472,8 +468,18 @@ then append that character to the inserted string."
         (save-excursion (insert "\n")))
       (indent-region (line-beginning-position) (line-end-position))))))
 
-(define-obsolete-function-alias 'hl-todo-insert-keyword
-  #'hl-todo-insert "hl-todo 3.0.0")
+(defun hl-todo-magit-revision ()
+  "Highlight TODO and similar keywords in commit messages and notes.
+If `global-hl-todo-mode' is disabled, do nothing."
+  (when global-hl-todo-mode
+    (let ((case-fold-search nil)
+          (regexp (hl-todo--regexp)))
+      (while (re-search-forward regexp nil t)
+        (put-text-property (match-beginning 1)
+                           (match-end 1)
+                           'font-lock-face (hl-todo--get-face))))))
+
+(add-hook 'magit-wash-message-hook #'hl-todo-magit-revision)
 
 ;;; _
 (provide 'hl-todo)
