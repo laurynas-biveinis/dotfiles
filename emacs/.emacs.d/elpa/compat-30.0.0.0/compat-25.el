@@ -40,23 +40,6 @@ usage: (bool-vector &rest OBJECTS)"
             i (1+ i)))
     vec))
 
-;;;; Defined in fns.c
-
-(compat-defun sort (seq predicate) ;; <compat-tests:sort>
-  "Handle vector SEQ."
-  :extended t
-  (cond
-   ((listp seq)
-    (sort seq predicate))
-   ((vectorp seq)
-    (let* ((list (sort (append seq nil) predicate))
-           (p list) (i 0))
-      (while p
-        (aset seq i (car p))
-        (setq i (1+ i) p (cdr p)))
-      (apply #'vector list)))
-   (t (signal 'wrong-type-argument (list 'list-or-vector-p seq)))))
-
 ;;;; Defined in editfns.c
 
 (compat-defalias format-message format) ;; <compat-tests:format-message>
@@ -266,6 +249,12 @@ itself or not."
                   (apply (cdr def) (cdr form))
                 form))))))))
    (t form)))
+
+;;;; Defined in minibuffer.el
+
+(compat-defun completion--category-override (category tag) ;; <compat-tests:completion-metadata-get>
+  "Return completion category override for CATEGORY and TAG."
+  (assq tag (cdr (assq category completion-category-overrides))))
 
 (provide 'compat-25)
 ;;; compat-25.el ends here
