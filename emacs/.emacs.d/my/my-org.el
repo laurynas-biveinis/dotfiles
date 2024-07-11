@@ -278,9 +278,6 @@ event of an error or nonlocal exit."
               (org-todo "TODO")))))))
 (add-hook 'org-checkbox-statistics-hook #'dotfiles--checkbox-list-complete)
 
-;;; Integration with Helm
-(setq org-outline-path-complete-in-steps nil)
-
 ;;; `org-roam'
 (setq org-roam-database-connector 'sqlite-builtin)
 (setq org-roam-mode-sections

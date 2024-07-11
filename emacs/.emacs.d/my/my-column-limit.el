@@ -48,8 +48,7 @@
   (let ((buf-name (buffer-name)))
     (when (or buffer-read-only (derived-mode-p 'org-agenda-mode)
               (equal " *Agenda Commands*" buf-name)
-              (equal " *Org Select*" buf-name)
-              (string-prefix-p "*helm" buf-name))
+              (equal " *Org Select*" buf-name))
       (setq-local display-fill-column-indicator nil))))
 
 (add-hook 'display-fill-column-indicator-mode-hook

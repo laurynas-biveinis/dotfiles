@@ -230,12 +230,12 @@
 (size-indication-mode)
 (column-number-mode t)
 
-;; rich-minority-mode
+;; `rich-minority'
 (require 'rich-minority)
 (setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
                      " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " Helm"
-                     " WK" " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
+                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " WK"
+                     " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
                      " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"
                      " Habit" " :ARCHIVE:" " activity-watch" " Async"))
 (rich-minority-mode)
@@ -1052,7 +1052,7 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             delete-backward-char scroll-up-command
                             c-electric-backspace org-agenda-next-line
                             mouse-drag-region mac-mwheel-scroll mouse-set-point
-                            org-cycle helm-next-line backward-word save-buffer
+                            org-cycle backward-word save-buffer
                             isearch-repeat-forward scroll-down-command
                             beginning-of-visual-line windmove-right
                             org-agenda-previous-line windmove-left
@@ -1066,25 +1066,25 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             xwidget-webkit-scroll-up-line
                             mu4e-view-mark-for-refile xwidget-webkit-scroll-up
                             mu4e-view-headers-next magit-section-toggle
-                            helm-maybe-exit-minibuffer isearch-forward
-                            helm-delete-char-backward mu4e-headers-next
+                            isearch-forward
+                            mu4e-headers-next
                             yank mu4e-view-marked-execute mu4e-view-action
-                            helm-mini kill-ring-save mu4e-headers-view-message
+                            kill-ring-save mu4e-headers-view-message
                             magit-stage org-todo goto-line mu4e-view-quit
                             org-agenda-clock-in balance-windows
-                            isearch-delete-char helm-M-x xref-find-definitions
+                            isearch-delete-char xref-find-definitions
                             beginend-prog-mode-goto-beginning kill-region
                             lsp-execute-code-action back-to-indentation
                             kill-word org-end-of-line
-                            deadgrep-toggle-file-results helm-ff-RET
+                            deadgrep-toggle-file-results
                             exit-minibuffer magit-status
                             beginend-org-mode-goto-beginning flycheck-next-error
                             isearch-forward-thing-at-point kill-visual-line
                             isearch-repeat-backward beginend-prog-mode-goto-end
-                            undo-tree-undo helm-projectile-switch-project
-                            xref-go-back helm-previous-line keyboard-quit
+                            undo-tree-undo
+                            xref-go-back keyboard-quit
                             beginend-org-agenda-mode-goto-beginning
-                            helm-keyboard-quit deadgrep
+                            deadgrep
                             company-select-next-or-abort
                             org-agenda-do-date-later org-shiftright lsp-rename
                             deadgrep-visit-result-other-window
@@ -1094,11 +1094,11 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             beginend-magit-status-mode-goto-beginning
                             mu4e~headers-quit-buffer org-shifttab
                             magit-commit-create beginend-org-mode-goto-end
-                            dired-next-line helm-find-files
-                            helm-find-files-up-one-level mu4e-search-rerun
+                            dired-next-line
+                            mu4e-search-rerun
                             quit-window org-clock-in org-clock-out
-                            helm-helm-ff-delete-char-backward-with-subkeys
-                            dired-previous-line xwidget-webkit-scroll-down
+                            dired-previous-line
+                            xwidget-webkit-scroll-down
                             org-clock-goto org-shiftleft org-yank))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)

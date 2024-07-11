@@ -3,11 +3,10 @@
 ;;; Commentary:
 
 ;; Configure everything related to projects. The core package is `projectile',
-;; which is also integrated with `lsp-mode', integrated with Helm through
-;; `helm-projectile', extended with project reconfiguration command for CMake
-;; projects, and integrated with my dotfiles "gitrmworktree" utility. Other
-;; packages are `deadgrep' and `wgrep'. Additionally there are custom commands
-;; for CMake project management.
+;; which is also integrated with `lsp-mode', extended with project
+;; reconfiguration command for CMake projects, and integrated with my dotfiles
+;; "gitrmworktree" utility. Other packages are `deadgrep' and `wgrep'.
+;; Additionally there are custom commands for CMake project management.
 ;;
 ;; Like in the rest of my personal configuration, all features (packages and
 ;; external tools) are assumed to exist, because this is a part of my dotfiles
@@ -25,9 +24,7 @@
 
 (require 'projectile)
 
-(setq projectile-completion-system 'helm
-      projectile-switch-project-action #'helm-projectile
-      projectile-use-git-grep t
+(setq projectile-use-git-grep t
       projectile-enable-cmake-presets t
       projectile-mode-line-prefix " "  ;; Save mode line space
       ;; Only use `xref' for cross-references. Any regex-based tooling is
@@ -35,7 +32,8 @@
       projectile-tags-backend 'xref
       ;; Browsing project files without caching is prohibitively slow on large
       ;; projects such as MySQL.
-      projectile-enable-caching t)
+      projectile-enable-caching t
+      projectile-switch-project-action 'projectile-vc)
 
 ;; Exclude some more modes from projectile
 (add-to-list 'projectile-globally-ignored-modes "lisp-interaction-mode")
@@ -63,16 +61,7 @@ behavior."
                 "]")))))
 (setq projectile-mode-line-function #'dotfiles--projectile-mode-line)
 
-
 (projectile-mode +1)
-
-(require 'helm-projectile)
-
-(helm-projectile-on)
-
-;; Remove "-a" from grep options, because it kills grepping over TRAMP for some
-;; projects.
-(setq helm-projectile-grep-command "grep -r %e -n%cH -e %p %f .")
 
 (defun dotfiles--projectile-set-build-dir-and-command ()
   "Discover the build dir and command for a `projectile' project if not set.

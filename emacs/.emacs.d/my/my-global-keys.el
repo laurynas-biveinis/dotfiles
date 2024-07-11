@@ -17,11 +17,6 @@
 (require 'org-clock)
 (require 'org-roam-node)
 (require 'magit-status)
-(require 'helm-command)
-(require 'helm-bookmark)
-(require 'helm-ring)
-(require 'helm-dash)
-(require 'helm-lsp)
 (require 'deadgrep)
 (declare-function my-secrets "secrets" ())
 (declare-function my-gtd "secrets" ())
@@ -61,17 +56,6 @@
 
 ;; `magit'
 (global-set-key (kbd "C-x g") #'magit-status)
-
-;; `helm'
-(global-set-key (kbd "M-x") #'helm-M-x)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-(global-set-key (kbd "M-y") #'helm-show-kill-ring)
-(global-set-key (kbd "C-x b") #'helm-mini)
-(substitute-key-definition #'apropos-command #'helm-apropos
-                           (current-global-map))
-(global-set-key (kbd "<C-f1>") #'helm-dash-at-point)
-(global-set-key [remap xref-find-apropos] #'helm-lsp-global-workspace-symbol)
 
 (provide 'my-global-keys)
 ;;; my-global-keys.el ends here

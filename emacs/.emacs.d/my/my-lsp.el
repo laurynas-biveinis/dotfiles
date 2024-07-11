@@ -105,21 +105,6 @@
 ;;; Integrate with `project.el' / `projectile'
 (setq lsp-auto-guess-root t)
 
-(require 'helm-lsp)
-
-(defun dotfiles--lsp-bind-helm-lsp-workspace-symbol ()
-  "Rebind C-M-. to helm-lsp-workspace-symbol."
-  (define-key lsp-mode-map [remap xref-find-apropos]
-    #'helm-lsp-workspace-symbol))
-
-(defun dotfiles--lsp-unbind-helm-lsp-workspace-symbol (_lsp_workspace)
-  "Restore global C-M-. binding."
-  (define-key lsp-mode-map [remap xref-find-apropos] #'xref-find-apropos))
-
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-bind-helm-lsp-workspace-symbol)
-(add-hook 'lsp-after-uninitialized-functions
-          #'dotfiles--lsp-unbind-helm-lsp-workspace-symbol)
-
 ;;; Integrate with `which-key'
 (defun dotfiles--lsp-enable-which-key ()
   "Enable `lsp-mode' integration with `which-key' for all major modes."
