@@ -23,6 +23,7 @@
       completion-at-point-functions nil)
 
 ;;; Company
+;; I looked into replacing it with corfu, but elpy uses company.
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
 
