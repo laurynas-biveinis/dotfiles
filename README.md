@@ -45,8 +45,7 @@ Unfortunately, that is not always possible.
 [lsp-mode](https://github.com/emacs-lsp/lsp-mode)
 [flycheck](https://www.flycheck.org)
 [company](https://github.com/company-mode/company-mode)
-[helm](https://emacs-helm.github.io/helm/)
-[projectile](https://github.com/bbatsov/helm-projectile)
+[projectile](https://github.com/bbatsov/projectile)
 [m4e](https://djcbsoftware.nl/code/mu/)
 
 #### Major
@@ -65,13 +64,8 @@ Unfortunately, that is not always possible.
 [dispwatch](https://github.com/mnp/dispwatch)
 [lsp-treemacs](https://github.com/emacs-lsp/lsp-treemacs)
 [calfw](https://github.com/kiwanami/emacs-calfw)
-[helm-make](https://github.com/abo-abo/helm-make)
 [which-key](https://github.com/justbur/emacs-which-key)
 [keyfreq](https://github.com/dacap/keyfreq)
-[helm-dash](https://github.com/dash-docs-el/helm-dash)
-[helm-org](https://github.com/emacs-helm/helm-org)
-[helm-lsp](https://github.com/emacs-lsp/helm-lsp)
-[helm-projectile](https://github.com/bbatsov/helm-projectile)
 [iedit](https://github.com/victorhge/iedit)
 [eldoc-cmake](https://github.com/ikirill/eldoc-cmake)
 [aggressive-indent-mode](https://github.com/Malabarba/aggressive-indent-mode)
@@ -92,7 +86,6 @@ Unfortunately, that is not always possible.
 
 [solarized-theme](https://github.com/bbatsov/solarized-emacs)
 [git-gutter-fringe](https://github.com/emacsorphanage/git-gutter-fringe)
-[helm-icons](https://github.com/yyoncho/helm-icons)
 [company-box](https://github.com/sebastiencs/company-box)
 [page-break-lines](https://github.com/purcell/page-break-lines)
 [xterm-color](https://github.com/atomontage/xterm-color)
@@ -116,8 +109,6 @@ tramp ts
 * [macOS: add the missing man page paths for woman](https://www.reddit.com/r/emacs/comments/ig7zzo/weekly_tipstricketc_thread/g34s8dl?utm_source=share&utm_medium=web2x&context=3)
 * [Re-enable Shellcheck if using lsp-mode with bash-language-server](https://www.reddit.com/r/emacs/comments/hqxm5v/weekly_tipstricketc_thread/fy4pvr8?utm_source=share&utm_medium=web2x&context=3)
 * [Clicking on URLs should open them instead of spellchecking them](https://www.reddit.com/r/emacs/comments/it4m2w/weekly_tipstricketc_thread/g5pff92?utm_source=share&utm_medium=web2x&context=3)
-* Workaround [helm-buffers-list error if all-the-icons is used and a dired
-  buffer is present](https://github.com/yyoncho/helm-icons/issues/16).
 * Workaround the [projectile
   issue](https://github.com/bbatsov/projectile/issues/347) of remote projects
   not being added to Projectile project list.
