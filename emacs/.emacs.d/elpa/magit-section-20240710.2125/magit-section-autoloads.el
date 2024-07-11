@@ -11,6 +11,17 @@
 
 ;;; Generated autoloads from magit-section.el
 
+(autoload 'magit--handle-bookmark "magit-section" "\
+Open a bookmark created by `magit--make-bookmark'.
+
+Call the generic function `magit-bookmark-get-buffer-create' to get
+the appropriate buffer without displaying it.
+
+Then call the `magit-*-setup-buffer' function of the the major-mode
+with the variables' values as arguments, which were recorded by
+`magit--make-bookmark'.
+
+(fn BOOKMARK)")
 (register-definition-prefixes "magit-section" '("context-menu-region" "isearch-clean-overlays" "magit-"))
 
 ;;; End of scraped data
