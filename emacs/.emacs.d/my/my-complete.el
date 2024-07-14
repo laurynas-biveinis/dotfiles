@@ -18,9 +18,10 @@
 
 ;;; Built-in configuration and completion at point
 (setq tab-always-indent 'complete  ;; If already indented, complete
-      completion-styles '(flex)
+      completion-styles '(substring flex)
       ;; Remove the default `tags-completion-at-point', I never use tags.
-      completion-at-point-functions nil)
+      completion-at-point-functions nil
+      completions-format 'vertical)
 
 ;;; Company
 ;; I looked into replacing it with corfu, but elpy uses company.
