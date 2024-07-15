@@ -55,7 +55,8 @@ mysql_export_environment_helpers() {
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
-        declare -r brew="$(brew --prefix)/opt"
+        declare -r brew="$(brew --prefix)"
+        declare -r brew_opt="$brew/opt"
         if [ "$(arch)" = "arm64" ]; then
             # Workaround https://bugs.mysql.com/bug.php?id=113047 (MTR test
             # main.derived_limit fails with small cost differences) and
@@ -63,19 +64,23 @@ mysql_export_environment_helpers() {
             # gis.gis_bugs_crashes fails with a result difference)
             declare -a -r my810_820_extra_cxx_flags=("-ffp-contract=off")
             declare -a -r my8018_35_extra_cxx_flags=("-ffp-contract=off")
-            declare -a my8018_28=("-DWITH_SSL=$brew/openssl@1.1")
+            declare -a my8018_28=("-DWITH_SSL=$brew_opt/openssl@1.1")
+            # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
+            # configuration failure on Linux virtualized on M1 Mac)
+            declare -a fb_common=("-DROCKSDB_BUILD_ARCH=armv8.1-a+crypto")
             export MY8030_900_CORE_DUMP_FLAGS=(
                 "-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         else
             declare -a -r my810_820_extra_cxx_flags=()
             declare -a -r my8018_35_extra_cxx_flags=()
             declare -a my8018_28=()
+            declare -a fb_common=()
             export MY8030_900_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
         declare -a my900_cxx_flags=("-Wno-unused-lambda-capture")
         declare -a my8018_extra=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
-        my8018_28+=("-DWITH_ICU=$brew/icu4c")
+        my8018_28+=("-DWITH_ICU=$brew_opt/icu4c")
         declare -a -r my8018_28_cxx_flags=(
             "-Wno-shadow-field" "-Wno-unqualified-std-cast-call"
             "-Wno-deprecated-copy-with-dtor" "-Wno-bitwise-instead-of-logical"
@@ -102,29 +107,29 @@ mysql_export_environment_helpers() {
         # Currently vectordb is only built on macOS. Only recognized starting
         # from 8.0.32, make it version-dependent if that becomes a problem, in
         # which case adjust the platform-specific fb_common values
-        declare -a fb_common=("-DWITH_FB_VECTORDB=ON"
-                              "-DWITH_OPENMP=$brew/libomp"
-                              "-DWITH_OPENBLAS=$brew/openblas")
+        fb_common+=("-DWITH_FB_VECTORDB=ON"
+                    "-DWITH_OPENMP=$brew_opt/libomp"
+                    "-DWITH_OPENBLAS=$brew_opt/openblas")
 
-        export MYCLANG12=("-DCMAKE_C_COMPILER=$brew/llvm@12/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew/llvm@12/bin/clang++")
+        export MYCLANG12=("-DCMAKE_C_COMPILER=$brew_opt/llvm@12/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@12/bin/clang++")
         # CMAKE_AR settings below workaround
         # https://bugs.mysql.com/bug.php?id=113113 (Build failure with Homebrew
         # LLVM 14-17 on macOS)
-        export MYCLANG14=("-DCMAKE_C_COMPILER=$brew/llvm@14/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew/llvm@14/bin/clang++"
-                          "-DCMAKE_AR=$brew/llvm@14/bin/llvm-ar")
-        export MYCLANG15=("-DCMAKE_C_COMPILER=$brew/llvm@15/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew/llvm@15/bin/clang++"
-                          "-DCMAKE_AR=$brew/llvm@15/bin/llvm-ar")
-        export MYCLANG16=("-DCMAKE_C_COMPILER=$brew/llvm@16/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew/llvm@16/bin/clang++"
-                          "-DCMAKE_AR=$brew/llvm@16/bin/llvm-ar")
-        export MYCLANG17=("-DCMAKE_C_COMPILER=$brew/llvm@17/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew/llvm@17/bin/clang++"
-                          "-DCMAKE_AR=$brew/llvm@17/bin/llvm-ar")
-        export MYCLANG=("-DCMAKE_C_COMPILER=$brew/llvm/bin/clang"
-                        "-DCMAKE_CXX_COMPILER=$brew/llvm/bin/clang++")
+        export MYCLANG14=("-DCMAKE_C_COMPILER=$brew_opt/llvm@14/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@14/bin/clang++"
+                          "-DCMAKE_AR=$brew_opt/llvm@14/bin/llvm-ar")
+        export MYCLANG15=("-DCMAKE_C_COMPILER=$brew_opt/llvm@15/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@15/bin/clang++"
+                          "-DCMAKE_AR=$brew_opt/llvm@15/bin/llvm-ar")
+        export MYCLANG16=("-DCMAKE_C_COMPILER=$brew_opt/llvm@16/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@16/bin/clang++"
+                          "-DCMAKE_AR=$brew_opt/llvm@16/bin/llvm-ar")
+        export MYCLANG17=("-DCMAKE_C_COMPILER=$brew_opt/llvm@17/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@17/bin/clang++"
+                          "-DCMAKE_AR=$brew_opt/llvm@17/bin/llvm-ar")
+        export MYCLANG=("-DCMAKE_C_COMPILER=$brew_opt/llvm/bin/clang"
+                        "-DCMAKE_CXX_COMPILER=$brew_opt/llvm/bin/clang++")
         export MYGCC11=("-DCMAKE_C_COMPILER=$brew/bin/gcc-11"
                         "-DCMAKE_CXX_COMPILER=$brew/bin/g++-11")
         export MYGCC12=("-DCMAKE_C_COMPILER=$brew/bin/gcc-12"
@@ -134,7 +139,7 @@ mysql_export_environment_helpers() {
         export MYGCC14=("-DCMAKE_C_COMPILER=$brew/bin/gcc-14"
                         "-DCMAKE_CXX_COMPILER=$brew/bin/g++-14")
 
-        declare -r emd_libdir="$brew/libeatmydata/lib/"
+        declare -r emd_libdir="$brew_opt/libeatmydata/lib/"
         export MTR_EMD=(
             "--mysqld-env=DYLD_LIBRARY_PATH=$emd_libdir"
             "--mysqld-env=DYLD_FORCE_FLAT_NAMESPACE=1"
