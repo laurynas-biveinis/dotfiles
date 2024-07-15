@@ -893,7 +893,7 @@
 		 (:url . "https://elpa.gnu.org/packages/cycle-quotes.html")
 		 (:commit . "836b19b39651419876e65cdb1a91e3eef83cc4e7"))])
  (dape .
-       [(0 13 0)
+       [(0 14 0)
 	((emacs
 	  (29 1))
 	 (jsonrpc
@@ -901,7 +901,7 @@
 	"Debug Adapter Protocol for Emacs" tar
 	((:url . "https://github.com/svaante/dape")
 	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
-	 (:commit . "985ff97c448b313ef3585cd4aae9dce4518a2136"))])
+	 (:commit . "e034ecedebc38c7f4c1e5d62044c231482b155d2"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -1356,7 +1356,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(0 11 9)
+	 [(0 11 10)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1371,7 +1371,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "8ee58b9f850f788f3fddd8e924a01091f3c76328"))])
+	   (:commit . "f5e12cbf064dac95a59cbf28e21e576c6165e311"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -2460,7 +2460,7 @@
 		      ("Sean Whitton" . "spwhitton@spwhitton.name"))
 		     (:commit . "c22a15e86acf28da716532c26ba1371574c8e979"))])
  (llm .
-      [(0 16 1)
+      [(0 17 0)
        ((emacs
 	 (28 1))
 	(plz
@@ -2470,7 +2470,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "0af693b635d7f9117790b129f0de1cd8fb7d5b85"))])
+	(:commit . "518757bcf3e7090f076c872e59d161865a2dc83c"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
@@ -4355,11 +4355,11 @@
 	       (:url . "https://elpa.gnu.org/packages/transcribe.html")
 	       (:commit . "89832e4cdc1e6d8262a4a2c9d1ff70f398b8faf0"))])
  (transient .
-	    [(0 7 2)
+	    [(0 7 3)
 	     ((emacs
 	       (26 1))
 	      (compat
-	       (29 1 4 5))
+	       (30 0 0 0))
 	      (seq
 	       (2 24)))
 	     "Transient commands" tar
@@ -4368,7 +4368,7 @@
 	      (:maintainer "Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev")
 	      (:authors
 	       ("Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev"))
-	      (:commit . "2d6fae0ca232c2423facbbbf8ece18c856e7d31d"))])
+	      (:commit . "2a680c21e2be0b055e0e801d43c92792e5305acc"))])
  (transient-cycles .
 		   [(1 0)
 		    ((emacs

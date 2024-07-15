@@ -7152,7 +7152,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240623.1340/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240623.1340/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240714.1824/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240714.1824/emacsql-autoloads.el"))
 
 
 
