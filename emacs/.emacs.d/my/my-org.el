@@ -177,7 +177,8 @@ optional and specified by the following properties on the task being clocked-in:
       ;; or `'buffer-name' starting with 9.1, not much difference in my setup
       org-refile-use-outline-path 'file
       org-refile-allow-creating-parent-nodes 'confirm
-      org-log-refile 'time)
+      org-log-refile 'time
+      org-outline-path-complete-in-steps nil)
 
 ;; Borrowed from https://emacs.nasy.moe/
 (defun dotfiles--org-verify-refile-target ()
