@@ -384,7 +384,7 @@
 		    ("Campbell Barton" . "ideasman42@gmail.com"))
 		   (:commit . "83d94733fd8ed64f2ba40f4e1df7ecbfe8260e51"))])
  (d-mode .
-	 [(202003130913)
+	 [(202405290611)
 	  ((emacs
 	    (25 1)))
 	  "D Programming Language major mode for (X)Emacs" tar
@@ -393,7 +393,7 @@
 	    ("Russel Winder" . "russel@winder.org.uk")
 	    ("Vladimir Panteleev" . "vladimir@thecybershadow.net"))
 	   (:url . "https://elpa.nongnu.org/nongnu/d-mode.html")
-	   (:commit . "6624fcbc1539613753af542923e27b3211690d39"))])
+	   (:commit . "7d280251de13c0042c0846ff4eaa5b1937fcbe01"))])
  (dart-mode .
 	    [(1 0 7)
 	     ((emacs
@@ -1963,7 +1963,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20240715 93306)
+	      [(1 0 20240718 150548)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2494,18 +2494,18 @@
 	      ("Akib Azmain Turja" . "akib@disroot.org"))
 	     (:commit . "5203d9379afaf6703746823a580c804e1dd98e08"))])
  (with-editor .
-	      [(3 3 4)
+	      [(3 4 0)
 	       ((emacs
 		 (25 1))
 		(compat
-		 (29 1 4 5)))
+		 (30 0 0 0)))
 	       "Use the Emacsclient as $EDITOR" tar
 	       ((:url . "https://github.com/magit/with-editor")
 		(:keywords "processes" "terminals")
 		(:maintainer "Jonas Bernoulli" . "emacs.with-editor@jonas.bernoulli.dev")
 		(:authors
 		 ("Jonas Bernoulli" . "emacs.with-editor@jonas.bernoulli.dev"))
-		(:commit . "322ee26d3a7d3d67840293041837b7e70cffa8d1"))])
+		(:commit . "62dc8ba2184bef074ff0e90eefb70bfa34c21d3c"))])
  (with-simulated-input .
 		       [(3 0)
 			((emacs
@@ -2545,14 +2545,14 @@
 	     ((:url . "https://github.com/lewang/ws-butler")
 	      (:commit . "323b651dd70ee40a25accc940b8f80c3a3185205"))])
  (xah-fly-keys .
-	       [(25 9 20240703220947)
+	       [(25 9 20240725161125)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "7c8789acf9a0256df3f42b9748e739254e806830"))])
+		 (:commit . "5556a1d5dfaa19ecd0fd0fce735966f8cc118865"))])
  (xkcd .
        [(1 1)
 	((json

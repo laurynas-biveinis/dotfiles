@@ -1,0 +1,1395 @@
+This is forge.info, produced by makeinfo version 6.8 from forge.texi.
+
+     Copyright (C) 2018-2024 Jonas Bernoulli
+     <emacs.forge@jonas.bernoulli.dev>
+
+     You can redistribute this document and/or modify it under the terms
+     of the GNU General Public License as published by the Free Software
+     Foundation, either version 3 of the License, or (at your option)
+     any later version.
+
+     This document is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+     General Public License for more details.
+
+INFO-DIR-SECTION Emacs
+START-INFO-DIR-ENTRY
+* Forge: (forge).       Access Git Forges from Magit.
+END-INFO-DIR-ENTRY
+
+
+File: forge.info,  Node: Top,  Next: Introduction,  Up: (dir)
+
+Forge User and Developer Manual
+*******************************
+
+Forge allows you to work with Git forges, currently Github and Gitlab,
+from the comfort of Magit and Emacs.
+
+This manual is for Forge version 0.3.2.50-git.
+
+     Copyright (C) 2018-2024 Jonas Bernoulli
+     <emacs.forge@jonas.bernoulli.dev>
+
+     You can redistribute this document and/or modify it under the terms
+     of the GNU General Public License as published by the Free Software
+     Foundation, either version 3 of the License, or (at your option)
+     any later version.
+
+     This document is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+     General Public License for more details.
+
+* Menu:
+
+* Introduction::
+* Initial Setup::
+* Getting Started::
+* Pulling::
+* Branching::
+* Working with Topics::
+* Miscellaneous::
+* Supported Forges and Hosts::
+* FAQ::
+* Keystroke Index::
+* Function and Command Index::
+* Variable Index::
+
+— The Detailed Node Listing —
+
+Initial Setup
+
+* Loading Forge::
+* Token Creation::
+* Initial Pull::
+* Repository Detection::
+
+Working with Topics
+
+* Visiting Topics::
+* Listing Topics and Notifications::
+* Creating Topics::
+* Editing Topics and Posts::
+
+Supported Forges and Hosts
+
+* Supported Forges::
+* Partially Supported Forges::
+* Supported Semi-Forges::
+
+FAQ
+
+* Is it possible to create a single pull-request without pulling everything?::
+* ‘error in process filter HTTP Error 502, "Bad gateway"’: error in process filter HTTP Error 502 "Bad gateway".
+
+
+
+File: forge.info,  Node: Introduction,  Next: Initial Setup,  Prev: Top,  Up: Top
+
+1 Introduction
+**************
+
+Forge allows you to work with Git forges, currently Github and Gitlab,
+from the comfort of Magit and Emacs.
+
+   Forge fetches issues, pull-requests and other data using the forge’s
+API and stores the retrieved information in a local database.
+Additionally it fetches pull-request references using Git.
+
+
+File: forge.info,  Node: Initial Setup,  Next: Getting Started,  Prev: Introduction,  Up: Top
+
+2 Initial Setup
+***************
+
+Initial setup turned out to be more challenging for many users than I
+had hoped.  I am trying to counter that by providing detailed
+instructions, which cover not just the happy path but also many of the
+issues, users have ran into in the past.  The recommended reading is
+longer than one might wish, but skipping it does not necessarily save
+time.
+
+   Forge uses the Ghub package to access the APIs of supported forges.
+How this works and how to create and store a token is documented in
+*note (ghub)Getting Started::.  Please read that in full before coming
+back here and continuing with the subsections listed below.
+
+   <https://github.com/magit/forge/wiki> lists additional resources,
+including a link to a much shorter quick-start guide, provided by a
+user.
+
+* Menu:
+
+* Loading Forge::
+* Token Creation::
+* Initial Pull::
+* Repository Detection::
+
+
+File: forge.info,  Node: Loading Forge,  Next: Token Creation,  Up: Initial Setup
+
+2.1 Loading Forge
+=================
+
+Loading Magit doesn’t cause Forge to be loaded automatically.  Adding
+something like this to your init file takes care of that:
+
+     (with-eval-after-load 'magit
+       (require 'forge))
+
+Or if you use ‘use-package’:
+
+     (use-package forge
+       :after magit)
+
+   By default Forge adds some bindings to Magit keymaps and menus, and
+sections to Magit buffers.  If you would like to prevent that, you have
+to set ‘forge-add-default-bindings’ and ‘forge-add-default-sections’ to
+‘nil’ before ‘magit’ (not just ‘forge’) is loaded.
+
+
+File: forge.info,  Node: Token Creation,  Next: Initial Pull,  Prev: Loading Forge,  Up: Initial Setup
+
+2.2 Token Creation
+==================
+
+Forge uses the Ghub package to access the APIs of supported Git forges.
+How this works and how to create and store a token is documented in
+*note (ghub)Getting Started::.
+
+   Forge requires the following token scopes.
+
+   • For Github these scopes are required.
+
+        • ‘repo’ grants full read/write access to private and public
+          repositories.
+        • ‘user’ grants access to profile information.
+        • ‘read:org’ grants read-only access to organization membership.
+
+     More information about these and other scopes can be found at
+     <https://docs.github.com/en/developers/apps/scopes-for-oauth-apps>.
+
+   • For Gitlab instances ‘api’ is the only required scope.  It gives
+     read and write access to everything.  The Gitlab API provides more
+     fine-grained scopes for read-only access, but when any write access
+     at all is required, then it is all or nothing.
+
+
+File: forge.info,  Node: Initial Pull,  Next: Repository Detection,  Prev: Token Creation,  Up: Initial Setup
+
+2.3 Initial Pull
+================
+
+To start using Forge in a certain repository visit the Magit status
+buffer for that repository and type ‘f n’ (‘forge-pull’).
+Alternatively, you can use ‘M-x forge-add-repository’, which makes it
+possible to add a forge repository without pulling all topics and even
+without having to clone the respective Git repository.
+
+   You must set up a token *before* you can add the first repository.
+See *note Token Creation::.
+
+   The first time ‘forge-pull’ is run in a repository, an entry for that
+repository is added to the database and a new value is added to the Git
+variable ‘remote.<remote>.fetch’, which fetches all pull-requests.
+(‘+refs/pull/*/head:refs/pullreqs/*’ for Github)
+
+   ‘forge-pull’ then fetches topics and other information using the
+forge’s API and pull-request references using Git.
+
+   The initial fetch can take a while but most of the work is done
+asynchronously.  Storing the information in the database is done
+synchronously though, so there can be a noticeable hang at the end.
+Subsequent fetches are much faster.
+
+   Fetching issues from Github is much faster than fetching from other
+forges, because making a handful of GraphQL requests, is much faster
+than making hundreds of REST requests.
+
+
+File: forge.info,  Node: Repository Detection,  Prev: Initial Pull,  Up: Initial Setup
+
+2.4 Repository Detection
+========================
+
+Ghub does *not* associate a given local repository with a repository on
+a forge.  The Forge package itself takes care of this.  In doing so it
+ignores the Git variable ‘ghub.host’ and other ‘*.host’ variables used
+by Ghub.  (But ‘github.user’, and other variables used to specify the
+user, are honored).
+
+   Forge associates the local repository with a forge repository, by
+first determining which remote is associated with the upstream
+repository, and then looking that up in ‘forge-alist’.
+
+   If only one remote exists, then Forge uses that unconditionally.  To
+reduce the number of support requests, this is even the case if the Git
+variable ‘forge.remote’ names another, non-existent, remote.
+
+   If several remotes exist, then a remote may be selected based on its
+name.  Almost always we want to fetch the data associated with the
+upstream repository, so that is what the logic described here tries to
+achieve.  The convention is to name the upstream remote "origin", and if
+that convention were universally followed, then things would be trivial.
+However many people name the upstream remote "upstream", which also
+makes sense.
+
+     Note, however, that even though a surprising number of people do
+     just that, it does not make any sense to use the name "origin" to
+     refer to a fork; not even to your own fork.  A fork is a *copy* of
+     the original, "copy" is an antonym for "original", and the word
+     "origin" is not only closely related to but is even contained in
+     the word "original".  Naming a fork the "origin" is at best
+     extremely confusing.
+
+     copy
+          a thing made to be similar or identical to another.
+
+     original
+          the earliest form of something, from which copies may be made.
+
+     origin
+          the point or place where something begins, arises, or is
+          derived.
+
+   If several remotes exist, then the following remote names are tried
+in order and the first remote thus named that exists in the repository
+is used.
+
+  1. The value of the Git variable ‘forge.remote’, if set.  If the
+     variable has a value but no remote by the specified name exists,
+     then a warning is shown, but otherwise this conflict is ignored.
+     This behavior is arguably odd, but due to historic and pragmatic
+     reasons it is the least painful path forward.
+
+  2. The remote named ‘upstream’, if it exists.
+
+  3. The remote named ‘origin’, if it exists.
+
+   The remote named "upstream" is preferred over the remote named
+"origin" because the existence of the former strongly suggests that the
+latter is either not used in this repository (in which case the order
+does not matter) or else it is abused as the name of a fork (in which
+case "upstream" must be preferred).
+
+ -- Variable: forge.remote
+     The value of this variable specifies the remote from which Forge
+     fetches data.  It is usually best to leave this unspecified and to
+     rely on the behavior described above.
+
+     If the remote has to be specified explicitly, then this should be
+     done locally, for a single repository.
+
+     Only ever set this globally, if you consistently use a certain name
+     to refer to the upstream repository and it isn’t one of "upstream"
+     or "origin", and you *never* use that name to refer to a repository
+     that does *not* refer to the upstream repository.
+
+‘N r’ (‘forge-forge.remote’)
+     This command changes the value of the ‘forge.remote’ Git variable
+     in the current repository.
+
+   If this variable is set, then Forge uses the remote by that name, if
+it exists, the same way it may have used ‘origin’ if the variable were
+undefined.  I.e., it does not fall through to try ‘origin’ if no remote
+by your chosen name exists.
+
+   Once the upstream remote has been determined, Forge looks it up in
+‘forge-alist’, using the host part of the URL as the key.  For example,
+the key for ‘git@github.com:magit/forge.git’ is ‘github.com’.
+
+ -- User Option: forge-alist
+     This option defines forge hosts known to Forge.
+
+     Each entry has the form ‘(GITHOST APIHOST WEBHOST CLASS)’.
+
+        • GITHOST is the host used to access repositories on the forge
+          using Git.
+
+        • APIHOST is the host used to access the forge’s API.  For some
+          forges the isn’t just a host, but a host followed by the path
+          to the API’s endpoint.
+
+        • WEBHOST is the host used to access repositories on this forge
+          using a browser.  The IDs used to identify repositories from
+          the forge in the local database also derives from this value.
+
+        • CLASS is the class to be used for repositories from the forge.
+
+     Complications:
+
+        • When connecting to a Github Enterprise edition whose REST
+          API’s end point is "<host>/v3" and whose GraphQL API’s end
+          point is "<host>/graphql", then use "<host>/v3" as APIHOST.
+          This is a historic accident.  See issue #174.
+
+        • WEBHOST and CLASS cannot be changed once you have added one or
+          more repositories from a forge.  Changing GITHOST and/or
+          APIHOST may be possible, but should seldom be necessary.
+
+
+File: forge.info,  Node: Getting Started,  Next: Pulling,  Prev: Initial Setup,  Up: Top
+
+3 Getting Started
+*****************
+
+Much like Git stores information in a local repository and does not
+require a constant internet connection, Forge retrieves additional
+information using a forge’s API and stores that in a local database.
+
+   Forge’s equivalent of ‘git clone’ is ‘forge-add-repository’, which
+has to be run, before most of Forges features become available in the
+local clone of a Git repository.
+
+‘N / a’ (‘forge-add-repository’)
+     This command guides the user through the process of adding a
+     repository to the local database.
+
+     Note that it is possible to add a repository to the local database,
+     without pulling all the data, which is useful if you just want to
+     create a single issue or pull-request in a repository, but are not
+     interested in existing topics, e.g., because you do not regularly
+     contribute to that repository.
+
+     Also note that you can add a repository to the local database, even
+     if no local Git clone exists.
+
+   Like with Git, you have to explicitly pull remote changes, at your
+leisure, using ‘forge-pull’.
+
+‘f n’ (‘forge-pull’)
+‘N f f’
+     This command uses a forge’s API to fetch topics and other
+     information about the current repository, and stores the fetched
+     information in the database.
+
+     If the current repository isn’t being tracked in the local database
+     yet, then this command pivots to behave like
+     ‘forge-add-repository’.
+
+   Forge adds two additional sections to Magit’s status buffer, which
+list open and/or pending issues and pull-requests.  Typing ‘RET’, while
+the cursor is on a topic section, shows more information about that
+topic in a separate buffer.  Typing ‘RET’ on a topic list section, shows
+that list in a separate buffer, where you can apply different filters.
+
+   The other main entry point to the functionality provided by Forge is
+the ‘forge-dispatch’ menu.
+
+‘N’ (‘forge-dispatch’)
+     This prefix command is available in all Magit buffers and provides
+     access to most of the available Forge commands.  See the following
+     sections for information about the available commands.
+
+
+File: forge.info,  Node: Pulling,  Next: Branching,  Prev: Getting Started,  Up: Top
+
+4 Pulling
+*********
+
+The commands that fetch forge data are available the Forge’s main menu
+(‘forge-dispatch’ on ‘N’) and from the same menu (‘magit-fetch’ on ‘f’)
+that is used to fetch Git data.  If ‘magit-pull-or-fetch’ is non-nil,
+then they are also available from the ‘magit-pull’ menu (on ‘F’).
+
+   With Git you have to explicitly pull Git data to make it available in
+the local repository.  Forge works the same; you have to explicitly pull
+to pull data using the forge’s API and storing in the local database.
+This is less disruptive, more reliable, familiar and easier to
+understand than if Forge pulled by itself at random intervals.  It might
+however mean that you occasionally invoke a command expecting the most
+recent data to be available and then have to abort and pull first.  The
+same can happen with Git, e.g., you might attempt to merge a branch that
+you know exists but haven’t actually pulled yet.
+
+‘f n’ (‘forge-pull’)
+‘N f f’
+     This command uses a forge’s API to fetch topics and other
+     information about the current repository and stores the fetched
+     information in the database.
+
+     If the current repository is still untracked locally, or the
+     current repository cannot be determined, this command instead
+     behaves like ‘forge-add-repository’, i.e., it adds the repository
+     to the database and then performs the initial pull.
+
+‘f N’ (‘forge-pull-notifications’)
+‘N f n’
+     This command uses a forge’s API to fetch all notifications from
+     that forge, including, but not limited to, the notifications for
+     the current repository.
+
+     Fetching notifications fetches associated topics even for
+     repositories that you have not yet explicitly added to the local
+     database.
+
+‘N f t’ (‘forge-pull-topic’)
+     This command uses a forge’s API to fetch a single pull-request and
+     stores it in the database.  This is useful if you chose to not
+     fetch all topics when you added the repository using
+     ‘forge-add-repository’.
+
+
+File: forge.info,  Node: Branching,  Next: Working with Topics,  Prev: Pulling,  Up: Top
+
+5 Branching
+***********
+
+Forge provides commands for creating and checking out a new branch or
+work tree from a pull-request.  These commands are available from the
+same transient prefix commands as the suffix commands, used to create
+and check out branches and work trees in a more generic fashion
+(‘magit-branch’ on ‘b’ and ‘magit-worktree’ on ‘%’).
+
+‘b F’ (‘forge-branch-pullreq’)
+     This command creates and configures a new branch from a
+     pull-request, creating and configuring a new remote if necessary.
+
+     The name of the local branch is the same as the name of the remote
+     branch that you are being asked to merge, unless the contributor
+     could not be bothered to properly name the branch before opening
+     the pull-request.  The most likely such case is when you are being
+     asked to merge something like "fork/master" into "origin/master".
+     In such cases the local branch will be named "pr-N", where ‘N’ is
+     the pull-request number.
+
+     These variables are always set by this command:
+
+        • ‘branch.<name>.pullRequest’ is set to the pull-request number.
+        • ‘branch.<name>.pullRequestRemote’ is set to the remote on
+          which the pull-request branch is located.
+        • ‘branch.<name>.pushRemote’ is set to the same remote as
+          ‘branch.<name>.pullRequestRemote’ if that is possible,
+          otherwise it is set to the upstream remote.
+        • ‘branch.<name>.description’ is set to the pull-request title.
+        • ‘branch.<name>.rebase’ is set to ‘true’ because there should
+          be no merge commits among the commits in a pull-request.
+
+     This command also configures the upstream and the push-remote of
+     the local branch that it creates.
+
+     The branch against which the pull-request was opened is always used
+     as the upstream.  This makes it easy to see what commits you are
+     being asked to merge in the section titled something like "Unmerged
+     into origin/master".
+
+     Like for other commands that create a branch, it depends on the
+     option ‘magit-branch-prefer-remote-upstream’ whether the remote
+     branch itself or the respective local branch is used as the
+     upstream, so this section may also be titled, e.g., "Unmerged into
+     master".
+
+     When necessary and possible, the remote pull-request branch is
+     configured to be used as the push-target.  This makes it easy to
+     see what further changes the contributor has made since you last
+     reviewed their changes in the section titled something like
+     "Unpulled from origin/new-feature" or "Unpulled from
+     fork/new-feature".
+
+        • If the pull-request branch is located in the upstream
+          repository, then you probably have set ‘remote.pushDefault’ to
+          that repository.  However some users like to set that variable
+          to their personal fork, even if they have push access to the
+          upstream, so ‘branch.<name>.pushRemote’ is set anyway.
+
+        • If the pull-request branch is located inside a fork, then you
+          are usually able to push to that branch, because Github by
+          default allows the recipient of a pull-request to push to the
+          remote pull-request branch even if it is located in a fork.
+          The contributor has to explicitly disable this.
+
+             • If you are not allowed to push to the pull-request branch
+               on the fork, then a branch by the same name located in
+               the upstream repository is configured as the push-target.
+
+             • A—sadly rather common—special case is when the
+               contributor didn’t bother to use a dedicated branch for
+               the pull-request.
+
+               The most likely such case is when you are being asked to
+               merge something like "fork/master" into "origin/master".
+               The special push permission mentioned above is never
+               granted for the branch that is the repository’s default
+               branch, and that would almost certainly be the case in
+               this scenario.
+
+               To enable you to easily push somewhere anyway, the local
+               branch is named "pr-N" (where ‘N’ is the pull-request
+               number) and the upstream repository is used as the
+               push-remote.
+
+             • Finally, if you are allowed to push to the pull-request
+               branch and the contributor had the foresight to use a
+               dedicated branch, then the fork is configured as the
+               push-remote.
+
+          The push-remote is configured using
+          ‘branch.<name>.pushRemote’, even if the used value is
+          identical to that of ‘remote.pushDefault’, just in case you
+          change the value of the latter later on.  Additionally the
+          variable ‘branch.<name>.pullRequestRemote’ is set to the
+          remote on which the pull-request branch is located.
+
+‘b f’ (‘forge-checkout-pullreq’)
+     This command creates and configures a new branch from a
+     pull-request the same way ‘forge-branch-pullreq’ does.
+     Additionally it checks out the new branch.
+
+‘Z n’ (‘forge-checkout-worktree’)
+     This command creates and configures a new branch from a
+     pull-request the same way ‘forge-branch-pullreq’ does.
+     Additionally it checks out the new branch, using a new working
+     tree.
+
+ -- User Option: forge-checkout-worktree-read-directory-function
+     This function is used by ‘forge-checkout-worktree’, to read the new
+     worktree directory where it checks out the pull-request.  It takes
+     the pull-request as the only argument and must return a directory.
+
+   When you delete a pull-request branch, which was created using one of
+the above three commands, then ‘magit-branch-delete’ usually offers to
+also delete the corresponding remote.  It does not offer to delete a
+remote if (1) the remote is the upstream remote, and/or (2) if other
+branches are being fetched from the remote.
+
+   Note that you have to delete the local branch (e.g., "feature") for
+this to work.  If you delete the tracking branch (e.g., "fork/feature"),
+then the remote is never removed.
+
+
+File: forge.info,  Node: Working with Topics,  Next: Miscellaneous,  Prev: Branching,  Up: Top
+
+6 Working with Topics
+*********************
+
+We call both issues and pull-requests "topics".  The contributions to
+the conversation are called "posts".
+
+* Menu:
+
+* Visiting Topics::
+* Listing Topics and Notifications::
+* Creating Topics::
+* Editing Topics and Posts::
+
+
+File: forge.info,  Node: Visiting Topics,  Next: Listing Topics and Notifications,  Up: Working with Topics
+
+6.1 Visiting Topics
+===================
+
+Magit’s status buffer contains lists of issues and pull-requests.
+Topics are ordered by last modification time.  All open issues and some
+recently edited and closed topics are listed.
+
+   Forge provides some commands that act on the listed topics.  These
+commands can also be used in other contexts, such as when point is on a
+commit or branch section.
+
+‘C-c C-w’ (‘forge-browse-TYPE’)
+‘C-c C-w’ (‘forge-browse-dwim’)
+‘N b r’ (‘forge-browse-remote’)
+‘N b I’ (‘forge-browse-issues’)
+‘N b P’ (‘forge-browse-pullreqs’)
+‘N b t’ (‘forge-browse-topic’)
+‘N b i’ (‘forge-browse-issue’)
+‘N b p’ (‘forge-browse-pullreq’)
+     These commands visit the topic, issue(s), pull-request(s), post,
+     branch, commit, or remote at point in a browser.
+
+     This is implemented using various commands named
+     ‘forge-browse-TYPE’, and the key binding is defined by remapping
+     ‘magit-browse-thing’ (as defined in ‘magit-mode-map)’.  For commit
+     sections this key is bound to ‘forge-browse-dwim’, which prefers a
+     topic over a branch and a branch over a commit.
+
+‘<RET>’ (‘forge-visit-TYPE’)
+‘C-c C-v’ (‘forge-visit-topic’)
+‘N v t’ (‘forge-visit-topic’)
+‘N v i’ (‘forge-visit-issue’)
+‘N v p’ (‘forge-visit-pullreq’)
+     These commands visit the pull-request(s), issue(s), or repository
+     in a separate buffer.
+
+     The ‘RET’ binding is only available when point is on a issue or
+     pull-request section because that key is already bound to something
+     else for most of Magit’s own sections.  ‘C-c C-v’ however is also
+     available on regular commit (e.g., in a log) and branch sections.
+
+     This is implemented using various commands named ‘forge-visit-TYPE’
+     and the key binding is defined by remapping ‘magit-visit-thing’ (as
+     defined in ‘magit-mode-map’).
+
+
+File: forge.info,  Node: Listing Topics and Notifications,  Next: Creating Topics,  Prev: Visiting Topics,  Up: Working with Topics
+
+6.2 Listing Topics and Notifications
+====================================
+
+By default Forge lists a subset of topics directly in the Magit status
+buffer.  It also provides commands to list topics and notifications in
+separate buffers.
+
+   Forge adds the following functions to ‘magit-status-sections-hook’:
+
+ -- Function: forge-insert-pullreqs
+     This function inserts a list of the most recent and/or open
+     pull-requests.
+
+ -- Function: forge-insert-issues
+     This function inserts a list of the most recent and/or open issues.
+
+   The following commands list repositories, notifications and topics in
+dedicated buffers:
+
+‘N l r’ (‘forge-list-repositories’)
+     This command lists all known repositories in a separate buffer.
+
+‘N l n’ (‘forge-list-notifications’)
+     This command lists all notifications for all forges in a separate
+     buffer.
+
+‘N l p’ (‘forge-list-pullreqs’)
+     This command lists the current repository’s pull-requests in a
+     separate buffer.
+
+‘N l i’ (‘forge-list-issues’)
+     This command lists the current repository’s issues in a separate
+     buffer.
+
+ -- User Option: forge-owned-accounts
+     This is an alist of accounts that are owned by you.  This should
+     include your username as well as any organization that you own.
+     Used by the commands ‘forge-list-owned-issues’,
+     ‘forge-list-owned-pullreqs’ and ‘forge-fork’.
+
+     Each element has the form ‘(ACCOUNT . PLIST)’.  The following
+     properties are currently being used:
+
+        • ‘remote-name’ The default name suggested by ‘forge-fork’ for a
+          fork created within this account.  If unspecified, then the
+          name of the account is used.
+
+     Example: ‘(("tarsius") ("emacsmirror" remote-name "mirror"))’.
+
+ -- User Option: forge-owned-ignored
+     This is a list of repository names that are considered to not be
+     owned by you even though they would have been considered to be
+     owned by you based on ‘forge-owned-accounts’.
+
+
+File: forge.info,  Node: Creating Topics,  Next: Editing Topics and Posts,  Prev: Listing Topics and Notifications,  Up: Working with Topics
+
+6.3 Creating Topics
+===================
+
+‘N c p’ (‘forge-create-pullreq’)
+‘C-c C-n [on "Pull requests" section]’
+     This command creates a new pull-request for the current repository.
+
+‘N c i’ (‘forge-create-issue’)
+‘C-c C-n [on "Issues" section]’
+     This command creates a new issue for the current repository.
+
+
+File: forge.info,  Node: Editing Topics and Posts,  Prev: Creating Topics,  Up: Working with Topics
+
+6.4 Editing Topics and Posts
+============================
+
+We call both issues and pull-requests "topics".  The contributions to
+the conversation are called "posts".  The post that initiated the
+conversation is also called a post.
+
+   These commands are available only from the topic buffer (i.e., from
+the buffer that shows the posts on a topic).  Other commands that also
+work in other buffers are available here also.  For example ‘C-c C-w’ on
+a post visits that post in a browser.
+
+‘C-c C-n’ (‘forge-create-post’)
+‘C-c C-r’
+     This command allows users to create a new post on an existing
+     topic.  It opens a buffer in which the user can write the post.
+     When the post is done, then the user has to submit using ‘C-c C-c’.
+
+     If the region is active and marks part of an existing post, then
+     that part of the post is quoted.  Otherwise, or if a prefix
+     argument is used, then the complete post that point is currently on
+     is quoted.
+
+‘C-c C-e [on a post section]’ (‘forge-edit-post’)
+     This command visits an existing post in a separate buffer.  When
+     the changes to the post are done, then the user has to submit using
+     ‘C-c C-c’.
+
+‘C-c C-e [on "Title" section]’ (‘forge-edit-topic-title’)
+     This command reads a new title for an existing topic in the
+     minibuffer.
+
+‘C-c C-e [on "State" section]’ (‘forge-edit-topic-state’)
+     This command toggles the state of an existing topic between "open"
+     and "closed".
+
+‘C-c C-e [on "Draft" section]’ (‘forge-edit-topic-draft’)
+     This command toggles whether an existing topic is a draft or not.
+
+‘C-c C-e [on "Labels" section]’ (‘forge-edit-topic-labels’)
+     This command reads a list of labels for an existing topic in the
+     minibuffer.
+
+‘C-c C-e [on "Marks" section]’ (‘forge-edit-topic-marks’)
+     This command reads a list of marks for an existing topic in the
+     minibuffer.
+
+     Marks are like labels except that they are not shared with anyone
+     else.  To create a mark that topics can subsequently be marked with
+     use the command ‘forge-create-mark’.  Existing marks can be edited
+     using the command ‘forge-edit-mark’.
+
+‘C-c C-e [on "Assignees" section]’ (‘forge-edit-topic-assignees’)
+     This command reads a list of assignees for an existing topic in the
+     minibuffer.
+
+‘C-c C-e [on "Review-Requests" section]’ (‘forge-edit-topic-review-requests’)
+     This command reads a list of people who you would like to review an
+     existing topic in the minibuffer.
+
+‘C-c C-e [on "Note" section]’
+‘M-x forge-edit-topic-note’
+     This lets you edit your private note about a topic.
+
+‘C-c C-k [on a comment section]’ (‘forge-delete-comment’)
+     This command deletes the comment at point.
+
+‘m M [if enabled]’ (‘forge-merge’)
+‘N M [if enabled]’
+     This command merges the current pull-request using the forge’s API.
+     If there is no current pull-request or with a prefix argument, then
+     it reads a pull-request to visit instead.
+
+     The "merge method" to be used is read from the user.
+
+     Use of this command is discouraged.  Unless the remote repository
+     is configured to disallow that, you should instead merge locally
+     and then push the target branch.  Forges detect that you have done
+     that and respond by automatically marking the pull-request as
+     merged.
+
+   Creating a new post and editing an existing post are similar to
+creating a new commit and editing the message of an existing commit.  In
+both cases the message has to be written in a separate buffer and then
+the process has to be finished or canceled using a separate command.
+
+   The following commands are available in buffers used to edit posts:
+
+‘C-c C-c’ (‘forge-post-submit’)
+     This command submits the post that is being edited in the current
+     buffer.
+
+‘C-c C-k’ (‘forge-post-cancel’)
+     This command cancels the post that is being edited in the current
+     buffer.
+
+‘C-c C-e’ (‘forge-post-dispatch’)
+     This prefix command features the above two commands as suffixes,
+     and when creating a pull-request also the following command.  More
+     suffix commands will likely be added in the future.
+
+‘C-c C-e d’ (‘forge-post-toggle-draft’)
+     This command toggles whether the pull-request being created is a
+     draft.
+
+
+File: forge.info,  Node: Miscellaneous,  Next: Supported Forges and Hosts,  Prev: Working with Topics,  Up: Top
+
+7 Miscellaneous
+***************
+
+‘N c f’ (‘forge-fork’)
+     This command adds an additional remote to the current repository.
+     The remote can either point at an existing repository or one that
+     has to be created first by forking it to an account the user has
+     access to.
+
+     Currently this only supports Github and Gitlab.
+
+‘N t t’ (‘forge-toggle-display-in-status-buffer’)
+     This command toggles whether any topics are displayed in the
+     current Magit status buffer.
+
+‘N t c’ (‘forge-toggle-closed-visibility’)
+     This command toggles whether closed topics are shown in the Magit
+     status buffer.
+
+ -- Command: forge-add-user-repositories
+     This command reads a host and a username from the user and adds all
+     of that user’s repositories on that host to the local database.
+
+     This may take a while.  Only Github is supported at the moment.
+
+ -- Command: forge-add-organization-repositories
+     This command reads a host and an organization from the user and
+     adds all the organization’s repositories on that host to the local
+     database.
+
+     This may take a while.  Only Github is supported at the moment.
+
+ -- Command: forge-remove-repository
+     This command reads a repository and removes it from the local
+     database.
+
+ -- Command: forge-remove-topic-locally
+     This command reads a topic and removes it from the local database.
+     The topic is not removed from the forge and, if it is later
+     modified, then it will be added to the database again.
+
+     Due to how the supported APIs work, it would be too expensive to
+     automatically remove topics from the local database that were
+     removed from the forge.  The only purpose of this command is to
+     allow you to manually clean up the local database.
+
+ -- Command: forge-reset-database
+     This command moves the current database file to the trash and
+     creates a new empty database.
+
+     This is useful after the database’s table schemata have changed,
+     which will happen a few times while the Forge functionality is
+     still under heavy development.
+
+
+File: forge.info,  Node: Supported Forges and Hosts,  Next: FAQ,  Prev: Miscellaneous,  Up: Top
+
+Appendix A Supported Forges and Hosts
+*************************************
+
+Currently Forge supports two forges and three more forges partially.
+Additionally it supports four semi-forges.  Support for more forges and
+semi-forges can and will be added.
+
+   Both forges and semi-forges provide web interfaces for Git
+repositories.  Forges additionally support pull-requests and issues and
+make those and other information available using an API.
+
+   When a forge is only partially supported, then that means that only
+the functionality that does not require the API is implemented, or in
+other words, that the forge is only supported as a semi-forge.
+
+   A host is a particular instance of a forge.  For example the hosts
+<https://gitlab.com> and <https://salsa.debian.org> are both instances
+of the Gitlab forge.  Forge supports some well known hosts out of the
+box and additional hosts can easily be supported by adding entries to
+the option ‘forge-alist’ (see *note Repository Detection::).
+
+   For more details about the caveats mentioned below (and some others)
+see also *note Getting Started::.
+
+* Menu:
+
+* Supported Forges::
+* Partially Supported Forges::
+* Supported Semi-Forges::
+
+
+File: forge.info,  Node: Supported Forges,  Next: Partially Supported Forges,  Up: Supported Forges and Hosts
+
+A.1 Supported Forges
+====================
+
+A.1.1 Github
+------------
+
+Forge’s support for Github can be considered the "reference
+implementation".  Support for other forges can lag behind a bit.
+
+A.1.1.1 Github Caveats
+......................
+
+   • Forge uses the Github GraphQL API when possible but has to fall
+     back to use the REST API in many cases because the former is still
+     rather incomplete.
+
+   • The Github GraphQL API has a hard-coded timeout on queries.  The
+     only solution is to reduce the number of entities we query at once,
+     which can be done by adjusting either the ‘forge.graphqlItemLimit’
+     git variable or the field "GQL entity limit" in a status buffer.
+
+   • Forge depends on the ‘updated_at’ field being updated when
+     appropriate.  For Github pull-requests at least, that is not always
+     done.
+
+A.1.1.2 Github Hosts
+....................
+
+   • <https://github.com>
+
+A.1.2 Gitlab
+------------
+
+A.1.2.1 Gitlab Caveats
+......................
+
+   • Forge cannot provide notifications because the Gitlab API does not
+     expose those.
+
+A.1.2.2 Gitlab Hosts
+....................
+
+   • <https://gitlab.com>
+   • <https://salsa.debian.org>
+   • <https://framagit.org>
+
+
+File: forge.info,  Node: Partially Supported Forges,  Next: Supported Semi-Forges,  Prev: Supported Forges,  Up: Supported Forges and Hosts
+
+A.2 Partially Supported Forges
+==============================
+
+A.2.1 Gitea https://gitea.io
+----------------------------
+
+This is the next forge whose API will be supported.
+
+A.2.1.1 Gitea Hosts
+...................
+
+   • <https://codeberg.org>
+
+A.2.2 Gogs https://gogs.io
+--------------------------
+
+Once Gitea is supported it should be fairly simple to support Gogs too,
+because the former is a fork of the latter and the APIs seem to still be
+very similar.
+
+A.2.2.1 Gogs Hosts
+..................
+
+   • <https://code.orgmode.org>
+
+A.2.3 Bitbucket https://bitbucket.org
+-------------------------------------
+
+I don’t plan to support Bitbucket’s API any time soon, and it gets less
+likely that I will every do it every time I look at it.
+
+A.2.3.1 Bitbucket Caveats
+.........................
+
+   • The API documentation is poor and initial tests indicated that the
+     implementation is buggy.
+
+   • Atlassian’s offering contains two very distinct implementations
+     that are both called "Bitbucket".  Forge only supports the
+     implementation whose only instance is available at
+     <https://bitbucket.org>, because I only have access to that.
+
+   • Unlike all other forges, Bitbucket does not expose pull-requests as
+     references in the upstream repository.  For that reason Forge
+     actually treats it as a semi-forge, not as forge whose API is not
+     supported yet.  This means that you cannot checkout pull-requests
+     locally.  There is little hope that this will ever get fixed; the
+     respective issue was opened six years ago and there has been no
+     progress since: <https://bitbucket.org/site/master/issues/5814>.
+
+A.2.3.2 Bitbucket Hosts
+.......................
+
+   • <https://bitbucket.org>
+
+
+File: forge.info,  Node: Supported Semi-Forges,  Prev: Partially Supported Forges,  Up: Supported Forges and Hosts
+
+A.3 Supported Semi-Forges
+=========================
+
+A.3.1 Gitweb https://git-scm.com/docs/gitweb
+--------------------------------------------
+
+A.3.1.1 Gitweb Caveats
+......................
+
+   • I could find only one public installation
+     (<https://git.savannah.gnu.org>), which gives users the choice
+     between Gitweb and Cgit.  The latter seems more popular (not just
+     on this site).
+
+A.3.2 Cgit https://git.zx2c4.com/cgit/about
+-------------------------------------------
+
+A.3.2.1 Cgit Caveats
+....................
+
+   • Different sites use different URL schemata and some of the bigger
+     sites use a fork.  For this reason Forge has to provide several
+     classes to support different variations of Cgit and you have to
+     look at their definitions to figure out which one is the correct
+     one for a particular installation.
+
+A.3.2.2 Cgit Hosts
+..................
+
+   • <https://git.savannah.gnu.org/cgit>
+   • <https://git.kernel.org>
+   • <https://repo.or.cz>
+
+A.3.3 Stgit https://codemadness.org/git/stagit/file/README.html
+---------------------------------------------------------------
+
+A.3.3.1 Stgit Caveats
+.....................
+
+   • Stgit cannot show logs for branches beside "master".  For that
+     reason Forge takes users to a page listing the branches when they
+     request the log for a particular branch (even for "master" whose
+     log is just one click away from there).
+
+A.3.3.2 Stgit Hosts
+...................
+
+   • <https://git.suckless.org>
+
+A.3.4 Srht https://meta.sr.ht
+-----------------------------
+
+A.3.4.1 Srht Caveats
+....................
+
+   • Srht cannot show logs for branches beside "master".  For that
+     reason Forge takes users to a page listing the branches when they
+     request the log for a particular branch (even for "master" whose
+     log is just one click away from there).
+
+A.3.4.2 Srht Hosts
+..................
+
+   • <https://git.sr.ht>
+
+
+File: forge.info,  Node: FAQ,  Next: Keystroke Index,  Prev: Supported Forges and Hosts,  Up: Top
+
+Appendix B FAQ
+**************
+
+This section lists some frequently asked questions.  Please see also
+<https://github.com/magit/forge/wiki/FAQ> for an extended list of common
+issues.
+
+* Menu:
+
+* Is it possible to create a single pull-request without pulling everything?::
+* ‘error in process filter HTTP Error 502, "Bad gateway"’: error in process filter HTTP Error 502 "Bad gateway".
+
+
+File: forge.info,  Node: Is it possible to create a single pull-request without pulling everything?,  Next: error in process filter HTTP Error 502 "Bad gateway",  Up: FAQ
+
+B.1 Is it possible to create a single pull-request without pulling everything?
+==============================================================================
+
+Yes.  ‘M-x forge-add-repository’ offers to add a repository to the
+database without also fetching all pull-requests and issues.
+
+
+File: forge.info,  Node: error in process filter HTTP Error 502 "Bad gateway",  Prev: Is it possible to create a single pull-request without pulling everything?,  Up: FAQ
+
+B.2 ‘error in process filter: HTTP Error: 502, "Bad gateway"’
+=============================================================
+
+This is a frequently occurring error.  Adding some formatting the full
+error is:
+
+     error in process filter: ghub--signal-error: HTTP Error: 502,
+       "Bad gateway", "/graphql",
+       ((data . "null")
+        (errors ((message . "Something went wrong while executing your query.
+           This may be the result of a timeout, or it could be a GitHub bug.
+           Please include `CC2C:4FEA:A1771C1:CBF40CE:5C33F7E5`
+           when reporting this issue."))))
+
+   This indicates that something went wrong within Github’s network.
+See
+<https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#5xx_server_errors>.
+The appended error message also says as much: "This may be the result of
+a timeout, or it could be a GitHub bug."
+
+   It appears that this happens more often in big repositories,
+especially during the initial pull, but this may be an illusion; it is
+known to also happens for smaller, incremental requests.
+
+   I believe that more data just means more requests and thus more
+opportunities for things to go wrong.  It seems unlikely that this is
+due to us requesting too much data at once (in that case we would get a
+different error from GraphQL, not HTTP). When fetching lots of data,
+then we do not request one large response but make many requests and we
+then collect the many responses (pagination forces us to do that).
+
+   The timeout may be due to many requests from other people arriving at
+some Github-internal bottleneck at the same time, or it may be due to
+cold caches and overly aggressive timeouts.  We just don’t know; it’s
+their infrastructure.
+
+   The second problem is that we currently simply error out if we get
+this error.  This could be changed and eventually it will be, but for
+the time being your only option is to just try again, possibly
+repeatedly and possibly after a delay to give whatever congestion may
+exist on the other end a chance to clear or to give their caches a
+chance to warm up.
+
+   This was also discussed in <https://github.com/magit/forge/issues/20>
+and <https://github.com/magit/ghub/issues/83>.
+
+
+File: forge.info,  Node: Keystroke Index,  Next: Function and Command Index,  Prev: FAQ,  Up: Top
+
+Appendix C Keystroke Index
+**************************
+
+ [index ]
+* Menu:
+
+* b F:                                   Branching.           (line  13)
+* b f:                                   Branching.           (line 102)
+* C-c C-c:                               Editing Topics and Posts.
+                                                              (line  92)
+* C-c C-e:                               Editing Topics and Posts.
+                                                              (line 100)
+* C-c C-e d:                             Editing Topics and Posts.
+                                                              (line 105)
+* C-c C-e [on "Assignees" section]:      Editing Topics and Posts.
+                                                              (line  56)
+* C-c C-e [on "Draft" section]:          Editing Topics and Posts.
+                                                              (line  40)
+* C-c C-e [on "Labels" section]:         Editing Topics and Posts.
+                                                              (line  43)
+* C-c C-e [on "Marks" section]:          Editing Topics and Posts.
+                                                              (line  47)
+* C-c C-e [on "Note" section]:           Editing Topics and Posts.
+                                                              (line  65)
+* C-c C-e [on "Review-Requests" section]: Editing Topics and Posts.
+                                                              (line  60)
+* C-c C-e [on "State" section]:          Editing Topics and Posts.
+                                                              (line  36)
+* C-c C-e [on "Title" section]:          Editing Topics and Posts.
+                                                              (line  32)
+* C-c C-e [on a post section]:           Editing Topics and Posts.
+                                                              (line  27)
+* C-c C-k:                               Editing Topics and Posts.
+                                                              (line  96)
+* C-c C-k [on a comment section]:        Editing Topics and Posts.
+                                                              (line  68)
+* C-c C-n:                               Editing Topics and Posts.
+                                                              (line  17)
+* C-c C-n [on "Issues" section]:         Creating Topics.     (line  12)
+* C-c C-n [on "Pull requests" section]:  Creating Topics.     (line   8)
+* C-c C-r:                               Editing Topics and Posts.
+                                                              (line  17)
+* C-c C-v:                               Visiting Topics.     (line  36)
+* C-c C-w:                               Visiting Topics.     (line  22)
+* C-c C-w <1>:                           Visiting Topics.     (line  22)
+* f n:                                   Getting Started.     (line  32)
+* f n <1>:                               Pulling.             (line  23)
+* f N:                                   Pulling.             (line  34)
+* m M [if enabled]:                      Editing Topics and Posts.
+                                                              (line  72)
+* N:                                     Getting Started.     (line  50)
+* N / a:                                 Getting Started.     (line  15)
+* N b I:                                 Visiting Topics.     (line  22)
+* N b i:                                 Visiting Topics.     (line  22)
+* N b P:                                 Visiting Topics.     (line  22)
+* N b p:                                 Visiting Topics.     (line  22)
+* N b r:                                 Visiting Topics.     (line  22)
+* N b t:                                 Visiting Topics.     (line  22)
+* N c f:                                 Miscellaneous.       (line   7)
+* N c i:                                 Creating Topics.     (line  12)
+* N c p:                                 Creating Topics.     (line   8)
+* N f f:                                 Getting Started.     (line  32)
+* N f f <1>:                             Pulling.             (line  23)
+* N f n:                                 Pulling.             (line  34)
+* N f t:                                 Pulling.             (line  43)
+* N l i:                                 Listing Topics and Notifications.
+                                                              (line  34)
+* N l n:                                 Listing Topics and Notifications.
+                                                              (line  26)
+* N l p:                                 Listing Topics and Notifications.
+                                                              (line  30)
+* N l r:                                 Listing Topics and Notifications.
+                                                              (line  23)
+* N M [if enabled]:                      Editing Topics and Posts.
+                                                              (line  72)
+* N r:                                   Repository Detection.
+                                                              (line  80)
+* N t c:                                 Miscellaneous.       (line  19)
+* N t t:                                 Miscellaneous.       (line  15)
+* N v i:                                 Visiting Topics.     (line  36)
+* N v p:                                 Visiting Topics.     (line  36)
+* N v t:                                 Visiting Topics.     (line  36)
+* RET:                                   Visiting Topics.     (line  36)
+* Z n:                                   Branching.           (line 107)
+
+
+File: forge.info,  Node: Function and Command Index,  Next: Variable Index,  Prev: Keystroke Index,  Up: Top
+
+Appendix D Function and Command Index
+*************************************
+
+ [index ]
+* Menu:
+
+* forge-add-organization-repositories:   Miscellaneous.       (line  28)
+* forge-add-repository:                  Getting Started.     (line  15)
+* forge-add-user-repositories:           Miscellaneous.       (line  22)
+* forge-branch-pullreq:                  Branching.           (line  13)
+* forge-browse-dwim:                     Visiting Topics.     (line  22)
+* forge-browse-issue:                    Visiting Topics.     (line  22)
+* forge-browse-issues:                   Visiting Topics.     (line  22)
+* forge-browse-pullreq:                  Visiting Topics.     (line  22)
+* forge-browse-pullreqs:                 Visiting Topics.     (line  22)
+* forge-browse-remote:                   Visiting Topics.     (line  22)
+* forge-browse-topic:                    Visiting Topics.     (line  22)
+* forge-browse-TYPE:                     Visiting Topics.     (line  22)
+* forge-checkout-pullreq:                Branching.           (line 102)
+* forge-checkout-worktree:               Branching.           (line 107)
+* forge-create-issue:                    Creating Topics.     (line  12)
+* forge-create-post:                     Editing Topics and Posts.
+                                                              (line  17)
+* forge-create-pullreq:                  Creating Topics.     (line   8)
+* forge-delete-comment:                  Editing Topics and Posts.
+                                                              (line  68)
+* forge-dispatch:                        Getting Started.     (line  50)
+* forge-edit-post:                       Editing Topics and Posts.
+                                                              (line  27)
+* forge-edit-topic-assignees:            Editing Topics and Posts.
+                                                              (line  56)
+* forge-edit-topic-draft:                Editing Topics and Posts.
+                                                              (line  40)
+* forge-edit-topic-labels:               Editing Topics and Posts.
+                                                              (line  43)
+* forge-edit-topic-marks:                Editing Topics and Posts.
+                                                              (line  47)
+* forge-edit-topic-note:                 Editing Topics and Posts.
+                                                              (line  65)
+* forge-edit-topic-review-requests:      Editing Topics and Posts.
+                                                              (line  60)
+* forge-edit-topic-state:                Editing Topics and Posts.
+                                                              (line  36)
+* forge-edit-topic-title:                Editing Topics and Posts.
+                                                              (line  32)
+* forge-forge.remote:                    Repository Detection.
+                                                              (line  80)
+* forge-fork:                            Miscellaneous.       (line   7)
+* forge-insert-issues:                   Listing Topics and Notifications.
+                                                              (line  16)
+* forge-insert-pullreqs:                 Listing Topics and Notifications.
+                                                              (line  12)
+* forge-list-issues:                     Listing Topics and Notifications.
+                                                              (line  34)
+* forge-list-notifications:              Listing Topics and Notifications.
+                                                              (line  26)
+* forge-list-pullreqs:                   Listing Topics and Notifications.
+                                                              (line  30)
+* forge-list-repositories:               Listing Topics and Notifications.
+                                                              (line  23)
+* forge-merge:                           Editing Topics and Posts.
+                                                              (line  72)
+* forge-post-cancel:                     Editing Topics and Posts.
+                                                              (line  96)
+* forge-post-dispatch:                   Editing Topics and Posts.
+                                                              (line 100)
+* forge-post-submit:                     Editing Topics and Posts.
+                                                              (line  92)
+* forge-post-toggle-draft:               Editing Topics and Posts.
+                                                              (line 105)
+* forge-pull:                            Getting Started.     (line  32)
+* forge-pull <1>:                        Pulling.             (line  23)
+* forge-pull-notifications:              Pulling.             (line  34)
+* forge-pull-topic:                      Pulling.             (line  43)
+* forge-remove-repository:               Miscellaneous.       (line  35)
+* forge-remove-topic-locally:            Miscellaneous.       (line  39)
+* forge-reset-database:                  Miscellaneous.       (line  49)
+* forge-toggle-closed-visibility:        Miscellaneous.       (line  19)
+* forge-toggle-display-in-status-buffer: Miscellaneous.       (line  15)
+* forge-visit-issue:                     Visiting Topics.     (line  36)
+* forge-visit-pullreq:                   Visiting Topics.     (line  36)
+* forge-visit-topic:                     Visiting Topics.     (line  36)
+* forge-visit-TYPE:                      Visiting Topics.     (line  36)
+
+
+File: forge.info,  Node: Variable Index,  Prev: Function and Command Index,  Up: Top
+
+Appendix E Variable Index
+*************************
+
+ [index ]
+* Menu:
+
+* forge-alist:                           Repository Detection.
+                                                              (line  92)
+* forge-checkout-worktree-read-directory-function: Branching. (line 112)
+* forge-owned-accounts:                  Listing Topics and Notifications.
+                                                              (line  37)
+* forge-owned-ignored:                   Listing Topics and Notifications.
+                                                              (line  52)
+* forge.remote:                          Repository Detection.
+                                                              (line  66)
+
+
+
+Tag Table:
+Node: Top771
+Node: Introduction2450
+Node: Initial Setup2871
+Node: Loading Forge3854
+Node: Token Creation4534
+Node: Initial Pull5599
+Node: Repository Detection6998
+Node: Getting Started12351
+Node: Pulling14630
+Node: Branching16793
+Node: Working with Topics23181
+Node: Visiting Topics23548
+Node: Listing Topics and Notifications25621
+Node: Creating Topics27797
+Node: Editing Topics and Posts28282
+Node: Miscellaneous32805
+Node: Supported Forges and Hosts35038
+Node: Supported Forges36330
+Ref: Github36486
+Ref: Github Caveats36641
+Ref: Github Hosts37303
+Ref: Gitlab37375
+Ref: Gitlab Caveats37402
+Ref: Gitlab Hosts37543
+Node: Partially Supported Forges37679
+Ref: Gitea https//giteaio37885
+Ref: Gitea Hosts37997
+Ref: Gogs https//gogsio38069
+Ref: Gogs Hosts38284
+Ref: Bitbucket https//bitbucketorg38358
+Ref: Bitbucket Caveats38568
+Ref: Bitbucket Hosts39481
+Node: Supported Semi-Forges39562
+Ref: Gitweb https//git-scmcom/docs/gitweb39733
+Ref: Gitweb Caveats39824
+Ref: Cgit https//gitzx2c4com/cgit/about40080
+Ref: Cgit Caveats40169
+Ref: Cgit Hosts40534
+Ref: Stgit https//codemadnessorg/git/stagit/file/READMEhtml40677
+Ref: Stgit Caveats40806
+Ref: Stgit Hosts41108
+Ref: Srht https//metasrht41184
+Ref: Srht Caveats41245
+Ref: Srht Hosts41544
+Node: FAQ41611
+Node: Is it possible to create a single pull-request without pulling everything?42100
+Node: error in process filter HTTP Error 502 "Bad gateway"42566
+Node: Keystroke Index44937
+Node: Function and Command Index50700
+Node: Variable Index56438
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:

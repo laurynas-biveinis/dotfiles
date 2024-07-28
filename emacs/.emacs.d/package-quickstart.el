@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240713.1931/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240713.1931/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240725.1429/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240725.1429/with-editor-autoloads.el"))
 
 
 
@@ -4426,7 +4426,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240713.1925/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240713.1925/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240724.1229/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240724.1229/magit-section-autoloads.el"))
 
 
 
@@ -4435,6 +4435,34 @@ it is disabled.
 
 
 
+(autoload 'magit-add-section-hook "magit-section" "\
+Add to the value of section hook HOOK the function FUNCTION.
+
+Add FUNCTION at the beginning of the hook list unless optional
+APPEND is non-nil, in which case FUNCTION is added at the end.
+If FUNCTION already is a member, then move it to the new location.
+
+If optional AT is non-nil and a member of the hook list, then
+add FUNCTION next to that instead.  Add before or after AT, or
+replace AT with FUNCTION depending on APPEND.  If APPEND is the
+symbol `replace', then replace AT with FUNCTION.  For any other
+non-nil value place FUNCTION right after AT.  If nil, then place
+FUNCTION right before AT.  If FUNCTION already is a member of the
+list but AT is not, then leave FUNCTION where ever it already is.
+
+If optional LOCAL is non-nil, then modify the hook's buffer-local
+value rather than its global value.  This makes the hook local by
+copying the default value.  That copy is then modified.
+
+HOOK should be a symbol.  If HOOK is void, it is first set to nil.
+HOOK's value must not be a single hook function.  FUNCTION should
+be a function that takes no arguments and inserts one or multiple
+sections at point, moving point forward.  FUNCTION may choose not
+to insert its section(s), when doing so would not make sense.  It
+should not be abused for other side-effects.  To remove FUNCTION
+again use `remove-hook'.
+
+(fn HOOK FUNCTION &optional AT APPEND LOCAL)")
 (autoload 'magit--handle-bookmark "magit-section" "\
 Open a bookmark created by `magit--make-bookmark'.
 
@@ -4476,7 +4504,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240713.1925/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240713.1925/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240725.2110/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240725.2110/magit-autoloads.el"))
 
 
 
@@ -5466,6 +5494,9 @@ Switch to a Magit buffer belonging to the current Git repository.
 Abort current operation.
 Depending on the context, this will abort a merge, a rebase, a
 patch application, a cherry-pick, a revert, or a bisect." t)
+(autoload 'magit-back-to-indentation "magit-extras" "\
+Move point to the first non-whitespace character on this line.
+In Magit diffs, also skip over - and + at the beginning of the line." t)
 (register-definition-prefixes "magit-extras" '("magit-"))
 
 
@@ -10226,7 +10257,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240713.1917/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240713.1917/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240726.1807/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240726.1807/forge-autoloads.el"))
 
 
 
@@ -10254,8 +10285,7 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
  (autoload 'forge-dispatch "forge-commands" nil t)
  (autoload 'forge-configure "forge-commands" nil t)
  (autoload 'forge-pull "forge-commands" nil t)
-(autoload 'forge-pull-notifications "forge-commands" "\
-Fetch notifications for all repositories from the current forge." t)
+ (autoload 'forge-pull-notifications "forge-commands" nil t)
  (autoload 'forge-pull-topic "forge-commands" nil t)
  (autoload 'forge-pull-this-topic "forge-commands" nil t)
 (autoload 'forge-browse-issues "forge-commands" "\
@@ -10341,6 +10371,7 @@ Create, configure and checkout a new branch from a pull-request.
 Please see the manual for more information.
 
 (fn PULLREQ)" t)
+ (autoload 'forge-checkout-this-pullreq "forge-commands" nil t)
 (autoload 'forge-checkout-worktree "forge-commands" "\
 Create, configure and checkout a new worktree from a pull-request.
 This is like `forge-checkout-pullreq', except that it also
@@ -11405,7 +11436,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.30.0/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.30.0/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.30.1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.30.1/cmake-mode-autoloads.el"))
 
 
 
@@ -11810,7 +11841,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240713.1917" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240713.1925" "/Users/laurynas/.emacs.d/elpa/magit-section-20240713.1925" "/Users/laurynas/.emacs.d/elpa/transient-20240713.2102" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240713.1931" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240726.1807" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240725.2110" "/Users/laurynas/.emacs.d/elpa/magit-section-20240724.1229" "/Users/laurynas/.emacs.d/elpa/transient-20240713.2102" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240725.1429" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
