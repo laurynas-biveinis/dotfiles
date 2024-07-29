@@ -29,26 +29,38 @@ class CaseSensitiveConfigParser(configparser.ConfigParser):
         return optionstr
 
 
+def get_key(row, name1, name2, fn):
+    """Return a value from CSV row using one of the key names."""
+    if name1 in row:
+        return row[name1]
+    if name2 in row:
+        return row[name2]
+    raise ValueError(f"Unrecognized file format for {fn}")
+
+
+PAYMENT_TO_QIF_TYPES = {
+    "Deposit": "Cash",
+    "Early repayment": "Sell",
+    "Gauta paskolos dalis (įskaitant sut. mok. grąž.)": "Sell",
+    "Gautos palūkanos": "IntInc",
+    "Gautos papildomos mokėjimo palūkanos dėl vėlavimo": "IntInc",
+    "Interest earned": "IntInc",
+    "investor.payment_request.type.ter": "Sell",
+    "Išankstinis paskolos grąžinimas (įskaitant sut. mok. grąž.)": "Sell",
+    "Loan disbursal": "Buy",
+    "Overdue interest earned": "IntInc",
+    "Principal repaid": "Sell",
+    "Priteistos lėšos": "Sell",
+    "Termination": "Sell"
+}
+
+
 def get_qif_investment_action(payment_type):
     """Return a QIF investment action string for a given CSV payment type
     value"""
     if FINBEE_FEE_TYPE.match(payment_type):
         return "Cash"
-    if payment_type == "Principal repaid":
-        return "Sell"
-    if payment_type == "Interest earned":
-        return "IntInc"
-    if payment_type == "Overdue interest earned":
-        return "IntInc"
-    if payment_type == "Deposit":
-        return "Cash"
-    if payment_type == "Loan disbursal":
-        return "Buy"
-    if payment_type == "Termination":
-        return "Sell"
-    if payment_type == "Early repayment":
-        return "Sell"
-    raise ValueError(f"Unknown type {payment_type}")
+    return PAYMENT_TO_QIF_TYPES[payment_type]
 
 
 arg_parser = argparse.ArgumentParser(
@@ -75,15 +87,14 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
      open(args.output, "w", encoding='utf-8') as output_file:
     csv_reader = csv.DictReader(input_file, delimiter=';')
     output_file.write("!Type:Invst\n")
-    for row in csv_reader:
-        # print(row)
-        date = row['Date']
+    for csv_row in csv_reader:
+        date = get_key(csv_row, 'Date', 'Data', args.input)
         # The last line is the total, breaking the schema
-        if date == "Total amount":
+        if date in ("Total amount", "Iš viso"):
             break
-        amount = row['Amount']
-        purpose = row['Purpose']
-        csv_payment_type = row['Type']
+        amount = get_key(csv_row, 'Amount', 'Suma', args.input)
+        purpose = get_key(csv_row, 'Purpose', 'Paskirtis', args.input)
+        csv_payment_type = get_key(csv_row, 'Type', 'Tipas', args.input)
         print(f"Before: Date: {date}, amount: {amount}, purpose: {purpose}, "
               f"payment_type: {csv_payment_type}")
 
