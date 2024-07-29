@@ -9858,6 +9858,7 @@ it is disabled.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "indent-bars-ts" '("ibtcs" "indent-bars-"))
+
 
 
 (provide 'indent-bars-autoloads)
