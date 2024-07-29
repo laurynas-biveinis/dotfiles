@@ -467,6 +467,9 @@ mysql_export_environment_helpers() {
     export MY810D=("${myd[@]}" "${my8033_900[@]}" "${my8018_820[@]}")
     export MY810=("${myr[@]}" "${my8033_900[@]}" "${my8018_820[@]}")
 
+    export MY8039D=("${myd[@]}" "${my8033_900[@]}" "${my8018_820[@]}")
+    export MY8039=("${myr[@]}" "${my8033_900[@]}" "${my8018_820[@]}")
+
     export MY8038D=("${myd[@]}" "${my8033_900[@]}" "${my8018_820[@]}")
     export MY8038=("${myr[@]}" "${my8033_900[@]}" "${my8018_820[@]}")
 
@@ -635,6 +638,12 @@ mysql_cmake() {
                 8.1.0)
                     declare -a release_flags=("${MY810[@]}")
                     declare -a debug_flags=("${MY810D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_900_CORE_DUMP_FLAGS[@]}")
+                    ;;
+                8.0.39)
+                    declare -a release_flags=("${MY8039[@]}")
+                    declare -a debug_flags=("${MY8039D[@]}")
                     declare -a -r \
                             core_dump_flags=("${MY8030_900_CORE_DUMP_FLAGS[@]}")
                     ;;
