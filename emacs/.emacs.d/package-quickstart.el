@@ -4504,7 +4504,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240725.2110/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240725.2110/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240727.2004/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240727.2004/magit-autoloads.el"))
 
 
 
@@ -6693,7 +6693,7 @@ Checkout BRANCH in a new worktree at PATH.
 (autoload 'magit-worktree-branch "magit-worktree" "\
 Create a new BRANCH and check it out in a new worktree at PATH.
 
-(fn PATH BRANCH START-POINT &optional FORCE)" t)
+(fn PATH BRANCH START-POINT)" t)
 (autoload 'magit-worktree-move "magit-worktree" "\
 Move WORKTREE to PATH.
 
@@ -11841,7 +11841,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240726.1807" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240725.2110" "/Users/laurynas/.emacs.d/elpa/magit-section-20240724.1229" "/Users/laurynas/.emacs.d/elpa/transient-20240713.2102" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240725.1429" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240726.1807" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240727.2004" "/Users/laurynas/.emacs.d/elpa/magit-section-20240724.1229" "/Users/laurynas/.emacs.d/elpa/transient-20240713.2102" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240725.1429" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:

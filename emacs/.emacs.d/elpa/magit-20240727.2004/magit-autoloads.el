@@ -2232,7 +2232,7 @@ Checkout BRANCH in a new worktree at PATH.
 (autoload 'magit-worktree-branch "magit-worktree" "\
 Create a new BRANCH and check it out in a new worktree at PATH.
 
-(fn PATH BRANCH START-POINT &optional FORCE)" t)
+(fn PATH BRANCH START-POINT)" t)
 (autoload 'magit-worktree-move "magit-worktree" "\
 Move WORKTREE to PATH.
 
