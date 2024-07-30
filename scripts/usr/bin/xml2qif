@@ -25,6 +25,9 @@ Output keys, all of which are required:
 - payee
 - category
 
+TODO(laurynas): in the above, make match optional for the cases where type
+determines everything.
+
 TODO(laurynas): transactions import to Banktivity in Cleared status,
 regardless of whether QIF "Cleared status" is present and with what value.
 Banktivity QIF exports omit it altogether.
