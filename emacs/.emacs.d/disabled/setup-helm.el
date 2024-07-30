@@ -6,6 +6,9 @@
 ;;
 ;; Emacs quit on startup with no notice, no error, no crash, no nothing if
 ;; `helm-org' is installed!
+;;
+;; `helm-lsp' needs to be melpa and not melpa-stable due to
+;; https://github.com/emacs-lsp/helm-lsp/issues/21
 
 ;;; Code:
 
