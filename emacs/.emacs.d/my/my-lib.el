@@ -137,6 +137,43 @@ ARGS must be properly quoted if needed."
          (format dotfiles--gh-commented-pr-url-format pr-id)))
     (dotfiles--string-match-string commented-pr-url-regex html-content)))
 
+;;; Development automation helpers
+
+(defvar my-push-remotes)
+
+(defun dotfiles--get-push-remote (gh-org-and-project)
+  "Get the remote to push the branch to for GH-ORG-AND-PROJECT."
+  (or (alist-get gh-org-and-project my-push-remotes nil nil #'string=)
+      (user-error "`my-push-remotes' not configured for %s"
+                  gh-org-and-project)))
+
+(defun dotfiles--create-pr (gh-org-and-project source-branch self-assign)
+  "Create a new PR from the current branch with provided data.
+Pushes the branch to my remote first. The needed data are GH-ORG-AND-PROJECT and
+SOURCE-BRANCH. If SELF-ASSIGN, then the PR will be assigned to @me.
+Returns the URL of this PR."
+  ;; TODO(laurynas): how to sync the push remote with `magit'?
+  (let* ((remote-name (dotfiles--get-push-remote gh-org-and-project))
+         ;; Prefix `source-branch' with fork org per
+         ;; https://github.com/cli/cli/issues/2691#issuecomment-1419845247
+         (gh-args
+          (format
+           "repo view $(git remote get-url %s) --json owner -q .owner.login"
+           remote-name))
+         (gh-my-org (dotfiles--gh-get gh-args))
+         (gh-head-arg (concat gh-my-org ":" source-branch))
+         (pr-create-args `("pr" "create" "--fill" "--head" ,gh-head-arg))
+         (result nil))
+    (dotfiles--run-program
+     "git" `("push" "--force-with-lease" "-u" ,remote-name ,source-branch))
+    (when self-assign
+      (setq pr-create-args (append pr-create-args '("-a" "@me"))))
+    (dotfiles--run-program-process-output
+     "gh" pr-create-args (lambda (output)
+                           (setq result
+                                 (car (last (split-string output "\n" t))))))
+    result))
+
 ;;; `org' helpers
 
 (require 'org-element)
