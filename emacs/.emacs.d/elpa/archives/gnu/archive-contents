@@ -1275,7 +1275,7 @@
 	       ("Markus Triska" . "triska@metalevel.at"))
 	      (:commit . "cfcdf9e42821d246b7fbc84877aa4ecacc184a1c"))])
  (eev .
-      [(20240726)
+      [(20240731)
        ((emacs
 	 (25 1)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -1284,7 +1284,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "55f2548e3fdaec9977c7b58f4502979787030cec"))])
+	(:commit . "c4f6a3d489d47fd2b2005e9fd75f71d9905aeee0"))])
  (ef-themes .
 	    [(1 7 0)
 	     ((emacs
