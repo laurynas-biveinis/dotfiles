@@ -25,6 +25,16 @@
   (concat dotfiles--gh-url-prefix "\\(.*\\)/pull/[0-9]+"))
 (defconst dotfiles--gh-repo "\\(https://github.com/.*/.*\\)/pull/[0-9]+")
 
+(defconst dotfiles--gh-release-in-subject
+  "^\\[\\(.*\\)/\\(.*\\)\\] Release \\(.*?\\) - \\(.*?\\)$")
+
+;;; string helpers
+
+;; If dependencies are OK, then use `string-join' instead.
+(defun dotfiles--concat-all (s)
+  "Concatenates all strings in S with spaces."
+  (mapconcat 'identity s " "))
+
 ;;; regex helpers
 
 (defun dotfiles--string-match-string (regex string)
@@ -38,21 +48,30 @@
   "Open the FILE in its default app."
   (shell-command (concat "open " (shell-quote-argument file))))
 
-;; Command-line program helper
+;; Command-line program helpers
 
-(defun dotfiles--run-program (program args success-fn)
-  "Run PROGRAM with ARGS, executing SUCCESS-FN on zero exit..
+(defun dotfiles--run-program-process-output (program args success-fn)
+  "Run PROGRAM with ARGS, executing SUCCESS-FN on zero exit.
 ARGS must be a list of strings passed to PROGRAM.
 SUCCESS-FN is executed on zero exit with a single string argument containing the
 output of execution.
-In the case of non-zero exit code it is printed as user error together with any
-output."
+In the case of non-zero exit code it is printed as a user error together with
+any output."
   (with-temp-buffer
-    (let ((exit-code (apply #'call-process program nil t nil args)))
+    (let* ((exit-code (apply #'call-process program nil t nil args))
+           (output (buffer-string)))
       (when (/= 0 exit-code)
         (user-error "%s %s failed with exit code %d and output %s" program
-                    (mapconcat 'identity args " ") exit-code (buffer-string)))
-      (funcall success-fn (buffer-string)))))
+                    (dotfiles--concat-all args) exit-code output))
+      (message "Output from %s %s:\n%s" program (dotfiles--concat-all args)
+               output)
+      (funcall success-fn output))))
+
+(defun dotfiles--run-program (program args)
+  "Run PROGRAM with ARGS, sending its output to the message buffer.
+ARGS must be a list of strings passed to PROGRAM. In the case of non-zero exit
+code it is printed as user error."
+  (dotfiles--run-program-process-output program args (lambda (_))))
 
 ;; Command-line "gh" utility helper
 
@@ -156,34 +175,78 @@ ARGS must be properly quoted if needed."
 
 ;;; Development automation helpers
 
-(defvar my-push-remotes)
+(require 'cl-lib)
 
-(defun dotfiles--get-push-remote (gh-org-and-project)
-  "Get the remote to push the branch to for GH-ORG-AND-PROJECT."
-  (or (alist-get gh-org-and-project my-push-remotes nil nil #'string=)
-      (user-error "`my-push-remotes' not configured for %s"
-                  gh-org-and-project)))
+(cl-defstruct (my-dev-project (:copier nil))
+  "A single development project for the purposes of automation."
+  (name
+   nil :read-only t :type string
+   :documentation "The name of the project, used in `org' tasks.")
+  (gh-name
+   nil :read-only t :type string
+   :documentation "GitHub organization and project name, slash-separated.")
+  (org-file
+   nil :read-only t :type string
+   :documentation "The `org' file.")
+  (branch-root
+   nil :read-only t :type string
+   :documentation "The root path of the branches.")
+  (push-remote
+   nil :read-only t :type string
+   :documentation "My push remote.")
+  (prs-are-mine
+   nil :read-only t :type booleanp ;; boolean? bool?
+   :documentation "Whether I handle the PRs myself.")
+  (pr-waitingfor-template
+   nil :read-only t :type string
+   :documentation "An `org' waitingfor template for PRs.
+The %s must be present and is substituted with a PR branch name.")
+  (post-pr-url
+   nil :read-only t :type string
+   :documentation "An optional URL to visit after closing a PR."))
 
-(defun dotfiles--create-pr (gh-org-and-project source-branch self-assign)
+(defvar my-projects)
+
+(defun dotfiles--find-project-by-gh (gh-name)
+  "Find a development project by its GitHub name GH-NAME."
+  (or (cl-find gh-name my-projects :test #'string= :key
+               #'my-dev-project-gh-name)
+      (user-error "GitHub project %s not configured in `my-projects'" gh-name)))
+
+(defun dotfiles--format-waitingfor-task-title (project branch-name)
+  "Format the `org' task title for a PR of BRANCH-NAME in PROJECT."
+  (let ((format-string (my-dev-project-pr-waitingfor-template project)))
+    (unless format-string
+      (user-error "Project %s misconfigured in `my-projects'"
+                  (my-dev-project-name project)))
+    (format format-string (concat "=" branch-name "="))))
+
+(defun dotfiles--visit-post-pr-url (project)
+  "Visit the URL for a PROJECT after a PR."
+  (when-let ((post-pr-url (my-dev-project-post-pr-url project)))
+    (browse-url post-pr-url)))
+
+(defun dotfiles--create-pr (project branch-name)
   "Create a new PR from the current branch with provided data.
-Pushes the branch to my remote first. The needed data are GH-ORG-AND-PROJECT and
-SOURCE-BRANCH. If SELF-ASSIGN, then the PR will be assigned to @me.
-Returns the URL of this PR."
+Pushes the branch to my remote first. The needed data are PROJECT and
+BRANCH-NAME. Returns the URL of this PR."
   ;; TODO(laurynas): how to sync the push remote with `magit'?
-  (let* ((remote-name (dotfiles--get-push-remote gh-org-and-project))
-         ;; Prefix `source-branch' with fork org per
+  ;; FIXME(laurynas): pass project instead of gh-name?
+  (let* ((remote-name (my-dev-project-push-remote project))
+         ;; Prefix `branch-name' with fork org per
          ;; https://github.com/cli/cli/issues/2691#issuecomment-1419845247
          (gh-args
           (format
            "repo view $(git remote get-url %s) --json owner -q .owner.login"
            remote-name))
          (gh-my-org (dotfiles--gh-get gh-args))
-         (gh-head-arg (concat gh-my-org ":" source-branch))
+         (gh-head-arg (concat gh-my-org ":" branch-name))
          (pr-create-args `("pr" "create" "--fill" "--head" ,gh-head-arg))
+         (pr-is-mine (my-dev-project-prs-are-mine project))
          (result nil))
     (dotfiles--run-program
-     "git" `("push" "--force-with-lease" "-u" ,remote-name ,source-branch))
-    (when self-assign
+     "git" `("push" "--force-with-lease" "-u" ,remote-name ,branch-name))
+    (when pr-is-mine
       (setq pr-create-args (append pr-create-args '("-a" "@me"))))
     (dotfiles--run-program-process-output
      "gh" pr-create-args (lambda (output)
