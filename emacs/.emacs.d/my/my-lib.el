@@ -222,7 +222,7 @@ Returns the URL of this PR."
     found))
 
 (defmacro dotfiles--with-org-node-with-url (url &rest body)
-  "Go to the Org node with the URL property value, execute the forms of BODY."
+  "Go to the `org' node with the URL property value, execute the forms of BODY."
   (declare (indent 1) (debug t))
   `(let ((org-info (dotfiles--find-org-node-with-url-property ,url)))
      (when (not org-info)
