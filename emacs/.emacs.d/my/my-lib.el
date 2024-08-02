@@ -78,6 +78,8 @@ code it is printed as user error."
 (defun dotfiles--gh-get (args)
   "Run gh with ARGS, return its output with the final newline trimmed.
 ARGS must be properly quoted if needed."
+  ;; We want to remove the final character and the final character only. Hence,
+  ;; `substring' instead of i.e. `string-trim-right'.
   (substring (shell-command-to-string (concat "gh " args)) 0 -1))
 
 ;;; Buffer management helpers
@@ -195,7 +197,7 @@ ARGS must be properly quoted if needed."
    nil :read-only t :type string
    :documentation "My push remote.")
   (prs-are-mine
-   nil :read-only t :type booleanp ;; boolean? bool?
+   nil :read-only t :type boolean
    :documentation "Whether I handle the PRs myself.")
   (pr-waitingfor-template
    nil :read-only t :type string
@@ -231,7 +233,6 @@ The %s must be present and is substituted with a PR branch name.")
 Pushes the branch to my remote first. The needed data are PROJECT and
 BRANCH-NAME. Returns the URL of this PR."
   ;; TODO(laurynas): how to sync the push remote with `magit'?
-  ;; FIXME(laurynas): pass project instead of gh-name?
   (let* ((remote-name (my-dev-project-push-remote project))
          ;; Prefix `branch-name' with fork org per
          ;; https://github.com/cli/cli/issues/2691#issuecomment-1419845247
