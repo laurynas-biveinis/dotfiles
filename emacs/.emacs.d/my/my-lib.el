@@ -61,6 +61,19 @@ output."
 ARGS must be properly quoted if needed."
   (substring (shell-command-to-string (concat "gh " args)) 0 -1))
 
+;;; Buffer management helpers
+
+(defun dotfiles--get-org-buffer (name)
+  "Get the buffer for an `org' file with NAME."
+  (or (find-buffer-visiting name)
+      (find-file-noselect name)))
+
+(defmacro dotfiles--in-org-buffer (name &rest body)
+  "Execute the forsm in BODY with NAME `org' buffer temporarily current."
+  (declare (indent 1) (debug t))
+  `(with-current-buffer (dotfiles--get-org-buffer ,name)
+     ,@body))
+
 ;;; `mu4e' helpers
 
 (require 'seq)
