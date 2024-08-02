@@ -112,6 +112,10 @@ ARGS must be properly quoted if needed."
     (mm-save-part-to-file (plist-get part :handle) file-path)
     file-path))
 
+(defun dotfiles--get-mu4e-msg-html-content ()
+  "Get the current `mu4de' message HTML content."
+  (mm-get-part (plist-get (dotfiles--get-qp-encoded-html-part) :handle)))
+
 (defun dotfiles--for-each-attachment (fn)
   "Call FN for each attachment with its handle and path."
   (let ((mime-parts (mu4e-view-mime-parts)))
