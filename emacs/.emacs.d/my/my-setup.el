@@ -356,7 +356,7 @@
     ;; Dependency on the internal `forge' schema. I haven't found a better way
     ;; to get this information.
     (let ((worktree-path (nth 33 row)))
-      (when worktree-path
+      (when (and worktree-path (file-directory-p worktree-path))
         (let ((default-directory worktree-path))
           (forge-pull))))))
 
