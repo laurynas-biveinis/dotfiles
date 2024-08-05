@@ -215,6 +215,14 @@ The %s must be present and is substituted with a PR branch name.")
                #'my-dev-project-gh-name)
       (user-error "GitHub project %s not configured in `my-projects'" gh-name)))
 
+(defun dotfiles--get-project-push-remote (project)
+  "Get the push remote for PROJECT."
+  (let ((push-remote (my-dev-project-push-remote project)))
+    (unless push-remote
+      (user-error "Project %s misconfigured in `my-projects'"
+                  (my-dev-project-name project)))
+    push-remote))
+
 (defun dotfiles--format-waitingfor-task-title (project branch-name)
   "Format the `org' task title for a PR of BRANCH-NAME in PROJECT."
   (let ((format-string (my-dev-project-pr-waitingfor-template project)))
@@ -233,7 +241,7 @@ The %s must be present and is substituted with a PR branch name.")
 Pushes the branch to my remote first. The needed data are PROJECT and
 BRANCH-NAME. Returns the URL of this PR."
   ;; TODO(laurynas): how to sync the push remote with `magit'?
-  (let* ((remote-name (my-dev-project-push-remote project))
+  (let* ((remote-name (dotfiles--get-project-push-remote project))
          ;; Prefix `branch-name' with fork org per
          ;; https://github.com/cli/cli/issues/2691#issuecomment-1419845247
          (gh-args
