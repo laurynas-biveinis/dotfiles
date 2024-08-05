@@ -19,7 +19,8 @@ import re
 
 CONFIG_FN = "~/.finbee2qif"
 CONFIG_MAPPING_SECTION = "payer map"
-FINBEE_FEE_TYPE = re.compile("^Account fee for period .*$")
+FINBEE_FEE_TYPE_EN = re.compile("^Account fee for period .*$")
+FINBEE_FEE_TYPE_LT = re.compile("^investor.payment_request.type.mfe .*$")
 
 
 class CaseSensitiveConfigParser(configparser.ConfigParser):
@@ -58,7 +59,9 @@ PAYMENT_TO_QIF_TYPES = {
 def get_qif_investment_action(payment_type):
     """Return a QIF investment action string for a given CSV payment type
     value"""
-    if FINBEE_FEE_TYPE.match(payment_type):
+    if FINBEE_FEE_TYPE_EN.match(payment_type):
+        return "Cash"
+    if FINBEE_FEE_TYPE_LT.match(payment_type):
         return "Cash"
     return PAYMENT_TO_QIF_TYPES[payment_type]
 
