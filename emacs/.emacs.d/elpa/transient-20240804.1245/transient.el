@@ -48,7 +48,7 @@
 (unless (fboundp 'seq-keep)
   (display-warning 'transient (substitute-command-keys "\
 Transient requires `seq' >= 2.24,
-but due to bad defaults, Emacs' package manager, refuses to
+but due to bad defaults, Emacs's package manager, refuses to
 upgrade this and other built-in packages to higher releases
 from GNU Elpa, when a package specifies that this is needed.
 
@@ -3989,9 +3989,9 @@ and its value is returned to the caller."
                         set " ")))))
 
 (cl-defmethod transient-format-description ((obj transient-group))
-  "Format the description by calling the next method.  If the result
-doesn't use the `face' property at all, then apply the face
-`transient-heading' to the complete string."
+  "Format the description by calling the next method.
+If the result doesn't use the `face' property at all, then apply the
+face `transient-heading' to the complete string."
   (and-let* ((desc (transient--get-description obj)))
     (cond ((oref obj inapt)
            (propertize desc 'face 'transient-inapt-suffix))
@@ -4000,10 +4000,10 @@ doesn't use the `face' property at all, then apply the face
           ((propertize desc 'face 'transient-heading)))))
 
 (cl-defmethod transient-format-description :around ((obj transient-suffix))
-  "Format the description by calling the next method.  If the result
-is nil, then use \"(BUG: no description)\" as the description.
-If the OBJ's `key' is currently unreachable, then apply the face
-`transient-unreachable' to the complete string."
+  "Format the description by calling the next method.
+If the result is nil, then use \"(BUG: no description)\" as the
+description.  If the OBJ's `key' is currently unreachable, then
+apply the face `transient-unreachable' to the complete string."
   (let ((desc (or (cl-call-next-method obj)
                   (and (slot-boundp transient--prefix 'suffix-description)
                        (funcall (oref transient--prefix suffix-description)

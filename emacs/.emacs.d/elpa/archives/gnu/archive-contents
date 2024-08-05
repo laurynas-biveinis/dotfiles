@@ -860,7 +860,7 @@
 		 ("Theodor Thornhill" . "theo@thornhill.no"))
 		(:commit . "02c61c219b2c22491eff9b7315fed661fab423d4"))])
  (csv-mode .
-	   [(1 25)
+	   [(1 26)
 	    ((emacs
 	      (27 1))
 	     (cl-lib
@@ -871,16 +871,16 @@
 	     (:authors
 	      ("Francis J. Wright" . "F.J.Wright@qmul.ac.uk"))
 	     (:url . "https://elpa.gnu.org/packages/csv-mode.html")
-	     (:commit . "6e8b70504236325989b2f6e19b38602a23f57ba3"))])
+	     (:commit . "388bcb9a77118d7b7d9c42aa8b3f9fa2c892b930"))])
  (cursor-undo .
-	      [(1 1 3)
+	      [(1 1 4)
 	       nil "Undo Cursor Movement" tar
 	       ((:keywords "undo" "cursor")
 		(:maintainer "Luke Lee" . "luke.yx.lee@gmail.com")
 		(:authors
 		 ("Luke Lee" . "luke.yx.lee@gmail.com"))
 		(:url . "https://elpa.gnu.org/packages/cursor-undo.html")
-		(:commit . "2264853e77872122a085fb2733b43c80337c44ca"))])
+		(:commit . "c544a74e5e4e46bc1211fdad25248200c330ec7b"))])
  (cursory .
 	  [(1 0 1)
 	   ((emacs
@@ -1275,7 +1275,7 @@
 	       ("Markus Triska" . "triska@metalevel.at"))
 	      (:commit . "cfcdf9e42821d246b7fbc84877aa4ecacc184a1c"))])
  (eev .
-      [(20240731)
+      [(20240803)
        ((emacs
 	 (25 1)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -1284,7 +1284,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "c4f6a3d489d47fd2b2005e9fd75f71d9905aeee0"))])
+	(:commit . "2cac1d27a18ed6a77f43f19e87df662e344983b5"))])
  (ef-themes .
 	    [(1 7 0)
 	     ((emacs
@@ -2488,7 +2488,7 @@
 		      ("Sean Whitton" . "spwhitton@spwhitton.name"))
 		     (:commit . "c22a15e86acf28da716532c26ba1371574c8e979"))])
  (llm .
-      [(0 17 0)
+      [(0 17 1)
        ((emacs
 	 (28 1))
 	(plz
@@ -2498,7 +2498,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "518757bcf3e7090f076c872e59d161865a2dc83c"))])
+	(:commit . "806a703b91580c1c34d3bb5fe1d556b659f89bcf"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
@@ -4882,14 +4882,14 @@
 	    (:url . "https://elpa.gnu.org/packages/wpuzzle.html")
 	    (:commit . "9373cbc013b978b31e38822bfdcc9a7fc5e0ed99"))])
  (wrap-search .
-	      [(4 16 15)
+	      [(4 16 17)
 	       nil "wrapped, non-incremental search" tar
 	       ((:url . "https://dataswamp.org/~incal/elpa/wrap-search.el")
 		(:keywords "matching")
 		(:maintainer "Emanuel Berg" . "incal@dataswamp.org")
 		(:authors
 		 ("Emanuel Berg" . "incal@dataswamp.org"))
-		(:commit . "54259280da4a78835e76c82262eace5c811abcc0"))])
+		(:commit . "4e913585afc59dffa56d39c4511e31552be4e80e"))])
  (xclip .
 	[(1 11)
 	 nil "Copy&paste GUI clipboard from text terminal" tar
