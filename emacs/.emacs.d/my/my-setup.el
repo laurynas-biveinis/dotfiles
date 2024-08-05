@@ -832,6 +832,7 @@
 (setq mu4e-confirm-quit nil)
 (setq mu4e-context-policy 'ask-if-none)
 (setq mu4e-compose-context-policy 'ask)
+(setq mu4e-compose-format-flowed t)
 ;; GMail-specific behavior. Make it per-context if adding a non-GMail acocunt
 (setq mu4e-sent-messages-behavior 'delete)
 ;; Locales on macOS are, uhm, interesting:
@@ -928,6 +929,14 @@ RULE is a plist containing either :subject-exact or :subject-match."
 (setq message-kill-buffer-on-exit t)
 (setq message-send-mail-function #'message-send-mail-with-sendmail)
 (setq message-sendmail-envelope-from 'header)
+
+;; TODO(laurynas): would be nice if the lines wrapped visually not at the window
+;; border. See also `mu4e-compose-format-flowed'.
+(defun dotfiles--message-mode-hook ()
+  "Work with format=flowed in `message-mode'."
+  (use-hard-newlines 1 'always)
+  (auto-fill-mode -1))
+(add-hook 'message-mode-hook #'dotfiles--message-mode-hook)
 
 ;; `mml'
 ;; TODO(laurynas): this one is new in 29.1. Confirm that it has effect in
