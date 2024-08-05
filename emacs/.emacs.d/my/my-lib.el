@@ -215,6 +215,14 @@ The %s must be present and is substituted with a PR branch name.")
                #'my-dev-project-gh-name)
       (user-error "GitHub project %s not configured in `my-projects'" gh-name)))
 
+(defun dotfiles--find-project-for-cwd ()
+  "Find a development project for the current working directory."
+  (let ((gh-name (dotfiles--gh-get
+                  "repo view --json nameWithOwner -q '.nameWithOwner'")))
+    (unless gh-name
+      (user-error "Could not find a GitHub project in %s" default-directory))
+    (dotfiles--find-project-by-gh gh-name)))
+
 (defun dotfiles--get-project-push-remote (project)
   "Get the push remote for PROJECT."
   (let ((push-remote (my-dev-project-push-remote project)))
