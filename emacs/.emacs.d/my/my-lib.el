@@ -162,7 +162,7 @@ ARGS must be properly quoted if needed."
      (when (string-suffix-p ".jpg" path t)
        (mm-save-part-to-file handle path)))))
 
-;;; GitHub helpers
+;; GitHub / `mu4e' helpers
 
 (defun dotfiles--get-closed-pr-url (pr-id html-content)
   "Return the URL of a closed GitHub PR with PR-ID in HTML-CONTENT or nil."
@@ -174,6 +174,31 @@ ARGS must be properly quoted if needed."
   (let ((commented-pr-url-regex
          (format dotfiles--gh-commented-pr-url-format pr-id)))
     (dotfiles--string-match-string commented-pr-url-regex html-content)))
+
+(defun dotfiles--parse-gh-release-subject (subject)
+  "Parse out GitHub release email SUBJECT into a plist."
+  (unless (string-match dotfiles--gh-release-in-subject subject)
+    (user-error "Subject %s did not match against %s" subject
+                dotfiles--gh-release-in-subject))
+  (let ((gh-org (match-string 1 subject))
+        (gh-project (match-string 2 subject))
+        (rel-tag (match-string 3 subject))
+        (rel-tag-2 (match-string 4 subject)))
+    (unless (string= rel-tag rel-tag-2)
+      (user-error "Unrecognized GitHub Release email subject format: %s"
+                  subject))
+    (list :gh-org gh-org :gh-project gh-project
+          :gh-name (concat gh-org "/" gh-project) :rel-tag rel-tag)))
+
+(defun dotfiles--get-run-results-url (msg)
+  "Get a GitHub run URL from a `mu4e' MSG."
+  (let ((raw-message (dotfiles--get-raw-message msg)))
+    (dotfiles--string-match-string dotfiles--gh-view-run-results raw-message)))
+
+(defun dotfiles--get-pr-id (msg)
+  "Return the PR id from a `mu4e' MSG subject."
+  (let ((subject (mu4e-message-field msg :subject)))
+    (dotfiles--string-match-string dotfiles--gh-pr-in-subject subject)))
 
 ;;; Development automation helpers
 
