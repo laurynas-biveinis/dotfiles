@@ -193,6 +193,10 @@ ARGS must be properly quoted if needed."
   (branch-root
    nil :read-only t :type string
    :documentation "The root path of the branches.")
+  (main-branch-checkout
+   nil :read-only t :type string
+   :documentation
+   "The name of the main branch checkout directory under `:branch-root'.")
   (push-remote
    nil :read-only t :type string
    :documentation "My push remote.")
@@ -230,11 +234,22 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defun dotfiles--get-project-push-remote (project)
   "Get the push remote for PROJECT."
-  (let ((push-remote (my-dev-project-push-remote project)))
-    (unless push-remote
+  (or (my-dev-project-push-remote project)
+      (user-error "Project %s misconfigured in `my-projects'"
+                  (my-dev-project-name project))))
+
+(defun dotfiles--get-project-branch-root (project)
+  "Get the branch root directory for PROJECT."
+  (or (my-dev-project-branch-root project)
+      (user-error "Project %s misconfigured in `my-projects'")))
+
+(defun dotfiles--get-project-main-branch-dir (project)
+  "Get the directory of the main branch checkout for PROJECT."
+  (let ((main-branch-checkout (my-dev-project-main-branch-checkout project)))
+    (unless main-branch-checkout
       (user-error "Project %s misconfigured in `my-projects'"
                   (my-dev-project-name project)))
-    push-remote))
+    (concat (dotfiles--get-project-branch-root project) main-branch-checkout)))
 
 (defun dotfiles--format-waitingfor-task-title (project branch-name)
   "Format the `org' task title for a PR of BRANCH-NAME in PROJECT."
