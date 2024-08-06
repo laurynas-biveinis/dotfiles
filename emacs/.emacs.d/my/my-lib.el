@@ -162,6 +162,12 @@ ARGS must be properly quoted if needed."
      (when (string-suffix-p ".jpg" path t)
        (mm-save-part-to-file handle path)))))
 
+;; GitHub helpers
+
+(defun dotfiles--get-gh-name-from-url (url)
+  "Get the GitHub organization/project from a PR URL."
+  (dotfiles--string-match-string dotfiles--gh-org-and-project url))
+
 ;; GitHub / `mu4e' helpers
 
 (defun dotfiles--get-closed-pr-url (pr-id html-content)
