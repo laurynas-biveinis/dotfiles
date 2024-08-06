@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240725.1429/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240725.1429/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240805.1439/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-20240805.1439/with-editor-autoloads.el"))
 
 
 
@@ -2483,7 +2483,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240804.1245/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240804.1245/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240805.1231/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240805.1231/transient-autoloads.el"))
 
 
 
@@ -4504,7 +4504,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240804.1520/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240804.1520/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240805.1544/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240805.1544/magit-autoloads.el"))
 
 
 
@@ -5832,7 +5832,7 @@ is asked to pull.  START has to be reachable from that commit.
 
 
 
-(register-definition-prefixes "magit-process" '("magit-" "tramp-sh-handle-"))
+(register-definition-prefixes "magit-process" '("magit-"))
 
 
 
@@ -8582,7 +8582,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.0/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.0/hl-todo-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.1/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.1/hl-todo-autoloads.el"))
 
 
 
@@ -10064,7 +10064,7 @@ or nil, plain link will be used.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.3/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.3/git-modes-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.4/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.4/git-modes-autoloads.el"))
 
 
 
@@ -10258,7 +10258,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240731.1235/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240731.1235/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240805.2127/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240805.2127/forge-autoloads.el"))
 
 
 
@@ -11842,7 +11842,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240731.1235" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240804.1520" "/Users/laurynas/.emacs.d/elpa/magit-section-20240730.1741" "/Users/laurynas/.emacs.d/elpa/transient-20240804.1245" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240725.1429" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240805.2127" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240805.1544" "/Users/laurynas/.emacs.d/elpa/magit-section-20240730.1741" "/Users/laurynas/.emacs.d/elpa/transient-20240805.1231" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240805.1439" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
