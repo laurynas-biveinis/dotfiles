@@ -276,6 +276,27 @@ BRANCH-NAME. Returns the URL of this PR."
                                  (car (last (split-string output "\n" t))))))
     result))
 
+(cl-defstruct (my-3rd-party-submodule (:copier nil))
+  "A mapping from a GitHub project to my submodule importing it."
+  (3p-gh-name
+   nil :read-only t :type string
+   :documentation "3rd party GitHub organization and project name.")
+  (project-name
+   nil :read-only t :type :string
+   :documentation
+   "My project name that include the 3rd party project submodule.")
+  (path
+   nil :read-only t :type :string
+   :documentation "Path to the submodule in my project."))
+
+(defvar my-3rd-party-submodules)
+
+(defun dotfiles--find-3rd-party-submodule (gh-name)
+  "Find a 3rd party submodule by GH-NAME."
+  (or (cl-find gh-name my-3rd-party-submodules :test #'string= :key
+               #'my-3rd-party-submodule-3p-gh-name)
+      (message "Nothing found in `my-3rd-party-submodules' for %s" gh-name)))
+
 ;;; `org' helpers
 
 (require 'org-element)
