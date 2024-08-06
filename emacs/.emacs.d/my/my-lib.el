@@ -209,6 +209,11 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defvar my-projects)
 
+(defun dotfiles--find-project-by-name (name)
+  "Find a development project by its NAME."
+  (or (cl-find name my-projects :test #'string= :key #'my-dev-project-name)
+      (user-error "Project %s not configured in `my-projects'" name)))
+
 (defun dotfiles--find-project-by-gh (gh-name)
   "Find a development project by its GitHub name GH-NAME."
   (or (cl-find gh-name my-projects :test #'string= :key
