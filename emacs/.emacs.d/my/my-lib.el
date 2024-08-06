@@ -28,6 +28,9 @@
 (defconst dotfiles--gh-release-in-subject
   "^\\[\\(.*\\)/\\(.*\\)\\] Release \\(.*?\\) - \\(.*?\\)$")
 
+(defconst dotfiles--gh-issue-url
+  "Reply to this email directly or view it on GitHub:\n\\(.*\\)$")
+
 ;;; string helpers
 
 ;; If dependencies are OK, then use `string-join' instead.
@@ -200,6 +203,11 @@ ARGS must be properly quoted if needed."
   "Get a GitHub run URL from a `mu4e' MSG."
   (let ((raw-message (dotfiles--get-raw-message msg)))
     (dotfiles--string-match-string dotfiles--gh-view-run-results raw-message)))
+
+(defun dotfiles--get-gh-issue-url (msg)
+  "Get a GitHub issue URL from a `mu4e' MSG."
+  (let ((raw-message (dotfiles--get-raw-message msg)))
+    (dotfiles--string-match-string dotfiles--gh-issue-url raw-message)))
 
 (defun dotfiles--get-pr-id (msg)
   "Return the PR id from a `mu4e' MSG subject."
