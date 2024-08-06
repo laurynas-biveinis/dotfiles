@@ -320,11 +320,6 @@ brew install stow git ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
         gcc@12 gcc@13 gcc
 git lfs install
 
-# gnupg@2.2.41 because newer versions up to 2.4.3 inclusive hang when called
-# from Emacs EasyPG.
-brew tap pgpbpadilla/pgpb
-brew install gnupg@2.2.41
-
 #
 # App Store
 #
