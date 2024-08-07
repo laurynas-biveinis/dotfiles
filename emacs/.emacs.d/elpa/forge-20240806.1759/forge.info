@@ -111,11 +111,6 @@ issues, users have ran into in the past.  The recommended reading is
 longer than one might wish, but skipping it does not necessarily save
 time.
 
-   Forge uses the Ghub package to access the APIs of supported forges.
-How this works and how to create and store a token is documented in
-*note (ghub)Getting Started::.  Please read that in full before coming
-back here and continuing with the subsections listed below.
-
    <https://github.com/magit/forge/wiki> lists additional resources,
 including a link to a much shorter quick-start guide, provided by a
 user.
@@ -155,9 +150,10 @@ File: forge.info,  Node: Token Creation,  Next: Initial Pull,  Prev: Loading For
 2.2 Token Creation
 ==================
 
-Forge uses the Ghub package to access the APIs of supported Git forges.
-How this works and how to create and store a token is documented in
-*note (ghub)Getting Started::.
+Forge uses the Ghub package to access the APIs of supported forges.  How
+this works and how to create and store a token is documented in *note
+(ghub)Getting Started::.  Please read that now, before you continue
+below.
 
    Forge requires the following token scopes.
 
@@ -182,22 +178,22 @@ File: forge.info,  Node: Initial Pull,  Next: Repository Detection,  Prev: Token
 2.3 Initial Pull
 ================
 
-To start using Forge in a certain repository visit the Magit status
-buffer for that repository and type ‘f n’ (‘forge-pull’).
-Alternatively, you can use ‘M-x forge-add-repository’, which makes it
-possible to add a forge repository without pulling all topics and even
-without having to clone the respective Git repository.
+(You must specify the host and your username and setup a token *before*
+you can add the first repository.)
 
-   You must set up a token *before* you can add the first repository.
-See *note Token Creation::.
+   To start using Forge in a certain repository, visit the Magit status
+buffer for that repository and type ‘N / a’ (‘forge-add-repository’).
+You are given a choice to pull all topics, all topics that were updated
+after a certain date, or only individual topics.
 
-   The first time ‘forge-pull’ is run in a repository, an entry for that
-repository is added to the database and a new value is added to the Git
-variable ‘remote.<remote>.fetch’, which fetches all pull-requests.
-(‘+refs/pull/*/head:refs/pullreqs/*’ for Github)
+   Beside adding the repository to the database, this also adds a new
+value to the Git variable ‘remote.<remote>.fetch’, which causes all
+pull-request refs (‘+refs/pull/*/head:refs/pullreqs/*’ for Github) to be
+fetched by Git.
 
-   ‘forge-pull’ then fetches topics and other information using the
-forge’s API and pull-request references using Git.
+   Note that it is possible to use the same command to add any
+repository from a supported forge to the database, without cloning the
+Git repository first.
 
    The initial fetch can take a while but most of the work is done
 asynchronously.  Storing the information in the database is done
@@ -1339,53 +1335,53 @@ Tag Table:
 Node: Top771
 Node: Introduction2450
 Node: Initial Setup2871
-Node: Loading Forge3854
-Node: Token Creation4534
-Node: Initial Pull5599
-Node: Repository Detection6998
-Node: Getting Started12351
-Node: Pulling14630
-Node: Branching16793
-Node: Working with Topics23181
-Node: Visiting Topics23548
-Node: Listing Topics and Notifications25621
-Node: Creating Topics27797
-Node: Editing Topics and Posts28282
-Node: Miscellaneous32805
-Node: Supported Forges and Hosts35038
-Node: Supported Forges36330
-Ref: Github36486
-Ref: Github Caveats36641
-Ref: Github Hosts37303
-Ref: Gitlab37375
-Ref: Gitlab Caveats37402
-Ref: Gitlab Hosts37543
-Node: Partially Supported Forges37679
-Ref: Gitea https//giteaio37885
-Ref: Gitea Hosts37997
-Ref: Gogs https//gogsio38069
-Ref: Gogs Hosts38284
-Ref: Bitbucket https//bitbucketorg38358
-Ref: Bitbucket Caveats38568
-Ref: Bitbucket Hosts39481
-Node: Supported Semi-Forges39562
-Ref: Gitweb https//git-scmcom/docs/gitweb39733
-Ref: Gitweb Caveats39824
-Ref: Cgit https//gitzx2c4com/cgit/about40080
-Ref: Cgit Caveats40169
-Ref: Cgit Hosts40534
-Ref: Stgit https//codemadnessorg/git/stagit/file/READMEhtml40677
-Ref: Stgit Caveats40806
-Ref: Stgit Hosts41108
-Ref: Srht https//metasrht41184
-Ref: Srht Caveats41245
-Ref: Srht Hosts41544
-Node: FAQ41611
-Node: Is it possible to create a single pull-request without pulling everything?42100
-Node: error in process filter HTTP Error 502 "Bad gateway"42566
-Node: Keystroke Index44937
-Node: Function and Command Index50700
-Node: Variable Index56438
+Node: Loading Forge3583
+Node: Token Creation4263
+Node: Initial Pull5375
+Node: Repository Detection6713
+Node: Getting Started12066
+Node: Pulling14345
+Node: Branching16508
+Node: Working with Topics22896
+Node: Visiting Topics23263
+Node: Listing Topics and Notifications25336
+Node: Creating Topics27512
+Node: Editing Topics and Posts27997
+Node: Miscellaneous32520
+Node: Supported Forges and Hosts34753
+Node: Supported Forges36045
+Ref: Github36201
+Ref: Github Caveats36356
+Ref: Github Hosts37018
+Ref: Gitlab37090
+Ref: Gitlab Caveats37117
+Ref: Gitlab Hosts37258
+Node: Partially Supported Forges37394
+Ref: Gitea https//giteaio37600
+Ref: Gitea Hosts37712
+Ref: Gogs https//gogsio37784
+Ref: Gogs Hosts37999
+Ref: Bitbucket https//bitbucketorg38073
+Ref: Bitbucket Caveats38283
+Ref: Bitbucket Hosts39196
+Node: Supported Semi-Forges39277
+Ref: Gitweb https//git-scmcom/docs/gitweb39448
+Ref: Gitweb Caveats39539
+Ref: Cgit https//gitzx2c4com/cgit/about39795
+Ref: Cgit Caveats39884
+Ref: Cgit Hosts40249
+Ref: Stgit https//codemadnessorg/git/stagit/file/READMEhtml40392
+Ref: Stgit Caveats40521
+Ref: Stgit Hosts40823
+Ref: Srht https//metasrht40899
+Ref: Srht Caveats40960
+Ref: Srht Hosts41259
+Node: FAQ41326
+Node: Is it possible to create a single pull-request without pulling everything?41815
+Node: error in process filter HTTP Error 502 "Bad gateway"42281
+Node: Keystroke Index44652
+Node: Function and Command Index50415
+Node: Variable Index56153
 
 End Tag Table
 
