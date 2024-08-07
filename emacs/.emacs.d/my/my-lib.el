@@ -150,13 +150,18 @@ ARGS must be properly quoted if needed."
                                          file-name)))
         (funcall fn attachment-handle file-path)))))
 
-(defun dotfiles--download-and-open-mu4e-all-attachments (suffix)
+(defun dotfiles--open-mu4e-all-attachments (suffix)
   "Download all attachments with file name SUFFIX from a `mu4e' message."
   (dotfiles--for-each-attachment
    (lambda (handle path)
      (when (string-suffix-p suffix path t)
        (mm-save-part-to-file handle path)
-       (dotfiles--open-file path)))))
+       (dotfiles--open-file path)
+       ;; TODO(laurynas): the above is asynchronuous. We cannot make it
+       ;; synchronuous, but at least replace the blocking `sleep-for' below with
+       ;; a `run-with-timer' call instead.
+       (sleep-for 1)
+       (delete-file path nil)))))
 
 (defun dotfiles--download-mu4e-all-jpgs ()
   "Download all .jpg attachments from a `mu4e' message."
