@@ -135,8 +135,8 @@ is added anyway.  Currently this only supports Github and Gitlab.
  (autoload 'forge-merge "forge-commands" nil t)
 (autoload 'forge-rename-default-branch "forge-commands" "\
 Rename the default branch to NEWNAME.
-Change the name on the upstream remote and locally, and update
-the upstream remotes of local branches accordingly." t)
+Change the name on the upstream remotely and locally, and update the
+upstream remotes of local branches accordingly." t)
  (autoload 'forge-add-pullreq-refspec "forge-commands" nil t)
  (autoload 'forge-add-repository "forge-commands" nil t)
 (autoload 'forge-add-user-repositories "forge-commands" "\

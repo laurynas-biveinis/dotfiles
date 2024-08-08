@@ -10258,7 +10258,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240806.1759/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240806.1759/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240807.1651/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240807.1651/forge-autoloads.el"))
 
 
 
@@ -10389,8 +10389,8 @@ is added anyway.  Currently this only supports Github and Gitlab.
  (autoload 'forge-merge "forge-commands" nil t)
 (autoload 'forge-rename-default-branch "forge-commands" "\
 Rename the default branch to NEWNAME.
-Change the name on the upstream remote and locally, and update
-the upstream remotes of local branches accordingly." t)
+Change the name on the upstream remotely and locally, and update the
+upstream remotes of local branches accordingly." t)
  (autoload 'forge-add-pullreq-refspec "forge-commands" nil t)
  (autoload 'forge-add-repository "forge-commands" nil t)
 (autoload 'forge-add-user-repositories "forge-commands" "\
@@ -11842,7 +11842,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240806.1759" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240805.1544" "/Users/laurynas/.emacs.d/elpa/magit-section-20240730.1741" "/Users/laurynas/.emacs.d/elpa/transient-20240805.1231" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240806.1454" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240807.1651" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240805.1544" "/Users/laurynas/.emacs.d/elpa/magit-section-20240730.1741" "/Users/laurynas/.emacs.d/elpa/transient-20240805.1231" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240806.1454" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:

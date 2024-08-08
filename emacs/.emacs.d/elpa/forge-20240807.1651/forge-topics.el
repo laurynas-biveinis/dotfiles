@@ -31,7 +31,7 @@
   "Filters initially used to limit topics listed in list buffers.
 
 This option controls which topics are listed when initially creating
-a `forge-topics-mode' buffer.  To temporarly change which topics are
+a `forge-topics-mode' buffer.  To temporarily change which topics are
 listed in a given buffer, instead use \\`N m' (`forge-topics-menu')."
   :package-version '(forge . "0.4.0")
   :group 'forge
@@ -42,7 +42,7 @@ listed in a given buffer, instead use \\`N m' (`forge-topics-menu')."
   "Filters initially used to limit topics listed in status buffers.
 
 This option controls which topics are listed when initially creating
-a `magit-status-mode' buffer.  To temporarly change which topics are
+a `magit-status-mode' buffer.  To temporarily change which topics are
 listed in a given buffer, instead use \\<forge-topics-mode-map> \
 \\[forge-topics-menu] (`forge-topics-menu').
 
@@ -111,7 +111,7 @@ Must be set before `forge-topics' is loaded.")
 (define-derived-mode forge-topics-mode magit-mode forge-topics-mode-name
   "Major mode for browsing a list of topics."
   :interactive nil
-  (hack-dir-local-variables-non-file-buffer))
+  (magit-hack-dir-local-variables))
 
 (defun forge-topics-setup-buffer (&optional repo spec &rest params)
   (let* ((global (or (plist-get params :global)

@@ -47,10 +47,15 @@ This manual is for Forge version 0.3.2.50-git.
 * Introduction::
 * Initial Setup::
 * Getting Started::
+* Working with Topics::
+* Listing Topics and Notifications::
+* Visiting Topics::
+* Creating Topics::
+* Editing Topics and Posts::
 * Pulling::
 * Branching::
-* Working with Topics::
-* Miscellaneous::
+* Miscellaneous Commands::
+* Miscellaneous Options::
 * Supported Forges and Hosts::
 * FAQ::
 * Keystroke Index::
@@ -65,13 +70,6 @@ Initial Setup
 * Token Creation::
 * Initial Pull::
 * Repository Detection::
-
-Working with Topics
-
-* Visiting Topics::
-* Listing Topics and Notifications::
-* Creating Topics::
-* Editing Topics and Posts::
 
 Supported Forges and Hosts
 
@@ -326,7 +324,7 @@ the key for ‘git@github.com:magit/forge.git’ is ‘github.com’.
           APIHOST may be possible, but should seldom be necessary.
 
 
-File: forge.info,  Node: Getting Started,  Next: Pulling,  Prev: Initial Setup,  Up: Top
+File: forge.info,  Node: Getting Started,  Next: Working with Topics,  Prev: Initial Setup,  Up: Top
 
 3 Getting Started
 *****************
@@ -380,9 +378,242 @@ the ‘forge-dispatch’ menu.
      sections for information about the available commands.
 
 
-File: forge.info,  Node: Pulling,  Next: Branching,  Prev: Getting Started,  Up: Top
+File: forge.info,  Node: Working with Topics,  Next: Listing Topics and Notifications,  Prev: Getting Started,  Up: Top
 
-4 Pulling
+4 Working with Topics
+*********************
+
+We call both issues and pull-requests "topics".  The contributions to
+the conversation are called "posts".
+
+
+File: forge.info,  Node: Listing Topics and Notifications,  Next: Visiting Topics,  Prev: Working with Topics,  Up: Top
+
+5 Listing Topics and Notifications
+**********************************
+
+By default Forge lists a subset of topics directly in the Magit status
+buffer.  It also provides commands to list topics and notifications in
+separate buffers.
+
+   Forge adds the following functions to ‘magit-status-sections-hook’:
+
+ -- Function: forge-insert-pullreqs
+     This function inserts a list of the most recent and/or open
+     pull-requests.
+
+ -- Function: forge-insert-issues
+     This function inserts a list of the most recent and/or open issues.
+
+   The following commands list repositories, notifications and topics in
+dedicated buffers:
+
+‘N l r’ (‘forge-list-repositories’)
+     This command lists all known repositories in a separate buffer.
+
+‘N l n’ (‘forge-list-notifications’)
+     This command lists all notifications for all forges in a separate
+     buffer.
+
+‘N l p’ (‘forge-list-pullreqs’)
+     This command lists the current repository’s pull-requests in a
+     separate buffer.
+
+‘N l i’ (‘forge-list-issues’)
+     This command lists the current repository’s issues in a separate
+     buffer.
+
+ -- User Option: forge-owned-accounts
+     This is an alist of accounts that are owned by you.  This should
+     include your username as well as any organization that you own.
+     Used by the commands ‘forge-list-owned-issues’,
+     ‘forge-list-owned-pullreqs’ and ‘forge-fork’.
+
+     Each element has the form ‘(ACCOUNT . PLIST)’.  The following
+     properties are currently being used:
+
+        • ‘remote-name’ The default name suggested by ‘forge-fork’ for a
+          fork created within this account.  If unspecified, then the
+          name of the account is used.
+
+     Example: ‘(("tarsius") ("emacsmirror" remote-name "mirror"))’.
+
+ -- User Option: forge-owned-ignored
+     This is a list of repository names that are considered to not be
+     owned by you even though they would have been considered to be
+     owned by you based on ‘forge-owned-accounts’.
+
+
+File: forge.info,  Node: Visiting Topics,  Next: Creating Topics,  Prev: Listing Topics and Notifications,  Up: Top
+
+6 Visiting Topics
+*****************
+
+By default Magit’s status buffer lists open and/or pending issues and
+pull-requests.
+
+   Forge provides some commands that act on the listed topics.  These
+commands can also be used in other contexts, such as when point is on a
+commit or branch section.
+
+‘<RET> [on topic]’ (‘forge-visit-this-topic’)
+‘<RET> [on repository]’ (‘forge-visit-this-repository’)
+     These commands visit the topic or repository at point in a separate
+     buffer.
+
+     These commands are bound by remapping ‘magit-visit-thing’ as
+     defined in ‘magit-mode-map’.
+
+‘N v t’ (‘forge-visit-topic’)
+‘N v i’ (‘forge-visit-issue’)
+‘N v p’ (‘forge-visit-pullreq’)
+     These commands read a topic, issue or pull-request and visit it in
+     a separate buffer.
+
+‘C-c C-o’ (‘forge-browse’)
+‘o [on topic in topic list]’ (‘forge-browse-this-topic’)
+‘o [on repository in repository list]’ (‘forge-browse-this-repository’)
+     These commands visit the topic, issue(s), pull-request(s), post,
+     branch, commit, remote or repository at point in a browser.
+
+ -- Command: forge-browse-commit
+ -- Command: forge-browse-branch
+ -- Command: forge-browse-repository
+‘N b t’ (‘forge-browse-topic’)
+‘N b i’ (‘forge-browse-issue’)
+‘N b p’ (‘forge-browse-pullreq’)
+‘N b r’ (‘forge-browse-remote’)
+‘N b I’ (‘forge-browse-issues’)
+‘N b P’ (‘forge-browse-pullreqs’)
+     These commands read a topic, issue(s), pull-request(s), branch,
+     commit, remote or repository, and open it in a browser.
+
+
+File: forge.info,  Node: Creating Topics,  Next: Editing Topics and Posts,  Prev: Visiting Topics,  Up: Top
+
+7 Creating Topics
+*****************
+
+‘N c p’ (‘forge-create-pullreq’)
+‘C-c C-n [on "Pull requests" section]’
+     This command creates a new pull-request for the current repository.
+
+‘N c i’ (‘forge-create-issue’)
+‘C-c C-n [on "Issues" section]’
+     This command creates a new issue for the current repository.
+
+
+File: forge.info,  Node: Editing Topics and Posts,  Next: Pulling,  Prev: Creating Topics,  Up: Top
+
+8 Editing Topics and Posts
+**************************
+
+We call both issues and pull-requests "topics".  The contributions to
+the conversation are called "posts".  The post that initiated the
+conversation is also called a post.
+
+   These commands are available only from the topic buffer (i.e., from
+the buffer that shows the posts on a topic).  Other commands that also
+work in other buffers are available here also.  For example ‘C-c C-w’ on
+a post visits that post in a browser.
+
+‘C-c C-n’ (‘forge-create-post’)
+‘C-c C-r’
+     This command allows users to create a new post on an existing
+     topic.  It opens a buffer in which the user can write the post.
+     When the post is done, then the user has to submit using ‘C-c C-c’.
+
+     If the region is active and marks part of an existing post, then
+     that part of the post is quoted.  Otherwise, or if a prefix
+     argument is used, then the complete post that point is currently on
+     is quoted.
+
+‘C-c C-e [on a post section]’ (‘forge-edit-post’)
+     This command visits an existing post in a separate buffer.  When
+     the changes to the post are done, then the user has to submit using
+     ‘C-c C-c’.
+
+‘C-c C-e [on "Title" section]’ (‘forge-edit-topic-title’)
+     This command reads a new title for an existing topic in the
+     minibuffer.
+
+‘C-c C-e [on "State" section]’ (‘forge-edit-topic-state’)
+     This command toggles the state of an existing topic between "open"
+     and "closed".
+
+‘C-c C-e [on "Draft" section]’ (‘forge-edit-topic-draft’)
+     This command toggles whether an existing topic is a draft or not.
+
+‘C-c C-e [on "Labels" section]’ (‘forge-edit-topic-labels’)
+     This command reads a list of labels for an existing topic in the
+     minibuffer.
+
+‘C-c C-e [on "Marks" section]’ (‘forge-edit-topic-marks’)
+     This command reads a list of marks for an existing topic in the
+     minibuffer.
+
+     Marks are like labels except that they are not shared with anyone
+     else.  To create a mark that topics can subsequently be marked with
+     use the command ‘forge-create-mark’.  Existing marks can be edited
+     using the command ‘forge-edit-mark’.
+
+‘C-c C-e [on "Assignees" section]’ (‘forge-edit-topic-assignees’)
+     This command reads a list of assignees for an existing topic in the
+     minibuffer.
+
+‘C-c C-e [on "Review-Requests" section]’ (‘forge-edit-topic-review-requests’)
+     This command reads a list of people who you would like to review an
+     existing topic in the minibuffer.
+
+‘C-c C-e [on "Note" section]’
+‘M-x forge-edit-topic-note’
+     This lets you edit your private note about a topic.
+
+‘C-c C-k [on a comment section]’ (‘forge-delete-comment’)
+     This command deletes the comment at point.
+
+‘m M [if enabled]’ (‘forge-merge’)
+‘N M [if enabled]’
+     This command merges the current pull-request using the forge’s API.
+     If there is no current pull-request or with a prefix argument, then
+     it reads a pull-request to visit instead.
+
+     The "merge method" to be used is read from the user.
+
+     Use of this command is discouraged.  Unless the remote repository
+     is configured to disallow that, you should instead merge locally
+     and then push the target branch.  Forges detect that you have done
+     that and respond by automatically marking the pull-request as
+     merged.
+
+   Creating a new post and editing an existing post are similar to
+creating a new commit and editing the message of an existing commit.  In
+both cases the message has to be written in a separate buffer and then
+the process has to be finished or canceled using a separate command.
+
+   The following commands are available in buffers used to edit posts:
+
+‘C-c C-c’ (‘forge-post-submit’)
+     This command submits the post that is being edited in the current
+     buffer.
+
+‘C-c C-k’ (‘forge-post-cancel’)
+     This command cancels the post that is being edited in the current
+     buffer.
+
+‘C-c C-e’ (‘forge-post-dispatch’)
+     This prefix command features the above two commands as suffixes,
+     and when creating a pull-request also the following command.  More
+     suffix commands will likely be added in the future.
+
+‘C-c C-e d’ (‘forge-post-toggle-draft’)
+     This command toggles whether the pull-request being created is a
+     draft.
+
+
+File: forge.info,  Node: Pulling,  Next: Branching,  Prev: Editing Topics and Posts,  Up: Top
+
+9 Pulling
 *********
 
 The commands that fetch forge data are available the Forge’s main menu
@@ -428,10 +659,10 @@ you know exists but haven’t actually pulled yet.
      ‘forge-add-repository’.
 
 
-File: forge.info,  Node: Branching,  Next: Working with Topics,  Prev: Pulling,  Up: Top
+File: forge.info,  Node: Branching,  Next: Miscellaneous Commands,  Prev: Pulling,  Up: Top
 
-5 Branching
-***********
+10 Branching
+************
 
 Forge provides commands for creating and checking out a new branch or
 work tree from a pull-request.  These commands are available from the
@@ -555,253 +786,10 @@ this to work.  If you delete the tracking branch (e.g., "fork/feature"),
 then the remote is never removed.
 
 
-File: forge.info,  Node: Working with Topics,  Next: Miscellaneous,  Prev: Branching,  Up: Top
+File: forge.info,  Node: Miscellaneous Commands,  Next: Miscellaneous Options,  Prev: Branching,  Up: Top
 
-6 Working with Topics
-*********************
-
-We call both issues and pull-requests "topics".  The contributions to
-the conversation are called "posts".
-
-* Menu:
-
-* Visiting Topics::
-* Listing Topics and Notifications::
-* Creating Topics::
-* Editing Topics and Posts::
-
-
-File: forge.info,  Node: Visiting Topics,  Next: Listing Topics and Notifications,  Up: Working with Topics
-
-6.1 Visiting Topics
-===================
-
-Magit’s status buffer contains lists of issues and pull-requests.
-Topics are ordered by last modification time.  All open issues and some
-recently edited and closed topics are listed.
-
-   Forge provides some commands that act on the listed topics.  These
-commands can also be used in other contexts, such as when point is on a
-commit or branch section.
-
-‘C-c C-w’ (‘forge-browse-TYPE’)
-‘C-c C-w’ (‘forge-browse-dwim’)
-‘N b r’ (‘forge-browse-remote’)
-‘N b I’ (‘forge-browse-issues’)
-‘N b P’ (‘forge-browse-pullreqs’)
-‘N b t’ (‘forge-browse-topic’)
-‘N b i’ (‘forge-browse-issue’)
-‘N b p’ (‘forge-browse-pullreq’)
-     These commands visit the topic, issue(s), pull-request(s), post,
-     branch, commit, or remote at point in a browser.
-
-     This is implemented using various commands named
-     ‘forge-browse-TYPE’, and the key binding is defined by remapping
-     ‘magit-browse-thing’ (as defined in ‘magit-mode-map)’.  For commit
-     sections this key is bound to ‘forge-browse-dwim’, which prefers a
-     topic over a branch and a branch over a commit.
-
-‘<RET>’ (‘forge-visit-TYPE’)
-‘C-c C-v’ (‘forge-visit-topic’)
-‘N v t’ (‘forge-visit-topic’)
-‘N v i’ (‘forge-visit-issue’)
-‘N v p’ (‘forge-visit-pullreq’)
-     These commands visit the pull-request(s), issue(s), or repository
-     in a separate buffer.
-
-     The ‘RET’ binding is only available when point is on a issue or
-     pull-request section because that key is already bound to something
-     else for most of Magit’s own sections.  ‘C-c C-v’ however is also
-     available on regular commit (e.g., in a log) and branch sections.
-
-     This is implemented using various commands named ‘forge-visit-TYPE’
-     and the key binding is defined by remapping ‘magit-visit-thing’ (as
-     defined in ‘magit-mode-map’).
-
-
-File: forge.info,  Node: Listing Topics and Notifications,  Next: Creating Topics,  Prev: Visiting Topics,  Up: Working with Topics
-
-6.2 Listing Topics and Notifications
-====================================
-
-By default Forge lists a subset of topics directly in the Magit status
-buffer.  It also provides commands to list topics and notifications in
-separate buffers.
-
-   Forge adds the following functions to ‘magit-status-sections-hook’:
-
- -- Function: forge-insert-pullreqs
-     This function inserts a list of the most recent and/or open
-     pull-requests.
-
- -- Function: forge-insert-issues
-     This function inserts a list of the most recent and/or open issues.
-
-   The following commands list repositories, notifications and topics in
-dedicated buffers:
-
-‘N l r’ (‘forge-list-repositories’)
-     This command lists all known repositories in a separate buffer.
-
-‘N l n’ (‘forge-list-notifications’)
-     This command lists all notifications for all forges in a separate
-     buffer.
-
-‘N l p’ (‘forge-list-pullreqs’)
-     This command lists the current repository’s pull-requests in a
-     separate buffer.
-
-‘N l i’ (‘forge-list-issues’)
-     This command lists the current repository’s issues in a separate
-     buffer.
-
- -- User Option: forge-owned-accounts
-     This is an alist of accounts that are owned by you.  This should
-     include your username as well as any organization that you own.
-     Used by the commands ‘forge-list-owned-issues’,
-     ‘forge-list-owned-pullreqs’ and ‘forge-fork’.
-
-     Each element has the form ‘(ACCOUNT . PLIST)’.  The following
-     properties are currently being used:
-
-        • ‘remote-name’ The default name suggested by ‘forge-fork’ for a
-          fork created within this account.  If unspecified, then the
-          name of the account is used.
-
-     Example: ‘(("tarsius") ("emacsmirror" remote-name "mirror"))’.
-
- -- User Option: forge-owned-ignored
-     This is a list of repository names that are considered to not be
-     owned by you even though they would have been considered to be
-     owned by you based on ‘forge-owned-accounts’.
-
-
-File: forge.info,  Node: Creating Topics,  Next: Editing Topics and Posts,  Prev: Listing Topics and Notifications,  Up: Working with Topics
-
-6.3 Creating Topics
-===================
-
-‘N c p’ (‘forge-create-pullreq’)
-‘C-c C-n [on "Pull requests" section]’
-     This command creates a new pull-request for the current repository.
-
-‘N c i’ (‘forge-create-issue’)
-‘C-c C-n [on "Issues" section]’
-     This command creates a new issue for the current repository.
-
-
-File: forge.info,  Node: Editing Topics and Posts,  Prev: Creating Topics,  Up: Working with Topics
-
-6.4 Editing Topics and Posts
-============================
-
-We call both issues and pull-requests "topics".  The contributions to
-the conversation are called "posts".  The post that initiated the
-conversation is also called a post.
-
-   These commands are available only from the topic buffer (i.e., from
-the buffer that shows the posts on a topic).  Other commands that also
-work in other buffers are available here also.  For example ‘C-c C-w’ on
-a post visits that post in a browser.
-
-‘C-c C-n’ (‘forge-create-post’)
-‘C-c C-r’
-     This command allows users to create a new post on an existing
-     topic.  It opens a buffer in which the user can write the post.
-     When the post is done, then the user has to submit using ‘C-c C-c’.
-
-     If the region is active and marks part of an existing post, then
-     that part of the post is quoted.  Otherwise, or if a prefix
-     argument is used, then the complete post that point is currently on
-     is quoted.
-
-‘C-c C-e [on a post section]’ (‘forge-edit-post’)
-     This command visits an existing post in a separate buffer.  When
-     the changes to the post are done, then the user has to submit using
-     ‘C-c C-c’.
-
-‘C-c C-e [on "Title" section]’ (‘forge-edit-topic-title’)
-     This command reads a new title for an existing topic in the
-     minibuffer.
-
-‘C-c C-e [on "State" section]’ (‘forge-edit-topic-state’)
-     This command toggles the state of an existing topic between "open"
-     and "closed".
-
-‘C-c C-e [on "Draft" section]’ (‘forge-edit-topic-draft’)
-     This command toggles whether an existing topic is a draft or not.
-
-‘C-c C-e [on "Labels" section]’ (‘forge-edit-topic-labels’)
-     This command reads a list of labels for an existing topic in the
-     minibuffer.
-
-‘C-c C-e [on "Marks" section]’ (‘forge-edit-topic-marks’)
-     This command reads a list of marks for an existing topic in the
-     minibuffer.
-
-     Marks are like labels except that they are not shared with anyone
-     else.  To create a mark that topics can subsequently be marked with
-     use the command ‘forge-create-mark’.  Existing marks can be edited
-     using the command ‘forge-edit-mark’.
-
-‘C-c C-e [on "Assignees" section]’ (‘forge-edit-topic-assignees’)
-     This command reads a list of assignees for an existing topic in the
-     minibuffer.
-
-‘C-c C-e [on "Review-Requests" section]’ (‘forge-edit-topic-review-requests’)
-     This command reads a list of people who you would like to review an
-     existing topic in the minibuffer.
-
-‘C-c C-e [on "Note" section]’
-‘M-x forge-edit-topic-note’
-     This lets you edit your private note about a topic.
-
-‘C-c C-k [on a comment section]’ (‘forge-delete-comment’)
-     This command deletes the comment at point.
-
-‘m M [if enabled]’ (‘forge-merge’)
-‘N M [if enabled]’
-     This command merges the current pull-request using the forge’s API.
-     If there is no current pull-request or with a prefix argument, then
-     it reads a pull-request to visit instead.
-
-     The "merge method" to be used is read from the user.
-
-     Use of this command is discouraged.  Unless the remote repository
-     is configured to disallow that, you should instead merge locally
-     and then push the target branch.  Forges detect that you have done
-     that and respond by automatically marking the pull-request as
-     merged.
-
-   Creating a new post and editing an existing post are similar to
-creating a new commit and editing the message of an existing commit.  In
-both cases the message has to be written in a separate buffer and then
-the process has to be finished or canceled using a separate command.
-
-   The following commands are available in buffers used to edit posts:
-
-‘C-c C-c’ (‘forge-post-submit’)
-     This command submits the post that is being edited in the current
-     buffer.
-
-‘C-c C-k’ (‘forge-post-cancel’)
-     This command cancels the post that is being edited in the current
-     buffer.
-
-‘C-c C-e’ (‘forge-post-dispatch’)
-     This prefix command features the above two commands as suffixes,
-     and when creating a pull-request also the following command.  More
-     suffix commands will likely be added in the future.
-
-‘C-c C-e d’ (‘forge-post-toggle-draft’)
-     This command toggles whether the pull-request being created is a
-     draft.
-
-
-File: forge.info,  Node: Miscellaneous,  Next: Supported Forges and Hosts,  Prev: Working with Topics,  Up: Top
-
-7 Miscellaneous
-***************
+11 Miscellaneous Commands
+*************************
 
 ‘N c f’ (‘forge-fork’)
      This command adds an additional remote to the current repository.
@@ -811,13 +799,35 @@ File: forge.info,  Node: Miscellaneous,  Next: Supported Forges and Hosts,  Prev
 
      Currently this only supports Github and Gitlab.
 
-‘N t t’ (‘forge-toggle-display-in-status-buffer’)
+‘N - H’ (‘forge-toggle-topic-legend’)
+     This command toggle whether to show a legend for faces used in
+     topic menus and lists.
+
+‘N - S’ (‘forge-toggle-display-in-status-buffer’)
      This command toggles whether any topics are displayed in the
      current Magit status buffer.
 
-‘N t c’ (‘forge-toggle-closed-visibility’)
-     This command toggles whether closed topics are shown in the Magit
-     status buffer.
+‘C-c C-w’ (‘forge-copy-url-at-point-as-kill’)
+     This command copies the url for the topic, issue(s),
+     pull-request(s), post, branch, commit, remote or repository to the
+     kill-ring.
+
+     This determines the url the same way as ‘forge-browse’ does, but
+     then adds it to the kill-ring, instead of visiting it in a browser.
+
+‘M b r’ (‘forge-rename-default-branch’)
+     This command rename the default branch to a new name read from the
+     user.
+
+     This changes the name on the upstream remotely and locally, and
+     update the upstream remotes of local branches accordingly.
+
+ -- Command: forge-add-pullreq-refspec
+     This command configures Git to fetch all pull-requests.
+
+     This is done by adding ‘+refs/pull/*/head:refs/pullreqs/*’ to the
+     value of ‘remote.REMOTE.fetch’, where REMOTE is the upstream
+     remote.
 
  -- Command: forge-add-user-repositories
      This command reads a host and a username from the user and adds all
@@ -855,7 +865,62 @@ File: forge.info,  Node: Miscellaneous,  Next: Supported Forges and Hosts,  Prev
      still under heavy development.
 
 
-File: forge.info,  Node: Supported Forges and Hosts,  Next: FAQ,  Prev: Miscellaneous,  Up: Top
+File: forge.info,  Node: Miscellaneous Options,  Next: Supported Forges and Hosts,  Prev: Miscellaneous Commands,  Up: Top
+
+12 Miscellaneous Options
+************************
+
+ -- User Option: forge-database-file
+     This option specifies the file used to store the forge database.
+
+ -- User Option: forge-topic-repository-slug-width
+     This option specifies the width of repository slugs (i.e.,
+     "OWNER/NAME").
+
+ -- User Option: forge-buffer-draft-p
+     This option controls whether new pull-requests start out as drafts
+     by default.
+
+     The buffer-local value of this variable is used to keep track of
+     the draft status of the current pull-request.
+
+ -- User Option: forge-repository-list-columns
+     This option specifies the list of columns displayed when listing
+     repositories.
+
+     Each element has the form ‘(HEADER SOURCE WIDTH SORT PROPS)’.
+
+     HEADER is the string displayed in the header.  WIDTH is the width
+     of the column.  SOURCE is used to get the value, it has to be the
+     name of a slot of ‘forge-repository’ or a function that takes such
+     an object as argument.  SORT is a boolean or a function used to
+     sort by this column.  Supported PROPS include ‘:right-align’ and
+     ‘:pad-right’.
+
+ -- User Option: forge-limit-topic-choices
+     This option controls whether to initially limit completion
+     candidates to active topics.
+
+ -- User Option: forge-post-heading-format
+     This option specifies the format for post headings in topic view.
+
+     The following ‘%’-sequences are supported:
+
+        • ‘%a’ The forge nickname of the author.
+        • ‘%c’ The absolute creation date.
+        • ‘%C’ The relative creation date.
+
+ -- User Option: forge-post-fill-region
+     This option controls whether to call ‘fill-region’ before
+     displaying forge posts.
+
+ -- User Option: forge-bug-reference-hooks
+     This option lists the hooks to which ‘forge-bug-reference-setup’ is
+     added.  It has to be customized before ‘forge’ is loaded, or it
+     won’t take effect.
+
+
+File: forge.info,  Node: Supported Forges and Hosts,  Next: FAQ,  Prev: Miscellaneous Options,  Up: Top
 
 Appendix A Supported Forges and Hosts
 *************************************
@@ -1178,25 +1243,32 @@ Appendix C Keystroke Index
                                                               (line  17)
 * C-c C-n [on "Issues" section]:         Creating Topics.     (line  12)
 * C-c C-n [on "Pull requests" section]:  Creating Topics.     (line   8)
+* C-c C-o:                               Visiting Topics.     (line  30)
 * C-c C-r:                               Editing Topics and Posts.
                                                               (line  17)
-* C-c C-v:                               Visiting Topics.     (line  36)
-* C-c C-w:                               Visiting Topics.     (line  22)
-* C-c C-w <1>:                           Visiting Topics.     (line  22)
+* C-c C-w:                               Miscellaneous Commands.
+                                                              (line  23)
 * f n:                                   Getting Started.     (line  32)
 * f n <1>:                               Pulling.             (line  23)
 * f N:                                   Pulling.             (line  34)
+* M b r:                                 Miscellaneous Commands.
+                                                              (line  31)
 * m M [if enabled]:                      Editing Topics and Posts.
                                                               (line  72)
 * N:                                     Getting Started.     (line  50)
+* N - H:                                 Miscellaneous Commands.
+                                                              (line  15)
+* N - S:                                 Miscellaneous Commands.
+                                                              (line  19)
 * N / a:                                 Getting Started.     (line  15)
-* N b I:                                 Visiting Topics.     (line  22)
-* N b i:                                 Visiting Topics.     (line  22)
-* N b P:                                 Visiting Topics.     (line  22)
-* N b p:                                 Visiting Topics.     (line  22)
-* N b r:                                 Visiting Topics.     (line  22)
-* N b t:                                 Visiting Topics.     (line  22)
-* N c f:                                 Miscellaneous.       (line   7)
+* N b i:                                 Visiting Topics.     (line  42)
+* N b I:                                 Visiting Topics.     (line  42)
+* N b p:                                 Visiting Topics.     (line  42)
+* N b P:                                 Visiting Topics.     (line  42)
+* N b r:                                 Visiting Topics.     (line  42)
+* N b t:                                 Visiting Topics.     (line  42)
+* N c f:                                 Miscellaneous Commands.
+                                                              (line   7)
 * N c i:                                 Creating Topics.     (line  12)
 * N c p:                                 Creating Topics.     (line   8)
 * N f f:                                 Getting Started.     (line  32)
@@ -1215,12 +1287,13 @@ Appendix C Keystroke Index
                                                               (line  72)
 * N r:                                   Repository Detection.
                                                               (line  80)
-* N t c:                                 Miscellaneous.       (line  19)
-* N t t:                                 Miscellaneous.       (line  15)
-* N v i:                                 Visiting Topics.     (line  36)
-* N v p:                                 Visiting Topics.     (line  36)
-* N v t:                                 Visiting Topics.     (line  36)
-* RET:                                   Visiting Topics.     (line  36)
+* N v i:                                 Visiting Topics.     (line  24)
+* N v p:                                 Visiting Topics.     (line  24)
+* N v t:                                 Visiting Topics.     (line  24)
+* o [on repository in repository list]:  Visiting Topics.     (line  30)
+* o [on topic in topic list]:            Visiting Topics.     (line  30)
+* RET [on repository]:                   Visiting Topics.     (line  15)
+* RET [on topic]:                        Visiting Topics.     (line  15)
 * Z n:                                   Branching.           (line 107)
 
 
@@ -1232,20 +1305,30 @@ Appendix D Function and Command Index
  [index ]
 * Menu:
 
-* forge-add-organization-repositories:   Miscellaneous.       (line  28)
+* forge-add-organization-repositories:   Miscellaneous Commands.
+                                                              (line  50)
+* forge-add-pullreq-refspec:             Miscellaneous Commands.
+                                                              (line  37)
 * forge-add-repository:                  Getting Started.     (line  15)
-* forge-add-user-repositories:           Miscellaneous.       (line  22)
+* forge-add-user-repositories:           Miscellaneous Commands.
+                                                              (line  44)
 * forge-branch-pullreq:                  Branching.           (line  13)
-* forge-browse-dwim:                     Visiting Topics.     (line  22)
-* forge-browse-issue:                    Visiting Topics.     (line  22)
-* forge-browse-issues:                   Visiting Topics.     (line  22)
-* forge-browse-pullreq:                  Visiting Topics.     (line  22)
-* forge-browse-pullreqs:                 Visiting Topics.     (line  22)
-* forge-browse-remote:                   Visiting Topics.     (line  22)
-* forge-browse-topic:                    Visiting Topics.     (line  22)
-* forge-browse-TYPE:                     Visiting Topics.     (line  22)
+* forge-browse:                          Visiting Topics.     (line  30)
+* forge-browse-branch:                   Visiting Topics.     (line  34)
+* forge-browse-commit:                   Visiting Topics.     (line  33)
+* forge-browse-issue:                    Visiting Topics.     (line  42)
+* forge-browse-issues:                   Visiting Topics.     (line  42)
+* forge-browse-pullreq:                  Visiting Topics.     (line  42)
+* forge-browse-pullreqs:                 Visiting Topics.     (line  42)
+* forge-browse-remote:                   Visiting Topics.     (line  42)
+* forge-browse-repository:               Visiting Topics.     (line  35)
+* forge-browse-this-repository:          Visiting Topics.     (line  30)
+* forge-browse-this-topic:               Visiting Topics.     (line  30)
+* forge-browse-topic:                    Visiting Topics.     (line  42)
 * forge-checkout-pullreq:                Branching.           (line 102)
 * forge-checkout-worktree:               Branching.           (line 107)
+* forge-copy-url-at-point-as-kill:       Miscellaneous Commands.
+                                                              (line  23)
 * forge-create-issue:                    Creating Topics.     (line  12)
 * forge-create-post:                     Editing Topics and Posts.
                                                               (line  17)
@@ -1273,7 +1356,8 @@ Appendix D Function and Command Index
                                                               (line  32)
 * forge-forge.remote:                    Repository Detection.
                                                               (line  80)
-* forge-fork:                            Miscellaneous.       (line   7)
+* forge-fork:                            Miscellaneous Commands.
+                                                              (line   7)
 * forge-insert-issues:                   Listing Topics and Notifications.
                                                               (line  16)
 * forge-insert-pullreqs:                 Listing Topics and Notifications.
@@ -1300,15 +1384,23 @@ Appendix D Function and Command Index
 * forge-pull <1>:                        Pulling.             (line  23)
 * forge-pull-notifications:              Pulling.             (line  34)
 * forge-pull-topic:                      Pulling.             (line  43)
-* forge-remove-repository:               Miscellaneous.       (line  35)
-* forge-remove-topic-locally:            Miscellaneous.       (line  39)
-* forge-reset-database:                  Miscellaneous.       (line  49)
-* forge-toggle-closed-visibility:        Miscellaneous.       (line  19)
-* forge-toggle-display-in-status-buffer: Miscellaneous.       (line  15)
-* forge-visit-issue:                     Visiting Topics.     (line  36)
-* forge-visit-pullreq:                   Visiting Topics.     (line  36)
-* forge-visit-topic:                     Visiting Topics.     (line  36)
-* forge-visit-TYPE:                      Visiting Topics.     (line  36)
+* forge-remove-repository:               Miscellaneous Commands.
+                                                              (line  57)
+* forge-remove-topic-locally:            Miscellaneous Commands.
+                                                              (line  61)
+* forge-rename-default-branch:           Miscellaneous Commands.
+                                                              (line  31)
+* forge-reset-database:                  Miscellaneous Commands.
+                                                              (line  71)
+* forge-toggle-display-in-status-buffer: Miscellaneous Commands.
+                                                              (line  19)
+* forge-toggle-topic-legend:             Miscellaneous Commands.
+                                                              (line  15)
+* forge-visit-issue:                     Visiting Topics.     (line  24)
+* forge-visit-pullreq:                   Visiting Topics.     (line  24)
+* forge-visit-this-repository:           Visiting Topics.     (line  15)
+* forge-visit-this-topic:                Visiting Topics.     (line  15)
+* forge-visit-topic:                     Visiting Topics.     (line  24)
 
 
 File: forge.info,  Node: Variable Index,  Prev: Function and Command Index,  Up: Top
@@ -1321,11 +1413,27 @@ Appendix E Variable Index
 
 * forge-alist:                           Repository Detection.
                                                               (line  92)
+* forge-buffer-draft-p:                  Miscellaneous Options.
+                                                              (line  13)
+* forge-bug-reference-hooks:             Miscellaneous Options.
+                                                              (line  50)
 * forge-checkout-worktree-read-directory-function: Branching. (line 112)
+* forge-database-file:                   Miscellaneous Options.
+                                                              (line   6)
+* forge-limit-topic-choices:             Miscellaneous Options.
+                                                              (line  33)
 * forge-owned-accounts:                  Listing Topics and Notifications.
                                                               (line  37)
 * forge-owned-ignored:                   Listing Topics and Notifications.
                                                               (line  52)
+* forge-post-fill-region:                Miscellaneous Options.
+                                                              (line  46)
+* forge-post-heading-format:             Miscellaneous Options.
+                                                              (line  37)
+* forge-repository-list-columns:         Miscellaneous Options.
+                                                              (line  20)
+* forge-topic-repository-slug-width:     Miscellaneous Options.
+                                                              (line   9)
 * forge.remote:                          Repository Detection.
                                                               (line  66)
 
@@ -1333,55 +1441,56 @@ Appendix E Variable Index
 
 Tag Table:
 Node: Top771
-Node: Introduction2450
-Node: Initial Setup2871
-Node: Loading Forge3583
-Node: Token Creation4263
-Node: Initial Pull5375
-Node: Repository Detection6713
-Node: Getting Started12066
-Node: Pulling14345
-Node: Branching16508
-Node: Working with Topics22896
-Node: Visiting Topics23263
-Node: Listing Topics and Notifications25336
-Node: Creating Topics27512
-Node: Editing Topics and Posts27997
-Node: Miscellaneous32520
-Node: Supported Forges and Hosts34753
-Node: Supported Forges36045
-Ref: Github36201
-Ref: Github Caveats36356
-Ref: Github Hosts37018
-Ref: Gitlab37090
-Ref: Gitlab Caveats37117
-Ref: Gitlab Hosts37258
-Node: Partially Supported Forges37394
-Ref: Gitea https//giteaio37600
-Ref: Gitea Hosts37712
-Ref: Gogs https//gogsio37784
-Ref: Gogs Hosts37999
-Ref: Bitbucket https//bitbucketorg38073
-Ref: Bitbucket Caveats38283
-Ref: Bitbucket Hosts39196
-Node: Supported Semi-Forges39277
-Ref: Gitweb https//git-scmcom/docs/gitweb39448
-Ref: Gitweb Caveats39539
-Ref: Cgit https//gitzx2c4com/cgit/about39795
-Ref: Cgit Caveats39884
-Ref: Cgit Hosts40249
-Ref: Stgit https//codemadnessorg/git/stagit/file/READMEhtml40392
-Ref: Stgit Caveats40521
-Ref: Stgit Hosts40823
-Ref: Srht https//metasrht40899
-Ref: Srht Caveats40960
-Ref: Srht Hosts41259
-Node: FAQ41326
-Node: Is it possible to create a single pull-request without pulling everything?41815
-Node: error in process filter HTTP Error 502 "Bad gateway"42281
-Node: Keystroke Index44652
-Node: Function and Command Index50415
-Node: Variable Index56153
+Node: Introduction2463
+Node: Initial Setup2884
+Node: Loading Forge3596
+Node: Token Creation4276
+Node: Initial Pull5388
+Node: Repository Detection6726
+Node: Getting Started12079
+Node: Working with Topics14370
+Node: Listing Topics and Notifications14646
+Node: Visiting Topics16806
+Node: Creating Topics18537
+Node: Editing Topics and Posts18985
+Node: Pulling23504
+Node: Branching25676
+Node: Miscellaneous Commands32069
+Node: Miscellaneous Options35191
+Node: Supported Forges and Hosts37277
+Node: Supported Forges38577
+Ref: Github38733
+Ref: Github Caveats38888
+Ref: Github Hosts39550
+Ref: Gitlab39622
+Ref: Gitlab Caveats39649
+Ref: Gitlab Hosts39790
+Node: Partially Supported Forges39926
+Ref: Gitea https//giteaio40132
+Ref: Gitea Hosts40244
+Ref: Gogs https//gogsio40316
+Ref: Gogs Hosts40531
+Ref: Bitbucket https//bitbucketorg40605
+Ref: Bitbucket Caveats40815
+Ref: Bitbucket Hosts41728
+Node: Supported Semi-Forges41809
+Ref: Gitweb https//git-scmcom/docs/gitweb41980
+Ref: Gitweb Caveats42071
+Ref: Cgit https//gitzx2c4com/cgit/about42327
+Ref: Cgit Caveats42416
+Ref: Cgit Hosts42781
+Ref: Stgit https//codemadnessorg/git/stagit/file/READMEhtml42924
+Ref: Stgit Caveats43053
+Ref: Stgit Hosts43355
+Ref: Srht https//metasrht43431
+Ref: Srht Caveats43492
+Ref: Srht Hosts43791
+Node: FAQ43858
+Node: Is it possible to create a single pull-request without pulling everything?44347
+Node: error in process filter HTTP Error 502 "Bad gateway"44813
+Node: Keystroke Index47184
+Node: Function and Command Index53491
+Node: Variable Index60528
 
 End Tag Table
 
