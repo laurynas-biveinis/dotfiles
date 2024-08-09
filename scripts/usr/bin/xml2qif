@@ -104,7 +104,7 @@ class LDASTransactionFamily(Enum):
 
 @add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD', 'CWDL': 'CASH_WITHDRAWAL',
                   'FEES': 'FEES', 'DAJT': 'CREDIT_ADJUSTMENT',
-                  'NTAV': 'NOT_AVAILABLE'})
+                  'CAJT': 'DEBIT_ADJUSTMENT', 'NTAV': 'NOT_AVAILABLE'})
 class CCRDTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in a Customer Card Transaction (CCRD)
     family."""
@@ -112,6 +112,7 @@ class CCRDTransactionSubfamily(Enum):
     CASH_WITHDRAWAL = auto()
     FEES = auto()
     CREDIT_ADJUSTMENT = auto()
+    DEBIT_ADJUSTMENT = auto()
     NOT_AVAILABLE = auto()
 
 
