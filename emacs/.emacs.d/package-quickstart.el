@@ -4426,7 +4426,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240730.1741/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240730.1741/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240808.1852/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240808.1852/magit-section-autoloads.el"))
 
 
 
@@ -4481,7 +4481,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240730.1355/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240730.1355/git-commit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240808.1852/git-commit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-commit-20240808.1852/git-commit-autoloads.el"))
 
 
 
@@ -4504,7 +4504,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240808.1208/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240808.1208/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240808.1852/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-20240808.1852/magit-autoloads.el"))
 
 
 
@@ -6705,7 +6705,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240808.1936/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-20240808.1936/ghub-autoloads.el"))
 
 
 
@@ -7183,7 +7183,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240730.1339/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240730.1339/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240808.1856/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240808.1856/emacsql-autoloads.el"))
 
 
 
@@ -7236,7 +7236,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.1.1/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-3.1.1/emacsql-sqlite-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.0/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.0/emacsql-sqlite-autoloads.el"))
 
 
 
@@ -10242,7 +10242,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240712.2215/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240712.2215/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240808.1934/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-20240808.1934/closql-autoloads.el"))
 
 
 
@@ -10258,7 +10258,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240808.1809/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240808.1809/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240808.1943/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-20240808.1943/forge-autoloads.el"))
 
 
 
@@ -10934,22 +10934,6 @@ values used in the user's shell." t)
 
 
 (provide 'exec-path-from-shell-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-builtin-20240415.1535/emacsql-sqlite-builtin-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-builtin-20240415.1535/emacsql-sqlite-builtin-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "emacsql-sqlite-builtin" '("emacsql-sqlite-builtin-connection"))
-
-
-(provide 'emacsql-sqlite-builtin-autoloads)
 
 
 )
@@ -11835,14 +11819,14 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell emacsql-sqlite-builtin company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240808.1809" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240713.1918" "/Users/laurynas/.emacs.d/elpa/magit-20240808.1208" "/Users/laurynas/.emacs.d/elpa/magit-section-20240730.1741" "/Users/laurynas/.emacs.d/elpa/transient-20240805.1231" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240806.1454" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-20240808.1943" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240808.1936" "/Users/laurynas/.emacs.d/elpa/magit-20240808.1852" "/Users/laurynas/.emacs.d/elpa/magit-section-20240808.1852" "/Users/laurynas/.emacs.d/elpa/transient-20240805.1231" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-20240806.1454" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
