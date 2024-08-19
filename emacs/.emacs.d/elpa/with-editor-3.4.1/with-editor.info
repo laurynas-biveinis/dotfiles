@@ -40,7 +40,7 @@ library is made available as a separate package.  It also defines some
 additional functionality which makes it useful even for end-users, who
 don’t use Magit or another package which uses it internally.
 
-This manual is for With-Editor v3.4.1-5-gb88e4a2.
+This manual is for With-Editor version 3.4.1.
 
      Copyright (C) 2015-2024 Jonas Bernoulli
      <emacs.with-editor@jonas.bernoulli.dev>
@@ -368,13 +368,13 @@ Appendix B Variable Index
 
 Tag Table:
 Node: Top799
-Node: Using the With-Editor package2619
-Node: Configuring With-Editor3206
-Node: Using With-Editor commands7762
-Node: Using With-Editor as a library11064
-Node: Debugging13096
-Node: Function and Command Index13988
-Node: Variable Index15486
+Node: Using the With-Editor package2615
+Node: Configuring With-Editor3202
+Node: Using With-Editor commands7758
+Node: Using With-Editor as a library11060
+Node: Debugging13092
+Node: Function and Command Index13984
+Node: Variable Index15482
 
 End Tag Table
 

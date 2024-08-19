@@ -27,7 +27,7 @@ Forge User and Developer Manual
 Forge allows you to work with Git forges, currently Github and Gitlab,
 from the comfort of Magit and Emacs.
 
-This manual is for Forge v0.4.1-7-g95a6532.
+This manual is for Forge version 0.4.1.
 
      Copyright (C) 2018-2024 Jonas Bernoulli
      <emacs.forge@jonas.bernoulli.dev>
@@ -491,7 +491,7 @@ Forge currently only supports the Github and Gitlab APIs.
 *note Partially Supported Forges::) and other lighter weight software
 used to host Git repositories, which also provide a web interfaces (see
 *note Supported Semi-Forges::).  Forge doesn’t use the APIs of such
-forges, but registering the host and adding repositories to the local
+forges, but registring the host and adding repositories to the local
 database at least enables the use of commands such as ‘forge-browse’.
 
 Tell Forge about the Instance
@@ -1904,77 +1904,77 @@ Appendix F Variable Index
 
 Tag Table:
 Node: Top771
-Node: Introduction2511
-Node: Initial Setup2932
-Ref: Common Setup3637
-Node: Setup for Githubcom4231
-Ref: Set your Username4392
-Ref: Create and Store an Access Token4722
-Node: Setup for Another Github Instance6590
-Ref: Tell Forge about the Instance7138
-Ref: Set your Username (1)8684
-Ref: Create and Store an Access Token (1)8992
-Node: Setup for Gitlabcom11093
-Ref: Set your Username (2)11296
-Ref: Create and Store an Access Token (2)11626
-Node: Setup for Another Gitlab Instance13511
-Ref: Tell Forge about the Instance (1)14072
-Ref: Set your Username (3)15413
-Ref: Create and Store an Access Token (3)15721
-Node: Setup a Partially Supported Host17773
-Ref: Tell Forge about the Instance (2)18458
-Ref: Add Support for Additional Forge Types19954
-Node: Initial Pull21125
-Node: Getting Started22332
-Node: Lists and Menus24618
-Ref: Dispatch and configuration menus26442
-Ref: Topic menu and list commands26901
-Ref: Notification menu and list commands28838
-Ref: Repository menu and list commands29215
-Ref: Exiting menus and lists30982
-Ref: Default topic filters31677
-Ref: Topic sections in Magit status buffers32117
-Node: Visiting Topics33348
-Node: Creating Topics and Posts35462
-Node: Editing Topics37544
-Node: Pulling39169
-Node: Branching41331
-Node: Miscellaneous Commands47724
-Node: Miscellaneous Options51448
-Node: How Forge Detection Works53533
-Node: Supported Forges and Hosts59070
-Node: Supported Forges60379
-Ref: Github60535
-Ref: Github Caveats60690
-Ref: Github Hosts61352
-Ref: Gitlab61424
-Ref: Gitlab Caveats61451
-Ref: Gitlab Hosts61592
-Node: Partially Supported Forges61728
-Ref: Gitea https//giteaio61934
-Ref: Gitea Hosts62046
-Ref: Gogs https//gogsio62118
-Ref: Gogs Hosts62333
-Ref: Bitbucket https//bitbucketorg62407
-Ref: Bitbucket Caveats62617
-Ref: Bitbucket Hosts63530
-Node: Supported Semi-Forges63611
-Ref: Gitweb https//git-scmcom/docs/gitweb63782
-Ref: Gitweb Caveats63873
-Ref: Cgit https//gitzx2c4com/cgit/about64129
-Ref: Cgit Caveats64218
-Ref: Cgit Hosts64583
-Ref: Stgit https//codemadnessorg/git/stagit/file/READMEhtml64726
-Ref: Stgit Caveats64855
-Ref: Stgit Hosts65157
-Ref: Srht https//metasrht65233
-Ref: Srht Caveats65294
-Ref: Srht Hosts65593
-Node: FAQ65660
-Node: error in process filter HTTP Error 502 "Bad gateway"66070
-Node: Keystroke Index67551
-Node: Function and Command Index73531
-Node: Variable Index79811
+Node: Introduction2507
+Node: Initial Setup2928
+Ref: Common Setup3633
+Node: Setup for Githubcom4227
+Ref: Set your Username4388
+Ref: Create and Store an Access Token4718
+Node: Setup for Another Github Instance6586
+Ref: Tell Forge about the Instance7134
+Ref: Set your Username (1)8680
+Ref: Create and Store an Access Token (1)8988
+Node: Setup for Gitlabcom11089
+Ref: Set your Username (2)11292
+Ref: Create and Store an Access Token (2)11622
+Node: Setup for Another Gitlab Instance13507
+Ref: Tell Forge about the Instance (1)14068
+Ref: Set your Username (3)15409
+Ref: Create and Store an Access Token (3)15717
+Node: Setup a Partially Supported Host17769
+Ref: Tell Forge about the Instance (2)18453
+Ref: Add Support for Additional Forge Types19949
+Node: Initial Pull21120
+Node: Getting Started22327
+Node: Lists and Menus24613
+Ref: Dispatch and configuration menus26437
+Ref: Topic menu and list commands26896
+Ref: Notification menu and list commands28833
+Ref: Repository menu and list commands29210
+Ref: Exiting menus and lists30977
+Ref: Default topic filters31672
+Ref: Topic sections in Magit status buffers32112
+Node: Visiting Topics33343
+Node: Creating Topics and Posts35457
+Node: Editing Topics37539
+Node: Pulling39164
+Node: Branching41326
+Node: Miscellaneous Commands47719
+Node: Miscellaneous Options51443
+Node: How Forge Detection Works53528
+Node: Supported Forges and Hosts59065
+Node: Supported Forges60374
+Ref: Github60530
+Ref: Github Caveats60685
+Ref: Github Hosts61347
+Ref: Gitlab61419
+Ref: Gitlab Caveats61446
+Ref: Gitlab Hosts61587
+Node: Partially Supported Forges61723
+Ref: Gitea https//giteaio61929
+Ref: Gitea Hosts62041
+Ref: Gogs https//gogsio62113
+Ref: Gogs Hosts62328
+Ref: Bitbucket https//bitbucketorg62402
+Ref: Bitbucket Caveats62612
+Ref: Bitbucket Hosts63525
+Node: Supported Semi-Forges63606
+Ref: Gitweb https//git-scmcom/docs/gitweb63777
+Ref: Gitweb Caveats63868
+Ref: Cgit https//gitzx2c4com/cgit/about64124
+Ref: Cgit Caveats64213
+Ref: Cgit Hosts64578
+Ref: Stgit https//codemadnessorg/git/stagit/file/READMEhtml64721
+Ref: Stgit Caveats64850
+Ref: Stgit Hosts65152
+Ref: Srht https//metasrht65228
+Ref: Srht Caveats65289
+Ref: Srht Hosts65588
+Node: FAQ65655
+Node: error in process filter HTTP Error 502 "Bad gateway"66065
+Node: Keystroke Index67546
+Node: Function and Command Index73526
+Node: Variable Index79806
 
 End Tag Table
 

@@ -1,4 +1,4 @@
-(define-package "closql" "20240808.1934" "Store EIEIO objects using EmacSQL"
+(define-package "closql" "2.0.0" "Store EIEIO objects using EmacSQL"
   '((emacs "26.1")
     (compat "30.0.0.0")
     (emacsql "4.0.0"))
