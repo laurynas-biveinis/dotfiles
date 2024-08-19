@@ -384,7 +384,7 @@
 		    ("Campbell Barton" . "ideasman42@gmail.com"))
 		   (:commit . "83d94733fd8ed64f2ba40f4e1df7ecbfe8260e51"))])
  (d-mode .
-	 [(202405290611)
+	 [(202408131340)
 	  ((emacs
 	    (25 1)))
 	  "D Programming Language major mode for (X)Emacs" tar
@@ -393,7 +393,7 @@
 	    ("Russel Winder" . "russel@winder.org.uk")
 	    ("Vladimir Panteleev" . "vladimir@thecybershadow.net"))
 	   (:url . "https://elpa.nongnu.org/nongnu/d-mode.html")
-	   (:commit . "7d280251de13c0042c0846ff4eaa5b1937fcbe01"))])
+	   (:commit . "688f5af819e461badfd6fda642937153b4946813"))])
  (dart-mode .
 	    [(1 0 7)
 	     ((emacs
@@ -475,7 +475,7 @@
 		  (:maintainer "tienne Deparis" . "etienne@depar.is")
 		  (:commit . "29d5180f7e34c0c858a520068fb650f705b8cfc2"))])
  (drupal-mode .
-	      [(0 7 4)
+	      [(0 8 1)
 	       ((php-mode
 		 (1 5 0)))
 	       "Advanced minor mode for Drupal development" tar
@@ -484,7 +484,7 @@
 		(:maintainer "Arne Jørgensen" . "arne@arnested.dk")
 		(:authors
 		 ("Arne Jørgensen" . "arne@arnested.dk"))
-		(:commit . "ed90b0c4d808365e9ae9f16cc8a96eff17815621"))])
+		(:commit . "f632fa5f140b04260fa23b15ffccbfe5a787b2e2"))])
  (dslide .
 	 [(0 5 3)
 	  ((emacs
@@ -951,9 +951,9 @@
 		   ("András Simonyi" . "andras.simonyi@gmail.com"))
 		  (:commit . "9e7ed54e5629f759660569bc7efc3d75dbabbc5f"))])
  (geiser-guile .
-	       [(0 28 1)
+	       [(0 28 2)
 		((emacs
-		  (25 1))
+		  (26 1))
 		 (transient
 		  (0 3))
 		 (geiser
@@ -964,7 +964,7 @@
 		 (:maintainer "Jose Antonio Ortega Ruiz" . "(jao@gnu.org)")
 		 (:authors
 		  ("Jose Antonio Ortega Ruiz" . "(jao@gnu.org)"))
-		 (:commit . "f57bfd5039ce158de95d2ef2933e64fb16def4f6"))])
+		 (:commit . "5a856c2982030ff77e2d151ead4fcd991512f362"))])
  (geiser-kawa .
 	      [(0 0 1)
 	       ((emacs
@@ -1471,26 +1471,33 @@
 	       ("Jon Oddie" . "j.j.oddie@gmail.com"))
 	      (:commit . "31d4adcca4f08cfd7a45f85e691aaa7a9316b355"))])
  (magit .
-	[(3 3 0)
+	[(4 0 0)
 	 ((emacs
-	   (25 1))
+	   (26 1))
+	  (compat
+	   (30 0 0 0))
 	  (dash
 	   (2 19 1))
 	  (git-commit
-	   (3 3 0))
+	   (4 0 0))
 	  (magit-section
-	   (3 3 0))
+	   (4 0 0))
+	  (seq
+	   (2 24))
 	  (transient
-	   (0 3 6))
+	   (0 7 4))
 	  (with-editor
-	   (3 0 5)))
+	   (3 4 1)))
 	 "A Git porcelain inside Emacs" tar
 	 ((:url . "https://github.com/magit/magit")
 	  (:keywords "git" "tools" "vc")
-	  (:maintainer "Jonas Bernoulli" . "jonas@bernoul.li")
+	  (:maintainer
+	   ("Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev")
+	   ("Kyle Meyer" . "kyle@kyleam.com"))
 	  (:authors
 	   ("Marius Vollmer" . "marius.vollmer@gmail.com")
-	   ("Jonas Bernoulli" . "jonas@bernoul.li")))])
+	   ("Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev"))
+	  (:commit . "020aca7c9c4154dbc4a72acbd56165ecccea1bf1"))])
  (magit-section .
 		[(4 0 0)
 		 ((emacs
@@ -1520,7 +1527,7 @@
 		   ("Jason R. Blevins" . "jblevins@xbeta.org"))
 		  (:commit . "193b61605f44c85d261b8bd82e0a213fd8f1ff32"))])
  (mastodon .
-	   [(1 0 24)
+	   [(1 0 26)
 	    ((emacs
 	      (27 1))
 	     (request
@@ -1533,7 +1540,7 @@
 	     (:authors
 	      ("Johnson Denen" . "johnson.denen@gmail.com")
 	      ("Marty Hiatt" . "martianhiatus@riseup.net"))
-	     (:commit . "d1baf1eed450b5dc5ddb8555d29eec3bb969a4fb"))])
+	     (:commit . "3443b49c55f65ae8e0b07e93e1e0299ce1bf8ed6"))])
  (material-theme .
 		 [(2015)
 		  ((emacs
@@ -1729,14 +1736,14 @@
 	       ((:url . "http://github.com/bastibe/org-journal")
 		(:commit . "18df4d5ae5e15580df42562c143d007c6d28d75f"))])
  (org-mime .
-	   [(0 3 2)
+	   [(0 3 3)
 	    ((emacs
-	      (25 1)))
+	      (27 1)))
 	    "org html export for text/html MIME emails" tar
 	    ((:url . "http://github.com/org-mime/org-mime")
 	     (:keywords "mime" "mail" "email" "html")
 	     (:maintainer "Chen Bin" . "chenbin.sh@gmail.com")
-	     (:commit . "cc00afcf0291633324364c1c83bfe2833cfdc1bf"))])
+	     (:commit . "468604b8404d3c7d6148be83a4cf308ee95d2cfb"))])
  (org-present .
 	      [(0 1)
 	       ((org
@@ -1783,22 +1790,22 @@
 		    ("Takaaki ISHIKAWA" . "takaxpatieeedotorg"))
 		   (:commit . "941e7e6cb8a5a0b193345263ed912cceecae1887"))])
  (orgit .
-	[(1 9 0)
+	[(2 0 0)
 	 ((emacs
-	   (25 1))
+	   (26 1))
 	  (compat
-	   (29 1 4 1))
+	   (30 0 0 0))
 	  (magit
-	   (3 3 0))
+	   (4 0 0))
 	  (org
-	   (9 6 5)))
+	   (9 7 8)))
 	 "Support for Org links to Magit buffers" tar
 	 ((:url . "https://github.com/magit/orgit")
 	  (:keywords "hypermedia" "vc")
-	  (:maintainer "Jonas Bernoulli" . "jonas@bernoul.li")
+	  (:maintainer "Jonas Bernoulli" . "emacs.orgit@jonas.bernoulli.dev")
 	  (:authors
-	   ("Jonas Bernoulli" . "jonas@bernoul.li"))
-	  (:commit . "4a585029875a1dbbe96d8ac157bd2fd02875f289"))])
+	   ("Jonas Bernoulli" . "emacs.orgit@jonas.bernoulli.dev"))
+	  (:commit . "59d21fdb21f84238c3172d37fdd2446b753e98dc"))])
  (p4-16-mode .
 	     [(0 3)
 	      nil "Support for the P4_16 programming language" tar
@@ -1981,7 +1988,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20240808 93008)
+	      [(1 0 20240813 124142)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
