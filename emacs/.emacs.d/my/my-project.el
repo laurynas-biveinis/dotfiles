@@ -33,7 +33,8 @@
       ;; Browsing project files without caching is prohibitively slow on large
       ;; projects such as MySQL.
       projectile-enable-caching t
-      projectile-switch-project-action 'projectile-vc)
+      projectile-switch-project-action 'projectile-vc
+      projectile-completion-system 'default)
 
 ;; Exclude some more modes from projectile
 (add-to-list 'projectile-globally-ignored-modes "lisp-interaction-mode")
