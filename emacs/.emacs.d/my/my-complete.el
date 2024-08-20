@@ -23,6 +23,19 @@
       completion-at-point-functions nil
       completions-format 'vertical)
 
+;;; Integration with `projectile'
+
+;; Make `projectile' minibuffer completions confirm inputs that were not from
+;; the valid completion alternative set
+
+(defun dotfiles--projectile-completing-read-with-confirm (orig-fun &rest args)
+  "Make minibuffer completion for (ORIG-FUN ARGS) confirm non-valid completion."
+  (let ((minibuffer-completion-confirm 'confirm))
+    (apply orig-fun args)))
+
+(advice-add 'projectile-completing-read :around
+            #'dotfiles--projectile-completing-read-with-confirm)
+
 ;;; Integration with `org-roam'
 
 ;; Make `org-roam' node completion case-insensitive
