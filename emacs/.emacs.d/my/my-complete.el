@@ -2,8 +2,8 @@
 ;;; Commentary:
 
 ;; Configure everything related to completions: built-in completion at point &
-;; company.
-;; Packages related to company that I wanted to use but couldn't:
+;; `company'.
+;; Packages related to `company' that I wanted to use but couldn't:
 ;; - `company-box': does not play well with Solarized Dark theme, resulting in
 ;;   too bright highlights.
 ;; - `company-quickhelp-mode': `pos-tip' results in ugly tooltips on macOS:
@@ -45,8 +45,8 @@
 
 (advice-add 'org-roam-node-read :around #'dotfiles--completion-case-insensitive)
 
-;;; Company
-;; I looked into replacing it with corfu, but elpy uses company.
+;;; `company'
+;; I looked into replacing it with `corfu', but `elpy' uses `company'.
 (require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
 
