@@ -23,6 +23,17 @@
       completion-at-point-functions nil
       completions-format 'vertical)
 
+;;; Integration with `org-roam'
+
+;; Make `org-roam' node completion case-insensitive
+(defun dotfiles--org-roam-node-read-case-insensitive (orig-fun &rest args)
+  "Make minibuffer completion for (ORIG-FUN ARGS) case-insensitive."
+  (let ((completion-ignore-case t))
+    (apply orig-fun args)))
+
+(advice-add 'org-roam-node-read :around
+            #'dotfiles--org-roam-node-read-case-insensitive)
+
 ;;; Company
 ;; I looked into replacing it with corfu, but elpy uses company.
 (require 'company)
