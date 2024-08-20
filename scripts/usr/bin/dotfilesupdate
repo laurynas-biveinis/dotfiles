@@ -16,6 +16,8 @@ readonly IGNORE_FOR_SYMLINKS=(
     "Library/Application Support/Google/Chrome/SingletonLock"
     "Library/Application Support/discord/SingletonCookie"
     "Library/Application Support/discord/SingletonLock"
+    "Library/Application Support/Signal/SingletonCookie"
+    "Library/Application Support/Signal/SingletonLock"
     "Library/Containers"
     "Library/Logs/ims.log"
     "Library/Saved Application State"
