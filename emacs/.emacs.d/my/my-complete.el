@@ -28,24 +28,22 @@
 ;; Make `projectile' minibuffer completions confirm inputs that were not from
 ;; the valid completion alternative set
 
-(defun dotfiles--projectile-completing-read-with-confirm (orig-fun &rest args)
+(defun dotfiles--completion-confirm (orig-fun &rest args)
   "Make minibuffer completion for (ORIG-FUN ARGS) confirm non-valid completion."
   (let ((minibuffer-completion-confirm 'confirm))
     (apply orig-fun args)))
 
-(advice-add 'projectile-completing-read :around
-            #'dotfiles--projectile-completing-read-with-confirm)
+(advice-add 'projectile-completing-read :around #'dotfiles--completion-confirm)
 
 ;;; Integration with `org-roam'
 
 ;; Make `org-roam' node completion case-insensitive
-(defun dotfiles--org-roam-node-read-case-insensitive (orig-fun &rest args)
+(defun dotfiles--completion-case-insensitive (orig-fun &rest args)
   "Make minibuffer completion for (ORIG-FUN ARGS) case-insensitive."
   (let ((completion-ignore-case t))
     (apply orig-fun args)))
 
-(advice-add 'org-roam-node-read :around
-            #'dotfiles--org-roam-node-read-case-insensitive)
+(advice-add 'org-roam-node-read :around #'dotfiles--completion-case-insensitive)
 
 ;;; Company
 ;; I looked into replacing it with corfu, but elpy uses company.
