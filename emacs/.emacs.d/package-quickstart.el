@@ -2483,7 +2483,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240817.1959/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-20240817.1959/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.7.4/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.7.4/transient-autoloads.el"))
 
 
 
@@ -4426,7 +4426,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240818.1914/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-20240818.1914/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.0.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.0.0/magit-section-autoloads.el"))
 
 
 
@@ -7183,7 +7183,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240808.1856/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20240808.1856/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.0.1/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.0.1/emacsql-autoloads.el"))
 
 
 
@@ -7236,7 +7236,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.0/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.0/emacsql-sqlite-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.1/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.1/emacsql-sqlite-autoloads.el"))
 
 
 
@@ -11826,7 +11826,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.1" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240818.1702" "/Users/laurynas/.emacs.d/elpa/magit-4.0.0" "/Users/laurynas/.emacs.d/elpa/magit-section-20240818.1914" "/Users/laurynas/.emacs.d/elpa/transient-20240817.1959" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.1" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.1" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-20240818.1702" "/Users/laurynas/.emacs.d/elpa/magit-4.0.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.0.0" "/Users/laurynas/.emacs.d/elpa/transient-0.7.4" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.1" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:

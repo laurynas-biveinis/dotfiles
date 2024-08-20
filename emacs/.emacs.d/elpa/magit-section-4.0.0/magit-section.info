@@ -34,7 +34,7 @@ packages that have nothing to do with Magit or Git.
 and user options see *note (magit)Sections::.  This manual documents how
 you can use sections in your own packages.
 
-This manual is for Magit-Section v4.0.0-17-g55656a31.
+This manual is for Magit-Section version 3.3.0.50-git.
 
      Copyright (C) 2015-2024 Jonas Bernoulli
      <emacs.magit@jonas.bernoulli.dev>
@@ -304,10 +304,10 @@ File: magit-section.info,  Node: Matching Functions,  Prev: Core Functions,  Up:
 
 Tag Table:
 Node: Top808
-Node: Introduction2115
-Node: Creating Sections2885
-Node: Core Functions7818
-Node: Matching Functions10970
+Node: Introduction2116
+Node: Creating Sections2886
+Node: Core Functions7819
+Node: Matching Functions10971
 
 End Tag Table
 
