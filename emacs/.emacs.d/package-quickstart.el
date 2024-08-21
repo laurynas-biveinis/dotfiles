@@ -2949,7 +2949,7 @@ EXIT-CODE-SUCCESS-P
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.5/rust-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.5/rust-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-20240520.749/rust-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-20240520.749/rust-mode-autoloads.el"))
 
 
 
@@ -2962,22 +2962,26 @@ EXIT-CODE-SUCCESS-P
 
 
 
+(register-definition-prefixes "rust-common" '("rust-"))
+
+
+
 (register-definition-prefixes "rust-compile" '("cargo-compilation-regexps" "rustc-"))
 
 
 
 (autoload 'rust-mode "rust-mode" "\
-Major mode for Rust code.
-
-\\{rust-mode-map}
-
-(fn)" t)
+Major mode for Rust code." t)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (register-definition-prefixes "rust-mode" '("rust-"))
 
 
 
 (register-definition-prefixes "rust-playpen" '("rust-"))
+
+
+
+(register-definition-prefixes "rust-prog-mode" '("rust-"))
 
 
 
@@ -2988,7 +2992,6 @@ Major mode for Rust code.
 (autoload 'rust-dbg-wrap-or-unwrap "rust-utils" "\
 Either remove or add the dbg! macro." t)
 (register-definition-prefixes "rust-utils" '("rust-"))
-
 
 
 (provide 'rust-mode-autoloads)
@@ -3063,7 +3066,281 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rustic-3.4/rustic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rustic-3.4/rustic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.1/flycheck-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.1/flycheck-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'flycheck-manual "flycheck" "\
+Open the Flycheck manual." t)
+(autoload 'flycheck-mode "flycheck" "\
+Flycheck is a minor mode for on-the-fly syntax checking.
+
+In `flycheck-mode' the buffer is automatically syntax-checked
+using the first suitable syntax checker from `flycheck-checkers'.
+Use `flycheck-select-checker' to select a checker for the current
+buffer manually.
+
+If you run into issues, use `\\[flycheck-verify-setup]' to get help.
+
+Flycheck supports many languages out of the box, and many
+additional ones are available on MELPA.  Adding new ones is very
+easy.  Complete documentation is available online at URL
+`https://www.flycheck.org/en/latest/'.  Please report issues and
+request features at URL `https://github.com/flycheck/flycheck'.
+
+Flycheck displays its status in the mode line.  In the default
+configuration, it looks like this:
+
+`FlyC'     This buffer has not been checked yet.
+`FlyC-'    Flycheck doesn't have a checker for this buffer.
+`FlyC*'    Flycheck is running.  Expect results soon!
+`FlyC:3|2' This buffer contains three warnings and two errors.
+           Use `\\[flycheck-list-errors]' to see the list.
+
+You may also see the following icons:
+`FlyC!'    The checker crashed.
+`FlyC.'    The last syntax check was manually interrupted.
+`FlyC?'    The checker did something unexpected, like exiting with 1
+           but returning no errors.
+
+The following keybindings are available in `flycheck-mode':
+
+\\{flycheck-mode-map}
+(you can change the prefix by customizing
+`flycheck-keymap-prefix')
+
+If called interactively, enable Flycheck mode if ARG is positive,
+and disable it if ARG is zero or negative.  If called from Lisp,
+also enable the mode if ARG is omitted or nil, and toggle it if
+ARG is ‘toggle’; disable the mode otherwise.
+
+(fn &optional ARG)" t)
+(put 'global-flycheck-mode 'globalized-minor-mode t)
+(defvar global-flycheck-mode nil "\
+Non-nil if Global Flycheck mode is enabled.
+See the `global-flycheck-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-flycheck-mode'.")
+(custom-autoload 'global-flycheck-mode "flycheck" nil)
+(autoload 'global-flycheck-mode "flycheck" "\
+Toggle Flycheck mode in all buffers.
+With prefix ARG, enable Global Flycheck mode if ARG is positive; otherwise,
+disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Flycheck mode is enabled in all buffers where `flycheck-mode-on-safe' would do
+it.
+
+See `flycheck-mode' for more information on Flycheck mode.
+
+(fn &optional ARG)" t)
+(autoload 'flycheck-define-error-level "flycheck" "\
+Define a new error LEVEL with PROPERTIES.
+
+The following PROPERTIES constitute an error level:
+
+`:severity SEVERITY'
+     A number denoting the severity of this level.  The higher
+     the number, the more severe is this level compared to other
+     levels.  Defaults to 0; info is -10, warning is 10, and
+     error is 100.
+
+     The severity is used by `flycheck-error-level-<' to
+     determine the ordering of errors according to their levels.
+
+`:compilation-level LEVEL'
+
+     A number indicating the broad class of messages that errors
+     at this level belong to: one of 0 (info), 1 (warning), or
+     2 or nil (error).  Defaults to nil.
+
+     This is used by `flycheck-checker-pattern-to-error-regexp'
+     to map error levels into `compilation-mode''s hierarchy and
+     to get proper highlighting of errors in `compilation-mode'.
+
+`:overlay-category CATEGORY'
+     A symbol denoting the overlay category to use for error
+     highlight overlays for this level.  See Info
+     node `(elisp)Overlay Properties' for more information about
+     overlay categories.
+
+     A category for an error level overlay should at least define
+     the `face' property, for error highlighting.  Another useful
+     property for error level categories is `priority', to
+     influence the stacking of multiple error level overlays.
+
+`:fringe-bitmap BITMAPS'
+     A fringe bitmap symbol denoting the bitmap to use for fringe
+     indicators for this level, or a cons of two bitmaps (one for
+     narrow fringes and one for wide fringes).  See Info node
+     `(elisp)Fringe Bitmaps' for more information about fringe
+     bitmaps, including a list of built-in fringe bitmaps.
+
+`:fringe-face FACE'
+     A face symbol denoting the face to use for fringe indicators
+     for this level.
+
+`:margin-spec SPEC'
+     A display specification indicating what to display in the
+     margin when `flycheck-indication-mode' is `left-margin' or
+     `right-margin'.  See Info node `(elisp)Displaying in the
+     Margins'.  If omitted, Flycheck generates an image spec from
+     the fringe bitmap.
+
+`:error-list-face FACE'
+     A face symbol denoting the face to use for messages of this
+     level in the error list.  See `flycheck-list-errors'.
+
+(fn LEVEL &rest PROPERTIES)")
+(function-put 'flycheck-define-error-level 'lisp-indent-function 1)
+(autoload 'flycheck-define-command-checker "flycheck" "\
+Define SYMBOL as syntax checker to run a command.
+
+Define SYMBOL as generic syntax checker via
+`flycheck-define-generic-checker', which uses an external command
+to check the buffer.  SYMBOL and DOCSTRING are the same as for
+`flycheck-define-generic-checker'.
+
+In addition to the properties understood by
+`flycheck-define-generic-checker', the following PROPERTIES
+constitute a command syntax checker.  Unless otherwise noted, all
+properties are mandatory.  Note that the default `:error-filter'
+of command checkers is `flycheck-sanitize-errors'.
+
+`:command COMMAND'
+     The command to run for syntax checking.
+
+     COMMAND is a list of the form `(EXECUTABLE [ARG ...])'.
+
+     EXECUTABLE is a string with the executable of this syntax
+     checker.  It can be overridden with the variable
+     `flycheck-SYMBOL-executable'.  Note that this variable is
+     NOT implicitly defined by this function.  Use
+     `flycheck-def-executable-var' to define this variable.
+
+     Each ARG is an argument to the executable, either as string,
+     or as special symbol or form for
+     `flycheck-substitute-argument', which see.
+
+`:error-patterns PATTERNS'
+     A list of patterns to parse the output of the `:command'.
+
+     Each ITEM in PATTERNS is a list `(LEVEL SEXP ...)', where
+     LEVEL is a Flycheck error level (see
+     `flycheck-define-error-level'), followed by one or more RX
+     `SEXP's which parse an error of that level and extract line,
+     column, file name and the message.
+
+     See `rx' for general information about RX, and
+     `flycheck-rx-to-string' for some special RX forms provided
+     by Flycheck.
+
+     All patterns are applied in the order of declaration to the
+     whole output of the syntax checker.  Output already matched
+     by a pattern will not be matched by subsequent patterns.  In
+     other words, the first pattern wins.
+
+     This property is optional.  If omitted, however, an
+     `:error-parser' is mandatory.
+
+`:error-parser FUNCTION'
+     A function to parse errors with.
+
+     The function shall accept three arguments OUTPUT CHECKER
+     BUFFER.  OUTPUT is the syntax checker output as string,
+     CHECKER the syntax checker that was used, and BUFFER a
+     buffer object representing the checked buffer.  The function
+     must return a list of `flycheck-error' objects parsed from
+     OUTPUT.
+
+     This property is optional.  If omitted, it defaults to
+     `flycheck-parse-with-patterns'.  In this case,
+     `:error-patterns' is mandatory.
+
+`:standard-input t'
+     Whether to send the buffer contents on standard input.
+
+     If this property is given and has a non-nil value, send the
+     contents of the buffer on standard input.
+
+     Defaults to nil.
+
+Note that you may not give `:start', `:interrupt', and
+`:print-doc' for a command checker.  You can give a custom
+`:verify' function, though, whose results will be appended to the
+default `:verify' function of command checkers.
+
+(fn SYMBOL DOCSTRING &rest PROPERTIES)")
+(function-put 'flycheck-define-command-checker 'lisp-indent-function 1)
+(function-put 'flycheck-define-command-checker 'doc-string-elt 2)
+(autoload 'flycheck-def-config-file-var "flycheck" "\
+Define SYMBOL as config file variable for CHECKER, with default FILE-NAME.
+
+SYMBOL is declared as customizable variable using `defcustom', to
+provide configuration files for the given syntax CHECKER.
+CUSTOM-ARGS are forwarded to `defcustom'.
+
+FILE-NAME is the initial value of the new variable.  If omitted,
+the default value is nil.  It can be either a string or a list of
+strings.
+
+Use this together with the `config-file' form in the `:command'
+argument to `flycheck-define-checker'.
+
+(fn SYMBOL CHECKER &optional FILE-NAME &rest CUSTOM-ARGS)" nil t)
+(function-put 'flycheck-def-config-file-var 'lisp-indent-function 3)
+(autoload 'flycheck-def-option-var "flycheck" "\
+Define SYMBOL as option variable with INIT-VALUE for CHECKER.
+
+SYMBOL is declared as customizable variable using `defcustom', to
+provide an option for the given syntax CHECKERS (a checker or a
+list of checkers).  INIT-VALUE is the initial value of the
+variable, and DOCSTRING is its docstring.  CUSTOM-ARGS are
+forwarded to `defcustom'.
+
+Use this together with the `option', `option-list' and
+`option-flag' forms in the `:command' argument to
+`flycheck-define-checker'.
+
+(fn SYMBOL INIT-VALUE CHECKERS DOCSTRING &rest CUSTOM-ARGS)" nil t)
+(function-put 'flycheck-def-option-var 'lisp-indent-function 3)
+(function-put 'flycheck-def-option-var 'doc-string-elt 4)
+(autoload 'flycheck-define-checker "flycheck" "\
+Define SYMBOL as command syntax checker with DOCSTRING and PROPERTIES.
+
+Like `flycheck-define-command-checker', but PROPERTIES must not
+be quoted.  Also, implicitly define the executable variable for
+SYMBOL with `flycheck-def-executable-var'.
+
+(fn SYMBOL DOCSTRING &rest PROPERTIES)" nil t)
+(function-put 'flycheck-define-checker 'lisp-indent-function 1)
+(function-put 'flycheck-define-checker 'doc-string-elt 2)
+(register-definition-prefixes "flycheck" '("flycheck-" "help-flycheck-checker-d" "list-flycheck-errors"))
+
+
+
+(register-definition-prefixes "flycheck-buttercup" '("flycheck-buttercup-format-error-list"))
+
+
+
+(register-definition-prefixes "flycheck-ert" '("flycheck-er"))
+
+
+(provide 'flycheck-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rustic-20240819.1214/rustic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rustic-20240819.1214/rustic-autoloads.el"))
 
 
 
@@ -3094,8 +3371,9 @@ Start compilation process for 'cargo test' with optional TEST-ARGS.
 (autoload 'rustic-cargo-test "rustic-cargo" "\
 Run 'cargo test'.
 
-If ARG is not nil, use value as argument and store it in `rustic-test-arguments'.
-When calling this function from `rustic-popup-mode', always use the value of
+If ARG is not nil, use value as argument and store it in
+`rustic-test-arguments'.  When calling this function from
+`rustic-popup-mode', always use the value of
 `rustic-test-arguments'.
 
 (fn &optional ARG)" t)
@@ -3251,10 +3529,11 @@ When calling this function from `rustic-popup-mode', always use the value of
 
 (fn &optional ARG)" t)
 (autoload 'rustic-cargo-comint-run-rerun "rustic-comint" "\
-Run 'cargo run' with `rustic-run-comint-arguments'." t)
+Run `cargo run' with `rustic-run-comint-arguments'." t)
 (autoload 'rustic-cargo-plain-run "rustic-comint" "\
-Run 'cargo run' for the current project.
-If running with prefix command `C-u', read whole command from minibuffer.
+Run `cargo run' for the current project.
+Read the full command from the minibuffer when ARG is non-nil or
+when called with a prefix command \\[universal-argument].
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "rustic-comint" '("poly-rustic-cargo-comint-switch-buffer-hook" "rustic-"))
@@ -3264,9 +3543,10 @@ If running with prefix command `C-u', read whole command from minibuffer.
 (autoload 'rustic-compile "rustic-compile" "\
 Compile rust project.
 
-If `compilation-read-command' is non-nil or if called with prefix
-argument ARG then read the command in the minibuffer.  Otherwise
-use `rustic-compile-command'.
+If the variable `compilation-read-command' is non-nil or if
+`rustic-compile` is called with prefix argument ARG then read the
+command in the minibuffer.  Otherwise use
+`rustic-compile-command'.
 
 In either store the used command in `compilation-arguments'.
 
@@ -3323,6 +3603,8 @@ evaluate `rustic-doc-mode'.
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
 
+\\{rustic-doc-mode-map}
+
 (fn &optional ARG)" t)
 (register-definition-prefixes "rustic-doc" '("rustic-doc-"))
 
@@ -3360,19 +3642,19 @@ visiting a project." t)
 
 
 (autoload 'rustic-analyzer-macro-expand "rustic-lsp" "\
-Default method for displaying macro expansion results.
+Default method for displaying macro expansion RESULT .
 
-(fn RESULT)" t)
+(fn RESULT)")
 (register-definition-prefixes "rustic-lsp" '("rustic-"))
 
 
 
-(autoload 'rustic-playpen "rustic-playpen" "\
+(autoload 'rustic-playground "rustic-playground" "\
 Create a shareable URL for the contents of the current region,
-src-block or buffer on the Rust playpen.
+src-block or buffer on the Rust playground.
 
 (fn BEGIN END)" t)
-(register-definition-prefixes "rustic-playpen" '("rustic-"))
+(register-definition-prefixes "rustic-playground" '("rustic-"))
 
 
 
@@ -3393,12 +3675,6 @@ Display help buffer for cargo command at point." t)
 (autoload 'rustic-popup-kill-help-buffer "rustic-popup" "\
 Kill popup help buffer and switch to popup buffer." t)
 (register-definition-prefixes "rustic-popup" '("rustic-"))
-
-
-
-(autoload 'rustic-racer-describe "rustic-racer" "\
-Show a *Racer Help* buffer for the function or type at point." t)
-(register-definition-prefixes "rustic-racer" '("racer-src-button" "rustic-racer-"))
 
 
 
@@ -3427,7 +3703,7 @@ Unlike `rustic-format-buffer' format file directly and revert the buffer.
 
 
 (autoload 'rustic-cargo-spellcheck "rustic-spellcheck" "\
-Run 'cargo spellcheck'.
+Run `cargo spellcheck'.
 
 If ARG is not nil, use value as argument and store it in
 `rustic-spellcheck-arguments'.  When calling this function from
@@ -3436,7 +3712,7 @@ If ARG is not nil, use value as argument and store it in
 
 (fn &optional ARG)" t)
 (autoload 'rustic-cargo-spellcheck-rerun "rustic-spellcheck" "\
-Run 'cargo spellcheck' with `rustic-spellcheck-arguments'." t)
+Run `cargo spellcheck' with `rustic-spellcheck-arguments'." t)
 (register-definition-prefixes "rustic-spellcheck" '("rustic-"))
 
 
@@ -10509,280 +10785,6 @@ heavy development." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.1/flycheck-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.1/flycheck-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'flycheck-manual "flycheck" "\
-Open the Flycheck manual." t)
-(autoload 'flycheck-mode "flycheck" "\
-Flycheck is a minor mode for on-the-fly syntax checking.
-
-In `flycheck-mode' the buffer is automatically syntax-checked
-using the first suitable syntax checker from `flycheck-checkers'.
-Use `flycheck-select-checker' to select a checker for the current
-buffer manually.
-
-If you run into issues, use `\\[flycheck-verify-setup]' to get help.
-
-Flycheck supports many languages out of the box, and many
-additional ones are available on MELPA.  Adding new ones is very
-easy.  Complete documentation is available online at URL
-`https://www.flycheck.org/en/latest/'.  Please report issues and
-request features at URL `https://github.com/flycheck/flycheck'.
-
-Flycheck displays its status in the mode line.  In the default
-configuration, it looks like this:
-
-`FlyC'     This buffer has not been checked yet.
-`FlyC-'    Flycheck doesn't have a checker for this buffer.
-`FlyC*'    Flycheck is running.  Expect results soon!
-`FlyC:3|2' This buffer contains three warnings and two errors.
-           Use `\\[flycheck-list-errors]' to see the list.
-
-You may also see the following icons:
-`FlyC!'    The checker crashed.
-`FlyC.'    The last syntax check was manually interrupted.
-`FlyC?'    The checker did something unexpected, like exiting with 1
-           but returning no errors.
-
-The following keybindings are available in `flycheck-mode':
-
-\\{flycheck-mode-map}
-(you can change the prefix by customizing
-`flycheck-keymap-prefix')
-
-If called interactively, enable Flycheck mode if ARG is positive,
-and disable it if ARG is zero or negative.  If called from Lisp,
-also enable the mode if ARG is omitted or nil, and toggle it if
-ARG is ‘toggle’; disable the mode otherwise.
-
-(fn &optional ARG)" t)
-(put 'global-flycheck-mode 'globalized-minor-mode t)
-(defvar global-flycheck-mode nil "\
-Non-nil if Global Flycheck mode is enabled.
-See the `global-flycheck-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `global-flycheck-mode'.")
-(custom-autoload 'global-flycheck-mode "flycheck" nil)
-(autoload 'global-flycheck-mode "flycheck" "\
-Toggle Flycheck mode in all buffers.
-With prefix ARG, enable Global Flycheck mode if ARG is positive; otherwise,
-disable it.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.
-Enable the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-Flycheck mode is enabled in all buffers where `flycheck-mode-on-safe' would do
-it.
-
-See `flycheck-mode' for more information on Flycheck mode.
-
-(fn &optional ARG)" t)
-(autoload 'flycheck-define-error-level "flycheck" "\
-Define a new error LEVEL with PROPERTIES.
-
-The following PROPERTIES constitute an error level:
-
-`:severity SEVERITY'
-     A number denoting the severity of this level.  The higher
-     the number, the more severe is this level compared to other
-     levels.  Defaults to 0; info is -10, warning is 10, and
-     error is 100.
-
-     The severity is used by `flycheck-error-level-<' to
-     determine the ordering of errors according to their levels.
-
-`:compilation-level LEVEL'
-
-     A number indicating the broad class of messages that errors
-     at this level belong to: one of 0 (info), 1 (warning), or
-     2 or nil (error).  Defaults to nil.
-
-     This is used by `flycheck-checker-pattern-to-error-regexp'
-     to map error levels into `compilation-mode''s hierarchy and
-     to get proper highlighting of errors in `compilation-mode'.
-
-`:overlay-category CATEGORY'
-     A symbol denoting the overlay category to use for error
-     highlight overlays for this level.  See Info
-     node `(elisp)Overlay Properties' for more information about
-     overlay categories.
-
-     A category for an error level overlay should at least define
-     the `face' property, for error highlighting.  Another useful
-     property for error level categories is `priority', to
-     influence the stacking of multiple error level overlays.
-
-`:fringe-bitmap BITMAPS'
-     A fringe bitmap symbol denoting the bitmap to use for fringe
-     indicators for this level, or a cons of two bitmaps (one for
-     narrow fringes and one for wide fringes).  See Info node
-     `(elisp)Fringe Bitmaps' for more information about fringe
-     bitmaps, including a list of built-in fringe bitmaps.
-
-`:fringe-face FACE'
-     A face symbol denoting the face to use for fringe indicators
-     for this level.
-
-`:margin-spec SPEC'
-     A display specification indicating what to display in the
-     margin when `flycheck-indication-mode' is `left-margin' or
-     `right-margin'.  See Info node `(elisp)Displaying in the
-     Margins'.  If omitted, Flycheck generates an image spec from
-     the fringe bitmap.
-
-`:error-list-face FACE'
-     A face symbol denoting the face to use for messages of this
-     level in the error list.  See `flycheck-list-errors'.
-
-(fn LEVEL &rest PROPERTIES)")
-(function-put 'flycheck-define-error-level 'lisp-indent-function 1)
-(autoload 'flycheck-define-command-checker "flycheck" "\
-Define SYMBOL as syntax checker to run a command.
-
-Define SYMBOL as generic syntax checker via
-`flycheck-define-generic-checker', which uses an external command
-to check the buffer.  SYMBOL and DOCSTRING are the same as for
-`flycheck-define-generic-checker'.
-
-In addition to the properties understood by
-`flycheck-define-generic-checker', the following PROPERTIES
-constitute a command syntax checker.  Unless otherwise noted, all
-properties are mandatory.  Note that the default `:error-filter'
-of command checkers is `flycheck-sanitize-errors'.
-
-`:command COMMAND'
-     The command to run for syntax checking.
-
-     COMMAND is a list of the form `(EXECUTABLE [ARG ...])'.
-
-     EXECUTABLE is a string with the executable of this syntax
-     checker.  It can be overridden with the variable
-     `flycheck-SYMBOL-executable'.  Note that this variable is
-     NOT implicitly defined by this function.  Use
-     `flycheck-def-executable-var' to define this variable.
-
-     Each ARG is an argument to the executable, either as string,
-     or as special symbol or form for
-     `flycheck-substitute-argument', which see.
-
-`:error-patterns PATTERNS'
-     A list of patterns to parse the output of the `:command'.
-
-     Each ITEM in PATTERNS is a list `(LEVEL SEXP ...)', where
-     LEVEL is a Flycheck error level (see
-     `flycheck-define-error-level'), followed by one or more RX
-     `SEXP's which parse an error of that level and extract line,
-     column, file name and the message.
-
-     See `rx' for general information about RX, and
-     `flycheck-rx-to-string' for some special RX forms provided
-     by Flycheck.
-
-     All patterns are applied in the order of declaration to the
-     whole output of the syntax checker.  Output already matched
-     by a pattern will not be matched by subsequent patterns.  In
-     other words, the first pattern wins.
-
-     This property is optional.  If omitted, however, an
-     `:error-parser' is mandatory.
-
-`:error-parser FUNCTION'
-     A function to parse errors with.
-
-     The function shall accept three arguments OUTPUT CHECKER
-     BUFFER.  OUTPUT is the syntax checker output as string,
-     CHECKER the syntax checker that was used, and BUFFER a
-     buffer object representing the checked buffer.  The function
-     must return a list of `flycheck-error' objects parsed from
-     OUTPUT.
-
-     This property is optional.  If omitted, it defaults to
-     `flycheck-parse-with-patterns'.  In this case,
-     `:error-patterns' is mandatory.
-
-`:standard-input t'
-     Whether to send the buffer contents on standard input.
-
-     If this property is given and has a non-nil value, send the
-     contents of the buffer on standard input.
-
-     Defaults to nil.
-
-Note that you may not give `:start', `:interrupt', and
-`:print-doc' for a command checker.  You can give a custom
-`:verify' function, though, whose results will be appended to the
-default `:verify' function of command checkers.
-
-(fn SYMBOL DOCSTRING &rest PROPERTIES)")
-(function-put 'flycheck-define-command-checker 'lisp-indent-function 1)
-(function-put 'flycheck-define-command-checker 'doc-string-elt 2)
-(autoload 'flycheck-def-config-file-var "flycheck" "\
-Define SYMBOL as config file variable for CHECKER, with default FILE-NAME.
-
-SYMBOL is declared as customizable variable using `defcustom', to
-provide configuration files for the given syntax CHECKER.
-CUSTOM-ARGS are forwarded to `defcustom'.
-
-FILE-NAME is the initial value of the new variable.  If omitted,
-the default value is nil.  It can be either a string or a list of
-strings.
-
-Use this together with the `config-file' form in the `:command'
-argument to `flycheck-define-checker'.
-
-(fn SYMBOL CHECKER &optional FILE-NAME &rest CUSTOM-ARGS)" nil t)
-(function-put 'flycheck-def-config-file-var 'lisp-indent-function 3)
-(autoload 'flycheck-def-option-var "flycheck" "\
-Define SYMBOL as option variable with INIT-VALUE for CHECKER.
-
-SYMBOL is declared as customizable variable using `defcustom', to
-provide an option for the given syntax CHECKERS (a checker or a
-list of checkers).  INIT-VALUE is the initial value of the
-variable, and DOCSTRING is its docstring.  CUSTOM-ARGS are
-forwarded to `defcustom'.
-
-Use this together with the `option', `option-list' and
-`option-flag' forms in the `:command' argument to
-`flycheck-define-checker'.
-
-(fn SYMBOL INIT-VALUE CHECKERS DOCSTRING &rest CUSTOM-ARGS)" nil t)
-(function-put 'flycheck-def-option-var 'lisp-indent-function 3)
-(function-put 'flycheck-def-option-var 'doc-string-elt 4)
-(autoload 'flycheck-define-checker "flycheck" "\
-Define SYMBOL as command syntax checker with DOCSTRING and PROPERTIES.
-
-Like `flycheck-define-command-checker', but PROPERTIES must not
-be quoted.  Also, implicitly define the executable variable for
-SYMBOL with `flycheck-def-executable-var'.
-
-(fn SYMBOL DOCSTRING &rest PROPERTIES)" nil t)
-(function-put 'flycheck-define-checker 'lisp-indent-function 1)
-(function-put 'flycheck-define-checker 'doc-string-elt 2)
-(register-definition-prefixes "flycheck" '("flycheck-" "help-flycheck-checker-d" "list-flycheck-errors"))
-
-
-
-(register-definition-prefixes "flycheck-buttercup" '("flycheck-buttercup-format-error-list"))
-
-
-
-(register-definition-prefixes "flycheck-ert" '("flycheck-er"))
-
-
-(provide 'flycheck-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-status-emoji-1.3/flycheck-status-emoji-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-status-emoji-1.3/flycheck-status-emoji-autoloads.el"))
 
 
@@ -11819,7 +11821,7 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)

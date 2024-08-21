@@ -727,6 +727,8 @@
 ;; `rust-mode'
 (require 'rust-mode)
 
+(setq rust-mode-treesitter-derive t)
+
 (defun dotfiles--rust-set-fill-column ()
   "Set the correct `fill-column' for `rust-mode'."
   (dotfiles--set-fill-column 100))
