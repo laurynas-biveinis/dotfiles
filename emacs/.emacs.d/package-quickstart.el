@@ -2949,7 +2949,7 @@ EXIT-CODE-SUCCESS-P
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-20240822.245/rust-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-20240822.245/rust-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.6/rust-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rust-mode-1.0.6/rust-mode-autoloads.el"))
 
 
 
