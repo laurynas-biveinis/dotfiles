@@ -25,6 +25,12 @@
 
 (require 'my-global-keys)
 
+;;; Internals
+
+;; So that `memory-report' works
+(setq max-lisp-eval-depth 51200)
+
+
 ;;; Encodings
 
 (set-language-environment "UTF-8")
