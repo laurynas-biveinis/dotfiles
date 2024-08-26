@@ -429,7 +429,7 @@
 	       (:url . "https://elpa.gnu.org/packages/breadcrumb.html")
 	       (:commit . "ff5fb77e2556c42aee9f1131f824bdfb955d861f"))])
  (brief .
-	[(5 91)
+	[(5 92)
 	 ((nadvice
 	   (0 3))
 	  (cl-lib
@@ -440,7 +440,7 @@
 	  (:authors
 	   ("Luke Lee" . "luke.yx.lee@gmail.com"))
 	  (:url . "https://elpa.gnu.org/packages/brief.html")
-	  (:commit . "1d1d8fe291d785512eaa746dc2e5cd6dac96585c"))])
+	  (:commit . "58c2f484100fecd89248c476e3baf222cda5c7c7"))])
  (buffer-env .
 	     [(0 6)
 	      ((emacs
@@ -902,7 +902,7 @@
 		 (:url . "https://elpa.gnu.org/packages/cycle-quotes.html")
 		 (:commit . "836b19b39651419876e65cdb1a91e3eef83cc4e7"))])
  (dape .
-       [(0 14 0)
+       [(0 15 0)
 	((emacs
 	  (29 1))
 	 (jsonrpc
@@ -910,7 +910,7 @@
 	"Debug Adapter Protocol for Emacs" tar
 	((:url . "https://github.com/svaante/dape")
 	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
-	 (:commit . "e034ecedebc38c7f4c1e5d62044c231482b155d2"))])
+	 (:commit . "b272d855333ccca6d42ec0957c7f6326a72fe22e"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -2367,7 +2367,7 @@
 	(:url . "https://elpa.gnu.org/packages/kmb.html")
 	(:commit . "4fee1c87e7e286d7ecd759fb74aa7a112bb51e3a"))])
  (kubed .
-	[(0 3 2)
+	[(0 4 0)
 	 ((emacs
 	   (29 1)))
 	 "Kubernetes, Emacs, done!" tar
@@ -2376,7 +2376,7 @@
 	  (:maintainer "Eshel Yaron" . "~eshel/kubed-devel@lists.sr.ht")
 	  (:authors
 	   ("Eshel Yaron" . "me@eshelyaron.com"))
-	  (:commit . "0863c58f1a8aedbc935fa6bb18bbdf3f7c1e939c"))])
+	  (:commit . "e5a83d7ff92f6f3c67f681ac97805a749658b664"))])
  (landmark .
 	   [(1 0)
 	    nil "Neural-network robot that learns landmarks" tar
@@ -2499,7 +2499,7 @@
 		      ("Sean Whitton" . "spwhitton@spwhitton.name"))
 		     (:commit . "c22a15e86acf28da716532c26ba1371574c8e979"))])
  (llm .
-      [(0 17 1)
+      [(0 17 2)
        ((emacs
 	 (28 1))
 	(plz
@@ -2509,7 +2509,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "806a703b91580c1c34d3bb5fe1d556b659f89bcf"))])
+	(:commit . "dc98688271afa11e1645744240573592b9d8c38a"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
@@ -3261,7 +3261,7 @@
 	    (:url . "https://elpa.gnu.org/packages/persist.html")
 	    (:commit . "5ea8f32ef50ce2b444d6918e17eedce9f74629af"))])
  (phpinspect .
-	     [(1 1 0)
+	     [(1 2 0)
 	      ((compat
 		(29)))
 	      "PHP parsing and code intelligence package" tar
@@ -3270,7 +3270,7 @@
 	       (:authors
 		("Hugo Thunnissen" . "devel@hugot.nl"))
 	       (:url . "https://elpa.gnu.org/packages/phpinspect.html")
-	       (:commit . "de248b090175b1ca2161a33eae963c6f9db5f45d"))])
+	       (:commit . "1ce40146b7294d257414ca4a3a6a834c0385d3e5"))])
  (phps-mode .
 	    [(0 4 49)
 	     ((emacs
@@ -4545,7 +4545,7 @@
 		   (:url . "https://elpa.gnu.org/packages/uniquify-files.html")
 		   (:commit . "1d76b4f0e283afaff2be053d85f8726ffc3abd6e"))])
  (urgrep .
-	 [(0 5 0)
+	 [(0 5 1)
 	  ((emacs
 	    (27 1))
 	   (compat
@@ -4555,7 +4555,7 @@
 	  "Universal recursive grep" tar
 	  ((:url . "https://github.com/jimporter/urgrep")
 	   (:keywords "grep" "search")
-	   (:commit . "df0bb61b3b99c9d1dabec42cb560a84230d20a4e"))])
+	   (:commit . "8af67d13dea234cf68868086d539f9fcbaf058ec"))])
  (url-http-ntlm .
 		[(2 0 5)
 		 ((cl-lib

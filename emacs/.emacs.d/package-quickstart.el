@@ -3340,7 +3340,7 @@ SYMBOL with `flycheck-def-executable-var'.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rustic-20240819.1214/rustic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rustic-20240819.1214/rustic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/rustic-3.5/rustic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/rustic-3.5/rustic-autoloads.el"))
 
 
 
