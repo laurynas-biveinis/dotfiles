@@ -996,11 +996,13 @@ mysql_build_all() {
 
 mtr() {
     declare -r mktemp_template="/tmp/mtr-XXXX"
-    declare -r mtr_emd_tmp_dir=$(mktemp -d $mktemp_template) ||
+    # The temp directory is left around for both successful and error returns in
+    # case a run needs to be reviewed or debugged.
+    declare -r mtr_emd_tmp_dir=$(mktemp -d "$mktemp_template") ||
         { 2>&1 echo "Failed to create a temp dir like $mktemp_template";
           return 1; }
 
-    ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@"
+    ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@" || return $?
 }
 
 rmtr() {
