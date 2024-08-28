@@ -5,11 +5,11 @@
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
-;; Version: 1.4.2
+;; Version: 1.4.4
 ;; Keywords: convenience, tooltip
 ;; Package-Requires: ((emacs "26.1"))
 
-;; This file is part of GNU Emacs.
+;; This file is not part of GNU Emacs.
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -125,7 +125,8 @@ effect.")
   (and (>= emacs-major-version 26)
        (not (or noninteractive
                 emacs-basic-display
-                (not (display-graphic-p))))))
+                (not (display-graphic-p))
+                (eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
 
 ;;;###autoload
 (cl-defun posframe-show (buffer-or-name
@@ -217,21 +218,22 @@ The builtin poshandler functions are listed below:
 2.  `posframe-poshandler-frame-top-center'
 3.  `posframe-poshandler-frame-top-left-corner'
 4.  `posframe-poshandler-frame-top-right-corner'
-5.  `posframe-poshandler-frame-bottom-center'
-6.  `posframe-poshandler-frame-bottom-left-corner'
-7.  `posframe-poshandler-frame-bottom-right-corner'
-8.  `posframe-poshandler-window-center'
-9.  `posframe-poshandler-window-top-center'
-10. `posframe-poshandler-window-top-left-corner'
-11. `posframe-poshandler-window-top-right-corner'
-12. `posframe-poshandler-window-bottom-center'
-13. `posframe-poshandler-window-bottom-left-corner'
-14. `posframe-poshandler-window-bottom-right-corner'
-15. `posframe-poshandler-point-top-left-corner'
-16. `posframe-poshandler-point-bottom-left-corner'
-17. `posframe-poshandler-point-bottom-left-corner-upward'
-18. `posframe-poshandler-point-window-center'
-19. `posframe-poshandler-point-frame-center'
+5.  `posframe-poshandler-frame-top-left-or-right-other-corner'
+6.  `posframe-poshandler-frame-bottom-center'
+7.  `posframe-poshandler-frame-bottom-left-corner'
+8.  `posframe-poshandler-frame-bottom-right-corner'
+9.  `posframe-poshandler-window-center'
+10.  `posframe-poshandler-window-top-center'
+11. `posframe-poshandler-window-top-left-corner'
+12. `posframe-poshandler-window-top-right-corner'
+13. `posframe-poshandler-window-bottom-center'
+14. `posframe-poshandler-window-bottom-left-corner'
+15. `posframe-poshandler-window-bottom-right-corner'
+16. `posframe-poshandler-point-top-left-corner'
+17. `posframe-poshandler-point-bottom-left-corner'
+18. `posframe-poshandler-point-bottom-left-corner-upward'
+19. `posframe-poshandler-point-window-center'
+20. `posframe-poshandler-point-frame-center'
 
  (3) POSHANDLER-EXTRA-INFO
 
@@ -355,7 +357,7 @@ when it is nil or it return nil, child-frame feature will be used
 and reference position will be deal with in Emacs.
 
 The user case I know at the moment is let ivy-posframe work well
-in EXWM environment (let posframe show on the other appliction
+in EXWM environment (let posframe show on the other application
 window).
 
          DO NOT USE UNLESS NECESSARY!!!
@@ -402,7 +404,9 @@ You can use `posframe-delete-all' to delete all posframes."
          (font-width (default-font-width))
          (font-height (with-current-buffer (window-buffer parent-window)
                         (posframe--get-font-height position)))
-         (mode-line-height (window-mode-line-height))
+         (mode-line-height (window-mode-line-height
+                            (and (window-minibuffer-p)
+                                 (ignore-errors (window-in-direction 'above)))))
          (minibuffer-height (window-pixel-height (minibuffer-window)))
          (header-line-height (window-header-line-height parent-window))
          (tab-line-height (if (functionp 'window-tab-line-height)
@@ -692,7 +696,7 @@ ACCEPT-FOCUS."
                        (undecorated . t)
                        (visibility . nil)
                        (cursor-type . nil)
-                       (minibuffer . nil)
+                       (minibuffer . ,(minibuffer-window parent-frame))
                        (left . ,(if (consp position) (car position) 0))
                        (top . ,(if (consp position) (cdr position) 0))
                        (width . 1)
@@ -708,7 +712,7 @@ ACCEPT-FOCUS."
          (or font (face-attribute 'default :font parent-frame)))
         (when border-color
           (if parent-frame
-	      (set-face-background
+              (set-face-background
                (if (facep 'child-frame-border)
                    'child-frame-border
                  'internal-border)
@@ -884,7 +888,7 @@ of `posframe-show'."
               (t (error "Posframe: have no valid poshandler"))))))
 
 (defun posframe--calculate-new-position (info position ref-position)
-  "Calcuate new position according to INFO, POSITION and REF-POSITION."
+  "Calculate new position according to INFO, POSITION and REF-POSITION."
   (let* ((parent-frame-width (plist-get info :parent-frame-width))
          (parent-frame-height (plist-get info :parent-frame-height))
          (posframe-width (plist-get info :posframe-width))
@@ -1280,6 +1284,25 @@ top right corner of frame.
 The structure of INFO can be found in docstring of
 `posframe-show'."
   '(-1 . 0))
+
+(defun posframe-poshandler-frame-top-left-or-right-other-corner (info)
+  "Posframe's position handler.
+
+This poshandler function let posframe align to top left or top right
+corner of frame, based on whether current window is relatively at left
+or right in the current frame.  If window is at left, place posframe on
+right, and vice versa.  (This is calculated by whether current window
+center is left or right to frame center.)
+
+The structure of INFO can be found in docstring of `posframe-show'."
+  (let ((window-left (plist-get info :parent-window-left))
+        (window-width (plist-get info :parent-window-width))
+        (frame-width (plist-get info :parent-frame-width)))
+    ;; when equal, put posframe on right because content in window tend to be on left
+    (if (<= (+ window-left (/ window-width 2))
+            (/ frame-width 2))
+        '(-1 . 0)
+      '(0 . 0))))
 
 (defun posframe-poshandler-frame-bottom-left-corner (info)
   "Posframe's position handler.
