@@ -181,6 +181,28 @@ ARGS must be properly quoted if needed."
      (when (string-suffix-p ".jpg" path t)
        (mm-save-part-to-file handle path)))))
 
+(require 'mu4e-compose)
+(require 'mu4e-draft)
+
+(defun dotfiles--send-email (context to subject body attachment success-fn)
+  "Send a mail in CONTEXT to TO with SUBJECT, BODY, ATTACHMENT, call SUCCESS-FN.
+The latter is called on success only."
+  (mu4e-context-switch nil context)
+  (let ((mu4e-compose-context-policy nil))
+    (mu4e-compose-new to subject))
+  (message-goto-body)
+  (insert body)
+  (mml-attach-file attachment)
+  (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
+      (progn
+        ;; Since the buffer will get destroyed immediately after the send
+        ;; attempt, adjust the buffer-local hook value and don't bother with
+        ;; cleaning it up.
+        (add-hook 'message-sent-hook success-fn nil t)
+        (message-send-and-exit))
+    (message-kill-buffer)
+    (user-error "Cancelled")))
+
 ;; GitHub helpers
 
 (defun dotfiles--get-gh-name-from-url (url)
