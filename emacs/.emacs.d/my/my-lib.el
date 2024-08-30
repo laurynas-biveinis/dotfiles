@@ -45,6 +45,17 @@
   (when (string-match regex string)
     (match-string 1 string)))
 
+;;; File helpers
+
+(defun dotfiles--find-latest-pdf (directory)
+  "Find the most recently created .pdf file in DIRECTORY."
+  (let* ((files (directory-files-and-attributes directory nil "\\.pdf$" t))
+         (sorted-files (sort files (lambda (a b)
+                                     (time-less-p (nth 6 b) (nth 6 a))))))
+    (if sorted-files
+        (file-name-nondirectory (car (car sorted-files)))
+      (user-error "No PDFs found in %s" directory))))
+
 ;;; External program helpers
 
 (defun dotfiles--open-file (file)
