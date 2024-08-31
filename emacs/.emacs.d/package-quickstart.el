@@ -10381,7 +10381,7 @@ A major mode for editing .gitignore files.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240425.647/git-gutter-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240425.647/git-gutter-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240830.1623/git-gutter-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240830.1623/git-gutter-autoloads.el"))
 
 
 
@@ -11822,15 +11822,15 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
-        package-activated-list)))
+	'(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section git-commit magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+	package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
-        (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.1" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.0.0" "/Users/laurynas/.emacs.d/elpa/magit-4.0.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.0.0" "/Users/laurynas/.emacs.d/elpa/transient-0.7.4" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.1" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
-         Info-directory-list)))
+	(append
+	 '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.1" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.0.0" "/Users/laurynas/.emacs.d/elpa/magit-4.0.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.0.0" "/Users/laurynas/.emacs.d/elpa/transient-0.7.4" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.1" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+	 Info-directory-list)))
 
 ;; Local Variables:
 ;; version-control: never
