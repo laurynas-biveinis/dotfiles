@@ -1067,15 +1067,15 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             org-delete-backward-char isearch-printing-char
                             magit-previous-line right-char forward-word
                             delete-backward-char scroll-up-command magit-commit
-                            c-electric-backspace org-agenda-next-line
+                            c-electric-backspace org-agenda-next-line find-file
                             mouse-drag-region mac-mwheel-scroll mouse-set-point
                             org-cycle backward-word save-buffer cycle-spacing
                             isearch-repeat-forward scroll-down-command
-                            beginning-of-visual-line windmove-right
-                            org-agenda-previous-line windmove-left
+                            beginning-of-visual-line windmove-right eval-defun
+                            org-agenda-previous-line windmove-left push-button
                             backward-delete-char-untabify org-ctrl-c-ctrl-c
                             org-beginning-of-line delete-forward-char
-                            set-mark-command backward-kill-word
+                            set-mark-command backward-kill-word magit-discard
                             python-indent-dedent-line-backspace
                             end-of-visual-line windmove-up kill-buffer
                             markdown-outdent-or-delete newline org-agenda-goto
@@ -1094,15 +1094,15 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             lsp-execute-code-action back-to-indentation
                             kill-word org-end-of-line markdown-enter-key
                             deadgrep-toggle-file-results with-indent-finish
-                            exit-minibuffer magit-status
+                            exit-minibuffer magit-status with-editor-finish
                             beginend-org-mode-goto-beginning flycheck-next-error
                             isearch-forward-thing-at-point kill-visual-line
                             isearch-repeat-backward beginend-prog-mode-goto-end
                             undo-tree-undo org-set-tags-command
-                            xref-go-back keyboard-quit
+                            xref-go-back keyboard-quit execute-extended-command
                             beginend-org-agenda-mode-goto-beginning
-                            deadgrep undo-tree-visualize-undo
-                            company-select-next-or-abort
+                            deadgrep undo-tree-visualize-undo describe-variable
+                            company-select-next-or-abort projectile-find-file
                             org-agenda-do-date-later org-shiftright lsp-rename
                             deadgrep-visit-result-other-window
                             beginning-of-buffer xwidget-webkit-scroll-down-line
@@ -1111,11 +1111,11 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             beginend-magit-status-mode-goto-beginning
                             mu4e~headers-quit-buffer org-shifttab
                             magit-commit-create beginend-org-mode-goto-end
-                            dired-next-line
-                            mu4e-search-rerun
+                            dired-next-line projectile-switch-project
+                            mu4e-search-rerun minibuffer-keyboard-quit
                             quit-window org-clock-in org-clock-out
-                            dired-previous-line
-                            xwidget-webkit-scroll-down
+                            dired-previous-line minibuffer-next-completion
+                            xwidget-webkit-scroll-down undo-tree-visualize-redo
                             org-clock-goto org-shiftleft org-yank))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
