@@ -20,6 +20,12 @@ jobs:
           - 25.3
           - 24.5
 
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
     steps:
     - uses: actions/checkout@v4
 
