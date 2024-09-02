@@ -195,6 +195,21 @@ ARGS must be properly quoted if needed."
 (require 'mu4e-compose)
 (require 'mu4e-draft)
 
+(defun dotfiles--do-send-email (to subject success-fn)
+  "Ask to send an already filled-out email to TO with SUBJECT, call SUCCESS-FN.
+TO and SUBJECT fields in the e-mail must be already filled out, as the arguments
+of this defun are only used for diagnostics. SUCCESS-FN is only called on
+success."
+  (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
+      (progn
+        ;; Since the buffer will get destroyed immediately after the send
+        ;; attempt, adjust the buffer-local hook value and don't bother with
+        ;; cleaning it up.
+        (add-hook 'message-sent-hook success-fn nil t)
+        (message-send-and-exit))
+    (message-kill-buffer)
+    (user-error "Cancelled")))
+
 (defun dotfiles--send-email (template attachments success-fn)
   "Send a mail using TEMPLATE with ATTACHMENTS, call SUCCESS-FN on success."
   (mu4e-context-switch nil (my-email-template-context template))
@@ -206,15 +221,7 @@ ARGS must be properly quoted if needed."
     (insert (my-email-template-body template))
     (dolist (attachment attachments)
       (mml-attach-file attachment))
-    (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
-        (progn
-          ;; Since the buffer will get destroyed immediately after the send
-          ;; attempt, adjust the buffer-local hook value and don't bother with
-          ;; cleaning it up.
-          (add-hook 'message-sent-hook success-fn nil t)
-          (message-send-and-exit))
-      (message-kill-buffer)
-      (user-error "Cancelled"))))
+    (dotfiles--do-send-email to subject success-fn)))
 
 ;; GitHub helpers
 
