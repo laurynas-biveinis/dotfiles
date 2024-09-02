@@ -3012,7 +3012,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "3847f311077efa17951a786d2759f2639c5f43c8"))])
  (org .
-      [(9 7 10)
+      [(9 7 11)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -3021,7 +3021,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "5ebd973e09d7a46d056f1cd9b5efc44e878cce9c"))])
+	(:commit . "6a5d0ed342efeb3a4c402672fbe9bfebd80af8b6"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -3272,7 +3272,7 @@
 	    (:url . "https://elpa.gnu.org/packages/persist.html")
 	    (:commit . "5ea8f32ef50ce2b444d6918e17eedce9f74629af"))])
  (phpinspect .
-	     [(1 2 0)
+	     [(2 0 0)
 	      ((compat
 		(29)))
 	      "PHP parsing and code intelligence package" tar
@@ -3281,7 +3281,7 @@
 	       (:authors
 		("Hugo Thunnissen" . "devel@hugot.nl"))
 	       (:url . "https://elpa.gnu.org/packages/phpinspect.html")
-	       (:commit . "1ce40146b7294d257414ca4a3a6a834c0385d3e5"))])
+	       (:commit . "95a29a39828e5122a13ebdec21734db5a46312d5"))])
  (phps-mode .
 	    [(0 4 49)
 	     ((emacs
@@ -4444,7 +4444,7 @@
 	       (:url . "https://elpa.gnu.org/packages/transcribe.html")
 	       (:commit . "89832e4cdc1e6d8262a4a2c9d1ff70f398b8faf0"))])
  (transient .
-	    [(0 7 4)
+	    [(0 7 5)
 	     ((emacs
 	       (26 1))
 	      (compat
@@ -4457,7 +4457,7 @@
 	      (:maintainer "Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev")
 	      (:authors
 	       ("Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev"))
-	      (:commit . "b2cb4e578f2362a0354c4a31a6bd89d6c4b63d63"))])
+	      (:commit . "3430943eaa3222cd2a487d4c102ec51e10e7e3c9"))])
  (transient-cycles .
 		   [(1 0)
 		    ((emacs
@@ -4496,7 +4496,7 @@
 	  ("Toby Cubitt" . "toby-predictive@dr-qubit.org"))
 	 (:commit . "e7326a61b1cd2605867063fcfc5ddddaeed6d993"))])
  (triples .
-	  [(0 3 5)
+	  [(0 4 0)
 	   ((seq
 	     (2 0))
 	    (emacs
@@ -4507,7 +4507,7 @@
 	    (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	    (:authors
 	     ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	    (:commit . "fc824c689d1935932e074d4563b0024a8a923d40"))])
+	    (:commit . "cf7f9c8dd77e47a1c32e0d0026df86a0eac4e2a5"))])
  (typo .
        [(1 0 1)
 	((emacs
