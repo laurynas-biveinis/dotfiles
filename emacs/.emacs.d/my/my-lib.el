@@ -181,28 +181,40 @@ ARGS must be properly quoted if needed."
      (when (string-suffix-p ".jpg" path t)
        (mm-save-part-to-file handle path)))))
 
+(cl-defstruct (my-email-template (:copier nil))
+  "An email template to be filled out and sent."
+  (context
+   nil :read-only t :type string :documentation "The `mu4e' context to use")
+  (to
+   nil :read-only t :type string :documentation "To: field")
+  (subject
+   nil :read-only t :type string :documentation "Subject: field")
+  (body
+   "" :read-only t :type string :documentation "E-mail body"))
+
 (require 'mu4e-compose)
 (require 'mu4e-draft)
 
-(defun dotfiles--send-email (context to subject body attachments success-fn)
-  "Send a mail in CONTEXT to TO with SUBJECT, BODY, ATTACHMENTS, call SUCCESS-FN.
-The latter is called on success only."
-  (mu4e-context-switch nil context)
-  (let ((mu4e-compose-context-policy nil))
-    (mu4e-compose-new to subject))
-  (message-goto-body)
-  (insert body)
-  (dolist (attachment attachments)
-    (mml-attach-file attachment))
-  (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
-      (progn
-        ;; Since the buffer will get destroyed immediately after the send
-        ;; attempt, adjust the buffer-local hook value and don't bother with
-        ;; cleaning it up.
-        (add-hook 'message-sent-hook success-fn nil t)
-        (message-send-and-exit))
-    (message-kill-buffer)
-    (user-error "Cancelled")))
+(defun dotfiles--send-email (template attachments success-fn)
+  "Send a mail using TEMPLATE with ATTACHMENTS, call SUCCESS-FN on success."
+  (mu4e-context-switch nil (my-email-template-context template))
+  (let ((mu4e-compose-context-policy nil)
+        (to (my-email-template-to template))
+        (subject (my-email-template-subject template)))
+    (mu4e-compose-new to subject)
+    (message-goto-body)
+    (insert (my-email-template-body template))
+    (dolist (attachment attachments)
+      (mml-attach-file attachment))
+    (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
+        (progn
+          ;; Since the buffer will get destroyed immediately after the send
+          ;; attempt, adjust the buffer-local hook value and don't bother with
+          ;; cleaning it up.
+          (add-hook 'message-sent-hook success-fn nil t)
+          (message-send-and-exit))
+      (message-kill-buffer)
+      (user-error "Cancelled"))))
 
 ;; GitHub helpers
 
