@@ -47,12 +47,14 @@ jobs:
     - name: Lint
       run: |
         emacs -Q --batch \
+              --eval "(package-initialize)" \
               --eval "(require 'package-lint)" \
               -f package-lint-batch-and-exit emacs/.emacs.d/my/my-org-gtd.el
 
     - name: Run tests
       run: |
         emacs -Q --batch \
+              --eval "(package-initialize)" \
               --eval "(add-to-list 'load-path (expand-file-name \"emacs/.emacs.d/my/\"))" \
               --eval "(require 'ert)" \
               -l my-org-gtd.el \
