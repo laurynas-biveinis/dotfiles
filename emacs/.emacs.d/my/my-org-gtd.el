@@ -1,4 +1,8 @@
-;;; my-org-gtd.el --- my GTD setup in `org'. -*- lexical-binding: t -*-
+;;; my-org-gtd.el --- My GTD setup in `org' -*- lexical-binding: t -*-
+
+;; Version: 0.1
+;; URL: https://github.com/laurynas-biveinis/dotfiles/
+;; Package-Requires: ((emacs "24.1"))
 
 ;;; Commentary:
 
