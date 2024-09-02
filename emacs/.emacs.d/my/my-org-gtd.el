@@ -38,11 +38,11 @@ Constructs `org-tag-alist' from `my-org-gtd-contexts',
 `my-org-gtd-waitingfor-tag', and `my-org-gtd-waitingfor-select'. Keeps any
 existing values."
   (setq org-tag-alist
-        (append '(:startgroup)
+        (append (list (cons :startgroup nil))
                 my-org-gtd-contexts
                 (list (cons my-org-gtd-waitingfor-tag
                             my-org-gtd-waitingfor-select))
-                '(:endgroup)
+                (list (cons :endgroup nil))
                 org-tag-alist)))
 
 (provide 'my-org-gtd)

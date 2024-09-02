@@ -16,11 +16,11 @@
         (my-org-gtd-waitingfor-select ?f))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
-                   '(:startgroup
+                   '((:startgroup)
                      ("@c1" . ?a)
                      ("@c2" . ?b)
                      ("@sometag" . ?f)
-                     :endgroup)))))
+                     (:endgroup))))))
 
 (ert-deftest org-tag-alist-construction-preexisting ()
   "Test that `org-tag-alist' is properly constructed, when it's non-empty."
@@ -30,11 +30,11 @@
         (my-org-gtd-waitingfor-select ?f))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
-                   '(:startgroup
+                   '((:startgroup)
                      ("@c1" . ?a)
                      ("@c2" . ?b)
                      ("@sometag" . ?f)
-                     :endgroup
+                     (:endgroup)
                      ("@p" . ?p))))))
 
 ;; TODO(laurynas): idempotency
