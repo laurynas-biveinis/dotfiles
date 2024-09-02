@@ -41,7 +41,8 @@ jobs:
       run: |
         emacs -Q --batch \
           --eval "(setq byte-compile-error-on-warn t)" \
-          -f batch-byte-compile emacs/.emacs.d/my/my-org-gtd.el
+          -f batch-byte-compile emacs/.emacs.d/my/my-org-gtd.el \
+          -f batch-byte-compile emacs/.emacs.d/my/my-org-gtd-test.el \
 
     - name: Lint
       run: |

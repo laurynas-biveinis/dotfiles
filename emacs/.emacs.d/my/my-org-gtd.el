@@ -37,12 +37,13 @@ together with (`my-org-gtd-waitingfor-tag' . `my-org-gtd-waitingfor-select')"
 Constructs `org-tag-alist' from `my-org-gtd-contexts',
 `my-org-gtd-waitingfor-tag', and `my-org-gtd-waitingfor-select'. Keeps any
 existing values."
-  (add-to-list
-   'org-tag-alist
-   (append '(:startgroup)
-           my-org-gtd-contexts
-           `((,my-org-gtd-waitingfor-tag . ,my-org-gtd-waitingfor-select))
-           '(:endgroup))))
+  (setq org-tag-alist
+        (append '(:startgroup)
+                my-org-gtd-contexts
+                (list (cons my-org-gtd-waitingfor-tag
+                            my-org-gtd-waitingfor-select))
+                '(:endgroup)
+                org-tag-alist)))
 
 (provide 'my-org-gtd)
 ;;; my-org-gtd.el ends here
