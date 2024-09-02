@@ -184,15 +184,16 @@ ARGS must be properly quoted if needed."
 (require 'mu4e-compose)
 (require 'mu4e-draft)
 
-(defun dotfiles--send-email (context to subject body attachment success-fn)
-  "Send a mail in CONTEXT to TO with SUBJECT, BODY, ATTACHMENT, call SUCCESS-FN.
+(defun dotfiles--send-email (context to subject body attachments success-fn)
+  "Send a mail in CONTEXT to TO with SUBJECT, BODY, ATTACHMENTS, call SUCCESS-FN.
 The latter is called on success only."
   (mu4e-context-switch nil context)
   (let ((mu4e-compose-context-policy nil))
     (mu4e-compose-new to subject))
   (message-goto-body)
   (insert body)
-  (mml-attach-file attachment)
+  (dolist (attachment attachments)
+    (mml-attach-file attachment))
   (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
       (progn
         ;; Since the buffer will get destroyed immediately after the send
