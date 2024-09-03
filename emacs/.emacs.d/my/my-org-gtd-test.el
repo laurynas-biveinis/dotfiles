@@ -13,7 +13,8 @@
   (let ((org-tag-alist nil)
         (my-org-gtd-contexts '(("@c1" . ?a) ("@c2" . ?b)))
         (my-org-gtd-waitingfor-tag "@sometag")
-        (my-org-gtd-waitingfor-select ?f))
+        (my-org-gtd-waitingfor-select ?f)
+        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -27,7 +28,8 @@
   (let ((org-tag-alist '(("@p" . ?p)))
         (my-org-gtd-contexts '(("@c1" . ?a) ("@c2" . ?b)))
         (my-org-gtd-waitingfor-tag "@sometag")
-        (my-org-gtd-waitingfor-select ?f))
+        (my-org-gtd-waitingfor-select ?f)
+        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -39,7 +41,8 @@
 
 (ert-deftest my-org-gtd-not-waitingfor ()
   "Test that `my-org-gtd-not-waitingfor' is initialized correctly."
-  (let ((my-org-gtd-waitingfor-tag "@foo"))
+  (let ((my-org-gtd-waitingfor-tag "@foo")
+        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-waitingfor "-@foo"))))
 
