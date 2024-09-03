@@ -37,6 +37,12 @@
                      (:endgroup)
                      ("@p" . ?p))))))
 
+(ert-deftest my-org-gtd-minus-waitingfor ()
+  "Test that `my-org-gtd-minus-waitingfor' is initialized correctly."
+  (let ((my-org-gtd-waitingfor-tag "@foo"))
+    (my-org-gtd-initialize)
+    (should (equal my-org-gtd-minus-waitingfor "-@foo"))))
+
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
 ;; TODO(laurynas): uniqueness in keys

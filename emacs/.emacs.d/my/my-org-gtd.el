@@ -19,9 +19,14 @@
 (defcustom my-org-gtd-contexts nil
   "Context strings and select keys for GTD contexts.
 They are exclusive and will be added as a single group to `org-tag-alist',
-together with (`my-org-gtd-waitingfor-tag' . `my-org-gtd-waitingfor-select')"
+together with (`my-org-gtd-waitingfor-tag' . `my-org-gtd-waitingfor-select') by
+`my-org-gtd-initialize'."
   :type '(repeat (cons string character))
   :group 'my-org-gtd)
+
+(defvar my-org-gtd-minus-waitingfor nil
+  "A substring for `org-agenda' blocks to exclude `my-org-gtd-waitingfor-tag'.
+Initialized by `my-org-gtd-initialize'.")
 
 (defcustom my-org-gtd-waitingfor-tag "@waitingfor"
   "The `org' tag used for GTD waiting-for items."
@@ -37,6 +42,7 @@ together with (`my-org-gtd-waitingfor-tag' . `my-org-gtd-waitingfor-select')"
 Constructs `org-tag-alist' from `my-org-gtd-contexts',
 `my-org-gtd-waitingfor-tag', and `my-org-gtd-waitingfor-select'. Keeps any
 existing values."
+  (setq my-org-gtd-minus-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
                 my-org-gtd-contexts
