@@ -24,7 +24,7 @@ together with (`my-org-gtd-waitingfor-tag' . `my-org-gtd-waitingfor-select') by
   :type '(repeat (cons string character))
   :group 'my-org-gtd)
 
-(defvar my-org-gtd-minus-waitingfor nil
+(defvar my-org-gtd-not-waitingfor nil
   "A substring for `org-agenda' blocks to exclude `my-org-gtd-waitingfor-tag'.
 Initialized by `my-org-gtd-initialize'.")
 
@@ -35,14 +35,29 @@ Initialized by `my-org-gtd-initialize'.")
 
 (defcustom my-org-gtd-waitingfor-select ?w
   "The character to select the GTD waiting-for tag."
-  :type '(character))
+  :type '(character)
+  :group 'my-org-gtd)
+
+(defcustom my-org-gtd-next-action-keyword "TODO(t!)"
+  "The TODO entry keyword that designates a GTD next action.
+It must be present in `org-todo-keywords', either directly or through per-file
+configuration."
+  :type '(string)
+  :group 'my-org-gtd)
 
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
 Constructs `org-tag-alist' from `my-org-gtd-contexts',
 `my-org-gtd-waitingfor-tag', and `my-org-gtd-waitingfor-select'. Keeps any
 existing values."
-  (setq my-org-gtd-minus-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
+  (let (keyword-found)
+    (dolist (todo-sequence org-todo-keywords)
+      (when (member my-org-gtd-next-action-keyword todo-sequence)
+        (setq keyword-found t)))
+    (unless keyword-found
+      (user-error "`my-org-gtd-next-action-keyword' must be preset in
+ `org-todo-keywords'")))
+  (setq my-org-gtd-not-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
                 my-org-gtd-contexts

@@ -37,11 +37,18 @@
                      (:endgroup)
                      ("@p" . ?p))))))
 
-(ert-deftest my-org-gtd-minus-waitingfor ()
-  "Test that `my-org-gtd-minus-waitingfor' is initialized correctly."
+(ert-deftest my-org-gtd-not-waitingfor ()
+  "Test that `my-org-gtd-not-waitingfor' is initialized correctly."
   (let ((my-org-gtd-waitingfor-tag "@foo"))
     (my-org-gtd-initialize)
-    (should (equal my-org-gtd-minus-waitingfor "-@foo"))))
+    (should (equal my-org-gtd-not-waitingfor "-@foo"))))
+
+(ert-deftest my-org-gtd-next-action-keyword-not-in-org-todo-keywords ()
+  "Test that the next action keyword must be present in `org-todo-keywords'."
+  (let ((my-org-gtd-next-action-keyword "ABSENT(a!)")
+        (org-todo-keywords
+         '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED"))))
+    (should-error (my-org-gtd-initialize))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
