@@ -98,14 +98,16 @@
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-t ()
   "Test `org-use-tag-inheritance' when it's t."
-  (let ((org-use-tag-inheritance t))
+  (let ((org-use-tag-inheritance t)
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)")))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance t))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-matching-regex ()
   "Test `org-use-tag-inheritance' matching `my-org-gtd-somedaymaybe-tag'."
   (let ((org-use-tag-inheritance "may.*")
-        (my-org-gtd-somedaymaybe-tag "maybe"))
+        (my-org-gtd-somedaymaybe-tag "maybe")
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)")))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance "may.*"))))
 
@@ -118,7 +120,8 @@
 (ert-deftest my-org-gtd-org-use-tag-inheritance-add-to-list ()
   "Test adding `my-org-gtd-somedaymaybe-tag' to `org-use-tag-inheritance'."
   (let ((org-use-tag-inheritance '("foo" "bar"))
-        (my-org-gtd-somedaymaybe-tag "somedaymaybe"))
+        (my-org-gtd-somedaymaybe-tag "somedaymaybe")
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)")))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance '("somedaymaybe" "foo" "bar")))))
 
