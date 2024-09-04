@@ -62,6 +62,18 @@ Initialized by `my-org-gtd-initialize'.")
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
+(defcustom my-org-gtd-somedaymaybe-tag "somedaymaybe"
+  "The `org' tag used for GTD someday/maybe items."
+  :type '(string)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
+
+(defcustom my-org-gtd-somedaymaybe-select ?m
+  "The character to select the GTD someday/maybe tag."
+  :type '(character)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
+
 (defcustom my-org-gtd-next-action-keyword "TODO"
   "The TODO entry keyword that designates a GTD next action.
 Projects also have this keyword (in addition to `my-org-gtd-project-tag' tag.)
@@ -114,6 +126,8 @@ variables."
                 (list (cons :endgroup nil))
                 (list (cons my-org-gtd-project-tag
                             my-org-gtd-project-select))
+                (list (cons my-org-gtd-somedaymaybe-tag
+                            my-org-gtd-somedaymaybe-select))
                 org-tag-alist))
   ;; Configure `org-gcal'
   (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
