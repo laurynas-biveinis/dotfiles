@@ -22,7 +22,8 @@ They are exclusive and will be added as a single group to `org-tag-alist',
 together with (`my-org-gtd-waitingfor-tag' . `my-org-gtd-waitingfor-select') by
 `my-org-gtd-initialize'."
   :type '(repeat (cons string character))
-  :group 'my-org-gtd)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
 
 (defvar my-org-gtd-not-waitingfor nil
   "A substring for `org-agenda' blocks to exclude `my-org-gtd-waitingfor-tag'.
@@ -31,29 +32,34 @@ Initialized by `my-org-gtd-initialize'.")
 (defcustom my-org-gtd-waitingfor-tag "@waitingfor"
   "The `org' tag used for GTD waiting-for items."
   :type '(string)
-  :group 'my-org-gtd)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
 
 (defcustom my-org-gtd-waitingfor-select ?w
   "The character to select the GTD waiting-for tag."
   :type '(character)
-  :group 'my-org-gtd)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
 
 (defcustom my-org-gtd-project-tag "project"
   "The `org' tag used for GTD projects."
   :type '(string)
-  :group 'my-org-gtd)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
 
 (defcustom my-org-gtd-project-select ?p
   "The character to select the GTD project tag."
   :type '(character)
-  :group 'my-org-gtd)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
 
 (defcustom my-org-gtd-next-action-keyword "TODO"
   "The TODO entry keyword that designates a GTD next action.
 It must be present in `org-todo-keywords', either directly or through per-file
 configuration, with an optional fast state selection character."
   :type '(string)
-  :group 'my-org-gtd)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
 
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
