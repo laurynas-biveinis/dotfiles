@@ -38,26 +38,31 @@ Initialized by `my-org-gtd-initialize'.")
   :type '(character)
   :group 'my-org-gtd)
 
-(defcustom my-org-gtd-next-action-keyword "TODO(t!)"
+(defcustom my-org-gtd-next-action-keyword "TODO"
   "The TODO entry keyword that designates a GTD next action.
 It must be present in `org-todo-keywords', either directly or through per-file
-configuration."
+configuration, with an optional fast state selection character."
   :type '(string)
   :group 'my-org-gtd)
 
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
-Constructs `org-tag-alist' from `my-org-gtd-contexts',
-`my-org-gtd-waitingfor-tag', and `my-org-gtd-waitingfor-select'. Keeps any
-existing values."
+Checks `org-todo-keywords' against `my-org-gtd-next-action-keyword', initializes
+`org-todo-repeat-to-state'. Constructs`org-tag-alist' while keeping any existing
+values from `my-org-gtd-contexts', `my-org-gtd-waitingfor-tag', and
+`my-org-gtd-waitingfor-select'."
   (let (keyword-found)
     (dolist (todo-sequence org-todo-keywords)
-      (when (member my-org-gtd-next-action-keyword todo-sequence)
-        (setq keyword-found t)))
+      (dolist (keyword-and-char todo-sequence)
+        (when (stringp keyword-and-char)
+          (let ((keyword (car (split-string keyword-and-char "("))))
+            (when (string= keyword my-org-gtd-next-action-keyword)
+              (setq keyword-found t))))))
     (unless keyword-found
-      (user-error "`my-org-gtd-next-action-keyword' must be preset in
- `org-todo-keywords'")))
+      (user-error
+       "`my-org-gtd-next-action-keyword' must be preset in `org-todo-keywords'")))
   (setq my-org-gtd-not-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
+  (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
                 my-org-gtd-contexts
@@ -66,5 +71,14 @@ existing values."
                 (list (cons :endgroup nil))
                 org-tag-alist)))
 
-(provide 'my-org-gtd)
+(defun my-org-gtd-insert-waiting-for-next-action (title)
+  "Insert a new next action waiting-for task with TITLE.
+The heading must be already created."
+  (when (string-empty-p title)
+    (user-error "Title cannot be empty"))
+  (insert title)
+  (org-todo my-org-gtd-next-action-keyword)
+  (org-set-tags my-org-gtd-waitingfor-tag))
+
+ (provide 'my-org-gtd)
 ;;; my-org-gtd.el ends here

@@ -48,10 +48,64 @@
 
 (ert-deftest my-org-gtd-next-action-keyword-not-in-org-todo-keywords ()
   "Test that the next action keyword must be present in `org-todo-keywords'."
-  (let ((my-org-gtd-next-action-keyword "ABSENT(a!)")
+  (let ((my-org-gtd-next-action-keyword "ABSENT")
         (org-todo-keywords
          '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED"))))
     (should-error (my-org-gtd-initialize))))
+
+(ert-deftest my-org-gtd-next-action-keyword-without-selection-char-ok ()
+  "Test that the next action keyword is accepted without the selection char."
+  (let ((my-org-gtd-next-action-keyword "TODO")
+        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
+    (my-org-gtd-initialize)))
+
+(ert-deftest my-org-gtd-next-action-keyword-absent-but-prefix ()
+  "Test that the absent NA keyword is diagnosed when it's a prefix."
+  (let ((my-org-gtd-next-action-keyword "TODO")
+        (org-todo-keywords '((sequence "TODONE(t!)" "DONE(d!)"))))
+    (should-error (my-org-gtd-initialize))))
+
+(ert-deftest my-org-gtd-org-todo-repeat-to-state ()
+  "Test that `org-todo-repeat-to-state' is initialized correctly."
+  (let ((my-org-gtd-next-action-keyword "TODO")
+        (org-todo-repeat-to-state nil))
+    (my-org-gtd-initialize)
+    (should (equal org-todo-repeat-to-state my-org-gtd-next-action-keyword))))
+
+(defmacro my-org-gtd--buffer-test (&rest body)
+  "Set up a temporary `org' buffer and execute BODY."
+  `(with-temp-buffer
+     (org-mode)
+     (let ((org-todo-log-states nil))
+       ,@body)))
+
+(ert-deftest my-org-gtd-insert-waiting-for-next-action-basic ()
+  "Basic test for `my-org-gtd-insert-waiting-for-next-action'."
+  (my-org-gtd--buffer-test
+   (org-insert-todo-heading-respect-content)
+   (my-org-gtd-insert-waiting-for-next-action "Test title")
+   (should (string= (org-get-heading t t t t) "Test title"))
+   (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
+   (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag)))))
+
+(ert-deftest my-org-gtd-insert-waiting-for-next-action-reject-empty ()
+  "Basic test for `my-org-gtd-insert-waiting-for-next-action'."
+  (my-org-gtd--buffer-test
+   (org-insert-todo-heading-respect-content)
+   (should-error (my-org-gtd-insert-waiting-for-next-action ""))))
+
+(ert-deftest my-org-gtd-insert-waiting-for-next-action-custom-state-tag ()
+  "Basic test for `my-org-gtd-insert-waiting-for-next-action'."
+  (let ((my-org-gtd-next-action-keyword "NEXT")
+        (my-org-gtd-waitingfor-tag "@wait")
+        (org-todo-keywords '((sequence "NEXT" "DONE"))))
+    (my-org-gtd-initialize)
+    (my-org-gtd--buffer-test
+     (org-insert-todo-heading-respect-content)
+     (my-org-gtd-insert-waiting-for-next-action "Title text")
+     (should (string= (org-get-heading t t t t) "Title text"))
+     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
+     (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag))))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
