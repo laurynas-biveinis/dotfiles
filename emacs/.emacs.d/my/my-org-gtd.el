@@ -106,9 +106,9 @@ configuration, with an optional fast state selection character."
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
 Checks `org-todo-keywords' against `my-org-gtd-next-action-keyword', initializes
-`org-todo-repeat-to-state'. Constructs`org-tag-alist' while keeping any existing
-values from the tag, their selection characters, and the GTD contexts
-variables."
+`org-todo-repeat-to-state'. Adds to `org-use-tag-inheritance' and to
+`org-tag-alist' from the tag  variables, selection character variables, and the
+GTD contexts variables."
   ;; Validate config
   (my-org-gtd--check-keyword-in-org-todo-keywords
    my-org-gtd-next-action-keyword)
@@ -117,6 +117,22 @@ variables."
   (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
   (setq my-org-gtd-not-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
   ;; Configure `org'
+  (cond
+   ((eq org-use-tag-inheritance t)
+    nil)
+   ((stringp org-use-tag-inheritance)
+    (unless (string-match-p org-use-tag-inheritance my-org-gtd-somedaymaybe-tag)
+      (user-error
+       "`my-org-gtd-somedaymaybe-tag' %s does not match `org-use-tag-inheritance' regex %s"
+       my-org-gtd-somedaymaybe-tag org-use-tag-inheritance)))
+   ((listp org-use-tag-inheritance)
+    (when (member my-org-gtd-somedaymaybe-tag org-use-tag-inheritance)
+      (user-error
+       "`my-org-gtd-somedaymaybe-tag' already in `org-use-tag-inheritance' %S"
+       my-org-gtd-somedaymaybe-tag org-use-tag-inheritance))
+    (push my-org-gtd-somedaymaybe-tag org-use-tag-inheritance))
+   (t (user-error "Don't know how handle `org-use-tag-inheritance' value %S"
+                  org-use-tag-inheritance)))
   (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
