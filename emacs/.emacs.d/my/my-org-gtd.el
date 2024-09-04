@@ -128,7 +128,7 @@ GTD contexts variables."
    ((listp org-use-tag-inheritance)
     (when (member my-org-gtd-somedaymaybe-tag org-use-tag-inheritance)
       (user-error
-       "`my-org-gtd-somedaymaybe-tag' already in `org-use-tag-inheritance' %S"
+       "`my-org-gtd-somedaymaybe-tag' %s already in `org-use-tag-inheritance' %S"
        my-org-gtd-somedaymaybe-tag org-use-tag-inheritance))
     (push my-org-gtd-somedaymaybe-tag org-use-tag-inheritance))
    (t (user-error "Don't know how handle `org-use-tag-inheritance' value %S"
