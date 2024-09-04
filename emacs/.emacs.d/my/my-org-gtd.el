@@ -3,7 +3,7 @@
 ;; Version: 0.1
 ;; URL: https://github.com/laurynas-biveinis/dotfiles/
 ;; Package-Requires: ((emacs "27.1"))
-;; Keywords: org, gtd, automation
+;; Keywords: org
 
 ;;; Commentary:
 
@@ -60,6 +60,7 @@ Initialized by `my-org-gtd-initialize'.")
 
 (defcustom my-org-gtd-next-action-keyword "TODO"
   "The TODO entry keyword that designates a GTD next action.
+Projects also have this keyword (in addition to `my-org-gtd-project-tag' tag.)
 It must be present in `org-todo-keywords', either directly or through per-file
 configuration, with an optional fast state selection character."
   :type '(string)
@@ -104,5 +105,11 @@ The heading must be already created."
   (org-todo my-org-gtd-next-action-keyword)
   (org-set-tags my-org-gtd-waitingfor-tag))
 
- (provide 'my-org-gtd)
+;; TODO(laurynas): my-org-gtd-insert-project (look at
+;; `dotfiles--mu4e-automation-handle-release').
+
+;; TODO(laurynas): README.org. What constitutes are project? Compare to org-gtd,
+;; org-edna.
+
+(provide 'my-org-gtd)
 ;;; my-org-gtd.el ends here
