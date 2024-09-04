@@ -14,21 +14,8 @@
         (my-org-gtd-contexts '(("@c1" . ?a) ("@c2" . ?b)))
         (my-org-gtd-waitingfor-tag "@sometag")
         (my-org-gtd-waitingfor-select ?f)
-        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
-    (my-org-gtd-initialize)
-    (should (equal org-tag-alist
-                   '((:startgroup)
-                     ("@c1" . ?a)
-                     ("@c2" . ?b)
-                     ("@sometag" . ?f)
-                     (:endgroup))))))
-
-(ert-deftest org-tag-alist-construction-preexisting ()
-  "Test that `org-tag-alist' is properly constructed, when it's non-empty."
-  (let ((org-tag-alist '(("@p" . ?p)))
-        (my-org-gtd-contexts '(("@c1" . ?a) ("@c2" . ?b)))
-        (my-org-gtd-waitingfor-tag "@sometag")
-        (my-org-gtd-waitingfor-select ?f)
+        (my-org-gtd-project-tag "prj")
+        (my-org-gtd-project-select ?c)
         (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
@@ -37,7 +24,26 @@
                      ("@c2" . ?b)
                      ("@sometag" . ?f)
                      (:endgroup)
-                     ("@p" . ?p))))))
+                     ("prj" . ?c))))))
+
+(ert-deftest org-tag-alist-construction-preexisting ()
+  "Test that `org-tag-alist' is properly constructed, when it's non-empty."
+  (let ((org-tag-alist '(("@x" . ?x)))
+        (my-org-gtd-contexts '(("@c1" . ?a) ("@c2" . ?b)))
+        (my-org-gtd-waitingfor-tag "@sometag")
+        (my-org-gtd-waitingfor-select ?f)
+        (my-org-gtd-project-tag "prj")
+        (my-org-gtd-project-select ?c)
+        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
+    (my-org-gtd-initialize)
+    (should (equal org-tag-alist
+                   '((:startgroup)
+                     ("@c1" . ?a)
+                     ("@c2" . ?b)
+                     ("@sometag" . ?f)
+                     (:endgroup)
+                     ("prj" . ?c)
+                     ("@x" . ?x))))))
 
 (ert-deftest my-org-gtd-not-waitingfor ()
   "Test that `my-org-gtd-not-waitingfor' is initialized correctly."

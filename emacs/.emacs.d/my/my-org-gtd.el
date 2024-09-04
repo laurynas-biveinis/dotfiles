@@ -38,6 +38,16 @@ Initialized by `my-org-gtd-initialize'.")
   :type '(character)
   :group 'my-org-gtd)
 
+(defcustom my-org-gtd-project-tag "project"
+  "The `org' tag used for GTD projects."
+  :type '(string)
+  :group 'my-org-gtd)
+
+(defcustom my-org-gtd-project-select ?p
+  "The character to select the GTD project tag."
+  :type '(character)
+  :group 'my-org-gtd)
+
 (defcustom my-org-gtd-next-action-keyword "TODO"
   "The TODO entry keyword that designates a GTD next action.
 It must be present in `org-todo-keywords', either directly or through per-file
@@ -49,8 +59,8 @@ configuration, with an optional fast state selection character."
   "Initialize `my-org-gtd'.
 Checks `org-todo-keywords' against `my-org-gtd-next-action-keyword', initializes
 `org-todo-repeat-to-state'. Constructs`org-tag-alist' while keeping any existing
-values from `my-org-gtd-contexts', `my-org-gtd-waitingfor-tag', and
-`my-org-gtd-waitingfor-select'."
+values from the tag, their selection characters, and the GTD contexts
+variables."
   (let (keyword-found)
     (dolist (todo-sequence org-todo-keywords)
       (dolist (keyword-and-char todo-sequence)
@@ -69,6 +79,8 @@ values from `my-org-gtd-contexts', `my-org-gtd-waitingfor-tag', and
                 (list (cons my-org-gtd-waitingfor-tag
                             my-org-gtd-waitingfor-select))
                 (list (cons :endgroup nil))
+                (list (cons my-org-gtd-project-tag
+                            my-org-gtd-project-select))
                 org-tag-alist)))
 
 (defun my-org-gtd-insert-waiting-for-next-action (title)
