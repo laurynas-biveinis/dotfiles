@@ -3,7 +3,7 @@
 ;; Version: 0.1
 ;; URL: https://github.com/laurynas-biveinis/dotfiles/
 ;; Package-Requires: ((emacs "27.1"))
-;; Keywords: org
+;; Keywords: outlines
 
 ;;; Commentary:
 
