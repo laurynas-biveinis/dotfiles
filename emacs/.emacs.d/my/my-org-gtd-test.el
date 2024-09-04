@@ -20,7 +20,7 @@
         (my-org-gtd-waitingfor-select ?f)
         (my-org-gtd-project-tag "prj")
         (my-org-gtd-project-select ?c)
-        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -38,7 +38,7 @@
         (my-org-gtd-waitingfor-select ?f)
         (my-org-gtd-project-tag "prj")
         (my-org-gtd-project-select ?c)
-        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -52,14 +52,14 @@
 (ert-deftest my-org-gtd-not-waitingfor ()
   "Test that `my-org-gtd-not-waitingfor' is initialized correctly."
   (let ((my-org-gtd-waitingfor-tag "@foo")
-        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-waitingfor "-@foo"))))
 
-(ert-deftest my-org-gtd-no-project ()
+(ert-deftest my-org-gtd-not-project ()
   "Test that `my-org-gtd-not-project' is initialized correctly."
   (let ((my-org-gtd-project-tag "foo")
-        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-project "-foo"))))
 

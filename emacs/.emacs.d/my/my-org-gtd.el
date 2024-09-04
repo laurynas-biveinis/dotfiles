@@ -89,8 +89,7 @@ configuration, with an optional fast state selection character."
                                     keyword)))
                        todo-sequence))
            org-todo-keywords)
-    (user-error
-     "`my-org-gtd-next-action-keyword' must be present in `org-todo-keywords'")))
+    (user-error "'%s' must be present in `org-todo-keywords'" keyword)))
 
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
