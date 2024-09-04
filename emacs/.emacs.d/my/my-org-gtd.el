@@ -2,7 +2,7 @@
 
 ;; Version: 0.1
 ;; URL: https://github.com/laurynas-biveinis/dotfiles/
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "24.1"))
 
 ;;; Commentary:
 
@@ -86,7 +86,7 @@ variables."
 (defun my-org-gtd-insert-waiting-for-next-action (title)
   "Insert a new next action waiting-for task with TITLE.
 The heading must be already created."
-  (when (string-empty-p title)
+  (when (string= title "")
     (user-error "Title cannot be empty"))
   (insert title)
   (org-todo my-org-gtd-next-action-keyword)
