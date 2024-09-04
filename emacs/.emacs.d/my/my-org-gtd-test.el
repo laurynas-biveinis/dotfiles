@@ -73,7 +73,7 @@
 (ert-deftest my-org-gtd-next-action-keyword-without-selection-char-ok ()
   "Test that the next action keyword is accepted without the selection char."
   (let ((my-org-gtd-next-action-keyword "TODO")
-        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
     (my-org-gtd-initialize)))
 
 (ert-deftest my-org-gtd-next-action-keyword-absent-but-prefix ()
@@ -143,7 +143,7 @@
   "Test `my-org-gtd-insert-waiting-for-next-action' with non-default config."
   (let ((my-org-gtd-next-action-keyword "NEXT")
         (my-org-gtd-waitingfor-tag "@wait")
-        (org-todo-keywords '((sequence "NEXT" "DONE"))))
+        (org-todo-keywords '((sequence "NEXT" "KILL"))))
     (my-org-gtd-initialize)
     (my-org-gtd--buffer-test
      (org-insert-todo-heading-respect-content)
@@ -171,7 +171,7 @@
   "Test `my-org-gtd-insert-project' with non-default config."
   (let ((my-org-gtd-next-action-keyword "FOO")
         (my-org-gtd-project-tag "bar")
-        (org-todo-keywords '((sequence "FOO" "DONE"))))
+        (org-todo-keywords '((sequence "FOO" "KILL"))))
     (my-org-gtd-initialize)
     (my-org-gtd--buffer-test
      (org-insert-todo-heading-respect-content)
