@@ -85,7 +85,8 @@
 (ert-deftest my-org-gtd-org-todo-repeat-to-state ()
   "Test that `org-todo-repeat-to-state' is initialized correctly."
   (let ((my-org-gtd-next-action-keyword "TODO")
-        (org-todo-repeat-to-state nil))
+        (org-todo-repeat-to-state nil)
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-todo-repeat-to-state my-org-gtd-next-action-keyword))))
 
