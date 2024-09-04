@@ -2,7 +2,7 @@
 
 ;; Version: 0.1
 ;; URL: https://github.com/laurynas-biveinis/dotfiles/
-;; Package-Requires: ((emacs "24.3"))
+;; Package-Requires: ((emacs "27.1"))
 
 ;;; Commentary:
 
