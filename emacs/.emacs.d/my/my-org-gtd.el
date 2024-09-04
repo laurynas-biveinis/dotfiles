@@ -41,6 +41,10 @@ Initialized by `my-org-gtd-initialize'.")
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
+(defvar my-org-gtd-not-project nil
+  "A substring for `org-agenda' blocks to exclude `my-org-gtd-project-tag'.
+Initialized by `my-org-gtd-initialize'.")
+
 (defcustom my-org-gtd-project-tag "project"
   "The `org' tag used for GTD projects."
   :type '(string)
@@ -77,6 +81,7 @@ variables."
     (unless keyword-found
       (user-error
        "`my-org-gtd-next-action-keyword' must be preset in `org-todo-keywords'")))
+  (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
   (setq my-org-gtd-not-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
   (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
   (setq org-tag-alist

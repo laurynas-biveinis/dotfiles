@@ -52,6 +52,13 @@
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-waitingfor "-@foo"))))
 
+(ert-deftest my-org-gtd-no-project ()
+  "Test that `my-org-gtd-not-project' is initialized correctly."
+  (let ((my-org-gtd-project-tag "foo")
+        (org-todo-keywords '((sequence "TODO(t!)" "DONE(d!)"))))
+    (my-org-gtd-initialize)
+    (should (equal my-org-gtd-not-project "-foo"))))
+
 (ert-deftest my-org-gtd-next-action-keyword-not-in-org-todo-keywords ()
   "Test that the next action keyword must be present in `org-todo-keywords'."
   (let ((my-org-gtd-next-action-keyword "ABSENT")
