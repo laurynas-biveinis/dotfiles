@@ -492,6 +492,9 @@ mysql_export_environment_helpers() {
     export PS8036D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
                     "${my8036_extra[@]}")
 
+    export FB8036D=("${MY8036D[@]}" "${fb_common[@]}")
+    export FB8036=("${MY8036[@]}" "${fb_common[@]}")
+
     export MY8035D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
                     "${my8035_extra[@]}")
     export MY8035=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
@@ -745,6 +748,12 @@ mysql_cmake() {
         "facebook")
             echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                8.0.36)
+                    declare -a release_flags=("${FB8036[@]}")
+                    declare -a debug_flags=("${FB8036D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 8.0.32)
                     declare -a release_flags=("${FB8032[@]}")
                     declare -a debug_flags=("${FB8032D[@]}")
