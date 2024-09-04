@@ -90,6 +90,7 @@
   (my-org-gtd--buffer-test
    (org-insert-todo-heading-respect-content)
    (my-org-gtd-insert-waiting-for-next-action "Test title")
+   (message "Buffer: %s" (buffer-string))
    (should (string= (org-get-heading t t) "Test title"))
    (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
    (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag)))))
