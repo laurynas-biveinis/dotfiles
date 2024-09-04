@@ -71,16 +71,16 @@ Checks `org-todo-keywords' against `my-org-gtd-next-action-keyword', initializes
 `org-todo-repeat-to-state'. Constructs`org-tag-alist' while keeping any existing
 values from the tag, their selection characters, and the GTD contexts
 variables."
-  (let (keyword-found)
-    (dolist (todo-sequence org-todo-keywords)
-      (dolist (keyword-and-char todo-sequence)
-        (when (stringp keyword-and-char)
-          (let ((keyword (car (split-string keyword-and-char "("))))
-            (when (string= keyword my-org-gtd-next-action-keyword)
-              (setq keyword-found t))))))
-    (unless keyword-found
-      (user-error
-       "`my-org-gtd-next-action-keyword' must be preset in `org-todo-keywords'")))
+  (unless (seq-some
+           (lambda (todo-sequence)
+             (seq-some (lambda (keyword-and-char)
+                         (when (stringp keyword-and-char)
+                           (string= (car (split-string keyword-and-char "("))
+                                    my-org-gtd-next-action-keyword)))
+                       todo-sequence))
+           org-todo-keywords)
+    (user-error
+     "`my-org-gtd-next-action-keyword' must be present in `org-todo-keywords'"))
   (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
   (setq my-org-gtd-not-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
   (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
