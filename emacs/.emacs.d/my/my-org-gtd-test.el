@@ -90,7 +90,7 @@
   (my-org-gtd--buffer-test
    (org-insert-todo-heading-respect-content)
    (my-org-gtd-insert-waiting-for-next-action "Test title")
-   (should (string= (org-get-heading t t t t) "Test title"))
+   (should (string= (org-get-heading t t) "Test title"))
    (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
    (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag)))))
 
@@ -109,7 +109,7 @@
     (my-org-gtd--buffer-test
      (org-insert-todo-heading-respect-content)
      (my-org-gtd-insert-waiting-for-next-action "Title text")
-     (should (string= (org-get-heading t t t t) "Title text"))
+     (should (string= (org-get-heading t t) "Title text"))
      (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
      (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag))))))
 
