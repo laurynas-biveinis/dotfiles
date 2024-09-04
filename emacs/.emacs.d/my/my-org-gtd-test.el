@@ -5,8 +5,12 @@
 
 ;;; Code:
 
+;; Hard dependencies
 (require 'ert)
 (require 'my-org-gtd)
+
+;; Soft dependencies
+(defvar org-gcal-cancelled-todo-keyword)
 
 (ert-deftest org-tag-alist-construction-empty ()
   "Test that `org-tag-alist' is properly constructed."
@@ -84,6 +88,34 @@
         (org-todo-repeat-to-state nil))
     (my-org-gtd-initialize)
     (should (equal org-todo-repeat-to-state my-org-gtd-next-action-keyword))))
+
+(ert-deftest my-org-gtd-cancelled-keyword-not-in-org-todo-keywords ()
+  "Test that the cancelled keyword must be present in `org-todo-keywords'."
+  (let ((my-org-gtd-cancelled-keyword "ABSENT")
+        (org-todo-keywords
+         '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED"))))
+    (should-error (my-org-gtd-initialize))))
+
+(ert-deftest my-org-gtd-cancelled-keyword-without-selection-char-ok ()
+  "Test that the cancelled keyword is accepted without the selection char."
+  (let ((my-org-gtd-cancelled-keyword "KILL")
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+    (my-org-gtd-initialize)))
+
+(ert-deftest my-org-gtd-cancelled-keyword-absent-but-prefix ()
+  "Test that the absent cancelled keyword is diagnosed when it's a prefix."
+  (let ((my-org-gtd-cancelled-keyword "KILL")
+        (org-todo-keywords '((sequence "TODO(t!)" "KILLED(k!)"))))
+    (should-error (my-org-gtd-initialize))))
+
+(ert-deftest my-org-gtd-org-gcal-cancelled-todo-keyword ()
+  "Test that `org-gcal-cancelled-todo-keyword' is initialized correctly."
+  (let ((my-org-gtd-cancelled-keyword "CANCELLED")
+        (org-todo-keywords '((sequence "TODO" "CANCELLED")))
+        (org-gcal-cancelled-todo-keyword nil))
+    (my-org-gtd-initialize)
+    (should (equal org-gcal-cancelled-todo-keyword
+                   my-org-gtd-cancelled-keyword))))
 
 (defmacro my-org-gtd--buffer-test (&rest body)
   "Set up a temporary `org' buffer and execute BODY."

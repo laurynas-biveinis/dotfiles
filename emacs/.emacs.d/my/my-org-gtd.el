@@ -11,7 +11,11 @@
 
 ;;; Code:
 
+;; Hard dependencies
 (require 'org)
+
+;; Soft dependencies
+(defvar org-gcal-cancelled-todo-keyword)
 
 (defgroup my-org-gtd nil
   "Configure `org' for GTD."
@@ -67,24 +71,41 @@ configuration, with an optional fast state selection character."
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
+(defcustom my-org-gtd-cancelled-keyword "KILL"
+  "The TODO entry keyword that designates a cancelled task or project.
+It must be present in `org-todo-keywords', either directly or through per-file
+configuration, with an optional fast state selection character."
+  :type '(string)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
+
+(defun my-org-gtd--check-keyword-in-org-todo-keywords (keyword)
+  "Check that KEYWORD in present in `org-todo-keywords'."
+  (unless (seq-some
+           (lambda (todo-sequence)
+             (seq-some (lambda (keyword-and-char)
+                         (when (stringp keyword-and-char)
+                           (string= (car (split-string keyword-and-char "("))
+                                    keyword)))
+                       todo-sequence))
+           org-todo-keywords)
+    (user-error
+     "`my-org-gtd-next-action-keyword' must be present in `org-todo-keywords'")))
+
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
 Checks `org-todo-keywords' against `my-org-gtd-next-action-keyword', initializes
 `org-todo-repeat-to-state'. Constructs`org-tag-alist' while keeping any existing
 values from the tag, their selection characters, and the GTD contexts
 variables."
-  (unless (seq-some
-           (lambda (todo-sequence)
-             (seq-some (lambda (keyword-and-char)
-                         (when (stringp keyword-and-char)
-                           (string= (car (split-string keyword-and-char "("))
-                                    my-org-gtd-next-action-keyword)))
-                       todo-sequence))
-           org-todo-keywords)
-    (user-error
-     "`my-org-gtd-next-action-keyword' must be present in `org-todo-keywords'"))
+  ;; Validate config
+  (my-org-gtd--check-keyword-in-org-todo-keywords
+   my-org-gtd-next-action-keyword)
+  (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-cancelled-keyword)
+  ;; Configure itself
   (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
   (setq my-org-gtd-not-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
+  ;; Configure `org'
   (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
@@ -94,7 +115,9 @@ variables."
                 (list (cons :endgroup nil))
                 (list (cons my-org-gtd-project-tag
                             my-org-gtd-project-select))
-                org-tag-alist)))
+                org-tag-alist))
+  ;; Configure `org-gcal'
+  (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
 
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
