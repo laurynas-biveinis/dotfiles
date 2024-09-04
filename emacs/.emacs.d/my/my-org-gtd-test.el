@@ -102,13 +102,13 @@
    (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag)))))
 
 (ert-deftest my-org-gtd-insert-waiting-for-next-action-reject-empty ()
-  "Basic test for `my-org-gtd-insert-waiting-for-next-action'."
+  "Test that `my-org-gtd-insert-waiting-for-next-action' rejects empty title."
   (my-org-gtd--buffer-test
    (org-insert-todo-heading-respect-content)
    (should-error (my-org-gtd-insert-waiting-for-next-action ""))))
 
 (ert-deftest my-org-gtd-insert-waiting-for-next-action-custom-state-tag ()
-  "Basic test for `my-org-gtd-insert-waiting-for-next-action'."
+  "Test `my-org-gtd-insert-waiting-for-next-action' with non-default config."
   (let ((my-org-gtd-next-action-keyword "NEXT")
         (my-org-gtd-waitingfor-tag "@wait")
         (org-todo-keywords '((sequence "NEXT" "DONE"))))
@@ -119,6 +119,34 @@
      (should (string= (org-get-heading t t) "Title text"))
      (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
      (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag))))))
+
+(ert-deftest my-org-gtd-insert-project-basic ()
+  "Basic test for `my-org-gtd-insert-project'."
+  (my-org-gtd--buffer-test
+   (org-insert-todo-heading-respect-content)
+   (my-org-gtd-insert-project "Test title")
+   (should (string= (org-get-heading t t) "Test title"))
+   (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
+   (should (equal (org-get-tags) `(,my-org-gtd-project-tag)))))
+
+(ert-deftest my-org-gtd-insert-project-reject-empty ()
+  "Test that `my-org-gtd-insert-project' rejects empty title."
+  (my-org-gtd--buffer-test
+   (org-insert-todo-heading-respect-content)
+   (should-error (my-org-gtd-insert-project ""))))
+
+(ert-deftest my-org-gtd-insert-project-custom-state-tag ()
+  "Test `my-org-gtd-insert-project' with non-default config."
+  (let ((my-org-gtd-next-action-keyword "FOO")
+        (my-org-gtd-project-tag "bar")
+        (org-todo-keywords '((sequence "FOO" "DONE"))))
+    (my-org-gtd-initialize)
+    (my-org-gtd--buffer-test
+     (org-insert-todo-heading-respect-content)
+     (my-org-gtd-insert-project "Title text")
+     (should (string= (org-get-heading t t) "Title text"))
+     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
+     (should (equal (org-get-tags) `(,my-org-gtd-project-tag))))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags

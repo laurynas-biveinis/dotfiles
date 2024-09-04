@@ -96,17 +96,26 @@ variables."
                             my-org-gtd-project-select))
                 org-tag-alist)))
 
-(defun my-org-gtd-insert-waiting-for-next-action (title)
-  "Insert a new next action waiting-for task with TITLE.
+(defun my-org-gtd--insert-item (title keyword tag)
+  "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
 The heading must be already created."
   (when (string-empty-p title)
     (user-error "Title cannot be empty"))
   (insert title)
-  (org-todo my-org-gtd-next-action-keyword)
-  (org-set-tags my-org-gtd-waitingfor-tag))
+  (org-todo keyword)
+  (org-set-tags tag))
 
-;; TODO(laurynas): my-org-gtd-insert-project (look at
-;; `dotfiles--mu4e-automation-handle-release').
+(defun my-org-gtd-insert-project (title)
+  "Insert a new project task with TITLE at point.
+The heading must be already created."
+  (my-org-gtd--insert-item title my-org-gtd-next-action-keyword
+                           my-org-gtd-project-tag))
+
+(defun my-org-gtd-insert-waiting-for-next-action (title)
+  "Insert a new next action waiting-for task with TITLE at point.
+The heading must be already created."
+  (my-org-gtd--insert-item title my-org-gtd-next-action-keyword
+                           my-org-gtd-waitingfor-tag))
 
 ;; TODO(laurynas): README.org. What constitutes are project? Compare to org-gtd,
 ;; org-edna.
