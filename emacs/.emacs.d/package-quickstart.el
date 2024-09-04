@@ -8655,7 +8655,7 @@ If NO-FALLBACK is set, don’t fall back to current buffer if not found in
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-1.9.8/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-1.9.8/async-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/async-1.9.9/async-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/async-1.9.9/async-autoloads.el"))
 
 
 
@@ -8789,6 +8789,10 @@ Same as `byte-compile-file' but asynchronous.
 
 (fn FILE)" t)
 (register-definition-prefixes "async-bytecomp" '("async-"))
+
+
+
+(register-definition-prefixes "async-package" '("async-p"))
 
 
 
@@ -10367,7 +10371,7 @@ A major mode for editing .gitignore files.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240830.1623/git-gutter-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240830.1623/git-gutter-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240903.418/git-gutter-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240903.418/git-gutter-autoloads.el"))
 
 
 

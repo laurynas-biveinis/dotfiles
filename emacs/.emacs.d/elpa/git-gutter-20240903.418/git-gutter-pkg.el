@@ -1,6 +1,6 @@
-(define-package "git-gutter" "20240830.1623" "Port of Sublime Text plugin GitGutter"
+(define-package "git-gutter" "20240903.418" "Port of Sublime Text plugin GitGutter"
   '((emacs "25.1"))
-  :commit "47e443809f352b5188751175413ebe0f1eb2311f" :authors
+  :commit "9beaed9e45f92ab0527f54dbf5fb241b84e7821d" :authors
   '(("Syohei YOSHIDA" . "syohex@gmail.com"))
   :maintainers
   '(("Neil Okamoto" . "neil.okamoto+melpa@gmail.com")

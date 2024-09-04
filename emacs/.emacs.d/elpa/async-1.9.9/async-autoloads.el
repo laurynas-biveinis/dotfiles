@@ -139,6 +139,11 @@ Same as `byte-compile-file' but asynchronous.
 (register-definition-prefixes "async-bytecomp" '("async-"))
 
 
+;;; Generated autoloads from async-package.el
+
+(register-definition-prefixes "async-package" '("async-p"))
+
+
 ;;; Generated autoloads from dired-async.el
 
 (defvar dired-async-mode nil "\

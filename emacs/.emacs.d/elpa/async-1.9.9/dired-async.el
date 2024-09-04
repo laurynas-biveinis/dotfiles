@@ -81,6 +81,10 @@ or rename for `dired-async-skip-fast'."
   :risky t
   :type 'integer)
 
+(defcustom dired-async-large-file-warning-threshold large-file-warning-threshold
+  "Same as `large-file-warning-threshold' but for dired-async."
+  :type 'integer)
+
 (defface dired-async-message
     '((t (:foreground "yellow")))
   "Face used for mode-line message.")
@@ -115,9 +119,9 @@ or rename for `dired-async-skip-fast'."
     (sit-for 3)
     (force-mode-line-update)))
 
-(defun dired-async-processes ()
+(defun dired-async-processes (&optional propname)
   (cl-loop for p in (process-list)
-           when (process-get p 'dired-async-process)
+           when (process-get p (or propname 'dired-async-process))
            collect p))
 
 (defun dired-async-kill-process ()
@@ -243,10 +247,10 @@ cases if `dired-async-skip-fast' is non-nil."
                (nreverse quick-list) name-constructor marker-char))))
 
 (defun dired-async--abort-if-file-too-large (size op-type filename)
-  "If file SIZE larger than `large-file-warning-threshold', allow user to abort.
+  "Warn when FILENAME larger than `dired-async-large-file-warning-threshold'.
 Same as `abort-if-file-too-large' but without user-error."
-  (when (and large-file-warning-threshold size
-	     (> size large-file-warning-threshold))
+  (when (and dired-async-large-file-warning-threshold size
+	     (> size dired-async-large-file-warning-threshold))
     (files--ask-user-about-large-file
      size op-type filename nil)))
 
@@ -383,6 +387,7 @@ ESC or `q' to not overwrite any of the remaining files,
                              (dired-copy-preserve-time
                               ,dired-copy-preserve-time)
                              (dired-create-destination-dirs ',create-dir)
+                             (dired-vc-rename-file ,dired-vc-rename-file)
                              auth-source-save-behavior)
                          (setq overwrite-backup-query nil)
                          ;; Inline `backup-file' as long as it is not
