@@ -275,6 +275,17 @@
      (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
      (should (equal (org-get-tags) `(,my-org-gtd-project-tag))))))
 
+(ert-deftest my-org-complete-item-basic ()
+  "Basic test for `my-org-complete-item'."
+  (my-org-gtd--buffer-test
+   (org-insert-todo-heading-respect-content)
+   (my-org-gtd-insert-waiting-for-next-action "Test title")
+   (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
+   (my-org-complete-item)
+   (should (string= (org-get-todo-state) my-org-gtd-done-keyword))
+   (should (string= (org-get-heading t t) "Test title"))
+   (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag)))))
+
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
 ;; TODO(laurynas): uniqueness in keys

@@ -188,6 +188,10 @@ The heading must be already created."
   (my-org-gtd--insert-item title my-org-gtd-next-action-keyword
                            my-org-gtd-waitingfor-tag))
 
+(defun my-org-complete-item ()
+  "Mark the item (a task or a project) at point as done."
+  (org-todo my-org-gtd-done-keyword))
+
 ;; TODO(laurynas): README.org. What constitutes are project? Compare to org-gtd,
 ;; org-edna.
 
