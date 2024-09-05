@@ -173,6 +173,14 @@
     (should (equal org-gcal-cancelled-todo-keyword
                    my-org-gtd-cancelled-keyword))))
 
+(ert-deftest my-org-gtd-active-todo-search-basic ()
+  "Basic test for `my-org-gtd-active-todo-search'."
+  (let ((my-org-gtd-somedaymaybe-tag "oneday")
+        (my-org-gtd-next-action-keyword "DOIT")
+        (org-todo-keywords '((sequence "DOIT(t!)" "KILL(k!)"))))
+    (my-org-gtd-initialize)
+    (should (equal (my-org-gtd-active-todo-search "ctx") "ctx-oneday/!DOIT"))))
+
 (defmacro my-org-gtd--buffer-test (&rest body)
   "Set up a temporary `org' buffer and execute BODY."
   `(with-temp-buffer

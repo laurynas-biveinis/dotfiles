@@ -153,6 +153,11 @@ GTD contexts variables."
   ;; Configure `org-gcal'
   (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
 
+(defun my-org-gtd-active-todo-search (context)
+  "Return an `org' search string for next actions in CONTEXT."
+  (concat context my-org-gtd-not-somedaymaybe "/!"
+          my-org-gtd-next-action-keyword))
+
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
 The heading must be already created."
