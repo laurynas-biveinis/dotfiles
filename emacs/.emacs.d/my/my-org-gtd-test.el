@@ -22,7 +22,7 @@
         (my-org-gtd-project-select ?c)
         (my-org-gtd-somedaymaybe-tag "maybesomeday")
         (my-org-gtd-somedaymaybe-select ?d)
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -43,7 +43,8 @@
         (my-org-gtd-project-select ?c)
         (my-org-gtd-somedaymaybe-tag "maybesomeday")
         (my-org-gtd-somedaymaybe-select ?d)
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-use-tag-inheritance nil)
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -58,21 +59,23 @@
 (ert-deftest my-org-gtd-not-waitingfor ()
   "Test that `my-org-gtd-not-waitingfor' is initialized correctly."
   (let ((my-org-gtd-waitingfor-tag "@foo")
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-use-tag-inheritance nil)
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-waitingfor "-@foo"))))
 
 (ert-deftest my-org-gtd-not-project ()
   "Test that `my-org-gtd-not-project' is initialized correctly."
   (let ((my-org-gtd-project-tag "foo")
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-use-tag-inheritance nil)
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-project "-foo"))))
 
 (ert-deftest my-org-gtd-not-somedaymaybe ()
   "Test that `my-org-gtd-not-somedaymaybe' is initialized correctly."
   (let ((my-org-gtd-somedaymaybe-tag "blah")
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)")))
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)")))
         (org-use-tag-inheritance nil))
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-somedaymaybe "-blah"))))
@@ -87,7 +90,8 @@
 (ert-deftest my-org-gtd-next-action-keyword-without-selection-char-ok ()
   "Test that the next action keyword is accepted without the selection char."
   (let ((my-org-gtd-next-action-keyword "TODO")
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-use-tag-inheritance nil)
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)))
 
 (ert-deftest my-org-gtd-next-action-keyword-absent-but-prefix ()
@@ -106,14 +110,14 @@
 (ert-deftest my-org-gtd-done-keyword-without-selection-char-ok ()
   "Test that the completed keyword is accepted without the selection char."
   (let ((my-org-gtd-done-keyword "DONE")
-        (org-use-tag-inheritance t)
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)" "|" "DONE(d!)"))))
+        (org-use-tag-inheritance nil)
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "KILL(k!)" "DONE(d!)"))))
     (my-org-gtd-initialize)))
 
 (ert-deftest my-org-gtd-done-keyword-absent-but-prefix ()
   "Test that the absent done keyword is diagnosed when it's a prefix."
   (let ((my-org-gtd-done-keyword "DONE")
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)" "|"
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "KILL(k!)"
                                        "DONEANDDONE(d!)"))))
     (should-error (my-org-gtd-initialize))))
 
@@ -121,14 +125,15 @@
   "Test that `org-todo-repeat-to-state' is initialized correctly."
   (let ((my-org-gtd-next-action-keyword "TODO")
         (org-todo-repeat-to-state nil)
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-use-tag-inheritance nil)
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-todo-repeat-to-state my-org-gtd-next-action-keyword))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-t ()
   "Test `org-use-tag-inheritance' when it's t."
   (let ((org-use-tag-inheritance t)
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)"  "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance t))))
 
@@ -136,7 +141,7 @@
   "Test `org-use-tag-inheritance' matching `my-org-gtd-somedaymaybe-tag'."
   (let ((org-use-tag-inheritance "may.*")
         (my-org-gtd-somedaymaybe-tag "maybe")
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance "may.*"))))
 
@@ -150,7 +155,7 @@
   "Test adding `my-org-gtd-somedaymaybe-tag' to `org-use-tag-inheritance'."
   (let ((org-use-tag-inheritance '("foo" "bar"))
         (my-org-gtd-somedaymaybe-tag "somedaymaybe")
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance '("somedaymaybe" "foo" "bar")))))
 
@@ -176,7 +181,8 @@
 (ert-deftest my-org-gtd-cancelled-keyword-without-selection-char-ok ()
   "Test that the cancelled keyword is accepted without the selection char."
   (let ((my-org-gtd-cancelled-keyword "KILL")
-        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)"))))
+        (org-use-tag-inheritance nil)
+        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)))
 
 (ert-deftest my-org-gtd-cancelled-keyword-absent-but-prefix ()
@@ -188,7 +194,8 @@
 (ert-deftest my-org-gtd-org-gcal-cancelled-todo-keyword ()
   "Test that `org-gcal-cancelled-todo-keyword' is initialized correctly."
   (let ((my-org-gtd-cancelled-keyword "CANCELLED")
-        (org-todo-keywords '((sequence "TODO" "CANCELLED")))
+        (org-use-tag-inheritance t)
+        (org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELLED")))
         (org-gcal-cancelled-todo-keyword nil))
     (my-org-gtd-initialize)
     (should (equal org-gcal-cancelled-todo-keyword
@@ -198,7 +205,8 @@
   "Basic test for `my-org-gtd-active-todo-search'."
   (let ((my-org-gtd-somedaymaybe-tag "oneday")
         (my-org-gtd-next-action-keyword "DOIT")
-        (org-todo-keywords '((sequence "DOIT(t!)" "KILL(k!)"))))
+        (org-use-tag-inheritance t)
+        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal (my-org-gtd-active-todo-search "ctx") "ctx-oneday/!DOIT"))))
 
@@ -256,7 +264,8 @@
   "Test `my-org-gtd-insert-project' with non-default config."
   (let ((my-org-gtd-next-action-keyword "FOO")
         (my-org-gtd-project-tag "bar")
-        (org-todo-keywords '((sequence "FOO" "KILL"))))
+        (org-use-tag-inheritance nil)
+        (org-todo-keywords '((sequence "FOO" "|" "DONE" "KILL"))))
     (my-org-gtd-initialize)
     (my-org-gtd--buffer-test
      (org-insert-todo-heading-respect-content)
