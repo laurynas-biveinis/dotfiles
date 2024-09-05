@@ -62,6 +62,10 @@ Initialized by `my-org-gtd-initialize'.")
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
+(defvar my-org-gtd-not-somedaymaybe nil
+  "A substring for `org-agenda' to exclude `my-org-gtd-somedaymaybe-tag'.
+Initialized by `my-org-gtd-initialize'.")
+
 (defcustom my-org-gtd-somedaymaybe-tag "somedaymaybe"
   "The `org' tag used for GTD someday/maybe items."
   :type '(string)
@@ -116,6 +120,7 @@ GTD contexts variables."
   ;; Configure itself
   (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
   (setq my-org-gtd-not-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
+  (setq my-org-gtd-not-somedaymaybe (concat "-" my-org-gtd-somedaymaybe-tag))
   ;; Configure `org'
   (cond
    ((eq org-use-tag-inheritance t)

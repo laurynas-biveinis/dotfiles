@@ -69,6 +69,14 @@
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-project "-foo"))))
 
+(ert-deftest my-org-gtd-not-somedaymaybe ()
+  "Test that `my-org-gtd-not-somedaymaybe' is initialized correctly."
+  (let ((my-org-gtd-project-tag "blah")
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)")))
+        (org-use-tag-inheritance nil))
+    (my-org-gtd-initialize)
+    (should (equal my-org-gtd-not-project "-blah"))))
+
 (ert-deftest my-org-gtd-next-action-keyword-not-in-org-todo-keywords ()
   "Test that the next action keyword must be present in `org-todo-keywords'."
   (let ((my-org-gtd-next-action-keyword "ABSENT")
