@@ -137,13 +137,12 @@ repository cannot be determined, instead invoke `forge-add-repository'."
                  (if (forge-get-repository :tracked?)
                      "forge topics"
                    "new forge repository"))
-  :inapt-if-not #'forge--get-repository:tracked?
   (declare (interactive-only nil))
   (interactive)
   (if-let ((repo (forge-get-repository :tracked?)))
       (forge--pull repo)
     (transient-setup 'forge-add-repository nil nil
-                     :scope (forge-get-repository :stub?))))
+                     :scope (forge-add-repository--scope))))
 
 (defun forge-read-date (prompt)
   (require (quote org) nil)
@@ -167,12 +166,13 @@ repository cannot be determined, instead invoke `forge-add-repository'."
   (magit-git-fetch (oref repo remote) (magit-fetch-arguments)))
 
 (defun forge--maybe-git-fetch (repo &optional buffer)
-  (if (and (buffer-live-p buffer)
-           (with-current-buffer buffer
-             (and (derived-mode-p 'magit-mode)
-                  (forge-repository-equal (forge-get-repository :stub?) repo))))
+  (if (buffer-live-p buffer)
       (with-current-buffer buffer
-        (magit-git-fetch (oref repo remote) (magit-fetch-arguments)))
+        (if (and (derived-mode-p 'magit-mode)
+                 (forge-repository-equal (forge-get-repository :stub?) repo)
+                 (magit-toplevel))
+            (magit-git-fetch (oref repo remote) (magit-fetch-arguments))
+          (magit-refresh-buffer)))
     (when-let ((worktree (forge-get-worktree repo)))
       (let ((default-directory worktree)
             (magit-inhibit-refresh t))
@@ -446,10 +446,10 @@ With prefix argument MENU, also show the topic menu."
     (cond
      ((and (eq transient-current-command 'forge-repositories-menu)
            (forge-get-repository repo nil :tracked?))
-      (if-let ((buffer (forge-topics-buffer-name repo)))
-          (switch-to-buffer buffer)
-        (forge-list-topics repo))
-      (transient-setup 'forge-topics-menu))
+      (if-let ((buffer (get-buffer (forge-topics-buffer-name repo))))
+          (progn (switch-to-buffer buffer)
+                 (transient-setup 'forge-topics-menu))
+        (forge-list-topics repo)))
      (worktree
       (magit-status-setup-buffer worktree))
      ((forge-get-repository repo nil :tracked?)

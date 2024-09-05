@@ -10525,7 +10525,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.2/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.2/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.3/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.3/forge-autoloads.el"))
 
 
 
@@ -11819,7 +11819,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.2" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.0" "/Users/laurynas/.emacs.d/elpa/magit-4.1.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.0" "/Users/laurynas/.emacs.d/elpa/transient-0.7.5" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.2" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-0.10.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.0" "/Users/laurynas/.emacs.d/elpa/magit-4.1.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.0" "/Users/laurynas/.emacs.d/elpa/transient-0.7.5" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.2" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:

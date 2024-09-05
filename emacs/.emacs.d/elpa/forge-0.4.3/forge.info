@@ -27,7 +27,7 @@ Forge User and Developer Manual
 Forge allows you to work with Git forges, currently Github and Gitlab,
 from the comfort of Magit and Emacs.
 
-This manual is for Forge version 0.4.2.
+This manual is for Forge version 0.4.3.
 
      Copyright (C) 2018-2024 Jonas Bernoulli
      <emacs.forge@jonas.bernoulli.dev>
