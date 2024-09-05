@@ -96,6 +96,27 @@
         (org-todo-keywords '((sequence "TODONE(t!)" "DONE(d!)"))))
     (should-error (my-org-gtd-initialize))))
 
+(ert-deftest my-org-gtd-done-keyword-not-in-org-todo-keywords ()
+  "Test that the completed keyword must be present in `org-todo-keywords'."
+  (let ((my-org-gtd-done-keyword "ABSENT")
+        (org-todo-keywords
+         '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "KILL"))))
+    (should-error (my-org-gtd-initialize))))
+
+(ert-deftest my-org-gtd-done-keyword-without-selection-char-ok ()
+  "Test that the completed keyword is accepted without the selection char."
+  (let ((my-org-gtd-done-keyword "DONE")
+        (org-use-tag-inheritance t)
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)" "|" "DONE(d!)"))))
+    (my-org-gtd-initialize)))
+
+(ert-deftest my-org-gtd-done-keyword-absent-but-prefix ()
+  "Test that the absent done keyword is diagnosed when it's a prefix."
+  (let ((my-org-gtd-done-keyword "DONE")
+        (org-todo-keywords '((sequence "TODO(t!)" "KILL(k!)" "|"
+                                       "DONEANDDONE(d!)"))))
+    (should-error (my-org-gtd-initialize))))
+
 (ert-deftest my-org-gtd-org-todo-repeat-to-state ()
   "Test that `org-todo-repeat-to-state' is initialized correctly."
   (let ((my-org-gtd-next-action-keyword "TODO")

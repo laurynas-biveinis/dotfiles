@@ -87,6 +87,14 @@ configuration, with an optional fast state selection character."
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
+(defcustom my-org-gtd-done-keyword "DONE"
+  "The TODO entry keyword that designates a completed task or project.
+It must be present in `org-todo-keyword', either directly or thorugh per-file
+configuration, with an optional fast state selection character."
+  :type '(string)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
+
 (defcustom my-org-gtd-cancelled-keyword "KILL"
   "The TODO entry keyword that designates a cancelled task or project.
 It must be present in `org-todo-keywords', either directly or through per-file
@@ -109,13 +117,14 @@ configuration, with an optional fast state selection character."
 
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
-Checks `org-todo-keywords' against `my-org-gtd-next-action-keyword', initializes
+Checks `org-todo-keywords' against keyword configuration, initializes
 `org-todo-repeat-to-state'. Adds to `org-use-tag-inheritance' and to
 `org-tag-alist' from the tag  variables, selection character variables, and the
 GTD contexts variables."
   ;; Validate config
   (my-org-gtd--check-keyword-in-org-todo-keywords
    my-org-gtd-next-action-keyword)
+  (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-done-keyword)
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-cancelled-keyword)
   ;; Configure itself
   (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
