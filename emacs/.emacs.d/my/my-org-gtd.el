@@ -188,7 +188,7 @@ The heading must be already created."
   (my-org-gtd--insert-item title my-org-gtd-next-action-keyword
                            my-org-gtd-waitingfor-tag))
 
-(defun my-org-complete-item ()
+(defun my-org-gtd-complete-item ()
   "Mark the item (a task or a project) at point as done."
   (org-todo my-org-gtd-done-keyword))
 
