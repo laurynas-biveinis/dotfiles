@@ -56,6 +56,17 @@
         (file-name-nondirectory (car (car sorted-files)))
       (user-error "No PDFs found in %s" directory))))
 
+(defun dotfiles--read-pdf (dir prompt confirmation)
+  "Read a PDF file in DIR with PROMPT, then confirm it with CONFIRMATION.
+While reading, suggest to complete with the latest PDF in the directory.
+CONFIRMATION must have a %s argument which will be replaced with the file path.
+Returns the path or nil."
+  (let* ((latest-pdf (dotfiles--find-latest-pdf dir))
+         (pdf-fn (read-file-name prompt dir latest-pdf t latest-pdf))
+         (pdf-path (expand-file-name pdf-fn dir)))
+    (when (y-or-n-p (format confirmation pdf-path))
+      pdf-path)))
+
 ;;; External program helpers
 
 (defun dotfiles--open-file (file)
