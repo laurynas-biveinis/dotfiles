@@ -129,7 +129,7 @@ there. The temporary file is automatically cleaned up after BODY execution."
       (find-file-noselect name)))
 
 (defmacro dotfiles--in-org-buffer (name &rest body)
-  "Execute the forsm in BODY with NAME `org' buffer temporarily current."
+  "Execute the forms in BODY with NAME `org' buffer temporarily current."
   (declare (indent 1) (debug t))
   `(with-current-buffer (dotfiles--get-org-buffer ,name)
      ,@body))
