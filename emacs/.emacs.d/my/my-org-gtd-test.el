@@ -227,7 +227,8 @@
   "Test `my-org-gtd-insert-waiting-for-next-action' with non-default config."
   (my-org-gtd--buffer-test
       ((my-org-gtd-next-action-keyword "NEXT")
-       (my-org-gtd-waitingfor-tag "@wait"))
+       (my-org-gtd-waitingfor-tag "@wait")
+       (org-todo-keywords '((sequence "NEXT(n!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (org-insert-todo-heading-respect-content)
     (my-org-gtd-insert-waiting-for-next-action "Title text")
