@@ -7445,7 +7445,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.0.2/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.0.2/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.0.3/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.0.3/emacsql-autoloads.el"))
 
 
 
@@ -7492,14 +7492,13 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 (register-definition-prefixes "emacsql-sqlite-module" '("emacsql-sqlite-module-connection"))
-
 
 
 (provide 'emacsql-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.2/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.2/emacsql-sqlite-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.3/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.3/emacsql-sqlite-autoloads.el"))
 
 
 

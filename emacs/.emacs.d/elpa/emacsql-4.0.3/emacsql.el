@@ -6,7 +6,7 @@
 ;; Maintainer: Jonas Bernoulli <emacs.emacsql@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/magit/emacsql
 
-;; Package-Version: 4.0.2
+;; Package-Version: 4.0.3
 ;; Package-Requires: ((emacs "25.1"))
 
 ;; SPDX-License-Identifier: Unlicense
@@ -32,11 +32,13 @@
   "The EmacSQL SQL database front-end."
   :group 'comm)
 
-(defconst emacsql-version "4.0.2")
+(defconst emacsql-version "4.0.3")
 
 (defvar emacsql-global-timeout 30
   "Maximum number of seconds to wait before bailing out on a SQL command.
-If nil, wait forever.")
+If nil, wait forever.  This is used by the `mysql', `pg', `psql' and
+`sqlite' back-ends.  It is not being used by the `sqlite-builtin' and
+`sqlite-module' back-ends, which only use `emacsql-sqlite-busy-timeout'.")
 
 (defvar emacsql-data-root
   (file-name-directory (or load-file-name buffer-file-name))
