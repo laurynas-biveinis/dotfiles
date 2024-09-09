@@ -231,8 +231,8 @@
     (my-org-gtd-insert-waiting-for-next-action "Test title")
     (should (string= (org-get-heading t t) "Test title"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) (my-org-gtd-context-tag
-                                   my-org-gtd-waitingfor-context)))))
+    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+                                         my-org-gtd-waitingfor-context))))))
 
 (ert-deftest my-org-gtd-insert-waiting-for-next-action-reject-empty ()
   "Test that `my-org-gtd-insert-waiting-for-next-action' rejects empty title."
@@ -244,14 +244,18 @@
   "Test `my-org-gtd-insert-waiting-for-next-action' with non-default config."
   (my-org-gtd--buffer-test
       ((my-org-gtd-next-action-keyword "NEXT")
-       (my-org-gtd-waitingfor-tag "@wait")
+       (my-org-gtd-waitingfor-context
+        (make-my-org-gtd-context
+         :tag "@wait" :select-char ?f
+         :description "Waiting-for context"))
        (org-todo-keywords '((sequence "NEXT(n!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (org-insert-todo-heading-respect-content)
     (my-org-gtd-insert-waiting-for-next-action "Title text")
     (should (string= (org-get-heading t t) "Title text"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag)))))
+    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+                                         my-org-gtd-waitingfor-context))))))
 
 (ert-deftest my-org-gtd-insert-project-basic ()
   "Basic test for `my-org-gtd-insert-project'."
@@ -290,8 +294,8 @@
     (my-org-gtd-complete-item)
     (should (string= (org-get-todo-state) my-org-gtd-done-keyword))
     (should (string= (org-get-heading t t) "Test title"))
-    (should (equal (org-get-tags) (my-org-gtd-context-tag
-                                   my-org-gtd-waitingfor-context)))))
+    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+                                         my-org-gtd-waitingfor-context))))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
