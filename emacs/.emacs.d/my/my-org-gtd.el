@@ -13,20 +13,35 @@
 
 ;; Hard dependencies
 (require 'org)
+(require 'cl-lib)
 
 ;; Soft dependencies
 (defvar org-gcal-cancelled-todo-keyword)
 
+;; The context structure
+(cl-defstruct (my-org-gtd-context)
+  "A single GTD context."
+  (tag "" :type string :read-only t :documentation "The `org' tag.")
+  (select-char
+   ? :type character :read-only t
+   :documentation "The `org' quick selection character for the tag.")
+  (description "" :type string :read-only t
+               :documentation "The description string for this context."))
+
+;; Customization
 (defgroup my-org-gtd nil
   "Configure `org' for GTD."
   :group 'org)
 
 (defcustom my-org-gtd-contexts nil
-  "Context strings and select keys for GTD contexts.
-They are exclusive and will be added as a single group to `org-tag-alist',
-together with (`my-org-gtd-waitingfor-tag' . `my-org-gtd-waitingfor-select') by
-`my-org-gtd-initialize'."
-  :type '(repeat (cons string character))
+  "GTD contexts with `org' tags, quick selection characters, and descriptions.
+The tags and the selection keys will be added to as a single group to
+`org-tag-alist', together with (`my-org-gtd-waitingfor-tag' .
+`my-org-gtd-waitingfor-select')  by`my-org-gtd-initialize'."
+  :type '(repeat (struct :tag "Context"
+                         (string :tag "`org' Tag")
+                         (character :tag "Quick selection character")
+                         (string :tag "Description")))
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
@@ -150,7 +165,10 @@ GTD contexts variables."
   (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
-                my-org-gtd-contexts
+                (mapcar (lambda (context)
+                          (cons (my-org-gtd-context-tag context)
+                                (my-org-gtd-context-select-char context)))
+                        my-org-gtd-contexts)
                 (list (cons my-org-gtd-waitingfor-tag
                             my-org-gtd-waitingfor-select))
                 (list (cons :endgroup nil))

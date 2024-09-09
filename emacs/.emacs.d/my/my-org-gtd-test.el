@@ -14,6 +14,15 @@
 
 ;; Test fixture
 
+(defconst my-org-gtd--test-contexts
+  (vector
+   (make-my-org-gtd-context
+    :tag "@c1" :select-char ?a
+    :description "c1 context")
+   (make-my-org-gtd-context
+    :tag "@c2" :select-char ?b
+    :description "c2 context")))
+
 (defmacro my-org-gtd--test-fixture (varlist &rest body)
   "A test fixture for `my-org-gtd' to bind VARLIST vars and execute BODY forms."
   (declare (indent 1) (debug t))
@@ -26,7 +35,7 @@
 (ert-deftest org-tag-alist-construction-empty ()
   "Test that `org-tag-alist' is properly constructed."
   (my-org-gtd--test-fixture ((org-tag-alist nil)
-                             (my-org-gtd-contexts '(("@c1" . ?a) ("@c2" . ?b)))
+                             (my-org-gtd-contexts my-org-gtd--test-contexts)
                              (my-org-gtd-waitingfor-tag "@sometag")
                              (my-org-gtd-waitingfor-select ?f)
                              (my-org-gtd-project-tag "prj")
@@ -46,7 +55,7 @@
 (ert-deftest org-tag-alist-construction-preexisting ()
   "Test that `org-tag-alist' is properly constructed, when it's non-empty."
   (my-org-gtd--test-fixture ((org-tag-alist '(("@x" . ?x)))
-                             (my-org-gtd-contexts '(("@c1" . ?a) ("@c2" . ?b)))
+                             (my-org-gtd-contexts my-org-gtd--test-contexts)
                              (my-org-gtd-waitingfor-tag "@sometag")
                              (my-org-gtd-waitingfor-select ?f)
                              (my-org-gtd-project-tag "prj")
