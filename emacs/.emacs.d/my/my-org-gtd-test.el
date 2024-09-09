@@ -36,8 +36,10 @@
   "Test that `org-tag-alist' is properly constructed."
   (my-org-gtd--test-fixture ((org-tag-alist nil)
                              (my-org-gtd-contexts my-org-gtd--test-contexts)
-                             (my-org-gtd-waitingfor-tag "@sometag")
-                             (my-org-gtd-waitingfor-select ?f)
+                             (my-org-gtd-waitingfor-context
+                              (make-my-org-gtd-context
+                               :tag "@sometag" :select-char ?f
+                               :description "Waiting-for context"))
                              (my-org-gtd-project-tag "prj")
                              (my-org-gtd-project-select ?c)
                              (my-org-gtd-somedaymaybe-tag "maybesomeday")
@@ -56,8 +58,10 @@
   "Test that `org-tag-alist' is properly constructed, when it's non-empty."
   (my-org-gtd--test-fixture ((org-tag-alist '(("@x" . ?x)))
                              (my-org-gtd-contexts my-org-gtd--test-contexts)
-                             (my-org-gtd-waitingfor-tag "@sometag")
-                             (my-org-gtd-waitingfor-select ?f)
+                             (my-org-gtd-waitingfor-context
+                              (make-my-org-gtd-context
+                               :tag "@anothertag" :select-char ?x
+                               :description "Waiting-for context"))
                              (my-org-gtd-project-tag "prj")
                              (my-org-gtd-project-select ?c)
                              (my-org-gtd-somedaymaybe-tag "maybesomeday")
@@ -67,7 +71,7 @@
                    '((:startgroup)
                      ("@c1" . ?a)
                      ("@c2" . ?b)
-                     ("@sometag" . ?f)
+                     ("@anothertag" . ?x)
                      (:endgroup)
                      ("prj" . ?c)
                      ("maybesomeday" . ?d)
@@ -75,7 +79,10 @@
 
 (ert-deftest my-org-gtd-not-waitingfor ()
   "Test that `my-org-gtd-not-waitingfor' is initialized correctly."
-  (my-org-gtd--test-fixture ((my-org-gtd-waitingfor-tag "@foo"))
+  (my-org-gtd--test-fixture
+      ((my-org-gtd-waitingfor-context (make-my-org-gtd-context
+                                       :tag "@foo" :select-char ?x
+                                       :description "Waiting-for context")))
     (my-org-gtd-initialize)
     (should (equal my-org-gtd-not-waitingfor "-@foo"))))
 
@@ -224,7 +231,8 @@
     (my-org-gtd-insert-waiting-for-next-action "Test title")
     (should (string= (org-get-heading t t) "Test title"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag)))))
+    (should (equal (org-get-tags) (my-org-gtd-context-tag
+                                   my-org-gtd-waitingfor-context)))))
 
 (ert-deftest my-org-gtd-insert-waiting-for-next-action-reject-empty ()
   "Test that `my-org-gtd-insert-waiting-for-next-action' rejects empty title."
@@ -282,7 +290,8 @@
     (my-org-gtd-complete-item)
     (should (string= (org-get-todo-state) my-org-gtd-done-keyword))
     (should (string= (org-get-heading t t) "Test title"))
-    (should (equal (org-get-tags) `(,my-org-gtd-waitingfor-tag)))))
+    (should (equal (org-get-tags) (my-org-gtd-context-tag
+                                   my-org-gtd-waitingfor-context)))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags

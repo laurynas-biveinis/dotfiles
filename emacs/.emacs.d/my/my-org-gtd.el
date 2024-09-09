@@ -49,15 +49,14 @@ The tags and the selection keys will be added to as a single group to
   "A substring for `org-agenda' blocks to exclude `my-org-gtd-waitingfor-tag'.
 Initialized by `my-org-gtd-initialize'.")
 
-(defcustom my-org-gtd-waitingfor-tag "@waitingfor"
-  "The `org' tag used for GTD waiting-for items."
-  :type '(string)
-  :group 'my-org-gtd
-  :package-version '(my-org-gtd . "0.1"))
-
-(defcustom my-org-gtd-waitingfor-select ?w
-  "The character to select the GTD waiting-for tag."
-  :type '(character)
+(defcustom my-org-gtd-waitingfor-context
+  (make-my-org-gtd-context :tag "@waitingfor" :select-char ?w
+                           :description "Waiting-for items")
+  "The GTD waiting-for context."
+  :type '(struct :tag "GTD waiting-for context"
+                 (string :tag "`org Tag")
+                 (character :tag "Quick selection character")
+                 (string :tag "Description"))
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
@@ -143,7 +142,8 @@ GTD contexts variables."
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-cancelled-keyword)
   ;; Configure itself
   (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
-  (setq my-org-gtd-not-waitingfor (concat "-" my-org-gtd-waitingfor-tag))
+  (setq my-org-gtd-not-waitingfor
+        (concat "-" (my-org-gtd-context-tag my-org-gtd-waitingfor-context)))
   (setq my-org-gtd-not-somedaymaybe (concat "-" my-org-gtd-somedaymaybe-tag))
   ;; Configure `org'
   (cond
@@ -168,9 +168,8 @@ GTD contexts variables."
                 (mapcar (lambda (context)
                           (cons (my-org-gtd-context-tag context)
                                 (my-org-gtd-context-select-char context)))
-                        my-org-gtd-contexts)
-                (list (cons my-org-gtd-waitingfor-tag
-                            my-org-gtd-waitingfor-select))
+                        (cons my-org-gtd-waitingfor-context
+                              my-org-gtd-contexts))
                 (list (cons :endgroup nil))
                 (list (cons my-org-gtd-project-tag
                             my-org-gtd-project-select))
@@ -204,7 +203,8 @@ The heading must be already created."
   "Insert a new next action waiting-for task with TITLE at point.
 The heading must be already created."
   (my-org-gtd--insert-item title my-org-gtd-next-action-keyword
-                           my-org-gtd-waitingfor-tag))
+                           (my-org-gtd-context-tag
+                            my-org-gtd-waitingfor-context)))
 
 (defun my-org-gtd-complete-item ()
   "Mark the item (a task or a project) at point as done."
