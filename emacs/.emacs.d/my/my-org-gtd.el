@@ -168,8 +168,8 @@ GTD contexts variables."
                 (mapcar (lambda (context)
                           (cons (my-org-gtd-context-tag context)
                                 (my-org-gtd-context-select-char context)))
-                        (cons my-org-gtd-waitingfor-context
-                              my-org-gtd-contexts))
+                        (append my-org-gtd-contexts
+                                (list my-org-gtd-waitingfor-context)))
                 (list (cons :endgroup nil))
                 (list (cons my-org-gtd-project-tag
                             my-org-gtd-project-select))
