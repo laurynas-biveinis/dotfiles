@@ -57,8 +57,10 @@
                               (make-my-org-gtd-context
                                :tag "prj" :select-char ?c
                                :description "Projects"))
-                             (my-org-gtd-somedaymaybe-tag "maybesomeday")
-                             (my-org-gtd-somedaymaybe-select ?d))
+                             (my-org-gtd-somedaymaybe-context
+                              (make-my-org-gtd-context
+                               :tag "maybesomeday" :select-char ?d
+                               :description "Someday/maybe")))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -81,8 +83,10 @@
                               (make-my-org-gtd-context
                                :tag "foo" :select-char ?f
                                :description "Foos"))
-                             (my-org-gtd-somedaymaybe-tag "maybesomeday")
-                             (my-org-gtd-somedaymaybe-select ?d))
+                             (my-org-gtd-somedaymaybe-context
+                              (make-my-org-gtd-context
+                               :tag "maybesomeday" :select-char ?d
+                               :description "Someday/maybe")))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -93,12 +97,6 @@
                      ("foo" . ?f)
                      ("maybesomeday" . ?d)
                      ("@x" . ?x))))))
-
-(ert-deftest my-org-gtd-not-somedaymaybe ()
-  "Test that `my-org-gtd-not-somedaymaybe' is initialized correctly."
-  (my-org-gtd--test-fixture ((my-org-gtd-somedaymaybe-tag "blah"))
-    (my-org-gtd-initialize)
-    (should (equal my-org-gtd-not-somedaymaybe "-blah"))))
 
 (ert-deftest my-org-gtd-next-action-keyword-not-in-org-todo-keywords ()
   "Test that the next action keyword must be present in `org-todo-keywords'."
@@ -153,33 +151,48 @@
 (ert-deftest my-org-gtd-org-use-tag-inheritance-matching-regex ()
   "Test `org-use-tag-inheritance' matching `my-org-gtd-somedaymaybe-tag'."
   (my-org-gtd--test-fixture ((org-use-tag-inheritance "may.*")
-                             (my-org-gtd-somedaymaybe-tag "maybe"))
+                             (my-org-gtd-somedaymaybe-context
+                              (make-my-org-gtd-context
+                               :tag "maybe" :select-char ?d
+                               :description "Someday/maybe")))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance "may.*"))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-not-matching-regex ()
   "Test `org-use-tag-inheritance' not matching `my-org-gtd-somedaymaybe-tag'."
   (my-org-gtd--test-fixture ((org-use-tag-inheritance "foo.*")
-                             (my-org-gtd-somedaymaybe-tag "maybe"))
+                             (my-org-gtd-somedaymaybe-context
+                              (make-my-org-gtd-context
+                               :tag "maybe" :select-char ?d
+                               :description "Someday/maybe")))
     (should-error (my-org-gtd-initialize))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-add-to-list ()
   "Test adding `my-org-gtd-somedaymaybe-tag' to `org-use-tag-inheritance'."
   (my-org-gtd--test-fixture ((org-use-tag-inheritance '("foo" "bar"))
-                             (my-org-gtd-somedaymaybe-tag "somedaymaybe"))
+                             (my-org-gtd-somedaymaybe-context
+                              (make-my-org-gtd-context
+                               :tag "somedaymaybe" :select-char ?d
+                               :description "Someday/maybe")))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance '("somedaymaybe" "foo" "bar")))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-already-in-list ()
   "Test `org-use-tag-inheritance' containing `my-org-gtd-somedaymaybe-tag'."
   (my-org-gtd--test-fixture ((org-use-tag-inheritance '("foo" "bar"))
-                             (my-org-gtd-somedaymaybe-tag "foo"))
+                             (my-org-gtd-somedaymaybe-context
+                              (make-my-org-gtd-context
+                               :tag "foo" :select-char ?d
+                               :description "Someday/maybe")))
     (should-error (my-org-gtd-initialize))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-wrong-type ()
   "Test `org-use-tag-inheritance' being of unrecognized type.."
   (my-org-gtd--test-fixture ((org-use-tag-inheritance 42)
-                             (my-org-gtd-somedaymaybe-tag "foo"))
+                             (my-org-gtd-somedaymaybe-context
+                              (make-my-org-gtd-context
+                               :tag "foo" :select-char ?d
+                               :description "Someday/maybe")))
     (should-error (my-org-gtd-initialize))))
 
 (ert-deftest my-org-gtd-cancelled-keyword-not-in-org-todo-keywords ()
@@ -212,7 +225,10 @@
 (ert-deftest my-org-gtd-active-todo-search-basic ()
   "Basic test for `my-org-gtd-active-todo-search'."
   (my-org-gtd--test-fixture
-      ((my-org-gtd-somedaymaybe-tag "oneday")
+      ((my-org-gtd-somedaymaybe-context
+        (make-my-org-gtd-context
+         :tag "oneday" :select-char ?d
+         :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)

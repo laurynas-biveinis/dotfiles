@@ -71,19 +71,14 @@ The tags and the selection keys will be added to as a single group to
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
-(defvar my-org-gtd-not-somedaymaybe nil
-  "A substring for `org-agenda' to exclude `my-org-gtd-somedaymaybe-tag'.
-Initialized by `my-org-gtd-initialize'.")
-
-(defcustom my-org-gtd-somedaymaybe-tag "somedaymaybe"
-  "The `org' tag used for GTD someday/maybe items."
-  :type '(string)
-  :group 'my-org-gtd
-  :package-version '(my-org-gtd . "0.1"))
-
-(defcustom my-org-gtd-somedaymaybe-select ?m
-  "The character to select the GTD someday/maybe tag."
-  :type '(character)
+(defcustom my-org-gtd-somedaymaybe-context
+  (make-my-org-gtd-context :tag "somedaymaybe" :select-char ?m
+                           :description "Projects")
+  "The GTD project context."
+  :type '(struct :tag "Someday/maybe item context."
+                 (string :tag "`org Tag")
+                 (character :tag "Quick selection character")
+                 (string :tag "Description"))
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
@@ -140,25 +135,25 @@ GTD contexts variables."
    my-org-gtd-next-action-keyword)
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-done-keyword)
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-cancelled-keyword)
-  ;; Configure itself
-  (setq my-org-gtd-not-somedaymaybe (concat "-" my-org-gtd-somedaymaybe-tag))
   ;; Configure `org'
-  (cond
-   ((eq org-use-tag-inheritance t)
-    nil)
-   ((stringp org-use-tag-inheritance)
-    (unless (string-match-p org-use-tag-inheritance my-org-gtd-somedaymaybe-tag)
-      (user-error
-       "`my-org-gtd-somedaymaybe-tag' %s does not match `org-use-tag-inheritance' regex %s"
-       my-org-gtd-somedaymaybe-tag org-use-tag-inheritance)))
-   ((listp org-use-tag-inheritance)
-    (when (member my-org-gtd-somedaymaybe-tag org-use-tag-inheritance)
-      (user-error
-       "`my-org-gtd-somedaymaybe-tag' %s already in `org-use-tag-inheritance' %S"
-       my-org-gtd-somedaymaybe-tag org-use-tag-inheritance))
-    (push my-org-gtd-somedaymaybe-tag org-use-tag-inheritance))
-   (t (user-error "Don't know how handle `org-use-tag-inheritance' value %S"
-                  org-use-tag-inheritance)))
+  (let ((somedaymaybe-tag (my-org-gtd-context-tag
+                           my-org-gtd-somedaymaybe-context)))
+    (cond
+     ((eq org-use-tag-inheritance t)
+      nil)
+     ((stringp org-use-tag-inheritance)
+      (unless (string-match-p org-use-tag-inheritance somedaymaybe-tag)
+        (user-error
+         "`my-org-gtd-somedaymaybe-context' tag %s does not match `org-use-tag-inheritance' regex %s"
+         somedaymaybe-tag org-use-tag-inheritance)))
+     ((listp org-use-tag-inheritance)
+      (when (member somedaymaybe-tag org-use-tag-inheritance)
+        (user-error
+         "`my-org-gtd-somedaymaybe-context' %s already in `org-use-tag-inheritance' %S"
+         somedaymaybe-tag org-use-tag-inheritance))
+      (push somedaymaybe-tag org-use-tag-inheritance))
+     (t (user-error "Don't know how handle `org-use-tag-inheritance' value %S"
+                    org-use-tag-inheritance))))
   (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
@@ -168,16 +163,16 @@ GTD contexts variables."
                 (list (cons :endgroup nil))
                 (list (my-org-gtd--make-org-alist-cons-cell
                        my-org-gtd-project-context))
-                (list (cons my-org-gtd-somedaymaybe-tag
-                            my-org-gtd-somedaymaybe-select))
+                (list (my-org-gtd--make-org-alist-cons-cell
+                       my-org-gtd-somedaymaybe-context))
                 org-tag-alist))
   ;; Configure `org-gcal'
   (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
 
 (defun my-org-gtd-active-todo-search (context)
   "Return an `org' search string for next actions in CONTEXT."
-  (concat context my-org-gtd-not-somedaymaybe "/!"
-          my-org-gtd-next-action-keyword))
+  (concat context (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)
+          "/!" my-org-gtd-next-action-keyword))
 
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
