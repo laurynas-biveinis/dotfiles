@@ -10370,7 +10370,7 @@ A major mode for editing .gitignore files.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240903.418/git-gutter-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-20240903.418/git-gutter-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-0.93/git-gutter-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-gutter-0.93/git-gutter-autoloads.el"))
 
 
 
