@@ -124,6 +124,11 @@ configuration, with an optional fast state selection character."
            org-todo-keywords)
     (user-error "'%s' must be present in `org-todo-keywords'" keyword)))
 
+(defun my-org-gtd--make-org-alist-cons-cell (context)
+  "Convert a CONTEXT to a cons cell for `org-tag-alist'."
+  (cons (my-org-gtd-context-tag context)
+        (my-org-gtd-context-select-char context)))
+
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
 Checks `org-todo-keywords' against keyword configuration, initializes
@@ -157,15 +162,12 @@ GTD contexts variables."
   (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
-                (mapcar (lambda (context)
-                          (cons (my-org-gtd-context-tag context)
-                                (my-org-gtd-context-select-char context)))
+                (mapcar #'my-org-gtd--make-org-alist-cons-cell
                         (append my-org-gtd-contexts
                                 (list my-org-gtd-waitingfor-context)))
                 (list (cons :endgroup nil))
-                (list (cons (my-org-gtd-context-tag my-org-gtd-project-context)
-                            (my-org-gtd-context-select-char
-                             my-org-gtd-project-context)))
+                (list (my-org-gtd--make-org-alist-cons-cell
+                       my-org-gtd-project-context))
                 (list (cons my-org-gtd-somedaymaybe-tag
                             my-org-gtd-somedaymaybe-select))
                 org-tag-alist))
