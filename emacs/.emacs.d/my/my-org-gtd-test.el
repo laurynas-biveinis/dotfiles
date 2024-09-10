@@ -32,6 +32,19 @@
          ,@varlist)
      ,@body))
 
+;; Test `my-org-gtd-context'
+
+(ert-deftest my-org-gtd-context-not-tag-basic ()
+  "Basic test for `my-org-gtd-context-not-tag'."
+  (my-org-gtd--test-fixture
+      ((my-org-gtd-waitingfor-context (make-my-org-gtd-context
+                                       :tag "@foo" :select-char ?x
+                                       :description "Waiting-for context")))
+    (should (equal (my-org-gtd-context-not-tag my-org-gtd-waitingfor-context)
+                   "-@foo"))))
+
+;; Test `my-org-gtd-initialize'
+
 (ert-deftest org-tag-alist-construction-empty ()
   "Test that `org-tag-alist' is properly constructed."
   (my-org-gtd--test-fixture ((org-tag-alist nil)
@@ -76,15 +89,6 @@
                      ("prj" . ?c)
                      ("maybesomeday" . ?d)
                      ("@x" . ?x))))))
-
-(ert-deftest my-org-gtd-not-waitingfor ()
-  "Test that `my-org-gtd-not-waitingfor' is initialized correctly."
-  (my-org-gtd--test-fixture
-      ((my-org-gtd-waitingfor-context (make-my-org-gtd-context
-                                       :tag "@foo" :select-char ?x
-                                       :description "Waiting-for context")))
-    (my-org-gtd-initialize)
-    (should (equal my-org-gtd-not-waitingfor "-@foo"))))
 
 (ert-deftest my-org-gtd-not-project ()
   "Test that `my-org-gtd-not-project' is initialized correctly."

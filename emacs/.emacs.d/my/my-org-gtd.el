@@ -28,6 +28,10 @@
   (description "" :type string :read-only t
                :documentation "The description string for this context."))
 
+(defun my-org-gtd-context-not-tag (gtd-context)
+  "Get the substring for `org-agenda' blocks to exclude GTD-CONTEXT."
+  (concat "-" (my-org-gtd-context-tag gtd-context)))
+
 ;; Customization
 (defgroup my-org-gtd nil
   "Configure `org' for GTD."
@@ -44,10 +48,6 @@ The tags and the selection keys will be added to as a single group to
                          (string :tag "Description")))
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
-
-(defvar my-org-gtd-not-waitingfor nil
-  "A substring for `org-agenda' blocks to exclude `my-org-gtd-waitingfor-tag'.
-Initialized by `my-org-gtd-initialize'.")
 
 (defcustom my-org-gtd-waitingfor-context
   (make-my-org-gtd-context :tag "@waitingfor" :select-char ?w
@@ -142,8 +142,6 @@ GTD contexts variables."
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-cancelled-keyword)
   ;; Configure itself
   (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
-  (setq my-org-gtd-not-waitingfor
-        (concat "-" (my-org-gtd-context-tag my-org-gtd-waitingfor-context)))
   (setq my-org-gtd-not-somedaymaybe (concat "-" my-org-gtd-somedaymaybe-tag))
   ;; Configure `org'
   (cond
