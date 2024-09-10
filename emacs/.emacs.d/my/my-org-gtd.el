@@ -163,7 +163,9 @@ GTD contexts variables."
                         (append my-org-gtd-contexts
                                 (list my-org-gtd-waitingfor-context)))
                 (list (cons :endgroup nil))
-                (list my-org-gtd-project-context)
+                (list (cons (my-org-gtd-context-tag my-org-gtd-project-context)
+                            (my-org-gtd-context-select-char
+                             my-org-gtd-project-context)))
                 (list (cons my-org-gtd-somedaymaybe-tag
                             my-org-gtd-somedaymaybe-select))
                 org-tag-alist))
