@@ -279,14 +279,18 @@
   "Test `my-org-gtd-insert-project' with non-default config."
   (my-org-gtd--buffer-test
       ((my-org-gtd-next-action-keyword "FOO")
-       (my-org-gtd-project-tag "bar")
+       (my-org-gtd-project-context
+        (make-my-org-gtd-context
+         :tag "bar" :select-char ?b
+         :description "Bars"))
        (org-todo-keywords '((sequence "FOO" "|" "DONE" "KILL"))))
     (my-org-gtd-initialize)
     (org-insert-todo-heading-respect-content)
     (my-org-gtd-insert-project "Title text")
     (should (string= (org-get-heading t t) "Title text"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) `(,my-org-gtd-project-tag)))))
+    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+                                         my-org-gtd-project-context))))))
 
 (ert-deftest my-org-gtd-complete-item-basic ()
   "Basic test for `my-org-complete-item'."

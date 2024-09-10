@@ -60,10 +60,6 @@ The tags and the selection keys will be added to as a single group to
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
-(defvar my-org-gtd-not-project nil
-  "A substring for `org-agenda' blocks to exclude `my-org-gtd-project-tag'.
-Initialized by `my-org-gtd-initialize'.")
-
 (defcustom my-org-gtd-project-context
   (make-my-org-gtd-context :tag "project" :select-char ?p
                            :description "Projects")
