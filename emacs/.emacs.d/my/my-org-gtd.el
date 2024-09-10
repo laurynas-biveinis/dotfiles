@@ -63,7 +63,7 @@ The tags and the selection keys will be added to as a single group to
 (defcustom my-org-gtd-project-context
   (make-my-org-gtd-context :tag "project" :select-char ?p
                            :description "Projects")
-  "The GTD waiting-for context."
+  "The GTD project context."
   :type '(struct :tag "Projects. Not a GTD context but works as one in `org'."
                  (string :tag "`org Tag")
                  (character :tag "Quick selection character")
