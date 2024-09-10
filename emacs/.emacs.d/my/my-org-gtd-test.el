@@ -53,8 +53,10 @@
                               (make-my-org-gtd-context
                                :tag "@sometag" :select-char ?f
                                :description "Waiting-for context"))
-                             (my-org-gtd-project-tag "prj")
-                             (my-org-gtd-project-select ?c)
+                             (my-org-gtd-project-context
+                              (make-my-org-gtd-context
+                               :tag "prj" :select-char ?c
+                               :description "Projects"))
                              (my-org-gtd-somedaymaybe-tag "maybesomeday")
                              (my-org-gtd-somedaymaybe-select ?d))
     (my-org-gtd-initialize)
@@ -75,8 +77,10 @@
                               (make-my-org-gtd-context
                                :tag "@anothertag" :select-char ?x
                                :description "Waiting-for context"))
-                             (my-org-gtd-project-tag "prj")
-                             (my-org-gtd-project-select ?c)
+                             (my-org-gtd-project-context
+                              (make-my-org-gtd-context
+                               :tag "foo" :select-char ?f
+                               :description "Foos"))
                              (my-org-gtd-somedaymaybe-tag "maybesomeday")
                              (my-org-gtd-somedaymaybe-select ?d))
     (my-org-gtd-initialize)
@@ -86,15 +90,9 @@
                      ("@c2" . ?b)
                      ("@anothertag" . ?x)
                      (:endgroup)
-                     ("prj" . ?c)
+                     ("foo" . ?f)
                      ("maybesomeday" . ?d)
                      ("@x" . ?x))))))
-
-(ert-deftest my-org-gtd-not-project ()
-  "Test that `my-org-gtd-not-project' is initialized correctly."
-  (my-org-gtd--test-fixture ((my-org-gtd-project-tag "foo"))
-    (my-org-gtd-initialize)
-    (should (equal my-org-gtd-not-project "-foo"))))
 
 (ert-deftest my-org-gtd-not-somedaymaybe ()
   "Test that `my-org-gtd-not-somedaymaybe' is initialized correctly."
@@ -268,7 +266,8 @@
     (my-org-gtd-insert-project "Test title")
     (should (string= (org-get-heading t t) "Test title"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) `(,my-org-gtd-project-tag)))))
+    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+                                         my-org-gtd-project-context))))))
 
 (ert-deftest my-org-gtd-insert-project-reject-empty ()
   "Test that `my-org-gtd-insert-project' rejects empty title."

@@ -64,15 +64,14 @@ The tags and the selection keys will be added to as a single group to
   "A substring for `org-agenda' blocks to exclude `my-org-gtd-project-tag'.
 Initialized by `my-org-gtd-initialize'.")
 
-(defcustom my-org-gtd-project-tag "project"
-  "The `org' tag used for GTD projects."
-  :type '(string)
-  :group 'my-org-gtd
-  :package-version '(my-org-gtd . "0.1"))
-
-(defcustom my-org-gtd-project-select ?p
-  "The character to select the GTD project tag."
-  :type '(character)
+(defcustom my-org-gtd-project-context
+  (make-my-org-gtd-context :tag "project" :select-char ?p
+                           :description "Projects")
+  "The GTD waiting-for context."
+  :type '(struct :tag "Projects. Not a GTD context but works as one in `org'."
+                 (string :tag "`org Tag")
+                 (character :tag "Quick selection character")
+                 (string :tag "Description"))
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
@@ -141,7 +140,6 @@ GTD contexts variables."
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-done-keyword)
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-cancelled-keyword)
   ;; Configure itself
-  (setq my-org-gtd-not-project (concat "-" my-org-gtd-project-tag))
   (setq my-org-gtd-not-somedaymaybe (concat "-" my-org-gtd-somedaymaybe-tag))
   ;; Configure `org'
   (cond
@@ -169,8 +167,7 @@ GTD contexts variables."
                         (append my-org-gtd-contexts
                                 (list my-org-gtd-waitingfor-context)))
                 (list (cons :endgroup nil))
-                (list (cons my-org-gtd-project-tag
-                            my-org-gtd-project-select))
+                (list my-org-gtd-project-context)
                 (list (cons my-org-gtd-somedaymaybe-tag
                             my-org-gtd-somedaymaybe-select))
                 org-tag-alist))
@@ -195,7 +192,8 @@ The heading must be already created."
   "Insert a new project task with TITLE at point.
 The heading must be already created."
   (my-org-gtd--insert-item title my-org-gtd-next-action-keyword
-                           my-org-gtd-project-tag))
+                           (my-org-gtd-context-tag
+                            my-org-gtd-project-context)))
 
 (defun my-org-gtd-insert-waiting-for-next-action (title)
   "Insert a new next action waiting-for task with TITLE at point.
