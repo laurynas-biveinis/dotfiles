@@ -1,0 +1,48 @@
+#+TITLE: my-org-gtd: GTD implementation bricks in Org
+
+* Introduction
+
+This package provides a set of building blocks for a custom GTD implementation, with
+focus on automation.
+
+* Configuration
+
+The package puts the following constraints on the ~org~ configuration for the
+purposes of GTD implementation:
+- A /project/ is tagged with a configurable project category-specific tag and also
+  has a TODO entry keyword.
+- /Someday-maybe/ items are marked with their category tag, which is configured to be
+  inheritable in ~org~. The items are moved to and from someday/maybe by refiling,
+  thus each ~org~ file should have a top-level heading tagged with this tag.
+
+The customization items are:
+- ~my-org-gtd-contexts~: TODO
+- ~my-org-gtd-waitingfor-context~: TODO
+- ~my-org-gtd-project-context~: TODO
+- ~my-org-gtd-somedaymaybe-context~: TODO
+- TODO
+
+* Usage
+
+Use the following commands to setup your agenda views: ~my-org-gtd-agenda~,
+~my-org-gtd-active-todo-search~. TODO.
+
+Use the following commands to implement your automation: TODO.
+
+* Comparison with other ~org~ GTD packages
+
+** =org-gtd=
+
+=org-gtd= provides a full prescriptive GTD implementation, covering the whole
+workflow. This package, on the other hand, provides some of the building blocks to
+build your own implementation without prescribing the whole workflow.
+
+** =org-edna=
+
+=org-edna= provides dependency management for =org= tasks for automation. While this
+package also focuses on automation, it does not focus on the dependencies much. Both
+packages can be used together.
+
+* License
+
+TODO
