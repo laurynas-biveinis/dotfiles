@@ -234,6 +234,14 @@
     (my-org-gtd-initialize)
     (should (equal (my-org-gtd-active-todo-search "ctx") "ctx-oneday/!DOIT"))))
 
+(ert-deftest my-org-gtd-agenda-basic ()
+  "Basic test for `my-org-gtd-agenda'."
+  (my-org-gtd--test-fixture
+      ((context (make-my-org-gtd-context :tag "foo" :select-char ?f
+                                         :description "Foo description")))
+    (should (equal (my-org-gtd-agenda context)
+                   '("Foo description" tags-todo "foo")))))
+
 (defmacro my-org-gtd--buffer-test (varlist &rest body)
   "Set up a temp `org' buffer, bind VARLIST and execute BODY in the fixture."
   (declare (indent 1) (debug t))

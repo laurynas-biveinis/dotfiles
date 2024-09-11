@@ -174,6 +174,11 @@ GTD contexts variables."
   (concat context (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)
           "/!" my-org-gtd-next-action-keyword))
 
+(defun my-org-gtd-agenda (context)
+  "Return an `org-agenda' command part to show active items from CONTEXT."
+  (list (my-org-gtd-context-description context) 'tags-todo
+        (my-org-gtd-context-tag context)))
+
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
 The heading must be already created."
