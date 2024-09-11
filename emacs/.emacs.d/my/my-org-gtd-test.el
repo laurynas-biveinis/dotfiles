@@ -226,9 +226,8 @@
   "Basic test for `my-org-gtd-active-todo-search'."
   (my-org-gtd--test-fixture
       ((my-org-gtd-somedaymaybe-context
-        (make-my-org-gtd-context
-         :tag "oneday" :select-char ?d
-         :description "Someday/maybe"))
+        (make-my-org-gtd-context :tag "oneday" :select-char ?d
+                                 :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
@@ -241,6 +240,16 @@
                                          :description "Foo description")))
     (should (equal (my-org-gtd-agenda context)
                    '("Foo description" tags-todo "foo")))))
+
+(ert-deftest my-org-gtd-somedaymaybe-agenda-basic ()
+  "Basic test for `my-org-gtd-somedaymaybe-agenda'."
+  (my-org-gtd--test-fixture
+      ((my-org-gtd-somedaymaybe-context
+        (make-my-org-gtd-context :tag "bar" :select-char ?b
+                                 :description "Bar description")))
+    (should (equal (my-org-gtd-somedaymaybe-agenda)
+                   '("Bar description" tags-todo "bar+LEVEL=2"
+                     ((org-agenda-dim-blocked-tasks nil)))))))
 
 (defmacro my-org-gtd--buffer-test (varlist &rest body)
   "Set up a temp `org' buffer, bind VARLIST and execute BODY in the fixture."

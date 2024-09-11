@@ -175,9 +175,19 @@ GTD contexts variables."
           "/!" my-org-gtd-next-action-keyword))
 
 (defun my-org-gtd-agenda (context)
-  "Return an `org-agenda' command part to show active items from CONTEXT."
+  "Return an `org-agenda' command part to show active items from CONTEXT.
+TODO(laurynas) example (also to README)."
   (list (my-org-gtd-context-description context) 'tags-todo
         (my-org-gtd-context-tag context)))
+
+(defun my-org-gtd-somedaymaybe-agenda ()
+  "Return an `org-agenda' command part to show someday/maybe item.
+TODO(laurynas) explanation for LEVEL=2."
+  (list (my-org-gtd-context-description my-org-gtd-somedaymaybe-context)
+        'tags-todo
+        (concat (my-org-gtd-context-tag my-org-gtd-somedaymaybe-context)
+                "+LEVEL=2")
+        '((org-agenda-dim-blocked-tasks nil))))
 
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
