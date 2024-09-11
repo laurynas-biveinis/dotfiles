@@ -18,7 +18,7 @@
 ;; Soft dependencies
 (defvar org-gcal-cancelled-todo-keyword)
 
-;; The context structure
+;; The context structure. FIXME(laurynas): rename, not only context
 (cl-defstruct (my-org-gtd-context)
   "A single GTD context."
   (tag "" :type string :read-only t :documentation "The `org' tag.")
@@ -84,9 +84,9 @@ The tags and the selection keys will be added to as a single group to
 
 (defcustom my-org-gtd-next-action-keyword "TODO"
   "The TODO entry keyword that designates a GTD next action.
-Projects also have this keyword (in addition to `my-org-gtd-project-tag' tag.)
-It must be present in `org-todo-keywords', either directly or through per-file
-configuration, with an optional fast state selection character."
+Projects also have this keyword (in addition to `my-org-gtd-project-context'
+tag.) It must be present in `org-todo-keywords', either directly or through
+per-file configuration, with an optional fast state selection character."
   :type '(string)
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
