@@ -173,7 +173,9 @@ GTD contexts variables."
   "Return an `org' search string for next actions in CONTEXTS."
   (let ((not-somedaymaybe
          (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)))
-    (concat (mapconcat (lambda (context) (concat context not-somedaymaybe))
+    (concat (mapconcat (lambda (context)
+                         (concat (my-org-gtd-context-tag context)
+                                 not-somedaymaybe))
                        contexts "|")
             "/!" my-org-gtd-next-action-keyword)))
 

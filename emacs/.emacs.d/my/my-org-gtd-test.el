@@ -225,24 +225,30 @@
 (ert-deftest my-org-gtd-active-todo-search-one-context ()
   "Test for `my-org-gtd-active-todo-search' with one context."
   (my-org-gtd--test-fixture
-      ((my-org-gtd-somedaymaybe-context
+      ((ctx (make-my-org-gtd-context :tag "ctx" :select-char ?c
+                                     :description "ctx description"))
+       (my-org-gtd-somedaymaybe-context
         (make-my-org-gtd-context :tag "oneday" :select-char ?d
                                  :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
-    (should (equal (my-org-gtd-active-todo-search "ctx") "ctx-oneday/!DOIT"))))
+    (should (equal (my-org-gtd-active-todo-search ctx) "ctx-oneday/!DOIT"))))
 
 (ert-deftest my-org-gtd-active-todo-search-two-contexts ()
   "Test for `my-org-gtd-active-todo-search' with two contexts."
   (my-org-gtd--test-fixture
-      ((my-org-gtd-somedaymaybe-context
+      ((ctx (make-my-org-gtd-context :tag "ctx" :select-char ?c
+                                     :description "ctx description"))
+       (ctx2 (make-my-org-gtd-context :tag "foo" :select-char ?f
+                                      :description "foo description"))
+       (my-org-gtd-somedaymaybe-context
         (make-my-org-gtd-context :tag "maybe" :select-char ?m
                                  :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
-    (should (equal (my-org-gtd-active-todo-search "ctx" "foo")
+    (should (equal (my-org-gtd-active-todo-search ctx ctx2)
                    "ctx-maybe|foo-maybe/!DOIT"))))
 
 (ert-deftest my-org-gtd-agenda-basic ()
