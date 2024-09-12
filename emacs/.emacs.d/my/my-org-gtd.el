@@ -189,6 +189,19 @@ TODO(laurynas) explanation for LEVEL=2."
                 "+LEVEL=2")
         '((org-agenda-dim-blocked-tasks nil))))
 
+(defun my-org-gtd-active-non-project-tasks-agenda ()
+  "Return an `org-agenda' command part to show active non-project next actions."
+  (list "Non-project next actions"
+        'tags-todo
+        (concat (my-org-gtd-context-not-tag my-org-gtd-project-context)
+                (my-org-gtd-context-not-tag my-org-gtd-waitingfor-context)
+                (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)
+                "/!" my-org-gtd-next-action-keyword)
+        `((org-use-tag-inheritance (,(my-org-gtd-context-tag
+                                      my-org-gtd-project-context)
+                                    ,(my-org-gtd-context-tag
+                                      my-org-gtd-somedaymaybe-context))))))
+
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
 The heading must be already created."

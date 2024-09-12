@@ -251,6 +251,24 @@
                    '("Bar description" tags-todo "bar+LEVEL=2"
                      ((org-agenda-dim-blocked-tasks nil)))))))
 
+(ert-deftest my-org-gtd-active-non-project-tasks-basic ()
+  "Basic test for `my-org-gtd-active-non-project-tasks-agenda'."
+  (my-org-gtd--test-fixture
+      ((my-org-gtd-project-context
+        (make-my-org-gtd-context :tag "prj" :select-char ?p
+                                 :description "Prj description"))
+       (my-org-gtd-somedaymaybe-context
+        (make-my-org-gtd-context :tag "maybe" :select-char ?m
+                                 :description "Maybe description"))
+       (my-org-gtd-waitingfor-context
+        (make-my-org-gtd-context :tag "wait" :select-char ?w
+                                 :description "Wait context"))
+       (my-org-gtd-next-action-keyword "NEXT"))
+    (should (equal (my-org-gtd-active-non-project-tasks-agenda)
+                   '("Non-project next actions" tags-todo
+                     "-prj-wait-maybe/!NEXT"
+                     ((org-use-tag-inheritance ("prj" "maybe"))))))))
+
 (defmacro my-org-gtd--buffer-test (varlist &rest body)
   "Set up a temp `org' buffer, bind VARLIST and execute BODY in the fixture."
   (declare (indent 1) (debug t))
