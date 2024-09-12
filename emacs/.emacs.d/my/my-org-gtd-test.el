@@ -222,8 +222,8 @@
     (should (equal org-gcal-cancelled-todo-keyword
                    my-org-gtd-cancelled-keyword))))
 
-(ert-deftest my-org-gtd-active-todo-search-basic ()
-  "Basic test for `my-org-gtd-active-todo-search'."
+(ert-deftest my-org-gtd-active-todo-search-one-context ()
+  "Test for `my-org-gtd-active-todo-search' with one context."
   (my-org-gtd--test-fixture
       ((my-org-gtd-somedaymaybe-context
         (make-my-org-gtd-context :tag "oneday" :select-char ?d
@@ -232,6 +232,18 @@
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (should (equal (my-org-gtd-active-todo-search "ctx") "ctx-oneday/!DOIT"))))
+
+(ert-deftest my-org-gtd-active-todo-search-two-contexts ()
+  "Test for `my-org-gtd-active-todo-search' with two contexts."
+  (my-org-gtd--test-fixture
+      ((my-org-gtd-somedaymaybe-context
+        (make-my-org-gtd-context :tag "maybe" :select-char ?m
+                                 :description "Someday/maybe"))
+       (my-org-gtd-next-action-keyword "DOIT")
+       (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
+    (my-org-gtd-initialize)
+    (should (equal (my-org-gtd-active-todo-search "ctx" "foo")
+                   "ctx-maybe|foo-maybe/!DOIT"))))
 
 (ert-deftest my-org-gtd-agenda-basic ()
   "Basic test for `my-org-gtd-agenda'."

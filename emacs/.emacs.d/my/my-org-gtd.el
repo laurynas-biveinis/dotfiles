@@ -169,10 +169,13 @@ GTD contexts variables."
   ;; Configure `org-gcal'
   (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
 
-(defun my-org-gtd-active-todo-search (context)
-  "Return an `org' search string for next actions in CONTEXT."
-  (concat context (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)
-          "/!" my-org-gtd-next-action-keyword))
+(defun my-org-gtd-active-todo-search (&rest contexts)
+  "Return an `org' search string for next actions in CONTEXTS."
+  (let ((not-somedaymaybe
+         (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)))
+    (concat (mapconcat (lambda (context) (concat context not-somedaymaybe))
+                       contexts "|")
+            "/!" my-org-gtd-next-action-keyword)))
 
 (defun my-org-gtd-agenda (context)
   "Return an `org-agenda' command part to show active items from CONTEXT.
