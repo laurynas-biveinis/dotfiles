@@ -222,8 +222,8 @@
     (should (equal org-gcal-cancelled-todo-keyword
                    my-org-gtd-cancelled-keyword))))
 
-(ert-deftest my-org-gtd-active-todo-search-one-context ()
-  "Test for `my-org-gtd-active-todo-search' with one context."
+(ert-deftest my-org-gtd-agenda-block-one-context ()
+  "Test for `my-org-gtd-agenda-block' with one context."
   (my-org-gtd--test-fixture
       ((ctx (make-my-org-gtd-context :tag "ctx" :select-char ?c
                                      :description "ctx description"))
@@ -233,10 +233,14 @@
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
-    (should (equal (my-org-gtd-active-todo-search ctx) "ctx-oneday/!DOIT"))))
+    (should (equal (my-org-gtd-agenda-block ctx)
+                   '(tags-todo
+                     "ctx-oneday/!DOIT"
+                     ((org-agenda-overriding-header "ctx description")
+                      (org-agenda-dim-blocked-tasks 'invisible)))))))
 
 (ert-deftest my-org-gtd-active-todo-search-two-contexts ()
-  "Test for `my-org-gtd-active-todo-search' with two contexts."
+  "Test for `my-org-gtd-agenda-block' with two contexts."
   (my-org-gtd--test-fixture
       ((ctx (make-my-org-gtd-context :tag "ctx" :select-char ?c
                                      :description "ctx description"))
@@ -248,8 +252,12 @@
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
-    (should (equal (my-org-gtd-active-todo-search ctx ctx2)
-                   "ctx-maybe|foo-maybe/!DOIT"))))
+    (should (equal (my-org-gtd-agenda-block (list ctx ctx2)
+                                            "Two contexts description")
+                   '(tags-todo
+                     "ctx-maybe|foo-maybe/!DOIT"
+                     ((org-agenda-overriding-header "Two contexts description")
+                      (org-agenda-dim-blocked-tasks 'invisible)))))))
 
 (ert-deftest my-org-gtd-agenda-basic ()
   "Basic test for `my-org-gtd-agenda'."

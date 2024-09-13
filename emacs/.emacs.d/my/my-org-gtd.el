@@ -169,7 +169,7 @@ GTD contexts variables."
   ;; Configure `org-gcal'
   (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
 
-(defun my-org-gtd-active-todo-search (&rest contexts)
+(defun my-org-gtd--active-todo-search (&rest contexts)
   "Return an `org' search string for next actions in CONTEXTS."
   (let ((not-somedaymaybe
          (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)))
@@ -178,6 +178,21 @@ GTD contexts variables."
                                  not-somedaymaybe))
                        contexts "|")
             "/!" my-org-gtd-next-action-keyword)))
+
+(defun my-org-gtd-agenda-block (contexts &optional header)
+  "Return a `tags-todo' block for CONTEXTS with optional HEADER.
+CONTEXTS can be a single context or a list. If HEADER is not provided, take it
+from the description of the only context."
+  (let* ((single-context-p (and (not (listp contexts))
+                                (my-org-gtd-context-p contexts)))
+         (contexts-list (if single-context-p (list contexts) contexts))
+         (header-string (or header
+                            (and single-context-p
+                                 (my-org-gtd-context-description contexts)))))
+    `(tags-todo
+      ,(apply #'my-org-gtd--active-todo-search contexts-list)
+      ((org-agenda-overriding-header ,header-string)
+       (org-agenda-dim-blocked-tasks 'invisible)))))
 
 (defun my-org-gtd-agenda (context)
   "Return an `org-agenda' command part to show active items from CONTEXT.
