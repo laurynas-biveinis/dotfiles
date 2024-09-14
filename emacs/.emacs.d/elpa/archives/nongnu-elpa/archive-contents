@@ -1933,14 +1933,14 @@
 	       ("Andreas Politz" . "mail@andreas-politz.de"))
 	      (:commit . "a9c9a12c3ecf2005fa641059368ac8284f507620"))])
  (php-mode .
-	   [(1 25 1)
+	   [(1 26 1)
 	    ((emacs
 	      (26 1)))
 	    "Major mode for editing PHP code" tar
 	    ((:url . "https://github.com/emacs-php/php-mode")
 	     (:keywords "languages" "php")
 	     (:maintainer "USAMI Kenta" . "tadsan@zonu.me")
-	     (:commit . "6ad1715ef0aed463ab05076dc7c91657978e4ec1"))])
+	     (:commit . "9a2fe1c6c34f4f22f11efff0caf1d4e7c8ea233a"))])
  (popon .
 	[(0 13)
 	 ((emacs
@@ -2280,7 +2280,7 @@
 		("Arthur Evstifeev" . "lod@pisem.net"))
 	       (:commit . "e58417ec871d260fe47183ffe4b7e47ac09bc682"))])
  (symbol-overlay .
-		 [(4 2)
+		 [(4 3)
 		  ((emacs
 		    (24 3))
 		   (seq
@@ -2291,7 +2291,7 @@
 		   (:maintainer "wolray" . "wolray@foxmail.com")
 		   (:authors
 		    ("wolray" . "wolray@foxmail.com"))
-		   (:commit . "8891c43ad4c5ceaacd5af4589abf3e76d01921f9"))])
+		   (:commit . "6151f4279bd94b5960149596b202cdcb45cacec2"))])
  (systemd .
 	  [(1 6 1)
 	   ((emacs
