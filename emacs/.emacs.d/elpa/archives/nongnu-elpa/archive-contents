@@ -1272,16 +1272,18 @@
 	       ("Akib Azmain Turja" . "akib@disroot.org"))
 	      (:commit . "2d3a3f551b52c07a11b9ea0f842ef39915911c55"))])
  (htmlize .
-	  [(1 56)
-	   nil "Convert buffer text and decorations to HTML." tar
-	   ((:keywords "hypermedia" "extensions")
+	  [(1 58)
+	   ((emacs
+	     (25 1)))
+	   "Convert buffer text and decorations to HTML." tar
+	   ((:url . "https://github.com/hniksic/emacs-htmlize")
+	    (:keywords "hypermedia" "extensions")
 	    (:maintainer "Hrvoje Niksic" . "hniksic@gmail.com")
 	    (:authors
 	     ("Hrvoje Niksic" . "hniksic@gmail.com"))
-	    (:url . "https://elpa.nongnu.org/nongnu/htmlize.html")
-	    (:commit . "7b63aa058c3dd0d9f8c07706cd8bb4e56aaa1fb3"))])
+	    (:commit . "5d2751c4ca101fa0884ce8662f5566736f8257fe"))])
  (hyperdrive .
-	     [(0 4)
+	     [(0 4 1)
 	      ((emacs
 		(28 1))
 	       (map
@@ -1303,7 +1305,7 @@
 	       (:maintainer "Joseph Turner" . "~ushin/ushin@lists.sr.ht")
 	       (:authors
 		("Joseph Turner" . "joseph@ushin.org"))
-	       (:commit . "aee81766c8f3415a31b539a30f4295899688b2d1"))])
+	       (:commit . "8e646524d282a8e4746238770e69b64adb6d409b"))])
  (idle-highlight-mode .
 		      [(1 1 4)
 		       ((emacs
@@ -1995,7 +1997,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20240907 162948)
+	      [(1 0 20240914 104237)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
