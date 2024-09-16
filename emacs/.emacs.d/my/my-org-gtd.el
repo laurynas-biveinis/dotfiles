@@ -222,6 +222,15 @@ TODO(laurynas) explanation for LEVEL=2."
                                     ,(my-org-gtd-context-tag
                                       my-org-gtd-somedaymaybe-context))))))
 
+(defun my-org-gtd-archivable-tasks ()
+  "Return an `org-aneda' command part to show archivable non-project tasks."
+  (list 'tags
+        (concat (my-org-gtd-context-not-tag my-org-gtd-project-context) "/+"
+                my-org-gtd-done-keyword "|+" my-org-gtd-cancelled-keyword)
+        `((org-agenda-overriding-header "Archivable tasks")
+          (org-use-tag-inheritance (,(my-org-gtd-context-tag
+                                      my-org-gtd-project-context))))))
+
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
 The heading must be already created."
