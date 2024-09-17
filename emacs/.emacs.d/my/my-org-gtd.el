@@ -217,10 +217,10 @@ TODO(laurynas) explanation for LEVEL=2."
                 (my-org-gtd-context-not-tag my-org-gtd-waitingfor-context)
                 (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)
                 "/!" my-org-gtd-next-action-keyword)
-        `((org-use-tag-inheritance (,(my-org-gtd-context-tag
-                                      my-org-gtd-project-context)
-                                    ,(my-org-gtd-context-tag
-                                      my-org-gtd-somedaymaybe-context))))))
+        `((org-use-tag-inheritance '(,(my-org-gtd-context-tag
+                                       my-org-gtd-project-context)
+                                     ,(my-org-gtd-context-tag
+                                       my-org-gtd-somedaymaybe-context))))))
 
 (defun my-org-gtd-archivable-tasks ()
   "Return an `org-aneda' command part to show archivable non-project tasks."
@@ -228,8 +228,8 @@ TODO(laurynas) explanation for LEVEL=2."
         (concat (my-org-gtd-context-not-tag my-org-gtd-project-context) "/+"
                 my-org-gtd-done-keyword "|+" my-org-gtd-cancelled-keyword)
         `((org-agenda-overriding-header "Archivable tasks")
-          (org-use-tag-inheritance (,(my-org-gtd-context-tag
-                                      my-org-gtd-project-context))))))
+          (org-use-tag-inheritance '(,(my-org-gtd-context-tag
+                                       my-org-gtd-project-context))))))
 
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
