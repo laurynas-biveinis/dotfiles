@@ -161,6 +161,7 @@
 (setq ispell-program-name "hunspell")
 (setq ispell-really-hunspell t)
 (setq ispell-dictionary "en_US,lt")
+(setq ispell-silently-savep t)
 (ispell-set-spellchecker-params)
 (ispell-hunspell-add-multi-dic "en_US,lt")
 (add-to-list 'ispell-skip-region-alist
