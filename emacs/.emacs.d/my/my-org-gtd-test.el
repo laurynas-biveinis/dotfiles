@@ -293,7 +293,7 @@
     (should (equal (my-org-gtd-active-non-project-tasks-agenda)
                    '("Non-project next actions" tags-todo
                      "-prj-wait-maybe/!NEXT"
-                     ((org-use-tag-inheritance ("prj" "maybe"))))))))
+                     ((org-use-tag-inheritance '("prj" "maybe"))))))))
 
 (ert-deftest my-org-gtd-archivable-tasks-basic ()
   "Basic test for `my-org-gtd-archivable-tasks'."
@@ -306,7 +306,7 @@
     (should (equal (my-org-gtd-archivable-tasks)
                    '(tags "-prj/+COMPLETED|+CANCELLED"
                           ((org-agenda-overriding-header "Archivable tasks")
-                           (org-use-tag-inheritance ("prj"))))))))
+                           (org-use-tag-inheritance '("prj"))))))))
 
 (defmacro my-org-gtd--buffer-test (varlist &rest body)
   "Set up a temp `org' buffer, bind VARLIST and execute BODY in the fixture."
