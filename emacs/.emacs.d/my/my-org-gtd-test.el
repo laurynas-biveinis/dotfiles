@@ -263,9 +263,13 @@
   "Basic test for `my-org-gtd-agenda'."
   (my-org-gtd--test-fixture
       ((context (make-my-org-gtd-context :tag "foo" :select-char ?f
-                                         :description "Foo description")))
+                                         :description "Foo description"))
+       (my-org-gtd-somedaymaybe-context
+        (make-my-org-gtd-context :tag "maybe" :select-char ?m
+                                 :description "Someday/maybe"))
+       (my-org-gtd-next-action-keyword "DOIT"))
     (should (equal (my-org-gtd-agenda context)
-                   '("Foo description" tags-todo "foo")))))
+                   '("Foo description" tags-todo "foo-maybe/!DOIT")))))
 
 (ert-deftest my-org-gtd-somedaymaybe-agenda-basic ()
   "Basic test for `my-org-gtd-somedaymaybe-agenda'."
