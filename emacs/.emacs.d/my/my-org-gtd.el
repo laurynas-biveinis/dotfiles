@@ -198,7 +198,7 @@ from the description of the only context."
   "Return an `org-agenda' command part to show active items from CONTEXT.
 TODO(laurynas) example (also to README)."
   (list (my-org-gtd-context-description context) 'tags-todo
-        (my-org-gtd-context-tag context)))
+        (my-org-gtd--active-todo-search context)))
 
 (defun my-org-gtd-somedaymaybe-agenda ()
   "Return an `org-agenda' command part to show someday/maybe item.
