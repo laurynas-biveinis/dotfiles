@@ -312,6 +312,29 @@
                           ((org-agenda-overriding-header "Archivable tasks")
                            (org-use-tag-inheritance '("prj"))))))))
 
+(ert-deftest my-org-gtd-contextless-tasks-basic ()
+  "Basic test for `my-org-gtd-contextless-tasks'."
+  (my-org-gtd--test-fixture
+      ((my-org-gtd-contexts
+        (vector
+         (make-my-org-gtd-context :tag "@home" :select-char ?h
+                                  :description "At home")
+         (make-my-org-gtd-context :tag "@work" :select-char ?w
+                                  :description "At work")))
+       (my-org-gtd-waitingfor-context
+        (make-my-org-gtd-context :tag "@wait" :select-char ?t
+                                 :description "Waiting for"))
+       (my-org-gtd-project-context
+        (make-my-org-gtd-context :tag "prj" :select-char ?p
+                                 :description "Projects"))
+       (my-org-gtd-somedaymaybe-context
+        (make-my-org-gtd-context :tag "someday" :select-char ?s
+                                 :description "Someday/Maybe")))
+    (should (equal (my-org-gtd-contextless-tasks)
+                   '(todo
+                     "-@home-@work-@wait-prj-someday"
+                     ((org-agenda-overriding-header "Contextless tasks")))))))
+
 (defmacro my-org-gtd--buffer-test (varlist &rest body)
   "Set up a temp `org' buffer, bind VARLIST and execute BODY in the fixture."
   (declare (indent 1) (debug t))

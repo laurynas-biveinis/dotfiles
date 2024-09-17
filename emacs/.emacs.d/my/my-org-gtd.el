@@ -223,13 +223,27 @@ TODO(laurynas) explanation for LEVEL=2."
                                        my-org-gtd-somedaymaybe-context))))))
 
 (defun my-org-gtd-archivable-tasks ()
-  "Return an `org-aneda' command part to show archivable non-project tasks."
+  "Return an `org-agenda' command part to show archivable non-project tasks."
   (list 'tags
         (concat (my-org-gtd-context-not-tag my-org-gtd-project-context) "/+"
                 my-org-gtd-done-keyword "|+" my-org-gtd-cancelled-keyword)
         `((org-agenda-overriding-header "Archivable tasks")
           (org-use-tag-inheritance '(,(my-org-gtd-context-tag
                                        my-org-gtd-project-context))))))
+
+;; FIXME(laurynas): prefix my-org-gtd-agenda- here and everywhere applying
+(defun my-org-gtd-contextless-tasks ()
+  "Return an `org-agenda' command part to show contextless tasks."
+  (list 'todo
+        (concat
+         (apply #'concat
+                (mapcar (lambda (context)
+                          (my-org-gtd-context-not-tag context))
+                        my-org-gtd-contexts))
+         (my-org-gtd-context-not-tag my-org-gtd-waitingfor-context)
+         (my-org-gtd-context-not-tag my-org-gtd-project-context)
+         (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context))
+        '((org-agenda-overriding-header "Contextless tasks"))))
 
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
