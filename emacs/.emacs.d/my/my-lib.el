@@ -15,12 +15,14 @@
 
 (defconst dotfiles--gh-pr-in-subject "^.*\(PR #\\([0-9]+\\)\)$")
 (defconst dotfiles--gh-url-prefix "https://github.com/")
-(defconst dotfiles--gh-url-format
+(defconst dotfiles--gh-url-id-matcher
+  (concat dotfiles--gh-url-prefix ".*/.*/pull/\\([0-9]+\\)"))
+(defconst dotfiles--gh-url-id-format
   (concat "\\(" dotfiles--gh-url-prefix ".*/.*/pull/%s\\)"))
 (defconst dotfiles--gh-closed-pr-url-format
-  (concat "Closed .*" dotfiles--gh-url-format))
+  (concat "Closed .*" dotfiles--gh-url-id-format))
 (defconst dotfiles--gh-commented-pr-url-format
-  (concat dotfiles--gh-url-format "#.*"))
+  (concat dotfiles--gh-url-id-format "#.*"))
 (defconst dotfiles--gh-org-and-project
   (concat dotfiles--gh-url-prefix "\\(.*\\)/pull/[0-9]+"))
 (defconst dotfiles--gh-repo "\\(https://github.com/.*/.*\\)/pull/[0-9]+")
