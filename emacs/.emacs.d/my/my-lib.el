@@ -69,6 +69,10 @@ Returns the path or nil."
     (when (y-or-n-p (format confirmation pdf-path))
       pdf-path)))
 
+(defun dotfiles--sibling-path (path fn)
+  "For a given PATH, return a full path for FN in the same directory."
+  (file-name-concat (file-name-directory path) fn))
+
 ;;; External program helpers
 
 (defun dotfiles--open-file (file)
@@ -184,6 +188,11 @@ there. The temporary file is automatically cleaned up after BODY execution."
          (file-path (mu4e-join-paths base-dir (plist-get part :filename))))
     (mm-save-part-to-file (plist-get part :handle) file-path)
     file-path))
+
+(defun dotfiles--save-mu4e-msg-csv-part ()
+  "For a `mu4e' mssage, save its first .csv part and return the path."
+  (let ((csv-part (dotfiles--get-mu4e-msg-csv-part)))
+    (dotfiles--save-mu4e-msg-part-file csv-part)))
 
 (defun dotfiles--get-mu4e-msg-html-content ()
   "Get the current `mu4de' message HTML content."
