@@ -530,5 +530,29 @@ The marker must be at the new clock position."
     (org-clock-in)
     (message "Clocking-in the `org' node with %s, use C-c & to go back" url)))
 
+;;; `org-gcal' helpers
+
+(defun dotfiles--create-gcal-event (org-file calendar-id event-title event-time)
+  "Create a Google Calendar event in the specified org file.
+ORG-FILE is the path to the org file where the event will be added.
+CALENDAR-ID is the ID of the Google Calendar.
+EVENT-TITLE is the title of the event.
+EVENT-TIME is the time of the event in `org' timestamp format."
+  (dotfiles--in-org-buffer org-file
+    (goto-char (point-max))
+    (unless (bolp) (insert "\n")) ; Ensure at start of new line
+    (insert "\n")
+    (insert "* " event-title "\n")
+    (insert ":PROPERTIES:\n")
+    (insert ":calendar-id: " calendar-id "\n")
+    (insert ":TRANSPARENCY: transparent\n")
+    (insert ":END:\n")
+    (insert ":org-gcal:\n")
+    (insert event-time "\n")
+    (insert "Added by dotfiles--create-gcal-event\n")
+    (insert ":END:\n")
+    (save-buffer)
+    (org-gcal-post-at-point)))
+
 (provide 'my-lib)
 ;;; my-lib.el ends here
