@@ -359,6 +359,8 @@
 
 (defun my-pull-all-forge-repos ()
   "Pull everything for all known `forge' repos."
+  (interactive)
+  (dotfiles--require-org-clock)
   (dolist (row (forge-sql [:select * :from repository]))
     ;; Dependency on the internal `forge' schema. I haven't found a better way
     ;; to get this information.
