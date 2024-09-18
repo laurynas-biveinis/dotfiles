@@ -222,6 +222,23 @@
     (should (equal org-gcal-cancelled-todo-keyword
                    my-org-gtd-cancelled-keyword))))
 
+(ert-deftest my-org-gtd-initialize-org-stuck-projects ()
+  "Test that `org-stuck-projects' is properly initialized."
+  (my-org-gtd--test-fixture
+      ((my-org-gtd-project-context (make-my-org-gtd-context
+                                    :tag "prj" :select-char ?p
+                                    :description "Projects"))
+       (my-org-gtd-somedaymaybe-context (make-my-org-gtd-context
+                                         :tag "someday" :select-char ?s
+                                         :description "Someday/Maybe"))
+       (my-org-gtd-next-action-keyword "NEXT")
+       (org-todo-keywords '((sequence "NEXT(n!)" "|" "DONE(d!)" "KILL(k!)"))))
+    (my-org-gtd-initialize)
+    (should (equal org-stuck-projects
+                   '("+prj-someday/!NEXT" ("NEXT") nil "")))))
+
+;; Test `my-org-gtd-agenda-block'
+
 (ert-deftest my-org-gtd-agenda-block-one-context ()
   "Test for `my-org-gtd-agenda-block' with one context."
   (my-org-gtd--test-fixture

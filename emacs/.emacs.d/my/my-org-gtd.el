@@ -13,6 +13,7 @@
 
 ;; Hard dependencies
 (require 'org)
+(require 'org-agenda)
 (require 'cl-lib)
 
 ;; Soft dependencies
@@ -127,9 +128,9 @@ configuration, with an optional fast state selection character."
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
 Checks `org-todo-keywords' against keyword configuration, initializes
-`org-todo-repeat-to-state'. Adds to `org-use-tag-inheritance' and to
-`org-tag-alist' from the tag  variables, selection character variables, and the
-GTD contexts variables."
+`org-todo-repeat-to-state' and `org-stuck-projects'. Adds to
+`org-use-tag-inheritance' and to `org-tag-alist' from the tag  variables,
+selection character variables, and the GTD contexts variables."
   ;; Validate config
   (my-org-gtd--check-keyword-in-org-todo-keywords
    my-org-gtd-next-action-keyword)
@@ -166,6 +167,12 @@ GTD contexts variables."
                 (list (my-org-gtd--make-org-alist-cons-cell
                        my-org-gtd-somedaymaybe-context))
                 org-tag-alist))
+  (setq org-stuck-projects `(,(concat "+" (my-org-gtd-context-tag
+                                           my-org-gtd-project-context)
+                                      (my-org-gtd-context-not-tag
+                                       my-org-gtd-somedaymaybe-context) "/!"
+                                      my-org-gtd-next-action-keyword)
+                             (,my-org-gtd-next-action-keyword) nil ""))
   ;; Configure `org-gcal'
   (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
 
