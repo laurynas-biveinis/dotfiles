@@ -541,6 +541,8 @@ The marker must be at the new clock position."
 
 ;;; `org-gcal' helpers
 
+(require 'org-gcal)
+
 (defun dotfiles--create-gcal-event (org-file calendar-id event-title event-time)
   "Create a Google Calendar event in the specified org file.
 ORG-FILE is the path to the org file where the event will be added.
