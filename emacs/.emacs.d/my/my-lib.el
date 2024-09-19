@@ -242,20 +242,20 @@ there. The temporary file is automatically cleaned up after BODY execution."
 (require 'mu4e-compose)
 (require 'mu4e-draft)
 
-(defun dotfiles--do-send-email (to subject success-fn)
-  "Ask to send an already filled-out email to TO with SUBJECT, call SUCCESS-FN.
-TO and SUBJECT fields in the e-mail must be already filled out, as the arguments
-of this defun are only used for diagnostics. SUCCESS-FN is only called on
-success."
-  (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
-      (progn
-        ;; Since the buffer will get destroyed immediately after the send
-        ;; attempt, adjust the buffer-local hook value and don't bother with
-        ;; cleaning it up.
-        (add-hook 'message-sent-hook success-fn nil t)
-        (message-send-and-exit))
-    (message-kill-buffer)
-    (user-error "Cancelled")))
+(defun dotfiles--do-send-email (to success-fn)
+  "Ask to send an already filled-out email to TO, call SUCCESS-FN on success.
+\"To:\" field in the e-mail must be already filled out, as TO argument is only
+used for diagnostics.  SUCCESS-FN is only called on success."
+  (let ((subject (message-field-value "Subject")))
+    (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
+        (progn
+          ;; Since the buffer will get destroyed immediately after the send
+          ;; attempt, adjust the buffer-local hook value and don't bother with
+          ;; cleaning it up.
+          (add-hook 'message-sent-hook success-fn nil t)
+          (message-send-and-exit))
+      (message-kill-buffer)
+      (user-error "Cancelled"))))
 
 (defun dotfiles--send-email (template attachments success-fn)
   "Send a mail using TEMPLATE with ATTACHMENTS, call SUCCESS-FN on success."
@@ -268,7 +268,7 @@ success."
     (insert (my-email-template-body template))
     (dolist (attachment attachments)
       (mml-attach-file attachment))
-    (dotfiles--do-send-email to subject success-fn)))
+    (dotfiles--do-send-email to success-fn)))
 
 ;; GitHub helpers
 
