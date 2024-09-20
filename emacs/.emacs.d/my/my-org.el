@@ -121,7 +121,7 @@ Sets up keybindings and adjusts the fill column."
 The possible actions are opening of multiple URLs, of a macOS app, executing a
 shell command, visiting a file, and executing Elisp code. All actions are
 optional and specified by the following properties on the task being clocked-in:
-- `URL': multiple properties may be speicfied to open multiple URLs
+- `URL': multiple properties may be specified to open multiple URLs
 - `APP': the macOS app to open. It may be quoted with double quotes if necessary
   and will be passed to shell without further quoting.
 - `SHELL': the shell command to execute. The user is responsbile for its safety.
