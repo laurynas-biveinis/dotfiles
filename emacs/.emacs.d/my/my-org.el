@@ -56,7 +56,7 @@ Sets up keybindings and adjusts the fill column."
   (dotfiles--set-fill-column 85))
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
-;;; Editing, navigation, folding
+;;; Editing, navigation, folding, state changes
 (setq org-use-speed-commands t
       org-M-RET-may-split-line '((default . nil))
       org-support-shift-select t
@@ -64,7 +64,9 @@ Sets up keybindings and adjusts the fill column."
       org-special-ctrl-k t
       org-ctrl-k-protect-subtree t
       org-yank-adjusted-subtrees t
-      org-cycle-separator-lines 0)
+      org-cycle-separator-lines 0
+      org-use-fast-todo-selection 'expert
+      org-fast-tag-selection-single-key 'expert)
 
 ;;; Saving
 (add-hook 'auto-save-hook #'org-save-all-org-buffers)  ;; Save automatically
@@ -78,13 +80,6 @@ Sets up keybindings and adjusts the fill column."
       org-startup-with-inline-images t
       org-startup-folded 'showall)
 (add-hook 'org-mode-hook #'org-sticky-header-mode)
-
-;;; TODO state changes
-(setq org-enforce-todo-dependencies t
-      org-use-fast-todo-selection 'expert)
-
-;;; Tags
-(setq org-fast-tag-selection-single-key 'expert)
 
 ;;; Agenda
 (setq org-agenda-tags-todo-honor-ignore-options t
