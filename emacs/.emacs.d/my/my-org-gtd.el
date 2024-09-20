@@ -128,9 +128,9 @@ configuration, with an optional fast state selection character."
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
 Checks `org-todo-keywords' against keyword configuration, initializes
-`org-todo-repeat-to-state' and `org-stuck-projects'. Adds to
-`org-use-tag-inheritance' and to `org-tag-alist' from the tag  variables,
-selection character variables, and the GTD contexts variables."
+`org-todo-repeat-to-state', `org-enforce-todo-dependencies', and
+`org-stuck-projects'. Adds to `org-use-tag-inheritance' and to `org-tag-alist'
+from the context configuration."
   ;; Validate config
   (my-org-gtd--check-keyword-in-org-todo-keywords
    my-org-gtd-next-action-keyword)
@@ -156,6 +156,7 @@ selection character variables, and the GTD contexts variables."
      (t (user-error "Don't know how handle `org-use-tag-inheritance' value %S"
                     org-use-tag-inheritance))))
   (setq org-todo-repeat-to-state my-org-gtd-next-action-keyword)
+  (setq org-enforce-todo-dependencies t)
   (setq org-tag-alist
         (append (list (cons :startgroup nil))
                 (mapcar #'my-org-gtd--make-org-alist-cons-cell

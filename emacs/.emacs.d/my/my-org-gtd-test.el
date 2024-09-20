@@ -212,6 +212,13 @@
        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILLED(k!)"))))
     (should-error (my-org-gtd-initialize))))
 
+(ert-deftest my-org-gtd-initialize-org-enforce-todp-dependencies ()
+  "Test that `org-enforce-todo-dependencies' is initialized correctly."
+  (my-org-gtd--test-fixture
+      ((org-enforce-todo-dependencies nil))
+    (my-org-gtd-initialize)
+    (should (equal org-enforce-todo-dependencies t))))
+
 (ert-deftest my-org-gtd-org-gcal-cancelled-todo-keyword ()
   "Test that `org-gcal-cancelled-todo-keyword' is initialized correctly."
   (my-org-gtd--test-fixture
