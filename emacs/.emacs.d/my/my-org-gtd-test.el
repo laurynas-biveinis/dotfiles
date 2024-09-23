@@ -222,7 +222,7 @@
        (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILLED(k!)"))))
     (should-error (my-org-gtd-initialize))))
 
-(ert-deftest my-org-gtd-initialize-org-enforce-todp-dependencies ()
+(ert-deftest my-org-gtd-initialize-org-enforce-todo-dependencies ()
   "Test that `org-enforce-todo-dependencies' is initialized correctly."
   (my-org-gtd--test-fixture
       ((org-enforce-todo-dependencies nil))
@@ -368,6 +368,8 @@
                    '(todo
                      "-@home-@work-@wait-prj-someday"
                      ((org-agenda-overriding-header "Contextless tasks")))))))
+
+;; Test creating and completing tasks
 
 (defmacro my-org-gtd--buffer-test (varlist &rest body)
   "Set up a temp `org' buffer, bind VARLIST and execute BODY in the fixture."

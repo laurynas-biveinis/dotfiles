@@ -83,6 +83,7 @@ The tags and the selection keys will be added to as a single group to
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
+;; Action keywords
 (defcustom my-org-gtd-next-action-keyword "TODO"
   "The TODO entry keyword that designates a GTD next action.
 Projects also have this keyword (in addition to `my-org-gtd-project-context'
@@ -303,6 +304,7 @@ TODO(laurynas) explanation for LEVEL=2."
          (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context))
         '((org-agenda-overriding-header "Contextless tasks"))))
 
+;; Creating new tasks and completing them
 (defun my-org-gtd--insert-item (title keyword tag)
   "Insert a new `org' item with TITLE, KEYWORD, & TAG at point.
 The heading must be already created."
