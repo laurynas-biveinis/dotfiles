@@ -647,14 +647,14 @@
 			("Clément Pit-Claudel" . "clement.pitclaudel@live.com"))
 		       (:commit . "50b9ec928193f339c3c2ae20f088ea62cc82bb9d"))])
  (company .
-	  [(0 10 2)
+	  [(1 0 1)
 	   ((emacs
 	     (25 1)))
 	   "Modular text completion framework" tar
 	   ((:url . "http://company-mode.github.io/")
 	    (:keywords "abbrev" "convenience" "matching")
 	    (:maintainer "Dmitry Gutov" . "dmitry@gutov.dev")
-	    (:commit . "34e92d9b7084b03d087866abcd1e6a22a244c9bb"))])
+	    (:commit . "87dd4ddb757afb8f88be8c8ededb71b991b926af"))])
  (company-ebdb .
 	       [(1 1)
 		((company
@@ -744,9 +744,11 @@
 		    ("Protesilaos Stavrou" . "info@protesilaos.com"))
 		   (:commit . "eb46c0b19ea2c385d4e8f21c3e953fc621626cf2"))])
  (consult-hoogle .
-		 [(0 2 1)
+		 [(0 2 2)
 		  ((emacs
 		    (27 1))
+		   (consult
+		    (0 18))
 		   (haskell-mode
 		    (16 1)))
 		  "Hoogle frontend using consult" tar
@@ -755,7 +757,7 @@
 		   (:maintainer "rahguzar" . "rahguzar@zohomail.eu")
 		   (:authors
 		    ("rahguzar" . "rahguzar@zohomail.eu"))
-		   (:commit . "188c8d90a04adeb08c61a0835f5f9a9a10255495"))])
+		   (:commit . "635418813c6c6089576cc3b1abb45d173e853aab"))])
  (consult-recoll .
 		 [(0 8 1)
 		  ((emacs
@@ -956,7 +958,7 @@
 		 (:url . "https://elpa.gnu.org/packages/dbus-codegen.html")
 		 (:commit . "4b0d8525943ebba797e1ebaf97fd9a608aef5ec1"))])
  (debbugs .
-	  [(0 40)
+	  [(0 41)
 	   ((emacs
 	     (26 1))
 	    (soap-client
@@ -967,7 +969,7 @@
 	    (:authors
 	     ("Michael Albinus" . "michael.albinus@gmx.de"))
 	    (:url . "https://elpa.gnu.org/packages/debbugs.html")
-	    (:commit . "e06d335153fab7eb82771919c82de125b51bdf66"))])
+	    (:commit . "3ca6aba1288caa8ed575b4ae48120ca739fc978a"))])
  (delight .
 	  [(1 7)
 	   ((cl-lib
@@ -1968,7 +1970,7 @@
 	     ("Sean Allred" . "code@seanallred.com"))
 	    (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader .
-	  [(0 11 17)
+	  [(0 11 18)
 	   ((emacs
 	     (26 1))
 	    (seq
@@ -1981,7 +1983,7 @@
 	    (:maintainer "Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com")
 	    (:authors
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
-	    (:commit . "a9628d29f642f6ea8f1ed2c0778b3e8073fff867"))])
+	    (:commit . "e163aec6109ba24ec543f087d9be7bf6b6efa389"))])
  (greenbar .
 	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" tar

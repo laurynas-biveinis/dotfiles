@@ -951,7 +951,7 @@
 		   ("András Simonyi" . "andras.simonyi@gmail.com"))
 		  (:commit . "9e7ed54e5629f759660569bc7efc3d75dbabbc5f"))])
  (geiser-guile .
-	       [(0 28 2)
+	       [(0 28 3)
 		((emacs
 		  (26 1))
 		 (transient
@@ -964,7 +964,7 @@
 		 (:maintainer "Jose Antonio Ortega Ruiz" . "(jao@gnu.org)")
 		 (:authors
 		  ("Jose Antonio Ortega Ruiz" . "(jao@gnu.org)"))
-		 (:commit . "5a856c2982030ff77e2d151ead4fcd991512f362"))])
+		 (:commit . "a0f111f8dedd31c593c4ed12c0b99745f3c1340f"))])
  (geiser-kawa .
 	      [(0 0 1)
 	       ((emacs
@@ -1536,7 +1536,7 @@
 		   ("Jason R. Blevins" . "jblevins@xbeta.org"))
 		  (:commit . "193b61605f44c85d261b8bd82e0a213fd8f1ff32"))])
  (mastodon .
-	   [(1 0 26)
+	   [(1 0 27)
 	    ((emacs
 	      (27 1))
 	     (request
@@ -1549,7 +1549,7 @@
 	     (:authors
 	      ("Johnson Denen" . "johnson.denen@gmail.com")
 	      ("Marty Hiatt" . "martianhiatus@riseup.net"))
-	     (:commit . "3443b49c55f65ae8e0b07e93e1e0299ce1bf8ed6"))])
+	     (:commit . "e593ad461ae275c641c6c4c90f67d62a920610a0"))])
  (material-theme .
 		 [(2015)
 		  ((emacs
@@ -1997,7 +1997,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20240919 94104)
+	      [(1 0 20240921 204525)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2266,7 +2266,7 @@
 		("Eshel Yaron" . "me@eshelyaron.com"))
 	       (:commit . "bd31199a34c0619b346954f25875fcb7239e2b86"))])
  (swift-mode .
-	     [(9 1 0)
+	     [(9 2 0)
 	      ((emacs
 		(24 4))
 	       (seq
@@ -2280,7 +2280,7 @@
 		("Chris Barrett" . "chris.d.barrett@me.com")
 		("Bozhidar Batsov" . "bozhidar@batsov.com")
 		("Arthur Evstifeev" . "lod@pisem.net"))
-	       (:commit . "e58417ec871d260fe47183ffe4b7e47ac09bc682"))])
+	       (:commit . "ab189d6e89ac4c0f776d691a41ddeaf9730260d1"))])
  (symbol-overlay .
 		 [(4 3)
 		  ((emacs
