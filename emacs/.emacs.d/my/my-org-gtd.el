@@ -112,10 +112,10 @@ configuration, with an optional fast state selection character."
 ;; Clock-in automation
 (defcustom my-org-gtd-clock-in-actions
   '((:property "URL" :action browse-url :multi t)
-    (:property "APP" :action my--org-clock-in-open-app)
+    (:property "APP" :action my-org-gtd--clock-in-open-macos-app)
     (:property "SHELL" :action shell-command)
-    (:property "VISIT" :action my--org-clock-in-visit-file)
-    (:property "EVAL" :action my--org-clock-in-eval-elisp))
+    (:property "VISIT" :action my-org-gtd--clock-in-visit-file)
+    (:property "EVAL" :action my-org-gtd--clock-in-eval-elisp))
   "Configuration for actions to perform when clocking in.
 Each entry is a plist with `:property', `:action', and optionally `:multi' keys.
 `:property' is the name of the Org property to look for.
@@ -130,7 +130,7 @@ property."
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
-(defun my-org-gtd--clock-in-open-app (app)
+(defun my-org-gtd--clock-in-open-macos-app (app)
   "Open APP on macOS."
   (shell-command (concat "open -a " app)))
 
