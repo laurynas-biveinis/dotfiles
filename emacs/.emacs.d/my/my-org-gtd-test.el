@@ -29,8 +29,18 @@
   `(let ((org-use-tag-inheritance nil)
          (org-todo-log-states nil)
          (org-todo-keywords '((sequence "TODO(t!)" "|" "DONE(d!)" "KILL(k!)")))
+         (org-clock-in-hook nil)
+         (current-clock-marker (when (org-clocking-p)
+                                 (copy-marker org-clock-marker)))
          ,@varlist)
-     ,@body))
+     (ignore org-clock-in-hook)
+     (unwind-protect
+         (progn
+           ,@body)
+       (cond (current-clock-marker
+              (org-with-point-at current-clock-marker
+                (org-clock-in)))
+             ((org-clocking-p) (org-clock-out))))))
 
 ;; Test `my-org-gtd-context'
 
@@ -444,6 +454,47 @@
     (should (string= (org-get-heading t t) "Test title"))
     (should (equal (org-get-tags) (list (my-org-gtd-context-tag
                                          my-org-gtd-waitingfor-context))))))
+
+;; Test clock-in automation
+
+(ert-deftest my-org-gtd-clock-in-actions-basic ()
+  "Basic test for `my-org-gtd--clock-in-actions' with mock actions."
+  (my-org-gtd--buffer-test
+      ((actions '()))
+    (let* ((action-fn (lambda (x) (push x actions)))
+           (my-org-gtd-clock-in-actions
+            `((:property "URL" :action ,action-fn)
+              (:property "APP" :action ,action-fn)
+              (:property "SHELL" :action ,action-fn)
+              (:property "VISIT" :action ,action-fn)
+              (:property "EVAL" :action ,action-fn))))
+      (my-org-gtd-initialize)
+      (org-insert-todo-heading-respect-content)
+      (org-set-property "URL" "http://example.com")
+      (org-set-property "APP" "TestApp")
+      (org-set-property "SHELL" "echo test")
+      (org-set-property "VISIT" "/tmp/test.txt")
+      (org-set-property "EVAL" "(message \"test\")")
+      (org-clock-in)
+      (should (equal (reverse actions)
+                     '("http://example.com" "TestApp" "echo test"
+                       "/tmp/test.txt" "(message \"test\")"))))))
+
+(ert-deftest my-org-gtd-clock-in-actions-multi-value ()
+  "Test `my-org-gtd--clock-in-actions' with multi-value properties."
+  (my-org-gtd--buffer-test
+      ((actions '()))
+    (let* ((action-fn (lambda (x) (push x actions)))
+           (my-org-gtd-clock-in-actions
+            `((:property "URL" :action ,action-fn :multi t))))
+      (my-org-gtd-initialize)
+      (org-insert-todo-heading-respect-content)
+      (org-set-property "URL" "http://1.example.com")
+      (org-entry-add-to-multivalued-property (point) "URL"
+                                             "http://2.example.com")
+      (org-clock-in)
+      (should (equal (reverse actions)
+                     '("http://1.example.com" "http://2.example.com"))))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags

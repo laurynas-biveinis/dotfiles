@@ -108,6 +108,54 @@ configuration, with an optional fast state selection character."
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
+;; Clock-in automation
+(defcustom my-org-gtd-clock-in-actions
+  '((:property "URL" :action browse-url :multi t)
+    (:property "APP" :action my--org-clock-in-open-app)
+    (:property "SHELL" :action shell-command)
+    (:property "VISIT" :action my--org-clock-in-visit-file)
+    (:property "EVAL" :action my--org-clock-in-eval-elisp))
+  "Configuration for actions to perform when clocking in.
+Each entry is a plist with `:property', `:action', and optionally `:multi' keys.
+`:property' is the name of the Org property to look for.
+`:action' is the function to call with the property value.
+`:multi', if non-nil, indicates that multiple values are allowed for the
+property."
+  :type '(repeat (plist :options
+                        ((:property (string :tag "Org node property"))
+                         (:action (function :tag "Action function"))
+                         (:multi (choice (const :tag "Single value" nil)
+                                         (const :tag "Multiple values" t))))))
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
+
+(defun my-org-gtd--clock-in-open-app (app)
+  "Open APP on macOS."
+  (shell-command (concat "open -a " app)))
+
+(defun my-org-gtd--clock-in-visit-file (file)
+  "Visit FILE and move to the end."
+  (find-file file)
+  (goto-char (point-max)))
+
+(defun my-org-gtd--clock-in-eval-elisp (code)
+  "Evaluate Elisp CODE."
+  (eval (read code)))
+
+(defun my-org-gtd--clock-in-actions ()
+  "Perform configured actions for the clocked-in task."
+  (dolist (action my-org-gtd-clock-in-actions)
+    (let* ((property (plist-get action :property))
+           (func (plist-get action :action))
+           (multi (plist-get action :multi))
+           (values (if multi
+                       (org-entry-get-multivalued-property (point) property)
+                     (list (org-entry-get (point) property)))))
+      (dolist (value values)
+        (when value
+          (funcall func value))))))
+
+;; `org' setup
 (defun my-org-gtd--check-keyword-in-org-todo-keywords (keyword)
   "Check that KEYWORD in present in `org-todo-keywords'."
   (unless (seq-some
@@ -129,8 +177,8 @@ configuration, with an optional fast state selection character."
   "Initialize `my-org-gtd'.
 Checks `org-todo-keywords' against keyword configuration, initializes
 `org-todo-repeat-to-state', `org-enforce-todo-dependencies', and
-`org-stuck-projects'. Adds to `org-use-tag-inheritance' and to `org-tag-alist'
-from the context configuration."
+`org-stuck-projects'. Adds to `org-use-tag-inheritance', and `org-tag-alist'
+from the context configuration and sets up clock-in automation."
   ;; Validate config
   (my-org-gtd--check-keyword-in-org-todo-keywords
    my-org-gtd-next-action-keyword)
@@ -174,9 +222,11 @@ from the context configuration."
                                        my-org-gtd-somedaymaybe-context) "/!"
                                       my-org-gtd-next-action-keyword)
                              (,my-org-gtd-next-action-keyword) nil ""))
+  (add-hook 'org-clock-in-hook #'my-org-gtd--clock-in-actions)
   ;; Configure `org-gcal'
   (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
 
+;; Agenda views
 (defun my-org-gtd--active-todo-search (&rest contexts)
   "Return an `org' search string for next actions in CONTEXTS."
   (let ((not-somedaymaybe
