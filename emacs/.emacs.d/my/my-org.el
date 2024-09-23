@@ -111,40 +111,6 @@ Sets up keybindings and adjusts the fill column."
       org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 
-(defun my--org-clock-in-actions ()
-  "Open URLs, a macOS app, visit a file, execute elisp for the clocked-in task.
-The possible actions are opening of multiple URLs, of a macOS app, executing a
-shell command, visiting a file, and executing Elisp code. All actions are
-optional and specified by the following properties on the task being clocked-in:
-- `URL': multiple properties may be specified to open multiple URLs
-- `APP': the macOS app to open. It may be quoted with double quotes if necessary
-  and will be passed to shell without further quoting.
-- `SHELL': the shell command to execute. The user is responsbile for its safety.
-- `VISIT': the file to visit in Emacs. It does not have to exist.
-- `EVAL': Elisp code to execute. The user is responsible for its safety."
-  (let ((urls (org-entry-get-multivalued-property (point) "URL"))
-        (app (org-entry-get (point) "APP"))
-        (shell-command (org-entry-get (point) "SHELL"))
-        (visit (org-entry-get (point) "VISIT"))
-        (elisp (org-entry-get (point) "EVAL")))
-    ;; Open all URLs
-    (dolist (url urls)
-      (browse-url url))
-    ;; Open one macOS application, if any
-    (when app
-      (shell-command (concat "open -a " app)))
-    ;; Execute a shell command, if any
-    (when shell-command
-      (shell-command shell-command))
-    ;; Visit a file, if any. If visiting a file without going to its end is
-    ;; needed, rename this one to VISIT_END.
-    (when visit
-      (find-file visit)
-      (goto-char (point-max)))
-    (when elisp
-      (eval (read elisp)))))
-(add-hook 'org-clock-in-hook #'my--org-clock-in-actions)
-
 ;;; Clock tables
 (setq org-clocktable-defaults
       (list
