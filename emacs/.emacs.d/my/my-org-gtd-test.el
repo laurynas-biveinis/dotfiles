@@ -480,6 +480,7 @@
       (org-set-property "VISIT" "/tmp/test.txt")
       (org-set-property "EVAL" "(message \"test\")")
       (org-clock-in)
+      (org-clock-out)
       (should (equal (reverse actions)
                      '("http://example.com" "TestApp" "echo test"
                        "/tmp/test.txt" "(message \"test\")"))))))
@@ -497,6 +498,7 @@
       (org-entry-add-to-multivalued-property (point) "URL"
                                              "http://2.example.com")
       (org-clock-in)
+      (org-clock-out)
       (should (equal (reverse actions)
                      '("http://1.example.com" "http://2.example.com"))))))
 
