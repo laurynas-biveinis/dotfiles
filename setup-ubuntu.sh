@@ -10,7 +10,7 @@ sudo update-locale
 
 sudo apt-get install net-tools
 
-# On the first SSH login allow Fig to install!
+# On the first SSH login allow Amazon Q to install!
 
 # Common
 sudo apt-get update

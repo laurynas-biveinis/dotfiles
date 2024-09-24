@@ -312,9 +312,10 @@ sudo chflags nohidden /Volumes
 #
 brew update
 
+# FIXME(laurynas): fig replaced by amazon q
 brew install stow git ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
 	hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
-	colordiff iwyu cppcheck infer creduce gnu-sed mas bat fig actionlint \
+	colordiff iwyu cppcheck infer creduce gnu-sed mas bat actionlint \
 	circleci imagemagick ripgrep boost cpplint duf eza clang-build-analyzer \
 	recode difftastic git-lfs plantuml gcalcli asdf watch shfmt gcc@11 \
         gcc@12 gcc@13 gcc markdown gdrive tidy-html5
