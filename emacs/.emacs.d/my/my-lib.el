@@ -543,23 +543,23 @@ The marker must be at the new clock position."
 
 (require 'org-gcal)
 
-(defun dotfiles--create-gcal-event (org-file calendar-id event-title event-time)
+(defun dotfiles--create-gcal-event (org-file calendar-id title time)
   "Create a Google Calendar event in the specified org file.
 ORG-FILE is the path to the org file where the event will be added.
 CALENDAR-ID is the ID of the Google Calendar.
-EVENT-TITLE is the title of the event.
-EVENT-TIME is the time of the event in `org' timestamp format."
+TITLE is the title of the event.
+TIME is the time of the event in `org' timestamp format."
   (dotfiles--in-org-buffer org-file
     (goto-char (point-max))
     (unless (bolp) (insert "\n")) ; Ensure at start of new line
     (insert "\n")
-    (insert "* " event-title "\n")
+    (insert "* " title "\n")
     (insert ":PROPERTIES:\n")
     (insert ":calendar-id: " calendar-id "\n")
     (insert ":TRANSPARENCY: transparent\n")
     (insert ":END:\n")
     (insert ":org-gcal:\n")
-    (insert event-time "\n")
+    (insert time "\n")
     (insert "Added by dotfiles--create-gcal-event\n")
     (insert ":END:\n")
     (save-buffer)
