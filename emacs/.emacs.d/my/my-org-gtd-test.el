@@ -488,19 +488,58 @@
 (ert-deftest my-org-gtd-clock-in-actions-multi-value ()
   "Test `my-org-gtd--clock-in-actions' with multi-value properties."
   (my-org-gtd--buffer-test
-      ((actions '()))
-    (let* ((action-fn (lambda (x) (push x actions)))
-           (my-org-gtd-clock-in-actions
-            `((:property "URL" :action ,action-fn :multi t))))
+   ((actions '()))
+   (let* ((action-fn (lambda (x) (push x actions)))
+          (my-org-gtd-clock-in-actions
+           `((:property "URL" :action ,action-fn :multi t))))
+     (my-org-gtd-initialize)
+     (org-insert-todo-heading-respect-content)
+     (org-set-property "URL" "http://1.example.com")
+     (org-entry-add-to-multivalued-property (point) "URL"
+                                            "http://2.example.com")
+     (org-clock-in)
+     (org-clock-out)
+     (should (equal (reverse actions)
+                    '("http://1.example.com" "http://2.example.com"))))))
+
+(ert-deftest my-org-gtd-clock-in-actions-default-url ()
+  "Test `my-org-gtd-clock-in-actions' default URL action handler."
+  (my-org-gtd--buffer-test
+      ((url-calls '()))
+    (cl-letf (((symbol-function 'browse-url)
+               (lambda (url) (push url url-calls))))
       (my-org-gtd-initialize)
       (org-insert-todo-heading-respect-content)
-      (org-set-property "URL" "http://1.example.com")
-      (org-entry-add-to-multivalued-property (point) "URL"
-                                             "http://2.example.com")
+      (org-set-property "URL" "http://example.com")
       (org-clock-in)
       (org-clock-out)
-      (should (equal (reverse actions)
-                     '("http://1.example.com" "http://2.example.com"))))))
+      (should (equal url-calls '("http://example.com"))))))
+
+(ert-deftest my-org-gtd-clock-in-actions-default-app ()
+  "Test `my-org-gtd-clock-in-actions' default APP action handler."
+  (my-org-gtd--buffer-test
+      ((shell-commands '()))
+    (cl-letf (((symbol-function 'shell-command)
+               (lambda (cmd) (push cmd shell-commands))))
+      (my-org-gtd-initialize)
+      (org-insert-todo-heading-respect-content)
+      (org-set-property "APP" "TestApp")
+      (org-clock-in)
+      (org-clock-out)
+      (should (equal shell-commands '("open -a TestApp"))))))
+
+(ert-deftest my-org-gtd-clock-in-actions-default-shell ()
+  "Test `my-org-gtd-clock-in-actions' default SHELL action handler."
+  (my-org-gtd--buffer-test
+      ((shell-commands '()))
+    (cl-letf (((symbol-function 'shell-command)
+               (lambda (cmd) (push cmd shell-commands))))
+      (my-org-gtd-initialize)
+      (org-insert-todo-heading-respect-content)
+      (org-set-property "SHELL" "shell with args")
+      (org-clock-in)
+      (org-clock-out)
+      (should (equal shell-commands '("shell with args"))))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
