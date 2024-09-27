@@ -1288,7 +1288,7 @@
 	       ("Markus Triska" . "triska@metalevel.at"))
 	      (:commit . "cfcdf9e42821d246b7fbc84877aa4ecacc184a1c"))])
  (eev .
-      [(20240811)
+      [(20240925)
        ((emacs
 	 (25 1)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -1297,7 +1297,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "39f6dfdd1d38e169469ff56ac93a0881a3fe1c8b"))])
+	(:commit . "43131f4af5f5a01b86731049202d2dd31e0ba25f"))])
  (ef-themes .
 	    [(1 8 0)
 	     ((emacs
@@ -3586,7 +3586,7 @@
 		("Alex Schroeder" . "alex@gnu.org"))
 	       (:maintainer "Alex Schroeder" . "alex@gnu.org"))])
  (rcirc-sqlite .
-	       [(1 0 2)
+	       [(1 0 3)
 		((emacs
 		  (30 0)))
 		"rcirc logging in SQLite" tar
@@ -3595,7 +3595,7 @@
 		 (:maintainer "Matto Fransen" . "matto@matto.nl")
 		 (:authors
 		  ("Matto Fransen" . "matto@matto.nl"))
-		 (:commit . "50279aa1aa4303bd2736de615414120e851db1dd"))])
+		 (:commit . "1bbc8b6a8643d6258c8b584ff8c4fba7025d8162"))])
  (realgud .
 	  [(1 5 1)
 	   ((load-relative
