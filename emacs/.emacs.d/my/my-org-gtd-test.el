@@ -541,6 +541,22 @@
       (org-clock-out)
       (should (equal shell-commands '("shell with args"))))))
 
+;; TODO(laurynas): it should be possible to test `find-file' calls directly, but
+;; such test does not appear to work.
+;; TODO(laurynas): buffer position is not tested
+(ert-deftest my-org-gtd-clock-in-actions-default-visit ()
+  "Test `my-org-gtd-clock-in-actions' default VISIT action handler."
+  (my-org-gtd--buffer-test
+      ((find-file-calls '()))
+    (cl-letf (((symbol-function 'find-file)
+               (lambda (cmd) (push cmd find-file-calls))))
+      (my-org-gtd-initialize)
+      (org-insert-todo-heading-respect-content)
+      (org-set-property "VISIT" "/tmp/path")
+      (org-clock-in)
+      (org-clock-out)
+      (should (equal find-file-calls '("/tmp/path"))))))
+
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
 ;; TODO(laurynas): uniqueness in keys
