@@ -89,7 +89,8 @@ styling.  If instead this is set to `in-scope', the out-of-scope
 bars share the default style, and in-scope bars are configured
 with alternate styling using the *-ts-* variables."
   :type '(choice (const :tag "Out of scope" out-of-scope)
-		 (const :tag "In scope" in-scope)))
+		 (const :tag "In scope" in-scope))
+  :set #'indent-bars--custom-set)
 
 (defun indent-bars-ts--add-customs ()
   "Add all the relevant custom variables for the alternate ts style."
@@ -120,7 +121,8 @@ this option."
 		 (alist :tag "Alist of node types"
 			:key-type (symbol :tag "Language")
 			:value-type (repeat :tag "Types" (symbol :tag "Type"))))
-  :group 'indent-bars-ts)
+  :group 'indent-bars-ts
+  :set #'indent-bars--custom-set)
 
 (defcustom indent-bars-treesit-scope nil
   "An alist of language and treesitter node types to emphasize.
@@ -133,12 +135,14 @@ which mirror and inherit from the normal style variables."
 		 (alist :tag "Alist of node types"
 			:key-type (symbol :tag "Language")
 			:value-type (repeat :tag "Types" (symbol :tag "Type"))))
-  :group 'indent-bars-ts)
+  :group 'indent-bars-ts
+  :set #'indent-bars--custom-set)
 
 (defcustom indent-bars-treesit-scope-min-lines 3
   "Minimum number of lines a node must span to be counted as a scope."
   :type 'integer
-  :group 'indent-bars-ts)
+  :group 'indent-bars-ts
+  :set #'indent-bars--custom-set)
 
 (defcustom indent-bars-treesit-ignore-blank-lines-types nil
   "Do not style blank lines when the type of node at start is in this list.
@@ -150,7 +154,8 @@ grammar.  Only applicable if `indent-bars-display-on-blank-lines'
 is set."
   :type '(choice (const :tag "None" nil)
 		 (repeat :tag "Node types" string))
-  :group 'indent-bars-ts)
+  :group 'indent-bars-ts
+  :set #'indent-bars--custom-set)
 
 (defcustom indent-bars-treesit-update-delay 0.125
   "Idle time in seconds for treesitter scope updates to occur.
@@ -455,6 +460,10 @@ due to edits or contextual fontification."
     (advice-add #'jit-lock-context-fontify :around #'indent-bars-ts--context-fontify))
   (indent-bars-ts--fontify-buffer))
 
+(defun indent-bars-ts--disable ()
+  "Disable `indent-bars--ts-mode'."
+  (indent-bars--ts-mode -1))
+
 (defun indent-bars-ts--setup (lang)
   "Setup indent-bars treesitter support in this buffer for language LANG."
   (setq indent-bars-ts--parser
@@ -494,7 +503,7 @@ due to edits or contextual fontification."
     (setf (ibts/query ibtcs)
 	  (treesit-query-compile lang `([,@(mapcar #'list types)] @ctx)))
     (add-hook 'post-command-hook #'indent-bars-ts--update-scope nil t)
-    (add-hook 'indent-bars--teardown-functions 'indent-bars-ts--teardown nil t))
+    (add-hook 'indent-bars--teardown-functions 'indent-bars-ts--disable nil t))
   
   (indent-bars-ts--finalize-jit-lock))
 
@@ -504,7 +513,8 @@ To be set in `indent-bars--teardown-functions'."
   (when indent-bars-ts--scope-timer
     (cancel-timer indent-bars-ts--scope-timer)
     (setq indent-bars-ts--scope-timer nil))
-  (setq font-lock-fontify-buffer-function indent-bars-ts--orig-fontify-buffer)
+  (setq font-lock-fontify-buffer-function indent-bars-ts--orig-fontify-buffer
+	indent-bars--ts-mode nil)
   (remove-hook 'post-command-hook #'indent-bars-ts--update-scope t)
   (remove-hook 'indent-bars--teardown-functions 'indent-bars-ts--teardown t)
   (remove-hook 'jit-lock-after-change-extend-region-functions

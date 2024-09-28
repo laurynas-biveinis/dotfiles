@@ -4,7 +4,7 @@
 ;; Author: J.D. Smith <jdtsmith+elpa@gmail.com>
 ;; Homepage: https://github.com/jdtsmith/indent-bars
 ;; Package-Requires: ((emacs "27.1") (compat "29.1"))
-;; Version: 0.7.4
+;; Version: 0.7.5
 ;; Keywords: convenience
 
 ;; indent-bars is free software: you can redistribute it and/or
@@ -398,7 +398,9 @@ non-nil.  Set to 0 for instant depth updates."
 
 ;;;;; Other
 (defcustom indent-bars-display-on-blank-lines t
-  "Whether to display bars on blank lines."
+  "Whether to display bars on blank lines.
+Bars are shown only on blank lines contiguously adjacent to lines
+already showing bars."
   :type 'boolean
   :set #'indent-bars--custom-set
   :group 'indent-bars)
@@ -415,9 +417,16 @@ than the indent level of the string's starting line."
 (defcustom indent-bars-no-descend-lists t
   "Configure bar behavior inside lists.
 If non-nil, displayed bars will go no deeper than the indent
-level at the starting line of the innermost containing list."
+level at the starting line of the innermost containing list.  If
+t, any list recognized by the active syntax table will be used to
+identify enclosing list contexts.  If set to a list of
+characters, only list-opening characters on this list will
+activate bar suppression."
   :local t
-  :type 'boolean
+  :type '(choice
+	  (const :tag "Disabled" nil)
+	  (const :tag "Any list element" t)
+	  (repeat :tag "List of open paren chars" character))
   :set #'indent-bars--custom-set
   :group 'indent-bars)
 
@@ -705,14 +714,12 @@ DEPTH starts at 1."
   `((t . ( :inherit ,(ibs/stipple-face style)
 	   :foreground ,(indent-bars--get-color style depth)))))
 
-(defun indent-bars--create-faces (style num &optional redefine)
-  "Create bar faces up to depth NUM for STYLE.
-Redefine them if REDEFINE is non-nil."
+(defun indent-bars--create-faces (style num)
+  "Create bar faces up to depth NUM for STYLE."
   (vconcat
    (cl-loop
     for i from 1 to num
     for face = (indent-bars--tag "indent-bars%s-%d" style i) do
-    (if (and redefine (facep face)) (face-spec-reset-face face))
     (face-spec-set face (indent-bars--calculate-face-spec style i))
     collect face)))
 
@@ -875,8 +882,8 @@ returned."
   "Reset all styles' colors and faces.
 Useful for calling after theme changes."
   (interactive)
-  (mapc #'indent-bars--initialize-style
-	indent-bars--styles))
+  (unless (equal (terminal-name) "initial_terminal")
+    (mapc #'indent-bars--initialize-style indent-bars--styles)))
 
 (defun indent-bars--initialize-style (style)
   "Initialize STYLE."
@@ -887,7 +894,7 @@ Useful for calling after theme changes."
 	(indent-bars--depth-palette style)
 	(ibs/current-depth-palette style)
 	(indent-bars--current-depth-palette style)
-	(ibs/faces style) (indent-bars--create-faces style 7 'reset)
+	(ibs/faces style) (indent-bars--create-faces style 7)
 	(ibs/no-stipple-chars style) (indent-bars--create-no-stipple-chars style 7))
 
   ;; Base stipple face
@@ -959,7 +966,11 @@ and can return an updated depth."
       (let* ((p (prog1 (point) (forward-line 0)))
 	     (ppss (syntax-ppss)) 	; moves point!
 	     (ss (and indent-bars-no-descend-string (nth 8 ppss)))
-	     (sl (and indent-bars-no-descend-lists (nth 1 ppss))))
+	     (sl (when-let
+		     ((ndl indent-bars-no-descend-lists)
+		      (open (nth 1 ppss))
+		      ((or (not (consp ndl)) (memq (char-after open) ndl))))
+		   open)))
 	(when (setq ppss-ind (if (and ss sl) (max ss sl) (or ss sl)))
 	  (goto-char ppss-ind)
 	  (let* ((cnew (current-indentation))
@@ -1370,7 +1381,7 @@ appropriate for that style."
     (let* ((rowbytes (/ (+ w 7) 8))
 	   (pattern (or pattern (indent-bars--style style "pattern")))
 	   (pat (if (< h (length pattern)) (substring pattern 0 h) pattern))
-	   (plen (length pat))
+	   (plen (max (length pat) 1))
 	   (chunk (/ (float h) plen))
 	   (small (floor chunk))
 	   (large (ceiling chunk))
@@ -1645,6 +1656,9 @@ Adapted from `highlight-indentation-mode'."
   (dolist (s indent-bars--styles)
     (face-remap-remove-relative
      (alist-get (ibs/tag s) indent-bars--remaps)))
+  (when indent-bars--highlight-timer
+    (cancel-timer indent-bars--highlight-timer)
+    (setq indent-bars--highlight-timer nil))
 
   ;; Remove stipple remaps and window parameters
   (unless indent-bars--no-stipple

@@ -12,8 +12,8 @@ This package provides indentation _guide bars_ in Emacs, with optional tree-sitt
 - Optimized for speed.
 - Optional tree-sitter support, including _scope focus_, among [other features](#tree-sitter-details).
 - Supports either space or tab-based indentation.
-- Bar appearance is _highly_ [configurable](https://github.com/jdtsmith/indent-bars/edit/main/README.md#customization): color, blending, width, position within the character, vertical fill/blank pattern, even zigzag (see [examples](examples.md)).
-- Bars can have optional depth-based coloring, with a cyclical color palette you can [customize](https://github.com/jdtsmith/indent-bars/edit/main/README.md#customization).
+- Bar appearance is _highly_ [configurable](#customization): color, blending, width, position within the character, vertical fill/blank pattern, even zigzag (see [examples](examples.md)).
+- Bars can have optional depth-based coloring, with a cyclical color palette you can [customize](#customization).
 - Fast current-depth bar highlighting with configurable bar color and/or appearance changes.
 - Bars can appear on blank lines.
 - Bar depth can be held constant inside multi-line strings and lists.
@@ -32,7 +32,7 @@ See the release [NEWS](NEWS.org).
 - **I want completely unique indent guide-bars so as to flex on my colleagues!** <br>Check the [Examples](examples.md) for some ideas.  The sky is the limit (submit your examples).
 - **I use Emacs on the terminal, you insensitive clod!** <br>`indent-bars` will just work for you (though you don't get any fancy bar patterns).
 - **I use graphical Emacs, but am an extreme minimalist.  All my outfits are gray.  Including my socks.** <br>Maybe [this](examples.md#minimal) will suit you?  Otherwise, you can turn off the stipple and use old fashioned `│` characters with [`indent-bars-prefer-character`](#character-display).
-- **I get too many bars inside function definitions and calls** <br>You can turn on `indent-bars-no-descend-lists` or even use [tree-sitter to help](#tree-sitter-details).
+- **I get too many bars inside function definitions and calls.** <br>You can turn on `indent-bars-no-descend-lists` or even use [tree-sitter to help](#tree-sitter-details).
 - **I want a bar in the very first column!** <br>Set `indent-bars-starting-column` to 0.
 - **The current bar highlight is so fast, but it flashes too rapidly during scrolling!** <br>Update to v0.2.2 or later and set `indent-bars-depth-update-delay` to a comfortable number like 0.1s (0.075s is the default).  If you _like_ the crazy-fast updates, set this to 0.
 - **I turned on treesitter support but nothing happened** <br>You need to configure `indent-bars-treesit-scope` (and possibly `wrap`) for your language(s) of interest. [More info](#configuring-tree-sitter).
@@ -63,9 +63,9 @@ To clone with `use-package` and `straight`:
   :hook ((python-mode yaml-mode) . indent-bars-mode)) ; or whichever modes you prefer
 ```
 
-## use-pacakge with tree-sitter support
+## use-package with tree-sitter support
 
-Configure `tree-sitter` and `ignore-blank-line` support for an example language.
+Configures `tree-sitter` and `ignore-blank-line` support for an example language.
 
 ```elisp
 (use-package indent-bars
@@ -122,7 +122,7 @@ Please [open an issue](../../issues) with any updates/corrections to this list. 
 
 See some [examples](examples.md) with relevant settings.
 
-The main customization variables are categorized below.  See the documentation of each variable for more details.
+The main customization variables are categorized below.  See the documentation of each variable for more details on the valid values.
 
 ## Bar colors
 
@@ -154,9 +154,9 @@ Configuration variables for bar position and line locations (including on blank 
 
 - `indent-bars-starting-column`: column to use for the first bar (default: one indent spacing).  Can be set in special modes which start at an unusual fixed offset, or set to 0 to get "column 0" bars (which are possibly superfluous given the left buffer edge).
 - `indent-bars-spacing-override`:  Normally the number of spaces for indentation is automatically discovered from the mode and other variables.  If that doesn't work for any reason, it can be explicitly overridden using this variable.
-- `indent-bars-display-on-blank-lines`: Whether to display bars on blank lines.
-- `indent-bars-no-descend-string`: Whether to inhibit increasing bar depth inside of strings. 
-- `indent-bars-no-descend-list`: Whether to inhibit increasing bar depth inside of lists. 
+- `indent-bars-display-on-blank-lines`: Whether to display bars on blank lines contiguous with lines already showing bars.
+- `indent-bars-no-descend-string`: Whether to inhibit increasing bar depth inside of strings.
+- `indent-bars-no-descend-list`: Whether to inhibit increasing bar depth inside of lists.  Note that this can optionally be configured with a list of list-opening chars (e.g. `'(?\( ?\[)`?) to select only certain list context (useful for c-based modes, where `{}` braces are a list syntax).
 
 ## Character-based bars and terminal
 
