@@ -557,6 +557,41 @@
       (org-clock-out)
       (should (equal find-file-calls '("/tmp/path"))))))
 
+;; TODO(laurynas): add a test `my-org-gtd-clock-in-actions-default-eval' to test
+;; EVAL action. It should be possible to test `eval' calls directly, but such
+;; test does not appear to work, and mocking `eval' has too many side effects.
+
+;; Test URL property custom automation helper
+
+(ert-deftest my-org-gtd-with-url-basic ()
+  "Basic test for `my-org-gtd-with-org-node-with-url'."
+  (let ((temp-file (make-temp-file "org-tst" nil ".org")))
+    (my-org-gtd--buffer-test
+        ((org-agenda-files (list temp-file)))
+      (unwind-protect
+          (progn
+            (with-temp-file temp-file
+              (org-mode)
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 0")
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 1")
+              (org-set-property "URL" "https://1.example.com")
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 2")
+              (org-set-property "URL" "https://2.example.com"))
+            (let (executed)
+              (my-org-gtd-with-org-node-with-url "https://1.example.com"
+                (setq executed t)
+                (should (string= (org-entry-get nil "URL")
+                                 "https://1.example.com"))
+                (should (string= (org-get-heading t t) "Item 1")))
+              (should executed)))
+        (delete-file temp-file)))))
+
+;; TODO(laurynas): remaining `my-org-gtd-with-org-node-with-url' tests: URL not
+;; found, search across multiple files
+
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
 ;; TODO(laurynas): uniqueness in keys

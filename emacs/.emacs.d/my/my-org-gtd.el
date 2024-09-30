@@ -156,6 +156,47 @@ property."
         (when value
           (funcall func value))))))
 
+;; URL property support for custom automation
+
+(defun my-org-gtd--org-headline-has-url (headline url)
+  "Return the HEADLINE if it has the URL property with the given value."
+  (let ((url-property-value (org-element-property :URL headline)))
+    (and url-property-value (string= url url-property-value)
+         headline)))
+
+(defun my-org-gtd--find-org-node-with-url-property-in-buffer (url)
+  "Find an Org node with a given URL property value in the current buffer."
+  (org-element-map (org-element-parse-buffer) 'headline
+    (lambda (headline)
+      (my-org-gtd--org-headline-has-url headline url)) nil t))
+
+(defun my-org-gtd--find-org-node-with-url-property (url)
+  "Find the Org node with a given URL property value across `org-agenda-files'."
+  (let ((files (org-agenda-files))
+        (found nil))
+    (while (and files (not found))
+      (let* ((file (pop files))
+             (buffer (or (find-buffer-visiting file)
+                         (find-file-noselect file t)))
+             (node (with-current-buffer buffer
+                     (my-org-gtd--find-org-node-with-url-property-in-buffer url))))
+        (when node
+          (setq found (list :buffer buffer :headline node)))))
+    found))
+
+(defmacro my-org-gtd-with-org-node-with-url (url &rest body)
+  "Go to the `org' node with the URL property value, execute the forms of BODY."
+  (declare (indent 1) (debug t))
+  `(let ((org-info (my-org-gtd--find-org-node-with-url-property ,url)))
+     (when (not org-info)
+       (user-error "URL %s not found in Org!" ,url))
+     (let* ((org-buffer (plist-get org-info :buffer))
+            (org-headline (plist-get org-info :headline))
+            (headline-pos (org-element-property :begin org-headline)))
+       (with-current-buffer org-buffer
+         (goto-char headline-pos)
+         ,@body))))
+
 ;; `org' setup
 (defun my-org-gtd--check-keyword-in-org-todo-keywords (keyword)
   "Check that KEYWORD in present in `org-todo-keywords'."

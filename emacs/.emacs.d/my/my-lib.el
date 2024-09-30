@@ -458,47 +458,6 @@ BRANCH-NAME. Returns the URL of this PR."
 
 ;;; `org' helpers
 
-(require 'org-element)
-
-(defun dotfiles--org-headline-has-url (headline url)
-  "Return the HEADLINE if it has the URL property with the given value."
-  (let ((url-property-value (org-element-property :URL headline)))
-    (and url-property-value (string= url url-property-value)
-         headline)))
-
-(defun dotfiles--find-org-node-with-url-property-in-buffer (url)
-  "Find an Org node with a given URL property value in the current buffer."
-  (org-element-map (org-element-parse-buffer) 'headline
-    (lambda (headline)
-      (dotfiles--org-headline-has-url headline url)) nil t))
-
-(defun dotfiles--find-org-node-with-url-property (url)
-  "Find the Org node with a given URL property value across `org-agenda-files'."
-  (let ((files (org-agenda-files))
-        (found nil))
-    (while (and files (not found))
-      (let* ((file (pop files))
-             (buffer (or (find-buffer-visiting file)
-                         (find-file-noselect file t)))
-             (node (with-current-buffer buffer
-                     (dotfiles--find-org-node-with-url-property-in-buffer url))))
-        (when node
-          (setq found (list :buffer buffer :headline node)))))
-    found))
-
-(defmacro dotfiles--with-org-node-with-url (url &rest body)
-  "Go to the `org' node with the URL property value, execute the forms of BODY."
-  (declare (indent 1) (debug t))
-  `(let ((org-info (dotfiles--find-org-node-with-url-property ,url)))
-     (when (not org-info)
-       (user-error "URL %s not found in Org!" ,url))
-     (let* ((org-buffer (plist-get org-info :buffer))
-            (org-headline (plist-get org-info :headline))
-            (headline-pos (org-element-property :begin org-headline)))
-       (with-current-buffer org-buffer
-         (goto-char headline-pos)
-         ,@body))))
-
 (require 'org-clock)
 
 (defun dotfiles--require-org-clock ()
@@ -533,7 +492,7 @@ The marker must be at the new clock position."
 
 (defun dotfiles--clock-in-org-node-with-url (url)
   "Go to the `org' node with the given URL property value and clock it in."
-  (dotfiles--with-org-node-with-url url
+  (my-org-gtd-with-org-node-with-url url
     (org-mark-ring-push)
     (goto-char headline-pos)
     (org-clock-in)
