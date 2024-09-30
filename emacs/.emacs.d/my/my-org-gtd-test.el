@@ -10,6 +10,7 @@
 (require 'my-org-gtd)
 
 (require 'org-clock)
+(require 'org-element)
 
 ;; Soft dependencies
 (defvar org-gcal-cancelled-todo-keyword)

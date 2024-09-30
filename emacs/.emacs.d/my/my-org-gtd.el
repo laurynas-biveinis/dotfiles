@@ -12,9 +12,10 @@
 ;;; Code:
 
 ;; Hard dependencies
+(require 'cl-lib)
 (require 'org)
 (require 'org-agenda)
-(require 'cl-lib)
+(require 'org-element)
 
 ;; Soft dependencies
 (defvar org-gcal-cancelled-todo-keyword)
