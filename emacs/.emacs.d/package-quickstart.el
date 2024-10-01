@@ -1098,7 +1098,7 @@ See `undo-tree-mode' for more information on Undo-Tree mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treepy-20230715.2154/treepy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treepy-20230715.2154/treepy-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treepy-20240930.728/treepy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treepy-20240930.728/treepy-autoloads.el"))
 
 
 
