@@ -180,7 +180,8 @@ property."
              (buffer (or (find-buffer-visiting file)
                          (find-file-noselect file t)))
              (node (with-current-buffer buffer
-                     (my-org-gtd--find-org-node-with-url-property-in-buffer url))))
+                     (my-org-gtd--find-org-node-with-url-property-in-buffer
+                      url))))
         (when node
           (setq found (list :buffer buffer :headline node)))))
     found))
