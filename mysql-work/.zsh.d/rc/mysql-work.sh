@@ -128,6 +128,9 @@ mysql_export_environment_helpers() {
         export MYCLANG17=("-DCMAKE_C_COMPILER=$brew_opt/llvm@17/bin/clang"
                           "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@17/bin/clang++"
                           "-DCMAKE_AR=$brew_opt/llvm@17/bin/llvm-ar")
+        export MYCLANG18=("-DCMAKE_C_COMPILER=$brew_opt/llvm@18/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@18/bin/clang++"
+                          "-DCMAKE_AR=$brew_opt/llvm@18/bin/llvm-ar")
         export MYCLANG=("-DCMAKE_C_COMPILER=$brew_opt/llvm/bin/clang"
                         "-DCMAKE_CXX_COMPILER=$brew_opt/llvm/bin/clang++")
         export MYGCC11=("-DCMAKE_C_COMPILER=$brew/bin/gcc-11"
@@ -862,6 +865,11 @@ mysql_cmake() {
             echo "Using LLVM 17"
             debug_flags+=("${MYCLANG17[@]}")
             release_flags+=("${MYCLANG17[@]}")
+            ;;
+        *llvm-18*)
+            echo "Using LLVM 18"
+            debug_flags+=("${MYCLANG18[@]}")
+            release_flags+=("${MYCLANG18[@]}")
             ;;
         *llvm*)
             echo "Using LLVM"
