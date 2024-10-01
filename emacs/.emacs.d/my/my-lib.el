@@ -481,6 +481,8 @@ The marker must be at the new clock position."
              (org-clock-in))
          (org-clock-out)))))
 
+(require 'org-refile)
+
 (defun dotfiles--read-org-headline ()
   "Get the target `org' headline for the capture."
   (let* ((refile-target (org-refile-get-location "File link to this under"))
