@@ -18,6 +18,7 @@
 (require 'org-roam-node)
 (require 'magit-status)
 (require 'deadgrep)
+(require 'mu4e)
 (declare-function my-secrets "secrets" ())
 (declare-function my-gtd "secrets" ())
 (declare-function my-main-agenda "secrets" ())
@@ -53,6 +54,7 @@
 (global-set-key (kbd "<f8>") #'my-secrets)
 (global-set-key (kbd "<f9>") #'my-gtd)
 (global-set-key (kbd "<f12>") #'my-switch-to-scratch)
+(global-set-key (kbd "C-c m") #'mu4e)
 
 ;; `magit'
 (global-set-key (kbd "C-x g") #'magit-status)
