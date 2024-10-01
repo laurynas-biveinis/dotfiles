@@ -590,8 +590,29 @@
               (should executed)))
         (delete-file temp-file)))))
 
-;; TODO(laurynas): remaining `my-org-gtd-with-org-node-with-url' tests: URL not
-;; found, search across multiple files
+(ert-deftest my-org-gtd-with-url-not-found ()
+  "Test for `my-org-gtd-with-org-node-with-url' when URL is not found."
+  (let ((temp-file (make-temp-file "org-tst" nil ".org")))
+    (my-org-gtd--buffer-test
+        ((org-agenda-files (list temp-file)))
+      (unwind-protect
+          (progn
+            (with-temp-file temp-file
+              (org-mode)
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 0")
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 1")
+              (org-set-property "URL" "https://1.example.com")
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 2")
+              (org-set-property "URL" "https://2.example.com"))
+            (should-error (my-org-gtd-with-org-node-with-url
+                              "https://3.example.com")))
+        (delete-file temp-file)))))
+
+;; TODO(laurynas): remaining `my-org-gtd-with-org-node-with-url' tests: search
+;; across multiple files
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
