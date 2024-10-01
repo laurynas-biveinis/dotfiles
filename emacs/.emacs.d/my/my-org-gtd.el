@@ -191,7 +191,7 @@ property."
   (declare (indent 1) (debug t))
   `(let ((org-info (my-org-gtd--find-org-node-with-url-property ,url)))
      (when (not org-info)
-       (user-error "URL %s not found in Org!" ,url))
+       (user-error "URL %s not found in `org-agenda-files'" ,url))
      (let* ((org-buffer (plist-get org-info :buffer))
             (org-headline (plist-get org-info :headline))
             (headline-pos (org-element-property :begin org-headline)))
