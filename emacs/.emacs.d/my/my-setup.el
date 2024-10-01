@@ -1079,7 +1079,7 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             backward-delete-char-untabify org-ctrl-c-ctrl-c
                             org-beginning-of-line delete-forward-char
                             set-mark-command backward-kill-word magit-discard
-                            python-indent-dedent-line-backspace
+                            python-indent-dedent-line-backspace magit-push
                             end-of-visual-line windmove-up kill-buffer
                             markdown-outdent-or-delete newline org-agenda-goto
                             windmove-down org-agenda-redo org-return
@@ -1087,11 +1087,11 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             mu4e-view-mark-for-refile xwidget-webkit-scroll-up
                             mu4e-view-headers-next magit-section-toggle
                             isearch-forward minibuffer-complete my-main-agenda
-                            mu4e-headers-next switch-to-buffer
+                            mu4e-headers-next switch-to-buffer transpose-chars
                             yank mu4e-view-marked-execute mu4e-view-action
                             kill-ring-save mu4e-headers-view-message
                             magit-stage org-todo goto-line mu4e-view-quit
-                            org-agenda-clock-in balance-windows
+                            org-agenda-clock-in balance-windows my-secrets
                             isearch-delete-char xref-find-definitions
                             beginend-prog-mode-goto-beginning kill-region
                             lsp-execute-code-action back-to-indentation
@@ -1119,7 +1119,16 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             quit-window org-clock-in org-clock-out
                             dired-previous-line minibuffer-next-completion
                             xwidget-webkit-scroll-down undo-tree-visualize-redo
-                            org-clock-goto org-shiftleft org-yank))
+                            org-clock-goto org-shiftleft org-yank
+                            previous-history-element org-mouse-down-mouse
+                            describe-function next-line-or-history-element
+                            magit-push-current-to-upstream
+                            indent-for-tab-command mu4e-mark-execute-all
+                            beginend-org-agenda-mode-goto-end
+                            minibuffer-complete-and-exit magit-diff-visit-file
+                            projectile-find-other-file electric-pair-delete-pair
+                            previous-line-or-history-element
+                            company-select-previous-or-abort))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
