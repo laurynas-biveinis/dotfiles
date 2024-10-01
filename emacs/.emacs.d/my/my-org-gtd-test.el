@@ -562,7 +562,7 @@
 ;; EVAL action. It should be possible to test `eval' calls directly, but such
 ;; test does not appear to work, and mocking `eval' has too many side effects.
 
-;; Test URL property custom automation helper
+;; Test URL property custom automation helpers
 
 (ert-deftest my-org-gtd-with-url-basic ()
   "Basic test for `my-org-gtd-with-org-node-with-url'."
@@ -639,6 +639,31 @@
               (should executed)))
         (delete-file temp-file-1)
         (delete-file temp-file-2)))))
+
+(ert-deftest my-org-gtd-clock-in-org-node-with-url-basic ()
+  "Basic test for `my-org-gtd-clock-in-org-node-with-url'."
+  (let ((temp-file (make-temp-file "org-tst" nil ".org")))
+    (my-org-gtd--buffer-test
+        ((org-agenda-files (list temp-file)))
+      (unwind-protect
+          (progn
+            (with-temp-file temp-file
+              (org-mode)
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 0")
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 1")
+              (org-set-property "URL" "https://1.example.com")
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 2")
+              (org-set-property "URL" "https://2.example.com"))
+            (my-org-gtd-clock-in-org-node-with-url "https://1.example.com")
+            (org-clock-goto)
+            (should (org-clocking-p))
+            (should (string= (org-entry-get nil "URL")
+                             "https://1.example.com"))
+            (should (string= (org-get-heading t t) "Item 1")))
+        (delete-file temp-file)))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags

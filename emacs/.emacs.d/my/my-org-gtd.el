@@ -198,6 +198,14 @@ property."
          (goto-char headline-pos)
          ,@body))))
 
+(defun my-org-gtd-clock-in-org-node-with-url (url)
+  "Go to the `org' node with the given URL property value and clock it in."
+  (org-mark-ring-push)
+  (my-org-gtd-with-org-node-with-url url
+    (goto-char headline-pos)
+    (org-clock-in)
+    (message "Clocking-in the `org' node with %s, use C-c & to go back" url)))
+
 ;; `org' setup
 (defun my-org-gtd--check-keyword-in-org-todo-keywords (keyword)
   "Check that KEYWORD in present in `org-todo-keywords'."

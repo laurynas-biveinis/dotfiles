@@ -490,14 +490,6 @@ The marker must be at the new clock position."
     (goto-char pos)
     (org-end-of-subtree)))
 
-(defun dotfiles--clock-in-org-node-with-url (url)
-  "Go to the `org' node with the given URL property value and clock it in."
-  (my-org-gtd-with-org-node-with-url url
-    (org-mark-ring-push)
-    (goto-char headline-pos)
-    (org-clock-in)
-    (message "Clocking-in the `org' node with %s, use C-c & to go back" url)))
-
 ;;; `org-gcal' helpers
 
 (require 'org-gcal)
