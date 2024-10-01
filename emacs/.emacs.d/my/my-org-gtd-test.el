@@ -611,8 +611,34 @@
                               "https://3.example.com")))
         (delete-file temp-file)))))
 
-;; TODO(laurynas): remaining `my-org-gtd-with-org-node-with-url' tests: search
-;; across multiple files
+(ert-deftest my-org-gtd-with-url-multiple-files ()
+  "Test `my-org-gtd-with-org-node-with-url' across multiple files."
+  (let ((temp-file-1 (make-temp-file "org-tst" nil ".org"))
+        (temp-file-2 (make-temp-file "org-tst" nil ".org")))
+    (my-org-gtd--buffer-test
+        ((org-agenda-files (list temp-file-1 temp-file-2)))
+      (unwind-protect
+          (progn
+            (with-temp-file temp-file-1
+              (org-mode)
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 1")
+              (org-set-property "URL" "https://1.example.com"))
+            (with-temp-file temp-file-2
+              (org-mode)
+              (org-insert-todo-heading-respect-content)
+              (insert "Item 2")
+              (org-set-property "URL" "https://2.example.com"))
+            (let (executed)
+              (my-org-gtd-with-org-node-with-url "https://2.example.com"
+                (setq executed t)
+                (should (string= (buffer-file-name) temp-file-2))
+                (should (string= (org-entry-get nil "URL")
+                                 "https://2.example.com"))
+                (should (string= (org-get-heading t t) "Item 2")))
+              (should executed)))
+        (delete-file temp-file-1)
+        (delete-file temp-file-2)))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
