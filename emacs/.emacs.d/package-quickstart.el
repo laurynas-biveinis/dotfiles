@@ -2484,7 +2484,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.7.5/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.7.5/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.7.6/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.7.6/transient-autoloads.el"))
 
 
 
@@ -4703,7 +4703,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.0/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.1/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.1/magit-section-autoloads.el"))
 
 
 
@@ -4758,7 +4758,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.0/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.0/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.1/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.1/magit-autoloads.el"))
 
 
 
@@ -6967,7 +6967,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.1.0/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.1.0/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1/ghub-autoloads.el"))
 
 
 
@@ -10074,7 +10074,7 @@ Fontify an `info' node.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.7.5/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.7.5/indent-bars-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.7.6/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.7.6/indent-bars-autoloads.el"))
 
 
 
@@ -10523,7 +10523,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.3/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.3/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.4/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.4/forge-autoloads.el"))
 
 
 
@@ -10548,12 +10548,12 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
 
 
 
- (autoload 'forge-dispatch "forge-commands" nil t)
- (autoload 'forge-configure "forge-commands" nil t)
- (autoload 'forge-pull "forge-commands" nil t)
- (autoload 'forge-pull-notifications "forge-commands" nil t)
- (autoload 'forge-pull-topic "forge-commands" nil t)
- (autoload 'forge-pull-this-topic "forge-commands" nil t)
+(autoload 'forge-dispatch "forge-commands" nil t)
+(autoload 'forge-configure "forge-commands" nil t)
+(autoload 'forge-pull "forge-commands" nil t)
+(autoload 'forge-pull-notifications "forge-commands" nil t)
+(autoload 'forge-pull-topic "forge-commands" nil t)
+(autoload 'forge-pull-this-topic "forge-commands" nil t)
 (autoload 'forge-browse-issues "forge-commands" "\
 Visit the current repository's issues using a browser." t)
 (autoload 'forge-browse-pullreqs "forge-commands" "\
@@ -10592,7 +10592,7 @@ Read a REMOTE and visit it using a browser.
 Read a REPOSITORY and visit it using a browser.
 
 (fn REPOSITORY)" t)
- (autoload 'forge-browse-this-topic "forge-commands" nil t)
+(autoload 'forge-browse-this-topic "forge-commands" nil t)
 (autoload 'forge-browse-this-repository "forge-commands" "\
 Visit the repository at point using a browser." t)
 (autoload 'forge-copy-url-at-point-as-kill "forge-commands" "\
@@ -10637,7 +10637,7 @@ Create, configure and checkout a new branch from a pull-request.
 Please see the manual for more information.
 
 (fn PULLREQ)" t)
- (autoload 'forge-checkout-this-pullreq "forge-commands" nil t)
+(autoload 'forge-checkout-this-pullreq "forge-commands" nil t)
 (autoload 'forge-checkout-worktree "forge-commands" "\
 Create, configure and checkout a new worktree from a pull-request.
 This is like `forge-checkout-pullreq', except that it also
@@ -10651,13 +10651,13 @@ If the fork already exists, then that isn't an error; the remote
 is added anyway.  Currently this only supports Github and Gitlab.
 
 (fn FORK REMOTE)" t)
- (autoload 'forge-merge "forge-commands" nil t)
+(autoload 'forge-merge "forge-commands" nil t)
 (autoload 'forge-rename-default-branch "forge-commands" "\
 Rename the default branch to NEWNAME.
 Change the name on the upstream remotely and locally, and update the
 upstream remotes of local branches accordingly." t)
- (autoload 'forge-add-pullreq-refspec "forge-commands" nil t)
- (autoload 'forge-add-repository "forge-commands" nil t)
+(autoload 'forge-add-pullreq-refspec "forge-commands" nil t)
+(autoload 'forge-add-repository "forge-commands" nil t)
 (autoload 'forge-add-user-repositories "forge-commands" "\
 Add all of USER's repositories from HOST to the database.
 This may take a while.  Only Github is supported at the moment.
@@ -10717,7 +10717,7 @@ heavy development." t)
 
 
 
- (autoload 'forge-list-notifications "forge-notify" nil t)
+(autoload 'forge-list-notifications "forge-notify" nil t)
 (register-definition-prefixes "forge-notify" '("forge-"))
 
 
@@ -10734,9 +10734,9 @@ heavy development." t)
 
 
 
- (autoload 'forge-repositories-menu "forge-repos" nil t)
- (autoload 'forge-list-repositories "forge-repos" nil t)
- (autoload 'forge-list-owned-repositories "forge-repos" nil t)
+(autoload 'forge-repositories-menu "forge-repos" nil t)
+(autoload 'forge-list-repositories "forge-repos" nil t)
+(autoload 'forge-list-owned-repositories "forge-repos" nil t)
 (register-definition-prefixes "forge-repos" '("forge-"))
 
 
@@ -10753,20 +10753,20 @@ heavy development." t)
 
 
 
- (autoload 'forge-topic-menu "forge-topic" nil t)
- (autoload 'forge-topic-state-menu "forge-topic" nil t)
- (autoload 'forge-topic-status-menu "forge-topic" nil t)
+(autoload 'forge-topic-menu "forge-topic" nil t)
+(autoload 'forge-topic-state-menu "forge-topic" nil t)
+(autoload 'forge-topic-status-menu "forge-topic" nil t)
 (register-definition-prefixes "forge-topic" '("forge-"))
 
 
 
- (autoload 'forge-topics-menu "forge-topics" nil t)
- (autoload 'forge-list-topics "forge-topics" nil t)
- (autoload 'forge-list-issues "forge-topics" nil t)
- (autoload 'forge-list-pullreqs "forge-topics" nil t)
- (autoload 'forge-list-global-topics "forge-topics" nil t)
- (autoload 'forge-list-global-issues "forge-topics" nil t)
- (autoload 'forge-list-global-pullreqs "forge-topics" nil t)
+(autoload 'forge-topics-menu "forge-topics" nil t)
+(autoload 'forge-list-topics "forge-topics" nil t)
+(autoload 'forge-list-issues "forge-topics" nil t)
+(autoload 'forge-list-pullreqs "forge-topics" nil t)
+(autoload 'forge-list-global-topics "forge-topics" nil t)
+(autoload 'forge-list-global-issues "forge-topics" nil t)
+(autoload 'forge-list-global-pullreqs "forge-topics" nil t)
 (register-definition-prefixes "forge-topics" '("forge-"))
 
 
@@ -11813,7 +11813,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.0" "/Users/laurynas/.emacs.d/elpa/magit-4.1.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.0" "/Users/laurynas/.emacs.d/elpa/transient-0.7.5" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.2" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.4" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1" "/Users/laurynas/.emacs.d/elpa/magit-4.1.1" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.1" "/Users/laurynas/.emacs.d/elpa/transient-0.7.6" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.2" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:

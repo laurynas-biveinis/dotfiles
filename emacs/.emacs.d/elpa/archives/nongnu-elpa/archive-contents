@@ -58,15 +58,15 @@
 			("Andrey Kotlarski" . "m00naticus@gmail.com"))
 		       (:commit . "c80cc51bb1aaf11dd53b9d08e01d61bc9b32622f"))])
  (anzu .
-       [(0 64)
+       [(0 66)
 	((emacs
 	  (25 1)))
 	"Show number of matches in mode-line while searching" tar
 	((:url . "https://github.com/emacsorphanage/anzu")
-	 (:maintainer "Neil Okamoto" . "neil.okamoto+melpa@gmail.com")
+	 (:maintainer "LemonBreezes" . "look@strawberrytea.xyz")
 	 (:authors
 	  ("Syohei YOSHIDA" . "syohex@gmail.com"))
-	 (:commit . "bdb3da5028935a4aea55c40769bc191a81afb54e"))])
+	 (:commit . "bc3a0032bb6aa7f5886f10460cd53eb7b8b020af"))])
  (apache-mode .
 	      [(2 2 0)
 	       nil "Major mode for editing Apache httpd configuration files" tar
@@ -541,7 +541,7 @@
 		(:keywords "languages" "elixir")
 		(:commit . "00d6580a040a750e019218f9392cf9a4c2dac23a"))])
  (elpher .
-	 [(3 6 2)
+	 [(3 6 3)
 	  ((emacs
 	    (27 1)))
 	  "A friendly gopher and gemini client" tar
@@ -550,7 +550,7 @@
 	   (:maintainer "Tim Vaughan" . "plugd@thelambdalab.xyz")
 	   (:authors
 	    ("Tim Vaughan" . "plugd@thelambdalab.xyz"))
-	   (:commit . "0bd12913940a047724d830725bf8649e4f8df499"))])
+	   (:commit . "e3760dfedbd803dd8ff2a5d4fbbda249c1963bd1"))])
  (emacsql .
 	  [(4 0 3)
 	   ((emacs
@@ -1761,14 +1761,14 @@
 	       ((:url . "http://github.com/bastibe/org-journal")
 		(:commit . "18df4d5ae5e15580df42562c143d007c6d28d75f"))])
  (org-mime .
-	   [(0 3 3)
+	   [(0 3 4)
 	    ((emacs
 	      (27 1)))
 	    "org html export for text/html MIME emails" tar
 	    ((:url . "http://github.com/org-mime/org-mime")
 	     (:keywords "mime" "mail" "email" "html")
 	     (:maintainer "Chen Bin" . "chenbin.sh@gmail.com")
-	     (:commit . "468604b8404d3c7d6148be83a4cf308ee95d2cfb"))])
+	     (:commit . "90aa9081ec00a1705552434cb45ff223aa9f8711"))])
  (org-present .
 	      [(0 1)
 	       ((org
@@ -2013,7 +2013,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20240924 164110)
+	      [(1 0 20241001 105847)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2602,14 +2602,14 @@
 	     ((:url . "https://github.com/lewang/ws-butler")
 	      (:commit . "323b651dd70ee40a25accc940b8f80c3a3185205"))])
  (xah-fly-keys .
-	       [(26 4 20240926100036)
+	       [(26 5 20240928104513)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "76149f99d247c39fc4e3ec7decea6b178d42b90f"))])
+		 (:commit . "59655bc78f26c1ce8fcafd460565414cfa4af75e"))])
  (xkcd .
        [(1 1)
 	((json
