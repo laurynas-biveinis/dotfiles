@@ -1041,6 +1041,11 @@ rm_tmp_mtr() {
        /tmp/mysqlx.sock /tmp/mysqlx.sock.lock
 }
 
+rm_cores_tmp_mtr() {
+    rmcores
+    rm_tmp_mtr
+}
+
 mysql_export_build_defaults
 mysql_export_environment_helpers
 
