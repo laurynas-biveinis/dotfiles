@@ -1056,6 +1056,10 @@ crmtr() {
     rmtr "$@"
 }
 
+rcmtr() {
+    crmtr "$@"
+}
+
 mysql_export_build_defaults
 mysql_export_environment_helpers
 
