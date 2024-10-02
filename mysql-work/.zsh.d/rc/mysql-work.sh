@@ -1046,6 +1046,11 @@ rm_cores_tmp_mtr() {
     rm_tmp_mtr
 }
 
+cmtr() {
+    rm_cores_tmp_mtr
+    mtr "$@"
+}
+
 crmtr() {
     rm_cores_tmp_mtr
     rmtr "$@"
