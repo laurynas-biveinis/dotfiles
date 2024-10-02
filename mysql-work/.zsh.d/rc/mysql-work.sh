@@ -1046,6 +1046,11 @@ rm_cores_tmp_mtr() {
     rm_tmp_mtr
 }
 
+crmtr() {
+    rm_cores_tmp_mtr
+    rmtr "$@"
+}
+
 mysql_export_build_defaults
 mysql_export_environment_helpers
 
