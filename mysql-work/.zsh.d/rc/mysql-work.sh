@@ -1060,6 +1060,16 @@ rcmtr() {
     crmtr "$@"
 }
 
+# macOS specific
+lldb_mysqld_core() {
+    declare -a -r cores=(/cores/*(N))
+    [[ ${#cores[@]} -ne 1 ]] && {
+        2>&1 echo "Error: not exactly one core file in /cores";
+        return 1;
+    }
+    lldb ../runtime_output_directory/mysqld -c "${cores[1]}"
+}
+
 mysql_export_build_defaults
 mysql_export_environment_helpers
 
