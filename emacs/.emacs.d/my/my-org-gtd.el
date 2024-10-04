@@ -111,7 +111,14 @@ configuration, with an optional fast state selection character."
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
-;; Clock-in automation
+;; Clocking automation
+
+(defcustom my-org-gtd-clock-gated-commands '()
+  "List of commands that should be gated by `my-org-gtd-require-org-clock'."
+  :type '(repeat symbol)
+  :group 'my-org-gtd
+  :package-version '(my-org-gtd . "0.1"))
+
 (defcustom my-org-gtd-clock-in-actions
   '((:property "URL" :action browse-url :multi t)
     (:property "APP" :action my-org-gtd--clock-in-open-macos-app)
@@ -231,6 +238,10 @@ property."
   (cons (my-org-gtd-context-tag context)
         (my-org-gtd-context-select-char context)))
 
+(defun my-org-gtd--require-org-clock (&rest _args)
+  "Block the command if no `org' task is clocked in."
+  (my-org-gtd-require-org-clock))
+
 (defun my-org-gtd-initialize ()
   "Initialize `my-org-gtd'.
 Checks `org-todo-keywords' against keyword configuration, initializes
@@ -282,7 +293,10 @@ from the context configuration and sets up clock-in automation."
                              (,my-org-gtd-next-action-keyword) nil ""))
   (add-hook 'org-clock-in-hook #'my-org-gtd--clock-in-actions)
   ;; Configure `org-gcal'
-  (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword))
+  (setq org-gcal-cancelled-todo-keyword my-org-gtd-cancelled-keyword)
+  ;; Set up clock gating for commands
+  (dolist (cmd my-org-gtd-clock-gated-commands)
+    (advice-add cmd :before #'my-org-gtd--require-org-clock)))
 
 ;; Agenda views
 (defun my-org-gtd--active-todo-search (&rest contexts)

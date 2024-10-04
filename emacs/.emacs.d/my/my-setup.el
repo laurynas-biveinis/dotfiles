@@ -308,16 +308,6 @@
 
 (add-hook 'magit-status-mode-hook #'dotfiles--turn-off-size-indication-mode)
 
-(defun dotfiles--magit-require-org-clock (&rest _args)
-  "Block Magit operation if no `org' task is clocked in."
-  (my-org-gtd-require-org-clock))
-
-(advice-add 'magit-status :before #'dotfiles--magit-require-org-clock)
-(advice-add 'magit-commit :before #'dotfiles--magit-require-org-clock)
-(advice-add 'magit-push :before #'dotfiles--magit-require-org-clock)
-(advice-add 'magit-stage :before #'dotfiles--magit-require-org-clock)
-(advice-add 'magit-unstage :before #'dotfiles--magit-require-org-clock)
-
 (defun dotfiles--read-non-existing-branch-name (prompt)
   "Read a non-existing branch with PROMPT, stolen from `magit-branch-read-args'."
   (let ((branch (magit-read-string-ns (concat prompt " named"))))
