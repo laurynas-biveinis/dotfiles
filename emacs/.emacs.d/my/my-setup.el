@@ -541,6 +541,26 @@
 ;; configured first.
 (require 'my-edit)
 
+;;; Elisp
+
+(defun my-eval-buf-and-run-ert-test-at-point ()
+  "Evaluate the current buffer and run the ERT test at point."
+  (interactive)
+  (my-org-gtd-require-org-clock)
+  (save-excursion
+    (beginning-of-defun)
+    (unless (looking-at "(ert-deftest\\s-+")
+      (user-error "Not at an ERT test"))
+    (goto-char (match-end 0))
+    (let ((test-name (thing-at-point 'symbol)))
+      (unless test-name
+        (user-error "Couldn't get ERT test name"))
+      (eval-buffer)
+      (ert-run-tests-interactively test-name))))
+
+(define-key emacs-lisp-mode-map (kbd "C-c C-t")
+            #'my-eval-buf-and-run-ert-test-at-point)
+
 ;;; C and C++ programming
 
 (require 'c-ts-mode)
