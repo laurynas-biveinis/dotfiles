@@ -458,13 +458,6 @@ BRANCH-NAME. Returns the URL of this PR."
 
 ;;; `org' helpers
 
-(require 'org-clock)
-
-(defun dotfiles--require-org-clock ()
-  "Return user error if no `org' task is currently clocked in."
-  (unless (org-clocking-p)
-    (user-error "No org task is clocked-in")))
-
 (defmacro dotfiles--with-different-org-clock (&rest body)
   "Save the current org clock, clock-in, execute the forms of BODY.
 

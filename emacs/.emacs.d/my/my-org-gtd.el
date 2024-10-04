@@ -15,6 +15,7 @@
 (require 'cl-lib)
 (require 'org)
 (require 'org-agenda)
+(require 'org-clock)
 (require 'org-element)
 
 ;; Soft dependencies
@@ -156,6 +157,11 @@ property."
       (dolist (value values)
         (when value
           (funcall func value))))))
+
+(defun my-org-gtd-require-org-clock ()
+  "Return user error if no `org' task is currently clocked in."
+  (unless (org-clocking-p)
+    (user-error "No org task is clocked-in")))
 
 ;; URL property support for custom automation
 

@@ -310,7 +310,7 @@
 
 (defun dotfiles--magit-require-org-clock (&rest _args)
   "Block Magit operation if no `org' task is clocked in."
-  (dotfiles--require-org-clock))
+  (my-org-gtd-require-org-clock))
 
 (advice-add 'magit-status :before #'dotfiles--magit-require-org-clock)
 (advice-add 'magit-commit :before #'dotfiles--magit-require-org-clock)
@@ -339,7 +339,7 @@
 (defun my-magit-worktree-branch ()
   "Branch a new project."
   (interactive)
-  (dotfiles--require-org-clock)
+  (my-org-gtd-require-org-clock)
   (let ((path (dotfiles--magit-worktree-branch)))
     (projectile-add-known-project path)
     ;; Make `projectile' initialize its file cache for this project
@@ -360,7 +360,7 @@
 (defun my-pull-all-forge-repos ()
   "Pull everything for all known `forge' repos."
   (interactive)
-  (dotfiles--require-org-clock)
+  (my-org-gtd-require-org-clock)
   (dolist (row (forge-sql [:select * :from repository]))
     ;; Dependency on the internal `forge' schema. I haven't found a better way
     ;; to get this information.
@@ -931,7 +931,7 @@ RULE is a plist containing either :subject-exact or :subject-match."
 
 (defun dotfiles--mu4e-email-automation (msg)
   "Run any matching email automation for a `mu4e' MSG."
-  (dotfiles--require-org-clock)
+  (my-org-gtd-require-org-clock)
   (let ((sender (car (cdr (car (mu4e-message-field msg :from)))))
         (subject (mu4e-message-field msg :subject))
         (already-matched nil))

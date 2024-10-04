@@ -562,6 +562,21 @@
 ;; EVAL action. It should be possible to test `eval' calls directly, but such
 ;; test does not appear to work, and mocking `eval' has too many side effects.
 
+(ert-deftest my-org-gtd-require-clock-on ()
+  "Test that `my-org-gtd-require-clock-on' does nothing with an active clock."
+  (my-org-gtd--buffer-test ()
+    (org-insert-todo-heading-respect-content)
+    (org-clock-in)
+    (my-org-gtd-require-org-clock)))
+
+(ert-deftest my-org-gtd-require-clock-off ()
+  "Test that `my-org-gtd-require-clock-on' errors out without an active clock."
+  (my-org-gtd--buffer-test ()
+    (org-insert-todo-heading-respect-content)
+    (when (org-clocking-p)
+      (org-clock-out))
+    (should-error (my-org-gtd-require-org-clock))))
+
 ;; Test URL property custom automation helpers
 
 (ert-deftest my-org-gtd-with-url-basic ()
