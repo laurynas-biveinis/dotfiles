@@ -567,7 +567,8 @@
   (my-org-gtd--buffer-test ()
     (org-insert-todo-heading-respect-content)
     (org-clock-in)
-    (my-org-gtd-require-org-clock)))
+    (my-org-gtd-require-org-clock)
+    (org-clock-out)))
 
 (ert-deftest my-org-gtd-require-clock-off ()
   "Test that `my-org-gtd-require-clock-on' errors out without an active clock."
