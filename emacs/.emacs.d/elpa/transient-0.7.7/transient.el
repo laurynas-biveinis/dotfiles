@@ -6,8 +6,8 @@
 ;; Homepage: https://github.com/magit/transient
 ;; Keywords: extensions
 
-;; Package-Version: 0.7.6
-;; Package-Revision: v0.7.6-0-gc06015cd6750
+;; Package-Version: 0.7.7
+;; Package-Revision: v0.7.7-0-gfc03c0b75826
 ;; Package-Requires: ((emacs "26.1") (compat "30.0.0.0") (seq "2.24"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -1188,8 +1188,13 @@ commands are aliases for."
         (error "Need command, argument, `:info' or `:info*'; got `%s'" car))
        ((symbolp car)
         (setq args (plist-put args :command (macroexp-quote pop))))
+       ;; During macro-expansion this is expected to be a `lambda'
+       ;; expression.  When this is called from a `:setup-children'
+       ;; function, it may also be a byte-code function object or a
+       ;; compiled function.  However, we never treat a string as a
+       ;; command, so we have to check for that explicitly.
        ((and (commandp car)
-             (eq (car-safe car) 'lambda))
+             (not (stringp car)))
         (let ((cmd pop)
               (sym (intern
                     (format
@@ -4472,7 +4477,7 @@ search instead."
                   2)
             lisp-imenu-generic-expression :test #'equal)
 
-(declare-function which-key-mode "which-key" (&optional arg))
+(declare-function which-key-mode "ext:which-key" (&optional arg))
 
 (defun transient--suspend-which-key-mode ()
   (when (bound-and-true-p which-key-mode)
