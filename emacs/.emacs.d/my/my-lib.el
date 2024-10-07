@@ -33,6 +33,8 @@
 (defconst dotfiles--gh-issue-url
   "Reply to this email directly or view it on GitHub:\n\\(.*\\)$")
 
+(defconst dotfiles--gdoc-open-comment-link "Open[[:space:]]*\n(\\(.*?\\))")
+
 ;;; string helpers
 
 ;; If dependencies are OK, then use `string-join' instead.
