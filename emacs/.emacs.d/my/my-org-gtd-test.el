@@ -578,6 +578,36 @@
       (org-clock-out))
     (should-error (my-org-gtd-require-org-clock))))
 
+(defvar my-org-gtd-test--1-called nil)
+(defvar my-org-gtd-test--2-called nil)
+(defvar my-org-gtd-test--3-called nil)
+
+(defun my-org-gtd--test-1 ()
+  "Set `my-org-gtd-test--1-called' to t."
+  (setq my-org-gtd-test--1-called t))
+
+(defun my-org-gtd--test-2 ()
+  "Set `my-org-gtd-test--2-called' to t."
+  (setq my-org-gtd-test--2-called t))
+
+(defun my-org-gtd--test-3 ()
+  "Set `my-org-gtd-test--3-called' to t."
+  (setq my-org-gtd-test--2-called t))
+
+(ert-deftest my-org-gtd-clock-gated-commands-blocked ()
+  (my-org-gtd--test-fixture
+      ((my-org-gtd-clock-gated-commands '(my-org-gtd--test-1
+                                          my-org-gtd--test-3)))
+    (my-org-gtd-initialize)
+    (when (org-clocking-p)
+      (org-clock-out))
+    (should-error (my-org-gtd--test-1))
+    (my-org-gtd--test-2)
+    (should-error (my-org-gtd--test-3))
+    (should-not my-org-gtd-test--1-called)
+    (should my-org-gtd-test--2-called)
+    (should-not my-org-gtd-test--3-called)))
+
 ;; Test URL property custom automation helpers
 
 (ert-deftest my-org-gtd-with-url-basic ()
