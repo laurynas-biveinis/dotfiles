@@ -162,12 +162,15 @@ there. The temporary file is automatically cleaned up after BODY execution."
   (with-temp-buffer (insert-file-contents (mu4e-message-readable-path msg))
                     (buffer-string)))
 
-(defun dotfiles--get-qp-encoded-html-part ()
-  "For a `mu4e' message, get its first quoted-printable-encoded HTML part."
-  (seq-find (lambda (part)
-              (and (string= "text/html" (plist-get part :mime-type))
-                   (eq 'quoted-printable (plist-get part :encoding))))
-            (mu4e-view-mime-parts)))
+(defun dotfiles--get-mu4e-msg-content (mime-type encoding)
+  "Get the content of the first `mu4e' message part with MIME-TYPE and ENCODING."
+  (mm-get-part
+   (plist-get
+    (seq-find (lambda (part)
+                (and (string= mime-type (plist-get part :mime-type))
+                     (eq encoding (plist-get part :encoding))))
+              (mu4e-view-mime-parts))
+    :handle)))
 
 (defun dotfiles--get-mu4e-msg-csv-part ()
   "For a `mu4e' message, get its first .csv attachment part, if any."
@@ -195,8 +198,12 @@ there. The temporary file is automatically cleaned up after BODY execution."
     (dotfiles--save-mu4e-msg-part-file csv-part)))
 
 (defun dotfiles--get-mu4e-msg-html-content ()
-  "Get the current `mu4de' message HTML content."
-  (mm-get-part (plist-get (dotfiles--get-qp-encoded-html-part) :handle)))
+  "Get the current `mu4e' message HTML content, decoded from quoted-printable."
+  (dotfiles--get-mu4e-msg-content "text/html" 'quoted-printable))
+
+(defun dotfiles--get-mu4e-msg-b64-txt-content ()
+  "Get the current `mu4e' message text content, decoded from base64."
+  (dotfiles--get-mu4e-msg-content "text/plain" 'base64))
 
 (defun dotfiles--for-each-attachment (fn)
   "Call FN for each attachment with its handle and path."
