@@ -34,6 +34,7 @@
   "Reply to this email directly or view it on GitHub:\n\\(.*\\)$")
 
 (defconst dotfiles--gdoc-open-comment-link "Open[[:space:]]*\n(\\(.*?\\))")
+(defconst dotfiles--gdoc-open-shared-link "^\\(https://docs.google.com/.*\\)$")
 
 ;;; string helpers
 
@@ -202,6 +203,10 @@ there. The temporary file is automatically cleaned up after BODY execution."
 (defun dotfiles--get-mu4e-msg-html-content ()
   "Get the current `mu4e' message HTML content, decoded from quoted-printable."
   (dotfiles--get-mu4e-msg-content "text/html" 'quoted-printable))
+
+(defun dotfiles--get-mu4e-msg-txt-content ()
+  "Get the current `mu4e' message text content."
+  (dotfiles--get-mu4e-msg-content "text/plain" nil))
 
 (defun dotfiles--get-mu4e-msg-b64-txt-content ()
   "Get the current `mu4e' message text content, decoded from base64."
