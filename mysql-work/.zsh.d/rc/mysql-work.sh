@@ -144,10 +144,67 @@ mysql_get_comp_flags() {
     return 0
 }
 
+# Enable when developing
+mysql_validate_cmake_flag_type() {
+    declare -r type="$1"
+    if ! [[ $type =~ ^(any|any_debug|any_release)$ ]]; then
+        2>&1 echo \
+             "Invalid flag type $type. Can be one of any, any_debug, any_release"
+        return 1
+    fi
+    echo "$type"
+    return 0
+}
+
+mysql_add_cmake_flags() {
+    if ! declare -r start_version=$(mysql_validate_version "$1"); then
+        return 1
+    fi
+    if ! declare -r end_version=$(mysql_validate_version "$2"); then
+        return 1
+    fi
+    if [[ $(mysql_version_compare "$start_version" "$end_version") -gt 0 ]];
+    then
+        2>&1 echo "Start $start_version cannot be higher than end $end_version"
+    fi
+    if ! declare -r type=$(mysql_validate_cmake_flag_type "$3"); then
+        return 1
+    fi
+    shift 3
+    declare -r flags=("$@")
+    declare -r key="${start_version}-${end_version}:${type}"
+    if [[ ! -v cmake_flags[$key] ]]; then
+        cmake_flags[$key]=""
+    fi
+    cmake_flags[$key]+=" ${flags[@]}"
+    return 0
+}
+
+mysql_get_cmake_flags() {
+    if ! declare -r version=$(mysql_validate_version "$1"); then
+        return 1
+    fi
+    if ! declare -r type=$(mysql_validate_compiler_flag_type "$2"); then
+        return 1
+    fi
+    declare -a flags=()
+    for range in "${(k)cmake_flags[@]}"; do
+        IFS='-:' read -r start_version end_version range_flag_type <<< "$range"
+        if [[ $(mysql_version_compare "$version" "$start_version") -ge 0 ]] &&
+               [[ $(mysql_version_compare "$version" "$end_version") -le 0 ]] &&
+               [[ "$type" == *"$range_flag_type"* ]]; then
+            flags+=("${cmake_flags[$range]}")
+        fi
+    done
+    echo "${flags[@]}"
+    return 0
+}
+
 mysql_export_environment_helpers() {
     declare -r uname_out="$(uname -s)"
 
     declare -gA comp_flags=()
+    declare -gA cmake_flags=()
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -160,21 +217,22 @@ mysql_export_environment_helpers() {
             # gis.gis_bugs_crashes fails with a result difference)
             mysql_add_comp_flags "8.1.0" "8.2.0" "cxx" "-ffp-contract=off"
             mysql_add_comp_flags "8.0.18" "8.0.35" "cxx" "-ffp-contract=off"
-            declare -a my8018_28=("-DWITH_SSL=$brew_opt/openssl@1.1")
+            mysql_add_cmake_flags "8.0.18" "8.0.28" "any" \
+                                  "-DWITH_SSL=$brew_opt/openssl@1.1"
             # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
             # configuration failure on Linux virtualized on M1 Mac)
             declare -a fb_common=("-DROCKSDB_BUILD_ARCH=armv8.1-a+crypto")
             export MY8030_901_CORE_DUMP_FLAGS=(
                 "-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         else
-            declare -a my8018_28=()
             declare -a fb_common=()
             export MY8030_901_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
         declare -a my8018_extra=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
-        my8018_28+=("-DWITH_ICU=$brew_opt/icu4c")
+        mysql_add_cmake_flags "8.0.18" "8.0.28" "any" \
+                              "-DWITH_ICU=$brew_opt/icu4c"
         mysql_add_comp_flags \
             "8.0.18" "8.0.28" cxx \
             "-Wno-shadow-field" "-Wno-unqualified-std-cast-call" \
@@ -247,7 +305,6 @@ mysql_export_environment_helpers() {
         # Linux-only because of https://bugs.mysql.com/bug.php?id=115471
         declare -a cmake_release=("-DWITH_LTO=ON")
         declare -a my8018_extra=()
-        declare -a my8018_28=()
         # FIXME(laurynas): convert all warning -Wno- to -Wno-error=
         mysql_add_comp_flags "8.0.18" "8.0.28" cxx "-Wno-unused-label"
         # FIXME(laurynas): fix in fb-mysql?
@@ -553,7 +610,8 @@ mysql_export_environment_helpers() {
                          "-Wno-unused-but-set-variable" \
                          "-Wno-discarded-qualifiers"
 
-    my8018_28+=("-DWITH_RAPIDJSON=bundled" "-DWITH_LZ4=bundled")
+    mysql_add_cmake_flags "8.0.18" "8.0.28" "any" \
+                          "-DWITH_RAPIDJSON=bundled" "-DWITH_LZ4=bundled"
 
     # 8.0.28
 
@@ -710,28 +768,35 @@ mysql_export_environment_helpers() {
     export MY8029D=("${myd[@]}" "${my8018_820[@]}" "${my8029_comp_flags[@]}")
 
     export MY8028=("${myr[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
-                   "${my8018_28[@]}" "${my8028_comp_flags[@]}")
+                   "$(mysql_get_cmake_flags "8.0.28" "any_debug")"
+                   "${my8028_comp_flags[@]}")
     export MY8028D=("${myd[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
-                    "${my8018_28[@]}" "${my8028_comp_flags[@]}")
+                    "$(mysql_get_cmake_flags "8.0.28" "any_debug")"
+                    "${my8028_comp_flags[@]}")
 
     export FB8028=("${MY8028[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
     export FB8028D=("${MY8028D[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
 
     export MY8027D=("${myd[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
-                    "${my8018_28[@]}" "${my8027_comp_flags[@]}")
+                    "$(mysql_get_cmake_flags "8.0.27" "any_debug")"
+                    "${my8027_comp_flags[@]}")
 
-    export MY8026=("${myr[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
+    export MY8026=("${myr[@]}" "${my8018_820[@]}"
+                   "$(mysql_get_cmake_flags "8.0.26" "any_debug")"
                    "${my8026_extra[@]}" "${my8027_comp_flags[@]}")
-    export MY8026D=("${myd[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
+    export MY8026D=("${myd[@]}" "${my8018_820[@]}"
+                    "$(mysql_get_cmake_flags "8.0.26" "any_release")"
                     "${my8026_extra[@]}" "-DDEBUG_EXTNAME=OFF"
                     "${my8026_comp_flags[@]}")
 
     export FB8026=("${MY8026[@]}" "${fb_common[@]}")
     export FB8026D=("${MY8026D[@]}" "${fb_common[@]}")
 
-    export MY8018=("${myr[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
+    export MY8018=("${myr[@]}" "${my8018_820[@]}"
+                   "$(mysql_get_cmake_flags "8.0.18" "any_release")"
                    "${my8018_extra[@]}" "${my8018_comp_flags[@]}")
-    export MY8018D=("${myd[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
+    export MY8018D=("${myd[@]}" "${my8018_820[@]}"
+                    "$(mysql_get_cmake_flags "8.0.18" "any_debug")"
                     "${my8018_extra[@]}" "${my8018_comp_flags[@]}")
 
     export MARIA108=("${cmake_release[@]}" "${maria_common[@]}")
