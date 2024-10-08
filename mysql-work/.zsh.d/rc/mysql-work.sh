@@ -245,6 +245,7 @@ mysql_export_environment_helpers() {
             `# LLVM 17:` \
             "-Wno-error=implicit-const-int-float-conversion"
         mysql_add_comp_flags "8.0.31" "8.0.31" cxx "-Wno-deprecated-declarations"
+        mysql_add_cmake_flags "8.0.32" "8.0.32" any "-DWITH_UNIT_TESTS=OFF"
         mysql_add_comp_flags "8.0.32" "8.0.34" cxx \
                              "-Wno-unused-but-set-variable" \
                              "-Wno-deprecated-copy-with-dtor"
