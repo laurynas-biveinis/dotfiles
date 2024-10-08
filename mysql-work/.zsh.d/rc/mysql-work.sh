@@ -137,7 +137,7 @@ mysql_get_comp_flags() {
             flags+=("${comp_flags[$range]}")
         fi
     done
-    echo "${flags[@]}"
+    echo "${flags[*]}"
     return 0
 }
 
@@ -378,55 +378,39 @@ mysql_export_environment_helpers() {
     mysql_add_cmake_flags "8.0.33" "9.0.1" any "-DFORCE_COLORED_OUTPUT=ON"
 
     declare -a -r my901_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags "9.0.1" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags "9.0.1" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags "9.0.1" \
-                                                            "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.0.1 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.0.1 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.0.1 cxx_release)"
     )
 
     declare -a -r my900_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "9.0.0" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "9.0.0" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "9.0.0" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.0.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.0.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.0.0 cxx_release)"
     )
 
     declare -a -r my842_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.4.2" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.4.2" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.4.2" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.2 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.2 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.2 cxx_release)"
     )
 
     declare -a -r my841_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.4.1" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.4.1" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.4.1" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.1 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.1 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.1 cxx_release)"
     )
 
     declare -a -r my840_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.4.0" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.4.0" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.4.0" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.0 cxx_release)"
     )
 
     declare -a -r my830_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.3.0" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.3.0" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.3.0" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.3.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.3.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.3.0 cxx_release)"
     )
 
     mysql_add_cmake_flags "8.0.18" "8.2.0" any \
@@ -434,127 +418,91 @@ mysql_export_environment_helpers() {
                           "-DWITH_BOOST=~/vilniusdb/mysql-boost/"
 
     declare -a -r my820_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.2.0" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.2.0" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.2.0" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.2.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.2.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.2.0 cxx_release)"
     )
 
     declare -a -r my810_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.1.0" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.1.0" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.1.0" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.1.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.1.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.1.0 cxx_release)"
     )
 
     declare -a -r my8039_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.39" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.39" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.39" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.39 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.39 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.39 cxx_release)"
     )
 
     declare -a -r my8038_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.38" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.38" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.38" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.38 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.38 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.38 cxx_release)"
     )
 
     declare -a -r my8037_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.37" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.37" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.37" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.37 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.37 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.37 cxx_release)"
     )
 
     declare -a -r my8036_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags "8.0.36" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags "8.0.36" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags "8.0.36" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.36 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.36 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.36 cxx_release)"
     )
 
     declare -a -r my8035_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.35" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.35" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.35" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.35 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.35 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.35 cxx_release)"
     )
 
     declare -a -r my8034_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.34" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.34" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.34" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.34 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.34 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.34 cxx_release)"
     )
 
     declare -a -r my8033_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.33" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.33" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.33" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.33 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.33 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.33 cxx_release)"
     )
 
     mysql_add_cmake_flags "8.0.33" "8.0.33" any "-DWITH_RAPIDJSON=bundled"
 
     declare -a -r my8032_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.32" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.32" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.32" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.32 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.32 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.32 cxx_release)"
     )
 
     declare -a -r my8031_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.31" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.31" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.31" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.31 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.31 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.31 cxx_release)"
     )
 
     declare -a -r my8030_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.30" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.30" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.30" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.30 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.30 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.30 cxx_release)"
     )
 
-    mysql_add_comp_flags "8.0.28" "8.0.29" "cxx_debug" \
+    mysql_add_comp_flags "8.0.28" "8.0.29" cxx_debug \
                          "-Wno-deprecated-declarations"
 
     declare -a -r my8029_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.29" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.29" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.29" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.29 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.29 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.29 cxx_release)"
     )
 
     mysql_add_cmake_flags "8.0.27" "8.0.28" any "-DWITH_FIDO=bundled"
 
-    mysql_add_comp_flags "8.0.18" "8.0.28" "cxx_debug" \
+    mysql_add_comp_flags "8.0.18" "8.0.28" cxx_debug \
                          "-Wno-unknown-warning-option" \
                          "-Wno-unused-but-set-variable" \
                          "-Wno-discarded-qualifiers"
@@ -565,183 +513,171 @@ mysql_export_environment_helpers() {
     declare -a -r fb8028_extra=("-DWITH_UNIT_TESTS=OFF")
 
     declare -a -r my8028_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.28" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.28" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.28" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.28 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.28 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.28 cxx_release)"
     )
 
     # 8.0.27
 
     declare -a -r my8027_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.27" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.27" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.27" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.27 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.27 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.27 cxx_release)"
     )
 
     # 8.0.26
 
     declare -a -r my8026_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.26" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.26" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.26" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.26 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.26 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.26 cxx_release)"
     )
 
     mysql_add_cmake_flags "8.0.26" "8.0.26" any "-DENABLE_DOWNLOADS=ON"
 
     # 8.0.18
 
-    mysql_add_comp_flags "8.0.18" "8.0.18" "cxx" \
+    mysql_add_comp_flags "8.0.18" "8.0.18" cxx \
                          "-Wno-deprecated-declarations" \
                          "-Wno-unused-result" \
                          "-Wno-range-loop-construct" \
                          "-Wno-non-c-typedef-for-linkage"
 
     declare -a -r my8018_comp_flags=(
-        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
-                "8.0.18" "cxx")\""
-        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
-                "8.0.18" "cxx_debug")\""
-        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
-                "8.0.18" "cxx_release")\""
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.18 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.18 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.18 cxx_release)"
     )
 
     # Paydirt!
 
-    export MY901D=("${myd[@]}" "$(mysql_get_cmake_flags "9.0.1" "any_debug")"
+    export MY901D=("${myd[@]}" "$(mysql_get_cmake_flags 9.0.1 any_debug)"
                    "${my901_comp_flags[@]}")
-    export MY901=("${myr[@]}" "$(mysql_get_cmake_flags "9.0.1" "any_release")"
+    export MY901=("${myr[@]}" "$(mysql_get_cmake_flags 9.0.1 any_release)"
                   "${my901_comp_flags[@]}")
 
-    export MY900D=("${myd[@]}" "$(mysql_get_cmake_flags "9.0.0" "any_debug")"
+    export MY900D=("${myd[@]}" "$(mysql_get_cmake_flags 9.0.0 any_debug)"
                    "${my900_comp_flags[@]}")
-    export MY900=("${myr[@]}" "$(mysql_get_cmake_flags "9.0.0" "any_release")"
+    export MY900=("${myr[@]}" "$(mysql_get_cmake_flags 9.0.0 any_release)"
                   "${my900_comp_flags[@]}")
 
-    export MY842D=("${myd[@]}" "$(mysql_get_cmake_flags "8.4.2" "any_debug")"
+    export MY842D=("${myd[@]}" "$(mysql_get_cmake_flags 8.4.2 any_debug)"
                    "${my842_comp_flags[@]}")
-    export MY842=("${myr[@]}" "$(mysql_get_cmake_flags "8.4.2" "any_release")"
+    export MY842=("${myr[@]}" "$(mysql_get_cmake_flags 8.4.2 any_release)"
                   "${my842_comp_flags[@]}")
 
-    export MY841D=("${myd[@]}" "$(mysql_get_cmake_flags "8.4.1" "any_debug")"
+    export MY841D=("${myd[@]}" "$(mysql_get_cmake_flags 8.4.1 any_debug)"
                    "${my841_comp_flags[@]}")
-    export MY841=("${myr[@]}" "$(mysql_get_cmake_flags "8.4.1" "any_release")"
+    export MY841=("${myr[@]}" "$(mysql_get_cmake_flags 8.4.1 any_release)"
                   "${my841_comp_flags[@]}")
 
-    export MY840D=("${myd[@]}" "$(mysql_get_cmake_flags "8.4.0" "any_debug")"
+    export MY840D=("${myd[@]}" "$(mysql_get_cmake_flags 8.4.0 any_debug)"
                    "${my840_comp_flags[@]}")
-    export MY840=("${myr[@]}" "$(mysql_get_cmake_flags "8.4.0" "any_release")"
+    export MY840=("${myr[@]}" "$(mysql_get_cmake_flags 8.4.0 any_release)"
                   "${my841_comp_flags[@]}")
 
-    export MY830D=("${myd[@]}" "$(mysql_get_cmake_flags "8.3.0" "any_debug")"
+    export MY830D=("${myd[@]}" "$(mysql_get_cmake_flags 8.3.0 any_debug)"
                    "${my830_comp_flags[@]}")
-    export MY830=("${myr[@]}" "$(mysql_get_cmake_flags "8.3.0" "any_release")"
+    export MY830=("${myr[@]}" "$(mysql_get_cmake_flags 8.3.0 any_release)"
                   "${my830_comp_flags[@]}")
 
-    export MY820D=("${myd[@]}" "$(mysql_get_cmake_flags "8.2.0" "any_debug")"
+    export MY820D=("${myd[@]}" "$(mysql_get_cmake_flags 8.2.0 any_debug)"
                    "${my820_comp_flags[@]}")
-    export MY820=("${myr[@]}" "$(mysql_get_cmake_flags "8.2.0" "any_release")"
+    export MY820=("${myr[@]}" "$(mysql_get_cmake_flags 8.2.0 any_release)"
                   "${my820_comp_flags[@]}")
 
-    export MY810D=("${myd[@]}" "$(mysql_get_cmake_flags "8.1.0" "any_debug")"
+    export MY810D=("${myd[@]}" "$(mysql_get_cmake_flags 8.1.0 any_debug)"
                    "${my810_comp_flags[@]}")
-    export MY810=("${myr[@]}" "$(mysql_get_cmake_flags "8.1.0" "any_release")"
+    export MY810=("${myr[@]}" "$(mysql_get_cmake_flags 8.1.0 any_release)"
                   "${my810_comp_flags[@]}")
 
-    export MY8039D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.39" "any_debug")"
+    export MY8039D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.39 any_debug)"
                     "${my8039_comp_flags[@]}")
-    export MY8039=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.39" "any_release")"
+    export MY8039=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.39 any_release)"
                    "${my8039_comp_flags[@]}")
 
-    export MY8038D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.38" "any_debug")"
+    export MY8038D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.38 any_debug)"
                     "${my8038_comp_flags[@]}")
-    export MY8038=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.38" "any_release")"
+    export MY8038=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.38 any_release)"
                    "${my8038_comp_flags[@]}")
 
-    export MY8037D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.37" "any_debug")"
+    export MY8037D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.37 any_debug)"
                     "${my8037_comp_flags[@]}")
-    export MY8037=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.37" "any_release")"
+    export MY8037=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.37 any_release)"
                    "${my8037_comp_flags[@]}")
 
-    export MY8036D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.36" "any_debug")"
+    export MY8036D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.36 any_debug)"
                     "${my8036_comp_flags[@]}")
-    export MY8036=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.36" "any_release")"
+    export MY8036=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.36 any_release)"
                    "${my8036_comp_flags[@]}")
 
-    export PS8036D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.36" "any_debug")"
+    export PS8036D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.36 any_debug)"
                     "${my8036_comp_flags[@]}")
 
     export FB8036D=("${MY8036D[@]}" "${fb_common[@]}")
     export FB8036=("${MY8036[@]}" "${fb_common[@]}")
 
-    export MY8035D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.35" "any_debug")"
+    export MY8035D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.35 any_debug)"
                     "${my8035_comp_flags[@]}")
-    export MY8035=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.35" "any_release")"
+    export MY8035=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.35 any_release)"
                    "${my8035_comp_flags[@]}")
 
-    export PS8035D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.35" "any_debug")"
+    export PS8035D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.35 any_debug)"
                     "${my8035_comp_flags[@]}")
 
-    export MY8034D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.34" "any_debug")"
+    export MY8034D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.34 any_debug)"
                     "${my8034_comp_flags[@]}")
-    export MY8034=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.34" "any_release")"
+    export MY8034=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.34 any_release)"
                    "${my8034_comp_flags[@]}")
 
-    export PS8034D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.34" "any_debug")"
+    export PS8034D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.34 any_debug)"
                     "${my8034_comp_flags[@]}")
 
-    export MY8033D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.33" "any_debug")"
+    export MY8033D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.33 any_debug)"
                     "${my8033_comp_flags[@]}")
-    export MY8033=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.33" "any_release")"
+    export MY8033=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.33 any_release)"
                    "${my8033_comp_flags[@]}")
 
-    export MY8032D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.32" "any_debug")"
+    export MY8032D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.32 any_debug)
                     "${my8032_comp_flags[@]}")
-    export MY8032=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.32" "any_release")"
+    export MY8032=("${myr[@]}" $(mysql_get_cmake_flags 8.0.32 any_release)
                    "${my8032_comp_flags[@]}")
 
     export FB8032D=("${MY8032D[@]}" "${fb_common[@]}")
     export FB8032=("${MY8032[@]}" "${fb_common[@]}")
 
-    export MY8031D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.31" "any_debug")"
+    export MY8031D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.31 any_debug)"
                     "${my8031_comp_flags[@]}")
 
-    export MY8030D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.30" "any_debug")"
+    export MY8030D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.30 any_debug)"
                     "${my8030_comp_flags[@]}")
 
-    export MY8029D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.29" "any_debug")"
+    export MY8029D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.29 any_debug)"
                     "${my8029_comp_flags[@]}")
 
-    export MY8028=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.28" "any_release")"
+    export MY8028=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.28 any_release)"
                    "${my8028_comp_flags[@]}")
-    export MY8028D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.28" "any_debug")"
+    export MY8028D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.28 any_debug)"
                     "${my8028_comp_flags[@]}")
 
     export FB8028=("${MY8028[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
     export FB8028D=("${MY8028D[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
 
-    export MY8027D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.27" "any_debug")"
+    export MY8027D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.27 any_debug)"
                     "${my8027_comp_flags[@]}")
 
-    export MY8026=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.26" "any_release")"
+    export MY8026=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.26 any_release)"
                    "${my8027_comp_flags[@]}")
-    export MY8026D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.26" "any_debug")"
+    export MY8026D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.26 any_debug)"
                     "-DDEBUG_EXTNAME=OFF" "${my8026_comp_flags[@]}")
 
     export FB8026=("${MY8026[@]}" "${fb_common[@]}")
     export FB8026D=("${MY8026D[@]}" "${fb_common[@]}")
 
-    export MY8018=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.18" "any_release")"
+    export MY8018=("${myr[@]}" "$(mysql_get_cmake_flags 8.0.18 any_release)"
                    "${my8018_comp_flags[@]}")
-    export MY8018D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.18" "any_debug")"
+    export MY8018D=("${myd[@]}" "$(mysql_get_cmake_flags 8.0.18 any_debug)"
                     "${my8018_comp_flags[@]}")
 
     export MARIA108=("${cmake_release[@]}" "${maria_common[@]}")
