@@ -592,7 +592,7 @@
 
 (defun my-org-gtd-test--3 ()
   "Set `my-org-gtd-test-3--called' to t."
-  (setq my-org-gtd-test--2-called t))
+  (setq my-org-gtd-test--3-called t))
 
 (ert-deftest my-org-gtd-clock-gated-commands-blocked ()
   "Test `my-org-gtd-clock-gated-commands' blocking commands when not clocking."
