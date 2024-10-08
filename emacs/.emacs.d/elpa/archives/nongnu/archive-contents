@@ -241,14 +241,14 @@
 	  ("Damien Doligez" . "damien.doligez@inria.fr"))
 	 (:commit . "2905a436e956c5bba16c4633a6e4c4fceefa6535"))])
  (cdlatex .
-	  [(4 18 4)
+	  [(4 18 5)
 	   nil "Fast input methods for LaTeX environments and math" tar
 	   ((:keywords "tex")
 	    (:maintainer "Carsten Dominik" . "carsten.dominik@gmail.com")
 	    (:authors
 	     ("Carsten Dominik" . "carsten.dominik@gmail.com"))
 	    (:url . "https://elpa.nongnu.org/nongnu/cdlatex.html")
-	    (:commit . "33770dec73138909714711b05a63e79da5a19ccd"))])
+	    (:commit . "fac070f0164ac9f5859cb4cccba7d29a65c337f3"))])
  (cider .
 	[(1 16 0)
 	 ((emacs
@@ -2260,14 +2260,14 @@
 		     ("John Olsson" . "john@cryon.se"))
 		    (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed .
-	[(1 2 15)
+	[(1 2 16)
 	 ((emacs
 	   (25 1)))
 	 "A major mode for editing subtitles" tar
 	 ((:url . "https://github.com/sachac/subed")
 	  (:keywords "convenience" "files" "hypermedia" "multimedia")
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
-	  (:commit . "47403ce79d084d7dec8599553456f35370d8aef2"))])
+	  (:commit . "4558c30f392e32a4658cfbcca335368035bf8da9"))])
  (sweeprolog .
 	     [(0 27 6)
 	      ((emacs
