@@ -746,6 +746,29 @@
             (should (string= (org-get-heading t t) "Item 1")))
         (delete-file temp-file)))))
 
+(ert-deftest my-org-gtd-with-different-org-clock-no-current-clock ()
+  "Test `my-org-gtd-with-different-org-clock' with no current clock."
+  (my-org-gtd--buffer-test ()
+    (org-insert-todo-heading-respect-content)
+    (insert "Item 0")
+    (org-insert-todo-heading-respect-content)
+    (insert "Item 1")
+    (let ((item1-pos (save-excursion
+                       (org-back-to-heading)
+                       (point)))
+          executed)
+      (when (org-clocking-p)
+        (org-clock-out))
+      (my-org-gtd-with-different-org-clock
+        (setq executed t)
+        (should (org-clocking-p))
+        (should (= (save-excursion
+                     (goto-char (marker-position org-clock-marker))
+                     (org-back-to-heading)
+                     (point)) item1-pos)))
+      (should executed)
+      (should-not (org-clocking-p)))))
+
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
 ;; TODO(laurynas): uniqueness in keys
