@@ -252,7 +252,7 @@ mysql_export_environment_helpers() {
                              "-Wno-unused-but-set-variable" \
                              "-Wno-deprecated-copy-with-dtor"
         mysql_add_comp_flags "8.0.36" "8.0.36" cxx "-Wno-unused-variable"
-        declare -a -r my830_901_extra=("-DWITH_ZLIB=bundled")
+        mysql_add_cmake_flags "8.3.0" "9.0.1" any "-DWITH_ZLIB=bundled"
 
         declare -a maria_common=(
             "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
@@ -309,7 +309,6 @@ mysql_export_environment_helpers() {
         # FIXME(laurynas): fix in fb-mysql?
         mysql_add_comp_flags "8.0.18" "8.0.35" cxx \
                              "-Wno-error=ignored-attributes"
-        declare -a -r my830_901_extra=()
         declare -a maria_common=()
         if [ "$(arch)" = "aarch64" ]; then
             # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
@@ -666,34 +665,46 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
-    export MY901D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY901D=("${myd[@]}" "${my8033_901[@]}"
+                   "$(mysql_get_cmake_flags "9.0.1" "any_debug")"
                    "${my901_comp_flags[@]}")
-    export MY901=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY901=("${myr[@]}" "${my8033_901[@]}"
+                  "$(mysql_get_cmake_flags "9.0.1" "any_release")"
                   "${my901_comp_flags[@]}")
 
-    export MY900D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY900D=("${myd[@]}" "${my8033_901[@]}"
+                   "$(mysql_get_cmake_flags "9.0.0" "any_debug")"
                    "${my900_comp_flags[@]}")
-    export MY900=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY900=("${myr[@]}" "${my8033_901[@]}"
+                  "$(mysql_get_cmake_flags "9.0.0" "any_release")"
                   "${my900_comp_flags[@]}")
 
-    export MY842D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY842D=("${myd[@]}" "${my8033_901[@]}"
+                   "$(mysql_get_cmake_flags "8.4.2" "any_debug")"
                    "${my842_comp_flags[@]}")
-    export MY842=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY842=("${myr[@]}" "${my8033_901[@]}"
+                  "$(mysql_get_cmake_flags "8.4.2" "any_release")"
                   "${my842_comp_flags[@]}")
 
-    export MY841D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY841D=("${myd[@]}" "${my8033_901[@]}"
+                   "$(mysql_get_cmake_flags "8.4.1" "any_debug")"
                    "${my841_comp_flags[@]}")
-    export MY841=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY841=("${myr[@]}" "${my8033_901[@]}"
+                  "$(mysql_get_cmake_flags "8.4.1" "any_release")"
                   "${my841_comp_flags[@]}")
 
-    export MY840D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY840D=("${myd[@]}" "${my8033_901[@]}"
+                   "$(mysql_get_cmake_flags "8.4.0" "any_debug")"
                    "${my840_comp_flags[@]}")
-    export MY840=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY840=("${myr[@]}" "${my8033_901[@]}"
+                  "$(mysql_get_cmake_flags "8.4.0" "any_release")"
                   "${my841_comp_flags[@]}")
 
-    export MY830D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY830D=("${myd[@]}" "${my8033_901[@]}"
+                   "$(mysql_get_cmake_flags "8.3.0" "any_debug")"
                    "${my830_comp_flags[@]}")
-    export MY830=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+    export MY830=("${myr[@]}" "${my8033_901[@]}"
+                  "$(mysql_get_cmake_flags "8.3.0" "any_release")"
                   "${my830_comp_flags[@]}")
 
     export MY820D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
