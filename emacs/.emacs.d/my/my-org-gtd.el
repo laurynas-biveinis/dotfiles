@@ -223,7 +223,7 @@ property."
 (defmacro my-org-gtd-with-different-org-clock (&rest body)
   "Save the current org clock, clock-in, execute the forms of BODY.
 The marker must be at the new clock position."
-  (declare (indent 1) (debug t))
+  (declare (indent defun) (debug t))
   `(let ((current-clock-marker (when (org-clocking-p)
                                  (copy-marker org-clock-marker))))
      (unwind-protect
