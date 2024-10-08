@@ -34,6 +34,10 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+# zsh functions
+autoload is-at-least
+
+# mysql-work functions
 autoload mysql_find_version_file
 autoload mysql_get_major_version
 autoload mysql_get_minor_version
@@ -61,30 +65,23 @@ mysql_validate_version() {
     return 0
 }
 
-mysql_version_to_comparable_num() {
-    if ! declare -r v=$(mysql_validate_version "$1"); then
-        return 1
-    fi
-    echo "$v" | awk -F . ' { printf("%03d%03d%03d\n", $1, $2, $3) }'
-    return 0
-}
-
 mysql_version_compare() {
-    if ! declare -i -r v1num=$(mysql_version_to_comparable_num "$1"); then
+    if ! declare -r v1=$(mysql_validate_version "$1"); then
         return 1
     fi
-    if ! declare -i -r v2num=$(mysql_version_to_comparable_num "$2"); then
+    if ! declare -r v2=$(mysql_validate_version "$1"); then
         return 1
     fi
 
-    if (( v1num > v2num )); then
-        echo 1
-    elif (( v1num < v2num )); then
-        echo -1
+    if is-at-least "$1" "$2"; then
+        if [[ "$1" == "$2" ]]; then
+            echo 0
+        else
+            echo -1
+        fi
     else
-        echo 0
+        echo 1
     fi
-    return 0
 }
 
 # Enable when developing
