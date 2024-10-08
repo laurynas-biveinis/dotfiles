@@ -251,7 +251,6 @@ mysql_export_environment_helpers() {
         mysql_add_comp_flags "8.0.32" "8.0.34" cxx \
                              "-Wno-unused-but-set-variable" \
                              "-Wno-deprecated-copy-with-dtor"
-        declare -a my8032_extra=("-DWITH_UNIT_TESTS=OFF")
         mysql_add_comp_flags "8.0.36" "8.0.36" cxx "-Wno-unused-variable"
         declare -a -r my830_901_extra=("-DWITH_ZLIB=bundled")
 
@@ -310,7 +309,6 @@ mysql_export_environment_helpers() {
         # FIXME(laurynas): fix in fb-mysql?
         mysql_add_comp_flags "8.0.18" "8.0.35" cxx \
                              "-Wno-error=ignored-attributes"
-        declare -a my8032_extra=()
         declare -a -r my830_901_extra=()
         declare -a maria_common=()
         if [ "$(arch)" = "aarch64" ]; then
