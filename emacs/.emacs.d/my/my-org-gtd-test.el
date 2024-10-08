@@ -612,6 +612,24 @@
     (should my-org-gtd-test--2-called)
     (should-not my-org-gtd-test--3-called)))
 
+(ert-deftest my-org-gtd-clock-gated-commands-allowed ()
+  "Test `my-org-gtd-clock-gated-commands' allowing commands when clocking."
+  (my-org-gtd--buffer-test
+      ((my-org-gtd-clock-gated-commands '(my-org-gtd-test--2
+                                          my-org-gtd-test--3))
+       (my-org-gtd-test--1-called nil)
+       (my-org-gtd-test--2-called nil)
+       (my-org-gtd-test--3-called nil))
+    (my-org-gtd-initialize)
+    (org-insert-todo-heading-respect-content)
+    (org-clock-in)
+    (my-org-gtd-test--1)
+    (my-org-gtd-test--2)
+    (my-org-gtd-test--3)
+    (should my-org-gtd-test--1-called)
+    (should my-org-gtd-test--2-called)
+    (should my-org-gtd-test--3-called)))
+
 ;; Test URL property custom automation helpers
 
 (ert-deftest my-org-gtd-with-url-basic ()
