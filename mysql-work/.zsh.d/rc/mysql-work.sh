@@ -436,8 +436,6 @@ mysql_export_environment_helpers() {
                           "-DDOWNLOAD_BOOST=ON" \
                           "-DWITH_BOOST=~/vilniusdb/mysql-boost/"
 
-    # 8.2.0
-
     declare -a -r my820_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
                 "8.2.0" "cxx")\""
@@ -446,8 +444,6 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
                 "8.2.0" "cxx_release")\""
     )
-
-    # 8.1.0
 
     declare -a -r my810_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
@@ -458,8 +454,6 @@ mysql_export_environment_helpers() {
                 "8.1.0" "cxx_release")\""
     )
 
-    # 8.0.39
-
     declare -a -r my8039_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
                 "8.0.39" "cxx")\""
@@ -468,8 +462,6 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
                 "8.0.39" "cxx_release")\""
     )
-
-    # 8.0.38
 
     declare -a -r my8038_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
@@ -480,8 +472,6 @@ mysql_export_environment_helpers() {
                 "8.0.38" "cxx_release")\""
     )
 
-    # 8.0.37
-
     declare -a -r my8037_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
                 "8.0.37" "cxx")\""
@@ -491,15 +481,11 @@ mysql_export_environment_helpers() {
                 "8.0.37" "cxx_release")\""
     )
 
-    # 8.0.36
-
     declare -a -r my8036_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags "8.0.36" "cxx")\""
         "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags "8.0.36" "cxx_debug")\""
         "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags "8.0.36" "cxx_release")\""
     )
-
-    # 8.0.35
 
     declare -a -r my8035_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
@@ -510,8 +496,6 @@ mysql_export_environment_helpers() {
                 "8.0.35" "cxx_release")\""
     )
 
-    # 8.0.34
-
     declare -a -r my8034_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
                 "8.0.34" "cxx")\""
@@ -520,8 +504,6 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
                 "8.0.34" "cxx_release")\""
     )
-
-    # 8.0.33
 
     declare -a -r my8033_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
@@ -532,7 +514,7 @@ mysql_export_environment_helpers() {
                 "8.0.33" "cxx_release")\""
     )
 
-    declare -a -r my8033_extra=("-DWITH_RAPIDJSON=bundled")
+    mysql_add_cmake_flags "8.0.33" "8.0.33" any "-DWITH_RAPIDJSON=bundled"
 
     # 8.0.32
 
@@ -735,10 +717,9 @@ mysql_export_environment_helpers() {
                     "${my8034_comp_flags[@]}")
 
     export MY8033D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.33" "any_debug")"
-                    "${my8033_extra[@]}"
                     "${my8033_comp_flags[@]}")
     export MY8033=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.33" "any_release")"
-                   "${my8033_extra[@]}" "${my8033_comp_flags[@]}")
+                   "${my8033_comp_flags[@]}")
 
     export MY8032D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.32" "any_debug")"
                     "${my8032_comp_flags[@]}")
