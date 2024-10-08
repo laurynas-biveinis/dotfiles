@@ -557,8 +557,6 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.27" "8.0.28" any "-DWITH_FIDO=bundled"
 
-    # 8.0.28--8.0.18
-
     mysql_add_comp_flags "8.0.18" "8.0.28" "cxx_debug" \
                          "-Wno-unknown-warning-option" \
                          "-Wno-unused-but-set-variable" \
@@ -566,8 +564,6 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.18" "8.0.28" "any" \
                           "-DWITH_RAPIDJSON=bundled" "-DWITH_LZ4=bundled"
-
-    # 8.0.28
 
     declare -a -r fb8028_extra=("-DWITH_UNIT_TESTS=OFF")
 
@@ -601,7 +597,8 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
                 "8.0.26" "cxx_release")\""
     )
-    declare -a -r my8026_extra=("-DENABLE_DOWNLOADS=ON")
+
+    mysql_add_cmake_flags "8.0.26" "8.0.26" any "-DENABLE_DOWNLOADS=ON"
 
     # 8.0.18
 
@@ -738,10 +735,9 @@ mysql_export_environment_helpers() {
                     "${my8027_comp_flags[@]}")
 
     export MY8026=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.26" "any_release")"
-                   "${my8026_extra[@]}" "${my8027_comp_flags[@]}")
+                   "${my8027_comp_flags[@]}")
     export MY8026D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.26" "any_debug")"
-                    "${my8026_extra[@]}" "-DDEBUG_EXTNAME=OFF"
-                    "${my8026_comp_flags[@]}")
+                    "-DDEBUG_EXTNAME=OFF" "${my8026_comp_flags[@]}")
 
     export FB8026=("${MY8026[@]}" "${fb_common[@]}")
     export FB8026D=("${MY8026D[@]}" "${fb_common[@]}")
