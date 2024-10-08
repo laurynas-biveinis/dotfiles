@@ -594,6 +594,12 @@
   "Set `my-org-gtd-test-3--called' to t."
   (setq my-org-gtd-test--3-called t))
 
+(defun my-org-gtd-test--undo-clock-gating ()
+  "Remove clock gating from the test commands."
+  (advice-remove 'my-org-gtd-test--1 #'my-org-gtd--require-org-clock)
+  (advice-remove 'my-org-gtd-test--2 #'my-org-gtd--require-org-clock)
+  (advice-remove 'my-org-gtd-test--3 #'my-org-gtd--require-org-clock))
+
 (ert-deftest my-org-gtd-clock-gated-commands-blocked ()
   "Test `my-org-gtd-clock-gated-commands' blocking commands when not clocking."
   (my-org-gtd--test-fixture
@@ -603,14 +609,17 @@
        (my-org-gtd-test--2-called nil)
        (my-org-gtd-test--3-called nil))
     (my-org-gtd-initialize)
-    (when (org-clocking-p)
-      (org-clock-out))
-    (should-error (my-org-gtd-test--1))
-    (my-org-gtd-test--2)
-    (should-error (my-org-gtd-test--3))
-    (should-not my-org-gtd-test--1-called)
-    (should my-org-gtd-test--2-called)
-    (should-not my-org-gtd-test--3-called)))
+    (unwind-protect
+        (progn
+          (when (org-clocking-p)
+            (org-clock-out))
+          (should-error (my-org-gtd-test--1))
+          (my-org-gtd-test--2)
+          (should-error (my-org-gtd-test--3))
+          (should-not my-org-gtd-test--1-called)
+          (should my-org-gtd-test--2-called)
+          (should-not my-org-gtd-test--3-called))
+      (my-org-gtd-test--undo-clock-gating))))
 
 (ert-deftest my-org-gtd-clock-gated-commands-allowed ()
   "Test `my-org-gtd-clock-gated-commands' allowing commands when clocking."
@@ -621,14 +630,18 @@
        (my-org-gtd-test--2-called nil)
        (my-org-gtd-test--3-called nil))
     (my-org-gtd-initialize)
-    (org-insert-todo-heading-respect-content)
-    (org-clock-in)
-    (my-org-gtd-test--1)
-    (my-org-gtd-test--2)
-    (my-org-gtd-test--3)
-    (should my-org-gtd-test--1-called)
-    (should my-org-gtd-test--2-called)
-    (should my-org-gtd-test--3-called)))
+    (unwind-protect
+        (progn
+          (org-insert-todo-heading-respect-content)
+          (org-clock-in)
+          (my-org-gtd-test--1)
+          (my-org-gtd-test--2)
+          (my-org-gtd-test--3)
+          (org-clock-out)
+          (should my-org-gtd-test--1-called)
+          (should my-org-gtd-test--2-called)
+          (should my-org-gtd-test--3-called))
+      (my-org-gtd-test--undo-clock-gating))))
 
 ;; Test URL property custom automation helpers
 
