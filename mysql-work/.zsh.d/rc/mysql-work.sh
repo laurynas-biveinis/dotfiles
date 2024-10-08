@@ -116,6 +116,7 @@ mysql_add_comp_flags() {
     shift 3
     declare -r flags=("$@")
     declare -r key="${start_version}-${end_version}:${type}"
+    # Enable when debugging
     if [[ -n "${comp_flags[$key]:-}" ]]; then
         2>&1 echo "Attempt to overwrite flags for $key"
     fi
