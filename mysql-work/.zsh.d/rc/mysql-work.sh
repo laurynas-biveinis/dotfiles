@@ -230,7 +230,8 @@ mysql_export_environment_helpers() {
         fi
         declare -a cmake_release=()
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
-        declare -a my8018_extra=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
+        mysql_add_cmake_flags "8.0.18" "8.0.18" "any" \
+                              "-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled"
         mysql_add_cmake_flags "8.0.18" "8.0.28" "any" \
                               "-DWITH_ICU=$brew_opt/icu4c"
         mysql_add_comp_flags \
@@ -304,7 +305,6 @@ mysql_export_environment_helpers() {
     else
         # Linux-only because of https://bugs.mysql.com/bug.php?id=115471
         declare -a cmake_release=("-DWITH_LTO=ON")
-        declare -a my8018_extra=()
         # FIXME(laurynas): convert all warning -Wno- to -Wno-error=
         mysql_add_comp_flags "8.0.18" "8.0.28" cxx "-Wno-unused-label"
         # FIXME(laurynas): fix in fb-mysql?
@@ -794,10 +794,10 @@ mysql_export_environment_helpers() {
 
     export MY8018=("${myr[@]}" "${my8018_820[@]}"
                    "$(mysql_get_cmake_flags "8.0.18" "any_release")"
-                   "${my8018_extra[@]}" "${my8018_comp_flags[@]}")
+                   "${my8018_comp_flags[@]}")
     export MY8018D=("${myd[@]}" "${my8018_820[@]}"
                     "$(mysql_get_cmake_flags "8.0.18" "any_debug")"
-                    "${my8018_extra[@]}" "${my8018_comp_flags[@]}")
+                    "${my8018_comp_flags[@]}")
 
     export MARIA108=("${cmake_release[@]}" "${maria_common[@]}")
     export MARIA108D=("${cmake_debug[@]}" "${maria_common[@]}")
