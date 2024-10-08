@@ -220,6 +220,21 @@ property."
     (org-clock-in)
     (message "Clocking-in the `org' node with %s, use C-c & to go back" url)))
 
+(defmacro my-org-gtd-with-different-org-clock (&rest body)
+  "Save the current org clock, clock-in, execute the forms of BODY.
+The marker must be at the new clock position."
+  (declare (indent 1) (debug t))
+  `(let ((current-clock-marker (when (org-clocking-p)
+                                 (copy-marker org-clock-marker))))
+     (unwind-protect
+         (progn
+           (org-clock-in)
+           ,@body)
+       (if current-clock-marker
+           (org-with-point-at current-clock-marker
+             (org-clock-in))
+         (org-clock-out)))))
+
 ;; `org' setup
 (defun my-org-gtd--check-keyword-in-org-todo-keywords (keyword)
   "Check that KEYWORD in present in `org-todo-keywords'."

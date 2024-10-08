@@ -467,22 +467,6 @@ BRANCH-NAME. Returns the URL of this PR."
 
 ;;; `org' helpers
 
-(defmacro dotfiles--with-different-org-clock (&rest body)
-  "Save the current org clock, clock-in, execute the forms of BODY.
-
-The marker must be at the new clock position."
-  (declare (indent 1) (debug t))
-  `(let ((current-clock-marker (when (org-clocking-p)
-                                 (copy-marker org-clock-marker))))
-     (unwind-protect
-         (progn
-           (org-clock-in)
-           ,@body)
-       (if current-clock-marker
-           (org-with-point-at current-clock-marker
-             (org-clock-in))
-         (org-clock-out)))))
-
 (require 'org-refile)
 
 (defun dotfiles--read-org-headline ()
