@@ -50,8 +50,103 @@ mysql_export_build_defaults() {
     export MY_BUILD_DIR_PREFIX="_build-"
 }
 
+# Enable when developing
+mysql_validate_version() {
+    declare -r version="$1"
+    if ! [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        2>&1 echo "Invalid version $version. Expected format X.Y.Z"
+        return 1
+    fi
+    echo "$version"
+    return 0
+}
+
+mysql_version_to_comparable_num() {
+    if ! declare -r v=$(mysql_validate_version "$1"); then
+        return 1
+    fi
+    echo "$v" | awk -F . ' { printf("%03d%03d%03d\n", $1, $2, $3) }'
+    return 0
+}
+
+mysql_version_compare() {
+    if ! declare -i -r v1num=$(mysql_version_to_comparable_num "$1"); then
+        return 1
+    fi
+    if ! declare -i -r v2num=$(mysql_version_to_comparable_num "$2"); then
+        return 1
+    fi
+
+    if (( v1num > v2num )); then
+        echo 1
+    elif (( v1num < v2num )); then
+        echo -1
+    else
+        echo 0
+    fi
+    return 0
+}
+
+# Enable when developing
+mysql_validate_compiler_flag_type() {
+    declare -r type="$1"
+    if ! [[ $type =~ ^(cxx|cxx_debug|cxx_release)$ ]]; then
+        2>&1 echo \
+             "Invalid flag type $type. Can be one of cxx, cxx_debug, cxx_release"
+        return 1
+    fi
+    echo "$type"
+    return 0
+}
+
+mysql_add_comp_flags() {
+    if ! declare -r start_version=$(mysql_validate_version "$1"); then
+        return 1
+    fi
+    if ! declare -r end_version=$(mysql_validate_version "$2"); then
+        return 1
+    fi
+    if [[ $(mysql_version_compare "$start_version" "$end_version") -gt 0 ]];
+    then
+        2>&1 echo "Start $start_version cannot be higher than end $end_version"
+    fi
+    if ! declare -r type=$(mysql_validate_compiler_flag_type "$3"); then
+        return 1
+    fi
+    shift 3
+    declare -r flags=("$@")
+    declare -r key="${start_version}-${end_version}:${type}"
+    if [[ -n "${comp_flags[$key]:-}" ]]; then
+        2>&1 echo "Attempt to overwrite flags for $key"
+    fi
+    comp_flags[$key]="${flags[*]}"
+    return 0
+}
+
+mysql_get_comp_flags() {
+    if ! declare -r version=$(mysql_validate_version "$1"); then
+        return 1
+    fi
+    if ! declare -r type=$(mysql_validate_compiler_flag_type "$2"); then
+        return 1
+    fi
+    declare -a flags=()
+    for range in "${(k)comp_flags[@]}"; do
+        IFS='-:' read -r start_version end_version range_flag_type <<< "$range"
+        if [[ $(mysql_version_compare "$version" "$start_version") -ge 0 ]] &&
+               [[ $(mysql_version_compare "$version" "$end_version") -le 0 ]] &&
+               [[ "$type" == *"$range_flag_type"* ]]; then
+            flags+=("${comp_flags[$range]}")
+        fi
+    done
+    echo "${flags[@]}"
+    return 0
+}
+
 mysql_export_environment_helpers() {
     declare -r uname_out="$(uname -s)"
+
+    declare -gA comp_flags=()
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -62,8 +157,8 @@ mysql_export_environment_helpers() {
             # main.derived_limit fails with small cost differences) and
             # https://bugs.mysql.com/bug.php?id=113048 (MTR test
             # gis.gis_bugs_crashes fails with a result difference)
-            declare -a -r my810_820_extra_cxx_flags=("-ffp-contract=off")
-            declare -a -r my8018_35_extra_cxx_flags=("-ffp-contract=off")
+            mysql_add_comp_flags "8.1.0" "8.2.0" "cxx" "-ffp-contract=off"
+            mysql_add_comp_flags "8.0.18" "8.0.35" "cxx" "-ffp-contract=off"
             declare -a my8018_28=("-DWITH_SSL=$brew_opt/openssl@1.1")
             # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
             # configuration failure on Linux virtualized on M1 Mac)
@@ -71,33 +166,33 @@ mysql_export_environment_helpers() {
             export MY8030_901_CORE_DUMP_FLAGS=(
                 "-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         else
-            declare -a -r my810_820_extra_cxx_flags=()
-            declare -a -r my8018_35_extra_cxx_flags=()
             declare -a my8018_28=()
             declare -a fb_common=()
             export MY8030_901_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
-        declare -a my900_901_cxx_flags=("-Wno-unused-lambda-capture")
+        mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
         declare -a my8018_extra=("-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled")
         my8018_28+=("-DWITH_ICU=$brew_opt/icu4c")
-        declare -a -r my8018_28_cxx_flags=(
-            "-Wno-shadow-field" "-Wno-unqualified-std-cast-call"
-            "-Wno-deprecated-copy-with-dtor" "-Wno-bitwise-instead-of-logical"
-            "-Wno-unused-label"
-            # LLVM 14:
-            "-Wno-error=unused-variable" "-Wno-error=missing-noreturn"
-            "-Wno-error=extra-semi"
-            # LLVM 14 RocksDB:
-            "-Wno-error=invalid-offsetof"
-            "-Wno-error=conditional-uninitialized"
-            # LLVM 17:
-            "-Wno-error=implicit-const-int-float-conversion")
-        declare -a -r my8031_extra_cxx_flags=("-Wno-deprecated-declarations")
-        declare -a -r my8032_34_extra_cxx_flags=(
-            "-Wno-unused-but-set-variable" "-Wno-deprecated-copy-with-dtor")
+        mysql_add_comp_flags \
+            "8.0.18" "8.0.28" cxx \
+            "-Wno-shadow-field" "-Wno-unqualified-std-cast-call" \
+            "-Wno-deprecated-copy-with-dtor" "-Wno-bitwise-instead-of-logical" \
+            "-Wno-unused-label" \
+            `# LLVM 14:` \
+            "-Wno-error=unused-variable" "-Wno-error=missing-noreturn" \
+            "-Wno-error=extra-semi" \
+            `# LLVM 14 RocksDB:` \
+            "-Wno-error=invalid-offsetof" \
+            "-Wno-error=conditional-uninitialized" \
+            `# LLVM 17:` \
+            "-Wno-error=implicit-const-int-float-conversion"
+        mysql_add_comp_flags "8.0.31" "8.0.31" cxx "-Wno-deprecated-declarations"
+        mysql_add_comp_flags "8.0.32" "8.0.34" cxx \
+                             "-Wno-unused-but-set-variable" \
+                             "-Wno-deprecated-copy-with-dtor"
         declare -a my8032_extra=("-DWITH_UNIT_TESTS=OFF")
-        declare -a -r my8036_extra_cxx_release_flags=("-Wno-unused-variable")
+        mysql_add_comp_flags "8.0.36" "8.0.36" cxx "-Wno-unused-variable"
         declare -a -r my830_901_extra=("-DWITH_ZLIB=bundled")
 
         declare -a maria_common=(
@@ -150,17 +245,14 @@ mysql_export_environment_helpers() {
     else
         # Linux-only because of https://bugs.mysql.com/bug.php?id=115471
         declare -a cmake_release=("-DWITH_LTO=ON")
-        declare -a my900_901_cxx_flags=()
-        declare -a -r my810_820_extra_cxx_flags=()
         declare -a my8018_extra=()
         declare -a my8018_28=()
-        declare -a -r my8018_28_cxx_flags=("-Wno-unused-label")
+        # FIXME(laurynas): convert all warning -Wno- to -Wno-error=
+        mysql_add_comp_flags "8.0.18" "8.0.28" cxx "-Wno-unused-label"
         # FIXME(laurynas): fix in fb-mysql?
-        declare -a -r my8018_35_extra_cxx_flags=("-Wno-error=ignored-attributes")
-        declare -a -r my8031_extra_cxx_flags=()
-        declare -a -r my8032_34_extra_cxx_flags=()
+        mysql_add_comp_flags "8.0.18" "8.0.35" cxx \
+                             "-Wno-error=ignored-attributes"
         declare -a my8032_extra=()
-        declare -a my8036_extra_cxx_release_flags=()
         declare -a -r my830_901_extra=()
         declare -a maria_common=()
         if [ "$(arch)" = "aarch64" ]; then
@@ -205,8 +297,9 @@ mysql_export_environment_helpers() {
 
     # Common building blocks
 
-    declare -a -r cxx_flags_debug=("-g")
-    declare -a -r cxx_flags_release=("-O2" "-g" "-DNDEBUG")
+    # FIXME(laurynas): min version, max version constants
+    mysql_add_comp_flags "8.0.18" "9.0.1" "cxx" "-g"
+    mysql_add_comp_flags "8.0.18" "9.0.1" "cxx_release" "-O2" "-DNDEBUG"
 
     declare -a -r cmake_common=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
                                 "-DFORCE_UNSUPPORTED_COMPILER=ON")
@@ -232,17 +325,69 @@ mysql_export_environment_helpers() {
 
     declare -a -r my8033_901=("-DFORCE_COLORED_OUTPUT=ON")
 
-    # 9.0.1--9.0.0
+    # 9.0.1
 
-    declare -a -r my900_901_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                             "${my900_901_cxx_flags[@]}")
-    declare -a -r my900_901_cxx_flags_release=("${cxx_flags_release[@]}"
-                                               "${my900_901_cxx_flags[@]}")
-    declare -a -r my900_901_extra=(
-        "-DCMAKE_CXX_FLAGS=${my900_901_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my900_901_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my900_901_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my900_901_cxx_flags_release[*]}")
+    declare -a -r my901_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags "9.0.1" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags "9.0.1" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags "9.0.1" \
+                                                            "cxx_release")\""
+    )
+
+    # 9.0.0
+
+    declare -a -r my900_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "9.0.0" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "9.0.0" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "9.0.0" "cxx_release")\""
+    )
+
+    # 8.4.2
+
+    declare -a -r my842_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.4.2" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.4.2" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.4.2" "cxx_release")\""
+    )
+
+    # 8.4.1
+
+    declare -a -r my841_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.4.1" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.4.1" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.4.1" "cxx_release")\""
+    )
+
+    # 8.4.0
+
+    declare -a -r my840_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.4.0" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.4.0" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.4.0" "cxx_release")\""
+    )
+
+    # 8.3.0
+
+    declare -a -r my830_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.3.0" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.3.0" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.3.0" "cxx_release")\""
+    )
 
     # 8.2.0--8.0.18
 
@@ -251,113 +396,150 @@ mysql_export_environment_helpers() {
 
     # 8.2.0
 
-    declare -a -r my820_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                         "${my810_820_extra_cxx_flags[@]}")
-    declare -a -r my820_cxx_flags_release=("${cxx_flags_release[@]}"
-                                           "${my810_820_extra_cxx_flags[@]}")
-    declare -a -r my820_extra=(
-        "-DCMAKE_CXX_FLAGS=${my810_820_extra_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my820_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my820_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my820_cxx_flags_release[*]}")
+    declare -a -r my820_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.2.0" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.2.0" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.2.0" "cxx_release")\""
+    )
+
+    # 8.1.0
+
+    declare -a -r my810_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.1.0" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.1.0" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.1.0" "cxx_release")\""
+    )
+
+    # 8.0.39
+
+    declare -a -r my8039_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.39" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.39" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.39" "cxx_release")\""
+    )
+
+    # 8.0.38
+
+    declare -a -r my8038_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.38" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.38" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.38" "cxx_release")\""
+    )
+
+    # 8.0.37
+
+    declare -a -r my8037_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.37" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.37" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.37" "cxx_release")\""
+    )
 
     # 8.0.36
 
-    declare -a -r my8036_cxx_flags_release=(
-        "${cxx_flags_release[@]}" "${my8036_extra_cxx_release_flags[@]}")
-    declare -a -r my8036_extra=(
-        "-DCMAKE_C_FLAGS_DEBUG=${cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8036_cxx_flags_release[*]}")
+    declare -a -r my8036_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags "8.0.36" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags "8.0.36" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags "8.0.36" "cxx_release")\""
+    )
 
     # 8.0.35
 
-    declare -a -r my8035_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8035_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8035_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8035_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8035_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8035_cxx_flags_release[*]}")
+    declare -a -r my8035_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.35" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.35" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.35" "cxx_release")\""
+    )
 
     # 8.0.34
 
-    declare -a -r my8034_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8032_34_extra_cxx_flags[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8034_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8032_34_extra_cxx_flags[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8034_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]} \
-                           ${my8018_35_extra_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8034_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8034_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8034_cxx_flags_release[*]}")
+    declare -a -r my8034_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.34" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.34" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.34" "cxx_release")\""
+    )
 
     # 8.0.33
 
-    declare -a -r my8033_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8032_34_extra_cxx_flags[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8033_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8032_34_extra_cxx_flags[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8033_extra=(
-        "-DWITH_RAPIDJSON=bundled"
-        "-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]} \
-                           ${my8018_35_extra_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8033_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8033_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8033_cxx_flags_release[*]}")
+    declare -a -r my8033_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.33" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.33" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.33" "cxx_release")\""
+    )
+
+    declare -a -r my8033_extra=("-DWITH_RAPIDJSON=bundled")
 
     # 8.0.32
 
-    declare -a -r my8032_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8032_34_extra_cxx_flags[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8032_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8032_34_extra_cxx_flags[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}")
-    my8032_extra+=("-DCMAKE_CXX_FLAGS=${my8032_34_extra_cxx_flags[*]} \
-                                      ${my8018_35_extra_cxx_flags[*]}"
-                   "-DCMAKE_C_FLAGS_DEBUG=${my8032_cxx_flags_debug[*]}"
-                   "-DCMAKE_CXX_FLAGS_DEBUG=${my8032_cxx_flags_debug[*]}"
-                   "-DCMAKE_CXX_FLAGS_RELEASE=${my8032_cxx_flags_release[*]}")
+    declare -a -r my8032_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.32" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.32" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.32" "cxx_release")\""
+    )
 
     # 8.0.31
 
-    declare -a -r my8031_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8031_extra_cxx_flags[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8031_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8031_extra_cxx_flags[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8031_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8031_extra_cxx_flags[*]} \
-                           ${my8018_35_extra_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8031_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8031_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8031_cxx_flags_release[*]}")
+    declare -a -r my8031_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.31" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.31" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.31" "cxx_release")\""
+    )
+
+    # 8.0.30
+
+    declare -a -r my8030_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.30" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.30" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.30" "cxx_release")\""
+    )
 
     # 8.0.29--8.0.28
 
-    declare -a -r my8028_29_cxx_flags_debug=("-Wno-deprecated-declarations")
+    mysql_add_comp_flags "8.0.28" "8.0.29" "cxx_debug" \
+                         "-Wno-deprecated-declarations"
 
     # 8.0.29
 
-    declare -a -r my8029_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8028_29_cxx_flags_debug[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8029_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8029_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8029_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8029_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8029_cxx_flags_release[*]}")
+    declare -a -r my8029_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.29" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.29" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.29" "cxx_release")\""
+    )
 
     # 8.0.28--8.0.27
 
@@ -365,10 +547,10 @@ mysql_export_environment_helpers() {
 
     # 8.0.28--8.0.18
 
-    declare -a -r my8018_28_cxx_flags_debug=("${my8018_28_cxx_flags[@]}"
-                                             "-Wno-unknown-warning-option"
-                                             "-Wno-unused-but-set-variable"
-                                             "-Wno-discarded-qualifiers")
+    mysql_add_comp_flags "8.0.18" "8.0.28" "cxx_debug" \
+                         "-Wno-unknown-warning-option" \
+                         "-Wno-unused-but-set-variable" \
+                         "-Wno-discarded-qualifiers"
 
     my8018_28+=("-DWITH_RAPIDJSON=bundled" "-DWITH_LZ4=bundled")
 
@@ -376,184 +558,180 @@ mysql_export_environment_helpers() {
 
     declare -a -r fb8028_extra=("-DWITH_UNIT_TESTS=OFF")
 
-    declare -a -r my8028_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8028_29_cxx_flags_debug[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}"
-                                          "${my8018_28_cxx_flags_debug[@]}")
-    declare -a -r my8028_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}")
-    declare -a -r my8028_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]} \
-                           ${my8018_28_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8028_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8028_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8028_cxx_flags_release[*]}")
+    declare -a -r my8028_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.28" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.28" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.28" "cxx_release")\""
+    )
 
     # 8.0.27
 
-    declare -a -r my8027_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}"
-                                          "${my8018_28_cxx_flags[*]}")
-    declare -a -r my8027_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}"
-                                            "${my8018_28_cxx_flags[@]}")
-    declare -a -r my8027_extra=(
-        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]} \
-                           ${my8018_28_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8027_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8027_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8027_cxx_flags_release[*]}")
+    declare -a -r my8027_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.27" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.27" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.27" "cxx_release")\""
+    )
 
     # 8.0.26
 
-    declare -a -r my8026_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}"
-                                          "${my8018_28_cxx_flags[@]}"
-                                          "${my8018_28_cxx_flags_debug[@]}")
-    declare -a -r my8026_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}"
-                                            "${my8018_28_cxx_flags[@]}")
-    declare -a -r my8026_extra=(
-        "-DENABLE_DOWNLOADS=ON"
-        "-DCMAKE_CXX_FLAGS=${my8018_35_extra_cxx_flags[*]} \
-                           ${my8018_28_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8026_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8026_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8026_cxx_flags_release[*]}")
+    declare -a -r my8026_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.26" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.26" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.26" "cxx_release")\""
+    )
+    declare -a -r my8026_extra=("-DENABLE_DOWNLOADS=ON")
 
     # 8.0.18
 
-    declare -a -r my8018_extra_cxx_flags=("-Wno-deprecated-declarations"
-                                          "-Wno-unused-result"
-                                          "-Wno-range-loop-construct"
-                                          "-Wno-non-c-typedef-for-linkage")
+    mysql_add_comp_flags "8.0.18" "8.0.18" "cxx" \
+                         "-Wno-deprecated-declarations" \
+                         "-Wno-unused-result" \
+                         "-Wno-range-loop-construct" \
+                         "-Wno-non-c-typedef-for-linkage"
 
-    declare -a -r my8018_cxx_flags=("${my8018_35_extra_cxx_flags[@]}"
-                                    "${my8018_28_cxx_flags[@]}"
-                                    "${my8018_extra_cxx_flags[@]}")
-    declare -a -r my8018_cxx_flags_debug=("${cxx_flags_debug[@]}"
-                                          "${my8018_35_extra_cxx_flags[@]}"
-                                          "${my8018_28_cxx_flags[@]}"
-                                          "${my8018_28_cxx_flags_debug[@]}"
-                                          "${my8018_extra_cxx_flags[@]}")
-    declare -a -r my8018_cxx_flags_release=("${cxx_flags_release[@]}"
-                                            "${my8018_35_extra_cxx_flags[@]}"
-                                            "${my8018_28_cxx_flags[@]}"
-                                            "${my8018_extra_cxx_flags[@]}")
-    my8018_extra+=(
-        "-DCMAKE_CXX_FLAGS=${my8018_cxx_flags[*]}"
-        "-DCMAKE_C_FLAGS_DEBUG=${my8018_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_DEBUG=${my8018_cxx_flags_debug[*]}"
-        "-DCMAKE_CXX_FLAGS_RELEASE=${my8018_cxx_flags_release[*]}")
+    declare -a -r my8018_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
+                "8.0.18" "cxx")\""
+        "-DCMAKE_CXX_FLAGS_DEBUG=\"$(mysql_get_comp_flags \
+                "8.0.18" "cxx_debug")\""
+        "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
+                "8.0.18" "cxx_release")\""
+    )
 
     # Paydirt!
 
     export MY901D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
-                   "${my900_901_extra[@]}")
+                   "${my901_comp_flags[@]}")
     export MY901=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
-                  "${my900_901_extra[@]}")
+                  "${my901_comp_flags[@]}")
 
     export MY900D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
-                   "${my900_901_extra[@]}")
+                   "${my900_comp_flags[@]}")
     export MY900=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
-                  "${my900_901_extra[@]}")
+                  "${my900_comp_flags[@]}")
 
-    export MY842D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}")
-    export MY842=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}")
+    export MY842D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+                   "${my842_comp_flags[@]}")
+    export MY842=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+                  "${my842_comp_flags[@]}")
 
-    export MY841D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}")
-    export MY841=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}")
+    export MY841D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+                   "${my841_comp_flags[@]}")
+    export MY841=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+                  "${my841_comp_flags[@]}")
 
-    export MY840D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}")
-    export MY840=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}")
+    export MY840D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+                   "${my840_comp_flags[@]}")
+    export MY840=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+                  "${my841_comp_flags[@]}")
 
-    export MY830D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}")
-    export MY830=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}")
+    export MY830D=("${myd[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+                   "${my830_comp_flags[@]}")
+    export MY830=("${myr[@]}" "${my8033_901[@]}" "${my830_901_extra[@]}"
+                  "${my830_comp_flags[@]}")
 
     export MY820D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                   "${my820_extra[@]}")
+                   "${my820_comp_flags[@]}")
     export MY820=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                  "${my820_extra[@]}")
+                  "${my820_comp_flags[@]}")
 
-    export MY810D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}")
-    export MY810=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}")
+    export MY810D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
+                   "${my810_comp_flags[@]}")
+    export MY810=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
+                  "${my810_comp_flags[@]}")
 
-    export MY8039D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}")
-    export MY8039=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}")
+    export MY8039D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
+                    "${my8039_comp_flags[@]}")
+    export MY8039=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
+                   "${my8039_comp_flags[@]}")
 
-    export MY8038D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}")
-    export MY8038=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}")
+    export MY8038D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
+                    "${my8038_comp_flags[@]}")
+    export MY8038=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
+                   "${my8038_comp_flags[@]}")
 
-    export MY8037D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}")
-    export MY8037=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}")
+    export MY8037D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
+                    "${my8037_comp_flags[@]}")
+    export MY8037=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
+                   "${my8037_comp_flags[@]}")
 
     export MY8036D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                    "${my8036_extra[@]}")
+                    "${my8036_comp_flags[@]}")
     export MY8036=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                   "${my8036_extra[@]}")
+                   "${my8036_comp_flags[@]}")
 
     export PS8036D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                    "${my8036_extra[@]}")
+                    "${my8036_comp_flags[@]}")
 
     export FB8036D=("${MY8036D[@]}" "${fb_common[@]}")
     export FB8036=("${MY8036[@]}" "${fb_common[@]}")
 
     export MY8035D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                    "${my8035_extra[@]}")
+                    "${my8035_comp_flags[@]}")
     export MY8035=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                   "${my8035_extra[@]}")
+                   "${my8035_comp_flags[@]}")
 
     export PS8035D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                    "${my8035_extra[@]}")
+                    "${my8035_comp_flags[@]}")
 
     export MY8034D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                    "${my8034_extra[@]}")
+                    "${my8034_comp_flags[@]}")
     export MY8034=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                   "${my8034_extra[@]}")
+                   "${my8034_comp_flags[@]}")
 
     export PS8034D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                    "${my8034_extra[@]}")
+                    "${my8034_comp_flags[@]}")
 
     export MY8033D=("${myd[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                    "${my8033_extra[@]}")
+                    "${my8033_extra[@]}" "${my8033_comp_flags[@]}")
     export MY8033=("${myr[@]}" "${my8033_901[@]}" "${my8018_820[@]}"
-                   "${my8033_extra[@]}")
+                   "${my8033_extra[@]}" "${my8033_comp_flags[@]}")
 
-    export MY8032D=("${myd[@]}" "${my8018_820[@]}" "${my8032_extra[@]}")
-    export MY8032=("${myr[@]}" "${my8018_820[@]}" "${my8032_extra[@]}")
+    export MY8032D=("${myd[@]}" "${my8018_820[@]}" "${my8032_comp_flags[@]}")
+    export MY8032=("${myr[@]}" "${my8018_820[@]}" "${my8032_comp_flags[@]}")
 
     export FB8032D=("${MY8032D[@]}" "${fb_common[@]}")
     export FB8032=("${MY8032[@]}" "${fb_common[@]}")
 
-    export MY8031D=("${myd[@]}" "${my8018_820[@]}" "${my8031_extra[@]}")
+    export MY8031D=("${myd[@]}" "${my8018_820[@]}" "${my8031_comp_flags[@]}")
 
-    export MY8030D=("${myd[@]}" "${my8018_820[@]}")
+    export MY8030D=("${myd[@]}" "${my8018_820[@]}" "${my8030_comp_flags[@]}")
 
-    export MY8029D=("${myd[@]}" "${my8018_820[@]}" "${my8029_extra[@]}")
+    export MY8029D=("${myd[@]}" "${my8018_820[@]}" "${my8029_comp_flags[@]}")
 
     export MY8028=("${myr[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
-                   "${my8018_28[@]}" "${my8028_extra[@]}")
+                   "${my8018_28[@]}" "${my8028_comp_flags[@]}")
     export MY8028D=("${myd[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
-                    "${my8018_28[@]}" "${my8028_extra[@]}")
+                    "${my8018_28[@]}" "${my8028_comp_flags[@]}")
 
     export FB8028=("${MY8028[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
     export FB8028D=("${MY8028D[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
 
     export MY8027D=("${myd[@]}" "${my8018_820[@]}" "${my8027_28[@]}"
-                    "${my8018_28[@]}" "${my8027_extra[@]}")
+                    "${my8018_28[@]}" "${my8027_comp_flags[@]}")
 
     export MY8026=("${myr[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
-                   "${my8026_extra[@]}")
+                   "${my8026_extra[@]}" "${my8027_comp_flags[@]}")
     export MY8026D=("${myd[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
-                    "${my8026_extra[@]}" "-DDEBUG_EXTNAME=OFF")
+                    "${my8026_extra[@]}" "-DDEBUG_EXTNAME=OFF"
+                    "${my8026_comp_flags[@]}")
 
     export FB8026=("${MY8026[@]}" "${fb_common[@]}")
     export FB8026D=("${MY8026D[@]}" "${fb_common[@]}")
 
     export MY8018=("${myr[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
-                   "${my8018_extra[@]}")
+                   "${my8018_extra[@]}" "${my8018_comp_flags[@]}")
     export MY8018D=("${myd[@]}" "${my8018_820[@]}" "${my8018_28[@]}"
-                    "${my8018_extra[@]}")
+                    "${my8018_extra[@]}" "${my8018_comp_flags[@]}")
 
     export MARIA108=("${cmake_release[@]}" "${maria_common[@]}")
     export MARIA108D=("${cmake_debug[@]}" "${maria_common[@]}")
