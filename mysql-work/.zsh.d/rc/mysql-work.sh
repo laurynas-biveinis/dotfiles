@@ -267,6 +267,8 @@ mysql_export_environment_helpers() {
 
         export MYCLANG12=("-DCMAKE_C_COMPILER=$brew_opt/llvm@12/bin/clang"
                           "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@12/bin/clang++")
+        export MYCLANG13=("-DCMAKE_C_COMPILER=$brew_opt/llvm@13/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@13/bin/clang++")
         # CMAKE_AR settings below workaround
         # https://bugs.mysql.com/bug.php?id=113113 (Build failure with Homebrew
         # LLVM 14-17 on macOS)
@@ -321,6 +323,8 @@ mysql_export_environment_helpers() {
         export MY8030_901_CORE_DUMP_FLAGS=()
         export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
                           "-DCMAKE_CXX_COMPILER=clang++-12")
+        export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
+                          "-DCMAKE_CXX_COMPILER=clang++-13")
         export MYCLANG14=("-DCMAKE_C_COMPILER=clang-14"
                           "-DCMAKE_CXX_COMPILER=clang++-14")
         export MYCLANG15=("-DCMAKE_C_COMPILER=clang-15"
@@ -346,8 +350,6 @@ mysql_export_environment_helpers() {
 
     # Platform-independent helpers
 
-    export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
-                      "-DCMAKE_CXX_COMPILER=clang++-13")
     export MYSAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
 
     # Common building blocks
