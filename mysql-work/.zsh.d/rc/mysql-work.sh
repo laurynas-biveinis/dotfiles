@@ -516,8 +516,6 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.33" "8.0.33" any "-DWITH_RAPIDJSON=bundled"
 
-    # 8.0.32
-
     declare -a -r my8032_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
                 "8.0.32" "cxx")\""
@@ -526,8 +524,6 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS_RELEASE=\"$(mysql_get_comp_flags \
                 "8.0.32" "cxx_release")\""
     )
-
-    # 8.0.31
 
     declare -a -r my8031_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
@@ -538,8 +534,6 @@ mysql_export_environment_helpers() {
                 "8.0.31" "cxx_release")\""
     )
 
-    # 8.0.30
-
     declare -a -r my8030_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
                 "8.0.30" "cxx")\""
@@ -549,12 +543,8 @@ mysql_export_environment_helpers() {
                 "8.0.30" "cxx_release")\""
     )
 
-    # 8.0.29--8.0.28
-
     mysql_add_comp_flags "8.0.28" "8.0.29" "cxx_debug" \
                          "-Wno-deprecated-declarations"
-
-    # 8.0.29
 
     declare -a -r my8029_comp_flags=(
         "-DCMAKE_CXX_FLAGS=\"$(mysql_get_comp_flags \
@@ -565,9 +555,7 @@ mysql_export_environment_helpers() {
                 "8.0.29" "cxx_release")\""
     )
 
-    # 8.0.28--8.0.27
-
-    declare -a -r my8027_28=("-DWITH_FIDO=bundled")
+    mysql_add_cmake_flags "8.0.27" "8.0.28" any "-DWITH_FIDO=bundled"
 
     # 8.0.28--8.0.18
 
@@ -738,18 +726,15 @@ mysql_export_environment_helpers() {
     export MY8029D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.29" "any_debug")"
                     "${my8029_comp_flags[@]}")
 
-    export MY8028=("${myr[@]}" "${my8027_28[@]}"
-                   "$(mysql_get_cmake_flags "8.0.28" "any_release")"
+    export MY8028=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.28" "any_release")"
                    "${my8028_comp_flags[@]}")
-    export MY8028D=("${myd[@]}" "${my8027_28[@]}"
-                    "$(mysql_get_cmake_flags "8.0.28" "any_debug")"
+    export MY8028D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.28" "any_debug")"
                     "${my8028_comp_flags[@]}")
 
     export FB8028=("${MY8028[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
     export FB8028D=("${MY8028D[@]}" "${fb_common[@]}" "${fb8028_extra[@]}")
 
-    export MY8027D=("${myd[@]}" "${my8027_28[@]}"
-                    "$(mysql_get_cmake_flags "8.0.27" "any_debug")"
+    export MY8027D=("${myd[@]}" "$(mysql_get_cmake_flags "8.0.27" "any_debug")"
                     "${my8027_comp_flags[@]}")
 
     export MY8026=("${myr[@]}" "$(mysql_get_cmake_flags "8.0.26" "any_release")"
