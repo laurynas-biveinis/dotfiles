@@ -801,6 +801,28 @@
                    (point)) item0-pos))
       (org-clock-out))))
 
+(ert-deftest my-org-gtd-with-different-org-clock-error-exit ()
+  "Test `my-org-gtd-with-different-org-clock' cleaning up on error exit."
+  (my-org-gtd--buffer-test ()
+    (org-insert-todo-heading-respect-content)
+    (insert "Item 0")
+    (org-insert-todo-heading-respect-content)
+    (insert "Item 1")
+    (let ((item0-pos (point-min)))
+      (goto-char item0-pos)
+      (org-clock-in)
+      (outline-next-heading)
+      (should-not (= item0-pos (point)))
+      (should-error
+       (my-org-gtd-with-different-org-clock
+         (user-error "Test error")))
+      (should (org-clocking-p))
+      (should (= (save-excursion
+                   (goto-char (marker-position org-clock-marker))
+                   (org-back-to-heading)
+                   (point)) item0-pos)))
+    (org-clock-out)))
+
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
 ;; TODO(laurynas): uniqueness in keys
