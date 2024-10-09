@@ -769,6 +769,36 @@
       (should executed)
       (should-not (org-clocking-p)))))
 
+(ert-deftest my-org-gtd-with-different-org-clock-with-existing-clock ()
+  "Test `my-org-gtd-with-different-org-clock' with an existing clock."
+  (my-org-gtd--buffer-test ()
+    (org-insert-todo-heading-respect-content)
+    (insert "Item 0")
+    (org-insert-todo-heading-respect-content)
+    (insert "Item 1")
+    (let ((item0-pos (point-min))
+          item1-pos executed)
+      (goto-char item0-pos)
+      (org-clock-in)
+      (outline-next-heading)
+      (my-org-gtd-with-different-org-clock
+        (setq item1-pos (save-excursion
+                          (goto-char item0-pos)
+                          (outline-next-heading)
+                          (point)))
+        (setq executed t)
+        (should (org-clocking-p))
+        (should (= (save-excursion
+                     (goto-char (marker-position org-clock-marker))
+                     (org-back-to-heading)
+                     (point)) item1-pos)))
+      (should executed)
+      (should (org-clocking-p))
+      (should (= (save-excursion
+                   (goto-char (marker-position org-clock-marker))
+                   (org-back-to-heading)
+                   (point)) item0-pos)))))
+
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
 ;; TODO(laurynas): uniqueness in keys
