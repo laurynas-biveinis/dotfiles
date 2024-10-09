@@ -165,13 +165,12 @@ there. The temporary file is automatically cleaned up after BODY execution."
   (with-temp-buffer (insert-file-contents (mu4e-message-readable-path msg))
                     (buffer-string)))
 
-(defun dotfiles--get-mu4e-msg-content (mime-type encoding)
-  "Get the content of the first `mu4e' message part with MIME-TYPE and ENCODING."
+(defun dotfiles--get-mu4e-msg-content (mime-type)
+  "Get the content of the first `mu4e' message part with MIME-TYPE."
   (mm-get-part
    (plist-get
     (seq-find (lambda (part)
-                (and (string= mime-type (plist-get part :mime-type))
-                     (eq encoding (plist-get part :encoding))))
+                (string= mime-type (plist-get part :mime-type)))
               (mu4e-view-mime-parts))
     :handle)))
 
@@ -201,16 +200,12 @@ there. The temporary file is automatically cleaned up after BODY execution."
     (dotfiles--save-mu4e-msg-part-file csv-part)))
 
 (defun dotfiles--get-mu4e-msg-html-content ()
-  "Get the current `mu4e' message HTML content, decoded from quoted-printable."
-  (dotfiles--get-mu4e-msg-content "text/html" 'quoted-printable))
+  "Get the current `mu4e' message HTML content."
+  (dotfiles--get-mu4e-msg-content "text/html"))
 
 (defun dotfiles--get-mu4e-msg-txt-content ()
   "Get the current `mu4e' message text content."
-  (dotfiles--get-mu4e-msg-content "text/plain" nil))
-
-(defun dotfiles--get-mu4e-msg-b64-txt-content ()
-  "Get the current `mu4e' message text content, decoded from base64."
-  (dotfiles--get-mu4e-msg-content "text/plain" 'base64))
+  (dotfiles--get-mu4e-msg-content "text/plain"))
 
 (defun dotfiles--for-each-attachment (fn)
   "Call FN for each attachment with its handle and path."
