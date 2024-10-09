@@ -77,7 +77,7 @@ The tags and the selection keys will be added to as a single group to
 (defcustom my-org-gtd-somedaymaybe-context
   (make-my-org-gtd-context :tag "somedaymaybe" :select-char ?m
                            :description "Someday/maybe")
-  "The GTD project context."
+  "The GTD someday/maybe context."
   :type '(struct :tag "Someday/maybe item context."
                  (string :tag "`org Tag")
                  (character :tag "Quick selection character")
