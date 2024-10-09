@@ -777,6 +777,7 @@
     (org-insert-todo-heading-respect-content)
     (insert "Item 1")
     (let ((item0-pos (point-min))
+          ;; TODO(laurynas): rewrite to use markers instead
           item1-pos executed)
       (goto-char item0-pos)
       (org-clock-in)
@@ -797,7 +798,8 @@
       (should (= (save-excursion
                    (goto-char (marker-position org-clock-marker))
                    (org-back-to-heading)
-                   (point)) item0-pos)))))
+                   (point)) item0-pos))
+      (org-clock-out))))
 
 ;; TODO(laurynas): idempotency
 ;; TODO(laurynas): uniqueness in tags
