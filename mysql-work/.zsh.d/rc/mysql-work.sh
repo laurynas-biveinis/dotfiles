@@ -243,7 +243,6 @@ mysql_export_environment_helpers() {
             `# LLVM 17:` \
             "-Wno-error=implicit-const-int-float-conversion"
         mysql_add_comp_flags "8.0.31" "8.0.31" cxx "-Wno-deprecated-declarations"
-        mysql_add_cmake_flags "8.0.32" "8.0.32" any "-DWITH_UNIT_TESTS=OFF"
         mysql_add_comp_flags "8.0.32" "8.0.34" cxx \
                              "-Wno-unused-but-set-variable" \
                              "-Wno-deprecated-copy-with-dtor"
@@ -451,6 +450,8 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.36 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.36 cxx_release)"
     )
+
+    mysql_add_cmake_flags "8.0.32" "8.0.36" any "-DWITH_UNIT_TESTS=OFF"
 
     declare -a -r my8035_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.35 cxx)"
