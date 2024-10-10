@@ -136,7 +136,9 @@
 (setq show-paren-style 'mixed)
 (setq show-paren-when-point-inside-paren t)
 (setq show-paren-when-point-in-periphery t)
-(setq show-paren-predicate '(not (derived-mode . authinfo-mode)))
+(setq show-paren-predicate '(not (or
+                                  (derived-mode . special-mode)
+                                  (derived-mode . authinfo-mode))))
 (setq show-paren-context-when-offscreen t)
 (show-paren-mode 1)
 
