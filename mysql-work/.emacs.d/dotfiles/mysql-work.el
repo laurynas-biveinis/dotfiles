@@ -1,3 +1,10 @@
+;;; mysql-work.el --- Emacs helpers for MySQL dev.  -*- lexical-binding: t; -*-
+;;; Commentary:
+
+;; Emacs setup specific for MySQL development.
+
+;;; Code:
+
 (c-add-style "MySQL-5.7"
              '("K&R"
                (indent-tabs-mode . nil)
@@ -47,12 +54,16 @@
 ;; sql-mode
 (add-to-list 'auto-mode-alist '("\\.test\\'" . sql-mode)) ; MySQL test files
 
+(require 'sql)
+
 ;; Thanks to Alexey Kopytov
 (defun dotfiles--sql-mode-hook ()
+  "Make # start a new line comment in SQL."
   (define-key sql-mode-map (kbd "RET") #'newline-and-indent)
-  ;; Make # start a new line comment in SQL. This is a MySQL-specific
-  ;; syntax.
   (modify-syntax-entry ?# "< b" sql-mode-syntax-table)
   (set-syntax-table sql-mode-syntax-table))
 
 (add-hook 'sql-mode-hook #'dotfiles--sql-mode-hook)
+
+(provide 'mysql-work)
+;;; mysql-work.el ends here
