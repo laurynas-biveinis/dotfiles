@@ -5,6 +5,32 @@
 
 ;;; Code:
 
+(require 'projectile)
+
+(add-to-list 'projectile-other-file-alist '("test" "result"))
+(add-to-list 'projectile-other-file-alist '("result" "test"))
+
+;; This is a not a MySQL-specific implementation of `projectile-find-test-file'.
+;; That function is meant for jumping from a source file to its test file.
+;; TODO(laurynas): this is not an exhaustive implementation for all locations
+;; test files can reside. Add them as the need arises.
+(defun my-visit-mtr-test ()
+  "Input MySQL MTR test name and visit it."
+  (interactive)
+  (let* ((input (read-string "MySQL MTR test name: "))
+         ;; TODO(laurynas): error checking
+         (parts (split-string input "\\."))
+         (suite-name (car parts))
+         (test-in-suite (concat "t/" (cadr parts) ".test"))
+         (test-root (concat (projectile-project-root) "mysql-test/"))
+         (file-path (if (string= suite-name "main")
+                        (concat test-root test-in-suite)
+                      (concat test-root "suite/" suite-name "/"
+                              test-in-suite))))
+    (find-file file-path)))
+
+(define-key projectile-command-map "M" #'my-visit-mtr-test)
+
 (c-add-style "MySQL-5.7"
              '("K&R"
                (indent-tabs-mode . nil)
