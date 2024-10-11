@@ -212,6 +212,7 @@ property."
          (goto-char headline-pos)
          ,@body))))
 
+;; FIXME(laurynas): remove mid -org-
 (defun my-org-gtd-clock-in-org-node-with-url (url)
   "Go to the `org' node with the given URL property value and clock it in."
   (org-mark-ring-push)
@@ -418,8 +419,7 @@ The heading must be already created."
   "Mark the item (a task or a project) at point as done."
   (org-todo my-org-gtd-done-keyword))
 
-;; TODO(laurynas): README.org. What constitutes a project? Compare to org-gtd,
-;; org-edna.
+;; TODO(laurynas): README.org. What constitutes a project?
 
 (provide 'my-org-gtd)
 ;;; my-org-gtd.el ends here
