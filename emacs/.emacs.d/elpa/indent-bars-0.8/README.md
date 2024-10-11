@@ -25,6 +25,8 @@ See the release [NEWS](NEWS.org).
 
 # FAQ's
 
+## Bar Appearance
+
 - **I don't see anything/bars are garbled!** <br>While most do, not all Emacsen support stipples; see [Compatibility](#compatibility).
 - **How can I find out if my Emacs supports stipples?!** <br>See [Testing Stipples](#testing-stipples).
 - **These bars are too intrusive!** <br>Reduce the `:blend` value in `indent-bars-color` closer to zero. Consider disabling `indent-bars-color-by-depth`.
@@ -32,13 +34,24 @@ See the release [NEWS](NEWS.org).
 - **I want completely unique indent guide-bars so as to flex on my colleagues!** <br>Check the [Examples](examples.md) for some ideas.  The sky is the limit (submit your examples).
 - **I use Emacs on the terminal, you insensitive clod!** <br>`indent-bars` will just work for you (though you don't get any fancy bar patterns).
 - **I use graphical Emacs, but am an extreme minimalist.  All my outfits are gray.  Including my socks.** <br>Maybe [this](examples.md#minimal) will suit you?  Otherwise, you can turn off the stipple and use old fashioned `│` characters with [`indent-bars-prefer-character`](#character-display).
+- **The current bar highlight is so fast, but it flashes too rapidly during scrolling!** <br>Update to v0.2.2 or later and set `indent-bars-depth-update-delay` to a comfortable number like 0.1s (0.075s is the default).  If you _like_ the crazy-fast updates, set this to 0.
+
+
+## Bar Placement
+
 - **I get too many bars inside function definitions and calls.** <br>You can turn on `indent-bars-no-descend-lists` or even use [tree-sitter to help](#tree-sitter-details).
 - **I want a bar in the very first column!** <br>Set `indent-bars-starting-column` to 0.
-- **The current bar highlight is so fast, but it flashes too rapidly during scrolling!** <br>Update to v0.2.2 or later and set `indent-bars-depth-update-delay` to a comfortable number like 0.1s (0.075s is the default).  If you _like_ the crazy-fast updates, set this to 0.
+- **indent-bars seems to be conflicting with another package I use.** <br>See [these workarounds](#compatibility-with-other-packages).
+- **In my brace language (C, JS, etc.) I sometimes get fewer bars than I expected!** <br>Your mode syntax likely interprets `{`/`}` as list context, and you have `indent-bars-no-descend-lists=t`.  Either disable this feature, or see [this config](#bar-setup-and-location) for another option.
+- **In my paren language (Elisp, Scheme, etc.) the bars disappear on some lines!**<br> You probably need to disable `indent-bars-no-descend-lists` there: most lines of these languages are inside "continuing lists", so it makes little sense to inhibit bars there.
+- **Bars are missing on lines with tabs!**<br> You likely have `indent-tabs-mode` set to `nil` in a buffer with a tab-indented file.  See [this for more](#indentation).
+
+## Tree-sitter and Scope
+
 - **I turned on treesitter support but nothing happened** <br>You need to configure `indent-bars-treesit-scope` (and possibly `wrap`) for your language(s) of interest. [More info](#configuring-tree-sitter).
+- **My treesitter scope makes no sense!** <br>A common mistake is adding too many node types for your language to the `indent-bars-treesit-scope` variable.  Start small, with thing you _know_ you want (function, method, class, etc.).
 - **How can I change the style of the out-of-scope bars?** <br>Using an [alternate set](#tree-sitter-alternate-styling-variables) of `ts-` customizations.
 - **What if I want out-of-scope text to have the default style, and in-scope text to be special?** <br>You want to set `indent-bars-ts-styling-scope` to `'in-scope`. 
-- **My treesitter scope makes no sense!** <br>A common mistake is adding too many node types for your language to the `indent-bars-treesit-scope` variable.  Start small, with thing you _know_ you want (function, method, class, etc.).
 
 
 # Install/config
@@ -66,6 +79,7 @@ Configures `tree-sitter` and `ignore-blank-line` support for an example language
   :config
   (require 'indent-bars-ts) 		; not needed with straight
   :custom
+  (indent-bars-no-descend-lists t) ; no extra bars in continued func arg lists
   (indent-bars-treesit-support t)
   (indent-bars-treesit-ignore-blank-lines-types '("module"))
   ;; Add other languages as needed
@@ -109,6 +123,10 @@ Please [open an issue](../../issues) with any updates/corrections to this list. 
 
 # Customization
 
+> [!NOTE]
+> `indent-bars` is _highly_ flexible and can be adapted to most situations.  It can't anticipate all nuances of different languages, modes, and user preferences, however, so "some assembly may be required".  If you arrive at customizations you are happy with for a given mode, please consider adding to the  [Wiki page](https://github.com/jdtsmith/indent-bars/wiki/indent%E2%80%90bars-config-Wiki#tree-sitter-config).
+
+
 `M-x customize-group indent-bars` is the easiest way to customize everything about the appearance and function of `indent-bars` (check sub-groups too).  There are many customization variables and bar styling in particular is highly configurable, so use Customize!
 
 > [!TIP]
@@ -148,7 +166,7 @@ Configuration variables for bar position and line locations (including on blank 
 
 - `indent-bars-starting-column`: column to use for the first bar (default: one indent spacing).  Can be set in special modes which start at an unusual fixed offset, or set to 0 to get "column 0" bars (which are possibly superfluous given the left buffer edge).
 - `indent-bars-spacing-override`:  Normally the number of spaces for indentation is automatically discovered from the mode and other variables.  If that doesn't work for any reason, it can be explicitly overridden using this variable.
-- `indent-bars-display-on-blank-lines`: Whether to display bars on blank lines contiguous with lines already showing bars.
+- `indent-bars-display-on-blank-lines`: Whether to display bars on blank lines contiguous with lines already showing bars.  By default the maximum number of adjacent bars on non-blank lines is used for a blank lines, but setting this to `least` instead uses the _least_ number of adjacent line bars.
 - `indent-bars-no-descend-string`: Whether to inhibit increasing bar depth inside of strings.
 - `indent-bars-no-descend-list`: Whether to inhibit increasing bar depth inside of lists.  Note that this can optionally be configured with a list of list-opening chars (e.g. `'(?\( ?\[)`?) to select only certain list context (useful for c-based modes, where `{}` braces are a list syntax).
 
@@ -218,11 +236,26 @@ means to configure the color of alternate style bars as follows:
 
 The easiest way to configure inheritance and unspecified values in the `ts` variables is via the customize interface; see the customize group `indent-bars-ts-style`. 
 
+## Per-mode customization
+
+Sometimes different `indent-bars` settings are appropriate for different modes.  In that case, you can use `setq-local` to set the appropriate variables in the mode's hook, prior to enabling `indent-bars`:
+
+```elisp
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda ()
+	    (setq-local 
+			indent-tabs-mode t ; make sure tabs-based indenting is on
+			indent-bars-no-descend-lists nil) ; elisp is mostly continued lists!
+	    (indent-bars-mode 1)))
+```
+
 # Details and Caveats
 
 ## Indentation
 
-`indent-bars` works with either space- or tab-based indentation (see `indent-tabs-mode`).  If possible, prefer space indentation, as it is faster.  Note that some modes explicitly enable or disable `indent-tabs-mode`.
+`indent-bars` works with either space- or tab-based indentation (see `indent-tabs-mode`).  If possible, prefer space indentation, as it is faster.  
+
+Note that some modes explicitly enable or disable `indent-tabs-mode`.  If the value of that variable does not match the actual indentation used in a file (e.g. file is indented with tabs, but you have set `indent-tabs-mode=nil`), bars may go missing.  You should ideally pick _one_ indentation-style (tabs or spaces) per mode and stick to it for all files in that mode, but see [dtrt-indent](https://github.com/jscheid/dtrt-indent) for a package that can adapt this variable by examining the file's contents. 
 
 ## Current Depth Highlight
 
@@ -263,6 +296,28 @@ You can assign a single (usually top-level) node type to ignore when drawing bar
 The easiest way to discover node types of interest (in a buffer with working treesit support) is to `M-x treesit-explore-mode`. Then simply highlight the beginning of a line of interest, and look in the `treesitter explorer` buffer which pops up for the names of obvious nodes in the tree.  Add these types to `indent-bars-treesit-scope/wrap` for the language of interest, then `M-x indent-bars-reset` and see how you did (this will happen automatically if you make the change in the Customize interface).
 
 Please document good tree-sitter settings for other languages in the [Wiki](https://github.com/jdtsmith/indent-bars/wiki/indent%E2%80%90bars-config-Wiki#tree-sitter-config).
+
+## Compatibility with other Packages
+
+`indent-bars` in general has good compatibility with other packages.  But sometimes conflicts do occur.
+
+### Unwanted `:stipple` inheritance on popups/overlays/etc.
+
+`indent-bars` by default uses `:stipple` face attributes, which have only rarely been used in Emacs in recent decades.  Consequently, some packages which inherit the face of underlying text while adding styled overlays, popups, etc. to the buffer neglect to guard against the presence of `:stipple` (e.g. [this](../../issues/67), or [this](../../issues/73)).  This becomes more likely if you set `indent-bars-starting-column=0` (since often overlays are placed at the line beginning).
+
+If you encounter unwanted bar patterns on text added to your buffer by other packages as seen in these issues, contact the package's maintainer to let them know they should also clear the `:stipple` face attribute.  You can also try restoring ``indent-bars-starting-column` to the default, if you've changed it.
+
+Sometimes unwanted stipples can be worked around yourself by explicitly setting `:stipple` to `nil` in appropriate faces, like:
+
+```elisp
+(set-face-attribute face nil :stipple nil)
+```
+
+for some relevant `face` (e.g. one from which the package's faces used for overlay/popup inherit).  This should be done both when loading `indent-bars-mode` and in the `after-enable-theme-hook`. 
+
+### `font-lock` contention
+
+`indent-bars` overrides and wraps the `font-lock-fontify-region-function` (and, when using treesitter, `font-lock-fontify-buffer-function`).  Other packages which advise or wrap the functions pointed to by these variables may lead to odd behavior on disabling/re-enabling `indent-bars` and/or their associated modes.  There is no generic solution to this issue, but the strong recommendation is to enable `indent-bars` _last_, after any other package which overrides `font-lock` in this way have been loaded.
 
 ## Moving by columns
 

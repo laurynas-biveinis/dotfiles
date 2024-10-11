@@ -4,7 +4,7 @@
 ;; Author: J.D. Smith <jdtsmith+elpa@gmail.com>
 ;; Homepage: https://github.com/jdtsmith/indent-bars
 ;; Package-Requires: ((emacs "27.1") (compat "29.1"))
-;; Version: 0.7.6
+;; Version: 0.8
 ;; Keywords: convenience
 
 ;; indent-bars is free software: you can redistribute it and/or
@@ -105,7 +105,8 @@ Applies to stipple-based bars only."
 		:match (lambda (_ val) (and val (<= val 1) (>= val 0)))
 		:type-error "Fraction must be between 0 and 1")
   :group 'indent-bars-style
-  :set #'indent-bars--custom-set)
+  :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default)
 
 (defcustom indent-bars-pad-frac 0.1
   "The offset of the bar from the left edge of the character.
@@ -115,7 +116,8 @@ A float, the fraction of the character width.  Applies to
 		:match (lambda (_ val) (and val (<= val 1) (>= val 0)))
 		:type-error "Fraction must be between 0 and 1")
   :group 'indent-bars-style
-  :set #'indent-bars--custom-set)
+  :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default)
 
 (defcustom indent-bars-pattern " . . ."
   "A pattern specifying the vertical structure of indent bars.
@@ -128,7 +130,8 @@ the same (e.g., see `indent-bars-zigzag').  Applies to
 stipple-based bars only."
   :type '(string :tag "Fill Pattern")
   :group 'indent-bars-style
-  :set #'indent-bars--custom-set)
+  :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default)
 
 (defcustom indent-bars-zigzag nil
   "The zigzag to apply to the bar pattern.
@@ -165,7 +168,8 @@ side of the bar; see `indent-bars-pad-frac' and
 			:match (lambda (_ val) (and val (<= val 1) (>= val -1)))
 			:type-error "Fraction must be between -1 and 1"))
   :group 'indent-bars-style
-  :set #'indent-bars--custom-set)
+  :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default)
 
 ;;;;; Bar Colors
 (defcustom indent-bars-color
@@ -216,7 +220,8 @@ where:
 			  :match (lambda (_ val) (and val (<= val 1) (>= val 0)))
 			  :type-error "Factor must be between 0 and 1")))))
   :group 'indent-bars-style
-  :set #'indent-bars--custom-set)
+  :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default)
 
 (defcustom indent-bars-color-by-depth
   '(:regexp "outline-\\([0-9]+\\)" :blend 1)
@@ -294,7 +299,8 @@ indentation level, if configured; see
 				 :type-error
 				 "Factor must be between 0 and 1")))))
   :group 'indent-bars-style
-  :set #'indent-bars--custom-set)
+  :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default)
 
 ;;;;; Depth Highlighting
 (defcustom indent-bars-highlight-current-depth
@@ -374,7 +380,8 @@ non-nil, any stipple appearance parameters will be ignored."
 		  (:pattern (string :tag "Fill Pattern"))
 		  (:zigzag (float :tag "Zig-Zag")))))
   :group 'indent-bars-style
-  :set #'indent-bars--custom-set)
+  :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default)
 
 (defcustom indent-bars-highlight-selection-method 'context
   "Method for selecting bar depth for current indentation highlight.
@@ -401,21 +408,31 @@ non-nil.  Set to 0 for instant depth updates."
 (defcustom indent-bars-display-on-blank-lines t
   "Whether to display bars on blank lines.
 Bars are shown only on blank lines contiguously adjacent to lines
-already showing bars."
-  :type 'boolean
+already showing bars, by default the deepest adjacent non-blank
+line, or, if set to `least' the least deep such line."
+  :type '(choice
+	  (const :tag "Disabled" nil)
+	  (const :tag "Deepest adjacent" t)
+	  (const :tag "Least deep adjacent" least))
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-no-descend-string t
   "Configure bar behavior inside strings.
 If non-nil, displayed bars inside the string will go no deeper
-than the indent level of the string's starting line."
+than the one more than the indent level of the string's starting
+line.  If the symbol `all', no bars will be included inside
+multiline strings at all."
   :local t
-  :type 'boolean
+  :type '(choice (const :tag "All normal bars appear inside strings" nil)
+		 (const :tag "Only one bar deeper than string start appears" t)
+		 (const :tag "No bars in multi-line strings" all))
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
-(defcustom indent-bars-no-descend-lists t
+(defcustom indent-bars-no-descend-lists nil
   "Configure bar behavior inside lists.
 If non-nil, displayed bars will go no deeper than the indent
 level at the starting line of the innermost containing list.  If
@@ -429,6 +446,7 @@ activate bar suppression."
 	  (const :tag "Any list element" t)
 	  (repeat :tag "List of open paren chars" character))
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-prefer-character nil
@@ -438,12 +456,14 @@ specifies using character bars exclusively.  See
 `indent-bars-no-stipple-char'."
   :type 'boolean
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-no-stipple-char ?\│
   "Character to display when stipple is unavailable (as in the terminal)."
   :type 'character
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-no-stipple-char-font-weight nil
@@ -454,6 +474,7 @@ If non-nil, set the no-stipple character font weight accordingly."
           ,@(mapcar (lambda (item) (list 'const (aref item 1)))
                     font-weight-table))
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-unspecified-bg-color "black"
@@ -463,12 +484,14 @@ background color specified.  This setting controls the background
 color to use for color blending in that case."
   :type 'color
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-unspecified-fg-color "white"
   "Color to use as the default foreground color if unspecified."
   :type 'color
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-starting-column nil
@@ -478,6 +501,7 @@ indent level) or an integer value for some other column."
   :type '(choice (const :tag "Default: 1st indent position" nil)
 		 (integer :tag "Specified column"))
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-spacing-override nil
@@ -487,12 +511,14 @@ buffer-local automatically."
   :local t
   :type '(choice integer (const :tag "Discover automatically" :value nil))
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 (defcustom indent-bars-treesit-support nil
   "Whether to enable tree-sitter support (if available)."
   :type 'boolean
   :set #'indent-bars--custom-set
+  :initialize #'custom-initialize-default
   :group 'indent-bars)
 
 ;;;;; Color Utilities
@@ -811,6 +837,7 @@ Additional `defcustom` keyword arguments can be given as R."
        :type ',type
        :link '(variable-link ,sym)
        :set #'indent-bars--custom-set
+       :initialize #'custom-initialize-default
        :group ',group
        ,@r)))
 
@@ -954,8 +981,9 @@ that line instead.
 
 If `indent-bars-no-descend-string' is non-nil and point at line
 beginning is inside a string, do not add bars deeper than one
-more than the string's start.  If `indent-bars-no-descend-lists'
-is non-nil, perform the same check for lists.
+more than the string's start.  If it is `all', do not add any
+bars at all.  If `indent-bars-no-descend-lists' is non-nil,
+perform the same check for lists.
 
 If `indent-bars--update-depth-function' is non-nil, it will be
 called with the indentation depth (prior to the ON-BAR check),
@@ -964,20 +992,24 @@ and can return an updated depth."
 	 (d (indent-bars--depth c)) 	;last visible bar
 	 ppss-ind)
     (when indent-bars--ppss
-      (let* ((p (prog1 (point) (forward-line 0)))
-	     (ppss (syntax-ppss)) 	; moves point!
-	     (ss (and indent-bars-no-descend-string (nth 8 ppss)))
-	     (sl (when-let
-		     ((ndl indent-bars-no-descend-lists)
-		      (open (nth 1 ppss))
-		      ((or (not (consp ndl)) (memq (char-after open) ndl))))
-		   open)))
-	(when (setq ppss-ind (if (and ss sl) (max ss sl) (or ss sl)))
-	  (goto-char ppss-ind)
-	  (let* ((cnew (current-indentation))
-		 (dnew (1+ (indent-bars--depth cnew))))
-	    (when (< dnew d) (setq d dnew c cnew))))
-	(goto-char p)))
+      (save-excursion
+	(forward-line 0)
+	(let* ((ppss (syntax-ppss))	; moves point!
+	       (string-start (and indent-bars-no-descend-string (nth 8 ppss)))
+	       (list-start (when-let
+			       ((ndl indent-bars-no-descend-lists)
+				(open (nth 1 ppss))
+				((or (not (consp ndl)) (memq (char-after open) ndl))))
+			     open)))
+	  (if (and string-start (eq indent-bars-no-descend-string 'all))
+	      (setq d 0 c 0) ; always inhibit inside multiline strings
+	    (when (setq ppss-ind (if (and string-start list-start)
+				     (max string-start list-start)
+				   (or string-start list-start)))
+	      (goto-char ppss-ind)
+	      (let* ((cnew (current-indentation))
+		     (dnew (1+ (indent-bars--depth cnew))))
+		(when (< dnew d) (setq d dnew c cnew))))))))
     (when (and indent-bars--update-depth-function (not ppss-ind))
       (setq d (funcall indent-bars--update-depth-function d)))
     (when (and (eq on-bar 'context)
@@ -1101,13 +1133,15 @@ needed."
 		    switch-after style2)
 		   "\n")))))))
 
-(defsubst indent-bars--context-bars (end)
+(defsubst indent-bars--context-bars (end &optional min)
   "Maximum number of bars at point and END.
+If MIN is non-nil, return the minimum number of bars instead.
 Moves point."
-  (max (indent-bars--current-indentation-depth)
-       (progn
-	 (goto-char (1+ end))		; end is always eol
-	 (indent-bars--current-indentation-depth))))
+  (funcall (if min #'min #'max)
+	   (indent-bars--current-indentation-depth)
+	   (progn
+	     (goto-char (1+ end))	; end is always eol
+	     (indent-bars--current-indentation-depth))))
 
 (defun indent-bars--display (beg end &optional style switch-after style2)
   "Draw indentation bars from BEG..END, based on line contents.
@@ -1125,19 +1159,24 @@ passed, uses `indent-bars-style' for drawing."
 Only called if `indent-bars-display-on-blank-lines' is non-nil.
 To be called on complete multi-line blank line regions.
 
-It is ambigious how many bars to draw on each line in a stretch
-of blank lines, so this uses the maximum depth of the surrounding
-line indentation, above and below.  Drawing using
-`indent-bars--draw-line'.  STYLE, SWITCH-AFTER and STYLE2 are as
-in `indent-bars--draw-line'.
+It is ambigious how many bars to draw on blank lines, so this
+uses the maximum depth of the surrounding line indentation, above
+and below, unless `indent-bars-display-on-blank-lines' is set to
+`least', in which case the minimum bar depth of such lines is
+used instead.
+
+Drawing uses `indent-bars--draw-line'.  STYLE, SWITCH-AFTER and
+STYLE2 are as in `indent-bars--draw-line'.
 
 Note: blank lines at the very beginning or end of the buffer are
 not indicated, even if they otherwise would be."
-  (let ((pm (point-max)) ctxbars)
+  (let ((pm (point-max))
+	(lst (eq indent-bars-display-on-blank-lines 'least))
+	ctxbars)
     (save-excursion
       (goto-char (1- beg))
       (beginning-of-line 1)
-      (when (> (setq ctxbars (indent-bars--context-bars end)) 0)
+      (when (> (setq ctxbars (indent-bars--context-bars end lst)) 0)
 	(goto-char beg)
 	(while (< (point) end) ;note: end extends 1 char beyond blank line range
 	  (let* ((bp (line-beginning-position))
@@ -1529,7 +1568,7 @@ Adapted from `highlight-indentation-mode'."
     gpr-ts-mode-indent-offset)
    ((and (derived-mode-p 'python-mode) (boundp 'py-indent-offset))
     py-indent-offset)
-   ((and (derived-mode-p 'python-mode) (boundp 'python-indent-offset))
+   ((and (derived-mode-p 'python-mode 'python-base-mode) (boundp 'python-indent-offset))
     python-indent-offset)
    ((and (derived-mode-p 'ruby-mode) (boundp 'ruby-indent-level))
     ruby-indent-level)
@@ -1669,8 +1708,10 @@ Adapted from `highlight-indentation-mode'."
 	       indent-bars--stipple-remaps)
       (setq indent-bars--stipple-remaps nil)))
 
-  (when indent-bars--orig-fontify-region
-    (setq font-lock-fontify-region-function indent-bars--orig-fontify-region))
+  (when (and indent-bars--orig-fontify-region
+	     (eq font-lock-fontify-region-function #'indent-bars--fontify))
+    (setq font-lock-fontify-region-function indent-bars--orig-fontify-region
+	  indent-bars--orig-fontify-region nil))
   (with-silent-modifications
     (remove-text-properties (point-min) (point-max) '(indent-bars-display nil)))
 

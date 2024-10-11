@@ -2,6 +2,16 @@
 #+author: J.D. Smith
 #+language: en
 
+* v0.8 (2024-10-09)
+
+- New configuration setting ~indent-bars-display-on-blank-lines=least~ which specifies using the /minimum/ bar depth of adjacent non-blank lines for blank line bar display (by default, when enabled, the /maximum/ is used).
+- [BUGFIX] Guard against custom-set errors when tree-sitter is enabled, but no scope stanza is present for the buffer's language.
+- Make ~indent-bars-no-descend-lists=nil~ by default (to avoid confusion in brace and paren languages).
+- Allow ~indent-bars-no-descend-string=all~ to inhibit /all/ bars inside multi-line strings.
+- [BUGFIX] Use correct offset guess when derived from ~python-base-mode~.
+- Be more careful when replacing/restoring ~font-lock-fontify-region-function~. 
+- Ensure ~indent-bars--ts-mode~ is fully disabled when ~indent-bars~ is disabled.
+
 * v0.7.6 (2024-09-28)
 
 - Improve speed of disabling indent-bars.
