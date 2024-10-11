@@ -347,7 +347,7 @@ TODO(laurynas) example (also to README)."
         (my-org-gtd--active-todo-search context)))
 
 (defun my-org-gtd-somedaymaybe-agenda ()
-  "Return an `org-agenda' command part to show someday/maybe item.
+  "Return an `org-agenda' command part to show someday/maybe items.
 TODO(laurynas) explanation for LEVEL=2."
   (list (my-org-gtd-context-description my-org-gtd-somedaymaybe-context)
         'tags-todo
