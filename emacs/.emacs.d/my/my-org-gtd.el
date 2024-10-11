@@ -263,7 +263,9 @@ The marker must be at the new clock position."
 Checks `org-todo-keywords' against keyword configuration, initializes
 `org-todo-repeat-to-state', `org-enforce-todo-dependencies', and
 `org-stuck-projects'. Adds to `org-use-tag-inheritance', and `org-tag-alist'
-from the context configuration and sets up clock-in automation."
+from the context configuration and sets up clock-in automation.
+Note that multiple calls without resetting the Org variables manually first may
+result in inconsistencies."
   ;; Validate config
   (my-org-gtd--check-keyword-in-org-todo-keywords
    my-org-gtd-next-action-keyword)
