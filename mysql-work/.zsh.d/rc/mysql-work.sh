@@ -1075,6 +1075,7 @@ mysql_build_in_build_dir() {
 
     pushd .. || return 1
 
+    # TODO(laurynas): an option for temp builds that does not touch the symlink
     ln -sf "$build_dir/compile_commands.json" .
 
     popd || return 1
