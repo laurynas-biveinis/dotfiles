@@ -915,7 +915,7 @@
 		 (:url . "https://elpa.gnu.org/packages/cycle-quotes.html")
 		 (:commit . "836b19b39651419876e65cdb1a91e3eef83cc4e7"))])
  (dape .
-       [(0 15 0)
+       [(0 16 0)
 	((emacs
 	  (29 1))
 	 (jsonrpc
@@ -923,7 +923,7 @@
 	"Debug Adapter Protocol for Emacs" tar
 	((:url . "https://github.com/svaante/dape")
 	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
-	 (:commit . "b272d855333ccca6d42ec0957c7f6326a72fe22e"))])
+	 (:commit . "3d4b8086d94ca93fe19ec72362782386abf35bde"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -1454,7 +1454,7 @@
 		    ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 		   (:commit . "195add1f1ccd1059472c9df7334c97c4d155425e"))])
  (ement .
-	[(0 15 1)
+	[(0 16)
 	 ((emacs
 	   (27 1))
 	  (map
@@ -1477,7 +1477,7 @@
 	  (:maintainer "Adam Porter" . "adam@alphapapa.net")
 	  (:authors
 	   ("Adam Porter" . "adam@alphapapa.net"))
-	  (:commit . "e120fdb3bdf23e31f6f8b4a3aa4490794ca37183"))])
+	  (:commit . "26bf5a4efd08bc724cf29c412c36c2909d72bb13"))])
  (emms .
        [(20 1)
 	((cl-lib
@@ -4339,7 +4339,7 @@
 	      ("Paul D. Nelson" . "nelson.paul.david@gmail.com"))
 	     (:commit . "ee1957f3bce6ed04627b985e95a17db190781e06"))])
  (tex-parens .
-	     [(0 5)
+	     [(0 6)
 	      ((emacs
 		(27 1)))
 	      "like lisp.el but for tex" tar
@@ -4348,7 +4348,7 @@
 	       (:maintainer "Paul D. Nelson" . "nelson.paul.david@gmail.com")
 	       (:authors
 		("Paul D. Nelson" . "nelson.paul.david@gmail.com"))
-	       (:commit . "7f03698353b6c43e5fc2633c7d38b7b23e5fefd1"))])
+	       (:commit . "f0717e7aa1918825505b4870d665012cc7b49fd1"))])
  (theme-buffet .
 	       [(0 1 2)
 		((emacs
