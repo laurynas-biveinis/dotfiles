@@ -377,7 +377,7 @@ pip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
 
 sudo gem install mdl
 brew install --cask slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner michaelvillar-timer utm basictex signal
+     telegram keycombiner michaelvillar-timer utm basictex signal whatsapp
 # TeX
 sudo tlmgr install dvipng
 
