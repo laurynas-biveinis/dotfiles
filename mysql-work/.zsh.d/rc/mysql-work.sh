@@ -135,7 +135,7 @@ mysql_get_comp_flags() {
             flags+=("${comp_flags[$range]}")
         fi
     done
-    echo "${flags[*]}"
+    echo ${flags[*]}
     return 0
 }
 
