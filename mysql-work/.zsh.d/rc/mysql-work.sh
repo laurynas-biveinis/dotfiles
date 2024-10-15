@@ -202,7 +202,7 @@ mysql_export_environment_helpers() {
     declare -gA cmake_flags=()
 
     declare -r min_version="8.0.18"
-    declare -r max_version="9.0.1"
+    declare -r max_version="9.1.0"
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -220,11 +220,11 @@ mysql_export_environment_helpers() {
             # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
             # configuration failure on Linux virtualized on M1 Mac)
             declare -a fb_common=("-DROCKSDB_BUILD_ARCH=armv8.1-a+crypto")
-            export MY8030_901_CORE_DUMP_FLAGS=(
+            export MY8030_910_CORE_DUMP_FLAGS=(
                 "-DWITH_DEVELOPER_ENTITLEMENTS=ON")
         else
             declare -a fb_common=()
-            export MY8030_901_CORE_DUMP_FLAGS=()
+            export MY8030_910_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
@@ -318,7 +318,7 @@ mysql_export_environment_helpers() {
             declare -a fb_common=()
         fi
 
-        export MY8030_901_CORE_DUMP_FLAGS=()
+        export MY8030_910_CORE_DUMP_FLAGS=()
         export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
                           "-DCMAKE_CXX_COMPILER=clang++-12")
         export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
@@ -378,6 +378,14 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.33" "${max_version}" any \
                           "-DFORCE_COLORED_OUTPUT=ON"
+
+    mysql_add_comp_flags "9.1.0" "9.1.0" cxx "-Wno-unused-const-variable"
+
+    declare -a -r my910_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.1.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.1.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.1.0 cxx_release)"
+    )
 
     declare -a -r my901_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.0.1 cxx)"
@@ -569,6 +577,11 @@ mysql_export_environment_helpers() {
     )
 
     # Paydirt!
+
+    export MY910D=("${myd[@]}" $(mysql_get_cmake_flags 9.1.0 any_debug)
+                   "${my910_comp_flags[@]}")
+    export MY910=("${myr[@]}" $(mysql_get_cmake_flags 9.1.0 any_release)
+                  "${my910_comp_flags[@]}")
 
     export MY901D=("${myd[@]}" $(mysql_get_cmake_flags 9.0.1 any_debug)
                    "${my901_comp_flags[@]}")
@@ -772,125 +785,131 @@ mysql_cmake() {
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                9.1.0)
+                    declare -a release_flags=("${MY910[@]}")
+                    declare -a debug_flags=("${MY910D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 9.0.1)
                     declare -a release_flags=("${MY901[@]}")
                     declare -a debug_flags=("${MY901D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 9.0.0)
                     declare -a release_flags=("${MY900[@]}")
                     declare -a debug_flags=("${MY900D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.4.3)
                     declare -a release_flags=("${MY843[@]}")
                     declare -a debug_flags=("${MY843D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.4.2)
                     declare -a release_flags=("${MY842[@]}")
                     declare -a debug_flags=("${MY842D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.4.1)
                     declare -a release_flags=("${MY841[@]}")
                     declare -a debug_flags=("${MY841D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.4.0)
                     declare -a release_flags=("${MY840[@]}")
                     declare -a debug_flags=("${MY840D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.3.0)
                     declare -a release_flags=("${MY830[@]}")
                     declare -a debug_flags=("${MY830D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.2.0)
                     declare -a release_flags=("${MY820[@]}")
                     declare -a debug_flags=("${MY820D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.1.0)
                     declare -a release_flags=("${MY810[@]}")
                     declare -a debug_flags=("${MY810D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.40)
                     declare -a release_flags=("${MY8040[@]}")
                     declare -a debug_flags=("${MY8040D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.39)
                     declare -a release_flags=("${MY8039[@]}")
                     declare -a debug_flags=("${MY8039D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.38)
                     declare -a release_flags=("${MY8038[@]}")
                     declare -a debug_flags=("${MY8038D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.37)
                     declare -a release_flags=("${MY8037[@]}")
                     declare -a debug_flags=("${MY8037D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.36)
                     declare -a release_flags=("${MY8036[@]}")
                     declare -a debug_flags=("${MY8036D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.35)
                     declare -a release_flags=("${MY8035[@]}")
                     declare -a debug_flags=("${MY8035D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.34)
                     declare -a release_flags=("${MY8034[@]}")
                     declare -a debug_flags=("${MY8034D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.33)
                     declare -a release_flags=("${MY8033[@]}")
                     declare -a debug_flags=("${MY8033D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.32)
                     declare -a release_flags=("${MY8032[@]}")
                     declare -a debug_flags=("${MY8032D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.31)
                     declare -a release_flags=("${MY8031[@]}")
                     declare -a debug_flags=("${MY8031D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.30)
                     declare -a release_flags=("${MY8030[@]}")
                     declare -a debug_flags=("${MY8030D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.29)
                     declare -a release_flags=("${MY8029[@]}")
@@ -920,13 +939,13 @@ mysql_cmake() {
                     declare -a release_flags=("${FB8036[@]}")
                     declare -a debug_flags=("${FB8036D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.32)
                     declare -a release_flags=("${FB8032[@]}")
                     declare -a debug_flags=("${FB8032D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.28)
                     declare -a release_flags=("${FB8028[@]}")
@@ -945,17 +964,17 @@ mysql_cmake() {
                 8.0.36)
                     declare -a debug_flags=("${PS8036D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.35)
                     declare -a debug_flags=("${PS8035D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 8.0.34)
                     declare -a debug_flags=("${PS8034D[@]}")
                     declare -a -r \
-                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                            core_dump_flags=("${MY8030_910_CORE_DUMP_FLAGS[@]}")
                     ;;
                 *)
                     2>&1 echo "Unsupported version, please add"
