@@ -201,6 +201,9 @@ mysql_export_environment_helpers() {
     declare -gA comp_flags=()
     declare -gA cmake_flags=()
 
+    declare -r min_version="8.0.18"
+    declare -r max_version="9.0.1"
+
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
         declare -r brew="$(brew --prefix)"
@@ -349,9 +352,9 @@ mysql_export_environment_helpers() {
 
     # Common building blocks
 
-    # FIXME(laurynas): min version, max version constants
-    mysql_add_comp_flags "8.0.18" "9.0.1" "cxx" "-g"
-    mysql_add_comp_flags "8.0.18" "9.0.1" "cxx_release" "-O2" "-DNDEBUG"
+    mysql_add_comp_flags "${min_version}" "${max_version}" "cxx" "-g"
+    mysql_add_comp_flags "${min_version}" "${max_version}" "cxx_release" \
+                         "-O2" "-DNDEBUG"
 
     declare -a -r cmake_common=("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
                                 "-DFORCE_UNSUPPORTED_COMPILER=ON")
@@ -373,7 +376,8 @@ mysql_export_environment_helpers() {
 
     # Version-specific building blocks, descending order
 
-    mysql_add_cmake_flags "8.0.33" "9.0.1" any "-DFORCE_COLORED_OUTPUT=ON"
+    mysql_add_cmake_flags "8.0.33" "${max_version}" any \
+                          "-DFORCE_COLORED_OUTPUT=ON"
 
     declare -a -r my901_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.0.1 cxx)"
