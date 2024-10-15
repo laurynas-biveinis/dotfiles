@@ -387,6 +387,14 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.0.0 cxx_release)"
     )
 
+    mysql_add_comp_flags "8.4.3" "8.4.3" cxx "-Wno-unused-const-variable"
+
+    declare -a -r my843_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.3 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.3 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.3 cxx_release)"
+    )
+
     declare -a -r my842_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.2 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.2 cxx_debug)"
@@ -567,6 +575,11 @@ mysql_export_environment_helpers() {
                    "${my900_comp_flags[@]}")
     export MY900=("${myr[@]}" $(mysql_get_cmake_flags 9.0.0 any_release)
                   "${my900_comp_flags[@]}")
+
+    export MY843D=("${myd[@]}" $(mysql_get_cmake_flags 8.4.3 any_debug)
+                   "${my843_comp_flags[@]}")
+    export MY843=("${myr[@]}" $(mysql_get_cmake_flags 8.4.3 any_release)
+                  "${my843_comp_flags[@]}")
 
     export MY842D=("${myd[@]}" $(mysql_get_cmake_flags 8.4.2 any_debug)
                    "${my842_comp_flags[@]}")
@@ -764,6 +777,12 @@ mysql_cmake() {
                 9.0.0)
                     declare -a release_flags=("${MY900[@]}")
                     declare -a debug_flags=("${MY900D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
+                    ;;
+                8.4.3)
+                    declare -a release_flags=("${MY843[@]}")
+                    declare -a debug_flags=("${MY843D[@]}")
                     declare -a -r \
                             core_dump_flags=("${MY8030_901_CORE_DUMP_FLAGS[@]}")
                     ;;
