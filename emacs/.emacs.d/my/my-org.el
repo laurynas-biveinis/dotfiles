@@ -37,6 +37,7 @@
 (require 'org-agenda)
 (require 'org-clock)
 (require 'org-capture)
+(require 'org-footnote)
 (require 'org-mobile)
 (require 'org-habit)
 (require 'org-crypt)
@@ -70,6 +71,9 @@ Sets up keybindings and adjusts the fill column."
 
 ;;; Saving
 (add-hook 'auto-save-hook #'org-save-all-org-buffers)  ;; Save automatically
+
+;;; Footnotes
+(setq org-footnote-auto-adjust t)
 
 ;;; Display
 (setq org-fontify-todo-headline t
