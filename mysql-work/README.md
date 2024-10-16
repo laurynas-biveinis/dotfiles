@@ -81,6 +81,8 @@ responsibilities: querying the source tree for version information and managing
   script automates saving its diff, and re-merging the lower series with that
   exact saved diff.
 - [mysql-work.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/.emacs.d/dotfiles/mysql-work.el):
-  mostly outdated Emacs configuration bits, mostly copied from colleagues at
-  Percona. They set up MySQL (and InnoDB) indentation styles that were used up
-  to 5.7, and provide a bit of syntax support for MTR `.test` files.
+  Emacs configuration bits. The up-to-date part configures
+  [Projectile](https://projectile.mx) for more efficient MTR test navigation.
+  There are also outdated bits, mostly copied from former colleagues at Percona.
+  They set up MySQL (and InnoDB) indentation styles that were used up to 5.7,
+  and provide some syntax support for MTR `.test` files.
