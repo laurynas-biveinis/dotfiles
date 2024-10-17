@@ -19,12 +19,10 @@
 
 (defconst my-org-gtd--test-contexts
   (vector
-   (make-my-org-gtd-context
-    :tag "@c1" :select-char ?a
-    :description "c1 context")
-   (make-my-org-gtd-context
-    :tag "@c2" :select-char ?b
-    :description "c2 context")))
+   (make-my-org-gtd-list
+    :tag "@c1" :select-char ?a :description "c1 context")
+   (make-my-org-gtd-list
+    :tag "@c2" :select-char ?b :description "c2 context")))
 
 (defmacro my-org-gtd--test-fixture (varlist &rest body)
   "A test fixture for `my-org-gtd' to bind VARLIST vars and execute BODY forms."
@@ -50,30 +48,28 @@
 (ert-deftest my-org-gtd-context-not-tag-basic ()
   "Basic test for `my-org-gtd-context-not-tag'."
   (my-org-gtd--test-fixture
-      ((my-org-gtd-waitingfor-context (make-my-org-gtd-context
+      ((my-org-gtd-waitingfor-context (make-my-org-gtd-list
                                        :tag "@foo" :select-char ?x
                                        :description "Waiting-for context")))
-    (should (equal (my-org-gtd-context-not-tag my-org-gtd-waitingfor-context)
+    (should (equal (my-org-gtd-list-not-tag my-org-gtd-waitingfor-context)
                    "-@foo"))))
 
 ;; Test `my-org-gtd-initialize'
 
 (ert-deftest org-tag-alist-construction-empty ()
   "Test that `org-tag-alist' is properly constructed."
-  (my-org-gtd--test-fixture ((org-tag-alist nil)
-                             (my-org-gtd-contexts my-org-gtd--test-contexts)
-                             (my-org-gtd-waitingfor-context
-                              (make-my-org-gtd-context
-                               :tag "@sometag" :select-char ?f
-                               :description "Waiting-for context"))
-                             (my-org-gtd-project-context
-                              (make-my-org-gtd-context
-                               :tag "prj" :select-char ?c
-                               :description "Projects"))
-                             (my-org-gtd-somedaymaybe-context
-                              (make-my-org-gtd-context
-                               :tag "maybesomeday" :select-char ?d
-                               :description "Someday/maybe")))
+  (my-org-gtd--test-fixture
+      ((org-tag-alist nil)
+       (my-org-gtd-contexts my-org-gtd--test-contexts)
+       (my-org-gtd-waitingfor-context
+        (make-my-org-gtd-list
+         :tag "@sometag" :select-char ?f :description "Waiting-for context"))
+       (my-org-gtd-project-list
+        (make-my-org-gtd-list
+         :tag "prj" :select-char ?c :description "Projects"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "maybesomeday" :select-char ?d :description "Someday/maybe")))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -86,20 +82,18 @@
 
 (ert-deftest org-tag-alist-construction-preexisting ()
   "Test that `org-tag-alist' is properly constructed, when it's non-empty."
-  (my-org-gtd--test-fixture ((org-tag-alist '(("@x" . ?x)))
-                             (my-org-gtd-contexts my-org-gtd--test-contexts)
-                             (my-org-gtd-waitingfor-context
-                              (make-my-org-gtd-context
-                               :tag "@anothertag" :select-char ?x
-                               :description "Waiting-for context"))
-                             (my-org-gtd-project-context
-                              (make-my-org-gtd-context
-                               :tag "foo" :select-char ?f
-                               :description "Foos"))
-                             (my-org-gtd-somedaymaybe-context
-                              (make-my-org-gtd-context
-                               :tag "maybesomeday" :select-char ?d
-                               :description "Someday/maybe")))
+  (my-org-gtd--test-fixture
+      ((org-tag-alist '(("@x" . ?x)))
+       (my-org-gtd-contexts my-org-gtd--test-contexts)
+       (my-org-gtd-waitingfor-context
+        (make-my-org-gtd-list
+         :tag "@anothertag" :select-char ?x :description "Waiting-for context"))
+       (my-org-gtd-project-list
+        (make-my-org-gtd-list
+         :tag "foo" :select-char ?f :description "Foos"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "maybesomeday" :select-char ?d :description "Someday/maybe")))
     (my-org-gtd-initialize)
     (should (equal org-tag-alist
                    '((:startgroup)
@@ -163,49 +157,49 @@
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-matching-regex ()
   "Test `org-use-tag-inheritance' matching `my-org-gtd-somedaymaybe-tag'."
-  (my-org-gtd--test-fixture ((org-use-tag-inheritance "may.*")
-                             (my-org-gtd-somedaymaybe-context
-                              (make-my-org-gtd-context
-                               :tag "maybe" :select-char ?d
-                               :description "Someday/maybe")))
+  (my-org-gtd--test-fixture
+      ((org-use-tag-inheritance "may.*")
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "maybe" :select-char ?d :description "Someday/maybe")))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance "may.*"))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-not-matching-regex ()
   "Test `org-use-tag-inheritance' not matching `my-org-gtd-somedaymaybe-tag'."
-  (my-org-gtd--test-fixture ((org-use-tag-inheritance "foo.*")
-                             (my-org-gtd-somedaymaybe-context
-                              (make-my-org-gtd-context
-                               :tag "maybe" :select-char ?d
-                               :description "Someday/maybe")))
+  (my-org-gtd--test-fixture
+      ((org-use-tag-inheritance "foo.*")
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "maybe" :select-char ?d :description "Someday/maybe")))
     (should-error (my-org-gtd-initialize))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-add-to-list ()
   "Test adding `my-org-gtd-somedaymaybe-tag' to `org-use-tag-inheritance'."
-  (my-org-gtd--test-fixture ((org-use-tag-inheritance '("foo" "bar"))
-                             (my-org-gtd-somedaymaybe-context
-                              (make-my-org-gtd-context
-                               :tag "somedaymaybe" :select-char ?d
-                               :description "Someday/maybe")))
+  (my-org-gtd--test-fixture
+      ((org-use-tag-inheritance '("foo" "bar"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "somedaymaybe" :select-char ?d :description "Someday/maybe")))
     (my-org-gtd-initialize)
     (should (equal org-use-tag-inheritance '("somedaymaybe" "foo" "bar")))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-already-in-list ()
   "Test `org-use-tag-inheritance' containing `my-org-gtd-somedaymaybe-tag'."
-  (my-org-gtd--test-fixture ((org-use-tag-inheritance '("foo" "bar"))
-                             (my-org-gtd-somedaymaybe-context
-                              (make-my-org-gtd-context
-                               :tag "foo" :select-char ?d
-                               :description "Someday/maybe")))
+  (my-org-gtd--test-fixture
+      ((org-use-tag-inheritance '("foo" "bar"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "foo" :select-char ?d :description "Someday/maybe")))
     (should-error (my-org-gtd-initialize))))
 
 (ert-deftest my-org-gtd-org-use-tag-inheritance-wrong-type ()
   "Test `org-use-tag-inheritance' being of unrecognized type.."
-  (my-org-gtd--test-fixture ((org-use-tag-inheritance 42)
-                             (my-org-gtd-somedaymaybe-context
-                              (make-my-org-gtd-context
-                               :tag "foo" :select-char ?d
-                               :description "Someday/maybe")))
+  (my-org-gtd--test-fixture
+      ((org-use-tag-inheritance 42)
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "foo" :select-char ?d :description "Someday/maybe")))
     (should-error (my-org-gtd-initialize))))
 
 (ert-deftest my-org-gtd-cancelled-keyword-not-in-org-todo-keywords ()
@@ -245,12 +239,12 @@
 (ert-deftest my-org-gtd-initialize-org-stuck-projects ()
   "Test that `org-stuck-projects' is properly initialized."
   (my-org-gtd--test-fixture
-      ((my-org-gtd-project-context (make-my-org-gtd-context
-                                    :tag "prj" :select-char ?p
-                                    :description "Projects"))
-       (my-org-gtd-somedaymaybe-context (make-my-org-gtd-context
-                                         :tag "someday" :select-char ?s
-                                         :description "Someday/Maybe"))
+      ((my-org-gtd-project-list
+        (make-my-org-gtd-list
+         :tag "prj" :select-char ?p :description "Projects"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "someday" :select-char ?s :description "Someday/Maybe"))
        (my-org-gtd-next-action-keyword "NEXT")
        (org-todo-keywords '((sequence "NEXT(n!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
@@ -262,11 +256,11 @@
 (ert-deftest my-org-gtd-agenda-block-one-context ()
   "Test for `my-org-gtd-agenda-block' with one context."
   (my-org-gtd--test-fixture
-      ((ctx (make-my-org-gtd-context :tag "ctx" :select-char ?c
-                                     :description "ctx description"))
-       (my-org-gtd-somedaymaybe-context
-        (make-my-org-gtd-context :tag "oneday" :select-char ?d
-                                 :description "Someday/maybe"))
+      ((ctx (make-my-org-gtd-list
+             :tag "ctx" :select-char ?c :description "ctx description"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list
+         :tag "oneday" :select-char ?d :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
@@ -279,13 +273,14 @@
 (ert-deftest my-org-gtd-active-todo-search-two-contexts ()
   "Test for `my-org-gtd-agenda-block' with two contexts."
   (my-org-gtd--test-fixture
-      ((ctx (make-my-org-gtd-context :tag "ctx" :select-char ?c
-                                     :description "ctx description"))
-       (ctx2 (make-my-org-gtd-context :tag "foo" :select-char ?f
-                                      :description "foo description"))
-       (my-org-gtd-somedaymaybe-context
-        (make-my-org-gtd-context :tag "maybe" :select-char ?m
-                                 :description "Someday/maybe"))
+      ((ctx
+        (make-my-org-gtd-list :tag "ctx" :select-char ?c
+                              :description "ctx description"))
+       (ctx2 (make-my-org-gtd-list :tag "foo" :select-char ?f
+                                   :description "foo description"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list :tag "maybe" :select-char ?m
+                              :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
@@ -299,11 +294,11 @@
 (ert-deftest my-org-gtd-agenda-basic ()
   "Basic test for `my-org-gtd-agenda'."
   (my-org-gtd--test-fixture
-      ((context (make-my-org-gtd-context :tag "foo" :select-char ?f
-                                         :description "Foo description"))
-       (my-org-gtd-somedaymaybe-context
-        (make-my-org-gtd-context :tag "maybe" :select-char ?m
-                                 :description "Someday/maybe"))
+      ((context (make-my-org-gtd-list :tag "foo" :select-char ?f
+                                      :description "Foo description"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list :tag "maybe" :select-char ?m
+                              :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT"))
     (should (equal (my-org-gtd-agenda context)
                    '("Foo description" tags-todo "foo-maybe/!DOIT")))))
@@ -311,9 +306,9 @@
 (ert-deftest my-org-gtd-somedaymaybe-agenda-basic ()
   "Basic test for `my-org-gtd-somedaymaybe-agenda'."
   (my-org-gtd--test-fixture
-      ((my-org-gtd-somedaymaybe-context
-        (make-my-org-gtd-context :tag "bar" :select-char ?b
-                                 :description "Bar description")))
+      ((my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list :tag "bar" :select-char ?b
+                              :description "Bar description")))
     (should (equal (my-org-gtd-somedaymaybe-agenda)
                    '("Bar description" tags-todo "bar+LEVEL=2"
                      ((org-agenda-dim-blocked-tasks nil)))))))
@@ -321,15 +316,15 @@
 (ert-deftest my-org-gtd-active-non-project-tasks-basic ()
   "Basic test for `my-org-gtd-active-non-project-tasks-agenda'."
   (my-org-gtd--test-fixture
-      ((my-org-gtd-project-context
-        (make-my-org-gtd-context :tag "prj" :select-char ?p
-                                 :description "Prj description"))
-       (my-org-gtd-somedaymaybe-context
-        (make-my-org-gtd-context :tag "maybe" :select-char ?m
-                                 :description "Maybe description"))
+      ((my-org-gtd-project-list
+        (make-my-org-gtd-list :tag "prj" :select-char ?p
+                              :description "Prj description"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list :tag "maybe" :select-char ?m
+                              :description "Maybe description"))
        (my-org-gtd-waitingfor-context
-        (make-my-org-gtd-context :tag "wait" :select-char ?w
-                                 :description "Wait context"))
+        (make-my-org-gtd-list :tag "wait" :select-char ?w
+                              :description "Wait context"))
        (my-org-gtd-next-action-keyword "NEXT"))
     (should (equal (my-org-gtd-active-non-project-tasks-agenda)
                    '("Non-project next actions" tags-todo
@@ -339,9 +334,9 @@
 (ert-deftest my-org-gtd-archivable-tasks-basic ()
   "Basic test for `my-org-gtd-archivable-tasks'."
   (my-org-gtd--test-fixture
-      ((my-org-gtd-project-context
-        (make-my-org-gtd-context :tag "prj" :select-char ?p
-                                 :description "Prj description"))
+      ((my-org-gtd-project-list
+        (make-my-org-gtd-list :tag "prj" :select-char ?p
+                              :description "Prj description"))
        (my-org-gtd-done-keyword "COMPLETED")
        (my-org-gtd-cancelled-keyword "CANCELLED"))
     (should (equal (my-org-gtd-archivable-tasks)
@@ -354,19 +349,19 @@
   (my-org-gtd--test-fixture
       ((my-org-gtd-contexts
         (vector
-         (make-my-org-gtd-context :tag "@home" :select-char ?h
-                                  :description "At home")
-         (make-my-org-gtd-context :tag "@work" :select-char ?w
-                                  :description "At work")))
+         (make-my-org-gtd-list :tag "@home" :select-char ?h
+                               :description "At home")
+         (make-my-org-gtd-list :tag "@work" :select-char ?w
+                               :description "At work")))
        (my-org-gtd-waitingfor-context
-        (make-my-org-gtd-context :tag "@wait" :select-char ?t
-                                 :description "Waiting for"))
-       (my-org-gtd-project-context
-        (make-my-org-gtd-context :tag "prj" :select-char ?p
-                                 :description "Projects"))
-       (my-org-gtd-somedaymaybe-context
-        (make-my-org-gtd-context :tag "someday" :select-char ?s
-                                 :description "Someday/Maybe")))
+        (make-my-org-gtd-list :tag "@wait" :select-char ?t
+                              :description "Waiting for"))
+       (my-org-gtd-project-list
+        (make-my-org-gtd-list :tag "prj" :select-char ?p
+                              :description "Projects"))
+       (my-org-gtd-somedaymaybe-list
+        (make-my-org-gtd-list :tag "someday" :select-char ?s
+                              :description "Someday/Maybe")))
     (should (equal (my-org-gtd-contextless-tasks)
                    '(todo
                      "-@home-@work-@wait-prj-someday"
@@ -389,7 +384,7 @@
     (my-org-gtd-insert-waiting-for-next-action "Test title")
     (should (string= (org-get-heading t t) "Test title"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+    (should (equal (org-get-tags) (list (my-org-gtd-list-tag
                                          my-org-gtd-waitingfor-context))))))
 
 (ert-deftest my-org-gtd-insert-waiting-for-next-action-reject-empty ()
@@ -403,16 +398,15 @@
   (my-org-gtd--buffer-test
       ((my-org-gtd-next-action-keyword "NEXT")
        (my-org-gtd-waitingfor-context
-        (make-my-org-gtd-context
-         :tag "@wait" :select-char ?f
-         :description "Waiting-for context"))
+        (make-my-org-gtd-list
+         :tag "@wait" :select-char ?f :description "Waiting-for context"))
        (org-todo-keywords '((sequence "NEXT(n!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
     (org-insert-todo-heading-respect-content)
     (my-org-gtd-insert-waiting-for-next-action "Title text")
     (should (string= (org-get-heading t t) "Title text"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+    (should (equal (org-get-tags) (list (my-org-gtd-list-tag
                                          my-org-gtd-waitingfor-context))))))
 
 (ert-deftest my-org-gtd-insert-project-basic ()
@@ -422,8 +416,8 @@
     (my-org-gtd-insert-project "Test title")
     (should (string= (org-get-heading t t) "Test title"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
-                                         my-org-gtd-project-context))))))
+    (should (equal (org-get-tags) (list (my-org-gtd-list-tag
+                                         my-org-gtd-project-list))))))
 
 (ert-deftest my-org-gtd-insert-project-reject-empty ()
   "Test that `my-org-gtd-insert-project' rejects empty title."
@@ -436,16 +430,15 @@
   (my-org-gtd--buffer-test
       ((my-org-gtd-next-action-keyword "FOO")
        (my-org-gtd-project-context
-        (make-my-org-gtd-context
-         :tag "bar" :select-char ?b
-         :description "Bars"))
+        (make-my-org-gtd-list
+         :tag "bar" :select-char ?b :description "Bars"))
        (org-todo-keywords '((sequence "FOO" "|" "DONE" "KILL"))))
     (my-org-gtd-initialize)
     (org-insert-todo-heading-respect-content)
     (my-org-gtd-insert-project "Title text")
     (should (string= (org-get-heading t t) "Title text"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
-    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+    (should (equal (org-get-tags) (list (my-org-gtd-list-tag
                                          my-org-gtd-project-context))))))
 
 (ert-deftest my-org-gtd-complete-item-basic ()
@@ -457,7 +450,7 @@
     (my-org-gtd-complete-item)
     (should (string= (org-get-todo-state) my-org-gtd-done-keyword))
     (should (string= (org-get-heading t t) "Test title"))
-    (should (equal (org-get-tags) (list (my-org-gtd-context-tag
+    (should (equal (org-get-tags) (list (my-org-gtd-list-tag
                                          my-org-gtd-waitingfor-context))))))
 
 ;; Test clock-in automation

@@ -21,19 +21,19 @@
 ;; Soft dependencies
 (defvar org-gcal-cancelled-todo-keyword)
 
-;; The context structure. FIXME(laurynas): rename, not only context
-(cl-defstruct (my-org-gtd-context)
-  "A single GTD context."
+;; The GTD list structure, used for contexts, projects, and someday/maybe items.
+(cl-defstruct (my-org-gtd-list)
+  "A single GTD list, which could be for a context, projects, and someday/maybe
+items."
   (tag "" :type string :read-only t :documentation "The `org' tag.")
-  (select-char
-   ? :type character :read-only t
-   :documentation "The `org' quick selection character for the tag.")
+  (select-char ? :type character :read-only t
+               :documentation "The `org' quick selection character for the tag.")
   (description "" :type string :read-only t
-               :documentation "The description string for this context."))
+               :documentation "The description string for this list."))
 
-(defun my-org-gtd-context-not-tag (gtd-context)
-  "Get the substring for `org-agenda' blocks to exclude GTD-CONTEXT."
-  (concat "-" (my-org-gtd-context-tag gtd-context)))
+(defun my-org-gtd-list-not-tag (gtd-list)
+  "Get the substring for `org-agenda' blocks to exclude GTD-LIST."
+  (concat "-" (my-org-gtd-list-tag gtd-list)))
 
 ;; Customization
 (defgroup my-org-gtd nil
@@ -44,7 +44,7 @@
   "GTD contexts with `org' tags, quick selection characters, and descriptions.
 The tags and the selection keys will be added to as a single group to
 `org-tag-alist', together with (`my-org-gtd-waitingfor-tag' .
-`my-org-gtd-waitingfor-select')  by`my-org-gtd-initialize'."
+`my-org-gtd-waitingfor-select') by `my-org-gtd-initialize'."
   :type '(repeat (struct :tag "Context"
                          (string :tag "`org' Tag")
                          (character :tag "Quick selection character")
@@ -53,8 +53,8 @@ The tags and the selection keys will be added to as a single group to
   :package-version '(my-org-gtd . "0.1"))
 
 (defcustom my-org-gtd-waitingfor-context
-  (make-my-org-gtd-context :tag "@waitingfor" :select-char ?w
-                           :description "Waiting-for items")
+  (make-my-org-gtd-list :tag "@waitingfor" :select-char ?w
+                        :description "Waiting-for items")
   "The GTD waiting-for context."
   :type '(struct :tag "GTD waiting-for context"
                  (string :tag "`org Tag")
@@ -63,22 +63,21 @@ The tags and the selection keys will be added to as a single group to
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
-(defcustom my-org-gtd-project-context
-  (make-my-org-gtd-context :tag "project" :select-char ?p
-                           :description "Projects")
-  "The GTD project context."
-  :type '(struct :tag "Projects. Not a GTD context but works as one in `org'."
+(defcustom my-org-gtd-project-list
+  (make-my-org-gtd-list :tag "project" :select-char ?p :description "Projects")
+  "The GTD project list."
+  :type '(struct :tag "Project list."
                  (string :tag "`org Tag")
                  (character :tag "Quick selection character")
                  (string :tag "Description"))
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
 
-(defcustom my-org-gtd-somedaymaybe-context
-  (make-my-org-gtd-context :tag "somedaymaybe" :select-char ?m
-                           :description "Someday/maybe")
-  "The GTD someday/maybe context."
-  :type '(struct :tag "Someday/maybe item context."
+(defcustom my-org-gtd-somedaymaybe-list
+  (make-my-org-gtd-list :tag "somedaymaybe" :select-char ?m
+                        :description "Someday/maybe")
+  "The GTD someday/maybe list."
+  :type '(struct :tag "Someday/maybe item list."
                  (string :tag "`org Tag")
                  (character :tag "Quick selection character")
                  (string :tag "Description"))
@@ -88,9 +87,9 @@ The tags and the selection keys will be added to as a single group to
 ;; Action keywords
 (defcustom my-org-gtd-next-action-keyword "TODO"
   "The TODO entry keyword that designates a GTD next action.
-Projects also have this keyword (in addition to `my-org-gtd-project-context'
-tag.) It must be present in `org-todo-keywords', either directly or through
-per-file configuration, with an optional fast state selection character."
+Projects also have this keyword (in addition to `my-org-gtd-project-list' tag.)
+It must be present in `org-todo-keywords', either directly or through per-file
+configuration, with an optional fast state selection character."
   :type '(string)
   :group 'my-org-gtd
   :package-version '(my-org-gtd . "0.1"))
@@ -249,10 +248,9 @@ The marker must be at the new clock position."
            org-todo-keywords)
     (user-error "'%s' must be present in `org-todo-keywords'" keyword)))
 
-(defun my-org-gtd--make-org-alist-cons-cell (context)
-  "Convert a CONTEXT to a cons cell for `org-tag-alist'."
-  (cons (my-org-gtd-context-tag context)
-        (my-org-gtd-context-select-char context)))
+(defun my-org-gtd--make-org-alist-cons-cell (gtd-list)
+  "Convert a GTD-LIST to a cons cell for `org-tag-alist'."
+  (cons (my-org-gtd-list-tag gtd-list) (my-org-gtd-list-select-char gtd-list)))
 
 (defun my-org-gtd--require-org-clock (&rest _args)
   "Block the command if no `org' task is clocked in."
@@ -263,7 +261,7 @@ The marker must be at the new clock position."
 Checks `org-todo-keywords' against keyword configuration, initializes
 `org-todo-repeat-to-state', `org-enforce-todo-dependencies', and
 `org-stuck-projects'. Adds to `org-use-tag-inheritance', and `org-tag-alist'
-from the context configuration and sets up clock-in automation.
+from the GTD list configuration and sets up clock-in automation.
 Note that multiple calls without resetting the Org variables manually first may
 result in inconsistencies."
   ;; Validate config
@@ -272,20 +270,19 @@ result in inconsistencies."
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-done-keyword)
   (my-org-gtd--check-keyword-in-org-todo-keywords my-org-gtd-cancelled-keyword)
   ;; Configure `org'
-  (let ((somedaymaybe-tag (my-org-gtd-context-tag
-                           my-org-gtd-somedaymaybe-context)))
+  (let ((somedaymaybe-tag (my-org-gtd-list-tag my-org-gtd-somedaymaybe-list)))
     (cond
      ((eq org-use-tag-inheritance t)
       nil)
      ((stringp org-use-tag-inheritance)
       (unless (string-match-p org-use-tag-inheritance somedaymaybe-tag)
         (user-error
-         "`my-org-gtd-somedaymaybe-context' tag %s does not match `org-use-tag-inheritance' regex %s"
+         "`my-org-gtd-somedaymaybe-list' tag %s does not match `org-use-tag-inheritance' regex %s"
          somedaymaybe-tag org-use-tag-inheritance)))
      ((listp org-use-tag-inheritance)
       (when (member somedaymaybe-tag org-use-tag-inheritance)
         (user-error
-         "`my-org-gtd-somedaymaybe-context' tag %s already in `org-use-tag-inheritance' %S"
+         "`my-org-gtd-somedaymaybe-list' tag %s already in `org-use-tag-inheritance' %S"
          somedaymaybe-tag org-use-tag-inheritance))
       (push somedaymaybe-tag org-use-tag-inheritance))
      (t (user-error "Don't know how handle `org-use-tag-inheritance' value %S"
@@ -299,14 +296,14 @@ result in inconsistencies."
                                 (list my-org-gtd-waitingfor-context)))
                 (list (cons :endgroup nil))
                 (list (my-org-gtd--make-org-alist-cons-cell
-                       my-org-gtd-project-context))
+                       my-org-gtd-project-list))
                 (list (my-org-gtd--make-org-alist-cons-cell
-                       my-org-gtd-somedaymaybe-context))
+                       my-org-gtd-somedaymaybe-list))
                 org-tag-alist))
-  (setq org-stuck-projects `(,(concat "+" (my-org-gtd-context-tag
-                                           my-org-gtd-project-context)
-                                      (my-org-gtd-context-not-tag
-                                       my-org-gtd-somedaymaybe-context) "/!"
+  (setq org-stuck-projects `(,(concat "+" (my-org-gtd-list-tag
+                                           my-org-gtd-project-list)
+                                      (my-org-gtd-list-not-tag
+                                       my-org-gtd-somedaymaybe-list) "/!"
                                       my-org-gtd-next-action-keyword)
                              (,my-org-gtd-next-action-keyword) nil ""))
   (add-hook 'org-clock-in-hook #'my-org-gtd--clock-in-actions)
@@ -317,81 +314,78 @@ result in inconsistencies."
     (advice-add cmd :before #'my-org-gtd--require-org-clock)))
 
 ;; Agenda views
-(defun my-org-gtd--active-todo-search (&rest contexts)
-  "Return an `org' search string for next actions in CONTEXTS."
+(defun my-org-gtd--active-todo-search (&rest gtd-lists)
+  "Return an `org' search string for next actions in GTD-LISTS."
   (let ((not-somedaymaybe
-         (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)))
-    (concat (mapconcat (lambda (context)
-                         (concat (my-org-gtd-context-tag context)
+         (my-org-gtd-list-not-tag my-org-gtd-somedaymaybe-list)))
+    (concat (mapconcat (lambda (gtd-list)
+                         (concat (my-org-gtd-list-tag gtd-list)
                                  not-somedaymaybe))
-                       contexts "|")
+                       gtd-lists "|")
             "/!" my-org-gtd-next-action-keyword)))
 
-(defun my-org-gtd-agenda-block (contexts &optional header)
-  "Return a `tags-todo' block for CONTEXTS with optional HEADER.
-CONTEXTS can be a single context or a list. If HEADER is not provided, take it
-from the description of the only context."
-  (let* ((single-context-p (and (not (listp contexts))
-                                (my-org-gtd-context-p contexts)))
-         (contexts-list (if single-context-p (list contexts) contexts))
+(defun my-org-gtd-agenda-block (gtd-lists &optional header)
+  "Return a `tags-todo' block for GTD-LISTS with optional HEADER.
+GTD-LISTS can be a single GTD list or their sequence. If HEADER is not provided,
+take it from the description of the only list."
+  (let* ((single-gtd-list-p (and (not (sequencep gtd-lists))
+                                 (my-org-gtd-list-p gtd-lists)))
+         (gtd-lists-list (if single-gtd-list-p (list gtd-lists) gtd-lists))
          (header-string (or header
-                            (and single-context-p
-                                 (my-org-gtd-context-description contexts)))))
+                            (and single-gtd-list-p
+                                 (my-org-gtd-list-description gtd-lists)))))
     `(tags-todo
-      ,(apply #'my-org-gtd--active-todo-search contexts-list)
+      ,(apply #'my-org-gtd--active-todo-search gtd-lists-list)
       ((org-agenda-overriding-header ,header-string)
        (org-agenda-dim-blocked-tasks 'invisible)))))
 
-(defun my-org-gtd-agenda (context)
-  "Return an `org-agenda' command part to show active items from CONTEXT.
+(defun my-org-gtd-agenda (gtd-list)
+  "Return an `org-agenda' command part to show active items from GTD-LIST.
 TODO(laurynas) example (also to README)."
-  (list (my-org-gtd-context-description context) 'tags-todo
-        (my-org-gtd--active-todo-search context)))
+  (list (my-org-gtd-list-description gtd-list) 'tags-todo
+        (my-org-gtd--active-todo-search gtd-list)))
 
 (defun my-org-gtd-somedaymaybe-agenda ()
   "Return an `org-agenda' command part to show someday/maybe items.
 TODO(laurynas) explanation for LEVEL=2."
-  (list (my-org-gtd-context-description my-org-gtd-somedaymaybe-context)
+  (list (my-org-gtd-list-description my-org-gtd-somedaymaybe-list)
         'tags-todo
-        (concat (my-org-gtd-context-tag my-org-gtd-somedaymaybe-context)
-                "+LEVEL=2")
+        (concat (my-org-gtd-list-tag my-org-gtd-somedaymaybe-list) "+LEVEL=2")
         '((org-agenda-dim-blocked-tasks nil))))
 
 (defun my-org-gtd-active-non-project-tasks-agenda ()
   "Return an `org-agenda' command part to show active non-project next actions."
   (list "Non-project next actions"
         'tags-todo
-        (concat (my-org-gtd-context-not-tag my-org-gtd-project-context)
-                (my-org-gtd-context-not-tag my-org-gtd-waitingfor-context)
-                (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context)
+        (concat (my-org-gtd-list-not-tag my-org-gtd-project-list)
+                (my-org-gtd-list-not-tag my-org-gtd-waitingfor-context)
+                (my-org-gtd-list-not-tag my-org-gtd-somedaymaybe-list)
                 "/!" my-org-gtd-next-action-keyword)
-        `((org-use-tag-inheritance '(,(my-org-gtd-context-tag
-                                       my-org-gtd-project-context)
-                                     ,(my-org-gtd-context-tag
-                                       my-org-gtd-somedaymaybe-context))))))
+        `((org-use-tag-inheritance
+           '(,(my-org-gtd-list-tag my-org-gtd-project-list)
+             ,(my-org-gtd-list-tag my-org-gtd-somedaymaybe-list))))))
 
 (defun my-org-gtd-archivable-tasks ()
   "Return an `org-agenda' command part to show archivable non-project tasks."
   (list 'tags
-        (concat (my-org-gtd-context-not-tag my-org-gtd-project-context) "/+"
+        (concat (my-org-gtd-list-not-tag my-org-gtd-project-list) "/+"
                 my-org-gtd-done-keyword "|+" my-org-gtd-cancelled-keyword)
         `((org-agenda-overriding-header "Archivable tasks")
-          (org-use-tag-inheritance '(,(my-org-gtd-context-tag
-                                       my-org-gtd-project-context))))))
+          (org-use-tag-inheritance '(,(my-org-gtd-list-tag
+                                       my-org-gtd-project-list))))))
 
 ;; FIXME(laurynas): prefix my-org-gtd-agenda- here and everywhere applying
 (defun my-org-gtd-contextless-tasks ()
-  "Return an `org-agenda' command part to show contextless tasks."
+  "Return an `org-agenda' command part to show listless tasks."
   (list 'todo
         (concat
-         (apply #'concat
-                (mapcar (lambda (context)
-                          (my-org-gtd-context-not-tag context))
-                        my-org-gtd-contexts))
-         (my-org-gtd-context-not-tag my-org-gtd-waitingfor-context)
-         (my-org-gtd-context-not-tag my-org-gtd-project-context)
-         (my-org-gtd-context-not-tag my-org-gtd-somedaymaybe-context))
-        '((org-agenda-overriding-header "Contextless tasks"))))
+         (apply #'concat (mapcar (lambda (context)
+                                   (my-org-gtd-list-not-tag context))
+                                 my-org-gtd-contexts))
+         (my-org-gtd-list-not-tag my-org-gtd-waitingfor-context)
+         (my-org-gtd-list-not-tag my-org-gtd-project-list)
+         (my-org-gtd-list-not-tag my-org-gtd-somedaymaybe-list))
+        '((org-agenda-overriding-header "Listless tasks"))))
 
 ;; Creating new tasks and completing them
 (defun my-org-gtd--insert-item (title keyword tag)
@@ -407,21 +401,19 @@ The heading must be already created."
   "Insert a new project task with TITLE at point.
 The heading must be already created."
   (my-org-gtd--insert-item title my-org-gtd-next-action-keyword
-                           (my-org-gtd-context-tag
-                            my-org-gtd-project-context)))
+                           (my-org-gtd-list-tag my-org-gtd-project-list)))
 
 (defun my-org-gtd-insert-waiting-for-next-action (title)
   "Insert a new next action waiting-for task with TITLE at point.
 The heading must be already created."
   (my-org-gtd--insert-item title my-org-gtd-next-action-keyword
-                           (my-org-gtd-context-tag
-                            my-org-gtd-waitingfor-context)))
+                           (my-org-gtd-list-tag my-org-gtd-waitingfor-context)))
 
 (defun my-org-gtd-complete-item ()
   "Mark the item (a task or a project) at point as done."
   (org-todo my-org-gtd-done-keyword))
 
-;; TODO(laurynas): README.org. What constitutes a project?
+;; TODO(laurynas): What constitutes a project?
 
 (provide 'my-org-gtd)
 ;;; my-org-gtd.el ends here
