@@ -43,10 +43,10 @@
                 (org-clock-in)))
              ((org-clocking-p) (org-clock-out))))))
 
-;; Test `my-org-gtd-context'
+;; Test `my-org-gtd-list'
 
 (ert-deftest my-org-gtd-context-not-tag-basic ()
-  "Basic test for `my-org-gtd-context-not-tag'."
+  "Basic test for `my-org-gtd-list-not-tag'."
   (my-org-gtd--test-fixture
       ((my-org-gtd-waitingfor-context (make-my-org-gtd-list
                                        :tag "@foo" :select-char ?x
@@ -253,38 +253,37 @@
 
 ;; Test `my-org-gtd-agenda-block'
 
-(ert-deftest my-org-gtd-agenda-block-one-context ()
-  "Test for `my-org-gtd-agenda-block' with one context."
+(ert-deftest my-org-gtd-agenda-block-one-list ()
+  "Test for `my-org-gtd-agenda-block' with one list."
   (my-org-gtd--test-fixture
-      ((ctx (make-my-org-gtd-list
-             :tag "ctx" :select-char ?c :description "ctx description"))
+      ((gtd-list (make-my-org-gtd-list :tag "ctx" :select-char ?c
+                                       :description "ctx description"))
        (my-org-gtd-somedaymaybe-list
         (make-my-org-gtd-list
          :tag "oneday" :select-char ?d :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
-    (should (equal (my-org-gtd-agenda-block ctx)
+    (should (equal (my-org-gtd-agenda-block gtd-list)
                    '(tags-todo
                      "ctx-oneday/!DOIT"
-                     ((org-agenda-overriding-header "ctx description")
+                     ((org-agenda-overriding-header "gtd-list description")
                       (org-agenda-dim-blocked-tasks 'invisible)))))))
 
-(ert-deftest my-org-gtd-active-todo-search-two-contexts ()
-  "Test for `my-org-gtd-agenda-block' with two contexts."
+(ert-deftest my-org-gtd-active-todo-search-two-lists ()
+  "Test for `my-org-gtd-agenda-block' with two lists."
   (my-org-gtd--test-fixture
-      ((ctx
-        (make-my-org-gtd-list :tag "ctx" :select-char ?c
-                              :description "ctx description"))
-       (ctx2 (make-my-org-gtd-list :tag "foo" :select-char ?f
-                                   :description "foo description"))
+      ((gtd-list (make-my-org-gtd-list :tag "ctx" :select-char ?c
+                                       :description "ctx description"))
+       (gtd-list2 (make-my-org-gtd-list :tag "foo" :select-char ?f
+                                        :description "foo description"))
        (my-org-gtd-somedaymaybe-list
         (make-my-org-gtd-list :tag "maybe" :select-char ?m
                               :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT")
        (org-todo-keywords '((sequence "DOIT(t!)" "|" "DONE(d!)" "KILL(k!)"))))
     (my-org-gtd-initialize)
-    (should (equal (my-org-gtd-agenda-block (list ctx ctx2)
+    (should (equal (my-org-gtd-agenda-block (list gtd-list gtd-list2)
                                             "Two contexts description")
                    '(tags-todo
                      "ctx-maybe|foo-maybe/!DOIT"
@@ -294,13 +293,13 @@
 (ert-deftest my-org-gtd-agenda-basic ()
   "Basic test for `my-org-gtd-agenda'."
   (my-org-gtd--test-fixture
-      ((context (make-my-org-gtd-list :tag "foo" :select-char ?f
-                                      :description "Foo description"))
+      ((gtd-list (make-my-org-gtd-list :tag "foo" :select-char ?f
+                                       :description "Foo description"))
        (my-org-gtd-somedaymaybe-list
         (make-my-org-gtd-list :tag "maybe" :select-char ?m
                               :description "Someday/maybe"))
        (my-org-gtd-next-action-keyword "DOIT"))
-    (should (equal (my-org-gtd-agenda context)
+    (should (equal (my-org-gtd-agenda gtd-list)
                    '("Foo description" tags-todo "foo-maybe/!DOIT")))))
 
 (ert-deftest my-org-gtd-somedaymaybe-agenda-basic ()
