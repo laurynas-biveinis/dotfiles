@@ -385,7 +385,7 @@ TODO(laurynas) explanation for LEVEL=2."
          (my-org-gtd-list-not-tag my-org-gtd-waitingfor-context)
          (my-org-gtd-list-not-tag my-org-gtd-project-list)
          (my-org-gtd-list-not-tag my-org-gtd-somedaymaybe-list))
-        '((org-agenda-overriding-header "Listless tasks"))))
+        '((org-agenda-overriding-header "Contextless tasks"))))
 
 ;; Creating new tasks and completing them
 (defun my-org-gtd--insert-item (title keyword tag)
