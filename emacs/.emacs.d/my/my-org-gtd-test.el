@@ -267,7 +267,7 @@
     (should (equal (my-org-gtd-agenda-block gtd-list)
                    '(tags-todo
                      "ctx-oneday/!DOIT"
-                     ((org-agenda-overriding-header "gtd-list description")
+                     ((org-agenda-overriding-header "ctx description")
                       (org-agenda-dim-blocked-tasks 'invisible)))))))
 
 (ert-deftest my-org-gtd-active-todo-search-two-lists ()
@@ -428,7 +428,7 @@
   "Test `my-org-gtd-insert-project' with non-default config."
   (my-org-gtd--buffer-test
       ((my-org-gtd-next-action-keyword "FOO")
-       (my-org-gtd-project-context
+       (my-org-gtd-project-list
         (make-my-org-gtd-list
          :tag "bar" :select-char ?b :description "Bars"))
        (org-todo-keywords '((sequence "FOO" "|" "DONE" "KILL"))))
@@ -438,7 +438,7 @@
     (should (string= (org-get-heading t t) "Title text"))
     (should (string= (org-get-todo-state) my-org-gtd-next-action-keyword))
     (should (equal (org-get-tags) (list (my-org-gtd-list-tag
-                                         my-org-gtd-project-context))))))
+                                         my-org-gtd-project-list))))))
 
 (ert-deftest my-org-gtd-complete-item-basic ()
   "Basic test for `my-org-complete-item'."
