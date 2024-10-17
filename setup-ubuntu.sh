@@ -18,19 +18,19 @@ sudo apt-get update
 sudo apt-get dist-upgrade
 # Not needed in the minimal install:
 sudo apt-get install manpages-dev binutils libc6-dev \
-     software-properties-common unattended-upgrades screen psmisc man-db htop \
-     jq strace lsof
+	software-properties-common unattended-upgrades screen psmisc man-db htop \
+	jq strace lsof
 sudo apt-get install stow tldr git-doc diffutils-doc perl-doc make \
-     build-essential gdb binutils-doc cpp g++ gcc liblsan0 libtsan0 libubsan1 \
-     cpp-doc gcc-doc autoconf automake libtool flex bison glibc-doc make-doc \
-     autoconf-archive gnu-standards autoconf-doc gettext bison-doc flex-doc \
-     gdb-doc gettext-doc libtool-doc m4-doc cmake cmake-doc diffstat unzip \
-     pinentry-doc zip colordiff valgrind linux-tools-generic libjemalloc2 \
-     python3-scipy python3-pytest python-scipy-doc fzf fd-find clang moreutils \
-     zsh zsh-doc libjemalloc-dev bzip2-doc hexyl ripgrep icu-doc ncurses-doc \
-     pkg-config lcov cpufrequtils libboost-dev libboost-doc cppcheck iwyu \
-     cpuset python3-pip ninja-build cmake-format clang-tidy neovim lynis \
-     shellcheck bat cpplint duf eza python3-pandas pipx pipx
+	build-essential gdb binutils-doc cpp g++ gcc liblsan0 libtsan0 libubsan1 \
+	cpp-doc gcc-doc autoconf automake libtool flex bison glibc-doc make-doc \
+	autoconf-archive gnu-standards autoconf-doc gettext bison-doc flex-doc \
+	gdb-doc gettext-doc libtool-doc m4-doc cmake cmake-doc diffstat unzip \
+	pinentry-doc zip colordiff valgrind linux-tools-generic libjemalloc2 \
+	python3-scipy python3-pytest python-scipy-doc fzf fd-find clang moreutils \
+	zsh zsh-doc libjemalloc-dev bzip2-doc hexyl ripgrep icu-doc ncurses-doc \
+	pkg-config lcov cpufrequtils libboost-dev libboost-doc cppcheck iwyu \
+	cpuset python3-pip ninja-build cmake-format clang-tidy neovim lynis \
+	shellcheck bat cpplint duf eza python3-pandas pipx pipx
 # Compiler versions
 # Absent in 24.10
 sudo apt-get install g++-10 libgfortran-10-dev
@@ -38,13 +38,13 @@ sudo apt-get install g++-11 libgfortran-11-dev
 sudo apt-get install g++-12 libgfortran-12-dev
 sudo apt-get install g++-13 libgfortran-13-dev
 sudo apt-get install g++-14 libgfortran-14-dev cpp-14-doc gcc-14-doc \
-     libstdc++-14-doc
+	libstdc++-14-doc
 # Absent in 24.04+
 sudo apt-get install clang-12 clang-12-doc clang-tools-12 lld-12 llvm-12 \
-     llvm-12-doc llvm-12-tools
+	llvm-12-doc llvm-12-tools
 # Absent in 24.10
 sudo apt-get install clang-13 clang-13-doc clang-tools-13 lld-13 llvm-13 \
-     llvm-13-doc llvm-13-tools
+	llvm-13-doc llvm-13-tools
 sudo apt-get install clang-14 clang-14-doc clang-tools-14 lld-14 llvm-14 \
 	llvm-14-doc llvm-14-tools
 sudo apt-get install clang-15 clang-15-doc clang-tools-15 lld-15 llvm-15 \
@@ -54,9 +54,9 @@ sudo apt-get install clang-16 clang-16-doc clang-tools-16 lld-16 llvm-16 \
 sudo apt-get install clang-17 clang-17-doc clang-tools-17 lld-17 llvm-17 \
 	llvm-17-doc llvm-17-tools
 sudo apt-get install clang-18 clang-18-doc clang-format-18 clang-tidy-18 \
-     clang-tools-18 lld-18 llvm-18 llvm-18-doc llvm-18-tools
+	clang-tools-18 lld-18 llvm-18 llvm-18-doc llvm-18-tools
 sudo apt-get install clang-19 clang-19-doc clang-format-19 clang-tidy-19 \
-     clang-tools-19 clangd-19 lld-19 llvm-19 llvm-19-doc llvm-19-tools
+	clang-tools-19 clangd-19 lld-19 llvm-19 llvm-19-doc llvm-19-tools
 # Absent in 24.10:
 sudo apt-get install libasan5 libstdc++-doc libgfortran-dev
 # DeepState (x86_64 only)
