@@ -26,7 +26,7 @@
 # - mysql_rebuild_all: rebuild all build dirs below
 #
 # Works on Linux and macOS (both Intel and Apple Silicon), XCode Command Line
-# Tools 15.0.1.
+# Tools 16.0.
 
 set -o errexit
 set -o nounset
