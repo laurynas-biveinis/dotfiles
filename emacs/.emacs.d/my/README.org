@@ -2,32 +2,89 @@
 
 * Introduction
 
-This package provides a set of building blocks for a custom GTD implementation, with
-focus on automation.
+This is a set of building blocks for a task management implementation in Org
+following GTD (Getting Things Done), with focus on agenda views for contexts and
+automation
 
 * Configuration
 
-The package puts the following constraints on the ~org~ configuration for the
-purposes of GTD implementation:
+The package puts constraints on the Org configuration for the purposes of GTD
+implementation:
 - A /project/ is tagged with a configurable project category-specific tag and also
   has a TODO entry keyword.
 - /Someday-maybe/ items are marked with their category tag, which is configured to be
   inheritable in ~org~. The items are moved to and from someday/maybe by refiling,
-  thus each ~org~ file should have a top-level heading tagged with this tag.
+  thus there should be at least one top-level heading tagged with this tag.
 
-The customization items are:
-- ~my-org-gtd-contexts~: TODO
-- ~my-org-gtd-waitingfor-context~: TODO
-- ~my-org-gtd-project-context~: TODO
-- ~my-org-gtd-somedaymaybe-context~: TODO
-- TODO
+The basic organization unit for lists is a context. It has an Org tag, a quick
+selection character, and a description. The context-related customization items are:
+- ~my-org-gtd-contexts~: A list of GTD contexts, excluding the special contexts
+  below. They, together with the waiting-for context below, are mutually exclusive.
+- ~my-org-gtd-waitingfor-context~: The GTD waiting-for context. Defaults to
+  =@waitingfor= / =w=
+- ~my-org-gtd-project-context~: The GTD project "context". Defaults to =project= /
+  =p=. TODO: rename the "context" term to reflect this better.
+- ~my-org-gtd-somedaymaybe-context~: The GTD someday/maybe context. Defaults to
+  =somedaymaybe= / =m=.
+
+For actions, there are three customizable TODO entry keywords:
+- ~my-org-gtd-next-action-keyword~: The keyword for the next action (in the GTD
+  sense). Active projects have this keyword too. Defaults to =TODO=
+- ~my-org-gtd-done-keyword~: The keyword for a completed task or project. Defaults to
+  =DONE=.
+- ~my-org-gtd-cancelled-keyword~: The keyword for a cancelled task or project.
+  Defaults to =KILL=.
+
+For clocking automation:
+- ~my-org-gtd-clock-gated-commands~: A list of commands, which may only be invoked
+  with an Org clock running.
+- ~my-org-gtd-clock-in-actions~: a list of plists configuring automatic actions to be
+  executed on clocking-in the node that has one of the configured properties.
 
 * Usage
 
-Use the following commands to setup your agenda views: ~my-org-gtd-agenda~,
-~my-org-gtd-active-todo-search~. TODO.
+Set the configuration as described above, then call ~my-org-gtd-initialize~. Beware
+that calling it multiple times in the same session may have unexpected results on the
+Org variables it touches.
 
-Use the following commands to implement your automation: TODO.
+** Building Agenda Views
+
+There are a few functions that can be used in ~org-agenda-custom-commands~:
+- ~my-org-gtd-agenda-block (contexts &optional header)~: return a ~tags-todo~ form to
+  be included in a custom agenda view for either a single context or a list of them.
+  If a header is not passed and it's a single context, use its description as the
+  header.
+- ~my-org-gtd-agenda (context)~: return a sublist (everything except the leading key)
+  for a single ~org-agenda-custom-commands~ entry.
+- ~my-org-gtd-somedaymaybe-agenda~: return a sublist for a single custom command
+  entry for the someday/maybe items.
+- ~my-org-gtd-active-project-tasks-agenda~: return a sublist for active next actions
+  that are not under any project.
+- ~my-org-gtd-archivable-tasks~: return a ~tags~ form to be included in a custom
+  agenda view that shows completed items which are not under any project.
+- ~my-org-gtd-contextless-tasks~: return a ~tags~ form to be included in a custom
+  agenda view that shows items which are not tagged with any context.
+
+TODO example
+
+** Elisp Automation Library
+
+- ~my-org-gtd-require-org-clock~: call this from interactive commands to block them
+  unless an Org clock is running. For the commands written by someone else, use
+  ~my-org-clock-gated-commands~ instead.
+- ~my-org-gtd-with-org-node-with-url (url &rest body)~: a macro to find the Org node
+  with this URL across Org agenda files and then execute the body forms there.
+- ~my-org-gtd-clock-in-org-node-with-url (url)~: find the Org node with this URL and
+  clock it in.
+- ~my-org-gtd-with-different-org-clock (&rest body)~: a macro to save the current Org
+  clock state, clock in the current Org node, execute the body forms, and resume
+  previous clocking, if any.
+- ~my-org-gtd-insert-project (title)~: insert a new project with the given title at
+  point.
+- ~my-org-gtd-insert-waiting-for-next-action (title)~: insert a new waiting-for item
+  at point.
+- ~my-org-gtd-complete-item~: mark the item at point (a next action or a project) as
+  completed.
 
 * Comparison with other ~org~ GTD packages
 
