@@ -286,7 +286,8 @@ mysql_export_environment_helpers() {
                           "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@18/bin/clang++"
                           "-DCMAKE_AR=$brew_opt/llvm@18/bin/llvm-ar")
         export MYCLANG=("-DCMAKE_C_COMPILER=$brew_opt/llvm/bin/clang"
-                        "-DCMAKE_CXX_COMPILER=$brew_opt/llvm/bin/clang++")
+                        "-DCMAKE_CXX_COMPILER=$brew_opt/llvm/bin/clang++"
+                        "-DCMAKE_AR=$brew_opt/llvm/bin/llvm-ar")
         export MYGCC11=("-DCMAKE_C_COMPILER=$brew/bin/gcc-11"
                         "-DCMAKE_CXX_COMPILER=$brew/bin/g++-11")
         export MYGCC12=("-DCMAKE_C_COMPILER=$brew/bin/gcc-12"
