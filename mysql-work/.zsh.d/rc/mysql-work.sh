@@ -1206,7 +1206,10 @@ mtr() {
         { 2>&1 echo "Failed to create a temp dir like $mktemp_template";
           return 1; }
 
-    ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@" || return $?
+    # Disable ASan ODR violation detection until
+    # https://bugs.mysql.com/bug.php?id=116372 is fixed
+    ASAN_OPTIONS="detect_odr_violation=0" \
+                ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@" || return $?
 }
 
 rmtr() {
