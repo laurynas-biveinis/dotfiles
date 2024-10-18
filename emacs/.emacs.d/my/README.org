@@ -16,15 +16,15 @@ implementation:
   inheritable in ~org~. The items are moved to and from someday/maybe by refiling,
   thus there should be at least one top-level heading tagged with this tag.
 
-The basic organization unit for lists is a context. It has an Org tag, a quick
-selection character, and a description. The context-related customization items are:
-- ~my-org-gtd-contexts~: A list of GTD contexts, excluding the special contexts
-  below. They, together with the waiting-for context below, are mutually exclusive.
+Tasks (and some other items such projects) are grouped into lists, as in GTD. A list
+has an Org tag for its items, a quick selection character, and a description. The
+list-related customization is:
+- ~my-org-gtd-contexts~: An (elisp) list of GTD contexts, except for the waiting-for
+  one. They, together with the waiting-for context, are mutually exclusive.
 - ~my-org-gtd-waitingfor-context~: The GTD waiting-for context. Defaults to
   =@waitingfor= / =w=
-- ~my-org-gtd-project-context~: The GTD project "context". Defaults to =project= /
-  =p=. TODO: rename the "context" term to reflect this better.
-- ~my-org-gtd-somedaymaybe-context~: The GTD someday/maybe context. Defaults to
+- ~my-org-gtd-project-list~: The GTD project list. Defaults to =project= / =p=.
+- ~my-org-gtd-somedaymaybe-list~: The GTD someday/maybe list. Defaults to
   =somedaymaybe= / =m=.
 
 For actions, there are three customizable TODO entry keywords:
