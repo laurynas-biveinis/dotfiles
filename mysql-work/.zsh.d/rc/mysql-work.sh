@@ -343,6 +343,7 @@ mysql_export_environment_helpers() {
         export MYGCC14=("-DCMAKE_C_COMPILER=gcc-14"
                         "-DCMAKE_CXX_COMPILER=g++-14")
 
+        # FIXME(laurynas): incorrect for aarch64
         export MTR_EMD=(
             "--mysqld-env=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libeatmydata.so")
     fi
