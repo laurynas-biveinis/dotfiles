@@ -2957,12 +2957,12 @@
 	   (:url . "https://elpa.gnu.org/packages/oauth2.html")
 	   (:commit . "0147cabd8e82e46af27aef07aeed402b0bb9a0fb"))])
  (ob-asymptote .
-	       [(1 0)
+	       [(1 0 1)
 		nil "Babel Functions for Asymptote" tar
 		((:url . "https://github.com/hurrja/ob-asymptote")
 		 (:keywords "literate programming" "reproducible research")
 		 (:maintainer "Jarmo Hurri" . "jarmo.hurri@iki.fi")
-		 (:commit . "8445b1cccc131e317b464a3ebc461301b9e2ca30"))])
+		 (:commit . "2afd4ebe1162cfdecd1206d8fe73a9e35c452b3a"))])
  (ob-haxe .
 	  [(1 0)
 	   nil "org-babel functions for haxe evaluation" tar
@@ -3031,7 +3031,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "416c62a4a8e7199567a5df63d03cf320dc4d6ab0"))])
  (org .
-      [(9 7 12)
+      [(9 7 13)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -3040,7 +3040,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "28c83e678f674aaadf1bcb068f72dcca0abcf14d"))])
+	(:commit . "8566bc8b45be06efab5d09305387bc74b44be8b2"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -4526,7 +4526,7 @@
 	  ("Toby Cubitt" . "toby-predictive@dr-qubit.org"))
 	 (:commit . "e7326a61b1cd2605867063fcfc5ddddaeed6d993"))])
  (triples .
-	  [(0 4 0)
+	  [(0 4 1)
 	   ((seq
 	     (2 0))
 	    (emacs
@@ -4537,7 +4537,7 @@
 	    (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	    (:authors
 	     ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	    (:commit . "cf7f9c8dd77e47a1c32e0d0026df86a0eac4e2a5"))])
+	    (:commit . "b7117858ed9e538a379cc398a7dbeea7046d585d"))])
  (typo .
        [(1 0 1)
 	((emacs
