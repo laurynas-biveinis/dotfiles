@@ -39,7 +39,7 @@ See the release [NEWS](NEWS.org).
 
 ## Bar Placement
 
-- **I get too many bars inside function definitions and calls.** <br>You can turn on `indent-bars-no-descend-lists` or even use [tree-sitter to help](#tree-sitter-details).
+- **I get too many bars inside function definitions/calls, and/or multi-line parenthesized expressions.** <br>You can turn on `indent-bars-no-descend-lists` or even use [tree-sitter to help](#tree-sitter-details).
 - **I want a bar in the very first column!** <br>Set `indent-bars-starting-column` to 0.
 - **indent-bars seems to be conflicting with another package I use.** <br>See [these workarounds](#compatibility-with-other-packages).
 - **In my brace language (C, JS, etc.) I sometimes get fewer bars than I expected!** <br>Your mode syntax likely interprets `{`/`}` as list context, and you have `indent-bars-no-descend-lists=t`.  Either disable this feature, or see [this config](#bar-setup-and-location) for another option.
@@ -236,18 +236,20 @@ means to configure the color of alternate style bars as follows:
 
 The easiest way to configure inheritance and unspecified values in the `ts` variables is via the customize interface; see the customize group `indent-bars-ts-style`. 
 
-## Per-mode customization
+## Per major-mode customization
 
-Sometimes different `indent-bars` settings are appropriate for different modes.  In that case, you can use `setq-local` to set the appropriate variables in the mode's hook, prior to enabling `indent-bars`:
+Sometimes different `indent-bars` settings are appropriate for different major modes.  In that case, you can use `setq-local` to set the appropriate cutomize variables _locally_, directly in the mode's hook, prior to enabling `indent-bars`:
 
 ```elisp
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
 	    (setq-local 
-			indent-tabs-mode t ; make sure tabs-based indenting is on
-			indent-bars-no-descend-lists nil) ; elisp is mostly continued lists!
+			indent-tabs-mode t ; make sure tabs-based indenting is on, even if we disable it globally
+			indent-bars-no-descend-lists nil) ; elisp is mostly continued lists!  allow bars to descend inside
 	    (indent-bars-mode 1)))
 ```
+
+Note that tree-sitter scope and wrap config are keyed to the parser _language_, which may be sufficient for tailoring these.
 
 # Details and Caveats
 
