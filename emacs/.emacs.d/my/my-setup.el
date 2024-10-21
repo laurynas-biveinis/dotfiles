@@ -331,7 +331,7 @@
 (defun my-magit-worktree-branch ()
   "Branch a new project."
   (interactive)
-  (my-org-gtd-require-org-clock)
+  (org-autotask-require-org-clock)
   (let ((path (dotfiles--magit-worktree-branch)))
     (projectile-add-known-project path)
     ;; Make `projectile' initialize its file cache for this project
@@ -352,7 +352,7 @@
 (defun my-pull-all-forge-repos ()
   "Pull everything for all known `forge' repos."
   (interactive)
-  (my-org-gtd-require-org-clock)
+  (org-autotask-require-org-clock)
   (dolist (row (forge-sql [:select * :from repository]))
     ;; Dependency on the internal `forge' schema. I haven't found a better way
     ;; to get this information.
@@ -538,7 +538,7 @@
 (defun my-eval-buf-and-run-ert-test-at-point ()
   "Evaluate the current buffer and run the ERT test at point."
   (interactive)
-  (my-org-gtd-require-org-clock)
+  (org-autotask-require-org-clock)
   (save-excursion
     (beginning-of-defun)
     (unless (looking-at "(ert-deftest\\s-+")
@@ -923,7 +923,7 @@ RULE is a plist containing either :subject-exact or :subject-match."
 
 (defun dotfiles--mu4e-email-automation (msg)
   "Run any matching email automation for a `mu4e' MSG."
-  (my-org-gtd-require-org-clock)
+  (org-autotask-require-org-clock)
   (let ((sender (car (cdr (car (mu4e-message-field msg :from)))))
         (subject (mu4e-message-field msg :subject))
         (already-matched nil))
