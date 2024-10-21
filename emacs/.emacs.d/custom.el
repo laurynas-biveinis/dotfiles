@@ -13,9 +13,10 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
-   '(rustic forge magit magit-todos shfmt indent-bars elpy org-gcal pr-review git-modes ob-rust plantuml-mode emacsql-sqlite-builtin difftastic wgrep-deadgrep prism org-sticky-header topsy org-roam-ui org-roam fancy-compilation flycheck-status-emoji flycheck-google-cpplint git-messenger beginend cheat-sh info-colors grab-mac-link stripe-buffer beacon lua-mode wgrep lsp-treemacs s calfw-ical calfw calfw-org gcmh which-key keyfreq company-box yasnippet iedit page-break-lines xterm-color eldoc-cmake projectile vterm deadgrep all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent lsp-ui lsp-mode flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode ssh ssh-config-mode bison-mode cmake-font-lock cmake-mode solarized-theme wakatime-mode exec-path-from-shell))
+   '(org-autotask rustic forge magit magit-todos shfmt indent-bars elpy org-gcal pr-review git-modes ob-rust plantuml-mode emacsql-sqlite-builtin difftastic wgrep-deadgrep prism org-sticky-header topsy org-roam-ui org-roam fancy-compilation flycheck-status-emoji flycheck-google-cpplint git-messenger beginend cheat-sh info-colors grab-mac-link stripe-buffer beacon lua-mode wgrep lsp-treemacs s calfw-ical calfw calfw-org gcmh which-key keyfreq company-box yasnippet iedit page-break-lines xterm-color eldoc-cmake projectile vterm deadgrep all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent lsp-ui lsp-mode flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode ssh ssh-config-mode bison-mode cmake-font-lock cmake-mode solarized-theme wakatime-mode exec-path-from-shell))
  '(package-vc-selected-packages
-   '((indent-bars :vc-backend Git :url "https://github.com/jdtsmith/indent-bars")))
+   '((org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask")
+     (indent-bars :vc-backend Git :url "https://github.com/jdtsmith/indent-bars")))
  '(safe-local-variable-values
    '((eval setq-local undo-tree-auto-save-history nil)
      (eval setq-local backup-inhibited t)
