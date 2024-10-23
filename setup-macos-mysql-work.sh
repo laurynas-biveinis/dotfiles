@@ -21,11 +21,11 @@ sudo ln -sf /opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.a \
 /opt/homebrew/opt/perl/bin/cpan JSON
 /opt/homebrew/opt/perl/bin/cpan Expect
 # Adjust path only for compilation below. For now I don't need it globally
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+export PATH="/opt/homebrew/opt/mysql-client@8.0/bin:$PATH"
 # Will fail
 # https://stackoverflow.com/questions/53277884/installation-of-dbdmysql-fails-with-symbol-not-found-on-osx-mojave
 /opt/homebrew/opt/perl/bin/cpan DBD::mysql
 # Go to ~/.cpan/build/DBD-mysql-<latest> and do:
 perl Makefile.PL \
-     --libs="-L/opt/homebrew/opt/mysql-client/lib -L/opt/homebrew/lib -lmysqlclient -lz -lzstd -lssl -lcrypto -lresolv"
+     --libs="-L/opt/homebrew/opt/mysql-client@8.0/lib -L/opt/homebrew/lib -lmysqlclient -lz -lzstd -lssl -lcrypto -lresolv"
 sudo make install
