@@ -541,7 +541,7 @@
 		(:keywords "languages" "elixir")
 		(:commit . "00d6580a040a750e019218f9392cf9a4c2dac23a"))])
  (elpher .
-	 [(3 6 3)
+	 [(3 6 4)
 	  ((emacs
 	    (27 1)))
 	  "A friendly gopher and gemini client" tar
@@ -550,7 +550,7 @@
 	   (:maintainer "Tim Vaughan" . "plugd@thelambdalab.xyz")
 	   (:authors
 	    ("Tim Vaughan" . "plugd@thelambdalab.xyz"))
-	   (:commit . "e3760dfedbd803dd8ff2a5d4fbbda249c1963bd1"))])
+	   (:commit . "a1c5fbf16b528fb67d087437d44d66e9edc99664"))])
  (emacsql .
 	  [(4 0 3)
 	   ((emacs
@@ -1307,11 +1307,11 @@
 		("Joseph Turner" . "joseph@ushin.org"))
 	       (:commit . "6b70954da945664ca798bf483f1d60e9d5859409"))])
  (hyperdrive-org-transclusion .
-			      [(0 2)
+			      [(0 3 1)
 			       ((emacs
 				 (28 1))
 				(hyperdrive
-				 (0 4 1))
+				 (0 4 2))
 				(org-transclusion
 				 (1 4 0)))
 			       "Tranclude hyperdrive content" tar
@@ -1319,7 +1319,7 @@
 				(:maintainer "Joseph Turner" . "~ushin/ushin@lists.sr.ht")
 				(:authors
 				 ("Joseph Turner" . "joseph@ushin.org"))
-				(:commit . "3cfb18514c53a9ab7d421f8720cbf23b6ba8eb90"))])
+				(:commit . "25570c6e4b90dce0858b80b7f557db19744b3955"))])
  (idle-highlight-mode .
 		      [(1 1 4)
 		       ((emacs
@@ -2615,14 +2615,14 @@
 	     ((:url . "https://github.com/lewang/ws-butler")
 	      (:commit . "323b651dd70ee40a25accc940b8f80c3a3185205"))])
  (xah-fly-keys .
-	       [(26 6 20241009212806)
+	       [(26 6 20241021131107)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "1ca81019cff66f04e83eeef74e7e475ffc21a5ed"))])
+		 (:commit . "3fb8453d4b4144e5105dd3e65c852be2e6770da8"))])
  (xkcd .
        [(1 1)
 	((json
