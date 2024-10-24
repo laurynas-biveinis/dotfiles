@@ -323,7 +323,7 @@
 	    ("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	   (:commit . "0cf8b60f62876f3e75653a5fb30d5d5cdd74c586"))])
  (beframe .
-	  [(1 1 1)
+	  [(1 2 1)
 	   ((emacs
 	     (28 1)))
 	   "Isolate buffers per frame" tar
@@ -331,7 +331,7 @@
 	    (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	    (:authors
 	     ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	    (:commit . "c3f4583b0767e7f8c38c83ed29af40af8ba3bdfa"))])
+	    (:commit . "ae7aaf8bcfa2b7883a8b9401bcb76f53324f6409"))])
  (bicep-ts-mode .
 		[(0 1 3)
 		 nil "tree-sitter support for Bicep" tar
@@ -1288,7 +1288,7 @@
 	       ("Markus Triska" . "triska@metalevel.at"))
 	      (:commit . "ea8710335eec483b576c7a800c92b8fd214aa6dd"))])
  (eev .
-      [(20241014)
+      [(20241022)
        ((emacs
 	 (25 1)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -1297,7 +1297,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "36b85774297847db6d5bf6c424e169321b47562d"))])
+	(:commit . "25c810004c2201960f32a60b362eb6ebe524de9f"))])
  (ef-themes .
 	    [(1 8 0)
 	     ((emacs
