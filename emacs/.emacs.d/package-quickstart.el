@@ -8648,7 +8648,6 @@ If NO-FALLBACK is set, don’t fall back to current buffer if not found in
 
 
 (register-definition-prefixes "org-autotask-test" '("org-autotask-"))
-
 
 
 (provide 'org-autotask-autoloads)
