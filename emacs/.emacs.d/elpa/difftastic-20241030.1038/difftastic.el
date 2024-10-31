@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0"))
-;; Package-Version: 20241021.2105
-;; Package-Revision: 4fb0528156e7
+;; Package-Version: 20241030.1038
+;; Package-Revision: 4980c08f7ad7
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -392,87 +392,87 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
 (defun difftastic-next-file ()
   "Move to the next file."
   (interactive nil difftastic-mode)
-  (if-let ((next (difftastic--next-chunk t)))
+  (if-let* ((next (difftastic--next-chunk t)))
       (goto-char next)
     (user-error "No more files")))
 
 (defun difftastic-next-chunk ()
   "Move to the next chunk."
   (interactive nil difftastic-mode)
-  (if-let ((next (difftastic--next-chunk)))
+  (if-let* ((next (difftastic--next-chunk)))
       (goto-char next)
     (user-error "No more chunks")))
 
 (defun difftastic-previous-file ()
   "Move to the previous file."
   (interactive nil difftastic-mode)
-  (if-let ((previous (difftastic--prev-chunk t)))
+  (if-let* ((previous (difftastic--prev-chunk t)))
       (goto-char previous)
     (user-error "No more files")))
 
 (defun difftastic-previous-chunk ()
   "Move to the previous chunk."
   (interactive nil difftastic-mode)
-  (if-let ((previous (difftastic--prev-chunk)))
+  (if-let* ((previous (difftastic--prev-chunk)))
       (goto-char previous)
     (user-error "No more chunks")))
 
 (compat-call ;; since Emacs-29
  defvar-keymap difftastic-mode-map
-  :doc "Keymap for `difftastic-mode'."
-  "n"     #'difftastic-next-chunk
-  "N"     #'difftastic-next-file
-  "p"     #'difftastic-previous-chunk
-  "P"     #'difftastic-previous-file
-  "g"     #'difftastic-rerun
-  "TAB"   #'difftastic-toggle-chunk
-  ;; some keys from `view-mode'
-  "C"     #'difftastic-quit-all
-  "c"     #'difftastic-leave
-  "Q"     #'difftastic-quit-all
-  "e"     #'difftastic-leave
-  "q"     #'difftastic-quit
-  ;; "?"  #'View-search-regexp-backward ; Less does this.
-  "\\"    #'View-search-regexp-backward
-  "/"     #'View-search-regexp-forward
-  "r"     #'isearch-backward
-  "s"     #'isearch-forward
-  "m"     #'point-to-register
-  "'"     #'register-to-point
-  "x"     #'exchange-point-and-mark
-  "@"     #'View-back-to-mark
-  "."     #'set-mark-command
-  "%"     #'View-goto-percent
-  "G"     #'View-goto-line
-  "="     #'what-line
-  "F"     #'View-revert-buffer-scroll-page-forward
-  "y"     #'View-scroll-line-backward
-  "C-j"   #'View-scroll-line-forward
-  "RET"   #'View-scroll-line-forward
-  "u"     #'View-scroll-half-page-backward
-  "d"     #'View-scroll-half-page-forward
-  "z"     #'View-scroll-page-forward-set-page-size
-  "w"     #'View-scroll-page-backward-set-page-size
-  "DEL"   #'View-scroll-page-backward
-  "SPC"   #'View-scroll-page-forward
-  "S-SPC" #'View-scroll-page-backward
-  "o"     #'View-scroll-to-buffer-end
-  ">"     #'end-of-buffer
-  "<"     #'beginning-of-buffer
-  "-"     #'negative-argument
-  "9"     #'digit-argument
-  "8"     #'digit-argument
-  "7"     #'digit-argument
-  "6"     #'digit-argument
-  "5"     #'digit-argument
-  "4"     #'digit-argument
-  "3"     #'digit-argument
-  "2"     #'digit-argument
-  "1"     #'digit-argument
-  "0"     #'digit-argument
-  "H"     #'describe-mode
-  "?"     #'describe-mode	; Maybe do as less instead? See above.
-  "h"     #'describe-mode)
+ :doc "Keymap for `difftastic-mode'."
+ "n"     #'difftastic-next-chunk
+ "N"     #'difftastic-next-file
+ "p"     #'difftastic-previous-chunk
+ "P"     #'difftastic-previous-file
+ "g"     #'difftastic-rerun
+ "TAB"   #'difftastic-toggle-chunk
+ ;; some keys from `view-mode'
+ "C"     #'difftastic-quit-all
+ "c"     #'difftastic-leave
+ "Q"     #'difftastic-quit-all
+ "e"     #'difftastic-leave
+ "q"     #'difftastic-quit
+ ;; "?"  #'View-search-regexp-backward ; Less does this.
+ "\\"    #'View-search-regexp-backward
+ "/"     #'View-search-regexp-forward
+ "r"     #'isearch-backward
+ "s"     #'isearch-forward
+ "m"     #'point-to-register
+ "'"     #'register-to-point
+ "x"     #'exchange-point-and-mark
+ "@"     #'View-back-to-mark
+ "."     #'set-mark-command
+ "%"     #'View-goto-percent
+ "G"     #'View-goto-line
+ "="     #'what-line
+ "F"     #'View-revert-buffer-scroll-page-forward
+ "y"     #'View-scroll-line-backward
+ "C-j"   #'View-scroll-line-forward
+ "RET"   #'View-scroll-line-forward
+ "u"     #'View-scroll-half-page-backward
+ "d"     #'View-scroll-half-page-forward
+ "z"     #'View-scroll-page-forward-set-page-size
+ "w"     #'View-scroll-page-backward-set-page-size
+ "DEL"   #'View-scroll-page-backward
+ "SPC"   #'View-scroll-page-forward
+ "S-SPC" #'View-scroll-page-backward
+ "o"     #'View-scroll-to-buffer-end
+ ">"     #'end-of-buffer
+ "<"     #'beginning-of-buffer
+ "-"     #'negative-argument
+ "9"     #'digit-argument
+ "8"     #'digit-argument
+ "7"     #'digit-argument
+ "6"     #'digit-argument
+ "5"     #'digit-argument
+ "4"     #'digit-argument
+ "3"     #'digit-argument
+ "2"     #'digit-argument
+ "1"     #'digit-argument
+ "0"     #'digit-argument
+ "H"     #'describe-mode
+ "?"     #'describe-mode	; Maybe do as less instead? See above.
+ "h"     #'describe-mode)
 
 (define-derived-mode difftastic-mode fundamental-mode "difftastic"
   "Major mode to display output of difftastic.
@@ -527,12 +527,12 @@ When FILE-CHUNK is t the line beginning position is only found
 when match data indicates this is the chunk number 1.  This
 function can be called only after a successfull searching for a
 regexp from `difftastic--chunk-regexp'."
-  (when-let ((chunk-bol (if file-chunk
-                            (when (let ((chunk-no (match-string 1)))
-                                    (or (not chunk-no)
-                                        (string-equal "1" chunk-no)))
-                              (line-beginning-position))
-                          (line-beginning-position))))
+  (when-let* ((chunk-bol (if file-chunk
+                             (when (let ((chunk-no (match-string 1)))
+                                     (or (not chunk-no)
+                                         (string-equal "1" chunk-no)))
+                               (line-beginning-position))
+                           (line-beginning-position))))
     (unless (or (difftastic--point-at-added-removed-p)
                 (get-text-property chunk-bol 'invisible))
       chunk-bol)))
@@ -543,9 +543,9 @@ regexp from `difftastic--chunk-regexp'."
     (goto-char (line-beginning-position))
     (save-match-data
       (looking-at (rx bol
-                            (or (1+ ".")
-                                (1+ digit))
-                            " " (1+ any))))))
+                      (or (1+ ".")
+                          (1+ digit))
+                      " " (1+ any))))))
 
 (defun difftastic--next-chunk (&optional file-chunk)
   "Find line beginning position of next chunk.
@@ -556,8 +556,8 @@ for.  Return nil when no chunk is found."
       (goto-char (line-end-position))
       (cl-block searching-next-chunk
         (while (re-search-forward chunk-regexp nil t)
-          (when-let ((chunk-bol
-                      (difftastic--chunk-bol file-chunk)))
+          (when-let* ((chunk-bol
+                       (difftastic--chunk-bol file-chunk)))
             (cl-return-from searching-next-chunk chunk-bol)))))))
 
 (defun difftastic--prev-chunk (&optional file-chunk)
@@ -571,8 +571,8 @@ for.  Return nil when no chunk is found."
         (backward-char)
         (cl-block searching-prev-chunk
           (while (re-search-backward chunk-regexp nil t)
-            (when-let ((chunk-bol
-                        (difftastic--chunk-bol file-chunk)))
+            (when-let* ((chunk-bol
+                         (difftastic--chunk-bol file-chunk)))
               (cl-return-from searching-prev-chunk chunk-bol))))))))
 
 (defun difftastic--point-at-chunk-header-p (&optional file-chunk)
@@ -598,8 +598,8 @@ of the file."
        `(difftastic (:hidden ,(if file-chunk :file :chunk))))
       (add-text-properties
        (line-end-position)
-       (if-let  ((next-chunk
-                  (difftastic--next-chunk file-chunk)))
+       (if-let*  ((next-chunk
+                   (difftastic--next-chunk file-chunk)))
            (save-excursion
              (goto-char next-chunk)
              (line-end-position -1))
@@ -621,8 +621,8 @@ The point needs to be in chunk header."
       ;; chunk, second as a file.
       (remove-list-of-text-properties
        (line-beginning-position)
-       (if-let ((next-chunk
-                 (difftastic--next-chunk file-chunk)))
+       (if-let* ((next-chunk
+                  (difftastic--next-chunk file-chunk)))
            (save-excursion
              (goto-char next-chunk)
              (line-end-position -1))
@@ -724,30 +724,30 @@ conses."
 N.B.  This is meant to filter-result of either
 `ansi-color--face-vec-face' or `ansi-color-get-face-1' by
 adding background to faces if they have a foreground set."
-  (when-let ((difftastic-face
-              (and (listp face)
-                   (cl-find-if
-                    (lambda (difftastic-face)
-                      (and (string=
-                            (face-foreground difftastic-face nil t)
-                            (or
-                             (plist-get face :foreground)
-                             (car (alist-get :foreground face))))
-                           (face-background difftastic-face nil t)
-                           ;; ansi-color-* faces have the same
-                           ;; foreground and background - don't use them
-                           (not (string=
-                                 (face-foreground difftastic-face nil t)
-                                 (face-background difftastic-face nil t)))))
-                    (vconcat difftastic-normal-colors-vector
-                             difftastic-bright-colors-vector)))))
+  (when-let* ((difftastic-face
+               (and (listp face)
+                    (cl-find-if
+                     (lambda (difftastic-face)
+                       (and (string=
+                             (face-foreground difftastic-face nil t)
+                             (or
+                              (plist-get face :foreground)
+                              (car (alist-get :foreground face))))
+                            (face-background difftastic-face nil t)
+                            ;; ansi-color-* faces have the same
+                            ;; foreground and background - don't use them
+                            (not (string=
+                                  (face-foreground difftastic-face nil t)
+                                  (face-background difftastic-face nil t)))))
+                     (vconcat difftastic-normal-colors-vector
+                              difftastic-bright-colors-vector)))))
     ;; difftastic uses underline to highlight some changes.  It uses bold as
     ;; well, but it's not as unambiguous as underline.  Use underline to detect
     ;; highlight, but remove all attributes that are in
     ;; `difftastic-highlight-strip-face-properties'.
-    (if-let ((highlight-face (and (cl-member 'ansi-color-underline face)
-                                  (alist-get difftastic-face
-                                             difftastic-highlight-alist))))
+    (if-let* ((highlight-face (and (cl-member 'ansi-color-underline face)
+                                   (alist-get difftastic-face
+                                              difftastic-highlight-alist))))
         (progn
           (dolist (prop-face '((:underline . ansi-color-underline)
                                (:bold . ansi-color-bold)
@@ -768,7 +768,7 @@ adding background to faces if they have a foreground set."
           (push `(:background
                   ,(face-background highlight-face nil t))
                 face))
-      (when-let ((fg (plist-get face :foreground)))
+      (when-let* ((fg (plist-get face :foreground)))
         (cl-remf face :foreground)
         (push `(:foreground ,fg) face))
       (push `(:background
@@ -784,8 +784,8 @@ adding background to faces if they have a foreground set."
   "Memoise ORIG-FUN based on FACE-VEC.
 Utilise `difftastic--ansi-color-add-background-cache' to cache
 `ansi-color--face-vec-face' calls."
-  (if-let ((cached (assoc face-vec
-                          difftastic--ansi-color-add-background-cache)))
+  (if-let* ((cached (assoc face-vec
+                           difftastic--ansi-color-add-background-cache)))
       (cdr cached)
     (let ((face (difftastic--ansi-color-add-background
                  (funcall orig-fun face-vec))))
@@ -837,8 +837,8 @@ The DIFFTASTIC-ARGS is a list of extra arguments to pass to
 It applies ANSI colors with `apply-ansi-colors' using difftastic
 custom colors vectors.  The PROCESS and STRING are filter
 arguments, like in `make-process''s filter."
-  (when-let ((buffer (and string
-                          (process-buffer process))))
+  (when-let* ((buffer (and string
+                           (process-buffer process))))
     (with-current-buffer buffer
       (let ((inhibit-read-only t)
             (ansi-color-normal-colors-vector
@@ -1080,7 +1080,7 @@ is the file and BUF either is  nil if this is non temporary file,
 or BUF is set to BUFFER if this is a temporary file."
   (let* (buf
          (file
-          (if-let ((buffer-file (buffer-file-name buffer)))
+          (if-let* ((buffer-file (buffer-file-name buffer)))
               (progn
                 (save-buffer buffer)
                 buffer-file)
@@ -1092,7 +1092,7 @@ or BUF is set to BUFFER if this is a temporary file."
   "Delete FILE-BUF when it is a temporary file.
 The FILE-BUF is a cons where car is the file and cdr is non-nil
 when it is a temporary or nil otherwise."
-  (when-let ((file (car file-buf)))
+  (when-let* ((file (car file-buf)))
     (when (and (cdr file-buf) (stringp file) (file-exists-p file))
       (delete-file file))))
 
@@ -1110,13 +1110,13 @@ when it is a temporary or nil otherwise."
 
 (defun difftastic--make-suggestion (languages buffer-A buffer-B)
   "Suggest one of LANGUAGES based on mode of BUFFER-A and BUFFER-B."
-  (when-let ((mode
-              (or (with-current-buffer buffer-A
-                    (when (derived-mode-p 'prog-mode)
-                      major-mode))
-                  (with-current-buffer buffer-B
-                    (when (derived-mode-p 'prog-mode)
-                      major-mode)))))
+  (when-let* ((mode
+               (or (with-current-buffer buffer-A
+                     (when (derived-mode-p 'prog-mode)
+                       major-mode))
+                   (with-current-buffer buffer-B
+                     (when (derived-mode-p 'prog-mode)
+                       major-mode)))))
     (cl-find-if (lambda (language)
                   (string= (downcase language)
                            (downcase (string-replace
@@ -1127,7 +1127,7 @@ when it is a temporary or nil otherwise."
                 languages)))
 
 (defun difftastic--build-files-command (file-buf-A file-buf-B requested-width
-                                                    &optional lang-override)
+                                                   &optional lang-override)
   "Build a difftastic command to compare files from FILE-BUF-A and FILE-BUF-B.
 The FILE-BUF-A and FILE-BUF-B are conses where car is the file
 and cdr is a buffer when it is a temporary file and nil otherwise.
@@ -1291,7 +1291,7 @@ makes the function prompt for LANG-OVERRIDE.  See \\='difft
 The new FILE-BUF is additionally set in RERUN-ALIST.  The FILE-BUF
 is a cons where car is the file and cdr is a buffer when it is a
 temporary file or nil otherwise."
-  (if-let ((buffer (cdr file-buf)))
+  (if-let* ((buffer (cdr file-buf)))
       (if (buffer-live-p buffer)
           (setf (alist-get (intern (concat "file-buf-" prefix)) rerun-alist)
                 (difftastic--get-file-buf prefix buffer))
@@ -1301,8 +1301,8 @@ temporary file or nil otherwise."
 (defun difftastic--rerun (lang-override)
   "Implementation for `difftastic-rerun'.
 See the original function documentation for LANG-OVERRIDE."
-  (if-let (((eq major-mode 'difftastic-mode))
-           (rerun-alist (copy-tree difftastic--rerun-alist)))
+  (if-let* (((eq major-mode 'difftastic-mode))
+            (rerun-alist (copy-tree difftastic--rerun-alist)))
       (difftastic--with-file-bufs (file-buf-A file-buf-B)
         (let-alist rerun-alist
           (setq file-buf-A
