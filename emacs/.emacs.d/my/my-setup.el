@@ -1076,7 +1076,7 @@ RULE is a plist containing either :subject-exact or :subject-match."
 (require 'keyfreq)
 (setq keyfreq-file "~/.emacs.d/.emacs.keyfreq")
 (setq keyfreq-excluded-commands
-      '(self-insert-command next-line lsp-ui-doc--handle-mouse-movement
+      '(self-insert-command next-line lsp-ui-doc--handle-mouse-movement mu4e
                             org-self-insert-command previous-line query-replace
                             magit-next-line gud-tooltip-mouse-motion left-char
                             org-delete-backward-char isearch-printing-char
@@ -1113,13 +1113,13 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             beginend-org-mode-goto-beginning flycheck-next-error
                             isearch-forward-thing-at-point kill-visual-line
                             isearch-repeat-backward beginend-prog-mode-goto-end
-                            undo-tree-undo org-set-tags-command
+                            undo-tree-undo org-set-tags-command org-meta-return
                             xref-go-back keyboard-quit execute-extended-command
                             beginend-org-agenda-mode-goto-beginning
                             deadgrep undo-tree-visualize-undo describe-variable
                             company-select-next-or-abort projectile-find-file
                             org-agenda-do-date-later org-shiftright lsp-rename
-                            deadgrep-visit-result-other-window
+                            deadgrep-visit-result-other-window fill-paragraph
                             beginning-of-buffer xwidget-webkit-scroll-down-line
                             lsp-format-buffer mouse-set-region shr-browse-url
                             mu4e-search-maildir company-complete-selection
@@ -1134,13 +1134,19 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             org-clock-goto org-shiftleft org-yank
                             previous-history-element org-mouse-down-mouse
                             describe-function next-line-or-history-element
-                            magit-push-current-to-upstream
+                            magit-push-current-to-upstream lsp-format-region
+                            company-complete-mouse projectile-kill-buffers
                             indent-for-tab-command mu4e-mark-execute-all
-                            beginend-org-agenda-mode-goto-end
+                            beginend-org-agenda-mode-goto-end end-of-buffer
+                            recenter-top-bottom xref-find-references
+                            my-eval-buf-and-run-ert-test-at-point
                             minibuffer-complete-and-exit magit-diff-visit-file
                             projectile-find-other-file electric-pair-delete-pair
-                            previous-line-or-history-element
-                            company-select-previous-or-abort))
+                            previous-line-or-history-element org-fill-paragraph
+                            company-select-previous-or-abort org-insert-link
+                            org-roam-node-insert projectile-switch-to-buffer
+                            org-insert-todo-heading-respect-content
+                            minibuffer-previous-completion))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
