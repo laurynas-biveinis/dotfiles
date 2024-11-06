@@ -58,10 +58,10 @@ with open(args.output, "w", encoding='utf-8') as output_file:
     output_file.write("!Type:Invst\n")
     for index, row in input_xlsx.iterrows():
         date = row['Data']
-        unit_price = row['Fondo vieneto kaina'].replace(",", ".")
-        count = row['Vnt. kiekis'].replace(",", ".")
+        unit_price = str(row['Fondo vieneto kaina']).replace(",", ".")
+        count = str(row['Vnt. kiekis']).replace(",", ".")
         fee = row['Mokestis']
-        op = row['Fondo vnt. operacija']
+        op = str(row['Fondo vnt. operacija'])
         if op == match_2pf_fund_source:
             amount = row['Įmokos/Išmokos'].replace(",", ".")
             qif_trx = QIFInvestmentTransaction(date, security_2pf, fee, amount,
