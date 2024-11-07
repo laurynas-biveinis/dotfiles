@@ -1,7 +1,7 @@
 ;;; cmake-mode.el --- major-mode for editing CMake sources -*- lexical-binding: t; -*-
 
-;; Package-Version: 3.30.5
-;; Package-Revision: v3.30.5-0-g9c4a0a9ff097
+;; Package-Version: 3.31.0
+;; Package-Revision: v3.31.0-0-ge22c8383b9ae
 ;; Package-Requires: ((emacs "24.1"))
 
 ; Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
@@ -185,7 +185,7 @@ set the path with these commands:
   )
 
 (defun cmake-point-in-indendation ()
-  (string-match "^[ \\t]*$" (buffer-substring (point-at-bol) (point))))
+  (string-match "^[ \\t]*$" (buffer-substring (line-beginning-position) (point))))
 
 (defun cmake-indent-line-to (column)
   "Indent the current line to COLUMN.
