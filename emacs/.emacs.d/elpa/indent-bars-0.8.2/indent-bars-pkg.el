@@ -1,0 +1,2 @@
+;; Generated package description from indent-bars.el  -*- no-byte-compile: t -*-
+(define-package "indent-bars" "0.8.2" "Highlight indentation with bars" '((emacs "27.1") (compat "29.1")) :commit "e1dbddc5afa2c0fe4c6cc2151142f4509c0cbcf0" :authors '(("J.D. Smith" . "jdtsmith+elpa@gmail.com")) :maintainer '("J.D. Smith" . "jdtsmith+elpa@gmail.com") :keywords '("convenience") :url "https://github.com/jdtsmith/indent-bars")

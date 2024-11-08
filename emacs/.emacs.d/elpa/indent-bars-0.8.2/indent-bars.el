@@ -4,7 +4,7 @@
 ;; Author: J.D. Smith <jdtsmith+elpa@gmail.com>
 ;; Homepage: https://github.com/jdtsmith/indent-bars
 ;; Package-Requires: ((emacs "27.1") (compat "29.1"))
-;; Version: 0.8.1
+;; Version: 0.8.2
 ;; Keywords: convenience
 
 ;; indent-bars is free software: you can redistribute it and/or
@@ -1058,12 +1058,12 @@ Bars are displayed using stipple properties or characters; see
 			   ?\s))))
 
 (defun indent-bars--tab-display (style p off bar-from max &rest r)
-  "Display up to MAX bars on the tab at P, offseting them by OFF.
+  "Display up to MAX bars on the tab at P, offsetting them by OFF.
 Bars are spaced by `indent-bars-spacing' and displayed with style
 STYLE.  BAR-FROM is the bar number for the first bar.  Other
 arguments R are passed to `indent-bars--blank-string'.  Returns
 the number of bars actually displayed."
-  (let* ((nb (min max (/ (- tab-width off -1) indent-bars-spacing)))
+  (let* ((nb (min max (1+ (/ (- tab-width off 1) indent-bars-spacing))))
 	 (str (apply #'indent-bars--blank-string style off nb
 		     bar-from tab-width r)))
     (put-text-property p (+ p 1) 'indent-bars-display str)
@@ -1107,7 +1107,7 @@ needed."
 	  (if (<= switch-after 0) (setq switch-after t))) ; switch the rest
 	(cl-incf bar bars-drawn)
 	(cl-incf vp (* bars-drawn indent-bars-spacing)))
-      (cl-incf start (+ (mod vp tab-width) (/ vp tab-width))))
+      (cl-incf start (+ (/ vp tab-width) (mod vp tab-width))))
     (when (<= bar nbars)		; still bars to show
       (if indent-bars--no-stipple
 	  (setq prop 'indent-bars-display fun #'indent-bars--no-stipple-char)
@@ -1130,12 +1130,14 @@ needed."
 	  (cl-incf pos indent-bars-spacing))
 	;; STILL bars to show: invent them (if requested)
 	(when (and invent (<= bar nbars))
-	  (put-text-property
-	   end (1+ end) 'indent-bars-display
-	   (concat (indent-bars--blank-string
-		    style (- pos end) (- nbars bar -1) bar nil
-		    switch-after style2)
-		   "\n")))))))
+	  (add-text-properties
+	   end (1+ end)
+	   `(indent-bars-display
+	     ,(concat (indent-bars--blank-string
+		       style (- pos end) (- nbars bar -1) bar nil
+		       switch-after style2)
+		      "\n")
+	    rear-nonsticky t)))))))
 
 (defsubst indent-bars--context-bars (end &optional min)
   "Maximum number of bars at point and END.
@@ -1616,6 +1618,8 @@ Adapted from `highlight-indentation-mode'."
    ((or (derived-mode-p 'go-ts-mode) (derived-mode-p 'go-mode))
     tab-width)
    ((derived-mode-p 'nix-mode)
+    tab-width)
+   ((derived-mode-p 'makefile-mode)
     tab-width)
    ((and (derived-mode-p 'nix-ts-mode) (boundp 'nix-ts-mode-indent-offset))
     nix-ts-mode-indent-offset)
