@@ -748,20 +748,18 @@
 		    ("Protesilaos Stavrou" . "info@protesilaos.com"))
 		   (:commit . "9fbe0f6a2636f46928f02ddde9c454f36aa45f39"))])
  (consult-hoogle .
-		 [(0 2 2)
+		 [(0 3 0)
 		  ((emacs
-		    (27 1))
+		    (28 1))
 		   (consult
-		    (0 18))
-		   (haskell-mode
-		    (16 1)))
+		    (0 18)))
 		  "Hoogle frontend using consult" tar
 		  ((:url . "https://codeberg.org/rahguzar/consult-hoogle")
 		   (:keywords "docs" "languages")
 		   (:maintainer "rahguzar" . "rahguzar@zohomail.eu")
 		   (:authors
 		    ("rahguzar" . "rahguzar@zohomail.eu"))
-		   (:commit . "635418813c6c6089576cc3b1abb45d173e853aab"))])
+		   (:commit . "2eae2976d8b097183a448f1e1bdbdcba8f8027bf"))])
  (consult-recoll .
 		 [(0 8 1)
 		  ((emacs
@@ -2531,17 +2529,21 @@
 		      ("Sean Whitton" . "spwhitton@spwhitton.name"))
 		     (:commit . "c22a15e86acf28da716532c26ba1371574c8e979"))])
  (llm .
-      [(0 17 4)
+      [(0 18 0)
        ((emacs
 	 (28 1))
 	(plz
-	 (0 8)))
+	 (0 8))
+	(plz-event-source
+	 (0 1 1))
+	(plz-media-type
+	 (0 2 1)))
        "Interface to pluggable llm backends" tar
        ((:url . "https://github.com/ahyatt/llm")
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "e6bc34d0e8f7d2a96b9334c7d3963ac7e6856e35"))])
+	(:commit . "423f483db3b285906e2b0ce45fd928ef84720563"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
@@ -3035,7 +3037,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "416c62a4a8e7199567a5df63d03cf320dc4d6ab0"))])
  (org .
-      [(9 7 15)
+      [(9 7 16)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -3044,7 +3046,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "a1df10f679a72fe75c3d95d1e41b5fdb689fe22e"))])
+	(:commit . "ba9734aedc22ef70a0263cfe9bc766d4a167919f"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -3592,7 +3594,7 @@
 		("Alex Schroeder" . "alex@gnu.org"))
 	       (:maintainer "Alex Schroeder" . "alex@gnu.org"))])
  (rcirc-sqlite .
-	       [(1 0 3)
+	       [(1 0 4)
 		((emacs
 		  (30 0)))
 		"rcirc logging in SQLite" tar
@@ -3601,7 +3603,7 @@
 		 (:maintainer "Matto Fransen" . "matto@matto.nl")
 		 (:authors
 		  ("Matto Fransen" . "matto@matto.nl"))
-		 (:commit . "1bbc8b6a8643d6258c8b584ff8c4fba7025d8162"))])
+		 (:commit . "349aabcbb6bd10b007f431d180e870a5918b9e21"))])
  (realgud .
 	  [(1 5 1)
 	   ((load-relative
