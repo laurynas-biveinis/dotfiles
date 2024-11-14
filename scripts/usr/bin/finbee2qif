@@ -20,7 +20,7 @@ import re
 CONFIG_FN = "~/.finbee2qif"
 CONFIG_MAPPING_SECTION = "payer map"
 FINBEE_FEE_TYPE_EN = re.compile("^Account fee for period .*$")
-FINBEE_FEE_TYPE_LT = re.compile("^investor.payment_request.type.mfe .*$")
+FINBEE_FEE_TYPE_LT = re.compile("^Sąskaitos aptarnavimo mokestis už laikotarpį .*$")
 
 
 class CaseSensitiveConfigParser(configparser.ConfigParser):
@@ -50,6 +50,7 @@ PAYMENT_TO_QIF_TYPES = {
     "Išankstinis paskolos grąžinimas (įskaitant sut. mok. grąž.)": "Sell",
     "Loan disbursal": "Buy",
     "Overdue interest earned": "IntInc",
+    "Paskolos įmoka nutraukus sutartį": "Sell",
     "Pinigų išmokėjimas": "Cash",
     "Principal repaid": "Sell",
     "Priteistos lėšos": "Sell",
