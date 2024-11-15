@@ -7423,6 +7423,49 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/package-lint-0.24/package-lint-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/package-lint-0.24/package-lint-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'package-lint-describe-symbol-history "package-lint" "\
+Show the version history of SYM, if any.
+
+(fn SYM)" t)
+(autoload 'package-lint-buffer "package-lint" "\
+Get linter errors and warnings for BUFFER.
+
+Returns a list, each element of which is list of
+
+   (LINE COL TYPE MESSAGE)
+
+where TYPE is either `warning' or `error'.
+
+Current buffer is used if none is specified.
+
+(fn &optional BUFFER)")
+(autoload 'package-lint-current-buffer "package-lint" "\
+Display lint errors and warnings for the current buffer." t)
+(autoload 'package-lint-batch-and-exit "package-lint" "\
+Run `package-lint-buffer' on the files remaining on the command line.
+Use this only with -batch, it won't work interactively.
+
+When done, exit Emacs with status 1 in case of any errors, otherwise exit
+with status 0.  The variable `package-lint-batch-fail-on-warnings' controls
+whether or not warnings alone produce a non-zero exit code.")
+(autoload 'package-lint-looks-like-a-package-p "package-lint" "\
+Return non-nil if the current buffer appears to be intended as a package.")
+(register-definition-prefixes "package-lint" '("package-lint-"))
+
+
+(provide 'package-lint-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-sticky-header-1.1/org-sticky-header-autoloads.el"))
 
 
@@ -11311,6 +11354,22 @@ Display the version of Elpy." t)
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-lint-20220419.252/elisp-lint-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-lint-20220419.252/elisp-lint-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "elisp-lint" '("elisp-lint-"))
+
+
+(provide 'elisp-lint-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el"))
 
 
@@ -11826,7 +11885,7 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
