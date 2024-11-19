@@ -3,7 +3,8 @@
 ;; Copyright (C) 2017-2020 by Lukas Fürmetz & Contributors
 ;;
 ;; Author: Lukas Fürmetz <fuermetz@mailbox.org>
-;; Version: 0.0.2
+;; Package-Version: 20241118.1627
+;; Package-Revision: fd5062472320
 ;; URL: https://github.com/akermu/emacs-libvterm
 ;; Keywords: terminals
 ;; Package-Requires: ((emacs "25.1"))
@@ -813,6 +814,14 @@ Exceptions are defined by `vterm-keymap-exceptions'."
   (vterm--set-pty-name vterm--term (process-tty-name vterm--process))
   (process-put vterm--process 'adjust-window-size-function
                #'vterm--window-adjust-process-window-size)
+
+  ;; Set the truncation slot for 'buffer-display-table' to the ASCII code for a
+  ;; space character (32) to make the vterm buffer display a space instead of
+  ;; the default truncation character ($) when a line is truncated.
+  (let* ((display-table (or buffer-display-table (make-display-table))))
+    (set-display-table-slot display-table 'truncation 32)
+    (setq buffer-display-table display-table))
+
   ;; Support to compilation-shell-minor-mode
   ;; Is this necessary? See vterm--compilation-setup
   (setq next-error-function 'vterm-next-error-function)

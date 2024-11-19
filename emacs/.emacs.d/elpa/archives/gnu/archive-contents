@@ -1403,7 +1403,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(0 12 4)
+	 [(0 12 5)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1420,7 +1420,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "882b0b241c2f69124edce70d41dc95ff49cb40e8"))])
+	   (:commit . "e8f64969d66aa71341804e0a4f8d3e7c632bf3b6"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -2533,7 +2533,7 @@
 		      ("Sean Whitton" . "spwhitton@spwhitton.name"))
 		     (:commit . "c22a15e86acf28da716532c26ba1371574c8e979"))])
  (llm .
-      [(0 18 0)
+      [(0 18 1)
        ((emacs
 	 (28 1))
 	(plz
@@ -2547,7 +2547,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "423f483db3b285906e2b0ce45fd928ef84720563"))])
+	(:commit . "90c2451d0c0d1b9598e67b2c1a3516a8496f130f"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
