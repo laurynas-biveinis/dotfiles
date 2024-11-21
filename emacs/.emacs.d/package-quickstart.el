@@ -8686,11 +8686,159 @@ If NO-FALLBACK is set, don’t fall back to current buffer if not found in
 
 
 
-(register-definition-prefixes "org-autotask" '("org-autotask-"))
+(defvar cl-struct-org-autotask-list-tags)
+(cl-defsubst org-autotask-list-p (cl-x) (declare (side-effect-free error-free) (pure t)) (and (memq (type-of cl-x) cl-struct-org-autotask-list-tags) t))
+(eval-and-compile (define-symbol-prop 'org-autotask-list 'cl-deftype-satisfies 'org-autotask-list-p))
+(cl-defsubst org-autotask-list-tag (cl-x) "\
+Access slot \"tag\" of `org-autotask-list' struct CL-X.
+The `org' tag." (declare (side-effect-free t)) (progn (or (org-autotask-list-p cl-x) (signal 'wrong-type-argument (list 'org-autotask-list cl-x))) (aref cl-x 1)))
+(gv-define-expander org-autotask-list-tag (lambda (_cl-do _cl-x) (error "%s is a read-only slot" 'org-autotask-list-tag)))
+(cl-defsubst org-autotask-list-select-char (cl-x) "\
+Access slot \"select-char\" of `org-autotask-list' struct CL-X.
+The `org' quick selection character for the tag." (declare (side-effect-free t)) (progn (or (org-autotask-list-p cl-x) (signal 'wrong-type-argument (list 'org-autotask-list cl-x))) (aref cl-x 2)))
+(gv-define-expander org-autotask-list-select-char (lambda (_cl-do _cl-x) (error "%s is a read-only slot" 'org-autotask-list-select-char)))
+(cl-defsubst org-autotask-list-description (cl-x) "\
+Access slot \"description\" of `org-autotask-list' struct CL-X.
+The description string for this list." (declare (side-effect-free t)) (progn (or (org-autotask-list-p cl-x) (signal 'wrong-type-argument (list 'org-autotask-list cl-x))) (aref cl-x 3)))
+(gv-define-expander org-autotask-list-description (lambda (_cl-do _cl-x) (error "%s is a read-only slot" 'org-autotask-list-description)))
+(autoload 'copy-org-autotask-list "org-autotask")
+(cl-defsubst make-org-autotask-list (&cl-defs (nil (cl-tag-slot) (tag "" :type string :read-only t :documentation "The `org' tag.") (select-char 32 :type character :read-only t :documentation "The `org' quick selection character for the tag.") (description "" :type string :read-only t :documentation "The description string for this list.")) &key tag select-char description) "\
+Constructor for objects of type `org-autotask-list'." (declare (side-effect-free t)) (record 'org-autotask-list tag select-char description))
+(autoload 'org-autotask-list-not-tag "org-autotask" "\
+Get the substring for `org-agenda' blocks to exclude GTD-LIST.
+
+(fn GTD-LIST)")
+(let ((loads (get 'org-autotask 'custom-loads))) (if (member '"org-autotask" loads) nil (put 'org-autotask 'custom-loads (cons '"org-autotask" loads)) (put 'org 'custom-loads (cons 'org-autotask (get 'org 'custom-loads)))))
+(defvar org-autotask-contexts nil "\
+GTD contexts with `org' tags, quick selection characters, and descriptions.
+The tags and the selection keys will be added to as a single group to
+`org-tag-alist', together with (`org-autotask-waitingfor-tag' .
+`org-autotask-waitingfor-select') by `org-autotask-initialize'.")
+(custom-autoload 'org-autotask-contexts "org-autotask" t)
+(defvar org-autotask-waitingfor (make-org-autotask-list :tag "@waitingfor" :select-char 119 :description "Waiting-for items") "\
+The GTD waiting-for context.")
+(custom-autoload 'org-autotask-waitingfor "org-autotask" t)
+(defvar org-autotask-projects (make-org-autotask-list :tag "project" :select-char 112 :description "Projects") "\
+The GTD project list.")
+(custom-autoload 'org-autotask-projects "org-autotask" t)
+(defvar org-autotask-somedaymaybes (make-org-autotask-list :tag "somedaymaybe" :select-char 109 :description "Someday/maybe") "\
+The GTD someday/maybe list.")
+(custom-autoload 'org-autotask-somedaymaybes "org-autotask" t)
+(defvar org-autotask-keyword-next-action "TODO" "\
+The TODO entry keyword that designates a next action.
+Projects also have this keyword (in addition to `org-autotask-projects' tag.) It
+must be present in `org-todo-keywords', either directly or through per-file
+configuration, with an optional fast state selection character.")
+(custom-autoload 'org-autotask-keyword-next-action "org-autotask" t)
+(defvar org-autotask-keyword-done "DONE" "\
+The TODO entry keyword that designates a completed task or project.
+It must be present in `org-todo-keyword', either directly or thorugh per-file
+configuration, with an optional fast state selection character.")
+(custom-autoload 'org-autotask-keyword-done "org-autotask" t)
+(defvar org-autotask-keyword-cancelled "CANCELLED" "\
+The TODO entry keyword that designates a cancelled task or project.
+It must be present in `org-todo-keywords', either directly or through per-file
+configuration, with an optional fast state selection character.")
+(custom-autoload 'org-autotask-keyword-cancelled "org-autotask" t)
+(defvar org-autotask-clock-gated-commands 'nil "\
+List of commands that should be gated by `org-autotask-require-org-clock'.")
+(custom-autoload 'org-autotask-clock-gated-commands "org-autotask" t)
+(defvar org-autotask-clock-in-actions '((:property "URL" :action browse-url :multi t) (:property "APP" :action org-autotask-clock-in-open-macos-app) (:property "SHELL" :action shell-command) (:property "VISIT" :action org-autotask-clock-in-visit-file) (:property "EVAL" :action org-autotask-clock-in-eval)) "\
+Configuration for actions to perform when clocking in.
+Each entry is a plist with `:property', `:action', and optionally `:multi' keys.
+`:property' is the name of the Org property to look for.
+`:action' is the function to call with the property value.
+`:multi', if non-nil, indicates that multiple values are allowed for the
+property.")
+(custom-autoload 'org-autotask-clock-in-actions "org-autotask" t)
+(autoload 'org-autotask-clock-in-open-macos-app "org-autotask" "\
+Open APP on macOS.
+
+(fn APP)")
+(autoload 'org-autotask-clock-in-visit-file "org-autotask" "\
+Visit FILE and move to the end.
+
+(fn FILE)")
+(autoload 'org-autotask-clock-in-eval "org-autotask" "\
+Evaluate Elisp CODE.
+
+(fn CODE)")
+(autoload 'org-autotask-require-org-clock "org-autotask" "\
+Return user error if no `org' task is currently clocked in.")
+(autoload 'org-autotask-with-org-node-with-url "org-autotask" "\
+Go to the `org' node with the URL property value, execute the forms of BODY.
+
+(fn URL &rest BODY)" nil t)
+(function-put 'org-autotask-with-org-node-with-url 'lisp-indent-function 1)
+(autoload 'org-autotask-clock-in-node-with-url "org-autotask" "\
+Go to the `org' node with the given URL property value and clock it in.
+
+(fn URL)")
+(autoload 'org-autotask-with-different-org-clock "org-autotask" "\
+Save the current org clock, clock-in, execute the forms of BODY.
+The marker must be at the new clock position.
+
+(fn &rest BODY)" nil t)
+(function-put 'org-autotask-with-different-org-clock 'lisp-indent-function 'defun)
+(autoload 'org-autotask-initialize "org-autotask" "\
+Initialize `org-autotask'.
+Checks and modifies `org' configuration:
+- `org-todo-keywords' must contain all of the `org-autotask'-configured
+  keywords.
+- `org-use-tag-inheritance' must either be t, a string that matches the
+  someday/maybe tag, or be a list.  If it's a list, the tag for someday/maybe
+  will be added there.
+- `org-tag-alist' must not have anything related to contexts, projects, and
+  someday/maybe, and they will be added to it.
+
+Overwrites Org configuration variables:
+- `org-todo-repeat-to-state'
+- `org-enforce-todo-dependencies'
+- `org-stuck-projects'
+- `org-gcal-cancelled-todo-keyword' for `org-gcal'
+
+And set up hooks for clock-in automation.
+
+Multiple calls without resetting the Org variables first will result in
+inconsistencies.")
+(autoload 'org-autotask-agenda-block "org-autotask" "\
+Return a `tags-todo' block for GTD-LISTS with optional HEADER.
+GTD-LISTS can be a single GTD list or their sequence.  If HEADER is not
+provided, take it from the description of the only list.
+
+(fn GTD-LISTS &optional HEADER)")
+(autoload 'org-autotask-agenda "org-autotask" "\
+Return an `org-agenda' command part to show active items from GTD-LIST.
+TODO(laurynas) example (also to README).
+
+(fn GTD-LIST)")
+(autoload 'org-autotask-agenda-somedaymaybe "org-autotask" "\
+Return an `org-agenda' command part to show someday/maybe items.
+TODO(laurynas) explanation for LEVEL=2.")
+(autoload 'org-autotask-agenda-active-non-project-tasks "org-autotask" "\
+Return an `org-agenda' command part to show active non-project next actions.")
+(autoload 'org-autotask-agenda-archivable-tasks "org-autotask" "\
+Return an `org-agenda' command part to show archivable non-project tasks.")
+(autoload 'org-autotask-agenda-contextless-tasks "org-autotask" "\
+Return an `org-agenda' command part to show listless tasks.")
+(autoload 'org-autotask-insert-project "org-autotask" "\
+Insert a new project task with TITLE at point.
+The heading must be already created.
+
+(fn TITLE)")
+(autoload 'org-autotask-insert-waiting-for-next-action "org-autotask" "\
+Insert a new next action waiting-for task with TITLE at point.
+The heading must be already created.
+
+(fn TITLE)")
+(autoload 'org-autotask-complete-item "org-autotask" "\
+Mark the item (a task or a project) at point as done.")
+(register-definition-prefixes "org-autotask" '("org-autotask--"))
 
 
 
 (register-definition-prefixes "org-autotask-test" '("org-autotask-"))
+
 
 
 (provide 'org-autotask-autoloads)
