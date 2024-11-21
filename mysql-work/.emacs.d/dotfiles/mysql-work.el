@@ -17,7 +17,7 @@
 (defun my-visit-mtr-test ()
   "Input MySQL MTR test name and visit it."
   (interactive)
-  (let* ((input (read-string "MySQL MTR test name: "))
+  (let* ((input (string-trim (read-string "MySQL MTR test name: ")))
          ;; TODO(laurynas): error checking
          (parts (split-string input "\\."))
          (suite-name (car parts))
