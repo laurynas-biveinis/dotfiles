@@ -397,7 +397,7 @@ xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
 duti -s org.videolan.vlc .mp3 all
 duti -s org.videolan.vlc .m4a all
-npm i -g bash-language-server
+npm i -g bash-language-server prettier
 brew tap homebrew/command-not-found
 # Play
 brew install mono
