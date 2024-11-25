@@ -21,13 +21,14 @@
          ;; TODO(laurynas): error checking
          (parts (split-string input "\\."))
          (suite-name (car parts))
-         (test-in-suite (concat "t/" (cadr parts) ".test"))
+         (test-name (cadr parts))
          (test-root (concat (projectile-project-root) "mysql-test/"))
-         (file-path (if (string= suite-name "main")
-                        (concat test-root test-in-suite)
-                      (concat test-root "suite/" suite-name "/"
-                              test-in-suite))))
-    (find-file file-path)))
+         (test-dir (if (string= suite-name "main")
+                       (concat test-root "t/")
+                     (concat test-root "suite/" suite-name "/t/"))))
+    (unless (file-directory-p test-dir)
+      (user-error "Directory %s does not exist" test-dir))
+    (find-file (concat test-dir test-name ".test"))))
 
 (define-key projectile-command-map "M" #'my-visit-mtr-test)
 
