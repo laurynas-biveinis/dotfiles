@@ -18,7 +18,8 @@
    '((org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")
      (indent-bars :vc-backend Git :url "https://github.com/jdtsmith/indent-bars")))
  '(safe-local-variable-values
-   '((eval setq-local undo-tree-auto-save-history nil)
+   '((elisp-lint-ignored-validators "package-lint")
+     (eval setq-local undo-tree-auto-save-history nil)
      (eval setq-local backup-inhibited t)
      (magit-todos-exclude-globs ".git/" "arcanist/" "extra/")
      (magit-todos-exclude-globs "emacs/.emacs.d/abbrev_defs" "emacs/.emacs.d/elpa/*" "zsh/.p10k.zsh")
