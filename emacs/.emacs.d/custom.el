@@ -18,7 +18,14 @@
    '((org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")
      (indent-bars :vc-backend Git :url "https://github.com/jdtsmith/indent-bars")))
  '(safe-local-variable-values
-   '((elisp-lint-ignored-validators "package-lint")
+   '((elisp-lint-indent-specs
+      (org-autotask-with-org-node-with-url . 1)
+      (org-autotask--test-fixture . 1)
+      (org-autotask--buffer-test . 1)
+      (org-autotask--clock-in-action-test . 2)
+      (org-autotask--with-replaced-action-fn . 3)
+      (org-autotask--with-temp-org-agenda-files . defun))
+     (elisp-lint-ignored-validators "package-lint")
      (eval setq-local undo-tree-auto-save-history nil)
      (eval setq-local backup-inhibited t)
      (magit-todos-exclude-globs ".git/" "arcanist/" "extra/")
