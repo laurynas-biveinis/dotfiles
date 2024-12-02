@@ -69,4 +69,3 @@ chsh
 ```
 
 log out, log in again.
-
