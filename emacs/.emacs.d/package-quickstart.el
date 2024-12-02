@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.2/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.2/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3/with-editor-autoloads.el"))
 
 
 
@@ -7488,7 +7488,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.0.3/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.0.3/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.1.0/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.1.0/emacsql-autoloads.el"))
 
 
 
@@ -7522,15 +7522,11 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 
-(register-definition-prefixes "emacsql-sqlite" '("emacsql-sqlite-"))
+(register-definition-prefixes "emacsql-sqlite" '("emacsql-"))
 
 
 
 (register-definition-prefixes "emacsql-sqlite-builtin" '("emacsql-sqlite-builtin-connection"))
-
-
-
-(register-definition-prefixes "emacsql-sqlite-common" '("emacsql-"))
 
 
 
@@ -10718,7 +10714,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.0.0/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.0.0/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.1.0/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.1.0/closql-autoloads.el"))
 
 
 
@@ -12040,7 +12036,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.4" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1" "/Users/laurynas/.emacs.d/elpa/magit-4.1.2" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.2" "/Users/laurynas/.emacs.d/elpa/transient-0.7.9" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.2" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.4" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1" "/Users/laurynas/.emacs.d/elpa/magit-4.1.2" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.2" "/Users/laurynas/.emacs.d/elpa/transient-0.7.9" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
