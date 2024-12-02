@@ -1080,7 +1080,7 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             org-self-insert-command previous-line query-replace
                             magit-next-line gud-tooltip-mouse-motion left-char
                             org-delete-backward-char isearch-printing-char
-                            magit-previous-line right-char forward-word
+                            magit-previous-line right-char forward-word my-gtd
                             delete-backward-char scroll-up-command magit-commit
                             c-electric-backspace org-agenda-next-line find-file
                             mouse-drag-region mac-mwheel-scroll mouse-set-point
@@ -1115,7 +1115,7 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             isearch-repeat-backward beginend-prog-mode-goto-end
                             undo-tree-undo org-set-tags-command org-meta-return
                             xref-go-back keyboard-quit execute-extended-command
-                            beginend-org-agenda-mode-goto-beginning
+                            beginend-org-agenda-mode-goto-beginning my-copy-cell
                             deadgrep undo-tree-visualize-undo describe-variable
                             company-select-next-or-abort projectile-find-file
                             org-agenda-do-date-later org-shiftright lsp-rename
@@ -1124,14 +1124,14 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             lsp-format-buffer mouse-set-region shr-browse-url
                             mu4e-search-maildir company-complete-selection
                             beginend-magit-status-mode-goto-beginning
-                            mu4e~headers-quit-buffer org-shifttab
+                            mu4e~headers-quit-buffer org-shifttab magit-refresh
                             magit-commit-create beginend-org-mode-goto-end
                             dired-next-line projectile-switch-project
                             mu4e-search-rerun minibuffer-keyboard-quit
-                            quit-window org-clock-in org-clock-out
+                            quit-window org-clock-in org-clock-out forward-char
                             dired-previous-line minibuffer-next-completion
                             xwidget-webkit-scroll-down undo-tree-visualize-redo
-                            org-clock-goto org-shiftleft org-yank
+                            org-clock-goto org-shiftleft org-yank org-kill-line
                             previous-history-element org-mouse-down-mouse
                             describe-function next-line-or-history-element
                             magit-push-current-to-upstream lsp-format-region
@@ -1146,7 +1146,15 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             company-select-previous-or-abort org-insert-link
                             org-roam-node-insert projectile-switch-to-buffer
                             org-insert-todo-heading-respect-content
-                            minibuffer-previous-completion))
+                            minibuffer-previous-completion my-visit-mtr-test
+                            org-latex-preview mu4e-update-mail-and-index
+                            deadgrep-visit-result xref-show-location-at-point
+                            org-agenda-clock-out org-roam-node-find
+                            mu4e-view-scroll-up-or-next magit-commit-amend
+                            minibuffer-complete-word mu4e-view-headers-prev
+                            org-archive-subtree goto-address-at-point
+                            org-fold-reveal transient-update
+                            toggle-frame-fullscreen package-menu-mark-upgrades))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
