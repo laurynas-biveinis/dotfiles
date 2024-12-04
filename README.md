@@ -20,6 +20,12 @@ focus is on seamless integration between all the different packages, avoiding
 surprises, and adding polish here and there. Of course, that is very much a work
 in progress.
 
+I have started splitting out logical units into standalone Elisp packages, where
+it makes sense, to increase maintainability:
+
+- [org-autotask](https://github.com/laurynas-biveinis/org-autotask/): Org agenda
+  views, clocking, automation.
+
 The bulk of configuration is in
 [my-setup.el](https://github.com/laurynas-biveinis/dotfiles/blob/master/emacs/.emacs.d/my/my-setup.el),
 along with some parts split into its own files in the same directory,
