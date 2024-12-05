@@ -12,3 +12,5 @@
 	clean = git-lfs clean -- %f
 [github]
 	user = laurynas-biveinis
+[init]
+	defaultBranch = main
