@@ -332,6 +332,8 @@ mysql_export_environment_helpers() {
                           "-DCMAKE_CXX_COMPILER=clang++-16")
         export MYCLANG17=("-DCMAKE_C_COMPILER=clang-17"
                           "-DCMAKE_CXX_COMPILER=clang++-17")
+        export MYCLANG18=("-DCMAKE_C_COMPILER=clang-18"
+                          "-DCMAKE_CXX_COMPILER=clang++-18")
         export MYCLANG=("-DCMAKE_C_COMPILER=clang"
                         "-DCMAKE_CXX_COMPILER=clang++")
         export MYGCC11=("-DCMAKE_C_COMPILER=gcc-11"
