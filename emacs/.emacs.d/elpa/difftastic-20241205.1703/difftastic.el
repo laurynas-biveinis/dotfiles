@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0"))
-;; Package-Version: 20241030.1038
-;; Package-Revision: 4980c08f7ad7
+;; Package-Version: 20241205.1703
+;; Package-Revision: e8f5f1fecc1b
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -85,21 +85,24 @@
 ;;   '(transient-append-suffix 'magit-diff '(-1 -1)
 ;;      [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
 ;;       ("S" "Difftastic show" difftastic-magit-show)]))
-;; (add-hook 'magit-blame-read-only-mode-hook
-;;           (lambda ()
-;;             (keymap-set magit-blame-read-only-mode-map
-;;                         "D" #'difftastic-magit-show)
-;;             (keymap-set magit-blame-read-only-mode-map
-;;                         "S" #'difftastic-magit-show)))
+;; (eval-after-load 'magit-blame
+;;           '(progn
+;;              (keymap-set magit-blame-read-only-mode-map
+;;                          "D" #'difftastic-magit-show)
+;;              (keymap-set magit-blame-read-only-mode-map
+;;                          "S" #'difftastic-magit-show)))
 ;;
 ;; Or, if you use `use-package':
 ;;
 ;; (use-package difftastic
-;;   :demand t
-;;   :bind (:map magit-blame-read-only-mode-map
-;;          ("D" . difftastic-magit-show)
-;;          ("S" . difftastic-magit-show))
-;;   :config
+;;   :defer t
+;;   :init
+;;   (use-package magit
+;;     :defer t
+;;     :bind
+;;     (:map magit-blame-read-only-mode-map
+;;      ("D" . #'difftastic-magit-show)
+;;      ("S" . #'difftastic-magit-show)))
 ;;   (eval-after-load 'magit-diff
 ;;     '(transient-append-suffix 'magit-diff '(-1 -1)
 ;;        [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
