@@ -2484,7 +2484,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.7.9/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.7.9/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.0/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.0/transient-autoloads.el"))
 
 
 
@@ -4703,7 +4703,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.2/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.2/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.3/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.3/magit-section-autoloads.el"))
 
 
 
@@ -4758,7 +4758,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.2/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.2/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.3/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.3/magit-autoloads.el"))
 
 
 
@@ -6522,11 +6522,16 @@ while two prefix arguments are equivalent to `--all'.
 (autoload 'magit-stash-apply "magit-stash" "\
 Apply a stash to the working tree.
 
+When using a Git release before v2.38.0, simply run \"git stash
+apply\" or with a prefix argument \"git stash apply --index\".
+
+When using Git v2.38.0 or later, behave more intelligently:
+
 First try \"git stash apply --index\", which tries to preserve
 the index stored in the stash, if any.  This may fail because
 applying the stash could result in conflicts and those have to
 be stored in the index, making it impossible to also store the
-stash's index there as well.
+stash's index there.
 
 If the above failed, then try \"git stash apply\".  This fails
 (with or without \"--index\") if there are any uncommitted
@@ -6542,11 +6547,16 @@ the user whether to use \"--3way\" or \"--reject\".
 (autoload 'magit-stash-pop "magit-stash" "\
 Apply a stash to the working tree, on success remove it from stash list.
 
+When using a Git release before v2.38.0, simply run \"git stash
+pop\" or with a prefix argument \"git stash pop --index\".
+
+When using Git v2.38.0 or later, behave more intelligently:
+
 First try \"git stash pop --index\", which tries to preserve
 the index stored in the stash, if any.  This may fail because
 applying the stash could result in conflicts and those have to
 be stored in the index, making it impossible to also store the
-stash's index there as well.
+stash's index there.
 
 If the above failed, then try \"git stash apply\".  This fails
 (with or without \"--index\") if there are any uncommitted
@@ -12036,7 +12046,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.4" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1" "/Users/laurynas/.emacs.d/elpa/magit-4.1.2" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.2" "/Users/laurynas/.emacs.d/elpa/transient-0.7.9" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.4" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1" "/Users/laurynas/.emacs.d/elpa/magit-4.1.3" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.3" "/Users/laurynas/.emacs.d/elpa/transient-0.8.0" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
