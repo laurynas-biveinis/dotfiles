@@ -2484,7 +2484,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.0/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.0/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.1/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.1/transient-autoloads.el"))
 
 
 
@@ -6977,7 +6977,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.2.0/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.2.0/ghub-autoloads.el"))
 
 
 
@@ -7498,7 +7498,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.1.0/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-4.1.0/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20241201.1551/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20241201.1551/emacsql-autoloads.el"))
 
 
 
@@ -7547,7 +7547,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.3/emacsql-sqlite-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-sqlite-4.0.3/emacsql-sqlite-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20241007.1704/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20241007.1704/org-roam-autoloads.el"))
 
 
 
@@ -7556,22 +7556,10 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 
-(register-definition-prefixes "emacsql-sqlite" '("emacsql-sqlite-"))
-
-
-(provide 'emacsql-sqlite-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2/org-roam-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
+(autoload 'org-roam-list-files "org-roam" "\
+Return a list of all Org-roam files under `org-roam-directory'.
+See `org-roam-file-p' for how each file is determined to be as
+part of Org-Roam.")
 (register-definition-prefixes "org-roam" '("org-roam-"))
 
 
@@ -7805,7 +7793,7 @@ If OTHER-WINDOW, visit the NODE in another window.
 The TEMPLATES, if provided, override the list of capture templates (see
 `org-roam-capture-'.)
 
-(fn &optional OTHER-WINDOW INITIAL-INPUT FILTER-FN &key TEMPLATES)" t)
+(fn &optional OTHER-WINDOW INITIAL-INPUT FILTER-FN PRED &key TEMPLATES)" t)
 (autoload 'org-roam-node-random "org-roam-node" "\
 Find and open a random Org-roam node.
 With prefix argument OTHER-WINDOW, visit the node in another
@@ -7825,7 +7813,9 @@ The INFO, if provided, is passed to the underlying `org-roam-capture-'.
 (fn &optional FILTER-FN &key TEMPLATES INFO)" t)
 (autoload 'org-roam-refile "org-roam-node" "\
 Refile node at point to an Org-roam node.
-If region is active, then use it instead of the node at point." t)
+If region is active, then use it instead of the node at point.
+
+(fn NODE)" t)
 (autoload 'org-roam-extract-subtree "org-roam-node" "\
 Convert current subtree at point to a node, and extract it into a new file." t)
 (autoload 'org-roam-ref-find "org-roam-node" "\
@@ -7855,6 +7845,7 @@ Interactively, or when MESSAGE is non-nil, show in the echo area.
 (autoload 'org-roam-diagnostics "org-roam-utils" "\
 Collect and print info for `org-roam' issues." t)
 (register-definition-prefixes "org-roam-utils" '("org-roam-"))
+
 
 
 (provide 'org-roam-autoloads)
@@ -10740,7 +10731,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.4/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.4/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.5/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.5/forge-autoloads.el"))
 
 
 
@@ -12039,14 +12030,14 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql emacsql-sqlite org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.4" "/Users/laurynas/.emacs.d/elpa/org-roam-2.2.2" "/Users/laurynas/.emacs.d/elpa/ghub-4.1.1" "/Users/laurynas/.emacs.d/elpa/magit-4.1.3" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.3" "/Users/laurynas/.emacs.d/elpa/transient-0.8.0" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.5" "/Users/laurynas/.emacs.d/elpa/org-roam-20241007.1704" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-4.1.3" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.3" "/Users/laurynas/.emacs.d/elpa/transient-0.8.1" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
