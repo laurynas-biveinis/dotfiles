@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0"))
-;; Package-Version: 20241205.1703
-;; Package-Revision: e8f5f1fecc1b
+;; Package-Version: 20241210.1616
+;; Package-Revision: 67e52739a480
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -81,32 +81,38 @@
 ;; (require 'difftastic)
 ;;
 ;; ;; Add commands to a `magit-difftastic'
-;; (eval-after-load 'magit-diff
-;;   '(transient-append-suffix 'magit-diff '(-1 -1)
-;;      [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
-;;       ("S" "Difftastic show" difftastic-magit-show)]))
-;; (eval-after-load 'magit-blame
-;;           '(progn
-;;              (keymap-set magit-blame-read-only-mode-map
-;;                          "D" #'difftastic-magit-show)
-;;              (keymap-set magit-blame-read-only-mode-map
-;;                          "S" #'difftastic-magit-show)))
+;; (with-eval-after-load 'magit-diff
+;;     (when-let* ((suffix [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
+;;                          ("S" "Difftastic show" difftastic-magit-show)])
+;;                 ((not (equal (transient-parse-suffix 'magit-diff suffix)
+;;                              (transient-get-suffix 'magit-diff '(-1 -1))))))
+;;       (transient-append-suffix 'magit-diff '(-1 -1) suffix)))
+;; (with-eval-after-load 'magit-blame
+;;   (keymap-set magit-blame-read-only-mode-map
+;;               "D" #'difftastic-magit-show)
+;;   (keymap-set magit-blame-read-only-mode-map
+;;               "S" #'difftastic-magit-show))
 ;;
 ;; Or, if you use `use-package':
 ;;
 ;; (use-package difftastic
 ;;   :defer t
 ;;   :init
-;;   (use-package magit
-;;     :defer t
+;;   (use-package transient
+;;     :autoload (transient-get-suffix
+;;                transient-parse-suffix))
+;;   (use-package magit-blame
+;;     :defer t :ensure magit
 ;;     :bind
 ;;     (:map magit-blame-read-only-mode-map
-;;      ("D" . #'difftastic-magit-show)
+;;      ("D" . #'difftastic-magit-diff)
 ;;      ("S" . #'difftastic-magit-show)))
-;;   (eval-after-load 'magit-diff
-;;     '(transient-append-suffix 'magit-diff '(-1 -1)
-;;        [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
-;;         ("S" "Difftastic show" difftastic-magit-show)])))
+;;   (with-eval-after-load 'magit-diff
+;;     (when-let* ((suffix [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
+;;                          ("S" "Difftastic show" difftastic-magit-show)])
+;;                 ((not (equal (transient-parse-suffix 'magit-diff suffix)
+;;                              (transient-get-suffix 'magit-diff '(-1 -1))))))
+;;       (transient-append-suffix 'magit-diff '(-1 -1) suffix))))
 ;;
 ;;
 ;; Usage
