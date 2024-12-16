@@ -4,8 +4,8 @@
 
 ;; Author: Yikai Zhao <yikai@z1k.dev>
 ;; Keywords: tools
-;; Package-Version: 20241105.1542
-;; Package-Revision: bd9846fa0636
+;; Package-Version: 20241212.523
+;; Package-Revision: eeb86ecb0406
 ;; URL: https://github.com/blahgeek/emacs-pr-review
 ;; Package-Requires: ((emacs "27.1") (magit-section "3.2") (magit "3.2") (markdown-mode "2.5") (ghub "3.5"))
 

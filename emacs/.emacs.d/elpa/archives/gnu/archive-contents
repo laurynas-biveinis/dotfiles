@@ -206,14 +206,14 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:commit . "f317b0c9c3e60a959f45d035ed5e31a78f1263ac"))])
  (auctex .
-	 [(14 0 7)
+	 [(14 0 8)
 	  ((emacs
 	    (27 1)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
 	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
 	   (:maintainer nil . "auctex-devel@gnu.org")
-	   (:commit . "3bdc30d3c91c6b84d7592f19959cdbe25a497fbc"))])
+	   (:commit . "b34aff234099fb52fd5616bbbdf86920f029d765"))])
  (auctex-cont-latexmk .
 		      [(0 3)
 		       ((emacs
@@ -704,7 +704,7 @@
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:commit . "e62157d43b2c874d2edbd547c3bdfb05d0a7ae5c"))])
  (compat .
-	 [(30 0 0 0)
+	 [(30 0 1 0)
 	  ((emacs
 	    (24 4))
 	   (seq
@@ -716,7 +716,7 @@
 	   (:authors
 	    ("Philip Kaludercic" . "philipk@posteo.net")
 	    ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	   (:commit . "09dce8a193c5a70277512263782b82fa1cba84c0"))])
+	   (:commit . "3626216e7665bfe20f41f9b3d6bbeb1a7de2b1a6"))])
  (constants .
 	    [(2 11 1)
 	     ((emacs
@@ -3276,7 +3276,7 @@
 	    ("Junpeng Qiu" . "qjpchmail@gmail.com"))
 	   (:keywords "extensions"))])
  (parser-generator .
-		   [(0 2 1)
+		   [(0 2 3)
 		    ((emacs
 		      (26)))
 		    "Parser Generator library" tar
@@ -3285,7 +3285,7 @@
 		     (:maintainer "Christian Johansson" . "christian@cvj.se")
 		     (:authors
 		      ("Christian Johansson" . "christian@cvj.se"))
-		     (:commit . "0d4b9a42ea207bfa6c995c9cf5834c4bf68b9c44"))])
+		     (:commit . "37732431e129f380d254a4d0d4f6c760975e9399"))])
  (path-iterator .
 		[(1 0)
 		 ((emacs
@@ -3521,7 +3521,7 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pulsar .
-	 [(1 1 0)
+	 [(1 2 0)
 	  ((emacs
 	    (28 1)))
 	  "Pulse highlight on demand or after select functions" tar
@@ -3530,7 +3530,7 @@
 	   (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	   (:authors
 	    ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	   (:commit . "b4b967786afef50ad848a2a0104dd05acd6051d7"))])
+	   (:commit . "2b9c9736b6ff3559acf2a65e3a29574dc7787523"))])
  (pyim .
        [(5 3 4)
 	((emacs
@@ -4505,7 +4505,7 @@
 		  ("Brian Cully" . "bjc@kublai.com"))
 		 (:commit . "c35ade49754e051c84eaa2733447b4307968f200"))])
  (tramp-theme .
-	      [(0 2)
+	      [(0 3)
 	       ((emacs
 		 (24 1)))
 	       "Custom theme for remote buffers" tar
@@ -4514,7 +4514,7 @@
 		(:authors
 		 ("Michael Albinus" . "michael.albinus@gmx.de"))
 		(:url . "https://elpa.gnu.org/packages/tramp-theme.html")
-		(:commit . "e23d7a390278feea8b5652da49052a16dfbbfc3f"))])
+		(:commit . "f89f0c8ac25455ae59ae3e4bd8c8cb673e16130e"))])
  (transcribe .
 	     [(1 5 2)
 	      nil "Package for audio transcriptions" tar
