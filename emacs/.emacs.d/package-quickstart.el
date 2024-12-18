@@ -937,7 +937,7 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20241118.1627/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20241118.1627/vterm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20241218.331/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20241218.331/vterm-autoloads.el"))
 
 
 
