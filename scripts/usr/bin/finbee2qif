@@ -54,6 +54,7 @@ PAYMENT_TO_QIF_TYPES = {
     "Pinigų išmokėjimas": "Cash",
     "Principal repaid": "Sell",
     "Priteistos lėšos": "Sell",
+    "Sąskaitos papildymas": "Cash",
     "Suteikta paskola": "Buy",
     "Termination": "Sell"
 }
