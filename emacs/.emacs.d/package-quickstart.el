@@ -11531,7 +11531,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241210.1616/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241210.1616/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241219.917/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241219.917/difftastic-autoloads.el"))
 
 
 
@@ -11598,6 +11598,66 @@ the latter is set to nil the call is made to
 
 (fn &optional LANG-OVERRIDE)" '(difftastic-mode))
 (register-definition-prefixes "difftastic" '("difftastic-"))
+
+
+
+(defvar difftastic-bindings-prefixes '((magit-diff (-1 -1) magit-diff) (magit-blame (-1) magit-blame)) "\
+List of prefixes to install `difftastic' bindings.
+Each entry in the list is in a from of (PREFIX LOC FEATURE),
+where PREFIX is a `transient' prefix to which to install
+bindings, LOC is a location within the prefix and FEATURE is a
+feature (symbol) or file (string) that defines the prefix.  LOC
+can be in any form accepted by `transient-get-suffix', which see.")
+(custom-autoload 'difftastic-bindings-prefixes "difftastic-bindings" t)
+(defvar difftastic-bindings-keymaps '((magit-blame-read-only-mode-map . magit-blame)) "\
+List of keymaps to add `difftastic' bindings to.
+Each entry in the list is in a form of (MAP . FEATURE), where MAP
+is a keymap to set bindings to and FEATURE is a feature (symbol)
+or file (string) that defines the MAP.")
+(custom-autoload 'difftastic-bindings-keymaps "difftastic-bindings" t)
+(defvar difftastic-bindings-alist '(("D" difftastic-magit-diff "Difftastic diff (dwim)") ("S" difftastic-magit-show "Difftastic show")) "\
+Define `difftastic' bindings.
+Each entry is in a form of (KEY COMMAND DESCRIPTION), where KEY
+is a key that should be bound, COMMAND is a command that should
+be executed when KEY has been pressed, and DESCRIPTION is a
+description that should be used for suffixes that are added to
+prefixes as defined in `difftastic-bindings-prefixes'.  KEY needs
+to be a valid key according to `key-valid-p' and in a form
+accepted by `transient-append-suffix'.")
+(custom-autoload 'difftastic-bindings-alist "difftastic-bindings" t)
+(defvar difftastic-bindings-mode nil "\
+Non-nil if Difftastic-Bindings mode is enabled.
+See the `difftastic-bindings-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `difftastic-bindings-mode'.")
+(custom-autoload 'difftastic-bindings-mode "difftastic-bindings" nil)
+(autoload 'difftastic-bindings-mode "difftastic-bindings" "\
+Ensure key bindings to `difftastic' commands.
+
+Use bindings specified in `difftastic-bindings' (which see) to
+create a suffixes in prefixes defined in
+`difftastic-bindings-prefixes' (which see) and install them into
+`difftastic-bindings-keymaps' (which see).
+
+This is a global minor mode.  If called interactively, toggle the
+`Difftastic-Bindings mode' mode.  If the prefix argument is
+positive, enable the mode, and if it is zero or negative, disable
+the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='difftastic-bindings-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "difftastic-bindings" '("difftastic-bindings-"))
 
 
 (provide 'difftastic-autoloads)
@@ -11632,7 +11692,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.31.2/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.31.2/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.31.3/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.31.3/cmake-mode-autoloads.el"))
 
 
 
