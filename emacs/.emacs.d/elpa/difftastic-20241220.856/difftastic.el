@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20241219.917
-;; Package-Revision: 2a1e9691379e
+;; Package-Version: 20241220.856
+;; Package-Revision: 42cb1d93c4e5
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -157,7 +157,7 @@
 ;;
 ;; You can adjust what bindings you want to have configured by changing values
 ;; of `difftastic-bindings-alist', `difftastic-bindings-prefixes', and
-;; `difftastic-bindings-keymaps'. You need to turn the
+;; `difftastic-bindings-keymaps'.  You need to turn the
 ;; `difftastic-bindings-mode' off and on again to apply the changes.
 ;;
 ;; The `difftastic-bindings=mode' was designed to have minimal dependencies
@@ -418,8 +418,7 @@ display buffer at bottom."
    'font-lock-warning-face
    (aref ansi-color-normal-colors-vector 7))
   "Faces to use for colors on difftastic output (normal).
-
-N.B. only foreground and background properties will be used."
+Note that only foreground and background properties will be used."
   :type '(vector face face face face face face face face)
   :group 'difftastic)
 
@@ -434,8 +433,7 @@ N.B. only foreground and background properties will be used."
    'font-lock-warning-face
    (aref ansi-color-bright-colors-vector 7))
   "Faces to use for colors on difftastic output (bright).
-
-N.B. only foreground and background properties will be used."
+Note that only foreground and background properties will be used."
   :type '(vector face face face face face face face face)
   :group 'difftastic)
 
@@ -447,7 +445,7 @@ This is an alist, where each association defines a mapping
 between a non-highlighted face to a highlighted face.  Set to nil if
 you prefer unaltered difftastic output.
 
-N.B. only foreground and background properties will be used."
+Note that only foreground and background properties will be used."
   :type '(alist :key-type face :value-type face)
   :group 'difftastic)
 
