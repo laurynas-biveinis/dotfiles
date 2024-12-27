@@ -4,7 +4,8 @@
 
 ;; Author: Jorgen Schaefer <contact@jorgenschaefer.de>, Gaby Launay <gaby.launay@protonmail.com>
 ;; URL: https://github.com/jorgenschaefer/elpy
-;; Version: 1.35.0
+;; Package-Version: 20241226.1523
+;; Package-Revision: 61540e713820
 ;; Keywords: Python, IDE, Languages, Tools
 ;; Package-Requires: ((company "0.9.10") (emacs "24.4") (highlight-indentation "0.7.0") (pyvenv "1.20") (yasnippet "0.13.0") (s "1.12.0"))
 

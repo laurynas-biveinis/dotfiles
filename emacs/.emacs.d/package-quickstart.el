@@ -11427,7 +11427,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20240109.1445/elpy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20240109.1445/elpy-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20241226.1523/elpy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20241226.1523/elpy-autoloads.el"))
 
 
 
@@ -11531,7 +11531,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241220.856/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241220.856/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241225.1606/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241225.1606/difftastic-autoloads.el"))
 
 
 
