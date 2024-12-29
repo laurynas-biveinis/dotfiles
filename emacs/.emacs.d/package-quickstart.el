@@ -11427,7 +11427,7 @@ shadow backends that come after it.  Recommended usages:
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20241226.1523/elpy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20241226.1523/elpy-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20241227.2255/elpy-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elpy-20241227.2255/elpy-autoloads.el"))
 
 
 
