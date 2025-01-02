@@ -2484,7 +2484,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.1/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.1/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.2/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.2/transient-autoloads.el"))
 
 
 
@@ -4703,7 +4703,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.3/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.3/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.2.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.2.0/magit-section-autoloads.el"))
 
 
 
@@ -4758,7 +4758,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.3/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.1.3/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.2.0/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.2.0/magit-autoloads.el"))
 
 
 
@@ -5362,6 +5362,24 @@ Spread modified modules across recent commits.
 (autoload 'magit-diff-dwim "magit-diff" "\
 Show changes for the thing at point.
 
+For example, if point is on a commit, show the changes introduced by
+that commit.  Likewise if point is on the section titled \"Unstaged
+changes\", then show those changes in a separate buffer.  Generally
+speaking, compare the thing at point with the most logical, trivial
+and (in *any* situation) at least potentially useful other thing it
+could be compared to.
+
+When the region selects commits, then compare the two commits at
+either end.  There are different ways two commits can be compared.
+In the buffer showing the diff, you can control how the comparison,
+is done, using \"D r\" and \"D f\".
+
+This function does not always show the changes that you might want
+to view in any given situation.  You can think of the changes being
+shown as the smallest common denominator.  There is no AI involved.
+If this command never does what you want, then ignore it, and instead
+use the commands that allow you to explicitly specify what you need.
+
 (fn &optional ARGS FILES)" t)
 (autoload 'magit-diff-range "magit-diff" "\
 Show differences between two commits.
@@ -5534,11 +5552,7 @@ Drop into `magit-status' from file switching.
 To make this command available use something like:
 
   (keymap-set ido-common-completion-map
-              \"C-x g\" \\='ido-enter-magit-status)
-
-This command does not work in Emacs 26.1.
-See https://github.com/magit/magit/issues/3634
-and https://debbugs.gnu.org/cgi/bugreport.cgi?bug=31707." t)
+              \"C-x g\" \\='ido-enter-magit-status)" t)
 (autoload 'magit-project-status "magit-extras" "\
 Run `magit-status' in the current project's root." t)
 (autoload 'magit-dired-jump "magit-extras" "\
@@ -10731,7 +10745,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.5/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.5/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.6/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.6/forge-autoloads.el"))
 
 
 
@@ -10747,6 +10761,7 @@ If you want to disable this, then you must set this to nil before
 `magit' is loaded.  If you do it before `forge' but after `magit'
 is loaded, then `magit-mode-map' ends up being modified anyway.")
 (with-eval-after-load 'magit-mode (when forge-add-default-bindings (keymap-set magit-mode-map "'" #'forge-dispatch) (keymap-set magit-mode-map "N" #'forge-dispatch) (keymap-set magit-mode-map "<remap> <magit-browse-thing>" #'forge-browse) (keymap-set magit-mode-map "<remap> <magit-copy-thing>" #'forge-copy-url-at-point-as-kill)))
+(with-eval-after-load 'magit-repos (when forge-add-default-bindings (keymap-set magit-repolist-mode-map "N" #'forge-dispatch)))
 (with-eval-after-load 'git-commit (when forge-add-default-bindings (keymap-set git-commit-mode-map "C-c C-v" #'forge-visit-topic)))
 (register-definition-prefixes "forge" '("forge-"))
 
@@ -11531,7 +11546,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241225.1606/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241225.1606/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241230.1035/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20241230.1035/difftastic-autoloads.el"))
 
 
 
@@ -12097,7 +12112,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.5" "/Users/laurynas/.emacs.d/elpa/org-roam-20241007.1704" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-4.1.3" "/Users/laurynas/.emacs.d/elpa/magit-section-4.1.3" "/Users/laurynas/.emacs.d/elpa/transient-0.8.1" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.1.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.6" "/Users/laurynas/.emacs.d/elpa/org-roam-20241007.1704" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.2.0" "/Users/laurynas/.emacs.d/elpa/transient-0.8.2" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.1.0")
          Info-directory-list)))
 
 ;; Local Variables:

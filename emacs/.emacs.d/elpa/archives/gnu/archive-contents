@@ -1047,7 +1047,7 @@
 			("Aleksandr Vityazev" . "avityazew@gmail.com"))
 		       (:commit . "bc07c1124545cbf6e5ebe64e92bfaa306e309033"))])
  (dicom .
-	[(0 4)
+	[(0 5)
 	 ((emacs
 	   (28 1))
 	  (compat
@@ -1058,7 +1058,7 @@
 	  (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	  (:authors
 	   ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	  (:commit . "d7136f4e48120ee02a559e2a415bb15a1fc3ed98"))])
+	  (:commit . "54440a704c573cd91b663ac79a01264a1aa59c51"))])
  (dict-tree .
 	    [(0 17)
 	     ((trie
@@ -1993,7 +1993,7 @@
 	     ("Sean Allred" . "code@seanallred.com"))
 	    (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader .
-	  [(0 12 4)
+	  [(0 12 6)
 	   ((emacs
 	     (26 1))
 	    (seq
@@ -2006,7 +2006,7 @@
 	    (:maintainer "Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com")
 	    (:authors
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
-	    (:commit . "ff886583fcf7f04146d3e4bd6d1c47d8dba8b28c"))])
+	    (:commit . "a7a8d4adc4f4590669cb8cbad086db12d831ad82"))])
  (greenbar .
 	   [(1 1)
 	    nil "Mark comint output with \"greenbar\" background" tar
@@ -3783,7 +3783,7 @@
 		  (:url . "https://elpa.gnu.org/packages/register-list.html")
 		  (:commit . "14d719a6f3596856228f08d3746a7bf92dd13240"))])
  (relint .
-	 [(2 0)
+	 [(2 1)
 	  ((xr
 	    (2 0))
 	   (emacs
@@ -3794,7 +3794,7 @@
 	   (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
 	   (:authors
 	    ("Mattias Engdegård" . "mattiase@acm.org"))
-	   (:commit . "a9a792dccbf4a34e6ae51f0cacd5ce3da2349209"))])
+	   (:commit . "9eda48e439e13479151be4abbf47906326bc732f"))])
  (repology .
 	   [(1 2 4)
 	    ((emacs
@@ -4182,16 +4182,16 @@
 		("Christian Johansson" . "christian@cvj.se"))
 	       (:commit . "95fb076c9b657c5f1bfad3ee5bf1f8691c50d428"))])
  (standard-themes .
-		  [(2 1 0)
+		  [(2 2 0)
 		   ((emacs
-		     (27 1)))
+		     (28 1)))
 		   "Like the default theme but more consistent" tar
 		   ((:url . "https://github.com/protesilaos/standard-themes")
 		    (:keywords "faces" "theme" "accessibility")
 		    (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		    (:authors
 		     ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		    (:commit . "9a982c4fad9a6d1a68e211bd83342bdd47dd7979"))])
+		    (:commit . "4b97416543a20f9d16515ff54e6481c852911843"))])
  (stream .
 	 [(2 3 0)
 	  ((emacs
@@ -4496,7 +4496,7 @@
 		  (:url . "https://elpa.gnu.org/packages/track-changes.html")
 		  (:commit . "44036b32ba398cf284320285b60be35874b6eea5"))])
  (tramp .
-	[(2 7 1 5)
+	[(2 7 2)
 	 ((emacs
 	   (27 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
@@ -4505,7 +4505,7 @@
 	  (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
 	  (:authors
 	   ("Kai Großjohann" . "kai.grossjohann@gmx.net"))
-	  (:commit . "73bdb480f64af3b7f39f382905f3edc5a76cb665"))])
+	  (:commit . "306ca5a231de66682f91676485ac6353c735d4fb"))])
  (tramp-nspawn .
 	       [(1 0 1)
 		((emacs
@@ -4537,7 +4537,7 @@
 	       (:url . "https://elpa.gnu.org/packages/transcribe.html")
 	       (:commit . "89832e4cdc1e6d8262a4a2c9d1ff70f398b8faf0"))])
  (transient .
-	    [(0 8 1)
+	    [(0 8 2)
 	     ((emacs
 	       (26 1))
 	      (compat
@@ -4550,7 +4550,7 @@
 	      (:maintainer "Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev")
 	      (:authors
 	       ("Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev"))
-	      (:commit . "dbe18e3f5e0812b8d086f92ca776935e41fafc75"))])
+	      (:commit . "ab22ba0e3b4c088b2981b22857fa09211a2c74ee"))])
  (transient-cycles .
 		   [(1 0)
 		    ((emacs
@@ -4806,7 +4806,7 @@
 	   ("Justin Burkett" . "justin@burkett.cc"))
 	  (:commit . "007e44be19d068fd6b49874b6e9b8df8b1f552bd"))])
  (verilog-mode .
-	       [(2024 10 9 140346409)
+	       [(2025 1 1 100165202)
 		nil "major mode for editing verilog source in Emacs" tar
 		((:url . "https://www.veripool.org")
 		 (:keywords "languages")
@@ -4816,7 +4816,7 @@
 		 (:authors
 		  ("Michael McNamara" . "mac@verilog.com")
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org"))
-		 (:commit . "cb0b6a405706f6367d9adfb3ee447590c2a0876f"))])
+		 (:commit . "78bc5949db489b143f7424540d6cc56fc529c9ea"))])
  (vertico .
 	  [(1 10)
 	   ((emacs
@@ -5094,7 +5094,7 @@
 	 ("Thien-Thi Nguyen" . "ttn@gnu.org"))
 	(:commit . "85e5c412dde7ec3c3f64c64d37079e233293e4d0"))])
  (xr .
-     [(2 0)
+     [(2 1)
       ((emacs
 	(27 1)))
       "Convert string regexp to rx notation" tar
@@ -5103,7 +5103,7 @@
        (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
        (:authors
 	("Mattias Engdegård" . "mattiase@acm.org"))
-       (:commit . "9048d15a8de605ad1ee9eba889e4ec90944d8416"))])
+       (:commit . "31cd397f54591e3692bf88d6e1995236928e3561"))])
  (xref .
        [(1 7 0)
 	((emacs
