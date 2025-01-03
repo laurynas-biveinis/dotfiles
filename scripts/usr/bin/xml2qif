@@ -118,13 +118,15 @@ class CCRDTransactionSubfamily(Enum):
 
 @add_from_string({'ESCT': 'SEPA_CREDIT_TRANSFER',
                   'BOOK': 'INTERNAL_BOOK_TRANSFER',
-                  'SALA': 'PAYROLL_SALARY_PAYMENT'})
+                  'SALA': 'PAYROLL_SALARY_PAYMENT',
+                  'DMCT': 'DOMESTIC_CREDIT_TRANSFER'})
 class ICDTTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in an Issued Credit Transfer (ICDT)
     family."""
     SEPA_CREDIT_TRANSFER = auto()
     INTERNAL_BOOK_TRANSFER = auto()
     PAYROLL_SALARY_PAYMENT = auto()
+    DOMESTIC_CREDIT_TRANSFER = auto()
 
 
 @add_from_string({'OTHR': 'OTHER'})
