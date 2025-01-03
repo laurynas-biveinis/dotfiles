@@ -1139,7 +1139,7 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             indent-for-tab-command mu4e-mark-execute-all
                             beginend-org-agenda-mode-goto-end end-of-buffer
                             recenter-top-bottom xref-find-references
-                            my-eval-buf-and-run-ert-test-at-point
+                            my-eval-buf-and-run-ert-test-at-point undefined
                             minibuffer-complete-and-exit magit-diff-visit-file
                             projectile-find-other-file electric-pair-delete-pair
                             previous-line-or-history-element org-fill-paragraph
@@ -1153,8 +1153,17 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             mu4e-view-scroll-up-or-next magit-commit-amend
                             minibuffer-complete-word mu4e-view-headers-prev
                             org-archive-subtree goto-address-at-point
-                            org-fold-reveal transient-update
-                            toggle-frame-fullscreen package-menu-mark-upgrades))
+                            org-fold-reveal transient-update xref-goto-xref
+                            toggle-frame-fullscreen package-menu-mark-upgrades
+                            projectile-compile-project kill-whole-line
+                            beginend-compilation-mode-goto-beginning
+                            handle-switch-frame package-menu-execute
+                            transient:magit-push:--force-with-lease
+                            markdown-electric-backquote message-send-and-exit
+                            projectile-configure-project magit-submodule
+                            my-switch-to-scratch magit-submodule-populate
+                            xref-revert-buffer isearch-abort org-metaright
+                            magit-copy-buffer-revision magit-worktree))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
