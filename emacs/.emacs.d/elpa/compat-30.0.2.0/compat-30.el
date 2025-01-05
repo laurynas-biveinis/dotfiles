@@ -1,6 +1,6 @@
 ;;; compat-30.el --- Functionality added in Emacs 30 -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023-2024 Free Software Foundation, Inc.
+;; Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ See also `find-buffer-visiting'."
 
 ;;;; Defined in files.el
 
-(compat-defvar trusted-files nil ;; <compat-tests:trusted-files>
+(compat-defvar trusted-content nil ;; <compat-tests:trusted-content>
   "List of files and directories whose content we trust.
 Be extra careful here since trusting means that Emacs might execute the
 code contained within those files and directories without an explicit
@@ -79,31 +79,26 @@ all files, which opens a gaping security hole."
 (compat-defun trusted-content-p () ;; <compat-tests:trusted-content-p>
   "Return non-nil if we trust the contents of the current buffer.
 Here, \"trust\" means that we are willing to run code found inside of it.
-See also `trusted-files'."
-  ;; We compare with `buffer-file-truename' i.s.o `buffer-file-name'
-  ;; to try and avoid marking as trusted a file that's merely accessed
-  ;; via a symlink that happens to be inside a trusted dir.
+See also `trusted-content'."
   (and (not untrusted-content)
-       buffer-file-truename
-       (with-demoted-errors "trusted-content-p: %S"
-         (let ((exists (file-exists-p buffer-file-truename)))
-           (or
-            (eq trusted-files :all)
-            ;; We can't avoid trusting the user's init file.
-            (if (and exists user-init-file)
-                (file-equal-p buffer-file-truename user-init-file)
-              (equal buffer-file-truename user-init-file))
-            (let ((file (abbreviate-file-name buffer-file-truename))
-                  (trusted nil))
-              (dolist (tf trusted-files)
-                (when (or (if exists (file-equal-p tf file) (equal tf file))
-                          ;; We don't use `file-in-directory-p' here, because
-                          ;; we want to err on the conservative side: "guilty
-                          ;; until proven innocent".
-                          (and (string-suffix-p "/" tf)
-                               (string-prefix-p tf file)))
-                  (setq trusted t)))
-              trusted))))))
+       (or
+        (eq trusted-content :all)
+        (and
+         buffer-file-truename
+         (with-demoted-errors "trusted-content-p: %S"
+           (let ((exists (file-exists-p buffer-file-truename)))
+             (or
+              (if (and exists user-init-file)
+                  (file-equal-p buffer-file-truename user-init-file)
+                (equal buffer-file-truename user-init-file))
+              (let ((file (abbreviate-file-name buffer-file-truename))
+                    (trusted nil))
+                (dolist (tf trusted-content)
+                  (when (or (if exists (file-equal-p tf file) (equal tf file))
+                            (and (string-suffix-p "/" tf)
+                                 (string-prefix-p tf file)))
+                    (setq trusted t)))
+                trusted))))))))
 
 (compat-defun require-with-check (feature &optional filename noerror) ;; <compat-tests:require-with-check>
   "If FEATURE is not already loaded, load it from FILENAME.

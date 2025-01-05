@@ -1,7 +1,7 @@
-This is docTwWwjU.info, produced by makeinfo version 6.8 from
+This is docKbISnW.info, produced by makeinfo version 6.8 from
 compat.texi.
 
-Copyright © 2022-2024 Free Software Foundation, Inc.
+Copyright © 2022-2025 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -20,16 +20,16 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docTwWwjU.info,  Node: Top,  Next: Introduction,  Up: (dir)
+File: docKbISnW.info,  Node: Top,  Next: Introduction,  Up: (dir)
 
 "Compat" Manual
 ***************
 
 This manual documents the usage of the "Compat" Emacs lisp library, the
 forward-compatibility library for Emacs Lisp, corresponding to version
-30.0.1.0.
+30.0.2.0.
 
-   Copyright © 2022-2024 Free Software Foundation, Inc.
+   Copyright © 2022-2025 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -69,7 +69,7 @@ Support
 
 
 
-File: docTwWwjU.info,  Node: Introduction,  Next: Support,  Prev: Top,  Up: Top
+File: docKbISnW.info,  Node: Introduction,  Next: Support,  Prev: Top,  Up: Top
 
 1 Introduction
 **************
@@ -81,7 +81,7 @@ File: docTwWwjU.info,  Node: Introduction,  Next: Support,  Prev: Top,  Up: Top
 * Limitations::
 
 
-File: docTwWwjU.info,  Node: Overview,  Next: Usage,  Up: Introduction
+File: docKbISnW.info,  Node: Overview,  Next: Usage,  Up: Introduction
 
 1.1 Overview
 ============
@@ -96,7 +96,7 @@ audience are package developers that are interested in using newer
 developments, without having to break compatibility.
 
 
-File: docTwWwjU.info,  Node: Usage,  Next: Limitations,  Prev: Overview,  Up: Introduction
+File: docKbISnW.info,  Node: Usage,  Next: Limitations,  Prev: Overview,  Up: Introduction
 
 1.2 Usage
 =========
@@ -106,7 +106,7 @@ as a dependency in the header.  The version of the Compat library
 mirrors the version of Emacs releases.  The current version of Compat
 corresponds to the current Emacs release.
 
-     ;; Package-Requires: ((emacs "24.4") (compat "30.0.1.0"))
+     ;; Package-Requires: ((emacs "24.4") (compat "30.0.2.0"))
 
    There is no need to depend on ‘emacs 24.4’ specifically.  One can
 choose any newer version, if features not provided by Compat necessitate
@@ -185,7 +185,7 @@ provide a development mailing list
 <~pkal/compat-devel@lists.sr.ht>).
 
 
-File: docTwWwjU.info,  Node: Limitations,  Prev: Usage,  Up: Introduction
+File: docKbISnW.info,  Node: Limitations,  Prev: Usage,  Up: Introduction
 
 1.3 Limitations
 ===============
@@ -277,7 +277,7 @@ belong here, a *note report: Development. would be much appreciated.
      on the level of Compat.
 
 
-File: docTwWwjU.info,  Node: Support,  Next: Development,  Prev: Introduction,  Up: Top
+File: docKbISnW.info,  Node: Support,  Next: Development,  Prev: Introduction,  Up: Top
 
 2 Support
 *********
@@ -295,7 +295,7 @@ manage to provide for each Emacs version.
 * Emacs 30.1::                   Compatibility support for Emacs 30.1
 
 
-File: docTwWwjU.info,  Node: Emacs 25.1,  Next: Emacs 26.1,  Up: Support
+File: docKbISnW.info,  Node: Emacs 25.1,  Next: Emacs 26.1,  Up: Support
 
 2.1 Emacs 25.1
 ==============
@@ -505,7 +505,7 @@ implemented in 25.1:
    • The ‘thunk’ library.
 
 
-File: docTwWwjU.info,  Node: Emacs 26.1,  Next: Emacs 27.1,  Prev: Emacs 25.1,  Up: Support
+File: docKbISnW.info,  Node: Emacs 26.1,  Next: Emacs 27.1,  Prev: Emacs 25.1,  Up: Support
 
 2.2 Emacs 26.1
 ==============
@@ -916,7 +916,7 @@ implemented in 26.1:
    • The ‘svg’ library (published separately as a :core package).
 
 
-File: docTwWwjU.info,  Node: Emacs 27.1,  Next: Emacs 28.1,  Prev: Emacs 26.1,  Up: Support
+File: docKbISnW.info,  Node: Emacs 27.1,  Next: Emacs 28.1,  Prev: Emacs 26.1,  Up: Support
 
 2.3 Emacs 27.1
 ==============
@@ -1385,7 +1385,7 @@ implemented in 27.1:
    • The ‘image-converter’ library.
 
 
-File: docTwWwjU.info,  Node: Emacs 28.1,  Next: Emacs 29.1,  Prev: Emacs 27.1,  Up: Support
+File: docKbISnW.info,  Node: Emacs 28.1,  Next: Emacs 29.1,  Prev: Emacs 27.1,  Up: Support
 
 2.4 Emacs 28.1
 ==============
@@ -1845,7 +1845,7 @@ implemented in 28.1:
    • The ‘multisession’ library.
 
 
-File: docTwWwjU.info,  Node: Emacs 29.1,  Next: Emacs 30.1,  Prev: Emacs 28.1,  Up: Support
+File: docKbISnW.info,  Node: Emacs 29.1,  Next: Emacs 30.1,  Prev: Emacs 28.1,  Up: Support
 
 2.5 Emacs 29.1
 ==============
@@ -2685,7 +2685,7 @@ implemented in 29.1:
    • Support for symbols with position information.
 
 
-File: docTwWwjU.info,  Node: Emacs 30.1,  Prev: Emacs 29.1,  Up: Support
+File: docKbISnW.info,  Node: Emacs 30.1,  Prev: Emacs 29.1,  Up: Support
 
 2.6 Emacs 30.1
 ==============
@@ -2698,7 +2698,7 @@ functions are made available by Compat on Emacs versions older than
 30.1.  Note that due to upstream changes, it might happen that there
 will be the need for changes, so use these functions with care.
 
- -- Variable: trusted-files
+ -- Variable: trusted-content
      List of files and directories whose content we trust.  Be extra
      careful here since trusting means that Emacs might execute the code
      contained within those files and directories without an explicit
@@ -2716,7 +2716,7 @@ will be the need for changes, so use these functions with care.
  -- Function: trusted-content-p
      Return non-nil if we trust the contents of the current buffer.
      Here, "trust" means that we are willing to run code found inside of
-     it.  See also ‘trusted-files’.
+     it.  See also ‘trusted-content’.
 
  -- Function: char-to-name char
      This function returns the Unicode name of CHAR.  It returns ‘nil’
@@ -2982,7 +2982,7 @@ Compat does not provide support for the following Lisp features
 implemented in 30.1:
 
 
-File: docTwWwjU.info,  Node: Development,  Next: Function Index,  Prev: Support,  Up: Top
+File: docKbISnW.info,  Node: Development,  Next: Function Index,  Prev: Support,  Up: Top
 
 3 Development
 *************
@@ -3019,7 +3019,7 @@ version has been reasonably stabilized, e.g., around the time when the
 Emacs version branch is created in the Emacs repository on Savannah.
 
 
-File: docTwWwjU.info,  Node: Function Index,  Next: Variable Index,  Prev: Development,  Up: Top
+File: docKbISnW.info,  Node: Function Index,  Next: Variable Index,  Prev: Development,  Up: Top
 
 Appendix A Function Index
 *************************
@@ -3253,7 +3253,7 @@ Appendix A Function Index
 * xor:                                   Emacs 27.1.          (line 142)
 
 
-File: docTwWwjU.info,  Node: Variable Index,  Prev: Function Index,  Up: Top
+File: docKbISnW.info,  Node: Variable Index,  Prev: Function Index,  Up: Top
 
 Appendix B Variable Index
 *************************
@@ -3270,7 +3270,7 @@ Appendix B Variable Index
 * regexp-unmatchable:                    Emacs 27.1.          (line 152)
 * set-transient-map-timeout:             Emacs 29.1.          (line 742)
 * text-quoting-style:                    Emacs 25.1.          (line  13)
-* trusted-files:                         Emacs 30.1.          (line  14)
+* trusted-content:                       Emacs 30.1.          (line  14)
 * untrusted-content:                     Emacs 29.1.          (line  17)
 
 
@@ -3288,9 +3288,9 @@ Node: Emacs 27.138699
 Node: Emacs 28.159096
 Node: Emacs 29.179232
 Node: Emacs 30.1116911
-Node: Development131074
-Node: Function Index132808
-Node: Variable Index149335
+Node: Development131078
+Node: Function Index132812
+Node: Variable Index149339
 
 End Tag Table
 

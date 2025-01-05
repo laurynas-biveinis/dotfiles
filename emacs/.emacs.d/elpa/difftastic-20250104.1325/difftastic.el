@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20241230.1035
-;; Package-Revision: c0cf19080d13
+;; Package-Version: 20250104.1325
+;; Package-Revision: cfb5336ea972
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -419,7 +419,15 @@ display buffer at bottom."
    (aref ansi-color-normal-colors-vector 7))
   "Faces to use for colors on difftastic output (normal).
 Note that only foreground and background properties will be used."
-  :type '(vector face face face face face face face face)
+  :type '(vector
+          (face :tag "Black")
+          (face :tag "Removed")
+          (face :tag "Added")
+          (face :tag "Heading")
+          (face :tag "Comment")
+          (face :tag "String")
+          (face :tag "Warning")
+          (face :tag "White"))
   :group 'difftastic)
 
 (defcustom difftastic-bright-colors-vector
@@ -434,7 +442,15 @@ Note that only foreground and background properties will be used."
    (aref ansi-color-bright-colors-vector 7))
   "Faces to use for colors on difftastic output (bright).
 Note that only foreground and background properties will be used."
-  :type '(vector face face face face face face face face)
+  :type '(vector
+          (face :tag "Black")
+          (face :tag "Removed")
+          (face :tag "Added")
+          (face :tag "Heading")
+          (face :tag "Comment")
+          (face :tag "String")
+          (face :tag "Warning")
+          (face :tag "White"))
   :group 'difftastic)
 
 (defcustom difftastic-highlight-alist
@@ -446,7 +462,8 @@ between a non-highlighted face to a highlighted face.  Set to nil if
 you prefer unaltered difftastic output.
 
 Note that only foreground and background properties will be used."
-  :type '(alist :key-type face :value-type face)
+  :type '(alist :key-type (face :tag "Non-highlighted")
+                :value-type (face :tag "Highlighted"))
   :group 'difftastic)
 
 (defcustom difftastic-highlight-strip-face-properties '(:bold :underline)
@@ -593,6 +610,7 @@ It uses many keybindings from `view-mode' to provide a familiar
 behaviour to view diffs."
   :group 'difftastic
   (setq buffer-read-only t)
+  (setq font-lock-defaults '(nil t))
   (add-to-invisibility-spec '(difftastic . t)))
 
 (defvar-local difftastic--chunk-regexp-chunk nil)
@@ -726,9 +744,9 @@ The point needs to be in chunk header."
   (when (difftastic--point-at-chunk-header-p)
     (let ((inhibit-read-only t)
           (file-chunk
-           (member :file
-                   (get-text-property (compat-call pos-bol) ; Since Emacs-29
-                                      'difftastic))))
+           (memq :file
+                 (get-text-property (compat-call pos-bol) ; Since Emacs-29
+                                    'difftastic))))
       ;; This is not ideal as it doesn't just undo how the chunk has been
       ;; hidden, but it bluntly shows everything when showing a file.  But it
       ;; allows to show all chunks that were hidden twice - first time as a
@@ -750,9 +768,9 @@ FILE-CHUNK prefix hide all file chunks from the header to the end
 of the file."
   (interactive "P" difftastic-mode)
   (when (difftastic--point-at-chunk-header-p file-chunk)
-    (if (member :hidden
-                (get-text-property (compat-call pos-bol) ; Since Emacs-29
-                                   'difftastic))
+    (if (memq :hidden
+              (get-text-property (compat-call pos-bol) ; Since Emacs-29
+                                 'difftastic))
         (difftastic-show-chunk)
       (difftastic-hide-chunk file-chunk))))
 
@@ -860,23 +878,29 @@ adding background to faces if they have a foreground set."
     ;; well, but it's not as unambiguous as underline.  Use underline to detect
     ;; highlight, but remove all attributes that are in
     ;; `difftastic-highlight-strip-face-properties'.
-    (if-let* ((highlight-face (and (cl-member 'ansi-color-underline face)
+    (if-let* ((highlight-face (and (memq 'ansi-color-underline face)
                                    (alist-get difftastic-face
                                               difftastic-highlight-alist))))
-        (progn
-          (dolist (prop-face '((:underline . ansi-color-underline)
-                               (:bold . ansi-color-bold)
-                               (:italic . ansi-color-italic)
-                               (:faint . ansi-color-faint)))
-            (when (member (car prop-face)
-                          difftastic-highlight-strip-face-properties)
-              (setq face (cl-delete (cdr prop-face) face))))
+        (let ((to-strip (delq
+                         nil
+                         (mapcar
+                          (lambda (value-prop)
+                            (when (memq
+                                   (cdr value-prop)
+                                   difftastic-highlight-strip-face-properties)
+                              (car value-prop)))
+                          '((ansi-color-underline . :underline)
+                            (ansi-color-bold . :bold)
+                            (ansi-color-italic . :italic)
+                            (ansi-color-faint . :faint))))))
+          (setq face (cl-delete-if
+                      (lambda (value)
+                        (or (memq value to-strip)
+                            (and (listp value)
+                                 (plist-member value :foreground))))
+                      face))
           (cl-remf face :foreground)
-          (setq face
-                (cl-delete-if (lambda (elt)
-                                (and (listp elt)
-                                     (plist-get elt :foreground)))
-                              face))
+
           (push `(:foreground
                   ,(face-foreground highlight-face nil t))
                 face)
@@ -1063,8 +1087,8 @@ to difftastic."
        args)))))
 
 (defun difftastic--git-diff-range (rev-or-range args files)
-  "Implementation for `difftastic-git-diff-range'.
-See the original function documentation for REV-OR-RANGE, ARGS, and FILES."
+                                        ; checkdoc-params: (rev-or-range args files)
+  "Implementation for `difftastic-git-diff-range', which see."
   (pcase-let* ((`(,git-args ,difftastic-args)
                 (difftastic--transform-diff-arguments args))
                (buffer-name
@@ -1098,10 +1122,9 @@ The meaning of REV-OR-RANGE, ARGS, and FILES is like in
                      (magit-diff-arguments)))
   (difftastic--git-diff-range rev-or-range args files))
 
-;;;###autoload
-(defun difftastic-magit-diff (&optional args files)
-  "Show the result of \\='git diff ARGS -- FILES\\=' with difftastic."
-  (interactive (magit-diff-arguments))
+(defun difftastic--magit-diff (args files)
+                                        ; checkdoc-params: (args files)
+  "Implementation for `difftastic-magit-diff', which see."
   (let ((default-directory (magit-toplevel))
         (section (magit-current-section)))
     (cond
@@ -1147,9 +1170,15 @@ The meaning of REV-OR-RANGE, ARGS, and FILES is like in
         (_
          (call-interactively #'difftastic-git-diff-range)))))))
 
+;;;###autoload
+(defun difftastic-magit-diff (&optional args files)
+  "Show the result of \\='git diff ARGS -- FILES\\=' with difftastic."
+  (interactive (magit-diff-arguments))
+  (difftastic--magit-diff args files))
+
 (defun difftastic--magit-show (rev)
-  "Implementation for `difftastic-magit-show'.
-See the original function documentation for REV."
+                                        ; checkdoc-params: (rev)
+  "Implementation for `difftastic-magit-show', which see."
   (if (not rev)
       (user-error "No revision specified")
     (difftastic--git-with-difftastic
@@ -1414,8 +1443,8 @@ temporary file or nil otherwise."
     file-buf))
 
 (defun difftastic--rerun (lang-override)
-  "Implementation for `difftastic-rerun'.
-See the original function documentation for LANG-OVERRIDE."
+                                        ; checkdoc-params: (lang-override)
+  "Implementation for `difftastic-rerun', which see."
   (if-let* (((eq major-mode 'difftastic-mode))
             (rerun-alist (copy-tree difftastic--rerun-alist)))
       (difftastic--with-file-bufs (file-buf-A file-buf-B)
