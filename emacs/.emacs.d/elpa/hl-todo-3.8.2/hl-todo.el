@@ -1,13 +1,14 @@
 ;;; hl-todo.el --- Highlight TODO and similar keywords  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2013-2024 Jonas Bernoulli
+;; Copyright (C) 2013-2025 Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <emacs.hl-todo@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/tarsius/hl-todo
 ;; Keywords: convenience
 
-;; Package-Version: 3.8.1
-;; Package-Requires: ((emacs "26.1") (compat "30.0.0.0"))
+;; Package-Version: 3.8.2
+;; Package-Revision: v3.8.2-0-gfb692ec0923b
+;; Package-Requires: ((emacs "26.1") (compat "30.0.2.0"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -294,7 +295,8 @@ If COLOR is a face symbol, do not combine, return COLOR instead."
 Depends on `hl-todo-include-modes' and `hl-todo-exclude-modes'."
   (when (and (apply #'derived-mode-p hl-todo-include-modes)
              (not (apply #'derived-mode-p hl-todo-exclude-modes))
-             (not (bound-and-true-p enriched-mode)))
+             (not (bound-and-true-p enriched-mode))
+             (not (string-prefix-p " *temp*" (buffer-name))))
     (hl-todo-mode 1)))
 
 ;;;###autoload
@@ -468,18 +470,17 @@ then append that character to the inserted string."
         (save-excursion (insert "\n")))
       (indent-region (line-beginning-position) (line-end-position))))))
 
-(defun hl-todo-magit-revision ()
-  "Highlight TODO and similar keywords in commit messages and notes.
-If `global-hl-todo-mode' is disabled, do nothing."
-  (when global-hl-todo-mode
-    (let ((case-fold-search nil)
-          (regexp (hl-todo--regexp)))
-      (while (re-search-forward regexp nil t)
-        (put-text-property (match-beginning 1)
-                           (match-end 1)
-                           'font-lock-face (hl-todo--get-face))))))
-
-(add-hook 'magit-wash-message-hook #'hl-todo-magit-revision)
+;;;###autoload
+(defun hl-todo-search-and-highlight ()
+  "Highlight TODO and similar keywords starting at point.
+Intended to be added to `magit-revision-wash-message-hook' and
+`magit-log-wash-summary-hook', but might be useful elsewhere too."
+  (let ((case-fold-search nil)
+        (regexp (hl-todo--regexp)))
+    (while (re-search-forward regexp nil t)
+      (put-text-property (match-beginning 1)
+                         (match-end 1)
+                         'font-lock-face (hl-todo--get-face)))))
 
 ;;; _
 (provide 'hl-todo)

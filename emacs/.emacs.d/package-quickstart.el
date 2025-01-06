@@ -9069,7 +9069,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.1/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.1/hl-todo-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.2/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.2/hl-todo-autoloads.el"))
 
 
 
@@ -9173,6 +9173,10 @@ If `hl-todo-require-punctuation' is non-nil and
 then append that character to the inserted string.
 
 (fn KEYWORD)" t)
+(autoload 'hl-todo-search-and-highlight "hl-todo" "\
+Highlight TODO and similar keywords starting at point.
+Intended to be added to `magit-revision-wash-message-hook' and
+`magit-log-wash-summary-hook', but might be useful elsewhere too.")
 (register-definition-prefixes "hl-todo" '("hl-todo-"))
 
 

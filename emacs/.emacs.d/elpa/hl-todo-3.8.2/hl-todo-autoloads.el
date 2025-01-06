@@ -106,6 +106,10 @@ If `hl-todo-require-punctuation' is non-nil and
 then append that character to the inserted string.
 
 (fn KEYWORD)" t)
+(autoload 'hl-todo-search-and-highlight "hl-todo" "\
+Highlight TODO and similar keywords starting at point.
+Intended to be added to `magit-revision-wash-message-hook' and
+`magit-log-wash-summary-hook', but might be useful elsewhere too.")
 (register-definition-prefixes "hl-todo" '("hl-todo-"))
 
 ;;; End of scraped data
