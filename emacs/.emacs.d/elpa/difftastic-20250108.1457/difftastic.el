@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250104.1325
-;; Package-Revision: cfb5336ea972
+;; Package-Version: 20250108.1457
+;; Package-Revision: c2b04adb023d
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -341,6 +341,8 @@
 ;; To run tests:
 ;; - open the <file:test/difftastic.t.el>
 ;; - type `M-x eval-buffer <RET>'
+;; - open the <file:test/difftastic-bindings.t.el>
+;; - type `M-x eval-buffer <RET>'
 ;; - type `M-x ert <RET> t <RET>'
 
 ;;; Code:
@@ -506,6 +508,15 @@ information.  If `difftastic-exits-all-viewing-windows' is nil, only
 the selected window is considered for restoring."
   :type 'boolean
   :group 'difftastic)
+
+(defcustom difftastic-use-last-dir ediff-use-last-dir
+  "When non-nil difftastic will use previous directory when reading file name.
+Like `ediff-use-last-dir', which see."
+  :type 'boolean
+  :group 'difftastic)
+
+(defvar difftastic--last-dir-A nil)
+(defvar difftastic--last-dir-B nil)
 
 (defmacro difftastic--with-temp-advice (symbol how function &rest body)
   ;; checkdoc-params: (symbol how function)
@@ -1324,6 +1335,29 @@ to `difftastic--delete-temp-file-buf'."
           (difftastic--delete-temp-file-buf file-buf))
         (signal (car err) (cdr err))))))
 
+(defun difftastic--buffers-args ()
+  "Return arguments for `difftastic-buffers'."
+  ;; adapted from `ediff-buffers'
+  (let (bf-A bf-B)
+    (list (setq bf-A (read-buffer "Buffer A to compare: "
+                                  (ediff-other-buffer "") t))
+          (setq bf-B (read-buffer "Buffer B to compare: "
+                                  (progn
+                                    ;; realign buffers so that two visible
+                                    ;; buffers will be at the top
+                                    (save-window-excursion (other-window 1))
+                                    (ediff-other-buffer bf-A))
+                                  t))
+          (when (or current-prefix-arg
+                    (and (not (buffer-file-name (get-buffer bf-A)))
+                         (not (buffer-file-name (get-buffer bf-B)))))
+            (let* ((languages (difftastic--get-languages))
+                   (suggested (difftastic--make-suggestion
+                               languages
+                               (get-buffer bf-A)
+                               (get-buffer bf-B))))
+              (completing-read "Language: " languages nil t suggested))))))
+
 ;;;###autoload
 (defun difftastic-buffers (buffer-A buffer-B &optional lang-override)
   "Run difftastic on a pair of buffers, BUFFER-A and BUFFER-B.
@@ -1336,27 +1370,7 @@ BUFFER-B is a file buffer,
 - or function is called with a prefix arg,
 
 then ask for language before running difftastic."
-  ;; adapted from `ediff-buffers'
-  (interactive
-   (let (bf-A bf-B)
-     (list (setq bf-A (read-buffer "Buffer A to compare: "
-                                   (ediff-other-buffer "") t))
-           (setq bf-B (read-buffer "Buffer B to compare: "
-                                   (progn
-                                     ;; realign buffers so that two visible
-                                     ;; buffers will be at the top
-                                     (save-window-excursion (other-window 1))
-                                     (ediff-other-buffer bf-A))
-                                   t))
-           (when (or current-prefix-arg
-                     (and (not (buffer-file-name (get-buffer bf-A)))
-                          (not (buffer-file-name (get-buffer bf-B)))))
-             (let* ((languages (difftastic--get-languages))
-                    (suggested (difftastic--make-suggestion
-                                languages
-                                (get-buffer bf-A)
-                                (get-buffer bf-B))))
-               (completing-read "Language: " languages nil t suggested))))))
+  (interactive (difftastic--buffers-args))
 
   (difftastic--with-file-bufs (file-buf-A file-buf-B)
     (setq file-buf-A (difftastic--get-file-buf "A" (get-buffer buffer-A))
@@ -1368,6 +1382,41 @@ then ask for language before running difftastic."
      file-buf-B
      lang-override)))
 
+(defun difftastic--files-args ()
+  "Return arguments for `difftastic-files'."
+  ;; adapted from `ediff-files'
+  (let ((dir-A (if difftastic-use-last-dir
+                   difftastic--last-dir-A
+                 default-directory))
+        dir-B f ff)
+    (prog1
+        (list (setq f (ediff-read-file-name
+                       "File A to compare"
+                       dir-A
+                       (ediff-get-default-file-name)))
+              (let ((file-name-history file-name-history))
+                (setq dir-B (if difftastic-use-last-dir
+                                difftastic--last-dir-B
+                              (file-name-directory f)))
+                (add-to-history 'file-name-history
+                                (ediff-abbreviate-file-name
+                                 (expand-file-name
+                                  (file-name-nondirectory f)
+                                  dir-B)))
+                (setq ff (ediff-read-file-name
+                          "File B to compare"
+                          dir-B
+                          (ediff-get-default-file-name f 1))))
+              (when current-prefix-arg
+                (completing-read "Language: "
+                                 (difftastic--get-languages)
+                                 nil
+                                 t)))
+      (setq difftastic--last-dir-A (file-name-as-directory
+                                    (file-name-directory f)))
+      (setq difftastic--last-dir-B (file-name-as-directory
+                                    (file-name-directory ff))))))
+
 ;;;###autoload
 (defun difftastic-files (file-A file-B &optional lang-override)
   "Run difftastic on a pair of files, FILE-A and FILE-B.
@@ -1375,32 +1424,7 @@ Optionally, provide a LANG-OVERRIDE to override language used.
 See \\='difft --list-languages\\=' for language list.  When
 function is called with a prefix arg then ask for language before
 running difftastic."
-  ;; adapted from `ediff-files'
-  (interactive
-   (let ((dir-A (if ediff-use-last-dir
-                    ediff-last-dir-A
-                  default-directory))
-         dir-B f)
-     (list (setq f (ediff-read-file-name
-                    "File A to compare"
-                    dir-A
-                    (ediff-get-default-file-name)
-                    'no-dirs))
-           (ediff-read-file-name "File B to compare"
-                                 (setq dir-B
-                                       (if ediff-use-last-dir
-                                           ediff-last-dir-B
-                                         (file-name-directory f)))
-                                 (progn
-                                   (add-to-history
-                                    'file-name-history
-                                    (ediff-abbreviate-file-name
-                                     (expand-file-name
-                                      (file-name-nondirectory f)
-                                      dir-B)))
-                                   (ediff-get-default-file-name f 1)))
-           (when current-prefix-arg
-             (completing-read "Language: " (difftastic--get-languages) nil t)))))
+  (interactive (difftastic--files-args))
   (difftastic--files-internal
    (get-buffer-create (concat "*difftastic "
                               (file-name-nondirectory file-A)
@@ -1410,6 +1434,17 @@ running difftastic."
    (cons file-A nil)
    (cons file-B nil)
    lang-override))
+
+(defun difftastic--dired-diff (file lang-override)
+                                        ; checkdoc-params: (file lang-override)
+  "Implementation for `difftastic--dired-diff', which see."
+  (cl-letf (((symbol-function 'diff)
+             (lambda (current file &rest _)
+               (difftastic-files current file lang-override)))
+            (current-prefix-arg nil))
+    (if (eq file 'interactive)
+        (call-interactively #'dired-diff)
+      (funcall #'dired-diff file))))
 
 ;;;###autoload
 (defun difftastic-dired-diff (file &optional lang-override)
@@ -1422,13 +1457,7 @@ makes the function prompt for LANG-OVERRIDE.  See \\='difft
          (when current-prefix-arg
            (completing-read "Language: " (difftastic--get-languages) nil t)))
    dired-mode)
-  (cl-letf (((symbol-function 'diff)
-             (lambda (current file _switches)
-               (difftastic-files current file lang-override)))
-            (current-prefix-arg nil))
-    (if (eq file 'interactive)
-        (call-interactively #'dired-diff))
-    (funcall #'dired-diff file)))
+  (difftastic--dired-diff file lang-override))
 
 (defun difftastic--rerun-file-buf (prefix file-buf rerun-alist)
   "Create a new temporary file for the FILE-BUF with PREFIX if needed.
