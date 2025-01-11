@@ -7561,7 +7561,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250105.443/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250105.443/org-roam-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250111.252/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250111.252/org-roam-autoloads.el"))
 
 
 
@@ -11549,7 +11549,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250108.1457/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250108.1457/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250109.923/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250109.923/difftastic-autoloads.el"))
 
 
 
@@ -11710,7 +11710,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.31.3/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.31.3/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.31.4/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-3.31.4/cmake-mode-autoloads.el"))
 
 
 
@@ -12115,7 +12115,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.6" "/Users/laurynas/.emacs.d/elpa/org-roam-20250105.443" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.2.0" "/Users/laurynas/.emacs.d/elpa/transient-0.8.3" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.6" "/Users/laurynas/.emacs.d/elpa/org-roam-20250111.252" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.2.0" "/Users/laurynas/.emacs.d/elpa/transient-0.8.3" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
