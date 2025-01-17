@@ -318,7 +318,7 @@ brew install stow git ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
 	colordiff iwyu cppcheck infer creduce gnu-sed mas bat actionlint \
 	circleci imagemagick ripgrep boost cpplint duf eza clang-build-analyzer \
 	recode difftastic git-lfs plantuml gcalcli asdf watch shfmt gcc@11 \
-        gcc@12 gcc@13 gcc markdown gdrive tidy-html5
+        gcc@12 gcc@13 gcc markdown gdrive tidy-html5 yamllint
 git lfs install
 
 #
