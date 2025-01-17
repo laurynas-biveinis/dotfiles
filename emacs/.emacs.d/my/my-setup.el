@@ -334,9 +334,9 @@
   (org-autotask-require-org-clock)
   (let ((path (dotfiles--magit-worktree-branch)))
     (projectile-add-known-project path)
-    ;; Make `projectile' initialize its file cache for this project
-    (when projectile-enable-caching
-      (projectile-project-files path))
+    ;; TODO(laurynas): make `prijectile' initialize its file cache. My previous
+    ;; attempt by (projectile-project-files path) initialized the cache, but the
+    ;; next access would initialize it again.
     ;; TODO(laurynas): install https://github.com/magit/orgit, add a property
     ;; with link to the magit-status buffer of this project to the currently
     ;; clocked-in task. Set up that clocking-in with this property existing goes
