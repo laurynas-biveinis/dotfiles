@@ -3081,7 +3081,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "2b7a1688f24cc8ef5a3c3a6dab8e00d833bcda59"))])
  (org .
-      [(9 7 19)
+      [(9 7 20)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -3090,7 +3090,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "5a4686915e568ace469f490c0606d2a016c1101c"))])
+	(:commit . "f9966309d507c6a98b7597f0e9639b3051ebe969"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -4831,20 +4831,20 @@
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	    (:commit . "6ef99c9219b55b7618d111d352caf795ba07bc54"))])
  (vertico-posframe .
-		   [(0 7 8)
+		   [(0 8 0)
 		    ((emacs
 		      (26 0))
 		     (posframe
 		      (1 4 0))
 		     (vertico
-		      (1 1)))
+		      (1 10)))
 		    "Using posframe to show Vertico" tar
 		    ((:url . "https://github.com/tumashu/vertico-posframe")
 		     (:keywords "abbrev" "convenience" "matching" "vertico")
 		     (:maintainer "Feng Shu" . "tumashu@163.com")
 		     (:authors
 		      ("Feng Shu" . "tumashu@163.com"))
-		     (:commit . "b1bcba60550ac2cf7676ad00c3f735dc43489869"))])
+		     (:commit . "781ee08f8d92f640dff8a0d8838b67a13a391846"))])
  (vigenere .
 	   [(1 0)
 	    ((emacs
