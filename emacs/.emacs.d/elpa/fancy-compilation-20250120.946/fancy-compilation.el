@@ -6,7 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-fancy-compilation
-;; Version: 0.1
+;; Package-Version: 20250120.946
+;; Package-Revision: 0fc42482983d
 ;; Package-Requires: ((emacs "26.1"))
 
 ;;; Commentary:
@@ -24,7 +25,10 @@
 
 (eval-when-compile
   (require 'compile)
-  (require 'ansi-color))
+  (require 'ansi-color)
+
+  ;; Quiet byte-code compilation warning.
+  (declare-function ansi-color-apply-on-region "diff-ansi"))
 
 
 ;; ---------------------------------------------------------------------------

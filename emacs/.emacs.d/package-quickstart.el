@@ -11072,7 +11072,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20240422.111/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20240422.111/fancy-compilation-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20250120.946/fancy-compilation-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/fancy-compilation-20250120.946/fancy-compilation-autoloads.el"))
 
 
 
