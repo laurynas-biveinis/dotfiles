@@ -323,7 +323,7 @@
 	    ("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	   (:commit . "0cf8b60f62876f3e75653a5fb30d5d5cdd74c586"))])
  (beframe .
-	  [(1 2 1)
+	  [(1 3 0)
 	   ((emacs
 	     (28 1)))
 	   "Isolate buffers per frame" tar
@@ -331,7 +331,7 @@
 	    (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	    (:authors
 	     ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	    (:commit . "ae7aaf8bcfa2b7883a8b9401bcb76f53324f6409"))])
+	    (:commit . "94b5122122959ea38cf257916edaf29e4ab02949"))])
  (bicep-ts-mode .
 		[(0 1 3)
 		 nil "tree-sitter support for Bicep" tar
@@ -1657,7 +1657,7 @@
 			(:url . "https://elpa.gnu.org/packages/external-completion.html")
 			(:commit . "4bc9c8972ac0a3dfa237a9c5704de89ef24ad82b"))])
  (exwm .
-       [(0 32)
+       [(0 33)
 	((emacs
 	  (27 1))
 	 (xelb
@@ -1673,7 +1673,7 @@
 	  ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	 (:authors
 	  ("Chris Feng" . "chris.w.feng@gmail.com"))
-	 (:commit . "1485fcf064cee1766444472b09a681654c68636e"))])
+	 (:commit . "da034e67784a9e2600383e75606a6ade6925f374"))])
  (f90-interface-browser .
 			[(1 1)
 			 nil "Parse and browse f90 interfaces" single
@@ -3958,7 +3958,7 @@
 	      (:url . "https://elpa.gnu.org/packages/shen-mode.html")
 	      (:commit . "df28df31317188a6d87c9df93444543ace4f7f4f"))])
  (show-font .
-	    [(0 1 1)
+	    [(0 2 1)
 	     ((emacs
 	       (28 1)))
 	     "Show font features in a buffer" tar
@@ -3967,7 +3967,7 @@
 	      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	      (:authors
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	      (:commit . "0f46562e42a4cc7f2546392360debed724be87e0"))])
+	      (:commit . "af941f3eafc1ee03e0d807c147ba07b878656222"))])
  (sisu-mode .
 	    [(7 1 8)
 	     nil "Major mode for SiSU markup text" tar

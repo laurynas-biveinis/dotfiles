@@ -2654,14 +2654,14 @@
 	     ((:url . "https://github.com/lewang/ws-butler")
 	      (:commit . "d3927f6131f215e9cd3e1f747be5a91e5be8ca9a"))])
  (xah-fly-keys .
-	       [(26 9 20241225173150)
+	       [(26 9 20250124153828)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "723d92aa47d618d2af84bd0bbffbd311103d5f99"))])
+		 (:commit . "bb111ced8ed987101e7a966af5696379d44fa0bc"))])
  (xkcd .
        [(1 1)
 	((json
