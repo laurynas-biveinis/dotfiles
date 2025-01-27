@@ -202,7 +202,7 @@ mysql_export_environment_helpers() {
     declare -gA cmake_flags=()
 
     declare -r min_version="8.0.18"
-    declare -r max_version="9.1.0"
+    declare -r max_version="9.2.0"
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -381,6 +381,17 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.33" "${max_version}" any \
                           "-DFORCE_COLORED_OUTPUT=ON"
+
+    # Workaround https://bugs.mysql.com/bug.php?id=117299 (ddl0bulk.h:236:15:
+    # error: parameter 'prebuilt' not found in the function declaration
+    # [-Werror,-Wdocumentation])
+    mysql_add_comp_flags "9.2.0" "9.2.0" cxx "-Wno-documentation"
+
+    declare -a -r my920_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.2.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.2.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.2.0 cxx_release)"
+    )
 
     mysql_add_comp_flags "9.1.0" "9.1.0" cxx "-Wno-unused-const-variable"
 
@@ -592,6 +603,11 @@ mysql_export_environment_helpers() {
     )
 
     # Paydirt!
+
+    export MY920D=("${myd[@]}" $(mysql_get_cmake_flags 9.2.0 any_debug)
+                   "${my920_comp_flags[@]}")
+    export MY920=("${myr[@]}" $(mysql_get_cmake_flags 9.2.0 any_release)
+                  "${my920_comp_flags[@]}")
 
     export MY910D=("${myd[@]}" $(mysql_get_cmake_flags 9.1.0 any_debug)
                    "${my910_comp_flags[@]}")
@@ -810,6 +826,12 @@ mysql_cmake() {
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                9.2.0)
+                    declare -a release_flags=("${MY920[@]}")
+                    declare -a debug_flags=("${MY920D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 9.1.0)
                     declare -a release_flags=("${MY910[@]}")
                     declare -a debug_flags=("${MY910D[@]}")
