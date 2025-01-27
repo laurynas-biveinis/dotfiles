@@ -250,7 +250,6 @@ mysql_export_environment_helpers() {
                              "-Wno-unused-but-set-variable" \
                              "-Wno-deprecated-copy-with-dtor"
         mysql_add_comp_flags "8.0.36" "8.0.36" cxx "-Wno-unused-variable"
-        mysql_add_cmake_flags "8.3.0" "9.0.1" any "-DWITH_ZLIB=bundled"
 
         declare -a maria_common=(
             "-DCMAKE_C_FLAGS='-isystem /usr/local/include'"
