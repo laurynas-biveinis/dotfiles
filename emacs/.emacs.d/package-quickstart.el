@@ -10732,7 +10732,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.1.0/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.1.0/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.0/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.0/closql-autoloads.el"))
 
 
 

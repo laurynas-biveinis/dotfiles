@@ -1,13 +1,13 @@
 ;;; closql.el --- Store EIEIO objects using EmacSQL  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2016-2024 Jonas Bernoulli
+;; Copyright (C) 2016-2025 Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <emacs.closql@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/emacscollective/closql
 ;; Keywords: extensions
 
-;; Package-Version: 2.1.0
-;; Package-Revision: v2.1.0-0-gb1522c4bcb3a
+;; Package-Version: 2.2.0
+;; Package-Revision: v2.2.0-0-gd925b8c9c1c7
 ;; Package-Requires: (
 ;;     (emacs "26.1")
 ;;     (compat "30.0.0.0")
@@ -183,7 +183,7 @@
                  (aset (eieio--class-class-allocation-values class) c value))
         (slot-missing obj slot 'oset value)))))
 
-(cl-defgeneric closql-dset (obj slot value)
+(cl-defgeneric closql-dset (obj slot value &optional drop-unknown)
   (let* ((db    (closql--oref obj 'closql-database))
          (key   (oref-default obj closql-primary-key))
          (id    (closql--oref obj key))
@@ -241,6 +241,11 @@
                      (cdr  elt1)
                      (cdr  elt2)))
                   (pop list1)
+                  (pop list2))
+                 (drop-unknown
+                  (ignore-errors
+                    (emacsql db [:insert-into $i1 :values $v2]
+                             table (vconcat (cons id elt2))))
                   (pop list2))
                  (t
                   (emacsql db [:insert-into $i1 :values $v2]
