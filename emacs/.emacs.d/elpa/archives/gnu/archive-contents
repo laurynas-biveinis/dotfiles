@@ -4593,7 +4593,7 @@
 	  ("Toby Cubitt" . "toby-predictive@dr-qubit.org"))
 	 (:commit . "e7326a61b1cd2605867063fcfc5ddddaeed6d993"))])
  (triples .
-	  [(0 4 1)
+	  [(0 5 0)
 	   ((seq
 	     (2 0))
 	    (emacs
@@ -4604,7 +4604,7 @@
 	    (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	    (:authors
 	     ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	    (:commit . "b7117858ed9e538a379cc398a7dbeea7046d585d"))])
+	    (:commit . "2e7cae76ac60227704c9631d27edf409b85e67c7"))])
  (typo .
        [(1 0 1)
 	((emacs
