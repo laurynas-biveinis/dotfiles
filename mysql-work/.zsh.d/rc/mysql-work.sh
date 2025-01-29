@@ -268,7 +268,8 @@ mysql_export_environment_helpers() {
                           "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@13/bin/clang++")
         # CMAKE_AR settings below workaround
         # https://bugs.mysql.com/bug.php?id=113113 (Build failure with Homebrew
-        # LLVM 14-17 on macOS)
+        # LLVM 14-17 on macOS). Remove the workaround when 8.4.4 and 9.2.0 are
+        # the oldest supported versions.
         export MYCLANG14=("-DCMAKE_C_COMPILER=$brew_opt/llvm@14/bin/clang"
                           "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@14/bin/clang++"
                           "-DCMAKE_AR=$brew_opt/llvm@14/bin/llvm-ar")
