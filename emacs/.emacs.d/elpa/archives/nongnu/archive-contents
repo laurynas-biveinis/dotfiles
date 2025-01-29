@@ -2150,7 +2150,7 @@
 	      (:keywords "markup" "language" "css")
 	      (:commit . "aee28ea552dce5aade05d8a7f91514e6eb37e59f"))])
  (scad-mode .
-	    [(95 0)
+	    [(96 0)
 	     ((emacs
 	       (28 1))
 	      (compat
@@ -2161,7 +2161,7 @@
 	      (:maintainer
 	       ("Len Trigg" . "lenbok@gmail.com")
 	       ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	      (:commit . "8bc0bbb7ab770ec81d7ce460984a000bf7a3c112"))])
+	      (:commit . "36852e689c34936464b32d1558f6f9428dce63b8"))])
  (scala-mode .
 	     [(1 1 1)
 	      ((emacs
@@ -2299,14 +2299,14 @@
 		     ("John Olsson" . "john@cryon.se"))
 		    (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed .
-	[(1 2 23)
+	[(1 2 25)
 	 ((emacs
 	   (25 1)))
 	 "A major mode for editing subtitles" tar
 	 ((:url . "https://github.com/sachac/subed")
 	  (:keywords "convenience" "files" "hypermedia" "multimedia")
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
-	  (:commit . "0a1b5adbd038fd16dce0a72886fbb106442d7816"))])
+	  (:commit . "df6f443ac6ed4c02bacb64a3f1c5c7888dfca5d0"))])
  (sweeprolog .
 	     [(0 27 6)
 	      ((emacs
