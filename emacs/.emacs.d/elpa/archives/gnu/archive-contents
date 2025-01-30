@@ -923,7 +923,7 @@
 		 (:url . "https://elpa.gnu.org/packages/cycle-quotes.html")
 		 (:commit . "836b19b39651419876e65cdb1a91e3eef83cc4e7"))])
  (dape .
-       [(0 21 0)
+       [(0 22 0)
 	((emacs
 	  (29 1))
 	 (jsonrpc
@@ -931,7 +931,7 @@
 	"Debug Adapter Protocol for Emacs" tar
 	((:url . "https://github.com/svaante/dape")
 	 (:maintainer "Daniel Pettersson" . "daniel@dpettersson.net")
-	 (:commit . "70d5db46325e9642f6a25730a79f3d0ae38c7eb7"))])
+	 (:commit . "89c0c7f0df0e74d11b613e9f3547588ef99c081a"))])
  (darkroom .
 	   [(0 3)
 	    ((cl-lib
@@ -3176,7 +3176,7 @@
 	      ("Amy Grinn" . "grinn.amy@gmail.com"))
 	     (:commit . "aa45c5dc795779e4f25e4a8200da06454e070a79"))])
  (org-remark .
-	     [(1 2 2)
+	     [(1 3 0)
 	      ((emacs
 		(27 1))
 	       (org
@@ -3187,7 +3187,7 @@
 	       (:maintainer "Noboru Ota" . "me@nobiot.com")
 	       (:authors
 		("Noboru Ota" . "me@nobiot.com"))
-	       (:commit . "b49ef0a0a0bd61c912567bcdcc201d4afe110a75"))])
+	       (:commit . "c458649989ab32babb61cf9fc5c178cdaef1a62a"))])
  (org-transclusion .
 		   [(1 4 0)
 		    ((emacs
