@@ -754,18 +754,18 @@
 		    ("Protesilaos Stavrou" . "info@protesilaos.com"))
 		   (:commit . "e07001ce3ded4b226f59264d3c8162761580c052"))])
  (consult-hoogle .
-		 [(0 3 0)
+		 [(0 4 0)
 		  ((emacs
 		    (28 1))
 		   (consult
-		    (0 18)))
+		    (2 0)))
 		  "Hoogle frontend using consult" tar
 		  ((:url . "https://codeberg.org/rahguzar/consult-hoogle")
 		   (:keywords "docs" "languages")
-		   (:maintainer "rahguzar" . "rahguzar@zohomail.eu")
+		   (:maintainer "rahguzar" . "rahguzar@mailbox.org")
 		   (:authors
-		    ("rahguzar" . "rahguzar@zohomail.eu"))
-		   (:commit . "2eae2976d8b097183a448f1e1bdbdcba8f8027bf"))])
+		    ("rahguzar" . "rahguzar@mailbox.org"))
+		   (:commit . "377799ace82f7a494410961252fe8ba624cefe00"))])
  (consult-recoll .
 		 [(0 8 1)
 		  ((emacs
@@ -4500,7 +4500,7 @@
 		  (:url . "https://elpa.gnu.org/packages/track-changes.html")
 		  (:commit . "44036b32ba398cf284320285b60be35874b6eea5"))])
  (tramp .
-	[(2 7 2)
+	[(2 7 2 1)
 	 ((emacs
 	   (27 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
@@ -4509,7 +4509,7 @@
 	  (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
 	  (:authors
 	   ("Kai Großjohann" . "kai.grossjohann@gmx.net"))
-	  (:commit . "306ca5a231de66682f91676485ac6353c735d4fb"))])
+	  (:commit . "8e038b0dc1fc16acf26c1c4b549a7be3c86e8a45"))])
  (tramp-nspawn .
 	       [(1 0 1)
 		((emacs
