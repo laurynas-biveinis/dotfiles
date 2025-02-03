@@ -1,17 +1,18 @@
 ;;; ghub.el --- Client libraries for Git forge APIs  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2016-2024 Jonas Bernoulli
+;; Copyright (C) 2016-2025 Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <emacs.ghub@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/magit/ghub
 ;; Keywords: tools
 
-;; Package-Version: 4.2.0
-;; Package-Revision: v4.2.0-0-g97edaf450ef7
+;; Package-Version: 4.2.1
+;; Package-Revision: v4.2.1-0-gc5003950b5ef
 ;; Package-Requires: (
 ;;     (emacs "29.1")
-;;     (compat "30.0.0.0")
+;;     (compat "30.0.2.0")
 ;;     (let-alist "1.0.6")
+;;     (llama "0.6.0")
 ;;     (treepy "0.1.2"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -63,16 +64,12 @@
 (require 'compat)
 (require 'gnutls)
 (require 'let-alist)
+(require 'llama)
 (require 'url)
 (require 'url-auth)
 (require 'url-http)
 
 (eval-when-compile (require 'subr-x))
-
-;; Needed for Emacs < 27.
-(eval-when-compile (require 'json))
-(declare-function json-read-from-string "json" (string))
-(declare-function json-encode "json" (object))
 
 (declare-function glab-repository-id "glab" (owner name &key username auth host))
 (declare-function gtea-repository-id "gtea" (owner name &key username auth host))
@@ -446,10 +443,8 @@ to the value of `ghub-response-headers', for later use when
 this function is called with nil for PAYLOAD."
   (if (eq (ghub--req-forge req) 'bitbucket)
       (if payload
-          (let* ((page (mapcan (lambda (key)
-                                 (and-let* ((elt (assq key payload)))
-                                   (list elt)))
-                               '(size page pagelen next previous)))
+          (let* ((page (seq-keep (##assq % payload)
+                                 '(size page pagelen next previous)))
                  (headers (cons (cons 'link-alist page) headers)))
             (if (and req (or (ghub--req-callback req)
                              (ghub--req-errorback req)))
@@ -754,25 +749,22 @@ and call `auth-source-forget+'."
 
 (defun ghub--token (host username package &optional nocreate forge)
   (let* ((user (ghub--ident username package))
-         (token
-          (or (car (ghub--auth-source-get (list :secret)
-                     :host host :user user))
-              (progn
-                ;; Auth-Source caches the information that there is no
-                ;; value, but in our case that is a situation that needs
-                ;; fixing so we want to keep trying by invalidating that
-                ;; information.
-                ;; The (:max 1) is needed and has to be placed at the
-                ;; end for Emacs releases before 26.1.  #24 #64 #72
-                (auth-source-forget (list :host host :user user :max 1))
-                (and (not nocreate)
-                     (error "\
-Required %s token (\"%s\" for \"%s\") does not exist.
+         (token (or (ghub--auth-source-get :secret :host host :user user)
+                    (and (string-match "\\`\\([^/]+\\)" host)
+                         (ghub--auth-source-get :secret
+                           :host (match-string 1 host)
+                           :user user)))))
+    (unless (or token nocreate)
+      (error "\
+Required %s token (%S for %s%sS) does not exist.
 See https://magit.vc/manual/ghub/Getting-Started.html
-or (info \"(ghub)Getting Started\") for instructions.
-\(The setup wizard no longer exists.)"
-                            (capitalize (symbol-name (or forge 'github)))
-                            user host))))))
+or (info \"(ghub)Getting Started\") for instructions."
+             (capitalize (symbol-name (or forge 'github)))
+             user
+             (if (string-match "\\`\\([^/]+\\)" host)
+                 (format "either \"%s\" or"  (match-string 1 host))
+               "")
+             host))
     (if (functionp token) (funcall token) token)))
 
 (cl-defgeneric ghub--host (&optional forge)
@@ -840,11 +832,16 @@ or (info \"(ghub)Getting Started\") for instructions.
 
 (defun ghub--auth-source-get (keys &rest spec)
   (declare (indent 1))
-  (let ((plist (car (apply #'auth-source-search
-                           (append spec (list :max 1))))))
-    (mapcar (lambda (k)
-              (plist-get plist k))
-            keys)))
+  (if-let ((plist (car (apply #'auth-source-search
+                              (append spec (list :max 1))))))
+      (if (keywordp keys)
+          (plist-get plist keys)
+        (mapcar (##plist-get plist %) keys))
+    ;; Auth-Source caches the information that there is no value, but in
+    ;; our case that is a situation that needs fixing, so we want to keep
+    ;; trying, by invalidating that information.
+    (auth-source-forget spec)
+    nil))
 
 ;;; _
 (provide 'ghub)

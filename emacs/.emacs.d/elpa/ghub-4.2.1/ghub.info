@@ -1,6 +1,6 @@
 This is ghub.info, produced by makeinfo version 6.8 from ghub.texi.
 
-     Copyright (C) 2017-2024 Jonas Bernoulli
+     Copyright (C) 2017-2025 Jonas Bernoulli
      <emacs.ghub@jonas.bernoulli.dev>
 
      You can redistribute this document and/or modify it under the terms
@@ -27,9 +27,9 @@ Ghub User and Developer Manual
 Ghub is an Emacs library that is used by various packages to access the
 APIs of various instances of various Git forge implementations.
 
-This manual is for Ghub version 4.2.0.
+This manual is for Ghub version 4.2.1.
 
-     Copyright (C) 2017-2024 Jonas Bernoulli
+     Copyright (C) 2017-2025 Jonas Bernoulli
      <emacs.ghub@jonas.bernoulli.dev>
 
      You can redistribute this document and/or modify it under the terms
@@ -59,12 +59,6 @@ Getting Started
 * Setting the Username::
 * Creating and Storing a Token::
 * Github Configuration Variables::
-
-Creating and Storing a Token
-
-* Creating a Token::
-* Storing a Token::
-
 
 API
 
@@ -296,14 +290,6 @@ File: ghub.info,  Node: Creating and Storing a Token,  Next: Github Configuratio
 2.3 Creating and Storing a Token
 ================================
 
-* Menu:
-
-* Creating a Token::
-* Storing a Token::
-
-
-File: ghub.info,  Node: Creating a Token,  Next: Storing a Token,  Up: Creating and Storing a Token
-
 2.3.1 Creating a Token
 ----------------------
 
@@ -325,9 +311,6 @@ token can be used.
 should consult the documentation of that package, which in turn should
 tell you which scopes are needed and why.  The Forge package for example
 does so in *note (forge)Token Creation::.
-
-
-File: ghub.info,  Node: Storing a Token,  Prev: Creating a Token,  Up: Creating and Storing a Token
 
 2.3.2 Storing a Token
 ---------------------
@@ -1129,30 +1112,30 @@ Appendix B Variable Index
 
 Tag Table:
 Node: Top773
-Node: Introduction2316
-Node: Getting Started2721
-Node: Basic Concepts Arguments and Variables3748
-Node: Setting the Username7728
-Ref: Setting your Githubcom Username8216
-Ref: Setting your Gitlabcom Username8572
-Ref: Setting your Github Enterprise Username9038
-Ref: Setting your Username for Other Hosts and/or Forges9771
-Node: Creating and Storing a Token10577
-Node: Creating a Token10841
-Node: Storing a Token11855
-Node: Github Configuration Variables13701
-Node: API15412
-Node: Their APIs15650
-Node: Making REST Requests16375
-Node: Making GraphQL Requests25788
-Node: Github Convenience Wrappers32471
-Node: Non-Github Convenience Wrappers36175
-Node: Notes41679
-Node: Using Ghub in Personal Scripts41886
-Node: Using Ghub in Your Own Package42777
-Node: Forge Limitations and Notes43712
-Node: Function Index44685
-Node: Variable Index50334
+Node: Introduction2243
+Node: Getting Started2648
+Node: Basic Concepts Arguments and Variables3675
+Node: Setting the Username7655
+Ref: Setting your Githubcom Username8143
+Ref: Setting your Gitlabcom Username8499
+Ref: Setting your Github Enterprise Username8965
+Ref: Setting your Username for Other Hosts and/or Forges9698
+Node: Creating and Storing a Token10504
+Ref: Creating a Token10717
+Ref: Storing a Token11628
+Node: Github Configuration Variables13371
+Node: API15082
+Node: Their APIs15320
+Node: Making REST Requests16045
+Node: Making GraphQL Requests25458
+Node: Github Convenience Wrappers32141
+Node: Non-Github Convenience Wrappers35845
+Node: Notes41349
+Node: Using Ghub in Personal Scripts41556
+Node: Using Ghub in Your Own Package42447
+Node: Forge Limitations and Notes43382
+Node: Function Index44355
+Node: Variable Index50004
 
 End Tag Table
 
