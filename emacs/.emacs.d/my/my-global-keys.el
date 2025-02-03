@@ -22,6 +22,8 @@
 (declare-function my-secrets "secrets" ())
 (declare-function my-gtd "secrets" ())
 (declare-function my-main-agenda "secrets" ())
+(declare-function my-create-pr "secrets" ())
+(declare-function my-close-pr "secrets" ())
 (declare-function end-of-line-and-newline-and-indent "my-edit" ())
 (declare-function my-switch-to-scratch "my-setup" ())
 
@@ -55,6 +57,8 @@
 (global-set-key (kbd "<f9>") #'my-gtd)
 (global-set-key (kbd "<f12>") #'my-switch-to-scratch)
 (global-set-key (kbd "C-c m") #'mu4e)
+(global-set-key (kbd "C-c p c") #'my-create-pr)
+(global-set-key (kbd "C-c p x") #'my-close-pr)
 
 ;; `magit'
 (global-set-key (kbd "C-x g") #'magit-status)

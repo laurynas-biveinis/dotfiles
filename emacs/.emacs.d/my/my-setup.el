@@ -1158,12 +1158,20 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             projectile-compile-project kill-whole-line
                             beginend-compilation-mode-goto-beginning
                             handle-switch-frame package-menu-execute
-                            transient:magit-push:--force-with-lease
+                            transient:magit-push:--force-with-lease magit-rebase
                             markdown-electric-backquote message-send-and-exit
                             projectile-configure-project magit-submodule
                             my-switch-to-scratch magit-submodule-populate
                             xref-revert-buffer isearch-abort org-metaright
-                            magit-copy-buffer-revision magit-worktree))
+                            magit-copy-buffer-revision magit-worktree
+                            deadgrep-restart image-forward-hscroll my-close-pr
+                            capitalize-word downcase-word comment-region
+                            doc-view-next-line-or-next-page mark-whole-buffer
+                            doc-view-previous-line-or-previous-page my-create-pr
+                            my-magit-worktree-branch projectile-test-project
+                            beginend-compilation-mode-goto-end left-word
+                            indent-rigidly-right magit-rebase-branch
+                            markdown-insert-list-item image-backward-hscroll))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
