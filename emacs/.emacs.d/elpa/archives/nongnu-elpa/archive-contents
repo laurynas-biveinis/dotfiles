@@ -406,7 +406,7 @@
 	      (:keywords "languages")
 	      (:commit . "3bac14200f9f8f8fcebc383087572da5c3823c34"))])
  (datetime .
-	   [(0 10 1)
+	   [(0 10 2)
 	    ((emacs
 	      (25 1))
 	     (extmap
@@ -417,7 +417,7 @@
 	     (:maintainer "Paul Pogonyshev" . "pogonyshev@gmail.com")
 	     (:authors
 	      ("Paul Pogonyshev" . "pogonyshev@gmail.com"))
-	     (:commit . "41d0221ee2fc7b9f9c57cf930f0011edf977a2a8"))])
+	     (:commit . "b8e5fc2b7338f26ee816a3b03322c585dbd3b686"))])
  (denote-refs .
 	      [(0 1 2)
 	       ((emacs
@@ -1724,14 +1724,14 @@
 	     ("Akib Azmain Turja" . "akib@disroot.org"))
 	    (:commit . "22831489d3bbc22aef315c0f003bf3756b8889fa"))])
  (moe-theme .
-	    [(1 0 2)
+	    [(1 1 0)
 	     nil "A colorful eye-candy theme. Moe, moe, kyun!" tar
 	     ((:url . "https://github.com/kuanyui/moe-theme.el")
 	      (:keywords "themes")
 	      (:maintainer "kuanyui" . "azazabc123@gmail.com")
 	      (:authors
 	       ("kuanyui" . "azazabc123@gmail.com"))
-	      (:commit . "52102d23f5a20d6349abc645c19bd04370773241"))])
+	      (:commit . "0a8ca29701170ea307a7f46d868c53bbce02f3c3"))])
  (monokai-theme .
 		[(3 5 3)
 		 nil "A fruity color theme for Emacs." tar
