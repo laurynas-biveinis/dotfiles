@@ -95,7 +95,7 @@ Simple mode to edit YAML.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/yaml-1.0.0/yaml-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-1.0.0/yaml-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/yaml-1.1.0/yaml-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-1.1.0/yaml-autoloads.el"))
 
 
 
@@ -4703,7 +4703,120 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.2.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.2.0/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.0/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.0/llama-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'llama "llama" "\
+Expand to a `lambda' expression that wraps around FN and BODY.
+
+This macro provides a compact way to write short `lambda' expressions.
+It expands to a `lambda' expression, which calls the function FN with
+arguments BODY and returns its value.  The arguments of the `lambda'
+expression are derived from symbols found in BODY.
+
+Each symbol from `%1' through `%9', which appears in an unquoted part
+of BODY, specifies a mandatory argument.  Each symbol from `&1' through
+`&9', which appears in an unquoted part of BODY, specifies an optional
+argument.  The symbol `&*' specifies extra (`&rest') arguments.
+
+The shorter symbol `%' can be used instead of `%1', but using both in
+the same expression is not allowed.  Likewise `&' can be used instead
+of `&1'.  These shorthands are not recognized in function position.
+
+To support binding forms that use a vector as VARLIST (such as `-let'
+from the `dash' package), argument symbols are also detected inside of
+vectors.
+
+The space between `##' and FN can be omitted because `##' is read-syntax
+for the symbol whose name is the empty string.  If you prefer you can
+place a space there anyway, and if you prefer to not use this somewhat
+magical symbol at all, you can instead use the alternative name `llama'.
+
+Instead of:
+
+  (lambda (a &optional _ c &rest d)
+    (foo a (bar c) d))
+
+you can use this macro and write:
+
+  (##foo %1 (bar &3) &*)
+
+which expands to:
+
+  (lambda (%1 &optional _&2 &3 &rest &*)
+    (foo %1 (bar &3) &*))
+
+Unused trailing arguments and mandatory unused arguments at the border
+between mandatory and optional arguments are also supported:
+
+  (##list %1 _%3 &5 _&6)
+
+becomes:
+
+  (lambda (%1 _%2 _%3 &optional _&4 &5 _&6)
+    (list %1 &5))
+
+Note how `_%3' and `_&6' are removed from the body, because their names
+begin with an underscore.  Also note that `_&4' is optional, unlike the
+explicitly specified `_%3'.
+
+(fn FN &rest BODY)" nil t)
+(autoload 'llama-fontify-mode "llama" "\
+Toggle fontification of the `##' macro and its positional arguments.
+
+This is a minor mode.  If called interactively, toggle the
+`Llama-Fontify mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `llama-fontify-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(put 'global-llama-fontify-mode 'globalized-minor-mode t)
+(defvar global-llama-fontify-mode nil "\
+Non-nil if Global Llama-Fontify mode is enabled.
+See the `global-llama-fontify-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-llama-fontify-mode'.")
+(custom-autoload 'global-llama-fontify-mode "llama" nil)
+(autoload 'global-llama-fontify-mode "llama" "\
+Toggle Llama-Fontify mode in all buffers.
+With prefix ARG, enable Global Llama-Fontify mode if ARG is positive; otherwise,
+disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Llama-Fontify mode is enabled in all buffers where `llama--turn-on-fontify-mode'
+would do it.
+
+See `llama-fontify-mode' for more information on Llama-Fontify mode.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "llama" '("\\#\\#" "completing-read" "elisp-" "intern" "lisp--el-match-keyword" "llama-"))
+
+
+(provide 'llama-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.0/magit-section-autoloads.el"))
 
 
 
@@ -4758,7 +4871,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.2.0/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.2.0/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.0/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.0/magit-autoloads.el"))
 
 
 
@@ -5262,78 +5375,132 @@ Clone REPOSITORY into DIRECTORY and create a sparse checkout.
 
  (autoload 'magit-commit "magit-commit" nil t)
 (autoload 'magit-commit-create "magit-commit" "\
-Create a new commit on `HEAD'.
-With a prefix argument, amend to the commit at `HEAD' instead.
-
-(git commit [--amend] ARGS)
-
-(fn &optional ARGS)" t)
-(autoload 'magit-commit-amend "magit-commit" "\
-Amend the last commit.
-
-(git commit --amend ARGS)
+Create a new commit.
 
 (fn &optional ARGS)" t)
 (autoload 'magit-commit-extend "magit-commit" "\
-Amend the last commit, without editing the message.
+Amend staged changes to the last commit, without editing its message.
 
-With a prefix argument keep the committer date, otherwise change
-it.  The option `magit-commit-extend-override-date' can be used
-to inverse the meaning of the prefix argument.
-
-(git commit --amend --no-edit)
+With a prefix argument do not update the committer date; without an
+argument update it. The option `magit-commit-extend-override-date'
+can be used to inverse the meaning of the prefix argument.  Called
+non-interactively, the optional OVERRIDE-DATE argument controls this
+behavior, and the option is of no relevance.
 
 (fn &optional ARGS OVERRIDE-DATE)" t)
+(autoload 'magit-commit-amend "magit-commit" "\
+Amend staged changes (if any) to the last commit, and edit its message.
+
+(fn &optional ARGS)" t)
 (autoload 'magit-commit-reword "magit-commit" "\
-Reword the last commit, ignoring staged changes.
+Reword the message of the last commit, without amending its tree.
 
-With a prefix argument keep the committer date, otherwise change
-it.  The option `magit-commit-reword-override-date' can be used
-to inverse the meaning of the prefix argument.
-
-Non-interactively respect the optional OVERRIDE-DATE argument
-and ignore the option.
-
-(git commit --amend --only)
+With a prefix argument do not update the committer date; without an
+argument update it. The option `magit-commit-reword-override-date'
+can be used to inverse the meaning of the prefix argument.  Called
+non-interactively, the optional OVERRIDE-DATE argument controls this
+behavior, and the option is of no relevance.
 
 (fn &optional ARGS OVERRIDE-DATE)" t)
 (autoload 'magit-commit-fixup "magit-commit" "\
-Create a fixup commit.
+Create a fixup commit, leaving the original commit message untouched.
 
-With a prefix argument the target COMMIT has to be confirmed.
-Otherwise the commit at point may be used without confirmation
-depending on the value of option `magit-commit-squash-confirm'.
+If there is a reachable commit at point, target that.  Otherwise prompt
+for a commit.  If `magit-commit-squash-confirm' is non-nil, always make
+the user explicitly select a commit, in a buffer dedicated to that task.
+
+During a later rebase, when this commit gets squashed into its targeted
+commit, the original message of the targeted commit is used as-is.
+
+In other words, call \"git commit --fixup=COMMIT --no-edit\".
 
 (fn &optional COMMIT ARGS)" t)
 (autoload 'magit-commit-squash "magit-commit" "\
-Create a squash commit, without editing the squash message.
+Create a squash commit, without the user authoring a commit message.
 
-With a prefix argument the target COMMIT has to be confirmed.
-Otherwise the commit at point may be used without confirmation
-depending on the value of option `magit-commit-squash-confirm'.
+If there is a reachable commit at point, target that.  Otherwise prompt
+for a commit.  If `magit-commit-squash-confirm' is non-nil, always make
+the user explicitly select a commit, in a buffer dedicated to that task.
 
-If you want to immediately add a message to the squash commit,
-then use `magit-commit-augment' instead of this command.
+During a later rebase, when this commit gets squashed into its targeted
+commit, the user is given a chance to edit the original message to take
+the changes from the squash commit into account.
+
+In other words, call \"git commit --squash=COMMIT --no-edit\".
+
+(fn &optional COMMIT ARGS)" t)
+(autoload 'magit-commit-alter "magit-commit" "\
+Create a squash commit, authoring the final commit message now.
+
+If there is a reachable commit at point, target that.  Otherwise prompt
+for a commit.  If `magit-commit-squash-confirm' is non-nil, always make
+the user explicitly select a commit, in a buffer dedicated to that task.
+
+During a later rebase, when this commit gets squashed into its targeted
+commit, the original message of the targeted commit is replaced with the
+message of this commit, without the user automatically being given a
+chance to edit again.
+
+In other words, call \"git commit --fixup=amend:COMMIT --edit\".
 
 (fn &optional COMMIT ARGS)" t)
 (autoload 'magit-commit-augment "magit-commit" "\
-Create a squash commit, editing the squash message.
+Create a squash commit, authoring a new temporary commit message.
 
-With a prefix argument the target COMMIT has to be confirmed.
-Otherwise the commit at point may be used without confirmation
-depending on the value of option `magit-commit-squash-confirm'.
+If there is a reachable commit at point, target that.  Otherwise prompt
+for a commit.  If `magit-commit-squash-confirm' is non-nil, always make
+the user explicitly select a commit, in a buffer dedicated to that task.
+
+During a later rebase, when this commit gets squashed into its targeted
+commit, the user is asked to write a final commit message, in a buffer
+that starts out containing both the original commit message, as well as
+the temporary commit message of the squash commit.
+
+In other words, call \"git commit --squash=COMMIT --edit\".
+
+(fn &optional COMMIT ARGS)" t)
+(autoload 'magit-commit-revise "magit-commit" "\
+Reword the message of an existing commit, without editing its tree.
+
+If there is a reachable commit at point, target that.  Otherwise prompt
+for a commit.  If `magit-commit-squash-confirm' is non-nil, always make
+the user explicitly select a commit, in a buffer dedicated to that task.
+
+During a later rebase, when this commit gets squashed into its targeted
+commit, a combined commit is created which uses the message of the fixup
+commit and the tree of the targeted commit.
+
+In other words, call \"git commit --fixup=reword:COMMIT --edit\".
 
 (fn &optional COMMIT ARGS)" t)
 (autoload 'magit-commit-instant-fixup "magit-commit" "\
-Create a fixup commit targeting COMMIT and instantly rebase.
+Create a fixup commit, and immediately combine it with its target.
+
+If there is a reachable commit at point, target that.  Otherwise prompt
+for a commit.  If `magit-commit-squash-confirm' is non-nil, always make
+the user explicitly select a commit, in a buffer dedicated to that task.
+
+Leave the original commit message of the targeted commit untouched.
+
+Like `magit-commit-fixup' but also run a `--autofixup' rebase.
 
 (fn &optional COMMIT ARGS)" t)
 (autoload 'magit-commit-instant-squash "magit-commit" "\
-Create a squash commit targeting COMMIT and instantly rebase.
+Create a squash commit, and immediately combine it with its target.
+
+If there is a reachable commit at point, target that.  Otherwise prompt
+for a commit.  If `magit-commit-squash-confirm' is non-nil, always make
+the user explicitly select a commit, in a buffer dedicated to that task.
+
+Turing the rebase phase, when the two commits are being squashed, ask
+the user to author the final commit message, based on the original
+message of the targeted commit.
+
+Like `magit-commit-squash' but also run a `--autofixup' rebase.
 
 (fn &optional COMMIT ARGS)" t)
 (autoload 'magit-commit-reshelve "magit-commit" "\
-Change the committer date and possibly the author date of `HEAD'.
+Change committer (and possibly author) date of the last commit.
 
 The current time is used as the initial minibuffer input and the
 original author or committer date is available as the previous
@@ -6541,21 +6708,17 @@ apply\" or with a prefix argument \"git stash apply --index\".
 
 When using Git v2.38.0 or later, behave more intelligently:
 
-First try \"git stash apply --index\", which tries to preserve
-the index stored in the stash, if any.  This may fail because
-applying the stash could result in conflicts and those have to
-be stored in the index, making it impossible to also store the
-stash's index there.
+First try \"git stash apply --index\", which tries to preserve the
+index stored in the stash, if any.  This may fail because applying
+the stash could result in conflicts and those have to be stored in
+the index, making it impossible to also store the stash's index
+there.
 
-If the above failed, then try \"git stash apply\".  This fails
-(with or without \"--index\") if there are any uncommitted
-changes to files that are also modified in the stash.
-
-If both of the above failed, then apply using \"git apply\".
-If there are no conflicting files, use \"--3way\".  If there are
-conflicting files, then using \"--3way\" requires that those
-files are staged first, which may be undesirable, so prompt
-the user whether to use \"--3way\" or \"--reject\".
+If \"git stash\" fails, then potentially fall back to using \"git
+apply\".  If the stash does not touch any unstaged files, then pass
+\"--3way\" to that command.  Otherwise ask the user whether to use
+that argument or \"--reject\".  Customize `magit-no-confirm' if you
+want to fall back to using \"--3way\", without being prompted.
 
 (fn STASH)" t)
 (autoload 'magit-stash-pop "magit-stash" "\
@@ -6566,21 +6729,17 @@ pop\" or with a prefix argument \"git stash pop --index\".
 
 When using Git v2.38.0 or later, behave more intelligently:
 
-First try \"git stash pop --index\", which tries to preserve
-the index stored in the stash, if any.  This may fail because
-applying the stash could result in conflicts and those have to
-be stored in the index, making it impossible to also store the
-stash's index there.
+First try \"git stash apply --index\", which tries to preserve the
+index stored in the stash, if any.  This may fail because applying
+the stash could result in conflicts and those have to be stored in
+the index, making it impossible to also store the stash's index
+there.
 
-If the above failed, then try \"git stash apply\".  This fails
-(with or without \"--index\") if there are any uncommitted
-changes to files that are also modified in the stash.
-
-If both of the above failed, then apply using \"git apply\".
-If there are no conflicting files, use \"--3way\".  If there are
-conflicting files, then using \"--3way\" requires that those
-files are staged first, which may be undesirable, so prompt
-the user whether to use \"--3way\" or \"--reject\".
+If \"git stash\" fails, then potentially fall back to using \"git
+apply\".  If the stash does not touch any unstaged files, then pass
+\"--3way\" to that command.  Otherwise ask the user whether to use
+that argument or \"--reject\".  Customize `magit-no-confirm' if you
+want to fall back to using \"--3way\", without being prompted.
 
 (fn STASH)" t)
 (autoload 'magit-stash-drop "magit-stash" "\
@@ -6988,119 +7147,6 @@ Move WORKTREE to PATH.
 
 
 (provide 'magit-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.0/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.0/llama-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'llama "llama" "\
-Expand to a `lambda' expression that wraps around FN and BODY.
-
-This macro provides a compact way to write short `lambda' expressions.
-It expands to a `lambda' expression, which calls the function FN with
-arguments BODY and returns its value.  The arguments of the `lambda'
-expression are derived from symbols found in BODY.
-
-Each symbol from `%1' through `%9', which appears in an unquoted part
-of BODY, specifies a mandatory argument.  Each symbol from `&1' through
-`&9', which appears in an unquoted part of BODY, specifies an optional
-argument.  The symbol `&*' specifies extra (`&rest') arguments.
-
-The shorter symbol `%' can be used instead of `%1', but using both in
-the same expression is not allowed.  Likewise `&' can be used instead
-of `&1'.  These shorthands are not recognized in function position.
-
-To support binding forms that use a vector as VARLIST (such as `-let'
-from the `dash' package), argument symbols are also detected inside of
-vectors.
-
-The space between `##' and FN can be omitted because `##' is read-syntax
-for the symbol whose name is the empty string.  If you prefer you can
-place a space there anyway, and if you prefer to not use this somewhat
-magical symbol at all, you can instead use the alternative name `llama'.
-
-Instead of:
-
-  (lambda (a &optional _ c &rest d)
-    (foo a (bar c) d))
-
-you can use this macro and write:
-
-  (##foo %1 (bar &3) &*)
-
-which expands to:
-
-  (lambda (%1 &optional _&2 &3 &rest &*)
-    (foo %1 (bar &3) &*))
-
-Unused trailing arguments and mandatory unused arguments at the border
-between mandatory and optional arguments are also supported:
-
-  (##list %1 _%3 &5 _&6)
-
-becomes:
-
-  (lambda (%1 _%2 _%3 &optional _&4 &5 _&6)
-    (list %1 &5))
-
-Note how `_%3' and `_&6' are removed from the body, because their names
-begin with an underscore.  Also note that `_&4' is optional, unlike the
-explicitly specified `_%3'.
-
-(fn FN &rest BODY)" nil t)
-(autoload 'llama-fontify-mode "llama" "\
-Toggle fontification of the `##' macro and its positional arguments.
-
-This is a minor mode.  If called interactively, toggle the
-`Llama-Fontify mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `llama-fontify-mode'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-(fn &optional ARG)" t)
-(put 'global-llama-fontify-mode 'globalized-minor-mode t)
-(defvar global-llama-fontify-mode nil "\
-Non-nil if Global Llama-Fontify mode is enabled.
-See the `global-llama-fontify-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `global-llama-fontify-mode'.")
-(custom-autoload 'global-llama-fontify-mode "llama" nil)
-(autoload 'global-llama-fontify-mode "llama" "\
-Toggle Llama-Fontify mode in all buffers.
-With prefix ARG, enable Global Llama-Fontify mode if ARG is positive; otherwise,
-disable it.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.
-Enable the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-Llama-Fontify mode is enabled in all buffers where `llama--turn-on-fontify-mode'
-would do it.
-
-See `llama-fontify-mode' for more information on Llama-Fontify mode.
-
-(fn &optional ARG)" t)
-(register-definition-prefixes "llama" '("\\#\\#" "completing-read" "elisp-" "intern" "lisp--el-match-keyword" "llama-"))
-
-
-(provide 'llama-autoloads)
 
 
 )
@@ -10861,7 +10907,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.6/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.6/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.7/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.7/forge-autoloads.el"))
 
 
 
@@ -10931,11 +10977,27 @@ Read a REMOTE and visit it using a browser.
 Read a REPOSITORY and visit it using a browser.
 
 (fn REPOSITORY)" t)
+(autoload 'forge-browse-blob "forge-commands" "\
+Visit a blob using a browser.
+
+When invoked from a blob- or file-visiting buffer, visit that blob
+without prompting.  If the region is active, try to jump to the marked
+line or lines, and highlight them in the browser.  To what extend that
+is possible depends on the forge.  When the region is not active just
+visit the blob, without trying to jump to the current line.  When
+jumping to a line, always use a commit hash as part of the URL.  From
+a file in the worktree with no active region, instead use the branch
+name as part of the URL, unless a prefix argument is used.
+
+When invoked from any other buffer, prompt the user for a branch or
+commit, and for a file.
+
+(fn COMMIT FILE &optional LINE END FORCE-HASH)" t)
 (autoload 'forge-browse-this-topic "forge-commands" nil t)
 (autoload 'forge-browse-this-repository "forge-commands" "\
 Visit the repository at point using a browser." t)
 (autoload 'forge-copy-url-at-point-as-kill "forge-commands" "\
-Copy the url of the thing at point." t)
+Copy the url of thing at point or the thing visited in the current buffer." t)
 (autoload 'forge-browse "forge-commands" "\
 Visit the thing at point using a browser." t)
 (autoload 'forge-visit-topic "forge-commands" "\
@@ -10991,10 +11053,12 @@ is added anyway.  Currently this only supports Github and Gitlab.
 
 (fn FORK REMOTE)" t)
 (autoload 'forge-merge "forge-commands" nil t)
+(autoload 'forge-set-default-branch "forge-commands" "\
+Change the default branch on the upstream remote and locally.
+Also update the upstream branches of local branches accordingly." t)
 (autoload 'forge-rename-default-branch "forge-commands" "\
-Rename the default branch to NEWNAME.
-Change the name on the upstream remotely and locally, and update the
-upstream remotes of local branches accordingly." t)
+Rename the default branch on the upstream remote and locally.
+Also update the upstream branches of local branches accordingly." t)
 (autoload 'forge-add-pullreq-refspec "forge-commands" nil t)
 (autoload 'forge-add-repository "forge-commands" nil t)
 (autoload 'forge-add-user-repositories "forge-commands" "\
@@ -11033,6 +11097,10 @@ heavy development." t)
 
 
 (register-definition-prefixes "forge-db" '("forge-"))
+
+
+
+(register-definition-prefixes "forge-forgejo" '("forge-forgejo-repository"))
 
 
 
@@ -12221,14 +12289,14 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism magit-section magit llama ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.6" "/Users/laurynas/.emacs.d/elpa/org-roam-20250111.252" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.1" "/Users/laurynas/.emacs.d/elpa/magit-4.2.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.2.0" "/Users/laurynas/.emacs.d/elpa/transient-0.8.4" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.7" "/Users/laurynas/.emacs.d/elpa/org-roam-20250111.252" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.0" "/Users/laurynas/.emacs.d/elpa/transient-0.8.4" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
          Info-directory-list)))
 
 ;; Local Variables:

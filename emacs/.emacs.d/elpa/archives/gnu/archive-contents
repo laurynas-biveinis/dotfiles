@@ -5126,7 +5126,7 @@
 		("Philip Kaludercic" . "philipk@posteo.net"))
 	       (:commit . "2bb88d0dc526177c3c6612d6585cee6b2c57803a"))])
  (yaml .
-       [(1 0 0)
+       [(1 1 0)
 	((emacs
 	  (25 1)))
 	"YAML parser for Elisp" tar
@@ -5135,7 +5135,7 @@
 	 (:maintainer "Zachary Romero" . "zkry@posteo.org")
 	 (:authors
 	  ("Zachary Romero" . "zkry@posteo.org"))
-	 (:commit . "cd3edfc02cb12514426c00e07160b87bd8340f4a"))])
+	 (:commit . "5f0e282f9f6ba4f27b17c1b05bf50d1407fcf7df"))])
  (yasnippet .
 	    [(0 14 1)
 	     ((cl-lib

@@ -1510,6 +1510,16 @@
 		 ("Shodai Yokoyama" . "(quantumcars@gmail.com)"))
 		(:url . "https://elpa.nongnu.org/nongnu/kotlin-mode.html")
 		(:commit . "d92c3b773473e9fe15f61f6177e4fbf097aadd05"))])
+ (llama .
+	[(0 6 0)
+	 ((emacs
+	   (26 1))
+	  (compat
+	   (30 0 2 0)))
+	 "Compact syntax for short lambda" tar
+	 ((:url . "https://github.com/tarsius/llama")
+	  (:keywords "extensions")
+	  (:commit . "9802c215a3eea748d9d7f81a1465850388006897"))])
  (logview .
 	  [(0 19 1)
 	   ((emacs
@@ -1630,13 +1640,13 @@
 	   ("Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev"))
 	  (:commit . "7dfebba55bf687a25049882c2316166d968048ea"))])
  (magit-section .
-		[(4 2 0)
+		[(4 3 0)
 		 ((emacs
 		   (27 1))
 		  (compat
-		   (30 0 1 0))
-		  (dash
-		   (2 19 1))
+		   (30 0 2 0))
+		  (llama
+		   (0 6 0))
 		  (seq
 		   (2 24)))
 		 "Sections for read-only buffers" tar
@@ -1645,7 +1655,7 @@
 		  (:maintainer "Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev")
 		  (:authors
 		   ("Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev"))
-		  (:commit . "7dfebba55bf687a25049882c2316166d968048ea"))])
+		  (:commit . "f52dfada8fa0fa6cd70886819868d84e198773a3"))])
  (markdown-mode .
 		[(2 6)
 		 ((emacs
@@ -1658,7 +1668,7 @@
 		   ("Jason R. Blevins" . "jblevins@xbeta.org"))
 		  (:commit . "193b61605f44c85d261b8bd82e0a213fd8f1ff32"))])
  (mastodon .
-	   [(1 1 8)
+	   [(1 1 9)
 	    ((emacs
 	      (28 1))
 	     (request
@@ -1673,7 +1683,7 @@
 	     (:authors
 	      ("Johnson Denen" . "johnson.denen@gmail.com")
 	      ("Marty Hiatt" . "mousebot@disroot.org"))
-	     (:commit . "4b7786c1fdf601a27f20104c33423d78dda92338"))])
+	     (:commit . "38f814c3e518e3a1f366eb1b00a971201d41f662"))])
  (material-theme .
 		 [(2015)
 		  ((emacs
@@ -2306,7 +2316,7 @@
 		 ("Matus Goljer" . "matus.goljer@gmail.com"))
 		(:commit . "4873352b5d0a1c5142658122de1b6950b8fe7e4d"))])
  (solarized-theme .
-		  [(2 0 1)
+		  [(2 0 4)
 		   ((emacs
 		     (24 1)))
 		   "The Solarized color theme" tar
@@ -2315,7 +2325,7 @@
 		    (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
 		    (:authors
 		     ("Bozhidar Batsov" . "bozhidar@batsov.dev"))
-		    (:commit . "0f0b1129cf51c85904f9e015da4fcca5f5f7a4ce"))])
+		    (:commit . "3fc6c26392ff76f216c2300807e0415cafbbc424"))])
  (spacemacs-theme .
 		  [(0 2)
 		   ((emacs
