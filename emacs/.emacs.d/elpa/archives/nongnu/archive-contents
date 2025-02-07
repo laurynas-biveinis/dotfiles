@@ -2131,7 +2131,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20250201 91223)
+	      [(1 0 20250205 162816)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2516,7 +2516,7 @@
 	       ("Vivek Das Mohapatra" . "vivek@etla.org"))
 	      (:commit . "v1.0"))])
  (tp .
-     [(0 6)
+     [(0 7)
       ((emacs
 	(28 1))
        (transient
@@ -2527,7 +2527,7 @@
        (:maintainer "Marty Hiatt" . "mousebot@disroot.org")
        (:authors
 	("Marty Hiatt" . "mousebot@disroot.org"))
-       (:commit . "40f1cbd73d9951adaaf7094cba0f0820410879ff"))])
+       (:commit . "cce2dfe0ec2b5c070cb13a7bdf95695eeb6e3caf"))])
  (treeview .
 	   [(1 3 1)
 	    ((emacs
@@ -2733,14 +2733,14 @@
 	     ((:url . "https://github.com/lewang/ws-butler")
 	      (:commit . "d3927f6131f215e9cd3e1f747be5a91e5be8ca9a"))])
  (xah-fly-keys .
-	       [(26 9 20250124153828)
+	       [(26 9 20250205172500)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "bb111ced8ed987101e7a966af5696379d44fa0bc"))])
+		 (:commit . "efd164009e8206252bbf71efd8a6977c3492ed94"))])
  (xkcd .
        [(1 1)
 	((json

@@ -1,4 +1,15 @@
 (1
+ (a68-mode .
+	   [(1 0)
+	    ((emacs
+	      (24 3)))
+	    "Major mode for editing Algol 68 code" tar
+	    ((:url . "https://git.sr.ht/~jemarch/a68-mode")
+	     (:keywords "languages")
+	     (:maintainer "Jose E. Marchesi" . "jemarch@gnu.org")
+	     (:authors
+	      ("Omar Polo" . "op@omarpolo.com"))
+	     (:commit . "2a191fae4c73839d34d19c086ec75af35a0937e4"))])
  (ace-window .
 	     [(0 10 0)
 	      ((avy
