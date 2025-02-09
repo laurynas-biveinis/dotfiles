@@ -95,7 +95,7 @@ Simple mode to edit YAML.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/yaml-1.1.0/yaml-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-1.1.0/yaml-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/yaml-1.2.0/yaml-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/yaml-1.2.0/yaml-autoloads.el"))
 
 
 
