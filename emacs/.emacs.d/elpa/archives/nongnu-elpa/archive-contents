@@ -1768,14 +1768,16 @@
 	 ("Johann Klähn" . "johann@jklaehn.de"))
 	(:commit . "4fd8baa508dbc1a6b42b4e40292c0dbb0f19c9b9"))])
  (multiple-cursors .
-		   [(1 4 0)
-		    nil "Multiple cursors for emacs." tar
-		    ((:keywords "editing" "cursors")
+		   [(1 5 0)
+		    ((cl-lib
+		      (0 5)))
+		    "Multiple cursors for emacs." tar
+		    ((:url . "https://github.com/magnars/multiple-cursors.el")
+		     (:keywords "editing" "cursors")
 		     (:maintainer "Magnar Sveen" . "magnars@gmail.com")
 		     (:authors
 		      ("Magnar Sveen" . "magnars@gmail.com"))
-		     (:url . "https://elpa.nongnu.org/nongnu/multiple-cursors.html")
-		     (:commit . "b3bd49c756cd959c0fb998d27eaf3d273570b05e"))])
+		     (:commit . "89f1a8df9b1fc721b1672b4c7b6d3ab451e7e3ef"))])
  (nasm-mode .
 	    [(1 1 1)
 	     ((emacs

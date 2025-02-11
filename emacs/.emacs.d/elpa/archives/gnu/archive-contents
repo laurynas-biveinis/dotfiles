@@ -385,7 +385,7 @@
 	      ("John Wiegley" . "johnw@newartisans.com"))
 	     (:commit . "4932ed21d40f9e8ad48ad2a1f086fdf9b3847ac9"))])
  (blist .
-	[(0 4)
+	[(0 6)
 	 ((ilist
 	   (0 4))
 	  (emacs
@@ -396,7 +396,7 @@
 	  (:maintainer "Durand" . "durand@jsdurand.xyz")
 	  (:authors
 	   ("Durand" . "durand@jsdurand.xyz"))
-	  (:commit . "f5751add5626ad437459e484b66219952287c517"))])
+	  (:commit . "e3894193fd7602483e0132b82f1b0afbcebe654d"))])
  (bluetooth .
 	    [(0 4 1)
 	     ((emacs
