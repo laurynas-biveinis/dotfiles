@@ -261,7 +261,7 @@
 		("Kevin Ryde" . "user42_kevin@yahoo.com.au"))
 	       (:commit . "72db1f3ee04f3d1db17487d5bd98466fcbad87fd"))])
  (auth-source-xoauth2-plugin .
-			     [(0 1)
+			     [(0 1 1)
 			      ((emacs
 				(28 1))
 			       (oauth2
@@ -271,7 +271,7 @@
 			       (:authors
 				("Xiyue Deng" . "manphiz@gmail.com"))
 			       (:url . "https://elpa.gnu.org/packages/auth-source-xoauth2-plugin.html")
-			       (:commit . "93a69c392a50b73d8d93ff486090a57dd2616e89"))])
+			       (:commit . "21b361839286b174698bae4258ec893dc5f5c27d"))])
  (auto-correct .
 	       [(1 1 4)
 		nil "Remembers and automatically fixes past corrections" tar
@@ -1456,7 +1456,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(1 0 0)
+	 [(1 0 2)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1475,7 +1475,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "6279b2f2a6a522b5c38a4c8ee047c622fc3a07fd"))])
+	   (:commit . "94bc0224e430bc8ff4cee4d330c7ce88267f14df"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -3160,11 +3160,11 @@
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:commit . "8258a4dfa00aa522249cdf9aeea5be4de97bd7c1"))])
  (org-gnosis .
-	     [(0 0 2)
+	     [(0 0 4)
 	      ((emacs
 		(27 2))
 	       (emacsql
-		(4 1 0))
+		(4 0 0))
 	       (compat
 		(29 1 4 2)))
 	      "Roam-like Knowledge Management System" tar
@@ -3173,7 +3173,7 @@
 	       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
 	       (:authors
 		("Thanos Apollo" . "public@thanosapollo.org"))
-	       (:commit . "a27e86c470a368c163e150ac3e85889ab763a6e9"))])
+	       (:commit . "693f5931fc7dbfc5fddc6e68670dec358dff96c9"))])
  (org-jami-bot .
 	       [(0 0 5)
 		((emacs

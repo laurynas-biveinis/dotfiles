@@ -1279,17 +1279,17 @@
 	  ("Thierry Volpiatto" . "thievol@posteo.net"))
 	 (:commit . "e0d028081f1f24da8e649f6ea3ecea42216d4632"))])
  (helm-core .
-	    [(4 0)
+	    [(4 0 1)
 	     ((emacs
 	       (25 1))
 	      (async
-	       (1 9 8)))
+	       (1 9 9)))
 	     "Development files for Helm" tar
 	     ((:url . "https://emacs-helm.github.io/helm/")
 	      (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
 	      (:authors
 	       ("Thierry Volpiatto" . "thievol@posteo.net"))
-	      (:commit . "e0d028081f1f24da8e649f6ea3ecea42216d4632"))])
+	      (:commit . "98c0d4e62ee3690da97323a4215bddda7f51e4fa"))])
  (hideshowvis .
 	      [(0 8)
 	       ((emacs
@@ -1423,7 +1423,7 @@
 		(:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
 		(:commit . "151b20ba9d3ae39b88f91aecbab98bd5a5215f1a"))])
  (inf-ruby .
-	   [(2 8 1)
+	   [(2 9 0)
 	    ((emacs
 	      (26 1)))
 	    "Run a Ruby process in a buffer" tar
@@ -1434,7 +1434,7 @@
 	      ("Cornelius Mika" . "cornelius.mika@gmail.com")
 	      ("Dmitry Gutov" . "dgutov@yandex.ru")
 	      ("Kyle Hargraves" . "pd@krh.me"))
-	     (:commit . "8116b3b8336819a9838dd73e6926b5ba6d57c05e"))])
+	     (:commit . "b8076aad10dfb0ba1e3a8b0d39c2b370dbe96ab0"))])
  (inkpot-theme .
 	       [(0 1)
 		((emacs
@@ -2102,16 +2102,16 @@
 	   ("Tomohiro Matsuyama" . "m2ym.pub@gmail.com"))
 	  (:commit . "bfa10dc8af3f07632e5167457671ce3738ac0b7e"))])
  (projectile .
-	     [(2 8 0)
+	     [(2 9 0)
 	      ((emacs
-		(25 1)))
+		(26 1)))
 	      "Manage and navigate projects in Emacs easily" tar
 	      ((:url . "https://github.com/bbatsov/projectile")
 	       (:keywords "project" "convenience")
 	       (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
 	       (:authors
 		("Bozhidar Batsov" . "bozhidar@batsov.dev"))
-	       (:commit . "e6889d7f4bc0d2c48ceac56dfe6f4a3d742a3b69"))])
+	       (:commit . "48d0a30137dc4dfecc261e66f2a5f75156232d85"))])
  (proof-general .
 		[(4 5)
 		 ((emacs
@@ -2133,7 +2133,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20250205 162816)
+	      [(1 0 20250212 102351)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2458,6 +2458,15 @@
 		    ((:url . "https://github.com/juba/color-theme-tangotango")
 		     (:keywords "tango" "palette" "color" "theme" "emacs")
 		     (:commit . "8843dab8109d4334be69038a9c689a929b6be687"))])
+ (teco .
+       [(9)
+	nil "Teco interpreter for Gnu Emacs" tar
+	((:url . "https://github.com/mtk/teco.git")
+	 (:keywords "convenience" "emulations" "files")
+	 (:maintainer "Mark T. Kennedy" . "mtk@acm.org")
+	 (:authors
+	  ("Dale R. Worley" . "worley@alum.mit.edu"))
+	 (:commit . "3e1db9d41d44f52c6b0de4349c5bbfeb125b2735"))])
  (telephone-line .
 		 [(0 5)
 		  ((emacs

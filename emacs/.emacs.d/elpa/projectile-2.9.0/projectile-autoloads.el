@@ -464,7 +464,7 @@ External commands are: `projectile-configure-project',
 `projectile-install-project', `projectile-package-project',
 and `projectile-run-project'.
 
-If the prefix argument SHOW_PROMPT is non nil, the command can be edited.
+If the prefix argument SHOW-PROMPT is non nil, the command can be edited.
 
 (fn SHOW-PROMPT)" t)
 (autoload 'projectile-switch-project "projectile" "\
@@ -527,6 +527,10 @@ dirty project list.
 (fn &optional CACHED)" t)
 (autoload 'projectile-edit-dir-locals "projectile" "\
 Edit or create a .dir-locals.el file of the project." t)
+(autoload 'project-projectile "projectile" "\
+Return Projectile project of form ('projectile . root-dir) for DIR.
+
+(fn DIR)")
 (defvar projectile-mode nil "\
 Non-nil if Projectile mode is enabled.
 See the `projectile-mode' command
@@ -550,7 +554,7 @@ Otherwise behave as if called interactively.
 
 (fn &optional ARG)" t)
 (define-obsolete-function-alias 'projectile-global-mode 'projectile-mode "1.0")
-(register-definition-prefixes "projectile" '("??" "compilation-find-file-projectile-find-compilation-buffer" "def-projectile-commander-method" "delete-file-projectile-remove-from-cache" "project"))
+(register-definition-prefixes "projectile" '("??" "compilation-find-file-projectile-find-compilation-buffer" "def-projectile-commander-method" "delete-file-projectile-remove-from-cache" "projectile-" "savehist-additional-variables"))
 
 ;;; End of scraped data
 
