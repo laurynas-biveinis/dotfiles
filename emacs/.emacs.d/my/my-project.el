@@ -32,9 +32,10 @@
       projectile-tags-backend 'xref
       ;; Browsing project files without caching is prohibitively slow on large
       ;; projects such as MySQL.
-      projectile-enable-caching t
+      projectile-enable-caching 'persistent
       projectile-switch-project-action 'projectile-vc
-      projectile-completion-system 'default)
+      projectile-completion-system 'default
+      projectile-auto-cleanup-known-projects t)
 
 ;; Exclude some more modes from projectile
 (add-to-list 'projectile-globally-ignored-modes "lisp-interaction-mode")
