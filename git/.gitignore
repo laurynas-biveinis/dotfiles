@@ -2,6 +2,9 @@
 compile_commands.json
 .clangd/
 
+# Emacs Projectile
+.projectile-cache.eld
+
 # Aerospike
 modules/nghttp2
 modules/snappy
