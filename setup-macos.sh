@@ -369,9 +369,9 @@ deactivate
 
 # Try to install Python development tools outside any virtualenv. If this
 # breaks, then install per-project.
-pip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
-	pyls-memestra jedi pylsp-rope python-lsp-ruff python-lsp-black pylint \
-	pycodestyle pyflakes pandas openpyxl pandas-stubs
+gpip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
+     pyls-memestra jedi pylsp-rope python-lsp-ruff python-lsp-black pylint \
+     pycodestyle pyflakes pandas openpyxl pandas-stubs scipy
 
 # Leftovers from the old-and-broken installation method: scipy pandas
 
