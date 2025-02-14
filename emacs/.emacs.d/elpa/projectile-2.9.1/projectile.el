@@ -5,8 +5,8 @@
 ;; Author: Bozhidar Batsov <bozhidar@batsov.dev>
 ;; URL: https://github.com/bbatsov/projectile
 ;; Keywords: project, convenience
-;; Package-Version: 2.9.0
-;; Package-Revision: 48d0a30137dc
+;; Package-Version: 2.9.1
+;; Package-Revision: ef17d2971bbc
 ;; Package-Requires: ((emacs "26.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -943,7 +943,7 @@ Should be set via .dir-locals.el.")
 
 ;;; Version information
 
-(defconst projectile-version "2.9.0"
+(defconst projectile-version "2.9.1"
   "The current version of Projectile.")
 
 (defun projectile--pkg-version ()
@@ -1081,6 +1081,9 @@ A wrapper around `file-exists-p' with additional caching support."
                 (run-with-timer 10 nil 'projectile-file-exists-cache-cleanup)))
         (equal value 'found)))))
 
+(defsubst projectile-persistent-cache-p ()
+  (eq projectile-enable-caching 'persistent))
+
 ;;;###autoload
 (defun projectile-invalidate-cache (prompt)
   "Remove the current project's files from `projectile-projects-cache'.
@@ -1099,7 +1102,7 @@ to invalidate."
     (remhash project-root projectile-projects-cache)
     (remhash project-root projectile-projects-cache-time)
     ;; reset the project's cache file
-    (when (eq projectile-enable-caching 'persistent)
+    (when (projectile-persistent-cache-p)
       ;; TODO: Perhaps it's better to delete the cache file in such cases?
       (projectile-serialize nil (projectile-project-cache-file project-root)))
     (when projectile-verbose
@@ -1120,7 +1123,7 @@ to invalidate."
 The cache is created both in memory and on the hard drive."
   (puthash project files projectile-projects-cache)
   (puthash project (projectile-time-seconds) projectile-projects-cache-time)
-  (when (eq projectile-enable-caching 'persistent)
+  (when (projectile-persistent-cache-p)
     (projectile-serialize files (projectile-project-cache-file project))))
 
 (defun projectile-load-project-cache (project-root)
@@ -1141,7 +1144,8 @@ The cache is created both in memory and on the hard drive."
     (if (projectile-file-cached-p file project-root)
         (progn
           (puthash project-root (remove file project-cache) projectile-projects-cache)
-          (projectile-serialize project-cache (projectile-project-cache-file project-root))
+          (when (projectile-persistent-cache-p)
+            (projectile-serialize project-cache (projectile-project-cache-file project-root)))
           (when projectile-verbose
             (message "%s removed from cache" file)))
       (error "%s is not in the cache" file))))
@@ -1179,10 +1183,11 @@ The cache is created both in memory and on the hard drive."
             (puthash current-project project-files projectile-projects-cache)
             ;; we serialize the cache with an idle time to avoid freezing the UI
             ;; immediately after the new file was created
-            (run-with-idle-timer
-             30
-             nil
-             'projectile-serialize project-files cache-file))
+            (when (projectile-persistent-cache-p)
+              (run-with-idle-timer
+               30
+               nil
+               'projectile-serialize project-files cache-file)))
           (message "File %s added to project %s cache."
                    (propertize current-file 'face 'font-lock-keyword-face)
                    (propertize current-project 'face 'font-lock-keyword-face)))))))

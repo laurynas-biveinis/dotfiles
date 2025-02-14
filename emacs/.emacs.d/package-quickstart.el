@@ -4088,7 +4088,7 @@ Restart Python inferior processes." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.9.0/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.9.0/projectile-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.9.1/projectile-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/projectile-2.9.1/projectile-autoloads.el"))
 
 
 

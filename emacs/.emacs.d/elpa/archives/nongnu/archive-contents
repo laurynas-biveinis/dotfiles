@@ -1266,9 +1266,9 @@
 		     ("Pranshu Sharma" . "pranshusharma366atgmail"))
 		    (:commit . "58d158bef475536e78e2a145f2029c49924fb19a"))])
  (helm .
-       [(4 0)
+       [(4 0 1)
 	((helm-core
-	  (4 0))
+	  (4 0 1))
 	 (wfnames
 	  (1 2)))
 	"Helm is an Emacs incremental and narrowing framework" tar
@@ -1277,7 +1277,7 @@
 	 (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
 	 (:authors
 	  ("Thierry Volpiatto" . "thievol@posteo.net"))
-	 (:commit . "e0d028081f1f24da8e649f6ea3ecea42216d4632"))])
+	 (:commit . "98c0d4e62ee3690da97323a4215bddda7f51e4fa"))])
  (helm-core .
 	    [(4 0 1)
 	     ((emacs
@@ -2102,7 +2102,7 @@
 	   ("Tomohiro Matsuyama" . "m2ym.pub@gmail.com"))
 	  (:commit . "bfa10dc8af3f07632e5167457671ce3738ac0b7e"))])
  (projectile .
-	     [(2 9 0)
+	     [(2 9 1)
 	      ((emacs
 		(26 1)))
 	      "Manage and navigate projects in Emacs easily" tar
@@ -2111,7 +2111,7 @@
 	       (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
 	       (:authors
 		("Bozhidar Batsov" . "bozhidar@batsov.dev"))
-	       (:commit . "48d0a30137dc4dfecc261e66f2a5f75156232d85"))])
+	       (:commit . "ef17d2971bbcce13b1ac16e0e36d44fa0defca63"))])
  (proof-general .
 		[(4 5)
 		 ((emacs
@@ -2141,6 +2141,17 @@
 		(:authors
 		 ("Greg Hendershott" . "racket-mode-author@greghendershott.com"))
 		(:commit . "HEAD"))])
+ (radio .
+	[(0 2 1)
+	 ((emacs
+	   (29 1)))
+	 "Listen to Internet radio" tar
+	 ((:url . "https://github.com/jroimartin/radio")
+	  (:keywords "multimedia")
+	  (:maintainer "Roi Martin" . "jroi.martin@gmail.com")
+	  (:authors
+	   ("Roi Martin" . "jroi.martin@gmail.com"))
+	  (:commit . "b62b114860416a016222097211739285b153b18e"))])
  (rainbow-delimiters .
 		     [(2 1 5)
 		      nil "Highlight brackets according to their depth" tar
@@ -2539,6 +2550,18 @@
        (:authors
 	("Marty Hiatt" . "mousebot@disroot.org"))
        (:commit . "cce2dfe0ec2b5c070cb13a7bdf95695eeb6e3caf"))])
+ (treesit-fold .
+	       [(0 2 1)
+		((emacs
+		  (29 1)))
+		"Code folding using treesit" tar
+		((:url . "https://github.com/emacs-tree-sitter/treesit-fold")
+		 (:keywords "convenience" "folding" "tree-sitter")
+		 (:maintainer "Jen-Chieh" . "jcs090218@gmail.com")
+		 (:authors
+		  ("Junyi Hou" . "junyi.yi.hou@gmail.com")
+		  ("Jen-Chieh" . "jcs090218@gmail.com"))
+		 (:commit . "1b4b552867d8eaa03008b887ec0c9236c3c2b416"))])
  (treeview .
 	   [(1 3 1)
 	    ((emacs
