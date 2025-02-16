@@ -1456,7 +1456,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(1 0 3)
+	 [(1 1 4)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1475,7 +1475,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "3368b6351a070ae4a089e0d395044c8f9f31ddd4"))])
+	   (:commit . "1e3b3210f0b553e7158065116a4d84adc7f3f1bd"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -3121,7 +3121,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "2b7a1688f24cc8ef5a3c3a6dab8e00d833bcda59"))])
  (org .
-      [(9 7 21)
+      [(9 7 22)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -3130,7 +3130,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "d1f528e830e32185a4b270100cf77961fe6025a2"))])
+	(:commit . "2f5add467c0c20c9f2427cc77597c9aa1b742a75"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -3160,7 +3160,7 @@
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:commit . "8258a4dfa00aa522249cdf9aeea5be4de97bd7c1"))])
  (org-gnosis .
-	     [(0 0 5)
+	     [(0 0 6)
 	      ((emacs
 		(27 2))
 	       (emacsql
@@ -3173,7 +3173,7 @@
 	       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
 	       (:authors
 		("Thanos Apollo" . "public@thanosapollo.org"))
-	       (:commit . "16142440ddb3a145bf054f2b9bc793f145fad110"))])
+	       (:commit . "a42e10a5bf10e11605e3b8f7b3453dff7d5087fd"))])
  (org-jami-bot .
 	       [(0 0 5)
 		((emacs
