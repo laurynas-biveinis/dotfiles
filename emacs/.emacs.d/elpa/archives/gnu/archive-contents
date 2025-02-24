@@ -654,7 +654,7 @@
 		("Augusto Stoffel" . "arstoffel@gmail.com"))
 	       (:commit . "caffb420be106cebbdfe4474ed0507a601603f83"))])
  (colorful-mode .
-		[(1 1 0)
+		[(1 2 0)
 		 ((emacs
 		   (28 1))
 		  (compat
@@ -662,10 +662,12 @@
 		 "Preview any color in your buffer in real time" tar
 		 ((:url . "https://github.com/DevelopmentCool2449/colorful-mode")
 		  (:keywords "faces" "tools" "matching" "convenience")
-		  (:maintainer "Jen-Chieh" . "jcs090218@gmail.com")
+		  (:maintainer
+		   ("Jen-Chieh" . "jcs090218@gmail.com")
+		   ("Elias G. Perez" . "eg642616@gmail.com"))
 		  (:authors
 		   ("Elias G. Perez" . "eg642616@gmail.com"))
-		  (:commit . "1aece9055546b30157c83b3b7cb51e808eeeca37"))])
+		  (:commit . "d6d093e55ea63ce3c2b7524f4ffb9ff7cf10cfc9"))])
  (comint-mime .
 	      [(0 7)
 	       ((emacs
@@ -788,9 +790,9 @@
 		    ("Protesilaos Stavrou" . "info@protesilaos.com"))
 		   (:commit . "e07001ce3ded4b226f59264d3c8162761580c052"))])
  (consult-hoogle .
-		 [(0 4 1)
+		 [(0 5 0)
 		  ((emacs
-		    (28 1))
+		    (27 1))
 		   (consult
 		    (2 0)))
 		  "Hoogle frontend using consult" tar
@@ -799,7 +801,7 @@
 		   (:maintainer "rahguzar" . "rahguzar@mailbox.org")
 		   (:authors
 		    ("rahguzar" . "rahguzar@mailbox.org"))
-		   (:commit . "5b16f2f6c8c9c81a2539ba8371db1f76e6e4cc68"))])
+		   (:commit . "384959016022d071464dc6e611e4fcded562834e"))])
  (consult-recoll .
 		 [(1 0 0)
 		  ((emacs
@@ -1178,16 +1180,16 @@
 		    ("Clemens Radermacher" . "clemera@posteo.net"))
 		   (:commit . "bd8556eef10e57b175406c117f18e1953422c803"))])
  (dired-preview .
-		[(0 3 0)
+		[(0 4 0)
 		 ((emacs
-		   (27 1)))
+		   (28 1)))
 		 "Automatically preview file at point in Dired" tar
 		 ((:url . "https://github.com/protesilaos/dired-preview")
 		  (:keywords "files" "convenience")
 		  (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		  (:authors
 		   ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		  (:commit . "9b3577b6d80a4202b81098814178d0394b222e4b"))])
+		  (:commit . "6caf3b15802ddcbbb89ee7278e714c3158f76d83"))])
  (disk-usage .
 	     [(1 3 3)
 	      ((emacs
@@ -1343,7 +1345,7 @@
 	       ("Markus Triska" . "triska@metalevel.at"))
 	      (:commit . "ea8710335eec483b576c7a800c92b8fd214aa6dd"))])
  (eev .
-      [(20241223)
+      [(20250216)
        ((emacs
 	 (25 1)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -1352,7 +1354,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "a7e6384b773d975eee6190da9904a617fc3e293a"))])
+	(:commit . "5c3013b291a17a5e8ec11e6a5d18e5b3b5aa0b17"))])
  (ef-themes .
 	    [(1 9 0)
 	     ((emacs
@@ -1456,26 +1458,24 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(1 1 4)
+	 [(1 4 0)
 	  ((emacs
 	    (28 1))
 	   (llm
 	    (0 22 0))
-	   (spinner
-	    (1 7 4))
+	   (plz
+	    (0 8))
 	   (transient
 	    (0 7))
 	   (compat
-	    (29 1))
-	   (posframe
-	    (1 4 0)))
+	    (29 1)))
 	  "Tool for interacting with LLMs" tar
 	  ((:url . "http://github.com/s-kostyaev/ellama")
 	   (:keywords "help" "local" "tools")
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "1e3b3210f0b553e7158065116a4d84adc7f3f1bd"))])
+	   (:commit . "f94002a4055c0e0acf95e40e7d722a68efc41fdb"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -1809,7 +1809,7 @@
 		       ("Manuel Uberti" . "manuel.uberti@inventati.org"))
 		      (:commit . "9c68ee881f18f554f0ab5bbf5bee1a4b753d792b"))])
  (fontaine .
-	   [(2 1 0)
+	   [(3 0 0)
 	    ((emacs
 	      (29 1)))
 	    "Set font configurations using presets" tar
@@ -1817,7 +1817,7 @@
 	     (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	     (:authors
 	      ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	     (:commit . "18e39174cc453fd47b2b27d0f6b7a431c7be73cb"))])
+	     (:commit . "fe78a2be64b09f55748fa0c6e62d59e787b761b4"))])
  (frame-tabs .
 	     [(1 1)
 	      nil "show buffer tabs in side window" tar
@@ -3121,7 +3121,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "2b7a1688f24cc8ef5a3c3a6dab8e00d833bcda59"))])
  (org .
-      [(9 7 22)
+      [(9 7 23)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -3130,7 +3130,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "2f5add467c0c20c9f2427cc77597c9aa1b742a75"))])
+	(:commit . "ec72678881b73d04f8cf4e574cbb7a470e9155d3"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
@@ -3160,7 +3160,7 @@
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:commit . "8258a4dfa00aa522249cdf9aeea5be4de97bd7c1"))])
  (org-gnosis .
-	     [(0 0 6)
+	     [(0 0 7)
 	      ((emacs
 		(27 2))
 	       (emacsql
@@ -3173,7 +3173,7 @@
 	       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
 	       (:authors
 		("Thanos Apollo" . "public@thanosapollo.org"))
-	       (:commit . "a42e10a5bf10e11605e3b8f7b3453dff7d5087fd"))])
+	       (:commit . "5027605e2dfea1031ffe97da1f1e8d35c63e2479"))])
  (org-jami-bot .
 	       [(0 0 5)
 		((emacs
@@ -3513,7 +3513,7 @@
 	  (:url . "https://elpa.gnu.org/packages/poker.html")
 	  (:commit . "56469f23f29dba8f8beefd308b01a0b1bbc81756"))])
  (popper .
-	 [(0 4 6)
+	 [(0 4 8)
 	  ((emacs
 	    (26 1)))
 	  "Summon and dismiss buffers as popups" tar
@@ -3522,7 +3522,7 @@
 	   (:maintainer "Karthik Chikmagalur" . "karthik.chikmagalur@gmail.com")
 	   (:authors
 	    ("Karthik Chikmagalur" . "karthik.chikmagalur@gmail.com"))
-	   (:commit . "fe4f0b3b8b16f005fb8b5f79bc26b380038400ab"))])
+	   (:commit . "91b71955db19014d7139191660272c736458d87d"))])
  (posframe .
 	   [(1 4 4)
 	    ((emacs

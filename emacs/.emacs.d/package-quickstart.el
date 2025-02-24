@@ -2697,7 +2697,7 @@ this time, in which case it won't display at all.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.4/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.4/solarized-theme-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.5/solarized-theme-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/solarized-theme-2.0.5/solarized-theme-autoloads.el"))
 
 
 
@@ -3781,7 +3781,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/request-20230127.417/request-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/request-20230127.417/request-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/request-20250219.2213/request-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/request-20250219.2213/request-autoloads.el"))
 
 
 
@@ -7675,7 +7675,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20241201.1551/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20241201.1551/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250223.1743/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250223.1743/emacsql-autoloads.el"))
 
 
 
@@ -7724,7 +7724,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250111.252/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250111.252/org-roam-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250218.1722/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250218.1722/org-roam-autoloads.el"))
 
 
 
@@ -7893,7 +7893,7 @@ it is disabled.
 (fn &optional ARG)" t)
 (autoload 'org-roam-db-autosync-enable "org-roam-db" "\
 Activate `org-roam-db-autosync-mode'.")
-(register-definition-prefixes "org-roam-db" '("emacsql-constraint" "org-roam-d"))
+(register-definition-prefixes "org-roam-db" '("emacsql-constraint" "org-roam-db"))
 
 
 
@@ -7989,7 +7989,8 @@ The INFO, if provided, is passed to the underlying `org-roam-capture-'.
 
 (fn &optional FILTER-FN &key TEMPLATES INFO)" t)
 (autoload 'org-roam-refile "org-roam-node" "\
-Refile node at point to an Org-roam node.
+Refile node at point to an org-roam NODE.
+
 If region is active, then use it instead of the node at point.
 
 (fn NODE)" t)
@@ -11734,7 +11735,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250109.923/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250109.923/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250219.1602/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250219.1602/difftastic-autoloads.el"))
 
 
 
@@ -12300,7 +12301,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.7" "/Users/laurynas/.emacs.d/elpa/org-roam-20250111.252" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.0" "/Users/laurynas/.emacs.d/elpa/transient-0.8.4" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.7" "/Users/laurynas/.emacs.d/elpa/org-roam-20250218.1722" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.0" "/Users/laurynas/.emacs.d/elpa/transient-0.8.4" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
