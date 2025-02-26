@@ -17,11 +17,16 @@
 
 (add-to-list 'load-path dotfiles--my-elisp)
 
-;; The absence of secrets.el is not an error, but the user needs to be notified.
-;; This file is not stored under dotfiles so that it does not get checked into
-;; their repo.
-(unless (load (expand-file-name "secrets" dotfiles--home-dir) 'noerror)
-  (display-warning 'dotfiles "Failed to load secrets.el" :info))
+;; The absence of secret files is not an error, but the user needs to be
+;; notified. These files are not stored under dotfiles so they don't get checked
+;; into the repo.
+(defun dotfiles--load-secrets-file (filename)
+  "Load FILENAME with secrets from `dotfiles--home-dir', warn if not found."
+  (unless (load (expand-file-name filename dotfiles--home-dir) 'noerror)
+    (display-warning 'dotfiles (format "Failed to load %s" filename) :info)))
+
+(dotfiles--load-secrets-file "secrets")
+(dotfiles--load-secrets-file "secrets-local.el")
 
 ;; Load optional system-specific library and setup system-specific things that
 ;; must be setup before main setup. All of these must exist and their absence
