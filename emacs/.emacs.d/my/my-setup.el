@@ -518,6 +518,13 @@
         (rust "https://github.com/tree-sitter/tree-sitter-rust")
         (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
 
+;; TODO(laurynas): Optimized for infrequent restarts. Can be made faster by
+;; checking whether the grammars are present.
+(dolist (lang-source treesit-language-source-alist)
+  (let ((lang (car lang-source)))
+    (message "Installing grammar for %s" lang)
+    (treesit-install-language-grammar lang)))
+
 (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
