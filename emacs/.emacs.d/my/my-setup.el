@@ -510,7 +510,7 @@
 (setq treesit-language-source-alist
       '((bash "https://github.com/tree-sitter/tree-sitter-bash")
         (c "https://github.com/tree-sitter/tree-sitter-c/")
-        (c++ "https://github.com/tree-sitter/tree-sitter-cpp/")
+        (cpp "https://github.com/tree-sitter/tree-sitter-cpp/")
         (cmake "https://github.com/uyha/tree-sitter-cmake")
         (make "https://github.com/tree-sitter-grammars/tree-sitter-make")
         (perl "https://github.com/ganezdragon/tree-sitter-perl")
