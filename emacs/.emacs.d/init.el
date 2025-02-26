@@ -25,8 +25,8 @@
   (unless (load (expand-file-name filename dotfiles--home-dir) 'noerror)
     (display-warning 'dotfiles (format "Failed to load %s" filename) :info)))
 
-(dotfiles--load-secrets-file "secrets")
 (dotfiles--load-secrets-file "secrets-local.el")
+(dotfiles--load-secrets-file "secrets")
 
 ;; Load optional system-specific library and setup system-specific things that
 ;; must be setup before main setup. All of these must exist and their absence
