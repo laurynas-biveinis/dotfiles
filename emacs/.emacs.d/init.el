@@ -22,6 +22,10 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
+;; On a new system, ensures that VC-selected packages are installed too.
+;; TODO(laurynas): do not ask to overwrite existing packages on Emacs restarts.
+(package-vc-install-selected-packages)
+
 ;; The absence of secret files is not an error, but the user needs to be
 ;; notified. These files are not stored under dotfiles so they don't get checked
 ;; into the repo.
