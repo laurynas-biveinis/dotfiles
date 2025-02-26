@@ -17,6 +17,11 @@
 
 (add-to-list 'load-path dotfiles--my-elisp)
 
+;; Load custom file with settings from `customize' interface. This file is
+;; committed to the dotfiles repo too. Its absence is an error.
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
+
 ;; The absence of secret files is not an error, but the user needs to be
 ;; notified. These files are not stored under dotfiles so they don't get checked
 ;; into the repo.
@@ -51,10 +56,5 @@
 (if (server-running-p)
     (display-warning 'dotfiles "Emacs server is already running" :warning)
   (server-start))
-
-;; Load custom file with settings from `customize' interface. This file is
-;; committed to the dotfiles repo too. Its absence is an error.
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
 
 ;;; init.el ends here
