@@ -46,29 +46,21 @@
 ;;; woman
 ;; Integrate `woman' with macOS XCode some better by adding the missing man
 ;; paths.
-
-(defconst dotfiles--xcode-dev-dir
-  (file-name-as-directory
-   (string-trim-right (shell-command-to-string "xcode-select -p")))
-  "The currently active XCode developer directory.")
-
-(unless dotfiles--xcode-dev-dir
-  (display-warning 'dotfiles "XCode not found" :warning))
-
 (require 'woman)
-(defun dotfiles--add-xcode-man-subdir-to-woman (subdir)
-  "Add SUBDIR below XCode dev dir `woman-manpath' if it exists, warn otherwise."
-  (let ((dir (file-name-as-directory (concat dotfiles--xcode-dev-dir subdir))))
-    (if (file-directory-p dir)
-        (add-to-list 'woman-manpath dir)
-      (display-warning
-       'dotfiles (format "Directory %s not found" dir) :warning))))
 
-(dotfiles--add-xcode-man-subdir-to-woman
- "Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man")
-(dotfiles--add-xcode-man-subdir-to-woman "usr/share/man")
-(dotfiles--add-xcode-man-subdir-to-woman
- "Toolchains/XcodeDefault.xctoolchain/usr/share/man")
+(defun dotfiles--get-xcode-man-paths ()
+  "Return the list of XCode-managed man path strings."
+  (let ((paths-string (shell-command-to-string "xcode-select --show-manpaths")))
+    (when (string-empty-p paths-string)
+      (display-warning 'dotfiles "No XCode man paths found" :warning)
+      nil)
+    (split-string paths-string "\n")))
+
+
+(let ((paths (dotfiles--get-xcode-man-paths)))
+  (dolist (path paths)
+    (when (file-directory-p path)
+      (add-to-list 'woman-manpath path))))
 
 (require 'exec-path-from-shell)
 (setq exec-path-from-shell-check-startup-files nil)
