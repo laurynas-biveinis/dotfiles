@@ -1013,8 +1013,10 @@ RULE is a plist containing either :subject-exact or :subject-match."
 (setq cfw:render-line-breaker #'cfw:render-line-breaker-wordwrap)
 
 ;;; Features: Wakatime
-(require 'wakatime-mode)
-(global-wakatime-mode)
+(if (not (file-exists-p "~/.wakatime.cfg"))
+    (message "WakaTime not enabled: ~/.wakatime.cfg not found")
+  (require 'wakatime-mode)
+  (global-wakatime-mode))
 
 ;;; Utilities
 
