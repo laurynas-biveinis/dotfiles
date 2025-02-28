@@ -40,7 +40,18 @@ Only supports 1 or 2 rows."
   (dotfiles--make-window-grid 4 2))
 
 (require 'cl-lib)
-(cl-defstruct dotfiles--frame-dimensions top left height width)
+
+(cl-defstruct (dotfiles--frame-dimensions
+               (:constructor dotfiles--make-frame-dimensions))
+  "Structure representing frame dimensions and position."
+  (top nil :type integer :read-only t
+       :documentation "Top position in pixels.")
+  (left nil :type integer :read-only t
+        :documentation "Left position in pixels.")
+  (height nil :type integer :read-only t
+          :documentation "Frame height in lines.")
+  (width nil :type integer :read-only t
+         :documentation "Frame width in columns."))
 
 (defun dotfiles--add-frame-geometry-to-initial-alist (geometry)
   "Add frame GEOMETRY to `initial-frame-alist'."
@@ -63,27 +74,27 @@ Only supports 1 or 2 rows."
 
 (defconst dotfiles--darkstar-laptop-display-size '(1440 . 900))
 (defconst dotfiles--darkstar-laptop-frame-dimensions
-  (make-dotfiles--frame-dimensions :top 1 :left 1 :height 55 :width 202))
+  (dotfiles--make-frame-dimensions :top 1 :left 1 :height 55 :width 202))
 
 (defconst dotfiles--darkstar-external-display-size '(7456 . 1692))
 (defconst dotfiles--darkstar-external-frame-dimensions
-  (make-dotfiles--frame-dimensions :top 4 :left 3011 :height 117 :width 426))
+  (dotfiles--make-frame-dimensions :top 4 :left 3011 :height 117 :width 426))
 
 (defconst dotfiles--m1star-laptop-display-size '(1728 . 1117))
 (defconst dotfiles--m1star-laptop-frame-dimensions
-  (make-dotfiles--frame-dimensions :top 1 :left 1 :height 67 :width 242))
+  (dotfiles--make-frame-dimensions :top 1 :left 1 :height 67 :width 242))
 
 (defconst dotfiles--m1star-external-display-size '(3360 . 1890))
 (defconst dotfiles--m1star-external-frame-dimensions
-  (make-dotfiles--frame-dimensions :top 0 :left 5568 :height 135 :width 477))
+  (dotfiles--make-frame-dimensions :top 0 :left 5568 :height 135 :width 477))
 
 (defconst dotfiles--work-laptop-display-size '(1728 . 1117))
 (defconst dotfiles--work-laptop-frame-dimensions
-  (make-dotfiles--frame-dimensions :top 1 :left 1 :height 67 :width 242))
+  (dotfiles--make-frame-dimensions :top 1 :left 1 :height 67 :width 242))
 
 (defconst dotfiles--work-external-display-size '(3008 . 1692))
 (defconst dotfiles--work-external-frame-dimensions
-  (make-dotfiles--frame-dimensions :top 0 :left 3008 :height 117 :width 427))
+  (dotfiles--make-frame-dimensions :top 0 :left 3008 :height 117 :width 427))
 
 (defconst dotfiles--ignored-display-sizes
   [(3600 . 1080) (5520 . 1080) (4688 . 1692) (3600 . 1692) (7744 . 1692)
