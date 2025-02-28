@@ -153,6 +153,12 @@ Only supports 1 or 2 rows."
   "Diagnose unknown GEOMETRY."
   (message "Unknown display size %sx%s" (car geometry) (cdr geometry)))
 
+(defun dotfiles--apply-display-config-grid (config)
+  "Apply the window grid configuration from CONFIG."
+  (dotfiles--make-window-grid
+   (dotfiles--display-config-window-columns config)
+   (dotfiles--display-config-window-rows config)))
+
 ;; FIXME(laurynas): does not appear to work
 (let* ((geometry (cons (display-pixel-width) (display-pixel-height)))
        (config (seq-find (lambda (cfg)
@@ -162,9 +168,7 @@ Only supports 1 or 2 rows."
   (cond
    (config
     (dotfiles--configure-initial-frame-alist config)
-    (dotfiles--make-window-grid
-     (dotfiles--display-config-window-columns config)
-     (dotfiles--display-config-window-rows config)))
+    (dotfiles--apply-display-config-grid config))
    ;; FIXME(laurynas): interim geometry for the initial frame does not make
    ;; sense
    ((seq-position dotfiles--ignored-display-sizes geometry) nil)
@@ -179,9 +183,7 @@ Only supports 1 or 2 rows."
    (dotfiles--display-config-frame-dimensions config))
   (set-frame-parameter nil 'fullscreen
                        (dotfiles--display-config-fullscreen config))
-  (dotfiles--make-window-grid
-   (dotfiles--display-config-window-columns config)
-   (dotfiles--display-config-window-rows config)))
+  (dotfiles--apply-display-config-grid config))
 
 (defvar dotfiles--old-display-geometry nil)
 
