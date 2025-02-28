@@ -7,38 +7,37 @@
 
 ;;; Code:
 
+(defun dotfiles--make-window-grid (columns rows)
+  "Create a grid of windows with COLUMNS columns and ROWS rows.
+Only supports 1 or 2 rows."
+  (delete-other-windows)
+  (switch-to-buffer "*scratch*")
+  (when (> rows 1)
+    (split-window-below))
+  ;; Create columns in top row
+  (dotimes (_ (1- columns))
+    (split-window-right))
+  ;; If we have a second row, move down and create columns there
+  (when (> rows 1)
+    (windmove-down)
+    (dotimes (_ (1- columns))
+      (split-window-right)))
+  (balance-windows))
+
 (defun two-windows ()
   "Make frame contain two vertical windows."
   (interactive)
-  (delete-other-windows)
-  (split-window-right))
+  (dotfiles--make-window-grid 2 1))
 
 (defun six-windows ()
   "Make frame contain 2x3 windows."
   (interactive)
-  (delete-other-windows)
-  (split-window-below)
-  (split-window-right)
-  (split-window-right)
-  (windmove-down)
-  (split-window-right)
-  (split-window-right)
-  (balance-windows))
+  (dotfiles--make-window-grid 3 2))
 
 (defun eight-windows ()
   "Make frame contain 2x4 windows."
   (interactive)
-  (delete-other-windows)
-  (switch-to-buffer "*scratch*")
-  (split-window-below)
-  (split-window-right)
-  (split-window-right)
-  (split-window-right)
-  (windmove-down)
-  (split-window-right)
-  (split-window-right)
-  (split-window-right)
-  (balance-windows))
+  (dotfiles--make-window-grid 4 2))
 
 (require 'cl-lib)
 (cl-defstruct dotfiles--frame-dimensions top left height width)
