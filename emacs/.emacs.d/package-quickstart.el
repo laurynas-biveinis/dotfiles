@@ -2484,7 +2484,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.4/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.4/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.5/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.5/transient-autoloads.el"))
 
 
 
@@ -2502,7 +2502,9 @@ LOC is a command, a key vector, a key description (a string
   as returned by `key-description'), or a coordination list
   (whose last element may also be a command or key).
 Remove a conflicting binding unless optional KEEP-OTHER is
-  non-nil.
+  non-nil.  When the conflict appears to be a false-positive,
+  non-nil KEEP-OTHER may be ignored, which can be prevented
+  by using `always'.
 See info node `(transient)Modifying Existing Transients'.
 
 (fn PREFIX LOC SUFFIX &optional KEEP-OTHER)")
@@ -2516,7 +2518,9 @@ LOC is a command, a key vector, a key description (a string
   as returned by `key-description'), or a coordination list
   (whose last element may also be a command or key).
 Remove a conflicting binding unless optional KEEP-OTHER is
-  non-nil.
+  non-nil.  When the conflict appears to be a false-positive,
+  non-nil KEEP-OTHER may be ignored, which can be prevented
+  by using `always'.
 See info node `(transient)Modifying Existing Transients'.
 
 (fn PREFIX LOC SUFFIX &optional KEEP-OTHER)")
@@ -4707,7 +4711,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.0/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.0/llama-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.1/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.1/llama-autoloads.el"))
 
 
 
@@ -4814,13 +4818,14 @@ See `llama-fontify-mode' for more information on Llama-Fontify mode.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "llama" '("\\#\\#" "completing-read" "elisp-" "intern" "lisp--el-match-keyword" "llama-"))
+
 
 
 (provide 'llama-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.0/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1/magit-section-autoloads.el"))
 
 
 
@@ -4875,7 +4880,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.0/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.0/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.1/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.1/magit-autoloads.el"))
 
 
 
@@ -4923,20 +4928,20 @@ the current Emacs session.
 
 If the value is nil, no bindings are added.
 
-If `default', maybe add:
+If \\+`default', maybe add:
 
-    C-x g     `magit-status'
-    C-x M-g   `magit-dispatch'
-    C-c M-g   `magit-file-dispatch'
+    \\`C-x' \\`g'     `magit-status'
+    \\`C-x' \\`M-g'   `magit-dispatch'
+    \\`C-c' \\`M-g'   `magit-file-dispatch'
 
 If `recommended', maybe add:
 
-    C-x g     `magit-status'
-    C-c g     `magit-dispatch'
-    C-c f     `magit-file-dispatch'
+    \\`C-x' \\`g'     `magit-status'
+    \\`C-c' \\`g'     `magit-dispatch'
+    \\`C-c' \\`f'     `magit-file-dispatch'
 
     These bindings are strongly recommended, but we cannot use
-    them by default, because the \"C-c <LETTER>\" namespace is
+    them by default, because the \\`C-c <LETTER>' namespace is
     strictly reserved for bindings added by the user.
 
 The bindings in the chosen set may be added when
@@ -4970,7 +4975,7 @@ See variable `magit-define-global-key-bindings'." (when magit-define-global-key-
 (autoload 'magit-git-command "magit" "\
 Execute COMMAND asynchronously; display output.
 
-Interactively, prompt for COMMAND in the minibuffer. \"git \" is
+Interactively, prompt for COMMAND in the minibuffer.  \"git \" is
 used as initial input, but can be deleted to run another command.
 
 With a prefix argument COMMAND is run in the top-level directory
@@ -4980,7 +4985,7 @@ of the current working tree, otherwise in `default-directory'.
 (autoload 'magit-git-command-topdir "magit" "\
 Execute COMMAND asynchronously; display output.
 
-Interactively, prompt for COMMAND in the minibuffer. \"git \" is
+Interactively, prompt for COMMAND in the minibuffer.  \"git \" is
 used as initial input, but can be deleted to run another command.
 
 COMMAND is run in the top-level directory of the current
@@ -5300,7 +5305,7 @@ and also rename the respective reflog file.
 
 (fn BRANCH)" t)
 (autoload 'magit-branch-unshelve "magit-branch" "\
-Unshelve a BRANCH
+Unshelve a BRANCH.
 Rename \"refs/shelved/BRANCH\" to \"refs/heads/BRANCH\",
 and also rename the respective reflog file.
 
@@ -5386,7 +5391,7 @@ Create a new commit.
 Amend staged changes to the last commit, without editing its message.
 
 With a prefix argument do not update the committer date; without an
-argument update it. The option `magit-commit-extend-override-date'
+argument update it.  The option `magit-commit-extend-override-date'
 can be used to inverse the meaning of the prefix argument.  Called
 non-interactively, the optional OVERRIDE-DATE argument controls this
 behavior, and the option is of no relevance.
@@ -5400,7 +5405,7 @@ Amend staged changes (if any) to the last commit, and edit its message.
 Reword the message of the last commit, without amending its tree.
 
 With a prefix argument do not update the committer date; without an
-argument update it. The option `magit-commit-reword-override-date'
+argument update it.  The option `magit-commit-reword-override-date'
 can be used to inverse the meaning of the prefix argument.  Called
 non-interactively, the optional OVERRIDE-DATE argument controls this
 behavior, and the option is of no relevance.
@@ -6768,7 +6773,7 @@ Then apply STASH, dropping it if it applies cleanly.
 
 (fn STASH BRANCH)" t)
 (autoload 'magit-stash-format-patch "magit-stash" "\
-Create a patch from STASH
+Create a patch from STASH.
 
 (fn STASH)" t)
 (autoload 'magit-stash-list "magit-stash" "\
@@ -7154,7 +7159,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.2.1/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.2.1/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2/ghub-autoloads.el"))
 
 
 
@@ -7675,7 +7680,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250223.1743/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250223.1743/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250301.1637/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250301.1637/emacsql-autoloads.el"))
 
 
 
@@ -9232,7 +9237,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.2/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.2/hl-todo-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.3/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.3/hl-todo-autoloads.el"))
 
 
 
@@ -10895,7 +10900,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.0/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.0/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.1/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.1/closql-autoloads.el"))
 
 
 
@@ -10905,13 +10910,14 @@ it is disabled.
 
 
 (register-definition-prefixes "closql" '("closql-" "eieio-"))
+
 
 
 (provide 'closql-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.7/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.7/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.8/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.8/forge-autoloads.el"))
 
 
 
@@ -11046,7 +11052,7 @@ Please see the manual for more information.
 (autoload 'forge-checkout-worktree "forge-commands" "\
 Create, configure and checkout a new worktree from a pull-request.
 This is like `forge-checkout-pullreq', except that it also
-creates a new worktree. Please see the manual for more
+creates a new worktree.  Please see the manual for more
 information.
 
 (fn PATH PULLREQ)" t)
@@ -11081,10 +11087,18 @@ Remove a repository from the database.
 (fn REPOSITORY)" t)
 (autoload 'forge-remove-topic-locally "forge-commands" "\
 Remove a topic from the local database only.
-Due to how the supported APIs work, it would be too expensive to
-automatically remove topics from the local database that were
-removed from the forge.  The purpose of this command is to allow
-you to manually clean up the local database.
+
+When the region marks multiple topics, then offer to remove them all.
+
+The topic is not removed from the forge and, if it is later modified,
+then it will be added to the database again when fetching all topics.
+
+This is useful for users who only fetch individual topics and want to
+remove the topics they are no longer interested in.  This can also be
+used to remove topics locally, which have already been removed on the
+forge (the service).  Forge (the package) cannot automatically detect
+when that happens, because given how the APIs work, this would be too
+expensive.
 
 (fn TOPIC)" t)
 (autoload 'forge-reset-database "forge-commands" "\
@@ -12300,7 +12314,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.7" "/Users/laurynas/.emacs.d/elpa/org-roam-20250218.1722" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.0" "/Users/laurynas/.emacs.d/elpa/transient-0.8.4" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.8" "/Users/laurynas/.emacs.d/elpa/org-roam-20250218.1722" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1" "/Users/laurynas/.emacs.d/elpa/transient-0.8.5" "/Users/laurynas/.emacs.d/elpa/dash-20240510.1327" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
