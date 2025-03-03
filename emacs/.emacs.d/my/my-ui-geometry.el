@@ -7,6 +7,7 @@
 
 ;;; Code:
 
+;; TODO(laurynas): split vertically first
 (defun dotfiles--make-window-grid (columns rows)
   "Create a grid of windows with COLUMNS columns and ROWS rows.
 Only supports 1 or 2 rows."
