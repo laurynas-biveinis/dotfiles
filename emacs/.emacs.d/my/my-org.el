@@ -259,7 +259,10 @@ event of an error or nonlocal exit."
 (org-roam-db-autosync-mode)
 
 ;;; `org-gcal'
-(require 'org-gcal)
+
+;; Do not require `org-gcal' to avoid the warning about needing to call
+;; `org-gcal-reload-client-id-secret'
+
 ;; TODO(laurynas): fetch automatically?
 ;; TODO(laurynas): Can `org-gcal-local-timezeone' be automated?
 ;; TODO(laurynas): key binding for `org-gcal-post-at-point'?

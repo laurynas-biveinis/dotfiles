@@ -480,7 +480,9 @@ BRANCH-NAME. Returns the URL of this PR."
 
 ;;; `org-gcal' helpers
 
-(require 'org-gcal)
+;; Do not require `org-gcal' to avoid the warning about needing to call
+;; `org-gcal-reload-client-id-secret'
+(declare-function org-gcal-post-at-point "org-gcal" ())
 
 (defun dotfiles--create-gcal-event (org-file calendar-id title time)
   "Create a Google Calendar event in the specified org file.
