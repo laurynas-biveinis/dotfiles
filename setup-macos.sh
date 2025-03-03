@@ -30,8 +30,8 @@ sudo defaults write /Library/Preferences/com.apple.HIToolbox \
 	AppleEnabledInputSources -array-add \
 	'<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
 # Show language menu in the login screen
-defaults write /Library/Preferences/com.apple.loginwindow \
-	showInputMenu -bool true
+sudo defaults write /Library/Preferences/com.apple.loginwindow \
+     showInputMenu -bool true
 # Current user setting
 defaults delete com.apple.HIToolbox AppleEnabledInputSources
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
@@ -210,9 +210,9 @@ defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
 # Show POSIX path in the window title
 defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
-defaults -currentHost write \
-	/Library/Preferences/SystemConfiguration/com.apple.finder \
-	AppleShowAllFiles -bool true
+sudo defaults -currentHost write \
+     /Library/Preferences/SystemConfiguration/com.apple.finder \
+     AppleShowAllFiles -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write -g AppleShowAllExtensions -bool true
