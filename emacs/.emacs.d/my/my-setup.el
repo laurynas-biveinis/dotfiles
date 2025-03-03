@@ -1094,26 +1094,26 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             c-electric-backspace org-agenda-next-line find-file
                             mouse-drag-region mac-mwheel-scroll mouse-set-point
                             org-cycle backward-word save-buffer cycle-spacing
-                            isearch-repeat-forward scroll-down-command
+                            isearch-repeat-forward scroll-down-command ignore
                             beginning-of-visual-line windmove-right eval-defun
                             org-agenda-previous-line windmove-left push-button
                             backward-delete-char-untabify org-ctrl-c-ctrl-c
-                            org-beginning-of-line delete-forward-char
+                            org-beginning-of-line delete-forward-char org-refile
                             set-mark-command backward-kill-word magit-discard
                             python-indent-dedent-line-backspace magit-push
                             end-of-visual-line windmove-up kill-buffer
                             markdown-outdent-or-delete newline org-agenda-goto
-                            windmove-down org-agenda-redo org-return
+                            windmove-down org-agenda-redo org-return my-morning
                             xwidget-webkit-scroll-up-line newline-and-indent
                             mu4e-view-mark-for-refile xwidget-webkit-scroll-up
                             mu4e-view-headers-next magit-section-toggle
                             isearch-forward minibuffer-complete my-main-agenda
                             mu4e-headers-next switch-to-buffer transpose-chars
                             yank mu4e-view-marked-execute mu4e-view-action
-                            kill-ring-save mu4e-headers-view-message
+                            kill-ring-save mu4e-headers-view-message dired-jump
                             magit-stage org-todo goto-line mu4e-view-quit
                             org-agenda-clock-in balance-windows my-secrets
-                            isearch-delete-char xref-find-definitions
+                            isearch-delete-char xref-find-definitions iedit-mode
                             beginend-prog-mode-goto-beginning kill-region
                             lsp-execute-code-action back-to-indentation
                             kill-word org-end-of-line markdown-enter-key
@@ -1180,7 +1180,17 @@ RULE is a plist containing either :subject-exact or :subject-match."
                             my-magit-worktree-branch projectile-test-project
                             beginend-compilation-mode-goto-end left-word
                             indent-rigidly-right magit-rebase-branch
-                            markdown-insert-list-item image-backward-hscroll))
+                            markdown-insert-list-item image-backward-hscroll
+                            org-decrypt-entry dired-find-file save-some-buffers
+                            deadgrep-toggle-all-file-results indent-rigidly
+                            save-buffers-kill-terminal indent-rigidly-left
+                            view-echo-area-messages transient-quit-one
+                            flycheck-list-errors org-set-property
+                            deadgrep-directory magit-push-current-to-pushremote
+                            org-agenda-do-date-earlier transpose-lines
+                            beginend-message-mode-goto-beginning
+                            mouse-save-then-kill deadgrep-search-term
+                            delete-indentation))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
