@@ -926,8 +926,17 @@ RULE is a plist containing either :subject-exact or :subject-match."
         (and subject-exact (string= subject-exact subject))
         (and subject-match (string-match subject-match subject)))))
 
-;; `dotfiles--email-automations' is defined elsewhere.
+(defvar dotfiles--email-automations '()
+  "List of email automation rules.
+Each rule is a property list with the following properties:
+  :sender-exact - Exact sender email address to match
+  :subject-match - Regex pattern to match against the email subject
+  :subject-exact - Exact subject text to match
+  :action-fn - Function to call when the rule matches
 
+Only one of :subject-match or :subject-exact can be specified per rule.
+The list is processed in order and stops at the first matching rule.
+Having multiple matching automation rules for the same email is an error.")
 (defun dotfiles--mu4e-email-automation (msg)
   "Run any matching email automation for a `mu4e' MSG."
   (org-autotask-require-org-clock)
