@@ -4,8 +4,8 @@
 
 ;; Author: Yikai Zhao <yikai@z1k.dev>
 ;; Keywords: tools
-;; Package-Version: 20241223.230
-;; Package-Revision: 9fa4ef4d1922
+;; Package-Version: 20250305.1646
+;; Package-Revision: 47bc3b00fd50
 ;; URL: https://github.com/blahgeek/emacs-pr-review
 ;; Package-Requires: ((emacs "27.1") (magit-section "3.2") (magit "3.2") (markdown-mode "2.5") (ghub "3.5"))
 
@@ -49,6 +49,7 @@
     (define-key map (kbd "C-c C-e") #'pr-review-context-edit)
     (define-key map (kbd "C-c C-v") #'pr-review-view-file)
     (define-key map (kbd "C-c C-f") #'pr-review-goto-file)
+    (define-key map (kbd "C-c C-d") #'pr-review-ediff-file)
     (define-key map (kbd "C-c C-o") #'pr-review-open-in-default-browser)
     (define-key map (kbd "C-c C-q") #'pr-review-request-reviews)
     (define-key map (kbd "C-c C-l") #'pr-review-set-labels)
