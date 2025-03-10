@@ -1010,7 +1010,7 @@
 		 (:url . "https://elpa.gnu.org/packages/dbus-codegen.html")
 		 (:commit . "4b0d8525943ebba797e1ebaf97fd9a608aef5ec1"))])
  (debbugs .
-	  [(0 43)
+	  [(0 44)
 	   ((emacs
 	     (26 1))
 	    (soap-client
@@ -1021,7 +1021,7 @@
 	    (:authors
 	     ("Michael Albinus" . "michael.albinus@gmx.de"))
 	    (:url . "https://elpa.gnu.org/packages/debbugs.html")
-	    (:commit . "268a377e48709b8dae88f773277215472581beaf"))])
+	    (:commit . "4fde9fbcbd872b8c30f2e95c8c6513ae7578bdea"))])
  (delight .
 	  [(1 7)
 	   ((cl-lib
@@ -1479,7 +1479,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(1 4 5)
+	 [(1 5 1)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1496,7 +1496,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "3b555e71bbf9f21466b5b1aa6ab1e9f931af1e11"))])
+	   (:commit . "30058c4771708e7ad0fa9d93fe0bd00c2889a483"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -1952,6 +1952,17 @@
 		   ("Daiki Ueno" . "ueno@gnu.org"))
 		  (:keywords "gnome" "c" "coding style")
 		  (:url . "http://elpa.gnu.org/packages/gnome-c-style.html"))])
+ (gnome-dark-style .
+		   [(0 2 2)
+		    ((emacs
+		      (30 1)))
+		    "Sync theme with GNOME color-scheme" tar
+		    ((:url . "https://github.com/dimagid/gnome-dark-style")
+		     (:keywords "themes" "gnome" "sync" "dark" "light" "color-scheme")
+		     (:maintainer "David Dimagid" . "davidimagid@gmail.com")
+		     (:authors
+		      ("David Dimagid" . "davidimagid@gmail.com"))
+		     (:commit . "cbc4fbe8f24ec28b5ca754c6022f60d09879d20c"))])
  (gnorb .
 	[(1 6 11)
 	 ((cl-lib
@@ -2609,7 +2620,7 @@
 		      ("Sean Whitton" . "spwhitton@spwhitton.name"))
 		     (:commit . "c22a15e86acf28da716532c26ba1371574c8e979"))])
  (llm .
-      [(0 23 0)
+      [(0 24 0)
        ((emacs
 	 (28 1))
 	(plz
@@ -2623,7 +2634,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "874d76211c6933f2f5e41583a495e9b3aee51fb3"))])
+	(:commit . "fae79cea904f7294889b71de89e37b2a3eca43ab"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
@@ -3142,7 +3153,7 @@
 	       ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 	      (:commit . "2b7a1688f24cc8ef5a3c3a6dab8e00d833bcda59"))])
  (org .
-      [(9 7 24)
+      [(9 7 25)
        ((emacs
 	 (26 1)))
        "Outline-based notes management and organizer" tar
@@ -3151,7 +3162,7 @@
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-	(:commit . "7fa7a541ee97366c8a0741d2ecfd3a2b7790b320"))])
+	(:commit . "bdf9f949d75f24f064b83971a0bb6311b3915f81"))])
  (org-contacts .
 	       [(1 1)
 		((emacs
