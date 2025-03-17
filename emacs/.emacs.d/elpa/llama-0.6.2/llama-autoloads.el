@@ -65,11 +65,22 @@ Note how `_%3' and `_&6' are removed from the body, because their names
 begin with an underscore.  Also note that `_&4' is optional, unlike the
 explicitly specified `_%3'.
 
-(fn FN &rest BODY)" nil t)
-(autoload 'llama-fontify-mode "llama" "\
-Toggle fontification of the `##' macro and its positional arguments.
+Consider enabling `llama-fontify-mode' to highlight `##' and its
+special arguments.
 
-This is a minor mode.  If called interactively, toggle the
+(fn FN &rest BODY)" nil t)
+(defvar llama-fontify-mode nil "\
+Non-nil if Llama-Fontify mode is enabled.
+See the `llama-fontify-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `llama-fontify-mode'.")
+(custom-autoload 'llama-fontify-mode "llama" nil)
+(autoload 'llama-fontify-mode "llama" "\
+In Emacs Lisp mode, highlight the `##' macro and its special arguments.
+
+This is a global minor mode.  If called interactively, toggle the
 `Llama-Fontify mode' mode.  If the prefix argument is positive,
 enable the mode, and if it is zero or negative, disable the mode.
 
@@ -78,38 +89,13 @@ the mode if ARG is nil, omitted, or is a positive number.
 Disable the mode if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
-evaluate `llama-fontify-mode'.
+evaluate `(default-value \\='llama-fontify-mode)'.
 
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
 
 (fn &optional ARG)" t)
-(put 'global-llama-fontify-mode 'globalized-minor-mode t)
-(defvar global-llama-fontify-mode nil "\
-Non-nil if Global Llama-Fontify mode is enabled.
-See the `global-llama-fontify-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `global-llama-fontify-mode'.")
-(custom-autoload 'global-llama-fontify-mode "llama" nil)
-(autoload 'global-llama-fontify-mode "llama" "\
-Toggle Llama-Fontify mode in all buffers.
-With prefix ARG, enable Global Llama-Fontify mode if ARG is positive; otherwise,
-disable it.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.
-Enable the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-Llama-Fontify mode is enabled in all buffers where `llama--turn-on-fontify-mode'
-would do it.
-
-See `llama-fontify-mode' for more information on Llama-Fontify mode.
-
-(fn &optional ARG)" t)
-(register-definition-prefixes "llama" '("\\#\\#" "completing-read" "elisp-" "intern" "lisp--el-match-keyword" "llama-"))
-
+(register-definition-prefixes "llama" '("\\#\\#" "all-completions" "elisp-" "intern" "lisp--el-match-keyword@llama" "llama-"))
 
 ;;; End of scraped data
 
