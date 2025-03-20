@@ -1539,11 +1539,11 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(1 5 6)
+	 [(1 6 0)
 	  ((emacs
 	    (28 1))
 	   (llm
-	    (0 22 0))
+	    (0 24 0))
 	   (plz
 	    (0 8))
 	   (transient
@@ -1556,7 +1556,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "d04c7bbb4d089ad53630ace932e99ef9188dc100"))])
+	   (:commit . "fca903ac1348b551d3372314b7b03511164da908"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs
@@ -2231,6 +2231,19 @@
 		 (:authors
 		  ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
 		 (:commit . "784c471a9ea9ae817d70b222ec6fbe90ac64a057"))])
+ (hugoista .
+	   [(0 2 0)
+	    ((emacs
+	      (24 3))
+	     (seq
+	      (0)))
+	    "Manage Hugo posts like a barista" tar
+	    ((:url . "https://codeberg.org/c-alpha/hugoista")
+	     (:maintainer "Alexander Adolf" . "alexander.adolf@condition-alpha.com")
+	     (:authors
+	      ("Alexander Adolf" . "alexander.adolf@condition-alpha.com")
+	      ("Thanos Apollo" . "public@thanosapollo.org"))
+	     (:commit . "1769fde5fb9c3a7cccea56c2f730861483d3571c"))])
  (hydra .
 	[(0 15 0)
 	 ((cl-lib
