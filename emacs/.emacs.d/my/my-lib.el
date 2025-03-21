@@ -116,31 +116,6 @@ ARGS must be properly quoted if needed."
   ;; `substring' instead of i.e. `string-trim-right'.
   (substring (shell-command-to-string (concat "gh " args)) 0 -1))
 
-;; Google Drive helpers through "gdrive" command-line utility
-
-(defmacro dotfiles--with-gdrive-file-as-txt (gdrive-id &rest body)
-  "Export Google Drive document GDRIVE-ID as text and execute BODY.
-A temporary buffer is created to hold the exported text and the body is executed
-there. The temporary file is automatically cleaned up after BODY execution."
-  (declare (indent 1) (debug t))
-  ;; In another context this would be a security hole due the race window
-  ;; between generating a temp name and using it. Here it's a single trusted
-  ;; user invocation, thus OK.
-  `(let ((temp-file-path (concat (make-temp-name
-                                  (expand-file-name "gdrive-export-"
-                                                    temporary-file-directory))
-                                 ".txt")))
-     (unwind-protect
-         (progn
-           (dotfiles--run-program "gdrive" (list "files" "export"
-                                                 ,gdrive-id
-                                                 temp-file-path))
-           (with-temp-buffer
-             (insert-file-contents temp-file-path)
-             ,@body))
-       (when (file-exists-p temp-file-path)
-         (delete-file temp-file-path)))))
-
 ;;; Buffer management helpers
 
 (defun dotfiles--get-org-buffer (name)
