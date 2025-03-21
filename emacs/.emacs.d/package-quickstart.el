@@ -1800,7 +1800,7 @@ Read a string using a pos-frame with given PROMPT and INITIAL-INPUT.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-3.1/treemacs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-3.1/treemacs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-3.2/treemacs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/treemacs-3.2/treemacs-autoloads.el"))
 
 
 
@@ -1831,7 +1831,7 @@ To *add* a project to the current workspace use
 `treemacs-add-and-display-current-project' instead." t)
 (autoload 'treemacs-find-file "treemacs" "\
 Find and focus the current file in the treemacs window.
-If the current buffer has visits no file or with a prefix ARG ask for the
+If the current buffer visits no file or with a prefix ARG ask for the
 file instead.
 Will show/create a treemacs buffers if it is not visible/does not exist.
 For the most part only useful when `treemacs-follow-mode' is not active.
@@ -1845,6 +1845,15 @@ Will ask to change the treemacs root if the file to find is not under the
 root.  If no treemacs buffer exists it will be created with the current file's
 containing directory as root.  Will do nothing if the current buffer is not
 visiting a file or Emacs cannot find any tags for the current file." t)
+(autoload 'treemacs-start-on-boot "treemacs" "\
+Initialiser specifically to start treemacs as part of your init file.
+
+Ensures that all visual elements are present which might otherwise be missing
+because their setup requires an interactive command or a post-command hook.
+
+FOCUS-TREEMACS indicates whether the treemacs window should be selected.
+
+(fn &optional FOCUS-TREEMACS)")
 (autoload 'treemacs-select-window "treemacs" "\
 Select the treemacs window if it is visible.
 Bring it to the foreground if it is not visible.
@@ -7666,7 +7675,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250301.1637/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250301.1637/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250320.1501/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250320.1501/emacsql-autoloads.el"))
 
 
 
@@ -12293,15 +12302,15 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-	'(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
-	package-activated-list)))
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
-	(append
-	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.8" "/Users/laurynas/.emacs.d/elpa/org-roam-20250313.134" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1" "/Users/laurynas/.emacs.d/elpa/transient-0.8.6" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
-	 Info-directory-list)))
+        (append
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.8" "/Users/laurynas/.emacs.d/elpa/org-roam-20250313.134" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1" "/Users/laurynas/.emacs.d/elpa/transient-0.8.6" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
+         Info-directory-list)))
 
 ;; Local Variables:
 ;; version-control: never
