@@ -22,16 +22,20 @@
 		     ("Ozan Sener" . "ozan@ozansener.com"))
 		    (:commit . "b58731c3b0bbaac9d3ed8d5ae900063df5db090d"))])
  (aidermacs .
-	    [(1 0)
+	    [(1 1)
 	     ((emacs
-	       (29 1)))
+	       (26 1))
+	      (transient
+	       (0 3 0))
+	      (compat
+	       (30 0 2 0)))
 	     "AI pair programming with Aider" tar
 	     ((:url . "https://github.com/MatthewZMD/aidermacs")
 	      (:keywords "ai" "emacs" "llm" "aider" "ai-pair-programming" "tools")
 	      (:maintainer "Mingde Zeng" . "matthewzmd@posteo.net")
 	      (:authors
 	       ("Mingde Zeng" . "matthewzmd@posteo.net"))
-	      (:commit . "5157e8fb760b239ae04f57d0c8a7f4bb87e7b6ad"))])
+	      (:commit . "992ab4867452fe2d2ec2153fc172fcc72281a3cd"))])
  (alect-themes .
 	       [(0 10)
 		((emacs
@@ -2142,7 +2146,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20250320 101804)
+	      [(1 0 20250321 115935)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2795,14 +2799,14 @@
 	       ("Le Wang" . "l26wang@gmail.com"))
 	      (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys .
-	       [(26 10 20250308091402)
+	       [(26 11 20250324000003)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "1f965c7e2de8ee190fe909c50c3683842deb3afb"))])
+		 (:commit . "b3dd7a1c7c3c0f8225a8d195cefcf2f4c7429bfb"))])
  (xkcd .
        [(1 1)
 	((json

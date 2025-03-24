@@ -7724,7 +7724,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250313.134/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250313.134/org-roam-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.20/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.20/org-roam-autoloads.el"))
 
 
 
@@ -12309,7 +12309,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.8" "/Users/laurynas/.emacs.d/elpa/org-roam-20250313.134" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1" "/Users/laurynas/.emacs.d/elpa/transient-0.8.6" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.8" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.20" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1" "/Users/laurynas/.emacs.d/elpa/transient-0.8.6" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
