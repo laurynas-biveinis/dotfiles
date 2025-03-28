@@ -575,7 +575,7 @@
 		  ("EditorConfig Team" . "editorconfig@googlegroups.com"))
 		 (:commit . "f1531bab5b57e40759167b7e5db49acbbc09972f"))])
  (eglot-inactive-regions .
-			 [(0 6 4)
+			 [(0 6 5)
 			  ((emacs
 			    (29 1)))
 			  "Highlight inactive code regions with eglot power" tar
@@ -583,7 +583,7 @@
 			   (:maintainer "Filippo Argiolas" . "filippo.argiolas@gmail.com")
 			   (:authors
 			    ("Filippo Argiolas" . "filippo.argiolas@gmail.com"))
-			   (:commit . "cbe09a531f1f86d7601c70fc071f5fa4bf13499e"))])
+			   (:commit . "3d973b45afbf3afa835abaf3d99c993b5426a596"))])
  (eldoc-diffstat .
 		 [(1 0)
 		  ((emacs
@@ -2146,7 +2146,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20250321 115935)
+	      [(1 0 20250324 74422)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -2227,6 +2227,15 @@
 	     (:authors
 	      ("Nicolas Martyanoff" . "nicolas@n16f.net"))
 	     (:commit . "ab09db78d9d1baa4da4f926930833598e1e978ce"))])
+ (rpm-spec-mode .
+		[(0 16)
+		 nil "RPM spec file editing commands for Emacs/XEmacs" tar
+		 ((:keywords "unix" "languages")
+		  (:maintainer nil . "stig@bjorlykke.org")
+		  (:authors
+		   (nil . "stig@bjorlykke.org"))
+		  (:url . "https://elpa.nongnu.org/nongnu/rpm-spec-mode.html")
+		  (:commit . "7d06d19a31e888b932da6c8202ff2c73f42703a1"))])
  (rubocop .
 	  [(0 6 0)
 	   ((emacs
@@ -2799,14 +2808,14 @@
 	       ("Le Wang" . "l26wang@gmail.com"))
 	      (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys .
-	       [(26 11 20250324000003)
+	       [(26 11 20250325184849)
 		((emacs
 		  (27)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "b3dd7a1c7c3c0f8225a8d195cefcf2f4c7429bfb"))])
+		 (:commit . "e8ba384256e8c88c7fe218b85c7da9e44d9b2074"))])
  (xkcd .
        [(1 1)
 	((json
