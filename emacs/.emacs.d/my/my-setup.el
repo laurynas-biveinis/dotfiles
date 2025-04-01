@@ -1097,7 +1097,7 @@ Having multiple matching automation rules for the same email is an error.")
       '(self-insert-command next-line lsp-ui-doc--handle-mouse-movement mu4e
                             org-self-insert-command previous-line query-replace
                             magit-next-line gud-tooltip-mouse-motion left-char
-                            org-delete-backward-char isearch-printing-char
+                            org-delete-backward-char isearch-printing-char undo
                             magit-previous-line right-char forward-word my-gtd
                             delete-backward-char scroll-up-command magit-commit
                             c-electric-backspace org-agenda-next-line find-file
@@ -1163,11 +1163,11 @@ Having multiple matching automation rules for the same email is an error.")
                             previous-line-or-history-element org-fill-paragraph
                             company-select-previous-or-abort org-insert-link
                             org-roam-node-insert projectile-switch-to-buffer
-                            org-insert-todo-heading-respect-content
+                            org-insert-todo-heading-respect-content org-capture
                             minibuffer-previous-completion my-visit-mtr-test
                             org-latex-preview mu4e-update-mail-and-index
                             deadgrep-visit-result xref-show-location-at-point
-                            org-agenda-clock-out org-roam-node-find
+                            org-agenda-clock-out org-roam-node-find crm-complete
                             mu4e-view-scroll-up-or-next magit-commit-amend
                             minibuffer-complete-word mu4e-view-headers-prev
                             org-archive-subtree goto-address-at-point
@@ -1194,12 +1194,17 @@ Having multiple matching automation rules for the same email is an error.")
                             deadgrep-toggle-all-file-results indent-rigidly
                             save-buffers-kill-terminal indent-rigidly-left
                             view-echo-area-messages transient-quit-one
-                            flycheck-list-errors org-set-property
+                            flycheck-list-errors org-set-property delete-window
                             deadgrep-directory magit-push-current-to-pushremote
                             org-agenda-do-date-earlier transpose-lines
-                            beginend-message-mode-goto-beginning
+                            beginend-message-mode-goto-beginning mml-attach-file
                             mouse-save-then-kill deadgrep-search-term
-                            delete-indentation))
+                            delete-indentation mu4e-view-mark-for-move
+                            magit-section-cycle-global compile-goto-error
+                            transient-backward-button magit-mode-bury-buffer
+                            mu4e-headers-mark-for-refile org-schedule
+                            exchange-point-and-mark forward-paragraph
+                            backward-paragraph))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
