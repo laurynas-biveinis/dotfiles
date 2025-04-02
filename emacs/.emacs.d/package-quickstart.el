@@ -2493,7 +2493,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.6/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.6/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.7/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.7/transient-autoloads.el"))
 
 
 
@@ -4820,7 +4820,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.2/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.2/magit-section-autoloads.el"))
 
 
 
@@ -4875,7 +4875,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.1/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.1/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.2/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.2/magit-autoloads.el"))
 
 
 
@@ -4890,6 +4890,7 @@ with the variables' values as arguments, which were recorded by
                   markdown-mode
                   org-mode
                   fundamental-mode
+                  log-edit-mode
                   git-commit-elisp-text-mode))))
 (register-definition-prefixes "git-commit" '("git-commit-" "global-git-commit-mode"))
 
@@ -5016,9 +5017,7 @@ the output in the kill ring.
 
 
 
-(autoload 'magit-stage-buffer-file "magit-apply" "\
-Stage all changes to the file being visited in the current buffer." t)
-(autoload 'magit-stage-file "magit-apply" "\
+(autoload 'magit-stage-files "magit-apply" "\
 Read one or more files and stage all changes in those files.
 With prefix argument FORCE, offer ignored files for completion.
 
@@ -5031,9 +5030,7 @@ With a prefix argument also stage previously untracked (but not
 ignored) files.
 
 (fn &optional ALL)" t)
-(autoload 'magit-unstage-buffer-file "magit-apply" "\
-Unstage all changes to the file being visited in the current buffer." t)
-(autoload 'magit-unstage-file "magit-apply" "\
+(autoload 'magit-unstage-files "magit-apply" "\
 Read one or more files and unstage all changes to those files.
 
 (fn FILES)" t)
@@ -5717,13 +5714,6 @@ Run `gitk' in the current repository." t)
 Run `gitk --branches' in the current repository." t)
 (autoload 'magit-run-gitk-all "magit-extras" "\
 Run `gitk --all' in the current repository." t)
-(autoload 'ido-enter-magit-status "magit-extras" "\
-Drop into `magit-status' from file switching.
-
-To make this command available use something like:
-
-  (keymap-set ido-common-completion-map
-              \"C-x g\" \\='ido-enter-magit-status)" t)
 (autoload 'magit-project-status "magit-extras" "\
 Run `magit-status' in the current project's root." t)
 (autoload 'magit-dired-jump "magit-extras" "\
@@ -6010,6 +6000,31 @@ the line and column corresponding to that location.
 View the file from the worktree corresponding to the current blob.
 When visiting a blob or the version from the index, then go to
 the same location in the respective file in the working tree." t)
+(autoload 'magit-file-stage "magit-files" "\
+Stage all changes to the file being visited in the current buffer." t)
+(autoload 'magit-file-unstage "magit-files" "\
+Unstage all changes to the file being visited in the current buffer." t)
+(autoload 'magit-file-untrack "magit-files" "\
+Untrack the selected FILES or one file read in the minibuffer.
+
+With a prefix argument FORCE do so even when the files have
+staged as well as unstaged changes.
+
+(fn FILES &optional FORCE)" t)
+(autoload 'magit-file-rename "magit-files" "\
+Rename or move FILE to NEWNAME.
+NEWNAME may be a file or directory name.  If FILE isn't tracked in
+Git, fallback to using `rename-file'.
+
+(fn FILE NEWNAME)" t)
+(autoload 'magit-file-delete "magit-files" "\
+Delete the selected FILES or one file read in the minibuffer.
+
+With a prefix argument FORCE do so even when the files have
+uncommitted changes.  When the files aren't being tracked in
+Git, then fallback to using `delete-file'.
+
+(fn FILES &optional FORCE)" t)
 (autoload 'magit-file-checkout "magit-files" "\
 Checkout FILE from REV.
 
@@ -6069,12 +6084,7 @@ Call \"git update-index --no-assume-unchanged -- FILE\".
 
  (autoload 'magit-log "magit-log" nil t)
  (autoload 'magit-log-refresh "magit-log" nil t)
-(autoload 'magit-log-current "magit-log" "\
-Show log for the current branch.
-When `HEAD' is detached or with a prefix argument show log for
-one or more revs read from the minibuffer.
-
-(fn REVS &optional ARGS FILES)" t)
+ (autoload 'magit-log-current "magit-log" nil t)
 (autoload 'magit-log-head "magit-log" "\
 Show log for `HEAD'.
 
@@ -6191,7 +6201,7 @@ inspect the merge and change the commit message.
 (git merge --no-commit --no-ff [ARGS] REV)
 
 (fn REV &optional ARGS)" t)
-(autoload 'magit-merge-into "magit-merge" "\
+(autoload 'magit-merge-dissolve "magit-merge" "\
 Merge the current branch into BRANCH and remove the former.
 
 Before merging, force push the source branch to its push-remote,
@@ -6595,8 +6605,11 @@ Start an interactive rebase sequence.
 (fn COMMIT ARGS)" t)
 (autoload 'magit-rebase-autosquash "magit-sequence" "\
 Combine squash and fixup commits with their intended targets.
+By default only squash into commits that are not reachable from
+the upstream branch.  If no upstream is configured or with a prefix
+argument, prompt for the first commit to potentially squash into.
 
-(fn ARGS)" t)
+(fn SELECT ARGS)" t)
 (autoload 'magit-rebase-edit-commit "magit-sequence" "\
 Edit a single older commit using rebase.
 
@@ -7154,7 +7167,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.3.0/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.3.0/ghub-autoloads.el"))
 
 
 
@@ -7675,7 +7688,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250320.1501/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250320.1501/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250401.1500/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250401.1500/emacsql-autoloads.el"))
 
 
 
@@ -10912,7 +10925,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.8/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.4.8/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.0/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.0/forge-autoloads.el"))
 
 
 
@@ -10944,6 +10957,8 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
 (autoload 'forge-pull-notifications "forge-commands" nil t)
 (autoload 'forge-pull-topic "forge-commands" nil t)
 (autoload 'forge-pull-this-topic "forge-commands" nil t)
+(autoload 'forge-browse-discussions "forge-commands" "\
+Visit the current repository's discussions using a browser." t)
 (autoload 'forge-browse-issues "forge-commands" "\
 Visit the current repository's issues using a browser." t)
 (autoload 'forge-browse-pullreqs "forge-commands" "\
@@ -10954,6 +10969,12 @@ By default only offer open topics but with a prefix argument
 also offer closed topics.
 
 (fn TOPIC)" t)
+(autoload 'forge-browse-discussion "forge-commands" "\
+Read a DISCUSSION and visit it using a browser.
+By default only offer open discussions but with a prefix argument
+also offer closed issues.
+
+(fn DISCUSSION)" t)
 (autoload 'forge-browse-issue "forge-commands" "\
 Read an ISSUE and visit it using a browser.
 By default only offer open issues but with a prefix argument
@@ -11012,6 +11033,13 @@ argument offer all topics.  While completion is in progress, \\<forge-read-topic
 the limitation to active topics.
 
 (fn TOPIC)" t)
+(autoload 'forge-visit-discussion "forge-commands" "\
+Read a DISCUSSION and visit it.
+By default only offer active topics for completion.  With a prefix
+argument offer all topics.  While completion is in progress, \\<forge-read-topic-minibuffer-map>\\[forge-read-topic-lift-limit] lifts
+the limitation to active topics.
+
+(fn DISCUSSION)" t)
 (autoload 'forge-visit-issue "forge-commands" "\
 Read an ISSUE and visit it.
 By default only offer active issues for completion.  With a prefix
@@ -11113,6 +11141,10 @@ heavy development." t)
 
 
 
+(register-definition-prefixes "forge-discussion" '("forge-"))
+
+
+
 (register-definition-prefixes "forge-forgejo" '("forge-forgejo-repository"))
 
 
@@ -11182,6 +11214,7 @@ heavy development." t)
 
 (autoload 'forge-topics-menu "forge-topics" nil t)
 (autoload 'forge-list-topics "forge-topics" nil t)
+(autoload 'forge-list-discussions "forge-topics" nil t)
 (autoload 'forge-list-issues "forge-topics" nil t)
 (autoload 'forge-list-pullreqs "forge-topics" nil t)
 (autoload 'forge-list-global-topics "forge-topics" nil t)
@@ -12309,7 +12342,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.4.8" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.2140" "/Users/laurynas/.emacs.d/elpa/ghub-4.2.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.1" "/Users/laurynas/.emacs.d/elpa/transient-0.8.6" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.2140" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.0" "/Users/laurynas/.emacs.d/elpa/magit-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.2" "/Users/laurynas/.emacs.d/elpa/transient-0.8.7" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
          Info-directory-list)))
 
 ;; Local Variables:
