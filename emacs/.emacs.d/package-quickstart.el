@@ -318,7 +318,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0/compat-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0/compat-autoloads.el"))
 
 
 
@@ -12342,7 +12342,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.2140" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.0" "/Users/laurynas/.emacs.d/elpa/magit-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.2" "/Users/laurynas/.emacs.d/elpa/transient-0.8.7" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.0.2.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.2140" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.0" "/Users/laurynas/.emacs.d/elpa/magit-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.2" "/Users/laurynas/.emacs.d/elpa/transient-0.8.7" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
