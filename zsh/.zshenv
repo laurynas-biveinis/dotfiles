@@ -11,7 +11,6 @@ else
     export LC_CTYPE=en_US.utf8
 fi
 
-
 if [ -f ~/.zshenv_private ]; then
     source ~/.zshenv_private
 fi
@@ -22,13 +21,16 @@ fi
 
 export ZINIT_HOME=~/.zsh.d/zinit
 
-source ~/.zsh.d/paths
+if [ "$UNAME_OUT" = "Darwin" ]; then
+    # For now macOS-specific
+    source ~/.zsh.d/paths
 
-export HOMEBREW_NO_INSTALL_CLEANUP=y
+    export HOMEBREW_NO_INSTALL_CLEANUP=y
+
+    export LIBRARY_PATH=/usr/local/lib
+fi
 
 fpath+=~/.zsh.d/functions
-
-export LIBRARY_PATH=/usr/local/lib
 
 setopt null_glob
 for script in ~/.zsh.d/env/*; do
