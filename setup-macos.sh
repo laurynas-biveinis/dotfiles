@@ -316,7 +316,7 @@ brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
      hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
      colordiff iwyu cppcheck creduce gnu-sed mas bat actionlint circleci \
      imagemagick ripgrep boost cpplint duf eza clang-build-analyzer recode \
-     difftastic git-lfs plantuml gcalcli asdf watch shfmt gcc@11 gcc@12 gcc@13 \
+     difftastic git-lfs plantuml gcalcli watch shfmt gcc@11 gcc@12 gcc@13 \
      gcc markdown gdrive tidy-html5 yamllint googletest google-benchmark
 
 #
@@ -341,37 +341,6 @@ sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.d
 # The 51st State
 sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
-#
-# Python
-#
-asdf plugin add python
-asdf install python latest
-asdf global python 3.12.2 # Take from the output above
-python -m pip install --upgrade pip setuptools
-python -m pip install virtualenv
-asdf reshim python
-sudo mkdir /opt/virtualenvs
-sudo chown $(whoami) /opt/virtualenvs
-
-virtualenv /opt/virtualenvs/asitop
-source /opt/virtualenvs/asitop/bin/activate
-pip install asitop
-sudo ln -sf /opt/virtualenvs/asitop/bin/asitop /usr/local/bin/asitop
-deactivate
-
-virtualenv /opt/virtualenvs/cppclean
-source /opt/virtualenvs/cppclean/bin/activate
-pip install cppclean
-sudo ln -sf /opt/virtualenvs/cppclean/bin/cppclean /usr/local/bin/cppclean
-deactivate
-
-# Try to install Python development tools outside any virtualenv. If this
-# breaks, then install per-project.
-gpip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
-     pyls-memestra jedi pylsp-rope python-lsp-ruff python-lsp-black pylint \
-     pycodestyle pyflakes pandas openpyxl pandas-stubs scipy
-
-# Leftovers from the old-and-broken installation method: scipy pandas
 
 sudo gem install mdl
 brew install --cask slack vlc disk-inventory-x google-chrome dash \
