@@ -4,8 +4,8 @@
 
 ;; Author: Jorgen Schaefer <contact@jorgenschaefer.de>, Gaby Launay <gaby.launay@protonmail.com>
 ;; URL: https://github.com/jorgenschaefer/elpy
-;; Package-Version: 20241227.2255
-;; Package-Revision: bcfd5e8c25e5
+;; Package-Version: 20250404.2349
+;; Package-Revision: 0b381f559694
 ;; Keywords: Python, IDE, Languages, Tools
 ;; Package-Requires: ((company "0.9.10") (emacs "24.4") (highlight-indentation "0.7.0") (pyvenv "1.20") (yasnippet "0.13.0") (s "1.12.0"))
 
@@ -641,7 +641,10 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 warnings.filterwarnings('ignore', category=PendingDeprecationWarning)
 
-from distutils.version import LooseVersion
+try:
+    from distutils.version import LooseVersion
+except ModuleNotFoundError:
+    from packaging.version import parse as LooseVersion
 
 try:
     import urllib2 as urllib
