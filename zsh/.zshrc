@@ -135,7 +135,10 @@ zinit load zsh-users/zsh-completions
 zinit load zsh-users/zsh-autosuggestions
 zinit load ael-code/zsh-colored-man-pages
 zinit load djui/alias-tips
-if [[ `uname -s` == "Darwin" ]]; then
+
+UNAME_OUT="$(uname -s)"
+
+if [ "$UNAME_OUT" = "Darwin" ]; then
     zinit snippet \
           https://github.com/Homebrew/homebrew-command-not-found/blob/master/handler.sh
 fi
@@ -162,6 +165,8 @@ autoload -Uz compinit && compinit
 
 zinit load zdharma/fast-syntax-highlighting
 
-source ~/.zsh.d/paths
+if [ "$UNAME_OUT" = "Darwin" ]; then
+    source ~/.zsh.d/paths
+fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
