@@ -388,6 +388,39 @@ brew tap epk/epk
 brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
 
+#
+# iTerm2
+#
+brew install --cask iterm2
+# Run once and quit
+defaults write com.googlecode.iterm2 SUEnableAutomaticChecks -bool true
+/usr/libexec/PlistBuddy -c \
+                        "Set :\"New Bookmarks\":0:\"Normal Font\" \"SFMonoNerdFontComplete-Regular 12\"" \
+                        ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c \
+                        "Set :\"New Bookmarks\":0:\"Blinking Cursor\" 1" \
+                        ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c \
+                        "Set :\"New Bookmarks\":0:\"Cursor Type\" 1" \
+                        ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c \
+                        "Set :\"New Bookmarks\":0:\"Unlimited Scrollback\" 1" \
+                        ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c \
+                        "Set :\"New Bookmarks\":0:\"Scrollback Lines\" 0" \
+                        ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c \
+                        "Set :\"New Bookmarks\":0:\"Load Shell Integration Automatically\" 1" \
+                        ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c \
+                        "Set :\"New Bookmarks\":0:\"Option Key Sends\" 2" \
+                        ~/Library/Preferences/com.googlecode.iterm2.plist
+curl -o 'Solarized Dark - Patched.itermcolors' \
+     https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Solarized%20Dark%20-%20Patched.itermcolors
+open 'Solarized Dark - Patched.itermcolors'
+rm 'Solarized Dark - Patched.itermcolors'
+# Set this theme manually as the default.
+
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
 	/Library/Java/JavaVirtualMachines/openjdk.jdk
 

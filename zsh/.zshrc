@@ -163,3 +163,5 @@ autoload -Uz compinit && compinit
 zinit load zdharma/fast-syntax-highlighting
 
 source ~/.zsh.d/paths
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
