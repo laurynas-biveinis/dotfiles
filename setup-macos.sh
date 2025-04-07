@@ -313,11 +313,13 @@ sudo chflags nohidden /Volumes
 brew update
 
 brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
-     hunspell llvm duti grep pinentry-mac htop findutils npm fd delta jq \
-     colordiff iwyu cppcheck creduce gnu-sed mas bat actionlint circleci \
-     imagemagick ripgrep boost cpplint duf eza clang-build-analyzer recode \
-     difftastic git-lfs plantuml gcalcli watch shfmt gcc@11 gcc@12 gcc@13 \
-     gcc markdown gdrive tidy-html5 yamllint googletest google-benchmark
+     hunspell duti grep pinentry-mac htop findutils fd delta jq colordiff \
+     gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
+     git-lfs plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint
+
+# C++ development
+brew install llvm iwyu cppcheck creduce circleci boost cpplint \
+     clang-build-analyzer gcc@11 gcc@12 gcc@13 gcc googletest google-benchmark
 
 #
 # App Store
