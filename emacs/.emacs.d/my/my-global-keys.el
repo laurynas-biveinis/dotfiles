@@ -53,7 +53,6 @@
 ;; Invoking functionality
 (global-set-key (kbd "<f5>") #'deadgrep)
 (global-set-key (kbd "<f7>") #'my-main-agenda)
-(global-set-key (kbd "<f8>") #'my-secrets)
 (global-set-key (kbd "<f9>") #'my-gtd)
 (global-set-key (kbd "<f12>") #'my-switch-to-scratch)
 (global-set-key (kbd "C-c m") #'mu4e)
