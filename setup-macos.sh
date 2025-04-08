@@ -399,6 +399,8 @@ xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
 duti -s org.videolan.vlc .mp3 all
 duti -s org.videolan.vlc .m4a all
+duti -s org.videolan.vlc .m3u all
+duti -s jp.tmkk.XLD .cue all
 npm i -g bash-language-server prettier
 brew tap homebrew/command-not-found
 # Play
