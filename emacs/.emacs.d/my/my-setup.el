@@ -895,6 +895,10 @@
 
 (require 'gnus-art)
 
+;; Remove "r" Gnus MIME keybinding, which conflicts with
+;; `mu4e-view-mark-for-refile' and sometimes takes precedence.
+(keymap-unset gnus-mime-button-map "r")
+
 ;; `dotfiles--mu4e-allowed-image-email-regexps' is defined elsewhere.
 (defun dotfiles--mu4e-block-external-images(&optional _ignore)
   "Decides what external image links to allow.
