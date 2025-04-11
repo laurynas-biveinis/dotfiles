@@ -7216,7 +7216,7 @@ and call `auth-source-forget+'." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20250328.132/pr-review-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20250328.132/pr-review-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20250410.1615/pr-review-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20250410.1615/pr-review-autoloads.el"))
 
 
 
@@ -7235,9 +7235,10 @@ Open in current window if NEW-WINDOW is nil, in other window otherwise.
 ANCHOR is a database id that may be present in the url fragment
 of a github pr notification, if it's not nil, try to jump to specific
 location after open.
-LAST-READ-TIME is the time when the PR is last read (in ISO string, mostly from notification buffer),
-if it's not nil, newer comments will be highlighted, and it will jump to first unread comment
-if ANCHOR is nil.
+LAST-READ-TIME is the time when the PR is last read (in ISO string,
+mostly from notification buffer),
+if it's not nil, newer comments will be highlighted,
+and it will jump to first unread comment if ANCHOR is nil.
 
 (fn REPO-OWNER REPO-NAME PR-ID &optional NEW-WINDOW ANCHOR LAST-READ-TIME)")
 (autoload 'pr-review "pr-review" "\
@@ -10475,7 +10476,7 @@ Fontify an `info' node.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.8.2/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.8.2/indent-bars-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.8.3/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.8.3/indent-bars-autoloads.el"))
 
 
 
@@ -11937,7 +11938,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.0/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.0/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.1/cmake-mode-autoloads.el"))
 
 
 

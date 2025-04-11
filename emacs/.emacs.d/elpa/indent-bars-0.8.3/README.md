@@ -76,8 +76,6 @@ Configures `tree-sitter` and `ignore-blank-line` support for an example language
 
 ```elisp
 (use-package indent-bars
-  :config
-  (require 'indent-bars-ts) 		; not needed with straight
   :custom
   (indent-bars-no-descend-lists t) ; no extra bars in continued func arg lists
   (indent-bars-treesit-support t)
@@ -105,11 +103,11 @@ Known `:stipple` support, by Emacs build:
 
 - Linux:
   - "Pure GTK" (`--with-pgtk` build flag) versions support stipples starting with Emacs v30.  There was a display bug that caused them to appear incorrectly (as [reverse video](../../issues/3)) and lead to [crashes](../../issues/6) in Emacs 29 and earlier; these issues were fixed in Emacs [here](https://lists.gnu.org/archive/html/bug-gnu-emacs/2023-07/msg02081.html) and will be released with Emacs 30.
-  - Cairo builds (`--with-cairo`, the default) have been [reported](../../issues/33#issuecomment-1768888990) not to display stipples (but only in [some cases](https://github.com/jdtsmith/indent-bars/issues/54#issuecomment-2330334476)).
+  - Cairo builds (`--with-cairo`, the default) have been [reported](../../issues/33#issuecomment-1768888990) not to display stipples (but only in [some cases](https://github.com/jdtsmith/indent-bars/issues/54#issuecomment-2330334476)).  You can try building `--without-cairo` or just omitting `--with-cairo` (which still enables Cairo but may have correct stipple display).  Also, the issue may be encountered [only on high-DPI systems](../../issues/97).
   - All other builds support stipples.
 - Mac:
   - The [emacs-mac](https://bitbucket.org/mituharu/emacs-mac/src/master/)[^1] port has stipple support.  `M-x version` should say `Carbon`, not `NS`.
-  - The `NS` build has partial stipple support in master, which may be released in Emacs v30.
+  - The `NS` build has partial stipple support in master, which may be released in Emacs v30.  A patch providing [full stipple support](https://debbugs.gnu.org/cgi/bugreport.cgi?bug=73384) for NS in master is currently under review.
 - Windows: Emacs on Windows will support stipples starting at v30.
 - Android: Android builds (to appear with Emacs 30) support stipples.
 - Haiku: Haiku Emacs builds will support stipples starting with v30.
@@ -124,7 +122,7 @@ Please [open an issue](../../issues) with any updates/corrections to this list. 
 # Customization
 
 > [!NOTE]
-> `indent-bars` is _highly_ flexible and can be adapted to most situations.  It can't anticipate all nuances of different languages, modes, and user preferences, however, so "some assembly may be required".  If you arrive at customizations you are happy with for a given mode, please consider adding to the  [Wiki page](https://github.com/jdtsmith/indent-bars/wiki/indent%E2%80%90bars-config-Wiki#tree-sitter-config).
+> `indent-bars` is _highly_ flexible and can be adapted to most situations.  It can't anticipate all nuances of different languages, modes, and user preferences, however — "some assembly may be required".  If you arrive at customizations you are happy with for a given mode, please consider adding to the  [Wiki page](https://github.com/jdtsmith/indent-bars/wiki/indent%E2%80%90bars-config-Wiki#tree-sitter-config).
 
 
 `M-x customize-group indent-bars` is the easiest way to customize everything about the appearance and function of `indent-bars` (check sub-groups too).  There are many customization variables and bar styling in particular is highly configurable, so use Customize!
@@ -175,7 +173,7 @@ Configuration variables for bar position and line locations (including on blank 
 Custom variables affecting character-based bar display, e.g. in the terminal:
 
 - `indent-bars-prefer-character`: Use *characters* to display the vertical bar instead of stipples.  This occurs automatically on non-graphical displays (terminals), but this variable can be used to always prefer character-based display.  Useful if your version of GUI Emacs does not support `:stipple` patterns.
-- `indent-bars-no-stipple-char`: The character to use when stipples are unavailable or disabled. Defaults to the vertical box character `│`.  Other good options include `┃`, `┋`, and `║`.
+- `indent-bars-no-stipple-char`: The character to use when stipples are unavailable or disabled. Defaults to the vertical box character `│`.  Other good options include `┃`, `┋`, and `║`.  Note that characters in emacs (e.g. in a `setq` command) are specified with a leading `?`, e.g. `?│`.
 - `indent-bars-no-stipple-char-font-weight`: Optional font weight to use for the face displaying the no-stipple character.
 - `indent-bars-unspecified-bg|fg-color`: Colors to use for the frame background and default foreground when they are unspecified (e.g. in terminals).  If you intend to use `indent-bars` in the terminal, set to the terminal background/foreground colors you use. 
 
@@ -303,6 +301,26 @@ Please document good tree-sitter settings for other languages in the [Wiki](http
 
 `indent-bars` in general has good compatibility with other packages.  But sometimes conflicts do occur.
 
+### `org-mode` src blocks
+
+In general, `org-mode` src blocks are difficult for many modes to support.  Org actually offsets the indentation of the src contents, copies that text to a special hidden buffer, and then maps all `face` properties (only)) back to the original buffer.  This doesn't work well for `indent-bars` for a few reasons:
+
+- the bars will be offset relative to your expectation by the "extra" indentation org applies.
+- stipple bars may no be correctly formatted (though this could be worked around).
+- Any `display` properties, e.g. for blank line bar display or bars on tab chars, will not be transferred.
+
+So it is best to disable `indent-bars` in `org` src blocks.  You can achieve this by inhibiting all the `mode-hooks` from running in org's special hidden fontification buffers (one per mode).  E.g., for python:
+
+```elisp
+  (defun my/org-simple-python-mode ()
+    (if (string-prefix-p " *org-src-fontification:" (buffer-name))
+	(delay-mode-hooks (python-mode))
+      (python-mode)))
+  (setf (alist-get "python" org-src-lang-modes) 'my/org-simple-python)
+```
+
+This will inhibit hooks (and hence `indent-bars`, `eglot`, `flymake`, whatever else you have setup) from running in the special ` *org-src-fontification:..` buffers (where they are either harmful or not needed), but these features will still be loaded and work when editing src block contents with `C-c '`. 
+
 ### Unwanted `:stipple` inheritance on popups/overlays/etc.
 
 `indent-bars` by default uses `:stipple` face attributes, which have only rarely been used in Emacs in recent decades.  Consequently, some packages which inherit the face of underlying text while adding styled overlays, popups, etc. to the buffer neglect to guard against the presence of `:stipple` (e.g. [this](../../issues/67), or [this](../../issues/73)).  This becomes more likely if you set `indent-bars-starting-column=0` (since often overlays are placed at the line beginning).
@@ -354,7 +372,7 @@ This should then look something like (note the blue vertical bars):
 
 <img width="668" alt="image" src="https://github.com/jdtsmith/indent-bars/assets/93749/dd0f65f5-3cdc-4865-a66d-41365cecadd0">
 
-If you determine that stipples do not work in your version of Emacs, consider upgrading to a [version which supports them](https://github.com/jdtsmith/indent-bars/edit/main/README.md#compatibility), reporting the bug, or setting `indent-bars-prefer-character=t`.
+If you determine that stipples do not work in your version of Emacs, consider upgrading to a [version which supports them](https://github.com/jdtsmith/indent-bars/blob/main/README.md#compatibility), reporting the bug, or setting `indent-bars-prefer-character=t`.
 
 #### Per-buffer stipple offsets
 

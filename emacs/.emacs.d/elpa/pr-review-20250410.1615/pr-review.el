@@ -4,8 +4,8 @@
 
 ;; Author: Yikai Zhao <yikai@z1k.dev>
 ;; Keywords: tools
-;; Package-Version: 20250328.132
-;; Package-Revision: 6b3895c79197
+;; Package-Version: 20250410.1615
+;; Package-Revision: 25b71053c404
 ;; URL: https://github.com/blahgeek/emacs-pr-review
 ;; Package-Requires: ((emacs "27.1") (magit-section "3.2") (magit "3.2") (markdown-mode "2.5") (ghub "3.5"))
 
@@ -197,9 +197,10 @@ Open in current window if NEW-WINDOW is nil, in other window otherwise.
 ANCHOR is a database id that may be present in the url fragment
 of a github pr notification, if it's not nil, try to jump to specific
 location after open.
-LAST-READ-TIME is the time when the PR is last read (in ISO string, mostly from notification buffer),
-if it's not nil, newer comments will be highlighted, and it will jump to first unread comment
-if ANCHOR is nil."
+LAST-READ-TIME is the time when the PR is last read (in ISO string,
+mostly from notification buffer),
+if it's not nil, newer comments will be highlighted,
+and it will jump to first unread comment if ANCHOR is nil."
   (with-current-buffer (get-buffer-create (format "*pr-review %s/%s/%s*" repo-owner repo-name pr-id))
     (unless (eq major-mode 'pr-review-mode)
       (pr-review-mode))
@@ -242,7 +243,7 @@ It's used as the default value of `pr-review'."
                                           (when default-pr-path
                                             (apply #'format " (default: %s/%s/%s)"
                                                    default-pr-path))
-                                          ":"))))
+                                          ": "))))
      (if (string-empty-p input-url)
          (or default-url "")
        input-url))

@@ -1,10 +1,10 @@
 ;;; indent-bars.el --- Highlight indentation with bars -*- lexical-binding: t; -*-
-;; Copyright (C) 2023-2024  Free Software Foundation, Inc.
+;; Copyright (C) 2023-2025  Free Software Foundation, Inc.
 
 ;; Author: J.D. Smith <jdtsmith+elpa@gmail.com>
 ;; Homepage: https://github.com/jdtsmith/indent-bars
 ;; Package-Requires: ((emacs "27.1") (compat "29.1"))
-;; Version: 0.8.2
+;; Version: 0.8.3
 ;; Keywords: convenience
 
 ;; indent-bars is free software: you can redistribute it and/or
@@ -93,7 +93,7 @@
 	       (with-selected-window win
 		 (indent-bars-reset)
 		 (let ((indent-bars-depth-update-delay 0))
-		   (indent-bars--highlight-current-depth 'force))
+		   (indent-bars--compute-and-highlight-current-depth 'force))
 		 (run-hooks 'indent-bars-custom-set))
 	       and return win))))
 
@@ -957,7 +957,7 @@ Note that the first bar is expected at `indent-bars-starting-column'."
       (1+ (/ (- len indent-bars--offset 1) indent-bars-spacing))
     0))
 
-(defun indent-bars--context-depth ()
+(defun indent-bars--context-indentation ()
   "Return the maximum `current-indentation' around current line.
 Skips any fully blank lines."
   (let ((prior-indent
@@ -974,12 +974,17 @@ Skips any fully blank lines."
 (defvar-local indent-bars--ppss nil)
 (defun indent-bars--current-indentation-depth (&optional on-bar)
   "Calculate current indentation depth.
+Depth is 1-based (independent of the value of
+`indent-bars-starting-column'), with a depth of 1 corresponding
+to the outermost bar, and a depth of 0 indicating there is no
+valid current depth.
+
 If ON-BAR is nil, return the depth of the last visible bar on the
-line.  If ON-BAR is non-nil and content begins at a column where
-a bar would otherwise have fallen, report the depth of
-that (undrawn) bar.  If ON-BAR is the symbol `context', and the
-first non-blank line immediately above or below the current line
-is not at a deeper indentation level (by at least one bar
+current line.  If ON-BAR is non-nil and content begins at a
+column where a bar would otherwise have fallen, report the depth
+of that (undrawn) bar.  If ON-BAR is the symbol `context', and
+the first non-blank line immediately above or below the current
+line is not at a deeper indentation level (by at least one bar
 spacing), disable on-bar and use the last-visible-bar depth for
 that line instead.
 
@@ -1017,7 +1022,7 @@ and can return an updated depth."
     (when (and indent-bars--update-depth-function (not ppss-ind))
       (setq d (funcall indent-bars--update-depth-function d)))
     (when (and (eq on-bar 'context)
-	       (< (indent-bars--context-depth) (+ c indent-bars-spacing)))
+	       (< (indent-bars--context-indentation) (+ c indent-bars-spacing)))
       (setq on-bar nil))
     (if (and on-bar (= c (+ indent-bars--offset (* d indent-bars-spacing))))
 	(1+ d) d)))
@@ -1131,7 +1136,7 @@ needed."
 	;; STILL bars to show: invent them (if requested)
 	(when (and invent (<= bar nbars))
 	  (add-text-properties
-	   end (1+ end)
+	   end (1+ end) ; atop the final newline
 	   `(indent-bars-display
 	     ,(concat (indent-bars--blank-string
 		       style (- pos end) (- nbars bar -1) bar nil
@@ -1161,7 +1166,7 @@ passed, uses `indent-bars-style' for drawing."
 					 switch-after style2))))
 
 (defun indent-bars--display-blank-lines (beg end &optional style switch-after style2)
-  "Display the appropriate bars over the blank-only lines from BEG..END.
+  "Display appropriate bars over the blank-only lines from BEG..END.
 Only called if `indent-bars-display-on-blank-lines' is non-nil.
 To be called on complete multi-line blank line regions.
 
@@ -1199,8 +1204,7 @@ not indicated, even if they otherwise would be."
   "Extend the region START..END.
 If `indent-bars-display-on-blank-lines' is non-nil, this extends
 it to include complete contiguous stretches of blank lines and
-always starts and ends on the beginning of a line.  Uses and sets
-the dynamic variables `jit-lock-start' and `jit-lock-end'."
+always starts and ends on the beginning of a line."
   (save-excursion
     (let ((chars " \t\n"))
       (goto-char start)
@@ -1252,6 +1256,9 @@ and END.  If it returns non-nil, skip font-lock."
   ;; Always draw bars (which may overwrite 'face in a few places)
   (pcase-let ((`(,beg . ,end) (indent-bars--extend-region beg end)))
     (with-silent-modifications
+      ;; We remove our display alias here instead of by adding it to
+      ;; `font-lock-extra-managed-keywords' because font-lock will not
+      ;; always be run.
       (remove-text-properties beg end '(indent-bars-display nil))
       (indent-bars--draw-all-bars-between beg end))
     `(jit-lock-bounds ,beg . ,end)))
@@ -1282,51 +1289,56 @@ ROT are as in `indent-bars--stipple', and have similar default values."
 	     (rot (or rot (indent-bars--stipple-rot nil w))))
 	(indent-bars--stipple w h rot style width pad pattern zigzag)))))
 
-(defvar-local indent-bars--highlight-timer nil)
-(defun indent-bars--update-current-depth-highlight (depth)
-  "Update highlight for the current DEPTH.
+(defun indent-bars--set-current-depth-highlight (depth)
+  "Set current highlight to DEPTH.
 Works by remapping the appropriate indent-bars[-tag]-N face for
 all styles in the `indent-bars--styles' list.  DEPTH should be
-greater than zero."
-  (setq indent-bars--highlight-timer nil)
+greater than or equal to zero (zero meaning: no highlight)."
   (dolist (s indent-bars--styles)
-    (let* ((face (indent-bars--face s depth))
-	   (hl-col (and (ibs/current-depth-palette s)
-			(indent-bars--get-color s depth 'highlight)))
-	   (hl-bg (ibs/current-bg-color s)))
-      (when (or hl-col hl-bg (ibs/current-stipple-face s))
-	(when-let ((c (alist-get (ibs/tag s) indent-bars--remaps))) ; out with the old
-	  (face-remap-remove-relative c))
-	(setf (alist-get (ibs/tag s) indent-bars--remaps)
-	      (face-remap-add-relative
-	       face
-	       `(,@(when hl-col `(:foreground ,hl-col))
-		 ,@(when hl-bg `(:background ,hl-bg)))
-	       (ibs/current-stipple-face s)))))))
+    (when-let ((c (alist-get (ibs/tag s) indent-bars--remaps))) ; out with the old
+      (face-remap-remove-relative c))
+    (when (> depth 0)
+      (let* ((face (indent-bars--face s depth))
+	     (hl-col (and (ibs/current-depth-palette s)
+			  (indent-bars--get-color s depth 'highlight)))
+	     (hl-bg (ibs/current-bg-color s)))
+	(when (or hl-col hl-bg (ibs/current-stipple-face s))
+	  (setf (alist-get (ibs/tag s) indent-bars--remaps)
+		(face-remap-add-relative
+		 face
+		 `(,@(when hl-col `(:foreground ,hl-col))
+		   ,@(when hl-bg `(:background ,hl-bg)))
+		 (ibs/current-stipple-face s))))))))
 
-(defun indent-bars--update-current-depth-highlight-in-buffer (buf depth)
+(defun indent-bars--compute-and-highlight-current-depth (&optional force)
+  "Compute and highlight current bar depth in the current buffer.
+If FORCE is non-nil, update depth even if it has not changed."
+  (let ((depth (indent-bars--current-indentation-depth
+		indent-bars-highlight-selection-method)))
+    (when (and depth (or force (not (= depth indent-bars--current-depth))))
+      (setq indent-bars--current-depth depth)
+      (indent-bars--set-current-depth-highlight depth))))
+
+(defvar-local indent-bars--highlight-timer nil)
+(defun indent-bars--update-current-depth-highlight-in-buffer (buf)
   "Highlight bar at DEPTH in buffer BUF."
   (when (buffer-live-p buf)
     (with-current-buffer buf
-      (indent-bars--update-current-depth-highlight depth))))
+      (setq indent-bars--highlight-timer nil)
+      (indent-bars--compute-and-highlight-current-depth))))
 
-(defun indent-bars--highlight-current-depth (&optional force)
+(defun indent-bars--update-current-depth-highlight ()
   "Refresh current indentation depth highlight.
-Rate limit set by `indent-bars-depth-update-delay'.  If FORCE is
-non-nil, update depth even if it has not changed."
-  (unless (or indent-bars--highlight-timer (not indent-bars-mode))
-    (let* ((depth (indent-bars--current-indentation-depth
-		   indent-bars-highlight-selection-method)))
-      (when (and depth (or force (not (= depth indent-bars--current-depth)))
-		 (> depth 0))
-	(setq indent-bars--current-depth depth)
-	(if (zerop indent-bars-depth-update-delay)
-	    (indent-bars--update-current-depth-highlight depth)
-	  (setq indent-bars--highlight-timer
-		(run-with-idle-timer
-		 indent-bars-depth-update-delay nil
-		 #'indent-bars--update-current-depth-highlight-in-buffer
-		 (current-buffer) depth)))))))
+Rate limit set by `indent-bars-depth-update-delay', if non-zero."
+  (when indent-bars-mode
+    (if (zerop indent-bars-depth-update-delay)
+	(indent-bars--compute-and-highlight-current-depth)
+      (unless indent-bars--highlight-timer
+	(setq indent-bars--highlight-timer
+	      (run-with-idle-timer
+	       indent-bars-depth-update-delay nil
+	       #'indent-bars--update-current-depth-highlight-in-buffer
+	       (current-buffer)))))))
 
 ;;;; Stipple Display
 (defsubst indent-bars--block (n)
@@ -1455,7 +1467,9 @@ appropriate for that style."
       (list w (length dlist) (string-join dlist)))))
 
 (defsubst indent-bars--whr (w h r)
-  "Encoded value for W, H and R."
+  "Encoded value for caching remaps.
+Combines font width W and height H, as well as window edge pixel
+offset R."
   (+ (ash w 16) (ash h 8) r))
 
 (defvar-local indent-bars--stipple-remaps nil
@@ -1506,7 +1520,7 @@ is created for each active style, for both :main[-styletag] and
 		(ibs/current-stipple-face s)
 		`( :filtered ,filter
 		   (:stipple ,(indent-bars--current-depth-stipple w h rot s))))))
-	(indent-bars--highlight-current-depth 'force)))
+	(indent-bars--compute-and-highlight-current-depth 'force)))
     (puthash whr remap indent-bars--stipple-remaps)))
 
 ;;;; Window change and cleanup
@@ -1688,9 +1702,9 @@ Adapted from `highlight-indentation-mode'."
   ;; Current depth Highlighting
   (when (indent-bars--style 'any "highlight-current-depth")
     (add-hook 'post-command-hook
-	      #'indent-bars--highlight-current-depth nil t)
+	      #'indent-bars--update-current-depth-highlight nil t)
     (setq indent-bars--current-depth 0)
-    (indent-bars--highlight-current-depth))
+    (indent-bars--update-current-depth-highlight))
 
   ;;Jit/Font-lock
   (cl-pushnew 'indent-bars-display (alist-get 'display char-property-alias-alist))
@@ -1726,7 +1740,7 @@ Adapted from `highlight-indentation-mode'."
 
   (setq indent-bars--current-depth 0)
   (remove-hook 'text-scale-mode-hook #'indent-bars--update-all-stipples t)
-  (remove-hook 'post-command-hook #'indent-bars--highlight-current-depth t)
+  (remove-hook 'post-command-hook #'indent-bars--update-current-depth-highlight t)
   (remove-hook 'window-state-change-functions
 	       #'indent-bars--window-change t)
   (run-hooks 'indent-bars--teardown-functions))
