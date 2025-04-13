@@ -19,6 +19,11 @@ query($repo_owner:String!, $repo_name:String!, $pr_id:Int!) {
       title
       body
       bodyHTML
+      reactionGroups {
+        content
+        reactors { totalCount }
+        viewerHasReacted
+      }
       author {
         login
       }
@@ -64,8 +69,6 @@ query($repo_owner:String!, $repo_name:String!, $pr_id:Int!) {
           author {
             login
           }
-          body
-          bodyHTML
           createdAt
           state
         }
@@ -93,6 +96,11 @@ query($repo_owner:String!, $repo_name:String!, $pr_id:Int!) {
               body
               bodyHTML
               createdAt
+              reactionGroups {
+                content
+                reactors { totalCount }
+                viewerHasReacted
+              }
             }
           }
         }
@@ -107,6 +115,7 @@ query($repo_owner:String!, $repo_name:String!, $pr_id:Int!) {
       commits(first: 100) {
         nodes {
           commit {
+            oid
             abbreviatedOid
             messageHeadline
           }
@@ -168,6 +177,11 @@ query($repo_owner:String!, $repo_name:String!, $pr_id:Int!) {
             body
             bodyHTML
             createdAt
+            reactionGroups {
+              content
+              reactors { totalCount }
+              viewerHasReacted
+            }
           }
           ... on PullRequestReview {
             id
@@ -180,6 +194,11 @@ query($repo_owner:String!, $repo_name:String!, $pr_id:Int!) {
               login
             }
             createdAt
+            reactionGroups {
+              content
+              reactors { totalCount }
+              viewerHasReacted
+            }
             
             comments(first: 100) {
               nodes {

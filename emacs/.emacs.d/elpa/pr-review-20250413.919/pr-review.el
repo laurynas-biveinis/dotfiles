@@ -4,10 +4,10 @@
 
 ;; Author: Yikai Zhao <yikai@z1k.dev>
 ;; Keywords: tools
-;; Package-Version: 20250410.1615
-;; Package-Revision: 25b71053c404
+;; Package-Version: 20250413.919
+;; Package-Revision: 7c2ce9deafe5
 ;; URL: https://github.com/blahgeek/emacs-pr-review
-;; Package-Requires: ((emacs "27.1") (magit-section "3.2") (magit "3.2") (markdown-mode "2.5") (ghub "3.5"))
+;; Package-Requires: ((emacs "27.1") (magit-section "4.0") (magit "4.0") (markdown-mode "2.5") (ghub "3.5"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@
     (define-key map (kbd "C-c C-o") #'pr-review-open-in-default-browser)
     (define-key map (kbd "C-c C-q") #'pr-review-request-reviews)
     (define-key map (kbd "C-c C-l") #'pr-review-set-labels)
+    (define-key map (kbd "C-c C-j") #'pr-review-update-reactions)
     map))
 
 (defvar pr-review--mode-map-setup-for-evil-done nil)
@@ -130,6 +131,15 @@ Which means that all sections are collapsed."
   (setq-local magit-hunk-section-map nil
               magit-file-section-map nil
               magit-diff-highlight-hunk-body nil)
+  (setq-local imenu-create-index-function #'magit--imenu-create-index
+              imenu-default-goto-function #'magit--imenu-goto-function
+              magit--imenu-item-types '(pr-review--review-section
+                                        pr-review--comment-section
+                                        pr-review--diff-section
+                                        pr-review--check-section
+                                        pr-review--commit-section
+                                        pr-review--description-section
+                                        pr-review--event-section))
   (add-to-list 'kill-buffer-query-functions 'pr-review--confirm-kill-buffer)
   (add-hook 'eldoc-documentation-functions #'pr-review--eldoc-function nil t)
   (eldoc-mode))
@@ -139,7 +149,8 @@ Which means that all sections are collapsed."
   (let* ((pr-info (pr-review--fetch-pr-info))
          (pr-diff (let-alist pr-info
                     (pr-review--fetch-compare-cached
-                     .baseRefOid .headRefOid)))
+                     (or pr-review--selected-commit-base .baseRefOid)
+                     (or pr-review--selected-commit-head .headRefOid))))
          section-id)
     (setq-local pr-review--pr-info pr-info
                 mark-ring nil)

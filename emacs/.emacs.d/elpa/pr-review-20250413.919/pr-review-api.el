@@ -139,10 +139,10 @@ HEAD-OR-BASE should be \='head or \='base, it determines the version to fetch."
   (let* ((repo-owner (car pr-review--pr-path))
          (repo-name (cadr pr-review--pr-path))
          (url (format "/repos/%s/%s/contents/%s" repo-owner repo-name filepath))
-         (ref (alist-get (pcase head-or-base
-                           ('head 'headRefOid)
-                           ('base 'baseRefOid))
-                         pr-review--pr-info)))
+         (ref (let-alist pr-review--pr-info
+                (pcase head-or-base
+                  ('head (or pr-review--selected-commit-head .headRefOid))
+                  ('base (or pr-review--selected-commit-base .baseRefOid))))))
     (apply #'ghub-request
            "GET" url `((ref . ,ref))
            :headers '(("Accept" . "application/vnd.github.v3.raw"))
@@ -471,6 +471,23 @@ See `pr-review--get-repo-labels-1' for return value."
    'add-labels
    `((input . ((labelableId . ,pr-node-id)
                (labelIds . ,(vconcat label-node-ids)))))))
+
+(defun pr-review--update-reactions (subject-id reactions)
+  "Update REACTIONS to SUBJECT-ID.
+REACTIONS is a list of reaction names.
+Those not in the list would be removed."
+  (let ((graphql (mapconcat
+                  (lambda (enum-item)
+                    (if (member (car enum-item) reactions)
+                        (format "_%s: addReaction(input: { content: %s, subjectId: \"%s\" }) {clientMutationId}"
+                                (car enum-item) (car enum-item) subject-id)
+                      (format "_%s: removeReaction(input: { content: %s, subjectId: \"%s\" }) {clientMutationId}"
+                              (car enum-item) (car enum-item) subject-id)))
+                  pr-review-reaction-emojis
+                  "\n")))
+    (pr-review--execute-graphql-raw
+     (concat "mutation { \n" graphql "\n}")
+     nil)))
 
 (provide 'pr-review-api)
 ;;; pr-review-api.el ends here

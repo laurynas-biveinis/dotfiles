@@ -139,17 +139,24 @@
   "Face used for buttons."
   :group 'pr-review)
 
+(defface pr-review-reaction-face
+  '((t :height 0.7 :box t))
+  "Face used for reaction emojis."
+  :group 'pr-review)
+
 
 ;; section classes
 (defclass pr-review--review-section (magit-section)
   ((body :initform nil)
    (updatable :initform nil)
-   (databaseId :initform nil)))
+   (databaseId :initform nil)
+   (reaction-groups :initform nil)))
 
 (defclass pr-review--comment-section (magit-section)
   ((body :initform nil)
    (updatable :initform nil)
-   (databaseId :initform nil)))
+   (databaseId :initform nil)
+   (reaction-groups :initform nil)))
 
 (defclass pr-review--diff-section (magit-section) ())
 (defclass pr-review--check-section (magit-section) ())
@@ -162,7 +169,8 @@
 (defclass pr-review--review-thread-item-section (magit-section)
   ((body :initform nil)
    (updatable :initform nil)
-   (databaseId :initform nil)))
+   (databaseId :initform nil)
+   (reaction-groups :initform nil)))
 
 (defclass pr-review--root-section (magit-section)
   ((title :initform nil)
@@ -170,13 +178,17 @@
 
 (defclass pr-review--description-section (magit-section)
   ((body :initform nil)
-   (updatable :initform nil)))
+   (updatable :initform nil)
+   (reaction-groups :initform nil)))
 
 (defclass pr-review--event-section (magit-section) ())
 
 (defvar-local pr-review--pr-path nil "List of repo-owner, repo-name, pr-id.")
 (defvar-local pr-review--pr-info nil "Result of fetch-pr-info, useful for actions.")
 (defvar-local pr-review--pending-review-threads nil)
+(defvar-local pr-review--selected-commits nil)
+(defvar-local pr-review--selected-commit-base nil)
+(defvar-local pr-review--selected-commit-head nil)
 
 (defcustom pr-review-generated-file-regexp ".*generated/.*"
   "Regexe that match generated files, which would be collapsed in review."
@@ -193,6 +205,18 @@ Set to nil to disable source language syntax highlighting."
   "Maximum number of lines shown for diff hunks in review threads."
   :type 'number
   :group 'pr-review)
+
+(defvar pr-review-reaction-emojis
+  '(("CONFUSED" . "😕")
+    ("EYES" . "👀")
+    ("HEART" . "❤️")
+    ("HOORAY" . "🎉")
+    ("LAUGH" . "😄")
+    ("ROCKET" . "🚀")
+    ("THUMBS_DOWN" . "👎")
+    ("THUMBS_UP" . "👍"))
+  "Alist of github reaction name to emoji unicode.
+See https://docs.github.com/en/graphql/reference/enums#reactioncontent")
 
 (provide 'pr-review-common)
 ;;; pr-review-common.el ends here
