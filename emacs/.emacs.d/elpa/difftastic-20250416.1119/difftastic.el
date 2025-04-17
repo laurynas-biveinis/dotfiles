@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250219.1602
-;; Package-Revision: ddc460e2c7da
+;; Package-Version: 20250416.1119
+;; Package-Revision: 50a77d4bda9e
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -1342,7 +1342,7 @@ sequentially and can reffer to symbols already bound by this
 FILE-BUFS.  If any of VALUEFORM or any form in BODY signals an
 error each symbol in FILE-BUFS will be passed to
 `difftastic--delete-temp-file-buf'."
-  (declare (indent 1) (debug ((&rest symbolp) body)))
+  (declare (indent 1) (debug ((&rest &or (sexp form) sexp) body)))
   `(let ,(mapcar (lambda (file-buf)
                    (cond
                     ((symbolp file-buf) file-buf)
