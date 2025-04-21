@@ -7624,7 +7624,7 @@ See `page-break-lines-mode' for more information on Page-Break-Lines mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/package-lint-0.25/package-lint-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/package-lint-0.25/package-lint-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/package-lint-0.26/package-lint-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/package-lint-0.26/package-lint-autoloads.el"))
 
 
 
