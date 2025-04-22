@@ -313,7 +313,7 @@ sudo chflags nohidden /Volumes
 brew update
 
 brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
-     hunspell duti grep pinentry-mac htop findutils fd delta jq colordiff \
+     hunspell duti grep pinentry-mac htop findutils fd delta jq colordiff npm \
      gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
      git-lfs plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint
 
