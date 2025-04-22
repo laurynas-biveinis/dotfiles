@@ -37,6 +37,12 @@
 (dotfiles--load-secrets-file "secrets-local.el")
 (dotfiles--load-secrets-file "secrets")
 
+(defvar my-zettelkasten-p)
+
+;; Report config
+(message "Optional features:\n")
+(message "- Zettelkasten: %S" my-zettelkasten-p)
+
 ;; Load optional system-specific library and setup system-specific things that
 ;; must be setup before main setup. All of these must exist and their absence
 ;; would be a fatal error.

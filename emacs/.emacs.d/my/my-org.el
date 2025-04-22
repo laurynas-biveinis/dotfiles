@@ -8,6 +8,9 @@
 ;; `org-roam-capture-templates' are set elsewhere, in secrets.el in my setup.
 ;; That file must be loaded first.
 ;;
+;; The configuration of `org-roam' is optional and gated on `my-zettelkasten-p'
+;; value.
+;;
 ;; Like in the rest of my personal configuration, all features (packages and
 ;; external tools) are assumed to exist, because this is a part of my dotfiles
 ;; repo where the needed packages are committed too. Thus, no error handling,
@@ -24,6 +27,7 @@
 ;; Defined in secrets.el:
 (defvar main-org-file)
 (defvar secrets-org-file)
+(defvar my-zettelkasten-p)
 
 (require 'my-column-limit)
 
@@ -43,7 +47,10 @@
 (require 'org-crypt)
 (require 'org-id)
 (require 'org-sticky-header)
-(require 'org-roam-node)
+
+(when my-zettelkasten-p
+  (require 'org-roam-node))
+
 
 ;;; Setup hook: keyboard shortcuts and fill column setting
 (defun dotfiles--org-mode-hook ()
@@ -51,8 +58,9 @@
 Sets up keybindings and adjusts the fill column."
   ;; Keybindings
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
-  (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
-  (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+  (when my-zettelkasten-p
+    (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
+    (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle))
   ;; Fill column
   (dotfiles--set-fill-column 85))
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
@@ -250,13 +258,15 @@ event of an error or nonlocal exit."
 (add-hook 'org-checkbox-statistics-hook #'dotfiles--checkbox-list-complete)
 
 ;;; `org-roam'
-(setq org-roam-database-connector 'sqlite-builtin)
-(setq org-roam-mode-sections
-      (list #'org-roam-backlinks-section #'org-roam-reflinks-section
-            #'org-roam-unlinked-references-section))
+(when my-zettelkasten-p
+  (progn
+    (setq org-roam-database-connector 'sqlite-builtin)
+    (setq org-roam-mode-sections
+          (list #'org-roam-backlinks-section #'org-roam-reflinks-section
+                #'org-roam-unlinked-references-section))
 
-(require 'org-roam-db)
-(org-roam-db-autosync-mode)
+    (require 'org-roam-db)
+    (org-roam-db-autosync-mode)))
 
 ;;; `org-gcal'
 
