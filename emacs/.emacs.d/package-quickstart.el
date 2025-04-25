@@ -3080,7 +3080,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.1/flycheck-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-34.1/flycheck-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-35.0/flycheck-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/flycheck-35.0/flycheck-autoloads.el"))
 
 
 
@@ -3091,6 +3091,8 @@ it is disabled.
 
 (autoload 'flycheck-manual "flycheck" "\
 Open the Flycheck manual." t)
+(autoload 'flycheck-quick-help "flycheck" "\
+Display brief Flycheck help." t)
 (autoload 'flycheck-mode "flycheck" "\
 Flycheck is a minor mode for on-the-fly syntax checking.
 
@@ -3111,10 +3113,11 @@ Flycheck displays its status in the mode line.  In the default
 configuration, it looks like this:
 
 `FlyC'     This buffer has not been checked yet.
-`FlyC-'    Flycheck doesn't have a checker for this buffer.
 `FlyC*'    Flycheck is running.  Expect results soon!
-`FlyC:3|2' This buffer contains three warnings and two errors.
+`FlyC:0'   Last check resulted in no errors and no warnings.
+`FlyC:3|5' This buffer contains three errors and five warnings.
            Use `\\[flycheck-list-errors]' to see the list.
+`FlyC-'    Flycheck doesn't have a checker for this buffer.
 
 You may also see the following icons:
 `FlyC!'    The checker crashed.
@@ -3286,6 +3289,21 @@ of command checkers is `flycheck-sanitize-errors'.
 
      If this property is given and has a non-nil value, send the
      contents of the buffer on standard input.
+
+     Some checkers that support reading from standard input have
+     a separate flag to indicate the name of the file whose
+     contents are being passed on standard input (typically
+     `stdin-filename').  In that case, use the `(option)' form in
+     `:command' to pass the value of variable `buffer-file-name'
+     when the current buffer has a file name (that is,
+     use `option \"--stdin-file-name\" buffer-file-name').
+
+     For buffers not backed by files, checkers that support input
+     on stdin typically report a file name like `-' or `<stdin>'.
+     Make sure your error parser or patterns expect these file
+     names (for example, use `(or \"<stdin>\" (file-name))') or
+     call `flycheck-remove-error-file-names' in a custom
+     `:error-filter'.
 
      Defaults to nil.
 
@@ -8865,6 +8883,27 @@ If NO-FALLBACK is set, don’t fall back to current buffer if not found in
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-autotask-mcp/org-autotask-mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-autotask-mcp/org-autotask-mcp-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(let ((loads (get 'org-autotask-mcp 'custom-loads))) (if (member '"org-autotask-mcp" loads) nil (put 'org-autotask-mcp 'custom-loads (cons '"org-autotask-mcp" loads)) (put 'org 'custom-loads (cons 'org-autotask-mcp (get 'org 'custom-loads)))))
+(autoload 'org-autotask-mcp-start-server "org-autotask-mcp" "\
+Start the MCP server for Org tasks." t)
+(autoload 'org-autotask-mcp-stop-server "org-autotask-mcp" "\
+Stop the MCP server for Org tasks." t)
+(register-definition-prefixes "org-autotask-mcp" '("org-autotask-mcp-"))
+
+
+(provide 'org-autotask-mcp-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-autotask/org-autotask-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-autotask/org-autotask-autoloads.el"))
 
 
@@ -9049,6 +9088,26 @@ Mark the item (a task or a project) at point as done.")
 
 
 (provide 'ob-rust-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp/mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp/mcp-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "mcp" '("mcp-"))
+
+
+
+(register-definition-prefixes "mcp-test" '("mcp-test-"))
+
+
+(provide 'mcp-autoloads)
 
 
 )
@@ -12336,7 +12395,7 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
