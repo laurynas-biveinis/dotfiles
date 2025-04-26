@@ -8898,6 +8898,11 @@ Start the MCP server for Org tasks." t)
 (autoload 'org-autotask-mcp-stop-server "org-autotask-mcp" "\
 Stop the MCP server for Org tasks." t)
 (register-definition-prefixes "org-autotask-mcp" '("org-autotask-mcp-"))
+
+
+
+
+(register-definition-prefixes "org-autotask-mcp-test" '("org-autotask-mcp-test--create-get-file-request"))
 
 
 (provide 'org-autotask-mcp-autoloads)
@@ -9104,7 +9109,8 @@ Mark the item (a task or a project) at point as done.")
 
 
 
-(register-definition-prefixes "mcp-test" '("mcp-test-"))
+(register-definition-prefixes "mcp-test" '("mcp-test--"))
+
 
 
 (provide 'mcp-autoloads)
