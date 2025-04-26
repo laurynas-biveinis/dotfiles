@@ -401,13 +401,18 @@ duti -s org.videolan.vlc .mp3 all
 duti -s org.videolan.vlc .m4a all
 duti -s org.videolan.vlc .m3u all
 duti -s jp.tmkk.XLD .cue all
-npm i -g bash-language-server prettier
+npm i -g bash-language-server prettier textlint jscpd
 brew tap homebrew/command-not-found
 # Play
 brew install mono
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
 	guitar-pro transcribe
 duti -s jp.tmkk.XLD .flac all
+#
+# LLM
+#
+npm install -g @anthropic-ai/claude-code
+claude mcp add puppeteer -s user -- npx -y u/modelcontextprotocol/server-puppeteer
 #
 # Backup and Spotlight exclusions
 #
