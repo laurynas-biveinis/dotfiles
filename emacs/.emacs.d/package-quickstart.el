@@ -9110,7 +9110,6 @@ Mark the item (a task or a project) at point as done.")
 
 
 (register-definition-prefixes "mcp-test" '("mcp-test--"))
-
 
 
 (provide 'mcp-autoloads)
