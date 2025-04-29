@@ -6,13 +6,13 @@
 ;; Homepage: https://github.com/magit/ghub
 ;; Keywords: tools
 
-;; Package-Version: 4.3.0
-;; Package-Revision: v4.3.0-0-g1fbce5379e21
+;; Package-Version: 4.3.1
+;; Package-Revision: v4.3.1-0-g214a14627f46
 ;; Package-Requires: (
 ;;     (emacs "29.1")
-;;     (compat "30.0.2.0")
+;;     (compat "30.1.0.0")
 ;;     (let-alist "1.0.6")
-;;     (llama "0.6.1")
+;;     (llama "0.6.2")
 ;;     (treepy "0.1.2"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -449,7 +449,7 @@ this function is called with nil for PAYLOAD."
                 (pcase-let ((`(,url ,rel) (split-string elt "; ")))
                   (cons (intern (substring rel 5 -1))
                         (substring url 1 -1))))
-              (split-string rels ", ")))))
+              (split-string rels ", ?")))))
 
 (cl-defun ghub-repository-id (owner name &key username auth host forge noerror)
   "Return the id of the specified repository.

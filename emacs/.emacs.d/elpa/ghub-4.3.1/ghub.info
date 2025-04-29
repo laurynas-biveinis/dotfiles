@@ -27,7 +27,7 @@ Ghub User and Developer Manual
 Ghub is an Emacs library that is used by various packages to access the
 APIs of various instances of various Git forge implementations.
 
-This manual is for Ghub version 4.3.0.
+This manual is for Ghub version 4.3.1.
 
      Copyright (C) 2017-2025 Jonas Bernoulli
      <emacs.ghub@jonas.bernoulli.dev>
