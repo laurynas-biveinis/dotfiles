@@ -1,0 +1,61 @@
+{
+"functions": {
+"function": ["func", 1, 1, {}],
+"lambda": ["macro", 1, "many", {"indent": "defun", "break": "multi"}],
+
+"eval-when-compile": ["macro", 0, "many", {"break": "always", "indent": 0}],
+"if": ["macro", 1, "many", {"break": "always", "indent": 2}],
+
+"defalias": ["func", 2, 3, {"doc-string": 3, "indent": "defun"}],
+"defconst": ["special", 2, "unevalled", {"break_point": "overflow", "doc-string": 3, "indent": "defun"}],
+"defcustom": ["macro", 2, "many", {"break_point": "overflow", "doc-string": 3, "indent": "defun"}],
+"defface": ["macro", 2, "many", {"break_point": "overflow", "doc-string": 3, "indent": "defun"}],
+"defgroup": ["macro", 2, "many", {"doc-string": 3, "indent": "defun"}],
+"define-minor-mode": ["macro", 2, "many", {"break": "always", "doc-string": 2, "indent": "defun"}],
+"define-globalized-minor-mode": ["macro", 1, "many", {"break": "always", "doc-string": 3, "indent": "defun"}],
+"defvar": ["special", 2, "unevalled", {"break_point": "overflow", "doc-string": 3, "indent": "defun"}],
+"defvar-local": ["macro", 2, "many", {"break_point": "overflow", "doc-string": 3, "indent": 2}],
+"defvaralias": ["macro", 2, 3, {"break_point": "overflow"}],
+"interactive": ["macro", 2, "many", {"break_point": "overflow"}],
+"throw": ["macro", 2, 2, {"break_point": "overflow"}],
+
+"and": ["macro", 1, "many", {}],
+"max": ["macro", 1, "many", {}],
+"min": ["macro", 1, "many", {}],
+"or": ["macro", 1, "many", {}],
+
+"*": ["macro", 2, "many", {}],
+"+": ["macro", 2, "many", {}],
+"-": ["macro", 2, "many", {}],
+"%": ["macro", 2, "many", {}],
+"/": ["macro", 2, "many", {}],
+"1+": ["macro", 2, "many", {}],
+"1-": ["macro", 2, "many", {}],
+
+"condition-case": ["special", 1, "many", {"break": "multi", "indent": 2}],
+"condition-case-unless-debug": ["special", 1, "many", {"break": "multi", "indent": 2}],
+
+"unwind-protect": ["special", 0, "unevalled", {"break": "always", "indent": 1}],
+
+"save-excursion": ["macro", 0, "many", {"break": "multi", "indent": 0}],
+"save-match-data": ["macro", 0, "many", {"break": "multi", "indent": 0}],
+"save-restriction": ["macro", 0, "many", {"break": "multi", "indent": 0}],
+"save-window-excursion": ["macro", 0, "many", {"break": "multi", "indent": 0}],
+
+"fset": ["func", 2, "many", {"break": "multi", "break_point": "overflow", "group": [0, 2]}],
+"setf": ["func", 2, "many", {"break": "multi", "break_point": "overflow", "group": [0, 2]}],
+"setopt": ["func", 2, "many", {"break": "multi", "break_point": "overflow", "group": [0, 2]}],
+"setq": ["func", 2, "many", {"break": "multi", "break_point": "overflow", "group": [0, 2]}],
+"setq-default": ["func", 2, "many", {"break": "multi", "break_point": "overflow", "group": [0, 2]}],
+"setq-local": ["func", 2, "many", {"break": "multi", "break_point": "overflow", "group": [0, 2]}],
+
+"cl-defmethod": ["macro", 2, "many", {"doc-string": 3, "indent": 2, "break": "always", "break_point": "overflow"}],
+"defadvice": ["macro", 2, "many", {"doc-string": 3, "indent": 2, "break": "always", "break_point": "overflow"}],
+"defmacro": ["macro", 2, "many", {"doc-string": 3, "indent": 2, "break": "always", "break_point": "overflow"}],
+"defsubst": ["macro", 2, "many", {"doc-string": 3, "indent": 2, "break": "always", "break_point": "overflow"}],
+"defun": ["macro", 2, "many", {"doc-string": 3, "indent": 2, "break": "always", "break_point": "overflow"}],
+"ert-deftest": ["macro", 2, "many", {"doc-string": 3, "indent": 2, "break": "always", "break_point": "overflow"}],
+"iter-defun": ["macro", 2, "many", {"doc-string": 3, "indent": 2, "break": "always", "break_point": "overflow"}]
+
+}
+}

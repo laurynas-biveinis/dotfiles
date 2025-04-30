@@ -11825,6 +11825,63 @@ Display the version of Elpy." t)
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250421.1112/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250421.1112/elisp-autofmt-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(put 'elisp-autofmt-style 'safe-local-variable #'symbolp)
+(put 'elisp-autofmt-format-quoted 'safe-local-variable #'booleanp)
+(put 'elisp-autofmt-empty-line-max 'safe-local-variable #'integerp)
+(put 'elisp-autofmt-load-packages-local 'safe-local-variable #'list-of-strings-p)
+(autoload 'elisp-autofmt-buffer-to-file "elisp-autofmt" "\
+Auto format the current buffer, writing it's output to a file.
+
+This is intended for use by batch processing scripts,
+where loading changes back into the buffer is not important.")
+(autoload 'elisp-autofmt-buffer "elisp-autofmt" "\
+Auto format the current buffer." t)
+(autoload 'elisp-autofmt-region "elisp-autofmt" "\
+Auto format the active region of the current buffer.
+Optionally use BEG & END, otherwise an active region is required.
+Optionally pass in IS-INTERACTIVE to display a status message from formatting.
+
+(fn &optional BEG END IS-INTERACTIVE)" t)
+(autoload 'elisp-autofmt-region-dwim "elisp-autofmt" "\
+Context sensitive auto formatting of the current buffer.
+When there is an active region, this is used,
+otherwise format the surrounding S-expression." t)
+(autoload 'elisp-autofmt-check-elisp-autofmt-exists "elisp-autofmt" "\
+Return non-nil when `.elisp-autofmt' is found in a parent directory.")
+(autoload 'elisp-autofmt-mode "elisp-autofmt" "\
+Elisp-AutoFMT minor mode.
+
+This is a minor mode.  If called interactively, toggle the
+`Elisp-Autofmt mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `elisp-autofmt-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t)
+(register-definition-prefixes "elisp-autofmt" '("elisp-autofmt-"))
+
+
+(provide 'elisp-autofmt-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/dispwatch-20210305.342/dispwatch-autoloads.el"))
 
 
@@ -12400,7 +12457,7 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
