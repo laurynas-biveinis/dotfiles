@@ -8893,16 +8893,15 @@ If NO-FALLBACK is set, don’t fall back to current buffer if not found in
 
 
 (let ((loads (get 'org-autotask-mcp 'custom-loads))) (if (member '"org-autotask-mcp" loads) nil (put 'org-autotask-mcp 'custom-loads (cons '"org-autotask-mcp" loads)) (put 'org 'custom-loads (cons 'org-autotask-mcp (get 'org 'custom-loads)))))
-(autoload 'org-autotask-mcp-start-server "org-autotask-mcp" "\
-Start the MCP server for Org tasks." t)
-(autoload 'org-autotask-mcp-stop-server "org-autotask-mcp" "\
-Stop the MCP server for Org tasks." t)
+(autoload 'org-autotask-mcp-enable "org-autotask-mcp" "\
+Enable Org-AutoTask MCP tools." t)
+(autoload 'org-autotask-mcp-disable "org-autotask-mcp" "\
+Disable Org-AutoTask MCP tools." t)
 (register-definition-prefixes "org-autotask-mcp" '("org-autotask-mcp-"))
-
 
 
 
-(register-definition-prefixes "org-autotask-mcp-test" '("org-autotask-mcp-test--create-get-file-request"))
+(register-definition-prefixes "org-autotask-mcp-test" '("org-autotask-mcp-test--"))
 
 
 (provide 'org-autotask-mcp-autoloads)
@@ -9110,6 +9109,11 @@ Mark the item (a task or a project) at point as done.")
 
 
 (register-definition-prefixes "mcp-test" '("mcp-test--"))
+
+
+
+
+(register-definition-prefixes "mcp-test-bytecode-handler" '("mcp-test-bytecode-handler--handler"))
 
 
 (provide 'mcp-autoloads)
@@ -11809,6 +11813,31 @@ Display the version of Elpy." t)
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-mcp-dev/elisp-mcp-dev-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-mcp-dev/elisp-mcp-dev-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'elisp-dev-mcp-enable "elisp-dev-mcp" "\
+Enable the Elisp development MCP tools.")
+(autoload 'elisp-dev-mcp-disable "elisp-dev-mcp" "\
+Disable the Elisp development MCP tools.")
+(register-definition-prefixes "elisp-dev-mcp" '("elisp-dev-mcp--describe-function"))
+
+
+
+(register-definition-prefixes "elisp-dev-mcp-test" '("elisp-dev-mcp-test--"))
+
+
+
+(provide 'elisp-mcp-dev-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-lint-20220419.252/elisp-lint-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-lint-20220419.252/elisp-lint-autoloads.el"))
 
 
@@ -11898,7 +11927,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250416.1119/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250416.1119/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250430.1114/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250430.1114/difftastic-autoloads.el"))
 
 
 
@@ -12457,7 +12486,7 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
