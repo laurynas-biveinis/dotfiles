@@ -2493,7 +2493,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.7/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.7/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.8/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.8/transient-autoloads.el"))
 
 
 
@@ -4838,7 +4838,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.2/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.2/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.3/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.3/magit-section-autoloads.el"))
 
 
 
@@ -4893,7 +4893,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.2/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.2/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.3/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.3/magit-autoloads.el"))
 
 
 
@@ -5310,14 +5310,15 @@ the remote.
 (fn OLD NEW &optional FORCE)" t)
 (autoload 'magit-branch-shelve "magit-branch" "\
 Shelve a BRANCH.
-Rename \"refs/heads/BRANCH\" to \"refs/shelved/BRANCH\",
+Rename \"refs/heads/BRANCH\" to \"refs/shelved/YYYY-MM-DD-BRANCH\",
 and also rename the respective reflog file.
 
 (fn BRANCH)" t)
 (autoload 'magit-branch-unshelve "magit-branch" "\
 Unshelve a BRANCH.
-Rename \"refs/shelved/BRANCH\" to \"refs/heads/BRANCH\",
-and also rename the respective reflog file.
+Rename \"refs/shelved/BRANCH\" to \"refs/heads/BRANCH\".  If BRANCH
+is prefixed with \"YYYY-MM-DD\", then drop that part of the name.
+Also rename the respective reflog file.
 
 (fn BRANCH)" t)
  (autoload 'magit-branch-configure "magit-branch" nil t)
@@ -5628,6 +5629,34 @@ for a revision.
 
 
 
+(autoload 'magit-dired-jump "magit-dired" "\
+Visit file at point using Dired.
+With a prefix argument, visit in another window.  If there
+is no file at point, then instead visit `default-directory'.
+
+(fn &optional OTHER-WINDOW)" t)
+(autoload 'magit-dired-stage "magit-dired" "\
+In Dired, staged all marked files or the file at point." t)
+(autoload 'magit-dired-unstage "magit-dired" "\
+In Dired, unstaged all marked files or the file at point." t)
+(autoload 'magit-dired-log "magit-dired" "\
+In Dired, show log for all marked files or the directory if none are marked.
+
+(fn &optional FOLLOW)" t)
+(autoload 'magit-dired-am-apply-patches "magit-dired" "\
+In Dired, apply the marked (or next ARG) files as patches.
+If inside a repository, then apply in that.  Otherwise prompt
+for a repository.
+
+(fn REPO &optional ARG)" t)
+(autoload 'magit-do-async-shell-command "magit-dired" "\
+Open FILE with `dired-do-async-shell-command'.
+Interactively, open the file at point.
+
+(fn FILE)" t)
+
+
+
  (autoload 'magit-ediff "magit-ediff" nil)
 (autoload 'magit-ediff-resolve-all "magit-ediff" "\
 Resolve all conflicts in the FILE at point using Ediff.
@@ -5734,27 +5763,6 @@ Run `gitk --branches' in the current repository." t)
 Run `gitk --all' in the current repository." t)
 (autoload 'magit-project-status "magit-extras" "\
 Run `magit-status' in the current project's root." t)
-(autoload 'magit-dired-jump "magit-extras" "\
-Visit file at point using Dired.
-With a prefix argument, visit in another window.  If there
-is no file at point, then instead visit `default-directory'.
-
-(fn &optional OTHER-WINDOW)" t)
-(autoload 'magit-dired-log "magit-extras" "\
-Show log for all marked files, or the current file.
-
-(fn &optional FOLLOW)" t)
-(autoload 'magit-dired-am-apply-patches "magit-extras" "\
-In Dired, apply the marked (or next ARG) files as patches.
-If inside a repository, then apply in that.  Otherwise prompt
-for a repository.
-
-(fn REPO &optional ARG)" t)
-(autoload 'magit-do-async-shell-command "magit-extras" "\
-Open FILE with `dired-do-async-shell-command'.
-Interactively, open the file at point.
-
-(fn FILE)" t)
 (autoload 'magit-previous-line "magit-extras" "\
 Like `previous-line' but with Magit-specific shift-selection.
 
@@ -12493,7 +12501,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.2140" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.2" "/Users/laurynas/.emacs.d/elpa/transient-0.8.7" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.2140" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.3" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.3" "/Users/laurynas/.emacs.d/elpa/transient-0.8.8" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
