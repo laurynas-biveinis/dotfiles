@@ -8910,6 +8910,7 @@ Disable Org-AutoTask MCP tools." t)
 
 
 (register-definition-prefixes "org-autotask-mcp-test" '("org-autotask-mcp-test--"))
+
 
 
 (provide 'org-autotask-mcp-autoloads)
@@ -9116,8 +9117,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 
-(register-definition-prefixes "mcp-test" '("mcp-test--"))
-
+(register-definition-prefixes "mcp-test" '("mcp-test-"))
 
 
 
@@ -11834,11 +11834,11 @@ Display the version of Elpy." t)
 Enable the Elisp development MCP tools.")
 (autoload 'elisp-dev-mcp-disable "elisp-dev-mcp" "\
 Disable the Elisp development MCP tools.")
-(register-definition-prefixes "elisp-dev-mcp" '("elisp-dev-mcp--describe-function"))
+(register-definition-prefixes "elisp-dev-mcp" '("elisp-dev-mcp--"))
 
 
 
-(register-definition-prefixes "elisp-dev-mcp-test" '("elisp-dev-mcp-test--"))
+(register-definition-prefixes "elisp-dev-mcp-test" '("elisp-dev-mcp-test-"))
 
 
 
@@ -11935,7 +11935,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250430.1114/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250430.1114/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250505.1114/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250505.1114/difftastic-autoloads.el"))
 
 
 
@@ -11960,6 +11960,11 @@ Show the result of \\='git show REV\\=' with difftastic.
 When REV couldn't be guessed or called with prefix arg ask for REV.
 
 (fn REV)" t)
+(autoload 'difftastic-magit-diff-buffer-file "difftastic" "\
+Show diff for the blob or file visited in the current buffer.
+When the buffer visits a blob, then show the respective commit.  When
+the buffer visits a file, then show the differences between `HEAD' and
+the working tree.  In both cases limit the diff to the file or blob." t)
 (autoload 'difftastic-buffers "difftastic" "\
 Run difftastic on a pair of buffers, BUFFER-A and BUFFER-B.
 Optionally, provide a LANG-OVERRIDE to override language used.
@@ -12096,7 +12101,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.1/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.2/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.2/cmake-mode-autoloads.el"))
 
 
 

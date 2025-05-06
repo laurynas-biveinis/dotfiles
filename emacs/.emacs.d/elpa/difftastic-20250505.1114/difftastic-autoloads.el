@@ -27,6 +27,11 @@ Show the result of \\='git show REV\\=' with difftastic.
 When REV couldn't be guessed or called with prefix arg ask for REV.
 
 (fn REV)" t)
+(autoload 'difftastic-magit-diff-buffer-file "difftastic" "\
+Show diff for the blob or file visited in the current buffer.
+When the buffer visits a blob, then show the respective commit.  When
+the buffer visits a file, then show the differences between `HEAD' and
+the working tree.  In both cases limit the diff to the file or blob." t)
 (autoload 'difftastic-buffers "difftastic" "\
 Run difftastic on a pair of buffers, BUFFER-A and BUFFER-B.
 Optionally, provide a LANG-OVERRIDE to override language used.
