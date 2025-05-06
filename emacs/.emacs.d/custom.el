@@ -21,6 +21,10 @@
      (org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
    '((elisp-lint-indent-specs
+      (mcp-test-with-server . defun))
+     (elisp-lint-indent-specs
+      (elisp-dev-mcp-test-with-server . defun))
+     (elisp-lint-indent-specs
       (org-autotask-with-org-node-with-url . 1)
       (org-autotask--test-fixture . 1)
       (org-autotask--buffer-test . 1)
