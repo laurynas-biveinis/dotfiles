@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250505.1114
-;; Package-Revision: 4e4b01160a2a
+;; Package-Version: 20250506.1640
+;; Package-Revision: 6fd2df58e6eb
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -150,15 +150,14 @@
 ;;   :ensure difftastic ;; or nil if you prefer manual installation
 ;;   :config (difftastic-bindings-mode))
 ;;
-;; This will bind `D' to `difftastic-magit-diff' and `S' to
+;; By default this will bind `D' to `difftastic-magit-diff' and `S' to
 ;; `difftastic-magit-show' in `magit-diff' and `magit-blame' transient
-;; prefixes as well as in `magit-blame-read-only-map'.  Please refer to
-;; `difftastic-bindings' documentation to see how to change default bindings.
-;;
-;; You can adjust what bindings you want to have configured by changing values
-;; of `difftastic-bindings-alist', `difftastic-bindings-prefixes', and
-;; `difftastic-bindings-keymaps'.  You need to turn the
-;; `difftastic-bindings-mode' off and on again to apply the changes.
+;; prefixes as well as in `magit-blame-read-only-map' as well as `M-d' to
+;; `difftastic-magit-diff-buffer-file' in `magit-file-dispatch' and `M-\=' to
+;; `difftastic-dired-diff' in `dired-mode-map'.  Please refer to
+;; `difftastic-bindings-alist' documentation to see how to change default
+;; bindings.  You need to turn the `difftastic-bindings-mode' off and on again
+;; to apply the changes.
 ;;
 ;; The `difftastic-bindings=mode' was designed to have minimal dependencies
 ;; and be reasonably fast to load, while providing a mechanism to bind
@@ -170,8 +169,8 @@
 ;;
 ;; If you don't want to use mechanism delivered by `difftastic-bindings-mode'
 ;; you can write your own configuration.  As a starting point the following
-;; snippets demonstrate how to achieve roughly the same effect as
-;; `difftastic-bindings-mode':
+;; snippets demonstrate how to achieve roughly partial effect as
+;; `difftastic-bindings-mode' in default configuration:
 ;;
 ;; (require 'difftastic)
 ;; (require 'transient)
@@ -1063,7 +1062,7 @@ and SIDE is either `left' or `right'."
               (point (point)))
     (if (< point (caaar lines))
         ; use right when point is in chunk header
-        (list file nil 'right)
+        (list file nil 0 'right)
       (catch 'chunk-file
         (while lines
           (pcase-let* ((`((,bol ,eol) ,left ,right) (car lines)))
@@ -1071,8 +1070,16 @@ and SIDE is either `left' or `right'."
               (if (and left
                        (or (not right)
                            (< point (cadr right))))
-                  (throw 'chunk-file (list file (car left) 'left))
-                (throw 'chunk-file (list file (car right) 'right))))
+                  (throw 'chunk-file (list file
+                                           (car left)
+                                           (max 0
+                                                (- point (caddr left) 1))
+                                           'left))
+                (throw 'chunk-file (list file
+                                         (car right)
+                                         (max 0
+                                              (- point (caddr right) 1))
+                                         'right))))
             (setq lines (cdr lines))))))))
 
 (defun difftastic--diff-visit-file-setup (buffer line col)
@@ -1104,7 +1111,7 @@ is the chunk file name, LINE-NUM is an optional line number within the
 FILE and SIDE is either `left' or `right'.  Use FN to display the buffer
 in some window.  After visiting the FILE start a smerge session (if
 there are unmerged changes) and run `difftastic-diff-visit-file-hook'."
-  (pcase-let* ((`(,_ ,line ,side) chunk-file)
+  (pcase-let* ((`(,_ ,line ,col ,side) chunk-file)
                (file-buf (alist-get (if (eq side 'left)
                                         'file-buf-A
                                       'file-buf-B)
@@ -1118,7 +1125,7 @@ there are unmerged changes) and run `difftastic-diff-visit-file-hook'."
                         (get-file-buffer file)
                         (find-file-noselect file))))
     (funcall fn buf)
-    (difftastic--diff-visit-file-setup buf line 0)
+    (difftastic--diff-visit-file-setup buf line col)
     buf))
 
 (defun difftastic--diff-visit-git-file (chunk-file fn &optional force-worktree)
@@ -1130,7 +1137,7 @@ name, LINE-NUM is an optional line number within the FILE and SIDE is
 either `left' or `right'.  Use FN to display the buffer in some window.
 After visiting the FILE start a smerge session (if there are unmerged
 changes) and run `difftastic-diff-visit-file-hook'."
-  (pcase-let* ((`(,file ,line ,side) chunk-file)
+  (pcase-let* ((`(,file ,line ,col ,side) chunk-file)
                (default-directory (alist-get 'default-directory
                                              difftastic--metadata))
                (rev (if-let* ((rev-or-range (alist-get 'rev-or-range
@@ -1165,7 +1172,7 @@ changes) and run `difftastic-diff-visit-file-hook'."
                (setq line
                      (magit-diff-visit--offset file rev line))))))
     (funcall fn buf)
-    (difftastic--diff-visit-file-setup buf line 0)
+    (difftastic--diff-visit-file-setup buf line col)
     buf))
 
 (defun difftastic--diff-visit-file (chunk-file fn &optional force-worktree)
@@ -2010,6 +2017,8 @@ then ask for language before running difftastic."
                                  (difftastic--get-languages)
                                  nil
                                  t)))
+      (add-to-history 'file-name-history (abbreviate-file-name f))
+      (add-to-history 'file-name-history (abbreviate-file-name ff))
       (setq difftastic--last-dir-A (file-name-as-directory
                                     (file-name-directory f)))
       (setq difftastic--last-dir-B (file-name-as-directory

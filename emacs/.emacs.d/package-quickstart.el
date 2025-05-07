@@ -11935,7 +11935,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250505.1114/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250505.1114/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250506.1640/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250506.1640/difftastic-autoloads.el"))
 
 
 
@@ -12010,29 +12010,35 @@ the latter is set to nil the call is made to
 
 
 
-(defvar difftastic-bindings-prefixes '((magit-diff (-1 -1) magit-diff) (magit-blame (-1) magit-blame)) "\
-List of prefixes to install `difftastic' bindings.
-Each entry in the list is in a from of (PREFIX LOC FEATURE),
-where PREFIX is a `transient' prefix to which to install
-bindings, LOC is a location within the prefix and FEATURE is a
-feature (symbol) or file (string) that defines the prefix.  LOC
-can be in any form accepted by `transient-get-suffix', which see.")
-(custom-autoload 'difftastic-bindings-prefixes "difftastic-bindings" t)
-(defvar difftastic-bindings-keymaps '((magit-blame-read-only-mode-map . magit-blame)) "\
-List of keymaps to add `difftastic' bindings to.
-Each entry in the list is in a form of (MAP . FEATURE), where MAP
-is a keymap to set bindings to and FEATURE is a feature (symbol)
-or file (string) that defines the MAP.")
-(custom-autoload 'difftastic-bindings-keymaps "difftastic-bindings" t)
-(defvar difftastic-bindings-alist '(("D" difftastic-magit-diff "Difftastic diff (dwim)") ("S" difftastic-magit-show "Difftastic show")) "\
+(defvar difftastic-bindings-alist '((((prefixes (magit-diff (-1 -1) magit-diff) (magit-blame (-1) magit-blame)) (keymaps (magit-blame-read-only-mode-map . magit-blame))) ("D" difftastic-magit-diff "Difftastic diff (dwim)") ("S" difftastic-magit-show "Difftastic show")) (((prefixes (magit-file-dispatch (0 1 -1) magit-files))) ("M-d" difftastic-magit-diff-buffer-file "Difftastic")) (((keymaps (dired-mode-map . dired))) ("M-=" difftastic-dired-diff))) "\
 Define `difftastic' bindings.
-Each entry is in a form of (KEY COMMAND DESCRIPTION), where KEY
-is a key that should be bound, COMMAND is a command that should
-be executed when KEY has been pressed, and DESCRIPTION is a
-description that should be used for suffixes that are added to
-prefixes as defined in `difftastic-bindings-prefixes'.  KEY needs
-to be a valid key according to `key-valid-p' and in a form
-accepted by `transient-append-suffix'.")
+This variable defines all bindings together with prefixes and keymaps
+where they should be installed.  It is an alist where each entry in in a
+form (SPECS . BINDINGS).  The SPECS is an alist where each entry is in a
+form (TYPE . SPEC).  The TYPE is either `prefixes' or `keymaps' and:
+
+- When TYPE is `prefixes' then SPEC is a list where each element is in a
+  from of (PREFIX LOC FEATURE), where PREFIX is a `transient' prefix to
+  which to install bindings, LOC is a location within the prefix and
+  FEATURE is a feature (symbol) or file (string) that defines the
+  prefix.  When length of SPEC is equal to 1 the binding is installed a
+  transient suffix, otherwise it's installed as a transient column.  LOC
+  can be in any form accepted by `transient-get-suffix', which see.
+
+- When TYPE is `keymaps' then SPEC is a list where each element is in a
+  form of (MAP . FEATURE), where MAP is a keymap to set bindings to and
+  FEATURE is a feature (symbol) or file (string) that defines the MAP.
+
+BINDINGS is a list where each enlement is in a form of (KEY COMMAND
+DESCRIPTION), where KEY is a key that should be bound, COMMAND is a
+command that should be executed when KEY has been pressed, and
+DESCRIPTION is a description that should be used for suffixes that are
+added to prefixes.  KEY needs to be a valid key according to
+`key-valid-p' and in a form accepted by `transient-append-suffix'.
+
+Note: this variable is applied only when `difftastic-bindings-mode' is
+turned on.  This means that the mode may need to be turned off and on
+again.")
 (custom-autoload 'difftastic-bindings-alist "difftastic-bindings" t)
 (defvar difftastic-bindings-mode nil "\
 Non-nil if Difftastic-Bindings mode is enabled.
@@ -12045,10 +12051,8 @@ or call the function `difftastic-bindings-mode'.")
 (autoload 'difftastic-bindings-mode "difftastic-bindings" "\
 Ensure key bindings to `difftastic' commands.
 
-Use bindings specified in `difftastic-bindings' (which see) to
-create a suffixes in prefixes defined in
-`difftastic-bindings-prefixes' (which see) and install them into
-`difftastic-bindings-keymaps' (which see).
+Use bindings specified in `difftastic-bindings-alist' (which see) to
+create defined suffixes in prefixes and bindings in keymaps.
 
 This is a global minor mode.  If called interactively, toggle the
 `Difftastic-Bindings mode' mode.  If the prefix argument is
