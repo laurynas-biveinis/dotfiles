@@ -78,7 +78,7 @@ the latter is set to nil the call is made to
 
 ;;; Generated autoloads from difftastic-bindings.el
 
-(defvar difftastic-bindings-alist '((((prefixes (magit-diff (-1 -1) magit-diff) (magit-blame (-1) magit-blame)) (keymaps (magit-blame-read-only-mode-map . magit-blame))) ("D" difftastic-magit-diff "Difftastic diff (dwim)") ("S" difftastic-magit-show "Difftastic show")) (((prefixes (magit-file-dispatch (0 1 -1) magit-files))) ("M-d" difftastic-magit-diff-buffer-file "Difftastic")) (((keymaps (dired-mode-map . dired))) ("M-=" difftastic-dired-diff))) "\
+(defvar difftastic-bindings-alist '((((prefixes (magit-diff (-1 -1) magit-diff))) ("M-d" difftastic-magit-diff "Difftastic diff (dwim)") ("M-c" difftastic-magit-show "Difftastic show")) (((prefixes (magit-blame "b" magit-blame)) (keymaps (magit-blame-read-only-mode-map . magit-blame))) ("M-RET" difftastic-magit-show "Difftastic show")) (((prefixes (magit-file-dispatch (0 1 -1) magit-files))) ("M-d" difftastic-magit-diff-buffer-file "Difftastic")) (((keymaps (dired-mode-map . dired))) ("M-=" difftastic-dired-diff))) "\
 Define `difftastic' bindings.
 This variable defines all bindings together with prefixes and keymaps
 where they should be installed.  It is an alist where each entry in in a

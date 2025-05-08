@@ -101,9 +101,11 @@ the `difftastic--installed' property and remove it from
           ;; Try remove the whole suffix if it is still a suffix at loc
           (transient-remove-suffix prefix loc)
         ;; Fall back to key by key removal
-        (seq-do (lambda (binding)
-                  (transient-remove-suffix prefix (car binding)))
-                suffix)))
+        (if (vectorp suffix)
+            (seq-do (lambda (binding)
+                      (transient-remove-suffix prefix (car binding)))
+                    suffix)
+          (transient-remove-suffix prefix (car suffix)))))
     (function-put prefix 'difftastic--installed nil)
     (difftastic-bindings--remove-from-installed :prefixes prefix)))
 
@@ -180,12 +182,14 @@ or file (string) that defines the MAP."
 
 ;;;###autoload
 (defcustom difftastic-bindings-alist
-  '((((prefixes .  ((magit-diff (-1 -1) magit-diff)
-                    (magit-blame (-1) magit-blame)))
+  '((((prefixes .  ((magit-diff (-1 -1) magit-diff))))
+     .
+     (("M-d" difftastic-magit-diff "Difftastic diff (dwim)")
+      ("M-c" difftastic-magit-show "Difftastic show")))
+    (((prefixes . ((magit-blame "b" magit-blame)))
       (keymaps . ((magit-blame-read-only-mode-map . magit-blame))))
      .
-     (("D" difftastic-magit-diff "Difftastic diff (dwim)")
-      ("S" difftastic-magit-show "Difftastic show")))
+     (("M-RET" difftastic-magit-show "Difftastic show")))
     (((prefixes . ((magit-file-dispatch (0 1 -1) magit-files))))
      .
      (("M-d" difftastic-magit-diff-buffer-file "Difftastic")))
@@ -225,7 +229,10 @@ again."
                  (cons :tag "Prefixes"
                        (const prefixes)
                        (repeat (list (symbol :tag "Prefix")
-                                     (repeat :tag "Location" (integer))
+                                     (choice :tag "Location"
+                                             (key :tag "Key")
+                                             (string :tag "Command")
+                                             (repeat (integer :tag "Coordinate")))
                                      (choice
                                       (string :tag "File")
                                       (symbol :tag "Feature")))))
