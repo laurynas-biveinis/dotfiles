@@ -10552,7 +10552,7 @@ Fontify an `info' node.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.8.3/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.8.3/indent-bars-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.8.4/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.8.4/indent-bars-autoloads.el"))
 
 
 
@@ -11839,7 +11839,6 @@ Disable the Elisp development MCP tools.")
 
 
 (register-definition-prefixes "elisp-dev-mcp-test" '("elisp-dev-mcp-test-"))
-
 
 
 (provide 'elisp-mcp-dev-autoloads)
