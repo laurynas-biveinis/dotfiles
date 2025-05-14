@@ -2883,10 +2883,10 @@ or a ref which is not a branch, then it inserts nothing."
 (defun magit-insert-revision-headers ()
   "Insert headers about the commit into a revision buffer."
   (magit-insert-section (headers)
-    (magit-insert-heading
+    (magit-insert-heading nil
       (and-let* ((string (magit-rev-format "%D" magit-buffer-revision
                                            "--decorate=full")))
-        (magit-format-ref-labels string) ?\s)
+        (concat (magit-format-ref-labels string) " "))
       (propertize
        (magit-rev-parse (magit--rev-dereference magit-buffer-revision))
        'font-lock-face 'magit-hash))
@@ -2942,18 +2942,18 @@ Refer to user option `magit-revision-insert-related-refs-display-alist'."
 
 (defun magit--insert-related-refs (rev arg title remote)
   (when-let ((refs (magit-list-related-branches arg rev (and remote "-a"))))
-    (insert title ":" (make-string (- 10 (length title)) ?\s))
-    (dolist (branch refs)
-      (if (<= (+ (current-column) 1 (length branch))
-              (window-width))
-          (insert ?\s)
-        (insert ?\n (make-string 12 ?\s)))
-      (magit-insert-section (branch branch)
+    (magit-insert-section (related-refs)
+      (insert title ":" (make-string (- 10 (length title)) ?\s))
+      (dolist (branch refs)
+        (if (<= (+ (current-column) 1 (length branch))
+                (window-width))
+            (insert ?\s)
+          (insert ?\n (make-string 12 ?\s)))
         (insert (propertize branch 'font-lock-face
                             (if (string-prefix-p "remotes/" branch)
                                 'magit-branch-remote
-                              'magit-branch-local)))))
-    (insert ?\n)))
+                              'magit-branch-local))))
+      (insert ?\n))))
 
 (defun magit-insert-revision-gravatars (rev beg)
   (when (and magit-revision-show-gravatars
@@ -3249,12 +3249,12 @@ actually a `diff' but a `diffstat' section."
                    (and siblings t)
                    (magit-diff-use-hunk-region-p)
                    ssection)
-        (`(hunk nil   t  ,_)
+        (`(hunk   nil   t  ,_)
          (if (magit-section-internal-region-p section) 'region 'hunk))
-        ('(hunk   t   t nil) 'hunks)
-        (`(hunk  ,_  ,_  ,_) 'hunk)
-        ('(file   t   t nil) 'files)
-        (`(file  ,_  ,_  ,_) 'file)
+        ('(hunk     t   t nil) 'hunks)
+        (`(hunk    ,_  ,_  ,_) 'hunk)
+        ('(file     t   t nil) 'files)
+        (`(file    ,_  ,_  ,_) 'file)
         ('(module   t   t nil) 'files)
         (`(module  ,_  ,_  ,_) 'file)
         (`(,(or 'staged 'unstaged 'untracked) nil ,_ ,_) 'list)))))
@@ -3523,7 +3523,6 @@ are highlighted."
                     (dolist (child (oref section children))
                       (recurse child)))))
       (recurse magit-root-section))))
-
 
 ;;; Hunk Region
 

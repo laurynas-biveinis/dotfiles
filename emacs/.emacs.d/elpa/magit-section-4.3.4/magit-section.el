@@ -8,8 +8,8 @@
 ;; Homepage: https://github.com/magit/magit
 ;; Keywords: tools
 
-;; Package-Version: 4.3.3
-;; Package-Revision: v4.3.3-0-g531e7ca6190e
+;; Package-Version: 4.3.4
+;; Package-Revision: v4.3.4-0-gf88225f6a873
 ;; Package-Requires: (
 ;;     (emacs "27.1")
 ;;     (compat "30.0.2.0")
@@ -1028,6 +1028,8 @@ global map, this involves advising `tab-bar--define-keys'."
          (eq (global-key-binding [C-tab]) 'tab-next)
          (fboundp 'tab-bar-switch-to-next-tab))
     (tab-bar-switch-to-next-tab current-prefix-arg))
+   ((eq section magit-root-section)
+    (magit-section-cycle-global))
    ((oref section hidden)
     (magit-section-show section)
     (magit-section-hide-children section))
@@ -1764,11 +1766,10 @@ part of the hook variable, then such a region would be
 invisible."
   (when (and selection
              (not (and (eq this-command 'mouse-drag-region))))
-    (dolist (section selection)
-      (magit-section-make-overlay (oref section start)
-                                  (or (oref section content)
-                                      (oref section end))
-                                  'magit-section-heading-selection))
+    (dolist (sibling selection)
+      (with-slots (start content end heading-selection-face) sibling
+        (magit-section-make-overlay start (or content end)
+                                    'magit-section-heading-selection)))
     t))
 
 (defun magit-section-make-overlay (start end face)
@@ -1777,6 +1778,8 @@ invisible."
     (overlay-put ov 'evaporate t)
     (push ov magit-section-highlight-overlays)
     ov))
+
+;;; Long Lines
 
 (defvar magit-show-long-lines-warning t)
 
@@ -1792,7 +1795,7 @@ invisible."
            (display-warning 'magit (format "\
 Emacs has enabled redisplay shortcuts
 in this buffer because there are lines whose length go beyond
-`long-line-threshold' \(%s characters).  As a result, section
+`long-line-threshold' (%s characters).  As a result, section
 highlighting and the special appearance of the region has been
 disabled.
 
@@ -1803,6 +1806,8 @@ and recreate the buffer.
 This message won't be shown for this session again.  To disable
 it for all future sessions, set `magit-show-long-lines-warning'
 to nil." (bound-and-true-p long-line-threshold)) :warning)))))
+
+;;; Successor
 
 (cl-defgeneric magit-section-get-relative-position (section))
 
@@ -1886,14 +1891,15 @@ to nil." (bound-and-true-p long-line-threshold)) :warning)))))
 (put 'magit-section-visibility-cache 'permanent-local t)
 
 (defun magit-section-cached-visibility (section)
-  "Set SECTION's visibility to the cached value.
-When `magit-section-preserve-visibility' is nil, do nothing."
+  "Return the visibility cached for SECTION.
+When `magit-section-preserve-visibility' is nil, return nil."
   (and magit-section-preserve-visibility
        (cdr (assoc (magit-section-ident section)
                    magit-section-visibility-cache))))
 
 (cl-defun magit-section-cache-visibility
     (&optional (section magit-insert-section--current))
+  "Cache SECTION's current visibility."
   (setf (compat-call alist-get
                      (magit-section-ident section)
                      magit-section-visibility-cache
