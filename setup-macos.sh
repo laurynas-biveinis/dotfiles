@@ -396,6 +396,9 @@ sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
 	/Library/Java/JavaVirtualMachines/openjdk.jdk
 
 xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
+xattr -dr com.apple.quarantine "/Applications/XLD.app/"
+xattr -dr com.apple.quarantine "/Applications/Last.fm.app/"
+
 duti -s org.videolan.vlc .MP4 all
 duti -s org.videolan.vlc .mp3 all
 duti -s org.videolan.vlc .m4a all
