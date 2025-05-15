@@ -6,8 +6,8 @@
 ;; Author: Zhang Weize (zwz)
 ;; Maintainer: Carlo Sciolla (skuro)
 ;; Keywords: uml plantuml ascii
-;; Version: 1.2.9
-;; Package-Version: 1.2.9
+;; Package-Version: 1.5.0
+;; Package-Revision: v1.5.0-0-g5e6b505c0695
 ;; Package-Requires: ((dash "2.0.0") (emacs "25.0"))
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -37,6 +37,7 @@
 
 ;;; Change log:
 ;;
+;; version 1.5.0, 2025-05-14 Fixed warnings with new Java versions #157; updated versions to let CI work again
 ;; version 1.4.1, 2019-09-03 Better indentation; more bugfixing; actually adding `executable' mode
 ;; version 1.4.0, 2019-08-21 Added `executable' exec mode to use locally installed `plantuml' binaries, various bugfixes
 ;; version 1.3.1, 2019-08-02 Fixed interactive behavior of `plantuml-set-exec-mode'
@@ -76,8 +77,7 @@
 (require 'dash)
 (require 'xml)
 
-(defgroup plantuml-mode nil
-  "Major mode for editing plantuml file."
+(defgroup plantuml-mode nil  "Major mode for editing plantuml file."
   :group 'languages)
 
 (defcustom plantuml-jar-path
@@ -94,7 +94,7 @@
 
 (defvar plantuml-mode-hook nil "Standard hook for plantuml-mode.")
 
-(defconst plantuml-mode-version "1.4.1" "The plantuml-mode version string.")
+(defconst plantuml-mode-version "1.5.0" "The plantuml-mode version string.")
 
 (defvar plantuml-mode-debug-enabled nil)
 
@@ -143,6 +143,9 @@
   :type 'boolean
   :group 'plantuml)
 
+(defcustom plantuml-indent-level 8
+  "Indentation level of PlantUML lines.")
+
 (defun plantuml-jar-render-command (&rest arguments)
   "Create a command line to execute PlantUML with arguments (as ARGUMENTS)."
   (let* ((cmd-list (append plantuml-java-args (list (expand-file-name plantuml-jar-path)) plantuml-jar-args arguments))
@@ -173,7 +176,7 @@
 
 ;; PlantUML execution mode
 (defvar-local plantuml-exec-mode nil
-  "The Plantuml execution mode override. See `plantuml-default-exec-mode' for acceptable values.")
+  "The Plantuml execution mode override.  See `plantuml-default-exec-mode' for acceptable values.")
 
 (defun plantuml-set-exec-mode (mode)
   "Set the execution mode MODE for PlantUML."
@@ -240,6 +243,15 @@
               (kill-buffer)))
         (message "Aborted."))
     (message "Aborted.")))
+
+(defun plantuml-jar-java-version ()
+  "Inspects the Java runtime version of the configured Java command in `plantuml-java-command'."
+  (save-excursion
+    (save-match-data
+      (with-temp-buffer
+        (call-process plantuml-java-command nil t nil "-XshowSettings:properties" "-version")
+        (re-search-backward "java.version = \\(1.\\)?\\([[:digit:]]+\\)")
+        (string-to-number (match-string 2))))))
 
 (defun plantuml-jar-get-language (buf)
   "Retrieve the language specification from the PlantUML JAR file and paste it into BUF."
@@ -358,13 +370,16 @@ Note that output type `txt' is promoted to `utxt' for better rendering."
 
 (defun plantuml-jar-start-process (buf)
   "Run PlantUML as an Emacs process and puts the output into the given buffer (as BUF)."
-  (apply #'start-process
-         "PLANTUML" buf plantuml-java-command
-         `(,@plantuml-java-args
-           ,(expand-file-name plantuml-jar-path)
-           ,(plantuml-jar-output-type-opt plantuml-output-type)
-           ,@plantuml-jar-args
-           "-p")))
+  (let ((java-args (if (<= 8 (plantuml-jar-java-version))
+                       (remove "--illegal-access=deny" plantuml-java-args)
+                     plantuml-java-args)))
+    (apply #'start-process
+           "PLANTUML" buf plantuml-java-command
+           `(,@java-args
+             ,(expand-file-name plantuml-jar-path)
+             ,(plantuml-jar-output-type-opt plantuml-output-type)
+             ,@plantuml-jar-args
+             "-p"))))
 
 (defun plantuml-executable-start-process (buf)
   "Run PlantUML as an Emacs process and puts the output into the given buffer (as BUF)."
@@ -501,8 +516,9 @@ Uses prefix (as PREFIX) to choose where to display it:
                                           "\n@enduml")))
 
 (defun plantuml-preview-current-block (prefix)
-  "Preview diagram from the PlantUML sources from the previous @startuml to the next @enduml.
-Uses prefix (as PREFIX) to choose where to display it:
+  "Preview diagram from the PlantUML sources for the current block.
+The block is defined as starting from the previous @startuml to the next
+@enduml.  Uses prefix (as PREFIX) to choose where to display it:
 - 4  (when prefixing the command with C-u) -> new window
 - 16 (when prefixing the command with C-u C-u) -> new frame.
 - else -> new buffer"
@@ -571,6 +587,9 @@ or it is followed by line end.")
       (defvar plantuml-indent-regexp-footer-start "^\s*\\(?:\\(?:center\\|left\\|right\\)\s+footer\\|footer\\)\s*\\('.*\\)?$")
       (defvar plantuml-indent-regexp-legend-start "^\s*\\(?:legend\\|legend\s+\\(?:bottom\\|top\\)\\|legend\s+\\(?:center\\|left\\|right\\)\\|legend\s+\\(?:bottom\\|top\\)\s+\\(?:center\\|left\\|right\\)\\)\s*\\('.*\\)?$")
       (defvar plantuml-indent-regexp-oldif-start "^.*if\s+\".*\"\s+then\s*\\('.*\\)?$" "used in current activity diagram, sometimes already mentioned as deprecated")
+      (defvar plantuml-indent-regexp-newif-start "^\s*\\(?:else\\)?if\s+(.*)\s+then\s*.*$")
+      (defvar plantuml-indent-regexp-loop-start "^\s*\\(?:repeat\s*\\|while\s+(.*).*\\)$")
+      (defvar plantuml-indent-regexp-fork-start "^\s*\\(?:fork\\|split\\)\\(?:\s+again\\)?\s*$")
       (defvar plantuml-indent-regexp-macro-start "^\s*!definelong.*$")
       (defvar plantuml-indent-regexp-user-control-start "^.*'.*\s*PLANTUML_MODE_INDENT_INCREASE\s*.*$")
       (defvar plantuml-indent-regexp-start (list plantuml-indent-regexp-block-start
@@ -580,7 +599,9 @@ or it is followed by line end.")
                                                  plantuml-indent-regexp-ref-start
                                                  plantuml-indent-regexp-legend-start
                                                  plantuml-indent-regexp-note-start
-                                                 plantuml-indent-regexp-oldif-start
+                                                 plantuml-indent-regexp-newif-start
+                                                 plantuml-indent-regexp-loop-start
+                                                 plantuml-indent-regexp-fork-start
                                                  plantuml-indent-regexp-title-start
                                                  plantuml-indent-regexp-header-start
                                                  plantuml-indent-regexp-footer-start
@@ -598,6 +619,9 @@ or it is followed by line end.")
       (defvar plantuml-indent-regexp-footer-end "^\s*endfooter\s*\\('.*\\)?$")
       (defvar plantuml-indent-regexp-legend-end "^\s*endlegend\s*\\('.*\\)?$")
       (defvar plantuml-indent-regexp-oldif-end "^\s*\\(endif\\|else\\)\s*\\('.*\\)?$")
+      (defvar plantuml-indent-regexp-newif-end "^\s*\\(endif\\|elseif\\|else\\)\s*.*$")
+      (defvar plantuml-indent-regexp-loop-end "^\s*\\(repeat\s*while\\|endwhile\\)\s*.*$")
+      (defvar plantuml-indent-regexp-fork-end "^\s*\\(\\(fork\\|split\\)\s+again\\|end\s+\\(fork\\|split\\)\\)\s*$")
       (defvar plantuml-indent-regexp-macro-end "^\s*!enddefinelong\s*\\('.*\\)?$")
       (defvar plantuml-indent-regexp-user-control-end "^.*'.*\s*PLANTUML_MODE_INDENT_DECREASE\s*.*$")
       (defvar plantuml-indent-regexp-end (list plantuml-indent-regexp-block-end
@@ -607,7 +631,9 @@ or it is followed by line end.")
                                                plantuml-indent-regexp-ref-end
                                                plantuml-indent-regexp-legend-end
                                                plantuml-indent-regexp-note-end
-                                               plantuml-indent-regexp-oldif-end
+                                               plantuml-indent-regexp-newif-end
+                                               plantuml-indent-regexp-loop-end
+                                               plantuml-indent-regexp-fork-end
                                                plantuml-indent-regexp-title-end
                                                plantuml-indent-regexp-header-end
                                                plantuml-indent-regexp-footer-end
@@ -696,7 +722,7 @@ Restore point to same position in text of the line as before indentation."
   (let ((original-position-eol (- (line-end-position) (point))))
     (save-excursion
       (beginning-of-line)
-      (indent-line-to (* tab-width (plantuml-current-block-depth))))
+      (indent-line-to (* plantuml-indent-level (plantuml-current-block-depth))))
 
     ;; restore position in text of line
     (goto-char (- (line-end-position) original-position-eol))))

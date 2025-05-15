@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250508.744
-;; Package-Revision: 6fa36b655f71
+;; Package-Version: 20250514.1259
+;; Package-Revision: 8790d2bf78c2
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -45,8 +45,10 @@
 ;; - Chunks and file navigation using `n' / `N' and `p' / `P' in generated
 ;;   diffs.
 ;; - DWIM workflows from `magit'.
+;; - Use difftastic do compare files and buffers (also directly from `dired').
 ;; - Rerun `difftastic' with `g' to use current window width to "reflow"
 ;;   content and/or to force language change (when called with prefix).
+;; - Use double prefix argument to specify all `difftastic' arguments.
 ;;
 ;;
 ;; Installation
@@ -248,6 +250,15 @@
 ;; - `difftastic-git-diff-range' - transform `ARGS' for difftastic and show
 ;;   the result of `git diff ARGS REV-OR-RANGE -- FILES' with `difftastic'.
 ;;
+;; All above commands (and `difftastic-rerun' described below) support
+;; specification of `difft' arguments when called with a double prefix
+;; argument.  This is in addition to a command specific handling of a single
+;; prefix argument.  In order to aid arguments entry, a `transient' menu is
+;; used, however some - less commonly used - arguments are not visible in
+;; default configuration.  Type `C-x l' in the menu to make them visible.
+;; Note that in some cases arguments will take precedence over standard and
+;; computed values, for example `--width' is one such a argument.
+;;
 ;;
 ;; `difftastic-mode' commands
 ;; ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -397,6 +408,8 @@
 (require 'font-lock)
 (require 'magit)
 (require 'view)
+(require 'transient)
+(require 'crm)
 
 (eval-when-compile
   (require 'compat)
@@ -882,20 +895,20 @@ The value of 6 allows for line numbers of up to 999,999.")
   (defun difftastic--line-num-rx (digits)
     "Return `rx' form for a up DIGITS long line number."
     `(seq ,(append
-            ; favor only digits or only dots up to given length
+            ;; favor only digits or only dots up to given length
             `(or (group (** 1 ,digits digit))
                  (group (** 1 ,digits ".")))
-             (let (num)
-               (dotimes (spaces (1- digits))
-                 (push `(seq
-                         ,(if (< 0 spaces)
-                              `(** 1 ,(1+ spaces) " ")
-                            `(= ,(1+ spaces) " "))
-                         (or (group (= ,(- digits (1+ spaces)) digit))
-                             (group (= ,(- digits (1+ spaces)) "."))))
-                       num))
-               ; favor more digits (or dots)
-               (nreverse num)))
+            (let (num)
+              (dotimes (spaces (1- digits))
+                (push `(seq
+                        ,(if (< 0 spaces)
+                             `(** 1 ,(1+ spaces) " ")
+                           `(= ,(1+ spaces) " "))
+                        (or (group (= ,(- digits (1+ spaces)) digit))
+                            (group (= ,(- digits (1+ spaces)) "."))))
+                      num))
+              ;; favor more digits (or dots)
+              (nreverse num)))
           (or " " line-end)))
 
   (rx-define difftastic--line-num-rx
@@ -904,7 +917,7 @@ The value of 6 allows for line numbers of up to 999,999.")
   (defun difftastic--line-num-or-spaces-rx (digits)
     "Return `rx' form for a up DIGITS long line number or up to DIGITS spaces."
     `(or
-      ; search for spaces first so they can be accounted as a left column
+      ;; search for spaces first so they can be accounted as a left column
       (** 2 ,(1+ digits) " ")
       ,(difftastic--line-num-rx digits)))
 
@@ -1015,10 +1028,10 @@ END are positions where the line number begins and ends respectively."
                                               (equal (car cols)
                                                      (car candidate)))
                                             (caddr line)))))
-                       (setcar right (or (car right)
-                                         prev-num-right))
-                       (setq prev-num-right (car right))
-                       right))))
+                     (setcar right (or (car right)
+                                       prev-num-right))
+                     (setq prev-num-right (car right))
+                     right))))
         lines))))
 
 (defun difftastic--parse-single-column-chunk (bounds)
@@ -1065,7 +1078,7 @@ SIDE is either `left' or `right'."
                         (difftastic--parse-single-column-chunk bounds))))
               (point (point)))
     (if (< point (caaar lines))
-        ; use right when point is in chunk header
+        ;; use right when point is in chunk header
         (list file nil 0 'right)
       (cl-block search-chunk-file
         (while lines
@@ -1169,7 +1182,7 @@ and run `difftastic-diff-visit-file-hook'."
                         (or (get-file-buffer file)
                             (find-file-noselect file))
                       (magit-find-file-noselect (if (stringp rev) rev "HEAD")
-                                           file))))
+                                                file))))
     (when line
       (with-current-buffer buf
         (cond ((eq rev 'staged)
@@ -1252,7 +1265,8 @@ and SIDE is either `left' or `right'.
 
 Note that this command only works if point is inside a diff."
   (interactive (list (difftastic--chunk-file-at-point)
-                     current-prefix-arg)
+                     (when (equal current-prefix-arg '(4))
+                       current-prefix-arg))
                difftastic-mode)
   (difftastic--diff-visit-file chunk-file (if other-window
                                               #'switch-to-buffer-other-window
@@ -1298,7 +1312,8 @@ FILE is the chunk file name, LINE-NUM is an optional line number within
 the FILE (1 based), COL is a column number within the LINE (0 based),
 and SIDE is either `left' or `right'."
   (interactive (list (difftastic--chunk-file-at-point)
-                     current-prefix-arg)
+                     (when (equal current-prefix-arg '(4))
+                       current-prefix-arg))
                difftastic-mode)
   (difftastic--diff-visit-file chunk-file
                                (if other-window
@@ -1310,16 +1325,16 @@ and SIDE is either `left' or `right'."
   "From a diff visit the worktree version of CHUNK-FILE in other window.
 Like `difftastic-diff-visit-worktree-file', which see, but use
 `switch-to-buffer-other-window'."
-    (interactive (list (difftastic--chunk-file-at-point))
-                 difftastic-mode)
+  (interactive (list (difftastic--chunk-file-at-point))
+               difftastic-mode)
   (difftastic--diff-visit-file chunk-file #'switch-to-buffer-other-window t))
 
 (defun difftastic-diff-visit-worktree-file-other-frame (chunk-file)
   "From a diff visit the worktree version of CHUNK-FILE in other frame.
 Like `difftastic-diff-visit-worktree-file', which see, but use
 `switch-to-buffer-other-frame'."
-    (interactive (list (difftastic--chunk-file-at-point))
-                 difftastic-mode)
+  (interactive (list (difftastic--chunk-file-at-point))
+               difftastic-mode)
   (difftastic--diff-visit-file chunk-file #'switch-to-buffer-other-frame t))
 
 ;; From `view-mode'
@@ -1480,22 +1495,43 @@ Utilise `difftastic--ansi-color-add-background-cache' to cache
             difftastic--ansi-color-add-background-cache)
       face)))
 
+(defun difftastic--add-standard-args (difftastic-args requested-width)
+  "Add standard arguments to DIFFTASTIC-ARGS, unless these are already present.
+It adds \\='--color=always\\=', \\='--background=(light|dark)\\=', and
+\\='--width=REQUESTED-WIDTH\\='."
+  (save-match-data
+    (unless (cl-find-if (lambda (arg)
+                          (string-match (rx string-start "--background=") arg))
+                        difftastic-args)
+      (setq difftastic-args (cons (format "--background=%s"
+                                          (frame-parameter nil 'background-mode))
+                                  difftastic-args))
+      (unless (cl-find-if (lambda (arg)
+                            (string-match (rx string-start "--width=") arg))
+                          difftastic-args)
+        (setq difftastic-args (cons (format "--width=%s" requested-width)
+                                    difftastic-args)))
+      (unless (cl-find-if (lambda (arg)
+                            (string-match (rx string-start "--color=") arg))
+                          difftastic-args)
+        (setq difftastic-args (cons "--color=always"
+                                    difftastic-args)))))
+  difftastic-args)
+
 (defun difftastic--build-git-process-environment (requested-width
                                                   &optional difftastic-args)
   "Build a difftastic git command with REQUESTED-WIDTH.
 The DIFFTASTIC-ARGS is a list of extra arguments to pass to
 `difftastic-executable'."
-  (cons (format
-         "GIT_EXTERNAL_DIFF=%s --color always --width %s --background %s%s"
-         difftastic-executable
-         requested-width
-         (frame-parameter nil 'background-mode)
-         (if difftastic-args
-             (mapconcat #'identity
-                        (cons "" difftastic-args)
-                        " ")
-           ""))
-        process-environment))
+  (let ((difftastic-args (difftastic--add-standard-args difftastic-args
+                                                        requested-width)))
+    (cons (format
+           "GIT_EXTERNAL_DIFF=%s%s"
+           difftastic-executable
+           (if difftastic-args
+               (format " %s" (string-join difftastic-args " "))
+             ""))
+          process-environment)))
 
 (defun difftastic--git-with-difftastic (buffer command rev-or-range
                                                &optional difftastic-args action)
@@ -1587,7 +1623,7 @@ perform cleanup.  It returns a process created by `make-process'."
      (difftastic--run-command-sentinel process action command))))
 
 (defvar difftastic--transform-git-to-difft
-  '(("^-\\(?:U\\|-unified=\\)\\([0-9]+\\)$" . "--context \\1"))
+  '(("^-\\(?:U\\|-unified=\\)\\([0-9]+\\)$" . "--context=\\1"))
   "Alist with entries in a from of (GIT-ARG-REGEXP . DIFFT-REPLACEMENT).
 When git argument matches GIT-ARG-REGEXP it will be replaces with
 DIFFT-REPLACEMENT.")
@@ -1606,41 +1642,51 @@ DIFFT-REPLACEMENT.")
   "List of git arguments that are incompatible in a context of difftastic.
 Each argument is matched as regexp.")
 
-(defun difftastic--transform-diff-arguments (args)
+(defun difftastic--transform-diff-arguments (args difftastic-args)
   "Transform \\='git diff\\=' ARGS to be compatible with difftastic.
-This removes arguments converts some arguments to be compatible
-with difftastic (i.e., \\='-U\\=' to \\='--context\\=') and
-removes some that are incompatible (i.e., \\='--stat\\=',
-\\='--no-ext-diff\\=').  The return value is a list in a form
-of (GIT-ARGS DIFFT-ARGS), where GIT-ARGS are arguments to be
-passed to \\='git\\=', and DIFFT-ARGS are arguments to be passed
-to difftastic."
-  (let (case-fold-search)
-    (list
-     (cl-remove-if
-      (lambda (arg)
-        (cl-member arg
-                   (append
-                    difftastic--transform-incompatible
-                    (cl-mapcar #'car difftastic--transform-git-to-difft))
-                   :test (lambda (arg regexp)
-                           (string-match regexp arg))))
-      args)
-     (cl-remove
-      nil
-      (cl-mapcar
-       (lambda (arg)
-         (cl-dolist (regexp-replacement difftastic--transform-git-to-difft)
-           (when (string-match (car regexp-replacement) arg)
-             (cl-return
-              (replace-match (cdr regexp-replacement) t nil arg)))))
-       args)))))
+This converts some arguments to be compatible with difftastic (i.e.,
+\\='-U\\=' to \\='--context\\=') and removes some that are
+incompatible (i.e., \\='--stat\\=', \\='--no-ext-diff\\=').  The return
+value is a list in a form of (GIT-ARGS DIFFT-ARGS), where GIT-ARGS are
+arguments to be passed to \\='git\\=', and DIFFT-ARGS are arguments to
+be passed to difftastic (merged with DIFFTASTIC-ARGS superseeding any
+argument extracted from ARGS with the one from DIFFTASTIC-ARGS."
+  (save-match-data
+    (let (case-fold-search)
+      (list
+       (cl-remove-if
+        (lambda (arg)
+          (cl-member arg
+                     (append
+                      difftastic--transform-incompatible
+                      (cl-mapcar #'car difftastic--transform-git-to-difft))
+                     :test (lambda (arg regexp)
+                             (string-match regexp arg))))
+        args)
+       (append
+        (cl-remove-if
+         (lambda (arg)
+           (when-let* ((arg (car (string-split arg "=" t))))
+             (member arg
+                     (mapcar (lambda (difftastic-arg)
+                               (car (string-split difftastic-arg "=" t)))
+                             difftastic-args))))
+         (delq
+          nil
+          (cl-mapcar
+           (lambda (arg)
+             (cl-dolist (regexp-replacement difftastic--transform-git-to-difft)
+               (when (string-match (car regexp-replacement) arg)
+                 (cl-return
+                  (replace-match (cdr regexp-replacement) t nil arg)))))
+           args)))
+        difftastic-args)))))
 
-(defun difftastic--git-diff-range (rev-or-range args files)
-                                        ; checkdoc-params: (rev-or-range args files)
+(defun difftastic--git-diff-range (rev-or-range args files &optional difftastic-args)
+  ;; checkdoc-params: (rev-or-range args files difftastic-args)
   "Implementation for `difftastic-git-diff-range', which see."
   (pcase-let* ((`(,git-args ,difftastic-args)
-                (difftastic--transform-diff-arguments args))
+                (difftastic--transform-diff-arguments args difftastic-args))
                (buffer-name
                 (concat
                  "*difftastic git diff"
@@ -1662,19 +1708,202 @@ to difftastic."
      rev-or-range
      difftastic-args)))
 
+(defun difftastic--get-languages ()
+  "Return list of language overrides supported by difftastic."
+  (append
+   '("Text")
+   (cl-remove-if (lambda (line)
+                   (string-match-p "^ \\*" line))
+                 (compat-call ;; Since Emacs-29
+                  string-split
+                  (shell-command-to-string
+                   (concat difftastic-executable " --list-languages"))
+                  "\n" t))))
+
+(defun difftastic--extra-arguments-completing-overrides (languages)
+  "Return a completion function for LANGUAGES overrides.
+The returned function is designed for `completing-read' family of
+functions to read language overrides."
+  (let ((languages languages))
+    (lambda (string predicate flag)
+      (let ((case-fold-search t))
+        (pcase (cons flag
+                     (if (string-match (rx string-start
+                                           (group (zero-or-more (not ":")))
+                                           ":"
+                                           (group (zero-or-more (not ":"))))
+                                       string)
+                         (list (if-let* ((glob (match-string 1 string))
+                                         ((not (equal glob ""))))
+                                   glob
+                                 "*")
+                               (match-string 2 string))
+                       (list (if (equal string "") "*" string)
+                             "")))
+          (`(nil ,glob ,language)
+           (let ((res (try-completion language languages predicate)))
+             (if (stringp res)
+                 (concat glob ":" res)
+               res)))
+          (`(t  ,glob ,language)
+           (let ((res (all-completions language languages predicate)))
+             (mapcar (lambda (c)
+                       (concat glob ":" c))
+                     res)))
+          (`(lambda ,_ ,_)
+           (if (string-match (rx-to-string `(seq
+                                             string-start
+                                             (one-or-more (not ":"))
+                                             ":"
+                                             (or ,@languages)))
+                             string)
+               t
+             (message "'%s' doesn't match GLOB:LANGUAGE pattern" string)
+             (sit-for 1)
+             nil))
+          (`((boundaries . ,suffix) ,_ ,language)
+           (completion-boundaries language languages predicate suffix)))))))
+
+(defvar helm-crm-default-separator)
+
+(defun difftastic--extra-arguments-read-overrides (prompt initial-input history)
+  ;; checkdoc-params: (prompt initial-input history)
+  "Read language overrides."
+  (let ((crm-separator ",")
+        (helm-crm-default-separator ","))
+    (magit-completing-read-multiple
+     prompt
+     (difftastic--extra-arguments-completing-overrides
+      (difftastic--get-languages))
+     nil
+     t
+     initial-input
+     history)))
+
+(defun difftastic--extra-arguments-override-prompt (_obj)
+  "Return a prompt for `difftastic--extra-arguments-override-infix'."
+  (with-temp-buffer
+    (let ((overriding-local-map crm-local-completion-map))
+      (concat
+       "Comma separated list of glob:language, type "
+       (substitute-command-keys "\\[crm-complete]")
+       " for languages: "))))
+
+(defun difftastic--extra-arguments-override-init-value (obj)
+  "Initialize value of override OBJ with language override from `transient-scope'.
+When the language override is a string, use it with * glob pattern.
+Otherwise, when the language override is a list use it removing
+\\='--override\\=' prefix from each element."
+  (when-let* ((lang-override (car (transient-scope))))
+    (oset obj value (if (stringp lang-override)
+                        (list (format "*:%s" lang-override))
+                      (mapcar (lambda (o)
+                                (string-remove-prefix "--override=" o))
+                              lang-override)))))
+
+(transient-define-infix difftastic--extra-arguments-override-infix ()
+  :prompt #'difftastic--extra-arguments-override-prompt
+  :multi-value t
+  :class 'transient-option
+  :reader #'difftastic--extra-arguments-read-overrides
+  :argument "--override="
+  :init-value #'difftastic--extra-arguments-override-init-value)
+
+(transient-define-suffix difftastic--extra-arguments-call-command ()
+  "Call command from `transient-scope' extra difftastic arguments.
+Difftastic arguments are like `transient-args', but ensure the
+`--override' argument is exploded."
+  :transient 'transient--do-exit
+  (interactive)
+  (pcase-let ((`(,_ ,fun ,args) (transient-scope))
+              (difft-args
+               (apply #'append
+                      (mapcar (lambda (arg)
+                                (if (and (listp arg)
+                                         (equal "--override=" (car arg)))
+                                    (mapcar (lambda (o)
+                                              (format "--override=%s" o))
+                                            (cdr arg))
+                                  (list arg)))
+                              (transient-args
+                               (oref transient-current-prefix command))))))
+    (when (functionp fun)
+      (apply fun (append args (list difft-args))))))
+
+(transient-define-prefix difftastic--with-extra-arguments (lang-override fun &rest args)
+  "Call FUN with ARGS and extra difftastic arguments.
+Number of ARGS must be equal to number of arguments that FUN takes minus
+1. The last argument will be a list of extra difftastic arguments.
+The LANG-OVERRIDE will be used to initialize language overrides."
+  ["Difftastic arguments"
+   ("-o" "language overrides" difftastic--extra-arguments-override-infix)
+   ("-s" "strip cr" "--strip-cr="
+    :choices ("on" "off"))
+   ("-c" "context" "--context="
+    :reader transient-read-number-N+)
+   ("-t" "tab width" "--tab-width="
+    :reader transient-read-number-N+)
+   ("-i" "ignore comments" "--ignore-comments")
+   ("-d" "display mode" "--display="
+    :choices ("side-by-side" "side-by-side-show-both" "inline"))
+   ("-h" "syntax highlight" "--syntax-highlight="
+    :choices ("on" "off"))
+   ("-p" "sort paths" "--sort-paths")
+   ("--skip-unchanged" "skip unchanged" "--skip-unchanged"
+    :level 5)
+   ("--color" "use color" "--color="
+    :choices ("always" "auto" "never")
+    :level 5)
+   ("--background" "background brightness" "--background"
+    :choices ("dark" "light")
+    :level 5)
+   ("--width" "line wraping columng" "--width"
+    :reader transient-read-number-N+
+    :level 5)
+   ("--byte-limit" "byte limit" "--byte-limit="
+    :reader transient-read-number-N+
+    :level 5)
+   ("--graph-limit" "graph limit" "--graph-limit="
+    :reader transient-read-number-N+
+    :level 5)
+   ("--error-limit" "parse error limit" "--parse-error-limit="
+    :reader transient-read-number-N+
+    :level 5)]
+
+  [("C-c C-c" "run difftastic" difftastic--extra-arguments-call-command)]
+  (interactive)
+  (transient-setup #'difftastic--with-extra-arguments nil nil
+                   :scope (append (list lang-override fun) (list args))))
+
+(defun difftastic--format-override-arg (lang-or-args)
+  "Format LANG-OR-ARGS to be usable with difftastic call."
+  (if (stringp lang-or-args)
+      (list (format "--override=*:%s" lang-or-args))
+    lang-or-args))
+
 ;;;###autoload
 (defun difftastic-git-diff-range (&optional rev-or-range args files)
   "Show difference between two commits using difftastic.
 The meaning of REV-OR-RANGE, ARGS, and FILES is like in
 `magit-diff-range', but ARGS are adjusted for difftastic with
-`difftastic--transform-diff-arguments'."
-  (interactive (cons (magit-diff-read-range-or-commit "Diff for range"
-                                                      nil current-prefix-arg)
+`difftastic--transform-diff-arguments'.  When called with double prefix
+argument ask for extra arguments for difftastic call."
+  (interactive (cons (magit-diff-read-range-or-commit
+                      "Diff for range"
+                      nil
+                      (when (equal current-prefix-arg '(4))
+                        current-prefix-arg))
                      (magit-diff-arguments)))
-  (difftastic--git-diff-range rev-or-range args files))
+  (if (equal current-prefix-arg '(16))
+      (difftastic--with-extra-arguments nil
+                                        #'difftastic--git-diff-range
+                                        rev-or-range
+                                        args
+                                        files)
+    (difftastic--git-diff-range rev-or-range args files)))
 
-(defun difftastic--magit-diff (args files)
-                                        ; checkdoc-params: (args files)
+(defun difftastic--magit-diff (args files &optional difftastic-args)
+  ;; checkdoc-params: (args files difftastic-args)
   "Implementation for `difftastic-magit-diff', which see."
   (let ((default-directory (magit-toplevel))
         (section (magit-current-section)))
@@ -1683,7 +1912,7 @@ The meaning of REV-OR-RANGE, ARGS, and FILES is like in
       (setq default-directory
             (expand-file-name
              (file-name-as-directory (oref section value))))
-      (difftastic-git-diff-range (oref section range)))
+      (difftastic--git-diff-range (oref section range) nil nil difftastic-args))
      (t
       (when (magit-section-match 'module-commit section)
         (setq args nil)
@@ -1695,9 +1924,12 @@ The meaning of REV-OR-RANGE, ARGS, and FILES is like in
         ('unmerged
          (unless (magit-merge-in-progress-p)
            (user-error "No merge is in progress"))
-         (difftastic-git-diff-range (magit--merge-range) args files))
+         (difftastic--git-diff-range (magit--merge-range)
+                                     args
+                                     files
+                                     difftastic-args))
         ('unstaged
-         (difftastic-git-diff-range 'unstaged args files))
+         (difftastic--git-diff-range 'unstaged args files difftastic-args))
         ('staged
          (let ((file (magit-file-at-point)))
            (if (and file (equal (cddr (car (magit-file-status file)))
@@ -1706,51 +1938,83 @@ The meaning of REV-OR-RANGE, ARGS, and FILES is like in
                (progn
                  (unless (magit-merge-in-progress-p)
                    (user-error "No merge is in progress"))
-                 (difftastic-git-diff-range
-                  (magit--merge-range) args (list file)))
-             (difftastic-git-diff-range
-              'staged (cl-pushnew "--cached" args :test #'string=) files))))
+                 (difftastic--git-diff-range
+                  (magit--merge-range) args (list file) difftastic-args))
+             (difftastic--git-diff-range
+              'staged (cl-pushnew "--cached" args :test #'string=)
+              files
+              difftastic-args))))
         (`(stash . ,value)
          ;; ATM, `magit-diff--dwim' evaluates to `commit' when point is on stash
          ;; section
-         (difftastic-git-diff-range (format "%s^..%s" value value) args files))
+         (difftastic--git-diff-range (format "%s^..%s" value value)
+                                     args
+                                     files
+                                     difftastic-args))
         (`(commit . ,value)
-         (difftastic-git-diff-range (format "%s^..%s" value value) args files))
+         (difftastic--git-diff-range (format "%s^..%s" value value)
+                                     args
+                                     files
+                                     difftastic-args))
         ((and range (pred stringp))
-         (difftastic-git-diff-range range args files))
+         (difftastic--git-diff-range range
+                                     args
+                                     files
+                                     difftastic-args))
         (_
-         (call-interactively #'difftastic-git-diff-range)))))))
+         (apply #'difftastic--git-diff-range
+                (magit-diff-read-range-or-commit
+                 "Diff for range"
+                 nil
+                 (when (equal current-prefix-arg '(4))
+                   current-prefix-arg))
+                args
+                files
+                (list difftastic-args))))))))
 
 ;;;###autoload
 (defun difftastic-magit-diff (&optional args files)
-  "Show the result of \\='git diff ARGS -- FILES\\=' with difftastic."
+  "Show the result of \\='git diff ARGS -- FILES\\=' with difftastic.
+When called with double prefix argument ask for extra arguments for
+difftastic call.  When called with double prefix argument ask for extra
+arguments for difftastic call."
   (interactive (magit-diff-arguments))
-  (difftastic--magit-diff args files))
+  (if (equal current-prefix-arg '(16))
+      (difftastic--with-extra-arguments nil
+                                        #'difftastic--magit-diff
+                                        args
+                                        files)
+    (difftastic--magit-diff args files nil)))
 
-(defun difftastic--magit-show (rev)
-                                        ; checkdoc-params: (rev)
+(defun difftastic--magit-show (rev &optional difftastic-args)
+  ;; checkdoc-params: (rev difftastic-args)
   "Implementation for `difftastic-magit-show', which see."
   (if rev
       (difftastic--git-with-difftastic
        (get-buffer-create (concat "*difftastic git show " rev "*"))
        (list "git" "--no-pager" "show" "--ext-diff" rev)
-       rev)
+       rev
+       difftastic-args)
     (user-error "No revision specified")))
 
 ;;;###autoload
 (defun difftastic-magit-show (rev)
   "Show the result of \\='git show REV\\=' with difftastic.
-When REV couldn't be guessed or called with prefix arg ask for REV."
+When REV couldn't be guessed or called with prefix arg ask for REV.
+When called with double prefix argument ask for extra arguments for
+difftastic call."
   (interactive
    (list (or
           ;; If not invoked with prefix arg, try to guess the REV from
           ;; point's position.
-          (and (not current-prefix-arg)
+          (and (not (equal current-prefix-arg '(4)))
                (or (magit-thing-at-point 'git-revision t)
                    (magit-branch-or-commit-at-point)))
           ;; Otherwise, query the user.
           (magit-read-branch-or-commit "Revision"))))
-  (difftastic--magit-show rev))
+  (if (equal current-prefix-arg '(16))
+      (difftastic--with-extra-arguments nil #'difftastic--magit-show rev)
+    (difftastic--magit-show rev)))
 
 (defun difftastic--goto-line-col-in-chunk (line col)
   "Goto LINE and COLUMN in a `difftastic' buffer.
@@ -1768,7 +2032,8 @@ the buffer.  COL is is column in right side of the chunk."
       (goto-char (min (compat-call pos-eol) ; Since Emacs-29
                       (+ (point) col))))))
 
-(defun difftastic--magit-diff-buffer-file ()
+(defun difftastic--magit-diff-buffer-file (&optional difftastic-args)
+  ;; checkdoc-params: (difftastic-args)
   "Implementation for `difftastic-magit-diff-buffer-file'."
   (if-let* ((default-directory (magit-toplevel))
             (file (magit-file-relative-name)))
@@ -1777,7 +2042,8 @@ the buffer.  COL is is column in right side of the chunk."
            (get-buffer-create
             (concat "*difftastic git show " rev "*"))
            (list "git" "--no-pager" "show" "--ext-diff" rev "--" file)
-           rev)
+           rev
+           difftastic-args)
         (save-buffer)
         (let ((line (line-number-at-pos))
               (col (current-column)))
@@ -1788,7 +2054,7 @@ the buffer.  COL is is column in right side of the chunk."
                  (or (magit-get-current-branch) "HEAD")
                  "--" file)
            'unstaged
-           nil
+           difftastic-args
            (lambda ()
              (difftastic--goto-line-col-in-chunk line col)))))
     (user-error "Buffer isn't visiting a file")))
@@ -1798,9 +2064,14 @@ the buffer.  COL is is column in right side of the chunk."
   "Show diff for the blob or file visited in the current buffer.
 When the buffer visits a blob, then show the respective commit.  When
 the buffer visits a file, then show the differences between `HEAD' and
-the working tree.  In both cases limit the diff to the file or blob."
+the working tree.  In both cases limit the diff to the file or blob.
+When called with double prefix argument ask for extra arguments for
+difftastic call."
   (interactive)
-  (difftastic--magit-diff-buffer-file))
+  (if (equal current-prefix-arg '(16))
+      (difftastic--with-extra-arguments nil
+                                        #'difftastic--magit-diff-buffer-file)
+    (difftastic--magit-diff-buffer-file)))
 
 (defun difftastic--file-extension-for-mode (mode)
   "Return a file extension for MODE."
@@ -1875,18 +2146,6 @@ when it is a temporary or nil otherwise."
     (when (and (cdr file-buf) (stringp file) (file-exists-p file))
       (delete-file file))))
 
-(defun difftastic--get-languages ()
-  "Return list of language overrides supported by difftastic."
-  (append
-   '("Text")
-   (cl-remove-if (lambda (line)
-                   (string-match-p "^ \\*" line))
-                 (compat-call ;; Since Emacs-29
-                  string-split
-                  (shell-command-to-string
-                   (concat difftastic-executable " --list-languages"))
-                  "\n" t))))
-
 (defun difftastic--make-suggestion (languages buffer-A buffer-B)
   "Suggest one of LANGUAGES based on mode of BUFFER-A and BUFFER-B."
   (when-let* ((mode
@@ -1906,28 +2165,23 @@ when it is a temporary or nil otherwise."
                 languages)))
 
 (defun difftastic--build-files-command (file-buf-A file-buf-B requested-width
-                                                   &optional lang-override)
+                                                   &optional difftastic-args)
   "Build a difftastic command to compare files from FILE-BUF-A and FILE-BUF-B.
 The FILE-BUF-A and FILE-BUF-B are conses where car is the file
 and cdr is a buffer when it is a temporary file and nil otherwise.
 REQUESTED-WIDTH is passed to difftastic as \\='--width\\=' argument.
-LANG-OVERRIDE is passed to difftastic as \\='--override\\=' argument."
+DIFFTASTIC-ARGS are passed to difftastic."
   `(,difftastic-executable
-    "--color" "always"
-    "--width" ,(number-to-string requested-width)
-    "--background" ,(format "%s" (frame-parameter nil 'background-mode))
-    ,@(when lang-override (list "--override"
-                                (format "*:%s" lang-override)))
+    ,@(difftastic--add-standard-args difftastic-args requested-width)
     ,(car file-buf-A)
     ,(car file-buf-B)))
 
 (defun difftastic--files-internal (buffer file-buf-A file-buf-B
-                                          &optional lang-override)
+                                          &optional difftastic-args)
   "Run difftastic on FILE-BUF-A and FILE-BUF-B and show results in BUFFER.
 The FILE-BUF-A and FILE-BUF-B are conses where car is the file
 and cdr is a buffer when it is a temporary file and nil otherwise.
-LANG-OVERRIDE is passed to difftastic as \\='--override\\='
-argument."
+DIFFTASTIS-ARGS are passed to difftastic."
   (let ((requested-width (funcall difftastic-requested-window-width-function))
         (difftastic-display-buffer-function difftastic-display-buffer-function))
     (difftastic--run-command
@@ -1935,11 +2189,11 @@ argument."
      (difftastic--build-files-command file-buf-A
                                       file-buf-B
                                       requested-width
-                                      lang-override)
+                                      difftastic-args)
      (lambda ()
        (setq difftastic--metadata
              `((default-directory . ,default-directory)
-               (lang-override . ,lang-override)
+               (difftastic-args . ,difftastic-args)
                (file-buf-A . ,file-buf-A)
                (file-buf-B . ,file-buf-B)))
        (funcall difftastic-display-buffer-function buffer requested-width)
@@ -2000,7 +2254,7 @@ error each symbol in FILE-BUFS will be passed to
                                     (save-window-excursion (other-window 1))
                                     (ediff-other-buffer bf-A))
                                   t))
-          (when (or current-prefix-arg
+          (when (or (equal current-prefix-arg '(4))
                     (and (not (buffer-file-name (get-buffer bf-A)))
                          (not (buffer-file-name (get-buffer bf-B)))))
             (let* ((languages (difftastic--get-languages))
@@ -2009,6 +2263,20 @@ error each symbol in FILE-BUFS will be passed to
                                (get-buffer bf-A)
                                (get-buffer bf-B))))
               (completing-read "Language: " languages nil t suggested))))))
+
+(defun difftastic--buffers (buffer-A buffer-B lang-or-args)
+  ;; checkdoc-params: (buffer-A buffer-B lang-or-args)
+  "Implementation of `difftastic-buffers', which see."
+  (difftastic--with-file-bufs ((file-buf-A (difftastic--get-file-buf
+                                            "A" (get-buffer buffer-A)))
+                               (file-buf-B (difftastic--get-file-buf
+                                            "B" (get-buffer buffer-B))))
+    (difftastic--files-internal
+     (get-buffer-create
+      (concat "*difftastic " buffer-A " " buffer-B "*"))
+     file-buf-A
+     file-buf-B
+     (difftastic--format-override-arg lang-or-args))))
 
 ;;;###autoload
 (defun difftastic-buffers (buffer-A buffer-B &optional lang-override)
@@ -2021,19 +2289,15 @@ When:
 BUFFER-B is a file buffer,
 - or function is called with a prefix arg,
 
-then ask for language before running difftastic."
+then ask for language before running difftastic.  When called with
+double prefix argument ask for extra arguments for difftastic call."
   (interactive (difftastic--buffers-args))
-
-  (difftastic--with-file-bufs ((file-buf-A (difftastic--get-file-buf
-                                            "A" (get-buffer buffer-A)))
-                               (file-buf-B (difftastic--get-file-buf
-                                             "B" (get-buffer buffer-B))))
-    (difftastic--files-internal
-     (get-buffer-create
-      (concat "*difftastic " buffer-A " " buffer-B "*"))
-     file-buf-A
-     file-buf-B
-     lang-override)))
+  (if (equal current-prefix-arg '(16))
+      (difftastic--with-extra-arguments lang-override
+                                        #'difftastic--buffers
+                                        buffer-A
+                                        buffer-B)
+    (difftastic--buffers buffer-A buffer-B lang-override)))
 
 (defun difftastic--files-args ()
   "Return arguments for `difftastic-files'."
@@ -2060,7 +2324,7 @@ then ask for language before running difftastic."
                           "File B to compare"
                           dir-B
                           (ediff-get-default-file-name f 1))))
-              (when current-prefix-arg
+              (when (equal current-prefix-arg '(4))
                 (completing-read "Language: "
                                  (difftastic--get-languages)
                                  nil
@@ -2072,14 +2336,9 @@ then ask for language before running difftastic."
       (setq difftastic--last-dir-B (file-name-as-directory
                                     (file-name-directory ff))))))
 
-;;;###autoload
-(defun difftastic-files (file-A file-B &optional lang-override)
-  "Run difftastic on a pair of files, FILE-A and FILE-B.
-Optionally, provide a LANG-OVERRIDE to override language used.
-See \\='difft --list-languages\\=' for language list.  When
-function is called with a prefix arg then ask for language before
-running difftastic."
-  (interactive (difftastic--files-args))
+(defun difftastic--files (file-A file-B &optional lang-or-args)
+  ;; checkdoc-params: (file-A file-B lang-or-args)
+  "Implementation for `difftastic-files', which see."
   (difftastic--files-internal
    (get-buffer-create (concat "*difftastic "
                               (file-name-nondirectory file-A)
@@ -2088,10 +2347,28 @@ running difftastic."
                               "*"))
    (cons file-A nil)
    (cons file-B nil)
-   lang-override))
+   (difftastic--format-override-arg lang-or-args)))
+
+;;;###autoload
+(defun difftastic-files (file-A file-B &optional lang-override)
+  "Run difftastic on a pair of files, FILE-A and FILE-B.
+Optionally, provide a LANG-OVERRIDE to override language used.  See
+\\='difft --list-languages\\=' for language list.  When function is
+called with a prefix arg then ask for language before running
+difftastic.  When called with double prefix argument ask for extra
+arguments for difftastic call."
+  (interactive (difftastic--files-args))
+  (if (equal current-prefix-arg '(16))
+      (difftastic--with-extra-arguments lang-override
+                                        #'difftastic--files
+                                        file-A
+                                        file-B)
+    (difftastic--files file-A
+                       file-B
+                       lang-override)))
 
 (defun difftastic--dired-diff (file lang-override)
-                                        ; checkdoc-params: (file lang-override)
+  ;; checkdoc-params: (file lang-override)
   "Implementation for `difftastic--dired-diff', which see."
   (cl-letf (((symbol-function 'diff)
              (lambda (current file &rest _)
@@ -2106,39 +2383,55 @@ running difftastic."
   "Compare file at point with FILE using difftastic.
 The behavior is the same as `dired-diff', except for the prefix argument, which
 makes the function prompt for LANG-OVERRIDE.  See \\='difft
---list-languages\\=' for language list."
+--list-languages\\=' for language list.   When called with double prefix
+argument ask for extra arguments for difftastic call."
   (interactive
    (list 'interactive
-         (when current-prefix-arg
+         (when (equal current-prefix-arg '(4))
            (completing-read "Language: " (difftastic--get-languages) nil t)))
    dired-mode)
-  (difftastic--dired-diff file lang-override))
+  (if (equal current-prefix-arg '(16))
+      (difftastic--with-extra-arguments lang-override
+                                        #'difftastic--dired-diff
+                                        file)
+    (difftastic--dired-diff file lang-override)))
 
-(defun difftastic--rerun-file-buf (prefix file-buf rerun-alist)
+(defun difftastic--rerun-file-buf (prefix file-buf metadata)
   "Create a new temporary file for the FILE-BUF with PREFIX if needed.
 The new FILE-BUF is additionally set in RERUN-ALIST.  The FILE-BUF
 is a cons where car is the file and cdr is a buffer when it is a
 temporary file or nil otherwise."
   (if-let* ((buffer (cdr file-buf)))
       (if (buffer-live-p buffer)
-          (setf (alist-get (intern (concat "file-buf-" prefix)) rerun-alist)
+          (setf (alist-get (intern (concat "file-buf-" prefix)) metadata)
                 (difftastic--get-file-buf prefix buffer))
         (user-error "Buffer %s [%s] doesn't exist anymore" prefix buffer))
     file-buf))
 
-(defun difftastic--rerun (lang-override)
-                                        ; checkdoc-params: (lang-override)
+(defun difftastic--rerun (lang-or-args)
+  ;; checkdoc-params: (lang-or-args)
   "Implementation for `difftastic-rerun', which see."
   (if-let* (((eq major-mode 'difftastic-mode))
-            (rerun-alist (copy-tree difftastic--metadata)))
-      (let-alist rerun-alist
+            (metadata (copy-tree difftastic--metadata)))
+      (let-alist metadata
         (difftastic--with-file-bufs ((file-buf-A (difftastic--rerun-file-buf
-                                                  "A" .file-buf-A rerun-alist))
+                                                  "A" .file-buf-A metadata))
                                      (file-buf-B (difftastic--rerun-file-buf
-                                                  "B" .file-buf-B rerun-alist)))
+                                                  "B" .file-buf-B metadata)))
           (let* ((default-directory .default-directory)
-                 (lang-override (or lang-override
-                                    (alist-get 'lang-override rerun-alist)))
+                 (difftastic-args
+                  (if-let* (((stringp lang-or-args))
+                            (override (difftastic--format-override-arg
+                                       lang-or-args)))
+                      (save-match-data
+                        (append override
+                                (cl-remove-if
+                                 (lambda (arg)
+                                   (string-match (rx string-start
+                                                     "--override=")
+                                                 arg))
+                                 .difftastic-args)))
+                    (or lang-or-args .difftastic-args)))
                  (requested-width
                   (funcall (or
                             difftastic-rerun-requested-window-width-function
@@ -2147,23 +2440,20 @@ temporary file or nil otherwise."
                   (if .git-command
                       (difftastic--build-git-process-environment
                        requested-width
-                       (append .difftastic-args
-                               (when lang-override
-                                 (list "--override"
-                                       (format "*:%s" lang-override)))))
+                       difftastic-args)
                     process-environment))
                  (command (or .git-command
                               (difftastic--build-files-command
                                file-buf-A
                                file-buf-B
                                requested-width
-                               lang-override)))
+                               difftastic-args)))
                  (buffer (current-buffer)))
             (difftastic--run-command
              buffer
              command
              (lambda ()
-               (setq difftastic--metadata rerun-alist)
+               (setq difftastic--metadata metadata)
                (difftastic--delete-temp-file-buf file-buf-A)
                (difftastic--delete-temp-file-buf file-buf-B))))))
     (user-error "Nothing to rerun")))
@@ -2171,21 +2461,24 @@ temporary file or nil otherwise."
 ;;;###autoload
 (defun difftastic-rerun (&optional lang-override)
   "Rerun difftastic in the current buffer.
-Optionally, provide a LANG-OVERRIDE to override language used.
-See \\='difft --list-languages\\=' for language list.  When
-function is called with a prefix arg then ask for language before
+Optionally, provide a LANG-OVERRIDE to override language used.  See
+\\='difft --list-languages\\=' for language list.  When function is
+called with a prefix arg (single of double) then ask for language before
 running difftastic.
 
 In order to determine requested width for difftastic a call to
-`difftastic-rerun-requested-window-width-function' is made.  When
-the latter is set to nil the call is made to
-`difftastic-requested-window-width-function'."
+`difftastic-rerun-requested-window-width-function' is made.  When the
+latter is set to nil the call is made to
+`difftastic-requested-window-width-function'.  When called with double
+prefix argument ask for extra arguments for difftastic call."
   (interactive (list
-                (when current-prefix-arg
+                (when current-prefix-arg ;; ask also when double prefix [sic!]
                   (completing-read "Language: "
                                    (difftastic--get-languages) nil t)))
                difftastic-mode)
-  (difftastic--rerun lang-override))
+  (if (equal current-prefix-arg '(16))
+      (difftastic--with-extra-arguments lang-override #'difftastic--rerun)
+    (difftastic--rerun lang-override)))
 
 ;;; LocalWords: unmerged unstaged smerge
 

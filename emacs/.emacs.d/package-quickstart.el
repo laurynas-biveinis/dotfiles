@@ -4838,7 +4838,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.4/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.4/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.5/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.5/magit-section-autoloads.el"))
 
 
 
@@ -4893,7 +4893,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.4/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.4/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.5/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.5/magit-autoloads.el"))
 
 
 
@@ -7334,7 +7334,7 @@ When called interactively, you will be asked to enter the QUERY.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.4.1/plantuml-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.4.1/plantuml-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.5.0/plantuml-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.5.0/plantuml-mode-autoloads.el"))
 
 
 
@@ -11934,7 +11934,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250508.744/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250508.744/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250514.1259/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250514.1259/difftastic-autoloads.el"))
 
 
 
@@ -11947,23 +11947,31 @@ it is disabled.
 Show difference between two commits using difftastic.
 The meaning of REV-OR-RANGE, ARGS, and FILES is like in
 `magit-diff-range', but ARGS are adjusted for difftastic with
-`difftastic--transform-diff-arguments'.
+`difftastic--transform-diff-arguments'.  When called with double prefix
+argument ask for extra arguments for difftastic call.
 
 (fn &optional REV-OR-RANGE ARGS FILES)" t)
 (autoload 'difftastic-magit-diff "difftastic" "\
 Show the result of \\='git diff ARGS -- FILES\\=' with difftastic.
+When called with double prefix argument ask for extra arguments for
+difftastic call.  When called with double prefix argument ask for extra
+arguments for difftastic call.
 
 (fn &optional ARGS FILES)" t)
 (autoload 'difftastic-magit-show "difftastic" "\
 Show the result of \\='git show REV\\=' with difftastic.
 When REV couldn't be guessed or called with prefix arg ask for REV.
+When called with double prefix argument ask for extra arguments for
+difftastic call.
 
 (fn REV)" t)
 (autoload 'difftastic-magit-diff-buffer-file "difftastic" "\
 Show diff for the blob or file visited in the current buffer.
 When the buffer visits a blob, then show the respective commit.  When
 the buffer visits a file, then show the differences between `HEAD' and
-the working tree.  In both cases limit the diff to the file or blob." t)
+the working tree.  In both cases limit the diff to the file or blob.
+When called with double prefix argument ask for extra arguments for
+difftastic call." t)
 (autoload 'difftastic-buffers "difftastic" "\
 Run difftastic on a pair of buffers, BUFFER-A and BUFFER-B.
 Optionally, provide a LANG-OVERRIDE to override language used.
@@ -11974,35 +11982,39 @@ When:
 BUFFER-B is a file buffer,
 - or function is called with a prefix arg,
 
-then ask for language before running difftastic.
+then ask for language before running difftastic.  When called with
+double prefix argument ask for extra arguments for difftastic call.
 
 (fn BUFFER-A BUFFER-B &optional LANG-OVERRIDE)" t)
 (autoload 'difftastic-files "difftastic" "\
 Run difftastic on a pair of files, FILE-A and FILE-B.
-Optionally, provide a LANG-OVERRIDE to override language used.
-See \\='difft --list-languages\\=' for language list.  When
-function is called with a prefix arg then ask for language before
-running difftastic.
+Optionally, provide a LANG-OVERRIDE to override language used.  See
+\\='difft --list-languages\\=' for language list.  When function is
+called with a prefix arg then ask for language before running
+difftastic.  When called with double prefix argument ask for extra
+arguments for difftastic call.
 
 (fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
 (autoload 'difftastic-dired-diff "difftastic" "\
 Compare file at point with FILE using difftastic.
 The behavior is the same as `dired-diff', except for the prefix argument, which
 makes the function prompt for LANG-OVERRIDE.  See \\='difft
---list-languages\\=' for language list.
+--list-languages\\=' for language list.   When called with double prefix
+argument ask for extra arguments for difftastic call.
 
 (fn FILE &optional LANG-OVERRIDE)" '(dired-mode))
 (autoload 'difftastic-rerun "difftastic" "\
 Rerun difftastic in the current buffer.
-Optionally, provide a LANG-OVERRIDE to override language used.
-See \\='difft --list-languages\\=' for language list.  When
-function is called with a prefix arg then ask for language before
+Optionally, provide a LANG-OVERRIDE to override language used.  See
+\\='difft --list-languages\\=' for language list.  When function is
+called with a prefix arg (single of double) then ask for language before
 running difftastic.
 
 In order to determine requested width for difftastic a call to
-`difftastic-rerun-requested-window-width-function' is made.  When
-the latter is set to nil the call is made to
-`difftastic-requested-window-width-function'.
+`difftastic-rerun-requested-window-width-function' is made.  When the
+latter is set to nil the call is made to
+`difftastic-requested-window-width-function'.  When called with double
+prefix argument ask for extra arguments for difftastic call.
 
 (fn &optional LANG-OVERRIDE)" '(difftastic-mode))
 (register-definition-prefixes "difftastic" '("difftastic-"))
@@ -12509,7 +12521,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.2140" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.4" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.4" "/Users/laurynas/.emacs.d/elpa/transient-0.8.8" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-20250324.2140" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.5" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.5" "/Users/laurynas/.emacs.d/elpa/transient-0.8.8" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
