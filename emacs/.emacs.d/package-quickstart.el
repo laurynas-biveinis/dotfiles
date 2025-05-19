@@ -7242,7 +7242,7 @@ and call `auth-source-forget+'." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20250413.919/pr-review-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20250413.919/pr-review-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20250518.311/pr-review-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/pr-review-20250518.311/pr-review-autoloads.el"))
 
 
 
@@ -11934,7 +11934,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250514.1259/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250514.1259/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250516.1623/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250516.1623/difftastic-autoloads.el"))
 
 
 

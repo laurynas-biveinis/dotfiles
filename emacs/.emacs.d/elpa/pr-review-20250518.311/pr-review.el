@@ -4,8 +4,8 @@
 
 ;; Author: Yikai Zhao <yikai@z1k.dev>
 ;; Keywords: tools
-;; Package-Version: 20250413.919
-;; Package-Revision: 7c2ce9deafe5
+;; Package-Version: 20250518.311
+;; Package-Revision: 469e2e1f0f11
 ;; URL: https://github.com/blahgeek/emacs-pr-review
 ;; Package-Requires: ((emacs "27.1") (magit-section "4.0") (magit "4.0") (markdown-mode "2.5") (ghub "3.5"))
 
@@ -140,6 +140,9 @@ Which means that all sections are collapsed."
                                         pr-review--commit-section
                                         pr-review--description-section
                                         pr-review--event-section))
+  (when pr-review-fringe-icons
+    (unless (and left-fringe-width (>= left-fringe-width 16))
+      (setq left-fringe-width 16)))
   (add-to-list 'kill-buffer-query-functions 'pr-review--confirm-kill-buffer)
   (add-hook 'eldoc-documentation-functions #'pr-review--eldoc-function nil t)
   (eldoc-mode))

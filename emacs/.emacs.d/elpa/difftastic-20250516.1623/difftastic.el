@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250514.1259
-;; Package-Revision: 8790d2bf78c2
+;; Package-Version: 20250516.1623
+;; Package-Revision: 77166b5b7230
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@
 ;;
 ;; [Installing from MELPA] See section Installing from MELPA
 ;;
-;; Manual installation
+;; Manual Installation
 ;; -------------------
 ;;
 ;; Note, that this method does not generate autoloads.  As a consequence it
@@ -227,7 +227,11 @@
 ;; Usage
 ;; =====
 ;;
-;; The following commands are meant to help to interact with `difftastic'.
+;; General Usage
+;; ~~~~~~~~~~~~~
+;;
+;; The following commands are meant to help invoking `difftastic' depending on
+;; context and desired outcome.
 ;;
 ;; - `difftastic-magit-diff' - show the result of `git diff ARGS -- FILES'
 ;;   with `difftastic'.  This is the main entry point for DWIM action, so it
@@ -250,17 +254,33 @@
 ;; - `difftastic-git-diff-range' - transform `ARGS' for difftastic and show
 ;;   the result of `git diff ARGS REV-OR-RANGE -- FILES' with `difftastic'.
 ;;
-;; All above commands (and `difftastic-rerun' described below) support
-;; specification of `difft' arguments when called with a double prefix
-;; argument.  This is in addition to a command specific handling of a single
-;; prefix argument.  In order to aid arguments entry, a `transient' menu is
-;; used, however some - less commonly used - arguments are not visible in
-;; default configuration.  Type `C-x l' in the menu to make them visible.
+;;
+;; Specifying `difftastic' Arguments
+;; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;;
+;; All [above] commands (and `difftastic-rerun' described [below]) support
+;; specification of `difft' arguments.  When a command is called with a double
+;; prefix argument a popup is presented allowing to specify desired arguments.
+;; This is in addition to a command specific handling of a single prefix
+;; argument.
+;;
+;; In order to aid arguments entry and provide similarity to workflows in
+;; `magit' and `forge', a `transient' prefix is used for the popup.  For
+;; example, some - less commonly used - arguments are not visible in default
+;; configuration.  Type `C-x l' in the menu to make them visible.  Type `C-h
+;; C-h' for `difftastic' help (`man difft').  Any other `transient' commands
+;; should work as well.
+;;
 ;; Note that in some cases arguments will take precedence over standard and
 ;; computed values, for example `--width' is one such a argument.
 ;;
 ;;
-;; `difftastic-mode' commands
+;; [above] See section General Usage
+;;
+;; [below] See section `difftastic-mode' Commands
+;;
+;;
+;; `difftastic-mode' Commands
 ;; ~~~~~~~~~~~~~~~~~~~~~~~~~~
 ;;
 ;; When a buffer shows `difftastic' output the following commands can be used.
@@ -331,7 +351,7 @@
 ;; (setq difftastic-highlight-alist nil)
 ;;
 ;;
-;; Window management
+;; Window Management
 ;; ~~~~~~~~~~~~~~~~~
 ;;
 ;; The `difftastic' relies on the `difft' command line tool to produce an
@@ -357,7 +377,7 @@
 ;;   mechanism to display the `difft' output.
 ;;
 ;;
-;; `difftastic-mode' behavior
+;; `difftastic-mode' Behavior
 ;; ~~~~~~~~~~~~~~~~~~~~~~~~~~
 ;;
 ;; - `difftastic-diff-visit-avoid-head-blob' - controls whether to avoid
@@ -381,15 +401,45 @@
 ;; <file:test/difftastic.t.el> are passing.  When adding a new functionality,
 ;; please strive to add tests for it as well.
 ;;
-;; To run tests:
+;; To run tests interactively:
 ;; - open the <file:test/difftastic.t.el>
 ;; - type `M-x eval-buffer <RET>'
 ;; - open the <file:test/difftastic-bindings.t.el>
 ;; - type `M-x eval-buffer <RET>'
 ;; - type `M-x ert <RET> t <RET>'
 ;;
+;; Alternatively you can use [Cask] to run tests in batch mode.  There's a
+;; convenience <file:Makefile> with a `test' target, so you can just type
+;; `make test'.
 ;;
-;; Documentation autoring
+;; It seems that byte compilation interferres with [el-mock].  In order to get
+;; the tests to pass you may need to:
+;; - type `M-x eval-buffer <RET>' in <file:difftastic.el> and in
+;;   <file:difftastic-bindings.el> when running test interactively with `M-x
+;;   <RET> ert <RET>',
+;; - remove all `.elc' files in the development directory when running tests
+;;   in batch mode.
+;;
+;; This repository uses [Coveralls] to track test coverage.  After a PR has
+;; been approved for a Gighub Action run, a report will be published
+;; [Coveralls difftastic repo].  Please check it out if there's no outstanding
+;; relevant lines.
+;;
+;; You can run all checks performed by Github Actions, by typing: `make
+;; bytecompile lint relint checkdoc commentary test'.
+;;
+;;
+;; [Cask] <https://github.com/cask/cask>
+;;
+;; [el-mock] <https://github.com/rejeep/el-mock.el>
+;;
+;; [Coveralls] <https://coveralls.io>
+;;
+;; [Coveralls difftastic repo]
+;; <https://coveralls.io/github/pkryger/difftastic.el>
+;;
+;;
+;; Documentation Autoring
 ;; ~~~~~~~~~~~~~~~~~~~~~~
 ;;
 ;; This package uses [org-commentary.el] (different from the one available on
@@ -1523,8 +1573,11 @@ It adds \\='--color=always\\=', \\='--background=(light|dark)\\=', and
   "Build a difftastic git command with REQUESTED-WIDTH.
 The DIFFTASTIC-ARGS is a list of extra arguments to pass to
 `difftastic-executable'."
-  (let ((difftastic-args (difftastic--add-standard-args difftastic-args
-                                                        requested-width)))
+  (let ((difftastic-args
+         (mapcar (lambda (arg)
+                   (replace-regexp-in-string (rx " ") "\\\\ " arg))
+                 (difftastic--add-standard-args difftastic-args
+                                                requested-width))))
     (cons (format
            "GIT_EXTERNAL_DIFF=%s%s"
            difftastic-executable
@@ -1720,6 +1773,9 @@ argument extracted from ARGS with the one from DIFFTASTIC-ARGS."
                    (concat difftastic-executable " --list-languages"))
                   "\n" t))))
 
+(defclass difftastic--extra-arguments-prefix (transient-prefix)
+  ())
+
 (defun difftastic--extra-arguments-completing-overrides (languages)
   "Return a completion function for LANGUAGES overrides.
 The returned function is designed for `completing-read' family of
@@ -1794,12 +1850,33 @@ functions to read language overrides."
 When the language override is a string, use it with * glob pattern.
 Otherwise, when the language override is a list use it removing
 \\='--override\\=' prefix from each element."
-  (when-let* ((lang-override (car (transient-scope))))
-    (oset obj value (if (stringp lang-override)
-                        (list (format "*:%s" lang-override))
-                      (mapcar (lambda (o)
-                                (string-remove-prefix "--override=" o))
-                              lang-override)))))
+  (if-let* ((lang-override (car (transient-scope))))
+      (oset obj value (if (stringp lang-override)
+                          (list (format "*:%s" lang-override))
+                        (mapcar (lambda (o)
+                                  (string-remove-prefix "--override=" o))
+                                lang-override)))
+    (oset obj value (delq
+                     nil
+                     (mapcar
+                      (lambda (arg)
+                        (when (string-match (rx string-start
+                                                "--override="
+                                                (group (one-or-more any)))
+                                            arg)
+                          (match-string 1 arg)))
+                      (alist-get 'difftastic-args difftastic--metadata))))))
+
+(cl-defmethod transient-init-value ((obj difftastic--extra-arguments-prefix))
+  "Set default values in OBJ from `difftastic-metadata'.
+The \\='--override\\=' argument is handled in
+`difftastic--extra-arguments-override-init-value', which see."
+  (oset obj value
+        (cl-remove-if (lambda (arg)
+                        (string-match (rx string-start
+                                          "--override=")
+                                      arg))
+                      (alist-get 'difftastic-args difftastic--metadata))))
 
 (transient-define-infix difftastic--extra-arguments-override-infix ()
   :prompt #'difftastic--extra-arguments-override-prompt
@@ -1809,11 +1886,24 @@ Otherwise, when the language override is a list use it removing
   :argument "--override="
   :init-value #'difftastic--extra-arguments-override-init-value)
 
+(defun difftastic--extra-arguments-call-command-description ()
+  "Return description for call command suffix."
+  (format "run difftastic%s"
+          (if-let* ((command (cadr (transient-scope))))
+              (concat " ("
+                      (propertize (replace-regexp-in-string
+                                   (rx "--") "-" (symbol-name command))
+                                  'face 'font-lock-constant-face)
+                      ")")
+            "")))
+
 (transient-define-suffix difftastic--extra-arguments-call-command ()
   "Call command from `transient-scope' extra difftastic arguments.
 Difftastic arguments are like `transient-args', but ensure the
-`--override' argument is exploded."
+\\='--override\\=' argument is exploded."
   :transient 'transient--do-exit
+  :key "C-c C-c"
+  :description #'difftastic--extra-arguments-call-command-description
   (interactive)
   (pcase-let ((`(,_ ,fun ,args) (transient-scope))
               (difft-args
@@ -1835,6 +1925,8 @@ Difftastic arguments are like `transient-args', but ensure the
 Number of ARGS must be equal to number of arguments that FUN takes minus
 1. The last argument will be a list of extra difftastic arguments.
 The LANG-OVERRIDE will be used to initialize language overrides."
+  :class 'difftastic--extra-arguments-prefix
+  :man-page "difft"
   ["Difftastic arguments"
    ("-o" "language overrides" difftastic--extra-arguments-override-infix)
    ("-s" "strip cr" "--strip-cr="
@@ -1870,7 +1962,7 @@ The LANG-OVERRIDE will be used to initialize language overrides."
     :reader transient-read-number-N+
     :level 5)]
 
-  [("C-c C-c" "run difftastic" difftastic--extra-arguments-call-command)]
+  [(difftastic--extra-arguments-call-command)]
   (interactive)
   (transient-setup #'difftastic--with-extra-arguments nil nil
                    :scope (append (list lang-override fun) (list args))))
@@ -2449,6 +2541,8 @@ temporary file or nil otherwise."
                                requested-width
                                difftastic-args)))
                  (buffer (current-buffer)))
+            (setf (alist-get 'difftastic-args metadata)
+                  difftastic-args)
             (difftastic--run-command
              buffer
              command
@@ -2472,7 +2566,7 @@ latter is set to nil the call is made to
 `difftastic-requested-window-width-function'.  When called with double
 prefix argument ask for extra arguments for difftastic call."
   (interactive (list
-                (when current-prefix-arg ;; ask also when double prefix [sic!]
+                (when (equal current-prefix-arg '(4))
                   (completing-read "Language: "
                                    (difftastic--get-languages) nil t)))
                difftastic-mode)
