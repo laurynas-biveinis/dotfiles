@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250516.1623
-;; Package-Revision: 77166b5b7230
+;; Package-Version: 20250525.1001
+;; Package-Revision: 57456cc42949
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -42,8 +42,8 @@
 ;;
 ;; - Configure faces to your likening.  By default `magit-diff-*' faces from
 ;;   your user them are used for consistent visual experience.
-;; - Chunks and file navigation using `n' / `N' and `p' / `P' in generated
-;;   diffs.
+;; - Chunks and file navigation using `n' / `N' (or `M-n') and `p' / `P' (or
+;;   `M-p'), as well as `C-M-f', `C-M-b', and `C-M-SPC' in generated diffs.
 ;; - DWIM workflows from `magit'.
 ;; - Use difftastic do compare files and buffers (also directly from `dired').
 ;; - Rerun `difftastic' with `g' to use current window width to "reflow"
@@ -294,14 +294,27 @@
 ;;   `difftastic-requested-window-width-function').  It will also reuse
 ;;   current buffer and will not call `difftastic-display-buffer-function'.
 ;;   When called with prefix argument it will ask for language to use.
-;; - `difftastic-next-chunk' (`n'), `difftastic-next-file' (`N') - move point
-;;   to a next logical chunk or a next file respectively.
-;; - `difftastic-previous-chunk' (`p'), `difftastic-previous-file' (`P') -
-;;   move point to a previous logical chunk or a previous file respectively.
+;; - `difftastic-next-chunk' (`n'), `difftastic-next-file' (`N' or `M-n') -
+;;   move point to a next logical chunk or a next file respectively.
+;; - `difftastic-previous-chunk' (`p'), `difftastic-previous-file' (`P' or
+;;   `M-p') - move point to a previous logical chunk or a previous file
+;;   respectively.
 ;; - `difftastic-toggle-chunk' (`TAB' or `C-i') - toggle visibility of a chunk
 ;;   at point.  The point has to be in a chunk header.  When called with a
 ;;   prefix toggle all file chunks from the header to the end of the file.
 ;;   See also `difftastic-hide-chunk' and `difftastic=show-chunk'.
+;; - `forward-sexp' (`C-M-f') - move point to end of current chunk or to an
+;;   end of next chunk when point is already at the end of the chunk.  When
+;;   called with argument move by that many chunks.  Binding is from a default
+;;   `global-map'.
+;; - `backward-sexp' (`C-M-b') - move point to beginning of current chunk or
+;;   to a beginning of previous chunk when point is already at the beginning
+;;   of the chunk.  When called with argument move by that many chunks.
+;;   Binding is from a default `global-map'.
+;; - `mark-sexp' (`C-M-SPC') - set mark and move point to end of current chunk
+;;   or to an end of next chunk when point is already at the end of the chunk.
+;;   When called with argument move by that many chunks.  Binding is from a
+;;   default `global-map'.
 ;; - `difftastic-diff-visit-file' (`RET'),
 ;;   `difftastic-diff-visit-file-other-window',
 ;;   `difftastic-diff-visit-file-other-frame' - from a diff visit appropriate
@@ -685,8 +698,10 @@ See `advice-add' for explanation of SYMBOL, HOW, and FUNCTION arguments."
  :doc "Keymap for `difftastic-mode'."
  "n"     #'difftastic-next-chunk
  "N"     #'difftastic-next-file
+ "M-n"   #'difftastic-next-file
  "p"     #'difftastic-previous-chunk
  "P"     #'difftastic-previous-file
+ "M-p"   #'difftastic-previous-file
  "g"     #'difftastic-rerun
  "TAB"   #'difftastic-toggle-chunk
  "RET"   #'difftastic-diff-visit-file
@@ -745,6 +760,7 @@ behaviour to view diffs."
   :group 'difftastic
   (setq buffer-read-only t)
   (setq font-lock-defaults '(nil t))
+  (setq-local forward-sexp-function #'difftastic--forward-chunk)
   (add-to-invisibility-spec '(difftastic . t)))
 
 (defvar-local difftastic--chunk-regexp-chunk nil)
@@ -807,11 +823,10 @@ regexp from `difftastic--chunk-regexp'."
   "Return whether a point is in added or removed line."
   (save-excursion
     (goto-char (compat-call pos-bol)) ; Since Emacs-29
-    (save-match-data
-      (looking-at (rx bol
+    (looking-at-p (rx bol
                       (or (1+ ".")
                           (1+ digit))
-                      " " (1+ any))))))
+                      " " (1+ any)))))
 
 (defun difftastic--next-chunk (&optional file-chunk)
   "Find line beginning position of next chunk.
@@ -908,6 +923,37 @@ of the file."
                                  'difftastic))
         (difftastic-show-chunk)
       (difftastic-hide-chunk file-chunk))))
+
+(defun difftastic--forward-chunk (&optional arg)
+  "Move forward across ARG chunks.
+Negative arg -N means move backward N chunks.  This command has been
+designed to be used as a `forward-sexp-function' to allow chunk by chunk
+movement with \\[forward-sexp], \\[backward-sexp], as well as mark and
+move with \\[mark-sexp]."
+  (setq arg (or arg 1))
+  (goto-char
+   (save-excursion
+     (cl-block searching-point
+       (cond
+        ((< 0 arg)
+         ;; Chunks are separated by a blank line.  Try to move past such a gap
+         ;; so the `difftastic--next-chunk' gets to the following chunk in case
+         ;; point is at the very end of a chunk.  When point is at the end of
+         ;; the buffer do nothing.
+         (if (< (point) (1- (point-max)))
+             (forward-char 2)
+           (cl-return-from searching-point (point)))
+         (dotimes (_ arg)
+           (goto-char (or (difftastic--next-chunk)
+                          (point-max))))
+         (goto-char (compat-call pos-eol 0)) ; Since Emacs-29
+         (while (looking-at (rx line-start line-end))
+           (goto-char (compat-call pos-eol 0)))) ; Since Emacs-29
+        ((< arg 0)
+         (dotimes (_ (- arg))
+           (goto-char (or (difftastic--prev-chunk)
+                          (point-min)))))))
+     (point))))
 
 (defun difftastic--chunk-bounds ()
   "Find bounds of a chunk at point.
@@ -1549,23 +1595,22 @@ Utilise `difftastic--ansi-color-add-background-cache' to cache
   "Add standard arguments to DIFFTASTIC-ARGS, unless these are already present.
 It adds \\='--color=always\\=', \\='--background=(light|dark)\\=', and
 \\='--width=REQUESTED-WIDTH\\='."
-  (save-match-data
-    (unless (cl-find-if (lambda (arg)
-                          (string-match (rx string-start "--background=") arg))
-                        difftastic-args)
-      (setq difftastic-args (cons (format "--background=%s"
-                                          (frame-parameter nil 'background-mode))
-                                  difftastic-args))
-      (unless (cl-find-if (lambda (arg)
-                            (string-match (rx string-start "--width=") arg))
-                          difftastic-args)
-        (setq difftastic-args (cons (format "--width=%s" requested-width)
-                                    difftastic-args)))
-      (unless (cl-find-if (lambda (arg)
-                            (string-match (rx string-start "--color=") arg))
-                          difftastic-args)
-        (setq difftastic-args (cons "--color=always"
-                                    difftastic-args)))))
+  (unless (cl-find-if (lambda (arg)
+                        (string-match (rx string-start "--background=") arg))
+                      difftastic-args)
+    (setq difftastic-args (cons (format "--background=%s"
+                                        (frame-parameter nil 'background-mode))
+                                difftastic-args)))
+  (unless (cl-find-if (lambda (arg)
+                        (string-match (rx string-start "--width=") arg))
+                      difftastic-args)
+    (setq difftastic-args (cons (format "--width=%s" requested-width)
+                                difftastic-args)))
+  (unless (cl-find-if (lambda (arg)
+                        (string-match (rx string-start "--color=") arg))
+                      difftastic-args)
+    (setq difftastic-args (cons "--color=always"
+                                difftastic-args)))
   difftastic-args)
 
 (defun difftastic--build-git-process-environment (requested-width
@@ -1610,32 +1655,44 @@ process sentinel."
        (when action (funcall action))
        (funcall difftastic-display-buffer-function buffer requested-width)))))
 
+(defun difftastic--ansi-color-apply (string)
+  "Apply ANSI colorrs to STRING using difftastic colors."
+  (let ((ansi-color-normal-colors-vector
+         difftastic-normal-colors-vector)
+        (ansi-color-bright-colors-vector
+         difftastic-bright-colors-vector))
+    (ignore ansi-color-normal-colors-vector
+            ansi-color-bright-colors-vector) ;; Until Emacs-28
+    (if (fboundp 'ansi-color--face-vec-face) ;; Since Emacs-29
+        (difftastic--with-temp-advice
+            'ansi-color--face-vec-face
+            :around
+            #'difftastic--ansi-color-add-background-cached
+          (ansi-color-apply string))
+      (difftastic--with-temp-advice
+          'ansi-color-get-face-1
+          :filter-return
+          #'difftastic--ansi-color-add-background
+        (ansi-color-apply string)))))
+
 (defun difftastic--run-command-filter (process string)
   "A process filter for `difftastic--run-command'.
 It applies ANSI colors with `apply-ansi-colors' using difftastic
 custom colors vectors.  The PROCESS and STRING are filter
 arguments, like in `make-process''s filter."
   (when-let* ((buffer (and string
-                           (process-buffer process))))
+                           (process-buffer process)))
+              ((buffer-live-p buffer)))
     (with-current-buffer buffer
-      (let ((inhibit-read-only t)
-            (ansi-color-normal-colors-vector
-             difftastic-normal-colors-vector)
-            (ansi-color-bright-colors-vector
-             difftastic-bright-colors-vector))
-        (ignore ansi-color-normal-colors-vector
-                ansi-color-bright-colors-vector)
-        (if (fboundp 'ansi-color--face-vec-face) ;; Since Emacs-29
-            (difftastic--with-temp-advice
-                'ansi-color--face-vec-face
-                :around
-                #'difftastic--ansi-color-add-background-cached
-              (insert (ansi-color-apply string)))
-          (difftastic--with-temp-advice
-              'ansi-color-get-face-1
-              :filter-return
-              #'difftastic--ansi-color-add-background
-            (insert (ansi-color-apply string))))))))
+      (let* ((inhibit-read-only t)
+             (string (difftastic--ansi-color-apply string)))
+        (let ((moving (= (process-mark process) (point))))
+          (save-excursion
+            (goto-char (process-mark process))
+            (insert string)
+            (set-marker (process-mark process) (point)))
+          (when moving
+            (goto-char (process-mark process))))))))
 
 (defun difftastic--run-command-sentinel (process action command)
   "A sentinel for `difftastic--run-command'.
@@ -1704,36 +1761,35 @@ value is a list in a form of (GIT-ARGS DIFFT-ARGS), where GIT-ARGS are
 arguments to be passed to \\='git\\=', and DIFFT-ARGS are arguments to
 be passed to difftastic (merged with DIFFTASTIC-ARGS superseeding any
 argument extracted from ARGS with the one from DIFFTASTIC-ARGS."
-  (save-match-data
-    (let (case-fold-search)
-      (list
-       (cl-remove-if
-        (lambda (arg)
-          (cl-member arg
-                     (append
-                      difftastic--transform-incompatible
-                      (cl-mapcar #'car difftastic--transform-git-to-difft))
-                     :test (lambda (arg regexp)
-                             (string-match regexp arg))))
-        args)
-       (append
-        (cl-remove-if
+  (let (case-fold-search)
+    (list
+     (cl-remove-if
+      (lambda (arg)
+        (cl-member arg
+                   (append
+                    difftastic--transform-incompatible
+                    (cl-mapcar #'car difftastic--transform-git-to-difft))
+                   :test (lambda (arg regexp)
+                           (string-match regexp arg))))
+      args)
+     (append
+      (cl-remove-if
+       (lambda (arg)
+         (when-let* ((arg (car (string-split arg "=" t))))
+           (member arg
+                   (mapcar (lambda (difftastic-arg)
+                             (car (string-split difftastic-arg "=" t)))
+                           difftastic-args))))
+       (delq
+        nil
+        (cl-mapcar
          (lambda (arg)
-           (when-let* ((arg (car (string-split arg "=" t))))
-             (member arg
-                     (mapcar (lambda (difftastic-arg)
-                               (car (string-split difftastic-arg "=" t)))
-                             difftastic-args))))
-         (delq
-          nil
-          (cl-mapcar
-           (lambda (arg)
-             (cl-dolist (regexp-replacement difftastic--transform-git-to-difft)
-               (when (string-match (car regexp-replacement) arg)
-                 (cl-return
-                  (replace-match (cdr regexp-replacement) t nil arg)))))
-           args)))
-        difftastic-args)))))
+           (cl-dolist (regexp-replacement difftastic--transform-git-to-difft)
+             (when (string-match (car regexp-replacement) arg)
+               (cl-return
+                (replace-match (cdr regexp-replacement) t nil arg)))))
+         args)))
+      difftastic-args))))
 
 (defun difftastic--git-diff-range (rev-or-range args files &optional difftastic-args)
   ;; checkdoc-params: (rev-or-range args files difftastic-args)
@@ -2515,14 +2571,13 @@ temporary file or nil otherwise."
                   (if-let* (((stringp lang-or-args))
                             (override (difftastic--format-override-arg
                                        lang-or-args)))
-                      (save-match-data
-                        (append override
-                                (cl-remove-if
-                                 (lambda (arg)
-                                   (string-match (rx string-start
-                                                     "--override=")
-                                                 arg))
-                                 .difftastic-args)))
+                      (append override
+                              (cl-remove-if
+                               (lambda (arg)
+                                 (string-match (rx string-start
+                                                   "--override=")
+                                               arg))
+                               .difftastic-args))
                     (or lang-or-args .difftastic-args)))
                  (requested-width
                   (funcall (or

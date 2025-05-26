@@ -20,7 +20,8 @@
      (mcp :vc-backend Git :url "https://github.com/laurynas-biveinis/mcp.el")
      (org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
-   '((elisp-lint-indent-specs
+   '((elisp-lint-ignored-validators "checkdoc")
+     (elisp-lint-indent-specs
       (mcp-test--with-server . defun)
       (mcp-test--with-tools . 1))
      (elisp-lint-indent-specs
@@ -43,15 +44,15 @@
      (magit-todos-exclude-globs "emacs/.emacs.d/abbrev_defs" "emacs/.emacs.d/elpa/*" "zsh/.p10k.zsh")
      (org-emphasis-alist)
      (eval setq-local ispell-personal-dictionary
-	   (expand-file-name ".ispell.dict"
-			     (file-name-directory
-			      (let
-				  ((d
-				    (dir-locals-find-file "./")))
-				(if
-				    (stringp d)
-				    d
-				  (car d))))))
+           (expand-file-name ".ispell.dict"
+                             (file-name-directory
+                              (let
+                                  ((d
+                                    (dir-locals-find-file "./")))
+                                (if
+                                    (stringp d)
+                                    d
+                                  (car d))))))
      (org-fontify-emphasized-text)
      (c-tab-always-indent t)
      (compilation-read-command)

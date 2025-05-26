@@ -1,7 +1,7 @@
 This is org-roam.info, produced by makeinfo version 6.8 from
 org-roam.texi.
 
-     Copyright (C) 2020-2022 Jethro Kuan <jethrokuan95@gmail.com>
+     Copyright (C) 2020-2025 Jethro Kuan <jethrokuan95@gmail.com>
 
      You can redistribute this document and/or modify it under the terms
      of the GNU General Public License as published by the Free Software
@@ -25,9 +25,9 @@ Org-roam User Manual
 ********************
 
 
-   This manual is for Org-roam version 2.2.2.
+   This manual is for Org-roam version 2.3.0.
 
-     Copyright (C) 2020-2022 Jethro Kuan <jethrokuan95@gmail.com>
+     Copyright (C) 2020-2025 Jethro Kuan <jethrokuan95@gmail.com>
 
      You can redistribute this document and/or modify it under the terms
      of the GNU General Public License as published by the Free Software
@@ -2405,7 +2405,7 @@ File: org-roam.info,  Node: Variable Index,  Prev: Function Index,  Up: Top
 Appendix D Variable Index
 *************************
 
-Emacs 29.4 (Org mode 9.7.19)
+Emacs 30.1 (Org mode 9.7.29)
 
 
 Tag Table:
