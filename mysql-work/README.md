@@ -12,7 +12,7 @@
   It prevents creating spurious `.ispell.dict` files, sets the C++ style to
   Google, and makes [Magit](https://magit.vc)
   ([magit-todos](https://github.com/alphapapa/magit-todos) actually) exclude 3rd
-  party TODO comments.
+  party todo comments.
 - [cpplint](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/vilniusdb/CPPLINT.cfg):
   [cpplint](https://github.com/cpplint/cpplint) is still marginally useful with
   MySQL sources.
@@ -26,7 +26,7 @@ I symlink these into the parent directory of all the source trees.
   in the patch. Introduced in its [own blog
   post](https://of-code.blogspot.com/2024/01/introducing-patch2testlist-for-mysql.html).
   Unlike the scripts below, `patch2testlist` is standalone and works without the
-  zsh utility functions.
+  Zsh utility functions.
 
 ## Useful to me
 
@@ -41,7 +41,7 @@ I symlink these into the parent directory of all the source trees.
   also absorbs bug workarounds and complications related to build environments,
   for example, different MySQL versions need both OpenSSL 1.1 and 3 installed,
   which then in turn results in build issues if both versions are present
-  simultaneously. This script is not usable without its [zsh utility
+  simultaneously. This script is not usable without its [Zsh utility
   functions](https://github.com/laurynas-biveinis/dotfiles/tree/master/mysql-work/.zsh.d/functions).
 - [fetchworksrc](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/usr/bin/fetchworksrc):
   fetch all remotes for Git repos in `WORK_REPOS_TO_PULL` environment variable;
@@ -49,14 +49,14 @@ I symlink these into the parent directory of all the source trees.
   builds. This script runs at midnight on my work machine. There are some
   quality of life embellishments such as skipping the the build if the machine
   is a laptop on battery and managing Homebrew OpenSSL version incompatibilities
-  in builds. Again, this script is not usable without its [zsh utility
+  in builds. Again, this script is not usable without its [Zsh utility
   functions](https://github.com/laurynas-biveinis/dotfiles/tree/master/mysql-work/.zsh.d/functions).
 
-## zsh function library
+## Zsh function library
 
 [This
 directory](https://github.com/laurynas-biveinis/dotfiles/tree/master/mysql-work/.zsh.d/functions).
-One file per function as zsh requires. Currently they fall into two sets of
+One file per function as Zsh requires. Currently they fall into two sets of
 responsibilities: querying the source tree for version information and managing
 [OpenSSL 3 build workarounds](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/.zsh.d/functions/mysql_need_openssl3_workaround).
 
