@@ -111,28 +111,28 @@ tramp ts
 
 ### Improvements, fixed annoyances, and bug workarounds
 
-* [Disable global-display-fill-column-indicator in read-only buffers](https://www.reddit.com/r/emacs/comments/ja97xs/weekly_tipstricketc_thread/g903xa3?utm_source=share&utm_medium=web2x&context=3)
-* [macOS: add the missing man page paths for woman](https://www.reddit.com/r/emacs/comments/ig7zzo/weekly_tipstricketc_thread/g34s8dl?utm_source=share&utm_medium=web2x&context=3)
-* [Re-enable Shellcheck if using lsp-mode with bash-language-server](https://www.reddit.com/r/emacs/comments/hqxm5v/weekly_tipstricketc_thread/fy4pvr8?utm_source=share&utm_medium=web2x&context=3)
-* [Clicking on URLs should open them instead of spellchecking them](https://www.reddit.com/r/emacs/comments/it4m2w/weekly_tipstricketc_thread/g5pff92?utm_source=share&utm_medium=web2x&context=3)
-* Workaround the [projectile
+- [Disable global-display-fill-column-indicator in read-only buffers](https://www.reddit.com/r/emacs/comments/ja97xs/weekly_tipstricketc_thread/g903xa3?utm_source=share&utm_medium=web2x&context=3)
+- [macOS: add the missing man page paths for woman](https://www.reddit.com/r/emacs/comments/ig7zzo/weekly_tipstricketc_thread/g34s8dl?utm_source=share&utm_medium=web2x&context=3)
+- [Re-enable Shellcheck if using lsp-mode with bash-language-server](https://www.reddit.com/r/emacs/comments/hqxm5v/weekly_tipstricketc_thread/fy4pvr8?utm_source=share&utm_medium=web2x&context=3)
+- [Clicking on URLs should open them instead of spellchecking them](https://www.reddit.com/r/emacs/comments/it4m2w/weekly_tipstricketc_thread/g5pff92?utm_source=share&utm_medium=web2x&context=3)
+- Workaround the [projectile
   issue](https://github.com/bbatsov/projectile/issues/347) of remote projects
   not being added to Projectile project list.
-* Add [Projectile reconfigure command for CMake
+- Add [Projectile reconfigure command for CMake
   presets](https://github.com/bbatsov/projectile/issues/1676).
-* [Automatically update git gutter on Magit
+- [Automatically update git gutter on Magit
   actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).
-* [Disable color-identifiers-mode under LSP with semantic
+- [Disable color-identifiers-mode under LSP with semantic
   highlighting](https://github.com/laurynas-biveinis/dotfiles/blob/ce044dab576c525f418a5383180d06c888a33599/emacs/.emacs.d/setup.el#L1924)
-* [Reduce LSP info in the modeline](https://github.com/laurynas-biveinis/dotfiles/commit/be71cb57292e3cda3759a373a0b7c38688780ab0)
-* [Show git ignored files in `dired-ignored` face](https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/?utm_source=share&utm_medium=web2x&context=3)
+- [Reduce LSP info in the modeline](https://github.com/laurynas-biveinis/dotfiles/commit/be71cb57292e3cda3759a373a0b7c38688780ab0)
+- [Show git ignored files in `dired-ignored` face](https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/?utm_source=share&utm_medium=web2x&context=3)
 
 ### Custom commands and functionality
 
-* [Set frame geometry after docking/undocking laptop automatically](https://www.reddit.com/r/emacs/comments/ev2q9q/weekly_tipstricketc_thread/fftpfj0?utm_source=share&utm_medium=web2x&context=3)
-* `my-recompile-packages`: force recompiling all the installed  packages, after
+- [Set frame geometry after docking/undocking laptop automatically](https://www.reddit.com/r/emacs/comments/ev2q9q/weekly_tipstricketc_thread/fftpfj0?utm_source=share&utm_medium=web2x&context=3)
+- `my-recompile-packages`: force recompiling all the installed packages, after
   a Emacs version upgrade or a borked package upgrade.
-* `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, kills all
+- `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, kills all
   buffers and executes `gitrmworktree.`
 
 # Installation
@@ -150,43 +150,43 @@ and
 
 # Dotfiles, Emacs distros, macOS defaults, etc. I have been stealing from
 
-* [Doom Emacs](https://github.com/hlissner/doom-emacs)
-* [EmacsWiki: Dot Emacs
+- [Doom Emacs](https://github.com/hlissner/doom-emacs)
+- [EmacsWiki: Dot Emacs
   Challenge](https://www.emacswiki.org/emacs/DotEmacsChallenge)
-* <https://sites.google.com/site/steveyegge2/my-dot-emacs-file>
-* <https://emacs.nasy.moe/>
-* <https://ebzzry.io/en/emacs-pairs/>
-* <https://github.com/snackon/Witchmacs>
-* <https://github.com/jhenahan/dots/tree/main/config/emacs>
-* <https://github.com/link0ff/emacs-init>
-* <https://www.lucacambiaghi.com/vanilla-emacs/readme.html>
-* <https://emacs.stackexchange.com/a/17281/16376>
-* <https://github.com/Bassmann/emacs-config/>
-* <https://github.com/KaratasFurkan/.emacs.d/>
-* <https://stackoverflow.com/questions/23344540/emacs-update-git-gutter-annotations-when-staging-or-unstaging-changes-in-magit>
-* <https://www.reddit.com/r/emacs/comments/ja97xs/weekly_tipstricketc_thread/g985tg9>
-* <https://irreal.org/blog/?p=6297>
-* <https://www.reddit.com/r/emacs/comments/6iqtze/org_mreturn_annoyance/>
-* <https://github.com/kaushalmodi/.emacs.d>
-* <https://www.reddit.com/r/emacs/comments/74ruu0/how_to_copy_the_contents_of_a_single_cell_in_org/do0utjf/?context=3>
-* <https://gitlab.com/gSwag/emacs-configuration>
-* <https://ianyepan.github.io/posts/emacs-git-gutter/>
-* <https://github.com/diamondBond/emacs>
-* <https://github.com/aadi58002/stow-dotfiles/blob/main/.config/emacs/init.org>
-* <https://github.com/thornjad/aero>
-* <https://qua.name/mrb/an-org-babel-based-emacs-configuration>
+- <https://sites.google.com/site/steveyegge2/my-dot-emacs-file>
+- <https://emacs.nasy.moe/>
+- <https://ebzzry.io/en/emacs-pairs/>
+- <https://github.com/snackon/Witchmacs>
+- <https://github.com/jhenahan/dots/tree/main/config/emacs>
+- <https://github.com/link0ff/emacs-init>
+- <https://www.lucacambiaghi.com/vanilla-emacs/readme.html>
+- <https://emacs.stackexchange.com/a/17281/16376>
+- <https://github.com/Bassmann/emacs-config/>
+- <https://github.com/KaratasFurkan/.emacs.d/>
+- <https://stackoverflow.com/questions/23344540/emacs-update-git-gutter-annotations-when-staging-or-unstaging-changes-in-magit>
+- <https://www.reddit.com/r/emacs/comments/ja97xs/weekly_tipstricketc_thread/g985tg9>
+- <https://irreal.org/blog/?p=6297>
+- <https://www.reddit.com/r/emacs/comments/6iqtze/org_mreturn_annoyance/>
+- <https://github.com/kaushalmodi/.emacs.d>
+- <https://www.reddit.com/r/emacs/comments/74ruu0/how_to_copy_the_contents_of_a_single_cell_in_org/do0utjf/?context=3>
+- <https://gitlab.com/gSwag/emacs-configuration>
+- <https://ianyepan.github.io/posts/emacs-git-gutter/>
+- <https://github.com/diamondBond/emacs>
+- <https://github.com/aadi58002/stow-dotfiles/blob/main/.config/emacs/init.org>
+- <https://github.com/thornjad/aero>
+- <https://qua.name/mrb/an-org-babel-based-emacs-configuration>
 
-* <https://github.com/michelegera/dotfiles>
-* <https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/>
-* <https://github.com/mathiasbynens/dotfiles>
-* <https://github.com/ryuta69/dotfiles/>
-* <https://twitter.com/nibroc/status/963088893758259200>
-* <https://github.com/geerlingguy/dotfiles>
-* <https://github.com/caarlos0/dotfiles>
-* <https://gitlab.com/bkhl/dotfiles>
-* <https://macowners.club/>
+- <https://github.com/michelegera/dotfiles>
+- <https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/>
+- <https://github.com/mathiasbynens/dotfiles>
+- <https://github.com/ryuta69/dotfiles/>
+- <https://twitter.com/nibroc/status/963088893758259200>
+- <https://github.com/geerlingguy/dotfiles>
+- <https://github.com/caarlos0/dotfiles>
+- <https://gitlab.com/bkhl/dotfiles>
+- <https://macowners.club/>
 
-* <https://metaredux.com/posts/2020/07/07/supercharge-your-bash-history.html>
-* <https://www.topbug.net/blog/2017/07/31/inputrc-for-humans/>
+- <https://metaredux.com/posts/2020/07/07/supercharge-your-bash-history.html>
+- <https://www.topbug.net/blog/2017/07/31/inputrc-for-humans/>
 
-* <https://twitter.com/trav_downs/status/1280004737455271936>
+- <https://twitter.com/trav_downs/status/1280004737455271936>
