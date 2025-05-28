@@ -46,7 +46,8 @@ with open(args.output, "w", encoding='utf-8') as output_file:
         unit_price = row['Vnt. kaina'].strip(" €")
         count = row['Vnt.'].strip(" €")
         fee = row['Mokestis'].strip(" €")
-        qif_trx = QIFInvestmentTransaction(date, security, fee, amount,
-                                           unit_price, count)
+        qif_trx = QIFInvestmentTransaction(date=date, security=security,
+                                           fee=fee, amount=amount,
+                                           unit_price=unit_price, count=count)
         print(qif_trx)
         qif_trx.write(output_file)

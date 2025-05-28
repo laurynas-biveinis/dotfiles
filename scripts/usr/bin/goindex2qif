@@ -64,8 +64,11 @@ with open(args.output, "w", encoding='utf-8') as output_file:
         op = str(row['Fondo vnt. operacija'])
         if op == match_2pf_fund_source:
             amount = str(row['Įmokos/Išmokos']).replace(",", ".")
-            qif_trx = QIFInvestmentTransaction(date, security_2pf, fee, amount,
-                                               unit_price, count)
+            qif_trx = QIFInvestmentTransaction(date=date,
+                                               security=security_2pf, fee=fee,
+                                               amount=amount,
+                                               unit_price=unit_price,
+                                               count=count)
             output_file.write(f"D{date}\n")
             output_file.write("NCash\n")
             output_file.write(f"T{amount}\n")
@@ -75,8 +78,11 @@ with open(args.output, "w", encoding='utf-8') as output_file:
             output_file.write("^\n")
         elif op == match_3pf_fund_source:
             amount = row['Įmokos/Išmokos']
-            qif_trx = QIFInvestmentTransaction(date, security_3pf, fee, amount,
-                                               unit_price, count)
+            qif_trx = QIFInvestmentTransaction(date=date,
+                                               security=security_3pf, fee=fee,
+                                               amount=amount,
+                                               unit_price=unit_price,
+                                               count=count)
         else:
             raise ValueError(f"Unknown match_fund_source {op}")
         print(qif_trx)
