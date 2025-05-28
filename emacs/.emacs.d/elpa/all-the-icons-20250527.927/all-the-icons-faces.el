@@ -1,9 +1,8 @@
-;;; all-the-icons-faces.el --- A module of faces for all-the-icons
+;;; all-the-icons-faces.el --- A module of faces for all-the-icons -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2016  Dominic Charlesworth <dgc336@gmail.com>
 
 ;; Author: Dominic Charlesworth <dgc336@gmail.com>
-;; Version: 1.0.0
 ;; Package-Requires: ((emacs "24.3"))
 ;; URL: https://github.com/domtronn/all-the-icons.el
 ;; Keywords: convenient, lisp

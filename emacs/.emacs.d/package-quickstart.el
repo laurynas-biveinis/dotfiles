@@ -7764,7 +7764,7 @@ A prefix argument causes the SQL to be printed into the current buffer.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250525.715/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-20250525.715/org-roam-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0/org-roam-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0/org-roam-autoloads.el"))
 
 
 
@@ -9104,7 +9104,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp/mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp/mcp-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib/mcp-server-lib-autoloads.el"))
 
 
 
@@ -9113,18 +9113,40 @@ Mark the item (a task or a project) at point as done.")
 
 
 
-(register-definition-prefixes "mcp" '("mcp-"))
+(register-definition-prefixes "mcp-server-lib" '("mcp-server-lib-"))
 
 
 
-(register-definition-prefixes "mcp-test" '("mcp-test--"))
+(autoload 'mcp-server-lib-start "mcp-server-lib-commands" "\
+Start the MCP server and begin handling client requests.
+
+This function starts the MCP server that can process JSON-RPC
+requests via `mcp-server-lib-process-jsonrpc'.  Once started, the server
+will dispatch incoming requests to the appropriate tool
+handlers that have been registered with `mcp-server-lib-register-tool'." t)
+(autoload 'mcp-server-lib-stop "mcp-server-lib-commands" "\
+Stop the MCP server from processing client requests.
+
+Sets the server state to stopped, which prevents further processing of
+client requests.  Note that this does not release any resources or unregister
+tools, it simply prevents `mcp-server-lib-process-jsonrpc' from accepting new
+requests." t)
+(autoload 'mcp-server-lib-install "mcp-server-lib-commands" "\
+Install emacs-mcp-stdio.sh to `mcp-server-lib-install-directory'." t)
+(autoload 'mcp-server-lib-uninstall "mcp-server-lib-commands" "\
+Remove installed emacs-mcp-stdio.sh from `mcp-server-lib-install-directory'." t)
+(register-definition-prefixes "mcp-server-lib-commands" '("mcp-server-lib--"))
 
 
 
-(register-definition-prefixes "mcp-test-bytecode-handler" '("mcp-test-bytecode-handler--handler"))
+(register-definition-prefixes "mcp-server-lib-test" '("mcp-server-lib-test--"))
+
 
 
-(provide 'mcp-autoloads)
+(register-definition-prefixes "mcp-server-lib-test-bytecode-handler" '("mcp-server-lib-test-bytecode-handler--handler"))
+
+
+(provide 'mcp-server-lib-autoloads)
 
 
 )
@@ -11839,6 +11861,18 @@ Disable the Elisp development MCP tools.")
 
 
 (register-definition-prefixes "elisp-dev-mcp-test" '("elisp-dev-mcp-test-"))
+
+
+
+(register-definition-prefixes "elisp-dev-mcp-test-bytecode" '("elisp-dev-mcp-test-bytecode--"))
+
+
+
+(register-definition-prefixes "elisp-dev-mcp-test-dynamic" '("elisp-dev-mcp-test-dynamic--with-header-comment"))
+
+
+
+(register-definition-prefixes "elisp-dev-mcp-test-no-checkdoc" '("elisp-dev-mcp-test-no-checkdoc--"))
 
 
 (provide 'elisp-mcp-dev-autoloads)
@@ -11934,7 +11968,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250525.1001/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250525.1001/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250527.2100/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250527.2100/difftastic-autoloads.el"))
 
 
 
@@ -12344,7 +12378,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20240623.1800/all-the-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20240623.1800/all-the-icons-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20250527.927/all-the-icons-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/all-the-icons-20250527.927/all-the-icons-autoloads.el"))
 
 
 
@@ -12514,14 +12548,14 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-20250525.715" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.5" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.5" "/Users/laurynas/.emacs.d/elpa/transient-0.8.8" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.5" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.5" "/Users/laurynas/.emacs.d/elpa/transient-0.8.8" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
          Info-directory-list)))
 
 ;; Local Variables:
