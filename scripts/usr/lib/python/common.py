@@ -4,6 +4,7 @@
 class QIFInvestmentTransaction:
     """An investment transaction in QIF format."""
 
+    # pylint: disable-next=too-many-arguments
     def __init__(self, *, date, security, fee, amount, unit_price, count):
         """Create a QIF investment transaction."""
         self._date = date
