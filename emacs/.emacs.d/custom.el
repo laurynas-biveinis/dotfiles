@@ -20,7 +20,14 @@
      (org-autotask-mcp :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask-mcp")
      (org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
-   '((eval and buffer-file-name
+   '((elisp-lint-indent-specs
+      (mcp-server-lib-test--with-server . defun)
+      (mcp-server-lib-test--with-tools . 1)
+      (mcp-server-lib-test--successful-req . defun)
+      (mcp-server-lib-test--verify-req-success . defun)
+      (mcp-server-lib-test--with-error-tracking . 1)
+      (cl-defstruct))
+     (eval and buffer-file-name
            (not
             (eq major-mode 'package-recipe-mode))
            (or
