@@ -338,7 +338,7 @@ Signal an error if SEQUENCE is empty.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4/with-editor-autoloads.el"))
 
 
 
@@ -2493,7 +2493,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.8/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.8.8/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.0/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.0/transient-autoloads.el"))
 
 
 
@@ -2546,6 +2546,13 @@ See info node `(transient)Modifying Existing Transients'.
 
 (fn PREFIX LOC SUFFIX)")
 (function-put 'transient-replace-suffix 'lisp-indent-function 'defun)
+(autoload 'transient-inline-group "transient" "\
+Inline the included GROUP into PREFIX.
+Replace the symbol GROUP with its expanded layout in the
+layout of PREFIX.
+
+(fn PREFIX GROUP)")
+(function-put 'transient-inline-group 'lisp-indent-function 'defun)
 (autoload 'transient-remove-suffix "transient" "\
 Remove the suffix or group at LOC in PREFIX.
 PREFIX is a prefix command, a symbol.
@@ -4738,7 +4745,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.2/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.2/llama-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.3/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-0.6.3/llama-autoloads.el"))
 
 
 
@@ -4832,13 +4839,14 @@ it is disabled.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "llama" '("\\#\\#" "all-completions" "elisp-" "intern" "lisp--el-match-keyword@llama" "llama-"))
+
 
 
 (provide 'llama-autoloads)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.5/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.5/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6/magit-section-autoloads.el"))
 
 
 
@@ -4893,7 +4901,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.5/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.5/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.6/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.6/magit-autoloads.el"))
 
 
 
@@ -4917,7 +4925,11 @@ with the variables' values as arguments, which were recorded by
 (autoload 'git-rebase-current-line "git-rebase" "\
 Parse current line into a `git-rebase-action' instance.
 If the current line isn't recognized as a rebase line, an
-instance with all nil values is returned.")
+instance with all nil values is returned, unless optional
+BATCH is non-nil, in which case nil is returned.  Non-nil
+BATCH also ignores commented lines.
+
+(fn &optional BATCH)")
 (autoload 'git-rebase-mode "git-rebase" "\
 Major mode for editing of a Git rebase file.
 
@@ -7193,7 +7205,7 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2/ghub-autoloads.el"))
 
 
 
@@ -7715,7 +7727,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250401.1500/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250401.1500/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250601.1009/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250601.1009/emacsql-autoloads.el"))
 
 
 
@@ -9143,6 +9155,10 @@ Display metrics in a buffer." t)
 
 
 
+(register-definition-prefixes "mcp-server-lib-ert" '("mcp-server-lib-ert-check-text-response"))
+
+
+
 (register-definition-prefixes "mcp-server-lib-metrics" '("mcp-server-lib-metrics-"))
 
 
@@ -9352,7 +9368,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.3/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.3/hl-todo-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.4/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.4/hl-todo-autoloads.el"))
 
 
 
@@ -10837,7 +10853,7 @@ or nil, plain link will be used.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.4/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.4/git-modes-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.5/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.5/git-modes-autoloads.el"))
 
 
 
@@ -11015,7 +11031,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.1/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.1/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.2/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.2/closql-autoloads.el"))
 
 
 
@@ -11032,7 +11048,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.0/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.0/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.1/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.1/forge-autoloads.el"))
 
 
 
@@ -12563,7 +12579,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
 	(append
-	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.1" "/Users/laurynas/.emacs.d/elpa/magit-4.3.5" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.5" "/Users/laurynas/.emacs.d/elpa/transient-0.8.8" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.3" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
+	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.1" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.6" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6" "/Users/laurynas/.emacs.d/elpa/transient-0.9.0" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
 	 Info-directory-list)))
 
 ;; Local Variables:

@@ -621,7 +621,7 @@
 	    ("Tim Vaughan" . "plugd@thelambdalab.xyz"))
 	   (:commit . "972a069f240f071a79da23c98d3519df45bb5851"))])
  (emacsql .
-	  [(4 3 0)
+	  [(4 3 1)
 	   ((emacs
 	     (26 1)))
 	   "High-level SQL database front-end" tar
@@ -629,7 +629,7 @@
 	    (:maintainer "Jonas Bernoulli" . "emacs.emacsql@jonas.bernoulli.dev")
 	    (:authors
 	     ("Christopher Wellons" . "wellons@nullprogram.com"))
-	    (:commit . "5470adaf5dcabebc80c913ac831258fd47a87cbe"))])
+	    (:commit . "ced062890061b6e4fbe4d00c0617f7ff84fff25c"))])
  (engine-mode .
 	      [(2 2 4)
 	       ((cl-lib
@@ -1097,11 +1097,11 @@
 		   ("Jeronimo Pellegrini" . "(j_p@aleph0.info)"))
 		  (:commit . "3358d0cc01436bd8f71a500175db2716e75b2eed"))])
  (git-modes .
-	    [(1 4 4)
+	    [(1 4 5)
 	     ((emacs
 	       (26 1))
 	      (compat
-	       (30 0 0 0)))
+	       (30 1)))
 	     "Major modes for editing Git configuration files" tar
 	     ((:url . "https://github.com/magit/git-modes")
 	      (:keywords "convenience" "vc" "git")
@@ -1110,7 +1110,7 @@
 	       ("Sebastian Wiesner" . "lunaryorn@gmail.com")
 	       ("Rüdiger Sonderfeld" . "ruediger@c-plusplus.net")
 	       ("Jonas Bernoulli" . "emacs.git-modes@jonas.bernoulli.dev"))
-	      (:commit . "f99010bbeb8b6d8a0819fac0195a2ef0159d08f0"))])
+	      (:commit . "27af84f31ed022267b7108ad10ea286631f88e88"))])
  (gnosis .
 	 [(0 4 10)
 	  ((emacs
@@ -1506,18 +1506,18 @@
 	       (:keywords "languages")
 	       (:commit . "0f4d74f9049df28e2f522733141bfc5b7a0f69a3"))])
  (keycast .
-	  [(1 4 3)
+	  [(1 4 4)
 	   ((emacs
 	     (28 1))
 	    (compat
-	     (30 0 2 0)))
+	     (30 1)))
 	   "Show current command and its binding" tar
 	   ((:url . "https://github.com/tarsius/keycast")
 	    (:keywords "multimedia")
 	    (:maintainer "Jonas Bernoulli" . "emacs.keycast@jonas.bernoulli.dev")
 	    (:authors
 	     ("Jonas Bernoulli" . "emacs.keycast@jonas.bernoulli.dev"))
-	    (:commit . "83216f97b3dd99dbb1d4dbc781e863f205b6d5d9"))])
+	    (:commit . "6570b73c4d726d18d6ee48a46494b6ff35aacea6"))])
  (kotlin-mode .
 	      [(2 0 0)
 	       ((emacs
@@ -1530,15 +1530,15 @@
 		(:url . "https://elpa.nongnu.org/nongnu/kotlin-mode.html")
 		(:commit . "d92c3b773473e9fe15f61f6177e4fbf097aadd05"))])
  (llama .
-	[(0 6 2)
+	[(0 6 3)
 	 ((emacs
 	   (26 1))
 	  (compat
-	   (30 0 2 0)))
+	   (30 1)))
 	 "Compact syntax for short lambda" tar
 	 ((:url . "https://github.com/tarsius/llama")
 	  (:keywords "extensions")
-	  (:commit . "48e5bc4919a4a29665362832d59ade8e248b0c3e"))])
+	  (:commit . "6a67e4253cc02aa9ce85ef96290c95198b65d913"))])
  (logview .
 	  [(0 19 2)
 	   ((emacs
@@ -1659,13 +1659,13 @@
 	   ("Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev"))
 	  (:commit . "04ee83d93fabbfbe202e9e7dc781b0dcd4d5b502"))])
  (magit-section .
-		[(4 3 5)
+		[(4 3 6)
 		 ((emacs
 		   (27 1))
 		  (compat
-		   (30 0 2 0))
+		   (30 1))
 		  (llama
-		   (0 6 1))
+		   (0 6 3))
 		  (seq
 		   (2 24)))
 		 "Sections for read-only buffers" tar
@@ -1674,7 +1674,7 @@
 		  (:maintainer "Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev")
 		  (:authors
 		   ("Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev"))
-		  (:commit . "04ee83d93fabbfbe202e9e7dc781b0dcd4d5b502"))])
+		  (:commit . "2f1ff91f128f28aa277e0e060ef44b4be8a989c1"))])
  (markdown-mode .
 		[(2 7)
 		 ((emacs
@@ -2757,18 +2757,18 @@
 	      ("Akib Azmain Turja" . "akib@disroot.org"))
 	     (:commit . "5203d9379afaf6703746823a580c804e1dd98e08"))])
  (with-editor .
-	      [(3 4 3)
+	      [(3 4 4)
 	       ((emacs
 		 (26 1))
 		(compat
-		 (30 0 0 0)))
+		 (30 1)))
 	       "Use the Emacsclient as $EDITOR" tar
 	       ((:url . "https://github.com/magit/with-editor")
 		(:keywords "processes" "terminals")
 		(:maintainer "Jonas Bernoulli" . "emacs.with-editor@jonas.bernoulli.dev")
 		(:authors
 		 ("Jonas Bernoulli" . "emacs.with-editor@jonas.bernoulli.dev"))
-		(:commit . "ca902ae02972bdd6919a902be2593d8cb6bd991b"))])
+		(:commit . "f32cd7b09d518b629bfaa3eeb92b539891c6b9bc"))])
  (with-simulated-input .
 		       [(3 0)
 			((emacs
