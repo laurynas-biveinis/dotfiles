@@ -1,5 +1,5 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "forge" "0.5.1"
+(define-package "forge" "0.5.2"
   "Access Git forges from Magit."
   '((emacs         "29.1")
     (compat        "30.1")
@@ -14,8 +14,8 @@
     (transient     "0.9.0")
     (yaml          "1.2.0"))
   :url "https://github.com/magit/forge"
-  :commit "be610f94cae7cc987b6b0dcd8b7f3b42a0c26409"
-  :revdesc "v0.5.1-0-gbe610f94cae7"
+  :commit "540c02654654afbe26666914caf86cae32292dbe"
+  :revdesc "v0.5.2-0-g540c02654654"
   :keywords '("git" "tools" "vc")
   :authors '(("Jonas Bernoulli" . "emacs.forge@jonas.bernoulli.dev"))
   :maintainers '(("Jonas Bernoulli" . "emacs.forge@jonas.bernoulli.dev")))

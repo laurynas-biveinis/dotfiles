@@ -6,8 +6,8 @@
 ;; Homepage: https://github.com/magit/transient
 ;; Keywords: extensions
 
-;; Package-Version: 0.9.0
-;; Package-Revision: v0.9.0-0-gef28fbe24d43
+;; Package-Version: 0.9.1
+;; Package-Revision: v0.9.1-0-g7937e57e29b5
 ;; Package-Requires: ((emacs "26.1") (compat "30.1") (seq "2.24"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -35,7 +35,7 @@
 
 ;;; Code:
 
-(defconst transient-version "0.9.0")
+(defconst transient-version "0.9.1")
 
 (require 'cl-lib)
 (require 'compat)
@@ -1520,9 +1520,8 @@ PREFIX is a prefix command symbol or object.
 SUFFIX is a suffix command or a group specification (of
   the same forms as expected by `transient-define-prefix').
 Intended for use in a group's `:setup-children' function."
-  (if (cl-typep prefix 'transient-prefix)
-      (setq prefix (oref prefix command))
-    (transient--get-layout prefix)) ; validate
+  (when (cl-typep prefix 'transient-prefix)
+    (setq prefix (oref prefix command)))
   (eval (car (transient--parse-child prefix suffix)) t))
 
 (defun transient-parse-suffixes (prefix suffixes)
@@ -1531,9 +1530,8 @@ PREFIX is a prefix command symbol or object.
 SUFFIXES is a list of suffix command or a group specification
   (of the same forms as expected by `transient-define-prefix').
 Intended for use in a group's `:setup-children' function."
-  (if (cl-typep prefix 'transient-prefix)
-      (setq prefix (oref prefix command))
-    (transient--get-layout prefix)) ; validate
+  (when (cl-typep prefix 'transient-prefix)
+    (setq prefix (oref prefix command)))
   (mapcar (apply-partially #'transient-parse-suffix prefix) suffixes))
 
 ;;; Edit
@@ -3079,9 +3077,10 @@ value.  Otherwise return CHILDREN as is.")
 (defun transient--emergency-exit (&optional id)
   "Exit the current transient command after an error occurred.
 When no transient is active (i.e., when `transient--prefix' is
-nil) then do nothing.  Optional ID is a keyword identifying the
-exit."
+nil) then only reset `inhibit-quit'.  Optional ID is a keyword
+identifying the exit."
   (transient--debug 'emergency-exit id)
+  (set-default-toplevel-value 'inhibit-quit nil)
   (when transient--prefix
     (setq transient--stack nil)
     (setq transient--exitp t)
