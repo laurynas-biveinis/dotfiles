@@ -2493,7 +2493,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.0/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.0/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.1/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.1/transient-autoloads.el"))
 
 
 
@@ -9129,6 +9129,10 @@ Mark the item (a task or a project) at point as done.")
 
 
 
+(register-definition-prefixes "mcp-server-lib-bytecode-handler-test" '("mcp-server-lib-test-bytecode-handler--handler"))
+
+
+
 (autoload 'mcp-server-lib-start "mcp-server-lib-commands" "\
 Start the MCP server and begin handling client requests.
 
@@ -9164,10 +9168,6 @@ Display metrics in a buffer." t)
 
 
 (register-definition-prefixes "mcp-server-lib-test" '("mcp-server-lib-test--"))
-
-
-
-(register-definition-prefixes "mcp-server-lib-test-bytecode-handler" '("mcp-server-lib-test-bytecode-handler--handler"))
 
 
 (provide 'mcp-server-lib-autoloads)
@@ -11048,7 +11048,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.1/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.1/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.3/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.3/forge-autoloads.el"))
 
 
 
@@ -12572,15 +12572,15 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-	'(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
-	package-activated-list)))
+        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
-	(append
-	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.1" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.6" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6" "/Users/laurynas/.emacs.d/elpa/transient-0.9.0" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
-	 Info-directory-list)))
+        (append
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.6" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6" "/Users/laurynas/.emacs.d/elpa/transient-0.9.1" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
+         Info-directory-list)))
 
 ;; Local Variables:
 ;; version-control: never

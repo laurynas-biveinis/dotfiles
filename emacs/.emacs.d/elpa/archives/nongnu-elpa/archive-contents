@@ -311,14 +311,14 @@
 		 (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
 		 (:commit . "d336db623e7ae8cffff50aaaea3f1b05cc4ccecb"))])
  (clojure-ts-mode .
-		  [(0 4 0)
+		  [(0 5 0)
 		   ((emacs
 		     (30 1)))
 		   "Major mode for Clojure code" tar
 		   ((:url . "http://github.com/clojure-emacs/clojure-ts-mode")
 		    (:keywords "languages" "clojure" "clojurescript" "lisp")
 		    (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
-		    (:commit . "c2269ea10a9129113a98eb58fc8abd8888a07e94"))])
+		    (:commit . "bd08cd02612507c4012d078eb94ccd7aa9b567b1"))])
  (coffee-mode .
 	      [(0 6 3)
 	       ((emacs
@@ -1149,16 +1149,18 @@
 		("Akib Azmain Turja" . "akib@disroot.org"))
 	       (:commit . "6bb82ce89ed93222dd919bc65e0f46ac4aa13479"))])
  (gnuplot .
-	  [(0 9)
+	  [(0 10)
 	   ((emacs
-	     (25 1)))
+	     (28 1))
+	    (compat
+	     (30)))
 	   "Major-mode and interactive frontend for gnuplot" tar
 	   ((:url . "https://github.com/emacs-gnuplot/gnuplot")
 	    (:keywords "data" "gnuplot" "plotting")
 	    (:maintainer
 	     ("Maxime Tréca" . "maxime@gmail.com")
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	    (:commit . "dad0462cd04190da3ec2603fba601260fa5e8a72"))])
+	    (:commit . "868c992c382955eb07db985e0b2cc9f152076125"))])
  (go-mode .
 	  [(1 6 0)
 	   ((emacs
