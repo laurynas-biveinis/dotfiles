@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250527.2100
-;; Package-Revision: 239faba53f6d
+;; Package-Version: 20250606.1113
+;; Package-Revision: eda5d044be66
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -1791,6 +1791,7 @@ perform cleanup.  It returns a process created by `make-process'."
    :command command
    :noquery t
    :filter #'difftastic--run-command-filter
+   :file-handler t
    :sentinel
    (lambda (process _event)
      (difftastic--run-command-sentinel process action command))))
