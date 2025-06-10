@@ -10,6 +10,8 @@ osascript -e \
 osascript -e \
           'tell application "Finder" to make alias file to POSIX file "/opt/homebrew/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
 
+npm install -g @emacs-eask/cli
+
 # Evaluate emacs/.emacs.d/install-dash-docsets.el in Emacs, then install any
 # non-main Dash docsets through the app
 em-regen-info-dir
