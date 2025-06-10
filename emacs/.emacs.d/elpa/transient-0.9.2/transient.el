@@ -6,8 +6,8 @@
 ;; Homepage: https://github.com/magit/transient
 ;; Keywords: extensions
 
-;; Package-Version: 0.9.1
-;; Package-Revision: v0.9.1-0-g7937e57e29b5
+;; Package-Version: 0.9.2
+;; Package-Revision: v0.9.2-0-gf3f498aa155f
 ;; Package-Requires: ((emacs "26.1") (compat "30.1") (seq "2.24"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -35,7 +35,7 @@
 
 ;;; Code:
 
-(defconst transient-version "0.9.1")
+(defconst transient-version "0.9.2")
 
 (require 'cl-lib)
 (require 'compat)
@@ -2512,16 +2512,16 @@ value.  Otherwise return CHILDREN as is.")
                           (alist-get cmd levels)
                           (plist-get args :level)
                           (and proto (oref proto level))
-                          transient--default-child-level)))
+                          transient--default-child-level))
+               (args (plist-put (copy-sequence args) :level level)))
     (when (transient--use-level-p level)
       (let ((obj (if (child-of-class-p class 'transient-information)
-                     (apply class :parent parent :level level args)
+                     (apply class :parent parent args)
                    (unless (and cmd (symbolp cmd))
                      (error "BUG: Non-symbolic suffix command: %s" cmd))
                    (if proto
-                       (apply #'clone proto :parent parent :level level args)
-                     (apply class :command cmd :parent parent :level level
-                            args)))))
+                       (apply #'clone proto :parent parent args)
+                     (apply class :command cmd :parent parent args)))))
         (cond ((not cmd))
               ((commandp cmd))
               ((or (cl-typep obj 'transient-switch)
