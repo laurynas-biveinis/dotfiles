@@ -386,6 +386,9 @@ defaults write com.googlecode.iterm2 SUEnableAutomaticChecks -bool true
 /usr/libexec/PlistBuddy -c \
                         "Set :\"New Bookmarks\":0:\"Option Key Sends\" 2" \
                         ~/Library/Preferences/com.googlecode.iterm2.plist
+/usr/libexec/PlistBuddy -c \
+                        "Set :\"New Bookmarks\":0:\"Movement Keys Scroll Outside Interactive Apps\" 1" \
+                        ~/Library/Preferences/com.googlecode.iterm2.plist
 curl -o 'Solarized Dark - Patched.itermcolors' \
      https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Solarized%20Dark%20-%20Patched.itermcolors
 open 'Solarized Dark - Patched.itermcolors'
