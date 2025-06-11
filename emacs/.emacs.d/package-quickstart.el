@@ -178,6 +178,89 @@ comparisons/benchmarks with libraries that offer similar functionality." t)
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/xr-2.1/xr-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/xr-2.1/xr-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'xr "xr" "\
+Convert a regexp string to rx notation; the inverse of `rx'.
+Passing the returned value to `rx' (or `rx-to-string') yields a regexp string
+equivalent to RE-STRING.  DIALECT controls the choice of keywords,
+and is one of:
+`verbose'       -- verbose keywords
+`medium' or nil -- somewhat verbose keywords (the default)
+`brief'         -- short keywords
+`terse'         -- very short keywords
+
+(fn RE-STRING &optional DIALECT)")
+(autoload 'xr-skip-set "xr" "\
+Convert a skip set string argument to rx notation.
+SKIP-SET-STRING is interpreted according to the syntax of
+`skip-chars-forward' and `skip-chars-backward' and converted to
+a character class on `rx' form.
+If desired, `rx' can then be used to convert the result to an
+ordinary regexp.
+See `xr' for a description of the DIALECT argument.
+
+(fn SKIP-SET-STRING &optional DIALECT)")
+(autoload 'xr-lint "xr" "\
+Detect dubious practices and possible mistakes in RE-STRING.
+This includes uses of tolerated but discouraged constructs, as well
+as outright syntax errors.
+
+If PURPOSE is `file', perform additional checks assuming that RE-STRING
+is used to match a file name.
+
+If CHECKS is absent or nil, only perform checks that are very
+likely to indicate mistakes; if `all', include all checks,
+including ones more likely to generate false alarms.
+
+Return a list of lists of (BEG END COMMENT SEVERITY), where COMMENT
+applies at offsets BEG..END inclusive in RE-STRING, and SEVERITY is
+`error', `warning' or `info'. The middle list level groups diagnostics
+about the same problem.
+
+(fn RE-STRING &optional PURPOSE CHECKS)")
+(autoload 'xr-skip-set-lint "xr" "\
+Detect dubious practices and possible mistakes in SKIP-SET-STRING.
+This includes uses of tolerated but discouraged constructs, as well
+as outright syntax errors.
+The argument is interpreted according to the syntax of
+`skip-chars-forward' and `skip-chars-backward'.
+
+Return a list of lists of (BEG END COMMENT SEVERITY), where COMMENT
+applies at offsets BEG..END inclusive in SKIP-SET-STRING, and SEVERITY is
+`error', `warning' or `info'. The middle list level groups diagnostics
+about the same problem.
+
+(fn SKIP-SET-STRING)")
+(autoload 'xr-pp "xr" "\
+Convert to `rx' notation and output the pretty-printed result.
+This function uses `xr' to translate RE-STRING into DIALECT.
+It is intended for use from an interactive elisp session.
+See `xr' for a description of the DIALECT argument.
+
+(fn RE-STRING &optional DIALECT)")
+(autoload 'xr-skip-set-pp "xr" "\
+Convert a skip set string to `rx' notation and pretty-print.
+This function uses `xr-skip-set' to translate SKIP-SET-STRING
+into DIALECT.
+It is intended for use from an interactive elisp session.
+See `xr' for a description of the DIALECT argument.
+
+(fn SKIP-SET-STRING &optional DIALECT)")
+(register-definition-prefixes "xr" '("xr-"))
+
+
+(provide 'xr-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/seq-2.24/seq-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/seq-2.24/seq-autoloads.el"))
 
 
@@ -4033,6 +4116,55 @@ associated process is exited.
 
 
 (provide 'request-deferred-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/relint-2.1/relint-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/relint-2.1/relint-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(autoload 'relint-file "relint" "\
+Scan FILE, an elisp file, for regexp-related errors.
+
+(fn FILE)" t)
+(autoload 'relint-directory "relint" "\
+Scan all *.el files in DIR for regexp-related errors.
+
+(fn DIR)" t)
+(autoload 'relint-current-buffer "relint" "\
+Scan the current buffer for regexp errors.
+The buffer must be in emacs-lisp-mode." t)
+(autoload 'relint-buffer "relint" "\
+Scan BUFFER for regexp mistakes. Return list of diagnostics.
+Each element in the returned list is an object with the slots
+
+  message    the message string
+  beg-pos    starting position in the buffer
+  end-pos    ending position the buffer (inclusive), or nil
+  pos-type   if `string', then the buffer at BEG-POS..END-POS is inside
+             a string literal corresponding to STRING at BEG-IDX..END-IDX;
+             otherwise BEG-POS..END-POS just point to code
+  string     the string the message is about, or nil
+  beg-idx    starting offset in STRING, or nil
+  end-idx    ending offset in STRING (inclusive), or nil
+  severity   `error', `warning' or `info'
+
+Accessors are prefixed by `relint-diag-': eg, (relint-diag-message D) returns
+the message of object D.
+
+BEG-POS..END-POS is the range of interest in the buffer, and may
+correspond to the range BEG-IDX..END-IDX in STRING but not necessarily so.
+
+(fn BUFFER)")
+(register-definition-prefixes "relint" '("relint-"))
+
+
+(provide 'relint-autoloads)
 
 
 )
@@ -11919,7 +12051,7 @@ Disable the Elisp development MCP tools.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250421.1112/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250421.1112/elisp-autofmt-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250611.40/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250611.40/elisp-autofmt-autoloads.el"))
 
 
 
@@ -11992,7 +12124,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250606.1113/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250606.1113/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250610.752/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250610.752/difftastic-autoloads.el"))
 
 
 
@@ -12053,6 +12185,15 @@ difftastic.  When called with double prefix argument ask for extra
 arguments for difftastic call.
 
 (fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
+(autoload 'difftastic-file-buffer "difftastic" "\
+Compare current buffer with its visiting file.
+Optionally, provide a LANG-OVERRIDE to override language used.  See
+\\='difft --list-languages\\=' for language list.  When function is
+called with a prefix arg then ask for language before running
+difftastic.  When called with double prefix argument ask for extra
+arguments for difftastic call.
+
+(fn &optional LANG-OVERRIDE)" t)
 (autoload 'difftastic-dired-diff "difftastic" "\
 Compare file at point with FILE using difftastic.
 The behavior is the same as `dired-diff', except for the prefix argument, which
@@ -12572,7 +12713,7 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color xr seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)
