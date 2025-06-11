@@ -63,6 +63,15 @@ difftastic.  When called with double prefix argument ask for extra
 arguments for difftastic call.
 
 (fn FILE-A FILE-B &optional LANG-OVERRIDE)" t)
+(autoload 'difftastic-file-buffer "difftastic" "\
+Compare current buffer with its visiting file.
+Optionally, provide a LANG-OVERRIDE to override language used.  See
+\\='difft --list-languages\\=' for language list.  When function is
+called with a prefix arg then ask for language before running
+difftastic.  When called with double prefix argument ask for extra
+arguments for difftastic call.
+
+(fn &optional LANG-OVERRIDE)" t)
 (autoload 'difftastic-dired-diff "difftastic" "\
 Compare file at point with FILE using difftastic.
 The behavior is the same as `dired-diff', except for the prefix argument, which

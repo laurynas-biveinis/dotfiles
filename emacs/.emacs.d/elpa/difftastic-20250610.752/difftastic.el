@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250606.1113
-;; Package-Revision: eda5d044be66
+;; Package-Version: 20250610.752
+;; Package-Revision: c0b68afbc128
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -250,6 +250,9 @@
 ;;   relaying on `difftastic''s detection mechanism.
 ;; - `difftastic-buffers' - show the result of `difft BUFFER-A BUFFER-B'.
 ;;   Language is guessed based on buffers modes.  When called with prefix
+;;   argument it will ask for language to use.
+;; - `difftastic-file-bufer' - show the result of =difft BUFFER BUFFER-FILE.
+;;   Language is guessed based on buffer mode.  When called with prefix
 ;;   argument it will ask for language to use.
 ;; - `difftastic-dired-diff' - same as `dired-diff', but with
 ;;   `difftastic-files' instead of the built-in `diff'.
@@ -2332,17 +2335,23 @@ difftastic call."
           (setq limit (1+ (match-end 0)))))
       (make-temp-file (format "difftastic-%s-%s-" prefix buffer-name)
                       nil
-                      (difftastic--file-extension-for-mode major-mode)
+                      (or
+                       (when-let* ((buffer-file (buffer-file-name buffer))
+                                   (extension (file-name-extension buffer-file)))
+                         (concat "." extension))
+                       (difftastic--file-extension-for-mode major-mode))
                       (buffer-string)))))
 
 (defun difftastic--get-file-buf (prefix buffer)
-  "If BUFFER visits a file return it else create a temporary file with PREFIX.
-The return value is a cons in a form of (FILE . BUF) where FILE
-is the file and BUF either is  nil if this is non temporary file,
-or BUF is set to BUFFER if this is a temporary file."
+  "Get a file-buf for BUFFER with PREFIX if creating a temporary file.
+If BUFFER visits a file and is non modified use it.  Else create a
+temporary file with PREFIX.  The return value is a cons in a form
+of (FILE . BUF) where FILE is the file and BUF either is nil if this is
+non temporary file, or BUF is set to BUFFER if this is a temporary file."
   (let* (buf
          (file
-          (if-let* ((buffer-file (buffer-file-name buffer)))
+          (if-let* ((buffer-file (buffer-file-name buffer))
+                    ((not (buffer-modified-p buffer))))
               (progn
                 (save-buffer buffer)
                 buffer-file)
@@ -2358,15 +2367,16 @@ when it is a temporary or nil otherwise."
     (when (and (cdr file-buf) (stringp file) (file-exists-p file))
       (delete-file file))))
 
-(defun difftastic--make-suggestion (languages buffer-A buffer-B)
+(defun difftastic--make-suggestion (languages buffer-A &optional buffer-B)
   "Suggest one of LANGUAGES based on mode of BUFFER-A and BUFFER-B."
   (when-let* ((mode
                (or (with-current-buffer buffer-A
                      (when (derived-mode-p 'prog-mode)
                        major-mode))
-                   (with-current-buffer buffer-B
-                     (when (derived-mode-p 'prog-mode)
-                       major-mode)))))
+                   (when buffer-B
+                     (with-current-buffer buffer-B
+                       (when (derived-mode-p 'prog-mode)
+                         major-mode))))))
     (cl-find-if (lambda (language)
                   (string= (downcase language)
                            (downcase (string-replace
@@ -2453,19 +2463,31 @@ error each symbol in FILE-BUFS will be passed to
           (difftastic--delete-temp-file-buf file-buf))
         (signal (car err) (cdr err))))))
 
+(defun difftastic--buffers-args-read-buffer-predicate (bf-A)
+  "Return a predicate that doesn't match BF-A.
+The predicate is designed to be used in `read-buffer', which see."
+  (lambda (buf)
+    (not (equal (if (stringp buf)
+                    buf
+                  (car buf))
+                bf-A))))
+
 (defun difftastic--buffers-args ()
   "Return arguments for `difftastic-buffers'."
   ;; adapted from `ediff-buffers'
   (let (bf-A bf-B)
-    (list (setq bf-A (read-buffer "Buffer A to compare: "
-                                  (ediff-other-buffer "") t))
-          (setq bf-B (read-buffer "Buffer B to compare: "
-                                  (progn
-                                    ;; realign buffers so that two visible
-                                    ;; buffers will be at the top
-                                    (save-window-excursion (other-window 1))
-                                    (ediff-other-buffer bf-A))
-                                  t))
+    (list (setq bf-A
+                (read-buffer "Buffer A to compare: "
+                             (ediff-other-buffer "") t))
+          (setq bf-B
+                (read-buffer "Buffer B to compare: "
+                             (progn
+                               ;; realign buffers so that two visible
+                               ;; buffers will be at the top
+                               (save-window-excursion (other-window 1))
+                               (ediff-other-buffer bf-A))
+                             t
+                             (difftastic--buffers-args-read-buffer-predicate bf-A)))
           (when (or (equal current-prefix-arg '(4))
                     (and (not (buffer-file-name (get-buffer bf-A)))
                          (not (buffer-file-name (get-buffer bf-B)))))
@@ -2479,16 +2501,18 @@ error each symbol in FILE-BUFS will be passed to
 (defun difftastic--buffers (buffer-A buffer-B lang-or-args)
   ;; checkdoc-params: (buffer-A buffer-B lang-or-args)
   "Implementation of `difftastic-buffers', which see."
-  (difftastic--with-file-bufs ((file-buf-A (difftastic--get-file-buf
-                                            "A" (get-buffer buffer-A)))
-                               (file-buf-B (difftastic--get-file-buf
-                                            "B" (get-buffer buffer-B))))
-    (difftastic--files-internal
-     (get-buffer-create
-      (concat "*difftastic " buffer-A " " buffer-B "*"))
-     file-buf-A
-     file-buf-B
-     (difftastic--format-override-arg lang-or-args))))
+  (if (equal buffer-A buffer-B)
+      (user-error "Buffers have to be different")
+    (difftastic--with-file-bufs ((file-buf-A (difftastic--get-file-buf
+                                              "A" (get-buffer buffer-A)))
+                                 (file-buf-B (difftastic--get-file-buf
+                                                "B" (get-buffer buffer-B))))
+      (difftastic--files-internal
+       (get-buffer-create
+        (concat "*difftastic " buffer-A " " buffer-B "*"))
+       file-buf-A
+       file-buf-B
+       (difftastic--format-override-arg lang-or-args)))))
 
 ;;;###autoload
 (defun difftastic-buffers (buffer-A buffer-B &optional lang-override)
@@ -2590,6 +2614,48 @@ arguments for difftastic call."
         (call-interactively #'dired-diff)
       (funcall #'dired-diff file))))
 
+(defun difftastic--file-buffer-args ()
+  "Return arguments for `difftastic-file-buffer'."
+  (when (equal current-prefix-arg '(4))
+    (let* ((languages (difftastic--get-languages))
+           (suggested (difftastic--make-suggestion
+                       languages
+                       (current-buffer))))
+      (list (completing-read "Language: " languages nil t suggested)))))
+
+(defun difftastic--file-buffer (lang-or-args)
+  ;; checkdoc-params: (lang-or-args)
+  "Implementation of `difftastitc-file-buffer', which see."
+  (if (buffer-modified-p (current-buffer))
+      (difftastic--with-file-bufs ((file-A (cons (buffer-file-name) nil))
+                                   (file-buf-B (cons (difftastic--make-temp-file
+                                                      "buffer-content"
+                                                      (current-buffer))
+                                                     (current-buffer))))
+        (difftastic--files-internal
+         (get-buffer-create
+          (concat "*difftastic file buffer " (buffer-name) "*"))
+         file-A
+         file-buf-B
+         (difftastic--format-override-arg lang-or-args)))
+    (user-error "Buffer has the same contents as a visited file")))
+
+;;;###autoload
+(defun difftastic-file-buffer (&optional lang-override)
+  "Compare current buffer with its visiting file.
+Optionally, provide a LANG-OVERRIDE to override language used.  See
+\\='difft --list-languages\\=' for language list.  When function is
+called with a prefix arg then ask for language before running
+difftastic.  When called with double prefix argument ask for extra
+arguments for difftastic call."
+  (interactive (difftastic--file-buffer-args))
+  (if (buffer-file-name)
+      (if (equal current-prefix-arg '(16))
+          (difftastic--with-extra-arguments lang-override
+                                            #'difftastic--file-buffer)
+        (difftastic--file-buffer lang-override))
+    (user-error "Buffer [%s] is not visiting a file" (buffer-name))))
+
 ;;;###autoload
 (defun difftastic-dired-diff (file &optional lang-override)
   "Compare file at point with FILE using difftastic.
@@ -2608,15 +2674,24 @@ argument ask for extra arguments for difftastic call."
                                         file)
     (difftastic--dired-diff file lang-override)))
 
-(defun difftastic--rerun-file-buf (prefix file-buf metadata)
-  "Create a new temporary file for the FILE-BUF with PREFIX if needed.
-The new FILE-BUF is additionally set in RERUN-ALIST.  The FILE-BUF
-is a cons where car is the file and cdr is a buffer when it is a
-temporary file or nil otherwise."
+(defun difftastic--rerun-file-buf (prefix file-buf metadata &optional other-file)
+  "Create a new temporary file for the FILE-BUF if needed.
+The new temporary file will use PREFIX unless OTHER-FILE is the same as
+file visited by buffer in FILE-BUF.  The new FILE-BUF is additionally
+set in METADATA as file-buf-PREFIX.  The FILE-BUF is a cons where car is
+the file and cdr is a buffer when it is a temporary file or nil
+otherwise."
   (if-let* ((buffer (cdr file-buf)))
       (if (buffer-live-p buffer)
           (setf (alist-get (intern (concat "file-buf-" prefix)) metadata)
-                (difftastic--get-file-buf prefix buffer))
+                (if (and other-file
+                         (equal (buffer-file-name buffer) other-file))
+                    (if (buffer-modified-p buffer)
+                        (cons (difftastic--make-temp-file "buffer-content"
+                                                          buffer)
+                              buffer)
+                      (user-error "Buffer has the same contents a visited file"))
+                  (difftastic--get-file-buf prefix buffer)))
         (user-error "Buffer %s [%s] doesn't exist anymore" prefix buffer))
     file-buf))
 
@@ -2629,7 +2704,8 @@ temporary file or nil otherwise."
         (difftastic--with-file-bufs ((file-buf-A (difftastic--rerun-file-buf
                                                   "A" .file-buf-A metadata))
                                      (file-buf-B (difftastic--rerun-file-buf
-                                                  "B" .file-buf-B metadata)))
+                                                  "B" .file-buf-B metadata
+                                                  (car .file-buf-A))))
           (let* ((default-directory .default-directory)
                  (difftastic-args
                   (if-let* (((stringp lang-or-args))
