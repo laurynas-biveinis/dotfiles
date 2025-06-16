@@ -158,13 +158,13 @@
 		     ("Stephane Zermatten" . "szermatt@gmx.net"))
 		    (:commit . "ed9c76252ac82d6352ba438f664b390fdd0b5d6c"))])
  (beancount .
-	    [(0 9)
+	    [(0 9 0)
 	     nil "A major mode to edit Beancount input files." tar
 	     ((:maintainer "Martin Blais" . "blais@furius.ca")
 	      (:authors
 	       ("Martin Blais" . "blais@furius.ca"))
 	      (:url . "https://elpa.nongnu.org/nongnu/beancount.html")
-	      (:commit . "71c16222461d947b82e45e4b986d01880b492bbb"))])
+	      (:commit . "2303612b2230de8b5849b9c407d3564edd189012"))])
  (better-jumper .
 		[(1 0 1)
 		 ((emacs
@@ -1149,7 +1149,7 @@
 		("Akib Azmain Turja" . "akib@disroot.org"))
 	       (:commit . "6bb82ce89ed93222dd919bc65e0f46ac4aa13479"))])
  (gnuplot .
-	  [(0 10)
+	  [(0 11)
 	   ((emacs
 	     (28 1))
 	    (compat
@@ -1160,7 +1160,7 @@
 	    (:maintainer
 	     ("Maxime Tréca" . "maxime@gmail.com")
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	    (:commit . "868c992c382955eb07db985e0b2cc9f152076125"))])
+	    (:commit . "f10d42221856e86c57dd5cc7400c078c021ba710"))])
  (go-mode .
 	  [(1 6 0)
 	   ((emacs
@@ -1200,7 +1200,7 @@
 	      ("David Andersson" . "l.david.anderssonsverige.nu"))
 	     (:commit . "278cd3e6d5107693aa2bb33189ca503f22f227d0"))])
  (gptel .
-	[(0 9 8)
+	[(0 9 8 5)
 	 ((emacs
 	   (27 1))
 	  (transient
@@ -1213,7 +1213,7 @@
 	  (:maintainer "Karthik Chikmagalur" . "karthik.chikmagalur@gmail.com")
 	  (:authors
 	   ("Karthik Chikmagalur" . "karthik.chikmagalur@gmail.com"))
-	  (:commit . "4c5f7e6953c3e4dac36b4c9cf4b4a2c854febfad"))])
+	  (:commit . "a5af15c770b66a61d0609a736e1db37495655559"))])
  (graphql-mode .
 	       [(1 0 0)
 		((emacs
@@ -2443,7 +2443,7 @@
 		("Eshel Yaron" . "me@eshelyaron.com"))
 	       (:commit . "bd31199a34c0619b346954f25875fcb7239e2b86"))])
  (swift-mode .
-	     [(9 3 0)
+	     [(9 4 0)
 	      ((emacs
 		(24 4))
 	       (seq
@@ -2457,7 +2457,7 @@
 		("Chris Barrett" . "chris.d.barrett@me.com")
 		("Bozhidar Batsov" . "bozhidar@batsov.com")
 		("Arthur Evstifeev" . "lod@pisem.net"))
-	       (:commit . "e30b9d46e031fd25e794f00f23b6427f44f7d221"))])
+	       (:commit . "fc7df7bd906a2bb04aac6e0de47fc7acf33ceed3"))])
  (symbol-overlay .
 		 [(4 3)
 		  ((emacs

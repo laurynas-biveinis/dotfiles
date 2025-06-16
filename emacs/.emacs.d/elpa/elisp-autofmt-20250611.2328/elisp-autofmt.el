@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20250611.40
-;; Package-Revision: 4225b4a7498f
+;; Package-Version: 20250611.2328
+;; Package-Revision: c4cd57b2599e
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -91,10 +91,10 @@ Each entry may be:
   which is intended to support sharing definitions for multi-file packages.
 
 This is intended to be set from file or directory locals and is marked safe."
-  :type '(repeat string))
+  :type '(repeat string)
+  :local t)
 ;;;###autoload
 (put 'elisp-autofmt-load-packages-local 'safe-local-variable #'list-of-strings-p)
-(make-variable-buffer-local 'elisp-autofmt-load-packages-local)
 
 (defcustom elisp-autofmt-ignore-autoload-packages
   (list
@@ -254,7 +254,9 @@ The following keyword arguments are supported:
       (pcase keyw
         (:prefix (setq prefix (pop body)))
         (:suffix (setq suffix (pop body)))
-        (_ (push keyw extra-keywords) (pop body))))
+        (_
+         (push keyw extra-keywords)
+         (pop body))))
     (when extra-keywords
       (error "Invalid keywords: %s" (mapconcat #'symbol-name extra-keywords " ")))
     (let ((prefix (or prefix ""))
@@ -1352,8 +1354,8 @@ otherwise format the surrounding S-expression."
   ;; Unlikely but possible this is nil.
   (let ((filepath buffer-file-name))
     (cond
-     (filepath
-      (not (null (locate-dominating-file (file-name-directory filepath) ".elisp-autofmt"))))
+     ((and filepath (locate-dominating-file (file-name-directory filepath) ".elisp-autofmt"))
+      t)
      (t
       nil))))
 

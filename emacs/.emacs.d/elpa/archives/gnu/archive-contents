@@ -838,7 +838,7 @@
 		      ("Jackson Ray Hamilton" . "jackson@jacksonrayhamilton.com"))
 		     (:commit . "1b30a28857727202d1f6a027f83ad66151fb1e92"))])
  (corfu .
-	[(2 2)
+	[(2 3)
 	 ((emacs
 	   (28 1))
 	  (compat
@@ -849,7 +849,7 @@
 	  (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	  (:authors
 	   ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	  (:commit . "77e639bc6b982be09f355390beef6f200936109a"))])
+	  (:commit . "53aa6c85be72ce220a4321487c535295b0de0488"))])
  (coterm .
 	 [(1 6)
 	  ((emacs
@@ -1846,7 +1846,7 @@
 		("Philip Kaludercic" . "philipk@posteo.net"))
 	       (:commit . "671e53fdef9ed3fdb9ee768216d05b90e3ce592a"))])
  (filechooser .
-	      [(0 2 2)
+	      [(0 2 3)
 	       ((emacs
 		 (28 1))
 		(compat
@@ -1857,7 +1857,7 @@
 		(:maintainer "rahguzar" . "rahguzar@mailbox.org")
 		(:authors
 		 ("rahguzar" . "rahguzar@mailbox.org"))
-		(:commit . "7ccb253b0a6f16e129cb886a144199dce015b07c"))])
+		(:commit . "904ff4764fe3a74442056e56cd298dea1edbf269"))])
  (filladapt .
 	    [(2 12 2)
 	     ((emacs
@@ -2198,13 +2198,13 @@
 	     (:url . "https://elpa.gnu.org/packages/greenbar.html")
 	     (:commit . "7b651257bd0536d454f4b896212b3fe1f8c75024"))])
  (gtags-mode .
-	     [(1 8 8)
+	     [(1 9 2)
 	      ((emacs
 		(28)))
 	      "GNU Global integration with xref, project and imenu." tar
 	      ((:url . "https://github.com/Ergus/gtags-mode")
 	       (:keywords "xref" "project" "imenu" "gtags" "global")
-	       (:commit . "7eb301e2344c542132118012e4332a3db81ccd16"))])
+	       (:commit . "2195fc11c3bf6134a361d898ab4787e1a311ac0f"))])
  (guess-language .
 		 [(0 0 1)
 		  ((cl-lib
@@ -2610,7 +2610,7 @@
 	(:url . "https://elpa.gnu.org/packages/kmb.html")
 	(:commit . "4fee1c87e7e286d7ecd759fb74aa7a112bb51e3a"))])
  (kubed .
-	[(0 4 3)
+	[(0 5 0)
 	 ((emacs
 	   (29 1)))
 	 "Kubernetes, Emacs, done!" tar
@@ -2619,7 +2619,7 @@
 	  (:maintainer "Eshel Yaron" . "~eshel/kubed-devel@lists.sr.ht")
 	  (:authors
 	   ("Eshel Yaron" . "me@eshelyaron.com"))
-	  (:commit . "8f979a198537532ce7749951ee6a85072eeb0610"))])
+	  (:commit . "e8a6f9b0dc25d44f3783036962d6c08eacbdbd23"))])
  (landmark .
 	   [(1 0)
 	    nil "Neural-network robot that learns landmarks" tar
@@ -3013,7 +3013,7 @@
 	      ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
 	     (:commit . "b1f5c7dbdc405e6e10d9ddd99a43a6b2ad61b176"))])
  (modus-themes .
-	       [(4 7 0)
+	       [(4 8 0)
 		((emacs
 		  (28 1)))
 		"Elegant, highly legible and customizable themes" tar
@@ -3022,7 +3022,7 @@
 		 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		 (:authors
 		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		 (:commit . "d5a0eeb4f0fc5f865862465c6d17482d166b3b3d"))])
+		 (:commit . "b7aa3ae780975b6dda98a75197a6ff89876bb7b7"))])
  (mpdired .
 	  [(3)
 	   ((emacs
@@ -3358,7 +3358,7 @@
 		  ("Hanno Perrey" . "hanno@hoowl.se"))
 		 (:commit . "020b03f299dad438f65d7bcbf93553b273fd7c33"))])
  (org-modern .
-	     [(1 8)
+	     [(1 9)
 	      ((emacs
 		(28 1))
 	       (org
@@ -3371,7 +3371,7 @@
 	       (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	       (:authors
 		("Daniel Mendler" . "mail@daniel-mendler.de"))
-	       (:commit . "a58534475b4312b0920aa9d3824272470c8e3500"))])
+	       (:commit . "16bef888cb8e0198dd26f869b85c10c4491a3444"))])
  (org-notify .
 	     [(0 1 1)
 	      ((emacs
@@ -5012,7 +5012,7 @@
 	      ("Andrii Kolomoiets" . "andreyk.mad@gmail.com"))
 	     (:commit . "d044448965d31ca8214f8bca48487e4d9b9d9a0f"))])
  (vc-jj .
-	[(0 2)
+	[(0 3)
 	 ((emacs
 	   (28 1))
 	  (compat
@@ -5023,7 +5023,7 @@
 	  (:maintainer "Rudolf Schlatte" . "rudi@constantly.at")
 	  (:authors
 	   ("Rudolf Schlatte" . "rudi@constantly.at"))
-	  (:commit . "91c15146d14c377cd97d191fd515d1ca8eb91427"))])
+	  (:commit . "e1fe0153fa798a3fcf151cdbb84ea978f2684b63"))])
  (vcard .
 	[(0 2 2)
 	 ((emacs
@@ -5072,7 +5072,7 @@
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org"))
 		 (:commit . "78bc5949db489b143f7424540d6cc56fc529c9ea"))])
  (vertico .
-	  [(2 2)
+	  [(2 3)
 	   ((emacs
 	     (28 1))
 	    (compat
@@ -5083,7 +5083,7 @@
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:authors
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	    (:commit . "bb6abf63cc439601cd65682cfd549e4b6d63d409"))])
+	    (:commit . "b43b594bb318e722b908f01a6a11409af14b1413"))])
  (vertico-posframe .
 		   [(0 8 0)
 		    ((emacs

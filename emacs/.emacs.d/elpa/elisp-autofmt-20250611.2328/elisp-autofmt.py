@@ -444,7 +444,8 @@ def scan_used_fn_defs(defs: FmtDefs, node_parent: NdSexp, fn_used: Set[str]) -> 
     '''
     if node_parent.nodes_only_code:
         node = node_parent.nodes_only_code[0]
-        if isinstance(node, NdSymbol):
+        # When `is_data`, the `fn_arity` value should be ignored.
+        if isinstance(node, NdSymbol) and (not node_parent.hints.get("is_data")):
             symbol = node.data
             len_prev = len(fn_used)
             fn_used.add(symbol)
@@ -589,16 +590,29 @@ def apply_rules_recursive(cfg: FmtConfig, node_parent: NdSexp) -> None:
 
                 # Only wrap with multiple declarations.
                 if cfg.use_wrap:
+                    # Regarding the following `is_data` assignment.
+                    #
+                    # This applies to:
+                    #    (cond
+                    #      (symbol
+                    #        (function X Y Z)
+                    #        result))
+                    # In this case it's incorrect to wrap `symbol` as if it is a function with two arguments.
+                    # Instead, the first argument should be considered "data".
                     if use_native:
                         if isinstance(node_parent.nodes_only_code[1], NdSexp):
                             if len(node_parent.nodes_only_code[1].nodes_only_code) > 1:
                                 for subnode in node_parent.nodes_only_code[1].nodes_only_code[1:]:
                                     subnode.force_newline = True
+                                    if isinstance(subnode, NdSexp):
+                                        subnode.hints["is_data"] = True
                     else:
                         if isinstance(node_parent.nodes_only_code[1], NdSexp):
                             if len(node_parent.nodes_only_code[1].nodes_only_code) > 1:
                                 for subnode in node_parent.nodes_only_code[1].nodes_only_code:
                                     subnode.force_newline = True
+                                    if isinstance(subnode, NdSexp):
+                                        subnode.hints["is_data"] = True
 
                     if not use_native:
                         if len(node_parent.nodes_only_code) > 2:
@@ -607,16 +621,79 @@ def apply_rules_recursive(cfg: FmtConfig, node_parent: NdSexp) -> None:
                             node_parent.nodes_only_code[2].force_newline = True
 
                     apply_relaxed_wrap(node_parent, cfg.style)
-            elif node.data == 'cond':
+
+            elif data_strip == 'cond':  # Also: `cond*`.
                 if cfg.use_wrap:
+                    # If the S-expression is data, don't attempt to evaluate it as a function call.
+                    # This applies to:
+                    #    (cond
+                    #      (symbol
+                    #        (function X Y Z)
+                    #        result))
+                    # In this case it's incorrect to wrap `symbol` as if it is a function with two arguments.
+                    # Instead, the first argument should be considered "data".
                     for subnode in node_parent.nodes_only_code[1:]:
                         subnode.force_newline = True
-                        if isinstance(subnode, NdSexp) and len(subnode.nodes_only_code) >= 2:
-                            subnode.nodes_only_code[1].force_newline = True
-                            apply_relaxed_wrap_when_multiple_args(subnode, cfg.style)
+                        if isinstance(subnode, NdSexp):
+                            if len(subnode.nodes_only_code) >= 2:
+                                subnode.nodes_only_code[1].force_newline = True
+                                apply_relaxed_wrap_when_multiple_args(subnode, cfg.style)
+                            subnode.hints["is_data"] = True
+
+            elif data_strip == 'pcase':
+                if cfg.use_wrap:
+                    # If the S-expression is data, don't attempt to evaluate it as a function call.
+                    # This applies to:
+                    #    (pcase var
+                    #      (symbol x))
+                    # In this case it's incorrect to wrap `symbol` as if it is a function with two arguments.
+                    # Instead, the first argument should be considered "data".
+                    for subnode in node_parent.nodes_only_code[2:]:
+                        # subnode.force_newline = True
+                        if isinstance(subnode, NdSexp):
+                            if len(subnode.nodes_only_code) >= 3:
+                                subnode.nodes_only_code[1].force_newline = True
+                                apply_relaxed_wrap_when_multiple_args(subnode, cfg.style)
+                            subnode.hints["is_data"] = True
+
+                    # Needed so the "value" is is not wrapped.
+                    node_parent.index_wrap_hint = 2
+                    # Needed so the body of the error cases is de-dented.
+                    node_parent.hints['indent'] = 1
+                    apply_relaxed_wrap(node_parent, cfg.style)
+
+            elif node.data in {
+                    'condition-case',
+                    'condition-case-unless-debug',
+            }:
+                if cfg.use_wrap:
+                    # If the S-expression is data, don't attempt to evaluate it as a function call.
+                    # This applies to:
+                    #    (condition-case error
+                    #        (progn
+                    #          result)
+                    #      (error
+                    #       result)
+                    # In this case it's incorrect to wrap `error` as if it is a function with two arguments.
+                    # Instead, the first argument should be considered "data".
+                    for subnode in node_parent.nodes_only_code[3:]:
+                        subnode.force_newline = True
+                        if isinstance(subnode, NdSexp):
+                            if len(subnode.nodes_only_code) >= 2:
+                                subnode.nodes_only_code[1].force_newline = True
+                                apply_relaxed_wrap_when_multiple_args(subnode, cfg.style)
+                            subnode.hints["is_data"] = True
+
+                    # Needed so the "error" id is not indented.
+                    node_parent.index_wrap_hint = 2
+                    # Needed so the body of the error cases is de-dented.
+                    node_parent.hints['indent'] = 2
+                    apply_relaxed_wrap(node_parent, cfg.style)
             else:
                 # First lookup built-in definitions, if they exist.
-                if (fn_data := cfg.defs.fn_arity.get(node.data)) is not None:
+                if node_parent.hints.get("is_data"):
+                    pass
+                elif (fn_data := cfg.defs.fn_arity.get(node.data)) is not None:
                     # May be `FnArity` or a list.
                     symbol_type, nargs_min, nargs_max, hints = fn_data
                     if nargs_min is None:
@@ -947,6 +1024,12 @@ class NdSexp(Node):
         'wrap_all_or_nothing_hint',
         # Disallow re-wrapping for `nodes` (does not apply to this nodes wrapped state).
         'wrap_locked',
+        # Documentation for hints:
+        # - `is_data`: boolean
+        #   When true, treat the the S-expression is data,
+        #   don't attempt to evaluate its first symbol as a function call.
+        #   This is needed for `let` & `cond` style statements where elements
+        #   where an S-expression doesn't define a function call.
         'hints',
         'prior_states',
         'fmt_cache',
@@ -977,16 +1060,20 @@ class NdSexp(Node):
         '''
         Return the ``FnArity`` from the first argument of this S-expressions symbol (if it is a symbol).
         '''
-        if self.nodes_only_code:
+        if self.nodes_only_code and (not self.hints.get("is_data")):
             node = self.nodes_only_code[0]
             if isinstance(node, NdSymbol):
                 return defs.fn_arity.get(node.data)
         return None
 
-    def maybe_function_call(self) -> bool:
+    def maybe_function_call(self, *, allow_data: bool) -> bool:
         '''
         Return true if this may be a function call signature.
         '''
+        if not allow_data:
+            if self.hints.get("is_data"):
+                return False
+
         if self.nodes_only_code:
             node = self.nodes_only_code[0]
             # Currently numbers are treated as symbols, check their contents here.
@@ -2149,7 +2236,9 @@ def fmt_solver_fill_column_unwrap_test_state_permutations(
     # causes an awkward and unbalanced formatting.
     if (
             # Ensure this is not a literal list of strings or numbers for e.g.
-            node.maybe_function_call() and
+            # NOTE: that we may want to handle data differently,
+            # currently matching logic for values inside `let` & `cond` works nicely.
+            node.maybe_function_call(allow_data=True) and
             # All arguments were wrapped onto separate lines.
             (False not in state_curr[1:])
     ):
@@ -2371,7 +2460,9 @@ def fmt_solver_newline_constraints_apply(
         # First node is a symbol (matches a function signature):
         if len(node_parent.nodes_only_code) > node_parent.index_wrap_hint:
             if (
-                    node_parent.maybe_function_call() or
+                    # NOTE: that we may want to handle data differently,
+                    # currently matching logic for values inside `let` & `cond` works nicely.
+                    node_parent.maybe_function_call(allow_data=True) or
                     isinstance(node_parent.nodes_only_code[0], NdSexp)
             ):
                 node = node_parent.nodes_only_code[node_parent.index_wrap_hint]
