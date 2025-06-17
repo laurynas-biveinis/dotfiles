@@ -261,146 +261,6 @@ See `xr' for a description of the DIALECT argument.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/seq-2.24/seq-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/seq-2.24/seq-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "seq-24" '("seq"))
-
-
-
-(autoload 'seq-subseq "seq-25" "\
-Return the sequence of elements of SEQUENCE from START to END.
-END is exclusive.
-
-If END is omitted, it defaults to the length of the sequence.  If
-START or END is negative, it counts from the end.  Signal an
-error if START or END are outside of the sequence (i.e too large
-if positive or too small if negative).
-
-(fn SEQUENCE START &optional END)")
-(autoload 'seq-take "seq-25" "\
-Return the sequence made of the first N elements of SEQUENCE.
-The result is a sequence of the same type as SEQUENCE.
-
-If N is a negative integer or zero, an empty sequence is
-returned.
-
-(fn SEQUENCE N)")
-(autoload 'seq-sort-by "seq-25" "\
-Sort SEQUENCE transformed by FUNCTION using PRED as the comparison function.
-Elements of SEQUENCE are transformed by FUNCTION before being
-sorted.  FUNCTION must be a function of one argument.
-
-(fn FUNCTION PRED SEQUENCE)")
-(autoload 'seq-filter "seq-25" "\
-Return a list of all the elements in SEQUENCE for which PRED returns non-nil.
-
-(fn PRED SEQUENCE)")
-(autoload 'seq-remove "seq-25" "\
-Return a list of all the elements in SEQUENCE for which PRED returns nil.
-
-(fn PRED SEQUENCE)")
-(autoload 'seq-remove-at-position "seq-25" "\
-Return a copy of SEQUENCE with the element at index N removed.
-
-N is the (zero-based) index of the element that should not be in
-the result.
-
-The result is a sequence of the same type as SEQUENCE.
-
-(fn SEQUENCE N)")
-(autoload 'seq-reduce "seq-25" "\
-Reduce the function FUNCTION across SEQUENCE, starting with INITIAL-VALUE.
-
-Return the result of calling FUNCTION with INITIAL-VALUE and the
-first element of SEQUENCE, then calling FUNCTION with that result
-and the second element of SEQUENCE, then with that result and the
-third element of SEQUENCE, etc.  FUNCTION will be called with
-INITIAL-VALUE (and then the accumulated value) as the first
-argument, and the elements from SEQUENCE as the second argument.
-
-If SEQUENCE is empty, return INITIAL-VALUE and FUNCTION is not called.
-
-(fn FUNCTION SEQUENCE INITIAL-VALUE)")
-(autoload 'seq-every-p "seq-25" "\
-Return non-nil if PRED returns non-nil for all the elements of SEQUENCE.
-
-(fn PRED SEQUENCE)")
-(autoload 'seq-some "seq-25" "\
-Return non-nil if PRED returns non-nil for at least one element of SEQUENCE.
-If the value is non-nil, it is the first non-nil value returned by PRED.
-
-(fn PRED SEQUENCE)")
-(autoload 'seq-find "seq-25" "\
-Return the first element in SEQUENCE for which PRED returns non-nil.
-If no such element is found, return DEFAULT.
-
-Note that `seq-find' has an ambiguity if the found element is
-identical to DEFAULT, as in that case it is impossible to know
-whether an element was found or not.
-
-(fn PRED SEQUENCE &optional DEFAULT)")
-(autoload 'seq-position "seq-25" "\
-Return the (zero-based) index of the first element in SEQUENCE \"equal\" to ELT.
-\"Equality\" is defined by the function TESTFN, which defaults to `equal'.
-
-(fn SEQUENCE ELT &optional TESTFN)")
-(autoload 'seq-positions "seq-25" "\
-Return list of indices of SEQUENCE elements for which TESTFN returns non-nil.
-
-TESTFN is a two-argument function which is called with each element of
-SEQUENCE as the first argument and ELT as the second.
-TESTFN defaults to `equal'.
-
-The result is a list of (zero-based) indices.
-
-(fn SEQUENCE ELT &optional TESTFN)")
-(autoload 'seq-uniq "seq-25" "\
-Return a list of the elements of SEQUENCE with duplicates removed.
-TESTFN is used to compare elements, and defaults to `equal'.
-
-(fn SEQUENCE &optional TESTFN)")
-(autoload 'seq-union "seq-25" "\
-Return a list of all the elements that appear in either SEQUENCE1 or SEQUENCE2.
-\"Equality\" of elements is defined by the function TESTFN, which
-defaults to `equal'.
-
-(fn SEQUENCE1 SEQUENCE2 &optional TESTFN)")
-(autoload 'seq-intersection "seq-25" "\
-Return a list of all the elements that appear in both SEQUENCE1 and SEQUENCE2.
-\"Equality\" of elements is defined by the function TESTFN, which
-defaults to `equal'.
-
-(fn SEQUENCE1 SEQUENCE2 &optional TESTFN)")
-(autoload 'seq-group-by "seq-25" "\
-Apply FUNCTION to each element of SEQUENCE.
-Separate the elements of SEQUENCE into an alist using the results as
-keys.  Keys are compared using `equal'.
-
-(fn FUNCTION SEQUENCE)")
-(autoload 'seq-max "seq-25" "\
-Return the largest element of SEQUENCE.
-SEQUENCE must be a sequence of numbers or markers.
-
-(fn SEQUENCE)")
-(autoload 'seq-random-elt "seq-25" "\
-Return a randomly chosen element from SEQUENCE.
-Signal an error if SEQUENCE is empty.
-
-(fn SEQUENCE)")
-(register-definition-prefixes "seq-25" '("seq-"))
-
-
-(provide 'seq-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0/compat-autoloads.el"))
 
 
@@ -7478,7 +7338,7 @@ When called interactively, you will be asked to enter the QUERY.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.5.0/plantuml-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.5.0/plantuml-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.6.0/plantuml-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/plantuml-mode-1.6.0/plantuml-mode-autoloads.el"))
 
 
 
@@ -9248,7 +9108,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib/mcp-server-lib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250613.1413/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250613.1413/mcp-server-lib-autoloads.el"))
 
 
 
@@ -9261,24 +9121,24 @@ Mark the item (a task or a project) at point as done.")
 
 
 
-(register-definition-prefixes "mcp-server-lib-bytecode-handler-test" '("mcp-server-lib-test-bytecode-handler--handler"))
-
-
-
 (autoload 'mcp-server-lib-start "mcp-server-lib-commands" "\
 Start the MCP server and begin handling client requests.
 
 This function starts the MCP server that can process JSON-RPC
 requests via `mcp-server-lib-process-jsonrpc'.  Once started, the server
 will dispatch incoming requests to the appropriate tool
-handlers that have been registered with `mcp-server-lib-register-tool'." t)
+handlers that have been registered with `mcp-server-lib-register-tool'.
+
+See also: `mcp-server-lib-stop'" t)
 (autoload 'mcp-server-lib-stop "mcp-server-lib-commands" "\
 Stop the MCP server from processing client requests.
 
 Sets the server state to stopped, which prevents further processing of
 client requests.  Note that this does not release any resources or unregister
 tools, it simply prevents `mcp-server-lib-process-jsonrpc' from accepting new
-requests." t)
+requests.
+
+See also: `mcp-server-lib-start'" t)
 (autoload 'mcp-server-lib-install "mcp-server-lib-commands" "\
 Install emacs-mcp-stdio.sh to `mcp-server-lib-install-directory'." t)
 (autoload 'mcp-server-lib-uninstall "mcp-server-lib-commands" "\
@@ -9296,10 +9156,6 @@ Display metrics in a buffer." t)
 
 
 (register-definition-prefixes "mcp-server-lib-metrics" '("mcp-server-lib-metrics-"))
-
-
-
-(register-definition-prefixes "mcp-server-lib-test" '("mcp-server-lib-test--"))
 
 
 (provide 'mcp-server-lib-autoloads)
@@ -12051,7 +11907,7 @@ Disable the Elisp development MCP tools.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250611.40/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250611.40/elisp-autofmt-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250611.2328/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250611.2328/elisp-autofmt-autoloads.el"))
 
 
 
@@ -12315,7 +12171,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.2/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.2/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.3/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.0.3/cmake-mode-autoloads.el"))
 
 
 
@@ -12713,15 +12569,15 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color xr seq compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
-        package-activated-list)))
+	'(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-mcp-dev elisp-lint elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+	package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
-        (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.6" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6" "/Users/laurynas/.emacs.d/elpa/transient-0.9.2" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
-         Info-directory-list)))
+	(append
+	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.6" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6" "/Users/laurynas/.emacs.d/elpa/transient-0.9.2" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
+	 Info-directory-list)))
 
 ;; Local Variables:
 ;; version-control: never
