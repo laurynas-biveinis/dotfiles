@@ -4,7 +4,6 @@
 
 ;; Author: Adrià Garriga-Alonso <adria.garriga@gmail.com>
 ;; URL: https://github.com/rhaps0dy/emacs-oauth2-auto
-;; Version: 0.1
 ;; Keywords: comm oauth2
 ;; Package-Requires: ((emacs "26.1") (aio "1.0") (alert "1.2") (dash "2.19"))
 

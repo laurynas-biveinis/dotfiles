@@ -2,7 +2,8 @@
 
 ;; Author: myuhe <yuhei.maeda_at_gmail.com>
 ;; URL: https://github.com/kidd/org-gcal.el
-;; Version: 0.4.2
+;; Package-Version: 20250617.1626
+;; Package-Revision: 29b0bdddee5e
 ;; Maintainer: Raimon Grau <raimonster@gmail.com>
 ;; Copyright (C) :2014 myuhe all rights reserved.
 ;; Keywords: convenience,
@@ -1187,11 +1188,11 @@ or nil if no valid link is found."
       (insert link)
       (org-mode)
       (goto-char (point-min))
-      (when-let ((link-element (car-safe (cdr-safe (org-element-link-parser)))))
-        (let ((link-title-begin (plist-get link-element :contents-begin))
-              (link-title-end (plist-get link-element :contents-end)))
+      (when-let ((link-element (org-element-link-parser)))
+        (let ((link-title-begin (org-element-property :contents-begin link-element))
+              (link-title-end (org-element-property :contents-end link-element)))
           (append
-           `((url . ,(plist-get link-element :raw-link)))
+           `((url . ,(org-element-property :raw-link link-element)))
            (when (and link-title-begin link-title-end)
              `((title
                 . ,(buffer-substring-no-properties

@@ -15,13 +15,21 @@
  '(package-selected-packages
    '(elisp-dev-mcp mcp-server-lib relint org-autotask-mcp elisp-autofmt simple-httpd elisp-lint org-autotask rustic forge magit magit-todos shfmt indent-bars elpy org-gcal pr-review git-modes ob-rust plantuml-mode emacsql-sqlite-builtin difftastic wgrep-deadgrep prism org-sticky-header topsy org-roam-ui org-roam fancy-compilation flycheck-status-emoji flycheck-google-cpplint git-messenger beginend cheat-sh info-colors grab-mac-link stripe-buffer beacon lua-mode wgrep lsp-treemacs s calfw-ical calfw calfw-org gcmh which-key keyfreq company-box yasnippet iedit page-break-lines xterm-color eldoc-cmake projectile vterm deadgrep all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent lsp-ui lsp-mode flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode ssh ssh-config-mode bison-mode cmake-font-lock cmake-mode solarized-theme wakatime-mode exec-path-from-shell))
  '(package-vc-selected-packages
-   '((elisp-dev-mcp :vc-backend Git :url "https://github.com/laurynas-biveinis/elisp-dev-mcp")
+   '((elisp-mcp-dev :vc-backend Git :url "https://github.com/laurynas-biveinis/elisp-mcp-dev")
      (mcp-server-lib :vc-backend Git :url "https://github.com/laurynas-biveinis/mcp-server-lib.el/")
-     (elisp-mcp-dev :vc-backend Git :url "https://github.com/laurynas-biveinis/elisp-mcp-dev")
+     (elisp-dev-mcp :vc-backend Git :url "https://github.com/laurynas-biveinis/elisp-dev-mcp")
      (org-autotask-mcp :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask-mcp")
      (org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
    '((elisp-lint-indent-specs
+      (if-let* . 1)
+      (mcp-server-lib-test--with-server . defun)
+      (mcp-server-lib-test--with-tools . 1)
+      (mcp-server-lib-test--successful-req . defun)
+      (mcp-server-lib-test--verify-req-success . defun)
+      (mcp-server-lib-test--with-error-tracking . 1)
+      (cl-defstruct))
+     (elisp-lint-indent-specs
       (elisp-dev-mcp-test--with-server . defun)
       (elisp-dev-mcp-test--with-bytecode-file . defun))
      (package-lint-main-file . "mcp-server-lib.el")
