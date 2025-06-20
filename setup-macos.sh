@@ -315,7 +315,8 @@ brew update
 brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
      hunspell duti grep pinentry-mac htop findutils fd delta jq colordiff npm \
      gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
-     git-lfs plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint
+     git-lfs plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint \
+     iperf3
 
 # C++ development
 brew install llvm iwyu cppcheck creduce circleci boost cpplint \
@@ -346,7 +347,8 @@ sudo ln -sf en_US.dic en_LT.dic
 
 sudo gem install mdl
 brew install --cask slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner michaelvillar-timer utm basictex signal whatsapp
+     telegram keycombiner michaelvillar-timer utm basictex signal whatsapp \
+     qfinder-pro
 # TeX
 sudo tlmgr install dvipng
 
