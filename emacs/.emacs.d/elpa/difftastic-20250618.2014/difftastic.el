@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250610.752
-;; Package-Revision: c0b68afbc128
+;; Package-Version: 20250618.2014
+;; Package-Revision: b1781b12d911
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -1659,8 +1659,7 @@ It adds \\='--color=always\\=', \\='--background=(light|dark)\\=', and
 The DIFFTASTIC-ARGS is a list of extra arguments to pass to
 `difftastic-executable'."
   (let ((difftastic-args
-         (mapcar (lambda (arg)
-                   (replace-regexp-in-string (rx " ") "\\\\ " arg))
+         (mapcar #'shell-quote-argument
                  (difftastic--add-standard-args difftastic-args
                                                 requested-width))))
     (cons (format

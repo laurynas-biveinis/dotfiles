@@ -261,7 +261,7 @@ See `xr' for a description of the DIALECT argument.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0/compat-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1/compat-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1/compat-autoloads.el"))
 
 
 
@@ -8763,7 +8763,7 @@ provided. Otherwise it will just error.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-gcal-20240426.2253/org-gcal-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-gcal-20240426.2253/org-gcal-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-gcal-20250617.1626/org-gcal-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-gcal-20250617.1626/org-gcal-autoloads.el"))
 
 
 
@@ -9108,7 +9108,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250613.1413/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250613.1413/mcp-server-lib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250618.610/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250618.610/mcp-server-lib-autoloads.el"))
 
 
 
@@ -9128,6 +9128,8 @@ This function starts the MCP server that can process JSON-RPC
 requests via `mcp-server-lib-process-jsonrpc'.  Once started, the server
 will dispatch incoming requests to the appropriate tool
 handlers that have been registered with `mcp-server-lib-register-tool'.
+
+Resets all metrics when starting.
 
 See also: `mcp-server-lib-stop'" t)
 (autoload 'mcp-server-lib-stop "mcp-server-lib-commands" "\
@@ -11980,7 +11982,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250610.752/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250610.752/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250618.2014/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250618.2014/difftastic-autoloads.el"))
 
 
 
@@ -12576,7 +12578,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.6" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6" "/Users/laurynas/.emacs.d/elpa/transient-0.9.2" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.0")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.0" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.6" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6" "/Users/laurynas/.emacs.d/elpa/transient-0.9.2" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
          Info-directory-list)))
 
 ;; Local Variables:

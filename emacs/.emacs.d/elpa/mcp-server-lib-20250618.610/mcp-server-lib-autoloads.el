@@ -24,6 +24,8 @@ requests via `mcp-server-lib-process-jsonrpc'.  Once started, the server
 will dispatch incoming requests to the appropriate tool
 handlers that have been registered with `mcp-server-lib-register-tool'.
 
+Resets all metrics when starting.
+
 See also: `mcp-server-lib-stop'" t)
 (autoload 'mcp-server-lib-stop "mcp-server-lib-commands" "\
 Stop the MCP server from processing client requests.
