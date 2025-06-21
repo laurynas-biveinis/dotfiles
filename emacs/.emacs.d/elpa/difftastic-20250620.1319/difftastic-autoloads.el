@@ -33,6 +33,22 @@ When called with double prefix argument ask for extra arguments for
 difftastic call.
 
 (fn REV)" t)
+(autoload 'difftastic-forge-create-pulreq-show-diff "difftastic" "\
+When creating a pull-request, show difftastic diff.
+This function is meant to be used in a `forge-edit-post-hook', for
+example as a replacement for (or in addition to)
+`forge-create-pulreq-show-diff'.")
+(autoload 'difftastic-forge-pullreq-show-diff "difftastic" "\
+Show the result of \\='git diff BASE..HEAD\\=' with difftastic.
+When called from a pull request buffer the BASE and HEAD branches are
+determined based on the current pull request.  When not called from a
+pull request buffer When called with a prefix argument force to ask for
+branches to compare.  When called with double prefix argument ask for
+extra arguments for difftastic call.  When called with triple prefix
+argument force to ask for branches to compare and ask for extra
+arguments for difftastic call.
+
+(fn &optional BASE HEAD)" t)
 (autoload 'difftastic-magit-diff-buffer-file "difftastic" "\
 Show diff for the blob or file visited in the current buffer.
 When the buffer visits a blob, then show the respective commit.  When
@@ -99,7 +115,7 @@ prefix argument ask for extra arguments for difftastic call.
 
 ;;; Generated autoloads from difftastic-bindings.el
 
-(defvar difftastic-bindings-alist '((((prefixes (magit-diff (-1 -1) magit-diff))) ("M-d" difftastic-magit-diff "Difftastic diff (dwim)") ("M-c" difftastic-magit-show "Difftastic show")) (((prefixes (magit-blame "b" magit-blame)) (keymaps (magit-blame-read-only-mode-map . magit-blame))) ("M-RET" difftastic-magit-show "Difftastic show")) (((prefixes (magit-file-dispatch (0 1 -1) magit-files))) ("M-d" difftastic-magit-diff-buffer-file "Difftastic")) (((keymaps (dired-mode-map . dired))) ("M-=" difftastic-dired-diff))) "\
+(defvar difftastic-bindings-alist '((((prefixes (magit-diff (-1 -1) magit-diff))) ("M-d" difftastic-magit-diff "Difftastic diff (dwim)") ("M-c" difftastic-magit-show "Difftastic show")) (((prefixes (magit-blame "b" magit-blame)) (keymaps (magit-blame-read-only-mode-map . magit-blame))) ("M-RET" difftastic-magit-show "Difftastic show")) (((prefixes (magit-file-dispatch (0 1 -1) magit-files))) ("M-d" difftastic-magit-diff-buffer-file "Difftastic")) (((keymaps (dired-mode-map . dired))) ("M-=" difftastic-dired-diff)) (((prefixes (forge-post-menu "C-c" forge-post))) ("C-M-d" difftastic-forge-pullreq-show-diff "Difftastic diff")) (((keymaps (forge-post-mode-map . forge-post))) ("C-c C-M-d" difftastic-forge-pullreq-show-diff))) "\
 Define `difftastic' bindings.
 This variable defines all bindings together with prefixes and keymaps
 where they should be installed.  It is an alist where each entry in in a
