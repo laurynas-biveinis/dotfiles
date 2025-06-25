@@ -5,10 +5,11 @@
 ;; Compatibility: Tested with Emacs 25 through 27 (current master)
 ;; Author: Zhang Weize (zwz)
 ;; Maintainer: Carlo Sciolla (skuro)
-;; Keywords: uml plantuml ascii
-;; Package-Version: 1.6.0
-;; Package-Revision: v1.6.0-0-g2c700c4d285d
-;; Package-Requires: ((dash "2.0.0") (emacs "25.0"))
+;; Keywords: files text processes tools
+;; Package-Version: 1.7.0
+;; Package-Revision: v1.7.0-0-g1666d8b2798e
+;; Package-Requires: ((dash "2.0.0") (emacs "25.1"))
+;; Homepage: https://github.com/skuro/plantuml-mode
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -37,6 +38,7 @@
 
 ;;; Change log:
 ;;
+;; version 1.7.0, 2025-05-24 Support for `completion-at-point'
 ;; version 1.6.0, 2025-05-15 Fix server exec mode; various indentation enhancements and bug fixes; better preview buffer management
 ;; version 1.5.0, 2025-05-14 Fixed warnings with new Java versions #157; updated versions to let CI work again
 ;; version 1.4.1, 2019-09-03 Better indentation; more bugfixing; actually adding `executable' mode
@@ -78,7 +80,7 @@
 (require 'dash)
 (require 'xml)
 
-(defgroup plantuml-mode nil  "Major mode for editing plantuml file."
+(defgroup plantuml nil  "Major mode for editing plantuml file."
   :group 'languages)
 
 (defcustom plantuml-jar-path
@@ -134,7 +136,15 @@
 
 (defcustom plantuml-default-exec-mode 'server
   "Default execution mode for PlantUML.  Valid values are:
-- `jar': run PlantUML as a JAR file (requires a local install of the PlantUML JAR file, see `plantuml-jar-path'"
+- `jar': run PlantUML as a JAR file
+- `server': contact the PlantUML server at `plantuml-server-url'
+- `executable' run the PlantUML executable at `plantuml-executable-path'
+
+The `jar' exec mode requires a local install of the PlantUML JAR file,
+see `plantuml-jar-path'.
+
+The `executable' exec mode requires a local install of the PlantUML JAR file,
+see `plantuml-executable-path'."
   :type 'symbol
   :group 'plantuml
   :options '(jar server executable))
@@ -145,14 +155,14 @@
   :group 'plantuml)
 
 (defcustom plantuml-indent-level 8
-  "Indentation level of PlantUML lines"
+  "Indentation level of PlantUML lines."
   :type 'natnum
   :group 'plantuml)
 
 (defun plantuml-jar-render-command (&rest arguments)
   "Create a command line to execute PlantUML with arguments (as ARGUMENTS)."
   (let* ((cmd-list (append plantuml-java-args (list (expand-file-name plantuml-jar-path)) plantuml-jar-args arguments))
-         (cmd (mapconcat 'identity cmd-list "|")))
+         (cmd (mapconcat #'identity cmd-list "|")))
     (plantuml-debug (format "Command is [%s]" cmd))
     cmd-list))
 
@@ -179,7 +189,8 @@
 
 ;; PlantUML execution mode
 (defvar-local plantuml-exec-mode nil
-  "The Plantuml execution mode override.  See `plantuml-default-exec-mode' for acceptable values.")
+  "The Plantuml execution mode override.
+See `plantuml-default-exec-mode' for acceptable values.")
 
 (defun plantuml-set-exec-mode (mode)
   "Set the execution mode MODE for PlantUML."
@@ -212,7 +223,7 @@
   (setq plantuml-mode-debug-enabled nil))
 
 (defun plantuml-debug (msg)
-  "Writes msg (as MSG) into the *PLANTUML Messages* buffer without annoying the user."
+  "Writes MSG into the *PLANTUML Messages* buffer without annoying the user."
   (if plantuml-mode-debug-enabled
       (let* ((log-buffer-name "*PLANTUML Messages*")
              (log-buffer (get-buffer-create log-buffer-name)))
@@ -248,7 +259,8 @@
     (message "Aborted.")))
 
 (defun plantuml-jar-java-version ()
-  "Inspects the Java runtime version of the configured Java command in `plantuml-java-command'."
+  "Inspects the Java runtime version of the configured Java command.
+The actual command is taken from in `plantuml-java-command'."
   (save-excursion
     (save-match-data
       (with-temp-buffer
@@ -257,30 +269,34 @@
         (string-to-number (match-string 2))))))
 
 (defun plantuml-jar-get-language (buf)
-  "Retrieve the language specification from the PlantUML JAR file and paste it into BUF."
+  "Retrieve the language specification from the PlantUML JAR file.
+The language spec is pasted into the buffer  BUF."
   (unless (or (eq system-type 'cygwin) (file-exists-p plantuml-jar-path))
     (error "Could not find plantuml.jar at %s" plantuml-jar-path))
   (with-current-buffer buf
     (let ((cmd-args (append (list plantuml-java-command nil t nil)
                             (plantuml-jar-render-command "-language"))))
-      (apply 'call-process cmd-args)
+      (apply #'call-process cmd-args)
       (goto-char (point-min)))))
 
 (defun plantuml-server-get-language (buf)
-  "Retrieve the language specification from the PlantUML server and paste it into BUF."
+  "Retrieve the language specification from the PlantUML server.
+The language spec is pasted into the buffer  BUF."
   (let ((lang-url (concat plantuml-server-url "/language")))
     (with-current-buffer buf
       (url-insert-file-contents lang-url))))
 
 (defun plantuml-executable-get-language (buf)
-  "Retrieve the language specification from the PlantUML executable and paste it into BUF."
+  "Retrieve the language specification from the PlantUML executable.
+The language spec is pasted into the buffer  BUF."
   (with-current-buffer buf
     (let ((cmd-args (append (list plantuml-executable-path nil t nil) (list "-language"))))
-      (apply 'call-process cmd-args)
+      (apply #'call-process cmd-args)
       (goto-char (point-min)))))
 
 (defun plantuml-get-language (mode buf)
-  "Retrieve the language spec using the preferred PlantUML execution mode MODE.  Paste the result into BUF."
+  "Retrieve the language spec using the preferred PlantUML execution mode MODE.
+Paste the result into BUF."
   (let ((get-fn (pcase mode
                   ('jar #'plantuml-jar-get-language)
                   ('server #'plantuml-server-get-language)
@@ -290,7 +306,8 @@
       (error "Unsupported execution mode %s" mode))))
 
 (defun plantuml-init (mode)
-  "Initialize the keywords or builtins from the cmdline language output.  Use exec mode MODE to load the language details."
+  "Initialize the keywords or builtins from the cmdline language output.
+Use exec mode MODE to load the language details."
   (with-temp-buffer
     (plantuml-get-language mode (current-buffer))
     (let ((found (search-forward ";" nil t))
@@ -353,7 +370,7 @@
                      plantuml-output-type)))
 
 (defun plantuml-set-output-type (type)
-  "Set the desired output type (as TYPE) for the current buffer.
+  "Set the desired output TYPE for the current buffer.
 If the
 major mode of the current buffer mode is not plantuml-mode, set the
 default output type for new buffers."
@@ -361,7 +378,7 @@ default output type for new buffers."
   (setq plantuml-output-type type))
 
 (defun plantuml-is-image-output-p ()
-  "Return non-nil if the diagram output format is an image, false if it's text based."
+  "Return t if `plantuml-output-type' denotes an image, nil if it's text based."
   (not (equal "txt" plantuml-output-type)))
 
 (defun plantuml-jar-output-type-opt (output-type)
@@ -372,7 +389,7 @@ Note that output type `txt' is promoted to `utxt' for better rendering."
                  (_     output-type))))
 
 (defun plantuml-jar-start-process (buf)
-  "Run PlantUML as an Emacs process and puts the output into the given buffer (as BUF)."
+  "Run the PlantUML JAR and puts the output into the given buffer BUF."
   (let ((java-args (if (<= 8 (plantuml-jar-java-version))
                        (remove "--illegal-access=deny" plantuml-java-args)
                      plantuml-java-args)))
@@ -385,7 +402,7 @@ Note that output type `txt' is promoted to `utxt' for better rendering."
              "-p"))))
 
 (defun plantuml-executable-start-process (buf)
-  "Run PlantUML as an Emacs process and puts the output into the given buffer (as BUF)."
+  "Run the PlantUML executable and puts the output into the given buffer BUF."
   (apply #'start-process
          "PLANTUML" buf plantuml-executable-path
          `(,@plantuml-executable-args
@@ -427,7 +444,7 @@ Put the result into buffer BUF.  Window is selected according to PREFIX:
                             (plantuml-update-preview-buffer prefix buf)))))
 
 (defun plantuml-server-encode-url (string)
-  "Encode the string STRING into a URL suitable for PlantUML server interactions."
+  "Encode STRING into a URL suitable for PlantUML server interactions."
   (let* ((coding-system (or buffer-file-coding-system
                             "utf8"))
          (str (encode-coding-string string coding-system))
@@ -445,7 +462,8 @@ Put the result into buffer BUF and place it according to PREFIX:
       (save-match-data
         (url-retrieve url-request-location
                       (lambda (status)
-                        ;; TODO: error check
+                        (if-let ((error (plist-get status :error)))
+                          (message (concat "PlantUML " (prin1-to-string error))))
                         (goto-char (point-min))
                         ;; skip the HTTP headers
                         (while (not (looking-at "\n"))
@@ -546,8 +564,20 @@ Uses prefix (as PREFIX) to choose where to display it:
       (plantuml-preview-region prefix (region-beginning) (region-end))
     (plantuml-preview-buffer prefix)))
 
+(defun plantuml-deprecation-warning ()
+  "Warns the user about the deprecation of the `puml-mode' project."
+  (if (and plantuml-suppress-deprecation-warning
+           (featurep 'puml-mode))
+      (display-warning :warning
+                       "`puml-mode' is now deprecated and no longer updated, but it's still present in your system. \
+You should move your configuration to use `plantuml-mode'. \
+See more at https://github.com/skuro/puml-mode/issues/26")))
+
 (defun plantuml-init-once (&optional mode)
-  "Ensure initialization only happens once.  Use exec mode MODE to load the language details or by first querying `plantuml-get-exec-mode'."
+  "Ensure initialization only happens once.
+Use exec mode MODE to load the language details
+or by first querying `plantuml-get-exec-mode'."
+  (plantuml-deprecation-warning)
   (let ((mode (or mode (plantuml-get-exec-mode))))
     (unless plantuml-kwdList
       (plantuml-init mode)
@@ -582,7 +612,7 @@ The opening { has to be the last visible character in the line (whitespace
 might follow).")
       (defvar plantuml-indent-regexp-note-start "^\s*\\(floating\s+\\)?[hr]?note\s+\\(right\\|left\\|top\\|bottom\\|over\\|as\\)[^:]*\\(\\:\\:[^:]+\\)?$" "simplyfied regex; note syntax is especially inconsistent across diagrams")
       (defvar plantuml-indent-regexp-group-start "^\s*\\(alt\\|else\\|opt\\|loop\\|par\\|break\\|critical\\|group\\)\\(?:\s+.+\\|$\\)"
-        "Indentation regex for plantuml group elements that are defined for sequence diagrams.
+        "Indentation regex for plantuml group elements  defined for sequence diagrams.
 Two variants for groups: keyword is either followed by whitespace and some text
 or it is followed by line end.")
       (defvar plantuml-indent-regexp-activate-start "^\s*activate\s+.+$")
@@ -592,7 +622,8 @@ or it is followed by line end.")
       (defvar plantuml-indent-regexp-header-start "^\s*\\(?:\\(?:center\\|left\\|right\\)\s+header\\|header\\)\s*\\('.*\\)?$")
       (defvar plantuml-indent-regexp-footer-start "^\s*\\(?:\\(?:center\\|left\\|right\\)\s+footer\\|footer\\)\s*\\('.*\\)?$")
       (defvar plantuml-indent-regexp-legend-start "^\s*\\(?:legend\\|legend\s+\\(?:bottom\\|top\\)\\|legend\s+\\(?:center\\|left\\|right\\)\\|legend\s+\\(?:bottom\\|top\\)\s+\\(?:center\\|left\\|right\\)\\)\s*\\('.*\\)?$")
-      (defvar plantuml-indent-regexp-oldif-start "^.*if\s+\".*\"\s+then\s*\\('.*\\)?$" "used in current activity diagram, sometimes already mentioned as deprecated")
+      (defvar plantuml-indent-regexp-oldif-start "^.*if\s+\".*\"\s+then\s*\\('.*\\)?$"
+        "used in current activity diagram, sometimes already mentioned as deprecated")
       (defvar plantuml-indent-regexp-newif-start "^\s*\\(?:else\\)?if\s+(.*)\s+then\s*.*$")
       (defvar plantuml-indent-regexp-loop-start "^\s*\\(?:repeat\s*\\|while\s+(.*).*\\)$")
       (defvar plantuml-indent-regexp-fork-start "^\s*\\(?:fork\\|split\\)\\(?:\s+again\\)?\s*$")
@@ -699,12 +730,27 @@ or it is followed by line end.")
                 (all-completions meat plantuml-kwdList)))
              (message "Making completion list...%s" "done")))))
 
+(make-obsolete 'plantuml-complete-symbol
+               "Use `completion-at-point' (C-M-i) instead"
+               "1.7.0")
+
+(defun plantuml-completion-at-point-function ()
+  "Complete symbol at point using `plantuml-kwdList'.
+See `completion-at-point-functions'."
+  (let ((thing-start (beginning-of-thing 'symbol))
+        (thing-end (end-of-thing 'symbol)))
+
+    (list thing-start
+          thing-end
+          plantuml-kwdList
+          '(:exclusive no))))
+
 
 ;; indentation
 
 
 (defun plantuml-current-block-depth ()
-  "Trace the current block indentation level by recursively looking back line by line."
+  "Trace the current block indentation level by looking back line by line."
   (save-excursion
     (let ((relative-depth 0))
       ;; current line
@@ -741,7 +787,7 @@ Restore point to same position in text of the line as before indentation."
 
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.\\(plantuml\\|pum\\|plu\\)\\'" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(pu\\|uml\\|plantuml\\|pum\\|plu\\)\\'" . plantuml-mode))
 
 ;;;###autoload
 (define-derived-mode plantuml-mode prog-mode "plantuml"
@@ -757,18 +803,8 @@ Shortcuts             Command Name
   (set (make-local-variable 'comment-multi-line) t)
   (set (make-local-variable 'comment-style) 'extra-line)
   (set (make-local-variable 'indent-line-function) 'plantuml-indent-line)
-  (setq font-lock-defaults '((plantuml-font-lock-keywords) nil t)))
-
-(defun plantuml-deprecation-warning ()
-  "Warns the user about the deprecation of the `puml-mode' project."
-  (if (and plantuml-suppress-deprecation-warning
-           (featurep 'puml-mode))
-      (display-warning :warning
-                       "`puml-mode' is now deprecated and no longer updated, but it's still present in your system. \
-You should move your configuration to use `plantuml-mode'. \
-See more at https://github.com/skuro/puml-mode/issues/26")))
-
-(add-hook 'plantuml-mode-hook 'plantuml-deprecation-warning)
+  (setq font-lock-defaults '((plantuml-font-lock-keywords) nil t))
+  (setq-local completion-at-point-functions (list #'plantuml-complete-symbol)))
 
 (provide 'plantuml-mode)
 ;;; plantuml-mode.el ends here

@@ -1,26 +1,26 @@
 ;;; oauth2-auto.el --- Automatically refreshing OAuth 2.0 tokens -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2011-2021 Free Software Foundation, Inc
+;; Copyright (C) 2022-2023 Adrià Garriga-Alonso, Robert Irelan
 
 ;; Author: Adrià Garriga-Alonso <adria.garriga@gmail.com>
 ;; URL: https://github.com/rhaps0dy/emacs-oauth2-auto
+;; Package-Version: 20250624.1919
+;; Package-Revision: 20b3153d9cfb
 ;; Keywords: comm oauth2
 ;; Package-Requires: ((emacs "26.1") (aio "1.0") (alert "1.2") (dash "2.19"))
 
-;; This file is part of GNU Emacs.
-
-;; GNU Emacs is free software: you can redistribute it and/or modify
+;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation, either version 3 of the License, or
 ;; (at your option) any later version.
 
-;; GNU Emacs is distributed in the hope that it will be useful,
+;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -75,6 +75,11 @@
   "Additional OAuth2 providers following `oauth2-auto--default-providers'."
   :group 'oauth2-auto
   :type 'alist)
+
+(defcustom oauth2-auto-manually-auth nil
+  "If non-nil, not launch browser automatically."
+  :group 'oauth2-auto
+  :type 'boolean)
 
 (defun oauth2-auto--default-providers ()
   "Default OAuth2 providers."
@@ -211,7 +216,7 @@ Cache data if a miss occurs."
 ;; Main entry point
 
 (aio-defun oauth2-auto-plist (username provider)
-  "Returns a 'oauth2-token structure for USERNAME and PROVIDER."
+  "Returns an \\='oauth2-token structure for USERNAME and PROVIDER."
   ; Check the plstore for the requested username and provider
   (let ((plist (oauth2-auto--plstore-read username provider)))
     (if (not (oauth2-auto--plist-needs-refreshing plist))
@@ -396,8 +401,13 @@ INPUT is the raw HTTP request."
       (error msg)
       nil))))
 
-
 (aio-defun oauth2-auto--browser-request (provider url-key data-keys extra-alist &optional quiet)
+           (if oauth2-auto-manually-auth
+               (aio-await (oauth2-auto--browser-request-manually provider url-key data-keys extra-alist quiet))
+             (aio-await (oauth2-auto--browser-request-auto provider url-key data-keys extra-alist quiet))))
+
+
+(aio-defun oauth2-auto--browser-request-auto (provider url-key data-keys extra-alist &optional quiet)
   "Open browser for the OAuth2 PROVIDER.
 Browser is opened at url and parameters given by taking URL-KEY and DATA-KEYS
 from the data of the PROVIDER, and adding EXTRA-ALIST.  Then we listen to the
@@ -447,6 +457,38 @@ If QUIET is non-nil, suppress alerts."
           (cons redirect-uri-elt response-alist))
       ; Always kill server-proc
       (delete-process server-proc))))
+
+(aio-defun oauth2-auto--browser-request-manually (provider url-key data-keys extra-alist &optional quiet)
+           "Open browser for the OAuth2 PROVIDER.
+Instead of opening browser, display the authorization URL and wait for user to input the code.
+Browser URL is constructed from url and parameters given by taking URL-KEY and DATA-KEYS
+from the data of the PROVIDER, and adding EXTRA-ALIST.
+
+If QUIET is non-nil, suppress alerts."
+           (let* ((redirect-uri "http://localhost:8080")
+                  (redirect-uri-elt (cons 'redirect_uri redirect-uri))
+                  (very-extra-alist (cons redirect-uri-elt extra-alist))
+                  (provider-info (oauth2-auto--provider-info provider))
+                  (data-alist (oauth2-auto--craft-request-alist
+                               provider-info data-keys very-extra-alist))
+                  (data (oauth2-auto--urlify-request data-alist))
+                  (url (cdr (assoc url-key provider-info)))
+                  (auth-url (concat url "?" data)))
+
+             ;; Instead of opening browser, show URL and wait for code
+             (unless quiet
+               (alert (format "Please visit this URL to authorize:\n%s\n\nAfter authorization, copy the 'code' parameter from the redirect URL and paste it below:"
+                              auth-url)
+                      :title "Emacs OAuth2 login"
+                      :category 'oauth2-auto))
+
+             ;; Wait for user to input the code
+             (let ((code (read-string (format "Please visit this URL to authorize:\n%s\n\nAfter authorization, copy the code from the redirect URL and paste it here.\nEnter authorization code: " auth-url))))
+               ;; return the response, with the 'redirect_uri
+               (cons redirect-uri-elt
+                     (list (cons 'code code)
+                           (cons 'redirect_uri redirect-uri)
+                           (cons 'state (cdr (assoc 'state data-alist))))))))
 
 (defconst oauth2-auto--url-unreserved
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY0123456789-_"

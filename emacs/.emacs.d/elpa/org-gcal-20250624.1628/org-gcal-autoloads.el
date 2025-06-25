@@ -9,21 +9,6 @@
 
 
 
-;;; Generated autoloads from oauth2-auto.el
-
-(autoload 'oauth2-auto-plist-sync "oauth2-auto" "\
-Synchronously call ‘oauth2-auto-plist’ and return result.
-For USERNAME and PROVIDER, see.
-
-(fn USERNAME PROVIDER)")
-(autoload 'oauth2-auto-access-token-sync "oauth2-auto" "\
-Synchronously call ‘oauth2-auto-access-token’ and return result.
-For USERNAME and PROVIDER, see.
-
-(fn USERNAME PROVIDER)")
-(register-definition-prefixes "oauth2-auto" '("oauth2-auto-"))
-
-
 ;;; Generated autoloads from org-gcal.el
 
 (autoload 'org-gcal-sync "org-gcal" "\

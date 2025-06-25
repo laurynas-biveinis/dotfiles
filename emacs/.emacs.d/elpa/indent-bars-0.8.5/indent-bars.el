@@ -4,7 +4,7 @@
 ;; Author: J.D. Smith <jdtsmith+elpa@gmail.com>
 ;; Homepage: https://github.com/jdtsmith/indent-bars
 ;; Package-Requires: ((emacs "27.1") (compat "30"))
-;; Version: 0.8.4
+;; Version: 0.8.5
 ;; Keywords: convenience
 
 ;; indent-bars is free software: you can redistribute it and/or
@@ -1596,6 +1596,10 @@ Adapted from `highlight-indentation-mode'."
     scala-indent:step)
    ((and (derived-mode-p 'scala-mode) (boundp 'scala-mode-indent:step))
     scala-mode-indent:step)
+   ((and (derived-mode-p 'scala-ts-mode) (boundp 'scala-ts-indent-offset))
+    scala-ts-indent-offset)
+   ((and (derived-mode-p 'rust-ts-mode) (boundp 'rust-ts-mode-indent-offset))
+    rust-ts-mode-indent-offset)
    ((and (or (derived-mode-p 'scss-mode) (derived-mode-p 'css-mode))
 	 (boundp 'css-indent-offset))
     css-indent-offset)
@@ -1623,6 +1627,8 @@ Adapted from `highlight-indentation-mode'."
     (symbol-value c-ts-common-indent-offset))
    ((and (derived-mode-p 'yaml-mode) (boundp 'yaml-indent-offset))
     yaml-indent-offset)
+   ((and (derived-mode-p 'yaml-pro-mode) (boundp 'yaml-pro-indent))
+    yaml-pro-indent)
    ((and (derived-mode-p 'elixir-mode) (boundp 'elixir-smie-indent-basic))
     elixir-smie-indent-basic)
    ((and (derived-mode-p 'lisp-data-mode) (boundp 'lisp-body-indent))
@@ -1643,6 +1649,10 @@ Adapted from `highlight-indentation-mode'."
     js-indent-level)
    ((and (derived-mode-p 'sh-base-mode) (boundp 'sh-basic-offset))
     sh-basic-offset)
+   ((and (derived-mode-p 'java-ts-mode) (boundp 'java-ts-mode-indent-offset))
+    java-ts-mode-indent-offset)
+   ((and (derived-mode-p 'tcl-mode) (boundp 'tcl-indent-level))
+    tcl-indent-level)
    ((and (boundp 'standard-indent) standard-indent))
    (t 4))) 				; backup
 
@@ -1663,7 +1673,9 @@ Adapted from `highlight-indentation-mode'."
 			(not (any ?\t ?\s ?\n)))
 		       ;; group 2: multi-line blank regions
 		       ,@(if indent-bars-display-on-blank-lines
-			     '((group (* (or ?\s ?\t ?\n)) ?\n))))))))
+			     '((group (* (or ?\s ?\t ?\n)) ?\n)))))))
+  (unless font-lock-defaults (setq font-lock-defaults '(nil t)))
+  (unless font-lock-mode (font-lock-mode 1)))
 
 (declare-function indent-bars--ts-mode "indent-bars-ts")
 (defun indent-bars-setup ()

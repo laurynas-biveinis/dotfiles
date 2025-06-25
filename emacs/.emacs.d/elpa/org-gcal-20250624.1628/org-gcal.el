@@ -2,8 +2,8 @@
 
 ;; Author: myuhe <yuhei.maeda_at_gmail.com>
 ;; URL: https://github.com/kidd/org-gcal.el
-;; Package-Version: 20250617.1626
-;; Package-Revision: 29b0bdddee5e
+;; Package-Version: 20250624.1628
+;; Package-Revision: c7ad854ee44e
 ;; Maintainer: Raimon Grau <raimonster@gmail.com>
 ;; Copyright (C) :2014 myuhe all rights reserved.
 ;; Keywords: convenience,
@@ -36,7 +36,6 @@
 (require 'alert)
 (require 'json)
 (require 'aio)
-;; Not on MELPA yet. Must install from https://github.com/rhaps0dy/emacs-oauth2-auto.
 (require 'oauth2-auto)
 (require 'ol)
 (require 'org)

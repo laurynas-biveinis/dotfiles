@@ -11,7 +11,7 @@
 
 ;;; Generated autoloads from plantuml-mode.el
 
-(add-to-list 'auto-mode-alist '("\\.\\(plantuml\\|pum\\|plu\\)\\'" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(pu\\|uml\\|plantuml\\|pum\\|plu\\)\\'" . plantuml-mode))
 (autoload 'plantuml-mode "plantuml-mode" "\
 Major mode for plantuml.
 
