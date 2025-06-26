@@ -76,11 +76,13 @@ class TransactionType(Enum):
     WITHDRAWAL = auto()
 
 
-@add_from_string({'PMNT': 'PAYMENTS', 'LDAS': 'LOANS_DEPOSITS_SYNDICATIONS'})
+@add_from_string({'PMNT': 'PAYMENTS', 'LDAS': 'LOANS_DEPOSITS_SYNDICATIONS',
+                  'XTND': 'EXTENDED_DOMAIN'})
 class TransactionDomain(Enum):
     """A CAMT.053 transaction domain"""
     PAYMENTS = auto()
     LOANS_DEPOSITS_SYNDICATIONS = auto()
+    EXTENDED_DOMAIN = auto()
 
 
 @add_from_string({'CCRD': 'CUSTOMER_CARD_TRANSACTION',
@@ -100,6 +102,18 @@ class LDASTransactionFamily(Enum):
     domain"""
     FIXED_TERM_LOANS = auto()
     MISC_DEBIT_OPS = auto()
+
+
+@add_from_string({'NTAV': 'NOT_AVAILABLE'})
+class XTNDTransactionFamily(Enum):
+    """A CAMT.053 transaction family in the Extended Domain"""
+    NOT_AVAILABLE = auto()
+
+
+@add_from_string({'NTAV': 'NOT_AVAILABLE'})
+class XTNDTransactionSubfamily(Enum):
+    """A CAMT.053 transaction subfamily in the Extended Domain"""
+    NOT_AVAILABLE = auto()
 
 
 @add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD', 'CWDL': 'CASH_WITHDRAWAL',
@@ -392,6 +406,12 @@ class XMLTransaction(Transaction):
             elif family == LDASTransactionFamily.FIXED_TERM_LOANS:
                 subfamily = FixedTermLoanTransactionSubfamily.from_string(
                     subfamily_str)
+            else:
+                subfamily = ""
+        elif domain == TransactionDomain.EXTENDED_DOMAIN:
+            family = XTNDTransactionFamily.from_string(family_str)
+            if family == XTNDTransactionFamily.NOT_AVAILABLE:
+                subfamily = XTNDTransactionSubfamily.from_string(subfamily_str)
             else:
                 subfamily = ""
         else:
