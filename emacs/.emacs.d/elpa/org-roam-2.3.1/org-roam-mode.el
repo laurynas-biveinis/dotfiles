@@ -657,17 +657,26 @@ This is the ROW within FILE."
        (end-of-line)
        (point)))))
 
-(defun org-roam-unlinked-references--rg-command (titles)
-  "Return the ripgrep command searching for TITLES."
+(defun org-roam-unlinked-references--rg-command (titles temp-file)
+  "Return the ripgrep command searching for TITLES using TEMP-FILE for pattern.
+This avoids shell escaping issues by writing the pattern to a file instead
+of passing it directly through the shell command line."
+  ;; Write pattern to temp file to avoid shell escaping issues with quotes,
+  ;; spaces, and other special characters in titles
+  (with-temp-file temp-file
+    (insert "\\[([^[]]++|(?R))*\\]"
+            (mapconcat (lambda (title)
+                         ;; Use regexp-quote instead of shell-quote-argument
+                         ;; since we're writing a regex pattern, not a shell argument
+                         (format "|(\\b%s\\b)" (regexp-quote title)))
+                       titles "")))
+
   (concat "rg --follow --only-matching --vimgrep --pcre2 --ignore-case "
           (mapconcat (lambda (glob) (concat "--glob " glob))
                      (org-roam--list-files-search-globs org-roam-file-extensions)
                      " ")
-          (format " '\\[([^[]]++|(?R))*\\]%s' "
-                  (mapconcat (lambda (title)
-                               (format "|(\\b%s\\b)" (shell-quote-argument title)))
-                             titles ""))
-          (shell-quote-argument org-roam-directory)))
+          " --file " (shell-quote-argument temp-file) " "
+          (shell-quote-argument (expand-file-name org-roam-directory))))
 
 (defun org-roam-unlinked-references-section (node)
   "The unlinked references section for NODE.
@@ -678,33 +687,39 @@ References from FILE are excluded."
                                 (shell-command-to-string "rg --pcre2-version"))))
     (let* ((titles (cons (org-roam-node-title node)
                          (org-roam-node-aliases node)))
-           (rg-command (org-roam-unlinked-references--rg-command titles))
-           (results (split-string (shell-command-to-string rg-command) "\n"))
-           f row col match)
-      (magit-insert-section (unlinked-references)
-        (magit-insert-heading "Unlinked References:")
-        (dolist (line results)
-          (save-match-data
-            (when (string-match org-roam-unlinked-references-result-re line)
-              (setq f (match-string 1 line)
-                    row (string-to-number (match-string 2 line))
-                    col (string-to-number (match-string 3 line))
-                    match (match-string 4 line))
-              (when (and match
-                         (not (file-equal-p (org-roam-node-file node) f))
-                         (member (downcase match) (mapcar #'downcase titles)))
-                (magit-insert-section section (org-roam-grep-section)
-                  (oset section file f)
-                  (oset section row row)
-                  (oset section col col)
-                  (insert (propertize (format "%s:%s:%s"
-                                              (truncate-string-to-width (file-name-base f) 15 nil nil t)
-                                              row col) 'font-lock-face 'org-roam-dim)
-                          " "
-                          (org-roam-fontify-like-in-org-mode
-                           (org-roam-unlinked-references-preview-line f row))
-                          "\n"))))))
-        (insert ?\n)))))
+           ;; Create temp file for the regex pattern
+           (temp-file (make-temp-file "org-roam-rg-pattern-"))
+           (rg-command (org-roam-unlinked-references--rg-command titles temp-file)))
+      ;; Use unwind-protect to ensure temp file cleanup even if errors occur
+      (unwind-protect
+          (let* ((results (split-string (shell-command-to-string rg-command) "\n"))
+                 f row col match)
+            (magit-insert-section (unlinked-references)
+              (magit-insert-heading "Unlinked References:")
+              (dolist (line results)
+                (save-match-data
+                  (when (string-match org-roam-unlinked-references-result-re line)
+                    (setq f (match-string 1 line)
+                          row (string-to-number (match-string 2 line))
+                          col (string-to-number (match-string 3 line))
+                          match (match-string 4 line))
+                    (when (and match
+                               (not (file-equal-p (org-roam-node-file node) f))
+                               (member (downcase match) (mapcar #'downcase titles)))
+                      (magit-insert-section section (org-roam-grep-section)
+                        (oset section file f)
+                        (oset section row row)
+                        (oset section col col)
+                        (insert (propertize (format "%s:%s:%s"
+                                                    (truncate-string-to-width (file-name-base f) 15 nil nil t)
+                                                    row col) 'font-lock-face 'org-roam-dim)
+                                " "
+                                (org-roam-fontify-like-in-org-mode
+                                 (org-roam-unlinked-references-preview-line f row))
+                                "\n"))))))
+              (insert ?\n)))
+        ;; Clean up temp file - this runs even if an error occurs above
+        (delete-file temp-file)))))
 
 (provide 'org-roam-mode)
 ;;; org-roam-mode.el ends here
