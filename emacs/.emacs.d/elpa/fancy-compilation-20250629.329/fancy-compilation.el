@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-fancy-compilation
-;; Package-Version: 20250120.946
-;; Package-Revision: 0fc42482983d
+;; Package-Version: 20250629.329
+;; Package-Revision: 51f6945c84e6
 ;; Package-Requires: ((emacs "26.1"))
 
 ;;; Commentary:
@@ -159,6 +159,8 @@ Use this to set or override defaults."
   (setq-local scroll-conservatively most-positive-fixnum)
   ;; A margin doesn't make sense for compilation output.
   (setq-local scroll-margin 0)
+  ;; Faster output (see !30).
+  (setq-local process-adaptive-read-buffering nil)
 
   (run-hooks 'fancy-compilation-setup-hook))
 

@@ -357,7 +357,7 @@
 	    ("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	   (:commit . "0cf8b60f62876f3e75653a5fb30d5d5cdd74c586"))])
  (beframe .
-	  [(1 3 0)
+	  [(1 4 0)
 	   ((emacs
 	     (28 1)))
 	   "Isolate buffers per frame" tar
@@ -365,7 +365,7 @@
 	    (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	    (:authors
 	     ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	    (:commit . "94b5122122959ea38cf257916edaf29e4ab02949"))])
+	    (:commit . "2728f72174c1164e99bab4daaef64910e6b41c6c"))])
  (bicep-ts-mode .
 		[(0 1 4)
 		 nil "tree-sitter support for Bicep" tar
@@ -776,7 +776,7 @@
 	       ("Carsten Dominik" . "carsten.dominik@gmail.com"))
 	      (:commit . "f07e221d4d5597c7ccf4b0003c0909a88bdfcc9e"))])
  (consult .
-	  [(2 5)
+	  [(2 6)
 	   ((emacs
 	     (28 1))
 	    (compat
@@ -785,7 +785,7 @@
 	   ((:url . "https://github.com/minad/consult")
 	    (:keywords "matching" "files" "completion")
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
-	    (:commit . "b6fd7feda74267a53f9f1cf1bd122e519a308132"))])
+	    (:commit . "4314c45d84d9e00d45d2b611562d8fe2e4ddcf48"))])
  (consult-denote .
 		 [(0 3 1)
 		  ((emacs
@@ -1757,28 +1757,22 @@
 	 ("J. Alexander Branham" . "alex.branham@gmail.com"))
 	(:commit . "78f4db2879d00e21b71261f0a6e512504837ab9b"))])
  (excorporate .
-	      [(1 1 2)
-	       ((emacs
-		 (24 1))
-		(cl-lib
-		 (0 6 1))
-		(fsm
+	      [(1 1 3)
+	       ((fsm
 		 (0 2 1))
 		(soap-client
 		 (3 2 0))
 		(url-http-ntlm
-		 (2 0 4))
-		(nadvice
-		 (0 3))
+		 (2 0 6))
 		(url-http-oauth
-		 (0 8 3)))
+		 (0 8 4)))
 	       "Exchange Web Services (EWS) integration" tar
 	       ((:url . "https://www.fitzsim.org/blog/")
 		(:keywords "calendar")
 		(:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
 		(:authors
 		 ("Thomas Fitzsimmons" . "fitzsim@fitzsim.org"))
-		(:commit . "8d1167ac47aa88265546ee7a82fd49ff6f9c8d66"))])
+		(:commit . "d0dc6a28a0b39b67b01c63163217f8ebd055df4d"))])
  (expand-region .
 		[(1 0 0)
 		 ((emacs
@@ -1810,7 +1804,7 @@
 			(:url . "https://elpa.gnu.org/packages/external-completion.html")
 			(:commit . "4bc9c8972ac0a3dfa237a9c5704de89ef24ad82b"))])
  (exwm .
-       [(0 33)
+       [(0 34)
 	((emacs
 	  (27 1))
 	 (xelb
@@ -1826,7 +1820,7 @@
 	  ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	 (:authors
 	  ("Chris Feng" . "chris.w.feng@gmail.com"))
-	 (:commit . "da034e67784a9e2600383e75606a6ade6925f374"))])
+	 (:commit . "254fa6c43f2e2c29f87dcac404a054a393a6a0ea"))])
  (f90-interface-browser .
 			[(1 1)
 			 nil "Parse and browse f90 interfaces" single
@@ -2332,7 +2326,7 @@
 	   ("Durand" . "mmemmew@gmail.com"))
 	  (:commit . "5a57e52122fe483fa9bd39049c13a25334e408da"))])
  (indent-bars .
-	      [(0 8 5)
+	      [(0 9)
 	       ((emacs
 		 (27 1))
 		(compat
@@ -2343,7 +2337,7 @@
 		(:maintainer "J.D. Smith" . "jdtsmith+elpa@gmail.com")
 		(:authors
 		 ("J.D. Smith" . "jdtsmith+elpa@gmail.com"))
-		(:commit . "9a89849cec54debc85791118ea9b05cf9567765f"))])
+		(:commit . "517487aa1666fac688685d01085a7d1fee89ef8d"))])
  (inspector .
 	    [(0 38)
 	     ((emacs
@@ -4736,9 +4730,9 @@
 		  (:url . "https://elpa.gnu.org/packages/track-changes.html")
 		  (:commit . "ffb7d656a2c89f86ccd2de51379de9612c7a4aa3"))])
  (tramp .
-	[(2 7 2 4)
+	[(2 8 0)
 	 ((emacs
-	   (27 1)))
+	   (28 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
 	 ((:url . "https://www.gnu.org/software/tramp/")
 	  (:keywords "comm" "processes")
@@ -4746,7 +4740,7 @@
 	  (:authors
 	   ("Kai Großjohann" . "kai.grossjohann@gmx.net")
 	   ("Michael Albinus" . "michael.albinus@gmx.de"))
-	  (:commit . "c37e5fa5f4e60a19b38089672fbad377035a33a2"))])
+	  (:commit . "34921006953b49f5ec04389bbc901122a3549265"))])
  (tramp-nspawn .
 	       [(1 0 1)
 		((emacs
@@ -4904,29 +4898,29 @@
 	   (:keywords "grep" "search")
 	   (:commit . "d53d3168e52b021738515491de391d66e4bf865c"))])
  (url-http-ntlm .
-		[(2 0 5)
-		 ((cl-lib
-		   (0 5))
+		[(2 0 6)
+		 ((emacs
+		   (24 4))
 		  (ntlm
-		   (2 1 0))
-		  (nadvice
-		   (0 3)))
+		   (2 1 0)))
 		 "NTLM authentication for the url library" tar
 		 ((:url . "https://code.google.com/p/url-http-ntlm/")
 		  (:keywords "comm" "data" "processes" "hypermedia")
 		  (:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
 		  (:authors
 		   ("Tom Schutzer-Weissmann" . "tom.weissmann@gmail.com"))
-		  (:commit . "2c76d9491304e485a91c9d457fc25130279e1324"))])
+		  (:commit . "234228e02682b9000015f5aa668875ea5d4fe6f0"))])
  (url-http-oauth .
-		 [(0 8 3)
-		  nil "OAuth 2.0 for URL library" tar
+		 [(0 8 4)
+		  ((emacs
+		    (24 4)))
+		  "OAuth 2.0 for URL library" tar
 		  ((:keywords "comm" "data" "processes" "hypermedia")
 		   (:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
 		   (:authors
 		    ("Thomas Fitzsimmons" . "fitzsim@fitzsim.org"))
 		   (:url . "https://elpa.gnu.org/packages/url-http-oauth.html")
-		   (:commit . "c2d06036f22ce61f5a1e3084c8b265d897b7fcab"))])
+		   (:commit . "f951bb71c5c34542cc75940d5e179d023f352ad4"))])
  (url-scgi .
 	   [(0 9)
 	    ((emacs
@@ -5072,7 +5066,7 @@
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org"))
 		 (:commit . "78bc5949db489b143f7424540d6cc56fc529c9ea"))])
  (vertico .
-	  [(2 3)
+	  [(2 4)
 	   ((emacs
 	     (28 1))
 	    (compat
@@ -5083,7 +5077,7 @@
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:authors
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	    (:commit . "b43b594bb318e722b908f01a6a11409af14b1413"))])
+	    (:commit . "fcab88ad878e16356c392c99a64f172e7541dd65"))])
  (vertico-posframe .
 		   [(0 8 0)
 		    ((emacs
@@ -5319,11 +5313,11 @@
 	  ("Yuan Fu" . "casouri@gmail.com"))
 	 (:commit . "6c63bc4c40eae8fe7a3213efe11b75dfe73aaaa4"))])
  (xelb .
-       [(0 20)
+       [(0 21)
 	((emacs
 	  (27 1))
 	 (compat
-	  (29 1)))
+	  (30)))
 	"X protocol Emacs Lisp Binding" tar
 	((:url . "https://github.com/emacs-exwm/xelb")
 	 (:keywords "unix")
@@ -5333,7 +5327,7 @@
 	  ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	 (:authors
 	  ("Chris Feng" . "chris.w.feng@gmail.com"))
-	 (:commit . "bdf3a69214c70611fbce71942598c85c4fe3d6b7"))])
+	 (:commit . "02abf74fa5eeb255c9c174eedc2f04097a9571d9"))])
  (xpm .
       [(1 0 5)
        ((cl-lib
