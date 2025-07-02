@@ -2436,7 +2436,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.2/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.2/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.3/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.3/transient-autoloads.el"))
 
 
 
@@ -4838,7 +4838,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.7/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.7/magit-section-autoloads.el"))
 
 
 
@@ -4893,7 +4893,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.6/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.6/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.7/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.7/magit-autoloads.el"))
 
 
 
@@ -10544,7 +10544,7 @@ Fontify an `info' node.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.9/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.9/indent-bars-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.9.1/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.9.1/indent-bars-autoloads.el"))
 
 
 
@@ -11938,7 +11938,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250620.1319/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250620.1319/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250701.842/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250701.842/difftastic-autoloads.el"))
 
 
 
@@ -12550,7 +12550,7 @@ mode.
   (info-initialize)
   (setq Info-directory-list
         (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.6" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.6" "/Users/laurynas/.emacs.d/elpa/transient-0.9.2" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
+         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.7" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.7" "/Users/laurynas/.emacs.d/elpa/transient-0.9.3" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.4" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
          Info-directory-list)))
 
 ;; Local Variables:
