@@ -61,9 +61,9 @@ with open(args.output, "w", encoding='utf-8') as output_file:
         unit_price = str(row['Fondo vieneto kaina']).replace(",", ".")
         count = str(row['Vnt. kiekis']).replace(",", ".")
         fee = row['Mokestis']
-        # They broke it on 2025 06
-        # op = str(row['Fondo vnt. operacija'])
-        op = str(row['operationType'])
+        # They broke it on 2025 06, fixed on 2025 07
+        # op = str(row['operationType'])
+        op = str(row['Fondo vnt. operacija'])
         if op == match_2pf_fund_source:
             amount = str(row['Įmokos/Išmokos']).replace(",", ".")
             qif_trx = QIFInvestmentTransaction(date=date,
