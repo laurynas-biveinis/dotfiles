@@ -1209,8 +1209,9 @@ Having multiple matching automation rules for the same email is an error.")
                             mu4e-headers-mark-for-refile org-schedule
                             exchange-point-and-mark forward-paragraph
                             backward-paragraph end-of-defun revert-buffer-quick
-                            next-history-element reposition-window
-                            eval-last-sexp eval-expression))
+                            next-history-element reposition-window revert-buffer
+                            eval-last-sexp eval-expression
+                            mu4e-headers-mark-for-read))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
