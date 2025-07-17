@@ -8926,7 +8926,6 @@ Disable Org-AutoTask MCP tools." t)
 
 
 (register-definition-prefixes "org-autotask-mcp-test" '("org-autotask-mcp-test--"))
-
 
 
 (provide 'org-autotask-mcp-autoloads)
@@ -9117,6 +9116,62 @@ Mark the item (a task or a project) at point as done.")
 
 
 (provide 'ob-rust-autoloads)
+
+
+)
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250716.1834/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250716.1834/mcp-server-lib-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "mcp-server-lib" '("mcp-server-lib-"))
+
+
+
+(autoload 'mcp-server-lib-start "mcp-server-lib-commands" "\
+Start the MCP server and begin handling client requests.
+
+This function starts the MCP server that can process JSON-RPC
+requests via `mcp-server-lib-process-jsonrpc'.  Once started, the server
+will dispatch incoming requests to the appropriate tool
+handlers that have been registered with `mcp-server-lib-register-tool'.
+
+Resets all metrics when starting.
+
+See also: `mcp-server-lib-stop'" t)
+(autoload 'mcp-server-lib-stop "mcp-server-lib-commands" "\
+Stop the MCP server from processing client requests.
+
+Sets the server state to stopped, which prevents further processing of
+client requests.  Note that this does not release any resources or unregister
+tools, it simply prevents `mcp-server-lib-process-jsonrpc' from accepting new
+requests.
+
+See also: `mcp-server-lib-start'" t)
+(autoload 'mcp-server-lib-install "mcp-server-lib-commands" "\
+Install emacs-mcp-stdio.sh to `mcp-server-lib-install-directory'." t)
+(autoload 'mcp-server-lib-uninstall "mcp-server-lib-commands" "\
+Remove installed emacs-mcp-stdio.sh from `mcp-server-lib-install-directory'." t)
+(autoload 'mcp-server-lib-reset-metrics "mcp-server-lib-commands" "\
+Reset all metrics." t)
+(autoload 'mcp-server-lib-show-metrics "mcp-server-lib-commands" "\
+Display metrics in a buffer." t)
+(register-definition-prefixes "mcp-server-lib-commands" '("mcp-server-lib--"))
+
+
+
+(register-definition-prefixes "mcp-server-lib-ert" '("mcp-server-lib-ert-check-text-response"))
+
+
+
+(register-definition-prefixes "mcp-server-lib-metrics" '("mcp-server-lib-metrics-"))
+
+
+(provide 'mcp-server-lib-autoloads)
 
 
 )
@@ -11829,7 +11884,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp/elisp-dev-mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp/elisp-dev-mcp-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250618.611/elisp-dev-mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250618.611/elisp-dev-mcp-autoloads.el"))
 
 
 
@@ -11843,22 +11898,6 @@ Enable the Elisp development MCP tools.")
 (autoload 'elisp-dev-mcp-disable "elisp-dev-mcp" "\
 Disable the Elisp development MCP tools.")
 (register-definition-prefixes "elisp-dev-mcp" '("elisp-dev-mcp--"))
-
-
-
-(register-definition-prefixes "elisp-dev-mcp-test" '("elisp-dev-mcp-test-"))
-
-
-
-(register-definition-prefixes "elisp-dev-mcp-test-bytecode" '("elisp-dev-mcp-test-bytecode--"))
-
-
-
-(register-definition-prefixes "elisp-dev-mcp-test-dynamic" '("elisp-dev-mcp-test-dynamic--with-header-comment"))
-
-
-
-(register-definition-prefixes "elisp-dev-mcp-test-no-checkdoc" '("elisp-dev-mcp-test-no-checkdoc--"))
 
 
 (provide 'elisp-dev-mcp-autoloads)
@@ -12543,7 +12582,7 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask-mcp org-autotask ob-rust async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism llama magit-section magit ghub pr-review plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)

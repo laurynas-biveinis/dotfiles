@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20250618.610
-;; Package-Revision: ad654ce7ba5f
+;; Package-Version: 20250716.1834
+;; Package-Revision: c6f9c59f37de
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -79,6 +79,9 @@ Defaults to `user-emacs-directory' but can be customized."
 (defconst mcp-server-lib--error-method-not-found -32601
   "Error code for Method Not Found.")
 
+(defconst mcp-server-lib--error-invalid-params -32602
+  "Error code for Invalid Params.")
+
 (defconst mcp-server-lib--error-internal -32603
   "Error code for Internal Error.")
 
@@ -87,6 +90,20 @@ Defaults to `user-emacs-directory' but can be customized."
 
 (defconst mcp-server-lib--protocol-version "2025-03-26"
   "Current MCP protocol version supported by this server.")
+
+(defconst mcp-server-lib--uri-scheme-regex
+  "[a-zA-Z][a-zA-Z0-9+.-]*://"
+  "Regex pattern matching URI scheme according to RFC 3986.
+Matches scheme names that start with a letter followed by any combination
+of letters, digits, plus, period, or hyphen, ending with ://")
+
+(defconst mcp-server-lib--uri-scheme-start-regex
+  (concat "^" mcp-server-lib--uri-scheme-regex)
+  "Regex pattern matching URI scheme at start of string.")
+
+(defconst mcp-server-lib--uri-with-scheme-regex
+  (concat "\\`" mcp-server-lib--uri-scheme-regex ".+")
+  "Regex pattern matching complete URI starting with scheme.")
 
 ;;; Internal global state variables
 
@@ -100,11 +117,104 @@ Defaults to `user-emacs-directory' but can be customized."
   "Hash table of registered MCP resources.
 Keys are URIs, values are plists with resource metadata and handlers.")
 
+(defvar mcp-server-lib--resource-templates
+  (make-hash-table :test 'equal)
+  "Hash table of registered MCP resource templates.
+Keys are URI templates, values are plists with template metadata and handlers.")
+
 ;;; Core helpers
 
 (defun mcp-server-lib--jsonrpc-response (id result)
   "Create a JSON-RPC response with ID and RESULT."
   (json-encode `((jsonrpc . "2.0") (id . ,id) (result . ,result))))
+
+(defun mcp-server-lib--extract-param-descriptions (docstring arglist)
+  "Extract parameter descriptions from DOCSTRING based on ARGLIST.
+The docstring should contain an \"MCP Parameters:\" section at the end,
+with each parameter described as \"parameter-name - description\".
+ARGLIST should be the function's argument list.
+Returns an alist mapping parameter names to their descriptions.
+Signals an error if a parameter is described multiple times,
+doesn't match function arguments, or if any parameter is not documented."
+  (let ((descriptions nil))
+    (when docstring
+      (when
+          (string-match
+           "MCP Parameters:[\n\r]+\\(\\(?:[ \t]+[^ \t\n\r].*[\n\r]*\\)*\\)"
+           docstring)
+        (let ((params-text (match-string 1 docstring))
+              (param-regex
+               "[ \t]+\\([^ \t\n\r]+\\)[ \t]*-[ \t]*\\(.*\\)[\n\r]*"))
+          (with-temp-buffer
+            (insert params-text)
+            (goto-char (point-min))
+            (while (re-search-forward param-regex nil t)
+              (let ((param-name (match-string 1))
+                    (param-desc (match-string 2)))
+                ;; Check for duplicate parameter names
+                (when (assoc param-name descriptions)
+                  (error
+                   "Duplicate parameter '%s' in MCP Parameters"
+                   param-name))
+                ;; Check parameter name matches function arguments
+                (unless (and (= 1 (length arglist))
+                             (symbolp (car arglist))
+                             (string=
+                              param-name (symbol-name (car arglist))))
+                  (error
+                   "Parameter '%s' in MCP Parameters not in function args %S"
+                   param-name
+                   arglist))
+                ;; Add to descriptions
+                (push (cons param-name (string-trim param-desc))
+                      descriptions))))))
+      ;; Check that all function parameters have descriptions
+      (when (and (= 1 (length arglist))
+                 (symbolp (car arglist))
+                 (not (memq (car arglist) '(&optional &rest))))
+        (let ((arg-name (symbol-name (car arglist))))
+          (unless (assoc arg-name descriptions)
+            (error
+             "Function parameter '%s' missing from MCP Parameters section"
+             arg-name)))))
+    descriptions))
+
+(defun mcp-server-lib--generate-schema-from-function (func)
+  "Generate JSON schema by analyzing FUNC's signature.
+Returns a schema object suitable for tool registration.
+Supports functions with zero or one argument only.
+Extracts parameter descriptions from the docstring if available."
+  (let* ((arglist (help-function-arglist func t))
+         (docstring (documentation func))
+         (param-descriptions
+          (mcp-server-lib--extract-param-descriptions
+           docstring arglist)))
+    (cond
+     ;; No arguments case
+     ((null arglist)
+      '((type . "object")))
+
+     ;; One argument case
+     ((and (= 1 (length arglist))
+           (symbolp (car arglist))
+           (not (memq (car arglist) '(&optional &rest))))
+      (let* ((arg-name (symbol-name (car arglist)))
+             (description (cdr (assoc arg-name param-descriptions)))
+             ;; Build property schema with type
+             (property-schema `((type . "string")))
+             ;; Add description if provided
+             (property-schema
+              (if description
+                  (cons `(description . ,description) property-schema)
+                property-schema)))
+        `((type . "object")
+          (properties . ((,arg-name . ,property-schema)))
+          (required . [,arg-name]))))
+
+     ;; Everything else is unsupported
+     (t
+      (error
+       "Only functions with zero or one argument are supported")))))
 
 (defun mcp-server-lib--ref-counted-register (key item table)
   "Register ITEM with KEY in TABLE with reference counting.
@@ -269,6 +379,172 @@ Returns a JSON-RPC formatted response string, or nil for notifications."
      (t
       (mcp-server-lib--dispatch-jsonrpc-method id method params)))))
 
+;;; Resource Template Support
+
+(defun mcp-server-lib--match-uri-template (uri parsed-template)
+  "Match URI against PARSED-TEMPLATE.
+Returns:
+- alist of captured parameters if URI matches and has variables
+- \\='match-no-params if URI matches but template has no variables
+- nil if URI doesn't match template"
+  (let ((segments (plist-get parsed-template :segments))
+        (pos 0)
+        (params '())
+        (uri-len (length uri)))
+    (catch 'no-match
+      ;; Handle first segment with scheme - it's always literal
+      (let* ((first-segment (car segments))
+             (value (plist-get first-segment :value))
+             (val-len (length value)))
+        ;; First literal segment always contains scheme - handle
+        ;; case-insensitive matching
+        (unless (<= val-len uri-len)
+          (throw 'no-match nil))
+        (let* ((uri-part (substring uri 0 val-len))
+               (scheme-end (string-match "://" value))
+               (scheme-len (+ scheme-end 3)))
+          (unless (and (>= (length uri-part) val-len)
+                       (>= val-len scheme-len)
+                       (let ((val-scheme
+                              (substring value 0 scheme-len))
+                             (uri-scheme
+                              (substring uri-part 0 scheme-len)))
+                         (string=
+                          (downcase val-scheme)
+                          (downcase uri-scheme)))
+                       (string=
+                        (substring value scheme-len)
+                        (substring uri-part scheme-len)))
+            (throw 'no-match nil))
+          (setq pos val-len)
+          (setq segments (cdr segments))))
+
+      ;; Process remaining segments
+      (dolist (segment segments)
+        (let ((seg-type (plist-get segment :type)))
+          (cond
+           ;; Literal segment - must match exactly (case-sensitive)
+           ((eq seg-type 'literal)
+            (let* ((value (plist-get segment :value))
+                   (val-len (length value)))
+              (unless (and (<= (+ pos val-len) uri-len)
+                           (string=
+                            value
+                            (substring uri pos (+ pos val-len))))
+                (throw 'no-match nil))
+              (setq pos (+ pos val-len))))
+           ;; Variable segment - capture value
+           ((eq seg-type 'variable)
+            (let* ((var-name (plist-get segment :name))
+                   ;; Find next segment to determine delimiter
+                   (segment-index (seq-position segments segment))
+                   (next-segment
+                    (when (< (1+ segment-index) (length segments))
+                      (nth (1+ segment-index) segments)))
+                   (delimiter
+                    (when (and next-segment
+                               (eq
+                                'literal
+                                (plist-get next-segment :type)))
+                      (plist-get next-segment :value))))
+              (if delimiter
+                  ;; Variable followed by literal - match until delimiter
+                  (let ((end-pos
+                         (string-match (regexp-quote delimiter) uri
+                                       pos)))
+                    (unless end-pos
+                      (throw 'no-match nil))
+                    (push (cons var-name (substring uri pos end-pos))
+                          params)
+                    (setq pos end-pos))
+                ;; Variable at end - consume rest
+                (push (cons var-name (substring uri pos)) params)
+                (setq pos uri-len)))))))
+      ;; Check we consumed entire URI
+      (when (= pos uri-len)
+        ;; Return params or 'match-no-params to distinguish from no match
+        (if params
+            (nreverse params)
+          'match-no-params)))))
+
+(defun mcp-server-lib--find-matching-template (uri)
+  "Find a resource template that matches URI.
+Returns cons of (template . params) or nil if no match found."
+  (catch 'found
+    (maphash
+     (lambda (_template-pattern template-data)
+       (let* ((parsed (plist-get template-data :parsed))
+              (match-result
+               (mcp-server-lib--match-uri-template uri parsed)))
+         ;; match-result is nil for no match, 'match-no-params or alist
+         (when match-result
+           (throw 'found
+                  (cons
+                   template-data
+                   (if (eq match-result 'match-no-params)
+                       nil
+                     match-result))))))
+     mcp-server-lib--resource-templates)
+    nil))
+
+(defun mcp-server-lib--execute-resource-handler
+    (resource-data uri handler-params id method-metrics)
+  "Execute a resource handler and return the response.
+RESOURCE-DATA is the plist containing handler and metadata.
+URI is the resource URI.
+HANDLER-PARAMS are parameters to pass to the handler (nil for direct resources).
+ID is the request ID.
+METHOD-METRICS is used to track errors."
+  (condition-case err
+      (let* ((handler (plist-get resource-data :handler))
+             (mime-type (plist-get resource-data :mime-type))
+             (content
+              (if handler-params
+                  (funcall handler handler-params)
+                (funcall handler)))
+             (content-entry
+              (mcp-server-lib--append-optional-fields
+               `((uri . ,uri) (text . ,content))
+               'mimeType mime-type)))
+        (mcp-server-lib--jsonrpc-response
+         id `((contents . ,(vector content-entry)))))
+    ;; Handle any error from the handler
+    (error
+     (cl-incf (mcp-server-lib-metrics-errors method-metrics))
+     (mcp-server-lib--jsonrpc-error
+      id mcp-server-lib--error-internal
+      (format "Error reading resource %s: %s"
+              uri (error-message-string err))))))
+
+(defun mcp-server-lib--handle-resources-read
+    (id params method-metrics)
+  "Handle resources/read request with ID and PARAMS.
+METHOD-METRICS is used to track errors for this method."
+  (let*
+      ((uri (alist-get 'uri params))
+       (resource (gethash uri mcp-server-lib--resources))
+       ;; Try to find matching resource template if no direct resource
+       (template-match
+        (unless resource
+          (mcp-server-lib--find-matching-template uri))))
+    (cond
+     ;; Direct resource found
+     (resource
+      (mcp-server-lib--execute-resource-handler
+       resource uri nil id method-metrics))
+     ;; Resource template match found
+     (template-match
+      (let ((template-data (car template-match))
+            (params (cdr template-match)))
+        (mcp-server-lib--execute-resource-handler
+         template-data uri params id method-metrics)))
+     ;; No resource or resource template found
+     (t
+      (mcp-server-lib--jsonrpc-error
+       id
+       mcp-server-lib--error-invalid-params
+       (format "Resource not found: %s" uri))))))
+
 (defun mcp-server-lib--dispatch-jsonrpc-method (id method params)
   "Dispatch a JSON-RPC request to the appropriate handler.
 ID is the JSON-RPC request ID to use in response.
@@ -313,9 +589,13 @@ version and capabilities between the client and server."
     (when (and mcp-server-lib--tools
                (> (hash-table-count mcp-server-lib--tools) 0))
       (push `(tools . ,(make-hash-table)) capabilities))
-    ;; Only include resources capability if resources are registered
-    (when (and mcp-server-lib--resources
-               (> (hash-table-count mcp-server-lib--resources) 0))
+    ;; Include resources capability if resources are registered
+    (when (or (and mcp-server-lib--resources
+                   (> (hash-table-count mcp-server-lib--resources) 0))
+              (and mcp-server-lib--resource-templates
+                   (> (hash-table-count
+                       mcp-server-lib--resource-templates)
+                      0)))
       (push `(resources . ,(make-hash-table)) capabilities))
     (mcp-server-lib--jsonrpc-response
      id
@@ -369,23 +649,56 @@ Returns a list of all registered tools with their metadata."
      mcp-server-lib--tools)
     (mcp-server-lib--jsonrpc-response id `((tools . ,tool-list)))))
 
+(defun mcp-server-lib--build-resource-entry
+    (uri-or-template resource-data is-template)
+  "Build a resource entry for resources/list response.
+URI-OR-TEMPLATE is the URI (for direct resources) or URI template.
+RESOURCE-DATA is the plist containing resource metadata.
+IS-TEMPLATE indicates whether this is a template resource."
+  (let* ((name (plist-get resource-data :name))
+         (description (plist-get resource-data :description))
+         (mime-type (plist-get resource-data :mime-type))
+         (uri-field
+          (if is-template
+              'uriTemplate
+            'uri))
+         (base-entry
+          `((,uri-field . ,uri-or-template) (name . ,name))))
+    (mcp-server-lib--append-optional-fields base-entry
+                                            'description
+                                            description
+                                            'mimeType
+                                            mime-type)))
+
+(defun mcp-server-lib--collect-resources-from-hash
+    (hash-table is-template)
+  "Collect resource entries from HASH-TABLE.
+IS-TEMPLATE indicates whether these are template resources.
+Returns a vector of resource entries."
+  (let ((entries (vector)))
+    (maphash
+     (lambda (uri-or-template resource-data)
+       (setq entries
+             (vconcat
+              entries
+              (vector
+               (mcp-server-lib--build-resource-entry
+                uri-or-template resource-data is-template)))))
+     hash-table)
+    entries))
+
 (defun mcp-server-lib--handle-resources-list (id)
   "Handle resources/list request with ID.
 
 Returns a list of all registered resources with their metadata."
-  (let ((resource-list (vector)))
-    (maphash
-     (lambda (uri resource)
-       (let* ((name (plist-get resource :name))
-              (description (plist-get resource :description))
-              (mime-type (plist-get resource :mime-type))
-              (resource-entry
-               (mcp-server-lib--append-optional-fields
-                `((uri . ,uri) (name . ,name))
-                'description description 'mimeType mime-type)))
-         (setq resource-list
-               (vconcat resource-list (vector resource-entry)))))
-     mcp-server-lib--resources)
+  (let ((resource-list
+         (vconcat
+          ;; Direct resources
+          (mcp-server-lib--collect-resources-from-hash
+           mcp-server-lib--resources nil)
+          ;; Resource templates
+          (mcp-server-lib--collect-resources-from-hash
+           mcp-server-lib--resource-templates t))))
     (mcp-server-lib--jsonrpc-response
      id `((resources . ,resource-list)))))
 
@@ -447,35 +760,6 @@ METHOD-METRICS is used to track errors for this method."
        mcp-server-lib--error-invalid-request
        (format "Tool not found: %s" tool-name)))))
 
-(defun mcp-server-lib--handle-resources-read
-    (id params method-metrics)
-  "Handle resources/read request with ID and PARAMS.
-METHOD-METRICS is used to track errors for this method."
-  (let* ((uri (alist-get 'uri params))
-         (resource (gethash uri mcp-server-lib--resources)))
-    (if resource
-        (condition-case err
-            (let* ((handler (plist-get resource :handler))
-                   (mime-type (plist-get resource :mime-type))
-                   (content (funcall handler))
-                   (content-entry
-                    (mcp-server-lib--append-optional-fields
-                     `((uri . ,uri) (text . ,content))
-                     'mimeType mime-type)))
-              (mcp-server-lib--jsonrpc-response
-               id `((contents . ,(vector content-entry)))))
-          ;; Handle any error from the resource handler
-          (error
-           (cl-incf (mcp-server-lib-metrics-errors method-metrics))
-           (mcp-server-lib--jsonrpc-error
-            id mcp-server-lib--error-internal
-            (format "Error reading resource %s: %s"
-                    uri (error-message-string err)))))
-      (mcp-server-lib--jsonrpc-error
-       id
-       mcp-server-lib--error-invalid-request
-       (format "Resource not found: %s" uri)))))
-
 ;;; Error handling helpers
 
 (defmacro mcp-server-lib-with-error-handling (&rest body)
@@ -507,94 +791,6 @@ See also: `mcp-server-lib-tool-throw'"
       (mcp-server-lib-tool-throw (format "Error: %S" err)))))
 
 ;;; Tool helpers
-
-(defun mcp-server-lib--extract-param-descriptions (docstring arglist)
-  "Extract parameter descriptions from DOCSTRING based on ARGLIST.
-The docstring should contain an \"MCP Parameters:\" section at the end,
-with each parameter described as \"parameter-name - description\".
-ARGLIST should be the function's argument list.
-Returns an alist mapping parameter names to their descriptions.
-Signals an error if a parameter is described multiple times,
-doesn't match function arguments, or if any parameter is not documented."
-  (let ((descriptions nil))
-    (when docstring
-      (when
-          (string-match
-           "MCP Parameters:[\n\r]+\\(\\(?:[ \t]+[^ \t\n\r].*[\n\r]*\\)*\\)"
-           docstring)
-        (let ((params-text (match-string 1 docstring))
-              (param-regex
-               "[ \t]+\\([^ \t\n\r]+\\)[ \t]*-[ \t]*\\(.*\\)[\n\r]*"))
-          (with-temp-buffer
-            (insert params-text)
-            (goto-char (point-min))
-            (while (re-search-forward param-regex nil t)
-              (let ((param-name (match-string 1))
-                    (param-desc (match-string 2)))
-                ;; Check for duplicate parameter names
-                (when (assoc param-name descriptions)
-                  (error
-                   "Duplicate parameter '%s' in MCP Parameters"
-                   param-name))
-                ;; Check parameter name matches function arguments
-                (unless (and (= 1 (length arglist))
-                             (symbolp (car arglist))
-                             (string=
-                              param-name (symbol-name (car arglist))))
-                  (error
-                   "Parameter '%s' in MCP Parameters not in function args %S"
-                   param-name
-                   arglist))
-                ;; Add to descriptions
-                (push (cons param-name (string-trim param-desc))
-                      descriptions))))))
-      ;; Check that all function parameters have descriptions
-      (when (and (= 1 (length arglist))
-                 (symbolp (car arglist))
-                 (not (memq (car arglist) '(&optional &rest))))
-        (let ((arg-name (symbol-name (car arglist))))
-          (unless (assoc arg-name descriptions)
-            (error
-             "Function parameter '%s' missing from MCP Parameters section"
-             arg-name)))))
-    descriptions))
-
-(defun mcp-server-lib--generate-schema-from-function (func)
-  "Generate JSON schema by analyzing FUNC's signature.
-Returns a schema object suitable for tool registration.
-Supports functions with zero or one argument only.
-Extracts parameter descriptions from the docstring if available."
-  (let* ((arglist (help-function-arglist func t))
-         (docstring (documentation func))
-         (param-descriptions
-          (mcp-server-lib--extract-param-descriptions
-           docstring arglist)))
-    (cond
-     ;; No arguments case
-     ((null arglist)
-      '((type . "object")))
-
-     ;; One argument case
-     ((and (= 1 (length arglist))
-           (symbolp (car arglist))
-           (not (memq (car arglist) '(&optional &rest))))
-      (let* ((arg-name (symbol-name (car arglist)))
-             (description (cdr (assoc arg-name param-descriptions)))
-             ;; Build property schema with type
-             (property-schema `((type . "string")))
-             ;; Add description if provided
-             (property-schema
-              (if description
-                  (cons `(description . ,description) property-schema)
-                property-schema)))
-        `((type . "object")
-          (properties . ((,arg-name . ,property-schema)))
-          (required . [,arg-name]))))
-
-     ;; Everything else is unsupported
-     (t
-      (error
-       "Only functions with zero or one argument are supported")))))
 
 ;;; API - Server
 
@@ -826,14 +1022,122 @@ MCP Parameters:
 See also: `mcp-server-lib-with-error-handling'"
   (signal 'mcp-server-lib-tool-error (list error-message)))
 
-;;; Resource management functions
+(defun mcp-server-lib--parse-uri-template (template)
+  "Parse URI TEMPLATE into segments.
+Returns plist with :segments, :variables, and :pattern.
+Supports RFC 6570 simple variables {var} and reserved expansion {+var}."
+  ;; First check for balanced braces
+  (let ((open-count 0)
+        (close-count 0)
+        (i 0))
+    (while (< i (length template))
+      (cond
+       ((eq (aref template i) ?{)
+        (setq open-count (1+ open-count)))
+       ((eq (aref template i) ?})
+        (setq close-count (1+ close-count))))
+      (setq i (1+ i)))
+    ;; Check for balanced braces after processing entire string
+    (unless (= open-count close-count)
+      (error "Unbalanced braces in resource template: %s" template)))
+
+  (let ((segments '())
+        (variables '())
+        (pos 0)
+        (len (length template)))
+    ;; Process template character by character
+    (while (< pos len)
+      (if-let ((var-start (string-match "{" template pos)))
+        ;; Found variable start
+        (progn
+          ;; Add literal segment before variable if any
+          (when (> var-start pos)
+            (push (list
+                   :type 'literal
+                   :value (substring template pos var-start))
+                  segments))
+          ;; Find variable end (guaranteed to exist due to balance check)
+          (let* ((var-end (string-match "}" template var-start))
+                 ;; Extract variable content
+                 (var-content
+                  (substring template (1+ var-start) var-end))
+                 (reserved
+                  (and (> (length var-content) 0)
+                       (eq (aref var-content 0) ?+)))
+                 (var-name
+                  (if reserved
+                      (substring var-content 1)
+                    var-content)))
+            ;; Validate variable name
+            ;; RFC 6570: Variable names must start with ALPHA / "_"
+            ;; and contain only ALPHA / DIGIT / "_" / pct-encoded
+            (unless (string-match-p
+                     "\\`[A-Za-z_][A-Za-z0-9_]*\\'" var-name)
+              (error
+               "Invalid variable name '%s' in resource template: %s"
+               var-name
+               template))
+            ;; Add variable segment
+            (push (list
+                   :type 'variable
+                   :name var-name
+                   :reserved reserved)
+                  segments)
+            (push var-name variables)
+            (setq pos (1+ var-end))))
+        ;; No more variables, add remaining literal
+        (when (< pos len)
+          (push (list :type 'literal :value (substring template pos))
+                segments))
+        (setq pos len)))
+    ;; Return parsed structure
+    (list
+     :segments (nreverse segments)
+     :variables (nreverse variables)
+     :pattern template)))
+
+(defun mcp-server-lib--register-resource-internal
+    (uri handler properties hash-table extra-props)
+  "Internal helper for resource registration.
+URI is the resource URI.
+HANDLER is the handler function.
+PROPERTIES is the plist of properties.
+HASH-TABLE is either `mcp-server-lib--resources' or
+`mcp-server-lib--resource-templates'.
+EXTRA-PROPS is a plist of additional properties to include (e.g., :parsed)."
+  (let ((name (plist-get properties :name))
+        (description (plist-get properties :description))
+        (mime-type (plist-get properties :mime-type)))
+    ;; Error checking for required properties
+    (unless (functionp handler)
+      (error "Resource registration requires handler function"))
+    (unless name
+      (error "Resource registration requires :name property"))
+
+    (if-let* ((existing (gethash uri hash-table)))
+      (mcp-server-lib--ref-counted-register uri existing hash-table)
+      (let ((entry
+             (append (list :handler handler :name name) extra-props)))
+        (when description
+          (setq entry (plist-put entry :description description)))
+        (when mime-type
+          (setq entry (plist-put entry :mime-type mime-type)))
+        (mcp-server-lib--ref-counted-register
+         uri entry hash-table)))))
+
+;;; API - Resources
 
 (defun mcp-server-lib-register-resource (uri handler &rest properties)
-  "Register a direct resource with the MCP server.
+  "Register a resource with the MCP server.
+
+Automatically detects whether URI is a template based on presence of {}.
 
 Arguments:
-  URI              Exact URI for the resource (e.g., \"org://projects.org\")
-  HANDLER          Function that takes no arguments and returns the content
+  URI              Resource URI or URI template (e.g., \"org://projects.org\"
+                   or \"org://{filename}/outline\")
+  HANDLER          Function that returns the content
+                   - For static resources: takes no arguments
+                   - For templates: takes params alist argument
   PROPERTIES       Property list with resource attributes
 
 Required properties:
@@ -843,7 +1147,8 @@ Optional properties:
   :description     Description of the resource
   :mime-type       MIME type (default: \"text/plain\")
 
-Example:
+Examples:
+  ;; Static resource
   (mcp-server-lib-register-resource
    \"org://projects.org\"
    (lambda ()
@@ -854,50 +1159,59 @@ Example:
    :description \"Current project list\"
    :mime-type \"text/plain\")
 
-See also: `mcp-server-lib-unregister-resource'"
-  (let ((name (plist-get properties :name))
-        (description (plist-get properties :description))
-        (mime-type (plist-get properties :mime-type)))
-    ;; Error checking for required properties
-    (unless (functionp handler)
-      (error "Resource registration requires handler function"))
-    (unless uri
-      (error "Resource registration requires URI"))
-    (unless name
-      (error "Resource registration requires :name property"))
+  ;; Template resource
+  (mcp-server-lib-register-resource
+   \"org://{filename}/outline\"
+   (lambda (params)
+     (generate-outline
+       (alist-get \"filename\" params nil nil #\\='string=)))
+   :name \"Org file outline\"
+   :description \"Hierarchical outline of an Org file\")
 
-    ;; Check for existing registration and use ref-counting
-    (if-let* ((existing (gethash uri mcp-server-lib--resources)))
-      ;; Resource already exists - use ref counting helper
-      (mcp-server-lib--ref-counted-register
-       uri existing mcp-server-lib--resources)
-      ;; New resource - create and register
-      (let ((resource (list :handler handler :name name)))
-        ;; Only add optional properties if they were provided
-        (when description
-          (setq resource
-                (plist-put resource :description description)))
-        (when mime-type
-          (setq resource (plist-put resource :mime-type mime-type)))
-        ;; Register the resource with ref counting
-        (mcp-server-lib--ref-counted-register
-         uri resource mcp-server-lib--resources)))))
+See also: `mcp-server-lib-unregister-resource'"
+  ;; Check for proper URI structure: scheme://path
+  (unless (string-match-p mcp-server-lib--uri-with-scheme-regex uri)
+    (error "Resource URI must have format 'scheme://path': '%s'" uri))
+  ;; Check for unmatched }
+  (when (and (string-match-p "}" uri) (not (string-match-p "{" uri)))
+    (error "Unmatched '}' in resource URI: %s" uri))
+  ;; Check if this is a template by looking for unescaped {
+  (if (string-match-p "{" uri)
+      ;; It's a template - delegate to template logic
+      (let ((parsed (mcp-server-lib--parse-uri-template uri)))
+        (mcp-server-lib--register-resource-internal
+         uri
+         handler
+         properties
+         mcp-server-lib--resource-templates
+         (list :parsed parsed)))
+    ;; It's a static resource
+    (mcp-server-lib--register-resource-internal
+     uri handler properties mcp-server-lib--resources nil)))
 
 (defun mcp-server-lib-unregister-resource (uri)
   "Unregister a resource by its URI.
 
+Automatically detects whether URI is a template based on presence of {}.
+
 Arguments:
-  URI  The URI of the resource to unregister
+    URI  The URI or URI template to unregister
 
 Returns t if the resource was found and removed, nil otherwise.
 
-Example:
+Examples:
   (mcp-server-lib-unregister-resource \"org://projects.org\")
+  (mcp-server-lib-unregister-resource \"org://{filename}/outline\")
 
 See also: `mcp-server-lib-register-resource'"
-  (mcp-server-lib--ref-counted-unregister
-   uri mcp-server-lib--resources))
-
+  ;; Check if this is a template by looking for unescaped {
+  (if (string-match-p "{" uri)
+      ;; It's a template
+      (mcp-server-lib--ref-counted-unregister
+       uri mcp-server-lib--resource-templates)
+    ;; It's a static resource
+    (mcp-server-lib--ref-counted-unregister
+     uri mcp-server-lib--resources)))
 
 (provide 'mcp-server-lib)
 ;;; mcp-server-lib.el ends here

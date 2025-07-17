@@ -36,21 +36,36 @@ If EXPECTED-ERROR is non-nil, expects isError to be true.
 Returns the text content string on success.
 Signals test failure if response structure is invalid."
   (let ((result (alist-get 'result response)))
+    ;; Response must have a result field
     (should result)
-    (should (alist-get 'content result))
-    (should (arrayp (alist-get 'content result)))
-    (should (= 1 (length (alist-get 'content result))))
-    (should (alist-get 'isError result nil t))
-    (should
-     (eq
-      (alist-get 'isError result)
-      (if expected-error
-          t
-        :json-false)))
-    (let ((text-item (aref (alist-get 'content result) 0)))
-      (should (string= "text" (alist-get 'type text-item)))
-      (should (stringp (alist-get 'text text-item)))
-      (alist-get 'text text-item))))
+    ;; Check result has exactly the expected fields
+    (let ((result-keys (mapcar #'car result)))
+      (should (= 2 (length result-keys)))
+      (should (member 'content result-keys))
+      (should (member 'isError result-keys)))
+    ;; Check content field structure
+    (let ((content (alist-get 'content result)))
+      (should (arrayp content))
+      (should (= 1 (length content)))
+      ;; Check content item structure
+      (let* ((text-item (aref content 0))
+             (item-keys (mapcar #'car text-item)))
+        (should (= 2 (length item-keys)))
+        (should (member 'type item-keys))
+        (should (member 'text item-keys))
+        ;; Check content item values
+        (should (string= "text" (alist-get 'type text-item)))
+        (let ((text (alist-get 'text text-item)))
+          (should (stringp text))
+          ;; Check isError field
+          (should
+           (eq
+            (alist-get 'isError result)
+            (if expected-error
+                t
+              :json-false)))
+          ;; Return the text content
+          text)))))
 
 (provide 'mcp-server-lib-ert)
 

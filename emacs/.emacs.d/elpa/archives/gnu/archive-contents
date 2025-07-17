@@ -217,14 +217,14 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:commit . "f317b0c9c3e60a959f45d035ed5e31a78f1263ac"))])
  (auctex .
-	 [(14 0 9)
+	 [(14 1 0)
 	  ((emacs
-	    (27 1)))
+	    (28 1)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
 	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
 	   (:maintainer nil . "auctex-devel@gnu.org")
-	   (:commit . "ee58d625501af073bde569718db02d1236162283"))])
+	   (:commit . "6e1b6922d7428b839ecfd3184fe50adfe2866a7a"))])
  (auctex-cont-latexmk .
 		      [(0 3)
 		       ((emacs
@@ -1348,16 +1348,16 @@
 	    (:url . "https://elpa.gnu.org/packages/docbook.html")
 	    (:commit . "a59f87c0dc04bcfcf9f55a124658c2e7a585dbd2"))])
  (doric-themes .
-	       [(0 1 0)
+	       [(0 2 0)
 		((emacs
 		  (29 1)))
-		"Minimalist themes" tar
+		"Highly legible minimalist themes with precise typography" tar
 		((:url . "https://github.com/protesilaos/doric-themes")
 		 (:keywords "faces" "theme" "accessibility")
 		 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		 (:authors
 		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		 (:commit . "88e924ea72d1a26196d418297a44e523167dfdde"))])
+		 (:commit . "279297c36c16b02fac114aa817c59cc2f71b3d4a"))])
  (drepl .
 	[(0 3)
 	 ((emacs
@@ -1528,7 +1528,7 @@
 	      (:url . "https://elpa.gnu.org/packages/el-search.html")
 	      (:commit . "43779b910025aba2574213cf3eabee2132c0a175"))])
  (eldoc .
-	[(1 15 0)
+	[(1 16 0)
 	 ((emacs
 	   (26 3)))
 	 "Show function arglist or variable docstring in echo area" tar
@@ -1537,7 +1537,7 @@
 	  (:authors
 	   ("Noah Friedman" . "friedman@splode.com"))
 	  (:url . "https://elpa.gnu.org/packages/eldoc.html")
-	  (:commit . "dc744fe6f3cd185bd9d29f61b08cd4c524e3969e"))])
+	  (:commit . "b85d9048f4a32c7c50894e991423d021d9f95317"))])
  (electric-spacing .
 		   [(5 0)
 		    nil "Insert operators with surrounding spaces smartly" tar
@@ -1659,7 +1659,7 @@
 	   ("Adam Porter" . "adam@alphapapa.net"))
 	  (:commit . "26bf5a4efd08bc724cf29c412c36c2909d72bb13"))])
  (emms .
-       [(22)
+       [(23)
 	((cl-lib
 	  (0 5))
 	 (nadvice
@@ -1672,7 +1672,7 @@
 	 (:maintainer "Yoni Rabkin" . "yrk@gnu.org")
 	 (:authors
 	  ("Jorgen Schäfer" . "forcer@forcix.cx"))
-	 (:commit . "338462506d7de508f7f74a01d15753f9113cd3cb"))])
+	 (:commit . "09f829b04804af37d00280e31a0e0257bcd2329e"))])
  (engrave-faces .
 		[(0 3 1)
 		 ((emacs
@@ -2736,7 +2736,7 @@
 		      ("Sean Whitton" . "spwhitton@spwhitton.name"))
 		     (:commit . "00b8f65effe4f2673e6450d70000644b266aa78a"))])
  (llm .
-      [(0 26 1)
+      [(0 27 0)
        ((emacs
 	 (28 1))
 	(plz
@@ -2752,7 +2752,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "7f11ee2d61e7ff24b3895851854a2b3856ac83f2"))])
+	(:commit . "ecc58b8ee2667dcb024c8ce90010a823be412169"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
@@ -2886,6 +2886,19 @@
 	    (:authors
 	     ("Augusto Stoffel" . "arstoffel@gmail.com"))
 	    (:commit . "db669451bbee7d2ea9872c28661c4679391b9644"))])
+ (mathsheet .
+	    [(1 2)
+	     ((peg
+	       (1 0))
+	      (emacs
+	       (28 1)))
+	     "Generate dynamic math worksheets" tar
+	     ((:url . "https://gitlab.com/ianxm/mathsheet")
+	      (:keywords "tools" "education" "math")
+	      (:maintainer "Ian Martins" . "ianxm@jhu.edu")
+	      (:authors
+	       ("Ian Martins" . "ianxm@jhu.edu"))
+	      (:commit . "344d10db24358c0974bdd9fffc2e3f8d960fbb07"))])
  (matlab-mode .
 	      [(6 3)
 	       ((emacs
@@ -2901,15 +2914,15 @@
 		 ("Eric M. Ludlam" . "eludlam@mathworks.com"))
 		(:commit . "935137844e16551a5369f928d2591556be7fb9c2"))])
  (mct .
-      [(1 0 0)
+      [(1 1 0)
        ((emacs
 	 (29 1)))
        "Minibuffer Confines Transcended" tar
-       ((:url . "https://git.sr.ht/~protesilaos/mct")
+       ((:url . "https://github.com/protesilaos/mct")
 	(:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	(:authors
 	 ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	(:commit . "2cbf74edb4f4553d7075b34e06adcf59e96efda2"))])
+	(:commit . "306cb704196c643b552aceb5893693641ca747d9"))])
  (memory-usage .
 	       [(0 2)
 		nil "Analyze the memory usage of Emacs in various ways" tar
@@ -3007,16 +3020,16 @@
 	      ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
 	     (:commit . "b1f5c7dbdc405e6e10d9ddd99a43a6b2ad61b176"))])
  (modus-themes .
-	       [(4 8 0)
+	       [(4 8 1)
 		((emacs
-		  (28 1)))
+		  (27 1)))
 		"Elegant, highly legible and customizable themes" tar
 		((:url . "https://github.com/protesilaos/modus-themes")
 		 (:keywords "faces" "theme" "accessibility")
 		 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		 (:authors
 		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		 (:commit . "b7aa3ae780975b6dda98a75197a6ff89876bb7b7"))])
+		 (:commit . "2f19a515110f7fcc407fcc32b9cdfdb26a853eb5"))])
  (mpdired .
 	  [(3)
 	   ((emacs
@@ -4190,7 +4203,7 @@
 	      (:url . "https://elpa.gnu.org/packages/shen-mode.html")
 	      (:commit . "df28df31317188a6d87c9df93444543ace4f7f4f"))])
  (show-font .
-	    [(0 3 0)
+	    [(0 3 1)
 	     ((emacs
 	       (29 1)))
 	     "Show font features in a buffer" tar
@@ -4199,7 +4212,7 @@
 	      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	      (:authors
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	      (:commit . "44da364c0a884008f91a12a9f9766d1d3b37f95c"))])
+	      (:commit . "de40b7a732abdee21d1887a5acc7b924098408e3"))])
  (sisu-mode .
 	    [(7 1 8)
 	     nil "Major mode for SiSU markup text" tar
