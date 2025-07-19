@@ -135,12 +135,12 @@ tramp ts
 - `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, kills all
   buffers and executes `gitrmworktree.`
 
-# Installation
+## Installation
 
 See
 [INSTALLATION.md](https://github.com/laurynas-biveinis/dotfiles/blob/master/INSTALLATION.md)
 
-# New system setup
+## New system setup
 
 See
 [setup-ubuntu.sh](https://github.com/laurynas-biveinis/dotfiles/blob/master/setup-ubuntu.sh),
@@ -148,7 +148,7 @@ See
 and
 [setup-macos.sh](https://github.com/laurynas-biveinis/dotfiles/blob/master/setup-macos.sh).
 
-# Dotfiles, Emacs distros, macOS defaults, etc. I have been stealing from
+## Dotfiles, Emacs distros, macOS defaults, etc. I have been stealing from
 
 - [Doom Emacs](https://github.com/hlissner/doom-emacs)
 - [EmacsWiki: Dot Emacs
