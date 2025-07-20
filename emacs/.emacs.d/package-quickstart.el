@@ -10626,7 +10626,7 @@ Fontify an `info' node.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.9.1/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.9.1/indent-bars-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.9.2/indent-bars-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/indent-bars-0.9.2/indent-bars-autoloads.el"))
 
 
 

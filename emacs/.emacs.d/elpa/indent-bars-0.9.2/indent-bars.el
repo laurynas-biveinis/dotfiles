@@ -4,7 +4,7 @@
 ;; Author: J.D. Smith <jdtsmith+elpa@gmail.com>
 ;; Homepage: https://github.com/jdtsmith/indent-bars
 ;; Package-Requires: ((emacs "27.1") (compat "30"))
-;; Version: 0.9.1
+;; Version: 0.9.2
 ;; Keywords: convenience
 
 ;; indent-bars is free software: you can redistribute it and/or
@@ -733,7 +733,8 @@ If WIN is not provided, the selected window is used.  This works for
 both variable pitch and fixed pitch fonts."
   (let ((win (or win (selected-window))))
     (with-selected-window win
-      (or (when-let* ((ff (face-font 'default))
+      (or (when-let* (( (fboundp 'font-info))
+		      (ff (face-font 'default))
 		      (fi (font-info ff))
 		      (space-width (aref fi 10)))
 	    (and (natnump space-width) (> space-width 0) space-width))
@@ -1665,6 +1666,8 @@ Adapted from `highlight-indentation-mode'."
     java-ts-mode-indent-offset)
    ((and (derived-mode-p 'tcl-mode) (boundp 'tcl-indent-level))
     tcl-indent-level)
+   ((and (derived-mode-p 'haml-mode) (boundp 'haml-indent-offset))
+    haml-indent-offset)
    ((and (boundp 'standard-indent) standard-indent))
    (t 4))) 				; backup
 
