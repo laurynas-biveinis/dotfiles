@@ -18,6 +18,7 @@
 ;;
 ;; Custom keybindings:
 ;; C-c C-x C-k - Decrypt encrypted org entry
+;; C-c C-x C-u - Open URL at point with org-autotask
 ;; C-c n i     - Insert a link to `org-roam' entry
 ;; C-c n l     - Toggle the `org-roam' buffer
 ;; C-c x       - Copy org table cell contents
@@ -58,6 +59,7 @@
 Sets up keybindings and adjusts the fill column."
   ;; Keybindings
   (local-set-key (kbd "C-c C-x C-k") #'org-decrypt-entry)
+  (local-set-key (kbd "C-c C-x C-u") #'org-autotask-open-url-at-point)
   (when my-zettelkasten-p
     (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
     (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle))
