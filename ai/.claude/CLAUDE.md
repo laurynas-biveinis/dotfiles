@@ -47,3 +47,8 @@ With the smallest possible iteration steps:
 1. If the code change is at a logical commit size, commit.
 1. Repeat for the next iteration.
 
+## Version Control
+
+NEVER use `git add -A` to stage changes for commits, because at any point there
+can be unrelated changes, files not meant to be tracked, or changes that I did
+in parallel. ALWAYS stage individual files.
