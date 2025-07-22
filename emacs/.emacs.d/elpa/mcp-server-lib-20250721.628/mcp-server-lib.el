@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20250716.1834
-;; Package-Revision: c6f9c59f37de
+;; Package-Version: 20250721.628
+;; Package-Revision: 1861396bcec0
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -897,6 +897,22 @@ If ID is not provided, it defaults to 1."
    `(("jsonrpc" . "2.0")
      ("method" . "resources/list")
      ("id" . ,(or id 1)))))
+
+(defun mcp-server-lib-create-resources-read-request (uri &optional id)
+  "Create a resources/read JSON-RPC request for URI with optional ID.
+If ID is not provided, it defaults to 1.
+
+Arguments:
+  URI    Resource URI to read
+  ID     Optional request ID (defaults to 1)
+
+Example:
+  (mcp-server-lib-create-resources-read-request \"test://resource\" 42)"
+  (json-encode
+   `(("jsonrpc" . "2.0")
+     ("method" . "resources/read")
+     ("id" . ,(or id 1))
+     ("params" . (("uri" . ,uri))))))
 
 ;;; API - Tools
 

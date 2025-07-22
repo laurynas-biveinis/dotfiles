@@ -1,10 +1,10 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "mcp-server-lib" "20250716.1834"
+(define-package "mcp-server-lib" "20250721.628"
   "Model Context Protocol server library."
   '((emacs "27.1"))
   :url "https://github.com/laurynas-biveinis/mcp-server-lib.el"
-  :commit "c6f9c59f37dee996e7bf5d8ee42e1d20275602d3"
-  :revdesc "c6f9c59f37de"
+  :commit "1861396bcec0841ca0e924da930634b64cae0603"
+  :revdesc "1861396bcec0"
   :keywords '("comm" "tools")
   :authors '(("Laurynas Biveinis" . "laurynas.biveinis@gmail.com"))
   :maintainers '(("Laurynas Biveinis" . "laurynas.biveinis@gmail.com")))
