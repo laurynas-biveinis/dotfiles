@@ -29,8 +29,11 @@ With the smallest possible iteration steps:
    principle and do NOT design functionality not asked for, but feel free to
    note it and ask the user for feedback. Strive for simplicity. For any
    non-trivially sized plan, write it to a scratch plan file.
+1. Run `./check.sh` to ensure you are starting from a clean baseline.
 1. Write user-facing documentation for the feature or for any behavior changes
    by a bug fix.
+1. Run `./check.sh` to format/lint the documentation and to confirm the
+   baseline.
 1. Write ONE failing test for the smallest bit of functionality or a minimal bug
    testcase. Tests are NOT allowed to access internal APIs or internal state of
    the module being tested. If that precludes testing, ultrathink about making
