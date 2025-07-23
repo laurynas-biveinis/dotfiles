@@ -64,6 +64,14 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+echo -n "Checking YAML formatting... $(echo .github/workflows/*.yml) gh/.config/gh/hosts.yml"
+if prettier --log-level warn --check .github/workflows/*.yml gh/.config/gh/hosts.yml; then
+	echo "OK!"
+else
+	echo "prettier check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
 # Final result
 if [ $ERRORS -eq 0 ]; then
 	echo "All checks passed successfully!"
