@@ -27,7 +27,8 @@ project-specific memory files.
 
 ### Symbol-level guidelines
 
-- All symbols must be prefixed with the package name
+- Prefer named functions to lambdas.
+- All symbols must be prefixed with the package name.
 - All internal symbols must finish the package name prefix with a double hyphen.
 - All symbols must have documentation strings.
 
