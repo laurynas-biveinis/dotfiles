@@ -72,6 +72,15 @@ With the smallest possible iteration steps:
 1. If the code change is at a logical commit size, commit.
 1. Repeat for the next iteration.
 
+## Code Comments
+
+- Do not add obvious comments that restate the code in slightly different words
+- Descriptive variable and function names often eliminate the need for comments.
+- Prefer comments that explain that "why" not "what" when the code isn't
+  self-explanatory
+- Use comments to explain complex algorithms, non-obvious side effects,
+  historical context
+
 ## Version Control
 
 NEVER use `git add -A` to stage changes for commits, because at any point there
