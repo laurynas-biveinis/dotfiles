@@ -48,6 +48,14 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+echo -n "Checking terminology... "
+if textlint --rule terminology ai; then
+	echo "OK!"
+else
+	echo "textlint check failed"
+	ERRORS=$((ERRORS + 1))
+fi
+
 echo -n "Checking GitHub workflows... $(echo .github/workflows/*.yml) "
 if actionlint .github/workflows/*.yml; then
 	echo "OK!"

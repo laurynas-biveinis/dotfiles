@@ -35,5 +35,5 @@ project-specific memory files.
 
 ### Testing
 
-- Test file names must end with `-test.el`
+- Test filenames must end with `-test.el`
 - Tests must use ERT (Emacs Lisp Regression Testing) framework

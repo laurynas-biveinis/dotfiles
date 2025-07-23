@@ -9,7 +9,7 @@ that will provide project-specific guidance.
 The `./check.sh` script in the repository, if present, will help you stay on
 course by making sure that all the tests pass and the code is properly
 formatted. Always run it after every change to validate it. NEVER suppress
-linter warnings or errors unless explicitly allowed by the user.
+linting warnings or errors unless explicitly allowed by the user.
 
 If `./check.sh` is not present, then use the linters and test-running commands
 proactively at your discretion.
@@ -51,7 +51,7 @@ With the smallest possible iteration steps:
    file.
 1. Run `./check.sh` to ensure you are starting from a clean baseline.
 1. Write user-facing documentation for the feature or for any behavior changes
-   by a bug fix.
+   by a bugfix.
 1. Run `./check.sh` to format/lint the documentation and to confirm the
    baseline.
 1. Write ONE failing test for the smallest bit of functionality or a minimal bug
