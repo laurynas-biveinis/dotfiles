@@ -16,6 +16,10 @@ proactively at your discretion.
 
 ## Development methodology
 
+NEVER switch tasks mid-work. If you notice something that needs or could be done
+but is not on the critical path for the current work, write it down to a scratch
+file and ask the user for guidance once you are finished with the current task.
+
 For the testable projects, follow strictly the following principles: TDD, DRY,
 YAGNI. For the mostly configuration-storing projects - such as dotfiles - full
 TDD might not be possible.
