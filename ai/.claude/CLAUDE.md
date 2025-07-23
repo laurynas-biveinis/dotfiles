@@ -20,6 +20,19 @@ NEVER switch tasks mid-work. If you notice something that needs or could be done
 but is not on the critical path for the current work, write it down to a scratch
 file and ask the user for guidance once you are finished with the current task.
 
+## Analysis
+
+When analyzing a bug or code inner workings:
+
+1. Do not guess. Collect hard evidence for any hypotheses you come up with. It's
+   OK to add temporary tracing to the code for this purpose.
+1. Explore multiple approaches in turn systematically and methodically.
+
+## Design
+
+Always consider trade-offs and alternative options. If they exist, present them
+to the user.
+
 ## Development methodology
 
 For the testable projects, follow strictly the following principles: TDD, DRY,
@@ -33,8 +46,9 @@ With the smallest possible iteration steps:
 1. Analyze, ultrathink, ask the user any clarifying questions to fully
    understand what needs to be done. Follow the YAGNI (You Ain't Gonna Need It)
    principle and do NOT design functionality not asked for, but feel free to
-   note it and ask the user for feedback. Strive for simplicity. For any
-   non-trivially sized plan, write it to a scratch plan file.
+   note it and ask the user for feedback. Only then design. Strive for
+   simplicity. For any non-trivially sized plan, write it to a scratch plan
+   file.
 1. Run `./check.sh` to ensure you are starting from a clean baseline.
 1. Write user-facing documentation for the feature or for any behavior changes
    by a bug fix.
