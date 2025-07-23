@@ -29,7 +29,7 @@ jobs:
         uses: super-linter/super-linter/slim@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/).*
+          FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/|.claude/commands).*
           VALIDATE_ANSIBLE: false
           VALIDATE_GIT_COMMITLINT: false
           VALIDATE_PYTHON_PYINK: false
