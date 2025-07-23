@@ -19,6 +19,7 @@ project-specific memory files.
 - Use lexical binding (`-*- lexical-binding: t -*-`).
 - Put any `(require)` statements at the top of the file, at the start of the
   code section.
+- All declarations must be above their first uses.
 
 ### Dependencies
 
