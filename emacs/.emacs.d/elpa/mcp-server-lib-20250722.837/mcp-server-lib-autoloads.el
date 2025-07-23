@@ -49,7 +49,7 @@ Display metrics in a buffer." t)
 
 ;;; Generated autoloads from mcp-server-lib-ert.el
 
-(register-definition-prefixes "mcp-server-lib-ert" '("mcp-server-lib-ert-check-text-response"))
+(register-definition-prefixes "mcp-server-lib-ert" '("mcp-server-lib-ert-"))
 
 
 ;;; Generated autoloads from mcp-server-lib-metrics.el

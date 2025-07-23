@@ -1,0 +1,201 @@
+;;; mcp-server-lib-ert.el --- ERT test utilities for MCP server -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2025 Laurynas Biveinis
+
+;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
+;; Keywords: tools, testing
+;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
+
+;; This file is NOT part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Test utilities for writing ERT tests for MCP servers.
+
+;;; Code:
+
+(require 'ert)
+(require 'mcp-server-lib-metrics)
+
+(defun mcp-server-lib-ert-check-text-response
+    (response &optional expected-error)
+  "Validate RESPONSE structure and extract text content.
+If EXPECTED-ERROR is non-nil, expects isError to be true.
+Returns the text content string on success.
+Signals test failure if response structure is invalid."
+  (let ((result (alist-get 'result response)))
+    ;; Response must have a result field
+    (should result)
+    ;; Check result has exactly the expected fields
+    (let ((result-keys (mapcar #'car result)))
+      (should (= 2 (length result-keys)))
+      (should (member 'content result-keys))
+      (should (member 'isError result-keys)))
+    ;; Check content field structure
+    (let ((content (alist-get 'content result)))
+      (should (arrayp content))
+      (should (= 1 (length content)))
+      ;; Check content item structure
+      (let* ((text-item (aref content 0))
+             (item-keys (mapcar #'car text-item)))
+        (should (= 2 (length item-keys)))
+        (should (member 'type item-keys))
+        (should (member 'text item-keys))
+        ;; Check content item values
+        (should (string= "text" (alist-get 'type text-item)))
+        (let ((text (alist-get 'text text-item)))
+          (should (stringp text))
+          ;; Check isError field
+          (should
+           (eq
+            (alist-get 'isError result)
+            (if expected-error
+                t
+              :json-false)))
+          ;; Return the text content
+          text)))))
+
+(defmacro mcp-server-lib-ert-with-metrics-tracking
+    (metrics-specs &rest body)
+  "Execute BODY and verify metrics changed as expected.
+METRICS-SPECS is a list of (METRICS-KEY EXPECTED-CALLS EXPECTED-ERRORS) lists.
+Returns the result of the last form in BODY.
+
+Arguments:
+  METRICS-SPECS - List of metric specifications, each containing:
+    - METRICS-KEY: String key for the metric to track
+    - EXPECTED-CALLS: Number of expected call increments
+    - EXPECTED-ERRORS: Number of expected error increments
+  BODY - Forms to execute while tracking metrics
+
+Example:
+  (mcp-server-lib-ert-with-metrics-tracking
+      ((\"initialize\" 1 0)
+       (\"tools/list\" 2 0))
+    ;; Code that should increment initialize calls by 1
+    ;; and tools/list calls by 2 with no errors
+    ...)"
+  (declare (indent 1) (debug t))
+  (let ((before-bindings '())
+        (after-checks '())
+        (result-var (gensym "result")))
+    ;; Build bindings and checks for each metric
+    (dolist (spec metrics-specs)
+      (let* ((key (car spec))
+             (expected-calls (cadr spec))
+             (expected-errors (caddr spec))
+             (metrics-var (gensym "metrics"))
+             (calls-var (gensym "calls"))
+             (errors-var (gensym "errors")))
+        ;; Add before bindings
+        (push `(,metrics-var (mcp-server-lib-metrics-get ,key))
+              before-bindings)
+        (push `(,calls-var
+                (mcp-server-lib-metrics-calls ,metrics-var))
+              before-bindings)
+        (push `(,errors-var
+                (mcp-server-lib-metrics-errors ,metrics-var))
+              before-bindings)
+        ;; Add after checks
+        (push `(let ((metrics-after
+                      (mcp-server-lib-metrics-get ,key)))
+                 (should
+                  (= (+ ,calls-var ,expected-calls)
+                     (mcp-server-lib-metrics-calls metrics-after)))
+                 (should
+                  (= (+ ,errors-var ,expected-errors)
+                     (mcp-server-lib-metrics-errors metrics-after))))
+              after-checks)))
+    `(let* (,@
+            (nreverse before-bindings)
+            (,result-var
+             (progn
+               ,@body)))
+       ,@
+       (nreverse after-checks)
+       ,result-var)))
+
+(defmacro mcp-server-lib-ert-verify-req-success (method &rest body)
+  "Execute BODY and verify METHOD metrics show success (+1 call, +0 errors).
+Captures metrics before BODY execution and asserts after that:
+- calls increased by 1
+- errors stayed the same
+
+Arguments:
+  METHOD - The MCP method name to track (e.g., \"tools/list\")
+  BODY - Forms to execute while tracking metrics
+
+Example:
+  (mcp-server-lib-ert-verify-req-success \"tools/list\"
+    (let ((response (mcp-server-lib-process-jsonrpc-parsed request)))
+      (should-not (alist-get \\='error response))
+      (alist-get \\='result response)))"
+  (declare (indent defun) (debug t))
+  `(mcp-server-lib-ert-with-metrics-tracking ((,method 1 0))
+     ,@body))
+
+(defun mcp-server-lib-ert-get-success-result (method request)
+  "Process REQUEST and return the result from a successful response.
+METHOD is the JSON-RPC method name for metrics verification.
+This function expects the request to succeed and will fail the test if an
+error is present in the response.  It verifies that the response contains no
+error and that the method metrics show success before returning the result.
+
+Arguments:
+  METHOD - The MCP method name for metrics tracking (e.g., \"initialize\")
+  REQUEST - The JSON-RPC request to process
+
+Returns the \\='result field from the response.
+
+Example:
+  (let* ((request (mcp-server-lib-create-tools-list-request))
+         (tools (mcp-server-lib-ert-get-success-result \"tools/list\" request)))
+    ;; tools now contains the tools array from the response
+    (should (arrayp tools)))"
+  (mcp-server-lib-ert-verify-req-success method
+    (let ((resp-obj (mcp-server-lib-process-jsonrpc-parsed request)))
+      (should-not (alist-get 'error resp-obj))
+      (alist-get 'result resp-obj))))
+
+(defun mcp-server-lib-ert-get-resource-list ()
+  "Get the successful response to a standard \\='resources/list request.
+This is a convenience function for tests that need to verify resource lists.
+It sends a resources/list request, verifies success, and returns the
+resources array.
+
+Returns an array of resource objects.
+
+Example:
+  (let ((resources (mcp-server-lib-ert-get-resource-list)))
+    (should (= 2 (length resources)))
+    (should (string= \"test://resource1\"
+                     (alist-get \\='uri (aref resources 0)))))"
+  (let ((result
+         (alist-get
+          'resources
+          (mcp-server-lib-ert-get-success-result
+           "resources/list"
+           (mcp-server-lib-create-resources-list-request)))))
+    (should (arrayp result))
+    result))
+
+(provide 'mcp-server-lib-ert)
+
+;; Local Variables:
+;; package-lint-main-file: "mcp-server-lib.el"
+;; End:
+
+;;; mcp-server-lib-ert.el ends here

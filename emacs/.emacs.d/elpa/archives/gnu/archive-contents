@@ -950,16 +950,16 @@
 		(:url . "https://elpa.gnu.org/packages/cursor-undo.html")
 		(:commit . "e82084c3d491ff7199e14cc8da69c250b9bda492"))])
  (cursory .
-	  [(1 1 0)
+	  [(1 2 0)
 	   ((emacs
-	     (27 1)))
+	     (29 1)))
 	   "Manage cursor styles using presets" tar
 	   ((:url . "https://github.com/protesilaos/cursory")
 	    (:keywords "convenience" "cursor")
 	    (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	    (:authors
 	     ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	    (:commit . "9c5bb8122d5780796b881da6d37442e532ba6c51"))])
+	    (:commit . "892c3b81037ece0e1753ab058e3cfda93f985693"))])
  (cycle-quotes .
 	       [(0 1)
 		nil "Cycle between quote styles" tar

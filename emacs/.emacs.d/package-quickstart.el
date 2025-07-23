@@ -9047,6 +9047,13 @@ Evaluate Elisp CODE.
 (fn CODE)")
 (autoload 'org-autotask-require-org-clock "org-autotask" "\
 Return user error if no `org' task is currently clocked in.")
+(autoload 'org-autotask-open-url-at-point "org-autotask" "\
+Open URL properties from the current Org entry without clocking in.
+This function reads the URL property (and URL+ for additional URLs) from
+the Org entry at point and opens them in the browser using `browse-url'.
+
+Unlike the automatic URL opening that happens during clock-in, this
+allows manual URL opening for quick reference without starting time tracking." t)
 (autoload 'org-autotask-with-org-node-with-url "org-autotask" "\
 Go to the `org' node with the URL property value, execute the forms of BODY.
 
@@ -9120,6 +9127,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 (register-definition-prefixes "org-autotask-test" '("org-autotask-"))
+
 
 
 (provide 'org-autotask-autoloads)
@@ -9146,7 +9154,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250721.628/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250721.628/mcp-server-lib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250722.837/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250722.837/mcp-server-lib-autoloads.el"))
 
 
 
@@ -9191,7 +9199,7 @@ Display metrics in a buffer." t)
 
 
 
-(register-definition-prefixes "mcp-server-lib-ert" '("mcp-server-lib-ert-check-text-response"))
+(register-definition-prefixes "mcp-server-lib-ert" '("mcp-server-lib-ert-"))
 
 
 
@@ -11911,7 +11919,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250618.611/elisp-dev-mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250618.611/elisp-dev-mcp-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250722.1502/elisp-dev-mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250722.1502/elisp-dev-mcp-autoloads.el"))
 
 
 
