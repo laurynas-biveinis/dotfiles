@@ -6,6 +6,8 @@ project-specific memory files.
 
 ## Elisp Guidelines
 
+- Make edits that take the edited file from one syntactically correct state to
+  another. Avoid breaking paren balance.
 - Use lexical binding (`-*- lexical-binding: t -*-`).
 - Use the common Elisp package file structure template.
 - All symbols must be prefixed with the package name
