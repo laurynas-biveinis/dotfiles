@@ -19,3 +19,5 @@ project-specific memory files.
   code section.
 - Test file names must end with `-test.el`
 - Tests must use ERT (Emacs Lisp Regression Testing) framework
+- Use `.dir-locals.el` to set up `elisp-lint-indent-specs` for `elisp-autofmt`
+  as needed.
