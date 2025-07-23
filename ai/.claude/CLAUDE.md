@@ -16,7 +16,9 @@ proactively at your discretion.
 
 ## Development methodology
 
-Follow strictly the following principles: TDD, DRY, YAGNI.
+For the testable projects, follow strictly the following principles: TDD, DRY,
+YAGNI. For the mostly configuration-storing projects - such as dotfiles - full
+TDD might not be possible.
 
 ### Test-Driven Development
 
