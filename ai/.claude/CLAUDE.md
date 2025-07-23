@@ -14,11 +14,13 @@ linter warnings or errors unless explicitly allowed by the user.
 If `./check.sh` is not present, then use the linters and test-running commands
 proactively at your discretion.
 
-## Development methodology
+## Focus
 
 NEVER switch tasks mid-work. If you notice something that needs or could be done
 but is not on the critical path for the current work, write it down to a scratch
 file and ask the user for guidance once you are finished with the current task.
+
+## Development methodology
 
 For the testable projects, follow strictly the following principles: TDD, DRY,
 YAGNI. For the mostly configuration-storing projects - such as dotfiles - full
