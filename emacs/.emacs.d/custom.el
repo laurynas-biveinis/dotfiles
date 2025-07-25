@@ -30,6 +30,23 @@
       (mcp-server-lib-test--with-resource-templates . 1)
       (mcp-server-lib-test--with-undefined-function . 1)
       (mcp-server-lib-test--with-request . defun)
+      (mcp-server-lib-test--with-error-tracking . 1)
+      (mcp-server-lib-test--check-resource-read-error . 0)
+      (mcp-server-lib-ert-with-metrics-tracking . 1)
+      (mcp-server-lib-ert-verify-req-success . defun)
+      (cl-defstruct))
+     (elisp-lint-indent-specs
+      (if-let* . 1)
+      (if-let . 1)
+      (mcp-server-lib-test--with-server . 0)
+      (mcp-server-lib-test--with-tools . 1)
+      (mcp-server-lib-test--register-tool . 1)
+      (mcp-server-lib-test--with-resources . 1)
+      (mcp-server-lib-test--register-resource . 2)
+      (mcp-server-lib-test--register-resource-template . 2)
+      (mcp-server-lib-test--with-resource-templates . 1)
+      (mcp-server-lib-test--with-undefined-function . 1)
+      (mcp-server-lib-test--with-request . defun)
       (mcp-server-lib-test--verify-req-success . defun)
       (mcp-server-lib-test--with-error-tracking . 1)
       (mcp-server-lib-test--check-resource-read-error . 0)
@@ -77,15 +94,15 @@
      (elisp-lint-indent-specs
       (org-mcp-test--with-enabled . defun))
      (eval and buffer-file-name
-	   (not
-	    (eq major-mode 'package-recipe-mode))
-	   (or
-	    (require 'package-recipe-mode nil t)
-	    (let
-		((load-path
-		  (cons "../package-build" load-path)))
-	      (require 'package-recipe-mode nil t)))
-	   (package-recipe-mode))
+           (not
+            (eq major-mode 'package-recipe-mode))
+           (or
+            (require 'package-recipe-mode nil t)
+            (let
+                ((load-path
+                  (cons "../package-build" load-path)))
+              (require 'package-recipe-mode nil t)))
+           (package-recipe-mode))
      (elisp-lint-ignored-validators "checkdoc")
      (elisp-lint-indent-specs
       (org-autotask-with-org-node-with-url . 1)
@@ -101,15 +118,15 @@
      (magit-todos-exclude-globs "emacs/.emacs.d/abbrev_defs" "emacs/.emacs.d/elpa/*" "zsh/.p10k.zsh")
      (org-emphasis-alist)
      (eval setq-local ispell-personal-dictionary
-	   (expand-file-name ".ispell.dict"
-			     (file-name-directory
-			      (let
-				  ((d
-				    (dir-locals-find-file "./")))
-				(if
-				    (stringp d)
-				    d
-				  (car d))))))
+           (expand-file-name ".ispell.dict"
+                             (file-name-directory
+                              (let
+                                  ((d
+                                    (dir-locals-find-file "./")))
+                                (if
+                                    (stringp d)
+                                    d
+                                  (car d))))))
      (org-fontify-emphasized-text)
      (c-tab-always-indent t)
      (compilation-read-command)

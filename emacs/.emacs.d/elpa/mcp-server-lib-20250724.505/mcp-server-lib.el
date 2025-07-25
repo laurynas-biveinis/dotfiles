@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20250722.837
-;; Package-Revision: 502f79d22fe5
+;; Package-Version: 20250724.505
+;; Package-Revision: c0233cc7b539
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -68,7 +68,15 @@ Defaults to `user-emacs-directory' but can be customized."
   :type 'directory
   :group 'mcp-server-lib)
 
-;;; Constants
+;;; Public Constants
+
+(defconst mcp-server-lib-name "emacs-mcp-server-lib"
+  "Name of the MCP server.")
+
+(defconst mcp-server-lib-protocol-version "2025-03-26"
+  "Current MCP protocol version supported by this server.")
+
+;;; Internal Constants
 
 (defconst mcp-server-lib--error-parse -32700
   "Error code for Parse Error.")
@@ -84,12 +92,6 @@ Defaults to `user-emacs-directory' but can be customized."
 
 (defconst mcp-server-lib--error-internal -32603
   "Error code for Internal Error.")
-
-(defconst mcp-server-lib--name "emacs-mcp-server-lib"
-  "Name of the MCP server.")
-
-(defconst mcp-server-lib--protocol-version "2025-03-26"
-  "Current MCP protocol version supported by this server.")
 
 (defconst mcp-server-lib--uri-scheme-regex
   "[a-zA-Z][a-zA-Z0-9+.-]*://"
@@ -599,11 +601,11 @@ version and capabilities between the client and server."
       (push `(resources . ,(make-hash-table)) capabilities))
     (mcp-server-lib--jsonrpc-response
      id
-     `((protocolVersion . ,mcp-server-lib--protocol-version)
+     `((protocolVersion . ,mcp-server-lib-protocol-version)
        (serverInfo
         .
-        ((name . ,mcp-server-lib--name)
-         (version . ,mcp-server-lib--protocol-version)))
+        ((name . ,mcp-server-lib-name)
+         (version . ,mcp-server-lib-protocol-version)))
        (capabilities . ,capabilities)))))
 
 (defun mcp-server-lib--handle-initialized ()

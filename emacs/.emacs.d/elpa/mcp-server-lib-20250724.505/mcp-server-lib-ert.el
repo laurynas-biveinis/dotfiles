@@ -170,6 +170,57 @@ Example:
       (should-not (alist-get 'error resp-obj))
       (alist-get 'result resp-obj))))
 
+(defun mcp-server-lib-ert--get-initialize-result ()
+  "Send an MCP \\='initialize request and return its result.
+This is a convenience function for tests that need to send the standard
+initialize request and get the result.
+
+Returns the result field from the initialize response."
+  (mcp-server-lib-ert-get-success-result
+   "initialize"
+   (json-encode
+    `(("jsonrpc" . "2.0")
+      ("method" . "initialize") ("id" . 15)
+      ("params" .
+       (("protocolVersion" . ,mcp-server-lib-protocol-version)
+        ("capabilities" . ,(make-hash-table))))))))
+
+(defun mcp-server-lib-ert-assert-initialize-result
+    (init-result tools resources)
+  "Assert the structure of an initialize result.
+INIT-RESULT is the result from an initialize request.
+TOOLS is a boolean indicating if tools capability is expected.
+RESOURCES is a boolean indicating if resources capability is expected.
+
+This function validates:
+- Protocol version matches the expected version
+- Server info contains the correct server name
+- Capabilities match the expected state for tools and resources"
+  (let ((protocol-version (alist-get 'protocolVersion init-result))
+        (capabilities (alist-get 'capabilities init-result))
+        (server-info (alist-get 'serverInfo init-result)))
+    (should
+     (string= mcp-server-lib-protocol-version protocol-version))
+    (should
+     (string= mcp-server-lib-name (alist-get 'name server-info)))
+    ;; Verify capabilities match expectations
+    (when tools
+      (should (assoc 'tools capabilities))
+      ;; Empty objects {} in JSON are parsed as nil in Elisp
+      (should-not (alist-get 'tools capabilities)))
+    (when resources
+      (should (assoc 'resources capabilities))
+      (should-not (alist-get 'resources capabilities)))
+    ;; Verify exact count
+    (should
+     (= (+ (if tools
+               1
+             0)
+           (if resources
+               1
+             0))
+        (length capabilities)))))
+
 (defun mcp-server-lib-ert-get-resource-list ()
   "Get the successful response to a standard \\='resources/list request.
 This is a convenience function for tests that need to verify resource lists.
@@ -191,6 +242,52 @@ Example:
            (mcp-server-lib-create-resources-list-request)))))
     (should (arrayp result))
     result))
+
+(cl-defmacro
+ mcp-server-lib-ert-with-server
+ (&rest body &key tools resources &allow-other-keys)
+ "Run BODY with MCP server active and initialized.
+Starts the server, sends initialize request, then runs BODY.
+TOOLS and RESOURCES are booleans indicating expected capabilities.
+
+This macro:
+1. Starts the MCP server with `mcp-server-lib-start'
+2. Sends and validates the initialize request
+3. Sends the initialized notification
+4. Executes BODY
+5. Stops the server with `mcp-server-lib-stop'
+
+Arguments:
+  TOOLS - If non-nil, expects server to have tools capability
+  RESOURCES - If non-nil, expects server to have resources capability
+  BODY - Forms to execute with server running
+
+Example:
+  ;; Test with no capabilities expected
+  (mcp-server-lib-ert-with-server :tools nil :resources nil
+    (let ((response (mcp-server-lib-process-jsonrpc-parsed request)))
+      (should (alist-get \\='result response))))
+
+  ;; Test with tools capability expected
+  (mcp-server-lib-ert-with-server :tools t :resources nil
+    (let ((tools (mcp-server-lib-ert-get-resource-list)))
+      (should (arrayp tools))))"
+ (declare (indent defun) (debug t))
+ `(unwind-protect
+      (progn
+        (mcp-server-lib-start)
+        (mcp-server-lib-ert-assert-initialize-result
+         (mcp-server-lib-ert--get-initialize-result)
+         ,tools
+         ,resources)
+        ;; Send initialized notification - should return nil
+        (should-not
+         (mcp-server-lib-process-jsonrpc
+          (json-encode
+           '(("jsonrpc" . "2.0")
+             ("method" . "notifications/initialized")))))
+        ,@body)
+    (mcp-server-lib-stop)))
 
 (provide 'mcp-server-lib-ert)
 

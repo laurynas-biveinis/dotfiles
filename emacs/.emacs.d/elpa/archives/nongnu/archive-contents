@@ -2831,14 +2831,14 @@
 	       ("Le Wang" . "l26wang@gmail.com"))
 	      (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys .
-	       [(27 8 20250722155928)
+	       [(27 8 20250723162832)
 		((emacs
 		  (28 3)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "893198c6a6c75ac3e40893cf79eed1c5ab15e798"))])
+		 (:commit . "27bf8de0e59beaf82ff39d4e7b95484e920b6bf8"))])
  (xkcd .
        [(1 1)
 	((json
