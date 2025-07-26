@@ -29,6 +29,7 @@
 
 (require 'ert)
 (require 'mcp-server-lib-metrics)
+(require 'mcp-server-lib-commands)
 
 (defun mcp-server-lib-ert-check-text-response
     (response &optional expected-error)
@@ -288,6 +289,69 @@ Example:
              ("method" . "notifications/initialized")))))
         ,@body)
     (mcp-server-lib-stop)))
+
+(defun mcp-server-lib-ert-check-error-object
+    (response expected-code expected-message)
+  "Check that RESPONSE has error with EXPECTED-CODE and EXPECTED-MESSAGE."
+  ;; Check that response contains only standard JSON-RPC fields plus error
+  (should (equal 3 (length response))) ; jsonrpc, id, error
+  (should (equal "2.0" (alist-get 'jsonrpc response)))
+  (should (assq 'id response))
+  (let ((error-obj (alist-get 'error response)))
+    (should error-obj)
+    (should (equal expected-code (alist-get 'code error-obj)))
+    (should (equal expected-message (alist-get 'message error-obj)))))
+
+;; Private resource test helpers
+
+(defconst mcp-server-lib-ert--resource-read-request-id 777
+  "Request ID used for resource read operations in tests.")
+
+(defun mcp-server-lib-ert--read-resource (uri)
+  "Send a resources/read request for URI and return the parsed response."
+  (let ((request
+         (mcp-server-lib-create-resources-read-request
+          uri mcp-server-lib-ert--resource-read-request-id)))
+    (mcp-server-lib-process-jsonrpc-parsed request)))
+
+(defun mcp-server-lib-ert-verify-resource-read (uri expected-fields)
+  "Verify that reading resource at URI succeeds with EXPECTED-FIELDS.
+EXPECTED-FIELDS is an alist of (field . value) pairs to verify in the content."
+  (mcp-server-lib-ert-verify-req-success "resources/read"
+    (let* ((response (mcp-server-lib-ert--read-resource uri))
+           (response-keys (mapcar #'car response)))
+      ;; Check response has exactly the expected fields
+      (should (= 3 (length response-keys)))
+      (should (member 'jsonrpc response-keys))
+      (should (member 'id response-keys))
+      (should (member 'result response-keys))
+      ;; Check response field values
+      (should (string= "2.0" (alist-get 'jsonrpc response)))
+      (should
+       (equal
+        mcp-server-lib-ert--resource-read-request-id
+        (alist-get 'id response)))
+      ;; Check result structure
+      (let* ((result (alist-get 'result response))
+             (result-keys (mapcar #'car result)))
+        (should (= 1 (length result-keys)))
+        (should (member 'contents result-keys))
+        ;; Check contents array
+        (let ((contents (alist-get 'contents result)))
+          (should (arrayp contents))
+          (should (= 1 (length contents)))
+          ;; Check content item structure
+          (let* ((content (aref contents 0))
+                 (content-keys (mapcar #'car content)))
+            ;; Verify exact field count
+            (should
+             (= (length expected-fields) (length content-keys)))
+            ;; Verify each expected field exists and has correct value
+            (dolist (field expected-fields)
+              (should (member (car field) content-keys))
+              (should
+               (equal
+                (alist-get (car field) content) (cdr field))))))))))
 
 (provide 'mcp-server-lib-ert)
 
