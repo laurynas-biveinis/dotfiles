@@ -115,10 +115,10 @@ Only supports 1 or 2 rows."
            :display-size '(1728 . 1117)
            :name "m1-laptop"
            :frame-dimensions (dotfiles--make-frame-dimensions
-                              :top 1 :left 1 :height 67 :width 242)
+                              :top 1 :left 1 :height 69 :width 242)
            :window-columns 2
            :window-rows 1
-           :fullscreen 'maximized)
+           :fullscreen nil)
           (dotfiles--make-display-config
            :display-size '(3200 . 1800)
            :name "m1star-external"
