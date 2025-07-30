@@ -1723,7 +1723,7 @@ Benchmark tool for posframe." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.6.0/cfrs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.6.0/cfrs-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.7.0/cfrs-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cfrs-1.7.0/cfrs-autoloads.el"))
 
 
 
@@ -9154,7 +9154,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250725.607/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250725.607/mcp-server-lib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250728.457/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250728.457/mcp-server-lib-autoloads.el"))
 
 
 
