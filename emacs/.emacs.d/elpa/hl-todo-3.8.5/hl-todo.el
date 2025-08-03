@@ -6,8 +6,8 @@
 ;; Homepage: https://github.com/tarsius/hl-todo
 ;; Keywords: convenience
 
-;; Package-Version: 3.8.4
-;; Package-Revision: v3.8.4-0-g7ed8bbcadb52
+;; Package-Version: 3.8.5
+;; Package-Revision: v3.8.5-0-gb8be53068b34
 ;; Package-Requires: ((emacs "26.1") (compat "30.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -289,8 +289,7 @@ If COLOR is a face symbol, do not combine, return COLOR instead."
   (if hl-todo-mode
       (font-lock-add-keywords nil hl-todo--keywords t)
     (font-lock-remove-keywords nil hl-todo--keywords))
-  (when font-lock-mode
-    (jit-lock-mode 1)))
+  (font-lock-flush))
 
 ;;;###autoload
 (define-globalized-minor-mode global-hl-todo-mode

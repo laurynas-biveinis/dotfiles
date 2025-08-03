@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250714.1248
-;; Package-Revision: 485c51913d43
+;; Package-Version: 20250801.1425
+;; Package-Revision: d149a37c93d4
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -442,6 +442,10 @@
 ;; <file:test/difftastic.t.el> are passing.  When adding a new functionality,
 ;; please strive to add tests for it as well.
 ;;
+;; This repository uses a [custom fork of `el-mock'] which has a few more
+;; features and some slight semantic differences.  Please make sure you're
+;; using that fork before you report issues with tests.
+;;
 ;; To run tests interactively:
 ;; - open the <file:test/difftastic.t.el>
 ;; - type `M-x eval-buffer <RET>'
@@ -469,6 +473,8 @@
 ;; You can run all checks performed by Github Actions, by typing: `make
 ;; bytecompile lint relint checkdoc commentary test'.
 ;;
+;;
+;; [custom fork of `el-mock'] <https://github.com/pkryger/el-mock.el>
 ;;
 ;; [Cask] <https://github.com/cask/cask>
 ;;

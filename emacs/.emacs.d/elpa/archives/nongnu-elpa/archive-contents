@@ -229,7 +229,7 @@
 	      ("Dave Pearson" . "davep@davep.org"))
 	     (:commit . "fe676396fa7e4372e01bf2c3d9a62e8d53615d46"))])
  (buttercup .
-	    [(1 37)
+	    [(1 38)
 	     ((emacs
 	       (24 4)))
 	     "Behavior-Driven Emacs Lisp Testing" tar
@@ -237,7 +237,7 @@
 	      (:maintainer "Ola Nilsson" . "ola.nilsson@gmail.com")
 	      (:authors
 	       ("Jorgen Schaefer" . "contact@jorgenschaefer.de"))
-	      (:commit . "c467c659b2c5b7029e20909331e072d7301af1d5"))])
+	      (:commit . "cc5a2ab7c7f18aaaf525fac61fe59bae5ad018dd"))])
  (camera .
 	 [(0 3)
 	  ((emacs
@@ -1112,7 +1112,7 @@
 	       ("Jonas Bernoulli" . "emacs.git-modes@jonas.bernoulli.dev"))
 	      (:commit . "27af84f31ed022267b7108ad10ea286631f88e88"))])
  (gnosis .
-	 [(0 5 3)
+	 [(0 5 4)
 	  ((emacs
 	    (27 2))
 	   (emacsql
@@ -1129,7 +1129,7 @@
 	   (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
 	   (:authors
 	    ("Thanos Apollo" . "public@thanosapollo.org"))
-	   (:commit . "4b87d58574d1b8cb2eb7bf7fe571efa758838c03"))])
+	   (:commit . "c302df0656f0a6fce69cc2e90c543514a896c75a"))])
  (gnu-apl-mode .
 	       [(1 5 1)
 		nil "Emacs mode for GNU APL" tar
@@ -2774,7 +2774,7 @@
 	      ("Akib Azmain Turja" . "akib@disroot.org"))
 	     (:commit . "5203d9379afaf6703746823a580c804e1dd98e08"))])
  (with-editor .
-	      [(3 4 4)
+	      [(3 4 5)
 	       ((emacs
 		 (26 1))
 		(compat
@@ -2785,7 +2785,7 @@
 		(:maintainer "Jonas Bernoulli" . "emacs.with-editor@jonas.bernoulli.dev")
 		(:authors
 		 ("Jonas Bernoulli" . "emacs.with-editor@jonas.bernoulli.dev"))
-		(:commit . "f32cd7b09d518b629bfaa3eeb92b539891c6b9bc"))])
+		(:commit . "0a2df46e2831c3b8ddc8f688069f2b4a49898731"))])
  (with-simulated-input .
 		       [(3 0)
 			((emacs
@@ -2831,14 +2831,14 @@
 	       ("Le Wang" . "l26wang@gmail.com"))
 	      (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys .
-	       [(28 1 20250731115547)
+	       [(28 1 20250801123856)
 		((emacs
 		  (28 3)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "058375ea80e6dcbf2196557997cedbe4890768ea"))])
+		 (:commit . "38cd9445aff6fdcb672a31c7c5d1405009470058"))])
  (xkcd .
        [(1 1)
 	((json

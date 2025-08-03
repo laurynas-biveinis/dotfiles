@@ -6,8 +6,8 @@
 ;; Homepage: https://github.com/magit/transient
 ;; Keywords: extensions
 
-;; Package-Version: 0.9.3
-;; Package-Revision: v0.9.3-0-g49bbb29fd34b
+;; Package-Version: 0.9.4
+;; Package-Revision: v0.9.4-0-gaa32e0d66cc3
 ;; Package-Requires: ((emacs "26.1") (compat "30.1") (seq "2.24"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -35,7 +35,7 @@
 
 ;;; Code:
 
-(defconst transient-version "0.9.3")
+(defconst transient-version "0.9.4")
 
 (require 'cl-lib)
 (require 'compat)
@@ -1570,7 +1570,9 @@ Intended for use in a group's `:setup-children' function."
                                            :command)))
                         (equal (transient--suffix-predicate suf)
                                (transient--suffix-predicate conflict)))))
-        (transient-remove-suffix prefix key))
+        (transient-remove-suffix prefix key)
+        (let ((eg (transient--locate-child prefix loc)))
+          (setq elt (car eg) group (cadr eg))))
       (let ((mem (memq elt (aref group 2))))
         (pcase-exhaustive action
           ('insert  (setcdr mem (cons elt (cdr mem)))
