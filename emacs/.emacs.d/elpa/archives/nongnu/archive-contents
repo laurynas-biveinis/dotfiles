@@ -914,6 +914,17 @@
 		  (:authors
 		   ("Akib Azmain Turja" . "akib@disroot.org"))
 		  (:commit . "99ea813346f3edef7220d8f4faeed2ec69af6060"))])
+ (flymake-pyrefly .
+		  [(0 1 6)
+		   ((emacs
+		     (26 1)))
+		   "A Pyrefly Flymake backend" tar
+		   ((:url . "https://github.com/inpefess/flymake-pyrefly")
+		    (:keywords "tools" "languages")
+		    (:maintainer "Boris Shminke" . "boris@shminke.com")
+		    (:authors
+		     ("Boris Shminke" . "boris@shminke.com"))
+		    (:commit . "f04dcbe5eaa42ae5062e621bb0df2d06b6ec6fcb"))])
  (focus .
 	[(1 0 1)
 	 ((emacs
@@ -958,7 +969,7 @@
 		("Akib Azmain Turja" . "akib@disroot.org"))
 	       (:commit . "ce2ea016a67b200862788e81f0ff1f8f7e4e0454"))])
  (geiser .
-	 [(0 31 1)
+	 [(0 32)
 	  ((emacs
 	    (27 1))
 	   (project
@@ -969,7 +980,7 @@
 	   (:maintainer "Jose Antonio Ortega Ruiz" . "(jao@gnu.org)")
 	   (:authors
 	    ("Jose Antonio Ortega Ruiz" . "(jao@gnu.org)"))
-	   (:commit . "c034c129cfa7442881f13ae146c87785b367cff5"))])
+	   (:commit . "9e76f336b91151315642de9bcbed0ffe83b69db7"))])
  (geiser-chez .
 	      [(0 18)
 	       ((emacs
@@ -1112,7 +1123,7 @@
 	       ("Jonas Bernoulli" . "emacs.git-modes@jonas.bernoulli.dev"))
 	      (:commit . "27af84f31ed022267b7108ad10ea286631f88e88"))])
  (gnosis .
-	 [(0 5 4)
+	 [(0 5 5)
 	  ((emacs
 	    (27 2))
 	   (emacsql
@@ -1129,7 +1140,7 @@
 	   (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
 	   (:authors
 	    ("Thanos Apollo" . "public@thanosapollo.org"))
-	   (:commit . "c302df0656f0a6fce69cc2e90c543514a896c75a"))])
+	   (:commit . "0c1a5dc92e4495976fc2d952dbea59873a4db797"))])
  (gnu-apl-mode .
 	       [(1 5 1)
 		nil "Emacs mode for GNU APL" tar
@@ -1289,9 +1300,9 @@
 		     ("Pranshu Sharma" . "pranshu@bauherren.ovh"))
 		    (:commit . "b47211699944997bfb03fd88b1157dd71727bad7"))])
  (helm .
-       [(4 0 4)
+       [(4 0 5)
 	((helm-core
-	  (4 0 4))
+	  (4 0 5))
 	 (wfnames
 	  (1 2)))
 	"Helm is an Emacs incremental and narrowing framework" tar
@@ -1300,9 +1311,9 @@
 	 (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
 	 (:authors
 	  ("Thierry Volpiatto" . "thievol@posteo.net"))
-	 (:commit . "6befd6e60f756936062fed6d4b905e508aa141fc"))])
+	 (:commit . "01ae48a989cdc8665692d5a18c5a386ba0a646ed"))])
  (helm-core .
-	    [(4 0 4)
+	    [(4 0 5)
 	     ((emacs
 	       (25 1))
 	      (async
@@ -1312,7 +1323,7 @@
 	      (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
 	      (:authors
 	       ("Thierry Volpiatto" . "thievol@posteo.net"))
-	      (:commit . "6befd6e60f756936062fed6d4b905e508aa141fc"))])
+	      (:commit . "01ae48a989cdc8665692d5a18c5a386ba0a646ed"))])
  (hideshowvis .
 	      [(0 8)
 	       ((emacs
@@ -2092,7 +2103,7 @@
 	       ("Andreas Politz" . "mail@andreas-politz.de"))
 	      (:commit . "a9c9a12c3ecf2005fa641059368ac8284f507620"))])
  (pg .
-     [(0 57)
+     [(0 58)
       ((emacs
 	(28 1))
        (peg
@@ -2103,7 +2114,7 @@
        (:maintainer "Eric Marsden" . "eric.marsden@risk-engineering.org")
        (:authors
 	("Eric Marsden" . "eric.marsden@risk-engineering.org"))
-       (:commit . "e8bf0ac164ab12987d79b795f09395ba52139867"))])
+       (:commit . "991bd9429d30b05a351fe2d46e628569ce6b661c"))])
  (php-mode .
 	   [(1 26 1)
 	    ((emacs
@@ -2831,14 +2842,14 @@
 	       ("Le Wang" . "l26wang@gmail.com"))
 	      (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys .
-	       [(28 1 20250801123856)
+	       [(28 3 20250807101931)
 		((emacs
 		  (28 3)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "38cd9445aff6fdcb672a31c7c5d1405009470058"))])
+		 (:commit . "2683d6c404364956ca2e2ca5c4199b07862896dd"))])
  (xkcd .
        [(1 1)
 	((json
