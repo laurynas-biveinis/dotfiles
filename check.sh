@@ -64,6 +64,14 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+echo -n "Checking GitHub workflows security with zizmor... "
+if zizmor --offline .github/workflows/*.yml; then
+	echo "OK!"
+else
+	echo "zizmor check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
 echo -n "Checking YAML formatting... $(echo .github/workflows/*.yml) gh/.config/gh/hosts.yml"
 if prettier --log-level warn --check .github/workflows/*.yml gh/.config/gh/hosts.yml; then
 	echo "OK!"
