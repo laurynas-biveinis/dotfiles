@@ -14,7 +14,156 @@
 
 # On Intel: Command-Option-P-R on the first boot
 
+#
+# Setup that makes sense for any device
+#
+
 # Add Terminal.app to System Preferences -> Privacy -> Full Disk Access
+
+# Show language menu in the login screen
+sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu \
+     -bool true
+#
+# UI Controls
+#
+# Full keyboard control (e.g. Tab over buttons in modal dialogs)
+defaults write -g AppleKeyboardUIMode -int 3
+# Esc closes autocompletion
+defaults write -g NSUseSpellCheckerForCompletions -bool false
+#
+# Appearance
+#
+defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
+defaults write -g CGFontRenderingFontSmoothingDisabled -bool YES
+#
+# Computer name
+#
+sudo scutil --set ComputerName new-computer-name
+sudo scutil --set LocalHostName new-computer-name
+sudo scutil --set HostName new-computer-name
+#
+# Volume icon
+#
+defaults write com.apple.controlcenter.plist Sound -int 18
+defaults write com.apple.systemuiserver menuExtras -array \
+	 "/System/Library/CoreServices/Menu Extras/Volume.menu"
+killall SystemUIServer
+#
+# Application Firewall
+#
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
+defaults -currentHost write ~/Library/Preferences/com.apple.alf globalstate \
+	 -bool true
+defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
+sudo pkill -HUP socketfilterfw
+#
+# FileVault
+#
+sudo fdesetup enable
+# Save the recovery key
+# Reboot (required by fdsetup enable)
+#
+# Power Management
+#
+sudo pmset -c sleep 0
+sudo pmset -a DestroyFVKeyOnStandby 1
+#
+# Time Machine (set up manually)
+#
+# do not ask to use new hard drives for backup
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+#
+# Locale
+#
+defaults write -g AppleLocale -string en_LT
+defaults write -g AppleMeasurementUnits -string "Centimeters"
+#
+# Time
+#
+sudo systemsetup -settimezone "Europe/Vilnius"
+sudo systemsetup -setnetworktimeserver "time.euro.apple.com"
+sudo systemsetup -setusingnetworktime on
+sudo defaults write com.apple.menuextra.clock DateFormat -string \
+     "EEE d MMM HH:mm:ss"
+#
+# Safari
+#
+defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
+	 WarnAboutFraudulentWebsites -bool true
+defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
+	 TreatSHA1CertificatesAsInsecure -bool true
+#
+# Finder
+#
+# Default view as list
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+# Show POSIX path in the window title
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+# Allow text selection in Quick Look
+defaults write com.apple.finder QLEnableTextSelection -bool true
+killall Finder
+#
+# SSH
+#
+sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+#
+# Screen Sharing
+#
+sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist \
+     com.apple.screensharing -dict Disabled -bool false
+sudo launchctl load -w \
+     /System/Library/LaunchDaemons/com.apple.screensharing.plist
+#
+# Activity Monitor
+#
+# Show all processes
+defaults write com.apple.ActivityMonitor ShowCategory -int 0
+#
+# Software Update
+#
+# Check for updates automatically
+defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+# Check daily
+defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+# Download updates in background automatically
+defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
+#
+# Printer
+#
+defaults write -g PMPrintingExpandedStateForPrint -bool true
+# Automatically quit printer app once the print jobs complete
+defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+#
+# brew
+#
+/bin/bash -c \
+          "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew update
+brew install duti
+brew install --cask vlc disk-inventory-x google-chrome
+# Intel
+brew install --cask intel-power-gadget
+# Apple Silicon
+brew install --cask mx-power-gadget
+# Open App Store, login there
+
+xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
+
+duti -s org.videolan.vlc .MP4 all
+duti -s org.videolan.vlc .mp3 all
+duti -s org.videolan.vlc .m4a all
+duti -s org.videolan.vlc .m3u all
+
+#
+# Setup that makes sense for my devices
+#
+
 #
 # Lithuanian Standard Keyboard Layout (http://ims.mii.lt/klav/tvarkyk.html)
 #
@@ -29,9 +178,6 @@ sudo defaults delete /Library/Preferences/com.apple.HIToolbox \
 sudo defaults write /Library/Preferences/com.apple.HIToolbox \
 	AppleEnabledInputSources -array-add \
 	'<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
-# Show language menu in the login screen
-sudo defaults write /Library/Preferences/com.apple.loginwindow \
-     showInputMenu -bool true
 # Current user setting
 defaults delete com.apple.HIToolbox AppleEnabledInputSources
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
@@ -39,8 +185,6 @@ defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
 #
 # UI Controls
 #
-# Full keyboard control (e.g. Tab over buttons in modal dialogs)
-defaults write -g AppleKeyboardUIMode -int 3
 # Do not ask to enable Dictation
 defaults write com.apple.HIToolbox AppleDictationAutoEnable -int 1
 #
@@ -67,8 +211,6 @@ defaults write -g InitialKeyRepeat -int 25
 # do. It should be possible to do that through XML plist, but I haven't gotten
 # around that yet.
 
-# Esc closes autocompletion
-defaults write -g NSUseSpellCheckerForCompletions -bool false
 #
 # Mouse
 #
@@ -81,50 +223,6 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode \
 # https://twitter.com/nibroc/status/963088893758259200
 defaults write -g NSWindowShouldDragOnGesture YES
 #
-# Appearance
-#
-defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
-defaults write -g CGFontRenderingFontSmoothingDisabled -bool YES
-#
-# Computer name
-#
-sudo scutil --set ComputerName new-computer-name
-sudo scutil --set LocalHostName new-computer-name
-sudo scutil --set HostName new-computer-name
-#
-# Volume icon
-#
-defaults write com.apple.controlcenter.plist Sound -int 18
-defaults write com.apple.systemuiserver menuExtras -array \
-	"/System/Library/CoreServices/Menu Extras/Volume.menu"
-killall SystemUIServer
-#
-# Application Firewall
-#
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
-defaults -currentHost write ~/Library/Preferences/com.apple.alf globalstate \
-	-bool true
-defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
-sudo pkill -HUP socketfilterfw
-#
-# FileVault
-#
-sudo fdesetup enable
-# Save the recovery key
-# Reboot (required by fdsetup enable)
-#
-# Power Management
-#
-sudo pmset -c sleep 0
-sudo pmset -a DestroyFVKeyOnStandby 1
-#
-# Time Machine (set up manually)
-#
-# do not ask to use new hard drives for backup
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-#
 # XCode
 #
 xcode-select --install
@@ -136,28 +234,11 @@ sudo chmod 775 /cores
 #
 defaults -currentHost write com.apple.screensaver showClock -bool true
 #
-# Locale
-#
-defaults write -g AppleLocale -string en_LT
-defaults write -g AppleMeasurementUnits -string "Centimeters"
-#
-# Time
-#
-sudo systemsetup -settimezone "Europe/Vilnius"
-sudo systemsetup -setnetworktimeserver "time.euro.apple.com"
-sudo systemsetup -setusingnetworktime on
-sudo defaults write com.apple.menuextra.clock DateFormat -string \
-	"EEE d MMM HH:mm:ss"
-#
 # Safari
 #
 defaults write \
 	~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari \
 	AutoOpenSafeDownloads -bool false
-defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
-	WarnAboutFraudulentWebsites -bool true
-defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
-	TreatSHA1CertificatesAsInsecure -bool true
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 # Cmd-W should only close tab, never window
 defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Tab' \
@@ -203,46 +284,14 @@ killall Dock
 #
 # Finder
 #
-# Default view as list
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 defaults write com.apple.finder AppleShowAllFiles -bool true
-defaults write com.apple.finder ShowPathbar -bool true
-defaults write com.apple.finder ShowStatusBar -bool true
-# Show POSIX path in the window title
-defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 sudo defaults -currentHost write \
      /Library/Preferences/SystemConfiguration/com.apple.finder \
      AppleShowAllFiles -bool true
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write -g AppleShowAllExtensions -bool true
 # Allow text selection in Quick Look
 defaults write com.apple.finder QLEnableTextSelection -bool true
 killall Finder
-#
-# SSH
-#
-sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
-#
-# Screen Sharing
-#
-sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist \
-	com.apple.screensharing -dict Disabled -bool false
-sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
-#
-# Activity Monitor
-#
-# Show all processes
-defaults write com.apple.ActivityMonitor ShowCategory -int 0
-#
-# Software Update
-#
-# Check for updates automatically
-defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-# Check daily
-defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-# Download updates in background automatically
-defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 #
 # TextEdit
 #
@@ -284,12 +333,6 @@ defaults write com.apple.Image_Capture IK_UseCustomScanSize -int 0
 # Show Details
 defaults write com.apple.Image_Capture IK_scannerDisplayMode -int 1
 #
-# Printer
-#
-defaults write -g PMPrintingExpandedStateForPrint -bool true
-# Automatically quit printer app once the print jobs complete
-defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
-#
 # Miscellaneous
 #
 chflags nohidden ~/Library/
@@ -310,13 +353,11 @@ sudo chflags nohidden /Volumes
 #
 # brew
 #
-brew update
-
 brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
-     hunspell duti grep pinentry-mac htop findutils fd delta jq colordiff npm \
+     hunspell grep pinentry-mac htop findutils fd delta jq colordiff npm \
      gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
      git-lfs plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint \
-     iperf3
+     iperf3 zizmor
 
 # C++ development
 brew install llvm iwyu cppcheck creduce circleci boost cpplint \
@@ -331,7 +372,6 @@ mas install 409201541  # Pages
 mas install 409203825  # Numbers
 mas install 1376402589 # StopTheMadness
 mas install 1365531024 # 1Blocker
-# Open App Store, login there
 #
 # Spellchecking
 #
@@ -346,16 +386,10 @@ sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
 
 sudo gem install mdl
-brew install --cask slack vlc disk-inventory-x google-chrome dash \
-     telegram keycombiner michaelvillar-timer utm basictex signal whatsapp \
-     qfinder-pro
+brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
+     basictex signal whatsapp qfinder-pro
 # TeX
 sudo tlmgr install dvipng
-
-# Intel
-brew install --cask intel-power-gadget
-# Apple Silicon
-brew install --cask mx-power-gadget
 
 brew tap epk/epk
 brew install font-sf-mono-nerd-font
@@ -400,14 +434,9 @@ rm 'Solarized Dark - Patched.itermcolors'
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
 	/Library/Java/JavaVirtualMachines/openjdk.jdk
 
-xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 xattr -dr com.apple.quarantine "/Applications/XLD.app/"
 xattr -dr com.apple.quarantine "/Applications/Last.fm.app/"
 
-duti -s org.videolan.vlc .MP4 all
-duti -s org.videolan.vlc .mp3 all
-duti -s org.videolan.vlc .m4a all
-duti -s org.videolan.vlc .m3u all
 duti -s jp.tmkk.XLD .cue all
 npm i -g bash-language-server prettier textlint jscpd
 brew tap homebrew/command-not-found
