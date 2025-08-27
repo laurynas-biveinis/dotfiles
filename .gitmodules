@@ -8,3 +8,6 @@
 [submodule "emacs/.emacs.d/elpa/indent-bars"]
 	path = emacs/.emacs.d/elpa/indent-bars
 	url = https://github.com/jdtsmith/indent-bars
+[submodule "emacs/.emacs.d/elpa/org-autotask"]
+	path = emacs/.emacs.d/elpa/org-autotask
+	url = https://github.com/laurynas-biveinis/org-autotask.git
