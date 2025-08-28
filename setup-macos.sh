@@ -18,7 +18,7 @@
 # Setup that makes sense for any device
 #
 
-# Add Terminal.app to System Preferences -> Privacy -> Full Disk Access
+# Add Terminal.app to System Settings -> Privacy & Security -> Full Disk Access
 
 # Show language menu in the login screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu \
@@ -34,7 +34,7 @@ defaults write -g NSUseSpellCheckerForCompletions -bool false
 # Appearance
 #
 defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
-defaults write -g CGFontRenderingFontSmoothingDisabled -bool YES
+defaults write -g CGFontRenderingFontSmoothingDisabled -bool true
 #
 # Computer name
 #
@@ -52,7 +52,6 @@ killall SystemUIServer
 # Application Firewall
 #
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
 defaults -currentHost write ~/Library/Preferences/com.apple.alf globalstate \
 	 -bool true
