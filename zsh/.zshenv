@@ -26,6 +26,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
     source ~/.zsh.d/paths
 
     export HOMEBREW_NO_INSTALL_CLEANUP=y
+    export HOMEBREW_DOWNLOAD_CONCURRENCY=auto
 
     export LIBRARY_PATH=/usr/local/lib
 fi
