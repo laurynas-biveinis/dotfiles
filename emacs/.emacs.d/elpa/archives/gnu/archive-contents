@@ -4193,7 +4193,7 @@
 	      (:url . "https://elpa.gnu.org/packages/shen-mode.html")
 	      (:commit . "df28df31317188a6d87c9df93444543ace4f7f4f"))])
  (show-font .
-	    [(0 4 0)
+	    [(0 4 1)
 	     ((emacs
 	       (29 1)))
 	     "Show font features in a buffer" tar
@@ -4202,7 +4202,7 @@
 	      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	      (:authors
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	      (:commit . "10e7dd6997e559cdb8d3bdf2be1176892240899d"))])
+	      (:commit . "c3aa4fc3a4775c72da42d9f39ae9b312523a999f"))])
  (sisu-mode .
 	    [(7 1 8)
 	     nil "Major mode for SiSU markup text" tar

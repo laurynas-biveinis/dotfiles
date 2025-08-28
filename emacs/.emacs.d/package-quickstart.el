@@ -9147,7 +9147,6 @@ Mark the item (a task or a project) at point as done.")
 
 
 (register-definition-prefixes "org-autotask-test" '("org-autotask-"))
-
 
 
 (provide 'org-autotask-autoloads)
@@ -9174,7 +9173,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250728.457/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250728.457/mcp-server-lib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250827.1000/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250827.1000/mcp-server-lib-autoloads.el"))
 
 
 
@@ -12239,7 +12238,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.1.0/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.1.0/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.1.1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.1.1/cmake-mode-autoloads.el"))
 
 
 

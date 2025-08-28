@@ -15,9 +15,9 @@
  '(package-selected-packages
    '(org-mcp mcp-server-lib elisp-dev-mcp relint org-autotask-mcp elisp-autofmt simple-httpd elisp-lint org-autotask rustic forge magit magit-todos shfmt indent-bars elpy org-gcal pr-review git-modes ob-rust plantuml-mode emacsql-sqlite-builtin difftastic wgrep-deadgrep prism org-sticky-header topsy org-roam-ui org-roam fancy-compilation flycheck-status-emoji flycheck-google-cpplint git-messenger beginend cheat-sh info-colors grab-mac-link stripe-buffer beacon lua-mode wgrep lsp-treemacs s calfw-ical calfw calfw-org gcmh which-key keyfreq company-box yasnippet iedit page-break-lines xterm-color eldoc-cmake projectile vterm deadgrep all-the-icons-dired rich-minority git-gutter-fringe aggressive-indent lsp-ui lsp-mode flycheck dispwatch org-analyzer undo-tree yaml-mode markdown-mode ssh ssh-config-mode bison-mode cmake-font-lock cmake-mode solarized-theme wakatime-mode exec-path-from-shell))
  '(package-vc-selected-packages
-   '((org-mcp :vc-backend Git :url "https://github.com/laurynas-biveinis/org-mcp.git")
+   '((org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")
      (org-autotask-mcp :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask-mcp")
-     (org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")))
+     (org-mcp :vc-backend Git :url "https://github.com/laurynas-biveinis/org-mcp.git")))
  '(safe-local-variable-values
    '((elisp-lint-indent-specs
       (org-mcp-test--with-enabled . defun)
@@ -100,15 +100,15 @@
      (elisp-lint-indent-specs
       (org-mcp-test--with-enabled . defun))
      (eval and buffer-file-name
-	   (not
-	    (eq major-mode 'package-recipe-mode))
-	   (or
-	    (require 'package-recipe-mode nil t)
-	    (let
-		((load-path
-		  (cons "../package-build" load-path)))
-	      (require 'package-recipe-mode nil t)))
-	   (package-recipe-mode))
+           (not
+            (eq major-mode 'package-recipe-mode))
+           (or
+            (require 'package-recipe-mode nil t)
+            (let
+                ((load-path
+                  (cons "../package-build" load-path)))
+              (require 'package-recipe-mode nil t)))
+           (package-recipe-mode))
      (elisp-lint-ignored-validators "checkdoc")
      (elisp-lint-indent-specs
       (org-autotask-with-org-node-with-url . 1)
@@ -124,15 +124,15 @@
      (magit-todos-exclude-globs "emacs/.emacs.d/abbrev_defs" "emacs/.emacs.d/elpa/*" "zsh/.p10k.zsh")
      (org-emphasis-alist)
      (eval setq-local ispell-personal-dictionary
-	   (expand-file-name ".ispell.dict"
-			     (file-name-directory
-			      (let
-				  ((d
-				    (dir-locals-find-file "./")))
-				(if
-				    (stringp d)
-				    d
-				  (car d))))))
+           (expand-file-name ".ispell.dict"
+                             (file-name-directory
+                              (let
+                                  ((d
+                                    (dir-locals-find-file "./")))
+                                (if
+                                    (stringp d)
+                                    d
+                                  (car d))))))
      (org-fontify-emphasized-text)
      (c-tab-always-indent t)
      (compilation-read-command)

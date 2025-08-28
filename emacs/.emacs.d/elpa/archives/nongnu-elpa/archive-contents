@@ -332,6 +332,14 @@
 		(:authors
 		 ("Chris Wanstrath" . "chris@ozmm.org"))
 		(:commit . "adfb7ae73d6ee2ef790c780dd3c967e62930e94a"))])
+ (cond-let .
+	   [(0 1 0)
+	    ((emacs
+	      (28 1)))
+	    "Additional and improved binding conditionals" tar
+	    ((:url . "https://github.com/tarsius/cond-let")
+	     (:keywords "extensions")
+	     (:commit . "8cb8733112d00ad8d24cb1f2f7a7845448c31819"))])
  (consult-flycheck .
 		   [(1 0)
 		    ((emacs
@@ -2178,7 +2186,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20250711 83643)
+	      [(1 0 20250827 113314)
 	       ((emacs
 		 (25 1))
 		(compat
@@ -2729,14 +2737,14 @@
 			("Joost Kremers" . "joostkremers@fastmail.fm"))
 		       (:commit . "e04d3521b6dc2435de4c4a4b9cac5feb194f0d5b"))])
  (web-mode .
-	   [(17 3 21)
+	   [(17 3 22)
 	    ((emacs
 	      (23 1)))
 	    "major mode for editing web templates" tar
 	    ((:url . "https://web-mode.org")
 	     (:keywords "languages")
 	     (:maintainer "François-Xavier Bois" . "fxbois@gmail.com")
-	     (:commit . "f90d44a14bfdef03eb866b3230cd221c9b2ca393"))])
+	     (:commit . "38013bcec72b93e29ffc3ce7fc7c20e233ea5c01"))])
  (webpaste .
 	   [(3 2 2)
 	    ((emacs
