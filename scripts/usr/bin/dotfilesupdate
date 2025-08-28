@@ -20,6 +20,8 @@ readonly IGNORE_FOR_SYMLINKS=(
     "Library/Application Support/Signal/SingletonLock"
     "Library/Application Support/Steam/SingletonCookie"
     "Library/Application Support/Steam/SingletonLock"
+    "Library/Application Support/Steam/config/htmlcache/SingletonCookie"
+    "Library/Application Support/Steam/config/htmlcache/SingletonLock"
     "Library/Containers"
     "Library/Logs/ims.log"
     "Library/Saved Application State"
