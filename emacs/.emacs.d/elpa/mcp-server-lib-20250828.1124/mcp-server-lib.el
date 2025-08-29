@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20250827.1000
-;; Package-Revision: 946bbc2571a0
+;; Package-Version: 20250828.1124
+;; Package-Revision: 1e48cf372051
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -512,7 +512,13 @@ METHOD-METRICS is used to track errors."
                'mimeType mime-type)))
         (mcp-server-lib--jsonrpc-response
          id `((contents . ,(vector content-entry)))))
-    ;; Handle any error from the handler
+    ;; Handle resource-specific errors with custom error codes
+    (mcp-server-lib-resource-error
+     (cl-incf (mcp-server-lib-metrics-errors method-metrics))
+     (let ((code (car (cdr err)))
+           (message (cadr (cdr err))))
+       (mcp-server-lib--jsonrpc-error id code message)))
+    ;; Handle any other error from the handler
     (error
      (cl-incf (mcp-server-lib-metrics-errors method-metrics))
      (mcp-server-lib--jsonrpc-error
@@ -1035,6 +1041,7 @@ See also: `mcp-server-lib-register-tool'"
 
 ;; Custom error type for tool errors
 (define-error 'mcp-server-lib-tool-error "MCP tool error" 'user-error)
+(define-error 'mcp-server-lib-resource-error "MCP resource error")
 
 (defun mcp-server-lib-tool-throw (error-message)
   "Signal a tool error with ERROR-MESSAGE.
@@ -1248,6 +1255,18 @@ See also: `mcp-server-lib-register-resource'"
     ;; It's a static resource
     (mcp-server-lib--ref-counted-unregister
      uri mcp-server-lib--resources)))
+
+(defun mcp-server-lib-resource-signal-error (code message)
+  "Signal a JSON-RPC error from a resource handler.
+
+CODE is the JSON-RPC error code constant (e.g., 
+`mcp-server-lib-jsonrpc-error-invalid-params' or 
+`mcp-server-lib-jsonrpc-error-internal').
+MESSAGE is the error message string.
+
+This function does not return - it signals an error condition that
+will be caught by the resource handler infrastructure."
+  (signal 'mcp-server-lib-resource-error (list code message)))
 
 (provide 'mcp-server-lib)
 ;;; mcp-server-lib.el ends here
