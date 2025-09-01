@@ -1178,7 +1178,7 @@ Having multiple matching automation rules for the same email is an error.")
                             org-fold-reveal transient-update xref-goto-xref
                             toggle-frame-fullscreen package-menu-mark-upgrades
                             projectile-compile-project kill-whole-line
-                            beginend-compilation-mode-goto-beginning
+                            beginend-compilation-mode-goto-beginning ispell-word
                             handle-switch-frame package-menu-execute
                             transient:magit-push:--force-with-lease magit-rebase
                             markdown-electric-backquote message-send-and-exit
@@ -1210,8 +1210,16 @@ Having multiple matching automation rules for the same email is an error.")
                             exchange-point-and-mark forward-paragraph
                             backward-paragraph end-of-defun revert-buffer-quick
                             next-history-element reposition-window revert-buffer
-                            eval-last-sexp eval-expression
-                            mu4e-headers-mark-for-read))
+                            eval-last-sexp eval-expression org-force-self-insert
+                            mu4e-headers-mark-for-read markdown-end-of-line
+                            profiler-report-toggle-entry magit-show-commit
+                            magit-file-dispatch magit-blame-addition
+                            magit-unstage markdown-beginning-of-line
+                            magit-blame-quit org-ctrl-c-minus isearch-backward
+                            read-char-from-minibuffer-insert-char org-metaleft
+                            transient-forward-button magit-kill-this-buffer
+                            isearch-yank-kill mu4e-view-go-to-url
+                            dired-find-alternate-file org-deadline))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
