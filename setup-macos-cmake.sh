@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-brew install cmake cmake-language-server ninja
+brew install cmake cmake-docs cmake-language-server ninja
 
 virtualenv /opt/virtualenvs/cmakelang
 source /opt/virtualenvs/cmakelang/bin/activate
