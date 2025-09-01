@@ -1339,7 +1339,7 @@
 	    (:url . "https://elpa.gnu.org/packages/docbook.html")
 	    (:commit . "a59f87c0dc04bcfcf9f55a124658c2e7a585dbd2"))])
  (doric-themes .
-	       [(0 3 0)
+	       [(0 4 0)
 		((emacs
 		  (29 1)))
 		"Highly legible minimalist themes with precise typography" tar
@@ -1348,7 +1348,7 @@
 		 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		 (:authors
 		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		 (:commit . "32db68a4bd22878e69cd3fa76fa206d4047bfc67"))])
+		 (:commit . "2216b91c89f0063d80e9abb53eef7afdbab67157"))])
  (drepl .
 	[(0 3)
 	 ((emacs
@@ -3703,7 +3703,7 @@
 	("Tom Gillespie" . "tgbugs@gmail.com"))
        (:commit . "4dad5fcdbbb362a0dc2dfa7b5a38dd5be1551c68"))])
  (preview-auto .
-	       [(0 4)
+	       [(0 4 1)
 		((emacs
 		  (29 3))
 		 (auctex
@@ -3714,7 +3714,7 @@
 		 (:maintainer "Paul D. Nelson" . "nelson.paul.david@gmail.com")
 		 (:authors
 		  ("Paul D. Nelson" . "nelson.paul.david@gmail.com"))
-		 (:commit . "fcbd9f12c323da336089bf008920c0a290126393"))])
+		 (:commit . "4002b7569416eac640072ec7fe04337e2747910d"))])
  (preview-tailor .
 		 [(0 2)
 		  ((emacs
@@ -4153,16 +4153,16 @@
 	(:url . "https://elpa.gnu.org/packages/seq.html")
 	(:commit . "27a90793a13f149121180e864fa53d68b9eac0b3"))])
  (setup .
-	[(1 4 0)
+	[(1 5 0)
 	 ((emacs
 	   (26 1)))
 	 "Helpful Configuration Macro" tar
-	 ((:url . "https://git.sr.ht/~pkal/setup")
+	 ((:url . "https://codeberg.org/pkal/setup.el")
 	  (:keywords "lisp" "local")
-	  (:maintainer "Philip Kaludercic" . "~pkal/public-inbox@lists.sr.ht")
+	  (:maintainer "Philip Kaludercic" . "philipk@posteo.net")
 	  (:authors
 	   ("Philip Kaludercic" . "philipk@posteo.net"))
-	  (:commit . "858ea70760426a9e1fa1ce1f21fb8f8d62bd1803"))])
+	  (:commit . "5a69dab9bb79d8bebaaa9bc14795cbaafd1c2423"))])
  (shelisp .
 	  [(1 0 0)
 	   nil "execute elisp in shell" tar
@@ -4733,7 +4733,7 @@
 		  (:url . "https://elpa.gnu.org/packages/track-changes.html")
 		  (:commit . "ffb7d656a2c89f86ccd2de51379de9612c7a4aa3"))])
  (tramp .
-	[(2 8 0 1)
+	[(2 8 0 2)
 	 ((emacs
 	   (28 1)))
 	 "Transparent Remote Access, Multiple Protocol" tar
@@ -4743,7 +4743,7 @@
 	  (:authors
 	   ("Kai Großjohann" . "kai.grossjohann@gmx.net")
 	   ("Michael Albinus" . "michael.albinus@gmx.de"))
-	  (:commit . "2a040ff9c74729017d1e93cef26a94fe80ef5f02"))])
+	  (:commit . "01599cd23fff35b4f90f9125a02bb281fb141958"))])
  (tramp-nspawn .
 	       [(1 0 1)
 		((emacs
