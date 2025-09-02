@@ -281,7 +281,7 @@ See `xr' for a description of the DIALECT argument.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.5/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.5/with-editor-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.6/with-editor-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.6/with-editor-autoloads.el"))
 
 
 
@@ -2436,7 +2436,7 @@ The `imenu-create-index-function' for treemacs buffers.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.4/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.9.4/transient-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.10.0/transient-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/transient-0.10.0/transient-autoloads.el"))
 
 
 
@@ -4737,7 +4737,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-1.0.0/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-1.0.0/llama-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-1.0.1/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-1.0.1/llama-autoloads.el"))
 
 
 
@@ -4831,7 +4831,6 @@ it is disabled.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "llama" '("\\#\\#" "all-completions" "elisp-" "intern" "lisp--el-match-keyword@llama" "llama-"))
-
 
 
 (provide 'llama-autoloads)
@@ -7746,7 +7745,7 @@ Return non-nil if the minor mode is enabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250829.1449/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250829.1449/emacsql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250901.1544/emacsql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/emacsql-20250901.1544/emacsql-autoloads.el"))
 
 
 
@@ -9423,7 +9422,7 @@ Run ‘dired-do-rename’ asynchronously.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.5/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.8.5/hl-todo-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.9.0/hl-todo-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/hl-todo-3.9.0/hl-todo-autoloads.el"))
 
 
 
@@ -10908,7 +10907,7 @@ or nil, plain link will be used.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.5/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.5/git-modes-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.6/git-modes-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/git-modes-1.4.6/git-modes-autoloads.el"))
 
 
 
@@ -11086,7 +11085,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.2/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.2.2/closql-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.3.0/closql-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/closql-2.3.0/closql-autoloads.el"))
 
 
 
@@ -11096,7 +11095,6 @@ it is disabled.
 
 
 (register-definition-prefixes "closql" '("closql-" "eieio-"))
-
 
 
 (provide 'closql-autoloads)
@@ -12636,15 +12634,15 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism llama magit-section magit ghub pr-review deflate plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui org-mcp aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
-        package-activated-list)))
+	'(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism llama magit-section magit ghub pr-review deflate plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui org-mcp aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+	package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
-        (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.8" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.8" "/Users/laurynas/.emacs.d/elpa/transient-0.9.4" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.5" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
-         Info-directory-list)))
+	(append
+	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.8" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.8" "/Users/laurynas/.emacs.d/elpa/transient-0.10.0" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.6" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
+	 Info-directory-list)))
 
 ;; Local Variables:
 ;; version-control: never

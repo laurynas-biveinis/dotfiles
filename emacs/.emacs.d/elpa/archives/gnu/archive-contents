@@ -3201,18 +3201,18 @@
 	      (:url . "https://elpa.gnu.org/packages/num3-mode.html")
 	      (:commit . "fdf4d633e541875a6f765f5c3c8e0d4911122ed3"))])
  (oauth2 .
-	 [(0 17)
-	  ((cl-lib
-	    (0 5))
-	   (nadvice
-	    (0 3)))
+	 [(0 18)
+	  ((emacs
+	    (27 1)))
 	  "OAuth 2.0 Authorization Protocol" tar
-	  ((:keywords "comm")
-	   (:maintainer "Julien Danjou" . "julien@danjou.info")
+	  ((:url . "https://elpa.gnu.org/packages/oauth2.html")
+	   (:keywords "comm")
+	   (:maintainer
+	    ("Xiyue Deng" . "manphiz@gmail.com")
+	    (nil . "emacs-devel@gnu.org"))
 	   (:authors
 	    ("Julien Danjou" . "julien@danjou.info"))
-	   (:url . "https://elpa.gnu.org/packages/oauth2.html")
-	   (:commit . "0147cabd8e82e46af27aef07aeed402b0bb9a0fb"))])
+	   (:commit . "adf02973c2710ca707471be9db92b9b88b51601b"))])
  (ob-asymptote .
 	       [(1 0 2)
 		nil "Babel Functions for Asymptote" tar
