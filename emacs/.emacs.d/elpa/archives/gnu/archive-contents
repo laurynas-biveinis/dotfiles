@@ -4775,7 +4775,7 @@
 	       (:url . "https://elpa.gnu.org/packages/transcribe.html")
 	       (:commit . "89832e4cdc1e6d8262a4a2c9d1ff70f398b8faf0"))])
  (transient .
-	    [(0 9 4)
+	    [(0 10 0)
 	     ((emacs
 	       (26 1))
 	      (compat
@@ -4788,7 +4788,7 @@
 	      (:maintainer "Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev")
 	      (:authors
 	       ("Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev"))
-	      (:commit . "aa32e0d66cc389befed7a8e8df9439d92a729daa"))])
+	      (:commit . "1d109f34b7c6af7af830c141bb0a3b4d33803e75"))])
  (transient-cycles .
 		   [(2 0)
 		    ((emacs
