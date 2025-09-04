@@ -9,7 +9,8 @@ that will provide project-specific guidance.
 The `./check.sh` script in the repository, if present, will help you stay on
 course by making sure that all the tests pass and the code is properly
 formatted. Always run it after every change to validate it. NEVER suppress
-linting warnings or errors unless explicitly allowed by the user.
+linting warnings or errors unless explicitly allowed by the user. DO NOT try to
+run subset of its checks or filter its output in any way.
 
 If `./check.sh` is not present, then use the linters and test-running commands
 proactively at your discretion.
