@@ -4998,7 +4998,7 @@
 	      ("Andrii Kolomoiets" . "andreyk.mad@gmail.com"))
 	     (:commit . "d044448965d31ca8214f8bca48487e4d9b9d9a0f"))])
  (vc-jj .
-	[(0 3)
+	[(0 4)
 	 ((emacs
 	   (28 1))
 	  (compat
@@ -5009,7 +5009,7 @@
 	  (:maintainer "Rudolf Schlatte" . "rudi@constantly.at")
 	  (:authors
 	   ("Rudolf Schlatte" . "rudi@constantly.at"))
-	  (:commit . "e1fe0153fa798a3fcf151cdbb84ea978f2684b63"))])
+	  (:commit . "454576546cd6917594c8f334386939970f442e21"))])
  (vcard .
 	[(0 2 2)
 	 ((emacs
