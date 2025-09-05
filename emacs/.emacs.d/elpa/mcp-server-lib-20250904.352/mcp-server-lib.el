@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20250903.1205
-;; Package-Revision: b46802e115aa
+;; Package-Version: 20250904.352
+;; Package-Revision: 361ea32cc155
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -132,19 +132,6 @@ Keys are URI templates, values are plists with template metadata and handlers.")
   "Create a JSON-RPC response with ID and RESULT."
   (json-encode `((jsonrpc . "2.0") (id . ,id) (result . ,result))))
 
-(defun mcp-server-lib--json-to-lisp-name (json-name)
-  "Convert JSON-NAME from camelCase to kebab-case.
-For example, \"firstName\" becomes \"first-name\"."
-  (let ((case-fold-search nil))
-    (downcase
-     (replace-regexp-in-string
-      "\\([a-z]\\)\\([A-Z]\\)" "\\1-\\2" json-name))))
-
-(defun mcp-server-lib--lisp-to-json-name (lisp-name)
-  "Convert LISP-NAME from kebab-case to camelCase.
-For example, \"first-name\" becomes \"firstName\"."
-  (let ((parts (split-string lisp-name "-")))
-    (concat (car parts) (mapconcat #'capitalize (cdr parts) ""))))
 
 (defun mcp-server-lib--param-name-matches-arg-p (param-name arg)
   "Return t if PARAM-NAME matches ARG symbol name."

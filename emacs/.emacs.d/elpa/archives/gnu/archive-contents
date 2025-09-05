@@ -3858,7 +3858,7 @@
 		(:url . "https://elpa.gnu.org/packages/rcirc-color.html")
 		(:commit . "79449152cb71ec4d719d4b1a95c1192fb9831ceb"))])
  (rcirc-mentions .
-		 [(1 0 3)
+		 [(1 0 4)
 		  ((emacs
 		    (29 1)))
 		  "Log mentions of your nick or keywords in a separate buffer" tar
@@ -3867,7 +3867,7 @@
 		   (:maintainer "Tassilo Horn" . "tsdh@gnu.org")
 		   (:authors
 		    ("Tassilo Horn" . "tsdh@gnu.org"))
-		   (:commit . "9ba423455ada1ce5de8663f9fda382c9e4c73f1c"))])
+		   (:commit . "a1f438da4a2a884a62f79ca90e6139e996b22191"))])
  (rcirc-menu .
 	     [(1 1)
 	      nil "A menu of all your rcirc connections" single
