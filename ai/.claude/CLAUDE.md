@@ -84,6 +84,7 @@ With the smallest possible iteration steps:
 
 ## Version Control
 
-NEVER use `git add -A` to stage changes for commits, because at any point there
-can be unrelated changes, files not meant to be tracked, or changes that I did
-in parallel. ALWAYS stage individual files.
+- NEVER use `git add -A` to stage changes for commits, because at any point there
+  can be unrelated changes, files not meant to be tracked, or changes that I did
+  in parallel. ALWAYS stage individual files.
+- NEVER commit without staging first.
