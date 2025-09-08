@@ -1,4 +1,5 @@
 {
+  "model": "opus",
   "permissions": {
     "allow": [
       "mcp__elisp-dev__elisp-describe-function",
