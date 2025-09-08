@@ -22,17 +22,21 @@
     ]
   },
   "enableAllProjectMcpServers": false,
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /Users/laurynas/dotfiles/.claude/hooks/validate-check-sh.py"
-          }
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "Bash",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 ~/.ai/.claude/hooks/validate-check-sh.py"
+                    },
+                    {
+                        "type": "command",
+                        "command": "python3 ~/.ai/.claude/hooks/block-git-commit-bypass.py"
+                    }
+                ]
+            }
         ]
-      }
-    ]
-  }
+    }
 }

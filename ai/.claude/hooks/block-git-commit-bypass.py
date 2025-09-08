@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+"""Block git commit commands that bypass explicit staging.
+
+This hook prevents the use of git commit flags that would commit files
+without explicitly staging them first with git add.
+"""
+
+import json
+import re
+import sys
+
+
+def main():
+    """Process the tool input and block inappropriate git commit commands."""
+    try:
+        # Read the tool input from stdin
+        tool_input = json.load(sys.stdin)
+        
+        # Extract the command from the Bash tool input
+        if tool_input.get("tool") != "Bash":
+            # Not a Bash command, allow it
+            sys.exit(0)
+        
+        command = tool_input.get("params", {}).get("command", "")
+        
+        # Check if this is a git commit command
+        if not re.search(r"\bgit\s+commit\b", command):
+            # Not a git commit, allow it
+            sys.exit(0)
+        
+        # Check for allowed patterns first
+        # Allow --amend, plain commit, commit with message only
+        allowed_patterns = [
+            r"^\s*git\s+commit\s*$",  # Plain git commit
+            r"^\s*git\s+commit\s+(-m\s+|--message[=\s])",  # With message only
+            r"^\s*git\s+commit\s+--amend",  # Amending
+            r"^\s*git\s+commit\s+(-[^aio]*m[^aio]*\s+|--message)",  # Message without a/i/o
+        ]
+        
+        # Patterns that indicate bypassing staging
+        bypass_patterns = [
+            # -a or --all flag
+            r"\bgit\s+commit\s+.*(-a\b|--all\b)",
+            # Combined flags with 'a' (e.g., -am, -ai, -ao)
+            r"\bgit\s+commit\s+-[a-z]*a[a-z]*\b",
+            # -i or --include with files
+            r"\bgit\s+commit\s+.*(-i\s+|--include\s+)\S+",
+            # -o or --only with files
+            r"\bgit\s+commit\s+.*(-o\s+|--only\s+)\S+",
+            # git commit with paths after -- separator
+            r"\bgit\s+commit\s+.*--\s+\S+",
+        ]
+        
+        # Check for direct file specification
+        # Split command and check for non-flag arguments after "git commit"
+        parts = command.split()
+        if len(parts) > 2 and parts[0] == "git" and parts[1] == "commit":
+            # Check if there are non-flag arguments
+            has_files = False
+            skip_next = False
+            for i, part in enumerate(parts[2:], 2):
+                if skip_next:
+                    skip_next = False
+                    continue
+                if part.startswith("-"):
+                    # Check if this flag takes an argument
+                    if part in ["-m", "--message", "-i", "--include", "-o", "--only"]:
+                        skip_next = True
+                    elif part.startswith("--message="):
+                        continue
+                elif part != "&&" and part != ";" and not part.startswith("|"):
+                    # Found a non-flag argument, likely a file
+                    has_files = True
+                    break
+            
+            if has_files:
+                # Block direct file specification
+                output = {
+                    "hookSpecificOutput": {
+                        "hookEventName": "PreToolUse",
+                        "permissionDecision": "deny",
+                        "permissionDecisionReason": (
+                            "Blocked: This git commit command bypasses explicit staging. "
+                            "Per CLAUDE.md guidelines, you must use 'git add' to stage "
+                            "individual files before committing. Do not use flags like "
+                            "-a, --all, -i, --include, -o, --only, or specify files "
+                            "directly with git commit."
+                        )
+                    }
+                }
+                print(json.dumps(output))
+                sys.exit(0)
+        
+        # Check if any bypass pattern matches
+        for pattern in bypass_patterns:
+            if re.search(pattern, command):
+                # Block the command
+                output = {
+                    "hookSpecificOutput": {
+                        "hookEventName": "PreToolUse",
+                        "permissionDecision": "deny",
+                        "permissionDecisionReason": (
+                            "Blocked: This git commit command bypasses explicit staging. "
+                            "Per CLAUDE.md guidelines, you must use 'git add' to stage "
+                            "individual files before committing. Do not use flags like "
+                            "-a, --all, -i, --include, -o, --only, or specify files "
+                            "directly with git commit."
+                        )
+                    }
+                }
+                print(json.dumps(output))
+                sys.exit(0)
+        
+        # Allow the command
+        sys.exit(0)
+        
+    except Exception as e:
+        # On error, allow the command but log the error
+        print(f"Hook error: {e}", file=sys.stderr)
+        sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
