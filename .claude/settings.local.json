@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__elisp-dev__elisp-describe-function",
+      "mcp__elisp-dev__elisp-info-lookup-symbol",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "mcp__elisp-dev__elisp-describe-variable",
+      "Bash(readlink:*)",
+      "Bash(mkdir:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(gh repo view:*)",
+      "Bash(gh auth refresh:*)",
+      "Bash(checkov:*)",
+      "Bash(./check.sh:*)",
+      "Bash(zizmor:*)",
+      "WebSearch",
+      "Bash(prettier:*)",
+      "Bash(git log:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  },
+  "enableAllProjectMcpServers": false,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/laurynas/dotfiles/.claude/hooks/validate-check-sh.py"
+          }
+        ]
+      }
+    ]
+  }
+}
