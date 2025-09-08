@@ -29,11 +29,38 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "python3 ~/.ai/.claude/hooks/validate-check-sh.py"
+                        "command": "python3 ~/.claude/hooks/validate-check-sh.py"
                     },
                     {
                         "type": "command",
-                        "command": "python3 ~/.ai/.claude/hooks/block-git-commit-bypass.py"
+                        "command": "python3 ~/.claude/hooks/block-git-commit-bypass.py"
+                    }
+                ]
+            },
+            {
+                "matcher": "Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 ~/.claude/hooks/validate-elisp-syntax.py"
+                    }
+                ]
+            },
+            {
+                "matcher": "Edit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 ~/.claude/hooks/validate-elisp-syntax.py"
+                    }
+                ]
+            },
+            {
+                "matcher": "MultiEdit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 ~/.claude/hooks/validate-elisp-syntax.py"
                     }
                 ]
             }
