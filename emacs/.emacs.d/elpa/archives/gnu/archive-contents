@@ -261,17 +261,17 @@
 		("Kevin Ryde" . "user42_kevin@yahoo.com.au"))
 	       (:commit . "72db1f3ee04f3d1db17487d5bd98466fcbad87fd"))])
  (auth-source-xoauth2-plugin .
-			     [(0 2 1)
+			     [(0 3 1)
 			      ((emacs
 				(28 1))
 			       (oauth2
-				(0 17)))
-			      "authentication source plugin for xoauth2" tar
-			      ((:maintainer "Xiyue Deng" . "manphiz@gmail.com")
+				(0 18)))
+			      "Authentication source plugin for xoauth2" tar
+			      ((:url . "https://gitlab.com/manphiz/auth-source-xoauth2-plugin")
+			       (:maintainer "Xiyue Deng" . "manphiz@gmail.com")
 			       (:authors
 				("Xiyue Deng" . "manphiz@gmail.com"))
-			       (:url . "https://elpa.gnu.org/packages/auth-source-xoauth2-plugin.html")
-			       (:commit . "08c5cf49a9ce69cd2a39f65f91abfeb7f6ae7772"))])
+			       (:commit . "2e6b36f3388be0c72b207b04a63776142a00c0c8"))])
  (auto-correct .
 	       [(1 1 4)
 		nil "Remembers and automatically fixes past corrections" tar
@@ -3201,7 +3201,7 @@
 	      (:url . "https://elpa.gnu.org/packages/num3-mode.html")
 	      (:commit . "fdf4d633e541875a6f765f5c3c8e0d4911122ed3"))])
  (oauth2 .
-	 [(0 18)
+	 [(0 18 2)
 	  ((emacs
 	    (27 1)))
 	  "OAuth 2.0 Authorization Protocol" tar
@@ -3212,7 +3212,7 @@
 	    (nil . "emacs-devel@gnu.org"))
 	   (:authors
 	    ("Julien Danjou" . "julien@danjou.info"))
-	   (:commit . "adf02973c2710ca707471be9db92b9b88b51601b"))])
+	   (:commit . "7331b130cb10d5f8425510f73d89e74a9133c520"))])
  (ob-asymptote .
 	       [(1 0 2)
 		nil "Babel Functions for Asymptote" tar
@@ -4193,7 +4193,7 @@
 	      (:url . "https://elpa.gnu.org/packages/shen-mode.html")
 	      (:commit . "df28df31317188a6d87c9df93444543ace4f7f4f"))])
  (show-font .
-	    [(0 4 1)
+	    [(1 0 0)
 	     ((emacs
 	       (29 1)))
 	     "Show font features in a buffer" tar
@@ -4202,7 +4202,7 @@
 	      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	      (:authors
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	      (:commit . "c3aa4fc3a4775c72da42d9f39ae9b312523a999f"))])
+	      (:commit . "07c46e3b96d726a674ae3d42e27eb4193208efd9"))])
  (sisu-mode .
 	    [(7 1 8)
 	     nil "Major mode for SiSU markup text" tar

@@ -923,7 +923,7 @@
 		   ("Akib Azmain Turja" . "akib@disroot.org"))
 		  (:commit . "99ea813346f3edef7220d8f4faeed2ec69af6060"))])
  (flymake-pyrefly .
-		  [(0 1 6)
+		  [(0 1 7)
 		   ((emacs
 		     (26 1)))
 		   "A Pyrefly Flymake backend" tar
@@ -932,7 +932,7 @@
 		    (:maintainer "Boris Shminke" . "boris@shminke.com")
 		    (:authors
 		     ("Boris Shminke" . "boris@shminke.com"))
-		    (:commit . "f04dcbe5eaa42ae5062e621bb0df2d06b6ec6fcb"))])
+		    (:commit . "a71fdd4733652417904ae2ec75775e010362bea1"))])
  (focus .
 	[(1 0 1)
 	 ((emacs
@@ -2863,14 +2863,14 @@
 	       ("Le Wang" . "l26wang@gmail.com"))
 	      (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys .
-	       [(28 4 20250829124616)
+	       [(2025 9 5)
 		((emacs
 		  (28 3)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "fbd2ca797b66cf613bcbb055dcda1741549d9aaf"))])
+		 (:commit . "38517315645db6d536268768537e2bbe3c181fa5"))])
  (xkcd .
        [(1 1)
 	((json
