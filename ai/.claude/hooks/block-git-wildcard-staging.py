@@ -15,31 +15,31 @@ import shlex
 
 def has_glob_patterns(arg):
     """Check if an argument contains glob pattern characters."""
-    glob_chars = ['*', '?', '[', ']', '{', '}']
+    glob_chars = ["*", "?", "[", "]", "{", "}"]
     return any(char in arg for char in glob_chars)
 
 
 def is_directory(arg):
     """Check if argument refers to a directory on the filesystem."""
     # Special cases that are always directories
-    if arg in ['.', '..']:
+    if arg in [".", ".."]:
         return True
-    
+
     # Remove trailing slash for filesystem check
-    path = arg.rstrip('/')
-    
+    path = arg.rstrip("/")
+
     # Check if it's a git pathspec (starts with : or contains :)
-    if arg.startswith(':') or ':(glob)' in arg or ':(literal)' in arg:
+    if arg.startswith(":") or ":(glob)" in arg or ":(literal)" in arg:
         return False  # Let git handle pathspecs, but they're suspicious
-    
+
     # Check if path exists and is a directory
     if os.path.exists(path) and os.path.isdir(path):
         return True
-    
+
     # If it explicitly ends with /, treat as directory even if doesn't exist yet
-    if arg.endswith('/'):
+    if arg.endswith("/"):
         return True
-    
+
     return False
 
 
@@ -51,66 +51,70 @@ def parse_git_staging_command(command):
     except ValueError:
         # If shlex fails, fall back to simple split
         parts = command.split()
-    
+
     if len(parts) < 2:
         return None, []
-    
-    if parts[0] != 'git':
+
+    if parts[0] != "git":
         return None, []
-    
-    if parts[1] not in ['add', 'rm']:
+
+    if parts[1] not in ["add", "rm"]:
         return None, []
-    
+
     # Extract the git subcommand
     subcommand = parts[1]
-    
+
     # Check for dangerous flags
     dangerous_flags = [
-        '-A', '--all',
-        '-u', '--update',
-        '--no-ignore-removal',
-        '-i', '--interactive',
-        '-p', '--patch',
-        '--intent-to-add',
+        "-A",
+        "--all",
+        "-u",
+        "--update",
+        "--no-ignore-removal",
+        "-i",
+        "--interactive",
+        "-p",
+        "--patch",
+        "--intent-to-add",
     ]
-    
+
     blocked_flags = []
     file_args = []
     skip_next = False
     after_double_dash = False
-    
+
     for i, arg in enumerate(parts[2:], 2):
         if skip_next:
             skip_next = False
             continue
-        
+
         # Check for double dash separator
-        if arg == '--':
+        if arg == "--":
             after_double_dash = True
             continue
-        
+
         # After --, everything is treated as a file
         if after_double_dash:
             file_args.append(arg)
             continue
-        
+
         # Check if it's a flag
-        if arg.startswith('-'):
+        if arg.startswith("-"):
             # Check for dangerous flags
             if arg in dangerous_flags:
                 blocked_flags.append(arg)
             # Check for flags that take arguments
-            elif arg in ['-m', '--chmod']:
+            elif arg in ["-m", "--chmod"]:
                 skip_next = True
             # Check for combined short flags (e.g., -Am)
-            elif arg.startswith('-') and not arg.startswith('--'):
+            elif arg.startswith("-") and not arg.startswith("--"):
                 # Check if 'A' or 'u' is in the combined flags
-                if 'A' in arg or 'u' in arg:
+                if "A" in arg or "u" in arg:
                     blocked_flags.append(arg)
         else:
             # It's a file argument
             file_args.append(arg)
-    
+
     return subcommand, blocked_flags, file_args
 
 
@@ -119,21 +123,21 @@ def main():
     try:
         # Read the tool input from stdin
         tool_input = json.load(sys.stdin)
-        
+
         # Extract the command from the Bash tool input
         if tool_input.get("tool") != "Bash":
             # Not a Bash command, allow it
             sys.exit(0)
-        
+
         command = tool_input.get("params", {}).get("command", "")
-        
+
         # Parse the git command
         subcommand, blocked_flags, file_args = parse_git_staging_command(command)
-        
+
         # If not a git add/rm command, allow it
         if subcommand is None:
             sys.exit(0)
-        
+
         # Check for blocked flags
         if blocked_flags:
             output = {
@@ -144,12 +148,12 @@ def main():
                         f"Blocked: git {subcommand} with flags {', '.join(blocked_flags)} is not allowed. "
                         f"Per CLAUDE.md guidelines, you must stage individual files explicitly. "
                         f"Do not use bulk staging flags like -A, --all, -u, or --update."
-                    )
+                    ),
                 }
             }
             print(json.dumps(output))
             sys.exit(0)
-        
+
         # Check each file argument for glob patterns or directories
         blocked_patterns = []
         for arg in file_args:
@@ -157,7 +161,7 @@ def main():
                 blocked_patterns.append(f"'{arg}' (contains glob patterns)")
             elif is_directory(arg):
                 blocked_patterns.append(f"'{arg}' (is a directory)")
-        
+
         if blocked_patterns:
             output = {
                 "hookSpecificOutput": {
@@ -168,16 +172,16 @@ def main():
                         f"Invalid arguments: {', '.join(blocked_patterns)}. "
                         f"Per CLAUDE.md guidelines, you must stage individual files explicitly. "
                         f"Use specific file paths without glob patterns or directory references."
-                    )
+                    ),
                 }
             }
             print(json.dumps(output))
             sys.exit(0)
-        
+
         # If no file arguments at all, that's fine (e.g., git add with no args shows usage)
         # Allow the command
         sys.exit(0)
-        
+
     except Exception as e:
         # On error, allow the command but log the error
         print(f"Hook error: {e}", file=sys.stderr)

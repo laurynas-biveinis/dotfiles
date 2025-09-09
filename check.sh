@@ -5,6 +5,7 @@
 set -eu -o pipefail
 
 readonly SHELL_FILES=(check.sh)
+readonly PYTHON_FILES=(ai/.claude/hooks/*.py)
 
 ERRORS=0
 SHELL_SYNTAX_FAILED=0
@@ -85,6 +86,15 @@ if prettier --log-level warn --check ai/.claude/settings.json; then
 	echo "OK!"
 else
 	echo "prettier check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
+# Python
+echo -n "Checking Python formatting with black... ${PYTHON_FILES[*]} "
+if black --check "${PYTHON_FILES[@]}" 2>/dev/null; then
+	echo "OK!"
+else
+	echo "black check failed! Run 'black ${PYTHON_FILES[*]}' to fix"
 	ERRORS=$((ERRORS + 1))
 fi
 

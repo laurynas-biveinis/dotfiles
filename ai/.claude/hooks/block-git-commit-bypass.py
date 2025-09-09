@@ -15,19 +15,19 @@ def main():
     try:
         # Read the tool input from stdin
         tool_input = json.load(sys.stdin)
-        
+
         # Extract the command from the Bash tool input
         if tool_input.get("tool") != "Bash":
             # Not a Bash command, allow it
             sys.exit(0)
-        
+
         command = tool_input.get("params", {}).get("command", "")
-        
+
         # Check if this is a git commit command
         if not re.search(r"\bgit\s+commit\b", command):
             # Not a git commit, allow it
             sys.exit(0)
-        
+
         # Check for allowed patterns first
         # Allow --amend, plain commit, commit with message only
         allowed_patterns = [
@@ -36,7 +36,7 @@ def main():
             r"^\s*git\s+commit\s+--amend",  # Amending
             r"^\s*git\s+commit\s+(-[^aio]*m[^aio]*\s+|--message)",  # Message without a/i/o
         ]
-        
+
         # Patterns that indicate bypassing staging
         bypass_patterns = [
             # -a or --all flag
@@ -50,7 +50,7 @@ def main():
             # git commit with paths after -- separator
             r"\bgit\s+commit\s+.*--\s+\S+",
         ]
-        
+
         # Check for direct file specification
         # Split command and check for non-flag arguments after "git commit"
         parts = command.split()
@@ -72,7 +72,7 @@ def main():
                     # Found a non-flag argument, likely a file
                     has_files = True
                     break
-            
+
             if has_files:
                 # Block direct file specification
                 output = {
@@ -85,12 +85,12 @@ def main():
                             "individual files before committing. Do not use flags like "
                             "-a, --all, -i, --include, -o, --only, or specify files "
                             "directly with git commit."
-                        )
+                        ),
                     }
                 }
                 print(json.dumps(output))
                 sys.exit(0)
-        
+
         # Check if any bypass pattern matches
         for pattern in bypass_patterns:
             if re.search(pattern, command):
@@ -105,15 +105,15 @@ def main():
                             "individual files before committing. Do not use flags like "
                             "-a, --all, -i, --include, -o, --only, or specify files "
                             "directly with git commit."
-                        )
+                        ),
                     }
                 }
                 print(json.dumps(output))
                 sys.exit(0)
-        
+
         # Allow the command
         sys.exit(0)
-        
+
     except Exception as e:
         # On error, allow the command but log the error
         print(f"Hook error: {e}", file=sys.stderr)
