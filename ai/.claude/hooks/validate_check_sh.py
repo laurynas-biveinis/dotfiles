@@ -28,6 +28,7 @@ import sys
 
 
 def main():
+    """Entry point for the check.sh validation hook."""
     try:
         input_data = json.load(sys.stdin)
     except json.JSONDecodeError as e:

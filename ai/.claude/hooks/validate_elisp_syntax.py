@@ -106,6 +106,7 @@ def apply_edit(content, old_string, new_string, replace_all=False):
 
 
 def main():
+    """Entry point for the Elisp syntax validation hook."""
     try:
         input_data = json.load(sys.stdin)
     except json.JSONDecodeError as e:
