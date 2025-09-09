@@ -767,7 +767,7 @@
 	       ("Carsten Dominik" . "carsten.dominik@gmail.com"))
 	      (:commit . "f07e221d4d5597c7ccf4b0003c0909a88bdfcc9e"))])
  (consult .
-	  [(2 7)
+	  [(2 8)
 	   ((emacs
 	     (28 1))
 	    (compat
@@ -776,7 +776,7 @@
 	   ((:url . "https://github.com/minad/consult")
 	    (:keywords "matching" "files" "completion")
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
-	    (:commit . "770c43117aad6add1ca8532207618b7e90aec1fe"))])
+	    (:commit . "098462a6321a15afd4ae33fa8083658145332d9c"))])
  (consult-denote .
 		 [(0 3 1)
 		  ((emacs
@@ -1158,7 +1158,7 @@
 			("Aleksandr Vityazev" . "avityazew@gmail.com"))
 		       (:commit . "bc07c1124545cbf6e5ebe64e92bfaa306e309033"))])
  (dicom .
-	[(0 6)
+	[(1 0)
 	 ((emacs
 	   (28 1))
 	  (compat
@@ -1169,7 +1169,7 @@
 	  (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	  (:authors
 	   ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	  (:commit . "33ef616725fb65270aecda68362caf1eaf8cbe07"))])
+	  (:commit . "3c5e750ff63cbd80d328738f93975eee4b537505"))])
  (dict-tree .
 	    [(0 17)
 	     ((trie
@@ -2726,7 +2726,7 @@
 		      ("Sean Whitton" . "spwhitton@spwhitton.name"))
 		     (:commit . "00b8f65effe4f2673e6450d70000644b266aa78a"))])
  (llm .
-      [(0 27 1)
+      [(0 27 2)
        ((emacs
 	 (28 1))
 	(plz
@@ -2742,7 +2742,7 @@
 	(:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
 	(:authors
 	 ("Andrew Hyatt" . "ahyatt@gmail.com"))
-	(:commit . "3afea0eb69c5ed615b1cf30bcda3daae3815306e"))])
+	(:commit . "efd1e7d6cbc4d454c2d7f0b6e7ad6cf35cd11136"))])
  (lmc .
       [(1 4)
        nil "Little Man Computer in Elisp" tar
@@ -2833,7 +2833,7 @@
 	(:url . "https://elpa.gnu.org/packages/map.html")
 	(:commit . "9da2efb670574b473ab864ae0456b4f1b38e680b"))])
  (marginalia .
-	     [(2 2)
+	     [(2 3)
 	      ((emacs
 		(28 1))
 	       (compat
@@ -2847,7 +2847,7 @@
 	       (:authors
 		("Omar Antolín Camarena" . "omar@matem.unam.mx")
 		("Daniel Mendler" . "mail@daniel-mendler.de"))
-	       (:commit . "6e3412ce57b9c87c2d66bc8814aa1a3fdb2e929f"))])
+	       (:commit . "cb3a69c039cf3b4ab007a72f802fc5f4699e8120"))])
  (markchars .
 	    [(0 2 2)
 	     nil "Mark chars fitting certain characteristics" tar
@@ -3858,7 +3858,7 @@
 		(:url . "https://elpa.gnu.org/packages/rcirc-color.html")
 		(:commit . "79449152cb71ec4d719d4b1a95c1192fb9831ceb"))])
  (rcirc-mentions .
-		 [(1 0 4)
+		 [(1 0 5)
 		  ((emacs
 		    (29 1)))
 		  "Log mentions of your nick or keywords in a separate buffer" tar
@@ -3867,7 +3867,7 @@
 		   (:maintainer "Tassilo Horn" . "tsdh@gnu.org")
 		   (:authors
 		    ("Tassilo Horn" . "tsdh@gnu.org"))
-		   (:commit . "a1f438da4a2a884a62f79ca90e6139e996b22191"))])
+		   (:commit . "f48c86345110433cfcda669d3ad6500334371a34"))])
  (rcirc-menu .
 	     [(1 1)
 	      nil "A menu of all your rcirc connections" single
@@ -4608,7 +4608,7 @@
 		       (:url . "https://elpa.gnu.org/packages/temp-buffer-browse.html")
 		       (:commit . "db6041b0413fdeefb1f1285e1d9c1039c10fbf04"))])
  (tempel .
-	 [(1 5)
+	 [(1 6)
 	  ((emacs
 	    (28 1))
 	   (compat
@@ -4619,7 +4619,7 @@
 	   (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	   (:authors
 	    ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	   (:commit . "9fa2c59660fe9473429a51872d3c00e1b95cab86"))])
+	   (:commit . "aa0f6fab4013d4661c34f9352531ceac1f0973a8"))])
  (test-simple .
 	      [(1 3 0)
 	       ((cl-lib
@@ -5072,7 +5072,7 @@
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org"))
 		 (:commit . "78bc5949db489b143f7424540d6cc56fc529c9ea"))])
  (vertico .
-	  [(2 4)
+	  [(2 5)
 	   ((emacs
 	     (28 1))
 	    (compat
@@ -5083,7 +5083,7 @@
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:authors
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	    (:commit . "fcab88ad878e16356c392c99a64f172e7541dd65"))])
+	    (:commit . "488685badfdf49bb750a213f228bdba8e113c7c8"))])
  (vertico-posframe .
 		   [(0 8 0)
 		    ((emacs
