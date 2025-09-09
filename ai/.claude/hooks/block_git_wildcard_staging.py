@@ -42,22 +42,32 @@ def is_directory(arg):
     return False
 
 
-def parse_git_staging_command(command):
-    """Parse git add/rm command and analyze arguments."""
+def _split_command(command):
+    """Split command into parts, handling quotes properly."""
     try:
         # Use shlex to properly split the command respecting quotes
-        parts = shlex.split(command)
+        return shlex.split(command)
     except ValueError:
         # If shlex fails, fall back to simple split
-        parts = command.split()
+        return command.split()
 
+
+def _is_git_staging_command(parts):
+    """Check if parts represent a git add/rm command."""
     if len(parts) < 2:
-        return None, [], []
-
+        return False
     if parts[0] != "git":
-        return None, [], []
-
+        return False
     if parts[1] not in ["add", "rm"]:
+        return False
+    return True
+
+
+def parse_git_staging_command(command):
+    """Parse git add/rm command and analyze arguments."""
+    parts = _split_command(command)
+
+    if not _is_git_staging_command(parts):
         return None, [], []
 
     # Extract the git subcommand
@@ -106,10 +116,8 @@ def parse_git_staging_command(command):
             elif arg in ["-m", "--chmod"]:
                 skip_next = True
             # Check for combined short flags (e.g., -Am)
-            elif arg.startswith("-") and not arg.startswith("--"):
-                # Check if 'A' or 'u' is in the combined flags
-                if "A" in arg or "u" in arg:
-                    blocked_flags.append(arg)
+            elif not arg.startswith("--") and ("A" in arg or "u" in arg):
+                blocked_flags.append(arg)
         else:
             # It's a file argument
             file_args.append(arg)
