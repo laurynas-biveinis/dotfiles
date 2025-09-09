@@ -28,15 +28,6 @@ def main():
             # Not a git commit, allow it
             sys.exit(0)
 
-        # Check for allowed patterns first
-        # Allow --amend, plain commit, commit with message only
-        allowed_patterns = [
-            r"^\s*git\s+commit\s*$",  # Plain git commit
-            r"^\s*git\s+commit\s+(-m\s+|--message[=\s])",  # With message only
-            r"^\s*git\s+commit\s+--amend",  # Amending
-            r"^\s*git\s+commit\s+(-[^aio]*m[^aio]*\s+|--message)",  # Message without a/i/o
-        ]
-
         # Patterns that indicate bypassing staging
         bypass_patterns = [
             # -a or --all flag
@@ -58,7 +49,7 @@ def main():
             # Check if there are non-flag arguments
             has_files = False
             skip_next = False
-            for i, part in enumerate(parts[2:], 2):
+            for part in parts[2:]:
                 if skip_next:
                     skip_next = False
                     continue
@@ -114,7 +105,7 @@ def main():
         # Allow the command
         sys.exit(0)
 
-    except Exception as e:
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
         # On error, allow the command but log the error
         print(f"Hook error: {e}", file=sys.stderr)
         sys.exit(0)

@@ -8,7 +8,6 @@ files explicitly.
 
 import json
 import os
-import re
 import sys
 import shlex
 
@@ -53,13 +52,13 @@ def parse_git_staging_command(command):
         parts = command.split()
 
     if len(parts) < 2:
-        return None, []
+        return None, [], []
 
     if parts[0] != "git":
-        return None, []
+        return None, [], []
 
     if parts[1] not in ["add", "rm"]:
-        return None, []
+        return None, [], []
 
     # Extract the git subcommand
     subcommand = parts[1]
@@ -83,7 +82,7 @@ def parse_git_staging_command(command):
     skip_next = False
     after_double_dash = False
 
-    for i, arg in enumerate(parts[2:], 2):
+    for arg in parts[2:]:
         if skip_next:
             skip_next = False
             continue
@@ -132,7 +131,10 @@ def main():
         command = tool_input.get("params", {}).get("command", "")
 
         # Parse the git command
-        subcommand, blocked_flags, file_args = parse_git_staging_command(command)
+        result = parse_git_staging_command(command)
+        if result is None:
+            sys.exit(0)
+        subcommand, blocked_flags, file_args = result
 
         # If not a git add/rm command, allow it
         if subcommand is None:
@@ -145,7 +147,8 @@ def main():
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "deny",
                     "permissionDecisionReason": (
-                        f"Blocked: git {subcommand} with flags {', '.join(blocked_flags)} is not allowed. "
+                        f"Blocked: git {subcommand} with flags "
+                        f"{', '.join(blocked_flags)} is not allowed. "
                         f"Per CLAUDE.md guidelines, you must stage individual files explicitly. "
                         f"Do not use bulk staging flags like -A, --all, -u, or --update."
                     ),
@@ -182,7 +185,7 @@ def main():
         # Allow the command
         sys.exit(0)
 
-    except Exception as e:
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
         # On error, allow the command but log the error
         print(f"Hook error: {e}", file=sys.stderr)
         sys.exit(0)

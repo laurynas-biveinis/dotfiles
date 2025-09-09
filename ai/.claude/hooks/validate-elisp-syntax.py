@@ -45,7 +45,6 @@ import json
 import os
 import subprocess
 import sys
-import tempfile
 
 
 def validate_elisp_syntax(content):
@@ -70,18 +69,22 @@ def validate_elisp_syntax(content):
 
     try:
         result = subprocess.run(
-            emacs_cmd, input=content, capture_output=True, text=True, timeout=5
+            emacs_cmd,
+            input=content,
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
 
         # Check if syntax is valid
         if result.returncode == 0 and "SYNTAX_OK" in result.stderr:
             return True, None
-        else:
-            # Extract error message
-            error_msg = result.stderr.strip()
-            if "SYNTAX_ERROR:" in error_msg:
-                error_msg = error_msg.split("SYNTAX_ERROR:", 1)[1].strip()
-            return False, error_msg
+        # Extract error message
+        error_msg = result.stderr.strip()
+        if "SYNTAX_ERROR:" in error_msg:
+            error_msg = error_msg.split("SYNTAX_ERROR:", 1)[1].strip()
+        return False, error_msg
     except subprocess.TimeoutExpired:
         return False, "Validation timeout"
     except Exception as e:
@@ -95,12 +98,11 @@ def apply_edit(content, old_string, new_string, replace_all=False):
 
     if replace_all:
         return content.replace(old_string, new_string)
-    else:
-        # Replace only first occurrence
-        idx = content.find(old_string)
-        if idx == -1:
-            raise ValueError(f"Could not find old_string in content")
-        return content[:idx] + new_string + content[idx + len(old_string) :]
+    # Replace only first occurrence
+    idx = content.find(old_string)
+    if idx == -1:
+        raise ValueError("Could not find old_string in content")
+    return content[:idx] + new_string + content[idx + len(old_string) :]
 
 
 def main():
@@ -123,9 +125,9 @@ def main():
     current_content = ""
     if os.path.exists(file_path):
         try:
-            with open(file_path, "r") as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 current_content = f.read()
-        except Exception as e:
+        except Exception:
             # If we can't read the file, allow the edit
             # Claude will handle the actual file operation errors
             sys.exit(0)
@@ -158,7 +160,7 @@ def main():
                     resulting_content, old_string, new_string, replace_all
                 )
 
-    except Exception as e:
+    except (ValueError, KeyError, TypeError):
         # If we can't apply the edit, let Claude handle it
         sys.exit(0)
 
