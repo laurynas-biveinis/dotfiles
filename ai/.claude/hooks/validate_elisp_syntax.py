@@ -105,6 +105,34 @@ def apply_edit(content, old_string, new_string, replace_all=False):
     return content[:idx] + new_string + content[idx + len(old_string) :]
 
 
+def get_resulting_content(tool_name, tool_input, current_content):
+    """Apply the appropriate edits based on tool type and return resulting content."""
+    if tool_name == "Write":
+        # For Write tool, the content is directly provided
+        return tool_input.get("content", "")
+
+    if tool_name == "Edit":
+        return apply_edit(
+            current_content,
+            tool_input.get("old_string", ""),
+            tool_input.get("new_string", ""),
+            tool_input.get("replace_all", False),
+        )
+
+    if tool_name == "MultiEdit":
+        resulting_content = current_content
+        for edit in tool_input.get("edits", []):
+            resulting_content = apply_edit(
+                resulting_content,
+                edit.get("old_string", ""),
+                edit.get("new_string", ""),
+                edit.get("replace_all", False),
+            )
+        return resulting_content
+
+    raise ValueError(f"Unexpected tool name: {tool_name}")
+
+
 def main():
     """Entry point for the Elisp syntax validation hook."""
     try:
@@ -135,32 +163,9 @@ def main():
 
     # Apply the edit(s) to get the resulting content
     try:
-        if tool_name == "Write":
-            # For Write tool, the content is directly provided
-            resulting_content = tool_input.get("content", "")
-
-        elif tool_name == "Edit":
-            old_string = tool_input.get("old_string", "")
-            new_string = tool_input.get("new_string", "")
-            replace_all = tool_input.get("replace_all", False)
-
-            resulting_content = apply_edit(
-                current_content, old_string, new_string, replace_all
-            )
-
-        elif tool_name == "MultiEdit":
-            edits = tool_input.get("edits", [])
-            resulting_content = current_content
-
-            for edit in edits:
-                old_string = edit.get("old_string", "")
-                new_string = edit.get("new_string", "")
-                replace_all = edit.get("replace_all", False)
-
-                resulting_content = apply_edit(
-                    resulting_content, old_string, new_string, replace_all
-                )
-
+        resulting_content = get_resulting_content(
+            tool_name, tool_input, current_content
+        )
     except Exception:
         # If we can't apply the edit, let Claude handle it
         sys.exit(0)
