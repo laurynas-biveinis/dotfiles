@@ -98,6 +98,14 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+echo -n "Running pylint... ${PYTHON_FILES[*]} "
+if pylint "${PYTHON_FILES[@]}"; then
+	echo "OK!"
+else
+	echo "pylint check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
 # Final result
 if [ $ERRORS -eq 0 ]; then
 	echo "All checks passed successfully!"
