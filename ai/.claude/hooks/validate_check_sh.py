@@ -31,7 +31,7 @@ def main():
     """Entry point for the check.sh validation hook."""
     try:
         input_data = json.load(sys.stdin)
-    except json.JSONDecodeError as e:
+    except Exception as e:
         print(f"Error: Invalid JSON input: {e}", file=sys.stderr)
         # Exit code 1 shows stderr to the user but not to Claude
         sys.exit(1)

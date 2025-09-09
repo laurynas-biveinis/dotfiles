@@ -193,7 +193,7 @@ def main():
         # Allow the command
         sys.exit(0)
 
-    except (json.JSONDecodeError, KeyError, TypeError) as e:
+    except Exception as e:
         # On error, allow the command but log the error
         print(f"Hook error: {e}", file=sys.stderr)
         sys.exit(0)

@@ -109,7 +109,7 @@ def main():
     """Entry point for the Elisp syntax validation hook."""
     try:
         input_data = json.load(sys.stdin)
-    except json.JSONDecodeError as e:
+    except Exception as e:
         print(f"Error: Invalid JSON input: {e}", file=sys.stderr)
         sys.exit(1)
 
@@ -161,7 +161,7 @@ def main():
                     resulting_content, old_string, new_string, replace_all
                 )
 
-    except (ValueError, KeyError, TypeError):
+    except Exception:
         # If we can't apply the edit, let Claude handle it
         sys.exit(0)
 
