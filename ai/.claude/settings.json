@@ -1,5 +1,4 @@
 {
-  "model": "opus",
   "permissions": {
     "allow": [
       "mcp__elisp-dev__elisp-describe-function",
@@ -22,6 +21,7 @@
       "WebFetch(domain:raw.githubusercontent.com)"
     ]
   },
+  "model": "opus",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "PreToolUse": [
@@ -30,15 +30,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/validate-check-sh.py"
+            "command": "python3 ~/.claude/hooks/validate_check_sh.py"
           },
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/block-git-commit-bypass.py"
+            "command": "python3 ~/.claude/hooks/block_git_commit_bypass.py"
           },
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/block-git-wildcard-staging.py"
+            "command": "python3 ~/.claude/hooks/block_git_wildcard_staging.py"
           }
         ]
       },
@@ -47,7 +47,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/validate-elisp-syntax.py"
+            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py"
           }
         ]
       },
@@ -56,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/validate-elisp-syntax.py"
+            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py"
           }
         ]
       },
@@ -65,7 +65,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/validate-elisp-syntax.py"
+            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py"
           }
         ]
       }
