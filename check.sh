@@ -80,6 +80,14 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+echo -n "Checking JSON formatting... ai/.claude/settings.json "
+if prettier --log-level warn --check ai/.claude/settings.json; then
+	echo "OK!"
+else
+	echo "prettier check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
 # Final result
 if [ $ERRORS -eq 0 ]; then
 	echo "All checks passed successfully!"
