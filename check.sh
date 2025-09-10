@@ -98,6 +98,14 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+echo -n "Checking Python import sorting with isort... ${PYTHON_FILES[*]} "
+if isort --check-only --diff "${PYTHON_FILES[@]}" 2>/dev/null; then
+	echo "OK!"
+else
+	echo "isort check failed! Run 'isort ${PYTHON_FILES[*]}' to fix"
+	ERRORS=$((ERRORS + 1))
+fi
+
 echo -n "Running pylint... ${PYTHON_FILES[*]} "
 if pylint "${PYTHON_FILES[@]}"; then
 	echo "OK!"
