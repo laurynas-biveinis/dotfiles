@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=broad-exception-caught
+# pylint: disable=broad-exception-caught,duplicate-code
 """Block git commit commands that bypass explicit staging.
 
 This hook prevents the use of git commit flags that would commit files

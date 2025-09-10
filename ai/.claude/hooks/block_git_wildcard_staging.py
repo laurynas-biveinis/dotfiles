@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=broad-exception-caught
+# pylint: disable=broad-exception-caught,duplicate-code
 """Block git add/rm commands that use glob patterns or directories.
 
 This hook prevents the use of glob patterns, directories, or bulk staging flags

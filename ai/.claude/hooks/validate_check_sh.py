@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=broad-exception-caught
+# pylint: disable=broad-exception-caught,duplicate-code
 """
 Claude Code Hook: Check.sh Validator
 =====================================
