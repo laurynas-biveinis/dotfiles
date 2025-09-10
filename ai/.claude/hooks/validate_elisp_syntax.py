@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# pylint: disable=broad-exception-caught
 """
 Claude Code Hook: Elisp Syntax Validator
 =========================================
