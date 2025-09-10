@@ -4737,6 +4737,22 @@ it is disabled.
 
 
 )
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cond-let-0.1.1/cond-let-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cond-let-0.1.1/cond-let-autoloads.el"))
+
+
+
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
+
+
+
+
+(register-definition-prefixes "cond-let" '("cond-let"))
+
+
+(provide 'cond-let-autoloads)
+
+
+)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/llama-1.0.1/llama-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/llama-1.0.1/llama-autoloads.el"))
 
 
@@ -4837,7 +4853,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.8/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.8/magit-section-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.4.0/magit-section-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-section-4.4.0/magit-section-autoloads.el"))
 
 
 
@@ -4892,7 +4908,7 @@ with the variables' values as arguments, which were recorded by
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.8/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.3.8/magit-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.4.0/magit-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-4.4.0/magit-autoloads.el"))
 
 
 
@@ -5095,7 +5111,7 @@ See info node `(magit)Debugging Tools' for more information." t)
 (define-advice Info-follow-nearest-node (:around (fn &optional fork) gitman) (let ((node (Info-get-token (point) "\\*note[ 
 	]+" "\\*note[ 
 	]+\\([^:]*\\):\\(:\\|[ 
-	]*(\\)?"))) (if (and node (string-match "^(gitman)\\(.+\\)" node)) (pcase magit-view-git-manual-method ('info (funcall fn fork)) ('man (require 'man) (man (match-string 1 node))) ('woman (require 'woman) (woman (match-string 1 node))) (_ (user-error "Invalid value for `magit-view-git-manual-method'"))) (funcall fn fork))))
+	]*(\\)?"))) (if (and node (string-match "^(gitman)\\(.+\\)" node)) (pcase magit-view-git-manual-method ('info (funcall fn fork)) ('man (require 'man) (man (match-str 1 node))) ('woman (require 'woman) (woman (match-str 1 node))) (_ (user-error "Invalid value for `magit-view-git-manual-method'"))) (funcall fn fork))))
 (define-advice org-man-export (:around (fn link description format) gitman) (if (and (eq format 'texinfo) (string-prefix-p "git" link)) (string-replace "%s" link "
 @ifinfo
 @ref{%s,,,gitman,}.
@@ -5168,15 +5184,15 @@ bisect run'.
 
  (autoload 'magit-branch "magit" nil t)
 (autoload 'magit-checkout "magit-branch" "\
-Checkout REVISION, updating the index and the working tree.
-If REVISION is a local branch, then that becomes the current
+Checkout COMMIT, updating the index and the working tree.
+If COMMIT is a local branch, then that becomes the current
 branch.  If it is something else, then `HEAD' becomes detached.
 Checkout fails if the working tree or the staging area contain
 changes.
 
-(git checkout REVISION).
+(git checkout COMMIT).
 
-(fn REVISION &optional ARGS)" t)
+(fn COMMIT &optional ARGS)" t)
 (function-put 'magit-checkout 'interactive-only 'magit--checkout)
 (autoload 'magit-branch-create "magit-branch" "\
 Create BRANCH at branch or revision START-POINT.
@@ -5848,11 +5864,9 @@ to be visited.
 
 Neither the blob nor the file buffer are killed when finishing
 the rebase.  If that is undesirable, then it might be better to
-use `magit-rebase-edit-commit' instead of this command.
-
-(fn FILE)" t)
+use `magit-rebase-edit-commit' instead of this command." t)
 (autoload 'magit-reshelve-since "magit-extras" "\
-Change the author and committer dates of the commits since REV.
+Change the author and committer dates of the commits since COMMIT.
 
 Ask the user for the first reachable commit whose dates should
 be changed.  Then read the new date for that commit.  The initial
@@ -5867,7 +5881,7 @@ If KEYID is non-nil, then use that to sign all reshelved commits.
 Interactively use the value of the \"--gpg-sign\" option in the
 list returned by `magit-rebase-arguments'.
 
-(fn REV KEYID)" t)
+(fn COMMIT KEYID)" t)
 (autoload 'magit-pop-revision-stack "magit-extras" "\
 Insert a representation of a revision into the current buffer.
 
@@ -6163,7 +6177,7 @@ restrict the log to the lines that the region touches.
 (autoload 'magit-log-trace-definition "magit-log" "\
 Show log for the definition at point.
 
-(fn FILE FN REV)" t)
+(fn FILE FN COMMIT)" t)
 (autoload 'magit-log-merged "magit-log" "\
 Show log for the merge of COMMIT into BRANCH.
 
@@ -6184,7 +6198,7 @@ Move to the Nth parent of the current commit.
 (autoload 'magit-shortlog-since "magit-log" "\
 Show a history summary for commits since REV.
 
-(fn REV ARGS)" t)
+(fn COMMIT ARGS)" t)
 (autoload 'magit-shortlog-range "magit-log" "\
 Show a history summary for commit or range REV-OR-RANGE.
 
@@ -6493,19 +6507,19 @@ Reset the `HEAD' and index to COMMIT, but not the working tree.
 (autoload 'magit-reset-soft "magit-reset" "\
 Reset the `HEAD' to COMMIT, but not the index and working tree.
 
-(git reset --soft REVISION)
+(git reset --soft COMMIT)
 
 (fn COMMIT)" t)
 (autoload 'magit-reset-hard "magit-reset" "\
 Reset the `HEAD', index, and working tree to COMMIT.
 
-(git reset --hard REVISION)
+(git reset --hard COMMIT)
 
 (fn COMMIT)" t)
 (autoload 'magit-reset-keep "magit-reset" "\
 Reset the `HEAD' and index to COMMIT, while keeping uncommitted changes.
 
-(git reset --keep REVISION)
+(git reset --keep COMMIT)
 
 (fn COMMIT)" t)
 (autoload 'magit-reset-index "magit-reset" "\
@@ -6878,7 +6892,9 @@ Instead of invoking this alias for `magit-status' using
 and read the info node `(magit)Getting Started', which
 also contains other useful hints.")
 (autoload 'magit-status-here "magit-status" "\
-Like `magit-status' but with non-nil `magit-status-goto-file-position'." t)
+Like `magit-status' but with non-nil `magit-status-goto-file-position'.
+Before doing so, save all file-visiting buffers belonging to the current
+repository without prompting." t)
 (autoload 'magit-status-quick "magit-status" "\
 Show the status of the current Git repository, maybe without refreshing.
 
@@ -6988,12 +7004,12 @@ Extract the history of the subtree PREFIX.
 
  (autoload 'magit-tag "magit" nil t)
 (autoload 'magit-tag-create "magit-tag" "\
-Create a new tag with the given NAME at REV.
+Create a new tag with the given NAME at COMMIT.
 With a prefix argument annotate the tag.
 
 (git tag [--annotate] NAME REV)
 
-(fn NAME REV &optional ARGS)" t)
+(fn NAME COMMIT &optional ARGS)" t)
 (autoload 'magit-tag-delete "magit-tag" "\
 Delete one or more tags.
 If the region marks multiple tags (and nothing else), then offer
@@ -7178,17 +7194,20 @@ a Git repository.")
 
  (autoload 'magit-worktree "magit-worktree" nil t)
 (autoload 'magit-worktree-checkout "magit-worktree" "\
-Checkout BRANCH in a new worktree at PATH.
+Checkout COMMIT in a new worktree in DIRECTORY.
+COMMIT may, but does not have to be, a local branch.
+Interactively, use `magit-read-worktree-directory-function'.
 
-(fn PATH BRANCH)" t)
+(fn DIRECTORY COMMIT)" t)
 (autoload 'magit-worktree-branch "magit-worktree" "\
-Create a new BRANCH and check it out in a new worktree at PATH.
+Create a new BRANCH and check it out in a new worktree at DIRECTORY.
+Interactively, use `magit-read-worktree-directory-function'.
 
-(fn PATH BRANCH START-POINT)" t)
+(fn DIRECTORY BRANCH START-POINT)" t)
 (autoload 'magit-worktree-move "magit-worktree" "\
-Move WORKTREE to PATH.
+Move existing WORKTREE directory to DIRECTORY.
 
-(fn WORKTREE PATH)" t)
+(fn WORKTREE DIRECTORY)" t)
 (register-definition-prefixes "magit-worktree" '("magit-"))
 
 
@@ -7196,16 +7215,12 @@ Move WORKTREE to PATH.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2/ghub-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/ghub-5.0.0/ghub-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/ghub-5.0.0/ghub-autoloads.el"))
 
 
 
 (add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
 
-
-
-
-(register-definition-prefixes "buck" '("buck-default-host"))
 
 
 
@@ -7226,19 +7241,11 @@ and call `auth-source-forget+'." t)
 
 
 
-(register-definition-prefixes "glab" '("glab-default-host"))
-
-
-
-(register-definition-prefixes "gogs" '("gogs-default-host"))
+(register-definition-prefixes "ghub-legacy" '("ghub-fetch-repository"))
 
 
 
 (register-definition-prefixes "gsexp" '("gsexp-"))
-
-
-
-(register-definition-prefixes "gtea" '("gtea-default-host"))
 
 
 (provide 'ghub-autoloads)
@@ -11101,7 +11108,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.3/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.5.3/forge-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.6.0/forge-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/forge-0.6.0/forge-autoloads.el"))
 
 
 
@@ -11124,6 +11131,10 @@ is loaded, then `magit-mode-map' ends up being modified anyway.")
 
 
 (register-definition-prefixes "forge-bitbucket" '("forge-bitbucket-repository"))
+
+
+
+(register-definition-prefixes "forge-client" '("forge--" "ghub--prepare-mutation"))
 
 
 
@@ -11230,6 +11241,10 @@ prefix argument offer all topics.  While completion is in progress,
 \\<forge-read-topic-minibuffer-map>\\[forge-read-topic-lift-limit] lifts the limitation to active pull-requests.
 
 (fn PULL-REQUEST)" t)
+(autoload 'forge-visit-topic-from-url "forge-commands" "\
+Visit the topic specified by web URL.
+
+(fn URL)" t)
 (autoload 'forge-visit-this-topic "forge-commands" "\
 Visit the topic at point.
 With prefix argument MENU, also show the topic menu.
@@ -11255,6 +11270,7 @@ creates a new worktree.  Please see the manual for more
 information.
 
 (fn PATH PULLREQ)" t)
+ (autoload 'forge-push-to-unnamed-pullreq "forge-commands" nil t)
 (autoload 'forge-fork "forge-commands" "\
 Fork the current repository to FORK and add it as a REMOTE.
 If the fork already exists, then that isn't an error; the remote
@@ -11956,7 +11972,7 @@ Disable the Elisp development MCP tools.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250611.2328/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250611.2328/elisp-autofmt-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250910.2/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250910.2/elisp-autofmt-autoloads.el"))
 
 
 
@@ -12634,14 +12650,14 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-	'(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism llama magit-section magit ghub pr-review deflate plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui org-mcp aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+	'(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism cond-let llama magit-section magit ghub pr-review deflate plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui org-mcp aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
 	package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
 	(append
-	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.5.3" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-4.3.2" "/Users/laurynas/.emacs.d/elpa/magit-4.3.8" "/Users/laurynas/.emacs.d/elpa/magit-section-4.3.8" "/Users/laurynas/.emacs.d/elpa/transient-0.10.0" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.6" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
+	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.6.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-5.0.0" "/Users/laurynas/.emacs.d/elpa/magit-4.4.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.4.0" "/Users/laurynas/.emacs.d/elpa/transient-0.10.0" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.6" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
 	 Info-directory-list)))
 
 ;; Local Variables:
