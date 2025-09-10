@@ -9,8 +9,8 @@ files explicitly.
 
 import json
 import os
-import sys
 import shlex
+import sys
 
 
 def has_glob_patterns(arg):
