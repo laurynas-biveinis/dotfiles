@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20250910.2
-;; Package-Revision: aecf72c12c83
+;; Package-Version: 20250910.325
+;; Package-Revision: 75b8cc993191
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -38,6 +38,18 @@
     (declare (side-effect-free t))
     (let ((inhibit-field-text-motion t))
       (line-end-position n))))
+
+(when (and (version< emacs-version "31.1") (not (and (fboundp 'incf) (fboundp 'decf))))
+  (defmacro incf (place &optional delta)
+    "Increment PLACE by DELTA or 1."
+    (declare (debug (gv-place &optional form)))
+    (gv-letplace (getter setter) place
+      (funcall setter `(+ ,getter ,(or delta 1)))))
+  (defmacro decf (place &optional delta)
+    "Decrement PLACE by DELTA or 1."
+    (declare (debug (gv-place &optional form)))
+    (gv-letplace (getter setter) place
+      (funcall setter `(- ,getter ,(or delta 1))))))
 
 
 ;; ---------------------------------------------------------------------------

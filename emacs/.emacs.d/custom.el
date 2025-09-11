@@ -23,6 +23,12 @@
       (org-mcp-test--with-enabled . defun)
       (org-mcp-test--with-config . 1)
       (org-mcp-test--with-temp-org-file . 2)
+      (org-mcp-test--with-add-todo-setup . 2)
+      (mcp-server-lib-ert-with-server . defun))
+     (elisp-lint-indent-specs
+      (org-mcp-test--with-enabled . defun)
+      (org-mcp-test--with-config . 1)
+      (org-mcp-test--with-temp-org-file . 2)
       (mcp-server-lib-ert-with-server . defun))
      (elisp-lint-indent-specs
       (if-let* . 1)

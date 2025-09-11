@@ -1820,7 +1820,7 @@
 			  (:maintainer "Lawrence Mitchell" . "wence@gmx.li")
 			  (:url . "http://github.com/wence-/f90-iface/"))])
  (filechooser .
-	      [(0 2 3)
+	      [(0 2 4)
 	       ((emacs
 		 (28 1))
 		(compat
@@ -1831,7 +1831,7 @@
 		(:maintainer "rahguzar" . "rahguzar@mailbox.org")
 		(:authors
 		 ("rahguzar" . "rahguzar@mailbox.org"))
-		(:commit . "904ff4764fe3a74442056e56cd298dea1edbf269"))])
+		(:commit . "e55c5ea294bbb2c67ab5c51d9489922a83c22456"))])
  (filladapt .
 	    [(2 12 2)
 	     ((emacs
@@ -3201,7 +3201,7 @@
 	      (:url . "https://elpa.gnu.org/packages/num3-mode.html")
 	      (:commit . "fdf4d633e541875a6f765f5c3c8e0d4911122ed3"))])
  (oauth2 .
-	 [(0 18 2)
+	 [(0 18 3)
 	  ((emacs
 	    (27 1)))
 	  "OAuth 2.0 Authorization Protocol" tar
@@ -3212,7 +3212,7 @@
 	    (nil . "emacs-devel@gnu.org"))
 	   (:authors
 	    ("Julien Danjou" . "julien@danjou.info"))
-	   (:commit . "7331b130cb10d5f8425510f73d89e74a9133c520"))])
+	   (:commit . "dc9f76dee716bad30395f079dd8dee85dce138c4"))])
  (ob-asymptote .
 	       [(1 0 2)
 		nil "Babel Functions for Asymptote" tar
@@ -5085,20 +5085,20 @@
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	    (:commit . "488685badfdf49bb750a213f228bdba8e113c7c8"))])
  (vertico-posframe .
-		   [(0 8 0)
+		   [(0 9 0)
 		    ((emacs
 		      (26 0))
 		     (posframe
 		      (1 4 0))
 		     (vertico
-		      (1 10)))
+		      (2 5)))
 		    "Using posframe to show Vertico" tar
 		    ((:url . "https://github.com/tumashu/vertico-posframe")
 		     (:keywords "abbrev" "convenience" "matching" "vertico")
 		     (:maintainer "Feng Shu" . "tumashu@163.com")
 		     (:authors
 		      ("Feng Shu" . "tumashu@163.com"))
-		     (:commit . "781ee08f8d92f640dff8a0d8838b67a13a391846"))])
+		     (:commit . "d89a70743cfd95b7fcda621679b7555bbef51acb"))])
  (vigenere .
 	   [(1 0)
 	    ((emacs

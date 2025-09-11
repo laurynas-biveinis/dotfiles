@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20250904.352
-;; Package-Revision: 361ea32cc155
+;; Package-Version: 20250910.1036
+;; Package-Revision: 8453bf29aa01
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -778,8 +778,20 @@ METHOD-METRICS is used to track errors for this method."
                                  (intern param-name) tool-args)))
                           (push value arg-values)))
                       (apply handler (nreverse arg-values))))
-                   ;; Ensure result is a string, convert nil to empty string
-                   (result-text (or result ""))
+                   ;; Ensure result is a string, convert nil to empty string, error on other types
+                   (result-text
+                    (cond
+                     ((null result)
+                      "")
+                     ((stringp result)
+                      result)
+                     (t
+                      (signal
+                       'mcp-server-lib-invalid-params
+                       (list
+                        (format
+                         "Tool handler must return string or nil, got: %s"
+                         (type-of result)))))))
                    ;; Wrap the handler result in the MCP format
                    (formatted-result
                     `((content
