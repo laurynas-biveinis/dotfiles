@@ -16,8 +16,8 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; Author: Laurynas Biveinis
-;; Package-Version: 20250722.1502
-;; Package-Revision: 45ae39151b66
+;; Package-Version: 20250911.1248
+;; Package-Revision: e20e34ea9f11
 ;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.1.0"))
 ;; Keywords: tools, development
 ;; URL: https://github.com/laurynas-biveinis/elisp-dev-mcp
@@ -607,16 +607,22 @@ MCP Parameters:
 
    ;; 3. Resolve symlinks and validate location
    (let* ((true-path (file-truename file-path))
-          (elpa-dir
-           (file-truename
-            (expand-file-name "elpa/" user-emacs-directory)))
-          (system-lisp-dir
-           (when elisp-dev-mcp--system-lisp-dir
-             (file-truename elisp-dev-mcp--system-lisp-dir)))
+          ;; Build list of allowed package directories
+          (allowed-dirs
+           (append
+            ;; Current package-user-dir
+            (when (boundp 'package-user-dir)
+              (list (file-truename (file-name-as-directory package-user-dir))))
+            ;; All dirs from package-directory-list
+            (mapcar #'file-truename package-directory-list)
+            ;; System lisp directory
+            (when elisp-dev-mcp--system-lisp-dir
+              (list (file-truename elisp-dev-mcp--system-lisp-dir)))))
+          ;; Check if file is under any allowed directory
           (allowed-p
-           (or (string-prefix-p elpa-dir true-path)
-               (and system-lisp-dir
-                    (string-prefix-p system-lisp-dir true-path)))))
+           (cl-some (lambda (dir)
+                      (and dir (string-prefix-p dir true-path)))
+                    allowed-dirs)))
 
      (unless allowed-p
        (mcp-server-lib-tool-throw

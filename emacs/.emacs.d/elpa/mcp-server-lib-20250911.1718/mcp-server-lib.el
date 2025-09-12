@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20250910.1036
-;; Package-Revision: 8453bf29aa01
+;; Package-Version: 20250911.1718
+;; Package-Revision: 95bfc1a51655
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -809,7 +809,7 @@ METHOD-METRICS is used to track errors for this method."
              (mcp-server-lib--jsonrpc-error
               id
               mcp-server-lib-jsonrpc-error-invalid-params
-              (error-message-string err)))
+              (cadr err)))
             ;; Handle tool-specific errors thrown with
             ;; mcp-server-lib-tool-throw
             (mcp-server-lib-tool-error
