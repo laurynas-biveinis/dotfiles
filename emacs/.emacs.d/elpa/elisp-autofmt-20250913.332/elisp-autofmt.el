@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20250911.556
-;; Package-Revision: bd90ac9db6c9
+;; Package-Version: 20250913.332
+;; Package-Revision: ac710c255099
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -27,7 +27,7 @@
 ;; ---------------------------------------------------------------------------
 ;; Compatibility
 
-(when (and (version< emacs-version "31.1") (not (and (fboundp 'incf) (fboundp 'decf))))
+(when (version< emacs-version "31.1")
   (defmacro incf (place &optional delta)
     "Increment PLACE by DELTA or 1."
     (declare (debug (gv-place &optional form)))

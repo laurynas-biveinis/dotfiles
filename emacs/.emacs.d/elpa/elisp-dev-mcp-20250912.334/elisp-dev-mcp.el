@@ -16,9 +16,9 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; Author: Laurynas Biveinis
-;; Package-Version: 20250911.1248
-;; Package-Revision: e20e34ea9f11
-;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.1.0"))
+;; Package-Version: 20250912.334
+;; Package-Revision: d14b3e98dd8a
+;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.2.0"))
 ;; Keywords: tools, development
 ;; URL: https://github.com/laurynas-biveinis/elisp-dev-mcp
 

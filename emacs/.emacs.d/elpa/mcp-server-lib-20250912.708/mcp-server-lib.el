@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20250911.1718
-;; Package-Revision: 95bfc1a51655
+;; Package-Version: 20250912.708
+;; Package-Revision: e63bf84049ce
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 

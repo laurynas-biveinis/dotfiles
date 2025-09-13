@@ -4664,6 +4664,17 @@
 		  ("Bruno Boal" . "egomet@bboal.com")
 		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
 		 (:commit . "06f1be349e9c3d124520b18742911307de9abda3"))])
+ (timeout .
+	  [(2 1)
+	   ((emacs
+	     (24 4)))
+	   "Throttle or debounce Elisp functions" tar
+	   ((:url . "https://github.com/karthink/timeout")
+	    (:keywords "convenience" "extensions")
+	    (:maintainer "Karthik Chikmagalur" . "karthikchikmagalur@gmail.com")
+	    (:authors
+	     ("Karthik Chikmagalur" . "karthikchikmagalur@gmail.com"))
+	    (:commit . "6d31046c5b1817271a52ab810e5bc635fe7ab3b4"))])
  (timerfunctions .
 		 [(1 4 2)
 		  ((cl-lib

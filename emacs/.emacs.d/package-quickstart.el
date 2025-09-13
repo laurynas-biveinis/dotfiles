@@ -9179,7 +9179,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250911.1718/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250911.1718/mcp-server-lib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250912.708/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250912.708/mcp-server-lib-autoloads.el"))
 
 
 
@@ -11952,7 +11952,7 @@ Display the version of Elpy." t)
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250911.1248/elisp-dev-mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250911.1248/elisp-dev-mcp-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250912.334/elisp-dev-mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-dev-mcp-20250912.334/elisp-dev-mcp-autoloads.el"))
 
 
 
@@ -11972,7 +11972,7 @@ Disable the Elisp development MCP tools.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250911.556/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250911.556/elisp-autofmt-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250913.332/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250913.332/elisp-autofmt-autoloads.el"))
 
 
 
