@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20250913.332
-;; Package-Revision: ac710c255099
+;; Package-Version: 20250913.2251
+;; Package-Revision: 5a59b7685418
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -27,17 +27,18 @@
 ;; ---------------------------------------------------------------------------
 ;; Compatibility
 
-(when (version< emacs-version "31.1")
-  (defmacro incf (place &optional delta)
-    "Increment PLACE by DELTA or 1."
-    (declare (debug (gv-place &optional form)))
-    (gv-letplace (getter setter) place
-      (funcall setter `(+ ,getter ,(or delta 1)))))
-  (defmacro decf (place &optional delta)
-    "Decrement PLACE by DELTA or 1."
-    (declare (debug (gv-place &optional form)))
-    (gv-letplace (getter setter) place
-      (funcall setter `(- ,getter ,(or delta 1))))))
+(eval-when-compile
+  (when (version< emacs-version "31.1")
+    (defmacro incf (place &optional delta)
+      "Increment PLACE by DELTA or 1."
+      (declare (debug (gv-place &optional form)))
+      (gv-letplace (getter setter) place
+        (funcall setter `(+ ,getter ,(or delta 1)))))
+    (defmacro decf (place &optional delta)
+      "Decrement PLACE by DELTA or 1."
+      (declare (debug (gv-place &optional form)))
+      (gv-letplace (getter setter) place
+        (funcall setter `(- ,getter ,(or delta 1)))))))
 
 
 ;; ---------------------------------------------------------------------------
