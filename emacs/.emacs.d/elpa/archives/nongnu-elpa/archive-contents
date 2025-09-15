@@ -1941,7 +1941,7 @@
 	       ((:url . "https://github.com/rlister/org-present")
 		(:commit . "75ac0cab2aee6785d184e65bf7abc6d5e55e05d6"))])
  (org-superstar .
-		[(1 6 1)
+		[(1 7 0)
 		 ((org
 		   (9 1 9))
 		  (emacs
@@ -1952,7 +1952,7 @@
 		  (:maintainer "D. Williams" . "d.williams@posteo.net")
 		  (:authors
 		   ("D. Williams" . "d.williams@posteo.net"))
-		  (:commit . "f61dd1894fc8d79ab60d1f5d67a99f2a6c939a80"))])
+		  (:commit . "e034a2c79518c69d4679adbc07ef431580a244b4"))])
  (org-transclusion-http .
 			[(0 4)
 			 ((emacs
