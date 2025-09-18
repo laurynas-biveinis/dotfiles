@@ -510,6 +510,19 @@
 	      ("Florian Rommel" . "mail@florommel.de")
 	      ("Stephane Marks" . "shipmints@gmail.com"))
 	     (:commit . "8fc587ba341b2ec8189b4d948accc90140469147"))])
+ (buframe .
+	  [(0 2)
+	   ((emacs
+	     (27 1))
+	    (timeout
+	     (2 1)))
+	   "Buffer-local frames" tar
+	   ((:url . "https://github.com/haji-ali/buframe")
+	    (:keywords "buffer" "frames" "convenience")
+	    (:maintainer "Al Haji-Ali" . "abdo.haji.ali@gmail.com")
+	    (:authors
+	     ("Al Haji-Ali" . "abdo.haji.ali@gmail.com"))
+	    (:commit . "d2f1fcdb5f320a5ac583e1f4edc22397106e830a"))])
  (bug-hunter .
 	     [(1 3 1)
 	      ((seq
@@ -1566,7 +1579,7 @@
 		     (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
 		     (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama .
-	 [(1 8 2)
+	 [(1 8 3)
 	  ((emacs
 	    (28 1))
 	   (llm
@@ -1583,7 +1596,7 @@
 	   (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
 	   (:authors
 	    ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-	   (:commit . "729df728b611fe14ddc25cc0236f7bcbc00daae6"))])
+	   (:commit . "e9047596cce871a7540c24bf0f1d349cfff14d99"))])
  (emacs-gc-stats .
 		 [(1 4 2)
 		  ((emacs

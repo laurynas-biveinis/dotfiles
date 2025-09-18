@@ -474,6 +474,7 @@ def apply_rules_from_comments(node_parent: NdSexp) -> None:
     del string
 
     wrap_locked = False
+    wrap_locked_next = False  # Should not be used but reads like a bug if this isn't set.
     autofmt_text = 'format'
     autofmt_text_next = '-next-line:'
     do_next_line = False
@@ -2852,7 +2853,7 @@ def parse_file(fh: TextIO) -> Tuple[str, NdSexp]:
                         line += 1
 
             if not c:
-                raise FmtException('parsing string at line {}'.format(line))
+                raise FmtException('unterminated string literal at line {}'.format(line))
 
             sexp_ctx[sexp_level].nodes.append(NdString((line_beg, line), data.getvalue()))
             del line_beg, data, is_slash, c
@@ -3051,14 +3052,14 @@ def format_file(
     # it will disable the settings such as lexical binding.
     # The intention of re-formatting is not to make any functional changes,
     # so it's important to add the blank line back.
-    stars_with_bank_line = False
+    starts_with_bank_line = False
     if root.nodes:
         if isinstance(root.nodes[0], NdWs):
-            stars_with_bank_line = True
+            starts_with_bank_line = True
 
     root.finalize_style(cfg)
 
-    if stars_with_bank_line:
+    if starts_with_bank_line:
         # Add back the blank line.
         root.nodes.insert(0, NdWs(0))
 
@@ -3177,7 +3178,7 @@ def argparse_create() -> argparse.ArgumentParser:
         default=False,
         action='store_true',
         required=False,
-        help='Don\t output any status messages.',
+        help='Don\'t output any status messages.',
     )
 
     parser.add_argument(
@@ -3186,7 +3187,7 @@ def argparse_create() -> argparse.ArgumentParser:
         default=False,
         action='store_true',
         required=False,
-        help='Give each trailing parenthesis it\'s own line.',
+        help='Give each trailing parenthesis its own line.',
     )
 
     parser.add_argument(
@@ -3205,7 +3206,7 @@ def argparse_create() -> argparse.ArgumentParser:
         nargs='?',
         type=int,
         required=False,
-        help='Maxumum column width (zero disables).',
+        help='Maximum column width (zero disables).',
     )
 
     parser.add_argument(
