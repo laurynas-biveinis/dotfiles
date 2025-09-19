@@ -41,12 +41,21 @@ else
 	echo "Skipping shellcheck, and shfmt due to previous errors"
 fi
 
-echo -n "Checking Markdown files... $(echo ./*.md) "
-if mdl --no-verbose ./*.md; then
-	echo "OK!"
+echo -n "Checking Markdown files... "
+MD_FILES=()
+while IFS= read -r file; do
+	MD_FILES+=("$file")
+done < <(find . -maxdepth 1 -name "*.md" && find ai -name "*.md" 2>/dev/null || true)
+echo "${MD_FILES[*]} "
+if [ ${#MD_FILES[@]} -gt 0 ]; then
+	if mdl --no-verbose "${MD_FILES[@]}"; then
+		echo "OK!"
+	else
+		echo "mdl check failed"
+		ERRORS=$((ERRORS + 1))
+	fi
 else
-	echo "mdl check failed"
-	ERRORS=$((ERRORS + 1))
+	echo "No Markdown files found, skipping"
 fi
 
 echo -n "Checking terminology... "
