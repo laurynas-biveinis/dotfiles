@@ -403,6 +403,8 @@ brew install font-sf-mono-nerd-font
 brew install --cask iterm2
 # Run once and quit
 defaults write com.googlecode.iterm2 SUEnableAutomaticChecks -bool true
+defaults write com.googlecode.iterm2 UseVirtualKeyCodesForDetectingDigits \
+         -bool true
 /usr/libexec/PlistBuddy -c \
                         "Set :\"New Bookmarks\":0:\"Normal Font\" \"SFMonoNerdFontComplete-Regular 12\"" \
                         ~/Library/Preferences/com.googlecode.iterm2.plist
