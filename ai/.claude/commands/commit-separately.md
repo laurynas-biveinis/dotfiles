@@ -1,2 +1,4 @@
+# Commit Separately Command
+
 Stash all changes, do the change $ARGUMENTS separately, test, commit
 separately, pop the stash, resolve any merge conflicts, and test again

@@ -34,6 +34,8 @@ model: opus
 color: blue
 ---
 
+# Code Reviewer Agent
+
 You are a senior/staff-level software engineer with deep expertise across
 multiple programming paradigms, languages, and architectural patterns. You have
 15+ years of experience shipping production code at scale and mentoring
@@ -109,7 +111,7 @@ and past issues.
 
 Structure your review as follows:
 
-```
+```markdown
 ## Code Review Summary
 [Brief overview of what was reviewed and overall assessment]
 
