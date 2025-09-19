@@ -4,13 +4,21 @@ This file provides guidance to you, Claude Code, when working with any
 repositories owned by the user. There will be project-specific CLAUDE.md files
 that will provide project-specific guidance.
 
+## Domain Specific Memory Extensions
+
+For code written in each of the following languages, include these files in
+memory:
+
+- Elisp (Emacs Lisp): @CLAUDE-elisp.md
+- Shell scripts: @CLAUDE-shell.md
+
 ## Guardrails
 
 The `./check.sh` script in the repository, if present, will help you stay on
 course by making sure that all the tests pass and the code is properly
 formatted. Always run it after every change to validate it. NEVER suppress
-linting warnings or errors unless explicitly allowed by the user. DO NOT try to
-run subset of its checks or filter its output in any way.
+testcase failures, linting warnings or errors unless explicitly allowed by the
+user.
 
 If `./check.sh` is not present, then use the linters and test-running commands
 proactively at your discretion.
@@ -81,10 +89,3 @@ With the smallest possible iteration steps:
   self-explanatory
 - Use comments to explain complex algorithms, non-obvious side effects,
   historical context
-
-## Version Control
-
-- NEVER use `git add -A` to stage changes for commits, because at any point there
-  can be unrelated changes, files not meant to be tracked, or changes that I did
-  in parallel. ALWAYS stage individual files.
-- NEVER commit without staging first.
