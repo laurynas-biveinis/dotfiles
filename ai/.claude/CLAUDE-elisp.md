@@ -1,15 +1,13 @@
 # CLAUDE-elisp.md
 
 This file provides guidance to you, Claude Code, when working with any Elisp
-(Emacs Lisp) repositories owned by the user. This file will be imported by the
-project-specific memory files.
+(Emacs Lisp) source code owned by the user. This file will be imported by the
+global user memory file.
 
 ## Elisp Guidelines
 
 ### Operation principles
 
-- Make edits that take the edited file from one syntactically correct state to
-  another. Avoid breaking paren balance.
 - Use `.dir-locals.el` to set up `elisp-lint-indent-specs` for `elisp-autofmt`
   as needed.
 
