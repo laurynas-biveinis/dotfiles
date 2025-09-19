@@ -386,7 +386,10 @@ sudo ln -sf en_US.dic en_LT.dic
 
 sudo gem install mdl
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
-     basictex signal whatsapp qfinder-pro
+     basictex signal whatsapp qfinder-pro rar
+xattr -cr /opt/homebrew/bin/unrar
+xattr -cr /opt/homebrew/bin/rar
+
 # TeX
 sudo tlmgr install dvipng
 
