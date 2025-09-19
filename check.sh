@@ -58,6 +58,18 @@ else
 	echo "No Markdown files found, skipping"
 fi
 
+echo -n "Checking Markdown with markdownlint-cli... "
+if [ ${#MD_FILES[@]} -gt 0 ]; then
+	if markdownlint "${MD_FILES[@]}"; then
+		echo "OK!"
+	else
+		echo "markdownlint check failed"
+		ERRORS=$((ERRORS + 1))
+	fi
+else
+	echo "No Markdown files found, skipping"
+fi
+
 echo -n "Checking terminology... "
 if textlint --rule terminology ai; then
 	echo "OK!"
