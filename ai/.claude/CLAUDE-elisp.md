@@ -31,6 +31,11 @@ global user memory file.
 - All internal symbols must finish the package name prefix with a double hyphen.
 - All symbols must have documentation strings.
 
+### Function-level guidelines
+
+- Never use `let*` for one binding, always use plain `let` then. Pay attention
+  when you remove bindings to leave only one untouched.
+
 ### Testing
 
 - Test filenames must end with `-test.el`
