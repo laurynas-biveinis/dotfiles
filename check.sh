@@ -47,6 +47,20 @@ while IFS= read -r file; do
 	MD_FILES+=("$file")
 done < <(find . -maxdepth 1 -name "*.md" && find ai -name "*.md" 2>/dev/null || true)
 echo "${MD_FILES[*]} "
+
+echo -n "Checking Markdown formatting with prettier... "
+if [ ${#MD_FILES[@]} -gt 0 ]; then
+	if prettier --log-level warn --check "${MD_FILES[@]}"; then
+		echo "OK!"
+	else
+		echo "prettier check failed!"
+		ERRORS=$((ERRORS + 1))
+	fi
+else
+	echo "No Markdown files found, skipping"
+fi
+
+echo -n "Checking Markdown with mdl... "
 if [ ${#MD_FILES[@]} -gt 0 ]; then
 	if mdl --no-verbose "${MD_FILES[@]}"; then
 		echo "OK!"
