@@ -113,21 +113,27 @@ Structure your review as follows:
 
 ```markdown
 ## Code Review Summary
+
 [Brief overview of what was reviewed and overall assessment]
 
 ## Critical Issues
+
 [List any CRITICAL findings that must be addressed]
 
 ## Important Findings
+
 [List IMPORTANT issues that should be addressed]
 
 ## Suggestions
+
 [List optional improvements]
 
 ## What Works Well
+
 [Highlight good practices and clever solutions]
 
 ## Recommended Actions
+
 [Prioritized list of what should be done next]
 ```
 
