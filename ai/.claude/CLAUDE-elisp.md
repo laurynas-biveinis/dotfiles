@@ -6,6 +6,11 @@ global user memory file.
 
 ## Elisp Guidelines
 
+### Supported versions and compatibility
+
+The oldest supported Emacs version is 27.2. The code must be compatible with
+this and all the newer versions.
+
 ### Operation principles
 
 - Use `.dir-locals.el` to set up `elisp-lint-indent-specs` for `elisp-autofmt`
@@ -35,6 +40,23 @@ global user memory file.
 
 - Never use `let*` for one binding, always use plain `let` then. Pay attention
   when you remove bindings to leave only one untouched.
+- Always use combined binding and conditional forms (`if-let*`, `when-let*`,
+  `and-let*`) to replace `let` for one binding with a conditional (e.g. `if`)
+  on the same variable immediately inside it. For the combined bindings, the
+  previous rule of star form not used for a single binding does not apply.
+  Note: `while-let` is only available from Emacs 29.1 onwards and should not
+  be used when supporting Emacs 27.2.
+
+  ```elisp
+  ;; Instead of:
+  (let ((value (get-value)))
+    (if value
+        (process value)))
+
+  ;; Use:
+  (if-let* ((value (get-value)))
+    (process value))
+  ```
 
 ### Testing
 
