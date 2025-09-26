@@ -85,7 +85,7 @@ else
 fi
 
 echo -n "Checking terminology... "
-if textlint --rule terminology ai; then
+if textlint --rule terminology ai CLAUDE.md; then
 	echo "OK!"
 else
 	echo "textlint check failed"
