@@ -11,3 +11,6 @@
 [submodule "emacs/.emacs.d/elpa/org-autotask"]
 	path = emacs/.emacs.d/elpa/org-autotask
 	url = https://github.com/laurynas-biveinis/org-autotask.git
+[submodule "emacs/.emacs.d/elpa/org-mcp"]
+	path = emacs/.emacs.d/elpa/org-mcp
+	url = https://github.com/laurynas-biveinis/org-mcp/
