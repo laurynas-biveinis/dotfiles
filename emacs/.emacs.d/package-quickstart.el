@@ -11948,7 +11948,7 @@ Disable the Elisp development MCP tools.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250918.25/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250918.25/elisp-autofmt-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250928.214/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250928.214/elisp-autofmt-autoloads.el"))
 
 
 
