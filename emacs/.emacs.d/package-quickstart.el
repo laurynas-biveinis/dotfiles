@@ -880,7 +880,7 @@ See `wakatime-mode' for more information on Wakatime mode.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20241218.331/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20241218.331/vterm-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20250929.1514/vterm-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/vterm-20250929.1514/vterm-autoloads.el"))
 
 
 
@@ -8203,27 +8203,6 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/org-mcp/org-mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/org-mcp/org-mcp-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(register-definition-prefixes "org-mcp" '("org-mcp-"))
-
-
-
-(register-definition-prefixes "org-mcp-test" '("org-mcp-test--"))
-
-
-
-(provide 'org-mcp-autoloads)
-
-
-)
 (let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/aio-1.0/aio-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/aio-1.0/aio-autoloads.el"))
 
 
@@ -9155,7 +9134,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250912.708/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250912.708/mcp-server-lib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250929.728/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250929.728/mcp-server-lib-autoloads.el"))
 
 
 
@@ -9194,6 +9173,8 @@ Install emacs-mcp-stdio.sh to `mcp-server-lib-install-directory'." t)
 Remove installed emacs-mcp-stdio.sh from `mcp-server-lib-install-directory'." t)
 (autoload 'mcp-server-lib-reset-metrics "mcp-server-lib-commands" "\
 Reset all metrics." t)
+(autoload 'mcp-server-lib-describe-setup "mcp-server-lib-commands" "\
+Show the current MCP server setup including registered tools and resources." t)
 (autoload 'mcp-server-lib-show-metrics "mcp-server-lib-commands" "\
 Display metrics in a buffer." t)
 (register-definition-prefixes "mcp-server-lib-commands" '("mcp-server-lib--"))
@@ -9520,7 +9501,7 @@ Intended to be added to `magit-revision-wash-message-hook' and
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-todos-1.8/magit-todos-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-todos-1.8/magit-todos-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/magit-todos-1.8.1/magit-todos-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/magit-todos-1.8.1/magit-todos-autoloads.el"))
 
 
 
@@ -11948,7 +11929,7 @@ Disable the Elisp development MCP tools.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250928.214/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250928.214/elisp-autofmt-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250929.2241/elisp-autofmt-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/elisp-autofmt-20250929.2241/elisp-autofmt-autoloads.el"))
 
 
 
@@ -12626,7 +12607,7 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism cond-let llama magit-section magit ghub pr-review deflate plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui org-mcp aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+        '(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism cond-let llama magit-section magit ghub pr-review deflate plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
         package-activated-list)))
 (progn
   (require 'info)

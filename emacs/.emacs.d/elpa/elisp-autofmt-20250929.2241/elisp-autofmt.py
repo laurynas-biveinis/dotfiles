@@ -2771,6 +2771,44 @@ NODE_CODE_TYPES = (NdSymbol, NdString, NdSexp)
 
 
 # ------------------------------------------------------------------------------
+# File Diffing
+
+def diff_range_calc(data_src: str, data_dst: str) -> tuple[str, int, int]:
+    '''
+    Takes a data source & destination,
+    returns the sub-range of ``data_dst`` which is different from ``data_src``
+    and the length of the beginning and end spans which match.
+    '''
+    # NOTE: this seems as if it might be slow, but in practice even files of 100's of
+    # KB only take 1/100'th of a second or so to test, so it's not really worth optimizing
+    # unless cases are found where it's a bottleneck.
+    data_len_min = min(len(data_src), len(data_dst))
+    if not data_dst:
+        return data_dst, 0, 0
+    i = 0
+    for i in range(data_len_min):
+        if data_src[i] != data_dst[i]:
+            break
+
+    # The buffers are a complete match.
+    if i + 1 == data_len_min and len(data_src) == len(data_dst):
+        return "", -1, -1
+
+    ofs_beg = max(0, i - 1)
+    i = len(data_src) - 1
+    j = len(data_dst) - 1
+    ofs_end = 0
+    for _ in range(data_len_min - ofs_beg):
+        if data_src[i] != data_dst[j]:
+            break
+        i -= 1
+        j -= 1
+    # As if this was incremented each iteration.
+    ofs_end = (len(data_src) - 1) - i
+    return data_dst[ofs_beg:len(data_dst) - ofs_end], ofs_beg, ofs_end
+
+
+# ------------------------------------------------------------------------------
 # File Parsing
 
 def parse_file(fh: TextIO) -> tuple[str, NdSexp]:
@@ -3041,20 +3079,30 @@ def format_file(
         parallel_jobs: int = 0,
         use_stdin: bool = False,
         use_stdout: bool = False,
+        use_diff_range: bool = False,
 ) -> None:
     '''
     Main file formatting function.
     '''
+    from io import StringIO
 
     # Needed as files may contain '\r' only, see emacs own:
     # `lisp/cedet/semantic/grammar-wy.el`
     newline = '\r\n' if (os.name == 'nt') else '\n'
 
-    if use_stdin:
-        first_line, root = parse_file(sys.stdin)
+    diff_range_data_src = ''
+    if use_diff_range:
+        assert use_stdin
+        diff_range_data_src = sys.stdin.read()
+        fh_as_text = StringIO(diff_range_data_src, newline=newline)
+        first_line, root = parse_file(fh_as_text)
+        del fh_as_text
     else:
-        with open(filepath, 'r', encoding='utf-8', newline=newline) as fh:
-            first_line, root = parse_file(fh)
+        if use_stdin:
+            first_line, root = parse_file(sys.stdin)
+        else:
+            with open(filepath, 'r', encoding='utf-8', newline=newline) as fh:
+                first_line, root = parse_file(fh)
 
     if USE_EXTRACT_DEFS:
         parse_local_defs(cfg.defs, root)
@@ -3123,11 +3171,29 @@ def format_file(
         if not cfg.use_multiprocessing:
             assert root.flush_newlines_from_nodes_recursive() is False
 
-    if use_stdout:
-        write_file(cfg, sys.stdout, root, first_line)
+    if use_diff_range:
+        assert use_stdout
+        fh_as_text = StringIO(newline=newline)
+        write_file(cfg, fh_as_text, root, first_line)
+        diff_range_data_dst = fh_as_text.getvalue()
+
+        diff_range_data_dst_sub, diff_ofs_beg, diff_ofs_end = diff_range_calc(diff_range_data_src, diff_range_data_dst)
+
+        if diff_ofs_beg == -1 and diff_ofs_end == -1:
+            # No change.
+            sys.stdout.write("(-1 . -1)\n")
+        else:
+            sys.stdout.write("({:d} . {:d})\n".format(
+                diff_ofs_beg + 1,
+                (len(diff_range_data_src) - diff_ofs_end) + 1,
+            ))
+            sys.stdout.write(diff_range_data_dst_sub)
     else:
-        with open(filepath, 'w', encoding='utf-8', newline=newline) as fh:
-            write_file(cfg, fh, root, first_line)
+        if use_stdout:
+            write_file(cfg, sys.stdout, root, first_line)
+        else:
+            with open(filepath, 'w', encoding='utf-8', newline=newline) as fh:
+                write_file(cfg, fh, root, first_line)
 
 
 # ------------------------------------------------------------------------------
@@ -3273,6 +3339,14 @@ def argparse_create() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
+        '--use-diff-range',
+        dest='use_diff_range',
+        default=False,
+        action='store_true',
+        required=False,
+        help='Calculate a diff range.',
+    )
+    parser.add_argument(
         '--exit-code',
         dest='exit_code',
         default=0,
@@ -3369,6 +3443,12 @@ def main() -> None:
             'No files passed in, pass in files or use both \'--stdin\' & \'--stdout\'\n')
         sys.exit(1)
 
+    if args.use_diff_range:
+        if not (args.use_stdin and args.use_stdout):
+            sys.stderr.write(
+                '\'--use-diff-range\' can only be used with both \'--stdin\' & \'--stdout\'\n')
+            sys.exit(1)
+
     line_range: tuple[int, int] | None = None
     if args.fmt_line_range:
         if ":" not in args.fmt_line_range:
@@ -3437,6 +3517,7 @@ def main() -> None:
                 line_range=line_range,
                 use_stdin=args.use_stdin,
                 use_stdout=args.use_stdout,
+                use_diff_range=args.use_diff_range,
             )
         except FmtException as ex:
             if filepath:

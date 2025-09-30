@@ -42,6 +42,8 @@ Install emacs-mcp-stdio.sh to `mcp-server-lib-install-directory'." t)
 Remove installed emacs-mcp-stdio.sh from `mcp-server-lib-install-directory'." t)
 (autoload 'mcp-server-lib-reset-metrics "mcp-server-lib-commands" "\
 Reset all metrics." t)
+(autoload 'mcp-server-lib-describe-setup "mcp-server-lib-commands" "\
+Show the current MCP server setup including registered tools and resources." t)
 (autoload 'mcp-server-lib-show-metrics "mcp-server-lib-commands" "\
 Display metrics in a buffer." t)
 (register-definition-prefixes "mcp-server-lib-commands" '("mcp-server-lib--"))

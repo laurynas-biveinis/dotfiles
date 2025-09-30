@@ -1,10 +1,10 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "vterm" "20241218.331"
+(define-package "vterm" "20250929.1514"
   "Fully-featured terminal emulator."
   '((emacs "25.1"))
   :url "https://github.com/akermu/emacs-libvterm"
-  :commit "f64729ed8b59e46ce827d28222c4087c538de562"
-  :revdesc "f64729ed8b59"
+  :commit "adf8d10212d15f9bd5ca62b96c7b423be02ce3c4"
+  :revdesc "adf8d10212d1"
   :keywords '("terminals")
   :authors '(("Lukas Fürmetz" . "fuermetz@mailbox.org"))
   :maintainers '(("Lukas Fürmetz" . "fuermetz@mailbox.org")))
