@@ -34,5 +34,6 @@ jobs:
           VALIDATE_ANSIBLE: false
           VALIDATE_GIT_COMMITLINT: false
           VALIDATE_PYTHON_PYINK: false
+          VALIDATE_PYTHON_RUFF_FORMAT: false
           # Until https://github.com/kucherenko/jscpd/issues/737 is fixed
           VALIDATE_JSCPD: false
