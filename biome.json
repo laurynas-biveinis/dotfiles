@@ -1,12 +1,16 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
-	"files": {
-		"includes": [
-			"**",
-			"!emacs/.emacs.d/elpa",
-			"!**/.mypy_cache",
-			"!ai/.claude",
-			"!.claude"
-		]
-	}
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!emacs/.emacs.d/elpa",
+      "!**/.mypy_cache",
+      "!ai/.claude",
+      "!.claude"
+    ]
+  }
 }

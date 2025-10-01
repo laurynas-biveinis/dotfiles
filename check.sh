@@ -6,6 +6,7 @@ set -eu -o pipefail
 
 readonly SHELL_FILES=(check.sh)
 readonly PYTHON_FILES=(ai/.claude/hooks/*.py)
+readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 
 ERRORS=0
 SHELL_SYNTAX_FAILED=0
@@ -116,8 +117,8 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
-echo -n "Checking JSON formatting... ai/.claude/settings.json "
-if prettier --log-level warn --check ai/.claude/settings.json; then
+echo -n "Checking JSON formatting... ${JSON_FILES[*]} "
+if prettier --log-level warn --check "${JSON_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "prettier check failed!"
