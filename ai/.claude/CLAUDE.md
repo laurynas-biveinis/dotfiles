@@ -4,6 +4,37 @@ This file provides guidance to you, Claude Code, when working with any
 repositories owned by the user. There will be project-specific CLAUDE.md files
 that will provide project-specific guidance.
 
+## Task management
+
+You have access to an `org-mcp` MCP server that provides access to the selected
+Org files in user's running Emacs. They serve both the user and you, the agent,
+and implement Getting Things Done (GTD) system as follows:
+
+- Immediate next actions available for execution are in the `TODO` state.
+- Actions blocked by the dependencies are in the `WAIT` state.
+- Completed actions are in `DONE` state and abandoned ones are in `KILL` state.
+- All actions have an execution context. An action delegated to someone else is
+  tagged with `@waitingfor`. For your own actions, always use `@internet` unless
+  instructed otherwise.
+- A project is any outcome that needs more than one action to be achieved. A
+  project is tagged with `project` tag and contains actions as children.
+- All actions and projects may have any support text material (i.e. reference
+  links, implementation details) in their bodies.
+
+Use these Org files as your working memory and todo system. To decide between
+TodoWrite and Org, ask: "If the session ends now, does the user need to remember
+this?" If no, use TodoWrite (e.g., "run formatter", "check syntax"). If yes, use
+Org (e.g., "fix bug in module X", "implement feature Y").
+
+When you write new items in Org, make them brief but understandable for the
+user. Update Org task states as work progresses (`TODO` to `DONE` on completion,
+`WAIT` to `TODO` on unblocking).
+
+If `org-mcp` MCP server is unavailable at the start of the session, work as you
+would without it. Assume the user is aware of its unavailability. However, if
+the server disappears in the middle of a session, stop and ask the user for
+guidance.
+
 ## Domain Specific Memory Extensions
 
 For code written in each of the following languages, include these files in
