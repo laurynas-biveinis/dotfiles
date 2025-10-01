@@ -443,6 +443,7 @@ xattr -dr com.apple.quarantine "/Applications/Last.fm.app/"
 
 duti -s jp.tmkk.XLD .cue all
 npm i -g bash-language-server prettier textlint jscpd
+npx @biomejs/biome init
 brew tap homebrew/command-not-found
 # Play
 brew install mono
