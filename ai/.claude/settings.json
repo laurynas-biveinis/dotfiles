@@ -21,7 +21,6 @@
       "WebFetch(domain:raw.githubusercontent.com)"
     ]
   },
-  "model": "opus",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "PreToolUse": [
@@ -70,5 +69,6 @@
         ]
       }
     ]
-  }
+  },
+  "alwaysThinkingEnabled": true
 }
