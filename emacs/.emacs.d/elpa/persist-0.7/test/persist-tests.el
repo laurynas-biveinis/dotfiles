@@ -15,7 +15,7 @@
    (let ((persist--symbols nil)
          (sym (cl-gensym)))
      (persist-symbol sym 10)
-     (seq-contains persist--symbols sym))))
+     (seq-contains-p persist--symbols sym))))
 
 (ert-deftest test-persist-save-only-persistant ()
   ;; do not save not persist variables
@@ -108,6 +108,12 @@
    (should (= 20
               (persist-default 'test-persist-variable)))))
 
+(ert-deftest test-persist-default-set-to-initvalue ()
+  (persist-defvar test-persist-variable-default 'INIT "Docstring.")
+  (setq test-persist-variable-default 'CHANGED)
+  (persist-defvar test-persist-variable-default 'INIT "Docstring.")
+  (should (equal 'INIT (persist-default 'test-persist-variable-default))))
+
 (ert-deftest test-persist-location ()
   (unwind-protect
       (let ((sym (cl-gensym)))
@@ -137,10 +143,17 @@
 
 (ert-deftest test-persist-reset ()
   "Symbol should be reset to a copy of the default."
-  (with-local-temp-persist
-   (persist-defvar persist--test-reset-variable (make-hash-table) "docstring")
-   (should-not (eq persist--test-reset-variable
-                   (persist-default 'persist--test-reset-variable)))
-   (persist-reset 'persist--test-reset-variable)
-   (should-not (eq persist--test-reset-variable
-                   (persist-default 'persist--test-reset-variable)))))
+  (let ((initial-value (make-hash-table)))
+    (with-local-temp-persist
+     (persist-defvar persist--test-reset-variable initial-value "docstring")
+     (should-not (eq persist--test-reset-variable
+                     (persist-default 'persist--test-reset-variable)))
+     (should-not (eq persist--test-reset-variable initial-value))
+     (should-not (eq initial-value
+                     (persist-default 'persist--test-reset-variable)))
+     (persist-reset 'persist--test-reset-variable)
+     (should-not (eq persist--test-reset-variable
+                     (persist-default 'persist--test-reset-variable)))
+     (should-not (eq persist--test-reset-variable initial-value))
+     (should-not (eq initial-value
+                     (persist-default 'persist--test-reset-variable))))))

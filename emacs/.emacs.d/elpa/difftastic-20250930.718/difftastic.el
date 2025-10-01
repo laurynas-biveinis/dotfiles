@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250801.1425
-;; Package-Revision: d149a37c93d4
+;; Package-Version: 20250930.718
+;; Package-Revision: 63d31f62617d
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -1723,17 +1723,27 @@ Utilise `difftastic--ansi-color-add-background-cache' to cache
             difftastic--ansi-color-add-background-cache)
       face)))
 
+(defun difftastic--override-binary-available-p ()
+  "Return non-nil when \\='--override-binary\\=' argument is supported."
+  (save-match-data
+    (version<= "0.65" (difftastic--get-version))))
+
 (defun difftastic--transient-arguments-to-difftastic (args)
   "Convert ARGS from transient format to a difftastic one."
   (apply #'append
          (mapcar (lambda (arg)
-                   (if (and (listp arg)
-                            (equal "--override=" (car arg)))
+                   (if-let* ((argument (car-safe arg))
+                             ((member argument '("--override="
+                                                 "--override-binary="))))
                        (mapcar (lambda (lang)
-                                 (concat "--override=" lang))
+                                 (concat argument lang))
                                (cdr arg))
                      (list arg)))
-                 args)))
+                 (if (difftastic--override-binary-available-p)
+                     args
+                   (cl-remove-if (lambda (arg)
+                                   (equal (car-safe arg) "--override-binary="))
+                                 args)))))
 
 (defun difftastic--args-or-saved (difftastic-args)
   "Return DIFFTASTIC-ARGS or arguments saved in `transient' state.
@@ -2006,6 +2016,22 @@ argument extracted from ARGS with the one from DIFFTASTIC-ARGS."
                    (string-match-p "^ \\*" line))
                  (process-lines difftastic-executable "--list-languages"))))
 
+(defun difftastic--get-version ()
+  "Return version of difftastic binary."
+  (or
+   (car-safe
+    (delq nil
+          (mapcar (lambda (line)
+                    (when (string-match
+                           (rx string-start "Difftastic "
+                               (group (one-or-more digit)
+                                      (zero-or-more
+                                       (seq "." (one-or-more digit)))))
+                           line)
+                      (match-string 1 line)))
+                  (process-lines difftastic-executable "--version"))))
+   "0"))
+
 (defclass difftastic--extra-arguments-prefix (transient-prefix)
   ())
 
@@ -2069,69 +2095,87 @@ functions to read language overrides."
      initial-input
      history)))
 
-(defun difftastic--extra-arguments-override-prompt (_obj)
-  "Return a prompt for `difftastic--extra-arguments-override-infix'."
+(defun difftastic--extra-arguments-override-language-prompt (_obj)
+  "Return a prompt for `difftastic--extra-arguments-override-language-infix'."
   (with-temp-buffer
     (let ((overriding-local-map crm-local-completion-map))
       (concat
-       "Comma separated list of glob:language, type "
+       "Comma separated list of GLOB:LANGUAGE, type "
        (substitute-command-keys "\\[crm-complete]")
        " for languages: "))))
 
 (defun difftastic--extra-arguments-override-init-value (obj)
-  "Initialize value of override OBJ with language override from `transient-scope'.
-When the language override is a string, use it with * glob pattern.
-Otherwise, when the language override is a list use it removing
-\\='--override\\=' prefix from each element."
+  "Initialize transient value of an override OBJ.
+Prefer an override from `difftasitc--metadata', and lastly from
+`difftastic--with-extra-arguments'."
+  (oset obj value
+        (if-let* ((metadata (alist-get 'difftastic-args difftastic--metadata)))
+            (delq
+             nil
+             (mapcar
+              (lambda (arg)
+                (when (string-match (rx string-start
+                                        (or "--override="
+                                            "--override-binary=")
+                                        (group (one-or-more any)))
+                                    arg)
+                  (match-string 1 arg)))
+              metadata))
+          (cdr (cl-find-if (lambda (arg)
+                             (member (car-safe arg) '("--override="
+                                                      "--override-binary=")))
+                           (alist-get 'difftastic--with-extra-arguments
+                                      transient-values))))))
+
+(defun difftastic--extra-arguments-override-language-init-value (obj)
+  "Initialize transient value of language override OBJ.
+Prefer a language override from `transient-scope', then from
+`difftasitc--metadata', and lastly from
+`difftastic--with-extra-arguments'."
   (if-let* ((lang-override (car (transient-scope))))
       (oset obj value (if (stringp lang-override)
                           (list (format "*:%s" lang-override))
                         (mapcar (lambda (o)
                                   (string-remove-prefix "--override=" o))
                                 lang-override)))
-    (oset obj value
-          (if-let* ((metadata (alist-get 'difftastic-args difftastic--metadata)))
-              (delq
-               nil
-               (mapcar
-                (lambda (arg)
-                  (when (string-match (rx string-start
-                                          "--override="
-                                          (group (one-or-more any)))
-                                      arg)
-                    (match-string 1 arg)))
-                metadata))
-            (cdr (cl-find-if (lambda (arg)
-                               (and (listp arg)
-                                    (equal "--override=" (car arg))))
-                             (alist-get 'difftastic--with-extra-arguments
-                                        transient-values)))))))
+    (difftastic--extra-arguments-override-init-value obj)))
 
 (cl-defmethod transient-init-value ((obj difftastic--extra-arguments-prefix))
   "Set default values in OBJ from `difftastic-metadata'.
 The \\='--override\\=' argument is handled in
-`difftastic--extra-arguments-override-init-value', which see."
+`difftastic--extra-arguments-override-language-init-value' (which see),
+while the \\='--override-binary\\=' is handled in
+`difftastic--extra-arguments-override-init-value' (which see)."
   (oset obj value
         (cl-remove-if (lambda (arg)
                         (pcase arg
                           ((pred stringp)
                            (string-match (rx string-start
-                                             "--override=")
+                                             (or "--override="
+                                                 "--override-binary="))
                                          arg))
                           ((pred listp)
-                           (equal "--override=" (car arg)))))
+                           (member (car arg) '("--override="
+                                               "--override-binary=")))))
                       (or
                        (alist-get 'difftastic-args difftastic--metadata)
                        (alist-get 'difftastic--with-extra-arguments
                                   transient-values)))))
 
-(transient-define-infix difftastic--extra-arguments-override-infix ()
-  :prompt #'difftastic--extra-arguments-override-prompt
+(transient-define-infix difftastic--extra-arguments-override-language-infix ()
+  :prompt #'difftastic--extra-arguments-override-language-prompt
   :multi-value t
   :class 'transient-option
   :reader #'difftastic--extra-arguments-read-overrides
   :argument "--override="
-  :init-value #'difftastic--extra-arguments-override-init-value)
+  :init-value #'difftastic--extra-arguments-override-language-init-value)
+
+(transient-define-infix difftastic--extra-arguments-override-binary-infix ()
+  :prompt "Comma separated list of GLOB: "
+  :if #'difftastic--override-binary-available-p
+  :multi-value t
+  :class 'transient-option
+  :argument "--override-binary=")
 
 (defun difftastic--extra-arguments-call-command-description ()
   "Return description for call command suffix."
@@ -2167,7 +2211,10 @@ The LANG-OVERRIDE will be used to initialize language overrides."
   :class 'difftastic--extra-arguments-prefix
   :man-page "difft"
   ["Difftastic arguments"
-   ("-o" "language overrides" difftastic--extra-arguments-override-infix)
+   ("-l" "language overrides"
+    difftastic--extra-arguments-override-language-infix)
+   ("-b" "binary overrides"
+    difftastic--extra-arguments-override-binary-infix)
    ("-s" "strip cr" "--strip-cr="
     :choices ("on" "off"))
    ("-c" "context" "--context="

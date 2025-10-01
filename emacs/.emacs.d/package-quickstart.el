@@ -7395,7 +7395,7 @@ Shortcuts             Command Name
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.6.1/persist-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.6.1/persist-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.7/persist-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/persist-0.7/persist-autoloads.el"))
 
 
 
@@ -9179,7 +9179,7 @@ Mark the item (a task or a project) at point as done.")
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250929.728/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250929.728/mcp-server-lib-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250930.1506/mcp-server-lib-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-server-lib-20250930.1506/mcp-server-lib-autoloads.el"))
 
 
 
@@ -9234,148 +9234,6 @@ Display metrics in a buffer." t)
 
 
 (provide 'mcp-server-lib-autoloads)
-
-
-)
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/mcp-20250928.1200/mcp-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/mcp-20250928.1200/mcp-autoloads.el"))
-
-
-
-(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
-
-
-
-
-(autoload 'mcp-connect-server "mcp" "\
-Connect to an MCP server with NAME, COMMAND, and ARGS or URL.
-
-NAME is a string representing the name of the server.
-COMMAND is a string representing the command to start the server
-in stdio mcp server.
-ARGS is a list of arguments to pass to the COMMAND.
-URL is a string arguments to connect sse mcp server.
-ENV is a plist argument to set mcp server env.
-
-TOKEN is a string.
-Authentication token used when connecting to an HTTP MCP server.
-
-HEADERS is a alist.
-Additional HTTP headers to include when connecting via URL.
-
-INITIAL-CALLBACK is a function called when the server completes
-the connection.
-TOOLS-CALLBACK is a function called to handle the list of tools
-provided by the server.
-PROMPTS-CALLBACK is a function called to handle the list of prompts
-provided by the server.
-RESOURCES-CALLBACK is a function called to handle the list of
-resources provided by the server.
-RESOURCES-TEMPLATES-CALLBACK is a function called to handle the list of
-resources-templates provided by the server.
-ERROR-CALLBACK is a function to call on error.
-SYNCP specifies if the operation should be synchronous or asynchronous.
-
-This function creates a new process for the server, initializes a connection,
-and sends an initialization message to the server.  The connection is stored
-in the `mcp-server-connections` hash table for future reference.
-
-(fn NAME &key COMMAND ARGS URL ENV TOKEN HEADERS INITIAL-CALLBACK TOOLS-CALLBACK PROMPTS-CALLBACK RESOURCES-CALLBACK RESOURCES-TEMPLATES-CALLBACK ERROR-CALLBACK SYNCP)")
-(autoload 'mcp-stop-server "mcp" "\
-Stop the MCP server with the given NAME.
-If the server is running, it will be shutdown and its connection will be removed
-from `mcp-server-connections'. If no server with the given NAME is found,
-a message will be displayed indicating that the server is not running.
-
-(fn NAME)")
-(autoload 'mcp-make-text-tool "mcp" "\
-Create a `gptel' tool with the given NAME, TOOL-NAME, and ASYNCP.
-
-NAME is the name of the server connection.
-TOOL-NAME is the name of the tool to be created.
-
-Currently, only synchronous messages are supported.
-
-This function retrieves the tool definition from the server connection,
-constructs a basic tool with the appropriate properties, and returns it.
-The tool is configured to handle input arguments, call the server, and process
-the response to extract and return text content.
-
-(fn NAME TOOL-NAME &optional ASYNCP)")
-(register-definition-prefixes "mcp" '("mcp-"))
-
-
-
-(autoload 'mcp-hub-get-all-tool "mcp-hub" "\
-Retrieve all available tools from connected MCP servers.
-This function collects all tools from currently connected MCP servers,
-filtering out any invalid entries. Each tool is created as a text tool
-that can be used for interaction.
-
-When ASYNCP is non-nil, the tools will be created asynchronously.
-
-When CATEGORYP is non-nil, the tools will be add to a category.
-
-Returns a list of text tools created from all valid tools across all
-connected servers. The list excludes any tools that couldn't be created
-due to missing or invalid names.
-
-Example:
-  (mcp-hub-get-all-tool)  ; Get all tools synchronously
-  (mcp-hub-get-all-tool t)  ; Get all tools asynchronously
-
-(fn &key ASYNCP CATEGORYP)")
-(autoload 'mcp-hub-start-all-server "mcp-hub" "\
-Start all configured MCP servers.
-This function will attempt to start each server listed in `mcp-hub-servers'
-if it's not already running.
-
-Optional argument CALLBACK is a function to be called when all servers have
-either started successfully or failed to start.The callback receives no
-arguments.
-
-Optional argument SERVERS is a list of server names (strings) to filter which
-servers should be started. When nil, all configured servers are considered.
-
-Optional argument SYNCP is a boolean. When non-nil, the servers are
-started synchronously.
-
-(fn &optional CALLBACK SERVERS SYNCP)" t)
-(autoload 'mcp-hub-close-all-server "mcp-hub" "\
-Stop all running MCP servers.
-This function will attempt to stop each server listed in `mcp-hub-servers'
-that is currently running." t)
-(autoload 'mcp-hub-restart-all-server "mcp-hub" "\
-Restart all configured MCP servers.
-This function first stops all running servers, then starts them again.
-It's useful for applying configuration changes or recovering from errors." t)
-(autoload 'mcp-hub "mcp-hub" "\
-View mcp hub server.
-Start all server if START is non-nil or if called interactively with a prefix
-argument.
-
-(fn &optional START)" t)
-(autoload 'mcp-hub-start-server "mcp-hub" "\
-Start the currently selected MCP server.
-This function starts the server that is currently highlighted in the *Mcp-Hub*
-buffer. It sets up callbacks for connection status, tools, prompts, and
-resources updates, and refreshes the hub view after starting the server." t)
-(autoload 'mcp-hub-close-server "mcp-hub" "\
-Stop the currently selected MCP server.
-This function stops the server that is currently highlighted in the *Mcp-Hub*
-buffer and updates the hub view to reflect the change in status." t)
-(autoload 'mcp-hub-restart-server "mcp-hub" "\
-Restart the currently selected MCP server.
-This function stops and then starts the server that is currently highlighted
-in the *Mcp-Hub* buffer. It's useful for applying configuration changes or
-recovering from errors." t)
-(autoload 'mcp-hub-view-log "mcp-hub" "\
-View the event log for the currently selected MCP server.
-This function opens a buffer showing the event log for the server that is
-currently highlighted in the *Mcp-Hub* buffer." t)
-(register-definition-prefixes "mcp-hub" '("mcp-hub-"))
-
-
-(provide 'mcp-autoloads)
 
 
 )
@@ -12189,7 +12047,7 @@ it is disabled.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250801.1425/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250801.1425/difftastic-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250930.718/difftastic-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/difftastic-20250930.718/difftastic-autoloads.el"))
 
 
 
@@ -12396,7 +12254,7 @@ don't actually start the search.
 
 
 )
-(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.1.1/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.1.1/cmake-mode-autoloads.el"))
+(let ((load-true-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.1.2/cmake-mode-autoloads.el")(load-file-name "/Users/laurynas/.emacs.d/elpa/cmake-mode-4.1.2/cmake-mode-autoloads.el"))
 
 
 
@@ -12794,15 +12652,15 @@ mode.
 (setq package-activated-list
       (delete-dups
        (append
-        '(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism cond-let llama magit-section magit ghub pr-review deflate plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui org-mcp aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib mcp async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
-        package-activated-list)))
+	'(yasnippet yaml-mode yaml xterm-color xr compat with-editor which-key wgrep wgrep-deadgrep websocket dash s web wakatime-mode vterm queue undo-tree treepy avy ace-window pfuture lv hydra ht posframe cfrs treemacs transient topsy stripe-buffer spinner solarized-theme simple-httpd reformatter shfmt rust-mode f markdown-mode flycheck rustic rich-minority deferred request request-deferred relint pyvenv projectile prism cond-let llama magit-section magit ghub pr-review deflate plantuml-mode persist pcre2el page-break-lines package-lint org-sticky-header emacsql org-roam org-roam-ui org-mcp aio gntp log4e alert noflet kv creole fakir db elnode oauth2-auto org-gcal org-autotask-mcp org-autotask ob-rust mcp-server-lib async hl-todo magit-todos lsp-mode lsp-ui lsp-treemacs keyfreq info-colors indent-bars iedit highlight-indentation grab-mac-link git-modes git-gutter fringe-helper git-gutter-fringe gcmh closql forge flycheck-status-emoji flycheck-google-cpplint fancy-compilation exec-path-from-shell company elpy elisp-lint elisp-dev-mcp elisp-autofmt dispwatch difftastic deadgrep cmake-mode calfw-org calfw-ical calfw bison-mode beginend beacon all-the-icons all-the-icons-dired aggressive-indent)
+	package-activated-list)))
 (progn
   (require 'info)
   (info-initialize)
   (setq Info-directory-list
-        (append
-         '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.6.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-5.0.0" "/Users/laurynas/.emacs.d/elpa/magit-4.4.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.4.0" "/Users/laurynas/.emacs.d/elpa/transient-0.10.0" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.6" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
-         Info-directory-list)))
+	(append
+	 '("/Users/laurynas/.emacs.d/elpa/company-1.0.2" "/Users/laurynas/.emacs.d/elpa/forge-0.6.0" "/Users/laurynas/.emacs.d/elpa/org-roam-2.3.1" "/Users/laurynas/.emacs.d/elpa/ghub-5.0.0" "/Users/laurynas/.emacs.d/elpa/magit-4.4.0" "/Users/laurynas/.emacs.d/elpa/magit-section-4.4.0" "/Users/laurynas/.emacs.d/elpa/transient-0.10.0" "/Users/laurynas/.emacs.d/elpa/dash-20250312.1307" "/Users/laurynas/.emacs.d/elpa/with-editor-3.4.6" "/Users/laurynas/.emacs.d/elpa/compat-30.1.0.1")
+	 Info-directory-list)))
 
 ;; Local Variables:
 ;; version-control: never

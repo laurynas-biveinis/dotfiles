@@ -1,12 +1,12 @@
 ;;; persist.el --- Persist Variables between Emacs Sessions -*- lexical-binding: t -*-
 
-;; Copyright (C) 2019, 2024 Free Software Foundation, Inc.
+;; Copyright (C) 2019, 2024, 2025 Free Software Foundation, Inc.
 
 ;; Author: Phillip Lord <phillip.lord@russet.org.uk>
 ;; Maintainer: Joseph Turner <persist-el@breatheoutbreathe.in>
 ;; Package-Type: multi
-;; Package-Requires: ((emacs "26.1"))
-;; Version: 0.6.1
+;; Package-Requires: ((emacs "26.1") (compat "30.0.2.0"))
+;; Version: 0.7
 
 ;; The contents of this file are subject to the GPL License, Version 3.0.
 
@@ -43,6 +43,8 @@
 
 ;;; Code:
 
+(require 'compat)
+
 (defvar persist--directory-location
   (locate-user-emacs-file "persist")
   "The location of persist directory.")
@@ -64,18 +66,20 @@ variable is not set to the value.")
    (or (get symbol 'persist-location)
        persist--directory-location)))
 
-(defun persist--defvar-1 (symbol location)
+(defun persist--defvar-1 (symbol location initvalue)
   "Set symbol up for persistence."
   (when location
     (persist-location symbol location))
-  (persist-symbol symbol (symbol-value symbol))
+  (persist-symbol symbol initvalue)
   (persist-load symbol))
 
 (defmacro persist-defvar (symbol initvalue docstring &optional location)
   "Define SYMBOL as a persistent variable and return SYMBOL.
 
 This form is nearly equivalent to `defvar', except that the
-variable persists between Emacs sessions.
+variable persists between Emacs sessions.  When this form is
+evaluated, the variable's default value is always set to
+INITVALUE.
 
 It does not support the optional parameters.  Both INITVALUE and
 DOCSTRING need to be given."
@@ -93,9 +97,12 @@ DOCSTRING need to be given."
   ;; Define inside progn so the byte compiler sees defvar
   `(progn
      (defvar ,symbol ,initvalue ,docstring)
-     ;; Access initvalue through its symbol because the defvar form
-     ;; has to stay at first level within a progn
-     (persist--defvar-1 ',symbol ,location)
+     ;; `defvar' must stay at top level within `progn'.  Pass init
+     ;; value to `persist--defvar-1' since the `defvar' form may not
+     ;; set the symbol's value and we don't want to set the
+     ;; persist-default property to the current value of the symbol.
+     ;; See bug#75779 for details.
+     (persist--defvar-1 ',symbol ,location ,initvalue)
      ',symbol))
 
 (defun persist-location (symbol directory)
@@ -211,39 +218,11 @@ tables.  In that case, the following are compared:
              t))
     (equal a b)))
 
-(defun persist-copy-tree (tree &optional vectors-and-records)
-  "Make a copy of TREE.
-If TREE is a cons cell, this recursively copies both its car and its cdr.
-Contrast to `copy-sequence', which copies only along the cdrs.
-With the second argument VECTORS-AND-RECORDS non-nil, this
-traverses and copies vectors and records as well as conses."
-  (declare (side-effect-free error-free))
-  (if (consp tree)
-      (let (result)
-	(while (consp tree)
-	  (let ((newcar (car tree)))
-	    (if (or (consp (car tree))
-                    (and vectors-and-records
-                         (or (vectorp (car tree)) (recordp (car tree)))))
-		(setq newcar (persist-copy-tree (car tree) vectors-and-records)))
-	    (push newcar result))
-	  (setq tree (cdr tree)))
-	(nconc (nreverse result)
-               (if (and vectors-and-records (or (vectorp tree) (recordp tree)))
-                   (persist-copy-tree tree vectors-and-records)
-                 tree)))
-    (if (and vectors-and-records (or (vectorp tree) (recordp tree)))
-	(let ((i (length (setq tree (copy-sequence tree)))))
-	  (while (>= (setq i (1- i)) 0)
-	    (aset tree i (persist-copy-tree (aref tree i) vectors-and-records)))
-	  tree)
-      tree)))
-
 (defun persist-copy (obj)
   "Return copy of OBJ."
   (if (hash-table-p obj)
       (copy-hash-table obj)
-    (persist-copy-tree obj t)))
+    (compat-call copy-tree obj t)))
 
 (provide 'persist)
 ;;; persist.el ends here
