@@ -124,6 +124,22 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+echo -n "Running biome format checker... "
+if npx @biomejs/biome format .; then
+	echo "OK!"
+else
+	echo "biome format check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
+echo -n "Running biome linter... "
+if npx @biomejs/biome lint .; then
+	echo "OK!"
+else
+	echo "biome lint check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
 # Python
 echo -n "Checking Python formatting with black... ${PYTHON_FILES[*]} "
 if black --check "${PYTHON_FILES[@]}" 2>/dev/null; then
