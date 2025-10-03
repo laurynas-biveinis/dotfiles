@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20250929.2241
-;; Package-Revision: 3dd9bc3212fb
+;; Package-Version: 20251002.1141
+;; Package-Revision: 6f5936074bb3
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -1275,7 +1275,11 @@ Argument IS-INTERACTIVE is set when running interactively."
                  (save-restriction
                    (widen)
                    (elisp-autofmt--replace-buffer-contents-fmt-region
-                    buf (car fmt-region-range) (cdr fmt-region-range)))))
+                    stdout-buffer (car fmt-region-range) (cdr fmt-region-range)))))
+            ;; Even though only a small region changed, use logic that re-writes the buffer.
+            (when changed
+              (elisp-autofmt--replace-region-contents-wrapper
+               (point-min) (point-max) stdout-buffer is-interactive))
             (when is-interactive
               (message "elisp-autofmt: %s"
                        (cond
