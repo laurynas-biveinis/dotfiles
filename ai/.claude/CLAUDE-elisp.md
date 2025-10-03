@@ -31,7 +31,8 @@ this and all the newer versions.
 
 ### Symbol-level guidelines
 
-- Prefer named functions to lambdas.
+- Prefer named functions to lambdas always except when lambda must capture
+  variables from the surrounding lexical scope.
 - All symbols must be prefixed with the package name.
 - All internal symbols must finish the package name prefix with a double hyphen.
 - All symbols must have documentation strings.
