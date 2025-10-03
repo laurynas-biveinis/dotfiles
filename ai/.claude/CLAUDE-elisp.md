@@ -8,7 +8,7 @@ global user memory file.
 
 ### Supported versions and compatibility
 
-The oldest supported Emacs version is 27.2. The code must be compatible with
+The oldest supported Emacs version is 27.1. The code must be compatible with
 this and all the newer versions.
 
 ### Operation principles
