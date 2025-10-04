@@ -16,8 +16,8 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; Author: Laurynas Biveinis
-;; Package-Version: 20250912.334
-;; Package-Revision: d14b3e98dd8a
+;; Package-Version: 20251004.1154
+;; Package-Revision: 05bc3ca843eb
 ;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.2.0"))
 ;; Keywords: tools, development
 ;; URL: https://github.com/laurynas-biveinis/elisp-dev-mcp
@@ -45,6 +45,8 @@
   "System Lisp directory for Emacs installation.
 Computed once at package load time from `data-directory'.")
 
+(defconst elisp-dev-mcp--server-id "elisp-dev-mcp"
+  "Server ID for this MCP server.")
 
 ;;; Utility Functions
 
@@ -612,7 +614,9 @@ MCP Parameters:
            (append
             ;; Current package-user-dir
             (when (boundp 'package-user-dir)
-              (list (file-truename (file-name-as-directory package-user-dir))))
+              (list
+               (file-truename
+                (file-name-as-directory package-user-dir))))
             ;; All dirs from package-directory-list
             (mapcar #'file-truename package-directory-list)
             ;; System lisp directory
@@ -620,9 +624,10 @@ MCP Parameters:
               (list (file-truename elisp-dev-mcp--system-lisp-dir)))))
           ;; Check if file is under any allowed directory
           (allowed-p
-           (cl-some (lambda (dir)
-                      (and dir (string-prefix-p dir true-path)))
-                    allowed-dirs)))
+           (cl-some
+            (lambda (dir)
+              (and dir (string-prefix-p dir true-path)))
+            allowed-dirs)))
 
      (unless allowed-p
        (mcp-server-lib-tool-throw
@@ -654,6 +659,7 @@ MCP Parameters:
   (mcp-server-lib-register-tool
    #'elisp-dev-mcp--describe-function
    :id "elisp-describe-function"
+   :server-id elisp-dev-mcp--server-id
    :description
    "Get documentation for an Emacs Lisp function or check if it exists. Returns
 function documentation from the current running Emacs environment, including all
@@ -679,6 +685,7 @@ Error cases:
   (mcp-server-lib-register-tool
    #'elisp-dev-mcp--get-function-definition
    :id "elisp-get-function-definition"
+   :server-id elisp-dev-mcp--server-id
    :description
    "Get the source code definition of an Emacs Lisp function with any header
 comments. Returns source code with file path and 1-based line numbers. For
@@ -709,6 +716,7 @@ Use this tool when you need to:
   (mcp-server-lib-register-tool
    #'elisp-dev-mcp--describe-variable
    :id "elisp-describe-variable"
+   :server-id elisp-dev-mcp--server-id
    :description
    "Get comprehensive information about an Emacs Lisp variable without
 exposing its value. Essential for understanding variable definitions,
@@ -760,6 +768,7 @@ Error cases return error messages for:
   (mcp-server-lib-register-tool
    #'elisp-dev-mcp--info-lookup-symbol
    :id "elisp-info-lookup-symbol"
+   :server-id elisp-dev-mcp--server-id
    :description
    "Look up Elisp symbols in Info documentation and return the complete
 documentation node. Returns the full content of the Info node containing
@@ -801,6 +810,7 @@ Error cases:
   (mcp-server-lib-register-tool
    #'elisp-dev-mcp--read-source-file
    :id "elisp-read-source-file"
+   :server-id elisp-dev-mcp--server-id
    :description
    "Read Elisp source files from Emacs system directories or ELPA packages.
 Designed to work with paths returned by other elisp-dev tools.
@@ -832,11 +842,16 @@ Error cases:
 ;;;###autoload
 (defun elisp-dev-mcp-disable ()
   "Disable the Elisp development MCP tools."
-  (mcp-server-lib-unregister-tool "elisp-describe-function")
-  (mcp-server-lib-unregister-tool "elisp-get-function-definition")
-  (mcp-server-lib-unregister-tool "elisp-describe-variable")
-  (mcp-server-lib-unregister-tool "elisp-info-lookup-symbol")
-  (mcp-server-lib-unregister-tool "elisp-read-source-file"))
+  (mcp-server-lib-unregister-tool
+   "elisp-describe-function" elisp-dev-mcp--server-id)
+  (mcp-server-lib-unregister-tool
+   "elisp-get-function-definition" elisp-dev-mcp--server-id)
+  (mcp-server-lib-unregister-tool
+   "elisp-describe-variable" elisp-dev-mcp--server-id)
+  (mcp-server-lib-unregister-tool
+   "elisp-info-lookup-symbol" elisp-dev-mcp--server-id)
+  (mcp-server-lib-unregister-tool
+   "elisp-read-source-file" elisp-dev-mcp--server-id))
 
 (provide 'elisp-dev-mcp)
 ;;; elisp-dev-mcp.el ends here
