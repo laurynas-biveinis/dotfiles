@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20251003.644
-;; Package-Revision: 96e08b6ccf1a
+;; Package-Version: 20251005.939
+;; Package-Revision: 82d8655498f3
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -322,14 +322,16 @@ Extracts parameter descriptions from the docstring if available."
 (defun mcp-server-lib--ref-counted-register (key item table)
   "Register ITEM with KEY in TABLE with reference counting.
 If KEY already exists, increment its reference count.
-Otherwise, add ITEM to TABLE with :ref-count 1."
+Otherwise, add ITEM to TABLE with :ref-count 1.
+Returns nil."
   (if-let* ((existing (gethash key table)))
     ;; Item already exists - increment ref count
     (let ((ref-count (or (plist-get existing :ref-count) 1)))
       (plist-put existing :ref-count (1+ ref-count)))
     ;; New item - ensure it has ref-count = 1
     (plist-put item :ref-count 1)
-    (puthash key item table)))
+    (puthash key item table))
+  nil)
 
 (defun mcp-server-lib--ref-counted-unregister (key table)
   "Unregister item with KEY from TABLE using reference counting.
