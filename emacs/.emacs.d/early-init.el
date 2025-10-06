@@ -64,6 +64,10 @@
 ;; the paths actually match on my machines. This might change in the future.
 (setq package-quickstart t)
 
+;; Manual package initialization in init.el to populate `package-alist' for
+;; `package-vc-install-selected-packages'.
+(setq package-enable-at-startup nil)
+
 ;; melpa-stable is higher priority than melpa because I always prefer stable
 ;; package versions. Unfortunately, the majority of package maintainers neglect
 ;; melpa-stable or ignore it completely.

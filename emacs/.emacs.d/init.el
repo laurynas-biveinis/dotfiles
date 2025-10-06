@@ -23,7 +23,10 @@
 (load custom-file)
 
 ;; On a new system, ensures that VC-selected packages are installed too.
-;; TODO(laurynas): do not ask to overwrite existing packages on Emacs restarts.
+;; With `package-quickstart' enabled, `package-alist' is not populated until
+;; `package-initialize' is called. Without it, `package-vc-install-selected-packages'
+;; cannot detect already-installed VC packages and prompts to overwrite them.
+(package-initialize)
 (package-vc-install-selected-packages)
 
 ;; The absence of secret files is not an error, but the user needs to be
