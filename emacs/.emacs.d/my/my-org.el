@@ -259,6 +259,12 @@ event of an error or nonlocal exit."
               (org-todo "TODO")))))))
 (add-hook 'org-checkbox-statistics-hook #'dotfiles--checkbox-list-complete)
 
+(defun org-dblock-write:filecount (params)
+  "Write a dynamic block that counts files in a :dir from PARAMS."
+  (let ((dir (plist-get params :dir)))
+    (insert (format "Files in %s: %d" dir
+                    (- (length (directory-files dir)) 2)))))
+
 ;;; `org-roam'
 (when my-zettelkasten-p
   (progn
