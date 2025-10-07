@@ -139,15 +139,15 @@
      (elisp-lint-indent-specs
       (org-mcp-test--with-enabled . defun))
      (eval and buffer-file-name
-           (not
-            (eq major-mode 'package-recipe-mode))
-           (or
-            (require 'package-recipe-mode nil t)
-            (let
-                ((load-path
-                  (cons "../package-build" load-path)))
-              (require 'package-recipe-mode nil t)))
-           (package-recipe-mode))
+	   (not
+	    (eq major-mode 'package-recipe-mode))
+	   (or
+	    (require 'package-recipe-mode nil t)
+	    (let
+		((load-path
+		  (cons "../package-build" load-path)))
+	      (require 'package-recipe-mode nil t)))
+	   (package-recipe-mode))
      (elisp-lint-ignored-validators "checkdoc")
      (elisp-lint-indent-specs
       (org-autotask-with-org-node-with-url . 1)
@@ -163,15 +163,15 @@
      (magit-todos-exclude-globs "emacs/.emacs.d/abbrev_defs" "emacs/.emacs.d/elpa/*" "zsh/.p10k.zsh")
      (org-emphasis-alist)
      (eval setq-local ispell-personal-dictionary
-           (expand-file-name ".ispell.dict"
-                             (file-name-directory
-                              (let
-                                  ((d
-                                    (dir-locals-find-file "./")))
-                                (if
-                                    (stringp d)
-                                    d
-                                  (car d))))))
+	   (expand-file-name ".ispell.dict"
+			     (file-name-directory
+			      (let
+				  ((d
+				    (dir-locals-find-file "./")))
+				(if
+				    (stringp d)
+				    d
+				  (car d))))))
      (org-fontify-emphasized-text)
      (c-tab-always-indent t)
      (compilation-read-command)
