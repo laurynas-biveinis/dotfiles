@@ -891,32 +891,14 @@
 ;; modeline. Simply adding these string to `rich-minority' settings does not
 ;; appear to work. Maybe because these are major modes.
 
-;; Allow some external images in emails. Uses
+;; Use 'w3m not 'gnus-w3m - the latter calls gnus-article-html which requires a
+;; Gnus article buffer environment and fails silently in mu4e.
+(setq mm-text-html-renderer 'w3m)
 
-(defvar-local dotfiles--mu4e-html-face-cookie nil
-  "Cookie for the current HTML email face remapping.")
+;; `w3m'
+(require 'w3m)
 
-(defun dotfiles--mu4e-html-view-white-background (&optional _ignore)
-  "Set white background for HTML email viewing to match Gmail."
-  ;; Remove any existing remapping first
-  (when dotfiles--mu4e-html-face-cookie
-    (face-remap-remove-relative dotfiles--mu4e-html-face-cookie)
-    (setq dotfiles--mu4e-html-face-cookie nil))
-  ;; Add new remapping if currently displaying HTML content
-  (when (save-excursion
-          (goto-char (point-min))
-          (text-property-search-forward 'face 'shr-text t))
-    (setq dotfiles--mu4e-html-face-cookie
-          (face-remap-add-relative 'default
-                                   :background "white"
-                                   :foreground "black"))))
-
-(add-hook 'mu4e-view-rendered-hook
-          #'dotfiles--mu4e-html-view-white-background)
-
-;; Also update background when toggling MIME parts (text/html ↔ text/plain)
-(advice-add 'gnus-mime-display-alternative :after
-            #'dotfiles--mu4e-html-view-white-background)
+(setq w3m-default-display-inline-images t)
 
 (require 'gnus-art)
 
@@ -1169,6 +1151,7 @@ Having multiple matching automation rules for the same email is an error.")
                             deadgrep-visit-result-other-window fill-paragraph
                             beginning-of-buffer xwidget-webkit-scroll-down-line
                             lsp-format-buffer mouse-set-region shr-browse-url
+                            w3m-view-this-url
                             mu4e-search-maildir company-complete-selection
                             beginend-magit-status-mode-goto-beginning
                             mu4e~headers-quit-buffer org-shifttab magit-refresh
