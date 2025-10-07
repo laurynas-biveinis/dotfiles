@@ -882,7 +882,7 @@
 (add-hook 'mu4e-thread-mode-hook #'mu4e-thread-fold-apply-all)
 (setq mu4e-search-include-related nil)
 (setq mu4e-eldoc-support t)
-;; TODO(laurynas): make window background white for HTML emails to match GMail?
+
 ;; TODO(laurynas): iCalendar support
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html)
 ;; TODO(laurynas): `dired' integration
@@ -892,6 +892,31 @@
 ;; appear to work. Maybe because these are major modes.
 
 ;; Allow some external images in emails. Uses
+
+(defvar-local dotfiles--mu4e-html-face-cookie nil
+  "Cookie for the current HTML email face remapping.")
+
+(defun dotfiles--mu4e-html-view-white-background (&optional _ignore)
+  "Set white background for HTML email viewing to match Gmail."
+  ;; Remove any existing remapping first
+  (when dotfiles--mu4e-html-face-cookie
+    (face-remap-remove-relative dotfiles--mu4e-html-face-cookie)
+    (setq dotfiles--mu4e-html-face-cookie nil))
+  ;; Add new remapping if currently displaying HTML content
+  (when (save-excursion
+          (goto-char (point-min))
+          (text-property-search-forward 'face 'shr-text t))
+    (setq dotfiles--mu4e-html-face-cookie
+          (face-remap-add-relative 'default
+                                   :background "white"
+                                   :foreground "black"))))
+
+(add-hook 'mu4e-view-rendered-hook
+          #'dotfiles--mu4e-html-view-white-background)
+
+;; Also update background when toggling MIME parts (text/html ↔ text/plain)
+(advice-add 'gnus-mime-display-alternative :after
+            #'dotfiles--mu4e-html-view-white-background)
 
 (require 'gnus-art)
 
