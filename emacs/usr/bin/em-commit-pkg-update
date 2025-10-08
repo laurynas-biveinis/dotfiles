@@ -2,14 +2,21 @@
 
 set -euo pipefail
 
-pushd $DOTFILES_ROOT || exit
+pushd "$DOTFILES_ROOT" || exit
 
-# Must be no changes outside Emacs ELPA
-# TODO(laurynas): check that changes in elisp exist
-git_status=$(git status -s -u -- ':!emacs/.emacs.d/')
-readonly git_status
-if [ -n "$git_status" ]; then
-    echo "Cannot commit Emacs package metadata update: changes outside emacs"
+# Must be no changes outside elpa directory
+non_elpa_status=$(git status -s -u -- ':!emacs/.emacs.d/elpa')
+readonly non_elpa_status
+if [ -n "$non_elpa_status" ]; then
+    echo "Cannot commit Emacs package update: changes found outside emacs/.emacs.d/elpa/"
+    exit 1
+fi
+
+# Must have changes in elpa directory
+elpa_status=$(git status -s -u -- 'emacs/.emacs.d/elpa')
+readonly elpa_status
+if [ -z "$elpa_status" ]; then
+    echo "Cannot commit Emacs package update: no changes found in emacs/.emacs.d/elpa/"
     exit 1
 fi
 git add --all

@@ -2,14 +2,31 @@
 
 set -euo pipefail
 
-pushd $DOTFILES_ROOT || exit
+pushd "$DOTFILES_ROOT" || exit
 
-# Must be no changes outside Emacs ELPA
-# TODO(laurynas): check that no changes in elisp
-git_status=$(git status -s -u -- ':!emacs/.emacs.d/elpa')
-readonly git_status
-if [ -n "$git_status" ]; then
-    echo "Cannot commit Emacs package metadata update: changes outside emacs"
+# Must be no changes outside elpa directory
+non_elpa_status=$(git status -s -u -- ':!emacs/.emacs.d/elpa')
+readonly non_elpa_status
+if [ -n "$non_elpa_status" ]; then
+    echo "Cannot commit Emacs package metadata update: changes found outside emacs/.emacs.d/elpa/"
+    exit 1
+fi
+
+# Must be no changes in elisp files (source or compiled)
+# Note: .el and .elc files should only exist within package subdirectories, not
+# in the top-level elpa directory itself, so **/*.el and **/*.elc are sufficient
+elisp_status=$(git status -s -u -- 'emacs/.emacs.d/elpa/**/*.el' 'emacs/.emacs.d/elpa/**/*.elc')
+readonly elisp_status
+if [ -n "$elisp_status" ]; then
+    echo "Cannot commit Emacs package metadata update: changes found in .el or .elc files in emacs/.emacs.d/elpa/"
+    exit 1
+fi
+
+# Must have changes in elpa directory
+elpa_status=$(git status -s -u -- 'emacs/.emacs.d/elpa')
+readonly elpa_status
+if [ -z "$elpa_status" ]; then
+    echo "Cannot commit Emacs package metadata update: no changes found in emacs/.emacs.d/elpa/"
     exit 1
 fi
 git add --all
