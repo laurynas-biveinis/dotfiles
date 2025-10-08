@@ -3,7 +3,9 @@ emacs/.emacs.d/elpa/vterm-*/build/
 emacs/.emacs.d/elpa/vterm-*/vterm-module.so
 emacs/.emacs.d/elpa/tree-sitter-langs-*/bin/
 emacs/.emacs.d/elpa/tsc-*/tsc-dyn.dylib
-/emacs/.emacs.d/elpa/emacsql-sqlite-3.1.1/sqlite/emacsql-sqlite
+emacs/.emacs.d/elpa/emacsql-sqlite-3.1.1/sqlite/emacsql-sqlite
+emacs/.emacs.d/package-quickstart.el
+emacs/.emacs.d/package-quickstart.elc
 /scripts/usr/lib/python/__pycache__/
 /.projectile-cache.eld
 /.claude/

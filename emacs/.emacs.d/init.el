@@ -22,11 +22,24 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
-;; On a new system, ensures that VC-selected packages are installed too.
-;; With `package-quickstart' enabled, `package-alist' is not populated until
-;; `package-initialize' is called. Without it, `package-vc-install-selected-packages'
-;; cannot detect already-installed VC packages and prompts to overwrite them.
+;; Auto-regenerate package-quickstart if missing. Do this BEFORE initialization
+;; so it can be used immediately rather than on next startup.
+(when (and package-quickstart
+           (not (file-exists-p package-quickstart-file)))
+  (message "Generating missing package-quickstart.el...")
+  ;; package-quickstart-refresh requires package-alist to be populated
+  (package-initialize)
+  (package-quickstart-refresh))
+
+;; Initialize packages to populate `package-alist'. On a new system, this
+;; ensures that VC-selected packages are installed too. Without `package-alist'
+;; populated, `package-vc-install-selected-packages' cannot detect
+;; already-installed VC packages and prompts to overwrite them.
+;;
+;; `package-initialize' is idempotent (it may have been called above when
+;; regenerating the quickstart file).
 (package-initialize)
+
 (package-vc-install-selected-packages)
 
 ;; The absence of secret files is not an error, but the user needs to be
