@@ -334,7 +334,7 @@
   (org-autotask-require-org-clock)
   (let ((path (dotfiles--magit-worktree-branch)))
     (projectile-add-known-project path)
-    ;; TODO(laurynas): make `prijectile' initialize its file cache. My previous
+    ;; TODO(laurynas): make `projectile' initialize its file cache. My previous
     ;; attempt by (projectile-project-files path) initialized the cache, but the
     ;; next access would initialize it again.
     ;; TODO(laurynas): install https://github.com/magit/orgit, add a property
