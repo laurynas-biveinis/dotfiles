@@ -26,6 +26,10 @@ TodoWrite and Org, ask: "If the session ends now, does the user need to remember
 this?" If no, use TodoWrite (e.g., "run formatter", "check syntax"). If yes, use
 Org (e.g., "fix bug in module X", "implement feature Y").
 
+When familiarizing with Org file content, avoid reading complete files, unless
+explicitly instructed to do so. Start by reading their outlines, then requesting
+full content for the outline items of interest.
+
 When you write new items in Org, make them brief but understandable for the
 user. Update Org task states as work progresses (`TODO` to `DONE` on completion,
 `WAIT` to `TODO` on unblocking).
