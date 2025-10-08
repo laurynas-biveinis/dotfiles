@@ -989,8 +989,6 @@ Having multiple matching automation rules for the same email is an error.")
 (add-hook 'message-mode-hook #'dotfiles--message-mode-hook)
 
 ;; `mml'
-;; TODO(laurynas): this one is new in 29.1. Confirm that it has effect in
-;; `mu4e'.
 (setq mml-attach-file-at-the-end t)
 
 ;; `sendmail'
