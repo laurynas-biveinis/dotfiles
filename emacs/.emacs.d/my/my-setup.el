@@ -853,6 +853,28 @@
 (add-to-list 'display-buffer-alist
              `(,(regexp-quote mu4e-main-buffer-name)
                display-buffer-same-window))
+
+;; Force mu4e view/article buffers to always split from the headers window,
+;; not from whatever window happens to be selected (e.g., after refiling).
+;; This fixes window layout issues when navigating between messages with "r".
+(defun dotfiles--display-mu4e-view-below-headers (buffer alist)
+  "Display BUFFER below the mu4e headers window.
+Custom display action function that finds the *mu4e-headers* window
+and splits it below, regardless of which window is currently selected.
+Returns the new window if successful, nil otherwise."
+  (when-let* ((headers-win (get-buffer-window "*mu4e-headers*"))
+              (new-win (condition-case nil
+                           (split-window-below nil headers-win)
+                         (error nil))))
+    (set-window-buffer new-win buffer)
+    (display-buffer-record-window 'window new-win buffer)
+    new-win))
+
+(add-to-list 'display-buffer-alist
+             '("\\*mu4e-\\(view\\|article\\)\\*"
+               (display-buffer-reuse-window
+                dotfiles--display-mu4e-view-below-headers)))
+
 (setq mu4e-mu-binary (executable-find "mu"))
 (setq mu4e-get-mail-command (concat (executable-find "mbsync") " -a"))
 ;; If updating the value below, keep in mind that each update takes about 5
