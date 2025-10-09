@@ -906,6 +906,10 @@
 ;; `mu4e-view-mark-for-refile' and sometimes takes precedence.
 (keymap-unset gnus-mime-button-map "r")
 
+;; Bind "v" to open URLs in external browser. w3m's default "M" key is shadowed
+;; by mu4e's `mu4e-view-massage'.
+(define-key mu4e-view-mode-map "v" #'w3m-view-url-with-browse-url)
+
 ;; `dotfiles--mu4e-allowed-image-email-regexps' is defined elsewhere.
 (defun dotfiles--mu4e-block-external-images(&optional _ignore)
   "Decides what external image links to allow.
