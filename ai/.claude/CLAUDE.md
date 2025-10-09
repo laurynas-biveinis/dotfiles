@@ -113,7 +113,9 @@ With the smallest possible iteration steps:
 1. Run `./check.sh` to confirm the refactoring did not break the code.
 1. Go back to the refactoring step until you no longer see any good
    refactorings.
-1. If the code change is at a logical commit size, commit.
+1. If the code change is at a logical commit size (see Commit Guidelines below),
+   invoke the `/code-review` subagent to do the code review. Present its findings
+   to the user and wait for the next steps.
 1. Repeat for the next iteration.
 
 ## Code Comments
@@ -124,3 +126,14 @@ With the smallest possible iteration steps:
   self-explanatory
 - Use comments to explain complex algorithms, non-obvious side effects,
   historical context
+
+## Commit Guidelines
+
+A logical commit represents a single, cohesive change that:
+
+- Addresses one concern (one feature, one bugfix, or one refactoring)
+- Passes all tests and quality checks (`./check.sh`)
+- Can be understood and reverted independently
+- Doesn't mix unrelated concerns
+
+When in doubt: "Does this commit tell one coherent story?"
