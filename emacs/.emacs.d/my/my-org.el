@@ -54,6 +54,14 @@
 
 
 ;;; Setup hook: keyboard shortcuts and fill column setting
+(defun dotfiles--update-org-tags-column (&optional _frame)
+  "Update `org-tags-column' based on current window width.
+Positions tags 3 columns from the right edge, with bounds checking to prevent
+overlap (min -85) and invalid positive values (max -1).  Does not realign
+existing tags; they will align on next edit or manual realignment."
+  (setq-local org-tags-column
+              (max -85 (min -1 (- 3 (window-body-width))))))
+
 (defun dotfiles--org-mode-hook ()
   "My configuration hook for `org-mode'.
 Sets up keybindings and adjusts the fill column."
@@ -64,7 +72,12 @@ Sets up keybindings and adjusts the fill column."
     (local-set-key (kbd "C-c n i") #'org-roam-node-insert)
     (local-set-key (kbd "C-c n l") #'org-roam-buffer-toggle))
   ;; Fill column
-  (dotfiles--set-fill-column 85))
+  (dotfiles--set-fill-column 85)
+  ;; Dynamic tags column with window resize handling
+  (dotfiles--update-org-tags-column)
+  (add-hook 'window-size-change-functions
+            #'dotfiles--update-org-tags-column
+            nil t))
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
 ;;; Editing, navigation, folding, state changes
@@ -88,7 +101,6 @@ Sets up keybindings and adjusts the fill column."
 ;;; Display
 (setq org-fontify-todo-headline t
       org-fontify-done-headline t
-      org-tags-column -85  ;; TODO(laurynas): compute automatically
       org-habit-graph-column 65  ;; TODO(laurynas): compute automatically
       org-image-actual-width 720 ;; TODO(laurynas): compute automatically
       org-startup-with-inline-images t
