@@ -19,6 +19,16 @@
      (org-autotask :vc-backend Git :url "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
    '((elisp-lint-indent-specs
+      (org-mcp--with-org-file-buffer . 2)
+      (org-mcp--with-uri-prefix-dispatch . 1)
+      (org-mcp-test--with-enabled . defun)
+      (org-mcp-test--with-config . 1)
+      (org-mcp-test--with-temp-org-file . 2)
+      (org-mcp-test--with-add-todo-setup . 2)
+      (org-mcp-test--with-id-setup . 1)
+      (org-mcp-test--refile-and-verify . 2)
+      (mcp-server-lib-ert-with-server . defun))
+     (elisp-lint-indent-specs
       (if-let* . 1)
       (if-let . 1)
       (mcp-server-lib-test--with-server . 0)
