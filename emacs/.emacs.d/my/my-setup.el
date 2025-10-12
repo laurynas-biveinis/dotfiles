@@ -525,6 +525,40 @@
       (message "Installing grammar for %s" lang)
       (treesit-install-language-grammar lang))))
 
+(defun dotfiles--tree-sitter-error-language-name (error-entry)
+  "Extract language name from tree-sitter ERROR-ENTRY.
+ERROR-ENTRY is a cons cell of (LANG . ERROR-MESSAGE-STRING)."
+  (symbol-name (car error-entry)))
+
+(defun my-update-tree-sitter-grammars ()
+  "Update all tree-sitter grammars defined in `treesit-language-source-alist'.
+
+It reinstalls each grammar by cloning its repository and recompiling, regardless
+of the current version. This operation may take several minutes.
+
+Errors for individual grammars are caught and reported at the end,
+allowing the update process to continue for other grammars.
+
+When called interactively, displays progress and final result messages
+in the echo area showing the number of successful and failed updates."
+  (interactive)
+  (let ((langs (mapcar #'car treesit-language-source-alist))
+        (errors '()))
+    (message "Updating %d tree-sitter grammars..." (length langs))
+    (dolist (lang langs)
+      (condition-case err
+          (treesit-install-language-grammar lang)
+        (error
+         (message "ERROR: Failed to update tree-sitter grammar for %s: %s"
+                  lang (error-message-string err))
+         (push (cons lang (error-message-string err)) errors))))
+    (if errors
+        (message "Tree-sitter: Updated %d, %d failed (%s)"
+                 (- (length langs) (length errors))
+                 (length errors)
+                 (mapconcat #'dotfiles--tree-sitter-error-language-name errors ", "))
+      (message "Tree-sitter: Updated %d grammars" (length langs)))))
+
 (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
