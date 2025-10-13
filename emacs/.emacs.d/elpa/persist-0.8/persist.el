@@ -6,7 +6,7 @@
 ;; Maintainer: Joseph Turner <persist-el@breatheoutbreathe.in>
 ;; Package-Type: multi
 ;; Package-Requires: ((emacs "26.1") (compat "30.0.2.0"))
-;; Version: 0.7
+;; Version: 0.8
 
 ;; The contents of this file are subject to the GPL License, Version 3.0.
 
@@ -113,23 +113,19 @@ to persist a variable, you will normally need to call
 `persist-load' to load a previously saved location."
   (put symbol 'persist-location (expand-file-name directory)))
 
-(defun persist-symbol (symbol &optional initvalue)
+(defun persist-symbol (symbol initvalue)
   "Make SYMBOL a persistent variable.
 
-If non-nil, INITVALUE is the value to which SYMBOL will be set if
-`persist-reset' is called.  Otherwise, the INITVALUE will be the
-current `symbol-value' of SYMBOL.
-
-INITVALUE is set for the session and will itself not persist
+INITVALUE is the value to which SYMBOL will be set if `persist-reset' is
+called.  INITVALUE is set for the session and will itself not persist
 across sessions.
 
 This does force the loading of value from this directory, so to
 persist a variable, you will normally need to call `persist-load'
 to load a previously saved location."
-  (let ((initvalue (or initvalue (symbol-value symbol))))
-    (add-to-list 'persist--symbols symbol)
-    (put symbol 'persist t)
-    (put symbol 'persist-default (persist-copy initvalue))))
+  (add-to-list 'persist--symbols symbol)
+  (put symbol 'persist t)
+  (put symbol 'persist-default (persist-copy initvalue)))
 
 (defun persist--persistant-p (symbol)
   "Return non-nil if SYMBOL is a persistent variable."

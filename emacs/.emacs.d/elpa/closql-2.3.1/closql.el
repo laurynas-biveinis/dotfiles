@@ -6,10 +6,10 @@
 ;; Homepage: https://github.com/emacscollective/closql
 ;; Keywords: extensions
 
-;; Package-Version: 2.3.0
-;; Package-Revision: v2.3.0-0-g80e91c557331
+;; Package-Version: 2.3.1
+;; Package-Revision: v2.3.1-0-gcc291a0d8f52
 ;; Package-Requires: (
-;;     (emacs "28.1")
+;;     (emacs  "28.1")
 ;;     (compat "30.1")
 ;;     (emacsql "4.3"))
 
@@ -584,16 +584,15 @@
 
 (cl-defmethod closql--list-subabbrevs ((class (subclass closql-object))
                                        &optional wildcards)
-  (cl-labels
-      ((types (class)
-         (let ((children (eieio--class-children (cl--find-class class)))
-               ;; An abstract base-class may violate its own naming rules.
-               (abbrev (ignore-errors (closql--abbrev-class class))))
-           (nconc (and (not (class-abstract-p class)) (list abbrev))
-                  (and wildcards children
-                       (list (if abbrev (intern (format "%s*" abbrev)) '*)))
-                  (mapcan #'types children)))))
-    (sort (types class) #'string<)))
+  (sort (named-let types ((class class))
+          (let ((children (eieio--class-children (cl--find-class class)))
+                ;; An abstract base-class may violate its own naming rules.
+                (abbrev (ignore-errors (closql--abbrev-class class))))
+            (nconc (and (not (class-abstract-p class)) (list abbrev))
+                   (and wildcards children
+                        (list (if abbrev (intern (format "%s*" abbrev)) '*)))
+                   (mapcan #'types children))))
+        #'string<))
 
 (cl-defmethod closql--set-object-class ((db closql-database) obj class)
   (let* ((table (oref-default obj closql-table))
