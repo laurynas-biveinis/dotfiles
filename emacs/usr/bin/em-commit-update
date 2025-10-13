@@ -1,0 +1,105 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+confirm_action() {
+    local prompt="$1"
+    local response
+    read -r "response?${prompt} (Y/n): "
+    case "$response" in
+        [Yy]|"")
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+show_elpa_files() {
+    echo "=== Files to be added to commit ==="
+    git status --porcelain --ignore-submodules=dirty -- 'emacs/.emacs.d/elpa' | while read -r file_status file; do
+        case "$file_status" in
+            M|MM|AM)
+                echo "  modified:   $file"
+                ;;
+            A)
+                echo "  new file:   $file"
+                ;;
+            D)
+                echo "  deleted:    $file"
+                ;;
+            \?\?)
+                echo "  new file:   $file"
+                ;;
+            *)
+                echo "  $file_status $file"
+                ;;
+        esac
+    done
+}
+
+pushd "$DOTFILES_ROOT" || exit
+
+# Show current git status
+echo "=== Git Status ==="
+git status
+echo
+
+# Check if there are any .el or .elc files that are modified, deleted, or untracked
+# Note: .el and .elc files should only exist within package subdirectories, not
+# in the top-level elpa directory itself, so **/*.el and **/*.elc are sufficient
+elisp_modified=$(git diff --name-only --diff-filter=MD --ignore-submodules=dirty HEAD -- 'emacs/.emacs.d/elpa/**/*.el' 'emacs/.emacs.d/elpa/**/*.elc')
+elisp_untracked=$(git ls-files --others --exclude-standard -- 'emacs/.emacs.d/elpa/**/*.el' 'emacs/.emacs.d/elpa/**/*.elc')
+elisp_status="${elisp_modified}${elisp_untracked}"
+readonly elisp_status
+
+# Check for any files in elpa directory that are modified, deleted, or untracked
+elpa_modified=$(git diff --name-only --diff-filter=MD --ignore-submodules=dirty HEAD -- 'emacs/.emacs.d/elpa')
+elpa_untracked=$(git ls-files --others --exclude-standard -- 'emacs/.emacs.d/elpa')
+elpa_status="${elpa_modified}${elpa_untracked}"
+readonly elpa_status
+
+if [ -n "$elisp_status" ]; then
+    # If there are .el or .elc files changed, commit with package update message
+    commit_message="Emacs package update"
+    show_elpa_files
+    echo
+    echo "Commit message: \"$commit_message\""
+    echo
+
+    if confirm_action "Proceed with commit and push?"; then
+        git add 'emacs/.emacs.d/elpa'
+        git commit -m "$commit_message"
+        git push
+        echo "Successfully committed and pushed changes."
+    else
+        echo "Operation cancelled."
+        popd || exit
+        exit 1
+    fi
+elif [ -n "$elpa_status" ]; then
+    # If there are only metadata files changed, commit with metadata update message
+    commit_message="Emacs package metadata update"
+    show_elpa_files
+    echo
+    echo "Commit message: \"$commit_message\""
+    echo
+
+    if confirm_action "Proceed with commit and push?"; then
+        git add 'emacs/.emacs.d/elpa'
+        git commit -m "$commit_message"
+        git push
+        echo "Successfully committed and pushed changes."
+    else
+        echo "Operation cancelled."
+        popd || exit
+        exit 1
+    fi
+else
+    echo "Nothing to commit for Emacs package update (no changes found in emacs/.emacs.d/elpa/)"
+    popd || exit
+    exit 1
+fi
+
+popd || exit
