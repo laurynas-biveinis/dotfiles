@@ -68,6 +68,16 @@ Reserves 32 columns for the habit graph, with bounds at columns 43-78."
   (setq-local org-habit-graph-column
               (max 43 (min (- (window-body-width) 32) 78))))
 
+(defun dotfiles--update-org-image-actual-width (&optional _frame)
+  "Update `org-image-actual-width' based on current window width.
+Uses approximately 80% of window width in pixels for images, with bounds
+checking to ensure reasonable display (min 400px, max 1200px).  Individual
+images can override this default using #+ATTR_ORG: or #+ATTR_HTML: :width
+specifications.  Does not automatically redisplay existing images; they will
+resize on next display toggle."
+  (setq-local org-image-actual-width
+              (list (max 400 (min (floor (* 0.8 (window-body-width nil t))) 1200)))))
+
 (defun dotfiles--org-mode-hook ()
   "My configuration hook for `org-mode'.
 Sets up keybindings and adjusts the fill column."
@@ -83,6 +93,11 @@ Sets up keybindings and adjusts the fill column."
   (dotfiles--update-org-tags-column)
   (add-hook 'window-size-change-functions
             #'dotfiles--update-org-tags-column
+            nil t)
+  ;; Dynamic image width with window resize handling
+  (dotfiles--update-org-image-actual-width)
+  (add-hook 'window-size-change-functions
+            #'dotfiles--update-org-image-actual-width
             nil t))
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
@@ -107,7 +122,6 @@ Sets up keybindings and adjusts the fill column."
 ;;; Display
 (setq org-fontify-todo-headline t
       org-fontify-done-headline t
-      org-image-actual-width 720 ;; TODO(laurynas): compute automatically
       org-startup-with-inline-images t
       org-startup-folded 'showall)
 (add-hook 'org-mode-hook #'org-sticky-header-mode)
