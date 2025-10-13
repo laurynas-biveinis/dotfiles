@@ -62,6 +62,12 @@ existing tags; they will align on next edit or manual realignment."
   (setq-local org-tags-column
               (max -85 (min -1 (- 3 (window-body-width))))))
 
+(defun dotfiles--update-org-habit-graph-column (&optional _frame)
+  "Update `org-habit-graph-column' based on current window width.
+Reserves 32 columns for the habit graph, with bounds at columns 43-78."
+  (setq-local org-habit-graph-column
+              (max 43 (min (- (window-body-width) 32) 78))))
+
 (defun dotfiles--org-mode-hook ()
   "My configuration hook for `org-mode'.
 Sets up keybindings and adjusts the fill column."
@@ -101,7 +107,6 @@ Sets up keybindings and adjusts the fill column."
 ;;; Display
 (setq org-fontify-todo-headline t
       org-fontify-done-headline t
-      org-habit-graph-column 65  ;; TODO(laurynas): compute automatically
       org-image-actual-width 720 ;; TODO(laurynas): compute automatically
       org-startup-with-inline-images t
       org-startup-folded 'showall)
@@ -120,6 +125,15 @@ Sets up keybindings and adjusts the fill column."
       org-agenda-todo-ignore-timestamp 'all
       org-agenda-sticky t
       org-agenda-window-setup 'current-window)
+
+(defun dotfiles--org-agenda-mode-hook ()
+  "My configuration hook for `org-agenda-mode'.
+Sets up dynamic habit graph column with window resize handling."
+  (dotfiles--update-org-habit-graph-column)
+  (add-hook 'window-size-change-functions
+            #'dotfiles--update-org-habit-graph-column
+            nil t))
+(add-hook 'org-agenda-mode-hook #'dotfiles--org-agenda-mode-hook)
 
 ;;; Logging
 (setq org-log-done 'time)
