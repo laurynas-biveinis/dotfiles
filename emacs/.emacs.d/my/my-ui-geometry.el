@@ -7,22 +7,26 @@
 
 ;;; Code:
 
-;; TODO(laurynas): split vertically first
 (defun dotfiles--make-window-grid (columns rows)
   "Create a grid of windows with COLUMNS columns and ROWS rows.
 Only supports 1 or 2 rows."
+  (unless (and (integerp columns) (>= columns 1))
+    (error "Invalid column count: %s (must be positive integer)" columns))
+  (unless (and (integerp rows) (<= 1 rows 2))
+    (error "Invalid row count: %s (must be 1 or 2)" rows))
   (delete-other-windows)
   (switch-to-buffer "*scratch*")
-  (when (> rows 1)
-    (split-window-below))
-  ;; Create columns in top row
+  ;; Create columns first
   (dotimes (_ (1- columns))
     (split-window-right))
-  ;; If we have a second row, move down and create columns there
+  ;; If we have a second row, split each column
   (when (> rows 1)
-    (windmove-down)
-    (dotimes (_ (1- columns))
-      (split-window-right)))
+    ;; Get all windows in the current row (left to right)
+    (let ((top-row-windows (window-list nil 'no-minibuffer)))
+      ;; Split each window in the top row
+      (dolist (win top-row-windows)
+        (select-window win)
+        (split-window-below))))
   (balance-windows))
 
 (defun two-windows ()
