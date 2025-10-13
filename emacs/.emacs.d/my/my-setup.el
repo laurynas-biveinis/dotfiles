@@ -943,9 +943,15 @@ Returns the new window if successful, nil otherwise."
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html)
 ;; TODO(laurynas): `dired' integration
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/Dired.html)
-;; TODO(laurynas): remove "mu4e:main", "mu4e:headers", & "mu4e:view" from the
-;; modeline. Simply adding these string to `rich-minority' settings does not
-;; appear to work. Maybe because these are major modes.
+
+;; Clean up mu4e mode names in the modeline
+(defun dotfiles--mu4e-clean-mode-name ()
+  "Remove mu4e mode names from the modeline."
+  (setq mode-name ""))
+
+(add-hook 'mu4e-main-mode-hook #'dotfiles--mu4e-clean-mode-name)
+(add-hook 'mu4e-headers-mode-hook #'dotfiles--mu4e-clean-mode-name)
+(add-hook 'mu4e-view-mode-hook #'dotfiles--mu4e-clean-mode-name)
 
 ;; Use 'w3m not 'gnus-w3m - the latter calls gnus-article-html which requires a
 ;; Gnus article buffer environment and fails silently in mu4e.
