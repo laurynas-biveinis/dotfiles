@@ -71,6 +71,7 @@ When analyzing a bug or code inner workings:
 1. Do not guess. Collect hard evidence for any hypotheses you come up with. It's
    OK to add temporary tracing to the code for this purpose.
 1. Explore multiple approaches in turn systematically and methodically.
+1. NEVER include any time-based effort estimates in your plans.
 
 ## Design
 
