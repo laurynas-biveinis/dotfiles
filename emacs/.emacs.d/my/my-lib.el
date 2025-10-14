@@ -82,6 +82,10 @@ Returns the path or nil."
   "Open the FILE in its default app."
   (shell-command (concat "open " (shell-quote-argument file))))
 
+(defun dotfiles--delete-file-after-delay (path delay)
+  "Delete file at PATH after DELAY seconds."
+  (run-with-timer delay nil #'delete-file path nil))
+
 ;; Command-line program helpers
 
 (defun dotfiles--run-program-process-output (program args success-fn)
@@ -199,11 +203,9 @@ ARGS must be properly quoted if needed."
      (when (string-suffix-p suffix path t)
        (mm-save-part-to-file handle path)
        (dotfiles--open-file path)
-       ;; TODO(laurynas): the above is asynchronuous. We cannot make it
-       ;; synchronuous, but at least replace the blocking `sleep-for' below with
-       ;; a `run-with-timer' call instead.
-       (sleep-for 1)
-       (delete-file path nil)))))
+       ;; If hardcoded 1 s does not resolve all the races, replace with polling
+       ;; using lsof.
+       (dotfiles--delete-file-after-delay path 1)))))
 
 (defun dotfiles--download-mu4e-all-jpgs ()
   "Download all .jpg attachments from a `mu4e' message."
