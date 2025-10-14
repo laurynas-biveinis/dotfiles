@@ -147,6 +147,7 @@ themselves."
 ;; consider .gitignore for those worktrees too.
 (require 'undo-tree)
 (require 'magit-status)
+(require 'seq)
 (setq undo-tree-history-directory-alist
       `(("." . ,(expand-file-name "undo" user-emacs-directory))))
 (add-to-list 'undo-tree-incompatible-major-modes #'help-mode)
@@ -156,18 +157,27 @@ themselves."
 (add-to-list 'undo-tree-incompatible-major-modes #'package-menu-mode)
 (add-to-list 'undo-tree-incompatible-major-modes #'messages-buffer-mode)
 
-(defun dotfiles--disable-undo-tree-by-buffer-name (&optional _print-message)
-  "Return nil if the buffer file name is in `dotfiles--no-undo-tree-names'."
-  (let ((file-name (buffer-file-name)))
-    ;; TODO(laurynas): replace special-casing of suffix and exact match against
-    ;; `no-undo-tree-file-names' with a glob match.
-    (if file-name (not (or (string-suffix-p "autoloads.el" file-name)
-                           (member (file-name-nondirectory (buffer-file-name))
-                                   no-undo-tree-file-names)))
-      t)))
+(defconst no-undo-tree-file-names
+  '("*autoloads.el" "secrets.org" "secrets-local.el" ".DS_Store"))
+
+(defun dotfiles--basename-matches-pattern-p (basename pattern)
+  "Return non-nil if BASENAME matches the glob PATTERN.
+PATTERN can use glob wildcards (* and ?)."
+  (string-match-p (wildcard-to-regexp pattern) basename))
+
+(defun dotfiles--undo-tree-allowed-for-buffer-p (&optional _print-message)
+  "Return non-nil if undo-tree is allowed for the current buffer.
+Returns nil if the buffer basename matches any pattern in `no-undo-tree-file-names'.
+Patterns can use glob wildcards (* and ?)."
+  (if-let ((file-name (buffer-file-name)))
+      (let ((basename (file-name-nondirectory file-name)))
+        (not (seq-some
+              (apply-partially #'dotfiles--basename-matches-pattern-p basename)
+              no-undo-tree-file-names)))
+    t))
 
 (advice-add 'turn-on-undo-tree-mode :before-while
-            #'dotfiles--disable-undo-tree-by-buffer-name)
+            #'dotfiles--undo-tree-allowed-for-buffer-p)
 
 (global-undo-tree-mode)
 
