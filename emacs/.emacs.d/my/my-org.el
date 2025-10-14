@@ -322,7 +322,9 @@ event of an error or nonlocal exit."
 ;; `org-gcal-reload-client-id-secret'
 
 ;; TODO(laurynas): fetch automatically?
-;; TODO(laurynas): Can `org-gcal-local-timezeone' be automated?
+;; TODO(laurynas): Automate setting `org-gcal-local-timezone': check
+;; (getenv "TZ") first, fallback to parsing (file-symlink-p "/etc/localtime"),
+;; and extract the IANA timezone from the zoneinfo path.
 ;; TODO(laurynas): key binding for `org-gcal-post-at-point'?
 ;; TODO(laurynas): key binding (and some command) to create a new event? How to
 ;; check for scheduling conflicts?
