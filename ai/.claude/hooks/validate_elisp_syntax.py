@@ -183,7 +183,10 @@ def main():
                 "permissionDecisionReason": (
                     f"Blocked: This edit would create invalid Elisp syntax. "
                     f"Emacs check-parens reported: {error_msg}. "
-                    f"Please ensure all parentheses, brackets, and quotes are balanced."
+                    f"Please ensure all parentheses, brackets, and quotes are "
+                    f"balanced. Try again using Edit/MultiEdit/Write tools. "
+                    f"DO NOT attempt to make the same edit through any shell "
+                    f"command (sed, awk, etc.)."
                 ),
             }
         }
