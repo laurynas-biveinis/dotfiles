@@ -682,7 +682,7 @@ mysql_export_environment_helpers() {
     export MY840D=("${myd[@]}" $(mysql_get_cmake_flags 8.4.0 any_debug)
                    "${my840_comp_flags[@]}")
     export MY840=("${myr[@]}" $(mysql_get_cmake_flags 8.4.0 any_release)
-                  "${my841_comp_flags[@]}")
+                  "${my840_comp_flags[@]}")
 
     export MY830D=("${myd[@]}" $(mysql_get_cmake_flags 8.3.0 any_debug)
                    "${my830_comp_flags[@]}")
