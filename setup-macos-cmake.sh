@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+set -euo pipefail
+
+# Do setup-macos-python.sh first
+
 brew install cmake cmake-docs cmake-language-server ninja
 
 virtualenv /opt/virtualenvs/cmakelang
