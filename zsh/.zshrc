@@ -138,11 +138,6 @@ zinit load djui/alias-tips
 
 UNAME_OUT="$(uname -s)"
 
-if [ "$UNAME_OUT" = "Darwin" ]; then
-    zinit snippet \
-          https://github.com/Homebrew/homebrew-command-not-found/blob/master/handler.sh
-fi
-
 setopt NULL_GLOB
 for script in ~/.zsh.d/rc/*; do
     source "$script"

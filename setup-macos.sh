@@ -438,23 +438,16 @@ rm 'Solarized Dark - Patched.itermcolors'
 sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
 	/Library/Java/JavaVirtualMachines/openjdk.jdk
 
-xattr -dr com.apple.quarantine "/Applications/XLD.app/"
-xattr -dr com.apple.quarantine "/Applications/Last.fm.app/"
-
-duti -s jp.tmkk.XLD .cue all
 npm i -g bash-language-server prettier textlint jscpd
 npx @biomejs/biome init
-brew tap homebrew/command-not-found
 # Play
 brew install mono
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
 	guitar-pro transcribe
+xattr -dr com.apple.quarantine "/Applications/XLD.app/"
+xattr -dr com.apple.quarantine "/Applications/Last.fm.app/"
 duti -s jp.tmkk.XLD .flac all
-#
-# LLM
-#
-npm install -g @anthropic-ai/claude-code
-claude mcp add puppeteer -s user -- npx -y u/modelcontextprotocol/server-puppeteer
+duti -s jp.tmkk.XLD .cue all
 #
 # Backup and Spotlight exclusions
 #
