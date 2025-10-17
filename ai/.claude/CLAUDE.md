@@ -116,7 +116,9 @@ With the smallest possible iteration steps:
    refactorings.
 1. If the code change is at a logical commit size (see Commit Guidelines below),
    invoke the `/code-review` subagent to do the code review. Present its findings
-   to the user and wait for the next steps.
+   to the user and wait for the next steps. Do not invoke code review subagent
+   when implementing mechanical low-risk requests by the user (for example,
+   symbol renames, formatting fixes).
 1. Repeat for the next iteration.
 
 ## Code Comments
