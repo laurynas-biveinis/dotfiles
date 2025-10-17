@@ -1,8 +1,13 @@
 #!/bin/zsh
 
+set -euo pipefail
+
+# Do after dotfiles setup
+
 brew tap railwaycat/emacsmacport
-brew install emacs-mac --with-native-compilation --with-unlimited-select \
-     --with-librsvg --with-mac-metal --with-natural-title-bar --with-xwidgets
+brew install --formula emacs-mac --with-native-compilation \
+     --with-unlimited-select --with-librsvg --with-mac-metal \
+     --with-natural-title-bar --with-xwidgets
 # Intel
 osascript -e \
           'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'

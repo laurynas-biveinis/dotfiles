@@ -6,7 +6,7 @@ set -euo pipefail
 
 asdf plugin add python
 asdf install python latest
-asdf global python 3.12.2 # Take from the output above
+asdf set python 3.12.2 --home # Take from the output above
 python -m pip install --upgrade pip setuptools
 python -m pip install virtualenv
 asdf reshim python
@@ -19,6 +19,7 @@ pip install asitop
 sudo ln -sf /opt/virtualenvs/asitop/bin/asitop /usr/local/bin/asitop
 deactivate
 
+# TODO(laurynas): works with 3.12.2 but not 3.14.0t?
 virtualenv /opt/virtualenvs/cppclean
 source /opt/virtualenvs/cppclean/bin/activate
 pip install cppclean

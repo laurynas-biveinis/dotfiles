@@ -355,8 +355,10 @@ sudo chflags nohidden /Volumes
 brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
      hunspell grep pinentry-mac htop findutils fd delta jq colordiff npm \
      gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
-     git-lfs plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint \
-     iperf3 zizmor markdownlint-cli checkov w3m asdf
+     plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint iperf3 \
+     zizmor markdownlint-cli checkov w3m asdf
+# Until the next login:
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 # C++ development
 brew install llvm iwyu cppcheck creduce circleci boost cpplint \
@@ -384,6 +386,8 @@ sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.d
 sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
 
+# Try to prevent missing dependency errors by installing last known good version
+sudo gem install mixlib-shellout -v 3.3.8
 sudo gem install mdl
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
      basictex signal whatsapp qfinder-pro rar
@@ -391,6 +395,9 @@ xattr -cr /opt/homebrew/bin/unrar
 xattr -cr /opt/homebrew/bin/rar
 
 # TeX
+# until the next login:
+eval "$(/usr/libexec/path_helper)"
+sudo tlmgr update --self
 sudo tlmgr install dvipng
 
 brew tap epk/epk
