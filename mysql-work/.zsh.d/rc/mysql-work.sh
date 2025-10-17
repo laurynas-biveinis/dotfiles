@@ -202,7 +202,7 @@ mysql_export_environment_helpers() {
     declare -gA cmake_flags=()
 
     declare -r min_version="8.0.18"
-    declare -r max_version="9.3.0"
+    declare -r max_version="9.4.0"
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -382,6 +382,12 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.33" "${max_version}" any \
                           "-DFORCE_COLORED_OUTPUT=ON"
+
+    declare -a -r my940_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.4.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.4.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.4.0 cxx_release)"
+    )
 
     declare -a -r my930_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.3.0 cxx)"
@@ -636,6 +642,11 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
+    export MY940D=("${myd[@]}" $(mysql_get_cmake_flags 9.4.0 any_debug)
+                   "${my940_comp_flags[@]}")
+    export MY940=("${myr[@]}" $(mysql_get_cmake_flags 9.4.0 any_release)
+                  "${my940_comp_flags[@]}")
+
     export MY930D=("${myd[@]}" $(mysql_get_cmake_flags 9.3.0 any_debug)
                    "${my930_comp_flags[@]}")
     export MY930=("${myr[@]}" $(mysql_get_cmake_flags 9.3.0 any_release)
@@ -883,6 +894,12 @@ mysql_cmake() {
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                9.4.0)
+                    declare -a release_flags=("${MY940[@]}")
+                    declare -a debug_flags=("${MY940D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 9.3.0)
                     declare -a release_flags=("${MY930[@]}")
                     declare -a debug_flags=("${MY930D[@]}")
