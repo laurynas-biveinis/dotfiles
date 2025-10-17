@@ -1,7 +1,8 @@
 #!/bin/zsh
-#
-# Python
-#
+
+set -euo pipefail
+
+# Python. Do before cmake and mysql-work modules
 
 asdf plugin add python
 asdf install python latest
@@ -9,8 +10,8 @@ asdf global python 3.12.2 # Take from the output above
 python -m pip install --upgrade pip setuptools
 python -m pip install virtualenv
 asdf reshim python
-sudo mkdir /opt/virtualenvs
-sudo chown $(whoami) /opt/virtualenvs
+sudo mkdir -p /opt/virtualenvs
+sudo chown "$(whoami)" /opt/virtualenvs
 
 virtualenv /opt/virtualenvs/asitop
 source /opt/virtualenvs/asitop/bin/activate
@@ -26,6 +27,8 @@ deactivate
 
 # Try to install Python development tools outside any virtualenv. If this
 # breaks, then install per-project.
-gpip install "python-lsp-server[all]" pylsp-mypy python-lsp-isort \
-     pyls-memestra jedi pylsp-rope python-lsp-ruff python-lsp-black pylint \
-     pycodestyle pyflakes pandas openpyxl pandas-stubs scipy
+# The prefix of this command simplifies to "gpip" if user dotfiles are set up
+PIP_REQUIRE_VIRTUALENV="0" pip install "python-lsp-server[all]" pylsp-mypy \
+                      python-lsp-isort pyls-memestra jedi pylsp-rope \
+                      python-lsp-ruff python-lsp-black pylint pycodestyle \
+                      pyflakes pandas openpyxl pandas-stubs scipy
