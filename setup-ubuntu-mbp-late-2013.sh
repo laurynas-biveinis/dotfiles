@@ -11,7 +11,7 @@ sudo systemctl daemon-reload
 sudo systemctl start mbpfan.service
 
 # Blacklist nouveau
-sudo tee /etc/modprobe.d/blacklist-nvidia-nouveau.conf > /dev/null <<'EOF'
+sudo tee /etc/modprobe.d/blacklist-nvidia-nouveau.conf >/dev/null <<'EOF'
 blacklist nouveau
 blacklist lbm-nouveau
 options nouveau modeset=0
@@ -20,7 +20,7 @@ alias lbm-nouveau off
 EOF
 
 # Blacklist WiFi
-sudo tee /etc/modprobe.d/blacklist-wifi.conf > /dev/null <<'EOF'
+sudo tee /etc/modprobe.d/blacklist-wifi.conf >/dev/null <<'EOF'
 # Disable Broadcom WiFi
 blacklist bcma
 blacklist bcmwl
@@ -34,7 +34,7 @@ EOF
 # Load i915
 echo "i915" | sudo tee -a /etc/initramfs-tools/modules
 
-sudo tee /etc/systemd/system/disable-nvidia-gpu.service > /dev/null <<'EOF'
+sudo tee /etc/systemd/system/disable-nvidia-gpu.service >/dev/null <<'EOF'
 [Unit]
 Description=Remove NVIDIA GPU from PCI bus to save power
 After=multi-user.target
@@ -48,7 +48,7 @@ RemainAfterExit=true
 WantedBy=multi-user.target
 EOF
 
-sudo tee /etc/modprobe.d/blacklist-camera.conf > /dev/null <<'EOF'
+sudo tee /etc/modprobe.d/blacklist-camera.conf >/dev/null <<'EOF'
 # Disable FaceTime HD camera and video devices
 blacklist facetimehd
 blacklist bdc_pci
@@ -60,7 +60,7 @@ blacklist videobuf2_core
 blacklist videodev
 EOF
 
-sudo tee /etc/systemd/system/disable-camera.service > /dev/null <<'EOF'
+sudo tee /etc/systemd/system/disable-camera.service >/dev/null <<'EOF'
 [Unit]
 Description=Disable FaceTime HD Camera
 After=multi-user.target
@@ -77,7 +77,7 @@ EOF
 sudo systemctl enable disable-camera.service
 sudo systemctl start disable-camera.service
 
-sudo tee /etc/modprobe.d/blacklist-bluetooth.conf > /dev/null <<'EOF'
+sudo tee /etc/modprobe.d/blacklist-bluetooth.conf >/dev/null <<'EOF'
 # Disable all Bluetooth modules
 blacklist bluetooth
 blacklist btusb
@@ -91,7 +91,7 @@ blacklist hci_uart
 blacklist bcm5974 # Trackpad too
 EOF
 
-sudo tee /etc/systemd/system/disable-wifi-pci.service > /dev/null <<'EOF'
+sudo tee /etc/systemd/system/disable-wifi-pci.service >/dev/null <<'EOF'
 [Unit]
 Description=Disable WiFi PCI Device
 After=multi-user.target
@@ -108,7 +108,7 @@ EOF
 sudo systemctl enable disable-wifi-pci.service
 sudo systemctl start disable-wifi-pci.service
 
-sudo tee /etc/udev/rules.d/81-disable-bluetooth.rules > /dev/null <<'EOF'
+sudo tee /etc/udev/rules.d/81-disable-bluetooth.rules >/dev/null <<'EOF'
 # Disable Apple Bluetooth devices
 SUBSYSTEM=="usb", ATTR{idVendor}=="05ac", ATTR{product}=="Bluetooth*", ATTR{authorized}="0"
 SUBSYSTEM=="usb", ATTR{idVendor}=="05ac", ATTR{bDeviceClass}=="e0", ATTR{authorized}="0"
@@ -133,7 +133,7 @@ sudo reboot
 # HandleLidSwitchExternalPower=ignore
 # HandleLidSwitchDocked=ignore
 
-sudo tee /usr/local/bin/lid-handler.sh > /dev/null <<'EOF'
+sudo tee /usr/local/bin/lid-handler.sh >/dev/null <<'EOF'
 #!/bin/sh
 
 if grep -q closed /proc/acpi/button/lid/LID0/state; then
@@ -146,7 +146,7 @@ fi
 EOF
 sudo chmod +x /usr/local/bin/lid-handler.sh
 
-sudo tee /etc/acpi/events/lid > /dev/null <<'EOF'
+sudo tee /etc/acpi/events/lid >/dev/null <<'EOF'
 event=button/lid.*
 action=/usr/local/bin/lid-handler.sh
 EOF

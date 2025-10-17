@@ -4,7 +4,7 @@
 
 set -eu -o pipefail
 
-readonly SHELL_FILES=(check.sh)
+readonly SHELL_FILES=(check.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
 readonly PYTHON_FILES=(ai/.claude/hooks/*.py)
 readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 
