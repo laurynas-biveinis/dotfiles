@@ -32,11 +32,11 @@ In the above two situations, with digit prefix argument 0, only
 occurrences in current function are matched.  This is good for
 renaming refactoring in programming.
 
-You can also switch to Iedit mode from isearch mode directly. The
+You can also switch to Iedit mode from isearch mode directly.  The
 current search string is used as occurrence.  All occurrences of
 the current search string are highlighted.
 
-With an universal prefix argument, the occurrence when Iedit mode
+With an universal prefix argument ARG, the occurrence when Iedit mode
 is turned off last time in current buffer is used as occurrence.
 This is intended to recover last Iedit mode which is turned off.
 If region active, Iedit mode is limited within the current
@@ -70,14 +70,13 @@ Keymap used within overlays:
 (fn &optional ARG)" t)
 (autoload 'iedit-mode-from-isearch "iedit" "\
 Start Iedit mode using last search string as the regexp.
+With optional ARG, perform a symbol search.
 
 (fn &optional ARG)" t)
 (autoload 'iedit-mode-toggle-on-function "iedit" "\
 Toggle Iedit mode on current function." t)
 (autoload 'iedit-execute-last-modification "iedit" "\
-Apply last modification in Iedit mode to the current buffer or an active region.
-
-(fn &optional ARG)" t)
+Apply last modification in Iedit mode to the current buffer or an active region." t)
 (register-definition-prefixes "iedit" '("iedit-"))
 
 

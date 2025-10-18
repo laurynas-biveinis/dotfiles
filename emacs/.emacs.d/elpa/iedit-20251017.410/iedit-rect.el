@@ -1,14 +1,12 @@
-;;; iedit-rect.el --- visible rectangle editing support based on Iedit.
+;;; iedit-rect.el --- visible rectangle editing support based on Iedit. -*-lexical-binding: t-*-
 
 ;; Copyright (C) 2010 - 2019, 2020 Victor Ren
 
-;; Time-stamp: <2022-01-14 12:33:45 Victor Ren>
 ;; Author: Victor Ren <victorhge@gmail.com>
 ;; Keywords: occurrence region simultaneous rectangle refactoring
-;; Version: 0.9.9.9.9
 ;; X-URL: https://github.com/victorhge/iedit
 ;;        https://www.emacswiki.org/emacs/Iedit
-;; Compatibility: GNU Emacs: 22.x, 23.x, 24.x, 25.x
+;; Compatibility: GNU Emacs: 24.x, 25.x
 
 ;; This file is not part of GNU Emacs, but it is distributed under
 ;; the same terms as GNU Emacs.
@@ -60,10 +58,9 @@
                                         (key-description [C-x r RET])
                                         key-def)
                          :warning)
-	  (define-key ctl-x-r-map  "\r" 'iedit-rectangle-mode)
+      (define-key ctl-x-r-map  "\r" 'iedit-rectangle-mode)
       (define-key ctl-x-r-map  ";" 'iedit-rectangle-mode)
-	  (define-key rectangle-mark-mode-map  ";" 'iedit-rectangle-mode)
-      (message "Iedit-rect default key binding is %s" (key-description [C-x r \;])))))
+      (define-key rectangle-mark-mode-map  ";" 'iedit-rectangle-mode))))
 
 (defvar-local iedit-rectangle nil
   "This buffer local variable which is the rectangle geometry if
@@ -76,7 +73,7 @@ current mode is iedit-rect. Otherwise it is nil.
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map iedit-occurrence-keymap-default)
     (define-key map (kbd "M-K") 'iedit-kill-rectangle)
-	(define-key map (kbd "C-;") 'iedit-rectangle-mode) ; to exit iedit-rect mode
+    (define-key map (kbd "C-;") 'iedit-rectangle-mode) ; to exit iedit-rect mode
     map)
   "Keymap used within overlays in Iedit-rect mode.")
 

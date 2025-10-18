@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20251002.1141
-;; Package-Revision: 6f5936074bb3
+;; Package-Version: 20251015.1201
+;; Package-Revision: 4295b30b432d
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -1097,12 +1097,16 @@ Argument IS-INTERACTIVE is set when running interactively."
        (is-end
         (goto-char (point-max)))))
      (t
-      (cond
-       (is-interactive
-        ;; When run interactively replace the buffer contents if this takes over 1 second.
-        (replace-region-contents pos-min pos-max buf 1.0))
-       (t
-        (replace-region-contents pos-min pos-max buf)))))))
+      (let ((max-secs
+             (cond
+              (is-interactive
+               1.0)
+              (t
+               nil)))
+            ;; Once emacs-31 is the minimum supported version,
+            ;; This can be dropped and `buf' can be passed in.
+            (buf-fn (lambda () buf)))
+        (replace-region-contents pos-min pos-max buf-fn max-secs))))))
 
 (defun elisp-autofmt--replace-buffer-contents-with-fastpath (buf fmt-region-range is-interactive)
   "Replace buffer contents with BUF, fast-path when undo is disabled.
