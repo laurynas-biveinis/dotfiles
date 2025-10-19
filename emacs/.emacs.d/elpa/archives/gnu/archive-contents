@@ -1043,7 +1043,7 @@
 	     ("Phil Sainty" . "psainty@orcon.net.nz"))
 	    (:commit . "a763ec1e5c2987efea3ce2ee6d9c979f56ab6528"))])
  (denote .
-	 [(4 1 0)
+	 [(4 1 1)
 	  ((emacs
 	    (28 1)))
 	  "Simple notes with an efficient file-naming scheme" tar
@@ -1051,7 +1051,7 @@
 	   (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 	   (:authors
 	    ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	   (:commit . "d4ba0eb290bd7afe54300718f16f23919390ce9b"))])
+	   (:commit . "13a4de04c8d04be697c891c34765526d7e6c5f25"))])
  (denote-journal .
 		 [(0 2 0)
 		  ((emacs
@@ -4732,7 +4732,7 @@
 	  ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	 (:keywords "convenience"))])
  (tmr .
-      [(1 2 0)
+      [(1 2 1)
        ((emacs
 	 (29 1)))
        "Set timers using a convenient notation" tar
@@ -4744,7 +4744,7 @@
 	 ("Damien Cassou" . "damien@cassou.me")
 	 ("Daniel Mendler" . "mail@daniel-mendler.de")
 	 ("Steven Allen" . "steven@stebalien.com"))
-	(:commit . "726c6491e327140e7df30e4c58e45244d0c22f22"))])
+	(:commit . "f6b62106b64d4ff99875fd10aad2950be06009e7"))])
  (tomelr .
 	 [(0 4 3)
 	  ((emacs
