@@ -181,5 +181,57 @@ Patterns can use glob wildcards (* and ?)."
 
 (global-undo-tree-mode)
 
+(defun my-undo-cleanup--undo-to-original-path (undo-filename)
+  "Convert undo-tree UNDO-FILENAME to original file path.
+Returns the absolute path to the original file, or nil if UNDO-FILENAME
+is not a valid undo-tree filename."
+  (let ((name (if (file-name-absolute-p undo-filename)
+                  (file-name-nondirectory undo-filename)
+                undo-filename)))
+    (when (and (string-prefix-p ".!" name)
+               (string-suffix-p ".~undo-tree~" name))
+      (let ((path-part (substring name 2 -12)))
+        (concat "/" (replace-regexp-in-string "!" "/" path-part t t))))))
+
+(defun my-undo-cleanup-orphans (&optional dry-run)
+  "Delete undo-tree files whose source files no longer exist.
+With optional DRY-RUN non-nil, only report what would be deleted without
+actually deleting anything.
+
+Returns a plist with :deleted (number of files), :size (bytes freed),
+and :files (list of deleted filenames in dry-run mode)."
+  (interactive "P")
+  (let* ((undo-dir (expand-file-name "undo" user-emacs-directory))
+         (undo-files (when (file-directory-p undo-dir)
+                       (directory-files undo-dir t "\\.~undo-tree~\\'" t)))
+         (deleted-count 0)
+         (total-size 0)
+         (deleted-files nil))
+    (dolist (undo-file undo-files)
+      (when-let ((original-path (my-undo-cleanup--undo-to-original-path undo-file)))
+        (unless (file-exists-p original-path)
+          (let ((file-size (file-attribute-size (file-attributes undo-file))))
+            (if dry-run
+                (progn
+                  (push (file-name-nondirectory undo-file) deleted-files)
+                  (setq total-size (+ total-size file-size))
+                  (setq deleted-count (1+ deleted-count)))
+              (condition-case err
+                  (progn
+                    (delete-file undo-file)
+                    (setq total-size (+ total-size file-size))
+                    (setq deleted-count (1+ deleted-count)))
+                (error
+                 (message "Failed to delete %s: %s" undo-file
+                          (error-message-string err)))))))))
+    (let ((result (list :deleted deleted-count
+                        :size total-size
+                        :files (nreverse deleted-files))))
+      (message "%s %d orphaned undo files (%.1f MB)"
+               (if dry-run "Would delete" "Deleted")
+               deleted-count
+               (/ total-size 1024.0 1024.0))
+      result)))
+
 (provide 'my-edit)
 ;;; my-edit.el ends here
