@@ -3,8 +3,8 @@
 ;; Copyright © 2021-2025  Free Software Foundation, Inc.
 
 ;; Author: Zachary Romero <zkry@posteo.org>
-;; Package-Version: 1.2.0
-;; Package-Revision: 09e46d563f1f
+;; Package-Version: 1.2.1
+;; Package-Revision: d3762199e6d5
 ;; Homepage: https://github.com/zkry/yaml.el
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: tools
@@ -45,6 +45,9 @@
 (require 'cl-lib)
 
 (defconst yaml-parser-version "0.5.1")
+
+(defvar yaml--encode-use-flow-sequence t
+  "Turn on encoding sequence of scalars as flow sequence.")
 
 (defvar yaml--parse-debug nil
   "Turn on debugging messages when parsing YAML when non-nil.
@@ -2630,9 +2633,11 @@ without first inserting a newline."
 If AUTO-INDENT is non-nil, start the list on the current line,
 auto-detecting the indentation.  Functionality defers to
 `yaml--encode-list'."
-  (yaml--encode-list (seq-map #'identity a)
-                     indent
-                     auto-indent))
+  (if (equal a [])
+      (insert "[]")
+    (yaml--encode-list (seq-map #'identity a)
+                       indent
+                       auto-indent)))
 
 
 (defun yaml--encode-scalar (s)
@@ -2673,7 +2678,8 @@ auto-detecting the indentation"
            (yaml--encode-hash-table ht indent auto-indent))
           ((zerop (length l))
            (insert "[]"))
-          ((seq-every-p #'yaml--scalarp l)
+          ((and yaml--encode-use-flow-sequence
+                (seq-every-p #'yaml--scalarp l))
            (insert "[")
            (yaml--encode-object (car l) 0)
            (seq-do (lambda (object)
