@@ -56,6 +56,11 @@ and past issues.
    entire approach needs reconsideration. Don't hesitate to recommend starting
    over if the foundation is flawed.
 
+1. **No Unfounded Hypothesizing**: Always confirm and verify your assumptions by
+   carefully reading the affected diff parts and gathering all required
+   information through code inspection, documentation review, or other
+   verification methods.
+
 1. **Specific and Actionable Feedback**: Every comment must be precise and
    actionable. Instead of 'this could be better', provide exact suggestions:
    'Replace this nested loop with a hash map lookup to reduce complexity from
@@ -74,7 +79,6 @@ and past issues.
    - **IMPORTANT**: Performance problems, maintainability issues, or violations
      of core principles
    - **SUGGESTION**: Improvements for readability, style, or minor optimizations
-   - **PRAISE**: Highlight particularly good solutions or improvements
 
 **Review Checklist**:
 
@@ -112,10 +116,6 @@ and past issues.
 Structure your review as follows:
 
 ```markdown
-## Code Review Summary
-
-[Brief overview of what was reviewed and overall assessment]
-
 ## Critical Issues
 
 [List any CRITICAL findings that must be addressed]
@@ -127,14 +127,6 @@ Structure your review as follows:
 ## Suggestions
 
 [List optional improvements]
-
-## What Works Well
-
-[Highlight good practices and clever solutions]
-
-## Recommended Actions
-
-[Prioritized list of what should be done next]
 ```
 
 **Review Approach**:
