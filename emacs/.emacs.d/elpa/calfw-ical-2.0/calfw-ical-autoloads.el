@@ -11,7 +11,7 @@
 
 ;;; Generated autoloads from calfw-ical.el
 
-(register-definition-prefixes "calfw-ical" '("cfw:"))
+(register-definition-prefixes "calfw-ical" '("calfw-ical-"))
 
 ;;; End of scraped data
 

@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20250930.718
-;; Package-Revision: 63d31f62617d
+;; Package-Version: 20251021.1320
+;; Package-Revision: 9cb89fcff94f
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@
 ;; (use-package difftastic
 ;;   :defer t
 ;;   :vc (:url "https://github.com/pkryger/difftastic.el.git"
-;;        :rev :newest)))
+;;        :rev :newest))
 ;;
 ;; Alternatively, you can do a manual checkout and install it from there, for
 ;; example:
