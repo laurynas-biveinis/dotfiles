@@ -202,7 +202,7 @@ mysql_export_environment_helpers() {
     declare -gA cmake_flags=()
 
     declare -r min_version="8.0.18"
-    declare -r max_version="9.4.0"
+    declare -r max_version="9.5.0"
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -227,7 +227,21 @@ mysql_export_environment_helpers() {
             export MY8030_MAX_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
+        # LLVM 21:
+        # https://bugs.mysql.com/bug.php?id=119246
+        mysql_add_comp_flags "9.5.0" "9.5.0" "cxx" "-Wno-nonnull"
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
+        mysql_add_comp_flags "8.4.7" "8.4.7" "cxx" \
+            `# LLVM 21:` \
+            `# https://bugs.mysql.com/bug.php?id=119239` \
+            "-Wno-uninitialized-const-pointer" \
+            `# https://bugs.mysql.com/bug.php?id=119242` \
+            "-Wno-conditional-uninitialized" \
+            "-Wno-unnecessary-virtual-specifier"
+        mysql_add_comp_flags "8.0.44" "8.0.44" "cxx" \
+            `# LLVM 20:` \
+            `# https://bugs.mysql.com/bug.php?id=119238` \
+            "-Wno-invalid-specialization"
         mysql_add_cmake_flags "8.0.18" "8.0.18" "any" \
                               "-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled"
         mysql_add_cmake_flags "8.0.18" "8.0.28" "any" \
@@ -285,6 +299,12 @@ mysql_export_environment_helpers() {
         export MYCLANG18=("-DCMAKE_C_COMPILER=$brew_opt/llvm@18/bin/clang"
                           "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@18/bin/clang++"
                           "-DCMAKE_AR=$brew_opt/llvm@18/bin/llvm-ar")
+        export MYCLANG19=("-DCMAKE_C_COMPILER=$brew_opt/llvm@19/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@19/bin/clang++"
+                          "-DCMAKE_AR=$brew_opt/llvm@19/bin/llvm-ar")
+        export MYCLANG20=("-DCMAKE_C_COMPILER=$brew_opt/llvm@20/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@20/bin/clang++"
+                          "-DCMAKE_AR=$brew_opt/llvm@20/bin/llvm-ar")
         export MYCLANG=("-DCMAKE_C_COMPILER=$brew_opt/llvm/bin/clang"
                         "-DCMAKE_CXX_COMPILER=$brew_opt/llvm/bin/clang++"
                         "-DCMAKE_AR=$brew_opt/llvm/bin/llvm-ar")
@@ -382,6 +402,12 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.33" "${max_version}" any \
                           "-DFORCE_COLORED_OUTPUT=ON"
+
+    declare -a -r my950_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.5.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.5.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.5.0 cxx_release)"
+    )
 
     declare -a -r my940_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.4.0 cxx)"
@@ -654,6 +680,11 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
+    export MY950D=("${myd[@]}" $(mysql_get_cmake_flags 9.5.0 any_debug)
+                   "${my950_comp_flags[@]}")
+    export MY950=("${myr[@]}" $(mysql_get_cmake_flags 9.5.0 any_release)
+                  "${my950_comp_flags[@]}")
+
     export MY940D=("${myd[@]}" $(mysql_get_cmake_flags 9.4.0 any_debug)
                    "${my940_comp_flags[@]}")
     export MY940=("${myr[@]}" $(mysql_get_cmake_flags 9.4.0 any_release)
@@ -916,6 +947,12 @@ mysql_cmake() {
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                9.5.0)
+                    declare -a release_flags=("${MY950[@]}")
+                    declare -a debug_flags=("${MY950D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 9.4.0)
                     declare -a release_flags=("${MY940[@]}")
                     declare -a debug_flags=("${MY940D[@]}")
@@ -1251,6 +1288,16 @@ mysql_cmake() {
             echo "Using LLVM 18"
             debug_flags+=("${MYCLANG18[@]}")
             release_flags+=("${MYCLANG18[@]}")
+            ;;
+        *llvm-19*)
+            echo "Using LLVM 19"
+            debug_flags+=("${MYCLANG19[@]}")
+            release_flags+=("${MYCLANG19[@]}")
+            ;;
+        *llvm-20*)
+            echo "Using LLVM 20"
+            debug_flags+=("${MYCLANG20[@]}")
+            release_flags+=("${MYCLANG20[@]}")
             ;;
         *llvm*)
             echo "Using LLVM"

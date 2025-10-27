@@ -5,8 +5,8 @@ set -euo pipefail
 # Do setup-macos-python.sh first
 
 brew install ghostscript bison libfido2 doxygen graphviz lz4 libeatmydata \
-     rapidjson protobuf@21 llvm@14 llvm@15 llvm@16 llvm@17 llvm@18 openblas \
-     perl mysql-client@8.0
+     rapidjson protobuf@21 llvm@14 llvm@15 llvm@16 llvm@17 llvm@18 llvm@19 \
+     llvm@20 openblas perl mysql-client@8.0
 
 # Set the default clang-format version to what upstreams use. Note that this
 # does not affect clangd.
