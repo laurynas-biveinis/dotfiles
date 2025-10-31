@@ -44,6 +44,8 @@ autoload mysql_need_openssl3_workaround
 autoload mysql_maybe_workaround_openssl3
 autoload mysql_undo_openssl3_workaround
 
+declare -r uname_out="$(uname -s)"
+
 mysql_export_build_defaults() {
     # The default build type for mysql_build if not in a build dir and no build
     # type was passed
@@ -196,8 +198,6 @@ mysql_get_cmake_flags() {
 }
 
 mysql_export_environment_helpers() {
-    declare -r uname_out="$(uname -s)"
-
     declare -gA comp_flags=()
     declare -gA cmake_flags=()
 
@@ -1450,10 +1450,16 @@ mtr() {
 
     # Disable malloc none zone to get rid of many "malloc: nano zone abandoned
     # due to inability to preallocate reserved vm space" messages
-    # Disable ASan ODR violation detection until
-    # https://bugs.mysql.com/bug.php?id=116372 is fixed
-    MallocNanoZone=0 ASAN_OPTIONS="detect_odr_violation=0" \
+    if [ "$uname_out" = "Darwin" ]; then
+        # Disable ASan ODR violation detection until
+        # https://bugs.mysql.com/bug.php?id=116372 is fixed
+        # Remove this workaround once 8.0.44 / 8.4.7 / 9.5.0 are the oldest
+        # supported versions
+        MallocNanoZone=0 ASAN_OPTIONS="detect_odr_violation=0" \
+                         ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@" || return $?
+    else
         ./mtr "${MTR_EMD[@]}" --tmpdir="$mtr_emd_tmp_dir" "$@" || return $?
+    fi
 }
 
 rmtr() {
