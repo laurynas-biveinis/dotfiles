@@ -791,7 +791,7 @@
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:commit . "da62326326b9b121edb46b0f31adb2569e4e896a"))])
  (consult-denote .
-		 [(0 4 0)
+		 [(0 4 1)
 		  ((emacs
 		    (28 1))
 		   (denote
@@ -803,7 +803,7 @@
 		   (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		   (:authors
 		    ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		   (:commit . "c3a8dccdcf375223036188ab7cacc0c6e421406d"))])
+		   (:commit . "f06fd19ccac60d798b0e41609aa522f3808acde5"))])
  (consult-hoogle .
 		 [(0 5 0)
 		  ((emacs
@@ -3033,16 +3033,16 @@
 	      ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
 	     (:commit . "b1f5c7dbdc405e6e10d9ddd99a43a6b2ad61b176"))])
  (modus-themes .
-	       [(4 8 1)
+	       [(5 0 0)
 		((emacs
-		  (27 1)))
+		  (28 1)))
 		"Elegant, highly legible and customizable themes" tar
 		((:url . "https://github.com/protesilaos/modus-themes")
 		 (:keywords "faces" "theme" "accessibility")
 		 (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
 		 (:authors
 		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
-		 (:commit . "2f19a515110f7fcc407fcc32b9cdfdb26a853eb5"))])
+		 (:commit . "16c2c667c4e65a242ca69bcd536b9a902dabae6f"))])
  (mpdired .
 	  [(3)
 	   ((emacs
@@ -4656,16 +4656,16 @@
 	     ("Milan Glacier" . "dev@milanglacier.com"))
 	    (:commit . "7d265907a960f7e0fab84a107185228860351f54"))])
  (test-simple .
-	      [(1 3 0)
+	      [(1 3 1)
 	       ((cl-lib
 		 (0)))
 	       "Simple Unit Test Framework for Emacs Lisp" tar
-	       ((:url . "http://github.com/rocky/emacs-test-simple")
+	       ((:url . "https://github.com/rocky/emacs-test-simple")
 		(:keywords "unit-test")
 		(:maintainer "Rocky Bernstein" . "rocky@gnu.org")
 		(:authors
 		 ("Rocky Bernstein" . "rocky@gnu.org"))
-		(:commit . "b3b69f52207d3a8111421ad7ab9ed82abbe85316"))])
+		(:commit . "da8ddb6fecb820c8e0809ac0892374e755e4efec"))])
  (tex-item .
 	   [(0 1)
 	    ((emacs
