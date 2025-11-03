@@ -1215,7 +1215,7 @@ Having multiple matching automation rules for the same email is an error.")
                             deadgrep-visit-result-other-window fill-paragraph
                             beginning-of-buffer xwidget-webkit-scroll-down-line
                             lsp-format-buffer mouse-set-region shr-browse-url
-                            w3m-view-this-url
+                            w3m-view-this-url w3m-previous-anchor
                             mu4e-search-maildir company-complete-selection
                             beginend-magit-status-mode-goto-beginning
                             mu4e~headers-quit-buffer org-shifttab magit-refresh
@@ -1291,7 +1291,11 @@ Having multiple matching automation rules for the same email is an error.")
                             read-char-from-minibuffer-insert-char org-metaleft
                             transient-forward-button magit-kill-this-buffer
                             isearch-yank-kill mu4e-view-go-to-url
-                            dired-find-alternate-file org-deadline))
+                            dired-find-alternate-file org-deadline
+                            w3m-next-anchor w3m-view-url-with-browse-url
+                            mu4e-compose-wide-reply magit-dired-jump
+                            magit-stash-drop gnus-article-press-button
+                            magit-bury-or-kill-buffer))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
