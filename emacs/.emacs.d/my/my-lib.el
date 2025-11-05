@@ -284,9 +284,13 @@ used for diagnostics.  SUCCESS-FN is only called on success."
         (gh-project (match-string 2 subject))
         (rel-tag (match-string 3 subject))
         (rel-tag-2 (match-string 4 subject)))
-    (unless (string= rel-tag rel-tag-2)
-      (user-error "Unrecognized GitHub Release email subject format: %s"
-                  subject))
+    ;; Strip leading 'v' from first tag if present before comparison
+    (let ((rel-tag-normalized (if (string-prefix-p "v" rel-tag)
+                                  (substring rel-tag 1)
+                                rel-tag)))
+      (unless (string= rel-tag-normalized rel-tag-2)
+        (user-error "Unrecognized GitHub Release email subject format: %s"
+                    subject)))
     (list :gh-org gh-org :gh-project gh-project
           :gh-name (concat gh-org "/" gh-project) :rel-tag rel-tag)))
 
