@@ -1131,7 +1131,7 @@
 	       ("Jonas Bernoulli" . "emacs.git-modes@jonas.bernoulli.dev"))
 	      (:commit . "dfc450d79498b7997b1155ac76629ab01f7ef355"))])
  (gnosis .
-	 [(0 5 7)
+	 [(0 5 8)
 	  ((emacs
 	    (27 2))
 	   (emacsql
@@ -1148,7 +1148,7 @@
 	   (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
 	   (:authors
 	    ("Thanos Apollo" . "public@thanosapollo.org"))
-	   (:commit . "bb0edd089351b646ad5746199678cc2626a8b539"))])
+	   (:commit . "43b8ba93a7173543d16e08ebc30ce8ed3f793b7f"))])
  (gnu-apl-mode .
 	       [(1 5 1)
 		nil "Emacs mode for GNU APL" tar
@@ -2877,14 +2877,14 @@
 	       ("Le Wang" . "l26wang@gmail.com"))
 	      (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys .
-	       [(28 10 20251107093856)
+	       [(28 10 20251107130929)
 		((emacs
 		  (28 3)))
 		"ergonomic modal keybinding minor mode." tar
 		((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
 		 (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
-		 (:commit . "d2cadf07bbd2bea0839c203095daae885911fde8"))])
+		 (:commit . "f9491c4b1800c1012797c85bd29e98115c2c6666"))])
  (xkcd .
        [(1 1)
 	((json
