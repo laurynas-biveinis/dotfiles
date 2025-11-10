@@ -519,11 +519,12 @@
         (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
 
 ;; Install any missing tree-sitter language grammars
-(dolist (lang-source treesit-language-source-alist)
-  (let ((lang (car lang-source)))
-    (unless (treesit-language-available-p lang)
-      (message "Installing grammar for %s" lang)
-      (treesit-install-language-grammar lang))))
+(without-remote-files
+  (dolist (lang-source treesit-language-source-alist)
+    (let ((lang (car lang-source)))
+      (unless (treesit-language-available-p lang)
+        (message "Installing grammar for %s" lang)
+        (treesit-install-language-grammar lang)))))
 
 (defun dotfiles--tree-sitter-error-language-name (error-entry)
   "Extract language name from tree-sitter ERROR-ENTRY.

@@ -12,8 +12,9 @@
   "My default frame font on Darwin.")
 
 (defconst dotfiles--homebrew-root
-  (file-name-as-directory
-   (string-trim-right (shell-command-to-string "brew --prefix")))
+  (without-remote-files
+    (file-name-as-directory
+     (string-trim-right (shell-command-to-string "brew --prefix"))))
   "Homebrew installation prefix.")
 
 (unless dotfiles--homebrew-root
@@ -22,10 +23,11 @@
 (defun dotfiles--set-exe-var (var name path)
   "Set VAR to PATH and warn if it is not an executable NAME."
   (set var path)
-  (unless (file-executable-p path)
-    (display-warning
-     'dotfiles
-     (format "Executable %s not found at %s" name path) :warning)))
+  (without-remote-files
+    (unless (file-executable-p path)
+      (display-warning
+       'dotfiles
+       (format "Executable %s not found at %s" name path) :warning))))
 
 (dotfiles--set-exe-var 'insert-directory-program "gls"
                        (concat dotfiles--homebrew-root "bin/gls"))

@@ -24,12 +24,13 @@
 
 ;; Auto-regenerate package-quickstart if missing. Do this BEFORE initialization
 ;; so it can be used immediately rather than on next startup.
-(when (and package-quickstart
-           (not (file-exists-p package-quickstart-file)))
-  (message "Generating missing package-quickstart.el...")
-  ;; package-quickstart-refresh requires package-alist to be populated
-  (package-initialize)
-  (package-quickstart-refresh))
+(without-remote-files
+  (when (and package-quickstart
+             (not (file-exists-p package-quickstart-file)))
+    (message "Generating missing package-quickstart.el...")
+    ;; package-quickstart-refresh requires package-alist to be populated
+    (package-initialize)
+    (package-quickstart-refresh)))
 
 ;; Initialize packages to populate `package-alist'. On a new system, this
 ;; ensures that VC-selected packages are installed too. Without `package-alist'
@@ -47,8 +48,9 @@
 ;; into the repo.
 (defun dotfiles--load-secrets-file (filename)
   "Load FILENAME with secrets from `dotfiles--home-dir', warn if not found."
-  (unless (load (expand-file-name filename dotfiles--home-dir) 'noerror)
-    (display-warning 'dotfiles (format "Failed to load %s" filename) :info)))
+  (without-remote-files
+    (unless (load (expand-file-name filename dotfiles--home-dir) 'noerror)
+      (display-warning 'dotfiles (format "Failed to load %s" filename) :info))))
 
 (dotfiles--load-secrets-file "secrets-local.el")
 (dotfiles--load-secrets-file "secrets")
@@ -62,11 +64,12 @@
 ;; Load optional system-specific library and setup system-specific things that
 ;; must be setup before main setup. All of these must exist and their absence
 ;; would be a fatal error.
-(load (expand-file-name
-       (cond ((eq system-type 'windows-nt) "nt-emacs-cygwin")
-             ((eq system-type 'gnu/linux) "linux")
-             ((eq system-type 'darwin) "darwin"))
-       user-emacs-directory))
+(without-remote-files
+  (load (expand-file-name
+         (cond ((eq system-type 'windows-nt) "nt-emacs-cygwin")
+               ((eq system-type 'gnu/linux) "linux")
+               ((eq system-type 'darwin) "darwin"))
+         user-emacs-directory)))
 
 ;; Load the main setup
 (require 'my-setup)
@@ -76,7 +79,8 @@
 
 ;; Load all other setup files from the dotfiles directory. The order is
 ;; irrelevant.
-(mapc #'load (file-expand-wildcards dotfiles--modules-elisp))
+(without-remote-files
+  (mapc #'load (file-expand-wildcards dotfiles--modules-elisp)))
 
 (require 'server)
 (if (server-running-p)

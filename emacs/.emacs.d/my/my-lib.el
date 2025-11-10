@@ -54,23 +54,25 @@
 
 (defun dotfiles--find-latest-pdf (directory)
   "Find the most recently created .pdf file in DIRECTORY."
-  (let* ((files (directory-files-and-attributes directory nil "\\.pdf$" t))
-         (sorted-files (sort files (lambda (a b)
-                                     (time-less-p (nth 6 b) (nth 6 a))))))
-    (if sorted-files
-        (file-name-nondirectory (car (car sorted-files)))
-      (user-error "No PDFs found in %s" directory))))
+  (without-remote-files
+    (let* ((files (directory-files-and-attributes directory nil "\\.pdf$" t))
+           (sorted-files (sort files (lambda (a b)
+                                       (time-less-p (nth 6 b) (nth 6 a))))))
+      (if sorted-files
+          (file-name-nondirectory (car (car sorted-files)))
+        (user-error "No PDFs found in %s" directory)))))
 
 (defun dotfiles--read-pdf (dir prompt confirmation)
   "Read a PDF file in DIR with PROMPT, then confirm it with CONFIRMATION.
 While reading, suggest to complete with the latest PDF in the directory.
 CONFIRMATION must have a %s argument which will be replaced with the file path.
 Returns the path or nil."
-  (let* ((latest-pdf (dotfiles--find-latest-pdf dir))
-         (pdf-fn (read-file-name prompt dir latest-pdf t latest-pdf))
-         (pdf-path (expand-file-name pdf-fn dir)))
-    (when (y-or-n-p (format confirmation pdf-path))
-      pdf-path)))
+  (without-remote-files
+    (let* ((latest-pdf (dotfiles--find-latest-pdf dir))
+           (pdf-fn (read-file-name prompt dir latest-pdf t latest-pdf))
+           (pdf-path (expand-file-name pdf-fn dir)))
+      (when (y-or-n-p (format confirmation pdf-path))
+        pdf-path))))
 
 (defun dotfiles--sibling-path (path fn)
   "For a given PATH, return a full path for FN in the same directory."
