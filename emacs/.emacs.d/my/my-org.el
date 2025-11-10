@@ -308,6 +308,11 @@ event of an error or nonlocal exit."
     (insert (format "Files in %s: %d" dir
                     (- (length (directory-files dir)) 2)))))
 
+;; Export
+(require 'ox)
+
+(setq org-export-body-only t)
+
 ;;; `org-roam'
 (when my-zettelkasten-p
   (progn
