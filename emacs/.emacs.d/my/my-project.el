@@ -52,6 +52,7 @@
 The type is not displayed if it is generic or rust-cargo. This function is meant
 to be set as the value of `projectile-mode-line-function' to replace the default
 behavior."
+  (declare (important-return-value t))
   (let ((project-name (projectile-project-name)))
     (if (string= project-name "-")
         ""
@@ -126,6 +127,7 @@ The command is determined like this:
   via .dir-locals.el
 - finally we check for the default configure command for a
   project of that type"
+  (declare (important-return-value t))
   (or projectile-project-configure-cmd
       (let ((cmd-format-string (projectile-default-configure-command
                                 (projectile-project-type))))

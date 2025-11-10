@@ -30,6 +30,7 @@
 
 (defun dotfiles--completion-confirm (orig-fun &rest args)
   "Make minibuffer completion for (ORIG-FUN ARGS) confirm non-valid completion."
+  (declare (important-return-value t))
   (let ((minibuffer-completion-confirm 'confirm))
     (apply orig-fun args)))
 
@@ -40,6 +41,7 @@
 ;; Make `org-roam' node completion case-insensitive
 (defun dotfiles--completion-case-insensitive (orig-fun &rest args)
   "Make minibuffer completion for (ORIG-FUN ARGS) case-insensitive."
+  (declare (important-return-value t))
   (let ((completion-ignore-case t))
     (apply orig-fun args)))
 

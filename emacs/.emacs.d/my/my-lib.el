@@ -41,12 +41,14 @@
 ;; If dependencies are OK, then use `string-join' instead.
 (defun dotfiles--concat-all (s)
   "Concatenates all strings in S with spaces."
+  (declare (important-return-value t))
   (mapconcat 'identity s " "))
 
 ;;; regex helpers
 
 (defun dotfiles--string-match-string (regex string)
   "Return the 1st match for REGEX in STRING, nil otherwise."
+  (declare (important-return-value t))
   (when (string-match regex string)
     (match-string 1 string)))
 
@@ -54,6 +56,7 @@
 
 (defun dotfiles--find-latest-pdf (directory)
   "Find the most recently created .pdf file in DIRECTORY."
+  (declare (important-return-value t))
   (without-remote-files
     (let* ((files (directory-files-and-attributes directory nil "\\.pdf$" t))
            (sorted-files (sort files (lambda (a b)
@@ -67,6 +70,7 @@
 While reading, suggest to complete with the latest PDF in the directory.
 CONFIRMATION must have a %s argument which will be replaced with the file path.
 Returns the path or nil."
+  (declare (important-return-value t))
   (without-remote-files
     (let* ((latest-pdf (dotfiles--find-latest-pdf dir))
            (pdf-fn (read-file-name prompt dir latest-pdf t latest-pdf))
@@ -76,6 +80,7 @@ Returns the path or nil."
 
 (defun dotfiles--sibling-path (path fn)
   "For a given PATH, return a full path for FN in the same directory."
+  (declare (important-return-value t))
   (file-name-concat (file-name-directory path) fn))
 
 ;;; External program helpers
@@ -118,6 +123,7 @@ code it is printed as user error."
 (defun dotfiles--gh-get (args)
   "Run gh with ARGS, return its output with the final newline trimmed.
 ARGS must be properly quoted if needed."
+  (declare (important-return-value t))
   ;; We want to remove the final character and the final character only. Hence,
   ;; `substring' instead of i.e. `string-trim-right'.
   (substring (shell-command-to-string (concat "gh " args)) 0 -1))
@@ -126,6 +132,7 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--get-org-buffer (name)
   "Get the buffer for an `org' file with NAME."
+  (declare (important-return-value t))
   (or (find-buffer-visiting name)
       (find-file-noselect name)))
 
@@ -143,11 +150,13 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--get-raw-message (msg)
   "Get the raw `mu4e' message MSG as string."
+  (declare (important-return-value t))
   (with-temp-buffer (insert-file-contents (mu4e-message-readable-path msg))
                     (buffer-string)))
 
 (defun dotfiles--get-mu4e-msg-content (mime-type)
   "Get the content of the first `mu4e' message part with MIME-TYPE."
+  (declare (important-return-value t))
   (mm-get-part
    (plist-get
     (seq-find (lambda (part)
@@ -157,6 +166,7 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--get-mu4e-msg-csv-part ()
   "For a `mu4e' message, get its first .csv attachment part, if any."
+  (declare (important-return-value t))
   (or (seq-find (lambda (part)
                   (string-suffix-p ".csv" (plist-get part :filename) t))
                 (mu4e-view-mime-parts))
@@ -164,12 +174,14 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--get-mu4e-msg-pdf-part ()
   "For a `mu4e' message, get its first .pdf attachment part, if any."
+  (declare (important-return-value t))
   (seq-find (lambda (part)
               (string-suffix-p ".pdf" (plist-get part :filename) t))
             (mu4e-view-mime-parts)))
 
 (defun dotfiles--save-mu4e-msg-part-file (part)
   "For a `mu4e' message PART, save it as a file and return its path."
+  (declare (important-return-value t))
   (let* ((base-dir (plist-get part :target-dir))
          (file-path (mu4e-join-paths base-dir (plist-get part :filename))))
     (mm-save-part-to-file (plist-get part :handle) file-path)
@@ -177,15 +189,18 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--save-mu4e-msg-csv-part ()
   "For a `mu4e' mssage, save its first .csv part and return the path."
+  (declare (important-return-value t))
   (let ((csv-part (dotfiles--get-mu4e-msg-csv-part)))
     (dotfiles--save-mu4e-msg-part-file csv-part)))
 
 (defun dotfiles--get-mu4e-msg-html-content ()
   "Get the current `mu4e' message HTML content."
+  (declare (important-return-value t))
   (dotfiles--get-mu4e-msg-content "text/html"))
 
 (defun dotfiles--get-mu4e-msg-txt-content ()
   "Get the current `mu4e' message text content."
+  (declare (important-return-value t))
   (dotfiles--get-mu4e-msg-content "text/plain"))
 
 (defun dotfiles--for-each-attachment (fn)
@@ -262,23 +277,27 @@ used for diagnostics.  SUCCESS-FN is only called on success."
 
 (defun dotfiles--get-gh-name-from-url (url)
   "Get the GitHub organization/project from a PR URL."
+  (declare (important-return-value t))
   (dotfiles--string-match-string dotfiles--gh-org-and-project url))
 
 ;; GitHub / `mu4e' helpers
 
 (defun dotfiles--get-closed-pr-url (pr-id html-content)
   "Return the URL of a closed GitHub PR with PR-ID in HTML-CONTENT or nil."
+  (declare (important-return-value t))
   (let ((closed-pr-url-regex (format dotfiles--gh-closed-pr-url-format pr-id)))
     (dotfiles--string-match-string closed-pr-url-regex html-content)))
 
 (defun dotfiles--get-commented-pr-url (pr-id html-content)
   "Return the URL of a commented GitHub PR with PR-ID in HTML-CONTENT or nil."
+  (declare (important-return-value t))
   (let ((commented-pr-url-regex
          (format dotfiles--gh-commented-pr-url-format pr-id)))
     (dotfiles--string-match-string commented-pr-url-regex html-content)))
 
 (defun dotfiles--parse-gh-release-subject (subject)
   "Parse out GitHub release email SUBJECT into a plist."
+  (declare (important-return-value t))
   (unless (string-match dotfiles--gh-release-in-subject subject)
     (user-error "Subject %s did not match against %s" subject
                 dotfiles--gh-release-in-subject))
@@ -298,16 +317,19 @@ used for diagnostics.  SUCCESS-FN is only called on success."
 
 (defun dotfiles--get-run-results-url (msg)
   "Get a GitHub run URL from a `mu4e' MSG."
+  (declare (important-return-value t))
   (let ((raw-message (dotfiles--get-raw-message msg)))
     (dotfiles--string-match-string dotfiles--gh-view-run-results raw-message)))
 
 (defun dotfiles--get-gh-issue-url (msg)
   "Get a GitHub issue URL from a `mu4e' MSG."
+  (declare (important-return-value t))
   (let ((raw-message (dotfiles--get-raw-message msg)))
     (dotfiles--string-match-string dotfiles--gh-issue-url raw-message)))
 
 (defun dotfiles--get-pr-id (msg)
   "Return the PR id from a `mu4e' MSG subject."
+  (declare (important-return-value t))
   (let ((subject (mu4e-message-field msg :subject)))
     (dotfiles--string-match-string dotfiles--gh-pr-in-subject subject)))
 
@@ -351,17 +373,20 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defun dotfiles--find-project-by-name (name)
   "Find a development project by its NAME."
+  (declare (important-return-value t))
   (or (cl-find name my-projects :test #'string= :key #'my-dev-project-name)
       (user-error "Project %s not configured in `my-projects'" name)))
 
 (defun dotfiles--find-project-by-gh (gh-name)
   "Find a development project by its GitHub name GH-NAME."
+  (declare (important-return-value t))
   (or (cl-find gh-name my-projects :test #'string= :key
                #'my-dev-project-gh-name)
       (user-error "GitHub project %s not configured in `my-projects'" gh-name)))
 
 (defun dotfiles--find-project-for-cwd ()
   "Find a development project for the current working directory."
+  (declare (important-return-value t))
   (let ((gh-name (dotfiles--gh-get
                   "repo view --json nameWithOwner -q '.nameWithOwner'")))
     (unless gh-name
@@ -370,17 +395,20 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defun dotfiles--get-project-push-remote (project)
   "Get the push remote for PROJECT."
+  (declare (important-return-value t))
   (or (my-dev-project-push-remote project)
       (user-error "Project %s misconfigured in `my-projects'"
                   (my-dev-project-name project))))
 
 (defun dotfiles--get-project-branch-root (project)
   "Get the branch root directory for PROJECT."
+  (declare (important-return-value t))
   (or (my-dev-project-branch-root project)
       (user-error "Project %s misconfigured in `my-projects'")))
 
 (defun dotfiles--get-project-main-branch-dir (project)
   "Get the directory of the main branch checkout for PROJECT."
+  (declare (important-return-value t))
   (let ((main-branch-checkout (my-dev-project-main-branch-checkout project)))
     (unless main-branch-checkout
       (user-error "Project %s misconfigured in `my-projects'"
@@ -389,6 +417,7 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defun dotfiles--format-waitingfor-task-title (project branch-name)
   "Format the `org' task title for a PR of BRANCH-NAME in PROJECT."
+  (declare (important-return-value t))
   (let ((format-string (my-dev-project-pr-waitingfor-template project)))
     (unless format-string
       (user-error "Project %s misconfigured in `my-projects'"
@@ -404,6 +433,7 @@ The %s must be present and is substituted with a PR branch name.")
   "Create a new PR from the current branch with provided data.
 Pushes the branch to my remote first. The needed data are PROJECT and
 BRANCH-NAME. Returns the URL of this PR."
+  (declare (important-return-value t))
   ;; TODO(laurynas): how to sync the push remote with `magit'?
   (let* ((remote-name (dotfiles--get-project-push-remote project))
          ;; Prefix `branch-name' with fork org per
@@ -444,6 +474,7 @@ BRANCH-NAME. Returns the URL of this PR."
 
 (defun dotfiles--find-3rd-party-submodule (gh-name)
   "Find a 3rd party submodule by GH-NAME."
+  (declare (important-return-value t))
   (or (cl-find gh-name my-3rd-party-submodules :test #'string= :key
                #'my-3rd-party-submodule-3p-gh-name)
       (message "Nothing found in `my-3rd-party-submodules' for %s" gh-name)))
