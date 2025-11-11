@@ -32,6 +32,9 @@
     (package-initialize)
     (package-quickstart-refresh)))
 
+(require 'package-vc)
+(setq package-vc-register-as-project nil)
+
 ;; Initialize packages to populate `package-alist'. On a new system, this
 ;; ensures that VC-selected packages are installed too. Without `package-alist'
 ;; populated, `package-vc-install-selected-packages' cannot detect
