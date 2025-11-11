@@ -29,9 +29,6 @@
        'dotfiles
        (format "Executable %s not found at %s" name path) :warning))))
 
-(dotfiles--set-exe-var 'insert-directory-program "gls"
-                       (concat dotfiles--homebrew-root "bin/gls"))
-
 (require 'lsp-clangd)
 (dotfiles--set-exe-var 'lsp-clients-clangd-executable "clangd"
                        (concat dotfiles--homebrew-root "opt/llvm/bin/clangd"))
