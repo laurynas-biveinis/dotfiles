@@ -107,6 +107,7 @@
 (setq tramp-default-method "scpx")
 (setq tramp-use-scp-direct-remote-copying t)
 (setq remote-file-name-inhibit-cache t)
+(setq remote-file-name-access-timeout 3)
 
 ;; "Integration" with `vc': I only use git on remote hosts, handled by Magit,
 ;; thus disable VC over TRAMP
