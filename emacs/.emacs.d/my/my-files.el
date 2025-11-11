@@ -61,6 +61,7 @@
 
 (require 'dired)
 (setq dired-recursive-copies 'always) ;; Copy recursively
+(setq dired-movement-style 'cycle-files)
 
 (require 'vc)
 ;; https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/

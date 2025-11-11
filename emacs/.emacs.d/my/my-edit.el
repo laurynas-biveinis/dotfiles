@@ -51,6 +51,8 @@ themselves."
 (global-so-long-mode 1)
 (delete-selection-mode 1)  ;; Typing or <Delete> will remove selected text
 
+(kill-ring-deindent-mode 1)
+
 (require 'elec-pair)
 (electric-pair-mode)
 

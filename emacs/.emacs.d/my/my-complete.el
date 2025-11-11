@@ -21,7 +21,8 @@
       completion-styles '(substring flex)
       ;; Remove the default `tags-completion-at-point', I never use tags.
       completion-at-point-functions nil
-      completions-format 'vertical)
+      completions-format 'vertical
+      minibuffer-visible-completions t)
 
 ;;; Integration with `projectile'
 
