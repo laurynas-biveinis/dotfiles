@@ -42,7 +42,8 @@
 (defun dotfiles--concat-all (s)
   "Concatenates all strings in S with spaces."
   (declare (ftype (function (list) string))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (mapconcat 'identity s " "))
 
 ;;; regex helpers
@@ -50,7 +51,8 @@
 (defun dotfiles--string-match-string (regex string)
   "Return the 1st match for REGEX in STRING, nil otherwise."
   (declare (ftype (function (string string) (or string null)))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (when (string-match regex string)
     (match-string 1 string)))
 
@@ -85,7 +87,8 @@ Returns the path or nil."
 (defun dotfiles--sibling-path (path fn)
   "For a given PATH, return a full path for FN in the same directory."
   (declare (ftype (function (string string) string))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (file-name-concat (file-name-directory path) fn))
 
 ;;; External program helpers
@@ -302,7 +305,8 @@ used for diagnostics.  SUCCESS-FN is only called on success."
 (defun dotfiles--get-gh-name-from-url (url)
   "Get the GitHub organization/project from a PR URL."
   (declare (ftype (function (string) (or string null)))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (dotfiles--string-match-string dotfiles--gh-org-and-project url))
 
 ;; GitHub / `mu4e' helpers
@@ -310,14 +314,16 @@ used for diagnostics.  SUCCESS-FN is only called on success."
 (defun dotfiles--get-closed-pr-url (pr-id html-content)
   "Return the URL of a closed GitHub PR with PR-ID in HTML-CONTENT or nil."
   (declare (ftype (function (string string) (or string null)))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (let ((closed-pr-url-regex (format dotfiles--gh-closed-pr-url-format pr-id)))
     (dotfiles--string-match-string closed-pr-url-regex html-content)))
 
 (defun dotfiles--get-commented-pr-url (pr-id html-content)
   "Return the URL of a commented GitHub PR with PR-ID in HTML-CONTENT or nil."
   (declare (ftype (function (string string) (or string null)))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (let ((commented-pr-url-regex
          (format dotfiles--gh-commented-pr-url-format pr-id)))
     (dotfiles--string-match-string commented-pr-url-regex html-content)))
@@ -455,7 +461,8 @@ The %s must be present and is substituted with a PR branch name.")
 (defun dotfiles--format-waitingfor-task-title (project branch-name)
   "Format the `org' task title for a PR of BRANCH-NAME in PROJECT."
   (declare (ftype (function (my-dev-project string) string))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (let ((format-string (my-dev-project-pr-waitingfor-template project)))
     (unless format-string
       (user-error "Project %s misconfigured in `my-projects'"

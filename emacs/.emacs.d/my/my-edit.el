@@ -33,7 +33,8 @@ This is checked through `major-mode-remap-alist' being empty."
 It is assumed that all the `treesit'-based modes, and only them, are values in
 the `major-mode-remap-alist'."
   (declare (ftype (function () boolean))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (member major-mode (mapcar #'cdr major-mode-remap-alist)))
 
 (defun dotfiles--maybe-enable-electric-layout-mode ()
@@ -167,7 +168,8 @@ themselves."
   "Return non-nil if BASENAME matches the glob PATTERN.
 PATTERN can use glob wildcards (* and ?)."
   (declare (ftype (function (string string) boolean))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free 'error-free))
   (string-match-p (wildcard-to-regexp pattern) basename))
 
 (defun dotfiles--undo-tree-allowed-for-buffer-p (&optional _print-message)
@@ -175,7 +177,8 @@ PATTERN can use glob wildcards (* and ?)."
 Returns nil if the buffer basename matches any pattern in `no-undo-tree-file-names'.
 Patterns can use glob wildcards (* and ?)."
   (declare (ftype (function (&optional t) boolean))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (if-let ((file-name (buffer-file-name)))
       (let ((basename (file-name-nondirectory file-name)))
         (not (seq-some
@@ -193,7 +196,8 @@ Patterns can use glob wildcards (* and ?)."
 Returns the absolute path to the original file, or nil if UNDO-FILENAME
 is not a valid undo-tree filename."
   (declare (ftype (function (string) (or string null)))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (let ((name (if (file-name-absolute-p undo-filename)
                   (file-name-nondirectory undo-filename)
                 undo-filename)))

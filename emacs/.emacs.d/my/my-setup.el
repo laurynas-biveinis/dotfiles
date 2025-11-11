@@ -191,14 +191,16 @@
 (defun dotfiles--goto-address-overlay-p (o)
   "Return t if O is an overlay used by `goto-address'."
   (declare (ftype (function (t) boolean))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free 'error-free))
   (and (overlayp o) (overlay-get o 'goto-address)))
 
 (defun dotfiles--no-flyspell-overlay-on-goto-address (beg _end _face
                                                           _mouse-face)
   "Do not create a `flyspell' overlay if a `goto-address' one exists at BEG."
   (declare (ftype (function (integer-or-marker t t t) boolean))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (seq-every-p #'null (mapcar #'dotfiles--goto-address-overlay-p (overlays-at
                                                                   beg))))
 
@@ -403,7 +405,8 @@
 (defun my--difftastic-window-width ()
   "Return the target window width for `difftastic'."
   (declare (ftype (function () integer))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free 'error-free))
   180)
 
 (setq difftastic-requested-window-width-function #'my--difftastic-window-width)
@@ -537,6 +540,7 @@
 (defun dotfiles--tree-sitter-error-language-name (error-entry)
   "Extract language name from tree-sitter ERROR-ENTRY.
 ERROR-ENTRY is a cons cell of (LANG . ERROR-MESSAGE-STRING)."
+  (declare (side-effect-free 'error-free))
   (symbol-name (car error-entry)))
 
 (defun my-update-tree-sitter-grammars ()
@@ -1008,7 +1012,8 @@ decision to block all the images."
   "Check if the email SUBJECT matches the criteria defined in RULE.
 RULE is a plist containing either :subject-exact or :subject-match."
   (declare (ftype (function (list string) boolean))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (let ((subject-exact (plist-get rule :subject-exact))
         (subject-match (plist-get rule :subject-match)))
     (when (and subject-exact subject-match)

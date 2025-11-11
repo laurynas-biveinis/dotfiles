@@ -129,7 +129,8 @@ The command is determined like this:
 - finally we check for the default configure command for a
   project of that type"
   (declare (ftype (function (string) (or null string)))
-           (important-return-value t))
+           (important-return-value t)
+           (side-effect-free t))
   (or projectile-project-configure-cmd
       (let ((cmd-format-string (projectile-default-configure-command
                                 (projectile-project-type))))
