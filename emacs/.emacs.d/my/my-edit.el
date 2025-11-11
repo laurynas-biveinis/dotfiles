@@ -32,7 +32,8 @@ This is checked through `major-mode-remap-alist' being empty."
   "Check whether the current mode is a `treesit'-based one.
 It is assumed that all the `treesit'-based modes, and only them, are values in
 the `major-mode-remap-alist'."
-  (declare (important-return-value t))
+  (declare (ftype (function () boolean))
+           (important-return-value t))
   (member major-mode (mapcar #'cdr major-mode-remap-alist)))
 
 (defun dotfiles--maybe-enable-electric-layout-mode ()
@@ -117,6 +118,7 @@ themselves."
 
 (defun end-of-line-and-newline-and-indent ()
   "Go to the end of line, insert a new line, and indent."
+  (declare (ftype (function () t)))
   (interactive)
   (end-of-line)
   (newline-and-indent))
@@ -129,6 +131,7 @@ themselves."
 
 (defun dotfiles--indent-if-prog-mode (&optional _ARG)
   "Indent current region if in programming mode and no prefix arg."
+  (declare (ftype (function (&optional t) t)))
   (interactive)
   (if (and (not current-prefix-arg)
            (derived-mode-p 'prog-mode))
@@ -161,14 +164,16 @@ themselves."
 (defun dotfiles--basename-matches-pattern-p (basename pattern)
   "Return non-nil if BASENAME matches the glob PATTERN.
 PATTERN can use glob wildcards (* and ?)."
-  (declare (important-return-value t))
+  (declare (ftype (function (string string) boolean))
+           (important-return-value t))
   (string-match-p (wildcard-to-regexp pattern) basename))
 
 (defun dotfiles--undo-tree-allowed-for-buffer-p (&optional _print-message)
   "Return non-nil if undo-tree is allowed for the current buffer.
 Returns nil if the buffer basename matches any pattern in `no-undo-tree-file-names'.
 Patterns can use glob wildcards (* and ?)."
-  (declare (important-return-value t))
+  (declare (ftype (function (&optional t) boolean))
+           (important-return-value t))
   (if-let ((file-name (buffer-file-name)))
       (let ((basename (file-name-nondirectory file-name)))
         (not (seq-some
@@ -185,7 +190,8 @@ Patterns can use glob wildcards (* and ?)."
   "Convert undo-tree UNDO-FILENAME to original file path.
 Returns the absolute path to the original file, or nil if UNDO-FILENAME
 is not a valid undo-tree filename."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) (or string null)))
+           (important-return-value t))
   (let ((name (if (file-name-absolute-p undo-filename)
                   (file-name-nondirectory undo-filename)
                 undo-filename)))
@@ -201,6 +207,7 @@ actually deleting anything.
 
 Returns a plist with :deleted (number of files), :size (bytes freed),
 and :files (list of deleted filenames in dry-run mode)."
+  (declare (ftype (function (&optional (or null integer cons)) t)))
   (interactive "P")
   (let* ((undo-dir (expand-file-name "undo" user-emacs-directory))
          (undo-files (when (file-directory-p undo-dir)

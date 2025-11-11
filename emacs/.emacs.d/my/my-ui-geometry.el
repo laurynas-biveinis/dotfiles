@@ -145,7 +145,8 @@ Only supports 1 or 2 rows."
 
 (defun dotfiles--find-config-for-display (geometry)
   "Find the configuration for GEOMETRY."
-  (declare (important-return-value t))
+  (declare (ftype (function (cons) (or null dotfiles--display-config)))
+           (important-return-value t))
   (seq-find (lambda (config)
               (equal (dotfiles--display-config-display-size config) geometry))
             dotfiles--display-configs))

@@ -34,7 +34,8 @@
 
 (defun dotfiles--lsp-mode-line ()
   "Construct the mode line text for `lsp-mode'."
-  (declare (important-return-value t))
+  (declare (ftype (function () string))
+           (important-return-value t))
   (if (lsp-workspaces)
       " LSP"
     " !LSP"))

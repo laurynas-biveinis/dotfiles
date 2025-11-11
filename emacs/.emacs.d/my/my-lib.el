@@ -235,6 +235,7 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--open-mu4e-all-attachments (suffix)
   "Download all attachments with file name SUFFIX from a `mu4e' message."
+  (declare (ftype (function (string) t)))
   (dotfiles--for-each-attachment
    (lambda (handle path)
      (when (string-suffix-p suffix path t)
@@ -246,6 +247,7 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--download-mu4e-all-jpgs ()
   "Download all .jpg attachments from a `mu4e' message."
+  (declare (ftype (function () t)))
   (dotfiles--for-each-attachment
    (lambda (handle path)
      (when (string-suffix-p ".jpg" path t)
@@ -269,6 +271,7 @@ ARGS must be properly quoted if needed."
   "Ask to send an already filled-out email to TO, call SUCCESS-FN on success.
 \"To:\" field in the e-mail must be already filled out, as TO argument is only
 used for diagnostics.  SUCCESS-FN is only called on success."
+  (declare (ftype (function (string function) t)))
   (let ((subject (message-field-value "Subject")))
     (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
         (progn
@@ -282,6 +285,7 @@ used for diagnostics.  SUCCESS-FN is only called on success."
 
 (defun dotfiles--send-email (template attachments success-fn)
   "Send a mail using TEMPLATE with ATTACHMENTS, call SUCCESS-FN on success."
+  (declare (ftype (function (my-email-template list function) t)))
   (mu4e-context-switch nil (my-email-template-context template))
   (let ((mu4e-compose-context-policy nil)
         (to (my-email-template-to template))
@@ -297,27 +301,31 @@ used for diagnostics.  SUCCESS-FN is only called on success."
 
 (defun dotfiles--get-gh-name-from-url (url)
   "Get the GitHub organization/project from a PR URL."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) (or string null)))
+           (important-return-value t))
   (dotfiles--string-match-string dotfiles--gh-org-and-project url))
 
 ;; GitHub / `mu4e' helpers
 
 (defun dotfiles--get-closed-pr-url (pr-id html-content)
   "Return the URL of a closed GitHub PR with PR-ID in HTML-CONTENT or nil."
-  (declare (important-return-value t))
+  (declare (ftype (function (string string) (or string null)))
+           (important-return-value t))
   (let ((closed-pr-url-regex (format dotfiles--gh-closed-pr-url-format pr-id)))
     (dotfiles--string-match-string closed-pr-url-regex html-content)))
 
 (defun dotfiles--get-commented-pr-url (pr-id html-content)
   "Return the URL of a commented GitHub PR with PR-ID in HTML-CONTENT or nil."
-  (declare (important-return-value t))
+  (declare (ftype (function (string string) (or string null)))
+           (important-return-value t))
   (let ((commented-pr-url-regex
          (format dotfiles--gh-commented-pr-url-format pr-id)))
     (dotfiles--string-match-string commented-pr-url-regex html-content)))
 
 (defun dotfiles--parse-gh-release-subject (subject)
   "Parse out GitHub release email SUBJECT into a plist."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) list))
+           (important-return-value t))
   (unless (string-match dotfiles--gh-release-in-subject subject)
     (user-error "Subject %s did not match against %s" subject
                 dotfiles--gh-release-in-subject))
@@ -337,19 +345,22 @@ used for diagnostics.  SUCCESS-FN is only called on success."
 
 (defun dotfiles--get-run-results-url (msg)
   "Get a GitHub run URL from a `mu4e' MSG."
-  (declare (important-return-value t))
+  (declare (ftype (function (list) (or string null)))
+           (important-return-value t))
   (let ((raw-message (dotfiles--get-raw-message msg)))
     (dotfiles--string-match-string dotfiles--gh-view-run-results raw-message)))
 
 (defun dotfiles--get-gh-issue-url (msg)
   "Get a GitHub issue URL from a `mu4e' MSG."
-  (declare (important-return-value t))
+  (declare (ftype (function (list) (or string null)))
+           (important-return-value t))
   (let ((raw-message (dotfiles--get-raw-message msg)))
     (dotfiles--string-match-string dotfiles--gh-issue-url raw-message)))
 
 (defun dotfiles--get-pr-id (msg)
   "Return the PR id from a `mu4e' MSG subject."
-  (declare (important-return-value t))
+  (declare (ftype (function (list) (or string null)))
+           (important-return-value t))
   (let ((subject (mu4e-message-field msg :subject)))
     (dotfiles--string-match-string dotfiles--gh-pr-in-subject subject)))
 
@@ -393,20 +404,23 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defun dotfiles--find-project-by-name (name)
   "Find a development project by its NAME."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) my-dev-project))
+           (important-return-value t))
   (or (cl-find name my-projects :test #'string= :key #'my-dev-project-name)
       (user-error "Project %s not configured in `my-projects'" name)))
 
 (defun dotfiles--find-project-by-gh (gh-name)
   "Find a development project by its GitHub name GH-NAME."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) my-dev-project))
+           (important-return-value t))
   (or (cl-find gh-name my-projects :test #'string= :key
                #'my-dev-project-gh-name)
       (user-error "GitHub project %s not configured in `my-projects'" gh-name)))
 
 (defun dotfiles--find-project-for-cwd ()
   "Find a development project for the current working directory."
-  (declare (important-return-value t))
+  (declare (ftype (function () my-dev-project))
+           (important-return-value t))
   (let ((gh-name (dotfiles--gh-get
                   "repo view --json nameWithOwner -q '.nameWithOwner'")))
     (unless gh-name
@@ -415,20 +429,23 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defun dotfiles--get-project-push-remote (project)
   "Get the push remote for PROJECT."
-  (declare (important-return-value t))
+  (declare (ftype (function (my-dev-project) string))
+           (important-return-value t))
   (or (my-dev-project-push-remote project)
       (user-error "Project %s misconfigured in `my-projects'"
                   (my-dev-project-name project))))
 
 (defun dotfiles--get-project-branch-root (project)
   "Get the branch root directory for PROJECT."
-  (declare (important-return-value t))
+  (declare (ftype (function (my-dev-project) string))
+           (important-return-value t))
   (or (my-dev-project-branch-root project)
       (user-error "Project %s misconfigured in `my-projects'")))
 
 (defun dotfiles--get-project-main-branch-dir (project)
   "Get the directory of the main branch checkout for PROJECT."
-  (declare (important-return-value t))
+  (declare (ftype (function (my-dev-project) string))
+           (important-return-value t))
   (let ((main-branch-checkout (my-dev-project-main-branch-checkout project)))
     (unless main-branch-checkout
       (user-error "Project %s misconfigured in `my-projects'"
@@ -437,7 +454,8 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defun dotfiles--format-waitingfor-task-title (project branch-name)
   "Format the `org' task title for a PR of BRANCH-NAME in PROJECT."
-  (declare (important-return-value t))
+  (declare (ftype (function (my-dev-project string) string))
+           (important-return-value t))
   (let ((format-string (my-dev-project-pr-waitingfor-template project)))
     (unless format-string
       (user-error "Project %s misconfigured in `my-projects'"
@@ -446,6 +464,7 @@ The %s must be present and is substituted with a PR branch name.")
 
 (defun dotfiles--visit-post-pr-url (project)
   "Visit the URL for a PROJECT after a PR."
+  (declare (ftype (function (my-dev-project) t)))
   (when-let ((post-pr-url (my-dev-project-post-pr-url project)))
     (browse-url post-pr-url)))
 
@@ -453,7 +472,8 @@ The %s must be present and is substituted with a PR branch name.")
   "Create a new PR from the current branch with provided data.
 Pushes the branch to my remote first. The needed data are PROJECT and
 BRANCH-NAME. Returns the URL of this PR."
-  (declare (important-return-value t))
+  (declare (ftype (function (my-dev-project string) string))
+           (important-return-value t))
   ;; TODO(laurynas): how to sync the push remote with `magit'?
   (let* ((remote-name (dotfiles--get-project-push-remote project))
          ;; Prefix `branch-name' with fork org per
@@ -494,7 +514,8 @@ BRANCH-NAME. Returns the URL of this PR."
 
 (defun dotfiles--find-3rd-party-submodule (gh-name)
   "Find a 3rd party submodule by GH-NAME."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) (or my-3rd-party-submodule null)))
+           (important-return-value t))
   (or (cl-find gh-name my-3rd-party-submodules :test #'string= :key
                #'my-3rd-party-submodule-3p-gh-name)
       (message "Nothing found in `my-3rd-party-submodules' for %s" gh-name)))
@@ -505,6 +526,7 @@ BRANCH-NAME. Returns the URL of this PR."
 
 (defun dotfiles--read-org-headline ()
   "Get the target `org' headline for the capture."
+  (declare (ftype (function () t)))
   (let* ((refile-target (org-refile-get-location "File link to this under"))
          (file (nth 1 refile-target))
          (pos (nth 3 refile-target)))
@@ -524,6 +546,7 @@ ORG-FILE is the path to the org file where the event will be added.
 CALENDAR-ID is the ID of the Google Calendar.
 TITLE is the title of the event.
 TIME is the time of the event in `org' timestamp format."
+  (declare (ftype (function (string string string string) t)))
   (dotfiles--in-org-buffer org-file
     (goto-char (point-max))
     (unless (bolp) (insert "\n")) ; Ensure at start of new line

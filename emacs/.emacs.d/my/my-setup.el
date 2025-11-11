@@ -190,13 +190,15 @@
 
 (defun dotfiles--goto-address-overlay-p (o)
   "Return t if O is an overlay used by `goto-address'."
-  (declare (important-return-value t))
+  (declare (ftype (function (t) boolean))
+           (important-return-value t))
   (and (overlayp o) (overlay-get o 'goto-address)))
 
 (defun dotfiles--no-flyspell-overlay-on-goto-address (beg _end _face
                                                           _mouse-face)
   "Do not create a `flyspell' overlay if a `goto-address' one exists at BEG."
-  (declare (important-return-value t))
+  (declare (ftype (function (integer-or-marker t t t) boolean))
+           (important-return-value t))
   (seq-every-p #'null (mapcar #'dotfiles--goto-address-overlay-p (overlays-at
                                                                   beg))))
 
@@ -322,7 +324,8 @@
 
 (defun dotfiles--magit-worktree-branch ()
   "Create a new git branch and its worktree in a sibling dir, return its path."
-  (declare (important-return-value t))
+  (declare (ftype (function () string))
+           (important-return-value t))
   (let* ((name (dotfiles--read-non-existing-branch-name
                 "Create branch and worktree"))
          (absolute-path (file-truename (concat "../" name))))
@@ -399,7 +402,8 @@
 
 (defun my--difftastic-window-width ()
   "Return the target window width for `difftastic'."
-  (declare (important-return-value t))
+  (declare (ftype (function () integer))
+           (important-return-value t))
   180)
 
 (setq difftastic-requested-window-width-function #'my--difftastic-window-width)
@@ -654,7 +658,8 @@ in the echo area showing the number of successful and failed updates."
 
 (defun google-c-style-ts-indent-style ()
   "Configure Google C++ style indentation."
-  (declare (important-return-value t))
+  (declare (ftype (function () list))
+           (important-return-value t))
   `(
     ;;
     ;; Similar to BSD style, but use `standalone-parent' instead of
@@ -902,7 +907,8 @@ in the echo area showing the number of successful and failed updates."
 Custom display action function that finds the *mu4e-headers* window
 and splits it below, regardless of which window is currently selected.
 Returns the new window if successful, nil otherwise."
-  (declare (important-return-value t))
+  (declare (ftype (function (buffer t) (or null window)))
+           (important-return-value t))
   (when-let* ((headers-win (get-buffer-window "*mu4e-headers*"))
               (new-win (condition-case nil
                            (split-window-below nil headers-win)
@@ -1001,7 +1007,8 @@ decision to block all the images."
 (defun dotfiles--subject-matches-rule (rule subject)
   "Check if the email SUBJECT matches the criteria defined in RULE.
 RULE is a plist containing either :subject-exact or :subject-match."
-  (declare (important-return-value t))
+  (declare (ftype (function (list string) boolean))
+           (important-return-value t))
   (let ((subject-exact (plist-get rule :subject-exact))
         (subject-match (plist-get rule :subject-match)))
     (when (and subject-exact subject-match)

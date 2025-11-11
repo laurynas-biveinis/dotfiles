@@ -198,7 +198,8 @@ Sets up dynamic habit graph column with window resize handling."
 ;; Borrowed from https://emacs.nasy.moe/
 (defun dotfiles--org-verify-refile-target ()
   "Exclude todo keywords with a done state from refile targets."
-  (declare (important-return-value t))
+  (declare (ftype (function () boolean))
+           (important-return-value t))
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function #'dotfiles--org-verify-refile-target)
 
@@ -227,7 +228,8 @@ Sets up dynamic habit graph column with window resize handling."
 ;; random wiggles under random passwords.
 (defun dotfiles--org-mode-flyspell-verify-disable-for-org-crypt ()
   "Do not flyspell blocks encrypted by `org-crypt'."
-  (declare (important-return-value t))
+  (declare (ftype (function () boolean))
+           (important-return-value t))
   (not (org-at-encrypted-entry-p)))
 (advice-add 'org-mode-flyspell-verify :before-while
             #'dotfiles--org-mode-flyspell-verify-disable-for-org-crypt)
@@ -270,7 +272,8 @@ event of an error or nonlocal exit."
 
 (defun dotfiles--org-checkbox-toggle-advice (orig-fn &rest args)
   "Advice ORIG-FN with ARGS to move to next list item on checkbox toggle."
-  (declare (important-return-value t))
+  (declare (ftype (function (function &rest t) t))
+           (important-return-value t))
   (dotfiles--with-advice
       ((#'org-update-checkbox-count-maybe
         :after (lambda ()
