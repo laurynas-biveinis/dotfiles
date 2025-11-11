@@ -16,14 +16,13 @@ import sys
 def is_valid_filename(arg):
     """Check if argument is a valid simple filename.
 
-    Valid filenames contain only: alphanumeric, /, -, _, .
+    Valid filenames contain only: alphanumeric, /, -, _, ., #, ~
     Rejects: . and .. (directory shortcuts that stage entire directories)
     """
     # Reject directory shortcuts
     if arg in [".", ".."]:
         return False
-    # Only allow safe characters
-    return bool(re.match(r"^[a-zA-Z0-9/_.\-]+$", arg))
+    return bool(re.match(r"^[a-zA-Z0-9/_.\-#~]+$", arg))
 
 
 def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-statements
@@ -45,8 +44,15 @@ def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-st
     if len(parts) == 2:
         return True, None
 
+    file_args_start = 2
+    if parts[1] == "rm" and len(parts) > 2 and parts[2] == "--cached":
+        file_args_start = 3
+        # Ensure there are file arguments after --cached
+        if len(parts) == 3:
+            return False, "No files specified after --cached"
+
     # Validate all file arguments
-    for part in parts[2:]:
+    for part in parts[file_args_start:]:
         if part.startswith("-"):
             return False, f"Flags not allowed: {part}"
         if not is_valid_filename(part):
