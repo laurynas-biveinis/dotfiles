@@ -390,7 +390,7 @@ sudo ln -sf en_US.dic en_LT.dic
 sudo gem install mixlib-shellout -v 3.3.8
 sudo gem install mdl
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
-     basictex signal whatsapp qfinder-pro rar
+     basictex signal whatsapp qfinder-pro rar docker
 xattr -cr /opt/homebrew/bin/unrar
 xattr -cr /opt/homebrew/bin/rar
 
