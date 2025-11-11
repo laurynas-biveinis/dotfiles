@@ -3,8 +3,9 @@
 ;;; Commentary:
 
 ;; Configure `lsp-mode'. This includes setup for 'clangd' for C++ development
-;; and `lsp-ui' package. It also includes configuration for `topsy', which, while
-;; not related to LSP, shares the same window header line space.
+;; and `lsp-ui' package. It also includes configuration for
+;; `which-function-mode', which, while not related to LSP, shares the same
+;; window header line space.
 ;;
 ;; Like in the rest of my personal configuration, all features (packages and
 ;; external tools) are assumed to exist, because this is a part of my dotfiles
@@ -72,17 +73,20 @@
 
 (add-hook 'lsp-after-open-hook #'yas-minor-mode-on)
 
-;;; Setup `topsy', make `lsp-mode' play nicely with it.
-(require 'topsy)
+;;; Setup `which-function-mode', make `lsp-mode' play nicely with it.
+(require 'which-func)
+(which-function-mode 1)
+(setq which-func-update-delay 0.3)
+(setq which-func-unknown "")
 
-(defun dotfiles--lsp-deferred-or-topsy ()
-  "Run `lsp-deferred' if it's a supported mode, otherwise enable `topsy-mode'."
+(defun dotfiles--lsp-deferred-or-which-func-header ()
+  "Run `lsp-deferred' if it's supported, else setup `which-function-mode'."
   (if (derived-mode-p 'emacs-lisp-mode 'makefile-bsdmake-mode
                       'makefile-gmake-mode 'asm-mode)
-      (topsy-mode)
+      (setq-local which-func-display 'header)
     (lsp-deferred)))
 
-(add-hook 'prog-mode-hook #'dotfiles--lsp-deferred-or-topsy)
+(add-hook 'prog-mode-hook #'dotfiles--lsp-deferred-or-which-func-header)
 
 ;; https://clang.llvm.org/extra/clangd/Features.html#formatting -
 ;; "Format-as-you-type is experimental and doesn’t work well yet."

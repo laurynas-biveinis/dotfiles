@@ -27,9 +27,9 @@
                        org-roam-ui org-sticky-header page-break-lines
                        plantuml-mode pr-review prism projectile relint
                        rich-minority rustic s shfmt simple-httpd solarized-theme
-                       ssh ssh-config-mode stripe-buffer topsy undo-tree vterm
-                       w3m wakatime-mode wgrep wgrep-deadgrep xterm-color
-                       yaml-mode yasnippet))
+                       ssh ssh-config-mode stripe-buffer undo-tree vterm w3m
+                       wakatime-mode wgrep wgrep-deadgrep xterm-color yaml-mode
+                       yasnippet))
  '(package-vc-selected-packages
    '((org-mcp :vc-backend Git :url
               "https://github.com/laurynas-biveinis/org-mcp.git")
