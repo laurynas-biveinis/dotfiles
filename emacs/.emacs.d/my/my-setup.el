@@ -790,7 +790,7 @@ in the echo area showing the number of successful and failed updates."
 ;; checker chain in that case.
 (defun dotfiles--lsp-flycheck-enable-cpplint ()
   "Enable cpplint for C and C++ buffers under LSP."
-  (when (derived-mode-p 'c-mode 'c++-mode)
+  (when (derived-mode-p '(c-mode c++-mode))
     (flycheck-add-next-checker 'lsp 'c/c++-googlelint)))
 
 (add-hook 'lsp-after-open-hook #'dotfiles--lsp-flycheck-enable-cpplint)

@@ -81,8 +81,8 @@
 
 (defun dotfiles--lsp-deferred-or-which-func-header ()
   "Run `lsp-deferred' if it's supported, else setup `which-function-mode'."
-  (if (derived-mode-p 'emacs-lisp-mode 'makefile-bsdmake-mode
-                      'makefile-gmake-mode 'asm-mode)
+  (if (derived-mode-p '(emacs-lisp-mode makefile-bsdmake-mode
+                       makefile-gmake-mode asm-mode))
       (setq-local which-func-display 'header)
     (lsp-deferred)))
 
