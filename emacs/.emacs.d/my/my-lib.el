@@ -41,14 +41,16 @@
 ;; If dependencies are OK, then use `string-join' instead.
 (defun dotfiles--concat-all (s)
   "Concatenates all strings in S with spaces."
-  (declare (important-return-value t))
+  (declare (ftype (function (list) string))
+           (important-return-value t))
   (mapconcat 'identity s " "))
 
 ;;; regex helpers
 
 (defun dotfiles--string-match-string (regex string)
   "Return the 1st match for REGEX in STRING, nil otherwise."
-  (declare (important-return-value t))
+  (declare (ftype (function (string string) (or string null)))
+           (important-return-value t))
   (when (string-match regex string)
     (match-string 1 string)))
 
@@ -56,7 +58,8 @@
 
 (defun dotfiles--find-latest-pdf (directory)
   "Find the most recently created .pdf file in DIRECTORY."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) string))
+           (important-return-value t))
   (without-remote-files
     (let* ((files (directory-files-and-attributes directory nil "\\.pdf$" t))
            (sorted-files (sort files (lambda (a b)
@@ -70,7 +73,8 @@
 While reading, suggest to complete with the latest PDF in the directory.
 CONFIRMATION must have a %s argument which will be replaced with the file path.
 Returns the path or nil."
-  (declare (important-return-value t))
+  (declare (ftype (function (string string string) (or string null)))
+           (important-return-value t))
   (without-remote-files
     (let* ((latest-pdf (dotfiles--find-latest-pdf dir))
            (pdf-fn (read-file-name prompt dir latest-pdf t latest-pdf))
@@ -80,17 +84,20 @@ Returns the path or nil."
 
 (defun dotfiles--sibling-path (path fn)
   "For a given PATH, return a full path for FN in the same directory."
-  (declare (important-return-value t))
+  (declare (ftype (function (string string) string))
+           (important-return-value t))
   (file-name-concat (file-name-directory path) fn))
 
 ;;; External program helpers
 
 (defun dotfiles--open-file (file)
   "Open the FILE in its default app."
+  (declare (ftype (function (string) t)))
   (shell-command (concat "open " (shell-quote-argument file))))
 
 (defun dotfiles--delete-file-after-delay (path delay)
   "Delete file at PATH after DELAY seconds."
+  (declare (ftype (function (string number) t)))
   (run-with-timer delay nil #'delete-file path nil))
 
 ;; Command-line program helpers
@@ -102,6 +109,7 @@ SUCCESS-FN is executed on zero exit with a single string argument containing the
 output of execution.
 In the case of non-zero exit code it is printed as a user error together with
 any output."
+  (declare (ftype (function (string list function) t)))
   (with-temp-buffer
     (let* ((exit-code (apply #'call-process program nil t nil args))
            (output (buffer-string)))
@@ -116,6 +124,7 @@ any output."
   "Run PROGRAM with ARGS, sending its output to the message buffer.
 ARGS must be a list of strings passed to PROGRAM. In the case of non-zero exit
 code it is printed as user error."
+  (declare (ftype (function (string list) t)))
   (dotfiles--run-program-process-output program args (lambda (_))))
 
 ;; Command-line "gh" utility helper
@@ -123,7 +132,8 @@ code it is printed as user error."
 (defun dotfiles--gh-get (args)
   "Run gh with ARGS, return its output with the final newline trimmed.
 ARGS must be properly quoted if needed."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) string))
+           (important-return-value t))
   ;; We want to remove the final character and the final character only. Hence,
   ;; `substring' instead of i.e. `string-trim-right'.
   (substring (shell-command-to-string (concat "gh " args)) 0 -1))
@@ -132,7 +142,8 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--get-org-buffer (name)
   "Get the buffer for an `org' file with NAME."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) buffer))
+           (important-return-value t))
   (or (find-buffer-visiting name)
       (find-file-noselect name)))
 
@@ -150,13 +161,15 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--get-raw-message (msg)
   "Get the raw `mu4e' message MSG as string."
-  (declare (important-return-value t))
+  (declare (ftype (function (list) string))
+           (important-return-value t))
   (with-temp-buffer (insert-file-contents (mu4e-message-readable-path msg))
                     (buffer-string)))
 
 (defun dotfiles--get-mu4e-msg-content (mime-type)
   "Get the content of the first `mu4e' message part with MIME-TYPE."
-  (declare (important-return-value t))
+  (declare (ftype (function (string) string))
+           (important-return-value t))
   (mm-get-part
    (plist-get
     (seq-find (lambda (part)
@@ -166,7 +179,8 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--get-mu4e-msg-csv-part ()
   "For a `mu4e' message, get its first .csv attachment part, if any."
-  (declare (important-return-value t))
+  (declare (ftype (function () list))
+           (important-return-value t))
   (or (seq-find (lambda (part)
                   (string-suffix-p ".csv" (plist-get part :filename) t))
                 (mu4e-view-mime-parts))
@@ -174,14 +188,16 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--get-mu4e-msg-pdf-part ()
   "For a `mu4e' message, get its first .pdf attachment part, if any."
-  (declare (important-return-value t))
+  (declare (ftype (function () (or list null)))
+           (important-return-value t))
   (seq-find (lambda (part)
               (string-suffix-p ".pdf" (plist-get part :filename) t))
             (mu4e-view-mime-parts)))
 
 (defun dotfiles--save-mu4e-msg-part-file (part)
   "For a `mu4e' message PART, save it as a file and return its path."
-  (declare (important-return-value t))
+  (declare (ftype (function (list) string))
+           (important-return-value t))
   (let* ((base-dir (plist-get part :target-dir))
          (file-path (mu4e-join-paths base-dir (plist-get part :filename))))
     (mm-save-part-to-file (plist-get part :handle) file-path)
@@ -189,22 +205,26 @@ ARGS must be properly quoted if needed."
 
 (defun dotfiles--save-mu4e-msg-csv-part ()
   "For a `mu4e' mssage, save its first .csv part and return the path."
-  (declare (important-return-value t))
+  (declare (ftype (function () string))
+           (important-return-value t))
   (let ((csv-part (dotfiles--get-mu4e-msg-csv-part)))
     (dotfiles--save-mu4e-msg-part-file csv-part)))
 
 (defun dotfiles--get-mu4e-msg-html-content ()
   "Get the current `mu4e' message HTML content."
-  (declare (important-return-value t))
+  (declare (ftype (function () string))
+           (important-return-value t))
   (dotfiles--get-mu4e-msg-content "text/html"))
 
 (defun dotfiles--get-mu4e-msg-txt-content ()
   "Get the current `mu4e' message text content."
-  (declare (important-return-value t))
+  (declare (ftype (function () string))
+           (important-return-value t))
   (dotfiles--get-mu4e-msg-content "text/plain"))
 
 (defun dotfiles--for-each-attachment (fn)
   "Call FN for each attachment with its handle and path."
+  (declare (ftype (function (function) t)))
   (let ((mime-parts (mu4e-view-mime-parts)))
     (dolist (part mime-parts)
       (let* ((attachment-handle (plist-get part :handle))
