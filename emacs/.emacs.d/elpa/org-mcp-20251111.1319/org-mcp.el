@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: convenience, files, matching, outlines
-;; Package-Version: 20251031.528
-;; Package-Revision: 01b51350ed96
+;; Package-Version: 20251111.1319
+;; Package-Revision: 70fef64ee096
 ;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.2.0"))
 ;; Homepage: https://github.com/laurynas-biveinis/org-mcp
 
@@ -727,8 +727,7 @@ After insertion, point is left on the heading line at end-of-line."
         ;; no children, it creates a sibling of the parent instead of
         ;; a child
         (let ((heading-start (point)))
-          (insert
-           (concat (make-string (1+ parent-level) ?*) " " title "\n"))
+          (insert (make-string (1+ parent-level) ?*) " " title "\n")
           ;; Set point to heading for `org-todo' and `org-set-tags'
           (goto-char heading-start)
           (end-of-line)))
