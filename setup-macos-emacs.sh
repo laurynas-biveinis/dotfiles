@@ -4,16 +4,12 @@ set -euo pipefail
 
 # Do after dotfiles setup
 
-brew tap railwaycat/emacsmacport
-brew install --formula emacs-mac --with-native-compilation \
-     --with-unlimited-select --with-librsvg --with-mac-metal \
-     --with-natural-title-bar --with-xwidgets
-# Intel
-osascript -e \
-          'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
+brew tap d12frosted/emacs-plus
+brew install emacs-plus --with-dbus --with-debug --with-imagemagick \
+     --with-mailutils --with-xwidgets
 # Apple Silicon
 osascript -e \
-          'tell application "Finder" to make alias file to POSIX file "/opt/homebrew/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
+          'tell application "Finder" to make alias file to posix file "/opt/homebrew/opt/emacs-plus@30/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
 
 npm install -g @emacs-eask/cli
 
