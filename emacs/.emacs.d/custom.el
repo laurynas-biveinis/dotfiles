@@ -14,7 +14,7 @@
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
    '(aggressive-indent all-the-icons-dired beacon beginend
-		       calfw calfw-ical calfw-org cheat-sh
+		       cheat-sh
 		       company-box
 		       difftastic dispwatch elisp-autofmt
 		       elisp-dev-mcp elisp-lint
@@ -26,7 +26,7 @@
 		       info-colors keyfreq lsp-mode lsp-treemacs
 		       lsp-ui lua-mode magit magit-todos markdown-mode
 		       mcp-server-lib org-analyzer
-		       org-autotask org-gcal org-mcp org-roam
+		       org-autotask org-mcp org-roam
 		       org-roam-ui org-sticky-header page-break-lines
 		       plantuml-mode prism projectile relint
 		       rich-minority s shfmt simple-httpd

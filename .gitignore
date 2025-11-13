@@ -2,6 +2,9 @@ dotfiles/extra_modules
 
 # Optional Elisp packages
 emacs/.emacs.d/elpa/bison-mode-*
+emacs/.emacs.d/elpa/calfw-*
+emacs/.emacs.d/elpa/calfw-ical-*
+emacs/.emacs.d/elpa/calfw-org-*
 emacs/.emacs.d/elpa/cmake-font-lock-*
 emacs/.emacs.d/elpa/cmake-mode-*
 emacs/.emacs.d/elpa/deadgrep-*
@@ -13,6 +16,7 @@ emacs/.emacs.d/elpa/forge-*
 emacs/.emacs.d/elpa/ghub-*
 emacs/.emacs.d/elpa/grab-mac-link-*
 emacs/.emacs.d/elpa/ob-rust-*
+emacs/.emacs.d/elpa/org-gcal-*
 emacs/.emacs.d/elpa/pr-review-*
 emacs/.emacs.d/elpa/rust-mode-*
 emacs/.emacs.d/elpa/rustic-*

@@ -1044,26 +1044,6 @@ Having multiple matching automation rules for the same email is an error.")
 (setq calendar-longitude 25.3)
 (setq calendar-location-name "Vilnius, Lithuania")
 
-;; `calfw'
-;; Workaround warnings stemming from
-;; https://github.com/kiwanami/emacs-calfw/issues/101 - "Package `cl' is
-;; obsolete."
-(with-suppressed-warnings ((obsolete cl)) (require 'calfw))
-(require 'calfw-org)
-(require 'calfw-ical)
-
-;; Unicode characters
-(setq cfw:fchar-junction ?╋
-      cfw:fchar-vertical-line ?┃
-      cfw:fchar-horizontal-line ?━
-      cfw:fchar-left-junction ?┣
-      cfw:fchar-right-junction ?┫
-      cfw:fchar-top-junction ?┯
-      cfw:fchar-top-left-corner ?┏
-      cfw:fchar-top-right-corner ?┓)
-
-(setq cfw:render-line-breaker #'cfw:render-line-breaker-wordwrap)
-
 ;;; Features: Wakatime
 (if (not (file-exists-p "~/.wakatime.cfg"))
     (message "WakaTime not enabled: ~/.wakatime.cfg not found")

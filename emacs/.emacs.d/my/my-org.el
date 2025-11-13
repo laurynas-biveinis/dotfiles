@@ -322,18 +322,5 @@ event of an error or nonlocal exit."
     (require 'org-roam-db)
     (org-roam-db-autosync-mode)))
 
-;;; `org-gcal'
-
-;; Do not require `org-gcal' to avoid the warning about needing to call
-;; `org-gcal-reload-client-id-secret'
-
-;; TODO(laurynas): fetch automatically?
-;; TODO(laurynas): Automate setting `org-gcal-local-timezone': check
-;; (getenv "TZ") first, fallback to parsing (file-symlink-p "/etc/localtime"),
-;; and extract the IANA timezone from the zoneinfo path.
-;; TODO(laurynas): key binding for `org-gcal-post-at-point'?
-;; TODO(laurynas): key binding (and some command) to create a new event? How to
-;; check for scheduling conflicts?
-
 (provide 'my-org)
 ;;; my-org.el ends here
