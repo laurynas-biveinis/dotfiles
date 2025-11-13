@@ -4,6 +4,9 @@ set -euo pipefail
 
 # Do after dotfiles setup
 
+# For vterm
+brew install cmake
+
 brew tap d12frosted/emacs-plus
 brew install emacs-plus --with-dbus --with-debug --with-imagemagick \
      --with-mailutils --with-xwidgets

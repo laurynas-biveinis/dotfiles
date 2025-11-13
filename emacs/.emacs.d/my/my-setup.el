@@ -575,7 +575,6 @@ in the echo area showing the number of successful and failed updates."
 (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-(add-to-list 'major-mode-remap-alist '(cmake-mode . cmake-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
 (add-to-list 'major-mode-remap-alist '(makefile-mode . makefile-ts-mode))
 (add-to-list 'major-mode-remap-alist '(perl-mode . perl-ts-mode))
@@ -787,17 +786,6 @@ in the echo area showing the number of successful and failed updates."
 ;; https://github.com/Lindydancer/highlight-doxygen and
 ;; https://emacs.stackexchange.com/q/78274/16376
 ;; TODO(laurynas): the equivalent of `c-tab-always-indent' in `c-ts-mode'
-
-;; `flycheck-google-cpplint'
-(require 'flycheck-google-cpplint)
-;; TODO(laurynas): it can be enabled without LSP as well, but there is no C/C++
-;; checker chain in that case.
-(defun dotfiles--lsp-flycheck-enable-cpplint ()
-  "Enable cpplint for C and C++ buffers under LSP."
-  (when (derived-mode-p '(c-mode c++-mode))
-    (flycheck-add-next-checker 'lsp 'c/c++-googlelint)))
-
-(add-hook 'lsp-after-open-hook #'dotfiles--lsp-flycheck-enable-cpplint)
 
 ;;; Rust programming
 

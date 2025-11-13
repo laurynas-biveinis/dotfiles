@@ -56,6 +56,24 @@
   (when (string-match regex string)
     (match-string 1 string)))
 
+;;; Package helpers
+
+(require 'package)
+
+(defun dotfiles--ensure-optional-package (package)
+  "Install PACKAGE if needed, without adding to selected packages."
+  (unless (package-installed-p package)
+    (message "Installing optional package: %s" package)
+    (let ((package-selected-packages package-selected-packages))
+      (condition-case err
+          (package-install package)
+        (error (message "Failed to install %s: %s" package err))))))
+
+(defun dotfiles--ensure-optional-packages (packages)
+  "Install PACKAGES without adding to selected packages."
+  (dolist (package packages)
+    (dotfiles--ensure-optional-package package)))
+
 ;;; File helpers
 
 (defun dotfiles--find-latest-pdf (directory)
