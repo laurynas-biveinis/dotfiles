@@ -13,14 +13,14 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
-   '(aggressive-indent all-the-icons-dired beacon beginend bison-mode
+   '(aggressive-indent all-the-icons-dired beacon beginend
 		       calfw calfw-ical calfw-org cheat-sh
-		       cmake-font-lock cmake-mode company-box deadgrep
-		       difftastic dispwatch eldoc-cmake elisp-autofmt
+		       company-box deadgrep
+		       difftastic dispwatch elisp-autofmt
 		       elisp-dev-mcp elisp-lint elpy
 		       emacsql-sqlite-builtin exec-path-from-shell
 		       fancy-compilation flycheck
-		       flycheck-google-cpplint flycheck-status-emoji
+		       flycheck-status-emoji
 		       forge gcmh git-gutter-fringe git-messenger
 		       git-modes grab-mac-link iedit indent-bars
 		       info-colors keyfreq lsp-mode lsp-treemacs
