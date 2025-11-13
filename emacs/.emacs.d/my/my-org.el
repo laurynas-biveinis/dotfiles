@@ -240,11 +240,6 @@ Sets up dynamic habit graph column with window resize handling."
                              (append org-babel-load-languages
                                      '((plantuml . t))))
 
-;; Try to workaround `ob-rust' ruining `org-id-locations-file':
-;; https://github.com/micanzhang/ob-rust/issues/12
-(with-eval-after-load 'ob-rust-test
-  (setq org-id-locations-file "~/.emacs.d/.org-id-locations"))
-
 (add-hook 'org-todo-repeat-hook #'org-reset-checkbox-state-subtree)
 
 ;; Make C-c C-c on a checkbox item check it and move point to the next unchecked

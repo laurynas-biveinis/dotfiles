@@ -25,7 +25,7 @@
 		       git-modes iedit indent-bars
 		       info-colors keyfreq lsp-mode lsp-treemacs
 		       lsp-ui lua-mode magit magit-todos markdown-mode
-		       mcp-server-lib ob-rust org-analyzer
+		       mcp-server-lib org-analyzer
 		       org-autotask org-gcal org-mcp org-roam
 		       org-roam-ui org-sticky-header page-break-lines
 		       plantuml-mode prism projectile relint

@@ -7,7 +7,8 @@
 
 (require 'my-lib)
 
-(dotfiles--ensure-optional-packages '(rust-mode rustic))
+;; Depends on org
+(dotfiles--ensure-optional-packages '(ob-rust rust-mode rustic))
 
 ;; `rust-mode'
 (require 'rust-mode)
@@ -22,6 +23,11 @@
 
 ;; `rustic'
 (require 'rustic)
+
+;; Try to workaround `ob-rust' ruining `org-id-locations-file':
+;; https://github.com/micanzhang/ob-rust/issues/12
+(with-eval-after-load 'ob-rust-test
+  (setq org-id-locations-file "~/.emacs.d/.org-id-locations"))
 
 (provide 'rust)
 ;;; rust.el ends here

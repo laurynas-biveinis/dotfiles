@@ -12,6 +12,7 @@ emacs/.emacs.d/elpa/flycheck-google-cpplint-*
 emacs/.emacs.d/elpa/forge-*
 emacs/.emacs.d/elpa/ghub-*
 emacs/.emacs.d/elpa/grab-mac-link-*
+emacs/.emacs.d/elpa/ob-rust-*
 emacs/.emacs.d/elpa/pr-review-*
 emacs/.emacs.d/elpa/rust-mode-*
 emacs/.emacs.d/elpa/rustic-*
