@@ -17,7 +17,7 @@
 		       calfw calfw-ical calfw-org cheat-sh
 		       company-box
 		       difftastic dispwatch elisp-autofmt
-		       elisp-dev-mcp elisp-lint elpy
+		       elisp-dev-mcp elisp-lint
 		       emacsql-sqlite-builtin exec-path-from-shell
 		       fancy-compilation flycheck
 		       flycheck-status-emoji

@@ -6,6 +6,7 @@ emacs/.emacs.d/elpa/cmake-font-lock-*
 emacs/.emacs.d/elpa/cmake-mode-*
 emacs/.emacs.d/elpa/deadgrep-*
 emacs/.emacs.d/elpa/eldoc-cmake-*
+emacs/.emacs.d/elpa/elpy-*
 emacs/.emacs.d/elpa/flycheck-google-cpplint-*
 emacs/.emacs.d/elpa/wgrep-deadgrep-*
 

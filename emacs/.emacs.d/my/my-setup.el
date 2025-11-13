@@ -803,15 +803,6 @@ in the echo area showing the number of successful and failed updates."
 ;; `rustic'
 (require 'rustic)
 
-;;; Python programming
-
-;; `elpy'
-(require 'elpy)
-(setq elpy-modules (delq #'elpy-module-flymake elpy-modules))
-(add-hook 'elpy-mode-hook #'flycheck-mode)
-(setq elpy-rpc-virtualenv-path 'system)
-(elpy-enable)
-
 ;;; Shell and terminal emulation
 
 ;; In Shell mode, do not echo passwords
