@@ -29,7 +29,7 @@
 		       org-autotask org-gcal org-mcp org-roam
 		       org-roam-ui org-sticky-header page-break-lines
 		       plantuml-mode prism projectile relint
-		       rich-minority rustic s shfmt simple-httpd
+		       rich-minority s shfmt simple-httpd
 		       solarized-theme ssh ssh-config-mode
 		       stripe-buffer undo-tree vterm w3m wakatime-mode
 		       wgrep xterm-color yaml-mode

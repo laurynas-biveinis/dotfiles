@@ -772,22 +772,6 @@ in the echo area showing the number of successful and failed updates."
 ;; https://emacs.stackexchange.com/q/78274/16376
 ;; TODO(laurynas): the equivalent of `c-tab-always-indent' in `c-ts-mode'
 
-;;; Rust programming
-
-;; `rust-mode'
-(require 'rust-mode)
-
-(setq rust-mode-treesitter-derive t)
-
-(defun dotfiles--rust-set-fill-column ()
-  "Set the correct `fill-column' for `rust-mode'."
-  (dotfiles--set-fill-column 100))
-
-(add-hook 'rust-mode-hook #'dotfiles--rust-set-fill-column)
-
-;; `rustic'
-(require 'rustic)
-
 ;;; Shell and terminal emulation
 
 ;; In Shell mode, do not echo passwords
