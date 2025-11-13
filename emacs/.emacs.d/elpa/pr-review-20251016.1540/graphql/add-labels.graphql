@@ -1,5 +1,0 @@
-mutation($input: AddLabelsToLabelableInput!) {
-  addLabelsToLabelable(input: $input) {
-    clientMutationId
-  }
-}

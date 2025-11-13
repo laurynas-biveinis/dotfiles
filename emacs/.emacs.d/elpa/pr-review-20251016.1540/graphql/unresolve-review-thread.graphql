@@ -1,7 +1,0 @@
-mutation($input: UnresolveReviewThreadInput!) {
-  unresolveReviewThread(input: $input) {
-    thread {
-      id
-    }
-  }
-}

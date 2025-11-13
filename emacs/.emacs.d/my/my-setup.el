@@ -354,21 +354,6 @@
 (transient-append-suffix 'magit-worktree '(0 0 -1)
   '("C" "Create a branch in a sibling worktree" my-magit-worktree-branch))
 
-;; `forge'
-(require 'forge)
-
-(defun my-pull-all-forge-repos ()
-  "Pull everything for all known `forge' repos."
-  (interactive)
-  (org-autotask-require-org-clock)
-  (dolist (row (forge-sql [:select * :from repository]))
-    ;; Dependency on the internal `forge' schema. I haven't found a better way
-    ;; to get this information.
-    (let ((worktree-path (nth 33 row)))
-      (when (and worktree-path (file-directory-p worktree-path))
-        (let ((default-directory worktree-path))
-          (forge-pull))))))
-
 ;; `magit-todos'
 (require 'magit-todos)
 (setq magit-todos-group-by '(magit-todos-item-suffix magit-todos-item-keyword

@@ -21,14 +21,14 @@
 		       emacsql-sqlite-builtin
 		       fancy-compilation flycheck
 		       flycheck-status-emoji
-		       forge gcmh git-gutter-fringe git-messenger
+		       gcmh git-gutter-fringe git-messenger
 		       git-modes iedit indent-bars
 		       info-colors keyfreq lsp-mode lsp-treemacs
 		       lsp-ui lua-mode magit magit-todos markdown-mode
 		       mcp-server-lib ob-rust org-analyzer
 		       org-autotask org-gcal org-mcp org-roam
 		       org-roam-ui org-sticky-header page-break-lines
-		       plantuml-mode pr-review prism projectile relint
+		       plantuml-mode prism projectile relint
 		       rich-minority rustic s shfmt simple-httpd
 		       solarized-theme ssh ssh-config-mode
 		       stripe-buffer undo-tree vterm w3m wakatime-mode

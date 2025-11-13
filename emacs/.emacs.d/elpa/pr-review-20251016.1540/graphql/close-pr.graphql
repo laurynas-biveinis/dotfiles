@@ -1,7 +1,0 @@
-mutation($input: ClosePullRequestInput!) {
-  closePullRequest(input: $input) {
-    pullRequest {
-      id
-    }
-  }
-}

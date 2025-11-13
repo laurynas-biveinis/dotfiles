@@ -1,7 +1,0 @@
-mutation($input: AddCommentInput!) {
-  addComment(input: $input) {
-    subject {
-      id
-    }
-  }
-}

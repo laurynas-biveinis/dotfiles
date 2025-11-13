@@ -1,7 +1,0 @@
-mutation($input: AddPullRequestReviewInput!) {
-  addPullRequestReview(input: $input) {
-    pullRequestReview {
-      id
-    }
-  }
-}
