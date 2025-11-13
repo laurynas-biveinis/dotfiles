@@ -7,7 +7,9 @@ emacs/.emacs.d/elpa/cmake-mode-*
 emacs/.emacs.d/elpa/deadgrep-*
 emacs/.emacs.d/elpa/eldoc-cmake-*
 emacs/.emacs.d/elpa/elpy-*
+emacs/.emacs.d/elpa/exec-path-from-shell-*
 emacs/.emacs.d/elpa/flycheck-google-cpplint-*
+emacs/.emacs.d/elpa/grab-mac-link-*
 emacs/.emacs.d/elpa/wgrep-deadgrep-*
 
 emacs/.emacs.d/elpa/vterm-*/build/

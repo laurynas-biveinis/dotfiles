@@ -33,6 +33,10 @@
 (dotfiles--set-exe-var 'lsp-clients-clangd-executable "clangd"
                        (concat dotfiles--homebrew-root "opt/llvm/bin/clangd"))
 
+(require 'my-lib)
+
+(dotfiles--ensure-optional-packages '(exec-path-from-shell grab-mac-link))
+
 ;; The right option modifier is used by the keyboard layout third level instead.
 (setq mac-right-option-modifier nil)
 (setq mac-command-modifier 'super)

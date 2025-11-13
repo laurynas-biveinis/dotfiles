@@ -18,11 +18,11 @@
 		       company-box
 		       difftastic dispwatch elisp-autofmt
 		       elisp-dev-mcp elisp-lint
-		       emacsql-sqlite-builtin exec-path-from-shell
+		       emacsql-sqlite-builtin
 		       fancy-compilation flycheck
 		       flycheck-status-emoji
 		       forge gcmh git-gutter-fringe git-messenger
-		       git-modes grab-mac-link iedit indent-bars
+		       git-modes iedit indent-bars
 		       info-colors keyfreq lsp-mode lsp-treemacs
 		       lsp-ui lua-mode magit magit-todos markdown-mode
 		       mcp-server-lib ob-rust org-analyzer
