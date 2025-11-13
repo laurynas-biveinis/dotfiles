@@ -5,7 +5,7 @@
 ;; Configure everything related to projects. The core package is `projectile',
 ;; which is also integrated with `lsp-mode', extended with project
 ;; reconfiguration command for CMake projects, and integrated with my dotfiles
-;; "gitrmworktree" utility. Other packages are `deadgrep' and `wgrep'.
+;; "gitrmworktree" utility.
 ;; Additionally there are custom commands for CMake project management.
 ;;
 ;; Like in the rest of my personal configuration, all features (packages and
@@ -183,14 +183,8 @@ The prefix argument enables FORCE."
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
 
-;; `deadgrep' alternatives: rg.el, ripgrep.el, counsel/helm, etc.
-(require 'deadgrep)
-
 (require 'wgrep)
 (setq wgrep-auto-save-buffer t)
-
-(require 'wgrep-deadgrep)
-(add-hook 'deadgrep-finished-hook #'wgrep-deadgrep-setup)
 
 (provide 'my-project)
 ;;; my-project.el ends here

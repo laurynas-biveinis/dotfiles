@@ -17,7 +17,6 @@
 (require 'org-clock)
 (require 'org-roam-node)
 (require 'magit-status)
-(require 'deadgrep)
 (require 'mu4e)
 (declare-function my-secrets "secrets" ())
 (declare-function my-gtd "secrets" ())
@@ -51,7 +50,7 @@
 (global-set-key (kbd "C-c n f") #'org-roam-node-find)
 
 ;; Invoking functionality
-(global-set-key (kbd "<f5>") #'deadgrep)
+;; <f5> is bound to deadgrep, if available
 (global-set-key (kbd "<f7>") #'my-main-agenda)
 (global-set-key (kbd "<f9>") #'my-gtd)
 (global-set-key (kbd "<f12>") #'my-switch-to-scratch)

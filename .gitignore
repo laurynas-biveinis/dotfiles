@@ -1,9 +1,14 @@
 dotfiles/extra_modules
+
+# Optional Elisp packages
 emacs/.emacs.d/elpa/bison-mode-*
 emacs/.emacs.d/elpa/cmake-font-lock-*
 emacs/.emacs.d/elpa/cmake-mode-*
+emacs/.emacs.d/elpa/deadgrep-*
 emacs/.emacs.d/elpa/eldoc-cmake-*
 emacs/.emacs.d/elpa/flycheck-google-cpplint-*
+emacs/.emacs.d/elpa/wgrep-deadgrep-*
+
 emacs/.emacs.d/elpa/vterm-*/build/
 emacs/.emacs.d/elpa/vterm-*/vterm-module.so
 emacs/.emacs.d/elpa/tree-sitter-langs-*/bin/
