@@ -356,7 +356,7 @@ brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
      hunspell grep pinentry-mac htop findutils fd delta jq colordiff npm \
      gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
      plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint iperf3 \
-     zizmor markdownlint-cli checkov w3m asdf
+     zizmor markdownlint-cli checkov asdf
 # Until the next login:
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
