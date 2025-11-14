@@ -17,9 +17,13 @@ emacs/.emacs.d/elpa/ghub-*
 emacs/.emacs.d/elpa/grab-mac-link-*
 emacs/.emacs.d/elpa/ob-rust-*
 emacs/.emacs.d/elpa/org-gcal-*
+emacs/.emacs.d/elpa/org-roam-*
+emacs/.emacs.d/elpa/org-roam-ui-*
+emacs/.emacs.d/elpa/org-sticky-header-*
 emacs/.emacs.d/elpa/pr-review-*
 emacs/.emacs.d/elpa/rust-mode-*
 emacs/.emacs.d/elpa/rustic-*
+emacs/.emacs.d/elpa/simple-httpd-*
 emacs/.emacs.d/elpa/wgrep-deadgrep-*
 
 emacs/.emacs.d/elpa/vterm-*/build/

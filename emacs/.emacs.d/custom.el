@@ -25,11 +25,9 @@
 		       git-modes iedit indent-bars
 		       info-colors keyfreq lsp-mode lsp-treemacs
 		       lsp-ui lua-mode magit magit-todos markdown-mode
-		       mcp-server-lib org-analyzer
-		       org-autotask org-mcp org-roam
-		       org-roam-ui org-sticky-header page-break-lines
+		       mcp-server-lib page-break-lines
 		       plantuml-mode prism projectile relint
-		       rich-minority s shfmt simple-httpd
+		       rich-minority s shfmt
 		       solarized-theme ssh ssh-config-mode
 		       stripe-buffer undo-tree vterm w3m wakatime-mode
 		       wgrep xterm-color yaml-mode

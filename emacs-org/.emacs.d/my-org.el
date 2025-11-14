@@ -25,6 +25,12 @@
 
 ;;; Code:
 
+(require 'my-lib)
+
+(dotfiles--ensure-optional-packages
+ '(org-analyzer org-autotask org-mcp org-roam org-roam-ui org-sticky-header
+                simple-httpd))
+
 ;; Defined in secrets.el:
 (defvar main-org-file)
 (defvar secrets-org-file)
@@ -323,4 +329,4 @@ event of an error or nonlocal exit."
     (org-roam-db-autosync-mode)))
 
 (provide 'my-org)
-;;; my-org.el ends here
+;; my-org.el ends here

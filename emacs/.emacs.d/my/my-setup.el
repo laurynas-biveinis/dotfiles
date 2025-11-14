@@ -830,8 +830,6 @@ in the echo area showing the number of successful and failed updates."
 (advice-add #'epg-decrypt-string :before
             #'dotfiles--set-epg-context-pinentry-mode)
 
-(require 'my-org)
-
 (require 'my-complete)
 
 (require 'my-lsp)
