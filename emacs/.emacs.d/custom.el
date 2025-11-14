@@ -13,29 +13,19 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
-   '(aggressive-indent all-the-icons-dired beacon beginend
-		       cheat-sh
-		       company-box
-		       difftastic dispwatch elisp-autofmt
-		       elisp-dev-mcp elisp-lint
-		       emacsql-sqlite-builtin
-		       fancy-compilation flycheck
-		       flycheck-status-emoji
-		       gcmh git-gutter-fringe git-messenger
-		       git-modes iedit indent-bars
-		       info-colors keyfreq lsp-mode lsp-treemacs
-		       lsp-ui lua-mode magit magit-todos markdown-mode
-		       mcp-server-lib page-break-lines
-		       plantuml-mode prism projectile relint
-		       rich-minority s shfmt
-		       solarized-theme ssh ssh-config-mode
-		       stripe-buffer undo-tree vterm w3m wakatime-mode
-		       wgrep xterm-color yaml-mode
-		       yasnippet))
+   '(aggressive-indent all-the-icons-dired beacon beginend cheat-sh company-box
+		       difftastic dispwatch elisp-autofmt elisp-dev-mcp
+                       elisp-lint emacsql-sqlite-builtin fancy-compilation
+                       flycheck flycheck-status-emoji gcmh git-gutter-fringe
+                       git-messenger git-modes iedit indent-bars info-colors
+                       keyfreq lsp-mode lsp-treemacs lsp-ui lua-mode magit
+                       magit-todos markdown-mode mcp-server-lib page-break-lines
+		       plantuml-mode prism projectile relint rich-minority s
+                       shfmt solarized-theme ssh ssh-config-mode stripe-buffer
+                       undo-tree vterm w3m wakatime-mode wgrep xterm-color
+                       yaml-mode yasnippet))
  '(package-vc-selected-packages
-   '((org-mcp :vc-backend Git :url
-	      "https://github.com/laurynas-biveinis/org-mcp.git")
-     (org-autotask :vc-backend Git :url
+   '((org-autotask :vc-backend Git :url
 		   "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
    '((elisp-lint-indent-specs (org-mcp--modify-and-save . 3)
@@ -115,7 +105,7 @@
 			      (mcp-server-lib-ert-verify-req-success
 			       . defun)
 			      (mcp-server-lib--with-hash-table-entries
-			       . 2)
+			          . 2)
 			      (cl-defstruct))
      (elisp-lint-indent-specs (if-let* . 1) (if-let . 1)
 			      (mcp-server-lib-test--with-server . 0)
@@ -141,7 +131,7 @@
 			      (mcp-server-lib-ert-verify-req-success
 			       . defun)
 			      (mcp-server-lib--with-hash-table-entries
-			       . 2)
+			          . 2)
 			      (cl-defstruct))
      (elisp-lint-indent-specs (org-mcp--with-org-file-buffer . 2)
 			      (org-mcp--with-uri-prefix-dispatch . 1)
