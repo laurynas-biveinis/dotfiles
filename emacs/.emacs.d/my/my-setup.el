@@ -1042,12 +1042,6 @@ Having multiple matching automation rules for the same email is an error.")
 (setq calendar-longitude 25.3)
 (setq calendar-location-name "Vilnius, Lithuania")
 
-;;; Features: Wakatime
-(if (not (file-exists-p "~/.wakatime.cfg"))
-    (message "WakaTime not enabled: ~/.wakatime.cfg not found")
-  (require 'wakatime-mode)
-  (global-wakatime-mode))
-
 ;;; Utilities
 
 ;; Written mostly by ChatGPT

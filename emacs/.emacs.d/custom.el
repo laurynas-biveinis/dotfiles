@@ -22,8 +22,8 @@
                        magit-todos markdown-mode mcp-server-lib page-break-lines
 		       plantuml-mode prism projectile relint rich-minority s
                        shfmt solarized-theme ssh ssh-config-mode stripe-buffer
-                       undo-tree vterm w3m wakatime-mode wgrep xterm-color
-                       yaml-mode yasnippet))
+                       undo-tree vterm w3m wgrep xterm-color yaml-mode
+                       yasnippet))
  '(package-vc-selected-packages
    '((org-autotask :vc-backend Git :url
 		   "https://github.com/laurynas-biveinis/org-autotask/")))
