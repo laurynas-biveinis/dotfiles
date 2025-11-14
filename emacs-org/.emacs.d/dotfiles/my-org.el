@@ -36,6 +36,12 @@
 (defvar secrets-org-file)
 (defvar my-zettelkasten-p)
 
+;; Global keybindings
+(require 'org-roam-node)
+
+;; `org-roam-mode'
+(global-set-key (kbd "C-c n f") #'org-roam-node-find)
+
 (require 'my-column-limit)
 
 ;; Needs to be set before `org' is loaded

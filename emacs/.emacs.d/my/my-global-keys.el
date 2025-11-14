@@ -15,7 +15,6 @@
 
 (require 'ol)
 (require 'org-clock)
-(require 'org-roam-node)
 (require 'magit-status)
 (require 'mu4e)
 (declare-function my-secrets "secrets" ())
@@ -46,8 +45,7 @@
 (global-set-key (kbd "C-c C-x C-o") #'org-clock-out)
 (global-set-key (kbd "C-c C-x C-j") #'org-clock-goto)
 
-;; `org-roam-mode'
-(global-set-key (kbd "C-c n f") #'org-roam-node-find)
+;; C-c n f is bound to org-roam-node-find, if available
 
 ;; Invoking functionality
 ;; <f5> is bound to deadgrep, if available
