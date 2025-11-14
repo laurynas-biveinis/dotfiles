@@ -76,6 +76,15 @@
 
 ;;; File helpers
 
+(defun dotfiles--set-exe-var (var name path)
+  "Set VAR to PATH and warn if it is not an executable NAME."
+  (set var path)
+  (without-remote-files
+    (unless (file-executable-p path)
+      (display-warning
+       'dotfiles
+       (format "Executable %s not found at %s" name path) :warning))))
+
 (defun dotfiles--find-latest-pdf (directory)
   "Find the most recently created .pdf file in DIRECTORY."
   (declare (ftype (function (string) string))

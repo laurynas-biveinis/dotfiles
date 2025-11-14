@@ -20,19 +20,6 @@
 (unless dotfiles--homebrew-root
   (display-warning 'dotfiles "Homebrew not found" :warning))
 
-(defun dotfiles--set-exe-var (var name path)
-  "Set VAR to PATH and warn if it is not an executable NAME."
-  (set var path)
-  (without-remote-files
-    (unless (file-executable-p path)
-      (display-warning
-       'dotfiles
-       (format "Executable %s not found at %s" name path) :warning))))
-
-(require 'lsp-clangd)
-(dotfiles--set-exe-var 'lsp-clients-clangd-executable "clangd"
-                       (concat dotfiles--homebrew-root "opt/llvm/bin/clangd"))
-
 (require 'my-lib)
 
 (dotfiles--ensure-optional-packages '(exec-path-from-shell grab-mac-link))
@@ -84,4 +71,5 @@
                                       "opt/mu/share/emacs/site-lisp/mu/mu4e"))
 (add-to-list 'load-path mu4e-lisp-load-path)
 
+(provide 'darwin)
 ;;; darwin.el ends here
