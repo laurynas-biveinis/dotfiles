@@ -5,3 +5,6 @@ Index:
 #   Enabled: Yes
 Hover:
   ShowAKA: Yes
+Completion:
+  HeaderInsertion: IWYU
+  CodePatterns: All

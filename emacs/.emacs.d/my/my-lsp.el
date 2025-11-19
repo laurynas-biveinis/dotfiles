@@ -20,7 +20,6 @@
                                 "--background-index"
                                 "--clang-tidy"
                                 "--cross-file-rename"
-                                "--header-insertion=never"
                                 "--enable-config"
                                 "-j=5"
                                 "--pch-storage=memory"
