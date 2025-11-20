@@ -937,13 +937,29 @@ RULE is a plist containing either :subject-exact or :subject-match."
   "List of email automation rules.
 Each rule is a property list with the following properties:
   :sender-exact - Exact sender email address to match
+  :sender-match - Regex pattern to match against the sender email address
   :subject-match - Regex pattern to match against the email subject
   :subject-exact - Exact subject text to match
   :action-fn - Function to call when the rule matches
 
+Only one of :sender-exact or :sender-match can be specified per rule.
 Only one of :subject-match or :subject-exact can be specified per rule.
 The list is processed in order and stops at the first matching rule.
 Having multiple matching automation rules for the same email is an error.")
+(defun dotfiles--sender-matches-rule (rule sender)
+  "Check if the email SENDER matches the criteria defined in RULE.
+RULE is a plist containing either :sender-exact or :sender-match."
+  (declare (ftype (function (list string) boolean))
+           (important-return-value t)
+           (side-effect-free t))
+  (let ((sender-exact (plist-get rule :sender-exact))
+        (sender-match (plist-get rule :sender-match)))
+    (when (and sender-exact sender-match)
+      (user-error "Both :sender-exact and :sender-match set in %s, fix your dotfiles--email-automations"
+                  rule))
+    (or (and sender-exact (string= sender-exact sender))
+        (and sender-match (string-match-p sender-match sender) t))))
+
 (defun dotfiles--mu4e-email-automation (msg)
   "Run any matching email automation for a `mu4e' MSG."
   (org-autotask-require-org-clock)
@@ -951,7 +967,7 @@ Having multiple matching automation rules for the same email is an error.")
         (subject (mu4e-message-field msg :subject))
         (already-matched nil))
     (dolist (rule dotfiles--email-automations)
-      (when (and (string= sender (plist-get rule :sender-exact))
+      (when (and (dotfiles--sender-matches-rule rule sender)
                  (dotfiles--subject-matches-rule rule subject))
         (when already-matched
           (user-error "A second rule %s matches on this message, fix your dotfiles--email-automations"
