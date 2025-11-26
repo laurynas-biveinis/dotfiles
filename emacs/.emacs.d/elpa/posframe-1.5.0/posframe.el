@@ -5,7 +5,8 @@
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
-;; Version: 1.4.4
+;; Package-Version: 1.5.0
+;; Package-Revision: d93828bf6c36
 ;; Keywords: convenience, tooltip
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -56,6 +57,15 @@
 Function `posframe-mouse-banish-default' will work well in most
 case, but suggest use function `posframe-mouse-banish-simple' or
 custom function for EXWM users."
+  :type 'function)
+
+(defcustom posframe-text-scale-factor-function #'posframe-text-scale-factor-default
+  "The function to adjust value of text-scale of posframe buffer.
+
+Accepts single argument which is the value of parent buffer
+`text-scale-mode-amount' or nil if the `text-scale-mode' is disabled in
+the parent buffer."
+  :group 'posframe
   :type 'function)
 
 (defvar-local posframe--frame nil
@@ -123,10 +133,11 @@ effect.")
 (defun posframe-workable-p ()
   "Test posframe workable status."
   (and (>= emacs-major-version 26)
-       (not (or noninteractive
-                emacs-basic-display
-                (not (display-graphic-p))
-                (eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
+       (not noninteractive)
+       (not emacs-basic-display)
+       (or (display-graphic-p)
+           (featurep 'tty-child-frames))
+       (eq (frame-parameter (selected-frame) 'minibuffer) 't)))
 
 ;;;###autoload
 (cl-defun posframe-show (buffer-or-name
@@ -151,6 +162,7 @@ effect.")
                          internal-border-color
                          font
                          cursor
+                         tty-non-selected-cursor
                          window-point
                          foreground-color
                          background-color
@@ -207,7 +219,8 @@ position.  Its argument is a plist of the following form:
    :header-line-height xxx
    :tab-line-height xxx
    :x-pixel-offset xxx
-   :y-pixel-offset xxx)
+   :y-pixel-offset xxx
+   :parent-text-scale-mode-amount xxx)
 
 By default, poshandler is auto-selected based on the type of POSITION,
 but the selection can be overridden using the POSHANDLER argument.
@@ -285,10 +298,14 @@ derived from the current frame by default, but can be overridden
 using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
 respectively.
 
- (10) CURSOR and WINDOW-POINT
+ (10) CURSOR, TTY-NON-SELECTED-CURSOR and WINDOW-POINT
 
 By default, cursor is not showed in posframe, user can let cursor
 showed with this argument help by set its value to a `cursor-type'.
+
+TTY-NON-SELECTED-CURSOR will let redisplay put the terminal
+cursor in a non-selected frame, which is useful when use
+vertico-posframe like package in tty.
 
 When cursor need to be showed in posframe, user may need to set
 WINDOW-POINT to the point of BUFFER, which can let cursor showed
@@ -404,6 +421,8 @@ You can use `posframe-delete-all' to delete all posframes."
          (font-width (default-font-width))
          (font-height (with-current-buffer (window-buffer parent-window)
                         (posframe--get-font-height position)))
+         (parent-text-scale-mode-amount (with-current-buffer (window-buffer parent-window)
+                                          (and (bound-and-true-p text-scale-mode) text-scale-mode-amount)))
          (mode-line-height (window-mode-line-height
                             (and (window-minibuffer-p)
                                  (ignore-errors (window-in-direction 'above)))))
@@ -432,6 +451,7 @@ You can use `posframe-delete-all' to delete all posframes."
              :position position
              :font font
              :cursor cursor
+             :tty-non-selected-cursor tty-non-selected-cursor
              :parent-frame
              (unless ref-position
                parent-frame)
@@ -448,7 +468,8 @@ You can use `posframe-delete-all' to delete all posframes."
              :respect-header-line respect-header-line
              :respect-mode-line respect-mode-line
              :override-parameters override-parameters
-             :accept-focus accept-focus))
+             :accept-focus accept-focus
+             :parent-text-scale-mode-amount parent-text-scale-mode-amount))
 
       ;; Insert string into the posframe buffer
       (posframe--insert-string string no-properties)
@@ -497,7 +518,8 @@ You can use `posframe-delete-all' to delete all posframes."
                        :header-line-height header-line-height
                        :tab-line-height tab-line-height
                        :x-pixel-offset x-pixel-offset
-                       :y-pixel-offset y-pixel-offset))))
+                       :y-pixel-offset y-pixel-offset
+                       :parent-text-scale-mode-amount parent-text-scale-mode-amount))))
 
       ;; Move posframe
       (posframe--set-frame-position
@@ -577,12 +599,14 @@ You can use `posframe-delete-all' to delete all posframes."
                                      internal-border-color
                                      font
                                      cursor
+                                     tty-non-selected-cursor
                                      keep-ratio
                                      lines-truncate
                                      override-parameters
                                      respect-header-line
                                      respect-mode-line
-                                     accept-focus)
+                                     accept-focus
+                                     parent-text-scale-mode-amount)
   "Create and return a posframe child frame.
 This posframe's buffer is BUFFER-OR-NAME.
 
@@ -602,6 +626,7 @@ ACCEPT-FOCUS."
         (after-make-frame-functions nil)
         (x-gtk-resize-child-frames posframe-gtk-resize-child-frames)
         (args (list "args"
+                    (display-graphic-p)
                     foreground-color
                     background-color
                     right-fringe
@@ -693,9 +718,13 @@ ACCEPT-FOCUS."
                        (line-spacing . 0)
                        (unsplittable . t)
                        (no-other-frame . t)
-                       (undecorated . t)
+                       ;; NOTE: TTY child frame use undecorated to control border.
+                       (undecorated . ,(or (display-graphic-p)
+                                           (not (and (> border-width 0)
+                                                     (featurep 'tty-child-frames)))))
                        (visibility . nil)
-                       (cursor-type . nil)
+                       (cursor-type . ,cursor)
+                       (tty-non-selected-cursor . ,tty-non-selected-cursor)
                        (minibuffer . ,(minibuffer-window parent-frame))
                        (left . ,(if (consp position) (car position) 0))
                        (top . ,(if (consp position) (cdr position) 0))
@@ -752,6 +781,10 @@ ACCEPT-FOCUS."
       ;; for cache reason, next call to posframe-show will be affected.
       ;; so we should force set parent-frame again in this place.
       (set-frame-parameter posframe--frame 'parent-frame parent-frame)
+
+      ;; Set text scale based on the parent frame text scale.
+      (text-scale-set
+       (funcall posframe-text-scale-factor-function parent-text-scale-mode-amount))
 
       posframe--frame)))
 
@@ -1497,6 +1530,11 @@ window manager selects it."
              ;; See posframe-show's accept-focus argument.
              (not posframe--accept-focus))
     (redirect-frame-focus posframe--frame (frame-parent))))
+
+(defun posframe-text-scale-factor-default (parent-text-scale-mode-amount)
+  "Return PARENT-TEXT-SCALE-MODE-AMOUNT or 0 if it is nil.
+This ensures text scale factor is always a number for posframe display."
+  (or parent-text-scale-mode-amount 0))
 
 (provide 'posframe)
 

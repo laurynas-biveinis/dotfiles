@@ -54,7 +54,8 @@ position.  Its argument is a plist of the following form:
    :header-line-height xxx
    :tab-line-height xxx
    :x-pixel-offset xxx
-   :y-pixel-offset xxx)
+   :y-pixel-offset xxx
+   :parent-text-scale-mode-amount xxx)
 
 By default, poshandler is auto-selected based on the type of POSITION,
 but the selection can be overridden using the POSHANDLER argument.
@@ -132,10 +133,14 @@ derived from the current frame by default, but can be overridden
 using the FONT, FOREGROUND-COLOR and BACKGROUND-COLOR arguments,
 respectively.
 
- (10) CURSOR and WINDOW-POINT
+ (10) CURSOR, TTY-NON-SELECTED-CURSOR and WINDOW-POINT
 
 By default, cursor is not showed in posframe, user can let cursor
 showed with this argument help by set its value to a `cursor-type'.
+
+TTY-NON-SELECTED-CURSOR will let redisplay put the terminal
+cursor in a non-selected frame, which is useful when use
+vertico-posframe like package in tty.
 
 When cursor need to be showed in posframe, user may need to set
 WINDOW-POINT to the point of BUFFER, which can let cursor showed
@@ -217,7 +222,7 @@ An example parent frame poshandler function is:
 
 You can use `posframe-delete-all' to delete all posframes.
 
-(fn BUFFER-OR-NAME &key STRING POSITION POSHANDLER POSHANDLER-EXTRA-INFO WIDTH HEIGHT MAX-WIDTH MAX-HEIGHT MIN-WIDTH MIN-HEIGHT X-PIXEL-OFFSET Y-PIXEL-OFFSET LEFT-FRINGE RIGHT-FRINGE BORDER-WIDTH BORDER-COLOR INTERNAL-BORDER-WIDTH INTERNAL-BORDER-COLOR FONT CURSOR WINDOW-POINT FOREGROUND-COLOR BACKGROUND-COLOR RESPECT-HEADER-LINE RESPECT-MODE-LINE INITIALIZE NO-PROPERTIES KEEP-RATIO LINES-TRUNCATE OVERRIDE-PARAMETERS TIMEOUT REFRESH ACCEPT-FOCUS HIDEHANDLER REFPOSHANDLER &allow-other-keys)")
+(fn BUFFER-OR-NAME &key STRING POSITION POSHANDLER POSHANDLER-EXTRA-INFO WIDTH HEIGHT MAX-WIDTH MAX-HEIGHT MIN-WIDTH MIN-HEIGHT X-PIXEL-OFFSET Y-PIXEL-OFFSET LEFT-FRINGE RIGHT-FRINGE BORDER-WIDTH BORDER-COLOR INTERNAL-BORDER-WIDTH INTERNAL-BORDER-COLOR FONT CURSOR TTY-NON-SELECTED-CURSOR WINDOW-POINT FOREGROUND-COLOR BACKGROUND-COLOR RESPECT-HEADER-LINE RESPECT-MODE-LINE INITIALIZE NO-PROPERTIES KEEP-RATIO LINES-TRUNCATE OVERRIDE-PARAMETERS TIMEOUT REFRESH ACCEPT-FOCUS HIDEHANDLER REFPOSHANDLER &allow-other-keys)")
 (autoload 'posframe-hide-all "posframe" "\
 Hide all posframe frames." t)
 (autoload 'posframe-delete-all "posframe" "\
