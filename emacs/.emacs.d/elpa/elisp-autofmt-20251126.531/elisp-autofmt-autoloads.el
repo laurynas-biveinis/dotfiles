@@ -20,36 +20,41 @@ Auto format the current buffer, writing it's output to a file.
 
 This is intended for use by batch processing scripts,
 where loading changes back into the buffer is not important.")
+(function-put 'elisp-autofmt-buffer-to-file 'important-return-value 'nil)
 (autoload 'elisp-autofmt-buffer "elisp-autofmt" "\
 Auto format the current buffer." t)
+(function-put 'elisp-autofmt-buffer 'important-return-value 'nil)
 (autoload 'elisp-autofmt-region "elisp-autofmt" "\
 Auto format the active region of the current buffer.
 Optionally use BEG & END, otherwise an active region is required.
 Optionally pass in IS-INTERACTIVE to display a status message from formatting.
 
 (fn &optional BEG END IS-INTERACTIVE)" t)
+(function-put 'elisp-autofmt-region 'important-return-value 'nil)
 (autoload 'elisp-autofmt-region-dwim "elisp-autofmt" "\
 Context sensitive auto formatting of the current buffer.
 When there is an active region, this is used,
 otherwise format the surrounding S-expression." t)
+(function-put 'elisp-autofmt-region-dwim 'important-return-value 'nil)
 (autoload 'elisp-autofmt-check-elisp-autofmt-exists "elisp-autofmt" "\
 Return non-nil when `.elisp-autofmt' is found in a parent directory.")
+(function-put 'elisp-autofmt-check-elisp-autofmt-exists 'important-return-value 't)
 (autoload 'elisp-autofmt-mode "elisp-autofmt" "\
 Elisp-AutoFMT minor mode.
 
 This is a minor mode.  If called interactively, toggle the
-`Elisp-Autofmt mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+`Elisp-Autofmt mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
-evaluate `elisp-autofmt-mode'.
+evaluate the variable `elisp-autofmt-mode'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "elisp-autofmt" '("elisp-autofmt-"))
