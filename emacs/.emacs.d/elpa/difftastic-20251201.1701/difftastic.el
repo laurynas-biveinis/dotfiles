@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20251021.1320
-;; Package-Revision: 9cb89fcff94f
+;; Package-Version: 20251201.1701
+;; Package-Revision: 6c60bb96f31c
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -426,6 +426,18 @@
 ;;   `difftastic-mode' buffer.
 ;;
 ;;
+;; Process Environment
+;; ~~~~~~~~~~~~~~~~~~~
+;;
+;; The `difftastic-difft-environment' variable allows users to customize the
+;; environment in which `difft' runs.  This is particularly useful for
+;; temporary configurations via `let'-binding.
+;;
+;; This variable is defined as a `defvar' (not `defcustom') since it's
+;; primarily intended for programmatic use rather than permanent
+;; customization.
+;;
+;;
 ;; Contributing
 ;; ============
 ;;
@@ -538,25 +550,21 @@ into (in the following order):
  - other window if it exists,
  - side by side by inspecting `split-width-threshold',
  - current window."
-  (- (if (< 1 (count-windows))
-         (save-window-excursion
-           (other-window 1)
-           (window-width))
-       (if (and split-width-threshold
-                (< split-width-threshold (- (window-width)
-                                            (fringe-columns 'left)
-                                            (fringe-columns 'right))))
-           (/ (window-width) 2)
-         (window-width)))
-     (fringe-columns 'left)
-     (fringe-columns 'rigth)))
+  (let (face-remapping-alist)
+    (if (< 1 (count-windows))
+        (save-window-excursion
+          (other-window 1)
+          (window-max-chars-per-line))
+      (if-let* ((width (window-max-chars-per-line))
+                ((window-splittable-p (selected-window) t)))
+          (/ (- width (- (frame-width) width)) 2)
+        width))))
 
 (defun difftastic-rerun-requested-window-width ()
   "Get a window width for a rerun of a difftastic call.
 It returns the current window width, to let difftastic fit content into it."
-  (- (window-width)
-     (fringe-columns 'left)
-     (fringe-columns 'right)))
+  (let (face-remapping-alist)
+    (window-max-chars-per-line)))
 
 (defun difftastic-pop-to-buffer (buffer-or-name requested-width)
   "Display BUFFER-OR-NAME with REQUESTED-WIDTH and select its window.
@@ -575,6 +583,9 @@ display buffer at bottom."
   "Location of difftastic executable."
   :type 'file
   :group 'difftastic)
+
+(defvar difftastic-difft-environment nil
+  "Prepended to `process-environment' while running difft.")
 
 (defcustom difftastic-normal-colors-vector
   (vector
@@ -1777,6 +1788,11 @@ It adds \\='--color=always\\=', \\='--background=(light|dark)\\=', and
                                 difftastic-args)))
   difftastic-args)
 
+(defun difftastic--build-process-environment ()
+  "Build process environment with difftastic-specific variables.
+Prepends `difftastic-difft-environment' to `process-environment'."
+  (append difftastic-difft-environment process-environment))
+
 (defun difftastic--build-git-process-environment (requested-width
                                                   &optional difftastic-args)
   "Build a difftastic git command with REQUESTED-WIDTH.
@@ -1787,13 +1803,13 @@ The DIFFTASTIC-ARGS is a list of extra arguments to pass to
                  (difftastic--add-standard-args (difftastic--args-or-saved
                                                  difftastic-args)
                                                 requested-width))))
-    (cons (format
-           "GIT_EXTERNAL_DIFF=%s%s"
-           difftastic-executable
-           (if difftastic-args
-               (format " %s" (string-join difftastic-args " "))
-             ""))
-          process-environment)))
+    (append (list (format
+                   "GIT_EXTERNAL_DIFF=%s%s"
+                   difftastic-executable
+                   (if difftastic-args
+                       (format " %s" (string-join difftastic-args " "))
+                     "")))
+            (difftastic--build-process-environment))))
 
 (defun difftastic--git-with-difftastic (buffer command rev-or-range
                                                &optional difftastic-args action)
@@ -1815,7 +1831,8 @@ process sentinel."
              `((default-directory . ,default-directory)
                (rev-or-range . ,rev-or-range)
                (git-command . ,command)
-               (difftastic-args . ,difftastic-args)))
+               (difftastic-args . ,difftastic-args)
+               (difft-environment . ,difftastic-difft-environment)))
        (when action (funcall action))
        (funcall difftastic-display-buffer-function buffer requested-width)))))
 
@@ -2141,7 +2158,7 @@ Prefer a language override from `transient-scope', then from
     (difftastic--extra-arguments-override-init-value obj)))
 
 (cl-defmethod transient-init-value ((obj difftastic--extra-arguments-prefix))
-  "Set default values in OBJ from `difftastic-metadata'.
+  "Set default values in OBJ from `difftastic--metadata'.
 The \\='--override\\=' argument is handled in
 `difftastic--extra-arguments-override-language-init-value' (which see),
 while the \\='--override-binary\\=' is handled in
@@ -2640,7 +2657,8 @@ The FILE-BUF-A and FILE-BUF-B are conses where car is the file
 and cdr is a buffer when it is a temporary file and nil otherwise.
 DIFFTASTIS-ARGS are passed to difftastic."
   (let ((requested-width (funcall difftastic-requested-window-width-function))
-        (difftastic-display-buffer-function difftastic-display-buffer-function))
+        (difftastic-display-buffer-function difftastic-display-buffer-function)
+        (process-environment (difftastic--build-process-environment)))
     (difftastic--run-command
      buffer
      (difftastic--build-files-command file-buf-A
@@ -2652,7 +2670,8 @@ DIFFTASTIS-ARGS are passed to difftastic."
              `((default-directory . ,default-directory)
                (difftastic-args . ,difftastic-args)
                (file-buf-A . ,file-buf-A)
-               (file-buf-B . ,file-buf-B)))
+               (file-buf-B . ,file-buf-B)
+               (difft-environment . ,difftastic-difft-environment)))
        (funcall difftastic-display-buffer-function buffer requested-width)
        (difftastic--delete-temp-file-buf file-buf-A)
        (difftastic--delete-temp-file-buf file-buf-B)))))
@@ -2958,12 +2977,15 @@ otherwise."
                   (funcall (or
                             difftastic-rerun-requested-window-width-function
                             difftastic-requested-window-width-function)))
+                 (difftastic-difft-environment (or difftastic-difft-environment
+                                                   (alist-get 'difft-environment
+                                                              metadata)))
                  (process-environment
                   (if .git-command
                       (difftastic--build-git-process-environment
                        requested-width
                        difftastic-args)
-                    process-environment))
+                    (difftastic--build-process-environment)))
                  (command (or .git-command
                               (difftastic--build-files-command
                                file-buf-A
