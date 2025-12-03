@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20251201.1701
-;; Package-Revision: 6c60bb96f31c
+;; Package-Version: 20251202.1715
+;; Package-Revision: 1f5471632d78
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -2995,6 +2995,8 @@ otherwise."
                  (buffer (current-buffer)))
             (setf (alist-get 'difftastic-args metadata)
                   difftastic-args)
+            (setf (alist-get 'difft-environment metadata)
+                  difftastic-difft-environment)
             (difftastic--run-command
              buffer
              command
