@@ -158,6 +158,7 @@ duti -s org.videolan.vlc .MP4 all
 duti -s org.videolan.vlc .mp3 all
 duti -s org.videolan.vlc .m4a all
 duti -s org.videolan.vlc .m3u all
+duti -s org.videolan.vlc .avi all
 
 #
 # Setup that makes sense for my devices
