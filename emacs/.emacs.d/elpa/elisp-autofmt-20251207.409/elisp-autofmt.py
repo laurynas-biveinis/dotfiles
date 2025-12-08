@@ -1545,7 +1545,7 @@ class NdSexp(Node):
             if isinstance(node, NdSexp):
                 node.finalize_style(cfg)
 
-    def fmt_check_exceeds_colum_max(
+    def fmt_check_exceeds_column_max(
             self,
             cfg: FmtConfig,
             level: int,
@@ -1582,24 +1582,19 @@ class NdSexp(Node):
                     i = text.find('\n')
                     if i == -1:
                         line_length += len(text)
-                        if line_length > fill_column:
-                            score += 2 ** (line_length - fill_column)
                     else:
                         i_prev = 0
                         while True:
-                            if i == -1:
-                                line_length += len(text) - i_prev
-                                if line_length > fill_column:
-                                    score += 2 ** (line_length - fill_column)
-                                break
-
                             line_length += i - i_prev
                             if line_length > fill_column:
                                 score += 2 ** (line_length - fill_column)
 
                             i_prev = i + 1
+                            i = text.find('\n', i_prev)
+                            if i == -1:
+                                line_length = len(text) - i_prev
+                                break
                             line_length = 0
-                            i = text.find('\n', i + 1)
 
                 self.fmt_with_terminate_node(_ctx, write_fn_fast, level, test=True)
                 line_length += trailing_parens
@@ -1619,19 +1614,16 @@ class NdSexp(Node):
                     else:
                         i_prev = 0
                         while True:
-                            if i == -1:
-                                line_length += len(text) - i_prev
-                                if line_length > fill_column:
-                                    raise FmtExceptionEarlyExit
-                                break
-
                             line_length += i - i_prev
                             if line_length > fill_column:
                                 raise FmtExceptionEarlyExit
 
                             i_prev = i + 1
+                            i = text.find('\n', i_prev)
+                            if i == -1:
+                                line_length = len(text) - i_prev
+                                break
                             line_length = 0
-                            i = text.find('\n', i + 1)
 
                 try:
                     self.fmt_with_terminate_node(_ctx, write_fn_fast, level, test=True)
@@ -1841,7 +1833,7 @@ def fmt_solver_fill_column_wrap_relaxed(
     Perform relaxed wrapping for blocks where any lines exceed the fill-column.
     '''
     # First be relaxed, then again if it fails.
-    if node_parent.fmt_check_exceeds_colum_max(cfg, level, trailing_parens, calc_score=False):
+    if node_parent.fmt_check_exceeds_column_max(cfg, level, trailing_parens, calc_score=False):
 
         if cfg.fill_column != 0:
             if not node_parent.wrap_all_or_nothing_hint:
@@ -1880,7 +1872,7 @@ def fmt_solver_fill_column_wrap_each_argument(
     assert i > 0
 
     node = node_parent.nodes_only_code[i]
-    score_init = node_parent.fmt_check_exceeds_colum_max(
+    score_init = node_parent.fmt_check_exceeds_column_max(
         cfg,
         level,
         trailing_parens,
@@ -1911,7 +1903,7 @@ def fmt_solver_fill_column_wrap_each_argument(
                 node_force_newline.append(node)
                 force_newline = True
 
-                if not node_parent.fmt_check_exceeds_colum_max(
+                if not node_parent.fmt_check_exceeds_column_max(
                     cfg,
                     level,
                     trailing_parens,
@@ -1939,7 +1931,7 @@ def fmt_solver_fill_column_wrap_each_argument(
 
         i = min(node_parent.index_wrap_hint, i_last)
         node = node_parent.nodes_only_code[i]
-        score_test = node_parent.fmt_check_exceeds_colum_max(
+        score_test = node_parent.fmt_check_exceeds_column_max(
             cfg,
             level,
             trailing_parens,
@@ -1963,7 +1955,7 @@ def fmt_solver_fill_column_wrap_each_argument(
     if cfg.style.use_native:
         node = node_parent.nodes_only_code[1]
         if not node.force_newline:
-            score_init = node_parent.fmt_check_exceeds_colum_max(
+            score_init = node_parent.fmt_check_exceeds_column_max(
                 cfg,
                 level,
                 trailing_parens,
@@ -1971,7 +1963,7 @@ def fmt_solver_fill_column_wrap_each_argument(
             )
             if score_init:
                 node.force_newline = True
-                score_test = node_parent.fmt_check_exceeds_colum_max(
+                score_test = node_parent.fmt_check_exceeds_column_max(
                     cfg,
                     level,
                     trailing_parens,
@@ -2077,7 +2069,7 @@ def fmt_solver_fill_column_unwrap_aggressive(
         # It's possible there are no new states worth testing.
         if nodes_recursive:
             # Calculate this before making the first change.
-            parent_score_curr = node_parent.fmt_check_exceeds_colum_max(
+            parent_score_curr = node_parent.fmt_check_exceeds_column_max(
                 cfg,
                 level,
                 trailing_parens,
@@ -2092,7 +2084,7 @@ def fmt_solver_fill_column_unwrap_aggressive(
                 node.newline_state_set(state_test)
 
             fmt_solver_newline_constraints_apply_recursive(node_parent, cfg, check_parent_multiline=True)
-            parent_score_test = node_parent.fmt_check_exceeds_colum_max(
+            parent_score_test = node_parent.fmt_check_exceeds_column_max(
                 cfg,
                 level,
                 trailing_parens,
@@ -2149,7 +2141,7 @@ def fmt_solver_fill_column_unwrap_test_state(
             node.newline_state_set(state_curr)
             return None
 
-    parent_score_test = node_parent.fmt_check_exceeds_colum_max(
+    parent_score_test = node_parent.fmt_check_exceeds_column_max(
         cfg,
         level,
         trailing_parens,
@@ -2411,7 +2403,7 @@ def fmt_solver_fill_column_unwrap_recursive(
 
             # Calculate the score to compare new states to.
             if parent_score_curr == -1:
-                parent_score_curr = node_parent.fmt_check_exceeds_colum_max(
+                parent_score_curr = node_parent.fmt_check_exceeds_column_max(
                     cfg,
                     level,
                     trailing_parens,
@@ -2847,141 +2839,141 @@ def parse_file(fh: TextIO) -> tuple[str, NdSexp]:
 
     while c := c_peek or fh.read(1):
         c_peek = None
-        # NOTE: Can use 'match c' here, will bump minimum Python version to 3.10
-        if c == '(':  # Open S-expression.
-            sexp_ctx.append(NdSexp((line, line), '()'))
-            sexp_ctx[sexp_level].nodes.append(sexp_ctx[-1])
-            sexp_level += 1
-            line_has_contents = True
+        match c:
+            case '(':  # Open S-expression.
+                sexp_ctx.append(NdSexp((line, line), '()'))
+                sexp_ctx[sexp_level].nodes.append(sexp_ctx[-1])
+                sexp_level += 1
+                line_has_contents = True
 
-        elif c == '[':  # Open vector.
-            # Second line is updated on closing brace.
-            sexp_ctx.append(NdSexp((line, line), '[]'))
-            sexp_ctx[sexp_level].nodes.append(sexp_ctx[-1])
-            sexp_level += 1
-            line_has_contents = True
-        elif c == ')':  # Close S-expression.
-            if sexp_level == 0:
-                raise FmtException('additional closing brackets, line {}'.format(line))
-            node = sexp_ctx.pop()
-            if node.brackets[0] != '(':
-                raise FmtException(
-                    'closing bracket "{:s}" line {:d}, unmatched bracket types, expected ")"'.format(c, line)
-                )
-            if node.original_lines[1] != line:
-                node.original_lines = node.original_lines[0], line
-            del node
-            sexp_level -= 1
-            line_has_contents = True
-        elif c == ']':  # Close vector.
-            if sexp_level == 0:
-                raise FmtException('additional closing brackets, line {}'.format(line))
-            node = sexp_ctx.pop()
-            if node.brackets[0] != '[':
-                raise FmtException(
-                    'closing bracket "{:s}" line {:d}, unmatched bracket types, expected "]"'.format(c, line)
-                )
-            if node.original_lines[1] != line:
-                node.original_lines = node.original_lines[0], line
-            del node
-            sexp_level -= 1
-            line_has_contents = True
-        elif c == '"':  # Open & close string.
-            line_beg = line
-            data = StringIO()
-            is_slash = False
-            while (c := fh.read(1)):
-                if c == '"' and not is_slash:
-                    break
-                data.write(c)
-                if c == '\\':
-                    is_slash = not is_slash
-                else:
-                    is_slash = False
-                    if c == '\n':
-                        line += 1
-
-            if not c:
-                raise FmtException('unterminated string literal at line {}'.format(line))
-
-            sexp_ctx[sexp_level].nodes.append(NdString((line_beg, line), data.getvalue()))
-            del line_beg, data, is_slash, c
-            line_has_contents = True
-        elif c == ';':  # Comment.
-            data = StringIO()
-            while (c_peek := fh.read(1)) not in {'', '\n'}:
-                c = c_peek
-                c_peek = None
-                data.write(c)
-
-            is_own_line = not line_has_contents
-            sexp_ctx[sexp_level].nodes.append(NdComment(line, data.getvalue(), is_own_line))
-            del data, is_own_line
-            line_has_contents = True
-        elif c == '\n':  # White-space (newline).
-            line += 1
-            # Respect blank lines up until the limit.
-            if line_has_contents is False:
-                sexp_ctx[sexp_level].nodes.append(NdWs(line))
-            line_has_contents = False
-        elif c in {' ', '\t'}:  # White-space (space, tab) - ignored.
-            pass
-        else:  # Symbol (any other character).
-            data = StringIO()
-            is_slash = False
-            while c:
-                if c == '\\':
-                    is_slash = not is_slash
-                else:
-                    is_slash = False
-                data.write(c)
-                c_peek = fh.read(1)
-                if not c_peek:
-                    break
-                if c_peek == '\n':
-                    break
-                if not is_slash:
-                    if c_peek in {
-                            '(', ')',
-                            '[', ']',
-                            ';',
-                            ' ', '\t',
-                            # Lisp doesn't require spaces are between symbols and quotes.
-                            '"',
-                    }:
+            case '[':  # Open vector.
+                # Second line is updated on closing brace.
+                sexp_ctx.append(NdSexp((line, line), '[]'))
+                sexp_ctx[sexp_level].nodes.append(sexp_ctx[-1])
+                sexp_level += 1
+                line_has_contents = True
+            case ')':  # Close S-expression.
+                if sexp_level == 0:
+                    raise FmtException('additional closing brackets, line {:d}'.format(line))
+                node = sexp_ctx.pop()
+                if node.brackets[0] != '(':
+                    raise FmtException(
+                        'closing bracket "{:s}" line {:d}, unmatched bracket types, expected ")"'.format(c, line)
+                    )
+                if node.original_lines[1] != line:
+                    node.original_lines = node.original_lines[0], line
+                del node
+                sexp_level -= 1
+                line_has_contents = True
+            case ']':  # Close vector.
+                if sexp_level == 0:
+                    raise FmtException('additional closing brackets, line {:d}'.format(line))
+                node = sexp_ctx.pop()
+                if node.brackets[0] != '[':
+                    raise FmtException(
+                        'closing bracket "{:s}" line {:d}, unmatched bracket types, expected "]"'.format(c, line)
+                    )
+                if node.original_lines[1] != line:
+                    node.original_lines = node.original_lines[0], line
+                del node
+                sexp_level -= 1
+                line_has_contents = True
+            case '"':  # Open & close string.
+                line_beg = line
+                data = StringIO()
+                is_slash = False
+                while (c := fh.read(1)):
+                    if c == '"' and not is_slash:
                         break
+                    data.write(c)
+                    if c == '\\':
+                        is_slash = not is_slash
+                    else:
+                        is_slash = False
+                        if c == '\n':
+                            line += 1
 
-                c = c_peek
-                c_peek = None
+                if not c:
+                    raise FmtException('unterminated string literal at line {:d}'.format(line))
 
-            text = data.getvalue()
-            del data
+                sexp_ctx[sexp_level].nodes.append(NdString((line_beg, line), data.getvalue()))
+                del line_beg, data, is_slash, c
+                line_has_contents = True
+            case ';':  # Comment.
+                data = StringIO()
+                while (c_peek := fh.read(1)) not in {'', '\n'}:
+                    c = c_peek
+                    c_peek = None
+                    data.write(c)
 
-            # Special support for character literals.
-            if text[0] == '?':
-                if c_peek:
-                    # Always include the next character
-                    # even if it's normally a delimiting character such as ';', '"'
-                    # (un-escaped literal support, even allowing for `?;` or `?\C-;`).
-                    if (
-                            # Support `? ` and `?;`.
-                            (len(text) == 1) or
-                            # Support `?\C- ` and `?\C-;` and `?\C-\s- `.
-                            (len(text) >= 4 and (
-                                text[-1] == '-' and
-                                text[-2].isalpha() and
-                                text[-3] == '\\')
-                             )
-                    ):
-                        text = text + c_peek
-                        c_peek = None
+                is_own_line = not line_has_contents
+                sexp_ctx[sexp_level].nodes.append(NdComment(line, data.getvalue(), is_own_line))
+                del data, is_own_line
+                line_has_contents = True
+            case '\n':  # White-space (newline).
+                line += 1
+                # Respect blank lines up until the limit.
+                if line_has_contents is False:
+                    sexp_ctx[sexp_level].nodes.append(NdWs(line))
+                line_has_contents = False
+            case ' ' | '\t':  # White-space (space, tab) - ignored.
+                pass
+            case _:  # Symbol (any other character).
+                data = StringIO()
+                is_slash = False
+                while c:
+                    if c == '\\':
+                        is_slash = not is_slash
+                    else:
+                        is_slash = False
+                    data.write(c)
+                    c_peek = fh.read(1)
+                    if not c_peek:
+                        break
+                    if c_peek == '\n':
+                        break
+                    if not is_slash:
+                        if c_peek in {
+                                '(', ')',
+                                '[', ']',
+                                ';',
+                                ' ', '\t',
+                                # Lisp doesn't require spaces are between symbols and quotes.
+                                '"',
+                        }:
+                            break
 
-            sexp_ctx[sexp_level].nodes.append(NdSymbol(line, text))
-            del is_slash
-            line_has_contents = True
+                    c = c_peek
+                    c_peek = None
+
+                text = data.getvalue()
+                del data
+
+                # Special support for character literals.
+                if text[0] == '?':
+                    if c_peek:
+                        # Always include the next character
+                        # even if it's normally a delimiting character such as ';', '"'
+                        # (un-escaped literal support, even allowing for `?;` or `?\C-;`).
+                        if (
+                                # Support `? ` and `?;`.
+                                (len(text) == 1) or
+                                # Support `?\C- ` and `?\C-;` and `?\C-\s- `.
+                                (len(text) >= 4 and (
+                                    text[-1] == '-' and
+                                    text[-2].isalpha() and
+                                    text[-3] == '\\')
+                                 )
+                        ):
+                            text = text + c_peek
+                            c_peek = None
+
+                sexp_ctx[sexp_level].nodes.append(NdSymbol(line, text))
+                del is_slash
+                line_has_contents = True
 
     if sexp_level != 0:
-        raise FmtException('unbalanced S-expressions at file-end, found {} levels, expected 0'.format(sexp_level))
+        raise FmtException('unbalanced S-expressions at file-end, found {:d} levels, expected 0'.format(sexp_level))
 
     # Maybe unnecessary, do this for correctness.
     if root.original_lines[1] != line:
