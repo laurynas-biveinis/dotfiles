@@ -16,7 +16,7 @@
 (put 'elisp-autofmt-empty-line-max 'safe-local-variable #'integerp)
 (put 'elisp-autofmt-load-packages-local 'safe-local-variable #'list-of-strings-p)
 (autoload 'elisp-autofmt-buffer-to-file "elisp-autofmt" "\
-Auto format the current buffer, writing it's output to a file.
+Auto format the current buffer, writing its output to a file.
 
 This is intended for use by batch processing scripts,
 where loading changes back into the buffer is not important.")
