@@ -362,8 +362,8 @@ brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 # C++ development
-brew install llvm iwyu cppcheck creduce circleci boost cpplint \
-     clang-build-analyzer gcc@11 gcc@12 gcc@13 gcc googletest google-benchmark
+brew install llvm iwyu cppcheck creduce boost cpplint clang-build-analyzer \
+     gcc@11 gcc@12 gcc@13 gcc googletest google-benchmark
 
 #
 # App Store
