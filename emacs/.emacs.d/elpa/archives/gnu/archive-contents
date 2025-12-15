@@ -1790,7 +1790,7 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "647be281945185a20f37363fd335e99ad0540eff"))])
  (listen
-  . [(0 9)
+  . [(0 10)
      ((emacs (29 1)) (persist (0 6)) (taxy (0 10))
       (taxy-magit-section (0 13)) (transient (0 5 3)))
      "Audio/Music player" tar
@@ -1798,7 +1798,7 @@
       (:keywords "multimedia")
       (:maintainer "Adam Porter" . "adam@alphapapa.net")
       (:authors ("Adam Porter" . "adam@alphapapa.net"))
-      (:commit . "61c511541af474027c012de7063ddfdb3f8cc780"))])
+      (:commit . "e0a243d3c6ba0a8a14d1d16168ac23441bd5e6c9"))])
  (literate-scratch
   . [(2 2) ((emacs (29 1))) "Lisp Interaction w/ text paragraphs" tar
      ((:url
@@ -2890,13 +2890,13 @@
       (:authors ("Artur Malabarba" . "emacs@endlessparentheses.com"))
       (:commit . "fffe8d0b42b143a2e7df0470d9049fa57b6ecac5"))])
  (spacious-padding
-  . [(0 7 0) ((emacs (28 1)))
+  . [(0 8 0) ((emacs (28 1)))
      "Increase the padding/spacing of frames and windows" tar
      ((:url . "https://github.com/protesilaos/spacious-padding")
       (:keywords "convenience" "focus" "writing" "presentation")
       (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "60d1a343d2e740920750cdfc389972b363e73411"))])
+      (:commit . "9507cb206e1187c08574e8fa65c3fe6aeab84063"))])
  (speedrect
   . [(0 7) ((emacs (29 1)) (compat (30)))
      "Fast modal rectangle commands" tar
@@ -3028,12 +3028,12 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "f9bc3f6f8639d4ed9c2d848fdcc84fab4b1b6cae"))])
  (system-packages
-  . [(1 1 1) ((emacs (24 3))) "functions to manage system packages"
+  . [(1 1 2) ((emacs (24 3))) "functions to manage system packages"
      tar
      ((:url . "https://gitlab.com/jabranham/system-packages")
       (:maintainer "J. Alexander Branham" . "alex.branham@gmail.com")
       (:authors ("J. Alexander Branham" . "alex.branham@gmail.com"))
-      (:commit . "52b9bb08041e7d91ead25a9a3c6170bad9bed7b7"))])
+      (:commit . "de2a98caad223ded3b58512d8f44a8307a228a93"))])
  (tNFA
   . [(0 1 1) ((queue (0 1)))
      "Tagged non-deterministic finite-state automata" single
