@@ -15,7 +15,7 @@
 Enable the Elisp development MCP tools.")
 (autoload 'elisp-dev-mcp-disable "elisp-dev-mcp" "\
 Disable the Elisp development MCP tools.")
-(register-definition-prefixes "elisp-dev-mcp" '("elisp-dev-mcp--"))
+(register-definition-prefixes "elisp-dev-mcp" '("elisp-dev-mcp-"))
 
 ;;; End of scraped data
 

@@ -6,8 +6,8 @@
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
 ;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20251202.1715
-;; Package-Revision: 1f5471632d78
+;; Package-Version: 20251217.921
+;; Package-Revision: 1ed9a8459d84
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -907,7 +907,9 @@ data."
                 `(seq
                   line-start
                   ;; non greedy filename to let following group match
-                  (group (not " ") ,(if file-chunk '(+? any) '(+ any)))
+                  (group (not " ") ,(if file-chunk
+                                        '(+? not-newline)
+                                      '(+ not-newline)))
                   ;; search for optional chunk info only when searching for a
                   ;; file-chunk
                   ,@(when file-chunk
@@ -953,7 +955,7 @@ regexp from `difftastic--chunk-regexp'."
     (looking-at-p (rx bol
                       (or (1+ ".")
                           (1+ digit))
-                      " " (1+ any)))))
+                      " " (1+ not-newline)))))
 
 (defun difftastic--next-chunk (&optional file-chunk)
   "Find line beginning position of next chunk.
@@ -1181,7 +1183,7 @@ The value of 6 allows for line numbers of up to 999,999.")
              (goto-char (match-end 0))
              (and
               (not (looking-at (rx difftastic--line-num-rx)))
-              (looking-at (rx (one-or-more any)
+              (looking-at (rx (one-or-more not-newline)
                               difftastic--line-num-rx))))
            (cl-incf side-by-side)))
          ((looking-at (rx line-start
@@ -2134,7 +2136,7 @@ Prefer an override from `difftasitc--metadata', and lastly from
                 (when (string-match (rx string-start
                                         (or "--override="
                                             "--override-binary=")
-                                        (group (one-or-more any)))
+                                        (group (one-or-more not-newline)))
                                     arg)
                   (match-string 1 arg)))
               metadata))

@@ -16,8 +16,8 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; Author: Laurynas Biveinis
-;; Package-Version: 20251004.1154
-;; Package-Revision: 05bc3ca843eb
+;; Package-Version: 20251223.1126
+;; Package-Revision: 481bb3edb9e9
 ;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.2.0"))
 ;; Keywords: tools, development
 ;; URL: https://github.com/laurynas-biveinis/elisp-dev-mcp
@@ -32,6 +32,7 @@
 (require 'help-fns)
 (require 'pp)
 (require 'info-look)
+(require 'cl-lib)
 
 
 ;;; System Directory Setup
@@ -47,6 +48,31 @@ Computed once at package load time from `data-directory'.")
 
 (defconst elisp-dev-mcp--server-id "elisp-dev-mcp"
   "Server ID for this MCP server.")
+
+(defgroup elisp-dev-mcp nil
+  "MCP server for agentic Elisp development."
+  :group 'tools
+  :prefix "elisp-dev-mcp-")
+
+(defcustom elisp-dev-mcp-additional-allowed-dirs nil
+  "Additional directories to allow for elisp-read-source-file.
+List of directory paths that should be accessible in addition to
+the default Emacs system and ELPA directories.
+
+This is useful for users of alternative package managers like
+straight.el, elpaca, or custom package setups.
+
+Example:
+  (setq elisp-dev-mcp-additional-allowed-dirs
+        \\='(\"~/.emacs.d/straight/build/\"
+           \"~/.emacs.d/straight/repos/\"
+           \"~/my-elisp-packages/\"))
+
+Security note: Only add directories you trust, as this allows
+the MCP server to read any .el files in these locations."
+  :type '(repeat directory)
+  :group 'elisp-dev-mcp
+  :safe (lambda (val) (and (listp val) (cl-every #'stringp val))))
 
 ;;; Utility Functions
 
@@ -621,7 +647,11 @@ MCP Parameters:
             (mapcar #'file-truename package-directory-list)
             ;; System lisp directory
             (when elisp-dev-mcp--system-lisp-dir
-              (list (file-truename elisp-dev-mcp--system-lisp-dir)))))
+              (list (file-truename elisp-dev-mcp--system-lisp-dir)))
+            ;; User-configured additional directories
+            (mapcar (lambda (dir)
+                      (file-truename (file-name-as-directory dir)))
+                    elisp-dev-mcp-additional-allowed-dirs)))
           ;; Check if file is under any allowed directory
           (allowed-p
            (cl-some
