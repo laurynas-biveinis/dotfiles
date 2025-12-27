@@ -1808,14 +1808,14 @@
       (:authors ("Sean Whitton" . "spwhitton@spwhitton.name"))
       (:commit . "00b8f65effe4f2673e6450d70000644b266aa78a"))])
  (llm
-  . [(0 28 2)
+  . [(0 28 3)
      ((emacs (28 1)) (plz (0 8)) (plz-event-source (0 1 1))
       (plz-media-type (0 2 1)) (compat (29 1)))
      "Interface to pluggable llm backends" tar
      ((:url . "https://github.com/ahyatt/llm")
       (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
-      (:commit . "cb7392fd4368d5fb567b0306574399df32fd3c31"))])
+      (:commit . "cbf1864089ceef6a1a733c55a2c72ca01dcbccb1"))])
  (lmc
   . [(1 4) nil "Little Man Computer in Elisp" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -2345,12 +2345,12 @@
       (:authors ("Junpeng Qiu" . "qjpchmail@gmail.com"))
       (:keywords "extensions"))])
  (parser-generator
-  . [(0 2 7) ((emacs (26))) "Parser Generator library" tar
+  . [(0 2 8) ((emacs (26))) "Parser Generator library" tar
      ((:url . "https://github.com/cjohansson/emacs-parser-generator")
       (:keywords "tools" "convenience")
       (:maintainer "Christian Johansson" . "christian@cvj.se")
       (:authors ("Christian Johansson" . "christian@cvj.se"))
-      (:commit . "5015e4fd92f9c33d3c6f0a50d0c802efbcb95ec0"))])
+      (:commit . "0180a672911591b86ae25fd67e99bc9b91147fe6"))])
  (path-iterator
   . [(1 0) ((emacs (25 0)))
      "An iterator for traversing a directory path." tar
