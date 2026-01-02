@@ -6,9 +6,9 @@ set -euo pipefail
 source ~/.zshenv
 
 for nightly_script in "$HOME"/.nightly/*; do
-    echo "Running nightly $nightly_script..."
-    # shellcheck source=/dev/null
-    source "$nightly_script"
+	echo "Running nightly $nightly_script..."
+	# shellcheck source=/dev/null
+	source "$nightly_script"
 done
 
 echo "Nightly completed!"

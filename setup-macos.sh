@@ -22,7 +22,7 @@
 
 # Show language menu in the login screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu \
-     -bool true
+	-bool true
 #
 # UI Controls
 #
@@ -46,7 +46,7 @@ sudo scutil --set HostName new-computer-name
 #
 defaults write com.apple.controlcenter.plist Sound -int 18
 defaults write com.apple.systemuiserver menuExtras -array \
-	 "/System/Library/CoreServices/Menu Extras/Volume.menu"
+	"/System/Library/CoreServices/Menu Extras/Volume.menu"
 killall SystemUIServer
 #
 # Application Firewall
@@ -54,7 +54,7 @@ killall SystemUIServer
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
 defaults -currentHost write ~/Library/Preferences/com.apple.alf globalstate \
-	 -bool true
+	-bool true
 defaults write ~/Library/Preferences/com.apple.alf stealthenabled -bool true
 sudo pkill -HUP socketfilterfw
 #
@@ -85,14 +85,14 @@ sudo systemsetup -settimezone "Europe/Vilnius"
 sudo systemsetup -setnetworktimeserver "time.euro.apple.com"
 sudo systemsetup -setusingnetworktime on
 sudo defaults write com.apple.menuextra.clock DateFormat -string \
-     "EEE d MMM HH:mm:ss"
+	"EEE d MMM HH:mm:ss"
 #
 # Safari
 #
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
-	 WarnAboutFraudulentWebsites -bool true
+	WarnAboutFraudulentWebsites -bool true
 defaults -currentHost write ~/Library/Preferences/com.apple.Safari \
-	 TreatSHA1CertificatesAsInsecure -bool true
+	TreatSHA1CertificatesAsInsecure -bool true
 #
 # Finder
 #
@@ -115,9 +115,9 @@ sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 # Screen Sharing
 #
 sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist \
-     com.apple.screensharing -dict Disabled -bool false
+	com.apple.screensharing -dict Disabled -bool false
 sudo launchctl load -w \
-     /System/Library/LaunchDaemons/com.apple.screensharing.plist
+	/System/Library/LaunchDaemons/com.apple.screensharing.plist
 #
 # Activity Monitor
 #
@@ -142,7 +142,7 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 # brew
 #
 /bin/bash -c \
-          "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew update
 brew install duti
 brew install --cask vlc disk-inventory-x google-chrome
@@ -286,8 +286,8 @@ killall Dock
 #
 defaults write com.apple.finder AppleShowAllFiles -bool true
 sudo defaults -currentHost write \
-     /Library/Preferences/SystemConfiguration/com.apple.finder \
-     AppleShowAllFiles -bool true
+	/Library/Preferences/SystemConfiguration/com.apple.finder \
+	AppleShowAllFiles -bool true
 defaults write -g AppleShowAllExtensions -bool true
 # Allow text selection in Quick Look
 defaults write com.apple.finder QLEnableTextSelection -bool true
@@ -354,16 +354,16 @@ sudo chflags nohidden /Volumes
 # brew
 #
 brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
-     hunspell grep pinentry-mac htop findutils fd delta jq colordiff npm \
-     gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
-     plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint iperf3 \
-     zizmor markdownlint-cli checkov asdf
+	hunspell grep pinentry-mac htop findutils fd delta jq colordiff npm \
+	gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
+	plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint iperf3 \
+	zizmor markdownlint-cli checkov asdf
 # Until the next login:
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 # C++ development
 brew install llvm iwyu cppcheck creduce boost cpplint clang-build-analyzer \
-     gcc@11 gcc@12 gcc@13 gcc googletest google-benchmark
+	gcc@11 gcc@12 gcc@13 gcc googletest google-benchmark
 
 #
 # App Store
@@ -391,7 +391,7 @@ sudo ln -sf en_US.dic en_LT.dic
 sudo gem install mixlib-shellout -v 3.3.8
 sudo gem install mdl
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
-     basictex signal whatsapp qfinder-pro rar docker
+	basictex signal whatsapp qfinder-pro rar docker
 xattr -cr /opt/homebrew/bin/unrar
 xattr -cr /opt/homebrew/bin/rar
 
@@ -412,33 +412,33 @@ brew install --cask iterm2
 # Run once and quit
 defaults write com.googlecode.iterm2 SUEnableAutomaticChecks -bool true
 defaults write com.googlecode.iterm2 UseVirtualKeyCodesForDetectingDigits \
-         -bool true
+	-bool true
 /usr/libexec/PlistBuddy -c \
-                        "Set :\"New Bookmarks\":0:\"Normal Font\" \"SFMonoNerdFontComplete-Regular 12\"" \
-                        ~/Library/Preferences/com.googlecode.iterm2.plist
+	"Set :\"New Bookmarks\":0:\"Normal Font\" \"SFMonoNerdFontComplete-Regular 12\"" \
+	~/Library/Preferences/com.googlecode.iterm2.plist
 /usr/libexec/PlistBuddy -c \
-                        "Set :\"New Bookmarks\":0:\"Blinking Cursor\" 1" \
-                        ~/Library/Preferences/com.googlecode.iterm2.plist
+	"Set :\"New Bookmarks\":0:\"Blinking Cursor\" 1" \
+	~/Library/Preferences/com.googlecode.iterm2.plist
 /usr/libexec/PlistBuddy -c \
-                        "Set :\"New Bookmarks\":0:\"Cursor Type\" 1" \
-                        ~/Library/Preferences/com.googlecode.iterm2.plist
+	"Set :\"New Bookmarks\":0:\"Cursor Type\" 1" \
+	~/Library/Preferences/com.googlecode.iterm2.plist
 /usr/libexec/PlistBuddy -c \
-                        "Set :\"New Bookmarks\":0:\"Unlimited Scrollback\" 1" \
-                        ~/Library/Preferences/com.googlecode.iterm2.plist
+	"Set :\"New Bookmarks\":0:\"Unlimited Scrollback\" 1" \
+	~/Library/Preferences/com.googlecode.iterm2.plist
 /usr/libexec/PlistBuddy -c \
-                        "Set :\"New Bookmarks\":0:\"Scrollback Lines\" 0" \
-                        ~/Library/Preferences/com.googlecode.iterm2.plist
+	"Set :\"New Bookmarks\":0:\"Scrollback Lines\" 0" \
+	~/Library/Preferences/com.googlecode.iterm2.plist
 /usr/libexec/PlistBuddy -c \
-                        "Set :\"New Bookmarks\":0:\"Load Shell Integration Automatically\" 1" \
-                        ~/Library/Preferences/com.googlecode.iterm2.plist
+	"Set :\"New Bookmarks\":0:\"Load Shell Integration Automatically\" 1" \
+	~/Library/Preferences/com.googlecode.iterm2.plist
 /usr/libexec/PlistBuddy -c \
-                        "Set :\"New Bookmarks\":0:\"Option Key Sends\" 2" \
-                        ~/Library/Preferences/com.googlecode.iterm2.plist
+	"Set :\"New Bookmarks\":0:\"Option Key Sends\" 2" \
+	~/Library/Preferences/com.googlecode.iterm2.plist
 /usr/libexec/PlistBuddy -c \
-                        "Set :\"New Bookmarks\":0:\"Movement Keys Scroll Outside Interactive Apps\" 1" \
-                        ~/Library/Preferences/com.googlecode.iterm2.plist
+	"Set :\"New Bookmarks\":0:\"Movement Keys Scroll Outside Interactive Apps\" 1" \
+	~/Library/Preferences/com.googlecode.iterm2.plist
 curl -o 'Solarized Dark - Patched.itermcolors' \
-     https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Solarized%20Dark%20-%20Patched.itermcolors
+	https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Solarized%20Dark%20-%20Patched.itermcolors
 open 'Solarized Dark - Patched.itermcolors'
 rm 'Solarized Dark - Patched.itermcolors'
 # Set this theme manually as the default.

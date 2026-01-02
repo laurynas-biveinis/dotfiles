@@ -8,8 +8,8 @@ pushd "$DOTFILES_ROOT" || exit
 non_elpa_status=$(git status -s -u -- ':!emacs/.emacs.d/elpa')
 readonly non_elpa_status
 if [ -n "$non_elpa_status" ]; then
-    echo "Cannot commit Emacs package metadata update: changes found outside emacs/.emacs.d/elpa/"
-    exit 1
+	echo "Cannot commit Emacs package metadata update: changes found outside emacs/.emacs.d/elpa/"
+	exit 1
 fi
 
 # Must be no changes in elisp files (source or compiled)
@@ -18,16 +18,16 @@ fi
 elisp_status=$(git status -s -u -- 'emacs/.emacs.d/elpa/**/*.el' 'emacs/.emacs.d/elpa/**/*.elc')
 readonly elisp_status
 if [ -n "$elisp_status" ]; then
-    echo "Cannot commit Emacs package metadata update: changes found in .el or .elc files in emacs/.emacs.d/elpa/"
-    exit 1
+	echo "Cannot commit Emacs package metadata update: changes found in .el or .elc files in emacs/.emacs.d/elpa/"
+	exit 1
 fi
 
 # Must have changes in elpa directory
 elpa_status=$(git status -s -u -- 'emacs/.emacs.d/elpa')
 readonly elpa_status
 if [ -z "$elpa_status" ]; then
-    echo "Cannot commit Emacs package metadata update: no changes found in emacs/.emacs.d/elpa/"
-    exit 1
+	echo "Cannot commit Emacs package metadata update: no changes found in emacs/.emacs.d/elpa/"
+	exit 1
 fi
 git add --all
 git commit -m "Emacs package metadata update"

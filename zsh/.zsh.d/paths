@@ -6,20 +6,18 @@
 typeset -U path
 typeset -U manpath
 
-function prepend_to_path_if_exists()
-{
-    local path_entry=$1
-    if [[ -d "$path_entry" ]]; then
-        path=("$path_entry" $path)
-    fi
+function prepend_to_path_if_exists() {
+	local path_entry=$1
+	if [[ -d "$path_entry" ]]; then
+		path=("$path_entry" $path)
+	fi
 }
 
-function prepend_to_manpath_if_exists()
-{
-    local path_entry=$1
-    if [[ -d "$path_entry" ]]; then
-        manpath=("$path_entry" $manpath)
-    fi
+function prepend_to_manpath_if_exists() {
+	local path_entry=$1
+	if [[ -d "$path_entry" ]]; then
+		manpath=("$path_entry" $manpath)
+	fi
 }
 
 prepend_to_path_if_exists /usr/local/texlive/2023basic/bin/universal-darwin

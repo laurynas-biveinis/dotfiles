@@ -4,24 +4,24 @@ set -euo pipefail
 
 declare -i FORCE=0
 
-while (( $# > 0 )); do
-    case "$1" in
-        --force)
-            FORCE=1
-            shift
-            ;;
-        *)
-            if [[ -z "${WORKTREE_PATH:-}" ]]; then
-                readonly WORKTREE_PATH="$1"
-            fi
-            shift
-            ;;
-    esac
+while (($# > 0)); do
+	case "$1" in
+	--force)
+		FORCE=1
+		shift
+		;;
+	*)
+		if [[ -z "${WORKTREE_PATH:-}" ]]; then
+			readonly WORKTREE_PATH="$1"
+		fi
+		shift
+		;;
+	esac
 done
 
 if [ -z "${WORKTREE_PATH:-}" ]; then
-    echo "Usage: $0 [--force] <worktree-path>"
-    exit 3
+	echo "Usage: $0 [--force] <worktree-path>"
+	exit 3
 fi
 
 readonly WORKTREE_DIR="$WORKTREE_PATH:t"
@@ -36,16 +36,15 @@ readonly BRANCH_NAME
 
 REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote || echo "")
 if [ -z "${REMOTE_NAME}" ]; then
-    REMOTE_NAME=$(git config branch."${BRANCH_NAME}".remote || echo "")
+	REMOTE_NAME=$(git config branch."${BRANCH_NAME}".remote || echo "")
 fi
 readonly REMOTE_NAME
 
 if [ -z "${REMOTE_NAME}" ]; then
-    2>&1 echo "Failed to find push remote name for branch $BRANCH_NAME"
-    popd || exit 1
-    exit 3
+	2>&1 echo "Failed to find push remote name for branch $BRANCH_NAME"
+	popd || exit 1
+	exit 3
 fi
-
 
 cd "$(git rev-parse --git-dir)"
 cd ../../../
@@ -53,16 +52,16 @@ cd ../../../
 git pull
 
 if [ $FORCE -ne 1 ]; then
-    # TODO(laurynas): replace hardcoded "master" with the default branch check,
-    # i.e. git remote show [remote-name] | grep 'HEAD branch'
-    git branch --contains "$BRANCH_NAME" | grep -q master
-    readonly BRANCH_MERGED=$?
+	# TODO(laurynas): replace hardcoded "master" with the default branch check,
+	# i.e. git remote show [remote-name] | grep 'HEAD branch'
+	git branch --contains "$BRANCH_NAME" | grep -q master
+	readonly BRANCH_MERGED=$?
 
-    if [ $BRANCH_MERGED -ne 0 ]; then
-        echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
-        popd || exit 1
-        exit 2
-    fi
+	if [ $BRANCH_MERGED -ne 0 ]; then
+		echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
+		popd || exit 1
+		exit 2
+	fi
 fi
 
 rm -rf "$WORKTREE_ABSOLUTE_PATH"
@@ -71,13 +70,13 @@ popd -n
 git worktree prune
 
 if ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
-    echo "Failed to delete the remote branch, perhaps it was already deleted"
+	echo "Failed to delete the remote branch, perhaps it was already deleted"
 fi
 
 if [ $FORCE -ne 1 ]; then
-    git branch -d "$BRANCH_NAME"
+	git branch -d "$BRANCH_NAME"
 else
-    git branch -D "$BRANCH_NAME"
+	git branch -D "$BRANCH_NAME"
 fi
 
 git fetch --all -p

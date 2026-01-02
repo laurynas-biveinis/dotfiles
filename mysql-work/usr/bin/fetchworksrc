@@ -7,72 +7,72 @@ autoload mysql_need_openssl3_workaround
 autoload mysql_maybe_workaround_openssl3
 autoload mysql_undo_openssl3_workaround
 
-function fetch_and_maintain_repo () {
-    declare -r repo="$1"
+function fetch_and_maintain_repo() {
+	declare -r repo="$1"
 
-    declare -r fullpath="$WORK_SRC_ROOT/$repo"
-    echo "Fetching & GCing $fullpath..."
-    pushd "$fullpath" || return
-    git fetch --all
-    git gc --quiet
-    popd || return
+	declare -r fullpath="$WORK_SRC_ROOT/$repo"
+	echo "Fetching & GCing $fullpath..."
+	pushd "$fullpath" || return
+	git fetch --all
+	git gc --quiet
+	popd || return
 }
 
-function pull_worktree () {
-    declare -r worktree="$1"
+function pull_worktree() {
+	declare -r worktree="$1"
 
-    declare -r fullpath="$WORK_SRC_ROOT/$worktree"
-    echo "Pulling $fullpath..."
-    pushd "$fullpath" || return
-    cf_off || true
-    git pull
-    git submodule update
-    cf_on || true
-    popd || return
+	declare -r fullpath="$WORK_SRC_ROOT/$worktree"
+	echo "Pulling $fullpath..."
+	pushd "$fullpath" || return
+	cf_off || true
+	git pull
+	git submodule update
+	cf_on || true
+	popd || return
 }
 
-function build_tree () {
-    declare -r build_dir="$1"
+function build_tree() {
+	declare -r build_dir="$1"
 
-    if ! is_on_ac; then
-        echo Laptop is on battery: skipping build of "$build_dir"
-        return 0
-    fi
-    pushd "$build_dir" || return 1
-    echo "Building $build_dir..."
-    time ninja
-    date
-    popd || return 1
-    return 0
+	if ! is_on_ac; then
+		echo Laptop is on battery: skipping build of "$build_dir"
+		return 0
+	fi
+	pushd "$build_dir" || return 1
+	echo "Building $build_dir..."
+	time ninja
+	date
+	popd || return 1
+	return 0
 }
 
 for repo in $WORK_REPOS_TO_PULL; do
-    fetch_and_maintain_repo "$repo"
+	fetch_and_maintain_repo "$repo"
 done
 
 for worktree in $WORK_TREES_TO_UPDATE; do
-    pull_worktree "$worktree"
+	pull_worktree "$worktree"
 done
 
 for worktree in $WORK_TREES_TO_UPDATE; do
-    declare full_worktree_path="$WORK_SRC_ROOT/$worktree"
-    pushd "$full_worktree_path" || return
+	declare full_worktree_path="$WORK_SRC_ROOT/$worktree"
+	pushd "$full_worktree_path" || return
 
-    if ! declare -i workaround_ssl3=$(mysql_need_openssl3_workaround); then
-        popd
-        return 1
-    fi
+	if ! declare -i workaround_ssl3=$(mysql_need_openssl3_workaround); then
+		popd
+		return 1
+	fi
 
-    mysql_maybe_workaround_openssl3 $workaround_ssl3
+	mysql_maybe_workaround_openssl3 $workaround_ssl3
 
-    for build_dir in "$full_worktree_path"/_build-*(/); do
-        if ! build_tree $build_dir; then
-            mysql_undo_openssl3_workaround $workaround_ssl3
-            return
-        fi
-    done
+	for build_dir in "$full_worktree_path"/_build-*(/); do
+		if ! build_tree $build_dir; then
+			mysql_undo_openssl3_workaround $workaround_ssl3
+			return
+		fi
+	done
 
-    mysql_undo_openssl3_workaround $workaround_ssl3
+	mysql_undo_openssl3_workaround $workaround_ssl3
 
-    popd || return
+	popd || return
 done

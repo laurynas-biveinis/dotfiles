@@ -5,18 +5,18 @@ set -euo pipefail
 # Do setup-macos-python.sh first
 
 brew install ghostscript bison libfido2 doxygen graphviz lz4 libeatmydata \
-     rapidjson protobuf@21 llvm@14 llvm@15 llvm@16 llvm@17 llvm@18 llvm@19 \
-     llvm@20 openblas perl mysql-client@8.0
+	rapidjson protobuf@21 llvm@14 llvm@15 llvm@16 llvm@17 llvm@18 llvm@19 \
+	llvm@20 openblas perl mysql-client@8.0
 
 # Set the default clang-format version to what upstreams use. Note that this
 # does not affect clangd.
 sudo ln -sf /opt/homebrew/opt/llvm@18/bin/clang-format \
-     /usr/local/bin/clang-format
+	/usr/local/bin/clang-format
 brew link protobuf@21
 
 # Needs to be re-executed after every XCode update
 sudo ln -sf /opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.a \
-     `xcode-select -p`/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libgfortran.a
+	$(xcode-select -p)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libgfortran.a
 
 # Perl
 # TODO(laurynas): does not survive upgrades, do what the Perl formula advises
@@ -31,7 +31,7 @@ export PATH="/opt/homebrew/opt/mysql-client@8.0/bin:$PATH"
 /opt/homebrew/opt/perl/bin/cpan DBD::mysql
 # Go to ~/.cpan/build/DBD-mysql-<latest> and do:
 perl Makefile.PL \
-     --libs="-L/opt/homebrew/opt/mysql-client@8.0/lib -L/opt/homebrew/lib -lmysqlclient -lz -lzstd -lssl -lcrypto -lresolv"
+	--libs="-L/opt/homebrew/opt/mysql-client@8.0/lib -L/opt/homebrew/lib -lmysqlclient -lz -lzstd -lssl -lcrypto -lresolv"
 sudo make install
 
 # Python

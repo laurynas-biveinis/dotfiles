@@ -5,13 +5,12 @@ readonly DIR=/opt/homebrew/share/info/emacs
 pushd $DIR || exit 1
 
 if [[ -f dir ]]; then
-    mv dir dir.orig
-    echo Review $DIR/dir.orig and delete it
+	mv dir dir.orig
+	echo Review $DIR/dir.orig and delete it
 fi
 
-for file in *
-do
-    install-info --align=33 --calign=33 "$file" dir
+for file in *; do
+	install-info --align=33 --calign=33 "$file" dir
 done
 
 popd || exit 1

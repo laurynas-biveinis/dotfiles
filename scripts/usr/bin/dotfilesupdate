@@ -4,45 +4,45 @@ set -euo pipefail
 
 readonly DOTFILES_ROOT=~/dotfiles
 readonly DOTFILES_SETUP_DIR=$DOTFILES_ROOT/dotfiles
-IFS=" " read -r -A base_modules < $DOTFILES_SETUP_DIR/base_modules
+IFS=" " read -r -A base_modules <$DOTFILES_SETUP_DIR/base_modules
 readonly EXTRA_MODULES_FILE=$DOTFILES_SETUP_DIR/extra_modules
 
 readonly IGNORE_FOR_SYMLINKS=(
-    "Library/Application Support/Slack/SingletonCookie"
-    "Library/Application Support/Slack/SingletonLock"
-    "Library/Caches/com.apple.bird"
-    "Library/Application Support/Google/Chrome/RunningChromeVersion"
-    "Library/Application Support/Google/Chrome/SingletonCookie"
-    "Library/Application Support/Google/Chrome/SingletonLock"
-    "Library/Application Support/discord/SingletonCookie"
-    "Library/Application Support/discord/SingletonLock"
-    "Library/Application Support/Signal/SingletonCookie"
-    "Library/Application Support/Signal/SingletonLock"
-    "Library/Application Support/Steam/SingletonCookie"
-    "Library/Application Support/Steam/SingletonLock"
-    "Library/Application Support/Steam/config/htmlcache/SingletonCookie"
-    "Library/Application Support/Steam/config/htmlcache/SingletonLock"
-    "Library/Containers"
-    "Library/Logs/ims.log"
-    "Library/Saved Application State"
-    "*/plugin_output_directory/libfido2.1.dylib"
-    "*/plugin_output_directory/plugin/libfido2.1.dylib"
-    "*/rqg/data/source"
-    "Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/*")
+	"Library/Application Support/Slack/SingletonCookie"
+	"Library/Application Support/Slack/SingletonLock"
+	"Library/Caches/com.apple.bird"
+	"Library/Application Support/Google/Chrome/RunningChromeVersion"
+	"Library/Application Support/Google/Chrome/SingletonCookie"
+	"Library/Application Support/Google/Chrome/SingletonLock"
+	"Library/Application Support/discord/SingletonCookie"
+	"Library/Application Support/discord/SingletonLock"
+	"Library/Application Support/Signal/SingletonCookie"
+	"Library/Application Support/Signal/SingletonLock"
+	"Library/Application Support/Steam/SingletonCookie"
+	"Library/Application Support/Steam/SingletonLock"
+	"Library/Application Support/Steam/config/htmlcache/SingletonCookie"
+	"Library/Application Support/Steam/config/htmlcache/SingletonLock"
+	"Library/Containers"
+	"Library/Logs/ims.log"
+	"Library/Saved Application State"
+	"*/plugin_output_directory/libfido2.1.dylib"
+	"*/plugin_output_directory/plugin/libfido2.1.dylib"
+	"*/rqg/data/source"
+	"Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/*")
 
 pushd $DOTFILES_ROOT || exit
 git pull origin-ro master
 git submodule update
 echo -n "Re-creating symlinks for:"
 for module in "${base_modules[@]}"; do
-    echo -n " $module"
-    stow "$module"
+	echo -n " $module"
+	stow "$module"
 done
 # Extra modules, if defined
-IFS=" " read -r -A extra_modules < $EXTRA_MODULES_FILE
+IFS=" " read -r -A extra_modules <$EXTRA_MODULES_FILE
 for extra_module in "${extra_modules[@]}"; do
-    echo -n " [$extra_module]"
-    stow "$extra_module"
+	echo -n " [$extra_module]"
+	stow "$extra_module"
 done
 echo
 # Since we cannot do stow -D before git pull, check manually for any now-stray
@@ -50,11 +50,11 @@ echo
 echo "Stray symlinks in $HOME, if any:"
 find_ignore_paths=()
 for find_ignore_path in "${IGNORE_FOR_SYMLINKS[@]}"; do
-    find_ignore_paths+=("-path" "$HOME/$find_ignore_path" "-prune" "-o")
+	find_ignore_paths+=("-path" "$HOME/$find_ignore_path" "-prune" "-o")
 done
 # A useful alternative would be "(cd $DOTFILE_ROOT && chkstow -b)", but this
 # command finds non-stow-managed stray symlinks too
 find ~ "${find_ignore_paths[@]}" -type l ! -exec test -e {} \; -print \
-     2>/dev/null || true
+	2>/dev/null || true
 echo "End of stray symlink list"
 popd || exit

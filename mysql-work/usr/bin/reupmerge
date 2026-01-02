@@ -9,16 +9,16 @@ readonly HIGHER=$3
 pushd "$WORK_SRC_ROOT" || exit 1
 
 if ! pushd "$BRANCH-$HIGHER"; then
-    echo "Failed to pushd to $BRANCH-$HIGHER, check args"
-    exit 1
+	echo "Failed to pushd to $BRANCH-$HIGHER, check args"
+	exit 1
 fi
 
 readonly base_rev="$(git rev-list HEAD -1 --skip=1 --first-parent --topo-order)"
 readonly tmp_patch=$(mktemp)
 readonly tmp_patch_commit=$(mktemp)
 echo "Saving $BRANCH-$HIGHER last commit on top of $base_rev"
-git log --format=%B -1 > "$tmp_patch_commit"
-git log -1 -p -m --first-parent --pretty=email --full-index --binary > "$tmp_patch"
+git log --format=%B -1 >"$tmp_patch_commit"
+git log -1 -p -m --first-parent --pretty=email --full-index --binary >"$tmp_patch"
 
 popd || exit 1
 

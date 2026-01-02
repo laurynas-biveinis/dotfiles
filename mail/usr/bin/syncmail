@@ -6,11 +6,11 @@ source ~/.zshenv
 
 # The process name is for the emacs-mac Homebrew port
 if pgrep -x "Emacs" >/dev/null; then
-    if emacsclient -e '(mapcar (function buffer-name) (buffer-list))' |
-            grep -q 'mu4e'; then
-        echo "Emacs with mu4e is running - skipping sync"
-        exit 0
-    fi
+	if emacsclient -e '(mapcar (function buffer-name) (buffer-list))' |
+		grep -q 'mu4e'; then
+		echo "Emacs with mu4e is running - skipping sync"
+		exit 0
+	fi
 fi
 
 mbsync -a || true
