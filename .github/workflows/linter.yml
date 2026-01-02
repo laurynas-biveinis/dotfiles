@@ -32,10 +32,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Exclude SC1071 (unsupported shell) to skip zsh scripts gracefully
           SHELLCHECK_OPTS: "--exclude=SC1071"
-          FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/|.claude/commands).*
+          # Exclude: elpa (third-party), .venv (virtual env)
+          FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/|\.venv/).*
           VALIDATE_ANSIBLE: false
           VALIDATE_GIT_COMMITLINT: false
+          # Conflicts with black (both are Python formatters)
           VALIDATE_PYTHON_PYINK: false
           VALIDATE_PYTHON_RUFF_FORMAT: false
+          # Redundant with PYTHON_RUFF which covers all flake8 rules
+          VALIDATE_PYTHON_FLAKE8: false
           # Until https://github.com/kucherenko/jscpd/issues/737 is fixed
           VALIDATE_JSCPD: false

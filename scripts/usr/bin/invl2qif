@@ -9,22 +9,25 @@ single section named '3PF' with a single key 'security':
 security = foo
 """
 
-import sys
 import argparse
 import configparser
 import os
+import sys
+
 import pandas as pd
 
-sys.path.append(os.path.expanduser('~/usr/lib/python'))
+sys.path.append(os.path.expanduser("~/usr/lib/python"))
 
-from common import QIFInvestmentTransaction
+from common import (  # noqa: E402  # pylint: disable=wrong-import-position
+    QIFInvestmentTransaction,
+)
 
 CONFIG_FN = "~/.invl2qif"
 
 config = configparser.ConfigParser()
 config.read(os.path.expanduser(CONFIG_FN))
 
-security = config['3PF']['security']
+security = config["3PF"]["security"]
 
 arg_parser = argparse.ArgumentParser(
     description="Convert ŠB pension fund XLSX statement to QIF for importing "
@@ -38,16 +41,21 @@ args = arg_parser.parse_args()
 
 source = pd.read_excel(args.input)
 
-with open(args.output, "w", encoding='utf-8') as output_file:
+with open(args.output, "w", encoding="utf-8") as output_file:
     output_file.write("!Type:Invst\n")
     for index, row in source.iterrows():
-        date = row['Data']
-        amount = row['Įmoka/išmoka'].strip(" €")
-        unit_price = row['Vnt. kaina'].strip(" €")
-        count = row['Vnt.'].strip(" €")
-        fee = row['Mokestis'].strip(" €")
-        qif_trx = QIFInvestmentTransaction(date=date, security=security,
-                                           fee=fee, amount=amount,
-                                           unit_price=unit_price, count=count)
+        date = row["Data"]
+        amount = row["Įmoka/išmoka"].strip(" €")
+        unit_price = row["Vnt. kaina"].strip(" €")
+        count = row["Vnt."].strip(" €")
+        fee = row["Mokestis"].strip(" €")
+        qif_trx = QIFInvestmentTransaction(
+            date=date,
+            security=security,
+            fee=fee,
+            amount=amount,
+            unit_price=unit_price,
+            count=count,
+        )
         print(qif_trx)
         qif_trx.write(output_file)

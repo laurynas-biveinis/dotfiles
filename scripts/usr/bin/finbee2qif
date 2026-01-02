@@ -57,7 +57,7 @@ PAYMENT_TO_QIF_TYPES = {
     "Priteistos lėšos": "Sell",
     "Sąskaitos papildymas": "Cash",
     "Suteikta paskola": "Buy",
-    "Termination": "Sell"
+    "Termination": "Sell",
 }
 
 
@@ -72,8 +72,7 @@ def get_qif_investment_action(payment_type):
 
 
 arg_parser = argparse.ArgumentParser(
-    description="Convert FinBee CSV statement to QIF for importing to "
-    "Banktivity."
+    description="Convert FinBee CSV statement to QIF for importing to Banktivity."
 )
 
 arg_parser.add_argument("input", type=str, help="The input file")
@@ -85,33 +84,37 @@ mapping_config = CaseSensitiveConfigParser()
 mapping_config.read(os.path.expanduser(CONFIG_FN))
 
 if CONFIG_MAPPING_SECTION not in mapping_config:
-    raise ValueError(f"Config file {CONFIG_FN} does not have "
-                     f"{CONFIG_MAPPING_SECTION} section")
+    raise ValueError(
+        f"Config file {CONFIG_FN} does not have " f"{CONFIG_MAPPING_SECTION} section"
+    )
 
 payer_mapping = dict(mapping_config.items(CONFIG_MAPPING_SECTION))
 print(payer_mapping)
 
-with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
-     open(args.output, "w", encoding='utf-8') as output_file:
-    csv_reader = csv.DictReader(input_file, delimiter=';')
+with open(args.input, newline="", encoding="utf-8-sig") as input_file, open(
+    args.output, "w", encoding="utf-8"
+) as output_file:
+    csv_reader = csv.DictReader(input_file, delimiter=";")
     output_file.write("!Type:Invst\n")
     for csv_row in csv_reader:
-        date = get_key(csv_row, 'Date', 'Data', args.input)
+        date = get_key(csv_row, "Date", "Data", args.input)
         # The last line is the total, breaking the schema
         if date in ("Total amount", "Iš viso"):
             break
-        amount = get_key(csv_row, 'Amount', 'Suma', args.input)
-        purpose = get_key(csv_row, 'Purpose', 'Paskirtis', args.input)
-        csv_payment_type = get_key(csv_row, 'Type', 'Tipas', args.input)
-        print(f"Before: Date: {date}, amount: {amount}, purpose: {purpose}, "
-              f"payment_type: {csv_payment_type}")
+        amount = get_key(csv_row, "Amount", "Suma", args.input)
+        purpose = get_key(csv_row, "Purpose", "Paskirtis", args.input)
+        csv_payment_type = get_key(csv_row, "Type", "Tipas", args.input)
+        print(
+            f"Before: Date: {date}, amount: {amount}, purpose: {purpose}, "
+            f"payment_type: {csv_payment_type}"
+        )
 
         # pylint: disable=C0103
         investment_action = get_qif_investment_action(csv_payment_type)
         # pulint: enable=C0103
 
-        if investment_action == 'Buy':
-            amount = amount.strip('-')
+        if investment_action == "Buy":
+            amount = amount.strip("-")
 
         payer = payer_mapping[purpose]
 
@@ -129,7 +132,7 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
             output_file.write("LInterest Income\n")
         else:
             output_file.write(f"Y{payer}\n")
-        if investment_action in ('Sell', 'Buy'):
+        if investment_action in ("Sell", "Buy"):
             output_file.write("I1.0\n")
             output_file.write(f"Q{amount}\n")
         output_file.write("^\n")

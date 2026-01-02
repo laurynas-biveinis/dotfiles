@@ -20,8 +20,9 @@ args = arg_parser.parse_args()
 
 header_printed = False
 
-with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
-     open(args.output, "w", encoding='utf-8') as output_file:
+with open(args.input, newline="", encoding="utf-8-sig") as input_file, open(
+    args.output, "w", encoding="utf-8"
+) as output_file:
     # Skip the "Statement," lines
     while True:
         current_pos = input_file.tell()
@@ -32,24 +33,26 @@ with open(args.input, newline='', encoding='utf-8-sig') as input_file, \
     # Process "Trades," lines
     csv_reader = csv.DictReader(input_file)
     for row in csv_reader:
-        if row['Header'] == 'SubTotal':
+        if row["Header"] == "SubTotal":
             continue
-        if row['Header'] == 'Total':
+        if row["Header"] == "Total":
             break
-        timestamp = row['Date/Time']
-        security = row['Symbol']
-        quantity = row['Quantity']
-        price = row['T. Price']
-        fee = row['Comm/Fee'].strip('-')
-        total = row['Proceeds']
+        timestamp = row["Date/Time"]
+        security = row["Symbol"]
+        quantity = row["Quantity"]
+        price = row["T. Price"]
+        fee = row["Comm/Fee"].strip("-")
+        total = row["Proceeds"]
         if not header_printed:
             header_printed = True
             output_file.write("!Type:Invst\n")
 
         print(f"{row}")
-        print(f"timestamp = {timestamp}, security = {security}, "
-              f"quantity = {quantity}, price = {price}, fee = {fee}, "
-              f"total = {total}\n")
+        print(
+            f"timestamp = {timestamp}, security = {security}, "
+            f"quantity = {quantity}, price = {price}, fee = {fee}, "
+            f"total = {total}\n"
+        )
 
         output_file.write(f"D{timestamp}\n")
         output_file.write(f"Y{security}\n")

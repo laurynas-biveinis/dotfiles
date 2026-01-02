@@ -54,11 +54,14 @@ XPATH_TRANSACTIONS = "ns:BkToCstmrStmt/ns:Stmt/ns:Ntry"
 def add_from_string(mapping):
     """Add a from_string method to an enum class that maps the CAMT.053 strings
     in XML to enum values"""
+
     def decorator(enum_class):
         # Construct the reverse mapping once and store it as a class attribute
-        reverse_mapping = {str_val: getattr(enum_class, enum_key) for str_val,
-                           enum_key in mapping.items()}
-        setattr(enum_class, '_str_to_enum', reverse_mapping)
+        reverse_mapping = {
+            str_val: getattr(enum_class, enum_key)
+            for str_val, enum_key in mapping.items()
+        }
+        setattr(enum_class, "_str_to_enum", reverse_mapping)
 
         @classmethod
         def from_string(cls, string):
@@ -66,62 +69,87 @@ def add_from_string(mapping):
 
         enum_class.from_string = from_string
         return enum_class
+
     return decorator
 
 
-@add_from_string({'CRDT': 'DEPOSIT', 'DBIT': 'WITHDRAWAL'})
+@add_from_string({"CRDT": "DEPOSIT", "DBIT": "WITHDRAWAL"})
 class TransactionType(Enum):
     """A CAMT.053 transaction type"""
+
     DEPOSIT = auto()
     WITHDRAWAL = auto()
 
 
-@add_from_string({'PMNT': 'PAYMENTS', 'LDAS': 'LOANS_DEPOSITS_SYNDICATIONS',
-                  'XTND': 'EXTENDED_DOMAIN'})
+@add_from_string(
+    {
+        "PMNT": "PAYMENTS",
+        "LDAS": "LOANS_DEPOSITS_SYNDICATIONS",
+        "XTND": "EXTENDED_DOMAIN",
+    }
+)
 class TransactionDomain(Enum):
     """A CAMT.053 transaction domain"""
+
     PAYMENTS = auto()
     LOANS_DEPOSITS_SYNDICATIONS = auto()
     EXTENDED_DOMAIN = auto()
 
 
-@add_from_string({'CCRD': 'CUSTOMER_CARD_TRANSACTION',
-                  'RCDT': 'RECEIVED_CREDIT_TRANSFER',
-                  'ICDT': 'ISSUED_CREDIT_TRANSFER', 'OTHR': 'OTHER'})
+@add_from_string(
+    {
+        "CCRD": "CUSTOMER_CARD_TRANSACTION",
+        "RCDT": "RECEIVED_CREDIT_TRANSFER",
+        "ICDT": "ISSUED_CREDIT_TRANSFER",
+        "OTHR": "OTHER",
+    }
+)
 class PaymentsTransactionFamily(Enum):
     """A CAMT.053 transaction family in the Payments domain"""
+
     CUSTOMER_CARD_TRANSACTION = auto()
     RECEIVED_CREDIT_TRANSFER = auto()
     ISSUED_CREDIT_TRANSFER = auto()
     OTHER = auto()
 
 
-@add_from_string({'FTLN': 'FIXED_TERM_LOANS', 'MDOP': 'MISC_DEBIT_OPS'})
+@add_from_string({"FTLN": "FIXED_TERM_LOANS", "MDOP": "MISC_DEBIT_OPS"})
 class LDASTransactionFamily(Enum):
     """A CAMT.053 transaction family in the Loans, Deposits & Syndications
     domain"""
+
     FIXED_TERM_LOANS = auto()
     MISC_DEBIT_OPS = auto()
 
 
-@add_from_string({'NTAV': 'NOT_AVAILABLE'})
+@add_from_string({"NTAV": "NOT_AVAILABLE"})
 class XTNDTransactionFamily(Enum):
     """A CAMT.053 transaction family in the Extended Domain"""
+
     NOT_AVAILABLE = auto()
 
 
-@add_from_string({'NTAV': 'NOT_AVAILABLE'})
+@add_from_string({"NTAV": "NOT_AVAILABLE"})
 class XTNDTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in the Extended Domain"""
+
     NOT_AVAILABLE = auto()
 
 
-@add_from_string({'POSD': 'POS_PAYMENT_DEBIT_CARD', 'CWDL': 'CASH_WITHDRAWAL',
-                  'FEES': 'FEES', 'DAJT': 'CREDIT_ADJUSTMENT',
-                  'CAJT': 'DEBIT_ADJUSTMENT', 'NTAV': 'NOT_AVAILABLE'})
+@add_from_string(
+    {
+        "POSD": "POS_PAYMENT_DEBIT_CARD",
+        "CWDL": "CASH_WITHDRAWAL",
+        "FEES": "FEES",
+        "DAJT": "CREDIT_ADJUSTMENT",
+        "CAJT": "DEBIT_ADJUSTMENT",
+        "NTAV": "NOT_AVAILABLE",
+    }
+)
 class CCRDTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in a Customer Card Transaction (CCRD)
     family."""
+
     POS_PAYMENT_DEBIT_CARD = auto()
     CASH_WITHDRAWAL = auto()
     FEES = auto()
@@ -130,35 +158,43 @@ class CCRDTransactionSubfamily(Enum):
     NOT_AVAILABLE = auto()
 
 
-@add_from_string({'ESCT': 'SEPA_CREDIT_TRANSFER',
-                  'BOOK': 'INTERNAL_BOOK_TRANSFER',
-                  'SALA': 'PAYROLL_SALARY_PAYMENT',
-                  'DMCT': 'DOMESTIC_CREDIT_TRANSFER'})
+@add_from_string(
+    {
+        "ESCT": "SEPA_CREDIT_TRANSFER",
+        "BOOK": "INTERNAL_BOOK_TRANSFER",
+        "SALA": "PAYROLL_SALARY_PAYMENT",
+        "DMCT": "DOMESTIC_CREDIT_TRANSFER",
+    }
+)
 class ICDTTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in an Issued Credit Transfer (ICDT)
     family."""
+
     SEPA_CREDIT_TRANSFER = auto()
     INTERNAL_BOOK_TRANSFER = auto()
     PAYROLL_SALARY_PAYMENT = auto()
     DOMESTIC_CREDIT_TRANSFER = auto()
 
 
-@add_from_string({'OTHR': 'OTHER'})
+@add_from_string({"OTHR": "OTHER"})
 class OtherTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in an Other family"""
+
     OTHER = auto()
 
 
-@add_from_string({'INTR': 'INTEREST'})
+@add_from_string({"INTR": "INTEREST"})
 class MiscDebitOpsTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in a Miscellaneous Debit Operations
     family"""
+
     INTEREST = auto()
 
 
-@add_from_string({'RIMB': 'REIMBURSEMENT'})
+@add_from_string({"RIMB": "REIMBURSEMENT"})
 class FixedTermLoanTransactionSubfamily(Enum):
     """A CAMT.053 transaction subfamily in a Fixed Term Loans family"""
+
     REIMBURSEMENT = auto()  # Absolutely incorrect yet Luminor returns this
 
 
@@ -175,8 +211,15 @@ def collect_rules(config):
         payee = config[section]["payee"]
         category = config[section]["category"]
 
-        rules.append({"type": type_key, "amount": amount, "pattern": pattern,
-                      "payee": payee, "category": category})
+        rules.append(
+            {
+                "type": type_key,
+                "amount": amount,
+                "pattern": pattern,
+                "payee": payee,
+                "category": category,
+            }
+        )
     return rules
 
 
@@ -203,8 +246,10 @@ class Transaction:
         self._amount = amount
 
     def __str__(self):
-        return (f"Transaction(date: {self._date}, type: {self._type}, "
-                f"amount: {self._amount})")
+        return (
+            f"Transaction(date: {self._date}, type: {self._type}, "
+            f"amount: {self._amount})"
+        )
 
     @property
     def date(self):
@@ -225,8 +270,7 @@ class Transaction:
 class XMLTransaction(Transaction):
     """A transaction from XML file."""
 
-    _US_DATE_PREFIX = re.compile(
-        "^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
+    _US_DATE_PREFIX = re.compile("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
 
     _XPATH_UNSTRUCTURED = ".//ns:NtryDtls/ns:TxDtls/ns:RmtInf/ns:Ustrd"
     _XPATH_VALUE_DATE = ".//ns:ValDt/ns:Dt"
@@ -241,13 +285,14 @@ class XMLTransaction(Transaction):
 
     def __init__(self, xml_obj):
         self._unstructured_info = self._get_unstructured_info(xml_obj)
-        super().__init__(self._get_transaction_date(xml_obj),
-                         self._get_transaction_type(xml_obj),
-                         self._get_transaction_amount(xml_obj))
+        super().__init__(
+            self._get_transaction_date(xml_obj),
+            self._get_transaction_type(xml_obj),
+            self._get_transaction_amount(xml_obj),
+        )
         self._creditor = self._get_creditor(xml_obj)
         self._debitor = self._get_debitor(xml_obj)
-        self._domain, self._family, self._subfamily = self._parse_txn_codes(
-            xml_obj)
+        self._domain, self._family, self._subfamily = self._parse_txn_codes(xml_obj)
 
     def __str__(self):
         return (
@@ -265,14 +310,15 @@ class XMLTransaction(Transaction):
         if self._domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
             return "loan"
         if self._domain == TransactionDomain.PAYMENTS:
-            if (self._family
-                    == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION):
+            if self._family == PaymentsTransactionFamily.CUSTOMER_CARD_TRANSACTION:
                 if self._subfamily == CCRDTransactionSubfamily.CASH_WITHDRAWAL:
                     return "cash_from_card"
                 if self._subfamily == CCRDTransactionSubfamily.FEES:
                     return "card_fee"
-            if (self._family == PaymentsTransactionFamily.OTHER
-                    and self._subfamily == OtherTransactionSubfamily.OTHER):
+            if (
+                self._family == PaymentsTransactionFamily.OTHER
+                and self._subfamily == OtherTransactionSubfamily.OTHER
+            ):
                 return "bank_service"
         return ""
 
@@ -280,18 +326,22 @@ class XMLTransaction(Transaction):
         """Find a matching rule and and return its fields."""
         rewrite_rule = None
         if self._debitor:
-            rewrite_rule = find_matching_rule(rules, self.amount,
-                                              rule_type, self._debitor)
+            rewrite_rule = find_matching_rule(
+                rules, self.amount, rule_type, self._debitor
+            )
         if rewrite_rule is None and self._creditor:
-            rewrite_rule = find_matching_rule(rules, self.amount,
-                                              rule_type, self._creditor)
+            rewrite_rule = find_matching_rule(
+                rules, self.amount, rule_type, self._creditor
+            )
         if rewrite_rule is None:
-            rewrite_rule = find_matching_rule(rules, self.amount,
-                                              rule_type,
-                                              self._unstructured_info)
+            rewrite_rule = find_matching_rule(
+                rules, self.amount, rule_type, self._unstructured_info
+            )
         if rewrite_rule is None:
-            raise ValueError(f"Please add a rule for {self._creditor}, "
-                             f"{self._debitor} or {self._unstructured_info}")
+            raise ValueError(
+                f"Please add a rule for {self._creditor}, "
+                f"{self._debitor} or {self._unstructured_info}"
+            )
 
         return rewrite_rule["payee"], rewrite_rule["category"]
 
@@ -309,8 +359,9 @@ class XMLTransaction(Transaction):
         if value_date is not None:
             return value_date.text
 
-        if (self._unstructured_info and
-                self._US_DATE_PREFIX.match(self._unstructured_info)):
+        if self._unstructured_info and self._US_DATE_PREFIX.match(
+            self._unstructured_info
+        ):
             date_substr = self._unstructured_info[:10]
             date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
             return date_obj.strftime("%Y-%m-%d")
@@ -319,8 +370,9 @@ class XMLTransaction(Transaction):
         if booking_date is not None:
             return booking_date.text
 
-        raise ValueError("Don't know how to get the transaction date from the "
-                         "transaction")
+        raise ValueError(
+            "Don't know how to get the transaction date from the transaction"
+        )
 
     @classmethod
     def _get_transaction_amount(cls, xml_obj):
@@ -381,7 +433,7 @@ class XMLTransaction(Transaction):
         return subfamily_obj.text
 
     @classmethod
-    def _parse_txn_codes(cls, xml_obj):
+    def _parse_txn_codes(cls, xml_obj):  # pylint: disable=too-many-branches
         """Parse the transaction codes to return domain, family, & subfamily"""
         domain = cls._get_transaction_domain(xml_obj)
         family_str = cls._get_transaction_family_string(xml_obj)
@@ -394,18 +446,15 @@ class XMLTransaction(Transaction):
             elif family == PaymentsTransactionFamily.ISSUED_CREDIT_TRANSFER:
                 subfamily = ICDTTransactionSubfamily.from_string(subfamily_str)
             elif family == PaymentsTransactionFamily.OTHER:
-                subfamily = OtherTransactionSubfamily.from_string(
-                    subfamily_str)
+                subfamily = OtherTransactionSubfamily.from_string(subfamily_str)
             else:
                 subfamily = ""
         elif domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
             family = LDASTransactionFamily.from_string(family_str)
             if family == LDASTransactionFamily.MISC_DEBIT_OPS:
-                subfamily = MiscDebitOpsTransactionSubfamily.from_string(
-                    subfamily_str)
+                subfamily = MiscDebitOpsTransactionSubfamily.from_string(subfamily_str)
             elif family == LDASTransactionFamily.FIXED_TERM_LOANS:
-                subfamily = FixedTermLoanTransactionSubfamily.from_string(
-                    subfamily_str)
+                subfamily = FixedTermLoanTransactionSubfamily.from_string(subfamily_str)
             else:
                 subfamily = ""
         elif domain == TransactionDomain.EXTENDED_DOMAIN:
@@ -416,6 +465,7 @@ class XMLTransaction(Transaction):
                 subfamily = ""
         else:
             family = ""
+            subfamily = ""
         # pylint: enable=E1101
         return domain, family, subfamily
 
@@ -424,11 +474,9 @@ class QIFTransaction(Transaction):
     """A QIF transaction."""
 
     def __init__(self, xml_txn, rules):
-        super().__init__(xml_txn.date, xml_txn.transaction_type,
-                         xml_txn.amount)
+        super().__init__(xml_txn.date, xml_txn.transaction_type, xml_txn.amount)
         self._rule_type = xml_txn.get_rule_type()
-        self._payee, self._category = xml_txn.get_rule_fields(rules,
-                                                              self._rule_type)
+        self._payee, self._category = xml_txn.get_rule_fields(rules, self._rule_type)
 
     def __str__(self):
         return (
@@ -445,8 +493,7 @@ class QIFTransaction(Transaction):
         elif self.transaction_type == TransactionType.WITHDRAWAL:
             f.write(f"T-{self.amount}\n")
         else:
-            raise ValueError(
-                f"Unknown transaction type {self.transaction_type}")
+            raise ValueError(f"Unknown transaction type {self.transaction_type}")
         f.write(f"P{self._payee}\n")
         f.write(f"L{self._category}\n")
         f.write("^\n")
@@ -467,7 +514,7 @@ def process_transactions(root, rules):
 arg_parser = argparse.ArgumentParser(
     description="Convert bank statement in XML format (camt.053) to QIF for "
     "importing to Banktivity."
-   )
+)
 
 arg_parser.add_argument("input", type=str, help="The input file")
 arg_parser.add_argument("output", type=str, help="The output file")

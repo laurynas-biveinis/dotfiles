@@ -21,30 +21,32 @@ security = baz2
 import argparse
 import configparser
 import os
-import pandas as pd
 import sys
 
-sys.path.append(os.path.expanduser('~/usr/lib/python'))
+import pandas as pd
 
-from common import QIFInvestmentTransaction
+sys.path.append(os.path.expanduser("~/usr/lib/python"))
+
+from common import (  # noqa: E402  # pylint: disable=wrong-import-position
+    QIFInvestmentTransaction,
+)
 
 CONFIG_FN = "~/.goindex2qif"
 
 config = configparser.ConfigParser()
 config.read(os.path.expanduser(CONFIG_FN))
 
-preceding_2pf_trx_payer = config['preceding 2pf trx']['payer']
-preceding_2pf_trx_category = config['preceding 2pf trx']['category']
+preceding_2pf_trx_payer = config["preceding 2pf trx"]["payer"]
+preceding_2pf_trx_category = config["preceding 2pf trx"]["category"]
 
-match_2pf_fund_source = config['goindex 2pf trx']['match_fund_source']
-security_2pf = config['goindex 2pf trx']['security']
+match_2pf_fund_source = config["goindex 2pf trx"]["match_fund_source"]
+security_2pf = config["goindex 2pf trx"]["security"]
 
-match_3pf_fund_source = config['goindex 3pf trx']['match_fund_source']
-security_3pf = config['goindex 3pf trx']['security']
+match_3pf_fund_source = config["goindex 3pf trx"]["match_fund_source"]
+security_3pf = config["goindex 3pf trx"]["security"]
 
 arg_parser = argparse.ArgumentParser(
-    description="Convert GoIndex XLSX statement to QIF for importing to "
-    "Banktivity."
+    description="Convert GoIndex XLSX statement to QIF for importing to Banktivity."
 )
 
 arg_parser.add_argument("input", type=str, help="The input file")
@@ -54,23 +56,28 @@ args = arg_parser.parse_args()
 
 input_xlsx = pd.read_excel(args.input)
 
-with open(args.output, "w", encoding='utf-8') as output_file:
+with open(args.output, "w", encoding="utf-8") as output_file:
     output_file.write("!Type:Invst\n")
     for index, row in input_xlsx.iterrows():
-        date = row['Data']
-        unit_price = str(row['Fondo vieneto kaina']).replace(",", ".")
-        count = str(row['Vnt. kiekis']).replace(",", ".")
-        fee = row['Mokestis']
+        date = row["Data"]
+        unit_price = str(row["Fondo vieneto kaina"]).replace(",", ".")
+        count = str(row["Vnt. kiekis"]).replace(",", ".")
+        fee = row["Mokestis"]
         # They broke it on 2025 06, fixed on 2025 07
         # op = str(row['operationType'])
-        op = str(row['Fondo vnt. operacija'])
+        op = str(row["Fondo vnt. operacija"])
         if op == match_2pf_fund_source:
-            amount = str(row['Įmokos/Išmokos']).replace(",", ".")
-            qif_trx = QIFInvestmentTransaction(date=date,
-                                               security=security_2pf, fee=fee,
-                                               amount=amount,
-                                               unit_price=unit_price,
-                                               count=count)
+            amount = str(row["Įmokos/Išmokos"]).replace(  # pylint: disable=invalid-name
+                ",", "."
+            )
+            qif_trx = QIFInvestmentTransaction(
+                date=date,
+                security=security_2pf,
+                fee=fee,
+                amount=amount,
+                unit_price=unit_price,
+                count=count,
+            )
             output_file.write(f"D{date}\n")
             output_file.write("NCash\n")
             output_file.write(f"T{amount}\n")
@@ -79,12 +86,15 @@ with open(args.output, "w", encoding='utf-8') as output_file:
             output_file.write(f"L{preceding_2pf_trx_category}\n")
             output_file.write("^\n")
         elif op == match_3pf_fund_source:
-            amount = row['Įmokos/Išmokos']
-            qif_trx = QIFInvestmentTransaction(date=date,
-                                               security=security_3pf, fee=fee,
-                                               amount=amount,
-                                               unit_price=unit_price,
-                                               count=count)
+            amount = row["Įmokos/Išmokos"]
+            qif_trx = QIFInvestmentTransaction(
+                date=date,
+                security=security_3pf,
+                fee=fee,
+                amount=amount,
+                unit_price=unit_price,
+                count=count,
+            )
         else:
             raise ValueError(f"Unknown match_fund_source {op}")
         print(qif_trx)
