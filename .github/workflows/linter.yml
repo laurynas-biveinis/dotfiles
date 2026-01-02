@@ -30,6 +30,8 @@ jobs:
         uses: super-linter/super-linter/slim@latest # zizmor: ignore[unpinned-uses]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Exclude SC1071 (unsupported shell) to skip zsh scripts gracefully
+          SHELLCHECK_OPTS: "--exclude=SC1071"
           FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/|.claude/commands).*
           VALIDATE_ANSIBLE: false
           VALIDATE_GIT_COMMITLINT: false
