@@ -1053,7 +1053,7 @@
       (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
       (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama
-  . [(1 10 2)
+  . [(1 10 3)
      ((emacs (28 1)) (llm (0 24 0)) (plz (0 8)) (transient (0 7))
       (compat (29 1)))
      "Tool for interacting with LLMs" tar
@@ -1061,7 +1061,7 @@
       (:keywords "help" "local" "tools")
       (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
       (:authors ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-      (:commit . "afcbca80bbe3be5a53924cb42b4b267c36e418a2"))])
+      (:commit . "141c17331cb96e16a145319bbf6c9d24a2b83f39"))])
  (emacs-gc-stats
   . [(1 4 2) ((emacs (25 1))) "Collect Emacs GC statistics" tar
      ((:url . "https://git.sr.ht/~yantar92/emacs-gc-stats")
@@ -1885,7 +1885,7 @@
       (:url . "https://elpa.gnu.org/packages/map.html")
       (:commit . "9da2efb670574b473ab864ae0456b4f1b38e680b"))])
  (marginalia
-  . [(2 6) ((emacs (29 1)) (compat (30)))
+  . [(2 7) ((emacs (29 1)) (compat (30)))
      "Enrich existing commands with completion annotations" tar
      ((:url . "https://github.com/minad/marginalia")
       (:keywords "docs" "help" "matching" "completion")
@@ -1893,7 +1893,7 @@
 		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Omar Antolín Camarena" . "omar@matem.unam.mx")
 		("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "c3e7b1904423bda143249c0d02cbb7cc7ed8bee0"))])
+      (:commit . "49bda384bc9b4d88518255de8d1ac3b32e76c783"))])
  (markchars
   . [(0 2 2) nil "Mark chars fitting certain characteristics" tar
      ((:maintainer "Lennart Borgman" . "lennart.borgman@gmail.com")
@@ -2009,13 +2009,13 @@
       (:authors ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
       (:commit . "b1f5c7dbdc405e6e10d9ddd99a43a6b2ad61b176"))])
  (modus-themes
-  . [(5 1 0) ((emacs (28 1)))
+  . [(5 2 0) ((emacs (28 1)))
      "Elegant, highly legible and customizable themes" tar
      ((:url . "https://github.com/protesilaos/modus-themes")
       (:keywords "faces" "theme" "accessibility")
       (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "4fd8cdfc552e7e1e6a96625a752ab612706b15e3"))])
+      (:commit . "d1037f1322487e5686fff655dcd88aa644b2ad51"))])
  (mpdired
   . [(3) ((emacs (29))) "A dired-like client for Music Player Daemon"
      tar
@@ -2806,12 +2806,12 @@
       (:keywords "text" "syntax" "processes" "tools")
       (:commit . "456acbde87a9fa9da0ed8b441c3f22c4d5310296"))])
  (site-lisp
-  . [(0 2 0) ((emacs (25 1))) "Manage site-lisp directories" tar
+  . [(0 3 0) ((emacs (25 1))) "Manage site-lisp directories" tar
      ((:url . "https://codeberg.org/pkal/site-lisp.el")
       (:keywords "lisp" "local")
       (:maintainer "Philip Kaludercic" . "philipk@posteo.net")
       (:authors ("Philip Kaludercic" . "philipk@posteo.net"))
-      (:commit . "3b0c3abab49cf4ab70a43e2c882bb8a2a6db45a1"))])
+      (:commit . "87656ba13c805285e50e7d86c29e444272b7d74f"))])
  (sketch-mode
   . [(1 0 4) nil
      "Quickly create svg sketches using keyboard and mouse" tar
@@ -3174,14 +3174,14 @@
       (:url . "https://elpa.gnu.org/packages/track-changes.html")
       (:commit . "e119514ae8b391f41577d22d4e41cc3fea7ab9eb"))])
  (tramp
-  . [(2 8 0 5) ((emacs (28 1)))
+  . [(2 8 1) ((emacs (28 1)))
      "Transparent Remote Access, Multiple Protocol" tar
      ((:url . "https://www.gnu.org/software/tramp/")
       (:keywords "comm" "processes")
       (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
       (:authors ("Kai Großjohann" . "kai.grossjohann@gmx.net")
 		("Michael Albinus" . "michael.albinus@gmx.de"))
-      (:commit . "ffb5b3473a4054e8d5499370cae50032227e8644"))])
+      (:commit . "272846ccfd98671259371591288280103c68f66b"))])
  (tramp-hlo
   . [(0 0 2) ((tramp (2 8 0 5)))
      "High level operations as Tramp handlers" tar
