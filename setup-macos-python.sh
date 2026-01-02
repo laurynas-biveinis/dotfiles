@@ -32,4 +32,4 @@ deactivate
 PIP_REQUIRE_VIRTUALENV="0" pip install "python-lsp-server[all]" pylsp-mypy \
 	python-lsp-isort pyls-memestra jedi pylsp-rope python-lsp-ruff \
 	python-lsp-black pylint pycodestyle pyflakes pandas openpyxl \
-        pandas-stubs scipy
+	pandas-stubs scipy
