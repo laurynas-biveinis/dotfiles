@@ -13,7 +13,8 @@
       "!emacs/.emacs.d/elpa",
       "!**/.mypy_cache",
       "!ai/.claude",
-      "!.claude"
+      "!.claude",
+      "!.venv"
     ]
   }
 }
