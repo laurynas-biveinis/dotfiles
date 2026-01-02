@@ -1,0 +1,12 @@
+# EditorConfig: https://editorconfig.org
+
+# Ignore zsh files with zsh-specific syntax that shfmt cannot parse
+# (shfmt only supports POSIX Shell, Bash, and mksh)
+[scripts/usr/bin/macupdate]
+ignore = true
+
+[mysql-work/.zsh.d/rc/mysql-work.sh]
+ignore = true
+
+[zsh/.p10k.zsh]
+ignore = true
