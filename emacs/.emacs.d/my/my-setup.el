@@ -1135,7 +1135,7 @@ RULE is a plist containing either :sender-exact or :sender-match."
                             deadgrep-visit-result-other-window fill-paragraph
                             beginning-of-buffer xwidget-webkit-scroll-down-line
                             lsp-format-buffer mouse-set-region shr-browse-url
-                            w3m-view-this-url w3m-previous-anchor
+                            w3m-view-this-url w3m-previous-anchor mwheel-scroll
                             mu4e-search-maildir company-complete-selection
                             beginend-magit-status-mode-goto-beginning
                             mu4e~headers-quit-buffer org-shifttab magit-refresh
@@ -1215,7 +1215,8 @@ RULE is a plist containing either :sender-exact or :sender-match."
                             w3m-next-anchor w3m-view-url-with-browse-url
                             mu4e-compose-wide-reply magit-dired-jump
                             magit-stash-drop gnus-article-press-button
-                            magit-bury-or-kill-buffer))
+                            magit-bury-or-kill-buffer
+                            isearch-with-input-method))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
