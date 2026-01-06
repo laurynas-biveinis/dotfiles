@@ -1,9 +1,9 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "elisp-autofmt" "20260101.1120"
+(define-package "elisp-autofmt" "20260105.1219"
   "Emacs lisp auto-format."
   '((emacs "29.1"))
   :url "https://codeberg.org/ideasman42/emacs-elisp-autofmt"
-  :commit "7c092f61dbf9673c9947c7048255c95b9d929204"
-  :revdesc "7c092f61dbf9"
+  :commit "4d12486434584485d8fd96b07dde0ea2a15810bf"
+  :revdesc "4d1248643458"
   :authors '(("Campbell Barton" . "ideasman42@gmail.com"))
   :maintainers '(("Campbell Barton" . "ideasman42@gmail.com")))

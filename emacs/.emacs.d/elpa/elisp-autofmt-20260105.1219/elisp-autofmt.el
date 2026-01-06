@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20260101.1120
-;; Package-Revision: 7c092f61dbf9
+;; Package-Version: 20260105.1219
+;; Package-Revision: 4d1248643458
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -67,7 +67,7 @@ Otherwise existing line-breaks are kept and only indentation is performed."
 
 (defcustom elisp-autofmt-empty-line-max 2
   "The maximum number of blank lines to preserve."
-  :type 'integer)
+  :type 'natnum)
 ;;;###autoload
 (put 'elisp-autofmt-empty-line-max 'safe-local-variable #'integerp)
 
@@ -85,9 +85,9 @@ Otherwise existing line-breaks are kept and only indentation is performed."
 (defcustom elisp-autofmt-load-packages-local nil
   "Additional packages/modules to include definitions from.
 
-Each entry may be:
-- A package identifier which will be loaded
-  which isn't loaded by default on Emacs startup.
+Each entry is a string which may be:
+- A package name (e.g. \"pcase\") which will be loaded
+  if it isn't loaded by default on Emacs startup.
 - A buffer relative path (beginning with a \".\"),
   which is intended to support sharing definitions for multi-file packages.
 
@@ -135,7 +135,7 @@ When nil, the default Python command is used."
 (defcustom elisp-autofmt-cache-directory
   (locate-user-emacs-file "elisp-autofmt-cache" ".elisp-autofmt-cache")
   "The directory to store cache data."
-  :type 'string)
+  :type 'directory)
 
 (defcustom elisp-autofmt-use-diff-range nil
   "For whole buffer formatting, compute the changed region & only update that.
@@ -156,7 +156,7 @@ Note that this may be useful for systems where the sub-process overhead is signi
   "Buffers under this size will not use parallel computation.
 
 - Use 0 to enable parallel computation for buffers of any size."
-  :type 'integer)
+  :type 'natnum)
 
 
 ;; ---------------------------------------------------------------------------
