@@ -101,6 +101,7 @@ class TransactionDomain(Enum):
         "CCRD": "CUSTOMER_CARD_TRANSACTION",
         "RCDT": "RECEIVED_CREDIT_TRANSFER",
         "ICDT": "ISSUED_CREDIT_TRANSFER",
+        "NTAV": "NOT_AVAILABLE",
         "OTHR": "OTHER",
     }
 )
@@ -110,6 +111,7 @@ class PaymentsTransactionFamily(Enum):
     CUSTOMER_CARD_TRANSACTION = auto()
     RECEIVED_CREDIT_TRANSFER = auto()
     ISSUED_CREDIT_TRANSFER = auto()
+    NOT_AVAILABLE = auto()
     OTHER = auto()
 
 
