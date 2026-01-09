@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20260105.1219
-;; Package-Revision: 4d1248643458
+;; Package-Version: 20260108.2310
+;; Package-Revision: e6c0aac8ebd8
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -225,7 +225,7 @@ useful for systems that patch the SHEBANG for a custom Python location."
 (defmacro elisp-autofmt--with-advice (advice &rest body)
   "Execute BODY with ADVICE temporarily enabled.
 
-Advice are triplets of (SYMBOL HOW FUNCTION),
+Each advice is a triplet of (SYMBOL HOW FUNCTION),
 see `advice-add' documentation."
   (declare (indent 1))
   (let ((advice-list advice)

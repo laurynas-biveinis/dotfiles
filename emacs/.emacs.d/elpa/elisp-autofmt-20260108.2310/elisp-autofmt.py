@@ -588,6 +588,7 @@ def apply_rules_recursive(cfg: FmtConfig, node_parent: NdSexp) -> None:
                     'cl-letf',  # Also: `cl-letf*`.
                     'if-let',  # Also: `if-let`.
                     'let',  # Also: `let*`.
+                    'letrec',
                     'pcase-let',  # Also: `pcase-let*`.
                     'when-let',  # Also: `when-let*`.
             }:
