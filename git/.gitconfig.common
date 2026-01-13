@@ -6,8 +6,6 @@
 [core]
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
-[magit]
-	hideCampaign = true
 [diff]
 	colorMoved = default
 	renamelimit = 100000
