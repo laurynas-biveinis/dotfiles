@@ -3,8 +3,8 @@
 ;; Copyright © 2021-2025  Free Software Foundation, Inc.
 
 ;; Author: Zachary Romero <zkry@posteo.org>
-;; Package-Version: 1.2.1
-;; Package-Revision: d3762199e6d5
+;; Package-Version: 1.2.2
+;; Package-Revision: 7b33b3a1b69f
 ;; Homepage: https://github.com/zkry/yaml.el
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: tools
@@ -45,6 +45,10 @@
 (require 'cl-lib)
 
 (defconst yaml-parser-version "0.5.1")
+
+
+(defvar yaml-encode-dialect :auto "yaml-encode-dialect. one of :auto, :kyaml-pretty, :kyaml-compact")
+(defvar yaml-encode-indent-width 2 "Number of spaces per indentation. Valid values >=2")
 
 (defvar yaml--encode-use-flow-sequence t
   "Turn on encoding sequence of scalars as flow sequence.")
@@ -2652,7 +2656,8 @@ auto-detecting the indentation.  Functionality defers to
      (t (insert (symbol-name s)))))
    ((numberp s) (insert (number-to-string s)))
    ((stringp s)
-    (if (string-match "\\`[-_a-zA-Z0-9]+\\'" s)
+    (if (and (string-match "\\`[-_a-zA-Z0-9]+\\'" s)
+	     (eql yaml-encode-dialect :auto))
         (insert s)
       (insert "\"" (yaml--encode-escape-string s) "\"")))))
 
@@ -2678,8 +2683,24 @@ auto-detecting the indentation"
            (yaml--encode-hash-table ht indent auto-indent))
           ((zerop (length l))
            (insert "[]"))
-          ((and yaml--encode-use-flow-sequence
-                (seq-every-p #'yaml--scalarp l))
+	      ((eql yaml-encode-dialect :kyaml-pretty)
+	       (let* ((indent-string (make-string indent ?\s))
+		          (next-indent (+ indent yaml-encode-indent-width))
+		          (next-indent-string (make-string next-indent ?\s)))
+	         (insert "[" "\n")
+             (let ((i 0))
+	           (seq-do (lambda (object)
+		                 (insert next-indent-string)
+		                 (yaml--encode-object object next-indent)
+                         (if (= i (1- (seq-length l)))
+                             (insert "\n")
+		                   (insert "," "\n"))
+                         (cl-incf i))
+		               l))
+	         (insert indent-string "]")))
+          ((or (eql yaml-encode-dialect :kyaml-compact)
+               (and yaml--encode-use-flow-sequence
+                    (seq-every-p #'yaml--scalarp l)))
            (insert "[")
            (yaml--encode-object (car l) 0)
            (seq-do (lambda (object)
@@ -2689,9 +2710,9 @@ auto-detecting the indentation"
            (insert "]"))
           (t
            (when (zerop indent)
-             (setq indent 2))
+             (setq indent yaml-encode-indent-width))
            (let* ((first t)
-                  (indent-string (make-string (- indent 2) ?\s)))
+                  (indent-string (make-string (- indent yaml-encode-indent-width) ?\s)))
              (seq-do
               (lambda (object)
                 (if (not first)
@@ -2704,7 +2725,7 @@ auto-detecting the indentation"
                 (if (or (hash-table-p object)
                         (yaml--alist-to-hash-table object))
                     (yaml--encode-object object indent t)
-                  (yaml--encode-object object (+ indent 2) nil)))
+                  (yaml--encode-object object (+ indent yaml-encode-indent-width) nil)))
               l))))))
 
 (defun yaml--encode-auto-detect-indent ()
@@ -2718,6 +2739,37 @@ If AUTO-INDENT is non-nil, auto-detect the indent on the current
 line and insert accordingly."
   (cond ((zerop (hash-table-size m))
          (insert "{}"))
+	((eql yaml-encode-dialect :kyaml-pretty)
+	 (let* ((indent-string (make-string indent ?\s))
+		(next-indent (+ indent yaml-encode-indent-width))
+		(next-indent-string (make-string next-indent ?\s)))
+	   (insert "{" "\n")
+       (let ((i 0))
+	     (maphash
+	      (lambda (k v)
+	        (insert next-indent-string)
+	        (yaml--encode-object k next-indent)
+	        (insert ": ")
+	        (yaml--encode-object v next-indent)
+            (if (= (1- (hash-table-count m)) i)
+                (insert "\n")
+	          (insert ",\n"))
+            (cl-incf i))
+          m))
+	   (insert indent-string "}")))
+	((eql yaml-encode-dialect :kyaml-compact)
+	 (insert "{")
+     (let ((i 0))
+	   (maphash
+	    (lambda (k v)
+	      (yaml--encode-object k nil)
+	      (insert ": ")
+	      (yaml--encode-object v nil)
+          (unless (= (1- (hash-table-count m)) i)
+            (insert ", "))
+          (cl-incf i))
+        m))
+	 (insert "}"))
         (t
          (let ((first t)
                (indent-string (make-string indent ?\s)))
@@ -2728,13 +2780,13 @@ line and insert accordingly."
                 (if auto-indent
                     (let ((curr-indent (yaml--encode-auto-detect-indent)))
                       (when (> curr-indent indent)
-                        (setq indent (+ curr-indent 1)))
+                        (setq indent (+ curr-indent yaml-encode-indent-width)))
                       (insert (make-string (- indent curr-indent) ?\s)))
                   (insert "\n" indent-string))
                 (setq first nil))
               (yaml--encode-object k indent nil)
               (insert ": ")
-              (yaml--encode-object v (+ indent 2)))
+              (yaml--encode-object v (+ indent yaml-encode-indent-width)))
             m)))))
 
 (provide 'yaml)

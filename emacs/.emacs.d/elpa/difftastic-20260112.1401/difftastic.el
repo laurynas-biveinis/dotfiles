@@ -5,9 +5,13 @@
 ;; Author: Przemyslaw Kryger <pkryger@gmail.com>
 ;; Keywords: tools diff
 ;; Homepage: https://github.com/pkryger/difftastic.el
-;; Package-Requires: ((emacs "28.1") (compat "29.1.4.2") (magit "4.0.0") (transient "0.4.0"))
-;; Package-Version: 20251217.921
-;; Package-Revision: 1ed9a8459d84
+;; Package-Requires: (
+;;     (emacs "28.1")
+;;     (compat "29.1.4.2")
+;;     (magit "4.0.0")
+;;     (transient "0.4.0"))
+;; Package-Version: 20260112.1401
+;; Package-Revision: b33554a22c63
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -548,17 +552,28 @@
 It returns a number that will let difftastic to fit content
 into (in the following order):
  - other window if it exists,
- - side by side by inspecting `split-width-threshold',
+ - a new window, as created by `split-window-sensibly',
  - current window."
   (let (face-remapping-alist)
     (if (< 1 (count-windows))
         (save-window-excursion
           (other-window 1)
           (window-max-chars-per-line))
-      (if-let* ((width (window-max-chars-per-line))
-                ((window-splittable-p (selected-window) t)))
-          (/ (- width (- (frame-width) width)) 2)
-        width))))
+      (let* ((width (window-max-chars-per-line))
+             (frame-width (frame-width))
+             (window (selected-window))
+             (horizontal
+              (if-let* ((direction
+                         (bound-and-true-p split-window-preferred-direction)))
+                  (and (or (eq direction 'horizontal)
+                           (and (eq direction 'longest)
+                                (> frame-width (frame-height))))
+                       (window-splittable-p window t))
+                (and (not (window-splittable-p window))
+                     (window-splittable-p window t)))))
+        (if horizontal
+            (/ (- width (- frame-width width)) 2)
+          width)))))
 
 (defun difftastic-rerun-requested-window-width ()
   "Get a window width for a rerun of a difftastic call.
