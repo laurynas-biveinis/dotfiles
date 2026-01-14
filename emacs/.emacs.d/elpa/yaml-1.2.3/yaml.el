@@ -3,8 +3,8 @@
 ;; Copyright © 2021-2025  Free Software Foundation, Inc.
 
 ;; Author: Zachary Romero <zkry@posteo.org>
-;; Package-Version: 1.2.2
-;; Package-Revision: 7b33b3a1b69f
+;; Package-Version: 1.2.3
+;; Package-Revision: f2369fb4985e
 ;; Homepage: https://github.com/zkry/yaml.el
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: tools
@@ -2692,15 +2692,19 @@ auto-detecting the indentation"
 	           (seq-do (lambda (object)
 		                 (insert next-indent-string)
 		                 (yaml--encode-object object next-indent)
-                         (if (= i (1- (seq-length l)))
-                             (insert "\n")
-		                   (insert "," "\n"))
+                         (insert "," "\n")
                          (cl-incf i))
 		               l))
 	         (insert indent-string "]")))
-          ((or (eql yaml-encode-dialect :kyaml-compact)
-               (and yaml--encode-use-flow-sequence
-                    (seq-every-p #'yaml--scalarp l)))
+          ((eql yaml-encode-dialect :kyaml-compact)
+	       (insert "[")
+           (seq-do (lambda (object)
+                     (yaml--encode-object object 0)
+                     (insert ", "))
+                   l)
+           (insert "]"))
+          ((and yaml--encode-use-flow-sequence
+                (seq-every-p #'yaml--scalarp l))
            (insert "[")
            (yaml--encode-object (car l) 0)
            (seq-do (lambda (object)
@@ -2751,9 +2755,7 @@ line and insert accordingly."
 	        (yaml--encode-object k next-indent)
 	        (insert ": ")
 	        (yaml--encode-object v next-indent)
-            (if (= (1- (hash-table-count m)) i)
-                (insert "\n")
-	          (insert ",\n"))
+            (insert ",\n")
             (cl-incf i))
           m))
 	   (insert indent-string "}")))
@@ -2765,8 +2767,7 @@ line and insert accordingly."
 	      (yaml--encode-object k nil)
 	      (insert ": ")
 	      (yaml--encode-object v nil)
-          (unless (= (1- (hash-table-count m)) i)
-            (insert ", "))
+          (insert ", ")
           (cl-incf i))
         m))
 	 (insert "}"))
