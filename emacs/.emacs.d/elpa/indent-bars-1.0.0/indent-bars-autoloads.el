@@ -14,19 +14,19 @@
 (autoload 'indent-bars-mode "indent-bars" "\
 Indicate indentation with configurable bars.
 
-This is a minor mode.  If called interactively, toggle the
-`Indent-Bars mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the `Indent-Bars
+mode' mode.  If the prefix argument is positive, enable the mode, and if
+it is zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
-evaluate `indent-bars-mode'.
+evaluate the variable `indent-bars-mode'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "indent-bars" '("indent-bars-"))
@@ -38,21 +38,21 @@ it is disabled.
 Minor mode for indent-bars using treesitter.
 
 This is a minor mode.  If called interactively, toggle the
-`Indent-Bars--Ts mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+`Indent-Bars--Ts mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
-evaluate `indent-bars--ts-mode'.
+evaluate the variable `indent-bars--ts-mode'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
 
 (fn &optional ARG)" t)
-(register-definition-prefixes "indent-bars-ts" '("ibtcs" "indent-bars-"))
+(register-definition-prefixes "indent-bars-ts" '("indent-bars-"))
 
 ;;; End of scraped data
 

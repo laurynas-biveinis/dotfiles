@@ -43,7 +43,7 @@ See the release [NEWS](NEWS.org).
 - **I want a bar in the very first column!** <br>Set `indent-bars-starting-column` to 0.
 - **indent-bars seems to be conflicting with another package I use.** <br>See [these workarounds](#compatibility-with-other-packages).
 - **In my brace language (C, JS, etc.) I sometimes get fewer bars than I expected!** <br>Your mode syntax likely interprets `{`/`}` as list context, and you have `indent-bars-no-descend-lists=t`.  Either disable this feature, or see [this config](#bar-setup-and-location) for another option.
-- **In my paren language (Elisp, Scheme, etc.) the bars disappear on some lines!**<br> You probably need to disable `indent-bars-no-descend-lists` there: most lines of these languages are inside "continuing lists", so it makes little sense to inhibit bars there.
+- **In my paren language (Elisp, Scheme, etc.) the bars disappear on some lines!**<br> You probably need to disable `indent-bars-no-descend-lists` or set it to `skip` there: almost all lines of these languages are inside nested "continuing lists".
 - **Bars are missing on lines with tabs!**<br> You likely have `indent-tabs-mode` set to `nil` in a buffer with a tab-indented file.  See [this for more](#indentation).
 
 ## Tree-sitter and Scope
@@ -77,7 +77,7 @@ Configures `tree-sitter` and `ignore-blank-line` support for an example language
 ```elisp
 (use-package indent-bars
   :custom
-  (indent-bars-no-descend-lists t) ; no extra bars in continued func arg lists
+  (indent-bars-no-descend-lists 'skip) ; prevent extra bars in nested lists
   (indent-bars-treesit-support t)
   (indent-bars-treesit-ignore-blank-lines-types '("module"))
   ;; Add other languages as needed
@@ -102,16 +102,16 @@ See [tree-sitter](#tree-sitter-details), and also the [Wiki page](https://github
 Known `:stipple` support, by Emacs build:
 
 - Linux:
-  - "Pure GTK" (`--with-pgtk` build flag) versions support stipples starting with Emacs v30.  There was a display bug that caused them to appear incorrectly (as [reverse video](../../issues/3)) and lead to [crashes](../../issues/6) in Emacs 29 and earlier; these issues were fixed in Emacs [here](https://lists.gnu.org/archive/html/bug-gnu-emacs/2023-07/msg02081.html) and will be released with Emacs 30.
+  - "Pure GTK" (`--with-pgtk` build flag) versions support stipples starting with Emacs v30.  There was a display bug that caused them to appear incorrectly (as [reverse video](../../issues/3)) and lead to [crashes](../../issues/6) in Emacs 29 and earlier; these issues were fixed in Emacs [here](https://lists.gnu.org/archive/html/bug-gnu-emacs/2023-07/msg02081.html) and released with Emacs 30.
   - Cairo builds (`--with-cairo`, the default) have been [reported](../../issues/33#issuecomment-1768888990) not to display stipples (but only in [some cases](https://github.com/jdtsmith/indent-bars/issues/54#issuecomment-2330334476)).  You can try building `--without-cairo` or just omitting `--with-cairo` (which still enables Cairo but may have correct stipple display).  Also, the issue may be encountered [only on high-DPI systems](../../issues/97).
   - All other builds support stipples.
 - Mac:
   - The [emacs-mac](https://bitbucket.org/mituharu/emacs-mac/src/master/)[^1] port has stipple support.  `M-x version` should say `Carbon`, not `NS`.
-  - The `NS` build has partial stipple support in master, which may be released in Emacs v30.  A patch providing [full stipple support](https://debbugs.gnu.org/cgi/bugreport.cgi?bug=73384) for NS in master is currently under review.
+  - The `NS` build has partial stipple support in master in Emacs v30.  A patch providing [full stipple support](https://debbugs.gnu.org/cgi/bugreport.cgi?bug=73384) for NS has been merged, and should be released with v31.
 - Windows: Emacs on Windows will support stipples starting at v30.
 - Android: Android builds (to appear with Emacs 30) support stipples.
 - Haiku: Haiku Emacs builds will support stipples starting with v30.
-- Terminal: Stipples are not supported on terminal emacs.  Character display is automatically selected.
+- Terminal: Stipples are not supported on terminal emacs.  Character display is automatically selected instead.
 
 [^1]: Most easily installed [with brew](https://github.com/railwaycat/homebrew-emacsmacport).
 
@@ -166,7 +166,17 @@ Configuration variables for bar position and line locations (including on blank 
 - `indent-bars-spacing-override`:  Normally the number of spaces for indentation is automatically discovered from the mode and other variables.  If that doesn't work for any reason, it can be explicitly overridden using this variable.
 - `indent-bars-display-on-blank-lines`: Whether to display bars on blank lines contiguous with lines already showing bars.  By default the maximum number of adjacent bars on non-blank lines is used for a blank lines, but setting this to `least` instead uses the _least_ number of adjacent line bars.
 - `indent-bars-no-descend-string`: Whether to inhibit increasing bar depth inside of strings.
-- `indent-bars-no-descend-list`: Whether to inhibit increasing bar depth inside of lists.  Note that this can optionally be configured with a list of list-opening chars (e.g. `'(?\( ?\[)`?) to select only certain list context (useful for c-based modes, where `{}` braces are a list syntax).
+- `indent-bars-no-descend-list`: Whether to inhibit increasing bar depth inside of lists.  Additionally, if set to the symbol `skip`, bars _between_ lists contexts are skipped (not displayed). 
+- If you need to alter what `indent-bars` considers a list context, override the variable `indent-bars-ppss-syntax-table`, e.g. for altering `python-mode` to omit `{`/`}` from consideration:
+
+   ```elisp
+    (setq indent-bars-ppss-syntax-table
+          (let ((table (make-syntax-table python-mode-syntax-table)))
+            ;; Remove { and } from list context
+            (modify-syntax-entry ?\{ "." table)
+            (modify-syntax-entry ?\} "." table)
+            table))
+    ```
 
 ## Character-based bars and terminal
 
@@ -250,7 +260,7 @@ Note that tree-sitter scope and wrap config are keyed to the parser _language_, 
 
 ## Indentation
 
-`indent-bars` works with either space- or tab-based indentation (see `indent-tabs-mode`).  If possible, prefer space indentation, as it is faster.  
+`indent-bars` works with either space- or tab-based indentation (see `indent-tabs-mode`).  If possible, prefer space indentation, as it is faster.
 
 Note that some modes explicitly enable or disable `indent-tabs-mode`.  If the value of that variable does not match the actual indentation used in a file (e.g. file is indented with tabs, but you have set `indent-tabs-mode=nil`), bars may go missing.  You should ideally pick _one_ indentation-style (tabs or spaces) per mode and stick to it for all files in that mode, but see [dtrt-indent](https://github.com/jscheid/dtrt-indent) for a package that can adapt this variable by examining the file's contents.
 
@@ -322,7 +332,7 @@ This will inhibit hooks (and hence `indent-bars`, `eglot`, `flymake`, whatever e
 
 `indent-bars` by default uses `:stipple` face attributes, which have only rarely been used in Emacs in recent decades.  Consequently, some packages which inherit the face of underlying text while adding styled overlays, popups, etc. to the buffer neglect to guard against the presence of `:stipple` (e.g. [this](../../issues/67), or [this](../../issues/73)).  This becomes more likely if you set `indent-bars-starting-column=0` (since often overlays are placed at the line beginning).
 
-If you encounter unwanted bar patterns on text added to your buffer by other packages as seen in these issues, contact the package's maintainer to let them know they should also clear the `:stipple` face attribute.  You can also try restoring ``indent-bars-starting-column` to the default, if you've changed it.
+If you encounter unwanted bar patterns on text added to your buffer by other packages as seen in these issues, contact the package's maintainer to let them know they should also clear the `:stipple` face attribute.  You can also try restoring `indent-bars-starting-column` to the default, if you've changed it.
 
 Sometimes unwanted stipples can be worked around yourself by explicitly setting `:stipple` to `nil` in appropriate faces, like:
 
