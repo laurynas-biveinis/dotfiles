@@ -16,8 +16,8 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; Author: Laurynas Biveinis
-;; Package-Version: 20260109.756
-;; Package-Revision: 62e811321329
+;; Package-Version: 20260119.1722
+;; Package-Revision: 8dc2dadd8b25
 ;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.2.0"))
 ;; Keywords: tools, development
 ;; URL: https://github.com/laurynas-biveinis/elisp-dev-mcp
@@ -638,76 +638,137 @@ MCP Parameters:
         (format "Symbol '%s' not found in Elisp Info documentation"
                 symbol))))))
 
-(defun elisp-dev-mcp--read-source-file (file-path)
+(defun elisp-dev-mcp--library-name-p (name)
+  "Return non-nil if NAME is a library name, not a file path.
+Library names are non-blank strings without path separators.
+Strings containing '/' or '\\\\' are treated as paths, not library names."
+  (and (stringp name)
+       (not (string-blank-p name))
+       (not (file-name-absolute-p name))
+       (not (string-match-p "[/\\]" name))))
+
+(defun elisp-dev-mcp--resolve-library-to-source-path (library-name)
+  "Resolve LIBRARY-NAME to its source file path that exists on disk.
+
+Uses `locate-library' to find the library, then:
+  - Converts .elc → .el (source, not bytecode)
+  - Checks if .el exists, otherwise tries .el.gz
+
+Returns the actual file path (.el or .el.gz) that exists on disk.
+Throws an error if the library or source file is not found.
+
+Example transformations:
+  `locate-library' returns /path/file.el     → /path/file.el
+  `locate-library' returns /path/file.el.gz  → /path/file.el.gz
+  `locate-library' returns /path/file.elc    → /path/file.el (or .el.gz)
+  `locate-library' returns /path/file.elc.gz → /path/file.el (or .el.gz)"
+  (let ((library-path (locate-library library-name)))
+    (unless library-path
+      (mcp-server-lib-tool-throw
+       (format "Library not found: %s" library-name)))
+    ;; Remove .gz extension first if present
+    ;; This must be done before .elc conversion to handle .elc.gz correctly
+    (when (string-suffix-p ".gz" library-path)
+      (setq library-path (file-name-sans-extension library-path)))
+    ;; Convert .elc to .el if needed (after .gz removal)
+    (when (string-suffix-p ".elc" library-path)
+      (setq library-path
+            (concat (file-name-sans-extension library-path) ".el")))
+    ;; Find the actual source file that exists on disk
+    (let ((actual-file
+           (cond
+            ((file-exists-p library-path)
+             library-path)
+            ((file-exists-p (concat library-path ".gz"))
+             (concat library-path ".gz"))
+            (t
+             nil))))
+      (unless actual-file
+        (mcp-server-lib-tool-throw
+         (format
+          "Source file not found for library %s (tried %s and %s.gz)"
+          library-name library-path library-path)))
+      actual-file)))
+
+(defun elisp-dev-mcp--read-source-file (library-or-path)
   "Read Elisp source file from allowed locations.
-Accepts absolute FILE-PATH as returned by other elisp-dev tools.
+Accepts either a library name or absolute path via LIBRARY-OR-PATH.
+
+Library names (e.g., \"subr\", \"mcp-server-lib\") are resolved via
+`locate-library' and validated against the allowed directories.
+
+Absolute paths must be as returned by other elisp-dev tools.
+
 Handles both .el and .el.gz files transparently.
 
 MCP Parameters:
-  file-path - Absolute path to .el file"
+  library-or-path - Library name (e.g., \"subr\") or absolute .el path"
   (mcp-server-lib-with-error-handling
-   ;; 1. Validate input format
-   (unless (and (stringp file-path)
-                (file-name-absolute-p file-path)
-                (string-suffix-p ".el" file-path))
-     (mcp-server-lib-tool-throw
-      "Invalid path format: must be absolute path ending in .el"))
+   ;; 1. Resolve library name to absolute path if needed
+   (let ((file-path
+          (if (elisp-dev-mcp--library-name-p library-or-path)
+              (elisp-dev-mcp--resolve-library-to-source-path
+               library-or-path)
+            library-or-path)))
 
-   ;; 2. Check for path traversal
-   (when (string-match-p "\\.\\." file-path)
-     (mcp-server-lib-tool-throw
-      "Path contains illegal '..' traversal"))
-
-   ;; 3. Resolve symlinks and validate location
-   (let* ((true-path (file-truename file-path))
-          ;; Build list of allowed package directories
-          (allowed-dirs
-           (append
-            ;; Current package-user-dir
-            (when (boundp 'package-user-dir)
-              (list
-               (file-truename
-                (file-name-as-directory package-user-dir))))
-            ;; All dirs from package-directory-list
-            (mapcar #'file-truename package-directory-list)
-            ;; System lisp directory
-            (when elisp-dev-mcp--system-lisp-dir
-              (list (file-truename elisp-dev-mcp--system-lisp-dir)))
-            ;; User-configured additional directories
-            (mapcar
-             (lambda (dir)
-               (file-truename (file-name-as-directory dir)))
-             elisp-dev-mcp-additional-allowed-dirs)))
-          ;; Check if file is under any allowed directory
-          (allowed-p
-           (cl-some
-            (lambda (dir)
-              (and dir (string-prefix-p dir true-path)))
-            allowed-dirs)))
-
-     (unless allowed-p
+     ;; 2. Validate input format
+     (unless (and (stringp file-path)
+                  (file-name-absolute-p file-path)
+                  (or (string-suffix-p ".el" file-path)
+                      (string-suffix-p ".el.gz" file-path)))
        (mcp-server-lib-tool-throw
-        "Access denied: path outside allowed directories"))
+        "Invalid path format: must be absolute path ending in .el or .el.gz"))
 
-     ;; 4. Find actual file (.el or .el.gz)
-     (let ((actual-file
-            (cond
-             ((file-exists-p true-path)
-              true-path)
-             ((file-exists-p (concat true-path ".gz"))
-              (concat true-path ".gz"))
-             (t
-              nil))))
+     ;; 3. Check for path traversal
+     (when (string-match-p "\\.\\." file-path)
+       (mcp-server-lib-tool-throw
+        "Path contains illegal '..' traversal"))
 
-       (unless actual-file
+     ;; 4. Resolve symlinks and validate location
+     (let* ((true-path (file-truename file-path))
+            ;; Build list of allowed package directories
+            (allowed-dirs
+             (append
+              ;; Current package-user-dir
+              (when (boundp 'package-user-dir)
+                (list
+                 (file-truename
+                  (file-name-as-directory package-user-dir))))
+              ;; All dirs from package-directory-list
+              (mapcar
+               (lambda (dir)
+                 (file-truename (file-name-as-directory dir)))
+               package-directory-list)
+              ;; System lisp directory
+              (when elisp-dev-mcp--system-lisp-dir
+                (list
+                 (file-truename
+                  (file-name-as-directory
+                   elisp-dev-mcp--system-lisp-dir))))
+              ;; User-configured additional directories
+              (mapcar
+               (lambda (dir)
+                 (file-truename (file-name-as-directory dir)))
+               elisp-dev-mcp-additional-allowed-dirs)))
+            ;; Check if file is under any allowed directory
+            (allowed-p
+             (cl-some
+              (lambda (dir)
+                (and dir (string-prefix-p dir true-path)))
+              allowed-dirs)))
+
+       (unless allowed-p
          (mcp-server-lib-tool-throw
-          (format "File not found: %s (tried .el and .el.gz)"
-                  file-path)))
+          "Access denied: path outside allowed directories"))
 
-       ;; 5. Read and return contents
+       ;; 5. Verify file exists and read contents
+       (unless (file-exists-p true-path)
+         (mcp-server-lib-tool-throw
+          (format "File not found: %s" library-or-path)))
+
        (elisp-dev-mcp--with-auto-compression
          (with-temp-buffer
-           (insert-file-contents actual-file)
+           (insert-file-contents true-path)
            (buffer-string)))))))
 
 ;;;###autoload
@@ -870,27 +931,37 @@ Error cases:
    :server-id elisp-dev-mcp--server-id
    :description
    "Read Elisp source files from Emacs system directories or ELPA packages.
-Designed to work with paths returned by other elisp-dev tools.
+Accepts either library names or absolute file paths.
 
 Parameters:
-  file-path - Absolute path to .el file (string)
+  library-or-path - Library name (e.g., \\='subr', \\='mcp-server-lib') or
+                    absolute path to .el file (string)
 
-Accepts paths like:
-- System Elisp files (from Emacs installation)
-- ELPA package files (from user-emacs-directory)
+Input modes:
+1. Library names (recommended for built-in and installed packages):
+   - Simple names without path separators (e.g., \\='subr', \\='files')
+   - Resolved via Emacs locate-library function
+   - Examples: \\='subr', \\='mcp-server-lib', \\='org'
+
+2. Absolute paths (for compatibility with other elisp-dev tools):
+   - Full paths ending in .el (e.g., \\='/path/to/file.el')
+   - Returned by elisp-get-function-definition
+   - Examples: \\='/opt/homebrew/.../lisp/subr.el'
 
 Security:
-- Only reads from Emacs system lisp directories and ELPA directory
+- Only reads from Emacs system lisp directories and ELPA directories
 - Rejects paths with \"..\" traversal
 - Resolves symlinks to prevent escaping allowed directories
+- Library names must resolve to paths within allowed directories
 
 Features:
 - Transparently handles .el.gz compressed files
-- Works directly with paths from elisp-get-function-definition
+- Works with both built-in Emacs libraries and installed packages
 - Returns complete file contents as string
 
 Error cases:
-- Invalid path format
+- Library not found (locate-library returns nil)
+- Invalid path format (paths must be absolute and end in .el)
 - Path traversal attempts
 - Access outside allowed directories
 - File not found"
