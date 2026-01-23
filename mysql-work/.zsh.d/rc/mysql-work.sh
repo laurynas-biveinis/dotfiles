@@ -229,9 +229,10 @@ mysql_export_environment_helpers() {
         declare -a cmake_release=()
         # LLVM 21:
         # https://bugs.mysql.com/bug.php?id=119246
-        mysql_add_comp_flags "9.5.0" "9.5.0" "cxx" "-Wno-nonnull"
+        mysql_add_comp_flags "8.4.8" "8.4.8" "cxx" "-Wno-nonnull"
+        mysql_add_comp_flags "9.5.0" "9.6.0" "cxx" "-Wno-nonnull"
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
-        mysql_add_comp_flags "8.4.7" "8.4.7" "cxx" \
+        mysql_add_comp_flags "8.4.7" "8.4.8" "cxx" \
             `# LLVM 21:` \
             `# https://bugs.mysql.com/bug.php?id=119239` \
             "-Wno-uninitialized-const-pointer" \
