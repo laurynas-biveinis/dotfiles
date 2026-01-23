@@ -238,7 +238,7 @@ mysql_export_environment_helpers() {
             `# https://bugs.mysql.com/bug.php?id=119242` \
             "-Wno-conditional-uninitialized" \
             "-Wno-unnecessary-virtual-specifier"
-        mysql_add_comp_flags "8.0.44" "8.0.44" "cxx" \
+        mysql_add_comp_flags "8.0.44" "8.0.45" "cxx" \
             `# LLVM 20:` \
             `# https://bugs.mysql.com/bug.php?id=119238` \
             "-Wno-invalid-specialization"
