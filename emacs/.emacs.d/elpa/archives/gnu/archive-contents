@@ -379,13 +379,13 @@
       (:authors ("Kjartan Oli Agustsson" . "kjartanoli@disroot.org"))
       (:commit . "dbbffe75c6a2492099e36dc93b6183800a7d6fcd"))])
  (cape
-  . [(2 5) ((emacs (29 1)) (compat (30)))
+  . [(2 6) ((emacs (29 1)) (compat (30)))
      "Completion At Point Extensions" tar
      ((:url . "https://github.com/minad/cape")
       (:keywords "abbrev" "convenience" "matching" "completion" "text")
       (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
       (:authors ("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "96162aab2a22158ccc40b0f5c90f61e77b03c4f8"))])
+      (:commit . "2b2a5c5bef16eddcce507d9b5804e5a0cc9481ae"))])
  (capf-autosuggest
   . [(0 3) ((emacs (25 1)))
      "History autosuggestions for comint and eshell" tar
@@ -735,6 +735,14 @@
       (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "36f24f0f0f472e4cb50025ed62a1b32351d7d294"))])
+ (denote-review
+  . [(1 0 3) ((emacs (28 1)) (denote (4 1 3)))
+     "implements review process for denote notes" tar
+     ((:url . "https://codeberg.org/mattof/denote-review")
+      (:keywords "files")
+      (:maintainer "Matto Fransen" . "matto@matto.nl")
+      (:authors ("Matto Fransen" . "matto@matto.nl"))
+      (:commit . "06732385c0022bfbcb6efe28440025479de2486b"))])
  (denote-search
   . [(1 0 3) ((emacs (29 1)) (denote (3 0)))
      "Search the contents of your notes" tar
@@ -1006,13 +1014,13 @@
       (:authors ("João Távora" . "joaotavora@gmail.com"))
       (:commit . "12730179acddc224f0c43a2b8e8a028182d1e40f"))])
  (el-job
-  . [(2 6 1) ((emacs (29 1)))
+  . [(2 7 1) ((emacs (29 1)))
      "Contrived way to call a function using all CPU cores" tar
      ((:url . "https://github.com/meedstrom/el-job")
       (:keywords "processes")
       (:maintainer "Martin Edström" . "meedstrom@runbox.eu")
       (:authors ("Martin Edström" . "meedstrom@runbox.eu"))
-      (:commit . "274f999ceee3db6c48e3550964c547161a3ee1bb"))])
+      (:commit . "f4ea8f705026546b401fb0912ffe2105ff084562"))])
  (el-search
   . [(1 12 6 1) ((emacs (25)) (stream (2 2 4)) (cl-print (1 0)))
      "Expression based interactive search for Emacs Lisp" tar
@@ -1885,7 +1893,7 @@
       (:url . "https://elpa.gnu.org/packages/map.html")
       (:commit . "9da2efb670574b473ab864ae0456b4f1b38e680b"))])
  (marginalia
-  . [(2 8) ((emacs (29 1)) (compat (30)))
+  . [(2 9) ((emacs (29 1)) (compat (30)))
      "Enrich existing commands with completion annotations" tar
      ((:url . "https://github.com/minad/marginalia")
       (:keywords "docs" "help" "matching" "completion")
@@ -1893,7 +1901,7 @@
 		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Omar Antolín Camarena" . "omar@matem.unam.mx")
 		("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "79c1dc2c63f710f7aad900881da49930af43d729"))])
+      (:commit . "0d08fbea0f1182627891240780081ba528c1348b"))])
  (markchars
   . [(0 2 2) nil "Mark chars fitting certain characteristics" tar
      ((:maintainer "Lennart Borgman" . "lennart.borgman@gmail.com")
@@ -2187,14 +2195,14 @@
       (:authors ("Michael Heerdegen" . "michael_heerdegen@web.de"))
       (:commit . "cfc449d68e762cf05297bb923a48e9bbd0af1b92"))])
  (orderless
-  . [(1 5) ((emacs (27 1)) (compat (30)))
+  . [(1 6) ((emacs (27 1)) (compat (30)))
      "Completion style for matching regexps in any order" tar
      ((:url . "https://github.com/oantolin/orderless")
       (:keywords "matching" "completion")
       (:maintainer ("Omar Antolín Camarena" . "omar@matem.unam.mx")
 		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
-      (:commit . "31812d9252c6cfa7eae8fa04cd40c8b2081e9936"))])
+      (:commit . "6e3a09d6026fe7d7d5a3caf9a3d777cc9841fe80"))])
  (org
   . [(9 7 39) ((emacs (26 1)))
      "Outline-based notes management and organizer" tar
@@ -2300,12 +2308,12 @@
       (:url . "https://elpa.gnu.org/packages/osc.html")
       (:commit . "6b6dbb4176f45f9ff3a783c816c4556ca2931a22"))])
  (osm
-  . [(2 1) ((emacs (29 1)) (compat (30))) "OpenStreetMap viewer" tar
+  . [(2 2) ((emacs (29 1)) (compat (30))) "OpenStreetMap viewer" tar
      ((:url . "https://github.com/minad/osm")
       (:keywords "network" "multimedia" "hypermedia" "mouse")
       (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
       (:authors ("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "7880b450138b3d260480e3e527fb3178cc8e2bc9"))])
+      (:commit . "19c9c958dd530a1ba606fc1074a28523af40ec28"))])
  (other-frame-window
   . [(1 0 6) ((emacs (24 4)))
      "Minor mode to enable global prefix keys for other frame/window buffer placement"
@@ -3075,13 +3083,13 @@
       (:url . "https://elpa.gnu.org/packages/temp-buffer-browse.html")
       (:commit . "db6041b0413fdeefb1f1285e1d9c1039c10fbf04"))])
  (tempel
-  . [(1 10) ((emacs (29 1)) (compat (30)))
+  . [(1 11) ((emacs (29 1)) (compat (30)))
      "Tempo templates/snippets with in-buffer field editing" tar
      ((:url . "https://github.com/minad/tempel")
       (:keywords "abbrev" "languages" "tools" "text")
       (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
       (:authors ("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "f69c18d89de44072e983c8ca8378b276603a1012"))])
+      (:commit . "8d9a1646fb4014a5d34f3f19b7c894310f06a1e8"))])
  (termint
   . [(0 2) ((emacs (29 1))) "Run REPLs in a terminal backend" tar
      ((:url . "https://github.com/milanglacier/termint.el")
@@ -3140,7 +3148,7 @@
       (:authors ("Oleh Krehel" . "ohwoeowho@gmail.com"))
       (:keywords "convenience"))])
  (tmr
-  . [(1 2 1) ((emacs (29 1))) "Set timers using a convenient notation"
+  . [(1 3 0) ((emacs (29 1))) "Set timers using a convenient notation"
      tar
      ((:url . "https://github.com/protesilaos/tmr")
       (:keywords "convenience" "timer")
@@ -3149,7 +3157,7 @@
 		("Damien Cassou" . "damien@cassou.me")
 		("Daniel Mendler" . "mail@daniel-mendler.de")
 		("Steven Allen" . "steven@stebalien.com"))
-      (:commit . "f6b62106b64d4ff99875fd10aad2950be06009e7"))])
+      (:commit . "7f074024de46f4d471943057403f900a6321e299"))])
  (tomelr
   . [(0 4 3) ((emacs (26 3)) (map (3 2 1)) (seq (2 23)))
      "Convert S-expressions to TOML" tar
