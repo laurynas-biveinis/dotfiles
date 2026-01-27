@@ -71,7 +71,7 @@ The builtin poshandler functions are listed below:
 7.  `posframe-poshandler-frame-bottom-left-corner'
 8.  `posframe-poshandler-frame-bottom-right-corner'
 9.  `posframe-poshandler-window-center'
-10.  `posframe-poshandler-window-top-center'
+10. `posframe-poshandler-window-top-center'
 11. `posframe-poshandler-window-top-left-corner'
 12. `posframe-poshandler-window-top-right-corner'
 13. `posframe-poshandler-window-bottom-center'
