@@ -334,5 +334,26 @@ event of an error or nonlocal exit."
     (require 'org-roam-db)
     (org-roam-db-autosync-mode)))
 
+;;; org-gcal workaround
+;; Workaround for org-gcal passing deferred org-element `:title' property
+;; (instead of `:raw-value') to notifications.  In Org 9.6+, `:title' returns a
+;; deferred object that causes errors when used as a string.  Disable the
+;; org-element cache during org-gcal-fetch to force eager parsing.
+;; TODO(laurynas): report upstream at https://github.com/kidd/org-gcal.el/issues
+
+(require 'org-gcal)
+
+(defun dotfiles--org-gcal-fetch-disable-cache (orig-fn &rest args)
+  "Advice to disable org-element cache during `org-gcal-fetch'.
+This forces eager parsing of headlines, avoiding deferred element issues.
+Uses `org-element-with-disabled-cache' which properly overrides
+`org-element--cache-active-p' instead of just setting a variable."
+  (declare (ftype (function (function &rest t) t))
+           (important-return-value t))
+  (org-element-with-disabled-cache
+    (apply orig-fn args)))
+
+(advice-add 'org-gcal-fetch :around #'dotfiles--org-gcal-fetch-disable-cache)
+
 (provide 'my-org)
 ;; my-org.el ends here
