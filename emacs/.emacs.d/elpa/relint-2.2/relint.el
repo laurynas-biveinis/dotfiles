@@ -1,9 +1,9 @@
 ;;; relint.el --- Elisp regexp mistake finder   -*- lexical-binding: t -*-
 
-;; Copyright (C) 2019-2024 Free Software Foundation, Inc.
+;; Copyright (C) 2019-2026 Free Software Foundation, Inc.
 
-;; Author: Mattias Engdegård <mattiase@acm.org>
-;; Version: 2.1
+;; Author: Mattias Engdegård <mattias.engdegard@gmail.com>
+;; Version: 2.2
 ;; Package-Requires: ((xr "2.0") (emacs "27.1"))
 ;; URL: https://github.com/mattiase/relint
 ;; Keywords: lisp, regexps
@@ -545,7 +545,7 @@ or (NAME val VAL), for values.")
     string-equal string= string< string-lessp string> string-greaterp
     compare-strings
     char-equal string-match-p
-    string-match split-string
+    string-match split-string string-split
     wildcard-to-regexp
     combine-and-quote-strings split-string-and-unquote
     string-to-multibyte string-as-multibyte string-to-unibyte string-as-unibyte
@@ -723,12 +723,6 @@ into something that can be called safely."
       #'take
     (lambda (n list)
       (cl-loop repeat n for x in list collect x))))
-
-(defalias 'relint--proper-list-p
-  (if (fboundp 'proper-list-p)
-      #'proper-list-p
-    (lambda (x)
-      (and (listp x) (ignore-errors (length x))))))
 
 (defun relint--eval (form)
   "Evaluate a form. Throw `relint-eval' `no-value' if something could
@@ -1594,7 +1588,7 @@ parameter is regexp-generating."
                                (0+ (any "+ #" ?-))
                                (0+ digit)
                                (opt "." (0+ digit))
-                               (group (any "%sdioxXefgcS")))
+                               (group (any "%sdibBoxXefgcS")))
                               template start))
       (let ((percent (match-beginning 0))
             (type (string-to-char (match-string 1 template)))
@@ -2052,7 +2046,7 @@ directly."
   (let ((head (car form))
         (args (cdr form)))
     (cond
-     ((not (relint--proper-list-p args))
+     ((not (proper-list-p args))
       ;; Dotted list: just recurse.
       (let ((index 0))
         (while (consp form)
@@ -2252,7 +2246,7 @@ directly."
         (let ((re-arg (cadr args)))
           (relint--check-file-name-re re-arg (cons 'call-to (car form))
                                       pos (cons 2 path))))
-       ((memq head '( split-string split-string-and-unquote
+       ((memq head '( split-string string-split split-string-and-unquote
                       string-trim-left string-trim-right string-trim
                       treesit-induce-sparse-tree treesit-search-forward
                       treesit-search-forward-goto treesit-search-subtree))
@@ -2271,7 +2265,7 @@ directly."
                 (relint--check-re right (cons 'call-to (car form))
                                   pos (cons 3 path)))))
           ;; split-string has another regexp argument (trim, arg 4)
-          (when (and (eq (car form) 'split-string)
+          (when (and (memq (car form) '(split-string string-split))
                      (cadr rest))
             (let ((trim (cadr rest)))
               (unless (and (symbolp trim)

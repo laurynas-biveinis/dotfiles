@@ -995,13 +995,13 @@
       (:authors ("Eduardo Ochs" . "eduardoochs@gmail.com"))
       (:commit . "ffa3b88874d064256c5221d2bbcb1564d901602a"))])
  (ef-themes
-  . [(2 0 1) ((emacs (28 1)) (modus-themes (5 0 0)))
+  . [(2 1 0) ((emacs (28 1)) (modus-themes (5 0 0)))
      "Colorful and legible themes" tar
      ((:url . "https://github.com/protesilaos/ef-themes")
       (:keywords "faces" "theme" "accessibility")
       (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "42d202b6a92841d075b0dd4008a2e94eb2f51764"))])
+      (:commit . "af6a2a588f72a40212624458278d87f1c769405b"))])
  (eglot
   . [(1 21)
      ((emacs (26 3)) (eldoc (1 14 0)) (external-completion (0 1))
@@ -1620,14 +1620,14 @@
       (:authors ("Oleh Krehel" . "ohwoeowho@gmail.com"))
       (:commit . "1c9bc4e190199c891a69af03b2cf3e3f0d00c1ec"))])
  (ivy-posframe
-  . [(0 6 3) ((emacs (26 0)) (posframe (1 0 0)) (ivy (0 13 0)))
+  . [(0 6 4) ((emacs (26 0)) (posframe (1 0 0)) (ivy (0 13 0)))
      "Using posframe to show Ivy" tar
      ((:url . "https://github.com/tumashu/ivy-posframe")
       (:keywords "abbrev" "convenience" "matching" "ivy")
       (:maintainer "Feng Shu" . "tumashu@163.com")
       (:authors ("Feng Shu" . "tumashu@163.com")
 		("Naoya Yamashita" . "conao3@gmail.com"))
-      (:commit . "5d9420252ca855d6d206f1f8ef5993a6be3c618f"))])
+      (:commit . "ede7b2121f176ab543ce6b73fd96e3eafd6d1505"))])
  (jami-bot
   . [(0 0 4) ((emacs (27 1)))
      "An extendable chat bot for the private messenger GNU Jami" tar
@@ -2212,14 +2212,14 @@
       (:authors ("Carsten Dominik" . "carsten.dominik@gmail.com"))
       (:commit . "b7bc0ede67f3e2a477f4d6ad0c46a6d80bca5aea"))])
  (org-contacts
-  . [(1 2) ((emacs (29 1)) (org (9 7)))
+  . [(1 3) ((emacs (29 1)) (org (9 7)))
      "Contacts management system for Org mode" tar
      ((:url . "https://repo.or.cz/org-contacts.git")
       (:keywords "contacts" "org-mode" "outlines" "hypermedia"
 		 "calendar")
       (:maintainer "stardiviner" . "numbchild@gmail.com")
       (:authors ("Julien Danjou" . "julien@danjou.info"))
-      (:commit . "33c1efd417974896f1991b4c94833bd5ef370e92"))])
+      (:commit . "adaca49699cc149af991825feebaa29624e124b0"))])
  (org-edna
   . [(1 1 2) ((emacs (25 1)) (seq (2 19)) (org (9 0 5)))
      "Extensible Dependencies 'N' Actions" tar
@@ -2468,13 +2468,13 @@
        ("Karthik Chikmagalur" . "karthik.chikmagalur@gmail.com"))
       (:commit . "91b71955db19014d7139191660272c736458d87d"))])
  (posframe
-  . [(1 5 0) ((emacs (26 1))) "Pop a posframe (just a frame) at point"
+  . [(1 5 1) ((emacs (26 1))) "Pop a posframe (just a frame) at point"
      tar
      ((:url . "https://github.com/tumashu/posframe")
       (:keywords "convenience" "tooltip")
       (:maintainer "Feng Shu" . "tumashu@163.com")
       (:authors ("Feng Shu" . "tumashu@163.com"))
-      (:commit . "d93828bf6c36383c365bd564ad3bab5a4403804c"))])
+      (:commit . "4fc893c3c9ea3f6b5099ac1b369abb3c6da40b1e"))])
  (pq
   . [(0 2) ((emacs (25))) "libpq binding" tar
      ((:url . "https://github.com/anse1/emacs-libpq")
@@ -2685,13 +2685,13 @@
       (:url . "https://elpa.gnu.org/packages/register-list.html")
       (:commit . "14d719a6f3596856228f08d3746a7bf92dd13240"))])
  (relint
-  . [(2 1) ((xr (2 0)) (emacs (27 1))) "Elisp regexp mistake finder"
+  . [(2 2) ((xr (2 0)) (emacs (27 1))) "Elisp regexp mistake finder"
      tar
      ((:url . "https://github.com/mattiase/relint")
       (:keywords "lisp" "regexps")
-      (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
-      (:authors ("Mattias Engdegård" . "mattiase@acm.org"))
-      (:commit . "9eda48e439e13479151be4abbf47906326bc732f"))])
+      (:maintainer "Mattias Engdegård" . "mattias.engdegard@gmail.com")
+      (:authors ("Mattias Engdegård" . "mattias.engdegard@gmail.com"))
+      (:commit . "03a881ce58c083b280da53e231487b2e0cf5eac4"))])
  (repology
   . [(1 2 4) ((emacs (26 1))) "Repology API access via Elisp" tar
      ((:keywords "web")
@@ -3427,13 +3427,13 @@
       (:authors ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:commit . "c12c8f842fd184db44fb2b835b0f954bbc90c7a6"))])
  (vertico-posframe
-  . [(0 9 0) ((emacs (26 0)) (posframe (1 4 0)) (vertico (2 5)))
+  . [(0 9 1) ((emacs (26 0)) (posframe (1 4 0)) (vertico (2 5)))
      "Using posframe to show Vertico" tar
      ((:url . "https://github.com/tumashu/vertico-posframe")
       (:keywords "abbrev" "convenience" "matching" "vertico")
       (:maintainer "Feng Shu" . "tumashu@163.com")
       (:authors ("Feng Shu" . "tumashu@163.com"))
-      (:commit . "d89a70743cfd95b7fcda621679b7555bbef51acb"))])
+      (:commit . "6ceeeff4c13663083bfaa4193879191a0c8c57de"))])
  (vigenere
   . [(1 0) ((emacs (25 1)))
      "Run a vigenere cipher on a block of text ;" tar
@@ -3604,12 +3604,12 @@
       (:authors ("Thien-Thi Nguyen" . "ttn@gnu.org"))
       (:commit . "85e5c412dde7ec3c3f64c64d37079e233293e4d0"))])
  (xr
-  . [(2 1) ((emacs (27 1))) "Convert string regexp to rx notation" tar
+  . [(2 2) ((emacs (27 1))) "Convert string regexp to rx notation" tar
      ((:url . "https://github.com/mattiase/xr")
       (:keywords "lisp" "regexps")
-      (:maintainer "Mattias Engdegård" . "mattiase@acm.org")
-      (:authors ("Mattias Engdegård" . "mattiase@acm.org"))
-      (:commit . "31cd397f54591e3692bf88d6e1995236928e3561"))])
+      (:maintainer "Mattias Engdegård" . "mattias.engdegard@gmail.com")
+      (:authors ("Mattias Engdegård" . "mattias.engdegard@gmail.com"))
+      (:commit . "694defa220113d0acaa78fd646dcff9f1a08fad9"))])
  (xref
   . [(1 7 0) ((emacs (26 1))) "Cross-referencing commands" tar
      ((:url . "https://elpa.gnu.org/packages/xref.html")
