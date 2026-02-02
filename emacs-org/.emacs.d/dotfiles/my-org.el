@@ -64,7 +64,6 @@
 (when my-zettelkasten-p
   (require 'org-roam-node))
 
-
 ;;; Setup hook: keyboard shortcuts and fill column setting
 (defun dotfiles--update-org-tags-column (&optional _frame)
   "Update `org-tags-column' based on current window width.
@@ -112,6 +111,10 @@ Sets up keybindings and adjusts the fill column."
             #'dotfiles--update-org-image-actual-width
             nil t))
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
+
+;; Disable org-element cache to avoid AVL tree infinite loop bug in Org 9.7.x
+;; https://list.orgmode.org/orgmode/ (Oct 2025 reports)
+(setq org-element-use-cache nil)
 
 ;;; Editing, navigation, folding, state changes
 (setq org-use-speed-commands t
@@ -334,26 +337,7 @@ event of an error or nonlocal exit."
     (require 'org-roam-db)
     (org-roam-db-autosync-mode)))
 
-;;; org-gcal workaround
-;; Workaround for org-gcal passing deferred org-element `:title' property
-;; (instead of `:raw-value') to notifications.  In Org 9.6+, `:title' returns a
-;; deferred object that causes errors when used as a string.  Disable the
-;; org-element cache during org-gcal-fetch to force eager parsing.
-;; TODO(laurynas): report upstream at https://github.com/kidd/org-gcal.el/issues
-
 (require 'org-gcal)
-
-(defun dotfiles--org-gcal-fetch-disable-cache (orig-fn &rest args)
-  "Advice to disable org-element cache during `org-gcal-fetch'.
-This forces eager parsing of headlines, avoiding deferred element issues.
-Uses `org-element-with-disabled-cache' which properly overrides
-`org-element--cache-active-p' instead of just setting a variable."
-  (declare (ftype (function (function &rest t) t))
-           (important-return-value t))
-  (org-element-with-disabled-cache
-    (apply orig-fn args)))
-
-(advice-add 'org-gcal-fetch :around #'dotfiles--org-gcal-fetch-disable-cache)
 
 (provide 'my-org)
 ;; my-org.el ends here
