@@ -1,9 +1,9 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "emacsql" "20260101.1849"
+(define-package "emacsql" "20260201.1512"
   "High-level SQL database front-end."
   '((emacs "26.1"))
   :url "https://github.com/magit/emacsql"
-  :commit "c6a9d2373cc15184e4e34414b8574a896d070323"
-  :revdesc "c6a9d2373cc1"
+  :commit "6ef7473248fce048c7daa00c3b2ae75af987c89c"
+  :revdesc "6ef7473248fc"
   :authors '(("Christopher Wellons" . "wellons@nullprogram.com"))
   :maintainers '(("Jonas Bernoulli" . "emacs.emacsql@jonas.bernoulli.dev")))

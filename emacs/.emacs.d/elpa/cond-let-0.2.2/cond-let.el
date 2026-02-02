@@ -9,8 +9,8 @@
 ;; Homepage: https://github.com/tarsius/cond-let
 ;; Keywords: extensions
 
-;; Package-Version: 0.2.1
-;; Package-Revision: v0.2.1-0-g0430bd1eb349
+;; Package-Version: 0.2.2
+;; Package-Revision: v0.2.2-0-g8bf87d45e169
 ;; Package-Requires: ((emacs "28.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -30,14 +30,16 @@
 
 ;;; Commentary:
 
-;; This is an ALPHA release!
-;; Breaking changes are possible!
+;; This is a BETA release!
+;; Breaking changes are unlikely but still possible!
+;; See https://github.com/tarsius/cond-let/wiki.
 
 ;; Emacs provides the binding conditionals `if-let', `if-let*',
 ;; `when-let', `when-let*', `and-let*' and `while-let'.
 
 ;; This package implements the missing `and-let' and `while-let*',
-;; and the original `cond-let', `cond-let*', `and$' and `and>'.
+;; and the original `cond-let', `cond-let*', `when$', `and$' and
+;; `and>'.
 
 ;; This package additionally provides more consistent and improved
 ;; implementations of the binding conditionals already provided by
@@ -61,6 +63,7 @@
 ;;   ("and>"      . "cond-let--and>")
 ;;   ("and-let"   . "cond-let--and-let")
 ;;   ("if-let"    . "cond-let--if-let")
+;;   ("when$"     . "cond-let--when$")
 ;;   ("when-let"  . "cond-let--when-let")
 ;;   ("while-let" . "cond-let--while-let"))
 ;; End:
@@ -73,8 +76,8 @@
 ;; Due to limitations of the shorthand implementation this has to be
 ;; done for each individual library.  "dir-locals.el" cannot be used.
 
-;; If you use `and$' and `and>', you might want to add this to your
-;; configuration:
+;; If you use `when$', `and$' and `and>', you might want to add this
+;; to your configuration:
 
 ;;   (with-eval-after-load 'cond-let
 ;;     (font-lock-add-keywords 'emacs-lisp-mode
@@ -452,7 +455,7 @@ BODY must be one or more expressions.  If VARLIST is empty, do nothing
 and return nil.
 
 \(fn VARLIST BODY...)"
-  (declare (debug (form form)))
+  (declare (indent 1) (debug (form form)))
   `(let (($ ,varform))
      (when $
        ,bodyform ,@body)))
