@@ -19,15 +19,23 @@
                        flycheck flycheck-status-emoji gcmh git-gutter-fringe
                        git-messenger git-modes iedit indent-bars info-colors
                        keyfreq lsp-mode lsp-treemacs lsp-ui lua-mode magit
-                       magit-todos markdown-mode mcp-server-lib page-break-lines
-                       plantuml-mode prism projectile relint rich-minority s
-                       shfmt solarized-theme ssh ssh-config-mode stripe-buffer
-                       undo-tree vterm wgrep xterm-color yaml-mode yasnippet))
+                       magit-todos markdown-mode mcp-server-lib org-autotask
+                       page-break-lines plantuml-mode prism projectile relint
+                       rich-minority s shfmt solarized-theme ssh ssh-config-mode
+                       stripe-buffer undo-tree vterm wgrep xterm-color yaml-mode
+                       yasnippet))
  '(package-vc-selected-packages
    '((org-autotask :vc-backend Git :url
                    "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
-   '((elisp-lint-indent-specs (elisp-dev-mcp-test--with-server . defun)
+   '((elisp-lint-indent-specs (org-autotask-with-org-node-with-url . 1)
+                              (org-autotask--test-fixture . 1)
+                              (org-autotask--buffer-test . 1)
+                              (org-autotask--clock-in-action-test . 2)
+                              (org-autotask--with-replaced-action-fn . 3)
+                              (org-autotask--with-temp-org-agenda-files . defun)
+                              (org-autotask-test--with-temp-archive . defun))
+     (elisp-lint-indent-specs (elisp-dev-mcp-test--with-server . defun)
                               (elisp-dev-mcp-test--with-bytecode-file . defun)
                               (elisp-dev-mcp--with-auto-compression . defun))
      (elisp-lint-indent-specs (org-mcp--modify-and-save . 3)
