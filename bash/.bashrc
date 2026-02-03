@@ -3,7 +3,7 @@
 # shellcheck disable=SC1090
 source ~/.noninteractive_init.bash
 
-# If not runing interactively, don't do anything
+# If not running interactively, don't do anything
 case $- in
     *i*) ;;
       *) return;;

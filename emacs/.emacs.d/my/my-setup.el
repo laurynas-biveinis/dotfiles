@@ -882,7 +882,7 @@ Returns the new window if successful, nil otherwise."
 (setq mu4e-context-policy 'ask-if-none)
 (setq mu4e-compose-context-policy 'ask)
 (setq mu4e-compose-format-flowed t)
-;; GMail-specific behavior. Make it per-context if adding a non-GMail acocunt
+;; GMail-specific behavior. Make it per-context if adding a non-GMail account
 (setq mu4e-sent-messages-behavior 'delete)
 ;; Locales on macOS are, uhm, interesting:
 ;; - System settings -> General -> Language & Region does not propagate to the
