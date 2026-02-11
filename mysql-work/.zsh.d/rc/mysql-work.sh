@@ -803,6 +803,8 @@ mysql_export_environment_helpers() {
 
     export MY8045D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.45 any_debug)
                     "${my8045_comp_flags[@]}")
+    export MY8045B=("${myb[@]}" $(mysql_get_cmake_flags 8.0.45 any_release)
+                    "${my8045_comp_flags[@]}")
     export MY8045=("${myr[@]}" $(mysql_get_cmake_flags 8.0.45 any_release)
                    "${my8045_comp_flags[@]}")
 
@@ -828,10 +830,10 @@ mysql_export_environment_helpers() {
 
     export MY8040D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.40 any_debug)
                     "${my8040_comp_flags[@]}")
-    export MY8040=("${myr[@]}" $(mysql_get_cmake_flags 8.0.40 any_release)
-                   "${my8040_comp_flags[@]}")
     export MY8040B=("${myb[@]}" $(mysql_get_cmake_flags 8.0.40 any_release)
                     "${my8040_comp_flags[@]}")
+    export MY8040=("${myr[@]}" $(mysql_get_cmake_flags 8.0.40 any_release)
+                   "${my8040_comp_flags[@]}")
 
     export MY8039D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.39 any_debug)
                     "${my8039_comp_flags[@]}")
