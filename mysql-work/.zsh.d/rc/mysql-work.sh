@@ -393,7 +393,7 @@ mysql_export_environment_helpers() {
     declare -a -r myd=("${cmake_debug[@]}" "${my[@]}")
     declare -a -r myr=("${cmake_release[@]}" "${my[@]}"
                        "-DMYSQL_MAINTAINER_MODE=ON")
-    declare -a -r myb=("${cmake_release[@]}" "${my[@]}")
+    declare -a -r myb=("${cmake_release[@]}" "${my[@]}" "-DWITH_UNIT_TESTS=OFF")
 
     # Workaround Facebook tooling incompatibility with git worktrees
     fb_common+=("-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
