@@ -386,12 +386,14 @@ mysql_export_environment_helpers() {
     cmake_release+=("${cmake_common[@]}" "-DBUILD_CONFIG=mysql_release"
                     "-DCMAKE_BUILD_TYPE=Release")
     declare -a -r cmake_debug=("${cmake_common[@]}" "-DCMAKE_BUILD_TYPE=Debug"
-                               "-DWITH_DEBUG=ON")
+                               "-DWITH_DEBUG=ON" "-DMYSQL_MAINTAINER_MODE=ON")
 
-    declare -a -r my=("-DMYSQL_MAINTAINER_MODE=ON" "-DWITH_SYSTEM_LIBS=ON"
+    declare -a -r my=("-DWITH_SYSTEM_LIBS=ON"
                       "-DWITH_NDBCLUSTER_STORAGE_ENGINE=OFF")
     declare -a -r myd=("${cmake_debug[@]}" "${my[@]}")
-    declare -a -r myr=("${cmake_release[@]}" "${my[@]}")
+    declare -a -r myr=("${cmake_release[@]}" "${my[@]}"
+                       "-DMYSQL_MAINTAINER_MODE=ON")
+    declare -a -r myb=("${cmake_release[@]}" "${my[@]}")
 
     # Workaround Facebook tooling incompatibility with git worktrees
     fb_common+=("-DMYSQL_GITHASH=0" "-DMYSQL_GITDATE=2100-02-29"
@@ -828,6 +830,8 @@ mysql_export_environment_helpers() {
                     "${my8040_comp_flags[@]}")
     export MY8040=("${myr[@]}" $(mysql_get_cmake_flags 8.0.40 any_release)
                    "${my8040_comp_flags[@]}")
+    export MY8040B=("${myb[@]}" $(mysql_get_cmake_flags 8.0.40 any_release)
+                    "${my8040_comp_flags[@]}")
 
     export MY8039D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.39 any_debug)
                     "${my8039_comp_flags[@]}")
@@ -1133,6 +1137,7 @@ mysql_cmake() {
                     ;;
                 8.0.40)
                     declare -a release_flags=("${MY8040[@]}")
+                    declare -a benchmark_flags=("${MY8040B[@]}")
                     declare -a debug_flags=("${MY8040D[@]}")
                     declare -a -r \
                             core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
@@ -1394,8 +1399,13 @@ mysql_cmake() {
             echo "CMake options: ${release_flags[@]} $@"
             cmake -G Ninja .. "${release_flags[@]}" "$@"
             ;;
+        *benchmark*)
+            echo "Release benchmark build"
+            echo "CMake options: ${benchmark_flags[@]} $@"
+            cmake -G Ninja .. "${benchmark_flags[@]}" "$@"
+            ;;
         *)
-            2>&1 echo "Must choose either debug or release build"
+            2>&1 echo "Must choose one of debug, release, benchmark"
             return 1
             ;;
     esac
