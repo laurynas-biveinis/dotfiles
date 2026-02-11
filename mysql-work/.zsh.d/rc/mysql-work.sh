@@ -1109,6 +1109,7 @@ mysql_cmake() {
                     ;;
                 8.0.45)
                     declare -a release_flags=("${MY8045[@]}")
+                    declare -a benchmark_flags=("${MY8045B[@]}")
                     declare -a debug_flags=("${MY8045D[@]}")
                     declare -a -r \
                             core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
