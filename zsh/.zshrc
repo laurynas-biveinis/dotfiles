@@ -160,8 +160,6 @@ autoload -Uz compinit && compinit
 
 zinit load zdharma/fast-syntax-highlighting
 
-if [ "$UNAME_OUT" = "Darwin" ]; then
-    source ~/.zsh.d/paths
-fi
+source ~/.zsh.d/paths
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
