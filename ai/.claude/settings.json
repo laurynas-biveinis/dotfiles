@@ -21,7 +21,6 @@
       "WebFetch(domain:raw.githubusercontent.com)"
     ]
   },
-  "model": "opus",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "PreToolUse": [
@@ -72,7 +71,9 @@
     ]
   },
   "enabledPlugins": {
-    "claude-code-wakatime@wakatime": true
+    "claude-code-wakatime@wakatime": true,
+    "clangd-lsp@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "model": "claude-opus-4-6"
 }
