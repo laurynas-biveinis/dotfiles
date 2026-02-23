@@ -1,12 +1,12 @@
 (1
  (adoc-mode
-  . [(0 7 0) ((emacs (26))) "a major-mode for editing AsciiDoc files"
-     tar
+  . [(0 8 0) ((emacs (28 1)))
+     "a major-mode for editing AsciiDoc files" tar
      ((:url . "https://github.com/bbatsov/adoc-mode")
-      (:keywords "docs" "wp")
+      (:keywords "asciidoc" "text")
       (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
       (:authors ("Florian Kaufmann" . "sensorflo@gmail.com"))
-      (:commit . "66b9adc97d8702de47140092cbae3a2f5563a297"))])
+      (:commit . "6fc5ebc9478de17b1971222485e7729f04fbcf57"))])
  (afternoon-theme
   . [(0 1) ((emacs (24 1)))
      "Dark color theme with a deep blue background" tar
@@ -200,8 +200,8 @@
       (:url . "https://elpa.nongnu.org/nongnu/cdlatex.html")
       (:commit . "fac070f0164ac9f5859cb4cccba7d29a65c337f3"))])
  (cider
-  . [(1 20 0)
-     ((emacs (27)) (clojure-mode (5 19)) (parseedn (1 2 1))
+  . [(1 21 0)
+     ((emacs (28)) (clojure-mode (5 19)) (parseedn (1 2 1))
       (queue (0 2)) (spinner (1 7)) (seq (2 22)) (sesman (0 3 2))
       (transient (0 4 1)))
      "Clojure Interactive Development Environment that Rocks" tar
@@ -214,13 +214,13 @@
 		("Artur Malabarba" . "bruce.connor.am@gmail.com")
 		("Hugo Duncan" . "hugo@hugoduncan.org")
 		("Steve Purcell" . "steve@sanityinc.com"))
-      (:commit . "8e3091e8c427cc18f1cc511d5d5aa15424cddb62"))])
+      (:commit . "c71bc65af7709667b0cc77306f4e3d5befe86d27"))])
  (clojure-mode
-  . [(5 20 0) ((emacs (25 1))) "Major mode for Clojure code" tar
+  . [(5 21 0) ((emacs (27 1))) "Major mode for Clojure code" tar
      ((:url . "https://github.com/clojure-emacs/clojure-mode")
       (:keywords "languages" "clojure" "clojurescript" "lisp")
       (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
-      (:commit . "d336db623e7ae8cffff50aaaea3f1b05cc4ccecb"))])
+      (:commit . "f1cd680918d6e3c28247b54fb199e186ef9cfd9d"))])
  (clojure-ts-mode
   . [(0 6 0) ((emacs (30 1))) "Major mode for Clojure code" tar
      ((:url . "http://github.com/clojure-emacs/clojure-ts-mode")
@@ -436,13 +436,13 @@
       (:keywords "languages" "elixir")
       (:commit . "00d6580a040a750e019218f9392cf9a4c2dac23a"))])
  (elpher
-  . [(3 6 6) ((emacs (27 1))) "A friendly gopher and gemini client"
+  . [(3 7 0) ((emacs (27 1))) "A friendly gopher and gemini client"
      tar
      ((:url . "https://thelambdalab.xyz/elpher")
       (:keywords "comm" "gopher" "gemini")
       (:maintainer "Tim Vaughan" . "plugd@thelambdalab.xyz")
       (:authors ("Tim Vaughan" . "plugd@thelambdalab.xyz"))
-      (:commit . "dcdeb86f7ae633e252f9ef8a73d3458e87c1ab12"))])
+      (:commit . "d799c467a1f35934f96d33960d638ddf796f01ba"))])
  (emacsql
   . [(4 3 5) ((emacs (26 1))) "High-level SQL database front-end" tar
      ((:url . "https://github.com/magit/emacsql")
@@ -485,6 +485,14 @@
       (:maintainer "Connor Smith" . "wconnorsmith@gmail.com")
       (:authors ("Connor Smith" . "wconnorsmith@gmail.com"))
       (:commit . "2671071a4a57eaee7cc8c27b9e4b6fc60fd2ccd3"))])
+ (evil-emacs-cursor-model-mode
+  . [(0 1 3) ((emacs (29 1)) (evil (1 15 0)))
+     "Emacs' cursor model in evil-mode" tar
+     ((:url
+       . "https://github.com/maxfriis/evil-emacs-cursor-model-mode")
+      (:keywords "convenience" "files")
+      (:maintainer "Peter Friis Jensen" . "maxfriis@gmail.com")
+      (:commit . "05f797f261cd4ee30166c326eeee63d776e26143"))])
  (evil-escape
   . [(3 16) ((emacs (24)) (evil (1 0 9)) (cl-lib (0 5)))
      "Escape from anything with a customizable key sequence" tar
@@ -605,15 +613,15 @@
       (:authors ("Marty Hiatt" . "martianhiatus@riseup.net"))
       (:commit . "b483834e64ce311a9f0db7f758b5d2234f8c02a3"))])
  (fj
-  . [(0 28)
-     ((emacs (29 1)) (fedi (0 2)) (tp (0 5)) (transient (0 9 3))
+  . [(0 30)
+     ((emacs (29 1)) (fedi (0 2)) (tp (0 8)) (transient (0 10 0))
       (magit (4 3 8)))
      "Client for Forgejo instances" tar
      ((:url . "https://codeberg.org/martianh/fj.el")
       (:keywords "git" "convenience")
       (:maintainer "Marty Hiatt" . "mousebot@disroot.org")
       (:authors ("Marty Hiatt" . "mousebot@disroot.org"))
-      (:commit . "7f1a5a973e387673d50c3257cb358c2d245ca930"))])
+      (:commit . "ab360df752c81be7b962d8e21f97b06c424a54bb"))])
  (flx
   . [(0 6 2) ((cl-lib (0 3))) "fuzzy matching with good sorting" tar
      ((:url . "https://github.com/lewang/flx")
@@ -624,15 +632,16 @@
      ((:url . "https://github.com/lewang/flx")
       (:commit . "29e3664b75618847eaaf821713a74eb3c897a124"))])
  (flycheck
-  . [(35 0) ((emacs (27 1))) "On-the-fly syntax checking" tar
-     ((:url . "https://www.flycheck.org")
+  . [(36 0) ((emacs (27 1)) (seq (2 24))) "On-the-fly syntax checking"
+     tar
+     ((:url . "https://github.com/flycheck/flycheck")
       (:keywords "convenience" "languages" "tools")
       (:maintainer
        ("Clément Pit-Claudel" . "clement.pitclaudel@live.com")
        ("fmdkdd" . "fmdkdd@gmail.com")
        ("Bozhidar Batsov" . "bozhidar@batsov.dev"))
       (:authors ("Sebastian Wiesner" . "swiesner@lunaryorn.com"))
-      (:commit . "6e43c07e83406cdd3f75952ee988d61d7573ec11"))])
+      (:commit . "ebddfd89b1eea91b8590f542908672569942fb82"))])
  (flymake-guile
   . [(0 5) ((emacs (26 1)) (flymake (1 2 1))) "Guile flymake backend"
      tar
@@ -847,7 +856,7 @@
       (:authors ("David Andersson" . "l.david.anderssonsverige.nu"))
       (:commit . "278cd3e6d5107693aa2bb33189ca503f22f227d0"))])
  (gptel
-  . [(0 9 9 3)
+  . [(0 9 9 4)
      ((emacs (27 1)) (transient (0 7 4)) (compat (30 1 0 0)))
      "Interact with ChatGPT or other LLMs" tar
      ((:url . "https://github.com/karthink/gptel")
@@ -856,7 +865,7 @@
 		   . "karthik.chikmagalur@gmail.com")
       (:authors
        ("Karthik Chikmagalur" . "karthik.chikmagalur@gmail.com"))
-      (:commit . "d0c392bbb0a1f7775d3a1e98220f4bdc043ab63b"))])
+      (:commit . "d221329ee3aa0198ad51c003a8d94b2af3a72dce"))])
  (graphql-mode
   . [(1 0 0) ((emacs (24 3))) "Major mode for editing GraphQL schemas"
      tar
@@ -1308,12 +1317,12 @@
       (:authors ("Yilkal Argaw" . "yilkalargawworkneh@gmail.com"))
       (:commit . "2494a6f78c9db5311123abc7cad119851a29a55c"))])
  (org-contrib
-  . [(0 7) ((emacs (25 1)) (org (9 4 6)))
+  . [(0 8) ((emacs (25 1)) (org (9 4 6)))
      "Unmaintained add-ons for Org-mode" tar
      ((:url . "https://git.sr.ht/~bzg/org-contrib") (:keywords "org")
       (:maintainer "Bastien Guerry" . "bzg@gnu.org")
       (:authors ("Bastien Guerry" . "bzg@gnu.org"))
-      (:commit . "90e1d6bd6288615233dae273f0525a43a9d8779d"))])
+      (:commit . "b840bdabd1867f9d51ee36bef7bac4be7073288c"))])
  (org-drill
   . [(2 7 0)
      ((emacs (25 3)) (seq (2 14)) (org (9 2 4)) (persist (0 3)))
@@ -1702,11 +1711,11 @@
       (:authors ("John Olsson" . "john@cryon.se"))
       (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed
-  . [(1 4 0) ((emacs (25 1))) "A major mode for editing subtitles" tar
+  . [(1 4 1) ((emacs (25 1))) "A major mode for editing subtitles" tar
      ((:url . "https://github.com/sachac/subed")
       (:keywords "convenience" "files" "hypermedia" "multimedia")
       (:maintainer "Sacha Chua" . "sacha@sachachua.com")
-      (:commit . "b39cae3fadfda5daafb963afb82cc1ff81d8ff3d"))])
+      (:commit . "88a64355523a3bc65790afc7fe6e852183df6df4"))])
  (sweeprolog
   . [(0 27 6) ((emacs (27 1)) (compat (29 1 4 2)))
      "Embedded SWI-Prolog" tar
@@ -1801,13 +1810,13 @@
       (:authors ("Vivek Das Mohapatra" . "vivek@etla.org"))
       (:commit . "v1.0"))])
  (tp
-  . [(0 7) ((emacs (28 1)) (transient (0 5 0)))
+  . [(0 8) ((emacs (28 1)) (transient (0 5 0)))
      "Utilities for transient menus that POST to an API" tar
      ((:url . "https://codeberg.org/martianh/tp.el")
       (:keywords "convenience" "api" "requests")
       (:maintainer "Marty Hiatt" . "mousebot@disroot.org")
       (:authors ("Marty Hiatt" . "mousebot@disroot.org"))
-      (:commit . "cce2dfe0ec2b5c070cb13a7bdf95695eeb6e3caf"))])
+      (:commit . "cef3fc2daefbbfc29ad02b7e1f39542b57c72fe8"))])
  (treesit-fold
   . [(0 2 1) ((emacs (29 1))) "Code folding using treesit" tar
      ((:url . "https://github.com/emacs-tree-sitter/treesit-fold")
@@ -1977,12 +1986,12 @@
       (:authors ("Le Wang" . "l26wang@gmail.com"))
       (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys
-  . [(28 11 20260204154143) ((emacs (28 3)))
+  . [(28 11 20260215192642) ((emacs (28 3)))
      "ergonomic modal keybinding minor mode." tar
      ((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
       (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
       (:maintainer "Xah Lee" . "xah@xahlee.org")
-      (:commit . "299eff83eb9ca96b8e35004a5eb200660a61d6fe"))])
+      (:commit . "10316e7bd865e5ba23291d7fd939649201a214a5"))])
  (xkcd
   . [(1 1) ((json (1 3))) "View xkcd from Emacs" tar
      ((:url . "https://github.com/vibhavp/emacs-xkcd")
