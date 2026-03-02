@@ -736,13 +736,13 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "36f24f0f0f472e4cb50025ed62a1b32351d7d294"))])
  (denote-review
-  . [(1 0 5) ((emacs (28 1)) (denote (4 1 3)))
+  . [(1 0 6) ((emacs (28 1)) (denote (4 1 3)))
      "implements review process for denote notes" tar
      ((:url . "https://codeberg.org/mattof/denote-review")
       (:keywords "files")
       (:maintainer "Matto Fransen" . "matto@matto.nl")
       (:authors ("Matto Fransen" . "matto@matto.nl"))
-      (:commit . "1a93a32190e35731ba12e7ecde629e2971e870db"))])
+      (:commit . "00620e6f57223a67e8f0ab039829e461d42de79e"))])
  (denote-search
   . [(1 0 3) ((emacs (29 1)) (denote (3 0)))
      "Search the contents of your notes" tar
@@ -1312,12 +1312,12 @@
       (:authors ("Yuan Fu" . "casouri@gmail.com"))
       (:commit . "d7c243ac3be2a67986f53f3dc31ba1426e82b771"))])
  (futur
-  . [(1 0) nil "Future/promise-based async library" tar
+  . [(1 1) nil "Future/promise-based async library" tar
      ((:keywords "concurrency" "async" "promises" "futures")
       (:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
       (:authors ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
       (:url . "https://elpa.gnu.org/packages/futur.html")
-      (:commit . "b45f7f64487b7c6786cc2a1997bab9237a75020f"))])
+      (:commit . "b3234c5ef479294cc194bb540e84f822fa937ac6"))])
  (gcmh
   . [(0 2 1) ((emacs (24))) "the Garbage Collector Magic Hack" tar
      ((:url . "https://gitlab.com/koral/gcmh") (:keywords "internal")
@@ -2260,6 +2260,16 @@
       (:maintainer "Hanno Perrey" . "hanno@hoowl.se")
       (:authors ("Hanno Perrey" . "hanno@hoowl.se"))
       (:commit . "020b03f299dad438f65d7bcbf93553b273fd7c33"))])
+ (org-mem
+  . [(0 32 1)
+     ((emacs (29 1)) (el-job (2 7 3)) (llama (1 0))
+      (truename-cache (0 3 2)))
+     "Fast info from a large number of Org file contents" tar
+     ((:url . "https://github.com/meedstrom/org-mem")
+      (:keywords "text")
+      (:maintainer "Martin Edström" . "meedstrom@runbox.eu")
+      (:authors ("Martin Edström" . "meedstrom@runbox.eu"))
+      (:commit . "c0aa21916a98c4601c4063737eddb6a1625410f4"))])
  (org-modern
   . [(1 12) ((emacs (29 1)) (org (9 6)) (compat (30)))
      "Modern looks for Org" tar
@@ -2538,13 +2548,13 @@
       (:authors ("Scott Andrew Borton" . "scott@pp.htv.fi"))
       (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pulsar
-  . [(1 3 3) ((emacs (28 1)))
+  . [(1 3 4) ((emacs (28 1)))
      "Pulse highlight on demand or after select functions" tar
      ((:url . "https://github.com/protesilaos/pulsar")
       (:keywords "convenience" "pulse" "highlight")
       (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "8ba8271dce9b90ab2e819f31edf808ddf43ed995"))])
+      (:commit . "70956bf72e07ea7e722f7a16eedb9aac8625ea5f"))])
  (pyim
   . [(5 3 6) ((emacs (27 1)) (async (1 6)) (xr (1 13)))
      "A Chinese input method support quanpin, shuangpin, wubi, cangjie and rime."
@@ -3203,14 +3213,14 @@
       (:url . "https://elpa.gnu.org/packages/track-changes.html")
       (:commit . "e119514ae8b391f41577d22d4e41cc3fea7ab9eb"))])
  (tramp
-  . [(2 8 1 1) ((emacs (28 1)))
+  . [(2 8 1 2) ((emacs (28 1)))
      "Transparent Remote Access, Multiple Protocol" tar
      ((:url . "https://www.gnu.org/software/tramp/")
       (:keywords "comm" "processes")
       (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
       (:authors ("Kai Großjohann" . "kai.grossjohann@gmx.net")
 		("Michael Albinus" . "michael.albinus@gmx.de"))
-      (:commit . "c04cee076dc5ed04abef538cde268d388f9571df"))])
+      (:commit . "d46a2d233f7862142f8e12fa9adfe7c2bb9b2e16"))])
  (tramp-hlo
   . [(0 0 2) ((tramp (2 8 0 5)))
      "High level operations as Tramp handlers" tar
@@ -3287,6 +3297,14 @@
       (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
       (:commit . "f2b8fe6d500e3543bece24381fd4ce34a171c860"))])
+ (truename-cache
+  . [(0 3 5) ((emacs (27 1)) (compat (30 1)))
+     "Efficiently de-dup file-names" tar
+     ((:url . "https://github.com/meedstrom/truename-cache")
+      (:keywords "lisp")
+      (:maintainer "Martin Edström" . "meedstrom91@gmail.com")
+      (:authors ("Martin Edström" . "meedstrom91@gmail.com"))
+      (:commit . "356a11ff9fc0c37413779e3f7388ba1410225ea9"))])
  (ulisp-repl
   . [(1 0 3) ((emacs (26 1))) "uLisp REPL" tar
      ((:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
