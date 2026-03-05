@@ -1210,13 +1210,19 @@ RULE is a plist containing either :sender-exact or :sender-match."
                             magit-blame-quit org-ctrl-c-minus isearch-backward
                             read-char-from-minibuffer-insert-char org-metaleft
                             transient-forward-button magit-kill-this-buffer
-                            isearch-yank-kill mu4e-view-go-to-url
+                            isearch-yank-kill mu4e-view-go-to-url isearch-exit
                             dired-find-alternate-file org-deadline
                             w3m-next-anchor w3m-view-url-with-browse-url
                             mu4e-compose-wide-reply magit-dired-jump
                             magit-stash-drop gnus-article-press-button
-                            magit-bury-or-kill-buffer
-                            isearch-with-input-method))
+                            magit-bury-or-kill-buffer magit-mouse-set-point
+                            isearch-with-input-method org-calndar-forward-day
+                            prog-fill-reindent-defun org-calendar-forward-week
+                            org-calendar-backward-day debugger-continue
+                            org-toggle-checkbox mouse-wheel-text-scale
+                            org-open-at-mouse mu4e-view-save-attachments
+                            mouse-drag-mode-line mu4e-compose-reply
+                            debugger-quit))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
