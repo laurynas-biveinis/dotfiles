@@ -1384,15 +1384,15 @@
       (:url . "https://elpa.gnu.org/packages/gnorb.html")
       (:commit . "409e4fc2c83f8406f362028dbcc3a1fc21182819"))])
  (gnosis
-  . [(0 7 0)
+  . [(0 8 0)
      ((emacs (27 2)) (emacsql (4 1 0)) (compat (29 1 4 2))
-      (transient (0 7 2)) (org-gnosis (0 0 9)))
-     "Spaced Repetition System" tar
+      (transient (0 7 2)) (org-gnosis (0 2 0)))
+     "Knowledge System" tar
      ((:url . "https://thanosapollo.org/projects/gnosis")
       (:keywords "extensions")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "54660aabfa3200663053dd0063f2c215ef674ddb"))])
+      (:commit . "0d0a43642dc122a1e8e4b27c1862f52303b856e1"))])
  (gnu-elpa
   . [(1 1) nil "Advertize GNU ELPA packages" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -3306,13 +3306,13 @@
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
       (:commit . "f2b8fe6d500e3543bece24381fd4ce34a171c860"))])
  (truename-cache
-  . [(0 3 5) ((emacs (27 1)) (compat (30 1)))
+  . [(0 3 7) ((emacs (27 1)) (compat (30 1)))
      "Efficiently de-dup file-names" tar
      ((:url . "https://github.com/meedstrom/truename-cache")
       (:keywords "lisp")
       (:maintainer "Martin Edström" . "meedstrom91@gmail.com")
       (:authors ("Martin Edström" . "meedstrom91@gmail.com"))
-      (:commit . "356a11ff9fc0c37413779e3f7388ba1410225ea9"))])
+      (:commit . "6540dd050c0db1e73e03dfa6fe253dd5fb03b579"))])
  (ulisp-repl
   . [(1 0 3) ((emacs (26 1))) "uLisp REPL" tar
      ((:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
