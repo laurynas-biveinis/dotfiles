@@ -1,10 +1,10 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "markdown-mode" "2.7"
+(define-package "markdown-mode" "2.8"
   "Major mode for Markdown-formatted text."
-  '((emacs "27.1"))
+  '((emacs "28.1"))
   :url "https://jblevins.org/projects/markdown-mode/"
-  :commit "1c7aecba67cc478ca3f6bd7899dc06956e4762f4"
-  :revdesc "1c7aecba67cc"
+  :commit "f5d520b3ee7722dd2231ab586ba51d8eb166e49b"
+  :revdesc "f5d520b3ee77"
   :keywords '("markdown" "github flavored markdown" "itex")
   :authors '(("Jason R. Blevins" . "jblevins@xbeta.org"))
   :maintainers '(("Jason R. Blevins" . "jblevins@xbeta.org")))
