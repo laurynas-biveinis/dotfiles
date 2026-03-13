@@ -5,8 +5,8 @@
 ;; Author: Daniel Barreto <daniel.barreto.n@gmail.com>
 ;; Keywords: lisp, maint, tools
 ;; Created: Mon Jul 10 15:17:36 2017 (+0200)
-;; Package-Version: 20240930.728
-;; Package-Revision: 651e2634f01f
+;; Package-Version: 20260313.916
+;; Package-Revision: 28f0e2c2c75e
 ;; Package-Requires: ((emacs "25.1"))
 ;; URL: https://github.com/volrath/treepy.el
 

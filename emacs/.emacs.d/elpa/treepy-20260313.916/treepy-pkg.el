@@ -1,10 +1,10 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "treepy" "20240930.728"
+(define-package "treepy" "20260313.916"
   "Generic tree traversal tools."
   '((emacs "25.1"))
   :url "https://github.com/volrath/treepy.el"
-  :commit "651e2634f01f346da9ec8a64613c51f54b444bc3"
-  :revdesc "651e2634f01f"
+  :commit "28f0e2c2c75ea186e8beb570a4a70087926ff80b"
+  :revdesc "28f0e2c2c75e"
   :keywords '("lisp" "maint" "tools")
   :authors '(("Daniel Barreto" . "daniel.barreto.n@gmail.com"))
   :maintainers '(("Daniel Barreto" . "daniel.barreto.n@gmail.com")))
