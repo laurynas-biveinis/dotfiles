@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: comm, tools
-;; Package-Version: 20260116.1406
-;; Package-Revision: 8c494fbb79cc
+;; Package-Version: 20260319.1344
+;; Package-Revision: 69722cd8f6e2
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/laurynas-biveinis/mcp-server-lib.el
 
@@ -1050,7 +1050,9 @@ See also: `mcp-server-lib-process-jsonrpc-parsed'"
         (response nil))
     ;; Attempt to parse the JSON
     (condition-case json-err
-        (setq json-object (json-read-from-string json-string))
+        (setq json-object
+              (json-read-from-string
+               (decode-coding-string json-string 'utf-8 t)))
       (json-error
        ;; If JSON parsing fails, create a parse error response
        (setq response
