@@ -47,13 +47,13 @@
       (:authors ("Stephen Leake" . "stephen_leake@member.fsf.org"))
       (:commit . "b86a173c1488989fd06f0b612e7b7acee9fda070"))])
  (adaptive-wrap
-  . [(0 8) nil "Smart line-wrapping with wrap-prefix" tar
+  . [(0 9) ((emacs (24 1))) "Smart line-wrapping with wrap-prefix" tar
      ((:maintainer ("Stephen Berman" . "stephen.berman@gmx.net")
 		   ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
       (:authors ("Stephen Berman" . "stephen.berman@gmx.net")
 		("Stefan Monnier" . "monnier@iro.umontreal.ca"))
       (:url . "https://elpa.gnu.org/packages/adaptive-wrap.html")
-      (:commit . "026c35f59174febab2bcdb3c50fb8344c248671c"))])
+      (:commit . "e929b38c12f17aa6f8d6270326301d61fbb09cab"))])
  (adjust-parens
   . [(3 2) ((emacs (24 3)))
      "Indent and dedent Lisp code, automatically adjust close parens"
@@ -914,13 +914,13 @@
       (:url . "https://elpa.gnu.org/packages/docbook.html")
       (:commit . "a59f87c0dc04bcfcf9f55a124658c2e7a585dbd2"))])
  (doric-themes
-  . [(1 0 0) ((emacs (29 1)))
+  . [(1 1 0) ((emacs (29 1)))
      "Highly legible minimalist themes with precise typography" tar
      ((:url . "https://github.com/protesilaos/doric-themes")
       (:keywords "faces" "theme" "accessibility")
       (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "03c73b9250195e82c0c37055b7767ea39b8016ff"))])
+      (:commit . "09612d87dedf8cf2083e557f6a6536ba9320afc8"))])
  (drepl
   . [(0 4) ((emacs (29 1)) (comint-mime (0 7)))
      "REPL protocol for the dumb terminal" tar
@@ -1320,12 +1320,12 @@
       (:authors ("Yuan Fu" . "casouri@gmail.com"))
       (:commit . "d7c243ac3be2a67986f53f3dc31ba1426e82b771"))])
  (futur
-  . [(1 3) nil "Future/promise-based async library" tar
+  . [(1 4) nil "Future/promise-based async library" tar
      ((:keywords "concurrency" "async" "promises" "futures")
       (:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
       (:authors ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
       (:url . "https://elpa.gnu.org/packages/futur.html")
-      (:commit . "0ad88655f83dd7ebd41883951b5d05cfd811fed8"))])
+      (:commit . "54608e8c009095749bd4481e4593006b1cd157eb"))])
  (gcmh
   . [(0 2 1) ((emacs (24))) "the Garbage Collector Magic Hack" tar
      ((:url . "https://gitlab.com/koral/gcmh") (:keywords "internal")
@@ -1451,7 +1451,7 @@
       (:authors ("Sean Allred" . "code@seanallred.com"))
       (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader
-  . [(0 13 1) ((emacs (26 1)) (seq (2 24)) (compat (29 1 4 5)))
+  . [(0 15 0) ((emacs (26 1)) (seq (2 24)) (compat (29 1 4 5)))
      "Gnamù reader, send buffer contents to a speech engine" tar
      ((:url . "https://gitlab.com/michelangelo-rodriguez/greader")
       (:keywords "tools" "accessibility")
@@ -1459,15 +1459,15 @@
 		   . "michelangelo.rodriguez@gmail.com")
       (:authors
        ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
-      (:commit . "b25974aeae49f11b91bb78d94ab51913fdfcdc05"))])
+      (:commit . "20b5343211408dbbf12ff2194472cea50384a5fa"))])
  (greenbar
-  . [(1 2) ((emacs (27 1)))
+  . [(1 2 260317) ((emacs (27 1)))
      "Mark comint output with \"greenbar\" background" tar
      ((:keywords "faces" "terminals")
       (:maintainer "Michael R. Mauger" . "michael@mauger.com")
       (:authors ("Michael R. Mauger" . "michael@mauger.com"))
       (:url . "https://elpa.gnu.org/packages/greenbar.html")
-      (:commit . "7b651257bd0536d454f4b896212b3fe1f8c75024"))])
+      (:commit . "eedbec6a0c56be403fdbe0b1f38a4acd4f11d09b"))])
  (gtags-mode
   . [(1 9 4) ((emacs (28)))
      "GNU Global integration with xref, project and imenu." tar
@@ -3244,14 +3244,14 @@
       (:authors ("Joe Sadusk" . "joe@sadusk.com"))
       (:commit . "a204c14a2eed4c92a455f12acae2ec7eeac6d8fd"))])
  (tramp-nspawn
-  . [(1 0 1) ((emacs (23)))
+  . [(1 0 2) ((emacs (23)))
      "Tramp integration for systemd-nspawn containers" tar
-     ((:url . "https://github.com/bjc/tramp-nspawn")
+     ((:url . "https://git.spork.org/tramp-nspawn.git")
       (:keywords "tramp" "nspawn" "machinectl" "systemd"
 		 "systemd-nspawn")
       (:maintainer "Brian Cully" . "bjc@kublai.com")
       (:authors ("Brian Cully" . "bjc@kublai.com"))
-      (:commit . "c35ade49754e051c84eaa2733447b4307968f200"))])
+      (:commit . "a2da5b6b25be7191755678651bdade2f9af5c617"))])
  (tramp-theme
   . [(0 3) ((emacs (24 1))) "Custom theme for remote buffers" tar
      ((:keywords "convenience" "faces")
@@ -3347,11 +3347,11 @@
       (:url . "https://elpa.gnu.org/packages/uniquify-files.html")
       (:commit . "1d76b4f0e283afaff2be053d85f8726ffc3abd6e"))])
  (urgrep
-  . [(0 5 2) ((emacs (27 1)) (compat (29 1 0 1)) (project (0 3 0)))
+  . [(0 6 0) ((emacs (28 1)) (compat (29 1 0 1)) (project (0 3 0)))
      "Universal recursive grep" tar
-     ((:url . "https://github.com/jimporter/urgrep")
+     ((:url . "https://sr.ht/~jimporter/urgrep/")
       (:keywords "grep" "search")
-      (:commit . "d53d3168e52b021738515491de391d66e4bf865c"))])
+      (:commit . "334aa0a364b2811ccba67b1ce4e719e9e96f963a"))])
  (url-http-ntlm
   . [(2 0 6) ((emacs (24 4)) (ntlm (2 1 0)))
      "NTLM authentication for the url library" tar
