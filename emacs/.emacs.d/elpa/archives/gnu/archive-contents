@@ -1384,13 +1384,13 @@
       (:url . "https://elpa.gnu.org/packages/gnorb.html")
       (:commit . "409e4fc2c83f8406f362028dbcc3a1fc21182819"))])
  (gnosis
-  . [(0 9 0) ((emacs (29 1)) (compat (29 1 4 2))) "Knowledge System"
+  . [(0 10 1) ((emacs (29 1)) (compat (29 1 4 2))) "Knowledge System"
      tar
      ((:url . "https://thanosapollo.org/projects/gnosis")
       (:keywords "extensions")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "27d7370e9006c8cadd186df3e253f8fe33f6081e"))])
+      (:commit . "9ac7fc3e23100f22276b94ed6876acc2406c8d35"))])
  (gnu-elpa
   . [(1 1) nil "Advertize GNU ELPA packages" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -1451,7 +1451,7 @@
       (:authors ("Sean Allred" . "code@seanallred.com"))
       (:commit . "b57b5ca5d2d0837e1fb4a4f30c051d5f3e643f0f"))])
  (greader
-  . [(0 15 0) ((emacs (26 1)) (seq (2 24)) (compat (29 1 4 5)))
+  . [(0 17 0) ((emacs (26 1)) (seq (2 24)) (compat (29 1 4 5)))
      "Gnamù reader, send buffer contents to a speech engine" tar
      ((:url . "https://gitlab.com/michelangelo-rodriguez/greader")
       (:keywords "tools" "accessibility")
@@ -1459,7 +1459,7 @@
 		   . "michelangelo.rodriguez@gmail.com")
       (:authors
        ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
-      (:commit . "20b5343211408dbbf12ff2194472cea50384a5fa"))])
+      (:commit . "4fd1ae83d21f6349cd849f3652e7bf8f00edc9dd"))])
  (greenbar
   . [(1 2 260317) ((emacs (27 1)))
      "Mark comint output with \"greenbar\" background" tar
