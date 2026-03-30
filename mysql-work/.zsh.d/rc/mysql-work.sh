@@ -202,7 +202,7 @@ mysql_export_environment_helpers() {
     declare -gA cmake_flags=()
 
     declare -r min_version="8.0.18"
-    declare -r max_version="9.6.0"
+    declare -r max_version="9.7.0"
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -405,6 +405,12 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.33" "${max_version}" any \
                           "-DFORCE_COLORED_OUTPUT=ON"
+
+    declare -a -r my970_comp_flags=(
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.7.0 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.7.0 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.7.0 cxx_release)"
+    )
 
     declare -a -r my960_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.6.0 cxx)"
@@ -701,6 +707,11 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
+    export MY970D=("${myd[@]}" $(mysql_get_cmake_flags 9.7.0 any_debug)
+                   "${my970_comp_flags[@]}")
+    export MY970=("${myr[@]}" $(mysql_get_cmake_flags 9.7.0 any_release)
+                  "${my970_comp_flags[@]}")
+
     export MY960D=("${myd[@]}" $(mysql_get_cmake_flags 9.6.0 any_debug)
                    "${my960_comp_flags[@]}")
     export MY960=("${myr[@]}" $(mysql_get_cmake_flags 9.6.0 any_release)
@@ -937,7 +948,7 @@ mysql_determine_flavor() {
 
     declare -r version_extra_str=$(grep MYSQL_VERSION_EXTRA "$version_file")
     declare -r version_extra="${version_extra_str/MYSQL_VERSION_EXTRA=/}"
-    if [ -n "$version_extra" ]; then
+    if [[ "$version_extra" =~ ^-[0-9]+$ ]]; then
         echo "percona"
         return 0
     fi
@@ -987,6 +998,12 @@ mysql_cmake() {
         "mysql")
             echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
             case "$major_ver.$minor_ver.$patch_level" in
+                9.7.0)
+                    declare -a release_flags=("${MY970[@]}")
+                    declare -a debug_flags=("${MY970D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+                    ;;
                 9.6.0)
                     declare -a release_flags=("${MY960[@]}")
                     declare -a debug_flags=("${MY960D[@]}")
@@ -1436,7 +1453,9 @@ mysql_rebuild() {
 }
 
 mysql_build_in_build_dir() {
-    git submodule update --init --recursive || return $?
+    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        git submodule update --init --recursive || return $?
+    fi
     mysql_cmake "$@" || return $?
 
     declare -r build_dir="$(basename "$PWD")"
