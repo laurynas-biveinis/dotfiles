@@ -1198,16 +1198,27 @@ class NdSexp(Node):
                 yield node
                 yield from node.iter_nodes_recursive_only_sexp()
 
+    def _iter_nodes_recursive_only_sexp_without_wrap_locked(self) -> Generator[NdSexp, None, None]:
+        '''
+        Iterate over all S-expression nodes recursively, skipping wrap-locked nodes.
+        '''
+        for node in self.nodes_only_code:
+            if isinstance(node, NdSexp) and not node.wrap_locked:
+                yield node
+                yield from node._iter_nodes_recursive_only_sexp_without_wrap_locked()
+
     def iter_nodes_recursive_with_self_only_sexp_without_wrap_locked(self) -> Generator[NdSexp, None, None]:
         '''
         Iterate over all S-expression nodes recursively, including this node (first).
         '''
         if not self.wrap_locked:
             yield self
-            for node in self.nodes_only_code:
-                if isinstance(node, NdSexp) and not node.wrap_locked:
-                    yield node
-                    yield from node.iter_nodes_recursive_only_sexp()
+            # Must filter `wrap_locked` at every level of recursion, not just direct children.
+            # A non-wrap-locked node can contain a wrap-locked descendant
+            # (e.g. a quoted `'(...)` nested inside a regular function call).
+            # These descendants must be excluded so they never receive `prior_states`,
+            # which would cause the unwrap pass to attempt modifying nodes whose formatting must be preserved.
+            yield from self._iter_nodes_recursive_only_sexp_without_wrap_locked()
 
     def iter_nodes_recursive_with_parent(self) -> Generator[tuple[Node, NdSexp], None, None]:
         '''

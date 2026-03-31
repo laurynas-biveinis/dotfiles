@@ -6,8 +6,8 @@
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 
 ;; URL: https://codeberg.org/ideasman42/emacs-elisp-autofmt
-;; Package-Version: 20260329.1053
-;; Package-Revision: c28b2fb8b451
+;; Package-Version: 20260331.554
+;; Package-Revision: 07f2d4bcd5db
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
