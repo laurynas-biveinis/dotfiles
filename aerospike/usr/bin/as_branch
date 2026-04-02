@@ -159,9 +159,9 @@ if [[ "$COMMAND" == "rsync" ]]; then
 	exit 0
 fi
 
-if [[ "$COMMAND" == "create" && "$#" -gt 2 ]]; then
+if [[ "$COMMAND" == "create" && $# -gt 2 ]]; then
 	readonly START_POINT="$3"
-	if [[ "$#" -gt 3 ]]; then
+	if [[ $# -gt 3 ]]; then
 		readonly EE_START_POINT="$4"
 	else
 		readonly EE_START_POINT="$START_POINT"
