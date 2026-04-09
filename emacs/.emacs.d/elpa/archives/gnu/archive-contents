@@ -1003,16 +1003,16 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "af6a2a588f72a40212624458278d87f1c769405b"))])
  (eglot
-  . [(1 21)
-     ((emacs (26 3)) (eldoc (1 14 0)) (external-completion (0 1))
-      (flymake (1 4 2)) (jsonrpc (1 0 26)) (project (0 11 2))
-      (seq (2 23)) (xref (1 6 2)))
+  . [(1 23)
+     ((emacs (26 3)) (eldoc (1 16 0)) (external-completion (0 1))
+      (flymake (1 4 5)) (jsonrpc (1 0 28)) (project (0 11 2))
+      (seq (2 23)) (xref (1 7 0)))
      "The Emacs Client for LSP servers" tar
      ((:url . "https://github.com/joaotavora/eglot")
       (:keywords "convenience" "languages")
       (:maintainer "João Távora" . "joaotavora@gmail.com")
       (:authors ("João Távora" . "joaotavora@gmail.com"))
-      (:commit . "12730179acddc224f0c43a2b8e8a028182d1e40f"))])
+      (:commit . "dc7c36ea1290c295f77ded998f72a0d9f992bef7"))])
  (el-job
   . [(2 7 4) ((emacs (29 1)))
      "Contrived way to call a function using all CPU cores" tar
@@ -1084,13 +1084,13 @@
       (:url . "https://elpa.gnu.org/packages/emacs-lisp-intro-es.html")
       (:commit . "a2c2c167837cef08a1b8f86f5eb9864f93699300"))])
  (embark
-  . [(1 1) ((emacs (27 1)) (compat (29 1 4 0)))
+  . [(1 2) ((emacs (29 1)) (compat (30)))
      "Conveniently act on minibuffer completions" tar
      ((:url . "https://github.com/oantolin/embark")
       (:keywords "convenience")
       (:maintainer "Omar Antolín Camarena" . "omar@matem.unam.mx")
       (:authors ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
-      (:commit . "195add1f1ccd1059472c9df7334c97c4d155425e"))])
+      (:commit . "27de48004242e98586b9c9661fdb6912f26fe70f"))])
  (embark-consult
   . [(1 1)
      ((emacs (27 1)) (compat (29 1 4 0)) (embark (1 0))
@@ -1384,13 +1384,13 @@
       (:url . "https://elpa.gnu.org/packages/gnorb.html")
       (:commit . "409e4fc2c83f8406f362028dbcc3a1fc21182819"))])
  (gnosis
-  . [(0 10 2) ((emacs (29 1)) (compat (29 1 4 2))) "Knowledge System"
+  . [(0 10 3) ((emacs (29 1)) (compat (29 1 4 2))) "Knowledge System"
      tar
      ((:url . "https://thanosapollo.org/projects/gnosis")
       (:keywords "extensions")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "dd73eb844c997a5a538549c4f85d5f431d69bfe5"))])
+      (:commit . "e830171c4bcbcbc0b1d466ffdbec179e32e9688e"))])
  (gnu-elpa
   . [(1 1) nil "Advertize GNU ELPA packages" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -1717,12 +1717,12 @@
       (:url . "https://elpa.gnu.org/packages/json-mode.html")
       (:commit . "2eb4b83db23e61fa2112688148aeedbacfc3c18e"))])
  (jsonrpc
-  . [(1 0 27) ((emacs (25 2))) "JSON-RPC library" tar
+  . [(1 0 28) ((emacs (25 2))) "JSON-RPC library" tar
      ((:keywords "processes" "languages" "extensions")
       (:maintainer "João Távora" . "joaotavora@gmail.com")
       (:authors ("João Távora" . "joaotavora@gmail.com"))
       (:url . "https://elpa.gnu.org/packages/jsonrpc.html")
-      (:commit . "6caf598ac49b3ed592f22e31307fe71e71490f2b"))])
+      (:commit . "f0fcc87a34c27f7d214107dc0a8d1ed96e6baf3b"))])
  (jumpc
   . [(3 1) nil "jump to previous insertion points" tar
      ((:maintainer "Ivan Kanis" . "ivan@kanis.fr")
@@ -1838,14 +1838,14 @@
       (:authors ("Sean Whitton" . "spwhitton@spwhitton.name"))
       (:commit . "00b8f65effe4f2673e6450d70000644b266aa78a"))])
  (llm
-  . [(0 29 0)
+  . [(0 30 1)
      ((emacs (28 1)) (plz (0 8)) (plz-event-source (0 1 1))
       (plz-media-type (0 2 1)) (compat (29 1)))
      "Interface to pluggable llm backends" tar
      ((:url . "https://github.com/ahyatt/llm")
       (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
-      (:commit . "921241dce18e121dc76bb879212f2bab08720015"))])
+      (:commit . "03ee7c5c7ecbedfce73e87be122fd078e12fa683"))])
  (lmc
   . [(1 4) nil "Little Man Computer in Elisp" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -2226,13 +2226,13 @@
       (:authors ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
       (:commit . "6e3a09d6026fe7d7d5a3caf9a3d777cc9841fe80"))])
  (org
-  . [(9 8) ((emacs (28 2)))
+  . [(9 8 1) ((emacs (28 2)))
      "Outline-based notes management and organizer" tar
      ((:url . "https://orgmode.org")
       (:keywords "outlines" "hypermedia" "calendar" "text")
       (:maintainer "Ihor Radchenko" . "yantar92@posteo.net")
       (:authors ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-      (:commit . "8280cf05ad99773a2ad55aac22655ef5bfbda57b"))])
+      (:commit . "c1bb5ae59101181708fc061666b6f2e402911c7b"))])
  (org-contacts
   . [(1 3) ((emacs (29 1)) (org (9 7)))
      "Contacts management system for Org mode" tar

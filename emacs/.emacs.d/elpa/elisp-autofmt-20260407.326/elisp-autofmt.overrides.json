@@ -1,0 +1,473 @@
+{
+  "functions": {
+    "function": [
+      "func",
+      1,
+      1,
+      {}
+    ],
+    "lambda": [
+      "macro",
+      1,
+      "many",
+      {
+        "indent": "defun",
+        "break": "multi"
+      }
+    ],
+    "eval-when-compile": [
+      "macro",
+      0,
+      "many",
+      {
+        "break": "always",
+        "indent": 0
+      }
+    ],
+    "if": [
+      "macro",
+      1,
+      "many",
+      {
+        "break": "always",
+        "indent": 2
+      }
+    ],
+    "defalias": [
+      "func",
+      2,
+      3,
+      {
+        "doc-string": 3,
+        "indent": "defun"
+      }
+    ],
+    "defcustom": [
+      "macro",
+      2,
+      "many",
+      {
+        "break_point": "overflow",
+        "doc-string": 3,
+        "indent": "defun"
+      }
+    ],
+    "defface": "defcustom",
+    "defgroup": [
+      "macro",
+      2,
+      "many",
+      {
+        "doc-string": 3,
+        "indent": "defun"
+      }
+    ],
+    "define-minor-mode": [
+      "macro",
+      2,
+      "many",
+      {
+        "break": "always",
+        "doc-string": 2,
+        "indent": "defun"
+      }
+    ],
+    "define-globalized-minor-mode": [
+      "macro",
+      1,
+      "many",
+      {
+        "break": "always",
+        "doc-string": 3,
+        "indent": "defun"
+      }
+    ],
+    "defvar": [
+      "special",
+      2,
+      "unevalled",
+      {
+        "break_point": "overflow",
+        "doc-string": 3,
+        "indent": "defun"
+      }
+    ],
+    "defconst": "defvar",
+    "defvar-local": [
+      "macro",
+      2,
+      "many",
+      {
+        "break_point": "overflow",
+        "doc-string": 3,
+        "indent": 2
+      }
+    ],
+    "defvaralias": [
+      "macro",
+      2,
+      3,
+      {
+        "break_point": "overflow"
+      }
+    ],
+    "interactive": [
+      "macro",
+      2,
+      "many",
+      {
+        "break_point": "overflow"
+      }
+    ],
+    "throw": [
+      "macro",
+      2,
+      2,
+      {
+        "break_point": "overflow"
+      }
+    ],
+    "and": [
+      "macro",
+      1,
+      "many",
+      {}
+    ],
+    "max": "and",
+    "min": "and",
+    "or": "and",
+    "*": [
+      "macro",
+      2,
+      "many",
+      {}
+    ],
+    "+": "*",
+    "-": "*",
+    "%": "*",
+    "/": "*",
+    "1+": "*",
+    "1-": "*",
+    "let": [
+      "func",
+      1,
+      "many",
+      {
+        "indent": 1,
+        "break": "always",
+        "args": [
+          [
+            [
+              0
+            ],
+            {
+              "if": [
+                ">=",
+                "children_count",
+                2
+              ],
+              "children": [
+                [
+                  [
+                    0,
+                    null
+                  ],
+                  {
+                    "newline": true,
+                    "is_data": true
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            [
+              1
+            ],
+            {
+              "newline": true
+            }
+          ]
+        ],
+        "args_native": [
+          [
+            [
+              0
+            ],
+            {
+              "if": [
+                ">=",
+                "children_count",
+                2
+              ],
+              "children": [
+                [
+                  [
+                    0,
+                    null
+                  ],
+                  {
+                    "is_data": true
+                  }
+                ],
+                [
+                  [
+                    1,
+                    null
+                  ],
+                  {
+                    "newline": true
+                  }
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    ],
+    "and-let": "let",
+    "and-let*": "let",
+    "cl-letf": "let",
+    "cl-letf*": "let",
+    "let*": "let",
+    "letrec": "let",
+    "pcase-let": "let",
+    "pcase-let*": "let",
+    "when-let": "let",
+    "when-let*": "let",
+    "if-let": [
+      "func",
+      1,
+      "many",
+      {
+        "indent": 2,
+        "break": "always",
+        "args": [
+          [
+            [
+              0
+            ],
+            {
+              "if": [
+                ">=",
+                "children_count",
+                2
+              ],
+              "children": [
+                [
+                  [
+                    0,
+                    null
+                  ],
+                  {
+                    "newline": true,
+                    "is_data": true
+                  }
+                ]
+              ]
+            }
+          ]
+        ],
+        "args_native": [
+          [
+            [
+              0
+            ],
+            {
+              "if": [
+                ">=",
+                "children_count",
+                2
+              ],
+              "children": [
+                [
+                  [
+                    0,
+                    null
+                  ],
+                  {
+                    "is_data": true
+                  }
+                ],
+                [
+                  [
+                    1,
+                    null
+                  ],
+                  {
+                    "newline": true
+                  }
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    ],
+    "if-let*": "if-let",
+    "cond": [
+      "func",
+      0,
+      "many",
+      {
+        "args": [
+          [
+            [
+              0,
+              null
+            ],
+            {
+              "newline": true,
+              "is_data": true,
+              "break": "multi",
+              "children": [
+                [
+                  [
+                    1
+                  ],
+                  {
+                    "newline": true
+                  }
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    ],
+    "cond*": "cond",
+    "pcase": [
+      "func",
+      1,
+      "many",
+      {
+        "indent": 1,
+        "break": "always",
+        "args": [
+          [
+            [
+              1,
+              null
+            ],
+            {
+              "is_data": true
+            }
+          ],
+          [
+            [
+              1,
+              null
+            ],
+            {
+              "if": [
+                ">=",
+                "children_count",
+                3
+              ],
+              "break": "multi",
+              "children": [
+                [
+                  [
+                    1
+                  ],
+                  {
+                    "newline": true
+                  }
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    ],
+    "condition-case": [
+      "special",
+      1,
+      "many",
+      {
+        "indent": 2,
+        "break": "always",
+        "args": [
+          [
+            [
+              2,
+              null
+            ],
+            {
+              "newline": true,
+              "is_data": true,
+              "break": "multi",
+              "children": [
+                [
+                  [
+                    1
+                  ],
+                  {
+                    "newline": true
+                  }
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    ],
+    "condition-case-unless-debug": "condition-case",
+    "unwind-protect": [
+      "special",
+      0,
+      "unevalled",
+      {
+        "break": "always",
+        "indent": 1
+      }
+    ],
+    "save-excursion": [
+      "macro",
+      0,
+      "many",
+      {
+        "break": "multi",
+        "indent": 0
+      }
+    ],
+    "save-match-data": "save-excursion",
+    "save-restriction": "save-excursion",
+    "save-window-excursion": "save-excursion",
+    "setq": [
+      "func",
+      2,
+      "many",
+      {
+        "break": "multi",
+        "break_point": "overflow",
+        "group": [
+          1,
+          2
+        ]
+      }
+    ],
+    "fset": "setq",
+    "setf": "setq",
+    "setopt": "setq",
+    "setq-default": "setq",
+    "setq-local": "setq",
+    "defun": [
+      "macro",
+      2,
+      "many",
+      {
+        "doc-string": 3,
+        "indent": 2,
+        "break": "always",
+        "break_point": "overflow"
+      }
+    ],
+    "cl-defmethod": "defun",
+    "defadvice": "defun",
+    "defmacro": "defun",
+    "defsubst": "defun",
+    "ert-deftest": "defun",
+    "iter-defun": "defun"
+  }
+}
