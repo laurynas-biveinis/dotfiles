@@ -716,12 +716,12 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "fdeacaa134e9de29a1888ad23d754b4ada3d8247"))])
  (denote-markdown
-  . [(0 2 1) ((emacs (28 1)) (denote (4 0 0)))
+  . [(0 2 2) ((emacs (28 1)) (denote (4 0 0)))
      "Extensions that better integrate Denote with Markdown" tar
      ((:url . "https://github.com/protesilaos/denote-markdown")
       (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "a7d7e1c1dd609abec2a8bdd0197782f62885d95b"))])
+      (:commit . "b3d19ffc68d15471f5098149467745951db883b7"))])
  (denote-menu
   . [(1 4 0) ((emacs (28 1)) (denote (3 0 0)))
      "View denote files in a tabulated list." tar
@@ -3329,6 +3329,13 @@
       (:maintainer "Martin Edström" . "meedstrom91@gmail.com")
       (:authors ("Martin Edström" . "meedstrom91@gmail.com"))
       (:commit . "6540dd050c0db1e73e03dfa6fe253dd5fb03b579"))])
+ (trust-manager
+  . [(0 4 1) ((emacs (30 1))) "Convenient trust management" tar
+     ((:url . "https://git.sr.ht/~eshel/trust-manager")
+      (:keywords "security" "trust" "files")
+      (:maintainer "Eshel Yaron" . "me@eshelyaron.com")
+      (:authors ("Eshel Yaron" . "me@eshelyaron.com"))
+      (:commit . "530c559ffa01b99ced8073ba4c74f1b8152a0ef2"))])
  (ulisp-repl
   . [(1 0 3) ((emacs (26 1))) "uLisp REPL" tar
      ((:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org")
