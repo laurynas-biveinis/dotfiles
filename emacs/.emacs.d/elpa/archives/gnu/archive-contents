@@ -1297,6 +1297,15 @@
       (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "34d8b04bef350b270f52dc4defc9bac3e9617bf0"))])
+ (forgejo
+  . [(0 1 2)
+     ((emacs (29 1)) (markdown-mode (2 6)) (keymap-popup (0 2 1)))
+     "Emacs Forgejo Front-end" tar
+     ((:url . "https://codeberg.org/thanosapollo/emacs-forgejo")
+      (:keywords "tools" "vc" "git" "forgejo")
+      (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
+      (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
+      (:commit . "0ab81526cef90e8fdfa91a1c98f72c8168335fca"))])
  (frame-tabs
   . [(1 1) nil "show buffer tabs in side window" tar
      ((:keywords "frames" "tabs")
@@ -1328,12 +1337,12 @@
       (:authors ("Yuan Fu" . "casouri@gmail.com"))
       (:commit . "d7c243ac3be2a67986f53f3dc31ba1426e82b771"))])
  (futur
-  . [(1 4) nil "Future/promise-based async library" tar
+  . [(1 7) nil "Future/promise-based async library" tar
      ((:keywords "concurrency" "async" "promises" "futures")
       (:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
       (:authors ("Stefan Monnier" . "monnier@iro.umontreal.ca"))
       (:url . "https://elpa.gnu.org/packages/futur.html")
-      (:commit . "54608e8c009095749bd4481e4593006b1cd157eb"))])
+      (:commit . "e02331ff9212868ac29644cd32c12dee4ace8375"))])
  (gcmh
   . [(0 2 1) ((emacs (24))) "the Garbage Collector Magic Hack" tar
      ((:url . "https://gitlab.com/koral/gcmh") (:keywords "internal")
@@ -1392,13 +1401,14 @@
       (:url . "https://elpa.gnu.org/packages/gnorb.html")
       (:commit . "409e4fc2c83f8406f362028dbcc3a1fc21182819"))])
  (gnosis
-  . [(0 10 3) ((emacs (29 1)) (compat (29 1 4 2))) "Knowledge System"
-     tar
+  . [(0 10 4)
+     ((emacs (29 1)) (compat (29 1 4 2)) (keymap-popup (0 2 0)))
+     "Knowledge System" tar
      ((:url . "https://thanosapollo.org/projects/gnosis")
       (:keywords "extensions")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "e830171c4bcbcbc0b1d466ffdbec179e32e9688e"))])
+      (:commit . "952a718b0ae7c1af0992cbc5aa80e1184999aa8a"))])
  (gnu-elpa
   . [(1 1) nil "Advertize GNU ELPA packages" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -1737,6 +1747,13 @@
       (:authors ("Ivan Kanis" . "ivan@kanis.fr"))
       (:url . "https://elpa.gnu.org/packages/jumpc.html")
       (:commit . "ab83a2a5416f83405361e25df8cbd8aab35cb8b3"))])
+ (keymap-popup
+  . [(0 2 2) ((emacs (29 1))) "Described keymaps with popup help" tar
+     ((:url . "https://codeberg.org/thanosapollo/emacs-keymap-popup")
+      (:keywords "convenience")
+      (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
+      (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
+      (:commit . "7aa36cdff46f46334299e839c64e94a5d39999bf"))])
  (kind-icon
   . [(0 2 2) ((emacs (27 1)) (svg-lib (0 2 8)))
      "Completion kind icons" tar
@@ -2019,13 +2036,13 @@
       (:url . "https://elpa.gnu.org/packages/minibuffer-line.html")
       (:commit . "852874725fd06329109b2d431d8af5502b54036c"))])
  (minimail
-  . [(0 4) ((emacs (30 1))) "Simple, non-blocking IMAP email client"
-     tar
+  . [(0 4 2) ((emacs (30 1)) (transient (0 12)))
+     "Simple, non-blocking IMAP email client" tar
      ((:url . "https://codeberg.org/astoff/minimail")
       (:keywords "mail")
       (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
       (:authors ("Augusto Stoffel" . "arstoffel@gmail.com"))
-      (:commit . "571d3f305a866457ece227f8580ab9fcdefa489e"))])
+      (:commit . "808e040da144008dea90935fbfdca1c1ed94bf2e"))])
  (minimap
   . [(1 4) nil "Sidebar showing a \"mini-map\" of a buffer" tar
      ((:maintainer "David Engster" . "deng@randomsample.de")
@@ -3237,14 +3254,14 @@
       (:url . "https://elpa.gnu.org/packages/track-changes.html")
       (:commit . "e119514ae8b391f41577d22d4e41cc3fea7ab9eb"))])
  (tramp
-  . [(2 8 1 3) ((emacs (28 1)))
+  . [(2 8 1 4) ((emacs (28 1)))
      "Transparent Remote Access, Multiple Protocol" tar
      ((:url . "https://www.gnu.org/software/tramp/")
       (:keywords "comm" "processes")
       (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
       (:authors ("Kai Großjohann" . "kai.grossjohann@gmx.net")
 		("Michael Albinus" . "michael.albinus@gmx.de"))
-      (:commit . "fe4488160a4c40c0540b31997b95764571a9202f"))])
+      (:commit . "16c625636811ab7b78ea238d063f0c7940196ddd"))])
  (tramp-hlo
   . [(0 0 2) ((tramp (2 8 0 5)))
      "High level operations as Tramp handlers" tar
