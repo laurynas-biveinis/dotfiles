@@ -505,15 +505,15 @@
       (:authors ("Ingo Lohmar" . "i.lohmar@gmail.com"))
       (:commit . "e62157d43b2c874d2edbd547c3bdfb05d0a7ae5c"))])
  (compat
-  . [(30 1 0 1) ((emacs (24 4)) (seq (2 23)))
-     "Emacs Lisp Compatibility Library" tar
+  . [(31 0 0 0) ((emacs (25 1))) "Emacs Lisp Compatibility Library"
+     tar
      ((:url . "https://github.com/emacs-compat/compat")
       (:keywords "lisp" "maint")
-      (:maintainer "Compat Development"
-		   . "~pkal/compat-devel@lists.sr.ht")
+      (:maintainer ("Philip Kaludercic" . "philipk@posteo.net")
+		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Philip Kaludercic" . "philipk@posteo.net")
 		("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "cccd41f549fa88031a32deb26253b462021d7e12"))])
+      (:commit . "2ef017671bdc643dbdbe3bfb746b80d090db792a"))])
  (cond-star
   . [(1 0) ((emacs (24 3))) "Extended form of `cond' construct" tar
      ((:maintainer "Richard Stallman" . "rms@gnu.org")
@@ -542,13 +542,13 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "122760ac3503f141625a2b3513d60c06c27cf84f"))])
  (consult-hoogle
-  . [(0 6 0) ((emacs (27 1)) (consult (2 0)))
+  . [(0 7 0) ((emacs (28 1)) (consult (2 0)))
      "Hoogle frontend using consult" tar
      ((:url . "https://codeberg.org/rahguzar/consult-hoogle")
       (:keywords "docs" "languages")
       (:maintainer "rahguzar" . "rahguzar@mailbox.org")
       (:authors ("rahguzar" . "rahguzar@mailbox.org"))
-      (:commit . "b5f327a5fa1f3b13ad693e1b5f9f2efe72c45929"))])
+      (:commit . "94b7800e1a23ee41db133a355d20e8c84db08c09"))])
  (consult-recoll
   . [(1 0 0) ((emacs (26 1)) (consult (2 0)))
      "Recoll queries using consult" tar
@@ -1069,7 +1069,7 @@
       (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
       (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama
-  . [(1 14 2)
+  . [(1 17 0)
      ((emacs (28 1)) (llm (0 24 0)) (plz (0 8)) (transient (0 7))
       (compat (29 1)) (yaml (1 2 3)))
      "Tool for interacting with LLMs" tar
@@ -1077,7 +1077,7 @@
       (:keywords "help" "local" "tools")
       (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
       (:authors ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-      (:commit . "fff94a97661845016ab454fd06c6aa8fd7424f76"))])
+      (:commit . "8b1ad67c930f5adb66ff7851d2d36d1cd6f5b768"))])
  (emacs-gc-stats
   . [(1 4 2) ((emacs (25 1))) "Collect Emacs GC statistics" tar
      ((:url . "https://git.sr.ht/~yantar92/emacs-gc-stats")
@@ -1298,14 +1298,13 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "34d8b04bef350b270f52dc4defc9bac3e9617bf0"))])
  (forgejo
-  . [(0 1 2)
-     ((emacs (29 1)) (markdown-mode (2 6)) (keymap-popup (0 2 1)))
+  . [(0 1 3) ((emacs (29 1)) (keymap-popup (0 2 1)))
      "Emacs Forgejo Front-end" tar
      ((:url . "https://codeberg.org/thanosapollo/emacs-forgejo")
       (:keywords "tools" "vc" "git" "forgejo")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "0ab81526cef90e8fdfa91a1c98f72c8168335fca"))])
+      (:commit . "008ee859c0c7bb2b18995d39310ddb8121a1c3c2"))])
  (frame-tabs
   . [(1 1) nil "show buffer tabs in side window" tar
      ((:keywords "frames" "tabs")
@@ -1748,12 +1747,12 @@
       (:url . "https://elpa.gnu.org/packages/jumpc.html")
       (:commit . "ab83a2a5416f83405361e25df8cbd8aab35cb8b3"))])
  (keymap-popup
-  . [(0 2 2) ((emacs (29 1))) "Described keymaps with popup help" tar
+  . [(0 2 3) ((emacs (29 1))) "Described keymaps with popup help" tar
      ((:url . "https://codeberg.org/thanosapollo/emacs-keymap-popup")
       (:keywords "convenience")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "7aa36cdff46f46334299e839c64e94a5d39999bf"))])
+      (:commit . "a74ff37f2dc6c60efa7df55df95a5d530e7cd9d2"))])
  (kind-icon
   . [(0 2 2) ((emacs (27 1)) (svg-lib (0 2 8)))
      "Completion kind icons" tar
@@ -1863,14 +1862,14 @@
       (:authors ("Sean Whitton" . "spwhitton@spwhitton.name"))
       (:commit . "00b8f65effe4f2673e6450d70000644b266aa78a"))])
  (llm
-  . [(0 30 1)
+  . [(0 30 3)
      ((emacs (28 1)) (plz (0 8)) (plz-event-source (0 1 1))
       (plz-media-type (0 2 1)) (compat (29 1)))
      "Interface to pluggable llm backends" tar
      ((:url . "https://github.com/ahyatt/llm")
       (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
-      (:commit . "03ee7c5c7ecbedfce73e87be122fd078e12fa683"))])
+      (:commit . "4f69909fcc81d9d0f54ccb0d44ef3fa6e95ee09c"))])
  (lmc
   . [(1 4) nil "Little Man Computer in Elisp" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -3294,8 +3293,8 @@
       (:url . "https://elpa.gnu.org/packages/transcribe.html")
       (:commit . "89832e4cdc1e6d8262a4a2c9d1ff70f398b8faf0"))])
  (transient
-  . [(0 13 0)
-     ((emacs (28 1)) (compat (30 1)) (cond-let (0 2)) (seq (2 24)))
+  . [(0 13 2)
+     ((emacs (28 1)) (compat (30 1)) (cond-let (1 0)) (seq (2 24)))
      "Transient commands" tar
      ((:url . "https://github.com/magit/transient")
       (:keywords "extensions")
@@ -3303,7 +3302,7 @@
 		   . "emacs.transient@jonas.bernoulli.dev")
       (:authors
        ("Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev"))
-      (:commit . "cd97319a851db9b2ed3faecdb735c6d089edf4e1"))])
+      (:commit . "43cbef8539e3c7398d0280958b42f94dac7ea7b4"))])
  (transient-cycles
   . [(2 0) ((emacs (29 1)))
      "Define command variants with transient cycling" tar
