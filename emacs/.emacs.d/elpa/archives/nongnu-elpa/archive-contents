@@ -479,6 +479,12 @@
       (:maintainer "Harry R. Schwartz" . "hello@harryrschwartz.com")
       (:authors ("Harry R. Schwartz" . "hello@harryrschwartz.com"))
       (:commit . "67b68c1a2bff48bad2cc4722598da0f36e3866a9"))])
+ (eprolog
+  . [(0 3 2) ((emacs (27 2))) "Native Prolog engine implementation"
+     tar
+     ((:url . "https://github.com/tani/eprolog")
+      (:keywords "languages" "prolog" "logic programming")
+      (:commit . "6eff9942d3de603109101f3d74e30aac495203f6"))])
  (esxml
   . [(0 3 8) ((emacs (24 1)) (cl-lib (0 5)))
      "Library for working with xml via esxml and sxml" tar
@@ -724,13 +730,13 @@
       (:authors ("Akib Azmain Turja" . "akib@disroot.org"))
       (:commit . "ce2ea016a67b200862788e81f0ff1f8f7e4e0454"))])
  (geiser
-  . [(0 32) ((emacs (27 1)) (project (0 8 1)))
+  . [(0 33) ((emacs (27 1)) (project (0 8 1)))
      "GNU Emacs and Scheme talk to each other" tar
      ((:url . "https://gitlab.com/emacs-geiser/")
       (:keywords "languages" "scheme" "geiser")
       (:maintainer "Jose Antonio Ortega Ruiz" . "(jao@gnu.org)")
       (:authors ("Jose Antonio Ortega Ruiz" . "(jao@gnu.org)"))
-      (:commit . "9e76f336b91151315642de9bcbed0ffe83b69db7"))])
+      (:commit . "55b4b7847902d626a76e110a862d0fde1d1ff297"))])
  (geiser-chez
   . [(0 18) ((emacs (26 1)) (geiser (0 19)))
      "Chez and Geiser talk to each other" tar
@@ -1480,14 +1486,14 @@
       (:authors ("Andreas Politz" . "mail@andreas-politz.de"))
       (:commit . "5245f092e35712df6559a7782a93bb61896175dd"))])
  (pg
-  . [(0 65) ((emacs (28 1)) (peg (1 0 1)))
+  . [(0 66) ((emacs (28 1)) (peg (1 0 1)))
      "Socket-level interface to the PostgreSQL database" tar
      ((:url . "https://github.com/emarsden/pg-el")
       (:keywords "data" "comm" "database" "postgresql")
       (:maintainer "Eric Marsden"
 		   . "eric.marsden@risk-engineering.org")
       (:authors ("Eric Marsden" . "eric.marsden@risk-engineering.org"))
-      (:commit . "e82be0a8a69042c102119b9c7d59619f3a2277a3"))])
+      (:commit . "67eb8564c6b974bc8f9a22053d1ff7ebec2e7dc3"))])
  (php-mode
   . [(1 26 1) ((emacs (26 1))) "Major mode for editing PHP code" tar
      ((:url . "https://github.com/emacs-php/php-mode")
