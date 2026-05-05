@@ -26,7 +26,7 @@ File: compat.info,  Node: Top,  Next: Introduction,  Up: (dir)
 
 This manual documents the usage of the "Compat" Emacs lisp library, the
 forward-compatibility library for Emacs Lisp, corresponding to version
-31.0.0.0.
+31.0.0.1.
 
    Copyright © 2022-2026 Free Software Foundation, Inc.
 
@@ -104,7 +104,7 @@ as a dependency in the header.  The version of the Compat library
 mirrors the version of Emacs releases.  The current version of Compat
 corresponds to the current Emacs release.
 
-     ;; Package-Requires: ((emacs "25.1") (compat "31.0.0.0"))
+     ;; Package-Requires: ((emacs "25.1") (compat "31.0.0.1"))
 
    There is no need to depend on ‘emacs 25.1’ specifically.  One can
 choose any newer version, if features not provided by Compat necessitate

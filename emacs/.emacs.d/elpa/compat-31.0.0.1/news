@@ -1,3 +1,11 @@
+Release of "Compat" Version 31.0.0.1
+════════════════════════════════════
+
+  • compat-31: Improve `with-work-buffer' implementation.
+
+  (Release <2026-05-03 Sun>)
+
+
 Release of "Compat" Version 31.0.0.0
 ════════════════════════════════════
 
@@ -125,7 +133,4 @@ Release of "Compat" Version 29.1.4.3
 Release of "Compat" Version 29.1.4.2
 ════════════════════════════════════
 
-  • compat-28: Improve `make-separator-line' visuals on graphic
-    displays.
-  • compat-28: Add `native-comp-available-p', which always returns nil.
   …  …
