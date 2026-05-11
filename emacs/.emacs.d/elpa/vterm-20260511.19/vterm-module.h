@@ -113,7 +113,6 @@ typedef struct Term {
 
   int width, height;
   int height_resize;
-  bool resizing;
   bool disable_bold_font;
   bool disable_underline;
   bool disable_inverse_video;

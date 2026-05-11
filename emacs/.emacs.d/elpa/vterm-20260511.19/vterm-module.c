@@ -28,6 +28,9 @@ void free_lineinfo(LineInfo *line) {
 }
 static int term_sb_push(int cols, const VTermScreenCell *cells, void *data) {
   Term *term = (Term *)data;
+  bool pushed_by_height_decr =
+      term->height_resize < 0 &&
+      term->sb_pending_by_height_decr < -term->height_resize;
 
   if (!term->sb_size) {
     return 0;
@@ -69,8 +72,9 @@ static int term_sb_push(int cols, const VTermScreenCell *cells, void *data) {
   sbrow->info = term->lines[0];
   memmove(term->lines, term->lines + 1,
           sizeof(term->lines[0]) * (term->lines_len - 1));
-  if (term->resizing) {
-    /* pushed by window height decr */
+  if (pushed_by_height_decr) {
+    /* Only shrink line metadata for rows lost to a height decrease.
+       Reflow can also push lines during width changes. */
     if (term->lines[term->lines_len - 1] != NULL) {
       /* do not need free here ,it is reused ,we just need set null */
       term->lines[term->lines_len - 1] = NULL;
@@ -97,8 +101,7 @@ static int term_sb_push(int cols, const VTermScreenCell *cells, void *data) {
   if (term->sb_pending < term->sb_size) {
     term->sb_pending++;
     /* when window height decreased */
-    if (term->height_resize < 0 &&
-        term->sb_pending_by_height_decr < -term->height_resize) {
+    if (pushed_by_height_decr) {
       term->sb_pending_by_height_decr++;
     }
   }
@@ -114,6 +117,9 @@ static int term_sb_push(int cols, const VTermScreenCell *cells, void *data) {
 /// @param data   Term
 static int term_sb_pop(int cols, VTermScreenCell *cells, void *data) {
   Term *term = (Term *)data;
+  bool popped_by_height_incr =
+      term->height_resize > 0 &&
+      term->lines_len < term->height + term->height_resize;
 
   if (!term->sb_current) {
     return 0;
@@ -142,14 +148,23 @@ static int term_sb_pop(int cols, VTermScreenCell *cells, void *data) {
     cells[col].width = 1;
   }
 
-  LineInfo **lines = malloc(sizeof(LineInfo *) * (term->lines_len + 1));
-
-  memmove(lines + 1, term->lines, sizeof(term->lines[0]) * term->lines_len);
-  lines[0] = sbrow->info;
+  if (popped_by_height_incr) {
+    LineInfo **lines = malloc(sizeof(LineInfo *) * (term->lines_len + 1));
+    memmove(lines + 1, term->lines, sizeof(term->lines[0]) * term->lines_len);
+    lines[0] = sbrow->info;
+    term->lines_len += 1;
+    free(term->lines);
+    term->lines = lines;
+  } else if (term->lines_len > 0) {
+    LineInfo *lastline = term->lines[term->lines_len - 1];
+    memmove(term->lines + 1, term->lines,
+            sizeof(term->lines[0]) * (term->lines_len - 1));
+    term->lines[0] = sbrow->info;
+    free_lineinfo(lastline);
+  } else {
+    free_lineinfo(sbrow->info);
+  }
   free(sbrow);
-  term->lines_len += 1;
-  free(term->lines);
-  term->lines = lines;
 
   return 1;
 }
@@ -421,8 +436,9 @@ static int term_resize(int rows, int cols, void *user_data) {
   term->invalid_start = 0;
   term->invalid_end = rows;
 
-  /* if rows=term->lines_len, that means term_sb_pop already resize term->lines
-   */
+  /* term_sb_pop grows term->lines only for rows gained by height increases.
+   * Reflow can also pop lines during width changes, but those pops keep the
+   * metadata length stable. */
   /* if rows<term->lines_len, term_sb_push would resize term->lines there */
   /* we only need to take care of rows>term->height */
 
@@ -456,7 +472,6 @@ static int term_resize(int rows, int cols, void *user_data) {
   term->height = rows;
 
   invalidate_terminal(term, -1, -1);
-  term->resizing = false;
 
   return 1;
 }
@@ -1253,6 +1268,9 @@ emacs_value Fvterm_new(emacs_env *env, ptrdiff_t nargs, emacs_value args[],
   vterm_screen_set_callbacks(term->vts, &vterm_screen_callbacks, term);
   vterm_screen_set_damage_merge(term->vts, VTERM_DAMAGE_SCROLL);
   vterm_screen_enable_altscreen(term->vts, true);
+#ifndef VTermScreenEnableReflowNotExists
+  vterm_screen_enable_reflow(term->vts, true);
+#endif
   term->sb_size = MIN(SB_MAX, sb_size);
   term->sb_current = 0;
   term->sb_pending = 0;
@@ -1275,7 +1293,6 @@ emacs_value Fvterm_new(emacs_env *env, ptrdiff_t nargs, emacs_value args[],
   }
   term->linenum = term->height;
   term->linenum_added = 0;
-  term->resizing = false;
 
   term->pty_fd = -1;
 
@@ -1373,7 +1390,6 @@ emacs_value Fvterm_set_size(emacs_env *env, ptrdiff_t nargs, emacs_value args[],
         term->linenum_added = rows - term->height - term->sb_current;
       }
     }
-    term->resizing = true;
     vterm_set_size(term->vt, rows, cols);
     vterm_screen_flush_damage(term->vts);
 
