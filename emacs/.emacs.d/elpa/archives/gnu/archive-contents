@@ -1149,14 +1149,14 @@
       (:authors ("Ted Zlatanov" . "tzz@lifelogs.com"))
       (:maintainer "Ted Zlatanov" . "tzz@lifelogs.com"))])
  (erc
-  . [(5 6 1) ((emacs (27 1)) (compat (29 1 4 5)))
+  . [(5 6 2) ((emacs (27 1)) (compat (29 1 4 5)))
      "An Emacs Internet Relay Chat client" tar
      ((:url . "https://www.gnu.org/software/emacs/erc.html")
       (:keywords "irc" "chat" "client" "internet")
       (:maintainer ("Amin Bandali" . "bandali@gnu.org")
 		   ("F. Jason Park" . "jp@neverwas.me"))
       (:authors ("Alexander L. Belikoff" . "alexander@belikoff.net"))
-      (:commit . "1b5fef63b483fba9908543da39365bd522ad6e4a"))])
+      (:commit . "6d347d983480c17293da0d430360d98cfc8bd805"))])
  (ergoemacs-mode
   . [(5 16 10 12) ((emacs (24 1)) (undo-tree (0 6 5)) (cl-lib (0 5)))
      "Emacs mode based on common modern interface and ergonomics." tar
@@ -1297,13 +1297,13 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "34d8b04bef350b270f52dc4defc9bac3e9617bf0"))])
  (forgejo
-  . [(0 2 0) ((emacs (29 1)) (keymap-popup (0 2 1)))
+  . [(0 2 1) ((emacs (29 1)) (keymap-popup (0 2 1)))
      "Emacs Forgejo Front-end" tar
      ((:url . "https://codeberg.org/thanosapollo/emacs-forgejo")
       (:keywords "tools" "vc" "git" "forgejo")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "8c3ac450ae47b6724e54ed6d8ea02441f10dfe4a"))])
+      (:commit . "a1ad09ab3fb0363b2e25431dad3b82be9ca1735b"))])
  (frame-tabs
   . [(1 1) nil "show buffer tabs in side window" tar
      ((:keywords "frames" "tabs")
