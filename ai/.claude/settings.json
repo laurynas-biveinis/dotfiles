@@ -12,7 +12,7 @@
       "Bash(gh repo view:*)",
       "Bash(gh auth refresh:*)",
       "Bash(checkov:*)",
-      "Bash(./check.sh:*)",
+      "Bash(./check.sh)",
       "Bash(zizmor:*)",
       "WebSearch",
       "Bash(prettier:*)",
