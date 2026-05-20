@@ -1,9 +1,5 @@
 # CLAUDE.md
 
-This file provides guidance to you, Claude Code, when working with any
-repositories owned by the user. There will be project-specific CLAUDE.md files
-that will provide project-specific guidance.
-
 ## Task management
 
 You have access to an `org-mcp` MCP server that provides access to the selected
