@@ -21,8 +21,7 @@ allowed-tools: >-
    - Whether changes represent a single logical commit per the project's
      commit guidelines
 
-   Ignore unstaged changes. If no changes are staged, stop and return the empty
-   state.
+   If no changes are staged, stop and return the empty state.
 
 1. **Learn the Repository Style**: Before crafting a commit message:
    - Run `git log --oneline -20` to examine recent commit messages
@@ -34,7 +33,7 @@ allowed-tools: >-
    clarification question.
 
 1. **Assess Commit Readiness**: Before writing a commit message, verify the
-   following. Ignore unstaged changes.
+   following.
    - Staged changes represent a single, cohesive concern
    - The staged diff tells one coherent story
    - No unrelated changes are staged together
