@@ -1,14 +1,14 @@
 ---
 name: commit-writer
 description: Writes well-crafted commit messages for staged changes
-tools:
-  - Bash(git diff:*)
-  - Bash(git log:*)
-  - Bash(git status:*)
-  - Bash(git commit:*)
-  - Bash(cat:*)
-  - Read
-  - Skill
+tools: >-
+  Bash(git diff:*)
+  Bash(git log:*)
+  Bash(git status:*)
+  Bash(git commit:*)
+  Bash(cat:*)
+  Read
+  Skill
 skills: commit
 model: haiku
 color: orange
