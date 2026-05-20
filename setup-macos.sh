@@ -449,6 +449,7 @@ sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
 npm i -g bash-language-server prettier textlint jscpd
 npx @biomejs/biome init
 
+# Hardware
 brew tap darrylmorley/whatcable
 brew install --cask whatcable
 
