@@ -1,6 +1,7 @@
 ---
 description: Commits the staged changes with well-written messages
 context: fork
+model: haiku
 agent: commit-writer
 allowed-tools: >-
   Bash(git diff:*)
