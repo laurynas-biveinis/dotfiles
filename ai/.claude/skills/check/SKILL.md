@@ -13,7 +13,7 @@ Check script output: !`./check.sh 2>&1; echo "check.sh exit code: $?"`
 
 Read the output above:
 
-- If the exit code is non-zero, pick exactly one category of error (e.g. all
+- If errors are reported, pick exactly one category (e.g. all
   Markdown lint "line too long" hits, or all shellcheck SC2086 hits - never a
   mix). Drive that category to clean: iterate fix -> `./check.sh` -> fix as
   many rounds as needed. If a pass doesn't reduce the count, try a different
@@ -21,7 +21,7 @@ Read the output above:
   is clean, or when you've run out of substantively different approaches to
   try (report the remaining hits and stop). Never start on a different
   category in this invocation, even if other categories still report errors.
-- If the exit code is zero, say so.
+- If no errors are reported, say so.
 
 Then run `git status` to surface any working-tree changes - from your
 fixes or from autoformat the script ran. Draft a commit message to describe the
