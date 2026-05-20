@@ -448,6 +448,10 @@ sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
 
 npm i -g bash-language-server prettier textlint jscpd
 npx @biomejs/biome init
+
+brew tap darrylmorley/whatcable
+brew install --cask whatcable
+
 # Play
 brew install mono
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
