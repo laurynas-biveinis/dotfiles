@@ -13,25 +13,16 @@ allowed-tools: >-
 
 # Commit
 
-1. **Analyze the Staged Diff**: You MUST actually invoke the Bash tool —
-   do not narrate commands in code fences without executing them, and do not
-   reason from any `Status:` block in the surrounding session/system context
-   (it conflates staged and unstaged changes and is often stale).
-
-   Run these two commands via the Bash tool, in order:
-   - `git diff --staged --name-status` — the authoritative list of staged
-     files. If this returns empty output, stop and report "nothing staged".
-   - `git diff --staged` — the full staged diff. Reason ONLY about files that
-     appeared in the `--name-status` output above. Any file not in that list
-     is unstaged and must be ignored entirely, even if you can see it
-     mentioned elsewhere in your context.
-
-   When examining the diff, pay attention to:
+1. **Analyze the Staged Diff**: Execute `git diff --staged` to examine all
+   changes that have been staged for commit. Pay careful attention to:
    - The nature and scope of changes (feature, fix, refactor, docs, test, etc.)
    - Which files and modules are affected
    - The semantic meaning of the changes, not just the mechanical edits
    - Whether changes represent a single logical commit per the project's
      commit guidelines
+
+   Ignore unstaged changes. If no changes are staged, stop and return the empty
+   state.
 
 1. **Learn the Repository Style**: Before crafting a commit message:
    - Run `git log --oneline -20` to examine recent commit messages
