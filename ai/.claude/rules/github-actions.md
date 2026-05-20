@@ -1,6 +1,5 @@
 ---
-paths:
-  - ".github/workflows/**"
+paths: [".github/workflows/**"]
 ---
 
 # GitHub Actions Workflow Rules
@@ -23,10 +22,12 @@ reusable-workflow refs (`owner/repo/.github/workflows/*.yml@ref`).
     1. `@v<major>` (floating major)
     1. `@v<major>.<minor>` (floating major-minor)
     1. `@v<major>.<minor>.<patch>` (explicit patch)
+
     Drop down a level when the higher form does not exist or when a
     branch shares its name (would trigger zizmor `ref-confusion`).
     Verify with `gh api repos/<owner>/<repo>/branches/<ref>`: a 404
     means no collision.
+
 - For non-SemVer refs (`@latest`, `@beta`, `@main`, `@master`): existing
   ones are deliberate choices. Do not modify them when editing the file for
   unrelated reasons, and do not suggest swapping them solely because a
