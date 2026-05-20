@@ -86,8 +86,14 @@ to the user.
 
 ## Development methodology
 
-For testable projects, follow TDD, DRY, and YAGNI strictly; for mostly
-configuration-storing projects (e.g. dotfiles), full TDD may not apply.
+Follow DRY and YAGNI strictly in all projects. For testable projects,
+additionally follow TDD strictly; for mostly configuration-storing projects
+(e.g. dotfiles), full TDD may not apply.
+
+YAGNI exception: extracting a new abstraction with only a single caller is
+acceptable when it meaningfully breaks up a very long function, especially
+one with deeply nested logic. Readability of the original site outweighs the
+"no helper for a one-shot" default in this case.
 
 ## Code Comments
 
