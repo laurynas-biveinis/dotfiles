@@ -49,7 +49,11 @@ def main():
 
     # Check if command starts with ./check.sh but isn't exactly ./check.sh
     if command.startswith("./check.sh") and command != "./check.sh":
-        print("./check.sh must be run as-is", file=sys.stderr)
+        print(
+            "./check.sh must be run as-is: "
+            "no args, redirects, or pipes to grep, tail, etc.",
+            file=sys.stderr,
+        )
         # Exit code 2 blocks tool call and shows stderr to Claude
         sys.exit(2)
 
