@@ -46,7 +46,10 @@ echo -n "Checking Markdown files... "
 MD_FILES=()
 while IFS= read -r file; do
 	MD_FILES+=("$file")
-done < <(find . -maxdepth 1 -name "*.md" && find ai -name "*.md" 2>/dev/null || true)
+done < <(
+	find . -maxdepth 1 -name "*.md"
+	find ai -name "*.md"
+)
 echo "${MD_FILES[*]} "
 
 echo -n "Checking Markdown formatting with prettier... "
