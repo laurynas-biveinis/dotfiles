@@ -58,7 +58,8 @@ allowed-tools: >-
 1. **Execute the Commit**: After crafting the commit message:
    - Execute `git commit -m "<message>"`. For multi-line messages use a
      heredoc:
-     ```
+
+     ```bash
      git commit -m "$(cat <<'EOF'
      <subject>
 
@@ -66,6 +67,7 @@ allowed-tools: >-
      EOF
      )"
      ```
+
    - Confirm the commit was successful. If a pre-commit hook rejects the
      commit, fix the underlying issue and create a new commit. Do not
      use `--amend` or `--no-verify`.
