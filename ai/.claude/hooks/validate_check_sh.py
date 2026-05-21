@@ -25,6 +25,7 @@ Configuration in settings.local.json:
 """
 
 import json
+import re
 import sys
 
 
@@ -47,8 +48,12 @@ def main():
     if not command:
         sys.exit(0)
 
-    # Check if command starts with ./check.sh but isn't exactly ./check.sh
-    if command.startswith("./check.sh") and command != "./check.sh":
+    # Match ./check.sh as a whole token (followed by EOL or a shell separator),
+    # so unrelated commands like ./check.shutdown are not flagged.
+    if (
+        re.match(r"^\./check\.sh($|[\s|&;<>])", command)
+        and command.strip() != "./check.sh"
+    ):
         print(
             "./check.sh must be run as-is: "
             "no args, redirects, or pipes to grep, tail, etc.",
