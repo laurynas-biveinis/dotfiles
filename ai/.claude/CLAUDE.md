@@ -52,7 +52,7 @@ For code in these languages, include these files in memory:
 ## Guardrails
 
 If the repository has a `./check.sh` script, it runs tests and formatting
-checks. Run it after every change. NEVER suppress test failures, lint warnings,
+checks. Run it after every change. NEVER suppress test failures, linting warnings,
 or errors unless the user explicitly allows it.
 
 If `./check.sh` is absent, use linters and test commands proactively at your

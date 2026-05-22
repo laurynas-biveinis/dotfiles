@@ -42,7 +42,7 @@ It absorbs everything that has no standalone value of its own:
 - Tests for behavior introduced by this concern — never a separate
   entry. Tests backfilling coverage of pre-existing code stand
   alone.
-- Documentation (NEWS, README, docstrings) of the concern's changes
+- Documentation (NEWS, readme, docstrings) of the concern's changes
   — never a separate entry.
 - Pure formatting side effects (autoformatter output, blank-line
   shuffling) in files touched for the concern — never a separate
