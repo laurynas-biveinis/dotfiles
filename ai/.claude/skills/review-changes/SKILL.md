@@ -145,14 +145,14 @@ checklist above. Write findings to
 `/tmp/review-changes-<topic>-draft-1.md` as append-only blocks:
 
 ```markdown
-### CR-R1-001 — CRITICAL — <one-line title>
+### R1-001 — CRITICAL — <one-line title>
 
 - Location: `path/to/file.ext:LN`
 - Observation: <what's wrong, with diff evidence>
 - Suggested action: <concrete fix>
 ```
 
-IDs use the format `CR-R<round>-<NNN>`, with `NNN` in per-round
+IDs use the format `R<round>-<NNN>`, with `NNN` in per-round
 discovery order. Include the scope line at the top of the file.
 If no findings, skip Phase 2 and proceed to Phase 3.
 
@@ -175,7 +175,7 @@ the valid replies:
    against the prior draft files it was given.
 1. Write the surviving proposals to
    `/tmp/review-changes-<topic>-draft-<round+1>.md` (created only
-   if any survive), assigning `CR-R<round+1>-<NNN>` IDs.
+   if any survive), assigning `R<round+1>-<NNN>` IDs.
 
 For each invalid reply, write nothing to disk; add the finding to
 the retry set. After the batch is fully processed, if the retry set
@@ -258,7 +258,7 @@ Scope: <staged | working tree | HEAD | range>
 
 ## Critical Issues
 
-### CR-R<round>-<NNN> — CRITICAL — <one-line title>
+### R<round>-<NNN> — CRITICAL — <one-line title>
 
 - Location: `path/to/file.ext:LN`
 - Observation: <what's wrong, with diff evidence>
@@ -266,13 +266,13 @@ Scope: <staged | working tree | HEAD | range>
 
 ## Important Findings
 
-### CR-R<round>-<NNN> — IMPORTANT — …
+### R<round>-<NNN> — IMPORTANT — …
 
 …
 
 ## Suggestions
 
-### CR-R<round>-<NNN> — SUGGESTION — …
+### R<round>-<NNN> — SUGGESTION — …
 
 …
 
@@ -284,8 +284,8 @@ dropped; truncation note if the 50-round stop fired>
 
 Assembly rules:
 
-- **Keep the original IDs.** A finding written as `CR-R2-004` stays
-  `CR-R2-004` in the final file. No renumbering.
+- **Keep the original IDs.** A finding written as `R2-004` stays
+  `R2-004` in the final file. No renumbering.
 - **Use the verdict's refined content, not the draft's.** Each
   block's severity, title, location, observation, and suggested
   action come verbatim from the verifier's verdict; these supersede
@@ -338,7 +338,7 @@ The subagent must:
    `Final …:` lines on `Outcome: drop`):
 
    ```markdown
-   ## Verdict: CR-R<round>-<NNN>
+   ## Verdict: R<round>-<NNN>
 
    - Outcome: keep | drop
    - Final severity: CRITICAL | IMPORTANT | SUGGESTION
