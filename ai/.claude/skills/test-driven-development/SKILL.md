@@ -38,8 +38,8 @@ With the smallest possible iteration steps, use red-green TDD as follows:
 1. Go back to the refactoring step until you no longer see any good
    refactorings.
 1. If the code change is at a logical commit size (see Commit Guidelines in
-   CLAUDE.md), invoke the `/code-review` subagent to do the code review.
-   Present its findings to the user and wait for the next steps. Do not invoke
-   code review subagent when implementing mechanical low-risk requests by the
-   user (for example, symbol renames, formatting fixes).
+   CLAUDE.md), invoke the `review-changes` skill to do the code review.
+   Present the findings file path and summary it returns to the user, and
+   wait for the next steps. Do not invoke the review-changes skill for
+   routine mechanical changes (comments, formatting, simple renames).
 1. Repeat for the next iteration.
