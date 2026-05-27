@@ -73,6 +73,26 @@ commits"). Print the chosen scope at the top of the findings file.
 - **SUGGESTION** — improvements for readability, style, or minor
   optimizations.
 
+## Confidence
+
+Each finding carries an integer `Confidence: N%` (0–100) reflecting how
+strongly the evidence supports it. Calibration anchors:
+
+- **90–100** — reproduced via isolated experiment, or trivially provable
+  from the diff alone (e.g. syntax error, undefined symbol).
+- **70–89** — confirmed by reading the code and following references or
+  Git history; no remaining unknowns.
+- **50–69** — plausible from the code but one or more assumptions remain
+  unverified.
+- **Below 50** — speculative. Phase 1 should usually drop these rather
+  than emit them; Phase 2 should usually `drop` on `keep` candidates
+  that fall here.
+
+Verifiers are expected to _raise_ the confidence of `keep` findings and
+_lower_ the confidence of `drop` findings, but no ordering is enforced
+structurally — the validator only checks the value is an integer in
+`[0, 100]`.
+
 ## Checklist
 
 - **Correctness** — does the code do what it's supposed to? Bugs or
@@ -147,6 +167,7 @@ checklist above. Write findings to
 ```markdown
 ### R1-001 — CRITICAL — <one-line title>
 
+- Confidence: 75%
 - Location: `path/to/file.ext:LN`
 - Observation: <what's wrong, with diff evidence>
 - Suggested action: <concrete fix>
@@ -209,12 +230,14 @@ A reply is _unusable_ if any of the following holds:
 1. Reply lacks a `## Verdict: <assigned-ID>` header for the
    finding's assigned ID.
 1. Required field missing or empty. Always required: `Outcome:`,
-   `Verification trace:`. Additionally required when `Outcome:` is
-   `keep`: the five `Final …:` fields (severity, title, location,
-   observation, suggested action).
+   `Final confidence:`, `Verification trace:`. Additionally required
+   when `Outcome:` is `keep`: `Final severity:`, `Final title:`,
+   `Final location:`, `Final observation:`, `Final suggested action:`.
 1. `Outcome:` value is not `keep` or `drop`.
 1. `Final severity:` (when present) is not `CRITICAL`, `IMPORTANT`,
    or `SUGGESTION`.
+1. `Final confidence:` is not an integer in `[0, 100]` (e.g. missing
+   `%`, non-numeric, out of range).
 1. Reply truncates mid-bullet or before the `Verification trace:`
    line.
 
@@ -260,6 +283,7 @@ Scope: <staged | working tree | HEAD | range>
 
 ### R<round>-<NNN> — CRITICAL — <one-line title>
 
+- Confidence: 85%
 - Location: `path/to/file.ext:LN`
 - Observation: <what's wrong, with diff evidence>
 - Suggested action: <concrete fix>
@@ -287,9 +311,9 @@ Assembly rules:
 - **Keep the original IDs.** A finding written as `R2-004` stays
   `R2-004` in the final file. No renumbering.
 - **Use the verdict's refined content, not the draft's.** Each
-  block's severity, title, location, observation, and suggested
-  action come verbatim from the verifier's verdict; these supersede
-  the original draft text.
+  block's severity, confidence, title, location, observation, and
+  suggested action come verbatim from the verifier's verdict; these
+  supersede the original draft text.
 - Group by final severity (Critical → Important → Suggestion).
   Within a severity tier, order by `(round, NNN)` ascending.
 - If a severity tier has no surviving findings, write "None." under it.
@@ -314,6 +338,9 @@ Each subagent must receive in its prompt:
 
 - The verdict-block schema and the structural validation rules the
   reply must satisfy, copied verbatim from this skill.
+- The "Confidence" section (calibration anchors and the
+  raise-on-keep / lower-on-drop expectation), copied verbatim from
+  this skill.
 - The finding ID and the full finding block from the draft.
 - The scope as a Git command for the subagent to run (e.g.
   `git diff --staged`, `git show HEAD`).
@@ -334,14 +361,17 @@ The subagent must:
    references, consulting Git history, or running an isolated
    experiment. Do not hypothesize. If it cannot be confirmed, the
    verdict is `drop`.
-1. Return one verdict block in exactly this schema (omit
-   `Final …:` lines on `Outcome: drop`):
+1. Return one verdict block in exactly this schema. `Final confidence:`
+   is required on every verdict; the severity, title, location,
+   observation, and suggested-action lines may be omitted on
+   `Outcome: drop`:
 
    ```markdown
    ## Verdict: R<round>-<NNN>
 
    - Outcome: keep | drop
    - Final severity: CRITICAL | IMPORTANT | SUGGESTION
+   - Final confidence: <0–100>%
    - Final title: <one-line title>
    - Final location: `path/to/file.ext:LN`
    - Final observation: <refined, with evidence>
@@ -352,12 +382,12 @@ The subagent must:
 
 1. Optionally append a `## Proposed new findings` section after the
    verdict, listing additional issues spotted while verifying. Each
-   entry must be a complete finding block (severity, title, location,
-   observation, suggested action) **without an ID** — the top-level
-   assigns IDs when it appends to the next draft. Before listing a
-   proposal, the subagent must confirm it is not a duplicate of any
-   finding in the prior draft files it was given; duplicates are
-   dropped silently.
+   entry must be a complete finding block (severity, confidence,
+   title, location, observation, suggested action) **without an ID**
+   — the top-level assigns IDs when it appends to the next draft.
+   Before listing a proposal, the subagent must confirm it is not a
+   duplicate of any finding in the prior draft files it was given;
+   duplicates are dropped silently.
 
 If a subagent's reply fails the **Subagent reply validation** rules
 in Phase 2, the top-level re-spawns the subagent with the same
