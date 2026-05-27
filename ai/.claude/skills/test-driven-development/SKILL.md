@@ -1,8 +1,8 @@
 ---
 description: >-
-  Red-green TDD iteration process for testable codebases. Apply when starting
-  a new feature, bugfix, or behavior change that can be exercised by tests -
-  drives one failing test, minimal pass, refactor cycle, validated by
+  Red-green TDD iteration process for testable codebases. You MUST use this when
+  starting a new feature, bugfix, or behavior change that can be exercised by
+  tests. Drives one failing test, minimal pass, refactor cycle, validated by
   ./check.sh at every step.
 user-invocable: false
 ---
