@@ -146,9 +146,9 @@ approach, do not bury it under low-severity findings. State the
 assumption, give concrete evidence it is wrong, and suggest an
 alternative direction.
 
-## Workflow: draft → verify → final
+## Workflow: draft → verify → analyze → final
 
-The review is produced in three phases. The top-level skill is the
+The review is produced in four phases. The top-level skill is the
 **sole writer** of every file under `/tmp/review-changes-<topic>-*`.
 Files are append-only.
 
@@ -175,7 +175,7 @@ checklist above. Write findings to
 
 IDs use the format `R<round>-<NNN>`, with `NNN` in per-round
 discovery order. Include the scope line at the top of the file.
-If no findings, skip Phase 2 and proceed to Phase 3.
+If no findings, skip Phases 2 and 3 and proceed to Phase 4.
 
 ### Phase 2 — Verification rounds
 
@@ -253,8 +253,8 @@ aborts on that observation:
 - Other replies in the same returned batch are processed normally:
   valid replies contribute their verdicts and proposed new findings
   per Phase 2's regular flow; invalid replies contribute nothing.
-- **Phase 3 does not run.** No `/tmp/review-changes-<topic>.md` is
-  written.
+- **Phases 3 and 4 do not run.** No `/tmp/review-changes-<topic>.md`
+  is written.
 - Return an abort message to the caller naming the exhausted
   finding(s) and pointing at the existing draft and verdicts files:
 
@@ -268,10 +268,50 @@ verdicts file remain there — append-only is preserved, no rollback.
 If a single returned batch contains multiple attempt-3 failures, all
 are named in the caller message; the abort is still a single event.
 
-### Phase 3 — Final assembly
+### Phase 3 — Analysis of kept findings
 
-Read every `verdicts-<round>.md` file. Write the final review to
-`/tmp/review-changes-<topic>.md` containing every kept finding,
+After all verification rounds have converged, collect every finding
+with `Outcome: keep` across all `verdicts-<round>.md` files. Spawn
+one analysis subagent **per kept finding**, in parallel (single
+message, multiple Agent tool calls). The subagent contract is in
+**Analysis subagents** below.
+
+Validate each reply with the rules in **Analysis subagent reply
+validation**. Hold each valid reply verbatim — the
+`#### Analysis: <ID>` header line (already at the level it occupies in
+the final review) and the body below it — for Phase 4 to inline. Do
+not write it to any file; no intermediate analyses file is produced.
+Invalid replies enter a retry set; dispatch a new parallel batch, same
+prompts. **Budget: 2 retries (3 attempts total) per finding.**
+
+**Exhaustion is non-fatal here.** Analysis augments findings; it is
+not load-bearing for correctness. If a finding's attempt 3 reply
+also fails validation, drop the analysis for that finding only and
+continue. Phase 4 will include the finding without an Analysis
+subsection and will note the omission in the Summary. Do not abort
+the review.
+
+If there are no kept findings at all, skip Phase 3 entirely and
+proceed to Phase 4.
+
+#### Analysis subagent reply validation
+
+A reply is _unusable_ if any of the following holds:
+
+1. Agent invocation returned an error or timeout.
+1. Reply lacks a `#### Analysis: <assigned-ID>` header (exactly four
+   `#`) for the finding's assigned ID.
+1. Body under the header is empty or whitespace-only.
+1. Reply truncates mid-sentence or mid-bullet.
+
+Detection is purely structural. The top-level does not judge
+analysis quality, only schema conformance.
+
+### Phase 4 — Final assembly
+
+Read every `verdicts-<round>.md` file. Using the kept verdicts and
+the valid analysis replies held from Phase 3, write the final review
+to `/tmp/review-changes-<topic>.md` containing every kept finding,
 using this structure:
 
 ```markdown
@@ -288,6 +328,11 @@ Scope: <staged | working tree | HEAD | range>
 - Observation: <what's wrong, with diff evidence>
 - Suggested action: <concrete fix>
 
+#### Analysis: R<round>-<NNN>
+
+<verbatim analysis body — restated critique, root cause, options,
+recommendation, caveats; whatever the subagent produced>
+
 ## Important Findings
 
 ### R<round>-<NNN> — IMPORTANT — …
@@ -303,7 +348,8 @@ Scope: <staged | working tree | HEAD | range>
 ## Summary
 
 <2–4 sentences, plus: rounds run; total drafted; total kept; total
-dropped; truncation note if the 50-round stop fired>
+dropped; total analyzed; analyses skipped due to retry exhaustion
+(list IDs, if any); truncation note if the 50-round stop fired>
 ```
 
 Assembly rules:
@@ -314,6 +360,17 @@ Assembly rules:
   block's severity, confidence, title, location, observation, and
   suggested action come verbatim from the verifier's verdict; these
   supersede the original draft text.
+- **Inline analysis.** For each kept finding, copy its held analysis
+  reply from Phase 3 verbatim immediately after the
+  `Suggested action:` bullet. The reply already opens with its own
+  `#### Analysis: <ID>` heading at the right level, so the top-level
+  adds no heading and strips nothing — do not edit, summarize, or
+  re-level it. Analysis subagents emit that one level-4 heading and
+  otherwise use bold-paragraph labels instead of `#`-prefixed
+  headings (see **Analysis subagents**), so nothing in the body
+  outranks the `#### Analysis` heading or breaks the document
+  outline. If a kept finding has no valid analysis (Phase 3
+  exhaustion), omit the analysis for that finding.
 - Group by final severity (Critical → Important → Suggestion).
   Within a severity tier, order by `(round, NNN)` ascending.
 - If a severity tier has no surviving findings, write "None." under it.
@@ -394,3 +451,63 @@ in Phase 2, the top-level re-spawns the subagent with the same
 prompt, up to 2 retries (3 attempts total). If attempt 3 also fails,
 the review aborts; the subagent itself never returns `Outcome:
 error`.
+
+## Analysis subagents
+
+Each analysis subagent analyzes exactly one kept finding. They are
+spawned in parallel via the Agent tool, with `subagent_type:
+general-purpose`.
+
+Analysis subagents **do not write files**. They return the analysis
+as their final message. Only the top-level skill writes to
+`/tmp/review-changes-<topic>-*`.
+
+Each subagent must receive in its prompt:
+
+- The finding's assigned ID and its **verdict block** (the refined
+  content from `verdicts-<round>.md`, not the draft).
+- The scope as a Git command for the subagent to run (e.g.
+  `git diff --staged`, `git show HEAD`).
+- The analysis schema and the structural validation rules the reply
+  must satisfy, copied verbatim from this skill.
+- An explicit instruction that it must not write files and must not
+  modify the project tree.
+- The instruction: "Analyze, research, and ultrathink about this
+  finding. Restate the critique in your own words, examine what the
+  code actually does, identify whether the finding addresses the
+  root cause or a symptom, present alternative resolutions when more
+  than one is reasonable, recommend one, and note anything the
+  analysis does not change. Drop sections that do not apply — do not
+  pad."
+
+Small isolated experiments outside the project tree (e.g. in
+`mktemp -d`) are fine if they sharpen the analysis; summarize the
+experiment inline rather than writing a file the top-level will not
+read.
+
+The subagent must return exactly one block in this schema, beginning
+its reply with the `#### Analysis: <ID>` header line (no preamble
+before it):
+
+```markdown
+#### Analysis: R<round>-<NNN>
+
+<freeform body — recommended subsections, all optional:
+Restated critique / What the code actually does /
+Root cause vs symptom / Options / Recommendation /
+What this analysis does not change. Emit the heading above as the
+first line of the reply, at exactly level 4 (four `#`) — the level
+it occupies in the final review, where the whole reply is copied
+verbatim under the finding. Do not emit any further ATX
+(`#`-prefixed) heading in the body; use bold-paragraph labels
+(e.g. **Recommendation:**)
+for subsections instead, so nothing outranks the `#### Analysis`
+heading or breaks the document outline.>
+```
+
+If the reply fails the **Analysis subagent reply validation** rules
+in Phase 3, the top-level re-spawns the subagent with the same
+prompt, up to 2 retries (3 attempts total). If attempt 3 also
+fails, the top-level drops the analysis for that finding (Phase 3
+non-fatal exhaustion); the subagent itself never returns an error
+outcome.
