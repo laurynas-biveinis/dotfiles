@@ -146,11 +146,18 @@ approach, do not bury it under low-severity findings. State the
 assumption, give concrete evidence it is wrong, and suggest an
 alternative direction.
 
-## Workflow: draft → verify → analyze → final
+## Workflow: draft → (verify ⇄ analyze) → final
 
 The review is produced in four phases. The top-level skill is the
 **sole writer** of every file under `/tmp/review-changes-<topic>-*`.
 Files are append-only.
+
+The workflow is not linear. Verification can surface new findings that
+re-trigger verification (Phase 2's own loop), and analysis can surface
+new findings too: emitting a new draft in Phase 3 re-enters Phase 2 for
+those findings, the same way verification's new drafts already do. The
+two loops share one flat round counter and converge on the same
+terminal condition — a draft that yields no new findings.
 
 `<topic>` is a 1–3-word kebab-case slug derived from the diff (module
 name, feature, or commit subject). If any
@@ -217,8 +224,10 @@ Once every finding in `draft-<round>.md` has a valid verdict in the
 verdicts file, if `draft-<round+1>.md` exists and is non-empty, run
 another round on that new draft. Otherwise iteration stops.
 
-Safety stop: **50 rounds.** This is a runaway-loop guard, not a
-quality knob; convergence is expected far sooner. If round 50 still
+Safety stop: **50 drafts.** This bounds every draft the review ever
+opens — those from verification rounds _and_ those Phase 3 analysis
+emits — under a single cap. It is a runaway-loop guard, not a quality
+knob; convergence is expected far sooner. If the 50th draft still
 produces new findings, stop and record the truncation in the final
 summary.
 
@@ -271,25 +280,80 @@ are named in the caller message; the abort is still a single event.
 ### Phase 3 — Analysis of kept findings
 
 After all verification rounds have converged, collect every finding
-with `Outcome: keep` across all `verdicts-<round>.md` files. Spawn
-one analysis subagent **per kept finding**, in parallel (single
-message, multiple Agent tool calls). The subagent contract is in
-**Analysis subagents** below.
+with `Outcome: keep` across all `verdicts-<round>.md` files **that has
+not already been analyzed in a prior Phase 3 pass**. The set of
+analyzed finding IDs is derived from disk, not held in memory: an ID
+counts as analyzed once it has either an analysis block or an
+exhaustion marker in `/tmp/review-changes-<topic>-analyses.md` (see
+below). A finding is analyzed exactly once even though Phase 3 may run
+several times. Spawn one analysis subagent **per not-yet-analyzed kept
+finding**, in parallel (single message, multiple Agent tool calls). The
+subagent contract is in **Analysis subagents** below.
+
+Each analysis reply has up to two parts: the `#### Analysis: <ID>`
+block, optionally followed by a `## Proposed new findings` section
+(level-2 header). **Split the reply on the first
+`## Proposed new findings` header that occurs as a true top-level line
+— outside any fenced code block or block quote.** A subagent that
+merely quotes the delimiter inside a fence (e.g. when reviewing this
+skill's own schema) does not trigger the split. Everything before that
+boundary is the analysis body; the section after it is routed into the
+loop below and is **never inlined** into the final review (so no
+level-2 header ever outranks the `#### Analysis` heading in the
+assembled document).
 
 Validate each reply with the rules in **Analysis subagent reply
-validation**. Hold each valid reply verbatim — the
-`#### Analysis: <ID>` header line (already at the level it occupies in
-the final review) and the body below it — for Phase 4 to inline. Do
-not write it to any file; no intermediate analyses file is produced.
-Invalid replies enter a retry set; dispatch a new parallel batch, same
-prompts. **Budget: 2 retries (3 attempts total) per finding.**
+validation**. For each valid reply, append its analysis body verbatim —
+the `#### Analysis: <ID>` header line (already at the level it occupies
+in the final review) and the body below it, up to but excluding any
+`## Proposed new findings` header — to the append-only file
+`/tmp/review-changes-<topic>-analyses.md`, of which the top-level is the
+sole writer (analysis subagents still never write files). Phase 4 reads
+the bodies back from this file rather than from memory, so a body
+produced in an early pass survives intact across any number of later
+verify⇄analyze rounds. Invalid replies enter a retry set; dispatch a new
+parallel batch, same prompts. **Budget: 2 retries (3 attempts total)
+per finding.**
 
 **Exhaustion is non-fatal here.** Analysis augments findings; it is
 not load-bearing for correctness. If a finding's attempt 3 reply
-also fails validation, drop the analysis for that finding only and
-continue. Phase 4 will include the finding without an Analysis
-subsection and will note the omission in the Summary. Do not abort
-the review.
+also fails validation, append an exhaustion marker for its ID to
+`/tmp/review-changes-<topic>-analyses.md` — an inert HTML comment
+`<!-- analysis-skipped: <ID> (retry exhaustion) -->`, so the ID counts
+as analyzed and is never re-dispatched on a later pass — then continue.
+Phase 4 will include the finding without an Analysis subsection and
+will note the omission in the Summary. Do not abort the review.
+
+Once every not-yet-analyzed finding in the batch has either a valid
+reply or has exhausted its retry budget, process the proposed new
+findings from the valid replies:
+
+1. Collect the `## Proposed new findings` entries from all valid
+   replies in the batch.
+1. Dedup them against **all previous raw findings** — every
+   `draft-<round>.md` file, whether the finding was ultimately kept or
+   dropped — then within this batch (first occurrence wins; later
+   duplicates dropped). Unlike Phase 2, which trusts each verification
+   subagent's own dedup against the prior drafts it was handed, Phase 3
+   re-dedups authoritatively at the top level against all raw findings:
+   analysis proposals can recur across passes and must never re-litigate
+   any previously raised finding. The two loops differ deliberately, not
+   by oversight — Phase 2's incidental verification proposals are
+   low-recurrence (a verifier surfaces a new issue only as a side effect
+   of adjudicating its assigned finding), so subagent self-check
+   suffices, whereas analysis subagents actively hunt for new issues
+   across repeated passes, making recurrence likely enough to warrant
+   the authoritative re-dedup.
+1. Write the survivors to a new `/tmp/review-changes-<topic>-draft-<N>.md`
+   (next free flat round index `N`, created only if any survive),
+   assigning `R<N>-<NNN>` IDs.
+
+**Loop-back trigger.** If a new draft was created, re-enter Phase 2 to
+verify it — verification runs to convergence as usual, possibly opening
+further drafts — then return to Phase 3 to analyze the findings it kept
+(skipping any already analyzed). Repeat until an analysis pass produces
+no surviving new draft. Then proceed to Phase 4. The 50-draft safety
+cap bounds the combined loop.
 
 If there are no kept findings at all, skip Phase 3 entirely and
 proceed to Phase 4.
@@ -301,18 +365,32 @@ A reply is _unusable_ if any of the following holds:
 1. Agent invocation returned an error or timeout.
 1. Reply lacks a `#### Analysis: <assigned-ID>` header (exactly four
    `#`) for the finding's assigned ID.
-1. Body under the header is empty or whitespace-only.
+1. Body under the header (before any `## Proposed new findings`
+   section) is empty or whitespace-only.
+1. The analysis body (everything before any `## Proposed new findings`
+   delimiter) contains an ATX heading — a `#`-prefixed line per
+   CommonMark (a `#` run with ≤3 leading spaces, outside any fenced
+   code block or code span) — other than the leading `#### Analysis:`.
+   A `#` line a body legitimately quotes inside a fenced code block
+   (e.g. a shell comment or `#!` shebang) is not a heading and does
+   not trip this rule.
 1. Reply truncates mid-sentence or mid-bullet.
 
-Detection is purely structural. The top-level does not judge
-analysis quality, only schema conformance.
+Carrying a `## Proposed new findings` section does **not** by itself
+make a reply unusable — that section is expected when the subagent
+spots a new issue. Detection is structural but CommonMark-aware: it
+must honor fenced-code-block and code-span boundaries, so `#`/`##`
+lines a body quotes inside a fence are treated as neither headings nor
+section delimiters. The top-level does not judge analysis quality, only
+schema conformance.
 
 ### Phase 4 — Final assembly
 
-Read every `verdicts-<round>.md` file. Using the kept verdicts and
-the valid analysis replies held from Phase 3, write the final review
-to `/tmp/review-changes-<topic>.md` containing every kept finding,
-using this structure:
+Read every `verdicts-<round>.md` file and the analysis bodies from
+`/tmp/review-changes-<topic>-analyses.md`. Using the kept verdicts and
+those analysis bodies, write the final review to
+`/tmp/review-changes-<topic>.md` containing every kept finding, using
+this structure:
 
 ```markdown
 # Code Review: <topic>
@@ -347,9 +425,12 @@ recommendation, caveats; whatever the subagent produced>
 
 ## Summary
 
-<2–4 sentences, plus: rounds run; total drafted; total kept; total
-dropped; total analyzed; analyses skipped due to retry exhaustion
-(list IDs, if any); truncation note if the 50-round stop fired>
+<2–4 sentences, plus: drafts opened; verify⇄analyze passes run (how
+many times analysis fed findings back to verification); total drafted;
+total kept; total dropped; total analyzed; findings proposed by
+analysis (and how many survived dedup); analyses skipped due to retry
+exhaustion (list IDs, if any); truncation note if the 50-draft stop
+fired>
 ```
 
 Assembly rules:
@@ -360,17 +441,24 @@ Assembly rules:
   block's severity, confidence, title, location, observation, and
   suggested action come verbatim from the verifier's verdict; these
   supersede the original draft text.
-- **Inline analysis.** For each kept finding, copy its held analysis
-  reply from Phase 3 verbatim immediately after the
-  `Suggested action:` bullet. The reply already opens with its own
-  `#### Analysis: <ID>` heading at the right level, so the top-level
-  adds no heading and strips nothing — do not edit, summarize, or
-  re-level it. Analysis subagents emit that one level-4 heading and
-  otherwise use bold-paragraph labels instead of `#`-prefixed
-  headings (see **Analysis subagents**), so nothing in the body
-  outranks the `#### Analysis` heading or breaks the document
-  outline. If a kept finding has no valid analysis (Phase 3
-  exhaustion), omit the analysis for that finding.
+- **Inline analysis.** For each kept finding, copy its analysis body
+  from `/tmp/review-changes-<topic>-analyses.md` verbatim immediately
+  after the `Suggested action:` bullet. A finding's body in that file
+  runs from its `#### Analysis: <ID>` line up to (but excluding) the
+  next `#### Analysis:` line, the next line beginning with the
+  `<!-- analysis-skipped:` marker prefix, or EOF — whichever comes
+  first. Treating that marker prefix as a delimiter keeps an
+  interleaved exhaustion marker from being swept into a preceding
+  body. The body already opens with its
+  own `#### Analysis: <ID>` heading at the right level, so the top-level
+  adds no heading and strips nothing further (Phase 3 already excluded
+  any `## Proposed new findings` section when it appended the body) — do
+  not edit, summarize, or re-level it. Analysis subagents emit that
+  one level-4 heading and otherwise use bold-paragraph labels instead
+  of `#`-prefixed headings (see **Analysis subagents**), so nothing in
+  the body outranks the `#### Analysis` heading or breaks the document
+  outline. If a kept finding has no analysis body in the file (only an
+  exhaustion marker, or nothing), omit the analysis for that finding.
 - Group by final severity (Critical → Important → Suggestion).
   Within a severity tier, order by `(round, NNN)` ascending.
 - If a severity tier has no surviving findings, write "None." under it.
@@ -470,6 +558,10 @@ Each subagent must receive in its prompt:
   `git diff --staged`, `git show HEAD`).
 - The analysis schema and the structural validation rules the reply
   must satisfy, copied verbatim from this skill.
+- Paths of **all prior draft files** (`draft-1.md` …
+  `draft-<round>.md`), so it can self-suppress proposals that
+  duplicate an already-raised finding. This is best-effort only; the
+  top-level dedups authoritatively against all raw findings.
 - An explicit instruction that it must not write files and must not
   modify the project tree.
 - The instruction: "Analyze, research, and ultrathink about this
@@ -479,13 +571,19 @@ Each subagent must receive in its prompt:
   than one is reasonable, recommend one, and note anything the
   analysis does not change. Drop sections that do not apply — do not
   pad."
+- The instruction: "If, while analyzing, you discover a **new** issue
+  not covered by the finding you were given, you **must** report it —
+  do not silently drop it. Append it as a `## Proposed new findings`
+  section after your analysis block (schema below). Confine that
+  section to genuinely new issues; do not restate or re-scope the
+  finding under analysis."
 
 Small isolated experiments outside the project tree (e.g. in
 `mktemp -d`) are fine if they sharpen the analysis; summarize the
 experiment inline rather than writing a file the top-level will not
 read.
 
-The subagent must return exactly one block in this schema, beginning
+The subagent must return the analysis block in this schema, beginning
 its reply with the `#### Analysis: <ID>` header line (no preamble
 before it):
 
@@ -497,13 +595,41 @@ Restated critique / What the code actually does /
 Root cause vs symptom / Options / Recommendation /
 What this analysis does not change. Emit the heading above as the
 first line of the reply, at exactly level 4 (four `#`) — the level
-it occupies in the final review, where the whole reply is copied
+it occupies in the final review, where the analysis body is copied
 verbatim under the finding. Do not emit any further ATX
 (`#`-prefixed) heading in the body; use bold-paragraph labels
 (e.g. **Recommendation:**)
 for subsections instead, so nothing outranks the `#### Analysis`
-heading or breaks the document outline.>
+heading or breaks the document outline. Quoting code that contains
+`#` lines inside a fenced code block is fine — those are not
+headings; the prohibition is only on real ATX headings outside
+fences.>
 ```
+
+If — and only if — analysis surfaced a genuinely new issue, append a
+`## Proposed new findings` section after the analysis block. This is
+the **only** higher-level (`##`) heading allowed anywhere in the
+reply; the top-level splits the reply on it, inlining the analysis
+block and routing the proposals into the loop. Each entry must be a
+complete finding block (severity, confidence, title, location,
+observation, suggested action) **without an ID** — the top-level
+assigns IDs when it appends to the next draft:
+
+```markdown
+## Proposed new findings
+
+### CRITICAL — <one-line title>
+
+- Confidence: 70%
+- Location: `path/to/file.ext:LN`
+- Observation: <what's wrong, with evidence>
+- Suggested action: <concrete fix>
+```
+
+Before listing a proposal, the subagent should confirm it is not a
+duplicate of any finding in the prior draft files it was given;
+duplicates are dropped silently. The top-level re-dedups
+authoritatively, so this check is best-effort.
 
 If the reply fails the **Analysis subagent reply validation** rules
 in Phase 3, the top-level re-spawns the subagent with the same
