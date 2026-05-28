@@ -13,6 +13,7 @@ allowed-tools: >-
   Bash(git status:*)
   Bash(git show:*)
   Bash(git blame:*)
+  Bash(git rev-parse:*)
   Read
   Grep
   Glob
@@ -290,6 +291,44 @@ several times. Spawn one analysis subagent **per not-yet-analyzed kept
 finding**, in parallel (single message, multiple Agent tool calls). The
 subagent contract is in **Analysis subagents** below.
 
+On first entry to Phase 3, compute the **unpublished-commit stack context**
+once and reuse it for every analysis subagent across all later verify⇄analyze
+passes — no commits are made during a review, so it is stable.
+
+Placement only makes sense when the reviewed lines are themselves committed —
+i.e. the scope is `git show HEAD` or a user-specified commit range. Under
+staged or working-tree scope the reviewed change is uncommitted, so any fix to
+it is WIP and there is **no placement decision**: skip the computation below,
+omit placement context from the subagent prompts, and run the rest of Phase 3
+unchanged.
+
+For committed scope, compute the stack with allowed commands only:
+
+- Trunk branch = `main` if `git rev-parse --verify --quiet main` succeeds, else
+  `master` if `git rev-parse --verify --quiet master` succeeds.
+- Stack = `git log --oneline <trunk>..HEAD` — the local commits not yet
+  contained in trunk (each entry is a SHA + subject). If that range is empty
+  _and_ HEAD is the trunk branch itself — i.e.
+  `git rev-parse --abbrev-ref HEAD` equals `<trunk>` (not the literal `HEAD`
+  of a detached checkout) — (you committed directly on trunk), recompute the
+  stack as `git log --oneline <trunk>@{upstream}..HEAD` when an upstream exists
+  (`git rev-parse --verify --quiet <trunk>@{upstream}` succeeds): those
+  un-pushed commits are still amendable. With no upstream configured, leave the
+  stack empty.
+- Blame-target revision `REV` — the newest reviewed revision whose tree holds
+  the reviewed lines in final form: `HEAD` for `git show HEAD` scope, or the
+  right-hand endpoint `B` of an `A..B`/`A...B` range (`HEAD` for the common
+  "last N commits" case). `REV` is a pure function of the already-chosen scope
+  and is identical for every analysis subagent, so compute it once here rather
+  than having each subagent re-derive it.
+
+If no trunk branch exists, or the stack is still empty after the upstream
+fallback above — e.g. HEAD is already merged into trunk, or HEAD is a trunk
+branch with nothing un-pushed — there is again **no placement decision**: omit
+placement context from the subagent prompts and run the rest of Phase 3
+unchanged. Otherwise, pass the stack and `REV` into each analysis subagent
+prompt (see **Analysis subagents**).
+
 Each analysis reply has up to two parts: the `#### Analysis: <ID>`
 block, optionally followed by a `## Proposed new findings` section
 (level-2 header). **Split the reply on the first
@@ -556,6 +595,9 @@ Each subagent must receive in its prompt:
   content from `verdicts-<round>.md`, not the draft).
 - The scope as a Git command for the subagent to run (e.g.
   `git diff --staged`, `git show HEAD`).
+- **Only when a placement decision applies** (committed scope with a non-empty
+  stack — see Phase 3): the stack as a list of SHA + subject, and the
+  blame-target revision `REV` (computed once in Phase 3).
 - The analysis schema and the structural validation rules the reply
   must satisfy, copied verbatim from this skill.
 - Paths of **all prior draft files** (`draft-1.md` …
@@ -571,6 +613,23 @@ Each subagent must receive in its prompt:
   than one is reasonable, recommend one, and note anything the
   analysis does not change. Drop sections that do not apply — do not
   pad."
+- **Only when a placement decision applies** (see Phase 3), the instruction:
+  "If your analysis recommends a concrete code change, also recommend
+  **where** to apply it within the unpublished stack. Identify the commit that
+  **owns the region the fix touches**: blame the affected lines at the supplied
+  blame-target revision `<REV>` (not the working tree) with
+  `git blame -L <start>,<end> <REV> -- <path>`, or use
+  `git log -L <start>,<end>:<path> <REV>`. Where the fix's exact target does
+  not exist at `<REV>` (e.g. an append past end-of-file), blame the nearest
+  surrounding anchor line within that region instead. (a) If that commit is
+  **one of the stack commits** and the fix corrects its own change,
+  recommend amending it — name the specific SHA + subject. (b) If that
+  commit is **already in trunk** (not in the stack), recommend a new commit
+  (never amend published history) and name its position (e.g. after
+  `<sha> <subject>`, or at the stack tip). (c) If the fix is a logically
+  separate concern, recommend a new commit. (d) If the fix is best left
+  uncommitted, recommend WIP. Emit this as a `**Suggested placement:**`
+  bold-paragraph label in your analysis body — never as an ATX heading."
 - The instruction: "If, while analyzing, you discover a **new** issue
   not covered by the finding you were given, you **must** report it —
   do not silently drop it. Append it as a `## Proposed new findings`
@@ -593,7 +652,9 @@ before it):
 <freeform body — recommended subsections, all optional:
 Restated critique / What the code actually does /
 Root cause vs symptom / Options / Recommendation /
-What this analysis does not change. Emit the heading above as the
+Suggested placement (only when given the unpublished-commit stack) /
+What this analysis does not change.
+Emit the heading above as the
 first line of the reply, at exactly level 4 (four `#`) — the level
 it occupies in the final review, where the analysis body is copied
 verbatim under the finding. Do not emit any further ATX
