@@ -24,7 +24,7 @@
 		("Bas Alberts" . "bas@anti.computer"))
       (:commit . "e99165ef5274bc4512b8d77ba2ac208c59b5d456"))])
  (aidermacs
-  . [(1 6)
+  . [(1 7)
      ((emacs (26 1)) (transient (0 3 0)) (compat (30 0 2 0))
       (markdown-mode (2 7)))
      "AI pair programming with Aider" tar
@@ -33,7 +33,7 @@
 		 "tools")
       (:maintainer "Mingde Zeng" . "matthewzmd@posteo.net")
       (:authors ("Mingde Zeng" . "matthewzmd@posteo.net"))
-      (:commit . "fc0f1381bb9398a2d5a76776bad812d7ce3507dc"))])
+      (:commit . "9772db3e1969eec1df6a53b7d3e5597d07e3337f"))])
  (alect-themes
   . [(0 11) ((emacs (24 0)))
      "Configurable light, dark and black themes for Emacs 24 or later"
@@ -734,13 +734,13 @@
       (:authors ("Akib Azmain Turja" . "akib@disroot.org"))
       (:commit . "ce2ea016a67b200862788e81f0ff1f8f7e4e0454"))])
  (geiser
-  . [(0 33) ((emacs (27 1)) (project (0 8 1)))
+  . [(0 33 1) ((emacs (27 1)) (project (0 8 1)))
      "GNU Emacs and Scheme talk to each other" tar
      ((:url . "https://gitlab.com/emacs-geiser/")
       (:keywords "languages" "scheme" "geiser")
       (:maintainer "Jose Antonio Ortega Ruiz" . "(jao@gnu.org)")
       (:authors ("Jose Antonio Ortega Ruiz" . "(jao@gnu.org)"))
-      (:commit . "55b4b7847902d626a76e110a862d0fde1d1ff297"))])
+      (:commit . "84c25e9683a18d00387b6c16b0cee66269536c3c"))])
  (geiser-chez
   . [(0 18) ((emacs (26 1)) (geiser (0 19)))
      "Chez and Geiser talk to each other" tar
@@ -779,13 +779,13 @@
       (:authors ("András Simonyi" . "andras.simonyi@gmail.com"))
       (:commit . "9e7ed54e5629f759660569bc7efc3d75dbabbc5f"))])
  (geiser-guile
-  . [(0 28 4) ((emacs (27 1)) (transient (0 3)) (geiser (0 33)))
+  . [(0 28 5) ((emacs (27 1)) (transient (0 3)) (geiser (0 33)))
      "Guile and Geiser talk to each other" tar
      ((:url . "https://gitlab.com/emacs-geiser/guile")
       (:keywords "languages" "guile" "scheme" "geiser")
       (:maintainer "Jose Antonio Ortega Ruiz" . "(jao@gnu.org)")
       (:authors ("Jose Antonio Ortega Ruiz" . "(jao@gnu.org)"))
-      (:commit . "5bc32c715e7ade96e813526190a9745db7916c4b"))])
+      (:commit . "cbab81bd2dcb4c787bcda4ae18062db3087e6887"))])
  (geiser-kawa
   . [(0 0 1) ((emacs (26 1)) (geiser (0 16)))
      "Kawa scheme support for Geiser" tar
@@ -844,13 +844,13 @@
       (:authors ("Akib Azmain Turja" . "akib@disroot.org"))
       (:commit . "6bb82ce89ed93222dd919bc65e0f46ac4aa13479"))])
  (gnuplot
-  . [(0 11) ((emacs (28 1)) (compat (30)))
+  . [(0 12) ((emacs (28 1)) (compat (31)))
      "Major-mode and interactive frontend for gnuplot" tar
      ((:url . "https://github.com/emacs-gnuplot/gnuplot")
       (:keywords "data" "gnuplot" "plotting")
       (:maintainer ("Maxime Tréca" . "maxime@gmail.com")
 		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "f10d42221856e86c57dd5cc7400c078c021ba710"))])
+      (:commit . "2da2ef68d4861e2e5a5b1a81340b8d92b276a3a5"))])
  (go-mode
   . [(1 6 0) ((emacs (26 1)))
      "Major mode for the Go programming language" tar
@@ -1053,12 +1053,13 @@
 		("Campbell Barton" . "ideasman42@gmail.com"))
       (:commit . "de745de9ab7f67431a5ce493a63be68d408ec40e"))])
  (isl
-  . [(1 6) ((emacs (29 1)))
+  . [(1 7) ((emacs (29 1)))
      "Simple incremental search in current-buffer" tar
      ((:url . "https://github.com/thierryvolpiatto/isearch-light")
+      (:keywords "matching" "searching")
       (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
-      (:commit . "c99dc44f604e30dc8c06f89edac37eba460d7351"))])
+      (:commit . "f8e2f56ea2a5c3178b26f63f014b66f1233c2c8d"))])
  (iwindow
   . [(1 1) ((emacs (24 3)) (seq (2 23)) (compat (28 1 2 2)))
      "Interactively manipulate windows" tar
@@ -1073,13 +1074,13 @@
       (:keywords "j" "languages")
       (:commit . "1365e5a3fe772609685b3787bbd2960331c1a02f"))])
  (jabber
-  . [(0 10 8) ((emacs (29 1)) (fsm (0 2 0)) (keymap-popup (0 2)))
+  . [(0 10 9) ((emacs (29 1)) (fsm (0 2 0)) (keymap-popup (0 2)))
      "XMPP/Jabber client" tar
      ((:url . "https://codeberg.org/emacs-jabber/emacs-jabber")
       (:keywords "comm")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Magnus Henoch" . "mange@freemail.hu"))
-      (:commit . "da883a54d88dc3afedb9772813d13973efeb5873"))])
+      (:commit . "b1db3db0287f4bcc3a31eb9645111b1246880f4e"))])
  (jade-mode
   . [(1 0 1) nil "Major mode for editing .jade files" tar
      ((:url . "https://github.com/brianc/jade-mode")
@@ -1632,13 +1633,13 @@
       (:keywords "markup" "language" "css")
       (:commit . "aee28ea552dce5aade05d8a7f91514e6eb37e59f"))])
  (scad-mode
-  . [(98 0) ((emacs (29 1)) (compat (30)))
+  . [(99 0) ((emacs (29 1)) (compat (31)))
      "A major mode for editing OpenSCAD code" tar
      ((:url . "https://github.com/openscad/emacs-scad-mode")
       (:keywords "languages")
       (:maintainer ("Len Trigg" . "lenbok@gmail.com")
 		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "546d1507cd131f55ca930de7ae1518884e8221f4"))])
+      (:commit . "8798dca7e919705bcbc35d4ab5639556827ccb6f"))])
  (scala-mode
   . [(1 1 1) ((emacs (25 1))) "Major mode for editing Scala" tar
      ((:url . "https://github.com/hvesalai/emacs-scala-mode")
@@ -1677,11 +1678,13 @@
       (:authors ("Chen Bin" . "chenbin.sh@gmail.com"))
       (:commit . "4e71f5b9199a0ad10017104a6b2bf5ef5f207dfc"))])
  (simple-httpd
-  . [(1 5 1) ((cl-lib (0 3))) "pure elisp HTTP server" tar
+  . [(1 6) ((emacs (27 1)) (compat (31))) "Pure Elisp HTTP server" tar
      ((:url . "https://github.com/skeeto/emacs-http-server")
-      (:maintainer "Christopher Wellons" . "wellons@nullprogram.com")
+      (:keywords "network" "comm")
+      (:maintainer ("Philip Kaludercic" . "philipk@posteo.net")
+		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Christopher Wellons" . "wellons@nullprogram.com"))
-      (:commit . "a5eb49a6567e33586fba15dd649d63ca6e964314"))])
+      (:commit . "5a9c69ae93ed5e2cdca98f51b41f6a6782091d74"))])
  (slime
   . [(2 32) ((emacs (24 3)) (macrostep (0 9)))
      "Superior Lisp Interaction Mode for Emacs" tar

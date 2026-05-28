@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: convenience, files, matching, outlines
-;; Package-Version: 20251111.1319
-;; Package-Revision: 70fef64ee096
+;; Package-Version: 20260515.753
+;; Package-Revision: 7793707df7ab
 ;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.2.0"))
 ;; Homepage: https://github.com/laurynas-biveinis/org-mcp
 
@@ -94,7 +94,7 @@ RESOURCE-TYPE is the type of resource,
 IDENTIFIER is the resource identifier."
   (mcp-server-lib-resource-signal-error
    mcp-server-lib-jsonrpc-error-invalid-params
-   (format "Cannot find %s: '%s'" resource-type identifier)))
+   (format "%s not found: '%s'" resource-type identifier)))
 
 (defun org-mcp--tool-file-access-error (locator)
   "Throw file access error for tool operations.
@@ -192,7 +192,9 @@ OPERATION is a string describing the operation for error messages."
                  (string= (buffer-file-name) file-path)
                  (buffer-modified-p))
         (org-mcp--tool-validation-error
-         "Cannot %s: file has unsaved changes in buffer"
+         (concat
+          "Cannot %s: an Emacs buffer visiting this file has unsaved "
+          "changes; ask the user to save it (C-x C-s) and retry")
          operation)))))
 
 (defmacro org-mcp--with-org-file (file-path &rest body)
@@ -234,10 +236,10 @@ Returns the expanded file path if found and allowed.
 Throws a tool error if ID exists but file is not allowed, or if ID
 is not found."
   (if-let* ((id-file (org-id-find-id-file id)))
-    ;; ID found in database, check if file is allowed
-    (if-let* ((allowed-file (org-mcp--find-allowed-file id-file)))
-      allowed-file
-      (org-mcp--tool-file-access-error id))
+      ;; ID found in database, check if file is allowed
+      (if-let* ((allowed-file (org-mcp--find-allowed-file id-file)))
+          allowed-file
+        (org-mcp--tool-file-access-error id))
     ;; ID not in database - might not exist or DB is stale
     ;; Fall back to searching allowed files manually
     (let ((found-file nil))
@@ -263,11 +265,11 @@ Throws an error if neither prefix matches."
   `(if-let* ((id
               (org-mcp--extract-uri-suffix
                ,uri org-mcp--uri-id-prefix)))
-     ,id-body
+       ,id-body
      (if-let* ((headline
                 (org-mcp--extract-uri-suffix
                  ,uri org-mcp--uri-headline-prefix)))
-       ,headline-body
+         ,headline-body
        (org-mcp--tool-validation-error
         "Invalid resource URI format: %s"
         ,uri))))
@@ -330,10 +332,10 @@ Returns (FILE . HEADLINE) where FILE is the decoded file path and
 HEADLINE is the part after the fragment separator.
 File paths with # characters should be encoded as %23."
   (if-let* ((hash-pos (string-match "#" path-after-protocol)))
-    (cons
-     (org-mcp--decode-file-path
-      (substring path-after-protocol 0 hash-pos))
-     (substring path-after-protocol (1+ hash-pos)))
+      (cons
+       (org-mcp--decode-file-path
+        (substring path-after-protocol 0 hash-pos))
+       (substring path-after-protocol (1+ hash-pos)))
     (cons (org-mcp--decode-file-path path-after-protocol) nil)))
 
 (defun org-mcp--parse-resource-uri (uri)
@@ -419,7 +421,7 @@ Otherwise, navigates using HEADLINE-PATH as title hierarchy."
   (if is-id
       ;; ID case - headline-path contains single ID
       (if-let* ((pos (org-find-property "ID" (car headline-path))))
-        (goto-char pos)
+          (goto-char pos)
         (org-mcp--id-not-found-error (car headline-path)))
     ;; Path case - headline-path contains title hierarchy
     (unless (org-mcp--navigate-to-headline headline-path)
@@ -1018,7 +1020,7 @@ The filename parameter includes both file and headline path."
                 allowed-file headline-path)))
           (unless content
             (org-mcp--resource-not-found-error
-             "headline" (mapconcat #'identity headline-path "/")))
+             "Headline" (mapconcat #'identity headline-path "/")))
           content)
       ;; No headline path means get entire file
       (org-mcp--read-file allowed-file))))
@@ -1351,6 +1353,8 @@ Use cases:
    "Update the TODO state of an Org headline.  Changes the task state
 while preserving the headline title, tags, and other properties.
 Creates an Org ID property for the headline if one doesn't exist.
+Modifies the file on disk; fails if an Emacs buffer visiting the
+file has unsaved changes; ask the user to save the buffer and retry.
 
 Parameters:
   uri - URI of the headline to update (string, required)
@@ -1378,6 +1382,8 @@ Returns JSON object:
    "Add a new TODO item to an Org file at a specified location.
 Creates the headline with TODO state, tags, and optional body content.
 Automatically creates an Org ID property for the new headline.
+Modifies the file on disk; fails if an Emacs buffer visiting the
+file has unsaved changes; ask the user to save the buffer and retry.
 
 Parameters:
   title - Headline text without TODO state or tags (string, required)
@@ -1422,6 +1428,8 @@ sibling
    "Rename an Org headline's title while preserving its TODO state,
 tags, properties, and body content.  Creates an Org ID property for
 the headline if one doesn't exist.
+Modifies the file on disk; fails if an Emacs buffer visiting the
+file has unsaved changes; ask the user to save the buffer and retry.
 
 Parameters:
   uri - URI of the headline to rename (string, required)
@@ -1452,6 +1460,8 @@ Returns JSON object:
 replacement.  Finds and replaces a substring within the headline's
 body text.  Creates an Org ID property for the headline if one doesn't
 exist.
+Modifies the file on disk; fails if an Emacs buffer visiting the
+file has unsaved changes; ask the user to save the buffer and retry.
 
 Parameters:
   resource_uri - URI of the headline to edit (string, required)
@@ -1487,6 +1497,8 @@ Special behavior - Empty old_body:
    "Read complete raw content of an Org file. Returns entire file as
 plain text with all formatting, properties, and structure preserved.
 File must be in org-mcp-allowed-files.
+Reads the file from disk; unsaved changes in an Emacs buffer visiting
+the file are not reflected.
 
 Parameters:
   file - Absolute path to Org file (string, required)
@@ -1502,6 +1514,8 @@ Returns: Plain text content of the entire Org file"
    "Get hierarchical structure of Org file as JSON outline. Returns
    all headline titles and nesting relationships at full depth. File
    must be in org-mcp-allowed-files.
+Reads the file from disk; unsaved changes in an Emacs buffer visiting
+the file are not reflected.
 
 Parameters:
   file - Absolute path to Org file (string, required)
@@ -1517,6 +1531,8 @@ Returns: JSON object with hierarchical outline structure"
    "Read specific Org headline by hierarchical path. Returns headline
    with TODO state, tags, properties, body text, and all nested
    subheadings. File must be in org-mcp-allowed-files.
+Reads the file from disk; unsaved changes in an Emacs buffer visiting
+the file are not reflected.
 
 Parameters:
   file - Absolute path to Org file (string, required)
@@ -1539,6 +1555,8 @@ Returns: Plain text content of the headline and its subtree"
    "Read Org headline by its unique ID property. More stable than
 path-based access since IDs don't change when headlines are renamed
 or moved. File containing the ID must be in org-mcp-allowed-files.
+Reads the file from disk; unsaved changes in an Emacs buffer visiting
+the file are not reflected.
 
 Parameters:
   uuid - UUID from headline's ID property (string, required)
@@ -1554,7 +1572,8 @@ Returns: Plain text content of the headline and its subtree"
    :description
    "Access the complete raw content of an Org file.  Returns the
 entire file as plain text, preserving all formatting, properties, and
-structure.
+structure.  Reads the file from disk; unsaved changes in an Emacs
+buffer visiting the file are not reflected.
 
 URI format: org://{filename}
   filename - Absolute path to the Org file (required)
@@ -1569,7 +1588,8 @@ Returns: Plain text content of the entire Org file"
    :description
    "Get the hierarchical structure of an Org file as a JSON
 outline.  Extracts headline titles and their nesting relationships up
-to 2 levels deep.
+to 2 levels deep.  Reads the file from disk; unsaved changes in an
+Emacs buffer visiting the file are not reflected.
 
 URI format: org-outline://{filename}
   filename - Absolute path to the Org file (required)
@@ -1613,7 +1633,8 @@ Use this resource to:
    :description
    "Access content of a specific Org headline by its path in the
 file hierarchy.  Returns the headline and all its subheadings as
-plain text.
+plain text.  Reads the file from disk; unsaved changes in an Emacs
+buffer visiting the file are not reflected.
 
 URI format: org-headline://{filename}#{headline-path}
   filename - Absolute path (# characters must be encoded as %23)
@@ -1670,7 +1691,8 @@ Use this resource to:
    :description
    "Access content of an Org headline by its unique ID property.
 More stable than path-based access since IDs don't change when
-headlines are renamed or moved.
+headlines are renamed or moved.  Reads the file from disk; unsaved
+changes in an Emacs buffer visiting the file are not reflected.
 
 URI format: org-id://{uuid}
   uuid - Value of the headline's ID property (required)

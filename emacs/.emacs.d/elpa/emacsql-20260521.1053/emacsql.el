@@ -6,9 +6,9 @@
 ;; Maintainer: Jonas Bernoulli <emacs.emacsql@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/magit/emacsql
 
-;; Package-Version: 20260401.1220
-;; Package-Revision: 2fe6d4562b32
-;; Package-Requires: ((emacs "26.1"))
+;; Package-Version: 20260521.1053
+;; Package-Revision: 182e66219568
+;; Package-Requires: ((emacs "28.1"))
 
 ;; SPDX-License-Identifier: Unlicense
 
