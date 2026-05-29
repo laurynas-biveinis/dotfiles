@@ -127,6 +127,13 @@ those findings, the same way verification's new drafts already do. The
 two loops share one flat round counter and converge on the same
 terminal condition — a draft that yields no new findings.
 
+Verification decides the fate of every drafted finding (`keep`/`drop`);
+analysis holds one **asymmetric** power on top of that: it may **reject**
+a finding verification kept, when deeper study proves it a false positive,
+which removes it from the final review. Analysis can only reject — it never
+resurrects a dropped finding. So a finding reaches the final review only if
+verification kept it **and** analysis did not reject it.
+
 `<topic>` is a 1–3-word kebab-case slug derived from the diff (module
 name, feature, or commit subject). If any
 `/tmp/review-changes-<topic>*` file already exists, suffix `<topic>`
@@ -290,10 +297,11 @@ After all verification rounds have converged, collect every finding
 with `Outcome: keep` across all `verdicts-<round>.md` files **that has
 not already been analyzed in a prior Phase 3 pass**. The set of
 analyzed finding IDs is derived from disk, not held in memory: an ID
-counts as analyzed once it has either an analysis block or an
-exhaustion marker in `/tmp/review-changes-<topic>-analyses.md` (see
-below). A finding is analyzed exactly once even though Phase 3 may run
-several times. Spawn one analysis subagent **per not-yet-analyzed kept
+counts as analyzed once it has an analysis block, an exhaustion marker,
+or a rejection marker (`<!-- analysis-rejected: <ID> -->`) in
+`/tmp/review-changes-<topic>-analyses.md` (see below). A finding is
+analyzed exactly once even though Phase 3 may run several times. Spawn
+one analysis subagent **per not-yet-analyzed kept
 finding**, in parallel (single message, multiple Agent tool calls). The
 subagent contract is in **Analysis subagents** below.
 
@@ -335,38 +343,57 @@ placement context from the subagent prompts and run the rest of Phase 3
 unchanged. Otherwise, pass the stack and `REV` into each analysis subagent
 prompt (see **Analysis subagents**).
 
-Each analysis reply has up to two parts: the `#### Analysis: <ID>`
-block, optionally followed by a `## Proposed new findings` section
-(level-2 header). **Split the reply on the first
-`## Proposed new findings` header that occurs as a true top-level line
-— outside any fenced code block or block quote.** A subagent that
-merely quotes the delimiter inside a fence (e.g. when reviewing this
-skill's own schema) does not trigger the split. Everything before that
-boundary is the analysis body; the section after it is routed into the
-loop below and is **never inlined** into the final review (so no
-level-2 header ever outranks the `#### Analysis` heading in the
-assembled document).
+Each analysis reply has up to three parts: the `#### Analysis: <ID>`
+block, optionally followed by a `## Rejection` section and/or a
+`## Proposed new findings` section (both level-2 headers). **Split the
+reply on the first occurrence of each such header that occurs as a true
+top-level line — outside any fenced code block or block quote**, using
+the same CommonMark-aware rule. A subagent that merely quotes a delimiter
+inside a fence (e.g. when reviewing this skill's own schema) does not
+trigger the split. Everything before the first such boundary is the
+analysis body; each routed section is handled below and is **never
+inlined** into the final review (so no level-2 header ever outranks the
+`#### Analysis` heading in the assembled document).
+
+A `## Rejection` section means the subagent has proven this kept finding a
+false positive: it is **removed** from the final review (the same end state
+as a verifier `drop`). Verification keeps drafted findings; analysis can
+additionally reject one but never resurrects a drop.
 
 Validate each reply with the rules in **Analysis subagent reply
-validation**. For each valid reply, append its analysis body verbatim —
-the `#### Analysis: <ID>` header line (already at the level it occupies
-in the final review) and the body below it, up to but excluding any
-`## Proposed new findings` header — to the append-only file
-`/tmp/review-changes-<topic>-analyses.md`, of which the top-level is the
-sole writer (analysis subagents still never write files). Phase 4 reads
-the bodies back from this file rather than from memory, so a body
-produced in an early pass survives intact across any number of later
-verify⇄analyze rounds. Invalid replies enter a retry set; dispatch a new
-parallel batch, same prompts. **Budget: 2 retries (3 attempts total)
-per finding.**
+validation**. For each valid reply:
 
-**Exhaustion is non-fatal here.** Analysis augments findings; it is
-not load-bearing for correctness. If a finding's attempt 3 reply
-also fails validation, append an exhaustion marker for its ID to
+- **If it carries a `## Rejection` section,** append a rejection marker for
+  its ID to `/tmp/review-changes-<topic>-analyses.md` — an inert HTML
+  comment `<!-- analysis-rejected: <ID> -->` followed by the rejection
+  reason verbatim — instead of an analysis body. The marker mirrors the
+  `<!-- analysis-skipped:` exhaustion marker: the ID counts as analyzed
+  (terminal — never re-dispatched), and Phase 4 reads it to exclude the
+  finding. Do **not** append the analysis body (the finding is gone, so
+  there is nothing to inline). A `## Proposed new findings` section on the
+  same reply is still processed by the loop below.
+- **Otherwise (no rejection),** append its analysis body verbatim — the
+  `#### Analysis: <ID>` header line (already at the level it occupies in
+  the final review) and the body below it, up to but excluding any
+  `## Rejection` or `## Proposed new findings` header.
+
+The append-only file `/tmp/review-changes-<topic>-analyses.md` is written
+solely by the top-level (analysis subagents still never write files).
+Phase 4 reads the bodies and markers back from this file rather than from
+memory, so a body produced in an early pass survives intact across any
+number of later verify⇄analyze rounds. Invalid replies enter a retry set;
+dispatch a new parallel batch, same prompts. **Budget: 2 retries (3
+attempts total) per finding.**
+
+**Exhaustion is non-fatal here.** Analysis augments findings and may
+reject one (above), but its _absence_ is never load-bearing: a finding
+with no usable analysis reply simply **falls back to its verifier
+`keep`** — exhaustion never infers a rejection. If a finding's attempt 3
+reply also fails validation, append an exhaustion marker for its ID to
 `/tmp/review-changes-<topic>-analyses.md` — an inert HTML comment
 `<!-- analysis-skipped: <ID> (retry exhaustion) -->`, so the ID counts
 as analyzed and is never re-dispatched on a later pass — then continue.
-Phase 4 will include the finding without an Analysis subsection and
+Phase 4 will include the finding (kept) without an Analysis subsection and
 will note the omission in the Summary. Do not abort the review.
 
 Once every not-yet-analyzed finding in the batch has either a valid
@@ -410,24 +437,34 @@ A reply is _unusable_ if any of the following holds:
 1. Agent invocation returned an error or timeout.
 1. Reply lacks a `#### Analysis: <assigned-ID>` header (exactly four
    `#`) for the finding's assigned ID.
-1. Body under the header (before any `## Proposed new findings`
-   section) is empty or whitespace-only.
-1. The analysis body (everything before any `## Proposed new findings`
-   delimiter) contains an ATX heading — a `#`-prefixed line per
-   CommonMark (a `#` run with ≤3 leading spaces, outside any fenced
-   code block or code span) — other than the leading `#### Analysis:`.
-   A `#` line a body legitimately quotes inside a fenced code block
-   (e.g. a shell comment or `#!` shebang) is not a heading and does
-   not trip this rule.
+1. Body under the header (before any `## Rejection` or
+   `## Proposed new findings` section) is empty or whitespace-only —
+   **unless** the reply carries a `## Rejection` section, in which case the
+   analysis body is optional (the rejection reason is the content).
+1. A `## Rejection` section is present but empty or whitespace-only (it
+   must carry a reason).
+1. A `## Rejection` section and a `## Experiment requests` section are
+   both present. The two are mutually exclusive: a rejection is a
+   terminal decision, whereas a deferral means the analyst has not yet
+   decided and needs evidence to do so — a reply that both rejects and
+   requests experiments is contradictory and must never happen.
+1. The analysis body (everything before any `## Rejection` or
+   `## Proposed new findings` delimiter) contains an ATX heading — a
+   `#`-prefixed line per CommonMark (a `#` run with ≤3 leading spaces,
+   outside any fenced code block or code span) — other than the leading
+   `#### Analysis:`. A `#` line a body legitimately quotes inside a fenced
+   code block (e.g. a shell comment or `#!` shebang) is not a heading and
+   does not trip this rule.
 1. Reply truncates mid-sentence or mid-bullet.
 
-Carrying a `## Proposed new findings` section does **not** by itself
-make a reply unusable — that section is expected when the subagent
-spots a new issue. Detection is structural but CommonMark-aware: it
-must honor fenced-code-block and code-span boundaries, so `#`/`##`
-lines a body quotes inside a fence are treated as neither headings nor
-section delimiters. The top-level does not judge analysis quality, only
-schema conformance.
+Carrying a `## Rejection` or `## Proposed new findings` section does
+**not** by itself make a reply unusable — `## Proposed new findings` is
+expected when the subagent spots a new issue, and `## Rejection` when it
+proves the finding a false positive. Detection is structural but
+CommonMark-aware: it must honor fenced-code-block and code-span
+boundaries, so `#`/`##` lines a body quotes inside a fence are treated as
+neither headings nor section delimiters. The top-level does not judge
+analysis quality, only schema conformance.
 
 An analyst that needs runtime evidence may instead return a `## Experiment
 requests` section and **no** analysis block. Handle the happy path as in
@@ -437,21 +474,25 @@ for this finding" bullet then carries the new `EXP` blocks, so nothing is
 separately appended. Each re-spawn is a main-loop iteration under the single
 50-iteration safety cap — no separate experiment budget. The edge cases follow
 Phase 3's own **non-fatal** handling, not Phase 2's abort: a reply carrying both
-an analysis block and requests is treated as an analysis (requests ignored), and
-a deferral whose request section is not parseable (see **Experiment requests**)
-counts as an invalid analysis reply under Phase 3's retry budget (→ exhaustion
-marker, never abort).
+an analysis block and requests is treated as an analysis (requests ignored); a
+reply carrying both a `## Rejection` and requests is malformed and counts as an
+invalid analysis reply under Phase 3's retry budget (per the validation rule
+above); and a deferral whose request section is not parseable (see **Experiment
+requests**) likewise counts as an invalid analysis reply under that budget
+(→ exhaustion marker, never abort).
 If the cap is hit while the analyst is still deferring, proceed without the
 experiment and treat it as the analysis-exhaustion case (exhaustion marker, noted
 in the Summary).
 
 ### Phase 4 — Final assembly
 
-Read every `verdicts-<round>.md` file and the analysis bodies from
-`/tmp/review-changes-<topic>-analyses.md`. Using the kept verdicts and
-those analysis bodies, write the final review to
-`/tmp/review-changes-<topic>.md` containing every kept finding, using
-this structure:
+Read every `verdicts-<round>.md` file and the analysis bodies and markers
+from `/tmp/review-changes-<topic>-analyses.md`. First compute the
+**rejected-ID set**: every ID with a `<!-- analysis-rejected: <ID> -->`
+marker in the analyses file. Using the kept verdicts and the analysis
+bodies, write the final review to `/tmp/review-changes-<topic>.md`
+containing every kept finding **except those in the rejected-ID set**,
+using this structure:
 
 ```markdown
 # Code Review: <topic>
@@ -488,10 +529,10 @@ recommendation, caveats; whatever the subagent produced>
 
 <2–4 sentences, plus: drafts opened; verify⇄analyze passes run (how
 many times analysis fed findings back to verification); total drafted;
-total kept; total dropped; total analyzed; findings proposed by
-analysis (and how many survived dedup); analyses skipped due to retry
-exhaustion (list IDs, if any); truncation note if the 50-iteration stop
-fired>
+total kept; total dropped; findings rejected on analysis (list IDs, if
+any); total analyzed; findings proposed by analysis (and how many
+survived dedup); analyses skipped due to retry exhaustion (list IDs, if
+any); truncation note if the 50-iteration stop fired>
 ```
 
 Assembly rules:
@@ -507,24 +548,35 @@ Assembly rules:
   after the `Suggested action:` bullet. A finding's body in that file
   runs from its `#### Analysis: <ID>` line up to (but excluding) the
   next `#### Analysis:` line, the next line beginning with the
-  `<!-- analysis-skipped:` marker prefix, or EOF — whichever comes
-  first. Treating that marker prefix as a delimiter keeps an
-  interleaved exhaustion marker from being swept into a preceding
-  body. The body already opens with its
+  `<!-- analysis-skipped:` or `<!-- analysis-rejected:` marker prefix, or
+  EOF — whichever comes first. Treating those marker prefixes as
+  delimiters keeps an interleaved exhaustion or rejection marker from
+  being swept into a preceding body. Body extraction also never _begins_
+  inside a rejection span: the text from a `<!-- analysis-rejected: <ID> -->`
+  marker up to the next `#### Analysis:` line, marker prefix, or EOF is
+  owned by that rejection (its verbatim reason) and is scanned neither as
+  its own body nor as any other finding's — so a `#### Analysis:` line a
+  reason happens to quote is never mistaken for a body anchor. The body
+  already opens with its
   own `#### Analysis: <ID>` heading at the right level, so the top-level
   adds no heading and strips nothing further (Phase 3 already excluded
-  any `## Proposed new findings` section when it appended the body) — do
-  not edit, summarize, or re-level it. Analysis subagents emit that
-  one level-4 heading and otherwise use bold-paragraph labels instead
-  of `#`-prefixed headings (see **Analysis subagents**), so nothing in
-  the body outranks the `#### Analysis` heading or breaks the document
+  any `## Rejection` or `## Proposed new findings` section when it appended
+  the body) — do not edit, summarize, or re-level it. Analysis subagents
+  emit that one level-4 heading and otherwise use bold-paragraph labels
+  instead of `#`-prefixed headings (see **Analysis subagents**), so nothing
+  in the body outranks the `#### Analysis` heading or breaks the document
   outline. If a kept finding has no analysis body in the file (only an
-  exhaustion marker, or nothing), omit the analysis for that finding.
+  exhaustion or rejection marker, or nothing), omit the analysis for that
+  finding.
 - Group by final severity (Critical → Important → Suggestion).
   Within a severity tier, order by `(round, NNN)` ascending.
 - If a severity tier has no surviving findings, write "None." under it.
 - Findings with `Outcome: drop` do **not** appear in the final file;
   they remain in their verdict file with a reason.
+- Findings in the rejected-ID set (rejected on analysis) do **not** appear
+  either; their `<!-- analysis-rejected: <ID> -->` marker and reason remain
+  in the analyses file. A finding rejected on analysis is excluded even
+  though its verdict is `keep`.
 
 Do **not** modify the reviewed code. Return the path of the final
 file and a brief summary to the caller. Leave draft and verdict files
@@ -649,6 +701,15 @@ Each subagent must receive in its prompt:
   than one is reasonable, recommend one, and note anything the
   analysis does not change. Drop sections that do not apply — do not
   pad."
+- The instruction: "This finding was already confirmed by verification —
+  treat it as valid and deepen it. But if your deeper analysis instead
+  proves it a **false positive** — the code is actually correct, or the
+  finding misreads the diff — append a `## Rejection` section (schema
+  below) stating why; do not bury that conclusion in the analysis body.
+  Rejection is all-or-nothing and removes the finding from the review, so
+  reserve it for genuine false positives, not disagreements of emphasis or
+  severity. You can only reject; you cannot revive a finding verification
+  dropped."
 - **Only when a placement decision applies** (see Phase 3), the instruction:
   "If your analysis recommends a concrete code change, also recommend
   **where** to apply it within the unpublished stack. Identify the commit that
@@ -678,7 +739,10 @@ sharpen the analysis, it returns an experiment-request deferral instead:
 a `## Experiment requests` section whose every entry is a
 `### EXP — <what it tests>` header block (the header is required) giving a
 goal, a freeform procedure whose commands may branch on output, and what
-confirms or refutes the finding — and **no** analysis block. The entry need
+confirms or refutes the finding — and **no** analysis block and **no**
+`## Rejection` section. A deferral and a rejection are mutually exclusive:
+deferring means the analyst has not yet decided and needs the evidence first,
+so it cannot also reject — return one or the other, never both. The entry need
 not name the finding; the top-level attributes the requests to the finding
 this subagent was spawned to analyze. The top-level runs it and re-spawns the
 analyst with the result.
@@ -708,14 +772,22 @@ headings; the prohibition is only on real ATX headings outside
 fences.>
 ```
 
+If — and only if — analysis proves the finding a false positive, append a
+`## Rejection` section after the analysis block, giving the reason. The
+analysis body is optional in this case (the reason carries the rationale):
+
+```markdown
+## Rejection
+
+<why the kept finding is invalid — the code is actually correct,
+or the finding misreads the diff>
+```
+
 If — and only if — analysis surfaced a genuinely new issue, append a
-`## Proposed new findings` section after the analysis block. This is
-the **only** higher-level (`##`) heading allowed anywhere in the
-reply; the top-level splits the reply on it, inlining the analysis
-block and routing the proposals into the loop. Each entry must be a
-complete finding block (severity, confidence, title, location,
-observation, suggested action) **without an ID** — the top-level
-assigns IDs when it appends to the next draft:
+`## Proposed new findings` section after the analysis block. Each entry
+must be a complete finding block (severity, confidence, title, location,
+observation, suggested action) **without an ID** — the top-level assigns
+IDs when it appends to the next draft:
 
 ```markdown
 ## Proposed new findings
@@ -728,10 +800,15 @@ assigns IDs when it appends to the next draft:
 - Suggested action: <concrete fix>
 ```
 
-Before listing a proposal, the subagent should confirm it is not a
-duplicate of any finding in the prior draft files it was given;
-duplicates are dropped silently. The top-level re-dedups
-authoritatively, so this check is best-effort.
+`## Rejection` and `## Proposed new findings` are the only higher-level
+(`##`) headings allowed in a reply that carries an analysis block; the
+top-level splits the reply on each, inlines the analysis block (unless
+rejected), records the rejection, and routes any proposals into the loop.
+A reply may carry both — a rejecting analyst that also spotted a genuinely
+different issue still reports it. Before listing a proposal, the subagent
+should confirm it is not a duplicate of any finding in the prior draft
+files it was given; duplicates are dropped silently. The top-level
+re-dedups authoritatively, so this check is best-effort.
 
 If the reply fails the **Analysis subagent reply validation** rules
 in Phase 3, the top-level re-spawns the subagent with the same
