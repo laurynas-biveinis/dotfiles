@@ -18,9 +18,9 @@ allowed-tools: >-
   Grep
   Glob
   Write(//tmp/**)
-  Agent
   Skill(review-changes-step)
   Skill(review-changes-verify)
+  Skill(review-changes-analyze)
 ---
 
 # Code Review
@@ -52,8 +52,8 @@ commits"). Print the chosen scope at the top of the findings file.
 
 ## Confidence
 
-<!-- Keep in sync with the same section in review-changes-step and
-     review-changes-verify. -->
+<!-- Keep in sync with the same section in review-changes-step,
+     review-changes-verify, and review-changes-analyze. -->
 
 Each finding carries an integer `Confidence: N%` (0–100) reflecting how
 strongly the evidence supports it. Calibration anchors:
@@ -74,8 +74,8 @@ per experiment, each giving a goal, a freeform procedure (commands that may
 branch on observed output), and what confirms or refutes the finding. The
 top-level reads each request as freeform and runs it; it does not parse a rigid
 schema, so the request format is defined only where requests are produced (the
-`review-changes-step` and `review-changes-verify` skills, and the analyze
-contract below).
+`review-changes-step`, `review-changes-verify`, and `review-changes-analyze`
+skills).
 
 The draft always returns its findings in one reply, with any experiment
 requests attached alongside; the top-level runs those and feeds the results to
@@ -307,10 +307,17 @@ analyzed finding IDs is derived from disk, not held in memory: an ID
 counts as analyzed once it has an analysis block, an exhaustion marker,
 or a rejection marker (`<!-- analysis-rejected: <ID> -->`) in
 `/tmp/review-changes-<topic>-analyses.md` (see below). A finding is
-analyzed exactly once even though Phase 3 may run several times. Spawn
-one analysis subagent **per not-yet-analyzed kept
-finding**, in parallel (single message, multiple Agent tool calls). The
-subagent contract is in **Analysis subagents** below.
+analyzed exactly once even though Phase 3 may run several times. Invoke
+`review-changes-analyze` once **per not-yet-analyzed kept finding**, in
+parallel (single message, multiple `Skill(review-changes-analyze)` calls).
+That skill holds the per-finding analysis contract; build each invocation's
+prompt to supply the finding's ID and full verdict block (from
+`verdicts-<round>.md`), the scope as a Git command, the paths of all prior
+draft files (`draft-1.md` … `draft-<round>.md`) for dedup, any experiment
+results (the matching `EXP` blocks) for that finding, and — only when a
+placement decision applies (committed scope with a non-empty stack, computed
+below) — the stack as a list of SHA + subject and the blame-target revision
+`REV`.
 
 On first entry to Phase 3, compute the **unpublished-commit stack context**
 once and reuse it for every analysis subagent across all later verify⇄analyze
@@ -348,7 +355,7 @@ fallback above — e.g. HEAD is already merged into trunk, or HEAD is a trunk
 branch with nothing un-pushed — there is again **no placement decision**: omit
 placement context from the subagent prompts and run the rest of Phase 3
 unchanged. Otherwise, pass the stack and `REV` into each analysis subagent
-prompt (see **Analysis subagents**).
+prompt (see the `review-changes-analyze` skill).
 
 Each analysis reply has up to three parts: the `#### Analysis: <ID>`
 block, optionally followed by a `## Rejection` section and/or a
@@ -568,11 +575,11 @@ Assembly rules:
   own `#### Analysis: <ID>` heading at the right level, so the top-level
   adds no heading and strips nothing further (Phase 3 already excluded
   any `## Rejection` or `## Proposed new findings` section when it appended
-  the body) — do not edit, summarize, or re-level it. Analysis subagents
-  emit that one level-4 heading and otherwise use bold-paragraph labels
-  instead of `#`-prefixed headings (see **Analysis subagents**), so nothing
-  in the body outranks the `#### Analysis` heading or breaks the document
-  outline. If a kept finding has no analysis body in the file (only an
+  the body) — do not edit, summarize, or re-level it. The analysis step
+  emits that one level-4 heading and otherwise uses bold-paragraph labels
+  instead of `#`-prefixed headings (see the `review-changes-analyze` skill),
+  so nothing in the body outranks the `#### Analysis` heading or breaks the
+  document outline. If a kept finding has no analysis body in the file (only an
   exhaustion or rejection marker, or nothing), omit the analysis for that
   finding.
 - Group by final severity (Critical → Important → Suggestion).
@@ -588,155 +595,3 @@ Assembly rules:
 Do **not** modify the reviewed code. Return the path of the final
 file and a brief summary to the caller. Leave draft and verdict files
 in place for audit.
-
-## Analysis subagents
-
-Each analysis subagent analyzes exactly one kept finding. They are
-spawned in parallel via the Agent tool, with `subagent_type:
-general-purpose` and `model: opus`.
-
-Analysis subagents **do not write files**. They return the analysis
-as their final message. Only the top-level skill writes to
-`/tmp/review-changes-<topic>-*`.
-
-Each subagent must receive in its prompt:
-
-- The finding's assigned ID and its **verdict block** (the refined
-  content from `verdicts-<round>.md`, not the draft).
-- The scope as a Git command for the subagent to run (e.g.
-  `git diff --staged`, `git show HEAD`).
-- **Only when a placement decision applies** (committed scope with a non-empty
-  stack — see Phase 3): the stack as a list of SHA + subject, and the
-  blame-target revision `REV` (computed once in Phase 3).
-- The analysis schema and the structural validation rules the reply
-  must satisfy.
-- Paths of **all prior draft files** (`draft-1.md` …
-  `draft-<round>.md`), so it can self-suppress proposals that
-  duplicate an already-raised finding. This is best-effort only; the
-  top-level dedups authoritatively against all raw findings.
-- Any experiment results for this finding (the matching `EXP` blocks from
-  the experiments file), if present.
-- An explicit instruction that it must not write files and must not
-  modify the project tree.
-- The instruction: "Analyze, research, and ultrathink about this
-  finding. Restate the critique in your own words, examine what the
-  code actually does, identify whether the finding addresses the
-  root cause or a symptom, present alternative resolutions when more
-  than one is reasonable, recommend one, and note anything the
-  analysis does not change. Drop sections that do not apply — do not
-  pad."
-- The instruction: "This finding was already confirmed by verification —
-  treat it as valid and deepen it. But if your deeper analysis instead
-  proves it a **false positive** — the code is actually correct, or the
-  finding misreads the diff — append a `## Rejection` section (schema
-  below) stating why; do not bury that conclusion in the analysis body.
-  Rejection is all-or-nothing and removes the finding from the review, so
-  reserve it for genuine false positives, not disagreements of emphasis or
-  severity. You can only reject; you cannot revive a finding verification
-  dropped."
-- **Only when a placement decision applies** (see Phase 3), the instruction:
-  "If your analysis recommends a concrete code change, also recommend
-  **where** to apply it within the unpublished stack. Identify the commit that
-  **owns the region the fix touches**: blame the affected lines at the supplied
-  blame-target revision `<REV>` (not the working tree) with
-  `git blame -L <start>,<end> <REV> -- <path>`, or use
-  `git log -L <start>,<end>:<path> <REV>`. Where the fix's exact target does
-  not exist at `<REV>` (e.g. an append past end-of-file), blame the nearest
-  surrounding anchor line within that region instead. (a) If that commit is
-  **one of the stack commits** and the fix corrects its own change,
-  recommend amending it — name the specific SHA + subject. (b) If that
-  commit is **already in trunk** (not in the stack), recommend a new commit
-  (never amend published history) and name its position (e.g. after
-  `<sha> <subject>`, or at the stack tip). (c) If the fix is a logically
-  separate concern, recommend a new commit. (d) If the fix is best left
-  uncommitted, recommend WIP. Emit this as a `**Suggested placement:**`
-  bold-paragraph label in your analysis body — never as an ATX heading."
-- The instruction: "If, while analyzing, you discover a **new** issue
-  not covered by the finding you were given, you **must** report it —
-  do not silently drop it. Append it as a `## Proposed new findings`
-  section after your analysis block (schema below). Confine that
-  section to genuinely new issues; do not restate or re-scope the
-  finding under analysis."
-
-The analyst must **not** run experiments. If runtime evidence would
-sharpen the analysis, it returns an experiment-request deferral instead:
-a `## Experiment requests` section whose every entry is a
-`### EXP — <what it tests>` header block (the header is required) giving a
-goal, a freeform procedure whose commands may branch on output, and what
-confirms or refutes the finding — and **no** analysis block and **no**
-`## Rejection` section. A deferral and a rejection are mutually exclusive:
-deferring means the analyst has not yet decided and needs the evidence first,
-so it cannot also reject — return one or the other, never both. The entry need
-not name the finding; the top-level attributes the requests to the finding
-this subagent was spawned to analyze. The top-level runs it and re-spawns the
-analyst with the result.
-
-The subagent must return the analysis block in this schema, beginning
-its reply with the `#### Analysis: <ID>` header line (no preamble
-before it):
-
-```markdown
-#### Analysis: R<round>-<NNN>
-
-<freeform body — recommended subsections, all optional:
-Restated critique / What the code actually does /
-Root cause vs symptom / Options / Recommendation /
-Suggested placement (only when given the unpublished-commit stack) /
-What this analysis does not change.
-Emit the heading above as the
-first line of the reply, at exactly level 4 (four `#`) — the level
-it occupies in the final review, where the analysis body is copied
-verbatim under the finding. Do not emit any further ATX
-(`#`-prefixed) heading in the body; use bold-paragraph labels
-(e.g. **Recommendation:**)
-for subsections instead, so nothing outranks the `#### Analysis`
-heading or breaks the document outline. Quoting code that contains
-`#` lines inside a fenced code block is fine — those are not
-headings; the prohibition is only on real ATX headings outside
-fences.>
-```
-
-If — and only if — analysis proves the finding a false positive, append a
-`## Rejection` section after the analysis block, giving the reason. The
-analysis body is optional in this case (the reason carries the rationale):
-
-```markdown
-## Rejection
-
-<why the kept finding is invalid — the code is actually correct,
-or the finding misreads the diff>
-```
-
-If — and only if — analysis surfaced a genuinely new issue, append a
-`## Proposed new findings` section after the analysis block. Each entry
-must be a complete finding block (severity, confidence, title, location,
-observation, suggested action) **without an ID** — the top-level assigns
-IDs when it appends to the next draft:
-
-```markdown
-## Proposed new findings
-
-### CRITICAL — <one-line title>
-
-- Confidence: 70%
-- Location: `path/to/file.ext:LN`
-- Observation: <what's wrong, with evidence>
-- Suggested action: <concrete fix>
-```
-
-`## Rejection` and `## Proposed new findings` are the only higher-level
-(`##`) headings allowed in a reply that carries an analysis block; the
-top-level splits the reply on each, inlines the analysis block (unless
-rejected), records the rejection, and routes any proposals into the loop.
-A reply may carry both — a rejecting analyst that also spotted a genuinely
-different issue still reports it. Before listing a proposal, the subagent
-should confirm it is not a duplicate of any finding in the prior draft
-files it was given; duplicates are dropped silently. The top-level
-re-dedups authoritatively, so this check is best-effort.
-
-If the reply fails the **Analysis subagent reply validation** rules
-in Phase 3, the top-level re-spawns the subagent with the same
-prompt, up to 2 retries (3 attempts total). If attempt 3 also
-fails, the top-level drops the analysis for that finding (Phase 3
-non-fatal exhaustion); the subagent itself never returns an error
-outcome.

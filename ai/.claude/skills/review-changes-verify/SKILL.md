@@ -42,7 +42,8 @@ Your invocation prompt supplies, for the single finding you must verify:
 
 ## Confidence
 
-<!-- Keep in sync with review-changes and review-changes-step. -->
+<!-- Keep in sync with review-changes, review-changes-step, and
+     review-changes-analyze. -->
 
 Each finding carries an integer `Confidence: N%` (0–100) reflecting how strongly
 the evidence supports it. Calibration anchors:
