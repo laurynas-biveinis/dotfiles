@@ -169,7 +169,7 @@ collides with an existing one.
 ### Phase 1 — Initial draft (round 1)
 
 Perform the review per the principles, severity definitions, and
-checklist above. Write findings to
+checklist above. Ultrathink as you review. Write findings to
 `/tmp/review-changes-<topic>-draft-1.md` as append-only blocks:
 
 ```markdown
@@ -533,6 +533,7 @@ Each subagent must receive in its prompt:
   proposes.
 - An explicit instruction that it must not write files and must not
   modify the project tree.
+- The instruction: "Ultrathink while verifying this finding."
 
 Small isolated experiments outside the project tree (e.g. in
 `mktemp -d`) are fine if they sharpen the verdict; summarize the
