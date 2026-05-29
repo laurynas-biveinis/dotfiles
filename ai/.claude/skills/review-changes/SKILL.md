@@ -20,6 +20,7 @@ allowed-tools: >-
   Write(//tmp/**)
   Agent
   Skill(review-changes-step)
+  Skill(review-changes-verify)
 ---
 
 # Code Review
@@ -51,7 +52,8 @@ commits"). Print the chosen scope at the top of the findings file.
 
 ## Confidence
 
-<!-- Keep in sync with the same section in review-changes-step. -->
+<!-- Keep in sync with the same section in review-changes-step and
+     review-changes-verify. -->
 
 Each finding carries an integer `Confidence: N%` (0–100) reflecting how
 strongly the evidence supports it. Calibration anchors:
@@ -72,7 +74,8 @@ per experiment, each giving a goal, a freeform procedure (commands that may
 branch on observed output), and what confirms or refutes the finding. The
 top-level reads each request as freeform and runs it; it does not parse a rigid
 schema, so the request format is defined only where requests are produced (the
-`review-changes-step` Output, and the verify/analyze contracts below).
+`review-changes-step` and `review-changes-verify` skills, and the analyze
+contract below).
 
 The draft always returns its findings in one reply, with any experiment
 requests attached alongside; the top-level runs those and feeds the results to
@@ -176,10 +179,13 @@ Phase 4.
 
 ### Phase 2 — Verification rounds
 
-For each round, spawn one verification subagent **per finding** in
-the current draft file, in parallel (single message, multiple Agent
-tool calls). The subagent contract is in **Verification subagents**
-below.
+For each round, invoke `review-changes-verify` once **per finding** in
+the current draft file, in parallel (single message, multiple
+`Skill(review-changes-verify)` calls). That skill holds the per-finding
+verification contract; build each invocation's prompt to supply the one
+finding's ID and full block, the scope as a Git command, the paths of
+all prior draft files (`draft-1.md` … `draft-<round>.md`) for dedup, and
+any experiment results (the matching `EXP` blocks) for that finding.
 
 Once the batch returns, validate each reply (rules below). Process
 the valid replies:
@@ -197,18 +203,19 @@ the valid replies:
 
 For each invalid reply, write nothing to disk; add the finding to
 the retry set. After the batch is fully processed, if the retry set
-is non-empty, dispatch a new parallel batch — one Agent call per
-retry-set finding, same prompt as the original attempt.
+is non-empty, dispatch a new parallel batch — one
+`Skill(review-changes-verify)` invocation per retry-set finding, same
+prompt as the original attempt.
 Repeat until the retry set is empty. **Budget: 2 retries (3 attempts
 total) per finding.** If any finding's third-attempt batch contains
 an invalid reply, abort the review (see **Abort on retry exhaustion**
 below).
 
-This batch-then-retry pattern reflects foreground Agent dispatch:
-parallel calls return as one batch, so retries naturally synchronize
-at attempt boundaries. Under background dispatch (asynchronous
-result delivery), retries can fire per finding as each result
-arrives, and the batch boundaries here are relaxed.
+This batch-then-retry pattern reflects foreground fork-skill dispatch:
+parallel invocations return as one batch, so retries naturally
+synchronize at attempt boundaries. Under background dispatch
+(asynchronous result delivery), retries can fire per finding as each
+result arrives, and the batch boundaries here are relaxed.
 
 Once every finding in `draft-<round>.md` has a valid verdict in the
 verdicts file, if `draft-<round+1>.md` exists and is non-empty, run
@@ -581,89 +588,6 @@ Assembly rules:
 Do **not** modify the reviewed code. Return the path of the final
 file and a brief summary to the caller. Leave draft and verdict files
 in place for audit.
-
-## Verification subagents
-
-Each verification subagent verifies exactly one finding. They are
-spawned in parallel via the Agent tool, with `subagent_type:
-general-purpose` and `model: opus`.
-
-Subagents **do not write files**. They return their output as their
-final message — both the verdict block and any proposed new findings.
-Only the top-level skill writes to `/tmp/review-changes-<topic>-*`.
-
-Each subagent must receive in its prompt:
-
-- The verdict-block schema and the structural validation rules the
-  reply must satisfy.
-- The `## Confidence` calibration anchors, plus the verifier
-  expectation: _raise_ the confidence of `keep` findings and _lower_
-  it on `drop`; a `keep` candidate that falls below 50 should usually
-  become a `drop`. No ordering is enforced structurally — the
-  validator only checks the value is an integer in `[0, 100]`.
-- The finding ID and the full finding block from the draft.
-- The scope as a Git command for the subagent to run (e.g.
-  `git diff --staged`, `git show HEAD`).
-- Paths of **all prior draft files** (`draft-1.md` …
-  `draft-<round>.md`) for deduplication of any new findings it
-  proposes.
-- Any experiment results for this finding (the matching `EXP` blocks from
-  the experiments file), if present.
-- An explicit instruction that it must not write files and must not
-  modify the project tree.
-- The instruction: "Ultrathink while verifying this finding."
-
-The subagent must **not** run experiments. If runtime evidence would help, it
-appends a `## Experiment requests` section whose every entry is a
-`### EXP — <what it tests>` header block (the header is required) giving a goal,
-a freeform procedure whose commands may branch on output, and what
-confirms/refutes; the top-level runs it. The entry need not name the finding —
-the top-level attributes the requests to the finding this subagent was spawned
-to verify. Two cases: if the experiment is needed to _decide_, return
-the requests with **no** verdict (a deferral) — the top-level re-spawns the
-subagent with the results; if the verdict is already settled but an experiment
-would aid the deeper analysis, return the verdict **and** the requests — the
-results flow to the analyst in Phase 3.
-
-The subagent must:
-
-1. Independently confirm the finding by reading the code, following
-   references, or consulting Git history. Do not hypothesize. If it
-   cannot be confirmed and no experiment would help, the verdict is
-   `drop`; if an experiment would settle it, defer (above) instead.
-1. Return one verdict block in exactly this schema. `Final confidence:`
-   is required on every verdict; the severity, title, location,
-   observation, and suggested-action lines may be omitted on
-   `Outcome: drop`:
-
-   ```markdown
-   ## Verdict: R<round>-<NNN>
-
-   - Outcome: keep | drop
-   - Final severity: CRITICAL | IMPORTANT | SUGGESTION
-   - Final confidence: <0–100>%
-   - Final title: <one-line title>
-   - Final location: `path/to/file.ext:LN`
-   - Final observation: <refined, with evidence>
-   - Final suggested action: <concrete fix>
-   - Verification trace: <what was checked to confirm/reject>
-   - Reason: <required on drop, explains why; optional on keep>
-   ```
-
-1. Optionally append a `## Proposed new findings` section after the
-   verdict, listing additional issues spotted while verifying. Each
-   entry must be a complete finding block (severity, confidence,
-   title, location, observation, suggested action) **without an ID**
-   — the top-level assigns IDs when it appends to the next draft.
-   Before listing a proposal, the subagent must confirm it is not a
-   duplicate of any finding in the prior draft files it was given;
-   duplicates are dropped silently.
-
-If a subagent's reply fails the **Subagent reply validation** rules
-in Phase 2, the top-level re-spawns the subagent with the same
-prompt, up to 2 retries (3 attempts total). If attempt 3 also fails,
-the review aborts; the subagent itself never returns `Outcome:
-error`.
 
 ## Analysis subagents
 

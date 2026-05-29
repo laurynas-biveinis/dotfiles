@@ -63,7 +63,8 @@ a user-specified range). Run it to see the changes to review.
 
 ## Confidence
 
-<!-- Keep in sync with the same section in review-changes. -->
+<!-- Keep in sync with the same section in review-changes and
+     review-changes-verify. -->
 
 Each finding carries an integer `Confidence: N%` (0–100) reflecting how
 strongly the evidence supports it. Calibration anchors:
