@@ -5,7 +5,7 @@ description: >-
   refactor at a logical-commit size. Skip routine mechanical changes
   (comments, formatting, simple renames). Presents findings without
   acting.
-model: opus
+model: sonnet
 effort: max
 allowed-tools: >-
   Bash(git diff:*)
@@ -19,6 +19,7 @@ allowed-tools: >-
   Glob
   Write(//tmp/**)
   Agent
+  Skill(review-changes-step)
 ---
 
 # Code Review
@@ -31,11 +32,11 @@ is responsible for ensuring `./check.sh` is green before invoking this
 skill — do not run `./check.sh`, the test suite, or builds against the
 project. You must not modify any file inside the project tree.
 
-Small isolated experiments are fine and encouraged when they sharpen a
-finding: a throwaway test case that reproduces a suspected bug, a
-one-off script that confirms a language rule, a regular expression
-tested against a few inputs. Run them in a scratch location (`/tmp`,
-`mktemp -d`) — never against project files.
+The draft/verify/analyze subagents never execute code; when one needs runtime
+evidence it emits an **experiment request**. The top-level (you) is the sole
+executor: you run each request in a scratch location (`/tmp`, `mktemp -d`),
+bounded by the isolation rules in **Experiment requests** below — which are the
+mandatory safety control.
 
 ## Scope
 
@@ -48,33 +49,9 @@ Use this precedence to choose what to review:
 The user may override with natural language ("review the last three
 commits"). Print the chosen scope at the top of the findings file.
 
-## Principles
-
-- **Correctness first.** Identify logic errors, edge cases, and broken
-  assumptions. If the foundation is wrong, say so directly and
-  recommend reconsidering the approach.
-- **Verify before claiming.** Confirm findings by reading the code,
-  following references, consulting Git history, or running a small
-  isolated experiment outside the project tree. Do not hypothesize.
-  If you cannot confirm a finding through any of these, drop it.
-- **Actionable and high-confidence.** Replace "this could be better"
-  with concrete edits and reasons (e.g. "Replace this nested loop
-  with a hash-map lookup to drop complexity from O(n²) to O(n)").
-- **Context-aware.** Consult `CLAUDE.md`, any stowed `CLAUDE-*.md`
-  files, and user/project memory to understand the standards the code
-  should meet and any prior incidents — not to enforce them.
-  Enforcement belongs to `./check.sh`, which the caller runs.
-
-## Severity
-
-- **CRITICAL** — bugs, security issues, or fundamental design flaws
-  that must be fixed.
-- **IMPORTANT** — performance problems, maintainability issues, or
-  violations of core principles.
-- **SUGGESTION** — improvements for readability, style, or minor
-  optimizations.
-
 ## Confidence
+
+<!-- Keep in sync with the same section in review-changes-step. -->
 
 Each finding carries an integer `Confidence: N%` (0–100) reflecting how
 strongly the evidence supports it. Calibration anchors:
@@ -85,67 +62,57 @@ strongly the evidence supports it. Calibration anchors:
   Git history; no remaining unknowns.
 - **50–69** — plausible from the code but one or more assumptions remain
   unverified.
-- **Below 50** — speculative. Phase 1 should usually drop these rather
-  than emit them; Phase 2 should usually `drop` on `keep` candidates
-  that fall here.
+- **Below 50** — speculative. Usually drop these rather than emit them.
 
-Verifiers are expected to _raise_ the confidence of `keep` findings and
-_lower_ the confidence of `drop` findings, but no ordering is enforced
-structurally — the validator only checks the value is an integer in
-`[0, 100]`.
+## Experiment requests
 
-## Checklist
+No subagent runs code. When the draft, a verifier, or an analyst needs runtime
+evidence, it appends a `## Experiment requests` section to its reply — one entry
+per experiment, each giving a goal, a freeform procedure (commands that may
+branch on observed output), and what confirms or refutes the finding. The
+top-level reads each request as freeform and runs it; it does not parse a rigid
+schema, so the request format is defined only where requests are produced (the
+`review-changes-step` Output, and the verify/analyze contracts below).
 
-- **Correctness** — does the code do what it's supposed to? Bugs or
-  logic errors?
-- **Edge cases** — boundary conditions, null values, error states?
-- **Performance** — obvious inefficiencies? O(n²) where O(n) would
-  work?
-- **Security — Input validation** — user inputs validated, sanitized,
-  length-limited?
-- **Security — Path traversal** — file paths validated against `../`
-  and symlink attacks?
-- **Security — Command injection** — shell commands parameterized,
-  not concatenated?
-- **Security — Data exposure** — secrets/passwords secure, not logged
-  or in errors?
-- **Security — Deserialization** — untrusted data validated before
-  parsing/deserializing?
-- **Security — Authentication** — permissions checked, no hardcoded
-  credentials?
-- **Security — Race conditions** — TOCTOU issues or unsynchronized
-  shared state?
-- **Maintainability** — readable? Functions/classes appropriately
-  sized?
-- **Testing — TDD compliance** — for testable projects, are changes
-  tested following TDD?
-- **Testing — Black-box** — tests use only public APIs (no internal
-  state access)?
-- **Testing — Single focus** — each test focused on one behavior?
-- **Testing — Descriptive names** — test names describe what they
-  verify?
-- **Testing — Edge coverage** — boundaries, null/empty inputs,
-  errors?
-- **Documentation** — complex logic and public APIs properly
-  documented?
-- **Design patterns** — SOLID where appropriate?
-- **Error handling** — errors caught, logged, and handled?
-- **Code duplication** — unnecessary repetition violating DRY?
-- **YAGNI — Extra features** — functionality beyond what was
-  requested?
-- **YAGNI — Premature abstraction** — abstractions for hypothetical
-  future use?
-- **YAGNI — Complexity** — solution more complex than the problem
-  requires?
-- **Project standards** — follows project-specific guidelines from
-  `CLAUDE.md`?
+The draft always returns its findings in one reply, with any experiment
+requests attached alongside; the top-level runs those and feeds the results to
+Phase 2's verifiers. A verifier or analyst may instead reply with experiment
+requests and **no** verdict/analysis — a _deferral_ — after which the top-level
+runs them and re-spawns that subagent with the results (Phase 2/3). (A verifier
+may also attach requests to a finished verdict; see Phase 2.)
 
-## Wrong-foundation handling
+**Isolation rules** — the requester must comply, and the top-level enforces them
+as a safety net on **every** concrete command before running it:
 
-If the diff is built on a wrong assumption that invalidates the
-approach, do not bury it under low-severity findings. State the
-assumption, give concrete evidence it is wrong, and suggest an
-alternative direction.
+- No writes outside a scratch dir (`mktemp -d`/`/tmp`) — reading project files
+  is fine; never `./check.sh`/tests/builds. Network only to read online docs.
+- Bounded and interpretable against Confirms/Refutes.
+
+**Run routine** (invoked whenever any tier returns requests):
+
+1. For each request, execute its Procedure adaptively — run a step, observe the
+   output, follow the request's branch logic to choose the next step. Before
+   running each concrete command, enforce the isolation rules: if a command
+   violates them, record `unsafe` and skip it. Otherwise run it; if a command is
+   refused or fails, that branch ends (`denied`). Capture the full step/output
+   trace.
+1. Append each outcome to `/tmp/review-changes-<topic>-experiments.md` (the
+   top-level is its sole writer) as an
+   `### EXP-<n> — supports <finding-ID> — <ok | denied | unsafe>` block with the
+   executed step/output trace and the Confirms/Refutes conclusion.
+1. Experiments are **never load-bearing**: `denied`/`unsafe`/failed simply means
+   the consuming tier proceeds on read/Git evidence and calibrates confidence
+   lower. They never abort the review.
+
+Splitting a reply on its `## Experiment requests` header uses the same
+CommonMark-aware rule as `## Proposed new findings`: split on the first such
+header that occurs as a true top-level line (outside any fenced code block or
+block quote); a reply may carry both sections.
+
+A request section is _parseable_ when it contains at least one `### EXP` entry
+(header present, body non-empty). A `## Experiment requests` header with no such
+entry is not parseable. This is the minimal recognition floor — not a rigid
+schema; the entry's own fields stay freeform per the producer contracts.
 
 ## Workflow: draft → (verify ⇄ analyze) → final
 
@@ -168,22 +135,37 @@ collides with an existing one.
 
 ### Phase 1 — Initial draft (round 1)
 
-Perform the review per the principles, severity definitions, and
-checklist above. Ultrathink as you review. Write findings to
-`/tmp/review-changes-<topic>-draft-1.md` as append-only blocks:
+Determine the scope (per **Scope** above) as a Git command and invoke the
+`review-changes-step` skill, passing the scope command as its argument. It
+returns the round-1 draft — the scope line and `R1-<NNN>` finding blocks.
 
-```markdown
-### R1-001 — CRITICAL — <one-line title>
+Validate the reply structurally: it must contain parseable `R1-<NNN>`
+blocks (or an explicit no-findings statement) and must not truncate
+mid-block. If the reply is unusable, re-invoke `review-changes-step` with
+the same arguments. **Budget: 2 retries (3 attempts total).** If attempt
+3 also fails, abort the review — write no `draft-1.md` — and return an
+abort message to the caller in the style of **Abort on retry
+exhaustion** below:
 
-- Confidence: 75%
-- Location: `path/to/file.ext:LN`
-- Observation: <what's wrong, with diff evidence>
-- Suggested action: <concrete fix>
+```text
+Review aborted in round 1: initial draft step exhausted retry budget
+(3 attempts, all failed).
 ```
 
-IDs use the format `R<round>-<NNN>`, with `NNN` in per-round
-discovery order. Include the scope line at the top of the file.
-If no findings, skip Phases 2 and 3 and proceed to Phase 4.
+On a valid reply, split off any `## Experiment requests` section (per the
+splitting rule in **Experiment requests**), then write the finding blocks
+verbatim to `/tmp/review-changes-<topic>-draft-1.md` as append-only blocks, with
+the scope line at the top — the top-level remains the **sole writer** of all
+`/tmp/review-changes-*` files. IDs use the format `R<round>-<NNN>`, with `NNN` in
+per-round discovery order; the step assigns the round-1 IDs.
+
+If the draft carried experiment requests, run them now via the **Experiment
+requests** run routine, recording results in
+`/tmp/review-changes-<topic>-experiments.md` keyed to the `R1-<NNN>` each
+supports; Phase 2 feeds each finding's results into its verifier.
+
+If the step reports no findings, skip Phases 2 and 3 and proceed to
+Phase 4.
 
 ### Phase 2 — Verification rounds
 
@@ -225,16 +207,20 @@ Once every finding in `draft-<round>.md` has a valid verdict in the
 verdicts file, if `draft-<round+1>.md` exists and is non-empty, run
 another round on that new draft. Otherwise iteration stops.
 
-Safety stop: **50 drafts.** This bounds every draft the review ever
-opens — those from verification rounds _and_ those Phase 3 analysis
-emits — under a single cap. It is a runaway-loop guard, not a quality
-knob; convergence is expected far sooner. If the 50th draft still
-produces new findings, stop and record the truncation in the final
-summary.
+Safety stop: **50 iterations.** This bounds, under a single cap, every
+iteration the review performs — each draft opened (verification rounds
+_and_ those Phase 3 analysis emits) _and_ each experiment-request re-spawn
+(Phase 2 or 3). It is a runaway-loop guard, not a quality knob;
+convergence is expected far sooner. If the cap is hit while iterations
+are still producing new findings or experiment requests, stop and record
+the truncation in the final summary.
 
 #### Subagent reply validation
 
-A reply is _unusable_ if any of the following holds:
+A verifier reply contains a verdict, or a `## Experiment requests` section, or
+both (see **Experiment deferrals**). The rules below judge the verdict part; a
+reply with a well-formed request section and no verdict (a deferral) is not
+unusable. A verdict (when present) is _unusable_ if any of the following holds:
 
 1. Agent invocation returned an error or timeout.
 1. Reply lacks a `## Verdict: <assigned-ID>` header for the
@@ -253,6 +239,26 @@ A reply is _unusable_ if any of the following holds:
 
 Detection is purely structural. The top-level does not judge verdict
 quality, only schema conformance.
+
+#### Experiment deferrals
+
+Run any `## Experiment requests` a verifier returns via the **Experiment
+requests** run routine, appending results to the experiments file. Then:
+
+- **Requests with no verdict (a deferral):** the verifier needs the results to
+  decide — re-spawn it; the rebuilt prompt's "Any experiment results for this
+  finding" bullet now carries the new `EXP` blocks, so nothing is separately
+  appended.
+- **Requests alongside a verdict:** process the verdict normally (no re-spawn);
+  the experiment results stay in the experiments file and flow to the analyst
+  for that finding in Phase 3 (via the analyst prompt's same bullet). This lets
+  a verifier that has already decided still queue evidence the deeper analysis
+  will want.
+
+Each re-spawn is a normal main-loop iteration counted under the single
+50-iteration safety cap — there is **no** separate experiment budget. A request
+section that is not parseable (see **Experiment requests**) counts as an invalid
+reply under the retry budget.
 
 #### Abort on retry exhaustion
 
@@ -391,7 +397,7 @@ findings from the valid replies:
 verify it — verification runs to convergence as usual, possibly opening
 further drafts — then return to Phase 3 to analyze the findings it kept
 (skipping any already analyzed). Repeat until an analysis pass produces
-no surviving new draft. Then proceed to Phase 4. The 50-draft safety
+no surviving new draft. Then proceed to Phase 4. The 50-iteration safety
 cap bounds the combined loop.
 
 If there are no kept findings at all, skip Phase 3 entirely and
@@ -422,6 +428,22 @@ must honor fenced-code-block and code-span boundaries, so `#`/`##`
 lines a body quotes inside a fence are treated as neither headings nor
 section delimiters. The top-level does not judge analysis quality, only
 schema conformance.
+
+An analyst that needs runtime evidence may instead return a `## Experiment
+requests` section and **no** analysis block. Handle the happy path as in
+Phase 2's **Experiment deferrals**: run the requests via the run routine, append
+results, and re-spawn the analyst — the rebuilt prompt's "Any experiment results
+for this finding" bullet then carries the new `EXP` blocks, so nothing is
+separately appended. Each re-spawn is a main-loop iteration under the single
+50-iteration safety cap — no separate experiment budget. The edge cases follow
+Phase 3's own **non-fatal** handling, not Phase 2's abort: a reply carrying both
+an analysis block and requests is treated as an analysis (requests ignored), and
+a deferral whose request section is not parseable (see **Experiment requests**)
+counts as an invalid analysis reply under Phase 3's retry budget (→ exhaustion
+marker, never abort).
+If the cap is hit while the analyst is still deferring, proceed without the
+experiment and treat it as the analysis-exhaustion case (exhaustion marker, noted
+in the Summary).
 
 ### Phase 4 — Final assembly
 
@@ -468,7 +490,7 @@ recommendation, caveats; whatever the subagent produced>
 many times analysis fed findings back to verification); total drafted;
 total kept; total dropped; total analyzed; findings proposed by
 analysis (and how many survived dedup); analyses skipped due to retry
-exhaustion (list IDs, if any); truncation note if the 50-draft stop
+exhaustion (list IDs, if any); truncation note if the 50-iteration stop
 fired>
 ```
 
@@ -512,7 +534,7 @@ in place for audit.
 
 Each verification subagent verifies exactly one finding. They are
 spawned in parallel via the Agent tool, with `subagent_type:
-general-purpose`.
+general-purpose` and `model: opus`.
 
 Subagents **do not write files**. They return their output as their
 final message — both the verdict block and any proposed new findings.
@@ -521,31 +543,42 @@ Only the top-level skill writes to `/tmp/review-changes-<topic>-*`.
 Each subagent must receive in its prompt:
 
 - The verdict-block schema and the structural validation rules the
-  reply must satisfy, copied verbatim from this skill.
-- The "Confidence" section (calibration anchors and the
-  raise-on-keep / lower-on-drop expectation), copied verbatim from
-  this skill.
+  reply must satisfy.
+- The `## Confidence` calibration anchors, plus the verifier
+  expectation: _raise_ the confidence of `keep` findings and _lower_
+  it on `drop`; a `keep` candidate that falls below 50 should usually
+  become a `drop`. No ordering is enforced structurally — the
+  validator only checks the value is an integer in `[0, 100]`.
 - The finding ID and the full finding block from the draft.
 - The scope as a Git command for the subagent to run (e.g.
   `git diff --staged`, `git show HEAD`).
 - Paths of **all prior draft files** (`draft-1.md` …
   `draft-<round>.md`) for deduplication of any new findings it
   proposes.
+- Any experiment results for this finding (the matching `EXP` blocks from
+  the experiments file), if present.
 - An explicit instruction that it must not write files and must not
   modify the project tree.
 - The instruction: "Ultrathink while verifying this finding."
 
-Small isolated experiments outside the project tree (e.g. in
-`mktemp -d`) are fine if they sharpen the verdict; summarize the
-experiment in the verification trace rather than writing a file the
-top-level will not read.
+The subagent must **not** run experiments. If runtime evidence would help, it
+appends a `## Experiment requests` section whose every entry is a
+`### EXP — <what it tests>` header block (the header is required) giving a goal,
+a freeform procedure whose commands may branch on output, and what
+confirms/refutes; the top-level runs it. The entry need not name the finding —
+the top-level attributes the requests to the finding this subagent was spawned
+to verify. Two cases: if the experiment is needed to _decide_, return
+the requests with **no** verdict (a deferral) — the top-level re-spawns the
+subagent with the results; if the verdict is already settled but an experiment
+would aid the deeper analysis, return the verdict **and** the requests — the
+results flow to the analyst in Phase 3.
 
 The subagent must:
 
 1. Independently confirm the finding by reading the code, following
-   references, consulting Git history, or running an isolated
-   experiment. Do not hypothesize. If it cannot be confirmed, the
-   verdict is `drop`.
+   references, or consulting Git history. Do not hypothesize. If it
+   cannot be confirmed and no experiment would help, the verdict is
+   `drop`; if an experiment would settle it, defer (above) instead.
 1. Return one verdict block in exactly this schema. `Final confidence:`
    is required on every verdict; the severity, title, location,
    observation, and suggested-action lines may be omitted on
@@ -584,7 +617,7 @@ error`.
 
 Each analysis subagent analyzes exactly one kept finding. They are
 spawned in parallel via the Agent tool, with `subagent_type:
-general-purpose`.
+general-purpose` and `model: opus`.
 
 Analysis subagents **do not write files**. They return the analysis
 as their final message. Only the top-level skill writes to
@@ -600,11 +633,13 @@ Each subagent must receive in its prompt:
   stack — see Phase 3): the stack as a list of SHA + subject, and the
   blame-target revision `REV` (computed once in Phase 3).
 - The analysis schema and the structural validation rules the reply
-  must satisfy, copied verbatim from this skill.
+  must satisfy.
 - Paths of **all prior draft files** (`draft-1.md` …
   `draft-<round>.md`), so it can self-suppress proposals that
   duplicate an already-raised finding. This is best-effort only; the
   top-level dedups authoritatively against all raw findings.
+- Any experiment results for this finding (the matching `EXP` blocks from
+  the experiments file), if present.
 - An explicit instruction that it must not write files and must not
   modify the project tree.
 - The instruction: "Analyze, research, and ultrathink about this
@@ -638,10 +673,15 @@ Each subagent must receive in its prompt:
   section to genuinely new issues; do not restate or re-scope the
   finding under analysis."
 
-Small isolated experiments outside the project tree (e.g. in
-`mktemp -d`) are fine if they sharpen the analysis; summarize the
-experiment inline rather than writing a file the top-level will not
-read.
+The analyst must **not** run experiments. If runtime evidence would
+sharpen the analysis, it returns an experiment-request deferral instead:
+a `## Experiment requests` section whose every entry is a
+`### EXP — <what it tests>` header block (the header is required) giving a
+goal, a freeform procedure whose commands may branch on output, and what
+confirms or refutes the finding — and **no** analysis block. The entry need
+not name the finding; the top-level attributes the requests to the finding
+this subagent was spawned to analyze. The top-level runs it and re-spawns the
+analyst with the result.
 
 The subagent must return the analysis block in this schema, beginning
 its reply with the `#### Analysis: <ID>` header line (no preamble
