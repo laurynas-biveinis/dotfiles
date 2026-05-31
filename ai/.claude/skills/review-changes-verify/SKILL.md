@@ -2,10 +2,7 @@
 description: >-
   Internal step of review-changes: verify one draft finding against the
   code and return its verdict block.
-context: fork
-agent: general-purpose
 model: opus
-effort: max
 user-invocable: false
 allowed-tools: >-
   Bash(git diff:*)
@@ -35,8 +32,10 @@ Your invocation prompt supplies, for the single finding you must verify:
 - The finding **ID** and its full finding block from the current draft.
 - The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
   `git show HEAD`, or a user-specified range). Run it to see the reviewed change.
-- Paths of **all prior draft files** (`draft-1.md` … `draft-<round>.md`), so you
-  can deduplicate any new findings you propose against issues already raised.
+- Paths of **the prior draft files that exist**, so you can self-suppress
+  proposals that duplicate an already-raised finding. This is best-effort; the
+  top-level dedups authoritatively against all raw findings (kept, dropped, or
+  rejected alike).
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
 
@@ -65,9 +64,15 @@ Ultrathink while verifying this finding. You **cannot execute code or write
 files** — your tools are read and Git only.
 
 1. Independently confirm the finding by reading the code, following references,
-   or consulting Git history. Do not hypothesize. If it cannot be confirmed and
-   no experiment would help, the verdict is `drop`; if an experiment would
-   settle it, defer (see **Experiment requests**) instead.
+   or consulting Git history. Do not hypothesize. A finding fails verification —
+   verdict `drop` — in either of two ways: (a) it **cannot be confirmed** and no
+   experiment would help (if an experiment would settle it, defer instead — see
+   **Experiment requests**); or (b) it is confirmed but **records no defect** —
+   its refined observation identifies nothing wrong and its suggested action is
+   empty or "none". Confirmation establishes that a finding is _true_; a true
+   statement that prescribes no fix is a verification note, not a review finding,
+   so `drop` it (give that as the reason) rather than keeping it as a zero-action
+   SUGGESTION.
 1. Return one verdict block in exactly the schema below. `Final confidence:` is
    required on every verdict; the severity, title, location, observation, and
    suggested-action lines may be omitted on `Outcome: drop`.
@@ -96,7 +101,7 @@ finding block (severity, confidence, title, location, observation, suggested
 action) **without an ID** — the top-level assigns IDs when it appends to the
 next draft. Before listing a proposal, confirm it is not a duplicate of any
 finding in the prior draft files you were given; duplicates are dropped
-silently.
+silently. The top-level re-dedups authoritatively, so this check is best-effort.
 
 ```markdown
 ## Proposed new findings
@@ -124,6 +129,11 @@ attributes the requests to the finding you were invoked to verify. Two cases:
 - If the verdict is already settled but an experiment would aid the deeper
   analysis, return the verdict **and** the requests — the results flow to the
   analysis step.
+
+Your experiments test a **finding's validity only**. You never author or ground
+a remedy — attached requests exist solely to feed the analysis step, which never
+re-invokes you — so remedy-feasibility experiments are reserved for the analysis
+tier.
 
 Keep each procedure isolated and bounded: no writes outside a scratch dir
 (`mktemp -d`/`/tmp`) — reading project files is fine; never

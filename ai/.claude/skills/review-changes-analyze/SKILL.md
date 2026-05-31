@@ -2,10 +2,7 @@
 description: >-
   Internal step of review-changes: deeply analyze one kept finding and
   return its analysis block (or a rejection).
-context: fork
-agent: general-purpose
 model: opus
-effort: max
 user-invocable: false
 allowed-tools: >-
   Bash(git diff:*)
@@ -40,9 +37,10 @@ Your invocation prompt supplies, for the single finding you must analyze:
   unpublished stack): the **stack** as a list of SHA + subject, and the
   blame-target revision `REV`. When these are absent, omit any placement
   discussion.
-- Paths of **all prior draft files** (`draft-1.md` … `draft-<round>.md`), so you
-  can self-suppress proposals that duplicate an already-raised finding. This is
-  best-effort; the top-level dedups authoritatively against all raw findings.
+- Paths of **the prior draft files that exist**, so you can self-suppress
+  proposals that duplicate an already-raised finding. This is best-effort; the
+  top-level dedups authoritatively against all raw findings (kept, dropped, or
+  rejected alike).
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
 
@@ -160,25 +158,55 @@ silently. The top-level re-dedups authoritatively, so this check is best-effort.
 - Suggested action: <concrete fix>
 ```
 
-`## Rejection` and `## Proposed new findings` are the only higher-level (`##`)
-headings allowed in a reply that carries an analysis block. A reply may carry
-both — a rejecting analyst that also spotted a genuinely different issue still
-reports it.
+`## Rejection`, `## Proposed new findings`, and `## Experiment requests` are the
+only higher-level (`##`) headings allowed in a reply that carries an analysis
+block. A reply may carry more than one — a rejecting analyst that also spotted a
+genuinely different issue still reports it — except that `## Rejection` and
+`## Experiment requests` may never co-occur (rejecting is terminal; see
+**Experiment requests** below).
 
 ## Experiment requests
 
 You **must not** run experiments. If runtime evidence would sharpen the
-analysis, return a `## Experiment requests` section whose every entry is a
-`### EXP — <what it tests>` header block (the header is required) giving a goal,
-a freeform procedure whose commands may branch on output, and what
-confirms/refutes — and **no** analysis block and **no** `## Rejection` section
-(a _deferral_). The top-level runs it and re-invokes analysis with the results.
-The entry need not name the finding — the top-level attributes the requests to
-the finding you were invoked to analyze.
+analysis — **including whether a suggested action or one of your options is
+actually feasible given the tooling, environment, or APIs, not only whether the
+finding is valid** — return a `## Experiment requests` section whose every entry
+is a `### EXP — <what it tests>` header block (the header is required) giving a
+goal, a freeform procedure whose commands may branch on output, and what
+confirms/refutes (a finding's validity **or a remedy's feasibility**). The entry
+need not name the finding — the top-level attributes the requests to the finding
+you were invoked to analyze. Return the section in one of two shapes:
 
-A deferral and a rejection are mutually exclusive: deferring means you have not
-yet decided and need the evidence first, so you cannot also reject — return one
-or the other, never both.
+- **Deferral** — requests and **no** analysis block: you cannot decide the
+  finding yet and need the evidence first. The top-level runs the experiments
+  and re-invokes you with the results.
+- **Alongside an analysis** — requests _plus_ your completed analysis block:
+  your analysis stands, but a suggested action (or option) asserts a
+  tooling/environment capability you have not verified. The top-level runs the
+  experiments and re-invokes you with the results so you can finalize that
+  suggested action. When re-invoked with results, you have three valid replies:
+  return your **finalized analysis** with no further requests (if the results
+  settle it); attach **another `## Experiment requests` section** alongside your
+  updated analysis block (if they surface a further unverified capability); or,
+  if the results instead disprove the finding, **reject it** with a
+  `## Rejection` section and no experiment requests. Do **not** return a pure
+  deferral — once you have produced an alongside analysis, always carry an
+  analysis block (or a rejection) forward; requests with no analysis block in
+  this context are invalid. Note that the caller does not retry an alongside
+  re-spawn: any validation failure terminates the loop immediately and falls
+  back to your latest provisional analysis (the 3-attempt budget governs only
+  the initial dispatch and pure deferrals), so when uncertain prefer returning a
+  finalized analysis over attaching yet another experiment batch.
+
+**Mandate:** if your recommendation hinges on an unverified capability of the
+tooling, environment, or APIs — e.g. whether a parameter, keyword, or config
+actually has the claimed effect — do **not** present it as an unvalidated option
+or punt its feasibility to the reader. Either defer, or attach the experiment
+alongside your analysis, so the remedy you recommend is grounded.
+
+A `## Rejection` is incompatible with **either** shape: rejecting is a terminal
+decision, so you cannot also request experiments — never combine a `## Rejection`
+with a `## Experiment requests` section.
 
 Keep each procedure isolated and bounded: no writes outside a scratch dir
 (`mktemp -d`/`/tmp`) — reading project files is fine; never
@@ -191,5 +219,6 @@ Keep each procedure isolated and bounded: no writes outside a scratch dir
 
 - Goal: <what you are trying to establish>
 - Procedure: <freeform; one or more steps that may branch on observed output>
-- Confirms / Refutes: <result patterns that decide the finding>
+- Confirms / Refutes: <result patterns that decide the finding, or the
+  feasibility of a proposed remedy>
 ```

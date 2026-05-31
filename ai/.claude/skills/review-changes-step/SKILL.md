@@ -2,10 +2,7 @@
 description: >-
   Internal step of review-changes: perform one code-review pass over a
   given scope and return the draft findings.
-context: fork
-agent: general-purpose
 model: opus
-effort: max
 user-invocable: false
 allowed-tools: >-
   Bash(git diff:*)
@@ -19,7 +16,7 @@ allowed-tools: >-
   Glob
 ---
 
-# Code Review — Initial Draft Step
+# Code Review — Draft Step
 
 Perform a single review pass over the given scope and return the draft findings
 as your final message.
@@ -29,9 +26,17 @@ only. You must not modify any file inside the project tree.
 
 ## Input
 
-Your invocation arguments (`$ARGUMENTS`) supply the **scope** as a Git
-command to run (e.g. `git diff --staged`, `git diff`, `git show HEAD`, or
-a user-specified range). Run it to see the changes to review.
+Your invocation prompt supplies:
+
+- The **round index `N`** for this pass. The top-level may run this step several
+  times over the same scope (independent re-draft passes) and hands out a fresh
+  `N` each time. Use `N` as the round index for every `R<N>-<NNN>` ID you
+  assign. If no `N` is given, treat it as `1`.
+- The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
+  `git show HEAD`, or a user-specified range). Run it to see the changes to
+  review.
+
+You do a single fresh pass each invocation; you carry no state between runs.
 
 ## Principles
 
@@ -140,10 +145,11 @@ verification.
 
 ## Output
 
-Return the scope line first, then one append-style block per finding:
+Return the scope line first — including the round index, e.g.
+`Scope (round 3): git diff --staged` — then one append-style block per finding:
 
 ```markdown
-### R1-001 — CRITICAL — <one-line title>
+### R<N>-001 — CRITICAL — <one-line title>
 
 - Confidence: 75%
 - Location: `path/to/file.ext:LN`
@@ -151,9 +157,12 @@ Return the scope line first, then one append-style block per finding:
 - Suggested action: <concrete fix>
 ```
 
-- IDs use the format `R1-<NNN>`, with `NNN` in per-round discovery order (`001`,
-  `002`, …). You assign only round-1 IDs.
+- IDs use the format `R<N>-<NNN>`, where `N` is the round index you were given
+  and `NNN` runs in per-round discovery order (`001`, `002`, …).
 - Use the severity values and confidence calibration from the rubric.
+- Do not emit a finding whose suggested action is empty or "none", or that only
+  confirms existing code is correct — that is a non-finding, not a SUGGESTION;
+  omit it.
 - If you find nothing, say so explicitly (e.g. "No findings.") instead of
   emitting empty blocks.
 
@@ -167,8 +176,8 @@ confidence), naming the experiment that would settle it.
 
 ### EXP — <what it tests>
 
-- Supports: R1-<NNN> (the finding this experiment bears on — the top-level keys
-  each result by this ID; required, since one reply may carry requests for
+- Supports: R<N>-<NNN> (the finding this experiment bears on — the top-level
+  keys each result by this ID; required, since one reply may carry requests for
   several findings)
 - Goal: <what you are trying to establish>
 - Procedure: <freeform; one or more steps that may branch on observed output —
