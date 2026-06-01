@@ -64,18 +64,6 @@ else
 	echo "No Markdown files found, skipping"
 fi
 
-echo -n "Checking Markdown with mdl... "
-if [ ${#MD_FILES[@]} -gt 0 ]; then
-	if mdl --no-verbose "${MD_FILES[@]}"; then
-		echo "OK!"
-	else
-		echo "mdl check failed"
-		ERRORS=$((ERRORS + 1))
-	fi
-else
-	echo "No Markdown files found, skipping"
-fi
-
 echo -n "Checking Markdown with markdownlint-cli... "
 if [ ${#MD_FILES[@]} -gt 0 ]; then
 	if markdownlint "${MD_FILES[@]}"; then

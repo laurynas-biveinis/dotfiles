@@ -387,9 +387,6 @@ sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.d
 sudo ln -sf en_US.aff en_LT.aff
 sudo ln -sf en_US.dic en_LT.dic
 
-# Try to prevent missing dependency errors by installing last known good version
-sudo gem install mixlib-shellout -v 3.3.8
-sudo gem install mdl
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
 	basictex signal whatsapp qfinder-pro rar docker
 xattr -cr /opt/homebrew/bin/unrar
