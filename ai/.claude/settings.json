@@ -68,6 +68,17 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -j 'select(.tool_input.file_path | endswith(\".md\")) | .tool_input.file_path + \"\\u0000\"' | xargs -0 -r prettier --write"
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
