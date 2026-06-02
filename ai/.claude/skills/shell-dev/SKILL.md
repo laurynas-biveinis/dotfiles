@@ -1,10 +1,11 @@
-# CLAUDE-shell.md
+---
+description: >-
+  Shell script development guidelines (bash, zsh, sh). Apply whenever writing,
+  editing, reviewing, or discussing shell scripts (.sh, .zsh, .bash files).
+user-invocable: false
+---
 
-This file provides guidance to you, Claude Code, when working with any shell
-scripts owned by the user. This file will be imported by the global user memory
-file.
-
-## Shell Script Guidelines
+# Shell Script Guidelines
 
 - The default shell for any new executable scripts is Zsh. Use `#!/bin/zsh`
   shebang. However, there are some scripts that are not directly executable but

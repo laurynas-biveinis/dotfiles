@@ -45,13 +45,6 @@ unblocking).
 If `org-mcp` is unavailable at session start, proceed without it; the user is
 aware. If it disappears mid-session, stop and ask the user for guidance.
 
-## Domain Specific Memory Extensions
-
-For code in these languages, include these files in memory:
-
-- Elisp (Emacs Lisp): @CLAUDE-elisp.md
-- Shell scripts: @CLAUDE-shell.md
-
 ## Guardrails
 
 If the repository has a `./check.sh` script, it runs tests and formatting

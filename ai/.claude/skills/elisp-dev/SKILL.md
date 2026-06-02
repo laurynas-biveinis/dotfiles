@@ -1,22 +1,23 @@
-# CLAUDE-elisp.md
+---
+description: >-
+  Emacs Lisp (elisp) development guidelines. Apply whenever writing, editing,
+  reviewing, or discussing Emacs Lisp / elisp code or .el files.
+user-invocable: false
+---
 
-This file provides guidance to you, Claude Code, when working with any Elisp
-(Emacs Lisp) source code owned by the user. This file will be imported by the
-global user memory file.
+# Elisp Guidelines
 
-## Elisp Guidelines
-
-### Supported versions and compatibility
+## Supported versions and compatibility
 
 The oldest supported Emacs version is 27.1. The code must be compatible with
 this and all the newer versions.
 
-### Operation principles
+## Operation principles
 
 - Use `.dir-locals.el` to set up `elisp-lint-indent-specs` for `elisp-autofmt`
   as needed.
 
-### File-level guidelines
+## File-level guidelines
 
 - Use the common Elisp package file structure template.
 - Use lexical binding (`-*- lexical-binding: t -*-`).
@@ -24,12 +25,12 @@ this and all the newer versions.
   code section.
 - All declarations must be above their first uses.
 
-### Dependencies
+## Dependencies
 
 - The use of `cl-lib` for modern Common Lisp constructs (`cl-defun`, `cl-letf`,
   etc.) is allowed as needed.
 
-### Symbol-level guidelines
+## Symbol-level guidelines
 
 - Prefer named functions to lambdas always except when lambda must capture
   variables from the surrounding lexical scope.
@@ -37,7 +38,7 @@ this and all the newer versions.
 - All internal symbols must finish the package name prefix with a double hyphen.
 - All symbols must have documentation strings.
 
-### Function-level guidelines
+## Function-level guidelines
 
 - Never use `let*` for one binding, always use plain `let` then. Pay attention
   when you remove bindings to leave only one untouched.
@@ -59,7 +60,7 @@ this and all the newer versions.
     (process value))
   ```
 
-### Testing
+## Testing
 
 - Test filenames must end with `-test.el`
 - Tests must use ERT (Emacs Lisp Regression Testing) framework
