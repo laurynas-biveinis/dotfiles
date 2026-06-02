@@ -122,3 +122,8 @@ A logical commit represents a single, cohesive change that:
 - Doesn't mix unrelated concerns
 
 When in doubt: "Does this commit tell one coherent story?"
+
+## GitHub
+
+When posting any comment, review, or reply on GitHub via the `gh` CLI, begin
+the body with `(LLM agent)`.
