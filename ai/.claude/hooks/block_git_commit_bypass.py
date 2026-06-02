@@ -40,15 +40,27 @@ def _has_direct_files(parts):
             continue
         if part.startswith("-"):
             # Check if this flag takes an argument
-            if part in ["-m", "--message", "-i", "--include", "-o", "--only"]:
+            if part in [
+                "-m",
+                "--message",
+                "-F",
+                "--file",
+                "-i",
+                "--include",
+                "-o",
+                "--only",
+            ]:
                 skip_next = True
-            elif part.startswith("--message="):
+            elif part.startswith("--message=") or part.startswith("--file="):
                 continue
-        elif part.startswith("<<"):
-            # Heredoc redirect: the rest is message content, not a file argument
+        elif part == "&&" or part == ";" or part.startswith("|"):
+            # Shell separator: git commit command ends here
             return False
-        elif part != "&&" and part != ";" and not part.startswith("|"):
-            # Found a non-flag argument, likely a file
+        elif part.startswith("<<"):
+            # Heredoc redirect: message content, not a file argument
+            return False
+        else:
+            # Non-flag argument, likely a file
             return True
     return False
 
