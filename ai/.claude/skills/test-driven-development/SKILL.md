@@ -11,12 +11,12 @@ user-invocable: false
 
 With the smallest possible iteration steps, use red-green TDD as follows:
 
-1. Analyze, ultrathink, ask the user any clarifying questions to fully
-   understand what needs to be done. Follow the YAGNI (You Ain't Gonna Need It)
-   principle and do NOT design functionality not asked for, but feel free to
-   note it and ask the user for feedback. Only then design. Strive for
-   simplicity. For any non-trivially sized plan, write it to a scratch plan
-   file.
+1. Ultrathink about the full scope of the task. Analyze what needs to be done,
+   ask the user any clarifying questions to fully understand it. Follow the
+   YAGNI (You Ain't Gonna Need It) principle and do NOT design functionality not
+   asked for, but feel free to note it and ask the user for feedback. Only then
+   design. Strive for simplicity. For any non-trivially sized plan, write it to
+   a scratch plan file.
 1. Run `./check.sh` to ensure you are starting from a clean baseline.
 1. Write user-facing documentation for the feature or for any behavior changes
    by a bugfix.
@@ -38,8 +38,8 @@ With the smallest possible iteration steps, use red-green TDD as follows:
 1. Go back to the refactoring step until you no longer see any good
    refactorings.
 1. If the code change is at a logical commit size (see Commit Guidelines in
-   CLAUDE.md), invoke the `review-changes` skill to do the code review.
-   Present the findings file path and summary it returns to the user, and
-   wait for the next steps. Do not invoke the review-changes skill for
-   routine mechanical changes (comments, formatting, simple renames).
+   CLAUDE.md), invoke the `review-changes` skill to do the code review. Present
+   the findings file path and summary it returns to the user, and wait for the
+   next steps. Do not invoke the review-changes skill for routine mechanical
+   changes (comments, formatting, simple renames).
 1. Repeat for the next iteration.
