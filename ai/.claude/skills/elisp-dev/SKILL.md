@@ -60,6 +60,14 @@ this and all the newer versions.
     (process value))
   ```
 
+## Literals
+
+- Prefer `'(...)` to `(list ...)` for literal lists; use `(list ...)` only when
+  elements must be evaluated, or when the resulting list will be destructively
+  modified (`setcar`/`setcdr`/`nconc`/`sort`) — quoted literals are
+  shared constants and must not be mutated. The same applies to `[...]` vector
+  literals.
+
 ## Testing
 
 - Test filenames must end with `-test.el`
