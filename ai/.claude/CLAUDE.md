@@ -91,6 +91,25 @@ YAGNI exception: a single-caller abstraction is acceptable when it meaningfully
 breaks up a long, deeply nested function. Readability of the original site
 outweighs the "no helper for a one-shot" default in this case.
 
+## Test Code
+
+Test code must be fail-fast and fail-hard — no defensive programming:
+
+- Assert directly on values without null/optional guards. Let the test crash if
+  the value is missing; never write
+  `if x = get-value(); x != nil: assert x.value == 42` —
+  write `assert get-value().value == 42`.
+- Never catch exceptions in test bodies unless the test explicitly targets error
+  behavior. Never use `try/catch` to silently discard errors.
+- Do not use fallback operators (`x or default`, `x ?? default`, null-guard
+  forms) on values under test — they mask failures.
+- Do not use conditional assertions (`if condition: assert ...`); the test
+  silently passes when the condition is false.
+- Assert specific expected values, not just existence:
+  `assert x == 42` rather than `assert x != nil`.
+- Test helpers and setup code must fail loudly on unexpected state, not degrade
+  gracefully.
+
 ## Code Comments
 
 - Do not add comments that restate the code.
