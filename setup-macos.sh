@@ -191,7 +191,7 @@ defaults write com.apple.HIToolbox AppleDictationAutoEnable -int 1
 # Keyboard
 #
 defaults write -g KeyRepeat -int 2
-defaults write -g InitialKeyRepeat -int 25
+defaults write -g InitialKeyRepeat -int 15
 
 # Go to System Preferences -> Keyboard -> Keyboard Shortcuts:
 # - Input Sources: uncheck:
