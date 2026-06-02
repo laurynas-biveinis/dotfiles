@@ -44,6 +44,9 @@ def _has_direct_files(parts):
                 skip_next = True
             elif part.startswith("--message="):
                 continue
+        elif part.startswith("<<"):
+            # Heredoc redirect: the rest is message content, not a file argument
+            return False
         elif part != "&&" and part != ";" and not part.startswith("|"):
             # Found a non-flag argument, likely a file
             return True
@@ -75,14 +78,14 @@ def main():
     """Process the tool input and block inappropriate git commit commands."""
     try:
         # Read the tool input from stdin
-        tool_input = json.load(sys.stdin)
+        input_data = json.load(sys.stdin)
 
         # Extract the command from the Bash tool input
-        if tool_input.get("tool") != "Bash":
+        if input_data.get("tool_name") != "Bash":
             # Not a Bash command, allow it
             sys.exit(0)
 
-        command = tool_input.get("params", {}).get("command", "")
+        command = input_data.get("tool_input", {}).get("command", "")
 
         # Check if this is a git commit command
         if not re.search(r"\bgit\s+commit\b", command):
