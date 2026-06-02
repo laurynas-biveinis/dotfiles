@@ -34,11 +34,6 @@
           },
           {
             "type": "command",
-            "if": "Bash(git commit *)",
-            "command": "python3 ~/.claude/hooks/block_git_commit_bypass.py"
-          },
-          {
-            "type": "command",
             "if": "Bash(git *)",
             "command": "python3 ~/.claude/hooks/block_git_wildcard_staging.py"
           }
