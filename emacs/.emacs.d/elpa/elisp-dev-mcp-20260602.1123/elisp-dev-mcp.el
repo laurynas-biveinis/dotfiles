@@ -16,9 +16,9 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; Author: Laurynas Biveinis
-;; Package-Version: 20260601.634
-;; Package-Revision: c399ad6126d0
-;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.3.0"))
+;; Package-Version: 20260602.1123
+;; Package-Revision: 6120460212e0
+;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.4.0"))
 ;; Keywords: tools, development
 ;; URL: https://github.com/laurynas-biveinis/elisp-dev-mcp
 
@@ -776,6 +776,8 @@ MCP Parameters:
   "Enable the Elisp development MCP tools."
   (mcp-server-lib-register-server
    :id elisp-dev-mcp--server-id
+   :name elisp-dev-mcp--server-id
+   :version "1.3.0"
    :tools
    (list
     (list
@@ -841,9 +843,6 @@ Use this tool when you need to:
 exposing its value. Essential for understanding variable definitions,
 types, and relationships in Elisp code.
 
-Parameters:
-  variable - Variable name as a string (e.g., \"load-path\", \"custom-file\")
-
 Returns JSON object with these fields:
   name - Variable name (string, always present)
   bound - Whether variable has a value (boolean, always present)
@@ -892,9 +891,6 @@ Error cases return error messages for:
 documentation node. Returns the full content of the Info node containing
 the symbol's documentation from the Emacs Lisp Reference Manual.
 
-Parameters:
-  symbol - The Elisp symbol to look up (string)
-
 Returns JSON with:
   found - Whether documentation was found (boolean)
   symbol - The symbol that was looked up (string)
@@ -931,10 +927,6 @@ Error cases:
      :description
      "Read Elisp source files from Emacs system directories or ELPA packages.
 Accepts either library names or absolute file paths.
-
-Parameters:
-  library-or-path - Library name (e.g., \\='subr', \\='mcp-server-lib') or
-                    absolute path to .el file (string)
 
 Input modes:
 1. Library names (recommended for built-in and installed packages):
