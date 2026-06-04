@@ -16,34 +16,13 @@ tools) in any artifact — duplicate the relevant finding text instead.
 
 ## Task Management
 
-You have access to an `org-mcp` MCP server that exposes selected Org files from
-the user's running Emacs. They serve both the user and you, and implement
-Getting Things Done (GTD) as follows:
-
-- Next actions ready to execute are in `TODO`.
-- Actions blocked by dependencies are in `WAIT`.
-- Completed actions are in `DONE` and abandoned ones in `KILL`.
-- All actions have an execution context. Tag delegated actions `@waitingfor`
-  and your own `@internet` unless told otherwise.
-- A project is any outcome requiring multiple actions. It is tagged `project`
-  and contains actions as children.
-- Actions and projects may have supporting text (reference links,
-  implementation details, etc.) in their bodies.
-
-Use these Org files as your working memory and todo system. To decide between
-TodoWrite and Org, ask: "If the session ends now, does the user need to remember
-this?" If no, use TodoWrite (e.g., "run formatter", "check syntax"). If yes, use
-Org (e.g., "fix bug in module X", "implement feature Y").
-
-When exploring Org files, avoid reading them in full unless instructed. Start
-with outlines, then request full content for items of interest.
-
-Keep new items brief but understandable to the user. Update task states as
-work progresses (`TODO` to `DONE` on completion, `WAIT` to `TODO` on
-unblocking).
-
-If `org-mcp` is unavailable at session start, proceed without it; the user is
-aware. If it disappears mid-session, stop and ask the user for guidance.
+`org-mcp` exposes the user's Org/GTD files — your shared working memory and todo
+system, and the source for prior/ongoing work and the agenda. When the user
+directs you to pick up or look up such work (today's agenda, where a worktree
+left off, …), look in Org. Persist cross-session work in Org; in public
+source-code projects track it as GitHub issues with Org holding a pointer. Use
+TodoWrite only for ephemeral within-session steps. If `org-mcp` is unavailable,
+proceed without it. See the `gtd` skill for the mechanics.
 
 ## Guardrails
 
