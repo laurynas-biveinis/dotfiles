@@ -1106,7 +1106,7 @@ RULE is a plist containing either :sender-exact or :sender-match."
                             org-beginning-of-line delete-forward-char org-refile
                             set-mark-command backward-kill-word magit-discard
                             python-indent-dedent-line-backspace magit-push
-                            end-of-visual-line windmove-up kill-buffer
+                            end-of-visual-line windmove-up kill-buffer dired-mark
                             markdown-outdent-or-delete newline org-agenda-goto
                             windmove-down org-agenda-redo org-return my-morning
                             xwidget-webkit-scroll-up-line newline-and-indent
@@ -1223,7 +1223,12 @@ RULE is a plist containing either :sender-exact or :sender-match."
                             org-toggle-checkbox mouse-wheel-text-scale
                             org-open-at-mouse mu4e-view-save-attachments
                             mouse-drag-mode-line mu4e-compose-reply
-                            debugger-quit))
+                            debugger-quit dired-flag-file-deletion
+                            dired-do-flagged-delete mu4e-headers-prev
+                            xwidget-webkit-scroll-forward
+                            my-vdb-bank-statements org-calendar-forward-day
+                            xwidget-webkit-scroll-backward
+                            mu4e-headers-mark-for-move))
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 
