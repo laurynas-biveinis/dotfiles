@@ -24,6 +24,9 @@ They serve both the user and you, implementing Getting Things Done (GTD).
 - Every action has an execution context. Tag delegated actions `@waitingfor` and
   your own `@internet`, unless told otherwise.
 - `@checklist` marks GTD trigger/checklist items of the form "if X, then do Y".
+- `somedaymaybe` (bare, no `@`) marks incubated someday/maybe outcomes — not
+  active next actions. It inherits, so tagging a project `somedaymaybe`
+  propagates to its children.
 - A project is any outcome requiring multiple actions. Tag it `project`; its
   actions are its children.
 - Actions and projects may carry supporting text (reference links,
@@ -64,12 +67,11 @@ rely on recall.
 When a project's outcome is achieved:
 
 1. Review the entire project subtree body (notes, references, residual
-   sub-items) for anything implying new next actions or projects, and capture
-   those as new `TODO` / `project` items.
+   sub-items) for anything implying new next actions, projects, or someday/maybe
+   outcomes, and capture those as new `TODO` / `project` / `somedaymaybe` items.
 2. Mark the project's top-level headline `DONE` via `org-update-todo-state`.
-
-Archiving the subtree remains the user's Emacs action — org-mcp exposes no
-archive tool.
+3. Archive the subtree via `org-archive-subtree` (sends it to the headline's
+   configured archive location).
 
 ## Availability
 
