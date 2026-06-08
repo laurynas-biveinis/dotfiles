@@ -1,10 +1,10 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "yaml" "1.2.3"
+(define-package "yaml" "1.2.4"
   "YAML parser for Elisp."
   '((emacs "25.1"))
   :url "https://github.com/zkry/yaml.el"
-  :commit "f2369fb4985ed054be47ae111760ff2075dff72a"
-  :revdesc "f2369fb4985e"
+  :commit "5546f36bde24a9a8c1934e0f6ce205cd41d72537"
+  :revdesc "5546f36bde24"
   :keywords '("tools")
   :authors '(("Zachary Romero" . "zkry@posteo.org"))
   :maintainers '(("Zachary Romero" . "zkry@posteo.org")))

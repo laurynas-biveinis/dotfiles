@@ -254,12 +254,12 @@
        ("Jonas Bernoulli" . "emacs.cond-let@jonas.bernoulli.dev"))
       (:commit . "21b9e9835756ff5cd1acb971cf9eb56fff671c8b"))])
  (consult-flycheck
-  . [(1 1) ((emacs (29 1)) (consult (2 8)) (flycheck (35)))
+  . [(1 2) ((emacs (29 1)) (consult (3 5)) (flycheck (35)))
      "Provides the command `consult-flycheck'" tar
      ((:url . "https://github.com/minad/consult-flycheck")
       (:keywords "languages" "tools" "completion")
       (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
-      (:commit . "9fe96c4b75c8566170ad41a04c3849d2e2606104"))])
+      (:commit . "9dd95361669f87e14230376f4f93c6b9a222c497"))])
  (corfu-terminal
   . [(0 7) ((emacs (26 1)) (corfu (0 36)) (popon (0 13)))
      "Corfu popup on terminal" tar
@@ -451,12 +451,29 @@
       (:authors ("Huang Feiyu" . "sibadake1@163.com"))
       (:commit . "2d89026fbc61214fda25d5dd589cd328ddce5f6e"))])
  (elfeed
-  . [(3 4 2) ((emacs (24 3))) "An Emacs Atom/RSS feed reader" tar
-     ((:url . "https://github.com/skeeto/elfeed")
-      (:keywords "network" "hypermedia")
-      (:maintainer "Christopher Wellons" . "wellons@nullprogram.com")
+  . [(4 0 0) ((emacs (28 1)) (compat (31))) "An Atom/RSS feed reader"
+     tar
+     ((:url . "https://github.com/emacs-elfeed/elfeed")
+      (:keywords "network" "comm" "hypermedia")
+      (:maintainer
+       ("Karthik Chikmagalur" . "karthik.chikmagalur@gmail.com")
+       ("Ihor Radchenko" . "yantar92@posteo.net")
+       ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Christopher Wellons" . "wellons@nullprogram.com"))
-      (:commit . "cfa931a0cf56e2e7be0ddadc41fcf11dc0209232"))])
+      (:commit . "d9ec8b93a61f6653bf9bcc929dbfa5e49133d37f"))])
+ (elfeed-web
+  . [(4 0 0)
+     ((emacs (28 1)) (compat (31)) (elfeed (3 4 2))
+      (simple-httpd (1 6)))
+     "Web interface to Elfeed" tar
+     ((:url . "https://github.com/emacs-elfeed/elfeed-web")
+      (:keywords "network" "hypermedia")
+      (:maintainer
+       ("Karthik Chikmagalur" . "karthik.chikmagalur@gmail.com")
+       ("Ihor Radchenko" . "yantar92@posteo.net")
+       ("Daniel Mendler" . "mail@daniel-mendler.de"))
+      (:authors ("Christopher Wellons" . "wellons@nullprogram.com"))
+      (:commit . "e947501a29457a55dfb0828aa791185c6b41bc37"))])
  (elixir-mode
   . [(2 5 0) ((emacs (25))) "Major mode for editing Elixir files" tar
      ((:url . "https://github.com/elixir-editors/emacs-elixir")
@@ -1504,14 +1521,14 @@
       (:authors ("Andreas Politz" . "mail@andreas-politz.de"))
       (:commit . "5245f092e35712df6559a7782a93bb61896175dd"))])
  (pg
-  . [(0 66) ((emacs (28 1)) (peg (1 0 1)))
+  . [(0 67) ((emacs (28 1)) (peg (1 0 1)))
      "Socket-level interface to the PostgreSQL database" tar
      ((:url . "https://github.com/emarsden/pg-el")
       (:keywords "data" "comm" "database" "postgresql")
       (:maintainer "Eric Marsden"
 		   . "eric.marsden@risk-engineering.org")
       (:authors ("Eric Marsden" . "eric.marsden@risk-engineering.org"))
-      (:commit . "67eb8564c6b974bc8f9a22053d1ff7ebec2e7dc3"))])
+      (:commit . "7426269673da42ed6706db44d2b7d1696ede95f6"))])
  (php-mode
   . [(1 26 1) ((emacs (26 1))) "Major mode for editing PHP code" tar
      ((:url . "https://github.com/emacs-php/php-mode")
