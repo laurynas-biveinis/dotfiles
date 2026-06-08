@@ -14,3 +14,6 @@
 [submodule "emacs/.emacs.d/elpa/org-mcp"]
 	path = emacs/.emacs.d/elpa/org-mcp
 	url = https://github.com/laurynas-biveinis/org-mcp/
+[submodule "emacs/.emacs.d/elpa/mu4e-autotask"]
+	path = emacs/.emacs.d/elpa/mu4e-autotask
+	url = https://github.com/laurynas-biveinis/mu4e-autotask.git

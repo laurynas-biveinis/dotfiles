@@ -19,16 +19,20 @@
                        flycheck flycheck-status-emoji gcmh git-gutter-fringe
                        git-messenger git-modes iedit indent-bars info-colors
                        keyfreq lsp-mode lsp-treemacs lsp-ui lua-mode magit
-                       magit-todos markdown-mode mcp-server-lib org-autotask
+                       magit-todos markdown-mode mcp-server-lib mu4e-autotask
+                       org-autotask
                        page-break-lines plantuml-mode prism projectile relint
                        rich-minority s shfmt solarized-theme ssh ssh-config-mode
                        stripe-buffer undo-tree vterm wgrep xterm-color yaml-mode
                        yasnippet))
  '(package-vc-selected-packages
-   '((org-autotask :vc-backend Git :url
+   '((mu4e-autotask :vc-backend Git :url
+                    "https://github.com/laurynas-biveinis/mu4e-autotask/")
+     (org-autotask :vc-backend Git :url
                    "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
-   '((elisp-lint-indent-specs (org-mcp--modify-and-save . 3)
+   '((elisp-lint-indent-specs (mu4e-autotask-test--with-cleanup . 0) (cl-defstruct))
+     (elisp-lint-indent-specs (org-mcp--modify-and-save . 3)
                               (org-mcp--with-visiting-org-file . 2)
                               (org-mcp--with-uri-prefix-dispatch . 1)
                               (org-mcp--with-org-file . 1)

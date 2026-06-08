@@ -118,18 +118,6 @@ Returns the path or nil."
            (side-effect-free t))
   (file-name-concat (file-name-directory path) fn))
 
-;;; External program helpers
-
-(defun dotfiles--open-file (file)
-  "Open the FILE in its default app."
-  (declare (ftype (function (string) t)))
-  (shell-command (concat "open " (shell-quote-argument file))))
-
-(defun dotfiles--delete-file-after-delay (path delay)
-  "Delete file at PATH after DELAY seconds."
-  (declare (ftype (function (string number) t)))
-  (run-with-timer delay nil #'delete-file path nil))
-
 ;; Command-line program helpers
 
 (defun dotfiles--run-program-process-output (program args success-fn)
@@ -183,149 +171,11 @@ ARGS must be properly quoted if needed."
   `(with-current-buffer (dotfiles--get-org-buffer ,name)
      ,@body))
 
-;;; `mu4e' helpers
-
-(require 'seq)
-(require 'mu4e-mime-parts)
+;; Email automation and the helpers for action functions now live in the
+;; `mu4e-autotask' package; some GitHub/`mu4e' helpers below still use
+;; `mu4e-autotask-raw-message' and `mu4e-message-field'.
 (require 'mu4e-message)
-
-(defun dotfiles--get-raw-message (msg)
-  "Get the raw `mu4e' message MSG as string."
-  (declare (ftype (function (list) string))
-           (important-return-value t))
-  (with-temp-buffer (insert-file-contents (mu4e-message-readable-path msg))
-                    (buffer-string)))
-
-(defun dotfiles--get-mu4e-msg-content (mime-type)
-  "Get the content of the first `mu4e' message part with MIME-TYPE."
-  (declare (ftype (function (string) string))
-           (important-return-value t))
-  (mm-get-part
-   (plist-get
-    (seq-find (lambda (part)
-                (string= mime-type (plist-get part :mime-type)))
-              (mu4e-view-mime-parts))
-    :handle)))
-
-(defun dotfiles--get-mu4e-msg-csv-part ()
-  "For a `mu4e' message, get its first .csv attachment part, if any."
-  (declare (ftype (function () list))
-           (important-return-value t))
-  (or (seq-find (lambda (part)
-                  (string-suffix-p ".csv" (plist-get part :filename) t))
-                (mu4e-view-mime-parts))
-      (user-error "The expected .CSV attachment not found")))
-
-(defun dotfiles--get-mu4e-msg-pdf-part ()
-  "For a `mu4e' message, get its first .pdf attachment part, if any."
-  (declare (ftype (function () (or list null)))
-           (important-return-value t))
-  (seq-find (lambda (part)
-              (string-suffix-p ".pdf" (plist-get part :filename) t))
-            (mu4e-view-mime-parts)))
-
-(defun dotfiles--save-mu4e-msg-part-file (part)
-  "For a `mu4e' message PART, save it as a file and return its path."
-  (declare (ftype (function (list) string))
-           (important-return-value t))
-  (let* ((base-dir (plist-get part :target-dir))
-         (file-path (mu4e-join-paths base-dir (plist-get part :filename))))
-    (mm-save-part-to-file (plist-get part :handle) file-path)
-    file-path))
-
-(defun dotfiles--save-mu4e-msg-csv-part ()
-  "For a `mu4e' mssage, save its first .csv part and return the path."
-  (declare (ftype (function () string))
-           (important-return-value t))
-  (let ((csv-part (dotfiles--get-mu4e-msg-csv-part)))
-    (dotfiles--save-mu4e-msg-part-file csv-part)))
-
-(defun dotfiles--get-mu4e-msg-html-content ()
-  "Get the current `mu4e' message HTML content."
-  (declare (ftype (function () string))
-           (important-return-value t))
-  (dotfiles--get-mu4e-msg-content "text/html"))
-
-(defun dotfiles--get-mu4e-msg-txt-content ()
-  "Get the current `mu4e' message text content."
-  (declare (ftype (function () string))
-           (important-return-value t))
-  (dotfiles--get-mu4e-msg-content "text/plain"))
-
-(defun dotfiles--for-each-attachment (fn)
-  "Call FN for each attachment with its handle and path."
-  (declare (ftype (function (function) t)))
-  (let ((mime-parts (mu4e-view-mime-parts)))
-    (dolist (part mime-parts)
-      (let* ((attachment-handle (plist-get part :handle))
-             (file-name (plist-get part :filename))
-             (file-path (mu4e-join-paths (plist-get part :target-dir)
-                                         file-name)))
-        (funcall fn attachment-handle file-path)))))
-
-(defun dotfiles--open-mu4e-all-attachments (suffix)
-  "Download all attachments with file name SUFFIX from a `mu4e' message."
-  (declare (ftype (function (string) t)))
-  (dotfiles--for-each-attachment
-   (lambda (handle path)
-     (when (string-suffix-p suffix path t)
-       (mm-save-part-to-file handle path)
-       (dotfiles--open-file path)
-       ;; If hardcoded 1 s does not resolve all the races, replace with polling
-       ;; using lsof.
-       (dotfiles--delete-file-after-delay path 1)))))
-
-(defun dotfiles--download-mu4e-all-jpgs ()
-  "Download all .jpg attachments from a `mu4e' message."
-  (declare (ftype (function () t)))
-  (dotfiles--for-each-attachment
-   (lambda (handle path)
-     (when (string-suffix-p ".jpg" path t)
-       (mm-save-part-to-file handle path)))))
-
-(cl-defstruct (my-email-template (:copier nil))
-  "An email template to be filled out and sent."
-  (context
-   nil :read-only t :type string :documentation "The `mu4e' context to use")
-  (to
-   nil :read-only t :type string :documentation "To: field")
-  (subject
-   nil :read-only t :type string :documentation "Subject: field")
-  (body
-   "" :read-only t :type string :documentation "E-mail body"))
-
-(require 'mu4e-compose)
-(require 'mu4e-draft)
-
-(defun dotfiles--do-send-email (to success-fn)
-  "Ask to send an already filled-out email to TO, call SUCCESS-FN on success.
-\"To:\" field in the e-mail must be already filled out, as TO argument is only
-used for diagnostics.  SUCCESS-FN is only called on success."
-  (declare (ftype (function (string function) t)))
-  (let ((subject (message-field-value "Subject")))
-    (if (y-or-n-p (format "Send email to %s with subject %s?" to subject))
-        (progn
-          ;; Since the buffer will get destroyed immediately after the send
-          ;; attempt, adjust the buffer-local hook value and don't bother with
-          ;; cleaning it up.
-          (add-hook 'message-sent-hook success-fn nil t)
-          (message-send-and-exit))
-      (message-kill-buffer)
-      (user-error "Cancelled"))))
-
-(defun dotfiles--send-email (template attachments success-fn)
-  "Send a mail using TEMPLATE with ATTACHMENTS, call SUCCESS-FN on success."
-  (declare (ftype (function (my-email-template list function) t)))
-  (mu4e-context-switch nil (my-email-template-context template))
-  (let ((mu4e-compose-context-policy nil)
-        (to (my-email-template-to template))
-        (subject (my-email-template-subject template)))
-    (mu4e-compose-new to subject)
-    (message-goto-body)
-    (insert (my-email-template-body template))
-    (dolist (attachment attachments)
-      (mml-attach-file attachment))
-    (dotfiles--do-send-email to success-fn)))
+(require 'mu4e-autotask)
 
 ;; GitHub helpers
 
@@ -380,14 +230,14 @@ used for diagnostics.  SUCCESS-FN is only called on success."
   "Get a GitHub run URL from a `mu4e' MSG."
   (declare (ftype (function (list) (or string null)))
            (important-return-value t))
-  (let ((raw-message (dotfiles--get-raw-message msg)))
+  (let ((raw-message (mu4e-autotask-raw-message msg)))
     (dotfiles--string-match-string dotfiles--gh-view-run-results raw-message)))
 
 (defun dotfiles--get-gh-issue-url (msg)
   "Get a GitHub issue URL from a `mu4e' MSG."
   (declare (ftype (function (list) (or string null)))
            (important-return-value t))
-  (let ((raw-message (dotfiles--get-raw-message msg)))
+  (let ((raw-message (mu4e-autotask-raw-message msg)))
     (dotfiles--string-match-string dotfiles--gh-issue-url raw-message)))
 
 (defun dotfiles--get-pr-id (msg)
