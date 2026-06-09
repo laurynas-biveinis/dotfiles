@@ -239,10 +239,24 @@ mysql_export_environment_helpers() {
             `# https://bugs.mysql.com/bug.php?id=119242` \
             "-Wno-conditional-uninitialized" \
             "-Wno-unnecessary-virtual-specifier"
-        mysql_add_comp_flags "8.0.44" "8.0.45" "cxx" \
-            `# LLVM 20:` \
-            `# https://bugs.mysql.com/bug.php?id=119238` \
-            "-Wno-invalid-specialization"
+        # https://bugs.mysql.com/bug.php?id=120650
+        mysql_add_comp_flags "8.0.46" "8.0.46" "c" \
+                             "-Wno-unknown-warning-option"
+        mysql_add_comp_flags "8.0.46" "8.0.46" "cxx" \
+                             `# https://bugs.mysql.com/bug.php?id=119239` \
+                             "-Wno-uninitialized-const-pointer" \
+                             `# https://bugs.mysql.com/bug.php?id=119242` \
+                             "-Wno-conditional-uninitialized" \
+                             "-Wno-unnecessary-virtual-specifier" \
+                             `# https://bugs.mysql.com/bug.php?id=119242` \
+                             "-Wno-nonnull" \
+                             `# https://bugs.mysql.com/bug.php?id=120650` \
+                             "-Wno-unused-but-set-variable" \
+                             `# so that the above options pass with LLVM 18` \
+                             "-Wno-unknown-warning-option"
+        mysql_add_comp_flags "8.0.44" "8.0.46" "cxx" \
+                             `# https://bugs.mysql.com/bug.php?id=119238` \
+                             "-Wno-invalid-specialization"
         mysql_add_cmake_flags "8.0.18" "8.0.18" "any" \
                               "-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled"
         mysql_add_cmake_flags "8.0.18" "8.0.28" "any" \
@@ -546,6 +560,13 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.1.0 cxx_release)"
     )
 
+    declare -a -r my8046_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.0.46 c)"
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.46 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.46 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.0.46 cxx_release)"
+    )
+
     declare -a -r my8045_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.0.45 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.0.45 cxx_debug)"
@@ -811,6 +832,13 @@ mysql_export_environment_helpers() {
                    "${my810_comp_flags[@]}")
     export MY810=("${myr[@]}" $(mysql_get_cmake_flags 8.1.0 any_release)
                    "${my810_comp_flags[@]}")
+
+    export MY8046D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.46 any_debug)
+                    "${my8046_comp_flags[@]}")
+    export MY8046B=("${myb[@]}" $(mysql_get_cmake_flags 8.0.46 any_release)
+                    "${my8046_comp_flags[@]}")
+    export MY8046=("${myr[@]}" $(mysql_get_cmake_flags 8.0.46 any_release)
+                   "${my8046_comp_flags[@]}")
 
     export MY8045D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.45 any_debug)
                     "${my8045_comp_flags[@]}")
@@ -1121,6 +1149,13 @@ mysql_cmake() {
                 8.1.0)
                     declare -a release_flags=("${MY810[@]}")
                     declare -a debug_flags=("${MY810D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+                    ;;
+                8.0.46)
+                    declare -a release_flags=("${MY8046[@]}")
+                    declare -a benchmark_flags=("${MY8046B[@]}")
+                    declare -a debug_flags=("${MY8046D[@]}")
                     declare -a -r \
                             core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
                     ;;
