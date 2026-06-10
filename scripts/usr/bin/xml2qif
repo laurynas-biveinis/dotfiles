@@ -18,8 +18,9 @@ Input keys:
     Transaction", & subfamily is "Cash Withdrawal"
   - card_fee: domain is "Payments", family is "Customer Card Transaction", &
     subfamily is "Fees"
-  - bank_service: domain is "Payments", family is "Other", & subfamily is
-    "Other".
+  - bank_service: domain is "Payments" and either family is "Other" &
+    subfamily is "Other", or family is "Miscellaneous Debit Operations" &
+    subfamily is "Charges".
   - deposit: type is deposit.
 Output keys, all of which are required:
 - payee
@@ -101,6 +102,8 @@ class TransactionDomain(Enum):
         "CCRD": "CUSTOMER_CARD_TRANSACTION",
         "RCDT": "RECEIVED_CREDIT_TRANSFER",
         "ICDT": "ISSUED_CREDIT_TRANSFER",
+        "MDOP": "MISC_DEBIT_OPS",
+        "MCOP": "MISC_CREDIT_OPS",
         "NTAV": "NOT_AVAILABLE",
         "OTHR": "OTHER",
     }
@@ -111,6 +114,8 @@ class PaymentsTransactionFamily(Enum):
     CUSTOMER_CARD_TRANSACTION = auto()
     RECEIVED_CREDIT_TRANSFER = auto()
     ISSUED_CREDIT_TRANSFER = auto()
+    MISC_DEBIT_OPS = auto()
+    MISC_CREDIT_OPS = auto()
     NOT_AVAILABLE = auto()
     OTHER = auto()
 
@@ -185,11 +190,12 @@ class OtherTransactionSubfamily(Enum):
     OTHER = auto()
 
 
-@add_from_string({"INTR": "INTEREST"})
-class MiscDebitOpsTransactionSubfamily(Enum):
-    """A CAMT.053 transaction subfamily in a Miscellaneous Debit Operations
-    family"""
+@add_from_string({"CHRG": "CHARGES", "INTR": "INTEREST"})
+class MiscOpsTransactionSubfamily(Enum):
+    """A CAMT.053 transaction subfamily in a Miscellaneous Debit/Credit
+    Operations family"""
 
+    CHARGES = auto()
     INTEREST = auto()
 
 
@@ -320,6 +326,9 @@ class XMLTransaction(Transaction):
             if (
                 self._family == PaymentsTransactionFamily.OTHER
                 and self._subfamily == OtherTransactionSubfamily.OTHER
+            ) or (
+                self._family == PaymentsTransactionFamily.MISC_DEBIT_OPS
+                and self._subfamily == MiscOpsTransactionSubfamily.CHARGES
             ):
                 return "bank_service"
         return ""
@@ -447,6 +456,11 @@ class XMLTransaction(Transaction):
                 subfamily = CCRDTransactionSubfamily.from_string(subfamily_str)
             elif family == PaymentsTransactionFamily.ISSUED_CREDIT_TRANSFER:
                 subfamily = ICDTTransactionSubfamily.from_string(subfamily_str)
+            elif family in (
+                PaymentsTransactionFamily.MISC_DEBIT_OPS,
+                PaymentsTransactionFamily.MISC_CREDIT_OPS,
+            ):
+                subfamily = MiscOpsTransactionSubfamily.from_string(subfamily_str)
             elif family == PaymentsTransactionFamily.OTHER:
                 subfamily = OtherTransactionSubfamily.from_string(subfamily_str)
             else:
@@ -454,7 +468,7 @@ class XMLTransaction(Transaction):
         elif domain == TransactionDomain.LOANS_DEPOSITS_SYNDICATIONS:
             family = LDASTransactionFamily.from_string(family_str)
             if family == LDASTransactionFamily.MISC_DEBIT_OPS:
-                subfamily = MiscDebitOpsTransactionSubfamily.from_string(subfamily_str)
+                subfamily = MiscOpsTransactionSubfamily.from_string(subfamily_str)
             elif family == LDASTransactionFamily.FIXED_TERM_LOANS:
                 subfamily = FixedTermLoanTransactionSubfamily.from_string(subfamily_str)
             else:
