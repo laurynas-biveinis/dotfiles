@@ -29,13 +29,13 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Bash(./check.sh *)",
-            "command": "python3 ~/.claude/hooks/validate_check_sh.py"
+            "command": "python3 ~/.claude/hooks/validate_check_sh.py",
+            "if": "Bash(./check.sh *)"
           },
           {
             "type": "command",
-            "if": "Bash(git *)",
-            "command": "python3 ~/.claude/hooks/block_git_wildcard_staging.py"
+            "command": "python3 ~/.claude/hooks/block_git_wildcard_staging.py",
+            "if": "Bash(git *)"
           }
         ]
       },
@@ -44,8 +44,8 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Write(*.el)",
-            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py"
+            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py",
+            "if": "Write(*.el)"
           }
         ]
       },
@@ -54,8 +54,8 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Edit(*.el)",
-            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py"
+            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py",
+            "if": "Edit(*.el)"
           }
         ]
       },
@@ -64,8 +64,8 @@
         "hooks": [
           {
             "type": "command",
-            "if": "MultiEdit(*.el)",
-            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py"
+            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py",
+            "if": "MultiEdit(*.el)"
           }
         ]
       }
@@ -76,8 +76,8 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Write(*.md)|Edit(*.md)|MultiEdit(*.md)",
-            "command": "jq -j 'select(.tool_input.file_path | endswith(\".md\")) | .tool_input.file_path + \"\\u0000\"' | xargs -0 -r prettier --write"
+            "command": "jq -j 'select(.tool_input.file_path | endswith(\".md\")) | .tool_input.file_path + \"\\u0000\"' | xargs -0 -r prettier --write",
+            "if": "Write(*.md)|Edit(*.md)|MultiEdit(*.md)"
           }
         ]
       }
@@ -89,5 +89,6 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "claude-fable-5[1m]"
 }
