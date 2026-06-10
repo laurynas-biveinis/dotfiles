@@ -2,7 +2,7 @@
 description: >-
   Internal step of review-changes: verify one draft finding against the
   code and return its verdict block.
-model: opus
+model: fable
 user-invocable: false
 allowed-tools: >-
   Bash(git diff:*)
