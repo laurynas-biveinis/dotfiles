@@ -248,10 +248,15 @@ mysql_export_environment_helpers() {
                              `# https://bugs.mysql.com/bug.php?id=119242` \
                              "-Wno-conditional-uninitialized" \
                              "-Wno-unnecessary-virtual-specifier" \
-                             `# https://bugs.mysql.com/bug.php?id=119242` \
-                             "-Wno-nonnull" \
                              `# https://bugs.mysql.com/bug.php?id=120650` \
                              "-Wno-unused-but-set-variable" \
+                             `# https://bugs.mysql.com/bug.php?id=119246` \
+                             "-Wno-nonnull" \
+                             `# https://bugs.mysql.com/bug.php?id=119246` \
+                             `# https://bugs.mysql.com/bug.php?id=120653` \
+                             "-Wno-format" \
+                             "-Wno-missing-format-attribute" \
+                             "-Wno-unused-result" \
                              `# so that the above options pass with LLVM 18` \
                              "-Wno-unknown-warning-option"
         mysql_add_comp_flags "8.0.44" "8.0.46" "cxx" \
