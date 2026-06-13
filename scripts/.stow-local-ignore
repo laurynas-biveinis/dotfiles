@@ -1,0 +1,27 @@
+# This file replaces Stow's entire default ignore list; the defaults are
+# carried over below the package-specific cache entries.
+__pycache__
+\.mypy_cache
+
+# Stow's default ignore list:
+RCS
+.+,v
+
+CVS
+\.\#.+
+\.cvsignore
+
+\.svn
+_darcs
+\.hg
+
+\.git
+\.gitignore
+\.gitmodules
+
+.+~
+\#.*\#
+
+^/README.*
+^/LICENSE.*
+^/COPYING

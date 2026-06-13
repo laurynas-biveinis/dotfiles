@@ -5,7 +5,7 @@
 set -eu -o pipefail
 
 readonly SHELL_FILES=(check.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
-readonly PYTHON_FILES=(ai/.claude/hooks/*.py)
+readonly PYTHON_FILES=(ai/.claude/hooks/*.py scripts/usr/bin/xml2qif scripts/usr/bin/*.py dotfiles/tests/*.py)
 readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 
 ERRORS=0
@@ -154,6 +154,14 @@ if pylint "${PYTHON_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "pylint check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
+echo -n "Running Python unit tests... "
+if python3 -B -m unittest discover -s dotfiles/tests; then
+	echo "OK!"
+else
+	echo "Python unit tests failed!"
 	ERRORS=$((ERRORS + 1))
 fi
 

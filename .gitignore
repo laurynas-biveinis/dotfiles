@@ -37,6 +37,6 @@ emacs/.emacs.d/elpa/emacsql-sqlite-3.1.1/sqlite/emacsql-sqlite
 emacs/.emacs.d/elpa/gnupg/
 emacs/.emacs.d/package-quickstart.el
 emacs/.emacs.d/package-quickstart.elc
-/scripts/usr/lib/python/__pycache__/
+__pycache__/
 /.projectile-cache.eld
 /.claude/

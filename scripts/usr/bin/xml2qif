@@ -8,7 +8,7 @@ This is configured by a configuration file ~/.xml2qifrc which contains a
 section per rule. Each rule must have some input and output keys.
 Input keys:
 - match (required): a regex to match one of the text fields. The following
-  fields are attempted to match in this order, if present: creditor, debitor,
+  fields are attempted to match in this order, if present: debitor, creditor,
   unstructured information.
 - amount (optional): if present, then must be equal.
 - type (optional): if present, then must be equal. Currently supported types
@@ -26,6 +26,20 @@ Output keys, all of which are required:
 - payee
 - category
 
+A [DEFAULT] section with keys is rejected: configparser would inject the keys
+into every rule, silently changing rules that do not spell those keys out
+themselves. An empty [DEFAULT] header is harmless and accepted.
+
+When no rule matches a transaction, the script asks Codex (requires the codex
+CLI on PATH) to suggest a new rule. The prompt sent to the OpenAI API includes
+the transaction XML and the entire ~/.xml2qifrc contents. Codex runs as a
+read-only sandboxed agent that may additionally read any local file while
+answering, and whatever it reads also reaches the OpenAI API. The suggested
+rule is inserted into ~/.xml2qifrc only after interactive confirmation. The
+Codex call itself is deliberately not gated by its own confirmation, even
+though counterparty-written statement text both triggers and steers it; that
+egress is an accepted risk for this tool. Do not add a pre-run prompt.
+
 TODO(laurynas): in the above, make match optional for the cases where type
 determines everything.
 
@@ -38,12 +52,26 @@ up with import rules
 """
 
 import argparse
-import configparser
 import os
 import re
+import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from enum import Enum, auto
+
+# Helper modules private to this script live beside it (imported via
+# sys.path[0], which resolves the stowed symlink, so script and modules always
+# come from the same checkout); modules shared across scripts go in
+# ~/usr/lib/python.
+from xml2qif_rules import (
+    MissingRuleError,
+    RuleConfigError,
+    RuleSuggestionError,
+    find_transaction_rule,
+    load_rule_config,
+    replace_control_characters,
+)
+from xml2qif_suggest import suggest_and_confirm_rule
 
 CONFIG_FN = "~/.xml2qifrc"
 
@@ -66,7 +94,14 @@ def add_from_string(mapping):
 
         @classmethod
         def from_string(cls, string):
-            return cls._str_to_enum[string]  # pylint: disable=E1101
+            try:
+                return cls._str_to_enum[string]  # pylint: disable=E1101
+            except KeyError:
+                # repr-quote: the code comes from untrusted XML and may be
+                # None for an empty element
+                raise ValueError(
+                    f"Unrecognized {cls.__name__} code {string!r}"
+                ) from None
 
         enum_class.from_string = from_string
         return enum_class
@@ -206,45 +241,6 @@ class FixedTermLoanTransactionSubfamily(Enum):
     REIMBURSEMENT = auto()  # Absolutely incorrect yet Luminor returns this
 
 
-def collect_rules(config):
-    """Collect transaction rewrite rules from the config file"""
-    rules = []
-    for section in config.sections():
-        # Input
-        type_key = config.get(section, "type", fallback="")
-        amount = config.get(section, "amount", fallback="")
-        regex = config[section]["match"]
-        pattern = re.compile(regex)
-        # Output
-        payee = config[section]["payee"]
-        category = config[section]["category"]
-
-        rules.append(
-            {
-                "type": type_key,
-                "amount": amount,
-                "pattern": pattern,
-                "payee": payee,
-                "category": category,
-            }
-        )
-    return rules
-
-
-def find_matching_rule(rules, amount, type_key, text):
-    """Find the rule whose whose amount and/or type, if present match the
-    transaction and the regex matches the text."""
-    for rule in rules:
-        if rule["type"] and type_key != rule["type"]:
-            continue
-        if rule["amount"] and amount != rule["amount"]:
-            continue
-        if rule["pattern"].match(text):
-            return rule
-
-    return None
-
-
 class Transaction:
     """Fields common to both XML and QIF transactions."""
 
@@ -292,6 +288,7 @@ class XMLTransaction(Transaction):
     _XPATH_SUBFAMILY = ".//ns:BkTxCd/ns:Domn/ns:Fmly/ns:SubFmlyCd"
 
     def __init__(self, xml_obj):
+        self._xml_obj = xml_obj
         self._unstructured_info = self._get_unstructured_info(xml_obj)
         super().__init__(
             self._get_transaction_date(xml_obj),
@@ -310,6 +307,26 @@ class XMLTransaction(Transaction):
             f"domain: {self._domain}, "
             f"family: {self._family}, subfamily: {self._subfamily})"
         )
+
+    @property
+    def xml_obj(self):
+        """Get the original XML transaction object."""
+        return self._xml_obj
+
+    @property
+    def creditor(self):
+        """Get the transaction creditor."""
+        return self._creditor
+
+    @property
+    def debitor(self):
+        """Get the transaction debitor."""
+        return self._debitor
+
+    @property
+    def unstructured_info(self):
+        """Get the transaction unstructured information."""
+        return self._unstructured_info
 
     def get_rule_type(self):
         """Get the ad-hoc rule type from the transaction parameters."""
@@ -334,41 +351,36 @@ class XMLTransaction(Transaction):
         return ""
 
     def get_rule_fields(self, rules, rule_type):
-        """Find a matching rule and and return its fields."""
-        rewrite_rule = None
-        if self._debitor:
-            rewrite_rule = find_matching_rule(
-                rules, self.amount, rule_type, self._debitor
-            )
-        if rewrite_rule is None and self._creditor:
-            rewrite_rule = find_matching_rule(
-                rules, self.amount, rule_type, self._creditor
-            )
+        """Find a matching rule and return its fields."""
+        rewrite_rule = find_transaction_rule(rules, self, rule_type)
         if rewrite_rule is None:
-            rewrite_rule = find_matching_rule(
-                rules, self.amount, rule_type, self._unstructured_info
-            )
-        if rewrite_rule is None:
-            raise ValueError(
-                f"Please add a rule for {self._creditor}, "
-                f"{self._debitor} or {self._unstructured_info}"
-            )
+            raise MissingRuleError(self, rule_type)
 
         return rewrite_rule["payee"], rewrite_rule["category"]
 
+    @staticmethod
+    def _node_text(node):
+        """Return the node's stripped text, or None for an absent node or one
+        without non-whitespace text: .text is None for an empty element, and
+        a blank value is as missing as an absent node and must fail loud or
+        fall through, not leak into the QIF output."""
+        if node is None or node.text is None:
+            return None
+        return node.text.strip() or None
+
     @classmethod
     def _get_unstructured_info(cls, xml_obj):
-        """Get the unstructured information from the XML."""
-        result_node = xml_obj.find(cls._XPATH_UNSTRUCTURED, NS)
-        if result_node is None:
-            return ""
-        return result_node.text
+        """Get the unstructured information or empty string from the XML."""
+        # _node_text strips and maps an absent/empty/blank node to None; rule
+        # matching needs a string, and an unstripped blank would defeat the
+        # start-anchored match
+        return cls._node_text(xml_obj.find(cls._XPATH_UNSTRUCTURED, NS)) or ""
 
     def _get_transaction_date(self, xml_obj):
         """Get the transaction date from the XML."""
-        value_date = xml_obj.find(self._XPATH_VALUE_DATE, NS)
-        if value_date is not None:
-            return value_date.text
+        value_date = self._node_text(xml_obj.find(self._XPATH_VALUE_DATE, NS))
+        if value_date:
+            return value_date
 
         if self._unstructured_info and self._US_DATE_PREFIX.match(
             self._unstructured_info
@@ -377,9 +389,9 @@ class XMLTransaction(Transaction):
             date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
             return date_obj.strftime("%Y-%m-%d")
 
-        booking_date = xml_obj.find(self._XPATH_BOOKING_DATE, NS)
-        if booking_date is not None:
-            return booking_date.text
+        booking_date = self._node_text(xml_obj.find(self._XPATH_BOOKING_DATE, NS))
+        if booking_date:
+            return booking_date
 
         raise ValueError(
             "Don't know how to get the transaction date from the transaction"
@@ -388,22 +400,26 @@ class XMLTransaction(Transaction):
     @classmethod
     def _get_transaction_amount(cls, xml_obj):
         """Get the transaction amount from the XML."""
-        amount_node = xml_obj.find(cls._XPATH_AMOUNT, NS)
-        if amount_node is None:
+        amount = cls._node_text(xml_obj.find(cls._XPATH_AMOUNT, NS))
+        if amount is None:
             raise ValueError("Unable to find amount in the transaction")
-        return amount_node.text
+        return amount
 
     @classmethod
     def _get_creditor(cls, xml_obj):
         """Get the creditor or empty string from the transaction"""
-        creditor_node = xml_obj.find(cls._XPATH_CREDITOR, NS)
-        return creditor_node.text if creditor_node is not None else ""
+        # _node_text strips and maps an absent/empty/blank node to None; an
+        # unstripped blank is truthy and would be tried against rules instead
+        # of falling through to the next field
+        return cls._node_text(xml_obj.find(cls._XPATH_CREDITOR, NS)) or ""
 
     @classmethod
     def _get_debitor(cls, xml_obj):
         """Get the debitor or empty string from the transaction"""
-        debitor_node = xml_obj.find(cls._XPATH_DEBITOR, NS)
-        return debitor_node.text if debitor_node is not None else ""
+        # _node_text strips and maps an absent/empty/blank node to None; an
+        # unstripped blank is truthy and would be tried against rules instead
+        # of falling through to the next field
+        return cls._node_text(xml_obj.find(cls._XPATH_DEBITOR, NS)) or ""
 
     @classmethod
     def _get_transaction_type(cls, xml_obj):
@@ -515,41 +531,108 @@ class QIFTransaction(Transaction):
         f.write("^\n")
 
 
-def process_transactions(root, rules):
-    """Convert all the transactions in the given XML document root"""
+def process_transactions(root, rules, config_path, output_file):
+    """Convert all transactions in root and write QIF records to output_file.
+
+    On MissingRuleError, interactively suggests a rule via Codex, inserts it
+    into config_path after user confirmation, reloads the rules via
+    load_rule_config, and retries the failing transaction; all subsequent
+    transactions in the same run use the reloaded config.
+    """
     for xml_obj in root.findall(XPATH_TRANSACTIONS, NS):
         xml_transaction = XMLTransaction(xml_obj)
-        print(f"Before: {xml_transaction}")
+        print(
+            "Before: "
+            f"{replace_control_characters(str(xml_transaction), single_line=True)}"
+        )
 
-        qif_transaction = QIFTransaction(xml_transaction, rules)
-        print(f"After: {qif_transaction}")
+        try:
+            qif_transaction = QIFTransaction(xml_transaction, rules)
+        except MissingRuleError as exc:
+            try:
+                suggest_and_confirm_rule(
+                    config_path, exc.xml_transaction, exc.rule_type
+                )
+            except (RuleSuggestionError, RuleConfigError, OSError) as sugg_exc:
+                # The missing rule is the user's action item; any suggestion
+                # flow failure, including a config read/write one, is only a
+                # diagnostic and must not displace it
+                print(sugg_exc)
+                raise exc from sugg_exc
+            # Reload so the in-memory rule order matches the rewritten file
+            rules = load_rule_config(config_path)
+            # A second miss means the just-added rule still does not match
+            # (e.g. an amount filter rejects this transaction). Re-raise it
+            # with a distinct prefix rather than re-entering the suggestion
+            # flow, which would loop on the same miss; a bare MissingRuleError
+            # would read as the initial prompt and invite that loop.
+            try:
+                qif_transaction = QIFTransaction(xml_transaction, rules)
+            except MissingRuleError as retry_exc:
+                raise ValueError(
+                    f"Added rule still did not match: {retry_exc}"
+                ) from retry_exc
+
+        print(
+            "After: "
+            f"{replace_control_characters(str(qif_transaction), single_line=True)}"
+        )
 
         qif_transaction.write(output_file)
 
 
-arg_parser = argparse.ArgumentParser(
-    description="Convert bank statement in XML format (camt.053) to QIF for "
-    "importing to Banktivity."
-)
+def main():
+    """Program entry point."""
+    arg_parser = argparse.ArgumentParser(
+        description="Convert bank statement in XML format (camt.053) to QIF for "
+        "importing to Banktivity."
+    )
 
-arg_parser.add_argument("input", type=str, help="The input file")
-arg_parser.add_argument("output", type=str, help="The output file")
+    arg_parser.add_argument("input", type=str, help="The input file")
+    arg_parser.add_argument("output", type=str, help="The output file")
 
-args = arg_parser.parse_args()
+    args = arg_parser.parse_args()
 
-rule_config = configparser.ConfigParser()
-rule_config.read(os.path.expanduser(CONFIG_FN))
+    config_path = os.path.expanduser(CONFIG_FN)
+    try:
+        rewrite_rules = load_rule_config(config_path)
+    except FileNotFoundError:
+        sys.exit(f"Config file not found: {config_path}")
+    except (OSError, RuleConfigError) as exc:
+        sys.exit(str(exc))
 
-rewrite_rules = collect_rules(rule_config)
+    print(f"Rules loaded from {CONFIG_FN}: {len(rewrite_rules)}")
 
-print(f"Rules loaded from {CONFIG_FN}: {len(rewrite_rules)}")
+    print(f"Processing {args.input} to {args.output}")
 
-print(f"Processing {args.input} to {args.output}")
+    try:
+        tree = ET.parse(args.input)
+    except OSError as exc:
+        sys.exit(str(exc))
+    # Unlike OSError, ParseError does not name the file itself
+    except ET.ParseError as exc:
+        sys.exit(f"{args.input}: {exc}")
 
-tree = ET.parse(args.input)
+    xml_root = tree.getroot()
 
-xml_root = tree.getroot()
+    # The output is deliberately written incrementally, not via an atomic
+    # write-then-rename: an aborted run (declined suggestion, Codex failure,
+    # Ctrl-C) leaves a partial QIF behind, but the abort itself prints a clear
+    # error in this interactive flow, and the partial file lets the user
+    # inspect how far conversion got. Do not "fix" this.
+    try:
+        with open(args.output, "w", encoding="utf-8") as output_file:
+            output_file.write("!Type:Bank\n")
+            process_transactions(xml_root, rewrite_rules, config_path, output_file)
+    # ValueError subsumes the custom rule errors (all ValueError subclasses)
+    # and the plain raises for malformed XML content, such as unrecognized
+    # CAMT codes or a missing amount
+    except (ValueError, OSError) as exc:
+        sys.exit(str(exc))
 
-with open(args.output, "w", encoding="utf-8") as output_file:
-    output_file.write("!Type:Bank\n")
-    process_transactions(xml_root, rewrite_rules)
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit(130)
