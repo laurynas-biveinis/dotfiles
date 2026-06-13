@@ -903,8 +903,26 @@ Returns the new window if successful, nil otherwise."
 (setq mu4e-search-include-related nil)
 (setq mu4e-eldoc-support t)
 
-;; TODO(laurynas): iCalendar support
+;; iCalendar support
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html)
+(require 'mu4e-icalendar)
+
+;; FIXME(laurynas): report upstream to mu. `mu4e--view-add-mime-icons'
+;; assumes every `gnus-data' text property holds an MM handle and calls
+;; `mm-handle-filename' on it, but the gnus-icalendar RSVP buttons store
+;; (HANDLE STATUS EVENT) there, so replying to any text/calendar message
+;; (`mu4e-compose-reply-to' -> `mu4e--compose-cite' ->
+;; `mu4e--view-render-buffer') crashes with
+;; (wrong-type-argument listp declined).  The icons are cosmetic, so
+;; swallow that error; let unrelated failures surface.
+(defun dotfiles--mu4e-view-add-mime-icons-safely (orig &rest args)
+  "Run ORIG with ARGS, ignoring `wrong-type-argument' from icalendar buttons."
+  (condition-case nil
+      (apply orig args)
+    (wrong-type-argument nil)))
+(advice-add #'mu4e--view-add-mime-icons :around
+            #'dotfiles--mu4e-view-add-mime-icons-safely)
+
 ;; TODO(laurynas): `dired' integration
 ;; (https://www.djcbsoftware.nl/code/mu/mu4e/Dired.html)
 
