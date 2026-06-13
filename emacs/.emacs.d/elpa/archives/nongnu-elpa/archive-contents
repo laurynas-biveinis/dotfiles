@@ -192,13 +192,13 @@
 		("Damien Doligez" . "damien.doligez@inria.fr"))
       (:commit . "2905a436e956c5bba16c4633a6e4c4fceefa6535"))])
  (casual
-  . [(2 16 1) ((emacs (30 1)) (transient (0 9 0)) (csv-mode (1 27)))
+  . [(2 16 2) ((emacs (30 1)) (transient (0 9 0)) (csv-mode (1 27)))
      "Transient user interfaces for various modes" tar
      ((:url . "https://github.com/kickingvegas/casual")
       (:keywords "tools" "wp")
       (:maintainer "Charles Choi" . "kickingvegas@gmail.com")
       (:authors ("Charles Choi" . "kickingvegas@gmail.com"))
-      (:commit . "72fc24345934888528e823195d90cf0a60b948c9"))])
+      (:commit . "f2977bc97e0e80f5b6ea817f016e739e4f64b6e1"))])
  (cdlatex
   . [(4 18 5) nil "Fast input methods for LaTeX environments and math"
      tar
@@ -451,7 +451,7 @@
       (:authors ("Huang Feiyu" . "sibadake1@163.com"))
       (:commit . "2d89026fbc61214fda25d5dd589cd328ddce5f6e"))])
  (elfeed
-  . [(4 0 0) ((emacs (28 1)) (compat (31))) "An Atom/RSS feed reader"
+  . [(4 0 1) ((emacs (28 1)) (compat (31))) "An Atom/RSS feed reader"
      tar
      ((:url . "https://github.com/emacs-elfeed/elfeed")
       (:keywords "network" "comm" "hypermedia")
@@ -460,7 +460,7 @@
        ("Ihor Radchenko" . "yantar92@posteo.net")
        ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Christopher Wellons" . "wellons@nullprogram.com"))
-      (:commit . "d9ec8b93a61f6653bf9bcc929dbfa5e49133d37f"))])
+      (:commit . "90470c3ff7cf215771f31e8c5e4b08fe6ad8f65b"))])
  (elfeed-web
   . [(4 0 0)
      ((emacs (28 1)) (compat (31)) (elfeed (3 4 2))
@@ -1789,11 +1789,11 @@
       (:authors ("John Olsson" . "john@cryon.se"))
       (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed
-  . [(1 5 0) ((emacs (25 1))) "A major mode for editing subtitles" tar
+  . [(1 5 1) ((emacs (25 1))) "A major mode for editing subtitles" tar
      ((:url . "https://github.com/sachac/subed")
       (:keywords "convenience" "files" "hypermedia" "multimedia")
       (:maintainer "Sacha Chua" . "sacha@sachachua.com")
-      (:commit . "cac3a94ae14afa1655cbd39a7128d8dc88e4fca6"))])
+      (:commit . "12386508eab140ee6c7d83654a162dbf52b0bf93"))])
  (sweeprolog
   . [(0 27 6) ((emacs (27 1)) (compat (29 1 4 2)))
      "Embedded SWI-Prolog" tar
