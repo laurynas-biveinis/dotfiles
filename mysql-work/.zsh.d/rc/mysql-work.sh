@@ -87,15 +87,19 @@ mysql_version_compare() {
 # Enable when developing
 mysql_validate_compiler_flag_type() {
     declare -r type="$1"
-    if ! [[ $type =~ ^(cxx|cxx_debug|cxx_release)$ ]]; then
+    if ! [[ $type =~ ^(c|cxx|cxx_debug|cxx_release)$ ]]; then
         2>&1 echo \
-             "Invalid flag type $type. Can be one of cxx, cxx_debug, cxx_release"
+             "Invalid flag type $type. Can be one of c, cxx, cxx_debug, cxx_release"
         return 1
     fi
     echo "$type"
     return 0
 }
 
+# Registers compiler flags for the inclusive version range [start, end].
+# Overreaching ranges are fine: covering middle versions where a flag was not
+# observed to be required is harmless, since suppressing a warning that never
+# fires has no effect. Prefer a single wide range over many narrow ones.
 mysql_add_comp_flags() {
     if ! declare -r start_version=$(mysql_validate_version "$1"); then
         return 1
@@ -133,7 +137,8 @@ mysql_get_comp_flags() {
         IFS='-:' read -r start_version end_version range_flag_type <<< "$range"
         if [[ $(mysql_version_compare "$version" "$start_version") -ge 0 ]] &&
                [[ $(mysql_version_compare "$version" "$end_version") -le 0 ]] &&
-               [[ "$type" == *"$range_flag_type"* ]]; then
+               { [[ "$type" == "$range_flag_type" ]] ||
+                     [[ "$range_flag_type" == "cxx" && "$type" == cxx_* ]]; }; then
             flags+=("${comp_flags[$range]}")
         fi
     done
@@ -227,20 +232,36 @@ mysql_export_environment_helpers() {
             export MY8030_MAX_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
-        # LLVM 21:
-        # https://bugs.mysql.com/bug.php?id=119246
-        mysql_add_comp_flags "8.4.8" "8.4.8" "cxx" "-Wno-nonnull"
+        mysql_add_comp_flags "8.4.8" "8.4.8" "cxx" \
+                             `# https://bugs.mysql.com/bug.php?id=119246` \
+                             "-Wno-nonnull"
         mysql_add_comp_flags "9.5.0" "9.6.0" "cxx" "-Wno-nonnull"
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
-        mysql_add_comp_flags "8.4.7" "8.4.8" "cxx" \
-            `# LLVM 21:` \
-            `# https://bugs.mysql.com/bug.php?id=119239` \
-            "-Wno-uninitialized-const-pointer" \
-            `# https://bugs.mysql.com/bug.php?id=119242` \
-            "-Wno-conditional-uninitialized" \
-            "-Wno-unnecessary-virtual-specifier"
-        # https://bugs.mysql.com/bug.php?id=120650
-        mysql_add_comp_flags "8.0.46" "8.0.46" "c" \
+        mysql_add_comp_flags "8.4.9" "8.4.9" "cxx" \
+                             `# https://bugs.mysql.com/bug.php?id=119246` \
+                             "-Wno-nonnull" \
+                             `# https://bugs.mysql.com/bug.php?id=117299` \
+                             "-Wno-documentation"
+        mysql_add_comp_flags "8.4.7" "8.4.9" "cxx" \
+                             `# https://bugs.mysql.com/bug.php?id=119239` \
+                             "-Wno-uninitialized-const-pointer" \
+                             `# https://bugs.mysql.com/bug.php?id=119242` \
+                             "-Wno-conditional-uninitialized" \
+                             "-Wno-unnecessary-virtual-specifier"
+        mysql_add_comp_flags "8.0.46" "8.4.9" "c" \
+                             `# Only 8.0.46 and 8.4.9 consume CMAKE_C_FLAGS;` \
+                             `# the range is wide so any intermediate version` \
+                             `# that gains a c-flags array inherits it.` \
+                             "-Wno-unknown-warning-option"
+        mysql_add_comp_flags "8.0.46" "8.4.9" "cxx" \
+                             `# https://bugs.mysql.com/bug.php?id=120650` \
+                             "-Wno-unused-but-set-variable" \
+                             `# https://bugs.mysql.com/bug.php?id=120653` \
+                             "-Wno-format" \
+                             "-Wno-missing-format-attribute" \
+                             `# https://bugs.mysql.com/bug.php?id=119246` \
+                             "-Wno-unused-result" \
+                             `# Some of warning options missing in LLVM 18` \
                              "-Wno-unknown-warning-option"
         mysql_add_comp_flags "8.0.46" "8.0.46" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=119239` \
@@ -248,17 +269,8 @@ mysql_export_environment_helpers() {
                              `# https://bugs.mysql.com/bug.php?id=119242` \
                              "-Wno-conditional-uninitialized" \
                              "-Wno-unnecessary-virtual-specifier" \
-                             `# https://bugs.mysql.com/bug.php?id=120650` \
-                             "-Wno-unused-but-set-variable" \
                              `# https://bugs.mysql.com/bug.php?id=119246` \
-                             "-Wno-nonnull" \
-                             `# https://bugs.mysql.com/bug.php?id=119246` \
-                             `# https://bugs.mysql.com/bug.php?id=120653` \
-                             "-Wno-format" \
-                             "-Wno-missing-format-attribute" \
-                             "-Wno-unused-result" \
-                             `# so that the above options pass with LLVM 18` \
-                             "-Wno-unknown-warning-option"
+                             "-Wno-nonnull"
         mysql_add_comp_flags "8.0.44" "8.0.46" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=119238` \
                              "-Wno-invalid-specialization"
@@ -485,6 +497,13 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.0.0 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.0.0 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.0.0 cxx_release)"
+    )
+
+    declare -a -r my849_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.9 c)"
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.9 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.9 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.9 cxx_release)"
     )
 
     declare -a -r my848_comp_flags=(
@@ -777,6 +796,11 @@ mysql_export_environment_helpers() {
                    "${my900_comp_flags[@]}")
     export MY900=("${myr[@]}" $(mysql_get_cmake_flags 9.0.0 any_release)
                   "${my900_comp_flags[@]}")
+
+    export MY849D=("${myd[@]}" $(mysql_get_cmake_flags 8.4.9 any_debug)
+                   "${my849_comp_flags[@]}")
+    export MY849=("${myr[@]}" $(mysql_get_cmake_flags 8.4.9 any_release)
+                  "${my849_comp_flags[@]}")
 
     export MY848D=("${myd[@]}" $(mysql_get_cmake_flags 8.4.8 any_debug)
                    "${my848_comp_flags[@]}")
@@ -1082,6 +1106,12 @@ mysql_cmake() {
                 9.0.0)
                     declare -a release_flags=("${MY900[@]}")
                     declare -a debug_flags=("${MY900D[@]}")
+                    declare -a -r \
+                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+                    ;;
+                8.4.9)
+                    declare -a release_flags=("${MY849[@]}")
+                    declare -a debug_flags=("${MY849D[@]}")
                     declare -a -r \
                             core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
                     ;;
