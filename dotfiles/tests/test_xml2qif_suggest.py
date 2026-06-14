@@ -198,12 +198,12 @@ class InsertRuleAfterSectionTest(unittest.TestCase):
             SUGGEST.insert_rule_after_section(self.config_path, "First", NEW_ENTRY)
         self.assertEqual(self._read_config(), config_text)
 
-    def test_unparseable_fresh_text_rejected(self):
-        """A config that became unparseable after validation is refused with
+    def test_unparsable_fresh_text_rejected(self):
+        """A config that became unparsable after validation is refused with
         a curated error instead of a configparser traceback."""
         config_text = "[First]\nbroken line without delimiter\n"
         self._write_config(config_text)
-        with self.assertRaisesRegex(RULES.RuleSuggestionError, "unparseable"):
+        with self.assertRaisesRegex(RULES.RuleSuggestionError, "unparsable"):
             SUGGEST.insert_rule_after_section(self.config_path, "First", NEW_ENTRY)
         self.assertEqual(self._read_config(), config_text)
 
@@ -624,7 +624,7 @@ class ParseSingleRuleTest(unittest.TestCase):
             SUGGEST.parse_single_rule(entry)
 
     def test_invalid_regex_rejected(self):
-        """An unparseable match regex is rejected."""
+        """An unparsable match regex is rejected."""
         entry = "[New Rule]\nmatch = ^(NEW$\npayee = New Payee\ncategory = New:Category"
         with self.assertRaises(RULES.RuleSuggestionError):
             SUGGEST.parse_single_rule(entry)

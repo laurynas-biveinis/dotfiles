@@ -115,7 +115,7 @@ class LoadRuleConfigTest(unittest.TestCase):
         self.assertEqual(str(ctx.exception).count(self.config_path), 1)
 
     def test_invalid_regex_raises_rule_config_error(self):
-        """A rule with an unparseable match regex raises the curated error
+        """A rule with an unparsable match regex raises the curated error
         naming the section."""
         self._assert_rule_config_error(
             "[Rule]\nmatch = ^(X$\npayee = P\ncategory = C\n", "section [Rule]"
@@ -623,7 +623,7 @@ class MainErrorCurationTest(unittest.TestCase):
         self._assert_curated_error(result, "missing.xml")
 
     def test_malformed_input_xml_exits_cleanly(self):
-        """An unparseable input file produces an error message naming the
+        """An unparsable input file produces an error message naming the
         file, not a traceback."""
         input_path = os.path.join(self.home_dir, "broken.xml")
         write_text(input_path, "<Document>")

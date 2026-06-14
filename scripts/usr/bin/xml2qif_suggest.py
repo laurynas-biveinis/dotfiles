@@ -349,7 +349,7 @@ def existing_sections(config_text):
     try:
         config.read_string(config_text)
     except configparser.Error as exc:
-        raise RuleSuggestionError(f"Config file became unparseable: {exc}") from exc
+        raise RuleSuggestionError(f"Config file became unparsable: {exc}") from exc
     return config.sections()
 
 

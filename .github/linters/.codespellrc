@@ -1,0 +1,4 @@
+[codespell]
+check-hidden =
+skip = */package-lock.json,*/go.mod,*/go.sum,*.log,.git
+ignore-words-list = amout
