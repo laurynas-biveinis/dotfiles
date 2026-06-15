@@ -2,7 +2,7 @@
 description: >-
   Internal step of review-changes: deeply analyze one kept finding and
   return its analysis block (or a rejection).
-model: fable
+model: opus
 user-invocable: false
 allowed-tools: >-
   Bash(git diff:*)

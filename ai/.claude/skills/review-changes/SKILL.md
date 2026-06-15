@@ -125,7 +125,7 @@ Files are append-only.
 
 **Dispatching a sub-step.** The draft, verify, and analyze sub-steps each run
 as a subagent spawned via the **Agent tool** (`subagent_type: general-purpose`,
-`model: fable`) — never via `Skill(...)`, which serializes forked invocations and
+`model: opus`) — never via `Skill(...)`, which serializes forked invocations and
 would run a per-finding "batch" one at a time. The Agent call's own parameters
 and the prompt below are authoritative; each child SKILL.md is read as plain
 instructions, so its frontmatter (`model`, `allowed-tools`) is documentation of
