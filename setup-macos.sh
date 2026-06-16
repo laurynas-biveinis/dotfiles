@@ -453,7 +453,7 @@ brew install --cask whatcable
 # Play
 brew install mono
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
-	guitar-pro transcribe
+	guitar-pro transcribe exiftool
 xattr -dr com.apple.quarantine "/Applications/XLD.app/"
 xattr -dr com.apple.quarantine "/Applications/Last.fm.app/"
 duti -s jp.tmkk.XLD .flac all
