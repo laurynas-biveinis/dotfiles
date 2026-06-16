@@ -418,17 +418,6 @@ BRANCH-NAME. Returns the URL of this PR."
     (goto-char pos)
     (org-end-of-subtree)))
 
-(defun dotfiles--org-append-mu4e-link (link msgid)
-  "Append mu4e LINK at the end of the `org' subtree at point.
-Do nothing when the subtree already contains a link to MSGID.  Point must be on
-the subtree's heading.  Return non-nil when LINK was inserted, nil otherwise."
-  (declare (ftype (function (string string) boolean)))
-  (let ((end (save-excursion (org-end-of-subtree t t) (point))))
-    (unless (save-excursion (search-forward (concat "mu4e:msgid:" msgid) end t))
-      (goto-char end)
-      (insert link "\n")
-      t)))
-
 ;;; `org-gcal' helpers
 
 ;; Do not require `org-gcal' to avoid the warning about needing to call
