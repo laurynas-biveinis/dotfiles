@@ -418,6 +418,24 @@ BRANCH-NAME. Returns the URL of this PR."
     (goto-char pos)
     (org-end-of-subtree)))
 
+(defun dotfiles--org-append-mu4e-link (link msgid)
+  "Append mu4e LINK at the end of the `org' subtree at point.
+Do nothing when the subtree already contains a link to MSGID.  Move point to the
+subtree's heading first, so the dedup scan covers the whole subtree wherever
+point started.  Return non-nil when LINK was inserted, nil otherwise."
+  (declare (ftype (function (string string) boolean)))
+  (org-back-to-heading)
+  (let ((end (save-excursion (org-end-of-subtree t) (point))))
+    ;; Anchor on the link's closing `]' and match case-sensitively: a Message-ID
+    ;; is case-sensitive and may be a prefix of another already linked here.
+    (unless (let ((case-fold-search nil))
+              (save-excursion
+                (search-forward (concat "mu4e:msgid:" msgid "]") end t)))
+      (goto-char end)
+      (unless (bolp) (insert "\n"))
+      (insert link "\n")
+      t)))
+
 ;;; `org-gcal' helpers
 
 ;; Do not require `org-gcal' to avoid the warning about needing to call
