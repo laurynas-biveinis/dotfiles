@@ -7,6 +7,10 @@ user-invocable: false
 
 # Elisp Guidelines
 
+## Tooling
+
+Use the `elisp-dev` MCP server when working with elisp.
+
 ## Supported versions and compatibility
 
 The oldest supported Emacs version is 27.1. The code must be compatible with
