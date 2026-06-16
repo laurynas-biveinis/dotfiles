@@ -436,6 +436,16 @@ point started.  Return non-nil when LINK was inserted, nil otherwise."
       (insert link "\n")
       t)))
 
+(defun dotfiles--org-task-top-level-p ()
+  "Return non-nil when the `org' task at point has no parent task.
+True when the immediate parent heading carries no TODO keyword (the task sits
+directly under a plain container heading such as \"Tasks\"); nil when it is a
+sub-action under a project task."
+  (declare (ftype (function () boolean))
+           (important-return-value t))
+  (save-excursion
+    (not (and (org-up-heading-safe) (org-get-todo-state)))))
+
 ;;; `org-gcal' helpers
 
 ;; Do not require `org-gcal' to avoid the warning about needing to call
