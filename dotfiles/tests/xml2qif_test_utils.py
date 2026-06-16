@@ -27,6 +27,12 @@ category = Last:Category
 
 NEW_ENTRY = "[New Rule]\nmatch = ^NEW$\npayee = New Payee\ncategory = New:Category"
 
+# A broadened body for the existing [First] section: same payee and category,
+# match widened to also cover the NEW transaction the edit flow tests use.
+EDIT_ENTRY = (
+    "[First]\nmatch = ^(FIRST|NEW)$\npayee = First Payee\ncategory = First:Category"
+)
+
 COMMENTED_CONFIG_TEXT = CONFIG_TEXT.replace(
     "[Last]", "# Last rules\n# more about Last\n[Last]"
 )
@@ -39,6 +45,18 @@ def suggest_json(**overrides):
         "confidence": 75,
         "insert_after": "First",
         "config_entry": NEW_ENTRY,
+    }
+    suggestion.update(overrides)
+    return json.dumps(suggestion)
+
+
+def edit_json(**overrides):
+    """Build a valid Codex edit JSON string with optional field overrides."""
+    suggestion = {
+        "action": "edit",
+        "confidence": 80,
+        "section": "First",
+        "config_entry": EDIT_ENTRY,
     }
     suggestion.update(overrides)
     return json.dumps(suggestion)

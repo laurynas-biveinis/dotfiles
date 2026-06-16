@@ -31,14 +31,16 @@ into every rule, silently changing rules that do not spell those keys out
 themselves. An empty [DEFAULT] header is harmless and accepted.
 
 When no rule matches a transaction, the script asks Codex (requires the codex
-CLI on PATH) to suggest a new rule. The prompt sent to the OpenAI API includes
-the transaction XML and the entire ~/.xml2qifrc contents. Codex runs as a
-read-only sandboxed agent that may additionally read any local file while
-answering, and whatever it reads also reaches the OpenAI API. The suggested
-rule is inserted into ~/.xml2qifrc only after interactive confirmation. The
-Codex call itself is deliberately not gated by its own confirmation, even
-though counterparty-written statement text both triggers and steers it; that
-egress is an accepted risk for this tool. Do not add a pre-run prompt.
+CLI on PATH) to either suggest a new rule or edit an existing one (broadening a
+near-match rather than adding a near-duplicate). The prompt sent to the OpenAI
+API includes the transaction XML and the entire ~/.xml2qifrc contents. Codex
+runs as a read-only sandboxed agent that may additionally read any local file
+while answering, and whatever it reads also reaches the OpenAI API. The
+suggested new or edited rule is written to ~/.xml2qifrc only after interactive
+confirmation; an edit shows a before/after of the affected section. The Codex
+call itself is deliberately not gated by its own confirmation, even though
+counterparty-written statement text both triggers and steers it; that egress is
+an accepted risk for this tool. Do not add a pre-run prompt.
 
 TODO(laurynas): in the above, make match optional for the cases where type
 determines everything.

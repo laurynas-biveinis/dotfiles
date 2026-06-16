@@ -38,15 +38,24 @@ def transaction_xml_string(xml_obj):
 
 
 def build_rule_suggestion_prompt(xml_transaction, rule_type, config_text):
-    """Build the prompt for Codex to suggest a new rule."""
-    return f"""Suggest one new xml2qif configuration rule.
+    """Build the prompt for Codex to suggest a new rule or edit an existing one."""
+    return f"""Suggest how to make one xml2qif configuration rule match this transaction.
 
 The existing configuration is an INI file. It has deliberate grouping and order.
-Choose the best existing section after which to insert the new rule.
 
 Return exactly one JSON object and no prose. Use one of these schemas.
 
-If you have a defensible suggestion:
+If an existing rule is almost right and should be broadened to also cover this
+transaction (rather than adding a near-duplicate new rule):
+{{
+  "action": "edit",
+  "confidence": 80,
+  "section": "Existing section name to replace",
+  "config_entry": "[Section name]\\nmatch = ^(...|...)$\\npayee = ...\\ncategory = ..."
+}}
+
+If no existing rule is a near-match and a new rule is needed, choose the best
+existing section after which to insert it:
 {{
   "action": "suggest",
   "confidence": 75,
@@ -62,7 +71,9 @@ If you cannot make a defensible suggestion:
 }}
 
 Rules:
-- Prefer action "punt" over a low-quality or guessed rule.
+- Prefer "edit" when an existing rule already targets the right payee and category
+  and only needs its match regex widened. Prefer "suggest" only when no existing
+  rule is a near-match. Prefer "punt" over a low-quality or guessed rule.
 - confidence is an integer from 0 to 100.
 - The config_entry must contain exactly one INI section.
 - Required keys are match, payee, and category.
@@ -70,7 +81,13 @@ Rules:
 - The regex in match must match one of the transaction text fields used by the
   script: debitor first, then creditor, then unstructured remittance info.
 - If the derived rule type is useful, include a type key with that value.
-- Do not duplicate an existing section name.
+- For "edit", section must be exactly an existing section name. The config_entry
+  header is the section after editing: keep it the same to edit in place, or use a
+  new name to rename. The whole section body is replaced, so include every key it
+  should keep. Only broaden the rule; do not narrow its match or change its payee
+  or category in a way that would re-route other transactions. A renamed section
+  must not collide with another existing section.
+- For "suggest", do not duplicate an existing section name.
 - Preserve the naming, category, regex, and ordering style of the existing file.
 
 Derived rule type: {rule_type}
@@ -204,7 +221,7 @@ def parse_rule_suggestion(suggestion_text):
 
     action = suggestion.get("action")
     confidence = normalize_confidence(suggestion.get("confidence"))
-    if action not in ("suggest", "punt"):
+    if action not in ("suggest", "edit", "punt"):
         raise RuleSuggestionError("Codex suggestion lacks valid action")
 
     if action == "punt":
@@ -221,16 +238,33 @@ def parse_rule_suggestion(suggestion_text):
             "reason": " ".join(reason.split()),
         }
 
-    insert_after = suggestion.get("insert_after")
     config_entry = suggestion.get("config_entry")
-    if not isinstance(insert_after, str) or not insert_after.strip():
-        raise RuleSuggestionError("Codex suggestion lacks insert_after")
     if not isinstance(config_entry, str) or not config_entry.strip():
         raise RuleSuggestionError("Codex suggestion lacks config_entry")
-    insert_after = normalize_line_endings(insert_after)
     config_entry = normalize_line_endings(config_entry)
-    reject_control_characters("insert_after", insert_after)
     reject_control_characters("config_entry", config_entry)
+
+    if action == "edit":
+        # section names the existing rule to replace; the config_entry header
+        # carries the section name after editing (the same name to edit in
+        # place, or a different one to rename)
+        section = suggestion.get("section")
+        if not isinstance(section, str) or not section.strip():
+            raise RuleSuggestionError("Codex suggestion lacks section")
+        section = normalize_line_endings(section)
+        reject_control_characters("section", section)
+        return {
+            "action": action,
+            "confidence": confidence,
+            "section": section.strip(),
+            "config_entry": config_entry.strip(),
+        }
+
+    insert_after = suggestion.get("insert_after")
+    if not isinstance(insert_after, str) or not insert_after.strip():
+        raise RuleSuggestionError("Codex suggestion lacks insert_after")
+    insert_after = normalize_line_endings(insert_after)
+    reject_control_characters("insert_after", insert_after)
 
     return {
         "action": action,
@@ -306,12 +340,34 @@ def parse_single_rule(config_entry):
         raise RuleSuggestionError("Suggested match regex is invalid") from exc
 
 
-def validate_rule_suggestion(config_text, xml_transaction, rule_type, suggestion):
-    """Validate a suggested rule and return normalized parts."""
-    if suggestion["action"] != "suggest":
+def check_rule_constraints(rule, xml_transaction, rule_type):
+    """Reject a parsed rule whose type/amount disagrees with the transaction or
+    that does not match it. Shared by the suggest and edit validation paths."""
+    if rule["type"] and rule["type"] != rule_type:
         raise RuleSuggestionError(
-            f"Expected suggest action, got {suggestion['action']!r}"
+            f"Suggested type {rule['type']} does not match transaction type {rule_type}"
         )
+    if rule["amount"] and rule["amount"] != xml_transaction.amount:
+        raise RuleSuggestionError(
+            f"Suggested amount {rule['amount']} does not match {xml_transaction.amount}"
+        )
+    if find_transaction_rule([rule], xml_transaction, rule_type) is None:
+        raise RuleSuggestionError("Suggested rule does not match the transaction")
+
+
+def validate_rule_suggestion(config_text, xml_transaction, rule_type, suggestion):
+    """Validate a suggested rule and return normalized parts as a dict.
+
+    The dict carries action, config_entry, section (the parsed body header), and
+    confidence. A suggest also carries insert_after; an edit also carries
+    old_section (the existing section being replaced)."""
+    action = suggestion["action"]
+    if action == "edit":
+        return validate_edit_suggestion(
+            config_text, xml_transaction, rule_type, suggestion
+        )
+    if action != "suggest":
+        raise RuleSuggestionError(f"Expected suggest or edit action, got {action!r}")
 
     insert_after = suggestion["insert_after"]
     config_entry = suggestion["config_entry"]
@@ -322,20 +378,42 @@ def validate_rule_suggestion(config_text, xml_transaction, rule_type, suggestion
     if section in existing_sections(config_text):
         raise RuleSuggestionError(f"Suggested section [{section}] already exists")
 
-    if rule["type"] and rule["type"] != rule_type:
-        raise RuleSuggestionError(
-            f"Suggested type {rule['type']} does not match transaction type {rule_type}"
-        )
-    if rule["amount"] and rule["amount"] != xml_transaction.amount:
-        raise RuleSuggestionError(
-            f"Suggested amount {rule['amount']} does not match {xml_transaction.amount}"
-        )
-
-    if find_transaction_rule([rule], xml_transaction, rule_type) is None:
-        raise RuleSuggestionError("Suggested rule does not match the transaction")
+    check_rule_constraints(rule, xml_transaction, rule_type)
 
     # Return section so insert_rule_after_section need not re-parse config_entry
-    return insert_after, config_entry, section, suggestion["confidence"]
+    return {
+        "action": action,
+        "insert_after": insert_after,
+        "config_entry": config_entry,
+        "section": section,
+        "confidence": suggestion["confidence"],
+    }
+
+
+def validate_edit_suggestion(config_text, xml_transaction, rule_type, suggestion):
+    """Validate an edit suggestion and return its normalized parts as a dict."""
+    old_section = suggestion["section"]
+    config_entry = suggestion["config_entry"]
+
+    new_section, rule = parse_single_rule(config_entry)
+    # Same scan as the rewrite, so validation and write cannot disagree about
+    # which section is replaced; also confirms old_section exists
+    _ = find_section_span(config_text, old_section)  # raises if it does not exist
+
+    # A rename must not land on top of a different existing section: the rewrite
+    # would then leave two same-named headers and an unloadable config
+    if new_section != old_section and new_section in existing_sections(config_text):
+        raise RuleSuggestionError(f"Suggested section [{new_section}] already exists")
+
+    check_rule_constraints(rule, xml_transaction, rule_type)
+
+    return {
+        "action": "edit",
+        "old_section": old_section,
+        "config_entry": config_entry,
+        "section": new_section,
+        "confidence": suggestion["confidence"],
+    }
 
 
 def existing_sections(config_text):
@@ -383,22 +461,40 @@ def configparser_header_name(config_text, header_start):
     return configparser.ConfigParser.SECTCRE.match(header_line).group("header")
 
 
-def find_section_insert_index(config_text, insert_after):
-    """Find the text offset after a config section."""
+def _locate_section(config_text, name):
+    """Locate the half-open span of a config section header by name.
+
+    Returns (start, end, False) when a header both the column-0 regex and
+    configparser read as name is found: start is the header line, end backs up
+    over comments attached to the next header (or is the text length for the
+    last section). Returns (None, None, prefix_read_only) when not found:
+    prefix_read_only is True if the only candidate was a header configparser
+    parses differently (e.g. [A] out of [A]B]), False if no header matched at
+    all. Callers format their own not-found error from that flag."""
     matches = list(SECTION_HEADER_RE.finditer(config_text))
     prefix_read_only = False
     for index, match in enumerate(matches):
-        if match.group(1) != insert_after:
+        if match.group(1) != name:
             continue
         # A prefix read of a header configparser parses differently (e.g.
-        # [A] out of [A]B]) is not the anchor section; skip it so the anchor
-        # resolves to a header both grammars read as insert_after
-        if configparser_header_name(config_text, match.start()) != insert_after:
+        # [A] out of [A]B]) is not this section; skip it so the span resolves
+        # to a header both grammars read as name
+        if configparser_header_name(config_text, match.start()) != name:
             prefix_read_only = True
             continue
+        start = match.start()
         if index + 1 >= len(matches):
-            return len(config_text)
-        return back_up_over_comment_lines(config_text, matches[index + 1].start())
+            return start, len(config_text), False
+        end = back_up_over_comment_lines(config_text, matches[index + 1].start())
+        return start, end, False
+    return None, None, prefix_read_only
+
+
+def find_section_insert_index(config_text, insert_after):
+    """Find the text offset after a config section."""
+    start, end, prefix_read_only = _locate_section(config_text, insert_after)
+    if start is not None:
+        return end
 
     # insert_after is untrusted Codex text that may carry an interior newline
     # (parse_rule_suggestion strips only edges); collapse it so a crafted anchor
@@ -409,6 +505,49 @@ def find_section_insert_index(config_text, insert_after):
             f"Insert anchor [{safe_anchor}] is not a config section"
         )
     raise RuleSuggestionError(f"Insert anchor [{safe_anchor}] does not exist")
+
+
+def find_section_span(config_text, section):
+    """Find the half-open text span (start, end) of an existing config section.
+
+    start is the section header line; comments above it document the section and
+    stay outside the span. end backs up over comments attached to the next
+    header so they stay with it; for the last section end is the text length.
+    Trailing comments inside the body, separated from the next header by a blank
+    line, fall inside the span and are replaced by a rewrite."""
+    start, end, prefix_read_only = _locate_section(config_text, section)
+    if start is not None:
+        return start, end
+
+    # section is untrusted Codex text that may carry an interior newline
+    # (parse_rule_suggestion strips only edges); collapse it so a crafted name
+    # cannot spoof a line of program output when the error is printed
+    safe_section = replace_control_characters(section, single_line=True)
+    if prefix_read_only:
+        raise RuleSuggestionError(f"Section [{safe_section}] is not a config section")
+    raise RuleSuggestionError(f"Section [{safe_section}] does not exist")
+
+
+def write_config_atomically(config_path, new_text):
+    """Replace the config file with new_text via write-then-rename.
+
+    The temp file must be in the same directory for os.replace to be atomic, so
+    an interrupted write cannot corrupt the config; the config's own mode is
+    preserved."""
+    config_dir = os.path.dirname(config_path)
+    tmp_file = tempfile.NamedTemporaryFile(
+        "w", dir=config_dir, delete=False, encoding="utf-8"
+    )
+    try:
+        with tmp_file:
+            tmp_file.write(new_text)
+        # NamedTemporaryFile creates the file as 0600; keep the config's own mode
+        os.chmod(tmp_file.name, os.stat(config_path).st_mode & 0o7777)
+        os.replace(tmp_file.name, config_path)
+    except BaseException:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(tmp_file.name)
+        raise
 
 
 def insert_rule_after_section(config_path, insert_after, config_entry, *, section=None):
@@ -431,22 +570,46 @@ def insert_rule_after_section(config_path, insert_after, config_entry, *, sectio
     if after:
         new_text = f"{new_text}\n{after}"
 
-    # Write-then-rename so an interrupted write cannot corrupt the config; the
-    # temp file must be in the same directory for os.replace to be atomic
-    config_dir = os.path.dirname(config_path)
-    tmp_file = tempfile.NamedTemporaryFile(
-        "w", dir=config_dir, delete=False, encoding="utf-8"
-    )
-    try:
-        with tmp_file:
-            tmp_file.write(new_text)
-        # NamedTemporaryFile creates the file as 0600; keep the config's own mode
-        os.chmod(tmp_file.name, os.stat(config_path).st_mode & 0o7777)
-        os.replace(tmp_file.name, config_path)
-    except BaseException:
-        with contextlib.suppress(FileNotFoundError):
-            os.unlink(tmp_file.name)
-        raise
+    write_config_atomically(config_path, new_text)
+
+
+def replace_rule_section(config_path, old_section, config_entry, *, new_section=None):
+    """Replace an existing config section with a new entry, in place.
+
+    config_entry's header may rename the section. A caller that already parsed
+    config_entry passes its section as new_section to skip the re-parse; a direct
+    caller leaves it None and the section is parsed here. The old section is
+    located on fresh file text, so a section that vanished or was renamed between
+    validation and confirmation aborts the write with the file untouched."""
+    config_text = read_config_text(config_path)
+    start, end = find_section_span(config_text, old_section)
+
+    # The file may have changed between validation and the user's confirmation;
+    # a rename landing on a section added since then would leave two same-named
+    # headers and an unloadable config. Catch it here with the same named-section
+    # message the insert path and validation use, rather than the generic
+    # unparsable error the post-reload guard below would give.
+    if new_section is None:
+        new_section = parse_single_rule(config_entry)[0]
+    if new_section != old_section and new_section in existing_sections(config_text):
+        raise RuleSuggestionError(f"Suggested section [{new_section}] already exists")
+
+    before = config_text[:start].rstrip()
+    after = config_text[end:]
+    if before:
+        new_text = f"{before}\n\n{config_entry.strip()}\n"
+    else:
+        # Editing the first section: no preceding content to separate from
+        new_text = f"{config_entry.strip()}\n"
+    if after:
+        new_text = f"{new_text}\n{after}"
+
+    # The rename check above used fresh config_text; a strict reload of the
+    # assembled text still backstops a stale duplicate of old_section or any
+    # other structure that would leave the file unloadable on the next parse.
+    _ = existing_sections(new_text)  # raises on duplicate or unparsable
+
+    write_config_atomically(config_path, new_text)
 
 
 def suggest_and_confirm_rule(config_path, xml_transaction, rule_type):
@@ -468,24 +631,76 @@ def suggest_and_confirm_rule(config_path, xml_transaction, rule_type):
         )
         raise MissingRuleError(xml_transaction, rule_type)
 
-    insert_after, config_entry, section, confidence = validate_rule_suggestion(
+    validated = validate_rule_suggestion(
         config_text, xml_transaction, rule_type, suggestion
     )
 
-    print(
-        f"\nCodex suggests inserting after [{insert_after}] "
-        f"({format_confidence(confidence)} confidence):\n"
-    )
-    print(config_entry)
+    if validated["action"] == "edit":
+        confirm_and_edit_rule(config_path, validated, xml_transaction, rule_type)
+    else:
+        confirm_and_insert_rule(config_path, validated, xml_transaction, rule_type)
+
+
+def prompt_to_continue(prompt_text, xml_transaction, rule_type):
+    """Ask the user a yes/no question; raise MissingRuleError on no or EOF."""
     try:
-        answer = input(
-            f"\nInsert this rule after [{insert_after}] and continue? [y/N] "
-        )
+        answer = input(prompt_text)
     except EOFError:
         print("\nstdin closed; treating as decline")
         raise MissingRuleError(xml_transaction, rule_type) from None
     if answer.strip().lower() not in ("y", "yes"):
         raise MissingRuleError(xml_transaction, rule_type)
 
-    insert_rule_after_section(config_path, insert_after, config_entry, section=section)
+
+def confirm_and_insert_rule(config_path, validated, xml_transaction, rule_type):
+    """Show a suggested new rule, confirm it, and insert it into the config."""
+    insert_after = validated["insert_after"]
+    print(
+        f"\nCodex suggests inserting after [{insert_after}] "
+        f"({format_confidence(validated['confidence'])} confidence):\n"
+    )
+    print(validated["config_entry"])
+    prompt_to_continue(
+        f"\nInsert this rule after [{insert_after}] and continue? [y/N] ",
+        xml_transaction,
+        rule_type,
+    )
+    insert_rule_after_section(
+        config_path,
+        insert_after,
+        validated["config_entry"],
+        section=validated["section"],
+    )
     print(f"Inserted rule into {config_path}")
+
+
+def confirm_and_edit_rule(config_path, validated, xml_transaction, rule_type):
+    """Show a before/after of an edited rule, confirm it, and rewrite the config."""
+    old_section = validated["old_section"]
+    # Re-read fresh so the Before block reflects the file as it is now, not the
+    # pre-Codex snapshot that may be minutes stale; the rewrite below re-reads
+    # independently in any case
+    config_text = read_config_text(config_path)
+    start, end = find_section_span(config_text, old_section)
+    print(
+        f"\nCodex suggests editing [{old_section}] "
+        f"({format_confidence(validated['confidence'])} confidence). Editing a "
+        "rule can change how other transactions match.\n"
+    )
+    # The Before block is the user's own config text, not untrusted Codex text
+    print("Before:")
+    print(config_text[start:end].rstrip("\n"))
+    print("\nAfter:")
+    print(validated["config_entry"])
+    prompt_to_continue(
+        f"\nEdit rule [{old_section}] and continue? [y/N] ",
+        xml_transaction,
+        rule_type,
+    )
+    replace_rule_section(
+        config_path,
+        old_section,
+        validated["config_entry"],
+        new_section=validated["section"],
+    )
+    print(f"Edited rule in {config_path}")
