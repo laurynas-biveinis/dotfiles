@@ -9,8 +9,8 @@
 ;;; Regexps for looking up information in e-mails
 
 (defconst dotfiles--muspy-release-date-and-title
-  (concat "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\): \\(.*? - .*?\\) "
-          "(\\(?:Album\\|EP\\|Compilation\\))"))
+  (concat "\\([0-9]\\{4\\}\\(?:-[0-9]\\{2\\}\\)\\{0,2\\}\\): \\(.*? - .*?\\) "
+          "(\\(?:Album\\|EP\\|Compilation\\|Single\\|Live\\))"))
 
 (defconst dotfiles--gh-view-run-results "^View results: \\(.*\\)")
 
