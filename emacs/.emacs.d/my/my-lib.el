@@ -37,6 +37,116 @@
 (defconst dotfiles--gdoc-open-comment-link "Open[[:space:]]*\n(\\(.*?\\))")
 (defconst dotfiles--gdoc-open-shared-link "^\\(https://docs.google.com/.*\\)$")
 
+;;; macOS Music library
+
+(declare-function do-applescript "term/ns-win" (script))
+
+(defun dotfiles--applescript-quote (s)
+  "Return S wrapped as an AppleScript string literal.
+Backslashes and double quotes in S are escaped so the result can be spliced into
+AppleScript source.  S must contain no newlines -- a raw newline inside an
+AppleScript string literal is a syntax error; signals an error if S does.
+Normalize user-supplied strings with `dotfiles--music-normalize-key' first."
+  (declare (ftype (function (string) string))
+           (important-return-value t)
+           (side-effect-free t))
+  (when (string-match-p "[\r\n]" s)
+    (error "dotfiles--applescript-quote: newline in argument %S" s))
+  (concat "\"" (replace-regexp-in-string "[\\\"]" "\\\\\\&" s) "\""))
+
+(defun dotfiles--music-normalize-key (s)
+  "Return S downcased and trimmed, with any newline run collapsed to a space.
+Produces a canonical comparison key stable across differing surrounding
+whitespace or embedded newlines, so the same artist or album text yields the
+same key regardless of such cosmetic differences."
+  (declare (ftype (function (string) string))
+           (important-return-value t)
+           (side-effect-free t))
+  (downcase (string-trim (replace-regexp-in-string "[\r\n]+" " " s))))
+
+(defconst dotfiles--music-field-separator "::dotfiles-field::"
+  "Separator joining a track's artist and album in the Music query output.
+A multi-character sentinel that should not appear in artist or album metadata,
+unlike a tab, so a tab in a title cannot shift field positions.")
+
+(defconst dotfiles--music-record-separator "::dotfiles-record::"
+  "Separator delimiting whole track records in the Music query output.
+A sentinel like `dotfiles--music-field-separator', which joins the artist and
+album within each record.")
+
+(defun dotfiles--music-library-owned-album (artist album)
+  "Return the Music library album by ARTIST matching ALBUM, or nil.
+Both are matched ignoring case and surrounding whitespace but
+otherwise exactly, so a differently decorated re-release (a remaster or
+anniversary edition, say) does not match.
+Returns nil off macOS (no `do-applescript'), when ARTIST or ALBUM is not a
+non-empty string, when the library has no such album, or when the query fails
+(Music unreachable or Automation permission not granted) -- in which case a
+warning is emitted.
+Tracks whose library artist or album metadata contains embedded newlines may be
+silently skipped even when present: the AppleScript `contains' pre-filter
+searches for the newline-collapsed key as a substring of the as-stored metadata,
+and a space does not match a newline there.
+Querying may launch the Music app if it is not running, and runs synchronously,
+blocking Emacs until it completes.  The matched library album name is returned so
+the caller can show what matched."
+  (declare (ftype (function (string string) (or string null)))
+           (important-return-value t))
+  (and-let* (((fboundp 'do-applescript))
+             ((stringp artist))
+             ((stringp album))
+             (artist-key (dotfiles--music-normalize-key artist))
+             ((not (string= artist-key "")))
+             (album-key (dotfiles--music-normalize-key album))
+             ((not (string= album-key "")))
+             ;; `contains' is a broad, case-insensitive substring pre-filter;
+             ;; the Elisp `string=' pass below enforces the exact match.  Every
+             ;; matching track is emitted -- not just the first -- because a
+             ;; substring match can be a superset (a deluxe edition whose title
+             ;; merely contains the queried album), and stopping at the first
+             ;; would let such a superset hide a genuine exact match later in the
+             ;; list.  Keys are normalized before splicing so a multi-line value
+             ;; cannot break the AppleScript string literal.
+             (raw (condition-case err
+                      (progn
+                        (message "Querying Music library...")
+                        (do-applescript
+                         (format "tell application \"Music\"
+set out to \"\"
+repeat with t in (every track whose artist contains %s and album contains %s)
+set out to out & (artist of t) & %s & (album of t) & %s
+end repeat
+return out
+end tell"
+                                 (dotfiles--applescript-quote artist-key)
+                                 (dotfiles--applescript-quote album-key)
+                                 (dotfiles--applescript-quote
+                                  dotfiles--music-field-separator)
+                                 (dotfiles--applescript-quote
+                                  dotfiles--music-record-separator))))
+                    (error
+                     (display-warning
+                      'dotfiles
+                      (format "Music library query failed: %s"
+                              (error-message-string err))
+                      :warning)
+                     nil)))
+             (records (split-string raw dotfiles--music-record-separator t)))
+    (seq-some
+     (lambda (record)
+       (let ((fields (split-string record dotfiles--music-field-separator)))
+         (if (/= (length fields) 2)
+             (display-warning
+              'dotfiles
+              (format "Music library query: malformed record %S" record)
+              :warning)
+           (let ((album-raw (cadr fields)))
+             (and (string= artist-key
+                           (dotfiles--music-normalize-key (car fields)))
+                  (string= album-key (dotfiles--music-normalize-key album-raw))
+                  (string-trim album-raw))))))
+     records)))
+
 ;;; string helpers
 
 ;; If dependencies are OK, then use `string-join' instead.
