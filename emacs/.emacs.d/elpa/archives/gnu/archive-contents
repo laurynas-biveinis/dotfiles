@@ -1011,13 +1011,13 @@
       (:authors ("Eduardo Ochs" . "eduardoochs@gmail.com"))
       (:commit . "ffa3b88874d064256c5221d2bbcb1564d901602a"))])
  (ef-themes
-  . [(2 1 0) ((emacs (28 1)) (modus-themes (5 0 0)))
+  . [(2 2 0) ((emacs (28 1)) (modus-themes (5 0 0)))
      "Colorful and legible themes" tar
      ((:url . "https://github.com/protesilaos/ef-themes")
       (:keywords "faces" "theme" "accessibility")
-      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
-      (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "af6a2a588f72a40212624458278d87f1c769405b"))])
+      (:maintainer "Protesilaos" . "info@protesilaos.com")
+      (:authors ("Protesilaos" . "info@protesilaos.com"))
+      (:commit . "5cdb7dd361ad3b5d7310f94375a832cd94c182d8"))])
  (eglot
   . [(1 23)
      ((emacs (26 3)) (eldoc (1 16 0)) (external-completion (0 1))
@@ -1793,12 +1793,12 @@
       (:url . "https://elpa.gnu.org/packages/kmb.html")
       (:commit . "4fee1c87e7e286d7ecd759fb74aa7a112bb51e3a"))])
  (kubed
-  . [(0 7 0) ((emacs (29 1))) "Kubernetes, Emacs, done!" tar
+  . [(0 7 1) ((emacs (29 1))) "Kubernetes, Emacs, done!" tar
      ((:url . "https://eshelyaron.com/kubed.html")
       (:keywords "tools" "kubernetes" "containers")
       (:maintainer "Eshel Yaron" . "~eshel/kubed-devel@lists.sr.ht")
       (:authors ("Eshel Yaron" . "me@eshelyaron.com"))
-      (:commit . "daf3bb9054bed987f8792ff227a3c6b060084834"))])
+      (:commit . "214cddb1e6458fd76143b580c24700cba70acf1e"))])
  (landmark
   . [(1 0) nil "Neural-network robot that learns landmarks" tar
      ((:keywords "games" "neural network" "adaptive search"
@@ -1878,14 +1878,14 @@
       (:authors ("Sean Whitton" . "spwhitton@spwhitton.name"))
       (:commit . "00b8f65effe4f2673e6450d70000644b266aa78a"))])
  (llm
-  . [(0 31 0)
+  . [(0 31 1)
      ((emacs (28 1)) (plz (0 8)) (plz-event-source (0 1 1))
       (plz-media-type (0 2 1)) (compat (29 1)))
      "Interface to pluggable llm backends" tar
      ((:url . "https://github.com/ahyatt/llm")
       (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
-      (:commit . "8bb1d42ab7e112a535a608c7a2538350f469e7b9"))])
+      (:commit . "34ac61091994c10bda45eed54433a1a87ca26af1"))])
  (lmc
   . [(1 4) nil "Little Man Computer in Elisp" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -2080,13 +2080,13 @@
       (:authors ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
       (:commit . "b1f5c7dbdc405e6e10d9ddd99a43a6b2ad61b176"))])
  (modus-themes
-  . [(5 2 0) ((emacs (28 1)))
+  . [(5 3 0) ((emacs (28 1)))
      "Elegant, highly legible and customizable themes" tar
      ((:url . "https://github.com/protesilaos/modus-themes")
       (:keywords "faces" "theme" "accessibility")
-      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
-      (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "d1037f1322487e5686fff655dcd88aa644b2ad51"))])
+      (:maintainer "Protesilaos" . "info@protesilaos.com")
+      (:authors ("Protesilaos" . "info@protesilaos.com"))
+      (:commit . "2d044ac89f3bca7011fa2bfda003cf80ce115f70"))])
  (mpdired
   . [(3) ((emacs (29))) "A dired-like client for Music Player Daemon"
      tar
@@ -2461,14 +2461,14 @@
       (:url . "https://elpa.gnu.org/packages/persist.html")
       (:commit . "3b4b421d5185f2c33bae478aa057dff13701cc25"))])
  (php-fill
-  . [(1 1 1) ((emacs (27 1)))
+  . [(1 1 2) ((emacs (27 1)))
      "Additional fill commands for PHP code editing" tar
      ((:url . "https://github.com/arielenter/php-fill.el")
       (:keywords "php" "languages" "tools" "convenience")
       (:maintainer "Ariel Del Valle Lozano"
 		   . "arielmazatlan@gmail.com")
       (:authors ("Ariel Del Valle Lozano" . "arielmazatlan@gmail.com"))
-      (:commit . "73c1c8765a84b0318f2ba852c504e8251ced43ca"))])
+      (:commit . "293bc8bc939cf0e4553d4aedd9c45e2ee653ae4d"))])
  (phpinspect
   . [(3 0 1) ((compat (29)))
      "PHP parsing and code intelligence package" tar
@@ -3329,15 +3329,15 @@
        ("Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev"))
       (:commit . "1856230dc181f23dd15026b0ad21d8b299b034d1"))])
  (transient-cycles
-  . [(2 0) ((emacs (29 1)))
+  . [(2 1) ((emacs (29 1)))
      "Define command variants with transient cycling" tar
      ((:url
-       . "https://git.spwhitton.name/dotfiles/tree/.emacs.d/site-lisp/transient-cycles.el")
+       . "https://git.spwhitton.name/dotfiles/tree/.emacs.d/user-lisp/transient-cycles.el")
       (:keywords "buffer" "window" "processes" "minor-mode"
 		 "convenience")
       (:maintainer "Sean Whitton" . "spwhitton@spwhitton.name")
       (:authors ("Sean Whitton" . "spwhitton@spwhitton.name"))
-      (:commit . "11e547c11b84fa81bb4ef8ec33ee777f96576e8c"))])
+      (:commit . "2a35e2086675c08d1d3d451307566215202b641e"))])
  (tree-inspector
   . [(0 4) ((emacs (27 1)) (treeview (1 1 0)))
      "Inspector tool for Emacs Lisp object that uses a treeview" tar
@@ -3521,14 +3521,14 @@
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
       (:commit . "a0240be7a917dca47b95e401382affd1c11abea1"))])
  (verilog-mode
-  . [(2026 1 18 88738971) nil
+  . [(2026 4 14 10117132) nil
      "major mode for editing verilog source in Emacs" tar
      ((:url . "https://www.veripool.org") (:keywords "languages")
       (:maintainer ("Michael McNamara" . "mac@verilog.com")
 		   ("Wilson Snyder" . "wsnyder@wsnyder.org"))
       (:authors ("Michael McNamara" . "mac@verilog.com")
 		("Wilson Snyder" . "wsnyder@wsnyder.org"))
-      (:commit . "72a34eceb9e7e3bfd295f908b8148b2aca41a20e"))])
+      (:commit . "b3574e6464b0cce4a878106c07f1ea8f65989a6b"))])
  (vertico
   . [(2 10) ((emacs (29 1)) (compat (31)))
      "VERTical Interactive COmpletion" tar

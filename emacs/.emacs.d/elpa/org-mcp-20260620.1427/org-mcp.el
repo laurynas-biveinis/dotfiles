@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: convenience, files, matching, outlines
-;; Package-Version: 20260604.909
-;; Package-Revision: 3972ee0f4292
+;; Package-Version: 20260620.1427
+;; Package-Revision: eea4942d8285
 ;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.4.0"))
 ;; Homepage: https://github.com/laurynas-biveinis/org-mcp
 
@@ -62,20 +62,23 @@
   "Cross-cutting behavior shared by org-mcp's tools and resources.
 
 File-modifying tools (org-add-todo, org-update-todo-state,
-org-rename-headline, org-edit-body) modify the file on disk; they fail
-if an Emacs buffer visiting the file has unsaved changes; ask the user
-to save the buffer and retry.  They validate the file's leading header
-block on every call; any `:NAME:' line at column 0 (with optional
-leading whitespace and any keyword) is treated as a drawer opener and
-must have a matching `:END:'.  An unterminated drawer, or a drawer
-containing a heading, is rejected as a validation error.  A
-`#+BEGIN_NAME' opener with no matching `#+END_NAME', or a `#+BEGIN:'
-dynamic block with no matching `#+END:', is rejected too.
+org-rename-headline, org-edit-body, org-refile-headline) modify the
+file on disk; they fail if an Emacs buffer visiting the file has
+unsaved changes; ask the user to save the buffer and retry.  They
+validate the file's leading header block on every call; any `:NAME:'
+line at column 0 (with optional leading whitespace and any keyword) is
+treated as a drawer opener and must have a matching `:END:'.  An
+unterminated drawer, or a drawer containing a heading, is rejected as
+a validation error.  A `#+BEGIN_NAME' opener with no matching
+`#+END_NAME', or a `#+BEGIN:' dynamic block with no matching `#+END:',
+is rejected too.
 
-org-archive-subtree likewise modifies files on disk and fails on
-unsaved changes, but writes two files -- the source and the
-destination archive file -- so a buffer visiting either one with
-unsaved changes blocks it; ask the user to save and retry.
+org-archive-subtree and org-refile-headline likewise modify files on
+disk and fail on unsaved changes, but can write two files --
+org-archive-subtree the source and the destination archive file,
+org-refile-headline the source and (for a cross-file move) the target
+file -- so a buffer visiting either one with unsaved changes blocks the
+operation; ask the user to save and retry.
 
 Read tools (org-read-file, org-read-outline, org-read-headline,
 org-read-by-id, org-grep) and all resources read the file from disk;
@@ -139,6 +142,19 @@ validators that may assume VALUE is a string after this guard."
     (org-mcp--tool-validation-error
      "Field %s must be a string, got: %S (type: %s)"
      field-name value (type-of value))))
+
+(defun org-mcp--normalize-json-boolean (value)
+  "Return nil for a JSON-falsy VALUE, VALUE unchanged otherwise.
+`json.el' decodes JSON `false' to `:json-false', which is truthy in
+Elisp; the string \"false\" is a common client typo.  Both normalize
+to nil so callers can test the result with ordinary truthiness."
+  (cond
+   ((eq value :json-false)
+    nil)
+   ((equal value "false")
+    nil)
+   (t
+    value)))
 
 (defun org-mcp--resource-validation-error (message &rest args)
   "Signal validation error MESSAGE with ARGS for resource operations."
@@ -742,19 +758,24 @@ Returns the content string or nil if not found."
 
 (defun org-mcp--validate-todo-state (state field-name)
   "Validate STATE is a valid TODO keyword.
+The empty string \"\" means no TODO keyword (Org's empty state,
+accepted by `org-todo') and is always valid.
 FIELD-NAME is the JSON wire-protocol name of the parameter being
 validated (e.g. `\"todo_state\"' or `\"new_state\"'); it is embedded
 into the validation error so the consumer can pinpoint which input
 to fix."
-  (let ((valid-states
-         (delete
-          "|"
-          (org-remove-keyword-keys
-           (apply #'append (mapcar #'cdr org-todo-keywords))))))
-    (unless (member state valid-states)
-      (org-mcp--tool-validation-error
-       "Field %s must be one of %s, got: '%s'"
-       field-name (mapconcat #'identity valid-states ", ") state))))
+  (unless (string-empty-p state)
+    (let ((valid-states
+           (delete
+            "|"
+            (org-remove-keyword-keys
+             (apply #'append (mapcar #'cdr org-todo-keywords))))))
+      (unless (member state valid-states)
+        (org-mcp--tool-validation-error
+         "Field %s must be one of %s, got: '%s'"
+         field-name
+         (mapconcat #'identity valid-states ", ")
+         state)))))
 
 (defun org-mcp--validate-and-normalize-tags (tags)
   "Validate TAGS and return a normalized list of tag strings.
@@ -1197,38 +1218,46 @@ final newline."
     (goto-char heading-start)
     (end-of-line)))
 
+(defun org-mcp--point-for-top-level-insert (position header-end)
+  "Return the buffer position for inserting a new top-level heading.
+POSITION is `start' or `end'.  HEADER-END is the buffer position past
+the file header block, as returned by
+`org-mcp--validate-and-skip-file-header', anchoring the heading search
+past it so `^\\*' patterns inside the header block do not match.
+`end', or `start' when the buffer past the header block has no
+top-level heading (empty file, header-only, or only zeroth-section
+content like a plain paragraph), returns `point-max' -- so any
+zeroth-section content stays above a heading inserted there rather
+than being absorbed into its section body.  `start' with an existing
+top-level heading returns the position of the first one."
+  (or (and (eq position 'start)
+           (save-excursion
+             (goto-char header-end)
+             (and (re-search-forward "^\\* " nil t)
+                  (match-beginning 0))))
+      (point-max)))
+
 (defun org-mcp--insert-top-level-heading (title position header-end)
   "Insert TITLE as a new top-level heading at POSITION.
 POSITION is `start' to insert before any existing top-level heading,
 or `end' to append at end of buffer.  HEADER-END is the buffer
 position past the file header block, as returned by
-`org-mcp--validate-and-skip-file-header', and anchors the heading search
-start past it so `^\\*' patterns inside the header block do not
-match.
-When the buffer past the header block contains no top-level heading
-\(empty file, header-only, or only zeroth-section content like a
-plain paragraph), `start' and `end' coincide at `point-max', so any
-zeroth-section content stays above the new heading rather than being
-absorbed into its section body.  After insertion, point is left at
-end-of-line of the new heading so the caller can apply `org-todo'
-and `org-set-tags'.
+`org-mcp--validate-and-skip-file-header'.  The insertion point is
+computed by `org-mcp--point-for-top-level-insert'.  After insertion,
+point is left at end-of-line of the new heading so the caller can
+apply `org-todo' and `org-set-tags'.
 
 Manual `(insert ...)' throughout, not `org-insert-heading' -- see
 `org-mcp--insert-heading-line' for the rationale."
-  (let ((first-heading-pos
-         (when (eq position 'start)
-           (save-excursion
-             (goto-char header-end)
-             (and (re-search-forward "^\\* " nil t)
-                  (match-beginning 0))))))
-    (goto-char (or first-heading-pos (point-max)))
-    (if first-heading-pos
-        (org-mcp--insert-heading-line 1 title)
-      (org-mcp--ensure-line-start)
-      ;; Manual insert (no trailing `\n').  Routing through
-      ;; `insert-heading-line' would defer EOF normalisation to
-      ;; the body-insertion block; manual keeps the EOF case local.
-      (insert "* " title))))
+  (goto-char
+   (org-mcp--point-for-top-level-insert position header-end))
+  (if (looking-at-p "\\* ")
+      (org-mcp--insert-heading-line 1 title)
+    (org-mcp--ensure-line-start)
+    ;; Manual insert (no trailing `\n').  Routing through
+    ;; `insert-heading-line' would defer EOF normalisation to
+    ;; the body-insertion block; manual keeps the EOF case local.
+    (insert "* " title)))
 
 (defun org-mcp--insert-body-after-heading (body)
   "Insert BODY after the heading line at point.
@@ -1414,7 +1443,7 @@ MCP Parameters:
 Creates an Org ID for the headline if one doesn't exist.
 Returns the ID-based URI for the updated headline.
 CURRENT_STATE is the current TODO state (empty string for no state).
-NEW_STATE is the new TODO state to set.
+NEW_STATE is the new TODO state to set (empty string clears it).
 
 MCP Parameters:
   uri - URI of the headline to update
@@ -1425,7 +1454,8 @@ MCP Parameters:
                   Use empty string \"\" if headline has no TODO state
                   Must match actual state or tool will error
   new_state - New TODO state to set
-              Must be a valid keyword from `org-todo-keywords'"
+              Must be a valid keyword from `org-todo-keywords',
+              or empty string \"\" to clear to no TODO keyword"
   (org-mcp--validate-string-field uri "uri")
   (org-mcp--validate-string-field current_state "current_state")
   (org-mcp--validate-string-field new_state "new_state")
@@ -1534,7 +1564,7 @@ Caller preconditions, NOT re-checked here:
      "Fields position and after_uri are mutually exclusive")))
 
 (defun org-mcp--check-after-uri-not-top-level
-    (after-id parent-path parent-id)
+    (after-id parent-path parent-id &optional parent-uri-field-name)
   "Signal a validation error if AFTER-ID names a sibling at top level.
 AFTER-ID is the id extracted from `after_uri' by
 `org-mcp--validate-after-uri'.  PARENT-PATH and PARENT-ID come from
@@ -1542,6 +1572,9 @@ AFTER-ID is the id extracted from `after_uri' by
 A top-level insert has no sibling-reference slot in the placement
 contract, so the combination is rejected at the tool boundary
 instead of silently falling through to end-of-file.
+PARENT-URI-FIELD-NAME is the caller's MCP field name for the parent
+URI, named in the error message; it defaults to \"parent_uri\" so
+callers whose field is named that need not pass it.
 
 Callers must run this AFTER `org-mcp--parse-parent-uri', which
 supplies the parsed parent shape."
@@ -1549,7 +1582,8 @@ supplies the parsed parent shape."
     (org-mcp--tool-validation-error
      (concat
       "Field after_uri must not be combined with a top-level "
-      "parent_uri (no fragment)"))))
+      (or parent-uri-field-name "parent_uri")
+      " (no fragment)"))))
 
 (defun org-mcp--tool-add-todo
     (title
@@ -1557,7 +1591,8 @@ supplies the parsed parent shape."
   "Add a new TODO item to an Org file.
 Creates an Org ID for the new headline and returns its ID-based URI.
 TITLE is the headline text.
-TODO_STATE is the TODO state from `org-todo-keywords'.
+TODO_STATE is the TODO state from `org-todo-keywords', or empty
+string for no keyword.
 TAGS is a single tag string or list of tag strings.
 BODY is optional body text.
 PARENT_URI is the URI of the parent item.
@@ -1569,7 +1604,8 @@ MCP Parameters:
   title - Headline text without TODO state or tags
           Cannot be empty or whitespace-only
           Cannot contain newlines
-  todo_state - TODO state from `org-todo-keywords'
+  todo_state - TODO state from `org-todo-keywords',
+               or empty string \"\" for a headline with no keyword
   tags - Tags to add (single string or array of strings)
          Single tag: \"urgent\"; multiple tags: [\"work\", \"urgent\"]
          Validated against `org-tag-alist' if configured
@@ -1665,7 +1701,11 @@ MCP Parameters:
                 (org-mcp--insert-top-level-heading
                  title position-sym header-end)))
 
-            (org-todo todo_state)
+            ;; Empty `todo_state' means no keyword; the freshly
+            ;; inserted heading already has none, so skip the no-op
+            ;; `org-todo' call and its state-change machinery.
+            (unless (string-empty-p todo_state)
+              (org-todo todo_state))
 
             (when tag-list
               (org-set-tags tag-list))
@@ -1817,16 +1857,8 @@ MCP Parameters:
   (org-mcp--validate-string-field old_body "old_body")
   (org-mcp--validate-string-field new_body "new_body")
   ;; Normalize falsy values to nil so the multi-occurrence guard
-  ;; fires.  Accept `:json-false' (JSON boolean) and string "false"
-  ;; (a common LLM-client typo); both are otherwise truthy in Elisp.
-  (let ((replace_all
-         (cond
-          ((eq replace_all :json-false)
-           nil)
-          ((equal replace_all "false")
-           nil)
-          (t
-           replace_all))))
+  ;; fires; `:json-false' and string "false" are truthy in Elisp.
+  (let ((replace_all (org-mcp--normalize-json-boolean replace_all)))
     (org-mcp--validate-body-no-unbalanced-blocks new_body)
 
     (pcase-let ((`(,file-path . ,headline-path)
@@ -1925,6 +1957,177 @@ MCP Parameters:
              replace_all
              body-begin
              body-end)))))))
+
+(defconst org-mcp--planning-repeater-body
+  "\\(?:\\+\\+?\\|\\.\\+\\)[0-9]+[hdwmy]\\(?:/[0-9]+[hdwmy]\\)?"
+  "Regex body matching a repeater cookie, no anchors or leading space.
+Prefix `+N'/`++N'/`.+N' (unit h/d/w/m/y) with an optional `/M' habit
+interval.  Shared by `org-mcp--split-planning-spec' and
+`org-mcp--set-planning-cookies' so the two stay in sync.")
+
+(defconst org-mcp--planning-warning-body "-[0-9]+[hdwmy]"
+  "Regex body matching a warning cookie, no anchors or leading space.
+A `-N' offset (unit h/d/w/m/y).  Shared by
+`org-mcp--split-planning-spec' and `org-mcp--set-planning-cookies'.")
+
+(defun org-mcp--split-planning-spec (spec)
+  "Split planning SPEC into a list (DATE-SPEC REPEATER WARNING).
+SPEC is the user timestamp content: a date/time chunk optionally
+followed by repeater and/or warning cookies.  The first whitespace
+token is always part of the date/time chunk, so a leading `+1w' is a
+relative date, not a repeater.  Trailing tokens matching a repeater
+cookie (`+N', `++N', `.+N', optionally with a `/M' habit interval) or
+a warning cookie (`-N'), each with a unit in h/d/w/m/y, are peeled
+off.  DATE-SPEC is the remaining chunk; REPEATER and WARNING are
+strings or nil."
+  (let ((tokens (split-string spec))
+        (repeater nil)
+        (warning nil))
+    (while (and (> (length tokens) 1)
+                (let ((last (car (last tokens))))
+                  (cond
+                   ((and (not repeater)
+                         (string-match-p
+                          (concat
+                           "\\`"
+                           org-mcp--planning-repeater-body
+                           "\\'")
+                          last))
+                    (setq repeater last))
+                   ((and (not warning)
+                         (string-match-p
+                          (concat
+                           "\\`" org-mcp--planning-warning-body "\\'")
+                          last))
+                    (setq warning last)))))
+      (setq tokens (butlast tokens)))
+    (list (string-join tokens " ") repeater warning)))
+
+(defun org-mcp--set-planning-cookies (keyword repeater warning)
+  "Replace the repeater/warning cookies of KEYWORD's planning timestamp.
+KEYWORD is \"SCHEDULED\" or \"DEADLINE\".  In the current entry, strip
+any existing repeater and warning cookies from that timestamp and
+append REPEATER and/or WARNING (each a string or nil) before the
+closing `>'.  Assumes the entry already has a KEYWORD timestamp."
+  (save-excursion
+    (org-back-to-heading t)
+    (let ((end
+           (save-excursion
+             (outline-next-heading)
+             (point))))
+      ;; The caller (`org-mcp--apply-planning-spec') has just placed the
+      ;; KEYWORD timestamp via `org-schedule'/`org-deadline', so the
+      ;; search always succeeds.  Bind its result before the assert so
+      ;; the side-effecting search still runs even if `cl-assert' is
+      ;; compiled out under a high-optimization byte-compile.
+      (let ((found
+             (re-search-forward (concat
+                                 "\\<" keyword ": <\\([^>\n]*\\)>")
+                                end t)))
+        (cl-assert found)
+        (let* ((base
+                (replace-regexp-in-string
+                 (concat
+                  "\\(?: "
+                  org-mcp--planning-repeater-body
+                  "\\| "
+                  org-mcp--planning-warning-body
+                  "\\)+\\'")
+                 "" (match-string 1)))
+               (rebuilt
+                (concat
+                 base
+                 (and repeater (concat " " repeater))
+                 (and warning (concat " " warning)))))
+          (replace-match rebuilt t t nil 1))))))
+
+(defun org-mcp--apply-planning-spec (setter keyword spec)
+  "Set KEYWORD planning from SPEC using SETTER, then splice cookies.
+SETTER is `org-schedule' or `org-deadline'.  SPEC is parsed by
+`org-mcp--split-planning-spec'; SETTER is called with the date/time
+chunk so Org resolves and places the timestamp, then any repeater or
+warning cookies are spliced into the KEYWORD timestamp."
+  (pcase-let ((`(,date ,repeater ,warning)
+               (org-mcp--split-planning-spec spec)))
+    (funcall setter nil date)
+    (when (or repeater warning)
+      (org-mcp--set-planning-cookies keyword repeater warning))))
+
+(defun org-mcp--tool-set-planning
+    (uri &optional scheduled deadline clear_scheduled clear_deadline)
+  "Set or clear SCHEDULED/DEADLINE planning timestamps on the headline at URI.
+Creates an Org ID for the headline if one doesn't exist.
+
+MCP Parameters:
+  uri - URI of the headline to update
+        Formats:
+          - org-headline://{absolute-path}#{url-encoded-path}
+          - org-id://{uuid}
+  scheduled - Timestamp content to schedule, as written inside <...>:
+              a date, optional time, and optional repeater/warning
+              cookies (e.g. \"2026-06-20\", \"2026-06-20 14:00\",
+              \"+1w\", \"2026-06-20 +1w -3d\")
+  deadline - Deadline timestamp content, same grammar as scheduled
+  clear_scheduled - When true, remove the SCHEDULED entry
+  clear_deadline - When true, remove the DEADLINE entry"
+  (org-mcp--validate-string-field uri "uri")
+  (org-mcp--validate-string-field scheduled "scheduled" t)
+  (org-mcp--validate-string-field deadline "deadline" t)
+  (setq clear_scheduled
+        (org-mcp--normalize-json-boolean clear_scheduled))
+  (setq clear_deadline
+        (org-mcp--normalize-json-boolean clear_deadline))
+  (unless (or scheduled deadline clear_scheduled clear_deadline)
+    (org-mcp--tool-validation-error
+     (concat
+      "Provide at least one of scheduled, deadline, "
+      "clear_scheduled, clear_deadline")))
+  (when (and scheduled clear_scheduled)
+    (org-mcp--tool-validation-error
+     "Cannot set and clear scheduled in the same call"))
+  (when (and deadline clear_deadline)
+    (org-mcp--tool-validation-error
+     "Cannot set and clear deadline in the same call"))
+  (when (and scheduled (org-mcp--blank-or-nbsp-only-p scheduled))
+    (org-mcp--tool-validation-error
+     "scheduled is empty; use clear_scheduled to remove the entry"))
+  (when (and deadline (org-mcp--blank-or-nbsp-only-p deadline))
+    (org-mcp--tool-validation-error
+     "deadline is empty; use clear_deadline to remove the entry"))
+  (pcase-let ((`(,file-path . ,headline-path)
+               (org-mcp--parse-resource-uri uri)))
+    (unless headline-path
+      (org-mcp--tool-validation-error
+       "URI must identify a headline, not a whole file"))
+    (org-mcp--modify-and-save file-path "set planning"
+                              (save-excursion
+                                (org-back-to-heading t)
+                                (list
+                                 (cons
+                                  'scheduled
+                                  (org-entry-get nil "SCHEDULED"))
+                                 (cons
+                                  'deadline
+                                  (org-entry-get nil "DEADLINE"))))
+      (org-mcp--validate-and-skip-file-header)
+      (org-mcp--goto-headline-from-uri
+       headline-path (string-prefix-p org-mcp--uri-id-prefix uri))
+      (beginning-of-line)
+      ;; `org-log-reschedule'/`org-log-redeadline' set to `note' would
+      ;; pop an interactive note buffer that an MCP call cannot answer,
+      ;; so suppress planning-change logging for this operation.
+      (let ((org-log-reschedule nil)
+            (org-log-redeadline nil))
+        (when clear_scheduled
+          (org-schedule '(4)))
+        (when scheduled
+          (org-mcp--apply-planning-spec
+           #'org-schedule "SCHEDULED" scheduled))
+        (when clear_deadline
+          (org-deadline '(4)))
+        (when deadline
+          (org-mcp--apply-planning-spec
+           #'org-deadline "DEADLINE" deadline))))))
 
 (defun org-mcp--tool-archive-subtree (uri)
   "Archive the subtree at URI using `org-archive-subtree'.
@@ -2049,6 +2252,285 @@ MCP Parameters:
            `((success . t)
              (archive_file . ,archive-file)
              (uri . ,(concat org-mcp--uri-id-prefix id)))))))))
+
+(defun org-mcp--refile-position-at-target
+    (parent-path parent-id after-id position-sym header-end)
+  "Position point in the current buffer for a refiled subtree.
+Resolves the target parent from PARENT-PATH or PARENT-ID (both nil
+means top level), positions point per AFTER-ID or POSITION-SYM, and
+returns the level for the moved subtree's root.  HEADER-END is the
+position past the file header block (see
+`org-mcp--validate-and-skip-file-header'), used for top-level
+placement.  Leaves point where `org-paste-subtree' should insert."
+  (let ((parent-level
+         (and (or parent-path parent-id)
+              (org-mcp--navigate-to-parent parent-path parent-id))))
+    (cond
+     ((and parent-level after-id)
+      (org-mcp--position-after-sibling after-id))
+     (parent-level
+      (org-mcp--position-for-new-child position-sym))
+     (t
+      (goto-char
+       (org-mcp--point-for-top-level-insert
+        position-sym header-end))))
+    (if parent-level
+        (1+ parent-level)
+      1)))
+
+(defun org-mcp--refile-noop-p
+    (parent-path parent-id after-id position-sym)
+  "Return non-nil if refiling the headline at point would change nothing.
+Point must be at the source heading.  A no-op requires the node to
+already carry an ID and to already occupy the requested slot under the
+requested parent: same parent (PARENT-PATH/PARENT-ID, both nil for top
+level) and AFTER-ID or POSITION-SYM already satisfied.  Purely
+structural -- compares parent and sibling relationships and never
+mutates the buffer."
+  (and (org-id-get)
+       (equal
+        (save-excursion (and (org-up-heading-safe) (point)))
+        (and (or parent-path parent-id)
+             (save-excursion
+               (org-mcp--navigate-to-parent parent-path parent-id)
+               (point))))
+       (cond
+        (after-id
+         (save-excursion
+           (and (org-get-previous-sibling)
+                (equal (org-entry-get nil "ID") after-id))))
+        ((eq position-sym 'start)
+         (save-excursion (not (org-get-previous-sibling))))
+        (t
+         (save-excursion (not (org-get-next-sibling)))))))
+
+(defun org-mcp--refile-capture-source (src-beg source-buf)
+  "Return list (ID SRC-END TREE) for the subtree at SRC-BEG in SOURCE-BUF.
+Creates an Org ID if the subtree's root lacks one.  The ID is read
+first because creating it inserts a `:PROPERTIES:' drawer that shifts
+the subtree's end and changes its text, so SRC-END and TREE are
+captured after.  Run this only after the target placement has been
+resolved, so a rejected move mints no ID."
+  (with-current-buffer source-buf
+    (goto-char src-beg)
+    (let* ((id (org-id-get-create))
+           (src-end
+            (save-excursion
+              (org-end-of-subtree t t)
+              (point)))
+           (tree (buffer-substring-no-properties src-beg src-end)))
+      (list id src-end tree))))
+
+(defun org-mcp--refile-paste-and-persist
+    (source-buf
+     src-beg src-end tree new-level insertion source-file target-file)
+  "Move subtree TREE from SOURCE-BUF into the current (target) buffer.
+[SRC-BEG, SRC-END) delimits the subtree in SOURCE-BUF; NEW-LEVEL is the
+level for its pasted root; INSERTION is a marker in the current buffer
+at the paste point.  The cut uses `org-save-markers-in-region' plus
+`delete-region' (not `org-cut-subtree'), leaving the user's kill ring
+untouched.  When SOURCE-BUF is the current buffer (a same-file move),
+SOURCE-FILE is written once.  Otherwise TARGET-FILE is written before
+SOURCE-FILE is emptied, so a failed source write leaves the subtree in
+both files -- a recoverable duplicate -- rather than dropping it from
+both."
+  (let ((target-buf (current-buffer)))
+    (with-current-buffer source-buf
+      (org-save-markers-in-region src-beg src-end)
+      (delete-region src-beg src-end))
+    (goto-char insertion)
+    ;; `org-paste-subtree' runs `org-id-paste-tracker', which
+    ;; re-registers the moved subtree's IDs (root and children) against
+    ;; the target file, so no manual `org-id-add-location' is needed.
+    (org-paste-subtree new-level tree)
+    (if (eq source-buf target-buf)
+        (progn
+          (write-region (point-min) (point-max) source-file)
+          (org-mcp--refresh-file-buffers source-file target-buf))
+      (write-region (point-min) (point-max) target-file)
+      (with-current-buffer source-buf
+        (write-region (point-min) (point-max) source-file))
+      (org-mcp--refresh-file-buffers target-file target-buf)
+      (org-mcp--refresh-file-buffers source-file source-buf))))
+
+(defun org-mcp--refile-capture-and-persist
+    (src-beg source-buf new-level insertion source-file target-file)
+  "Capture the subtree at SRC-BEG in SOURCE-BUF and move it, returning its ID.
+Mints the subtree's Org ID via `org-mcp--refile-capture-source', then
+pastes it into the current (target) buffer at INSERTION as a level
+NEW-LEVEL subtree and persists via `org-mcp--refile-paste-and-persist'
+(SOURCE-FILE, TARGET-FILE).  Must be called with the target buffer
+current and after the target placement is resolved, so a rejected move
+mints no ID."
+  (pcase-let ((`(,id ,src-end ,tree)
+               (org-mcp--refile-capture-source src-beg source-buf)))
+    (org-mcp--refile-paste-and-persist
+     source-buf
+     src-beg
+     src-end
+     tree
+     new-level
+     insertion
+     source-file
+     target-file)
+    id))
+
+(defun org-mcp--tool-refile-headline
+    (uri current_title target_parent_uri &optional after_uri position)
+  "Move the headline at URI and its subtree under TARGET_PARENT_URI.
+Preserves the moved node's TODO state, tags, properties, ID, body,
+and child structure; creates an Org ID if it has none and returns
+its `org-id://' URI.
+
+CURRENT_TITLE is the expected current title, guarding against races.
+AFTER_URI and POSITION select placement among the target's children,
+mirroring `org-add-todo' (mutually exclusive).
+
+MCP Parameters:
+  uri - URI of the headline to move
+        Formats:
+          - org-headline://{absolute-path}#{url-encoded-path}
+          - org-id://{uuid}
+        Must identify a headline, not a whole file
+  current_title - Expected current title without TODO state or tags
+                  Must match actual title or tool will error
+                  Used to prevent race conditions
+  target_parent_uri - URI of the new parent
+                      For top-level: org-headline://{absolute-path}/
+                      For child: org-headline://{path}#{parent-path}
+                                 or org-id://{parent-uuid}
+  after_uri - Sibling to place after (optional)
+              Must be org-id://{uuid} format
+              See tool description for combination rules
+  position - Placement among the target's children: \"start\" or
+             \"end\" (optional, defaults to \"end\")
+             Mutually exclusive with after_uri"
+  (org-mcp--validate-string-field uri "uri")
+  (org-mcp--validate-string-field current_title "current_title")
+  (org-mcp--validate-string-field
+   target_parent_uri "target_parent_uri")
+  (org-mcp--validate-string-field after_uri "after_uri" t)
+  (org-mcp--validate-string-field position "position" t)
+  (let ((position-sym (org-mcp--validate-position position))
+        (after-id (org-mcp--validate-after-uri after_uri)))
+    (org-mcp--check-position-after-uri-mutex position after-id)
+    (pcase-let ((`(,source-file . ,source-path)
+                 (org-mcp--parse-resource-uri uri))
+                (`(,target-file ,parent-path ,parent-id)
+                 (org-mcp--parse-parent-uri target_parent_uri)))
+      (unless source-path
+        (org-mcp--tool-validation-error
+         "URI must identify a headline to refile, not a whole file"))
+      (org-mcp--check-after-uri-not-top-level
+       after-id parent-path parent-id
+       "target_parent_uri")
+      (org-mcp--with-visiting-org-file source-file "refile"
+        (let ((header-end (org-mcp--validate-and-skip-file-header))
+              (same-file (file-equal-p source-file target-file)))
+          (org-mcp--goto-headline-from-uri
+           source-path (string-prefix-p org-mcp--uri-id-prefix uri))
+          (beginning-of-line)
+          (let ((title (org-get-heading t t t t)))
+            (unless (string= title current_title)
+              (org-mcp--state-mismatch-error
+               current_title title "Title"))
+            (when (and after-id (equal (org-id-get) after-id))
+              (org-mcp--tool-validation-error
+               "Field after_uri refers to the node being refiled"))
+            (if (and same-file
+                     (org-mcp--refile-noop-p
+                      parent-path parent-id after-id position-sym))
+                ;; Already in the requested slot with an ID: change
+                ;; nothing, return the existing URI.
+                (json-encode
+                 `((success . t)
+                   (uri
+                    . ,(concat org-mcp--uri-id-prefix (org-id-get)))
+                   (title . ,title)
+                   (source_file
+                    . ,(file-name-nondirectory source-file))
+                   (target_file
+                    . ,(file-name-nondirectory target-file))))
+              ;; Reject a move that would make the node its own
+              ;; descendant (same-file only; across files no
+              ;; containment is possible).  Checked before creating the
+              ;; ID so a rejected move mutates nothing.
+              (when (and same-file (or parent-path parent-id))
+                (let ((node-beg (line-beginning-position))
+                      (node-end
+                       (save-excursion
+                         (org-end-of-subtree t t)
+                         (point)))
+                      (parent-pos
+                       (save-excursion
+                         (org-mcp--navigate-to-parent
+                          parent-path parent-id)
+                         (point))))
+                  (when (and (>= parent-pos node-beg)
+                             (< parent-pos node-end))
+                    (org-mcp--tool-validation-error
+                     (concat
+                      "Cannot refile a headline into itself or "
+                      "its own subtree")))))
+              (let*
+                  ((src-beg (copy-marker (line-beginning-position)))
+                   (source-buf (current-buffer))
+                   (id
+                    (if same-file
+                        (let* ((new-level
+                                (org-mcp--refile-position-at-target
+                                 parent-path
+                                 parent-id
+                                 after-id
+                                 position-sym
+                                 header-end))
+                               (insertion (point-marker)))
+                          ;; Resolve placement before creating the ID,
+                          ;; so a rejected move (a missing `after_uri'
+                          ;; sibling) leaves no stale `org-id-locations'
+                          ;; entry -- mirroring the cross-file branch.
+                          (org-mcp--refile-capture-and-persist
+                           src-beg
+                           source-buf
+                           new-level
+                           insertion
+                           source-file
+                           target-file))
+                      (org-mcp--with-visiting-org-file target-file
+                          "refile"
+                        ;; Resolve and validate the target before
+                        ;; creating the ID, so a rejected move leaves no
+                        ;; stale `org-id-locations' entry.  The macro's
+                        ;; entry guard rejects an unsaved target buffer
+                        ;; before the body validates the header and
+                        ;; resolves the parent / `after_uri' sibling --
+                        ;; all ahead of the ID mint.
+                        (let*
+                            ((target-header-end
+                              (org-mcp--validate-and-skip-file-header))
+                             (new-level
+                              (org-mcp--refile-position-at-target
+                               parent-path
+                               parent-id
+                               after-id
+                               position-sym
+                               target-header-end))
+                             (insertion (point-marker)))
+                          (org-mcp--refile-capture-and-persist
+                           src-beg
+                           source-buf
+                           new-level
+                           insertion
+                           source-file
+                           target-file))))))
+                (json-encode
+                 `((success . t)
+                   (uri . ,(concat org-mcp--uri-id-prefix id))
+                   (title . ,title)
+                   (source_file
+                    . ,(file-name-nondirectory source-file))
+                   (target_file
+                    . ,(file-name-nondirectory target-file))))))))))))
 
 ;; Tools duplicating resource templates
 
@@ -2218,13 +2700,7 @@ MCP Parameters:
        "'%s': the referenced file not in allowed list"
        file))
     (let* ((case_sensitive
-            (cond
-             ((eq case_sensitive :json-false)
-              nil)
-             ((equal case_sensitive "false")
-              nil)
-             (t
-              case_sensitive)))
+            (org-mcp--normalize-json-boolean case_sensitive))
            (case-fold (not case_sensitive))
            (files
             (if file
@@ -2370,7 +2846,8 @@ Creates an Org ID property for the headline if one doesn't exist.
 Returns JSON object:
   success - Always true on success (boolean)
   previous_state - The previous TODO state (string, empty for none)
-  new_state - The new TODO state that was set (string)
+  new_state - The new TODO state that was set (string, empty if
+              cleared)
   uri - ID-based URI (org-id://{uuid}) for the updated headline"
      :read-only nil)
     (list
@@ -2470,6 +2947,27 @@ Returns JSON object:
   uri - ID-based URI (org-id://{uuid}) for the edited headline"
      :read-only nil)
     (list
+     #'org-mcp--tool-set-planning
+     :id "org-set-planning"
+     :description
+     "Set, change, or clear a headline's SCHEDULED and/or DEADLINE
+planning timestamps via `org-schedule'/`org-deadline'.  Org produces
+the relative-date resolution, weekday formatting, and planning-line
+placement; trailing repeater (+1w, ++1w, .+1w) and warning (-3d)
+cookies in a date string are spliced into the timestamp.  When
+re-scheduling, omitting cookies preserves an existing repeater/warning
+while including any cookie replaces the field's cookies.  Provide at
+least one of scheduled, deadline, clear_scheduled, clear_deadline; a
+field and its clear_* cannot be combined.  Creates an Org ID property
+for the headline if one doesn't exist.
+
+Returns JSON object:
+  success - Always true on success (boolean)
+  scheduled - Resulting SCHEDULED timestamp string, or null
+  deadline - Resulting DEADLINE timestamp string, or null
+  uri - ID-based URI (org-id://{uuid}) for the headline"
+     :read-only nil)
+    (list
      #'org-mcp--tool-archive-subtree
      :id "org-archive-subtree"
      :description
@@ -2493,6 +2991,56 @@ Returns JSON object:
   uri - org-id:// URI of the archived headline (string);
         resolvable via resources/read only if the archive file is
         in org-mcp-allowed-files, otherwise informational only"
+     :read-only nil)
+    (list
+     #'org-mcp--tool-refile-headline
+     :id "org-refile-headline"
+     :description
+     "Move an existing headline and its entire subtree to a new parent
+or file, preserving its TODO state, tags, properties, ID, body, and
+child structure.  The whole subtree is re-leveled to fit the new
+parent.  Creates an Org ID for the moved headline if it has none.
+
+Both the source file and the target file must be members of
+org-mcp-allowed-files.  The existing ID is preserved, including across
+files, and the returned org-id:// URI resolves to the moved node in
+its new location.
+
+Returns JSON object:
+  success - Always true on success (boolean)
+  uri - ID-based URI (org-id://{uuid}) for the moved headline
+  title - The moved headline's title
+  source_file - Filename (not full path) the node moved from
+  target_file - Filename (not full path) the node moved to
+
+Placement under target_parent_uri mirrors org-add-todo:
+
+  Child, end (default).
+    target_parent_uri with fragment (#PATH) or org-id://UUID; no
+    after_uri; position omitted or \"end\".  Appended as the last
+    child of the parent.
+
+  Child, after sibling.
+    target_parent_uri + after_uri=org-id://UUID-of-sibling; no
+    position.  Inserted as the immediate next sibling of after_uri's
+    headline.
+
+  Child, start.
+    target_parent_uri + position=\"start\"; no after_uri.  Inserted
+    as the first child of the parent.
+
+  Top-level, end (default) / start.
+    target_parent_uri with no fragment (org-headline://FILE/); no
+    after_uri.  Appended at end of file, or with position=\"start\"
+    inserted before the first existing top-level heading (after the
+    file header block).
+
+after_uri cannot combine with an explicit position, nor with a
+top-level target_parent_uri, nor reference the node being moved.
+
+Moving a node into itself or its own subtree is rejected.  When the
+node already sits in the requested place and already has an ID, the
+file is left unchanged."
      :read-only nil)
     (list
      #'org-mcp--tool-read-file

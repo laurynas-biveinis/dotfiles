@@ -92,13 +92,13 @@
       (:maintainer "stardiviner" . "numbchild@gmail.com")
       (:commit . "b2ffd8441851659cb1cc844156073967729585e5"))])
  (auto-dim-other-buffers
-  . [(2 2 1) ((emacs (27 1)))
+  . [(2 2 2) ((emacs (27 1)))
      "Makes windows without focus less prominent" tar
      ((:url . "https://github.com/mina86/auto-dim-other-buffers.el")
       (:keywords "faces")
       (:maintainer "Michal Nazarewicz" . "mina86@mina86.com")
       (:authors ("Michal Nazarewicz" . "mina86@mina86.com"))
-      (:commit . "0164908fd3f8d8e83aa636f08096dcc843d6b2fa"))])
+      (:commit . "cf0263073470190b85f6013066856126aac67d19"))])
  (autothemer
   . [(0 2 18) ((dash (2 10 0)) (emacs (26 1)))
      "Conveniently define themes" tar
@@ -277,12 +277,12 @@
       (:authors ("Bozhidar Batsov" . "bozhidar@batsov.dev"))
       (:commit . "7980df10e47eef41d4d1c57cfb690ec406381ed3"))])
  (csv2ledger
-  . [(1 5 4) ((emacs (29 1)) (csv-mode (1 24)))
+  . [(1 5 5) ((emacs (29 1)) (csv-mode (1 24)))
      "Convert csv files to ledger entries" tar
      ((:url . "https://codeberg.org/joostkremers/csv2ledger")
       (:maintainer "Joost Kremers" . "joostkremers@fastmail.fm")
       (:authors ("Joost Kremers" . "joostkremers@fastmail.fm"))
-      (:commit . "5c38ee8a4bd3edd24ff49bcbe63b1b6a659497dc"))])
+      (:commit . "7b095112e7a0a4cbe58e665129c3b2d227f3c96e"))])
  (cyberpunk-theme
   . [(1 22) nil "Cyberpunk Color Theme" tar
      ((:url . "https://github.com/n3mo/cyberpunk-theme.el")
@@ -1173,13 +1173,13 @@
       (:authors ("Paul Pogonyshev" . "pogonyshev@gmail.com"))
       (:commit . "93b744ac5d57d527b8ca625116c3206549b8231f"))])
  (loopy
-  . [(0 15 0)
+  . [(0 16 0)
      ((emacs (28 1)) (map (3 3 1)) (seq (2 22)) (compat (29 1 3))
       (stream (2 4 0)))
      "A looping macro" tar
      ((:url . "https://github.com/okamsn/loopy")
       (:keywords "extensions")
-      (:commit . "1849c6c774332c6451288debd4c353449ee79a92"))])
+      (:commit . "09fecad848c8671902ceae7d74afecdd29a84ac5"))])
  (loopy-dash
   . [(0 13 0) ((emacs (25 1)) (loopy (0 13 0)) (dash (2 19)))
      "Dash destructuring for `loopy'" tar
@@ -1993,11 +1993,11 @@
       (:maintainer nil . "viewmail-info@nongnu.org")
       (:commit . "790c95503d8e130f97a68ab502eb5c77f35011c8"))])
  (web-mode
-  . [(17 3 23) ((emacs (24 3 1)))
+  . [(17 3 24) ((emacs (24 3 1)))
      "major mode for editing web templates" tar
      ((:url . "https://web-mode.org") (:keywords "languages")
       (:maintainer "François-Xavier Bois" . "fxbois@gmail.com")
-      (:commit . "e93b3fb89fd6345a5ff59795bed712abd486200a"))])
+      (:commit . "aeee2d4c82a791ff69657c1413873bf9265544df"))])
  (webpaste
   . [(3 2 2) ((emacs (24 4)) (request (0 2 0)) (cl-lib (0 5)))
      "Paste to pastebin-like services" tar
