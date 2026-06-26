@@ -451,7 +451,7 @@ brew tap darrylmorley/whatcable
 brew install --cask whatcable
 
 # Play
-brew install mono
+brew install mono gpac
 brew install --cask banktivity beatunes lastfm steam xld loopback audacity \
 	guitar-pro transcribe exiftool
 xattr -dr com.apple.quarantine "/Applications/XLD.app/"
