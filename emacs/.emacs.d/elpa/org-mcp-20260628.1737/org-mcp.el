@@ -4,9 +4,9 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: convenience, files, matching, outlines
-;; Package-Version: 20260626.810
-;; Package-Revision: d6027d7632dd
-;; Package-Requires: ((emacs "27.1") (mcp-server-lib "0.4.0"))
+;; Package-Version: 20260628.1737
+;; Package-Revision: dae2df9e3a72
+;; Package-Requires: ((emacs "28.2") (mcp-server-lib "0.4.0"))
 ;; Homepage: https://github.com/laurynas-biveinis/org-mcp
 
 ;; This file is NOT part of GNU Emacs.
@@ -89,8 +89,9 @@ tool and resource description.")
 
 (defun org-mcp--blank-or-nbsp-only-p (s)
   "Return non-nil if S is empty or has only whitespace and NBSP chars.
-NBSP is matched explicitly because Emacs 27.2's `[[:space:]]'
-excludes U+00A0."
+NBSP (U+00A0) is listed explicitly in the character class so it is
+always rejected, independent of whether `[[:space:]]' matches NBSP --
+that depends on the active syntax table and the Emacs version."
   (string-match-p "\\`[[:space:]\u00A0]*\\'" s))
 
 (defun org-mcp--extract-uri-suffix (uri prefix)
@@ -486,9 +487,9 @@ cannot poison a successful resolution.
 Callers translate the status into a tool error or a resource error
 of the appropriate shape."
   (if-let* ((id-file (org-id-find-id-file id)))
-      (if-let* ((allowed-file (org-mcp--find-allowed-file id-file)))
-          (cons :found allowed-file)
-        (cons :disallowed nil))
+    (if-let* ((allowed-file (org-mcp--find-allowed-file id-file)))
+      (cons :found allowed-file)
+      (cons :disallowed nil))
     (if-let* ((file
                (catch 'found
                  (dolist (allowed-file org-mcp-allowed-files)
@@ -498,11 +499,11 @@ of the appropriate shape."
                          (throw 'found
                                 (expand-file-name
                                  allowed-file)))))))))
-        (progn
-          (when org-id-track-globally
-            (ignore-errors
-              (org-id-add-location id file)))
-          (cons :found file))
+      (progn
+        (when org-id-track-globally
+          (ignore-errors
+            (org-id-add-location id file)))
+        (cons :found file))
       (cons :missing nil))))
 
 (defun org-mcp--find-allowed-file-with-id (id)
@@ -532,11 +533,11 @@ Throws an error if neither prefix matches."
   `(if-let* ((id
               (org-mcp--extract-uri-suffix
                ,uri org-mcp--uri-id-prefix)))
-       ,id-body
+     ,id-body
      (if-let* ((headline
                 (org-mcp--extract-uri-suffix
                  ,uri org-mcp--uri-headline-prefix)))
-         ,headline-body
+       ,headline-body
        (org-mcp--tool-validation-error
         "Invalid resource URI format: %s"
         ,uri))))
@@ -785,7 +786,7 @@ Otherwise, navigates using HEADLINE-PATH as title hierarchy."
   (if is-id
       ;; ID case - headline-path contains single ID
       (if-let* ((pos (org-find-property "ID" (car headline-path))))
-          (goto-char pos)
+        (goto-char pos)
         (org-mcp--id-not-found-error (car headline-path)))
     ;; Path case - headline-path contains title hierarchy
     (unless (org-mcp--navigate-to-headline headline-path)

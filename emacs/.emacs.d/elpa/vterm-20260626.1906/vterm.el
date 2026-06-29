@@ -3,8 +3,8 @@
 ;; Copyright (C) 2017-2020 by Lukas Fürmetz & Contributors
 ;;
 ;; Author: Lukas Fürmetz <fuermetz@mailbox.org>
-;; Package-Version: 20260528.1919
-;; Package-Revision: d8157e74339e
+;; Package-Version: 20260626.1906
+;; Package-Revision: 9495966d9124
 ;; URL: https://github.com/akermu/emacs-libvterm
 ;; Keywords: terminals
 ;; Package-Requires: ((emacs "25.1"))
@@ -1721,7 +1721,10 @@ If N is negative backward-line from end of buffer."
                   (progn
                     (when (file-directory-p dir)
                       (setq directory (file-name-as-directory dir))))
-                (setq directory (file-name-as-directory (concat "/-:" path))))))
+                (let ((method (if (tramp-tramp-file-p default-directory)
+                                  (tramp-file-name-method (tramp-dissect-file-name default-directory))
+                                tramp-default-method-marker)))
+                  (setq directory (file-name-as-directory (concat tramp-prefix-format method tramp-postfix-method-format path)))))))
         (when (file-directory-p path)
           (setq directory (file-name-as-directory path))))
       directory)))
