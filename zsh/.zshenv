@@ -24,10 +24,10 @@ export ZINIT_HOME=~/.zsh.d/zinit
 source ~/.zsh.d/paths
 
 if [ "$UNAME_OUT" = "Darwin" ]; then
-    export HOMEBREW_NO_INSTALL_CLEANUP=y
-    export HOMEBREW_DOWNLOAD_CONCURRENCY=auto
+	export HOMEBREW_NO_INSTALL_CLEANUP=y
+	export HOMEBREW_DOWNLOAD_CONCURRENCY=auto
 
-    export LIBRARY_PATH=/usr/local/lib
+	export LIBRARY_PATH=/usr/local/lib
 fi
 
 fpath+=~/.zsh.d/functions
