@@ -773,6 +773,25 @@ in the echo area showing the number of successful and failed updates."
 ;; https://emacs.stackexchange.com/q/78274/16376
 ;; TODO(laurynas): the equivalent of `c-tab-always-indent' in `c-ts-mode'
 
+;;; Shell scripting
+
+;; Make shell-script indentation agree with `shfmt' defaults (check.sh invokes
+;; `shfmt' flag-less): one tab per level; without `-ci' the `case' labels stay
+;; at the `case' column with their bodies one level in; and a continued line is
+;; indented one fixed level deep rather than aligned under the command's args.
+(setq sh-basic-offset tab-width)
+(setq sh-indent-for-case-label 0)
+(setq sh-indent-for-case-alt '+)
+(setq sh-indent-after-continuation 'always)
+
+;; `indent-tabs-mode' defaults to nil globally for every mode; shfmt indents
+;; with tabs, so re-enable it for shell buffers only.
+(defun dotfiles--sh-use-tabs ()
+  "Indent shell buffers with tabs, as `shfmt' does."
+  (setq-local indent-tabs-mode t))
+
+(add-hook 'sh-base-mode-hook #'dotfiles--sh-use-tabs)
+
 ;;; Shell and terminal emulation
 
 ;; In Shell mode, do not echo passwords
