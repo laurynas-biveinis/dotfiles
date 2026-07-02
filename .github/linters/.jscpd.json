@@ -1,0 +1,15 @@
+{
+  "threshold": 0,
+  "reporters": ["consoleFull"],
+  "ignore": [
+    "**/__snapshots__/**",
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/.emacs.d/elpa/**",
+    "**/.venv/**",
+    "**/mysql-work/.zsh.d/rc/mysql-work.sh",
+    "**/scripts/usr/bin/macupdate",
+    "**/zsh/.p10k.zsh"
+  ],
+  "absolute": true
+}
