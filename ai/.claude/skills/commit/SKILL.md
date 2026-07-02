@@ -14,6 +14,10 @@ allowed-tools: >-
 
 # Commit
 
+You are running as the forked `commit` skill. This document is your
+complete task — there is no separate user request. Execute the
+numbered steps now, starting with step 1.
+
 1. **Analyze the Staged Diff**: Execute `git diff --staged` to examine all
    changes that have been staged for commit. Pay careful attention to:
    - The nature and scope of changes (feature, fix, refactor, docs, test, etc.)
