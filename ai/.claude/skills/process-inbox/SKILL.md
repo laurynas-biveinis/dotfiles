@@ -30,7 +30,9 @@ allowed-tools: >-
 # Process one inbox item
 
 Run the single item in `$ARGUMENTS` through David Allen's GTD clarify
-flowchart, asking the user at any branch that isn't obvious. If `$ARGUMENTS`
+flowchart, asking the user at any branch that isn't obvious. At every branch,
+if the answer is unambiguous from context already gathered, state your reading
+and ask for confirmation rather than posing an open question. If `$ARGUMENTS`
 is empty, ask for the item. If a single capture bundles more than one outcome
 — a rule _and_ an action, or several unrelated actions — split it and run each
 through this flow independently. **Inbox-clear rule:** deliver the inbox-clear
@@ -63,12 +65,15 @@ filesystem (step 2, Not actionable → Reference path).
 
 Restate the item and its desired outcome; if unclear, ask the user.
 
-**Reconcile against existing items** (per `gtd`; `org-grep` covers only
-`org-mcp`-exposed files, so also ask / surface for any private Org files
-outside that set). Confirm the matched item with the user before any
-reconcile action that changes existing Org state — resolving a `@waitingfor`,
-completing or `KILL`ing a pre-existing `TODO`, or firing a `@checklist`'s
-"then Y".
+**Reconcile against existing items** (per `gtd`). Begin by running `org-grep`
+with terms drawn from the capture (sender, subject nouns, identifiers); drive
+the case checks below from its results. Do not ask the user whether the item
+relates to existing work as an open question — ask only to confirm specific
+matches (`org-grep` covers only `org-mcp`-exposed files, so also ask / surface
+for any private Org files outside that set). Confirm the matched item with the
+user before any reconcile action that changes existing Org state — resolving a
+`@waitingfor`, completing or `KILL`ing a pre-existing `TODO`, or firing a
+`@checklist`'s "then Y".
 Don't auto-apply a second-level trigger either: surface chained triggers to the
 user rather than acting on them automatically. Check these cases in order; each
 is terminal (routes to Close) unless its bullet says otherwise, and the final
@@ -160,9 +165,7 @@ later terminal case whose Close then applies.
 
 ## 2. Is it actionable?
 
-Ask `Actionable` vs `Not actionable`. The user's answer governs; if it's
-unambiguous from context, state your reading and ask for confirmation rather
-than posing an open question.
+Ask `Actionable` vs `Not actionable`. The user's answer governs.
 
 ### Not actionable → `Trash` / `Someday/Maybe` / `Reference`
 
@@ -249,12 +252,20 @@ routes to doing it now.
   user unless they already specified one:
   - **Delegate** — record a `WAIT` action using the appropriate delegated
     context tag per `gtd`, noting who/what it waits on.
-  - **Defer to a specific time** — ask Org vs Calendar:
-    - **Org `SCHEDULED`/`DEADLINE`** — create the action with an appropriate
+  - **Defer to a specific time** — choose Org vs Calendar per `gtd`'s _Where
+    to track new work_; the branch is usually decidable from what earlier
+    steps established:
+    - **Org `SCHEDULED`/`DEADLINE`** — when the action belongs to a project or
+      relates to existing Org work, needs a repeater, or the date is a
+      start/review date ("from this day onward") rather than a fixed-day
+      commitment. Create the action with an appropriate
       context tag, then set the timestamp with `org-set-planning` (`DEADLINE`
       for a hard due date, `SCHEDULED` for a start date; repeaters like `+1w`
       are fine).
-    - **Google Calendar** — for a timed deferral, run `gcalcli add` with
+    - **Google Calendar** — when the action is a day/time-specific commitment
+      (appointment, delivery, event — it happens on that date regardless of
+      any list) and steps 1/3 tied it to no Org work or project, including a
+      project created in step 3. For a timed deferral, run `gcalcli add` with
       `--calendar`, `--title`, `--when`, `--duration`, and `--noprompt`; for a
       date-only deferral, additionally pass `--allday`, and `--duration` is then
       counted in days (e.g. `--allday --duration 1` for a single day). Ask for
@@ -263,10 +274,7 @@ routes to doing it now.
       and let them pick. Confirm, and run it. If `gcalcli` is unavailable or not
       authenticated, surface the full command for the user to run. Tell the user
       the event will appear in the Org agenda after the next `org-gcal` sync, if
-      that calendar is among those `org-gcal` syncs. If step 3 established or
-      identified a project, also record a `TODO` next action under that project
-      (with an appropriate context tag per `gtd`, noting the calendar event in
-      its body) so the project retains a visible next action until the event fires.
+      that calendar is among those `org-gcal` syncs.
   - **Defer (as soon as I can)** — record a `TODO` next action with an
     appropriate context tag.
   - **Revised to < 2 min after recording** — if after recording above the user
@@ -283,9 +291,6 @@ routes to doing it now.
       prompts for confirmation before deleting), using the exact calendar name,
       title, and times from creation:
       `gcalcli delete --calendar <calendar> "<title>" "<start>" "<end>"`
-      If step 3 established or identified a project, close the recorded TODO
-      via `gtd`'s "Completing and archiving items" (state `DONE`), then go to
-      Close.
 
   After any of the above, go to Close.
 

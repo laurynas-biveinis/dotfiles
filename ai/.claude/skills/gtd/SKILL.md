@@ -52,11 +52,14 @@ Decide the record path:
 2. Persists across sessions, in a public source-code project → a GitHub issue,
    used idiomatically (labels, cross-references in commits/PRs). Org then holds
    only a pointer (link) to the issue, not a copy of its content.
-3. Persists across sessions otherwise → Org directly.
+3. Date/time-specific commitment that happens on that date regardless of any
+   list (GTD's hard landscape) and is tied to no project or context list →
+   Google Calendar. Other dated items live in Org via `SCHEDULED`/`DEADLINE`.
+4. Persists across sessions otherwise → Org directly.
 
 Heuristic for step 1 vs. persisting: "If the session ends now, does the user
 need to remember this?" No → TodoWrite (e.g. "run formatter", "check syntax").
-Yes → step 2 or 3 (e.g. "fix bug in module X", "implement feature Y").
+Yes → steps 2–4 (e.g. "fix bug in module X", "implement feature Y").
 
 ## Work triggers
 
