@@ -85,16 +85,20 @@ later terminal case whose Close then applies.
   is the awaited input/response to a delegated `WAIT` item, resolve that `WAIT`
   item per `gtd`: `WAIT`→`TODO` if the input unblocks further action still
   needed, `WAIT`→`DONE` if the delegated action is now fully resolved. A
-  `WAIT`→`DONE` that completes the item's project archives that subtree, so any
-  later reconcile case targeting the same project must re-locate it via
-  `org-grep`:
-  - If the archive file is among those returned by `org-get-allowed-files`,
-    `org-grep` finds it — proceed normally.
-  - Otherwise the archive is not exposed to `org-mcp`: tell the user the project
-    was just archived (give its title, and the archive file path if
-    `org-archive-subtree` returned one), explain that the later reconcile case
-    cannot be applied automatically, and ask the user to handle any cascading
-    reconcile effect manually in the archive file.
+  `WAIT`→`DONE` that completes the item's project archives that subtree.
+  `org-archive-subtree` returns the archived headline's `org-id://` `uri` and
+  the absolute `archive_file` path; any later reconcile case targeting the
+  same project addresses it by that `uri` (the mutation tools accept it
+  directly; `org-read-by-id` takes the uuid extracted from it) — do not
+  re-locate it via `org-grep`:
+  - If `archive_file` is among the files returned by `org-get-allowed-files`
+    (compare expanded absolute paths — the allowed list may use `~/`), the
+    `uri` resolves — proceed normally.
+  - Otherwise the archive is not exposed to `org-mcp`: tell the user the
+    project was just archived (give its title and `archive_file`), explain
+    that the later reconcile case cannot be applied automatically, and ask the
+    user to handle any cascading reconcile effect manually in the archive
+    file.
 
   Then check the remaining reconcile cases below.
 
