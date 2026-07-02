@@ -5,10 +5,12 @@
 ;; This configures visiting, saving, backups, file management, TRAMP remote
 ;; access, and everything else related to files.
 ;;
+;; jscpd:ignore-start
 ;; Like in the rest of my personal configuration, all features (packages and
 ;; external tools) are assumed to exist, because this is a part of my dotfiles
 ;; repo where the needed packages are committed too. Thus, no error handling,
 ;; and no need to ensure compatibility with different Emacs or package versions.
+;; jscpd:ignore-end
 
 ;;; Code:
 

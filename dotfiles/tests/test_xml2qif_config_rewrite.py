@@ -187,8 +187,8 @@ class FindSectionSpanTest(unittest.TestCase):
         self.assertNotIn("\n", str(ctx.exception))
 
 
-class InsertRuleAfterSectionTest(unittest.TestCase):
-    """Round-trip tests for insert_rule_after_section on temp copies."""
+class ScratchConfigTestCase(unittest.TestCase):
+    """Base for round-trip tests rewriting a config copy in a scratch dir."""
 
     def setUp(self):
         """Create a scratch directory holding a config copy."""
@@ -203,6 +203,10 @@ class InsertRuleAfterSectionTest(unittest.TestCase):
     def _read_config(self):
         """Read the scratch config back as text."""
         return read_text(self.config_path)
+
+
+class InsertRuleAfterSectionTest(ScratchConfigTestCase):
+    """Round-trip tests for insert_rule_after_section on temp copies."""
 
     def test_insert_after_middle_section(self):
         """The entry lands between the anchor and the next section."""
@@ -299,22 +303,8 @@ class InsertRuleAfterSectionTest(unittest.TestCase):
         self.assertEqual(self._read_config(), expected)
 
 
-class ReplaceRuleSectionTest(unittest.TestCase):
+class ReplaceRuleSectionTest(ScratchConfigTestCase):
     """Round-trip tests for replace_rule_section on temp copies."""
-
-    def setUp(self):
-        """Create a scratch directory holding a config copy."""
-        tmp_dir = tempfile.mkdtemp()
-        self.addCleanup(shutil.rmtree, tmp_dir)
-        self.config_path = os.path.join(tmp_dir, "xml2qifrc")
-
-    def _write_config(self, text):
-        """Write the given config text to the scratch config path."""
-        write_text(self.config_path, text)
-
-    def _read_config(self):
-        """Read the scratch config back as text."""
-        return read_text(self.config_path)
 
     def test_replace_middle_section(self):
         """Editing a middle section replaces only its body, keeping order."""

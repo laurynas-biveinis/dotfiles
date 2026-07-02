@@ -8,10 +8,12 @@
 ;; "gitrmworktree" utility.
 ;; Additionally there are custom commands for CMake project management.
 ;;
+;; jscpd:ignore-start
 ;; Like in the rest of my personal configuration, all features (packages and
 ;; external tools) are assumed to exist, because this is a part of my dotfiles
 ;; repo where the needed packages are committed too. Thus, no error handling,
 ;; and no need to ensure compatibility with different Emacs or package versions.
+;; jscpd:ignore-end
 ;;
 ;; Custom keybindings:
 ;; s-p    - Projectile command map

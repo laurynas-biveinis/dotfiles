@@ -42,5 +42,3 @@ jobs:
           VALIDATE_PYTHON_RUFF_FORMAT: false
           # Redundant with PYTHON_RUFF which covers all flake8 rules
           VALIDATE_PYTHON_FLAKE8: false
-          # Until https://github.com/kucherenko/jscpd/issues/737 is fixed
-          VALIDATE_JSCPD: false

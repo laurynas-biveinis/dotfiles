@@ -349,6 +349,16 @@ class ProcessTransactionsTest(unittest.TestCase):
         self.config_path = os.path.join(tmp_dir, "xml2qifrc")
         write_text(self.config_path, CONFIG_TEXT)
 
+    def _process_accepting_suggestion(self, root, rules, output, **mock_kwargs):
+        """Run process_transactions with the codex suggestion mocked per
+        MOCK_KWARGS and the confirmation prompt auto-accepted."""
+        with unittest.mock.patch.object(
+            SUGGEST, "run_codex_rule_suggestion", **mock_kwargs
+        ):
+            with unittest.mock.patch("builtins.input", return_value="y"):
+                with contextlib.redirect_stdout(io.StringIO()):
+                    XML2QIF.process_transactions(root, rules, self.config_path, output)
+
     def test_accepted_suggestion_reloads_rules_and_writes_qif(self):
         """An unmatched transaction triggers the suggestion flow, and after
         the accepted rule is inserted and reloaded, the transaction is
@@ -356,12 +366,9 @@ class ProcessTransactionsTest(unittest.TestCase):
         rules = RULES.load_rule_config(self.config_path)
         root = ET.fromstring(self._DOCUMENT_XML)
         output = io.StringIO()
-        with unittest.mock.patch.object(
-            SUGGEST, "run_codex_rule_suggestion", return_value=suggest_json()
-        ):
-            with unittest.mock.patch("builtins.input", return_value="y"):
-                with contextlib.redirect_stdout(io.StringIO()):
-                    XML2QIF.process_transactions(root, rules, self.config_path, output)
+        self._process_accepting_suggestion(
+            root, rules, output, return_value=suggest_json()
+        )
         self.assertEqual(
             output.getvalue(),
             "D2026-06-11\nT-10.00\nPNew Payee\nLNew:Category\n^\n",
@@ -394,12 +401,9 @@ class ProcessTransactionsTest(unittest.TestCase):
             )
         )
         output = io.StringIO()
-        with unittest.mock.patch.object(
-            SUGGEST, "run_codex_rule_suggestion", side_effect=[suggest_json()]
-        ):
-            with unittest.mock.patch("builtins.input", return_value="y"):
-                with contextlib.redirect_stdout(io.StringIO()):
-                    XML2QIF.process_transactions(root, rules, self.config_path, output)
+        self._process_accepting_suggestion(
+            root, rules, output, side_effect=[suggest_json()]
+        )
         self.assertEqual(
             output.getvalue(),
             "D2026-06-11\nT-10.00\nPNew Payee\nLNew:Category\n^\n"
@@ -458,18 +462,14 @@ class ProcessTransactionsTest(unittest.TestCase):
                     )
         self.assertIs(ctx.exception, decline_error)
 
-    def test_suggestion_failure_preserves_missing_rule_message(self):
-        """When the Codex flow itself fails, the actionable missing-rule
-        message must still control the exit; the suggestion failure is only
-        a diagnostic and is printed instead."""
+    def _assert_suggestion_failure_diagnostic(self, target, side_effect, diagnostic):
+        """Run the suggestion flow with TARGET patched to raise SIDE_EFFECT
+        and assert the actionable missing-rule message controls the exit
+        while DIAGNOSTIC is printed."""
         rules = RULES.load_rule_config(self.config_path)
         root = ET.fromstring(self._DOCUMENT_XML)
         captured = io.StringIO()
-        with unittest.mock.patch.object(
-            SUGGEST,
-            "run_codex_rule_suggestion",
-            side_effect=RULES.RuleSuggestionError("codex executable not found"),
-        ):
+        with unittest.mock.patch.object(SUGGEST, target, side_effect=side_effect):
             with contextlib.redirect_stdout(captured):
                 with self.assertRaisesRegex(
                     RULES.MissingRuleError, "Please add a rule for"
@@ -477,49 +477,37 @@ class ProcessTransactionsTest(unittest.TestCase):
                     XML2QIF.process_transactions(
                         root, rules, self.config_path, io.StringIO()
                     )
-        self.assertIn("codex executable not found", captured.getvalue())
+        self.assertIn(diagnostic, captured.getvalue())
+
+    def test_suggestion_failure_preserves_missing_rule_message(self):
+        """When the Codex flow itself fails, the actionable missing-rule
+        message must still control the exit; the suggestion failure is only
+        a diagnostic and is printed instead."""
+        self._assert_suggestion_failure_diagnostic(
+            "run_codex_rule_suggestion",
+            RULES.RuleSuggestionError("codex executable not found"),
+            "codex executable not found",
+        )
 
     def test_config_error_in_suggestion_flow_preserves_missing_rule_message(self):
         """A config read failure inside the suggestion flow is a diagnostic
         like any other suggestion failure and must not displace the
         actionable missing-rule message."""
-        rules = RULES.load_rule_config(self.config_path)
-        root = ET.fromstring(self._DOCUMENT_XML)
-        captured = io.StringIO()
-        with unittest.mock.patch.object(
-            SUGGEST,
+        self._assert_suggestion_failure_diagnostic(
             "read_config_text",
-            side_effect=RULES.RuleConfigError("config became non-UTF-8"),
-        ):
-            with contextlib.redirect_stdout(captured):
-                with self.assertRaisesRegex(
-                    RULES.MissingRuleError, "Please add a rule for"
-                ):
-                    XML2QIF.process_transactions(
-                        root, rules, self.config_path, io.StringIO()
-                    )
-        self.assertIn("config became non-UTF-8", captured.getvalue())
+            RULES.RuleConfigError("config became non-UTF-8"),
+            "config became non-UTF-8",
+        )
 
     def test_os_error_in_suggestion_flow_preserves_missing_rule_message(self):
         """An I/O failure inside the suggestion flow (config unreadable, temp
         file write failure) is likewise only a diagnostic and must not
         displace the actionable missing-rule message."""
-        rules = RULES.load_rule_config(self.config_path)
-        root = ET.fromstring(self._DOCUMENT_XML)
-        captured = io.StringIO()
-        with unittest.mock.patch.object(
-            SUGGEST,
+        self._assert_suggestion_failure_diagnostic(
             "read_config_text",
-            side_effect=OSError("config disappeared"),
-        ):
-            with contextlib.redirect_stdout(captured):
-                with self.assertRaisesRegex(
-                    RULES.MissingRuleError, "Please add a rule for"
-                ):
-                    XML2QIF.process_transactions(
-                        root, rules, self.config_path, io.StringIO()
-                    )
-        self.assertIn("config disappeared", captured.getvalue())
+            OSError("config disappeared"),
+            "config disappeared",
+        )
 
 
 class ProcessTransactionsOutputSanitizationTest(unittest.TestCase):

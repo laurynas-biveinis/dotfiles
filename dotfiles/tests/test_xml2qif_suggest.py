@@ -364,18 +364,21 @@ class ParseRuleSuggestionConfidenceTest(unittest.TestCase):
 class RunCodexRuleSuggestionTest(unittest.TestCase):
     """Tests for run_codex_rule_suggestion."""
 
+    @staticmethod
+    def _fake_codex_success(command, **_kwargs):
+        """Write the canned response to the requested output file and fake a
+        codex success."""
+        output_path = command[command.index("--output-last-message") + 1]
+        with open(output_path, "w", encoding="utf-8") as output_file:
+            output_file.write("response text\n")
+        return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+
     def test_success(self):
         """The stripped final message is read from the --output-last-message
         file on a zero exit."""
-
-        def fake_run(command, **_kwargs):
-            """Write the canned response to the requested output file."""
-            output_path = command[command.index("--output-last-message") + 1]
-            with open(output_path, "w", encoding="utf-8") as output_file:
-                output_file.write("response text\n")
-            return types.SimpleNamespace(returncode=0, stdout="", stderr="")
-
-        with unittest.mock.patch.object(SUGGEST.subprocess, "run", fake_run):
+        with unittest.mock.patch.object(
+            SUGGEST.subprocess, "run", self._fake_codex_success
+        ):
             self.assertEqual(
                 SUGGEST.run_codex_rule_suggestion("prompt"), "response text"
             )
@@ -434,10 +437,7 @@ class RunCodexRuleSuggestionTest(unittest.TestCase):
             """Record the cwd and its contents, then fake a codex success."""
             seen["cwd"] = kwargs["cwd"]
             seen["entries"] = os.listdir(kwargs["cwd"])
-            output_path = command[command.index("--output-last-message") + 1]
-            with open(output_path, "w", encoding="utf-8") as output_file:
-                output_file.write("response text\n")
-            return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+            return self._fake_codex_success(command)
 
         with unittest.mock.patch.object(SUGGEST.subprocess, "run", fake_run):
             SUGGEST.run_codex_rule_suggestion("prompt")

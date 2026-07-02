@@ -5,10 +5,12 @@
 ;; configuration variables, configures the built-in modes, installed packages,
 ;; and my own code.
 ;;
+;; jscpd:ignore-start
 ;; Like in the rest of my personal configuration, all features (packages and
 ;; external tools) are assumed to exist, because this is a part of my dotfiles
 ;; repo where the needed packages are committed too. Thus, no error handling,
 ;; and no need to ensure compatibility with different Emacs or package versions.
+;; jscpd:ignore-end
 ;;
 ;; Not using `use-package', because a big part of my setup is cross-package
 ;; integration, where it would not be as useful. Lazy package loading to reduce

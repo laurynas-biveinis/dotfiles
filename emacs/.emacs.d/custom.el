@@ -6,6 +6,7 @@
 ;; 2) a repository cannot hold multiple package versions
 ;; So, for `s', `lsp-mode' uses `s-replace-regexp', which was introduced after
 ;; the latest stable release, which happened only over two years ago. /s
+;; jscpd:ignore-start
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -362,3 +363,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+;; jscpd:ignore-end
