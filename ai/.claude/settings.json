@@ -89,6 +89,5 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
-  "skipAutoPermissionPrompt": true,
-  "model": "claude-fable-5[1m]"
+  "skipAutoPermissionPrompt": true
 }
