@@ -335,9 +335,15 @@ def parse_local_defs(defs: FmtDefs, node_parent: NdSexp) -> None:
                         if node_arg.data == '&optional':
                             arg_index_min = i
                             arg_index_max = i
-                            # Count remaining arguments and exit.
+                            # Count remaining optional arguments and exit.
+                            # A following `&rest` (and its rest-arg) must not be
+                            # counted; it makes the maximum unbounded ('many').
                             for j in range(i + 1, len(node_args.nodes_only_code)):
-                                if isinstance(node_args.nodes_only_code[j], NdSymbol):
+                                node_arg_optional = node_args.nodes_only_code[j]
+                                if isinstance(node_arg_optional, NdSymbol):
+                                    if node_arg_optional.data == '&rest':
+                                        arg_index_max = 'many'
+                                        break
                                     arg_index_max = j
                             break
 
@@ -466,7 +472,9 @@ def apply_rules_from_comments(node_parent: NdSexp) -> None:
                 if ok:
                     # After format either: `:` or `-next-line:` are expected.
                     autofmt_text_index += len(autofmt_text)
-                    if comment[autofmt_text_index] == ':':
+                    if autofmt_text_index >= len(comment):
+                        ok = False
+                    elif comment[autofmt_text_index] == ':':
                         autofmt_text_index += 1
                         do_next_line = False
                     elif comment[autofmt_text_index:autofmt_text_index + len(autofmt_text_next)] == autofmt_text_next:
@@ -2986,12 +2994,16 @@ def diff_range_calc(data_src: str, data_dst: str) -> tuple[str, int, int]:
     if not data_dst:
         return data_dst, 0, 0
     i = 0
+    found_mismatch = False
     for i in range(data_len_min):
         if data_src[i] != data_dst[i]:
+            found_mismatch = True
             break
 
     # The buffers are a complete match.
-    if i + 1 == data_len_min and len(data_src) == len(data_dst):
+    # NOTE: test ``found_mismatch`` (not ``i + 1 == data_len_min``) so a mismatch
+    # at the final index is not confused with the loop running to completion.
+    if (not found_mismatch) and len(data_src) == len(data_dst):
         return '', -1, -1
 
     ofs_beg = max(0, i - 1)
@@ -3109,7 +3121,10 @@ def parse_file(fh: TextIO) -> tuple[str, NdSexp]:
                 line_has_contents = True
             case ';':  # Comment.
                 data = StringIO()
-                while (c_peek := fh.read(1)) not in {'', '\n'}:
+                # A trailing ``\r`` (CRLF line-ending) ends the comment too; it is
+                # left in ``c_peek`` and dropped by the whitespace case so it does
+                # not get stored as part of the comment text.
+                while (c_peek := fh.read(1)) not in {'', '\n', '\r'}:
                     c = c_peek
                     c_peek = None
                     data.write(c)
@@ -3124,7 +3139,12 @@ def parse_file(fh: TextIO) -> tuple[str, NdSexp]:
                 if line_has_contents is False:
                     sexp_ctx[sexp_level].nodes.append(NdWs(line))
                 line_has_contents = False
-            case ' ' | '\t':  # White-space (space, tab) - ignored.
+            case ' ' | '\t' | '\r':  # White-space (space, tab, carriage-return) - ignored.
+                # NOTE: ``\r`` is dropped here so CRLF line-endings (read
+                # untranslated, see ``newline=`` in ``format_file``) don't leak
+                # into the output as stray symbols. A ``\r`` *inside* a string
+                # literal is preserved by the string-reading loop, which is
+                # intentionally left untouched.
                 pass
             case _:  # Symbol (any other character).
                 data = StringIO()
@@ -3145,7 +3165,7 @@ def parse_file(fh: TextIO) -> tuple[str, NdSexp]:
                                 '(', ')',
                                 '[', ']',
                                 ';',
-                                ' ', '\t',
+                                ' ', '\t', '\r',
                                 # Lisp doesn't require spaces are between symbols and quotes.
                                 '"',
                         }:
@@ -3481,7 +3501,6 @@ def argparse_create() -> argparse.ArgumentParser:
         '--fmt-fill-column',
         dest='fmt_fill_column',
         default=99,
-        nargs='?',
         type=int,
         required=False,
         help='Maximum column width (zero disables).',
@@ -3491,7 +3510,6 @@ def argparse_create() -> argparse.ArgumentParser:
         '--fmt-empty-lines',
         dest='fmt_empty_lines',
         default=2,
-        nargs='?',
         type=int,
         required=False,
         help='Maximum column width.',
@@ -3514,7 +3532,6 @@ def argparse_create() -> argparse.ArgumentParser:
         '--parallel-jobs',
         dest='parallel_jobs',
         default=0,
-        nargs='?',
         type=int,
         required=False,
         help='The number of parallel processes to use (zero to select automatically, -1 to disable multi-processing).',
@@ -3550,7 +3567,6 @@ def argparse_create() -> argparse.ArgumentParser:
         '--exit-code',
         dest='exit_code',
         default=0,
-        nargs='?',
         type=int,
         required=False,
         help='Exit code to use upon successfully re-formatting',

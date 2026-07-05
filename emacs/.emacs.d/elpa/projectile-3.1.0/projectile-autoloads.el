@@ -38,6 +38,18 @@ is cleared when there is no current project (unless you give a prefix
 argument).
 
 (fn PROMPT)" t)
+(autoload 'projectile-invalidate-cache-all "projectile" "\
+Invalidate the caches of every known project.
+
+Runs the same per-project invalidation as `projectile-invalidate-cache'
+over all projects in `projectile-known-projects' (plus any project that
+only has an entry in `projectile-projects-cache'), and also clears the
+global project root and file-existence caches.  When persistent caching
+is enabled the projects' on-disk cache files are deleted too.
+
+Remote (TRAMP) projects are skipped, as touching each one could mean a
+slow connection round-trip per project; invalidate those individually
+with `projectile-invalidate-cache'." t)
 (autoload 'projectile-discard-root-cache "projectile" "\
 Clear `projectile-project-root-cache' without touching other caches.
 Useful after creating, removing, or moving a project marker (e.g.
@@ -55,7 +67,10 @@ Purge DIR from the cache of the current project.
 
 (fn DIR)" t)
 (autoload 'projectile-cache-current-file "projectile" "\
-Add the currently visited file to the cache." t)
+Add the currently visited file to the cache.
+PROJECT-ROOT defaults to the current project.
+
+(fn &optional PROJECT-ROOT)" t)
 (autoload 'projectile-discover-projects-in-directory "projectile" "\
 Discover any projects in DIRECTORY and add them to the projectile cache.
 
@@ -63,9 +78,6 @@ If DEPTH is non-nil recursively descend exactly DEPTH levels below DIRECTORY and
 discover projects there.
 
 (fn DIRECTORY &optional DEPTH)" t)
-(autoload 'projectile-discover-projects-in-search-path "projectile" "\
-Discover projects in `projectile-project-search-path'.
-Invoked automatically when `projectile-mode' is enabled." t)
 (autoload 'projectile-index-project-async "projectile" "\
 Index PROJECT-ROOT in the background and populate the files cache.
 
@@ -84,10 +96,8 @@ indexing process, or nil when nothing was started.
 (fn &optional PROJECT-ROOT)" t)
 (autoload 'projectile-switch-to-buffer "projectile" "\
 Switch to a project buffer." t)
-(autoload 'projectile-switch-to-buffer-other-window "projectile" "\
-Switch to a project buffer and show it in another window." t)
-(autoload 'projectile-switch-to-buffer-other-frame "projectile" "\
-Switch to a project buffer and show it in another frame." t)
+ (autoload 'projectile-switch-to-buffer-other-window "projectile" nil t)
+ (autoload 'projectile-switch-to-buffer-other-frame "projectile" nil t)
 (autoload 'projectile-display-buffer "projectile" "\
 Display a project buffer in another window without selecting it." t)
 (autoload 'projectile-project-buffers-other-buffer "projectile" "\
@@ -105,22 +115,8 @@ Other file extensions can be customized with the variable
 `projectile-other-file-alist'.
 
 (fn &optional FLEX-MATCHING)" t)
-(autoload 'projectile-find-other-file-other-window "projectile" "\
-Switch between files with different extensions in other window.
-Switch between files with the same name but different extensions in other
-window.  With FLEX-MATCHING, match any file that contains the base name of
-current file.  Other file extensions can be customized with the variable
-`projectile-other-file-alist'.
-
-(fn &optional FLEX-MATCHING)" t)
-(autoload 'projectile-find-other-file-other-frame "projectile" "\
-Switch between files with different extensions in other frame.
-Switch between files with the same name but different extensions in other frame.
-With FLEX-MATCHING, match any file that contains the base name of current
-file.  Other file extensions can be customized with the variable
-`projectile-other-file-alist'.
-
-(fn &optional FLEX-MATCHING)" t)
+ (autoload 'projectile-find-other-file-other-window "projectile" nil t)
+ (autoload 'projectile-find-other-file-other-frame "projectile" nil t)
 (autoload 'projectile-find-file-dwim "projectile" "\
 Jump to a project's files using completion based on context.
 
@@ -148,79 +144,15 @@ on a partial filename like \"projectile/a\", a list of files with character
 - If it finds nothing, display a list of all files in project for selecting.
 
 (fn &optional INVALIDATE-CACHE)" t)
-(autoload 'projectile-find-file-dwim-other-window "projectile" "\
-Jump to a project's files using completion based on context in other window.
-
-With a prefix arg INVALIDATE-CACHE invalidates the cache first.
-
-If point is on a filename, Projectile first tries to search for that
-file in project:
-
-- If it finds just a file, it switches to that file instantly.  This works
-even if the filename is incomplete, but there's only a single file in the
-current project that matches the filename at point.  For example, if
-there's only a single file named \"projectile/projectile.el\" but the
-current filename is \"projectile/proj\" (incomplete),
-`projectile-find-file-dwim-other-window' still switches to
-\"projectile/projectile.el\" immediately because this is the only filename
-that matches.
-
-- If it finds a list of files, the list is displayed for selecting.  A list
-of files is displayed when a filename appears more than one in the project
-or the filename at point is a prefix of more than two files in a project.
-For example, if `projectile-find-file-dwim-other-window' is executed on a
-filepath like \"projectile/\", it lists the content of that directory.  If
-it is executed on a partial filename like \"projectile/a\", a list of files
-with character \"a\" in that directory is presented.
-
-- If it finds nothing, display a list of all files in project for selecting.
-
-(fn &optional INVALIDATE-CACHE)" t)
-(autoload 'projectile-find-file-dwim-other-frame "projectile" "\
-Jump to a project's files using completion based on context in other frame.
-
-With a prefix arg INVALIDATE-CACHE invalidates the cache first.
-
-If point is on a filename, Projectile first tries to search for that
-file in project:
-
-- If it finds just a file, it switches to that file instantly.  This works
-even if the filename is incomplete, but there's only a single file in the
-current project that matches the filename at point.  For example, if
-there's only a single file named \"projectile/projectile.el\" but the
-current filename is \"projectile/proj\" (incomplete),
-`projectile-find-file-dwim-other-frame' still switches to
-\"projectile/projectile.el\" immediately because this is the only filename
-that matches.
-
-- If it finds a list of files, the list is displayed for selecting.  A list
-of files is displayed when a filename appears more than one in the project
-or the filename at point is a prefix of more than two files in a project.
-For example, if `projectile-find-file-dwim-other-frame' is executed on a
-filepath like \"projectile/\", it lists the content of that directory.  If
-it is executed on a partial filename like \"projectile/a\", a list of files
-with character \"a\" in that directory is presented.
-
-- If it finds nothing, display a list of all files in project for selecting.
-
-(fn &optional INVALIDATE-CACHE)" t)
+ (autoload 'projectile-find-file-dwim-other-window "projectile" nil t)
+ (autoload 'projectile-find-file-dwim-other-frame "projectile" nil t)
 (autoload 'projectile-find-file "projectile" "\
 Jump to a project's file using completion.
 With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 (fn &optional INVALIDATE-CACHE)" t)
-(autoload 'projectile-find-file-other-window "projectile" "\
-Jump to a project's file using completion and show it in another window.
-
-With a prefix arg INVALIDATE-CACHE invalidates the cache first.
-
-(fn &optional INVALIDATE-CACHE)" t)
-(autoload 'projectile-find-file-other-frame "projectile" "\
-Jump to a project's file using completion and show it in another frame.
-
-With a prefix arg INVALIDATE-CACHE invalidates the cache first.
-
-(fn &optional INVALIDATE-CACHE)" t)
+ (autoload 'projectile-find-file-other-window "projectile" nil t)
+ (autoload 'projectile-find-file-other-frame "projectile" nil t)
 (autoload 'projectile-find-file-all "projectile" "\
 Jump to any file in the project, ignoring VCS and projectile ignore rules.
 This lists all files under the project root using a generic file listing
@@ -247,28 +179,16 @@ Jump to a project's directory using completion.
 With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 (fn &optional INVALIDATE-CACHE)" t)
-(autoload 'projectile-find-dir-other-window "projectile" "\
-Jump to a project's directory in other window using completion.
-
-With a prefix arg INVALIDATE-CACHE invalidates the cache first.
-
-(fn &optional INVALIDATE-CACHE)" t)
-(autoload 'projectile-find-dir-other-frame "projectile" "\
-Jump to a project's directory in other frame using completion.
-
-With a prefix arg INVALIDATE-CACHE invalidates the cache first.
-
-(fn &optional INVALIDATE-CACHE)" t)
+ (autoload 'projectile-find-dir-other-window "projectile" nil t)
+ (autoload 'projectile-find-dir-other-frame "projectile" nil t)
 (autoload 'projectile-find-test-file "projectile" "\
 Jump to a project's test file using completion.
 
 With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 (fn &optional INVALIDATE-CACHE)" t)
-(autoload 'projectile-find-related-file-other-window "projectile" "\
-Open related file in other window." t)
-(autoload 'projectile-find-related-file-other-frame "projectile" "\
-Open related file in other frame." t)
+ (autoload 'projectile-find-related-file-other-window "projectile" nil t)
+ (autoload 'projectile-find-related-file-other-frame "projectile" nil t)
 (autoload 'projectile-find-related-file "projectile" "\
 Open related file." t)
 (autoload 'projectile-related-files-fn-groups "projectile" "\
@@ -289,21 +209,31 @@ Generate a related-files-fn which relates tests and impl.
 Use files with EXTENSION based on TEST-SUFFIX.
 
 (fn EXTENSION TEST-SUFFIX)")
+(autoload 'projectile-find-file-of-kind "projectile" "\
+Jump to a project file of a chosen file kind using completion.
+
+Prompt for one of the current project type's file kinds (see the
+`:file-kinds' keyword of `projectile-register-project-type') and then
+complete over all project files belonging to that kind.  With a prefix
+arg INVALIDATE-CACHE invalidates the cache first.
+
+(fn &optional INVALIDATE-CACHE)" t)
+ (autoload 'projectile-find-file-of-kind-other-window "projectile" nil t)
+ (autoload 'projectile-find-file-of-kind-other-frame "projectile" nil t)
+(autoload 'projectile-toggle-related-file "projectile" "\
+Jump between the current file and its related files of other kinds.
+
+This is the file-kinds generalization of
+`projectile-toggle-between-implementation-and-test'.  The current file's
+kind and resource key are detected from the project type's `:file-kinds'
+declaration and its related files (files of other kinds sharing the same
+key) are collected in table order.  When exactly one related kind exists
+it is opened immediately; when several exist the first invocation prompts
+for the kind, and repeated invocations cycle through them in table order." t)
 (autoload 'projectile-project-info "projectile" "\
 Display info for current project." t)
-(autoload 'projectile--find-implementation-or-test-in "projectile" "\
-Open the matching implementation or test file using FF-VARIANT.
-FF-VARIANT is a `find-file'-like command; passing
-`find-file-other-window' or `find-file-other-frame' yields the
-corresponding display variants.
-
-(fn FF-VARIANT)")
-(autoload 'projectile-find-implementation-or-test-other-frame "projectile" "\
-Open matching implementation or test file in other frame.
-
-See the documentation of `projectile--find-matching-file' and
-`projectile--find-matching-test' for how implementation and test files
-are determined." t)
+ (autoload 'projectile-find-implementation-or-test-other-window "projectile" nil t)
+ (autoload 'projectile-find-implementation-or-test-other-frame "projectile" nil t)
 (autoload 'projectile-toggle-between-implementation-and-test "projectile" "\
 Toggle between an implementation file and its test file.
 
@@ -399,31 +329,19 @@ Invoke `vterm' in the project's root (the vterm `projectile-run' backend).
 Use a prefix argument ARG to indicate creation of a new process instead.
 
 (fn &optional ARG)" t)
-(autoload 'projectile-run-vterm-other-window "projectile" "\
-Invoke `vterm' in the project's root, displayed in another window.
-Use a prefix argument ARG to indicate creation of a new process instead.
-
-(fn &optional ARG)" t)
+ (autoload 'projectile-run-vterm-other-window "projectile" nil t)
 (autoload 'projectile-run-eat "projectile" "\
 Invoke `eat' in the project's root (the eat `projectile-run' backend).
 Use a prefix argument ARG to indicate creation of a new process instead.
 
 (fn &optional ARG)" t)
-(autoload 'projectile-run-eat-other-window "projectile" "\
-Invoke `eat' in the project's root, displayed in another window.
-Use a prefix argument ARG to indicate creation of a new process instead.
-
-(fn &optional ARG)" t)
+ (autoload 'projectile-run-eat-other-window "projectile" nil t)
 (autoload 'projectile-run-ghostel "projectile" "\
 Invoke `ghostel' in the project's root (the ghostel `projectile-run' backend).
 Use a prefix argument ARG to indicate creation of a new process instead.
 
 (fn &optional ARG)" t)
-(autoload 'projectile-run-ghostel-other-window "projectile" "\
-Invoke `ghostel' in the project's root, displayed in another window.
-Use a prefix argument ARG to indicate creation of a new process instead.
-
-(fn &optional ARG)" t)
+ (autoload 'projectile-run-ghostel-other-window "projectile" nil t)
 (autoload 'projectile-replace "projectile" "\
 Replace a literal string in the project's files.
 
@@ -450,16 +368,8 @@ Open `dired' at the root of the project.
 With a prefix argument ARG, prompt for a known project to open in dired.
 
 (fn &optional ARG)" t)
-(autoload 'projectile-dired-other-window "projectile" "\
-Open `dired' at the root of the project in another window.
-With a prefix argument ARG, prompt for a known project to open in dired.
-
-(fn &optional ARG)" t)
-(autoload 'projectile-dired-other-frame "projectile" "\
-Open `dired' at the root of the project in another frame.
-With a prefix argument ARG, prompt for a known project to open in dired.
-
-(fn &optional ARG)" t)
+ (autoload 'projectile-dired-other-window "projectile" nil t)
+ (autoload 'projectile-dired-other-frame "projectile" nil t)
 (autoload 'projectile-vc "projectile" "\
 Open `vc-dir' at the root of the project.
 
@@ -534,6 +444,21 @@ variable `compilation-read-command'.  You can force the prompt
 with a prefix ARG.
 
 (fn ARG)" t)
+(autoload 'projectile-run-test-at-point "projectile" "\
+Run the test around point, if any.
+
+The test is located by walking up the buffer's tree-sitter parse
+tree according to the rule for the buffer's major mode in
+`projectile-test-at-point-rules', which also determines the command
+used to run it.  Requires Emacs 29+ built with tree-sitter support
+and a tree-sitter major mode (e.g. `python-ts-mode').
+
+The command runs like `projectile-test-project' does (same working
+directory and buffer-saving behavior), but it is not recorded as the
+project's test command and doesn't touch the command history.  With
+a prefix ARG you can edit the command before it's run.
+
+(fn ARG)" t)
 (autoload 'projectile-install-project "projectile" "\
 Run project install command.
 
@@ -564,11 +489,36 @@ Run last projectile external command.
 External commands are: `projectile-configure-project',
 `projectile-compile-project', `projectile-test-project',
 `projectile-install-project', `projectile-package-project',
-and `projectile-run-project'.
+`projectile-run-project' and the named tasks run via
+`projectile-run-task' (which also feed the combined history this
+command reads).
 
 If the prefix argument SHOW-PROMPT is non nil, the command can be edited.
 
 (fn SHOW-PROMPT)" t)
+(autoload 'projectile-run-task "projectile" "\
+Run one of the current project's named tasks.
+
+The task is picked with completion among the tasks of the project's
+type and those in `projectile-tasks', which win for same-named tasks
+(see `projectile-project-tasks').  With a prefix ARG the task's
+command can be edited before it's run, e.g. to pass it ad-hoc
+arguments.
+
+The command runs through the same machinery as
+`projectile-compile-project' - in `projectile-compilation-dir', with
+`%p' expanded to the project name - but its output goes to a per-task
+compilation buffer named after the task.
+
+(fn ARG)" t)
+(autoload 'projectile-repeat-last-task "projectile" "\
+Re-run the last task executed in the current project.
+
+This re-runs the exact command the task ran last time, including any
+ad-hoc edits made then.  With a prefix ARG the command can be edited
+again before it's run.
+
+(fn ARG)" t)
 (autoload 'projectile-switch-project "projectile" "\
 Switch to a project we have visited before.
 Invokes the command referenced by `projectile-switch-project-action' on switch.
@@ -583,26 +533,8 @@ With a prefix ARG invokes `projectile-dispatch' instead
 of `projectile-switch-project-action'.
 
 (fn &optional ARG)" t)
-(autoload 'projectile-switch-project-other-window "projectile" "\
-Switch to a project we have visited before and display it in another window.
-
-Like `projectile-switch-project', but runs
-`projectile-switch-project-other-window-action' (by default
-`projectile-find-file-other-window') after switching, so the project is
-shown in another window.  With a prefix ARG invokes `projectile-dispatch'
-instead.
-
-(fn &optional ARG)" t)
-(autoload 'projectile-switch-project-other-frame "projectile" "\
-Switch to a project we have visited before and display it in another frame.
-
-Like `projectile-switch-project', but runs
-`projectile-switch-project-other-frame-action' (by default
-`projectile-find-file-other-frame') after switching, so the project is
-shown in another frame.  With a prefix ARG invokes `projectile-dispatch'
-instead.
-
-(fn &optional ARG)" t)
+ (autoload 'projectile-switch-project-other-window "projectile" nil t)
+ (autoload 'projectile-switch-project-other-frame "projectile" nil t)
 (autoload 'projectile-switch-to-most-recent-project "projectile" "\
 Switch to the project recorded in `projectile-most-recent-project'.
 That's the project that was current before the most recent project
@@ -670,6 +602,26 @@ Let user choose another project when PROMPT-FOR-PROJECT is supplied.
 (fn PROMPT-FOR-PROJECT)" t)
 (autoload 'projectile-edit-dir-locals "projectile" "\
 Edit or create a .dir-locals.el file of the project." t)
+(autoload 'projectile-other-window-command "projectile" "\
+Show the buffer of the next Projectile command in another window.
+
+Set up the next command's buffer to be displayed in a new window (via
+`other-window-prefix') and keep `projectile-command-map' active for the
+next key sequence, so any Projectile key typed right after this command
+gets the other-window treatment without re-typing the Projectile
+prefix.  Any non-Projectile command works as well; commands that use
+`switch-to-buffer' are covered too, by temporarily enabling
+`switch-to-buffer-obey-display-actions'." t)
+(autoload 'projectile-other-frame-command "projectile" "\
+Show the buffer of the next Projectile command in another frame.
+
+Set up the next command's buffer to be displayed in a new frame (via
+`other-frame-prefix') and keep `projectile-command-map' active for the
+next key sequence, so any Projectile key typed right after this command
+gets the other-frame treatment without re-typing the Projectile
+prefix.  Any non-Projectile command works as well; commands that use
+`switch-to-buffer' are covered too, by temporarily enabling
+`switch-to-buffer-obey-display-actions'." t)
 (autoload 'project-projectile "projectile" "\
 Return Projectile project of form ('projectile . root-dir) for DIR.
 
