@@ -208,8 +208,7 @@ CANDIDATES is the list of candidates."
 
 ;; `helm' and `projectile'
 (require 'projectile)
-(setq projectile-completion-system 'helm
-      projectile-switch-project-action #'helm-projectile)
+(setq projectile-switch-project-action #'helm-projectile)
 
 (require 'helm-projectile)
 

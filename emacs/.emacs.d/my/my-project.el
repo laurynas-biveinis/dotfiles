@@ -29,9 +29,6 @@
 (setq projectile-use-git-grep t
       projectile-enable-cmake-presets t
       projectile-mode-line-prefix " "  ;; Save mode line space
-      ;; Only use `xref' for cross-references. Any regex-based tooling is
-      ;; inaccurate.
-      projectile-tags-backend 'xref
       ;; Browsing project files without caching is prohibitively slow on large
       ;; projects such as MySQL.
       projectile-enable-caching 'persistent
