@@ -207,7 +207,7 @@ mysql_export_environment_helpers() {
     declare -gA cmake_flags=()
 
     declare -r min_version="8.0.18"
-    declare -r max_version="9.7.0"
+    declare -r max_version="9.7.1"
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -436,6 +436,12 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.33" "${max_version}" any \
                           "-DFORCE_COLORED_OUTPUT=ON"
+
+    declare -a -r my971_comp_flags=(
+	    "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.7.1 cxx)"
+	    "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.7.1 cxx_debug)"
+	    "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.7.1 cxx_release)"
+    )
 
     declare -a -r my970_comp_flags=(
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.7.0 cxx)"
@@ -752,6 +758,11 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
+    export MY971D=("${myd[@]}" $(mysql_get_cmake_flags 9.7.1 any_debug)
+		   "${my971_comp_flags[@]}")
+    export MY971=("${myr[@]}" $(mysql_get_cmake_flags 9.7.1 any_release)
+		  "${my971_comp_flags[@]}")
+
     export MY970D=("${myd[@]}" $(mysql_get_cmake_flags 9.7.0 any_debug)
                    "${my970_comp_flags[@]}")
     export MY970=("${myr[@]}" $(mysql_get_cmake_flags 9.7.0 any_release)
@@ -1022,483 +1033,489 @@ mysql_determine_flavor() {
 
 # Any arguments will passed through to CMake
 mysql_cmake() {
-    pushd .. || return 1
+	pushd .. || return 1
 
-    if ! declare -r version_file=$(mysql_find_version_file); then
-        popd
-        return 1
-    fi
+	if ! declare -r version_file=$(mysql_find_version_file); then
+		popd
+		return 1
+	fi
 
-    if ! declare -i -r major_ver=$(mysql_get_major_version "$version_file");
-    then
-        popd
-        return 1
-    fi
+	if ! declare -i -r major_ver=$(mysql_get_major_version "$version_file");
+	then
+		popd
+		return 1
+	fi
 
-    if ! declare -i -r minor_ver=$(mysql_get_minor_version "$version_file");
-    then
-        popd
-        return 1
-    fi
+	if ! declare -i -r minor_ver=$(mysql_get_minor_version "$version_file");
+	then
+		popd
+		return 1
+	fi
 
-    if ! declare -i -r patch_level=$(mysql_get_patch_level "$version_file");
-    then
-        popd
-        return 1
-    fi
+	if ! declare -i -r patch_level=$(mysql_get_patch_level "$version_file");
+	then
+		popd
+		return 1
+	fi
 
-    declare -r flavor=$(mysql_determine_flavor "$version_file")
+	declare -r flavor=$(mysql_determine_flavor "$version_file")
 
-    popd || return 1
+	popd || return 1
 
-    case "$flavor" in
+	case "$flavor" in
         "mysql")
-            echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
-            case "$major_ver.$minor_ver.$patch_level" in
-                9.7.0)
-                    declare -a release_flags=("${MY970[@]}")
-                    declare -a debug_flags=("${MY970D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+		echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
+		case "$major_ver.$minor_ver.$patch_level" in
+		9.7.1)
+			declare -a release_flags=("${MY971[@]}")
+			declare -a debug_flags=("${MY971D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
+		9.7.0)
+			declare -a release_flags=("${MY970[@]}")
+			declare -a debug_flags=("${MY970D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 9.6.0)
-                    declare -a release_flags=("${MY960[@]}")
-                    declare -a debug_flags=("${MY960D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY960[@]}")
+			declare -a debug_flags=("${MY960D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 9.5.0)
-                    declare -a release_flags=("${MY950[@]}")
-                    declare -a debug_flags=("${MY950D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY950[@]}")
+			declare -a debug_flags=("${MY950D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 9.4.0)
-                    declare -a release_flags=("${MY940[@]}")
-                    declare -a debug_flags=("${MY940D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY940[@]}")
+			declare -a debug_flags=("${MY940D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 9.3.0)
-                    declare -a release_flags=("${MY930[@]}")
-                    declare -a debug_flags=("${MY930D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY930[@]}")
+			declare -a debug_flags=("${MY930D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 9.2.0)
-                    declare -a release_flags=("${MY920[@]}")
-                    declare -a debug_flags=("${MY920D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY920[@]}")
+			declare -a debug_flags=("${MY920D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 9.1.0)
-                    declare -a release_flags=("${MY910[@]}")
-                    declare -a debug_flags=("${MY910D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY910[@]}")
+			declare -a debug_flags=("${MY910D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 9.0.1)
-                    declare -a release_flags=("${MY901[@]}")
-                    declare -a debug_flags=("${MY901D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY901[@]}")
+			declare -a debug_flags=("${MY901D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 9.0.0)
-                    declare -a release_flags=("${MY900[@]}")
-                    declare -a debug_flags=("${MY900D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY900[@]}")
+			declare -a debug_flags=("${MY900D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.9)
-                    declare -a release_flags=("${MY849[@]}")
-                    declare -a debug_flags=("${MY849D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY849[@]}")
+			declare -a debug_flags=("${MY849D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.8)
-                    declare -a release_flags=("${MY848[@]}")
-                    declare -a debug_flags=("${MY848D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY848[@]}")
+			declare -a debug_flags=("${MY848D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.7)
-                    declare -a release_flags=("${MY847[@]}")
-                    declare -a debug_flags=("${MY847D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY847[@]}")
+			declare -a debug_flags=("${MY847D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.6)
-                    declare -a release_flags=("${MY846[@]}")
-                    declare -a debug_flags=("${MY846D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY846[@]}")
+			declare -a debug_flags=("${MY846D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.5)
-                    declare -a release_flags=("${MY845[@]}")
-                    declare -a debug_flags=("${MY845D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY845[@]}")
+			declare -a debug_flags=("${MY845D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.4)
-                    declare -a release_flags=("${MY844[@]}")
-                    declare -a debug_flags=("${MY844D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY844[@]}")
+			declare -a debug_flags=("${MY844D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.3)
-                    declare -a release_flags=("${MY843[@]}")
-                    declare -a debug_flags=("${MY843D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY843[@]}")
+			declare -a debug_flags=("${MY843D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.2)
-                    declare -a release_flags=("${MY842[@]}")
-                    declare -a debug_flags=("${MY842D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY842[@]}")
+			declare -a debug_flags=("${MY842D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.1)
-                    declare -a release_flags=("${MY841[@]}")
-                    declare -a debug_flags=("${MY841D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY841[@]}")
+			declare -a debug_flags=("${MY841D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.4.0)
-                    declare -a release_flags=("${MY840[@]}")
-                    declare -a debug_flags=("${MY840D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY840[@]}")
+			declare -a debug_flags=("${MY840D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.3.0)
-                    declare -a release_flags=("${MY830[@]}")
-                    declare -a debug_flags=("${MY830D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY830[@]}")
+			declare -a debug_flags=("${MY830D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.2.0)
-                    declare -a release_flags=("${MY820[@]}")
-                    declare -a debug_flags=("${MY820D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY820[@]}")
+			declare -a debug_flags=("${MY820D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.1.0)
-                    declare -a release_flags=("${MY810[@]}")
-                    declare -a debug_flags=("${MY810D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY810[@]}")
+			declare -a debug_flags=("${MY810D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.46)
-                    declare -a release_flags=("${MY8046[@]}")
-                    declare -a benchmark_flags=("${MY8046B[@]}")
-                    declare -a debug_flags=("${MY8046D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8046[@]}")
+			declare -a benchmark_flags=("${MY8046B[@]}")
+			declare -a debug_flags=("${MY8046D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.45)
-                    declare -a release_flags=("${MY8045[@]}")
-                    declare -a benchmark_flags=("${MY8045B[@]}")
-                    declare -a debug_flags=("${MY8045D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8045[@]}")
+			declare -a benchmark_flags=("${MY8045B[@]}")
+			declare -a debug_flags=("${MY8045D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.44)
-                    declare -a release_flags=("${MY8044[@]}")
-                    declare -a debug_flags=("${MY8044D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8044[@]}")
+			declare -a debug_flags=("${MY8044D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.43)
-                    declare -a release_flags=("${MY8043[@]}")
-                    declare -a debug_flags=("${MY8043D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8043[@]}")
+			declare -a debug_flags=("${MY8043D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.42)
-                    declare -a release_flags=("${MY8042[@]}")
-                    declare -a debug_flags=("${MY8042D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8042[@]}")
+			declare -a debug_flags=("${MY8042D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.41)
-                    declare -a release_flags=("${MY8041[@]}")
-                    declare -a debug_flags=("${MY8041D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8041[@]}")
+			declare -a debug_flags=("${MY8041D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.40)
-                    declare -a release_flags=("${MY8040[@]}")
-                    declare -a benchmark_flags=("${MY8040B[@]}")
-                    declare -a debug_flags=("${MY8040D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8040[@]}")
+			declare -a benchmark_flags=("${MY8040B[@]}")
+			declare -a debug_flags=("${MY8040D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.39)
-                    declare -a release_flags=("${MY8039[@]}")
-                    declare -a debug_flags=("${MY8039D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8039[@]}")
+			declare -a debug_flags=("${MY8039D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.38)
-                    declare -a release_flags=("${MY8038[@]}")
-                    declare -a debug_flags=("${MY8038D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8038[@]}")
+			declare -a debug_flags=("${MY8038D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.37)
-                    declare -a release_flags=("${MY8037[@]}")
-                    declare -a debug_flags=("${MY8037D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8037[@]}")
+			declare -a debug_flags=("${MY8037D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.36)
-                    declare -a release_flags=("${MY8036[@]}")
-                    declare -a debug_flags=("${MY8036D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8036[@]}")
+			declare -a debug_flags=("${MY8036D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.35)
-                    declare -a release_flags=("${MY8035[@]}")
-                    declare -a debug_flags=("${MY8035D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8035[@]}")
+			declare -a debug_flags=("${MY8035D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.34)
-                    declare -a release_flags=("${MY8034[@]}")
-                    declare -a debug_flags=("${MY8034D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8034[@]}")
+			declare -a debug_flags=("${MY8034D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.33)
-                    declare -a release_flags=("${MY8033[@]}")
-                    declare -a debug_flags=("${MY8033D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8033[@]}")
+			declare -a debug_flags=("${MY8033D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.32)
-                    declare -a release_flags=("${MY8032[@]}")
-                    declare -a debug_flags=("${MY8032D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8032[@]}")
+			declare -a debug_flags=("${MY8032D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.31)
-                    declare -a release_flags=("${MY8031[@]}")
-                    declare -a debug_flags=("${MY8031D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8031[@]}")
+			declare -a debug_flags=("${MY8031D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.30)
-                    declare -a release_flags=("${MY8030[@]}")
-                    declare -a debug_flags=("${MY8030D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${MY8030[@]}")
+			declare -a debug_flags=("${MY8030D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.29)
-                    declare -a release_flags=("${MY8029[@]}")
-                    declare -a debug_flags=("${MY8029D[@]}")
-                    declare -a -r core_dump_flags=()
-                    ;;
+			declare -a release_flags=("${MY8029[@]}")
+			declare -a debug_flags=("${MY8029D[@]}")
+			declare -a -r core_dump_flags=()
+			;;
                 8.0.28)
-                    declare -a release_flags=("${MY8028[@]}")
-                    declare -a debug_flags=("${MY8028D[@]}")
-                    declare -a -r core_dump_flags=()
-                    ;;
+			declare -a release_flags=("${MY8028[@]}")
+			declare -a debug_flags=("${MY8028D[@]}")
+			declare -a -r core_dump_flags=()
+			;;
                 8.0.18)
-                    declare -a release_flags=("${MY8018[@]}")
-                    declare -a debug_flags=("${MY8018D[@]}")
-                    declare -a -r core_dump_flags=()
-                    ;;
+			declare -a release_flags=("${MY8018[@]}")
+			declare -a debug_flags=("${MY8018D[@]}")
+			declare -a -r core_dump_flags=()
+			;;
                 *)
-                    2>&1 echo "Unsupported version, please implement"
-                    return 1
-                    ;;
-            esac
-            ;;
+			2>&1 echo "Unsupported version, please implement"
+			return 1
+			;;
+		esac
+		;;
         "facebook")
-            echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
-            case "$major_ver.$minor_ver.$patch_level" in
+		echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
+		case "$major_ver.$minor_ver.$patch_level" in
                 8.0.36)
-                    declare -a release_flags=("${FB8036[@]}")
-                    declare -a debug_flags=("${FB8036D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${FB8036[@]}")
+			declare -a debug_flags=("${FB8036D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.32)
-                    declare -a release_flags=("${FB8032[@]}")
-                    declare -a debug_flags=("${FB8032D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a release_flags=("${FB8032[@]}")
+			declare -a debug_flags=("${FB8032D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.28)
-                    declare -a release_flags=("${FB8028[@]}")
-                    declare -a debug_flags=("${FB8028D[@]}")
-                    declare -a -r core_dump_flags=()
-                    ;;
+			declare -a release_flags=("${FB8028[@]}")
+			declare -a debug_flags=("${FB8028D[@]}")
+			declare -a -r core_dump_flags=()
+			;;
                 *)
-                    2>&1 echo "Unsupported version, please add"
-                    return 1
-                    ;;
-            esac
-            ;;
+			2>&1 echo "Unsupported version, please add"
+			return 1
+			;;
+		esac
+		;;
         "percona")
-            echo "Configuring Percona Server $major_ver.$minor_ver.$patch_level"
-            case "$major_ver.$minor_ver.$patch_level" in
+		echo "Configuring Percona Server $major_ver.$minor_ver.$patch_level"
+		case "$major_ver.$minor_ver.$patch_level" in
                 8.0.36)
-                    declare -a debug_flags=("${PS8036D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a debug_flags=("${PS8036D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.35)
-                    declare -a debug_flags=("${PS8035D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a debug_flags=("${PS8035D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 8.0.34)
-                    declare -a debug_flags=("${PS8034D[@]}")
-                    declare -a -r \
-                            core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
-                    ;;
+			declare -a debug_flags=("${PS8034D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
                 *)
-                    2>&1 echo "Unsupported version, please add"
-                    return 1
-                    ;;
-            esac
-            ;;
+			2>&1 echo "Unsupported version, please add"
+			return 1
+			;;
+		esac
+		;;
         "mariadb")
-            2>&1 echo "MariaDB unsupported, please add"
-            return 1
-            ;;
+		2>&1 echo "MariaDB unsupported, please add"
+		return 1
+		;;
         *)
-            2>&1 echo "Unsupported flavor, should have caught sooner"
-            return 1
-            ;;
-    esac
+		2>&1 echo "Unsupported flavor, should have caught sooner"
+		return 1
+		;;
+	esac
 
-    # build directory can be named arbitrarily as long as it starts with a
-    # $MY_BUILD_DIR_PREFIX. The build type is determined by the presence of
-    # certain substrings in the name.
-    declare -r build_dir="$(basename "$PWD")"
+	# build directory can be named arbitrarily as long as it starts with a
+	# $MY_BUILD_DIR_PREFIX. The build type is determined by the presence of
+	# certain substrings in the name.
+	declare -r build_dir="$(basename "$PWD")"
 
-    case "$build_dir" in
+	case "$build_dir" in
         *san*)
-            echo "Using sanitizers"
-            declare -i -r sanitizers=1
-            debug_flags+=("${MYSAN[@]}")
-            release_flags+=("${MYSAN[@]}")
-            ;;
+		echo "Using sanitizers"
+		declare -i -r sanitizers=1
+		debug_flags+=("${MYSAN[@]}")
+		release_flags+=("${MYSAN[@]}")
+		;;
         *)
-            echo "Not using sanitizers, enabling macOS core dumps if needed"
-            declare -i -r sanitizers=0
-            debug_flags+=("${core_dump_flags[@]}")
-            release_flags+=("${core_dump_flags[@]}")
-            ;;
-    esac
+		echo "Not using sanitizers, enabling macOS core dumps if needed"
+		declare -i -r sanitizers=0
+		debug_flags+=("${core_dump_flags[@]}")
+		release_flags+=("${core_dump_flags[@]}")
+		;;
+	esac
 
-    case "$build_dir" in
+	case "$build_dir" in
         *valgrind*)
-            echo "Using Valgrind"
-            if [ "$sanitizers" -eq 1 ]; then
-                2>&1 echo "Valgrind is incompatible with sanitizers"
-                return 1
-            fi
-            debug_flags+=("-DWITH_VALGRIND=ON")
-            release_flags+=("-DWITH_VALGRIND=ON")
-            ;;
-    esac
+		echo "Using Valgrind"
+		if [ "$sanitizers" -eq 1 ]; then
+			2>&1 echo "Valgrind is incompatible with sanitizers"
+			return 1
+		fi
+		debug_flags+=("-DWITH_VALGRIND=ON")
+		release_flags+=("-DWITH_VALGRIND=ON")
+		;;
+	esac
 
-    case "$build_dir" in
+	case "$build_dir" in
         *llvm-12*)
-            echo "Using LLVM 12"
-            debug_flags+=("${MYCLANG12[@]}")
-            release_flags+=("${MYCLANG12[@]}")
-            ;;
+		echo "Using LLVM 12"
+		debug_flags+=("${MYCLANG12[@]}")
+		release_flags+=("${MYCLANG12[@]}")
+		;;
         *llvm-14*)
-            echo "Using LLVM 14"
-            debug_flags+=("${MYCLANG14[@]}")
-            release_flags+=("${MYCLANG14[@]}")
-            ;;
+		echo "Using LLVM 14"
+		debug_flags+=("${MYCLANG14[@]}")
+		release_flags+=("${MYCLANG14[@]}")
+		;;
         *llvm-15*)
-            echo "Using LLVM 15"
-            debug_flags+=("${MYCLANG15[@]}")
-            release_flags+=("${MYCLANG15[@]}")
-            ;;
+		echo "Using LLVM 15"
+		debug_flags+=("${MYCLANG15[@]}")
+		release_flags+=("${MYCLANG15[@]}")
+		;;
         *llvm-16*)
-            echo "Using LLVM 16"
-            debug_flags+=("${MYCLANG16[@]}")
-            release_flags+=("${MYCLANG16[@]}")
-            ;;
+		echo "Using LLVM 16"
+		debug_flags+=("${MYCLANG16[@]}")
+		release_flags+=("${MYCLANG16[@]}")
+		;;
         *llvm-17*)
-            echo "Using LLVM 17"
-            debug_flags+=("${MYCLANG17[@]}")
-            release_flags+=("${MYCLANG17[@]}")
-            ;;
+		echo "Using LLVM 17"
+		debug_flags+=("${MYCLANG17[@]}")
+		release_flags+=("${MYCLANG17[@]}")
+		;;
         *llvm-18*)
-            echo "Using LLVM 18"
-            debug_flags+=("${MYCLANG18[@]}")
-            release_flags+=("${MYCLANG18[@]}")
-            ;;
+		echo "Using LLVM 18"
+		debug_flags+=("${MYCLANG18[@]}")
+		release_flags+=("${MYCLANG18[@]}")
+		;;
         *llvm-19*)
-            echo "Using LLVM 19"
-            debug_flags+=("${MYCLANG19[@]}")
-            release_flags+=("${MYCLANG19[@]}")
-            ;;
+		echo "Using LLVM 19"
+		debug_flags+=("${MYCLANG19[@]}")
+		release_flags+=("${MYCLANG19[@]}")
+		;;
         *llvm-20*)
-            echo "Using LLVM 20"
-            debug_flags+=("${MYCLANG20[@]}")
-            release_flags+=("${MYCLANG20[@]}")
-            ;;
+		echo "Using LLVM 20"
+		debug_flags+=("${MYCLANG20[@]}")
+		release_flags+=("${MYCLANG20[@]}")
+		;;
         *llvm*)
-            echo "Using LLVM"
-            debug_flags+=("${MYCLANG[@]}")
-            release_flags+=("${MYCLANG[@]}")
-            ;;
+		echo "Using LLVM"
+		debug_flags+=("${MYCLANG[@]}")
+		release_flags+=("${MYCLANG[@]}")
+		;;
         *gcc-11*)
-            echo "Using GCC 11"
-            debug_flags+=("${MYGCC11[@]}")
-            release_flags+=("${MYGCC11[@]}")
-            ;;
+		echo "Using GCC 11"
+		debug_flags+=("${MYGCC11[@]}")
+		release_flags+=("${MYGCC11[@]}")
+		;;
         *gcc-12*)
-            echo "Using GCC 12"
-            debug_flags+=("${MYGCC12[@]}")
-            release_flags+=("${MYGCC12[@]}")
-            ;;
+		echo "Using GCC 12"
+		debug_flags+=("${MYGCC12[@]}")
+		release_flags+=("${MYGCC12[@]}")
+		;;
         *gcc-13*)
-            echo "Using GCC 13"
-            debug_flags+=("${MYGCC13[@]}")
-            release_flags+=("${MYGCC13[@]}")
-            ;;
+		echo "Using GCC 13"
+		debug_flags+=("${MYGCC13[@]}")
+		release_flags+=("${MYGCC13[@]}")
+		;;
         *gcc-14*)
-            echo "Using GCC 14"
-            debug_flags+=("${MYGCC14[@]}")
-            release_flags+=("${MYGCC14[@]}")
-            ;;
-    esac
+		echo "Using GCC 14"
+		debug_flags+=("${MYGCC14[@]}")
+		release_flags+=("${MYGCC14[@]}")
+		;;
+	esac
 
-    # TODO(laurynas): we might want to brew unlink boost temporarily for
-    # configuration and build, but each of these functions may be called
-    # independently. Re-linking at the end of configuration just to unlink again
-    # at the start of the build would work, but it is not nice.
+	# TODO(laurynas): we might want to brew unlink boost temporarily for
+	# configuration and build, but each of these functions may be called
+	# independently. Re-linking at the end of configuration just to unlink again
+	# at the start of the build would work, but it is not nice.
 
-    case "$build_dir" in
+	case "$build_dir" in
         *debug*)
-            echo "Debug build"
-            echo "CMake options: ${debug_flags[@]} $@"
-            cmake -G Ninja .. "${debug_flags[@]}" "$@"
-            ;;
+		echo "Debug build"
+		echo "CMake options: ${debug_flags[@]} $@"
+		cmake -G Ninja .. "${debug_flags[@]}" "$@"
+		;;
         *release*)
-            echo "Release build"
-            echo "CMake options: ${release_flags[@]} $@"
-            cmake -G Ninja .. "${release_flags[@]}" "$@"
-            ;;
+		echo "Release build"
+		echo "CMake options: ${release_flags[@]} $@"
+		cmake -G Ninja .. "${release_flags[@]}" "$@"
+		;;
         *benchmark*)
-            echo "Release benchmark build"
-            echo "CMake options: ${benchmark_flags[@]} $@"
-            cmake -G Ninja .. "${benchmark_flags[@]}" "$@"
-            ;;
+		echo "Release benchmark build"
+		echo "CMake options: ${benchmark_flags[@]} $@"
+		cmake -G Ninja .. "${benchmark_flags[@]}" "$@"
+		;;
         *)
-            2>&1 echo "Must choose one of debug, release, benchmark"
-            return 1
-            ;;
-    esac
+		2>&1 echo "Must choose one of debug, release, benchmark"
+		return 1
+		;;
+	esac
 }
 
 # Incremental rebuild command, should be called from the build directory one
