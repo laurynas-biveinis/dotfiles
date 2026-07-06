@@ -130,15 +130,17 @@ rely on recall.
   via its Captured-new-work rule) satisfies this, so record it here only when
   nothing else will. For closing an item (`DONE`/`KILL`) and the health check
   itself, see "Completing and archiving items" below.
-- `org-read-outline` nodes and `org-grep` `headline_path` entries carry
-  `todo`/`tags`/`uri` per node — read an item's state from these rather than
-  parsing raw heading text. `org-read-outline` is top-down (each node has its
+- `org-read-outline` nodes and the `headline_path` entries returned by
+  `org-grep`, `org-read-headline`, and `org-read-by-id` carry `todo`/`tags`/`uri`
+  per node — read an item's state from these rather than parsing raw heading
+  text. `org-read-outline` is top-down (each node has its
   children) but returns **only the top two levels** (level-1 headings with their
   level-2 children); level-3+ items do not appear. Never treat an outline miss
   as proof of absence — use `org-read-headline` (full subtree) or `org-grep` to
   reach deeper items. `org-read-outline` does not surface an item's ancestor
-  chain. For an item's **ancestors'** state use `org-grep`'s `headline_path`
-  (full chain with per-node metadata).
+  chain. For an item's **ancestors'** state use the `headline_path` returned by
+  `org-grep`, `org-read-headline`, or `org-read-by-id` (full chain with per-node
+  `todo`/`tags`/`uri`).
 - Before acting on an `org-grep` match as an open item — to close, mutate, or
   treat as already tracked — verify the matched entry's `todo` is not already in
   a closed state (`DONE`/`KILL`). Disregard closed matches; if all matches are
@@ -171,18 +173,17 @@ absent.
 
 When you close an item — `DONE` (completed) or `KILL` (abandoned) — decide
 standalone vs project child by scanning the item's ancestors — every entry in
-`org-grep`'s `headline_path` except the last, which is the item itself: if any
-ancestor carries a `project` tag, the item is a project child; otherwise it is
-standalone. For exposed files, each ancestor node in `headline_path` carries
-`todo` and `tags`; otherwise ask the user. If you do not already hold an
-`org-grep` result for this item (e.g. you reached it via `org-read-by-id` or
-`org-read-outline`), run `org-grep` with the item's title to obtain its
-`headline_path` before classifying. If `org-grep` returns no results, or only
-closed matches, ask the user to identify the item
-before proceeding. Cross-reference by URI first: match the item's known URI
-against the `uri` field of each result; if exactly one result matches, use that
-chain. If the match is ambiguous or no URI is available, show the candidates to
-the user and ask which item to use.
+its `headline_path` except the last, which is the item itself: if any ancestor
+carries a `project` tag, the item is a project child; otherwise it is
+standalone. Use the `headline_path` returned by whichever tool surfaced the item
+(`org-grep`, `org-read-headline`, or `org-read-by-id`); each node carries `todo`
+and `tags`. If you hold only a URI (e.g. an `org-read-outline` node, which
+carries no ancestor chain), read it by URI first — `org-read-by-id` or
+`org-read-headline` per "Reading and editing" — to obtain its `headline_path`.
+Only a bare title still needs `org-grep`: run it with the title, and if
+`org-grep` returns no results, or only closed matches, ask the user to identify
+the item before proceeding; if more than one open match remains, show the
+candidates to the user and ask which item to use.
 
 **Superseded-outcome rule:** when closing an action whose outcome has been
 reached or mooted — possibly via another route — the close state records the
@@ -224,7 +225,7 @@ tag (a nested sub-project), harvest residuals (`DONE` or `KILL`, matching the
 intended close state), then mark the child item `DONE` (or `KILL`) via
 `org-update-todo-state`. Otherwise (child is not project-tagged), mark it `DONE`
 (or `KILL`) directly. Then locate the innermost `project`-tagged ancestor in
-`org-grep`'s `headline_path` (excluding the last entry, the item itself;
+the item's `headline_path` (excluding the last entry, the item itself;
 innermost = the last `project`-tagged entry in the remaining ancestors). Decide
 whether the project outcome is reached:
 
