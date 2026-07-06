@@ -172,18 +172,18 @@ absent.
 ## Completing and archiving items
 
 When you close an item — `DONE` (completed) or `KILL` (abandoned) — decide
-standalone vs project child by scanning the item's ancestors — every entry in
-its `headline_path` except the last, which is the item itself: if any ancestor
-carries a `project` tag, the item is a project child; otherwise it is
-standalone. Use the `headline_path` returned by whichever tool surfaced the item
-(`org-grep`, `org-read-headline`, or `org-read-by-id`); each node carries `todo`
-and `tags`. If you hold only a URI (e.g. an `org-read-outline` node, which
-carries no ancestor chain), read it by URI first — `org-read-by-id` or
-`org-read-headline` per "Reading and editing" — to obtain its `headline_path`.
-Only a bare title still needs `org-grep`: run it with the title, and if
-`org-grep` returns no results, or only closed matches, ask the user to identify
-the item before proceeding; if more than one open match remains, show the
-candidates to the user and ask which item to use.
+standalone vs project child by calling `org-find-tagged-ancestor` with the
+item's `uri` and tag `project` (leave `include_self` at its default false, so
+only the ancestors are tested): a null `found` means standalone; a non-null
+`found` means project child, and that node is the innermost `project`-tagged
+ancestor — reuse it (its `uri`) for the project operations below. Every read
+tool and `org-grep` result already carries the item's `uri` — an
+`org-read-outline` node included — so pass it straight in. Only a bare title
+first needs `org-grep` to obtain a URI: run it with the title, and if
+`org-grep` returns no results, or
+only closed matches, ask the user to identify the item before proceeding; if
+more than one open match remains, show the candidates to the user and ask which
+item to use.
 
 **Superseded-outcome rule:** when closing an action whose outcome has been
 reached or mooted — possibly via another route — the close state records the
@@ -224,10 +224,9 @@ Possibly completing the project. If the child item itself carries a `project`
 tag (a nested sub-project), harvest residuals (`DONE` or `KILL`, matching the
 intended close state), then mark the child item `DONE` (or `KILL`) via
 `org-update-todo-state`. Otherwise (child is not project-tagged), mark it `DONE`
-(or `KILL`) directly. Then locate the innermost `project`-tagged ancestor in
-the item's `headline_path` (excluding the last entry, the item itself;
-innermost = the last `project`-tagged entry in the remaining ancestors). Decide
-whether the project outcome is reached:
+(or `KILL`) directly. The innermost `project`-tagged ancestor is the `found`
+node returned by the classification `org-find-tagged-ancestor` call above.
+Decide whether the project outcome is reached:
 
 - if achieved: harvest residuals (`DONE`), then mark the project headline `DONE`
   via `org-update-todo-state` and archive the subtree via `org-archive-subtree`.
