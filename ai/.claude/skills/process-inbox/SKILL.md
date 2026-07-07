@@ -558,9 +558,9 @@ own 2-minute assessment happens only inside Delegate.
       rule: `DONE` if it was carried out, else `KILL` as mooted; a
       Delegate-branch **`@waitingfor` tracker** is **not** blanket-closed but
       disposed of via `gtd`'s "Resolving a delegated item" mapping against what
-      the on-the-spot action achieved — `KILL` if the user did the underlying
-      task themselves (delegation superseded), `DONE` if the delegate delivered
-      on the spot, else leave it **open** and flip `WAIT`→`TODO` (the hand-off
+      the on-the-spot action achieved — `DONE` if the underlying task got done
+      (the user did it themselves, or the delegate delivered on the spot), else
+      leave it **open** and flip `WAIT`→`TODO` (the hand-off
       cleared, the delegate still awaited). Then apply those dispositions via
       `gtd`'s "Completing and archiving items": when more than one item was
       recorded under the **same project**, mark all of them to their decided

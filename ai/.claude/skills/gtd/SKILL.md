@@ -186,13 +186,16 @@ more than one open match remains, show the candidates to the user and ask which
 item to use.
 
 **Superseded-outcome rule:** when closing an action whose outcome has been
-reached or mooted — possibly via another route — the close state records the
-fate of the recorded action, not of the outcome: `DONE` if its actor
-performed it (the delegate delivered; the user did their own action, even
-bypassing its dependency), `KILL` if it went unperformed (a delegation
-superseded, an own action mooted). A `project`-tagged item's close state
-instead records the fate of its outcome: `DONE` if reached — however
-reached — `KILL` only if unreachable (per the Project child bullets below).
+reached or mooted — possibly via another route — the close state reflects
+whether the action's task was, in the end, actually carried out, not merely
+which actor did it: `DONE` if it was — the delegate delivered, the user did
+their own action (even bypassing its dependency), or the user did a
+delegated task themselves rather than await the delegate — `KILL` only if
+the task went undone (a delegation dropped with nothing delivered and its
+outcome no longer pursued, an own action mooted). A `project`-tagged item's
+close state instead records the fate of its outcome: `DONE` if reached —
+however reached — `KILL` only if unreachable (per the Project child bullets
+below).
 
 A caller that performed an action **that belongs to a project** without
 recording it in Org — e.g. a sub-2-minute action a caller did inline — has no
@@ -323,8 +326,9 @@ input reports for it:
 - _Awaited result delivered_: close the item `DONE` per the **Standalone** or
   **Project child** case above (which handles the state-marking, archiving,
   and project-health check).
-- _Outcome achieved without the delegate delivering_: close it `KILL`
-  likewise, per the superseded-outcome rule.
+- _Outcome achieved without the delegate delivering_ — the user or another
+  route did the task: close it `DONE` likewise, per the superseded-outcome
+  rule.
 - _Delegation dead — neither delivery nor outcome_ — the delegate refuses or
   cannot deliver, or either side withdrew the delegation: for a standalone
   item, first ask whether the outcome is still wanted, and if so ensure the
