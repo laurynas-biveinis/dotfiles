@@ -418,11 +418,21 @@ Capture the desired **outcome**, then:
 
 Ask. The human's estimate governs and may be overridden **either way** —
 "actually longer" routes to delegate/defer; "actually shorter (< 2 min)"
-routes to doing it now.
+routes to doing it now. Assess the 2-minute question against the **underlying
+action as the user would perform it themselves**, not the act of asking someone
+else to do it: an action only a delegate can perform, or that hands work off and
+leaves the user awaiting a result, is a delegation — it always takes
+**Longer → Delegate** (where the `@waitingfor` tracker is recorded), never the
+"Under 2 minutes" branch, however quick the ask itself would be. The hand-off's
+own 2-minute assessment happens only inside Delegate.
 
-- **Under 2 minutes** — confirm, then do it now (within your tools, or prompt
-  the user to do it). The action was never recorded, so there is nothing to
-  mark `DONE` or archive: if standalone, go to Close; if it belongs to a
+- **Under 2 minutes** — first confirm this is the user's own action to finish
+  now, not a delegation: if completing it hands work to someone else and leaves
+  the user awaiting their result (or only a delegate can perform it), treat it
+  as **Longer → Delegate** so the `@waitingfor` tracker is recorded — do not
+  do-it-now-and-Close. Otherwise confirm, then do it now (within your tools, or
+  prompt the user to do it). The action was never recorded, so there is nothing
+  to mark `DONE` or archive: if standalone, go to Close; if it belongs to a
   project (just created, or the existing one from step 3), apply `gtd`'s
   "caller that performed an action without recording it" rule to that project,
   then go to Close. If it cannot be done now — outside your tools, the user
@@ -451,11 +461,57 @@ routes to doing it now.
   the tag: a deferred action of the user's own keeps its self-context tag
   whether `TODO` or `WAIT`; `@waitingfor` marks only delegations (the
   Delegate branch):
-  - **Delegate** — record the delegation per `gtd`'s Tags convention
-    (`@waitingfor`, state per the blocking-status rule above), noting
-    who/what it waits on. For a `WAIT` delegation that is standalone or
-    leaves its project with no live `TODO`, offer a `SCHEDULED` as in
-    `Defer (as soon as I can)` below.
+  - **Delegate** — delegating is two parts, both following this step's project
+    placement and blocking-status rule: the **hand-off** (your own act of
+    asking the delegate) and the **`@waitingfor` tracker** (what you now await
+    back).
+    - **Hand-off** — the act of asking is itself an action subject to the
+      2-minute rule: if under 2 min, do it now (within your tools, or prompt
+      the user), then continue to the **`@waitingfor` tracker** below — do not
+      go to Close at the hand-off (Close comes only after the tracker is
+      recorded), and do not run a project health check here: doing the ask
+      inline would otherwise invoke `gtd`'s "caller that performed an action
+      without recording it" rule (which ends in a health check), but this branch
+      **overrides** that routing — recording the tracker, not a health check,
+      settles the project's next-action state (see the tracker below). If
+      longer, or it can't be done now, record it as a deferred own-action — a
+      self-context `TODO` (or `WAIT` if the hand-off is itself blocked) using
+      the recording mechanics of **Defer (as soon as I can)** — its recording
+      only, not that bullet's own `SCHEDULED` offer, which does not fire on the
+      hand-off; the delegation's resurfacing date is decided once, on the
+      tracker below, per its suppression rule — or, for a date-bound hand-off,
+      via **Defer to a specific time**'s **Org `SCHEDULED`/`DEADLINE`**
+      sub-branch (where the date is the point). Then continue to the
+      **`@waitingfor` tracker** below; do not go to Close at the hand-off. It is
+      the user's own action, never re-delegated.
+    - **`@waitingfor` tracker** — record the delegation per `gtd`'s Tags
+      convention (`@waitingfor`), noting who/what it waits on. Its state per the
+      blocking-status rule: `TODO` once the hand-off is done and the delegate is
+      free to proceed (the under-2-min, unblocked case), else `WAIT`. Recording
+      the tracker settles the project's next-action state for this branch — no
+      separate project health check runs: a `TODO` tracker is itself the
+      project's live next action, and a `WAIT` tracker is kept on a path
+      back to a list — by the `SCHEDULED` offer below, or, for a project
+      child, by the visible pending hand-off or other live `TODO` that keeps
+      the project surfacing, per the suppression rule. Name the
+      live blocker in the `Blocked by:` dependency note beside the
+      `Waiting on <who> for <what>` delegation note — the pending hand-off while
+      it is still a recorded, undone action, or the delegate's own dependency
+      once the hand-off is done but the delegate is itself blocked — so that
+      clearing the last remaining blocker flips it `WAIT`→`TODO` onto the
+      waiting-for list (while undated; once dated it resurfaces on the
+      date-based agenda instead, per `gtd`'s States). For a `WAIT` delegation,
+      offer a `SCHEDULED` (as in `Defer (as soon as I can)` below) unless
+      something already keeps it on a path back to a list. For a **standalone**
+      delegation (no project), always offer it — a standalone `WAIT` tracker has
+      no project health check or projects-list review to resurface it, so the
+      date is its only system-level guarantee; it then rides the date-based
+      agenda rather than the waiting-for list (as `Defer (as soon as I can)`
+      discloses). For a **project-child** delegation, suppress the offer when a
+      visible pending hand-off (any `TODO`, or a dated `WAIT`) or another live
+      `TODO` under the same project keeps the project — and thus the parked
+      delegation — surfacing for review; an undated `WAIT` hand-off, itself off
+      every list, does not suppress.
   - **Defer to a specific time** — choose Org vs Calendar per `gtd`'s _Where
     to track new work_; the branch is usually decidable from what earlier
     steps established:
@@ -496,13 +552,26 @@ routes to doing it now.
   - **Revised to < 2 min after recording** — if after recording above the user
     says "< 2 min":
     - _Recorded Org item (`TODO` or `WAIT`)_: if "do it now" succeeds (within
-      your tools and the user confirms completion), close the recorded item via
-      `gtd`'s "Completing and archiving items", choosing the close state per
-      its superseded-outcome rule (the user's own action closes `DONE`; a
-      Delegate-branch delegation closes `KILL` when the user did the action
-      themselves, `DONE` if the delegate delivered on the spot), then go to
-      Close. If it cannot be done now, leave the recorded item unchanged and
-      go to Close.
+      your tools and the user confirms completion), first decide each recorded
+      item's disposition — a **non-hand-off** own action closes `DONE`; a
+      recorded **hand-off** own-action closes per the same superseded-outcome
+      rule: `DONE` if it was carried out, else `KILL` as mooted; a
+      Delegate-branch **`@waitingfor` tracker** is **not** blanket-closed but
+      disposed of via `gtd`'s "Resolving a delegated item" mapping against what
+      the on-the-spot action achieved — `KILL` if the user did the underlying
+      task themselves (delegation superseded), `DONE` if the delegate delivered
+      on the spot, else leave it **open** and flip `WAIT`→`TODO` (the hand-off
+      cleared, the delegate still awaited). Then apply those dispositions via
+      `gtd`'s "Completing and archiving items": when more than one item was
+      recorded under the **same project**, mark all of them to their decided
+      states first and run `gtd`'s project-outcome/health-check/archive
+      resolution **once** for the shared project (via its "caller that performed
+      an action without recording it" entry, which resolves the project
+      independently of per-item close) — do not loop the full per-item project
+      close over each, and do not treat "close the tracker last" as equivalent
+      (closing any first item still resolves the project while a sibling is
+      open). Then go to Close. If it cannot be done now, leave the recorded
+      item(s) unchanged and go to Close.
     - _Recorded Google Calendar event_: first do the action now. If it cannot
       be done now, leave the event in place and go to Close. Only on confirmed
       completion, surface the full command for the user to run (gcalcli always
