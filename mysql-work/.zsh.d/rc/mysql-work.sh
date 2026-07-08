@@ -207,7 +207,7 @@ mysql_export_environment_helpers() {
     declare -gA cmake_flags=()
 
     declare -r min_version="8.0.18"
-    declare -r max_version="9.7.1"
+    declare -r max_version="26.7.0"
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -232,6 +232,9 @@ mysql_export_environment_helpers() {
             export MY8030_MAX_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
+	mysql_add_comp_flags "26.7.0" "26.7.0" "cxx" \
+ 		`# https://bugs.mysql.com/bug.php?id=117299` \
+		"-Wno-documentation"
         mysql_add_comp_flags "8.4.8" "8.4.8" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=119246` \
                              "-Wno-nonnull"
@@ -436,6 +439,12 @@ mysql_export_environment_helpers() {
 
     mysql_add_cmake_flags "8.0.33" "${max_version}" any \
                           "-DFORCE_COLORED_OUTPUT=ON"
+
+    declare -a -r my2670_comp_flags=(
+	    "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 26.7.0 cxx)"
+	    "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 26.7.0 cxx_debug)"
+	    "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 26.7.0 cxx_release)"
+    )
 
     declare -a -r my971_comp_flags=(
 	    "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.7.1 cxx)"
@@ -758,6 +767,11 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
+    export MY2670D=("${myd[@]}" $(mysql_get_cmake_flags 26.7.0 any_debug)
+		    "${my2670_comp_flags[@]}")
+    export MY2670=("${myr[@]}" $(mysql_get_cmake_flags 26.7.0 any_release)
+		   "${my2670_comp_flags[@]}")
+
     export MY971D=("${myd[@]}" $(mysql_get_cmake_flags 9.7.1 any_debug)
 		   "${my971_comp_flags[@]}")
     export MY971=("${myr[@]}" $(mysql_get_cmake_flags 9.7.1 any_release)
@@ -1066,6 +1080,12 @@ mysql_cmake() {
         "mysql")
 		echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
 		case "$major_ver.$minor_ver.$patch_level" in
+		26.7.0)
+			declare -a release_flags=("${MY2670[@]}")
+			declare -a debug_flags=("${MY2670D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
 		9.7.1)
 			declare -a release_flags=("${MY971[@]}")
 			declare -a debug_flags=("${MY971D[@]}")
