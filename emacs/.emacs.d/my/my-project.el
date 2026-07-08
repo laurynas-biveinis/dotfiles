@@ -99,17 +99,18 @@ leaving other cases for that function."
 (advice-add 'projectile-compilation-dir :before
             #'dotfiles--projectile-set-build-dir-and-command)
 
-;; Workaround https://github.com/bbatsov/projectile/issues/347: remote projects
-;; do not get added to known project list automatically. Also workaround the
-;; lack of dynamic mode line on remote projects. It seems that after
-;; https://github.com/bbatsov/projectile/pull/1096 there is no reason not to
-;; enable it.
+;; Workaround the lack of a dynamic mode line on remote projects: upstream's
+;; `projectile-find-file-hook-function' deliberately skips the mode-line update
+;; for remote buffers (probing project-type markers is slow on a cold TRAMP
+;; cache), but per https://github.com/bbatsov/projectile/pull/1096 there is no
+;; reason not to enable it.
 (defun dotfiles--projectile-find-file-hook-function ()
-  "Hook to set up Projectile when called by `find-file-hook' on remote files."
-  (when (file-remote-p default-directory)
-    (when projectile-dynamic-mode-line
-      (projectile-update-mode-line))
-    (projectile-track-known-projects-find-file-hook)))
+  "Update the Projectile mode line for remote files.
+Upstream's `find-file-hook' handler skips the mode-line update for remote
+buffers."
+  (when (and (file-remote-p default-directory)
+             projectile-dynamic-mode-line)
+    (projectile-update-mode-line)))
 (advice-add #'projectile-find-file-hook-function :after
             #'dotfiles--projectile-find-file-hook-function)
 
