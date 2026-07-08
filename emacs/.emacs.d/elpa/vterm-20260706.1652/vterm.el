@@ -3,8 +3,8 @@
 ;; Copyright (C) 2017-2020 by Lukas Fürmetz & Contributors
 ;;
 ;; Author: Lukas Fürmetz <fuermetz@mailbox.org>
-;; Package-Version: 20260626.1906
-;; Package-Revision: 9495966d9124
+;; Package-Version: 20260706.1652
+;; Package-Revision: 9a32a4afce25
 ;; URL: https://github.com/akermu/emacs-libvterm
 ;; Keywords: terminals
 ;; Package-Requires: ((emacs "25.1"))
@@ -680,6 +680,8 @@ Exceptions are defined by `vterm-keymap-exceptions'."
     (define-key map [backspace]                 #'vterm-send-backspace)
     (define-key map (kbd "DEL")                 #'vterm-send-backspace)
     (define-key map [delete]                    #'vterm-send-delete)
+    (define-key map (kbd "<deletechar>")        #'vterm-send-delete) ; OKAY!
+    (define-key map [C-delete]                  #'vterm-send-ctrl-delete)
     (define-key map [M-backspace]               #'vterm-send-meta-backspace)
     (define-key map (kbd "M-DEL")               #'vterm-send-meta-backspace)
     (define-key map [C-backspace]               #'vterm-send-meta-backspace)
@@ -1121,6 +1123,11 @@ running in the terminal (like Emacs or Nano)."
   "Send `<delete>' to the libvterm."
   (interactive)
   (vterm-send-key "<delete>"))
+
+(defun vterm-send-ctrl-delete ()
+  "Send `C-<delete>' to the libvterm."
+  (interactive)
+  (vterm-send-key "<delete>" nil nil t))
 
 (defun vterm-send-meta-backspace ()
   "Send `M-<backspace>' to the libvterm."

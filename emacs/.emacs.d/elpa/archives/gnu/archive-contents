@@ -2275,13 +2275,13 @@
       (:authors ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
       (:commit . "cebe19e3cf0f30604d1ed1bfaa74fff21a4e89a5"))])
  (org
-  . [(9 8 7) ((emacs (28 2)))
+  . [(9 8 6) ((emacs (28 2)))
      "Outline-based notes management and organizer" tar
      ((:url . "https://orgmode.org")
       (:keywords "outlines" "hypermedia" "calendar" "text")
       (:maintainer "Ihor Radchenko" . "yantar92@posteo.net")
       (:authors ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-      (:commit . "cdc16898fd46a30d7187c0a5830b2b898ffbd2de"))])
+      (:commit . "dcb8f00ec7605327dcd32562c2a51ad278f7af28"))])
  (org-contacts
   . [(1 3) ((emacs (29 1)) (org (9 7)))
      "Contacts management system for Org mode" tar
@@ -2389,12 +2389,12 @@
       (:url . "https://elpa.gnu.org/packages/osc.html")
       (:commit . "6b6dbb4176f45f9ff3a783c816c4556ca2931a22"))])
  (osm
-  . [(2 3) ((emacs (29 1)) (compat (31))) "OpenStreetMap viewer" tar
+  . [(2 4) ((emacs (29 1)) (compat (31))) "OpenStreetMap viewer" tar
      ((:url . "https://github.com/minad/osm")
       (:keywords "network" "multimedia" "hypermedia" "mouse")
       (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
       (:authors ("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "a9e76ce08fb86e40a9f3efc42b38045c9b58fa95"))])
+      (:commit . "d6167ca4f99bead657ac6f7f163c1fcf9b34267f"))])
  (other-frame-window
   . [(1 0 6) ((emacs (24 4)))
      "Minor mode to enable global prefix keys for other frame/window buffer placement"
@@ -3191,13 +3191,13 @@
       (:url . "https://elpa.gnu.org/packages/temp-buffer-browse.html")
       (:commit . "db6041b0413fdeefb1f1285e1d9c1039c10fbf04"))])
  (tempel
-  . [(1 13) ((emacs (29 1)) (compat (31)))
+  . [(1 14) ((emacs (29 1)) (compat (31)))
      "Tempo templates/snippets with in-buffer field editing" tar
      ((:url . "https://github.com/minad/tempel")
       (:keywords "abbrev" "languages" "tools" "text")
       (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
       (:authors ("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "ab6d67c2e8abcb9bd20bfe56cba930a5ea093ae0"))])
+      (:commit . "c5fdc3806b486d9d86a54c50efac3d4a141e789d"))])
  (termint
   . [(0 2 3) ((emacs (29 1))) "Run REPLs in a terminal backend" tar
      ((:url . "https://github.com/milanglacier/termint.el")
