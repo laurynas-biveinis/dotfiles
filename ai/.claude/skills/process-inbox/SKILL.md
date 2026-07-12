@@ -18,12 +18,14 @@ allowed-tools: >-
   mcp__org-mcp__org-read-headline
   mcp__org-mcp__org-read-by-id
   mcp__org-mcp__org-grep
+  mcp__org-mcp__org-find-tagged-ancestor
   mcp__org-mcp__org-get-tag-config
   mcp__org-mcp__org-add-todo
   mcp__org-mcp__org-update-todo-state
   mcp__org-mcp__org-set-planning
   mcp__org-mcp__org-refile-headline
   mcp__org-mcp__org-edit-body
+  mcp__org-mcp__org-edit-headline
   mcp__org-mcp__org-archive-subtree
 ---
 
@@ -42,10 +44,10 @@ user to clear this capture from their inbox. Once delivered for a capture, skip
 it in every subsequent Close for that same capture.
 
 **Resolution-summary rule:** resolving or updating an earlier in-pass
-`@waitingfor` item, resolving a `WAIT` or somedaymaybe item, updating a
-still-parked `WAIT`'s dependency note, or parking (`TODO`→`WAIT`, with its
-`Blocked by:` note) or closing (`DONE`/`KILL`) a pre-existing `TODO` is a
-one-time, pass-level event.
+`@waitingfor` item, resolving a `WAIT` or somedaymaybe item, promoting a
+somedaymaybe item, updating a still-parked `WAIT`'s dependency note, or
+parking (`TODO`→`WAIT`, with its `Blocked by:` note) or closing
+(`DONE`/`KILL`) a pre-existing `TODO` is a one-time, pass-level event.
 Surface each such event's summary — its Org state or note change (including
 any archive path) and any returned `org-id://` URI — exactly once, in the
 first Close that executes at or after it, before that Close's own outcome
@@ -114,6 +116,12 @@ in a file not exposed to `org-mcp`, or it still cannot be found, surface the
 capture and ask the user to apply that resolution manually; if they confirm
 none exists, the case does not apply.
 
+**Somedaymaybe-membership check:** the membership variant of `gtd`'s
+**Incubation check** — a match is incubated when it or any of its
+`headline_path` ancestors carries the `somedaymaybe` tag (the tag inherits, and
+`org-grep` reports local tags only, so the confirming tag may sit on an ancestor
+node, not the item itself).
+
 **Captured-new-work rule:** several reconcile cases, while resolving, parking,
 or closing a pre-existing item, meet new work the capture itself names — a
 follow-up or a blocker — that belongs on its own track:
@@ -123,10 +131,12 @@ follow-up or a blocker — that belongs on its own track:
   outcome is still wanted), or a new blocker that parks a still-open delegation;
 - the **`WAIT` case** — a _Partial progress_ blocker that changed into new
   work, or a _Completed or abandoned_ action whose still-wanted outcome names
-  its successor;
+  its successor (an _Achieved_ incubated match excepted — that successor rides
+  the re-entered run);
 - the **pre-existing-`TODO` case** — a _Newly blocked_ dependency, or a
   _Completed or abandoned_ action whose still-wanted outcome names its
-  successor.
+  successor (an _Achieved_ incubated match excepted — that successor rides the
+  re-entered run).
 
 When that named work is itself new, untracked work — the user's own next action
 or a new delegation, not an external event, a date, or an already-tracked
@@ -143,7 +153,8 @@ Placement and discharge of that recorded new work follow step 3's project, if
 any.
 
 **Placement.** For a **project child** whose reconcile action left the project
-open, treat that project as the one step 3 identifies, so step 4 places the new
+open, treat that project as the one step 3 identifies — applying step 3's
+**Existing-project incubation check** to it — so step 4 places the new
 work under it; where that flavor runs `gtd`'s project health check, suppress its
 filler-action / deliberately-parked ask — the continued processing records the
 new work instead. When the reconcile close instead completed or killed and
@@ -155,7 +166,8 @@ never under an archived project.
 **Otherwise** → step 2. Two guards keep a preempted or spent pass from stranding
 it, and are mutually exclusive so the work is recorded exactly once. (1) **At
 preemption:** a later terminal reconcile case — a firing `@checklist` or a
-somedaymaybe _Realized_/_Abandoned_ — that would preempt **Otherwise** first
+somedaymaybe flavor (_Achieved_, _Activate now_, or _Abandoned_) — that would
+preempt **Otherwise** first
 records any still-unrecorded new work via steps 2–4
 (placed per **Placement** above) before it fires. (2) **Final backstop:** if the
 pass still reaches its final Close (no split or re-entered run remains) with the
@@ -168,9 +180,18 @@ it via steps 2–4, which for the `@waitingfor` _Delegation dead_ flavor is that
 flavor's own ask-and-capture (skipped up front only because the capture already
 shows the outcome is still wanted).
 
+**Outer-Close suppression rule:** in the `WAIT` and pre-existing-`TODO`
+reconcile cases, if any confirmed report was an _Achieved_ incubated match, its
+re-entered run already provides that outcome's Close (per the somedaymaybe
+_Achieved_ flavor, mirroring the `@checklist` case), so emit **no** outer Close
+for that capture — where the case's routing would "go to Close", end there with
+no Close instead.
+
 - **Does it resolve or update a `@waitingfor` item?** Resolve the delegation
   per `gtd`'s "Resolving a delegated item (`@waitingfor`)" — it identifies
-  and confirms the item with the user and maps the capture's report to
+  and confirms the item with the user, handles an incubated delegation (its
+  disclosure, archive-unconditionally close, and leave-incubating in-place
+  flavors), and maps the capture's report to
   `DONE`, `KILL`, or leaving the item open, possibly parked `TODO`→`WAIT`
   (`gtd`'s close still runs in full within this case, including its
   project-health check — but when the capture names a follow-up, that
@@ -197,8 +218,16 @@ shows the outcome is still wanted).
 
 - **Does it resolve or update a `WAIT`?** A `WAIT` match is a parked action
   per `gtd`'s state definitions; a `@waitingfor`-tagged match belongs to the
-  previous case, whatever its state. Confirm the matched `WAIT` with the
-  user, even for a single candidate; if more than one open `WAIT` qualifies,
+  previous case, whatever its state. Run the **Somedaymaybe-membership check**
+  on each match and disclose incubated provenance at confirmation: a _Completed
+  or abandoned_ report on an incubated match is closed in place by the
+  _Completed or abandoned_ flavor below (applying the somedaymaybe case's
+  found-flavor), while the in-place flavors (_Dependency cleared_, _Partial
+  progress_) apply here as usual and leave it incubating — disclosing that an
+  unblocked or still-parked incubated item stays off the active views until
+  promoted. Confirm
+  the matched `WAIT` with the user, even for a single candidate; if more than
+  one open `WAIT` qualifies,
   show the candidates and confirm which (one, some, or all) the capture
   resolves — several parked actions may legitimately wait on the same
   dependency. Then apply the matching flavor below to each confirmed `WAIT`,
@@ -212,10 +241,17 @@ shows the outcome is still wanted).
     resolution-summary rule. It counts
     as a confirmed non-cleared report in the routing below — and if the changed
     blocker is itself new work, the **Captured-new-work rule** routes it.
-  - _Completed or abandoned_: follow `gtd`'s completing and archiving steps in
-    full (close state `DONE` or `KILL`, including the state-marking and any
-    project-health check). If the capture names a still-wanted successor, the
-    **Captured-new-work rule** routes it.
+  - _Completed or abandoned_: for an active match, follow `gtd`'s completing
+    and archiving steps in full (close state `DONE` or `KILL`, including the
+    state-marking and any project-health check). For an incubated match (per
+    the **Somedaymaybe-membership check**), apply the somedaymaybe case's
+    matching found-flavor to this already-confirmed match, skipping that case's
+    locate-and-confirm preamble — _Achieved_ for completed (surface its body
+    notes, close `DONE` per the superseded-outcome rule, archive
+    unconditionally, then run its outcome through the flowchart) or _Abandoned_
+    for abandoned (`KILL`, archive unconditionally). If the capture names a
+    still-wanted successor, the **Captured-new-work rule** routes it (for an
+    _Achieved_ incubated match, the successor rides the re-entered run).
 
   For a reported `WAIT` with no matching open candidate, apply the
   unfound-item rule; the case's resolution is the matching flavor above. A
@@ -232,30 +268,48 @@ shows the outcome is still wanted).
     the _Dependency cleared_ flavor, or it named new work per the
     **Captured-new-work rule** (a _Partial progress_ blocker that changed into
     new work, or a _Completed or abandoned_ action whose still-wanted
-    outcome names its successor) — continue with the remaining reconcile cases
-    below;
+    outcome names its successor; an _Achieved_ incubated match's successor is
+    not a continue-trigger — it rides that match's re-entered run) — continue
+    with the remaining reconcile cases below;
   - otherwise the capture is `Trash` — go to Close.
+
+  Apply the **Outer-Close suppression rule**.
 
 - **Does it complete, abandon, or block a pre-existing `TODO`?** A
   `@waitingfor`-tagged match belongs to the `@waitingfor` resolution case
-  above, whatever its state. Confirm the matched `TODO` with the user, even
-  for a single candidate; if more than one open `TODO` qualifies, show the
+  above, whatever its state. Run the **Somedaymaybe-membership check** on each
+  match and disclose incubated provenance at confirmation: a _Completed or
+  abandoned_ report on an incubated match is closed in place by the _Completed
+  or abandoned_ flavor below (applying the somedaymaybe case's found-flavor),
+  while a _Newly blocked_ report applies here as usual and leaves it incubating
+  (skip the standalone `SCHEDULED` offer — an incubated item is never dated,
+  per `gtd`'s Tags and structure — and disclose that the re-parked item stays
+  off the active views until promoted). Confirm the matched `TODO`
+  with the user, even for a single candidate; if more than one open `TODO`
+  qualifies, show the
   candidates and confirm which (one, some, or all) the capture reports on —
   one report may complete several actions, and one new dependency may block
   several at once. Then apply the matching flavor below to each confirmed
   `TODO`, per what the capture reports for it:
-  - _Completed or abandoned_: follow `gtd`'s completing and archiving steps
-    in full (including the state-marking and any project-health check). If the
-    capture names a still-wanted successor, the **Captured-new-work rule**
-    routes it.
+  - _Completed or abandoned_: for an active match, follow `gtd`'s completing
+    and archiving steps in full (including the state-marking and any
+    project-health check). For an incubated match (per the
+    **Somedaymaybe-membership check**), apply the somedaymaybe case's matching
+    found-flavor to this already-confirmed match, skipping that case's
+    locate-and-confirm preamble — _Achieved_ for completed (surface its body
+    notes, close `DONE` per the superseded-outcome rule, archive
+    unconditionally, then run its outcome through the flowchart) or _Abandoned_
+    for abandoned (`KILL`, archive unconditionally). If the capture names a
+    still-wanted successor, the **Captured-new-work rule** routes it (for an
+    _Achieved_ incubated match, the successor rides the re-entered run).
   - _Newly blocked by a dependency_: park it, `TODO`→`WAIT` via
     `org-update-todo-state`, adding the dependency note (via `org-edit-body`)
-    per `gtd`'s States; for a standalone item, offer a `SCHEDULED` via
-    `org-set-planning` (per `gtd`'s States, the execution date by/at which it
-    must be unblocked and completed); for a project child, run `gtd`'s
-    project health check (when the capture's blocker is itself new work, that
-    check's filler/parked-ask provisioning is likewise deferred to the
-    **Captured-new-work rule** continuation).
+    per `gtd`'s States; for a standalone, non-incubated item, offer a
+    `SCHEDULED` via `org-set-planning` (per `gtd`'s States, the execution date
+    by/at which it must be unblocked and completed); for a project child, run
+    `gtd`'s project health check (when the capture's blocker is itself new
+    work, that check's filler/parked-ask provisioning is likewise deferred to
+    the **Captured-new-work rule** continuation).
 
   For a reported `TODO` with no matching open candidate, apply the
   unfound-item rule; the case's resolution is the matching flavor above. A
@@ -271,9 +325,12 @@ shows the outcome is still wanted).
   - else if any confirmed report is a continue-trigger for this case — it named
     new work per the **Captured-new-work rule** (a _Newly blocked_ report whose
     blocker is new work, or a _Completed or abandoned_ report whose
-    still-wanted outcome names its successor) — continue with the remaining
-    reconcile cases below;
+    still-wanted outcome names its successor; an _Achieved_ incubated match's
+    successor is not a continue-trigger — it rides that match's re-entered
+    run) — continue with the remaining reconcile cases below;
   - otherwise the capture is `Trash` — go to Close.
+
+  Apply the **Outer-Close suppression rule**.
 
 - **Does it match a `@checklist` trigger?** Disregard any `DONE`/`KILL` results
   from `org-grep`. If more than one open match remains, show all
@@ -304,37 +361,44 @@ shows the outcome is still wanted).
      inbox-clear rule.
 - **Is it itself a standing "if X then do Y" rule?** Capture it as a
   `@checklist`-tagged item, then go to Close.
-- **Does it realize or abandon a somedaymaybe item?** Confirm with the user —
-  including whether this is an Abandoned or Realized case if not already clear
-  from the capture text — then locate it by grepping its title or content terms
-  via `org-grep`; confirm `somedaymaybe` membership by checking `tags` on each
-  `headline_path` node (item and all ancestors — the tag inherits, and
-  `org-grep` reports local tags only, so the confirming tag may appear on an
-  ancestor, not the item itself). If more than one candidate passes the tag
-  check, show the list and ask the user which one this inbox item refers to.
-  Realize/abandon is terminal and preempts **Otherwise**, so before the action
-  below, first discharge any still-unrecorded named new work this capture
-  carries (per the **Captured-new-work rule**'s **Discharge**).
+- **Does it realize, activate, or abandon a somedaymaybe item?** Confirm with
+  the user which flavor applies — _Achieved_ (the outcome already happened),
+  _Activate now_ (start pursuing it), or _Abandoned_ — if not already clear
+  from the capture text; then locate it by grepping its title or content terms
+  via `org-grep`, confirming candidates per the **Somedaymaybe-membership
+  check**. If more than one candidate passes the check, show the list and ask
+  the user which one this inbox item refers to. All three flavors are terminal
+  and preempt **Otherwise**, so before the action below, first discharge any
+  still-unrecorded named new work this capture carries (per the
+  **Captured-new-work rule**'s **Discharge**).
   - If found in an exposed file — _Abandoned_: the capture is Trash; follow
     `gtd`'s completing and archiving steps with close state `KILL` (archive
     unconditionally — do not offer); go to Close.
-    _Realized_: read the somedaymaybe item's full body per `gtd`'s post-`org-grep`
-    reading guidance and surface any notes, links, or hints to the user to
-    inform the re-entered processing; follow `gtd`'s completing and archiving
-    steps (archive unconditionally — do not offer); the `DONE`+archive step
+    _Achieved_: read the somedaymaybe item's full body per `gtd`'s
+    post-`org-grep` reading guidance and surface any notes, links, or hints to
+    the user to inform the re-entered processing; follow `gtd`'s completing
+    and archiving steps with close state `DONE` per the superseded-outcome
+    rule (archive unconditionally — do not offer); the `DONE`+archive step
     precedes re-entry; the re-entered run's Close surfaces this somedaymaybe
-    resolution per the resolution-summary rule (which anchors each resolution to
-    the first Close at or after it); run the somedaymaybe's outcome through this
-    full flowchart independently (do not Close here for this somedaymaybe match;
-    the re-entered run provides its own Close).
+    resolution per the resolution-summary rule (which anchors each resolution
+    to the first Close at or after it); run the somedaymaybe's outcome through
+    this full flowchart independently (do not Close here for this somedaymaybe
+    match; the re-entered run provides its own Close).
+    _Activate now_: the item is already a fully-formed action or project —
+    promote it in place per `gtd`'s **Promoting a someday/maybe item** (the
+    user decides the target shape); do not close, archive, or re-create it.
+    The capture is Trash; go to Close, surfacing the promotion and its
+    returned `org-id://` URI.
   - If not found / unexposed: the item may be in an unexposed file or captured
     under a different headline. Surface the capture and ask the user to locate
     the somedaymaybe item. For _Abandoned_: treat the capture as Trash, inform
     the user the somedaymaybe entry may need manual archiving, and go to Close.
-    For _Realized_: ask what the somedaymaybe's outcome was, surface the
+    For _Achieved_: ask what the somedaymaybe's outcome was, surface the
     archiving step for manual execution; run the outcome through this full
     flowchart independently (do not Close here for this somedaymaybe match; the
-    re-entered run provides its own Close).
+    re-entered run provides its own Close). For _Activate now_: surface `gtd`'s
+    **Promoting a someday/maybe item** steps for manual execution, then go to
+    Close.
 - **Otherwise** — no case above sent the item to Close. Proceed to step 2 to
   process the item itself only if the capture is a fresh item (no reconcile
   case above applied to it) or it carries named new work not yet recorded (a
@@ -372,8 +436,24 @@ Capture the desired **outcome**, then:
 
 - **Existing project** — find it (`org-grep` / `org-read-outline`, or ask
   which) and review its plan (`org-read-headline`) for the right next action.
+  **Existing-project incubation check:** apply the **Somedaymaybe-membership
+  check** to the project itself (its just-read `headline_path`); when
+  incubated, disclose it and decide with the user before proceeding — activate
+  the project now per `gtd`'s **Promoting a someday/maybe item**, deferring its
+  project health check (Promoting step 4) filler-action / deliberately-parked
+  provisioning to the continued processing that records the described action
+  (per **Placement**; if the pass ends leaving the just-activated project no
+  live next action, the **Discharge** final backstop runs the deferred check
+  before Close), then continue, addressing it by the refile-returned
+  `org-id://` URI — or knowingly record the new work incubated under it,
+  disclosing it will surface only via the someday/maybe review, skipping step
+  4's `SCHEDULED` offers for it (an incubated item is never dated, per
+  `gtd`'s Tags and structure), and omitting step 4's projects-list
+  reassurance (an incubated project is off the projects list).
   Search for the described action via `org-grep`; consider only open-state
-  (`TODO`/`WAIT`) matches. **Parked-entry check:** when a bullet below
+  (`TODO`/`WAIT`) matches, applying the **Somedaymaybe-membership check** to
+  each and disclosing incubated provenance on any surfaced match.
+  **Parked-entry check:** when a bullet below
   identifies the entry — confirmed in place or just refiled — and it is in
   `WAIT` state, its "go to Close" first passes through this check: surface
   the parked status and any `Blocked by:` note (a legacy or stale park may
@@ -384,16 +464,37 @@ Capture the desired **outcome**, then:
   Evaluate the bullets in order; as soon as any returned result satisfies a
   bullet's condition, take its action and stop:
   - If one or more open matching entries are found inside the project subtree:
-    if exactly one, confirm with the user; if confirmed, the action is already
-    tracked — go to Close; otherwise, continue to the next bullet. If more than
-    one, show the list and ask which one is the already-tracked action; once
-    identified, confirm and go to Close. If the user indicates none of the listed
-    entries matches the described action, continue to the next bullet.
+    if exactly one, confirm with the user; if more than one, show the list and
+    ask which one is the already-tracked action. If the user indicates none of
+    the listed entries matches the described action, continue to the next
+    bullet. Once a match is confirmed, its provenance decides — for an active
+    match the action is already tracked, so go to Close; for a confirmed
+    incubated match (its confirming tag strictly below the project heading, or
+    local to the item — at or above the heading means the target project itself
+    is incubated, the **Existing-project incubation check**'s territory), first
+    offer promotion per `gtd`'s **Promoting a someday/maybe item** with the
+    project as its active home (out of the pocket to a direct child of the
+    project; for a local-tag-only match the container refile is inapplicable and
+    Promoting's step-2 tag fixup is the activation; the Parked-entry check
+    covers its state step), or keep it incubating — disclosing that the project
+    is then left without the described action on any active view, and offering
+    to instead treat the action as new via step 4, recording a body note (via
+    `org-edit-body`) on the incubated match that an active counterpart now
+    exists, citing the new item's returned `org-id://` URI — then go to Close.
   - If one or more open matching entries are found outside the project subtree
     with no `project`-tagged ancestor (truly standalone): if more than one, show
-    the list and ask which one to refile before proceeding. Confirm with the
-    user; if confirmed, move it under the project with `org-refile-headline` and
-    go to Close; otherwise, continue to the next bullet.
+    the list and ask which one is the already-tracked action before proceeding.
+    Confirm with the user. If the user indicates none matches the described
+    action, continue to the next bullet. Once a match is confirmed, an active
+    match moves under the project with `org-refile-headline` — go to Close. For
+    a confirmed incubated match, first offer promotion under the project per
+    `gtd`'s **Promoting a someday/maybe item** with the project as its active
+    home (the Parked-entry check covers its state step), or keep it incubating
+    in place — disclosing that the project is then left without the described
+    action on any active view, and offering to instead treat the action as new
+    via step 4, recording a body note (via `org-edit-body`) on the incubated
+    match that an active counterpart now exists, citing the new item's returned
+    `org-id://` URI — then go to Close.
   - If open matching entries are found under a different project's subtree: if
     matches span more than one owning project, show all (owning project, entry)
     pairs and ask the user which to handle first (or that none is the described
@@ -401,11 +502,21 @@ Capture the desired **outcome**, then:
     the same owning project, show the list and ask which entry to handle (or that
     none is the described action). Once a single entry is identified, read its
     owning project from `headline_path`, surface the target project and the
-    owning project of the selected match to the user, and ask whether to refile
-    the action here (creating a new entry for the project it was moved from if
-    needed) or leave it in place (go to Close; the action is already tracked). If
-    the user indicates none of the entries is the described action, treat the
-    action as new and pass it to step 4.
+    owning project of the selected match to the user — disclosing when the
+    owning project is incubated, and that refiling the action out changes its
+    parked plan — and ask whether to refile the action here (for an incubated
+    match per `gtd`'s **Promoting a someday/maybe item**, with the target
+    project as its active home; creating a new entry — or, for an incubated
+    owner, a body note — for the project it was moved from if needed) or leave
+    it in place (go to Close; for an active match the action is already
+    tracked, while for an incubated match this means keeping it incubating — off
+    every active view until promoted or the someday/maybe review — leaving the
+    target project without the described action; offer to instead treat the
+    action as new and pass it to step 4, recording a body note (via
+    `org-edit-body`) on the incubated match that an active counterpart now
+    exists, citing the new item's returned `org-id://` URI). If the user
+    indicates none of the entries is the described action, treat the action as
+    new and pass it to step 4.
   - **Otherwise** (no remaining open match the user accepts as the described
     action) — treat the action as new and pass it to step 4.
 
@@ -432,10 +543,24 @@ own 2-minute assessment happens only inside Delegate.
   as **Longer → Delegate** so the `@waitingfor` tracker is recorded — do not
   do-it-now-and-Close. Otherwise confirm, then do it now (within your tools, or
   prompt the user to do it). The action was never recorded, so there is nothing
-  to mark `DONE` or archive: if standalone, go to Close; if it belongs to a
-  project (just created, or the existing one from step 3), apply `gtd`'s
-  "caller that performed an action without recording it" rule to that project,
-  then go to Close. If it cannot be done now — outside your tools, the user
+  to mark `DONE` or archive — **unless** step 4 was entered via a treat-as-new
+  offer on a confirmed incubated match (step 3): that incubated copy is its
+  recording, so decide with the user per `gtd`'s superseded-outcome rule to
+  close it `DONE` (via its close case) or knowingly keep it incubating when its
+  scope outlives the just-done action, rather than treating it as unrecorded. In
+  this sub-path no new item or `org-id://` URI is created, so step 3's promised
+  counterpart body note is not written — this incubated copy's disposition here
+  is the entire record.
+  Then: if standalone, go to Close; if it belongs to a project (just created,
+  or the existing one from step 3), apply `gtd`'s "caller that performed an
+  action without recording it" rule to that project, then go to Close —
+  **except** when the treat-as-new incubated copy above was just closed `DONE`
+  via a **Project child** close on that same project (an inside-the-project
+  match, per step 3's first bullet): that close already ran the project's
+  outcome decision / health check, so skip the rule and go straight to Close.
+  (A standalone-match or different-project `DONE` close did not resolve this
+  project, so the rule still applies.) If it
+  cannot be done now — outside your tools, the user
   won't do it this moment, or you prompted the user but they did not confirm
   completing it — treat it as **Longer** below so the action
   is captured, not dropped (the full three-way choice applies;
@@ -570,8 +695,22 @@ own 2-minute assessment happens only inside Delegate.
       independently of per-item close) — do not loop the full per-item project
       close over each, and do not treat "close the tracker last" as equivalent
       (closing any first item still resolves the project while a sibling is
-      open). Then go to Close. If it cannot be done now, leave the recorded
-      item(s) unchanged and go to Close.
+      open). For a **treat-as-new** entry (step 3), also settle the incubated
+      match once the counterpart(s) are disposed: a counterpart that ended
+      closed (`DONE`/`KILL`) means the action was completed or mooted, so
+      surface the incubated match's superseded-outcome decision as under
+      **Under 2 minutes** above — keep it incubating when its scope outlives the
+      done action, or close it `DONE`; when a closed incubated match shares a
+      project with a recorded counterpart, mark both to their decided states and
+      resolve that shared project **once** (per the multi-item rule above), not
+      with a second per-item close — and write **no** counterpart body note for
+      that now-closed counterpart. A counterpart left open (a `@waitingfor`
+      tracker flipped `WAIT`→`TODO`) keeps the incubated match incubating and
+      takes step 3's counterpart body note (via `org-edit-body`) citing that
+      still-open tracker. Then go to Close. If it cannot be done now, leave the
+      recorded item(s) unchanged — a treat-as-new entry's still-open counterpart
+      then takes step 3's counterpart body note (via `org-edit-body`) citing
+      it — and go to Close.
     - _Recorded Google Calendar event_: first do the action now. If it cannot
       be done now, leave the event in place and go to Close. Only on confirmed
       completion, surface the full command for the user to run (gcalcli always
@@ -579,7 +718,15 @@ own 2-minute assessment happens only inside Delegate.
       title, and times from creation:
       `gcalcli delete --calendar <calendar> "<title>" "<start>" "<end>"`
 
-  After any of the above, go to Close.
+  After any of the above, go to Close. When step 4 was entered via a
+  treat-as-new offer on a confirmed incubated match (step 3) and a new item was
+  recorded above **and left open** (the Delegate and Defer cases — the
+  **Revised to < 2 min** sub-branch settles its own note and the incubated
+  match's disposition above), first write step 3's promised counterpart body
+  note (via `org-edit-body`) on the incubated match — that an active
+  counterpart now exists — citing the recorded action's returned `org-id://`
+  URI (for the Delegate branch, the `@waitingfor` tracker's URI), then go to
+  Close.
 
 ## Close
 
