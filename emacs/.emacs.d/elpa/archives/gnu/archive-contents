@@ -513,7 +513,7 @@
       (:authors ("Ingo Lohmar" . "i.lohmar@gmail.com"))
       (:commit . "e62157d43b2c874d2edbd547c3bdfb05d0a7ae5c"))])
  (compat
-  . [(31 0 0 1) ((emacs (25 1))) "Emacs Lisp Compatibility Library"
+  . [(31 0 0 2) ((emacs (25 1))) "Emacs Lisp Compatibility Library"
      tar
      ((:url . "https://github.com/emacs-compat/compat")
       (:keywords "lisp" "maint")
@@ -521,7 +521,7 @@
 		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Philip Kaludercic" . "philipk@posteo.net")
 		("Daniel Mendler" . "mail@daniel-mendler.de"))
-      (:commit . "b5b48183689b536f72b1214106afeabc465da9d4"))])
+      (:commit . "df03e91f1fc47503ca71e11dd507ed18ca8b5ab0"))])
  (cond-star
   . [(1 0) ((emacs (24 3))) "Extended form of `cond' construct" tar
      ((:maintainer "Richard Stallman" . "rms@gnu.org")
@@ -1886,14 +1886,14 @@
       (:authors ("Sean Whitton" . "spwhitton@spwhitton.name"))
       (:commit . "00b8f65effe4f2673e6450d70000644b266aa78a"))])
  (llm
-  . [(0 31 1)
+  . [(0 31 2)
      ((emacs (28 1)) (plz (0 8)) (plz-event-source (0 1 1))
       (plz-media-type (0 2 1)) (compat (29 1)))
      "Interface to pluggable llm backends" tar
      ((:url . "https://github.com/ahyatt/llm")
       (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
-      (:commit . "34ac61091994c10bda45eed54433a1a87ca26af1"))])
+      (:commit . "2fe1f99a51e66c1f50e2c0b603b949783b9320f0"))])
  (lmc
   . [(1 4) nil "Little Man Computer in Elisp" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -3684,6 +3684,13 @@
       (:maintainer "Stephen Leake" . "stephen_leake@stephe-leake.org")
       (:authors ("Stephen Leake" . "stephen_leake@stephe-leake.org"))
       (:commit . "2d58879cea26b8a3b573d084d149dea94f93dfb8"))])
+ (with-command-redo
+  . [(0 2) ((emacs (29 1))) "Repeat commands with automatic undo" tar
+     ((:url
+       . "https://codeberg.org/ideasman42/emacs-with-command-redo")
+      (:maintainer "Campbell Barton" . "ideasman42@gmail.com")
+      (:authors ("Campbell Barton" . "ideasman42@gmail.com"))
+      (:commit . "b3e3c86e2cbeb097552a1bff000905ad28de7907"))])
  (wpuzzle
   . [(1 1) nil "find as many word in a given time" tar
      ((:maintainer "Ivan Kanis" . "ivan@kanis.fr")

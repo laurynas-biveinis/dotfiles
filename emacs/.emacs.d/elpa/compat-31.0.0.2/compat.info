@@ -1,4 +1,5 @@
-This is compat.info, produced by makeinfo version 7.2 from compat.texi.
+This is compat.info, produced by makeinfo version 7.1.1 from
+compat.texi.
 
 Copyright © 2022-2026 Free Software Foundation, Inc.
 
@@ -26,7 +27,7 @@ File: compat.info,  Node: Top,  Next: Introduction,  Up: (dir)
 
 This manual documents the usage of the "Compat" Emacs lisp library, the
 forward-compatibility library for Emacs Lisp, corresponding to version
-31.0.0.1.
+31.0.0.2.
 
    Copyright © 2022-2026 Free Software Foundation, Inc.
 
@@ -66,6 +67,7 @@ Support
 * Emacs 30.1::                   Compatibility support for Emacs 30.1
 * Emacs 31.1::                   Compatibility support for Emacs 31.1
 
+
 
 File: compat.info,  Node: Introduction,  Next: Support,  Prev: Top,  Up: Top
 
@@ -104,7 +106,7 @@ as a dependency in the header.  The version of the Compat library
 mirrors the version of Emacs releases.  The current version of Compat
 corresponds to the current Emacs release.
 
-     ;; Package-Requires: ((emacs "25.1") (compat "31.0.0.1"))
+     ;; Package-Requires: ((emacs "25.1") (compat "31.0.0.2"))
 
    There is no need to depend on ‘emacs 25.1’ specifically.  One can
 choose any newer version, if features not provided by Compat necessitate
@@ -3315,28 +3317,28 @@ Appendix B Variable Index
 * trusted-content:                       Emacs 30.1.          (line  14)
 * untrusted-content:                     Emacs 29.1.          (line  17)
 
+
 
 Tag Table:
-Node: Top826
-Node: Introduction2319
-Node: Overview2479
-Node: Usage3002
-Node: Limitations7040
-Node: Support11899
-Node: Emacs 26.112549
-Node: Emacs 27.129811
-Node: Emacs 28.150174
-Node: Emacs 29.170324
-Node: Emacs 30.1108461
-Node: Emacs 31.1123287
-Node: Development132639
-Node: Function Index134218
-Node: Variable Index151837
+Node: Top828
+Node: Introduction2322
+Node: Overview2482
+Node: Usage3005
+Node: Limitations7043
+Node: Support11902
+Node: Emacs 26.112552
+Node: Emacs 27.129814
+Node: Emacs 28.150177
+Node: Emacs 29.170327
+Node: Emacs 30.1108464
+Node: Emacs 31.1123290
+Node: Development132642
+Node: Function Index134221
+Node: Variable Index151840
 
 End Tag Table
 
 
 Local Variables:
 coding: utf-8
-Info-documentlanguage: en
 End:
