@@ -157,6 +157,7 @@ xattr -dr com.apple.quarantine "/Applications/Disk Inventory X.app"
 duti -s org.videolan.vlc .MP4 all
 duti -s org.videolan.vlc .mp3 all
 duti -s org.videolan.vlc .m4a all
+duti -s org.videolan.vlc .m4v all
 duti -s org.videolan.vlc .m3u all
 duti -s org.videolan.vlc .avi all
 
