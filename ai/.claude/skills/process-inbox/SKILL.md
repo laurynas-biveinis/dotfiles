@@ -429,7 +429,37 @@ Ask for the very next visible, physical action.
 
 ### One action or many?
 
-A **single action** is not a project — carry it directly to step 4.
+**Parked-entry check:** when a duplicate search below — the single-action search
+or the **Existing project** path's — confirms an open match (in place or just
+refiled) in `WAIT` state, its "go to Close" first passes through this check:
+surface the parked status and any `Blocked by:` note (a legacy or stale park may
+carry none); if the user says the dependency has cleared, offer `WAIT`→`TODO`,
+handling the dependency note per `gtd`'s States; otherwise leave it parked — or,
+if the user instead names a different next action, treat that action as new and
+pass it to step 4. (The single-action path has no project to refile into, so
+only the in-place case arises there.)
+
+A **single action** is not a project, but first confirm it is not already
+tracked — the same duplicate search the **Existing project** path runs, without
+a project to refile matches into. Search for the described action via
+`org-grep`; consider only open-state (`TODO`/`WAIT`) matches, applying the
+**Somedaymaybe-membership check** to each and disclosing incubated provenance on
+any surfaced match. Confirm any surfaced match with the user (standalone or
+under any project; for a single candidate too — for several, show the list and
+ask which, if any, is the same action), then act by outcome:
+
+- **Confirmed active match** — the action is already tracked, so the capture is
+  a duplicate: record nothing and go to Close (for a `WAIT` match, that go to
+  Close first passes through the **Parked-entry check**).
+- **Confirmed incubated match** — offer promotion per `gtd`'s **Promoting a
+  someday/maybe item** (the user decides the target shape and home; the
+  **Parked-entry check** covers its state step), or keep it incubating —
+  disclosing that it then stays off every active view until promoted, and
+  offering to instead treat the action as new via step 4, recording a body note
+  (via `org-edit-body`) on the incubated match that an active counterpart now
+  exists, citing the new item's returned `org-id://` URI — then go to Close.
+- **Otherwise** (no open match, or the user accepts none) — carry the action to
+  step 4.
 
 If reaching the outcome needs **more than one** action, it is a **project**.
 Capture the desired **outcome**, then:
@@ -452,15 +482,10 @@ Capture the desired **outcome**, then:
   reassurance (an incubated project is off the projects list).
   Search for the described action via `org-grep`; consider only open-state
   (`TODO`/`WAIT`) matches, applying the **Somedaymaybe-membership check** to
-  each and disclosing incubated provenance on any surfaced match.
-  **Parked-entry check:** when a bullet below
-  identifies the entry — confirmed in place or just refiled — and it is in
-  `WAIT` state, its "go to Close" first passes through this check: surface
-  the parked status and any `Blocked by:` note (a legacy or stale park may
-  carry none); if the user says the dependency
-  has cleared, offer `WAIT`→`TODO`, handling the dependency note per `gtd`'s
-  States; otherwise leave it parked — or, if the user instead names a
-  different next action, treat that action as new and pass it to step 4.
+  each and disclosing incubated provenance on any surfaced match. The
+  **Parked-entry check** (defined at the top of this section) wraps the "go to
+  Close" of any bullet below that confirms a `WAIT` match, in place or just
+  refiled.
   Evaluate the bullets in order; as soon as any returned result satisfies a
   bullet's condition, take its action and stop:
   - If one or more open matching entries are found inside the project subtree:
