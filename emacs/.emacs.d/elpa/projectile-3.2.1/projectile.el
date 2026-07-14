@@ -5,8 +5,8 @@
 ;; Author: Bozhidar Batsov <bozhidar@batsov.dev>
 ;; URL: https://github.com/bbatsov/projectile
 ;; Keywords: project, convenience
-;; Package-Version: 3.2.0
-;; Package-Revision: 6ed57a4d2f1a
+;; Package-Version: 3.2.1
+;; Package-Revision: 8ac2834f1f70
 ;; Package-Requires: ((emacs "28.1") (compat "30"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -1455,7 +1455,7 @@ Should be set via .dir-locals.el.")
 
 ;;; Version information
 
-(defconst projectile-version "3.2.0"
+(defconst projectile-version "3.2.1"
   "The current version of Projectile.")
 
 (defun projectile--pkg-version ()
@@ -7036,10 +7036,12 @@ This is a subset of `grep-read-files', where either a matching entry from
 
 (defun projectile--search-tool-tag (tool)
   "Return a faced `[TOOL]' tag for a search prompt.
-Used where the backend varies (e.g. `projectile-search' or the
-reviewable search's ripgrep/elisp fast-path) so the prompt makes clear
-which tool will run."
-  (format "[%s]" (propertize tool 'face 'projectile-search-prompt-tool)))
+TOOL is the backend, given as a symbol or a string: `projectile-search'
+passes the backend name symbol while the reviewable search passes a
+\"ripgrep\"/\"elisp\" string.  Used where the backend varies so the
+prompt makes clear which tool will run."
+  (format "[%s]" (propertize (format "%s" tool)
+                             'face 'projectile-search-prompt-tool)))
 
 (defun projectile--read-search-string-with-default (prompt-label)
   "Read a search string, defaulting to the symbol or region at point.
