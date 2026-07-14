@@ -4,8 +4,8 @@
 
 ;; Author: Laurynas Biveinis <laurynas.biveinis@gmail.com>
 ;; Keywords: convenience, files, matching, outlines
-;; Package-Version: 20260711.718
-;; Package-Revision: 12562f4394c6
+;; Package-Version: 20260714.1520
+;; Package-Revision: 29a2310ed172
 ;; Package-Requires: ((emacs "28.2") (mcp-server-lib "0.4.0"))
 ;; Homepage: https://github.com/laurynas-biveinis/org-mcp
 
@@ -499,13 +499,20 @@ OPERATION is a string describing the operation for error messages."
          operation)))))
 
 (defmacro org-mcp--with-org-file (file-path &rest body)
-  "Execute BODY in a temp Org buffer with file at FILE-PATH."
+  "Execute BODY in a temp Org buffer with file at FILE-PATH.
+`default-directory' is set to FILE-PATH's directory so a relative
+`#+SETUPFILE' resolves against the file's own directory during
+`org-mode' setup, as when Emacs visits the file."
   (declare (indent 1) (debug (form body)))
-  `(with-temp-buffer
-     (insert-file-contents ,file-path)
-     (org-mode)
-     (goto-char (point-min))
-     ,@body))
+  (let ((file-var (gensym "file-path")))
+    `(let ((,file-var ,file-path))
+       (with-temp-buffer
+         (insert-file-contents ,file-var)
+         (setq default-directory
+               (file-name-directory (expand-file-name ,file-var)))
+         (org-mode)
+         (goto-char (point-min))
+         ,@body))))
 
 (defmacro org-mcp--with-visiting-org-file
     (file-path operation &rest body)
@@ -609,23 +616,22 @@ cannot poison a successful resolution.
 Callers translate the status into a tool error or a resource error
 of the appropriate shape."
   (if-let* ((id-file (org-id-find-id-file id)))
-      (if-let* ((allowed-file (org-mcp--find-allowed-file id-file)))
-          (cons :found allowed-file)
-        (cons :disallowed nil))
+    (if-let* ((allowed-file (org-mcp--find-allowed-file id-file)))
+      (cons :found allowed-file)
+      (cons :disallowed nil))
     (if-let* ((file
                (catch 'found
                  (dolist (allowed-file org-mcp-allowed-files)
-                   (when (file-exists-p allowed-file)
-                     (org-mcp--with-org-file allowed-file
-                       (when (org-find-property "ID" id)
-                         (throw 'found
-                                (expand-file-name
-                                 allowed-file)))))))))
-        (progn
-          (when org-id-track-globally
-            (ignore-errors
-              (org-id-add-location id file)))
-          (cons :found file))
+                   (let ((abs (expand-file-name allowed-file)))
+                     (when (file-exists-p abs)
+                       (org-mcp--with-org-file abs
+                         (when (org-find-property "ID" id)
+                           (throw 'found abs)))))))))
+      (progn
+        (when org-id-track-globally
+          (ignore-errors
+            (org-id-add-location id file)))
+        (cons :found file))
       (cons :missing nil))))
 
 (defun org-mcp--find-allowed-file-with-id (id)
@@ -655,11 +661,11 @@ Throws an error if neither prefix matches."
   `(if-let* ((id
               (org-mcp--extract-uri-suffix
                ,uri org-mcp--uri-id-prefix)))
-       ,id-body
+     ,id-body
      (if-let* ((headline
                 (org-mcp--extract-uri-suffix
                  ,uri org-mcp--uri-headline-prefix)))
-         ,headline-body
+       ,headline-body
        (org-mcp--tool-validation-error
         "Invalid resource URI format: %s"
         ,uri))))
@@ -827,6 +833,12 @@ resolve to equivalent (FILE . HEADLINE) pairs."
                  (and (> (length fragment) 0) fragment)))))
     (cons file headline)))
 
+(defun org-mcp--unhex-path-segment (segment)
+  "Percent-decode SEGMENT and decode the result as UTF-8.
+`url-unhex-string' returns unibyte raw bytes; the UTF-8 decode is
+required so a non-ASCII title round-trips against multibyte Org text."
+  (decode-coding-string (url-unhex-string segment) 'utf-8))
+
 (defun org-mcp--parse-resource-uri (uri)
   "Parse URI and return (file-path . headline-path).
 Validates file access and returns expanded file path."
@@ -843,7 +855,7 @@ Validates file access and returns expanded file path."
         (setq headline-path
               (when headline-path-str
                 (mapcar
-                 #'url-unhex-string
+                 #'org-mcp--unhex-path-segment
                  (split-string headline-path-str "/")))))
       ;; Handle org-id:// URIs
       (progn
@@ -886,7 +898,8 @@ file is not in the allowed list."
         (when path-str
           (setq parent-path
                 (mapcar
-                 #'url-unhex-string (split-string path-str "/")))))
+                 #'org-mcp--unhex-path-segment
+                 (split-string path-str "/")))))
       ;; Handle org-id:// URIs
       (progn
         (setq file-path (org-mcp--find-allowed-file-with-id id))
@@ -963,7 +976,7 @@ Otherwise, navigates using HEADLINE-PATH as title hierarchy."
   (if is-id
       ;; ID case - headline-path contains single ID
       (if-let* ((pos (org-find-property "ID" (car headline-path))))
-          (goto-char pos)
+        (goto-char pos)
         (org-mcp--id-not-found-error (car headline-path)))
     ;; Path case - headline-path contains title hierarchy
     (unless (org-mcp--navigate-to-headline headline-path)
@@ -2188,7 +2201,7 @@ The filename parameter includes both file and headline path."
          (headline-path
           (when headline-path-str
             (mapcar
-             #'url-unhex-string
+             #'org-mcp--unhex-path-segment
              (split-string headline-path-str "/")))))
     (if headline-path
         (let ((content
@@ -2331,23 +2344,28 @@ MCP Parameters:
         (org-mcp--validate-body-no-headlines
          new_body (org-current-level))
 
-        ;; Skip past headline and properties
-        (org-end-of-meta-data t)
-
-        ;; Get body boundaries
-        (let ((body-begin (point))
-              (body-end nil)
+        ;; Compute the node's own section end from its heading BEFORE
+        ;; `org-end-of-meta-data' moves point: for a drawer-only node
+        ;; followed by another heading it leaves point on that heading,
+        ;; so deriving `body-end' afterwards would capture the sibling.
+        (let ((body-end
+               (save-excursion
+                 (if (org-goto-first-child)
+                     ;; Has children - body ends before first child
+                     (point)
+                   ;; No children - body extends to end of subtree
+                   (org-end-of-subtree t)
+                   (point))))
               (body-content nil)
-              (occurrence-count 0))
+              (occurrence-count 0)
+              body-begin)
 
-          ;; Find end of body (before next headline or end of subtree)
-          (save-excursion
-            (if (org-goto-first-child)
-                ;; Has children - body ends before first child
-                (setq body-end (point))
-              ;; No children - body extends to end of subtree
-              (org-end-of-subtree t)
-              (setq body-end (point))))
+          ;; Skip past headline and its planning/drawers
+          (org-end-of-meta-data t)
+
+          ;; Clamp so a drawer-only section never spills past its own
+          ;; end into the next heading.
+          (setq body-begin (min (point) body-end))
 
           ;; Extract body content
           (setq body-content
@@ -2398,15 +2416,18 @@ MCP Parameters:
              occurrence-count)))
 
           ;; Perform replacement.
-          ;; `save-excursion' keeps point inside the edit target's
-          ;; entry so `org-id-get-create' (in `complete-and-save')
-          ;; resolves to the edit target.  Without it, body
-          ;; insertion lands point in a different entry -- the
-          ;; parent's first child (when the target has children) or
-          ;; a strictly-deeper heading inside the new body
-          ;; (permitted by `validate-body-no-headlines') -- and
-          ;; `org-back-to-heading' inside `org-id-get-create'
-          ;; would resolve to that entry.
+          ;; Anchor point at `body-begin', which is always within the
+          ;; edit target's own section (`org-end-of-meta-data' can leave
+          ;; point on the next heading for a drawer-only node).
+          ;; `save-excursion' then keeps point inside the target entry so
+          ;; `org-id-get-create' (in `complete-and-save') resolves to the
+          ;; edit target.  Without it, body insertion lands point in a
+          ;; different entry -- the parent's first child (when the target
+          ;; has children) or a strictly-deeper heading inside the new
+          ;; body (permitted by `validate-body-no-headlines') -- and
+          ;; `org-back-to-heading' inside `org-id-get-create' would
+          ;; resolve to that entry.
+          (goto-char body-begin)
           (save-excursion
             (org-mcp--replace-body-content
              old_body
