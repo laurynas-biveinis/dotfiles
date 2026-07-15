@@ -4,9 +4,10 @@ description: >-
   Facilitate a full GTD weekly review over the org-mcp Org files and Google
   Calendar, one section at a time: catch calendar items that slipped, look ahead
   a month, and review every project, standalone next action, waiting-for,
-  checklist trigger, and someday/maybe item. Assumes the inbox is already
-  processed and "empty your head" is done. Calls gtd for all Org mechanics. Use
-  when the user asks to run or do their weekly review.
+  checklist trigger, and someday/maybe item, then close with a creative,
+  whole-system synthesis. Assumes the inbox is already processed and "empty your
+  head" is done. Calls gtd for all Org mechanics. Use when the user asks to run
+  or do their weekly review.
 argument-hint: optional look-back start date (e.g. 2026-06-01); default derives from the last review
 allowed-tools: >-
   Skill(gtd)
@@ -69,7 +70,7 @@ newest DONE logbook entry (via its `uri`). The calendar look-back start is
 default to 14 days ago. However overdue the review, cover the **entire** window
 in full — a long gap is never a reason to summarize or skip.
 
-Then run the nine steps in order.
+Then run the ten steps in order.
 
 ## 1. Inbox
 
@@ -199,6 +200,39 @@ file's Someday/maybe container (`org-read-headline`) for keyword-less children
 the view cannot show, and normalize each with the user per `gtd`'s **Promoting
 a someday/maybe item** step 3 (assign `TODO`/`WAIT`, and clear any date to keep
 it incubating) or close it.
+
+## 10. Be creative and courageous
+
+This step is GTD's canonical closing move, right after the someday/maybe review:
+_"Any new, wonderful, hare-brained, creative, thought-provoking, risk-taking
+ideas to add into your system???"_ It is **synthesis, not re-review**: do not
+re-litigate items already handled in steps 1–9; step back to the whole and name
+what the siloed passes structurally cannot.
+
+Two voices:
+
+1. **Invite the user's own ideas.** Ask, in the spirit of the canonical prompt,
+   for any bold, half-formed, or long-deferred idea the review stirred up. Capture
+   each via `Skill(process-inbox)` or record it directly through `gtd`.
+2. **Offer an outsider read.** Having just seen the entire system this session,
+   give a candid, fresh-eyes synthesis as fuel for the same creative step. This
+   is advisory — you propose, the user disposes. Surface:
+   - **Blind spots** — commitments or areas conspicuously absent or untouched.
+   - **Synergies** — one next action that would unblock several projects; two
+     projects that overlap or should merge; a waiting-for that gates other work.
+   - **Stale / zombie projects** — nominally alive but drifting, candidates to
+     `KILL` rather than perpetually carry.
+   - **Overcommitment & imbalance** — too many active projects to be real; skew
+     across the user's areas of focus (e.g. all work, no personal).
+   - **Low-hanging fruit** — quick wins visible only now that all is in view.
+   - **Bigger picture** — are the active projects the _right_ things, and do they
+     ladder up to anything.
+
+Present the outsider read as a concise list of observations (batch for pacing per
+the one-section-at-a-time convention). For each, the user decides whether to act;
+route any resulting capture or edit through `gtd` / `Skill(process-inbox)` exactly
+as the other steps do, and add it to the running change list for the close. A
+purely-advisory observation the user declines needs no Org change.
 
 ## Close
 
