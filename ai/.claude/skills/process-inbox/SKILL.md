@@ -20,6 +20,8 @@ allowed-tools: >-
   mcp__org-mcp__org-grep
   mcp__org-mcp__org-find-tagged-ancestor
   mcp__org-mcp__org-get-tag-config
+  mcp__org-mcp__org-get-agenda-config
+  mcp__org-mcp__org-get-agenda
   mcp__org-mcp__org-add-todo
   mcp__org-mcp__org-update-todo-state
   mcp__org-mcp__org-set-planning
@@ -72,26 +74,27 @@ Restate the item and its desired outcome; if unclear, ask the user.
 
 **Reconcile against existing items** (per `gtd`). Begin by running `org-grep`
 with terms drawn from the capture (sender, subject nouns, identifiers); drive
-the case checks below from its results. Do not ask the user whether the item
-relates to existing work as an open question — ask only to confirm specific
-matches (`org-grep` covers only `org-mcp`-exposed files, so also ask / surface
-for any private Org files outside that set). Confirm the matched item with the
-user before any reconcile action that changes existing Org state — resolving
-or updating a `@waitingfor` item or a `WAIT`, completing, `KILL`ing, or
-parking a pre-existing `TODO`, or firing a `@checklist`'s "then Y". Don't
-auto-apply a second-level trigger either: surface chained triggers to the
-user rather than acting on them automatically. Check these cases in order;
-each is terminal (routes to Close) unless its bullet says otherwise, and the
-final **Otherwise** routes to step 2 or Close per its bullet. Exception: a
-`@waitingfor` resolution or status update, a `WAIT` unblock (`WAIT`→`TODO`),
-and any reconcile action that names new work per the
-**Captured-new-work rule** below, continue through the
-remaining checks rather than ending at Close — so one capture can resolve or
-park a delegation, clear a dependency, or route named new work to
-**Otherwise** → step 2, and still match any later terminal case whose Close
-then applies — a firing terminal case first discharges any still-unrecorded
-named new work (per the **Captured-new-work rule**'s **Discharge**) before it
-fires, so preemption never strands it.
+the item-matching case checks below — each seeking a specific known item the
+capture reports on — from its results. The `@checklist` case does **not** use
+those results: a trigger is matched by enumeration, per `gtd`'s "Work triggers".
+Do not ask the user whether the item relates to existing work as an open
+question — ask only to confirm specific matches (`org-grep` covers only
+`org-mcp`-exposed files, so also ask / surface for any private Org files outside
+that set). Confirm the matched item with the user before any reconcile action
+that changes existing Org state — resolving or updating a `@waitingfor` item or
+a `WAIT`, completing, `KILL`ing, or parking a pre-existing `TODO`, or firing a
+`@checklist`'s "then Y". Don't auto-apply a second-level trigger either: surface
+chained triggers to the user rather than acting on them automatically. Check
+these cases in order; each is terminal (routes to Close) unless its bullet says
+otherwise, and the final **Otherwise** routes to step 2 or Close per its bullet.
+Exception: a `@waitingfor` resolution or status update, a `WAIT` unblock
+(`WAIT`→`TODO`), and any reconcile action that names new work per the
+**Captured-new-work rule** below, continue through the remaining checks rather
+than ending at Close — so one capture can resolve or park a delegation, clear a
+dependency, or route named new work to **Otherwise** → step 2, and still match
+any later terminal case whose Close then applies — a firing terminal case first
+discharges any still-unrecorded named new work (per the **Captured-new-work
+rule**'s **Discharge**) before it fires, so preemption never strands it.
 
 **Archived-project addressing rule:** `org-archive-subtree` returns the
 archived headline's `org-id://` `uri` and the absolute `archive_file` path.
@@ -332,26 +335,27 @@ no Close instead.
 
   Apply the **Outer-Close suppression rule**.
 
-- **Does it match a `@checklist` trigger?** Disregard any `DONE`/`KILL` results
-  from `org-grep`. If more than one open match remains, show all
-  candidates to the user and confirm which (one, some, or all) to apply before
-  proceeding — multiple rules may legitimately all match one capture. If the
-  user applies none of the matched triggers (all matches were false positives),
-  this case does not apply: fall through to the remaining reconcile cases in
-  order (standing-rule → somedaymaybe → **Otherwise**), stopping at the first
-  that applies — do not enter sub-steps 1–4 or emit a Close. Otherwise confirm
-  with the user; this firing preempts **Otherwise**, so first discharge any
-  still-unrecorded named new work this capture carries (per the
-  **Captured-new-work rule**'s **Discharge**), then repeat sub-steps 1–4 for
+- **Does it match a `@checklist` trigger?** Match the capture against the
+  trigger headlines by enumeration, per `gtd`'s "Work triggers" — not from step
+  1's `org-grep` results; that section drops retired triggers. If more than one
+  trigger matches, show all candidates to the user and confirm which (one, some,
+  or all) to apply before proceeding — multiple rules may legitimately all match
+  one capture. If the user applies none of the matched triggers (all matches
+  were false positives), this case does not apply: fall through to the remaining
+  reconcile cases in order (standing-rule → somedaymaybe → **Otherwise**),
+  stopping at the first that applies — do not enter sub-steps 1–4 or emit a
+  Close. Otherwise confirm with the user; this firing preempts **Otherwise**, so
+  first discharge any still-unrecorded named new work this capture carries (per
+  the **Captured-new-work rule**'s **Discharge**), then repeat sub-steps 1–4 for
   each selected trigger:
   1. The matched trigger input is Trash — record nothing for this matched piece.
   2. Read the confirmed trigger item's full body via its URI (per `gtd`'s
-     post-`org-grep` reading guidance) to obtain its complete "then Y" clause.
-     Apply it; run each resulting outcome through this full flowchart
-     independently. Each gets its own Close. On re-entry, always run the
-     re-entered item through the full flowchart from step 1; if the `@checklist`
-     case matches at re-entry, surface the chained trigger to the user (do not
-     auto-apply or recurse) and fall through to the remaining cases.
+     reading guidance) to obtain its complete "then Y" clause. Apply it; run
+     each resulting outcome through this full flowchart independently. Each gets
+     its own Close. On re-entry, always run the re-entered item through the full
+     flowchart from step 1; if the `@checklist` case matches at re-entry,
+     surface the chained trigger to the user (do not auto-apply or recurse) and
+     fall through to the remaining cases.
   3. In all re-entered Closes, apply the inbox-clear rule and the
      resolution-summary rule (the latter surfaces each earlier in-pass
      event exactly once, in the first Close at or after it).
@@ -360,7 +364,8 @@ no Close instead.
      sub-step 2), emit a Close now, applying the resolution-summary rule and the
      inbox-clear rule.
 - **Is it itself a standing "if X then do Y" rule?** Capture it as a
-  `@checklist`-tagged item, then go to Close.
+  `@checklist`-tagged item per `gtd`'s Tags and structure — the condition X in
+  the headline, the action Y in the body — then go to Close.
 - **Does it realize, activate, or abandon a somedaymaybe item?** Confirm with
   the user which flavor applies — _Achieved_ (the outcome already happened),
   _Activate now_ (start pursuing it), or _Abandoned_ — if not already clear
@@ -374,16 +379,16 @@ no Close instead.
   - If found in an exposed file — _Abandoned_: the capture is Trash; follow
     `gtd`'s completing and archiving steps with close state `KILL` (archive
     unconditionally — do not offer); go to Close.
-    _Achieved_: read the somedaymaybe item's full body per `gtd`'s
-    post-`org-grep` reading guidance and surface any notes, links, or hints to
-    the user to inform the re-entered processing; follow `gtd`'s completing
-    and archiving steps with close state `DONE` per the superseded-outcome
-    rule (archive unconditionally — do not offer); the `DONE`+archive step
-    precedes re-entry; the re-entered run's Close surfaces this somedaymaybe
-    resolution per the resolution-summary rule (which anchors each resolution
-    to the first Close at or after it); run the somedaymaybe's outcome through
-    this full flowchart independently (do not Close here for this somedaymaybe
-    match; the re-entered run provides its own Close).
+    _Achieved_: read the somedaymaybe item's full body per `gtd`'s reading
+    guidance and surface any notes, links, or hints to the user to inform the
+    re-entered processing; follow `gtd`'s completing and archiving steps with
+    close state `DONE` per the superseded-outcome rule (archive unconditionally
+    — do not offer); the `DONE`+archive step precedes re-entry; the re-entered
+    run's Close surfaces this somedaymaybe resolution per the resolution-summary
+    rule (which anchors each resolution to the first Close at or after it); run
+    the somedaymaybe's outcome through this full flowchart independently (do not
+    Close here for this somedaymaybe match; the re-entered run provides its own
+    Close).
     _Activate now_: the item is already a fully-formed action or project —
     promote it in place per `gtd`'s **Promoting a someday/maybe item** (the
     user decides the target shape); do not close, archive, or re-create it.

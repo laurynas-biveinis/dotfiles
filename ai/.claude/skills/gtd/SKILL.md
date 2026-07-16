@@ -36,25 +36,26 @@ the mechanics — `gtd` never invokes `process-inbox`.
 
 State is orthogonal to tags: it records whether the action is live or parked,
 never whose move it is — that is the tag's job (see "Tags and structure").
-The tag-based agenda lists — the user's own context lists and the
-`@waitingfor` review list alike — show only `TODO` items, and only undated
-ones: an item with a `SCHEDULED`/`DEADLINE` (or any plain active timestamp)
-is off every tag-based list regardless of state. The someday/maybe review
-list is the state exception: undated-only like every tag-based list, but
-open-state rather than `TODO`-only — it shows `WAIT` incubated outcomes too,
-since a parked incubated outcome is reviewable there or nowhere; a
-keyword-less item, being neither open nor closed, appears on no list at all
-and must be normalized per "Promoting a someday/maybe item" step 3. A
-`SCHEDULED`/`DEADLINE`
-item surfaces on the date-based agenda instead — from its date onward
-(`DEADLINE`: prewarning window) — while open (`TODO`/`WAIT`); closed, it
-appears on neither. A keyword-less item with a `SCHEDULED`/`DEADLINE` is
-neither open nor closed and keeps surfacing as overdue. A plain active
-timestamp surfaces the item only on its exact date, open or closed — once
-that date passes, an item dated only that way is on no current view. Hence a
-date inside an item body — dependency and delegation notes included — is
-written as plain text or an inactive timestamp (`[2026-08-01 Sat]`), never an
-active `<…>` one, which would count as dating the item.
+The tag-based agenda lists show only `TODO` items, and only undated ones: an
+item with a `SCHEDULED`/`DEADLINE` (or any plain active timestamp) is off every
+tag-based list regardless of state. Two lists depart from this. The
+someday/maybe review list is the state exception: undated-only like the rest,
+but open-state rather than `TODO`-only — it shows `WAIT` incubated outcomes too,
+since a parked incubated outcome is reviewable there or nowhere; an incubated
+keyword-less item, being neither open nor closed, does not appear on it and must
+be normalized per "Promoting a someday/maybe item" step 3. The Checklists list
+is the wider exception: it filters on neither state nor date, so it shows every
+trigger — keyword-less ones included, which is what makes "Work triggers"'
+enumeration complete. A `SCHEDULED`/`DEADLINE` item surfaces on the date-based
+agenda instead — from its date onward (`DEADLINE`: prewarning window) — while
+open (`TODO`/`WAIT`); closed, it appears on neither. A keyword-less item with a
+`SCHEDULED`/`DEADLINE` is neither open nor closed and keeps surfacing as
+overdue. A plain active timestamp surfaces the item only on its exact date,
+open or closed — once that date passes, an item dated only that way is on no
+current view. Hence a date inside an item body — dependency and delegation
+notes included — is written as plain text or an inactive timestamp
+(`[2026-08-01 Sat]`), never an active `<…>` one, which would count as dating
+the item.
 
 ## Tags and structure
 
@@ -71,11 +72,17 @@ active `<…>` one, which would count as dating the item.
   undated (per States). The user's full context set (e.g. `@home`, `@office`,
   `@calls`, `@errands`) is user-configured at runtime and discoverable via
   `org-get-tag-config` (the mutually-exclusive context group, minus
-  `@waitingfor`) — `@internet` is only your default for online actions, not a
-  catch-all for the user's physical actions.
-- `@checklist` marks GTD trigger/checklist items of the form "if X, then do Y";
-  a standing rule is not an active next action, so it is created with no `TODO`
-  keyword (`todo_state` `""`).
+  `@waitingfor` and `@checklist`) — `@internet` is only your default for online
+  actions, not a catch-all for the user's physical actions.
+- `@checklist` marks GTD trigger/checklist items of the form "if X, then do Y":
+  the condition X **must** be stated in the headline, the action Y in the body.
+  A standing rule is not an active next action, so it is created with no `TODO`
+  keyword (`todo_state` `""`); `@checklist` shares the contexts'
+  mutually-exclusive group, so a trigger is never also a context, but it is not
+  itself an execution context and must never tag an action. The headline
+  invariant serves matching (per "Work triggers"): a candidate condition is
+  matched against trigger headlines alone, so an X reachable only by reading a
+  body would never fire. Y is read from the body once its trigger matches.
 - `somedaymaybe` (bare, no `@`) marks each file's **top-level**, keyword-less
   "Someday/maybe" container heading. Incubated outcomes live under it as
   ordinary open items — `TODO` (or `WAIT` if blocked), tagged `project` or an
@@ -136,21 +143,47 @@ Yes → steps 2–4 (e.g. "fix bug in module X", "implement feature Y").
 ## Work triggers
 
 The user keeps GTD trigger lists of the form "if X, then do Y", tagged
-`@checklist`. When a candidate condition X surfaces during work, call `org-grep`
-with terms drawn from X to find any matching trigger, then act on its Y — do not
-rely on recall.
+`@checklist`, shaped per "Tags and structure".
+
+When a candidate condition surfaces during work, enumerate every trigger and
+match the condition against their headlines — do not rely on recall. Run the
+user's Checklists view via `org-get-agenda`, resolving its dispatch key from
+`org-get-agenda-config` by the command's **description**, never hardcoding a
+key. Enumeration must be state-agnostic. A `type` other than `tags` disqualifies
+the command outright — a `tags-todo` view, the shape of the user's other
+tag-based lists (per States), returns only keyword-ed items and would omit every
+trigger — but `tags` alone does not qualify it: that command's match string and
+settings can re-impose the same filter, and `org-get-agenda-config` exposes
+neither. The result settles it — every trigger is keyword-less, so a live
+trigger list never enumerates empty. If no description names the checklists
+list, its type is not `tags`, or the enumeration returns nothing, surface that
+to the user and ask how to proceed: never silently skip trigger matching, and
+never fall back to the grep below. One call then returns every trigger across
+all allowed files, at any depth, each node carrying its `title` — the condition
+X to match, rather than the response's rendered `agenda` text — plus its `todo`
+and `uri`; the view filters on no state, so disregard `DONE`/`KILL` results —
+retired triggers — before matching. Then read the matched trigger's body for its
+Y (per "Reading and editing") and act on it.
+
+Do not instead match by grepping terms drawn from the condition. Matching is a
+judgement about meaning; `org-grep` tests whether one literal term, chosen up
+front, occurs in the text. Which term would surface a trigger is a property of
+that trigger, not of the condition — so a miss proves nothing.
 
 ## Reading and editing
 
 - Read outline-first: start from outlines (`org-read-outline`), and request full
   content only for items of interest (`org-read-headline` for a single
   headline's body and its subtree). Avoid reading whole files unless instructed.
-- After `org-grep`, read a matched headline using the result's `uri`: for an
-  `org-id://` URI use `org-read-by-id` with the uuid; for an `org-headline://`
-  URI use `org-read-headline`, passing the result's `file` field as `file` and
-  the URI's already-encoded fragment (the path component after `#`) as
-  `headline_path` verbatim — do not re-encode. For any other URI scheme,
-  surface the URI to the user and ask how to proceed.
+- Read a matched headline using the result's `uri` — from `org-grep`, an agenda
+  view, or any other node result: for an `org-id://` URI use `org-read-by-id`
+  with the uuid; for an `org-headline://` URI, drop the `org-headline://`
+  prefix, then split the rest at its single literal `#` — the part before it is
+  `file`, the part after is `headline_path`. Pass both undecoded: a `#` in a
+  filename arrives as `%23`, which `org-read-headline` decodes itself. So
+  `org-headline:///Users/u/gtd.org#Kai%20skrendu` gives `file`
+  `/Users/u/gtd.org` and `headline_path` `Kai%20skrendu`. For any other URI
+  scheme, surface the URI to the user and ask how to proceed.
 - Keep new items brief but understandable to the user.
 - Transition action states as work progresses: `WAIT`→`TODO` on unblocking,
   handling the dependency note per States; `TODO`→`WAIT` when a new
@@ -325,8 +358,10 @@ No ancestor carries a `project` tag. If the item itself carries a `project` tag
 Otherwise, mark it `DONE` (or `KILL`) via `org-update-todo-state`, then offer to
 archive via `org-archive-subtree` (offer, rather than archive outright, because
 a standalone item may still serve as a reference node the user wants to keep in
-place; callers may direct archive-unconditionally when the item's incubation
-purpose is exhausted).
+place; callers may direct archive-unconditionally when the item's purpose is
+exhausted and no such reference value remains — an incubated item whose outcome
+is settled, or a retired `@checklist` trigger whose condition can no longer
+occur).
 
 ### Project child
 

@@ -127,7 +127,7 @@ project headings. For each project:
   `KILL` + archive.
 
 **Parked/dated cross-check** (steps 5–7, each on its step's tag — one tag for
-steps 5 and 7, the whole mutually-exclusive context group for step 6): these
+steps 5 and 7, each of the user's execution contexts for step 6): these
 views match only open `TODO` items, so an item parked in `WAIT`, or carrying a
 `SCHEDULED`/`DEADLINE`, is off the view (per `gtd`'s States); cross-check with
 `org-grep` on the step's tag in its colon-wrapped raw form (`:project:`,
@@ -150,9 +150,10 @@ context tag with `org-edit-headline` (to fix a wrong context, remove the old
 context tag and add the new one in one call — they are a mutually-exclusive
 group).
 
-Apply the **Parked/dated cross-check** on **each** context tag in the user's
-mutually-exclusive context group (per `org-get-tag-config`, minus
-`@waitingfor`), so no context's parked/dated items are skipped.
+Apply the **Parked/dated cross-check** on **each** of the user's execution
+contexts (per `gtd`'s _Tags and structure_ — the mutually-exclusive context
+group from `org-get-tag-config`, minus `@waitingfor` and `@checklist`), so no
+context's parked/dated items are skipped.
 
 ## 7. Waiting-for
 
@@ -167,9 +168,10 @@ Apply the **Parked/dated cross-check** on the `@waitingfor` tag.
 
 ## 8. Checklist triggers
 
-Run the Checklists view. For each trigger, ask the user whether its condition
-currently applies (upcoming travel, a purchase, a release, …). For each firing
-trigger, act on its "then Y" — capture the resulting items and run
+Enumerate the triggers per `gtd`'s **Work triggers** (which resolves the
+Checklists view and drops retired triggers). For each, ask the user whether its
+condition currently applies (upcoming travel, a purchase, a release, …). For
+each firing trigger, act on its "then Y" — capture the resulting items and run
 `process-inbox`, or record them via `gtd`. If a trigger's condition can no longer
 occur, retire it (`KILL` + archive via `gtd`) rather than leaving it to resurface
 every review.
