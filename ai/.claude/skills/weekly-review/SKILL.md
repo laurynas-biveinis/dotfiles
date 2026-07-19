@@ -61,6 +61,20 @@ of every change for the close. A long list may be presented in batches for
 pacing, but review **every** item — batching never means dropping or summarizing
 items away.
 
+<!-- Keep in sync with process-inbox's Always-confirm rule: the always-confirm
+core (state and confirm every chosen context before recording, not only when
+unsure) is shared. This copy deliberately broadens the trigger to "or changes"
+(step-6 context edits) and names the resource/precedent gloss. -->
+
+**Always-confirm rule.** Whenever this flow or a `gtd` procedure it invokes
+chooses or changes an action's self-context — e.g. the **Project health
+check**'s new next action, **Promoting a someday/maybe item**'s tag fixup, or a
+step-6 context fix — apply `gtd`'s **Choosing the context** procedure (the
+resource-required rule and the precedent check). Per `process-inbox`'s rule of
+the same name, state your reading and confirm the context with the user before
+recording, not only when unsure — a context the user already specified is
+recorded as given (per `gtd`).
+
 **Setup — anchor the look-back window.** Find the weekly-review tracking habit
 (`org-grep "weekly review"`, or the tracking-habit entry the Agenda view
 surfaces) and read its last-completion date from `:LAST_REPEAT:` or the
@@ -145,10 +159,13 @@ heading's own state or date that takes it off the view.
 
 Run the non-project next-actions view. For each standalone action, confirm with
 the user: still relevant? right context? still the true next physical action?
-Reschedule, change state, complete, or kill it via `gtd`, or edit its title or
-context tag with `org-edit-headline` (to fix a wrong context, remove the old
-context tag and add the new one in one call — they are a mutually-exclusive
-group).
+Judge "right context?" per `gtd`'s **Choosing the context** (by the resource the
+action requires — an online step in otherwise-local work, such as a push,
+review, or CI, makes it an online action — and its precedent check), then
+confirm per the **Always-confirm rule** above. Reschedule, change state,
+complete, or kill it via `gtd`, or edit its title or context tag with
+`org-edit-headline` (to fix a wrong context, remove the old context tag and add
+the new one in one call — they are a mutually-exclusive group).
 
 Apply the **Parked/dated cross-check** on **each** of the user's execution
 contexts (per `gtd`'s _Tags and structure_ — the mutually-exclusive context

@@ -62,11 +62,17 @@ surface "create a GitHub issue" and record only an Org pointer; for Org-direct
 work, write to `org-mcp` where the destination file is exposed, else surface
 the exact item), **completing & archiving items**, and **resolving
 `@waitingfor`**; ask one question at a time and stop once the item is filed.
+
+<!-- Keep in sync with weekly-review's Always-confirm rule: the always-confirm
+core is shared. weekly-review's copy additionally covers changing an existing
+context ("or changes"); this copy only covers choosing one. -->
+
 **Always-confirm rule:** whenever this flow — or a `gtd` procedure it
 invokes — chooses a self-context (per `gtd`'s **Choosing the context**) for an
 action, always state your reading and confirm it with the user before
 recording, not only when unsure (a context the user already specified is
 recorded as given, per `gtd`).
+
 Because this flow executes `gtd`'s procedures itself, `allowed-tools` lists
 every `org-mcp` operation this flow calls (e.g. `org-add-todo`), not only those
 this flow names directly — `gtd` carries no `allowed-tools` of its own. `Write`
