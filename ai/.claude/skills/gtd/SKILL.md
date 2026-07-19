@@ -62,18 +62,52 @@ the item.
 - Every action has an execution context saying whose move it is:
   `@waitingfor` marks a delegated action — an external party's move, reviewed
   on the waiting-for list and resolved per "Resolving a delegated item
-  (`@waitingfor`)" — while every other context marks the user's own action;
-  tag your own online actions `@internet`, unless told otherwise. Record a
-  delegation as `@waitingfor`, noting who/what it waits on in the item body
-  as a `Waiting on <who> for <what>` line (the delegation note); its state
-  follows its blocking status per States — `TODO` normally, `WAIT` if the
-  delegation is itself blocked by a dependency (add the dependency note as
-  well) — and like any action, it appears on its list only while `TODO` and
-  undated (per States). The user's full context set (e.g. `@home`, `@office`,
-  `@calls`, `@errands`) is user-configured at runtime and discoverable via
+  (`@waitingfor`)" — while every other context marks the user's own action and
+  is chosen per **Choosing the context** below. Record a delegation as
+  `@waitingfor`, noting who/what it waits on in the item body as a
+  `Waiting on <who> for <what>` line (the delegation note); its state follows
+  its blocking status per States — `TODO` normally, `WAIT` if the delegation is
+  itself blocked by a dependency (add the dependency note as well) — and like
+  any action, it appears on its list only while `TODO` and undated (per States).
+- **Choosing the context** — a context the user already specified is recorded
+  as given; the rest of this procedure governs only a context you choose. The
+  user's own contexts are user-configured and discoverable at runtime via
   `org-get-tag-config` (the mutually-exclusive context group, minus
-  `@waitingfor` and `@checklist`) — `@internet` is only your default for online
-  actions, not a catch-all for the user's physical actions.
+  `@waitingfor` and `@checklist`, which this section defines separately). Never
+  assume the set, and never default to a member of it:
+  choose by the **resource the action requires** — what must be at hand to
+  finish it, not the equipment it incidentally uses. An online service (a
+  repository host, CI, a review, the web, mail, a cloud account) requires the
+  network; a local-only edit, build, or read requires just the machine; an
+  errand requires its place; a synchronous conversation (a call or live chat)
+  requires the person or the device, while asynchronous correspondence (mail,
+  review comments) requires only its carrying service — the network. Match
+  that resource to the discovered context whose name denotes it. Nearly all of
+  the user's work happens at a computer, so "done at a computer" never picks a
+  context on its own.
+  Where an action needs more than one resource, the **most restrictive** — the
+  one at hand in the fewest situations — wins: a place, a person, or the
+  conversation's device (its carrying service is mere transport) outranks the
+  network, and the network outranks the machine, so an action belongs to the
+  local machine only if it can be finished start to finish offline — an errand's
+  incidental online step leaves it an errand, while any online step in
+  otherwise-local work (a push, a review, CI) makes it an online action.
+  Development work ending in a push is one such action, not two; never split an
+  action merely to separate its local half from its online half.
+  Before tagging, check precedent — the nearest analogous existing action's
+  context. When a project in hand has sibling actions, those are the nearest
+  analogues — read them (`org-read-headline` on the project) if not already in
+  hand. With no such siblings — no project in hand, or a project without
+  sibling actions — run one `org-grep` on a distinctive term from the headline
+  (a repository, tool, or party name) and read its open matches' `tags`, unless
+  equivalent open matches are already in hand. Stop there: `org-grep` is a
+  literal substring search, so a miss proves nothing (per "Work triggers") —
+  fall through to the resource rule.
+  Precedent informs the choice but does not override it; an existing tag may
+  itself be wrong. **Confirm when unsure:** when the required resource, or the
+  context it maps to, is not plain from the material in hand, or precedent
+  contradicts it, state your reading and ask the user to confirm the context
+  before recording.
 - `@checklist` marks GTD trigger/checklist items of the form "if X, then do Y":
   the condition X **must** be stated in the headline, the action Y in the body.
   A standing rule is not an active next action, so it is created with no `TODO`

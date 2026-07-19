@@ -62,11 +62,16 @@ surface "create a GitHub issue" and record only an Org pointer; for Org-direct
 work, write to `org-mcp` where the destination file is exposed, else surface
 the exact item), **completing & archiving items**, and **resolving
 `@waitingfor`**; ask one question at a time and stop once the item is filed.
-`allowed-tools` therefore lists every
-`org-mcp` operation this flow calls directly (e.g. `org-add-todo`),
-not only those this flow names directly — `gtd` carries no `allowed-tools` of
-its own. `Write` is also listed for saving reference content to the local
-filesystem (step 2, Not actionable → Reference path).
+**Always-confirm rule:** whenever this flow — or a `gtd` procedure it
+invokes — chooses a self-context (per `gtd`'s **Choosing the context**) for an
+action, always state your reading and confirm it with the user before
+recording, not only when unsure (a context the user already specified is
+recorded as given, per `gtd`).
+Because this flow executes `gtd`'s procedures itself, `allowed-tools` lists
+every `org-mcp` operation this flow calls (e.g. `org-add-todo`), not only those
+this flow names directly — `gtd` carries no `allowed-tools` of its own. `Write`
+is also listed for saving reference content to the local filesystem (step 2,
+Not actionable → Reference path).
 
 ## 1. What is it?
 
@@ -599,10 +604,10 @@ own 2-minute assessment happens only inside Delegate.
 - **Longer** — then ask `Delegate` / `Defer to a specific time` /
   `Defer (as soon as I can)`. Place any Org item recorded below under its
   project if step 3 established or identified one. Tag Org actions you record
-  for yourself with a self-context per `gtd`'s _Tags and structure_ (discovered
-  at runtime, not `@internet` by default); confirm the chosen context with the
-  user unless they already specified one. **Blocking-status rule:** for all
-  three branches, the recorded Org action's state follows its blocking status
+  for yourself with a self-context per `gtd`'s _Tags and structure_, which
+  covers the choice (context confirmed per this skill's **Always-confirm rule**
+  above). **Blocking-status rule:** for all three branches, the recorded Org
+  action's state follows its blocking status
   per `gtd`'s state definitions: `WAIT` if the action is blocked by a
   dependency (noting the dependency per `gtd`'s `WAIT` convention), `TODO` if
   it is doable as soon as its actor gets to it — infer from context already
