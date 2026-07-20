@@ -116,7 +116,14 @@ the item.
   itself an execution context and must never tag an action. The headline
   invariant serves matching (per "Work triggers"): a candidate condition is
   matched against trigger headlines alone, so an X reachable only by reading a
-  body would never fire. Y is read from the body once its trigger matches.
+  body would never fire. Y is read from the body once its trigger matches. A
+  trigger is either **one-time** — its condition X names a specific,
+  non-recurring event or version (e.g. "when GCC 15 is released", "before the
+  Berlin trip on Aug 5"), so it fires once — or **recurring** — its
+  condition recurs (e.g. "whenever I travel"), so it fires repeatedly. This
+  kind governs retirement (per "Work triggers"). ("Standing rule" remains the
+  generic name for any `@checklist` trigger, one-time or recurring alike, per
+  its keyword-less shape above — not a synonym for the recurring kind.)
 - `somedaymaybe` (bare, no `@`) marks each file's **top-level**, keyword-less
   "Someday/maybe" container heading. Incubated outcomes live under it as
   ordinary open items — `TODO` (or `WAIT` if blocked), tagged `project` or an
@@ -197,12 +204,43 @@ all allowed files, at any depth, each node carrying its `title` — the conditio
 X to match, rather than the response's rendered `agenda` text — plus its `todo`
 and `uri`; the view filters on no state, so disregard `DONE`/`KILL` results —
 retired triggers — before matching. Then read the matched trigger's body for its
-Y (per "Reading and editing") and act on it.
+Y (per "Reading and editing") and act on it, then apply **Retire a trigger**
+below.
 
 Do not instead match by grepping terms drawn from the condition. Matching is a
 judgement about meaning; `org-grep` tests whether one literal term, chosen up
 front, occurs in the text. Which term would surface a trigger is a property of
 that trigger, not of the condition — so a miss proves nothing.
+
+**Retire a trigger.** A trigger leaves the checklist for good in two cases, each
+closed and archived unconditionally per "Completing and archiving items"
+(standalone-shaped, per that section's exception):
+
+- **Spent** — a **one-time** trigger has fired and the work from its Y is
+  recorded (or surfaced/done). It fulfilled its purpose, so retire it `DONE`. A
+  **recurring** trigger is never spent by a firing — keep it for future firings.
+- **Remaining purpose abandoned** — the trigger's condition became impossible,
+  or the user drops the rule while its condition could still occur (whether or
+  not it ever fired), so its remaining firings are abandoned: retire it `KILL`.
+  (A spent one-time trigger's condition also cannot recur, but it is retired
+  `DONE` by the spent case above, not here — reason, not firing history, decides
+  the close.)
+
+A recurring trigger that fired before but whose condition then died still
+retires `KILL` — its past firings already did their job, and nothing more will.
+If the trigger was relocated by a close performed since it was enumerated —
+Harvest residuals can refile a standing rule clear of a closing `project`
+subtree — retire it by the `org-id://` URI that refile returned, since the move
+invalidates its pre-refile `org-headline://` URI (mirroring "Promoting a
+someday/maybe item" step 1 and `process-inbox`'s Archived-project addressing
+rule). A trigger in hand with a live keyword (a non-empty `todo` other than
+`DONE`/`KILL`) is a shape anomaly — being keyword-less is the trigger shape (per
+"Tags and structure") — so surface it and normalize with the user first: clear
+the stray keyword via `org-update-todo-state` with `new_state` `""`, or, if it
+proves a mis-tagged action, re-tag and close it through the normal
+classification instead of this rule. Classify the kind, and confirm the trigger
+and its retirement with the user, whenever either is not plain, before
+retiring.
 
 ## Reading and editing
 
@@ -336,6 +374,14 @@ only closed matches, ask the user to identify the item before proceeding; if
 more than one open match remains, show the candidates to the user and ask which
 item to use.
 
+Exception: a `@checklist` trigger being retired (per "Work triggers") closes as
+**Standalone** regardless of ancestry — a standing rule is never a project
+action, and being keyword-less it is no project's live next action, so retiring
+it cannot change project health — so skip the classification and take the
+Standalone case directly. Its to-done mark is a keyword-less transition —
+`org-update-todo-state` with `current_state` `""` (per the trigger shape in
+"Tags and structure").
+
 **Superseded-outcome rule:** when closing an action whose outcome has been
 reached or mooted — possibly via another route — the close state reflects
 whether the action's task was, in the end, actually carried out, not merely
@@ -385,7 +431,9 @@ detector of silent failure.
 
 ### Standalone
 
-No ancestor carries a `project` tag. If the item itself carries a `project` tag
+No ancestor carries a `project` tag (or the item is a `@checklist` trigger being
+retired — standalone by the exception in the section entry above). If the item
+itself carries a `project` tag
 (a top-level project being closed directly), harvest residuals (`DONE` or
 `KILL`, matching the intended close state), then mark it `DONE` (or `KILL`) via
 `org-update-todo-state` and archive the subtree via `org-archive-subtree`.
@@ -394,8 +442,8 @@ archive via `org-archive-subtree` (offer, rather than archive outright, because
 a standalone item may still serve as a reference node the user wants to keep in
 place; callers may direct archive-unconditionally when the item's purpose is
 exhausted and no such reference value remains — an incubated item whose outcome
-is settled, or a retired `@checklist` trigger whose condition can no longer
-occur).
+is settled, or a retired `@checklist` trigger (per "Work triggers", either
+case)).
 
 ### Project child
 

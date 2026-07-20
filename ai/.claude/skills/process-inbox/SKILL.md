@@ -47,13 +47,17 @@ it in every subsequent Close for that same capture.
 
 **Resolution-summary rule:** resolving or updating an earlier in-pass
 `@waitingfor` item, resolving a `WAIT` or somedaymaybe item, promoting a
-somedaymaybe item, updating a still-parked `WAIT`'s dependency note, or
+somedaymaybe item, updating a still-parked `WAIT`'s dependency note,
 parking (`TODO`→`WAIT`, with its `Blocked by:` note) or closing
-(`DONE`/`KILL`) a pre-existing `TODO` is a one-time, pass-level event.
+(`DONE`/`KILL`) a pre-existing `TODO`, or retiring a spent one-time
+`@checklist` trigger (`DONE` + archive) is a once-per-pass event.
 Surface each such event's summary — its Org state or note change (including
 any archive path) and any returned `org-id://` URI — exactly once, in the
 first Close that executes at or after it, before that Close's own outcome
-summary; skip it in every later Close of the same pass.
+summary; skip it in every later Close of the same pass. Exception: a trigger
+retirement the `@checklist` case already surfaced directly (its sub-step 4, in
+place of a suppressed outer Close) counts as that once — skip it in every
+subsequent Close of the pass likewise.
 
 First invoke `Skill(gtd)` and follow its conventions. This skill is **only
 the decision flow** — follow `gtd`'s conventions for **recording** (choose
@@ -369,11 +373,20 @@ no Close instead.
      fall through to the remaining cases.
   3. In all re-entered Closes, apply the inbox-clear rule and the
      resolution-summary rule (the latter surfaces each earlier in-pass
-     event exactly once, in the first Close at or after it).
-  4. If at least one re-entered run produced a Close, emit no outer Close for
-     this trigger match. If no re-entered run ran (zero outcomes from
-     sub-step 2), emit a Close now, applying the resolution-summary rule and the
-     inbox-clear rule.
+     event exactly once).
+  4. Retire the fired trigger per the **Spent** case of `gtd`'s "Work triggers"
+     retirement rule — sub-step 2 applied its Y and any outcomes are recorded
+     (or surfaced/done) by the re-entered runs above, so that case's precondition
+     holds; it retires a spent **one-time** trigger and keeps a **recurring** one
+     (the abandonment `KILL` case is not applied here — the weekly review is
+     its venue). Then the outer Close: if at least one re-entered run
+     produced a Close, emit no outer Close for this trigger match — but if a
+     retirement happened, surface it directly here (its close + archive and
+     returned `org-id://` URI), which is its once-only surfacing (later Closes of
+     the pass skip it per the resolution-summary rule). If no re-entered run ran
+     (zero outcomes from sub-step 2), emit a Close now, applying the
+     resolution-summary rule (which surfaces any yet-unsurfaced retirement) and
+     the inbox-clear rule.
 - **Is it itself a standing "if X then do Y" rule?** Capture it as a
   `@checklist`-tagged item per `gtd`'s Tags and structure — the condition X in
   the headline, the action Y in the body — then go to Close.

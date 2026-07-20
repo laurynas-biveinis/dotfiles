@@ -187,11 +187,15 @@ Apply the **Parked/dated cross-check** on the `@waitingfor` tag.
 
 Enumerate the triggers per `gtd`'s **Work triggers** (which resolves the
 Checklists view and drops retired triggers). For each, ask the user whether its
-condition currently applies (upcoming travel, a purchase, a release, …). For
-each firing trigger, act on its "then Y" — capture the resulting items and run
-`process-inbox`, or record them via `gtd`. If a trigger's condition can no longer
-occur, retire it (`KILL` + archive via `gtd`) rather than leaving it to resurface
-every review.
+condition currently applies (upcoming travel, a purchase, a release, …), and
+whether they still want the rule at all. For each firing trigger, act on its
+"then Y" — capture the resulting items and run `process-inbox`, or record them
+via `gtd` — then apply `gtd`'s **Work triggers** retirement rule (it retires a
+spent fired **one-time** trigger and keeps a **recurring** one for future
+firings). Also apply that rule to any trigger whose condition can no longer
+occur, or that the user no longer wants (it retires, whether or not it ever
+fired). Retire per that rule rather than leaving a spent, dead, or unwanted
+trigger to resurface every review.
 
 ## 9. Someday/maybe
 
