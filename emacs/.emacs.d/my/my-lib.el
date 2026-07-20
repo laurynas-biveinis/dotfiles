@@ -515,9 +515,49 @@ BRANCH-NAME. Returns the URL of this PR."
                #'my-3rd-party-submodule-3p-gh-name)
       (message "Nothing found in `my-3rd-party-submodules' for %s" gh-name)))
 
+;;; Lithuanian date parsing
+
+(require 'calendar)
+(require 'time-date)
+
+(defconst dotfiles--lithuanian-month-genitives
+  '(("sausio" . 1) ("vasario" . 2) ("kovo" . 3) ("balandžio" . 4)
+    ("gegužės" . 5) ("birželio" . 6) ("liepos" . 7) ("rugpjūčio" . 8)
+    ("rugsėjo" . 9) ("spalio" . 10) ("lapkričio" . 11) ("gruodžio" . 12))
+  "Genitive Lithuanian month names mapped to month numbers.")
+
+(defun dotfiles--lithuanian-genitive-date-to-iso (month-name day reference-time)
+  "Return the ISO date for genitive Lithuanian MONTH-NAME and DAY number.
+The source text carries no year; infer it from REFERENCE-TIME by choosing, among
+the reference year and its two neighbours, the one that places the date closest
+to REFERENCE-TIME.  This suits a delivery date, which may fall shortly before or
+after the message that carries it.  Signal a `user-error' on an unknown
+MONTH-NAME, or on a DAY out of range for the month in every candidate year."
+  (declare (ftype (function (string integer t) string))
+           (important-return-value t))
+  (let ((month (or (cdr (assoc month-name
+                               dotfiles--lithuanian-month-genitives))
+                   (user-error "Unknown Lithuanian month name: %s" month-name)))
+        (ref-year (string-to-number (format-time-string "%Y" reference-time)))
+        (ref-days (time-to-days reference-time))
+        (best nil)
+        (best-distance nil))
+    (dolist (year (list (1- ref-year) ref-year (1+ ref-year)))
+      (when (<= 1 day (date-days-in-month year month))
+        (let ((distance (abs (- (calendar-absolute-from-gregorian
+                                 (list month day year))
+                                ref-days))))
+          (when (or (null best-distance) (< distance best-distance))
+            (setq best (format "%04d-%02d-%02d" year month day)
+                  best-distance distance)))))
+    (or best
+        (user-error "Invalid day %d for Lithuanian month %s"
+                    day month-name))))
+
 ;;; `org' helpers
 
 (require 'org-refile)
+(require 'org-autotask)
 
 (defun dotfiles--read-org-headline ()
   "Get the target `org' headline for the capture."
@@ -557,11 +597,103 @@ sub-action under a project task."
   (save-excursion
     (not (and (org-up-heading-safe) (org-get-todo-state)))))
 
+;;; Online-store order tracking
+
+(defun dotfiles--store-order-task-title (store order-date order-id)
+  "Return the order-task title for STORE, ORDER-DATE and ORDER-ID.
+With ORDER-DATE non-nil, the full \"Iš STORE DATE ID užsakymo\" the order
+confirmation creates; with ORDER-DATE nil, the ID-only form a shipping notice
+creates and the confirmation later completes.  ORDER-DATE lets a date-only
+payment email find the task; ORDER-ID lets a shipping notice find it."
+  (declare (ftype (function (string (or null string) string) string))
+           (important-return-value t)
+           (side-effect-free t))
+  (if order-date
+      (format "Iš %s %s %s užsakymo" store order-date order-id)
+    (format "Iš %s %s užsakymo" store order-id)))
+
+(defun dotfiles--store-find-order-task (store key)
+  "Return the position of the STORE @waitingfor order task containing KEY.
+KEY is an order ID or an order date.  Search the current buffer for the first
+@waitingfor \"Iš STORE ... užsakymo\" heading whose title carries KEY as a whole
+space-delimited token, and return its position, or nil.  Anchoring to that title
+shape, matching case-sensitively, and requiring a whole token keep a bare order
+date from latching onto an unrelated dated task, and one order ID from matching
+another that merely contains it as a substring."
+  (declare (ftype (function (string string) (or null integer)))
+           (important-return-value t))
+  (let ((heading-rx (concat "\\`Iš " (regexp-quote store) " .*užsakymo\\'")))
+    (catch 'found
+      (org-map-entries
+       (lambda ()
+         (let ((heading (org-get-heading t t t t)))
+           (when (and (let ((case-fold-search nil))
+                        (string-match-p heading-rx heading))
+                      (member key (split-string heading)))
+             (throw 'found (point)))))
+       (concat "+" (org-autotask-list-tag org-autotask-waitingfor)) 'file)
+      nil)))
+
+(defun dotfiles--store-file-order-email (org-file store msg order-id order-date
+                                                  delivery-date)
+  "File an `org' link to STORE order MSG into its @waitingfor task in ORG-FILE.
+Create the task under \"Tasks\" when absent.  Locate the task by
+ORDER-ID.  ORDER-DATE (the order day, or nil when MSG does not carry it)
+completes an ID-only title; the order confirmation is authoritative for it and
+corrects a stale one.  Reschedule the task to DELIVERY-DATE when non-nil.
+Idempotent: append the link only when the task's subtree does not already hold
+MSG's message-id."
+  (declare (ftype (function (string string list string (or null string)
+                                    (or null string))
+                            t)))
+  ;; Store the link while the email buffer is current, before switching files.
+  (let ((msgid (mu4e-message-field msg :message-id))
+        (link (org-store-link nil)))
+    (dotfiles--in-org-buffer org-file
+      (org-with-wide-buffer
+       (let ((task (dotfiles--store-find-order-task store order-id)))
+         (if task
+             (progn
+               (goto-char task)
+               ;; The confirmation (ORDER-DATE non-nil) owns the order date: add
+               ;; it to an ID-only title, or correct a stale one.
+               (when order-date
+                 (let ((full (dotfiles--store-order-task-title
+                              store order-date order-id)))
+                   (unless (string= (org-get-heading t t t t) full)
+                     (org-edit-headline full)))))
+           (goto-char (or (org-find-exact-headline-in-buffer "Tasks")
+                          (user-error "No \"Tasks\" heading in %s" org-file)))
+           (org-insert-subheading '(4))
+           (org-autotask-insert-waiting-for-next-action
+            (dotfiles--store-order-task-title store order-date order-id))
+           (setq task (dotfiles--store-find-order-task store order-id)))
+         (goto-char task)
+         (when delivery-date
+           (org-schedule nil delivery-date))
+         ;; Append at the end of the subtree, past any SCHEDULED line, so an
+         ;; active clock cannot misplace the link into the clocked-in entry.
+         (unless (dotfiles--org-append-mu4e-link link msgid)
+           (message "%s link already filed: %s" store order-id))
+         (save-buffer))))))
+
 ;;; `org-gcal' helpers
 
 ;; Do not require `org-gcal' to avoid the warning about needing to call
 ;; `org-gcal-reload-client-id-secret'
 (declare-function org-gcal-post-at-point "org-gcal" ())
+
+(defun dotfiles--org-timestamp (date &optional start-time end-time)
+  "Return an active `org' timestamp for DATE, an ISO YYYY-MM-DD string.
+With START-TIME and END-TIME, HH:MM strings passed together, append the time
+range."
+  (declare (ftype (function (string &optional string string) string))
+           (important-return-value t))
+  (cl-assert (eq (null start-time) (null end-time)))
+  (let ((weekday (format-time-string "%a" (org-time-string-to-time date))))
+    (if start-time
+        (format "<%s %s %s-%s>" date weekday start-time end-time)
+      (format "<%s %s>" date weekday))))
 
 (defun dotfiles--create-gcal-event (org-file calendar-id title time)
   "Create a Google Calendar event in the specified org file.
@@ -585,6 +717,14 @@ TIME is the time of the event in `org' timestamp format."
     (insert ":END:\n")
     (save-buffer)
     (org-gcal-post-at-point)))
+
+(defun dotfiles--prompt-create-gcal-event (org-file calendar-id title time)
+  "Prompt to create a Google Calendar event, creating it on confirmation.
+ORG-FILE, CALENDAR-ID, TITLE, and TIME are as in `dotfiles--create-gcal-event'."
+  (declare (ftype (function (string string string string) t)))
+  (when (y-or-n-p (format "Add \"%s\" at %s to the Google Calendar? "
+                          title time))
+    (dotfiles--create-gcal-event org-file calendar-id title time)))
 
 (provide 'my-lib)
 ;;; my-lib.el ends here
