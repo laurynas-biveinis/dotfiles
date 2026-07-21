@@ -253,15 +253,22 @@ with VALUE."
        (setenv var value))
      ,@body))
 
+;; `trusted-content' only exists on Emacs 30+; declare it so that the
+;; let-binding below is dynamic instead of lexical on older versions.
+(defvar trusted-content)
+
 (defmacro flycheck-buttercup-with-resource-buffer (resource-file &rest body)
   "Create a temp buffer from a RESOURCE-FILE and execute BODY.
 
 The absolute file name of RESOURCE-FILE is determined with
-`flycheck-buttercup-resource-filename'."
+`flycheck-buttercup-resource-filename'.  The resource file is
+marked as trusted via `trusted-content', so that checkers gated
+on `trusted-content-p' (e.g. `emacs-lisp') remain enabled."
   (declare (indent 1))
-  `(flycheck-buttercup-with-file-buffer
-       (flycheck-buttercup-resource-filename ,resource-file)
-     ,@body))
+  `(let ((trusted-content :all))
+     (flycheck-buttercup-with-file-buffer
+         (flycheck-buttercup-resource-filename ,resource-file)
+       ,@body)))
 
 
 ;;; Syntax checking in tests
@@ -364,17 +371,20 @@ ERROR is a Flycheck error object."
          (level (flycheck-error-level error))
          (category (flycheck-error-level-overlay-category level))
          (face (get category 'face))
-         (fringe-bitmap (flycheck-error-level-fringe-bitmap level))
-         (fringe-face (flycheck-error-level-fringe-face level))
-         (fringe-icon (list 'left-fringe fringe-bitmap fringe-face)))
+         ;; With indication disabled there is no icon at all
+         (indicator-icon (when-let* ((side (flycheck--resolve-indication-mode)))
+                           (get-char-property
+                            0 'display
+                            (flycheck-error-level-make-indicator level side))))
+         (before-string (and overlay (overlay-get overlay 'before-string))))
     (expect overlay :to-be-truthy)
     (expect (overlay-get overlay 'flycheck-overlay) :to-be-truthy)
     (expect (overlay-start overlay) :to-equal (car region))
     (expect (overlay-end overlay) :to-equal (cdr region))
     (expect (overlay-get overlay 'face) :to-equal face)
-    (expect (get-char-property 0 'display
-                               (overlay-get overlay 'before-string))
-            :to-equal fringe-icon)
+    (expect (and before-string
+                 (get-char-property 0 'display before-string))
+            :to-equal indicator-icon)
     (expect (overlay-get overlay 'category) :to-equal category)
     (expect (flycheck-buttercup-error-without-group
              (overlay-get overlay 'flycheck-error))

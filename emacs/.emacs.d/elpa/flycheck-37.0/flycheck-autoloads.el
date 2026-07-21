@@ -202,9 +202,46 @@ of command checkers is `flycheck-sanitize-errors'.
      must return a list of `flycheck-error' objects parsed from
      OUTPUT.
 
+     Flycheck provides ready-made parsers for common structured
+     output formats: `flycheck-parse-checkstyle' for Checkstyle
+     XML and `flycheck-parse-sarif' for SARIF, which many
+     analyzers can emit.  Prefer these over `:error-patterns'
+     when a checker offers such an output format, as they are
+     more robust than matching human-readable text.
+
      This property is optional.  If omitted, it defaults to
      `flycheck-parse-with-patterns'.  In this case,
      `:error-patterns' is mandatory.
+
+`:handle-suspicious FUNCTION'
+     A function to handle suspicious state: when the process
+     returns non-zero code, but no standard errors (i.e. using
+     `:error-patterns' or `:error-parser') are found.
+
+     The function is called with three arguments: CHECKER,
+     EXIT-STATUS and OUTPUT (as string) with the checked buffer
+     as current.  It should process the output and return a list
+     of non-standard errors that best describe what exactly has
+     failed.  The returned errors go through `:error-filter' just
+     like regular parsed errors.
+
+     The function may also return symbol `disable', or a cons
+     cell `(disable . REASON)' with a reason string, when the
+     output shows that the checker doesn't apply to this buffer
+     at all, e.g. a linter reporting that it has no configuration
+     file: the checker is then disabled in the buffer like a
+     failing `:enabled' test, with an echo-area notice including
+     REASON, and checker selection re-runs so a fallback checker
+     can take over.  This avoids probing for applicability with a
+     blocking process call in `:enabled'; the asynchronous check
+     itself serves as the probe.
+
+     If the function cannot make sense of the output, it should
+     return symbol `suspicious' to indicate that what has
+     happened is really not expected.
+
+     This property is optional.  If omitted, such state is always
+     treated as suspicious.
 
 `:standard-input t'
      Whether to send the buffer contents on standard input.
