@@ -100,14 +100,60 @@ for a commitment that slipped — an unfinished follow-up, an implied action,
 something to carry forward. For each, decide with the user: reschedule it
 (`gcalcli add`, per `process-inbox`'s Google Calendar invocation, including
 `--noprompt`), turn it into a next action or project (via `gtd`), re-capture it
-and run `process-inbox`, or dismiss it. To cross-check overdue Org-dated items,
-the Agenda view's week block lists open `SCHEDULED`/`DEADLINE` items.
+and run `process-inbox`, or dismiss it. Before proposing that an event become a
+next action or project, run the **Related-item cross-check** so you neither
+duplicate an existing item nor ask the user cold.
+
+**Related-item cross-check.** Look for an existing item related to the event — a
+next action, a delegation, or a **project**, in any open state (`TODO`/`WAIT`) —
+before proposing a new one. Fetch the Agenda view and Projects view once per
+step and reuse them across every event this step loops over — only `org-grep`,
+re-run per event, needs same-pass freshness. The Agenda view is one composite
+call whose single response already carries both its week block (open
+`SCHEDULED`/`DEADLINE` items)
+and its **Waiting-for items** and per-context blocks; those tag-based blocks list
+only `TODO`, undated items (per `gtd`'s States), so they — not `org-grep` — are
+the primary source for a `TODO`, undated `@waitingfor`/context action: scan them
+first. Neither a `WAIT`-parked delegation/context action nor a pre-existing
+**project** ever appears on any of the Agenda view's tag-based blocks, though —
+the former because those blocks are `TODO`-only, the latter because each block
+is scoped to a context or `@waitingfor` tag while a project heading is not
+expected to also carry a context or `@waitingfor` tag. A dated `WAIT` action
+or a dated project surfaces on the week block instead (per `gtd`'s States) —
+scan it too, for a `WAIT`-state match or a matching project title. So, once the
+tag-based blocks and week block have turned up no match, for the project gap
+also consult the Projects view's headings by title (a project-only
+duplicate check — not step 5's review); for either gap, `org-grep` a
+distinctive term from the event (a person, vendor, or thing) — one
+literal-substring search that, filtering on neither tag nor state, surfaces
+whichever kind is actually there; the title check also misses a `WAIT`-parked
+or incubated project outright (step 5's state-based reason or the
+`somedaymaybe` exclusion, not wording), otherwise both
+checks can still miss on wording, so a miss is inconclusive — lean on user
+confirmation rather than assume absence (an `org-grep` miss especially proves
+nothing, for either gap: it is a literal substring search, per `gtd`'s **Work
+triggers**). Before treating
+any candidate as coverage, validate it as `process-inbox` does: consider only
+open-state (`TODO`/`WAIT`) matches, apply its **Somedaymaybe-membership check**
+(a match incubated under a someday/maybe container is not live coverage), and
+route a `WAIT` match through its **Parked-entry check** (surfacing the match's
+blocked status and offering to unblock it — coverage still holds, per
+`process-inbox`'s **Confirmed active match** treatment). State your reading
+against what survives.
 
 ## 3. Upcoming month
 
-`gcalcli agenda <today> <today+1month>`. For each upcoming commitment, decide with
-the user whether it needs preparation recorded now (a next action or project, via
-`gtd`) or is already covered.
+`gcalcli agenda <today> <today+1month>`. For each upcoming commitment, first run
+the **Related-item cross-check**, extending its week-block search across the
+month: the Agenda view's week block always anchors on today and reaches only
+~7 days out (a custom-command view ignores any date argument), so also run the
+built-in `week` span (`org-get-agenda`) at `+7d`, `+14d`, `+21d`, `+28d` — day
+offsets, since a whole-month offset can overflow a short month — to cover open
+`SCHEDULED`/`DEADLINE` items through the full window, fetched once per step
+like the base cross-check's own fetches; the undated-item and project checks
+are not date-scoped and already cover the month unchanged. Then decide with
+the user whether it needs preparation recorded now (a next action or project,
+via `gtd`) or is already covered.
 
 ## 4. Empty your head
 
