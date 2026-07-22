@@ -4,7 +4,7 @@
 
 set -eu -o pipefail
 
-readonly SHELL_FILES=(check.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
+readonly SHELL_FILES=(check.sh relint.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
 readonly PYTHON_FILES=(ai/.claude/hooks/*.py scripts/usr/bin/xml2qif scripts/usr/bin/*.py dotfiles/tests/*.py)
 readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 
@@ -162,6 +162,15 @@ if python3 -B -m unittest discover -s dotfiles/tests; then
 	echo "OK!"
 else
 	echo "Python unit tests failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
+# Emacs Lisp
+echo -n "Running relint on Emacs Lisp files... "
+if ./relint.sh; then
+	echo "OK!"
+else
+	echo "relint check failed!"
 	ERRORS=$((ERRORS + 1))
 fi
 

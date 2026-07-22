@@ -420,10 +420,10 @@
 (add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
 
 ;; YAML
-(add-to-list 'auto-mode-alist '("/.clang-format\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("/.clang-tidy\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("/.clangd\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("/.oclint\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/\\.clang-format\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/\\.clang-tidy\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/\\.clangd\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("/\\.oclint\\'" . yaml-mode))
 
 ;; `prism'
 (require 'prism)

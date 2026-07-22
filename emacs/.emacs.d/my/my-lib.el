@@ -14,7 +14,7 @@
 
 (defconst dotfiles--gh-view-run-results "^View results: \\(.*\\)")
 
-(defconst dotfiles--gh-pr-in-subject "^.*\(PR #\\([0-9]+\\)\)$")
+(defconst dotfiles--gh-pr-in-subject "^.*(PR #\\([0-9]+\\))$")
 (defconst dotfiles--gh-url-prefix "https://github.com/")
 (defconst dotfiles--gh-url-id-matcher
   (concat dotfiles--gh-url-prefix ".*/.*/pull/\\([0-9]+\\)"))
@@ -201,7 +201,7 @@ end tell"
   (declare (ftype (function (string) string))
            (important-return-value t))
   (without-remote-files
-    (let* ((files (directory-files-and-attributes directory nil "\\.pdf$" t))
+    (let* ((files (directory-files-and-attributes directory nil "\\.pdf\\'" t))
            (sorted-files (sort files (lambda (a b)
                                        (time-less-p (nth 6 b) (nth 6 a))))))
       (if sorted-files

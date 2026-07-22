@@ -1,0 +1,29 @@
+---
+name: Emacs Lisp
+
+# Run this workflow every time a new commit pushed to your repository
+on: push
+
+permissions: {}
+
+jobs:
+  relint:
+    name: relint
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Emacs
+        uses: purcell/setup-emacs@master
+        with:
+          version: release-snapshot
+
+      - name: Run relint
+        run: ./relint.sh

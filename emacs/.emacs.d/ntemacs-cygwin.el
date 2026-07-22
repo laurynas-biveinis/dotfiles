@@ -48,7 +48,7 @@ loaded as such.)"
          "L\x000\x000\x000\x001\x014\x002\x000\x000\x000\x000\x000\x0C0\x000\x000\x000\x000\x000\x000\x046\x00C")
         (progn
           (re-search-forward
-           "\x000\\([-A-Za-z0-9_\\.\\\\\\$%@(){}~!#^'`][-A-Za-z0-9_\\.\\\\\\$%@(){}~!#^'`]+\\)")
+           "\x000\\([-A-Za-z0-9_.\\$%@(){}~!#^'`][-A-Za-z0-9_.\\$%@(){}~!#^'`]+\\)")
           (find-alternate-file (match-string 1)))
       (when (looking-at "!<symlink>")
         (re-search-forward "!<symlink>\\(.*\\)\0")
