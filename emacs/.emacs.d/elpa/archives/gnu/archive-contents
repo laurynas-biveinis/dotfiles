@@ -551,13 +551,13 @@
       (:authors ("Protesilaos" . "info@protesilaos.com"))
       (:commit . "0fbd723e7f4d824902b0a4b712b92c66a1eaf97e"))])
  (consult-hoogle
-  . [(0 7 0) ((emacs (28 1)) (consult (2 0)))
+  . [(0 8 0) ((emacs (28 1)) (consult (2 0)))
      "Hoogle frontend using consult" tar
      ((:url . "https://codeberg.org/rahguzar/consult-hoogle")
       (:keywords "docs" "languages")
       (:maintainer "rahguzar" . "rahguzar@mailbox.org")
       (:authors ("rahguzar" . "rahguzar@mailbox.org"))
-      (:commit . "94b7800e1a23ee41db133a355d20e8c84db08c09"))])
+      (:commit . "d6d3e9419980c0c385ae2e7a55b1e52e93103f87"))])
  (consult-recoll
   . [(1 0 0) ((emacs (26 1)) (consult (2 0)))
      "Recoll queries using consult" tar
@@ -1248,13 +1248,13 @@
       (:authors ("Amin Bandali" . "bandali@gnu.org"))
       (:commit . "71b66bcf7e1538a28ca7b354e3e1acfd3d7da444"))])
  (filechooser
-  . [(0 2 4) ((emacs (28 1)) (compat (29 1)))
+  . [(0 3 0) ((emacs (28 1)) (compat (29 1)))
      "An xdg-desktop-portal filechooser" tar
      ((:url . "https://codeberg.org/rahguzar/filechooser")
       (:keywords "convenience" "files" "tools" "unix")
       (:maintainer "rahguzar" . "rahguzar@mailbox.org")
       (:authors ("rahguzar" . "rahguzar@mailbox.org"))
-      (:commit . "e55c5ea294bbb2c67ab5c51d9489922a83c22456"))])
+      (:commit . "a0be6ce512eea8940b325d96fbefba2ada3048ec"))])
  (filladapt
   . [(2 12 2) ((emacs (24 4))) "Adaptive fill" tar
      ((:maintainer nil . "emacs-devel@gnu.org")
@@ -1894,14 +1894,14 @@
       (:authors ("Sean Whitton" . "spwhitton@spwhitton.name"))
       (:commit . "00b8f65effe4f2673e6450d70000644b266aa78a"))])
  (llm
-  . [(0 31 2)
+  . [(0 31 3)
      ((emacs (28 1)) (plz (0 8)) (plz-event-source (0 1 1))
       (plz-media-type (0 2 1)) (compat (29 1)))
      "Interface to pluggable llm backends" tar
      ((:url . "https://github.com/ahyatt/llm")
       (:maintainer "Andrew Hyatt" . "ahyatt@gmail.com")
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
-      (:commit . "2fe1f99a51e66c1f50e2c0b603b949783b9320f0"))])
+      (:commit . "3245b15889d4b536daae5cfa566b5c082796a0a0"))])
  (lmc
   . [(1 4) nil "Little Man Computer in Elisp" tar
      ((:maintainer "Stefan Monnier" . "monnier@iro.umontreal.ca")
@@ -2096,11 +2096,11 @@
       (:authors ("Michael Abraham Shulman" . "viritrilbia@gmail.com"))
       (:commit . "b1f5c7dbdc405e6e10d9ddd99a43a6b2ad61b176"))])
  (mode-line-maker
-  . [(0 2 1) ((emacs (29 1))) "Mode-line helper tools" tar
+  . [(0 2 2) ((emacs (29 1))) "Mode-line helper tools" tar
      ((:url . "https://github.com/rougier/mode-line-maker")
       (:keywords "convenience" "mode-line" "header-line")
       (:maintainer "Nicolas P. Rougier" . "Nicolas.Rougier@inria.fr")
-      (:commit . "7af5dbe8dcf24725b106b5776008a3aef490de2b"))])
+      (:commit . "dc0bd20750f34340448ba1c7be4ed2b62af0f78c"))])
  (modus-themes
   . [(5 3 0) ((emacs (28 1)))
      "Elegant, highly legible and customizable themes" tar
@@ -2626,13 +2626,13 @@
       (:authors ("Scott Andrew Borton" . "scott@pp.htv.fi"))
       (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pulsar
-  . [(1 4 0) ((emacs (28 1)))
+  . [(1 4 1) ((emacs (28 1)))
      "Pulse highlight on demand or after select functions" tar
      ((:url . "https://github.com/protesilaos/pulsar")
       (:keywords "convenience" "pulse" "highlight")
       (:maintainer "Protesilaos" . "info@protesilaos.com")
       (:authors ("Protesilaos" . "info@protesilaos.com"))
-      (:commit . "76dc758361378e1c863151cb7febceb4d5218f6f"))])
+      (:commit . "c75b0bb3e062cd1c51b31af8f7c32b049596ecde"))])
  (pyim
   . [(5 3 6) ((emacs (27 1)) (async (1 6)) (xr (1 13)))
      "A Chinese input method support quanpin, shuangpin, wubi, cangjie and rime."
