@@ -174,6 +174,16 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+# Copy/paste detection (matches Super-Linter's JSCPD)
+echo -n "Running jscpd copy/paste detection... "
+if jscpd_out=$(npx --yes jscpd --config .github/linters/.jscpd.json . 2>&1); then
+	echo "OK!"
+else
+	echo "jscpd check failed!"
+	echo "$jscpd_out"
+	ERRORS=$((ERRORS + 1))
+fi
+
 # Final result
 if [ $ERRORS -eq 0 ]; then
 	echo "All checks passed successfully!"
