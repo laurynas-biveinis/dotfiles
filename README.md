@@ -118,8 +118,6 @@ tramp ts
 - Workaround the [projectile
   issue](https://github.com/bbatsov/projectile/issues/347) of remote projects
   not being added to Projectile project list.
-- Add [Projectile reconfigure command for CMake
-  presets](https://github.com/bbatsov/projectile/issues/1676).
 - [Automatically update Git gutter on Magit
   actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).
 - [Disable color-identifiers-mode under LSP with semantic

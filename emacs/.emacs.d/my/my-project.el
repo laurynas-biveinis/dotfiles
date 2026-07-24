@@ -3,10 +3,8 @@
 ;;; Commentary:
 
 ;; Configure everything related to projects. The core package is `projectile',
-;; which is also integrated with `lsp-mode', extended with project
-;; reconfiguration command for CMake projects, and integrated with my dotfiles
+;; which is also integrated with `lsp-mode' and with my dotfiles
 ;; "gitrmworktree" utility.
-;; Additionally there are custom commands for CMake project management.
 ;;
 ;; jscpd:ignore-start
 ;; Like in the rest of my personal configuration, all features (packages and
@@ -17,7 +15,6 @@
 ;;
 ;; Custom keybindings:
 ;; s-p    - Projectile command map
-;; s-p w  - Projectile reconfigure CMake project
 ;; s-p y  - Projectile kill all buffers and remove the worktree
 
 ;;; Code:
@@ -113,45 +110,6 @@ buffers."
     (projectile-update-mode-line)))
 (advice-add #'projectile-find-file-hook-function :after
             #'dotfiles--projectile-find-file-hook-function)
-
-;; Implement https://github.com/bbatsov/projectile/issues/1676 (Unable to
-;; completing-read CMake preset the second time) by adding a new command for
-;; reconfigure.
-(defun dotfiles--projectile-reconfigure-command (compile-dir)
-  "Retrieve the configure command for COMPILE-DIR without considering history.
-
-Not considering the history is what it makes it different from
-`projectile-configure-command'.
-
-The command is determined like this:
-- first we check for `projectile-project-configure-cmd' supplied
-  via .dir-locals.el
-- finally we check for the default configure command for a
-  project of that type"
-  (declare (ftype (function (string) (or null string)))
-           (important-return-value t)
-           (side-effect-free t))
-  (or projectile-project-configure-cmd
-      (let ((cmd-format-string (projectile-default-configure-command
-                                (projectile-project-type))))
-        (when cmd-format-string
-          (format cmd-format-string (projectile-project-root) compile-dir)))))
-
-(defun projectile-reconfigure-project (arg)
-  "Run project configure command without considering command history.
-
-Normally you'll be prompted for a compilation command, unless
-variable `compilation-read-command'.  You can force the prompt
-with a prefix ARG."
-  (interactive "P")
-  (let ((command (dotfiles--projectile-reconfigure-command
-                  (projectile-compilation-dir))))
-    (projectile--run-project-cmd command projectile-configure-cmd-map
-                                 :show-prompt arg
-                                 :prompt-prefix "Configure command: "
-                                 :save-buffers t)))
-
-(define-key projectile-command-map "w" #'projectile-reconfigure-project)
 
 ;; Integrate `projectile' and `lsp-mode' with my gitrmworktree
 (require 'lsp-mode)
