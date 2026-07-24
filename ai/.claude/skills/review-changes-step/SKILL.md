@@ -2,7 +2,6 @@
 description: >-
   Internal step of review-changes: perform one code-review pass over a
   given scope and return the draft findings.
-model: opus
 user-invocable: false
 allowed-tools: >-
   Bash(git diff:*)

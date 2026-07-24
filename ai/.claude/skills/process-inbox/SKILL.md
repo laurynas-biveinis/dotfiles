@@ -1,5 +1,4 @@
 ---
-model: opus
 description: >-
   Process one GTD inbox item through David Allen's clarify/process flowchart,
   asking clarifying questions at each branch. Calls org-mcp tools directly

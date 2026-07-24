@@ -1,5 +1,4 @@
 ---
-model: opus
 description: >-
   Facilitate a full GTD weekly review over the org-mcp Org files and Google
   Calendar, one section at a time: catch calendar items that slipped, look ahead

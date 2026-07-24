@@ -124,11 +124,11 @@ The review is produced in four phases. The top-level skill is the
 Files are append-only.
 
 **Dispatching a sub-step.** The draft, verify, and analyze sub-steps each run
-as a subagent spawned via the **Agent tool** (`subagent_type: general-purpose`,
-`model: opus`) — never via `Skill(...)`, which serializes forked invocations and
+as a subagent spawned via the **Agent tool** (`subagent_type: general-purpose`)
+— never via `Skill(...)`, which serializes forked invocations and
 would run a per-finding "batch" one at a time. The Agent call's own parameters
 and the prompt below are authoritative; each child SKILL.md is read as plain
-instructions, so its frontmatter (`model`, `allowed-tools`) is documentation of
+instructions, so its frontmatter (`allowed-tools`) is documentation of
 intent only, not enforced. The Agent call cannot carry an effort level, so the
 prompt ends with the `ultrathink` keyword to request the deepest reasoning for
 the sub-step. To dispatch one, issue an Agent call whose prompt is:
