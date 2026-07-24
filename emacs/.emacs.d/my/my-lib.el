@@ -634,6 +634,21 @@ another that merely contains it as a substring."
        (concat "+" (org-autotask-list-tag org-autotask-waitingfor)) 'file)
       nil)))
 
+(defmacro dotfiles--with-store-order-task (org-file store msg key &rest body)
+  "Locate the @waitingfor STORE order task for KEY in ORG-FILE and run BODY.
+Capture MSG's mu4e link and message-id -- as `link' and `msgid' -- while the
+email buffer is current, then switch to ORG-FILE (widened and left current) and
+bind `task' to the position of the STORE order task carrying KEY, or nil.  BODY
+runs with `task', `link', and `msgid' bound and decides how to handle a found or
+missing task."
+  (declare (indent 4) (debug (form form form form body)))
+  `(let ((msgid (mu4e-message-field ,msg :message-id))
+         (link (org-store-link nil)))
+     (dotfiles--in-org-buffer ,org-file
+       (org-with-wide-buffer
+        (let ((task (dotfiles--store-find-order-task ,store ,key)))
+          ,@body)))))
+
 (defun dotfiles--store-file-order-email (org-file store msg order-id order-date
                                                   delivery-date)
   "File an `org' link to STORE order MSG into its @waitingfor task in ORG-FILE.
@@ -646,36 +661,31 @@ MSG's message-id."
   (declare (ftype (function (string string list string (or null string)
                                     (or null string))
                             t)))
-  ;; Store the link while the email buffer is current, before switching files.
-  (let ((msgid (mu4e-message-field msg :message-id))
-        (link (org-store-link nil)))
-    (dotfiles--in-org-buffer org-file
-      (org-with-wide-buffer
-       (let ((task (dotfiles--store-find-order-task store order-id)))
-         (if task
-             (progn
-               (goto-char task)
-               ;; The confirmation (ORDER-DATE non-nil) owns the order date: add
-               ;; it to an ID-only title, or correct a stale one.
-               (when order-date
-                 (let ((full (dotfiles--store-order-task-title
-                              store order-date order-id)))
-                   (unless (string= (org-get-heading t t t t) full)
-                     (org-edit-headline full)))))
-           (goto-char (or (org-find-exact-headline-in-buffer "Tasks")
-                          (user-error "No \"Tasks\" heading in %s" org-file)))
-           (org-insert-subheading '(4))
-           (org-autotask-insert-waiting-for-next-action
-            (dotfiles--store-order-task-title store order-date order-id))
-           (setq task (dotfiles--store-find-order-task store order-id)))
-         (goto-char task)
-         (when delivery-date
-           (org-schedule nil delivery-date))
-         ;; Append at the end of the subtree, past any SCHEDULED line, so an
-         ;; active clock cannot misplace the link into the clocked-in entry.
-         (unless (dotfiles--org-append-mu4e-link link msgid)
-           (message "%s link already filed: %s" store order-id))
-         (save-buffer))))))
+  (dotfiles--with-store-order-task org-file store msg order-id
+    (if task
+        (progn
+          (goto-char task)
+          ;; The confirmation (ORDER-DATE non-nil) owns the order date: add it
+          ;; to an ID-only title, or correct a stale one.
+          (when order-date
+            (let ((full (dotfiles--store-order-task-title
+                         store order-date order-id)))
+              (unless (string= (org-get-heading t t t t) full)
+                (org-edit-headline full)))))
+      (goto-char (or (org-find-exact-headline-in-buffer "Tasks")
+                     (user-error "No \"Tasks\" heading in %s" org-file)))
+      (org-insert-subheading '(4))
+      (org-autotask-insert-waiting-for-next-action
+       (dotfiles--store-order-task-title store order-date order-id))
+      (setq task (dotfiles--store-find-order-task store order-id)))
+    (goto-char task)
+    (when delivery-date
+      (org-schedule nil delivery-date))
+    ;; Append at the end of the subtree, past any SCHEDULED line, so an active
+    ;; clock cannot misplace the link into the clocked-in entry.
+    (unless (dotfiles--org-append-mu4e-link link msgid)
+      (message "%s link already filed: %s" store order-id))
+    (save-buffer)))
 
 (defun dotfiles--mu4e-complete-order-task (org-file store msg key)
   "Complete the STORE @waitingfor order task in ORG-FILE for a delivered MSG.
@@ -684,23 +694,18 @@ an `org' link to MSG, then prompt to mark it DONE; on yes, complete it and, when
 it is a top-level task (not a project sub-action), archive its subtree.  Signal a
 `user-error' when no such task exists."
   (declare (ftype (function (string string list string) t)))
-  ;; Store the link while the email buffer is current, before switching files.
-  (let ((msgid (mu4e-message-field msg :message-id))
-        (link (org-store-link nil)))
-    (dotfiles--in-org-buffer org-file
-      (org-with-wide-buffer
-       (let ((task (dotfiles--store-find-order-task store key)))
-         (if (not task)
-             (user-error "No %s order task found for %s" store key)
-           (goto-char task)
-           (unless (dotfiles--org-append-mu4e-link link msgid)
-             (message "%s order link already filed: %s" store key))
-           (goto-char task)
-           (when (y-or-n-p (format "Mark %s order %s as completed? " store key))
-             (org-autotask-complete-item)
-             (when (dotfiles--org-task-top-level-p)
-               (org-archive-subtree)))
-           (save-buffer)))))))
+  (dotfiles--with-store-order-task org-file store msg key
+    (if (not task)
+        (user-error "No %s order task found for %s" store key)
+      (goto-char task)
+      (unless (dotfiles--org-append-mu4e-link link msgid)
+        (message "%s order link already filed: %s" store key))
+      (goto-char task)
+      (when (y-or-n-p (format "Mark %s order %s as completed? " store key))
+        (org-autotask-complete-item)
+        (when (dotfiles--org-task-top-level-p)
+          (org-archive-subtree)))
+      (save-buffer))))
 
 ;;; `org-gcal' helpers
 
