@@ -2289,13 +2289,13 @@
       (:authors ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
       (:commit . "cebe19e3cf0f30604d1ed1bfaa74fff21a4e89a5"))])
  (org
-  . [(9 8 7) ((emacs (28 2)))
+  . [(9 8 8) ((emacs (28 2)))
      "Outline-based notes management and organizer" tar
      ((:url . "https://orgmode.org")
       (:keywords "outlines" "hypermedia" "calendar" "text")
       (:maintainer "Ihor Radchenko" . "yantar92@posteo.net")
       (:authors ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-      (:commit . "cdc16898fd46a30d7187c0a5830b2b898ffbd2de"))])
+      (:commit . "c75ffe4a43355bc76807d9aa711834b33f724fca"))])
  (org-contacts
   . [(1 3) ((emacs (29 1)) (org (9 7)))
      "Contacts management system for Org mode" tar
@@ -3097,12 +3097,12 @@
       (:url . "https://elpa.gnu.org/packages/stream.html")
       (:commit . "b9b3ad5c38063703cfa5a06522031e631c49b7e3"))])
  (substitute
-  . [(0 5 0) ((emacs (27 1)))
+  . [(0 6 0) ((emacs (27 1)))
      "Efficiently replace targets in the buffer or context" tar
      ((:url . "https://github.com/protesilaos/substitute")
-      (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
-      (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
-      (:commit . "cb15c1b4c974f9a04c60af7c58590dcd85578d69"))])
+      (:maintainer "Protesilaos" . "info@protesilaos.com")
+      (:authors ("Protesilaos" . "info@protesilaos.com"))
+      (:commit . "4582d8ba5d3f90d681a7601f3dc6bdccb059dc98"))])
  (svg
   . [(1 1) ((emacs (25))) "SVG image creation functions" tar
      ((:keywords "image")
