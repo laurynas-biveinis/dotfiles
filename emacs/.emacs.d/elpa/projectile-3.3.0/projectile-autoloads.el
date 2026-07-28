@@ -356,6 +356,21 @@ With a prefix argument ARG prompts you for a directory on which
 to run the replacement.
 
 (fn &optional ARG)" t)
+(autoload 'projectile-replace-undo "projectile" "\
+Revert the last project-wide replace applied from the replace reviewer.
+
+Only replaces applied with \\<projectile-replace-mode-map>\\[projectile-replace--apply] in a
+`*projectile-replace*' buffer are recorded, and only the most recent one:
+this is a safety net for the single most destructive thing Projectile
+does, not an edit history.  The record lives in memory, so it is gone
+after restarting Emacs.
+
+Each file is reverted only when the text the replace wrote is still
+exactly there; a file edited, reverted, deleted or rewritten by a branch
+switch in the meantime is reported and left alone rather than corrupted.
+Files that were reverted are dropped from the record, so undoing twice
+can never apply anything twice, while files that were skipped stay
+undoable once you have sorted them out." t)
 (autoload 'projectile-replace-review "projectile" "\
 Review and apply a literal project-wide replacement.
 
@@ -385,6 +400,26 @@ Search the project for an Emacs regexp and review the matches read-only.
 Like `projectile-search-review', but the search term is an Emacs regexp,
 so full Emacs regexp syntax (e.g. symbol boundaries like `\\_<foo\\_>')
 is honored." t)
+(autoload 'projectile-todos "projectile" "\
+Collect the project's TODO-style annotations and review them read-only.
+
+Searches every project file for the annotation keywords in
+`projectile-todo-keywords' (`TODO', `FIXME', `HACK', ... - customize the
+list to match your own conventions) and gathers the hits into the same
+read-only `*projectile-search*' buffer `projectile-search-review' uses,
+grouped by file, so all of its navigation, filtering, re-search, export
+and hand-off commands apply.
+
+A keyword only counts when it stands as a whole word followed by a colon,
+by whitespace or by the end of the line, so `TODO:' and `FIXME ' are
+found while `TODOS' and `MASTODON' are not.  Matching is case-sensitive
+(annotation keywords are uppercase by convention); toggle that with `c'
+in the results buffer.  The keyword does not have to sit in a comment.
+
+With a prefix argument ARG, prompt for which keywords to search for
+instead of using all of them.
+
+(fn &optional ARG)" t)
 (autoload 'projectile-kill-buffers "projectile" "\
 Kill project buffers.
 
@@ -424,6 +459,10 @@ Handy on `after-save-hook' for `.dir-locals.el' buffers.
 
 This only clears the cached commands, not the command history offered at
 the prompt.  See also `projectile-discard-root-cache'." t)
+(autoload 'projectile-find-file-in-subproject "projectile" "\
+Jump to a file in one of the current project's subprojects.
+Prompts for the subproject first, so the file completion only covers
+that part of the repository." t)
 (autoload 'projectile-configure-project "projectile" "\
 Run project configure command.
 
@@ -449,30 +488,12 @@ variable `compilation-read-command'.  You can force the prompt
 with a prefix ARG.
 
 (fn ARG)" t)
-(autoload 'projectile-compile-subproject "projectile" "\
-Run compilation in the nearest subproject.
-Find the closest build file (e.g. pom.xml, build.gradle) between the
-current directory and the project root, then run the project's compile
-command there.  This is useful for multi-module projects where building
-a single module is faster than building the entire project.
-
-Normally you'll be prompted for a compilation command, unless
-variable `compilation-read-command'.  You can force the prompt
-with a prefix ARG.
-
-(fn ARG)" t)
-(autoload 'projectile-test-subproject "projectile" "\
-Run tests in the nearest subproject.
-Find the closest build file (e.g. pom.xml, build.gradle) between the
-current directory and the project root, then run the project's test
-command there.  This is useful for multi-module projects where testing
-a single module is faster than testing the entire project.
-
-Normally you'll be prompted for a compilation command, unless
-variable `compilation-read-command'.  You can force the prompt
-with a prefix ARG.
-
-(fn ARG)" t)
+ (autoload 'projectile-configure-subproject "projectile" nil t)
+ (autoload 'projectile-compile-subproject "projectile" nil t)
+ (autoload 'projectile-test-subproject "projectile" nil t)
+ (autoload 'projectile-install-subproject "projectile" nil t)
+ (autoload 'projectile-package-subproject "projectile" nil t)
+ (autoload 'projectile-run-subproject "projectile" nil t)
 (autoload 'projectile-run-test-at-point "projectile" "\
 Run the test around point, if any.
 
@@ -529,10 +550,12 @@ If the prefix argument SHOW-PROMPT is non nil, the command can be edited.
 Run one of the current project's named tasks.
 
 The task is picked with completion among the tasks of the project's
-type and those in `projectile-tasks', which win for same-named tasks
-(see `projectile-project-tasks').  With a prefix ARG the task's
-command can be edited before it's run, e.g. to pass it ad-hoc
-arguments.
+type, those in `projectile-tasks' (which win for same-named tasks) and
+the ones discovered in the project's own tooling - npm scripts, Makefile
+targets and the like, named after the tool that defines them (see
+`projectile-project-tasks' and `projectile-task-providers').  With a
+prefix ARG the task's command can be edited before it's run, e.g. to
+pass it ad-hoc arguments.
 
 The command runs through the same machinery as
 `projectile-compile-project' - in `projectile-compilation-dir', with
@@ -623,6 +646,36 @@ This combines `projectile-add-known-project' and
 `projectile-switch-project-by-name' into a single command.
 
 (fn PROJECT-ROOT)" t)
+(autoload 'projectile-bookmark-set "projectile" "\
+Set a bookmark named NAME at point, scoped to the current project.
+
+The bookmark is a regular Emacs bookmark - it lands in `bookmark-alist',
+shows up in `list-bookmarks' and is persisted by `bookmark.el' itself.
+The only Projectile touch is the suggested NAME: the name `bookmark-set'
+would suggest, prefixed with the project's name (e.g. \"projectile:
+projectile.el\"), so the project's bookmarks are easy to spot in the
+global list.  You're free to edit the name - a bookmark on a file inside
+the project is recognised as the project's even without the prefix (see
+`projectile-bookmark-scope').
+
+(fn NAME)" t)
+(autoload 'projectile-bookmark-jump "projectile" "\
+Jump to the project bookmark named NAME.
+Only the current project's bookmarks are offered for completion - see
+`projectile-bookmark-scope' for how that's decided.
+
+When the bookmark's file has been deleted in the meantime this refuses
+with a friendly error instead of dragging you through the relocation
+prompt of `bookmark.el'.  Use `projectile-bookmark-delete' to get rid of
+such a stale bookmark.
+
+(fn NAME)" t)
+(autoload 'projectile-bookmark-delete "projectile" "\
+Delete the project bookmark named NAME.
+Only the current project's bookmarks are offered for completion - see
+`projectile-bookmark-scope' for how that's decided.
+
+(fn NAME)" t)
 (autoload 'projectile-ibuffer "projectile" "\
 Open an IBuffer window showing all buffers in the current project.
 
@@ -631,6 +684,48 @@ Let user choose another project when PROMPT-FOR-PROJECT is supplied.
 (fn PROMPT-FOR-PROJECT)" t)
 (autoload 'projectile-edit-dir-locals "projectile" "\
 Edit or create a .dir-locals.el file of the project." t)
+(autoload 'projectile-doctor "projectile" "\
+Diagnose Projectile's view of the current project.
+
+Open a read-only report describing the project Projectile sees around
+`default-directory': its root and which of
+`projectile-project-root-functions' found it, the detected project type
+and the marker that matched, the indexing method and the very command
+that will be run, which external tools are available, the file count and
+the cache state, the ignore rules in effect, and a list of findings -
+things that look fine and things worth changing.  Outside a project the
+report says so and explains how to mark the directory as one.
+
+The report is plain text, meant to be pasted into a bug report.
+
+The doctor doesn't change what it measures: it never populates and never
+invalidates the file cache.  A project that isn't cached yet is indexed
+with caching switched off and that run is reported as a fresh index.  On
+remote projects indexing and program lookups are skipped rather than
+risking a hang, and the report says so." t)
+(autoload 'projectile-dashboard "projectile" "\
+Show a dashboard summarising the project around `default-directory'.
+
+The dashboard covers the project's name, root, type and file count, the
+version control system with the current branch and how many files are
+modified or untracked, the project files you visit most (ranked by
+frecency, the same ranking `projectile-find-file' uses), the project's
+tasks and its configured lifecycle commands.
+
+Everything worth acting on is a button, so the buffer doubles as a
+launcher: RET on a file visits it, on a task or a lifecycle command runs
+it, on the branch opens the project's VC interface, and on the root
+opens it in Dired.  TAB moves to the next button, `g' refreshes the
+dashboard and `q' buries it.
+
+The command is cheap on purpose, so that it can serve as a
+`projectile-switch-project-action'.  It never indexes the project and
+never touches the file cache - an uncached project is reported as not
+indexed rather than indexed on the spot.  The branch and status come
+from two short git commands, run only on a local git project; on a
+remote project, or under any other VCS, that section says so instead.
+
+`projectile-dashboard-sections' controls which sections are shown." t)
 (autoload 'projectile-other-window-command "projectile" "\
 Show the buffer of the next Projectile command in another window.
 
