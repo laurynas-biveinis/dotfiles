@@ -25,6 +25,8 @@
 
 (setq projectile-use-git-grep t
       projectile-enable-cmake-presets t
+      ;; Separate compile/test/run buffers so one doesn't clobber another
+      projectile-per-command-compilation-buffer t
       projectile-mode-line-prefix " "  ;; Save mode line space
       ;; Browsing project files without caching is prohibitively slow on large
       ;; projects such as MySQL.
