@@ -6,22 +6,21 @@ Emacs lisp auto formatter.
 '''
 
 from __future__ import annotations
+
+import argparse
+import os
+import sys
 from collections.abc import (
     Callable,
     Generator,
     Iterable,
     Sequence,
-
 )
 from typing import (
     Any,
     NamedTuple,
     TextIO,
 )
-
-import sys
-import os
-import argparse
 
 HintType = dict[
     str,
@@ -1245,7 +1244,7 @@ class NdSexp(Node):
                 return self.nodes[-1]
         return None
 
-    def iter_nodes_recursive(self) -> Generator[Node, None, None]:
+    def iter_nodes_recursive(self) -> Generator[Node]:
         '''
         Iterate over all nodes recursively.
         '''
@@ -1254,7 +1253,7 @@ class NdSexp(Node):
             if isinstance(node, NdSexp):
                 yield from node.iter_nodes_recursive()
 
-    def iter_nodes_recursive_only_sexp(self) -> Generator[NdSexp, None, None]:
+    def iter_nodes_recursive_only_sexp(self) -> Generator[NdSexp]:
         '''
         Iterate over all S-expression nodes recursively.
         '''
@@ -1263,7 +1262,7 @@ class NdSexp(Node):
                 yield node
                 yield from node.iter_nodes_recursive_only_sexp()
 
-    def iter_nodes_recursive_with_self(self) -> Generator[Node, None, None]:
+    def iter_nodes_recursive_with_self(self) -> Generator[Node]:
         '''
         Iterate over all nodes recursively, including this node (first).
         '''
@@ -1273,7 +1272,7 @@ class NdSexp(Node):
             if isinstance(node, NdSexp):
                 yield from node.iter_nodes_recursive()
 
-    def iter_nodes_recursive_with_self_only_sexp(self) -> Generator[NdSexp, None, None]:
+    def iter_nodes_recursive_with_self_only_sexp(self) -> Generator[NdSexp]:
         '''
         Iterate over all S-expression nodes recursively, including this node (first).
         '''
@@ -1283,7 +1282,7 @@ class NdSexp(Node):
                 yield node
                 yield from node.iter_nodes_recursive_only_sexp()
 
-    def _iter_nodes_recursive_only_sexp_without_wrap_locked(self) -> Generator[NdSexp, None, None]:
+    def _iter_nodes_recursive_only_sexp_without_wrap_locked(self) -> Generator[NdSexp]:
         '''
         Iterate over all S-expression nodes recursively, skipping wrap-locked nodes.
         '''
@@ -1292,7 +1291,7 @@ class NdSexp(Node):
                 yield node
                 yield from node._iter_nodes_recursive_only_sexp_without_wrap_locked()
 
-    def iter_nodes_recursive_with_self_only_sexp_without_wrap_locked(self) -> Generator[NdSexp, None, None]:
+    def iter_nodes_recursive_with_self_only_sexp_without_wrap_locked(self) -> Generator[NdSexp]:
         '''
         Iterate over all S-expression nodes recursively, including this node (first).
         '''
@@ -1305,7 +1304,7 @@ class NdSexp(Node):
             # which would cause the unwrap pass to attempt modifying nodes whose formatting must be preserved.
             yield from self._iter_nodes_recursive_only_sexp_without_wrap_locked()
 
-    def iter_nodes_recursive_with_parent(self) -> Generator[tuple[Node, NdSexp], None, None]:
+    def iter_nodes_recursive_with_parent(self) -> Generator[tuple[Node, NdSexp]]:
         '''
         Iterate over all nodes recursively, with the parent node as well.
         '''
@@ -1314,7 +1313,7 @@ class NdSexp(Node):
             if isinstance(node, NdSexp):
                 yield from node.iter_nodes_recursive_with_parent()
 
-    def iter_nodes_recursive_with_prior_state(self, visited: set[int]) -> Generator[NdSexp, None, None]:
+    def iter_nodes_recursive_with_prior_state(self, visited: set[int]) -> Generator[NdSexp]:
         '''
         Specialized iterator for looping over nodes that have a ``prior_state`` set.
 
@@ -1330,7 +1329,7 @@ class NdSexp(Node):
                         yield node
                     yield from node.iter_nodes_recursive_with_prior_state(visited)
 
-    def iter_nodes_recursive_with_prior_state_and_self(self, visited: set[int]) -> Generator[NdSexp, None, None]:
+    def iter_nodes_recursive_with_prior_state_and_self(self, visited: set[int]) -> Generator[NdSexp]:
         '''
         A version of ``iter_nodes_recursive_with_prior_state`` that includes ``self`` (last).
         '''
