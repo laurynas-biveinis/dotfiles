@@ -142,6 +142,66 @@ The following PROPERTIES constitute an error level:
 
 (fn LEVEL &rest PROPERTIES)")
 (function-put 'flycheck-define-error-level 'lisp-indent-function 1)
+(autoload 'flycheck-annotate-mode "flycheck" "\
+Minor mode to display Flycheck error messages inline in the buffer.
+
+When enabled, the error messages are rendered right next to the code
+they refer to, in addition to the fringe/margin indicators and the
+highlighting.  The line at point is annotated with
+`flycheck-annotate-current-line-style' and the rest with
+`flycheck-annotate-other-lines-style'; see those options and
+`flycheck-annotate-style-functions' for the available styles.
+
+This mode only shows errors while command `flycheck-mode' is on in the
+buffer.  With `flycheck-annotate-suppress-echo' (on by default), it also
+suppresses the redundant echo-area/Eldoc message for the errors at
+point.
+
+The annotations track the window showing the buffer and the line at
+point, and are rebuilt after a check, when point changes line, and when
+the window scrolls.  When a buffer is shown in more than one window they
+follow the selected one; lines revealed by an implicit scroll are
+annotated on the next command.
+
+This is a minor mode.  If called interactively, toggle the
+`Flycheck-Annotate mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate the variable `flycheck-annotate-mode'.
+
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
+
+(fn &optional ARG)" t)
+(put 'global-flycheck-annotate-mode 'globalized-minor-mode t)
+(defvar global-flycheck-annotate-mode nil "\
+Non-nil if Global Flycheck-Annotate mode is enabled.
+See the `global-flycheck-annotate-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-flycheck-annotate-mode'.")
+(custom-autoload 'global-flycheck-annotate-mode "flycheck" nil)
+(autoload 'global-flycheck-annotate-mode "flycheck" "\
+Toggle Flycheck-Annotate mode in all buffers.
+With prefix ARG, enable Global Flycheck-Annotate mode if ARG is positive;
+otherwise, disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Flycheck-Annotate mode is enabled in all buffers where `(lambda nil (when
+(flycheck-may-enable-mode) (flycheck-annotate-mode 1)))' would do it.
+
+See `flycheck-annotate-mode' for more information on Flycheck-Annotate mode.
+
+(fn &optional ARG)" t)
 (autoload 'flycheck-define-command-checker "flycheck" "\
 Define SYMBOL as syntax checker to run a command.
 
@@ -252,10 +312,12 @@ of command checkers is `flycheck-sanitize-errors'.
      Some checkers that support reading from standard input have
      a separate flag to indicate the name of the file whose
      contents are being passed on standard input (typically
-     `stdin-filename').  In that case, use the `(option)' form in
-     `:command' to pass the value of variable `buffer-file-name'
-     when the current buffer has a file name (that is,
-     use `option \"--stdin-file-name\" buffer-file-name').
+     `stdin-filename').  In that case, use an `(eval)' form in
+     `:command' to pass `flycheck-buffer-file-local-name', which
+     yields the file name the checker's host understands even when
+     the buffer visits a remote file over TRAMP (that is, use
+     `eval (when buffer-file-name (list \"--stdin-file-name\"
+     (flycheck-buffer-file-local-name)))').
 
      For buffers not backed by files, checkers that support input
      on stdin typically report a file name like `-' or `<stdin>'.
@@ -316,6 +378,107 @@ SYMBOL with `flycheck-def-executable-var'.
 (fn SYMBOL DOCSTRING &rest PROPERTIES)" nil t)
 (function-put 'flycheck-define-checker 'lisp-indent-function 1)
 (function-put 'flycheck-define-checker 'doc-string-elt 2)
+(autoload 'flycheck-lsp-mode "flycheck" "\
+Minor mode to report a Language Server's diagnostics through Flycheck.
+
+When enabled, and the buffer's major mode has a server configured in
+`flycheck-lsp-servers', Flycheck starts that server and shows the
+diagnostics it reports (via the `flycheck-lsp' checker), talking LSP directly
+without Eglot.  With `flycheck-lsp-exclusive' nil, `flycheck-lsp' chains to the
+command checkers so both contribute.
+
+Enable it for every configured buffer with `global-flycheck-lsp-mode'.
+For a full language server, prefer Eglot and `flycheck-eglot-mode'.
+
+This is a minor mode.  If called interactively, toggle the `Flycheck-Lsp
+mode' mode.  If the prefix argument is positive, enable the mode, and if
+it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate the variable `flycheck-lsp-mode'.
+
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
+
+(fn &optional ARG)" t)
+(put 'global-flycheck-lsp-mode 'globalized-minor-mode t)
+(defvar global-flycheck-lsp-mode nil "\
+Non-nil if Global Flycheck-Lsp mode is enabled.
+See the `global-flycheck-lsp-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-flycheck-lsp-mode'.")
+(custom-autoload 'global-flycheck-lsp-mode "flycheck" nil)
+(autoload 'global-flycheck-lsp-mode "flycheck" "\
+Toggle Flycheck-Lsp mode in all buffers.
+With prefix ARG, enable Global Flycheck-Lsp mode if ARG is positive; otherwise,
+disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Flycheck-Lsp mode is enabled in all buffers where `(lambda nil (when
+(flycheck-lsp--available-command major-mode) (flycheck-lsp-mode 1)))' would do
+it.
+
+See `flycheck-lsp-mode' for more information on Flycheck-Lsp mode.
+
+(fn &optional ARG)" t)
+(autoload 'flycheck-eglot-mode "flycheck" "\
+Minor mode to report Eglot's LSP diagnostics through Flycheck.
+
+When enabled in an Eglot-managed buffer, Flycheck shows the diagnostics
+the LSP server reports (via the `eglot-check' checker) instead of Flymake,
+which is turned off.  With `flycheck-eglot-exclusive' nil, `eglot-check'
+chains to the command checkers so both contribute.
+
+Usually enabled for every Eglot buffer via `global-flycheck-eglot-mode'.
+
+This is a minor mode.  If called interactively, toggle the
+`Flycheck-Eglot mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate the variable `flycheck-eglot-mode'.
+
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
+
+(fn &optional ARG)" t)
+(put 'global-flycheck-eglot-mode 'globalized-minor-mode t)
+(defvar global-flycheck-eglot-mode nil "\
+Non-nil if Global Flycheck-Eglot mode is enabled.
+See the `global-flycheck-eglot-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-flycheck-eglot-mode'.")
+(custom-autoload 'global-flycheck-eglot-mode "flycheck" nil)
+(autoload 'global-flycheck-eglot-mode "flycheck" "\
+Toggle Flycheck-Eglot mode in all buffers.
+With prefix ARG, enable Global Flycheck-Eglot mode if ARG is positive;
+otherwise, disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Flycheck-Eglot mode is enabled in all buffers where `(lambda nil (when
+(flycheck-eglot--available-p) (flycheck-eglot-mode 1)))' would do it.
+
+See `flycheck-eglot-mode' for more information on Flycheck-Eglot mode.
+
+(fn &optional ARG)" t)
 (register-definition-prefixes "flycheck" '("flycheck-" "help-flycheck-checker-d" "list-flycheck-errors"))
 
 
