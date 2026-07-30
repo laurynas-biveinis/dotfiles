@@ -449,6 +449,12 @@
 (global-flycheck-mode)
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
+;; Inline diagnostics, at the `flycheck-annotate-mode' defaults. `eol' at point
+;; would show only a line's most severe error, and
+;; `flycheck-annotate-suppress-echo' would keep the rest out of the echo area
+;; too. Placed after `flycheck-global-modes', whose exclusions this inherits.
+(global-flycheck-annotate-mode)
+
 ;; `flycheck-status-emoji-mode'
 (require 'flycheck-status-emoji)
 ;; Since I spent way too much time measuring, here's the height in pixels
