@@ -218,6 +218,25 @@ _Achieved_ flavor, mirroring the `@checklist` case), so emit **no** outer Close
 for that capture — where the case's routing would "go to Close", end there with
 no Close instead.
 
+**Reconcile-report routing rule:** after applying the matching flavors in the
+`WAIT` or pre-existing-`TODO` case, apply the **Unfound-item rule** to each
+reported item with no matching open candidate, using that report's matching
+flavor as the case's resolution. Count a re-located or manually handled report
+as confirmed under its flavor; do not count one the user confirms nonexistent.
+
+Treat the inbox capture itself as `Trash` and record nothing for it. Then route
+once for the whole capture:
+
+- if no report was confirmed, this case does not apply — continue with the
+  remaining reconcile cases below;
+- if any confirmed report names new work per the **Captured-new-work rule**,
+  continue with the remaining reconcile cases below;
+- in the `WAIT` case, also continue if any confirmed report took the _Dependency
+  cleared_ flavor;
+- otherwise go to Close.
+
+Finally apply the **Outer-Close suppression rule**.
+
 - **Does it resolve or update a `@waitingfor` item?** Resolve the delegation
   per `gtd`'s "Resolving a delegated item (`@waitingfor`)" — it identifies
   and confirms the item with the user, handles an incubated delegation (its
@@ -274,27 +293,7 @@ no Close instead.
     blocker is itself new work, the **Captured-new-work rule** routes it.
   - _Completed or abandoned_: apply the **Completed-or-abandoned match rule**.
 
-  For a reported `WAIT` with no matching open candidate, apply the
-  unfound-item rule; the case's resolution is the matching flavor above. A
-  re-located or manually handled report still counts, by flavor, in the
-  routing below; one the user confirms nonexistent contributes no confirmed
-  report.
-
-  The inbox capture itself is `Trash`, so record nothing for it. Then route
-  once for the whole capture:
-  - if no report was confirmed at all (every candidate a false positive, no
-    unfound `WAIT` acknowledged), this case does not apply — continue with the
-    remaining reconcile cases below;
-  - else if any confirmed report is a continue-trigger for this case — it took
-    the _Dependency cleared_ flavor, or it named new work per the
-    **Captured-new-work rule** (a _Partial progress_ blocker that changed into
-    new work, or a _Completed or abandoned_ action whose still-wanted
-    outcome names its successor; an _Achieved_ incubated match's successor is
-    not a continue-trigger — it rides that match's re-entered run) — continue
-    with the remaining reconcile cases below;
-  - otherwise the capture is `Trash` — go to Close.
-
-  Apply the **Outer-Close suppression rule**.
+  Apply the **Reconcile-report routing rule**.
 
 - **Does it complete, abandon, or block a pre-existing `TODO`?** A
   `@waitingfor`-tagged match belongs to the `@waitingfor` resolution case
@@ -322,26 +321,7 @@ no Close instead.
     work, that check's filler/parked-ask provisioning is likewise deferred to
     the **Captured-new-work rule** continuation).
 
-  For a reported `TODO` with no matching open candidate, apply the
-  unfound-item rule; the case's resolution is the matching flavor above. A
-  re-located or manually handled report still counts, by flavor, in the
-  routing below; one the user confirms nonexistent contributes no confirmed
-  report.
-
-  The inbox capture itself is `Trash`, so record nothing for it. Then route
-  once for the whole capture:
-  - if no report was confirmed at all (every candidate a false positive, no
-    unfound `TODO` acknowledged), this case does not apply — continue with the
-    remaining reconcile cases below;
-  - else if any confirmed report is a continue-trigger for this case — it named
-    new work per the **Captured-new-work rule** (a _Newly blocked_ report whose
-    blocker is new work, or a _Completed or abandoned_ report whose
-    still-wanted outcome names its successor; an _Achieved_ incubated match's
-    successor is not a continue-trigger — it rides that match's re-entered
-    run) — continue with the remaining reconcile cases below;
-  - otherwise the capture is `Trash` — go to Close.
-
-  Apply the **Outer-Close suppression rule**.
+  Apply the **Reconcile-report routing rule**.
 
 - **Does it match a `@checklist` trigger?** Match the capture against the
   trigger headlines by enumeration, per `gtd`'s "Work triggers" — not from step
