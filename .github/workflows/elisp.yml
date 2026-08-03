@@ -27,3 +27,6 @@ jobs:
 
       - name: Run relint
         run: ./relint.sh
+
+      - name: Run ERT tests
+        run: ./test-elisp.sh

@@ -4,7 +4,7 @@
 
 set -eu -o pipefail
 
-readonly SHELL_FILES=(check.sh relint.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
+readonly SHELL_FILES=(check.sh relint.sh test-elisp.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
 readonly PYTHON_FILES=(ai/.claude/hooks/*.py scripts/usr/bin/xml2qif scripts/usr/bin/*.py dotfiles/tests/*.py)
 readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 
@@ -171,6 +171,14 @@ if ./relint.sh; then
 	echo "OK!"
 else
 	echo "relint check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
+echo "Running Emacs Lisp tests..."
+if ./test-elisp.sh; then
+	echo "Emacs Lisp tests OK!"
+else
+	echo "Emacs Lisp tests failed!"
 	ERRORS=$((ERRORS + 1))
 fi
 
