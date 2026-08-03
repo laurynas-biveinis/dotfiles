@@ -139,6 +139,20 @@ none exists, the case does not apply.
 `org-grep` reports local tags only, so the confirming tag may sit on an ancestor
 node, not the item itself).
 
+**Completed-or-abandoned match rule:** in the `WAIT` and pre-existing-`TODO`
+cases, apply this rule to each confirmed match reported as completed or
+abandoned. For an active match, follow `gtd`'s completing and archiving steps in
+full: close it `DONE` or `KILL`, respectively, including the state-marking and
+any project-health check. For an incubated match (per the
+**Somedaymaybe-membership check**), apply the somedaymaybe case's matching
+found-flavor to this already-confirmed match, skipping that case's
+locate-and-confirm preamble — _Achieved_ for completed (surface its body notes,
+close `DONE` per the superseded-outcome rule, archive unconditionally, then run
+its outcome through the flowchart) or _Abandoned_ for abandoned (`KILL`, archive
+unconditionally). If the capture names a still-wanted successor, the
+**Captured-new-work rule** routes it (for an _Achieved_ incubated match, the
+successor rides the re-entered run).
+
 **Captured-new-work rule:** several reconcile cases, while resolving, parking,
 or closing a pre-existing item, meet new work the capture itself names — a
 follow-up or a blocker — that belongs on its own track:
@@ -258,17 +272,7 @@ no Close instead.
     resolution-summary rule. It counts
     as a confirmed non-cleared report in the routing below — and if the changed
     blocker is itself new work, the **Captured-new-work rule** routes it.
-  - _Completed or abandoned_: for an active match, follow `gtd`'s completing
-    and archiving steps in full (close state `DONE` or `KILL`, including the
-    state-marking and any project-health check). For an incubated match (per
-    the **Somedaymaybe-membership check**), apply the somedaymaybe case's
-    matching found-flavor to this already-confirmed match, skipping that case's
-    locate-and-confirm preamble — _Achieved_ for completed (surface its body
-    notes, close `DONE` per the superseded-outcome rule, archive
-    unconditionally, then run its outcome through the flowchart) or _Abandoned_
-    for abandoned (`KILL`, archive unconditionally). If the capture names a
-    still-wanted successor, the **Captured-new-work rule** routes it (for an
-    _Achieved_ incubated match, the successor rides the re-entered run).
+  - _Completed or abandoned_: apply the **Completed-or-abandoned match rule**.
 
   For a reported `WAIT` with no matching open candidate, apply the
   unfound-item rule; the case's resolution is the matching flavor above. A
@@ -308,17 +312,7 @@ no Close instead.
   one report may complete several actions, and one new dependency may block
   several at once. Then apply the matching flavor below to each confirmed
   `TODO`, per what the capture reports for it:
-  - _Completed or abandoned_: for an active match, follow `gtd`'s completing
-    and archiving steps in full (including the state-marking and any
-    project-health check). For an incubated match (per the
-    **Somedaymaybe-membership check**), apply the somedaymaybe case's matching
-    found-flavor to this already-confirmed match, skipping that case's
-    locate-and-confirm preamble — _Achieved_ for completed (surface its body
-    notes, close `DONE` per the superseded-outcome rule, archive
-    unconditionally, then run its outcome through the flowchart) or _Abandoned_
-    for abandoned (`KILL`, archive unconditionally). If the capture names a
-    still-wanted successor, the **Captured-new-work rule** routes it (for an
-    _Achieved_ incubated match, the successor rides the re-entered run).
+  - _Completed or abandoned_: apply the **Completed-or-abandoned match rule**.
   - _Newly blocked by a dependency_: park it, `TODO`→`WAIT` via
     `org-update-todo-state`, adding the dependency note (via `org-edit-body`)
     per `gtd`'s States; for a standalone, non-incubated item, offer a
