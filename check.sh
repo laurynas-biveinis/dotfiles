@@ -47,8 +47,8 @@ MD_FILES=()
 while IFS= read -r file; do
 	MD_FILES+=("$file")
 done < <(
-	find . -maxdepth 1 -name "*.md"
-	find ai -name "*.md"
+	find . -maxdepth 1 -type f -name "*.md"
+	find ai -type f -name "*.md"
 )
 echo "${MD_FILES[*]} "
 
