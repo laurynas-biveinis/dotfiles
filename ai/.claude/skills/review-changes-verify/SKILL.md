@@ -37,15 +37,6 @@ Your invocation prompt supplies, for the single finding you must verify:
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
 
-## Confidence
-
-Read and apply the
-[shared confidence rubric](../review-changes/references/confidence.md) when
-revising the finding's confidence.
-
-Raise the confidence of `keep` findings and lower it on `drop`; a `keep`
-candidate that falls below 50 should usually become a `drop`.
-
 ## Procedure
 
 Ultrathink while verifying this finding. You **cannot execute code or write
@@ -61,6 +52,8 @@ files** — your tools are read and Git only.
    statement that prescribes no fix is a verification note, not a review finding,
    so `drop` it (give that as the reason) rather than keeping it as a zero-action
    SUGGESTION.
+1. Recalibrate confidence from the evidence: raise it on `keep` and lower it on
+   `drop`; usually drop a candidate whose final confidence falls below 50.
 1. Return one verdict block in exactly the schema below. `Final confidence:` is
    required on every verdict; the severity, title, location, observation, and
    suggested-action lines may be omitted on `Outcome: drop`.

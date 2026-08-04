@@ -42,12 +42,6 @@ Your invocation prompt supplies, for the single finding you must analyze:
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
 
-## Confidence
-
-Read and apply the
-[shared confidence rubric](../review-changes/references/confidence.md) while
-analyzing the finding.
-
 ## Procedure
 
 Ultrathink about this finding. You **cannot execute code or write files** — your

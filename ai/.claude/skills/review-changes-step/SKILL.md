@@ -72,12 +72,6 @@ You do a single fresh pass each invocation; you carry no state between runs.
 - **SUGGESTION** — improvements for readability, style, or minor
   optimizations.
 
-## Confidence
-
-Read and apply the
-[shared confidence rubric](../review-changes/references/confidence.md) before
-assigning confidence to findings.
-
 ## Checklist
 
 - **Correctness** — does the code do what it's supposed to? Bugs or
@@ -156,7 +150,7 @@ Return the scope line first — including the round index, e.g.
 
 - IDs use the format `R<N>-<NNN>`, where `N` is the round index you were given
   and `NNN` runs in per-round discovery order (`001`, `002`, …).
-- Use the severity values and confidence calibration from the rubric.
+- Use the severity values defined above.
 - Do not emit a finding whose suggested action is empty or "none", or that only
   confirms existing code is correct — that is a non-finding, not a SUGGESTION;
   omit it.

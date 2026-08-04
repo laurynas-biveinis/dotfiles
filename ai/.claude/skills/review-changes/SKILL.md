@@ -48,11 +48,6 @@ Use this precedence to choose what to review:
 The user may override with natural language ("review the last three
 commits"). Print the chosen scope at the top of the findings file.
 
-## Confidence
-
-Read and apply the [shared confidence rubric](references/confidence.md)
-throughout the review.
-
 ## Experiment requests
 
 No subagent runs code. When the draft, a verifier, or an analyst needs runtime
@@ -122,12 +117,14 @@ intent only, not enforced. The Agent call cannot carry an effort level, so the
 prompt ends with the `ultrathink` keyword to request the deepest reasoning for
 the sub-step. To dispatch one, issue an Agent call whose prompt is:
 
-> Read `ai/.claude/skills/review-changes-<step>/SKILL.md` and follow it exactly
-> as your instructions. You are a read-only reviewer: do not modify, stage,
-> execute, or build anything in the project; use only read-only git, Read,
-> Grep, and Glob. Your inputs: `<the structured inputs for this step>`. Return
-> only the output that skill's Output section specifies (its primary block plus
-> any auxiliary sections it defines) as your final message. ultrathink
+> Read `ai/.claude/skills/review-changes-<step>/SKILL.md` and
+> `ai/.claude/skills/review-changes/references/confidence.md`; follow both
+> exactly as your instructions. You are a read-only reviewer: do not modify,
+> stage, execute, or build anything in the project; use only read-only git,
+> Read, Grep, and Glob. Your inputs: `<the structured inputs for this step>`.
+> Return only the output that skill's Output section specifies (its primary
+> block plus any auxiliary sections it defines) as your final message.
+> ultrathink
 
 The `<the structured inputs for this step>` placeholder is the bulleted Input
 list the named child skill defines, so later references to a specific input
