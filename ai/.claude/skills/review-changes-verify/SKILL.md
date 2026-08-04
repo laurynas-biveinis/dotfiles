@@ -40,19 +40,9 @@ Your invocation prompt supplies, for the single finding you must verify:
 
 ## Confidence
 
-<!-- Keep in sync with review-changes, review-changes-step, and
-     review-changes-analyze. -->
-
-Each finding carries an integer `Confidence: N%` (0–100) reflecting how strongly
-the evidence supports it. Calibration anchors:
-
-- **90–100** — reproduced via isolated experiment, or trivially provable from
-  the diff alone (e.g. syntax error, undefined symbol).
-- **70–89** — confirmed by reading the code and following references or Git
-  history; no remaining unknowns.
-- **50–69** — plausible from the code but one or more assumptions remain
-  unverified.
-- **Below 50** — speculative. Usually drop these rather than emit them.
+Read and apply the
+[shared confidence rubric](../review-changes/references/confidence.md) when
+revising the finding's confidence.
 
 Raise the confidence of `keep` findings and lower it on `drop`; a `keep`
 candidate that falls below 50 should usually become a `drop`.
