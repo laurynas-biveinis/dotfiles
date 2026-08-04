@@ -31,10 +31,9 @@ Your invocation prompt supplies, for the single finding you must verify:
 - The finding **ID** and its full finding block from the current draft.
 - The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
   `git show HEAD`, or a user-specified range). Run it to see the reviewed change.
-- Paths of **the prior draft files that exist**, so you can self-suppress
-  proposals that duplicate an already-raised finding. This is best-effort; the
-  top-level dedups authoritatively against all raw findings (kept, dropped, or
-  rejected alike).
+- Paths of **existing prior drafts**. Use the
+  [shared prior-draft guidance](../review-changes/references/prior-drafts.md)
+  to screen issues discovered during verification.
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
 
@@ -88,9 +87,7 @@ Optionally append a `## Proposed new findings` section after the verdict,
 listing additional issues spotted while verifying. Each entry must be a complete
 finding block (severity, confidence, title, location, observation, suggested
 action) **without an ID** — the top-level assigns IDs when it appends to the
-next draft. Before listing a proposal, confirm it is not a duplicate of any
-finding in the prior draft files you were given; duplicates are dropped
-silently. The top-level re-dedups authoritatively, so this check is best-effort.
+next draft.
 
 ```markdown
 ## Proposed new findings

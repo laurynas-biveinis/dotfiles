@@ -165,27 +165,20 @@ which removes it from the final review. Analysis can only reject — it never
 resurrects a dropped finding. So a finding reaches the final review only if
 verification kept it **and** analysis did not reject it.
 
-**Raw-findings corpus.** The corpus is every finding block written to any
-`draft-<round>.md` file — **kept, dropped, or rejected alike**. Draft files
-are append-only and never pruned, so once written, a block stays in the corpus
-regardless of its later fate. (A rejected finding is a `keep` verdict that
-analysis marked with `<!-- analysis-rejected: <ID> -->`; its original draft
-block is untouched and remains in the corpus.)
+**Raw-findings corpus.** Read and apply the
+[shared prior-draft guidance](references/prior-drafts.md) throughout the
+workflow. Draft files are append-only and never pruned, so every written block
+stays in the corpus regardless of its later fate. (A rejected finding is a
+`keep` verdict that analysis marked with `<!-- analysis-rejected: <ID> -->`;
+its original draft block is untouched and remains in the corpus.)
 
 **Unified dedup.** Whenever any source yields candidate new findings — a
 verifier's or analyst's `## Proposed new findings`, or a fresh
-`review-changes-step` re-run — the top-level deduplicates them
-authoritatively: first against the entire raw-findings corpus, then within the
-current batch (first occurrence wins; later duplicates dropped). Two findings
-are **duplicates** when they identify the same defect at the same location,
-irrespective of severity, title, or wording; the top-level decides this by
-semantic judgment, not a literal field-equality test. A dropped duplicate
-needs no corpus entry of its own: the surviving occurrence it duplicates —
-whether a prior corpus finding or this batch's first occurrence once written —
-is its anchor for every future pass. Every source is gated identically.
-Verify and analyze subagents are still handed prior draft files and asked to
-self-suppress obvious duplicates, but that self-check is only a best-effort
-noise reducer — the top-level dedup is the sole authoritative gate.
+`review-changes-step` re-run — apply the authoritative gate in the shared
+guidance. A dropped duplicate needs no corpus entry of its own: the surviving
+occurrence it duplicates — whether a prior corpus finding or this batch's first
+occurrence once written — is its anchor for every future pass. Every source is
+gated identically.
 
 `<topic>` is a 1–3-word kebab-case slug derived from the diff (module
 name, feature, or commit subject). If any

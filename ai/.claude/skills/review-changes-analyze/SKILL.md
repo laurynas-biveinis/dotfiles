@@ -36,10 +36,9 @@ Your invocation prompt supplies, for the single finding you must analyze:
   unpublished stack): the **stack** as a list of SHA + subject, and the
   blame-target revision `REV`. When these are absent, omit any placement
   discussion.
-- Paths of **the prior draft files that exist**, so you can self-suppress
-  proposals that duplicate an already-raised finding. This is best-effort; the
-  top-level dedups authoritatively against all raw findings (kept, dropped, or
-  rejected alike).
+- Existing **prior draft paths**. Follow the
+  [shared prior-draft guidance](../review-changes/references/prior-drafts.md)
+  when filtering issues discovered during analysis.
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
 
@@ -132,9 +131,7 @@ If — and only if — analysis surfaced a genuinely new issue, append a
 `## Proposed new findings` section after the analysis block. Each entry must be
 a complete finding block (severity, confidence, title, location, observation,
 suggested action) **without an ID** — the top-level assigns IDs when it appends
-to the next draft. Before listing a proposal, confirm it is not a duplicate of
-any finding in the prior draft files you were given; duplicates are dropped
-silently. The top-level re-dedups authoritatively, so this check is best-effort.
+to the next draft.
 
 ```markdown
 ## Proposed new findings
