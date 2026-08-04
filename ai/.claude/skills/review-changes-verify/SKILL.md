@@ -77,30 +77,14 @@ Return one verdict block:
 ```
 
 Optionally append a `## Proposed new findings` section after the verdict,
-listing additional issues spotted while verifying. Each entry must be a complete
-finding block (severity, confidence, title, location, observation, suggested
-action) **without an ID** — the top-level assigns IDs when it appends to the
-next draft.
-
-```markdown
-## Proposed new findings
-
-### CRITICAL — <one-line title>
-
-- Confidence: 70%
-- Location: `path/to/file.ext:LN`
-- Observation: <what's wrong, with evidence>
-- Suggested action: <concrete fix>
-```
+listing additional issues spotted while verifying. Follow the
+[shared output-section contract](../review-changes/references/shared-output-sections.md).
 
 ## Experiment requests
 
-You **must not** run experiments. If runtime evidence would help, append a
-`## Experiment requests` section whose every entry is a `### EXP — <what it
-tests>` header block (the header is required) giving a goal, a freeform
-procedure whose commands may branch on output, and what confirms/refutes; the
-top-level runs it. The entry need not name the finding — the top-level
-attributes the requests to the finding you were invoked to verify. Two cases:
+Follow the [shared experiment-request format and safety
+constraints](../review-changes/references/shared-output-sections.md). Request
+runtime evidence in two cases:
 
 - If the experiment is needed to **decide**, return the requests with **no**
   verdict (a _deferral_) — the top-level runs them and re-invokes verification
@@ -113,17 +97,3 @@ Your experiments test a **finding's validity only**. You never author or ground
 a remedy — attached requests exist solely to feed the analysis step, which never
 re-invokes you — so remedy-feasibility experiments are reserved for the analysis
 tier.
-
-Keep each procedure isolated and bounded: no writes outside a scratch dir
-(`mktemp -d`/`/tmp`) — reading project files is fine; never
-`./check.sh`/tests/builds; network only to read online docs.
-
-```markdown
-## Experiment requests
-
-### EXP — <what it tests>
-
-- Goal: <what you are trying to establish>
-- Procedure: <freeform; one or more steps that may branch on observed output>
-- Confirms / Refutes: <result patterns that decide the finding>
-```
