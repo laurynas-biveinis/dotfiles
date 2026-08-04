@@ -11,5 +11,8 @@
     "**/scripts/usr/bin/macupdate",
     "**/zsh/.p10k.zsh"
   ],
+  "ignorePattern": [
+    "(?s)description: >-\\n  Internal step of review-changes:.*?Glob"
+  ],
   "absolute": true
 }
