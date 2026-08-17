@@ -6,6 +6,8 @@
 
 ;;; Code:
 
+(require 'subr-x)
+
 ;;; Regexps for looking up information in e-mails
 
 (defconst dotfiles--muspy-release-date-and-title
@@ -327,13 +329,12 @@ ARGS must be properly quoted if needed."
         (gh-project (match-string 2 subject))
         (rel-tag (match-string 3 subject))
         (rel-tag-2 (match-string 4 subject)))
-    ;; Strip leading 'v' from first tag if present before comparison
-    (let ((rel-tag-normalized (if (string-prefix-p "v" rel-tag)
-                                  (substring rel-tag 1)
-                                rel-tag)))
-      (unless (string= rel-tag-normalized rel-tag-2)
-        (user-error "Unrecognized GitHub Release email subject format: %s"
-                    subject)))
+    ;; The release title and the tag must refer to the same version, but either
+    ;; may carry a leading 'v'.
+    (unless (string= (string-remove-prefix "v" rel-tag)
+                     (string-remove-prefix "v" rel-tag-2))
+      (user-error "Unrecognized GitHub Release email subject format: %s"
+                  subject))
     (list :gh-org gh-org :gh-project gh-project
           :gh-name (concat gh-org "/" gh-project) :rel-tag rel-tag)))
 
