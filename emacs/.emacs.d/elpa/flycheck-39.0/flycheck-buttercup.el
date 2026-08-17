@@ -280,11 +280,17 @@ on `trusted-content-p' (e.g. `emacs-lisp') remain enabled."
           (lambda ()
             (setq flycheck-buttercup-syntax-checker-finished t)))
 
-(defconst flycheck-buttercup-checker-wait-time 10
+(defconst flycheck-buttercup-checker-wait-time
+  (if (memq system-type '(windows-nt ms-dos cygwin)) 30 10)
   "Time to wait until a checker is finished in seconds.
 
 After this time has elapsed, the checker is considered to have
-failed, and the test aborted with failure.")
+failed, and the test aborted with failure.
+
+Windows gets longer.  Spawning a process there costs far more than it
+does elsewhere, and on a loaded CI runner a check that would finish in
+well under a second locally can take longer than ten, which fails specs
+that have nothing wrong with them.")
 
 (define-error 'flycheck-buttercup-syntax-check-timed-out
   "Syntax check timed out.")
@@ -338,15 +344,43 @@ Raise an assertion error if errors or overlays remain afterwards."
 
 ;;; Error utilities
 
-(defun flycheck-buttercup-error-without-group (err)
-  "Return a copy of ERR with the `group' and `fix' properties set to nil.
+(defconst flycheck-buttercup--quote-alist
+  '((?\‘ . ?\') (?\’ . ?\') (?\“ . ?\") (?\” . ?\"))
+  "Typographic quotes and the ASCII ones specs write instead.")
 
-Language checker specs compare errors without asserting on these
-incidental slots: `group' holds an uninterned symbol, and `fix'
-holds a machine-applicable suggestion that is verified separately."
+(defun flycheck-buttercup-normalize-quotes (message)
+  "Replace typographic quotes in MESSAGE with their ASCII equivalents.
+
+Which pair of quotes a tool puts around a name is not something a
+spec should assert.  GCC and gfortran quote with ‘…’ under a UTF-8
+locale and with '…' under C, and Clang, which answers to the name
+`gcc' on macOS, always uses the ASCII ones.  Emacs itself has both
+spellings, chosen by the option `text-quoting-style', so the same byte
+compiler warning reads differently across the versions we test on.
+
+The grave form is only folded as a matching pair, so a message
+about backticks in shell code keeps them."
+  (when message
+    (replace-regexp-in-string
+     "`\\([^`'\n]*\\)'" "'\\1'"
+     (apply #'string
+            (mapcar (lambda (c)
+                      (or (cdr (assq c flycheck-buttercup--quote-alist)) c))
+                    message))
+     'fixedcase)))
+
+(defun flycheck-buttercup-error-without-group (err)
+  "Return a copy of ERR with incidental differences flattened.
+
+Language checker specs do not assert on these: `group' holds an
+uninterned symbol, `fix' holds a machine-applicable suggestion that
+is verified separately, and a message's quote glyphs depend on the
+tool and the locale (see `flycheck-buttercup-normalize-quotes')."
   (let ((copy (copy-flycheck-error err)))
     (setf (flycheck-error-group copy) nil)
     (setf (flycheck-error-fix copy) nil)
+    (setf (flycheck-error-message copy)
+          (flycheck-buttercup-normalize-quotes (flycheck-error-message copy)))
     copy))
 
 (defun flycheck-buttercup-sort-errors (errors)
@@ -377,10 +411,20 @@ ERROR is a Flycheck error object."
          (category (flycheck-error-level-overlay-category level))
          (face (get category 'face))
          ;; With indication disabled there is no icon at all
-         (indicator-icon (when-let* ((side (flycheck--resolve-indication-mode)))
-                           (get-char-property
-                            0 'display
-                            (flycheck-error-level-make-indicator level side))))
+         (indicator-icon
+          (when-let* ((side (flycheck--resolve-indication-mode)))
+            ;; Whether a checker attaches a fix is asserted separately, so
+            ;; take the indicator from what the error actually carries
+            ;; rather than assume it carries nothing
+            (let* ((actual (and overlay (overlay-get overlay 'flycheck-error)))
+                   (fixable (and actual
+                                 flycheck-fixable-indicator
+                                 (flycheck-error-known-fix-p actual)
+                                 (flycheck--error-fix-buffer actual)
+                                 t)))
+              (get-char-property
+               0 'display
+               (flycheck-error-level-make-indicator level side nil fixable)))))
          (before-string (and overlay (overlay-get overlay 'before-string))))
     (expect overlay :to-be-truthy)
     (expect (overlay-get overlay 'flycheck-overlay) :to-be-truthy)
@@ -583,10 +627,12 @@ case, including assertions and setup code."
                                      (executable-find
                                       (flycheck-checker-executable ',c)))))
                              checkers)))
+    ;; `it' already wraps the body in a function of its own, so an extra
+    ;; `lambda' here would just be evaluated and thrown away, taking every
+    ;; assertion in the body with it
     `(,it-fn ,full-name
-             (lambda ()
-               ,@skip-forms
-               ,@body))))
+             ,@skip-forms
+             ,@body)))
 
 (provide 'flycheck-buttercup)
 

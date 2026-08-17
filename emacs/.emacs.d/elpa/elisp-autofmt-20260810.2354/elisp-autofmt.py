@@ -923,6 +923,11 @@ class FmtDefs:
 
     @staticmethod
     def _validate_hints(hints: Any, filepath: str, context: str) -> None:
+        # Null is a definition without hints, written by `--gen-defs` for anything
+        # that declares none. The Emacs cache generator writes an empty dictionary
+        # for the same case, both spellings must be accepted.
+        if hints is None:
+            return
         if not isinstance(hints, dict):
             FmtDefs._warn_json(filepath, context, 'expected a dict, got {!r}'.format(type(hints).__name__))
             return
@@ -972,9 +977,13 @@ class FmtDefs:
         self.fn_arity = {k: v for k, v in fn_arity.items() if k in fn_used}
         fn_arity.clear()
 
-    def from_json_files(self, fmt_defs: Iterable[str]) -> None:
+    def from_json_files(self, fmt_defs: Iterable[str], cache_dir: str = '') -> None:
         '''
         Load definitions from JSON files.
+
+        ``cache_dir`` is the directory holding generated (disposable)
+        definitions, a file inside it that fails to parse is removed so the
+        next run regenerates it.
         '''
         import json
         for filepath in fmt_defs:
@@ -982,8 +991,26 @@ class FmtDefs:
                 try:
                     fh_as_json = json.load(fh)
                 except Exception as ex:  # pylint: disable=W0703
-                    sys.stderr.write('JSON definition: error ({:s}) parsing {!r}!\n'.format(str(ex), filepath))
-                    continue
+                    # Failing here means formatting without definitions the
+                    # caller asked for, which silently collapses indentation
+                    # that depends on them. Unlike the warnings below this
+                    # must not be recoverable, the caller needs to know the
+                    # result would be wrong.
+                    msg = 'JSON definition: error ({:s}) parsing {!r}!'.format(str(ex), filepath)
+                    # A cache damaged in the middle with its tail intact passes
+                    # the completeness check on the EMACS side, so it is never
+                    # regenerated and this error would repeat on every run,
+                    # with deleting the file by hand the only way out. The
+                    # cache is disposable by definition, remove it so the next
+                    # run regenerates it. Anything outside the cache directory
+                    # (the bundled overrides for e.g.) is not ours to remove.
+                    if cache_dir and os.path.dirname(os.path.abspath(filepath)) == os.path.abspath(cache_dir):
+                        try:
+                            os.remove(filepath)
+                            msg += ' Removed the damaged cache, the next run regenerates it.'
+                        except OSError:
+                            pass
+                    raise FmtException(msg) from ex
 
                 for key in fh_as_json:
                     if key != 'functions':
@@ -3000,7 +3027,7 @@ def diff_range_calc(data_src: str, data_dst: str) -> tuple[str, int, int]:
             break
 
     # The buffers are a complete match.
-    # NOTE: test ``found_mismatch`` (not ``i + 1 == data_len_min``) so a mismatch
+    # NOTE: test `found_mismatch` (not `i + 1 == data_len_min`) so a mismatch
     # at the final index is not confused with the loop running to completion.
     if (not found_mismatch) and len(data_src) == len(data_dst):
         return '', -1, -1
@@ -3120,8 +3147,8 @@ def parse_file(fh: TextIO) -> tuple[str, NdSexp]:
                 line_has_contents = True
             case ';':  # Comment.
                 data = StringIO()
-                # A trailing ``\r`` (CRLF line-ending) ends the comment too; it is
-                # left in ``c_peek`` and dropped by the whitespace case so it does
+                # A trailing `\r` (CRLF line-ending) ends the comment too; it is
+                # left in `c_peek` and dropped by the whitespace case so it does
                 # not get stored as part of the comment text.
                 while (c_peek := fh.read(1)) not in {'', '\n', '\r'}:
                     c = c_peek
@@ -3139,9 +3166,9 @@ def parse_file(fh: TextIO) -> tuple[str, NdSexp]:
                     sexp_ctx[sexp_level].nodes.append(NdWs(line))
                 line_has_contents = False
             case ' ' | '\t' | '\r':  # White-space (space, tab, carriage-return) - ignored.
-                # NOTE: ``\r`` is dropped here so CRLF line-endings (read
-                # untranslated, see ``newline=`` in ``format_file``) don't leak
-                # into the output as stray symbols. A ``\r`` *inside* a string
+                # NOTE: `\r` is dropped here so CRLF line-endings (read
+                # untranslated, see `newline=` in `format_file`) don't leak
+                # into the output as stray symbols. A `\r` *inside* a string
                 # literal is preserved by the string-reading loop, which is
                 # intentionally left untouched.
                 pass
@@ -3611,24 +3638,64 @@ def main_generate_defs() -> bool:
 
             parse_local_defs(defs, root)
 
-        with open(file_output, 'w', encoding='utf-8') as fh:
-            fh.write('{\n')
-            fh.write('"functions": {\n')
-            is_first = True
-            for key, val in defs.fn_arity.items():
-                if is_first:
-                    is_first = False
-                else:
-                    fh.write(',\n')
-                symbol_type, nargs_min, nargs_max, hints = val
-                nargs_min_str = str(nargs_min) if isinstance(nargs_min, int) else '"{:s}"'.format(nargs_min)
-                nargs_max_str = str(nargs_max) if isinstance(nargs_max, int) else '"{:s}"'.format(nargs_max)
-                fh.write('"{:s}": ["{:s}", {:s}, {:s}, {:s}]'.format(
-                    key, symbol_type, nargs_min_str, nargs_max_str, json.dumps(hints)
-                ))
-            fh.write('')
-            fh.write('}\n')  # 'functions'.
-            fh.write('}\n')
+        # Write to a temporary file and move it into place. Opening the
+        # destination directly truncates any previous cache, so a run that
+        # dies part way (a full disk, or the caller killing the process) left
+        # a truncated file with a current time-stamp, which was then
+        # considered up to date and failed to parse on every later run.
+        #
+        # A unique name keeps concurrent runs from sharing it, where they
+        # would write over each other and move the result into place. The
+        # process ID is not enough, the cache directory is often on a network
+        # home shared between machines, which hand out the same IDs.
+        #
+        # The name is a short fixed prefix, not the output's own:
+        # URL-hexifying has already inflated that, so appending to a name
+        # near NAME_MAX failed the write for a cache whose final name fit.
+        import tempfile
+        fd, file_output_temp = tempfile.mkstemp(
+            dir=os.path.dirname(file_output) or os.curdir,
+            prefix='tmp',
+            suffix='.incomplete',
+        )
+        try:
+            # `mkstemp` creates the file private to this user (it is made for
+            # secrets) and `os.replace` keeps that, where `open` followed the
+            # umask like every other file - on a shared cache directory the
+            # next user's read then failed.
+            if os.name == 'posix':
+                umask = os.umask(0)
+                os.umask(umask)
+                os.fchmod(fd, 0o666 & ~umask)
+            with os.fdopen(fd, 'w', encoding='utf-8') as fh:
+                fh.write('{\n')
+                fh.write('"functions": {\n')
+                is_first = True
+                for key, val in defs.fn_arity.items():
+                    if is_first:
+                        is_first = False
+                    else:
+                        fh.write(',\n')
+                    symbol_type, nargs_min, nargs_max, hints = val
+                    # Encode every value, a symbol name may contain characters
+                    # that need escaping (a quote or a backslash for e.g.).
+                    # `json.dumps` also writes the counts, which are an int or "many".
+                    fh.write('{:s}: [{:s}, {:s}, {:s}, {:s}]'.format(
+                        json.dumps(key),
+                        json.dumps(symbol_type),
+                        json.dumps(nargs_min),
+                        json.dumps(nargs_max),
+                        json.dumps(hints),
+                    ))
+                fh.write('')
+                fh.write('}\n')  # 'functions'.
+                fh.write('}\n')
+
+            os.replace(file_output_temp, file_output)
+        finally:
+            # A successful move leaves nothing behind, only a failed write does.
+            if os.path.exists(file_output_temp):
+                os.remove(file_output_temp)
 
     return True
 
@@ -3689,10 +3756,19 @@ def main() -> None:
     defs_orig = FmtDefs(fn_arity={})
 
     if args.fmt_defs:
-        defs_orig.from_json_files(
-            os.path.join(args.fmt_defs_dir, filename) if (os.sep not in filename) else filename
-            for filename in args.fmt_defs.split(os.pathsep)
-        )
+        try:
+            defs_orig.from_json_files(
+                (
+                    os.path.join(args.fmt_defs_dir, filename) if (os.sep not in filename) else filename
+                    for filename in args.fmt_defs.split(os.pathsep)
+                ),
+                cache_dir=args.fmt_defs_dir,
+            )
+        except FmtException as ex:
+            # Report it the way a malformed input file is reported,
+            # a trace-back here is noise, the message names the file.
+            sys.stderr.write('Error: {:s}\n'.format(str(ex)))
+            sys.exit(1)
 
     count_files_error = 0
     count_files_total = 0

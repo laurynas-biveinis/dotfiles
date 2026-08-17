@@ -19,7 +19,10 @@
 Auto format the current buffer, writing its output to a file.
 
 This is intended for use by batch processing scripts,
-where loading changes back into the buffer is not important.")
+where loading changes back into the buffer is not important.
+
+Signals when the buffer could not be formatted, a batch Emacs exits
+non-zero so the caller doesn't take the unformatted text for a result.")
 (function-put 'elisp-autofmt-buffer-to-file 'important-return-value 'nil)
 (autoload 'elisp-autofmt-buffer "elisp-autofmt" "\
 Auto format the current buffer." t)

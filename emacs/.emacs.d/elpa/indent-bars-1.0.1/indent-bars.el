@@ -4,7 +4,7 @@
 ;; Author: J.D. Smith <jdtsmith+elpa@gmail.com>
 ;; Homepage: https://github.com/jdtsmith/indent-bars
 ;; Package-Requires: ((emacs "27.1") (compat "30"))
-;; Version: 1.0.0
+;; Version: 1.0.1
 ;; Keywords: convenience
 
 ;; indent-bars is free software: you can redistribute it and/or
@@ -531,6 +531,19 @@ buffer-local automatically."
   :type 'boolean
   :set #'indent-bars--custom-set
   :initialize #'custom-initialize-default
+  :group 'indent-bars)
+
+(defcustom indent-bars-defer-setup nil
+  "Whether to defer indent-bars setup to `after-change-major-mode-hook'.
+Setting up `indent-bars' correctly in a buffer requires correct
+information about the indentation spacing and tabs vs. spaces.  If these
+are set after `indent-bars' is initialized, via another minor mode, or
+in file or directory-local variables, this can lead to incorrect
+behavior.  In these cases, it can be useful to defer `indent-bars' setup
+to the `after-change-major-mode-hook'.  Enable this only if you only
+experience problems, and enable `indent-bars' via major mode
+hooks (e.g. `python-base-mode')."
+  :type 'boolean
   :group 'indent-bars)
 
 ;;;;; Color Utilities
@@ -1910,7 +1923,9 @@ Adapted from `highlight-indentation-mode'."
       (if (and (daemonp) (not (frame-parameter nil 'client)))
 	  (add-hook 'after-make-frame-functions #'indent-bars-setup-and-remove
 		    nil t)
-	(indent-bars-setup))
+	(if indent-bars-defer-setup
+	    (add-hook 'after-change-major-mode-hook #'indent-bars-setup nil t)
+	  (indent-bars-setup)))
     (indent-bars-teardown)))
 
 ;; Theme support

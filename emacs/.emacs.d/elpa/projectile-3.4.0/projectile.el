@@ -5,8 +5,8 @@
 ;; Author: Bozhidar Batsov <bozhidar@batsov.dev>
 ;; URL: https://github.com/bbatsov/projectile
 ;; Keywords: project, convenience
-;; Package-Version: 3.3.0
-;; Package-Revision: d1cc09ba9bec
+;; Package-Version: 3.4.0
+;; Package-Revision: b60bb09927a6
 ;; Package-Requires: ((emacs "28.1") (compat "30"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -46,6 +46,7 @@
 (require 'grep)
 (require 'fileloop)
 (require 'filenotify)
+(require 'outline)
 (eval-when-compile
   ;; `transient' is bundled with Emacs 28.1+ (Projectile's minimum), but
   ;; it's only needed once `projectile-dispatch' is invoked, so it's
@@ -113,6 +114,8 @@
 (declare-function treesit-node-type "treesit.c")
 (declare-function treesit-node-child "treesit.c")
 (declare-function treesit-node-child-by-field-name "treesit.c")
+(declare-function treesit-node-prev-sibling "treesit.c")
+(declare-function treesit-node-children "treesit")
 (declare-function treesit-node-text "treesit")
 
 
@@ -155,12 +158,12 @@ in Emacs Lisp only for the few tools that can't express them (see
 The disadvantage of the hybrid and alien methods is that they are not well
 supported on Windows systems.  That's why by default alien indexing is the
 default on all operating systems, except Windows."
-  :safe (lambda (x) (memq x '(native hybrid alien)))
   :group 'projectile
-  :type '(radio
+  :type '(choice
           (const :tag "Native" native)
           (const :tag "Hybrid" hybrid)
           (const :tag "Alien" alien))
+  :safe (lambda (x) (memq x '(native hybrid alien)))
   :package-version '(projectile . "2.0.0"))
 
 (defcustom projectile-alien-honors-ignores t
@@ -195,13 +198,13 @@ separate mechanism and remain `hybrid'/`native' only."
   "When t enables project files caching.
 
 Normally the cache lasts for the duration of your Emacs session.
-If you want to cache to persist between Emacs sessions you
-should set this option to `'persistent'.
+If you want the cache to persist between Emacs sessions you
+should set this option to `persistent'.
 
 Project caching is automatically enabled by default if you're
 using the native indexing method."
   :group 'projectile
-  :type '(radio
+  :type '(choice
           (const :tag "Disabled" nil)
           (const :tag "Transient" t)
           (const :tag "Persistent" persistent))
@@ -293,7 +296,7 @@ A value of nil disables this cache.
 See `projectile-file-exists-p' for details."
   :group 'projectile
   :type '(choice (const :tag "Disabled" nil)
-                 (integer :tag "Seconds"))
+                 (natnum :tag "Seconds"))
   :package-version '(projectile . "0.11.0"))
 
 (defcustom projectile-file-exists-remote-cache-expire (* 5 60)
@@ -304,7 +307,7 @@ A value of nil disables this cache.
 See `projectile-file-exists-p' for details."
   :group 'projectile
   :type '(choice (const :tag "Disabled" nil)
-                 (integer :tag "Seconds"))
+                 (natnum :tag "Seconds"))
   :package-version '(projectile . "0.11.0"))
 
 (defcustom projectile-files-cache-expire nil
@@ -312,11 +315,14 @@ See `projectile-file-exists-p' for details."
 
 A value of nil means the cache never expires."
   :group 'projectile
-  :type '(choice (const :tag "Disabled" nil)
-                 (integer :tag "Seconds"))
+  :type '(choice (const :tag "Never expires" nil)
+                 (natnum :tag "Seconds"))
   :package-version '(projectile . "1.0.0"))
 
-(defcustom projectile-auto-discover t
+(define-obsolete-variable-alias 'projectile-auto-discover
+  'projectile-auto-discover-projects "3.4.0")
+
+(defcustom projectile-auto-discover-projects t
   "Whether to discover projects under `projectile-project-search-path'.
 When non-nil, the projects under the search path are discovered and
 remembered the first time a project-switching command runs in an Emacs
@@ -395,7 +401,7 @@ count against the same limit.
 Only relevant when `projectile-auto-update-cache-with-watches' is
 enabled."
   :group 'projectile
-  :type 'integer
+  :type 'natnum
   :package-version '(projectile . "3.1.0"))
 
 (defcustom projectile-require-project-root 'prompt
@@ -426,9 +432,20 @@ of those legacy values now behaves like `default'."
   :package-version '(projectile . "3.0.0"))
 
 (defcustom projectile-keymap-prefix nil
-  "Projectile keymap prefix."
+  "The key sequence `projectile-command-map' is bound to, if any.
+
+A key sequence in the form `kbd' returns, e.g. (kbd \"C-c p\").  There
+is no prefix by default - Projectile binds none of its commands until
+you ask for it.
+
+The value is read once, when `projectile-mode-map' is built as
+Projectile loads, so it has to be set before that - which rules out
+Customize and `setopt'.  Binding the map directly works whenever:
+
+  (define-key projectile-mode-map (kbd \"C-c p\") \\='projectile-command-map)"
   :group 'projectile
-  :type 'string
+  :type '(choice (const :tag "None" nil)
+                 (key-sequence :tag "Prefix"))
   :package-version '(projectile . "0.7"))
 
 (defcustom projectile-cache-file  ".projectile-cache.eld"
@@ -438,13 +455,14 @@ It's relative to the project root."
   :type 'string
   :package-version '(projectile . "2.9.0"))
 
-(defcustom projectile-tags-file-name "TAGS"
-  "The name of the tags file Projectile excludes from indexing.
-Listed in `projectile-globally-ignored-files' so a generated tags
-file doesn't show up among the project files."
-  :group 'projectile
-  :type 'string
-  :package-version '(projectile . "0.12.0"))
+;; Remove in 4.0.  This was only ever read to seed the default of
+;; `projectile-globally-ignored-files' as this file loaded, so setting it
+;; from an init file never did anything; that list now names TAGS itself.
+(defvar projectile-tags-file-name "TAGS"
+  "The name of the tags file Projectile excludes from indexing.")
+(make-obsolete-variable 'projectile-tags-file-name
+                        "add the file name to `projectile-globally-ignored-files' instead."
+                        "3.4.0")
 
 (defcustom projectile-sort-order 'default
   "The sort order used for a project's files.
@@ -456,20 +474,55 @@ Note that files aren't sorted if `projectile-indexing-method'
 is set to `alien'."
   :group 'projectile
   :type '(choice
-          (radio
-           (const :tag "Default (no sorting)" default)
-           (const :tag "Recently opened files" recentf)
-           (const :tag "Recently active buffers, then recently opened files" recently-active)
-           (const :tag "Access time (atime)" access-time)
-           (const :tag "Modification time (mtime)" modification-time))
+          (const :tag "Default (no sorting)" default)
+          (const :tag "Recently opened files" recentf)
+          (const :tag "Recently active buffers, then recently opened files" recently-active)
+          (const :tag "Access time (atime)" access-time)
+          (const :tag "Modification time (mtime)" modification-time)
           (function :tag "Custom sort function"))
   :package-version '(projectile . "3.1.0"))
 
 (defcustom projectile-verbose t
-  "Echo messages that are not errors."
+  "Whether to echo the messages Projectile emits without being asked.
+
+This covers what Projectile says as a side effect of something else -
+caching a file you just opened, a background index that had something to
+report, a session file it had to skip.  Commands you invoke still say
+what they did whatever this is set to: turning it off makes Projectile
+quieter, not mute."
   :group 'projectile
   :type 'boolean
   :package-version '(projectile . "0.12.0"))
+
+(defconst projectile--message-prefix "[Projectile] "
+  "What Projectile puts in front of the messages it emits unprompted.
+
+Bracketed rather than `Projectile: \\=', which is the form eglot uses and
+which stays legible when the message itself contains a colon - several
+do.  Direct answers to a command you just invoked go unprefixed: you
+know who is talking, and the echo area is narrow.")
+
+(defun projectile--message (format-string &rest args)
+  "Report FORMAT-STRING with ARGS as coming from Projectile, if permitted.
+
+For what Projectile says off its own bat - a background index, a watch
+that gave up, a file cached behind a `find-file\\='.  Such a message is
+prefixed, so it is clear where it came from when nothing was asked of
+Projectile, and suppressed entirely when `projectile-verbose\\=' is nil.
+See `projectile--message-always\\=' for the messages that must not be
+suppressed."
+  (when projectile-verbose
+    (apply #'projectile--message-always format-string args)))
+
+(defun projectile--message-always (format-string &rest args)
+  "Report FORMAT-STRING with ARGS as coming from Projectile.
+
+The prefix without the `projectile-verbose\\=' gate, for the messages that
+answer for something you did ask for but arrive later, out of a process
+sentinel or a timer - by then the prefix is the only thing saying which
+package is talking."
+  (message "%s%s" projectile--message-prefix
+           (apply #'format format-string args)))
 
 (defcustom projectile-buffers-filter-function nil
   "A function used to filter the buffers in `projectile-project-buffers'.
@@ -479,7 +532,8 @@ Two example filter functions are shipped by default -
 `projectile-buffers-with-file' and
 `projectile-buffers-with-file-or-process'."
   :group 'projectile
-  :type 'function
+  :type '(choice (const :tag "No filtering" nil)
+                 (function :tag "Filter function"))
   :package-version '(projectile . "0.11.0"))
 
 (defcustom projectile-project-name nil
@@ -487,7 +541,8 @@ Two example filter functions are shipped by default -
 
 It has precedence over function `projectile-project-name-function'."
   :group 'projectile
-  :type 'string
+  :type '(choice (const :tag "Derive from the project root" nil)
+                 (string :tag "Name"))
   :safe (lambda (v) (or (null v)
                         (and (stringp v)
                              (not (string-blank-p v)))))
@@ -588,12 +643,13 @@ This should _not_ be set via .dir-locals.el."
 
 (defcustom projectile-dirconfig-comment-prefix
   nil
-  "`projectile-dirconfig-file` comment start marker.
+  "`projectile-dirconfig-file' comment start marker.
 If specified, starting a line in a project's .projectile file with this
 character marks that line as a comment instead of a pattern.
 Similar to '#' in .gitignore files."
   :group 'projectile
-  :type 'character
+  :type '(choice (const :tag "No comment syntax" nil)
+                 (character :tag "Comment character"))
   :package-version '(projectile . "2.2.0"))
 
 (defcustom projectile-warn-on-prefixless-dirconfig-lines t
@@ -607,17 +663,21 @@ such line, listing the offending entries."
   :type 'boolean
   :package-version '(projectile . "3.0.0"))
 
+;; The options below hold nothing but a list of names, patterns or regexps,
+;; and none of them can do more than widen or narrow a listing - so a project
+;; is free to set any of them from its .dir-locals.el.
+
 (defcustom projectile-globally-ignored-files
-  (list projectile-tags-file-name projectile-cache-file)
+  (list "TAGS" projectile-cache-file)
   "A list of files globally ignored by projectile.
 
 Entries are gitignore patterns: a plain name matches a file with that
 name at any depth, a name containing a slash is anchored at the project
 root, and `*', `**', `?' and `[...]' are the usual wildcards.  See
 `projectile-globally-ignored-directories' for the full pattern language."
-  :safe (lambda (x) (not (remq t (mapcar #'stringp x))))
   :group 'projectile
   :type '(repeat string)
+  :safe #'list-of-strings-p
   :package-version '(projectile . "3.0.0"))
 
 (defcustom projectile-globally-unignored-files nil
@@ -627,6 +687,7 @@ Entries cancel out the matching `projectile-globally-ignored-files'
 entries."
   :group 'projectile
   :type '(repeat string)
+  :safe #'list-of-strings-p
   :package-version '(projectile . "0.14.0"))
 
 (defcustom projectile-globally-ignored-file-suffixes
@@ -637,6 +698,7 @@ were the gitignore pattern `*SUFFIX' (e.g. \".elc\" ignores every
 `.elc' file in the project)."
   :group 'projectile
   :type '(repeat string)
+  :safe #'list-of-strings-p
   :package-version '(projectile . "0.12.0"))
 
 (defcustom projectile-globally-ignored-directories
@@ -716,10 +778,10 @@ an entry to `projectile-globally-unignored-directories' to get one of
 them back, or a `!' line to a project's `.projectile' to get it back
 for that project only.
 
-See also `projectile-global-ignore-file-patterns'."
-  :safe (lambda (x) (not (remq t (mapcar #'stringp x))))
+See also `projectile-globally-ignored-file-regexps'."
   :group 'projectile
   :type '(repeat string)
+  :safe #'list-of-strings-p
   :package-version '(projectile . "3.3.0"))
 
 (defcustom projectile-globally-unignored-directories nil
@@ -729,11 +791,15 @@ Entries cancel out the matching `projectile-globally-ignored-directories'
 entries."
   :group 'projectile
   :type '(repeat string)
+  :safe #'list-of-strings-p
   :package-version '(projectile . "0.14.0"))
 
-(defcustom projectile-global-ignore-file-patterns
+(define-obsolete-variable-alias 'projectile-global-ignore-file-patterns
+  'projectile-globally-ignored-file-regexps "3.4.0")
+
+(defcustom projectile-globally-ignored-file-regexps
   nil
-  "A list of file regexp patterns ignored by Projectile.
+  "A list of regexps matching files ignored by Projectile.
 
 Unlike `projectile-globally-ignored-files' and
 `projectile-globally-ignored-directories', which speak gitignore
@@ -744,9 +810,9 @@ only applied by `native' indexing.
 
 See also `projectile-ignored-file-p' and
 `projectile-ignored-directory-p'."
-  :safe (lambda (x) (not (remq t (mapcar #'stringp x))))
   :group 'projectile
   :type '(repeat string)
+  :safe #'list-of-strings-p
   :package-version '(projectile . "2.9.0"))
 
 (defcustom projectile-globally-ignored-modes
@@ -759,21 +825,34 @@ See also `projectile-ignored-file-p' and
   "A list of regular expressions for major modes ignored by projectile.
 
 If a buffer is using a given major mode, projectile will ignore
-it for functions working with buffers."
+it for functions working with buffers.
+
+Each entry is matched against the whole mode name, so \"occur-mode\"
+ignores that mode and nothing else, while \"gnus-.*-mode\" ignores a
+family of them."
   :group 'projectile
-  :type '(repeat string)
+  :type '(repeat regexp)
+  :safe #'list-of-strings-p
   :package-version '(projectile . "0.10.0"))
 
 (defcustom projectile-globally-ignored-buffers
-  '("*scratch*"
-    "*lsp-log*")
-  "A list of buffer-names ignored by projectile.
+  '("\\*scratch\\*"
+    "\\*lsp-log\\*")
+  "A list of buffer names ignored by projectile.
 
-You can use either exact buffer names or regular expressions.
-If a buffer is in the list projectile will ignore it for
-functions working with buffers."
+If a buffer matches one of these, projectile will ignore it for
+functions working with buffers.
+
+Each entry is a regular expression, matched anywhere in the buffer
+name - unlike `projectile-globally-ignored-modes', which matches whole
+mode names.  Anchor an entry yourself when you mean an exact name.
+
+Note that the `*' of a buffer name like `*scratch*' has to be escaped
+to be matched literally, as in the default value; unescaped it is a
+repetition operator."
   :group 'projectile
-  :type '(repeat string)
+  :type '(repeat regexp)
+  :safe #'list-of-strings-p
   :package-version '(projectile . "0.12.0"))
 
 (defcustom projectile-find-file-hook nil
@@ -821,7 +900,10 @@ Any function that does not take arguments will do."
   :package-version '(projectile . "0.10.0"))
 
 (defcustom projectile-use-git-grep nil
-  "If true, use `vc-git-grep' in git projects."
+  "Whether `projectile-grep' delegates to `vc-git-grep' in git projects.
+
+Only affects `projectile-grep'; the other search commands and the
+backends of `projectile-search' ignore this."
   :group 'projectile
   :type 'boolean
   :package-version '(projectile . "0.11.0"))
@@ -849,15 +931,15 @@ Either a backend name registered in `projectile-shell-backends'
 you registered yourself with `projectile-register-shell-backend'), `auto'
 to pick the first available backend, or `prompt' to be asked each time."
   :group 'projectile
-  :type '(choice (const :tag "shell" shell)
+  :type '(choice (const :tag "Automatic" auto)
+                 (const :tag "Prompt each time" prompt)
+                 (const :tag "shell" shell)
                  (const :tag "eshell" eshell)
                  (const :tag "ielm" ielm)
                  (const :tag "term" term)
                  (const :tag "vterm" vterm)
                  (const :tag "eat" eat)
                  (const :tag "ghostel" ghostel)
-                 (const :tag "Automatic" auto)
-                 (const :tag "Prompt each time" prompt)
                  (symbol :tag "Other registered backend"))
   :package-version '(projectile . "3.0.0"))
 
@@ -879,7 +961,10 @@ to pick the first available backend, or `prompt' to be asked each time."
   :type 'function
   :package-version '(projectile . "0.11.0"))
 
-(defcustom projectile-related-files-fn-function 'projectile-related-files-fn
+(define-obsolete-variable-alias 'projectile-related-files-fn-function
+  'projectile-related-files-function "3.4.0")
+
+(defcustom projectile-related-files-function 'projectile-related-files-fn
   "Function to find related files based on PROJECT-TYPE."
   :group 'projectile
   :type 'function
@@ -1002,7 +1087,7 @@ project cache was invalidated while it was still running.")
      (remhash project-root projectile--async-index-processes))))
 
 (defvar projectile-project-root-cache (make-hash-table :test 'equal)
-  "Cached value of function `projectile-project-root`.")
+  "Cached value of function `projectile-project-root'.")
 
 ;;; Project path spelling helpers
 ;;
@@ -1047,6 +1132,12 @@ Entries are stored abbreviated (via `abbreviate-file-name') and with a
 trailing slash so that membership and removal checks compare equal
 regardless of how the root was originally obtained."
   (file-name-as-directory (abbreviate-file-name root)))
+
+(defun projectile--directory-key (path)
+  "Return PATH in a spelling two references to one directory always share.
+Symlink-resolved and slash-terminated, so it can be compared with `equal'
+or used as a hash key regardless of how each reference was spelled."
+  (file-truename (file-name-as-directory path)))
 
 (projectile-define-project-cache projectile-project-type-cache
   "A hashmap used to cache project type to speed up related operations.")
@@ -1151,18 +1242,37 @@ Contains a copy of `projectile-known-projects' when it was last
 synchronized with `projectile-known-projects-file'.")
 
 (defcustom projectile-known-projects-file
-  (expand-file-name "projectile-bookmarks.eld"
-                    user-emacs-directory)
-  "Name and location of the Projectile's known projects file."
+  (locate-user-emacs-file "projectile-bookmarks.eld")
+  "Name and location of the Projectile's known projects file.
+
+Resolved with `locate-user-emacs-file\\=', so it lands beside the rest of
+your Emacs state wherever that is - including `~/.config/emacs\\=' for a
+configuration kept there, which a hand-rolled `user-emacs-directory\\='
+path would have missed."
   :group 'projectile
-  :type 'string
-  :package-version '(projectile . "0.9.0"))
+  :type 'file
+  :package-version '(projectile . "3.4.0"))
 
 (defcustom projectile-ignored-projects nil
   "A list of projects not to be added to `projectile-known-projects'."
   :group 'projectile
   :type '(repeat :tag "Project list" directory)
   :package-version '(projectile . "0.11.0"))
+
+(defcustom projectile-ignored-project-patterns nil
+  "Regexps matching projects not to be added to `projectile-known-projects'.
+
+The pattern-matching sibling of `projectile-ignored-projects', which
+takes exact paths, and `projectile-ignored-project-function', which takes
+a predicate.  Each entry is matched against the project root with
+`string-match-p', so keeping the scratch areas of a machine out of the
+known projects is a line of configuration rather than a lambda:
+
+    (setq projectile-ignored-project-patterns
+          \\='(\"\\\\`/tmp/\" \"/Downloads/\"))"
+  :group 'projectile
+  :type '(repeat :tag "Regexps" regexp)
+  :package-version '(projectile . "3.4.0"))
 
 (defcustom projectile-ignored-project-function nil
   "Function to decide if a project is added to `projectile-known-projects'.
@@ -1172,7 +1282,8 @@ project root as argument and returns non-nil if the project is to
 be ignored or nil otherwise.
 
 This function is only called if the project is not listed in
-the variable `projectile-ignored-projects'.
+the variable `projectile-ignored-projects' and matches none of
+`projectile-ignored-project-patterns'.
 
 A suitable candidate would be `file-remote-p' to ignore remote
 projects."
@@ -1217,7 +1328,8 @@ projects on a TRAMP host fd is detected separately on the remote (and
 cached per host), since whatever is on the local box may not exist on
 the remote.  See `projectile-fd-executable-for'."
   :group 'projectile
-  :type 'string
+  :type '(choice (const :tag "Don't use fd" nil)
+                 (string :tag "Path or name"))
   :package-version '(projectile . "2.8.0"))
 
 (defvar projectile--remote-fd-executable-cache (make-hash-table :test 'equal)
@@ -1293,7 +1405,8 @@ default value the submodules are listed by running git directly, with
 no shell involved (see issue #1600).  Customizing the variable switches
 back to running it as a shell command."
   :group 'projectile
-  :type 'string
+  :type '(choice (const :tag "Don't list submodules" nil)
+                 (string :tag "Command"))
   :package-version '(projectile . "0.12.0"))
 
 (defcustom projectile-git-ignored-command "git ls-files -zcoi --exclude-standard"
@@ -1341,20 +1454,23 @@ back to running it as a shell command."
   :type 'string
   :package-version '(projectile . "0.9.0"))
 
-(defcustom projectile-darcs-command "darcs show files -0 . "
+(defcustom projectile-darcs-command "darcs show files -0 ."
   "Command used by projectile to get the files in a darcs project."
   :group 'projectile
   :type 'string
   :package-version '(projectile . "0.9.0"))
 
 (defcustom projectile-pijul-command "pijul list | tr '\\n' '\\0'"
-   "Command used by projectile to get the files in a pijul project."
-   :group 'projectile
-   :type 'string
+  "Command used by projectile to get the files in a pijul project."
+  :group 'projectile
+  :type 'string
   :package-version '(projectile . "2.6.0"))
 
-(defcustom projectile-svn-command "svn list -R . | grep -v '$/' | tr '\\n' '\\0'"
+(defcustom projectile-svn-command "svn list -R . | grep -v '/$' | tr '\\n' '\\0'"
   "Command used by projectile to get the files in a svn project.
+
+`svn list -R' reports directories too, with a trailing slash, so they
+are filtered out - the project files are what Projectile is after.
 
 The command runs non-interactively (its output is piped), so `svn'
 can't prompt for credentials.  For projects on an authenticated remote
@@ -1418,11 +1534,16 @@ fails with an authentication error.  See URL
     ("lock" . (""))
     ("gpg"  . (""))
     )
-  "Alist of extensions for switching to file with the same name,
-  using other extensions based on the extension of current
-  file."
+  "Alist of extensions to try when switching to a file's counterpart.
+
+Keys and values are extensions without the leading dot; the key nil
+stands for a file with no extension at all.  Each value lists the
+extensions `projectile-find-other-file' offers for a file with that
+key's extension, in the order they are tried."
   :group 'projectile
-  :type 'alist
+  :type '(alist :key-type (choice (string :tag "Extension")
+                                  (const :tag "No extension" nil))
+                :value-type (repeat (string :tag "Extension")))
   :package-version '(projectile . "0.12.0"))
 
 (defcustom projectile-create-missing-test-files nil
@@ -1435,26 +1556,42 @@ It assumes the test/ folder is at the same level as src/."
   :type 'boolean
   :package-version '(projectile . "0.13.0"))
 
-(defcustom projectile-per-project-compilation-buffer nil
-  "When non-nil, the compilation command makes the per-project compilation buffer."
-  :group 'projectile
-  :type 'boolean
-  :package-version '(projectile . "2.6.0"))
-
-(defcustom projectile-per-command-compilation-buffer nil
-  "When non-nil, each lifecycle command gets its own compilation buffer.
+(defcustom projectile-compilation-buffer-scope nil
+  "What a lifecycle command's compilation buffer is named after.
 
 Compiling, testing and running a project all use `compilation-mode' and
 therefore share one buffer, so running the tests discards the build
-output and vice versa.  With this enabled the command type is part of the
-buffer name (`*compilation*<test>'), which keeps them apart.
+output and vice versa - across projects as well as within one.
+Qualifying the buffer name keeps them apart.  The value is a list of:
 
-Composes with `projectile-per-project-compilation-buffer': with both
-enabled the buffer is named after the project and the command
-\(`*compilation*<my-project:test>')."
+- `project' - the project name (`*compilation*<my-project>'), so two
+  projects don't overwrite each other's output.  This also narrows the
+  buffers offered for saving before a command runs to the project's own.
+- `command' - the lifecycle command (`*compilation*<test>'), so a build
+  and a test run don't overwrite each other.
+
+The two compose: with both, the buffer is `*compilation*<my-project:test>'.
+Setting this to t is the same as naming both.  With nil there's a single
+shared compilation buffer, as in plain Emacs."
   :group 'projectile
-  :type 'boolean
-  :package-version '(projectile . "3.3.0"))
+  :type '(choice (const :tag "One shared buffer" nil)
+                 (const :tag "Project and command" t)
+                 (set :tag "Selected aspects"
+                      (const :tag "Project" project)
+                      (const :tag "Lifecycle command" command)))
+  :package-version '(projectile . "3.4.0"))
+
+;; Remove in 4.0.  Superseded by `projectile-compilation-buffer-scope', which
+;; folds them in - setting both booleans is what its two-element list means.
+(defvar projectile-per-project-compilation-buffer nil
+  "When non-nil, each project gets its own compilation buffer.")
+(defvar projectile-per-command-compilation-buffer nil
+  "When non-nil, each lifecycle command gets its own compilation buffer.")
+
+(dolist (var '(projectile-per-project-compilation-buffer
+               projectile-per-command-compilation-buffer))
+  (make-obsolete-variable var "use `projectile-compilation-buffer-scope' instead."
+                          "3.4.0"))
 
 (defcustom projectile-after-switch-project-hook nil
   "Hooks run right after project is switched."
@@ -1490,7 +1627,7 @@ will display current project and the end of the list of known
 projects, `keep' will leave the current project at the default
 position."
   :group 'projectile
-  :type '(radio
+  :type '(choice
           (const :tag "Remove" remove)
           (const :tag "Move to end" move-to-end)
           (const :tag "Keep" keep))
@@ -1501,10 +1638,14 @@ position."
 
 If the value is nil, there is no limit to the opened buffers count."
   :group 'projectile
-  :type 'integer
+  :type '(choice (const :tag "No limit" nil)
+                 (natnum :tag "Buffers"))
   :package-version '(projectile . "2.2.0"))
 
-(defcustom projectile-cmd-hist-ignoredups t
+(define-obsolete-variable-alias 'projectile-cmd-hist-ignoredups
+  'projectile-command-history-ignore-duplicates "3.4.0")
+
+(defcustom projectile-command-history-ignore-duplicates t
   "Controls when inputs are added to projectile's command history.
 
 A value of t means consecutive duplicates are ignored.
@@ -1515,6 +1656,35 @@ A value of nil means nothing is ignored."
                  (const :tag "Ignore consecutive duplicates" t)
                  (const :tag "Only keep last duplicate" erase))
   :package-version '(projectile . "2.9.0"))
+
+(defcustom projectile-command-history-scope 'repository
+  "How widely a project's command history is shared.
+
+- `repository' - every checkout of one repository shares a history.  Two
+  git worktrees, or two clones of the same upstream, are the same project
+  on two branches: the commands you build and test it with are the same
+  ones, so a worktree made this morning already knows them (issue #1786).
+
+- `project' - each project root keeps its own history, so checkouts of one
+  repository start empty and learn separately.
+
+This is a single choice, not a list of aspects like the other options
+whose names end in `-scope': one value replaces the other.
+
+What gets shared is the history you browse - the list behind \\[previous-history-element]
+at a command prompt.  Two things stay this checkout's own, because both
+act without asking and a remembered command can carry absolute paths back
+into the checkout it was typed in: what a prompt is pre-filled with, and
+what `projectile-repeat-last-command' replays.
+
+Sharing needs the repository to be identifiable (see
+`projectile-repo-identity'); a project Projectile can say nothing about
+keeps its own history whatever this is set to."
+  :group 'projectile
+  :type '(choice (const :tag "Share across checkouts of one repository" repository)
+                 (const :tag "Keep a history per project root" project))
+  :safe (lambda (value) (memq value '(repository project)))
+  :package-version '(projectile . "3.4.0"))
 
 (defvar projectile-project-test-suffix nil
   "Use this variable to override the current project's test-suffix property.
@@ -1548,7 +1718,7 @@ Should be set via .dir-locals.el.")
 
 ;;; Version information
 
-(defconst projectile-version "3.3.0"
+(defconst projectile-version "3.4.0"
   "The current version of Projectile.")
 
 (defun projectile--pkg-version ()
@@ -1577,6 +1747,33 @@ just return nil."
      version)))
 
 ;;; Misc utility functions
+
+(defun projectile--collect-from-functions (functions root key-function what)
+  "Call each of FUNCTIONS with ROOT and collect their results.
+
+The lists come back concatenated in the order FUNCTIONS were given,
+de-duplicated by KEY-FUNCTION, so the first function to report an item
+is the one whose version of it survives and the earlier functions'
+findings are offered first.  Items KEY-FUNCTION returns nil for are
+dropped.
+
+A function that signals is reported and skipped rather than taking the
+whole lookup down with it; WHAT names the kind of function in that
+message."
+  (let ((seen (make-hash-table :test 'equal))
+        results)
+    (dolist (fn functions)
+      (dolist (item (condition-case err
+                        (funcall fn root)
+                      (error
+                       (projectile--message "%s function %s failed: %s"
+                                            what fn (error-message-string err))
+                       nil)))
+        (when-let* ((key (funcall key-function item))
+                    ((not (gethash key seen))))
+          (puthash key t seen)
+          (push item results))))
+    (nreverse results)))
 
 (defun projectile-unixy-system-p ()
   "Check to see if unixy text utilities are installed."
@@ -1740,9 +1937,8 @@ argument)."
                                    (hash-table-keys projectile-projects-cache))
                 (projectile-project-root))))
     (projectile--invalidate-project-cache project-root)
-    (when projectile-verbose
-      (message "Invalidated Projectile cache for %s."
-               (propertize project-root 'face 'font-lock-keyword-face))))
+    (projectile--message "Invalidated cache for %s"
+                         (propertize project-root 'face 'font-lock-keyword-face)))
   (when (fboundp 'recentf-cleanup)
     (recentf-cleanup)))
 
@@ -1768,9 +1964,7 @@ with `projectile-invalidate-cache'."
                                     (hash-table-keys projectile-projects-cache))))))
     (dolist (project-root roots)
       (projectile--invalidate-project-cache project-root))
-    (when projectile-verbose
-      (message "Invalidated the Projectile caches of %d project(s)."
-               (length roots))))
+    (projectile--message "Invalidated the caches of %d project(s)" (length roots)))
   (when (fboundp 'recentf-cleanup)
     (recentf-cleanup)))
 
@@ -1791,8 +1985,7 @@ the per-project file list and project-type caches."
   ;; visible until the entries time out (see
   ;; `projectile-file-exists-remote-cache-expire').
   (clrhash projectile-file-exists-cache)
-  (when projectile-verbose
-    (message "Cleared Projectile project root cache.")))
+  (projectile--message "Cleared the project root cache"))
 
 (defun projectile-time-seconds ()
   "Return the number of seconds since the unix epoch."
@@ -1847,8 +2040,7 @@ The cache is created both in memory and on the hard drive."
           ;; file's directory keeps being watched and a later create-event
           ;; there re-adds the entries we just removed.
           (projectile--maybe-watch-project project-root new-cache)
-          (when projectile-verbose
-            (message "%s removed from cache" file)))
+          (projectile--message "%s removed from cache" file))
       (user-error "%s is not in the cache" file))))
 
 ;;;###autoload
@@ -1939,8 +2131,7 @@ The message is only emitted when `projectile-verbose' is non-nil, and
 only once per project and session."
   (unless (gethash project projectile--watch-skipped-projects)
     (puthash project t projectile--watch-skipped-projects)
-    (when projectile-verbose
-      (apply #'message format-string args))))
+    (apply #'projectile--message format-string args)))
 
 (defun projectile--watch-project (project files)
   "Register file-notify watches for PROJECT, whose cached files are FILES.
@@ -1954,7 +2145,7 @@ usable file notification backend."
     (if (> (length dirs) projectile-watch-directory-limit)
         (projectile--watch-skipped-once
          project
-         "Projectile: not watching %s: %d directories exceed `projectile-watch-directory-limit' (%d)"
+         "Not watching %s: %d directories exceed `projectile-watch-directory-limit' (%d)"
          project (length dirs) projectile-watch-directory-limit)
       (let ((callback (projectile--watch-make-callback project))
             (failed nil)
@@ -1975,7 +2166,7 @@ usable file notification backend."
             (ignore-errors (file-notify-rm-watch (car entry))))
           (projectile--watch-skipped-once
            project
-           "Projectile: cannot watch %s (no file notification backend, or watch registration failed)"
+           "Cannot watch %s (no file notification backend, or watch registration failed)"
            project))))))
 
 (defun projectile--unwatch-project (project)
@@ -2020,6 +2211,54 @@ project was unwatched."
                                #'projectile--process-watch-events project)
                projectile--watch-debounce-timers))))
 
+(defvar projectile--watch-added-files nil
+  "Paths the watch batch in progress has added to the cache.
+Bound by `projectile--process-watch-events\\=' so the whole batch can be
+put to the VCS in one go; nil outside one.")
+
+(defun projectile--vcs-ignored-subset (root relatives)
+  "Return the members of RELATIVES that the VCS at ROOT ignores.
+
+One `git check-ignore\\=' answers for the whole list, which is what makes
+this usable from the watch path - a process per file would not be.
+Returns nil for anything but git, and for a git that fails; treating the
+answer as \"nothing is ignored\" is conservative, since the only cost is
+the drift this exists to remove.
+
+`call-process-region\\=' rather than a TRAMP-aware call because watches are
+never armed for a remote project in the first place."
+  (when (and relatives (eq (projectile-project-vcs root) 'git))
+    (let ((default-directory root))
+      (with-temp-buffer
+        ;; Exit status 1 means "none of them are ignored", which is an
+        ;; answer rather than a failure; only 0 produces output.
+        (when (eq 0 (ignore-errors
+                      (call-process-region
+                       (mapconcat #'identity relatives "\0") nil
+                       "git" nil t nil
+                       "check-ignore" "-z" "--stdin")))
+          (split-string (buffer-string) "\0" t))))))
+
+(defun projectile--watch-drop-vcs-ignored (project added)
+  "Remove from PROJECT\\='s cache the ADDED paths its VCS ignores.
+
+The watch path applies Projectile\\='s own ignore rules, which know nothing
+about a `.gitignore\\='; under `alien\\=' and `hybrid\\=' indexing the VCS is
+what produced the file list, so without this a watched project slowly
+gains files a re-index would never have listed (see issue #1075, which
+fixed the same hole for files opened by hand).
+
+Returns non-nil when the cache was changed."
+  (when (memq projectile-indexing-method '(alien hybrid))
+    (when-let* ((ignored (projectile--vcs-ignored-subset project added)))
+      (let ((set (make-hash-table :test 'equal :size (length ignored))))
+        (dolist (file ignored) (puthash file t set))
+        (puthash project
+                 (seq-remove (lambda (file) (gethash file set))
+                             (gethash project projectile-projects-cache))
+                 projectile-projects-cache)
+        t))))
+
 (defun projectile--process-watch-events (project)
   "Apply PROJECT's queued file-notify events to its cached file list.
 Runs from the debounce timer.  If any event can't be applied
@@ -2042,17 +2281,23 @@ scheduled via `projectile--schedule-cache-flush'."
               'projectile--none)
           (projectile--unwatch-project project)
         (let* ((mutated nil)
+               (projectile--watch-added-files nil)
                (fallback
                 (catch 'projectile--watch-fallback
                   (dolist (event events)
                     (when (projectile--watch-apply-event project event)
                       (setq mutated t)))
                   nil)))
+          ;; One question to the VCS for everything the batch added, rather
+          ;; than one per file as the opened-file path can afford.
+          (when (and (not fallback)
+                     (projectile--watch-drop-vcs-ignored
+                      project projectile--watch-added-files))
+            (setq mutated t))
           (cond
            (fallback
-            (when projectile-verbose
-              (message "Projectile: invalidating the cache of %s (%s)"
-                       project fallback))
+            (projectile--message "Invalidating the cache of %s (%s)"
+                                 project fallback)
             ;; Also drops the watches (and any events queued meanwhile).
             (projectile--invalidate-project-cache project))
            ((and mutated (projectile-persistent-cache-p))
@@ -2125,6 +2370,7 @@ Returns non-nil when the cached list was mutated."
       (when (and (not (member relative
                               (gethash project projectile-projects-cache)))
                  (projectile--watch-keep-file-p project relative))
+        (push relative projectile--watch-added-files)
         (puthash project
                  (cons relative (gethash project projectile-projects-cache))
                  projectile-projects-cache)
@@ -2274,9 +2520,14 @@ PROJECT-ROOT defaults to the current project."
             ;; UI immediately after the new file was created.
             (when (projectile-persistent-cache-p)
               (projectile--schedule-cache-flush current-project)))
-          (message "File %s added to project %s cache."
-                   (propertize current-file 'face 'font-lock-keyword-face)
-                   (propertize current-project 'face 'font-lock-keyword-face)))))))
+          (if (called-interactively-p 'interactive)
+              (message "Added %s to the cache of %s"
+                       (propertize current-file 'face 'font-lock-keyword-face)
+                       (propertize current-project 'face 'font-lock-keyword-face))
+            (projectile--message
+             "Added %s to the cache of %s"
+             (propertize current-file 'face 'font-lock-keyword-face)
+             (propertize current-project 'face 'font-lock-keyword-face))))))))
 
 ;; cache opened files automatically to reduce the need for cache invalidation
 (defun projectile-cache-files-find-file-hook (&optional project-root)
@@ -2339,11 +2590,11 @@ The history is persisted in `projectile-frecency-file'."
   :package-version '(projectile . "3.1.0"))
 
 (defcustom projectile-frecency-file
-  (expand-file-name "projectile-frecency.eld" user-emacs-directory)
+  (locate-user-emacs-file "projectile-frecency.eld")
   "File where Projectile persists the per-project file visit history."
   :group 'projectile
   :type 'file
-  :package-version '(projectile . "3.1.0"))
+  :package-version '(projectile . "3.4.0"))
 
 (defcustom projectile-frecency-max-files 200
   "Maximum number of files tracked per project.
@@ -2571,7 +2822,9 @@ discover projects there."
           (let ((dir (projectile--known-project-root (projectile-project-root directory))))
             (unless (member dir projectile-known-projects)
               (projectile-add-known-project dir)))))
-    (message "Project search path directory %s doesn't exist" directory)))
+    (if (called-interactively-p 'interactive)
+        (message "Search path directory %s doesn't exist" directory)
+      (projectile--message "Search path directory %s doesn't exist" directory))))
 
 (defvar projectile--search-path-discovered nil
   "Non-nil once `projectile-project-search-path' has been auto-discovered.
@@ -2581,7 +2834,7 @@ project-switch command.")
 (defun projectile-discover-projects-in-search-path ()
   "Discover projects in `projectile-project-search-path'.
 When called interactively, always re-scans; the automatic scan (see
-`projectile-auto-discover') runs this once per session."
+`projectile-auto-discover-projects') runs this once per session."
   (interactive)
   (setq projectile--search-path-discovered t)
   (dolist (path projectile-project-search-path)
@@ -2732,7 +2985,7 @@ Return the first (topmost) matched directory or nil if not found."
      (lambda (dir) (projectile--directory-marker dir markers 'files-only)))))
 
 (defun projectile-root-marked (dir)
-  "Identify a project root in DIR by search for `projectile-dirconfig-file`."
+  "Identify a project root in DIR by search for `projectile-dirconfig-file'."
   (projectile-root-bottom-up dir (list projectile-dirconfig-file)))
 
 (defun projectile-root-bottom-up (dir &optional list)
@@ -2973,13 +3226,13 @@ Files are returned as relative paths to DIRECTORY."
                                         progress-reporter))))
 
 (defun projectile--global-ignore-regexp-p (path)
-  "Return non-nil when PATH matches `projectile-global-ignore-file-patterns'.
+  "Return non-nil when PATH matches `projectile-globally-ignored-file-regexps'.
 PATH is an absolute file name.  Those patterns are Emacs regexps rather
 than globs, which is why they are a separate mechanism from the ignore
 patterns proper; matching is case-sensitive."
   (seq-some (lambda (re) (let ((case-fold-search nil))
                            (string-match-p re path)))
-            projectile-global-ignore-file-patterns))
+            projectile-globally-ignored-file-regexps))
 
 (defun projectile--glob-to-regexp (glob)
   "Translate the dirconfig GLOB into a regexp fragment.
@@ -3661,8 +3914,9 @@ Only text sent to standard output is taken into account."
                    ;; mention it (quietly) when there was stderr worth seeing.
                    (files
                     (when had-stderr
-                      (message "Projectile: `%s' exited with code %d but produced output; using it (see *projectile-files-errors*)"
-                               full-command exit-code)))
+                      (projectile--message
+                       "`%s' exited with code %d but produced output; using it (see *projectile-files-errors*)"
+                       full-command exit-code)))
                    ;; Non-zero exit and nothing on stdout: a real failure.
                    (t
                     (user-error
@@ -3769,8 +4023,9 @@ Remote ROOTs are handled via TRAMP (`make-process' is given a non-nil
                          ;; and mention it quietly when there's anything to see.
                          (files
                           (when (projectile--surface-ext-command-errors errors-file)
-                            (message "Projectile: `%s' exited with code %s but produced output; using it (see *projectile-files-errors*)"
-                                     command exit-code))
+                            (projectile--message
+                             "`%s' exited with code %s but produced output; using it (see *projectile-files-errors*)"
+                             command exit-code))
                           (funcall callback files nil))
                          ;; Non-zero exit and nothing on stdout: a real failure.
                          (t
@@ -3876,17 +4131,19 @@ indexing process, or nil when nothing was started."
   (let ((root (or project-root (projectile-acquire-root))))
     (cond
      ((eq projectile-indexing-method 'native)
-      (message "Projectile: async indexing needs the `alien'/`hybrid' method; `native' cannot be warmed")
+      (projectile--message-always
+       "Async indexing needs the `alien'/`hybrid' method; `native' cannot be warmed")
       nil)
      ((not projectile-enable-caching)
-      (message "Projectile: async indexing has no effect while caching is disabled")
+      (projectile--message-always
+       "Async indexing has no effect while caching is disabled")
       nil)
      ((let ((proc (gethash root projectile--async-index-processes)))
         (and proc (process-live-p proc)))
-      (message "Projectile: already indexing %s" root)
+      (projectile--message-always "Already indexing %s" root)
       nil)
      (t
-      (message "Projectile: indexing %s in the background..." root)
+      (projectile--message-always "Indexing %s in the background..." root)
       ;; The callback needs to know which process it belongs to so it can
       ;; tell whether it is still the active index for ROOT when it
       ;; finishes (a re-trigger or `projectile-invalidate-cache' replaces
@@ -3907,10 +4164,11 @@ indexing process, or nil when nothing was started."
                            (car proc-cell))
                    (remhash root projectile--async-index-processes)
                    (if err
-                       (message "Projectile: background indexing of %s failed: %s" root err)
+                       (projectile--message-always
+                        "Background indexing of %s failed: %s" root err)
                      (projectile-cache-project root files)
-                     (message "Projectile: finished indexing %s (%d files)"
-                              root (length files))))))))
+                     (projectile--message-always "Finished indexing %s (%d files)"
+                                                 root (length files))))))))
         (setcar proc-cell proc)
         (when (processp proc)
           (puthash root proc projectile--async-index-processes))
@@ -4374,7 +4632,7 @@ slash) can match it.  ROOT defaults to the current project's root.
 
 The check is the one indexing performs: PATH's root-relative name is
 matched against `projectile--ignore-patterns', `!' ensure patterns
-rescue it, and `projectile-global-ignore-file-patterns' is applied to
+rescue it, and `projectile-globally-ignored-file-regexps' is applied to
 the absolute name.  Because an ignored directory covers its whole
 subtree, a path inside one is reported as ignored too."
   (let* ((path (expand-file-name path))
@@ -4490,7 +4748,7 @@ list, so they all apply the same rules the same way.  It merges
   written in this language
 
 The `projectile-globally-unignored-*' options cancel out the matching
-entries.  `projectile-global-ignore-file-patterns' is deliberately not
+entries.  `projectile-globally-ignored-file-regexps' is deliberately not
 part of this: those are Emacs regexps, not patterns, and can't be handed
 to an external tool.
 
@@ -4683,7 +4941,7 @@ Never use on many files since it's going to recalculate the
 project-root for every file."
   (expand-file-name name (projectile-project-root dir)))
 
-(cl-defun projectile-completing-read (prompt choices &key initial-input action caller sort-function (category 'project-file))
+(cl-defun projectile-completing-read (prompt choices &key initial-input action caller sort-function annotation-function (category 'project-file))
   "Present a project tailored PROMPT with CHOICES.
 
 Reads with `completing-read', unless `projectile-completion-system' is a
@@ -4694,6 +4952,12 @@ called on the selected candidate and its result returned.  SORT-FUNCTION,
 when non-nil, is exposed as the completion metadata's
 `display-sort-function' and `cycle-sort-function', so completion UIs
 that honor metadata present the candidates in that order.
+
+ANNOTATION-FUNCTION, when non-nil, is exposed as the metadata's
+`annotation-function', so UIs that honor metadata show a suffix next to
+each candidate.  Use it when the candidate string alone doesn't identify
+what's being picked - a worktree's path doesn't say which branch it has
+checked out, for instance.
 
 CATEGORY is the completion metadata category advertised to UIs like
 marginalia and embark so they annotate and act on the candidates
@@ -4713,6 +4977,8 @@ CALLER is accepted for backward compatibility but no longer used."
                    ;; and embark enhance how candidates are presented.
                    (if (eq action 'metadata)
                        `(metadata ,@(when category `((category . ,category)))
+                                  ,@(when annotation-function
+                                      `((annotation-function . ,annotation-function)))
                                   ,@(when sort-function
                                       `((display-sort-function . ,sort-function)
                                         (cycle-sort-function . ,sort-function))))
@@ -4744,7 +5010,7 @@ CALLER is accepted for backward compatibility but no longer used."
     ;; Calculate the list of files.
     (when (null files)
       (when projectile-enable-caching
-        (message "Projectile is initializing cache for %s ..." project-root))
+        (message "Indexing %s..." project-root))
       (setq files
             (if (eq projectile-indexing-method 'alien)
                 ;; In alien mode the external tool does the walking.  The
@@ -4801,7 +5067,11 @@ CALLER is accepted for backward compatibility but no longer used."
 
       ;; Save the cached list.
       (when projectile-enable-caching
-        (projectile-cache-project project-root files)))
+        (projectile-cache-project project-root files)
+        ;; Close the `Indexing...' notice opened above.  The manual asks
+        ;; for this pairing, and without it a long index leaves the echo
+        ;; area claiming to still be working.
+        (message "Indexing %s...done" project-root)))
 
     ;;; Sorting
     ;;
@@ -5276,7 +5546,7 @@ PROJECT-ROOT is the project root."
   (if-let* ((rel-path (if (file-name-absolute-p file)
                          (file-relative-name file project-root)
                        file))
-           (custom-function (funcall projectile-related-files-fn-function (projectile-project-type))))
+           (custom-function (funcall projectile-related-files-function (projectile-project-type))))
       (funcall (cond ((functionp custom-function)
                       custom-function)
                      ((consp custom-function)
@@ -5521,6 +5791,118 @@ This is REL-PATH's parent directory (without a trailing slash), so
 keys as \"apps/polls\" without colliding with a different \"polls\" app."
   (when-let* ((dir (file-name-directory rel-path)))
     (directory-file-name dir)))
+
+(defun projectile--parent-directory-key (rel-path)
+  "Return REL-PATH\\='s parent directory, without a trailing slash.
+A key for the frameworks that group a resource\\='s files in a directory
+rather than naming them after it, so \"polls/models.py\" keys as
+\"polls\" and a nested \"apps/polls/models.py\" as \"apps/polls\", without
+the two colliding."
+  (when-let* ((dir (file-name-directory rel-path)))
+    (directory-file-name dir)))
+
+(defalias 'projectile--django-app-key #'projectile--parent-directory-key
+  "Return the Django app directory of a path.
+An alias for `projectile--parent-directory-key\\=', kept because the
+Django reference table named it.")
+
+(defun projectile--basename-key (rel-path suffix)
+  "Return REL-PATH\\='s basename with SUFFIX removed, ignoring its directory.
+For the frameworks that name a resource\\='s files after it but scatter
+them across directories, so the directory can\\='t be part of the key."
+  (let ((name (file-name-nondirectory rel-path)))
+    (when (string-suffix-p suffix name)
+      (substring name 0 (- (length suffix))))))
+
+(defun projectile--phoenix-controller-key (rel-path)
+  "Return the Phoenix resource key of the controller REL-PATH."
+  (projectile--basename-key rel-path "_controller.ex"))
+
+(defun projectile--phoenix-html-key (rel-path)
+  "Return the Phoenix resource key of the HTML module REL-PATH."
+  (projectile--basename-key rel-path "_html.ex"))
+
+(defun projectile--phoenix-json-key (rel-path)
+  "Return the Phoenix resource key of the JSON module REL-PATH."
+  (projectile--basename-key rel-path "_json.ex"))
+
+(defun projectile--phoenix-view-key (rel-path)
+  "Return the Phoenix resource key of the view REL-PATH (Phoenix 1.6)."
+  (projectile--basename-key rel-path "_view.ex"))
+
+(defun projectile--phoenix-live-key (rel-path)
+  "Return the Phoenix resource key of the LiveView REL-PATH."
+  (projectile--basename-key rel-path "_live.ex"))
+
+(defvar projectile--phoenix-file-kinds
+  '((:controller . (:suffix "_controller.ex"
+                    :key-fn projectile--phoenix-controller-key))
+    (:html       . (:suffix "_html.ex"
+                    :key-fn projectile--phoenix-html-key))
+    (:json       . (:suffix "_json.ex"
+                    :key-fn projectile--phoenix-json-key))
+    (:view       . (:suffix "_view.ex"
+                    :key-fn projectile--phoenix-view-key))
+    (:live       . (:suffix "_live.ex"
+                    :key-fn projectile--phoenix-live-key)))
+  "Reference `:file-kinds\\=' table for Phoenix applications.
+Relates the modules of a resource by the name they share - user_controller.ex,
+user_html.ex, user_json.ex, user_live.ex - wherever under `lib/\\=' they
+live, since the web directory is named after the application.  `:view\\='
+is the Phoenix 1.6 spelling that `:html\\=' replaced in 1.7; a project
+will have one or the other.")
+
+(defun projectile--laravel-model-key (rel-path)
+  "Return the Laravel resource key of the model REL-PATH."
+  (projectile--basename-key rel-path ".php"))
+
+(defun projectile--laravel-controller-key (rel-path)
+  "Return the Laravel resource key of the controller REL-PATH."
+  (projectile--basename-key rel-path "Controller.php"))
+
+(defun projectile--laravel-factory-key (rel-path)
+  "Return the Laravel resource key of the factory REL-PATH."
+  (projectile--basename-key rel-path "Factory.php"))
+
+(defun projectile--laravel-seeder-key (rel-path)
+  "Return the Laravel resource key of the seeder REL-PATH."
+  (projectile--basename-key rel-path "Seeder.php"))
+
+(defun projectile--laravel-policy-key (rel-path)
+  "Return the Laravel resource key of the policy REL-PATH."
+  (projectile--basename-key rel-path "Policy.php"))
+
+(defvar projectile--laravel-file-kinds
+  '((:model      . (:path "app/Models/" :suffix ".php"
+                    :key-fn projectile--laravel-model-key))
+    (:controller . (:path "app/Http/Controllers/" :suffix "Controller.php"
+                    :key-fn projectile--laravel-controller-key))
+    (:factory    . (:path "database/factories/" :suffix "Factory.php"
+                    :key-fn projectile--laravel-factory-key))
+    (:seeder     . (:path "database/seeders/" :suffix "Seeder.php"
+                    :key-fn projectile--laravel-seeder-key))
+    (:policy     . (:path "app/Policies/" :suffix "Policy.php"
+                    :key-fn projectile--laravel-policy-key)))
+  "Reference `:file-kinds\\=' table for the Laravel project type.
+Relates the files named after an Eloquent model - User.php,
+UserController.php, UserFactory.php, UserSeeder.php, UserPolicy.php -
+by that class name.  Blade views are deliberately left out: they live in
+snake_case plural directories while the classes are StudlyCase singular,
+so relating them would need inflection and case conversion, and would
+guess wrong often enough not to be worth it.")
+
+(defvar projectile--nextjs-file-kinds
+  '((:page    . (:prefix "page." :key-fn projectile--parent-directory-key))
+    (:layout  . (:prefix "layout." :key-fn projectile--parent-directory-key))
+    (:loading . (:prefix "loading." :key-fn projectile--parent-directory-key))
+    (:error   . (:prefix "error." :key-fn projectile--parent-directory-key))
+    (:route   . (:prefix "route." :key-fn projectile--parent-directory-key)))
+  "Reference `:file-kinds\\=' table for Next.js applications.
+The app router gives a route\\='s files fixed names in a shared directory -
+page, layout, loading, error, route - so the directory is the key.  Each
+kind matches on the name plus its dot rather than a whole file name, so
+it covers whichever of .js, .jsx, .ts or .tsx the project uses without
+also matching something like `pageant.tsx\\='.")
 
 (defvar projectile--rails-file-kinds
   '((:model      . (:path "app/models/"))
@@ -5863,8 +6245,26 @@ Such a clause has the form (:any FILE...) and is satisfied by any one
 of its FILEs; see `projectile-register-project-type'."
   (and (consp marker) (eq (car marker) :any)))
 
+(defun projectile--marker-clauses (marker-files)
+  "Return MARKER-FILES as a plain list of alternative-lists.
+
+A marker specification mixes two shapes - a bare file name and an
+\\(:any FILE...) clause - and every consumer used to take that apart for
+itself, which is how the project-file derivation came to understand a
+clause only in the first position.  This is the one place that knows the
+shapes: it answers with a list whose every element is a list of names,
+any one of which satisfies that position.
+
+Returns nil for a predicate marker, which has no file names to give."
+  (unless (functionp marker-files)
+    (mapcar (lambda (clause)
+              (if (projectile--any-marker-p clause)
+                  (cdr clause)
+                (list clause)))
+            (ensure-list marker-files))))
+
 (cl-defun projectile--build-project-plist
-    (marker-files &key project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir related-files-fn file-kinds tasks)
+    (marker-files &key project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir src-extension test-extension related-files-fn file-kinds tasks)
   "Return a project type plist with the provided arguments.
 
 A project type is defined by PROJECT-TYPE, a set of MARKER-FILES,
@@ -5901,6 +6301,11 @@ TEST-SUFFIX which specifies test file suffix, and
 TEST-PREFIX which specifies test file prefix.
 SRC-DIR which specifies the path to the source relative to the project root.
 TEST-DIR which specifies the path to the tests relative to the project root.
+SRC-EXTENSION which specifies the file extension implementation files use,
+    when it differs from the one their tests use.
+TEST-EXTENSION which specifies the file extension test files use, when it
+    differs from the implementation's (Elixir tests are scripts: `foo.ex\\='
+    is tested by `foo_test.exs\\=').
 RELATED-FILES-FN which specifies a custom function to find the related
 files such as test/impl/other files as below:
     CUSTOM-FUNCTION accepts FILE as relative path from the project root and
@@ -5916,20 +6321,19 @@ TASKS an alist of named tasks of the form (TASK-NAME . COMMAND); see
   ;; the symbol `none' opts out of both the derivation and the root-file
   ;; seeding below, for types (e.g. bloop) whose only marker also shows
   ;; up outside real projects and so must not anchor a project root.
-  (let* ((project-file (cond ((eq project-file 'none) nil)
-                             ;; An alternatives clause is a marker shape, so
-                             ;; accept it here too and keep the plain list of
-                             ;; file names the rest of the code expects.
-                             ((projectile--any-marker-p project-file)
-                              (cdr project-file))
-                             (project-file project-file)
-                             ((not (consp marker-files)) nil)
-                             ;; An alternatives clause contributes all of
-                             ;; its files, so each of them can anchor a root.
-                             ((projectile--any-marker-p (car marker-files))
-                              (cdar marker-files))
-                             ((stringp (car marker-files))
-                              (car marker-files))))
+  (let* ((project-file
+          (cond ((eq project-file 'none) nil)
+                ;; An alternatives clause is a marker shape, so accept it
+                ;; here too and keep the plain list of names the rest of
+                ;; the code expects.
+                ((projectile--any-marker-p project-file) (cdr project-file))
+                (project-file project-file)
+                ;; Otherwise the first marker position is the project file -
+                ;; all of its alternatives, so each can anchor a root.
+                (t (let ((first (car (projectile--marker-clauses marker-files))))
+                     (cond ((null first) nil)
+                           ((cdr first) first)
+                           ((stringp (car first)) (car first)))))))
          (project-plist (list 'marker-files marker-files
                               'project-file project-file
                               'compilation-dir compilation-dir
@@ -5953,6 +6357,10 @@ TASKS an alist of named tasks of the form (TASK-NAME . COMMAND); see
       (plist-put project-plist 'src-dir src-dir))
     (when test-dir
       (plist-put project-plist 'test-dir test-dir))
+    (when src-extension
+      (plist-put project-plist 'src-extension src-extension))
+    (when test-extension
+      (plist-put project-plist 'test-extension test-extension))
     (when related-files-fn
       (plist-put project-plist 'related-files-fn related-files-fn))
     (when file-kinds
@@ -5962,7 +6370,7 @@ TASKS an alist of named tasks of the form (TASK-NAME . COMMAND); see
     project-plist))
 
 (cl-defun projectile-register-project-type
-    (project-type marker-files &key project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir related-files-fn file-kinds tasks)
+    (project-type marker-files &key project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir src-extension test-extension related-files-fn file-kinds tasks)
   "Register a project type with projectile.
 
 A project type is defined by PROJECT-TYPE, a set of MARKER-FILES,
@@ -6000,6 +6408,11 @@ TEST-SUFFIX which specifies test file suffix, and
 TEST-PREFIX which specifies test file prefix.
 SRC-DIR which specifies the path to the source relative to the project root.
 TEST-DIR which specifies the path to the tests relative to the project root.
+SRC-EXTENSION which specifies the file extension implementation files use,
+    when it differs from the one their tests use.
+TEST-EXTENSION which specifies the file extension test files use, when it
+    differs from the implementation's (Elixir tests are scripts: `foo.ex\\='
+    is tested by `foo_test.exs\\=').
 RELATED-FILES-FN which specifies a custom function to find the related
 files such as test/impl/other files as below:
     CUSTOM-FUNCTION accepts FILE as relative path from the project root and
@@ -6035,6 +6448,8 @@ with the project name at execution time."
                                 :test-prefix test-prefix
                                 :src-dir src-dir
                                 :test-dir test-dir
+                                :src-extension src-extension
+                                :test-extension test-extension
                                 :related-files-fn related-files-fn
                                 :file-kinds file-kinds
                                 :tasks tasks))
@@ -6056,6 +6471,8 @@ with the project name at execution time."
      (test-prefix nil test-prefix-specified)
      (src-dir nil src-dir-specified)
      (test-dir nil test-dir-specified)
+     (src-extension nil src-extension-specified)
+     (test-extension nil test-extension-specified)
      (related-files-fn nil related-files-fn-specified)
      (file-kinds nil file-kinds-specified)
      (tasks nil tasks-specified))
@@ -6092,6 +6509,8 @@ arguments - have the same meaning as for
              (when test-prefix-specified `(test-prefix ,test-prefix))
              (when src-dir-specified `(src-dir ,src-dir))
              (when test-dir-specified `(test-dir ,test-dir))
+             (when src-extension-specified `(src-extension ,src-extension))
+             (when test-extension-specified `(test-extension ,test-extension))
              (when related-files-fn-specified
                `(related-files-fn ,related-files-fn))
              (when file-kinds-specified `(file-kinds ,file-kinds))
@@ -6192,11 +6611,14 @@ it acts on the current project."
   (or (projectile-verify-file "build.mill" dir)
       (projectile-verify-file "build.sc" dir)))
 
-(defcustom projectile-go-project-test-function #'projectile-go-project-p
-  "Function to determine if project's type is go."
-  :group 'projectile
-  :type 'function
-  :package-version '(projectile . "1.0.0"))
+;; Remove in 4.0.  The only project type with a detection hook of its own,
+;; and only read when the `go' type was registered as this file loaded.
+;; Re-registering the type is how every other type is customized.
+(defvar projectile-go-project-test-function #'projectile-go-project-p
+  "Function to determine if project's type is go.")
+(make-obsolete-variable 'projectile-go-project-test-function
+                        "re-register the `go' project type with your own predicate instead."
+                        "3.4.0")
 
 (defun projectile-terraform-project-p (&optional dir)
   "Check if a project contains Terraform configuration files.
@@ -6308,10 +6730,11 @@ it acts on the current project."
           (projectile--cmake-all-command-presets command-type)))
 
 (defcustom projectile-enable-cmake-presets nil
-  "Enables configuration with CMake presets.
+  "Whether CMake projects use presets for their lifecycle commands.
 
-When `projectile-enable-cmake-presets' is non-nil, CMake projects can
-be configured, built and tested using presets."
+When non-nil, CMake projects are configured, built and tested through
+the presets their `CMakePresets.json' and `CMakeUserPresets.json'
+declare, rather than through Projectile's own default commands."
   :group 'projectile
   :type 'boolean
   :package-version '(projectile . "2.4.0"))
@@ -6411,6 +6834,15 @@ a manual COMMAND-TYPE command is created with
 
 (defconst projectile--makefile-names '("Makefile" "makefile" "GNUmakefile")
   "The file names GNU make reads its targets from.")
+
+(defconst projectile--rakefile-names
+  '("Rakefile" "rakefile" "Rakefile.rb" "rakefile.rb")
+  "The file names rake accepts as a project's main task file.")
+
+(defconst projectile--rake-task-directories '("rakelib" "tasks" "lib/tasks")
+  "Directories a project keeps its extra `.rake' files in.
+`rakelib' is rake's own convention, `lib/tasks' is Rails\\='s, and
+`tasks' is what a lot of gems use.")
 
 (defconst projectile--deno-config-names '("deno.json" "deno.jsonc")
   "The file names Deno reads its configuration from.")
@@ -6560,7 +6992,7 @@ a manual COMMAND-TYPE command is created with
                                   :test "task test"
                                   :install "task install")
 ;; Go should take higher precedence than Make because Go projects often have a Makefile.
-(projectile-register-project-type 'go projectile-go-project-test-function
+(projectile-register-project-type 'go #'projectile-go-project-p
                                   ;; The type is detected by predicate (a
                                   ;; project can be Go without a go.mod), but
                                   ;; the module file is still what marks a Go
@@ -6573,12 +7005,31 @@ a manual COMMAND-TYPE command is created with
 (projectile-register-project-type 'rebar '("rebar.config")
                                   :compile "rebar3 compile"
                                   :test "rebar3 do eunit,ct"
+                                  :run "rebar3 shell"
+                                  :install "rebar3 release"
+                                  :package "rebar3 tar"
+                                  :src-dir "src/"
+                                  :test-dir "test/"
+                                  :test-suffix "_SUITE")
+;; erlang.mk is the other common Erlang build tool; it drives everything
+;; through make, so the commands are make targets.
+(projectile-register-project-type 'erlang-mk '("erlang.mk")
+                                  :compile "make"
+                                  :test "make tests"
+                                  :run "make run"
+                                  :src-dir "src/"
+                                  :test-dir "test/"
                                   :test-suffix "_SUITE")
 (projectile-register-project-type 'elixir '("mix.exs")
+                                  :file-kinds projectile--phoenix-file-kinds
                                   :compile "mix compile"
                                   :src-dir "lib/"
                                   :test "mix test"
-                                  :test-suffix "_test")
+                                  :test-suffix "_test"
+                                  ;; ExUnit tests are scripts, so `lib/foo.ex'
+                                  ;; is tested by `test/foo_test.exs'.
+                                  :src-extension "ex"
+                                  :test-extension "exs")
 ;; Gleam
 (projectile-register-project-type 'gleam '("gleam.toml")
                                   :compile "gleam build"
@@ -6635,6 +7086,14 @@ a manual COMMAND-TYPE command is created with
                                   :test-suffix ".spec")
 ;; JavaScript monorepo tools, which sit on top of one of the package
 ;; managers above and are what you actually build and test through.
+(projectile-register-project-type 'nextjs
+                                  '((:any "next.config.js" "next.config.mjs"
+                                          "next.config.ts"))
+                                  :compile "next build"
+                                  :test "npm test"
+                                  :run "next dev"
+                                  :test-suffix ".test"
+                                  :file-kinds projectile--nextjs-file-kinds)
 (projectile-register-project-type 'nx '("nx.json")
                                   :compile "npx nx run-many -t build"
                                   :test "npx nx run-many -t test"
@@ -6666,6 +7125,7 @@ a manual COMMAND-TYPE command is created with
                                   :test-dir "tests/"
                                   :test-suffix "Test")
 (projectile-register-project-type 'php-laravel '("composer.json" "artisan")
+                                  :file-kinds projectile--laravel-file-kinds
                                   :compile "composer install"
                                   :run "php artisan serve"
                                   :test "php artisan test"
@@ -6939,7 +7399,12 @@ a manual COMMAND-TYPE command is created with
 ;; OCaml
 (projectile-register-project-type 'ocaml-dune '("dune-project")
                                   :compile "dune build"
-                                  :test "dune runtest")
+                                  :test "dune runtest"
+                                  :run "dune exec"
+                                  :install "dune install"
+                                  :package "dune build @install"
+                                  :src-dir "lib/"
+                                  :test-dir "test/")
 
 ;; Zig
 ;; `build.zig' is the build script; `build.zig.zon' only shows up once a
@@ -7054,10 +7519,10 @@ The project type is cached for improved performance."
 (defun projectile-project-info ()
   "Display info for current project."
   (interactive)
-  (message "Project dir: %s ## Project VCS: %s ## Project type: %s"
+  (message "Project: %s (%s, %s)"
            (projectile-acquire-root)
-           (projectile-project-vcs)
-           (projectile-project-type)))
+           (projectile-project-type)
+           (projectile-project-vcs)))
 
 (defun projectile-verify-files (files &optional dir entry-set)
   "Check whether all FILES exist in the project.
@@ -7068,13 +7533,11 @@ it acts on the current project.  ENTRY-SET, when non-nil, is a hash set
 of the project root's immediate entries (see
 `projectile--directory-entry-set') used to answer plain-name FILES
 without a filesystem round-trip each."
-  (seq-every-p (lambda (file)
-                 (if (projectile--any-marker-p file)
-                     (seq-some (lambda (alternative)
-                                 (projectile-verify-file alternative dir entry-set))
-                               (cdr file))
-                   (projectile-verify-file file dir entry-set)))
-               files))
+  (seq-every-p (lambda (alternatives)
+                 (seq-some (lambda (file)
+                             (projectile-verify-file file dir entry-set))
+                           alternatives))
+               (projectile--marker-clauses files)))
 
 (defun projectile-verify-file (file &optional dir entry-set)
   "Check whether FILE exists in the current project.
@@ -7179,10 +7642,14 @@ IMPL-FILE-PATH may be an absolute path, relative path or a file name."
          (impl-file-name (file-name-sans-extension (file-name-nondirectory impl-file-path)))
          (impl-file-ext (file-name-extension impl-file-path))
          (test-prefix (funcall projectile-test-prefix-function project-type))
-         (test-suffix (funcall projectile-test-suffix-function project-type)))
+         (test-suffix (funcall projectile-test-suffix-function project-type))
+         ;; A test usually carries the implementation's extension; a type
+         ;; that says otherwise (Elixir's scripts) is taken at its word.
+         (test-file-ext (or (projectile-test-extension project-type)
+                            impl-file-ext)))
     (cond
-     (test-prefix (concat test-prefix impl-file-name "." impl-file-ext))
-     (test-suffix (concat impl-file-name test-suffix "." impl-file-ext))
+     (test-prefix (concat test-prefix impl-file-name "." test-file-ext))
+     (test-suffix (concat impl-file-name test-suffix "." test-file-ext))
      (t (user-error "Cannot determine a test file name, one of \"test-suffix\" or \"test-prefix\" must be set for project type `%s'" project-type)))))
 
 (defun projectile--impl-name-for-test-name (test-file-path)
@@ -7193,12 +7660,14 @@ TEST-FILE-PATH may be an absolute path, relative path or a file name."
          (test-file-name (file-name-sans-extension (file-name-nondirectory test-file-path)))
          (test-file-ext (file-name-extension test-file-path))
          (test-prefix (funcall projectile-test-prefix-function project-type))
-         (test-suffix (funcall projectile-test-suffix-function project-type)))
+         (test-suffix (funcall projectile-test-suffix-function project-type))
+         (impl-file-ext (or (projectile-src-extension project-type)
+                            test-file-ext)))
     (cond
      (test-prefix
-      (concat (string-remove-prefix test-prefix test-file-name) "." test-file-ext))
+      (concat (string-remove-prefix test-prefix test-file-name) "." impl-file-ext))
      (test-suffix
-      (concat (string-remove-suffix test-suffix test-file-name) "." test-file-ext))
+      (concat (string-remove-suffix test-suffix test-file-name) "." impl-file-ext))
      (t (user-error "Cannot determine an implementation file name, one of \"test-suffix\" or \"test-prefix\" must be set for project type `%s'" project-type)))))
 
 (defun projectile--test-to-impl-dir (test-dir-path)
@@ -7366,6 +7835,19 @@ Fallback to DEFAULT-VALUE for missing attributes."
   "Find default test files suffix based on PROJECT-TYPE."
   (or projectile-project-test-suffix
       (projectile-project-type-attribute project-type 'test-suffix)))
+
+(defun projectile-test-extension (project-type)
+  "Find the extension test files use in PROJECT-TYPE, or nil.
+Nil means a test file carries the same extension as the implementation
+it belongs to, which is true of most languages - Elixir, whose tests are
+scripts (`.exs\\=') beside sources (`.ex\\='), is why this exists."
+  (projectile-project-type-attribute project-type 'test-extension))
+
+(defun projectile-src-extension (project-type)
+  "Find the extension implementation files use in PROJECT-TYPE, or nil.
+The counterpart of `projectile-test-extension\\=', for naming the
+implementation belonging to a test."
+  (projectile-project-type-attribute project-type 'src-extension))
 
 (defun projectile-related-files-fn (project-type)
   "Find relative file based on PROJECT-TYPE.
@@ -8667,10 +9149,14 @@ to run the replacement."
 ;; place under a single `atomic-change-group', and buffers modified since the
 ;; scan are skipped rather than corrupted.
 
-(defcustom projectile-replace-max-matches 5000
-  "Upper bound on how many matches `projectile-replace-review' collects.
-When a search would exceed this, only the first that many matches are
-shown and a note is displayed."
+(define-obsolete-variable-alias 'projectile-replace-max-matches
+  'projectile-search-max-matches "3.4.0")
+
+(defcustom projectile-search-max-matches 5000
+  "Upper bound on how many matches a review buffer collects.
+Applies to `projectile-search-review' and `projectile-replace-review'
+alike.  When a search would exceed this, only the first that many
+matches are shown and a note is displayed."
   :group 'projectile
   :type 'natnum
   :package-version '(projectile . "3.2.0"))
@@ -8685,7 +9171,10 @@ binds it for a single invocation."
   :type 'boolean
   :package-version '(projectile . "3.2.0"))
 
-(defcustom projectile-replace-async t
+(define-obsolete-variable-alias 'projectile-replace-async
+  'projectile-search-async "3.4.0")
+
+(defcustom projectile-search-async t
   "Whether the reviewable search/replace commands scan asynchronously.
 When non-nil (the default) `projectile-replace-review',
 `projectile-search-review' and their in-buffer re-scan commands (`g',
@@ -8751,7 +9240,10 @@ string or in prose is reported too."
   :type '(repeat string)
   :package-version '(projectile . "3.3.0"))
 
-(defcustom projectile-replace-scan-chunk-size 24
+(define-obsolete-variable-alias 'projectile-replace-scan-chunk-size
+  'projectile-search-scan-chunk-size "3.4.0")
+
+(defcustom projectile-search-scan-chunk-size 24
   "Number of candidate files scanned per async chunk before yielding.
 Each chunk scans this many files, delivers the matches into the results
 buffer and re-renders, then yields to redisplay via a zero-delay timer
@@ -8848,7 +9340,7 @@ search has no known ripgrep equivalent.")
 (defvar-local projectile-replace--matches nil
   "List of `projectile-replace--match' structs shown in the results buffer.")
 (defvar-local projectile-replace--truncated nil
-  "Non-nil when the match list was capped at `projectile-replace-max-matches'.")
+  "Non-nil when the match list was capped at `projectile-search-max-matches'.")
 (defvar-local projectile-replace--filtered nil
   "Non-nil when the shown match list was pruned by a filter command.
 Re-searching (\\<projectile-replace-mode-map>\\[projectile-replace--refresh]) gathers from scratch and clears this.")
@@ -8994,11 +9486,11 @@ Binary-looking and unreadable files are skipped."
         (error nil)))))
 
 (defun projectile-replace--gather (candidates regexp)
-  "Scan CANDIDATES for REGEXP, capped at `projectile-replace-max-matches'.
+  "Scan CANDIDATES for REGEXP, capped at `projectile-search-max-matches'.
 Return a plist with `:matches' (the collected structs, in file order)
 and `:truncated' (non-nil when the cap was hit)."
   (let ((all nil)
-        (budget projectile-replace-max-matches)
+        (budget projectile-search-max-matches)
         (truncated nil))
     (dolist (file candidates)
       (if (> budget 0)
@@ -9024,10 +9516,10 @@ and `:truncated' (non-nil when the cap was hit)."
 
 (defun projectile-replace--async-p ()
   "Return non-nil when scanning should run asynchronously.
-True when `projectile-replace-async' is set and we are interactive;
+True when `projectile-search-async' is set and we are interactive;
 batch (`noninteractive') always scans synchronously so scripted runs stay
 deterministic."
-  (and projectile-replace-async (not noninteractive)))
+  (and projectile-search-async (not noninteractive)))
 
 (defun projectile-replace--cancel-scan ()
   "Cancel any in-flight async scan in the current results buffer.
@@ -9050,11 +9542,11 @@ on re-scan, on quit, and from `kill-buffer-hook'."
 (defun projectile-replace--gather-async (candidates regexp buffer on-done)
   "Scan CANDIDATES for REGEXP into BUFFER incrementally, then call ON-DONE.
 Resets BUFFER's match list and scanning state, then processes CANDIDATES
-in `projectile-replace-scan-chunk-size' batches, each batch delivering
+in `projectile-search-scan-chunk-size' batches, each batch delivering
 its matches and re-rendering before yielding to redisplay via a
 zero-delay timer.  Matches accumulate in file order, so the final list is
 identical to `projectile-replace--gather' over the same CANDIDATES and
-REGEXP; `projectile-replace-max-matches' and the `:truncated' note are
+REGEXP; `projectile-search-max-matches' and the `:truncated' note are
 honored the same way.  ON-DONE (or nil) is called in BUFFER once the scan
 finishes.  A scan already running in BUFFER should be canceled first (see
 `projectile-replace--cancel-scan')."
@@ -9067,7 +9559,7 @@ finishes.  A scan already running in BUFFER should be canceled first (see
                  projectile-replace--scan-timer nil)
            (cl-incf projectile-replace--scan-generation))))
     (projectile-replace--scan-step
-     buffer candidates regexp projectile-replace-max-matches on-done generation)))
+     buffer candidates regexp projectile-search-max-matches on-done generation)))
 
 (defun projectile-replace--scan-step (buffer remaining regexp budget on-done generation)
   "Scan one chunk of REMAINING candidates for REGEXP into BUFFER.
@@ -9093,7 +9585,7 @@ killed BUFFER (leaving no work behind) and against \\`C-g' during a chunk
           ;; a file is scanned while budget remains; the first file reached
           ;; with the budget exhausted marks the list truncated and stops.
           (while (and remaining (not stop)
-                      (< count projectile-replace-scan-chunk-size))
+                      (< count projectile-search-scan-chunk-size))
             (if (> budget 0)
                 (let ((ms (let ((case-fold-search fold))
                             (projectile-replace--scan-file
@@ -9278,7 +9770,7 @@ async scan streams matches in."
           (insert (projectile-replace--render-line m replacement literal)))))
     (when projectile-replace--truncated
       (insert (format "\n(showing the first %d matches)\n"
-                      projectile-replace-max-matches)))
+                      projectile-search-max-matches)))
     (goto-char (point-min))))
 
 (defun projectile-replace--render-preserve ()
@@ -10089,7 +10581,7 @@ submatches yields one struct per submatch, in order."
 
 (defun projectile-search--rg-ingest (buffer lines root)
   "Parse rg NDJSON LINES into BUFFER's match list, render, honor the cap.
-Appends up to `projectile-replace-max-matches' matches in arrival order;
+Appends up to `projectile-search-max-matches' matches in arrival order;
 when the cap is reached the surplus is dropped and the truncated flag is
 set.  Returns non-nil when the cap has been reached, so the caller can
 finish the scan."
@@ -10100,7 +10592,7 @@ finish the scan."
         (dolist (l lines)
           (unless (string-empty-p l)
             (setq new (nconc new (projectile-search--rg-parse-line l root)))))
-        (let ((room (- projectile-replace-max-matches
+        (let ((room (- projectile-search-max-matches
                        (length projectile-replace--matches))))
           (when (> (length new) room)
             (setq new (take (max 0 room) new)
@@ -10134,7 +10626,7 @@ ripgrep-syntax regexp is searched for instead of the literal TERM.
 Resets BUFFER's match list and scanning state, launches `rg' as a
 subprocess reading ROOT, CASE-FOLD and the ignore globs from BUFFER's
 buffer-locals, and streams parsed matches into the buffer as ripgrep
-emits them, re-rendering per output chunk.  `projectile-replace-max-matches'
+emits them, re-rendering per output chunk.  `projectile-search-max-matches'
 is honored (the process is killed when the cap is hit) and the scan is
 cancelable and kill-safe exactly like the elisp async engine: the process
 is registered in `projectile-replace--scan-process' so
@@ -10259,7 +10751,7 @@ plain regexp search always take the elisp path below."
       (message "%s"
                (projectile-prepend-project-name
                 (format "showing the first %d matches"
-                        projectile-replace-max-matches))))))
+                        projectile-search-max-matches))))))
 
 (defun projectile-replace--open (mode buf-name root term regexp replacement
                                       literal case-fold candidates no-match-msg
@@ -10279,7 +10771,7 @@ state."
   (if (or (projectile-replace--async-p)
           ;; the read-only search reviewer's ripgrep fast-path is inherently
           ;; async, so it opens the streaming buffer even when the elisp async
-          ;; engine is off (`projectile-replace-async' nil); `--start' then
+          ;; engine is off (`projectile-search-async' nil); `--start' then
           ;; dispatches it to ripgrep
           (and (eq mode #'projectile-search-mode)
                (projectile-search--rg-fastpath-p literal rg-pattern)))
@@ -10313,7 +10805,7 @@ state."
             (message "%s"
                      (projectile-prepend-project-name
                       (format "showing the first %d matches"
-                              projectile-replace-max-matches))))
+                              projectile-search-max-matches))))
           (pop-to-buffer buf)
           buf)))))
 
@@ -10470,7 +10962,7 @@ property so the shared navigation, visit and filter commands find it."
           (insert (projectile-search--render-line m)))))
     (when projectile-replace--truncated
       (insert (format "\n(showing the first %d matches)\n"
-                      projectile-replace-max-matches)))
+                      projectile-search-max-matches)))
     (goto-char (point-min))))
 
 (defun projectile-search--to-replace ()
@@ -10883,38 +11375,32 @@ Acts on the current project if not specified explicitly."
      :cmd-map projectile-configure-cmd-map
      :dir-local-var projectile-project-configure-cmd
      :default-fn projectile--expand-configure-command
-     :command-fn projectile-configure-command
-     :use-comint-var projectile-configure-use-comint-mode)
+     :command-fn projectile-configure-command)
     (:name compile :prompt "Compile command: " :save-buffers t
      :cmd-map projectile-compilation-cmd-map
      :dir-local-var projectile-project-compilation-cmd
      :default-fn projectile-default-compilation-command
-     :command-fn projectile-compilation-command
-     :use-comint-var projectile-compile-use-comint-mode)
+     :command-fn projectile-compilation-command)
     (:name test :prompt "Test command: " :save-buffers t
      :cmd-map projectile-test-cmd-map
      :dir-local-var projectile-project-test-cmd
      :default-fn projectile-default-test-command
-     :command-fn projectile-test-command
-     :use-comint-var projectile-test-use-comint-mode)
+     :command-fn projectile-test-command)
     (:name install :prompt "Install command: " :save-buffers t
      :cmd-map projectile-install-cmd-map
      :dir-local-var projectile-project-install-cmd
      :default-fn projectile-default-install-command
-     :command-fn projectile-install-command
-     :use-comint-var projectile-install-use-comint-mode)
+     :command-fn projectile-install-command)
     (:name package :prompt "Package command: " :save-buffers t
      :cmd-map projectile-package-cmd-map
      :dir-local-var projectile-project-package-cmd
      :default-fn projectile-default-package-command
-     :command-fn projectile-package-command
-     :use-comint-var projectile-package-use-comint-mode)
+     :command-fn projectile-package-command)
     (:name run :prompt "Run command: " :save-buffers nil
      :cmd-map projectile-run-cmd-map
      :dir-local-var projectile-project-run-cmd
      :default-fn projectile-default-run-command
-     :command-fn projectile-run-command
-     :use-comint-var projectile-run-use-comint-mode))
+     :command-fn projectile-run-command))
   "Descriptors for the project lifecycle phases.
 
 Each entry is a plist with the phase symbol (`:name', also used as the
@@ -10922,9 +11408,8 @@ command type for the per-type command history), the variable caching
 the last command per project (`:cmd-map'), the .dir-locals.el override
 variable (`:dir-local-var'), a function of the project type returning
 the default command (`:default-fn'), the public command resolver
-\(`:command-fn'), the option making the output buffer interactive
-\(`:use-comint-var'), the prompt prefix (`:prompt') and whether to save
-the project's buffers before running the command (`:save-buffers').")
+\(`:command-fn'), the prompt prefix (`:prompt') and whether to save the
+project's buffers before running the command (`:save-buffers').")
 
 (defun projectile--phase-descriptor (phase)
   "Return the lifecycle descriptor for PHASE (a symbol like `compile')."
@@ -10953,8 +11438,9 @@ the prompt.  See also `projectile-discard-root-cache'."
             (remhash dir command-map)))))
     ;; Give feedback when invoked interactively; stay quiet when used
     ;; programmatically (e.g. from `after-save-hook') unless verbose.
-    (when (or projectile-verbose (called-interactively-p 'interactive))
-      (message "Discarded Projectile command cache for %s" root))))
+    (if (called-interactively-p 'interactive)
+        (message "Discarded the command cache for %s" root)
+      (projectile--message "Discarded the command cache for %s" root))))
 
 (defvar projectile-project-enable-cmd-caching t
   "Enables command caching for the project.  Set to nil to disable.
@@ -11082,6 +11568,7 @@ them (e.g. `npm:build'), so they never collide with configured ones."
     projectile-tasks-from-composer
     projectile-tasks-from-just
     projectile-tasks-from-taskfile
+    projectile-tasks-from-rake
     projectile-tasks-from-make)
   "Functions that discover the tasks a project's tooling defines.
 
@@ -11235,6 +11722,77 @@ the special dot-targets aren't things you'd run by hand."
       file "^\\([a-zA-Z0-9][a-zA-Z0-9_-]*\\)[ \t]*:\\(?:[^=\n]\\|$\\)")
      "make" "make %s")))
 
+(defun projectile--rake-task-files (project-root)
+  "Return the files rake tasks may be defined in under PROJECT-ROOT.
+That's the project's Rakefile plus the `.rake' files in the usual task
+directories (see `projectile--rake-task-directories').  Returns nil when
+the project has no Rakefile, since without one there's nothing for rake
+to run - which also keeps this provider free for non-Ruby projects."
+  (when-let* ((rakefile (projectile--first-task-file
+                         project-root projectile--rakefile-names)))
+    (cons rakefile
+          (mapcan (lambda (dir)
+                    (let ((dir (expand-file-name dir project-root)))
+                      (when (file-directory-p dir)
+                        (ignore-errors
+                          (directory-files dir t "\\.rake\\'" 'nosort)))))
+                  projectile--rake-task-directories))))
+
+(defun projectile--rake-task-names (file)
+  "Return the names of the rake tasks defined in FILE.
+
+Only tasks whose name is written out literally are returned: a name
+built from a variable (`task type, [:id]') can't be known without
+running rake, which this deliberately doesn't do.  Names are qualified
+with the `namespace' blocks they sit in, so a task is returned under the
+name you'd actually invoke it by."
+  (let ((names nil)
+        ;; Stack of (INDENT . NAME) for the `namespace' blocks we're in.
+        (namespaces nil))
+    (with-temp-buffer
+      (insert-file-contents file)
+      (goto-char (point-min))
+      (let ((case-fold-search nil))
+        (while (not (eobp))
+          (let ((indent (current-indentation)))
+            (cond
+             ;; Leaving a block: drop the namespace it opened, if any.
+             ((looking-at "[ \t]*end\\_>")
+              (when (and namespaces (<= indent (caar namespaces)))
+                (pop namespaces)))
+             ((looking-at "[ \t]*namespace[ \t]+[:'\"]?\\([a-zA-Z0-9_][a-zA-Z0-9_-]*\\)")
+              (push (cons indent (match-string 1)) namespaces))
+             ;; `task' followed by whitespace - not `task.files = ...',
+             ;; which is a method call on a block argument.
+             ((looking-at
+               (concat "[ \t]*\\(?:multi\\)?task[ \t]+"
+                       ;; :symbol | 'string' | "string" | bare-word:
+                       "\\(?::\\([a-zA-Z0-9_][a-zA-Z0-9_:-]*\\)"
+                       "\\|[\"']\\([^\"'\n]+\\)[\"']"
+                       "\\|\\([a-zA-Z0-9_][a-zA-Z0-9_-]*\\):\\)"))
+              (let* ((name (or (match-string 1) (match-string 2) (match-string 3)))
+                     (qualified (string-join
+                                 (append (reverse (mapcar #'cdr namespaces))
+                                         (list name))
+                                 ":")))
+                (unless (member qualified names)
+                  (push qualified names))))))
+          (forward-line 1))))
+    (nreverse names)))
+
+(defun projectile-tasks-from-rake (project-root)
+  "Return the rake tasks of the project in PROJECT-ROOT.
+The tasks are read out of the project's Rakefile and `.rake' files
+rather than by running `rake -T', which would load the whole
+application."
+  (when-let* ((files (projectile--rake-task-files project-root)))
+    (let ((runner (if (projectile--task-file project-root "Gemfile")
+                      "bundle exec rake"
+                    "rake")))
+      (projectile--tasks-named
+       (delete-dups (mapcan #'projectile--rake-task-names files))
+       "rake" (concat runner " %s")))))
+
 (defun projectile-discovered-tasks (&optional project-root)
   "Return the tasks discovered in the project at PROJECT-ROOT.
 PROJECT-ROOT defaults to the current project's root.  The tasks come
@@ -11248,9 +11806,8 @@ from `projectile-task-providers'; a provider that signals is skipped."
                     (condition-case err
                         (funcall provider root)
                       (error
-                       (when projectile-verbose
-                         (message "Projectile task provider %s failed: %s"
-                                  provider (error-message-string err)))
+                       (projectile--message "Task provider %s failed: %s"
+                                            provider (error-message-string err))
                        nil)))
                   projectile-task-providers))))
 
@@ -11351,22 +11908,37 @@ Bound by `projectile--run-project-cmd' for the duration of the call, so
 `projectile-compilation-buffer-name' - which `compile' calls with nothing
 but the mode name - can tell a test run from a build.")
 
+(defun projectile-compilation-buffer-scope ()
+  "Return the aspects a compilation buffer's name is qualified by.
+A list of `project' and/or `command'.  Normalizes the t shorthand of
+`projectile-compilation-buffer-scope' and folds in the two obsolete
+booleans it replaced, for a configuration that still sets one."
+  (let ((scope (if (eq projectile-compilation-buffer-scope t)
+                   '(project command)
+                 projectile-compilation-buffer-scope)))
+    (with-no-warnings
+      (append (unless (memq 'project scope)
+                (and projectile-per-project-compilation-buffer '(project)))
+              (unless (memq 'command scope)
+                (and projectile-per-command-compilation-buffer '(command)))
+              scope))))
+
 (defun projectile-compilation-buffer-name (compilation-mode)
-  "Meant to be used for `compilation-buffer-name-function`.
+  "Meant to be used for `compilation-buffer-name-function'.
 Argument COMPILATION-MODE is the name of the major mode used for the
 compilation buffer.
 
 The name is qualified by the project and/or the lifecycle command type,
-according to `projectile-per-project-compilation-buffer' and
-`projectile-per-command-compilation-buffer'."
-  (let ((qualifiers
-         (delq nil
-               (list (and projectile-per-project-compilation-buffer
-                          (projectile-project-p)
-                          (projectile-project-name))
-                     (and projectile-per-command-compilation-buffer
-                          projectile--compilation-command-type
-                          (symbol-name projectile--compilation-command-type))))))
+according to `projectile-compilation-buffer-scope'."
+  (let* ((scope (projectile-compilation-buffer-scope))
+         (qualifiers
+          (delq nil
+                (list (and (memq 'project scope)
+                           (projectile-project-p)
+                           (projectile-project-name))
+                      (and (memq 'command scope)
+                           projectile--compilation-command-type
+                           (symbol-name projectile--compilation-command-type))))))
     (concat "*" (downcase compilation-mode) "*"
             (if qualifiers
                 (concat "<" (string-join qualifiers ":") ">")
@@ -11580,7 +12152,36 @@ per-type command history."
 (defvar projectile-project-command-history (make-hash-table :test 'equal)
   "The history of last executed project commands, per project.
 
-Projects are indexed by their project-root value.")
+Indexed by whatever `projectile--command-history-key' makes of a project
+root, which is the repository the project is a checkout of when that can
+be established and the root itself otherwise.")
+
+(defun projectile--command-history-key (project-root)
+  "Return the key PROJECT-ROOT's command history is stored under.
+
+That's PROJECT-ROOT itself, unless `projectile-command-history-scope' asks
+for a repository-wide history and the repository can be identified - then
+it's a spelling of the repository, so that every checkout of it reaches the
+same history.
+
+The upstream is preferred over the repository directory because it is the
+broader of the two: worktrees of one repository agree on it, and so do
+separate clones, which is the same arrangement done by hand.  A repository
+with no upstream falls back to the directory its checkouts share, which
+still covers its worktrees.
+
+Two consequences worth knowing.  The key follows the remote, so pointing a
+repository at a new upstream moves it to a fresh history.  And this picks
+one of the two keys where `projectile-same-repo-p' accepts either, so
+checkouts that disagree about having a remote at all - an `hg share'
+working directory whose source configures a `default' path and which
+doesn't - are one repository for switching purposes but keep separate
+histories."
+  (or (and (eq projectile-command-history-scope 'repository)
+           (let ((identity (projectile-repo-identity project-root)))
+             (or (plist-get identity :remote)
+                 (plist-get identity :repo))))
+      project-root))
 
 (defun projectile--get-command-history (project-root &optional command-type)
   "Return the command history ring for PROJECT-ROOT.
@@ -11589,23 +12190,46 @@ With COMMAND-TYPE non-nil (one of the lifecycle command type
 symbols, e.g. `compile' or `test', or a (task . TASK-NAME) cons
 for named tasks) return the history specific to that command
 type, so histories of different types don't bleed into each
-other's prompts.  With COMMAND-TYPE nil return the combined
-per-project history, which is what `projectile-repeat-last-command'
-reads."
-  (let ((key (if command-type (cons project-root command-type) project-root)))
+other's prompts.  With COMMAND-TYPE nil return the combined history,
+which is what `projectile-repeat-last-command' reads.
+
+Which history that is depends on `projectile--command-history-key' - by
+default the repository's rather than this one checkout's."
+  (let* ((root-key (if command-type (cons project-root command-type) project-root))
+         (key (if command-type
+                  ;; The per-type histories are the ones you browse at a
+                  ;; prompt, so sharing them is all upside: pressing M-p in
+                  ;; a fresh worktree offers the commands this project is
+                  ;; actually built with.
+                  (cons (projectile--command-history-key project-root) command-type)
+                ;; The combined history stays this checkout's own.
+                ;; `projectile-repeat-last-command' replays its most recent
+                ;; entry without asking, and a command typed in another
+                ;; checkout can carry absolute paths back into it - being
+                ;; handed somebody else's build unasked is no fun.
+                project-root)))
     (or (gethash key projectile-project-command-history)
+        ;; The per-type histories used to be keyed by root, and they're
+        ;; persisted, so an upgrade would otherwise walk into a project you
+        ;; have been building for years with nothing in hand.  Adopt this
+        ;; root's history as the repository's instead.
+        (unless (equal key root-key)
+          (when-let* ((inherited (gethash root-key projectile-project-command-history)))
+            (remhash root-key projectile-project-command-history)
+            (puthash key inherited projectile-project-command-history)))
         (puthash key
                  (make-ring 16)
                  projectile-project-command-history))))
 
 (defun projectile--command-history-insert (history command)
   "Insert COMMAND into the ring HISTORY.
-Duplicates are handled according to `projectile-cmd-hist-ignoredups'."
+Duplicates are handled according to
+`projectile-command-history-ignore-duplicates'."
   (cond
-   ((eq projectile-cmd-hist-ignoredups t)
+   ((eq projectile-command-history-ignore-duplicates t)
     (unless (string= (car-safe (ring-elements history)) command)
       (ring-insert history command)))
-   ((eq projectile-cmd-hist-ignoredups 'erase)
+   ((eq projectile-command-history-ignore-duplicates 'erase)
     (let ((idx (ring-member history command)))
       (while idx
         (ring-remove history idx)
@@ -11643,8 +12267,7 @@ running the command.
 
 BUFFER-NAME-FUNCTION, when non-nil, is used as the
 `compilation-buffer-name-function' for the compilation, taking
-precedence over the `projectile-per-project-compilation-buffer'
-naming.
+precedence over the `projectile-compilation-buffer-scope' naming.
 
 The placeholder `%p' in COMMAND is replaced with the project name.
 
@@ -11686,13 +12309,14 @@ The command actually run is returned."
                          (lambda ()
                            (projectile-project-buffer-p (current-buffer)
                                                         project-root))))
-    (when projectile-per-project-compilation-buffer
-      (setq compilation-save-buffers-predicate #'projectile-current-project-buffer-p))
-    (when (or projectile-per-project-compilation-buffer
-              projectile-per-command-compilation-buffer)
-      (setq compilation-buffer-name-function #'projectile-compilation-buffer-name))
-    (when buffer-name-function
-      (setq compilation-buffer-name-function buffer-name-function))
+    (let ((scope (projectile-compilation-buffer-scope)))
+      (when (memq 'project scope)
+        (setq compilation-save-buffers-predicate #'projectile-current-project-buffer-p))
+      (cond (buffer-name-function
+             (setq compilation-buffer-name-function buffer-name-function))
+            (scope
+             (setq compilation-buffer-name-function
+                   #'projectile-compilation-buffer-name))))
     (unless command
       (user-error "No %scommand configured for project type `%s'"
                   (or prompt-prefix "") (projectile-project-type)))
@@ -11704,41 +12328,67 @@ The command actually run is returned."
     (projectile-run-compilation command use-comint-mode)
     command))
 
-(defcustom projectile-configure-use-comint-mode nil
-  "Make the output buffer of `projectile-configure-project' interactive."
-  :group 'projectile
-  :type 'boolean
-  :package-version '(projectile . "2.5.0"))
+(defcustom projectile-use-comint-mode nil
+  "Which lifecycle commands get an interactive output buffer.
 
-(defcustom projectile-compile-use-comint-mode nil
-  "Make the output buffer of `projectile-compile-project' interactive."
-  :group 'projectile
-  :type 'boolean
-  :package-version '(projectile . "2.5.0"))
+The lifecycle commands report through `compilation-mode', which is
+read-only.  For a command covered here Projectile uses `comint-mode'
+instead, so a build that asks a question, or a test runner that drops
+into a debugger, can be typed at.
 
-(defcustom projectile-test-use-comint-mode nil
-  "Make the output buffer of `projectile-test-project' interactive."
+The value is nil (no command is interactive), t (all of them), or a
+list naming the ones that are - `configure', `compile', `test',
+`install', `package' and `run'."
   :group 'projectile
-  :type 'boolean
-  :package-version '(projectile . "2.5.0"))
+  :type '(choice (const :tag "No command" nil)
+                 (const :tag "Every command" t)
+                 (set :tag "Selected commands"
+                      (const :tag "Configure" configure)
+                      (const :tag "Compile" compile)
+                      (const :tag "Test" test)
+                      (const :tag "Install" install)
+                      (const :tag "Package" package)
+                      (const :tag "Run" run)))
+  :package-version '(projectile . "3.4.0"))
 
-(defcustom projectile-install-use-comint-mode nil
-  "Make the output buffer of `projectile-install-project' interactive."
-  :group 'projectile
-  :type 'boolean
-  :package-version '(projectile . "2.5.0"))
+;; Remove in 4.0, this block and the fallback in
+;; `projectile-use-comint-mode-p' together.  Superseded by the single
+;; `projectile-use-comint-mode', which folds them in.
+(defvar projectile-configure-use-comint-mode nil
+  "Make the output buffer of `projectile-configure-project' interactive.")
+(defvar projectile-compile-use-comint-mode nil
+  "Make the output buffer of `projectile-compile-project' interactive.")
+(defvar projectile-test-use-comint-mode nil
+  "Make the output buffer of `projectile-test-project' interactive.")
+(defvar projectile-install-use-comint-mode nil
+  "Make the output buffer of `projectile-install-project' interactive.")
+(defvar projectile-package-use-comint-mode nil
+  "Make the output buffer of `projectile-package-project' interactive.")
+(defvar projectile-run-use-comint-mode nil
+  "Make the output buffer of `projectile-run-project' interactive.")
 
-(defcustom projectile-package-use-comint-mode nil
-  "Make the output buffer of `projectile-package-project' interactive."
-  :group 'projectile
-  :type 'boolean
-  :package-version '(projectile . "2.5.0"))
+(defconst projectile--obsolete-comint-vars
+  '((configure . projectile-configure-use-comint-mode)
+    (compile   . projectile-compile-use-comint-mode)
+    (test      . projectile-test-use-comint-mode)
+    (install   . projectile-install-use-comint-mode)
+    (package   . projectile-package-use-comint-mode)
+    (run       . projectile-run-use-comint-mode))
+  "The per-phase option `projectile-use-comint-mode' replaced, by phase.")
 
-(defcustom projectile-run-use-comint-mode nil
-  "Make the output buffer of `projectile-run-project' interactive."
-  :group 'projectile
-  :type 'boolean
-  :package-version '(projectile . "2.5.0"))
+(dolist (var projectile--obsolete-comint-vars)
+  (make-obsolete-variable (cdr var) "use `projectile-use-comint-mode' instead."
+                          "3.4.0"))
+
+(defun projectile-use-comint-mode-p (phase)
+  "Return non-nil when PHASE's output buffer should be interactive.
+PHASE is a lifecycle phase symbol such as `compile'.  Reads
+`projectile-use-comint-mode', falling back to the obsolete per-phase
+option it replaced for a configuration that still sets one."
+  (or (eq projectile-use-comint-mode t)
+      (memq phase projectile-use-comint-mode)
+      (when-let* ((var (alist-get phase projectile--obsolete-comint-vars)))
+        (symbol-value var))))
 
 (defun projectile--phase-command-dynamic-p (phase)
   "Non-nil when PHASE's command comes from a function for the current project.
@@ -11785,7 +12435,7 @@ root (see `projectile-compilation-dir')."
                                  :prompt-prefix (projectile--lifecycle-prompt descriptor base)
                                  :save-buffers (plist-get descriptor :save-buffers)
                                  :no-cache (projectile--phase-command-dynamic-p phase)
-                                 :use-comint-mode (symbol-value (plist-get descriptor :use-comint-var)))))
+                                 :use-comint-mode (projectile-use-comint-mode-p phase))))
 
 ;;;###autoload
 (defun projectile-configure-project (arg)
@@ -11932,6 +12582,185 @@ interpolation would let a hostile project inject shell code."
           (shell-quote-argument file-name)
           (shell-quote-argument test-name)))
 
+(defun projectile-test-at-point-ruby-name (node)
+  "Return the test name for the Ruby NODE at point.
+Handles both dialects: an RSpec `it'/`describe' call whose first
+argument is a string, and a Minitest `def test_foo' method."
+  (pcase (treesit-node-type node)
+    ("method"
+     (when-let* ((name-node (treesit-node-child-by-field-name node "name"))
+                 (name (treesit-node-text name-node t)))
+       (when (string-prefix-p "test_" name)
+         name)))
+    ((or "call" "method_call")
+     (when-let* ((method (treesit-node-child-by-field-name node "method"))
+                 (method-name (treesit-node-text method t)))
+       (when (member method-name '("it" "describe" "context" "specify"))
+         (when-let* ((args (treesit-node-child-by-field-name node "arguments"))
+                     (arg (treesit-node-child args 0 t)))
+           (when (equal (treesit-node-type arg) "string")
+             ;; Strip the surrounding quotes.
+             (let ((text (treesit-node-text arg t)))
+               (if (> (length text) 1) (substring text 1 -1) text)))))))))
+
+(defun projectile-test-at-point-ruby-command (test-name file-name)
+  "Return a command running Ruby\\='s TEST-NAME in FILE-NAME.
+
+Which runner to use is decided by the project type rather than by the
+buffer, since both dialects are written in the same major mode: an
+`rspec\\=' project gets `rspec -e\\=', anything else the Minitest
+invocation.  TEST-NAME and FILE-NAME are shell-quoted, as a test name is
+arbitrary source text."
+  (if (memq (projectile-project-type) '(rails-rspec ruby-rspec))
+      (format "bundle exec rspec %s -e %s"
+              (shell-quote-argument file-name)
+              (shell-quote-argument test-name))
+    (format "bundle exec ruby -Itest %s -n %s"
+            (shell-quote-argument file-name)
+            (shell-quote-argument test-name))))
+
+(defun projectile-test-at-point-rust-name (node)
+  "Return the test name for the Rust `function_item' NODE.
+Return nil unless the function carries a `#[test]\\=' (or
+`#[tokio::test]\\=', and friends) attribute, since an ordinary function
+isn\\='t something `cargo test\\=' would run."
+  (when-let* ((name-node (treesit-node-child-by-field-name node "name"))
+              (name (treesit-node-text name-node t)))
+    ;; Attributes are siblings preceding the function item.
+    (let ((sibling (treesit-node-prev-sibling node))
+          (test nil))
+      (while (and sibling
+                  (equal (treesit-node-type sibling) "attribute_item"))
+        (when (projectile--test-at-point-annotated-p
+               (treesit-node-text sibling t) '("test"))
+          (setq test t))
+        (setq sibling (treesit-node-prev-sibling sibling)))
+      (when test name))))
+
+(defun projectile-test-at-point-rust-command (test-name _file-name)
+  "Return a `cargo test\\=' command running TEST-NAME.
+Cargo selects tests by name filter rather than by file, so the file
+isn\\='t part of the command.  `--\\=' separates the filter from cargo\\='s own
+arguments and `--exact\\=' keeps a short name from also matching longer
+ones."
+  (format "cargo test -- --exact %s" (shell-quote-argument test-name)))
+
+(defun projectile-test-at-point-elixir-name (node)
+  "Return the test name for the Elixir `call' NODE.
+Matches an ExUnit `test\\='/`describe\\=' call whose first argument is a
+string."
+  (when-let* ((target (treesit-node-child-by-field-name node "target"))
+              (target-name (treesit-node-text target t)))
+    (when (member target-name '("test" "describe"))
+      (when-let* ((args (treesit-node-child-by-field-name node "arguments"))
+                  (arg (treesit-node-child args 0 t)))
+        (when (equal (treesit-node-type arg) "string")
+          (let ((text (treesit-node-text arg t)))
+            (if (> (length text) 1) (substring text 1 -1) text)))))))
+
+(defun projectile-test-at-point-elixir-command (_test-name file-name)
+  "Return a `mix test\\=' command running the test at point in FILE-NAME.
+
+ExUnit has no way to select a test by name from the command line, so it
+is addressed by line instead - the `FILE:LINE\\=' form.  The line is the
+one point is on, which is where the test was found in the first place."
+  (format "mix test %s"
+          (shell-quote-argument (format "%s:%d" file-name (line-number-at-pos)))))
+
+(defun projectile-test-at-point-java-name (node)
+  "Return the test name for the Java `method_declaration' NODE.
+Return nil unless the method carries a `@Test\\=' annotation (JUnit\\='s
+`@ParameterizedTest\\=' and `@RepeatedTest\\=' count too)."
+  (when-let* ((name-node (treesit-node-child-by-field-name node "name"))
+              (name (treesit-node-text name-node t))
+              (modifiers (treesit-node-child node 0 t)))
+    (when (and (equal (treesit-node-type modifiers) "modifiers")
+               (projectile--test-at-point-annotated-p
+                (treesit-node-text modifiers t)
+                '("Test" "ParameterizedTest" "RepeatedTest")))
+      name)))
+
+(defun projectile-test-at-point-java-command (test-name file-name)
+  "Return a command running Java\\='s TEST-NAME from FILE-NAME.
+
+JUnit addresses a test as `Class#method\\=', and Java requires the public
+class to be named after its file, so the class comes from FILE-NAME.
+Gradle and Maven spell the selector differently, so the project type
+decides which one to emit."
+  (let ((class (file-name-base file-name)))
+    (if (memq (projectile-project-type) '(gradle gradlew))
+        (format "./gradlew test --tests %s"
+                (shell-quote-argument (format "%s.%s" class test-name)))
+      (format "mvn test -Dtest=%s"
+              (shell-quote-argument (format "%s#%s" class test-name))))))
+
+(defun projectile--test-at-point-annotated-p (text names)
+  "Return non-nil when TEXT mentions one of NAMES as a whole word.
+
+Deliberately not the symbol-boundary operators: those consult the
+buffer's syntax table, under which the `<' and `>' of an F# `[<Fact>]'
+count as part of the symbol, so the boundary never matches.  Bracketing
+on non-alphanumerics is the same test without the dependency."
+  (string-match-p
+   (format "\\(?:^\\|[^[:alnum:]_]\\)\\(?:%s\\)\\(?:$\\|[^[:alnum:]_]\\)"
+           (mapconcat #'regexp-quote names "\\|"))
+   text))
+
+(defun projectile-test-at-point-erlang-name (node)
+  "Return the test name for the Erlang `fun_decl\\=' NODE.
+EUnit picks up functions whose name ends in `_test\\=' (a plain test) or
+`_test_\\=' (a test generator), which is the only thing marking one out
+from any other function."
+  (when-let* ((clause (treesit-node-child-by-field-name node "clause"))
+              (name-node (treesit-node-child-by-field-name clause "name"))
+              (name (treesit-node-text name-node t)))
+    (when (or (string-suffix-p "_test" name)
+              (string-suffix-p "_test_" name))
+      name)))
+
+(defun projectile-test-at-point-erlang-command (test-name file-name)
+  "Return a `rebar3 eunit\\=' command running TEST-NAME from FILE-NAME.
+EUnit addresses a test as `module:function\\=', and an Erlang module is
+named after its file, so the module comes from FILE-NAME."
+  (format "rebar3 eunit --test=%s"
+          (shell-quote-argument
+           (format "%s:%s" (file-name-base file-name) test-name))))
+
+(defun projectile-test-at-point-fsharp-name (node)
+  "Return the test name for the F# `function_or_value_defn\\=' NODE.
+
+Return nil unless the binding carries a test attribute - xUnit\\='s
+`[<Fact>]\\=' or `[<Theory>]\\=', NUnit\\='s `[<Test>]\\=' or FsCheck\\='s
+`[<Property>]\\='.  The attributes are a sibling of the definition under
+its enclosing `declaration_expression\\=', not a child of it.
+
+A name written between double backticks - which is how F# tests usually
+get readable names - is returned without them, since that is what the
+test framework sees."
+  (when-let* ((parent (treesit-node-parent node))
+              ;; `attributes' is a positional child of the enclosing
+              ;; `declaration_expression', not a field of it.
+              (attributes
+               (seq-find (lambda (child)
+                           (equal (treesit-node-type child) "attributes"))
+                         (treesit-node-children parent t))))
+    (when (projectile--test-at-point-annotated-p
+           (treesit-node-text attributes t)
+           '("Fact" "Theory" "Test" "TestCase" "Property"))
+      (when-let* ((left (treesit-node-child node 0 t))
+                  (name (treesit-node-text (treesit-node-child left 0 t) t)))
+        (if (and (string-prefix-p "``" name) (string-suffix-p "``" name))
+            (substring name 2 -2)
+          name)))))
+
+(defun projectile-test-at-point-fsharp-command (test-name _file-name)
+  "Return a `dotnet test\\=' command running TEST-NAME.
+The .NET test runners select by a filter expression rather than by file,
+so the file plays no part.  `FullyQualifiedName~\\=' matches on a
+substring, which keeps the filter working without the namespace."
+  (format "dotnet test --filter %s"
+          (shell-quote-argument (format "FullyQualifiedName~%s" test-name))))
+
 (defcustom projectile-test-at-point-rules
   (let ((jest-rule '(:node-types ("call_expression")
                      :name-fn projectile-test-at-point-jest-name
@@ -11946,7 +12775,32 @@ interpolation would let a hostile project inject shell code."
        :command-fn projectile-test-at-point-go-command)
       (js-ts-mode ,@jest-rule)
       (typescript-ts-mode ,@jest-rule)
-      (tsx-ts-mode ,@jest-rule)))
+      (tsx-ts-mode ,@jest-rule)
+      (ruby-ts-mode
+       ;; RSpec examples are calls, Minitest cases are methods.
+       :node-types ("call" "method_call" "method")
+       :name-fn projectile-test-at-point-ruby-name
+       :command-fn projectile-test-at-point-ruby-command)
+      (rust-ts-mode
+       :node-types ("function_item")
+       :name-fn projectile-test-at-point-rust-name
+       :command-fn projectile-test-at-point-rust-command)
+      (elixir-ts-mode
+       :node-types ("call")
+       :name-fn projectile-test-at-point-elixir-name
+       :command-fn projectile-test-at-point-elixir-command)
+      (java-ts-mode
+       :node-types ("method_declaration")
+       :name-fn projectile-test-at-point-java-name
+       :command-fn projectile-test-at-point-java-command)
+      (erlang-ts-mode
+       :node-types ("fun_decl")
+       :name-fn projectile-test-at-point-erlang-name
+       :command-fn projectile-test-at-point-erlang-command)
+      (fsharp-ts-mode
+       :node-types ("function_or_value_defn")
+       :name-fn projectile-test-at-point-fsharp-name
+       :command-fn projectile-test-at-point-fsharp-command)))
   "Rules telling `projectile-run-test-at-point' how to run a single test.
 
 An alist keyed by major mode symbol.  The current buffer's mode is
@@ -12041,7 +12895,7 @@ a prefix ARG you can edit the command before it's run."
                                      :show-prompt arg
                                      :prompt-prefix "Test at point command: "
                                      :save-buffers t
-                                     :use-comint-mode projectile-test-use-comint-mode)))))
+                                     :use-comint-mode (projectile-use-comint-mode-p 'test))))))
 
 ;;;###autoload
 (defun projectile-install-project (arg)
@@ -12152,7 +13006,7 @@ the `%p' placeholder still intact."
     ;; `projectile--run-project-cmd' from prompting a second time.
     (let ((compilation-read-command nil)
           (buffer-name (concat "*projectile-task: " task-name "*"
-                               (when projectile-per-project-compilation-buffer
+                               (when (memq 'project (projectile-compilation-buffer-scope))
                                  (concat "<" (projectile-project-name project-root) ">")))))
       (projectile--run-project-cmd command nil
                                    :save-buffers t
@@ -12272,15 +13126,15 @@ An open project is a project with any open buffers."
 (defun projectile-known-projects ()
   "Initialize the known projects.
 
-This might potentially clean up redundant projects and discover new ones if
-`projectile-auto-cleanup-known-projects' or `projectile-auto-discover' are
-enabled."
+This might potentially clean up redundant projects and discover new ones
+if `projectile-auto-cleanup-known-projects' or
+`projectile-auto-discover-projects' are enabled."
   ;; load the known projects
   (unless projectile-known-projects
     (projectile-load-known-projects))
   (when projectile-auto-cleanup-known-projects
     (projectile--cleanup-known-projects))
-  (when (and projectile-auto-discover
+  (when (and projectile-auto-discover-projects
              projectile-project-search-path
              (not projectile--search-path-discovered))
     (projectile-discover-projects-in-search-path))
@@ -12642,8 +13496,7 @@ projects removed."
       (projectile--unwatch-project project)
       (projectile--unwatch-project (expand-file-name project)))
     (projectile-merge-known-projects)
-    (when projectile-verbose
-      (message "Project %s removed from the list of known projects." project))))
+    (projectile--message "Removed %s from the known projects" project)))
 
 ;;;###autoload
 (defun projectile-remove-current-project-from-known-projects ()
@@ -12671,6 +13524,8 @@ that requiring exact paths is acceptable.  Local behavior is unchanged."
                           project-root
                         (file-truename project-root))))
     (or (member project-root (projectile-ignored-projects))
+        (seq-some (lambda (pattern) (string-match-p pattern project-root))
+                  projectile-ignored-project-patterns)
         (and (functionp projectile-ignored-project-function)
              (funcall projectile-ignored-project-function project-root)))))
 
@@ -12694,23 +13549,75 @@ This combines `projectile-add-known-project' and
 
 (defun projectile-load-known-projects ()
   "Load saved projects from `projectile-known-projects-file'.
-Also set `projectile-known-projects'."
-  (let ((data (projectile-unserialize projectile-known-projects-file)))
-    (setq projectile-known-projects
-          (if (proper-list-p data) data nil))
-    (unless (equal data projectile-known-projects)
-      (message "Warning: Projectile known projects file was corrupted, ignoring saved data"))
+Also set `projectile-known-projects'.
+
+An unreadable file is moved aside rather than silently overwritten on
+the next save, and the fact is reported - losing a list of projects
+built up over years to a stray byte is worse than being told about it."
+  (let ((data (projectile--read-known-projects-file)))
+    (if (eq data 'unreadable)
+        (progn
+          (projectile--quarantine-known-projects-file)
+          (setq projectile-known-projects nil))
+      (setq projectile-known-projects data))
     (setq projectile-known-projects-on-file
           (and (sequencep projectile-known-projects)
                (copy-sequence projectile-known-projects)))))
 
 (defun projectile-save-known-projects ()
-  "Save PROJECTILE-KNOWN-PROJECTS to PROJECTILE-KNOWN-PROJECTS-FILE."
-  (projectile-serialize projectile-known-projects
+  "Save PROJECTILE-KNOWN-PROJECTS to PROJECTILE-KNOWN-PROJECTS-FILE.
+Text properties are stripped on the way out: a propertized string
+serializes to `#(\"...\" 0 3 (face ...))\\=', whose properties can hold
+objects that don\\='t read back, which is how the file gets corrupted in
+the first place (see issue #1927)."
+  (projectile-serialize (mapcar (lambda (project)
+                                  ;; Anything that isn't a string is left
+                                  ;; alone: refusing to save at all would be
+                                  ;; a worse failure than the one being
+                                  ;; guarded against.
+                                  (if (stringp project)
+                                      (substring-no-properties project)
+                                    project))
+                                projectile-known-projects)
                         projectile-known-projects-file)
   (setq projectile-known-projects-on-file
         (and (sequencep projectile-known-projects)
              (copy-sequence projectile-known-projects))))
+
+(defun projectile--quarantine-known-projects-file ()
+  "Move an unreadable known projects file aside and say so.
+Returns non-nil when a file was moved.  Overwriting it would throw away
+whatever it holds, and merging against \"nothing\" would look exactly
+like every project having been removed elsewhere - so the file is kept
+under a `.corrupt\\=' name and the list carries on from memory."
+  (let ((file projectile-known-projects-file))
+    (when (file-exists-p file)
+      (let ((backup (concat file ".corrupt")))
+        (ignore-errors (rename-file file backup t))
+        (display-warning
+         'projectile
+         (format "Couldn't read %s, so it was moved to %s.  \
+Projectile is carrying on with the projects known to this session; \
+the file will be written afresh."
+                 file backup)
+         :warning)
+        t))))
+
+(defun projectile--read-known-projects-file ()
+  "Return the known projects on disk, or the symbol `unreadable\\='.
+Distinguishing the two matters: an absent file legitimately means no
+projects, while an unreadable one means the list on disk is unknown -
+and treating unknown as empty is how a corrupt file used to take the
+known projects with it (see issue #1927)."
+  (let ((file projectile-known-projects-file))
+    (cond
+     ((not (file-exists-p file)) nil)
+     (t (condition-case nil
+            (let ((data (with-temp-buffer
+                          (insert-file-contents file)
+                          (read (buffer-string)))))
+              (if (proper-list-p data) data 'unreadable))
+          (error 'unreadable))))))
 
 (defun projectile-merge-known-projects ()
   "Merge any change from `projectile-known-projects-file' and save to disk.
@@ -12718,21 +13625,813 @@ Also set `projectile-known-projects'."
 This enables multiple Emacs processes to make changes without
 overwriting each other's changes."
   (let* ((known-now projectile-known-projects)
+         (known-on-file-raw (projectile--read-known-projects-file))
+         (unreadable (eq known-on-file-raw 'unreadable))
          (known-on-last-sync projectile-known-projects-on-file)
-         (known-on-file
-          (let ((data (projectile-unserialize projectile-known-projects-file)))
-            (if (proper-list-p data) data nil)))
+         (known-on-file (if unreadable nil known-on-file-raw))
          (removed-after-sync (seq-difference known-on-last-sync known-now))
+         ;; An unreadable file says nothing about what another process
+         ;; removed.  Reading it as "nothing is on disk" is precisely how a
+         ;; corrupt file used to look like every project having been removed
+         ;; elsewhere, taking the session's list down with it (issue #1927).
          (removed-in-other-process
-          (seq-difference known-on-last-sync known-on-file))
+          (unless unreadable
+            (seq-difference known-on-last-sync known-on-file)))
          (result (seq-uniq
                   (seq-difference
                    (append known-now known-on-file)
                    (append removed-after-sync removed-in-other-process)))))
+    (when unreadable
+      (projectile--quarantine-known-projects-file))
     (setq projectile-known-projects result)
     (projectile-save-known-projects)))
 
 
+;;; Repository identity
+;;
+;; Projectile treats every checkout as a project of its own: a git worktree
+;; and the checkout it was linked from have their own roots, their own file
+;; listings and usually their own branches, so that's the right call.  It
+;; does mean that "take me to my other checkout of this" needs a notion of
+;; identity that outlives any single root, which is what
+;; `projectile-repo-identity' provides.  Its two keys answer progressively
+;; weaker questions:
+;;
+;;   :repo    the directory the checkouts share - git's common dir, the
+;;            store an `hg share' points at.  Equal `:repo' means one
+;;            repository checked out more than once, which is what a
+;;            worktree is.
+;;   :remote  the upstream they were cloned from, normalized so that the
+;;            scp-like and URL spellings of one remote compare equal.
+;;            Equal `:remote' means separate clones of one project - the
+;;            hand-rolled version of worktrees, and just as common.
+;;   :owner   the account, organization or directory that upstream hangs
+;;            off.  Equal `:owner' means nothing about the code, but it's
+;;            the strongest signal there is that two projects belong to
+;;            one effort (see `projectile-sibling-projects').
+;;
+;; The first two are both needed: `:repo' alone would miss separate clones
+;; entirely, and `:remote' alone would miss the worktrees of a repository
+;; that doesn't have a remote at all.
+
+(projectile-define-project-cache projectile-repo-identity-cache
+  "Cache of `projectile-repo-identity' results keyed by project root.
+Cleared by `projectile-invalidate-cache'.")
+
+(defconst projectile--repo-url-scheme-regexp
+  "\\`[a-zA-Z][a-zA-Z0-9+.-]*://\\(?:[^@/]*@\\)?\\([^/:]+\\)\\(?::[0-9]+\\)?/+\\(.+\\)\\'"
+  "Match a `scheme://[user@]host[:port]/path' remote URL.
+Group 1 is the host, group 2 the path.")
+
+(defconst projectile--repo-url-scp-regexp
+  "\\`\\(?:[^@/]*@\\)?\\([^/:]\\{2,\\}\\):\\(.+\\)\\'"
+  "Match git's scp-like `[user@]host:path' remote syntax.
+Group 1 is the host, group 2 the path.  The host has to be at least two
+characters long so that a Windows path like `c:/src/repo' isn't read as
+one; that's the same ambiguity, resolved the same way, as in git itself.")
+
+(defun projectile--normalize-repo-path (path)
+  "Return PATH without its trailing slashes or its `.git' suffix.
+Those are the two ways one repository path gets spelled differently."
+  (string-remove-suffix ".git" (string-trim-right path "/+")))
+
+(defun projectile--normalize-repo-url (url)
+  "Return a canonical identity for the remote URL, or nil when there's none.
+
+One repository can be addressed in several ways - `git@host:owner/repo.git',
+`https://host/owner/repo', `ssh://git@host:22/owner/repo/' - and all of
+them have to compare equal for two clones of it to be recognized as
+checkouts of the same thing.  The identity is `HOST/PATH' without the
+user, port, trailing slashes or `.git' suffix, downcased because hosts
+are case-insensitive and so, in practice, are the forges' paths.
+
+A URL that addresses a local repository (a bare path, or a `file://'
+URL) normalizes to that path, left in its original case since local file
+systems are not reliably case-insensitive."
+  (when (and url (not (string-blank-p url)))
+    (let ((url (string-trim url)))
+      (cond
+       ;; A `file://' URL addresses a local repository, same as a bare path.
+       ((string-prefix-p "file:///" url)
+        (projectile--normalize-repo-path (string-remove-prefix "file://" url)))
+       ((or (string-match projectile--repo-url-scheme-regexp url)
+            ;; The scp-like syntax has no scheme, so anything carrying one
+            ;; has already had its chance above and isn't a host:path.
+            (and (not (string-match-p "://" url))
+                 (string-match projectile--repo-url-scp-regexp url)))
+        (downcase (concat (match-string 1 url) "/"
+                          (projectile--normalize-repo-path
+                           (replace-regexp-in-string "\\`/+" "" (match-string 2 url))))))
+       (t (projectile--normalize-repo-path (expand-file-name url)))))))
+
+(defun projectile--repo-url-owner (remote)
+  "Return the owner of the normalized REMOTE, or nil when it has none.
+
+That's everything but the last segment: the account or organization a
+forge hangs the repository off, or the directory a local repository sits
+in.  A remote with a single path segment (`host/repo') has no owner worth
+the name - the host isn't one - so it gets nil rather than something that
+would put every repository on that host in one group."
+  (when (and remote (string-match "\\`\\(.*/.+\\)/[^/]+\\'" remote))
+    (match-string 1 remote)))
+
+;; Everything below reads git's own files rather than running git.  Identity
+;; is computed for every known project when looking for the other checkouts
+;; of one, and a subprocess apiece would be seconds of latency on a machine
+;; with a hundred projects - the same reason `projectile--hg-default-path'
+;; parses `.hg/hgrc' directly.  The layout being read is stable and
+;; documented in gitrepository-layout(5).
+
+(defun projectile--git-dir (root)
+  "Return the git directory belonging to the checkout at ROOT, or nil.
+
+That's `<root>/.git' when it is a directory, and the directory named by
+the `gitdir:' line when it is the file a linked worktree gets instead.
+
+Nil when ROOT holds no `.git' at all, which is what distinguishes a
+checkout from a directory inside one: `projectile-project-vcs'
+deliberately answers `git' for a project below a repository root too, so
+that file listing can still go through git, but the worktrees of the
+enclosing repository are not other copies of such a project."
+  (let ((dot-git (expand-file-name ".git" root)))
+    (cond
+     ((file-directory-p dot-git) (file-name-as-directory dot-git))
+     ((file-readable-p dot-git)
+      (with-temp-buffer
+        (insert-file-contents dot-git)
+        (goto-char (point-min))
+        (when (looking-at "gitdir:[ \t]*\\(.+?\\)[ \t]*$")
+          (file-name-as-directory
+           (expand-file-name (match-string 1) root))))))))
+
+(defun projectile--git-common-dir (git-dir)
+  "Return the directory GIT-DIR shares with the repository's other checkouts.
+
+A linked worktree's git directory carries a `commondir' file naming that
+shared directory; the main checkout's git directory is the shared
+directory itself."
+  (if-let* ((common (projectile--file-contents-trimmed
+                     (expand-file-name "commondir" git-dir))))
+      (file-name-as-directory (expand-file-name common git-dir))
+    git-dir))
+
+(defun projectile--git-config-remote-url (config-file)
+  "Return the URL of the upstream remote configured in CONFIG-FILE, or nil.
+
+That's `origin' when it's there, since it's what cloning sets up and what
+two checkouts of one repository will therefore agree on; a repository
+wired up by hand may use another name, so fall back to whichever remote
+comes first rather than giving up."
+  (when (file-readable-p config-file)
+    (with-temp-buffer
+      (insert-file-contents config-file)
+      (goto-char (point-min))
+      (let (remotes)
+        (while (re-search-forward "^[ \t]*\\[remote[ \t]+\"\\([^\"]+\\)\"\\]" nil t)
+          (let ((name (match-string 1))
+                (section-end (save-excursion
+                               (if (re-search-forward "^[ \t]*\\[" nil t)
+                                   (match-beginning 0)
+                                 (point-max)))))
+            (when (re-search-forward "^[ \t]*url[ \t]*=[ \t]*\\(.+?\\)[ \t]*$"
+                                     section-end t)
+              (push (cons name (match-string 1)) remotes))))
+        (setq remotes (nreverse remotes))
+        (or (cdr (assoc "origin" remotes)) (cdar remotes))))))
+
+(defun projectile--git-head-branch (git-dir)
+  "Return the branch checked out in GIT-DIR, or nil when HEAD is detached."
+  (let ((head (expand-file-name "HEAD" git-dir)))
+    (when (file-readable-p head)
+      (with-temp-buffer
+        (insert-file-contents head)
+        (goto-char (point-min))
+        (when (looking-at "ref:[ \t]*refs/heads/\\(.+?\\)[ \t]*$")
+          (match-string 1))))))
+
+(defun projectile--git-dir-identity (git-dir)
+  "Return the repository identity plist for the repository at GIT-DIR."
+  (let ((git-dir (file-name-as-directory git-dir)))
+    (list :repo (file-truename git-dir)
+          :remote (projectile--normalize-repo-url
+                   (projectile--git-config-remote-url
+                    (expand-file-name "config" git-dir))))))
+
+(defun projectile--git-repo-identity (root)
+  "Return the repository identity plist for the git checkout at ROOT."
+  (when-let* ((git-dir (projectile--git-dir root)))
+    (projectile--git-dir-identity (projectile--git-common-dir git-dir))))
+
+(defun projectile--file-contents-trimmed (file)
+  "Return the trimmed contents of FILE, or nil when it can't be read.
+The version control systems all record their cross-references as a path
+on a line of its own in a small file, so this is the shape of every one
+of those reads."
+  (when (file-readable-p file)
+    (with-temp-buffer
+      (insert-file-contents file)
+      (string-trim (buffer-string)))))
+
+(defun projectile--jj-repo-dir (root)
+  "Return the `.jj/repo' directory the Jujutsu workspace at ROOT uses, or nil.
+
+Jujutsu lays its workspaces out the way git lays out worktrees: the first
+one holds the directory itself, and every one added later holds a file
+naming it."
+  (let ((repo (expand-file-name ".jj/repo" root)))
+    (if (file-directory-p repo)
+        (file-name-as-directory repo)
+      (when-let* ((target (projectile--file-contents-trimmed repo))
+                  ((not (string-empty-p target))))
+        (file-name-as-directory
+         (expand-file-name target (file-name-directory repo)))))))
+
+(defun projectile--jj-repo-identity (root)
+  "Return the repository identity plist for the Jujutsu workspace at ROOT."
+  (when-let* ((repo-dir (projectile--jj-repo-dir root)))
+    ;; A git-backed repository - which is every one `jj git init' makes -
+    ;; names the git directory holding its commits, relative to the store
+    ;; rather than to the repository.  Resolving to that instead of to
+    ;; `.jj' makes a workspace and the colocated git checkout agree on
+    ;; which repository they are, rather than each insisting on its own
+    ;; answer, and it gets the remote for free.
+    (let ((store (expand-file-name "store/" repo-dir)))
+      (if-let* ((target (projectile--file-contents-trimmed
+                         (expand-file-name "git_target" store)))
+                (path (expand-file-name target store)))
+          (projectile--git-dir-identity
+           ;; The target is usually a git directory, but a submodule
+           ;; checkout or a linked worktree has a `.git' *file* pointing at
+           ;; the real one, and either can be a linked worktree's git
+           ;; directory rather than the shared one.
+           (projectile--git-common-dir
+            (if (file-directory-p path)
+                (file-name-as-directory path)
+              (or (projectile--git-dir (file-name-directory path))
+                  (file-name-as-directory path)))))
+        (list :repo (file-truename repo-dir))))))
+
+(defun projectile--hg-repo-identity (root)
+  "Return the repository identity plist for the Mercurial project at ROOT.
+
+A working directory created by `hg share' keeps its store elsewhere and
+records where in `.hg/sharedpath', which makes that path the Mercurial
+equivalent of git\\='s common dir."
+  (let* ((hg-dir (expand-file-name ".hg" root))
+         (store (or (projectile--file-contents-trimmed
+                     (expand-file-name "sharedpath" hg-dir))
+                    hg-dir)))
+    (list :repo (when (file-exists-p store) (file-truename store))
+          :remote (projectile--normalize-repo-url
+                   (projectile--hg-default-path root)))))
+
+(defun projectile--hg-default-path (root)
+  "Return the Mercurial `default' path configured for ROOT, or nil.
+That's the upstream a repository was cloned from, so it plays the same
+role as git\\='s `origin' remote.  Read out of `.hg/hgrc' directly rather
+than by running hg, which would cost a process launch per project."
+  (let ((hgrc (expand-file-name ".hg/hgrc" root)))
+    (when (file-readable-p hgrc)
+      (with-temp-buffer
+        (insert-file-contents hgrc)
+        (goto-char (point-min))
+        (when (re-search-forward "^[ \t]*default[ \t]*=[ \t]*\\(.+?\\)[ \t]*$" nil t)
+          (match-string 1))))))
+
+(defun projectile-repo-identity (&optional project-root)
+  "Return a plist identifying the repository PROJECT-ROOT is a checkout of.
+
+The plist has two keys, either of which may be nil: `:repo', the
+directory every checkout of this very repository shares, and `:remote',
+a canonical identity for the upstream it was cloned from.  See
+`projectile-same-repo-p' for comparing two of these.
+
+Returns nil for a project that isn't under a version control system
+Projectile can answer this for (only git, Mercurial and Jujutsu carry
+the notion),
+and for a remote project, where every probe would be a TRAMP round trip.
+
+Results are cached in `projectile-repo-identity-cache' (cleared by
+`projectile-invalidate-cache')."
+  (let ((root (or project-root (projectile-acquire-root))))
+    (unless (file-remote-p root)
+      (let ((cached (gethash root projectile-repo-identity-cache 'unset)))
+        (if (not (eq cached 'unset))
+            cached
+          (let ((identity (pcase (projectile-project-vcs root)
+                            ('git (projectile--git-repo-identity root))
+                            ('hg (projectile--hg-repo-identity root))
+                            ('jj (projectile--jj-repo-identity root)))))
+            ;; An identity with nothing in it says as little as no identity
+            ;; at all, and storing it as nil keeps the callers from having
+            ;; to test both.
+            (if (not (or (plist-get identity :repo) (plist-get identity :remote)))
+                (setq identity nil)
+              ;; The owner falls out of the remote, so derive it here rather
+              ;; than in every backend.
+              (setq identity
+                    (plist-put identity :owner
+                               (projectile--repo-url-owner
+                                (plist-get identity :remote)))))
+            (puthash root identity projectile-repo-identity-cache)
+            identity))))))
+
+(defun projectile-same-repo-p (a b)
+  "Return non-nil when identities A and B describe one repository.
+
+Either sharing the repository directory (worktrees of each other) or
+sharing an upstream (clones of each other) is enough.  Missing keys never
+match, so two projects that Projectile knows nothing about aren't
+silently declared identical."
+  (or (when-let* ((repo (plist-get a :repo)))
+        (equal repo (plist-get b :repo)))
+      (when-let* ((remote (plist-get a :remote)))
+        (equal remote (plist-get b :remote)))))
+
+
+;;; Worktrees
+;;
+;; A worktree, in the sense this section means it, is another directory
+;; holding the same repository: a real `git worktree', or simply a second
+;; clone, which is how the same workflow gets done without the plumbing.
+;; `projectile-switch-worktree' offers both, because from where the user
+;; sits they're the same thing - the other place this project is checked
+;; out, on another branch.
+;;
+;; Worktrees are found by `projectile-worktree-functions', which is a list
+;; so that a version control system Projectile can enumerate directly
+;; doesn't have to go through the generic fallback.  Each entry takes a
+;; project root and returns a list of plists with `:path' (mandatory),
+;; `:label' and `:prunable'.
+
+(defcustom projectile-worktree-functions
+  '(projectile-worktrees-from-git
+    projectile-worktrees-from-jj
+    projectile-worktrees-from-known-projects)
+  "Functions consulted by `projectile-project-worktrees'.
+
+Each is called with a project root and should return a list of plists,
+one per checkout of that project\\='s repository, with the keys `:path'
+(the checkout\\='s directory, mandatory), `:label' (what tells this
+checkout apart from the others - a branch, a workspace name - if that\\='s
+known) and `:prunable' (non-nil when the checkout is registered but no
+longer on disk).  Results from all the functions are
+merged and de-duplicated by path, so a checkout found twice is listed
+once, and a function that has nothing to say should return nil.
+
+The default set covers git worktrees and Jujutsu workspaces, both of
+which the version control system enumerates itself, and anything else via
+the known projects (see `projectile-worktrees-from-known-projects')."
+  :group 'projectile
+  :type '(repeat function)
+  :package-version '(projectile . "3.4.0"))
+
+(defun projectile--parse-git-worktree-list (output)
+  "Parse the `git worktree list --porcelain' OUTPUT into worktree plists.
+
+Records are separated by blank lines and each opens with a `worktree'
+line.  Bare repositories are skipped: they have no working tree, so
+there\\='s nothing there to switch to."
+  (delq nil
+        (mapcar
+         (lambda (record)
+           (let ((lines (split-string record "\n" t)))
+             (unless (member "bare" lines)
+               (let ((worktree (list :path (file-name-as-directory
+                                            (string-remove-prefix
+                                             "worktree " (car lines))))))
+                 ;; `HEAD' and `detached' say nothing a switch needs, and
+                 ;; `locked' doesn't stop one, so they're all skipped here.
+                 (dolist (line (cdr lines) worktree)
+                   (cond
+                    ((string-prefix-p "branch " line)
+                     (plist-put worktree :label
+                                (string-remove-prefix
+                                 "refs/heads/"
+                                 (string-remove-prefix "branch " line))))
+                    ((string-prefix-p "prunable" line)
+                     (plist-put worktree :prunable t))))))))
+         (split-string output "\n\n" t))))
+
+(defun projectile-worktrees-from-git (root)
+  "Return the git worktrees of the project at ROOT.
+
+Git registers them itself, so this finds worktrees that have never been
+visited in this Emacs session - which the known projects can't do."
+  (when-let* (((eq (projectile-project-vcs root) 'git))
+              ((not (file-remote-p root)))
+              ;; Only a checkout's own top level has worktrees.  ROOT can
+              ;; just as well be a directory *inside* one - a project marked
+              ;; out by its own `.projectile' in a corner of a bigger
+              ;; repository, say, which `projectile-project-vcs' still calls
+              ;; git because it walks up to find the repository.  Git would
+              ;; happily list the enclosing repository's worktrees, but none
+              ;; of them is another copy of *this* project.
+              ((projectile--git-dir root))
+              (output (projectile--git root "worktree" "list" "--porcelain")))
+    (projectile--parse-git-worktree-list output)))
+
+(defun projectile--jj (root &rest args)
+  "Run jj with ARGS in ROOT and return its output, or nil when it fails.
+`--no-pager' because a pager would hang a batch invocation,
+`--ignore-working-copy' so that merely listing workspaces doesn\\='t snapshot
+the working copy behind the user\\='s back, and `--color=never' because jj
+colorizes template output too and a user with `ui.color = \"always\"' would
+otherwise get paths wrapped in escape sequences."
+  (let ((default-directory root))
+    (with-temp-buffer
+      (when (eql 0 (ignore-errors
+                     (apply #'process-file "jj" nil '(t nil) nil
+                            "--no-pager" "--color=never"
+                            "--ignore-working-copy" args)))
+        (buffer-string)))))
+
+(defun projectile-worktrees-from-jj (root)
+  "Return the Jujutsu workspaces of the project at ROOT.
+
+Gated on a `.jj' directory rather than on `projectile-project-vcs'
+answering `jj', because a colocated repository (`jj git init --colocate')
+holds both markers and is reported as git by default - see
+`projectile-vcs-markers'.  Such a repository has git worktrees *and*
+Jujutsu workspaces, and both belong on the list.
+
+The workspace root is asked for through a template.  Jujutsu only started
+recording it in 0.38: an older *workspace* renders as nothing and is
+skipped rather than becoming a bogus candidate, while an older *binary*
+rejects the template outright and simply reports nothing.
+
+The remote check comes first, before anything touches the file system,
+so that a remote project costs no TRAMP round trip."
+  (when-let* (((not (file-remote-p root)))
+              ((file-directory-p (expand-file-name ".jj" root)))
+              ((executable-find "jj"))
+              (output (projectile--jj root "workspace" "list"
+                                      "-T" "self.name() ++ \"\\t\" ++ self.root() ++ \"\\n\"")))
+    (delq nil
+          (mapcar (lambda (line)
+                    ;; Only the name is escaped and quoted by jj, so a tab
+                    ;; in the output can only have come from the path -
+                    ;; hence splitting once, at the first one.
+                    (let* ((parts (split-string line "\t"))
+                           (name (car parts))
+                           (path (string-join (cdr parts) "\t")))
+                      (unless (string-empty-p path)
+                        (list :path (file-name-as-directory path)
+                              ;; A name that isn't a bare identifier comes
+                              ;; back quoted; the quotes aren't part of it.
+                              :label (string-trim name "\"" "\"")))))
+                  (split-string output "\n" t)))))
+
+(defun projectile-worktrees-from-known-projects (root)
+  "Return the known projects that are checkouts of ROOT\\='s repository.
+
+This is how everything git can\\='t enumerate gets found: a Mercurial
+working directory sharing another\\='s store, and - the case that turns up
+far more often than the plumbing suggests - a second clone of the same
+upstream, which is the same workflow done by hand.
+
+Only projects Projectile already knows about can be found this way, since
+there\\='s nothing else to enumerate."
+  (when-let* ((identity (projectile-repo-identity root)))
+    (delq nil
+          (mapcar (lambda (project)
+                    (let ((project (file-name-as-directory
+                                    (expand-file-name project))))
+                      (when (and (not (file-remote-p project))
+                                 (file-directory-p project)
+                                 (not (projectile-ignored-project-p project))
+                                 (projectile-same-repo-p
+                                  identity (projectile-repo-identity project)))
+                        (list :path project
+                              :label (projectile--checkout-branch project)))))
+                  (projectile-known-projects)))))
+
+(defun projectile--checkout-branch (root)
+  "Return the branch checked out at ROOT, or nil when that isn't knowable.
+
+Read out of the checkout's own files rather than by running the version
+control system, since this is asked once per candidate checkout."
+  (pcase (projectile-project-vcs root)
+    ('git (when-let* ((git-dir (projectile--git-dir root)))
+            (projectile--git-head-branch git-dir)))))
+
+(defun projectile-project-worktrees (&optional project-root)
+  "Return the checkouts of PROJECT-ROOT\\='s repository, including itself.
+
+Every function in `projectile-worktree-functions' is consulted in turn and
+their results merged, de-duplicated by resolved path so that a worktree
+both git and the known projects report is listed once - the first
+function to report it wins, which is why the one that knows the most
+about a checkout should come first.  The plists that come back carry
+`:path', and `:label'/`:prunable' when whoever found them knew."
+  (projectile--collect-from-functions
+   projectile-worktree-functions
+   (or project-root (projectile-acquire-root))
+   (lambda (worktree)
+     (when-let* ((path (plist-get worktree :path)))
+       (projectile--directory-key path)))
+   "Worktree"))
+
+(defun projectile--worktree-annotation (worktree)
+  "Return the completion annotation describing WORKTREE, or nil.
+That's whatever tells this checkout apart from the others - the branch
+for git and Mercurial, the workspace name for Jujutsu - which is the
+thing a path alone doesn't say and the whole reason for picking one
+checkout over another."
+  (when-let* ((label (plist-get worktree :label)))
+    (format " (%s)" label)))
+
+;;;###autoload
+(defun projectile-switch-worktree (&optional arg)
+  "Switch to another checkout of the current project\\='s repository.
+
+That's the project\\='s git worktrees, plus any other clone of the same
+upstream that Projectile already knows about - both are the same thing in
+practice, the place this project is checked out on another branch.
+
+Invokes the command referenced by `projectile-switch-project-action' on
+switch.  With a prefix ARG invokes `projectile-dispatch' instead."
+  (interactive "P")
+  (let* ((root (projectile-acquire-root))
+         (worktrees (seq-remove
+                     (lambda (worktree)
+                       ;; The checkout we're already in is not somewhere to
+                       ;; switch to, and one that's been deleted from under
+                       ;; its registration can't be switched to at all.
+                       (or (plist-get worktree :prunable)
+                           (file-equal-p (plist-get worktree :path) root)))
+                     (projectile-project-worktrees root)))
+         ;; Offered in the spelling every other switch command uses, so a
+         ;; worktree looks the same here as in `projectile-switch-project'.
+         (by-path (mapcar (lambda (worktree)
+                            (cons (projectile--known-project-root
+                                   (plist-get worktree :path))
+                                  worktree))
+                          worktrees)))
+    (unless worktrees
+      ;; Say which of the two it is: nothing to switch to, or nothing
+      ;; Projectile is able to look at.  They call for different responses
+      ;; and the same message for both sends people hunting for a bug.
+      (cond
+       ((file-remote-p root)
+        (user-error "Projectile doesn't look for the checkouts of a remote project"))
+       ((projectile-repo-identity root)
+        (user-error "No other checkout of %s found" (projectile-project-name root)))
+       (t
+        (user-error "Cannot tell what %s is a checkout of - only git, Mercurial and Jujutsu say.  Try `projectile-switch-sibling-project'"
+                    (projectile-project-name root)))))
+    (projectile-completing-read
+     "Switch to worktree: " (mapcar #'car by-path)
+     :action (lambda (path)
+               (projectile-switch-project-by-name path arg))
+     :annotation-function (lambda (path)
+                            (projectile--worktree-annotation
+                             (cdr (assoc path by-path))))
+     :category 'projectile-worktree)))
+
+
+;;; Sibling projects
+;;
+;; Plenty of work spans several repositories: a library and the app using
+;; it, a tool and its documentation site, the handful of packages that make
+;; up one project.  They're separate projects and should stay that way, but
+;; moving between them shouldn't mean going through every project on the
+;; machine.  `projectile-switch-sibling-project' offers just the ones
+;; related to the project you're in.
+;;
+;; Which ones those are comes from `projectile-sibling-project-functions',
+;; consulted in order, from the most reliable signal to the least:
+;;
+;;   1. Groups you configured yourself, which are always right.
+;;   2. The owner of the upstream remote - the account or organization the
+;;      repositories hang off.  This is by far the best of the inferred
+;;      signals: it relates projects whose names have nothing in common,
+;;      which no amount of looking at directory names ever will.
+;;   3. The leading word of the directory name, which is all that's left
+;;      for a repository with no remote at all.
+;;
+;; Inference is a heuristic, so it's bounded: a group covering more than
+;; `projectile-sibling-max-group-share' of the known projects is dropped
+;; rather than offered.  A group that most of your projects belong to isn't
+;; telling you anything - if everything you own lives under one account,
+;; "same account" doesn't relate anything to anything.
+
+(defcustom projectile-project-groups nil
+  "Named groups of projects that belong together.
+
+An alist mapping a group name to the list of project directories in it.
+A project may appear in several groups, and the groups of every one it
+belongs to are offered together by
+`projectile-switch-sibling-project'.
+
+This is the one signal that's never guessed, so it's consulted first.
+Use it for the projects that belong together for reasons nothing about
+them can reveal:
+
+  (setq projectile-project-groups
+        \\='((\"editor\" . (\"~/src/editor\" \"~/src/editor-docs\"))
+          (\"infra\"  . (\"~/src/deploy\" \"~/src/terraform\"))))
+
+To describe a single project's siblings from its own directory, set
+`projectile-project-siblings' in its `.dir-locals.el' instead."
+  :group 'projectile
+  :type '(alist :key-type (string :tag "Group")
+                :value-type (repeat directory))
+  :package-version '(projectile . "3.4.0"))
+
+(defvar projectile-project-siblings nil
+  "Projects to treat as siblings of the current one.
+A list of project directories.  Use this to describe one project's
+siblings from the project itself; it should be set via .dir-locals.el.
+`projectile-project-groups' is the equivalent for describing whole
+groups centrally.")
+(put 'projectile-project-siblings 'safe-local-variable
+     (lambda (value) (and (listp value) (seq-every-p #'stringp value))))
+
+(defcustom projectile-sibling-max-group-share 0.25
+  "How much of the known projects an inferred sibling group may cover.
+
+A number between 0 and 1, or nil to never discard a group.  Inference
+that relates most of your projects to each other has found nothing: if
+every repository you own lives under one account then \"same account\"
+tells you nothing, and offering that group is just
+`projectile-switch-project' with extra steps.  Such a group is dropped
+so the next signal gets its turn.
+
+Groups of two always survive, and the cap doesn't apply at all until
+there are `projectile--sibling-cap-min-projects' known projects to take
+a share of.  Configured groups (`projectile-project-groups') are never
+subject to this - you meant those."
+  :group 'projectile
+  :type '(choice (const :tag "Never discard a group" nil)
+                 (number :tag "Share of known projects"))
+  :package-version '(projectile . "3.4.0"))
+
+(defcustom projectile-sibling-project-functions
+  '(projectile-siblings-from-groups
+    projectile-siblings-from-owner
+    projectile-siblings-from-name)
+  "Functions consulted by `projectile-sibling-projects'.
+
+Each is called with a project root and should return a list of project
+directories related to it.  They're consulted in order and their results
+concatenated, so the most trustworthy signal should come first; a project
+found by more than one is offered once, in the position the first
+function to report it put it."
+  :group 'projectile
+  :type '(repeat function)
+  :package-version '(projectile . "3.4.0"))
+
+(defconst projectile--sibling-cap-min-projects 10
+  "How many known projects there must be before the share cap applies.
+Below this `projectile-sibling-max-group-share' is ignored: a share of a
+handful of projects measures nothing, and relating three of your four
+projects to each other is a fine answer.")
+
+(defvar projectile--sibling-project-pool nil
+  "The known projects a sibling lookup is choosing from.
+Bound by `projectile-sibling-projects' so that every signal function
+shares one walk of the known projects and one pass of the ignore
+filtering, instead of each of them paying for both.")
+
+(defun projectile--sibling-candidate-projects ()
+  "Return the known projects a sibling signal may draw on."
+  (or projectile--sibling-project-pool
+      (let ((projects (projectile-known-projects)))
+        ;; Only filter when there's ignore configuration to apply, so the
+        ;; common case doesn't pay for a `file-truename' per known project.
+        (if (or projectile-ignored-projects
+                projectile-ignored-project-patterns
+                projectile-ignored-project-function)
+            (seq-remove #'projectile-ignored-project-p projects)
+          projects))))
+
+(defun projectile--siblings-by-key (root key-function)
+  "Return the known projects KEY-FUNCTION gives the same answer for as ROOT.
+
+Nil when ROOT has no key, and nil when so many projects share it that
+the answer says nothing - see `projectile-sibling-max-group-share'.  This
+is the shape every inferred signal takes: some property of a project
+root, and everything else that has it too."
+  (when-let* ((key (funcall key-function root)))
+    (let* ((projects (projectile--sibling-candidate-projects))
+           (matches (seq-filter (lambda (project)
+                                  (equal key (funcall key-function project)))
+                                projects)))
+      (unless (and projectile-sibling-max-group-share
+                   ;; A share of a handful of projects isn't a measurement
+                   ;; of anything, and the switch list is short enough not
+                   ;; to need narrowing, so the cap only starts applying
+                   ;; once "most of them" means something.
+                   (>= (length projects) projectile--sibling-cap-min-projects)
+                   (> (length matches)
+                      (max 2 (floor (* projectile-sibling-max-group-share
+                                       (length projects))))))
+        matches))))
+
+(defun projectile-siblings-from-groups (root)
+  "Return the projects grouped with ROOT by configuration.
+
+That's the groups in `projectile-project-groups' that ROOT is a member
+of, plus whatever `projectile-project-siblings' names.  The latter is a
+buffer-local setting describing the project you're in, so it's only
+consulted when that's the project being asked about.
+
+Configured groups are never subject to
+`projectile-sibling-max-group-share': however many projects you put in a
+group, you meant to."
+  (let ((key (projectile--directory-key root)))
+    (append
+     (when-let* ((current (ignore-errors (projectile-project-root)))
+                 ((equal key (projectile--directory-key current))))
+       projectile-project-siblings)
+     (seq-mapcat
+      #'cdr
+      (seq-filter (lambda (group)
+                    (seq-some (lambda (member)
+                                (equal key (projectile--directory-key member)))
+                              (cdr group)))
+                  projectile-project-groups)))))
+
+(defun projectile-siblings-from-owner (root)
+  "Return the known projects whose upstream has the same owner as ROOT\\='s.
+
+The account or organization a repository hangs off is the strongest hint
+there is that two projects are part of one effort, and the only one that
+relates projects whose names have nothing in common."
+  (projectile--siblings-by-key
+   root (lambda (project)
+          (plist-get (projectile-repo-identity project) :owner))))
+
+(defun projectile--project-leading-token (path)
+  "Return the first word of PATH\\='s directory name, or nil.
+Single characters aren't words worth grouping on, so they're skipped."
+  (seq-find (lambda (token) (>= (length token) 2))
+            (split-string (downcase (file-name-nondirectory
+                                     (directory-file-name path)))
+                          "[-_. ]+" t)))
+
+(defun projectile-siblings-from-name (root)
+  "Return the known projects whose directory name starts like ROOT\\='s.
+
+Only the leading word counts.  Matching on any shared word instead reads
+far more into a name than is there - it relates every `*-mode' to every
+other, and every `docs.*' site to the rest - whereas a shared first word
+is nearly always a deliberate family (`rubocop', `rubocop-ast').
+
+This is the signal of last resort: it's the only one left for a
+repository with no remote at all, and the only one that will ever relate
+two projects belonging to different owners."
+  (projectile--siblings-by-key root #'projectile--project-leading-token))
+
+(defun projectile-sibling-projects (&optional project-root)
+  "Return the projects related to PROJECT-ROOT, including itself.
+
+Every function in `projectile-sibling-project-functions' is consulted in
+turn and their results concatenated, de-duplicated by resolved path, so
+the ordering runs from the most trustworthy signal to the least.  The
+projects come back in the spelling the other switch commands use."
+  (let* ((root (or project-root (projectile-acquire-root)))
+         ;; Walk the known projects once for all the signal functions.
+         (projectile--sibling-project-pool (projectile--sibling-candidate-projects)))
+    (mapcar #'projectile--known-project-root
+            (projectile--collect-from-functions
+             projectile-sibling-project-functions root
+             #'projectile--directory-key "Sibling"))))
+
+;;;###autoload
+(defun projectile-switch-sibling-project (&optional arg)
+  "Switch to a project related to the current one.
+
+Related means grouped with it in `projectile-project-groups', or sharing
+the owner of its upstream remote, or - failing both - starting with the
+same word.  See `projectile-sibling-project-functions'.
+
+Invokes the command referenced by `projectile-switch-project-action' on
+switch.  With a prefix ARG invokes `projectile-dispatch' instead."
+  (interactive "P")
+  (let* ((root (projectile-acquire-root))
+         (siblings (seq-remove
+                    (lambda (project)
+                      ;; The project we're in isn't somewhere to switch to,
+                      ;; and a configured group can name one that has since
+                      ;; been moved away.
+                      (or (file-equal-p project root)
+                          (not (file-directory-p project))))
+                    (projectile-sibling-projects root))))
+    (unless siblings
+      ;; Nothing inferred is a perfectly ordinary outcome - it's what the
+      ;; share cap does when a signal relates too much - so point at the
+      ;; setting that always works rather than just reporting the miss.
+      (user-error "No projects related to %s found - see `projectile-project-groups'"
+                  (projectile-project-name root)))
+    (projectile-completing-read
+     "Switch to sibling project: " siblings
+     :action (lambda (project)
+               (projectile-switch-project-by-name project arg))
+     :category 'projectile-project)))
+
+
 ;;; Project bookmarks
 ;;
 ;; Project-scoped bookmarks on top of the built-in `bookmark.el'.  There's
@@ -13030,6 +14729,134 @@ entered, keeping the entries made so far."
 ;; the project root - is skipped for remote (TRAMP) projects and marked
 ;; as skipped in the report, so the doctor can't hang on a slow host.
 
+;;;; Shared rendering for the report buffers
+;;
+;; The doctor and the dashboard are both label/value reports, and they
+;; share their look.  Two rules keep them honest:
+;;
+;; - Every face here only inherits, so themes style them without knowing
+;;   Projectile exists, and a terminal without colors degrades to plain
+;;   text rather than to something unreadable.
+;; - The buffer text stays plain ASCII.  Faces are a display layer on top
+;;   of it, so what you see and what you yank are the same characters -
+;;   which matters because a doctor report's destination is usually a bug
+;;   report (see `projectile-report-copy').
+
+(defface projectile-report-section
+  '((t :inherit font-lock-function-name-face :weight bold))
+  "Face for the section headers of the doctor and dashboard buffers."
+  :group 'projectile
+  :package-version '(projectile . "3.4.0"))
+
+(defface projectile-report-label
+  '((t :inherit shadow))
+  "Face for the field labels of the doctor and dashboard buffers.
+Labels are dimmed so the values they introduce carry the eye."
+  :group 'projectile
+  :package-version '(projectile . "3.4.0"))
+
+(defface projectile-report-value
+  '((t :inherit font-lock-string-face))
+  "Face for the values that identify a project - its root, type and name."
+  :group 'projectile
+  :package-version '(projectile . "3.4.0"))
+
+(defface projectile-report-ok
+  '((t :inherit success))
+  "Face for a finding that reports something is fine, and for `on'/`present'."
+  :group 'projectile
+  :package-version '(projectile . "3.4.0"))
+
+(defface projectile-report-warning
+  '((t :inherit warning))
+  "Face for a finding that suggests a change, and for `missing'."
+  :group 'projectile
+  :package-version '(projectile . "3.4.0"))
+
+(defface projectile-report-info
+  '((t :inherit shadow))
+  "Face for a purely informational finding."
+  :group 'projectile
+  :package-version '(projectile . "3.4.0"))
+
+(defface projectile-report-hint
+  '((t :inherit shadow :slant italic))
+  "Face for the key hints at the foot of a report buffer."
+  :group 'projectile
+  :package-version '(projectile . "3.4.0"))
+
+(defun projectile--report-face (string face)
+  "Return STRING propertized with FACE."
+  (propertize string 'face face))
+
+(defun projectile--report-title (title &optional char)
+  "Insert TITLE underlined with CHAR (`=' by default).
+The rule is kept as text rather than expressed with a face, so a yanked
+report reads the same as the rendered one - but it is dimmed, so the
+title carries the emphasis rather than competing with its own underline."
+  (insert (projectile--report-face title 'projectile-report-section) "\n"
+          (projectile--report-face (make-string (length title) (or char ?=))
+                                   'projectile-report-label)
+          "\n"))
+
+(defun projectile--report-section (title)
+  "Insert the header of a report section titled TITLE."
+  (insert "\n")
+  (projectile--report-title title ?-))
+
+(defun projectile--report-label (label width)
+  "Insert LABEL, dimmed and padded out to WIDTH."
+  (insert (projectile--report-face label 'projectile-report-label)
+          (make-string (max 1 (- width (length label))) ?\s)))
+
+(defun projectile--report-status-face (value)
+  "Return the face for the status word VALUE, or nil when it isn't one.
+Only the words whose polarity is unambiguous are colored."
+  (cond ((member value '("on" "present" "yes")) 'projectile-report-ok)
+        ((member value '("missing")) 'projectile-report-warning)
+        ((member value '("off" "skipped" "none")) 'projectile-report-info)))
+
+(defun projectile--report-hints (bindings)
+  "Insert a dimmed footer line describing BINDINGS.
+BINDINGS is an alist of (COMMAND . DESCRIPTION).  The key is looked up
+with `substitute-command-keys', so the hint tells the truth even when the
+buffer\\='s map has been rebound - the trick Flycheck\\='s verify buffer uses."
+  (insert "\n"
+          (projectile--report-face
+           (mapconcat (lambda (binding)
+                        (format "%s %s"
+                                (substitute-command-keys
+                                 (format "\\[%s]" (car binding)))
+                                (cdr binding)))
+                      bindings "   ")
+           'projectile-report-hint)
+          "\n"))
+
+(defun projectile--report-setup-outline ()
+  "Make the report\\='s sections collapsible with `outline-minor-mode'.
+Section titles are capitalized and start in column zero, while every
+field label is lowercase, so that one distinction is the whole heading
+regexp - no dependency on `magit-section' needed to fold a long report."
+  (setq-local outline-regexp "[A-Z]")
+  (setq-local outline-level (lambda () 1))
+  (outline-minor-mode 1))
+
+;;;###autoload
+(defun projectile-report-copy ()
+  "Copy the current report buffer to the kill ring as plain text.
+
+Strips the faces and buttons, so what lands in the clipboard is exactly
+the text of the report - ready to paste into an issue, an email or a
+chat window without dragging Emacs\\='s text properties along."
+  (interactive)
+  (unless (derived-mode-p 'projectile-doctor-mode 'projectile-dashboard-mode)
+    (user-error "Not in a Projectile report buffer"))
+  (let ((text (buffer-substring-no-properties (point-min) (point-max))))
+    (kill-new text)
+    (message "Copied %d lines of %s to the kill ring"
+             (count-lines (point-min) (point-max))
+             (if (derived-mode-p 'projectile-doctor-mode) "the report" "the dashboard"))))
+
 (defconst projectile-doctor-buffer-name "*projectile-doctor*"
   "The name of the buffer `projectile-doctor' renders its report in.")
 
@@ -13209,10 +15036,38 @@ a nil `:root' and the rendering degrades to saying so."
 
 ;;;; Doctor findings
 
+(defun projectile-doctor--finding (severity message &optional action-label action)
+  "Return a finding of SEVERITY described by MESSAGE.
+SEVERITY is one of `ok\\=', `warn\\=' or `info\\='.
+
+ACTION, when given, is a function of no arguments that does something
+about the finding, and ACTION-LABEL is what to call it in the report.
+The report renders such a finding with a button, so the fix sits next to
+the diagnosis rather than in a sentence telling you what to go and type."
+  (list :severity severity :message message
+        :action-label action-label :action action))
+
+(defun projectile-doctor--enable-mode ()
+  "Turn `projectile-mode\\=' on."
+  (projectile-mode 1)
+  (projectile--message-always "`projectile-mode' enabled"))
+
+(defun projectile-doctor--set-option (option value)
+  "Set OPTION to VALUE for this session, the way Customize would.
+Says so, since the change doesn\\='t outlive Emacs unless it\\='s saved."
+  (customize-set-variable option value)
+  (projectile--message-always
+   "`%s' set to %s for this session - use %s to keep it"
+   option value (substitute-command-keys "\\[customize-save-variable]")))
+
+(defun projectile-doctor--visit-dirconfig ()
+  "Visit the current project\\='s dirconfig file, creating it if need be."
+  (find-file (expand-file-name projectile-dirconfig-file
+                               (projectile-acquire-root))))
+
 (defun projectile-doctor--findings (data)
   "Return the list of findings for the report DATA.
-Each finding is a cons of a status symbol (`ok', `warn' or `info') and
-a one-line description."
+Each finding is a plist built by `projectile-doctor--finding\\='."
   (let* ((remote (plist-get data :remote))
          (method (plist-get data :indexing-method))
          (external (memq method '(alien hybrid)))
@@ -13220,93 +15075,120 @@ a one-line description."
          (cfg (plist-get data :dirconfig))
          (findings nil))
     (push (if (eq (plist-get data :type) 'generic)
-              (cons 'warn (concat "Project type not detected (generic).  "
-                                  "Register a type with "
-                                  "`projectile-register-project-type', or set "
-                                  "`projectile-project-type' in .dir-locals.el."))
-            (cons 'ok (format "Project type detected: %s."
-                              (plist-get data :type))))
+              (projectile-doctor--finding
+               'warn (concat "Project type not detected (generic).  "
+                             "Register a type with "
+                             "`projectile-register-project-type', or set "
+                             "`projectile-project-type' in .dir-locals.el.")
+               "edit .dir-locals.el" #'projectile-edit-dir-locals)
+            (projectile-doctor--finding
+             'ok (format "Project type detected: %s." (plist-get data :type))))
           findings)
     (when (and external (eq (plist-get data :vcs) 'git))
       (push (pcase (plist-get data :git)
-              ('present (cons 'ok "git is installed and lists the project files."))
-              ('skipped (cons 'info "git availability not checked (remote project)."))
-              (_ (cons 'warn (concat "git is not installed, but this is a git "
-                                     "project - indexing falls back to `find'."))))
+              ('present (projectile-doctor--finding
+                         'ok "git is installed and lists the project files."))
+              ('skipped (projectile-doctor--finding
+                         'info "git availability not checked (remote project)."))
+              (_ (projectile-doctor--finding
+                  'warn (concat "git is not installed, but this is a git "
+                                "project - indexing falls back to `find'."))))
             findings))
     (when external
       (push (pcase (plist-get data :fd)
-              ('present (cons 'ok "fd is installed and used for fast indexing."))
-              ('skipped (cons 'info "fd availability not checked (remote project)."))
-              (_ (cons 'warn (concat "fd is not installed.  Installing it speeds "
-                                     "up indexing noticeably on large projects "
-                                     "(see `projectile-git-use-fd')."))))
+              ('present (projectile-doctor--finding
+                         'ok "fd is installed and used for fast indexing."))
+              ('skipped (projectile-doctor--finding
+                         'info "fd availability not checked (remote project)."))
+              (_ (projectile-doctor--finding
+                  'warn (concat "fd is not installed.  Installing it speeds "
+                                "up indexing noticeably on large projects "
+                                "(see `projectile-git-use-fd')."))))
             findings))
     (when (and (eq (plist-get data :rg) 'missing) (not remote))
-      (push (cons 'info (concat "ripgrep (rg) is not installed; "
-                                "`projectile-ripgrep' and the fast path of the "
-                                "search reviewer need it."))
+      (push (projectile-doctor--finding
+             'info (concat "ripgrep (rg) is not installed; "
+                           "`projectile-ripgrep' and the fast path of the "
+                           "search reviewer need it."))
             findings))
     (when (integerp count)
       (cond
        ((>= count projectile-doctor--huge-project)
-        (push (cons 'warn (format (concat "%d files indexed.  That's a lot - "
-                                          "check the ignore rules above, a "
-                                          "build or vendor directory may be "
-                                          "sneaking in.")
-                                  count))
+        (push (projectile-doctor--finding
+               'warn (format (concat "%d files indexed.  That's a lot - "
+                                     "check the ignore rules above, a "
+                                     "build or vendor directory may be "
+                                     "sneaking in.")
+                             count)
+               "edit ignores" #'projectile-doctor--visit-dirconfig)
               findings))
        ((and (>= count projectile-doctor--large-project)
              (not (plist-get data :caching)))
-        (push (cons 'warn (format (concat "%d files indexed with caching "
-                                          "disabled.  Set "
-                                          "`projectile-enable-caching' to t "
-                                          "(or `persistent').")
-                                  count))
+        (push (projectile-doctor--finding
+               'warn (format (concat "%d files indexed with caching "
+                                     "disabled.  Set "
+                                     "`projectile-enable-caching' to t "
+                                     "(or `persistent').")
+                             count)
+               "enable caching"
+               (lambda () (projectile-doctor--set-option
+                           'projectile-enable-caching t)))
               findings))
-       (t (push (cons 'ok (format "%d files indexed." count)) findings))))
+       (t (push (projectile-doctor--finding
+                 'ok (format "%d files indexed." count))
+                findings))))
     (when (and remote (not (plist-get data :async-indexing)))
-      (push (cons 'warn (concat "Remote project with `projectile-async-indexing' "
-                                "off - indexing will block Emacs for as long as "
-                                "the remote takes."))
+      (push (projectile-doctor--finding
+             'warn (concat "Remote project with `projectile-async-indexing' "
+                           "off - indexing will block Emacs for as long as "
+                           "the remote takes.")
+             "enable async indexing"
+             (lambda () (projectile-doctor--set-option
+                         'projectile-async-indexing t)))
             findings))
     (when cfg
       (when (projectile-dirconfig-keep cfg)
-        (push (cons 'info (format (concat "The dirconfig has %d `+' keep "
-                                          "entries, so the project is "
-                                          "restricted to those subdirectories "
-                                          "- everything else is invisible to "
-                                          "Projectile.")
-                                  (length (projectile-dirconfig-keep cfg))))
+        (push (projectile-doctor--finding
+               'info (format (concat "The dirconfig has %d `+' keep "
+                                     "entries, so the project is "
+                                     "restricted to those subdirectories "
+                                     "- everything else is invisible to "
+                                     "Projectile.")
+                             (length (projectile-dirconfig-keep cfg)))
+               "open dirconfig" #'projectile-doctor--visit-dirconfig)
               findings))
       (when (projectile-dirconfig-prefixless-ignore cfg)
-        (push (cons 'warn (concat "The dirconfig has lines without a "
-                                  "`+'/`-'/`!' prefix.  They are treated as "
-                                  "ignore rules for now, but the implicit form "
-                                  "is being phased out - prefix them with `-'."))
+        (push (projectile-doctor--finding
+               'warn (concat "The dirconfig has lines without a "
+                             "`+'/`-'/`!' prefix.  They are treated as "
+                             "ignore rules for now, but the implicit form "
+                             "is being phased out - prefix them with `-'.")
+               "open dirconfig" #'projectile-doctor--visit-dirconfig)
               findings)))
     (unless (plist-get data :projectile-mode)
-      (push (cons 'warn (concat "`projectile-mode' is not enabled; "
-                                "Projectile's keymap and mode line are "
-                                "inactive."))
+      (push (projectile-doctor--finding
+             'warn (concat "`projectile-mode' is not enabled; "
+                           "Projectile's keymap and mode line are "
+                           "inactive.")
+             "enable" #'projectile-doctor--enable-mode)
             findings))
     (nreverse findings)))
 
-
 ;;;; Doctor report rendering
 
-(defun projectile-doctor--field (label value)
+(defun projectile-doctor--field (label value &optional face)
   "Insert a LABEL/VALUE line into the report.
-VALUE is rendered with `%s'; a nil or empty one reads as \"n/a\"."
-  (insert label
-          (make-string (max 1 (- projectile-doctor--label-width (length label)))
-                       ?\s)
-          (if (or (null value) (equal value "")) "n/a" (format "%s" value))
-          "\n"))
+VALUE is rendered with `%s'; a nil or empty one reads as \"n/a\".  FACE,
+when given, is applied to the value; otherwise a value that is an
+unambiguous status word is colored by its polarity."
+  (projectile--report-label label projectile-doctor--label-width)
+  (let* ((value (if (or (null value) (equal value "")) "n/a" (format "%s" value)))
+         (face (or face (projectile--report-status-face value))))
+    (insert (if face (projectile--report-face value face) value) "\n")))
 
 (defun projectile-doctor--section (title)
   "Insert the header of a report section titled TITLE."
-  (insert "\n" title "\n" (make-string (length title) ?-) "\n"))
+  (projectile--report-section title))
 
 (defun projectile-doctor--list-field (label items)
   "Insert LABEL followed by ITEMS, one per line."
@@ -13363,14 +15245,16 @@ cached too.
 
 (defun projectile-doctor--render (data)
   "Render the report described by DATA into the current buffer."
-  (insert "Projectile doctor report\n"
-          "========================\n"
-          (format "projectile %s, Emacs %s, %s\n"
-                  projectile-version emacs-version system-type))
+  (projectile--report-title "Projectile doctor report")
+  (insert (projectile--report-face
+           (format "projectile %s, Emacs %s, %s\n"
+                   projectile-version emacs-version system-type)
+           'projectile-report-label))
   (if (null (plist-get data :root))
       (projectile-doctor--render-no-project data)
     (projectile-doctor--section "Project")
-    (projectile-doctor--field "root" (plist-get data :root))
+    (projectile-doctor--field "root" (plist-get data :root)
+                              'projectile-report-value)
     (projectile-doctor--field
      "detected by"
      (when-let* ((func (plist-get data :root-function)))
@@ -13401,11 +15285,11 @@ cached too.
      (when-let* ((marker (plist-get data :type-marker)))
        (if (functionp marker)
            (format "%s (predicate)" marker)
-         (mapconcat (lambda (clause)
-                      (if (projectile--any-marker-p clause)
-                          (string-join (cdr clause) "|")
-                        clause))
-                    (ensure-list marker)
+         ;; Every position is a list of alternatives once normalized, so
+         ;; rendering doesn't need to know the shapes: `|' separates what
+         ;; would satisfy one position, a space separates the positions.
+         (mapconcat (lambda (alternatives) (string-join alternatives "|"))
+                    (projectile--marker-clauses marker)
                     " "))))
     (projectile-doctor--field "vcs" (plist-get data :vcs))
     (when (eq (plist-get data :type) 'generic)
@@ -13470,17 +15354,67 @@ in .dir-locals.el to pin a type, or register one with
                                      (plist-get data :excluded-entries)))
 
     (projectile-doctor--section "Findings")
-    (dolist (finding (projectile-doctor--findings data))
-      (insert (format "%-6s%s\n"
-                      (pcase (car finding)
-                        ('ok "ok")
-                        ('warn "warn")
-                        (_ "info"))
-                      (cdr finding))))))
+    ;; Anything that wants action first - a report is read top-down and a
+    ;; lone warning shouldn't be buried among a dozen `ok' lines.
+    (dolist (finding (projectile-doctor--sort-findings
+                      (projectile-doctor--findings data)))
+      (pcase-let* ((`(,label . ,face)
+                    (pcase (plist-get finding :severity)
+                      ('ok '("ok" . projectile-report-ok))
+                      ('warn '("warn" . projectile-report-warning))
+                      (_ '("info" . projectile-report-info)))))
+        (insert (projectile--report-face (format "%-6s" label) face)
+                (plist-get finding :message)
+                "\n")
+        ;; Put the fix under the diagnosis rather than describing it.  Its
+        ;; own line, because findings are long and a button at the end of
+        ;; one sits past the window edge where nobody will find it.
+        (when-let* ((action (plist-get finding :action)))
+          (insert (make-string 6 ?\s))
+          (insert-text-button (format "[%s]" (plist-get finding :action-label))
+                              'type 'projectile-doctor-action
+                              'projectile-action action)
+          (insert "\n"))))
+    (projectile--report-hints '((forward-button . "next action")
+                                (revert-buffer . "refresh")
+                                (projectile-report-copy . "copy")
+                                (outline-toggle-children . "fold")
+                                (quit-window . "quit")))))
+
+(defun projectile-doctor--sort-findings (findings)
+  "Return FINDINGS ordered warnings first, then info, then `ok'.
+The order within each severity is preserved, so the report still reads
+in the order the checks are written."
+  (let ((rank (lambda (finding)
+                (pcase (plist-get finding :severity) ('warn 0) ('ok 2) (_ 1)))))
+    (sort (copy-sequence findings)
+          (lambda (a b) (< (funcall rank a) (funcall rank b))))))
+
+(defun projectile-doctor--run-action (button)
+  "Run the action BUTTON stands for, then regenerate the report.
+Regenerating is the point: the finding that prompted the action should
+answer for itself once it has been dealt with."
+  (let ((action (button-get button 'projectile-action)))
+    (funcall action)
+    (when (derived-mode-p 'projectile-doctor-mode)
+      (revert-buffer))))
+
+(define-button-type 'projectile-doctor-action
+  'action #'projectile-doctor--run-action
+  'follow-link t
+  'help-echo "mouse-1, RET: do something about this finding")
 
 (defvar projectile-doctor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q") #'quit-window)
+    (define-key map (kbd "w") #'projectile-report-copy)
+    ;; The findings carry action buttons, so moving between them is worth
+    ;; a key - as is folding a report that runs past a screenful.
+    (define-key map (kbd "TAB") #'forward-button)
+    (define-key map (kbd "<backtab>") #'backward-button)
+    (define-key map (kbd "n") #'forward-button)
+    (define-key map (kbd "p") #'backward-button)
+    (define-key map (kbd "f") #'outline-toggle-children)
     map)
   "Keymap for `projectile-doctor-mode'.")
 
@@ -13494,7 +15428,8 @@ and \\[quit-window] buries it.
 \\{projectile-doctor-mode-map}"
   (setq-local revert-buffer-function
               (lambda (&rest _)
-                (projectile-doctor--report projectile-doctor--directory))))
+                (projectile-doctor--report projectile-doctor--directory)))
+  (projectile--report-setup-outline))
 
 (defun projectile-doctor--report (dir)
   "Render a doctor report for DIR into the report buffer and return it."
@@ -13563,17 +15498,20 @@ risking a hang, and the report says so."
 ;; switch would be intolerable.
 
 (defcustom projectile-dashboard-sections
-  '(project vcs recent tasks commands)
+  '(project links vcs recent tasks commands)
   "The sections `projectile-dashboard' renders, in order.
 
-Each element is one of the symbols `project' (name, root, type and file
-count), `vcs' (version-control system, branch and working tree status),
-`recent' (the project files you visit most, ranked by frecency), `tasks'
-\(the project's named tasks) and `commands' (the configured lifecycle
-commands).  Dropping a section skips both its rendering and the work
-needed to fill it in."
+Each element is one of the symbols `project' (name, root, type, file and
+buffer counts, ignore rules), `links' (the project's README, changelog,
+license, manifest and Projectile configuration, when it has them), `vcs'
+\(version-control system, branch and working tree status), `recent' (the
+project files you visit most, ranked by frecency), `tasks' (the project's
+named tasks) and `commands' (the configured lifecycle commands).
+Dropping a section skips both its rendering and the work needed to fill
+it in."
   :group 'projectile
   :type '(repeat (choice (const :tag "Project summary" project)
+                         (const :tag "Notable files" links)
                          (const :tag "Version control" vcs)
                          (const :tag "Recently visited files" recent)
                          (const :tag "Tasks" tasks)
@@ -13606,7 +15544,7 @@ Used by the buffer's `revert-buffer' to regenerate it.")
 
 ;;;; Dashboard data collection
 
-(defun projectile-dashboard--git (root &rest args)
+(defun projectile--git (root &rest args)
   "Run git with ARGS in ROOT and return its output, or nil when it fails.
 No shell is involved, and the call would go through TRAMP for a remote
 ROOT - which is why the callers make sure never to reach here with one.
@@ -13619,6 +15557,106 @@ taking the index lock and rewriting the index behind the user's back."
                      (apply #'process-file "git" nil '(t nil) nil
                             "--no-optional-locks" args)))
         (buffer-string)))))
+
+(defun projectile--git-toplevel (root)
+  "Return the toplevel of the git repository containing ROOT, or nil."
+  (when-let* ((top (projectile--git root "rev-parse" "--show-toplevel")))
+    (file-name-as-directory (file-truename (string-trim top)))))
+
+(defun projectile--git-relativize (paths root toplevel)
+  "Return PATHS, given relative to TOPLEVEL, relative to ROOT instead.
+Git reports porcelain and diff paths relative to the repository root
+regardless of where it was run, so a project sitting below that root
+needs them translated - and anything outside the project dropped."
+  (if (equal (file-truename root) toplevel)
+      paths
+    (delq nil
+          (mapcar (lambda (path)
+                    (let ((absolute (expand-file-name path toplevel))
+                          (root (file-truename root)))
+                      (when (string-prefix-p root absolute)
+                        (file-relative-name absolute root))))
+                  paths))))
+
+(defun projectile--git-status-changed-files (root)
+  "Return the paths git reports as changed in ROOT\\='s working tree.
+Covers staged, unstaged and untracked files, as repository-relative
+paths.  A rename occupies two NUL-separated fields - the new name and
+then the old one - so those are consumed in step rather than the old
+name being mistaken for another changed file."
+  (when-let* ((output (projectile--git root "status" "--porcelain" "-z"
+                                       "--untracked-files=all")))
+    (let ((records (split-string output "\0" t))
+          files)
+      (while records
+        (let ((record (pop records)))
+          ;; "XY PATH", with X and Y the index and worktree status codes.
+          (when (> (length record) 3)
+            (let ((status (substring record 0 2))
+                  (path (substring record 3)))
+              (push path files)
+              ;; A rename or copy carries the source path in the next field.
+              (when (string-match-p "[RC]" status)
+                (pop records))))))
+      (nreverse files))))
+
+(defun projectile-git-changed-files (root &optional base)
+  "Return the files changed in the project at ROOT, relative to it.
+
+Without BASE that is the working tree: everything staged, unstaged or
+untracked.  With BASE - a branch, tag or any other revision - it is
+everything that differs from it, plus the files not yet tracked at all,
+which is what \"show me what this branch changed\" usually means.
+
+Only git is supported; any other version control system returns nil."
+  (when (eq (projectile-project-vcs root) 'git)
+    (when-let* ((toplevel (projectile--git-toplevel root)))
+      (let ((paths
+             (if base
+                 (append
+                  (when-let* ((diff (projectile--git root "diff" "--name-only"
+                                                     "-z" base)))
+                    (split-string diff "\0" t))
+                  (when-let* ((new (projectile--git root "ls-files" "-z"
+                                                    "--others" "--exclude-standard")))
+                    (split-string new "\0" t)))
+               (projectile--git-status-changed-files root))))
+        (seq-uniq (projectile--git-relativize paths root toplevel))))))
+
+(defun projectile--read-git-ref (root)
+  "Read a git revision to compare against, completing over ROOT\\='s branches."
+  (let ((branches (when-let* ((output (projectile--git
+                                       root "for-each-ref" "--format=%(refname:short)"
+                                       "refs/heads" "refs/remotes")))
+                    (split-string output "\n" t))))
+    (completing-read "Compare against: " branches nil nil nil nil
+                     (car (member "main" branches)))))
+
+;;;###autoload
+(defun projectile-find-changed-file (&optional arg)
+  "Jump to a file changed in the current project.
+
+That is everything git reports as staged, unstaged or untracked.  With a
+prefix ARG you are asked for a revision to compare against instead - a
+branch, say - and the candidates become everything that differs from it,
+which is the \"what did this branch touch\" list.
+
+Only git projects are supported."
+  (interactive "P")
+  (let* ((root (projectile-acquire-root))
+         (base (when arg (projectile--read-git-ref root))))
+    (unless (eq (projectile-project-vcs root) 'git)
+      (user-error "`projectile-find-changed-file' needs a git project"))
+    (let ((files (projectile-git-changed-files root base)))
+      (unless files
+        (user-error "No changed files in %s%s" root
+                    (if base (format " compared to %s" base) "")))
+      (find-file (expand-file-name
+                  (projectile-completing-read
+                   (if base (format "Changed vs %s: " base) "Changed file: ")
+                   files :caller 'projectile-find-changed-file)
+                  root))
+      (run-hooks 'projectile-find-file-hook))))
 
 (defun projectile-dashboard--git-status (root)
   "Return the git branch and working tree counts for ROOT as a plist.
@@ -13634,9 +15672,9 @@ be meaningless for it.
 The plist's `:vcs-state' is `ok' when both answered, `partial' when only
 the branch could be determined and `unavailable' when git couldn't
 answer at all (not installed, no commits yet, a broken repository)."
-  (if-let* ((branch (projectile-dashboard--git
+  (if-let* ((branch (projectile--git
                      root "rev-parse" "--abbrev-ref" "HEAD")))
-      (let ((status (projectile-dashboard--git
+      (let ((status (projectile--git
                      root "status" "--porcelain" "--untracked-files=normal"
                      "--" "."))
             (modified 0)
@@ -13716,6 +15754,64 @@ the last thing to do in somebody's project-switch action."
                    (cons phase command)))))
            projectile--lifecycle-phases))))
 
+(defcustom projectile-dashboard-link-files
+  '("README" "CHANGELOG" "CONTRIBUTING" "LICENSE" "COPYING")
+  "Base names the dashboard offers as links when the project has them.
+
+Matched case-insensitively and ignoring any extension, so \"README\"
+finds `README.md\\=' as well as `README.rst\\='.  The project\\='s own marker
+file (`package.json\\=', `Cargo.toml\\=', ...) and its `.projectile\\=' are
+always offered when present, without being listed here."
+  :group 'projectile
+  :type '(repeat string)
+  :package-version '(projectile . "3.4.0"))
+
+(defun projectile-dashboard--links (root type)
+  "Return the notable files of the project at ROOT of TYPE, as relative names.
+Answered from a single listing of the project root, so this costs one
+`directory-files\\=' however many names are looked for."
+  (when-let* ((entries (projectile--directory-entry-set root)))
+    (let ((found nil))
+      ;; The docs a human looks for, matched without their extension.
+      (dolist (base projectile-dashboard-link-files)
+        (when-let* ((hit (seq-find
+                          (lambda (entry)
+                            (string-equal (downcase base)
+                                          (downcase (file-name-base entry))))
+                          (sort (hash-table-keys entries) #'string<))))
+          (push hit found)))
+      ;; The project\\='s own manifest, and its Projectile configuration.
+      (dolist (name (append (ensure-list
+                             (projectile-project-type-attribute type 'project-file))
+                            (list projectile-dirconfig-file ".dir-locals.el")))
+        (when (and (stringp name)
+                   (not (projectile--wildcard-p name))
+                   (gethash name entries)
+                   (not (member name found)))
+          (push name found)))
+      (nreverse found))))
+
+(defun projectile-dashboard--ignore-summary (root)
+  "Return a one-line summary of the ignore rules in effect at ROOT.
+Counting compiled patterns is free - they are derived from the
+configuration and the project\\='s dirconfig, both of which are cached."
+  (ignore-errors
+    (let* ((default-directory root)
+           ;; Reads the project's dirconfig; the parser caches it, so this
+           ;; costs nothing the rest of Projectile isn't paying anyway.
+           (cfg (projectile-parse-dirconfig-file))
+           (local (if cfg
+                      (+ (length (projectile-dirconfig-ignore cfg))
+                         (length (projectile-dirconfig-ensure cfg)))
+                    0))
+           (global (+ (length projectile-globally-ignored-directories)
+                      (length projectile-globally-ignored-files)
+                      (length projectile-globally-ignored-file-suffixes))))
+      (if (zerop local)
+          (format "%d global patterns" global)
+        (format "%d global patterns, %d from %s"
+                global local projectile-dirconfig-file)))))
+
 (defun projectile-dashboard--collect-in-project (dir root)
   "Collect the dashboard data for the project at ROOT, reached from DIR.
 Must run in a buffer that has ROOT's directory-local variables applied -
@@ -13733,6 +15829,12 @@ see `projectile-dashboard--collect', which arranges that."
            :name (when project (ignore-errors (projectile-project-name root)))
            :type (when project (ignore-errors (projectile-project-type)))
            :file-count (unless (eq cached 'uncached) (length cached))
+           :buffer-count (length (ignore-errors (projectile-project-buffers root)))
+           :links (when project
+                    (ignore-errors
+                      (projectile-dashboard--links
+                       root (ignore-errors (projectile-project-type)))))
+           :ignores (when project (projectile-dashboard--ignore-summary root))
            :recent-files (when (projectile-dashboard--section-p 'recent)
                            (projectile-dashboard--recent-files root))
            :tasks (when (projectile-dashboard--section-p 'tasks)
@@ -13795,6 +15897,14 @@ that the dashboard stays cheap enough to be a
   "Open the root of the project BUTTON stands for in Dired."
   (dired (button-get button 'projectile-root)))
 
+(defun projectile-dashboard--index (button)
+  "Index the project BUTTON stands for, then refresh the dashboard."
+  (let ((root (button-get button 'projectile-root)))
+    (projectile-index-project-async root)
+    (projectile--message-always
+     "Indexing %s - press %s to refresh when it finishes"
+     root (substitute-command-keys "\\[revert-buffer]"))))
+
 (define-button-type 'projectile-dashboard-file
   'action #'projectile-dashboard--visit-file
   'follow-link t
@@ -13820,26 +15930,29 @@ that the dashboard stays cheap enough to be a
   'follow-link t
   'help-echo "mouse-1, RET: open the project root in Dired")
 
+(define-button-type 'projectile-dashboard-index
+  'action #'projectile-dashboard--index
+  'follow-link t
+  'help-echo "mouse-1, RET: index this project in the background")
+
 
 ;;;; Dashboard rendering
 
 (defun projectile-dashboard--label (label)
   "Insert LABEL padded out to the dashboard's label column."
-  (insert label
-          (make-string (max 1 (- projectile-dashboard--label-width
-                                 (length label)))
-                       ?\s)))
+  (projectile--report-label label projectile-dashboard--label-width))
 
-(defun projectile-dashboard--field (label value)
+(defun projectile-dashboard--field (label value &optional face)
   "Insert a LABEL/VALUE line into the dashboard.
-VALUE is rendered with `%s'; a nil or empty one reads as \"n/a\"."
+VALUE is rendered with `%s'; a nil or empty one reads as \"n/a\".  FACE,
+when given, is applied to the value."
   (projectile-dashboard--label label)
-  (insert (if (or (null value) (equal value "")) "n/a" (format "%s" value))
-          "\n"))
+  (let ((value (if (or (null value) (equal value "")) "n/a" (format "%s" value))))
+    (insert (if face (projectile--report-face value face) value) "\n")))
 
 (defun projectile-dashboard--section (title)
   "Insert the header of a dashboard section titled TITLE."
-  (insert "\n" title "\n" (make-string (length title) ?-) "\n"))
+  (projectile--report-section title))
 
 (defun projectile-dashboard--button (label type root &rest properties)
   "Insert a button labelled LABEL of button TYPE for the project at ROOT.
@@ -13870,12 +15983,20 @@ The lifecycle commands are named after their phase by construction (see
     (projectile-dashboard--label "root")
     (projectile-dashboard--button root 'projectile-dashboard-dired root)
     (insert "\n")
-    (projectile-dashboard--field "type" (plist-get data :type))
-    (projectile-dashboard--field
-     "files"
-     (if-let* ((count (plist-get data :file-count)))
-         (format "%d (cached)" count)
-       "not indexed yet"))
+    (projectile-dashboard--field "type" (plist-get data :type)
+                                 'projectile-report-value)
+    (projectile-dashboard--label "files")
+    (if-let* ((count (plist-get data :file-count)))
+        (insert (format "%d (cached)\n" count))
+      ;; The dashboard never indexes on its own - but it can offer to.
+      (insert "not indexed yet  ")
+      (projectile-dashboard--button "[index now]" 'projectile-dashboard-index root)
+      (insert "\n"))
+    (when-let* ((buffers (plist-get data :buffer-count)))
+      (unless (zerop buffers)
+        (projectile-dashboard--field "buffers" (format "%d open" buffers))))
+    (when-let* ((ignores (plist-get data :ignores)))
+      (projectile-dashboard--field "ignores" ignores))
     (when (plist-get data :remote)
       (projectile-dashboard--field "remote" (plist-get data :remote)))))
 
@@ -13891,13 +16012,17 @@ The lifecycle commands are named after their phase by construction (see
        (projectile-dashboard--button (plist-get data :branch)
                                      'projectile-dashboard-vc root)
        (insert "\n")
-       (projectile-dashboard--field
-        "status"
-        (if (eq state 'partial)
-            "unavailable"
-          (format "%d modified, %d untracked"
-                  (plist-get data :modified)
-                  (plist-get data :untracked)))))
+       (let ((modified (plist-get data :modified))
+             (untracked (plist-get data :untracked)))
+         (projectile-dashboard--field
+          "status"
+          (if (eq state 'partial)
+              "unavailable"
+            (format "%d modified, %d untracked" modified untracked))
+          (unless (eq state 'partial)
+            (if (and (zerop modified) (zerop untracked))
+                'projectile-report-ok
+              'projectile-report-warning)))))
       ('skipped
        (projectile-dashboard--field "status" "not checked (remote project)"))
       ('unavailable
@@ -13908,6 +16033,18 @@ The lifecycle commands are named after their phase by construction (see
          (projectile-dashboard--button "open the VC interface"
                                        'projectile-dashboard-vc root)
          (insert "\n"))))))
+
+(defun projectile-dashboard--render-links (data)
+  "Render DATA's notable project files."
+  (let ((root (plist-get data :root))
+        (links (plist-get data :links)))
+    (projectile-dashboard--section "Notable files")
+    (if (null links)
+        (insert "  none found\n")
+      (dolist (file links)
+        (projectile-dashboard--entry file 'projectile-dashboard-file root
+                                     'projectile-file file)
+        (insert "\n")))))
 
 (defun projectile-dashboard--render-recent (data)
   "Render DATA's recently visited files."
@@ -13967,19 +16104,25 @@ explains why none of them claimed the directory.
 
 (defun projectile-dashboard--render (data)
   "Render the dashboard described by DATA into the current buffer."
-  (insert "Projectile project dashboard\n"
-          "============================\n")
+  (projectile--report-title
+   (if-let* ((name (plist-get data :name)))
+       (format "Projectile dashboard: %s" name)
+     "Projectile dashboard"))
   (if (null (plist-get data :root))
       (projectile-dashboard--render-no-project data)
     (dolist (section projectile-dashboard-sections)
       (pcase section
         ('project (projectile-dashboard--render-project data))
+        ('links (projectile-dashboard--render-links data))
         ('vcs (projectile-dashboard--render-vcs data))
         ('recent (projectile-dashboard--render-recent data))
         ('tasks (projectile-dashboard--render-tasks data))
         ('commands (projectile-dashboard--render-commands data))))
-    (insert "\nRET acts on the entry at point, TAB moves to the next one, "
-            "g refreshes, q buries.\n")))
+    (projectile--report-hints '((push-button . "act on entry")
+                                (forward-button . "next entry")
+                                (revert-buffer . "refresh")
+                                (projectile-report-copy . "copy")
+                                (quit-window . "bury")))))
 
 
 ;;;; The dashboard buffer
@@ -13992,6 +16135,7 @@ explains why none of them claimed the directory.
     ;; here than the `next-line'/`previous-line' these shadow.
     (define-key map (kbd "n") #'forward-button)
     (define-key map (kbd "p") #'backward-button)
+    (define-key map (kbd "w") #'projectile-report-copy)
     map)
   "Keymap for `projectile-dashboard-mode'.")
 
@@ -14006,7 +16150,8 @@ move between them.  \\[revert-buffer] refreshes the dashboard and \\[quit-window
   (setq-local revert-buffer-function
               (lambda (&rest _)
                 (projectile-dashboard--refresh
-                 projectile-dashboard--directory))))
+                 projectile-dashboard--directory)))
+  (projectile--report-setup-outline))
 
 (defun projectile-dashboard--refresh (dir)
   "Render the dashboard for DIR into the dashboard buffer and return it."
@@ -14131,6 +16276,7 @@ Magit that don't trigger `find-file-hook'."
     (define-key map (kbd "B s") #'projectile-bookmark-set)
     (define-key map (kbd "B j") #'projectile-bookmark-jump)
     (define-key map (kbd "B d") #'projectile-bookmark-delete)
+    (define-key map (kbd "C") #'projectile-find-changed-file)
     (define-key map (kbd "d") #'projectile-find-dir)
     (define-key map (kbd "D") #'projectile-dired)
     (define-key map (kbd "e") #'projectile-recentf)
@@ -14148,6 +16294,8 @@ Magit that don't trigger `find-file-hook'."
     (define-key map (kbd "k") #'projectile-kill-buffers)
     (define-key map (kbd "l") #'projectile-find-file-in-directory)
     (define-key map (kbd "m") #'projectile-dispatch)
+    ;; projects related to this one, in other repositories
+    (define-key map (kbd "n") #'projectile-switch-sibling-project)
     (define-key map (kbd "o") #'projectile-multi-occur)
     (define-key map (kbd "p") #'projectile-switch-project)
     (define-key map (kbd "q") #'projectile-switch-open-project)
@@ -14173,6 +16321,8 @@ Magit that don't trigger `find-file-hook'."
     (define-key map (kbd "w R") #'projectile-session-restore-all)
     (define-key map (kbd "w f") #'projectile-session-forget)
     (define-key map (kbd "w b") #'projectile-session-switch-to-buffer)
+    ;; other checkouts of the current project's repository
+    (define-key map (kbd "W") #'projectile-switch-worktree)
     ;; project lifecycle external commands
     (define-key map (kbd "c o") #'projectile-configure-project)
     (define-key map (kbd "c c") #'projectile-compile-project)
@@ -14464,6 +16614,7 @@ search/replace case-sensitive, `--word' makes it match whole words,
       ("g" "file dwim" projectile-dispatch-find-file-dwim)
       ("a" "other file" projectile-dispatch-find-other-file)
       ("l" "file in dir" projectile-find-file-in-directory)
+      ("C" "changed file" projectile-find-changed-file)
       ("F" "file in known projects" projectile-find-file-in-known-projects)
       ("d" "dir" projectile-dispatch-find-dir)
       ("D" "dired" projectile-dispatch-dired)
@@ -14498,6 +16649,8 @@ search/replace case-sensitive, `--word' makes it match whole words,
     [["Project"
       ("p" "switch project" projectile-dispatch-switch-project)
       ("q" "switch open project" projectile-switch-open-project)
+      ("W" "switch worktree" projectile-switch-worktree)
+      ("n" "switch sibling project" projectile-switch-sibling-project)
       ("A" "add known project" projectile-add-known-project)
       ("v" "vc" projectile-vc)
       ("P" "dashboard" projectile-dashboard)
@@ -14581,6 +16734,7 @@ search/replace case-sensitive, `--word' makes it match whole words,
          ["Find directory" projectile-find-dir]
          ["Find file in directory" projectile-find-file-in-directory]
          ["Find file in subproject" projectile-find-file-in-subproject]
+         ["Find changed file" projectile-find-changed-file]
          ["Find other file" projectile-find-other-file]
          ["Find file of kind" projectile-find-file-of-kind]
          ["Jump between implementation file and test file" projectile-toggle-between-implementation-and-test]
@@ -14740,7 +16894,13 @@ when opening new files.  PROJECT-ROOT defaults to the current project."
     ;; see https://github.com/bbatsov/projectile/issues/1591#issuecomment-896423965
     ;; That's needed because Projectile uses relative paths for project files
     ;; and project.el expects them to be absolute.
-    ;; FIXME: That's probably going to be very slow in large projects.
+    ;;
+    ;; Measured rather than feared: this is 4 ms for 50k files and 20 ms for
+    ;; 200k, a rounding error next to the listing it is prepending to.
+    ;; `expand-file-name' would be the obvious alternative and is 18 times
+    ;; slower, since it consults the filesystem's notion of the default
+    ;; directory; the paths here are already absolute once the root is on
+    ;; the front, so `concat' is both correct and the cheap option.
     (mapcar (lambda (f)
               (concat root f))
             (projectile-project-files root))))
@@ -14873,13 +17033,13 @@ component."
   :package-version '(projectile . "3.2.0"))
 
 (defcustom projectile-session-directory
-  (expand-file-name "projectile-sessions/" user-emacs-directory)
+  (locate-user-emacs-file "projectile-sessions/")
   "Directory under which per-project session files are stored.
 Each project's saved layout and buffers live in a single file here, named
 after the project (see `projectile-session--file')."
   :group 'projectile
   :type 'directory
-  :package-version '(projectile . "3.2.0"))
+  :package-version '(projectile . "3.4.0"))
 
 (defcustom projectile-session-restore-on-switch t
   "Whether switching to a project restores its saved session.
@@ -15386,9 +17546,12 @@ with a message, so the user learns why nothing was restored."
                   projectile-session--format-version)
            data))
      ((and (consp data) (plist-member data :projectile-session-version))
-      (message "Ignoring session file %s: format version %s (expected %s)"
-               file (plist-get data :projectile-session-version)
-               projectile-session--format-version)
+      ;; `projectile-session-restore-all' can walk a directory full of these
+      ;; at startup, so this is exactly the kind of thing that shouldn't
+      ;; announce itself once per file.
+      (projectile--message "Ignoring session file %s: format version %s (expected %s)"
+                           file (plist-get data :projectile-session-version)
+                           projectile-session--format-version)
       nil))))
 
 (defun projectile-session--read (root)
@@ -15690,6 +17853,11 @@ existing tabs untouched."
 ;;    offers project operations (switch, vc, dired, remove) instead of only
 ;;    generic file actions.  Marginalia keeps annotating those candidates via
 ;;    the built-in file annotator (they are directory paths).
+;;
+;; The `projectile-worktree' category gets the same Embark actions but is
+;; deliberately left out of the Marginalia registry: those candidates carry
+;; their own `annotation-function' naming what each worktree has checked
+;; out, and a registered annotator would take precedence over it.
 
 (defun projectile--embark-project-file-target (target)
   "Resolve a `project-file' TARGET to an absolute path under the Projectile root.
@@ -15758,7 +17926,11 @@ Projectile again doesn't stack wrappers."
       (setf (alist-get 'project-file embark-transformer-alist)
             #'projectile--embark-project-file-transform)))
   (add-to-list 'embark-keymap-alist
-               '(projectile-project . projectile-embark-project-map)))
+               '(projectile-project . projectile-embark-project-map))
+  ;; A worktree candidate is a project directory too, so the same actions
+  ;; apply to it.
+  (add-to-list 'embark-keymap-alist
+               '(projectile-worktree . projectile-embark-project-map)))
 
 (with-eval-after-load 'embark (projectile--embark-setup))
 

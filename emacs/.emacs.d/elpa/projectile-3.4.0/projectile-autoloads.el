@@ -646,6 +646,28 @@ This combines `projectile-add-known-project' and
 `projectile-switch-project-by-name' into a single command.
 
 (fn PROJECT-ROOT)" t)
+(autoload 'projectile-switch-worktree "projectile" "\
+Switch to another checkout of the current project\\='s repository.
+
+That's the project\\='s git worktrees, plus any other clone of the same
+upstream that Projectile already knows about - both are the same thing in
+practice, the place this project is checked out on another branch.
+
+Invokes the command referenced by `projectile-switch-project-action' on
+switch.  With a prefix ARG invokes `projectile-dispatch' instead.
+
+(fn &optional ARG)" t)
+(autoload 'projectile-switch-sibling-project "projectile" "\
+Switch to a project related to the current one.
+
+Related means grouped with it in `projectile-project-groups', or sharing
+the owner of its upstream remote, or - failing both - starting with the
+same word.  See `projectile-sibling-project-functions'.
+
+Invokes the command referenced by `projectile-switch-project-action' on
+switch.  With a prefix ARG invokes `projectile-dispatch' instead.
+
+(fn &optional ARG)" t)
 (autoload 'projectile-bookmark-set "projectile" "\
 Set a bookmark named NAME at point, scoped to the current project.
 
@@ -684,6 +706,12 @@ Let user choose another project when PROMPT-FOR-PROJECT is supplied.
 (fn PROMPT-FOR-PROJECT)" t)
 (autoload 'projectile-edit-dir-locals "projectile" "\
 Edit or create a .dir-locals.el file of the project." t)
+(autoload 'projectile-report-copy "projectile" "\
+Copy the current report buffer to the kill ring as plain text.
+
+Strips the faces and buttons, so what lands in the clipboard is exactly
+the text of the report - ready to paste into an issue, an email or a
+chat window without dragging Emacs\\='s text properties along." t)
 (autoload 'projectile-doctor "projectile" "\
 Diagnose Projectile's view of the current project.
 
@@ -703,6 +731,17 @@ invalidates the file cache.  A project that isn't cached yet is indexed
 with caching switched off and that run is reported as a fresh index.  On
 remote projects indexing and program lookups are skipped rather than
 risking a hang, and the report says so." t)
+(autoload 'projectile-find-changed-file "projectile" "\
+Jump to a file changed in the current project.
+
+That is everything git reports as staged, unstaged or untracked.  With a
+prefix ARG you are asked for a revision to compare against instead - a
+branch, say - and the candidates become everything that differs from it,
+which is the \"what did this branch touch\" list.
+
+Only git projects are supported.
+
+(fn &optional ARG)" t)
 (autoload 'projectile-dashboard "projectile" "\
 Show a dashboard summarising the project around `default-directory'.
 

@@ -24,7 +24,7 @@
 		("Bas Alberts" . "bas@anti.computer"))
       (:commit . "e99165ef5274bc4512b8d77ba2ac208c59b5d456"))])
  (aidermacs
-  . [(1 11)
+  . [(1 12)
      ((emacs (26 1)) (transient (0 3 0)) (compat (30 0 2 0))
       (markdown-mode (2 7)))
      "AI pair programming with Aider" tar
@@ -33,7 +33,7 @@
 		 "tools")
       (:maintainer "Mingde Zeng" . "matthewzmd@posteo.net")
       (:authors ("Mingde Zeng" . "matthewzmd@posteo.net"))
-      (:commit . "04c31616481fe55b4362859af01241041b755a6a"))])
+      (:commit . "2d8c28d3fbd64260cbfd5a1477aea3bff55ba54f"))])
  (alect-themes
   . [(0 11) ((emacs (24 0)))
      "Configurable light, dark and black themes for Emacs 24 or later"
@@ -235,6 +235,15 @@
       (:keywords "languages" "clojure" "clojurescript" "lisp")
       (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
       (:commit . "96fdffcbe9e1b8ebf9ad14e23b06f62cc3422e22"))])
+ (codex-ide
+  . [(0 1 1)
+     ((emacs (29 1)) (compat (29 1 4 2)) (keymap-popup (0 4 0))
+      (eat (0 9 4)))
+     "Run Codex CLI in a terminal" tar
+     ((:url . "https://git.thanosapollo.org/emacs-codex-ide")
+      (:keywords "ai" "codex" "tools" "terminal")
+      (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
+      (:commit . "d11a143ac52894eb25bbb43d877c8761f2f01244"))])
  (coffee-mode
   . [(0 6 3) ((emacs (24 1)) (cl-lib (0 5)))
      "Major mode for CoffeeScript code" tar
@@ -699,7 +708,7 @@
      ((:url . "https://github.com/lewang/flx")
       (:commit . "29e3664b75618847eaaf821713a74eb3c897a124"))])
  (flycheck
-  . [(38 3) ((emacs (28 1)) (seq (2 24))) "On-the-fly syntax checking"
+  . [(39 0) ((emacs (28 1)) (seq (2 24))) "On-the-fly syntax checking"
      tar
      ((:url . "https://github.com/flycheck/flycheck")
       (:keywords "convenience" "languages" "tools")
@@ -708,7 +717,7 @@
        ("fmdkdd" . "fmdkdd@gmail.com")
        ("Bozhidar Batsov" . "bozhidar@batsov.dev"))
       (:authors ("Sebastian Wiesner" . "swiesner@lunaryorn.com"))
-      (:commit . "4414c198f1efe1015c7523119c7c29f152f7243d"))])
+      (:commit . "65b93d8e9f406ce276824675101cd20d8e1f2960"))])
  (flymake-guile
   . [(0 5) ((emacs (26 1)) (flymake (1 2 1))) "Guile flymake backend"
      tar
@@ -768,13 +777,13 @@
       (:authors ("Akib Azmain Turja" . "akib@disroot.org"))
       (:commit . "ce2ea016a67b200862788e81f0ff1f8f7e4e0454"))])
  (geiser
-  . [(0 33 1) ((emacs (27 1)) (project (0 8 1)))
+  . [(0 33 2) ((emacs (27 1)) (project (0 8 1)))
      "GNU Emacs and Scheme talk to each other" tar
      ((:url . "https://gitlab.com/emacs-geiser/")
       (:keywords "languages" "scheme" "geiser")
       (:maintainer "Jose Antonio Ortega Ruiz" . "(jao@gnu.org)")
       (:authors ("Jose Antonio Ortega Ruiz" . "(jao@gnu.org)"))
-      (:commit . "84c25e9683a18d00387b6c16b0cee66269536c3c"))])
+      (:commit . "efcf1939fd839e9ea22d68ff0ebbd8ca2e1b71e1"))])
  (geiser-chez
   . [(0 18) ((emacs (26 1)) (geiser (0 19)))
      "Chez and Geiser talk to each other" tar
@@ -989,6 +998,16 @@
       (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
       (:commit . "3cd5097285dc10ac0898cf6f30c9699c3399e421"))])
+ (hermes
+  . [(0 3 1)
+     ((emacs (29 1)) (keymap-popup (0 3 1)) (websocket (1 15))
+      (markdown-mode (2 6)))
+     "Emacs frontend for Hermes Agent" tar
+     ((:url . "https://git.thanosapollo.org/emacs-hermes")
+      (:keywords "tools" "convenience")
+      (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
+      (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
+      (:commit . "93def9ce6793e8bb7f4e47cec0d9fd04ec302100"))])
  (hideshowvis
   . [(0 9) ((emacs (27 1)))
      "Fringe markers for regions foldable by hideshow.el" tar
@@ -1108,13 +1127,13 @@
       (:keywords "j" "languages")
       (:commit . "1365e5a3fe772609685b3787bbd2960331c1a02f"))])
  (jabber
-  . [(0 13 0) ((emacs (29 1)) (fsm (0 2 0)) (keymap-popup (0 2)))
+  . [(0 13 1) ((emacs (29 1)) (fsm (0 2 0)) (keymap-popup (0 2)))
      "XMPP/Jabber client" tar
      ((:url . "https://git.thanosapollo.org/emacs-jabber/about/")
       (:keywords "comm")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Magnus Henoch" . "mange@freemail.hu"))
-      (:commit . "25c2b32620ef9d7a3bce98896e5d223d0d539a75"))])
+      (:commit . "fc127ac13d1ec3b8cafe0bafd42f9461bcb92750"))])
  (jade-mode
   . [(1 0 1) nil "Major mode for editing .jade files" tar
      ((:url . "https://github.com/brianc/jade-mode")
@@ -1272,13 +1291,13 @@
       (:authors ("Jason R. Blevins" . "jblevins@xbeta.org"))
       (:commit . "f5d520b3ee7722dd2231ab586ba51d8eb166e49b"))])
  (mastodon
-  . [(2 0 17) ((emacs (29 1)) (persist (0 8)) (tp (0 8)))
+  . [(2 1 0) ((emacs (29 1)) (persist (0 8)) (tp (0 8)))
      "Client for fediverse services using the Mastodon API" tar
      ((:url . "https://codeberg.org/martianh/mastodon.el")
       (:maintainer "Marty Hiatt" . "martianh@disroot.org")
       (:authors ("Johnson Denen" . "johnson.denen@gmail.com")
 		("Marty Hiatt" . "martianh@disroot.org"))
-      (:commit . "97434f91d1dd940fcec6df78d8aaf338a2d7a7ba"))])
+      (:commit . "c4f82bd9750bb20708e8b8ab9ae335f245ebf0d9"))])
  (material-theme
   . [(2015) ((emacs (24 1)))
      "A Theme based on the colors of the Google Material Design" tar
@@ -1402,6 +1421,14 @@
       (:maintainer "Phillip Lord" . "phillip.lord@russet.org.uk")
       (:authors ("Paul Sexton" . "eeeickythump@gmail.com"))
       (:commit . "4c114489e682e514e79701045d541ab6f3dc3fb4"))])
+ (org-history
+  . [(0 5 2) ((emacs (29 1)))
+     "Show Dates for Org headers from vcs + auto-commit" tar
+     ((:url . "https://codeberg.org/Anoncheg/emacs-org-history")
+      (:keywords "org" "outline" "vc")
+      (:maintainer nil . "github.com/Anoncheg1,codeberg.org/Anoncheg")
+      (:authors (nil . "github.com/Anoncheg1,codeberg.org/Anoncheg"))
+      (:commit . "3049ba97830e8dd19a56add34ad2538cf11a0ac8"))])
  (org-journal
   . [(2 2 0) ((emacs (25 1)) (org (9 1)))
      "a simple org-mode based journaling mode" tar
@@ -1529,20 +1556,25 @@
       (:authors ("Andreas Politz" . "mail@andreas-politz.de"))
       (:commit . "5245f092e35712df6559a7782a93bb61896175dd"))])
  (pg
-  . [(0 68) ((emacs (28 1)) (peg (1 0 1)))
+  . [(0 69) ((emacs (28 1)) (peg (1 0 1)))
      "Socket-level interface to the PostgreSQL database" tar
      ((:url . "https://github.com/emarsden/pg-el")
       (:keywords "data" "comm" "database" "postgresql")
       (:maintainer "Eric Marsden"
 		   . "eric.marsden@risk-engineering.org")
       (:authors ("Eric Marsden" . "eric.marsden@risk-engineering.org"))
-      (:commit . "6d4b528cfd1e7f776eb0e4c14d84668fa69a041b"))])
+      (:commit . "17e82d7557cc8d86abdf0679c6a54be3bc25cf5f"))])
  (php-mode
   . [(1 26 1) ((emacs (26 1))) "Major mode for editing PHP code" tar
      ((:url . "https://github.com/emacs-php/php-mode")
       (:keywords "languages" "php")
       (:maintainer "USAMI Kenta" . "tadsan@zonu.me")
       (:commit . "9a2fe1c6c34f4f22f11efff0caf1d4e7c8ea233a"))])
+ (pinyin-isearch
+  . [(1 7 0) ((emacs (28 1))) "Pinyin mode for isearch" tar
+     ((:url . "https://github.com/Anoncheg1/pinyin-isearch")
+      (:keywords "chinese" "pinyin" "matching" "convenience")
+      (:commit . "9e9b97ad9c1b927e462cd012a27351f8d595baa8"))])
  (popon
   . [(0 13) ((emacs (25 1))) "\"Pop\" floating text \"on\" a window"
      tar
@@ -1566,13 +1598,13 @@
       (:authors ("Frédéric Perrin" . "fredericperrinreselfr"))
       (:commit . "176f9fb0c29ac60898e1e938458f26205511cc23"))])
  (projectile
-  . [(3 3 0) ((emacs (28 1)) (compat (30)))
+  . [(3 4 0) ((emacs (28 1)) (compat (30)))
      "Manage and navigate projects in Emacs easily" tar
      ((:url . "https://github.com/bbatsov/projectile")
       (:keywords "project" "convenience")
       (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
       (:authors ("Bozhidar Batsov" . "bozhidar@batsov.dev"))
-      (:commit . "d1cc09ba9beced496b6aca70e6a8a1da07917c16"))])
+      (:commit . "b60bb09927a6c78793dc96a2da3c5a8d4cec3062"))])
  (proof-general
   . [(4 5) ((emacs (25 2)))
      "A generic Emacs interface for proof assistants" tar
