@@ -436,7 +436,8 @@
 
 ;;; Syntax checking
 
-;; The syntax checker is `flycheck'. 26.1+ flymake would work too.
+;; The syntax checker is `flycheck'. Flymake would work too. Both gate elisp
+;; byte-compile checking on `trusted-content', set in ~/secrets-local.el.
 (require 'flycheck)
 (setq flycheck-global-modes
       '(not org-mode org-agenda-mode vterm-mode erc-mode lisp-interaction-mode))
