@@ -192,13 +192,13 @@
 		("Damien Doligez" . "damien.doligez@inria.fr"))
       (:commit . "2905a436e956c5bba16c4633a6e4c4fceefa6535"))])
  (casual
-  . [(2 17 1) ((emacs (30 1)) (transient (0 9 0)) (csv-mode (1 27)))
+  . [(3 0 1) ((emacs (30 1)) (transient (0 9 0)) (csv-mode (1 27)))
      "Transient user interfaces for various modes" tar
      ((:url . "https://github.com/kickingvegas/casual")
       (:keywords "tools" "wp")
       (:maintainer "Charles Choi" . "kickingvegas@gmail.com")
       (:authors ("Charles Choi" . "kickingvegas@gmail.com"))
-      (:commit . "cadbeab2ec45804e63a328202c9a82fbed2413c5"))])
+      (:commit . "4360a3f8bd8dc775bd1c41a0fb26f2397785ad7f"))])
  (cdlatex
   . [(4 18 5) nil "Fast input methods for LaTeX environments and math"
      tar
@@ -382,6 +382,13 @@
      ((:url . "https://github.com/spotify/dockerfile-mode")
       (:keywords "docker" "languages" "processes" "tools")
       (:commit . "7ce17e054eca4d56ca8bc1e4a6a0dbf58efd8d52"))])
+ (doom-game
+  . [(0 4) ((emacs (31 0))) "DOOM on Emacs" tar
+     ((:url . "https://github.com/minad/doom-on-emacs")
+      (:keywords "games")
+      (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
+      (:authors ("Daniel Mendler" . "mail@daniel-mendler.de"))
+      (:commit . "cf637c9c59f34f997c00728eccac8685763927b2"))])
  (dracula-theme
   . [(1 8 3) ((emacs (24 3))) "Dracula Theme" tar
      ((:url . "https://github.com/dracula/emacs")
@@ -460,7 +467,7 @@
       (:authors ("Huang Feiyu" . "sibadake1@163.com"))
       (:commit . "2d89026fbc61214fda25d5dd589cd328ddce5f6e"))])
  (elfeed
-  . [(4 1 1) ((emacs (29 1)) (compat (31))) "An Atom/RSS feed reader"
+  . [(4 2 0) ((emacs (29 1)) (compat (31))) "An Atom/RSS feed reader"
      tar
      ((:url . "https://github.com/emacs-elfeed/elfeed")
       (:keywords "network" "comm" "hypermedia")
@@ -469,10 +476,10 @@
        ("Ihor Radchenko" . "yantar92@posteo.net")
        ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Christopher Wellons" . "wellons@nullprogram.com"))
-      (:commit . "fdf477f99fe1e152f7fbcb098fae1de00fa09efb"))])
+      (:commit . "737c1d6d2649b1ff82c5e2d2d9891a7caeac3835"))])
  (elfeed-web
-  . [(4 0 0)
-     ((emacs (28 1)) (compat (31)) (elfeed (3 4 2))
+  . [(4 1 0)
+     ((emacs (29 1)) (compat (31)) (elfeed (4 1 0))
       (simple-httpd (1 6)))
      "Web interface to Elfeed" tar
      ((:url . "https://github.com/emacs-elfeed/elfeed-web")
@@ -482,7 +489,7 @@
        ("Ihor Radchenko" . "yantar92@posteo.net")
        ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Christopher Wellons" . "wellons@nullprogram.com"))
-      (:commit . "e947501a29457a55dfb0828aa791185c6b41bc37"))])
+      (:commit . "1f089663e7952c33512c37d2bd2544043e039e23"))])
  (elixir-mode
   . [(2 5 0) ((emacs (25))) "Major mode for editing Elixir files" tar
      ((:url . "https://github.com/elixir-editors/emacs-elixir")
@@ -699,14 +706,14 @@
       (:authors ("Dmitry Gutov" . "dmitry@gutov.dev"))
       (:commit . "84e57b17520edbadbdca17e0b2dba50c56134d74"))])
  (flx
-  . [(0 6 2) ((cl-lib (0 3))) "fuzzy matching with good sorting" tar
+  . [(0 6 3) ((cl-lib (0 3))) "fuzzy matching with good sorting" tar
      ((:url . "https://github.com/lewang/flx")
-      (:commit . "29e3664b75618847eaaf821713a74eb3c897a124"))])
+      (:commit . "dc6e4cec66ab05d536ec2cc6f5f324c019e8f8c0"))])
  (flx-ido
-  . [(0 6 2) ((flx (0 1)) (cl-lib (0 3))) "flx integration for ido"
-     tar
+  . [(0 6 3) ((emacs (24 1)) (flx (0 1)) (cl-lib (0 3)))
+     "flx integration for ido" tar
      ((:url . "https://github.com/lewang/flx")
-      (:commit . "29e3664b75618847eaaf821713a74eb3c897a124"))])
+      (:commit . "dc6e4cec66ab05d536ec2cc6f5f324c019e8f8c0"))])
  (flycheck
   . [(39 0) ((emacs (28 1)) (seq (2 24))) "On-the-fly syntax checking"
      tar
@@ -1703,6 +1710,13 @@
       (:maintainer "Mozilla" . "rust-mode@noreply.github.com")
       (:authors ("Mozilla" . "rust-mode@noreply.github.com"))
       (:commit . "a8c69ce8f5e7793d2f81dbef60fb37b4b93afccf"))])
+ (sapling
+  . [(0 2 2) ((emacs (26 1))) "Magit-like interface for Sapling" tar
+     ((:url . "https://github.com/swithinchan/sapling/")
+      (:keywords "tools" "vc")
+      (:maintainer "Swithin Chan" . "swithinchan@yahoo.com.hk")
+      (:authors ("Swithin Chan" . "swithinchan@yahoo.com.hk"))
+      (:commit . "0f833a51cf7515470fe0348661133cf4ce8f3bc2"))])
  (sass-mode
   . [(3 0 16) ((haml-mode (3 0 15)))
      "Major mode for editing Sass files" tar
@@ -2027,6 +2041,14 @@
       (:authors ("Venkat Iyer" . "venkat@comit.com"))
       (:url . "https://elpa.nongnu.org/nongnu/vc-fossil.html")
       (:commit . "4a4a3e4df83ba2f1ea8bfd8aa7e9f9b2c1c32ca9"))])
+ (vc-sapling
+  . [(0 2 1) ((emacs (26 1)) (sapling (0 2 0)))
+     "VC backend for Sapling" tar
+     ((:url . "https://github.com/swithinchan/vc-sapling/")
+      (:keywords "tools" "vc")
+      (:maintainer "Swithin Chan" . "swithinchan@yahoo.com.hk")
+      (:authors ("Swithin Chan" . "swithinchan@yahoo.com.hk"))
+      (:commit . "d1edae122831e39ea5e6c67e26a5f2efd218bf06"))])
  (vcomplete
   . [(2 0) ((emacs (25 1))) "Visual completions" tar
      ((:url . "https://dsemy.com/projects/vcomplete")

@@ -1,11 +1,11 @@
 ;; -*- no-byte-compile: t; lexical-binding: nil -*-
-(define-package "org-mcp" "0.9"
+(define-package "org-mcp" "1.0.0"
   "MCP server for Org-mode."
-  '((emacs          "27.1")
-    (mcp-server-lib "0.2.0"))
+  '((emacs          "28.2")
+    (mcp-server-lib "0.4.0"))
   :url "https://github.com/laurynas-biveinis/org-mcp"
-  :commit "70fef64ee096c13eb33389c4803c5825e146c60e"
-  :revdesc "70fef64ee096"
+  :commit "b02d20d190ecaa6c40f044d04a1502576cdca7bb"
+  :revdesc "1.0.0-0-gb02d20d190ec"
   :keywords '("convenience" "files" "matching" "outlines")
   :authors '(("Laurynas Biveinis" . "laurynas.biveinis@gmail.com"))
   :maintainers '(("Laurynas Biveinis" . "laurynas.biveinis@gmail.com")))
