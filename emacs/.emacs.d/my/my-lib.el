@@ -616,12 +616,27 @@ sub-action under a project task."
 
 ;;; Online-store order tracking
 
+(defun dotfiles--store-check-order-token (store what token)
+  "Signal a `user-error' unless TOKEN, STORE's order WHAT, is a single token.
+Rejects embedded and surrounding whitespace and the empty string alike.  One
+tokenization for every input spliced into an order-task heading, so the rule
+and its check cannot drift."
+  (declare (ftype (function (string string string) t)))
+  (unless (equal (split-string token) (list token))
+    (user-error "%s order %s must be a single whitespace-free token: %S"
+                store what token)))
+
 (defun dotfiles--store-order-task-title (store order-date order-id)
   "Return the order-task title for STORE, ORDER-DATE and ORDER-ID.
 With ORDER-DATE non-nil, the full \"Iš STORE DATE ID užsakymo\" the order
 confirmation creates; with ORDER-DATE nil, the ID-only form a shipping notice
 creates and the confirmation later completes.  ORDER-DATE lets a date-only
-payment email find the task; ORDER-ID lets a shipping notice find it."
+payment email find the task; ORDER-ID lets a shipping notice find it.
+
+ORDER-DATE and ORDER-ID are spliced in raw and must each be a single
+whitespace-free token: `dotfiles--store-check-order-token' rejects both before
+anything is edited.  Unchecked, a newline would split the generated heading, and
+other whitespace would re-tokenize ORDER-DATE and break the date-keyed lookup."
   (declare (ftype (function (string (or null string) string) string))
            (important-return-value t)
            (side-effect-free t))
@@ -636,9 +651,14 @@ KEY is an order ID or an order date.  Search the current buffer for the first
 space-delimited token, and return its position, or nil.  Anchoring to that title
 shape, matching case-sensitively, and requiring a whole token keep a bare order
 date from latching onto an unrelated dated task, and one order ID from matching
-another that merely contains it as a substring."
+another that merely contains it as a substring.
+
+Signal a `user-error' when KEY is not itself a single whitespace-free token.
+No heading token can match such a KEY, so a caller that created a task for it
+could never re-find it; rejecting it here keeps that caller from editing first."
   (declare (ftype (function (string string) (or null integer)))
            (important-return-value t))
+  (dotfiles--store-check-order-token store "key" key)
   (let ((heading-rx (concat "\\`Iš " (regexp-quote store) " .*užsakymo\\'")))
     (catch 'found
       (org-map-entries
@@ -669,15 +689,19 @@ missing task."
 (defun dotfiles--store-file-order-email (org-file store msg order-id order-date
                                                   delivery-date)
   "File an `org' link to STORE order MSG into its @waitingfor task in ORG-FILE.
-Create the task under \"Tasks\" when absent.  Locate the task by
-ORDER-ID.  ORDER-DATE (the order day, or nil when MSG does not carry it)
-completes an ID-only title; the order confirmation is authoritative for it and
-corrects a stale one.  Reschedule the task to DELIVERY-DATE when non-nil.
-Idempotent: append the link only when the task's subtree does not already hold
-MSG's message-id."
+Create the task under \"Tasks\" when absent.  Locate the task by ORDER-ID,
+which `dotfiles--store-find-order-task' requires to be a single whitespace-free
+token and otherwise rejects with a `user-error' before anything is edited.
+ORDER-DATE (the order day, or nil when MSG does not carry it) completes an
+ID-only title; the order confirmation is authoritative for it and corrects a
+stale one, and is rejected the same way when it is not a single whitespace-free
+token.  Reschedule the task to DELIVERY-DATE when non-nil.  Idempotent: append
+the link only when the task's subtree does not already hold MSG's message-id."
   (declare (ftype (function (string string list string (or null string)
                                     (or null string))
                             t)))
+  (when order-date
+    (dotfiles--store-check-order-token store "date" order-date))
   (dotfiles--with-store-order-task org-file store msg order-id
     (if task
         (progn
@@ -706,10 +730,11 @@ MSG's message-id."
 
 (defun dotfiles--mu4e-complete-order-task (org-file store msg key)
   "Complete the STORE @waitingfor order task in ORG-FILE for a delivered MSG.
-Find the task by KEY (an order ID) via `dotfiles--store-find-order-task', append
-an `org' link to MSG, then prompt to mark it DONE; on yes, complete it and, when
-it is a top-level task (not a project sub-action), archive its subtree.  Signal a
-`user-error' when no such task exists."
+Find the task by KEY (an order ID) via `dotfiles--store-find-order-task', which
+requires KEY to be a single whitespace-free token and otherwise rejects it with
+a `user-error'.  Append an `org' link to MSG, then prompt to mark it DONE; on
+yes, complete it and, when it is a top-level task (not a project sub-action),
+archive its subtree.  Signal a `user-error' when no such task exists."
   (declare (ftype (function (string string list string) t)))
   (dotfiles--with-store-order-task org-file store msg key
     (if (not task)

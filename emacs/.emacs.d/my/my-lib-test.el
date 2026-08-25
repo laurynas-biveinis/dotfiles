@@ -256,6 +256,32 @@ Return a cons of the appender's return value and the resulting buffer text."
              (regexp-quote "[[mu4e:msgid:new@example.com][New]]")
              (cdr result)))))
 
+(ert-deftest dotfiles--store-file-order-email-unfindable-order-id-test ()
+  (dolist (order-id '("12 345" " 12345" ""))
+    (with-temp-buffer
+      (org-mode)
+      (should
+       (string-match-p
+        "single whitespace-free token"
+        (cadr (should-error
+               (dotfiles--store-find-order-task "teststore" order-id)
+               :type 'user-error)))))))
+
+(ert-deftest dotfiles--store-file-order-email-unfindable-order-date-test ()
+  (let ((file (make-temp-name
+               (expand-file-name "dotfiles-order-date-"
+                                 temporary-file-directory))))
+    (should-not (file-exists-p file))
+    (dolist (order-date '("2026-08 17" " 2026-08-17" "2026-08-17\n" ""))
+      (should
+       (string-match-p
+        "single whitespace-free token"
+        (cadr (should-error
+               (dotfiles--store-file-order-email
+                file "teststore" nil "12345" order-date nil)
+               :type 'user-error)))))
+    (should-not (file-exists-p file))))
+
 (provide 'my-lib-test)
 
 ;;; my-lib-test.el ends here
