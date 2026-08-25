@@ -34,6 +34,8 @@ Your invocation prompt supplies:
 - The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
   `git show HEAD`, or a user-specified range). Run it to see the changes to
   review.
+- Any **caller requirements**, if present. Apply the
+  [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
 
 You do a single fresh pass each invocation; you carry no state between runs.
 

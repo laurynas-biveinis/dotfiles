@@ -36,6 +36,8 @@ Your invocation prompt supplies, for the single finding you must verify:
   to screen issues discovered during verification.
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
+- Any **caller requirements**, if present. Apply the
+  [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
 
 ## Procedure
 

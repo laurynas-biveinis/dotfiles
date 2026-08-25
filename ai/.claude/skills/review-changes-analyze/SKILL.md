@@ -32,6 +32,8 @@ Your invocation prompt supplies, for the single finding you must analyze:
   verification (`verdicts-<round>.md`), not the original draft.
 - The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
   `git show HEAD`, or a user-specified range). Run it to see the reviewed change.
+- Any **caller requirements**, if present. Apply the
+  [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
 - **Only when a placement decision applies** (committed scope with a non-empty
   unpublished stack): the **stack** as a list of SHA + subject, and the
   blame-target revision `REV`. When these are absent, omit any placement
@@ -41,6 +43,10 @@ Your invocation prompt supplies, for the single finding you must analyze:
   when filtering issues discovered during analysis.
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
+- **Only when this is an alongside-analysis re-spawn:** the invocation mode
+  `alongside` and the complete latest provisional analysis block (header and
+  body, excluding routed level-2 sections). Revise that analysis using the new
+  experiment results instead of reconstructing it from the verdict.
 
 ## Procedure
 
@@ -147,8 +153,10 @@ section in one of two shapes:
 - **Alongside an analysis** — requests _plus_ your completed analysis block:
   your analysis stands, but a suggested action (or option) asserts a
   tooling/environment capability you have not verified. The top-level runs the
-  experiments and re-invokes you with the results so you can finalize that
-  suggested action. When re-invoked with results, you have three valid replies:
+  experiments and re-invokes you with the results, invocation mode `alongside`,
+  and your complete latest provisional analysis block so you can finalize that
+  suggested action without losing its context. When re-invoked in this mode,
+  you have three valid replies:
   return your **finalized analysis** with no further requests (if the results
   settle it); attach **another `## Experiment requests` section** alongside your
   updated analysis block (if they surface a further unverified capability); or,

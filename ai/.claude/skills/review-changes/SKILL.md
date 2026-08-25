@@ -130,6 +130,24 @@ The `<the structured inputs for this step>` placeholder is the bulleted Input
 list the named child skill defines, so later references to a specific input
 (e.g. the "Any experiment results" bullet) resolve unambiguously.
 
+**Caller requirements.** At the start of the review, capture any requirements
+defined by the [shared caller-requirements
+guidance](references/caller-requirements.md). Pass the same verbatim block as a
+declared input to every draft, verify, and analyze dispatch, including retries,
+re-drafts, experiment deferrals, and alongside-analysis re-spawns.
+
+**No orchestration steering.** The prompt above is fixed, and its only variable
+content is the named child skill's declared inputs. Apart from the verbatim
+caller-requirements input, never add orchestration-generated direction — no
+"focus on X", no statement of what earlier rounds covered, missed, or already
+found, no ranking of files or areas, no instruction to skip part of the scope.
+Every subagent examines the whole scope on its own terms; overlap between rounds
+is removed afterwards by **Unified dedup**, never by narrowing a subagent's
+attention. The prior draft paths handed to verify and analyze are a
+duplicate-suppression filter on what they emit (see
+[prior drafts](references/prior-drafts.md)), not a redirection of where they
+look.
+
 Spawning several subagents in **one message** (multiple Agent calls) runs them
 concurrently — this is what makes a per-finding batch actually parallel.
 
@@ -192,11 +210,10 @@ the two differences (initial vs re-draft) are called out below.
 
 Determine the scope (per **Scope** above) as a Git command. For each pass,
 choose the **round index** `N`: `1` for the initial pass; `<round+1>` for a
-re-draft pass. Spawn one `review-changes-step` subagent **blind** — i.e. given
-only `N` and the scope, not the prior draft files (unlike verify/analyze), so
-each re-draft pass is a fresh, independent look and relies solely on the
-top-level corpus dedup to suppress rediscoveries — via the dispatch convention
-above, passing as its inputs the round index `N` and the scope command —
+re-draft pass. Spawn one `review-changes-step` subagent **blind** — unlike
+verify/analyze it is handed no prior draft paths or cross-round state, only `N`,
+the scope, and any verbatim caller requirements (see **No orchestration
+steering** above) — via the dispatch convention above —
 e.g. `N = 3`, `scope = git show HEAD`. It must use `N` as the round index for
 every `R<N>-<NNN>` ID it assigns. It returns that pass's draft — the scope line
 and `R<N>-<NNN>` finding blocks.
@@ -259,7 +276,8 @@ the current draft file, in parallel — one message, multiple Agent calls (per
 the dispatch convention above). That skill holds the per-finding verification
 contract; each subagent's inputs are the one finding's ID and full block, the
 scope as a Git command, the paths of the prior draft files that exist, for
-dedup, and any experiment results (the matching `EXP` blocks) for that finding.
+dedup, any experiment results (the matching `EXP` blocks) for that finding, and
+the same verbatim caller requirements, if present.
 
 Once the batch returns, validate each reply (rules below). Process
 the valid replies:
@@ -386,7 +404,10 @@ above). That skill holds the per-finding analysis contract; each subagent's
 inputs are the finding's ID and full verdict block (from
 `verdicts-<round>.md`), the scope as a Git command, the paths of the prior
 draft files that exist, for dedup, any experiment results (the matching `EXP`
-blocks) for that finding, and — only when a
+blocks) for that finding, the same verbatim caller requirements, if present,
+and — only for an alongside-analysis re-spawn — the invocation mode `alongside`
+and complete latest provisional analysis block (header and body, excluding
+routed level-2 sections). Also pass — only when a
 placement decision applies (committed scope with a non-empty stack, computed
 below) — the stack as a list of SHA + subject and the blame-target revision
 `REV`.
@@ -575,12 +596,14 @@ by shape:
   proposed-new-findings step alongside the initial batch's.
 - **Requests alongside an analysis block (grounding a remedy):** the analyst has
   a usable analysis but flagged a suggested action whose feasibility it has not
-  verified. Re-spawn it with the results so it can finalize that suggested
-  action. The re-spawn's outcome is one of:
+  verified. Re-spawn it with the results, the invocation mode `alongside`, and
+  the complete latest provisional analysis block so it can finalize that
+  suggested action. The re-spawn's outcome is one of:
   - **Finalized analysis** (a plain block with no further requests): append it.
-  - **Another alongside batch:** run those requests and re-spawn again — the
-    alongside path loops like a deferral, except every reply already carries a
-    usable provisional body, so it is never blocked.
+  - **Another alongside batch:** make its analysis block the latest provisional
+    block, run those requests, and re-spawn again with the same alongside state
+    inputs. The alongside path loops like a deferral, except every reply already
+    carries a usable provisional body, so it is never blocked.
   - **A pure deferral** (well-formed `## Experiment requests` and no analysis
     block): loop-terminating — append the latest provisional body and exit the
     alongside loop. Do **not** enter a deferral sub-loop; the alongside loop
