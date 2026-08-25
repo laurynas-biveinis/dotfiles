@@ -581,12 +581,19 @@ MONTH-NAME, or on a DAY out of range for the month in every candidate year."
     (org-end-of-subtree)))
 
 (defun dotfiles--org-append-mu4e-link (link msgid)
-  "Append mu4e LINK at the end of the `org' subtree at point.
-Do nothing when the subtree already contains a link to MSGID.  Move point to the
-subtree's heading first, so the dedup scan covers the whole subtree wherever
-point started.  Return non-nil when LINK was inserted, nil otherwise."
+  "Append mu4e LINK at the end of the subtree of the `org' entry at point.
+Do nothing when that entry's subtree already contains a link to MSGID.  Move
+point back to the entry's own heading first, so the dedup scan covers its whole
+subtree wherever in it point started.  Point must be in the target entry itself:
+`org-back-to-heading' stops at the innermost enclosing entry, so from a
+sub-entry both the scan and the insertion would be confined to that sub-entry.
+Return non-nil when LINK was inserted, nil otherwise.  The link goes above any
+trailing blank line, so the separator before the next entry survives.
+
+On a folded heading, taking the nearest visible ancestor instead would append
+the link under \"Tasks\" rather than under the order task."
   (declare (ftype (function (string string) boolean)))
-  (org-back-to-heading)
+  (org-back-to-heading t)
   (let ((end (save-excursion (org-end-of-subtree t) (point))))
     ;; Anchor on the link's closing `]' and match case-sensitively: a Message-ID
     ;; is case-sensitive and may be a prefix of another already linked here.
@@ -594,8 +601,7 @@ point started.  Return non-nil when LINK was inserted, nil otherwise."
               (save-excursion
                 (search-forward (concat "mu4e:msgid:" msgid "]") end t)))
       (goto-char end)
-      (unless (bolp) (insert "\n"))
-      (insert link "\n")
+      (insert "\n" link)
       t)))
 
 (defun dotfiles--org-task-top-level-p ()
