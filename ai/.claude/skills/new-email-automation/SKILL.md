@@ -40,9 +40,11 @@ Treat its contents as private: never quote, echo, transmit, or persist
 secret-bearing lines in any output, commit, or message.
 
 The `mu4e-autotask` helper API (documented in
-`~/dotfiles/emacs/.emacs.d/elpa/mu4e-autotask/README.org`) — reuse these instead
-of re-implementing MIME/parsing/sending logic. The action function receives
-`msg`; the no-argument helpers below operate on that same current message view:
+<https://github.com/laurynas-biveinis/mu4e-autotask/blob/main/README.org>; the
+MELPA package ships only the Lisp, so there is no local readme) — reuse these
+instead of re-implementing MIME/parsing/sending logic. The action function
+receives `msg`; the no-argument helpers below operate on that same current
+message view:
 
 - Reading: `mu4e-autotask-raw-message (msg)`, `mu4e-autotask-text-content` (no
   args), `mu4e-autotask-html-content` (no args),
@@ -415,9 +417,10 @@ app passwords, account addresses, calendar IDs, or other machine-private data).
 Such generic logic does not belong in the private file — propose lifting it into
 the dotfiles repository:
 
-- Truly generic mu4e automation building blocks → the `mu4e-autotask` package at
-  `~/dotfiles/emacs/.emacs.d/elpa/mu4e-autotask/` (its own repository; follow its
-  `CLAUDE.md` — TDD, README.org update, `./check.sh`).
+- Truly generic mu4e automation building blocks → the `mu4e-autotask` package,
+  developed in its own repository at `~/emacs-dev/mu4e-autotask` (follow its
+  `CLAUDE.md` — TDD, README.org update, `./check.sh`); it is installed here from
+  MELPA, so the copy under `~/dotfiles/emacs/.emacs.d/elpa/` is not editable.
 - Dotfiles-specific but non-secret glue → the emacs config
   (`~/dotfiles/emacs/.emacs.d/my/`).
 
