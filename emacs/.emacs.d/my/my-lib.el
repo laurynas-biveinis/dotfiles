@@ -430,7 +430,7 @@ The %s must be present and is substituted with a PR branch name.")
   (declare (ftype (function (my-dev-project) string))
            (important-return-value t))
   (or (my-dev-project-push-remote project)
-      (user-error "Project %s misconfigured in `my-projects'"
+      (user-error "Project %s has no :push-remote in `my-projects'"
                   (my-dev-project-name project))))
 
 (defun dotfiles--get-project-branch-root (project)
@@ -447,7 +447,7 @@ The %s must be present and is substituted with a PR branch name.")
            (important-return-value t))
   (let ((main-branch-checkout (my-dev-project-main-branch-checkout project)))
     (unless main-branch-checkout
-      (user-error "Project %s misconfigured in `my-projects'"
+      (user-error "Project %s has no :main-branch-checkout in `my-projects'"
                   (my-dev-project-name project)))
     (concat (dotfiles--get-project-branch-root project) main-branch-checkout)))
 
@@ -458,7 +458,7 @@ The %s must be present and is substituted with a PR branch name.")
            (side-effect-free t))
   (let ((format-string (my-dev-project-pr-waitingfor-template project)))
     (unless format-string
-      (user-error "Project %s misconfigured in `my-projects'"
+      (user-error "Project %s has no :pr-waitingfor-template in `my-projects'"
                   (my-dev-project-name project)))
     (format format-string (concat "=" branch-name "="))))
 
