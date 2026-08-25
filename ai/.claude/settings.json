@@ -90,5 +90,6 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }
