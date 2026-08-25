@@ -28,9 +28,7 @@
 		       ssh ssh-config-mode stripe-buffer undo-tree
 		       vterm wgrep xterm-color yaml-mode yasnippet))
  '(package-vc-selected-packages
-   '((mu4e-autotask :vc-backend Git :url
-		    "https://github.com/laurynas-biveinis/mu4e-autotask/")
-     (org-autotask :vc-backend Git :url
+   '((org-autotask :vc-backend Git :url
 		   "https://github.com/laurynas-biveinis/org-autotask/")))
  '(safe-local-variable-values
    '((elisp-lint-indent-specs (mu4e-autotask-test--with-cleanup . 0)
