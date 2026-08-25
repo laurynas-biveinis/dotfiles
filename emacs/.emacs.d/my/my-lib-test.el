@@ -8,17 +8,12 @@
 
 (require 'ert)
 
-;; my-lib requires mu4e and org-autotask at load time; batch tests run without
-;; them, and the functions under test do not call into them. The stubs are
-;; removed after the load so a later test file in the same batch run cannot
-;; silently `require' a stub instead of the real library. (Let-binding
-;; `features' around the load does not work: `require' and `featurep' ignore
-;; the binding.)
+;; Stub unavailable mu4e features while loading `my-lib', then remove them so
+;; later tests cannot use the stubs.
 (provide 'mu4e-message)
 (provide 'mu4e-autotask)
-(provide 'org-autotask)
 (require 'my-lib)
-(dolist (stub '(mu4e-message mu4e-autotask org-autotask))
+(dolist (stub '(mu4e-message mu4e-autotask))
   (setq features (delq stub features)))
 
 (ert-deftest dotfiles--parse-gh-release-subject-same-v-tags-test ()
@@ -55,6 +50,15 @@
   (should-error (dotfiles--parse-gh-release-subject
                  "[o/p] Some other notification")
                 :type 'user-error))
+
+;; Match `user-error' quoting across `text-quoting-style' values.
+(ert-deftest dotfiles--get-project-branch-root-misconfigured-test ()
+  (should (equal
+           (cadr (should-error (dotfiles--get-project-branch-root
+                                (make-my-dev-project :name "demo"))
+                               :type 'user-error))
+           (format-message
+            "Project demo has no :branch-root in `my-projects'"))))
 
 (provide 'my-lib-test)
 

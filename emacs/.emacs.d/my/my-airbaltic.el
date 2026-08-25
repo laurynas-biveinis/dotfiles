@@ -22,10 +22,11 @@
 (defconst dotfiles--airbaltic-open-meteo-url
   "https://api.open-meteo.com/v1/forecast")
 
-(declare-function org-gcal--get-access-token "org-gcal" (calendar-id))
+;; Generated response accessors can only be file-checked by `check-declare'.
+(declare-function org-gcal--get-access-token "ext:org-gcal" (calendar-id))
 (declare-function request "request" (url &rest settings))
-(declare-function request-response-data "request" (response))
-(declare-function request-response-status-code "request" (response))
+(declare-function request-response-data "request" (response) t)
+(declare-function request-response-status-code "request" (response) t)
 
 (cl-defstruct (dotfiles--airbaltic-leg
                (:constructor dotfiles--airbaltic-leg-create))

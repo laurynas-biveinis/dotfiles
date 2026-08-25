@@ -7,8 +7,8 @@ on: push
 permissions: {}
 
 jobs:
-  relint:
-    name: relint
+  check:
+    name: Check
     runs-on: ubuntu-latest
 
     permissions:
@@ -20,10 +20,16 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Check out the org-autotask submodule
+        run: git submodule update --init emacs/.emacs.d/elpa/org-autotask
+
       - name: Set up Emacs
         uses: purcell/setup-emacs@master
         with:
           version: release-snapshot
+
+      - name: Byte-compile tested files
+        run: ./compile-elisp.sh
 
       - name: Run relint
         run: ./relint.sh

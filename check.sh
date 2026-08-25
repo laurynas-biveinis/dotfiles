@@ -4,35 +4,36 @@
 
 set -eu -o pipefail
 
-readonly SHELL_FILES=(check.sh relint.sh test-elisp.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
+readonly BASH_FILES=(check.sh relint.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
+readonly ZSH_FILES=(elisp-env.sh compile-elisp.sh test-elisp.sh)
 readonly PYTHON_FILES=(ai/.claude/hooks/*.py scripts/usr/bin/xml2qif scripts/usr/bin/*.py dotfiles/tests/*.py)
 readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 
 ERRORS=0
-SHELL_SYNTAX_FAILED=0
+BASH_SYNTAX_FAILED=0
 
 # Shell
 
-echo -n "Checking shell syntax... ${SHELL_FILES[*]} "
-if bash -n "${SHELL_FILES[@]}"; then
+echo -n "Checking Bash syntax... ${BASH_FILES[*]} "
+if bash -n "${BASH_FILES[@]}"; then
 	echo "OK!"
 else
-	echo "shell syntax check failed!"
+	echo "Bash syntax check failed!"
 	ERRORS=$((ERRORS + 1))
-	SHELL_SYNTAX_FAILED=1
+	BASH_SYNTAX_FAILED=1
 fi
 
-if [ $SHELL_SYNTAX_FAILED -eq 0 ]; then
-	echo -n "Running shellcheck... ${SHELL_FILES[*]} "
-	if shellcheck "${SHELL_FILES[@]}"; then
+if [ $BASH_SYNTAX_FAILED -eq 0 ]; then
+	echo -n "Running shellcheck... ${BASH_FILES[*]} "
+	if shellcheck "${BASH_FILES[@]}"; then
 		echo "OK!"
 	else
 		echo "shellcheck check failed"
 		ERRORS=$((ERRORS + 1))
 	fi
 
-	echo -n "Running shfmt to format all shell scripts... ${SHELL_FILES[*]} "
-	if shfmt -w "${SHELL_FILES[@]}"; then
+	echo -n "Running shfmt to format Bash scripts... ${BASH_FILES[*]} "
+	if shfmt -w "${BASH_FILES[@]}"; then
 		echo "OK!"
 	else
 		echo "shfmt failed!"
@@ -40,6 +41,14 @@ if [ $SHELL_SYNTAX_FAILED -eq 0 ]; then
 	fi
 else
 	echo "Skipping shellcheck, and shfmt due to previous errors"
+fi
+
+echo -n "Checking Zsh syntax... ${ZSH_FILES[*]} "
+if zsh -n "${ZSH_FILES[@]}"; then
+	echo "OK!"
+else
+	echo "Zsh syntax check failed!"
+	ERRORS=$((ERRORS + 1))
 fi
 
 echo -n "Checking Markdown files... "
@@ -166,6 +175,14 @@ else
 fi
 
 # Emacs Lisp
+echo -n "Byte-compiling tested Emacs Lisp files... "
+if ./compile-elisp.sh; then
+	echo "OK!"
+else
+	echo "byte-compile check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
 echo -n "Running relint on Emacs Lisp files... "
 if ./relint.sh; then
 	echo "OK!"

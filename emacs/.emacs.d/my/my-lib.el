@@ -289,6 +289,9 @@ ARGS must be properly quoted if needed."
 ;; `mu4e-autotask-raw-message' and `mu4e-message-field'.
 (require 'mu4e-message)
 (require 'mu4e-autotask)
+;; Restore arity checks for features stubbed during batch compilation.
+(declare-function mu4e-autotask-raw-message "mu4e-autotask" (msg))
+(declare-function mu4e-message-field "ext:mu4e-message" (msg field))
 
 ;; GitHub helpers
 
@@ -435,7 +438,8 @@ The %s must be present and is substituted with a PR branch name.")
   (declare (ftype (function (my-dev-project) string))
            (important-return-value t))
   (or (my-dev-project-branch-root project)
-      (user-error "Project %s misconfigured in `my-projects'")))
+      (user-error "Project %s has no :branch-root in `my-projects'"
+                  (my-dev-project-name project))))
 
 (defun dotfiles--get-project-main-branch-dir (project)
   "Get the directory of the main branch checkout for PROJECT."
@@ -559,6 +563,12 @@ MONTH-NAME, or on a DAY out of range for the month in every candidate year."
 
 (require 'org-refile)
 (require 'org-autotask)
+;; Keep arity checks independent of package bytecode availability.
+;; The generated accessor can only be file-checked by `check-declare'.
+(declare-function org-autotask-list-tag "org-autotask" (gtd-list) t)
+(declare-function org-autotask-insert-waiting-for-next-action "org-autotask"
+                  (title))
+(declare-function org-autotask-complete-item "org-autotask" ())
 
 (defun dotfiles--read-org-headline ()
   "Get the target `org' headline for the capture."
@@ -710,9 +720,9 @@ it is a top-level task (not a project sub-action), archive its subtree.  Signal 
 
 ;;; `org-gcal' helpers
 
-;; Do not require `org-gcal' to avoid the warning about needing to call
-;; `org-gcal-reload-client-id-secret'
-(declare-function org-gcal-post-at-point "org-gcal" ())
+;; Avoid requiring `org-gcal', which warns until credentials are reloaded.
+(declare-function org-gcal-post-at-point "ext:org-gcal"
+                  (&optional skip-import skip-export existing-mode))
 
 (defun dotfiles--org-timestamp (date &optional start-time end-time)
   "Return an active `org' timestamp for DATE, an ISO YYYY-MM-DD string.

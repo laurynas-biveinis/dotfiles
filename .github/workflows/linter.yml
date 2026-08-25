@@ -34,7 +34,7 @@ jobs:
           SHELLCHECK_OPTS: "--exclude=SC1071"
           # Exclude: elpa (third-party), .venv (virtual env), zsh-specific files
           # (shfmt cannot parse zsh-specific syntax)
-          FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/|\.venv/|mysql-work/\.zsh\.d/rc/mysql-work\.sh|scripts/usr/bin/macupdate|zsh/\.p10k\.zsh).*
+          FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/|\.venv/|compile-elisp\.sh|elisp-env\.sh|test-elisp\.sh|mysql-work/\.zsh\.d/rc/mysql-work\.sh|scripts/usr/bin/macupdate|zsh/\.p10k\.zsh).*
           VALIDATE_ANSIBLE: false
           VALIDATE_GIT_COMMITLINT: false
           # Conflicts with black (both are Python formatters)
