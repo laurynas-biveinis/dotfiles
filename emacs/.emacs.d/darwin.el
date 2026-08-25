@@ -53,13 +53,12 @@
       (add-to-list 'woman-manpath path))))
 
 (require 'exec-path-from-shell)
-(setq exec-path-from-shell-check-startup-files nil)
 (add-to-list 'exec-path-from-shell-variables "LANG")
 (exec-path-from-shell-initialize)
 
 ;; Fix native compilation warnings: "Warning (comp): ld: warning: -undefined
 ;; dynamic_lookup may not work with chained fixups"
-(setq native-comp-driver-options '("-Wl,-w"))
+(add-to-list 'native-comp-driver-options "-Wl,-w")
 
 ;;; plantuml
 (require 'ob-plantuml)
