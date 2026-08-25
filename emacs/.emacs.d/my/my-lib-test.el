@@ -6,6 +6,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'ert)
 
 ;; Stub unavailable mu4e features while loading `my-lib', then remove them so
@@ -255,6 +256,45 @@ Return a cons of the appender's return value and the resulting buffer text."
     (should (string-match-p
              (regexp-quote "[[mu4e:msgid:new@example.com][New]]")
              (cdr result)))))
+
+(defconst dotfiles--lib-test-order-file-org-nested-no-task "\
+* Container
+** Tasks
+*** TODO Decoy
+**** TODO Decoy child
+*** TODO After
+** Other
+*** TODO Elsewhere
+"
+  "Org text with an invisible \"Tasks\" heading nested under a folded parent.")
+
+;; Only the final child catches the misfile: the link still lands on the
+;; correctly titled task wherever it ended up.
+(ert-deftest dotfiles--store-file-order-email-creates-task-when-folded-test ()
+  (let ((file (make-temp-file
+               "dotfiles-order" nil ".org"
+               dotfiles--lib-test-order-file-org-nested-no-task))
+        (org-startup-folded 'fold)
+        (system-time-locale "C"))
+    (unwind-protect
+        (cl-letf (((symbol-function 'mu4e-message-field) #'plist-get)
+                  ((symbol-function 'org-store-link)
+                   (lambda (&rest _)
+                     "[[mu4e:msgid:new@example.com][New]]")))
+          (dotfiles--store-file-order-email
+           file "teststore" '(:message-id "new@example.com") "12345"
+           "2026-08-17" "2026-08-18")
+          (with-current-buffer (find-file-noselect file)
+            (goto-char (org-find-exact-headline-in-buffer "Tasks"))
+            (org-end-of-subtree t)
+            (org-back-to-heading t)
+            (should (equal (org-get-heading t t t t)
+                           "Iš teststore 2026-08-17 12345 užsakymo"))))
+      (let ((buffer (find-buffer-visiting file)))
+        (when buffer
+          (with-current-buffer buffer (set-buffer-modified-p nil))
+          (kill-buffer buffer)))
+      (delete-file file))))
 
 (ert-deftest dotfiles--store-file-order-email-unfindable-order-id-test ()
   (dolist (order-id '("12 345" " 12345" ""))

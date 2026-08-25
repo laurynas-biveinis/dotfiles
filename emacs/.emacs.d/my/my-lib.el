@@ -715,7 +715,19 @@ the link only when the task's subtree does not already hold MSG's message-id."
                 (org-edit-headline full)))))
       (goto-char (or (org-find-exact-headline-in-buffer "Tasks")
                      (user-error "No \"Tasks\" heading in %s" org-file)))
-      (org-insert-subheading '(4))
+      ;; `org-insert-subheading' does this for a `'(4)' arg, but forwards no
+      ;; `invisible-ok' to `org-insert-heading'.  A fold does not hide its own
+      ;; headline, so the case to guard is a "Tasks" that is itself invisible,
+      ;; nested under a folded ancestor: without `invisible-ok' the insertion
+      ;; re-anchors on that ancestor and files the task under an unrelated
+      ;; sibling.  In that same case `invisible-ok' suppresses the reveal
+      ;; `org-insert-heading' would otherwise do, so the new task, inserted
+      ;; inside the ancestor's fold, ends up as folded as the siblings around
+      ;; it.  That is deliberate, and is what `org-refile' does: it anchors
+      ;; with the same `invisible-ok' and reveals a pasted entry only when the
+      ;; insertion point was visible beforehand.
+      (org-insert-heading '(4) t)
+      (org-do-demote)
       (org-autotask-insert-waiting-for-next-action
        (dotfiles--store-order-task-title store order-date order-id))
       (setq task (dotfiles--store-find-order-task store order-id)))
