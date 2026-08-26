@@ -247,15 +247,31 @@
 (size-indication-mode)
 (column-number-mode t)
 
-;; `rich-minority'
-(require 'rich-minority)
-(setq rm-blacklist '(" company" " waka" " Undo-Tree" " =>" " GitGutter" " WS"
-                     " ElDoc" " Wrap" " Fill" " all-the-icons-dired-mode"
-                     " Projectile" " PgLn" " h-i-g" " mc++fl" " yas" " WK"
-                     " GCMH" " (*)" " ColorIds" " be" " Fly" " ARev"
-                     " tree-sitter" " Abbrev" " org-roam-ui" " TblHeader"
-                     " Habit" " :ARCHIVE:" " activity-watch" " Async"))
-(rich-minority-mode)
+(setq mode-line-collapse-minor-modes
+      (append '(abbrev-mode
+                aggressive-indent-mode
+                all-the-icons-dired-mode
+                auto-fill-function
+                auto-revert-mode
+                beacon-mode
+                beginend-global-mode
+                company-mode
+                dired-async-mode
+                eldoc-mode
+                flycheck-mode
+                gcmh-mode
+                git-gutter-mode
+                org-roam-ui-follow-mode
+                org-roam-ui-mode
+                org-table-header-line-mode
+                page-break-lines-mode
+                undo-tree-mode
+                visual-line-mode
+                wakatime-mode
+                which-key-mode
+                whitespace-mode
+                yas-minor-mode)
+              (mapcar #'cdr beginend-modes)))
 
 ;;; Misc settings
 

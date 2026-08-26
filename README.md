@@ -66,7 +66,6 @@ Unfortunately, that is not always possible.
 
 #### Nice to have, niche, & specific major modes
 
-[rich-minority](https://github.com/Malabarba/rich-minority)
 [dispwatch](https://github.com/mnp/dispwatch)
 [lsp-treemacs](https://github.com/emacs-lsp/lsp-treemacs)
 [calfw](https://github.com/kiwanami/emacs-calfw)

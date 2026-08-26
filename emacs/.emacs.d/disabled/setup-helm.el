@@ -161,9 +161,8 @@ CANDIDATES is the list of candidates."
 (require 'org-refile)
 (setq org-outline-path-complete-in-steps nil)
 
-;; `helm' and `rich-minority'
-(require 'rich-minority)
-(add-to-list 'rm-blacklist " Helm")
+;; `helm' and minor-mode collapsing
+(add-to-list 'mode-line-collapse-minor-modes 'helm-mode)
 
 ;; `helm' and `keyfreq'
 (add-to-list 'keyfreq-excluded-commands helm-next-line

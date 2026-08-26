@@ -24,7 +24,7 @@
 		       lsp-ui lua-mode magit magit-todos markdown-mode
 		       mcp-server-lib mu4e-autotask org-autotask
 		       page-break-lines plantuml-mode prism projectile
-		       relint rich-minority s shfmt solarized-theme
+		       relint s shfmt solarized-theme
 		       ssh ssh-config-mode stripe-buffer undo-tree
 		       vterm wgrep xterm-color yaml-mode yasnippet))
  '(package-vc-selected-packages
