@@ -1,3 +1,4 @@
+;;; custom.el --- custom setup.  -*- lexical-binding: t; -*-
 (put 'upcase-region 'disabled nil)
 ;; `s' is a part of package-selected-packages because the ecosystem is broken:
 ;; 1) not enough package maintainers care about melpa-stable, only about melpa,
