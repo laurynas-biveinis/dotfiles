@@ -672,7 +672,7 @@ could never re-find it; rejecting it here keeps that caller from editing first."
       nil)))
 
 (defmacro dotfiles--with-store-order-task (org-file store msg key &rest body)
-  "Locate the @waitingfor STORE order task for KEY in ORG-FILE and run BODY.
+  "Run BODY on ORG-FILE's @waitingfor STORE order task for KEY, then save it.
 Capture MSG's mu4e link and message-id -- as `link' and `msgid' -- while the
 email buffer is current, then switch to ORG-FILE (widened and left current) and
 bind `task' to the position of the STORE order task carrying KEY, or nil.  BODY
@@ -684,7 +684,8 @@ missing task."
      (dotfiles--in-org-buffer ,org-file
        (org-with-wide-buffer
         (let ((task (dotfiles--store-find-order-task ,store ,key)))
-          ,@body)))))
+          ,@body))
+       (save-buffer))))
 
 (defun dotfiles--store-file-order-email (org-file store msg order-id order-date
                                                   delivery-date)
@@ -737,8 +738,7 @@ the link only when the task's subtree does not already hold MSG's message-id."
     ;; Append at the end of the subtree, past any SCHEDULED line, so an active
     ;; clock cannot misplace the link into the clocked-in entry.
     (unless (dotfiles--org-append-mu4e-link link msgid)
-      (message "%s link already filed: %s" store order-id))
-    (save-buffer)))
+      (message "%s link already filed: %s" store order-id))))
 
 (defun dotfiles--mu4e-complete-order-task (org-file store msg key)
   "Complete the STORE @waitingfor order task in ORG-FILE for a delivered MSG.
@@ -758,8 +758,7 @@ archive its subtree.  Signal a `user-error' when no such task exists."
       (when (y-or-n-p (format "Mark %s order %s as completed? " store key))
         (org-autotask-complete-item)
         (when (dotfiles--org-task-top-level-p)
-          (org-archive-subtree)))
-      (save-buffer))))
+          (org-archive-subtree))))))
 
 ;;; `org-gcal' helpers
 
