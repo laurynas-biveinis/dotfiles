@@ -1062,6 +1062,20 @@ ORIGINALLY-LOCAL-P, remove an otherwise unchanged inheritance-only binding."
           (kill-local-variable hook)
         (set hook remaining)))))
 
+(defun dotfiles--store-match-length (comparison cap)
+  "Decode COMPARISON, a `compare-strings' result, into a match length.
+`compare-strings' returns t when the compared portions match entirely
+-- CAP characters at our call sites -- and otherwise a number whose
+absolute value is one plus the count of leading characters that agree.
+Both callers compare portions from the start of their strings; the
+decode assumes that."
+  (declare (ftype (function ((or integer (member t)) integer) integer))
+           (important-return-value t)
+           (side-effect-free t))
+  (if (eq comparison t)
+      cap
+    (1- (abs comparison))))
+
 (defun dotfiles--store-record-text-change (before previous)
   "Record the current buffer's textual change from BEFORE.
 Release PREVIOUS.  The returned markers bound one exact replacement hunk; its
@@ -1073,16 +1087,26 @@ subsequently changed."
          (before-length (length before))
          (after-length (length after))
          (shared-length (min before-length after-length))
-         (prefix 0)
-         (suffix 0))
-    (while (and (< prefix shared-length)
-                (= (aref before prefix) (aref after prefix)))
-      (setq prefix (1+ prefix)))
-    (while (and (< suffix (- before-length prefix))
-                (< suffix (- after-length prefix))
-                (= (aref before (- before-length suffix 1))
-                   (aref after (- after-length suffix 1))))
-      (setq suffix (1+ suffix)))
+         ;; Char-by-char `aref' scans are quadratic here: these are whole-file
+         ;; multibyte snapshots, and alternating `aref' between two strings
+         ;; defeats the global char-to-byte cache, so each access re-walks the
+         ;; string.  `compare-strings' finds the first mismatch in one C pass;
+         ;; the suffix reuses it over the reversed unshared tails.
+         (prefix (dotfiles--store-match-length
+                  (compare-strings before 0 shared-length
+                                   after 0 shared-length)
+                  shared-length))
+         (max-suffix (- shared-length prefix))
+         (suffix
+          (if (zerop max-suffix)
+              0
+            (dotfiles--store-match-length
+             (compare-strings
+              (reverse (substring before (- before-length max-suffix)))
+              nil nil
+              (reverse (substring after (- after-length max-suffix)))
+              nil nil)
+             max-suffix))))
     (dotfiles--store-release-text-change previous)
     (unless (and (= prefix before-length) (= prefix after-length))
       (save-restriction

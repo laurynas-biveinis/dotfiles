@@ -1644,6 +1644,41 @@ Increment the integer in SAVE-COUNT for every source save."
            file "teststore" (list :message-id msgid) "12345")))
       (equal (file-truename observed-archive) (file-truename redirected)))))
 
+;; Every archive fixture pastes at the destination's end, so the integration
+;; suite only ever produces append-shaped changes; the mismatch branches of
+;; the `compare-strings' arithmetic are pinned here directly.
+(ert-deftest dotfiles--store-record-text-change-bounds-hunks-test ()
+  (cl-flet ((record (before after)
+              (with-temp-buffer
+                (insert after)
+                (let ((change (dotfiles--store-record-text-change before nil)))
+                  (should-not (marker-insertion-type (nth 0 change)))
+                  (should (eq (marker-insertion-type (nth 1 change)) t))
+                  (list (marker-position (nth 0 change))
+                        (marker-position (nth 1 change))
+                        (nth 2 change)
+                        (nth 3 change))))))
+    ;; Middle replacement with differing hunk lengths.
+    (should (equal (record "abQcd" "abXYcd") '(3 5 "Q" "XY")))
+    ;; Change at index 0: zero prefix, nonzero suffix.
+    (should (equal (record "Qcd" "XYcd") '(1 3 "Q" "XY")))
+    ;; Pure append.
+    (should (equal (record "ab" "abcd") '(3 5 "" "cd")))
+    ;; Pure truncation.
+    (should (equal (record "abcd" "ab") '(3 3 "cd" "")))
+    ;; Empty before, as when archiving to a fresh archive file.
+    (should (equal (record "" "x") '(1 2 "" "x")))
+    ;; Empty after: whole-content deletion.
+    (should (equal (record "x" "") '(1 1 "x" "")))
+    ;; Identical snapshots record nothing.
+    (with-temp-buffer
+      (insert "ab")
+      (should-not (dotfiles--store-record-text-change "ab" nil)))
+    ;; Ambiguous alignment: the shared character binds to the prefix first.
+    (should (equal (record "aa" "aba") '(2 3 "" "b")))
+    ;; Multibyte: positions and hunks count characters, not bytes.
+    (should (equal (record "Iš ųžsakymo" "Iš užsakymo") '(4 5 "ų" "u")))))
+
 (ert-deftest dotfiles--store-archive-transaction-restores-cut-on-save-error-test
     ()
   (dotfiles--lib-test-with-archive-transaction
