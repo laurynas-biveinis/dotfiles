@@ -1901,28 +1901,38 @@ Reject SOURCE-FILE as STORE order KEY's destination."
                (= (progn (org-end-of-subtree t t) (point))
                   (marker-position end)))))))
 
-(defun dotfiles--mu4e-complete-order-task (org-file store msg key)
-  "Complete the STORE @waitingfor order task in ORG-FILE for a delivered MSG.
+(defun dotfiles--mu4e-complete-order-task (org-file store msg key
+                                                    &optional keyword)
+  "Close the STORE @waitingfor order task in ORG-FILE for a wait-ending MSG.
 Find the task by KEY (an order ID) via `dotfiles--store-find-order-task', which
 requires KEY to be a single whitespace-free token and otherwise rejects it with
-a `user-error'.  Append an `org' link to MSG, then prompt to mark it DONE; on
-yes, complete it and, when it is a top-level task (not a project sub-action),
-archive its subtree.  Signal a `user-error' when no such task exists, when its
-archive destination is the source file, when completion is blocked, or when the
-task changed during the prompt or completion -- re-running the automation is
-safe there, the append dedups.
+a `user-error'.  Append an `org' link to MSG, then prompt to mark it KEYWORD --
+`org-autotask-keyword-done' when nil; on yes, transition it and, when it is a
+top-level task (not a project sub-action), archive its subtree.  Signal a
+`user-error' when KEYWORD is outside the buffer's done partition
+(`org-done-keywords'), when no such task exists, when its archive destination
+is the source file, when the transition is blocked or does not take, or when
+the task changed during the prompt or transition -- re-running the automation
+is safe there, the append dedups.
 Signal one as well when the archive is not cutting that task.  The archive's own
 save is suppressed so its paste, source cut and Org-marker moves can be rolled
 back before the error escapes."
-  (declare (ftype (function (string string list string) t)))
+  (declare (ftype (function (string string list string &optional string) t)))
+  (setq keyword (or keyword org-autotask-keyword-done))
   (dotfiles--with-store-order-task org-file store msg key
+    ;; The archive below must never run on a task left in a non-terminal
+    ;; state, and the reach-check alone accepts any keyword `org-todo' does.
+    ;; Buffer-local, so this is the earliest the check can run.
+    (unless (member keyword org-done-keywords)
+      (user-error "%s order %s: %s is not a terminal keyword"
+                  store key keyword))
     (if (not task)
         (user-error "No %s order task found for %s" store key)
       (goto-char task)
       (let* ((expected (org-get-heading t t t t))
              (source-file (buffer-file-name (buffer-base-buffer))))
         ;; Keep the early check so a known same-file destination cannot even
-        ;; add the mail link.  The plan is recomputed after completion.
+        ;; add the mail link.  The plan is recomputed after the transition.
         (dotfiles--store-order-archive-file task source-file store key)
         (unless (dotfiles--org-append-mu4e-link link msgid)
           (message "%s order link already filed: %s" store key))
@@ -1941,7 +1951,14 @@ back before the error escapes."
               (when
                   (let ((org-ignore-region nil))
                     (y-or-n-p
-                     (format "Mark %s order %s as completed? " store key)))
+                     (format "Mark %s order %s as %s? " store key keyword)))
+                ;; A mid-prompt `#+TODO:' edit can move KEYWORD out of the
+                ;; done partition while `org-todo' still accepts it, so the
+                ;; entry terminality check does not survive the yield.
+                (unless (member keyword org-done-keywords)
+                  (user-error
+                   "%s order %s: %s is no longer a terminal keyword"
+                   store key keyword))
                 ;; A start marker can collapse onto an identical successor when
                 ;; its subtree is deleted.  The end marker makes that extent
                 ;; empty, while the text snapshot catches every in-place edit.
@@ -1955,21 +1972,26 @@ back before the error escapes."
                   (user-error
                    "%s order task for %s changed during the prompt" store key))
                 (goto-char task)
+                ;; Route the done transition through the `org-autotask' API;
+                ;; the package has no cancel counterpart, so any other keyword
+                ;; goes through `org-todo' directly.
                 (let ((org-loop-over-headlines-in-active-region nil))
-                  (org-autotask-complete-item))
+                  (if (equal keyword org-autotask-keyword-done)
+                      (org-autotask-complete-item)
+                    (org-todo keyword)))
                 (unless (and
                          (dotfiles--store-task-extent-current-p task prompt-end)
                          (save-excursion
                            (goto-char task)
                            (equal (org-get-heading t t t t) expected)))
                   (user-error
-                   "%s order task for %s changed during completion" store key))
+                   "%s order task for %s changed during the transition"
+                   store key))
                 (goto-char task)
-                (unless (equal (org-get-todo-state)
-                               org-autotask-keyword-done)
-                  (user-error "%s order task for %s did not complete"
-                              store key))
-                ;; Completion hooks may change both project status and the
+                (unless (equal (org-get-todo-state) keyword)
+                  (user-error "%s order task for %s did not reach %s"
+                              store key keyword))
+                ;; Transition hooks may change both project status and the
                 ;; inherited archive location, so this is the authoritative
                 ;; plan used immediately before the transaction.
                 (let ((archive-file

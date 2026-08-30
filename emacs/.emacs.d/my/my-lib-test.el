@@ -826,6 +826,7 @@ the last entry under \"Tasks\".")
 (cl-defun dotfiles--lib-test-complete-order-run
     (&key (text dotfiles--lib-test-order-file-org)
           (answer t)
+          keyword
           drift-to drift-after-done folded region
           insert-before insert-at-task-end delete-task change-during-archive
           insert-during-archive mark-during-archive drift-before-copy
@@ -834,13 +835,19 @@ the last entry under \"Tasks\".")
           foreign-archive nested-archive archive-buffer archive-initial-text
           retry-after-abort move-org-marker kill-archive-buffer)
   "Complete the order task in a temp copy of TEXT and report what happened.
-ANSWER is what the confirmation prompt returns.  DRIFT-TO, when non-nil, is a
-regexp whose first matching line point is parked on while the prompt is
+ANSWER is what the confirmation prompt returns.  KEYWORD, when non-nil, is the
+target TODO keyword handed to `dotfiles--mu4e-complete-order-task'; a terminal
+keyword other than `org-autotask-keyword-done' bypasses
+`org-autotask-complete-item', leaving `:completed' nil, so the transition's
+aim is read from `:archived' and `:todo' instead.  DRIFT-TO, when non-nil, is
+a regexp whose first matching line point is parked on while the prompt is
 answered, modelling point drifting out of the entry.  DRIFT-AFTER-DONE is the
 same regexp, applied instead from inside the `org-autotask-complete-item' stub
 once it has recorded its heading -- the one key that reaches the re-anchor
 guarding the archive; the real `org-todo' restores point, so the drift is
-synthetic and pins the contract rather than today's behaviour.  FOLDED and
+synthetic and pins the contract rather than today's behaviour.  Because only
+that stub injects the drift, combining this key with a KEYWORD other than
+`org-autotask-keyword-done' is rejected at entry.  FOLDED and
 REGION are as in `dotfiles--lib-test-with-order-org-file'.  INSERT-BEFORE,
 when non-nil, is a regexp before whose first matching line a heading is
 inserted while the prompt is answered.  DELETE-TASK, when non-nil, deletes the
@@ -891,6 +898,9 @@ every completion test green, `task' being a marker the later re-anchors reach
 regardless of a stray earlier insertion.  Reporting `:todo' matters because
 `:completed' and `:archived' are the stubs' own account of where each step was
 aimed, both taken at stub entry; `:linked' and `:todo' read the buffer back."
+  (when (and drift-after-done keyword
+             (not (equal keyword org-autotask-keyword-done)))
+    (error "DRIFT-AFTER-DONE requires %s" org-autotask-keyword-done))
   (dotfiles--lib-test-with-order-org-file (text folded region)
     (let ((real-complete (symbol-function 'org-autotask-complete-item))
           (archive (concat file "_archive"))
@@ -1107,7 +1117,8 @@ aimed, both taken at stub entry; `:linked' and `:todo' read the buffer back."
                      (setq archived aimed)))))
         (cl-flet ((complete ()
                     (dotfiles--mu4e-complete-order-task
-                     file "teststore" (list :message-id msgid) "12345"))
+                     file "teststore" (list :message-id msgid) "12345"
+                     keyword))
                   (success-result ()
                     (when (or archive-buffer archive-initial-text
                               move-org-marker)
@@ -2718,13 +2729,16 @@ this, so the expectation is written once: a regression that misdirects any one
 step has to change this constant to pass, which makes it obvious that it is
 changing every one of them.")
 
+(defconst dotfiles--lib-test-order-untouched-todo-states
+  '(("Tasks" nil)
+    ("Decoy" "TODO")
+    ("Decoy child" "TODO")
+    ("After" "TODO"))
+  "TODO states of every fixture heading the completion must leave alone.")
+
 (defconst dotfiles--lib-test-complete-order-region-result
   `(,@dotfiles--lib-test-complete-order-done-result
-    :todo-states
-    (("Tasks" nil)
-     ("Decoy" "TODO")
-     ("Decoy child" "TODO")
-     ("After" "TODO")))
+    :todo-states ,dotfiles--lib-test-order-untouched-todo-states)
   "Completed order result including every heading's TODO state.
 Used by the active-region case to prove only the target changed state.")
 
@@ -2734,12 +2748,49 @@ Used by the active-region case to prove only the target changed state.")
                ((,dotfiles--lib-test-order-task-heading "TODO")))
   "Completion result after the selected task changes during its prompt.")
 
+(defconst dotfiles--lib-test-complete-order-kill-result
+  `(:completed nil
+               :archived ,dotfiles--lib-test-order-task-heading
+               :linked ,dotfiles--lib-test-order-task-heading
+               :todo "KILL")
+  "The `dotfiles--lib-test-complete-order-run' result for a killed order.
+`:completed' is nil because a terminal keyword other than
+`org-autotask-keyword-done' goes through `org-todo' rather than
+`org-autotask-complete-item'; that the transition still hit the order task is
+what `:todo' shows, read back from the archived copy.")
+
+(defconst dotfiles--lib-test-complete-order-kill-region-result
+  `(,@dotfiles--lib-test-complete-order-kill-result
+    :todo-states ,dotfiles--lib-test-order-untouched-todo-states)
+  "Killed order result including every heading's TODO state.
+Used by the active-region kill case to prove only the target changed state.")
+
+(defconst dotfiles--lib-test-order-kill-todo-keywords
+  '((sequence "TODO" "|" "DONE" "KILL"))
+  "`org-todo-keywords' spec declaring KILL, absent from the defaults.
+Bound around the kill tests so the fixture buffers created inside the run
+parse and accept the keyword.")
+
 (ert-deftest dotfiles--mu4e-complete-order-task-completes-order-task-test ()
   (should (equal (dotfiles--lib-test-complete-order-run)
                  dotfiles--lib-test-complete-order-done-result)))
 
 (ert-deftest dotfiles--mu4e-complete-order-task-completes-folded-task-test ()
   (should (equal (dotfiles--lib-test-complete-order-run :folded t)
+                 dotfiles--lib-test-complete-order-done-result)))
+
+(ert-deftest dotfiles--mu4e-complete-order-task-kills-order-task-test ()
+  (let ((org-todo-keywords dotfiles--lib-test-order-kill-todo-keywords))
+    (should (equal (dotfiles--lib-test-complete-order-run :keyword "KILL")
+                   dotfiles--lib-test-complete-order-kill-result))))
+
+;; Same expectation as the default-keyword test, kept separate to pin that the
+;; dispatch is by value: an explicit DONE routes through
+;; `org-autotask-complete-item' exactly like the nil default, never through
+;; the `org-todo' branch merely because a keyword was supplied.
+(ert-deftest
+    dotfiles--mu4e-complete-order-task-completes-with-explicit-done-test ()
+  (should (equal (dotfiles--lib-test-complete-order-run :keyword "DONE")
                  dotfiles--lib-test-complete-order-done-result)))
 
 (ert-deftest
@@ -2767,6 +2818,71 @@ Used by the active-region case to prove only the target changed state.")
       (setq next-hook-ran nil)
       (run-hooks 'org-archive-hook)
       (should next-hook-ran))))
+
+;; The terminality guard must fire before any mutation: no prompt, no link
+;; append, no archive.  "TODO" is a valid keyword outside `org-done-keywords',
+;; so `org-todo' alone would accept it.
+(ert-deftest
+    dotfiles--mu4e-complete-order-task-rejects-non-terminal-keyword-test ()
+  (dotfiles--lib-test-with-order-org-file
+      (dotfiles--lib-test-order-file-org nil nil)
+    (let (prompted archive-called)
+      (cl-letf (((symbol-function 'y-or-n-p)
+                 (lambda (&rest _) (setq prompted t) nil))
+                ((symbol-function 'org-archive-subtree)
+                 (lambda (&rest _) (setq archive-called t))))
+        (should-error
+         (dotfiles--mu4e-complete-order-task
+          file "teststore" (list :message-id msgid) "12345" "TODO")
+         :type 'user-error))
+      (should-not prompted)
+      (should-not archive-called)
+      (with-current-buffer (find-buffer-visiting file)
+        (should-not (buffer-modified-p)))
+      (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (should (search-forward
+                 "** TODO Iš teststore 2026-08-17 12345 užsakymo" nil t))
+        (goto-char (point-min))
+        (should-not (search-forward msgid nil t))))))
+
+;; The mid-prompt analogue of the guard test above: the prompt yields to the
+;; command loop, where a `#+TODO:' edit plus restart can move KEYWORD out of
+;; the done partition while `org-todo' still accepts it, so the terminality
+;; check must be re-established before the transition mutates the task.
+(ert-deftest
+    dotfiles--mu4e-complete-order-task-rejects-repartitioned-keyword-test ()
+  (let ((org-todo-keywords dotfiles--lib-test-order-kill-todo-keywords))
+    (dotfiles--lib-test-with-order-org-file
+        (dotfiles--lib-test-order-file-org nil nil)
+      (let (archive-called)
+        (cl-letf (((symbol-function 'y-or-n-p)
+                   (lambda (&rest _)
+                     (save-excursion
+                       (goto-char (point-min))
+                       (insert "#+TODO: TODO KILL | DONE\n"))
+                     (org-mode-restart)
+                     t))
+                  ((symbol-function 'org-archive-subtree)
+                   (lambda (&rest _) (setq archive-called t))))
+          (should (string-match-p
+                   "is no longer a terminal keyword"
+                   (cadr (should-error
+                          (dotfiles--mu4e-complete-order-task
+                           file "teststore" (list :message-id msgid) "12345"
+                           "KILL")
+                          :type 'user-error)))))
+        (should-not archive-called)
+        (with-current-buffer (find-buffer-visiting file)
+          (save-excursion
+            (goto-char (point-min))
+            (should (search-forward
+                     "** TODO Iš teststore 2026-08-17 12345 užsakymo" nil t))))
+        (with-temp-buffer
+          (insert-file-contents file)
+          (goto-char (point-min))
+          (should-not (search-forward msgid nil t)))))))
 
 (ert-deftest dotfiles--mu4e-complete-order-task-rejects-blocked-completion-test
     ()
@@ -2819,6 +2935,15 @@ Used by the active-region case to prove only the target changed state.")
 (ert-deftest dotfiles--mu4e-complete-order-task-ignores-region-test ()
   (should (equal (dotfiles--lib-test-complete-order-run :region t)
                  dotfiles--lib-test-complete-order-region-result)))
+
+;; The kill analogue of the region test above: the `org-todo' branch bypasses
+;; the completion wrapper and its policy probe, so `:todo-states' is the only
+;; witness if a narrowed rebinding let the region loop leak here.
+(ert-deftest dotfiles--mu4e-complete-order-task-ignores-region-on-kill-test ()
+  (let ((org-todo-keywords dotfiles--lib-test-order-kill-todo-keywords))
+    (should (equal (dotfiles--lib-test-complete-order-run
+                    :region t :keyword "KILL")
+                   dotfiles--lib-test-complete-order-kill-region-result))))
 
 ;; The insertion analogue of the drift tests; see
 ;; `dotfiles--store-find-order-task' for the marker contract it pins.
@@ -3148,6 +3273,18 @@ Used by the active-region case to prove only the target changed state.")
   (should-error (dotfiles--lib-test-complete-order-run
                  :text dotfiles--lib-test-order-file-org-no-task)
                 :type 'user-error))
+
+;; The terminality guard precedes the missing-task error, so a misconfigured
+;; keyword surfaces on every run instead of hiding behind "no task found".
+(ert-deftest
+    dotfiles--mu4e-complete-order-task-rejects-keyword-without-task-test ()
+  (should (string-match-p
+           "is not a terminal keyword"
+           (cadr (should-error
+                  (dotfiles--lib-test-complete-order-run
+                   :text dotfiles--lib-test-order-file-org-no-task
+                   :keyword "TODO")
+                  :type 'user-error)))))
 
 (provide 'my-lib-test)
 
