@@ -109,9 +109,7 @@ with open(args.input, newline="", encoding="utf-8-sig") as input_file, open(
             f"payment_type: {csv_payment_type}"
         )
 
-        # pylint: disable=C0103
         investment_action = get_qif_investment_action(csv_payment_type)
-        # pulint: enable=C0103
 
         if investment_action == "Buy":
             amount = amount.strip("-")
