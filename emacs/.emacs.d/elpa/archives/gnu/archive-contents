@@ -600,13 +600,13 @@
       (:authors ("Oleh Krehel" . "ohwoeowho@gmail.com"))
       (:commit . "72f47d4d1e6dcf89d59f5af65f365dd704efe9e5"))])
  (cperl-mode
-  . [(32 0 50) ((emacs (26 1))) "Perl code editing commands" tar
-     ((:url . "https://github.com/HaraldJoerg/cperl-mode/issues/32")
+  . [(33 0 0) ((emacs (26 1))) "Perl code editing commands" tar
+     ((:url . "https://elpa.gnu.org/packages/cperl-mode.html")
       (:keywords "languages")
       (:maintainer nil . "emacs-devel@gnu.org")
       (:authors ("Ilya Zakharevich" . "ilyaz@cpan.org")
 		("Jonathan Rockway" . "jon@jrock.us"))
-      (:commit . "ca03a4c3857b46f24613d1b4dc87299847fdaf19"))])
+      (:commit . "f4f249a2249a7047ba41a659b8fcdcd7e1caf4e0"))])
  (cpio-mode
   . [(0 17) nil "Handle cpio archives in the style of dired." tar
      ((:keywords "files")
@@ -825,13 +825,13 @@
       (:authors ("Toby Cubitt" . "toby-predictive@dr-qubit.org"))
       (:commit . "a83ea986982b2d09d150456028a9f1e73658333a"))])
  (diff-hl
-  . [(1 10 0) ((cl-lib (0 2)) (emacs (25 1)))
+  . [(1 11 1) ((cl-lib (0 2)) (emacs (27 1)))
      "Highlight uncommitted changes using VC" tar
      ((:url . "https://github.com/dgutov/diff-hl")
       (:keywords "vc" "diff")
       (:maintainer "Dmitry Gutov" . "dmitry@gutov.dev")
       (:authors ("Dmitry Gutov" . "dmitry@gutov.dev"))
-      (:commit . "b80ff9b4a772f7ea000e86fbf88175104ddf9557"))])
+      (:commit . "3d9552c575fd14ac98ac97bf3c19cdef39f79305"))])
  (diffview
   . [(1 0) nil "View diffs in side-by-side format" single
      ((:keywords "convenience" "diff")
@@ -1894,13 +1894,13 @@
       (:authors ("Protesilaos Stavrou" . "info@protesilaos.com"))
       (:commit . "fa75ea6b05070ce0f06befdef1954afa99aa5e89"))])
  (lisp-ts-mode
-  . [(0 3 3) ((emacs (30 2)) (cond-star (0)) (compat (31)))
+  . [(0 3 4) ((emacs (30 2)) (cond-star (0)) (compat (31)))
      "lisp-mode with tree-sitter support" tar
      ((:url . "https://codeberg.org/zshaftel/lisp-ts-mode")
       (:keywords "lisp" "languages" "tree-sitter")
       (:maintainer "zach shaftel" . "zach@shaf.tel")
       (:authors ("zach shaftel" . "zach@shaf.tel"))
-      (:commit . "9642d56362f0417a5b9a9c6299282e5df8b02353"))])
+      (:commit . "d42a20f33c46d8eaa653440e134c0aa954dbbe98"))])
  (listen
   . [(0 10 1)
      ((emacs (29 1)) (persist (0 6)) (taxy (0 10))
@@ -2315,13 +2315,13 @@
       (:authors ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
       (:commit . "cebe19e3cf0f30604d1ed1bfaa74fff21a4e89a5"))])
  (org
-  . [(9 8 9) ((emacs (28 2)))
+  . [(9 8 10) ((emacs (28 2)))
      "Outline-based notes management and organizer" tar
      ((:url . "https://orgmode.org")
       (:keywords "outlines" "hypermedia" "calendar" "text")
       (:maintainer "Ihor Radchenko" . "yantar92@posteo.net")
       (:authors ("Carsten Dominik" . "carsten.dominik@gmail.com"))
-      (:commit . "7427df2d96d264734e1ba2a943545faa1c8c763f"))])
+      (:commit . "80c431fe0c59bb6b6c4d05ad2d4d279f34b5fcd5"))])
  (org-contacts
   . [(1 3) ((emacs (29 1)) (org (9 7)))
      "Contacts management system for Org mode" tar
@@ -3338,14 +3338,14 @@
       (:url . "https://elpa.gnu.org/packages/track-changes.html")
       (:commit . "e119514ae8b391f41577d22d4e41cc3fea7ab9eb"))])
  (tramp
-  . [(2 8 2 1) ((emacs (28 1)))
+  . [(2 8 2 2) ((emacs (28 1)))
      "Transparent Remote Access, Multiple Protocol" tar
      ((:url . "https://www.gnu.org/software/tramp/")
       (:keywords "comm" "processes")
       (:maintainer "Michael Albinus" . "michael.albinus@gmx.de")
       (:authors ("Kai Großjohann" . "kai.grossjohann@gmx.net")
 		("Michael Albinus" . "michael.albinus@gmx.de"))
-      (:commit . "56569d77e50d73b3db7b34e903adade9122660ce"))])
+      (:commit . "665e7acb0b119b43bf4928abc5aeb228553901b0"))])
  (tramp-hlo
   . [(0 0 2) ((tramp (2 8 0 5)))
      "High level operations as Tramp handlers" tar
@@ -3378,7 +3378,7 @@
       (:url . "https://elpa.gnu.org/packages/transcribe.html")
       (:commit . "89832e4cdc1e6d8262a4a2c9d1ff70f398b8faf0"))])
  (transient
-  . [(0 13 7)
+  . [(0 13 8)
      ((emacs (28 1)) (compat (31 0)) (cond-let (1 1)) (llama (1 0))
       (seq (2 24)))
      "Transient commands" tar
@@ -3388,7 +3388,7 @@
 		   . "emacs.transient@jonas.bernoulli.dev")
       (:authors
        ("Jonas Bernoulli" . "emacs.transient@jonas.bernoulli.dev"))
-      (:commit . "0ec75dcce235f5ab3d39a02b878e6aaa78159b22"))])
+      (:commit . "0cacc84ff0c7df126e194666ff8b8a1e6082e796"))])
  (transient-cycles
   . [(2 1) ((emacs (29 1)))
      "Define command variants with transient cycling" tar

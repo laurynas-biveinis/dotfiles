@@ -24,7 +24,7 @@
 		("Bas Alberts" . "bas@anti.computer"))
       (:commit . "e99165ef5274bc4512b8d77ba2ac208c59b5d456"))])
  (aidermacs
-  . [(1 12)
+  . [(1 13)
      ((emacs (26 1)) (transient (0 3 0)) (compat (30 0 2 0))
       (markdown-mode (2 7)))
      "AI pair programming with Aider" tar
@@ -33,7 +33,7 @@
 		 "tools")
       (:maintainer "Mingde Zeng" . "matthewzmd@posteo.net")
       (:authors ("Mingde Zeng" . "matthewzmd@posteo.net"))
-      (:commit . "2d8c28d3fbd64260cbfd5a1477aea3bff55ba54f"))])
+      (:commit . "9046a03af9edfe7077ea4dfa67b52b8c63edb0a6"))])
  (alect-themes
   . [(0 11) ((emacs (24 0)))
      "Configurable light, dark and black themes for Emacs 24 or later"
@@ -192,13 +192,13 @@
 		("Damien Doligez" . "damien.doligez@inria.fr"))
       (:commit . "2905a436e956c5bba16c4633a6e4c4fceefa6535"))])
  (casual
-  . [(3 0 1) ((emacs (30 1)) (transient (0 9 0)) (csv-mode (1 27)))
+  . [(3 0 2) ((emacs (30 1)) (transient (0 9 0)) (csv-mode (1 27)))
      "Transient user interfaces for various modes" tar
      ((:url . "https://github.com/kickingvegas/casual")
       (:keywords "tools" "wp")
       (:maintainer "Charles Choi" . "kickingvegas@gmail.com")
       (:authors ("Charles Choi" . "kickingvegas@gmail.com"))
-      (:commit . "4360a3f8bd8dc775bd1c41a0fb26f2397785ad7f"))])
+      (:commit . "60259e256e34d4f6ae64ef950c740cacbe8b4d37"))])
  (cdlatex
   . [(4 18 5) nil "Fast input methods for LaTeX environments and math"
      tar
@@ -253,7 +253,7 @@
       (:authors ("Chris Wanstrath" . "chris@ozmm.org"))
       (:commit . "adfb7ae73d6ee2ef790c780dd3c967e62930e94a"))])
  (cond-let
-  . [(1 1 3) ((emacs (28 1)))
+  . [(1 1 4) ((emacs (28 1)))
      "Additional and improved binding conditionals" tar
      ((:url . "https://github.com/tarsius/cond-let")
       (:keywords "extensions")
@@ -261,7 +261,7 @@
 		   . "emacs.cond-let@jonas.bernoulli.dev")
       (:authors
        ("Jonas Bernoulli" . "emacs.cond-let@jonas.bernoulli.dev"))
-      (:commit . "c48600dfab6372670225f046cace263700c78eab"))])
+      (:commit . "3b88187fe067d4ca3dec3ef8a329b0ce18bdb356"))])
  (consult-flycheck
   . [(1 2) ((emacs (29 1)) (consult (3 5)) (flycheck (35)))
      "Provides the command `consult-flycheck'" tar
@@ -1006,7 +1006,7 @@
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
       (:commit . "3cd5097285dc10ac0898cf6f30c9699c3399e421"))])
  (hermes
-  . [(0 3 3)
+  . [(0 4 3)
      ((emacs (29 1)) (keymap-popup (0 3 1)) (websocket (1 15))
       (markdown-mode (2 6)))
      "Emacs frontend for Hermes Agent" tar
@@ -1014,7 +1014,7 @@
       (:keywords "tools" "convenience")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "46bb6616df287a5a0c52f706e79108f18c85a41c"))])
+      (:commit . "0a539e4e35ca5d4d1dea0aec55d0b89ef7d7d96f"))])
  (hideshowvis
   . [(0 9) ((emacs (27 1)))
      "Fringe markers for regions foldable by hideshow.el" tar
@@ -1265,7 +1265,7 @@
       (:authors ("Jon Oddie" . "j.j.oddie@gmail.com"))
       (:commit . "8e8487712d150178be7297604d0f47fd036a6d8d"))])
  (magit
-  . [(4 7 0)
+  . [(4 7 1)
      ((emacs (28 1)) (compat (31 0)) (cond-let (1 1)) (llama (1 0))
       (magit-section (4 7)) (seq (2 24)) (transient (0 13))
       (with-editor (3 5)))
@@ -1277,9 +1277,9 @@
        ("Kyle Meyer" . "kyle@kyleam.com"))
       (:authors ("Marius Vollmer" . "marius.vollmer@gmail.com")
 		("Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev"))
-      (:commit . "67f203853e74e926e2c99f60ed508840714f7ced"))])
+      (:commit . "659f89955cf60fe3d4326d881c412df06c69680d"))])
  (magit-section
-  . [(4 7 0)
+  . [(4 7 1)
      ((emacs (28 1)) (compat (31 0)) (cond-let (1 1)) (llama (1 0))
       (seq (2 24)))
      "Sections for read-only buffers" tar
@@ -1288,7 +1288,7 @@
 		   . "emacs.magit@jonas.bernoulli.dev")
       (:authors
        ("Jonas Bernoulli" . "emacs.magit@jonas.bernoulli.dev"))
-      (:commit . "67f203853e74e926e2c99f60ed508840714f7ced"))])
+      (:commit . "659f89955cf60fe3d4326d881c412df06c69680d"))])
  (markdown-mode
   . [(2 8) ((emacs (28 1))) "Major mode for Markdown-formatted text"
      tar
@@ -1712,12 +1712,13 @@
       (:authors ("Mozilla" . "rust-mode@noreply.github.com"))
       (:commit . "a8c69ce8f5e7793d2f81dbef60fb37b4b93afccf"))])
  (sapling
-  . [(0 3 1) ((emacs (26 1))) "Fast interface for Sapling" tar
+  . [(0 3 2) ((emacs (26 1)) (transient (0 3 0)))
+     "Fast interface for Sapling" tar
      ((:url . "https://github.com/swithinchan/sapling/")
       (:keywords "tools" "vc")
       (:maintainer "Swithin Chan" . "swithinchan@yahoo.com.hk")
       (:authors ("Swithin Chan" . "swithinchan@yahoo.com.hk"))
-      (:commit . "37bf45fa2b34f1099bf7e352fa0e88b35bb779c7"))])
+      (:commit . "0462aa9b402eba218ba1a45c5b8ac9e3a3a42561"))])
  (sass-mode
   . [(3 0 16) ((haml-mode (3 0 15)))
      "Major mode for editing Sass files" tar
@@ -2107,7 +2108,7 @@
       (:authors ("Akib Azmain Turja" . "akib@disroot.org"))
       (:commit . "5203d9379afaf6703746823a580c804e1dd98e08"))])
  (with-editor
-  . [(3 5 3)
+  . [(3 5 4)
      ((emacs (28 1)) (compat (31 0)) (cond-let (1 1)) (llama (1 0)))
      "Use the Emacsclient as $EDITOR" tar
      ((:url . "https://github.com/magit/with-editor")
@@ -2116,7 +2117,7 @@
 		   . "emacs.with-editor@jonas.bernoulli.dev")
       (:authors
        ("Jonas Bernoulli" . "emacs.with-editor@jonas.bernoulli.dev"))
-      (:commit . "a1f92a26e53033ec58e1d2ce9b132da7ebae816e"))])
+      (:commit . "5021ef6885381cf5b2852f7a3f67ca8c4be1dca2"))])
  (with-simulated-input
   . [(3 0) ((emacs (24 4)))
      "A macro to simulate user input non-interactively" tar
@@ -2149,12 +2150,12 @@
       (:authors ("Le Wang" . "l26wang@gmail.com"))
       (:commit . "9ee5a7657a22e836618813c2e2b64a548d27d2ff"))])
  (xah-fly-keys
-  . [(28 11 20260729193514) ((emacs (28 3)))
+  . [(28 11 20260901082352) ((emacs (28 3)))
      "ergonomic modal keybinding minor mode." tar
      ((:url . "http://xahlee.info/emacs/misc/xah-fly-keys.html")
       (:keywords "convenience" "vi" "vim" "ergoemacs" "keybinding")
       (:maintainer "Xah Lee" . "xah@xahlee.org")
-      (:commit . "f3a3f21c5a330f7d2230d5cbbe4ef7f7ea233cb4"))])
+      (:commit . "e526d025425776a47987369c490e26f33a8b35cf"))])
  (xkcd
   . [(1 1) ((json (1 3))) "View xkcd from Emacs" tar
      ((:url . "https://github.com/vibhavp/emacs-xkcd")
