@@ -117,14 +117,23 @@ intent only, not enforced. The Agent call cannot carry an effort level, so the
 prompt ends with the `ultrathink` keyword to request the deepest reasoning for
 the sub-step. To dispatch one, issue an Agent call whose prompt is:
 
-> Read `ai/.claude/skills/review-changes-<step>/SKILL.md` and
-> `ai/.claude/skills/review-changes/references/confidence.md`; follow both
+> Read `<skills-dir>/review-changes-<step>/SKILL.md` and
+> `<skills-dir>/review-changes/references/confidence.md`; follow both
 > exactly as your instructions. You are a read-only reviewer: do not modify,
 > stage, execute, or build anything in the project; use only read-only git,
 > Read, Grep, and Glob. Your inputs: `<the structured inputs for this step>`.
 > Return only the output that skill's Output section specifies (its primary
 > block plus any auxiliary sections it defines) as your final message.
 > ultrathink
+
+`<skills-dir>` is the absolute path of the directory holding this skill: the
+skill body is loaded prefixed with
+`Base directory for this skill: <absolute path>`, and `<skills-dir>` is that
+path's parent. Substitute it rather than naming an install location, so every
+sub-step reads the same copy of the skill set the orchestrator is running — this
+tree is registered both user-level and directory-scoped, and a checkout under
+review may be a worktree whose copy is neither. If no base directory is stated,
+fall back to `~/.claude/skills`.
 
 The `<the structured inputs for this step>` placeholder is the bulleted Input
 list the named child skill defines, so later references to a specific input
@@ -137,16 +146,16 @@ declared input to every draft, verify, and analyze dispatch, including retries,
 re-drafts, experiment deferrals, and alongside-analysis re-spawns.
 
 **No orchestration steering.** The prompt above is fixed, and its only variable
-content is the named child skill's declared inputs. Apart from the verbatim
-caller-requirements input, never add orchestration-generated direction — no
-"focus on X", no statement of what earlier rounds covered, missed, or already
-found, no ranking of files or areas, no instruction to skip part of the scope.
-Every subagent examines the whole scope on its own terms; overlap between rounds
-is removed afterwards by **Unified dedup**, never by narrowing a subagent's
-attention. The prior draft paths handed to verify and analyze are a
-duplicate-suppression filter on what they emit (see
-[prior drafts](references/prior-drafts.md)), not a redirection of where they
-look.
+content is the named child skill, its skills directory, and that skill's
+declared inputs. Apart from the verbatim caller-requirements input, never add
+orchestration-generated direction — no "focus on X", no statement of what
+earlier rounds covered, missed, or already found, no ranking of files or areas,
+no instruction to skip part of the scope. Every subagent examines the whole
+scope on its own terms; overlap between rounds is removed afterwards by
+**Unified dedup**, never by narrowing a subagent's attention. The prior draft
+paths handed to verify and analyze are a duplicate-suppression filter on what
+they emit (see [prior drafts](references/prior-drafts.md)), not a redirection of
+where they look.
 
 Spawning several subagents in **one message** (multiple Agent calls) runs them
 concurrently — this is what makes a per-finding batch actually parallel.
