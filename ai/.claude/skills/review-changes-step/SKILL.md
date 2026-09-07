@@ -70,15 +70,6 @@ You do a single fresh pass each invocation; you carry no state between runs.
   the code should meet and any prior incidents — not to enforce them.
   Enforcement belongs to `./check.sh`, which the caller runs.
 
-## Severity
-
-- **CRITICAL** — bugs, security issues, or fundamental design flaws
-  that must be fixed.
-- **IMPORTANT** — performance problems, maintainability issues, or
-  violations of core principles.
-- **SUGGESTION** — improvements for readability, style, or minor
-  optimizations.
-
 ## Checklist
 
 - **Correctness** — does the code do what it's supposed to? Bugs or
@@ -158,7 +149,8 @@ Return the scope line first — including the round index, e.g.
 
 - IDs use the format `R<N>-<NNN>`, where `N` is the round index you were given
   and `NNN` runs in per-round discovery order (`001`, `002`, …).
-- Use the severity values defined above.
+- Grade every finding's severity per the
+  [shared severity guidance](../review-changes/references/severity.md).
 - Classify every finding's provenance per the
   [shared provenance guidance](../review-changes/references/provenance.md),
   which says when the scope's diff settles it, when Git history is needed, and

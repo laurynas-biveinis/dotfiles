@@ -169,8 +169,9 @@ prompt ends with the `ultrathink` keyword to request the deepest reasoning for
 the sub-step. To dispatch one, issue an Agent call whose prompt is:
 
 > Read `<skills-dir>/review-changes-<step>/SKILL.md`,
-> `<skills-dir>/review-changes/references/confidence.md`, and
-> `<skills-dir>/review-changes/references/provenance.md`; follow all three
+> `<skills-dir>/review-changes/references/confidence.md`,
+> `<skills-dir>/review-changes/references/severity.md`, and
+> `<skills-dir>/review-changes/references/provenance.md`; follow all of them
 > exactly as your instructions. You are a read-only reviewer: do not modify,
 > stage, execute, or build anything in the project; use only read-only git,
 > Read, Grep, and Glob. Your inputs: `<the structured inputs for this step>`.

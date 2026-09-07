@@ -71,6 +71,11 @@ files** — your tools are read and Git only.
    SUGGESTION.
 1. Recalibrate confidence from the evidence: raise it on `keep` and lower it on
    `drop`; usually drop a candidate whose final confidence falls below 50.
+1. On `keep`, re-derive the finding's severity per the
+   [shared severity guidance](../review-changes/references/severity.md), rather
+   than inheriting the draft's grade. When your severity differs from the
+   draft's, say so in `Verification trace:` and give the consequence that
+   settled it.
 1. On `keep`, re-derive the finding's provenance per the
    [shared provenance guidance](../review-changes/references/provenance.md).
    Where that guidance sends you to attribution, read the [attribution

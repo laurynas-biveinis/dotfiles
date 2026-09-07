@@ -21,9 +21,10 @@ IDs when it appends the proposals to the next draft.
 - Suggested action: <concrete fix>
 ```
 
-Classify each proposal's provenance per the
-[shared provenance guidance](provenance.md); it is a first-pass claim that
-verification re-derives, so a cheap read suffices.
+Grade each proposal's severity per the [shared severity guidance](severity.md)
+and classify its provenance per the
+[shared provenance guidance](provenance.md); both are first-pass claims that
+verification re-derives, and for provenance a cheap read suffices.
 
 ## Experiment requests
 
