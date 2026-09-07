@@ -6,8 +6,8 @@ paths are supplied, read every file before emitting any
 `## Proposed new findings`.
 
 Suppress a proposal when it identifies the same defect at the same location as
-a corpus finding, regardless of severity, title, or wording. Judge duplicates
-semantically rather than by literal field equality.
+a corpus finding, regardless of severity, provenance, title, or wording. Judge
+duplicates semantically rather than by literal field equality.
 
 This subagent check is a best-effort noise reducer. The top-level review is the
 sole authoritative deduplication gate: it checks every candidate against the

@@ -9,7 +9,11 @@ allowed-tools: >-
   Bash(git status:*)
   Bash(git show:*)
   Bash(git blame:*)
+  Bash(git merge-base:*)
   Bash(git rev-parse:*)
+  Bash(git grep:*)
+  Bash(git ls-files:*)
+  Bash(git ls-tree:*)
   Read
   Grep
   Glob
@@ -30,7 +34,9 @@ Your invocation prompt supplies, for the single finding you must verify:
 
 - The finding **ID** and its full finding block from the current draft.
 - The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
-  `git show HEAD`, or a user-specified range). Run it to see the reviewed change.
+  `git show HEAD`, or a user-specified range as the endpoint diff
+  `git diff A..B`). Run it to see the reviewed change.
+- The **pre-image baseline** to re-derive provenance against, if supplied.
 - Paths of **existing prior drafts**. Use the
   [shared prior-draft guidance](../review-changes/references/prior-drafts.md)
   to screen issues discovered during verification.
@@ -45,20 +51,39 @@ Ultrathink while verifying this finding. You **cannot execute code or write
 files** — your tools are read and Git only.
 
 1. Independently confirm the finding by reading the code, following references,
-   or consulting Git history. Do not hypothesize. A finding fails verification —
-   verdict `drop` — in either of two ways: (a) it **cannot be confirmed** and no
-   experiment would help (if an experiment would settle it, defer instead — see
-   **Experiment requests**); or (b) it is confirmed but **records no defect** —
-   its refined observation identifies nothing wrong and its suggested action is
-   empty or "none". Confirmation establishes that a finding is _true_; a true
-   statement that prescribes no fix is a verification note, not a review finding,
-   so `drop` it (give that as the reason) rather than keeping it as a zero-action
+   or consulting Git history. Do not hypothesize. Before deciding, run rule 3's
+   in-image check from the [shared provenance
+   guidance](../review-changes/references/provenance.md): a site in neither the
+   pre-image nor the post-image is outside the reviewed content, and the rule's
+   re-location half can move `Final location:` onto in-image content that
+   depends on it, which is why the check belongs here rather than after the
+   outcome is fixed. A finding fails verification — verdict `drop` — in any of
+   three ways: (a) it **cannot be confirmed** and no experiment would help (if
+   an experiment would settle it, defer instead — see **Experiment requests**);
+   (b) it is confirmed but **records no defect** — its refined observation
+   identifies nothing wrong and its suggested action is empty or "none"; or (c)
+   its site is in neither image and cannot be re-located onto in-image content,
+   so it is outside the reviewed content — `drop` is your form of that rule's
+   "omit the finding", since no provenance value describes such a site.
+   Confirmation establishes that a finding is _true_; a true statement that
+   prescribes no fix is a verification note, not a review finding, so `drop` it
+   (give that as the reason) rather than keeping it as a zero-action
    SUGGESTION.
 1. Recalibrate confidence from the evidence: raise it on `keep` and lower it on
    `drop`; usually drop a candidate whose final confidence falls below 50.
+1. On `keep`, re-derive the finding's provenance per the
+   [shared provenance guidance](../review-changes/references/provenance.md).
+   Where that guidance sends you to attribution, read the [attribution
+   procedure](../review-changes/references/provenance-attribution.md) before
+   running any of its commands — several fail by printing a plausible wrong
+   answer rather than an error. Yours is the only tier that runs them.
+   Establish it yourself rather than inheriting the draft's tag; the draft's
+   value is a claim to check, not a premise. When your value differs from the
+   draft's, say so in `Verification trace:` and give the evidence that settled
+   it — that record is what the draft's tag is for.
 1. Return one verdict block in exactly the schema below. `Final confidence:` is
-   required on every verdict; the severity, title, location, observation, and
-   suggested-action lines may be omitted on `Outcome: drop`.
+   required on every verdict; the severity, provenance, title, location,
+   observation, and suggested-action lines may be omitted on `Outcome: drop`.
 
 ## Output
 
@@ -70,6 +95,7 @@ Return one verdict block:
 - Outcome: keep | drop
 - Final severity: CRITICAL | IMPORTANT | SUGGESTION
 - Final confidence: <0–100>%
+- Final provenance: introduced | pre-existing-on-path | pre-existing-off-path
 - Final title: <one-line title>
 - Final location: `path/to/file.ext:LN`
 - Final observation: <refined, with evidence>

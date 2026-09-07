@@ -15,10 +15,15 @@ IDs when it appends the proposals to the next draft.
 ### CRITICAL — <one-line title>
 
 - Confidence: 70%
+- Provenance: introduced | pre-existing-on-path | pre-existing-off-path
 - Location: `path/to/file.ext:LN`
 - Observation: <what's wrong, with evidence>
 - Suggested action: <concrete fix>
 ```
+
+Classify each proposal's provenance per the
+[shared provenance guidance](provenance.md); it is a first-pass claim that
+verification re-derives, so a cheap read suffices.
 
 ## Experiment requests
 

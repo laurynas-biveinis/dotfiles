@@ -9,7 +9,11 @@ allowed-tools: >-
   Bash(git status:*)
   Bash(git show:*)
   Bash(git blame:*)
+  Bash(git merge-base:*)
   Bash(git rev-parse:*)
+  Bash(git grep:*)
+  Bash(git ls-files:*)
+  Bash(git ls-tree:*)
   Read
   Grep
   Glob
@@ -32,8 +36,9 @@ Your invocation prompt supplies:
   `N` each time. Use `N` as the round index for every `R<N>-<NNN>` ID you
   assign. If no `N` is given, treat it as `1`.
 - The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
-  `git show HEAD`, or a user-specified range). Run it to see the changes to
-  review.
+  `git show HEAD`, or a user-specified range as the endpoint diff
+  `git diff A..B`). Run it to see the changes to review.
+- The **pre-image baseline** to tag provenance against, if supplied.
 - Any **caller requirements**, if present. Apply the
   [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
 
@@ -145,6 +150,7 @@ Return the scope line first — including the round index, e.g.
 ### R<N>-001 — CRITICAL — <one-line title>
 
 - Confidence: 75%
+- Provenance: introduced | pre-existing-on-path | pre-existing-off-path
 - Location: `path/to/file.ext:LN`
 - Observation: <what's wrong, with diff evidence>
 - Suggested action: <concrete fix>
@@ -153,6 +159,15 @@ Return the scope line first — including the round index, e.g.
 - IDs use the format `R<N>-<NNN>`, where `N` is the round index you were given
   and `NNN` runs in per-round discovery order (`001`, `002`, …).
 - Use the severity values defined above.
+- Classify every finding's provenance per the
+  [shared provenance guidance](../review-changes/references/provenance.md),
+  which says when the scope's diff settles it, when Git history is needed, and
+  how cheap a first-pass tag may be. Tag it from the diff and a cheap baseline
+  read; never run history attribution at this tier. Verification re-derives the
+  value independently and its answer is the one that reaches the review, so
+  yours is not an input to it — it is the claim a verifier records disagreeing
+  with, which is what makes an ambiguous case visible in the audit trail rather
+  than silently resolved.
 - Do not emit a finding whose suggested action is empty or "none", or that only
   confirms existing code is correct — that is a non-finding, not a SUGGESTION;
   omit it.

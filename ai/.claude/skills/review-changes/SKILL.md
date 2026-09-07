@@ -13,7 +13,11 @@ allowed-tools: >-
   Bash(git status:*)
   Bash(git show:*)
   Bash(git blame:*)
+  Bash(git merge-base:*)
   Bash(git rev-parse:*)
+  Bash(git grep:*)
+  Bash(git ls-files:*)
+  Bash(git ls-tree:*)
   Read
   Grep
   Glob
@@ -46,7 +50,54 @@ Use this precedence to choose what to review:
 1. Else, review `HEAD`'s last commit (`git show HEAD`).
 
 The user may override with natural language ("review the last three
-commits"). Print the chosen scope at the top of the findings file.
+commits"). Print the chosen scope at the top of the findings file. A range
+scope is a single diff, not a per-commit walk — `git diff A..B`, or
+`git diff A...B` for the three-dot form — whose pre-image the [shared
+provenance guidance](references/provenance.md) already names for each form.
+
+**The pre-image baseline.** Derive it once here, alongside the scope, and pass
+it to every draft, verify, and analyze dispatch as a declared input — it is a
+pure function of the already-chosen scope, so having each per-finding subagent
+re-derive it risks two of them resolving an unusual scope string differently.
+Read the [shared provenance guidance](references/provenance.md) for what each
+scope shape yields — it is the single source for that, and the bullets below
+add only how to resolve and pin what it names, never a second copy of the
+values themselves, except the one shape whose mapped value is the command to
+run.
+
+- **A bare `git diff`.** The mapped baseline names no revision: neither probe
+  nor pin it.
+- **`git diff --staged`, and a two-dot range `git diff A..B`.** Resolve the
+  mapped revision with `git rev-parse --verify --quiet <value>` and pin the
+  SHA. The one legitimate failure is an unborn `HEAD` under
+  `git diff --staged`, whose mapped baseline names no revision: neither pin nor
+  pass one.
+- **A three-dot range `git diff A...B`.** The mapping names a command, so run
+  it: `git merge-base A B` — singular — and take its output, already a full SHA
+  needing no pin; never pin one of `--all`'s extra bases, which are not the one
+  the diff used. Never pass the range itself to `git rev-parse --verify`: on
+  `A...B` that exits non-zero _while printing_ the endpoints followed by one
+  `^`-prefixed line per merge base, and its first line is `B`, the post-image,
+  so pinning any line of it inverts the baseline. Then count with
+  `git merge-base --all A B`: more than one line means the pre-image was chosen
+  rather than unique, so say so alongside the pinned SHA — still the one the
+  diff used. Only the scope command itself warns
+  `multiple merge bases, using <sha>`, and nothing here runs it.
+- **A single commit — `git show <commit>`, and both merge shapes.** Enumerate
+  the parents with `git rev-parse <commit>^@`, _without_ `--verify`, which
+  rejects the `^@` form outright at every parent count, zero and one included,
+  while still printing every parent it found. Do not reach for the
+  `--verify --quiet` shape above either: it fails the same way but silently
+  (exit 1, parents still on stdout), and under it a root commit is
+  indistinguishable from a bad revision. Read the count only off a **zero**
+  exit — a failure prints either nothing at all or the argument echoed back
+  with its `^@` suffix, so both low counts below are reachable with no parent
+  behind them. No output then means a root commit, whose mapped baseline
+  likewise names none; one line is that commit's parent, already a full SHA;
+  two or more is a merge, where the mapping's own per-shape rule decides which
+  parents are the baseline — see the [shared provenance
+  guidance](references/provenance.md) for how a supplied baseline interacts
+  with it.
 
 ## Experiment requests
 
@@ -117,8 +168,9 @@ intent only, not enforced. The Agent call cannot carry an effort level, so the
 prompt ends with the `ultrathink` keyword to request the deepest reasoning for
 the sub-step. To dispatch one, issue an Agent call whose prompt is:
 
-> Read `<skills-dir>/review-changes-<step>/SKILL.md` and
-> `<skills-dir>/review-changes/references/confidence.md`; follow both
+> Read `<skills-dir>/review-changes-<step>/SKILL.md`,
+> `<skills-dir>/review-changes/references/confidence.md`, and
+> `<skills-dir>/review-changes/references/provenance.md`; follow all three
 > exactly as your instructions. You are a read-only reviewer: do not modify,
 > stage, execute, or build anything in the project; use only read-only git,
 > Read, Grep, and Glob. Your inputs: `<the structured inputs for this step>`.
@@ -220,17 +272,17 @@ the two differences (initial vs re-draft) are called out below.
 Determine the scope (per **Scope** above) as a Git command. For each pass,
 choose the **round index** `N`: `1` for the initial pass; `<round+1>` for a
 re-draft pass. Spawn one `review-changes-step` subagent **blind** — unlike
-verify/analyze it is handed no prior draft paths or cross-round state, only `N`,
-the scope, and any verbatim caller requirements (see **No orchestration
-steering** above) — via the dispatch convention above —
-e.g. `N = 3`, `scope = git show HEAD`. It must use `N` as the round index for
-every `R<N>-<NNN>` ID it assigns. It returns that pass's draft — the scope line
-and `R<N>-<NNN>` finding blocks.
+verify/analyze it is handed no prior draft paths or cross-round state, only
+`N`, the scope, the pre-image baseline, and any verbatim caller requirements
+(see **No orchestration steering** above) — via the dispatch convention above —
+e.g. `N = 3`, `scope = git show HEAD`, `baseline = HEAD~ (<sha>)`. It must use
+`N` as the round index for every `R<N>-<NNN>` ID it assigns. It returns that
+pass's draft — the scope line and `R<N>-<NNN>` finding blocks.
 
 Validate the reply structurally: it must contain parseable `R<N>-<NNN>` blocks
 (or an explicit no-findings statement) and must not truncate mid-block. If the
 reply is unusable, re-spawn the `review-changes-step` subagent with the same
-inputs (round index `N` and scope).
+inputs (round index `N`, scope, baseline, and caller requirements).
 **Budget: 2 retries (3 attempts total).** Retry exhaustion (attempt 3 also
 fails) is handled differently by pass:
 
@@ -284,9 +336,9 @@ For each round, spawn one `review-changes-verify` subagent **per finding** in
 the current draft file, in parallel — one message, multiple Agent calls (per
 the dispatch convention above). That skill holds the per-finding verification
 contract; each subagent's inputs are the one finding's ID and full block, the
-scope as a Git command, the paths of the prior draft files that exist, for
-dedup, any experiment results (the matching `EXP` blocks) for that finding, and
-the same verbatim caller requirements, if present.
+scope as a Git command, the pre-image baseline, the paths of the prior draft
+files that exist, for dedup, any experiment results (the matching `EXP` blocks)
+for that finding, and the same verbatim caller requirements, if present.
 
 Once the batch returns, validate each reply (rules below). Process
 the valid replies:
@@ -340,11 +392,14 @@ unusable. A verdict (when present) is _unusable_ if any of the following holds:
    finding's assigned ID.
 1. Required field missing or empty. Always required: `Outcome:`,
    `Final confidence:`, `Verification trace:`. Additionally required
-   when `Outcome:` is `keep`: `Final severity:`, `Final title:`,
-   `Final location:`, `Final observation:`, `Final suggested action:`.
+   when `Outcome:` is `keep`: `Final severity:`, `Final provenance:`,
+   `Final title:`, `Final location:`, `Final observation:`,
+   `Final suggested action:`.
 1. `Outcome:` value is not `keep` or `drop`.
 1. `Final severity:` (when present) is not `CRITICAL`, `IMPORTANT`,
    or `SUGGESTION`.
+1. `Final provenance:` (when present) is not `introduced`,
+   `pre-existing-on-path`, or `pre-existing-off-path`.
 1. `Final confidence:` is not an integer in `[0, 100]` (e.g. missing
    `%`, non-numeric, out of range).
 1. Reply truncates mid-bullet or before the `Verification trace:`
@@ -411,53 +466,91 @@ one `review-changes-analyze` subagent **per not-yet-analyzed kept finding**, in
 parallel — one message, multiple Agent calls (per the dispatch convention
 above). That skill holds the per-finding analysis contract; each subagent's
 inputs are the finding's ID and full verdict block (from
-`verdicts-<round>.md`), the scope as a Git command, the paths of the prior
-draft files that exist, for dedup, any experiment results (the matching `EXP`
-blocks) for that finding, the same verbatim caller requirements, if present,
-and — only for an alongside-analysis re-spawn — the invocation mode `alongside`
-and complete latest provisional analysis block (header and body, excluding
-routed level-2 sections). Also pass — only when a
-placement decision applies (committed scope with a non-empty stack, computed
-below) — the stack as a list of SHA + subject and the blame-target revision
-`REV`.
+`verdicts-<round>.md`), the scope as a Git command, the pre-image baseline, the
+paths of the prior draft files that exist, for dedup, any experiment results
+(the matching `EXP` blocks) for that finding, the same verbatim caller
+requirements, if present, and — only for an alongside-analysis re-spawn — the
+invocation mode `alongside` and complete latest provisional analysis block
+(header and body, excluding routed level-2 sections). Also pass — only when a
+placement decision applies (computed below) — the stack as a list of SHA +
+subject, which may be empty, and the blame-target revision `REV`.
 
 On first entry to Phase 3, compute the **unpublished-commit stack context**
 once and reuse it for every analysis subagent across all later verify⇄analyze
 passes — no commits are made during a review, so it is stable.
 
-Placement only makes sense when the reviewed lines are themselves committed —
-i.e. the scope is `git show HEAD` or a user-specified commit range. Under
-staged or working-tree scope the reviewed change is uncommitted, so any fix to
-it is WIP and there is **no placement decision**: skip the computation below,
-omit placement context from the subagent prompts, and run the rest of Phase 3
-unchanged.
+Placement asks where a fix belongs, so it turns on where the **defect** is, not
+on where the reviewed lines are. Under any committed scope — any single-commit
+or range scope, `git show HEAD`, `git show <commit>` and a user-specified range
+among them — every finding qualifies, and `REV` is as defined below.
 
-For committed scope, compute the stack with allowed commands only:
+Under `git diff --staged` the reviewed change is uncommitted, but a
+`pre-existing-*` finding names a defect in the pre-image, which is `HEAD` —
+committed, and possibly still amendable. Compute the stack there too, with
+`REV = HEAD`, and pass placement context to every analysis subagent; the
+analyst returns WIP for an `introduced` finding, whose fix really is in the
+uncommitted change. Passing it to every subagent rather than gating at dispatch
+keeps that provenance rule in one place — the analyst already chooses among
+(a)–(d) under every scope — makes an `introduced` finding answer WIP explicitly
+instead of omitting placement, and keeps the dispatch payload a pure function
+of the scope. Both caveats this scope needs — that a finding's `Location:` line
+number is a post-image number, and that the index holds the reviewed change, so
+"amend `<sha>`" is not a bare `git commit --amend` — are stated in the analyze
+skill's placement input bullet, which every analyst reads.
+
+Under a bare `git diff` the pre-image is the index — which the precedence above
+reaches only when `git diff --staged` is empty, i.e. when the index tree is
+`HEAD`'s, so its content is committed after all. Ask the index rather than the
+scope name: run `git diff --cached --quiet`, and on success treat this scope
+exactly as `git diff --staged` above, `REV = HEAD` included. Only when it fails
+— a user override selecting a bare `git diff` over a dirty index — is there
+**no placement decision**, the pre-image then holding staged content that
+belongs to no commit; skip the computation below, omit placement context from
+the subagent prompts, and run the rest of Phase 3 unchanged.
+
+Where placement applies, compute the stack with allowed commands only:
 
 - Trunk branch = `main` if `git rev-parse --verify --quiet main` succeeds, else
   `master` if `git rev-parse --verify --quiet master` succeeds.
-- Stack = `git log --oneline <trunk>..HEAD` — the local commits not yet
-  contained in trunk (each entry is a SHA + subject). If that range is empty
+- Stack = `git log --oneline <trunk>..HEAD --not --remotes` — the local
+  commits not yet contained in trunk and not reachable from any
+  remote-tracking ref (each entry is a SHA + subject). `<trunk>..HEAD` alone
+  says only "not in trunk", which a pushed feature branch also satisfies, so
+  without `--not --remotes` the stack offers published commits for amendment.
+  Remote-tracking refs record only the publication this checkout knows about,
+  so the filter removes what is known published and leaves the rest _presumed_
+  unpublished: a commit pushed from another clone, or whose remote ref has
+  since been pruned, survives it. The stack is therefore a candidate list, not
+  proof — pass it as one, so an amendment recommendation reads as contingent
+  on the commit never having been published. If that range is empty
   _and_ HEAD is the trunk branch itself — i.e.
   `git rev-parse --abbrev-ref HEAD` equals `<trunk>` (not the literal `HEAD`
   of a detached checkout) — (you committed directly on trunk), recompute the
-  stack as `git log --oneline <trunk>@{upstream}..HEAD` when an upstream exists
+  stack as `git log --oneline HEAD --not --remotes` — the same publication
+  filter, which subsumes the upstream range — when an upstream exists
   (`git rev-parse --verify --quiet <trunk>@{upstream}` succeeds): those
   un-pushed commits are still amendable. With no upstream configured, leave the
   stack empty.
 - Blame-target revision `REV` — the newest reviewed revision whose tree holds
-  the reviewed lines in final form: `HEAD` for `git show HEAD` scope, or the
-  right-hand endpoint `B` of an `A..B`/`A...B` range (`HEAD` for the common
-  "last N commits" case). `REV` is a pure function of the already-chosen scope
-  and is identical for every analysis subagent, so compute it once here rather
-  than having each subagent re-derive it.
+  the reviewed lines in final form. That criterion governs; the usual shapes are
+  `HEAD` for a `git show HEAD` scope, `<commit>` for a `git show <commit>`
+  scope, and the right-hand endpoint `B` of an `A..B`/`A...B` range (`HEAD` for
+  the common "last N commits" case). Under `git diff --staged` — and under a
+  bare `git diff` over a clean index, per the paragraph above — the reviewed
+  lines are not in any revision, so the criterion has no instance and `REV` is
+  `HEAD` — the pre-image, which is where a `pre-existing-*` defect lives and the
+  only thing placement is asked about there. `REV` is a pure function of the
+  already-chosen scope and is identical for every analysis subagent, so compute
+  it once here rather than having each subagent re-derive it.
 
-If no trunk branch exists, or the stack is still empty after the upstream
-fallback above — e.g. HEAD is already merged into trunk, or HEAD is a trunk
-branch with nothing un-pushed — there is again **no placement decision**: omit
-placement context from the subagent prompts and run the rest of Phase 3
-unchanged. Otherwise, pass the stack and `REV` into each analysis subagent
-prompt (see the `review-changes-analyze` skill).
+An empty stack is a placement answer, not the absence of one: nothing is
+amendable from this checkout, so every owned defect routes to a new commit.
+That is the ordinary outcome when no trunk branch exists, when HEAD is already
+merged into trunk or is a trunk branch with nothing un-pushed, and when the
+publication filter above removes the whole feature branch. Pass the stack —
+empty or not — and `REV` into each analysis subagent prompt (see the
+`review-changes-analyze` skill). Placement context is omitted only where no
+answer exists at all: the dirty-index bare `git diff` above.
 
 Each analysis reply has up to four parts: the `#### Analysis: <ID>` block,
 optionally followed by a `## Rejection` section, a `## Proposed new findings`
@@ -667,13 +760,31 @@ using this structure:
 ```markdown
 # Code Review: <topic>
 
-Scope: <staged | working tree | HEAD | range>
+Scope: <the chosen scope command, with any revision it names pinned to its
+SHA>
+
+Baseline: <the value derived in **Scope**, rendered as it was derived: every
+revision pinned to its SHA and named as the reader would recognise it — a
+symbolic name where it has one, `merge-base(A, B)` for a three-dot range,
+marked `(chosen; <n> merge bases)` where that base was not unique, each parent
+listed for a combined-diff merge with the first marked — and a
+non-revision value (`index`, `empty tree`) printed literally>
+
+Provenance is relative to the pre-image of the reviewed scope, which may itself
+be your own unpushed commit: introduced = this change caused it;
+pre-existing-on-path = present in the pre-image and on this change's critical
+path; pre-existing-off-path = present in the pre-image and independent of this
+change.
+<only for a merge scope: reviewed as a combined diff every parent listed above
+is a pre-image and pre-existing means present on any of them; under a
+first-parent merge scope the first parent is the sole baseline>
 
 ## Critical Issues
 
 ### R<round>-<NNN> — CRITICAL — <one-line title>
 
 - Confidence: 85%
+- Provenance: introduced | pre-existing-on-path | pre-existing-off-path
 - Location: `path/to/file.ext:LN`
 - Observation: <what's wrong, with diff evidence>
 - Suggested action: <concrete fix>
@@ -704,8 +815,10 @@ contributed after dedup; note any re-draft pass that failed on retry
 exhaustion); total drafted; total kept; total dropped; findings rejected
 on analysis (list IDs, if any); total analyzed; findings proposed by
 analysis (and how many survived dedup); analyses skipped due to retry
-exhaustion (list IDs, if any); truncation note if the 50-iteration stop
-fired>
+exhaustion (list IDs, if any); the count of findings listed in this review per
+final provenance value, relative to the reviewed scope's pre-image (introduced /
+pre-existing-on-path / pre-existing-off-path); truncation note if the
+50-iteration stop fired>
 ```
 
 Assembly rules:
@@ -713,7 +826,7 @@ Assembly rules:
 - **Keep the original IDs.** A finding written as `R2-004` stays
   `R2-004` in the final file. No renumbering.
 - **Use the verdict's refined content, not the draft's.** Each
-  block's severity, confidence, title, location, observation, and
+  block's severity, confidence, provenance, title, location, observation, and
   suggested action come verbatim from the verifier's verdict; these
   supersede the original draft text.
 - **Inline analysis.** For each kept finding, copy its analysis body
@@ -742,7 +855,10 @@ Assembly rules:
   has no analysis body in the file (only an exhaustion or rejection marker, or
   nothing), omit the analysis for that finding.
 - Group by final severity (Critical → Important → Suggestion).
-  Within a severity tier, order by `(round, NNN)` ascending.
+  Within a severity tier, sort findings whose final provenance is
+  `pre-existing-off-path` after all others — they are the only tier members the
+  report itself calls independent of this change — then by `(round, NNN)`
+  ascending.
 - If a severity tier has no surviving findings, write "None." under it.
 - Findings with `Outcome: drop` do **not** appear in the final file;
   they remain in their verdict file with a reason.

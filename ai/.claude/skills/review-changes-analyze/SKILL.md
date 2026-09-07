@@ -9,7 +9,11 @@ allowed-tools: >-
   Bash(git status:*)
   Bash(git show:*)
   Bash(git blame:*)
+  Bash(git merge-base:*)
   Bash(git rev-parse:*)
+  Bash(git grep:*)
+  Bash(git ls-files:*)
+  Bash(git ls-tree:*)
   Read
   Grep
   Glob
@@ -31,13 +35,26 @@ Your invocation prompt supplies, for the single finding you must analyze:
 - The finding **ID** and its **verdict block** — the refined content from
   verification (`verdicts-<round>.md`), not the original draft.
 - The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
-  `git show HEAD`, or a user-specified range). Run it to see the reviewed change.
+  `git show HEAD`, or a user-specified range as the endpoint diff
+  `git diff A..B`). Run it to see the reviewed change.
+- The **pre-image baseline** to classify any `## Proposed new findings` entry
+  against, if supplied — distinct from the placement `REV` below. The finding
+  under analysis keeps the verdict's `Final provenance:`; do not re-derive or
+  restate it.
 - Any **caller requirements**, if present. Apply the
   [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
-- **Only when a placement decision applies** (committed scope with a non-empty
-  unpublished stack): the **stack** as a list of SHA + subject, and the
-  blame-target revision `REV`. When these are absent, omit any placement
-  discussion.
+- **Only when a placement decision applies** (the caller supplied a stack and
+  a `REV`): the **stack** as a list of SHA + subject, and the blame-target
+  revision `REV`. The stack may be **empty** — nothing is amendable from this
+  checkout — which is an answer rather than an absence: every owned defect then
+  routes to a new commit, case (b). Only when the inputs are absent altogether
+  do you omit any placement discussion. Under an
+  uncommitted scope — `git diff --staged`, or a bare `git diff` over a clean
+  index — `REV` is `HEAD` and only a `pre-existing-*` finding has a placement
+  answer; an `introduced` one is WIP in the uncommitted change. There the
+  finding's `Location:` line is a post-image number, so locate the defect in
+  `REV` by content, and note that the index holds the reviewed change, so
+  amending there is not a bare `git commit --amend`.
 - Existing **prior draft paths**. Follow the
   [shared prior-draft guidance](../review-changes/references/prior-drafts.md)
   when filtering issues discovered during analysis.
@@ -70,19 +87,67 @@ tools are read and Git only.
 1. **Only when your prompt supplies the unpublished stack and blame-target
    `REV`:** if your analysis recommends a concrete code change, also recommend
    **where** to apply it within the unpublished stack. Identify the commit that
-   **owns the region the fix touches**: blame the affected lines at the supplied
+   **owns the region the fix touches**. First, if the finding's provenance is
+   `introduced` and the scope is uncommitted, the fix lives in that uncommitted
+   change: recommend (d) and skip the blame. Otherwise settle the removal
+   question first: where the defect exists because something was **deleted** —
+   the fix restores it — the deleting commit owns it and no surviving
+   neighbour does, so blaming the neighbours places the fix on whoever happens
+   to sit beside the hole. Find the deleting commit with
+   `git log -m -p -S'<removed text>' <REV> -- <path>`, taking the newest hit
+   whose diff shows the removal from the affected region. `-m` is not optional:
+   `git log` computes no merge diffs by default, so a deletion authored by a
+   merge resolution is otherwise invisible and ownership reads as unresolved.
+   Two escalations follow, in order, before ownership counts as unresolved.
+   `-S` counts a text's occurrences across the file, so a removal that
+   preserves that count — a guard moved from one function to another in the
+   same file — never hits it: re-run as
+   `git log -m -p -G'<escaped pattern>' <REV> -- <path>`, which matches changed
+   lines instead, and read each hit's deletion in the affected region, since
+   `-G` also returns additions and unrelated matches. Then drop the pathspec —
+   `git log -m -p -S'<removed text>' <REV>` — because `<path>` names the file
+   at `REV` and so cannot reach a deletion made before a later rename; tie each
+   candidate back to the affected region through the intervening history, never
+   on matching text alone. A merge hit is not yet authorship either: enumerate
+   its parents with `git rev-parse <merge>^@` and read
+   `git diff <parent> <merge> -- <path>` for each, attributing the removal to
+   the merge only where it deletes the content against **every** parent. Where
+   it deletes against some parents and not others the merge inherited the
+   deletion, and the branch that supplied it is the parent whose image
+   **already lacks** the content in the affected region — not the parent the
+   diff shows the removal against, which is the one that still had it. Where
+   several parents already lack it, inspect each of their histories rather than
+   naming an owner prematurely.
+   Only where no removal is in play blame the affected lines at the supplied
    blame-target revision `REV` (not the working tree) with
    `git blame -L <start>,<end> <REV> -- <path>`, or use
-   `git log -L <start>,<end>:<path> <REV>`. Where the fix's exact target does
-   not exist at `REV` (e.g. an append past end-of-file), blame the nearest
-   surrounding anchor line within that region instead. (a) If that commit is
+   `git log -L <start>,<end>:<path> <REV>` — but `REV` need not hold the
+   reviewed lines in final form, since under an uncommitted scope it is the
+   pre-image, so the `Location:` numbers need not index it (see the **Input**
+   bullet). Find the region's counterpart in `REV` by content and pass _those_
+   numbers to `-L`. Where the target has no counterpart there — a mid-file
+   insertion, an append past end-of-file, or a path absent from `REV`
+   altogether — blame the nearest surrounding anchor line located by content
+   the same way, which is the right owner for content that was always missing.
+   Where nothing resolves, do **not** read that as the content being
+   uncommitted: a committed removal leaves neither target nor anchor at `REV`
+   while still owning the defect and still being amendable, so work back
+   through the removal ladder above — `-S` on the path, `-G` on the path, then
+   `-S` with no pathspec — and if ownership is still unresolved, say so rather
+   than defaulting to (d). (a) If that commit is
    **one of the stack commits** and the fix corrects its own change, recommend
-   amending it — name the specific SHA + subject. (b) If that commit is
-   **already in trunk** (not in the stack), recommend a new commit (never amend
-   published history) and name its position (e.g. after `<sha> <subject>`, or at
-   the stack tip). (c) If the fix is a logically separate concern, recommend a
-   new commit. (d) If the fix is best left uncommitted, recommend WIP. Emit this
-   as a `**Suggested placement:**` bold-paragraph label in your analysis body —
+   amending it — name the specific SHA + subject, and say the recommendation
+   holds only if that commit was never published, since the stack is a
+   candidate list built from this checkout's remote-tracking refs rather than
+   proof. (b) If that commit is
+   **not in the stack** — already in trunk, or published on some other branch
+   and so filtered out of it — recommend a new commit (never amend published
+   history) and name its position (e.g. after `<sha> <subject>`, or at the
+   stack tip). An empty stack lands here too: with nothing amendable, a new
+   commit is the answer. (c) If the fix is a logically separate concern,
+   recommend a new commit. (d) If the fix is best left uncommitted, recommend
+   WIP. Emit this as a `**Suggested placement:**` bold-paragraph label in your
+   analysis body —
    never as an ATX heading.
 1. If, while analyzing, you discover a **new** issue not covered by the finding
    you were given, you **must** report it — do not silently drop it. Append it
