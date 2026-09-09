@@ -208,6 +208,13 @@ tree is registered both user-level and directory-scoped, and a checkout under
 review may be a worktree whose copy is neither. If no base directory is stated,
 fall back to `~/.claude/skills`.
 
+Every graded field's rubric is wired twice, and both halves are required: it is
+named in the prompt above, which is the delivery floor that puts it in every
+sub-step's context, and it is linked inline at each site that assigns the value,
+which is what keeps the wiring visible to whoever edits that site. Do not add a
+standalone pointer section for a rubric — that shape was tried and withdrawn,
+and the inline link is what survives a rework of this prompt.
+
 The `<the structured inputs for this step>` placeholder is the bulleted Input
 list the named child skill defines, so later references to a specific input
 (e.g. the "Any experiment results" bullet) resolve unambiguously.

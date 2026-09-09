@@ -92,7 +92,9 @@ tools are read and Git only.
    [shared provenance guidance](../review-changes/references/provenance.md)),
    **severity** (per the
    [shared severity guidance](../review-changes/references/severity.md)), and
-   **confidence** against what your deeper study found. When one of the three is
+   **confidence** (per the
+   [shared confidence guidance](../review-changes/references/confidence.md))
+   against what your deeper study found. When one of the three is
    wrong, append a `## Correction` section (schema below) carrying only the
    fields you are correcting, and state the reasoning in your analysis body as
    well: the body is rendered in the review, the correction's `Rationale:` is
