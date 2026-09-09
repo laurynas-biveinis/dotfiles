@@ -599,7 +599,8 @@ requirements, if present, and — only for an alongside-analysis re-spawn — th
 invocation mode `alongside` and complete latest provisional analysis block
 (header and body, excluding routed level-2 sections). Also pass — only when a
 placement decision applies (computed below) — the stack as a list of SHA +
-subject, which may be empty, and the blame-target revision `REV`.
+subject, which may be empty, the blame-target revision `REV`, and the rebase
+boundary `BASE` when the stack is non-empty.
 
 On first entry to Phase 3, compute the **unpublished-commit stack context**
 once and reuse it for every analysis subagent across all later verify⇄analyze
@@ -656,7 +657,24 @@ Where placement applies, compute the stack with allowed commands only:
   filter, which subsumes the upstream range — when an upstream exists
   (`git rev-parse --verify --quiet <trunk>@{upstream}` succeeds): those
   un-pushed commits are still amendable. With no upstream configured, leave the
-  stack empty.
+  stack empty. Retain the revision arguments of the query that selected the
+  stack as `<stack-revisions>` for the topology walks below, including its
+  publication exclusions and the fallback's omission of `<trunk>`.
+- Topology marks, only for a non-empty stack: run
+  `git log --oneline --first-parent <stack-revisions>` and mark every stack
+  entry missing from it `[behind a merge]`; run
+  `git log --format='%h %P' <stack-revisions>` and mark every stack entry
+  listing more than one parent `[merge commit]`. These are independent
+  properties: an entry may carry neither, either, or both marks. An inner
+  merge brought in through an outer merge's second parent carries both.
+- Rebase boundary `BASE`, only for a non-empty stack: take the oldest stack
+  entry on the first-parent walk above and read its parents with
+  `git log -1 --format=%P <oldest>`. Its first parent is `BASE`; no parents
+  means `BASE` is the option `--root`. This boundary precedes the candidates
+  even in the direct-on-trunk fallback, where the local trunk name is `HEAD`
+  and would select an empty replay. Pass `BASE` with the stack; the analyst
+  checks the full replay range before recommending a rebase, since marks on
+  the owning commit alone say nothing about merges replayed after it.
 - Blame-target revision `REV` — the newest reviewed revision whose tree holds
   the reviewed lines in final form. That criterion governs; the usual shapes are
   `HEAD` for a `git show HEAD` scope, `<commit>` for a `git show <commit>`
@@ -674,8 +692,8 @@ amendable from this checkout, so every owned defect routes to a new commit.
 That is the ordinary outcome when no trunk branch exists, when HEAD is already
 merged into trunk or is a trunk branch with nothing un-pushed, and when the
 publication filter above removes the whole feature branch. Pass the stack —
-empty or not — and `REV` into each analysis subagent prompt (see the
-`review-changes-analyze` skill).
+empty or not — and `REV`, plus `BASE` for a non-empty stack, into each analysis
+subagent prompt (see the `review-changes-analyze` skill).
 
 Placement context is omitted only where no answer exists at all: the dirty-index
 bare `git diff` above, and a `REV` not reachable from `HEAD`

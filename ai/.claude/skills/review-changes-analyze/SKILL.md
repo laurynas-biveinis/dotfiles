@@ -46,17 +46,20 @@ Your invocation prompt supplies, for the single finding you must analyze:
 - Any **caller requirements**, if present. Apply the
   [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
 - **Only when a placement decision applies** (the caller supplied a stack and
-  a `REV`): the **stack** as a list of SHA + subject, and the blame-target
-  revision `REV`. The stack may be **empty** — nothing is amendable from this
-  checkout — which is an answer rather than an absence: every owned defect then
-  routes to a new commit, case (b). Only when the inputs are absent altogether
-  do you omit any placement discussion. Under an
+  a `REV`): the **stack** as a list of SHA + subject, each entry carrying
+  neither, either, or both of `[behind a merge]` and `[merge commit]`, and the
+  blame-target revision `REV`. A non-empty stack also supplies the rebase
+  boundary `BASE`, either a commit SHA or the option `--root`. The stack may
+  be **empty** — nothing is amendable from this checkout — which is an answer
+  rather than an absence:
+  every owned defect then routes to a new commit, case (b). Only when the
+  inputs are absent altogether do you omit any placement discussion. Under an
   uncommitted scope — `git diff --staged`, or a bare `git diff` over a clean
-  index — `REV` is `HEAD` and only a `pre-existing-*` finding has a placement
-  answer; an `introduced` one is WIP in the uncommitted change. There the
-  finding's `Location:` line is a post-image number, so locate the defect in
-  `REV` by content, and note that the index holds the reviewed change, so
-  amending there is not a bare `git commit --amend`.
+  index — `REV` is `HEAD` and only a `pre-existing-*`
+  finding has a placement answer; an `introduced` one is WIP in the uncommitted
+  change. There the finding's `Location:` line is a post-image number, so
+  locate the defect in `REV` by content, and note that the index holds the
+  reviewed change, so amending there is not a bare `git commit --amend`.
 - Existing **prior draft paths**. Follow the
   [shared prior-draft guidance](../review-changes/references/prior-drafts.md)
   when filtering issues discovered during analysis.
@@ -180,15 +183,35 @@ tools are read and Git only.
    amending it — name the specific SHA + subject, and say the recommendation
    holds only if that commit was never published, since the stack is a
    candidate list built from this checkout's remote-tracking refs rather than
-   proof. (b) If that commit is
+   proof. Handle an owner equal to `HEAD` first: `git commit --amend` works
+   for both merge and non-merge tips and preserves their parents, subject to
+   the existing index caveat. No rebase is needed there.
+
+   For an earlier owner, inspect the full replay range with
+   `git log --format='%H %P' <BASE>..HEAD`, or the same command over `HEAD`
+   when `BASE` is `--root`. Confirm that it includes the owner and check for
+   entries with multiple parents; do not filter this walk to stack candidates.
+   Recommend ordinary `git rebase -i <BASE>` only when the range has no
+   merges. Otherwise use `git rebase -i --rebase-merges <BASE>` and explain
+   that recreating merges requires reapplying both conflict resolutions and
+   other changes authored directly in the merges. Preserving topology alone
+   does not preserve those changes. This range check covers owners marked
+   `[behind a merge]` and unmarked first-parent owners with later merges alike.
+   An earlier owner marked `[merge commit]` additionally needs a `break`
+   immediately after its own `merge -C …` instruction, then amendment at that
+   stop; it cannot be edited by changing an ordinary `pick` to `edit`. Apply
+   both qualifications when both marks are present. Where replaying history
+   is unwelcome, a new fix commit remains available as case (c).
+
+   (b) If that commit is
    **not in the stack** — already in trunk, or published on some other branch
    and so filtered out of it — recommend a new commit (never amend published
    history) and name its position (e.g. after `<sha> <subject>`, or at the
    stack tip). An empty stack lands here too: with nothing amendable, a new
    commit is the answer. (c) If the fix is a logically separate concern,
    recommend a new commit. (d) If the fix is best left uncommitted, recommend
-   WIP. Emit this as a `**Suggested placement:**` bold-paragraph label in your
-   analysis body —
+   WIP. Emit this
+   as a `**Suggested placement:**` bold-paragraph label in your analysis body —
    never as an ATX heading.
 
    Provenance and placement can identify different owning commits. Determine
