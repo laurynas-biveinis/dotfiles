@@ -107,9 +107,13 @@ tools are read and Git only.
 1. **Only when your prompt supplies the unpublished stack and blame-target
    `REV`:** if your analysis recommends a concrete code change, also recommend
    **where** to apply it within the unpublished stack. Identify the commit that
-   **owns the region the fix touches**. First, if the finding's provenance is
-   `introduced` and the scope is uncommitted, the fix lives in that uncommitted
-   change: recommend (d) and skip the blame. Otherwise settle the removal
+   **owns the region the fix touches**. Ask the stack first: for each stack
+   commit, `git show <sha> -- <path>` answers case (a)'s actual test — does the
+   fix correct that commit's own change? — and sees additions and removals
+   alike. Only when no stack commit is implicated do you need to place the fix
+   against trunk. First, if the finding's provenance is `introduced` and the
+   scope is uncommitted, the fix lives in that uncommitted change: recommend
+   (d) and skip the blame. Otherwise settle the removal
    question first: where the defect exists because something was **deleted** —
    the fix restores it — the deleting commit owns it and no surviving
    neighbour does, so blaming the neighbours places the fix on whoever happens
