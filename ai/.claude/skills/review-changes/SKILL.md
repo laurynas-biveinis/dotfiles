@@ -139,8 +139,8 @@ as a safety net on **every** concrete command before running it:
    `### EXP-<n> — supports <finding-ID> — <ok | denied | unsafe>` block with the
    executed step/output trace and the Confirms/Refutes conclusion.
 1. Experiments are **never load-bearing**: `denied`/`unsafe`/failed simply means
-   the consuming tier proceeds on read/Git evidence and calibrates confidence
-   lower. They never abort the review.
+   the consuming tier proceeds on read/Git evidence. They never abort the
+   review.
 
 Splitting a reply on its `## Experiment requests` header uses the same
 CommonMark-aware rule as `## Proposed new findings`: split on the first such
@@ -772,6 +772,11 @@ marked `(chosen; <n> merge bases)` where that base was not unique, each parent
 listed for a combined-diff merge with the first marked — and a
 non-revision value (`index`, `empty tree`) printed literally>
 
+Confidence is how strongly the evidence establishes that what the observation
+describes is wrong, as described, at that location — not how much it would cost
+if it is (the severity section it sits in says that), nor whether this change
+caused it (Provenance says that).
+
 Provenance is relative to the pre-image of the reviewed scope, which may itself
 be your own unpushed commit: introduced = this change caused it;
 pre-existing-on-path = present in the pre-image and on this change's critical
@@ -814,11 +819,12 @@ recommendation, caveats; whatever the subagent produced>
 many times analysis fed findings back to verification); re-draft passes
 run (how many produced surviving new findings, and findings they
 contributed after dedup; note any re-draft pass that failed on retry
-exhaustion); total drafted; total kept; total dropped; findings rejected
-on analysis (list IDs, if any); total analyzed; findings proposed by
-analysis (and how many survived dedup); analyses skipped due to retry
-exhaustion (list IDs, if any); the count of findings listed in this review per
-final provenance value, relative to the reviewed scope's pre-image (introduced /
+exhaustion); total drafted; total kept; total dropped, naming any dropped on a
+confidence below 50 rather than on the merits; findings rejected on analysis
+(list IDs, if any); total analyzed; findings proposed by analysis (and how many
+survived dedup); analyses skipped due to retry exhaustion (list IDs,
+if any); the count of findings listed in this review per final provenance
+value, relative to the reviewed scope's pre-image (introduced /
 pre-existing-on-path / pre-existing-off-path); truncation note if the
 50-iteration stop fired>
 ```
