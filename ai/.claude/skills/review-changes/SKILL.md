@@ -184,7 +184,10 @@ as a subagent spawned via the **Agent tool** (`subagent_type: general-purpose`)
 would run a per-finding "batch" one at a time. The Agent call's own parameters
 and the prompt below are authoritative; each child SKILL.md is read as plain
 instructions, so its frontmatter (`allowed-tools`) is documentation of
-intent only, not enforced. The Agent call cannot carry an effort level, so the
+intent only, not enforced; the child Bash lists mirror the top-level's entries
+and move with them, and what actually gates a sub-step's Git commands is the
+session's own permissions, so a command may prompt regardless of any list. The
+Agent call cannot carry an effort level, so the
 prompt ends with the `ultrathink` keyword to request the deepest reasoning for
 the sub-step. To dispatch one, issue an Agent call whose prompt is:
 
