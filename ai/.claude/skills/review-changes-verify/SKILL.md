@@ -94,8 +94,9 @@ files** — your tools are read and Git only.
    draft's, say so in `Verification trace:` and give the evidence that settled
    it — that record is what the draft's tag is for.
 1. Return one verdict block in exactly the schema below. `Final confidence:` is
-   required on every verdict; the severity, provenance, title, location,
-   observation, and suggested-action lines may be omitted on `Outcome: drop`.
+   required on every verdict and `Reason:` on every `drop`; the severity,
+   provenance, title, location, observation, and suggested-action lines may be
+   omitted on `Outcome: drop`.
 
 ## Output
 

@@ -395,7 +395,8 @@ unusable. A verdict (when present) is _unusable_ if any of the following holds:
    `Final confidence:`, `Verification trace:`. Additionally required
    when `Outcome:` is `keep`: `Final severity:`, `Final provenance:`,
    `Final title:`, `Final location:`, `Final observation:`,
-   `Final suggested action:`.
+   `Final suggested action:`. Additionally required when `Outcome:` is
+   `drop`: `Reason:`.
 1. `Outcome:` value is not `keep` or `drop`.
 1. `Final severity:` (when present) is not `CRITICAL`, `IMPORTANT`,
    or `SUGGESTION`.
