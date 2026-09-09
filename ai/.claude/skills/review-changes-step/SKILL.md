@@ -151,15 +151,18 @@ Return the scope line first — including the round index, e.g.
   and `NNN` runs in per-round discovery order (`001`, `002`, …).
 - Grade every finding's severity per the
   [shared severity guidance](../review-changes/references/severity.md).
+- Calibrate every finding's confidence per the
+  [shared confidence guidance](../review-changes/references/confidence.md).
 - Classify every finding's provenance per the
   [shared provenance guidance](../review-changes/references/provenance.md),
   which says when the scope's diff settles it, when Git history is needed, and
   how cheap a first-pass tag may be. Tag it from the diff and a cheap baseline
-  read; never run history attribution at this tier. Verification re-derives the
-  value independently and its answer is the one that reaches the review, so
-  yours is not an input to it — it is the claim a verifier records disagreeing
-  with, which is what makes an ambiguous case visible in the audit trail rather
-  than silently resolved.
+  read; never run history attribution at this tier.
+- Your severity, confidence, and provenance are all first-pass claims.
+  Verification re-derives each independently and its answers are the ones that
+  reach the review, so yours are not inputs to them — each is the claim a
+  verifier records disagreeing with, which is what makes an ambiguous case
+  visible in the audit trail rather than silently resolved.
 - Do not emit a finding whose suggested action is empty or "none", or that only
   confirms existing code is correct — that is a non-finding, not a SUGGESTION;
   omit it.

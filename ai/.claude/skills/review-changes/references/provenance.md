@@ -76,10 +76,8 @@ work: a defect an earlier **unpublished** stack commit introduced is still
 `pre-existing`. Whether to fix it by amending that commit is the analysis step's
 placement question, not this tag's.
 
-A `Provenance:` tag on a draft finding, or on a `## Proposed new findings`
-entry, is a first-pass claim that verification re-derives independently, so a
-cheap read suffices — do not spend deep archaeology there. A verifier's
-`Final provenance:` is the authoritative value that reaches the review.
+A verifier's `Final provenance:` is the authoritative value that reaches the
+review.
 
 These rules locate the defect's origin, not the diff's `+` lines: throughout,
 the tag follows the defect, not the line.
@@ -152,8 +150,9 @@ the tag follows the defect, not the line.
    confirm a relocation and to resolve a path the scope's diff does not cover.
    The analysis step's placement question is answered at the blame-target
    `REV` instead, per the `review-changes-analyze` skill, so the procedure does
-   not apply to it, nor to the draft tier, which stops at the cheap baseline
-   read above. Where it does apply, the commands and their traps are in the
+   not apply to it, nor to a first-pass tag — a draft finding's, or a
+   `## Proposed new findings` entry's from any tier — which a cheap baseline
+   read settles. Where it does apply, the commands and their traps are in the
    [attribution procedure](provenance-attribution.md) — read that before
    running any of them, because several fail in ways that print a plausible
    wrong answer rather than an error.

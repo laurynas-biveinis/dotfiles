@@ -69,8 +69,15 @@ files** — your tools are read and Git only.
    prescribes no fix is a verification note, not a review finding, so `drop` it
    (give that as the reason) rather than keeping it as a zero-action
    SUGGESTION.
-1. Recalibrate confidence from the evidence: raise it on `keep` and lower it on
-   `drop`; usually drop a candidate whose final confidence falls below 50.
+1. Re-derive the finding's confidence from the evidence per the
+   [shared confidence guidance](../review-changes/references/confidence.md),
+   rather than adjusting the draft's number. On either outcome the number
+   grades the evidence for the finding's claim, not the verdict you reach
+   about it. Give the evidence that settled it in `Verification trace:`, and
+   when your confidence falls in a different anchor band than the draft's, say
+   so there too. A `keep` candidate whose final confidence lands below 50
+   should usually become a `drop` — a gate on the number, not a fourth way of
+   failing verification.
 1. On `keep`, re-derive the finding's severity per the
    [shared severity guidance](../review-changes/references/severity.md), rather
    than inheriting the draft's grade. When your severity differs from the

@@ -15,6 +15,5 @@ How well established a finding is belongs to [confidence](confidence.md), and
 whether the reviewed change caused it belongs to [provenance](provenance.md);
 neither should be folded into this value.
 
-A draft finding's severity, or a `## Proposed new findings` entry's, is a
-first-pass grade that verification re-derives independently. A verifier's
-`Final severity:` is the authoritative value that reaches the review.
+A verifier's `Final severity:` is the authoritative value that reaches the
+review.
