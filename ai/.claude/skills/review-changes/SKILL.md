@@ -855,7 +855,7 @@ Provenance is relative to the pre-image of the reviewed scope, which may itself
 be your own unpushed commit: introduced = this change caused it;
 pre-existing-on-path = present in the pre-image and on this change's critical
 path; pre-existing-off-path = present in the pre-image and independent of this
-change.
+change — see any Suggested placement for where a fix belongs.
 <only for a merge scope: reviewed as a combined diff every parent listed above
 is a pre-image and pre-existing means present on any of them; under a
 first-parent merge scope the first parent is the sole baseline>

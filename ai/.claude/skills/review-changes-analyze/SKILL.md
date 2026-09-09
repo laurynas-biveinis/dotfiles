@@ -169,6 +169,24 @@ tools are read and Git only.
    WIP. Emit this as a `**Suggested placement:**` bold-paragraph label in your
    analysis body —
    never as an ATX heading.
+
+   Provenance and placement can identify different owning commits. Determine
+   provenance from whether the defect already exists in the scope's pre-image,
+   including when introduced by the baseline commit itself, per the
+   [shared provenance guidance](../review-changes/references/provenance.md).
+   Placement follows the fix's target and cases (a)–(d) above, including the
+   candidate-stack and never-published conditions for amendment. Compare blame
+   results for consistency only when the revision, region, and attribution
+   options are identical; line ownership does not override evidence that this
+   change made existing code wrong.
+
+   Under a committed scope, a pre-existing defect owned by an earlier stack
+   commit can qualify for case (a), while an `introduced` defect (a new caller,
+   an altered invariant) whose fix lands in trunk-owned code is case (b).
+   Do not force either answer to match the other.
+   `pre-existing-off-path` argues for case (c), a separate follow-up, rather
+   than folding the fix into this change.
+
 1. If, while analyzing, you discover a **new** issue not covered by the finding
    you were given, you **must** report it — do not silently drop it. Append it
    as a `## Proposed new findings` section after your analysis block (schema
