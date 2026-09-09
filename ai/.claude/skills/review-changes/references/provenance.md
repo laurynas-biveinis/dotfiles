@@ -76,8 +76,8 @@ work: a defect an earlier **unpublished** stack commit introduced is still
 `pre-existing`. Whether to fix it by amending that commit is the analysis step's
 placement question, not this tag's.
 
-A verifier's `Final provenance:` is the authoritative value that reaches the
-review.
+A verifier's `Final provenance:` is authoritative unless superseded by a valid
+analysis correction for that field.
 
 These rules locate the defect's origin, not the diff's `+` lines: throughout,
 the tag follows the defect, not the line.

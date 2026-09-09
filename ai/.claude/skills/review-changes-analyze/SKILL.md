@@ -39,8 +39,10 @@ Your invocation prompt supplies, for the single finding you must analyze:
   `git diff A..B`). Run it to see the reviewed change.
 - The **pre-image baseline** to classify any `## Proposed new findings` entry
   against, if supplied — distinct from the placement `REV` below. The finding
-  under analysis keeps the verdict's `Final provenance:`; do not re-derive or
-  restate it.
+  under analysis arrives with the verdict's `Final severity:`,
+  `Final confidence:`, and `Final provenance:`; you re-assess all three in the
+  Procedure below and change one only through `## Correction`, never by
+  restating it in the analysis body.
 - Any **caller requirements**, if present. Apply the
   [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
 - **Only when a placement decision applies** (the caller supplied a stack and
@@ -63,7 +65,9 @@ Your invocation prompt supplies, for the single finding you must analyze:
 - **Only when this is an alongside-analysis re-spawn:** the invocation mode
   `alongside` and the complete latest provisional analysis block (header and
   body, excluding routed level-2 sections). Revise that analysis using the new
-  experiment results instead of reconstructing it from the verdict.
+  experiment results instead of reconstructing the analysis body from the
+  verdict; re-assessing the verdict's values under Procedure step 3 is still
+  required.
 
 ## Procedure
 
@@ -84,6 +88,20 @@ tools are read and Git only.
    removes the finding from the review, so reserve it for genuine false
    positives, not disagreements of emphasis or severity. You can only reject;
    you cannot revive a finding verification dropped.
+1. Re-assess the verdict's **provenance** (per the
+   [shared provenance guidance](../review-changes/references/provenance.md)),
+   **severity** (per the
+   [shared severity guidance](../review-changes/references/severity.md)), and
+   **confidence** against what your deeper study found. When one of the three is
+   wrong, append a `## Correction` section (schema below) carrying only the
+   fields you are correcting, and state the reasoning in your analysis body as
+   well: the body is rendered in the review, the correction's `Rationale:` is
+   not. Correction is for a value the verdict got wrong, not a difference of
+   taste; the finding itself stands. It cannot remove a finding — a confidence
+   you correct below 50 keeps the finding in the review, so reject instead when
+   it is a false positive. The other verdict fields (title, location,
+   observation, suggested action) are not correctable: fold any refinement of
+   those into your analysis body.
 1. **Only when your prompt supplies the unpublished stack and blame-target
    `REV`:** if your analysis recommends a concrete code change, also recommend
    **where** to apply it within the unpublished stack. Identify the commit that
@@ -194,16 +212,35 @@ body is optional in this case (the reason carries the rationale):
 or the finding misreads the diff>
 ```
 
+If — and only if — the verdict's severity, confidence, or provenance is wrong,
+append a `## Correction` section after the analysis block, listing only the
+fields you are correcting. `Rationale:` is required; the corrected values
+supersede the verdict's in the final review:
+
+```markdown
+## Correction
+
+- Corrected severity: IMPORTANT
+- Corrected confidence: 60%
+- Corrected provenance: pre-existing-off-path
+- Rationale: <why the verdict's value is wrong>
+```
+
+A `## Correction` qualifies an analysis, so it is valid only on a reply that
+carries an analysis block: never on a deferral, and never with a `## Rejection`
+(a finding you remove has no values left to correct).
+
 If — and only if — analysis surfaced a genuinely new issue, append a
 `## Proposed new findings` section after the analysis block, following the
 [shared output-section contract](../review-changes/references/shared-output-sections.md).
 
-`## Rejection`, `## Proposed new findings`, and `## Experiment requests` are the
-only higher-level (`##`) headings allowed in a reply that carries an analysis
-block. A reply may carry more than one — a rejecting analyst that also spotted a
-genuinely different issue still reports it — except that `## Rejection` and
-`## Experiment requests` may never co-occur (rejecting is terminal; see
-**Experiment requests** below).
+`## Rejection`, `## Correction`, `## Proposed new findings`, and
+`## Experiment requests` are the only higher-level (`##`) headings allowed in a
+reply that carries an analysis block. A reply may carry more than one — a
+rejecting analyst that also spotted a genuinely different issue still reports it
+— except that `## Rejection` may never co-occur with `## Experiment requests`
+(rejecting is terminal; see **Experiment requests** below) or with
+`## Correction`.
 
 ## Experiment requests
 
@@ -222,20 +259,25 @@ section in one of two shapes:
   tooling/environment capability you have not verified. The top-level runs the
   experiments and re-invokes you with the results, invocation mode `alongside`,
   and your complete latest provisional analysis block so you can finalize that
-  suggested action without losing its context. When re-invoked in this mode,
-  you have three valid replies:
-  return your **finalized analysis** with no further requests (if the results
-  settle it); attach **another `## Experiment requests` section** alongside your
-  updated analysis block (if they surface a further unverified capability); or,
-  if the results instead disprove the finding, **reject it** with a
-  `## Rejection` section and no experiment requests. Do **not** return a pure
-  deferral — once you have produced an alongside analysis, always carry an
-  analysis block (or a rejection) forward; requests with no analysis block in
-  this context are invalid. Note that the caller does not retry an alongside
-  re-spawn: any validation failure terminates the loop immediately and falls
-  back to your latest provisional analysis (the 3-attempt budget governs only
-  the initial dispatch and pure deferrals), so when uncertain prefer returning a
-  finalized analysis over attaching yet another experiment batch.
+  suggested action without losing its context. When re-invoked in this mode, you
+  have three valid replies: return your **finalized analysis** with no further
+  requests (if the results settle it); attach **another `## Experiment requests`
+  section** alongside your updated analysis block (if they surface a further
+  unverified capability); or, if the results instead disprove the finding,
+  **reject it** with a `## Rejection` section and no experiment requests. Do
+  **not** return a pure deferral — once you have produced an alongside analysis,
+  always carry an analysis block (or a rejection) forward; requests with no
+  analysis block in this context are invalid. You are re-spawned fresh, and no
+  earlier `## Correction` is handed back to you — the provisional block excludes
+  routed level-2 sections. So re-run Procedure step 3 on every reply of this
+  loop **except a rejection** (a finding you remove has no values left to
+  correct) and re-emit a `## Correction` if one is still warranted; only the
+  correction on the reply the caller ends up appending is recorded. Note that
+  the caller does not retry an alongside re-spawn: any validation failure
+  terminates the loop immediately and falls back to your latest provisional
+  analysis (the 3-attempt budget governs only the initial dispatch and pure
+  deferrals), so when uncertain prefer returning a finalized analysis over
+  attaching yet another experiment batch.
 
 **Mandate:** if your recommendation hinges on an unverified capability of the
 tooling, environment, or APIs — e.g. whether a parameter, keyword, or config

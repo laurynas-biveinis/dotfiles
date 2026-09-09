@@ -15,5 +15,5 @@ How well established a finding is belongs to [confidence](confidence.md), and
 whether the reviewed change caused it belongs to [provenance](provenance.md);
 neither should be folded into this value.
 
-A verifier's `Final severity:` is the authoritative value that reaches the
-review.
+A verifier's `Final severity:` is authoritative unless superseded by a valid
+analysis correction for that field.

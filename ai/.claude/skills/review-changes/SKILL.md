@@ -235,12 +235,13 @@ converge — a fresh draft-step re-run yields no new finding once verify⇄analy
 has converged — and is hard-bounded in any case by the 50-iteration cap (see
 Phase 2).
 
-Verification decides the fate of every drafted finding (`keep`/`drop`);
-analysis holds one **asymmetric** power on top of that: it may **reject**
-a finding verification kept, when deeper study proves it a false positive,
-which removes it from the final review. Analysis can only reject — it never
-resurrects a dropped finding. So a finding reaches the final review only if
-verification kept it **and** analysis did not reject it.
+Verification decides the fate of every drafted finding (`keep`/`drop`); analysis
+holds two powers on top of that. It may **reject** a finding verification kept,
+when deeper study proves it a false positive, which removes it from the final
+review — an **asymmetric** power: analysis can only reject, never resurrect a
+dropped finding. It may also **correct** a surviving finding's severity,
+confidence, or provenance, which never removes it. So a finding reaches the
+final review only if verification kept it **and** analysis did not reject it.
 
 **Raw-findings corpus.** Read and apply the
 [shared prior-draft guidance](references/prior-drafts.md) throughout the
@@ -456,6 +457,13 @@ are named in the caller message; the abort is still a single event.
 
 ### Phase 3 — Analysis of kept findings
 
+**Reading persisted analyses.** In `analyses.md`, recognize analysis headings
+and bookkeeping markers only as top-level lines outside fenced code blocks and
+block quotes, using the same CommonMark-aware rule as reply section routing.
+Apply this to analyzed-ID and rejected-ID detection, body and record boundaries,
+and correction lookup. Only unquoted fields within an actual correction record
+supply overlay values; quoted examples remain verbatim content.
+
 After all verification rounds have converged, collect every finding
 with `Outcome: keep` across all `verdicts-<round>.md` files **that has
 not already been analyzed in a prior Phase 3 pass**. The set of
@@ -559,22 +567,28 @@ bare `git diff` above, and a `REV` not reachable from `HEAD`
 sits outside this checkout and the stack can say nothing about it. Omit it
 there and run the rest of Phase 3 unchanged.
 
-Each analysis reply has up to four parts: the `#### Analysis: <ID>` block,
-optionally followed by a `## Rejection` section, a `## Proposed new findings`
-section, and/or a `## Experiment requests` section (all level-2 headers).
-**Split the reply on the first occurrence of each such header that occurs as a
-true top-level line — outside any fenced code block or block quote**, using the
-same CommonMark-aware rule. A subagent that merely quotes a delimiter inside a
-fence (e.g. when reviewing this skill's own schema) does not trigger the split.
-Everything before the first such boundary is the analysis body; each routed
-section is handled below and is **never inlined** into the final review (so no
-level-2 header ever outranks the `#### Analysis` heading in the assembled
-document).
+Each analysis reply has up to five parts: the `#### Analysis: <ID>` block,
+optionally followed by a `## Rejection` section, a `## Correction` section, a
+`## Proposed new findings` section, and/or a `## Experiment requests` section
+(all level-2 headers). **Split the reply on the first occurrence of each such
+header that occurs as a true top-level line — outside any fenced code block or
+block quote**, using the same CommonMark-aware rule. A subagent that merely
+quotes a delimiter inside a fence (e.g. when reviewing this skill's own schema)
+does not trigger the split. Everything before the first such boundary is the
+analysis body; each routed section is handled below and is **never inlined**
+into the final review (so no level-2 header ever outranks the `#### Analysis`
+heading in the assembled document).
 
 A `## Rejection` section means the subagent has proven this kept finding a
 false positive: it is **removed** from the final review (the same end state
 as a verifier `drop`). Verification keeps drafted findings; analysis can
 additionally reject one but never resurrects a drop.
+
+A `## Correction` section revises the verdict's `Final severity:`,
+`Final confidence:`, and/or `Final provenance:` for a finding that stays in the
+review; Phase 4 overlays the corrected values on the verdict's. It corrects no
+other field, and it never removes a finding — a corrected confidence below 50
+still leaves the finding in the review.
 
 Validate each reply with the rules in **Analysis subagent reply
 validation**. For each valid reply:
@@ -591,16 +605,40 @@ validation**. For each valid reply:
 - **Otherwise (no rejection),** append its analysis body verbatim — the
   `#### Analysis: <ID>` header line (already at the level it occupies in the
   final review) and the body below it, up to but excluding any `## Rejection`,
-  `## Proposed new findings`, or `## Experiment requests` header. The one
-  exception is the **alongside-analysis shape** — the reply also carries a
-  `## Experiment requests` section — in which case do not append now. The body
-  is held pending experiment results; the experiment-request handling below runs
-  inline for this finding, re-spawns the analyst, and appends the finalized (or
-  latest provisional) body instead — so a re-spawn intervenes before any append,
-  and the body finally appended may differ from this provisional one. That
-  inline alongside loop runs to completion before this finding counts as having
-  a valid reply, so the "once every … has a valid reply" condition below is
-  reached only after every finding's alongside loop has terminated.
+  `## Correction`, `## Proposed new findings`, or `## Experiment requests`
+  header. Then, if the same reply carried a `## Correction` section, append a
+  correction marker directly after that body — an inert HTML comment
+  `<!-- analysis-corrected: <ID> -->` followed by the section's
+  `Corrected …:`/`Rationale:` lines verbatim. Order matters: the body first, its
+  correction after it. The one exception is the **alongside-analysis shape** —
+  the reply also carries a `## Experiment requests` section — in which case do
+  not append now. The body is held pending experiment results; the
+  experiment-request handling below runs inline for this finding, re-spawns the
+  analyst, and appends the finalized (or latest provisional) body instead — so a
+  re-spawn intervenes before any append, and the body finally appended may
+  differ from this provisional one. That inline alongside loop runs to
+  completion before this finding counts as having a valid reply, so the "once
+  every … has a valid reply" condition below is reached only after every
+  finding's alongside loop has terminated. Throughout that loop the correction
+  travels with the body: the one appended is the correction carried by the same
+  reply whose body is appended, and a correction on a superseded provisional
+  reply is discarded. At most one correction marker is written per finding,
+  mirroring the analyze-once rule for bodies.
+
+A defective `## Correction` is **ignored**, never fatal. A correction that
+corrects nothing, gives no `Rationale:`, appears on a reply carrying no analysis
+block, or accompanies a `## Rejection` is dropped; one whose
+`Corrected severity:`, `Corrected provenance:`, or `Corrected confidence:` value
+is out of range (the enumerations at **Phase 2**'s verdict rules, and an integer
+in `[0, 100]` — e.g. missing `%`, non-numeric, out of range) has that field
+dropped and its remaining fields applied. In every such case no correction
+marker is written for the dropped part and the rest of the reply — body,
+rejection, experiment requests, proposed new findings — is processed normally.
+No defect in a `## Correction` makes a reply unusable, and none can void a
+co-carried `## Rejection`: the correction is an optional qualifier, so
+discarding a whole reply over it would trade a rendered field for an analysis or
+a proven false positive. The analyze skill's own prohibitions stay as authoring
+guidance.
 
 The append-only file `/tmp/review-changes-<topic>-analyses.md` is written
 solely by the top-level (analysis subagents still never write files).
@@ -657,7 +695,7 @@ A reply is _unusable_ if any of the following holds:
 1. Reply lacks a `#### Analysis: <assigned-ID>` header (exactly four
    `#`) for the finding's assigned ID — **unless** it is a deferral (a
    well-formed `## Experiment requests` section and no analysis block).
-1. Body under the header (before any `## Rejection`,
+1. Body under the header (before any `## Rejection`, `## Correction`,
    `## Proposed new findings`, or `## Experiment requests` section) is empty or
    whitespace-only — **unless** the reply carries a `## Rejection` section, in
    which case the analysis body is optional (the rejection reason is the
@@ -669,7 +707,7 @@ A reply is _unusable_ if any of the following holds:
    terminal decision, whereas a deferral means the analyst has not yet
    decided and needs evidence to do so — a reply that both rejects and
    requests experiments is contradictory and must never happen.
-1. The analysis body (everything before any `## Rejection`,
+1. The analysis body (everything before any `## Rejection`, `## Correction`,
    `## Proposed new findings`, or `## Experiment requests` delimiter) contains
    an ATX heading — a
    `#`-prefixed line per CommonMark (a `#` run with ≤3 leading spaces,
@@ -679,17 +717,17 @@ A reply is _unusable_ if any of the following holds:
    does not trip this rule.
 1. Reply truncates mid-sentence or mid-bullet.
 
-Carrying a `## Rejection`, `## Proposed new findings`, or
-`## Experiment requests` section does
-**not** by itself make a reply unusable — `## Proposed new findings` is
-expected when the subagent spots a new issue, `## Rejection` when it
-proves the finding a false positive, and `## Experiment requests` when it
-defers or attaches a remedy-feasibility experiment alongside its analysis.
-Detection is structural but
-CommonMark-aware: it must honor fenced-code-block and code-span
-boundaries, so `#`/`##` lines a body quotes inside a fence are treated as
-neither headings nor section delimiters. The top-level does not judge
-analysis quality, only schema conformance.
+Carrying a `## Rejection`, `## Correction`, `## Proposed new findings`, or
+`## Experiment requests` section does **not** by itself make a reply unusable —
+`## Proposed new findings` is expected when the subagent spots a new issue,
+`## Rejection` when it proves the finding a false positive, `## Correction` when
+deeper study revises the verdict's severity, confidence, or provenance, and
+`## Experiment requests` when it defers or attaches a remedy-feasibility
+experiment alongside its analysis. Detection is structural but CommonMark-aware:
+it must honor fenced-code-block and code-span boundaries, so `#`/`##` lines a
+body quotes inside a fence are treated as neither headings nor section
+delimiters. The top-level does not judge analysis quality, only schema
+conformance.
 
 An analyst that needs runtime evidence may return a `## Experiment requests`
 section in one of two shapes. Run any such requests via the **Experiment
@@ -757,7 +795,8 @@ as the analysis-exhaustion case (exhaustion marker, noted in the Summary).
 ### Phase 4 — Final assembly
 
 Read every `verdicts-<round>.md` file and the analysis bodies and markers
-from `/tmp/review-changes-<topic>-analyses.md`. First compute the
+from `/tmp/review-changes-<topic>-analyses.md`, applying **Reading persisted
+analyses** above. First compute the
 **rejected-ID set**: every ID with a `<!-- analysis-rejected: <ID> -->`
 marker in the analyses file. Using the kept verdicts and the analysis
 bodies, write the final review to `/tmp/review-changes-<topic>.md`
@@ -830,8 +869,10 @@ confidence below 50 rather than on the merits; findings rejected on analysis
 survived dedup); analyses skipped due to retry exhaustion (list IDs,
 if any); the count of findings listed in this review per final provenance
 value, relative to the reviewed scope's pre-image (introduced /
-pre-existing-on-path / pre-existing-off-path); truncation note if the
-50-iteration stop fired>
+pre-existing-on-path / pre-existing-off-path); findings whose severity,
+confidence, or provenance analysis corrected — one entry per correction as
+`<ID>: <field> <verdict value> → <corrected value>`, if any; truncation note if
+the 50-iteration stop fired>
 ```
 
 Assembly rules:
@@ -842,31 +883,42 @@ Assembly rules:
   block's severity, confidence, provenance, title, location, observation, and
   suggested action come verbatim from the verifier's verdict; these
   supersede the original draft text.
-- **Inline analysis.** For each kept finding, copy its analysis body
-  from `/tmp/review-changes-<topic>-analyses.md` verbatim immediately
-  after the `Suggested action:` bullet. A finding's body in that file
-  runs from its `#### Analysis: <ID>` line up to (but excluding) the
-  next `#### Analysis:` line, the next line beginning with the
-  `<!-- analysis-skipped:` or `<!-- analysis-rejected:` marker prefix, or
-  EOF — whichever comes first. Treating those marker prefixes as
-  delimiters keeps an interleaved exhaustion or rejection marker from
-  being swept into a preceding body. Body extraction also never _begins_
-  inside a rejection span: the text from a `<!-- analysis-rejected: <ID> -->`
-  marker up to the next `#### Analysis:` line, marker prefix, or EOF is
-  owned by that rejection (its verbatim reason) and is scanned neither as
-  its own body nor as any other finding's — so a `#### Analysis:` line a
-  reason happens to quote is never mistaken for a body anchor. The body
-  already opens with its
-  own `#### Analysis: <ID>` heading at the right level, so the top-level
-  adds no heading and strips nothing further (Phase 3 already excluded
-  any `## Rejection`, `## Proposed new findings`, or `## Experiment requests`
-  section when it appended the body) — do not edit, summarize, or re-level it.
-  The analysis step emits that one level-4 heading and otherwise uses
-  bold-paragraph labels instead of `#`-prefixed headings (see the
-  `review-changes-analyze` skill), so nothing in the body outranks the
-  `#### Analysis` heading or breaks the document outline. If a kept finding
-  has no analysis body in the file (only an exhaustion or rejection marker, or
-  nothing), omit the analysis for that finding.
+- **Overlay any analysis correction.** If the finding has an
+  `<!-- analysis-corrected: <ID> -->` marker in the analyses file, each
+  `Corrected severity:`, `Corrected confidence:`, or `Corrected provenance:`
+  line it carries replaces the verdict's value for that field; fields the
+  correction omits keep the verdict's. Severity grouping and ordering use the
+  corrected severity. Retain the pre-overlay value for each field you replace —
+  the Summary reports it. The correction's `Rationale:` is bookkeeping: it stays
+  in the analyses file and is not rendered, so an analyst that wants its
+  reasoning in the review states it in the analysis body, which is. A correction
+  never removes a finding: one that drops confidence below 50 still appears,
+  since only a verifier `drop` or an analysis rejection removes anything.
+- **Inline analysis.** For each kept finding, copy its analysis body from
+  `/tmp/review-changes-<topic>-analyses.md` verbatim immediately after the
+  `Suggested action:` bullet. A finding's body in that file runs from its
+  `#### Analysis: <ID>` heading up to (but excluding) the next analysis heading
+  or bookkeeping marker recognized by **Reading persisted analyses**, or EOF —
+  whichever comes first. Treating those markers as delimiters keeps an
+  interleaved exhaustion, rejection, or correction marker from being swept into
+  a preceding body — including the finding's own correction, which is appended
+  directly after its body. Body extraction also never _begins_ inside a
+  rejection or correction span: the text from a
+  `<!-- analysis-rejected: <ID> -->` or `<!-- analysis-corrected: <ID> -->`
+  marker up to the next unquoted analysis heading or bookkeeping marker, or EOF,
+  is owned by that record (the rejection's verbatim reason, the correction's
+  fields), not an analysis body. The body already opens with its own
+  `#### Analysis: <ID>`
+  heading at the right level, so the top-level adds no heading and strips
+  nothing further (Phase 3 already excluded any `## Rejection`, `## Correction`,
+  `## Proposed new findings`, or `## Experiment requests` section when it
+  appended the body) — do not edit, summarize, or re-level it. The analysis step
+  emits that one level-4 heading and otherwise uses bold-paragraph labels
+  instead of `#`-prefixed headings (see the `review-changes-analyze` skill), so
+  nothing in the body outranks the `#### Analysis` heading or breaks the
+  document outline. If a kept finding has no analysis body in the file (only an
+  exhaustion or rejection marker, or nothing), omit the analysis for that
+  finding.
 - Group by final severity (Critical → Important → Suggestion).
   Within a severity tier, sort findings whose final provenance is
   `pre-existing-off-path` after all others — they are the only tier members the
