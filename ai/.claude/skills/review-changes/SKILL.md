@@ -55,6 +55,26 @@ scope is a single diff, not a per-commit walk — `git diff A..B`, or
 `git diff A...B` for the three-dot form — whose pre-image the [shared
 provenance guidance](references/provenance.md) already names for each form.
 
+**Untracked paths are in no diff**, so no scope command reaches them and none
+of the precedence rules above can select them. After choosing the scope, run
+`git status --porcelain -uall` and, when it reports `??` entries, name them as
+excluded on the printed scope line and on a trailing line appended to any stop
+message below — the stop templates are fixed strings with no slot of their own.
+Use `-uall` because the default collapses a whole new subtree into a single
+entry, and summarize by count and top-level directory rather than listing every
+path when the list runs long. They enter a review only by being staged or named
+in an override, and saying so is what keeps a partially-untracked change from
+reading as fully reviewed.
+
+That covers both shapes. When rule 1 or 2 selected the scope, the review is
+merely partial — the untracked files are excluded, and the named exclusions say
+so. When rule 3 was reached **only** because both probes were empty while `??`
+entries exist, the review's entire subject is wrong: it would spend a full
+multi-subagent run on the previous commit while the user's only new work goes
+unread. Confirm the scope with the user before dispatching there rather than
+stopping outright, since untracked scratch files alongside a genuine
+just-committed change are ordinary.
+
 **The pre-image baseline.** Derive it once here, alongside the scope, and pass
 it to every draft, verify, and analyze dispatch as a declared input — it is a
 pure function of the already-chosen scope, so having each per-finding subagent
