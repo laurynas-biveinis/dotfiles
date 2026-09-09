@@ -551,8 +551,13 @@ That is the ordinary outcome when no trunk branch exists, when HEAD is already
 merged into trunk or is a trunk branch with nothing un-pushed, and when the
 publication filter above removes the whole feature branch. Pass the stack —
 empty or not — and `REV` into each analysis subagent prompt (see the
-`review-changes-analyze` skill). Placement context is omitted only where no
-answer exists at all: the dirty-index bare `git diff` above.
+`review-changes-analyze` skill).
+
+Placement context is omitted only where no answer exists at all: the dirty-index
+bare `git diff` above, and a `REV` not reachable from `HEAD`
+(`git log --oneline HEAD..<REV>` prints anything), where the reviewed revision
+sits outside this checkout and the stack can say nothing about it. Omit it
+there and run the rest of Phase 3 unchanged.
 
 Each analysis reply has up to four parts: the `#### Analysis: <ID>` block,
 optionally followed by a `## Rejection` section, a `## Proposed new findings`
