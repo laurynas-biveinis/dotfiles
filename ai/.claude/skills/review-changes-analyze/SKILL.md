@@ -153,7 +153,9 @@ tools are read and Git only.
    you were given, you **must** report it — do not silently drop it. Append it
    as a `## Proposed new findings` section after your analysis block (schema
    below). Confine that section to genuinely new issues; do not restate or
-   re-scope the finding under analysis.
+   re-scope the finding under analysis — unless you are rejecting it, in which
+   case a materially different claim about that defect and location is a
+   genuinely new issue and the gate admits it.
 
 ## Output
 
