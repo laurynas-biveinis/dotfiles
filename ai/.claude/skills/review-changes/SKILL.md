@@ -43,11 +43,49 @@ mandatory safety control.
 
 ## Scope
 
+**Normalize before running a scope or a precedence probe.** Reject
+`--no-index` as described below before executing it. Otherwise derive a
+patch-producing command, preserving revisions, pathspecs, diff filters and
+merge mode:
+
+- Remove `--exit-code`, `--quiet`, `--name-only`, `--name-status`, `--check`,
+  and `--graph` when they occur as options before any `--` or
+  `--end-of-options` delimiter. These modes suppress patches, change a
+  successful status, or decorate patch headers.
+- Remove `--raw`, `--numstat`, `--patch-with-raw`, and `-z` as options
+  under the same delimiter rules. Their NUL-delimited records can hide a patch
+  header from the line-start check below.
+- Remove every `--output=<file>` and `--output <file>` option before any
+  option-ending delimiter, consuming the separate filename when present. This
+  keeps the patch on stdout and prevents a file write.
+- Add `--patch --no-color --line-prefix= --submodule=short --no-ext-diff`
+  and `--no-textconv --word-diff=none` to every shape. Also add
+  `--output-indicator-new=+ --output-indicator-old=-` and
+  `--output-indicator-context=' '` to restore the standard hunk markers. These
+  options force Git's own patch format with undecorated headers and submodule
+  updates as gitlink patches, without external diff or textconv helpers.
+  For `git show`, also add `--format=` and replace the revision argument with
+  the commit SHA obtained by resolving `<revision>^{commit}`. Peeling here
+  suppresses annotated-tag metadata without changing the commit being reviewed.
+- Reconstruct the command with existing options and their arguments first,
+  added options next, then revisions and finally pathspecs behind an explicit
+  `--`. Preserve each operand's role; do not turn revisions into pathspecs.
+  Keep any `--end-of-options` between the added options and revisions. Never
+  append added options after either delimiter or an implicit pathspec.
+
 Use this precedence to choose what to review:
 
 1. If `git diff --staged` shows changes, review those.
 1. Else, if `git diff` shows working-tree changes, review those.
 1. Else, review `HEAD`'s last commit (`git show HEAD`).
+
+Normalize both diff probes with the rules above before running them. Read each
+exit status before stdout: a failure stops with the failed-scope message below;
+a successful probe without a patch advances to the next candidate. Use the
+patch-header test below to decide that, not whether stdout is nonempty. Retain
+the selected probe's status and stdout for validation instead of running it
+again. An explicit user scope skips precedence and runs once through the same
+normalization and validation.
 
 The user may override with natural language ("review the last three
 commits"). Print the chosen scope at the top of the findings file. A range
@@ -74,6 +112,53 @@ multi-subagent run on the previous commit while the user's only new work goes
 unread. Confirm the scope with the user before dispatching there rather than
 stopping outright, since untracked scratch files alongside a genuine
 just-committed change are ordinary.
+
+**An empty or failed scope is a stop, not a converged review.** Before
+dispatching anything, reject a chosen scope that uses `--no-index`: it compares
+arbitrary filesystem paths, for which this workflow defines neither a repository
+baseline nor a post-image, so its mandatory provenance analysis cannot run.
+
+```text
+Review not run: the chosen scope (<command>) uses --no-index, which has no
+repository baseline for provenance.
+```
+
+Use the derived command as the scope command passed to every sub-step. Reuse a
+selected probe's captured status and stdout; otherwise run the normalized chosen
+scope once. Read its exit status before interpreting stdout. Any non-zero is
+a failed scope — the revision never resolved, a mistyped name, or a deleted
+branch — so quote the failing Git invocation's message verbatim. In the stop
+message, keep the originally chosen command so the user sees the selection they
+requested; print the derived command as the reviewed scope because it is what
+every reviewer runs. Either stop below happens before any `<topic>` is derived
+and writes no `/tmp/review-changes-*` file:
+
+```text
+Review not run: the chosen scope (<command>) failed: <Git's message verbatim>.
+```
+
+After a successful run, judge emptiness only by patch headers in stdout:
+`diff --git`, `diff --cc`, or `diff --combined` at the start of a line. Do not
+use total output or a diffstat: `git show` can print object metadata without a
+patch, and a merge's combined diff can report files and insertions under
+`--stat`, `--shortstat` or `--numstat` while emitting no patch. If no patch
+header appears, stop: an empty scope reaching Phase 4 as "no findings" is a
+clean bill of health for code nobody read.
+
+```text
+Review not run: the chosen scope (<command>) selected no changes.
+```
+
+That guards an `--allow-empty` commit, a range whose endpoints do not differ, a
+first-parent merge diff on a merge whose tree equals its first parent's, an
+unmatched pathspec (which exits 0, so it arrives here rather than as a failed
+scope), and a user-requested
+working-tree or staged scope whose own probe — `git diff` or
+`git diff --staged` — is empty. Under the default precedence a tree with no
+tracked modifications instead selects `git show HEAD`, so it reaches this stop
+only through the commit-shaped cases already listed. Untracked files leave both
+probes empty, so an untracked-only tree takes whichever of those two routes
+applies, its new files read by nothing either way.
 
 **The pre-image baseline.** Derive it once here, alongside the scope, and pass
 it to every draft, verify, and analyze dispatch as a declared input — it is a
@@ -307,7 +392,8 @@ re-draft pass. Spawn one `review-changes-step` subagent **blind** — unlike
 verify/analyze it is handed no prior draft paths or cross-round state, only
 `N`, the scope, the pre-image baseline, and any verbatim caller requirements
 (see **No orchestration steering** above) — via the dispatch convention above —
-e.g. `N = 3`, `scope = git show HEAD`, `baseline = HEAD~ (<sha>)`. It must use
+e.g. `N = 3`, `scope = git show <sha>` with the options derived above,
+`baseline = HEAD~ (<parent-sha>)`. It must use
 `N` as the round index for every `R<N>-<NNN>` ID it assigns. It returns that
 pass's draft — the scope line and `R<N>-<NNN>` finding blocks.
 
@@ -836,7 +922,7 @@ using this structure:
 ```markdown
 # Code Review: <topic>
 
-Scope: <the chosen scope command, with any revision it names pinned to its
+Scope: <the derived reviewed scope command, with every revision pinned to its
 SHA>
 
 Baseline: <the value derived in **Scope**, rendered as it was derived: every
