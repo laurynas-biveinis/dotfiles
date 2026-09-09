@@ -113,39 +113,14 @@ tools are read and Git only.
    alike. Only when no stack commit is implicated do you need to place the fix
    against trunk. First, if the finding's provenance is `introduced` and the
    scope is uncommitted, the fix lives in that uncommitted change: recommend
-   (d) and skip the blame. Otherwise settle the removal
-   question first: where the defect exists because something was **deleted** —
-   the fix restores it — the deleting commit owns it and no surviving
-   neighbour does, so blaming the neighbours places the fix on whoever happens
-   to sit beside the hole. Find the deleting commit with
-   `git log -m -p -S'<removed text>' <REV> -- <path>`, taking the newest hit
-   whose diff shows the removal from the affected region. `-m` is not optional:
-   `git log` computes no merge diffs by default, so a deletion authored by a
-   merge resolution is otherwise invisible and ownership reads as unresolved.
-   Two escalations follow, in order, before ownership counts as unresolved.
-   `-S` counts a text's occurrences across the file, so a removal that
-   preserves that count — a guard moved from one function to another in the
-   same file — never hits it: re-run as
-   `git log -m -p -G'<escaped pattern>' <REV> -- <path>`, which matches changed
-   lines instead, and read each hit's deletion in the affected region, since
-   `-G` also returns additions and unrelated matches. Then drop the pathspec —
-   `git log -m -p -S'<removed text>' <REV>` — because `<path>` names the file
-   at `REV` and so cannot reach a deletion made before a later rename; tie each
-   candidate back to the affected region through the intervening history, never
-   on matching text alone. A merge hit is not yet authorship either: enumerate
-   its parents with `git rev-parse <merge>^@` and read
-   `git diff <parent> <merge> -- <path>` for each, attributing the removal to
-   the merge only where it deletes the content against **every** parent. Where
-   it deletes against some parents and not others the merge inherited the
-   deletion, and the branch that supplied it is the parent whose image
-   **already lacks** the content in the affected region — not the parent the
-   diff shows the removal against, which is the one that still had it. Where
-   several parents already lack it, inspect each of their histories rather than
-   naming an owner prematurely.
-   Only where no removal is in play blame the affected lines at the supplied
-   blame-target revision `REV` (not the working tree) with
-   `git blame -L <start>,<end> <REV> -- <path>`, or use
-   `git log -L <start>,<end>:<path> <REV>` — but `REV` need not hold the
+   (d) and skip the blame. Otherwise settle the removal question first: where
+   the defect exists because something was **deleted** — the fix restores it —
+   the deleting commit owns it and no surviving neighbour does, so blaming the
+   neighbours places the fix on whoever happens to sit beside the hole. Run the
+   removal-direction search below before any blame, and only where no removal
+   is in play blame the affected lines at the supplied blame-target revision
+   `REV` (not the working tree) with
+   `git blame -L <start>,<end> <REV> -- <path>` — but `REV` need not hold the
    reviewed lines in final form, since under an uncommitted scope it is the
    pre-image, so the `Location:` numbers need not index it (see the **Input**
    bullet). Find the region's counterpart in `REV` by content and pass _those_
@@ -156,9 +131,51 @@ tools are read and Git only.
    Where nothing resolves, do **not** read that as the content being
    uncommitted: a committed removal leaves neither target nor anchor at `REV`
    while still owning the defect and still being amendable, so work back
-   through the removal ladder above — `-S` on the path, `-G` on the path, then
-   `-S` with no pathspec — and if ownership is still unresolved, say so rather
-   than defaulting to (d). (a) If that commit is
+   through the removal ladder below — `-S` on the path, `-G` on the path, then
+   `-S` and finally `-G` with no pathspec — and if ownership is still
+   unresolved, say so rather than defaulting to (d).
+   For a fix restoring something a commit removed, blame cannot see it: use
+   `git log -m -p -S'<removed text>' <REV> -- <path>`, or
+   `git log -L <start>,<end>:<path> <REV>` over a range that brackets the site.
+   `-m` is not optional here: `git log` computes no merge diffs by default, so
+   a deletion authored by a merge resolution is otherwise invisible and
+   ownership reads as unresolved. Three escalations follow, in order, before
+   ownership counts as unresolved. `-S` counts a text's occurrences across the
+   file, so a removal that preserves that count — a guard moved from one
+   function to another in the same file — never hits it: re-run as
+   `git log -m -p -G'<escaped pattern>' <REV> -- <path>`, which matches changed
+   lines instead, and read each hit's deletion in the affected region, since
+   `-G` also returns additions and unrelated matches. Then drop the pathspec —
+   `git log -m -p -S'<removed text>' <REV>` — because `<path>` names the file
+   at `REV` and so cannot reach a deletion made before a later rename; tie each
+   candidate back to the affected region through the intervening history, never
+   on matching text alone. If no validated deleting commit emerges, run
+   `git log -m -p -G'<escaped pattern>' <REV>` without a pathspec before
+   declaring ownership unresolved: an occurrence-preserving move before a
+   rename defeats both the path-local `-G` and the unrestricted `-S` searches.
+   Apply the same region, rename, and merge checks to these candidates.
+   A merge hit is not yet authorship either: enumerate
+   its parents with `git rev-parse <merge>^@` and read
+   `git diff <parent> <merge> -- <path>` for each, attributing the removal to
+   the merge only where it deletes the content against **every** parent. Where
+   it deletes against some parents and not others the merge inherited the
+   deletion, and the branch that supplied it is the parent whose image
+   **already lacks** the content in the affected region — not the parent the
+   diff shows the removal against, which is the one that still had it. Where
+   several parents already lack it, inspect each of their histories rather than
+   naming an owner prematurely.
+   Pickaxe matches the exact removed string, so when the fix rephrases or
+   re-indents it, prefer the bracketing `-L` form. The [attribution
+   procedure](../review-changes/references/provenance-attribution.md)
+   carries pickaxe search and merge-propagation caveats; apply those in the
+   removal direction, with `<REV>` as the search endpoint. Exclude its
+   containment and post-image blame tests: those classify surviving content.
+   Validate removal candidates by their deletion diffs in the affected region
+   and that region's intervening history through `<REV>`, including renames
+   and merge propagation. Take the most recent commit whose diff shows the
+   removal from `<path>` or an earlier name of it — `git log` lists newest
+   first, so the first such hit that survives those checks. Whichever route
+   identified it, you now hold the owning commit. (a) If that commit is
    **one of the stack commits** and the fix corrects its own change, recommend
    amending it — name the specific SHA + subject, and say the recommendation
    holds only if that commit was never published, since the stack is a
