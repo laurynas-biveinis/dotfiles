@@ -1,8 +1,49 @@
 #!/bin/zsh
 
-set -eu
+set -euo pipefail
 
 echo "Updating outdated global Python packages, if any"
-asdf reshim python
-pip list --outdated | tail -n +3 | (grep " " || [ $? = 1 ]) |
-	cut -d " " -f 1 | PIP_REQUIRE_VIRTUALENV="0" xargs -n1 pip install -U
+# 01macupdate upgrades Homebrew's Python minutes earlier in the same nightly
+# run, which has left these shims stale before (75ead12ff).
+asdf reshim python || echo "pythonupdate: asdf reshim failed (above)" >&2
+
+# Everything below drives pip through that shim, so stop once here rather than
+# let four steps rediscover the same breakage. `return`, never `exit`: the
+# nightly runner sources this script, and exiting would end the whole run.
+if ! pip --version >/dev/null; then
+	echo "pythonupdate: pip is not runnable (above); skipping update" >&2
+	return 0
+fi
+
+# Sweep roots only: `xargs -n1` resolves each package alone, so a dependency can
+# be walked past its dependent's ceiling with only a warning — astroid left
+# pylint crashing on every file check.sh gave it. `--not-required` is
+# extras-blind, so the packages python-lsp-server[all] caps stay roots; exclude
+# them and the resolve below places them instead of repairing them afterwards.
+pip list --outdated --not-required --exclude autopep8 --exclude flake8 \
+	--exclude pydocstyle --exclude pylint --exclude whatthepatch |
+	tail -n +3 | (grep " " || [ $? = 1 ]) | cut -d " " -f 1 |
+	PIP_REQUIRE_VIRTUALENV="0" xargs -n1 pip install -U ||
+	echo "pythonupdate: package upgrade sweep failed (above)" >&2
+
+# One pass weighing every pin that must bind together. Two rules pick the names:
+# a package whose ceilings the sweep cannot see, and a package nothing forces
+# forward — pip defaults to --upgrade-strategy only-if-needed, so an unnamed one
+# that still satisfies never moves again. Naming is ceiling-safe only when
+# everything capping a package is named too; numpy stays out because scipy caps
+# it and is not here. Derived from setup-macos-python.sh's list by those rules.
+PIP_REQUIRE_VIRTUALENV="0" pip install -U "python-lsp-server[all]" pylsp-mypy \
+	python-lsp-isort pyls-memestra pylsp-rope python-lsp-ruff \
+	python-lsp-black autopep8 flake8 pycodestyle pydocstyle pyflakes \
+	pylint whatthepatch jedi rope black isort mypy ruff ||
+	echo "pythonupdate: global tool re-resolution failed (above)" >&2
+
+# Publish this run's console-script churn.
+asdf reshim python ||
+	echo "pythonupdate: post-install asdf reshim failed (above)" >&2
+
+# Two named packages can still resolve into mutual conflict, and pip check is
+# extras-blind in the same way the sweep is. Every step above reports instead of
+# exiting, for the sourcing runner's sake, so this script cannot fail and
+# `Nightly completed!` no longer implies that it succeeded.
+pip check || echo "pythonupdate: pip check reported problems (above)" >&2
