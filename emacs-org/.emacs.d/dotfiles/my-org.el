@@ -114,10 +114,6 @@ Sets up keybindings and adjusts the fill column."
             nil t))
 (add-hook 'org-mode-hook #'dotfiles--org-mode-hook)
 
-;; Disable org-element cache to avoid AVL tree infinite loop bug in Org 9.7.x
-;; https://list.orgmode.org/orgmode/ (Oct 2025 reports)
-(setq org-element-use-cache nil)
-
 ;;; Editing, navigation, folding, state changes
 (setq org-use-speed-commands t
       org-M-RET-may-split-line '((default . nil))
