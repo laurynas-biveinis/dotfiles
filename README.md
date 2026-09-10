@@ -70,7 +70,6 @@ Unfortunately, that is not always possible.
 [lsp-treemacs](https://github.com/emacs-lsp/lsp-treemacs)
 [calfw](https://github.com/kiwanami/emacs-calfw)
 [which-key](https://github.com/justbur/emacs-which-key)
-[keyfreq](https://github.com/dacap/keyfreq)
 [iedit](https://github.com/victorhge/iedit)
 [eldoc-cmake](https://github.com/ikirill/eldoc-cmake)
 [aggressive-indent-mode](https://github.com/Malabarba/aggressive-indent-mode)

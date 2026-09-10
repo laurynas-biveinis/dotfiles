@@ -21,7 +21,7 @@
 		       fancy-compilation flycheck
 		       flycheck-status-emoji gcmh git-gutter-fringe
 		       git-messenger git-modes iedit indent-bars
-		       info-colors keyfreq lsp-mode lsp-treemacs
+		       info-colors lsp-mode lsp-treemacs
 		       lsp-ui lua-mode magit magit-todos markdown-mode
 		       mcp-server-lib mu4e-autotask org-autotask
 		       page-break-lines plantuml-mode prism projectile

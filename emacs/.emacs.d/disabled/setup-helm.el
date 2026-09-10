@@ -164,14 +164,6 @@ CANDIDATES is the list of candidates."
 ;; `helm' and minor-mode collapsing
 (add-to-list 'mode-line-collapse-minor-modes 'helm-mode)
 
-;; `helm' and `keyfreq'
-(add-to-list 'keyfreq-excluded-commands helm-next-line
-             helm-maybe-exit-minibuffer helm-delete-char-backward helm-mini
-             helm-M-x helm-ff-RET helm-projectile-switch-project
-             helm-previous-line helm-keyboard-quit helm-find-files
-             helm-find-files-up-one-level
-             helm-helm-ff-delete-char-backward-with-subkeys)
-
 ;; Global keybindings
 (require 'helm-command)
 (require 'helm-bookmark)
