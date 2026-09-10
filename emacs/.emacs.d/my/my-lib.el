@@ -594,8 +594,8 @@ trailing blank line, so the separator before the next entry survives.
 Accept a folded heading: callers reach the entry through a marker from
 `dotfiles--store-find-order-task' and do not control the buffer's fold state.
 On a folded heading, taking the nearest visible ancestor instead would append
-the link under \"Tasks\" rather than under the order task.  Keep appended links
-inside legacy outline overlays, including beneath overlapping drawer folds."
+the link under \"Tasks\" rather than under the order task.  Keep an appended
+link inside an existing outline fold, including at its end boundary."
   (declare (ftype (function (string string) boolean)))
   (org-back-to-heading t)
   (let ((end (save-excursion (org-end-of-subtree t) (point))))
@@ -605,13 +605,18 @@ inside legacy outline overlays, including beneath overlapping drawer folds."
               (save-excursion
                 (search-forward (concat "mu4e:msgid:" msgid "]") end t)))
       (goto-char end)
-      ;; A drawer can mask the effective invisible property of an outline fold.
-      (let ((folded (cl-loop for overlay in (overlays-at (1- end))
-                             thereis (eq (overlay-get overlay 'invisible)
-                                         'outline))))
+      ;; Outline folds are not rear-sticky, so appending can expose the link
+      ;; while its heading remains hidden.  Do not extend a drawer fold.
+      (let ((folded (if (fboundp 'org-fold-folded-p)
+                        (org-fold-folded-p (1- end) 'outline)
+                      (cl-loop for overlay in (overlays-at (1- end))
+                               thereis (eq (overlay-get overlay 'invisible)
+                                           'outline)))))
         (insert "\n" link)
         (when folded
-          (outline-flag-region end (point) t)))
+          (if (fboundp 'org-fold-region)
+              (org-fold-region end (point) t 'outline)
+            (outline-flag-region end (point) t))))
       t)))
 
 (defun dotfiles--org-task-top-level-p ()

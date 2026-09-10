@@ -220,6 +220,21 @@ Return a cons of the appender's return value and the resulting buffer text."
                   dotfiles--lib-test-append-link-org t)
                  (cons t dotfiles--lib-test-append-link-org-appended))))
 
+(ert-deftest dotfiles--org-append-mu4e-link-keeps-fold-boundary-hidden-test ()
+  (with-temp-buffer
+    (insert "* Container\n** TODO Target\nBody line.\n* After\n")
+    (org-mode)
+    (org-overview)
+    (dotfiles--lib-test-goto-line-matching "^\\*\\* TODO Target$")
+    (should (org-invisible-p))
+    (should (dotfiles--org-append-mu4e-link
+             "[[mu4e:msgid:new@example.com][New]]" "new@example.com"))
+    (dotfiles--lib-test-goto-line-matching "^\\[\\[mu4e:")
+    (should (org-invisible-p))
+    (should (equal (org-get-heading t t t t) "Target"))
+    (dotfiles--lib-test-goto-line-matching "^\\* After$")
+    (should-not (org-invisible-p))))
+
 (defun dotfiles--lib-test-append-link-over-legacy-drawer (folded)
   "Append a link after a legacy drawer, with an outline fold when FOLDED.
 Return whether the target heading, link, and following heading are hidden."
