@@ -160,7 +160,8 @@ The user may override with natural language ("review the last three
 commits"). Print the chosen scope at the top of the findings file. A range
 scope is a single diff, not a per-commit walk — `git diff A..B`, or
 `git diff A...B` for the three-dot form — whose pre-image the [shared
-provenance guidance](references/provenance.md) already names for each form.
+provenance guidance](references/provenance.md) already names for each form, and
+which carries merge-authored content that survives to `B`.
 
 **Untracked paths are in no diff**, so no scope command reaches them and none
 of the precedence rules above can select them. After choosing the scope, run
@@ -182,6 +183,80 @@ unread. Confirm the scope with the user before dispatching there rather than
 stopping outright, since untracked scratch files alongside a genuine
 just-committed change are ordinary.
 
+**A merge in the chosen scope.** Apply this selection only when the scope
+reviews a single commit's changes, including the default `git show HEAD` and
+equivalent commit comparisons such as `git diff <commit>^!`. Preserve
+`git diff <merge>` and `git diff --staged/--cached <merge>` as working-tree and
+index comparisons against that merge, subject to the existing conflict checks
+and normalization. Preserve explicitly selected endpoint comparisons as well.
+For a qualifying commit review, check whether that commit is a merge
+(`git log -1 --format=%P <commit>` lists more than one parent) before dispatching
+anything. If it is, say which of these you are reviewing rather than defaulting
+silently — they are different intents, and an empty diff means something
+different in each. A range scope reaches the merges inside it through the range
+command above, and a merge that precedence rules 1 and 2 would otherwise have
+caught uncommitted is stopped before the precedence runs.
+
+1. **Everything the merge brought in** — `git diff <commit>^1 <commit>`, which
+   diffs against the first parent and so carries every other side's work
+   whatever the parent count. Name the endpoints rather than writing
+   `git show --first-parent <commit>`: that form relies on `--first-parent`
+   overriding `git show`'s combined-diff default, which arrived with the
+   `--diff-merges` family in Git 2.31, and on older Git it yields the combined
+   diff instead, which can hide merged-in changes and trigger the empty-scope
+   stop below. This is the default, except for a back-merge:
+   when some other parent `<commit>^<n>` is already contained in trunk's
+   upstream and `<commit>^1` is not
+   (`git log --oneline <trunk>@{upstream}..<commit>^<n>` empty while the same
+   over `<commit>^1` is not — `<trunk>` as Phase 3 defines it below, `n`
+   ranging over the parents `%P` listed above, and `2` on the ordinary
+   two-parent merge), the merge integrated upstream history, so the
+   first-parent diff would review published work while the author's own commits
+   went unread. Default there to `git diff <commit>^<n> <commit>` — the
+   author's side, with that parent as its pre-image — and say which side is
+   already published, naming any other published parent the diff still carries.
+   Containment in trunk's upstream is narrower than published: a merge of a
+   branch that is pushed but outside trunk — a colleague's branch being
+   integrated — tests as not a back-merge and falls to the first-parent
+   default, as does a merge where no trunk or no upstream exists and the test
+   cannot run at all.
+1. **The merge's own resolution** — `git show <commit>`, a dense combined
+   comparison against all parents. It shows only files modified from every
+   parent and suppresses hunks choosing one of two parent variants unchanged.
+   Parent-selected conflict resolutions can be hidden, while automatic
+   combinations of nearby edits can appear. State these limits on the printed
+   scope line and preserve an explicit resolution-review request: do not
+   substitute an integration review when the comparison is empty. Use the
+   resolution-specific stop below instead.
+1. **One authored commit, on a named side** — a resolution step, then an
+   ordinary scope. Resolve the commit with
+   `git log --no-merges -1 --format=%H <commit>^<n> --not <every other parent>`,
+   where `^1` is the branch that received the merge and `^2` and up are each
+   branch it brought in, `n` ranging over the parents `%P` already listed; then
+   review it as `git show <sha>`. Excluding the other parents is what makes the
+   answer a commit that side alone contributed. `--first-parent` is compatible
+   with `--not`, but restricts traversal to the receiving lineage at each nested
+   merge and can omit exclusive commits reached through other parents. If that
+   lineage reaches excluded trunk without encountering an exclusive non-merge
+   commit, the combination returns nothing even when another parent leads to an
+   eligible commit. Without either, plain `git log --no-merges -1` takes the
+   newest non-merge commit by committer date, which is whichever side happens to
+   hold it. Run the
+   resolution and read it before substituting: a non-zero exit is a failed
+   scope, and empty output — a side that contributed nothing exclusive — is an
+   empty scope. Report either in the shapes below, naming the resolution
+   command, because a bare `git show` with an empty argument silently reviews
+   `HEAD`. Resolving first is also what keeps this intent ordinary downstream:
+   the printed scope names the actual commit, and its `REV` and pre-image
+   follow the `git show <commit>` rules with no exception anywhere.
+
+Intent 1, back-merge exception included, is the one the orchestrator picks
+unaided; intents 2 and 3 are entered only when the user's scope request names
+one, arriving through the natural-language override above, for which the
+intents' titles are the vocabulary. Each is a chosen scope in its own right —
+that is why the stop below has a clause about intent 2's empty diff — so
+announcing which one is in play names a decision, not a side note.
+
 **An empty or failed scope is a stop, not a converged review.** Before
 dispatching anything, reject a chosen scope that uses `--no-index`: it compares
 arbitrary filesystem paths, for which this workflow defines neither a repository
@@ -199,7 +274,7 @@ a failed scope — the revision never resolved, a mistyped name, or a deleted
 branch — so quote the failing Git invocation's message verbatim. In the stop
 message, keep the originally chosen command so the user sees the selection they
 requested; print the derived command as the reviewed scope because it is what
-every reviewer runs. Either stop below happens before any `<topic>` is derived
+every reviewer runs. Every stop below happens before any `<topic>` is derived
 and writes no `/tmp/review-changes-*` file:
 
 ```text
@@ -212,7 +287,14 @@ use total output or a diffstat: `git show` can print object metadata without a
 patch, and a merge's combined diff can report files and insertions under
 `--stat`, `--shortstat` or `--numstat` while emitting no patch. If no patch
 header appears, stop: an empty scope reaching Phase 4 as "no findings" is a
-clean bill of health for code nobody read.
+clean bill of health for code nobody read. For intent 2, use:
+
+```text
+Review not run: the combined comparison exposes no changes; this does not
+establish that no conflict resolution occurred.
+```
+
+For all other scopes, use:
 
 ```text
 Review not run: the chosen scope (<command>) selected no changes.
@@ -221,7 +303,7 @@ Review not run: the chosen scope (<command>) selected no changes.
 That guards an `--allow-empty` commit, a range whose endpoints do not differ, a
 first-parent merge diff on a merge whose tree equals its first parent's, an
 unmatched pathspec (which exits 0, so it arrives here rather than as a failed
-scope), and a user-requested
+scope), an intent-3 resolution that named no commit, and a user-requested
 working-tree or staged scope whose own probe — `git diff` or
 `git diff --staged` — is empty. Under the default precedence a tree with no
 tracked modifications instead selects `git show HEAD`, so it reaches this stop
@@ -752,9 +834,13 @@ Where placement applies, compute the stack with allowed commands only:
   bare `git diff` over a clean index, per the paragraph above — the reviewed
   lines are not in any revision, so the criterion has no instance and `REV` is
   `HEAD` — the pre-image, which is where a `pre-existing-*` defect lives and the
-  only thing placement is asked about there. `REV` is a pure function of the
-  already-chosen scope and is identical for every analysis subagent, so compute
-  it once here rather than having each subagent re-derive it.
+  only thing placement is asked about there. The merge intents need no exception
+  of their own: each is one of those shapes by the time it is dispatched — the
+  first-parent and back-merge diffs as endpoint diffs whose right endpoint is
+  `<commit>`, and intent 3 as a `git show` of the commit its resolution step
+  already named. `REV` is a pure function of the already-chosen scope and is
+  identical for every analysis subagent, so compute it once here rather than
+  having each subagent re-derive it.
 
 An empty stack is a placement answer, not the absence of one: nothing is
 amendable from this checkout, so every owned defect routes to a new commit.
