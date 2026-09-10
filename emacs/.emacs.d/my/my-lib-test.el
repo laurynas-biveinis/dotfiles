@@ -220,6 +220,47 @@ Return a cons of the appender's return value and the resulting buffer text."
                   dotfiles--lib-test-append-link-org t)
                  (cons t dotfiles--lib-test-append-link-org-appended))))
 
+(defun dotfiles--lib-test-append-link-over-legacy-drawer (folded)
+  "Append a link after a legacy drawer, with an outline fold when FOLDED.
+Return whether the target heading, link, and following heading are hidden."
+  (let ((org-fold-core-style 'overlays))
+    (with-temp-buffer
+      (insert "* Container\n** TODO Target\n:PROPERTIES:\n:ID: target\n:END:\n* After\n")
+      (org-mode)
+      (add-to-invisibility-spec '(outline . t))
+      (add-to-invisibility-spec '(org-hide-drawer . t))
+      (dotfiles--lib-test-goto-line-matching "^:END:$")
+      (let ((end (line-end-position)))
+        (goto-char (point-min))
+        (when folded
+          (overlay-put (make-overlay (line-end-position) end nil t)
+                       'invisible 'outline))
+        (dotfiles--lib-test-goto-line-matching "^:PROPERTIES:$")
+        (overlay-put (make-overlay (line-end-position) end nil t)
+                     'invisible 'org-hide-drawer)
+        (should (eq (get-char-property (1- end) 'invisible) 'org-hide-drawer)))
+      (dotfiles--lib-test-goto-line-matching "^\\*\\* TODO Target$")
+      (let ((target (point)))
+        (should (eq (not (null (invisible-p target))) folded))
+        ;; Exercise legacy detection while retaining the installed folding API.
+        (cl-letf (((symbol-function 'org-fold-folded-p) nil))
+          (should (dotfiles--org-append-mu4e-link
+                   "[[mu4e:msgid:new@example.com][New]]" "new@example.com")))
+        (dotfiles--lib-test-goto-line-matching "^\\[\\[mu4e:")
+        (let ((link-hidden (not (null (invisible-p (point))))))
+          (dotfiles--lib-test-goto-line-matching "^\\* After$")
+          (list (not (null (invisible-p target)))
+                link-hidden
+                (not (null (invisible-p (point))))))))))
+
+(ert-deftest dotfiles--org-append-mu4e-link-legacy-nested-drawer-test ()
+  (should (equal (dotfiles--lib-test-append-link-over-legacy-drawer t)
+                 '(t t nil))))
+
+(ert-deftest dotfiles--org-append-mu4e-link-legacy-drawer-only-test ()
+  (should (equal (dotfiles--lib-test-append-link-over-legacy-drawer nil)
+                 '(nil nil nil))))
+
 ;; `fold' nil only: the fold axis is carried three times already, and the
 ;; subtree-end scan is text-based and indifferent to visibility.
 (ert-deftest dotfiles--org-append-mu4e-link-keeps-trailing-blank-line-test ()

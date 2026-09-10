@@ -594,7 +594,8 @@ trailing blank line, so the separator before the next entry survives.
 Accept a folded heading: callers reach the entry through a marker from
 `dotfiles--store-find-order-task' and do not control the buffer's fold state.
 On a folded heading, taking the nearest visible ancestor instead would append
-the link under \"Tasks\" rather than under the order task."
+the link under \"Tasks\" rather than under the order task.  Keep appended links
+inside legacy outline overlays, including beneath overlapping drawer folds."
   (declare (ftype (function (string string) boolean)))
   (org-back-to-heading t)
   (let ((end (save-excursion (org-end-of-subtree t) (point))))
@@ -604,7 +605,13 @@ the link under \"Tasks\" rather than under the order task."
               (save-excursion
                 (search-forward (concat "mu4e:msgid:" msgid "]") end t)))
       (goto-char end)
-      (insert "\n" link)
+      ;; A drawer can mask the effective invisible property of an outline fold.
+      (let ((folded (cl-loop for overlay in (overlays-at (1- end))
+                             thereis (eq (overlay-get overlay 'invisible)
+                                         'outline))))
+        (insert "\n" link)
+        (when folded
+          (outline-flag-region end (point) t)))
       t)))
 
 (defun dotfiles--org-task-top-level-p ()
