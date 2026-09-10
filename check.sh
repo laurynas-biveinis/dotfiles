@@ -14,8 +14,32 @@ BASH_SYNTAX_FAILED=0
 
 # Shell
 
+# One file per invocation: `<shell> -n f1 f2` parses f1 and turns the rest into
+# positional parameters — rc 0, no diagnostic — in bash, sh and zsh alike. The
+# stages below do take file lists, so collapsing this loop reads as cleanup;
+# that is how the old multi-file call spent ten months parsing check.sh alone.
+# Gate on output as well as status: Bash 3.2 diagnoses a nested `(' in an array
+# assignment yet exits 0. Two things this stage still does not prove: `bash -n`
+# uses the Bash grammar whatever the shebang says, so POSIX conformance of the
+# #!/bin/sh scripts is shellcheck's SC3xxx, not this stage's; and it is silent
+# on an unterminated here-document. shellcheck -x and shfmt -d reject both,
+# which is why gating on output does not make -n an oracle.
+syntax_check() {
+	local interpreter="$1"
+	shift
+	local file output failed=0
+	for file in "$@"; do
+		output="$("$interpreter" -n "$file" 2>&1)" || failed=1
+		if [ -n "$output" ]; then
+			printf '%s\n' "$output" >&2
+			failed=1
+		fi
+	done
+	return "$failed"
+}
+
 echo -n "Checking Bash syntax... ${BASH_FILES[*]} "
-if bash -n "${BASH_FILES[@]}"; then
+if syntax_check bash "${BASH_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "Bash syntax check failed!"
@@ -44,7 +68,7 @@ else
 fi
 
 echo -n "Checking Zsh syntax... ${ZSH_FILES[*]} "
-if zsh -n "${ZSH_FILES[@]}"; then
+if syntax_check zsh "${ZSH_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "Zsh syntax check failed!"
