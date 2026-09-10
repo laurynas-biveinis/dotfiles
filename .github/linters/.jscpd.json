@@ -12,7 +12,7 @@
     "**/zsh/.p10k.zsh"
   ],
   "ignorePattern": [
-    "(?s)description: >-\\n  Internal step of review-changes:.*?Glob"
+    "(?s)description: >-\\n  Internal step of inspect-changes:.*?Glob"
   ],
   "absolute": true
 }

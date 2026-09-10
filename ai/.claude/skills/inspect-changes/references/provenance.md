@@ -149,7 +149,7 @@ the tag follows the defect, not the line.
    Attribution — naming the commit that owns the content — is needed only to
    confirm a relocation and to resolve a path the scope's diff does not cover.
    The analysis step's placement question is answered at the blame-target
-   `REV` instead, per the `review-changes-analyze` skill, so the procedure does
+   `REV` instead, per the `inspect-changes-analyze` skill, so the procedure does
    not apply to it, nor to a first-pass tag — a draft finding's, or a
    `## Proposed new findings` entry's from any tier — which a cheap baseline
    read settles. Where it does apply, the commands and their traps are in the

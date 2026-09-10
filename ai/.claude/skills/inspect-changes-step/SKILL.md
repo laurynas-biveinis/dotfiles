@@ -1,6 +1,7 @@
 ---
+name: inspect-changes-step
 description: >-
-  Internal step of review-changes: perform one code-review pass over a
+  Internal step of inspect-changes: perform one code-review pass over a
   given scope and return the draft findings.
 user-invocable: false
 allowed-tools: >-
@@ -40,7 +41,7 @@ Your invocation prompt supplies:
   `git diff A..B`). Run it to see the changes to review.
 - The **pre-image baseline** to tag provenance against, if supplied.
 - Any **caller requirements**, if present. Apply the
-  [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
+  [shared caller-requirements guidance](../inspect-changes/references/caller-requirements.md).
 
 You do a single fresh pass each invocation; you carry no state between runs.
 
@@ -150,11 +151,11 @@ Return the scope line first — including the round index, e.g.
 - IDs use the format `R<N>-<NNN>`, where `N` is the round index you were given
   and `NNN` runs in per-round discovery order (`001`, `002`, …).
 - Grade every finding's severity per the
-  [shared severity guidance](../review-changes/references/severity.md).
+  [shared severity guidance](../inspect-changes/references/severity.md).
 - Calibrate every finding's confidence per the
-  [shared confidence guidance](../review-changes/references/confidence.md).
+  [shared confidence guidance](../inspect-changes/references/confidence.md).
 - Classify every finding's provenance per the
-  [shared provenance guidance](../review-changes/references/provenance.md),
+  [shared provenance guidance](../inspect-changes/references/provenance.md),
   which says when the scope's diff settles it, when Git history is needed, and
   how cheap a first-pass tag may be. Tag it from the diff and a cheap baseline
   read; never run history attribution at this tier.

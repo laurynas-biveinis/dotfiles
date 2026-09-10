@@ -20,7 +20,7 @@ finding, judged semantically rather than by literal field equality. Where it
 names the same defect and location but makes a materially different claim, emit
 it and let the gate decide: a duplicate the gate then drops costs one candidate,
 whereas suppressing here is terminal. The finding you are analyzing is the
-exception — `review-changes-analyze` governs what you may propose about it.
+exception — `inspect-changes-analyze` governs what you may propose about it.
 
 **At the gate**, suppress a proposal identifying the same defect at the same
 location as a corpus finding, regardless of severity, confidence, provenance,

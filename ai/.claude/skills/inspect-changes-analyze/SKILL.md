@@ -1,6 +1,7 @@
 ---
+name: inspect-changes-analyze
 description: >-
-  Internal step of review-changes: deeply analyze one kept finding and
+  Internal step of inspect-changes: deeply analyze one kept finding and
   return its analysis block (or a rejection).
 user-invocable: false
 allowed-tools: >-
@@ -44,7 +45,7 @@ Your invocation prompt supplies, for the single finding you must analyze:
   Procedure below and change one only through `## Correction`, never by
   restating it in the analysis body.
 - Any **caller requirements**, if present. Apply the
-  [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
+  [shared caller-requirements guidance](../inspect-changes/references/caller-requirements.md).
 - **Only when a placement decision applies** (the caller supplied a stack and
   a `REV`): the **stack** as a list of SHA + subject, each entry carrying
   neither, either, or both of `[behind a merge]` and `[merge commit]`, and the
@@ -61,7 +62,7 @@ Your invocation prompt supplies, for the single finding you must analyze:
   locate the defect in `REV` by content, and note that the index holds the
   reviewed change, so amending there is not a bare `git commit --amend`.
 - Existing **prior draft paths**. Follow the
-  [shared prior-draft guidance](../review-changes/references/prior-drafts.md)
+  [shared prior-draft guidance](../inspect-changes/references/prior-drafts.md)
   when filtering issues discovered during analysis.
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
@@ -92,11 +93,11 @@ tools are read and Git only.
    positives, not disagreements of emphasis or severity. You can only reject;
    you cannot revive a finding verification dropped.
 1. Re-assess the verdict's **provenance** (per the
-   [shared provenance guidance](../review-changes/references/provenance.md)),
+   [shared provenance guidance](../inspect-changes/references/provenance.md)),
    **severity** (per the
-   [shared severity guidance](../review-changes/references/severity.md)), and
+   [shared severity guidance](../inspect-changes/references/severity.md)), and
    **confidence** (per the
-   [shared confidence guidance](../review-changes/references/confidence.md))
+   [shared confidence guidance](../inspect-changes/references/confidence.md))
    against what your deeper study found. When one of the three is
    wrong, append a `## Correction` section (schema below) carrying only the
    fields you are correcting, and state the reasoning in your analysis body as
@@ -169,7 +170,7 @@ tools are read and Git only.
    naming an owner prematurely.
    Pickaxe matches the exact removed string, so when the fix rephrases or
    re-indents it, prefer the bracketing `-L` form. The [attribution
-   procedure](../review-changes/references/provenance-attribution.md)
+   procedure](../inspect-changes/references/provenance-attribution.md)
    carries pickaxe search and merge-propagation caveats; apply those in the
    removal direction, with `<REV>` as the search endpoint. Exclude its
    containment and post-image blame tests: those classify surviving content.
@@ -217,7 +218,7 @@ tools are read and Git only.
    Provenance and placement can identify different owning commits. Determine
    provenance from whether the defect already exists in the scope's pre-image,
    including when introduced by the baseline commit itself, per the
-   [shared provenance guidance](../review-changes/references/provenance.md).
+   [shared provenance guidance](../inspect-changes/references/provenance.md).
    Placement follows the fix's target and cases (a)–(d) above, including the
    candidate-stack and never-published conditions for amendment. Compare blame
    results for consistency only when the revision, region, and attribution
@@ -296,7 +297,7 @@ carries an analysis block: never on a deferral, and never with a `## Rejection`
 
 If — and only if — analysis surfaced a genuinely new issue, append a
 `## Proposed new findings` section after the analysis block, following the
-[shared output-section contract](../review-changes/references/shared-output-sections.md).
+[shared output-section contract](../inspect-changes/references/shared-output-sections.md).
 
 `## Rejection`, `## Correction`, `## Proposed new findings`, and
 `## Experiment requests` are the only higher-level (`##`) headings allowed in a
@@ -309,7 +310,7 @@ rejecting analyst that also spotted a genuinely different issue still reports it
 ## Experiment requests
 
 Follow the [shared experiment-request format and safety
-constraints](../review-changes/references/shared-output-sections.md). Request
+constraints](../inspect-changes/references/shared-output-sections.md). Request
 runtime evidence when it would sharpen the analysis — **including whether a
 suggested action or one of your options is actually feasible given the tooling,
 environment, or APIs, not only whether the finding is valid**. Return the

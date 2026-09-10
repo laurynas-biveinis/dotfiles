@@ -1,6 +1,7 @@
 ---
+name: inspect-changes-verify
 description: >-
-  Internal step of review-changes: verify one draft finding against the
+  Internal step of inspect-changes: verify one draft finding against the
   code and return its verdict block.
 user-invocable: false
 allowed-tools: >-
@@ -38,12 +39,12 @@ Your invocation prompt supplies, for the single finding you must verify:
   `git diff A..B`). Run it to see the reviewed change.
 - The **pre-image baseline** to re-derive provenance against, if supplied.
 - Paths of **existing prior drafts**. Use the
-  [shared prior-draft guidance](../review-changes/references/prior-drafts.md)
+  [shared prior-draft guidance](../inspect-changes/references/prior-drafts.md)
   to screen issues discovered during verification.
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
 - Any **caller requirements**, if present. Apply the
-  [shared caller-requirements guidance](../review-changes/references/caller-requirements.md).
+  [shared caller-requirements guidance](../inspect-changes/references/caller-requirements.md).
 
 ## Procedure
 
@@ -53,7 +54,7 @@ files** — your tools are read and Git only.
 1. Independently confirm the finding by reading the code, following references,
    or consulting Git history. Do not hypothesize. Before deciding, run rule 3's
    in-image check from the [shared provenance
-   guidance](../review-changes/references/provenance.md): a site in neither the
+   guidance](../inspect-changes/references/provenance.md): a site in neither the
    pre-image nor the post-image is outside the reviewed content, and the rule's
    re-location half can move `Final location:` onto in-image content that
    depends on it, which is why the check belongs here rather than after the
@@ -70,7 +71,7 @@ files** — your tools are read and Git only.
    (give that as the reason) rather than keeping it as a zero-action
    SUGGESTION.
 1. Re-derive the finding's confidence from the evidence per the
-   [shared confidence guidance](../review-changes/references/confidence.md),
+   [shared confidence guidance](../inspect-changes/references/confidence.md),
    rather than adjusting the draft's number. On either outcome the number
    grades the evidence for the finding's claim, not the verdict you reach
    about it. Give the evidence that settled it in `Verification trace:`, and
@@ -79,14 +80,14 @@ files** — your tools are read and Git only.
    should usually become a `drop` — a gate on the number, not a fourth way of
    failing verification.
 1. On `keep`, re-derive the finding's severity per the
-   [shared severity guidance](../review-changes/references/severity.md), rather
+   [shared severity guidance](../inspect-changes/references/severity.md), rather
    than inheriting the draft's grade. When your severity differs from the
    draft's, say so in `Verification trace:` and give the consequence that
    settled it.
 1. On `keep`, re-derive the finding's provenance per the
-   [shared provenance guidance](../review-changes/references/provenance.md).
+   [shared provenance guidance](../inspect-changes/references/provenance.md).
    Where that guidance sends you to attribution, read the [attribution
-   procedure](../review-changes/references/provenance-attribution.md) before
+   procedure](../inspect-changes/references/provenance-attribution.md) before
    running any of its commands — several fail by printing a plausible wrong
    answer rather than an error. Yours is the only tier that runs them.
    Establish it yourself rather than inheriting the draft's tag; the draft's
@@ -119,12 +120,12 @@ Return one verdict block:
 
 Optionally append a `## Proposed new findings` section after the verdict,
 listing additional issues spotted while verifying. Follow the
-[shared output-section contract](../review-changes/references/shared-output-sections.md).
+[shared output-section contract](../inspect-changes/references/shared-output-sections.md).
 
 ## Experiment requests
 
 Follow the [shared experiment-request format and safety
-constraints](../review-changes/references/shared-output-sections.md). Request
+constraints](../inspect-changes/references/shared-output-sections.md). Request
 runtime evidence in two cases:
 
 - If the experiment is needed to **decide**, return the requests with **no**

@@ -4,7 +4,7 @@ Naming the commit that owns a piece of content, for the cases rule 3 of the
 [shared provenance guidance](provenance.md) routes here. **This file is for the
 verify tier.** The draft tier stops at the cheap baseline read and never runs
 history attribution; the analysis step answers its placement question at the
-blame-target `REV` instead, per the `review-changes-analyze` skill.
+blame-target `REV` instead, per the `inspect-changes-analyze` skill.
 
 Ask Git about the **baseline**, never the default: `git blame` with no
 revision annotates the working tree, and `git log -L` starts at `HEAD`. Under

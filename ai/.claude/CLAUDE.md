@@ -11,7 +11,7 @@ When presenting multiple options/alternatives to choose from, NEVER use Greek
 letters (α, β, γ, δ, ...). The user does not know the full Greek alphabet and
 it's awkward to type them in conversation.
 
-Never reference ephemeral IDs (review IDs from `review-changes` or similar
+Never reference ephemeral IDs (review IDs from `inspect-changes` or similar
 tools) in any artifact — duplicate the relevant finding text instead.
 
 ## Task Management
