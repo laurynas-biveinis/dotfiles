@@ -87,6 +87,75 @@ the selected probe's status and stdout for validation instead of running it
 again. An explicit user scope skips precedence and runs once through the same
 normalization and validation.
 
+**Before applying the default precedence**, run both checks below in order. For
+an explicit scope, run the unmerged-entry check whenever the current index is
+its pre-image or post-image, counting only paths selected by the normalized
+scope, including its diff filters and pathspecs. Run the merge-in-progress check
+whenever the scope uses the `HEAD`-to-index staged form. Revision-only commit and
+range scopes skip both. Each applicable check stops the review before any
+`<topic>` is derived, in the shape the stops below use:
+
+1. **Unmerged index entries.** Locate the repository root with
+   `git rev-parse --show-toplevel`; run
+   `git ls-files --unmerged --full-name -z` from there and deduplicate the paths
+   across index stages. Under default precedence, count all of them.
+   For an explicit scope, intersect them with paths selected by a probe derived
+   from the normalized diff: replace its output-format options with
+   `--name-only -z`, retaining its endpoints, selection options (including every
+   `--diff-filter` option in order), pathspecs, and external-helper safeguards.
+   Follow normalization's option-placement rules, but do not normalize this
+   probe again: that would remove its filename output.
+
+   Keep the probe in the scope's original working directory and convert its
+   NUL-delimited filenames to repository-relative paths before intersecting.
+   Restore only the prefix stripped by the effective relative-output setting,
+   accounting for `--relative=<prefix>`, `--relative`, `--no-relative`, their
+   option order, and `diff.relative`. For an implicit relative prefix, use
+   `git rev-parse --show-prefix` from that working directory. Running from a
+   subdirectory alone does not strip the prefix from diff output. Preserve
+   `--relative`: removing it can broaden selection and include excluded
+   conflicts. Count distinct paths in the normalized intersection. A command
+   failure uses the failed-scope stop below; an empty intersection proceeds to
+   the remaining checks and scope validation.
+
+   Let Git apply the filters, including lowercase exclusions and all-or-none
+   `*`; adding `--diff-filter=U` would change the selection. Intersect paths
+   rather than counting only `U` diff records: a working-tree diff can also
+   report an unmerged path as `M`, so `--diff-filter=M` can still select it.
+   Each selected unmerged path has no stage-0 blob for `git show :<path>` to
+   serve, and `git diff --staged` renders it as `* Unmerged path <file>` with
+   no patch. Conflicts excluded by the scope do not block its review. Any
+   conflicted operation produces these entries, not merges alone.
+
+   ```text
+   Review not run: unresolved conflicts remain (<n> unmerged paths); resolve
+   and stage them, then re-run.
+   ```
+
+1. **A merge in progress** (the path from
+   `git rev-parse --git-path MERGE_HEAD` exists). Resolve relative output
+   against the repository working directory and check that exact path with
+   `Read` or `Glob`, not by resolving the bare name as a revision. The path is
+   worktree-specific, so it detects linked-worktree merges while a branch or tag
+   named `MERGE_HEAD` cannot satisfy it. `git merge` stages the whole merge
+   result before stopping, so rule 1 selects `git diff --staged`, whose
+   pre-image is `HEAD` — the pre-merge tip. Every line the merged-in branch
+   contributed then reads as authored content and tags `introduced`, and
+   neither the diff nor `git status --porcelain` signals that a merge is
+   underway. Committing first supplies a stable merge object and parent
+   topology so the follow-up can choose the intended merge scope.
+
+   ```text
+   Review not run: a merge is in progress; commit it, then review the merge's
+   own resolution with `git show <merge>`, or review everything integrated from
+   the other side with `git diff <merge>^1 <merge>`.
+   ```
+
+   Cherry-pick, revert, and a rebase stopped at `edit` need no such check:
+   their staged content's pre-image genuinely is `HEAD`, since the author is
+   adopting it as their own commit. `git merge --squash` is the same case, and
+   records no `MERGE_HEAD`.
+
 The user may override with natural language ("review the last three
 commits"). Print the chosen scope at the top of the findings file. A range
 scope is a single diff, not a per-commit walk — `git diff A..B`, or
