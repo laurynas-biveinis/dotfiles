@@ -11,18 +11,18 @@ brew update
 
 readonly keep_old_package_list=(cmake icu4c protobuf)
 
-IFS=$'\n' readonly outdated_formulae=($(brew outdated --formula --quiet))
+readonly outdated_formulae=("${(f)$(brew outdated --formula --quiet)}")
 for outdated_formula in $outdated_formulae; do
-    if ! is_on_ac; then
-        echo Laptop is on battery: skipping brew upgrade of "$outdated_formula"
-        continue
-    fi
-    echo "brew upgrade $outdated_formula"
-    brew upgrade "$outdated_formula"
-    if (($keep_old_package_list[(Ie)$outdated_formula])); then
-        echo "Not cleaning up older brew $outdated_formula versions"
-    else
-        echo "brew cleanup $outdated_formula"
-        brew cleanup "$outdated_formula"
-    fi
+	if ! is_on_ac; then
+		echo Laptop is on battery: skipping brew upgrade of "$outdated_formula"
+		continue
+	fi
+	echo "brew upgrade $outdated_formula"
+	brew upgrade "$outdated_formula"
+	if (($keep_old_package_list[(Ie)$outdated_formula])); then
+		echo "Not cleaning up older brew $outdated_formula versions"
+	else
+		echo "brew cleanup $outdated_formula"
+		brew cleanup "$outdated_formula"
+	fi
 done

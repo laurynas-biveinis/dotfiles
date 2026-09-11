@@ -8,7 +8,6 @@
     "**/.emacs.d/elpa/**",
     "**/.venv/**",
     "**/mysql-work/.zsh.d/rc/mysql-work.sh",
-    "**/scripts/usr/bin/macupdate",
     "**/zsh/.p10k.zsh"
   ],
   "ignorePattern": [
