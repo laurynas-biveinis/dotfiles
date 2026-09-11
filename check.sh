@@ -190,6 +190,21 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+# Super-linter runs mypy from this same config file, so pointing at it is what
+# makes the two sides agree — mypy never discovers a config under
+# .github/linters on its own. The cache goes outside the tree: neither
+# .gitignore nor the jscpd ignore list covers .mypy_cache, and the jscpd stage
+# scans '.'.
+echo -n "Running mypy... ${PYTHON_FILES[*]} "
+if mypy --config-file .github/linters/.mypy.ini \
+	--cache-dir "${TMPDIR:-/tmp}/dotfiles-check-mypy-cache" \
+	"${PYTHON_FILES[@]}"; then
+	echo "OK!"
+else
+	echo "mypy check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
 echo -n "Running Python unit tests... "
 if python3 -B -m unittest discover -s dotfiles/tests; then
 	echo "OK!"
