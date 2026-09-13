@@ -4,8 +4,10 @@
 
 set -eu -o pipefail
 
-readonly BASH_FILES=(check.sh relint.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh)
-readonly ZSH_FILES=(elisp-env.sh compile-elisp.sh test-elisp.sh)
+readonly BASH_FILES=(check.sh compile-elisp.sh elisp-env.sh relint.sh setup-ubuntu.sh setup-ubuntu-mbp-late-2013.sh setup-ubuntu-mysql-work.sh test-elisp.sh)
+# The Zsh root scripts. shellcheck refuses Zsh (SC1071), so this list carries
+# that dialect and only zsh -n reads these.
+readonly ZSH_FILES=(setup-macos-ai.sh setup-macos-cpp.sh setup-macos-emacs.sh setup-macos-gh.sh setup-macos-git.sh setup-macos-mysql-work.sh setup-macos-python.sh setup-macos-rust.sh setup-macos.sh)
 readonly PYTHON_FILES=(ai/.claude/hooks/*.py scripts/usr/bin/xml2qif scripts/usr/bin/*.py dotfiles/tests/*.py)
 readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 

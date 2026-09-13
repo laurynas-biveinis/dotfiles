@@ -1,9 +1,10 @@
-#!/bin/zsh
+#!/bin/bash
 # Byte-compile tested first-party Emacs Lisp and validate its declarations.
 
 set -euo pipefail
 
-source "${0:A:h}/elisp-env.sh"
+# shellcheck source=elisp-env.sh source-path=SCRIPTDIR
+source "$(dirname -- "${BASH_SOURCE[0]}")/elisp-env.sh"
 
 # Compile each subject before its test so subject diagnostics appear first.
 files=()

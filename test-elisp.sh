@@ -1,9 +1,10 @@
-#!/bin/zsh
+#!/bin/bash
 # Run first-party Emacs Lisp tests.
 
 set -euo pipefail
 
-source "${0:A:h}/elisp-env.sh"
+# shellcheck source=elisp-env.sh source-path=SCRIPTDIR
+source "$(dirname -- "${BASH_SOURCE[0]}")/elisp-env.sh"
 
 load_args=()
 for test_file in "${test_files[@]}"; do
