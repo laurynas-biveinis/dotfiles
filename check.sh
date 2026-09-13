@@ -7,11 +7,12 @@ set -eu -o pipefail
 # The rule these lists follow: derive the file set where an extension and a
 # location decide membership, name it where a shebang decides it. A shebang
 # grep would derive those too, so naming is a choice and not a necessity: a
-# derived ZSH_FILES could not reuse the exclusions super-linter applies, since
-# mysql-work.sh is excluded there and required here, so it would cost a second
-# partial mirror of FILTER_REGEX_EXCLUDE; SHELL_FILES is a multi-term set
-# difference rather than one grep. Derived: the Markdown, workflow, biome, jscpd and
-# Emacs Lisp stages. Location bounds most of the derived
+# derived ZSH_FILES could not reuse SUPER_LINTER_EXCLUDES, since mysql-work.sh
+# is excluded there and required here, so it would cost a second partial
+# mirror of FILTER_REGEX_EXCLUDE; SHELL_FILES is a multi-term set difference
+# rather than one grep. Derived: the Markdown, workflow, biome, jscpd and
+# Emacs Lisp stages. MODE_PATHSPECS is both, extension globs plus the named
+# arrays. Location bounds most of the derived
 # sets as much as extension does — Markdown to the root and ai/, the
 # byte-compile and test set to emacs/.emacs.d/my, the workflow stages to
 # .github/workflows/*.yml — so a file of the right kind elsewhere still needs
@@ -21,6 +22,8 @@ set -eu -o pipefail
 # here is unchecked locally and CI is the backstop, except for zsh -n, which
 # CI does not run; a derived set grows by itself, but it can pull a file in
 # silently, and an index-derived one sees a new file only once it is staged.
+# SUPER_LINTER_EXCLUDES is the one place FILTER_REGEX_EXCLUDE is mirrored; see
+# its comment below.
 #
 # The same green-local/red-CI asymmetry exists one level up, at the stage set
 # and the linter configs, where no file list can close it: super-linter also
@@ -119,6 +122,45 @@ readonly SHFMT_FILES=(
 	"${ZSH_ROOT_FILES[@]}"
 )
 
+# The four FILTER_REGEX_EXCLUDE alternatives, as pathspecs: elpa/
+# (third-party), .venv/ (virtual env), and the two files shfmt would reformat.
+# Super-linter drops these from its file list before any validator runs, so it
+# demands nothing of them. Both derivations below mirror it from here, so the
+# regex has one counterpart in this file rather than two partial ones. The
+# leading * is what makes each entry the same predicate as its alternative:
+# each regex alternative sits inside .*(...).* and so matches at any depth,
+# while a pathspec carrying no such wildcard is anchored at the repository
+# root. A leading * crosses / and matches empty, so it covers both.
+readonly SUPER_LINTER_EXCLUDES=(
+	':(exclude)*emacs/.emacs.d/elpa/**'
+	':(exclude)*.venv/**'
+	':(exclude)*mysql-work/.zsh.d/rc/mysql-work.sh'
+	':(exclude)*zsh/.p10k.zsh'
+)
+
+# The files super-linter's bash-exec requires mode 755 on, including ones that
+# are never run, as pathspecs rather than a list. It runs on actions/checkout's
+# tree, so the mode that matters is the one Git records, not the working-tree
+# bit — which is why the stage reads the index. The globs cover what an
+# extension decides; SHELL_FILES and ZSH_FILES supply the rest, because
+# super-linter also detects a shell file by its shebang and every entry of
+# those two arrays carries one or the other. Reusing them adds no list to
+# maintain: a new extension-less program has to join one of them anyway for
+# syntax and lint coverage, so this stage follows the edit that was already
+# owed instead of silently not covering it. A hand-kept list could only catch
+# a mode regression in a file someone had remembered to add, never the new
+# file the stage exists for; four such files reached master at 100644 and were
+# flipped in later linter-fix commits. Symlinks carry no mode
+# of their own and are skipped by mode below.
+readonly MODE_PATHSPECS=(
+	'*.sh'
+	'*.bash'
+	'*.zsh'
+	"${SHELL_FILES[@]}"
+	"${ZSH_FILES[@]}"
+	"${SUPER_LINTER_EXCLUDES[@]}"
+)
+
 readonly PYTHON_FILES=(ai/.claude/hooks/*.py scripts/usr/bin/xml2qif scripts/usr/bin/*.py dotfiles/tests/*.py)
 readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 
@@ -165,6 +207,44 @@ if syntax_check zsh "${ZSH_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "Zsh syntax check failed!"
+	ERRORS=$((ERRORS + 1))
+fi
+
+# --error-unmatch: without it a pathspec that matches nothing still exits 0,
+# and the stage reports OK on a list that silently stopped covering it. A
+# positive entry fails when it matches nothing in the index — a named path once
+# it leaves the index or before it ever enters one, a glob once its match set
+# empties. Excludes never trip
+# the flag, and a glob whose matches are all excluded still counts as matched,
+# so that case shrinks silently instead. git still prints the rows it did
+# match, so those are checked either way. A new file has no recorded mode, so
+# the globs miss it until it is staged, while a named entry for it trips
+# --error-unmatch instead — which is why the message offers staging.
+# No -z: the path reaches only the failure message, so git quoting an unusual
+# name is cosmetic here, unlike the PYTHON_FILES listing where a quoted name
+# fails the -f test and drops the file. -z would also collapse every row into
+# one, since bash strips NULs in command substitution, costing the capture.
+echo -n "Checking shell script modes... "
+MODES_STATUS=0
+shell_modes="$(git ls-files -s --error-unmatch -- "${MODE_PATHSPECS[@]}")" || MODES_STATUS=$?
+NON_EXEC=()
+while read -r mode _ _ path; do
+	# An empty $shell_modes still feeds the here-string one empty line, and
+	# 120000 is a symlink, which carries no mode of its own.
+	if [ -n "$mode" ] && [ "$mode" != 100755 ] && [ "$mode" != 120000 ]; then
+		NON_EXEC+=("$path")
+	fi
+done <<<"$shell_modes"
+if [ "$MODES_STATUS" -eq 0 ] && [ ${#NON_EXEC[@]} -eq 0 ]; then
+	echo "OK!"
+else
+	if [ "$MODES_STATUS" -ne 0 ]; then
+		echo "a MODE_PATHSPECS entry matched nothing in the index (git names it above): stage it if the file is new, or fix or drop the entry if it was renamed or deleted"
+	fi
+	if [ ${#NON_EXEC[@]} -gt 0 ]; then
+		echo "recorded mode is not 100755 (super-linter bash-exec requires it): ${NON_EXEC[*]}"
+		echo "  chmod +x them and stage the mode change; a bare chmod is not enough"
+	fi
 	ERRORS=$((ERRORS + 1))
 fi
 

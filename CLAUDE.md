@@ -37,6 +37,12 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   with SC1071 (`c7e353089`). A file `shfmt` would reformat, or cannot parse,
   needs a `FILTER_REGEX_EXCLUDE` entry. Both `check.sh` and super-linter
   format-check Zsh scripts with `shfmt`.
+- Any shell file super-linter sees — detected by `.sh`/`.bash`/`.zsh` extension
+  or shell shebang, and not matched by `FILTER_REGEX_EXCLUDE` — must be mode
+  755, including files that are never executed. Its `bash-exec` check fails
+  them otherwise. That is also why `zsh/.p10k.zsh` stays 644 despite its `.zsh`
+  extension: an excluded path is dropped from super-linter's file list before
+  any validator runs.
 - The default-to-Bash rule freezes the `#!/bin/zsh` set, but migrating out of
   Zsh is a per-file decision, not one target for all of `ZSH_ROOT_FILES`: only
   `setup-macos-git.sh` and `setup-macos-ai.sh` are meant to be run, the rest
@@ -107,6 +113,11 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   would then fail `bash-exec` at 644 while `.zshrc` would need a
   `FILTER_REGEX_EXCLUDE` entry for shfmt. `./check.sh` catches none of that
   either — they are in none of its lists.
+- `*/.zsh.d/functions/*` are Zsh autoload bodies, not scripts: `zsh/.zshenv`
+  does `fpath+=~/.zsh.d/functions` and consumers `autoload` them by name. No
+  shebang, mode 644, an Emacs `# -*- mode: sh; sh-shell: zsh; -*-` line
+  instead — which is what keeps them out of super-linter's view, and so out of
+  the mode-755 rule above.
 
 ## Code Style Guidelines
 
