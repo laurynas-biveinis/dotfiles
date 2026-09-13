@@ -35,8 +35,8 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   `--exclude=SC1071` in `SHELLCHECK_OPTS` fires on nothing. It stays because
   `slim@latest` floats and pre-routing super-linter did fail this repository
   with SC1071 (`c7e353089`). A file `shfmt` would reformat, or cannot parse,
-  needs a `FILTER_REGEX_EXCLUDE` entry. Both `check.sh` and super-linter
-  format-check Zsh scripts with `shfmt`.
+  needs a `FILTER_REGEX_EXCLUDE` entry. Both `check.sh` and super-linter run
+  shellcheck with `-x`, and both format-check Zsh scripts with `shfmt`.
 - Any shell file super-linter sees — detected by `.sh`/`.bash`/`.zsh` extension
   or shell shebang, and not matched by `FILTER_REGEX_EXCLUDE` — must be mode
   755, including files that are never executed. Its `bash-exec` check fails

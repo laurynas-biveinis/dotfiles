@@ -30,7 +30,7 @@ set -eu -o pipefail
 # runs codespell and ruff, which have no stage here, and runs pylint against
 # its own bundled .python-lint rather than this repo's defaults.
 
-# Everything bash -n and shellcheck cover: every non-Zsh shell file
+# Everything bash -n and shellcheck -x cover: every non-Zsh shell file
 # super-linter shellchecks — the root scripts, the module files, and the
 # extension-less #!/bin/sh programs under */usr/bin/, which CI has linted all
 # along. shellcheck refuses Zsh (SC1071), so ZSH_FILES carries that dialect. A
@@ -212,7 +212,7 @@ readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 # assignment yet exits 0. Two things this stage still does not prove: `bash -n`
 # uses the Bash grammar whatever the shebang says, so POSIX conformance of the
 # #!/bin/sh scripts is shellcheck's SC3xxx, not this stage's; and it is silent
-# on an unterminated here-document. shellcheck and shfmt -d reject both,
+# on an unterminated here-document. shellcheck -x and shfmt -d reject both,
 # which is why gating on output does not make -n an oracle.
 syntax_check() {
 	local interpreter="$1"
@@ -287,7 +287,7 @@ fi
 # bash -n one, and skipping the stage would discard every other file's
 # diagnostics to suppress a three-line cascade.
 echo -n "Running shellcheck... ${#SHELL_FILES[@]} files "
-if shellcheck "${SHELL_FILES[@]}"; then
+if shellcheck -x "${SHELL_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "shellcheck check failed"
