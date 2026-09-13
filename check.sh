@@ -11,8 +11,8 @@ set -eu -o pipefail
 # is excluded there and required here, so it would cost a second partial
 # mirror of FILTER_REGEX_EXCLUDE; SHELL_FILES is a multi-term set difference
 # rather than one grep. Derived: the Markdown, workflow, biome, jscpd and
-# Emacs Lisp stages. MODE_PATHSPECS is both, extension globs plus the named
-# arrays. Location bounds most of the derived
+# Emacs Lisp stages, and the .py half of PYTHON_FILES. MODE_PATHSPECS is both,
+# extension globs plus the named arrays. Location bounds most of the derived
 # sets as much as extension does — Markdown to the root and ai/, the
 # byte-compile and test set to emacs/.emacs.d/my, the workflow stages to
 # .github/workflows/*.yml — so a file of the right kind elsewhere still needs
@@ -161,11 +161,47 @@ readonly MODE_PATHSPECS=(
 	"${SUPER_LINTER_EXCLUDES[@]}"
 )
 
-readonly PYTHON_FILES=(ai/.claude/hooks/*.py scripts/usr/bin/xml2qif scripts/usr/bin/*.py dotfiles/tests/*.py)
-readonly JSON_FILES=(ai/.claude/settings.json biome.json)
-
 ERRORS=0
 BASH_SYNTAX_FAILED=0
+
+# Derived by extension, then extended by name. Super-linter's rule is ".py
+# extension or Python shebang, minus FILTER_REGEX_EXCLUDE"; the extension half
+# is mechanically reproducible, so a new .py file enrols itself here instead of
+# being remembered. The tools read the working tree, so the listing does too:
+# --others --exclude-standard admits a new file before it is staged, and the
+# existence test drops a tracked file deleted but not yet staged, as the globs
+# this replaced did. It needs -z: without it git quotes unusual names, and the
+# test would drop those silently; tr turns the NULs back into the newlines the
+# loop reads, leaving only a path with a literal newline in it unhandled. The
+# status is captured because a failed listing must fail the stage rather than
+# silently shrink the set. The elpa and .venv excludes it takes from
+# SUPER_LINTER_EXCLUDES are not optional: a bare glob pulls in the vendored
+# elpa copies, and .venv is hidden only by the .gitignore the virtualenv tool
+# wrote inside it, which not every tool writes. The other two match no .py
+# file, which costs nothing and keeps one mirror of the regex. The
+# extension-less programs are named, for the reason the header gives. Neither
+# half was current before: four of the five programs were unnamed, and
+# scripts/usr/lib/python/common.py matched none of the replaced globs — all of
+# them linted by CI throughout.
+PYTHON_FILES=()
+python_listing=$(git ls-files -z --cached --others --exclude-standard -- '*.py' "${SUPER_LINTER_EXCLUDES[@]}" | tr '\000' '\n') || {
+	echo "listing .py files failed (git names it above): the Python stages below cover only the named programs"
+	ERRORS=$((ERRORS + 1))
+}
+while IFS= read -r file; do
+	if [ -f "$file" ]; then
+		PYTHON_FILES+=("$file")
+	fi
+done <<<"$python_listing"
+PYTHON_FILES+=(
+	scripts/usr/bin/finbee2qif
+	scripts/usr/bin/goindex2qif
+	scripts/usr/bin/ib2qif
+	scripts/usr/bin/invl2qif
+	scripts/usr/bin/xml2qif
+)
+readonly PYTHON_FILES
+readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 
 # Shell
 
