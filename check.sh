@@ -162,7 +162,6 @@ readonly MODE_PATHSPECS=(
 )
 
 ERRORS=0
-BASH_SYNTAX_FAILED=0
 
 # Derived by extension, then extended by name. Super-linter's rule is ".py
 # extension or Python shebang, minus FILTER_REGEX_EXCLUDE"; the extension half
@@ -213,7 +212,7 @@ readonly JSON_FILES=(ai/.claude/settings.json biome.json)
 # assignment yet exits 0. Two things this stage still does not prove: `bash -n`
 # uses the Bash grammar whatever the shebang says, so POSIX conformance of the
 # #!/bin/sh scripts is shellcheck's SC3xxx, not this stage's; and it is silent
-# on an unterminated here-document. shellcheck and shfmt reject both,
+# on an unterminated here-document. shellcheck and shfmt -d reject both,
 # which is why gating on output does not make -n an oracle.
 syntax_check() {
 	local interpreter="$1"
@@ -235,7 +234,6 @@ if syntax_check bash "${SHELL_FILES[@]}"; then
 else
 	echo "Shell syntax check failed!"
 	ERRORS=$((ERRORS + 1))
-	BASH_SYNTAX_FAILED=1
 fi
 
 echo -n "Checking Zsh syntax with zsh -n... ${#ZSH_FILES[@]} files "
@@ -284,24 +282,26 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
-if [ $BASH_SYNTAX_FAILED -eq 0 ]; then
-	echo -n "Running shellcheck... ${#SHELL_FILES[@]} files "
-	if shellcheck "${SHELL_FILES[@]}"; then
-		echo "OK!"
-	else
-		echo "shellcheck check failed"
-		ERRORS=$((ERRORS + 1))
-	fi
-
-	echo -n "Running shfmt to format shell scripts... ${#SHFMT_FILES[@]} files "
-	if shfmt -w "${SHFMT_FILES[@]}"; then
-		echo "OK!"
-	else
-		echo "shfmt failed!"
-		ERRORS=$((ERRORS + 1))
-	fi
+# Not gated on the syntax check: shellcheck brings its own parser and reports
+# its own parse errors at error severity, so its result never depended on the
+# bash -n one, and skipping the stage would discard every other file's
+# diagnostics to suppress a three-line cascade.
+echo -n "Running shellcheck... ${#SHELL_FILES[@]} files "
+if shellcheck "${SHELL_FILES[@]}"; then
+	echo "OK!"
 else
-	echo "Skipping shellcheck, and shfmt due to previous errors"
+	echo "shellcheck check failed"
+	ERRORS=$((ERRORS + 1))
+fi
+
+# Super-linter runs shfmt in check mode, so rewriting in place here would report
+# OK on exactly the content CI rejects.
+echo -n "Checking shell script formatting... ${#SHFMT_FILES[@]} files "
+if shfmt -d "${SHFMT_FILES[@]}"; then
+	echo "OK!"
+else
+	echo "shfmt check failed! Run 'shfmt -w ${SHFMT_FILES[*]}' to fix"
+	ERRORS=$((ERRORS + 1))
 fi
 
 echo -n "Checking Markdown files... "

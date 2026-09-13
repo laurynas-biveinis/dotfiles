@@ -1,7 +1,6 @@
 ---
 description: >-
-  Run ./check.sh (lint/test/autoformat) and fix one category of reported
-  errors.
+  Run ./check.sh (lint/test) and fix one category of reported errors.
 disable-model-invocation: true
 context: fork
 allowed-tools: Bash(./check.sh) Bash(git status:*)
@@ -23,6 +22,5 @@ Read the output above:
   category in this invocation, even if other categories still report errors.
 - If no errors are reported, say so.
 
-Then run `git status` to surface any working-tree changes - from your
-fixes or from autoformat the script ran. Draft a commit message to describe the
-changes and return it.
+Then run `git status` to surface any working-tree changes from your fixes.
+Draft a commit message to describe the changes and return it.
