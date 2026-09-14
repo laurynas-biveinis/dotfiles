@@ -577,12 +577,14 @@ clear — so no mark trips Org's enforcement veto.
   **first** any someday/maybe residuals — move them directly under the file's
   Someday/maybe container; **then**, by the placement rule, the remaining
   residual open actions (`todo_state` `TODO`/`WAIT`) and sub-projects
-  (`todo_state` `TODO`, tagged `project`) — except, when the close target is
-  itself incubated (per the residual definition above), its own such
-  descendants, which the **Incubated-close-target rule** below handles, not the
-  placement rule — plus standing `@checklist` rules (`todo_state` `""`, tagged
-  `@checklist`), which relocate clear regardless of incubation. No separate
-  `KILL` is needed — the move removes each from the closing subtree.
+  (`todo_state` not `DONE`/`KILL`, tagged `project`) — except, when the close
+  target is itself incubated (per the residual definition above), its own
+  such descendants, which the **Incubated-close-target rule** below handles,
+  not the placement rule — plus standing `@checklist` rules (`todo_state`
+  `""`, tagged `@checklist`), which relocate clear regardless of incubation.
+  Normalize any keyword-less sub-project being relocated per "Promoting a
+  someday/maybe item" step 3 before its move.
+  No separate `KILL` is needed — the move removes each from the closing subtree.
   **Incubated-close-target rule:** when the close target is itself incubated
   (per the residual definition above — a realized incubated outcome), its
   still-live descendants **other than someday/maybe residuals and standing
@@ -608,7 +610,9 @@ clear — so no mark trips Org's enforcement veto.
   their open states die with the cascade) and, by the placement rule, standing
   `@checklist` rules (`todo_state` `""`, tagged `@checklist`), then `KILL` all
   remaining `TODO`/`WAIT` **descendants** via `org-update-todo-state`, per
-  **Kill ordering** (deepest-first, checkboxes resolved).
+  **Kill ordering** (deepest-first, checkboxes resolved). Keyword-less
+  descendants need no `KILL` — being neither open nor closed, they archive
+  with the cascade as they stand.
 
 ### Resolving a delegated item (`@waitingfor`)
 
