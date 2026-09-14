@@ -46,8 +46,9 @@ it in every subsequent Close for that same capture.
 
 **Resolution-summary rule:** resolving or updating an earlier in-pass
 `@waitingfor` item, resolving a `WAIT` or somedaymaybe item, promoting a
-somedaymaybe item, updating a still-parked `WAIT`'s dependency note,
-parking (`TODO`→`WAIT`, with its `Blocked by:` note) or closing
+somedaymaybe item, backfilling or updating a still-parked `WAIT`'s
+dependency note,
+parking (`TODO`→`WAIT`, with any `Blocked by:` note) or closing
 (`DONE`/`KILL`) a pre-existing `TODO`, or retiring a spent one-time
 `@checklist` trigger (`DONE` + archive) is a once-per-pass event.
 Surface each such event's summary — its Org state or note change (including
@@ -286,8 +287,9 @@ Finally apply the **Outer-Close suppression rule**.
     `org-update-todo-state`, handling the dependency note (via
     `org-edit-body`) per `gtd`'s States.
   - _Partial progress, still blocked_ — part of the dependency arrived, or it
-    changed: leave the state `WAIT`, offer to update the dependency note (via
-    `org-edit-body`) to what it now waits on; the note update surfaces per the
+    changed: leave the state `WAIT`, handling the dependency note (via
+    `org-edit-body`) per `gtd`'s States — recording what it now waits on
+    wherever States calls for a note; the note change surfaces per the
     resolution-summary rule. It counts
     as a confirmed non-cleared report in the routing below — and if the changed
     blocker is itself new work, the **Captured-new-work rule** routes it.
@@ -313,7 +315,7 @@ Finally apply the **Outer-Close suppression rule**.
   `TODO`, per what the capture reports for it:
   - _Completed or abandoned_: apply the **Completed-or-abandoned match rule**.
   - _Newly blocked by a dependency_: park it, `TODO`→`WAIT` via
-    `org-update-todo-state`, adding the dependency note (via `org-edit-body`)
+    `org-update-todo-state`, handling the dependency note (via `org-edit-body`)
     per `gtd`'s States; for a standalone, non-incubated item, offer a
     `SCHEDULED` via `org-set-planning` (per `gtd`'s States, the execution date
     by/at which it must be unblocked and completed); for a project child, run
@@ -434,12 +436,21 @@ Ask for the very next visible, physical action.
 **Parked-entry check:** when a duplicate search below — the single-action search
 or the **Existing project** path's — confirms an open match (in place or just
 refiled) in `WAIT` state, its "go to Close" first passes through this check:
-surface the parked status and any `Blocked by:` note (a legacy or stale park may
-carry none); if the user says the dependency has cleared, offer `WAIT`→`TODO`,
-handling the dependency note per `gtd`'s States; otherwise leave it parked — or,
-if the user instead names a different next action, treat that action as new and
-pass it to step 4. (The single-action path has no project to refile into, so
-only the in-place case arises there.)
+surface the parked status and any `Blocked by:` note — a direct project
+child may carry none, implicitly blocked per `gtd`'s States, in which case
+name the earlier open sibling the reading blames, since that reading is
+disclosed and
+confirmed rather than acted on silently. A note-less deeper descendant or
+standalone records nothing at all. If the user says the dependency has
+cleared, offer `WAIT`→`TODO`, handling the dependency note per `gtd`'s
+States. Otherwise the match stays parked — whether the user leaves it so or
+instead names a different next action, which is treated as new and passed to
+step 4 — and in either case ask what a note-less match waits on and backfill
+per `gtd`'s States, unless the user confirms the project's sequence already
+has it right; a just-refiled match settles its park per that same rule as
+part of the move. (The
+single-action path has no project to refile into, so only the in-place case
+arises there.)
 
 A **single action** is not a project, but first confirm it is not already
 tracked — the same duplicate search the **Existing project** path runs, without
@@ -533,8 +544,11 @@ Capture the desired **outcome**, then:
     owning project is incubated, and that refiling the action out changes its
     parked plan — and ask whether to refile the action here (for an incubated
     match per `gtd`'s **Promoting a someday/maybe item**, with the target
-    project as its active home; creating a new entry — or, for an incubated
-    owner, a body note — for the project it was moved from if needed) or leave
+    project as its active home, the Parked-entry check covering its state
+    step; creating a new entry — or, for an incubated owner, a body note — for
+    the project it was moved from if needed; the move settles both this item's
+    own park and that of any `WAIT` it leaves behind in the owning project,
+    per `gtd`'s States — then go to Close) or leave
     it in place (go to Close; for an active match the action is already
     tracked, while for an incubated match this means keeping it incubating — off
     every active view until promoted or the someday/maybe review — leaving the
@@ -601,7 +615,7 @@ own 2-minute assessment happens only inside Delegate.
   above). **Blocking-status rule:** for all three branches, the recorded Org
   action's state follows its blocking status
   per `gtd`'s state definitions: `WAIT` if the action is blocked by a
-  dependency (noting the dependency per `gtd`'s `WAIT` convention), `TODO` if
+  dependency (handling the dependency note per `gtd`'s States), `TODO` if
   it is doable as soon as its actor gets to it — infer from context already
   gathered and confirm. When an undated recorded `WAIT` leaves its project
   with no live `TODO` — always the case for a new project's first action —

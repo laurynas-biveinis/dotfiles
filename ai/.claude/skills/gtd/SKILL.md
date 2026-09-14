@@ -23,10 +23,67 @@ the mechanics — `gtd` never invokes `process-inbox`.
 - `WAIT` — action blocked by a dependency: parked, shown on no active
   tag-based list until reactivated (`WAIT`→`TODO`; the someday/maybe review
   list alone still shows an incubated one — see below). Note what it waits on
-  in the item body as a `Blocked by: <dependency>` line (the dependency note);
-  on unblocking,
-  remove the note or replace it with what cleared it, leaving the rest of the
-  body intact. A `SCHEDULED` on a `WAIT` item is the execution date: the item
+  in the item body as a `Blocked by: <dependency>` line (the dependency
+  note) — unless the block is implicit: a direct project child parked behind
+  its earlier open sibling(s) needs no note, and a note-less `WAIT` whose
+  immediate parent is the project reads as exactly that — blocked while any
+  earlier sibling (`TODO` or `WAIT`, a sub-project included) is open and not itself
+  incubated relative to the project (per the **Incubation check**), its
+  dependency cleared once none remains. Any other blocker — on a standalone
+  item, or not faithfully expressed by the project's own sequence (a blocker
+  it omits, or unrelated open earlier siblings it would sweep into the
+  block) — gets the note (a note on an implicitly blocked item is fine too,
+  and then governs). A note-less `WAIT` where no implicit block can apply —
+  a deeper descendant beneath an untagged heading, or a standalone's park
+  predating this convention or gone stale — records nothing at all: ask what
+  it waits on and backfill the note. Project-child handling elsewhere still
+  includes deeper descendants; this restriction applies only to implicit
+  dependency inference.
+  **The reading is defeasible.** It infers from position, not from anything
+  the user recorded, and nothing maintains that position but this convention
+  itself — so it never decides alone. Disclose it and have the user confirm
+  it before it drives a state change or a deliberately-parked judgement, in
+  **both** directions: name the earlier open sibling the reading blames when
+  it keeps an item parked, as readily as the one that cleared when it offers
+  the unblock. Where a flow would otherwise act silently on a still-blocked
+  reading, ask what the item waits on and backfill the note instead, which
+  then governs — that is also how a park predating this convention acquires
+  a record of its own.
+  **Reading the siblings:** first confirm that the item is a direct child of
+  its innermost `project` ancestor; otherwise use the explicit-note rule above.
+  Read that project's full subtree via `org-read-headline`/`org-read-by-id`.
+  `org-read-outline` omits headings below level 2, which can be direct
+  children even of a top-level project: Org permits skipped heading levels.
+  A direct child's nearest preceding heading of smaller level is the
+  project itself; use that ancestry rather than a level difference of one.
+  Read those children in document order; earlier means before this item.
+  This is the one sanctioned exception to reading state from node fields
+  rather than raw heading text (see "Reading and editing").
+  **Clearing:** when a close removes a note-less direct-child `WAIT`'s last
+  eligible earlier sibling, offer `WAIT`→`TODO` per the transitions bullet.
+  Apply the same state and incubation filters above to both the closed item
+  and the remaining siblings.
+  **In-place promotion:** when promoting a direct project child without
+  refiling, read the following note-less `WAIT`s before removing the local
+  `somedaymaybe` tag. For each whose eligible earlier siblings would change,
+  confirm its blockers against the pre-change sequence. Record the confirmed
+  dependencies in an explicit note unless the user confirms that the
+  resulting sequence still expresses them; if its block proves void, offer
+  `WAIT`→`TODO`.
+  **Refiles that unsettle a park:** when a refile leaves a note-less item's park
+  no longer expressed by its surroundings — the item parted from the earlier
+  siblings that expressed it, an earlier sibling refiled out from in front of
+  it, or the item landed under a project whose own sequence did not produce
+  its park — settle that park as part of the move: confirm with the user what
+  it now waits on, proposing the blockers the source sequence expressed where
+  it did and asking open-endedly where no record does, then name them in the
+  note (`org-edit-body`; address a moved item by the `org-id://` URI the
+  refile returns, since the move invalidates its pre-refile `org-headline://`
+  one) — or, when the block turns out to be void, offer `WAIT`→`TODO` instead
+  of a note. Closes are not refiles: a sibling completing is how the sequence
+  clears, per **Clearing** above. On unblocking, remove the note or replace it
+  with what cleared it, leaving the rest of the body
+  intact. A `SCHEDULED` on a `WAIT` item is the execution date: the item
   must be unblocked and completed by/at that date — a genuine commitment,
   kept through `WAIT`→`TODO`; a `DEADLINE` on a `WAIT` item is the same
   commitment as a hard due date. A start/review date is never expressed as a
@@ -67,8 +124,9 @@ the item.
   `@waitingfor`, noting who/what it waits on in the item body as a
   `Waiting on <who> for <what>` line (the delegation note); its state follows
   its blocking status per States — `TODO` normally, `WAIT` if the delegation is
-  itself blocked by a dependency (add the dependency note as well) — and like
-  any action, it appears on its list only while `TODO` and undated (per States).
+  itself blocked by a dependency (plus the dependency note per States) — and
+  like any action, it appears on its list only while `TODO` and undated (per
+  States).
 - **Choosing the context** — a context the user already specified is recorded
   as given; the rest of this procedure governs only a context you choose. The
   user's own contexts are user-configured and discoverable at runtime via
@@ -148,7 +206,8 @@ the item.
   is stranded off every view, a legacy artifact — normalize with the user:
   refile it under the container to keep it incubating, or shed
   the local tag (`org-edit-headline`) / promote it (per "Promoting a
-  someday/maybe item") if active.
+  someday/maybe item") if active, settling affected parks per States'
+  **In-place promotion** rule before removing the tag.
 - **Incubation check** — whether an item is incubated, and whether its
   `somedaymaybe` tag is local or inherited. It is incubated when it carries
   `somedaymaybe` on itself or on any ancestor (the container, an enclosing
@@ -266,22 +325,37 @@ retiring.
 - Keep new items brief but understandable to the user.
 - Transition action states as work progresses: `WAIT`→`TODO` on unblocking,
   handling the dependency note per States; `TODO`→`WAIT` when a new
-  dependency blocks an action, adding the dependency note per States (for a
+  dependency blocks an action, handling the dependency note per States (for a
   standalone, non-incubated item, optionally offer a `SCHEDULED` via
   `org-set-planning` — per States, the execution-date commitment, which
   resurfaces it on the date-based agenda; never a date on an incubated item,
   per Tags and structure) and, for a project child, running the project health
   check — but when the blocking dependency is itself new work that you will
   record as the project's next action, record it first, as an open `TODO`
-  under the project, so the check finds a live child and provisions nothing.
-  When the blocking dependency is itself new, untracked work — the
-  user's own next action or a new delegation, not an external event, a date, or
-  an already-tracked action — that blocker must also end up recorded as its own
-  action (per "Where to track new work" and "Tags and structure"); a caller
-  whose flow already routes captured new work to recording (e.g. `process-inbox`
-  via its Captured-new-work rule) satisfies this, so record it here only when
-  nothing else will. For closing an item (`DONE`/`KILL`) and the health check
-  itself, see "Completing and archiving items" below.
+  under the project, so the check finds a live child and provisions nothing —
+  placed before the parked item to make it an earlier sibling — the sequence
+  marker per States, when the sequence then faithfully expresses the block.
+  `org-add-todo` takes either `after_uri` or `position`, never both, and
+  `after_uri` accepts only the preceding sibling's `org-id://` URI. With no
+  preceding sibling or no ID, use `position` `"start"`, which lands ahead of
+  every other child. Before either placement, inspect the next existing
+  heading at the insertion boundary: the tool inserts at the project's level
+  plus one, so a deeper heading would become the blocker's descendant. If
+  placement would change existing ancestry or misexpress another marked
+  item's park, use the project as `parent_uri` with `position` `"end"`
+  instead. Also use this fallback for `after_uri` when direct children have
+  different heading levels: its sibling walker follows only one level.
+  At the project subtree's end, the new action is no earlier sibling, so the
+  parked item's note names the blocker outright.
+  When the blocking dependency is itself
+  new, untracked work — the user's own next action or a new delegation, not
+  an external event, a date, or an already-tracked action — that blocker must
+  also end up recorded as its own action (per "Where to track new work" and
+  "Tags and structure"); a caller whose flow already routes captured new work
+  to recording (e.g. `process-inbox` via its Captured-new-work rule)
+  satisfies this, so record it here only when nothing else will. For closing
+  an item (`DONE`/`KILL`) and the health check itself, see "Completing and
+  archiving items" below.
 - `org-read-outline` nodes and the `headline_path` entries returned by
   `org-grep`, `org-read-headline`, and `org-read-by-id` carry `todo`/`tags`/`uri`
   per node — read an item's state from these rather than parsing raw heading
@@ -343,21 +417,24 @@ so promotion is chiefly the move:
    activation. After any refile, address the item in the steps below by the
    `org-id://` URI the refile returns — the move invalidates a pre-refile
    `org-headline://` URI.
-2. Fix up tags only if needed (`org-edit-headline`, one call): remove a rare
-   local `somedaymaybe` tag, and ensure the shape's tag is present — an
+2. Before removing a local incubation tag without a refile, settle affected
+   parks per States' **In-place promotion** rule. Fix up tags only if needed
+   (`org-edit-headline`, one call): remove a rare local `somedaymaybe` tag, and
+   ensure the shape's tag is present — an
    execution context (per "Tags and structure") for a single next action, or
    `project` for a project. Incubated items normally already carry it.
 3. Confirm the state: normally already `TODO`; handle a `WAIT` per States —
-   keep it with its dependency note while blocked, or unblock `WAIT`→`TODO`
-   (`org-update-todo-state`) if its dependency has cleared. A legacy
-   keyword-less item gets `TODO` — or `WAIT` plus a dependency note per States
-   if genuinely blocked — via `org-update-todo-state` (`current_state` `""`);
-   when a caller reuses this step to normalize a keyword-less item **in place,
-   kept incubating** (per States, Harvest residuals, or the weekly review —
-   none of which refiled it out via step 1), also clear any
-   `SCHEDULED`/`DEADLINE` (`org-set-planning`) so it is not left dated, since an
-   incubated item is never dated (per "Tags and structure"). A genuinely
-   promoted item, refiled to its active home, may keep a legitimate date.
+   keep it while blocked, handling the dependency note per States, or unblock
+   `WAIT`→`TODO` (`org-update-todo-state`) if its dependency has cleared. A
+   legacy keyword-less item gets `TODO` — or `WAIT` with the dependency
+   note per States if genuinely blocked — via `org-update-todo-state`
+   (`current_state` `""`); when a caller reuses this step to normalize a
+   keyword-less item **in place, kept incubating** (per States, Harvest
+   residuals, or the weekly review — none of which refiled it out via
+   step 1), also clear any `SCHEDULED`/`DEADLINE` (`org-set-planning`) so it
+   is not left dated, since an incubated item is never dated (per "Tags and
+   structure"). A genuinely promoted item, refiled to its active home, may
+   keep a legitimate date.
 4. For a project, run the **Project health check** to ensure it has a good
    next action.
 
@@ -470,7 +547,10 @@ Decide whether the project outcome is reached:
 - if uncertain which branch applies — e.g. the last open action was just closed
   but the user has not explicitly confirmed the project outcome — ask the user
   before archiving or KILLing remaining open actions.
-- Otherwise: run the **Project health check** below.
+- Otherwise: identify note-less direct-child `WAIT`s whose last eligible
+  earlier sibling this close removed, applying States' state and incubation
+  filters. Offer `WAIT`→`TODO` there, disclosing the implicit reading, since
+  the user is already in the loop. Then run the **Project health check** below.
 
 ### Project health check
 
@@ -493,20 +573,26 @@ structure.
 If an open `TODO` child remains, nothing more is needed.
 Otherwise: create one, or offer `WAIT`→`TODO` on an existing `WAIT` —
 confirming with the user that its dependency has cleared before flipping,
-and handling its dependency note per States. For a `WAIT` with no dependency
-note (its park predates the current convention or went stale), first ask
-what it was waiting on; per the answer, offer the unblock, backfill the
-dependency note (the item then counts as still blocked below), or close it
-if the park is moot. If every remaining open action is a `WAIT` still
-blocked by its dependency: when one already carries a `SCHEDULED`/`DEADLINE`
-that has not passed, the project is already deliberately parked and dated
-per States — note the date to the user rather than re-confirming; when that
-date has passed, surface the breached commitment and offer to re-date it.
-Otherwise confirm with the user that the project is deliberately parked —
-optionally offering a `SCHEDULED` on a blocking `WAIT` per States — rather
-than creating a filler action; the weekly review re-examines it in every
-case. This check covers only the innermost project ancestor; any outer
-`project`-tagged ancestors are reviewed during the weekly review.
+and handling its dependency note per States. For a note-less direct child of
+the project under check — the `found` node this check already holds — disclose
+the implicit reading per States: name its eligible earlier siblings if any
+remain, or explain that none remains, and ask the user to confirm. For any
+other note-less `WAIT`, ask what it waits on.
+In every case, follow the user's answer: offer `WAIT`→`TODO` if the actual
+dependency cleared, close the item if moot, or retain `WAIT` when a remaining
+dependency is confirmed. Record that dependency unless States' implicit-block
+rule applies and the user confirms that the sequence expresses it faithfully.
+Only a confirmed remaining dependency counts as still blocked below. If every
+remaining open child is a `WAIT` still blocked by its dependency: when one
+already carries a `SCHEDULED`/`DEADLINE` that has not passed, the project
+is already deliberately parked and dated per States — note the date to the
+user rather than re-confirming; when that date has passed, surface the
+breached commitment and offer to re-date it. Otherwise confirm with the
+user that the project is deliberately parked — optionally offering a
+`SCHEDULED` on a blocking `WAIT` per States — rather than creating a filler
+action; the weekly review re-examines it in every case. This check covers
+only the innermost project ancestor; any outer `project`-tagged ancestors
+are reviewed during the weekly review.
 
 ### Harvest residuals
 
@@ -524,13 +610,15 @@ Relocate **subtree-once**: move only the shallowest live residual in each
 ancestry chain — one not nested under another live residual being relocated — via
 `org-refile-headline`; its descendants travel with it in that single move, since
 refile carries the whole subtree out intact (state, tags, body, and ID
-preserved). Never separately refile a descendant of a residual you already
-relocated. What matters is _live_: a live residual under a _dead_ (`DONE`/`KILL`)
-intermediate that will be archived with the project is still rescued.
-Subtree-once governs the two-destination ordering below: a someday/maybe
-residual nested under another live residual being relocated travels with it
-(staying incubated at the destination), so the "first … then" ordering applies
-only to residuals that are themselves relocation roots.
+preserved — though a move that leaves a `WAIT`'s park unexpressed at its
+destination settles the dependency note as part of the move, per States and
+**Park settling** below). Never separately refile a descendant of a residual
+you already relocated. What matters is _live_: a live residual under a _dead_
+(`DONE`/`KILL`) intermediate that will be archived with the project is still
+rescued. Subtree-once governs the two-destination ordering below: a
+someday/maybe residual nested under another live residual being relocated
+travels with it (staying incubated at the destination), so the "first … then"
+ordering applies only to residuals that are themselves relocation roots.
 
 A **someday/maybe residual** is a live (`todo_state` not `DONE`/`KILL`) item
 under a `somedaymaybe`-tagged heading that itself lies strictly below the close
@@ -551,6 +639,18 @@ step 3.
 relocation in this procedure follows Tags and structure — if the file has no
 container, create one first (a top-level keyword-less `somedaymaybe` heading,
 `org-add-todo`) or route to a file that already has one.
+
+**Park settling:** a relocation out of a closing subtree never infers a
+`WAIT`'s block from the sequence it is leaving — that sequence is being
+archived, and on a `KILL` cascade its blockers are killed outright moments
+later. Determine each note-less item's blockers against the **pre-harvest**
+sequence — read from the closing subtree this procedure already has in hand,
+per States — before the first relocation, so relocation order cannot change
+the answer; then surface them to the user and settle the park per States —
+naming what the item actually waits on, or offering `WAIT`→`TODO` where the
+block proves void. A `KILL` cascade abandons the tasks, not the facts: a
+rescued item may still wait on work the cascade just killed, so never
+conclude the block is void merely because its blockers died.
 
 **Kill ordering:** any `KILL` this procedure applies to an item with open
 (`TODO`/`WAIT`) descendants proceeds deepest-first — children before their
@@ -604,12 +704,14 @@ clear — so no mark trips Org's enforcement veto.
   the blanket kill below) — remains in the subtree, **block the parent
   `KILL`**: surface each and ask the user to close it (`DONE`/`KILL`, via its
   own **Project child** close) or refile it clear of the cascade
-  (`org-refile-headline`) first, then resume. Once no such child `project`
-  remains, first relocate any someday/maybe residuals (directly under the
-  file's Someday/maybe container, **before** the blanket `KILL` below — or
-  their open states die with the cascade) and, by the placement rule, standing
-  `@checklist` rules (`todo_state` `""`, tagged `@checklist`), then `KILL` all
-  remaining `TODO`/`WAIT` **descendants** via `org-update-todo-state`, per
+  (`org-refile-headline`, settling the dependency note per States and
+  **Park settling** above) first,
+  then resume. Once no such child `project` remains, first relocate any
+  someday/maybe residuals (directly under the file's Someday/maybe container,
+  **before** the blanket `KILL` below — or their open states die with the
+  cascade) and, by the placement rule, standing `@checklist` rules
+  (`todo_state` `""`, tagged `@checklist`), then `KILL` all remaining
+  `TODO`/`WAIT` **descendants** via `org-update-todo-state`, per
   **Kill ordering** (deepest-first, checkboxes resolved). Keyword-less
   descendants need no `KILL` — being neither open nor closed, they archive
   with the cascade as they stand.
@@ -662,23 +764,31 @@ input reports for it:
   below offers the unblock (the delegation note stays).
 - _Newly blocked by a dependency, delivery still awaited_ — nothing
   delivered, the delegation itself intact: leave the item open, parking it
-  (`TODO`→`WAIT`) per the transitions bullet — add the dependency note per
-  States; the delegation note and tag stay, and that bullet's standalone
+  (`TODO`→`WAIT`) per the transitions bullet — handling the dependency note
+  per States; the delegation note and tag stay, and that bullet's standalone
   `SCHEDULED` offer and project-child health check apply.
 
 When a confirmed candidate in `WAIT` state remains open, key the handling on
-its dependency status: if the item's own blocking dependency has cleared — or
-it has none (its `WAIT` predates the current convention or went stale) —
-offer `WAIT`→`TODO` (tag kept) per the Tags convention, handling the
-dependency note per States (the delegation note stays), so the still-awaited
-delegation returns to the review list — if undated and not incubated; a
-dated one resurfaces on the date-based agenda at its date instead, per
-States, and an incubated one stays off the active views until promoted —
-disclose this when offering the unblock. If it is still
-blocked by a dependency of its own, keep `WAIT`, updating the dependency
-note when the input reports the blocker changed. A follow-up action of the
-user's own is always a new self-context item, never the delegated item
-retagged or relabeled.
+its dependency status: if the item's own blocking dependency has cleared — a
+note-less direct project child's implicit block clears once no earlier open
+sibling remains, per States, disclosing that reading as it does elsewhere;
+this path arrives by `org-grep` and so holds no siblings, so resolve the innermost
+`project`-tagged node of the match's `headline_path`, confirm direct-child
+eligibility per States, and read that ancestor first — or it
+carries no note at all (a park predating the convention or gone stale: ask
+what it waited on and backfill per States before deciding) — offer
+`WAIT`→`TODO` (tag kept) per the Tags convention, handling the dependency
+note per States (the delegation note stays), so the still-awaited delegation
+returns to the review list — if undated and not incubated; a dated one
+resurfaces on the date-based agenda at its date instead, per States, and an
+incubated one stays off the active views until promoted — disclose this when
+offering the unblock. If it is still blocked by a dependency of its own,
+keep `WAIT`, saying which blocker still stands — for a note-less item, which
+earlier open sibling the reading blames, asked and backfilled per States
+rather than acted on silently — and handling the dependency note per States
+when the input reports the blocker changed. A follow-up action of the
+user's own is always a new self-context
+item, never the delegated item retagged or relabeled.
 
 ## Availability
 
