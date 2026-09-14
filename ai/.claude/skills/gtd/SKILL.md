@@ -564,7 +564,16 @@ clear — so no mark trips Org's enforcement veto.
   already present as live headlines, and capture those as new `TODO` /
   `project` items placed clear of the close cascade (per the placement rule
   above) — a someday/maybe outcome as a `TODO` directly under the file's
-  Someday/maybe container (per Tags and structure). Then relocate residuals:
+  Someday/maybe container (per Tags and structure).
+  Before selecting relocation roots, resolve keyword-less descendants with
+  the user, shallowest first — except `project`-tagged items, standing
+  `@checklist` rules, and someday/maybe residuals, which follow their own rules.
+  An execution context marks a legacy action: normalize it per "Promoting a
+  someday/maybe item" step 3, then follow the residual and incubation rules
+  below. An untagged heading is presumed structural and archives with the
+  close unless the user says otherwise; its live descendants still need
+  rescue. Select relocation roots only after these decisions, so an action's
+  children travel with it under subtree-once. Then relocate residuals:
   **first** any someday/maybe residuals — move them directly under the file's
   Someday/maybe container; **then**, by the placement rule, the remaining
   residual open actions (`todo_state` `TODO`/`WAIT`) and sub-projects
