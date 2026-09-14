@@ -21,8 +21,8 @@ in mu4e. An automation is an action function plus a rule (a property list
 matching sender/subject) in `mu4e-autotask-rules`. Both live in
 `~/secrets-local.el`. Name new action functions `dotfiles--mu4e-automation-<name>`.
 
-The `Read` and `Edit` tools require an absolute path: expand `~` to your home
-directory when passing `~/secrets-local.el` to them.
+Pass `~/secrets-local.el` to `Read` and `Edit` as an absolute path: both
+document `file_path` as one.
 
 Follow the user's Elisp guidelines throughout — invoke the `elisp-dev` skill
 before writing any elisp.
