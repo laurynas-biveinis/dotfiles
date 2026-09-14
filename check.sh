@@ -411,11 +411,22 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+# pylint normally encodes message categories in its exit status. Exit 1 also
+# covers configured score/fail-on failures and early aborts, so status alone
+# cannot establish whether analysis completed.
 echo -n "Running pylint... ${PYTHON_FILES[*]} "
-if pylint "${PYTHON_FILES[@]}"; then
+PYLINT_STATUS=0
+pylint "${PYTHON_FILES[@]}" || PYLINT_STATUS=$?
+if [ "$PYLINT_STATUS" -eq 0 ]; then
 	echo "OK!"
 else
 	echo "pylint check failed!"
+	if [ "$PYLINT_STATUS" -gt 31 ]; then
+		echo "  exit $PYLINT_STATUS is outside pylint's message bitmask, so pylint did not complete: 32 usage error, 126/127 not runnable, 128+N signal"
+	elif [ $((PYLINT_STATUS & 1)) -ne 0 ]; then
+		echo "  bit 0 set: pylint may have reported a fatal error, failed a configured score/fail-on check, or aborted; the report may be incomplete — inspect its output above"
+		echo "  if those diagnostics suggest a dependency conflict, run 'pip check'"
+	fi
 	ERRORS=$((ERRORS + 1))
 fi
 
