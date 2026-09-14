@@ -8,15 +8,23 @@ Do not invoke a fresh inbox-processing dialogue for each finding.
 ## Search before acting
 
 Apply this procedure to both pre-existing provenance classes after excluding
-findings handled above. Determine the relevant repository and whether GitHub
-issues apply from project instructions, repository configuration, and existing
-practice. Public source-code projects use GitHub plus an Org pointer; private
-or non-GitHub work defaults to full Org records unless established practice
-specifies otherwise. Do not guess a repository from a directory name.
+findings handled above. Determine the relevant repository and whether it uses
+GitHub issues from project instructions, repository configuration, and
+existing practice. Public source-code projects use GitHub plus an Org pointer;
+private or non-GitHub work defaults to full Org records unless established
+practice specifies otherwise. Do not guess a repository from a directory name.
 
-Search applicable GitHub issues and exposed Org files before creating records
-or fixing an on-path finding. Search open and closed records, varying terms
-for the affected component, behavior, and root cause; `org-grep` is a literal
+GitHub applies per finding, not per repository alone: GTD's typo-level
+carve-out in _Where to track new work_ sends such a finding to Org directly
+even where the repository uses issues. Decide from the finding's recommended
+action, not its severity tier — a `SUGGESTION` proposing a design or
+structural change is issue-worthy, and so is a one-character bug. Record the
+decision in the ledger with the search result.
+
+Search GitHub issues whenever the repository uses them, including for
+typo-level findings, and exposed Org files before creating records or fixing
+an on-path finding. Search open and closed records, varying terms for the
+affected component, behavior, and root cause; `org-grep` is a literal
 substring search, so one missed phrase does not establish absence. Read
 candidate bodies and relevant comments/subtrees to establish that the defect
 and remaining outcome match. An existing record can cover more than one
@@ -43,21 +51,23 @@ operation, not permission to duplicate it.
 
 Handle GitHub and Org matches independently:
 
-- Neither exists: create the GitHub issue when applicable, then an Org action
-  pointing to it; otherwise create the full Org action.
+- Neither exists: create the GitHub issue when applicable — the repository
+  uses issues and the finding is issue-worthy — then an Org action pointing to
+  it; otherwise create the full Org action.
 - Only GitHub exists: reuse or reopen it and create the missing Org pointer.
-- Only Org exists: reuse or reopen it. When GitHub applies, create the missing
-  issue from the full finding and turn the Org action into its pointer,
-  preserving personal planning/context information.
+- Only Org exists: reuse or reopen it. When GitHub applies in that same sense,
+  create the missing issue from the full finding and turn the Org action into
+  its pointer, preserving personal planning/context information.
 - Both exist: reuse or reopen them and repair a missing pointer if necessary.
 
 For a full finding record, include the problem, affected code/behavior,
 evidence, recommended action, and enough repository context to resume the
-work without a scratch report. Use permanent repository/commit references
-where available; never make `/tmp` files or ephemeral review IDs load-bearing.
-Once GitHub holds the finding, Org holds the actionable title and issue link
-with personal GTD metadata, rather than a second copy of the technical body.
-Do not expose private local content in a public issue.
+work without a scratch report; for typo-level work the location and the edit
+suffice. Use permanent repository/commit references where available; never
+make `/tmp` files or ephemeral review IDs load-bearing. Once GitHub holds the
+finding, Org holds the actionable title and issue link with personal GTD
+metadata, rather than a second copy of the technical body. Do not expose
+private local content in a public issue.
 
 Use available labels and repository conventions. Begin GitHub comments,
 reviews, and replies with `(LLM agent)`; use the same attribution for new issue

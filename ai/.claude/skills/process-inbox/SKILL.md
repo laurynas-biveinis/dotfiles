@@ -60,10 +60,10 @@ subsequent Close of the pass likewise.
 
 First invoke `Skill(gtd)` and follow its conventions. This skill is **only
 the decision flow** — follow `gtd`'s conventions for **recording** (choose
-the track per `gtd`'s _Where to track new work_; for public source-code work,
-surface "create a GitHub issue" and record only an Org pointer; for Org-direct
-work, write to `org-mcp` where the destination file is exposed, else surface
-the exact item), **completing & archiving items**, and **resolving
+the track per `gtd`'s _Where to track new work_; for work `gtd` routes to a
+GitHub issue, surface "create a GitHub issue" and record only an Org pointer;
+for Org-direct work, write to `org-mcp` where the destination file is exposed,
+else surface the exact item), **completing & archiving items**, and **resolving
 `@waitingfor`**; ask one question at a time and stop once the item is filed.
 
 <!-- Keep in sync with weekly-review's Always-confirm rule: the always-confirm

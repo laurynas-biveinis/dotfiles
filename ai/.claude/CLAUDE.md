@@ -20,9 +20,10 @@ tools) in any artifact — duplicate the relevant finding text instead.
 system, and the source for prior/ongoing work and the agenda. When the user
 directs you to pick up or look up such work (today's agenda, where a worktree
 left off, …), look in Org. Persist cross-session work in Org; in public
-source-code projects track it as GitHub issues with Org holding a pointer. Use
-TodoWrite only for ephemeral within-session steps. If `org-mcp` is unavailable,
-proceed without it. See the `gtd` skill for the mechanics.
+source-code projects track issue-worthy work as GitHub issues with Org holding
+a pointer, and typo-level work in Org alone. Use TodoWrite only for ephemeral
+within-session steps. If `org-mcp` is unavailable, proceed without it. See the
+`gtd` skill for the mechanics.
 
 ## Guardrails
 

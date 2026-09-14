@@ -169,9 +169,16 @@ the item.
 Decide the record path:
 
 1. Ephemeral within-session step → TodoWrite.
-2. Persists across sessions, in a public source-code project → a GitHub issue,
-   used idiomatically (labels, cross-references in commits/PRs). Org then holds
-   only a pointer (link) to the issue, not a copy of its content.
+2. Persists across sessions, in a public source-code project, and is
+   issue-worthy → a GitHub issue, used idiomatically (labels, cross-references
+   in commits/PRs). Org then holds only a pointer (link) to the issue, not a
+   copy of its content. Typo-level work — a mechanical edit with no behavioral
+   consequence that needs no explanation beyond its diff: a typo in a comment,
+   docstring, message, or document; whitespace or formatting; a stale comment
+   or reference — is not issue-worthy in any project and goes to Org directly
+   (step 4). A bug is issue-worthy however small its fix. An existing issue
+   that already covers typo-level work is still reused, with an Org pointer,
+   rather than bypassed.
 3. Date/time-specific commitment that happens on that date regardless of any
    list (GTD's hard landscape) and is tied to no project or context list →
    Google Calendar. Other dated items live in Org via `SCHEDULED`/`DEADLINE`.
