@@ -22,12 +22,12 @@ END-INFO-DIR-ENTRY
 
 File: compat.info,  Node: Top,  Next: Introduction,  Up: (dir)
 
-"Compat" Manual
-***************
+Compat Manual
+*************
 
-This manual documents the usage of the "Compat" Emacs lisp library, the
+This manual documents the usage of the Compat Elisp library, the
 forward-compatibility library for Emacs Lisp, corresponding to version
-31.0.0.2.
+31.1.0.0.
 
    Copyright © 2022-2026 Free Software Foundation, Inc.
 
@@ -106,7 +106,7 @@ as a dependency in the header.  The version of the Compat library
 mirrors the version of Emacs releases.  The current version of Compat
 corresponds to the current Emacs release.
 
-     ;; Package-Requires: ((emacs "25.1") (compat "31.0.0.2"))
+     ;; Package-Requires: ((emacs "25.1") (compat "31.1"))
 
    There is no need to depend on ‘emacs 25.1’ specifically.  One can
 choose any newer version, if features not provided by Compat necessitate
@@ -2873,13 +2873,18 @@ will be the need for changes, so use these functions with care.
           (all #'numberp '())            ⇒ t
 
  -- Function: any pred list
+     This function is an alias for ‘member-if’.  It may be preferable in
+     contexts which do not make use of the returned value but only
+     whether or not it was nil.
+
+ -- Function: member-if pred list
      This function returns non-‘nil’ if PRED is true for at least one
      element in LIST.  The returned value is the longest LIST suffix
      whose first element satisfies PRED.
 
-          (any #'symbolp '(1 2 3 4))     ⇒ nil
-          (any #'symbolp '(1 2 a b 3 4)) ⇒ (a b 3 4)
-          (any #'symbolp '())            ⇒ nil
+          (member-if #'symbolp '(1 2 3 4))     ⇒ nil
+          (member-if #'symbolp '(1 2 a b 3 4)) ⇒ (a b 3 4)
+          (member-if #'symbolp '())            ⇒ nil
 
  -- Function: remove-display-text-property start end spec &optional
           object
@@ -3078,7 +3083,7 @@ Appendix A Function Index
 * cl-once-only:                          Emacs 29.1.          (line 676)
 * cl-with-gensyms:                       Emacs 29.1.          (line 657)
 * closurep:                              Emacs 30.1.          (line  57)
-* color-blend:                           Emacs 31.1.          (line 179)
+* color-blend:                           Emacs 31.1.          (line 184)
 * color-dark-p:                          Emacs 28.1.          (line 326)
 * color-oklab-to-srgb:                   Emacs 30.1.          (line  44)
 * color-oklab-to-xyz:                    Emacs 30.1.          (line  34)
@@ -3103,7 +3108,7 @@ Appendix A Function Index
 * compat-call plist-put:                 Emacs 29.1.          (line 801)
 * compat-call recenter:                  Emacs 27.1.          (line 346)
 * compat-call regexp-opt:                Emacs 27.1.          (line 385)
-* compat-call seconds-to-string:         Emacs 31.1.          (line 194)
+* compat-call seconds-to-string:         Emacs 31.1.          (line 199)
 * compat-call set-transient-map:         Emacs 29.1.          (line 728)
 * compat-call setq-local:                Emacs 27.1.          (line 370)
 * compat-call sort:                      Emacs 30.1.          (line 212)
@@ -3115,14 +3120,14 @@ Appendix A Function Index
 * compat-function:                       Usage.               (line  58)
 * compiled-function-p:                   Emacs 29.1.          (line 232)
 * completion-lazy-hilit:                 Emacs 30.1.          (line 182)
-* completion-list-candidate-at-point:    Emacs 31.1.          (line 138)
-* completion-table-with-metadata:        Emacs 31.1.          (line 133)
+* completion-list-candidate-at-point:    Emacs 31.1.          (line 143)
+* completion-table-with-metadata:        Emacs 31.1.          (line 138)
 * count-sentences:                       Emacs 29.1.          (line  31)
 * cXXXr:                                 Emacs 26.1.          (line  66)
 * cXXXXr:                                Emacs 26.1.          (line  67)
 * date-days-in-month:                    Emacs 27.1.          (line 213)
 * date-ordinal-to-time:                  Emacs 27.1.          (line 220)
-* decf:                                  Emacs 31.1.          (line 175)
+* decf:                                  Emacs 31.1.          (line 180)
 * decoded-time-day:                      Emacs 27.1.          (line 175)
 * decoded-time-dst:                      Emacs 27.1.          (line 195)
 * decoded-time-hour:                     Emacs 27.1.          (line 170)
@@ -3151,7 +3156,7 @@ Appendix A Function Index
 * error-type-p:                          Emacs 31.1.          (line  14)
 * ert-with-temp-directory:               Emacs 29.1.          (line 641)
 * ert-with-temp-file:                    Emacs 29.1.          (line 635)
-* evenp:                                 Emacs 31.1.          (line 161)
+* evenp:                                 Emacs 31.1.          (line 166)
 * file-attribute-access-time:            Emacs 26.1.          (line 223)
 * file-attribute-collect:                Emacs 26.1.          (line 260)
 * file-attribute-device-number:          Emacs 26.1.          (line 255)
@@ -3188,11 +3193,11 @@ Appendix A Function Index
 * get-display-property:                  Emacs 29.1.          (line 179)
 * get-scratch-buffer-create:             Emacs 29.1.          (line  44)
 * get-truename-buffer:                   Emacs 30.1.          (line 115)
-* hash-table-contains-p:                 Emacs 31.1.          (line 116)
+* hash-table-contains-p:                 Emacs 31.1.          (line 121)
 * if-let*:                               Emacs 26.1.          (line 149)
 * ignore-errors:                         Emacs 27.1.          (line 106)
 * image-property:                        Emacs 26.1.          (line 198)
-* incf:                                  Emacs 31.1.          (line 166)
+* incf:                                  Emacs 31.1.          (line 171)
 * insert-into-buffer:                    Emacs 28.1.          (line  92)
 * interpreted-function-p:                Emacs 30.1.          (line  62)
 * key-parse:                             Emacs 29.1.          (line 436)
@@ -3221,17 +3226,18 @@ Appendix A Function Index
 * mapcan:                                Emacs 26.1.          (line  53)
 * mark-thing-at-mouse:                   Emacs 28.1.          (line 302)
 * match-buffers:                         Emacs 29.1.          (line 298)
+* member-if:                             Emacs 31.1.          (line  85)
 * merge-ordered-lists:                   Emacs 30.1.          (line 135)
 * minibuffer-history-value:              Emacs 27.1.          (line  32)
-* minusp:                                Emacs 31.1.          (line 152)
+* minusp:                                Emacs 31.1.          (line 157)
 * named-let:                             Emacs 28.1.          (line 211)
 * native-comp-available-p:               Emacs 28.1.          (line 375)
 * ntake:                                 Emacs 29.1.          (line 219)
 * obarray-clear:                         Emacs 30.1.          (line  54)
-* oddp:                                  Emacs 31.1.          (line 156)
+* oddp:                                  Emacs 31.1.          (line 161)
 * package-get-version:                   Emacs 27.1.          (line 205)
 * plistp:                                Emacs 29.1.          (line  71)
-* plusp:                                 Emacs 31.1.          (line 148)
+* plusp:                                 Emacs 31.1.          (line 153)
 * pos-bol:                               Emacs 29.1.          (line 125)
 * pos-eol:                               Emacs 29.1.          (line 129)
 * primitive-function-p:                  Emacs 30.1.          (line  65)
@@ -3243,15 +3249,15 @@ Appendix A Function Index
 * read-char-from-minibuffer:             Emacs 27.1.          (line  44)
 * read-multiple-choice:                  Emacs 26.1.          (line 185)
 * readablep:                             Emacs 29.1.          (line  34)
-* remove-display-text-property:          Emacs 31.1.          (line  89)
+* remove-display-text-property:          Emacs 31.1.          (line  94)
 * replace-regexp-in-string:              Emacs 28.1.          (line 108)
 * replace-string-in-region:              Emacs 28.1.          (line 102)
 * require-with-check:                    Emacs 30.1.          (line 124)
 * ring-resize:                           Emacs 27.1.          (line  28)
 * set-local:                             Emacs 31.1.          (line  53)
 * static-if:                             Emacs 30.1.          (line 187)
-* static-unless:                         Emacs 31.1.          (line 124)
-* static-when:                           Emacs 31.1.          (line 119)
+* static-unless:                         Emacs 31.1.          (line 129)
+* static-when:                           Emacs 31.1.          (line 124)
 * string-chop-newline:                   Emacs 28.1.          (line 206)
 * string-clean-whitespace:               Emacs 28.1.          (line 175)
 * string-distance:                       Emacs 27.1.          (line  86)
@@ -3276,7 +3282,7 @@ Appendix A Function Index
 * thing-at-mouse:                        Emacs 28.1.          (line 289)
 * time-equal-p:                          Emacs 27.1.          (line 208)
 * trusted-content-p:                     Emacs 30.1.          (line  29)
-* unbuttonize-region:                    Emacs 31.1.          (line 129)
+* unbuttonize-region:                    Emacs 31.1.          (line 134)
 * use-region-beginning:                  Emacs 29.1.          (line  53)
 * use-region-end:                        Emacs 29.1.          (line  50)
 * use-region-noncontiguous-p:            Emacs 29.1.          (line  47)
@@ -3293,7 +3299,7 @@ Appendix A Function Index
 * with-restriction:                      Emacs 29.1.          (line  79)
 * with-suppressed-warnings:              Emacs 27.1.          (line  65)
 * with-window-non-dedicated:             Emacs 28.1.          (line 383)
-* with-work-buffer:                      Emacs 31.1.          (line 143)
+* with-work-buffer:                      Emacs 31.1.          (line 148)
 * without-restriction:                   Emacs 29.1.          (line 113)
 * xor:                                   Emacs 27.1.          (line 142)
 
@@ -3321,20 +3327,20 @@ Appendix B Variable Index
 
 Tag Table:
 Node: Top828
-Node: Introduction2322
-Node: Overview2482
-Node: Usage3005
-Node: Limitations7043
-Node: Support11902
-Node: Emacs 26.112552
-Node: Emacs 27.129814
-Node: Emacs 28.150177
-Node: Emacs 29.170327
-Node: Emacs 30.1108464
-Node: Emacs 31.1123290
-Node: Development132642
-Node: Function Index134221
-Node: Variable Index151840
+Node: Introduction2311
+Node: Overview2471
+Node: Usage2994
+Node: Limitations7028
+Node: Support11887
+Node: Emacs 26.112537
+Node: Emacs 27.129799
+Node: Emacs 28.150162
+Node: Emacs 29.170312
+Node: Emacs 30.1108449
+Node: Emacs 31.1123275
+Node: Development132856
+Node: Function Index134435
+Node: Variable Index152127
 
 End Tag Table
 
