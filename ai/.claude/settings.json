@@ -24,6 +24,46 @@
   },
   "enableAllProjectMcpServers": false,
   "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -j 'select(.tool_input.file_path | endswith(\".md\")) | .tool_input.file_path + \"\\u0000\"' | xargs -0 -r prettier --write",
+            "if": "Write(*.md)|Edit(*.md)|MultiEdit(*.md)"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
@@ -69,16 +109,72 @@
             "if": "MultiEdit(*.el)"
           }
         ]
-      }
-    ],
-    "PostToolUse": [
+      },
       {
-        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "jq -j 'select(.tool_input.file_path | endswith(\".md\")) | .tool_input.file_path + \"\\u0000\"' | xargs -0 -r prettier --write",
-            "if": "Write(*.md)|Edit(*.md)|MultiEdit(*.md)"
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
           }
         ]
       }
