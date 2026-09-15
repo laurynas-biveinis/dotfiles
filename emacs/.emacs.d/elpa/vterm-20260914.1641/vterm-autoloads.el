@@ -11,18 +11,18 @@
 
 ;;; Generated autoloads from vterm.el
 
-(autoload 'vterm-module-compile "vterm" "\
-Compile vterm-module." t)
-(autoload 'vterm--bookmark-handler "vterm" "\
-Handler to restore a vterm bookmark BMK.
+(autoload 'vterm-module-compile "vterm"
+"Compile vterm-module." t)
+(autoload 'vterm--bookmark-handler "vterm"
+"Handler to restore a vterm bookmark BMK.
 
 If a vterm buffer of the same name does not exist, the function will create a
 new vterm buffer of the name. It also checks the current directory and sets
 it to the bookmarked directory if needed.
 
 (fn BMK)")
-(autoload 'vterm-next-error-function "vterm" "\
-Advance to the next error message and visit the file where the error was.
+(autoload 'vterm-next-error-function "vterm"
+"Advance to the next error message and visit the file where the error was.
 This is the value of `next-error-function' in Compilation
 buffers.  Prefix arg N says how many error messages to move
 forwards (or backwards, if negative).
@@ -30,8 +30,8 @@ forwards (or backwards, if negative).
 Optional argument RESET clears all the errors.
 
 (fn N &optional RESET)" t)
-(autoload 'vterm "vterm" "\
-Create an interactive Vterm buffer.
+(autoload 'vterm "vterm"
+"Create an interactive Vterm buffer.
 Start a new Vterm session, or switch to an already active
 session.  Return the buffer selected (or created).
 
@@ -47,8 +47,8 @@ The buffer name used for Vterm sessions is determined by the
 value of `vterm-buffer-name'.
 
 (fn &optional ARG)" t)
-(autoload 'vterm-other-window "vterm" "\
-Create an interactive Vterm buffer in another window.
+(autoload 'vterm-other-window "vterm"
+"Create an interactive Vterm buffer in another window.
 Start a new Vterm session, or switch to an already active
 session.  Return the buffer selected (or created).
 

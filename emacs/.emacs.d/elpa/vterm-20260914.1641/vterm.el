@@ -3,8 +3,8 @@
 ;; Copyright (C) 2017-2020 by Lukas Fürmetz & Contributors
 ;;
 ;; Author: Lukas Fürmetz <fuermetz@mailbox.org>
-;; Package-Version: 20260730.1414
-;; Package-Revision: 70921114908e
+;; Package-Version: 20260914.1641
+;; Package-Revision: 6d715a93fa0e
 ;; URL: https://github.com/akermu/emacs-libvterm
 ;; Keywords: terminals
 ;; Package-Requires: ((emacs "25.1"))
@@ -384,13 +384,13 @@ This means that vterm will render bold with the default face weight."
   :type  'boolean
   :group 'vterm)
 
+(define-obsolete-variable-alias 'vterm-set-bold-hightbright
+  'vterm-set-bold-highbright "0.0.2")
+
 (defcustom vterm-set-bold-highbright nil
   "When not-nil, using highbright colors for bolded text, see #549."
   :type  'boolean
   :group 'vterm)
-
-(define-obsolete-variable-alias 'vterm-set-bold-hightbright
-  'vterm-set-bold-highbright "0.0.2")
 
 (defcustom vterm-ignore-blink-cursor t
   "When t, vterm will ignore request from application to turn on/off cursor blink.
@@ -578,6 +578,8 @@ Only background is used."
   "Shell process of current term.")
 
 (defvar-local vterm--redraw-timer nil)
+(define-obsolete-variable-alias 'vterm--redraw-immididately 'vterm--redraw-immediately "2025-07-15")
+
 (defvar-local vterm--redraw-immediately nil)
 (defvar-local vterm--linenum-remapping nil)
 (defvar-local vterm--prompt-tracking-enabled-p nil)
@@ -586,8 +588,6 @@ Only background is used."
 (defvar-local vterm--delete-region-function (symbol-function #'delete-region))
 (defvar-local vterm--undecoded-bytes nil)
 (defvar-local vterm--copy-mode-fake-newlines nil)
-
-(define-obsolete-variable-alias 'vterm--redraw-immididately 'vterm--redraw-immediately "2025-07-15")
 
 (defvar vterm-timer-delay 0.1
   "Delay for refreshing the buffer after receiving updates from libvterm.
