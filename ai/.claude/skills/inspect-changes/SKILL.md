@@ -78,6 +78,13 @@ create a report file for a stop that previously wrote none.
 
 ## Scope
 
+**Observe the repository in this review.** Never answer a probe, check or
+other repository read this skill calls for from what you ran or saw before
+this review started: the user stages, unstages, edits and commits out-of-band,
+so such an observation is not evidence of the current state. The repository
+is assumed to hold still while the review runs, so a value captured during it
+may be reused where a step says so.
+
 **Normalize before running a scope or a precedence probe.** Reject
 `--no-index` as described below before executing it. Otherwise derive a
 patch-producing command, preserving revisions, pathspecs, diff filters and
@@ -790,7 +797,7 @@ boundary `BASE` when the stack is non-empty.
 
 On first entry to Phase 3, compute the **unpublished-commit stack context**
 once and reuse it for every analysis subagent across all later verify⇄analyze
-passes — no commits are made during a review, so it is stable.
+passes, as **Observe the repository in this review** above allows.
 
 Placement asks where a fix belongs, so it turns on where the **defect** is, not
 on where the reviewed lines are. Under any committed scope — any single-commit
