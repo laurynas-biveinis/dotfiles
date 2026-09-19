@@ -404,6 +404,66 @@ brew install font-sf-mono-nerd-font
 # Set font in Terminal manually
 
 #
+# BetterDisplay
+#
+brew install --cask betterdisplay
+# Run once and leave it running; the tagID check below needs it
+
+# Services Quick Actions, one BetterDisplay ConnectedIntent per external
+# display, "on" for Connect and "off" for Disconnect. The displays are baked
+# in by tagID (3 = ASUS PB279, 4 = ASUS PB27U), which is per-machine, so with
+# both attached check:
+#   betterdisplaycli get -identifiers
+# If they differ, re-select each display in Shortcuts, export over the files
+# in ~/dotfiles/dotfiles/macos-shortcuts (File > Export, For: "Anyone" - the
+# other mode embeds contact info and this repository is public), update the
+# tagIDs above, and commit.
+# The signatures expire 2027-10-13, taken by hand from the leaf certificates;
+# re-check on re-export. If import fails, Shortcuts tries iCloud first; then
+# re-sign in place (shortcuts sign --mode anyone, to a mktemp file, moved over
+# the original); then re-export from a Mac that still has them; last, rebuild
+# by hand as "Connect External Displays" and "Disconnect External Displays",
+# the names the lookups below match.
+open ~/dotfiles/dotfiles/macos-shortcuts/'Connect External Displays.shortcut'
+open ~/dotfiles/dotfiles/macos-shortcuts/'Disconnect External Displays.shortcut'
+# Confirm "Add Shortcut" for each before continuing
+
+shortcut_uuid() {
+	shortcuts list --show-identifiers |
+		awk -F '[()]' -v name="$1" '
+        # NF == 3 rejects a listed name that itself contains parentheses,
+        # whose $2 would be that text rather than the identifier.
+        NF == 3 && $1 == (name " ") { uuid = $2; count++ }
+        END {
+          if (count != 1) {
+            print "expected one shortcut named \"" name "\", found " count + 0 > "/dev/stderr"
+            exit 1
+          }
+          print uuid
+        }
+      '
+}
+
+connect_uuid=$(shortcut_uuid 'Connect External Displays')
+disconnect_uuid=$(shortcut_uuid 'Disconnect External Displays')
+
+# @ Cmd, ~ Opt, ^ Ctrl: Ctrl-Opt-Cmd-R connects, Ctrl-Opt-Cmd-D disconnects.
+# The inner quotes are required: without them "(null)"'s parentheses make the
+# key unparseable. The key also embeds the UUID minted at import, and
+# "defaults" cannot remove from NSServicesStatus, so re-importing leaves the
+# old binding behind. To drop one: export the domain to a mktemp file,
+# "plutil -remove" its unquoted "NSServicesStatus.(null) - <uuid> -
+# runShortcutAsService" key, import it back, re-run pbs -flush.
+# "shortcuts list --show-identifiers" says which UUIDs are live.
+defaults write pbs NSServicesStatus -dict-add \
+	"\"(null) - ${connect_uuid:?no Connect External Displays UUID} - runShortcutAsService\"" \
+	'{ key_equivalent = "@~^r"; }' \
+	"\"(null) - ${disconnect_uuid:?no Disconnect External Displays UUID} - runShortcutAsService\"" \
+	'{ key_equivalent = "@~^d"; }'
+
+/System/Library/CoreServices/pbs -flush
+
+#
 # iTerm2
 #
 brew install --cask iterm2
