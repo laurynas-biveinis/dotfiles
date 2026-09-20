@@ -1006,15 +1006,15 @@
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
       (:commit . "3cd5097285dc10ac0898cf6f30c9699c3399e421"))])
  (hermes
-  . [(0 7 0)
-     ((emacs (29 1)) (keymap-popup (0 3 1)) (websocket (1 15))
+  . [(0 7 1)
+     ((emacs (29 1)) (keymap-popup (0 4 0)) (websocket (1 15))
       (markdown-mode (2 6)))
      "Emacs frontend for Hermes Agent" tar
      ((:url . "https://git.thanosapollo.org/emacs-hermes")
       (:keywords "tools" "convenience")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "228b72b4acd7bf7750020f09f77b986405d61636"))])
+      (:commit . "3bcafa0357d7f2d9071da8274f323134460105a6"))])
  (hideshowvis
   . [(0 9) ((emacs (27 1)))
      "Fringe markers for regions foldable by hideshow.el" tar
@@ -1854,11 +1854,11 @@
       (:authors ("John Olsson" . "john@cryon.se"))
       (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed
-  . [(1 5 2) ((emacs (25 1))) "A major mode for editing subtitles" tar
+  . [(1 5 3) ((emacs (25 1))) "A major mode for editing subtitles" tar
      ((:url . "https://github.com/sachac/subed")
       (:keywords "convenience" "files" "hypermedia" "multimedia")
       (:maintainer "Sacha Chua" . "sacha@sachachua.com")
-      (:commit . "be52d53bf2ccb583f881e5663ad5a6fc28221396"))])
+      (:commit . "581d53e80518ddba48432f439bd73b4e208bec60"))])
  (sweeprolog
   . [(0 27 6) ((emacs (27 1)) (compat (29 1 4 2)))
      "Embedded SWI-Prolog" tar
