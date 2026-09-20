@@ -3,14 +3,18 @@
 """Block git add/rm commands that use glob patterns or directories.
 
 This hook uses pure allowlist validation: only commands matching the exact
-pattern 'git add|rm file1 file2 ...' with simple filenames are allowed.
-All other patterns including flags, glob patterns, shell operators, and
+pattern 'git add|rm [<option>] [--] file1 file2 ...' with simple filenames are
+allowed, where the one option is --intent-to-add for add and --cached for rm.
+All other patterns including other flags, glob patterns, shell operators, and
 directories are rejected.
 """
 
 import json
 import re
 import sys
+
+# The one option each subcommand may carry, directly after it.
+ALLOWED_OPTIONS = {"add": "--intent-to-add", "rm": "--cached"}
 
 
 def is_valid_filename(arg):
@@ -26,7 +30,8 @@ def is_valid_filename(arg):
 
 
 def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-statements
-    """Check if command matches the allowed pattern: git add|rm file1 file2 ...
+    """Check if command matches the allowed pattern:
+    git add|rm [<allowed option>] [--] file1 file2 ...
 
     Returns: (is_valid, error_message)
     """
@@ -37,7 +42,7 @@ def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-st
         return False, "Too few arguments"
     if parts[0] != "git":
         return False, "Not a git command"
-    if parts[1] not in ["add", "rm"]:
+    if parts[1] not in ALLOWED_OPTIONS:
         return False, "Not a staging command"
 
     # Allow 'git add' or 'git rm' with no arguments (shows usage)
@@ -45,11 +50,12 @@ def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-st
         return True, None
 
     file_args_start = 2
-    if parts[1] == "rm" and len(parts) > 2 and parts[2] == "--cached":
-        file_args_start = 3
-        # Ensure there are file arguments after --cached
-        if len(parts) == 3:
-            return False, "No files specified after --cached"
+    if parts[file_args_start] == ALLOWED_OPTIONS[parts[1]]:
+        file_args_start += 1
+    if file_args_start < len(parts) and parts[file_args_start] == "--":
+        file_args_start += 1
+    if file_args_start == len(parts):
+        return False, f"No files specified after {parts[-1]}"
 
     # Validate all file arguments
     for part in parts[file_args_start:]:
@@ -99,9 +105,8 @@ def main():
                 "permissionDecision": "deny",
                 "permissionDecisionReason": (
                     "Blocked: git staging commands cannot be used in compound commands. "
-                    "Per CLAUDE.md guidelines, you must use separate Bash tool calls for "
-                    "git add/rm commands. Do not use shell operators like &&, ||, ;, or | "
-                    "with git staging commands."
+                    "Run git add/rm in its own Bash tool call, without shell operators "
+                    "like &&, ||, ;, or |."
                 ),
             }
         }
@@ -118,9 +123,12 @@ def main():
                 "permissionDecision": "deny",
                 "permissionDecisionReason": (
                     f"Blocked: {error_message}. "
-                    f"Per CLAUDE.md guidelines, only 'git add file1 file2 ...' or "
-                    f"'git rm file1 file2 ...' with explicit file paths are allowed. "
-                    f"No flags, glob patterns, directories, or shell operators permitted."
+                    "Stage individual files: "
+                    "'git add [--intent-to-add] [--] file1 file2 ...' or "
+                    "'git rm [--cached] [--] file1 file2 ...'. The working tree may "
+                    "hold unrelated changes, files not meant to be tracked, or the "
+                    "user's own parallel work, so no other flags, glob patterns, "
+                    "directories, or shell operators are allowed."
                 ),
             }
         }
