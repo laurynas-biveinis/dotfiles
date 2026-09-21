@@ -449,7 +449,7 @@ disconnect_uuid=$(shortcut_uuid 'Disconnect External Displays')
 
 # @ Cmd, ~ Opt, ^ Ctrl: Ctrl-Opt-Cmd-R connects, Ctrl-Opt-Cmd-D disconnects.
 # The inner quotes are required: without them "(null)"'s parentheses make the
-# key unparseable. The key also embeds the UUID minted at import, and
+# key unparsable. The key also embeds the UUID minted at import, and
 # "defaults" cannot remove from NSServicesStatus, so re-importing leaves the
 # old binding behind. To drop one: export the domain to a mktemp file,
 # "plutil -remove" its unquoted "NSServicesStatus.(null) - <uuid> -
