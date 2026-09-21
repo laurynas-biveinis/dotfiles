@@ -48,7 +48,15 @@ allowed-tools: >-
    Leave any other edit this invocation made in place and unstaged, and report
    it on return. If a path to stage cannot be passed to the staging hook as an
    argument, abort and report both that path and the stash entry still holding
-   the user's work.
+   the user's work. Enumerate the files:
+   - Pass each path as its own `git add`/`git rm` argument, never `-A`, `.`, a
+     glob, or a directory, except a caller-named submodule path already tracked
+     as a gitlink. An untracked nested Git repository reports as a single
+     directory entry even under `-uall`, and staging it records a gitlink rather
+     than the files.
+   - Run each staging command as its own Bash call, with no `cd` prefix and no
+     `&&`, `||`, `;`, `|` or redirects: the staging hook denies compound
+     commands before it validates anything else.
 1. Draft the commit message.
 1. Call `/commit` skill with the drafted commit message to commit. Note in the
    skill invocation that the commit message draft is only a suggestion and that
