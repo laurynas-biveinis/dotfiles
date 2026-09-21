@@ -1,8 +1,8 @@
 ---
 description: >-
   Identify and list any logically complete and self-contained concerns in the
-  current working tree changes that would be perfect candidates for separate
-  commits.
+  current uncommitted changes (staged, else unstaged) that would be perfect
+  candidates for separate commits.
 model: haiku
 context: fork
 agent: general-purpose
@@ -11,13 +11,15 @@ allowed-tools: Bash(git diff:*) Read
 
 # Identify Diff Splits
 
-Identify the independent concerns in the current working tree. Name
-and list them.
+Identify the independent concerns in the current uncommitted changes.
+Name and list them.
 
 ## Method
 
-1. Read the working tree changes.
-2. Identify the distinct concerns. Most working trees have one; some
+1. Read the changes: `git diff --staged` if it shows any, else
+   `git diff`. If both are empty, return that there is nothing to
+   split.
+2. Identify the distinct concerns. Most change sets have one; some
    have a few genuinely independent ones. Concerns may be mixed
    within a single hunk — chunk boundaries do not delimit concerns.
 3. Return one named entry per concern. Output only the final list.
@@ -36,8 +38,8 @@ It absorbs everything that has no standalone value of its own:
 - Helpers, validation, frameworks, and test infrastructure that
   exist solely to enable it.
 - Wiring needed only to expose the change.
-- Deprecation of an API replaced by another change in this working
-  tree, and migration of in-repo callers — never a separate entry,
+- Deprecation of an API replaced by another change in the same set,
+  and migration of in-repo callers — never a separate entry,
   the deprecation references the replacement.
 - Tests for behavior introduced by this concern — never a separate
   entry. Tests backfilling coverage of pre-existing code stand
