@@ -70,9 +70,9 @@ abort; keep partial edits and recovery data in place.
    names as part of the slice, including one whose status record is unchanged
    because it was already untracked, or is a submodule the stash left dirty.
    Leave any other edit this invocation made in place and unstaged, and report
-   it on return. If a path to stage cannot be passed to the staging hook as an
-   argument, abort through the failure return and report that path. Enumerate
-   the files:
+   it on return. If staging is denied, abort through the failure return with
+   the path and denial. Do not retry with quoting, escaping, a directory
+   argument or `git apply`. Enumerate the files:
    - Pass each path as its own `git add`/`git rm` argument, never `-A`, `.`, a
      glob, or a directory, except a caller-named submodule path already tracked
      as a gitlink. An untracked nested Git repository reports as a single
