@@ -37,9 +37,15 @@ caller has established these preconditions.
 1. Abort if $ARGUMENTS requires design choices or back-and-forth discussion.
 1. Abort if the current working tree has both staged and unstaged changes,
    because stashing and unstashing would lose this state.
-1. Stash the current working tree changes with a plain `git stash` — not
-   `-u`, which would take the untracked files the baseline relies on. Then
-   write the output of `git status --porcelain -uall` to
+1. Choose a unique invocation marker and record
+   `git stash list --format='%H %gd %gs'`. Stash the current working tree
+   changes with `git stash push -m "commit-separately: <marker>"` — not
+   `-u`, which would take the untracked files the baseline relies on. Read
+   the same stash listing again: record the new marked entry's full object
+   ID, or record "nothing stashed" if the push succeeded and the list is
+   unchanged. A clean tree is a valid input. If the push fails or the new
+   entry cannot be identified unambiguously, stop using the failure return
+   below. Then write the output of `git status --porcelain -uall` to
    `/tmp/commit-separately-<topic>-baseline.txt`, outside the repository,
    where `<topic>` is a 1-3 word kebab-case slug derived from $ARGUMENTS:
    whatever that listing still reports survived the stash, so those paths
@@ -68,7 +74,16 @@ caller has established these preconditions.
 1. Call `/commit` skill with the drafted commit message to commit. Note in the
    skill invocation that the commit message draft is only a suggestion and that
    the commit skill is responsible for verifying and crafting the final message.
-1. Pop the stash.
+1. If nothing was stashed, skip restoration and continue to the success
+   return. Otherwise, run `git stash pop 'stash@{0}'`; the exclusive-use
+   precondition keeps this invocation's stash on top.
 1. Resolve any merge conflicts.
 1. Return the commit message as returned by the commit skill, plus any path
    this invocation left deliberately unstaged, and why.
+
+**Failure return:** stop without further mutations. Report the reason, any
+commit already made (hash and message), the current working-tree and index
+state from `git status --porcelain -uall`, and the invocation's stash marker,
+object ID and current stash selector. Say explicitly when nothing was stashed
+or its entry is missing or uncertain; never identify another entry as this
+invocation's. Retain any surviving invocation stash as recovery data.
