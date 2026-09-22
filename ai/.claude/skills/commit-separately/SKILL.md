@@ -7,7 +7,8 @@ description: >-
   the slice needs: the stash does not carry untracked files, so nothing else
   tells this skill they belong to it. Do NOT use for changes that
   need design choices or back-and-forth. Mechanism: stash the working tree,
-  apply the change, commit, restore the stash.
+  apply the change, commit, restore the stash. Requires exclusive use of the
+  checkout and the repository stash list, with tracked-file buffers saved.
 context: fork
 argument-hint: slice of changes (name untracked paths), or mechanical operation
 allowed-tools: >-
@@ -26,6 +27,12 @@ allowed-tools: >-
 ---
 
 # Commit Separately
+
+The caller must arrange exclusive use of this checkout and the repository's
+stash list until the fork returns, including stash operations in other
+worktrees. Save tracked-file buffers before invocation; the caller must keep
+unrelated checkout readers and writers idle. Abort before stashing unless the
+caller has established these preconditions.
 
 1. Abort if $ARGUMENTS requires design choices or back-and-forth discussion.
 1. Abort if the current working tree has both staged and unstaged changes,
