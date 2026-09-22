@@ -60,6 +60,8 @@ numbered steps now, starting with step 1.
    - Do NOT use unstaged changes as input to the commit message.
 
 1. **Execute the Commit**: After crafting the commit message:
+   - Commit only the staged changes. Do not edit files, stage changes, or use
+     `-a`/`--all`.
    - Execute `git commit -m "<message>"`. For multi-line messages use a
      heredoc:
 
@@ -73,8 +75,9 @@ numbered steps now, starting with step 1.
      ```
 
    - Confirm the commit was successful. If a pre-commit hook rejects the
-     commit, fix the underlying issue and create a new commit. Do not
-     use `--amend` or `--no-verify`.
+     commit, report the hook output and rejected commit message, then stop
+     without retrying. Leave any hook edits for the caller to review and stage.
+   - Do not use `--amend` or `--no-verify`.
 
 1. **Report Back**: Return the resulting commit hash and the final commit
    message. If no commit was made (e.g. nothing staged, mixed concerns, hook
