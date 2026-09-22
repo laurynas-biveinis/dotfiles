@@ -77,12 +77,15 @@ abort; keep partial edits and recovery data in place.
 1. Call `/commit` skill with the drafted commit message to commit. Note in the
    skill invocation that the commit message draft is only a suggestion and that
    the commit skill is responsible for verifying and crafting the final message.
+   Require a resulting commit hash and final message; on a non-commit return,
+   abort through the failure return before attempting restoration.
 1. If nothing was stashed, skip restoration and continue to the success
    return. Otherwise, run `git stash pop 'stash@{0}'`; the exclusive-use
    precondition keeps this invocation's stash on top.
 1. Resolve any merge conflicts.
-1. Return the commit message as returned by the commit skill, plus any path
-   this invocation left deliberately unstaged, and why.
+1. On success, return the commit hash and final message from the commit skill,
+   whether restoration succeeded or was skipped because nothing was stashed,
+   and any path this invocation left deliberately unstaged, with its reason.
 
 **Failure return:** stop without further mutations. Report the reason, the
 commit hash and message if one was made (otherwise say no commit was made),
