@@ -53,7 +53,12 @@ abort; keep partial edits and recovery data in place.
    where `<topic>` is a 1-3 word kebab-case slug derived from $ARGUMENTS:
    whatever that listing still reports survived the stash, so those paths
    predate this change.
-1. Do the $ARGUMENTS change.
+1. For an extraction, read tracked changes from
+   `git stash show -p <recorded-object-id>` when an entry was created; read
+   caller-named untracked or dirty-submodule content from the checkout. Apply
+   only the requested slice with `Edit`/`Write` or working-tree-only `git apply`,
+   never `--cached` or `--index`. For a mechanical operation, make the requested
+   change directly.
 1. Run `./check.sh` if present, fix any errors, repeat as needed. Abort if
    fixing them requires design choices or back-and-forth discussion.
 1. Stage exactly these, and nothing else: (a) every path
