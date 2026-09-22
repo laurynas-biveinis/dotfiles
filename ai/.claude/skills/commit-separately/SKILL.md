@@ -34,6 +34,9 @@ worktrees. Save tracked-file buffers before invocation; the caller must keep
 unrelated checkout readers and writers idle. Abort before stashing unless the
 caller has established these preconditions.
 
+Every abort uses the failure return below. If a step cannot be completed,
+abort; keep partial edits and recovery data in place.
+
 1. Abort if $ARGUMENTS requires design choices or back-and-forth discussion.
 1. Abort if the current working tree has both staged and unstaged changes,
    because stashing and unstashing would lose this state.
@@ -60,8 +63,8 @@ caller has established these preconditions.
    because it was already untracked, or is a submodule the stash left dirty.
    Leave any other edit this invocation made in place and unstaged, and report
    it on return. If a path to stage cannot be passed to the staging hook as an
-   argument, abort and report both that path and the stash entry still holding
-   the user's work. Enumerate the files:
+   argument, abort through the failure return and report that path. Enumerate
+   the files:
    - Pass each path as its own `git add`/`git rm` argument, never `-A`, `.`, a
      glob, or a directory, except a caller-named submodule path already tracked
      as a gitlink. An untracked nested Git repository reports as a single
@@ -81,9 +84,11 @@ caller has established these preconditions.
 1. Return the commit message as returned by the commit skill, plus any path
    this invocation left deliberately unstaged, and why.
 
-**Failure return:** stop without further mutations. Report the reason, any
-commit already made (hash and message), the current working-tree and index
-state from `git status --porcelain -uall`, and the invocation's stash marker,
-object ID and current stash selector. Say explicitly when nothing was stashed
-or its entry is missing or uncertain; never identify another entry as this
-invocation's. Retain any surviving invocation stash as recovery data.
+**Failure return:** stop without further mutations. Report the reason, the
+commit hash and message if one was made (otherwise say no commit was made),
+and the current working-tree/index state from `git status --porcelain -uall`,
+including staged and unmerged paths. Report the invocation's stash marker,
+object ID and current selector when known. Distinguish stashing not attempted,
+nothing stashed, and an entry missing or uncertain; never identify another
+entry as this invocation's. Retain any surviving invocation stash as recovery
+data. A commit alone does not mean the procedure succeeded.
