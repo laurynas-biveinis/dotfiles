@@ -13,7 +13,10 @@ context: fork
 argument-hint: slice of changes (name untracked paths), or mechanical operation
 allowed-tools: >-
   Bash(./check.sh)
-  Bash(git stash:*)
+  Bash(git stash push:*)
+  Bash(git stash list:*)
+  Bash(git stash show:*)
+  Bash(git stash pop:*)
   Bash(git status:*)
   Bash(git diff:*)
   Bash(git add:*)
