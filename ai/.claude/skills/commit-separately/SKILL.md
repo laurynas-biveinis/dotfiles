@@ -31,6 +31,10 @@ allowed-tools: >-
 
 # Commit Separately
 
+You are running as the forked `commit-separately` skill. This document is your
+complete task — there is no separate user request. Execute the numbered steps
+now, using $ARGUMENTS as the requested change.
+
 The caller must arrange exclusive use of this checkout and the repository's
 stash list until the fork returns, including stash operations in other
 worktrees. Save tracked-file buffers before invocation; the caller must keep
