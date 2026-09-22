@@ -82,7 +82,9 @@ abort; keep partial edits and recovery data in place.
 1. If nothing was stashed, skip restoration and continue to the success
    return. Otherwise, run `git stash pop 'stash@{0}'`; the exclusive-use
    precondition keeps this invocation's stash on top.
-1. Resolve any merge conflicts.
+1. On any pop failure, including conflicts, use the failure return; do not
+   resolve or stage the conflicts. A failed pop can leave its entry in the
+   stash list; retain it as recovery data and report it.
 1. On success, return the commit hash and final message from the commit skill,
    whether restoration succeeded or was skipped because nothing was stashed,
    and any path this invocation left deliberately unstaged, with its reason.
