@@ -38,8 +38,8 @@ Every abort uses the failure return below. If a step cannot be completed,
 abort; keep partial edits and recovery data in place.
 
 1. Abort if $ARGUMENTS requires design choices or back-and-forth discussion.
-1. Abort if the current working tree has both staged and unstaged changes,
-   because stashing and unstashing would lose this state.
+1. Abort if the index already contains staged changes. Restoring that index
+   after extracting a staged slice can fail on the newly committed content.
 1. Choose a unique invocation marker and record
    `git stash list --format='%H %gd %gs'`. Stash the current working tree
    changes with `git stash push -m "commit-separately: <marker>"` — not
