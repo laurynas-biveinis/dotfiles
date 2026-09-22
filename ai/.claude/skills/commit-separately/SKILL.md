@@ -61,15 +61,18 @@ abort; keep partial edits and recovery data in place.
    caller-named untracked or dirty-submodule content from the checkout. Apply
    only the requested slice with `Edit`/`Write` or working-tree-only `git apply`,
    never `--cached` or `--index`. For a mechanical operation, make the requested
-   change directly.
+   change directly. Record which paths this step and the check/fix step change.
 1. Run `./check.sh` if present, fix any errors, repeat as needed. Abort if
    fixing them requires design choices or back-and-forth discussion.
-1. Stage exactly these, and nothing else: (a) every path
+1. Form the staging candidate set from (a) every path
    `git status --porcelain -uall` now reports that the baseline file does not,
    including one a `./check.sh` fix landed on; and (b) every path $ARGUMENTS
    names as part of the slice, including one whose status record is unchanged
    because it was already untracked, or is a submodule the stash left dirty.
-   Leave any other edit this invocation made in place and unstaged, and report
+   Check every candidate against the recorded changes from the preceding two
+   steps and the caller-named slice. Abort and report any candidate you cannot
+   account for; a new status record alone does not establish ownership. Stage
+   only that verified set. Leave any other edit this invocation made unstaged; report
    it on return. If staging is denied, abort through the failure return with
    the path and denial. Do not retry with quoting, escaping, a directory
    argument or `git apply`. Enumerate the files:
