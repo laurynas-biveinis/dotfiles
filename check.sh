@@ -43,6 +43,7 @@ readonly SHELL_FILES=(
 	relint.sh
 	setup-centos9.sh
 	setup-cpu-benchmark.sh
+	setup-macos-emacs.sh
 	setup-macos-mail.sh
 	setup-ubuntu-mbp-late-2013.sh
 	setup-ubuntu-mysql-work.sh
@@ -69,7 +70,6 @@ readonly SHELL_FILES=(
 readonly ZSH_ROOT_FILES=(
 	setup-macos-ai.sh
 	setup-macos-cpp.sh
-	setup-macos-emacs.sh
 	setup-macos-gh.sh
 	setup-macos-git.sh
 	setup-macos-mysql-work.sh

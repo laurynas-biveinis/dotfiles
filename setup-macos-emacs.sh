@@ -1,6 +1,10 @@
-#!/bin/zsh
+#!/bin/sh
 
-set -euo pipefail
+set -eu
+
+# Not actually meant for running as an invoked script, but rather as a sequence
+# of steps to consult and copy and paste into the terminal, and to do some
+# unscripted steps manually.
 
 # Do after dotfiles setup
 
@@ -8,11 +12,12 @@ set -euo pipefail
 brew install cmake
 
 brew tap d12frosted/emacs-plus
-brew install emacs-plus --with-dbus --with-debug --with-imagemagick \
+readonly EMACS_FORMULA=emacs-plus@31
+brew install "$EMACS_FORMULA" --with-dbus --with-debug --with-imagemagick \
 	--with-mailutils --with-xwidgets
 # Apple Silicon
 osascript -e \
-	'tell application "Finder" to make alias file to posix file "/opt/homebrew/opt/emacs-plus@31/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
+	'tell application "Finder" to make alias file to posix file "/opt/homebrew/opt/'"$EMACS_FORMULA"'/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
 
 npm install -g @emacs-eask/cli
 
