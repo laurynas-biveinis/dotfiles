@@ -158,7 +158,8 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 #
 # Completion
 #
-zstyle ':completion:*' list-suffixeszstyle ':completion:*' expand prefix suffix
+zstyle ':completion:*' list-suffixes true
+zstyle ':completion:*' expand prefix suffix
 autoload -Uz compinit && compinit
 
 zinit load zdharma/fast-syntax-highlighting
