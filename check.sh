@@ -396,15 +396,20 @@ fi
 
 # Python
 echo -n "Checking Python formatting with black... ${PYTHON_FILES[*]} "
-if black --check "${PYTHON_FILES[@]}" 2>/dev/null; then
+if black --check -q "${PYTHON_FILES[@]}"; then
 	echo "OK!"
 else
+	BLACK_STATUS=$?
+	if [ "$BLACK_STATUS" -eq 1 ] || [ "$BLACK_STATUS" -eq 123 ]; then
+		# Quiet mode also hides the filenames of formatting violations.
+		black --check "${PYTHON_FILES[@]}" || BLACK_STATUS=$?
+	fi
 	echo "black check failed! Run 'black ${PYTHON_FILES[*]}' to fix"
 	ERRORS=$((ERRORS + 1))
 fi
 
 echo -n "Checking Python import sorting with isort... ${PYTHON_FILES[*]} "
-if isort --check-only --diff "${PYTHON_FILES[@]}" 2>/dev/null; then
+if isort --check-only --diff "${PYTHON_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "isort check failed! Run 'isort ${PYTHON_FILES[*]}' to fix"
