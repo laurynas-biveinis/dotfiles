@@ -30,7 +30,7 @@ set -eu -o pipefail
 # runs codespell and ruff, which have no stage here, and runs pylint against
 # its own bundled .python-lint rather than this repo's defaults.
 
-# Everything bash -n and shellcheck -x cover: every non-Zsh shell file
+# Everything shellcheck -x covers: every non-Zsh shell file
 # super-linter shellchecks — the root scripts, the module files, and the
 # extension-less #!/bin/sh programs under */usr/bin/, which CI has linted all
 # along. shellcheck refuses Zsh (SC1071), so ZSH_FILES carries that dialect. A
@@ -68,6 +68,15 @@ readonly SHELL_FILES=(
 	scripts/usr/bin/npmupdate
 )
 
+# bash -n also covers startup files without a shebang or shell extension.
+# Keep them out of SHELL_FILES: shellcheck cannot infer their dialect, and CI
+# does not recognize them as shell scripts or require mode 755.
+readonly BASH_FILES=(
+	"${SHELL_FILES[@]}"
+	bash/.bashrc
+	bash/.profile
+)
+
 # The Zsh root scripts.
 readonly ZSH_ROOT_FILES=(
 	setup-macos-ai.sh
@@ -81,14 +90,10 @@ readonly ZSH_ROOT_FILES=(
 	setup-macos.sh
 )
 
-# Everything zsh -n covers: the root scripts plus every other #!/bin/zsh file
-# in the tree. shellcheck refuses Zsh (SC1071); shfmt -d parses the root
-# scripts here, and the #!/bin/zsh files super-linter sees in CI, but only as
-# far as its Zsh support reaches, so this is the only check that uses Zsh's own
-# grammar. The entries beyond the root scripts are not in SHFMT_FILES;
-# mysql-work.sh is FILTER_REGEX_EXCLUDE'd in CI besides, leaving this stage as
-# its only check anywhere.
-readonly ZSH_FILES=(
+# The root scripts plus every other #!/bin/zsh file in the tree, named because
+# the shebang decides membership. Keep these separate from ZSH_FILES so the
+# mode check does not require mode 755 on autoload bodies without a shebang.
+readonly ZSH_SCRIPT_FILES=(
 	"${ZSH_ROOT_FILES[@]}"
 	aerospike/usr/bin/as_branch
 	emacs/usr/bin/em-commit-metadata-update
@@ -111,6 +116,18 @@ readonly ZSH_FILES=(
 	wakatime/.zsh.d/rc/wakatime.zsh
 	zsh/.zsh.d/paths
 	zsh/.zshenv
+)
+
+# Everything zsh -n covers. Name .zshrc explicitly: it has neither a shebang
+# nor a shell extension. Autoload bodies are identified by directory, so new
+# ones join automatically. CI sees neither group; this is their only check.
+# ShellCheck refuses Zsh (SC1071), and shfmt's Zsh support is partial, so this
+# is the only check using Zsh's own grammar. Only the root scripts are in
+# SHFMT_FILES; CI formats the other scripts except mysql-work.sh.
+readonly ZSH_FILES=(
+	"${ZSH_SCRIPT_FILES[@]}"
+	zsh/.zshrc
+	*/.zsh.d/functions/*
 )
 
 # shfmt reads the shebang and handles Zsh too. The Zsh half stops at the root
@@ -142,10 +159,9 @@ readonly SUPER_LINTER_EXCLUDES=(
 # are never run, as pathspecs rather than a list. It runs on actions/checkout's
 # tree, so the mode that matters is the one Git records, not the working-tree
 # bit — which is why the stage reads the index. The globs cover what an
-# extension decides; SHELL_FILES and ZSH_FILES supply the rest, because
-# super-linter also detects a shell file by its shebang and every entry of
-# those two arrays carries one or the other. Reusing them adds no list to
-# maintain: a new extension-less program has to join one of them anyway for
+# extension decides; SHELL_FILES and ZSH_SCRIPT_FILES supply the rest, because
+# super-linter also detects a shell file by its shebang. Reusing them adds no
+# list to maintain: a new extension-less program has to join one anyway for
 # syntax and lint coverage, so this stage follows the edit that was already
 # owed instead of silently not covering it. A hand-kept list could only catch
 # a mode regression in a file someone had remembered to add, never the new
@@ -157,7 +173,7 @@ readonly MODE_PATHSPECS=(
 	'*.bash'
 	'*.zsh'
 	"${SHELL_FILES[@]}"
-	"${ZSH_FILES[@]}"
+	"${ZSH_SCRIPT_FILES[@]}"
 	"${SUPER_LINTER_EXCLUDES[@]}"
 )
 
@@ -228,8 +244,8 @@ syntax_check() {
 	return "$failed"
 }
 
-echo -n "Checking shell syntax with bash -n... ${#SHELL_FILES[@]} files "
-if syntax_check bash "${SHELL_FILES[@]}"; then
+echo -n "Checking shell syntax with bash -n... ${#BASH_FILES[@]} files "
+if syntax_check bash "${BASH_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "Shell syntax check failed!"

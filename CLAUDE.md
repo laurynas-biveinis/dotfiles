@@ -25,10 +25,10 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   `FILTER_REGEX_EXCLUDE` drops. `mysql-work/README.md` is the one tracked
   Markdown file CI's markdownlint lints and `./check.sh` does not. It runs the
   other way for `zsh -n`, which CI has no counterpart for.
-- Backstopped by nothing: the two `FILTER_REGEX_EXCLUDE`'d paths, the
+- Format-checked nowhere: the two `FILTER_REGEX_EXCLUDE`'d paths, the
   `*/.zsh.d/functions/*` autoload bodies, and `zsh/.zshrc`, `bash/.bashrc`,
-  `bash/.profile` are format-checked nowhere; for all but `mysql-work.sh`, which
-  still gets `zsh -n`, no checker sees them at all.
+  `bash/.profile`. All except `zsh/.p10k.zsh` get a syntax check from
+  `./check.sh`; no checker sees `zsh/.p10k.zsh`.
 - Super-linter (`.github/workflows/linter.yml`) lints by denylist, so it picks
   up new files on its own. Zsh never reaches shellcheck there: current
   super-linter routes Zsh files to `bash-exec` and `shfmt` only, so the
@@ -111,13 +111,15 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   and the two Bash files are 644 with nothing failing. Giving any of them the
   shebang `shell-dev` prescribes makes them visible, and `.bashrc`/`.profile`
   would then fail `bash-exec` at 644 while `.zshrc` would need a
-  `FILTER_REGEX_EXCLUDE` entry for shfmt. `./check.sh` catches none of that
-  either — they are in none of its lists.
+  `FILTER_REGEX_EXCLUDE` entry for shfmt. `./check.sh` syntax-checks `.zshrc`
+  with `zsh -n` and the two Bash files with `bash -n`, without imposing mode
+  or formatting requirements.
 - `*/.zsh.d/functions/*` are Zsh autoload bodies, not scripts: `zsh/.zshenv`
   does `fpath+=~/.zsh.d/functions` and consumers `autoload` them by name. No
   shebang, mode 644, an Emacs `# -*- mode: sh; sh-shell: zsh; -*-` line
   instead — which is what keeps them out of super-linter's view, and so out of
-  the mode-755 rule above.
+  the mode-755 rule above. `./check.sh` includes them by directory glob in
+  `ZSH_FILES` for `zsh -n`; `ZSH_SCRIPT_FILES` keeps the mode check separate.
 
 ## Code Style Guidelines
 
