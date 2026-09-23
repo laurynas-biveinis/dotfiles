@@ -68,7 +68,7 @@ function enable_core() {
 function strip_disas_offsets() {
     local input="$1"
     local output="$2"
-    cut -f 2- -d ':' "$input" | sed 's/^\s*//g' > "$output"
+    cut -f 2- -d ':' "$input" | sed 's/^[[:space:]]*//g' > "$output"
 }
 
 function source_if_exists()
