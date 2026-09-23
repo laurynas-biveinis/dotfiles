@@ -1,20 +1,24 @@
 #!/bin/sh
 
-# Decide and symlink the right git config
-# https://stackoverflow.com/a/48998537/80458
-if (
-	echo a version 2.38.0
-	git --version
-) | sort -Vk3 | tail -1 | grep -q git; then
-	ln -sf ~/.gitconfig.2.38 ~/.gitconfig
-elif (
-	echo a version 2.35.0
-	git --version
-) | sort -Vk3 | tail -1 | grep -q git; then
-	ln -sf ~/.gitconfig.2.35 ~/.gitconfig
-else
-	ln -sf ~/.gitconfig.1.0 ~/.gitconfig
-fi
+(
+	git_version=$(git --version) || exit
+	git_version=${git_version#git version }
+	git_major=${git_version%%.*}
+	git_minor=${git_version#*.}
+	git_minor=${git_minor%%.*}
+
+	if [ "$git_major" -gt 2 ] || { [ "$git_major" -eq 2 ] && [ "$git_minor" -ge 38 ]; }; then
+		git_config=~/.gitconfig.2.38
+	elif [ "$git_major" -eq 2 ] && [ "$git_minor" -ge 35 ]; then
+		git_config=~/.gitconfig.2.35
+	else
+		git_config=~/.gitconfig.1.0
+	fi
+
+	if [ ! "$git_config" -ef ~/.gitconfig ]; then
+		ln -sf "$git_config" ~/.gitconfig
+	fi
+)
 
 cf_on() {
 	git config --local include.path ../.gitconfig
