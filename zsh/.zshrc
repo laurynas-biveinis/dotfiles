@@ -77,8 +77,8 @@ function source_if_exists()
     [ -f "$file" ] && source "$file"
 }
 
-if [[ -f "~/.fzf.zsh" ]]; then
-    source "~/.fzf.zsh"
+if [[ -f "$HOME/.fzf.zsh" ]]; then
+    source "$HOME/.fzf.zsh"
 else
     source_if_exists /usr/share/doc/fzf/examples/completion.zsh
     source_if_exists /usr/share/doc/fzf/examples/key-bindings.zsh
