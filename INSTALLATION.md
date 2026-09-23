@@ -1,5 +1,7 @@
 # Installation
 
+Shell startup configuration is provided for Zsh.
+
 ```sh
 cd
 git clone --recurse-submodules git@github.com:laurynas-biveinis/dotfiles.git
@@ -26,13 +28,6 @@ On Linux
 
 ```sh
 pipx install wakatime
-```
-
-If using `bash`, then
-
-```sh
-cd ~/usr/src
-git clone https://github.com/gjsheep/bash-wakatime.git
 ```
 
 put .wakatime.cfg into $HOME, `chmod 600` it.

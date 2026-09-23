@@ -51,30 +51,18 @@ readonly SHELL_FILES=(
 	aerospike/setup-centos6.sh
 	aerospike/setup-macos.sh
 	aerospike/setup-ubuntu.sh
-	bash/.noninteractive_init.bash
-	ccache/.bash.d/noninteractive_init/ccache.bash
 	cpp/.zsh.d/env/cmake.sh
-	emacs/.bash.d/rc/emacs.sh
-	git/.bash.d/noninteractive_init/git.sh
+	emacs/.zsh.d/rc/emacs.sh
+	git/.zsh.d/env/git.sh
 	gnupg/.zsh.d/env/gnupg.sh
 	python/.zsh.d/rc/python.sh
 	ripgrep/.zsh.d/env/ripgrep.sh
 	rust/.zsh.d/env/rust.sh
-	wakatime/.bash.d/rc/wakatime.bash
 	ccache/usr/bin/ccachestats
 	git/usr/bin/gittake
 	nightly/usr/bin/reloadnightly
 	rust/usr/bin/rustupdate
 	scripts/usr/bin/npmupdate
-)
-
-# bash -n also covers startup files without a shebang or shell extension.
-# Keep them out of SHELL_FILES: shellcheck cannot infer their dialect, and CI
-# does not recognize them as shell scripts or require mode 755.
-readonly BASH_FILES=(
-	"${SHELL_FILES[@]}"
-	bash/.bashrc
-	bash/.profile
 )
 
 # The Zsh root scripts.
@@ -170,7 +158,6 @@ readonly SUPER_LINTER_EXCLUDES=(
 # of their own and are skipped by mode below.
 readonly MODE_PATHSPECS=(
 	'*.sh'
-	'*.bash'
 	'*.zsh'
 	"${SHELL_FILES[@]}"
 	"${ZSH_SCRIPT_FILES[@]}"
@@ -244,8 +231,8 @@ syntax_check() {
 	return "$failed"
 }
 
-echo -n "Checking shell syntax with bash -n... ${#BASH_FILES[@]} files "
-if syntax_check bash "${BASH_FILES[@]}"; then
+echo -n "Checking shell syntax with bash -n... ${#SHELL_FILES[@]} files "
+if syntax_check bash "${SHELL_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "Shell syntax check failed!"
