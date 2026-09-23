@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-# shellcheck source=/dev/null
-source ~/.zshenv
-
 for nightly_script in "$HOME"/.nightly/*; do
 	echo "Running nightly $nightly_script..."
 	# shellcheck source=/dev/null

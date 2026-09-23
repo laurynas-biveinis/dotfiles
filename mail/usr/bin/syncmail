@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-source ~/.zshenv
-
 # The process name is for the emacs-mac Homebrew port
 if pgrep -x "Emacs" >/dev/null; then
 	if emacsclient -e '(mapcar (function buffer-name) (buffer-list))' |
