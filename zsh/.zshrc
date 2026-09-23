@@ -105,7 +105,10 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
 fi
 
 autoload -U add-zsh-hook
-add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
+set_terminal_title() {
+    print -Pn "\e]2;%m:%2~\a"
+}
+add-zsh-hook chpwd set_terminal_title
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.zsh.d/zinit/bin/zinit.zsh ]]; then
