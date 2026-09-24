@@ -111,9 +111,45 @@ merge mode:
   `--output-indicator-context=' '` to restore the standard hunk markers. These
   options force Git's own patch format with undecorated headers and submodule
   updates as gitlink patches, without external diff or textconv helpers.
-  For `git show`, also add `--format=` and replace the revision argument with
-  the commit SHA obtained by resolving `<revision>^{commit}`. Peeling here
-  suppresses annotated-tag metadata without changing the commit being reviewed.
+  For `git show`, also add `--format=`.
+- Pin every revision operand before running the scope. Resolve each individual
+  revision with `git rev-parse --verify '<revision>^{commit}'`, require a zero
+  exit and exactly one full commit SHA, and substitute that SHA in the command.
+  A resolution failure takes the failed-scope stop below; never take the first
+  line of partial output as a successful resolution. Peeling also suppresses
+  annotated-tag metadata for `git show`.
+  - Split `A..B` and `A...B` into endpoints first, resolve each separately,
+    then reconstruct with the same two-dot or three-dot operator. An omitted
+    endpoint means `HEAD`; pin it too. Never resolve an entire range as one
+    revision: its output can contain endpoints and exclusions, not one commit.
+  - Pin separate endpoints in order, including `<merge>^1 <merge>`. For
+    revision-set shorthands such as `<commit>^!` or `<commit>^@`, pin the
+    underlying commit and retain the set suffix; do not peel the whole set or
+    collapse it to a single-commit operand. Ordinary single-revision suffixes
+    such as `~3` and `^1` resolve to their own commit SHAs.
+  - Materialize implicit revisions: `git show` uses pinned `HEAD`; “last N
+    commits” becomes a two-dot range from pinned `HEAD~N` to pinned `HEAD`.
+    A staged diff without an explicit revision uses the captured `HEAD` SHA,
+    except under an unborn `HEAD`, where it stays revision-free. A bare
+    unstaged `git diff` stays revision-free and keeps its index baseline.
+  - For `--merge-base` comparisons, preserve invalid forms for the failed-scope
+    stop: Git rejects range operands with this option, and the unstaged form
+    needs an explicit revision. For valid forms, resolve the base from the
+    pinned endpoints, using captured `HEAD` as the second endpoint where
+    implicit. Run
+    `git merge-base --all A B` and require success with exactly one full SHA.
+    For no or multiple bases, obtain Git's diagnostic from
+    `git diff --merge-base A B` with the output safeguards above and take the
+    failed-scope stop. Otherwise remove `--merge-base` and use that base SHA
+    as the left operand and declared baseline, preserving the working-tree,
+    staged, or committed right-hand side. Do not add `HEAD` as a second diff
+    operand to a working-tree or staged comparison. Keep the three-dot form's
+    separate multiple-base behavior below when `--merge-base` is absent.
+  - Keep the original scope shape and merge intent for the checks below.
+    Any later merge-scope selection must derive its revisions from the pinned
+    commit and normalize the resulting command too. Derive the baseline from
+    these same pinned operands; dispatch and print only the normalized command,
+    never re-resolve the original symbols in a sub-step.
 - Reconstruct the command with existing options and their arguments first,
   added options next, then revisions and finally pathspecs behind an explicit
   `--`. Preserve each operand's role; do not turn revisions into pathspecs.
@@ -138,8 +174,9 @@ normalization and validation.
 an explicit scope, run the unmerged-entry check whenever the current index is
 its pre-image or post-image, counting only paths selected by the normalized
 scope, including its diff filters and pathspecs. Run the merge-in-progress check
-whenever the scope uses the `HEAD`-to-index staged form. Revision-only commit and
-range scopes skip both. Each applicable check stops the review before any
+whenever the scope uses the `HEAD`-to-index staged form, including its normalized
+form with an explicit pinned `HEAD`. Revision-only commit and range scopes skip
+both. Each applicable check stops the review before any
 `<topic>` is derived, in the shape the stops below use:
 
 1. **Unmerged index entries.** Locate the repository root with
@@ -366,15 +403,15 @@ Read the [shared provenance guidance](references/provenance.md) for what each
 scope shape yields — it is the single source for that, and the bullets below
 add only how to resolve and pin what it names, never a second copy of the
 values themselves, except the one shape whose mapped value is the command to
-run.
+run. Revision placeholders below refer to normalization's pinned SHAs, never
+the original symbolic operands.
 
 - **A bare `git diff`.** The mapped baseline names no revision: neither probe
   nor pin it.
-- **`git diff --staged`, and a two-dot range `git diff A..B`.** Resolve the
-  mapped revision with `git rev-parse --verify --quiet <value>` and pin the
-  SHA. The one legitimate failure is an unborn `HEAD` under
-  `git diff --staged`, whose mapped baseline names no revision: neither pin nor
-  pass one.
+- **A diff against an explicit revision, a staged diff, or a two-dot range.**
+  Reuse the mapped revision's already-pinned SHA. An unborn `HEAD` under
+  revision-free `git diff --staged` maps to no revision: neither pin nor pass
+  one.
 - **A three-dot range `git diff A...B`.** The mapping names a command, so run
   it: `git merge-base A B` — singular — and take its output, already a full SHA
   needing no pin; never pin one of `--all`'s extra bases, which are not the one
