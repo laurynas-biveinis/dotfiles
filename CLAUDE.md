@@ -20,11 +20,9 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
 
 - `check.sh`'s list definitions carry their own comments saying what each one
   covers and why it is named or derived; read them before adding a script.
-- Backstopped by CI only: Zsh files outside the root are format-checked there
-  and not by `./check.sh` — except `mysql-work/.zsh.d/rc/mysql-work.sh`, which
-  `FILTER_REGEX_EXCLUDE` drops. `mysql-work/README.md` is the one tracked
-  Markdown file CI's markdownlint lints and `./check.sh` does not. It runs the
-  other way for `zsh -n`, which CI has no counterpart for.
+- Backstopped by CI only: `mysql-work/README.md` is the one tracked Markdown
+  file CI's markdownlint lints and `./check.sh` does not. It runs the other
+  way for `zsh -n`, which CI has no counterpart for.
 - Format-checked nowhere: the three `FILTER_REGEX_EXCLUDE`'d shell paths and
   the `*/.zsh.d/functions/*` autoload bodies.
   All except `zsh/.p10k.zsh` get a syntax check from

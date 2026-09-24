@@ -78,11 +78,9 @@ readonly ZSH_ROOT_FILES=(
 	setup-macos-rust.sh
 )
 
-# The root scripts plus every other #!/bin/zsh file in the tree, named because
-# the shebang decides membership. Keep these separate from ZSH_FILES so the
-# mode check does not require mode 755 on autoload bodies without a shebang.
-readonly ZSH_SCRIPT_FILES=(
-	"${ZSH_ROOT_FILES[@]}"
+# Non-root Zsh scripts shared by the syntax, mode and format checks. Scripts
+# excluded from shfmt are added separately in ZSH_SCRIPT_FILES.
+readonly ZSH_NON_ROOT_FILES=(
 	aerospike/usr/bin/as_branch
 	emacs/usr/bin/em-commit-metadata-update
 	emacs/usr/bin/em-commit-pkg-update
@@ -91,7 +89,6 @@ readonly ZSH_SCRIPT_FILES=(
 	git/usr/bin/gitrmworktree
 	mail/usr/bin/reviewsyncmail
 	mail/usr/bin/syncmail
-	mysql-work/.zsh.d/rc/mysql-work.sh
 	mysql-work/usr/bin/fetchworksrc
 	mysql-work/usr/bin/gca
 	mysql-work/usr/bin/patch2testlist
@@ -104,27 +101,35 @@ readonly ZSH_SCRIPT_FILES=(
 	wakatime/.zsh.d/rc/wakatime.zsh
 	zsh/.zsh.d/paths
 	zsh/.zshenv
+)
+
+# The root scripts plus every other #!/bin/zsh file in the tree, named because
+# the shebang decides membership. Keep these separate from ZSH_FILES so the
+# mode check does not require mode 755 on autoload bodies without a shebang.
+readonly ZSH_SCRIPT_FILES=(
+	"${ZSH_ROOT_FILES[@]}"
+	"${ZSH_NON_ROOT_FILES[@]}"
+	mysql-work/.zsh.d/rc/mysql-work.sh
 	zsh/.zshrc
 )
 
 # Everything zsh -n covers. Autoload bodies are identified by directory, so
 # new ones join automatically. CI does not see autoload bodies and excludes
-# .zshrc; this is their only check.
+# mysql-work.sh and .zshrc; this is their only check.
 # ShellCheck refuses Zsh (SC1071), and shfmt's Zsh support is partial, so this
-# is the only check using Zsh's own grammar. Only the root scripts are in
-# SHFMT_FILES; CI formats the other scripts except mysql-work.sh and .zshrc.
+# is the only check using Zsh's own grammar.
 readonly ZSH_FILES=(
 	"${ZSH_SCRIPT_FILES[@]}"
 	*/.zsh.d/functions/*
 )
 
-# shfmt reads the shebang and handles Zsh too. The Zsh half stops at the root
-# because ZSH_FILES cannot be taken whole: mysql-work.sh is
-# FILTER_REGEX_EXCLUDE'd exactly because shfmt would reformat it, and the root
-# boundary drops it without a second mirror of the regex.
+# shfmt reads the shebang and handles Zsh too. The non-root list omits
+# mysql-work.sh and .zshrc, which CI also excludes because shfmt would
+# reformat them.
 readonly SHFMT_FILES=(
 	"${SHELL_FILES[@]}"
 	"${ZSH_ROOT_FILES[@]}"
+	"${ZSH_NON_ROOT_FILES[@]}"
 )
 
 # The five FILTER_REGEX_EXCLUDE alternatives, as pathspecs: elpa/
