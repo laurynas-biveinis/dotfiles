@@ -64,8 +64,9 @@ directly and answers absence as well as presence, exiting 1 on no match:
 first, per `git grep [<options>] [-e] <pattern> [<rev>…] [[--] <path>…]`;
 reversed, it either dies or silently greps the working tree for the revision
 name. A bare `git grep <pattern>` searches tracked working-tree files, which is
-a bare `git diff`'s post-image exactly and the wrong image under every other
-scope. `Glob`'s counterparts are `git ls-files --cached -- <pathspec>` and
+`git diff [<rev>]`'s post-image exactly and the wrong image under staged or
+committed comparisons. `Glob`'s counterparts are
+`git ls-files --cached -- <pathspec>` and
 `git ls-tree -r --name-only <rev> -- <pathspec>`.
 
 Reading the post-image correctly governs every
