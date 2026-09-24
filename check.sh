@@ -45,6 +45,7 @@ readonly SHELL_FILES=(
 	setup-cpu-benchmark.sh
 	setup-macos-emacs.sh
 	setup-macos-mail.sh
+	setup-macos.sh
 	setup-ubuntu-mbp-late-2013.sh
 	setup-ubuntu-mysql-work.sh
 	setup-ubuntu.sh
@@ -75,7 +76,6 @@ readonly ZSH_ROOT_FILES=(
 	setup-macos-mysql-work.sh
 	setup-macos-python.sh
 	setup-macos-rust.sh
-	setup-macos.sh
 )
 
 # The root scripts plus every other #!/bin/zsh file in the tree, named because
