@@ -309,37 +309,38 @@ else
 fi
 
 echo -n "Checking Markdown files... "
+MD_STATUS=0
+root_markdown="$(find . -maxdepth 1 -type f -name "*.md")" || MD_STATUS=$?
+ai_markdown="$(find ai -type f -name "*.md")" || MD_STATUS=$?
 MD_FILES=()
 while IFS= read -r file; do
-	MD_FILES+=("$file")
-done < <(
-	find . -maxdepth 1 -type f -name "*.md"
-	find ai -type f -name "*.md"
-)
-echo "${MD_FILES[*]} "
-
-echo -n "Checking Markdown formatting with prettier... "
+	if [ -n "$file" ]; then
+		MD_FILES+=("$file")
+	fi
+done <<<"$root_markdown
+$ai_markdown"
+if [ "$MD_STATUS" -ne 0 ] || [ ${#MD_FILES[@]} -eq 0 ]; then
+	echo "Markdown file listing failed or found no files!"
+	ERRORS=$((ERRORS + 1))
+fi
 if [ ${#MD_FILES[@]} -gt 0 ]; then
+	echo "${MD_FILES[*]} "
+
+	echo -n "Checking Markdown formatting with prettier... "
 	if prettier --log-level warn --check "${MD_FILES[@]}"; then
 		echo "OK!"
 	else
 		echo "prettier check failed!"
 		ERRORS=$((ERRORS + 1))
 	fi
-else
-	echo "No Markdown files found, skipping"
-fi
 
-echo -n "Checking Markdown with markdownlint-cli... "
-if [ ${#MD_FILES[@]} -gt 0 ]; then
+	echo -n "Checking Markdown with markdownlint-cli... "
 	if markdownlint "${MD_FILES[@]}"; then
 		echo "OK!"
 	else
 		echo "markdownlint check failed"
 		ERRORS=$((ERRORS + 1))
 	fi
-else
-	echo "No Markdown files found, skipping"
 fi
 
 echo -n "Checking terminology... "
