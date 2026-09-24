@@ -140,7 +140,7 @@ See
 
 See
 [setup-ubuntu.sh](https://github.com/laurynas-biveinis/dotfiles/blob/master/setup-ubuntu.sh),
-[setup-centos6.sh](https://github.com/laurynas-biveinis/dotfiles/blob/master/setup-centos6.sh),
+[setup-centos9.sh](https://github.com/laurynas-biveinis/dotfiles/blob/master/setup-centos9.sh),
 and
 [setup-macos.sh](https://github.com/laurynas-biveinis/dotfiles/blob/master/setup-macos.sh).
 
