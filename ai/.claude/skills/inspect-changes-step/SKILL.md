@@ -12,6 +12,7 @@ allowed-tools: >-
   Bash(git blame:*)
   Bash(git merge-base:*)
   Bash(git rev-parse:*)
+  Bash(git symbolic-ref --quiet --no-recurse HEAD)
   Bash(git grep:*)
   Bash(git ls-files:*)
   Bash(git ls-tree:*)

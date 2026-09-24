@@ -14,6 +14,7 @@ allowed-tools: >-
   Bash(git blame:*)
   Bash(git merge-base:*)
   Bash(git rev-parse:*)
+  Bash(git symbolic-ref --quiet --no-recurse HEAD)
   Bash(git grep:*)
   Bash(git ls-files:*)
   Bash(git ls-tree:*)
@@ -63,6 +64,8 @@ is `incomplete`, even if a later draft pass yields no new findings:
 - An analysis is skipped after retry exhaustion or a pure-deferral cap stop.
 - An alongside-analysis loop falls back to a provisional body.
 - The 50-iteration safety cap prevents further work.
+- A repository-state check detects drift or cannot establish an unchanged
+  basis after dispatch began (see [repository state](references/repository-state.md)).
 
 At each such event append its reason to
 `/tmp/inspect-changes-<topic>-limitations.md`, preserving the existing fallback
@@ -81,9 +84,11 @@ create a report file for a stop that previously wrote none.
 **Observe the repository in this review.** Never answer a probe, check or
 other repository read this skill calls for from what you ran or saw before
 this review started: the user stages, unstages, edits and commits out-of-band,
-so such an observation is not evidence of the current state. The repository
-is assumed to hold still while the review runs, so a value captured during it
-may be reused where a step says so.
+so such an observation is not evidence of the current state. Before Scope's
+first repository read, capture the guard observations in
+[repository state](references/repository-state.md). That procedure checks the
+assumption that the repository holds still; reuse captured values only while
+its checks pass. It also defines how to resume from persisted review files.
 
 **Normalize before running a scope or a precedence probe.** Reject
 `--no-index` as described below before executing it. Otherwise derive a
@@ -454,9 +459,19 @@ schema; the entry's own fields stay freeform per the producer contracts.
 
 The review is produced in four phases. The top-level skill is the
 **sole writer** of every file under `/tmp/inspect-changes-<topic>-*`.
-Files are append-only.
+Files are append-only. Every draft file, including verifier and analyst
+proposal batches, starts with the scope line and a link to
+`/tmp/inspect-changes-<topic>-state.md`.
 
-**Dispatching a sub-step.** The draft, verify, and analyze sub-steps each run
+**Dispatching a sub-step.** Before every dispatch batch, and after it returns
+before consuming any reply, run the
+[repository-state check](references/repository-state.md#check-boundaries).
+This includes the first draft, re-drafts, retries, experiment deferrals, and
+alongside-analysis re-spawns; a single asynchronous dispatch or returned reply
+is its own batch. A failed check takes that procedure's stop path, before
+reply validation, dedup, rejection, or provisional-analysis fallback.
+
+The draft, verify, and analyze sub-steps each run
 as a subagent spawned via the **Agent tool** (`subagent_type: general-purpose`)
 — never via `Skill(...)`, which serializes forked invocations and
 would run a per-finding "batch" one at a time. The Agent call's own parameters
@@ -570,7 +585,9 @@ gated identically.
 name, feature, or commit subject). If any
 `/tmp/inspect-changes-<topic>*` file already exists, suffix `<topic>`
 with the smallest free integer (`-2`, `-3`, …) so a fresh review never
-collides with an existing one.
+collides with an existing one. After Scope succeeds, persist the review basis
+per [repository state](references/repository-state.md) before any dispatch,
+even if no draft file is ever written.
 
 ### Phase 1 — Draft passes
 
@@ -615,7 +632,8 @@ splitting rule in **Experiment requests**), then dedup the pass's findings per
 **Unified dedup** (above) — against the full raw-findings corpus, then within
 the batch. (On round 1 the corpus is empty, so every finding survives.) Write
 the survivors verbatim to `/tmp/inspect-changes-<topic>-draft-<N>.md` as
-append-only blocks, with the scope line at the top, keeping the IDs the step
+append-only blocks, with the scope line and a link to
+`/tmp/inspect-changes-<topic>-state.md` at the top, keeping the IDs the step
 assigned — the top-level remains the **sole writer** of all
 `/tmp/inspect-changes-*` files. The file is created **only if at least one
 finding survives** (matching the same guard in Phases 2 and 3); an empty pass
@@ -807,8 +825,10 @@ stack. Continue the rest of Phase 3 normally. The rules below govern scopes
 with an existing commit for placement.
 
 On first entry to Phase 3, compute the **unpublished-commit stack context**
-once and reuse it for every analysis subagent across all later verify⇄analyze
-passes, as **Observe the repository in this review** above allows.
+between repository-state checks and append it to the state file. Reuse it
+across later verify⇄analyze passes only while those checks pass; resumption
+recomputes it per [repository state](references/repository-state.md#resume).
+Resolve `REV` to its full commit SHA before persisting or passing it.
 
 Placement asks where a fix belongs, so it turns on where the **defect** is, not
 on where the reviewed lines are. Under any committed scope — any single-commit
@@ -1136,6 +1156,11 @@ as the analysis-exhaustion case (exhaustion marker, noted in the Summary).
 
 ### Phase 4 — Final assembly
 
+Run the [repository-state check](references/repository-state.md#check-boundaries)
+before assembly. Prepare the report in memory, check again, then write and
+return it once. Its drift-stop path assembles only previously accepted
+evidence, under the original basis.
+
 Read every `verdicts-<round>.md` file and the analysis bodies and markers
 from `/tmp/inspect-changes-<topic>-analyses.md`, applying **Reading persisted
 analyses** above. First compute the
@@ -1152,6 +1177,8 @@ Status: <converged | incomplete, per Result contract>
 
 Scope: <the derived reviewed scope command, with every revision pinned to its
 SHA>
+
+Review basis: /tmp/inspect-changes-<topic>-state.md
 
 Baseline: <the value derived in **Scope**, rendered as it was derived: every
 revision pinned to its SHA and named as the reader would recognise it — a
