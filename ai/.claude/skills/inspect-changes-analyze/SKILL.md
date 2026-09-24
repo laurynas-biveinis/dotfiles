@@ -46,6 +46,11 @@ Your invocation prompt supplies, for the single finding you must analyze:
   restating it in the analysis body.
 - Any **caller requirements**, if present. Apply the
   [shared caller-requirements guidance](../inspect-changes/references/caller-requirements.md).
+- **For a confirmed unborn HEAD:** the caller supplies **placement mode: WIP
+  (unborn HEAD)** instead of a stack, `REV`, or `BASE`. For a recommended fix,
+  explicitly return **Suggested placement: WIP in the uncommitted change**.
+  Do not run commit-based placement queries in this mode; the rest of the
+  analysis still applies.
 - **Only when a placement decision applies** (the caller supplied a stack and
   a `REV`): the **stack** as a list of SHA + subject, each entry carrying
   neither, either, or both of `[behind a merge]` and `[merge commit]`, and the
@@ -54,7 +59,8 @@ Your invocation prompt supplies, for the single finding you must analyze:
   be **empty** — nothing is amendable from this checkout — which is an answer
   rather than an absence:
   every owned defect then routes to a new commit, case (b). Only when the
-  inputs are absent altogether do you omit any placement discussion. Under an
+  inputs and an explicit placement mode are absent altogether do you omit any
+  placement discussion. Under an
   uncommitted scope — `git diff --staged`, or a bare `git diff` over a clean
   index — `REV` is `HEAD` and only a `pre-existing-*`
   finding has a placement answer; an `introduced` one is WIP in the uncommitted

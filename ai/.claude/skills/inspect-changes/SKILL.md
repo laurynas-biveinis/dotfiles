@@ -790,10 +790,21 @@ paths of the prior draft files that exist, for dedup, any experiment results
 (the matching `EXP` blocks) for that finding, the same verbatim caller
 requirements, if present, and — only for an alongside-analysis re-spawn — the
 invocation mode `alongside` and complete latest provisional analysis block
-(header and body, excluding routed level-2 sections). Also pass — only when a
-placement decision applies (computed below) — the stack as a list of SHA +
+(header and body, excluding routed level-2 sections). Also pass the explicit
+WIP placement mode for an unborn HEAD, or — when committed placement applies
+(computed below) — the stack as a list of SHA +
 subject, which may be empty, the blame-target revision `REV`, and the rebase
 boundary `BASE` when the stack is non-empty.
+
+Before any committed placement computation, handle an unborn HEAD under
+`git diff --staged`, or a bare `git diff` whose index is clean by the check
+below. Confirm that HEAD is symbolic and its branch ref is missing; other
+resolution failures remain errors. Pass **placement mode: WIP (unborn HEAD)**
+to every analyst, with no stack, `REV`, or `BASE`. Skip SHA resolution, stack,
+blame, and reachability queries in this mode. The analyst must explicitly
+place fixes in the uncommitted change; absence of a commit is not an empty
+stack. Continue the rest of Phase 3 normally. The rules below govern scopes
+with an existing commit for placement.
 
 On first entry to Phase 3, compute the **unpublished-commit stack context**
 once and reuse it for every analysis subagent across all later verify⇄analyze
