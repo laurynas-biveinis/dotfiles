@@ -145,6 +145,13 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 #
 /bin/bash -c \
 	"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+homebrew_bin=/usr/local/bin/brew
+if [ "$(uname -m)" = arm64 ]; then
+	homebrew_bin=/opt/homebrew/bin/brew
+fi
+printf "\neval \"\$(%s shellenv)\"\n" "$homebrew_bin" >>~/.zprofile
+eval "$("$homebrew_bin" shellenv)"
+unset homebrew_bin
 brew update
 brew install duti
 brew install --cask vlc disk-inventory-x google-chrome
