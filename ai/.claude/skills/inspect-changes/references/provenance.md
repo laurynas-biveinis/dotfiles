@@ -18,7 +18,12 @@ lines come from: `HEAD` for `git diff --staged`, the index for a bare
 `<commit>` is not a merge (so `HEAD~` for `git show HEAD`), `A` for an `A..B`
 range (`git merge-base A B` for `A...B`), every parent for a combined diff
 (`git show <merge>`), and the first parent alone for a first-parent merge scope
-(`git diff <merge>^1 <merge>`). A supplied baseline wins over this mapping, but
+(`git diff <merge>^1 <merge>`). For explicit endpoint comparisons
+(`git diff A B`), the baseline is `A`; for a working-tree or staged comparison
+against an explicit revision (`git diff A` or `git diff --staged A`), it is
+that revision. Scope normalization pins these revisions, including implicit
+`HEAD` when it exists; use those SHAs throughout. A supplied baseline wins over
+this mapping, but
 never over the rule that content
 present on any parent predates a merge reviewed as a combined diff. Under a
 combined diff the commit has no single pre-image — a shown hunk differs from
@@ -41,12 +46,12 @@ procedure](provenance-attribution.md) is unavailable there.
 The post-image — the content actually under review — is the other half, and
 your file tools do not track it: `Read`, `Grep`, and `Glob` serve the working
 tree. It is the right-hand side of the scope's diff: the indexed blob under
-`git diff --staged`, read with `git show :<path>` for any path whose
+`git diff --staged [<rev>]`, read with `git show :<path>` for any path whose
 `git status --porcelain` second column is non-blank; the working tree's tracked
-paths under a bare `git diff`, where `Read` is correct; and the scope's
+paths under `git diff [<rev>]`, where `Read` is correct; and the scope's
 right-hand revision otherwise — `HEAD` for `git show HEAD`, `<commit>` for
-`git show <commit>`, `B` for an `A..B`/`A...B` range, the merge itself for
-either merge shape — read with `git show <rev>:<path>`. Unlike the pre-image,
+`git show <commit>`, `B` for an `A B`/`A..B`/`A...B` comparison, the merge itself
+for either merge shape — read with `git show <rev>:<path>`. Unlike the pre-image,
 the post-image is one tree even for a merge, so no per-parent expansion arises
 here. Prefer the `git show` forms because they are self-diagnosing where `Read`
 is silent, failing with `fatal: path '…' exists on disk, but not in the index`
