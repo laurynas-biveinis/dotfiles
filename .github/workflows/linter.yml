@@ -38,14 +38,14 @@ jobs:
           # external-sources=true; kept as insurance because a repo-local
           # .shellcheckrc would replace that template, and to match check.sh.
           SHELLCHECK_OPTS: "--exclude=SC1071 -x"
-          # Exclude: elpa (third-party), .venv (virtual env), and two files
-          # shfmt would reformat (mysql-work.sh, .p10k.zsh).
+          # Exclude: elpa (third-party), .venv (virtual env), and three files
+          # shfmt would reformat (mysql-work.sh, .p10k.zsh, .zshrc).
           # Editing this regex has consequences elsewhere: check.sh's
           # SUPER_LINTER_EXCLUDES mirrors it for both the mode and the Python
           # query; biome.json's files.includes repeats its elpa and .venv
           # entries; .github/linters/.jscpd.json's ignore array repeats all its
           # paths.
-          FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/|\.venv/|mysql-work/\.zsh\.d/rc/mysql-work\.sh|zsh/\.p10k\.zsh).*
+          FILTER_REGEX_EXCLUDE: .*(emacs/.emacs.d/elpa/|\.venv/|mysql-work/\.zsh\.d/rc/mysql-work\.sh|zsh/\.p10k\.zsh|zsh/\.zshrc).*
           VALIDATE_ANSIBLE: false
           VALIDATE_GIT_COMMITLINT: false
           # Conflicts with black (both are Python formatters)

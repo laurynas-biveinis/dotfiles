@@ -104,17 +104,17 @@ readonly ZSH_SCRIPT_FILES=(
 	wakatime/.zsh.d/rc/wakatime.zsh
 	zsh/.zsh.d/paths
 	zsh/.zshenv
+	zsh/.zshrc
 )
 
-# Everything zsh -n covers. Name .zshrc explicitly: it has neither a shebang
-# nor a shell extension. Autoload bodies are identified by directory, so new
-# ones join automatically. CI sees neither group; this is their only check.
+# Everything zsh -n covers. Autoload bodies are identified by directory, so
+# new ones join automatically. CI does not see autoload bodies and excludes
+# .zshrc; this is their only check.
 # ShellCheck refuses Zsh (SC1071), and shfmt's Zsh support is partial, so this
 # is the only check using Zsh's own grammar. Only the root scripts are in
-# SHFMT_FILES; CI formats the other scripts except mysql-work.sh.
+# SHFMT_FILES; CI formats the other scripts except mysql-work.sh and .zshrc.
 readonly ZSH_FILES=(
 	"${ZSH_SCRIPT_FILES[@]}"
-	zsh/.zshrc
 	*/.zsh.d/functions/*
 )
 
@@ -127,8 +127,8 @@ readonly SHFMT_FILES=(
 	"${ZSH_ROOT_FILES[@]}"
 )
 
-# The four FILTER_REGEX_EXCLUDE alternatives, as pathspecs: elpa/
-# (third-party), .venv/ (virtual env), and the two files shfmt would reformat.
+# The five FILTER_REGEX_EXCLUDE alternatives, as pathspecs: elpa/
+# (third-party), .venv/ (virtual env), and the three files shfmt would reformat.
 # Super-linter drops these from its file list before any validator runs, so it
 # demands nothing of them. Both derivations below mirror it from here, so the
 # regex has one counterpart in this file rather than two partial ones. The
@@ -141,6 +141,7 @@ readonly SUPER_LINTER_EXCLUDES=(
 	':(exclude)*.venv/**'
 	':(exclude)*mysql-work/.zsh.d/rc/mysql-work.sh'
 	':(exclude)*zsh/.p10k.zsh'
+	':(exclude)*zsh/.zshrc'
 )
 
 # The files super-linter's bash-exec requires mode 755 on, including ones that

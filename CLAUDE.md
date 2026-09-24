@@ -25,8 +25,8 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   `FILTER_REGEX_EXCLUDE` drops. `mysql-work/README.md` is the one tracked
   Markdown file CI's markdownlint lints and `./check.sh` does not. It runs the
   other way for `zsh -n`, which CI has no counterpart for.
-- Format-checked nowhere: the two `FILTER_REGEX_EXCLUDE`'d paths, the
-  `*/.zsh.d/functions/*` autoload bodies, and `zsh/.zshrc`.
+- Format-checked nowhere: the three `FILTER_REGEX_EXCLUDE`'d shell paths and
+  the `*/.zsh.d/functions/*` autoload bodies.
   All except `zsh/.p10k.zsh` get a syntax check from
   `./check.sh`; no checker sees `zsh/.p10k.zsh`.
 - Super-linter (`.github/workflows/linter.yml`) lints by denylist, so it picks
@@ -103,10 +103,9 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   and working directory persist into the runner for the rest of the loop.
   Command prefixes such as `IFS=" " read -r -A x <file` in
   `scripts/usr/bin/dotfilesupdate` do not leak.
-- `zsh/.zshrc` is sourced too, but has neither a shell extension nor a
-  shebang, so super-linter does not see it: no shellcheck, no shfmt, no mode
-  requirement. Giving it the shebang `shell-dev` prescribes makes it visible
-  and would need a `FILTER_REGEX_EXCLUDE` entry for shfmt. `./check.sh`
+- `zsh/.zshrc` is sourced too. Its Zsh shebang makes it visible to
+  super-linter, so `FILTER_REGEX_EXCLUDE` excludes it to preserve its
+  formatting. `./check.sh`
   syntax-checks it with `zsh -n`, without imposing mode or formatting
   requirements.
 - `*/.zsh.d/functions/*` are Zsh autoload bodies, not scripts: `zsh/.zshenv`

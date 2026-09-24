@@ -8,7 +8,8 @@
     "**/.emacs.d/elpa/**",
     "**/.venv/**",
     "**/mysql-work/.zsh.d/rc/mysql-work.sh",
-    "**/zsh/.p10k.zsh"
+    "**/zsh/.p10k.zsh",
+    "**/zsh/.zshrc"
   ],
   "ignorePattern": [
     "(?s)description: >-\\n  Internal step of inspect-changes:.*?Glob"
