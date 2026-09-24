@@ -25,6 +25,7 @@ if [ "$UNAME_OUT" = "Darwin" ]; then
 
 	export LIBRARY_PATH=/usr/local/lib
 fi
+unset UNAME_OUT
 
 fpath+=~/.zsh.d/functions
 
@@ -33,3 +34,4 @@ for script in ~/.zsh.d/env/*; do
 	source "$script"
 done
 unsetopt null_glob
+unset script

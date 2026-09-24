@@ -60,6 +60,7 @@ alias heic2jpg='magick mogrify -monitor -format jpg *.HEIC'
 # https://developer.apple.com/forums/thread/694233
 function enable_core() {
     local input="$1"
+    local tmpfile
     tmpfile=$(mktemp)
     /usr/libexec/PlistBuddy \
         -c "Add :com.apple.security.get-task-allow bool true" "$tmpfile"
@@ -141,13 +142,12 @@ zinit load zsh-users/zsh-autosuggestions
 zinit load ael-code/zsh-colored-man-pages
 zinit load djui/alias-tips
 
-UNAME_OUT="$(uname -s)"
-
 setopt NULL_GLOB
 for script in ~/.zsh.d/rc/*; do
     source "$script"
 done
 unsetopt NULL_GLOB
+unset script
 
 #
 # Powerlevel10k
