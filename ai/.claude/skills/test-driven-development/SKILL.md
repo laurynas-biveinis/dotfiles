@@ -20,8 +20,7 @@ With the smallest possible iteration steps, use red-green TDD as follows:
 1. Run `./check.sh` to ensure you are starting from a clean baseline.
 1. Write user-facing documentation for the feature or for any behavior changes
    by a bugfix.
-1. Run `./check.sh` to format/lint the documentation and to confirm the
-   baseline.
+1. Run `./check.sh` to confirm the baseline after the documentation changes.
 1. Write ONE failing test for the smallest bit of functionality or a minimal bug
    testcase. Tests are NOT allowed to access internal APIs or internal state of
    the module being tested. If that precludes testing, ultrathink about making
