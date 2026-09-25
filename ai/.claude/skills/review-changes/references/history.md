@@ -46,12 +46,13 @@ interpret this checkout's stack as permission to amend a different history.
 
 ## Preserve and place
 
-Before mutation, record branch/HEAD, index and working-tree differences, and
-untracked files. Save recoverable copies before stashing or rebasing. Keep
-unrelated work out of fixes and commits, including unrelated hunks in the same
-file. Restore the exact staged/unstaged split; do not assume a plain stash pop
-preserves it. Retain recovery data until restoration is verified. Stop on
-unexpected concurrent edits and reconcile them before continuing.
+Follow [concurrent changes](concurrency.md) before every mutation, including
+restoration, and after it. Save recoverable copies before stashing or rebasing.
+Keep unrelated work out of fixes and commits, including unrelated hunks in the
+same file. Restore only the staged/unstaged split the workflow disturbed,
+preserving subsequent user edits and staging decisions; a plain stash pop
+does not establish that. Retain recovery data until restoration is resolved
+under that protocol.
 
 For uncommitted introduced fixes, update only the reviewed layer and necessary
 new files, staging explicitly when the entry is staged. Preserve any separate
@@ -118,6 +119,10 @@ decision is required, retain the evidence and finish incomplete rather than
 claiming checks passed.
 
 ## Update the queue
+
+These rules cover the run's own rewrites. For out-of-band ref or layer changes,
+first use [concurrent changes](concurrency.md#ref-and-layer-changes) to determine
+which logical entries were re-addressed and obtain the required decision.
 
 After every insertion, amendment, or replay, map the old logical entries to
 their current commits and update the endpoint, scopes, and resolution

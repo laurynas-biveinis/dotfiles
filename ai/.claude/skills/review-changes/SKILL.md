@@ -15,28 +15,38 @@ tracking operations. Apply caller requirements verbatim throughout.
 
 ## Start
 
-Read [history and scope](references/history.md) to establish the original
-target, initialize the unreviewed stack, and preserve the user's work. Use
-the scope-selection rules from `inspect-changes` once, without running a
-review during selection. Initially only the requested scope is unreviewed.
+Create a unique `/tmp/review-changes-<topic>-state.md` scratch ledger before
+the first repository observation, deriving `<topic>` from the request and
+working directory because no diff is known yet. Read
+[concurrent changes](references/concurrency.md) and capture its initial
+repository record. Then read
+[history and scope](references/history.md) to establish the original target,
+initialize the unreviewed stack, and preserve the user's work. Use the
+scope-selection rules from `inspect-changes` once, without running a review
+during selection. Initially only the requested scope is unreviewed.
 
-Create a unique `/tmp/review-changes-<topic>-state.md` scratch ledger. Record
-the original endpoint, current logical entries and their SHAs or uncommitted
-layers, scope filters, review states, inspection paths, finding dispositions,
-resolution dependencies, and tracking results. Keep a cumulative list of
-records created for off-path findings, with their returned URLs/Org URIs;
-later completion or reclassification never removes an item from that list.
+Record the original endpoint, current logical entries and their SHAs or
+uncommitted layers, scope filters, review states, inspection paths, finding
+dispositions, resolution dependencies, and tracking results. Keep the repository
+record, in-flight mutations, recovery copies and restoration obligations, and pending
+concurrent changes in this ledger as the concurrency reference specifies.
+Keep a cumulative list of records created for off-path findings, with their
+returned URLs/Org URIs; later completion or reclassification never removes an
+item from that list.
 
 An entry is `unhandled` until a complete inspection produces no new findings
 after the filtering below and all required actions are handled. Its state then
 becomes `converged`. Initially empty range members use `empty`; validated
 removal uses `eliminated`, under the rules below. Record state changes as work
-happens so a resumed run can reconstruct the queue; revalidate its repository
-state before continuing.
+happens so a resumed run can reconstruct the queue. On resume, reconcile the
+repository against the saved record before using the queue or taking a new
+baseline; follow the concurrency reference if the record is missing.
 
 ## Inspect and handle
 
 1. Select the lowest unhandled entry, with ancestors before descendants.
+   Apply the concurrency checkpoints throughout this loop, including before
+   resolving scope, after an inner result, and before accepting completion.
    Resolve its current state and scope per the history reference. Validate its
    exact post-image under that reference's **Validation state** contract,
    including isolation and reconciliation of formatter edits. Run required
@@ -58,8 +68,12 @@ state before continuing.
    prior outer findings or focus steering. Wait for its result before mutating
    the reviewed state.
 1. Read its result envelope and final report. Only `Status: converged` supplies
-   a completed inspection. An incomplete, aborted, missing, or malformed result
-   never counts as no findings; preserve its evidence and report the blocker.
+   a completed inspection. For an inner repository-state stop — drift or a
+   failed state observation, named in its `Reason` or limitations file —
+   reconcile under the concurrency reference and dispatch a fresh inspection
+   when cleared; never promote that stopped inspection to completed. Any other
+   incomplete, aborted, missing, or malformed result never counts as no
+   findings; preserve its evidence and report the blocker.
    A `not-run` result also cannot establish convergence.
 1. For each surviving finding, apply **Handled above** first. For the rest,
    match against the outer ledger semantically by defect and affected behavior,
@@ -168,8 +182,9 @@ Do not run several remediation writers concurrently.
 
 Finish successfully only when the original endpoint and all lower queued
 entries are `converged`, `empty`, or `eliminated`, all handling is complete, and
-handled-above dependencies and empty/eliminated evidence still hold. Never
-expand beyond that endpoint. There is no arbitrary outer iteration cap. An
+handled-above dependencies and empty/eliminated evidence still hold. Resolve
+all restoration obligations and required concurrent-change decisions first.
+Never expand beyond that endpoint. There is no arbitrary outer iteration cap. An
 unresolved blocker or a repeated fix attempt with no new evidence or viable
 remedy ends incomplete, with recoverable state. Repetition alone never makes
 an unresolved finding handled. Continue independent authorized work before
@@ -181,6 +196,9 @@ outcome. Include fixes and placement, validation, findings dropped as handled
 above, empty and eliminated entries, remaining blockers, and why traversal
 stopped.
 Refer to findings by their text, never by ephemeral inner review IDs.
+
+At every termination, state the concurrency reference's observation limit and
+list concurrent changes preserved without a user decision.
 
 At every termination, including an incomplete run, present **all GitHub issues
 and Org items created for pre-existing off-path findings across every
