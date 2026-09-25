@@ -148,6 +148,20 @@ class MainTest(unittest.TestCase):
         """Non-staging git commands pass, operators included."""
         self.assertEqual(run_main("Bash", "git status && git log"), (0, ""))
 
+    def test_denies_irregular_whitespace(self):
+        """Any whitespace between git and the subcommand still reaches validation."""
+        for command in ("git  add -A", "git\tadd -A", "git\nadd -A", "git\trm -A"):
+            with self.subTest(command=command):
+                self.assertEqual(
+                    run_main("Bash", command),
+                    (
+                        0,
+                        denial(
+                            "Blocked: Flags not allowed: -A" + ALLOWLIST_REASON_SUFFIX
+                        ),
+                    ),
+                )
+
     def test_denies_wildcard(self):
         """A wildcard stage is denied with the self-contained rule."""
         self.assertEqual(

@@ -93,7 +93,7 @@ def main():
     command = tool_input.get("command", "")
 
     # Check if this is a git staging command
-    if "git add" not in command and "git rm" not in command:
+    if not re.search(rf"\bgit\s+(?:{'|'.join(ALLOWED_OPTIONS)})\b", command):
         # Not a git staging command, pass through
         sys.exit(0)
 
