@@ -5,8 +5,8 @@
 This hook uses pure allowlist validation: only commands matching the exact
 pattern 'git add|rm [<option>] [--] file1 file2 ...' with simple filenames are
 allowed, where the one option is --intent-to-add for add and --cached for rm.
-All other patterns including other flags, glob patterns, shell operators, and
-directories are rejected.
+All other patterns including other flags, glob patterns, shell operators, line
+breaks, and directories are rejected.
 """
 
 import json
@@ -68,10 +68,14 @@ def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-st
 
 
 def has_shell_operators(command):
-    """Check if command contains shell operators."""
-    # Shell operators that indicate compound commands
-    operators = ["&&", "||", ";", "|", ">", "<", "$(", "`", "&"]
-    return any(op in command for op in operators)
+    """Check for a shell operator or a line break, ignoring edge line feeds."""
+    # Shell operators that indicate compound commands. A carriage return is no
+    # shell separator, but the argument split treats it as whitespace, so
+    # allowing it would let one garbled argument pass as several filenames.
+    # The shell drops line feeds and blanks at either end but keeps a carriage
+    # return there as part of the adjacent word, so only the former are stripped.
+    operators = ["&&", "||", ";", "|", ">", "<", "$(", "`", "&", "\n", "\r"]
+    return any(op in command.strip(" \t\n") for op in operators)
 
 
 def main():
@@ -105,8 +109,8 @@ def main():
                 "permissionDecision": "deny",
                 "permissionDecisionReason": (
                     "Blocked: git staging commands cannot be used in compound commands. "
-                    "Run git add/rm in its own Bash tool call, without shell operators "
-                    "like &&, ||, ;, or |."
+                    "Run git add/rm in its own Bash tool call, on one line, without "
+                    "shell operators like &&, ||, ;, or |."
                 ),
             }
         }

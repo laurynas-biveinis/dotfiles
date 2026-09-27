@@ -17,8 +17,8 @@ HOOK = importlib.import_module("block_git_wildcard_staging")
 
 COMPOUND_REASON = (
     "Blocked: git staging commands cannot be used in compound commands. Run "
-    "git add/rm in its own Bash tool call, without shell operators like &&, "
-    "||, ;, or |."
+    "git add/rm in its own Bash tool call, on one line, without shell "
+    "operators like &&, ||, ;, or |."
 )
 ALLOWLIST_REASON_SUFFIX = (
     ". Stage individual files: 'git add [--intent-to-add] [--] file1 file2 ...' "
@@ -124,13 +124,17 @@ class HasShellOperatorsTest(unittest.TestCase):
             "git add a; git status",
             "git add a | cat",
             "git add $(ls)",
+            "git add a\ngit push",
+            "git add a\rgit push",
         ):
             with self.subTest(command=command):
                 self.assertTrue(HOOK.has_shell_operators(command))
 
     def test_plain_command(self):
-        """A single staging command is not compound."""
-        self.assertFalse(HOOK.has_shell_operators("git add --intent-to-add -- a"))
+        """A single staging command is not compound, even with edge line feeds."""
+        for command in ("git add --intent-to-add -- a", "git add a\n", "\ngit add a"):
+            with self.subTest(command=command):
+                self.assertFalse(HOOK.has_shell_operators(command))
 
 
 class MainTest(unittest.TestCase):
@@ -148,9 +152,15 @@ class MainTest(unittest.TestCase):
         """Non-staging git commands pass, operators included."""
         self.assertEqual(run_main("Bash", "git status && git log"), (0, ""))
 
+    def test_allows_edge_line_feed(self):
+        """A line feed at either end joins no commands, so it is no operator."""
+        for command in ("git add a\n", "\ngit add a", "git add a\n \n"):
+            with self.subTest(command=command):
+                self.assertEqual(run_main("Bash", command), (0, ""))
+
     def test_denies_irregular_whitespace(self):
         """Any whitespace between git and the subcommand still reaches validation."""
-        for command in ("git  add -A", "git\tadd -A", "git\nadd -A", "git\trm -A"):
+        for command in ("git  add -A", "git\tadd -A", "git\trm -A"):
             with self.subTest(command=command):
                 self.assertEqual(
                     run_main("Bash", command),
@@ -168,6 +178,22 @@ class MainTest(unittest.TestCase):
             run_main("Bash", "git add -A"),
             (0, denial("Blocked: Flags not allowed: -A" + ALLOWLIST_REASON_SUFFIX)),
         )
+
+    def test_denies_multiline(self):
+        """A line break in the command is denied like the other operators."""
+        for command in (
+            "git add a\ngit push",
+            "git add a\rgit push",
+            "git\nadd -A",
+            "git\radd -A",
+            "git\nrm -A",
+            "git add a\r",
+            "\rgit add a",
+        ):
+            with self.subTest(command=command):
+                self.assertEqual(
+                    run_main("Bash", command), (0, denial(COMPOUND_REASON))
+                )
 
     def test_denies_compound(self):
         """A compound staging command is denied."""
