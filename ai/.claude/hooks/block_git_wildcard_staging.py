@@ -5,28 +5,40 @@
 This hook uses pure allowlist validation: only commands matching the exact
 pattern 'git add|rm [<option>] [--] file1 file2 ...' with simple filenames are
 allowed, where the one option is --intent-to-add for add and --cached for rm.
+Arguments are split by shlex's POSIX quoting rules, so a quoted or
+backslash-escaped path with spaces is one filename; unbalanced quoting is
+rejected, and a backslash-newline is a line break, not a line continuation.
 All other patterns including other flags, glob patterns, shell operators, line
 breaks, and directories are rejected.
 """
 
 import json
 import re
+import shlex
 import sys
 
 # The one option each subcommand may carry, directly after it.
 ALLOWED_OPTIONS = {"add": "--intent-to-add", "rm": "--cached"}
 
+# The characters a filename may contain, as a regex character-class body.
+FILENAME_CHARS = r"a-zA-Z0-9 /_.\-#~@"
 
-def is_valid_filename(arg):
-    """Check if argument is a valid simple filename.
 
-    Valid filenames contain only: alphanumeric, /, -, _, ., #, ~
-    Rejects: . and .. (directory shortcuts that stage entire directories)
+def filename_problem(arg):
+    """Return why arg is not a simple filename, or None if it is one.
+
+    Simple filenames contain only: alphanumeric, space, /, -, _, ., #, ~, @
+    Rejects: . and .. (directory shortcuts that stage entire directories), and
+    names made only of spaces
     """
-    # Reject directory shortcuts
     if arg in [".", ".."]:
-        return False
-    return bool(re.match(r"^[a-zA-Z0-9/_.\-#~]+$", arg))
+        return "directory shortcut"
+    if not arg.strip(" "):
+        return "blank name"
+    disallowed = dict.fromkeys(re.findall(f"[^{FILENAME_CHARS}]", arg))
+    if disallowed:
+        return f"disallowed characters: {', '.join(map(repr, disallowed))}"
+    return None
 
 
 def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-statements
@@ -35,7 +47,10 @@ def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-st
 
     Returns: (is_valid, error_message)
     """
-    parts = command.split()
+    try:
+        parts = shlex.split(command)
+    except ValueError as e:
+        return False, f"Unparsable quoting: {e}"
 
     # Validate command structure
     if len(parts) < 2:
@@ -61,8 +76,9 @@ def is_valid_git_staging_command(command):  # pylint: disable=too-many-return-st
     for part in parts[file_args_start:]:
         if part.startswith("-"):
             return False, f"Flags not allowed: {part}"
-        if not is_valid_filename(part):
-            return False, f"Invalid filename pattern: {part}"
+        problem = filename_problem(part)
+        if problem:
+            return False, f"Invalid filename pattern: {part} ({problem})"
 
     return True, None
 

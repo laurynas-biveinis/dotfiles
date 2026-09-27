@@ -71,8 +71,14 @@ class IsValidGitStagingCommandTest(unittest.TestCase):
             "git add --intent-to-add -- a",
             "git add --intent-to-add a",
             "git add -- a/b.txt",
+            'git add "a b"',
+            "git add 'a b'",
+            "git add a\\ b",
+            "git add emacs/.emacs.d/elpa/lsp-treemacs-0.5/icons/eclipse/boolean@2x.png",
             "git rm --cached a",
             "git rm --cached -- a",
+            'git rm --cached -- "a b"',
+            'git add "--" a',
             "git rm -- a",
             "git add",
             "git rm",
@@ -86,15 +92,52 @@ class IsValidGitStagingCommandTest(unittest.TestCase):
         """Other flags, globs, directories, and option-only commands fail."""
         for command, message in (
             ("git add -A", "Flags not allowed: -A"),
-            ("git add .", "Invalid filename pattern: ."),
-            ("git add ..", "Invalid filename pattern: .."),
-            ("git add *.py", "Invalid filename pattern: *.py"),
+            ("git add .", "Invalid filename pattern: . (directory shortcut)"),
+            ("git add ..", "Invalid filename pattern: .. (directory shortcut)"),
+            (
+                "git add *.py",
+                "Invalid filename pattern: *.py (disallowed characters: '*')",
+            ),
+            (
+                'git add "*.py"',
+                "Invalid filename pattern: *.py (disallowed characters: '*')",
+            ),
+            ('git add "a b', "Unparsable quoting: No closing quotation"),
+            ("git add a\\", "Unparsable quoting: No escaped character"),
+            ('git add " "', "Invalid filename pattern:   (blank name)"),
+            ('git add ""', "Invalid filename pattern:  (blank name)"),
+            # main() denies these two as compound commands before validating.
+            (
+                "git add \\\nfile1.py",
+                "Invalid filename pattern: \nfile1.py (disallowed characters: '\\n')",
+            ),
+            (
+                'git add "a\n"',
+                "Invalid filename pattern: a\n (disallowed characters: '\\n')",
+            ),
+            (
+                "git add a+b",
+                "Invalid filename pattern: a+b (disallowed characters: '+')",
+            ),
+            (
+                "git add a*+b",
+                "Invalid filename pattern: a*+b (disallowed characters: '*', '+')",
+            ),
+            (
+                "git add a**b",
+                "Invalid filename pattern: a**b (disallowed characters: '*')",
+            ),
             ("git add --intent-to-add", "No files specified after --intent-to-add"),
             ("git add --intent-to-add --", "No files specified after --"),
             ("git add --", "No files specified after --"),
             ("git add -- -x", "Flags not allowed: -x"),
-            ("git add -- ..", "Invalid filename pattern: .."),
-            ("git rm --cached -- .", "Invalid filename pattern: ."),
+            ('git add "-A"', "Flags not allowed: -A"),
+            ('git add -- "-x"', "Flags not allowed: -x"),
+            ("git add -- ..", "Invalid filename pattern: .. (directory shortcut)"),
+            (
+                "git rm --cached -- .",
+                "Invalid filename pattern: . (directory shortcut)",
+            ),
             ("git add a --intent-to-add", "Flags not allowed: --intent-to-add"),
             (
                 "git add --intent-to-add --intent-to-add a",
@@ -177,6 +220,36 @@ class MainTest(unittest.TestCase):
         self.assertEqual(
             run_main("Bash", "git add -A"),
             (0, denial("Blocked: Flags not allowed: -A" + ALLOWLIST_REASON_SUFFIX)),
+        )
+
+    def test_denies_unparsable_quoting(self):
+        """Unbalanced quoting is denied instead of escaping as an exception."""
+        self.assertEqual(
+            run_main("Bash", 'git add "a b'),
+            (
+                0,
+                denial(
+                    "Blocked: Unparsable quoting: No closing quotation"
+                    + ALLOWLIST_REASON_SUFFIX
+                ),
+            ),
+        )
+
+    def test_allows_quoted_path(self):
+        """A quoted path with spaces reaches git as one filename."""
+        self.assertEqual(run_main("Bash", 'git add "a b"'), (0, ""))
+
+    def test_denies_quoted_directory_shortcut(self):
+        """Quoting does not hide a directory shortcut."""
+        self.assertEqual(
+            run_main("Bash", 'git add "."'),
+            (
+                0,
+                denial(
+                    "Blocked: Invalid filename pattern: . (directory shortcut)"
+                    + ALLOWLIST_REASON_SUFFIX
+                ),
+            ),
         )
 
     def test_denies_multiline(self):
