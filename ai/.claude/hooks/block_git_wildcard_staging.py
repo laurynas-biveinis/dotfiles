@@ -427,6 +427,19 @@ def is_compound(command, commands, operators):
     )
 
 
+def deny(reason):
+    """Deny the tool call for reason and exit."""
+    output = {
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "deny",
+            "permissionDecisionReason": reason,
+        }
+    }
+    print(json.dumps(output))
+    sys.exit(0)
+
+
 def main():
     """Process the tool input and block inappropriate git staging commands."""
     # Parse JSON input
@@ -461,41 +474,25 @@ def main():
 
     # Check for shell operators in git staging commands
     if is_compound(command, commands, operators):
-        output = {
-            "hookSpecificOutput": {
-                "hookEventName": "PreToolUse",
-                "permissionDecision": "deny",
-                "permissionDecisionReason": (
-                    "Blocked: git staging commands cannot be used in compound commands. "
-                    "Run git add/rm in its own Bash tool call, on one line, without "
-                    "shell operators like &&, ||, ;, or |."
-                ),
-            }
-        }
-        print(json.dumps(output))
-        sys.exit(0)
+        deny(
+            "Blocked: git staging commands cannot be used in compound commands. "
+            "Run git add/rm in its own Bash tool call, on one line, without "
+            "shell operators like &&, ||, ;, or |."
+        )
 
     # Validate against allowlist pattern
     for problem in problems:
         if not problem:
             continue
-        output = {
-            "hookSpecificOutput": {
-                "hookEventName": "PreToolUse",
-                "permissionDecision": "deny",
-                "permissionDecisionReason": (
-                    f"Blocked: {problem}. "
-                    "Stage individual files: "
-                    "'git [-C <path>] add [--intent-to-add] [--] file1 file2 ...' or "
-                    "'git [-C <path>] rm [--cached] [--] file1 file2 ...'. The working "
-                    "tree may hold unrelated changes, files not meant to be tracked, "
-                    "or the user's own parallel work, so no other flags, glob "
-                    "patterns, directories, or shell operators are allowed."
-                ),
-            }
-        }
-        print(json.dumps(output))
-        sys.exit(0)
+        deny(
+            f"Blocked: {problem}. "
+            "Stage individual files: "
+            "'git [-C <path>] add [--intent-to-add] [--] file1 file2 ...' or "
+            "'git [-C <path>] rm [--cached] [--] file1 file2 ...'. The working "
+            "tree may hold unrelated changes, files not meant to be tracked, "
+            "or the user's own parallel work, so no other flags, glob "
+            "patterns, directories, or shell operators are allowed."
+        )
 
     # Command matches allowlist, allow it
     sys.exit(0)
