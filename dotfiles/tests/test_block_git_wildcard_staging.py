@@ -371,7 +371,7 @@ class StagingDetectionTest(unittest.TestCase):
             ("git${=IFS}add -A", "${=IFS}add"),
             ("git a* -A", "a*"),
             ("git ?m -r .", "?m"),
-            ("git [s]tage -A", "[s]tage"),
+            ("git s[t]age -A", "s[t]age"),
             ("git [^x]dd -A", "[^x]dd"),
             ("git (add) -A", "(add)"),
             ("git a(d)d -A", "a(d)d"),
