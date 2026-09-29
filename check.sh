@@ -172,27 +172,35 @@ readonly MODE_PATHSPECS=(
 
 ERRORS=0
 
+# The tracked paths, and the untracked non-ignored ones, matching the caller's
+# pathspecs, one per line. The tools read the working tree, so the listing
+# includes untracked files: --others --exclude-standard admits a new file
+# before it is staged. It needs -z: without it git quotes unusual names, and
+# the callers' existence test would drop those silently; tr turns the NULs back
+# into the newlines the callers' loops read, leaving only a path with a literal
+# newline in it unhandled. Callers pass their own --, so they can add options
+# before it; test each path with -f, which drops a tracked file deleted but not
+# yet staged; and capture the status, which pipefail carries out, because a
+# failed listing must fail the stage rather than silently shrink the set.
+list_worktree_files() {
+	git ls-files -z --cached --others --exclude-standard "$@" | tr '\000' '\n'
+}
+
 # Derived by extension, then extended by name. Super-linter's rule is ".py
 # extension or Python shebang, minus FILTER_REGEX_EXCLUDE"; the extension half
 # is mechanically reproducible, so a new .py file enrols itself here instead of
-# being remembered. The tools read the working tree, so the listing does too:
-# --others --exclude-standard admits a new file before it is staged, and the
-# existence test drops a tracked file deleted but not yet staged, as the globs
-# this replaced did. It needs -z: without it git quotes unusual names, and the
-# test would drop those silently; tr turns the NULs back into the newlines the
-# loop reads, leaving only a path with a literal newline in it unhandled. The
-# status is captured because a failed listing must fail the stage rather than
-# silently shrink the set. The elpa and .venv excludes it takes from
-# SUPER_LINTER_EXCLUDES are not optional: a bare glob pulls in the vendored
-# elpa copies, and .venv is hidden only by the .gitignore the virtualenv tool
-# wrote inside it, which not every tool writes. The other two match no .py
-# file, which costs nothing and keeps one mirror of the regex. The
-# extension-less programs are named, for the reason the header gives. Neither
-# half was current before: four of the five programs were unnamed, and
-# scripts/usr/lib/python/common.py matched none of the replaced globs — all of
-# them linted by CI throughout.
+# being remembered. Through list_worktree_files and the -f test below it takes
+# in new files and drops deleted ones, as the globs it replaced did. The elpa
+# and .venv excludes it takes from SUPER_LINTER_EXCLUDES are not optional: a
+# bare glob pulls in the vendored elpa copies, and .venv is hidden only by the
+# .gitignore the virtualenv tool wrote inside it, which not every tool writes.
+# The other two match no .py file, which costs nothing and keeps one mirror of
+# the regex. The extension-less programs are named, for the reason the header
+# gives. Neither half was current before: four of the five programs were
+# unnamed, and scripts/usr/lib/python/common.py matched none of the replaced
+# globs — all of them linted by CI throughout.
 PYTHON_FILES=()
-python_listing=$(git ls-files -z --cached --others --exclude-standard -- '*.py' "${SUPER_LINTER_EXCLUDES[@]}" | tr '\000' '\n') || {
+python_listing=$(list_worktree_files -- '*.py' "${SUPER_LINTER_EXCLUDES[@]}") || {
 	echo "listing .py files failed (git names it above): the Python stages below cover only the named programs"
 	ERRORS=$((ERRORS + 1))
 }
@@ -313,19 +321,29 @@ else
 	ERRORS=$((ERRORS + 1))
 fi
 
+# Listed by git rather than found on disk, so that ignored files stay out:
+# ~/.claude/skills links into ai/, and the root .gitignore covers the synced/,
+# .trash/ and .staging/ directories where Claude Code keeps claude.ai skills.
+# The symlink test keeps out the AGENTS.md link, as find -type f did.
+# --error-unmatch as for the mode stage, so a location that matches nothing
+# fails the stage instead of dropping out of it, as find ai did for a missing
+# ai/. textlint reads the same ai/ files, which it would otherwise walk the
+# directory for.
 echo -n "Checking Markdown files... "
 MD_STATUS=0
-root_markdown="$(find . -maxdepth 1 -type f -name "*.md")" || MD_STATUS=$?
-ai_markdown="$(find ai -type f -name "*.md")" || MD_STATUS=$?
+md_listing=$(list_worktree_files --error-unmatch -- ':(glob)*.md' ':(glob)ai/**/*.md') || MD_STATUS=$?
 MD_FILES=()
+TEXTLINT_FILES=(CLAUDE.md)
 while IFS= read -r file; do
-	if [ -n "$file" ]; then
+	if [ -f "$file" ] && [ ! -L "$file" ]; then
 		MD_FILES+=("$file")
+		case $file in
+		ai/*) TEXTLINT_FILES+=("$file") ;;
+		esac
 	fi
-done <<<"$root_markdown
-$ai_markdown"
+done <<<"$md_listing"
 if [ "$MD_STATUS" -ne 0 ] || [ ${#MD_FILES[@]} -eq 0 ]; then
-	echo "Markdown file listing failed or found no files!"
+	echo "Markdown file listing failed or found no files (git names any failure above): prettier and markdownlint below cover only the listed files, terminology only CLAUDE.md and the listed ai/ files"
 	ERRORS=$((ERRORS + 1))
 fi
 if [ ${#MD_FILES[@]} -gt 0 ]; then
@@ -349,7 +367,7 @@ if [ ${#MD_FILES[@]} -gt 0 ]; then
 fi
 
 echo -n "Checking terminology... "
-if textlint --rule terminology ai CLAUDE.md; then
+if textlint --rule terminology "${TEXTLINT_FILES[@]}"; then
 	echo "OK!"
 else
 	echo "textlint check failed"
