@@ -40,3 +40,7 @@ emacs/.emacs.d/package-quickstart.elc
 __pycache__/
 /.projectile-cache.eld
 /.claude/
+# Claude Code's claude.ai skill sync, under the ~/.claude/skills stow link
+/ai/.claude/skills/synced/
+/ai/.claude/skills/.trash/
+/ai/.claude/skills/.staging/
