@@ -72,11 +72,6 @@
             "type": "command",
             "command": "python3 ~/.claude/hooks/validate_check_sh.py",
             "if": "Bash(./check.sh *)"
-          },
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/block_git_wildcard_staging.py",
-            "if": "Bash(git *)"
           }
         ]
       },

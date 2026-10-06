@@ -85,9 +85,8 @@ abort; keep partial edits and recovery data in place.
      as a gitlink. An untracked nested Git repository reports as a single
      directory entry even under `-uall`, and staging it records a gitlink rather
      than the files.
-   - Run each staging command as its own Bash call, with no `cd` prefix and no
-     `&&`, `||`, `;`, `|` or redirects: the staging hook denies compound
-     commands before it validates anything else.
+   - Use no option but `git add`'s `--intent-to-add` or `git rm`'s
+     `--cached`.
 1. Draft the commit message.
 1. Call `/commit` skill with the drafted commit message to commit. Note in the
    skill invocation that the commit message draft is only a suggestion and that
