@@ -11,8 +11,8 @@
 
 ;;; Generated autoloads from hl-todo.el
 
-(autoload 'hl-todo-mode "hl-todo" "\
-Highlight TODO and similar keywords in comments and strings.
+(autoload 'hl-todo-mode "hl-todo"
+"Highlight TODO and similar keywords in comments and strings.
 
 This is a minor mode.  If called interactively, toggle the `Hl-Todo
 mode' mode.  If the prefix argument is positive, enable the mode, and if
@@ -32,16 +32,19 @@ disabled.
 
 (fn &optional ARG)" t)
 (put 'global-hl-todo-mode 'globalized-minor-mode t)
-(defvar global-hl-todo-mode nil "\
-Non-nil if Global Hl-Todo mode is enabled.
+(defvar global-hl-todo-mode nil
+"Non-nil if Global Hl-Todo mode is enabled.
 See the `global-hl-todo-mode' command
 for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `global-hl-todo-mode'.")
 (custom-autoload 'global-hl-todo-mode "hl-todo" nil)
-(autoload 'global-hl-todo-mode "hl-todo" "\
-Toggle Hl-Todo mode in all buffers.
+(autoload 'global-hl-todo-mode "hl-todo"
+"Toggle Hl-Todo mode in many buffers.
+Specifically, Hl-Todo mode is enabled in all buffers where
+`hl-todo--turn-on-mode-if-desired' would do it.
+
 With prefix ARG, enable Global Hl-Todo mode if ARG is positive; otherwise,
 disable it.
 
@@ -49,32 +52,29 @@ If called from Lisp, toggle the mode if ARG is `toggle'.
 Enable the mode if ARG is nil, omitted, or is a positive number.
 Disable the mode if ARG is a negative number.
 
-Hl-Todo mode is enabled in all buffers where `hl-todo--turn-on-mode-if-desired'
-would do it.
-
 See `hl-todo-mode' for more information on Hl-Todo mode.
 
 (fn &optional ARG)" t)
-(autoload 'hl-todo-next "hl-todo" "\
-Jump to the next TODO or similar keyword.
+(autoload 'hl-todo-next "hl-todo"
+"Jump to the next TODO or similar keyword.
 The prefix argument ARG specifies how many keywords to move.
 A negative argument means move backward that many keywords.
 
 (fn ARG)" t)
-(autoload 'hl-todo-previous "hl-todo" "\
-Jump to the previous TODO or similar keyword.
+(autoload 'hl-todo-previous "hl-todo"
+"Jump to the previous TODO or similar keyword.
 The prefix argument ARG specifies how many keywords to move.
 A negative argument means move forward that many keywords.
 
 (fn ARG)" t)
-(autoload 'hl-todo-occur "hl-todo" "\
-Use `occur' to find all TODO or similar keywords.
+(autoload 'hl-todo-occur "hl-todo"
+"Use `occur' to find all TODO or similar keywords.
 This actually finds a superset of the highlighted keywords,
 because it uses a regexp instead of a more sophisticated
 matcher.  It also finds occurrences that are not within a
 string or comment." t)
-(autoload 'hl-todo-rgrep "hl-todo" "\
-Use `rgrep' to find all TODO or similar keywords.
+(autoload 'hl-todo-rgrep "hl-todo"
+"Use `rgrep' to find all TODO or similar keywords.
 This actually finds a superset of the highlighted keywords,
 because it uses a regexp instead of a more sophisticated
 matcher.  It also finds occurrences that are not within a
@@ -85,15 +85,15 @@ constructed shell command line before it is executed.
 Also see option `hl-todo-keyword-faces'.
 
 (fn REGEXP &optional FILES DIR CONFIRM)" t)
-(autoload 'hl-todo-flymake "hl-todo" "\
-Flymake backend for `hl-todo-mode'.
+(autoload 'hl-todo-flymake "hl-todo"
+"Flymake backend for `hl-todo-mode'.
 Diagnostics are reported to REPORT-FN.  Use `add-hook' to
 register this function in `flymake-diagnostic-functions' before
 enabling `flymake-mode'.
 
 (fn REPORT-FN &rest PLIST)")
-(autoload 'hl-todo-insert "hl-todo" "\
-Read a TODO or similar keyword and insert it at point.
+(autoload 'hl-todo-insert "hl-todo"
+"Read a TODO or similar keyword and insert it at point.
 
 If point is not inside a string or comment, then insert a new
 comment.  If point is at the end of the line, then insert the
@@ -106,8 +106,8 @@ If `hl-todo-require-punctuation' is non-nil and
 then append that character to the inserted string.
 
 (fn KEYWORD)" t)
-(autoload 'hl-todo-search-and-highlight "hl-todo" "\
-Highlight TODO and similar keywords starting at point.
+(autoload 'hl-todo-search-and-highlight "hl-todo"
+"Highlight TODO and similar keywords starting at point.
 Intended to be added to `magit-revision-wash-message-hook' and
 `magit-log-wash-summary-hook', but might be useful elsewhere too.")
 (register-definition-prefixes "hl-todo" '("hl-todo-"))

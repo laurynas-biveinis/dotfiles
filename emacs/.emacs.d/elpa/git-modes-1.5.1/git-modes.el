@@ -11,11 +11,11 @@
 ;; Homepage: https://github.com/magit/git-modes
 ;; Keywords: convenience vc git
 
-;; Package-Version: 1.5.0
-;; Package-Revision: v1.5.0-0-gf291a4cc4a8b
+;; Package-Version: 1.5.1
+;; Package-Revision: v1.5.1-0-gf8a453725586
 ;; Package-Requires: (
 ;;     (emacs  "28.1")
-;;     (compat "31.0"))
+;;     (compat "31.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 

@@ -6,11 +6,11 @@
 ;; Homepage: https://github.com/tarsius/hl-todo
 ;; Keywords: convenience
 
-;; Package-Version: 3.9.4
-;; Package-Revision: v3.9.4-0-g527d545b8c2f
+;; Package-Version: 3.9.5
+;; Package-Revision: v3.9.5-0-gd25aa5a2e78f
 ;; Package-Requires: (
 ;;     (emacs    "28.1")
-;;     (compat   "31.0")
+;;     (compat   "31.1")
 ;;     (cond-let  "1.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -53,7 +53,6 @@
 
 (require 'compat)
 (require 'cond-let)
-(eval-when-compile (require 'subr-x))
 (eval-when-compile (require 'cl-lib))
 
 (defvar grep-find-template)

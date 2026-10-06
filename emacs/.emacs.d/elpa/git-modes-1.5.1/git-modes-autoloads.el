@@ -11,31 +11,41 @@
 
 ;;; Generated autoloads from gitattributes-mode.el
 
-(autoload 'gitattributes-mode "gitattributes-mode" "\
-A major mode for editing .gitattributes files.
+(autoload 'gitattributes-mode "gitattributes-mode"
+"A major mode for editing .gitattributes files.
 \\{gitattributes-mode-map}
 
-(fn)" t)
+In addition to any hooks its parent mode `text-mode' might have run, this mode
+runs the hook `gitattributes-mode-hook', as the final or penultimate step during
+initialization." t)
 (dolist (pattern '("/\\.gitattributes\\'" "/info/attributes\\'" "/git/attributes\\'")) (add-to-list 'auto-mode-alist (cons pattern #'gitattributes-mode)))
 (register-definition-prefixes "gitattributes-mode" '("gitattributes-mode-"))
 
 
 ;;; Generated autoloads from gitconfig-mode.el
 
-(autoload 'gitconfig-mode "gitconfig-mode" "\
-A major mode for editing .gitconfig files.
+(autoload 'gitconfig-mode "gitconfig-mode"
+"A major mode for editing .gitconfig files.
 
-(fn)" t)
+In addition to any hooks its parent mode `conf-unix-mode' might have run, this
+mode runs the hook `gitconfig-mode-hook', as the final or penultimate step
+during initialization.
+
+\\{gitconfig-mode-map}" t)
 (dolist (pattern '("/\\.gitconfig\\'" "/\\.git/config\\'" "/modules/.*/config\\'" "/git/config\\'" "/\\.gitmodules\\'" "/etc/gitconfig\\'")) (add-to-list 'auto-mode-alist (cons pattern 'gitconfig-mode)))
 (register-definition-prefixes "gitconfig-mode" '("gitconfig-"))
 
 
 ;;; Generated autoloads from gitignore-mode.el
 
-(autoload 'gitignore-mode "gitignore-mode" "\
-A major mode for editing .gitignore files.
+(autoload 'gitignore-mode "gitignore-mode"
+"A major mode for editing .gitignore files.
 
-(fn)" t)
+In addition to any hooks its parent mode `conf-unix-mode' might have run, this
+mode runs the hook `gitignore-mode-hook', as the final or penultimate step
+during initialization.
+
+\\{gitignore-mode-map}" t)
 (dolist (pattern (list "/\\.gitignore\\'" "/info/exclude\\'" "/git/ignore\\'")) (add-to-list 'auto-mode-alist (cons pattern 'gitignore-mode)))
 (register-definition-prefixes "gitignore-mode" '("gitignore-mode-font-lock-keywords"))
 

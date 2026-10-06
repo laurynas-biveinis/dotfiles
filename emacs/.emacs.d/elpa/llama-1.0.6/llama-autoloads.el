@@ -11,8 +11,8 @@
 
 ;;; Generated autoloads from llama.el
 
-(autoload 'llama "llama" "\
-Expand to a `lambda' expression that wraps around FN and BODY.
+(autoload 'llama "llama"
+"Expand to a `lambda' expression that wraps around FN and BODY.
 
 This macro provides a compact way to write short `lambda' expressions.
 It expands to a `lambda' expression, which calls the function FN with
@@ -69,16 +69,16 @@ Consider enabling `llama-fontify-mode' to highlight `##' and its
 special arguments.
 
 (fn FN &rest BODY)" nil t)
-(defvar llama-fontify-mode nil "\
-Non-nil if Llama-Fontify mode is enabled.
+(defvar llama-fontify-mode nil
+"Non-nil if Llama-Fontify mode is enabled.
 See the `llama-fontify-mode' command
 for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `llama-fontify-mode'.")
 (custom-autoload 'llama-fontify-mode "llama" nil)
-(autoload 'llama-fontify-mode "llama" "\
-In Emacs Lisp mode, highlight the `##' macro and its special arguments.
+(autoload 'llama-fontify-mode "llama"
+"In Emacs Lisp mode, highlight the `##' macro and its special arguments.
 
 This is a global minor mode.  If called interactively, toggle the
 `Llama-Fontify mode' mode.  If the prefix argument is positive, enable

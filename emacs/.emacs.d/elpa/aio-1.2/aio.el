@@ -4,8 +4,8 @@
 
 ;; Author: Christopher Wellons <wellons@nullprogram.com>
 ;; URL: https://github.com/skeeto/emacs-aio
-;; Package-Version: 1.1
-;; Package-Revision: 1.1-0-ge0105f8ec8c4
+;; Package-Version: 1.2
+;; Package-Revision: 1.2-0-ga20c99aafef0
 ;; Package-Requires: ((emacs "26.1"))
 
 ;;; Commentary:
@@ -80,15 +80,20 @@ value or rethrows a signal."
 
 PROMISE is the return promise of the iterator, which was returned
 by the originating async function.  YIELD-RESULT is the value
-function result directly from the previously yielded promise."
-  (condition-case _
-      (cl-loop for result = (iter-next iter yield-result)
-               then (iter-next iter (lambda () result))
-               until (aio-promise-p result)
-               finally (aio-listen result
-                                   (lambda (value)
-                                     (aio--step iter promise value))))
-    (iter-end-of-sequence)))
+function result directly from the previously yielded promise.
+
+The current buffer belongs to the async function, which saves and
+restores it around each pause (see `aio-await'), so changes to it
+do not escape to whoever advanced the iterator."
+  (save-current-buffer
+    (condition-case _
+        (cl-loop for result = (iter-next iter yield-result)
+                 then (iter-next iter (lambda () result))
+                 until (aio-promise-p result)
+                 finally (aio-listen result
+                                     (lambda (value)
+                                       (aio--step iter promise value))))
+      (iter-end-of-sequence))))
 
 (defmacro aio-with-promise (promise &rest body)
   "Evaluate BODY and resolve PROMISE with the result.
@@ -114,9 +119,76 @@ immediately and the function is not paused.  Since async functions
 return promises, async functions can await directly on other
 async functions using this macro.
 
+The current buffer is restored when the function resumes.  If
+that buffer was killed while paused, the function resumes in
+whatever buffer is current, except inside `with-current-buffer',
+`save-current-buffer', or `save-excursion', where an error is
+signaled instead.
+
 This macro can only be used inside an async function, either
 `aio-lambda' or `aio-defun'."
-  `(funcall (iter-yield ,expr)))
+  (let ((promise (make-symbol "promise"))
+        (buffer (make-symbol "buffer")))
+    `(let* ((,promise ,expr)
+            (,buffer (current-buffer)))
+       (aio--resume ,buffer (iter-yield ,promise)))))
+
+(defun aio--resume (buffer value-function)
+  "Make BUFFER current, if live, and return VALUE-FUNCTION's result."
+  (when (buffer-live-p buffer)
+    (set-buffer buffer))
+  (funcall value-function))
+
+(defun aio--resume-strict (buffer value-function)
+  "Make BUFFER current and return VALUE-FUNCTION's result.
+Unlike `aio--resume', signal an error if BUFFER was killed."
+  (unless (buffer-live-p buffer)
+    (error "Current buffer was killed during `aio-await'"))
+  (set-buffer buffer)
+  (funcall value-function))
+
+(defun aio--yields-p (form)
+  "Return non-nil if macro-expanded FORM contains `iter-yield'."
+  (let ((found nil))
+    (while (and (consp form) (not found))
+      (setq found (aio--yields-p (pop form))))
+    (or found (eq form 'iter-yield))))
+
+(defun aio--rewrite (form strict)
+  "Rewrite macro-expanded FORM so that generators can transform it.
+
+Generators cannot pause inside `save-current-buffer' or
+`save-excursion', so each of these that contains a pause is
+replaced with an equivalent built on `unwind-protect'.  Within
+them, pauses resume strictly (see `aio--resume-strict'), and
+STRICT is non-nil when FORM is already within one."
+  (pcase form
+    ((or (pred atom) `(quote . ,_) `(function . ,_))
+     form)
+    (`(aio--resume . ,args)
+     (cons (if strict 'aio--resume-strict 'aio--resume)
+           (aio--rewrite args strict)))
+    ((and `(save-current-buffer . ,body) (guard (aio--yields-p body)))
+     (let ((buffer (make-symbol "buffer")))
+       `(let ((,buffer (current-buffer)))
+          (unwind-protect
+              (progn ,@(aio--rewrite body t))
+            (when (buffer-live-p ,buffer)
+              (set-buffer ,buffer))))))
+    ((and `(save-excursion . ,body) (guard (aio--yields-p body)))
+     (let ((marker (make-symbol "marker")))
+       `(let ((,marker (point-marker)))
+          (unwind-protect
+              (progn ,@(aio--rewrite body t))
+            (when (marker-buffer ,marker)
+              (set-buffer (marker-buffer ,marker))
+              (goto-char ,marker))
+            (set-marker ,marker nil)))))
+    (_
+     (let ((result ()))
+       (while (consp form)
+         (push (aio--rewrite (pop form) strict) result))
+       (nconc (nreverse result) form)))))
 
 (defmacro aio-lambda (arglist &rest body)
   "Like `lambda', but defines an async function.
@@ -126,23 +198,34 @@ promises.  When an async function is called, it immediately
 returns a promise that will resolve to the function's return
 value, or any uncaught error signal.
 
+The current buffer is part of an async function's state.  It starts
+as the caller's current buffer and persists across pauses, and
+changing it never affects the caller or whatever resumes the
+function.  Hence `aio-await' may be used inside `with-current-buffer',
+`save-current-buffer', and `save-excursion'.
+
 See Info node ‘(elisp)Lambda Components’ for a description of
-ARGLIST and BODY."
+ARGLIST and BODY.
+
+\(fn ARGLIST &optional DOCSTRING INTERACTIVE &rest BODY)"
   (declare (indent defun)
            (doc-string 3)
            (debug (&define lambda-list lambda-doc
                            [&optional ("interactive" interactive)]
                            &rest sexp)))
-  (let ((args (make-symbol "args"))
-        (promise (make-symbol "promise"))
-        (split-body (macroexp-parse-body body)))
+  (let* ((args (make-symbol "args"))
+         (promise (make-symbol "promise"))
+         (split-body (macroexp-parse-body body))
+         (body (aio--rewrite (macroexpand-all (macroexp-progn (cdr split-body))
+                                              macroexpand-all-environment)
+                             nil)))
     (if (fboundp 'iter2-lambda)
         `(lambda (&rest ,args)
            ,@(car split-body)
            (let* ((,promise (aio-promise))
                   (iter (apply (iter2-lambda ,arglist
                                  (aio-with-promise ,promise
-                                   ,@(cdr split-body)))
+                                   ,body))
                                ,args)))
              (prog1 ,promise
                (aio--step iter ,promise nil))))
@@ -151,7 +234,7 @@ ARGLIST and BODY."
          (let* ((,promise (aio-promise))
                 (iter (apply (iter-lambda ,arglist
                                (aio-with-promise ,promise
-                                 ,@(cdr split-body)))
+                                 ,body))
                              ,args)))
            (prog1 ,promise
              (aio--step iter ,promise nil)))))))
@@ -219,7 +302,9 @@ Beware: Dynamic bindings that are lexically outside
     (aio-wait-for (my-func)))
   ⇒ 456
 
-Other global state such as the current buffer behaves likewise."
+Other global state behaves likewise, except for the current buffer:
+BODY starts in the buffer that was current when `aio-with-async'
+was evaluated (see `aio-lambda')."
   (declare (indent 0)
            (debug (&rest sexp)))
   `(let ((promise (funcall (aio-lambda ()
@@ -246,8 +331,8 @@ a chain of promise-yielding promises."
 (defmacro aio-all (promises)
   "Return a promise that resolves when all PROMISES are resolved."
   `(let ((promises ,promises))
-      (while-let ((promise (pop promises)))
-        (aio-await promise))))
+      (while promises
+        (aio-await (pop promises)))))
 
 (defun aio-catch (promise)
   "Return a new promise that wraps PROMISE but will never signal.
@@ -297,9 +382,8 @@ automatically wrapped with a value function (see `aio-resolve')."
 
 This function will never directly signal an error.  Instead any
 errors will be delivered via the returned promise.  The promise
-result is a cons of (status . buffer).  This buffer is a clone of
-the buffer created by `url-retrieve' and should be killed by the
-caller.
+result is a cons of (status . buffer).  This buffer is the one
+created by `url-retrieve' and should be killed by the caller.
 
 Arguments URL, SILENT, and INHIBIT-COOKIES are passed on to
 `url-retrieve', which see.  Also see Info node ‘(url)Retrieving
@@ -309,9 +393,9 @@ URLs’ for details."
     (prog1 promise
       (condition-case error
           (url-retrieve url (lambda (status)
-                              (let ((value (cons status (clone-buffer))))
+                              (let ((value (cons status (current-buffer))))
                                 (aio-resolve promise (lambda () value))))
-                        silent inhibit-cookies)
+                        nil silent inhibit-cookies)
         (error (aio-resolve promise
                             (lambda ()
                               (signal (car error) (cdr error)))))))))
