@@ -4,24 +4,8 @@
 Claude Code Hook: Check.sh Validator
 =====================================
 This hook ensures ./check.sh is run without any additional arguments or pipes.
-It runs as a PreToolUse hook for the Bash tool.
-
-Configuration in settings.local.json:
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /Users/laurynas/dotfiles/.claude/hooks/validate-check-sh.py"
-          }
-        ]
-      }
-    ]
-  }
-}
+It runs as a PreToolUse hook for the Bash tool, configured in
+ai/.claude/settings.json.
 """
 
 import json

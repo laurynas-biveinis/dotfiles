@@ -5,41 +5,7 @@ Claude Code Hook: Elisp Syntax Validator
 =========================================
 This hook validates Emacs Lisp syntax for Write, Edit and MultiEdit operations.
 It uses Emacs' check-parens function to ensure well-formed S-expressions.
-
-Configuration in settings.local.json:
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /path/to/validate-elisp-syntax.py"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /path/to/validate-elisp-syntax.py"
-          }
-        ]
-      },
-      {
-        "matcher": "MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /path/to/validate-elisp-syntax.py"
-          }
-        ]
-      }
-    ]
-  }
-}
+It runs as a PreToolUse hook configured in ai/.claude/settings.json.
 """
 
 import json
