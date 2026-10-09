@@ -11,21 +11,24 @@ mysql_need_openssl3_workaround() {
         return 0
     fi
 
-    if ! declare -r version_file=$(mysql_find_version_file); then
+    declare version_file
+    declare -i major_ver minor_ver patch_level
+    if ! version_file=$(mysql_find_version_file); then
         return 1
     fi
 
-    if ! declare -i -r major_ver=$(mysql_get_major_version "$version_file"); then
+    if ! major_ver=$(mysql_get_major_version "$version_file"); then
         return 1
     fi
 
-    if ! declare -i -r minor_ver=$(mysql_get_minor_version "$version_file"); then
+    if ! minor_ver=$(mysql_get_minor_version "$version_file"); then
         return 1
     fi
 
-    if ! declare -i -r patch_level=$(mysql_get_patch_level "$version_file"); then
+    if ! patch_level=$(mysql_get_patch_level "$version_file"); then
         return 1
     fi
+    declare -r version_file major_ver minor_ver patch_level
 
     if [ "$major_ver" -lt 8 ] ||
            [ "$major_ver" -eq 8 ] && [ "$minor_ver" -eq 0 ] &&

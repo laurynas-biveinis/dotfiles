@@ -59,8 +59,9 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
     (super-linter re-routes on its own);
   - anything actually executed loses the `~/.zshenv` `PATH` that supplies
     `brew`, the `asdf` shims and `~/usr/bin`;
-  - `setup-macos-mysql-work.sh` carries dialect-independent shellcheck findings
-    that the Zsh shebang hides today;
+  - `setup-macos-mysql-work.sh` carries a dialect-independent shellcheck
+    finding (`SC2046`, the unquoted `$(xcode-select -p)` `ln` target) that the
+    Zsh shebang hides today;
   - the scripts that `source` a virtualenv activate script —
     `setup-macos-python.sh`, `setup-macos-cpp.sh`, `setup-macos-mysql-work.sh` —
     hit two independent shellcheck walls the Zsh shebang also hides. `#!/bin/sh`

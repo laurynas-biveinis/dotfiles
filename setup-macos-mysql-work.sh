@@ -39,6 +39,7 @@ mkdir ~/vilniusdb
 virtualenv ~/vilniusdb/mysql-python-env
 source ~/vilniusdb/mysql-python-env/bin/activate
 # https://github.com/orgs/Homebrew/discussions/5547#discussioncomment-10292879
-export PKG_CONFIG_PATH="$(brew --prefix)/opt/mysql-client@8.0/lib/pkgconfig"
+PKG_CONFIG_PATH="$(brew --prefix)/opt/mysql-client@8.0/lib/pkgconfig"
+export PKG_CONFIG_PATH
 pip install --force-reinstall --no-cache mysqlclient
 pip install mysql-connector-python==8.0.33

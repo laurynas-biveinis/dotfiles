@@ -36,7 +36,8 @@ if [[ "$COMMAND" != "create" && "$COMMAND" != "checkout" &&
 	exit 1
 fi
 
-readonly UNAME_OUT="$(uname -s)"
+UNAME_OUT="$(uname -s)"
+readonly UNAME_OUT
 readonly SUPPORT_FILE_DIR="$HOME/dotfiles/aerospike/aerospike"
 
 function do_master_command() {

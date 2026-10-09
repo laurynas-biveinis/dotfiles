@@ -4,11 +4,15 @@ mysql_get_single_version_number() {
     declare -r version_file="$1"
     declare -r key="$2"
 
-    declare -r ver_str=$(grep "$2" "$version_file")
-    declare -i -r ver="${ver_str//[^0-9]/}"
-    if [ -n "$ver" ]; then
-        echo "$ver"
-        return 0
+    declare ver_str
+    if ver_str=$(grep "$key" "$version_file"); then
+        declare -r ver_str
+        declare -r ver="${ver_str//[^0-9]/}"
+        if [ -n "$ver" ]; then
+            echo "$ver"
+            return 0
+        fi
     fi
+    >&2 echo "No $key version number in $version_file"
     return 1
 }

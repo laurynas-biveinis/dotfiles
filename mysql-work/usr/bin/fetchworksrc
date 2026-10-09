@@ -58,7 +58,8 @@ for worktree in $WORK_TREES_TO_UPDATE; do
 	declare full_worktree_path="$WORK_SRC_ROOT/$worktree"
 	pushd "$full_worktree_path" || return
 
-	if ! declare -i workaround_ssl3=$(mysql_need_openssl3_workaround); then
+	declare -i workaround_ssl3
+	if ! workaround_ssl3=$(mysql_need_openssl3_workaround); then
 		popd
 		return 1
 	fi

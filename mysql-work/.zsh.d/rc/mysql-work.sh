@@ -44,7 +44,8 @@ autoload mysql_need_openssl3_workaround
 autoload mysql_maybe_workaround_openssl3
 autoload mysql_undo_openssl3_workaround
 
-declare -r uname_out="$(uname -s)"
+uname_out="$(uname -s)"
+declare -r uname_out
 
 mysql_export_build_defaults() {
     # The default build type for mysql_build if not in a build dir and no build
@@ -66,15 +67,17 @@ mysql_validate_version() {
 }
 
 mysql_version_compare() {
-    if ! declare -r v1=$(mysql_validate_version "$1"); then
+    declare v1 v2
+    if ! v1=$(mysql_validate_version "$1"); then
         return 1
     fi
-    if ! declare -r v2=$(mysql_validate_version "$1"); then
+    if ! v2=$(mysql_validate_version "$2"); then
         return 1
     fi
+    declare -r v1 v2
 
-    if is-at-least "$1" "$2"; then
-        if [[ "$1" == "$2" ]]; then
+    if is-at-least "$v1" "$v2"; then
+        if [[ "$v1" == "$v2" ]]; then
             echo 0
         else
             echo -1
@@ -101,19 +104,21 @@ mysql_validate_compiler_flag_type() {
 # observed to be required is harmless, since suppressing a warning that never
 # fires has no effect. Prefer a single wide range over many narrow ones.
 mysql_add_comp_flags() {
-    if ! declare -r start_version=$(mysql_validate_version "$1"); then
+    declare start_version end_version type
+    if ! start_version=$(mysql_validate_version "$1"); then
         return 1
     fi
-    if ! declare -r end_version=$(mysql_validate_version "$2"); then
+    if ! end_version=$(mysql_validate_version "$2"); then
         return 1
     fi
     if [[ $(mysql_version_compare "$start_version" "$end_version") -gt 0 ]];
     then
         >&2 echo "Start $start_version cannot be higher than end $end_version"
     fi
-    if ! declare -r type=$(mysql_validate_compiler_flag_type "$3"); then
+    if ! type=$(mysql_validate_compiler_flag_type "$3"); then
         return 1
     fi
+    declare -r start_version end_version type
     shift 3
     declare -r flags=("$@")
     declare -r key="${start_version}-${end_version}:${type}"
@@ -126,12 +131,14 @@ mysql_add_comp_flags() {
 }
 
 mysql_get_comp_flags() {
-    if ! declare -r version=$(mysql_validate_version "$1"); then
+    declare version type
+    if ! version=$(mysql_validate_version "$1"); then
         return 1
     fi
-    if ! declare -r type=$(mysql_validate_compiler_flag_type "$2"); then
+    if ! type=$(mysql_validate_compiler_flag_type "$2"); then
         return 1
     fi
+    declare -r version type
     declare -a flags=()
     for range in "${(k)comp_flags[@]}"; do
         IFS='-:' read -r start_version end_version range_flag_type <<< "$range"
@@ -159,19 +166,21 @@ mysql_validate_cmake_flag_type() {
 }
 
 mysql_add_cmake_flags() {
-    if ! declare -r start_version=$(mysql_validate_version "$1"); then
+    declare start_version end_version type
+    if ! start_version=$(mysql_validate_version "$1"); then
         return 1
     fi
-    if ! declare -r end_version=$(mysql_validate_version "$2"); then
+    if ! end_version=$(mysql_validate_version "$2"); then
         return 1
     fi
     if [[ $(mysql_version_compare "$start_version" "$end_version") -gt 0 ]];
     then
         >&2 echo "Start $start_version cannot be higher than end $end_version"
     fi
-    if ! declare -r type=$(mysql_validate_cmake_flag_type "$3"); then
+    if ! type=$(mysql_validate_cmake_flag_type "$3"); then
         return 1
     fi
+    declare -r start_version end_version type
     shift 3
     declare -r flags=("$@")
     declare -r key="${start_version}-${end_version}:${type}"
@@ -183,12 +192,14 @@ mysql_add_cmake_flags() {
 }
 
 mysql_get_cmake_flags() {
-    if ! declare -r version=$(mysql_validate_version "$1"); then
+    declare version type
+    if ! version=$(mysql_validate_version "$1"); then
         return 1
     fi
-    if ! declare -r type=$(mysql_validate_cmake_flag_type "$2"); then
+    if ! type=$(mysql_validate_cmake_flag_type "$2"); then
         return 1
     fi
+    declare -r version type
     declare -a flags=()
     for range in "${(k)cmake_flags[@]}"; do
         IFS='-:' read -r start_version end_version range_flag_type <<< "$range"
@@ -211,7 +222,11 @@ mysql_export_environment_helpers() {
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
-        declare -r brew="$(brew --prefix)"
+        declare brew
+        if ! brew="$(brew --prefix)"; then
+            return 1
+        fi
+        declare -r brew
         declare -r brew_opt="$brew/opt"
         if [ "$(arch)" = "arm64" ]; then
             # Workaround https://bugs.mysql.com/bug.php?id=113047 (MTR test
@@ -1028,14 +1043,21 @@ mysql_determine_flavor() {
         return 0
     fi
 
-    declare -r version_extra_str=$(grep MYSQL_VERSION_EXTRA "$version_file")
+    declare version_extra_str
+    # grep exit status 1 means no match, which is not an error here
+    version_extra_str=$(grep MYSQL_VERSION_EXTRA "$version_file") ||
+        (( $? == 1 )) || return 1
+    declare -r version_extra_str
     declare -r version_extra="${version_extra_str/MYSQL_VERSION_EXTRA=/}"
     if [[ "$version_extra" =~ ^-[0-9]+$ ]]; then
         echo "percona"
         return 0
     fi
 
-    declare -r server_maturity=$(grep SERVER_MATURITY "$version_file")
+    declare server_maturity
+    server_maturity=$(grep SERVER_MATURITY "$version_file") ||
+        (( $? == 1 )) || return 1
+    declare -r server_maturity
     if [ -n "$server_maturity" ]; then
         echo "mariadb"
         return 0
@@ -1049,30 +1071,33 @@ mysql_determine_flavor() {
 mysql_cmake() {
 	pushd .. || return 1
 
-	if ! declare -r version_file=$(mysql_find_version_file); then
+	declare version_file flavor
+	declare -i major_ver minor_ver patch_level
+	if ! version_file=$(mysql_find_version_file); then
 		popd
 		return 1
 	fi
 
-	if ! declare -i -r major_ver=$(mysql_get_major_version "$version_file");
-	then
+	if ! major_ver=$(mysql_get_major_version "$version_file"); then
 		popd
 		return 1
 	fi
 
-	if ! declare -i -r minor_ver=$(mysql_get_minor_version "$version_file");
-	then
+	if ! minor_ver=$(mysql_get_minor_version "$version_file"); then
 		popd
 		return 1
 	fi
 
-	if ! declare -i -r patch_level=$(mysql_get_patch_level "$version_file");
-	then
+	if ! patch_level=$(mysql_get_patch_level "$version_file"); then
 		popd
 		return 1
 	fi
 
-	declare -r flavor=$(mysql_determine_flavor "$version_file")
+	if ! flavor=$(mysql_determine_flavor "$version_file"); then
+		popd
+		return 1
+	fi
+	declare -r version_file major_ver minor_ver patch_level flavor
 
 	popd || return 1
 
@@ -1413,7 +1438,7 @@ mysql_cmake() {
 	# build directory can be named arbitrarily as long as it starts with a
 	# $MY_BUILD_DIR_PREFIX. The build type is determined by the presence of
 	# certain substrings in the name.
-	declare -r build_dir="$(basename "$PWD")"
+	declare -r build_dir="${PWD:t}"
 
 	case "$build_dir" in
         *san*)
@@ -1544,10 +1569,12 @@ mysql_cmake() {
 # example _build-debug/mysql-test)
 mysql_rebuild() {
     pushd .. || return 1
-    if ! declare -i -r workaround_ssl3=$(mysql_need_openssl3_workaround); then
+    declare -i workaround_ssl3
+    if ! workaround_ssl3=$(mysql_need_openssl3_workaround); then
         popd
         return 1
     fi
+    declare -r workaround_ssl3
     popd || return 1
 
     rm -f dev.entitlements
@@ -1565,7 +1592,7 @@ mysql_build_in_build_dir() {
     fi
     mysql_cmake "$@" || return $?
 
-    declare -r build_dir="$(basename "$PWD")"
+    declare -r build_dir="${PWD:t}"
 
     pushd .. || return 1
 
@@ -1586,7 +1613,7 @@ mysql_cd_into_build_dir() {
 
 mysql_build() {
     declare -r build_type_arg=$1
-    declare -r cur_dir_name="$(basename "$PWD")"
+    declare -r cur_dir_name="${PWD:t}"
 
     if [ -n "$build_type_arg" ]; then
         if [[ $cur_dir_name == "$MY_BUILD_DIR_PREFIX"* ]]; then
@@ -1635,9 +1662,11 @@ mtr() {
     declare -r mktemp_template="/tmp/mtr-XXXX"
     # The temp directory is left around for both successful and error returns in
     # case a run needs to be reviewed or debugged.
-    declare -r mtr_emd_tmp_dir=$(mktemp -d "$mktemp_template") ||
+    declare mtr_emd_tmp_dir
+    mtr_emd_tmp_dir=$(mktemp -d "$mktemp_template") ||
         { >&2 echo "Failed to create a temp dir like $mktemp_template";
           return 1; }
+    declare -r mtr_emd_tmp_dir
 
     # Disable malloc none zone to get rid of many "malloc: nano zone abandoned
     # due to inability to preallocate reserved vm space" messages

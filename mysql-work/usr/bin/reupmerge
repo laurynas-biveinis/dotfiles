@@ -13,9 +13,12 @@ if ! pushd "$BRANCH-$HIGHER"; then
 	exit 1
 fi
 
-readonly base_rev="$(git rev-list HEAD -1 --skip=1 --first-parent --topo-order)"
-readonly tmp_patch=$(mktemp)
-readonly tmp_patch_commit=$(mktemp)
+base_rev="$(git rev-list HEAD -1 --skip=1 --first-parent --topo-order)"
+readonly base_rev
+tmp_patch=$(mktemp)
+readonly tmp_patch
+tmp_patch_commit=$(mktemp)
+readonly tmp_patch_commit
 echo "Saving $BRANCH-$HIGHER last commit on top of $base_rev"
 git log --format=%B -1 >"$tmp_patch_commit"
 git log -1 -p -m --first-parent --pretty=email --full-index --binary >"$tmp_patch"
