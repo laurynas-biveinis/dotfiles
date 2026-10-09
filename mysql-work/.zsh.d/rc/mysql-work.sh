@@ -186,7 +186,7 @@ mysql_get_cmake_flags() {
     if ! declare -r version=$(mysql_validate_version "$1"); then
         return 1
     fi
-    if ! declare -r type=$(mysql_validate_compiler_flag_type "$2"); then
+    if ! declare -r type=$(mysql_validate_cmake_flag_type "$2"); then
         return 1
     fi
     declare -a flags=()
