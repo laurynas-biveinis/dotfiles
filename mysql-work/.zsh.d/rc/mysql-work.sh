@@ -58,7 +58,7 @@ mysql_export_build_defaults() {
 mysql_validate_version() {
     declare -r version="$1"
     if ! [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        2>&1 echo "Invalid version $version. Expected format X.Y.Z"
+        >&2 echo "Invalid version $version. Expected format X.Y.Z"
         return 1
     fi
     echo "$version"
@@ -88,7 +88,7 @@ mysql_version_compare() {
 mysql_validate_compiler_flag_type() {
     declare -r type="$1"
     if ! [[ $type =~ ^(c|cxx|cxx_debug|cxx_release)$ ]]; then
-        2>&1 echo \
+        >&2 echo \
              "Invalid flag type $type. Can be one of c, cxx, cxx_debug, cxx_release"
         return 1
     fi
@@ -109,7 +109,7 @@ mysql_add_comp_flags() {
     fi
     if [[ $(mysql_version_compare "$start_version" "$end_version") -gt 0 ]];
     then
-        2>&1 echo "Start $start_version cannot be higher than end $end_version"
+        >&2 echo "Start $start_version cannot be higher than end $end_version"
     fi
     if ! declare -r type=$(mysql_validate_compiler_flag_type "$3"); then
         return 1
@@ -119,7 +119,7 @@ mysql_add_comp_flags() {
     declare -r key="${start_version}-${end_version}:${type}"
     # Enable when debugging
     if [[ -n "${comp_flags[$key]:-}" ]]; then
-        2>&1 echo "Attempt to overwrite flags for $key"
+        >&2 echo "Attempt to overwrite flags for $key"
     fi
     comp_flags[$key]="${flags[*]}"
     return 0
@@ -150,7 +150,7 @@ mysql_get_comp_flags() {
 mysql_validate_cmake_flag_type() {
     declare -r type="$1"
     if ! [[ $type =~ ^(any|any_debug|any_release)$ ]]; then
-        2>&1 echo \
+        >&2 echo \
              "Invalid flag type $type. Can be one of any, any_debug, any_release"
         return 1
     fi
@@ -167,7 +167,7 @@ mysql_add_cmake_flags() {
     fi
     if [[ $(mysql_version_compare "$start_version" "$end_version") -gt 0 ]];
     then
-        2>&1 echo "Start $start_version cannot be higher than end $end_version"
+        >&2 echo "Start $start_version cannot be higher than end $end_version"
     fi
     if ! declare -r type=$(mysql_validate_cmake_flag_type "$3"); then
         return 1
@@ -1345,7 +1345,7 @@ mysql_cmake() {
 			declare -a -r core_dump_flags=()
 			;;
                 *)
-			2>&1 echo "Unsupported version, please implement"
+			>&2 echo "Unsupported version, please implement"
 			return 1
 			;;
 		esac
@@ -1371,7 +1371,7 @@ mysql_cmake() {
 			declare -a -r core_dump_flags=()
 			;;
                 *)
-			2>&1 echo "Unsupported version, please add"
+			>&2 echo "Unsupported version, please add"
 			return 1
 			;;
 		esac
@@ -1395,17 +1395,17 @@ mysql_cmake() {
 				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
 			;;
                 *)
-			2>&1 echo "Unsupported version, please add"
+			>&2 echo "Unsupported version, please add"
 			return 1
 			;;
 		esac
 		;;
         "mariadb")
-		2>&1 echo "MariaDB unsupported, please add"
+		>&2 echo "MariaDB unsupported, please add"
 		return 1
 		;;
         *)
-		2>&1 echo "Unsupported flavor, should have caught sooner"
+		>&2 echo "Unsupported flavor, should have caught sooner"
 		return 1
 		;;
 	esac
@@ -1434,7 +1434,7 @@ mysql_cmake() {
         *valgrind*)
 		echo "Using Valgrind"
 		if [ "$sanitizers" -eq 1 ]; then
-			2>&1 echo "Valgrind is incompatible with sanitizers"
+			>&2 echo "Valgrind is incompatible with sanitizers"
 			return 1
 		fi
 		debug_flags+=("-DWITH_VALGRIND=ON")
@@ -1532,7 +1532,7 @@ mysql_cmake() {
 		cmake -G Ninja .. "${benchmark_flags[@]}" "$@"
 		;;
         *)
-		2>&1 echo "Must choose one of debug, release, benchmark"
+		>&2 echo "Must choose one of debug, release, benchmark"
 		return 1
 		;;
 	esac
@@ -1590,7 +1590,7 @@ mysql_build() {
 
     if [ -n "$build_type_arg" ]; then
         if [[ $cur_dir_name == "$MY_BUILD_DIR_PREFIX"* ]]; then
-            2>&1 echo "Build type given but already in a build dir"
+            >&2 echo "Build type given but already in a build dir"
             return 1
         fi
         mysql_cd_into_build_dir "$build_type_arg" || return 1
@@ -1636,7 +1636,7 @@ mtr() {
     # The temp directory is left around for both successful and error returns in
     # case a run needs to be reviewed or debugged.
     declare -r mtr_emd_tmp_dir=$(mktemp -d "$mktemp_template") ||
-        { 2>&1 echo "Failed to create a temp dir like $mktemp_template";
+        { >&2 echo "Failed to create a temp dir like $mktemp_template";
           return 1; }
 
     # Disable malloc none zone to get rid of many "malloc: nano zone abandoned
@@ -1695,7 +1695,7 @@ rcmtr() {
 lldb_mysqld_core() {
     declare -a -r cores=(/cores/*(N))
     [[ ${#cores[@]} -ne 1 ]] && {
-        2>&1 echo "Error: not exactly one core file in /cores";
+        >&2 echo "Error: not exactly one core file in /cores";
         return 1;
     }
     lldb ../runtime_output_directory/mysqld -c "${cores[1]}"

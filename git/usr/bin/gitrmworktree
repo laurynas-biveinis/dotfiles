@@ -41,7 +41,7 @@ fi
 readonly REMOTE_NAME
 
 if [ -z "${REMOTE_NAME}" ]; then
-	2>&1 echo "Failed to find push remote name for branch $BRANCH_NAME"
+	>&2 echo "Failed to find push remote name for branch $BRANCH_NAME"
 	popd || exit 1
 	exit 3
 fi
