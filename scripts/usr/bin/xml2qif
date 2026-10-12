@@ -388,7 +388,12 @@ class XMLTransaction(Transaction):
             self._unstructured_info
         ):
             date_substr = self._unstructured_info[:10]
-            date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
+            try:
+                date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
+            except ValueError as exc:
+                raise ValueError(
+                    f"Invalid date prefix {date_substr!r} in unstructured info: {exc}"
+                ) from exc
             return date_obj.strftime("%Y-%m-%d")
 
         booking_date = self._node_text(xml_obj.find(self._XPATH_BOOKING_DATE, NS))

@@ -241,6 +241,12 @@ class XMLTransactionDateTest(unittest.TestCase):
         transaction = _transaction_from_xml("<ValDt><Dt> </Dt></ValDt>")
         self.assertEqual(transaction.date, "2026-06-11")
 
+    def test_invalid_unstructured_date_prefix_raises(self):
+        """An impossible calendar date in the unstructured date prefix fails
+        loud, naming the prefix, instead of falling back to the booking date."""
+        with self.assertRaisesRegex(ValueError, "Invalid date prefix '31/02/2025'"):
+            _transaction_from_xml("<RmtInf><Ustrd>31/02/2025 CARD</Ustrd></RmtInf>")
+
     def test_all_date_sources_empty_raises(self):
         """An empty <BookgDt><Dt/></BookgDt> with no other date source must
         fail loud like an absent node, never yield None, which would silently
