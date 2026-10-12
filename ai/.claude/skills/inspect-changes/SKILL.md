@@ -4,7 +4,6 @@ description: >-
   Inspect code changes and report verified, analyzed findings without acting.
   Use when review-changes needs an independent inspection, or when the caller
   requests a review report without fixes or tracking operations.
-effort: max
 allowed-tools: >-
   Bash(git diff:*)
   Bash(git log:*)
@@ -515,10 +514,8 @@ and the prompt below are authoritative; each child SKILL.md is read as plain
 instructions, so its frontmatter (`allowed-tools`) is documentation of
 intent only, not enforced; the child Bash lists mirror the top-level's entries
 and move with them, and what actually gates a sub-step's Git commands is the
-session's own permissions, so a command may prompt regardless of any list. The
-Agent call cannot carry an effort level, so the
-prompt ends with the `ultrathink` keyword to request the deepest reasoning for
-the sub-step. To dispatch one, issue an Agent call whose prompt is:
+session's own permissions, so a command may prompt regardless of any list. To
+dispatch one, issue an Agent call whose prompt is:
 
 > Read `<skills-dir>/inspect-changes-<step>/SKILL.md`,
 > `<skills-dir>/inspect-changes/references/confidence.md`,
@@ -529,7 +526,6 @@ the sub-step. To dispatch one, issue an Agent call whose prompt is:
 > Read, Grep, and Glob. Your inputs: `<the structured inputs for this step>`.
 > Return only the output that skill's Output section specifies (its primary
 > block plus any auxiliary sections it defines) as your final message.
-> ultrathink
 
 `<skills-dir>` is the absolute path of the directory holding this skill: the
 skill body is loaded prefixed with

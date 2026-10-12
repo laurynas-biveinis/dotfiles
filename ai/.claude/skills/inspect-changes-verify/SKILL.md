@@ -49,8 +49,7 @@ Your invocation prompt supplies, for the single finding you must verify:
 
 ## Procedure
 
-Ultrathink while verifying this finding. You **cannot execute code or write
-files** — your tools are read and Git only.
+You **cannot execute code or write files** — your tools are read and Git only.
 
 1. Independently confirm the finding by reading the code, following references,
    or consulting Git history. Do not hypothesize. Before deciding, run rule 3's

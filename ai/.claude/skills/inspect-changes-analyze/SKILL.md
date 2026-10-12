@@ -82,15 +82,13 @@ Your invocation prompt supplies, for the single finding you must analyze:
 
 ## Procedure
 
-Ultrathink about this finding. You **cannot execute code or write files** — your
-tools are read and Git only.
+You **cannot execute code or write files** — your tools are read and Git only.
 
-1. Analyze, research, and ultrathink about this finding. Restate the critique in
-   your own words, examine what the code actually does, identify whether the
-   finding addresses the root cause or a symptom, present alternative
-   resolutions when more than one is reasonable, recommend one, and note
-   anything the analysis does not change. Drop sections that do not apply — do
-   not pad.
+1. Analyze and research this finding. Restate the critique in your own words,
+   examine what the code actually does, identify whether the finding addresses
+   the root cause or a symptom, present alternative resolutions when more than
+   one is reasonable, recommend one, and note anything the analysis does not
+   change. Drop sections that do not apply — do not pad.
 1. This finding was already confirmed by verification — treat it as valid and
    deepen it. But if your deeper analysis instead proves it a **false
    positive** — the code is actually correct, or the finding misreads the
