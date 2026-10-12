@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=broad-exception-caught,duplicate-code
+# pylint: disable=duplicate-code
 """
 Claude Code Hook: Elisp Syntax Validator
 =========================================
@@ -54,7 +54,7 @@ def validate_elisp_syntax(content):
         return False, error_msg
     except subprocess.TimeoutExpired:
         return False, "Validation timeout"
-    except Exception as e:
+    except (OSError, UnicodeError) as e:
         return False, f"Validation error: {e}"
 
 
@@ -104,7 +104,7 @@ def main():
     """Entry point for the Elisp syntax validation hook."""
     try:
         input_data = json.load(sys.stdin)
-    except Exception as e:
+    except ValueError as e:
         print(f"Error: Invalid JSON input: {e}", file=sys.stderr)
         sys.exit(1)
 
@@ -123,7 +123,7 @@ def main():
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 current_content = f.read()
-        except Exception:
+        except (OSError, UnicodeDecodeError):
             # If we can't read the file, allow the edit
             # Claude will handle the actual file operation errors
             sys.exit(0)
@@ -133,7 +133,7 @@ def main():
         resulting_content = get_resulting_content(
             tool_name, tool_input, current_content
         )
-    except Exception:
+    except ValueError:
         # If we can't apply the edit, let Claude handle it
         sys.exit(0)
 

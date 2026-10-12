@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=broad-exception-caught,duplicate-code
+# pylint: disable=duplicate-code
 """
 Claude Code Hook: Check.sh Validator
 =====================================
@@ -17,7 +17,7 @@ def main():
     """Entry point for the check.sh validation hook."""
     try:
         input_data = json.load(sys.stdin)
-    except Exception as e:
+    except ValueError as e:
         print(f"Error: Invalid JSON input: {e}", file=sys.stderr)
         # Exit code 1 shows stderr to the user but not to Claude
         sys.exit(1)
