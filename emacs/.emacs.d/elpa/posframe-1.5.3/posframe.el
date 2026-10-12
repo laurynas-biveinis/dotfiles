@@ -5,8 +5,8 @@
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
-;; Package-Version: 1.5.2
-;; Package-Revision: 74c8c56131ed
+;; Package-Version: 1.5.3
+;; Package-Revision: 1d833af5c433
 ;; Keywords: convenience, tooltip
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -331,7 +331,7 @@ posframe instead of wrap.
 
  (14) OVERRIDE-PARAMETERS
 
-OVERRIDE-PARAMETERS is very powful, *all* the valid frame parameters
+OVERRIDE-PARAMETERS is very powerful, *all* the valid frame parameters
 used by posframe's frame can be overridden by it.
 
 NOTE: some `posframe-show' arguments are not frame parameters, so they
@@ -422,7 +422,8 @@ You can use `posframe-delete-all' to delete all posframes."
          (font-height (with-current-buffer (window-buffer parent-window)
                         (posframe--get-font-height position)))
          (parent-text-scale-mode-amount (with-current-buffer (window-buffer parent-window)
-                                          (and (bound-and-true-p text-scale-mode) text-scale-mode-amount)))
+                                          (and (bound-and-true-p text-scale-mode)
+                                               (bound-and-true-p text-scale-mode-amount))))
          (mode-line-height (window-mode-line-height
                             (and (window-minibuffer-p)
                                  (ignore-errors (window-in-direction 'above)))))
@@ -709,8 +710,10 @@ ACCEPT-FOCUS."
                    (frame-live-p posframe--frame)
                    ;; For speed reason, posframe will reuse
                    ;; existing frame at possible, but when
-                   ;; user change args, recreating frame
-                   ;; is needed.
+                   ;; user changes args or terminal,
+                   ;; recreating the frame is needed.
+                   (eq (frame-terminal posframe--frame)
+                       (frame-terminal parent-frame))
                    (equal posframe--last-args args))
         (posframe-delete-frame buffer)
         (setq-local posframe--last-args args)
@@ -758,7 +761,8 @@ ACCEPT-FOCUS."
                        (width . 1)
                        (height . 1)
                        (no-special-glyphs . t)
-                       (skip-taskbar . t)
+                       ,(unless parent-frame
+                          (cons 'skip-taskbar t))
                        (inhibit-double-buffering . ,posframe-inhibit-double-buffering)
                        ;; Do not save child-frame when use desktop.el
                        (desktop-dont-save . t))))
@@ -804,25 +808,32 @@ ACCEPT-FOCUS."
       (set-frame-parameter posframe--frame 'parent-frame parent-frame)
 
       ;; Set text scale based on the parent frame text scale.
-      (text-scale-set
-       (funcall posframe-text-scale-factor-function parent-text-scale-mode-amount))
+      (require 'face-remap)
+      (let ((target-scale (funcall posframe-text-scale-factor-function
+                                   parent-text-scale-mode-amount)))
+        (unless (equal target-scale text-scale-mode-amount)
+          (text-scale-set target-scale)))
 
       posframe--frame)))
 
 (defun posframe--find-existing-posframe (buffer &optional last-args)
   "Find existing posframe with BUFFER and LAST-ARGS."
-  (let ((posframe
-         (cl-find-if
-          (lambda (frame)
-            (let* ((buffer-info (frame-parameter frame 'posframe-buffer))
-                   (buffer-equal-p
-                    (or (equal (buffer-name buffer) (car buffer-info))
-                        (equal buffer (cdr buffer-info)))))
-              (if last-args
-                  (and buffer-equal-p
-                       (equal last-args (frame-parameter frame 'last-args)))
-                buffer-equal-p)))
-          (frame-list))))
+  (let* ((selected-terminal (frame-terminal))
+         (posframe
+          (cl-find-if
+           (lambda (frame)
+             (let* ((buffer-info (frame-parameter frame 'posframe-buffer))
+                    (buffer-equal-p
+                     (or (equal (buffer-name buffer) (car buffer-info))
+                         (equal buffer (cdr buffer-info))))
+                    (terminal-equal-p
+                     (eq (frame-terminal frame) selected-terminal)))
+               (if last-args
+                   (and buffer-equal-p
+                        terminal-equal-p
+                        (equal last-args (frame-parameter frame 'last-args)))
+                 (and buffer-equal-p terminal-equal-p))))
+           (frame-list))))
     (when posframe
       (set-frame-parameter posframe 'existing-posframe t))
     posframe))

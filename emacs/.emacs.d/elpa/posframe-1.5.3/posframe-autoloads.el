@@ -11,10 +11,10 @@
 
 ;;; Generated autoloads from posframe.el
 
-(autoload 'posframe-workable-p "posframe" "\
-Test posframe workable status.")
-(autoload 'posframe-show "posframe" "\
-Pop up a posframe to show STRING at POSITION.
+(autoload 'posframe-workable-p "posframe"
+"Test posframe workable status.")
+(autoload 'posframe-show "posframe"
+"Pop up a posframe to show STRING at POSITION.
 
  (1) POSITION
 
@@ -166,7 +166,7 @@ posframe instead of wrap.
 
  (14) OVERRIDE-PARAMETERS
 
-OVERRIDE-PARAMETERS is very powful, *all* the valid frame parameters
+OVERRIDE-PARAMETERS is very powerful, *all* the valid frame parameters
 used by posframe's frame can be overridden by it.
 
 NOTE: some `posframe-show' arguments are not frame parameters, so they
@@ -223,17 +223,17 @@ An example parent frame poshandler function is:
 You can use `posframe-delete-all' to delete all posframes.
 
 (fn BUFFER-OR-NAME &key STRING POSITION POSHANDLER POSHANDLER-EXTRA-INFO WIDTH HEIGHT MAX-WIDTH MAX-HEIGHT MIN-WIDTH MIN-HEIGHT X-PIXEL-OFFSET Y-PIXEL-OFFSET LEFT-FRINGE RIGHT-FRINGE BORDER-WIDTH BORDER-COLOR INTERNAL-BORDER-WIDTH INTERNAL-BORDER-COLOR FONT CURSOR TTY-NON-SELECTED-CURSOR WINDOW-POINT FOREGROUND-COLOR BACKGROUND-COLOR RESPECT-HEADER-LINE RESPECT-MODE-LINE INITIALIZE NO-PROPERTIES KEEP-RATIO LINES-TRUNCATE OVERRIDE-PARAMETERS TIMEOUT REFRESH ACCEPT-FOCUS HIDEHANDLER REFPOSHANDLER &allow-other-keys)")
-(autoload 'posframe-hide-all "posframe" "\
-Hide all posframe frames." t)
-(autoload 'posframe-delete-all "posframe" "\
-Delete all posframe frames and buffers." t)
+(autoload 'posframe-hide-all "posframe"
+"Hide all posframe frames." t)
+(autoload 'posframe-delete-all "posframe"
+"Delete all posframe frames and buffers." t)
 (register-definition-prefixes "posframe" '("posframe-"))
 
 
 ;;; Generated autoloads from posframe-benchmark.el
 
-(autoload 'posframe-benchmark "posframe-benchmark" "\
-Benchmark tool for posframe." t)
+(autoload 'posframe-benchmark "posframe-benchmark"
+"Benchmark tool for posframe." t)
 (register-definition-prefixes "posframe-benchmark" '("posframe-benchmark-alist"))
 
 ;;; End of scraped data
