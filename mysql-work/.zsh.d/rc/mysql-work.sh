@@ -58,44 +58,21 @@ mysql_export_build_defaults() {
 # Enable when developing
 mysql_validate_version() {
     declare -r version="$1"
-    if ! [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    if ! [[ $version == <->.<->.<-> ]]; then
         >&2 echo "Invalid version $version. Expected format X.Y.Z"
         return 1
     fi
-    echo "$version"
     return 0
-}
-
-mysql_version_compare() {
-    declare v1 v2
-    if ! v1=$(mysql_validate_version "$1"); then
-        return 1
-    fi
-    if ! v2=$(mysql_validate_version "$2"); then
-        return 1
-    fi
-    declare -r v1 v2
-
-    if is-at-least "$v1" "$v2"; then
-        if [[ "$v1" == "$v2" ]]; then
-            echo 0
-        else
-            echo -1
-        fi
-    else
-        echo 1
-    fi
 }
 
 # Enable when developing
 mysql_validate_compiler_flag_type() {
     declare -r type="$1"
-    if ! [[ $type =~ ^(c|cxx|cxx_debug|cxx_release)$ ]]; then
+    if ! [[ $type == (c|cxx|cxx_debug|cxx_release) ]]; then
         >&2 echo \
              "Invalid flag type $type. Can be one of c, cxx, cxx_debug, cxx_release"
         return 1
     fi
-    echo "$type"
     return 0
 }
 
@@ -104,21 +81,20 @@ mysql_validate_compiler_flag_type() {
 # observed to be required is harmless, since suppressing a warning that never
 # fires has no effect. Prefer a single wide range over many narrow ones.
 mysql_add_comp_flags() {
-    declare start_version end_version type
-    if ! start_version=$(mysql_validate_version "$1"); then
+    if ! mysql_validate_version "$1"; then
         return 1
     fi
-    if ! end_version=$(mysql_validate_version "$2"); then
+    if ! mysql_validate_version "$2"; then
         return 1
     fi
-    if [[ $(mysql_version_compare "$start_version" "$end_version") -gt 0 ]];
-    then
+    declare -r start_version="$1" end_version="$2"
+    if ! is-at-least "$start_version" "$end_version"; then
         >&2 echo "Start $start_version cannot be higher than end $end_version"
     fi
-    if ! type=$(mysql_validate_compiler_flag_type "$3"); then
+    if ! mysql_validate_compiler_flag_type "$3"; then
         return 1
     fi
-    declare -r start_version end_version type
+    declare -r type="$3"
     shift 3
     declare -r flags=("$@")
     declare -r key="${start_version}-${end_version}:${type}"
@@ -131,19 +107,20 @@ mysql_add_comp_flags() {
 }
 
 mysql_get_comp_flags() {
-    declare version type
-    if ! version=$(mysql_validate_version "$1"); then
+    if ! mysql_validate_version "$1"; then
         return 1
     fi
-    if ! type=$(mysql_validate_compiler_flag_type "$2"); then
+    if ! mysql_validate_compiler_flag_type "$2"; then
         return 1
     fi
-    declare -r version type
+    declare -r version="$1" type="$2"
     declare -a flags=()
     for range in "${(k)comp_flags[@]}"; do
-        IFS='-:' read -r start_version end_version range_flag_type <<< "$range"
-        if [[ $(mysql_version_compare "$version" "$start_version") -ge 0 ]] &&
-               [[ $(mysql_version_compare "$version" "$end_version") -le 0 ]] &&
+        start_version=${range%%-*}
+        end_version=${${range#*-}%%:*}
+        range_flag_type=${range##*:}
+        if is-at-least "$start_version" "$version" &&
+               is-at-least "$version" "$end_version" &&
                { [[ "$type" == "$range_flag_type" ]] ||
                      [[ "$range_flag_type" == "cxx" && "$type" == cxx_* ]]; }; then
             flags+=("${comp_flags[$range]}")
@@ -156,31 +133,29 @@ mysql_get_comp_flags() {
 # Enable when developing
 mysql_validate_cmake_flag_type() {
     declare -r type="$1"
-    if ! [[ $type =~ ^(any|any_debug|any_release)$ ]]; then
+    if ! [[ $type == (any|any_debug|any_release) ]]; then
         >&2 echo \
              "Invalid flag type $type. Can be one of any, any_debug, any_release"
         return 1
     fi
-    echo "$type"
     return 0
 }
 
 mysql_add_cmake_flags() {
-    declare start_version end_version type
-    if ! start_version=$(mysql_validate_version "$1"); then
+    if ! mysql_validate_version "$1"; then
         return 1
     fi
-    if ! end_version=$(mysql_validate_version "$2"); then
+    if ! mysql_validate_version "$2"; then
         return 1
     fi
-    if [[ $(mysql_version_compare "$start_version" "$end_version") -gt 0 ]];
-    then
+    declare -r start_version="$1" end_version="$2"
+    if ! is-at-least "$start_version" "$end_version"; then
         >&2 echo "Start $start_version cannot be higher than end $end_version"
     fi
-    if ! type=$(mysql_validate_cmake_flag_type "$3"); then
+    if ! mysql_validate_cmake_flag_type "$3"; then
         return 1
     fi
-    declare -r start_version end_version type
+    declare -r type="$3"
     shift 3
     declare -r flags=("$@")
     declare -r key="${start_version}-${end_version}:${type}"
@@ -192,19 +167,20 @@ mysql_add_cmake_flags() {
 }
 
 mysql_get_cmake_flags() {
-    declare version type
-    if ! version=$(mysql_validate_version "$1"); then
+    if ! mysql_validate_version "$1"; then
         return 1
     fi
-    if ! type=$(mysql_validate_cmake_flag_type "$2"); then
+    if ! mysql_validate_cmake_flag_type "$2"; then
         return 1
     fi
-    declare -r version type
+    declare -r version="$1" type="$2"
     declare -a flags=()
     for range in "${(k)cmake_flags[@]}"; do
-        IFS='-:' read -r start_version end_version range_flag_type <<< "$range"
-        if [[ $(mysql_version_compare "$version" "$start_version") -ge 0 ]] &&
-               [[ $(mysql_version_compare "$version" "$end_version") -le 0 ]] &&
+        start_version=${range%%-*}
+        end_version=${${range#*-}%%:*}
+        range_flag_type=${range##*:}
+        if is-at-least "$start_version" "$version" &&
+               is-at-least "$version" "$end_version" &&
                [[ "$type" == *"$range_flag_type"* ]]; then
             flags+=("${cmake_flags[$range]}")
         fi
