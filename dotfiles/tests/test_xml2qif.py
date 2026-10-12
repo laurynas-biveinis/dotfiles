@@ -241,6 +241,14 @@ class XMLTransactionDateTest(unittest.TestCase):
         transaction = _transaction_from_xml("<ValDt><Dt> </Dt></ValDt>")
         self.assertEqual(transaction.date, "2026-06-11")
 
+    def test_unstructured_date_prefix_used_without_value_date(self):
+        """Without a value date, a dd/mm/yyyy prefix of the unstructured
+        remittance info gives the date, ahead of the booking date."""
+        transaction = _transaction_from_xml(
+            "<RmtInf><Ustrd>25/12/2025 CARD</Ustrd></RmtInf>"
+        )
+        self.assertEqual(transaction.date, "2025-12-25")
+
     def test_invalid_unstructured_date_prefix_raises(self):
         """An impossible calendar date in the unstructured date prefix fails
         loud, naming the prefix, instead of falling back to the booking date."""
