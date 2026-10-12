@@ -535,18 +535,16 @@ def write_config_atomically(config_path, new_text):
     an interrupted write cannot corrupt the config; the config's own mode is
     preserved."""
     config_dir = os.path.dirname(config_path)
-    tmp_file = tempfile.NamedTemporaryFile(
-        "w", dir=config_dir, delete=False, encoding="utf-8"
-    )
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=config_dir)
     try:
-        with tmp_file:
+        with open(tmp_fd, "w", encoding="utf-8") as tmp_file:
             tmp_file.write(new_text)
-        # NamedTemporaryFile creates the file as 0600; keep the config's own mode
-        os.chmod(tmp_file.name, os.stat(config_path).st_mode & 0o7777)
-        os.replace(tmp_file.name, config_path)
+        # mkstemp creates the file as 0600; keep the config's own mode
+        os.chmod(tmp_path, os.stat(config_path).st_mode & 0o7777)
+        os.replace(tmp_path, config_path)
     except BaseException:
         with contextlib.suppress(FileNotFoundError):
-            os.unlink(tmp_file.name)
+            os.unlink(tmp_path)
         raise
 
 

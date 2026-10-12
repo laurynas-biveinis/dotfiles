@@ -401,15 +401,20 @@ class RunCodexRuleSuggestionTest(unittest.TestCase):
                 SUGGEST.run_codex_rule_suggestion("prompt"), "bad \ufffd bytes"
             )
 
+    def _failure_message(self, stdout, stderr):
+        """Return the RuleSuggestionError message for a codex run that exits 1
+        with STDOUT and STDERR."""
+        result = types.SimpleNamespace(returncode=1, stdout=stdout, stderr=stderr)
+        with (
+            unittest.mock.patch.object(SUGGEST.subprocess, "run", return_value=result),
+            self.assertRaises(RULES.RuleSuggestionError) as ctx,
+        ):
+            SUGGEST.run_codex_rule_suggestion("prompt")
+        return str(ctx.exception)
+
     def test_failure_message_has_control_characters_replaced(self):
         """Raw codex stdout/stderr quoted on failure is sanitized."""
-        result = types.SimpleNamespace(
-            returncode=1, stdout="\x1b[2Jout", stderr="\x1b[31merr"
-        )
-        with unittest.mock.patch.object(SUGGEST.subprocess, "run", return_value=result):
-            with self.assertRaises(RULES.RuleSuggestionError) as ctx:
-                SUGGEST.run_codex_rule_suggestion("prompt")
-        message = str(ctx.exception)
+        message = self._failure_message("\x1b[2Jout", "\x1b[31merr")
         self.assertNotIn("\x1b", message)
         self.assertIn("?[2Jout", message)
         self.assertIn("?[31merr", message)
@@ -418,13 +423,7 @@ class RunCodexRuleSuggestionTest(unittest.TestCase):
         """Every quoted line of the codex stdout/stderr dump is indented: a
         flush-left line in the dump could spoof a line of program output on the
         terminal."""
-        result = types.SimpleNamespace(
-            returncode=1, stdout="out\nInserted rule into x", stderr="err"
-        )
-        with unittest.mock.patch.object(SUGGEST.subprocess, "run", return_value=result):
-            with self.assertRaises(RULES.RuleSuggestionError) as ctx:
-                SUGGEST.run_codex_rule_suggestion("prompt")
-        message = str(ctx.exception)
+        message = self._failure_message("out\nInserted rule into x", "err")
         self.assertIn("\n  out\n  Inserted rule into x", message)
         self.assertNotIn("\nInserted rule into x", message)
 
@@ -753,14 +752,14 @@ class SuggestAndConfirmRuleTest(unittest.TestCase):
 
     def _suggest_and_confirm(self, suggestion_text, input_mock):
         """Run suggest_and_confirm_rule with Codex and input() mocked."""
-        with unittest.mock.patch.object(
-            SUGGEST, "run_codex_rule_suggestion", return_value=suggestion_text
+        with (
+            unittest.mock.patch.object(
+                SUGGEST, "run_codex_rule_suggestion", return_value=suggestion_text
+            ),
+            unittest.mock.patch("builtins.input", input_mock),
+            contextlib.redirect_stdout(io.StringIO()),
         ):
-            with unittest.mock.patch("builtins.input", input_mock):
-                with contextlib.redirect_stdout(io.StringIO()):
-                    SUGGEST.suggest_and_confirm_rule(
-                        self.config_path, self.transaction, ""
-                    )
+            SUGGEST.suggest_and_confirm_rule(self.config_path, self.transaction, "")
 
     def _read_config(self):
         """Read the scratch config back as text."""
@@ -851,14 +850,14 @@ class SuggestAndConfirmRuleTest(unittest.TestCase):
     def test_edit_prints_before_and_after(self):
         """The edit confirmation shows both the old and new section bodies."""
         captured = io.StringIO()
-        with unittest.mock.patch.object(
-            SUGGEST, "run_codex_rule_suggestion", return_value=edit_json()
+        with (
+            unittest.mock.patch.object(
+                SUGGEST, "run_codex_rule_suggestion", return_value=edit_json()
+            ),
+            unittest.mock.patch("builtins.input", lambda _: "y"),
+            contextlib.redirect_stdout(captured),
         ):
-            with unittest.mock.patch("builtins.input", lambda _: "y"):
-                with contextlib.redirect_stdout(captured):
-                    SUGGEST.suggest_and_confirm_rule(
-                        self.config_path, self.transaction, ""
-                    )
+            SUGGEST.suggest_and_confirm_rule(self.config_path, self.transaction, "")
         output = captured.getvalue()
         self.assertIn("Before:", output)
         self.assertIn("match = ^FIRST$", output)

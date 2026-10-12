@@ -57,8 +57,8 @@ import argparse
 import os
 import re
 import sys
+import time
 import xml.etree.ElementTree as ET
-from datetime import datetime
 from enum import Enum, auto
 
 # Helper modules private to this script live beside it (imported via
@@ -87,17 +87,15 @@ def add_from_string(mapping):
     in XML to enum values"""
 
     def decorator(enum_class):
-        # Construct the reverse mapping once and store it as a class attribute
         reverse_mapping = {
             str_val: getattr(enum_class, enum_key)
             for str_val, enum_key in mapping.items()
         }
-        setattr(enum_class, "_str_to_enum", reverse_mapping)
 
         @classmethod
         def from_string(cls, string):
             try:
-                return cls._str_to_enum[string]  # pylint: disable=E1101
+                return reverse_mapping[string]
             except KeyError:
                 # repr-quote: the code comes from untrusted XML and may be
                 # None for an empty element
@@ -389,12 +387,12 @@ class XMLTransaction(Transaction):
         ):
             date_substr = self._unstructured_info[:10]
             try:
-                date_obj = datetime.strptime(date_substr, "%d/%m/%Y")
+                date_struct = time.strptime(date_substr, "%d/%m/%Y")
             except ValueError as exc:
                 raise ValueError(
                     f"Invalid date prefix {date_substr!r} in unstructured info: {exc}"
                 ) from exc
-            return date_obj.strftime("%Y-%m-%d")
+            return time.strftime("%Y-%m-%d", date_struct)
 
         booking_date = self._node_text(xml_obj.find(self._XPATH_BOOKING_DATE, NS))
         if booking_date:

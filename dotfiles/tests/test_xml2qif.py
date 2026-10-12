@@ -366,12 +366,14 @@ class ProcessTransactionsTest(unittest.TestCase):
     def _process_accepting_suggestion(self, root, rules, output, **mock_kwargs):
         """Run process_transactions with the codex suggestion mocked per
         MOCK_KWARGS and the confirmation prompt auto-accepted."""
-        with unittest.mock.patch.object(
-            SUGGEST, "run_codex_rule_suggestion", **mock_kwargs
+        with (
+            unittest.mock.patch.object(
+                SUGGEST, "run_codex_rule_suggestion", **mock_kwargs
+            ),
+            unittest.mock.patch("builtins.input", return_value="y"),
+            contextlib.redirect_stdout(io.StringIO()),
         ):
-            with unittest.mock.patch("builtins.input", return_value="y"):
-                with contextlib.redirect_stdout(io.StringIO()):
-                    XML2QIF.process_transactions(root, rules, self.config_path, output)
+            XML2QIF.process_transactions(root, rules, self.config_path, output)
 
     def test_accepted_suggestion_reloads_rules_and_writes_qif(self):
         """An unmatched transaction triggers the suggestion flow, and after
@@ -441,16 +443,16 @@ class ProcessTransactionsTest(unittest.TestCase):
                 + "amount = 999.00\n",
             )
 
-        with unittest.mock.patch.object(
-            XML2QIF,
-            "suggest_and_confirm_rule",
-            side_effect=insert_amount_mismatched_rule,
+        with (
+            unittest.mock.patch.object(
+                XML2QIF,
+                "suggest_and_confirm_rule",
+                side_effect=insert_amount_mismatched_rule,
+            ),
+            contextlib.redirect_stdout(io.StringIO()),
+            self.assertRaises(ValueError) as ctx,
         ):
-            with contextlib.redirect_stdout(io.StringIO()):
-                with self.assertRaises(ValueError) as ctx:
-                    XML2QIF.process_transactions(
-                        root, rules, self.config_path, io.StringIO()
-                    )
+            XML2QIF.process_transactions(root, rules, self.config_path, io.StringIO())
         self.assertNotIsInstance(ctx.exception, RULES.MissingRuleError)
         self.assertIn("Added rule still did not match", str(ctx.exception))
 
@@ -466,14 +468,14 @@ class ProcessTransactionsTest(unittest.TestCase):
         def decline(_config_path, _xml_transaction, _rule_type):
             raise decline_error
 
-        with unittest.mock.patch.object(
-            XML2QIF, "suggest_and_confirm_rule", side_effect=decline
+        with (
+            unittest.mock.patch.object(
+                XML2QIF, "suggest_and_confirm_rule", side_effect=decline
+            ),
+            contextlib.redirect_stdout(io.StringIO()),
+            self.assertRaises(RULES.MissingRuleError) as ctx,
         ):
-            with contextlib.redirect_stdout(io.StringIO()):
-                with self.assertRaises(RULES.MissingRuleError) as ctx:
-                    XML2QIF.process_transactions(
-                        root, rules, self.config_path, io.StringIO()
-                    )
+            XML2QIF.process_transactions(root, rules, self.config_path, io.StringIO())
         self.assertIs(ctx.exception, decline_error)
 
     def _assert_suggestion_failure_diagnostic(self, target, side_effect, diagnostic):
@@ -483,14 +485,12 @@ class ProcessTransactionsTest(unittest.TestCase):
         rules = RULES.load_rule_config(self.config_path)
         root = ET.fromstring(self._DOCUMENT_XML)
         captured = io.StringIO()
-        with unittest.mock.patch.object(SUGGEST, target, side_effect=side_effect):
-            with contextlib.redirect_stdout(captured):
-                with self.assertRaisesRegex(
-                    RULES.MissingRuleError, "Please add a rule for"
-                ):
-                    XML2QIF.process_transactions(
-                        root, rules, self.config_path, io.StringIO()
-                    )
+        with (
+            unittest.mock.patch.object(SUGGEST, target, side_effect=side_effect),
+            contextlib.redirect_stdout(captured),
+            self.assertRaisesRegex(RULES.MissingRuleError, "Please add a rule for"),
+        ):
+            XML2QIF.process_transactions(root, rules, self.config_path, io.StringIO())
         self.assertIn(diagnostic, captured.getvalue())
 
     def test_suggestion_failure_preserves_missing_rule_message(self):
