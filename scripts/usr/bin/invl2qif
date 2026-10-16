@@ -18,7 +18,7 @@ import pandas as pd
 
 sys.path.append(os.path.expanduser("~/usr/lib/python"))
 
-from common import (  # noqa: E402  # pylint: disable=wrong-import-position
+from common import (  # noqa: E402, RUF100  # pylint: disable=wrong-import-position
     QIFInvestmentTransaction,
 )
 
