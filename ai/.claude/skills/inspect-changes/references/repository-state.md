@@ -69,8 +69,9 @@ files under that prefix and link them from the state file. Record:
   stdout, resolved revision operands, and the derived pre-image baseline.
 - The observation commands, working directories, statuses, and saved-output
   paths. Preserve empty output and distinguish it from a missing capture.
-- Dispatch and acceptance checkpoints as they occur; draft-file existence
-  alone cannot show whether the first dispatch happened.
+- Dispatch and acceptance checkpoints as they occur, each dispatch with its
+  reply path; draft-file existence alone cannot show whether the first dispatch
+  happened.
 - Phase 3's placement mode when computed: committed, WIP (unborn HEAD), or
   omitted. For committed placement, also record trunk, stack query and
   marked stack, pinned `REV`, and `BASE` if present. WIP has no such commit

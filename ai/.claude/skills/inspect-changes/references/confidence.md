@@ -4,10 +4,10 @@ Each finding carries an integer `Confidence: N%` (0–100) reflecting how
 strongly the evidence supports its claim — that what the observation
 describes is wrong, as described, at that location — not how much the defect
 would cost or whether the change caused it. Read "the observation" and "that
-location" as the finding's most recent statement of them: the block you are
+location" as the finding's most recent statement of them: the finding you are
 writing, which for a verifier means the observation and location as you have
-refined them — printed as `Final observation:` and `Final location:`, or held
-unprinted where an `Outcome: drop` omits those lines — rather than the draft's.
+refined them — given as `final_observation` and `final_location`, or held
+unstated where a `drop` omits those fields — rather than the draft's.
 
 Calibration anchors:
 
@@ -32,5 +32,5 @@ How much the defect would cost belongs to [severity](severity.md), and
 whether the reviewed change caused it belongs to [provenance](provenance.md);
 neither should be folded into this value.
 
-A verifier's `Final confidence:` is authoritative unless superseded by a valid
+A verifier's `final_confidence` is authoritative unless superseded by a valid
 analysis correction for that field.

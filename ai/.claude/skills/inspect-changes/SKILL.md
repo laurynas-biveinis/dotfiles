@@ -20,6 +20,7 @@ allowed-tools: >-
   Grep
   Glob
   Write(//tmp/**)
+  Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/replies.py *)
   Agent
 ---
 
@@ -239,9 +240,10 @@ both. Each applicable check stops the review before any
    records no `MERGE_HEAD`.
 
 The user may override with natural language ("review the last three
-commits"). Print the chosen scope at the top of the findings file. A range
-scope is a single diff, not a per-commit walk — `git diff A..B`, or
-`git diff A...B` for the three-dot form — whose pre-image the [shared
+commits"). The chosen scope becomes the report's `Scope:` line, recorded as
+**The reply script** describes. A range scope is a single diff, not a
+per-commit walk — `git diff A..B`, or `git diff A...B` for the three-dot form —
+whose pre-image the [shared
 provenance guidance](references/provenance.md) already names for each form, and
 which carries merge-authored content that survives to `B`.
 
@@ -440,13 +442,14 @@ the original symbolic operands.
 ## Experiment requests
 
 No subagent runs code. When the draft, a verifier, or an analyst needs runtime
-evidence, it appends a `## Experiment requests` section to its reply — one entry
+evidence, it adds an `experiment_requests` list to its JSON reply — one entry
 per experiment, each giving a goal, a freeform procedure (commands that may
 branch on observed output), and what confirms or refutes the finding (or the
-feasibility of a proposed remedy). The top-level reads each request as freeform
-and runs it; it does not parse a rigid schema, so the request format is defined
-only where requests are produced (the `inspect-changes-step`,
-`inspect-changes-verify`, and `inspect-changes-analyze` skills).
+feasibility of a proposed remedy). The top-level prints them with
+`requests <reply>`, reads each one as freeform and runs it; it does not parse a
+rigid schema, so the request format is defined only where requests are produced
+(the `inspect-changes-step`, `inspect-changes-verify`, and
+`inspect-changes-analyze` skills).
 
 The draft always returns its findings in one reply, with any experiment
 requests attached alongside; the top-level runs those and feeds the results to
@@ -480,23 +483,78 @@ as a safety net on **every** concrete command before running it:
    the consuming tier proceeds on read/Git evidence. They never abort the
    review.
 
-Splitting a reply on its `## Experiment requests` header uses the same
-CommonMark-aware rule as `## Proposed new findings`: split on the first such
-header that occurs as a true top-level line (outside any fenced code block or
-block quote); a reply may carry both sections.
-
-A request section is _parseable_ when it contains at least one `### EXP` entry
-(header present, body non-empty). A `## Experiment requests` header with no such
-entry is not parseable. This is the minimal recognition floor — not a rigid
-schema; the entry's own fields stay freeform per the producer contracts.
+A request is _usable_ when it is an object whose `procedure` holds non-blank
+text (see **Reply files** below) and, in a draft reply, has a `supports`
+finding ID. A request list is _parseable_ when it is a list holding
+at least one usable request, a lone request object counting as a one-entry
+list; its other entries are dropped, the status line ends with
+`; unusable requests dropped: <n>`, and the usable requests count as the whole
+list, so the drop is no completion limitation. An empty list or object, `null`,
+`""`, `false`, `0`, or an absent list carries no requests. This is the minimal
+recognition floor — not a rigid schema; the entry's other fields stay freeform
+per the producer contracts.
 
 ## Workflow: draft ⇄ (verify ⇄ analyze) → final
 
 The review is produced in four phases. The top-level skill is the
-**sole writer** of every file under `/tmp/inspect-changes-<topic>-*`.
-Files are append-only. Every draft file, including verifier and analyst
-proposal batches, starts with the scope line and a link to
-`/tmp/inspect-changes-<topic>-state.md`.
+**sole writer** of every file under `/tmp/inspect-changes-<topic>-*` except
+the reply files below. The review records the script keeps are JSON Lines, one
+record per line: the draft files `/tmp/inspect-changes-<topic>-draft-<N>.jsonl`
+(findings), the verdicts files `…-verdicts-<round>.jsonl`, the analyses file
+`…-analyses.jsonl` (records of kind `analysis`, `rejected`, `corrected` or
+`skipped`) and the proposal batches `…-batch-<n>.jsonl`. Files are append-only,
+except two. `/tmp/inspect-changes-<topic>-summary.md` holds one assembly's prose
+rather than review evidence, and is rewritten when Phase 4 runs again (drift at
+its final check, or resume). `/tmp/inspect-changes-<topic>-verdict-<ID>.json`,
+the analyst's copy of a kept verdict, is written whole by `verify-record` before
+that verdict is recorded, so a retry after an interrupted call replaces it; once
+the verdict is in its round's verdicts file, nothing writes the copy again.
+
+**Reply files.** Each dispatch names a fresh reply path,
+`/tmp/inspect-changes-<topic>-reply-<step>-<key>-<k>.json`: `<step>` is `draft`,
+`verify`, or `analyze`; `<key>` is the round index `N` for a draft pass and the
+finding ID otherwise; `<k>` is one more than the highest `<k>` that is either
+recorded for that `<step>-<key>` in the state file's dispatch checkpoints or
+present among the existing
+`/tmp/inspect-changes-<topic>-reply-<step>-<key>-*.json` files (1 if neither),
+so no retry, re-spawn, or resumed dispatch reuses a path, even one whose reply
+was never written. Record each reply path with its dispatch checkpoint. The
+sub-step writes its whole reply there once, as one JSON object, and nothing
+modifies it afterwards. Only the file is the reply: a missing or empty reply
+file, or one that is not a JSON object, is an unusable reply, whatever the final
+message carries. A reply's text field holds a JSON string, or a list of strings
+read as one line each; any other value counts as absent.
+
+**The reply script.** Handle replies with
+`python3 <skills-dir>/inspect-changes/scripts/replies.py <command>`, where
+`<prefix>` below is `/tmp/inspect-changes-<topic>`. Its commands validate a
+reply against this skill's rules, copy accepted records into the review files,
+and print one status line, so a reply's content never passes through your
+context to be recorded. Read reply content only where a step below says so:
+draft findings and proposals for dedup, and experiment requests to run them.
+`invalid: <reason>` marks an unusable reply. `refused: <reason>` means the call
+would break append-only or analyze-once, record a second verdict for a finding,
+record a verdict for a finding no draft holds, record an analysis or skip for a
+finding with no kept verdict, append to a draft whose round already has a
+verdict, write outside `/tmp/inspect-changes-*`, name a malformed finding ID,
+select an entry twice, one already written or one the reply or batch does not
+hold, assemble before the scope, baseline or summary file exists, or assemble a
+`converged` report while the limitations file has an entry, the analyses file
+has a `skipped` or provisional record, or a drafted finding has no verdict or a
+kept one no analysis record. Each is an orchestration error to correct, never a
+reply outcome. An empty draft pass records nothing, so `assemble` cannot tell
+whether the terminal one ran; running it stays your job. A verdict refused for
+a finding no draft holds was dispatched in
+error: discard that reply, its proposals included, and take Phase 2's IDs from
+the draft file. For a missing assembly input, write it (scope and baseline from
+the values the state file records, the summary per Phase 4) and re-run
+`assemble`. For the findings any other refusal names, finish their Phase 2 or
+Phase 3 work, taking the IDs to analyze from `pending-analysis`, after which the
+usual loop decides whether another re-draft pass is due. When you write the
+state file, also write, with Write,
+the printed scope line (the text following `Scope:`) to `<prefix>-scope.txt` and
+the rendered baseline to `<prefix>-baseline.txt`, once; `assemble` reads them
+for the report header, so no shell quoting touches either value.
 
 **Dispatching a sub-step.** Before every dispatch batch, and after it returns
 before consuming any reply, run the
@@ -512,10 +570,10 @@ as a subagent spawned via the **Agent tool** (`subagent_type: general-purpose`)
 would run a per-finding "batch" one at a time. The Agent call's own parameters
 and the prompt below are authoritative; each child SKILL.md is read as plain
 instructions, so its frontmatter (`allowed-tools`) is documentation of
-intent only, not enforced; the child Bash lists mirror the top-level's entries
-and move with them, and what actually gates a sub-step's Git commands is the
-session's own permissions, so a command may prompt regardless of any list. To
-dispatch one, issue an Agent call whose prompt is:
+intent only, not enforced; the child Bash lists mirror the top-level's Git
+entries and move with them, and what actually gates a sub-step's Git commands
+is the session's own permissions, so a command may prompt regardless of any
+list. To dispatch one, issue an Agent call whose prompt is:
 
 > Read `<skills-dir>/inspect-changes-<step>/SKILL.md`,
 > `<skills-dir>/inspect-changes/references/confidence.md`,
@@ -523,9 +581,11 @@ dispatch one, issue an Agent call whose prompt is:
 > `<skills-dir>/inspect-changes/references/provenance.md`; follow all of them
 > exactly as your instructions. You are a read-only reviewer: do not modify,
 > stage, execute, or build anything in the project; use only read-only git,
-> Read, Grep, and Glob. Your inputs: `<the structured inputs for this step>`.
-> Return only the output that skill's Output section specifies (its primary
-> block plus any auxiliary sections it defines) as your final message.
+> Read, Grep, Glob, and one Write of your reply path. Your inputs:
+> `<the structured inputs for this step>`. Write exactly the JSON reply that
+> skill's Output section specifies (its primary part plus any optional parts it
+> defines) to your reply path, then return only `Wrote <reply path>` as your
+> final message.
 
 `<skills-dir>` is the absolute path of the directory holding this skill: the
 skill body is loaded prefixed with
@@ -575,12 +635,13 @@ re-enters Phase 2, the same way verification's new drafts do); and the
 draft step itself is **re-run** over the scope (Phase 1, after each
 convergence), each fresh independent pass possibly opening another
 draft. All of it shares one flat round counter: `<round>` is its current value
-— the index of the draft in hand. Every new draft (a re-draft pass, or a
-verifier's or analyst's proposal batch) is created at the next index
+— the index of the draft in hand. Every new draft (a re-draft pass's, or one
+written from a verifier's or analyst's proposal batch) is created at the next
+index
 `<round+1>` with `R<round+1>-<NNN>` IDs; the draft step is dispatched with that
 index as its `N` input. (For recovery or verification, `<round>` equals the
-highest `N` for which `/tmp/inspect-changes-<topic>-draft-<N>.md` exists, or 0
-if none — the files are append-only and single-writer, so the latest draft on
+highest `N` for which `/tmp/inspect-changes-<topic>-draft-<N>.jsonl` exists, or
+0 if none — the files are append-only and single-writer, so the latest draft on
 disk is the round in hand. `<round>` = 0 means no draft is on disk, which is
 indistinguishable between a never-started review and one that converged on an
 empty initial pass; either way recovery simply runs the initial pass at `N = 1`
@@ -600,13 +661,13 @@ final review only if verification kept it **and** analysis did not reject it.
 
 **Raw-findings corpus.** Read and apply the
 [shared prior-draft guidance](references/prior-drafts.md) throughout the
-workflow. Draft files are append-only and never pruned, so every written block
-stays in the corpus regardless of its later fate. (A rejected finding is a
-`keep` verdict that analysis marked with `<!-- analysis-rejected: <ID> -->`;
-its original draft block is untouched and remains in the corpus.)
+workflow. Draft files are append-only and never pruned, so every written
+finding stays in the corpus regardless of its later fate. (A rejected finding is
+a `keep` verdict that analysis marked with a `rejected` record; its original
+draft record is untouched and remains in the corpus.)
 
 **Unified dedup.** Whenever any source yields candidate new findings — a
-verifier's or analyst's `## Proposed new findings`, or a fresh
+verifier's or analyst's `proposed_findings`, or a fresh
 `inspect-changes-step` re-run — apply the authoritative gate in the shared
 guidance. A dropped duplicate needs no corpus entry of its own: the surviving
 occurrence it duplicates — whether a prior corpus finding or this batch's first
@@ -632,21 +693,35 @@ Determine the scope (per **Scope** above) as a Git command. For each pass,
 choose the **round index** `N`: `1` for the initial pass; `<round+1>` for a
 re-draft pass. Spawn one `inspect-changes-step` subagent **blind** — unlike
 verify/analyze it is handed no prior draft paths or cross-round state, only
-`N`, the scope, the pre-image baseline, and any verbatim caller requirements
-(see **No orchestration steering** above) — via the dispatch convention above —
-e.g. `N = 3`, `scope = git show <sha>` with the options derived above,
-`baseline = HEAD~ (<parent-sha>)`. It must use
-`N` as the round index for every `R<N>-<NNN>` ID it assigns. It returns that
-pass's draft — the scope line and `R<N>-<NNN>` finding blocks.
+`N`, the scope, the pre-image baseline, any verbatim caller requirements
+(see **No orchestration steering** above), and its reply path — via the dispatch
+convention above — e.g. `N = 3`, `scope = git show <sha>` with the options
+derived above, `baseline = HEAD~ (<parent-sha>)`. It must use
+`N` as the round index for every `R<N>-<NNN>` ID it assigns. Its reply is that
+pass's draft — a JSON object whose `findings` list holds the `R<N>-<NNN>`
+findings.
 
-Validate the reply structurally: it must contain parseable `R<N>-<NNN>` blocks
-(or an explicit no-findings statement) and must not truncate mid-block. If the
-reply is unusable, re-spawn the `inspect-changes-step` subagent with the same
-inputs (round index `N`, scope, baseline, and caller requirements).
+Validate the reply with `draft-check <N> <reply>`: it must be a JSON object
+with a `findings` list — empty for a pass that found nothing, a lone finding
+object counting as a one-entry list — whose every entry is an object
+carrying a round-`N` ID and non-empty `title`, `location`,
+`observation` and `suggested_action` text. Its `severity`, `confidence` and
+`provenance` are first-pass claims that verification re-derives, so none makes
+the reply unusable: `draft-write` records each in canonical form where it is in
+range and as given otherwise, a non-text severity or provenance as its JSON text
+and a null one as empty. A non-empty `review_failed`, or a repeated ID,
+makes the reply unusable. An
+`experiment_requests` list that is not parseable (see **Experiment requests**)
+does not: `draft-check` counts no requests and ends its status with
+`; malformed requests ignored`. Verification can still request the evidence, so
+an ignored draft or verifier list is no completion limitation. If the reply
+is unusable, re-spawn the `inspect-changes-step` subagent with the same inputs
+(round index `N`, scope, baseline, and caller requirements) and a fresh reply
+path.
 **Budget: 2 retries (3 attempts total).** Retry exhaustion (attempt 3 also
 fails) is handled differently by pass:
 
-- **Initial pass (round 1):** abort the review — write no `draft-1.md` — and
+- **Initial pass (round 1):** abort the review — write no `draft-1.jsonl` — and
   return an abort message to the caller in the style of **Abort on retry
   exhaustion** below:
 
@@ -659,29 +734,29 @@ fails) is handled differently by pass:
   set, so do not abort: stop opening further re-draft passes, proceed to Phase 4
   (final assembly), and note the failed re-draft pass in the Summary.
 
-On a valid reply, split off any `## Experiment requests` section (per the
-splitting rule in **Experiment requests**), then dedup the pass's findings per
+On a valid reply, read the reply file and dedup the pass's findings per
 **Unified dedup** (above) — against the full raw-findings corpus, then within
-the batch. (On round 1 the corpus is empty, so every finding survives.) Write
-the survivors verbatim to `/tmp/inspect-changes-<topic>-draft-<N>.md` as
-append-only blocks, with the scope line and a link to
-`/tmp/inspect-changes-<topic>-state.md` at the top, keeping the IDs the step
-assigned — the top-level remains the **sole writer** of all
-`/tmp/inspect-changes-*` files. The file is created **only if at least one
+the batch. (On round 1 the corpus is empty, so only a within-batch duplicate can
+drop one.) Write the survivors with
+`draft-write <prefix> <N> --reply <reply> <ID>...`, which appends them,
+keeping the IDs the step assigned, to
+`/tmp/inspect-changes-<topic>-draft-<N>.jsonl`. Run it **only if at least one
 finding survives** (matching the same guard in Phases 2 and 3); an empty pass
 writes no draft file at all. Dedup may drop some, leaving gaps in `NNN` among
 survivors; that is fine — IDs stay unique.
 
-If the draft carried experiment requests, run those whose supported
+If `draft-check` counted experiment requests, read them with
+`requests --draft <reply>` and run those whose supported
 `R<N>-<NNN>` survived dedup (skip any keyed to a deduped-out finding) via the
 **Experiment requests** run routine, recording results in
 `/tmp/inspect-changes-<topic>-experiments.md` keyed to the `R<N>-<NNN>` each
 supports; Phase 2 feeds each finding's results into its verifier.
 
-**Terminal condition.** If a pass yields no surviving finding — the initial
-draft reports none, or a re-draft pass's findings are all dropped by dedup —
-the review has converged: skip to Phase 4 (final assembly); no further re-draft
-is attempted. So any review that found anything always incurs one final
+**Terminal condition.** If a pass yields no surviving finding — the pass reports
+none, or dedup drops all its findings — the review has converged: skip to
+Phase 4 (final assembly); no further
+re-draft is attempted. So any review whose initial pass wrote a draft always
+incurs one final
 re-draft pass whose findings are all deduped away — that empty pass **is** the
 convergence detector and must always be run, because "no surviving finding" is a
 post-run, post-dedup observation, never a pre-run prediction, so it cannot be
@@ -696,27 +771,38 @@ pass, and every draft it transitively opens, counts under the single
 For each round, spawn one `inspect-changes-verify` subagent **per finding** in
 the current draft file, in parallel — one message, multiple Agent calls (per
 the dispatch convention above). That skill holds the per-finding verification
-contract; each subagent's inputs are the one finding's ID and full block, the
-scope as a Git command, the pre-image baseline, the paths of the prior draft
-files that exist, for dedup, any experiment results (the matching `EXP` blocks)
-for that finding, and the same verbatim caller requirements, if present.
+contract; each subagent's inputs are the one finding's ID and the path of the
+draft file holding it, the scope as a Git command, the pre-image
+baseline, the paths of the prior draft files that exist, for dedup, any
+experiment results (the matching `EXP` blocks) for that finding, the same
+verbatim caller requirements, if present, and its reply path.
 
-Once the batch returns, validate each reply (rules below). Process
-the valid replies:
+Once the batch returns, run `verify-record <prefix> <ID> <reply>` on each
+reply. It validates the reply (rules below), appends an accepted verdict to
+`/tmp/inspect-changes-<topic>-verdicts-<round>.jsonl`, copies a kept one to
+`/tmp/inspect-changes-<topic>-verdict-<ID>.json` as its analyst's input, and
+prints the outcome, severity, provenance, confidence, location, and title, or
+the drop reason. The line identifies the verdict, not its claim: where a
+candidate names the same defect and location as a finding that dropped, or that
+analysis rejected, read that finding's verdict and compare against the
+claim as settled per the shared prior-draft guidance. Then process the valid
+replies:
 
-1. Write all verdict blocks to
-   `/tmp/inspect-changes-<topic>-verdicts-<round>.md`.
-1. Dedup the batch's `## Proposed new findings` per **Unified dedup**
-   (above) — against the full raw-findings corpus, then within this batch.
-1. Write the surviving proposals to
-   `/tmp/inspect-changes-<topic>-draft-<round+1>.md` (created only
-   if any survive), assigning `R<round+1>-<NNN>` IDs.
+1. Run `proposals <prefix> <round+1> <reply>...` over the valid replies that
+   report proposals; it appends them to
+   `/tmp/inspect-changes-<topic>-batch-<round+1>.jsonl`, numbering on from its
+   last `P<n>` label, and prints the new ones as Markdown blocks.
+1. Dedup them per **Unified dedup** (above) — against the full raw-findings
+   corpus, then within this batch.
+1. Write the survivors with
+   `draft-write <prefix> <round+1> --batch <P>...` (run only
+   if any survive), which assigns `R<round+1>-<NNN>` IDs.
 
-For each invalid reply, write nothing to disk; add the finding to
-the retry set. After the batch is fully processed, if the retry set
+For each reply the script reports `invalid`, nothing is written; add the finding
+to the retry set. After the batch is fully processed, if the retry set
 is non-empty, dispatch a new parallel batch — one
 `inspect-changes-verify` Agent call per retry-set finding, same
-prompt as the original attempt.
+prompt as the original attempt except for a fresh reply path.
 Repeat until the retry set is empty. **Budget: 2 retries (3 attempts
 total) per finding.** If any finding's third-attempt batch contains
 an invalid reply, abort the review (see **Abort on retry exhaustion**
@@ -728,8 +814,8 @@ synchronize at attempt boundaries. Under background dispatch
 (asynchronous result delivery), retries can fire per finding as each
 result arrives, and the batch boundaries here are relaxed.
 
-Once every finding in `draft-<round>.md` has a valid verdict in the
-verdicts file, if `draft-<round+1>.md` exists and is non-empty, run
+Once every finding in `draft-<round>.jsonl` has a valid verdict in the
+verdicts file, if `draft-<round+1>.jsonl` exists and is non-empty, run
 another round on that new draft. Otherwise iteration stops.
 
 Safety stop: **50 iterations.** This bounds, under a single cap, every
@@ -743,37 +829,42 @@ the truncation in the final summary.
 
 #### Subagent reply validation
 
-A verifier reply contains a verdict, or a `## Experiment requests` section, or
-both (see **Experiment deferrals**). The rules below judge the verdict part; a
-reply with a well-formed request section and no verdict (a deferral) is not
-unusable. A verdict (when present) is _unusable_ if any of the following holds:
+A verifier reply contains a `verdict`, or `experiment_requests`, or both (see
+**Experiment deferrals**). The rules below judge the verdict part; a reply with
+parseable requests and no verdict (a deferral) is not unusable. Beside parseable
+requests, a `verdict` that is not an object or has no non-blank `outcome`
+counts as absent.
+`verify-record` applies these rules. A verdict (when present) is _unusable_ if
+any of the following holds:
 
-1. Agent invocation returned an error or timeout.
-1. Reply lacks a `## Verdict: <assigned-ID>` header for the
-   finding's assigned ID.
-1. Required field missing or empty. Always required: `Outcome:`,
-   `Final confidence:`, `Verification trace:`. Additionally required
-   when `Outcome:` is `keep`: `Final severity:`, `Final provenance:`,
-   `Final title:`, `Final location:`, `Final observation:`,
-   `Final suggested action:`. Additionally required when `Outcome:` is
-   `drop`: `Reason:`.
-1. `Outcome:` value is not `keep` or `drop`.
-1. `Final severity:` (when present) is not `CRITICAL`, `IMPORTANT`,
-   or `SUGGESTION`.
-1. `Final provenance:` (when present) is not `introduced`,
-   `pre-existing-on-path`, or `pre-existing-off-path`.
-1. `Final confidence:` is not an integer in `[0, 100]` (e.g. missing
-   `%`, non-numeric, out of range).
-1. Reply truncates mid-bullet or before the `Verification trace:`
-   line.
+1. Agent invocation returned an error or timeout, or the reply file is missing,
+   empty, or not a JSON object.
+1. Reply lacks a `verdict` whose `id` is the finding's assigned ID.
+1. Required field missing or empty. Always required: `outcome`,
+   `final_confidence`, `verification_trace`. Additionally required when
+   `outcome` is `keep`: `final_severity`, `final_provenance`, `final_title`,
+   `final_location`, `final_observation`, `final_suggested_action`.
+   Additionally required when `outcome` is `drop`: `reason`.
+1. `outcome` is not `keep` or `drop`.
+1. On a keep, `final_severity` is not `CRITICAL`, `IMPORTANT`, or
+   `SUGGESTION`.
+1. On a keep, `final_provenance` is not `introduced`, `pre-existing-on-path`,
+   or `pre-existing-off-path`.
+1. `final_confidence` is not an integer in `[0, 100]`.
 
-Detection is purely structural. The top-level does not judge verdict
-quality, only schema conformance.
+These values are compared without regard to case or surrounding whitespace and
+recorded in the case shown; `final_confidence` may also be a number with a zero
+fractional part, such as `80.0`, or a string of digits, optionally followed by
+`%`. The remaining fields are optional and recorded only as non-empty text: a
+keep's `reason`, and a drop's `final_location` and `final_observation`.
+Detection is purely structural. The top-level does not judge verdict quality,
+only schema conformance.
 
 #### Experiment deferrals
 
-Run any `## Experiment requests` a verifier returns via the **Experiment
-requests** run routine, appending results to the experiments file. Then:
+Run the experiment requests `verify-record` counts (read them with
+`requests <reply>`) via the **Experiment requests** run
+routine, appending results to the experiments file. Then:
 
 - **Requests with no verdict (a deferral):** the verifier needs the results to
   decide — re-spawn it; the rebuilt prompt's "Any experiment results for this
@@ -787,8 +878,10 @@ requests** run routine, appending results to the experiments file. Then:
 
 Each re-spawn is a normal main-loop iteration counted under the single
 50-iteration safety cap — there is **no** separate experiment budget. A request
-section that is not parseable (see **Experiment requests**) counts as an invalid
-reply under the retry budget.
+list that is not parseable (see **Experiment requests**) is ignored, as in a
+draft: `verify-record` records a verdict beside it and ends its status with
+`; malformed requests ignored`, and a reply with no verdict is invalid under
+the retry budget.
 
 #### Abort on retry exhaustion
 
@@ -816,31 +909,31 @@ are named in the caller message; the abort is still a single event.
 
 ### Phase 3 — Analysis of kept findings
 
-**Reading persisted analyses.** In `analyses.md`, recognize analysis headings
-and bookkeeping markers only as top-level lines outside fenced code blocks and
-block quotes, using the same CommonMark-aware rule as reply section routing.
-Apply this to analyzed-ID and rejected-ID detection, body and record boundaries,
-and correction lookup. Only unquoted fields within an actual correction record
-supply overlay values; quoted examples remain verbatim content.
+**Reading persisted analyses.** `/tmp/inspect-changes-<topic>-analyses.jsonl`
+holds one record per line, of kind `analysis` (with its `body`, and
+`"provisional": true` when it is a provisional-body fallback), `rejected` (with
+its `reason`), `corrected` (with the corrected fields and `rationale`), or
+`skipped`. The reply script's `pending-analysis`, `analysis-record`, and
+`assemble` read it.
 
 After all verification rounds have converged, collect every finding
-with `Outcome: keep` across all `verdicts-<round>.md` files **that has
+with `outcome` `keep` across all `verdicts-<round>.jsonl` files **that has
 not already been analyzed in a prior Phase 3 pass**. The set of
 analyzed finding IDs is derived from disk, not held in memory: an ID
-counts as analyzed once it has an analysis block, an exhaustion marker,
-or a rejection marker (`<!-- analysis-rejected: <ID> -->`) in
-`/tmp/inspect-changes-<topic>-analyses.md` (see below). A finding is
-analyzed exactly once even though Phase 3 may run several times. Spawn
+counts as analyzed once it has an `analysis`, `skipped`, or `rejected` record
+in `/tmp/inspect-changes-<topic>-analyses.jsonl` (see below);
+`pending-analysis <prefix>` lists the rest with their verdict files. A finding
+is analyzed exactly once even though Phase 3 may run several times. Spawn
 one `inspect-changes-analyze` subagent **per not-yet-analyzed kept finding**, in
 parallel — one message, multiple Agent calls (per the dispatch convention
 above). That skill holds the per-finding analysis contract; each subagent's
-inputs are the finding's ID and full verdict block (from
-`verdicts-<round>.md`), the scope as a Git command, the pre-image baseline, the
-paths of the prior draft files that exist, for dedup, any experiment results
-(the matching `EXP` blocks) for that finding, the same verbatim caller
-requirements, if present, and — only for an alongside-analysis re-spawn — the
-invocation mode `alongside` and complete latest provisional analysis block
-(header and body, excluding routed level-2 sections). Also pass the explicit
+inputs are the finding's ID and its verdict file,
+`/tmp/inspect-changes-<topic>-verdict-<ID>.json`, the scope as a Git command,
+the pre-image baseline, the paths of the prior draft files that exist, for
+dedup, any experiment results (the matching `EXP` blocks) for that finding, the
+same verbatim caller requirements, if present, its reply path, and — only for an
+alongside-analysis re-spawn — the invocation mode `alongside` and the path of
+the reply holding the complete latest provisional analysis. Also pass the explicit
 WIP placement mode for an unborn HEAD, or — when committed placement applies
 (computed below) — the stack as a list of SHA +
 subject, which may be empty, the blame-target revision `REV`, and the rebase
@@ -870,16 +963,16 @@ among them — every finding qualifies, and `REV` is as defined below.
 Under `git diff --staged` the reviewed change is uncommitted, but a
 `pre-existing-*` finding names a defect in the pre-image, which is `HEAD` —
 committed, and possibly still amendable. Compute the stack there too, with
-`REV = HEAD`, and pass placement context to every analysis subagent; the
-analyst returns WIP for an `introduced` finding, whose fix really is in the
-uncommitted change. Passing it to every subagent rather than gating at dispatch
-keeps that provenance rule in one place — the analyst already chooses among
-(a)–(d) under every scope — makes an `introduced` finding answer WIP explicitly
-instead of omitting placement, and keeps the dispatch payload a pure function
-of the scope. Both caveats this scope needs — that a finding's `Location:` line
-number is a post-image number, and that the index holds the reviewed change, so
-"amend `<sha>`" is not a bare `git commit --amend` — are stated in the analyze
-skill's placement input bullet, which every analyst reads.
+`REV = HEAD`, and pass placement context to every analysis subagent; the analyst
+returns WIP for an `introduced` finding, whose fix really is in the uncommitted
+change. Passing it to every subagent rather than gating at dispatch keeps that
+provenance rule in one place — the analyst already chooses among (a)–(d) under
+every scope — makes an `introduced` finding answer WIP explicitly instead of
+omitting placement, and keeps the dispatch payload a pure function of the scope.
+Both caveats this scope needs — that a finding's `final_location` line number is
+a post-image number, and that the index holds the reviewed change, so "amend
+`<sha>`" is not a bare `git commit --amend` — are stated in the analyze skill's
+placement input bullet, which every analyst reads.
 
 Under a bare `git diff` the pre-image is the index — which the precedence above
 reaches only when `git diff --staged` is empty, i.e. when the index tree is
@@ -961,52 +1054,44 @@ bare `git diff` above, and a `REV` not reachable from `HEAD`
 sits outside this checkout and the stack can say nothing about it. Omit it
 there and run the rest of Phase 3 unchanged.
 
-Each analysis reply has up to five parts: the `#### Analysis: <ID>` block,
-optionally followed by a `## Rejection` section, a `## Correction` section, a
-`## Proposed new findings` section, and/or a `## Experiment requests` section
-(all level-2 headers). **Split the reply on the first occurrence of each such
-header that occurs as a true top-level line — outside any fenced code block or
-block quote**, using the same CommonMark-aware rule. A subagent that merely
-quotes a delimiter inside a fence (e.g. when reviewing this skill's own schema)
-does not trigger the split. Everything before the first such boundary is the
-analysis body; each routed section is handled below and is **never inlined**
-into the final review (so no level-2 header ever outranks the `#### Analysis`
-heading in the assembled document).
+Each analysis reply is a JSON object with up to five parts: the `analysis` (its
+`id` and Markdown `body`), a `rejection`, a `correction`, `proposed_findings`,
+and `experiment_requests`. Only the body is inlined into the final review, under
+an `#### Analysis: <ID>` heading; each other part is handled below.
 
-A `## Rejection` section means the subagent has proven this kept finding a
-false positive: it is **removed** from the final review (the same end state
-as a verifier `drop`). Verification keeps drafted findings; analysis can
-additionally reject one but never resurrects a drop.
+A `rejection` means the subagent has proven this kept finding a false positive:
+it is **removed** from the final review (the same end state as a verifier
+`drop`). Verification keeps drafted findings; analysis can additionally reject
+one but never resurrects a drop.
 
-A `## Correction` section revises the verdict's `Final severity:`,
-`Final confidence:`, and/or `Final provenance:` for a finding that stays in the
-review; Phase 4 overlays the corrected values on the verdict's. It corrects no
-other field, and it never removes a finding — a corrected confidence below 50
-still leaves the finding in the review.
+A `correction` revises the verdict's `final_severity`, `final_confidence`,
+and/or `final_provenance` for a finding that stays in the review; Phase 4
+overlays the corrected values on the verdict's. It corrects no other field, and
+it never removes a finding — a corrected confidence below 50 still leaves the
+finding in the review.
 
-Validate each reply with the rules in **Analysis subagent reply
-validation**. For each valid reply:
+Run `analysis-record <prefix> <ID> <reply>` on each reply. It validates the
+reply with the rules in **Analysis subagent reply validation** (rule 3 as
+qualified there) and records each valid reply as follows, printing `rejected`,
+`analysis recorded` (naming any corrected fields, and ending with
+`; malformed requests ignored` when it kept a body beside unparseable or
+contradictory requests, after `; rejection discarded` when the reply also
+rejected), `deferral`, or `provisional analysis held`:
 
-- **If it carries a `## Rejection` section,** append a rejection marker for
-  its ID to `/tmp/inspect-changes-<topic>-analyses.md` — an inert HTML
-  comment `<!-- analysis-rejected: <ID> -->` followed by the rejection
-  reason verbatim — instead of an analysis body. The marker mirrors the
-  `<!-- analysis-skipped:` exhaustion marker: the ID counts as analyzed
+- **If it carries a `rejection`,** it appends a `rejected` record holding the
+  reason to `/tmp/inspect-changes-<topic>-analyses.jsonl` instead of an
+  analysis body. Like the `skipped` record, it makes the ID count as analyzed
   (terminal — never re-dispatched), and Phase 4 reads it to exclude the
-  finding. Do **not** append the analysis body (the finding is gone, so
-  there is nothing to inline). A `## Proposed new findings` section on the
-  same reply is still processed by the loop below.
-- **Otherwise (no rejection),** append its analysis body verbatim — the
-  `#### Analysis: <ID>` header line (already at the level it occupies in the
-  final review) and the body below it, up to but excluding any `## Rejection`,
-  `## Correction`, `## Proposed new findings`, or `## Experiment requests`
-  header. Then, if the same reply carried a `## Correction` section, append a
-  correction marker directly after that body — an inert HTML comment
-  `<!-- analysis-corrected: <ID> -->` followed by the section's
-  `Corrected …:`/`Rationale:` lines verbatim. Order matters: the body first, its
-  correction after it. The one exception is the **alongside-analysis shape** —
-  the reply also carries a `## Experiment requests` section — in which case do
-  not append now. The body is held pending experiment results; the
+  finding. The analysis body is **not** recorded (the finding is gone, so there
+  is nothing to inline). `proposed_findings` on the same reply are still
+  processed by the loop below.
+- **Otherwise (no rejection),** it appends an `analysis` record holding the
+  body. Then, if the same reply carried a `correction`, it appends a
+  `corrected` record directly after it, holding each in-range corrected field
+  and the `rationale`. Order matters: the body first, its correction after it.
+  The one exception is the **alongside-analysis shape** — the reply also carries
+  `experiment_requests` — which it holds as `provisional analysis held`,
+  appending nothing. The body is held pending experiment results; the
   experiment-request handling below runs inline for this finding, re-spawns the
   analyst, and appends the finalized (or latest provisional) body instead — so a
   re-spawn intervenes before any append, and the body finally appended may
@@ -1016,40 +1101,40 @@ validation**. For each valid reply:
   finding's alongside loop has terminated. Throughout that loop the correction
   travels with the body: the one appended is the correction carried by the same
   reply whose body is appended, and a correction on a superseded provisional
-  reply is discarded. At most one correction marker is written per finding,
-  mirroring the analyze-once rule for bodies.
+  reply is discarded. At most one `corrected` record is written per finding,
+  mirroring the analyze-once rule for bodies. To append the latest provisional
+  body, run `analysis-record --provisional` on the reply that carries it; that
+  mode records its body and correction and ignores its rejection and requests.
 
-A defective `## Correction` is **ignored**, never fatal. A correction that
-corrects nothing, gives no `Rationale:`, appears on a reply carrying no analysis
-block, or accompanies a `## Rejection` is dropped; one whose
-`Corrected severity:`, `Corrected provenance:`, or `Corrected confidence:` value
-is out of range (the enumerations at **Phase 2**'s verdict rules, and an integer
-in `[0, 100]` — e.g. missing `%`, non-numeric, out of range) has that field
-dropped and its remaining fields applied. In every such case no correction
-marker is written for the dropped part and the rest of the reply — body,
+A defective `correction` is **ignored**, never fatal. A correction that corrects
+nothing, gives no `rationale`, appears on a reply carrying no analysis, or
+accompanies a `rejection` that removes the finding is dropped; one whose
+`severity`, `provenance`, or `confidence` value is out of range (the
+enumerations at **Phase 2**'s verdict rules, and an integer in `[0, 100]`) has
+that field dropped and its remaining fields applied. In every such case no
+record is written for the dropped part and the rest of the reply — body,
 rejection, experiment requests, proposed new findings — is processed normally.
-No defect in a `## Correction` makes a reply unusable, and none can void a
-co-carried `## Rejection`: the correction is an optional qualifier, so
-discarding a whole reply over it would trade a rendered field for an analysis or
-a proven false positive. The analyze skill's own prohibitions stay as authoring
-guidance.
+No defect in a `correction` makes a reply unusable, and none can void a
+co-carried `rejection`: the correction is an optional qualifier, so discarding a
+whole reply over it would trade a rendered field for an analysis or a proven
+false positive. The analyze skill's own prohibitions stay as authoring guidance.
 
-The append-only file `/tmp/inspect-changes-<topic>-analyses.md` is written
-solely by the top-level (analysis subagents still never write files).
-Phase 4 reads the bodies and markers back from this file rather than from
+The append-only file `/tmp/inspect-changes-<topic>-analyses.jsonl` is written
+solely by the top-level, through `analysis-record` and `analysis-skip`.
+Phase 4 reads the bodies and records back from this file rather than from
 memory, so a body produced in an early pass survives intact across any
 number of later verify⇄analyze rounds. Invalid replies enter a retry set;
-dispatch a new parallel batch, same prompts. **Budget: 2 retries (3
-attempts total) per finding.**
+dispatch a new parallel batch, same prompts except for fresh reply paths.
+**Budget: 2 retries (3 attempts total) per finding.**
 
 **Exhaustion is non-fatal here.** Analysis augments findings and may
 reject one (above), but its _absence_ is never load-bearing: a finding
 with no usable analysis reply simply **falls back to its verifier
 `keep`** — exhaustion never infers a rejection. If a finding's attempt 3
-reply also fails validation, append an exhaustion marker for its ID to
-`/tmp/inspect-changes-<topic>-analyses.md` — an inert HTML comment
-`<!-- analysis-skipped: <ID> (retry exhaustion) -->`, so the ID counts
-as analyzed and is never re-dispatched on a later pass — then continue.
+reply also fails validation, run `analysis-skip <prefix> <ID>`, which appends a
+`skipped` record for its ID to `/tmp/inspect-changes-<topic>-analyses.jsonl`, so
+the ID counts as analyzed and is never re-dispatched on a later pass — then
+continue.
 Phase 4 (final assembly) will include the finding (kept) without an Analysis
 subsection and will note the omission in the Summary. Do not abort the review.
 
@@ -1057,14 +1142,16 @@ Once every not-yet-analyzed finding in the batch has either a valid
 reply or has exhausted its retry budget, process the proposed new
 findings from the valid replies:
 
-1. Collect the `## Proposed new findings` entries from all valid replies in the
-   batch, including any re-spawn replies produced by deferral or alongside loops
-   (per the experiment-request handling below).
+1. Collect the `proposed_findings` with
+   `proposals <prefix> <round+1> <reply>...` over all valid replies
+   in the batch that report proposals, including any re-spawn replies produced by
+   deferral or alongside loops (per the experiment-request handling below).
 1. Dedup them per **Unified dedup** (above) — against the full
    raw-findings corpus, then within this batch.
-1. Write the survivors to a new
-   `/tmp/inspect-changes-<topic>-draft-<round+1>.md` (created only if any
-   survive), assigning `R<round+1>-<NNN>` IDs.
+1. Write the survivors with
+   `draft-write <prefix> <round+1> --batch <P>...` to a new
+   `/tmp/inspect-changes-<topic>-draft-<round+1>.jsonl` (run only if any
+   survive), which assigns `R<round+1>-<NNN>` IDs.
 
 **Loop-back trigger.** If a new draft was created, re-enter Phase 2 to
 verify it — verification runs to convergence as usual, possibly opening
@@ -1079,81 +1166,72 @@ Phase 1 for a re-draft pass.
 
 #### Analysis subagent reply validation
 
-An analyst reply contains an analysis block, or a `## Experiment requests`
-section (a deferral), or both (an analysis with requests attached alongside).
-The rules below judge the analysis part; a reply with a well-formed request
-section and **no** analysis block (a deferral) is not unusable on that account.
-A reply is _unusable_ if any of the following holds:
+An analyst reply contains an `analysis`, or `experiment_requests` (a deferral),
+or both (an analysis with requests attached alongside). The rules below judge
+the analysis part; a reply with parseable requests and **no** analysis (a
+deferral) is not unusable on that account. `analysis-record` applies these
+rules. A `rejection` counts only as non-blank text, or as an object whose
+`reason` or `rationale` is non-blank text; any other value is absent. A reply
+is _unusable_ if any of the following holds:
 
-1. Agent invocation returned an error or timeout.
-1. Reply lacks a `#### Analysis: <assigned-ID>` header (exactly four
-   `#`) for the finding's assigned ID — **unless** it is a deferral (a
-   well-formed `## Experiment requests` section and no analysis block).
-1. Body under the header (before any `## Rejection`, `## Correction`,
-   `## Proposed new findings`, or `## Experiment requests` section) is empty or
-   whitespace-only — **unless** the reply carries a `## Rejection` section, in
-   which case the analysis body is optional (the rejection reason is the
-   content).
-1. A `## Rejection` section is present but empty or whitespace-only (it
-   must carry a reason).
-1. A `## Rejection` section and a `## Experiment requests` section are
-   both present. The two are mutually exclusive: a rejection is a
-   terminal decision, whereas a deferral means the analyst has not yet
-   decided and needs evidence to do so — a reply that both rejects and
-   requests experiments is contradictory and must never happen.
-1. The analysis body (everything before any `## Rejection`, `## Correction`,
-   `## Proposed new findings`, or `## Experiment requests` delimiter) contains
-   an ATX heading — a
-   `#`-prefixed line per CommonMark (a `#` run with ≤3 leading spaces,
-   outside any fenced code block or code span) — other than the leading
-   `#### Analysis:`. A `#` line a body legitimately quotes inside a fenced
-   code block (e.g. a shell comment or `#!` shebang) is not a heading and
-   does not trip this rule.
-1. Reply truncates mid-sentence or mid-bullet.
+1. Agent invocation returned an error or timeout, or the reply file is missing,
+   empty, or not a JSON object.
+1. Reply lacks an `analysis` whose `id` is the finding's assigned ID —
+   **unless** it is a deferral (parseable `experiment_requests` and no
+   analysis). An analysis whose `body` is missing, blank, or not text counts as
+   absent unless the reply carries a `rejection`, whose reason is then the
+   content.
+1. A `rejection` and `experiment_requests` are both present. The two are
+   mutually exclusive: a rejection is a terminal decision, whereas a deferral
+   means the analyst has not yet decided and needs evidence to do so — a reply
+   that both rejects and requests experiments is contradictory and must never
+   happen. A reply that also carries a usable analysis is the exception: its
+   body and any `correction` are recorded, its rejection and requests are
+   discarded, and you log the provisional-body completion limitation (see the
+   alongside fallback below), naming the discarded rejection. The analyst's
+   rejection is then not honoured: the finding stays in the review with that
+   body as its analysis.
 
-Carrying a `## Rejection`, `## Correction`, `## Proposed new findings`, or
-`## Experiment requests` section does **not** by itself make a reply unusable —
-`## Proposed new findings` is expected when the subagent spots a new issue,
-`## Rejection` when it proves the finding a false positive, `## Correction` when
+Carrying a `rejection`, `correction`, `proposed_findings`, or
+`experiment_requests` does **not** by itself make a reply unusable —
+`proposed_findings` are expected when the subagent spots a new issue, a
+`rejection` when it proves the finding a false positive, a `correction` when
 deeper study revises the verdict's severity, confidence, or provenance, and
-`## Experiment requests` when it defers or attaches a remedy-feasibility
-experiment alongside its analysis. Detection is structural but CommonMark-aware:
-it must honor fenced-code-block and code-span boundaries, so `#`/`##` lines a
-body quotes inside a fence are treated as neither headings nor section
-delimiters. The top-level does not judge analysis quality, only schema
-conformance.
+`experiment_requests` when it defers or attaches a remedy-feasibility experiment
+alongside its analysis. The top-level does not judge analysis quality, only
+schema conformance.
 
-An analyst that needs runtime evidence may return a `## Experiment requests`
-section in one of two shapes. Run any such requests via the **Experiment
-requests** run routine, appending results to the experiments file, then handle
-by shape:
+An analyst that needs runtime evidence may return `experiment_requests` in one of
+two shapes. Run any such requests (read them with `requests <reply>`) via the
+**Experiment requests** run
+routine, appending results to the experiments file, then handle by shape:
 
-- **Requests with no analysis block (a deferral):** the analyst cannot decide
+- **Requests with no analysis (a deferral):** the analyst cannot decide
   the finding yet — re-spawn it; the rebuilt prompt's "Any experiment results
   for this finding" bullet carries the new `EXP` blocks, so nothing is
   separately appended. Append no analysis body for this ID until the re-spawn
   produces one, so the ID stays unanalyzed and is re-dispatched. Any
-  `## Proposed new findings` on a re-spawn reply are collected and fed to the
+  `proposed_findings` on a re-spawn reply are collected and fed to the
   proposed-new-findings step alongside the initial batch's.
-- **Requests alongside an analysis block (grounding a remedy):** the analyst has
+- **Requests alongside an analysis (grounding a remedy):** the analyst has
   a usable analysis but flagged a suggested action whose feasibility it has not
   verified. Re-spawn it with the results, the invocation mode `alongside`, and
-  the complete latest provisional analysis block so it can finalize that
-  suggested action. The re-spawn's outcome is one of:
-  - **Finalized analysis** (a plain block with no further requests): append it.
-  - **Another alongside batch:** make its analysis block the latest provisional
-    block, run those requests, and re-spawn again with the same alongside state
+  the path of the reply holding the complete latest provisional analysis so it
+  can finalize that suggested action. The re-spawn's outcome is one of:
+  - **Finalized analysis** (no further requests): append it.
+  - **Another alongside batch:** make its analysis the latest provisional one,
+    run those requests, and re-spawn again with the same alongside state
     inputs. The alongside path loops like a deferral, except every reply already
     carries a usable provisional body, so it is never blocked.
-  - **A pure deferral** (well-formed `## Experiment requests` and no analysis
-    block): loop-terminating — append the latest provisional body and exit the
+  - **A pure deferral** (parseable `experiment_requests` and no analysis):
+    loop-terminating — append the latest provisional body and exit the
     alongside loop. Do **not** enter a deferral sub-loop; the alongside loop
     started because the analyst already held a usable answer, and reverting to
     pure deferral from that state is a regression.
-  - **A `## Rejection`** (and no `## Experiment requests`): process it as a
-    rejection exactly as the non-alongside rejection path above does — write the
-    rejection marker `<!-- analysis-rejected: <ID> -->` followed by the reason
-    verbatim, do **not** append the provisional body, and terminate the loop.
+  - **A `rejection`** (and no `experiment_requests`): process it as a rejection
+    exactly as the non-alongside rejection path above does — record the
+    `rejected` record, do **not** append the provisional body, and terminate the
+    loop.
 
   Otherwise the loop ends when the analyst finalizes, or — if a re-spawn fails
   validation or the 50-cap is hit — by appending the latest **provisional**
@@ -1162,8 +1240,8 @@ by shape:
   subject to the 3-attempt retry budget (which governs only the initial analysis
   dispatch and pure deferrals): the loop terminates immediately and appends the
   latest provisional body. Exactly one analysis body is appended per finding
-  either way — or, on rejection, a rejection marker instead — preserving
-  analyze-once. Any `## Proposed new findings` on **any** re-spawn reply
+  either way — or, on rejection, a `rejected` record instead — preserving
+  analyze-once. Any `proposed_findings` on **any** re-spawn reply
   (finalized, intermediate alongside, or rejecting) are collected and fed to the
   proposed-new-findings step alongside the initial batch's. The analyst is the
   last tier, so its experiment results feed its own next pass rather than
@@ -1174,33 +1252,46 @@ Each re-spawn is a main-loop iteration under the single 50-iteration safety
 cap — no separate experiment budget. Remaining edge cases follow Phase 3's own
 **non-fatal** handling, not Phase 2's abort. When no provisional body exists to
 fall back on (a pure deferral — whether the initial dispatch or a re-spawn,
-which in either case carries no analysis block): a reply carrying both a
-`## Rejection` and requests is malformed and counts as an invalid analysis reply
-under Phase 3's retry budget (per the validation rule above); and a request
-section that is not parseable (see **Experiment requests**) likewise counts as
-an invalid analysis reply under that budget (→ exhaustion marker, never abort).
-For any **alongside** reply — the first one or a re-spawn, since it carries an
-analysis block and so a provisional body — these same malformations instead
-terminate the alongside path with the latest provisional body (above), never the
-retry budget. If the cap is hit while the analyst is still deferring (no
-provisional body to fall back on), proceed without the experiment and treat it
-as the analysis-exhaustion case (exhaustion marker, noted in the Summary).
+which in either case carries no analysis): a reply carrying both a `rejection`
+and requests is malformed and counts as an invalid analysis reply under Phase
+3's retry budget (per the validation rule above); and a request list that is not
+parseable (see **Experiment requests**) likewise counts as an invalid analysis
+reply under that budget (→ `skipped` record, never abort). A reply that carries
+a usable analysis beside either malformation — an
+alongside reply, or an initial one — is recorded by `analysis-record` itself,
+whose `analysis recorded` status ends with `; malformed requests ignored`; that
+ends any alongside loop, never spends the retry budget, and is the
+provisional-body fallback the Result contract counts as a completion
+limitation. Only when an
+alongside reply's own analysis is unusable does the loop fall back to the latest
+provisional body (above). If the cap is hit while the analyst is still
+deferring (no provisional body to fall back on), proceed without the experiment
+and treat it as the analysis-exhaustion case (`skipped` record, noted in the
+Summary).
 
 ### Phase 4 — Final assembly
 
 Run the [repository-state check](references/repository-state.md#check-boundaries)
-before assembly. Prepare the report in memory, check again, then write and
-return it once. Its drift-stop path assembles only previously accepted
+before assembly, and again before writing the report straight to its final
+path; return it once. Its drift-stop path assembles only previously accepted
 evidence, under the original basis.
 
-Read every `verdicts-<round>.md` file and the analysis bodies and markers
-from `/tmp/inspect-changes-<topic>-analyses.md`, applying **Reading persisted
-analyses** above. First compute the
-**rejected-ID set**: every ID with a `<!-- analysis-rejected: <ID> -->`
-marker in the analyses file. Using the kept verdicts and the analysis
-bodies, write the final review to `/tmp/inspect-changes-<topic>.md`
-containing every kept finding **except those in the rejected-ID set**,
-using this structure:
+Write the Summary's prose to `/tmp/inspect-changes-<topic>-summary.md`: the
+2–4 sentences and every Summary item below that only the orchestration knows,
+including the repository-state observation limit.
+After the second check, run `assemble <prefix> --status <status>`, with
+`converged` or `incomplete` per the Result contract, which writes
+`/tmp/inspect-changes-<topic>.md`. Add `--merge combined` for a combined merge
+scope (`git show <merge>`) or `--merge single-parent` for a single-parent one
+(`git diff <merge>^<n> <merge>`, whether first-parent or back-merge).
+It reads the scope, baseline and limitations files, every
+`draft-<round>.jsonl` and `verdicts-<round>.jsonl` file, and the records in
+`/tmp/inspect-changes-<topic>-analyses.jsonl` (see **Reading persisted
+analyses** above), and computes the **rejected-ID set**: every ID with
+a `rejected` record in the analyses file. From the kept verdicts and the analysis
+bodies it renders every kept finding **except those in the rejected-ID set**,
+appending to your prose the limitations file's entries and the Summary counts
+the files settle. The report has this structure:
 
 ```markdown
 # Code Review: <topic>
@@ -1219,19 +1310,10 @@ marked `(chosen; <n> merge bases)` where that base was not unique, each parent
 listed for a combined-diff merge with the first marked — and a
 non-revision value (`index`, `empty tree`) printed literally>
 
-Confidence is how strongly the evidence establishes that what the observation
-describes is wrong, as described, at that location — not how much it would cost
-if it is (the severity section it sits in says that), nor whether this change
-caused it (Provenance says that).
+<the fixed confidence and provenance notes `assemble` prints>
 
-Provenance is relative to the pre-image of the reviewed scope, which may itself
-be your own unpushed commit: introduced = this change caused it;
-pre-existing-on-path = present in the pre-image and on this change's critical
-path; pre-existing-off-path = present in the pre-image and independent of this
-change — see any Suggested placement for where a fix belongs.
-<only for a merge scope: reviewed as a combined diff every parent listed above
-is a pre-image and pre-existing means present on any of them; under a
-first-parent merge scope the first parent is the sole baseline>
+<only for a merge scope: the fixed note `assemble` prints for its `--merge`
+shape>
 
 ## Critical Issues
 
@@ -1262,23 +1344,32 @@ recommendation, caveats; whatever the subagent produced>
 
 ## Summary
 
-<2–4 sentences, plus: drafts opened; verify⇄analyze passes run (how
-many times analysis fed findings back to verification); re-draft passes
+<your prose: 2–4 sentences, plus: drafts opened; verify⇄analyze passes run
+(how many times analysis fed findings back to verification); re-draft passes
 run (how many produced surviving new findings, and findings they
 contributed after dedup; note any re-draft pass that failed on retry
-exhaustion); total drafted; total kept; total dropped, naming any dropped on a
-confidence below 50 rather than on the merits; findings rejected on analysis
-(list IDs, if any); total analyzed; findings proposed by analysis (and how many
-survived dedup); analyses skipped due to retry exhaustion (list IDs,
-if any); the count of findings listed in this review per final provenance
-value, relative to the reviewed scope's pre-image (introduced /
-pre-existing-on-path / pre-existing-off-path); findings whose severity,
-confidence, or provenance analysis corrected — one entry per correction as
-`<ID>: <field> <verdict value> → <corrected value>`, if any; truncation note if
-the 50-iteration stop fired>
+exhaustion); findings proposed by analysis (and how many survived dedup);
+findings dropped on a confidence below 50 rather than on the merits, judged
+from each drop's `reason` (list IDs, if any); truncation note if the
+50-iteration stop fired>
+
+Completion limitations:
+
+<appended by `assemble` only when the limitations file has an entry: that
+file's entries verbatim>
+
+Counts: <appended by `assemble`: total drafted; total kept; total dropped;
+findings rejected on analysis;
+total analyzed; analyses skipped, after retry exhaustion or a pure-deferral cap
+stop; analyses recorded from a provisional body; the count of findings listed
+in this review per final provenance value,
+relative to the reviewed scope's pre-image (introduced / pre-existing-on-path /
+pre-existing-off-path);
+findings whose severity, confidence, or provenance analysis corrected — one
+entry per correction as `<ID>: <field> <verdict value> → <corrected value>`>
 ```
 
-Assembly rules:
+`assemble` applies these rules:
 
 - **Keep the original IDs.** A finding written as `R2-004` stays
   `R2-004` in the final file. No renumbering.
@@ -1286,54 +1377,39 @@ Assembly rules:
   block's severity, confidence, provenance, title, location, observation, and
   suggested action come verbatim from the verifier's verdict; these
   supersede the original draft text.
-- **Overlay any analysis correction.** If the finding has an
-  `<!-- analysis-corrected: <ID> -->` marker in the analyses file, each
-  `Corrected severity:`, `Corrected confidence:`, or `Corrected provenance:`
-  line it carries replaces the verdict's value for that field; fields the
-  correction omits keep the verdict's. Severity grouping and ordering use the
-  corrected severity. Retain the pre-overlay value for each field you replace —
-  the Summary reports it. The correction's `Rationale:` is bookkeeping: it stays
-  in the analyses file and is not rendered, so an analyst that wants its
-  reasoning in the review states it in the analysis body, which is. A correction
-  never removes a finding: one that drops confidence below 50 still appears,
-  since only a verifier `drop` or an analysis rejection removes anything.
-- **Inline analysis.** For each kept finding, copy its analysis body from
-  `/tmp/inspect-changes-<topic>-analyses.md` verbatim immediately after the
-  `Suggested action:` bullet. A finding's body in that file runs from its
-  `#### Analysis: <ID>` heading up to (but excluding) the next analysis heading
-  or bookkeeping marker recognized by **Reading persisted analyses**, or EOF —
-  whichever comes first. Treating those markers as delimiters keeps an
-  interleaved exhaustion, rejection, or correction marker from being swept into
-  a preceding body — including the finding's own correction, which is appended
-  directly after its body. Body extraction also never _begins_ inside a
-  rejection or correction span: the text from a
-  `<!-- analysis-rejected: <ID> -->` or `<!-- analysis-corrected: <ID> -->`
-  marker up to the next unquoted analysis heading or bookkeeping marker, or EOF,
-  is owned by that record (the rejection's verbatim reason, the correction's
-  fields), not an analysis body. The body already opens with its own
-  `#### Analysis: <ID>`
-  heading at the right level, so the top-level adds no heading and strips
-  nothing further (Phase 3 already excluded any `## Rejection`, `## Correction`,
-  `## Proposed new findings`, or `## Experiment requests` section when it
-  appended the body) — do not edit, summarize, or re-level it. The analysis step
-  emits that one level-4 heading and otherwise uses bold-paragraph labels
-  instead of `#`-prefixed headings (see the `inspect-changes-analyze` skill), so
-  nothing in the body outranks the `#### Analysis` heading or breaks the
-  document outline. If a kept finding has no analysis body in the file (only an
-  exhaustion or rejection marker, or nothing), omit the analysis for that
-  finding.
+- **Overlay any analysis correction.** If the finding has a `corrected` record
+  in the analyses file, each corrected `severity`, `confidence`, or
+  `provenance` it carries replaces the verdict's value for that field; fields
+  the correction omits keep the verdict's. Severity grouping and ordering use
+  the corrected severity. Retain the pre-overlay value for each field you
+  replace — the Summary reports it. The correction's `rationale` is bookkeeping:
+  it stays in the analyses file and is not rendered, so an analyst that wants
+  its reasoning in the review states it in the analysis body, which is. A
+  correction never removes a finding: one that drops confidence below 50 still
+  appears, since only a verifier `drop` or an analysis rejection removes
+  anything.
+- **Inline analysis.** For each kept finding, render its `analysis` record's
+  body verbatim under an `#### Analysis: <ID>` heading immediately after the
+  `Suggested action:` bullet, closing any fenced block the body leaves open so
+  it cannot swallow the findings after it. The analysis step asks for
+  bold-paragraph labels instead of `#`-prefixed headings (see the
+  `inspect-changes-analyze` skill); nothing enforces that, so a body that uses
+  headings anyway is rendered as written, and only the report's outline suffers.
+  If a kept finding has no
+  analysis body in the file (only a `skipped` or `rejected` record, or nothing),
+  omit the analysis for that finding.
 - Group by final severity (Critical → Important → Suggestion).
   Within a severity tier, sort findings whose final provenance is
   `pre-existing-off-path` after all others — they are the only tier members the
   report itself calls independent of this change — then by `(round, NNN)`
   ascending.
 - If a severity tier has no surviving findings, write "None." under it.
-- Findings with `Outcome: drop` do **not** appear in the final file;
-  they remain in their verdict file with a reason.
+- Findings whose `outcome` is `drop` do **not** appear in the final file;
+  they remain in their round's verdicts file (`verdicts-<round>.jsonl`) with a
+  reason.
 - Findings in the rejected-ID set (rejected on analysis) do **not** appear
-  either; their `<!-- analysis-rejected: <ID> -->` marker and reason remain
-  in the analyses file. A finding rejected on analysis is excluded even
-  though its verdict is `keep`.
+  either; their `rejected` record and reason remain in the analyses file. A
+  finding rejected on analysis is excluded even though its verdict is `keep`.
 
 Do **not** modify the reviewed code. Return the **Result contract** envelope
 with the final file path and summary. Leave all intermediate files in place

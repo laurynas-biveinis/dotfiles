@@ -19,15 +19,17 @@ allowed-tools: >-
   Read
   Grep
   Glob
+  Write(//tmp/**)
 ---
 
 # Code Review — Draft Step
 
 Perform a single review pass over the given scope and return the draft findings
-as your final message.
+as your reply.
 
-You **do not write finding files**. Return the blocks as your final message
-only. You must not modify any file inside the project tree.
+Write your reply, in one Write, to the reply path your prompt supplies, then end
+with `Wrote <reply path>`. Write nothing else, and never modify the project
+tree.
 
 ## Input
 
@@ -43,6 +45,7 @@ Your invocation prompt supplies:
 - The **pre-image baseline** to tag provenance against, if supplied.
 - Any **caller requirements**, if present. Apply the
   [shared caller-requirements guidance](../inspect-changes/references/caller-requirements.md).
+- The **reply path** to write this pass's draft to.
 
 You do a single fresh pass each invocation; you carry no state between runs.
 
@@ -127,30 +130,42 @@ evidence it is wrong, and suggest an alternative direction.
 ## Procedure
 
 As you review, adversarially probe the change for the inputs and edge cases
-that break it. You **cannot execute code or write files** — your
-tools are read and Git only. When a finding would be confirmed or refuted by
-running something (a throwaway test case, a one-off script, a regular expression
-tested against inputs), do not attempt it; emit an **experiment request** in your
-Output (schema below). The top-level runs it and feeds the result to
-verification.
+that break it. You **cannot execute code or write files** beyond your reply
+file — your tools are read and Git only. When a finding would be confirmed or
+refuted by running something (a throwaway test case, a one-off script, a regular
+expression tested against inputs), do not attempt it; emit an **experiment
+request** in your Output (schema below). The top-level runs it and feeds the
+result to verification.
 
 ## Output
 
-Return the scope line first — including the round index, e.g.
-`Scope (round 3): git diff --staged` — then one append-style block per finding:
+Your reply is one JSON object, with nothing around it:
 
-```markdown
-### R<N>-001 — CRITICAL — <one-line title>
-
-- Confidence: 75%
-- Provenance: introduced | pre-existing-on-path | pre-existing-off-path
-- Location: `path/to/file.ext:LN`
-- Observation: <what's wrong, with diff evidence>
-- Suggested action: <concrete fix>
+```json
+{
+  "findings": [
+    {
+      "id": "R<N>-001",
+      "severity": "CRITICAL",
+      "title": "<one-line title>",
+      "confidence": 75,
+      "provenance": "introduced",
+      "location": "`path/to/file.ext:LN`",
+      "observation": "<what's wrong, with diff evidence>",
+      "suggested_action": "<concrete fix>"
+    }
+  ]
+}
 ```
 
+- `findings` is required: an empty list says the pass found nothing.
 - IDs use the format `R<N>-<NNN>`, where `N` is the round index you were given
   and `NNN` runs in per-round discovery order (`001`, `002`, …).
+- `severity` is `CRITICAL`, `IMPORTANT` or `SUGGESTION`; `confidence` is an
+  integer percentage from 0 to 100; `provenance` is `introduced`,
+  `pre-existing-on-path` or `pre-existing-off-path`. The text fields may hold
+  Markdown such as code spans, lists and fenced blocks; JSON string escaping is
+  the only escaping they need.
 - Grade every finding's severity per the
   [shared severity guidance](../inspect-changes/references/severity.md).
 - Calibrate every finding's confidence per the
@@ -168,29 +183,27 @@ Return the scope line first — including the round index, e.g.
 - Do not emit a finding whose suggested action is empty or "none", or that only
   confirms existing code is correct — that is a non-finding, not a SUGGESTION;
   omit it.
-- If you find nothing, say so explicitly (e.g. "No findings.") instead of
-  emitting empty blocks.
+- If you could not run the scope command or read the change, do not report no
+  findings: add `"review_failed": "<reason>"`, and the pass is re-run.
 
-If a finding needs runtime evidence you cannot get by reading, append a
-`## Experiment requests` section after the findings — you run nothing; the
-top-level runs each request. Still emit the finding itself (with calibrated
-confidence), naming the experiment that would settle it.
+If a finding needs runtime evidence you cannot get by reading, add an
+`experiment_requests` list — you run nothing; the top-level runs each request.
+Still emit the finding itself (with calibrated confidence), naming the
+experiment that would settle it. Each request is an object:
 
-```markdown
-## Experiment requests
-
-### EXP — <what it tests>
-
-- Supports: R<N>-<NNN> (the finding this experiment bears on — the top-level
-  keys each result by this ID; required, since one reply may carry requests for
-  several findings)
-- Goal: <what you are trying to establish>
-- Procedure: <freeform; one or more steps that may branch on observed output —
-  e.g. "run A; if it prints X, run B; else run C". Keep isolated and bounded:
-  no writes outside a scratch dir (`mktemp -d`/`/tmp`) — reading project files
-  is fine; never `./check.sh`/tests/builds; network only to read online docs.>
-- Confirms / Refutes: <result patterns that decide the finding>
+```json
+{
+  "title": "<what it tests>",
+  "supports": "R<N>-<NNN>",
+  "goal": "<what you are trying to establish>",
+  "procedure": "<freeform steps that may branch on observed output>",
+  "confirms_refutes": "<result patterns that decide the finding>"
+}
 ```
 
-Return the scope line, the finding blocks, and any `## Experiment requests`
-section as your final message — no preamble, no file writes.
+- `supports` names the finding the experiment bears on. It is required, since
+  one reply may carry requests for several findings, and the top-level keys
+  each result by it.
+- Keep the procedure isolated and bounded: no writes outside a scratch dir
+  (`mktemp -d`/`/tmp`) — reading project files is fine; never
+  `./check.sh`/tests/builds; network only to read online docs.

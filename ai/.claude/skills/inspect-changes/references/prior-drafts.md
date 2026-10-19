@@ -1,9 +1,8 @@
 # Prior drafts
 
-Treat every finding block written to a draft file as part of the raw-findings
-corpus, including findings later kept, dropped, or rejected. When prior draft
-paths are supplied, read every file before emitting any
-`## Proposed new findings`.
+Treat every finding written to a draft file as part of the raw-findings corpus,
+including findings later kept, dropped, or rejected. When prior draft paths are
+supplied, read every file before proposing any new finding.
 
 The two tiers that dedup hold different evidence, so they apply different tests.
 A subagent holds no corpus finding's fate, except that an analyst holds the
@@ -11,9 +10,9 @@ verdict of the one finding it is analyzing, and its check is a best-effort noise
 reducer. The top-level review is the sole authoritative deduplication gate: it
 checks every candidate against the corpus and then within the current batch,
 preserving the first occurrence and dropping later duplicates, and it alone
-holds each corpus finding's outcome — `Outcome:` in the round's verdict file,
-and the `<!-- analysis-rejected: <ID> -->` markers in the analyses file, since a
-rejected finding's own verdict reads `keep`.
+holds each corpus finding's outcome — the `outcome` of its record in the round's
+`verdicts-<round>.jsonl` file, and the `rejected` records in the analyses file,
+since a rejected finding's own verdict reads `keep`.
 
 **As a subagent**, suppress a proposal that makes the same claim as a corpus
 finding, judged semantically rather than by literal field equality. Where it
@@ -42,6 +41,6 @@ suppressed — the re-draft pass the convergence detector guarantees is where th
 claim can return. Admit at most one materially different claim per defect and
 location, and require it to differ from every claim already settled there; once
 two findings stand at that pair, suppress whatever the wording. Compare against
-the claim as settled: the verdict's `Final observation:` and `Final location:`
-where it printed them, otherwise the corpus block's `Observation:` and
-`Location:` as narrowed by its `Reason:` and `Verification trace:`.
+the claim as settled: the verdict's `final_observation` and `final_location`
+where it gave them, otherwise the corpus finding's `observation` and `location`
+as narrowed by its verdict's `reason` and `verification_trace`.

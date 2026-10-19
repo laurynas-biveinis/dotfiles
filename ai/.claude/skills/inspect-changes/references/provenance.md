@@ -82,7 +82,7 @@ work: a defect an earlier **unpublished** stack commit introduced is still
 `pre-existing`. Whether to fix it by amending that commit is the analysis step's
 placement question, not this tag's.
 
-A verifier's `Final provenance:` is authoritative unless superseded by a valid
+A verifier's `final_provenance` is authoritative unless superseded by a valid
 analysis correction for that field.
 
 These rules locate the defect's origin, not the diff's `+` lines: throughout,
@@ -156,8 +156,8 @@ the tag follows the defect, not the line.
    confirm a relocation and to resolve a path the scope's diff does not cover.
    The analysis step's placement question is answered at the blame-target
    `REV` instead, per the `inspect-changes-analyze` skill, so the procedure does
-   not apply to it, nor to a first-pass tag — a draft finding's, or a
-   `## Proposed new findings` entry's from any tier — which a cheap baseline
+   not apply to it, nor to a first-pass tag — a draft finding's, or a proposed
+   finding's from any tier — which a cheap baseline
    read settles. Where it does apply, the commands and their traps are in the
    [attribution procedure](provenance-attribution.md) — read that before
    running any of them, because several fail in ways that print a plausible

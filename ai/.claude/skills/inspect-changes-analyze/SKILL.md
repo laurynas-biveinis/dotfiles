@@ -2,7 +2,7 @@
 name: inspect-changes-analyze
 description: >-
   Internal step of inspect-changes: deeply analyze one kept finding and
-  return its analysis block (or a rejection).
+  return its analysis (or a rejection).
 user-invocable: false
 allowed-tools: >-
   Bash(git diff:*)
@@ -19,31 +19,32 @@ allowed-tools: >-
   Read
   Grep
   Glob
+  Write(//tmp/**)
 ---
 
 # Code Review — Analysis Step
 
-Analyze exactly one kept finding and return its analysis block as your final
-message.
+Analyze exactly one kept finding and return its analysis as your reply.
 
-You **do not write finding files**. Return the analysis block — and any
-rejection or proposed new findings — as your final message only. You must not
-modify any file inside the project tree.
+The analysis, with any rejection, correction, proposed new findings, or
+experiment requests, is your reply: Write it once to the reply path your prompt
+supplies and end with `Wrote <reply path>`. You must not write any other file
+or modify any file inside the project tree.
 
 ## Input
 
 Your invocation prompt supplies, for the single finding you must analyze:
 
-- The finding **ID** and its **verdict block** — the refined content from
-  verification (`verdicts-<round>.md`), not the original draft.
+- The finding **ID** and the path of a JSON file holding only its **verdict** —
+  the refined content from verification, not the original draft.
 - The **scope** as a Git command to run (e.g. `git diff --staged`, `git diff`,
   `git show HEAD`, or a user-specified range as the endpoint diff
   `git diff A..B`). Run it to see the reviewed change.
-- The **pre-image baseline** to classify any `## Proposed new findings` entry
-  against, if supplied — distinct from the placement `REV` below. The finding
-  under analysis arrives with the verdict's `Final severity:`,
-  `Final confidence:`, and `Final provenance:`; you re-assess all three in the
-  Procedure below and change one only through `## Correction`, never by
+- The **pre-image baseline** to classify any proposed finding against, if
+  supplied — distinct from the placement `REV` below. The finding
+  under analysis arrives with the verdict's `final_severity`,
+  `final_confidence`, and `final_provenance`; you re-assess all three in the
+  Procedure below and change one only through a `correction`, never by
   restating it in the analysis body.
 - Any **caller requirements**, if present. Apply the
   [shared caller-requirements guidance](../inspect-changes/references/caller-requirements.md).
@@ -65,7 +66,7 @@ Your invocation prompt supplies, for the single finding you must analyze:
   uncommitted scope — `git diff --staged`, or a bare `git diff` over a clean
   index — `REV` is `HEAD` and only a `pre-existing-*`
   finding has a placement answer; an `introduced` one is WIP in the uncommitted
-  change. There the finding's `Location:` line is a post-image number, so
+  change. There the finding's `final_location` is a post-image number, so
   locate the defect in `REV` by content, and note that the index holds the
   reviewed change, so amending there is not a bare `git commit --amend`.
 - Existing **prior draft paths**. Follow the
@@ -73,16 +74,18 @@ Your invocation prompt supplies, for the single finding you must analyze:
   when filtering issues discovered during analysis.
 - Any **experiment results** for this finding (the matching `EXP` blocks), if
   present.
+- The **reply path** your analysis reply goes to.
 - **Only when this is an alongside-analysis re-spawn:** the invocation mode
-  `alongside` and the complete latest provisional analysis block (header and
-  body, excluding routed level-2 sections). Revise that analysis using the new
-  experiment results instead of reconstructing the analysis body from the
+  `alongside` and the path of the earlier reply holding the complete latest
+  provisional analysis (its `analysis` object). Revise that analysis using the
+  new experiment results instead of reconstructing the analysis body from the
   verdict; re-assessing the verdict's values under Procedure step 3 is still
   required.
 
 ## Procedure
 
-You **cannot execute code or write files** — your tools are read and Git only.
+You **cannot execute code or write files** beyond your reply file — your tools
+are read and Git only.
 
 1. Analyze and research this finding. Restate the critique in your own words,
    examine what the code actually does, identify whether the finding addresses
@@ -92,27 +95,25 @@ You **cannot execute code or write files** — your tools are read and Git only.
 1. This finding was already confirmed by verification — treat it as valid and
    deepen it. But if your deeper analysis instead proves it a **false
    positive** — the code is actually correct, or the finding misreads the
-   diff — append a `## Rejection` section (schema below) stating why; do not
+   diff — add a `rejection` (schema below) stating why; do not
    bury that conclusion in the analysis body. Rejection is all-or-nothing and
    removes the finding from the review, so reserve it for genuine false
    positives, not disagreements of emphasis or severity. You can only reject;
    you cannot revive a finding verification dropped.
-1. Re-assess the verdict's **provenance** (per the
-   [shared provenance guidance](../inspect-changes/references/provenance.md)),
-   **severity** (per the
-   [shared severity guidance](../inspect-changes/references/severity.md)), and
-   **confidence** (per the
-   [shared confidence guidance](../inspect-changes/references/confidence.md))
-   against what your deeper study found. When one of the three is
-   wrong, append a `## Correction` section (schema below) carrying only the
-   fields you are correcting, and state the reasoning in your analysis body as
-   well: the body is rendered in the review, the correction's `Rationale:` is
-   not. Correction is for a value the verdict got wrong, not a difference of
-   taste; the finding itself stands. It cannot remove a finding — a confidence
-   you correct below 50 keeps the finding in the review, so reject instead when
-   it is a false positive. The other verdict fields (title, location,
-   observation, suggested action) are not correctable: fold any refinement of
-   those into your analysis body.
+1. Re-assess the verdict's **provenance** (per the [shared provenance
+   guidance](../inspect-changes/references/provenance.md)), **severity** (per
+   the [shared severity guidance](../inspect-changes/references/severity.md)),
+   and **confidence** (per the [shared confidence
+   guidance](../inspect-changes/references/confidence.md)) against what your
+   deeper study found. When one of the three is wrong, add a `correction`
+   (schema below) carrying only the fields you are correcting, and state the
+   reasoning in your analysis body as well: the body is rendered in the review,
+   the correction's `rationale` is not. Correction is for a value the verdict
+   got wrong, not a difference of taste; the finding itself stands. It cannot
+   remove a finding — a confidence you correct below 50 keeps the finding in the
+   review, so reject instead when it is a false positive. The other verdict
+   fields (title, location, observation, suggested action) are not correctable:
+   fold any refinement of those into your analysis body.
 1. **Only when your prompt supplies the unpublished stack and blame-target
    `REV`:** if your analysis recommends a concrete code change, also recommend
    **where** to apply it within the unpublished stack. Identify the commit that
@@ -131,7 +132,7 @@ You **cannot execute code or write files** — your tools are read and Git only.
    `REV` (not the working tree) with
    `git blame -L <start>,<end> <REV> -- <path>` — but `REV` need not hold the
    reviewed lines in final form, since under an uncommitted scope it is the
-   pre-image, so the `Location:` numbers need not index it (see the **Input**
+   pre-image, so the `final_location` numbers need not index it (see the **Input**
    bullet). Find the region's counterpart in `REV` by content and pass _those_
    numbers to `-L`. Where the target has no counterpart there — a mid-file
    insertion, an append past end-of-file, or a path absent from `REV`
@@ -238,79 +239,73 @@ You **cannot execute code or write files** — your tools are read and Git only.
    than folding the fix into this change.
 
 1. If, while analyzing, you discover a **new** issue not covered by the finding
-   you were given, you **must** report it — do not silently drop it. Append it
-   as a `## Proposed new findings` section after your analysis block (schema
-   below). Confine that section to genuinely new issues; do not restate or
+   you were given, you **must** report it — do not silently drop it. Add it to
+   a `proposed_findings` list beside your analysis (schema below). Confine that
+   list to genuinely new issues; do not restate or
    re-scope the finding under analysis — unless you are rejecting it, in which
    case a materially different claim about that defect and location is a
    genuinely new issue and the gate admits it.
 
 ## Output
 
-Return the analysis block in this schema, beginning your reply with the
-`#### Analysis: <ID>` header line (no preamble before it):
+Your reply is one JSON object, with nothing around it:
 
-```markdown
-#### Analysis: R<round>-<NNN>
-
-<freeform body — recommended subsections, all optional:
-Restated critique / What the code actually does /
-Root cause vs symptom / Options / Recommendation /
-Suggested placement (only when given the unpublished-commit stack) /
-What this analysis does not change.
-Emit the heading above as the
-first line of the reply, at exactly level 4 (four `#`) — the level
-it occupies in the final review, where the analysis body is copied
-verbatim under the finding. Do not emit any further ATX
-(`#`-prefixed) heading in the body; use bold-paragraph labels
-(e.g. **Recommendation:**)
-for subsections instead, so nothing outranks the `#### Analysis`
-heading or breaks the document outline. Quoting code that contains
-`#` lines inside a fenced code block is fine — those are not
-headings; the prohibition is only on real ATX headings outside
-fences.>
+```json
+{
+  "analysis": {
+    "id": "R<round>-<NNN>",
+    "body": "<freeform Markdown>"
+  }
+}
 ```
 
-If — and only if — analysis proves the finding a false positive, append a
-`## Rejection` section after the analysis block, giving the reason. The analysis
-body is optional in this case (the reason carries the rationale):
+The body is Markdown, copied verbatim into the final review under an
+`#### Analysis: <ID>` heading. Recommended subsections, all optional: Restated
+critique / What the code actually does / Root cause vs symptom / Options /
+Recommendation / Suggested placement (only when given the unpublished-commit
+stack) / What this analysis does not change. Use bold-paragraph labels (e.g.
+`**Recommendation:**`) for them, not ATX headings, so nothing in the body
+outranks that heading or breaks the review's outline; quoting `#` lines inside
+a fenced code block is fine. JSON string escaping is the only escaping the body
+needs.
 
-```markdown
-## Rejection
+If — and only if — analysis proves the finding a false positive, add a
+`rejection` giving the reason. The analysis body may then be empty (the reason
+carries the rationale):
 
-<why the kept finding is invalid — the code is actually correct,
-or the finding misreads the diff>
+```json
+{
+  "analysis": { "id": "R<round>-<NNN>", "body": "" },
+  "rejection": "<why the kept finding is invalid: correct code, or a misread>"
+}
 ```
 
 If — and only if — the verdict's severity, confidence, or provenance is wrong,
-append a `## Correction` section after the analysis block, listing only the
-fields you are correcting. `Rationale:` is required; the corrected values
-supersede the verdict's in the final review:
+add a `correction` listing only the fields you are correcting. `rationale` is
+required; the corrected values supersede the verdict's in the final review:
 
-```markdown
-## Correction
-
-- Corrected severity: IMPORTANT
-- Corrected confidence: 60%
-- Corrected provenance: pre-existing-off-path
-- Rationale: <why the verdict's value is wrong>
+```json
+{
+  "correction": {
+    "severity": "IMPORTANT",
+    "confidence": 60,
+    "provenance": "pre-existing-off-path",
+    "rationale": "<why the verdict's value is wrong>"
+  }
+}
 ```
 
-A `## Correction` qualifies an analysis, so it is valid only on a reply that
-carries an analysis block: never on a deferral, and never with a `## Rejection`
-(a finding you remove has no values left to correct).
+A `correction` qualifies an analysis, so it is valid only on a reply that
+carries an `analysis`: never on a deferral, and never with a `rejection` (a
+finding you remove has no values left to correct).
 
-If — and only if — analysis surfaced a genuinely new issue, append a
-`## Proposed new findings` section after the analysis block, following the
+If — and only if — analysis surfaced a genuinely new issue, add a
+`proposed_findings` list, following the
 [shared output-section contract](../inspect-changes/references/shared-output-sections.md).
-
-`## Rejection`, `## Correction`, `## Proposed new findings`, and
-`## Experiment requests` are the only higher-level (`##`) headings allowed in a
-reply that carries an analysis block. A reply may carry more than one — a
-rejecting analyst that also spotted a genuinely different issue still reports it
-— except that `## Rejection` may never co-occur with `## Experiment requests`
-(rejecting is terminal; see **Experiment requests** below) or with
-`## Correction`.
+A reply may carry more than one of these — a rejecting analyst that also spotted
+a genuinely different issue still reports it — except that a `rejection` may
+never co-occur with `experiment_requests` (rejecting is terminal; see
+**Experiment requests** below) or with a `correction`.
 
 ## Experiment requests
 
@@ -319,35 +314,38 @@ constraints](../inspect-changes/references/shared-output-sections.md). Request
 runtime evidence when it would sharpen the analysis — **including whether a
 suggested action or one of your options is actually feasible given the tooling,
 environment, or APIs, not only whether the finding is valid**. Return the
-section in one of two shapes:
+requests in one of two shapes:
 
-- **Deferral** — requests and **no** analysis block: you cannot decide the
+- **Deferral** — requests and **no** `analysis`: you cannot decide the
   finding yet and need the evidence first. The top-level runs the experiments
   and re-invokes you with the results.
-- **Alongside an analysis** — requests _plus_ your completed analysis block:
-  your analysis stands, but a suggested action (or option) asserts a
+- **Alongside an analysis** — requests _plus_ your completed `analysis`: your
+  analysis stands, but a suggested action (or option) asserts a
   tooling/environment capability you have not verified. The top-level runs the
   experiments and re-invokes you with the results, invocation mode `alongside`,
-  and your complete latest provisional analysis block so you can finalize that
+  and your complete latest provisional analysis so you can finalize that
   suggested action without losing its context. When re-invoked in this mode, you
   have three valid replies: return your **finalized analysis** with no further
-  requests (if the results settle it); attach **another `## Experiment requests`
-  section** alongside your updated analysis block (if they surface a further
-  unverified capability); or, if the results instead disprove the finding,
-  **reject it** with a `## Rejection` section and no experiment requests. Do
-  **not** return a pure deferral — once you have produced an alongside analysis,
-  always carry an analysis block (or a rejection) forward; requests with no
-  analysis block in this context are invalid. You are re-spawned fresh, and no
-  earlier `## Correction` is handed back to you — the provisional block excludes
-  routed level-2 sections. So re-run Procedure step 3 on every reply of this
-  loop **except a rejection** (a finding you remove has no values left to
-  correct) and re-emit a `## Correction` if one is still warranted; only the
-  correction on the reply the caller ends up appending is recorded. Note that
-  the caller does not retry an alongside re-spawn: any validation failure
-  terminates the loop immediately and falls back to your latest provisional
-  analysis (the 3-attempt budget governs only the initial dispatch and pure
-  deferrals), so when uncertain prefer returning a finalized analysis over
-  attaching yet another experiment batch.
+  requests (if the results settle it); attach **another `experiment_requests`
+  list** alongside your updated analysis (if they surface a further unverified
+  capability); or, if the results instead disprove the finding, **reject it**
+  with a `rejection` and no experiment requests. Do **not** return a pure
+  deferral — once you have produced an alongside analysis, always carry an
+  analysis (or a rejection) forward; requests with no analysis in this context
+  are invalid. You are re-spawned fresh, and no earlier `correction` carries
+  forward: the provisional analysis is its `analysis` object only, and although
+  the earlier reply still shows its other parts, only the correction on the
+  reply the caller ends up appending is recorded. The earlier reply's
+  `proposed_findings` need not be repeated, since the caller collects them from
+  that file, and its `experiment_requests` have run, with their results among
+  your inputs. So
+  re-run Procedure step 3 on every reply of this loop **except a rejection** (a
+  finding you remove has no values left to correct) and re-emit a `correction`
+  if one is still warranted. Note that the caller does not retry an alongside
+  re-spawn: any validation failure terminates the loop immediately and falls
+  back to your latest provisional analysis (the 3-attempt budget governs only
+  the initial dispatch and pure deferrals), so when uncertain prefer returning a
+  finalized analysis over attaching yet another experiment batch.
 
 **Mandate:** if your recommendation hinges on an unverified capability of the
 tooling, environment, or APIs — e.g. whether a parameter, keyword, or config
@@ -355,6 +353,6 @@ actually has the claimed effect — do **not** present it as an unvalidated opti
 or punt its feasibility to the reader. Either defer, or attach the experiment
 alongside your analysis, so the remedy you recommend is grounded.
 
-A `## Rejection` is incompatible with **either** shape: rejecting is a terminal
-decision, so you cannot also request experiments — never combine a `## Rejection`
-with a `## Experiment requests` section.
+A `rejection` is incompatible with **either** shape: rejecting is a terminal
+decision, so you cannot also request experiments — never combine a `rejection`
+with `experiment_requests`.
