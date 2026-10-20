@@ -59,9 +59,10 @@ run in an empty submodule directory can find the parent repository, so that
 alone does not establish a populated submodule. The parent's dirty marker
 cannot distinguish successive edits inside an already-dirty submodule.
 
-After Scope succeeds, derive a fresh topic and write
-`/tmp/inspect-changes-<topic>-state.md`. Save the observations in separate
-files under that prefix and link them from the state file. Record:
+After Scope succeeds, derive a fresh slug and `claim` it as the entrypoint
+says. Read the state file `claim` created, then Write the state over its
+placeholder. Save the observations in separate files under the prefix `claim`
+printed and link them from the state file. Record:
 
 - The original scope request (or default precedence), merge intent, and
   verbatim caller requirements, so selection can be repeated on resume.

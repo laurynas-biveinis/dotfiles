@@ -14,6 +14,7 @@ from inspect_changes_replies_test_utils import (
     PROPOSAL,
     REQUEST,
     REQUEST_ONLY,
+    SCRIPT,
     VERDICT,
     RepliesTestCase,
     read_records,
@@ -33,6 +34,10 @@ class ConfinementTest(RepliesTestCase):
         self.addCleanup(shutil.rmtree, outside)
         link = self.dir / "inspect-changes-link"
         link.symlink_to(outside)
+        # The prefix itself resolves into the review files, but its directory does
+        # not; a trailing separator must not make the link that directory.
+        final_link = outside / "inspect-changes-y"
+        final_link.symlink_to(self.dir / "inspect-changes-x")
         draft = self.reply("draft.json", {"findings": [FINDING]})
         verdict = self.reply("verdict.json", {"verdict": VERDICT})
         analysis = self.reply("analysis.json", {"analysis": ANALYSIS})
@@ -41,9 +46,13 @@ class ConfinementTest(RepliesTestCase):
             "plain": str(outside / "inspect-changes-x"),
             "dotdot": f"{self.dir}/../../{outside.relative_to('/')}/x",
             "symlink": str(link / "inspect-changes-x"),
+            "final symlink": str(final_link),
+            "trailing slash": f"{final_link}/",
+            "trailing dot": f"{final_link}/.",
         }
         for kind, prefix in prefixes.items():
             commands = {
+                "claim": ["claim", prefix],
                 "draft-write": ["draft-write", prefix, "1", "--reply", draft, "R1-001"],
                 "verify-record": ["verify-record", prefix, "R1-001", verdict],
                 "analysis-record": ["analysis-record", prefix, "R1-001", analysis],
@@ -57,10 +66,11 @@ class ConfinementTest(RepliesTestCase):
                     self.assertEqual(
                         result.returncode, 2, result.stdout + result.stderr
                     )
-                    self.assertTrue(
-                        result.stdout.startswith("refused: "), result.stdout
+                    self.assertEqual(
+                        result.stdout,
+                        f"refused: {Path(prefix)} is outside /tmp/inspect-changes-*\n",
                     )
-        self.assertEqual(list(outside.iterdir()), [])
+        self.assertEqual(list(outside.iterdir()), [final_link])
 
     def test_link_between_review_files_is_written_through(self):
         """A review file linking to another is followed, never replaced."""
@@ -83,7 +93,7 @@ class ConfinementTest(RepliesTestCase):
         absent = str(self.dir / "absent.json")
         result = self.run_script("draft-check", "1", absent, env=env)
         self.assertEqual(result.stdout, "invalid: reply file missing or empty\n")
-        for module in ("rendering", "reply_file"):
+        for module in (path.stem for path in SCRIPT.parent.glob("*.py")):
             self.assertEqual(list(cache.rglob(f"{module}.*")), [])
 
     def test_finding_id_must_be_one(self):
@@ -740,6 +750,16 @@ class PendingAnalysisTest(RepliesTestCase):
         self.put_records("verdicts-1.jsonl", [VERDICT])
         result = self.run_script("pending-analysis", self.prefix)
         self.assertEqual(result.stdout, f"R1-001 {self.prefix}-verdict-R1-001.json\n")
+
+    def test_trailing_separator_reads_the_plain_prefix(self):
+        """A prefix ending in `/` or `/.` names the plain prefix's files."""
+        self.put_records("verdicts-1.jsonl", [VERDICT])
+        for suffix in ("/", "/."):
+            with self.subTest(suffix=suffix):
+                result = self.run_script("pending-analysis", self.prefix + suffix)
+                self.assertEqual(
+                    result.stdout, f"R1-001 {self.prefix}-verdict-R1-001.json\n"
+                )
 
     def test_lists_unanalyzed_keeps_with_their_verdict_file(self):
         """Drops and analyzed, rejected or skipped findings are not pending."""

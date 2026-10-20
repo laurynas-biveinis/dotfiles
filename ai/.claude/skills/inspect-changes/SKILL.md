@@ -55,9 +55,10 @@ Reason: <brief summary or the existing stop/abort diagnostic verbatim>
 `converged` means the terminal draft pass was observed to produce no surviving
 new findings and no completion limitation occurred. It can still carry kept
 findings: convergence describes the inspection, not whether the code is fixed.
-`not-run` covers Scope's pre-dispatch stops; `aborted` covers initial-draft or
-verification retry exhaustion. A report assembled after any of the following
-is `incomplete`, even if a later draft pass yields no new findings:
+`not-run` covers Scope's pre-dispatch stops and a failed `claim`; `aborted`
+covers initial-draft or verification retry exhaustion. A report assembled after
+any of the following is `incomplete`, even if a later draft pass yields no new
+findings:
 
 - A re-draft pass exhausts its retries.
 - An analysis is skipped after retry exhaustion or a pure-deferral cap stop.
@@ -503,8 +504,10 @@ record per line: the draft files `/tmp/inspect-changes-<topic>-draft-<N>.jsonl`
 (findings), the verdicts files `…-verdicts-<round>.jsonl`, the analyses file
 `…-analyses.jsonl` (records of kind `analysis`, `rejected`, `corrected` or
 `skipped`) and the proposal batches `…-batch-<n>.jsonl`. Files are append-only,
-except two. `/tmp/inspect-changes-<topic>-summary.md` holds one assembly's prose
-rather than review evidence, and is rewritten when Phase 4 runs again (drift at
+except three. The state file's `claim` placeholder is replaced once, by the
+review basis; later writes append.
+`/tmp/inspect-changes-<topic>-summary.md` holds one assembly's prose rather
+than review evidence, and is rewritten when Phase 4 runs again (drift at
 its final check, or resume). `/tmp/inspect-changes-<topic>-verdict-<ID>.json`,
 the analyst's copy of a kept verdict, is written whole by `verify-record` before
 that verdict is recorded, so a retry after an interrupted call replaces it; once
@@ -538,20 +541,25 @@ record a verdict for a finding no draft holds, record an analysis or skip for a
 finding with no kept verdict, append to a draft whose round already has a
 verdict, write outside `/tmp/inspect-changes-*`, name a malformed finding ID,
 select an entry twice, one already written or one the reply or batch does not
-hold, assemble before the scope, baseline or summary file exists, or assemble a
-`converged` report while the limitations file has an entry, the analyses file
-has a `skipped` or provisional record, or a drafted finding has no verdict or a
-kept one no analysis record. Each is an orchestration error to correct, never a
-reply outcome. An empty draft pass records nothing, so `assemble` cannot tell
-whether the terminal one ran; running it stays your job. A verdict refused for
-a finding no draft holds was dispatched in
+hold, claim a prefix whose last component does not start with
+`inspect-changes-` or whose directory cannot be used, assemble before the
+scope, baseline or summary file exists, or assemble a `converged` report while
+the limitations file has an entry, the analyses file has a `skipped` or
+provisional record, or a drafted finding has no verdict or a kept one no
+analysis record. Each is an orchestration error to correct, never a reply
+outcome. An empty draft pass records nothing, so `assemble` cannot tell whether
+the terminal one ran; running it stays your job. A verdict refused for a
+finding no draft holds was dispatched in
 error: discard that reply, its proposals included, and take Phase 2's IDs from
 the draft file. For a missing assembly input, write it (scope and baseline from
 the values the state file records, the summary per Phase 4) and re-run
-`assemble`. For the findings any other refusal names, finish their Phase 2 or
-Phase 3 work, taking the IDs to analyze from `pending-analysis`, after which the
-usual loop decides whether another re-draft pass is due. When you write the
-state file, also write, with Write,
+`assemble`. For a refused `claim`, derive a one-component kebab-case slug and
+claim once more. If that claim is refused too, or any `claim` prints neither a
+`claimed` nor a `refused:` line, stop before dispatch with `Status: not-run`,
+`Report: none`, and that output verbatim in `Reason`. For the findings any other
+refusal names, finish their Phase 2 or Phase 3 work, taking the IDs to analyze
+from `pending-analysis`, after which the usual loop decides whether another
+re-draft pass is due. When you write the state file, also write, with Write,
 the printed scope line (the text following `Scope:`) to `<prefix>-scope.txt` and
 the rendered baseline to `<prefix>-baseline.txt`, once; `assemble` reads them
 for the report header, so no shell quoting touches either value.
@@ -674,13 +682,16 @@ occurrence it duplicates — whether a prior corpus finding or this batch's firs
 occurrence once written — is its anchor for every future pass. Every source is
 gated identically.
 
-`<topic>` is a 1–3-word kebab-case slug derived from the diff (module
-name, feature, or commit subject). If any
-`/tmp/inspect-changes-<topic>*` file already exists, suffix `<topic>`
-with the smallest free integer (`-2`, `-3`, …) so a fresh review never
-collides with an existing one. After Scope succeeds, persist the review basis
-per [repository state](references/repository-state.md) before any dispatch,
-even if no draft file is ever written.
+`<slug>` is a 1–3-word kebab-case slug derived from the diff (module name,
+feature, or commit subject). Run `claim /tmp/inspect-changes-<slug>`: it picks
+the topic and creates its state file in one step, under the lock every review's
+script calls share, so reviews that start together cannot take colliding
+topics. It prints `claimed <prefix>`; `<topic>` is `<prefix>` without
+`/tmp/inspect-changes-`: `<slug>` in lowercase, plus `-<n>` when another
+review's filenames could reach it. Never pick or suffix a topic yourself. After
+Scope succeeds, persist the review basis per
+[repository state](references/repository-state.md) before any dispatch, even if
+no draft file is ever written.
 
 ### Phase 1 — Draft passes
 

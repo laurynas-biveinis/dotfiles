@@ -33,6 +33,15 @@ from reply_file import (  # noqa: E402, RUF100  # pylint: disable=wrong-import-p
     InvalidReply,
     read_reply,
 )
+from review_files import (  # noqa: E402, RUF100  # pylint: disable=wrong-import-position
+    NAME_PREFIX,
+    REVIEW_FILES,
+    Refusal,
+    confined,
+    confined_prefix,
+    state_file,
+)
+from topic import claim  # noqa: E402, RUF100  # pylint: disable=wrong-import-position
 
 FINDING_ID = re.compile(r"R\d+-\d+")
 SEVERITIES = tuple(severity for severity, _ in TIERS)
@@ -50,16 +59,10 @@ KEEP_TEXT = (
 KEEP_BLOCKS = ("final_observation", "final_suggested_action")
 # A drop's refined claim, which the dedup gate compares against when given.
 SETTLED_CLAIM = ("final_location", "final_observation")
-# Resolved, so a symlink or `..` cannot lead a write out of the review files.
-REVIEW_FILES = str(Path("/tmp").resolve() / "inspect-changes-")
 
 
 class MalformedRequests(InvalidReply):
     """A reply whose experiment requests alone make it unusable."""
-
-
-class Refusal(Exception):
-    """A request that would break the review files' invariants."""
 
 
 def text_field(record, key):
@@ -263,14 +266,6 @@ def draft_check(args):
     suffix = describe_routed(reply, requests_count) + note
     print("valid: " + (", ".join(ids) or "no findings") + suffix)
     return 0
-
-
-def confined(path):
-    """Return the resolved write target, refusing one outside the review files."""
-    resolved = Path(path).resolve()
-    if not str(resolved).startswith(REVIEW_FILES):
-        raise Refusal(f"{path} is outside /tmp/inspect-changes-*")
-    return resolved
 
 
 def write_whole(target, text):
@@ -803,12 +798,12 @@ def listed_findings(prefix, records):
 
 def report_header(args):
     """Return the report's opening paragraphs."""
-    topic = Path(args.prefix).name.removeprefix("inspect-changes-")
+    topic = Path(args.prefix).name.removeprefix(NAME_PREFIX)
     pieces = [
         f"# Code Review: {topic}\n",
         f"Status: {args.status}\n",
         f"Scope: {recorded(args.prefix, 'scope')}\n",
-        f"Review basis: {args.prefix}-state.md\n",
+        f"Review basis: {state_file(args.prefix)}\n",
         f"Baseline: {recorded(args.prefix, 'baseline')}\n",
         CONFIDENCE_NOTE,
         PROVENANCE_NOTE,
@@ -890,11 +885,13 @@ def arg(*names, **options):
     return names, options
 
 
-PREFIX = arg("prefix")
+# Parsed once like pathlib, so a trailing `/` or `/.` names no other directory.
+PREFIX = arg("prefix", type=lambda prefix: str(Path(prefix)))
 FINDING = arg("id")
 REPLY = arg("reply")
 ROUND = arg("round", type=int)
 COMMANDS = (
+    (claim, [PREFIX]),
     (draft_check, [ROUND, REPLY]),
     (
         draft_write,
@@ -950,7 +947,7 @@ def build_parser():
 def check_arguments(args):
     """Refuse a prefix outside the review files or a malformed finding ID."""
     if getattr(args, "prefix", None) is not None:
-        confined(args.prefix)
+        confined_prefix(args.prefix)
     if getattr(args, "id", None) is not None and not FINDING_ID.fullmatch(args.id):
         raise Refusal(f"not a finding ID: {args.id!r}")
 
