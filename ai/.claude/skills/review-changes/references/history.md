@@ -143,9 +143,10 @@ commits above the original endpoint.
 
 Recheck handled-above dependencies as the entrypoint specifies: editing a
 higher remedy can reopen a lower entry as well. Retain previously recorded
-off-path dispositions, but reassess their applicability against current
-provenance and evidence. Commit remapping never authorizes suppression of a
-recurring unresolved defect.
+off-path dispositions, but reassess their applicability against the current
+report's final provenance and evidence. A known match supplies only its
+unverified draft tag, so it is reassessed against that tag alone. Commit
+remapping never authorizes suppression of a recurring unresolved defect.
 
 Revalidate previously empty members under **Empty range members**, retaining
 their initial comparisons alongside the current evidence. A rewrite that makes

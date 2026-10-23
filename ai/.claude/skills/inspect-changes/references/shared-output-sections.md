@@ -32,8 +32,8 @@ integer percentage from 0 to 100; `provenance` is `introduced`,
 severity per the [shared severity guidance](severity.md), calibrate its
 confidence per the [shared confidence guidance](confidence.md), and classify its
 provenance per the [shared provenance guidance](provenance.md); all three are
-first-pass claims that verification re-derives, and for provenance a cheap read
-suffices.
+first-pass claims that verification re-derives, except as the provenance
+guidance's **Tie-breaks** notes, and for provenance a cheap read suffices.
 
 ## Experiment requests
 

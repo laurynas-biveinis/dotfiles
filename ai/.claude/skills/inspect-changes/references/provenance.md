@@ -177,3 +177,9 @@ file, an opportunistic cleanup.
 Without evidence that the change caused the defect, tag it `pre-existing-*`
 rather than assert authorship. When on-path versus off-path is genuinely
 uncertain, tag `pre-existing-on-path`.
+
+A first-pass tag — a draft finding's or a proposed finding's —
+can be acted on before verification: when the caller tracks known findings, the
+orchestrator sets aside, unverified, a candidate tagged `pre-existing-off-path`
+that matches one. So at the first pass, resolve any on-path versus off-path
+doubt toward `pre-existing-on-path`.

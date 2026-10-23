@@ -125,8 +125,9 @@ entries unhandled and return to the lowest one after reconciliation.
 If the inner stops on its repository-state check — drift or a failed state
 observation — preserve its incomplete/not-run result and reconcile even if the
 outer's next observation matches its prior record:
-the inner's detected event must not be lost. Revalidate the entry and dispatch
-a fresh inner inspection with no old findings as input. Other inner failures
+the inner's detected event must not be lost. Revalidate the entry and
+redispatch through the entrypoint's reviewer-dispatch step, giving the fresh
+inner inspection none of the stopped inspection's findings. Other inner failures
 keep the entrypoint's incomplete-result handling. A converged inner result
 whose basis no longer matches the entry is stale and likewise needs a fresh
 inspection; it cannot authorize fixes or convergence on the changed state.

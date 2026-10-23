@@ -755,7 +755,7 @@ def provisional_ids(records):
     return [record["id"] for record in records if record.get("provisional")]
 
 
-def summary_counts(prefix, records, listed):
+def summary_counts(prefix, records, listed, matched):
     """Render the Summary counts that the review files settle by themselves."""
     verdicts = recorded_verdicts(prefix)
     drafted = sum(len(read_records(path)) for path in round_files(prefix, "draft"))
@@ -782,6 +782,8 @@ def summary_counts(prefix, records, listed):
         f"listed per provenance: {by_provenance}",
         f"analysis corrections: {listing(changes)}",
     ]
+    if matched is not None:
+        parts.append(f"known findings matched: {len(matched)}")
     return "Counts: " + "; ".join(parts) + ".\n"
 
 
@@ -844,6 +846,21 @@ def logged_limitations(prefix):
     return optional_text(Path(f"{prefix}-limitations.md")).strip()
 
 
+def known_matches(prefix):
+    """Return the first matches line per known entry, or None without a snapshot.
+
+    Each pass that re-drafts a tracked defect logs another candidate line, so
+    only the first line naming each known entry is listed.
+    """
+    if not Path(f"{prefix}-known.md").exists():
+        return None
+    text = optional_text(Path(f"{prefix}-known-matches.md"))
+    first = {}
+    for line in filter(str.strip, text.splitlines()):
+        first.setdefault(line.rpartition(" — matches known: ")[2], line)
+    return list(first.values())
+
+
 def convergence_gap(prefix, records):
     """Return why the review files cannot back a converged report, or ""."""
     logged = logged_limitations(prefix)
@@ -869,7 +886,11 @@ def assemble(args):
             raise Refusal(f"converged, but {gap}")
     listed = listed_findings(args.prefix, records)
     pieces = report_header(args) + severity_tiers(listed, records)
-    counts = summary_counts(args.prefix, records, listed)
+    matched = known_matches(args.prefix)
+    if matched is not None:
+        lines = "\n".join(matched) or "None."
+        pieces.extend(["## Known findings matched\n", lines + "\n"])
+    counts = summary_counts(args.prefix, records, listed, matched)
     summary = required_text(Path(f"{args.prefix}-summary.md")).strip()
     logged = logged_limitations(args.prefix)
     block = ["Completion limitations:\n", logged + "\n"] if logged else []

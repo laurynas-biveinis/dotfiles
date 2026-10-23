@@ -621,6 +621,14 @@ guidance](references/caller-requirements.md). Pass the same verbatim block as a
 declared input to every draft, verify, and analyze dispatch, including retries,
 re-drafts, experiment deferrals, and alongside-analysis re-spawns.
 
+**Known findings.** A caller may supply `Known findings: <path>`, a file of
+findings it already tracks, one per line as `- <title> (<location>) — <claim>`.
+An entry's _known side_ is its `<title> (<location>)`, spelled as the line gives
+it. Once the state file is written, copy that file verbatim to
+`/tmp/inspect-changes-<topic>-known.md` and read only the snapshot afterwards.
+It serves **Unified dedup** alone: never pass it, or anything drawn from it, to
+a sub-step.
+
 **No orchestration steering.** The prompt above is fixed, and its only variable
 content is the named child skill, its skills directory, and that skill's
 declared inputs. Apart from the verbatim caller-requirements input, never add
@@ -682,14 +690,34 @@ occurrence it duplicates — whether a prior corpus finding or this batch's firs
 occurrence once written — is its anchor for every future pass. Every source is
 gated identically.
 
+With a known-findings snapshot, the gate also drops a candidate drafted
+`pre-existing-off-path` that identifies the same defect at the same location as
+a known entry, and appends one line for it to
+`/tmp/inspect-changes-<topic>-known-matches.md`:
+`- <candidate title> (<location>) — matches known: <known side>`, copying the
+known side verbatim. A known entry's location
+may come from an earlier image (another stack entry, or this one before a fix),
+so judge it by the code it names, following moves and rewrites, rather than by
+line number. A candidate
+drafted with any other provenance passes this test, since the caller must
+reassess a known finding the change may have put on its path. The test reads
+the unverified draft tag by design, trading a residual risk for the match's
+saved verification and analysis: a known finding that the change did put on its
+path, but that its drafter tagged off-path, is suppressed instead of reassessed.
+Only a later pass that tags it otherwise recovers it, and none may run: a pass
+whose candidates are all known matches ends the review, which then hands its
+caller no new finding. A known match is not a surviving finding,
+so it anchors nothing: run this test before the within-batch step, which then
+compares only the candidates this test passed.
+
 `<slug>` is a 1–3-word kebab-case slug derived from the diff (module name,
 feature, or commit subject). Run `claim /tmp/inspect-changes-<slug>`: it picks
-the topic and creates its state file in one step, under the lock every review's
-script calls share, so reviews that start together cannot take colliding
-topics. It prints `claimed <prefix>`; `<topic>` is `<prefix>` without
-`/tmp/inspect-changes-`: `<slug>` in lowercase, plus `-<n>` when another
-review's filenames could reach it. Never pick or suffix a topic yourself. After
-Scope succeeds, persist the review basis per
+the topic by the [review topic](references/topic.md) rule and creates its state
+file in one step, under the lock every review's script calls share, so reviews
+that start together cannot take colliding topics. It prints `claimed <prefix>`;
+`<topic>` is `<prefix>` without `/tmp/inspect-changes-`: `<slug>` in lowercase,
+plus `-<n>` when another review's filenames could reach it. Never pick or
+suffix a topic yourself. After Scope succeeds, persist the review basis per
 [repository state](references/repository-state.md) before any dispatch, even if
 no draft file is ever written.
 
@@ -747,8 +775,8 @@ fails) is handled differently by pass:
 
 On a valid reply, read the reply file and dedup the pass's findings per
 **Unified dedup** (above) — against the full raw-findings corpus, then within
-the batch. (On round 1 the corpus is empty, so only a within-batch duplicate can
-drop one.) Write the survivors with
+the batch. (On round 1 the corpus is empty, so only a within-batch duplicate or
+a known-findings match can drop one.) Write the survivors with
 `draft-write <prefix> <N> --reply <reply> <ID>...`, which appends them,
 keeping the IDs the step assigned, to
 `/tmp/inspect-changes-<topic>-draft-<N>.jsonl`. Run it **only if at least one
@@ -764,8 +792,8 @@ If `draft-check` counted experiment requests, read them with
 supports; Phase 2 feeds each finding's results into its verifier.
 
 **Terminal condition.** If a pass yields no surviving finding — the pass reports
-none, or dedup drops all its findings — the review has converged: skip to
-Phase 4 (final assembly); no further
+none, or dedup drops all its findings (on round 1, only known-findings matches
+can) — the review has converged: skip to Phase 4 (final assembly); no further
 re-draft is attempted. So any review whose initial pass wrote a draft always
 incurs one final
 re-draft pass whose findings are all deduped away — that empty pass **is** the
@@ -1295,7 +1323,8 @@ After the second check, run `assemble <prefix> --status <status>`, with
 `/tmp/inspect-changes-<topic>.md`. Add `--merge combined` for a combined merge
 scope (`git show <merge>`) or `--merge single-parent` for a single-parent one
 (`git diff <merge>^<n> <merge>`, whether first-parent or back-merge).
-It reads the scope, baseline and limitations files, every
+It reads the scope, baseline and limitations files, the known-matches file
+when a known-findings snapshot exists, every
 `draft-<round>.jsonl` and `verdicts-<round>.jsonl` file, and the records in
 `/tmp/inspect-changes-<topic>-analyses.jsonl` (see **Reading persisted
 analyses** above), and computes the **rejected-ID set**: every ID with
@@ -1353,6 +1382,11 @@ recommendation, caveats; whatever the subagent produced>
 
 …
 
+## Known findings matched
+
+<only with a known-findings snapshot: the first known-matches line for each
+known entry, or "None.">
+
 ## Summary
 
 <your prose: 2–4 sentences, plus: drafts opened; verify⇄analyze passes run
@@ -1377,7 +1411,8 @@ in this review per final provenance value,
 relative to the reviewed scope's pre-image (introduced / pre-existing-on-path /
 pre-existing-off-path);
 findings whose severity, confidence, or provenance analysis corrected — one
-entry per correction as `<ID>: <field> <verdict value> → <corrected value>`>
+entry per correction as `<ID>: <field> <verdict value> → <corrected value>`;
+with a snapshot, known findings matched>
 ```
 
 `assemble` applies these rules:

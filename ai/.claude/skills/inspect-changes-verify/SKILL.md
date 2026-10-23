@@ -97,7 +97,9 @@ are read and Git only.
    Establish it yourself rather than inheriting the draft's tag; the draft's
    value is a claim to check, not a premise. When your value differs from the
    draft's, say so in `verification_trace` and give the evidence that settled
-   it — that record is what the draft's tag is for.
+   it — that record is what the draft's tag is for, apart from the
+   orchestrator's known-findings gate, which reads an off-path draft tag
+   before any verification.
 1. Unless deferring (see **Experiment requests**), return one verdict in
    exactly the schema below. `final_confidence` is required on every verdict
    and `reason` on every `drop`; the severity, provenance, title, location,

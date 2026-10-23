@@ -64,8 +64,10 @@ says. Read the state file `claim` created, then Write the state over its
 placeholder. Save the observations in separate files under the prefix `claim`
 printed and link them from the state file. Record:
 
-- The original scope request (or default precedence), merge intent, and
-  verbatim caller requirements, so selection can be repeated on resume.
+- The original scope request (or default precedence), merge intent,
+  verbatim caller requirements, and the known-findings source and snapshot
+  paths, if any,
+  so selection can be repeated on resume.
 - The normalized selected command, its retained exit status and complete
   stdout, resolved revision operands, and the derived pre-image baseline.
 - The observation commands, working directories, statuses, and saved-output
@@ -123,9 +125,10 @@ precedence over retry exhaustion and every normal continuation path.
 
 Once stopped, this topic cannot become converged even if the repository
 returns to its former state. A new review uses a fresh topic and no prior
-findings as input. Remote-tracking refs describe only local knowledge of
-publication; these checks do not fetch or detect a push from another clone
-until a local ref changes, and preserve Phase 3's publication caveat.
+finding corpus as input; caller inputs, known findings included, carry over.
+Remote-tracking refs describe only local knowledge of publication; these checks
+do not fetch or detect a push from another clone until a local ref changes, and
+preserve Phase 3's publication caveat.
 
 ## Resume
 
@@ -144,9 +147,10 @@ reusing any analysis. Append the successful resume checkpoint, then recover
 the round and pending work by the entrypoint's normal rules. Existing
 completion limitations still preclude convergence.
 
-If the basis differs, is missing, or records a drift stop, preserve the old
-files for audit and start a fresh review from that original request under a
-new topic, with no old finding corpus or cached context. Explain what changed.
+If the basis differs, is missing (a recorded known-findings snapshot included),
+or records a drift stop, preserve the old files for audit and start a fresh
+review from that original request under a new topic, with no old finding corpus
+or cached context. Explain what changed.
 Do not end the resumed request as incomplete merely because the old basis
 changed. If fresh Scope instead stops (including an empty explicit staged
 scope after a commit), return its `not-run` result; never fall through to

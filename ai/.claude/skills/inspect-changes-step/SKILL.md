@@ -179,7 +179,8 @@ Your reply is one JSON object, with nothing around it:
   Verification re-derives each independently and its answers are the ones that
   reach the review, so yours are not inputs to them — each is the claim a
   verifier records disagreeing with, which is what makes an ambiguous case
-  visible in the audit trail rather than silently resolved.
+  visible in the audit trail rather than silently resolved. One exception for
+  provenance: see the shared provenance guidance's **Tie-breaks**.
 - Do not emit a finding whose suggested action is empty or "none", or that only
   confirms existing code is correct — that is a non-finding, not a SUGGESTION;
   omit it.

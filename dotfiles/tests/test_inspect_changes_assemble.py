@@ -30,8 +30,8 @@ def verdict(finding, severity, provenance):
     }
 
 
-class AssembleTest(RepliesTestCase):
-    """`assemble` renders the final report from the recorded review files."""
+class AssembleCase(RepliesTestCase):
+    """Assemble reports from review files that hold a scope, baseline and summary."""
 
     def setUp(self):
         super().setUp()
@@ -45,6 +45,10 @@ class AssembleTest(RepliesTestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(result.stdout, f"wrote {self.prefix}.md\n")
         return Path(self.prefix + ".md").read_text(encoding="utf-8")
+
+
+class AssembleTest(AssembleCase):
+    """`assemble` renders the final report from the recorded review files."""
 
     def test_report_layout_with_one_analyzed_finding(self):
         """Header, severity tiers with None. placeholders, the finding, Summary."""
@@ -383,6 +387,54 @@ class AssembleTest(RepliesTestCase):
                     "verdicts-1.jsonl", [{**VERDICT, "final_observation": observation}]
                 )
                 self.assertIn(expected, self.assemble(status="incomplete"))
+
+
+class KnownMatchesTest(AssembleCase):
+    """`assemble` reports the known findings a review given a snapshot matched."""
+
+    def give_known_findings(self, *known):
+        """Write a known-findings snapshot holding one entry per known side."""
+        self.put("known.md", "".join(f"- {side} — It writes.\n" for side in known))
+
+    def test_known_matches_get_a_section_and_a_count(self):
+        """Each known entry matched is listed once and counted once."""
+        known = "Rename get_config (`src/b.py:3`)"
+        first = "- Helper hides a write (`src/b.py:3`) — matches known: " + known
+        again = "- Cache write in getter (`src/b.py:9`) — matches known: " + known
+        self.give_known_findings(known)
+        self.put("known-matches.md", first + "\n" + again + "\n")
+        report = self.assemble()
+        self.assertIn(
+            "## Known findings matched\n\n" + first + "\n\n## Summary\n", report
+        )
+        self.assertTrue(
+            report.endswith("analysis corrections: none; known findings matched: 1.\n"),
+            report,
+        )
+
+    def test_known_entries_sharing_a_title_or_location_are_distinct(self):
+        """A known entry is its title and location together, not either alone."""
+        lines = (
+            "- Helper hides a write (`src/b.py:3`) — matches known: Rename (`b.py`)",
+            "- Getter writes a file (`src/b.py:3`) — matches known: Rename (`c.py`)",
+            "- Getter skips a lock (`src/b.py:3`) — matches known: Inline (`b.py`)",
+        )
+        self.give_known_findings(
+            "Rename (`b.py`)", "Rename (`c.py`)", "Inline (`b.py`)"
+        )
+        self.put("known-matches.md", "".join(line + "\n" for line in lines))
+        report = self.assemble()
+        self.assertIn(
+            "## Known findings matched\n\n" + "\n".join(lines) + "\n\n", report
+        )
+        self.assertTrue(report.endswith("; known findings matched: 3.\n"), report)
+
+    def test_known_matches_section_says_none_without_matches(self):
+        """A review given known findings says so even when none matched."""
+        self.give_known_findings("Rename get_config (`src/b.py:3`)")
+        report = self.assemble()
+        self.assertIn("## Known findings matched\n\nNone.\n\n## Summary\n", report)
+        self.assertTrue(report.endswith("; known findings matched: 0.\n"), report)
 
 
 if __name__ == "__main__":

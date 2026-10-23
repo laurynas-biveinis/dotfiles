@@ -15,9 +15,10 @@ tracking operations. Apply caller requirements verbatim throughout.
 
 ## Start
 
-Create a unique `/tmp/review-changes-<topic>-state.md` scratch ledger before
-the first repository observation, deriving `<topic>` from the request and
-working directory because no diff is known yet. Read
+Create the `/tmp/review-changes-<topic>-state.md` scratch ledger before the
+first repository observation, deriving `<topic>` from the request and working
+directory because no diff is known yet, then suffixing it as
+[review topic](../inspect-changes/references/topic.md) prescribes. Read
 [concurrent changes](references/concurrency.md) and capture its initial
 repository record. Then read
 [history and scope](references/history.md) to establish the original target,
@@ -33,6 +34,12 @@ concurrent changes in this ledger as the concurrency reference specifies.
 Keep a cumulative list of records created for off-path findings, with their
 returned URLs/Org URIs; later completion or reclassification never removes an
 item from that list.
+
+Before each reviewer dispatch, rewrite `/tmp/review-changes-<topic>-known.md`
+with one line per ledger finding whose current disposition is
+`pre-existing-off-path` with a created, reused, or reopened tracking record, in
+the format the `inspect-changes` **Known findings** input defines: its final
+title and location and a one-sentence claim.
 
 An entry is `unhandled` until a complete inspection produces no new findings
 after the filtering below and all required actions are handled. Its state then
@@ -64,9 +71,10 @@ baseline; follow the concurrency reference if the record is missing.
    `Base directory for this skill: <absolute inspection directory>` in the
    reviewer prompt, naming that sibling `inspect-changes` directory alongside
    its absolute entrypoint path. The reviewer owns its inner subagents and
-   scratch reports. It cannot edit the project or file records. Give it no
-   prior outer findings or focus steering. Wait for its result before mutating
-   the reviewed state.
+   scratch reports. It cannot edit the project or file records. When the
+   known-findings file lists any finding, supply its path as
+   `Known findings: <path>`; give it no other prior outer findings and no focus
+   steering. Wait for its result before mutating the reviewed state.
 1. Read its result envelope and final report. Only `Status: converged` supplies
    a completed inspection. For an inner repository-state stop — drift or a
    failed state observation, named in its `Reason` or limitations file —
@@ -74,7 +82,9 @@ baseline; follow the concurrency reference if the record is missing.
    when cleared; never promote that stopped inspection to completed. Any other
    incomplete, aborted, missing, or malformed result never counts as no
    findings; preserve its evidence and report the blocker.
-   A `not-run` result also cannot establish convergence.
+   A `not-run` result also cannot establish convergence. Entries under the
+   report's **Known findings matched** are not new findings: note each against
+   its ledger entry; they need no handling.
 1. For each surviving finding, apply **Handled above** first. For the rest,
    match against the outer ledger semantically by defect and affected behavior,
    following moves and rewrites rather than comparing titles, line numbers,
