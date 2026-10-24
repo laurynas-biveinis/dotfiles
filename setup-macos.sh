@@ -510,7 +510,7 @@ open 'Solarized Dark - Patched.itermcolors'
 rm 'Solarized Dark - Patched.itermcolors'
 # Set this theme manually as the default.
 
-sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk \
+sudo ln -sfn "$(brew --prefix openjdk)/libexec/openjdk.jdk" \
 	/Library/Java/JavaVirtualMachines/openjdk.jdk
 
 npm i -g bash-language-server prettier textlint jscpd
