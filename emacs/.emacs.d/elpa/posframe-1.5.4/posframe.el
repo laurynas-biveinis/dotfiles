@@ -5,8 +5,8 @@
 ;; Author: Feng Shu <tumashu@163.com>
 ;; Maintainer: Feng Shu <tumashu@163.com>
 ;; URL: https://github.com/tumashu/posframe
-;; Package-Version: 1.5.3
-;; Package-Revision: 1d833af5c433
+;; Package-Version: 1.5.4
+;; Package-Revision: 1a6a25c58559
 ;; Keywords: convenience, tooltip
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -521,7 +521,6 @@ You can use `posframe-delete-all' to delete all posframes."
                                  :posframe-height ,(* (default-line-height) height)))))
         (if (and width height
                  (fboundp 'set-frame-size-and-position-pixelwise)
-                 (frame-visible-p posframe)
                  (not (equal
                        pixel-position
                        posframe--last-posframe-pixel-position)))
@@ -605,6 +604,12 @@ You can use `posframe-delete-all' to delete all posframes."
       (setq posframe--last-font-height-info
             (cons position height))
       height)))
+
+;; Avoid compilation warnings on Emacs < 30.
+(defvar text-scale-mode-amount)
+
+;; Avoid compilation warnings on Emacs < 31.
+(declare-function set-frame-size-and-position-pixelwise "frame.c")
 
 (cl-defun posframe--create-posframe (buffer-or-name
                                      &key

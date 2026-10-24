@@ -627,12 +627,12 @@
       (:authors ("Sylvain Benner" . "sylvain.benner@gmail.com"))
       (:commit . "3c65fecd9917a41eaf6460f22187e2323821f3ce"))])
  (evil-matchit
-  . [(4 1 0) ((emacs (27 1))) "Vim matchit ported to Evil" tar
+  . [(5 0 0) ((emacs (27 1))) "Vim matchit ported to Evil" tar
      ((:url . "http://github.com/redguardtoo/evil-matchit")
       (:keywords "matchit" "vim" "evil")
       (:maintainer "Chen Bin" . "chenbin.sh@gmail.com")
       (:authors ("Chen Bin" . "chenbin.sh@gmail.com"))
-      (:commit . "8d0bca76ed9958fc5ad460e6085175c83695bbdb"))])
+      (:commit . "4cb8dd3d811ecb2abd774b491223ac5460dcdd5e"))])
  (evil-nerd-commenter
   . [(3 6 1) ((emacs (26 1)))
      "Comment/uncomment lines efficiently. Like Nerd Commenter in Vim"
@@ -716,14 +716,14 @@
       (:authors ("Dmitry Gutov" . "dmitry@gutov.dev"))
       (:commit . "84e57b17520edbadbdca17e0b2dba50c56134d74"))])
  (flx
-  . [(0 6 3) ((cl-lib (0 3))) "fuzzy matching with good sorting" tar
+  . [(0 6 4) ((emacs (24 3))) "Fuzzy matching with good sorting" tar
      ((:url . "https://github.com/lewang/flx")
-      (:commit . "dc6e4cec66ab05d536ec2cc6f5f324c019e8f8c0"))])
+      (:commit . "be738f439fa779c5a5def44569202d2d7c6b0547"))])
  (flx-ido
-  . [(0 6 3) ((emacs (24 1)) (flx (0 1)) (cl-lib (0 3)))
-     "flx integration for ido" tar
+  . [(0 6 4) ((emacs (24 3)) (flx (0 6 4))) "Flx integration for ido"
+     tar
      ((:url . "https://github.com/lewang/flx")
-      (:commit . "dc6e4cec66ab05d536ec2cc6f5f324c019e8f8c0"))])
+      (:commit . "be738f439fa779c5a5def44569202d2d7c6b0547"))])
  (flycheck
   . [(39 0) ((emacs (28 1)) (seq (2 24))) "On-the-fly syntax checking"
      tar
@@ -1000,23 +1000,24 @@
       (:authors ("Pranshu Sharma" . "pranshu@bauherren.ovh"))
       (:commit . "16155f8b63ccf67d46535207a4f4378f675a8b47"))])
  (helm
-  . [(4 0 7) ((helm-core (4 0 7)) (wfnames (1 2)))
+  . [(4 0 8) ((helm-core (4 0 8)) (wfnames (1 2)))
      "Helm is an Emacs incremental and narrowing framework" tar
      ((:url . "https://emacs-helm.github.io/helm/")
       (:keywords "helm" "convenience" "files" "buffers" "grep"
-		 "completion" "lisp" "matching" "tools" "help")
+		 "completion" "lisp" "matching" "tools" "help"
+		 "package")
       (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
-      (:commit . "3cd5097285dc10ac0898cf6f30c9699c3399e421"))])
+      (:commit . "d41a41f8e7d760bb3f74a2fe54ccb3e008e80e5a"))])
  (helm-core
-  . [(4 0 7) ((emacs (25 1)) (async (1 9 9)))
+  . [(4 0 8) ((emacs (25 1)) (async (1 9 9)))
      "Development files for Helm" tar
      ((:url . "https://emacs-helm.github.io/helm/")
       (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
-      (:commit . "3cd5097285dc10ac0898cf6f30c9699c3399e421"))])
+      (:commit . "d41a41f8e7d760bb3f74a2fe54ccb3e008e80e5a"))])
  (hermes
-  . [(0 8 0)
+  . [(0 9 0)
      ((emacs (29 1)) (keymap-popup (0 4 0)) (websocket (1 15))
       (markdown-mode (2 6)))
      "Emacs frontend for Hermes Agent" tar
@@ -1024,7 +1025,7 @@
       (:keywords "tools" "convenience")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "2ec10e56b798e251e68ce85306670794ffe6f877"))])
+      (:commit . "3f5cc4ea8686471fee72a89f742c792071e7e17d"))])
  (hideshowvis
   . [(0 9) ((emacs (27 1)))
      "Fringe markers for regions foldable by hideshow.el" tar
@@ -1307,14 +1308,21 @@
       (:maintainer "Jason R. Blevins" . "jblevins@xbeta.org")
       (:authors ("Jason R. Blevins" . "jblevins@xbeta.org"))
       (:commit . "f5d520b3ee7722dd2231ab586ba51d8eb166e49b"))])
+ (markdown-ts-appear
+  . [(0 3 1) ((emacs (31 1))) "Reveal Markdown source at point" tar
+     ((:url . "https://github.com/Thysrael/markdown-ts-appear")
+      (:keywords "text" "convenience")
+      (:maintainer "Thysrael" . "thysrael@163.com")
+      (:authors ("Thysrael" . "thysrael@163.com"))
+      (:commit . "22577039b48c3209776bc2efc901b2bb8d4ebd9f"))])
  (mastodon
-  . [(2 1 7) ((emacs (29 1)) (compat (31)) (persist (0 8)) (tp (0 8)))
+  . [(2 1 8) ((emacs (29 1)) (compat (31)) (persist (0 8)) (tp (0 8)))
      "Client for fediverse services using the Mastodon API" tar
      ((:url . "https://codeberg.org/martianh/mastodon.el")
       (:maintainer "Marty Hiatt" . "martianh@disroot.org")
       (:authors ("Johnson Denen" . "johnson.denen@gmail.com")
 		("Marty Hiatt" . "martianh@disroot.org"))
-      (:commit . "43f52902604df5e5ba664bf71d952f64617b93e9"))])
+      (:commit . "1af6f742ff599f2ce65be1656afd375b245d3679"))])
  (material-theme
   . [(2015) ((emacs (24 1)))
      "A Theme based on the colors of the Google Material Design" tar
@@ -2085,10 +2093,10 @@
       (:authors ("Joost Kremers" . "joostkremers@fastmail.fm"))
       (:commit . "9c0ecc2af21d3024a2a838c30d574e86265a52be"))])
  (vm
-  . [(8 3 2) ((emacs (28 1)) (vcard (0 2 2))) "VM mail reader" tar
+  . [(9 0 0) ((emacs (28 1)) (vcard (0 2 2))) "VM mail reader" tar
      ((:url . "https://gitlab.com/emacs-vm/vm") (:keywords "mail")
       (:maintainer nil . "viewmail-info@nongnu.org")
-      (:commit . "790c95503d8e130f97a68ab502eb5c77f35011c8"))])
+      (:commit . "4ca2ebdb1f5165181e487bff5db9059592f58d85"))])
  (web-mode
   . [(17 3 25) ((emacs (24 3 1)))
      "major mode for editing web templates" tar
