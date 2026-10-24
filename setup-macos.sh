@@ -514,7 +514,6 @@ sudo ln -sfn "$(brew --prefix openjdk)/libexec/openjdk.jdk" \
 	/Library/Java/JavaVirtualMachines/openjdk.jdk
 
 npm i -g bash-language-server prettier textlint jscpd
-npx @biomejs/biome init
 
 # Hardware
 brew install --cask whatcable
