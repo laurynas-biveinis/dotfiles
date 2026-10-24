@@ -14,7 +14,11 @@
       "!**/.mypy_cache",
       "!ai/.claude",
       "!.claude",
-      "!.venv"
+      "!.venv",
+      "!**/*.md",
+      "!**/*.yml",
+      "!**/*.yaml",
+      "!**/.clang-format"
     ]
   }
 }
