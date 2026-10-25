@@ -387,15 +387,14 @@ mas install 1365531024 # 1Blocker
 #
 # Spellchecking
 #
-sudo mkdir /Library/Spelling
-cd /Library/Spelling
-sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
-sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
-sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.aff
-sudo wget https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.dic
+sudo wget -N -P /Library/Spelling \
+	https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff \
+	https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic \
+	https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.aff \
+	https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.dic
 # The 51st State
-sudo ln -sf en_US.aff en_LT.aff
-sudo ln -sf en_US.dic en_LT.dic
+sudo ln -sf en_US.aff /Library/Spelling/en_LT.aff
+sudo ln -sf en_US.dic /Library/Spelling/en_LT.dic
 
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
 	basictex signal whatsapp qfinder-pro rar docker
@@ -504,10 +503,10 @@ defaults write com.googlecode.iterm2 UseVirtualKeyCodesForDetectingDigits \
 /usr/libexec/PlistBuddy -c \
 	"Set :\"New Bookmarks\":0:\"Movement Keys Scroll Outside Interactive Apps\" 1" \
 	~/Library/Preferences/com.googlecode.iterm2.plist
-curl -o 'Solarized Dark - Patched.itermcolors' \
+# No rm after open: open can return before iTerm2 has read the file
+curl -fsSL -o "$TMPDIR/Solarized Dark - Patched.itermcolors" \
 	https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Solarized%20Dark%20-%20Patched.itermcolors
-open 'Solarized Dark - Patched.itermcolors'
-rm 'Solarized Dark - Patched.itermcolors'
+open "$TMPDIR/Solarized Dark - Patched.itermcolors"
 # Set this theme manually as the default.
 
 sudo ln -sfn "$(brew --prefix openjdk)/libexec/openjdk.jdk" \
