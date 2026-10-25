@@ -17,8 +17,14 @@
      (string-trim-right (shell-command-to-string "brew --prefix"))))
   "Homebrew installation prefix.")
 
-(unless dotfiles--homebrew-root
-  (display-warning 'dotfiles "Homebrew not found" :warning))
+;; `file-name-as-directory' turns empty or blank `brew --prefix' output into
+;; "./", which `file-directory-p' accepts but `file-name-absolute-p' rejects.
+(unless (and (file-name-absolute-p dotfiles--homebrew-root)
+             (file-directory-p dotfiles--homebrew-root))
+  (display-warning 'dotfiles
+                   (format "Unusable Homebrew prefix %S from brew --prefix"
+                           dotfiles--homebrew-root)
+                   :warning))
 
 (require 'my-lib)
 
