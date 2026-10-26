@@ -13,18 +13,22 @@
 
 (defconst dotfiles--homebrew-root
   (without-remote-files
-    (file-name-as-directory
-     (string-trim-right (shell-command-to-string "brew --prefix"))))
+    (with-temp-buffer
+      ;; Keep stdout only: stderr from the shell's startup files, which run
+      ;; before any `2>/dev/null' here, and from brew would precede the prefix.
+      (let* ((status (call-process-shell-command "brew --prefix" nil '(t nil)))
+             (output (string-trim-right (buffer-string)))
+             (root (file-name-as-directory output)))
+        ;; `file-name-as-directory' turns empty or blank output into "./",
+        ;; which `file-directory-p' accepts but `file-name-absolute-p' rejects.
+        (unless (and (file-name-absolute-p root) (file-directory-p root))
+          (display-warning
+           'dotfiles
+           (format "Unusable Homebrew prefix %S from brew --prefix (exit %s)"
+                   output status)
+           :warning))
+        root)))
   "Homebrew installation prefix.")
-
-;; `file-name-as-directory' turns empty or blank `brew --prefix' output into
-;; "./", which `file-directory-p' accepts but `file-name-absolute-p' rejects.
-(unless (and (file-name-absolute-p dotfiles--homebrew-root)
-             (file-directory-p dotfiles--homebrew-root))
-  (display-warning 'dotfiles
-                   (format "Unusable Homebrew prefix %S from brew --prefix"
-                           dotfiles--homebrew-root)
-                   :warning))
 
 (require 'my-lib)
 
