@@ -397,7 +397,7 @@ sudo ln -sf en_US.aff /Library/Spelling/en_LT.aff
 sudo ln -sf en_US.dic /Library/Spelling/en_LT.dic
 
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
-	basictex signal whatsapp qfinder-pro rar docker
+	basictex signal whatsapp qfinder-pro rar docker-desktop
 xattr -cr /opt/homebrew/bin/unrar
 xattr -cr /opt/homebrew/bin/rar
 
