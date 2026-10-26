@@ -511,7 +511,7 @@ open "$TMPDIR/Solarized Dark - Patched.itermcolors"
 sudo ln -sfn "$(brew --prefix openjdk)/libexec/openjdk.jdk" \
 	/Library/Java/JavaVirtualMachines/openjdk.jdk
 
-npm i -g bash-language-server prettier textlint jscpd
+npm i -g bash-language-server prettier textlint textlint-rule-terminology jscpd
 
 # Hardware
 brew install --cask whatcable
