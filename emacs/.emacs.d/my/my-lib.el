@@ -465,7 +465,7 @@ The %s must be present and is substituted with a PR branch name.")
 (defun dotfiles--visit-post-pr-url (project)
   "Visit the URL for a PROJECT after a PR."
   (declare (ftype (function (my-dev-project) t)))
-  (when-let ((post-pr-url (my-dev-project-post-pr-url project)))
+  (when-let* ((post-pr-url (my-dev-project-post-pr-url project)))
     (browse-url post-pr-url)))
 
 (defun dotfiles--create-pr (project branch-name)
