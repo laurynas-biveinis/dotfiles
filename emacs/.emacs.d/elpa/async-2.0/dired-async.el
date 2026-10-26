@@ -71,7 +71,9 @@ Should take same args as `message'."
 (defcustom dired-async-skip-fast nil
   "If non-nil, skip async for fast operations.
 Same device renames and copying and renaming files smaller than
-`dired-async-small-file-max' are considered fast."
+`dired-async-small-file-max' are considered fast.
+If the total size of all files exceed `dired-async-small-file-max'
+operation is not considered fast."
   :risky t
   :type 'boolean)
 
@@ -86,19 +88,30 @@ or rename for `dired-async-skip-fast'."
   :type 'integer)
 
 (defface dired-async-message
-    '((t (:foreground "yellow")))
+  '((t (:foreground "yellow")))
   "Face used for mode-line message.")
 
 (defface dired-async-failures
-    '((t (:foreground "red")))
+  '((t (:foreground "red")))
   "Face used for mode-line message.")
 
 (defface dired-async-mode-message
-    '((t (:foreground "Gold")))
+  '((t (:foreground "Gold")))
   "Face used for `dired-async--modeline-mode' lighter.")
 
+(defvar dired-async-file-directory-p-fn #'file-directory-p
+  "The function used as `file-directory-p' fn for the from files.
+In `dired-create-files', `file-directory-p' run on each candidate
+before being async, which is costly when copying many files from a
+remote like for example `adb'.  A faster function may be let-bound to this
+variable to speedup preprocessing of candidates in
+`dired-create-files'.  For instance, Helm use here
+`helm-ff--file-directory-p'.  This is used only once on each candidate
+during the preprocessing of files before running async.  It should be
+used only there and let-bounded, don't bind it globally.")
+
 (define-minor-mode dired-async--modeline-mode
-    "Notify mode-line that an async process run."
+  "Notify mode-line that an async process run."
   :global t
   :lighter (:eval (propertize (format " [%s Async job(s) running]"
                                       (length (dired-async-processes)))
@@ -203,41 +216,49 @@ See `file-attributes'."
   (equal (file-attribute-device-number (file-attributes f1))
          (file-attribute-device-number (file-attributes f2))))
 
-(defun dired-async--small-file-p (file)
+(defun dired-async--small-file-p (file &optional attrs)
   "Return non-nil if FILE is considered small.
 
 File is considered small if it size is smaller than
 `dired-async-small-file-max'."
-  (let ((a (file-attributes file)))
+  (let ((a (or attrs (file-attributes file))))
     ;; Directories are always large since we can't easily figure out
     ;; their total size.
     (and (not (dired-async--directory-p a))
          (< (file-attribute-size a) dired-async-small-file-max))))
 
-(defun dired-async--skip-async-p (file-creator file name-constructor)
+(defun dired-async--skip-async-p (file-creator file name-constructor &optional attrs)
   "Return non-nil if we should skip async for FILE.
 See `dired-create-files' for FILE-CREATOR and NAME-CONSTRUCTOR."
   ;; Skip async for small files.
-  (or (dired-async--small-file-p file)
+  (or (dired-async--small-file-p file attrs)
       ;; Also skip async for same device renames.
       (and (eq file-creator 'dired-rename-file)
            (let ((new (funcall name-constructor file)))
              (dired-async--same-device-p file (file-name-directory new))))))
 
 (defun dired-async--smart-create-files (old-func file-creator
-                                        operation fn-list name-constructor
-                                        &optional marker-char)
+                                                 operation fn-list name-constructor
+                                                 &optional marker-char)
   "Around advice for `dired-create-files'.
 Uses async like `dired-async-create-files' but skips certain fast
 cases if `dired-async-skip-fast' is non-nil."
-  (let (async-list quick-list)
+  (let ((total-size 0)
+        async-list quick-list)
     (if (or (eq file-creator 'backup-file)
             (null dired-async-skip-fast))
         (setq async-list fn-list)
       (dolist (old fn-list)
-        (if (dired-async--skip-async-p file-creator old name-constructor)
-            (push old quick-list)
-          (push old async-list))))
+        (let ((attrs (file-attributes old)))
+          (if (dired-async--skip-async-p
+               file-creator old name-constructor attrs)
+              (progn
+                (push old quick-list)
+                (setq total-size (+ total-size (nth 7 attrs))))
+            (push old async-list))))
+      (when (> total-size dired-async-small-file-max)
+        (setq async-list (append quick-list async-list)
+              quick-list nil)))
     (when async-list
       (dired-async-create-files
        file-creator operation (nreverse async-list)
@@ -300,7 +321,7 @@ ESC or `q' to not overwrite any of the remaining files,
             ;; need such a construction of the target directory,
             ;; so modify the destination TO to "~/test/" instead of "~/test/foo/".
             (let ((destname (file-name-directory to)))
-              (when (and (file-directory-p from)
+              (when (and (funcall dired-async-file-directory-p-fn from)
                          (file-directory-p to)
                          (eq file-creator 'dired-copy-file))
                 (setq to destname))
@@ -313,6 +334,7 @@ ESC or `q' to not overwrite any of the remaining files,
                           from to)))
             ;; Skip file if it is too large.
             (if (and (member operation '("Copy" "Rename"))
+                     dired-async-large-file-warning-threshold
                      (eq (dired-async--abort-if-file-too-large
                           (file-attribute-size
                            (file-attributes (file-truename from)))

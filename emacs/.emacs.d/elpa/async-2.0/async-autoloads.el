@@ -11,8 +11,8 @@
 
 ;;; Generated autoloads from async.el
 
-(autoload 'async-start-process "async" "\
-Start the executable PROGRAM asynchronously named NAME.  See `async-start'.
+(autoload 'async-start-process "async"
+"Start the executable PROGRAM asynchronously named NAME.  See `async-start'.
 PROGRAM is passed PROGRAM-ARGS, calling FINISH-FUNC with the
 process object when done.  If FINISH-FUNC is nil, the future
 object will return the process object when the program is
@@ -20,8 +20,8 @@ finished.  Set DEFAULT-DIRECTORY to change PROGRAM's current
 working directory.
 
 (fn NAME PROGRAM FINISH-FUNC &rest PROGRAM-ARGS)")
-(autoload 'async-start "async" "\
-Execute START-FUNC (often a lambda) in a subordinate Emacs process.
+(autoload 'async-start "async"
+"Execute START-FUNC (often a lambda) in a subordinate Emacs process.
 When done, the return value is passed to FINISH-FUNC.  Example:
 
     (async-start
@@ -95,43 +95,45 @@ returns nil.  It can still be useful, however, as an argument to
 
 ;;; Generated autoloads from async-bytecomp.el
 
-(autoload 'async-byte-recompile-directory "async-bytecomp" "\
-Compile all *.el files in DIRECTORY asynchronously.
+(autoload 'async-byte-recompile-directory "async-bytecomp"
+"Compile all *.el files in DIRECTORY asynchronously.
 All *.elc files are systematically deleted before proceeding.
 
 (fn DIRECTORY &optional QUIET)")
-(defvar async-bytecomp-package-mode nil "\
-Non-nil if Async-Bytecomp-Package mode is enabled.
+(defvar async-bytecomp-package-mode nil
+"Non-nil if Async-Bytecomp-Package mode is enabled.
 See the `async-bytecomp-package-mode' command
 for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `async-bytecomp-package-mode'.")
 (custom-autoload 'async-bytecomp-package-mode "async-bytecomp" nil)
-(autoload 'async-bytecomp-package-mode "async-bytecomp" "\
-Byte compile asynchronously packages installed with package.el.
+(autoload 'async-bytecomp-package-mode "async-bytecomp"
+"Byte compile asynchronously packages installed with package.el.
 
 Async compilation of packages can be controlled by
 `async-bytecomp-allowed-packages'.
+NOTE: Use this mode only if you install/upgrade etc... your packages
+synchronously, if you use a package manager like helm-package.el which
+by default is async you don't need this.
 
 This is a global minor mode.  If called interactively, toggle the
-`Async-Bytecomp-Package mode' mode.  If the prefix argument is
-positive, enable the mode, and if it is zero or negative, disable
-the mode.
+`Async-Bytecomp-Package mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
 evaluate `(default-value \\='async-bytecomp-package-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
 
 (fn &optional ARG)" t)
-(autoload 'async-byte-compile-file "async-bytecomp" "\
-Byte compile Lisp code FILE asynchronously.
+(autoload 'async-byte-compile-file "async-bytecomp"
+"Byte compile Lisp code FILE asynchronously.
 
 Same as `byte-compile-file' but asynchronous.
 
@@ -146,46 +148,46 @@ Same as `byte-compile-file' but asynchronous.
 
 ;;; Generated autoloads from dired-async.el
 
-(defvar dired-async-mode nil "\
-Non-nil if Dired-Async mode is enabled.
+(defvar dired-async-mode nil
+"Non-nil if Dired-Async mode is enabled.
 See the `dired-async-mode' command
 for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `dired-async-mode'.")
 (custom-autoload 'dired-async-mode "dired-async" nil)
-(autoload 'dired-async-mode "dired-async" "\
-Do dired actions asynchronously.
+(autoload 'dired-async-mode "dired-async"
+"Do dired actions asynchronously.
 
 This is a global minor mode.  If called interactively, toggle the
-`Dired-Async mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+`Dired-Async mode' mode.  If the prefix argument is positive, enable the
+mode, and if it is zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
 evaluate `(default-value \\='dired-async-mode)'.
 
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
 
 (fn &optional ARG)" t)
-(autoload 'dired-async-do-copy "dired-async" "\
-Run ‘dired-do-copy’ asynchronously.
+(autoload 'dired-async-do-copy "dired-async"
+"Run ‘dired-do-copy’ asynchronously.
 
 (fn &optional ARG)" t)
-(autoload 'dired-async-do-symlink "dired-async" "\
-Run ‘dired-do-symlink’ asynchronously.
+(autoload 'dired-async-do-symlink "dired-async"
+"Run ‘dired-do-symlink’ asynchronously.
 
 (fn &optional ARG)" t)
-(autoload 'dired-async-do-hardlink "dired-async" "\
-Run ‘dired-do-hardlink’ asynchronously.
+(autoload 'dired-async-do-hardlink "dired-async"
+"Run ‘dired-do-hardlink’ asynchronously.
 
 (fn &optional ARG)" t)
-(autoload 'dired-async-do-rename "dired-async" "\
-Run ‘dired-do-rename’ asynchronously.
+(autoload 'dired-async-do-rename "dired-async"
+"Run ‘dired-do-rename’ asynchronously.
 
 (fn &optional ARG)" t)
 (register-definition-prefixes "dired-async" '("dired-async-"))

@@ -6,11 +6,12 @@
 ;; Maintainer: Thierry Volpiatto <thievol@posteo.net>
 
 ;; Created: 18 Jun 2012
-;; Version: 1.9.9
+;; Package-Version: 2.0
+;; Package-Revision: v2.0-0-g93be69563f6f
 ;; Package-Requires: ((emacs "24.4"))
 
 ;; Keywords: async
-;; X-URL: https://github.com/jwiegley/emacs-async
+;; URL: https://github.com/jwiegley/emacs-async
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -117,7 +118,7 @@ is returned unmodified."
                   collect elm))
         (t object)))
 
-(defvar async-inject-variables-exclude-regexps '("-syntax-table\\'")
+(defvar async-inject-variables-exclude-regexps '("-syntax-table\\'" "-abbrev-table\\'")
   "A list of regexps that `async-inject-variables' should ignore.")
 
 (defun async-inject-variables
@@ -283,15 +284,13 @@ is used."
           (move-marker async-read-marker (point)))))))
 
 (defun async--receive-sexp (&optional stream)
-  ;; FIXME: Why use `utf-8-auto' instead of `utf-8-unix'?  This is
-  ;; a communication channel over which we have complete control,
-  ;; so we get to choose exactly which encoding and EOL we use, isn't
-  ;; it?
-  ;; UPDATE: We use now `utf-8-emacs-unix' instead of `utf-8-auto' as
-  ;; recommended in bug#165.
+  ;; We use `utf-8-emacs-unix' for the communication channel between
+  ;; parent and child Emacs processes. This encoding can represent any
+  ;; character that Emacs is capable of processing and gives us full
+  ;; control over the EOL format. (See bug#165)
   (let ((sexp (decode-coding-string (base64-decode-string (read stream))
                                     'utf-8-emacs-unix))
-        ;; Parent expects UTF-8 encoded text.
+        ;; Parent expects utf-8-emacs-unix encoded text.
         (coding-system-for-write 'utf-8-emacs-unix))
     (if async-debug
         (message "Received sexp {{{%s}}}" (pp-to-string sexp)))
@@ -323,8 +322,8 @@ is used."
 
 (defun async-batch-invoke ()
   "Called from the child Emacs process' command line."
-  ;; Make sure 'message' and 'prin1' encode stuff in UTF-8, as parent
-  ;; process expects.
+  ;; Make sure 'message' and 'prin1' encode stuff in utf-8-emacs-unix,
+  ;; as parent process expects.
   (let ((coding-system-for-write 'utf-8-emacs-unix)
         (args-left command-line-args-left))
     (setq async-in-child-emacs t
@@ -466,11 +465,20 @@ Can be one of \"-Q\" or \"-q\".
 Default is \"-Q\" but it is sometimes useful to use \"-q\" to have a
 enhanced config or some more variables loaded.")
 
+(defvar async-library nil
+  "Cache async library path.
+It is useful only when you run multiple async processes in a loop, to
+avoid calling many times `locate-library' which is costly.
+This variable should be let bound around an `async-start' call and not
+used globally.  Should be found with `locate-library'.")
+
 (defun async--emacs-program-args (&optional sexp)
   "Return a list of arguments for invoking the child Emacs."
   ;; Using `locate-library' ensure we use the right file
-  ;; when the .elc have been deleted.
-  (let ((args (list async-quiet-switch "-l" (locate-library "async"))))
+  ;; when the .elc have been deleted, its result can be cached in
+  ;; `async-library' see Issue#193.
+  (let ((args (list async-quiet-switch "-l" (or async-library
+                                                (locate-library "async")))))
     (when async-child-init
       (setq args (append args (list "-l" async-child-init))))
     (append args (list "-batch" "-f" "async-batch-invoke"
@@ -478,7 +486,7 @@ enhanced config or some more variables loaded.")
                            (with-temp-buffer
                              (async--insert-sexp (list 'quote sexp))
                              (buffer-string))
-                           "<none>")))))
+                         "<none>")))))
 
 ;;;###autoload
 (defun async-start (start-func &optional finish-func)
@@ -550,7 +558,7 @@ passed to FINISH-FUNC).  Call `async-get' on such a future always
 returns nil.  It can still be useful, however, as an argument to
 `async-ready' or `async-wait'."
   (let ((sexp start-func)
-        ;; Subordinate Emacs will send text encoded in UTF-8.
+        ;; Subordinate Emacs will send text encoded in utf-8-emacs-unix.
         (coding-system-for-read 'utf-8-emacs-unix))
     (setq async--procvar
           (apply 'async-start-process

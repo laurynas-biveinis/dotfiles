@@ -419,7 +419,7 @@
       (:authors ("Akib Azmain Turja" . "akib@disroot.org"))
       (:commit . "c91451f2d17453c19d3fa76faa4945cbe54e14ce"))])
  (ebuild-mode
-  . [(1 88) ((emacs (26 3))) "edit ebuild and eclass files" tar
+  . [(1 89) ((emacs (26 3))) "edit ebuild and eclass files" tar
      ((:keywords "languages" "processes")
       (:maintainer nil . "emacs@gentoo.org")
       (:authors ("Matthew Kennedy" . "mkennedy@gentoo.org")
@@ -427,7 +427,7 @@
 		("Christian Faulhammer" . "fauli@gentoo.org")
 		("Ulrich Müller" . "ulm@gentoo.org"))
       (:url . "https://elpa.nongnu.org/nongnu/ebuild-mode.html")
-      (:commit . "0171516b881f66f73369978a781e440611f0a42d"))])
+      (:commit . "9b8609e9e298d78bf8b62732ec729c76a7f45a99"))])
  (edit-indirect
   . [(0 1 13) ((emacs (24 3))) "Edit regions in separate buffers" tar
      ((:url . "https://github.com/Fanael/edit-indirect")
@@ -1000,7 +1000,7 @@
       (:authors ("Pranshu Sharma" . "pranshu@bauherren.ovh"))
       (:commit . "16155f8b63ccf67d46535207a4f4378f675a8b47"))])
  (helm
-  . [(4 0 8) ((helm-core (4 0 8)) (wfnames (1 2)))
+  . [(4 0 9) ((helm-core (4 0 9)) (wfnames (1 2)))
      "Helm is an Emacs incremental and narrowing framework" tar
      ((:url . "https://emacs-helm.github.io/helm/")
       (:keywords "helm" "convenience" "files" "buffers" "grep"
@@ -1008,14 +1008,14 @@
 		 "package")
       (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
-      (:commit . "d41a41f8e7d760bb3f74a2fe54ccb3e008e80e5a"))])
+      (:commit . "a1e8724ed20d1f8024ff7530047374e1d7e994b0"))])
  (helm-core
-  . [(4 0 8) ((emacs (25 1)) (async (1 9 9)))
+  . [(4 0 9) ((emacs (25 1)) (async (2 0)))
      "Development files for Helm" tar
      ((:url . "https://emacs-helm.github.io/helm/")
       (:maintainer "Thierry Volpiatto" . "thievol@posteo.net")
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
-      (:commit . "d41a41f8e7d760bb3f74a2fe54ccb3e008e80e5a"))])
+      (:commit . "a1e8724ed20d1f8024ff7530047374e1d7e994b0"))])
  (hermes
   . [(0 9 0)
      ((emacs (29 1)) (keymap-popup (0 4 0)) (websocket (1 15))

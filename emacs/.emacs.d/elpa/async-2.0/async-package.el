@@ -33,7 +33,7 @@
 (require 'package)
 
 (define-minor-mode async-package--modeline-mode
-    "Notify mode-line that an async process run."
+  "Notify mode-line that an async process run."
   :group 'async
   :global t
   :lighter (:eval (propertize (format " [%s async job Installing package(s)]"
@@ -48,8 +48,9 @@
 The hook runs in the call-back once installation is done in child emacs.")
 
 (defface async-package-message
-    '((t (:foreground "yellow")))
-  "Face used for mode-line message.")
+  '((t (:foreground "yellow")))
+  "Face used for mode-line message."
+  :group 'async)
 
 (defun async-package-do-action (action packages error-file)
   "Execute ACTION asynchronously on PACKAGES.
@@ -64,7 +65,14 @@ Argument ERROR-FILE is the file where errors are logged, if some."
         (action-string (pcase action
                          ('install "Installing")
                          ('upgrade "Upgrading")
-                         ('reinstall "Reinstalling"))))
+                         ('reinstall "Reinstalling")))
+        ;; As PACKAGES are installed and compiled in a single async
+        ;; process we don't need to compute log-file in child process
+        ;; i.e. we use the same log-file for all PACKAGES.
+        (log-file (make-temp-file
+                   (expand-file-name
+                    (file-name-nondirectory async-byte-compile-log-file)
+                    temporary-file-directory))))
     (message "%s %s package(s)..." action-string (length packages))
     (process-put
      (async-start
@@ -76,6 +84,12 @@ Argument ERROR-FILE is the file where errors are logged, if some."
                package-user-dir ,package-user-dir
                package-alist ',package-alist
                load-path ',load-path)
+         ;; Ensure `async-bytecomp-package-mode' doesn't kick in
+         ;; (issue #194) as some packages may enable it
+         ;; inconditionally.  We don't need to compile async as we are
+         ;; already async and in a clean environment.
+         (require 'async-bytecomp)
+         (setq async-bytecomp-allowed-packages nil)
          (prog1
              (condition-case err
                  (mapc ',fn ',packages)
@@ -85,13 +99,12 @@ Argument ERROR-FILE is the file where errors are logged, if some."
                    (format
                     "%S:\n Please refresh package list before %s"
                     err ,action-string)))))
-           (let (error-data)
-             (when (get-buffer byte-compile-log-buffer)
-               (setq error-data (with-current-buffer byte-compile-log-buffer
-                                  (buffer-substring-no-properties
-                                   (point-min) (point-max))))
+           (when (get-buffer byte-compile-log-buffer)
+             (let ((error-data (with-current-buffer byte-compile-log-buffer
+                                 (buffer-substring-no-properties
+                                  (point-min) (point-max)))))
                (unless (string= error-data "")
-                 (with-temp-file ,async-byte-compile-log-file
+                 (with-temp-file ,log-file
                    (erase-buffer)
                    (insert error-data)))))))
       (lambda (result)
@@ -120,15 +133,9 @@ Argument ERROR-FILE is the file where errors are logged, if some."
                   'async-package-message
                   str (length lst)))
                packages action-string)
-              (when (file-exists-p async-byte-compile-log-file)
-                (let ((buf (get-buffer-create byte-compile-log-buffer)))
-                  (with-current-buffer buf
-                    (goto-char (point-max))
-                    (let ((inhibit-read-only t))
-                      (insert-file-contents async-byte-compile-log-file)
-                      (compilation-mode))
-                    (display-buffer buf)
-                    (delete-file async-byte-compile-log-file)))))))
+              (if (zerop (nth 7 (file-attributes log-file)))
+                  (delete-file log-file)
+                (async-bytecomp--file-to-comp-buffer-1 log-file)))))
         (run-hooks 'async-pkg-install-after-hook)))
      'async-pkg-install t)
     (async-package--modeline-mode 1)))
