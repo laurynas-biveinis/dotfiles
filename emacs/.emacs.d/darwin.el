@@ -56,11 +56,10 @@
 
 (defun dotfiles--get-xcode-man-paths ()
   "Return the list of XCode-managed man path strings."
-  (let ((paths-string (shell-command-to-string "xcode-select --show-manpaths")))
-    (when (string-empty-p paths-string)
-      (display-warning 'dotfiles "No XCode man paths found" :warning)
-      nil)
-    (split-string paths-string "\n")))
+  (let ((paths (process-lines-ignore-status "xcode-select" "--show-manpaths")))
+    (unless paths
+      (display-warning 'dotfiles "No XCode man paths found" :warning))
+    paths))
 
 
 (let ((paths (dotfiles--get-xcode-man-paths)))
