@@ -55,17 +55,19 @@
 (require 'woman)
 
 (defun dotfiles--get-xcode-man-paths ()
-  "Return the list of XCode-managed man path strings."
-  (let ((paths (process-lines-ignore-status "xcode-select" "--show-manpaths")))
+  "Return the list of existing XCode-managed man directories."
+  (let* ((lines (process-lines-ignore-status "xcode-select" "--show-manpaths"))
+         (paths (seq-filter #'file-directory-p lines)))
     (unless paths
-      (display-warning 'dotfiles "No XCode man paths found" :warning))
+      (display-warning
+       'dotfiles
+       (format "No existing XCode man directories in xcode-select output %S"
+               lines)
+       :warning))
     paths))
 
-
-(let ((paths (dotfiles--get-xcode-man-paths)))
-  (dolist (path paths)
-    (when (file-directory-p path)
-      (add-to-list 'woman-manpath path))))
+(dolist (path (dotfiles--get-xcode-man-paths))
+  (add-to-list 'woman-manpath path))
 
 (require 'exec-path-from-shell)
 (add-to-list 'exec-path-from-shell-variables "LANG")
