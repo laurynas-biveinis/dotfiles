@@ -10,14 +10,19 @@
 (dotfiles--ensure-optional-packages
  '(bison-mode cmake-font-lock cmake-mode eldoc-cmake flycheck-google-cpplint))
 
+;; Defined in darwin.el:
+(defvar dotfiles--homebrew-root)
+(defvar dotfiles--homebrew-root-usable-p)
+
 ;; `lsp-clangd'
 
 (when (eq system-type 'darwin)
   (require 'darwin)
   (require 'lsp-clangd)
-  (dotfiles--set-exe-var 'lsp-clients-clangd-executable "clangd"
-                         (concat dotfiles--homebrew-root
-                                 "opt/llvm/bin/clangd")))
+  (when dotfiles--homebrew-root-usable-p
+    (dotfiles--set-exe-var 'lsp-clients-clangd-executable "clangd"
+                           (concat dotfiles--homebrew-root
+                                   "opt/llvm/bin/clangd"))))
 
 ;; `flycheck-google-cpplint'
 

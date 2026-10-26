@@ -11,24 +11,30 @@
   "-*-SFMono Nerd Font-normal-normal-normal-*-12-*-*-*-p-0-iso10646-1"
   "My default frame font on Darwin.")
 
-(defconst dotfiles--homebrew-root
-  (without-remote-files
-    (with-temp-buffer
-      ;; Keep stdout only: stderr from the shell's startup files, which run
-      ;; before any `2>/dev/null' here, and from brew would precede the prefix.
-      (let* ((status (call-process-shell-command "brew --prefix" nil '(t nil)))
-             (output (string-trim-right (buffer-string)))
-             (root (file-name-as-directory output)))
-        ;; `file-name-as-directory' turns empty or blank output into "./",
-        ;; which `file-directory-p' accepts but `file-name-absolute-p' rejects.
-        (unless (and (file-name-absolute-p root) (file-directory-p root))
-          (display-warning
-           'dotfiles
-           (format "Unusable Homebrew prefix %S from brew --prefix (exit %s)"
-                   output status)
-           :warning))
-        root)))
-  "Homebrew installation prefix.")
+;; The byte compiler scopes the nested `defconst's below to their `let'.
+(defvar dotfiles--homebrew-root)
+(defvar dotfiles--homebrew-root-usable-p)
+
+(without-remote-files
+  (with-temp-buffer
+    ;; Keep stdout only: stderr from the shell's startup files, which run
+    ;; before any `2>/dev/null' here, and from brew would precede the prefix.
+    (let* ((status (call-process-shell-command "brew --prefix" nil '(t nil)))
+           (output (string-trim-right (buffer-string))))
+      (defconst dotfiles--homebrew-root (file-name-as-directory output)
+        "Homebrew prefix, valid only if `dotfiles--homebrew-root-usable-p'.")
+      ;; `file-name-as-directory' turns empty or blank output into "./",
+      ;; which `file-directory-p' accepts but `file-name-absolute-p' rejects.
+      (defconst dotfiles--homebrew-root-usable-p
+        (and (file-name-absolute-p dotfiles--homebrew-root)
+             (file-directory-p dotfiles--homebrew-root))
+        "Non-nil when the Homebrew prefix is an existing absolute directory.")
+      (unless dotfiles--homebrew-root-usable-p
+        (display-warning
+         'dotfiles
+         (format "Unusable Homebrew prefix %S from brew --prefix (exit %s)"
+                 output status)
+         :warning)))))
 
 (require 'my-lib)
 
@@ -72,8 +78,9 @@
 
 ;;; plantuml
 (require 'ob-plantuml)
-(setq org-plantuml-jar-path
-      (concat dotfiles--homebrew-root "opt/plantuml/libexec/plantuml.jar"))
+(when dotfiles--homebrew-root-usable-p
+  (setq org-plantuml-jar-path
+        (concat dotfiles--homebrew-root "opt/plantuml/libexec/plantuml.jar")))
 
 (provide 'darwin)
 ;;; darwin.el ends here
