@@ -1113,7 +1113,7 @@ Run `analysis-record <prefix> <ID> <reply>` on each reply. It validates the
 reply with the rules in **Analysis subagent reply validation** (rule 3 as
 qualified there) and records each valid reply as follows, printing `rejected`,
 `analysis recorded` (naming any corrected fields, and ending with
-`; malformed requests ignored` when it kept a body beside unparseable or
+`; malformed requests ignored` when it kept a body beside unparsable or
 contradictory requests, after `; rejection discarded` when the reply also
 rejected), `deferral`, or `provisional analysis held`:
 
