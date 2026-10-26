@@ -11,6 +11,7 @@ set -eu
 # For vterm
 brew install cmake
 
+brew trust d12frosted/emacs-plus
 brew tap d12frosted/emacs-plus
 readonly EMACS_FORMULA=emacs-plus@31
 brew install "$EMACS_FORMULA" --with-dbus --with-debug --with-imagemagick \

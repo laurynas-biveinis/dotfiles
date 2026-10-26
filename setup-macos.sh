@@ -407,8 +407,7 @@ eval "$(/usr/libexec/path_helper)"
 sudo tlmgr update --self
 sudo tlmgr install dvipng
 
-brew tap epk/epk
-brew install font-sf-mono-nerd-font
+brew install --cask epk/epk/font-sf-mono-nerd-font
 # Set font in Terminal manually
 
 #
