@@ -75,10 +75,5 @@
 (setq org-plantuml-jar-path
       (concat dotfiles--homebrew-root "opt/plantuml/libexec/plantuml.jar"))
 
-;;; mu4e
-(defconst mu4e-lisp-load-path (concat dotfiles--homebrew-root
-                                      "opt/mu/share/emacs/site-lisp/mu/mu4e"))
-(add-to-list 'load-path mu4e-lisp-load-path)
-
 (provide 'darwin)
 ;;; darwin.el ends here
