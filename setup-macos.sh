@@ -177,11 +177,13 @@ duti -s org.videolan.vlc .avi all
 #
 # Lithuanian Standard Keyboard Layout (http://ims.mii.lt/klav/tvarkyk.html)
 #
-curl -fsSL http://www.ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
+curl -fsSL http://www.ims.mii.lt/klav/MacOS-X.zip --output "$TMPDIR/macOS.zip"
 # Verify the downloaded file (note that lack of https above, which the server
 # admins have not solved yet as of 2023)
-unzip macOS.zip
-sudo cp -r "Lithuanian Standard Keyboard.bundle" /Library/Keyboard\ Layouts
+unzip -o -d "$TMPDIR/klav" "$TMPDIR/macOS.zip"
+sudo cp -r "$TMPDIR/klav/Lithuanian Standard Keyboard.bundle" \
+	/Library/Keyboard\ Layouts
+rm -r "$TMPDIR/macOS.zip" "$TMPDIR/klav"
 # Global and login screen setting
 sudo defaults delete /Library/Preferences/com.apple.HIToolbox \
 	AppleEnabledInputSources
