@@ -178,9 +178,11 @@ duti -s org.videolan.vlc .avi all
 # Lithuanian Standard Keyboard Layout (http://ims.mii.lt/klav/tvarkyk.html)
 #
 curl -fsSL http://www.ims.mii.lt/klav/MacOS-X.zip --output "$TMPDIR/macOS.zip"
-# Verify the downloaded file (note that lack of https above, which the server
-# admins have not solved yet as of 2023)
-unzip -o -d "$TMPDIR/klav" "$TMPDIR/macOS.zip"
+# SHA-256 pinned 2026-10-27 from HTTP; all five bundle files matched the
+# existing /Library/Keyboard Layouts installation byte for byte. HTTPS still
+# failed certificate validation.
+echo "00238f0c6fc43fe2433ec739e33c94eda070e1e38e5812c939f3cff05551653b  $TMPDIR/macOS.zip" |
+	shasum -a 256 -c && unzip -o -d "$TMPDIR/klav" "$TMPDIR/macOS.zip"
 sudo cp -r "$TMPDIR/klav/Lithuanian Standard Keyboard.bundle" \
 	/Library/Keyboard\ Layouts
 rm -r "$TMPDIR/macOS.zip" "$TMPDIR/klav"
