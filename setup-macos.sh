@@ -177,7 +177,7 @@ duti -s org.videolan.vlc .avi all
 #
 # Lithuanian Standard Keyboard Layout (http://ims.mii.lt/klav/tvarkyk.html)
 #
-curl http://www.ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
+curl -fsSL http://www.ims.mii.lt/klav/MacOS-X.zip --output macOS.zip
 # Verify the downloaded file (note that lack of https above, which the server
 # admins have not solved yet as of 2023)
 unzip macOS.zip
