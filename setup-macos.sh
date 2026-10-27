@@ -366,7 +366,7 @@ sudo chflags nohidden /Volumes
 #
 # brew
 #
-brew install stow ncdu coreutils fzf hexyl tldr lynis curl shellcheck wget \
+brew install stow ncdu coreutils fzf hexyl tlrc lynis curl shellcheck wget \
 	hunspell grep pinentry-mac htop findutils fd delta jq colordiff npm \
 	gnu-sed mas bat actionlint imagemagick ripgrep duf eza recode difftastic \
 	plantuml gcalcli watch shfmt markdown gdrive tidy-html5 yamllint iperf3 \
