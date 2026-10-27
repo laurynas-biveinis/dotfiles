@@ -395,10 +395,10 @@ mas install 1365531024 # 1Blocker
 # Spellchecking
 #
 sudo wget -N -P /Library/Spelling \
-	https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff \
-	https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic \
-	https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.aff \
-	https://cgit.freedesktop.org/libreoffice/dictionaries/plain/lt_LT/lt.dic
+	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/en/en_US.aff \
+	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/en/en_US.dic \
+	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/lt_LT/lt.aff \
+	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/lt_LT/lt.dic
 # The 51st State
 sudo ln -sf en_US.aff /Library/Spelling/en_LT.aff
 sudo ln -sf en_US.dic /Library/Spelling/en_LT.dic
