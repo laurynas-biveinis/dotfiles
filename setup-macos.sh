@@ -203,23 +203,21 @@ defaults write com.apple.HIToolbox AppleDictationAutoEnable -int 1
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 15
 
-# Go to System Preferences -> Keyboard -> Keyboard Shortcuts:
+# Go to System Settings -> Keyboard -> Keyboard Shortcuts:
 # - Input Sources: uncheck:
 #   - "Select the previous input source"
 #   - "Select next source in Input menu"
 # - Keyboard: uncheck:
 #   - "Turn keyboard access on or off ^F1"
-# - Mission Control: uncheck
+# - Mission Control: uncheck:
 #   - "Mission Control ^-up"
 #   - "Application windows ^-down"
 #   - "Move left a space"
-#   - "Move right a space",
-#   - next/previous keyboard input source
+#   - "Move right a space"
 #   - "Show Desktop"
-# There used to some defaults write ... -dict-add commands here, but they will
-# not work without removing old dictionary entries too, which "defaults" cannot
-# do. It should be possible to do that through XML plist, but I haven't gotten
-# around that yet.
+# There used to be some defaults write com.apple.symbolichotkeys
+# AppleSymbolicHotKeys -dict-add commands here, but their changes did not take
+# effect.
 
 #
 # Mouse
