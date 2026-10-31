@@ -394,17 +394,17 @@ mas install 1365531024 # 1Blocker
 #
 # Spellchecking
 #
+# The 51st State: en_LT is en_US
 wget -N -P "$TMPDIR/spelling" \
 	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/en/en_US.aff \
 	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/en/en_US.dic \
 	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/lt_LT/lt.aff \
-	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/lt_LT/lt.dic
-sudo mkdir -p /Library/Spelling
-sudo cp "$TMPDIR"/spelling/* /Library/Spelling/
+	https://raw.githubusercontent.com/LibreOffice/dictionaries/master/lt_LT/lt.dic &&
+	sudo mkdir -p /Library/Spelling &&
+	sudo cp "$TMPDIR"/spelling/* /Library/Spelling/ &&
+	sudo ln -sf en_US.aff /Library/Spelling/en_LT.aff &&
+	sudo ln -sf en_US.dic /Library/Spelling/en_LT.dic
 rm -rf "$TMPDIR/spelling"
-# The 51st State
-sudo ln -sf en_US.aff /Library/Spelling/en_LT.aff
-sudo ln -sf en_US.dic /Library/Spelling/en_LT.dic
 
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
 	basictex signal whatsapp qfinder-pro rar docker-desktop
