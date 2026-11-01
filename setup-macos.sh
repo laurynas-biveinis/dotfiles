@@ -274,23 +274,16 @@ defaults write com.apple.Safari AutoFillPasswords -bool false
 #
 # Terminal
 #
-open \
-	~/dotfiles/dotfiles/3rd_party/osx-terminal.app-colors-solarized/Solarized\ Dark.terminal
+cp ~/dotfiles/dotfiles/3rd_party/osx-terminal.app-colors-solarized/Solarized\ Dark.terminal \
+	"$TMPDIR/"
+plutil -insert CursorBlink -bool true "$TMPDIR/Solarized Dark.terminal"
+plutil -insert CursorType -integer 2 "$TMPDIR/Solarized Dark.terminal"
+# No rm after open: open can return before Terminal has read the file
+open "$TMPDIR/Solarized Dark.terminal"
 defaults write com.apple.Terminal "Default Window Settings" \
 	-string "Solarized Dark"
 defaults write com.apple.Terminal "Startup Window Settings" \
 	-string "Solarized Dark"
-defaults export com.apple.Terminal "$TMPDIR/com.apple.Terminal.plist"
-plutil -remove "Window Settings.Solarized Dark.CursorBlink" \
-	"$TMPDIR/com.apple.Terminal.plist"
-plutil -remove "Window Settings.Solarized Dark.CursorType" \
-	"$TMPDIR/com.apple.Terminal.plist"
-plutil -insert "Window Settings.Solarized Dark.CursorBlink" -integer 1 \
-	"$TMPDIR/com.apple.Terminal.plist"
-plutil -insert "Window Settings.Solarized Dark.CursorType" -integer 2 \
-	"$TMPDIR/com.apple.Terminal.plist"
-defaults import com.apple.Terminal "$TMPDIR/com.apple.Terminal.plist"
-rm "$TMPDIR/com.apple.Terminal.plist"
 #
 # Dock
 #
