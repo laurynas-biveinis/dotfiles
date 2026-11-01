@@ -145,13 +145,14 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 #
 /bin/bash -c \
 	"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-homebrew_bin=/usr/local/bin/brew
-if [ "$(uname -m)" = arm64 ]; then
-	homebrew_bin=/opt/homebrew/bin/brew
-fi
-printf "\neval \"\$(%s shellenv)\"\n" "$homebrew_bin" >>~/.zprofile
-eval "$("$homebrew_bin" shellenv)"
-unset homebrew_bin
+# Only the ~/.zprofile appends are gated: a wrong eval just fails once
+# Apple Silicon
+if [ -x /opt/homebrew/bin/brew ]; then printf "\neval \"\$(/opt/homebrew/bin/brew shellenv)\"\n" >>~/.zprofile; fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
+# Intel
+if [ -x /usr/local/bin/brew ]; then printf "\neval \"\$(/usr/local/bin/brew shellenv)\"\n" >>~/.zprofile; fi
+eval "$(/usr/local/bin/brew shellenv)"
+
 brew update
 brew install duti
 brew install --cask vlc disk-inventory-x google-chrome
