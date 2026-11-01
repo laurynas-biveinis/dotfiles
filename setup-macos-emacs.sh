@@ -13,12 +13,11 @@ brew install cmake
 
 brew trust d12frosted/emacs-plus
 brew tap d12frosted/emacs-plus
-readonly EMACS_FORMULA=emacs-plus@31
-brew install "$EMACS_FORMULA" --with-dbus --with-debug --with-imagemagick \
+brew install emacs-plus@31 --with-dbus --with-debug --with-imagemagick \
 	--with-mailutils --with-xwidgets
 # Apple Silicon
 osascript -e \
-	'tell application "Finder" to make alias file to posix file "/opt/homebrew/opt/'"$EMACS_FORMULA"'/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
+	'tell application "Finder" to make alias file to posix file "/opt/homebrew/opt/emacs-plus@31/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
 
 npm install -g @emacs-eask/cli
 
