@@ -11,6 +11,10 @@ if pgrep -x "Emacs" >/dev/null; then
 	fi
 fi
 
-mbsync -a || true
+mbsync -a || {
+	mbsync_status=$?
+	>&2 echo "Mail sync failed with status $mbsync_status at $(date)!"
+	exit $mbsync_status
+}
 
 echo "Mail sync completed at $(date)!"
