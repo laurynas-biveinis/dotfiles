@@ -183,9 +183,9 @@ curl -fsSL http://www.ims.mii.lt/klav/MacOS-X.zip --output "$TMPDIR/macOS.zip"
 # existing /Library/Keyboard Layouts installation byte for byte. HTTPS still
 # failed certificate validation.
 echo "00238f0c6fc43fe2433ec739e33c94eda070e1e38e5812c939f3cff05551653b  $TMPDIR/macOS.zip" |
-	shasum -a 256 -c && unzip -o -d "$TMPDIR/klav" "$TMPDIR/macOS.zip"
-sudo cp -R "$TMPDIR/klav/Lithuanian Standard Keyboard.bundle" \
-	/Library/Keyboard\ Layouts
+	shasum -a 256 -c && unzip -o -d "$TMPDIR/klav" "$TMPDIR/macOS.zip" &&
+	sudo cp -R "$TMPDIR/klav/Lithuanian Standard Keyboard.bundle" \
+		/Library/Keyboard\ Layouts
 rm -rf "$TMPDIR/macOS.zip" "$TMPDIR/klav"
 if [ -d "/Library/Keyboard Layouts/Lithuanian Standard Keyboard.bundle" ]; then
 	# Global and login screen setting
