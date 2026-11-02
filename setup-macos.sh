@@ -408,8 +408,8 @@ rm -rf "$TMPDIR/spelling"
 
 brew install --cask slack dash telegram keycombiner michaelvillar-timer utm \
 	basictex signal whatsapp qfinder-pro rar docker-desktop
-xattr -cr /opt/homebrew/bin/unrar
-xattr -cr /opt/homebrew/bin/rar
+xattr -cr "$(brew --prefix)/bin/unrar"
+xattr -cr "$(brew --prefix)/bin/rar"
 
 # TeX
 # until the next login:
