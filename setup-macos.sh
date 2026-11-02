@@ -380,12 +380,17 @@ brew install llvm iwyu cppcheck creduce boost cpplint clang-build-analyzer \
 #
 # App Store
 #
-mas install 497799835 # XCode
+# Xcode
+mas install 497799835
 sudo xcodebuild -license accept
-mas install 409201541  # Pages
-mas install 409203825  # Numbers
-mas install 1376402589 # StopTheMadness
-mas install 1365531024 # 1Blocker
+# Pages
+mas install 409201541
+# Numbers
+mas install 409203825
+# StopTheMadness
+mas install 1376402589
+# 1Blocker
+mas install 1365531024
 #
 # Spellchecking
 #

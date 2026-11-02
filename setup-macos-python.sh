@@ -6,7 +6,8 @@ set -euo pipefail
 
 asdf plugin add python
 asdf install python latest
-asdf set python 3.12.2 --home # Take from the output above
+# Take the version from the output above
+asdf set python 3.12.2 --home
 python -m pip install --upgrade pip setuptools
 python -m pip install virtualenv
 asdf reshim python
