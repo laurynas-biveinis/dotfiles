@@ -187,16 +187,18 @@ echo "00238f0c6fc43fe2433ec739e33c94eda070e1e38e5812c939f3cff05551653b  $TMPDIR/
 sudo cp -R "$TMPDIR/klav/Lithuanian Standard Keyboard.bundle" \
 	/Library/Keyboard\ Layouts
 rm -rf "$TMPDIR/macOS.zip" "$TMPDIR/klav"
-# Global and login screen setting
-sudo defaults delete /Library/Preferences/com.apple.HIToolbox \
-	AppleEnabledInputSources
-sudo defaults write /Library/Preferences/com.apple.HIToolbox \
-	AppleEnabledInputSources -array-add \
-	'<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
-# Current user setting
-defaults delete com.apple.HIToolbox AppleEnabledInputSources
-defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
-	'<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+if [ -d "/Library/Keyboard Layouts/Lithuanian Standard Keyboard.bundle" ]; then
+	# Global and login screen setting
+	sudo defaults delete /Library/Preferences/com.apple.HIToolbox \
+		AppleEnabledInputSources
+	sudo defaults write /Library/Preferences/com.apple.HIToolbox \
+		AppleEnabledInputSources -array-add \
+		'<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+	# Current user setting
+	defaults delete com.apple.HIToolbox AppleEnabledInputSources
+	defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
+		'<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-4377</integer><key>KeyboardLayout Name</key><string>Lithuanian Standard</string></dict>'
+fi
 #
 # UI Controls
 #
