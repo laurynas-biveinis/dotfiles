@@ -433,30 +433,13 @@ brew install --cask betterdisplay
 # re-check on re-export. If import fails, Shortcuts tries iCloud first; then
 # re-sign in place (shortcuts sign --mode anyone, to a mktemp file, moved over
 # the original); then re-export from a Mac that still has them; last, rebuild
-# by hand as "Connect External Displays" and "Disconnect External Displays",
-# the names the lookups below match.
+# by hand as "Connect External Displays" and "Disconnect External Displays".
 open ~/dotfiles/dotfiles/macos-shortcuts/'Connect External Displays.shortcut'
 open ~/dotfiles/dotfiles/macos-shortcuts/'Disconnect External Displays.shortcut'
 # Confirm "Add Shortcut" for each before continuing
 
-shortcut_uuid() {
-	shortcuts list --show-identifiers |
-		awk -F '[()]' -v name="$1" '
-        # NF == 3 rejects a listed name that itself contains parentheses,
-        # whose $2 would be that text rather than the identifier.
-        NF == 3 && $1 == (name " ") { uuid = $2; count++ }
-        END {
-          if (count != 1) {
-            print "expected one shortcut named \"" name "\", found " count + 0 > "/dev/stderr"
-            exit 1
-          }
-          print uuid
-        }
-      '
-}
-
-connect_uuid=$(shortcut_uuid 'Connect External Displays')
-disconnect_uuid=$(shortcut_uuid 'Disconnect External Displays')
+# Replace CONNECT-UUID and DISCONNECT-UUID below with the UUIDs this lists
+shortcuts list --show-identifiers | grep 'External Displays'
 
 # @ Cmd, ~ Opt, ^ Ctrl: Ctrl-Opt-Cmd-R connects, Ctrl-Opt-Cmd-D disconnects.
 # The inner quotes are required: without them "(null)"'s parentheses make the
@@ -465,11 +448,10 @@ disconnect_uuid=$(shortcut_uuid 'Disconnect External Displays')
 # old binding behind. To drop one: export the domain to a mktemp file,
 # "plutil -remove" its unquoted "NSServicesStatus.(null) - <uuid> -
 # runShortcutAsService" key, import it back, re-run pbs -flush.
-# "shortcuts list --show-identifiers" says which UUIDs are live.
 defaults write pbs NSServicesStatus -dict-add \
-	"\"(null) - ${connect_uuid:?no Connect External Displays UUID} - runShortcutAsService\"" \
+	'"(null) - CONNECT-UUID - runShortcutAsService"' \
 	'{ key_equivalent = "@~^r"; }' \
-	"\"(null) - ${disconnect_uuid:?no Disconnect External Displays UUID} - runShortcutAsService\"" \
+	'"(null) - DISCONNECT-UUID - runShortcutAsService"' \
 	'{ key_equivalent = "@~^d"; }'
 
 /System/Library/CoreServices/pbs -flush
