@@ -431,10 +431,6 @@
 (require 'nxml-mode)
 (setq nxml-slash-auto-complete-flag t)  ;; Autocomplete closing tags
 
-;; SSH configuration
-(add-hook 'ssh-config-mode-hook #'dotfiles--enable-trailing-whitespace)
-(add-hook 'ssh-config-mode-hook #'turn-on-auto-fill)
-
 ;; YAML
 (add-to-list 'auto-mode-alist '("/\\.clang-format\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("/\\.clang-tidy\\'" . yaml-mode))

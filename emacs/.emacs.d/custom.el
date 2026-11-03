@@ -15,18 +15,18 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
-   '(aggressive-indent all-the-icons-dired beacon beginend cheat-sh
-		       company-box difftastic dispwatch elisp-autofmt
-		       elisp-dev-mcp elisp-lint emacsql-sqlite-builtin
+   '(aggressive-indent all-the-icons-dired beacon beginend company
+		       difftastic dispwatch elisp-autofmt
+		       elisp-dev-mcp elisp-lint
 		       fancy-compilation flycheck
 		       flycheck-status-emoji gcmh git-gutter-fringe
-		       git-messenger git-modes iedit indent-bars
+		       git-modes iedit indent-bars
 		       info-colors lsp-mode lsp-treemacs
 		       lsp-ui lua-mode magit magit-todos markdown-mode
 		       mcp-server-lib mu4e-autotask org-autotask
 		       page-break-lines plantuml-mode prism projectile
 		       relint s shfmt solarized-theme
-		       ssh ssh-config-mode stripe-buffer undo-tree
+		       stripe-buffer undo-tree
 		       vterm wgrep xterm-color yaml-mode yasnippet))
  '(package-vc-selected-packages
    '((org-autotask :vc-backend Git :url
