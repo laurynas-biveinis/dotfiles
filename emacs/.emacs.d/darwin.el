@@ -50,8 +50,7 @@
 (global-unset-key (kbd "s-t"))
 
 ;;; woman
-;; Integrate `woman' with macOS Xcode some better by adding the missing man
-;; paths.
+;; Integrate `woman' with macOS Xcode better by adding the missing man paths.
 (require 'woman)
 
 (defun dotfiles--get-xcode-man-paths ()
