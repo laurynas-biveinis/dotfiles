@@ -110,13 +110,8 @@ tramp ts
 - [macOS: add the missing man page paths for woman](https://www.reddit.com/r/emacs/comments/ig7zzo/weekly_tipstricketc_thread/g34s8dl?utm_source=share&utm_medium=web2x&context=3)
 - [Re-enable Shellcheck if using lsp-mode with bash-language-server](https://www.reddit.com/r/emacs/comments/hqxm5v/weekly_tipstricketc_thread/fy4pvr8?utm_source=share&utm_medium=web2x&context=3)
 - [Clicking on URLs should open them instead of spell checking them](https://www.reddit.com/r/emacs/comments/it4m2w/weekly_tipstricketc_thread/g5pff92?utm_source=share&utm_medium=web2x&context=3)
-- Workaround the [projectile
-  issue](https://github.com/bbatsov/projectile/issues/347) of remote projects
-  not being added to Projectile project list.
-- [Automatically update Git gutter on Magit
-  actions](https://stackoverflow.com/questions/43236670/visual-studio-code-git-diff-over-git-gutter-indicator).
-- [Disable color-identifiers-mode under LSP with semantic
-  highlighting](https://github.com/laurynas-biveinis/dotfiles/blob/ce044dab576c525f418a5383180d06c888a33599/emacs/.emacs.d/setup.el#L1924)
+- [Enable the dynamic Projectile mode line for remote
+  projects](https://github.com/bbatsov/projectile/pull/1096)
 - [Reduce LSP info in the modeline](https://github.com/laurynas-biveinis/dotfiles/commit/be71cb57292e3cda3759a373a0b7c38688780ab0)
 - [Show Git ignored files in `dired-ignored` face](https://www.reddit.com/r/emacs/comments/u2lf9t/comment/i4n9aoa/?utm_source=share&utm_medium=web2x&context=3)
 
