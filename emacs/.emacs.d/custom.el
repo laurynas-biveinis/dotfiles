@@ -22,7 +22,7 @@
 		       flycheck-status-emoji gcmh git-gutter-fringe
 		       git-modes iedit indent-bars
 		       info-colors lsp-mode lsp-treemacs
-		       lsp-ui lua-mode magit magit-todos markdown-mode
+		       lsp-ui magit magit-todos markdown-mode
 		       mcp-server-lib mu4e-autotask org-autotask
 		       page-break-lines plantuml-mode prism projectile
 		       relint s shfmt solarized-theme
