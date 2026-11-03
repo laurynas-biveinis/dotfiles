@@ -52,7 +52,7 @@ Unfortunately, that is not always possible.
 [flycheck](https://www.flycheck.org)
 [company](https://github.com/company-mode/company-mode)
 [projectile](https://github.com/bbatsov/projectile)
-[m4e](https://djcbsoftware.nl/code/mu/)
+[mu4e](https://djcbsoftware.nl/code/mu/)
 
 #### Major
 
@@ -69,7 +69,6 @@ Unfortunately, that is not always possible.
 [dispwatch](https://github.com/mnp/dispwatch)
 [lsp-treemacs](https://github.com/emacs-lsp/lsp-treemacs)
 [calfw](https://github.com/kiwanami/emacs-calfw)
-[which-key](https://github.com/justbur/emacs-which-key)
 [iedit](https://github.com/victorhge/iedit)
 [eldoc-cmake](https://github.com/ikirill/eldoc-cmake)
 [aggressive-indent-mode](https://github.com/Malabarba/aggressive-indent-mode)
@@ -97,12 +96,11 @@ Unfortunately, that is not always possible.
 [stripe-buffer](https://github.com/sabof/stripe-buffer)
 [prism.el](https://github.com/alphapapa/prism.el)
 [info-colors](https://github.com/ubolonton/info-colors)
-[topsy.el](https://github.com/alphapapa/topsy.el)
 [org-sticky-header](https://github.com/alphapapa/org-sticky-header)
 
 #### Packages bundled with Emacs
 
-tramp ts
+tramp ts which-key
 
 ### Improvements, fixed annoyances, and bug workarounds
 
@@ -118,10 +116,8 @@ tramp ts
 ### Custom commands and functionality
 
 - [Set frame geometry after docking/undocking laptop automatically](https://www.reddit.com/r/emacs/comments/ev2q9q/weekly_tipstricketc_thread/fftpfj0?utm_source=share&utm_medium=web2x&context=3)
-- `my-recompile-packages`: force recompiling all the installed packages, after
-  a Emacs version upgrade or a borked package upgrade.
 - `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, kills all
-  buffers and executes `gitrmworktree.`
+  buffers and executes `gitrmworktree`.
 
 ## Installation
 
