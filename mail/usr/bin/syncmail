@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# The process name is for the emacs-mac Homebrew port
+# The process name is for the emacs-plus Homebrew build
 if pgrep -x "Emacs" >/dev/null; then
 	if emacsclient -e '(mapcar (function buffer-name) (buffer-list))' |
 		grep -q 'mu4e'; then
