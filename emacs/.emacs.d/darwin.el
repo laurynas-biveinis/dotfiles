@@ -50,18 +50,18 @@
 (global-unset-key (kbd "s-t"))
 
 ;;; woman
-;; Integrate `woman' with macOS XCode some better by adding the missing man
+;; Integrate `woman' with macOS Xcode some better by adding the missing man
 ;; paths.
 (require 'woman)
 
 (defun dotfiles--get-xcode-man-paths ()
-  "Return the list of existing XCode-managed man directories."
+  "Return the list of existing Xcode-managed man directories."
   (let* ((lines (process-lines-ignore-status "xcode-select" "--show-manpaths"))
          (paths (seq-filter #'file-directory-p lines)))
     (unless paths
       (display-warning
        'dotfiles
-       (format "No existing XCode man directories in xcode-select output %S"
+       (format "No existing Xcode man directories in xcode-select output %S"
                lines)
        :warning))
     paths))

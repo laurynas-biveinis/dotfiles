@@ -238,7 +238,7 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode \
 # https://twitter.com/nibroc/status/963088893758259200
 defaults write -g NSWindowShouldDragOnGesture YES
 #
-# XCode
+# Xcode
 #
 xcode-select --install
 # /cores is root:wheel by default, where the default user is admin not wheel

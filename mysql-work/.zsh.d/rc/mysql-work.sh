@@ -25,7 +25,7 @@
 # - mysql_rebuild: in a build directory, build
 # - mysql_rebuild_all: rebuild all build dirs below
 #
-# Works on Linux and macOS (both Intel and Apple Silicon), XCode Command Line
+# Works on Linux and macOS (both Intel and Apple Silicon), Xcode Command Line
 # Tools 16.0.
 
 set -o errexit
