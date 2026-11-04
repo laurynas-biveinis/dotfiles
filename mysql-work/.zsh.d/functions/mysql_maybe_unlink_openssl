@@ -1,0 +1,40 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
+mysql_maybe_unlink_openssl() {
+    autoload mysql_openssl_relink_file
+
+    declare -i -r workaround=$1
+
+    if [ "$workaround" -eq 1 ]; then
+        declare -r relink_file="$(mysql_openssl_relink_file)"
+        declare brew_prefix
+        if ! brew_prefix=$(brew --prefix); then
+            return 1
+        fi
+        declare -r brew_prefix
+        declare -a kegs=("$brew_prefix"/var/homebrew/linked/openssl*(N:t))
+        # openssl@1.1 is the version these builds want. A newer keg installed
+        # while 1.1 was linked moved 1.1's shared links aside, which plain
+        # brew link cannot redo.
+        kegs=("${(@)kegs:#openssl@1.1}")
+        if (( ${#kegs} > 0 )); then
+            mkdir -p "${relink_file:h}" || return 1
+            print -rl -- "${kegs[@]}" >"$relink_file" || return 1
+            brew unlink "${kegs[@]}"
+        elif [[ -r $relink_file ]]; then
+            declare keg
+            for keg in ${(f)"$(<"$relink_file")"}; do
+                if [[ -e $brew_prefix/opt/$keg ]]; then
+                    kegs+=("$keg")
+                fi
+            done
+            if (( ${#kegs} > 0 )); then
+                echo "Relinking ${kegs[*]}, left unlinked by an aborted" \
+                     "build, after this build"
+                print -rl -- "${kegs[@]}" >"$relink_file" || return 1
+            else
+                rm -f "$relink_file"
+            fi
+        fi
+    fi
+}

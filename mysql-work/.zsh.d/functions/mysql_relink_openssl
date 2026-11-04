@@ -1,0 +1,16 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
+mysql_relink_openssl() {
+    autoload mysql_openssl_relink_file
+
+    declare -i -r workaround=$1
+
+    if [ "$workaround" -eq 1 ]; then
+        declare -r relink_file="$(mysql_openssl_relink_file)"
+        if [[ -r $relink_file ]]; then
+            declare -a kegs
+            kegs=(${(f)"$(<"$relink_file")"})
+            brew link "${kegs[@]}" && rm -f "$relink_file"
+        fi
+    fi
+}

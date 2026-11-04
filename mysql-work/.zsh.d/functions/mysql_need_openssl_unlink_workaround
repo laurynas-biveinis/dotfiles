@@ -1,6 +1,6 @@
 # -*- mode: sh; sh-shell: zsh; -*-
 
-mysql_need_openssl3_workaround() {
+mysql_need_openssl_unlink_workaround() {
     autoload mysql_find_version_file
     autoload mysql_get_major_version
     autoload mysql_get_minor_version
@@ -33,10 +33,9 @@ mysql_need_openssl3_workaround() {
     if [ "$major_ver" -lt 8 ] ||
            [ "$major_ver" -eq 8 ] && [ "$minor_ver" -eq 0 ] &&
                [ "$patch_level" -le 32 ]; then
-        # MySQL versions <= 8.0.32 will fail to build if both OpenSSL 1.1 and
-        # OpenSSL 3 from Homebrew are installed and linked, because system
-        # wide-installed version 3 headers will take precedence over version 1.1
-        # headers.
+        # MySQL versions <= 8.0.32 will fail to build if an OpenSSL newer than
+        # 1.1 is linked into the Homebrew prefix, because its headers there take
+        # precedence over the openssl@1.1 ones.
         #
         # The relevant patches in MySQL 8.0.33 are:
         # 19b8d5478e7 Bug#35057542 Create INTERFACE libraries for bundled/system

@@ -58,7 +58,7 @@ I symlink these into the parent directory of all the source trees.
 directory](https://github.com/laurynas-biveinis/dotfiles/tree/master/mysql-work/.zsh.d/functions).
 One file per function as Zsh requires. Currently they fall into two sets of
 responsibilities: querying the source tree for version information and managing
-[OpenSSL 3 build workarounds](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/.zsh.d/functions/mysql_need_openssl3_workaround).
+[Homebrew OpenSSL unlinking for MySQL <= 8.0.32 builds](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/.zsh.d/functions/mysql_need_openssl_unlink_workaround).
 
 ## No longer maintained (patches welcome)
 

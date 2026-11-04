@@ -1,0 +1,9 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
+mysql_openssl_relink_file() {
+    # Lists the kegs mysql_maybe_unlink_openssl unlinked, for
+    # mysql_relink_openssl. A file, so that a build aborted before the relink
+    # leaves them for the next workaround build to relink.
+    declare -r state_home="${XDG_STATE_HOME:-$HOME/.local/state}"
+    echo "$state_home/mysql-work/openssl-kegs-to-relink"
+}

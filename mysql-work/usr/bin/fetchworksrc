@@ -3,9 +3,9 @@
 set -euo pipefail
 
 autoload is_on_ac
-autoload mysql_need_openssl3_workaround
-autoload mysql_maybe_workaround_openssl3
-autoload mysql_undo_openssl3_workaround
+autoload mysql_need_openssl_unlink_workaround
+autoload mysql_maybe_unlink_openssl
+autoload mysql_relink_openssl
 
 function fetch_and_maintain_repo() {
 	declare -r repo="$1"
@@ -58,22 +58,22 @@ for worktree in $WORK_TREES_TO_UPDATE; do
 	declare full_worktree_path="$WORK_SRC_ROOT/$worktree"
 	pushd "$full_worktree_path" || return
 
-	declare -i workaround_ssl3
-	if ! workaround_ssl3=$(mysql_need_openssl3_workaround); then
+	declare -i workaround_ssl
+	if ! workaround_ssl=$(mysql_need_openssl_unlink_workaround); then
 		popd
 		return 1
 	fi
 
-	mysql_maybe_workaround_openssl3 $workaround_ssl3
+	mysql_maybe_unlink_openssl $workaround_ssl
 
 	for build_dir in "$full_worktree_path"/_build-*(/); do
 		if ! build_tree $build_dir; then
-			mysql_undo_openssl3_workaround $workaround_ssl3
+			mysql_relink_openssl $workaround_ssl
 			return
 		fi
 	done
 
-	mysql_undo_openssl3_workaround $workaround_ssl3
+	mysql_relink_openssl $workaround_ssl
 
 	popd || return
 done

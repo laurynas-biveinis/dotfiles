@@ -40,9 +40,9 @@ autoload mysql_find_version_file
 autoload mysql_get_major_version
 autoload mysql_get_minor_version
 autoload mysql_get_patch_level
-autoload mysql_need_openssl3_workaround
-autoload mysql_maybe_workaround_openssl3
-autoload mysql_undo_openssl3_workaround
+autoload mysql_need_openssl_unlink_workaround
+autoload mysql_maybe_unlink_openssl
+autoload mysql_relink_openssl
 
 uname_out="$(uname -s)"
 declare -r uname_out
@@ -1545,21 +1545,20 @@ mysql_cmake() {
 # example _build-debug/mysql-test)
 mysql_rebuild() {
     pushd .. || return 1
-    declare -i workaround_ssl3
-    if ! workaround_ssl3=$(mysql_need_openssl3_workaround); then
+    declare -i workaround_ssl
+    if ! workaround_ssl=$(mysql_need_openssl_unlink_workaround); then
         popd
         return 1
     fi
-    declare -r workaround_ssl3
+    declare -r workaround_ssl
     popd || return 1
 
     rm -f dev.entitlements
-    mysql_maybe_workaround_openssl3 $workaround_ssl3
-    ninja
-    declare -i -r ninja_status=$?
-    mysql_undo_openssl3_workaround $workaround_ssl3
+    mysql_maybe_unlink_openssl $workaround_ssl && ninja
+    declare -i -r rebuild_status=$?
+    mysql_relink_openssl $workaround_ssl
 
-    return ninja_status
+    return rebuild_status
 }
 
 mysql_build_in_build_dir() {
