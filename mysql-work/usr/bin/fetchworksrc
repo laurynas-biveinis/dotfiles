@@ -6,6 +6,7 @@ autoload is_on_ac
 autoload mysql_need_openssl_unlink_workaround
 autoload mysql_maybe_unlink_openssl
 autoload mysql_relink_openssl
+autoload mysql_unlink_googletest
 
 function fetch_and_maintain_repo() {
 	declare -r repo="$1"
@@ -53,6 +54,8 @@ done
 for worktree in $WORK_TREES_TO_UPDATE; do
 	pull_worktree "$worktree"
 done
+
+mysql_unlink_googletest
 
 for worktree in $WORK_TREES_TO_UPDATE; do
 	declare full_worktree_path="$WORK_SRC_ROOT/$worktree"

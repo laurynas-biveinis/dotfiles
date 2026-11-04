@@ -43,6 +43,7 @@ autoload mysql_get_patch_level
 autoload mysql_need_openssl_unlink_workaround
 autoload mysql_maybe_unlink_openssl
 autoload mysql_relink_openssl
+autoload mysql_unlink_googletest
 
 uname_out="$(uname -s)"
 declare -r uname_out
@@ -1553,6 +1554,7 @@ mysql_rebuild() {
     declare -r workaround_ssl
     popd || return 1
 
+    mysql_unlink_googletest || return 1
     rm -f dev.entitlements
     mysql_maybe_unlink_openssl $workaround_ssl && ninja
     declare -i -r rebuild_status=$?

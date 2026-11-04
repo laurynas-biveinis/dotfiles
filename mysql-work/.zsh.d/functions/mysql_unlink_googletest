@@ -1,0 +1,23 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
+mysql_unlink_googletest() {
+    if [ "$(uname -s)" != "Darwin" ]; then
+        return 0
+    fi
+    declare brew_prefix
+    if ! brew_prefix=$(brew --prefix); then
+        return 1
+    fi
+    declare -r brew_prefix
+    # Linked googletest headers precede the googletest bundled with MySQL and
+    # break its unit test build: https://bugs.mysql.com/bug.php?id=121386.
+    # Homebrew relinks a formula whenever it upgrades it, hence its callers run
+    # this before each build. A bare ninja, such as Projectile's compile
+    # command from my-project.el, does not, and fails after an out-of-band
+    # googletest upgrade until the next call.
+    # It stays unlinked between builds: other users of it must look under
+    # $(brew --prefix googletest), and brew doctor warns about it.
+    if [[ -e $brew_prefix/var/homebrew/linked/googletest ]]; then
+        brew unlink googletest
+    fi
+}

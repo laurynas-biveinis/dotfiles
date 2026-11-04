@@ -373,7 +373,8 @@ brew install stow ncdu coreutils fzf hexyl tlrc lynis curl shellcheck wget \
 # Until the next login:
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
-# C++ development
+# C++ development. mysql-work builds keep googletest unlinked: see
+# mysql_unlink_googletest
 brew install llvm iwyu cppcheck creduce boost cpplint clang-build-analyzer \
 	gcc@11 gcc@12 gcc@13 gcc@14 gcc@15 gcc googletest google-benchmark
 
