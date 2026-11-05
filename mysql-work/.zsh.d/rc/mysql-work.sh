@@ -224,6 +224,22 @@ mysql_export_environment_helpers() {
             export MY8030_MAX_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
+        # Homebrew's openssl is OpenSSL 4, which ssl.cmake rejects.
+        # 8.0.18-8.0.32 stay on openssl@1.1: pinned above up to 8.0.28 (arm64
+        # only; x86_64 8.0.18-8.0.28 hint the unversioned keg and fail), then
+        # hinted by ssl.cmake. 8.0.33-8.1.0 hint openssl@1.1 too, but
+        # homebrew-core no longer ships it, so from 8.0.33 pin openssl@3 through
+        # WITH_SSL rather than OPENSSL_ROOT_DIR: a path there is ssl.cmake's
+        # custom mode, which copies the dylibs and the openssl CLI into the
+        # build tree once as MTR's my_openssl. Without it MTR runs a hard-coded
+        # openssl@1.1 CLI up to 8.1.0 and Homebrew's OpenSSL 4 one after.
+        mysql_add_cmake_flags "8.0.33" "${max_version}" "any" \
+                              "-DWITH_SSL=$brew_opt/openssl@3"
+        # CMake rejects system FIDO with that non-system SSL once the FIDO
+        # server plugin (WebAuthn from 8.2.0) or client plugins are on.
+        # Percona's default LDAP plugin turns client plugins on. Homebrew's
+        # libfido2 links OpenSSL 4 anyway.
+        declare -a ps_common=("-DWITH_FIDO=bundled")
 	mysql_add_comp_flags "26.7.0" "26.7.0" "cxx" \
  		`# https://bugs.mysql.com/bug.php?id=117299` \
 		"-Wno-documentation"
@@ -358,6 +374,7 @@ mysql_export_environment_helpers() {
         mysql_add_comp_flags "8.0.18" "8.0.35" cxx \
                              "-Wno-error=ignored-attributes"
         declare -a maria_common=()
+        declare -a ps_common=()
         if [ "$(arch)" = "aarch64" ]; then
             # Workaround https://perconadev.atlassian.net/browse/PS-9034 (MyRocks
             # configuration failure on Linux virtualized on M1 Mac)
@@ -941,7 +958,7 @@ mysql_export_environment_helpers() {
                     "${my8036_comp_flags[@]}")
 
     export PS8036D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.36 any_debug)
-                    "${my8036_comp_flags[@]}")
+                    "${my8036_comp_flags[@]}" "${ps_common[@]}")
 
     export FB8036D=("${MY8036D[@]}" "${fb_common[@]}")
     export FB8036=("${MY8036[@]}" "${fb_common[@]}")
@@ -952,7 +969,7 @@ mysql_export_environment_helpers() {
                    "${my8035_comp_flags[@]}")
 
     export PS8035D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.35 any_debug)
-                    "${my8035_comp_flags[@]}")
+                    "${my8035_comp_flags[@]}" "${ps_common[@]}")
 
     export MY8034D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.34 any_debug)
                     "${my8034_comp_flags[@]}")
@@ -960,7 +977,7 @@ mysql_export_environment_helpers() {
                     "${my8034_comp_flags[@]}")
 
     export PS8034D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.34 any_debug)
-                    "${my8034_comp_flags[@]}")
+                    "${my8034_comp_flags[@]}" "${ps_common[@]}")
 
     export MY8033D=("${myd[@]}" $(mysql_get_cmake_flags 8.0.33 any_debug)
                     "${my8033_comp_flags[@]}")
