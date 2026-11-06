@@ -32,9 +32,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-# zsh functions
-autoload is-at-least
-
 # mysql-work functions
 autoload mysql_find_version_file
 autoload mysql_get_major_version
@@ -59,8 +56,9 @@ mysql_export_build_defaults() {
 # Enable when developing
 mysql_validate_version() {
     declare -r version="$1"
-    if ! [[ $version == <->.<->.<-> ]]; then
-        >&2 echo "Invalid version $version. Expected format X.Y.Z"
+    if ! [[ $version == <0-999>.<0-999>.<0-999> ]]; then
+        >&2 echo "Invalid version $version." \
+             "Expected format X.Y.Z, each part below 1000"
         return 1
     fi
     return 0
@@ -77,6 +75,26 @@ mysql_validate_compiler_flag_type() {
     return 0
 }
 
+# Sets REPLY to X.Y.Z as an integer that orders like is-at-least, so that
+# version comparisons are plain arithmetic. Needs each part below 1000, which
+# mysql_validate_version enforces.
+mysql_version_number() {
+    declare -r -a parts=("${(@s:.:)1}")
+    REPLY=$(( parts[1] * 1000000 + parts[2] * 1000 + parts[3] ))
+}
+
+# Sets REPLY to "start-end" in mysql_version_number integers, the range part of
+# a flag-table key, warning when start is above end.
+mysql_version_range() {
+    mysql_version_number "$1"
+    declare -r -i start_number=$REPLY
+    mysql_version_number "$2"
+    if (( start_number > REPLY )); then
+        >&2 echo "Start $1 cannot be higher than end $2"
+    fi
+    REPLY="${start_number}-${REPLY}"
+}
+
 # Registers compiler flags for the inclusive version range [start, end].
 # Overreaching ranges are fine: covering middle versions where a flag was not
 # observed to be required is harmless, since suppressing a warning that never
@@ -89,19 +107,20 @@ mysql_add_comp_flags() {
         return 1
     fi
     declare -r start_version="$1" end_version="$2"
-    if ! is-at-least "$start_version" "$end_version"; then
-        >&2 echo "Start $start_version cannot be higher than end $end_version"
-    fi
+    declare REPLY
+    mysql_version_range "$start_version" "$end_version"
+    declare -r bounds=$REPLY
     if ! mysql_validate_compiler_flag_type "$3"; then
         return 1
     fi
     declare -r type="$3"
     shift 3
     declare -r flags=("$@")
-    declare -r key="${start_version}-${end_version}:${type}"
+    declare -r key="${bounds}:${type}"
     # Enable when debugging
     if [[ -n "${comp_flags[$key]:-}" ]]; then
-        >&2 echo "Attempt to overwrite flags for $key"
+        >&2 echo "Attempt to overwrite flags for" \
+             "${start_version}-${end_version}:${type}"
     fi
     comp_flags[$key]="${flags[*]}"
     return 0
@@ -115,13 +134,14 @@ mysql_get_comp_flags() {
         return 1
     fi
     declare -r version="$1" type="$2"
+    declare REPLY
+    mysql_version_number "$version"
+    declare -r -i version_number=$REPLY
     declare -a flags=()
     for range in "${(k)comp_flags[@]}"; do
-        start_version=${range%%-*}
-        end_version=${${range#*-}%%:*}
         range_flag_type=${range##*:}
-        if is-at-least "$start_version" "$version" &&
-               is-at-least "$version" "$end_version" &&
+        if (( ${range%%-*} <= version_number &&
+                  version_number <= ${${range#*-}%%:*} )) &&
                { [[ "$type" == "$range_flag_type" ]] ||
                      [[ "$range_flag_type" == "cxx" && "$type" == cxx_* ]]; }; then
             flags+=("${comp_flags[$range]}")
@@ -150,16 +170,16 @@ mysql_add_cmake_flags() {
         return 1
     fi
     declare -r start_version="$1" end_version="$2"
-    if ! is-at-least "$start_version" "$end_version"; then
-        >&2 echo "Start $start_version cannot be higher than end $end_version"
-    fi
+    declare REPLY
+    mysql_version_range "$start_version" "$end_version"
+    declare -r bounds=$REPLY
     if ! mysql_validate_cmake_flag_type "$3"; then
         return 1
     fi
     declare -r type="$3"
     shift 3
     declare -r flags=("$@")
-    declare -r key="${start_version}-${end_version}:${type}"
+    declare -r key="${bounds}:${type}"
     if [[ ! -v cmake_flags[$key] ]]; then
         cmake_flags[$key]=""
     fi
@@ -175,13 +195,14 @@ mysql_get_cmake_flags() {
         return 1
     fi
     declare -r version="$1" type="$2"
+    declare REPLY
+    mysql_version_number "$version"
+    declare -r -i version_number=$REPLY
     declare -a flags=()
     for range in "${(k)cmake_flags[@]}"; do
-        start_version=${range%%-*}
-        end_version=${${range#*-}%%:*}
         range_flag_type=${range##*:}
-        if is-at-least "$start_version" "$version" &&
-               is-at-least "$version" "$end_version" &&
+        if (( ${range%%-*} <= version_number &&
+                  version_number <= ${${range#*-}%%:*} )) &&
                [[ "$type" == *"$range_flag_type"* ]]; then
             flags+=("${cmake_flags[$range]}")
         fi
