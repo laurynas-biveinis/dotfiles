@@ -99,6 +99,8 @@ mysql_version_range() {
 # Overreaching ranges are fine: covering middle versions where a flag was not
 # observed to be required is harmless, since suppressing a warning that never
 # fires has no effect. Prefer a single wide range over many narrow ones.
+# Flags of type c reach only versions whose comp-flags array passes
+# -DCMAKE_C_FLAGS.
 mysql_add_comp_flags() {
     if ! mysql_validate_version "$1"; then
         return 1
@@ -280,10 +282,13 @@ mysql_export_environment_helpers() {
                              `# https://bugs.mysql.com/bug.php?id=119242` \
                              "-Wno-conditional-uninitialized" \
                              "-Wno-unnecessary-virtual-specifier"
+        # The cxx -Wno-unknown-warning-option below makes libmysql's C++ probe
+        # accept -Wmissing-profile, which clang lacks, and add
+        # -Wno-missing-profile to the C file api_test.c, where -Werror rejects
+        # it. Keep this range equal to that flag's, and pass -DCMAKE_C_FLAGS in
+        # every covered version's comp-flags array.
         mysql_add_comp_flags "8.0.46" "8.4.9" "c" \
-                             `# Only 8.0.46 and 8.4.9 consume CMAKE_C_FLAGS;` \
-                             `# the range is wide so any intermediate version` \
-                             `# that gains a c-flags array inherits it.` \
+                             `# https://bugs.mysql.com/bug.php?id=120650` \
                              "-Wno-unknown-warning-option"
         mysql_add_comp_flags "8.0.46" "8.4.9" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=120650` \
@@ -552,30 +557,35 @@ mysql_export_environment_helpers() {
     )
 
     declare -a -r my848_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.8 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.8 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.8 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.8 cxx_release)"
     )
 
     declare -a -r my847_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.7 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.7 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.7 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.7 cxx_release)"
     )
 
     declare -a -r my846_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.6 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.6 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.6 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.6 cxx_release)"
     )
 
     declare -a -r my845_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.5 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.5 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.5 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.5 cxx_release)"
     )
 
     declare -a -r my844_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.4 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.4 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.4 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.4 cxx_release)"
@@ -584,30 +594,35 @@ mysql_export_environment_helpers() {
     mysql_add_comp_flags "8.4.3" "8.4.3" cxx "-Wno-unused-const-variable"
 
     declare -a -r my843_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.3 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.3 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.3 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.3 cxx_release)"
     )
 
     declare -a -r my842_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.2 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.2 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.2 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.2 cxx_release)"
     )
 
     declare -a -r my841_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.1 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.1 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.1 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.1 cxx_release)"
     )
 
     declare -a -r my840_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.0 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.0 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.0 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.0 cxx_release)"
     )
 
     declare -a -r my830_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.3.0 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.3.0 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.3.0 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.3.0 cxx_release)"
@@ -618,12 +633,14 @@ mysql_export_environment_helpers() {
                           "-DWITH_BOOST=~/vilniusdb/mysql-boost/"
 
     declare -a -r my820_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.2.0 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.2.0 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.2.0 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.2.0 cxx_release)"
     )
 
     declare -a -r my810_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.1.0 c)"
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.1.0 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.1.0 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.1.0 cxx_release)"
