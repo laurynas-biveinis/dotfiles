@@ -96,9 +96,9 @@ mysql_version_range() {
 }
 
 # Registers compiler flags for the inclusive version range [start, end].
-# Overreaching ranges are fine: covering middle versions where a flag was not
-# observed to be required is harmless, since suppressing a warning that never
-# fires has no effect. Prefer a single wide range over many narrow ones.
+# A range must cover only versions that need its flags. Merge two ranges into
+# one only when every supported version between them needs the flags too, as
+# a build or the triggering source code shows; otherwise keep them separate.
 # Flags of type c reach only versions whose comp-flags array passes
 # -DCMAKE_C_FLAGS.
 mysql_add_comp_flags() {
@@ -164,6 +164,8 @@ mysql_validate_cmake_flag_type() {
     return 0
 }
 
+# Registers CMake flags for the inclusive version range [start, end], under
+# the range rule above mysql_add_comp_flags.
 mysql_add_cmake_flags() {
     if ! mysql_validate_version "$1"; then
         return 1
@@ -275,12 +277,6 @@ mysql_export_environment_helpers() {
         mysql_add_comp_flags "8.4.9" "8.4.9" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=117299` \
                              "-Wno-documentation"
-        mysql_add_comp_flags "8.4.7" "8.4.9" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=119239` \
-                             "-Wno-uninitialized-const-pointer" \
-                             `# https://bugs.mysql.com/bug.php?id=119242` \
-                             "-Wno-conditional-uninitialized" \
-                             "-Wno-unnecessary-virtual-specifier"
         # The cxx -Wno-unknown-warning-option below makes libmysql's C++ probe
         # accept -Wmissing-profile, which clang lacks, and add
         # -Wno-missing-profile to the C file api_test.c, where -Werror rejects
@@ -295,16 +291,19 @@ mysql_export_environment_helpers() {
                              `# https://bugs.mysql.com/bug.php?id=120653` \
                              "-Wno-format" \
                              "-Wno-missing-format-attribute" \
-                             `# https://bugs.mysql.com/bug.php?id=119246` \
-                             "-Wno-unused-result" \
-                             `# Some of warning options missing in LLVM 18` \
-                             "-Wno-unknown-warning-option"
-        mysql_add_comp_flags "8.0.46" "8.0.46" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=119239` \
                              "-Wno-uninitialized-const-pointer" \
                              `# https://bugs.mysql.com/bug.php?id=119242` \
                              "-Wno-conditional-uninitialized" \
-                             "-Wno-unnecessary-virtual-specifier"
+                             "-Wno-unnecessary-virtual-specifier" \
+                             `# Some of warning options missing in LLVM 18` \
+                             "-Wno-unknown-warning-option"
+        mysql_add_comp_flags "8.0.46" "8.0.46" "cxx" \
+                             `# https://bugs.mysql.com/bug.php?id=121385` \
+                             "-Wno-unused-result"
+        mysql_add_comp_flags "8.4.6" "8.4.9" "cxx" \
+                             `# https://bugs.mysql.com/bug.php?id=121385` \
+                             "-Wno-unused-result"
         mysql_add_comp_flags "8.0.44" "8.0.46" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=119238` \
                              "-Wno-invalid-specialization"
