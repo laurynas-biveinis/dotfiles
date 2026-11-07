@@ -266,14 +266,11 @@ mysql_export_environment_helpers() {
 	mysql_add_comp_flags "26.7.0" "26.7.0" "cxx" \
  		`# https://bugs.mysql.com/bug.php?id=117299` \
 		"-Wno-documentation"
-        mysql_add_comp_flags "8.4.8" "8.4.8" "cxx" \
+        mysql_add_comp_flags "8.0.32" "9.6.0" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=119246` \
                              "-Wno-nonnull"
-        mysql_add_comp_flags "9.5.0" "9.6.0" "cxx" "-Wno-nonnull"
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
         mysql_add_comp_flags "8.4.9" "8.4.9" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=119246` \
-                             "-Wno-nonnull" \
                              `# https://bugs.mysql.com/bug.php?id=117299` \
                              "-Wno-documentation"
         mysql_add_comp_flags "8.4.7" "8.4.9" "cxx" \
@@ -305,9 +302,7 @@ mysql_export_environment_helpers() {
                              "-Wno-uninitialized-const-pointer" \
                              `# https://bugs.mysql.com/bug.php?id=119242` \
                              "-Wno-conditional-uninitialized" \
-                             "-Wno-unnecessary-virtual-specifier" \
-                             `# https://bugs.mysql.com/bug.php?id=119246` \
-                             "-Wno-nonnull"
+                             "-Wno-unnecessary-virtual-specifier"
         mysql_add_comp_flags "8.0.44" "8.0.46" "cxx" \
                              `# https://bugs.mysql.com/bug.php?id=119238` \
                              "-Wno-invalid-specialization"
