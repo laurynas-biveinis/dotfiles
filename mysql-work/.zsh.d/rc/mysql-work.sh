@@ -266,7 +266,9 @@ mysql_export_environment_helpers() {
 	mysql_add_comp_flags "26.7.0" "26.7.0" "cxx" \
  		`# https://bugs.mysql.com/bug.php?id=117299` \
 		"-Wno-documentation"
-        mysql_add_comp_flags "8.0.32" "9.6.0" "cxx" \
+        # Bug 119246's -Wnonnull fires only once NDEBUG compiles out the
+        # assert(false) before return nullptr, so suppress it in release builds.
+        mysql_add_comp_flags "8.0.32" "9.6.0" "cxx_release" \
                              `# https://bugs.mysql.com/bug.php?id=119246` \
                              "-Wno-nonnull"
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
