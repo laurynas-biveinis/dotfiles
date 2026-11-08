@@ -249,21 +249,22 @@ mysql_export_environment_helpers() {
             export MY8030_MAX_CORE_DUMP_FLAGS=()
         fi
         declare -a cmake_release=()
-        # Homebrew's openssl is OpenSSL 4, which ssl.cmake rejects.
-        # 8.0.18-8.0.32 stay on openssl@1.1: pinned above up to 8.0.28 (arm64
-        # only; x86_64 8.0.18-8.0.28 hint the unversioned keg and fail), then
-        # hinted by ssl.cmake. 8.0.33-8.1.0 hint openssl@1.1 too, but
+        # Homebrew's openssl is OpenSSL 4, which ssl.cmake rejects before
+        # 26.10.0. 8.0.18-8.0.32 stay on openssl@1.1: pinned above up to 8.0.28
+        # (arm64 only; x86_64 8.0.18-8.0.28 hint the unversioned keg and fail),
+        # then hinted by ssl.cmake. 8.0.33-8.1.0 hint openssl@1.1 too, but
         # homebrew-core no longer ships it, so from 8.0.33 pin openssl@3 through
         # WITH_SSL rather than OPENSSL_ROOT_DIR: a path there is ssl.cmake's
         # custom mode, which copies the dylibs and the openssl CLI into the
         # build tree once as MTR's my_openssl. Without it MTR runs a hard-coded
         # openssl@1.1 CLI up to 8.1.0 and Homebrew's OpenSSL 4 one after.
-        mysql_add_cmake_flags "8.0.33" "${max_version}" "any" \
+        mysql_add_cmake_flags "8.0.33" "26.7.0" "any" \
                               "-DWITH_SSL=$brew_opt/openssl@3"
         # CMake rejects system FIDO with that non-system SSL once the FIDO
-        # server plugin (WebAuthn from 8.2.0) or client plugins are on.
-        # Percona's default LDAP plugin turns client plugins on. Homebrew's
-        # libfido2 links OpenSSL 4 anyway.
+        # server plugin (WebAuthn from 8.2.0) or client plugins are on. 9.7.4
+        # turns WebAuthn on by default, and Percona's default LDAP plugin turns
+        # client plugins on. Homebrew's libfido2 links OpenSSL 4 anyway.
+        mysql_add_cmake_flags "9.7.4" "9.7.4" "any" "-DWITH_FIDO=bundled"
         declare -a ps_common=("-DWITH_FIDO=bundled")
 	mysql_add_comp_flags "26.7.0" "26.7.0" "cxx" \
  		`# https://bugs.mysql.com/bug.php?id=117299` \
