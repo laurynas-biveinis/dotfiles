@@ -220,7 +220,7 @@ mysql_export_environment_helpers() {
     declare -gA cmake_flags=()
 
     declare -r min_version="8.0.18"
-    declare -r max_version="26.7.0"
+    declare -r max_version="26.10.0"
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [ "$uname_out" = "Darwin" ]; then
@@ -480,10 +480,28 @@ mysql_export_environment_helpers() {
     mysql_add_cmake_flags "8.0.33" "${max_version}" any \
                           "-DFORCE_COLORED_OUTPUT=ON"
 
+    declare -a -r my26100_comp_flags=(
+	    "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 26.10.0 cxx)"
+	    "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 26.10.0 cxx_debug)"
+	    "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 26.10.0 cxx_release)"
+    )
+
     declare -a -r my2670_comp_flags=(
 	    "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 26.7.0 cxx)"
 	    "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 26.7.0 cxx_debug)"
 	    "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 26.7.0 cxx_release)"
+    )
+
+    declare -a -r my974_comp_flags=(
+	    "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.7.4 cxx)"
+	    "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.7.4 cxx_debug)"
+	    "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.7.4 cxx_release)"
+    )
+
+    declare -a -r my972_comp_flags=(
+	    "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.7.2 cxx)"
+	    "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.7.2 cxx_debug)"
+	    "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.7.2 cxx_release)"
     )
 
     declare -a -r my971_comp_flags=(
@@ -552,6 +570,20 @@ mysql_export_environment_helpers() {
         "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 9.0.0 cxx)"
         "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 9.0.0 cxx_debug)"
         "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 9.0.0 cxx_release)"
+    )
+
+    declare -a -r my8413_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.13 c)"
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.13 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.13 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.13 cxx_release)"
+    )
+
+    declare -a -r my8411_comp_flags=(
+        "-DCMAKE_C_FLAGS=$(mysql_get_comp_flags 8.4.11 c)"
+        "-DCMAKE_CXX_FLAGS=$(mysql_get_comp_flags 8.4.11 cxx)"
+        "-DCMAKE_CXX_FLAGS_DEBUG=$(mysql_get_comp_flags 8.4.11 cxx_debug)"
+        "-DCMAKE_CXX_FLAGS_RELEASE=$(mysql_get_comp_flags 8.4.11 cxx_release)"
     )
 
     declare -a -r my849_comp_flags=(
@@ -819,10 +851,25 @@ mysql_export_environment_helpers() {
 
     # Paydirt!
 
+    export MY26100D=("${myd[@]}" $(mysql_get_cmake_flags 26.10.0 any_debug)
+		     "${my26100_comp_flags[@]}")
+    export MY26100=("${myr[@]}" $(mysql_get_cmake_flags 26.10.0 any_release)
+		    "${my26100_comp_flags[@]}")
+
     export MY2670D=("${myd[@]}" $(mysql_get_cmake_flags 26.7.0 any_debug)
 		    "${my2670_comp_flags[@]}")
     export MY2670=("${myr[@]}" $(mysql_get_cmake_flags 26.7.0 any_release)
 		   "${my2670_comp_flags[@]}")
+
+    export MY974D=("${myd[@]}" $(mysql_get_cmake_flags 9.7.4 any_debug)
+		   "${my974_comp_flags[@]}")
+    export MY974=("${myr[@]}" $(mysql_get_cmake_flags 9.7.4 any_release)
+		  "${my974_comp_flags[@]}")
+
+    export MY972D=("${myd[@]}" $(mysql_get_cmake_flags 9.7.2 any_debug)
+		   "${my972_comp_flags[@]}")
+    export MY972=("${myr[@]}" $(mysql_get_cmake_flags 9.7.2 any_release)
+		  "${my972_comp_flags[@]}")
 
     export MY971D=("${myd[@]}" $(mysql_get_cmake_flags 9.7.1 any_debug)
 		   "${my971_comp_flags[@]}")
@@ -873,6 +920,16 @@ mysql_export_environment_helpers() {
                    "${my900_comp_flags[@]}")
     export MY900=("${myr[@]}" $(mysql_get_cmake_flags 9.0.0 any_release)
                   "${my900_comp_flags[@]}")
+
+    export MY8413D=("${myd[@]}" $(mysql_get_cmake_flags 8.4.13 any_debug)
+		    "${my8413_comp_flags[@]}")
+    export MY8413=("${myr[@]}" $(mysql_get_cmake_flags 8.4.13 any_release)
+		   "${my8413_comp_flags[@]}")
+
+    export MY8411D=("${myd[@]}" $(mysql_get_cmake_flags 8.4.11 any_debug)
+		    "${my8411_comp_flags[@]}")
+    export MY8411=("${myr[@]}" $(mysql_get_cmake_flags 8.4.11 any_release)
+		   "${my8411_comp_flags[@]}")
 
     export MY849D=("${myd[@]}" $(mysql_get_cmake_flags 8.4.9 any_debug)
                    "${my849_comp_flags[@]}")
@@ -1142,9 +1199,27 @@ mysql_cmake() {
         "mysql")
 		echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
 		case "$major_ver.$minor_ver.$patch_level" in
+		26.10.0)
+			declare -a release_flags=("${MY26100[@]}")
+			declare -a debug_flags=("${MY26100D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
 		26.7.0)
 			declare -a release_flags=("${MY2670[@]}")
 			declare -a debug_flags=("${MY2670D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
+		9.7.4)
+			declare -a release_flags=("${MY974[@]}")
+			declare -a debug_flags=("${MY974D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
+		9.7.2)
+			declare -a release_flags=("${MY972[@]}")
+			declare -a debug_flags=("${MY972D[@]}")
 			declare -a -r \
 				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
 			;;
@@ -1205,6 +1280,18 @@ mysql_cmake() {
                 9.0.0)
 			declare -a release_flags=("${MY900[@]}")
 			declare -a debug_flags=("${MY900D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
+		8.4.13)
+			declare -a release_flags=("${MY8413[@]}")
+			declare -a debug_flags=("${MY8413D[@]}")
+			declare -a -r \
+				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
+			;;
+		8.4.11)
+			declare -a release_flags=("${MY8411[@]}")
+			declare -a debug_flags=("${MY8411D[@]}")
 			declare -a -r \
 				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
 			;;
