@@ -62,8 +62,10 @@ message view:
   `mu4e-autotask-do-send-email`
 - Acting on the message (reserve these for step 4):
   `mu4e-autotask-browse-url-matching`, arglist
-  `(regexp content &optional description group)`, and
-  `mu4e-autotask-when-body-matches`, arglist
+  `(regexp content &optional description group)`;
+  `mu4e-autotask-browse-html-url-matching`, arglist
+  `(regexp &optional description group)`, from mu4e-autotask 1.1.0 on (step 4
+  says how to check for it); and `mu4e-autotask-when-body-matches`, arglist
   `(msg regexp action &optional skip-message)`. `group` defaults to 1, so pass
   `0` for a regular expression with no capture group; a non-participating group
   yields a message and nil rather than an error. `when-body-matches` matches
@@ -143,6 +145,27 @@ against a source you have actually looked at, and choose that source
 deliberately. `:body` settles nothing here: it is a rendered display, not a
 source you can match (step 2), and an HTML link's target is not even in it.
 
+- **For a link in the HTML body, prefer
+  `mu4e-autotask-browse-html-url-matching`** when the running Emacs has it,
+  which this prints `t` for:
+
+  ```sh
+  emacsclient --eval "(fboundp 'mu4e-autotask-browse-html-url-matching)"
+  ```
+
+  It matches the `text/html` part decoded from its transfer encoding _and_ its
+  charset, so the pattern may contain non-ASCII link text, and it decodes
+  character references in the captured URL. Its pattern still matches the HTML
+  source, so text written there as character references (`&#279;`) must be
+  matched as written:
+
+  ```elisp
+  (mu4e-autotask-browse-html-url-matching "href=\"\\(https://[^\"]+\\)\"")
+  ```
+
+  Without it, use `browse-url-matching` on `(mu4e-autotask-html-content)` as the
+  next two bullets describe.
+
 - **Match a decoded body part, not the raw message.** `mu4e-autotask-html-content`
   / `-text-content` return the part with its transfer encoding already undone by
   `mm-get-part`, so quoted-printable soft breaks, `=3D` escapes, and base64 are
@@ -161,11 +184,11 @@ source you can match (step 2), and an HTML link's target is not even in it.
                                      (mu4e-autotask-html-content) nil 1)
   ```
 
-- **The pattern matches bytes, not characters.** These helpers return unibyte
-  strings, so a non-ASCII marker in an ordinary multibyte pattern will not
-  match. Keep the pattern ASCII — anchor on an ASCII neighbour (a domain, an
-  ID), as the `README.org` examples do — or wrap it in `encode-coding-string`.
-  That
+- **The pattern matches bytes, not characters.** These helpers (all but
+  `browse-html-url-matching`) return unibyte strings, so a non-ASCII marker in
+  an ordinary multibyte pattern will not match. Keep the pattern ASCII — anchor
+  on an ASCII neighbour (a domain, an ID), as the `README.org` examples do — or
+  wrap it in `encode-coding-string`. That
   wrap is legal here because the pattern lives in the action function's `defun`
   body, which is evaluated — unlike a bare form in the backquoted rules list,
   which is data unless prefixed with `,` (step 3).
