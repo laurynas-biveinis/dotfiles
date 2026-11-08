@@ -32,7 +32,7 @@ used to implement similar menus in other packages.
 resource to get over that hurdle is Psionic K's interactive tutorial,
 available at <https://github.com/positron-solutions/transient-showcase>.
 
-This manual is for Transient version 0.13.8.
+This manual is for Transient version 0.13.9.
 
      Copyright (C) 2018-2026 Free Software Foundation, Inc.
 
@@ -459,41 +459,47 @@ File: transient.info,  Node: Enabling and Disabling Suffixes,  Next: Other Comma
 2.7 Enabling and Disabling Suffixes
 ===================================
 
-The user base of a package that uses transients can be very diverse.
-This is certainly the case for Magit; some users have been using it and
-Git for a decade, while others are just getting started now.
+The user base of a package that uses transient menus can be diverse.
+This is certainly the case for Magit.  Some users have been using it and
+Git for a decade or more, while others are just getting started now.
 
-   For that reason a mechanism is needed that authors can use to
-classify a transient's infixes and suffixes along the
-essentials...everything spectrum.  We use the term “levels” to describe
-that mechanism.
+   For that reason a mechanism is needed, that enables authors to
+control which infix and suffix commands are shown to which group of
+users, and for users to override those choices.  We use the term
+“levels” to describe that mechanism.
 
-   Each suffix command is placed on a level and each transient has a
-level (called “transient-level”), which controls which suffix commands
-are available.  Integers between 1 and 7 (inclusive) are valid levels.
-For suffixes, 0 is also valid; it means that the suffix is not displayed
-at any level.
+   Each suffix command is placed on a level and each menu has a level.
+A suffix commands is available if its (non-zero) level is smaller or
+equal to the level of the menu.  Valid levels are integers between 1 and
+7.  As a special case, the level of a suffix can be 0, in which case it
+is never shown, regardless of the menu's level.  The default level for
+suffix commands is 1.
 
-   The levels of individual transients and/or their individual suffixes
-can be changed interactively, by invoking the menu and entering its
-"edit" mode using the command ‘transient-set-level’, as described below.
+   The default level for menus is controlled using the option
+‘transient-default-level’, which defaults to 4.  To show more suffix
+commands increase the value of this option or the level of an individual
+menu.  To show fewer suffixes increase such a value.  Changing the value
+of this option affects the menus of all packages, so you might want to
+only change the value of individual menus.
 
-   The default level for both transients and their suffixes is 4.  The
-‘transient-default-level’ option only controls the default for
-transients.  The default suffix level is always 4.  The authors of
-transients should place certain suffixes on a higher level, if they
-expect that it won't be of use to most users, and they should place very
-important suffixes on a lower level, so that they remain available even
-if the user lowers the transient level.
+   To control which commands are shown for some menu, invoke it as
+usual, and then press ‘C-x l’.  You will be guided through the process.
+This allows you to change the level of the menu itself, and/or the
+levels of individual suffix commands for even finer control.
+
+   The function ‘transient-set-default-level’ can be used to change the
+level of an individual suffix command across all menus, which feature
+that command and provided no local value is specified.  This does not
+work for all suffix commands, and is thus discouraged.
 
  -- User Option: transient-default-level
      This option controls which suffix levels are made available by
-     default.  It sets the transient-level for transients for which the
-     user has not set that individually.
+     default.  It specifies the level for menus for which the user has
+     not set a local value.  The default is 4.
 
  -- User Option: transient-levels-file
      This option names the file that is used to persist the levels of
-     transients and their suffixes between Emacs sessions.
+     menus and their suffix commands between Emacs sessions.
 
    Option ‘transient-common-command-prefix’ controls the prefix key used
 in the following bindings.  For simplicity's sake the default, ‘C-x’, is
@@ -529,9 +535,38 @@ shown below.
      the level specified by ‘transient-default-level’ are temporarily
      available anyway.
 
- -- Function: transient-set-default-level suffix level
+ -- Function: transient-set-default-level command level
      This function sets the default level of the suffix COMMAND to
      LEVEL.
+
+     (The use of this function is currently discouraged, because it does
+     not work for all commands and because even for commands, which
+     would support it, it does not always have an effect.)
+
+     A suffix command is made available if its level is smaller than or
+     equal to the level of the menu.  The level of a suffix command is
+     determined as follows:
+
+       1. The default level for all suffix commands, which is always 1.
+
+       2. The level set when the suffix command was defined using
+          ‘transient-define-suffix’, ‘transient-define-infix’ or
+          ‘transient-define-argument’.
+
+       3. The level set using this function.  Use this to override the
+          value set using (2) or the default from (1).  (4) and (5)
+          override the value set here.  This function can only be used
+          for commands defined using the functions mentioned in (2);
+          else you have to use (5).  Unless a command appears in
+          multiple menus, it is better to use (5).
+
+       4. The level set when binding the suffix command in a specific
+          menu.  Package authors should avoid this, and prefer (2);
+          unless they want to place a command on different levels in
+          different menus.
+
+       5. The level interactively set for an individual suffix command
+          in an individual menu, using ‘C-x l’.
 
      If a suffix command appears in multiple menus, it may make sense to
      consistently change its level in all those menus at once.  For
@@ -539,7 +574,7 @@ shown below.
      command ‘magit:--gpg-sign’), is bound in all of Magit's menu which
      create commits.  Users who sometimes sign their commits would want
      that argument to be available in all of these menus, while for
-     users who never sign it is just unnecessary noise in any menus.
+     users who never sign, it is just unnecessary noise in any menus.
 
      To always make ‘--gpg-sign’ available, use:
 
@@ -548,25 +583,6 @@ shown below.
      To never make ‘--gpg-sign’ available, use:
 
           (transient-set-default-level 'magit:--gpg-sign 0)
-
-     This sets the level in the suffix prototype object for this
-     command.  Commands only have a suffix prototype if they were
-     defined using one of ‘transient-define-argument’,
-     ‘transient-define-infix’ and ‘transient-define-suffix’.  For all
-     other commands this would signal an error.  (This is one of the
-     reasons why package authors should use one of these functions to
-     define shared suffix commands, and especially shared arguments.)
-
-     If the user changes the level of a suffix in a particular menu,
-     using ‘C-x l’ as shown above, then that obviously shadows the
-     default.
-
-     It is also possible to set the level of a suffix binding in a
-     particular menu, either when defining the menu using
-     ‘transient-define-prefix,’ or later using
-     ‘transient-insert-suffix’.  If such bindings specify a level, then
-     that also overrides the default.  (Per-suffix default levels is a
-     new feature, so you might encounter this quite often.)
 
 
 File: transient.info,  Node: Other Commands,  Next: Configuration,  Prev: Enabling and Disabling Suffixes,  Up: Usage
@@ -3101,11 +3117,11 @@ Appendix B Keystroke Index
 * C-q:                                   Aborting and Resuming Transients.
                                                                (line 36)
 * C-x a:                                 Enabling and Disabling Suffixes.
-                                                               (line 72)
+                                                               (line 78)
 * C-x C-k:                               Saving Values.        (line 33)
 * C-x C-s:                               Saving Values.        (line 29)
 * C-x l:                                 Enabling and Disabling Suffixes.
-                                                               (line 47)
+                                                               (line 53)
 * C-x n:                                 Using History.        (line 22)
 * C-x p:                                 Using History.        (line 17)
 * C-x s:                                 Saving Values.        (line 25)
@@ -3203,9 +3219,9 @@ Appendix C Command and Function Index
 * transient-scroll-up:                   Other Commands.      (line  12)
 * transient-set:                         Saving Values.       (line  25)
 * transient-set-default-level:           Enabling and Disabling Suffixes.
-                                                              (line  76)
+                                                              (line  82)
 * transient-set-level:                   Enabling and Disabling Suffixes.
-                                                              (line  47)
+                                                              (line  53)
 * transient-setup-children:              Group Methods.       (line   6)
 * transient-show-help:                   Suffix Methods.      (line 107)
 * transient-show-summary:                Suffix Methods.      (line 132)
@@ -3221,7 +3237,7 @@ Appendix C Command and Function Index
                                                               (line  50)
 * transient-toggle-docstrings:           Other Commands.      (line  29)
 * transient-toggle-level-limit:          Enabling and Disabling Suffixes.
-                                                              (line  72)
+                                                              (line  78)
 * transient-with-help-window:            Suffix Methods.      (line 127)
 
 
@@ -3243,7 +3259,7 @@ Appendix D Variable Index
 * transient-current-suffixes:            Current Suffix Command.
                                                               (line  45)
 * transient-default-level:               Enabling and Disabling Suffixes.
-                                                              (line  33)
+                                                              (line  39)
 * transient-describe-menu:               Configuration.       (line 200)
 * transient-detect-key-conflicts:        Configuration.       (line 406)
 * transient-display-buffer-action:       Configuration.       (line 113)
@@ -3258,7 +3274,7 @@ Appendix D Variable Index
 * transient-history-file:                Using History.       (line  41)
 * transient-history-limit:               Using History.       (line  45)
 * transient-levels-file:                 Enabling and Disabling Suffixes.
-                                                              (line  38)
+                                                              (line  44)
 * transient-mode-line-format:            Configuration.       (line 303)
 * transient-navigate-to-group-descriptions: Configuration.    (line 189)
 * transient-post-exit-hook:              Configuration.       (line 442)
@@ -3319,8 +3335,6 @@ Appendix E Concept Index
 * suffix specifications:                 Binding Suffix and Infix Commands.
                                                               (line 164)
 * transient state:                       Transient State.     (line   6)
-* transient-level:                       Enabling and Disabling Suffixes.
-                                                              (line  15)
 * value history:                         Using History.       (line   6)
 
 
@@ -4056,64 +4070,64 @@ Ref: Saving Values-Footnote-115295
 Node: Using History15488
 Node: Getting Help for Suffix Commands17360
 Node: Enabling and Disabling Suffixes18736
-Node: Other Commands24090
-Node: Configuration25768
-Ref: Essential Options26048
-Ref: Accessibility Options33174
-Ref: Auxiliary Options40415
-Ref: Developer Options45066
-Ref: Hook Variables46591
-Node: Modifying Existing Transients47119
-Node: Defining New Commands52986
-Node: Technical Introduction53426
-Node: Defining Transients59117
-Node: Binding Suffix and Infix Commands62460
-Ref: Group Specifications63251
-Ref: Suffix Specifications70176
-Node: Defining Suffix and Infix Commands75074
-Node: Using Infix Arguments78110
-Node: Using Prefix Scope81138
-Node: Current Suffix Command83174
-Node: Current Prefix Command85531
-Node: Transient State88083
-Ref: Pre-commands for Infixes92386
-Ref: Pre-commands for Suffixes92902
-Ref: Pre-commands for Non-Suffixes95351
-Ref: Special Pre-Commands96487
-Node: Classes and Methods96995
-Node: Group Classes99082
-Node: Group Methods100995
-Node: Prefix Classes102254
-Node: Suffix Classes103095
-Node: Prefix Methods107889
-Node: Suffix Methods111110
-Ref: Suffix Value Methods111370
-Ref: Suffix Format Methods114609
-Node: Prefix Slots117490
-Ref: Value and Scope117640
-Ref: Behavior120628
-Ref: Appearance121969
-Ref: Documentation122653
-Ref: Internal123548
-Node: Suffix Slots124899
-Ref: Slots of transient-child125267
-Ref: Slots of transient-suffix126982
-Ref: Slots of transient-infix129423
-Ref: Slots of transient-variable133176
-Ref: Slots of transient-switches133278
-Node: Predicate Slots133641
-Node: FAQ135978
-Ref: Can I control how the menu buffer is displayed?136107
-Ref: How can I copy text from the menu buffer?136431
-Ref: How can I autoload prefix and suffix commands?137138
-Ref: How does Transient compare to prefix keys and universal arguments?137606
-Ref: How does Transient compare to Magit-Popup and Hydra?137849
-Ref: Why does q not quit popups anymore?138043
-Node: Keystroke Index139144
-Node: Command and Function Index141009
-Node: Variable Index148476
-Node: Concept Index151766
-Node: GNU General Public License154590
+Node: Other Commands24843
+Node: Configuration26521
+Ref: Essential Options26801
+Ref: Accessibility Options33927
+Ref: Auxiliary Options41168
+Ref: Developer Options45819
+Ref: Hook Variables47344
+Node: Modifying Existing Transients47872
+Node: Defining New Commands53739
+Node: Technical Introduction54179
+Node: Defining Transients59870
+Node: Binding Suffix and Infix Commands63213
+Ref: Group Specifications64004
+Ref: Suffix Specifications70929
+Node: Defining Suffix and Infix Commands75827
+Node: Using Infix Arguments78863
+Node: Using Prefix Scope81891
+Node: Current Suffix Command83927
+Node: Current Prefix Command86284
+Node: Transient State88836
+Ref: Pre-commands for Infixes93139
+Ref: Pre-commands for Suffixes93655
+Ref: Pre-commands for Non-Suffixes96104
+Ref: Special Pre-Commands97240
+Node: Classes and Methods97748
+Node: Group Classes99835
+Node: Group Methods101748
+Node: Prefix Classes103007
+Node: Suffix Classes103848
+Node: Prefix Methods108642
+Node: Suffix Methods111863
+Ref: Suffix Value Methods112123
+Ref: Suffix Format Methods115362
+Node: Prefix Slots118243
+Ref: Value and Scope118393
+Ref: Behavior121381
+Ref: Appearance122722
+Ref: Documentation123406
+Ref: Internal124301
+Node: Suffix Slots125652
+Ref: Slots of transient-child126020
+Ref: Slots of transient-suffix127735
+Ref: Slots of transient-infix130176
+Ref: Slots of transient-variable133929
+Ref: Slots of transient-switches134031
+Node: Predicate Slots134394
+Node: FAQ136731
+Ref: Can I control how the menu buffer is displayed?136860
+Ref: How can I copy text from the menu buffer?137184
+Ref: How can I autoload prefix and suffix commands?137891
+Ref: How does Transient compare to prefix keys and universal arguments?138359
+Ref: How does Transient compare to Magit-Popup and Hydra?138602
+Ref: Why does q not quit popups anymore?138796
+Node: Keystroke Index139897
+Node: Command and Function Index141762
+Node: Variable Index149229
+Node: Concept Index152519
+Node: GNU General Public License155196
 
 End Tag Table
 
