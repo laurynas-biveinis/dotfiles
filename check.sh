@@ -271,6 +271,8 @@ fi
 # match, so those are checked either way. A new file has no recorded mode, so
 # the globs miss it until it is staged, while a named entry for it trips
 # --error-unmatch instead — which is why the message offers staging.
+# Only exit 1 means an unmatched entry; git's fatal errors, such as no
+# repository or bad pathspec magic, exit 128 and get the generic message.
 # No -z: the path reaches only the failure message, so git quoting an unusual
 # name is cosmetic here, unlike the PYTHON_FILES listing where a quoted name
 # fails the -f test and drops the file. -z would also collapse every row into
@@ -289,8 +291,10 @@ done <<<"$shell_modes"
 if [ "$MODES_STATUS" -eq 0 ] && [ ${#NON_EXEC[@]} -eq 0 ]; then
 	echo "OK!"
 else
-	if [ "$MODES_STATUS" -ne 0 ]; then
+	if [ "$MODES_STATUS" -eq 1 ]; then
 		echo "a MODE_PATHSPECS entry matched nothing in the index (git names it above): stage it if the file is new, or fix or drop the entry if it was renamed or deleted"
+	elif [ "$MODES_STATUS" -ne 0 ]; then
+		echo "listing MODE_PATHSPECS failed (git names it above): no recorded modes were checked"
 	fi
 	if [ ${#NON_EXEC[@]} -gt 0 ]; then
 		echo "recorded mode is not 100755 (super-linter bash-exec requires it): ${NON_EXEC[*]}"
