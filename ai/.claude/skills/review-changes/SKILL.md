@@ -70,9 +70,11 @@ baseline; follow the concurrency reference if the record is missing.
    skill's installed directory, as the inner dispatch convention does. Include
    `Base directory for this skill: <absolute inspection directory>` in the
    reviewer prompt, naming that sibling `inspect-changes` directory alongside
-   its absolute entrypoint path. The reviewer owns its inner subagents and
-   scratch reports. It cannot edit the project or file records. When the
-   known-findings file lists any finding, supply its path as
+   its absolute entrypoint path. Explicitly instruct the reviewer to use `Read`
+   on that entrypoint and never load it through the `Skill` tool under any
+   registered name, directory-scoped variants included. The reviewer owns its
+   inner subagents and scratch reports. It cannot edit the project or file
+   records. When the known-findings file lists any finding, supply its path as
    `Known findings: <path>`; give it no other prior outer findings and no focus
    steering. Wait for its result before mutating the reviewed state.
 1. Read its result envelope and final report. Only `Status: converged` supplies
