@@ -41,7 +41,10 @@ function build_tree() {
 	fi
 	pushd "$build_dir" || return 1
 	echo "Building $build_dir..."
-	time ninja
+	time ninja || {
+		popd
+		return 1
+	}
 	date
 	popd || return 1
 	return 0
@@ -57,26 +60,30 @@ done
 
 mysql_unlink_googletest
 
+declare -i fetchworksrc_status=0
 for worktree in $WORK_TREES_TO_UPDATE; do
 	declare full_worktree_path="$WORK_SRC_ROOT/$worktree"
-	pushd "$full_worktree_path" || return
+	pushd "$full_worktree_path" || exit
 
 	declare -i workaround_ssl
 	if ! workaround_ssl=$(mysql_need_openssl_unlink_workaround); then
 		popd
-		return 1
+		exit 1
 	fi
 
-	mysql_maybe_unlink_openssl $workaround_ssl
+	if mysql_maybe_unlink_openssl $workaround_ssl; then
+		for build_dir in "$full_worktree_path"/_build-*(N/); do
+			if ! build_tree $build_dir; then
+				fetchworksrc_status=1
+			fi
+		done
+	else
+		fetchworksrc_status=1
+	fi
 
-	for build_dir in "$full_worktree_path"/_build-*(/); do
-		if ! build_tree $build_dir; then
-			mysql_relink_openssl $workaround_ssl
-			return
-		fi
-	done
+	mysql_relink_openssl $workaround_ssl || fetchworksrc_status=1
 
-	mysql_relink_openssl $workaround_ssl
-
-	popd || return
+	popd || exit
 done
+
+exit "$fetchworksrc_status"

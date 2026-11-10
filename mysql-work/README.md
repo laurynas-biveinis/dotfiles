@@ -46,10 +46,17 @@ I symlink these into the parent directory of all the source trees.
 - [fetchworksrc](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/usr/bin/fetchworksrc):
   fetch all remotes for Git repos in `WORK_REPOS_TO_PULL` environment variable;
   pull all the worktrees in `WORK_TREES_TO_UPDATE` one and do incremental
-  builds. This script runs at midnight on my work machine. There are some
-  quality of life embellishments such as skipping the the build if the machine
-  is a laptop on battery and managing Homebrew OpenSSL version incompatibilities
-  in builds. Again, this script is not usable without its [Zsh utility
+  builds. A failed fetch, pull, googletest unlink or MySQL version check stops
+  the script, and a failed OpenSSL unlink skips that worktree's builds;
+  otherwise all builds are attempted even if one fails, restoring the OpenSSL
+  links after each worktree and the working directory after each build. If any
+  build, OpenSSL unlink or relink fails, the script returns nonzero after the
+  last worktree. The nightly runner still attempts all its scripts and returns
+  nonzero if any script fails. This script runs at midnight on my work machine.
+  There are some quality of life embellishments such as skipping the the build
+  if the machine is a laptop on battery and managing Homebrew OpenSSL version
+  incompatibilities in builds. Again, this script is not usable without its
+  [Zsh utility
   functions](https://github.com/laurynas-biveinis/dotfiles/tree/master/mysql-work/.zsh.d/functions).
 
 ## Zsh function library

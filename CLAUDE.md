@@ -74,8 +74,8 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
     Neither shebang clears the second wall: `-x` follows the sourced path, so
     where it is unreadable — every CI runner for the `/opt/virtualenvs` two, and
     everywhere for the `~`-prefixed one — the file needs a `# shellcheck`
-    directive: `source=` to point `-x` at a file, as `nightly/usr/bin/nightly`
-    does with `source=/dev/null`, or a `disable=` — `SC1091` for a constant
+    directive: `source=` to point `-x` at a file, such as `source=/dev/null`,
+    or a `disable=` — `SC1091` for a constant
     absolute path, as `rust/.zsh.d/env/rust.sh` carries, `SC1090` for a
     non-constant one.
 - Sourced rather than executed: `elisp-env.sh`, `zsh/.zshenv`,
@@ -91,17 +91,6 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   See the `# Workaround P10K going crazy`
   lines in `mysql-work/.zsh.d/rc/mysql-work.sh` for what setting `-e` in
   interactive configuration costs.
-- Sourced **and** executed: `nightly/usr/bin/nightly` sources, rather than
-  runs, the seven `*/usr/bin/` scripts symlinked from `*/.nightly/`, while
-  `~/usr/bin` on `PATH` means they are also invoked directly. On the sourced
-  path their shebangs are inert, so the three `#!/bin/sh` bodies execute under
-  Zsh; the runner's `-euo pipefail` is a floor their own `set` lines can add to
-  but cannot clear — those three are `set -eu`, so each gains `pipefail` it
-  does not set, while the four `#!/bin/zsh` bodies already set `-euo pipefail`
-  themselves; and their top-level names, `readonly` marks, function definitions
-  and working directory persist into the runner for the rest of the loop.
-  Command prefixes such as `IFS=" " read -r -A x <file` in
-  `scripts/usr/bin/dotfilesupdate` do not leak.
 - `zsh/.zshrc` is sourced too. Its Zsh shebang makes it visible to
   super-linter, so `FILTER_REGEX_EXCLUDE` excludes it to preserve its
   formatting. `./check.sh`
@@ -113,6 +102,12 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   instead — which is what keeps them out of super-linter's view, and so out of
   the mode-755 rule above. `./check.sh` includes them by directory glob in
   `ZSH_FILES` for `zsh -n`; `ZSH_SCRIPT_FILES` keeps the mode check separate.
+- Nightly jobs: `nightly/usr/bin/nightly` runs the seven `*/usr/bin/` scripts
+  symlinked from `*/.nightly/` as separate processes through their shebangs,
+  as a direct `~/usr/bin` invocation does, so each must set its own errexit.
+  The runner attempts every script and exits nonzero if any fails. Do not
+  replace the child process with a conditional `source`: that suppresses
+  errexit inside the script.
 
 ## Code Style Guidelines
 
