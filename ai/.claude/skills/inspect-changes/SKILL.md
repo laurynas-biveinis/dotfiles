@@ -2,8 +2,8 @@
 name: inspect-changes
 description: >-
   Inspect code changes and report verified, analyzed findings without acting.
-  Use when review-changes needs an independent inspection, or when the caller
-  requests a review report without fixes or tracking operations.
+  Use when the caller requests a review report without fixes or tracking
+  operations.
 allowed-tools: >-
   Bash(git diff:*)
   Bash(git log:*)
