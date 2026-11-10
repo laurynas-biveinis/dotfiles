@@ -11,6 +11,10 @@ allowed-tools: Bash(git diff:*) Read
 
 # Identify Diff Splits
 
+You are running as the forked `identify-diff-splits` skill. This
+document is your complete task — there is no separate user request.
+Execute the numbered Method steps now, starting with step 1.
+
 Identify the independent concerns in the current uncommitted changes.
 Name and list them.
 
