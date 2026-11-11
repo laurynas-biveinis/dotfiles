@@ -235,6 +235,136 @@ exit $fetch_status
         self.assertEqual(self.recorded_calls(), ["bash", "after"])
 
 
+class FetchworksrcPullTest(ScriptTestCase):
+    """Exercise pull failures against real shared Git configuration."""
+
+    def setUp(self):
+        super().setUp()
+        self.repo = self.root / "repo"
+        self.repo.mkdir()
+        self.env = {
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "FETCHWORKSRC_TEST_GIT_ENV": str(REPO / "git/.zsh.d/env/git.sh"),
+        }
+        self.git("init")
+        self.git(
+            "-c",
+            "user.name=Test",
+            "-c",
+            "user.email=test@example.invalid",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "Initial",
+        )
+        self.git("worktree", "add", "-b", "linked", str(self.root / "linked"))
+        (self.repo / ".gitconfig").write_text(
+            "[merge]\n\trenormalize = true\n", encoding="utf-8"
+        )
+        functions = self.root / "functions"
+        functions.mkdir()
+        for name in (
+            "mysql_unlink_googletest",
+            "mysql_need_openssl_unlink_workaround",
+            "mysql_maybe_unlink_openssl",
+            "mysql_relink_openssl",
+        ):
+            (functions / name).write_text("return 0\n", encoding="utf-8")
+        (self.root / ".zshenv").write_text(
+            r"""
+. "$FETCHWORKSRC_TEST_GIT_ENV"
+fpath=("$HOME/functions")
+WORK_SRC_ROOT=$HOME
+WORK_REPOS_TO_PULL=()
+WORK_TREES_TO_UPDATE=(linked)
+git() {
+    case "$*" in
+        pull|"submodule update")
+            print -r -- "$*" >> "$NIGHTLY_TEST_CALLS"
+            command git config --local --list > "$HOME/$1-config"
+            if [[ "$*" == "$FETCHWORKSRC_TEST_FAILED_CALL" ]]; then
+                return 23
+            fi
+            return 0
+            ;;
+        *) command git "$@" ;;
+    esac
+}
+""",
+            encoding="utf-8",
+        )
+
+    def git(self, *args):
+        """Run real Git with isolated configuration, failing on setup errors."""
+        return subprocess.run(
+            ["git", *args],
+            cwd=self.repo,
+            env={**os.environ, **self.env},
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+    def test_include_state_and_update_status(self):
+        """Updates preserve opt-in state and propagate either update's failure."""
+        config = self.repo / ".git/config"
+        initial = config.read_text(encoding="utf-8")
+        for includes, during_update in (
+            ((), []),
+            (("../.gitconfig",), []),
+            (
+                ("../.gitconfig", "../extra.gitconfig"),
+                ["include.path=../.gitconfig", "include.path=../extra.gitconfig"],
+            ),
+        ):
+            for failed_call, expected_status, expected_calls in (
+                ("pull", 23, ["pull"]),
+                ("submodule update", 23, ["pull", "submodule update"]),
+                ("none", 0, ["pull", "submodule update"]),
+            ):
+                with self.subTest(includes=includes, failed_call=failed_call):
+                    config.write_text(initial, encoding="utf-8")
+                    for include in includes:
+                        self.git("config", "--local", "--add", "include.path", include)
+                    original = config.read_text(encoding="utf-8")
+                    result = self.run_script(
+                        "mysql-work/usr/bin/fetchworksrc",
+                        {**self.env, "FETCHWORKSRC_TEST_FAILED_CALL": failed_call},
+                    )
+                    self.assertEqual(
+                        result.returncode,
+                        expected_status,
+                        result.stdout + result.stderr,
+                    )
+                    self.assertEqual(config.read_text(encoding="utf-8"), original)
+                    self.assertEqual(self.recorded_calls(), expected_calls)
+                    for call in expected_calls:
+                        snapshot = self.root / f"{call.split()[0]}-config"
+                        self.assertEqual(
+                            [
+                                line
+                                for line in snapshot.read_text(
+                                    encoding="utf-8"
+                                ).splitlines()
+                                if line.startswith("include.path=")
+                            ],
+                            during_update,
+                        )
+
+    def test_failed_restore_is_reported(self):
+        """A restoration failure must not turn a successful update green."""
+        self.git("config", "--local", "include.path", "../.gitconfig")
+        with (self.root / ".zshenv").open("a", encoding="utf-8") as startup:
+            startup.write("cf_on() { return 47; }\n")
+        result = self.run_script(
+            "mysql-work/usr/bin/fetchworksrc",
+            {**self.env, "FETCHWORKSRC_TEST_FAILED_CALL": "none"},
+        )
+        self.assertEqual(result.returncode, 47, result.stdout + result.stderr)
+        self.assertEqual(self.recorded_calls(), ["pull", "submodule update"])
+
+
 class PythonUpdateTest(ScriptTestCase):
     """Run pythonupdate with stub asdf and pip commands."""
 

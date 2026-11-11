@@ -53,6 +53,10 @@ I symlink these into the parent directory of all the source trees.
   build, OpenSSL unlink or relink fails, the script returns nonzero after the
   last worktree. The nightly runner still attempts all its scripts and returns
   nonzero if any script fails. This script runs at midnight on my work machine.
+  Pulls temporarily disable the clang-format Git config include and restore it
+  only if it was removed, including after a failed pull or submodule update.
+  Clones without the include stay opted out. Interruption by a signal can still
+  leave the include disabled.
   There are some quality of life embellishments such as skipping the the build
   if the machine is a laptop on battery and managing Homebrew OpenSSL version
   incompatibilities in builds. Again, this script is not usable without its

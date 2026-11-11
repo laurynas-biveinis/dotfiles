@@ -25,11 +25,16 @@ function pull_worktree() {
 	declare -r fullpath="$WORK_SRC_ROOT/$worktree"
 	echo "Pulling $fullpath..."
 	pushd "$fullpath" || return
-	cf_off || true
-	git pull
-	git submodule update
-	cf_on || true
+	declare -i had_include=0 pull_status=0
+	if cf_off; then
+		had_include=1
+	fi
+	{ git pull && git submodule update; } || pull_status=$?
+	if ((had_include)); then
+		cf_on
+	fi
 	popd || return
+	return "$pull_status"
 }
 
 function build_tree() {
