@@ -484,12 +484,12 @@
        ("Clément Pit-Claudel" . "clement.pitclaudel@live.com"))
       (:commit . "50b9ec928193f339c3c2ae20f088ea62cc82bb9d"))])
  (company
-  . [(1 1 0) ((emacs (26 1)) (posframe (1 5 1)))
+  . [(1 2 0) ((emacs (26 1)) (posframe (1 5 1)))
      "Modular text completion framework" tar
      ((:url . "http://company-mode.github.io/")
       (:keywords "abbrev" "convenience" "matching")
       (:maintainer "Dmitry Gutov" . "dmitry@gutov.dev")
-      (:commit . "1cc907ac9e46ae4209eb5a341131787e0c678406"))])
+      (:commit . "ba9c346c43bbe3c904cec60364100f521c43faea"))])
  (company-ebdb
   . [(1 1) ((company (0 9 4)) (ebdb (0 2)))
      "company-mode completion backend for EBDB in message-mode" tar
@@ -551,13 +551,13 @@
       (:authors ("Protesilaos" . "info@protesilaos.com"))
       (:commit . "0fbd723e7f4d824902b0a4b712b92c66a1eaf97e"))])
  (consult-hoogle
-  . [(0 8 0) ((emacs (28 1)) (consult (2 0)))
+  . [(0 8 1) ((emacs (28 1)) (consult (2 0)))
      "Hoogle frontend using consult" tar
      ((:url . "https://codeberg.org/rahguzar/consult-hoogle")
       (:keywords "docs" "languages")
       (:maintainer "rahguzar" . "rahguzar@mailbox.org")
       (:authors ("rahguzar" . "rahguzar@mailbox.org"))
-      (:commit . "d6d3e9419980c0c385ae2e7a55b1e52e93103f87"))])
+      (:commit . "d8ccf9ed4f409272b01474387a98203d66a7c4a0"))])
  (consult-recoll
   . [(1 0 0) ((emacs (26 1)) (consult (2 0)))
      "Recoll queries using consult" tar
@@ -1772,13 +1772,13 @@
       (:authors ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:commit . "bccb08062a3372629015bcd2c197490b7d005f37"))])
  (jit-spell
-  . [(0 5) ((emacs (27 1)) (compat (29 1)))
+  . [(0 6) ((emacs (28 1)) (compat (31 1)))
      "Just-in-time spell checking" tar
      ((:url . "https://github.com/astoff/jit-spell")
-      (:keywords "tools" "wp")
+      (:keywords "text")
       (:maintainer "Augusto Stoffel" . "arstoffel@gmail.com")
       (:authors ("Augusto Stoffel" . "arstoffel@gmail.com"))
-      (:commit . "e6f3525b848c48906f06bf21a9e8678b95ccd3bf"))])
+      (:commit . "493237accb3759b9ca22b1346a90cceae08d4853"))])
  (js2-mode
   . [(20231224) ((emacs (24 1)) (cl-lib (0 5)))
      "Improved JavaScript editing mode" tar
@@ -2570,13 +2570,13 @@
       (:authors ("Adam Porter" . "adam@alphapapa.net"))
       (:commit . "c579f039ffdb52ff61775ff25510a9c26e25d0c5"))])
  (plz-event-source
-  . [(0 1 3) ((emacs (26 3)) (plz-media-type (0 2 4)))
+  . [(0 1 4) ((emacs (26 3)) (plz-media-type (0 2 4)))
      "Plz Event Source" tar
      ((:url . "https://github.com/r0man/plz-event-source")
       (:keywords "comm" "network" "http")
       (:maintainer "r0man" . "roman@burningswell.com")
       (:authors ("r0man" . "roman@burningswell.com"))
-      (:commit . "236235a14cd33ab3d458627a3c169b1a0c7a887e"))])
+      (:commit . "a286c29d08fbd712374a4743d370bad937c1c3c6"))])
  (plz-media-type
   . [(0 2 4) ((emacs (26 3)) (plz (0 9 1))) "Plz Media Types" tar
      ((:url . "https://github.com/r0man/plz-media-type")
@@ -3731,12 +3731,12 @@
       (:authors ("Andrew Hyatt" . "ahyatt@gmail.com"))
       (:commit . "03d1cca4bd910a8df73e4ec637836c6ac25213a2"))])
  (which-key
-  . [(3 6 1) ((emacs (25 1))) "Display available keybindings in popup"
+  . [(3 6 2) ((emacs (25 1))) "Display available keybindings in popup"
      tar
      ((:maintainer "Justin Burkett" . "justin@burkett.cc")
       (:authors ("Justin Burkett" . "justin@burkett.cc"))
       (:url . "https://elpa.gnu.org/packages/which-key.html")
-      (:commit . "34b832fce1d01c22aa644196cd6e6b50b1d403ee"))])
+      (:commit . "fd3a65bd1af4ca0034da9986c68d455a08e2eca1"))])
  (window-commander
   . [(3 1) ((emacs (27 1))) "Simply execute commands on windows" tar
      ((:url . "https://dsemy.com/projects/window-commander")
