@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+# Unmaintained until needed again; revisit known defects before use.
+
 set -euo pipefail
 
 readonly BRANCH=$1
