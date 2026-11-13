@@ -51,7 +51,7 @@ pushd "$DOTFILES_ROOT" || exit
 # instead of dying mid-flow at the commit
 if git rev-parse -q --verify MERGE_HEAD >/dev/null ||
 	git rev-parse -q --verify CHERRY_PICK_HEAD >/dev/null; then
-	echo "Cannot commit Emacs package update: merge or cherry-pick in progress; conclude it with git commit && git push"
+	>&2 echo "Cannot commit Emacs package update: merge or cherry-pick in progress; conclude it with git commit && git push"
 	popd || exit
 	exit 1
 fi
@@ -61,8 +61,10 @@ fi
 staged_outside_elpa=$(git diff --cached --name-only -- ":!${elpa_dir}")
 readonly staged_outside_elpa
 if [ -n "$staged_outside_elpa" ]; then
-	echo "Cannot commit Emacs package update: staged changes outside ${elpa_dir}/"
-	echo "$staged_outside_elpa"
+	{
+		echo "Cannot commit Emacs package update: staged changes outside ${elpa_dir}/"
+		echo "$staged_outside_elpa"
+	} >&2
 	popd || exit
 	exit 1
 fi
@@ -91,7 +93,7 @@ if [ -n "$elisp_status" ]; then
 elif [ -n "$elpa_status" ]; then
 	commit_message="Emacs package metadata update"
 else
-	echo "Nothing to commit for Emacs package update (no changes found in ${elpa_dir}/)"
+	>&2 echo "Nothing to commit for Emacs package update (no changes found in ${elpa_dir}/)"
 	popd || exit
 	exit 1
 fi
@@ -108,7 +110,7 @@ if confirm_action "Proceed with commit and push?"; then
 	git push
 	echo "Successfully committed and pushed changes."
 else
-	echo "Operation cancelled."
+	>&2 echo "Operation cancelled."
 	popd || exit
 	exit 1
 fi

@@ -23,16 +23,18 @@ if [[ "$COMMAND" != "create" && "$COMMAND" != "checkout" &&
 	"$COMMAND" != "pull" && "$COMMAND" != "push" && "$COMMAND" != "rm" &&
 	"$COMMAND" != "status" && "$COMMAND" != "worktree" &&
 	"$COMMAND" != "rsync" || "$COMMAND" == "UNDEFINED" ]]; then
-	echo "Usage: $0 checkout branch"
-	echo "       $0 create branch starting_point [ee_starting_point]"
-	echo "       $0 fetch"
-	echo "       $0 init branch"
-	echo "       $0 pull"
-	echo "       $0 push"
-	echo "       $0 rm branch"
-	echo "       $0 rsync branch"
-	echo "       $0 status"
-	echo "       $0 worktree prune"
+	{
+		echo "Usage: $0 checkout branch"
+		echo "       $0 create branch starting_point [ee_starting_point]"
+		echo "       $0 fetch"
+		echo "       $0 init branch"
+		echo "       $0 pull"
+		echo "       $0 push"
+		echo "       $0 rm branch"
+		echo "       $0 rsync branch"
+		echo "       $0 status"
+		echo "       $0 worktree prune"
+	} >&2
 	exit 1
 fi
 

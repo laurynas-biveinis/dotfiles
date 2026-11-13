@@ -9,7 +9,7 @@ readonly HIGHER=$3
 pushd "$WORK_SRC_ROOT" || exit 1
 
 if ! pushd "$BRANCH-$HIGHER"; then
-	echo "Failed to pushd to $BRANCH-$HIGHER, check args"
+	>&2 echo "Failed to pushd to $BRANCH-$HIGHER, check args"
 	exit 1
 fi
 

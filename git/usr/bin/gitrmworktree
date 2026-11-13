@@ -20,7 +20,7 @@ while (($# > 0)); do
 done
 
 if [ -z "${WORKTREE_PATH:-}" ]; then
-	echo "Usage: $0 [--force] <worktree-path>"
+	>&2 echo "Usage: $0 [--force] <worktree-path>"
 	exit 3
 fi
 
@@ -58,7 +58,7 @@ if [ $FORCE -ne 1 ]; then
 	readonly BRANCH_MERGED=$?
 
 	if [ $BRANCH_MERGED -ne 0 ]; then
-		echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
+		>&2 echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
 		popd || exit 1
 		exit 2
 	fi
@@ -70,7 +70,7 @@ popd -n
 git worktree prune
 
 if ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
-	echo "Failed to delete the remote branch, perhaps it was already deleted"
+	>&2 echo "Failed to delete the remote branch, perhaps it was already deleted"
 fi
 
 if [ $FORCE -ne 1 ]; then
