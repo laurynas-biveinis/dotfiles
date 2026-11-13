@@ -13,7 +13,7 @@
 	xfuncname="^\\((((def\\S+)|use-package)\\s+\\S+)"
 [fetch]
 	prune = true
-	jobs = 0
+	parallel = 0
 [rerere]
 	enabled = false
 [commit]
