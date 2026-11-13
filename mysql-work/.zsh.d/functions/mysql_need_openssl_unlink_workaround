@@ -6,7 +6,7 @@ mysql_need_openssl_unlink_workaround() {
     autoload mysql_get_minor_version
     autoload mysql_get_patch_level
 
-    if [ "$(uname -s)" != "Darwin" ]; then
+    if [[ $OSTYPE != darwin* ]]; then
         echo 0
         return 0
     fi

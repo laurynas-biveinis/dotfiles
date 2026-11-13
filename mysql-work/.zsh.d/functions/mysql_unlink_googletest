@@ -1,7 +1,7 @@
 # -*- mode: sh; sh-shell: zsh; -*-
 
 mysql_unlink_googletest() {
-    if [ "$(uname -s)" != "Darwin" ]; then
+    if [[ $OSTYPE != darwin* ]]; then
         return 0
     fi
     declare brew_prefix

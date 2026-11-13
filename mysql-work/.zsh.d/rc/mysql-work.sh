@@ -38,9 +38,6 @@ autoload mysql_maybe_unlink_openssl
 autoload mysql_relink_openssl
 autoload mysql_unlink_googletest
 
-uname_out="$(uname -s)"
-declare -r uname_out
-
 mysql_export_build_defaults() {
     # The default build type for mysql_build if not in a build dir and no build
     # type was passed
@@ -219,7 +216,7 @@ mysql_export_environment_helpers() {
     declare -r max_version="26.10.0"
 
     # Platform-specific stuff, both building blocks and complete user variables
-    if [ "$uname_out" = "Darwin" ]; then
+    if [[ $OSTYPE == darwin* ]]; then
         declare brew
         if ! brew="$(brew --prefix)"; then
             return 1
@@ -1790,7 +1787,7 @@ mtr() {
 
     # Disable malloc none zone to get rid of many "malloc: nano zone abandoned
     # due to inability to preallocate reserved vm space" messages
-    if [ "$uname_out" = "Darwin" ]; then
+    if [[ $OSTYPE == darwin* ]]; then
         # Disable ASan ODR violation detection until
         # https://bugs.mysql.com/bug.php?id=116372 is fixed
         # Remove this workaround once 8.0.44 / 8.4.7 / 9.5.0 are the oldest
