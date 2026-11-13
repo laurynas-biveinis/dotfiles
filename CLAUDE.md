@@ -88,9 +88,10 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   its name — `shfmt` takes the dialect from the shebang whatever the file is
   called, and parses its Zsh-only expansions fine. `zsh/.p10k.zsh` is wizard
   output, stays 644, and is excluded for the same formatting reason.
-  See the `# Workaround P10K going crazy`
-  lines in `mysql-work/.zsh.d/rc/mysql-work.sh` for what setting `-e` in
-  interactive configuration costs.
+  `mysql-work/.zsh.d/rc/mysql-work.sh` confines its startup `nounset` to an
+  anonymous function with `local_options`: its former top-level `set -o` lines
+  leaked into the interactive shell, broke P10K, and let `errexit` close the
+  shell on a manual `source ~/.zshrc`.
 - `zsh/.zshrc` is sourced too. Its Zsh shebang makes it visible to
   super-linter, so `FILTER_REGEX_EXCLUDE` excludes it to preserve its
   formatting. `./check.sh`

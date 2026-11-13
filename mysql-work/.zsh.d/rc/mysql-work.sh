@@ -28,10 +28,6 @@
 # Works on Linux and macOS (both Intel and Apple Silicon), Xcode Command Line
 # Tools 16.0.
 
-set -o errexit
-set -o nounset
-set -o pipefail
-
 # mysql-work functions
 autoload mysql_find_version_file
 autoload mysql_get_major_version
@@ -1854,9 +1850,8 @@ lldb_mysqld_core() {
     lldb ../runtime_output_directory/mysqld -c "${cores[1]}"
 }
 
-mysql_export_build_defaults
-mysql_export_environment_helpers
-
-# Workaround P10K going crazy
-set +o errexit
-set +o nounset
+() {
+    setopt local_options no_unset
+    mysql_export_build_defaults
+    mysql_export_environment_helpers
+}
