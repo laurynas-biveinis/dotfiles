@@ -5,9 +5,5 @@ compile_commands.json
 # Emacs Projectile
 .projectile-cache.eld
 
-# Aerospike
-modules/nghttp2
-modules/snappy
-
 # Claude Code
 **/.claude/settings.local.json

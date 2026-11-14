@@ -36,12 +36,12 @@ Create potentially-empty directories so that `stow` does not symlink them:
 
 ```sh
 cd
-mkdir -p .gnupg usr usr/bin usr/src vilniusdb
+mkdir -p .config/git .gnupg usr usr/bin usr/src vilniusdb
 chmod 700 .gnupg
 ```
 
-Check that existing `~/.ssh/config`, `~/.zshenv` & `~/.zshrc` files are OK to
-overwrite, rm them, and
+Check that existing `~/.ssh/config`, `~/.zshenv`, `~/.zshrc` &
+`~/.config/git/ignore` files are OK to overwrite, rm them, and
 `cd ~/dotfiles && stow $(cat dotfiles/base_modules) $(cat dotfiles/extra_modules)`
 
 If "emacs" is enabled in `dotfiles/extra_modules`, then
