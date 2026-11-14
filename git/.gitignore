@@ -8,3 +8,6 @@ compile_commands.json
 # Aerospike
 modules/nghttp2
 modules/snappy
+
+# Claude Code
+**/.claude/settings.local.json
