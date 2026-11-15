@@ -52,19 +52,16 @@ See the `shell-dev` skill for the portable rules; these are how they land here.
   by intent alone. `shell-dev`'s per-category shebang
   rules then decide each, with `setup-ubuntu.sh` as the in-repo template for
   the copy-and-paste shape: it carries the `#!/bin/sh`, the `set -eu`, and the
-  same "consult and copy and paste" header comment `setup-macos.sh` has. Four
+  same "consult and copy and paste" header comment `setup-macos.sh` has. Three
   local caveats:
   - the shebang alone buys nothing here, since the file must also move from
     `ZSH_ROOT_FILES` into `SHELL_FILES` for `bash -n` and `shellcheck -x`
     (super-linter re-routes on its own);
   - anything actually executed loses the `~/.zshenv` `PATH` that supplies
     `brew`, the `asdf` shims and `~/usr/bin`;
-  - `setup-macos-mysql-work.sh` carries a dialect-independent shellcheck
-    finding (`SC2046`, the unquoted `$(xcode-select -p)` `ln` target) that the
-    Zsh shebang hides today;
   - the scripts that `source` a virtualenv activate script —
     `setup-macos-python.sh`, `setup-macos-cpp.sh`, `setup-macos-mysql-work.sh` —
-    hit two independent shellcheck walls the Zsh shebang also hides. `#!/bin/sh`
+    hit two independent shellcheck walls the Zsh shebang hides. `#!/bin/sh`
     makes `source` itself an error (`SC3046`, `warning`; neither `check.sh` nor
     super-linter sets an `-S` floor), so the body needs `.` first — `a3c81b160`
     split this line out of `#!/bin/zsh` `setup-macos.sh` into a new `#!/bin/sh`

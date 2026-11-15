@@ -14,9 +14,9 @@ sudo ln -sf /opt/homebrew/opt/llvm@18/bin/clang-format \
 	/usr/local/bin/clang-format
 brew link protobuf@21
 
-# Needs to be re-executed after every XCode update
+# Needs to be re-executed after every Xcode or Command Line Tools update
 sudo ln -sf /opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.a \
-	$(xcode-select -p)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libgfortran.a
+	"$(xcrun --show-sdk-path)/usr/lib/libgfortran.a"
 
 # Perl
 # TODO(laurynas): does not survive upgrades, do what the Perl formula advises
