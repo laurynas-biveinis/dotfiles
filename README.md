@@ -116,8 +116,11 @@ tramp ts which-key
 ### Custom commands and functionality
 
 - [Set frame geometry after docking/undocking laptop automatically](https://www.reddit.com/r/emacs/comments/ev2q9q/weekly_tipstricketc_thread/fftpfj0?utm_source=share&utm_medium=web2x&context=3)
-- `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, kills all
-  buffers and executes `gitrmworktree`.
+- `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, asks for
+  confirmation, kills the project's buffers and, if none remain, removes the
+  project's worktree with `gitrmworktree`, which also deletes the branch
+  locally and on its remote and discards uncommitted work. A prefix argument
+  passes `--force`, which skips its merged-into-`master` check.
 
 ## Installation
 

@@ -15,7 +15,7 @@
 ;;
 ;; Custom keybindings:
 ;; s-p    - Projectile command map
-;; s-p y  - Projectile kill all buffers and remove the worktree
+;; s-p y  - Kill project buffers; if none remain, remove worktree and branch
 
 ;;; Code:
 
@@ -116,8 +116,11 @@ buffers."
 ;; Integrate `projectile' and `lsp-mode' with my gitrmworktree
 (require 'lsp-mode)
 (defun kill-buffers-rm-worktree (force)
-  "Remove the git worktree and kill project buffers, optionally with FORCE.
-The prefix argument enables FORCE."
+  "Kill project buffers and, if none remain, remove the git worktree.
+Ask for confirmation first.  gitrmworktree also deletes the worktree's
+branch, locally and on its remote, and discards uncommitted work.  The
+prefix argument FORCE passes it --force, skipping its merged-into-master
+check."
   (interactive "P")
   (let* ((project-root-path (projectile-acquire-root))
          ;; `projectile-project-buffers' matches truenames, but a root picked
