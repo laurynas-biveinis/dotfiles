@@ -192,13 +192,14 @@
 		("Damien Doligez" . "damien.doligez@inria.fr"))
       (:commit . "2905a436e956c5bba16c4633a6e4c4fceefa6535"))])
  (casual
-  . [(3 0 2) ((emacs (30 1)) (transient (0 9 0)) (csv-mode (1 27)))
+  . [(3 1 0)
+     ((emacs (30 1)) (transient (0 9 0)) (org (9 3)) (csv-mode (1 27)))
      "Transient user interfaces for various modes" tar
      ((:url . "https://github.com/kickingvegas/casual")
       (:keywords "tools" "wp")
       (:maintainer "Charles Choi" . "kickingvegas@gmail.com")
       (:authors ("Charles Choi" . "kickingvegas@gmail.com"))
-      (:commit . "60259e256e34d4f6ae64ef950c740cacbe8b4d37"))])
+      (:commit . "d5166240f23e4481a32672cd952f7d117c647a0f"))])
  (cdlatex
   . [(4 18 5) nil "Fast input methods for LaTeX environments and math"
      tar
@@ -286,12 +287,12 @@
       (:authors ("Bozhidar Batsov" . "bozhidar@batsov.dev"))
       (:commit . "c0cab0b0423fadf63bdf0f08bd2b74eb0139b893"))])
  (csv2ledger
-  . [(1 5 5) ((emacs (29 1)) (csv-mode (1 24)))
+  . [(1 6) ((emacs (29 1)) (csv-mode (1 24)))
      "Convert csv files to ledger entries" tar
      ((:url . "https://codeberg.org/joostkremers/csv2ledger")
       (:maintainer "Joost Kremers" . "joostkremers@fastmail.fm")
       (:authors ("Joost Kremers" . "joostkremers@fastmail.fm"))
-      (:commit . "7b095112e7a0a4cbe58e665129c3b2d227f3c96e"))])
+      (:commit . "ec888b00419d9b136cf81d4fc1c2d38b02790bb5"))])
  (cyberpunk-theme
   . [(1 22) nil "Cyberpunk Color Theme" tar
      ((:url . "https://github.com/n3mo/cyberpunk-theme.el")
@@ -477,7 +478,7 @@
       (:authors ("Huang Feiyu" . "sibadake1@163.com"))
       (:commit . "2d89026fbc61214fda25d5dd589cd328ddce5f6e"))])
  (elfeed
-  . [(4 2 1) ((emacs (29 1)) (compat (31))) "An Atom/RSS feed reader"
+  . [(4 2 2) ((emacs (29 1)) (compat (31))) "An Atom/RSS feed reader"
      tar
      ((:url . "https://github.com/emacs-elfeed/elfeed")
       (:keywords "network" "comm" "hypermedia")
@@ -486,7 +487,7 @@
        ("Ihor Radchenko" . "yantar92@posteo.net")
        ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Christopher Wellons" . "wellons@nullprogram.com"))
-      (:commit . "acbb86e342d2b8f85dfb30dce9df01db9a829c77"))])
+      (:commit . "d76d43699a1348077bada2c4a313f256f8b377c3"))])
  (elfeed-web
   . [(4 1 0)
      ((emacs (29 1)) (compat (31)) (elfeed (4 1 0))
@@ -690,12 +691,12 @@
       (:authors ("Paul Pogonyshev" . "pogonyshev@gmail.com"))
       (:commit . "c7af95865ef083327d299b86c254ca87fa88a504"))])
  (fedi
-  . [(0 5) ((emacs (28 1)) (markdown-mode (2 5)))
+  . [(0 6) ((emacs (28 1)) (markdown-mode (2 5)))
      "Helper functions for fediverse clients" tar
      ((:url . "https://codeberg.org/martianh/fedi.el")
       (:maintainer "Marty Hiatt" . "martianh@disroot.org")
       (:authors ("Marty Hiatt" . "martianh@disroot.org"))
-      (:commit . "6eee9c67589c56da9a801756142e6563e1fa4384"))])
+      (:commit . "a41695624789b25523904749d0c6fa2dfbb8cd93"))])
  (fj
   . [(0 53)
      ((emacs (29 1)) (compat (31)) (fedi (0 5)) (tp (0 8))
@@ -1017,7 +1018,7 @@
       (:authors ("Thierry Volpiatto" . "thievol@posteo.net"))
       (:commit . "a1e8724ed20d1f8024ff7530047374e1d7e994b0"))])
  (hermes
-  . [(0 9 0)
+  . [(0 9 1)
      ((emacs (29 1)) (keymap-popup (0 4 0)) (websocket (1 15))
       (markdown-mode (2 6)))
      "Emacs frontend for Hermes Agent" tar
@@ -1025,7 +1026,7 @@
       (:keywords "tools" "convenience")
       (:maintainer "Thanos Apollo" . "public@thanosapollo.org")
       (:authors ("Thanos Apollo" . "public@thanosapollo.org"))
-      (:commit . "3f5cc4ea8686471fee72a89f742c792071e7e17d"))])
+      (:commit . "e1799efbe1e98c33c7621d78007462ab9fa199e4"))])
  (hideshowvis
   . [(0 9) ((emacs (27 1)))
      "Fringe markers for regions foldable by hideshow.el" tar
@@ -1669,12 +1670,12 @@
        ("Greg Hendershott" . "racket-mode-author@greghendershott.com"))
       (:commit . "HEAD"))])
  (radio
-  . [(0 4 3) ((emacs (29 1))) "Listen to Internet radio" tar
+  . [(0 4 4) ((emacs (29 1))) "Listen to Internet radio" tar
      ((:url . "https://github.com/jroimartin/radio")
       (:keywords "multimedia")
       (:maintainer "Roi Martin" . "jroi.martin@gmail.com")
       (:authors ("Roi Martin" . "jroi.martin@gmail.com"))
-      (:commit . "da47fd36af0309f3d782dd49559ae77b234896d2"))])
+      (:commit . "14a826b7c479f5e039c6b38de9775a39392d72fe"))])
  (rainbow-delimiters
   . [(2 1 5) nil "Highlight brackets according to their depth" tar
      ((:url . "https://github.com/Fanael/rainbow-delimiters")
@@ -1798,13 +1799,13 @@
       (:authors ("Chen Bin" . "chenbin.sh@gmail.com"))
       (:commit . "4e71f5b9199a0ad10017104a6b2bf5ef5f207dfc"))])
  (simple-httpd
-  . [(1 7) ((emacs (29 1)) (compat (31))) "Pure Elisp HTTP server" tar
+  . [(1 8) ((emacs (29 1)) (compat (31))) "Pure Elisp HTTP server" tar
      ((:url . "https://github.com/skeeto/emacs-http-server")
       (:keywords "network" "comm")
       (:maintainer ("Philip Kaludercic" . "philipk@posteo.net")
 		   ("Daniel Mendler" . "mail@daniel-mendler.de"))
       (:authors ("Christopher Wellons" . "wellons@nullprogram.com"))
-      (:commit . "0c17124cefddf2d50defcec5f2bd25fa6d1db756"))])
+      (:commit . "2777955684eb8724757014de03e7834640d37423"))])
  (slime
   . [(2 32) ((emacs (24 3)) (macrostep (0 9)))
      "Superior Lisp Interaction Mode for Emacs" tar
