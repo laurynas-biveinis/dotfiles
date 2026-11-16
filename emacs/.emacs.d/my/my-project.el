@@ -119,27 +119,46 @@ buffers."
   "Remove the git worktree and kill project buffers, optionally with FORCE.
 The prefix argument enables FORCE."
   (interactive "P")
-  ;; We don't know whether `projectile-kill-buffers' prompt will be answered
-  ;; with 'y' or 'n' – assume that zero existing buffers means 'y'. For that to
-  ;; work, `projectile-kill-buffers-filter' must be set to `'kill-all'.
-  (let ((projectile-kill-buffers-filter 'kill-all)
-        (project-root-path (projectile-acquire-root))
-        (force-arg (if force "--force " "")))
-    (projectile-with-default-dir project-root-path
-      (projectile-kill-buffers)
-      (when (null (projectile-project-buffers project-root-path))
-        (let* ((cmd (concat "gitrmworktree " force-arg project-root-path))
-               (ret-code (shell-command cmd)))
-          (when (/= ret-code 0)
-            (user-error
-             "'%s' failed with exit code %d, check `shell-command-buffer-name'"
-             cmd ret-code))
-          (projectile-remove-known-project project-root-path)
-          ;; TODO(laurynas): remove the project from `treemacs'. For that
-          ;; package it is actually a 'workspace' that needs to be removed and
-          ;; probably `treemacs-remove-workspace' is the right function, but
-          ;; need figure out how to get from path to workspace name first.
-          (lsp-workspace-folders-remove project-root-path))))))
+  (let* ((project-root-path (projectile-acquire-root))
+         ;; `projectile-project-buffers' matches truenames, but a root picked
+         ;; from the known projects is spelled "~/...", and a buffer-local
+         ;; `projectile-project-root' is returned as spelled.
+         (buffers-root (projectile--directory-key project-root-path))
+         ;; Org buffers are hidden from Projectile above, but they visit files
+         ;; that gitrmworktree deletes.
+         (projectile-globally-ignored-modes
+          (remove "org-mode" projectile-globally-ignored-modes))
+         (buffers (projectile-project-buffers buffers-root))
+         (force-arg (if force "--force " "")))
+    (when (yes-or-no-p
+           (format "Kill %d buffers, remove worktree %s and its branch%s? "
+                   (length buffers) project-root-path
+                   (if force ", even if unmerged" "")))
+      (dolist (buffer buffers)
+        ;; Killing a base buffer kills its indirect buffers.
+        (unless (buffer-base-buffer buffer)
+          (kill-buffer buffer)))
+      (when-let* ((remaining (projectile-project-buffers buffers-root)))
+        (user-error "Not removing %s, buffers still open: %s" project-root-path
+                    (mapconcat #'buffer-name remaining ", ")))
+      ;; Bind only now: the kills above may have replaced the current buffer.
+      ;; Not to the worktree itself: `shell-command' copies this into its
+      ;; output buffer, and gitrmworktree deletes it.
+      (let* ((default-directory (file-name-directory
+                                 (directory-file-name project-root-path)))
+             (cmd (concat "gitrmworktree " force-arg project-root-path))
+             (ret-code (shell-command cmd)))
+        (when (/= ret-code 0)
+          (user-error
+           "'%s' failed with exit code %d, check `shell-command-buffer-name'"
+           cmd ret-code))
+        (projectile-remove-known-project
+         (projectile--known-project-root project-root-path))
+        ;; TODO(laurynas): remove the project from `treemacs'. For that
+        ;; package it is actually a 'workspace' that needs to be removed and
+        ;; probably `treemacs-remove-workspace' is the right function, but
+        ;; need figure out how to get from path to workspace name first.
+        (lsp-workspace-folders-remove project-root-path)))))
 
 (define-key projectile-command-map "y" #'kill-buffers-rm-worktree)
 
