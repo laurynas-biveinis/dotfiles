@@ -2,9 +2,8 @@
 
 import subprocess
 import unittest
-from pathlib import Path
 
-SCRIPT = Path(__file__).resolve().parents[2] / "mysql-work/.zsh.d/rc/mysql-work.sh"
+from mysql_work_test_utils import SCRIPT, SOURCE_STUBS
 
 
 class MysqlWorkStartupTest(unittest.TestCase):
@@ -18,8 +17,7 @@ class MysqlWorkStartupTest(unittest.TestCase):
                 "/bin/zsh",
                 "-f",
                 "-c",
-                "brew() { print -r -- /stub-brew; }; arch() { print arm64; }; "
-                'source "$1"; source "$1"',
+                SOURCE_STUBS + 'source "$1"; source "$1"',
                 "mysql-work-startup-test",
                 str(SCRIPT),
             ],
