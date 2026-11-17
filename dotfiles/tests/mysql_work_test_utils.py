@@ -9,7 +9,7 @@ SCRIPT = Path(__file__).resolve().parents[2] / "mysql-work/.zsh.d/rc/mysql-work.
 SOURCE_STUBS = "brew() { print -r -- /stub-brew; }\narch() { print arm64; }\n"
 
 
-def run_sourced_zsh(commands, name, *arguments):
+def run_sourced_zsh(commands, name, *arguments, cwd=None):
     """Run COMMANDS in `zsh -f` after SOURCE_STUBS, as NAME.
 
     $1 is SCRIPT, for COMMANDS to source; ARGUMENTS follow it.
@@ -24,6 +24,7 @@ def run_sourced_zsh(commands, name, *arguments):
             str(SCRIPT),
             *arguments,
         ],
+        cwd=cwd,
         check=False,
         capture_output=True,
         text=True,

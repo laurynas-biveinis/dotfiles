@@ -1744,6 +1744,7 @@ mysql_build() {
 # Must be called from the directory containing all the build directories
 for_all_build_dirs() {
     local command="$1"
+    local build_dir
     for build_dir in "$MY_BUILD_DIR_PREFIX"*; do
         if [ ! -d "$build_dir" ]; then
             continue
