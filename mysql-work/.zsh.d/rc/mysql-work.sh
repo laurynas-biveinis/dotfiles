@@ -1160,6 +1160,8 @@ mysql_determine_flavor() {
 
 # Any arguments will passed through to CMake
 mysql_cmake() {
+	declare -a release_flags=() debug_flags=() benchmark_flags=()
+
 	pushd .. || return 1
 
 	declare version_file flavor
@@ -1464,19 +1466,16 @@ mysql_cmake() {
 				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
 			;;
                 8.0.31)
-			declare -a release_flags=("${MY8031[@]}")
 			declare -a debug_flags=("${MY8031D[@]}")
 			declare -a -r \
 				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
 			;;
                 8.0.30)
-			declare -a release_flags=("${MY8030[@]}")
 			declare -a debug_flags=("${MY8030D[@]}")
 			declare -a -r \
 				core_dump_flags=("${MY8030_MAX_CORE_DUMP_FLAGS[@]}")
 			;;
                 8.0.29)
-			declare -a release_flags=("${MY8029[@]}")
 			declare -a debug_flags=("${MY8029D[@]}")
 			declare -a -r core_dump_flags=()
 			;;
@@ -1560,19 +1559,45 @@ mysql_cmake() {
 	# $MY_BUILD_DIR_PREFIX. The build type is determined by the presence of
 	# certain substrings in the name.
 	declare -r build_dir="${PWD:t}"
+	declare -a build_flags=()
+
+	case "$build_dir" in
+        *debug*)
+		echo "Debug build"
+		declare -r build_type=debug
+		build_flags=("${debug_flags[@]}")
+		;;
+        *release*)
+		echo "Release build"
+		declare -r build_type=release
+		build_flags=("${release_flags[@]}")
+		;;
+        *benchmark*)
+		echo "Release benchmark build"
+		declare -r build_type=benchmark
+		build_flags=("${benchmark_flags[@]}")
+		;;
+        *)
+		>&2 echo "Must choose one of debug, release, benchmark"
+		return 1
+		;;
+	esac
+
+	if [[ -z ${build_flags[*]} ]]; then
+		>&2 echo "$build_type build unsupported for $flavor $major_ver.$minor_ver.$patch_level"
+		return 1
+	fi
 
 	case "$build_dir" in
         *san*)
 		echo "Using sanitizers"
 		declare -i -r sanitizers=1
-		debug_flags+=("${MYSAN[@]}")
-		release_flags+=("${MYSAN[@]}")
+		build_flags+=("${MYSAN[@]}")
 		;;
         *)
 		echo "Not using sanitizers, enabling macOS core dumps if needed"
 		declare -i -r sanitizers=0
-		debug_flags+=("${core_dump_flags[@]}")
-		release_flags+=("${core_dump_flags[@]}")
+		build_flags+=("${core_dump_flags[@]}")
 		;;
 	esac
 
@@ -1583,76 +1608,62 @@ mysql_cmake() {
 			>&2 echo "Valgrind is incompatible with sanitizers"
 			return 1
 		fi
-		debug_flags+=("-DWITH_VALGRIND=ON")
-		release_flags+=("-DWITH_VALGRIND=ON")
+		build_flags+=("-DWITH_VALGRIND=ON")
 		;;
 	esac
 
 	case "$build_dir" in
         *llvm-12*)
 		echo "Using LLVM 12"
-		debug_flags+=("${MYCLANG12[@]}")
-		release_flags+=("${MYCLANG12[@]}")
+		build_flags+=("${MYCLANG12[@]}")
 		;;
         *llvm-14*)
 		echo "Using LLVM 14"
-		debug_flags+=("${MYCLANG14[@]}")
-		release_flags+=("${MYCLANG14[@]}")
+		build_flags+=("${MYCLANG14[@]}")
 		;;
         *llvm-15*)
 		echo "Using LLVM 15"
-		debug_flags+=("${MYCLANG15[@]}")
-		release_flags+=("${MYCLANG15[@]}")
+		build_flags+=("${MYCLANG15[@]}")
 		;;
         *llvm-16*)
 		echo "Using LLVM 16"
-		debug_flags+=("${MYCLANG16[@]}")
-		release_flags+=("${MYCLANG16[@]}")
+		build_flags+=("${MYCLANG16[@]}")
 		;;
         *llvm-17*)
 		echo "Using LLVM 17"
-		debug_flags+=("${MYCLANG17[@]}")
-		release_flags+=("${MYCLANG17[@]}")
+		build_flags+=("${MYCLANG17[@]}")
 		;;
         *llvm-18*)
 		echo "Using LLVM 18"
-		debug_flags+=("${MYCLANG18[@]}")
-		release_flags+=("${MYCLANG18[@]}")
+		build_flags+=("${MYCLANG18[@]}")
 		;;
         *llvm-19*)
 		echo "Using LLVM 19"
-		debug_flags+=("${MYCLANG19[@]}")
-		release_flags+=("${MYCLANG19[@]}")
+		build_flags+=("${MYCLANG19[@]}")
 		;;
         *llvm-20*)
 		echo "Using LLVM 20"
-		debug_flags+=("${MYCLANG20[@]}")
-		release_flags+=("${MYCLANG20[@]}")
+		build_flags+=("${MYCLANG20[@]}")
 		;;
         *llvm*)
 		echo "Using LLVM"
-		debug_flags+=("${MYCLANG[@]}")
-		release_flags+=("${MYCLANG[@]}")
+		build_flags+=("${MYCLANG[@]}")
 		;;
         *gcc-11*)
 		echo "Using GCC 11"
-		debug_flags+=("${MYGCC11[@]}")
-		release_flags+=("${MYGCC11[@]}")
+		build_flags+=("${MYGCC11[@]}")
 		;;
         *gcc-12*)
 		echo "Using GCC 12"
-		debug_flags+=("${MYGCC12[@]}")
-		release_flags+=("${MYGCC12[@]}")
+		build_flags+=("${MYGCC12[@]}")
 		;;
         *gcc-13*)
 		echo "Using GCC 13"
-		debug_flags+=("${MYGCC13[@]}")
-		release_flags+=("${MYGCC13[@]}")
+		build_flags+=("${MYGCC13[@]}")
 		;;
         *gcc-14*)
 		echo "Using GCC 14"
-		debug_flags+=("${MYGCC14[@]}")
-		release_flags+=("${MYGCC14[@]}")
+		build_flags+=("${MYGCC14[@]}")
 		;;
 	esac
 
@@ -1661,27 +1672,8 @@ mysql_cmake() {
 	# independently. Re-linking at the end of configuration just to unlink again
 	# at the start of the build would work, but it is not nice.
 
-	case "$build_dir" in
-        *debug*)
-		echo "Debug build"
-		echo "CMake options: ${debug_flags[@]} $@"
-		cmake -G Ninja .. "${debug_flags[@]}" "$@"
-		;;
-        *release*)
-		echo "Release build"
-		echo "CMake options: ${release_flags[@]} $@"
-		cmake -G Ninja .. "${release_flags[@]}" "$@"
-		;;
-        *benchmark*)
-		echo "Release benchmark build"
-		echo "CMake options: ${benchmark_flags[@]} $@"
-		cmake -G Ninja .. "${benchmark_flags[@]}" "$@"
-		;;
-        *)
-		>&2 echo "Must choose one of debug, release, benchmark"
-		return 1
-		;;
-	esac
+	echo "CMake options: ${build_flags[@]} $@"
+	cmake -G Ninja .. "${build_flags[@]}" "$@"
 }
 
 # Incremental rebuild command, should be called from the build directory one

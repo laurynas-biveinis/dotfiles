@@ -43,6 +43,12 @@ I symlink these into the parent directory of all the source trees.
   which then in turn results in build issues if both versions are present
   simultaneously. This script is not usable without its [Zsh utility
   functions](https://github.com/laurynas-biveinis/dotfiles/tree/master/mysql-work/.zsh.d/functions).
+  `mysql_cmake` selects debug, release, or benchmark options from the build
+  directory name. Compiler, sanitizer, Valgrind, and macOS core-dump modifiers
+  apply to every supported build type. A flavor/version without base options
+  for the selected type fails before invoking CMake. Sanitizers and Valgrind
+  cannot be combined. Explicit CMake arguments come last and can override the
+  selected options.
 - [fetchworksrc](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/usr/bin/fetchworksrc):
   fetch all remotes for Git repos in `WORK_REPOS_TO_PULL` environment variable;
   pull all the worktrees in `WORK_TREES_TO_UPDATE` one and do incremental
