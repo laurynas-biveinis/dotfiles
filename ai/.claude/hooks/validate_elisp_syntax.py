@@ -3,7 +3,7 @@
 """
 Claude Code Hook: Elisp Syntax Validator
 =========================================
-This hook validates Emacs Lisp syntax for Write, Edit and MultiEdit operations.
+This hook validates Emacs Lisp syntax for Write and Edit operations.
 It uses Emacs' check-parens function to ensure well-formed S-expressions.
 It runs as a PreToolUse hook configured in ai/.claude/settings.json.
 """
@@ -58,44 +58,22 @@ def validate_elisp_syntax(content):
         return False, f"Validation error: {e}"
 
 
-def apply_edit(content, old_string, new_string, replace_all=False):
-    """Apply an edit operation to content."""
-    if not old_string:  # File creation
-        return new_string
-
-    if replace_all:
-        return content.replace(old_string, new_string)
-    # Replace only first occurrence
-    idx = content.find(old_string)
-    if idx == -1:
-        raise ValueError("Could not find old_string in content")
-    return content[:idx] + new_string + content[idx + len(old_string) :]
-
-
 def get_resulting_content(tool_name, tool_input, current_content):
-    """Apply the appropriate edits based on tool type and return resulting content."""
+    """Return the file content that the Write or Edit call would produce."""
     if tool_name == "Write":
         # For Write tool, the content is directly provided
         return tool_input.get("content", "")
 
     if tool_name == "Edit":
-        return apply_edit(
-            current_content,
-            tool_input.get("old_string", ""),
-            tool_input.get("new_string", ""),
-            tool_input.get("replace_all", False),
-        )
-
-    if tool_name == "MultiEdit":
-        resulting_content = current_content
-        for edit in tool_input.get("edits", []):
-            resulting_content = apply_edit(
-                resulting_content,
-                edit.get("old_string", ""),
-                edit.get("new_string", ""),
-                edit.get("replace_all", False),
-            )
-        return resulting_content
+        old_string = tool_input.get("old_string", "")
+        new_string = tool_input.get("new_string", "")
+        if not old_string:  # File creation
+            return new_string
+        if tool_input.get("replace_all", False):
+            return current_content.replace(old_string, new_string)
+        if old_string not in current_content:
+            raise ValueError("Could not find old_string in content")
+        return current_content.replace(old_string, new_string, 1)
 
     raise ValueError(f"Unexpected tool name: {tool_name}")
 
@@ -128,7 +106,6 @@ def main():
             # Claude will handle the actual file operation errors
             sys.exit(0)
 
-    # Apply the edit(s) to get the resulting content
     try:
         resulting_content = get_resulting_content(
             tool_name, tool_input, current_content
@@ -150,7 +127,7 @@ def main():
                     f"Blocked: This edit would create invalid Elisp syntax. "
                     f"Emacs check-parens reported: {error_msg}. "
                     f"Please ensure all parentheses, brackets, and quotes are "
-                    f"balanced. Try again using Edit/MultiEdit/Write tools. "
+                    f"balanced. Try again using Edit/Write tools. "
                     f"DO NOT attempt to make the same edit through any shell "
                     f"command (sed, awk, etc.)."
                 ),

@@ -86,16 +86,6 @@
         ]
       },
       {
-        "matcher": "MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py",
-            "if": "MultiEdit(*.el)"
-          }
-        ]
-      },
-      {
         "hooks": [
           {
             "type": "command",
