@@ -207,6 +207,9 @@ mysql_get_cmake_flags() {
     return 0
 }
 
+# Ignores the exit status of its mysql_add_*_flags registrations and
+# $(mysql_get_*_flags ...) lookups: bad literals are already reported on stderr
+# at every shell start, and returning early would leave all later exports unset.
 mysql_export_environment_helpers() {
     declare -gA comp_flags=()
     declare -gA cmake_flags=()
