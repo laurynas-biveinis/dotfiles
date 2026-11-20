@@ -33,5 +33,44 @@ print -rl -- ${(o)after:|before}
                 )
 
 
+class MysqlFlagTypesTest(unittest.TestCase):
+    """A lookup gets only its own type's flags and those of the type it extends."""
+
+    def test_types_cover_their_underscore_suffixed_variants(self):
+        """A lookup of cxx_debug, say, gets the flags of both cxx_debug and cxx."""
+        expected = {
+            ("comp", "c"): ["-DC"],
+            ("comp", "cxx"): ["-DCXX"],
+            ("comp", "cxx_debug"): ["-DCXX", "-DCXX_DEBUG"],
+            ("comp", "cxx_release"): ["-DCXX", "-DCXX_RELEASE"],
+            ("cmake", "any"): ["-DANY"],
+            ("cmake", "any_debug"): ["-DANY", "-DANY_DEBUG"],
+            ("cmake", "any_release"): ["-DANY", "-DANY_RELEASE"],
+        }
+        result = run_sourced_zsh(
+            r"""
+set -eu
+source "$1"
+shift
+for kind flag_type in "$@"; do
+    "mysql_add_${kind}_flags" 999.0.0 999.0.0 "$flag_type" "-D${(U)flag_type}"
+done
+for kind flag_type in "$@"; do
+    flags=$("mysql_get_${kind}_flags" 999.0.0 "$flag_type")
+    print -r -- "$kind" "$flag_type" "$flags"
+done
+""",
+            "mysql-flag-types-test",
+            *(word for lookup in expected for word in lookup),
+        )
+        selected = {}
+        for line in result.stdout.splitlines():
+            kind, flag_type, *flags = line.split()
+            selected[kind, flag_type] = sorted(flags)
+        self.assertEqual(
+            (result.returncode, selected, result.stderr), (0, expected, "")
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
