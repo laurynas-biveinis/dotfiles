@@ -121,6 +121,28 @@ mysql_add_comp_flags() {
     return 0
 }
 
+# Sets reply to the flags among the $3... key/value pairs whose range covers
+# version $1 and whose type covers type $2.
+mysql_select_flags() {
+    declare REPLY
+    mysql_version_number "$1"
+    declare -r -i version_number=$REPLY
+    declare -r type="$2"
+    shift 2
+    reply=()
+    declare range flags range_flag_type
+    for range flags in "$@"; do
+        range_flag_type=${range##*:}
+        # A flag type also covers its underscore-suffixed variants.
+        if (( ${range%%-*} <= version_number &&
+                  version_number <= ${${range#*-}%%:*} )) &&
+               { [[ "$type" == "$range_flag_type" ]] ||
+                     [[ "$type" == "$range_flag_type"_* ]]; }; then
+            reply+=("$flags")
+        fi
+    done
+}
+
 mysql_get_comp_flags() {
     if ! mysql_validate_version "$1"; then
         return 1
@@ -128,22 +150,9 @@ mysql_get_comp_flags() {
     if ! mysql_validate_compiler_flag_type "$2"; then
         return 1
     fi
-    declare -r version="$1" type="$2"
-    declare REPLY
-    mysql_version_number "$version"
-    declare -r -i version_number=$REPLY
-    declare -a flags=()
-    declare range range_flag_type
-    for range in "${(k)comp_flags[@]}"; do
-        range_flag_type=${range##*:}
-        if (( ${range%%-*} <= version_number &&
-                  version_number <= ${${range#*-}%%:*} )) &&
-               { [[ "$type" == "$range_flag_type" ]] ||
-                     [[ "$range_flag_type" == "cxx" && "$type" == cxx_* ]]; }; then
-            flags+=("${comp_flags[$range]}")
-        fi
-    done
-    echo ${flags[*]}
+    declare -a reply
+    mysql_select_flags "$1" "$2" "${(@kv)comp_flags}"
+    echo ${reply[*]}
     return 0
 }
 
@@ -192,21 +201,9 @@ mysql_get_cmake_flags() {
     if ! mysql_validate_cmake_flag_type "$2"; then
         return 1
     fi
-    declare -r version="$1" type="$2"
-    declare REPLY
-    mysql_version_number "$version"
-    declare -r -i version_number=$REPLY
-    declare -a flags=()
-    declare range range_flag_type
-    for range in "${(k)cmake_flags[@]}"; do
-        range_flag_type=${range##*:}
-        if (( ${range%%-*} <= version_number &&
-                  version_number <= ${${range#*-}%%:*} )) &&
-               [[ "$type" == *"$range_flag_type"* ]]; then
-            flags+=("${cmake_flags[$range]}")
-        fi
-    done
-    echo "${flags[@]}"
+    declare -a reply
+    mysql_select_flags "$1" "$2" "${(@kv)cmake_flags}"
+    echo "${reply[@]}"
     return 0
 }
 
