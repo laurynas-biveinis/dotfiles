@@ -133,6 +133,7 @@ mysql_get_comp_flags() {
     mysql_version_number "$version"
     declare -r -i version_number=$REPLY
     declare -a flags=()
+    declare range range_flag_type
     for range in "${(k)comp_flags[@]}"; do
         range_flag_type=${range##*:}
         if (( ${range%%-*} <= version_number &&
@@ -196,6 +197,7 @@ mysql_get_cmake_flags() {
     mysql_version_number "$version"
     declare -r -i version_number=$REPLY
     declare -a flags=()
+    declare range range_flag_type
     for range in "${(k)cmake_flags[@]}"; do
         range_flag_type=${range##*:}
         if (( ${range%%-*} <= version_number &&
