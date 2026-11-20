@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 from typing import NamedTuple
 
-from mysql_work_test_utils import SCRIPT, SOURCE_STUBS
+from mysql_work_test_utils import run_sourced_zsh
 
 # The markers mysql_determine_flavor detects: a rocksdb/ directory and a
 # MYSQL_VERSION_EXTRA line.  An unlisted flavor raises KeyError.
@@ -37,26 +37,17 @@ class MysqlCmakeTest(unittest.TestCase):
 
     def run_sourced(self, ostype, commands, *arguments):
         """Run COMMANDS with ARGUMENTS in zsh after sourcing SCRIPT for OSTYPE."""
-        result = subprocess.run(
-            [
-                "/bin/zsh",
-                "-f",
-                "-c",
-                SOURCE_STUBS + r"""
+        result = run_sourced_zsh(
+            r"""
 set -e
-OSTYPE=$1
-fpath=("${2:h:h}/functions" $fpath)
-source "$2"
+OSTYPE=$2
+fpath=("${1:h:h}/functions" $fpath)
+source "$1"
 shift 2
 """ + commands,
-                "mysql-cmake-test",
-                ostype,
-                str(SCRIPT),
-                *arguments,
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
+            "mysql-cmake-test",
+            ostype,
+            *arguments,
         )
         self.assertEqual((result.returncode, result.stderr), (0, ""))
         return result.stdout
