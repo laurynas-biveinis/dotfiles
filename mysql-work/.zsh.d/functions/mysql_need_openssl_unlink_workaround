@@ -30,9 +30,10 @@ mysql_need_openssl_unlink_workaround() {
     fi
     declare -r version_file major_ver minor_ver patch_level
 
-    if [ "$major_ver" -lt 8 ] ||
-           [ "$major_ver" -eq 8 ] && [ "$minor_ver" -eq 0 ] &&
-               [ "$patch_level" -le 32 ]; then
+    if [ "$major_ver" -lt 8 ] || {
+        [ "$major_ver" -eq 8 ] && [ "$minor_ver" -eq 0 ] &&
+            [ "$patch_level" -le 32 ]
+    }; then
         # MySQL versions <= 8.0.32 will fail to build if an OpenSSL newer than
         # 1.1 is linked into the Homebrew prefix, because its headers there take
         # precedence over the openssl@1.1 ones.
