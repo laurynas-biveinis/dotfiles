@@ -30,9 +30,7 @@
 
 # mysql-work functions
 autoload mysql_find_version_file
-autoload mysql_get_major_version
-autoload mysql_get_minor_version
-autoload mysql_get_patch_level
+autoload mysql_get_version
 autoload mysql_need_openssl_unlink_workaround
 autoload mysql_maybe_unlink_openssl
 autoload mysql_relink_openssl
@@ -1166,24 +1164,13 @@ mysql_cmake() {
 
 	pushd .. || return 1
 
-	declare version_file flavor
-	declare -i major_ver minor_ver patch_level
+	declare version_file version flavor
 	if ! version_file=$(mysql_find_version_file); then
 		popd
 		return 1
 	fi
 
-	if ! major_ver=$(mysql_get_major_version "$version_file"); then
-		popd
-		return 1
-	fi
-
-	if ! minor_ver=$(mysql_get_minor_version "$version_file"); then
-		popd
-		return 1
-	fi
-
-	if ! patch_level=$(mysql_get_patch_level "$version_file"); then
+	if ! version=$(mysql_get_version "$version_file"); then
 		popd
 		return 1
 	fi
@@ -1192,14 +1179,14 @@ mysql_cmake() {
 		popd
 		return 1
 	fi
-	declare -r version_file major_ver minor_ver patch_level flavor
+	declare -r version_file version flavor
 
 	popd || return 1
 
 	case "$flavor" in
         "mysql")
-		echo "Configuring MySQL $major_ver.$minor_ver.$patch_level"
-		case "$major_ver.$minor_ver.$patch_level" in
+		echo "Configuring MySQL $version"
+		case "$version" in
 		26.10.0)
 			declare -a release_flags=("${MY26100[@]}")
 			declare -a debug_flags=("${MY26100D[@]}")
@@ -1498,8 +1485,8 @@ mysql_cmake() {
 		esac
 		;;
         "facebook")
-		echo "Configuring Facebook MySQL $major_ver.$minor_ver.$patch_level"
-		case "$major_ver.$minor_ver.$patch_level" in
+		echo "Configuring Facebook MySQL $version"
+		case "$version" in
                 8.0.36)
 			declare -a release_flags=("${FB8036[@]}")
 			declare -a debug_flags=("${FB8036D[@]}")
@@ -1524,8 +1511,8 @@ mysql_cmake() {
 		esac
 		;;
         "percona")
-		echo "Configuring Percona Server $major_ver.$minor_ver.$patch_level"
-		case "$major_ver.$minor_ver.$patch_level" in
+		echo "Configuring Percona Server $version"
+		case "$version" in
                 8.0.36)
 			declare -a debug_flags=("${PS8036D[@]}")
 			declare -a -r \
@@ -1586,7 +1573,7 @@ mysql_cmake() {
 	esac
 
 	if [[ -z ${build_flags[*]} ]]; then
-		>&2 echo "$build_type build unsupported for $flavor $major_ver.$minor_ver.$patch_level"
+		>&2 echo "$build_type build unsupported for $flavor $version"
 		return 1
 	fi
 

@@ -2,38 +2,25 @@
 
 mysql_need_openssl_unlink_workaround() {
     autoload mysql_find_version_file
-    autoload mysql_get_major_version
-    autoload mysql_get_minor_version
-    autoload mysql_get_patch_level
+    autoload mysql_get_version
+    autoload -Uz is-at-least
 
     if [[ $OSTYPE != darwin* ]]; then
         echo 0
         return 0
     fi
 
-    declare version_file
-    declare -i major_ver minor_ver patch_level
+    declare version_file version
     if ! version_file=$(mysql_find_version_file); then
         return 1
     fi
 
-    if ! major_ver=$(mysql_get_major_version "$version_file"); then
+    if ! version=$(mysql_get_version "$version_file"); then
         return 1
     fi
+    declare -r version_file version
 
-    if ! minor_ver=$(mysql_get_minor_version "$version_file"); then
-        return 1
-    fi
-
-    if ! patch_level=$(mysql_get_patch_level "$version_file"); then
-        return 1
-    fi
-    declare -r version_file major_ver minor_ver patch_level
-
-    if [ "$major_ver" -lt 8 ] || {
-        [ "$major_ver" -eq 8 ] && [ "$minor_ver" -eq 0 ] &&
-            [ "$patch_level" -le 32 ]
-    }; then
+    if ! is-at-least 8.0.33 "$version"; then
         # MySQL versions <= 8.0.32 will fail to build if an OpenSSL newer than
         # 1.1 is linked into the Homebrew prefix, because its headers there take
         # precedence over the openssl@1.1 ones.

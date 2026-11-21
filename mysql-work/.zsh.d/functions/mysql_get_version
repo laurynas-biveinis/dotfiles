@@ -1,0 +1,18 @@
+# -*- mode: sh; sh-shell: zsh; -*-
+
+mysql_get_version() {
+    declare -r version_file="$1"
+    declare -a parts=()
+    declare key line digits
+    for key in MYSQL_VERSION_MAJOR MYSQL_VERSION_MINOR MYSQL_VERSION_PATCH; do
+        line=$(grep "$key" "$version_file") || line=
+        digits=${line//[^0-9]/}
+        if [[ -z $digits ]]; then
+            >&2 echo "No $key version number in $version_file"
+            return 1
+        fi
+        parts+=("$((digits))")
+    done
+
+    echo "${(j:.:)parts}"
+}

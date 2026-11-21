@@ -282,6 +282,38 @@ done
         )
         self.assertFalse(self.cmake_called(build.name))
 
+    def test_missing_version_components_restore_directory(self):
+        """A failed lookup restores the build directory without invoking CMake."""
+        builds = {}
+        for key in ("MAJOR", "MINOR", "PATCH"):
+            contents = "\n".join(
+                f"MYSQL_VERSION_{field}={value}"
+                for field, value in (("MAJOR", 8), ("MINOR", 0), ("PATCH", 46))
+                if field != key
+            )
+            builds[key] = Build(
+                f"_build-debug-missing-{key.lower()}",
+                commands=f"printf '%s\\n' {shlex.quote(contents)} > ../MYSQL_VERSION\n"
+                + r"""
+if mysql_cmake; then
+    exit 90
+else
+    test_result=$?
+fi
+[[ $PWD == "$test_build_dir" ]] || exit 91
+exit $test_result
+""",
+            )
+        results = self.configure(list(builds.values()))
+        for key, build in builds.items():
+            with self.subTest(key=key):
+                result = results[build.name]
+                self.assertEqual(
+                    (result.returncode, result.stderr),
+                    (1, f"No MYSQL_VERSION_{key} version number in ./MYSQL_VERSION\n"),
+                )
+                self.assertFalse(self.cmake_called(build.name))
+
     def test_invalid_build_dir_names_are_rejected(self):
         """A name must pick a build type and not combine sanitizers with Valgrind."""
         cases = {
