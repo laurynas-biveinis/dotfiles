@@ -247,73 +247,70 @@ mysql_export_environment_helpers() {
         # client plugins on. Homebrew's libfido2 links OpenSSL 4 anyway.
         mysql_add_cmake_flags "9.7.4" "9.7.4" "any" "-DWITH_FIDO=bundled"
         declare -a ps_common=("-DWITH_FIDO=bundled")
-	mysql_add_comp_flags "26.7.0" "26.10.0" "cxx" \
- 		`# https://bugs.mysql.com/bug.php?id=117299` \
-		`# scheduler_perf_dependencies-t.cc @param` \
-		"-Wno-documentation"
+        # https://bugs.mysql.com/bug.php?id=117299
+        # scheduler_perf_dependencies-t.cc @param
+        mysql_add_comp_flags "26.7.0" "26.10.0" "cxx" "-Wno-documentation"
         # Bug 119246's -Wnonnull fires only once NDEBUG compiles out the
         # assert(false) before return nullptr, so suppress it in release builds.
-        mysql_add_comp_flags "8.0.32" "9.6.0" "cxx_release" \
-                             `# https://bugs.mysql.com/bug.php?id=119246` \
-                             "-Wno-nonnull"
+        # https://bugs.mysql.com/bug.php?id=119246
+        mysql_add_comp_flags "8.0.32" "9.6.0" "cxx_release" "-Wno-nonnull"
         mysql_add_comp_flags "9.0.0" "9.0.1" "cxx" "-Wno-unused-lambda-capture"
-        mysql_add_comp_flags "8.4.9" "8.4.13" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=117299` \
-                             `# harness filesystem.h: empty @throws` \
-                             `# LLVM 23: variable_length_integers.h @tparam` \
-                             "-Wno-documentation"
+        # https://bugs.mysql.com/bug.php?id=117299
+        # harness filesystem.h: empty @throws
+        # LLVM 23: variable_length_integers.h @tparam
+        mysql_add_comp_flags "8.4.9" "8.4.13" "cxx" "-Wno-documentation"
         # The cxx -Wno-unknown-warning-option below makes libmysql's C++ probe
         # accept -Wmissing-profile, which clang lacks, and add
         # -Wno-missing-profile to the C file api_test.c, where -Werror rejects
         # it. Keep this range equal to that flag's, and pass -DCMAKE_C_FLAGS in
         # every covered version's comp-flags array.
+        # https://bugs.mysql.com/bug.php?id=120650
         mysql_add_comp_flags "8.0.46" "8.4.13" "c" \
-                             `# https://bugs.mysql.com/bug.php?id=120650` \
                              "-Wno-unknown-warning-option"
+        # https://bugs.mysql.com/bug.php?id=120650
+        # LLVM 23: pars0grm.cc yynerrs
         mysql_add_comp_flags "8.0.46" "26.10.0" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=120650` \
-                             `# LLVM 23: pars0grm.cc yynerrs` \
                              "-Wno-unused-but-set-variable"
+        declare -a -r cxx_new_clang_warnings=(
+            # https://bugs.mysql.com/bug.php?id=120653
+            "-Wno-format"
+            "-Wno-missing-format-attribute"
+            # https://bugs.mysql.com/bug.php?id=119239
+            "-Wno-uninitialized-const-pointer"
+            # https://bugs.mysql.com/bug.php?id=119242
+            "-Wno-conditional-uninitialized"
+            "-Wno-unnecessary-virtual-specifier"
+            # Some of warning options missing in LLVM 18
+            "-Wno-unknown-warning-option"
+        )
         mysql_add_comp_flags "8.0.46" "8.4.13" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=120653` \
-                             "-Wno-format" \
-                             "-Wno-missing-format-attribute" \
-                             `# https://bugs.mysql.com/bug.php?id=119239` \
-                             "-Wno-uninitialized-const-pointer" \
-                             `# https://bugs.mysql.com/bug.php?id=119242` \
-                             "-Wno-conditional-uninitialized" \
-                             "-Wno-unnecessary-virtual-specifier" \
-                             `# Some of warning options missing in LLVM 18` \
-                             "-Wno-unknown-warning-option"
-        mysql_add_comp_flags "8.0.46" "8.0.46" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=121385` \
-                             "-Wno-unused-result"
-        mysql_add_comp_flags "8.4.6" "8.4.13" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=121385` \
-                             "-Wno-unused-result"
-        mysql_add_comp_flags "9.4.0" "26.10.0" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=121385` \
-                             "-Wno-unused-result"
+                             "${cxx_new_clang_warnings[@]}"
+        # https://bugs.mysql.com/bug.php?id=121385
+        mysql_add_comp_flags "8.0.46" "8.0.46" "cxx" "-Wno-unused-result"
+        mysql_add_comp_flags "8.4.6" "8.4.13" "cxx" "-Wno-unused-result"
+        mysql_add_comp_flags "9.4.0" "26.10.0" "cxx" "-Wno-unused-result"
+        # https://bugs.mysql.com/bug.php?id=119238
         mysql_add_comp_flags "8.0.44" "8.0.46" "cxx" \
-                             `# https://bugs.mysql.com/bug.php?id=119238` \
                              "-Wno-invalid-specialization"
         mysql_add_cmake_flags "8.0.18" "8.0.18" "any" \
                               "-DWITH_ZSTD=bundled" "-DWITH_PROTOBUF=bundled"
         mysql_add_cmake_flags "8.0.18" "8.0.28" "any" \
                               "-DWITH_ICU=$brew_opt/icu4c"
-        mysql_add_comp_flags \
-            "8.0.18" "8.0.28" cxx \
-            "-Wno-shadow-field" "-Wno-unqualified-std-cast-call" \
-            "-Wno-deprecated-copy-with-dtor" "-Wno-bitwise-instead-of-logical" \
-            "-Wno-unused-label" \
-            `# LLVM 14:` \
-            "-Wno-error=unused-variable" "-Wno-error=missing-noreturn" \
-            "-Wno-error=extra-semi" \
-            `# LLVM 14 RocksDB:` \
-            "-Wno-error=invalid-offsetof" \
-            "-Wno-error=conditional-uninitialized" \
-            `# LLVM 17:` \
+        declare -a -r cxx_old_source_clang_warnings=(
+            "-Wno-shadow-field" "-Wno-unqualified-std-cast-call"
+            "-Wno-deprecated-copy-with-dtor" "-Wno-bitwise-instead-of-logical"
+            "-Wno-unused-label"
+            # LLVM 14:
+            "-Wno-error=unused-variable" "-Wno-error=missing-noreturn"
+            "-Wno-error=extra-semi"
+            # LLVM 14 RocksDB:
+            "-Wno-error=invalid-offsetof"
+            "-Wno-error=conditional-uninitialized"
+            # LLVM 17:
             "-Wno-error=implicit-const-int-float-conversion"
+        )
+        mysql_add_comp_flags "8.0.18" "8.0.28" cxx \
+                             "${cxx_old_source_clang_warnings[@]}"
         mysql_add_comp_flags "8.0.31" "8.0.31" cxx "-Wno-deprecated-declarations"
         mysql_add_comp_flags "8.0.32" "8.0.34" cxx \
                              "-Wno-unused-but-set-variable" \
