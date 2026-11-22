@@ -4,12 +4,30 @@ import unittest
 
 from mysql_work_test_utils import run_sourced_zsh
 
-# Each flag table's kind, as in mysql_add_<kind>_flags, with one of its types.
-FLAG_TABLES = (("comp", "cxx"), ("cmake", "any"))
+INVALID_VERSION = "Invalid version 999.0. Expected format X.Y.Z, each part below 1000"
+
+# Each flag table's kind, as in mysql_add_<kind>_flags, with one of its types,
+# then the other table's type and the diagnostic that rejects it.
+INVALID_TYPES = (
+    (
+        "comp",
+        "cxx",
+        "any",
+        "Invalid flag type any. Can be one of c, cxx, cxx_debug, cxx_release",
+    ),
+    (
+        "cmake",
+        "any",
+        "cxx",
+        "Invalid flag type cxx. Can be one of any, any_debug, any_release",
+    ),
+)
+
+FLAG_TABLES = tuple(case[:2] for case in INVALID_TYPES)
 
 
 class MysqlFlagsTest(unittest.TestCase):
-    """Adders reject bad input and store by table rule; no call leaks variables."""
+    """Bad input fails; adders store by table rule and keep the caller's REPLY."""
 
     def test_compiler_flags_replace_and_cmake_flags_append(self):
         """Re-registering replaces compiler flags with a warning; CMake ones append."""
@@ -30,6 +48,7 @@ source "$1"
 "mysql_add_${2}_flags" 999.0.0 999.0.1 "$3" -DFIRST
 "mysql_add_${2}_flags" 999.0.0 999.0.1 "$3" -DSECOND -DTHIRD
 "mysql_get_${2}_flags" 999.0.0 "$3"
+print -r -- "$REPLY"
 """,
                     "mysql-registration-storage-test",
                     kind,
@@ -42,13 +61,7 @@ source "$1"
 
     def test_adders_reject_invalid_registrations(self):
         """An invalid registration fails to its caller and registers nothing."""
-        invalid_version = (
-            "Invalid version 999.0. Expected format X.Y.Z, each part below 1000"
-        )
-        for kind, valid_type, invalid_type, type_choices in (
-            ("comp", "cxx", "any", "c, cxx, cxx_debug, cxx_release"),
-            ("cmake", "any", "cxx", "any, any_debug, any_release"),
-        ):
+        for kind, valid_type, invalid_type, type_diagnostic in INVALID_TYPES:
             for start, end, flag_type, diagnostic in (
                 (
                     "999.0.1",
@@ -56,14 +69,9 @@ source "$1"
                     valid_type,
                     "Start 999.0.1 cannot be higher than end 999.0.0",
                 ),
-                ("999.0", "999.0.0", valid_type, invalid_version),
-                ("999.0.0", "999.0", valid_type, invalid_version),
-                (
-                    "999.0.0",
-                    "999.0.0",
-                    invalid_type,
-                    f"Invalid flag type {invalid_type}. Can be one of {type_choices}",
-                ),
+                ("999.0", "999.0.0", valid_type, INVALID_VERSION),
+                ("999.0.0", "999.0", valid_type, INVALID_VERSION),
+                ("999.0.0", "999.0.0", invalid_type, type_diagnostic),
             ):
                 with self.subTest(kind=kind, start=start, end=end, type=flag_type):
                     result = run_sourced_zsh(
@@ -87,29 +95,33 @@ exit $rc
                         (1, "", diagnostic + "\n"),
                     )
 
-    def test_getters_do_not_create_globals(self):
-        """Direct calls return registered flags without leaking temporaries."""
-        for kind, flag_type in FLAG_TABLES:
-            with self.subTest(kind=kind):
-                result = run_sourced_zsh(
-                    r"""
+    def test_getters_reject_invalid_lookups(self):
+        """An invalid lookup fails to its caller and leaves REPLY empty."""
+        for kind, valid_type, invalid_type, type_diagnostic in INVALID_TYPES:
+            for version, flag_type, diagnostic in (
+                ("999.0", valid_type, INVALID_VERSION),
+                ("999.0.0", invalid_type, type_diagnostic),
+            ):
+                with self.subTest(kind=kind, version=version, type=flag_type):
+                    result = run_sourced_zsh(
+                        r"""
 set -eu
 source "$1"
-"mysql_add_${2}_flags" 999.0.0 999.0.0 "$3" -DGETTER_SCOPE_TEST=1
-typeset -a before after
-before=("${(@k)parameters}")
-"mysql_get_${2}_flags" 999.0.0 "$3"
-after=("${(@k)parameters}")
-print -rl -- ${(o)after:|before}
+REPLY=stale
+rc=0
+"mysql_get_${2}_flags" "$3" "$4" || rc=$?
+print -r -- "$REPLY"
+exit $rc
 """,
-                    "mysql-flags-test",
-                    kind,
-                    flag_type,
-                )
-                self.assertEqual(
-                    (result.returncode, result.stdout.split(), result.stderr),
-                    (0, ["-DGETTER_SCOPE_TEST=1"], ""),
-                )
+                        "mysql-invalid-lookup-test",
+                        kind,
+                        version,
+                        flag_type,
+                    )
+                    self.assertEqual(
+                        (result.returncode, result.stdout, result.stderr),
+                        (1, "\n", diagnostic + "\n"),
+                    )
 
     def test_adders_keep_the_callers_reply(self):
         """Registration builds its key in REPLY without touching the caller's."""
@@ -158,8 +170,8 @@ for kind flag_type in "$@"; do
     "mysql_add_${kind}_flags" 999.0.0 999.0.0 "$flag_type" "-D${(U)flag_type}"
 done
 for kind flag_type in "$@"; do
-    flags=$("mysql_get_${kind}_flags" 999.0.0 "$flag_type")
-    print -r -- "$kind" "$flag_type" "$flags"
+    "mysql_get_${kind}_flags" 999.0.0 "$flag_type"
+    print -r -- "$kind" "$flag_type" "$REPLY"
 done
 """,
             "mysql-flag-types-test",
@@ -196,8 +208,8 @@ set -eu
 source "$1"
 "mysql_add_${2}_flags" 998.999.1 999.10.1 "$3" -DRANGED
 for version in "${@[4,-1]}"; do
-    flags=$("mysql_get_${2}_flags" "$version" "$3")
-    print -r -- "$version" ${=flags}
+    "mysql_get_${2}_flags" "$version" "$3"
+    print -r -- "$version" ${=REPLY}
 done
 """,
                     "mysql-flag-ranges-test",

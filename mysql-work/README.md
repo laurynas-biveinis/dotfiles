@@ -49,6 +49,8 @@ I symlink these into the parent directory of all the source trees.
   for the selected type fails before invoking CMake. Sanitizers and Valgrind
   cannot be combined. Explicit CMake arguments come last and can override the
   selected options.
+  MySQL configurations always set `CMAKE_C_FLAGS`, including an empty value
+  when no workaround applies, so reconfiguration clears obsolete C flags.
 - [fetchworksrc](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/usr/bin/fetchworksrc):
   fetch all remotes for Git repos in `WORK_REPOS_TO_PULL` environment variable;
   pull all the worktrees in `WORK_TREES_TO_UPDATE` one and do incremental

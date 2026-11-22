@@ -5,8 +5,8 @@ from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parents[2] / "mysql-work/.zsh.d/rc/mysql-work.sh"
 
-# Sourcing SCRIPT runs `brew --prefix` on macOS and `arch` on every platform.
-SOURCE_STUBS = "brew() { print -r -- /stub-brew; }\narch() { print arm64; }\n"
+# Keep platform-dependent exports independent of the host's CPU and Homebrew.
+SOURCE_STUBS = "CPUTYPE=arm64\ncommands[brew]=/stub-brew/bin/brew\n"
 
 
 def run_zsh(commands, name, *arguments, cwd=None):
