@@ -74,17 +74,27 @@ mysql_version_number() {
     REPLY=$(( parts[1] * 1000000 + parts[2] * 1000 + parts[3] ))
 }
 
-# Sets REPLY to "start-end" in mysql_version_number integers, the range part of
-# a flag-table key, failing when start is above end.
-mysql_version_range() {
+# Validates the start $2, end $3 and type $4 of a flag registration, the type
+# with validator function $1, and sets REPLY to its "start-end:type" key with
+# start and end as mysql_version_number integers.
+mysql_flag_key() {
+    declare -r type_validator="$1"
+    shift
+    if ! mysql_validate_version "$1" || ! mysql_validate_version "$2"; then
+        return 1
+    fi
     mysql_version_number "$1"
     declare -r -i start_number=$REPLY
     mysql_version_number "$2"
-    if (( start_number > REPLY )); then
+    declare -r -i end_number=$REPLY
+    if (( start_number > end_number )); then
         >&2 echo "Start $1 cannot be higher than end $2"
         return 1
     fi
-    REPLY="${start_number}-${REPLY}"
+    if ! "$type_validator" "$3"; then
+        return 1
+    fi
+    REPLY="${start_number}-${end_number}:$3"
 }
 
 # Registers compiler flags for the inclusive version range [start, end].
@@ -95,30 +105,16 @@ mysql_version_range() {
 # Flags of type c reach only versions whose comp-flags array passes
 # -DCMAKE_C_FLAGS.
 mysql_add_comp_flags() {
-    if ! mysql_validate_version "$1"; then
-        return 1
-    fi
-    if ! mysql_validate_version "$2"; then
-        return 1
-    fi
-    declare -r start_version="$1" end_version="$2"
     declare REPLY
-    if ! mysql_version_range "$start_version" "$end_version"; then
+    if ! mysql_flag_key mysql_validate_compiler_flag_type "$@"; then
         return 1
     fi
-    declare -r bounds=$REPLY
-    if ! mysql_validate_compiler_flag_type "$3"; then
-        return 1
-    fi
-    declare -r type="$3"
-    shift 3
-    declare -r flags=("$@")
-    declare -r key="${bounds}:${type}"
+    declare -r key=$REPLY
     if [[ -n "${comp_flags[$key]:-}" ]]; then
-        >&2 echo "Attempt to overwrite flags for" \
-             "${start_version}-${end_version}:${type}"
+        >&2 echo "Attempt to overwrite flags for $1-$2:$3"
     fi
-    comp_flags[$key]="${flags[*]}"
+    shift 3
+    comp_flags[$key]="$*"
     return 0
 }
 
@@ -171,29 +167,16 @@ mysql_validate_cmake_flag_type() {
 # Registers CMake flags for the inclusive version range [start, end], under
 # the failure and range rules above mysql_add_comp_flags.
 mysql_add_cmake_flags() {
-    if ! mysql_validate_version "$1"; then
-        return 1
-    fi
-    if ! mysql_validate_version "$2"; then
-        return 1
-    fi
-    declare -r start_version="$1" end_version="$2"
     declare REPLY
-    if ! mysql_version_range "$start_version" "$end_version"; then
+    if ! mysql_flag_key mysql_validate_cmake_flag_type "$@"; then
         return 1
     fi
-    declare -r bounds=$REPLY
-    if ! mysql_validate_cmake_flag_type "$3"; then
-        return 1
-    fi
-    declare -r type="$3"
-    shift 3
-    declare -r flags=("$@")
-    declare -r key="${bounds}:${type}"
+    declare -r key=$REPLY
     if [[ ! -v cmake_flags[$key] ]]; then
         cmake_flags[$key]=""
     fi
-    cmake_flags[$key]+=" ${flags[@]}"
+    shift 3
+    cmake_flags[$key]+=" $@"
     return 0
 }
 
