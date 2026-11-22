@@ -145,5 +145,45 @@ done
         )
 
 
+class MysqlFlagRangesTest(unittest.TestCase):
+    """A lookup gets only the flags whose range covers its version."""
+
+    def test_ranges_cover_exactly_their_versions(self):
+        """Inclusive bounds select across minor and major version boundaries."""
+        expected = {
+            "998.999.0": [],
+            "998.999.1": ["-DRANGED"],
+            "998.999.999": ["-DRANGED"],
+            "999.0.0": ["-DRANGED"],
+            "999.9.999": ["-DRANGED"],
+            "999.10.1": ["-DRANGED"],
+            "999.10.2": [],
+        }
+        for kind, flag_type in FLAG_TABLES:
+            with self.subTest(kind=kind):
+                result = run_sourced_zsh(
+                    r"""
+set -eu
+source "$1"
+"mysql_add_${2}_flags" 998.999.1 999.10.1 "$3" -DRANGED
+for version in "${@[4,-1]}"; do
+    flags=$("mysql_get_${2}_flags" "$version" "$3")
+    print -r -- "$version" ${=flags}
+done
+""",
+                    "mysql-flag-ranges-test",
+                    kind,
+                    flag_type,
+                    *expected,
+                )
+                selected = {}
+                for line in result.stdout.splitlines():
+                    version, *flags = line.split()
+                    selected[version] = flags
+                self.assertEqual(
+                    (result.returncode, selected, result.stderr), (0, expected, "")
+                )
+
+
 if __name__ == "__main__":
     unittest.main()
