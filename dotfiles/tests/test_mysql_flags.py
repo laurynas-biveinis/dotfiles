@@ -4,6 +4,9 @@ import unittest
 
 from mysql_work_test_utils import run_sourced_zsh
 
+# Each flag table's kind, as in mysql_add_<kind>_flags, with one of its types.
+FLAG_TABLES = (("comp", "cxx"), ("cmake", "any"))
+
 
 class MysqlFlagsTest(unittest.TestCase):
     """Flag lookups must leave the calling shell's variables alone."""
@@ -57,7 +60,7 @@ exit $rc
 
     def test_getters_do_not_create_globals(self):
         """Direct calls return registered flags without leaking temporaries."""
-        for kind, flag_type in (("comp", "cxx"), ("cmake", "any")):
+        for kind, flag_type in FLAG_TABLES:
             with self.subTest(kind=kind):
                 result = run_sourced_zsh(
                     r"""
@@ -77,6 +80,29 @@ print -rl -- ${(o)after:|before}
                 self.assertEqual(
                     (result.returncode, result.stdout.split(), result.stderr),
                     (0, ["-DGETTER_SCOPE_TEST=1"], ""),
+                )
+
+    def test_adders_keep_the_callers_reply(self):
+        """Registration builds its key in REPLY without touching the caller's."""
+        for kind, flag_type in FLAG_TABLES:
+            with self.subTest(kind=kind):
+                # Sourcing already runs the adders, so a leaked REPLY would
+                # predate any parameter snapshot; a sentinel catches it.
+                result = run_sourced_zsh(
+                    r"""
+set -eu
+source "$1"
+REPLY=caller
+"mysql_add_${2}_flags" 999.0.0 999.0.0 "$3" -DADDER_SCOPE_TEST=1
+print -r -- "$REPLY"
+""",
+                    "mysql-adder-scope-test",
+                    kind,
+                    flag_type,
+                )
+                self.assertEqual(
+                    (result.returncode, result.stdout, result.stderr),
+                    (0, "caller\n", ""),
                 )
 
 
