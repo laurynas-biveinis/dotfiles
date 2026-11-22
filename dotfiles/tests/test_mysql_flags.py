@@ -1,4 +1,4 @@
-"""Regression tests for direct mysql-work flag lookups."""
+"""Regression tests for mysql-work flag registration and lookups."""
 
 import unittest
 
@@ -9,7 +9,36 @@ FLAG_TABLES = (("comp", "cxx"), ("cmake", "any"))
 
 
 class MysqlFlagsTest(unittest.TestCase):
-    """Flag lookups must leave the calling shell's variables alone."""
+    """Adders reject bad input and store by table rule; no call leaks variables."""
+
+    def test_compiler_flags_replace_and_cmake_flags_append(self):
+        """Re-registering replaces compiler flags with a warning; CMake ones append."""
+        for kind, flag_type, flags, diagnostic in (
+            (
+                "comp",
+                "cxx",
+                ["-DSECOND", "-DTHIRD"],
+                "Attempt to overwrite flags for 999.0.0-999.0.1:cxx\n",
+            ),
+            ("cmake", "any", ["-DFIRST", "-DSECOND", "-DTHIRD"], ""),
+        ):
+            with self.subTest(kind=kind):
+                result = run_sourced_zsh(
+                    r"""
+set -eu
+source "$1"
+"mysql_add_${2}_flags" 999.0.0 999.0.1 "$3" -DFIRST
+"mysql_add_${2}_flags" 999.0.0 999.0.1 "$3" -DSECOND -DTHIRD
+"mysql_get_${2}_flags" 999.0.0 "$3"
+""",
+                    "mysql-registration-storage-test",
+                    kind,
+                    flag_type,
+                )
+                self.assertEqual(
+                    (result.returncode, result.stdout.split(), result.stderr),
+                    (0, flags, diagnostic),
+                )
 
     def test_adders_reject_invalid_registrations(self):
         """An invalid registration fails to its caller and registers nothing."""
