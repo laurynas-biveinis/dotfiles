@@ -311,12 +311,12 @@
       (:authors ("Amy Pillow" . "amypillow@lavache.com"))
       (:commit . "08e1c84dee28f87010f50cb4e9a48c0798c8912b"))])
  (breadcrumb
-  . [(1 0 1) ((emacs (28 1)) (project (0 9 8)))
+  . [(1 1 0) ((emacs (28 1)) (project (0 9 8)))
      "project and imenu-based breadcrumb paths" tar
      ((:maintainer "João Távora" . "joaotavora@gmail.com")
       (:authors ("João Távora" . "joaotavora@gmail.com"))
       (:url . "https://elpa.gnu.org/packages/breadcrumb.html")
-      (:commit . "ff5fb77e2556c42aee9f1131f824bdfb955d861f"))])
+      (:commit . "f636f2643a2492f350d7c3624b8e6b9ed9bd2a7f"))])
  (brief
   . [(5 92) ((nadvice (0 3)) (cl-lib (0 5)))
      "Brief Editor Emulator (Brief Mode)" tar
@@ -719,12 +719,12 @@
       (:authors ("Phil Sainty" . "psainty@orcon.net.nz"))
       (:commit . "a763ec1e5c2987efea3ce2ee6d9c979f56ab6528"))])
  (denote
-  . [(4 2 3) ((emacs (28 1)))
+  . [(4 3 0) ((emacs (28 1)))
      "Simple notes with an efficient file-naming scheme" tar
      ((:url . "https://github.com/protesilaos/denote")
       (:maintainer "Protesilaos" . "info@protesilaos.com")
       (:authors ("Protesilaos" . "info@protesilaos.com"))
-      (:commit . "9fd6692a32a99e236c377f12f114b77a91417ac2"))])
+      (:commit . "4ba614dfa3e4443d7ae76e6316292aee2909fb3b"))])
  (denote-journal
   . [(0 3 0) ((emacs (28 1)) (denote (4 0 0)))
      "Convenience functions for daily journaling with Denote" tar
@@ -990,13 +990,13 @@
       (:authors ("Leo Liu" . "sdl.web@gmail.com"))
       (:commit . "f155d19c528e27f8f6c72f0d75f652edbdcab37f"))])
  (ebdb
-  . [(0 8 22) ((emacs (25 1)) (seq (2 15)))
+  . [(0 8 23) ((emacs (25 1)) (seq (2 15)))
      "Contact management package" tar
      ((:url . "https://github.com/girzel/ebdb")
       (:keywords "convenience" "mail")
       (:maintainer "Eric Abrahamsen" . "eric@ericabrahamsen.net")
       (:authors ("Eric Abrahamsen" . "eric@ericabrahamsen.net"))
-      (:commit . "b96e5470c54503eab2159e69c822648ad55e6915"))])
+      (:commit . "1257d3033e1365111864d71c00d61ba8dde392ec"))])
  (ebdb-gnorb
   . [(1 0 2) ((gnorb (1 1 0)) (ebdb (0 2)))
      "Utilities for connecting EBDB to Gnorb" tar
@@ -1028,13 +1028,13 @@
       (:authors ("Eduardo Ochs" . "eduardoochs@gmail.com"))
       (:commit . "9aa4aca967ea30262b50a9510b1bcd0dc400e1b5"))])
  (ef-themes
-  . [(2 2 1) ((emacs (28 1)) (modus-themes (5 0 0)))
+  . [(2 3 0) ((emacs (28 1)) (modus-themes (5 0 0)))
      "Colorful and legible themes" tar
      ((:url . "https://github.com/protesilaos/ef-themes")
       (:keywords "faces" "theme" "accessibility")
       (:maintainer "Protesilaos" . "info@protesilaos.com")
       (:authors ("Protesilaos" . "info@protesilaos.com"))
-      (:commit . "e1f617607a5f0692b398365dcd8412ba1e98ccb3"))])
+      (:commit . "0682217085244de7b3e8aba81496abe4b70a61bd"))])
  (eglot
   . [(1 26)
      ((emacs (26 3)) (eldoc (1 16 0)) (external-completion (0 1))
