@@ -8,6 +8,53 @@ from mysql_work_test_utils import run_sourced_zsh
 class MysqlFlagsTest(unittest.TestCase):
     """Flag lookups must leave the calling shell's variables alone."""
 
+    def test_adders_reject_invalid_registrations(self):
+        """An invalid registration fails to its caller and registers nothing."""
+        invalid_version = (
+            "Invalid version 999.0. Expected format X.Y.Z, each part below 1000"
+        )
+        for kind, valid_type, invalid_type, type_choices in (
+            ("comp", "cxx", "any", "c, cxx, cxx_debug, cxx_release"),
+            ("cmake", "any", "cxx", "any, any_debug, any_release"),
+        ):
+            for start, end, flag_type, diagnostic in (
+                (
+                    "999.0.1",
+                    "999.0.0",
+                    valid_type,
+                    "Start 999.0.1 cannot be higher than end 999.0.0",
+                ),
+                ("999.0", "999.0.0", valid_type, invalid_version),
+                ("999.0.0", "999.0", valid_type, invalid_version),
+                (
+                    "999.0.0",
+                    "999.0.0",
+                    invalid_type,
+                    f"Invalid flag type {invalid_type}. Can be one of {type_choices}",
+                ),
+            ):
+                with self.subTest(kind=kind, start=start, end=end, type=flag_type):
+                    result = run_sourced_zsh(
+                        r"""
+set -eu
+source "$1"
+before="${(kv)comp_flags} ${(kv)cmake_flags}"
+rc=0
+"mysql_add_${2}_flags" "$3" "$4" "$5" -DREJECTED || rc=$?
+[[ "${(kv)comp_flags} ${(kv)cmake_flags}" == "$before" ]] || exit 2
+exit $rc
+""",
+                        "mysql-invalid-registration-test",
+                        kind,
+                        start,
+                        end,
+                        flag_type,
+                    )
+                    self.assertEqual(
+                        (result.returncode, result.stdout, result.stderr),
+                        (1, "", diagnostic + "\n"),
+                    )
+
     def test_getters_do_not_create_globals(self):
         """Direct calls return registered flags without leaking temporaries."""
         for kind, flag_type in (("comp", "cxx"), ("cmake", "any")):

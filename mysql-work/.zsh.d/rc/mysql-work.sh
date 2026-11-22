@@ -75,18 +75,20 @@ mysql_version_number() {
 }
 
 # Sets REPLY to "start-end" in mysql_version_number integers, the range part of
-# a flag-table key, warning when start is above end.
+# a flag-table key, failing when start is above end.
 mysql_version_range() {
     mysql_version_number "$1"
     declare -r -i start_number=$REPLY
     mysql_version_number "$2"
     if (( start_number > REPLY )); then
         >&2 echo "Start $1 cannot be higher than end $2"
+        return 1
     fi
     REPLY="${start_number}-${REPLY}"
 }
 
 # Registers compiler flags for the inclusive version range [start, end].
+# Invalid versions, inverted ranges and invalid types fail without registering.
 # A range must cover only versions that need its flags. Merge two ranges into
 # one only when every supported version between them needs the flags too, as
 # a build or the triggering source code shows; otherwise keep them separate.
@@ -101,7 +103,9 @@ mysql_add_comp_flags() {
     fi
     declare -r start_version="$1" end_version="$2"
     declare REPLY
-    mysql_version_range "$start_version" "$end_version"
+    if ! mysql_version_range "$start_version" "$end_version"; then
+        return 1
+    fi
     declare -r bounds=$REPLY
     if ! mysql_validate_compiler_flag_type "$3"; then
         return 1
@@ -166,7 +170,7 @@ mysql_validate_cmake_flag_type() {
 }
 
 # Registers CMake flags for the inclusive version range [start, end], under
-# the range rule above mysql_add_comp_flags.
+# the failure and range rules above mysql_add_comp_flags.
 mysql_add_cmake_flags() {
     if ! mysql_validate_version "$1"; then
         return 1
@@ -176,7 +180,9 @@ mysql_add_cmake_flags() {
     fi
     declare -r start_version="$1" end_version="$2"
     declare REPLY
-    mysql_version_range "$start_version" "$end_version"
+    if ! mysql_version_range "$start_version" "$end_version"; then
+        return 1
+    fi
     declare -r bounds=$REPLY
     if ! mysql_validate_cmake_flag_type "$3"; then
         return 1
