@@ -1,4 +1,6 @@
 #!/bin/zsh
+# Remove a linked worktree and its branch once merged into master.
+# --force permits removing a branch that is not merged.
 
 set -euo pipefail
 
@@ -54,10 +56,7 @@ git pull
 if [ $FORCE -ne 1 ]; then
 	# TODO(laurynas): replace hardcoded "master" with the default branch check,
 	# i.e. git remote show [remote-name] | grep 'HEAD branch'
-	git branch --contains "$BRANCH_NAME" | grep -q master
-	readonly BRANCH_MERGED=$?
-
-	if [ $BRANCH_MERGED -ne 0 ]; then
+	if ! git merge-base --is-ancestor "refs/heads/$BRANCH_NAME" refs/heads/master; then
 		>&2 echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
 		popd || exit 1
 		exit 2
