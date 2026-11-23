@@ -64,8 +64,6 @@ if [ $FORCE -ne 1 ]; then
 fi
 
 rm -rf "$WORKTREE_ABSOLUTE_PATH"
-popd -n
-
 git worktree prune
 
 if ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
