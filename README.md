@@ -125,6 +125,8 @@ tramp ts which-key
   and populated submodules with unpushed commits or stashes block removal.
   `--force` overrides those protections too. The push remote is selected from
   `branch.<name>.pushRemote`, `remote.pushDefault`, then `branch.<name>.remote`.
+  With no external push remote, removal uses the current local `master` without
+  contacting remotes.
 
 ## Installation
 

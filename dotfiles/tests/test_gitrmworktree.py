@@ -83,6 +83,28 @@ class GitRmWorktreeTestCase(unittest.TestCase):
             text=True,
         )
 
+    def assert_local_removal(self, result, branch="topic", returncode=0):
+        """Assert that both the checkout and its local branch were removed."""
+        self.assertEqual(result.returncode, returncode, result.stderr)
+        self.assertFalse(self.worktree.exists())
+        self.assertEqual(
+            self.git(
+                self.main, "for-each-ref", "--format=%(refname)", f"refs/heads/{branch}"
+            ),
+            "",
+        )
+
+    def create_merged_worktree_with_older_local_upstream(self):
+        """Create a topic merged into master while its local upstream stays behind."""
+        base = self.git(self.main, "rev-parse", "master")
+        self.git(self.main, "branch", "base")
+        commit = self.create_worktree(unmerged=True)
+        self.git(self.main, "merge", "--ff-only", "topic")
+        self.git(self.main, "push", "origin", "master")
+        self.git(self.main, "config", "branch.topic.remote", ".")
+        self.git(self.main, "config", "branch.topic.merge", "refs/heads/base")
+        return base, commit
+
 
 class GitRmWorktreeTest(GitRmWorktreeTestCase):
     """Validate the target and local-work policy before removing anything."""
@@ -134,14 +156,7 @@ class GitRmWorktreeTest(GitRmWorktreeTestCase):
         self.git(self.worktree, "commit", "--allow-empty", "-m", "Local only")
         (self.worktree / "new").write_text("discard\n", encoding="utf-8")
         result = self.remove_worktree("--force")
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertFalse(self.worktree.exists())
-        self.assertEqual(
-            self.git(
-                self.main, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
-            ),
-            "",
-        )
+        self.assert_local_removal(result)
         self.assertEqual(
             self.git(
                 self.remote, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
@@ -291,14 +306,7 @@ class GitRmWorktreeRemovalTest(GitRmWorktreeTestCase):
         """Allow completed worktrees containing populated submodules."""
         self.create_populated_submodule()
         result = self.remove_worktree()
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertFalse(self.worktree.exists())
-        self.assertEqual(
-            self.git(
-                self.main, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
-            ),
-            "",
-        )
+        self.assert_local_removal(result)
 
     def test_keeps_other_missing_worktree_registrations(self):
         """Removing one checkout must not prune other registrations."""
@@ -411,6 +419,12 @@ class GitRmWorktreeRemovalTest(GitRmWorktreeTestCase):
 class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
     """Choose and verify remote branches before deletion."""
 
+    def make_origin_unreachable(self):
+        """Point fetches at a missing repository without deleting the fixture remote."""
+        self.git(
+            self.main, "remote", "set-url", "origin", str(self.root / "unavailable.git")
+        )
+
     def test_push_default_takes_precedence_over_upstream_remote(self):
         """Use the configured push destination before the pull destination."""
         commit = self.create_worktree()
@@ -444,15 +458,27 @@ class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
         )
         self.assertFalse(self.worktree.exists())
 
+    def test_no_configured_remote_skips_remote_deletion(self):
+        """A branch without a configured destination can be removed locally."""
+        commit = self.create_worktree()
+        self.git(self.main, "config", "--remove-section", "branch.topic")
+        self.make_origin_unreachable()
+        result = self.remove_worktree()
+        self.assert_local_removal(result)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+
+    def test_local_upstream_skips_remote_deletion(self):
+        """A local upstream must not cause a push that deletes local refs."""
+        base, commit = self.create_merged_worktree_with_older_local_upstream()
+        self.make_origin_unreachable()
+        result = self.remove_worktree()
+        self.assert_local_removal(result)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+        self.assertEqual(self.git(self.main, "rev-parse", "base"), base)
+
     def test_deletion_uses_master_instead_of_an_older_local_upstream(self):
         """A topic merged into master can be deleted despite an older upstream."""
-        base = self.git(self.main, "rev-parse", "master")
-        self.git(self.main, "branch", "base")
-        self.create_worktree(unmerged=True)
-        self.git(self.main, "merge", "--ff-only", "topic")
-        self.git(self.main, "push", "origin", "master")
-        self.git(self.main, "config", "branch.topic.remote", ".")
-        self.git(self.main, "config", "branch.topic.merge", "refs/heads/base")
+        base, _ = self.create_merged_worktree_with_older_local_upstream()
         self.git(self.main, "config", "branch.topic.pushRemote", "origin")
         result = self.remove_worktree()
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -462,6 +488,13 @@ class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
         )
         self.assertEqual(self.git(self.main, "rev-parse", "base"), base)
         self.assertFalse(self.worktree.exists())
+
+    def test_removes_worktree_without_any_remote_or_upstream(self):
+        """A local-only repository does not need a pull destination for removal."""
+        self.create_worktree()
+        self.git(self.main, "remote", "remove", "origin")
+        result = self.remove_worktree()
+        self.assert_local_removal(result)
 
 
 if __name__ == "__main__":

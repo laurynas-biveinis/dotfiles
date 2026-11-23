@@ -83,12 +83,6 @@ if [ -z "${REMOTE_NAME}" ]; then
 fi
 readonly REMOTE_NAME
 
-if [ -z "${REMOTE_NAME}" ]; then
-	>&2 echo "Failed to find push remote name for branch $BRANCH_NAME"
-	popd || exit 1
-	exit 3
-fi
-
 # TODO(laurynas): replace hardcoded "master" with the default branch check,
 # i.e. git remote show [remote-name] | grep 'HEAD branch'
 readonly TRUNK_BRANCH=master
@@ -117,7 +111,9 @@ fi
 
 cd "$COMMON_GIT_DIR/.."
 
-git pull
+if [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ]; then
+	git pull
+fi
 
 if [ $FORCE -ne 1 ]; then
 	if ! git merge-base --is-ancestor "refs/heads/$BRANCH_NAME" "refs/heads/$TRUNK_BRANCH"; then
@@ -133,11 +129,15 @@ if [ $FORCE -eq 1 ]; then
 fi
 git worktree remove "${REMOVE_FLAGS[@]}" "$WORKTREE_ABSOLUTE_PATH"
 
-if ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
+if [ -z "$REMOTE_NAME" ] || [ "$REMOTE_NAME" = . ]; then
+	>&2 echo "No external push remote for branch $BRANCH_NAME, not deleting it remotely"
+elif ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
 	>&2 echo "Failed to delete the remote branch, perhaps it was already deleted"
 fi
 
 # The preflight checks master even when this branch's upstream is older.
 git branch -D "$BRANCH_NAME"
 
-git fetch --all -p
+if [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ]; then
+	git fetch --all -p
+fi

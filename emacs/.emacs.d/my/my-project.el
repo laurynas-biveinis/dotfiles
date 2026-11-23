@@ -118,9 +118,10 @@ buffers."
 (defun kill-buffers-rm-worktree (force)
   "Kill project buffers and, if none remain, remove the git worktree.
 Ask for confirmation first.  gitrmworktree also deletes the worktree's
-branch, locally and on its remote.  It refuses uncommitted changes by
-default.  The prefix argument FORCE passes --force, skipping the local
-merged-into-master check and discarding uncommitted work.  Locks and
+branch locally and, when configured, on its external remote.  It refuses
+uncommitted changes by default.  The prefix argument FORCE passes --force,
+skipping the local merged-into-master check and discarding uncommitted
+work.  Locks and
 populated submodules with unpushed commits or stashes block removal by
 default; FORCE overrides those protections too."
   (interactive "P")
