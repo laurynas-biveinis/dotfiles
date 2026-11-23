@@ -444,6 +444,25 @@ class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
         )
         self.assertFalse(self.worktree.exists())
 
+    def test_deletion_uses_master_instead_of_an_older_local_upstream(self):
+        """A topic merged into master can be deleted despite an older upstream."""
+        base = self.git(self.main, "rev-parse", "master")
+        self.git(self.main, "branch", "base")
+        self.create_worktree(unmerged=True)
+        self.git(self.main, "merge", "--ff-only", "topic")
+        self.git(self.main, "push", "origin", "master")
+        self.git(self.main, "config", "branch.topic.remote", ".")
+        self.git(self.main, "config", "branch.topic.merge", "refs/heads/base")
+        self.git(self.main, "config", "branch.topic.pushRemote", "origin")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.git(self.main, "for-each-ref", "--format=%(refname)", "refs/heads"),
+            "refs/heads/base\nrefs/heads/master",
+        )
+        self.assertEqual(self.git(self.main, "rev-parse", "base"), base)
+        self.assertFalse(self.worktree.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

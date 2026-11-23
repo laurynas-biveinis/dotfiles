@@ -137,10 +137,7 @@ if ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
 	>&2 echo "Failed to delete the remote branch, perhaps it was already deleted"
 fi
 
-if [ $FORCE -ne 1 ]; then
-	git branch -d "$BRANCH_NAME"
-else
-	git branch -D "$BRANCH_NAME"
-fi
+# The preflight checks master even when this branch's upstream is older.
+git branch -D "$BRANCH_NAME"
 
 git fetch --all -p
