@@ -80,6 +80,16 @@ if [ -z "${REMOTE_NAME}" ]; then
 fi
 if [ -z "${REMOTE_NAME}" ]; then
 	REMOTE_NAME=$(git config branch."${BRANCH_NAME}".remote || echo "")
+	UPSTREAM_MERGE=$(git config branch."${BRANCH_NAME}".merge || echo "")
+	readonly UPSTREAM_MERGE
+	if [ $FORCE -ne 1 ] && [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ] &&
+		[ "$UPSTREAM_MERGE" != "refs/heads/$BRANCH_NAME" ]; then
+		readonly UPSTREAM_BRANCH_REF="refs/remotes/$REMOTE_NAME/$BRANCH_NAME"
+		if ! git show-ref --verify --quiet "$UPSTREAM_BRANCH_REF" ||
+			! git merge-base --is-ancestor "$UPSTREAM_BRANCH_REF" "refs/heads/$BRANCH_NAME"; then
+			REMOTE_NAME=""
+		fi
+	fi
 fi
 readonly REMOTE_NAME
 

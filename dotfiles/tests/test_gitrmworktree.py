@@ -496,6 +496,36 @@ class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
         result = self.remove_worktree()
         self.assert_local_removal(result)
 
+    def test_differently_named_upstream_does_not_select_an_unrelated_remote_branch(
+        self,
+    ):
+        """Avoid deleting an unrelated same-named branch on the pull remote."""
+        self.create_worktree()
+        self.git(self.main, "config", "branch.topic.merge", "refs/heads/master")
+        self.git(self.worktree, "commit", "--allow-empty", "-m", "Remote only")
+        commit = self.git(self.worktree, "rev-parse", "HEAD")
+        self.git(self.worktree, "push", "origin", "topic")
+        self.git(self.worktree, "reset", "--hard", "master")
+        result = self.remove_worktree()
+        self.assert_local_removal(result)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+
+    def test_force_uses_pull_remote_despite_differently_named_upstream(self):
+        """Force overrides the conservative pull-remote fallback."""
+        self.create_worktree()
+        self.git(self.main, "config", "branch.topic.merge", "refs/heads/master")
+        self.git(self.worktree, "commit", "--allow-empty", "-m", "Remote only")
+        self.git(self.worktree, "push", "origin", "topic")
+        self.git(self.worktree, "reset", "--hard", "master")
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.git(
+                self.remote, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
+            ),
+            "",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
