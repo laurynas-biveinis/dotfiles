@@ -200,6 +200,16 @@ class GitRmWorktreeTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertFalse(self.worktree.exists())
 
+    def test_refuses_detached_head_even_with_force(self):
+        """Explain detached HEAD refusal independently of remote configuration."""
+        commit = self.create_worktree()
+        self.git(self.worktree, "switch", "--detach")
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 3, result.stderr)
+        self.assertIn("is not on a branch (detached HEAD", result.stderr)
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -68,6 +68,11 @@ readonly WORKTREE_ABSOLUTE_PATH
 
 BRANCH_NAME=$(git branch --show-current)
 readonly BRANCH_NAME
+if [ -z "$BRANCH_NAME" ]; then
+	>&2 echo "$WORKTREE_PATH is not on a branch (detached HEAD, or a rebase or bisect in progress)"
+	popd || exit 1
+	exit 3
+fi
 
 REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote || echo "")
 if [ -z "${REMOTE_NAME}" ]; then
