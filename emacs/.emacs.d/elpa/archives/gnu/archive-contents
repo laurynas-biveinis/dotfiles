@@ -719,12 +719,12 @@
       (:authors ("Phil Sainty" . "psainty@orcon.net.nz"))
       (:commit . "a763ec1e5c2987efea3ce2ee6d9c979f56ab6528"))])
  (denote
-  . [(4 3 0) ((emacs (28 1)))
+  . [(4 3 1) ((emacs (28 1)))
      "Simple notes with an efficient file-naming scheme" tar
      ((:url . "https://github.com/protesilaos/denote")
       (:maintainer "Protesilaos" . "info@protesilaos.com")
       (:authors ("Protesilaos" . "info@protesilaos.com"))
-      (:commit . "4ba614dfa3e4443d7ae76e6316292aee2909fb3b"))])
+      (:commit . "0019a310e4a960dc8902213000bea7f738b16134"))])
  (denote-journal
   . [(0 3 0) ((emacs (28 1)) (denote (4 0 0)))
      "Convenience functions for daily journaling with Denote" tar
@@ -1094,7 +1094,7 @@
       (:url . "https://elpa.gnu.org/packages/elisp-benchmarks.html")
       (:commit . "1a3d97954957a95a179806e0d49ca6d178b097af"))])
  (ellama
-  . [(1 33 1)
+  . [(1 33 2)
      ((emacs (28 1)) (llm (0 31 1)) (plz (0 8)) (transient (0 7))
       (compat (29 1)) (yaml (1 2 3)))
      "Tool for interacting with LLMs" tar
@@ -1102,7 +1102,7 @@
       (:keywords "help" "local" "tools")
       (:maintainer "Sergey Kostyaev" . "sskostyaev@gmail.com")
       (:authors ("Sergey Kostyaev" . "sskostyaev@gmail.com"))
-      (:commit . "0f91f19991fcea58931a665b9750cf110d660ce9"))])
+      (:commit . "df06bc59485112269bd17faecd758ec8b6ed5875"))])
  (emacs-gc-stats
   . [(1 4 2) ((emacs (25 1))) "Collect Emacs GC statistics" tar
      ((:url . "https://git.sr.ht/~yantar92/emacs-gc-stats")
@@ -1528,13 +1528,13 @@
        ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
       (:commit . "f5deabe3b490fa72365922ce76f6df3dd0b5a27c"))])
  (greenbar
-  . [(1 2 260317) ((emacs (27 1)))
+  . [(1 2 261121) ((emacs (27 1)))
      "Mark comint output with \"greenbar\" background" tar
      ((:keywords "faces" "terminals")
       (:maintainer "Michael R. Mauger" . "michael@mauger.com")
       (:authors ("Michael R. Mauger" . "michael@mauger.com"))
       (:url . "https://elpa.gnu.org/packages/greenbar.html")
-      (:commit . "eedbec6a0c56be403fdbe0b1f38a4acd4f11d09b"))])
+      (:commit . "0bc2ee574cfe92f8981e2570f8adc3f8b1007b6f"))])
  (gtags-mode
   . [(1 9 5) ((emacs (28)))
      "GNU Global integration with xref, project and imenu." tar
@@ -3594,7 +3594,7 @@
       (:authors ("Andrii Kolomoiets" . "andreyk.mad@gmail.com"))
       (:commit . "d044448965d31ca8214f8bca48487e4d9b9d9a0f"))])
  (vc-jj
-  . [(0 5) ((emacs (28 1)) (compat (29 4)))
+  . [(0 6) ((emacs (28 1)) (compat (30 1)) (project (0 11 2)))
      "VC backend for the Jujutsu version control system" tar
      ((:url . "https://codeberg.org/emacs-jj-vc/vc-jj.el")
       (:keywords "vc" "tools")
@@ -3602,7 +3602,7 @@
 		   ("Kristoffer Balintona" . "krisbalintona@gmail.com"))
       (:authors ("Rudolf Schlatte" . "rudi@constantly.at")
 		("Kristoffer Balintona" . "krisbalintona@gmail.com"))
-      (:commit . "13b00216330c381179659f5210472fe975c2805d"))])
+      (:commit . "e3cbce6985efffaf0ef5f28338d3145bc53dfd1e"))])
  (vcard
   . [(0 2 2) ((emacs (27 1))) "Package for handling vCard files" tar
      ((:keywords "vcard" "mail" "news")
