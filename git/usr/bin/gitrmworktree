@@ -30,6 +30,28 @@ readonly WORKTREE_DIR="$WORKTREE_PATH:t"
 
 pushd "$WORKTREE_PATH" || exit 1
 
+WORKTREE_GIT_DIR=$(git rev-parse --absolute-git-dir)
+readonly WORKTREE_GIT_DIR
+COMMON_GIT_DIR=$(git rev-parse --path-format=absolute --git-common-dir)
+readonly COMMON_GIT_DIR
+if [ "$WORKTREE_GIT_DIR" = "$COMMON_GIT_DIR" ]; then
+	>&2 echo "$WORKTREE_PATH is not a linked worktree"
+	popd || exit 1
+	exit 3
+fi
+if [ "${COMMON_GIT_DIR:t}" != .git ]; then
+	>&2 echo "Unsupported repository layout: $COMMON_GIT_DIR is not <main>/.git"
+	popd || exit 1
+	exit 3
+fi
+WORKTREE_PREFIX=$(git rev-parse --show-prefix)
+readonly WORKTREE_PREFIX
+if [ -n "$WORKTREE_PREFIX" ]; then
+	>&2 echo "$WORKTREE_PATH is not the top of a worktree"
+	popd || exit 1
+	exit 3
+fi
+
 if [ $FORCE -ne 1 ]; then
 	WORKTREE_STATUS=$(git status --porcelain --untracked-files=all --ignore-submodules=none)
 	readonly WORKTREE_STATUS
@@ -41,7 +63,7 @@ if [ $FORCE -ne 1 ]; then
 	fi
 fi
 
-WORKTREE_ABSOLUTE_PATH=$(pwd)
+WORKTREE_ABSOLUTE_PATH=$(git rev-parse --show-toplevel)
 readonly WORKTREE_ABSOLUTE_PATH
 
 BRANCH_NAME=$(git branch --show-current)
@@ -59,15 +81,21 @@ if [ -z "${REMOTE_NAME}" ]; then
 	exit 3
 fi
 
-cd "$(git rev-parse --git-dir)"
-cd ../../../
+# TODO(laurynas): replace hardcoded "master" with the default branch check,
+# i.e. git remote show [remote-name] | grep 'HEAD branch'
+readonly TRUNK_BRANCH=master
+if [ "$BRANCH_NAME" = "$TRUNK_BRANCH" ]; then
+	>&2 echo "Refusing to delete $TRUNK_BRANCH, use git worktree remove instead"
+	popd || exit 1
+	exit 2
+fi
+
+cd "$COMMON_GIT_DIR/.."
 
 git pull
 
 if [ $FORCE -ne 1 ]; then
-	# TODO(laurynas): replace hardcoded "master" with the default branch check,
-	# i.e. git remote show [remote-name] | grep 'HEAD branch'
-	if ! git merge-base --is-ancestor "refs/heads/$BRANCH_NAME" refs/heads/master; then
+	if ! git merge-base --is-ancestor "refs/heads/$BRANCH_NAME" "refs/heads/$TRUNK_BRANCH"; then
 		>&2 echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
 		popd || exit 1
 		exit 2

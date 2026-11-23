@@ -150,6 +150,56 @@ class GitRmWorktreeTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertFalse(self.worktree.exists())
 
+    def test_refuses_main_worktree(self):
+        """Reject the main checkout without changing its branch."""
+        before = self.git(self.main, "rev-parse", "HEAD")
+        result = self.remove_worktree("--force", target=self.main)
+        self.assertEqual(result.returncode, 3, result.stderr)
+        self.assertIn("is not a linked worktree", result.stderr)
+        self.assertEqual(self.git(self.main, "rev-parse", "HEAD"), before)
+        self.assertEqual(self.git(self.remote, "rev-parse", "master"), before)
+
+    def test_refuses_worktree_subdirectory(self):
+        """Reject a subdirectory before any removal or remote change."""
+        commit = self.create_worktree()
+        nested = self.worktree / "nested"
+        nested.mkdir()
+        result = self.remove_worktree("--force", target=nested)
+        self.assertEqual(result.returncode, 3, result.stderr)
+        self.assertIn("is not the top of a worktree", result.stderr)
+        self.assertTrue(nested.is_dir())
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+
+    def test_refuses_linked_master_even_with_force(self):
+        """Protect the trunk even when it is in a linked worktree."""
+        commit = self.git(self.main, "rev-parse", "master")
+        self.git(self.main, "switch", "-c", "holding")
+        self.git(self.main, "worktree", "add", str(self.worktree), "master")
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("Refusing to delete master", result.stderr)
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
+        self.assertEqual(self.git(self.remote, "rev-parse", "master"), commit)
+
+    def test_refuses_separate_git_directory(self):
+        """Fail before side effects when the main directory cannot be inferred."""
+        self.git(self.main, "init", "--separate-git-dir=" + str(self.root / "separate"))
+        commit = self.create_worktree()
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 3, result.stderr)
+        self.assertIn("Unsupported repository layout", result.stderr)
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+
+    def test_accepts_a_symlink_to_the_worktree_root(self):
+        """Resolve a root alias to the registered worktree."""
+        self.create_worktree()
+        alias = self.root / "alias"
+        alias.symlink_to(self.worktree, target_is_directory=True)
+        result = self.remove_worktree(target=alias)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
+
 
 if __name__ == "__main__":
     unittest.main()
