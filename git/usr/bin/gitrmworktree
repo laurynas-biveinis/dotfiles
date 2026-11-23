@@ -95,6 +95,23 @@ if [ "$BRANCH_NAME" = "$TRUNK_BRANCH" ]; then
 	exit 2
 fi
 
+if [ $FORCE -ne 1 ] && ! git submodule --quiet foreach --recursive '
+	stash_symbolic_status=0
+	git symbolic-ref --quiet refs/stash >/dev/null || stash_symbolic_status=$?
+	stash_refs=$(git for-each-ref --format="%(refname)" refs/stash 2>&1) &&
+		test -z "$stash_refs" &&
+		test "$stash_symbolic_status" -eq 1 &&
+		unpushed=$(git rev-list -n 1 HEAD --all --not --remotes) &&
+		test -z "$unpushed" || {
+		test -z "$stash_refs" || printf "%s\n" "$stash_refs" >&2
+		>&2 echo "$displaypath has unpushed commits or a stash, or cannot be read"
+		exit 1
+	}
+'; then
+	popd || exit 1
+	exit 2
+fi
+
 cd "$COMMON_GIT_DIR/.."
 
 git pull
@@ -107,8 +124,11 @@ if [ $FORCE -ne 1 ]; then
 	fi
 fi
 
-rm -rf "$WORKTREE_ABSOLUTE_PATH"
-git worktree prune
+REMOVE_FLAGS=(--force)
+if [ $FORCE -eq 1 ]; then
+	REMOVE_FLAGS+=(--force)
+fi
+git worktree remove "${REMOVE_FLAGS[@]}" "$WORKTREE_ABSOLUTE_PATH"
 
 if ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
 	>&2 echo "Failed to delete the remote branch, perhaps it was already deleted"

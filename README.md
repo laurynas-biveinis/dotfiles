@@ -121,7 +121,9 @@ tramp ts which-key
   project's worktree with `gitrmworktree`, which also deletes the branch
   locally and on its remote. It refuses uncommitted changes by default. A prefix
   argument passes `--force`, which skips the local merged-into-`master` check and
-  discards uncommitted work. Ignored files are still removed.
+  discards uncommitted work. Ignored files are still removed. By default, locks
+  and populated submodules with unpushed commits or stashes block removal.
+  `--force` overrides those protections too.
 
 ## Installation
 

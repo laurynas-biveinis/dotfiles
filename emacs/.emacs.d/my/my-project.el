@@ -120,7 +120,9 @@ buffers."
 Ask for confirmation first.  gitrmworktree also deletes the worktree's
 branch, locally and on its remote.  It refuses uncommitted changes by
 default.  The prefix argument FORCE passes --force, skipping the local
-merged-into-master check and discarding uncommitted work."
+merged-into-master check and discarding uncommitted work.  Locks and
+populated submodules with unpushed commits or stashes block removal by
+default; FORCE overrides those protections too."
   (interactive "P")
   (let* ((project-root-path (projectile-acquire-root))
          ;; `projectile-project-buffers' matches truenames, but a root picked

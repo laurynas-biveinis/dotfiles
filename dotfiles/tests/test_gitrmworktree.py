@@ -10,7 +10,7 @@ from pathlib import Path
 SCRIPT = Path(__file__).resolve().parents[2] / "git/usr/bin/gitrmworktree"
 
 
-class GitRmWorktreeTest(unittest.TestCase):
+class GitRmWorktreeTestCase(unittest.TestCase):
     """Refusals must preserve both the worktree and its branches."""
 
     def setUp(self):
@@ -24,6 +24,11 @@ class GitRmWorktreeTest(unittest.TestCase):
         self.env.update(
             GIT_CONFIG_NOSYSTEM="1",
             GIT_CONFIG_GLOBAL="/dev/null",
+            GIT_CONFIG_COUNT="2",
+            GIT_CONFIG_KEY_0="gc.auto",
+            GIT_CONFIG_VALUE_0="0",
+            GIT_CONFIG_KEY_1="maintenance.auto",
+            GIT_CONFIG_VALUE_1="false",
             GIT_AUTHOR_NAME="Worktree Test",
             GIT_AUTHOR_EMAIL="worktree@example.invalid",
             GIT_COMMITTER_NAME="Worktree Test",
@@ -77,6 +82,10 @@ class GitRmWorktreeTest(unittest.TestCase):
             capture_output=True,
             text=True,
         )
+
+
+class GitRmWorktreeTest(GitRmWorktreeTestCase):
+    """Validate the target and local-work policy before removing anything."""
 
     def test_refuses_hidden_untracked_files(self):
         """The default guard includes untracked files hidden by Git configuration."""
@@ -209,6 +218,194 @@ class GitRmWorktreeTest(unittest.TestCase):
         self.assertIn("is not on a branch (detached HEAD", result.stderr)
         self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
         self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+
+
+class GitRmWorktreeRemovalTest(GitRmWorktreeTestCase):
+    """Keep other worktrees and private submodule work intact."""
+
+    def test_locked_worktree_is_preserved(self):
+        """Default removal honors a worktree lock."""
+        commit = self.create_worktree()
+        self.git(self.main, "worktree", "lock", str(self.worktree))
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 128, result.stderr)
+        self.assertIn("locked", result.stderr)
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+
+    def create_populated_submodule(self):
+        """Return a populated worktree module whose initial commit is published."""
+        source = self.root / "module-source"
+        self.git(self.root, "init", "--initial-branch=master", str(source))
+        (source / "content").write_text("original\n", encoding="utf-8")
+        self.git(source, "add", "content")
+        self.git(source, "commit", "-m", "Module initial")
+        self.git(
+            self.main,
+            "-c",
+            "protocol.file.allow=always",
+            "submodule",
+            "add",
+            str(source),
+            "module",
+        )
+        self.git(self.main, "commit", "-am", "Add module")
+        self.git(self.main, "push", "origin", "master")
+        self.create_worktree()
+        self.git(
+            self.worktree,
+            "-c",
+            "protocol.file.allow=always",
+            "submodule",
+            "update",
+            "--init",
+        )
+        return self.worktree / "module"
+
+    def test_preserves_submodule_only_branch_commits(self):
+        """Protect a private module branch even when its checkout is clean."""
+        module = self.create_populated_submodule()
+        base = self.git(module, "rev-parse", "HEAD")
+        self.git(module, "switch", "-c", "private-work")
+        self.git(module, "commit", "--allow-empty", "-m", "Unpushed work")
+        commit = self.git(module, "rev-parse", "HEAD")
+        self.git(module, "switch", "--detach", base)
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn(
+            "module has unpushed commits or a stash, or cannot be read", result.stderr
+        )
+        self.assertEqual(self.git(module, "rev-parse", "private-work"), commit)
+
+    def test_preserves_submodule_stash(self):
+        """Protect a module stash even when its checkout is clean."""
+        module = self.create_populated_submodule()
+        (module / "content").write_text("stashed work\n", encoding="utf-8")
+        self.git(module, "stash", "push", "-m", "Keep this")
+        stash = self.git(module, "rev-parse", "refs/stash")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertEqual(self.git(module, "rev-parse", "refs/stash"), stash)
+
+    def test_removes_populated_submodule_with_only_published_work(self):
+        """Allow completed worktrees containing populated submodules."""
+        self.create_populated_submodule()
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
+        self.assertEqual(
+            self.git(
+                self.main, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
+            ),
+            "",
+        )
+
+    def test_keeps_other_missing_worktree_registrations(self):
+        """Removing one checkout must not prune other registrations."""
+        self.create_worktree()
+        other = self.root / "other"
+        self.git(self.main, "worktree", "add", "-b", "other", str(other))
+        other.rename(self.root / "moved-other")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            "worktree " + str(other) + "\n",
+            self.git(self.main, "worktree", "list", "--porcelain"),
+        )
+
+    def test_refuses_unreadable_populated_submodule(self):
+        """Unreadable module metadata must fail closed by default."""
+        module = self.create_populated_submodule()
+        (module / ".git").write_text(
+            "gitdir: /nonexistent/gitrmworktree-test\n", encoding="utf-8"
+        )
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 128, result.stderr)
+        self.assertEqual((module / "content").read_text(encoding="utf-8"), "original\n")
+
+    def test_preserves_unpushed_detached_submodule_commit(self):
+        """Protect a module commit referenced only by its detached HEAD."""
+        module = self.create_populated_submodule()
+        self.git(module, "commit", "--allow-empty", "-m", "Detached module work")
+        commit = self.git(module, "rev-parse", "HEAD")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 4, result.stderr)
+        self.assertEqual(self.git(module, "rev-parse", "HEAD"), commit)
+
+    def test_submodule_edits_require_force_despite_ignore_configuration(self):
+        """Honor the dirty policy even when Git normally hides module edits."""
+        module = self.create_populated_submodule()
+        self.git(self.main, "config", "submodule.module.ignore", "all")
+        (module / "content").write_text("edited\n", encoding="utf-8")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 4, result.stderr)
+        self.assertEqual((module / "content").read_text(encoding="utf-8"), "edited\n")
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
+
+    def test_refuses_unreadable_stash_reference(self):
+        """Distinguish a missing module stash from an unreadable stash ref."""
+        module = self.create_populated_submodule()
+        git_dir = Path(self.git(module, "rev-parse", "--absolute-git-dir"))
+        for contents in ("not-an-object-id\n", "ref: refs/heads/missing\n"):
+            with self.subTest(contents=contents):
+                (git_dir / "refs/stash").write_text(contents, encoding="utf-8")
+                result = self.remove_worktree()
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertEqual(
+                    (git_dir / "refs/stash").read_text(encoding="utf-8"), contents
+                )
+
+    def test_force_removes_locked_worktree_with_private_submodule_work(self):
+        """Force overrides locks as well as private module commits and stashes."""
+        module = self.create_populated_submodule()
+        self.git(module, "switch", "-c", "private-work")
+        self.git(module, "commit", "--allow-empty", "-m", "Private work")
+        (module / "content").write_text("stashed work\n", encoding="utf-8")
+        self.git(module, "stash", "push", "-m", "Private stash")
+        self.git(self.main, "worktree", "lock", str(self.worktree))
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
+        self.assertNotIn(
+            f"worktree {self.worktree}\n",
+            self.git(self.main, "worktree", "list", "--porcelain"),
+        )
+
+    def test_preserves_private_submodule_commits_referenced_only_by_tags(self):
+        """Both tag types retain private work until a remote ref reaches it."""
+        module = self.create_populated_submodule()
+        published = self.git(module, "rev-parse", "HEAD")
+        self.git(module, "commit", "--allow-empty", "-m", "Private tagged work")
+        private = self.git(module, "rev-parse", "HEAD")
+        self.git(module, "switch", "--detach", published)
+        for options in ((), ("-a", "-m", "Keep private work")):
+            with self.subTest(options=options):
+                self.git(module, "tag", *options, "private", private)
+                result = self.remove_worktree()
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertEqual(
+                    self.git(module, "rev-parse", "private^{commit}"), private
+                )
+                self.git(module, "tag", "-d", "private")
+        self.git(module, "tag", "private", private)
+        self.git(module, "push", "origin", "private:refs/heads/published")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
+
+    def test_preserves_private_submodule_notes_unless_forced(self):
+        """Protect private commits outside branch and tag refs unless forced."""
+        module = self.create_populated_submodule()
+        self.git(module, "notes", "add", "-m", "Private note")
+        note = self.git(module, "rev-parse", "refs/notes/commits")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertEqual(self.git(module, "rev-parse", "refs/notes/commits"), note)
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
 
 
 if __name__ == "__main__":
