@@ -119,8 +119,9 @@ tramp ts which-key
 - `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, asks for
   confirmation, kills the project's buffers and, if none remain, removes the
   project's worktree with `gitrmworktree`, which also deletes the branch
-  locally and on its remote and discards uncommitted work. A prefix argument
-  passes `--force`, which skips its merged-into-`master` check.
+  locally and on its remote. It refuses uncommitted changes by default. A prefix
+  argument passes `--force`, which skips the local merged-into-`master` check and
+  discards uncommitted work. Ignored files are still removed.
 
 ## Installation
 

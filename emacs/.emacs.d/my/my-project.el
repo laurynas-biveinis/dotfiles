@@ -118,9 +118,9 @@ buffers."
 (defun kill-buffers-rm-worktree (force)
   "Kill project buffers and, if none remain, remove the git worktree.
 Ask for confirmation first.  gitrmworktree also deletes the worktree's
-branch, locally and on its remote, and discards uncommitted work.  The
-prefix argument FORCE passes it --force, skipping its merged-into-master
-check."
+branch, locally and on its remote.  It refuses uncommitted changes by
+default.  The prefix argument FORCE passes --force, skipping the local
+merged-into-master check and discarding uncommitted work."
   (interactive "P")
   (let* ((project-root-path (projectile-acquire-root))
          ;; `projectile-project-buffers' matches truenames, but a root picked

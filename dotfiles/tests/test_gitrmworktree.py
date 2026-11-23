@@ -78,6 +78,19 @@ class GitRmWorktreeTest(unittest.TestCase):
             text=True,
         )
 
+    def test_refuses_hidden_untracked_files(self):
+        """The default guard includes untracked files hidden by Git configuration."""
+        self.create_worktree()
+        self.git(self.worktree, "config", "status.showUntrackedFiles", "no")
+        (self.worktree / "new").write_text("keep me\n", encoding="utf-8")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 4, result.stderr)
+        self.assertIn("has uncommitted changes", result.stderr)
+        self.assertIn("?? new", result.stderr)
+        self.assertEqual(
+            (self.worktree / "new").read_text(encoding="utf-8"), "keep me\n"
+        )
+
     def test_branch_name_containing_master_does_not_prove_a_merge(self):
         """The old substring guard deletes this unmerged branch's worktree."""
         commit = self.create_worktree("fix-master-build", unmerged=True)
@@ -88,6 +101,54 @@ class GitRmWorktreeTest(unittest.TestCase):
         self.assertEqual(
             self.git(self.remote, "rev-parse", "refs/heads/fix-master-build"), commit
         )
+
+    def test_refuses_tracked_changes(self):
+        """Both unstaged and staged edits survive default removal."""
+        commit = self.create_worktree()
+        (self.worktree / "tracked").write_text("changed\n", encoding="utf-8")
+        for staged in (False, True):
+            with self.subTest(staged=staged):
+                result = self.remove_worktree()
+                self.assertEqual(result.returncode, 4, result.stderr)
+                self.assertIn("has uncommitted changes", result.stderr)
+                self.assertEqual(
+                    (self.worktree / "tracked").read_text(encoding="utf-8"), "changed\n"
+                )
+                self.assertEqual(
+                    self.git(self.remote, "rev-parse", "refs/heads/topic"), commit
+                )
+                self.git(self.worktree, "add", "tracked")
+
+    def test_force_discards_dirty_files_and_unmerged_local_commit(self):
+        """An explicit --force still permits discarding local work."""
+        self.create_worktree()
+        self.git(self.worktree, "commit", "--allow-empty", "-m", "Local only")
+        (self.worktree / "new").write_text("discard\n", encoding="utf-8")
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
+        self.assertEqual(
+            self.git(
+                self.main, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
+            ),
+            "",
+        )
+        self.assertEqual(
+            self.git(
+                self.remote, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
+            ),
+            "",
+        )
+
+    def test_ignored_build_output_does_not_block_removal(self):
+        """Ignored files do not turn a finished worktree into dirty work."""
+        self.create_worktree()
+        (self.main / ".git/info/exclude").write_text("build/\n", encoding="utf-8")
+        (self.worktree / "build").mkdir()
+        (self.worktree / "build/output").write_text("generated\n", encoding="utf-8")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
 
 
 if __name__ == "__main__":

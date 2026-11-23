@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Remove a linked worktree and its branch once merged into master.
-# --force permits removing a branch that is not merged.
+# --force skips the local merge check and discards uncommitted changes.
 
 set -euo pipefail
 
@@ -29,6 +29,17 @@ fi
 readonly WORKTREE_DIR="$WORKTREE_PATH:t"
 
 pushd "$WORKTREE_PATH" || exit 1
+
+if [ $FORCE -ne 1 ]; then
+	WORKTREE_STATUS=$(git status --porcelain --untracked-files=all --ignore-submodules=none)
+	readonly WORKTREE_STATUS
+	if [ -n "$WORKTREE_STATUS" ]; then
+		>&2 echo "Worktree $WORKTREE_DIR has uncommitted changes:"
+		>&2 echo "$WORKTREE_STATUS"
+		popd || exit 1
+		exit 4
+	fi
+fi
 
 WORKTREE_ABSOLUTE_PATH=$(pwd)
 readonly WORKTREE_ABSOLUTE_PATH
