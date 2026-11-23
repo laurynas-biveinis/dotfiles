@@ -119,8 +119,9 @@ buffers."
   "Kill project buffers and, if none remain, remove the git worktree.
 Ask for confirmation first.  gitrmworktree also deletes the worktree's
 branch locally and, when configured, on its external remote.  By default,
-it requires a clean linked worktree on a branch merged into master,
-honors locks, and protects private populated-submodule commits and stashes.
+it requires a clean linked worktree with local and selected remote branches
+merged into master.  It honors locks and protects private populated-submodule
+commits and stashes.
 The prefix argument FORCE passes --force, bypassing every script safety
 check and skipping pull/fetch.  This can discard local and remote work.
 Forced detached removal skips branch deletion.  Git operation failures

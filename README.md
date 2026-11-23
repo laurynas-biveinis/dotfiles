@@ -139,6 +139,10 @@ tramp ts which-key
   same-name remote-tracking branch already contained in the local branch.
   With no external push remote, removal uses the current local `master` without
   contacting remotes.
+  Otherwise, default removal checks the actual push destination for work absent
+  from `master` and uses a deletion lease to protect concurrent remote updates.
+  Multiple push URLs, or a push URL rewritten again during verification, are
+  refused without `--force`.
 
 ## Installation
 

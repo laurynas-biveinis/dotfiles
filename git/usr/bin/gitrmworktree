@@ -64,9 +64,14 @@ change_to_force_push_directory() {
 delete_remote_branch() {
 	if [ -z "$REMOTE_NAME" ] || [ "$REMOTE_NAME" = . ]; then
 		>&2 echo "No external push remote for branch $BRANCH_NAME, not deleting it remotely"
-	elif ! git_common push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
-		>&2 echo "Failed to delete the remote branch, perhaps it was already deleted"
-		if [ $FORCE -eq 1 ]; then
+	elif [ $FORCE -eq 1 ]; then
+		if ! git_common push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
+			>&2 echo "Failed to delete remote branch $REMOTE_NAME/$BRANCH_NAME"
+			return 1
+		fi
+	elif [ -n "$REMOTE_TIP" ]; then
+		if ! git_common push --force-with-lease="$REMOTE_BRANCH_REF:$REMOTE_TIP" "$REMOTE_NAME" ":$REMOTE_BRANCH_REF"; then
+			>&2 echo "Failed to delete remote branch $REMOTE_NAME/$BRANCH_NAME; keeping the local branch"
 			return 1
 		fi
 	fi
@@ -185,14 +190,45 @@ if [ $FORCE -ne 1 ]; then
 	fi
 fi
 
+readonly REMOTE_BRANCH_REF="refs/heads/$BRANCH_NAME"
+REMOTE_TIP=""
+if [ $FORCE -ne 1 ] && [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ]; then
+	PUSH_URL=$(git_common remote get-url --push --all "$REMOTE_NAME")
+	readonly PUSH_URL
+	if [[ "$PUSH_URL" = *$'\n'* ]]; then
+		>&2 echo "Refusing remote $REMOTE_NAME with multiple push URLs"
+		popd || exit 1
+		exit 3
+	fi
+	VERIFY_URL=$(git_common ls-remote --get-url "$PUSH_URL")
+	readonly VERIFY_URL
+	if [ "$VERIFY_URL" != "$PUSH_URL" ]; then
+		>&2 echo "Push URL for $REMOTE_NAME would be rewritten during verification"
+		popd || exit 1
+		exit 3
+	fi
+	REMOTE_BRANCH=$(git_common ls-remote --heads "$PUSH_URL" "$REMOTE_BRANCH_REF")
+	readonly REMOTE_BRANCH
+	if [ -n "$REMOTE_BRANCH" ]; then
+		git_common fetch --no-tags "$PUSH_URL" "$REMOTE_BRANCH_REF"
+		REMOTE_TIP=$(git_common rev-parse --verify FETCH_HEAD)
+		if ! git_common merge-base --is-ancestor "$REMOTE_TIP" "refs/heads/$TRUNK_BRANCH"; then
+			>&2 echo "Remote branch $REMOTE_NAME/$BRANCH_NAME has commits not in $TRUNK_BRANCH"
+			popd || exit 1
+			exit 2
+		fi
+	fi
+fi
+readonly REMOTE_TIP
+
 REMOVE_FLAGS=(--force)
 if [ $FORCE -eq 1 ]; then
 	REMOVE_FLAGS+=(--force)
 fi
 git_common worktree remove "${REMOVE_FLAGS[@]}" "$WORKTREE_ABSOLUTE_PATH"
 
-if [ $FORCE -ne 1 ]; then
-	delete_remote_branch
+if [ $FORCE -ne 1 ] && ! delete_remote_branch; then
+	exit 1
 fi
 
 if [ -n "$BRANCH_NAME" ]; then

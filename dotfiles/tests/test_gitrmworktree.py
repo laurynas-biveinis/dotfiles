@@ -515,6 +515,141 @@ class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assert_branch_absent(self.remote)
 
+    def test_refuses_remote_commits_missing_from_master(self):
+        """Default removal preserves remote work missing from master."""
+        base = self.create_worktree()
+        self.git(self.worktree, "commit", "--allow-empty", "-m", "Remote only")
+        remote_tip = self.git(self.worktree, "rev-parse", "HEAD")
+        self.git(self.worktree, "push", "origin", "topic")
+        self.git(self.worktree, "reset", "--hard", "master")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn(
+            "Remote branch origin/topic has commits not in master", result.stderr
+        )
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), base)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), remote_tip)
+
+    def advance_remote_topic(self, remote):
+        """Create a remote-only commit without updating the checkout tracking refs."""
+        tree = self.git(remote, "rev-parse", "topic^{tree}")
+        commit = self.git(
+            remote, "commit-tree", tree, "-p", "topic", "-m", "Other clone work"
+        )
+        self.git(remote, "update-ref", "refs/heads/topic", commit)
+        return commit
+
+    def test_narrow_fetch_configuration_does_not_hide_remote_commits(self):
+        """Inspect the remote branch even when the configured fetch omits it."""
+        base = self.create_worktree()
+        remote_tip = self.advance_remote_topic(self.remote)
+        self.git(
+            self.main,
+            "config",
+            "remote.origin.fetch",
+            "+refs/heads/master:refs/remotes/origin/master",
+        )
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), remote_tip)
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), base)
+
+    def test_remote_advance_between_check_and_push_is_not_deleted(self):
+        """A stale deletion lease must preserve concurrent remote work."""
+        base = self.create_worktree()
+        tree = self.git(self.remote, "rev-parse", "topic^{tree}")
+        new_tip = self.git(
+            self.remote, "commit-tree", tree, "-p", "topic", "-m", "Concurrent work"
+        )
+        wrapper_dir = self.root / "bin"
+        wrapper_dir.mkdir()
+        wrapper = wrapper_dir / "git"
+        wrapper.write_text(
+            """#!/bin/sh
+set -eu
+for argument do
+    if [ "$argument" = push ]; then
+        "$WORKTREE_TEST_GIT" -C "$WORKTREE_TEST_REMOTE" update-ref \\
+            refs/heads/topic "$WORKTREE_TEST_TIP"
+        break
+    fi
+done
+exec "$WORKTREE_TEST_GIT" "$@"
+""",
+            encoding="utf-8",
+        )
+        wrapper.chmod(493)
+        real_git = shutil.which("git")
+        assert isinstance(real_git, str)
+        self.env.update(
+            WORKTREE_TEST_GIT=real_git,
+            WORKTREE_TEST_REMOTE=str(self.remote),
+            WORKTREE_TEST_TIP=new_tip,
+        )
+        self.env["PATH"] = str(wrapper_dir) + ":" + self.env["PATH"]
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), new_tip)
+        self.assertEqual(self.git(self.main, "rev-parse", "topic"), base)
+
+    def test_checks_push_url_instead_of_fetch_url(self):
+        """Validate the destination that actually receives branch deletion."""
+        base = self.create_worktree()
+        published = self.root / "published.git"
+        self.git(self.root, "clone", "--bare", str(self.remote), str(published))
+        remote_tip = self.advance_remote_topic(published)
+        self.git(self.main, "remote", "set-url", "--push", "origin", str(published))
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertEqual(self.git(published, "rev-parse", "topic"), remote_tip)
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), base)
+
+    def test_missing_remote_branch_allows_local_removal(self):
+        """An already deleted remote branch does not block local cleanup."""
+        self.create_worktree()
+        self.git(self.remote, "update-ref", "-d", "refs/heads/topic")
+        result = self.remove_worktree()
+        self.assert_local_removal(result)
+
+    def test_multiple_push_urls_are_refused_before_removal(self):
+        """Refuse ambiguous multi-destination deletion before changing anything."""
+        commit = self.create_worktree()
+        published = self.root / "published.git"
+        self.git(self.root, "clone", "--bare", str(self.remote), str(published))
+        self.git(self.main, "remote", "set-url", "--push", "origin", str(self.remote))
+        self.git(
+            self.main, "remote", "set-url", "--add", "--push", "origin", str(published)
+        )
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 3, result.stderr)
+        self.assertIn("multiple push URLs", result.stderr)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+        self.assertEqual(self.git(published, "rev-parse", "topic"), commit)
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
+
+    def test_force_deletes_unmerged_remote_branch(self):
+        """Force bypasses remote merge protection as explicitly requested."""
+        self.create_worktree(unmerged=True)
+        result = self.remove_worktree("--force")
+        self.assert_local_removal(result)
+        self.assert_branch_absent(self.remote)
+
+    def test_refuses_push_url_rewritten_again_during_verification(self):
+        """Do not validate a decoy after expanding the push URL a second time."""
+        commit = self.create_worktree()
+        decoy = self.root / "decoy.git"
+        self.git(self.root, "clone", "--bare", str(self.remote), str(decoy))
+        remote_tip = self.advance_remote_topic(self.remote)
+        self.git(self.main, "config", "remote.origin.url", "test:remote")
+        self.git(self.main, "config", "url.../remote.git.insteadOf", "test:remote")
+        self.git(self.main, "config", f"url.{decoy}.insteadOf", "../remote.git")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 3, result.stderr)
+        self.assertIn("rewritten during verification", result.stderr)
+        self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), remote_tip)
+        self.assertEqual(self.git(decoy, "rev-parse", "topic"), commit)
+
 
 class GitRmWorktreeForceTest(GitRmWorktreeTestCase):
     """Force overrides safety policy while Git still reports operation errors."""
