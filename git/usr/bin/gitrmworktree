@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Remove a linked worktree and its branch once merged into master.
-# --force skips the local merge check and discards uncommitted changes.
+# --force overrides safety checks and discards local and remote branch work.
 
 set -euo pipefail
 
@@ -34,25 +34,63 @@ WORKTREE_GIT_DIR=$(git rev-parse --absolute-git-dir)
 readonly WORKTREE_GIT_DIR
 COMMON_GIT_DIR=$(git rev-parse --path-format=absolute --git-common-dir)
 readonly COMMON_GIT_DIR
-if [ "$WORKTREE_GIT_DIR" = "$COMMON_GIT_DIR" ]; then
-	>&2 echo "$WORKTREE_PATH is not a linked worktree"
-	popd || exit 1
-	exit 3
-fi
-if [ "${COMMON_GIT_DIR:t}" != .git ]; then
-	>&2 echo "Unsupported repository layout: $COMMON_GIT_DIR is not <main>/.git"
-	popd || exit 1
-	exit 3
-fi
-WORKTREE_PREFIX=$(git rev-parse --show-prefix)
-readonly WORKTREE_PREFIX
-if [ -n "$WORKTREE_PREFIX" ]; then
-	>&2 echo "$WORKTREE_PATH is not the top of a worktree"
-	popd || exit 1
-	exit 3
-fi
+
+git_common() {
+	git --git-dir="$COMMON_GIT_DIR" "$@"
+}
+
+change_to_force_push_directory() {
+	local push_is_bare push_candidate push_inside push_top push_git_dir
+	local -a push_records
+	push_is_bare=$(git_common rev-parse --is-bare-repository)
+	if [ "$push_is_bare" = true ]; then
+		cd "$COMMON_GIT_DIR"
+		return
+	fi
+	push_records=("${(@0)$(git_common worktree list --porcelain -z)}")
+	push_candidate="${push_records[1]#worktree }"
+	if push_inside=$(git -C "$push_candidate" rev-parse --is-inside-work-tree) &&
+		[ "$push_inside" = true ] &&
+		push_top=$(git -C "$push_candidate" rev-parse --show-toplevel) &&
+		push_git_dir=$(git -C "$push_candidate" rev-parse --absolute-git-dir) &&
+		[ "${push_top:A}" = "${push_candidate:A}" ] &&
+		[ "${push_git_dir:A}" = "${COMMON_GIT_DIR:A}" ]; then
+		cd "$push_candidate"
+	else
+		cd "$WORKTREE_ABSOLUTE_PATH"
+	fi
+}
+
+delete_remote_branch() {
+	if [ -z "$REMOTE_NAME" ] || [ "$REMOTE_NAME" = . ]; then
+		>&2 echo "No external push remote for branch $BRANCH_NAME, not deleting it remotely"
+	elif ! git_common push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
+		>&2 echo "Failed to delete the remote branch, perhaps it was already deleted"
+		if [ $FORCE -eq 1 ]; then
+			return 1
+		fi
+	fi
+}
 
 if [ $FORCE -ne 1 ]; then
+	if [ "$WORKTREE_GIT_DIR" = "$COMMON_GIT_DIR" ]; then
+		>&2 echo "$WORKTREE_PATH is not a linked worktree"
+		popd || exit 1
+		exit 3
+	fi
+	if [ "${COMMON_GIT_DIR:t}" != .git ]; then
+		>&2 echo "Unsupported repository layout: $COMMON_GIT_DIR is not <main>/.git"
+		popd || exit 1
+		exit 3
+	fi
+	WORKTREE_PREFIX=$(git rev-parse --show-prefix)
+	readonly WORKTREE_PREFIX
+	if [ -n "$WORKTREE_PREFIX" ]; then
+		>&2 echo "$WORKTREE_PATH is not the top of a worktree"
+		popd || exit 1
+		exit 3
+	fi
+
 	WORKTREE_STATUS=$(git status --porcelain --untracked-files=all --ignore-submodules=none)
 	readonly WORKTREE_STATUS
 	if [ -n "$WORKTREE_STATUS" ]; then
@@ -68,26 +106,29 @@ readonly WORKTREE_ABSOLUTE_PATH
 
 BRANCH_NAME=$(git branch --show-current)
 readonly BRANCH_NAME
-if [ -z "$BRANCH_NAME" ]; then
+if [ $FORCE -ne 1 ] && [ -z "$BRANCH_NAME" ]; then
 	>&2 echo "$WORKTREE_PATH is not on a branch (detached HEAD, or a rebase or bisect in progress)"
 	popd || exit 1
 	exit 3
 fi
 
-REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote || echo "")
-if [ -z "${REMOTE_NAME}" ]; then
-	REMOTE_NAME=$(git config remote.pushdefault || echo "")
-fi
-if [ -z "${REMOTE_NAME}" ]; then
-	REMOTE_NAME=$(git config branch."${BRANCH_NAME}".remote || echo "")
-	UPSTREAM_MERGE=$(git config branch."${BRANCH_NAME}".merge || echo "")
-	readonly UPSTREAM_MERGE
-	if [ $FORCE -ne 1 ] && [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ] &&
-		[ "$UPSTREAM_MERGE" != "refs/heads/$BRANCH_NAME" ]; then
-		readonly UPSTREAM_BRANCH_REF="refs/remotes/$REMOTE_NAME/$BRANCH_NAME"
-		if ! git show-ref --verify --quiet "$UPSTREAM_BRANCH_REF" ||
-			! git merge-base --is-ancestor "$UPSTREAM_BRANCH_REF" "refs/heads/$BRANCH_NAME"; then
-			REMOTE_NAME=""
+REMOTE_NAME=""
+if [ -n "$BRANCH_NAME" ]; then
+	REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote || echo "")
+	if [ -z "${REMOTE_NAME}" ]; then
+		REMOTE_NAME=$(git config remote.pushdefault || echo "")
+	fi
+	if [ -z "${REMOTE_NAME}" ]; then
+		REMOTE_NAME=$(git config branch."${BRANCH_NAME}".remote || echo "")
+		UPSTREAM_MERGE=$(git config branch."${BRANCH_NAME}".merge || echo "")
+		readonly UPSTREAM_MERGE
+		if [ $FORCE -ne 1 ] && [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ] &&
+			[ "$UPSTREAM_MERGE" != "refs/heads/$BRANCH_NAME" ]; then
+			readonly UPSTREAM_BRANCH_REF="refs/remotes/$REMOTE_NAME/$BRANCH_NAME"
+			if ! git show-ref --verify --quiet "$UPSTREAM_BRANCH_REF" ||
+				! git merge-base --is-ancestor "$UPSTREAM_BRANCH_REF" "refs/heads/$BRANCH_NAME"; then
+				REMOTE_NAME=""
+			fi
 		fi
 	fi
 fi
@@ -96,7 +137,7 @@ readonly REMOTE_NAME
 # TODO(laurynas): replace hardcoded "master" with the default branch check,
 # i.e. git remote show [remote-name] | grep 'HEAD branch'
 readonly TRUNK_BRANCH=master
-if [ "$BRANCH_NAME" = "$TRUNK_BRANCH" ]; then
+if [ $FORCE -ne 1 ] && [ "$BRANCH_NAME" = "$TRUNK_BRANCH" ]; then
 	>&2 echo "Refusing to delete $TRUNK_BRANCH, use git worktree remove instead"
 	popd || exit 1
 	exit 2
@@ -119,14 +160,25 @@ if [ $FORCE -ne 1 ] && ! git submodule --quiet foreach --recursive '
 	exit 2
 fi
 
-cd "$COMMON_GIT_DIR/.."
-
-if [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ]; then
-	git pull
+REMOTE_DELETE_STATUS=0
+if [ $FORCE -eq 1 ]; then
+	if [ "$WORKTREE_GIT_DIR" != "$COMMON_GIT_DIR" ] &&
+		[ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ]; then
+		change_to_force_push_directory
+		if ! delete_remote_branch; then
+			REMOTE_DELETE_STATUS=1
+		fi
+	fi
+	cd "$COMMON_GIT_DIR"
+else
+	cd "$COMMON_GIT_DIR/.."
+	if [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ]; then
+		git_common pull
+	fi
 fi
 
 if [ $FORCE -ne 1 ]; then
-	if ! git merge-base --is-ancestor "refs/heads/$BRANCH_NAME" "refs/heads/$TRUNK_BRANCH"; then
+	if ! git_common merge-base --is-ancestor "refs/heads/$BRANCH_NAME" "refs/heads/$TRUNK_BRANCH"; then
 		>&2 echo "Branch $BRANCH_NAME checked out at $WORKTREE_DIR is not fully merged"
 		popd || exit 1
 		exit 2
@@ -137,17 +189,19 @@ REMOVE_FLAGS=(--force)
 if [ $FORCE -eq 1 ]; then
 	REMOVE_FLAGS+=(--force)
 fi
-git worktree remove "${REMOVE_FLAGS[@]}" "$WORKTREE_ABSOLUTE_PATH"
+git_common worktree remove "${REMOVE_FLAGS[@]}" "$WORKTREE_ABSOLUTE_PATH"
 
-if [ -z "$REMOTE_NAME" ] || [ "$REMOTE_NAME" = . ]; then
-	>&2 echo "No external push remote for branch $BRANCH_NAME, not deleting it remotely"
-elif ! git push "$REMOTE_NAME" -d "$BRANCH_NAME"; then
-	>&2 echo "Failed to delete the remote branch, perhaps it was already deleted"
+if [ $FORCE -ne 1 ]; then
+	delete_remote_branch
 fi
 
-# The preflight checks master even when this branch's upstream is older.
-git branch -D "$BRANCH_NAME"
-
-if [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ]; then
-	git fetch --all -p
+if [ -n "$BRANCH_NAME" ]; then
+	# The preflight checks master even when this branch's upstream is older.
+	git_common branch -D "$BRANCH_NAME"
 fi
+
+if [ $FORCE -ne 1 ] && [ -n "$REMOTE_NAME" ] && [ "$REMOTE_NAME" != . ]; then
+	git_common fetch --all -p
+fi
+
+exit "$REMOTE_DELETE_STATUS"

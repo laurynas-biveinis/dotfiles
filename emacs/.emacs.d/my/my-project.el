@@ -118,12 +118,15 @@ buffers."
 (defun kill-buffers-rm-worktree (force)
   "Kill project buffers and, if none remain, remove the git worktree.
 Ask for confirmation first.  gitrmworktree also deletes the worktree's
-branch locally and, when configured, on its external remote.  It refuses
-uncommitted changes by default.  The prefix argument FORCE passes --force,
-skipping the local merged-into-master check and discarding uncommitted
-work.  Locks and
-populated submodules with unpushed commits or stashes block removal by
-default; FORCE overrides those protections too."
+branch locally and, when configured, on its external remote.  By default,
+it requires a clean linked worktree on a branch merged into master,
+honors locks, and protects private populated-submodule commits and stashes.
+The prefix argument FORCE passes --force, bypassing every script safety
+check and skipping pull/fetch.  This can discard local and remote work.
+Forced detached removal skips branch deletion.  Git operation failures
+are still reported; forced local cleanup continues if remote deletion fails.
+Forced remote deletion runs first, so a later local failure may leave the
+remote branch already deleted."
   (interactive "P")
   (let* ((project-root-path (projectile-acquire-root))
          ;; `projectile-project-buffers' matches truenames, but a root picked
@@ -139,7 +142,7 @@ default; FORCE overrides those protections too."
     (when (yes-or-no-p
            (format "Kill %d buffers, remove worktree %s and its branch%s? "
                    (length buffers) project-root-path
-                   (if force ", even if unmerged" "")))
+                   (if force ", bypassing safety checks" "")))
       (dolist (buffer buffers)
         ;; Killing a base buffer kills its indirect buffers.
         (unless (buffer-base-buffer buffer)

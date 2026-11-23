@@ -87,9 +87,13 @@ class GitRmWorktreeTestCase(unittest.TestCase):
         """Assert that both the checkout and its local branch were removed."""
         self.assertEqual(result.returncode, returncode, result.stderr)
         self.assertFalse(self.worktree.exists())
+        self.assert_branch_absent(self.main, branch)
+
+    def assert_branch_absent(self, directory, branch="topic"):
+        """Assert ref absence without treating a Git error as absence."""
         self.assertEqual(
             self.git(
-                self.main, "for-each-ref", "--format=%(refname)", f"refs/heads/{branch}"
+                directory, "for-each-ref", "--format=%(refname)", f"refs/heads/{branch}"
             ),
             "",
         )
@@ -157,12 +161,7 @@ class GitRmWorktreeTest(GitRmWorktreeTestCase):
         (self.worktree / "new").write_text("discard\n", encoding="utf-8")
         result = self.remove_worktree("--force")
         self.assert_local_removal(result)
-        self.assertEqual(
-            self.git(
-                self.remote, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
-            ),
-            "",
-        )
+        self.assert_branch_absent(self.remote)
 
     def test_ignored_build_output_does_not_block_removal(self):
         """Ignored files do not turn a finished worktree into dirty work."""
@@ -177,7 +176,7 @@ class GitRmWorktreeTest(GitRmWorktreeTestCase):
     def test_refuses_main_worktree(self):
         """Reject the main checkout without changing its branch."""
         before = self.git(self.main, "rev-parse", "HEAD")
-        result = self.remove_worktree("--force", target=self.main)
+        result = self.remove_worktree(target=self.main)
         self.assertEqual(result.returncode, 3, result.stderr)
         self.assertIn("is not a linked worktree", result.stderr)
         self.assertEqual(self.git(self.main, "rev-parse", "HEAD"), before)
@@ -188,18 +187,18 @@ class GitRmWorktreeTest(GitRmWorktreeTestCase):
         commit = self.create_worktree()
         nested = self.worktree / "nested"
         nested.mkdir()
-        result = self.remove_worktree("--force", target=nested)
+        result = self.remove_worktree(target=nested)
         self.assertEqual(result.returncode, 3, result.stderr)
         self.assertIn("is not the top of a worktree", result.stderr)
         self.assertTrue(nested.is_dir())
         self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
 
-    def test_refuses_linked_master_even_with_force(self):
+    def test_refuses_linked_master_by_default(self):
         """Protect the trunk even when it is in a linked worktree."""
         commit = self.git(self.main, "rev-parse", "master")
         self.git(self.main, "switch", "-c", "holding")
         self.git(self.main, "worktree", "add", str(self.worktree), "master")
-        result = self.remove_worktree("--force")
+        result = self.remove_worktree()
         self.assertEqual(result.returncode, 2, result.stderr)
         self.assertIn("Refusing to delete master", result.stderr)
         self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
@@ -209,7 +208,7 @@ class GitRmWorktreeTest(GitRmWorktreeTestCase):
         """Fail before side effects when the main directory cannot be inferred."""
         self.git(self.main, "init", "--separate-git-dir=" + str(self.root / "separate"))
         commit = self.create_worktree()
-        result = self.remove_worktree("--force")
+        result = self.remove_worktree()
         self.assertEqual(result.returncode, 3, result.stderr)
         self.assertIn("Unsupported repository layout", result.stderr)
         self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
@@ -224,11 +223,11 @@ class GitRmWorktreeTest(GitRmWorktreeTestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertFalse(self.worktree.exists())
 
-    def test_refuses_detached_head_even_with_force(self):
+    def test_refuses_detached_head_by_default(self):
         """Explain detached HEAD refusal independently of remote configuration."""
         commit = self.create_worktree()
         self.git(self.worktree, "switch", "--detach")
-        result = self.remove_worktree("--force")
+        result = self.remove_worktree()
         self.assertEqual(result.returncode, 3, result.stderr)
         self.assertIn("is not on a branch (detached HEAD", result.stderr)
         self.assertEqual(self.git(self.worktree, "rev-parse", "HEAD"), commit)
@@ -450,12 +449,7 @@ class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
         self.git(self.main, "config", "branch.topic.pushRemote", "origin")
         result = self.remove_worktree()
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(
-            self.git(
-                self.remote, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
-            ),
-            "",
-        )
+        self.assert_branch_absent(self.remote)
         self.assertFalse(self.worktree.exists())
 
     def test_no_configured_remote_skips_remote_deletion(self):
@@ -519,12 +513,166 @@ class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
         self.git(self.worktree, "reset", "--hard", "master")
         result = self.remove_worktree("--force")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(
-            self.git(
-                self.remote, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
-            ),
-            "",
+        self.assert_branch_absent(self.remote)
+
+
+class GitRmWorktreeForceTest(GitRmWorktreeTestCase):
+    """Force overrides safety policy while Git still reports operation errors."""
+
+    def test_force_preserves_relative_remote_url_resolution(self):
+        """Resolve relative push destinations from the original main context."""
+        self.worktree = self.root / "targets" / "worktree"
+        self.worktree.parent.mkdir()
+        self.assert_force_preserves_relative_remotes(
+            self.main, "../remote.git", self.worktree.parent / "remote.git"
         )
+
+    def test_force_resolves_relative_remotes_with_separate_metadata(self):
+        """Use the target root when metadata is not a discoverable checkout."""
+        self.separate_git_directory("metadata/deeper/repo")
+        self.worktree = self.root / "targets" / "worktree"
+        self.worktree.parent.mkdir()
+        self.assert_force_preserves_relative_remotes(
+            self.worktree, "../../remote.git", self.root / "metadata" / "remote.git"
+        )
+
+    def test_force_uses_git_discovered_parent_for_dotgit_metadata(self):
+        """Honor Git's discovered checkout for metadata literally named .git."""
+        metadata = self.separate_git_directory("metadata/.git").parent
+        self.worktree = self.root / "targets" / "worktree"
+        self.worktree.parent.mkdir()
+        self.assert_force_preserves_relative_remotes(
+            metadata, "../remote.git", self.worktree.parent / "remote.git"
+        )
+
+    def test_force_preserves_native_url_rewriting(self):
+        """Do not reinject an expanded URL and apply a second rewrite."""
+        metadata = self.separate_git_directory("metadata/repo").parent
+        commit = self.create_worktree()
+        decoy = metadata / "remote.git"
+        self.git(self.root, "clone", "--bare", str(self.remote), str(decoy))
+        self.git(self.main, "config", "remote.origin.url", "test:remote")
+        self.git(self.main, "config", "url.../remote.git.insteadOf", "test:remote")
+        self.git(self.main, "config", f"url.{decoy}.insteadOf", str(self.remote))
+        config = self.git(self.main, "config", "--get-regexp", r"^(remote\.|url\.)")
+        result = self.remove_worktree("--force")
+        self.assert_local_removal(result)
+        self.assert_branch_absent(self.remote)
+        self.assertEqual(self.git(decoy, "rev-parse", "topic"), commit)
+        self.assertEqual(
+            self.git(self.main, "config", "--get-regexp", r"^(remote\.|url\.)"), config
+        )
+
+    def separate_git_directory(self, relative_path):
+        """Move metadata to a new location outside the main checkout."""
+        directory = self.root / relative_path
+        directory.parent.mkdir(parents=True)
+        self.git(self.main, "init", "--separate-git-dir=" + str(directory))
+        return directory
+
+    def test_force_uses_all_relative_push_urls(self):
+        """Let Git delete each configured destination from the chosen context."""
+        metadata = self.separate_git_directory("metadata/repo").parent
+        commit = self.create_worktree()
+        published = self.root / "published.git"
+        decoys = (metadata / "remote.git", metadata / "published.git")
+        for remote in (published, *decoys):
+            self.git(self.root, "clone", "--bare", str(self.remote), str(remote))
+        self.git(self.main, "remote", "set-url", "--push", "origin", "../remote.git")
+        self.git(
+            self.main,
+            "remote",
+            "set-url",
+            "--add",
+            "--push",
+            "origin",
+            "../published.git",
+        )
+        config = self.git(self.main, "config", "--get-regexp", r"^(remote\.|url\.)")
+        result = self.remove_worktree("--force")
+        self.assert_local_removal(result)
+        for remote in (self.remote, published):
+            self.assert_branch_absent(remote)
+        for remote in decoys:
+            self.assertEqual(self.git(remote, "rev-parse", "topic"), commit)
+        self.assertEqual(
+            self.git(self.main, "config", "--get-regexp", r"^(remote\.|url\.)"), config
+        )
+
+    def assert_force_preserves_relative_remotes(
+        self, push_directory, relative_url, decoy
+    ):
+        """Delete both relative push destinations while preserving the decoy."""
+        self.git(self.root, "clone", "--bare", str(self.remote), str(decoy))
+        for setting in ("remote.origin.url", "remote.origin.pushurl"):
+            with self.subTest(setting=setting):
+                commit = self.create_worktree()
+                self.git(decoy, "update-ref", "refs/heads/topic", commit)
+                self.git(self.main, "config", setting, relative_url)
+                self.git(push_directory, "push", "origin", "topic")
+                nested = self.worktree / "nested" / "child"
+                nested.mkdir(parents=True)
+                result = self.remove_worktree("--force", target=nested)
+                self.assert_local_removal(result)
+                self.assert_branch_absent(self.remote)
+                self.assertEqual(self.git(decoy, "rev-parse", "topic"), commit)
+                self.git(self.main, "config", setting, str(self.remote))
+
+    def test_force_removes_worktree_from_bare_repository(self):
+        """Find a valid cleanup context when no main checkout exists."""
+        bare = self.root / "bare.git"
+        self.git(self.root, "clone", "--bare", str(self.remote), str(bare))
+        self.main = bare
+        self.create_worktree()
+        result = self.remove_worktree("--force")
+        self.assert_local_removal(result)
+        self.assert_branch_absent(self.remote)
+
+    def test_force_reports_native_main_worktree_refusal(self):
+        """Force reaches Git's own refusal to remove the main worktree."""
+        before = self.git(self.main, "rev-parse", "HEAD")
+        result = self.remove_worktree("--force", target=self.main)
+        self.assertEqual(result.returncode, 128, result.stderr)
+        self.assertIn("is a main working tree", result.stderr)
+        self.assertEqual(self.git(self.main, "rev-parse", "HEAD"), before)
+        self.assertEqual(self.git(self.remote, "rev-parse", "master"), before)
+
+    def test_force_removes_detached_worktree_without_main_upstream(self):
+        """Force removes a detached checkout without requiring a pull upstream."""
+        commit = self.create_worktree()
+        self.git(self.worktree, "switch", "--detach")
+        self.git(self.main, "config", "--remove-section", "branch.master")
+        result = self.remove_worktree("--force")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.worktree.exists())
+        self.assertEqual(self.git(self.main, "rev-parse", "topic"), commit)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+
+    def test_force_removes_linked_master(self):
+        """Force overrides the trunk protection for a linked checkout."""
+        self.git(self.main, "switch", "-c", "holding")
+        self.git(self.main, "worktree", "add", str(self.worktree), "master")
+        self.git(self.remote, "config", "receive.denyDeleteCurrent", "ignore")
+        result = self.remove_worktree("--force")
+        self.assert_local_removal(result, branch="master")
+        self.assert_branch_absent(self.remote, branch="master")
+
+    def test_force_accepts_subdirectory_with_separate_git_directory(self):
+        """Force resolves the containing worktree without layout restrictions."""
+        self.git(self.main, "init", "--separate-git-dir=" + str(self.root / "separate"))
+        self.create_worktree()
+        nested = self.worktree / "nested"
+        nested.mkdir()
+        result = self.remove_worktree("--force", target=nested)
+        self.assert_local_removal(result)
+
+    def test_force_finishes_local_removal_when_remote_deletion_fails(self):
+        """Force finishes local cleanup and still reports a remote operation failure"""
+        commit = self.create_worktree()
+        self.git(self.remote, "config", "receive.denyDeletes", "true")
+        result = self.remove_worktree("--force")
+        self.assert_local_removal(result, returncode=1)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
 
 
 if __name__ == "__main__":

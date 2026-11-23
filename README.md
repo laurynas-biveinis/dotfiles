@@ -119,11 +119,21 @@ tramp ts which-key
 - `kill-buffers-rm-worktree`: bound to `y` in the Projectile keymap, asks for
   confirmation, kills the project's buffers and, if none remain, removes the
   project's worktree with `gitrmworktree`, which also deletes the branch
-  locally and on its remote. It refuses uncommitted changes by default. A prefix
-  argument passes `--force`, which skips the local merged-into-`master` check and
-  discards uncommitted work. Ignored files are still removed. By default, locks
-  and populated submodules with unpushed commits or stashes block removal.
-  `--force` overrides those protections too. The push remote is selected from
+  locally and, when configured, on its external remote. Default removal requires
+  a linked worktree root on a branch merged into local `master`. Uncommitted
+  changes, locks, and populated submodules with private commits or stashes block
+  removal. Ignored files are still removed.
+  A prefix argument passes `--force`, bypassing every script safety check and
+  skipping pull/fetch. This can discard local and remote work. Forced detached
+  removal skips branch deletion. Git operation failures are still reported;
+  forced local cleanup continues if remote deletion fails.
+  Forced remote deletion happens first, so a later local removal failure can
+  leave the remote branch already deleted. Relative URLs use the main checkout
+  discovered by Git, the common directory for a bare repository, or the target
+  checkout root when no main checkout is discoverable. Separate metadata named
+  `.git` follows Git's discovered-parent semantics; the original checkout path
+  cannot be recovered from that metadata alone.
+  The push remote is selected from
   `branch.<name>.pushRemote`, `remote.pushDefault`, then `branch.<name>.remote`.
   Without `--force`, the pull remote is used only for a matching upstream or a
   same-name remote-tracking branch already contained in the local branch.
