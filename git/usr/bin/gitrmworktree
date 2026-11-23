@@ -76,6 +76,9 @@ fi
 
 REMOTE_NAME=$(git config branch."${BRANCH_NAME}".pushremote || echo "")
 if [ -z "${REMOTE_NAME}" ]; then
+	REMOTE_NAME=$(git config remote.pushdefault || echo "")
+fi
+if [ -z "${REMOTE_NAME}" ]; then
 	REMOTE_NAME=$(git config branch."${BRANCH_NAME}".remote || echo "")
 fi
 readonly REMOTE_NAME

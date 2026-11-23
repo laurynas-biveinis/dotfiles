@@ -408,5 +408,42 @@ class GitRmWorktreeRemovalTest(GitRmWorktreeTestCase):
         self.assertFalse(self.worktree.exists())
 
 
+class GitRmWorktreeRemoteTest(GitRmWorktreeTestCase):
+    """Choose and verify remote branches before deletion."""
+
+    def test_push_default_takes_precedence_over_upstream_remote(self):
+        """Use the configured push destination before the pull destination."""
+        commit = self.create_worktree()
+        publish = self.root / "publish.git"
+        self.git(self.root, "init", "--bare", str(publish))
+        self.git(self.main, "remote", "add", "publish", str(publish))
+        self.git(self.worktree, "push", "publish", "topic")
+        self.git(self.main, "config", "remote.pushDefault", "publish")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.git(self.remote, "rev-parse", "topic"), commit)
+        self.assertEqual(
+            self.git(
+                publish, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
+            ),
+            "",
+        )
+
+    def test_branch_push_remote_overrides_push_default(self):
+        """A branch-specific push remote remains the highest-priority choice."""
+        self.create_worktree()
+        self.git(self.main, "config", "remote.pushDefault", "not-a-remote")
+        self.git(self.main, "config", "branch.topic.pushRemote", "origin")
+        result = self.remove_worktree()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.git(
+                self.remote, "for-each-ref", "--format=%(refname)", "refs/heads/topic"
+            ),
+            "",
+        )
+        self.assertFalse(self.worktree.exists())
+
+
 if __name__ == "__main__":
     unittest.main()

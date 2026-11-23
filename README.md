@@ -123,7 +123,8 @@ tramp ts which-key
   argument passes `--force`, which skips the local merged-into-`master` check and
   discards uncommitted work. Ignored files are still removed. By default, locks
   and populated submodules with unpushed commits or stashes block removal.
-  `--force` overrides those protections too.
+  `--force` overrides those protections too. The push remote is selected from
+  `branch.<name>.pushRemote`, `remote.pushDefault`, then `branch.<name>.remote`.
 
 ## Installation
 
