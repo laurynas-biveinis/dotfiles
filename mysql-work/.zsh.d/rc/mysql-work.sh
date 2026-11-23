@@ -140,17 +140,21 @@ mysql_select_flags() {
     done
 }
 
-mysql_get_comp_flags() {
-    if ! mysql_validate_version "$1"; then
+# Validates version $2 and, with validator function $1, type $3, then prints
+# the flags among the $4... key/value pairs selected for them.
+mysql_get_flags() {
+    if ! mysql_validate_version "$2" || ! "$1" "$3"; then
         return 1
     fi
-    if ! mysql_validate_compiler_flag_type "$2"; then
-        return 1
-    fi
+    shift
     declare -a reply
-    mysql_select_flags "$1" "$2" "${(@kv)comp_flags}"
+    mysql_select_flags "$@"
     echo ${reply[*]}
-    return 0
+}
+
+mysql_get_comp_flags() {
+    mysql_get_flags mysql_validate_compiler_flag_type "$1" "$2" \
+                    "${(@kv)comp_flags}"
 }
 
 # Enable when developing
@@ -181,16 +185,8 @@ mysql_add_cmake_flags() {
 }
 
 mysql_get_cmake_flags() {
-    if ! mysql_validate_version "$1"; then
-        return 1
-    fi
-    if ! mysql_validate_cmake_flag_type "$2"; then
-        return 1
-    fi
-    declare -a reply
-    mysql_select_flags "$1" "$2" "${(@kv)cmake_flags}"
-    echo "${reply[@]}"
-    return 0
+    mysql_get_flags mysql_validate_cmake_flag_type "$1" "$2" \
+                    "${(@kv)cmake_flags}"
 }
 
 # Ignores the exit status of its mysql_add_*_flags registrations and
