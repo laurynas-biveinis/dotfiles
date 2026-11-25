@@ -13,6 +13,7 @@
       "!emacs/.emacs.d/elpa",
       "!**/.mypy_cache",
       "!ai/.claude",
+      "!ai/.agents",
       "!.claude",
       "!.venv",
       "!**/*.md",
