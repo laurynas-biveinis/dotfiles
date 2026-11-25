@@ -266,8 +266,10 @@ done
                     (result.returncode, result.stderr),
                     (
                         1,
-                        f"{build_type} build unsupported for {build.flavor} "
-                        f"{build.version}\n",
+                        (
+                            f"{build_type} build unsupported for {build.flavor} "
+                            f"{build.version}\n"
+                        ),
                     ),
                 )
                 self.assertFalse(self.cmake_called(build.name))

@@ -126,10 +126,10 @@ done
         )
 
     def test_unknown_build_type_is_reported_and_skipped(self):
-        """A misspelled build type exports nothing in place of a sibling."""
+        """An unknown build type exports nothing in place of a sibling."""
         for build_types, exported in (
-            (("debug", "relase"), ["MY99900D"]),
-            (("relase",), []),
+            (("debug", "unknown"), ["MY99900D"]),
+            (("unknown",), []),
         ):
             with self.subTest(build_types=build_types):
                 result = run_sourced_zsh(
@@ -151,8 +151,10 @@ done
                     (
                         0,
                         exported,
-                        "Invalid build type relase."
-                        " Can be one of debug, release, benchmark\n",
+                        (
+                            "Invalid build type unknown."
+                            " Can be one of debug, release, benchmark\n"
+                        ),
                     ),
                 )
 
