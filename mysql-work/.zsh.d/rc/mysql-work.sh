@@ -1,23 +1,37 @@
 #!/bin/zsh
 #
 # Exported environment variables, CMake options:
-# MYxyz, MYxyzD: Oracle MySQL release & debug build, for x.y.z version
+# MYxyz, MYxyzD: Oracle MySQL release & debug builds for selected x.y.z
+#   versions; some versions have MYxyzD only
+# MYxyzB: Oracle MySQL release build for benchmarking (no unit tests or
+#   maintainer mode), only for some versions
+# PS80xyD: Percona Server 8.0 debug build for selected versions
 # MARIA108, MARIA108D: MariaDB 10.8 release and debug build
-# FB80xy, FB80xyD: MySQL 8.0 Facebook Patch release and debug
+# FB80xy, FB80xyD: MySQL 8.0 Facebook Patch release and debug builds for
+#   selected versions
 #
 # Extra CMake options:
-# MYCLANG, MYCLANG12, MYCLANG14, MYCLANG15, MYCLANG16, MYCLANG17: set compiler
-# to clang for CMake, optionally with a version
-# MYGCC13: set compiler to GCC 13 for CMake
+# MYCLANG, MYCLANGnn: set compiler to clang for CMake, optionally LLVM nn
+# MYGCCnn: set compiler to GCC nn for CMake
 # MYSAN: add maximum supported Sanitizer configuration
+# MY8030_MAX_CORE_DUMP_FLAGS: for 8.0.30 and later, developer entitlements
+#   that enable core dumps on macOS Apple Silicon; empty elsewhere
 #
 # mysql-test-run options:
 # MTR_EMD: MTR options to preload libeatmydata
 #
 # User shell functions:
-# - mtr: call mtr with libeatmydata and some tmpdir
-# - rmtr: rebuild and then call mtr
-# - rm_tmp_mtr: cleanup all tmpdir from the above
+# - mtr: in a build directory's mysql-test, call mtr with libeatmydata and
+#   some tmpdir
+# - rmtr: in a build directory's mysql-test, rebuild and then call mtr
+# - rm_tmp_mtr: kill -9 all mysql_server_mock and mysqlrouter processes, then
+#   delete all /tmp/mtr-* tmpdirs and the router, mysqld and unique-ID
+#   leftovers in /tmp, including those of concurrent runs, and the default X
+#   Protocol socket /tmp/mysqlx.sock and its lock file, live or not
+# - rm_cores_tmp_mtr: rm_tmp_mtr, plus delete all core files in /cores
+# - cmtr, crmtr (also rcmtr): rm_cores_tmp_mtr, then mtr / rmtr
+# - lldb_mysqld_core: macOS, open the only core in /cores in lldb against
+#   mysqld; run from a build directory's mysql-test
 # - mysql_cmake: in a build directory, figure out CMake options & run it. Any
 #   arguments will be passed through to CMake
 # - mysql_build: in a build directory, CMake and build
