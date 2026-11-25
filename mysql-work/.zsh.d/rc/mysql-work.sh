@@ -251,7 +251,7 @@ mysql_export_environment_helpers() {
     declare -r max_version="26.10.0"
     # The newest versions with compiler presets, which the loops below generate
     # on both platforms.
-    declare -ri newest_llvm=20 newest_gcc=14
+    declare -ri newest_llvm=21 newest_gcc=14
     declare -i v
 
     # Platform-specific stuff, both building blocks and complete user variables

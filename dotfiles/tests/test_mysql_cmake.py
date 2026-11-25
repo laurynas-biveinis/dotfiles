@@ -128,12 +128,12 @@ done
         core_dump = ["-DWITH_DEVELOPER_ENTITLEMENTS=ON"]
         cases = (
             (
-                "san-llvm-18",
+                "san-llvm-21",
                 ["-DWITH_ASAN=ON", "-DWITH_ASAN_SCOPE=ON", "-DWITH_UBSAN=ON"],
                 [
-                    "-DCMAKE_C_COMPILER=/stub-brew/opt/llvm@18/bin/clang",
-                    "-DCMAKE_CXX_COMPILER=/stub-brew/opt/llvm@18/bin/clang++",
-                    "-DCMAKE_AR=/stub-brew/opt/llvm@18/bin/llvm-ar",
+                    "-DCMAKE_C_COMPILER=/stub-brew/opt/llvm@21/bin/clang",
+                    "-DCMAKE_CXX_COMPILER=/stub-brew/opt/llvm@21/bin/clang++",
+                    "-DCMAKE_AR=/stub-brew/opt/llvm@21/bin/llvm-ar",
                 ],
             ),
             (
@@ -199,7 +199,7 @@ done
     def test_compiler_presets_exist_on_every_platform(self):
         """A preset defined for one platform only fails its builds on the other."""
         darwin = self.compiler_presets("darwin")
-        self.assertIn("MYCLANG20", darwin)
+        self.assertIn("MYCLANG21", darwin)
         self.assertEqual(darwin, self.compiler_presets("linux-gnu"))
 
     def test_darwin_cmake_ar_starts_at_llvm_14(self):
@@ -217,7 +217,7 @@ done
         """Each Linux compiler modifier selects both its C and C++ compiler."""
         compilers = [("llvm", "clang", "clang++")]
         compilers += [
-            (f"llvm-{v}", f"clang-{v}", f"clang++-{v}") for v in range(12, 21)
+            (f"llvm-{v}", f"clang-{v}", f"clang++-{v}") for v in range(12, 22)
         ]
         compilers += [(f"gcc-{v}", f"gcc-{v}", f"g++-{v}") for v in range(11, 15)]
         results = self.configure(
@@ -251,7 +251,7 @@ done
             ("llvm-120", "LLVM 120", "mysql_cmake"),
             ("gcc-10", "GCC 10", "mysql_cmake"),
             ("gcc-140", "GCC 140", "mysql_cmake"),
-            ("llvm-20", "LLVM 20", "unset MYCLANG20; mysql_cmake"),
+            ("llvm-21", "LLVM 21", "unset MYCLANG21; mysql_cmake"),
             ("gcc-14", "GCC 14", "unset MYGCC14; mysql_cmake"),
             ("llvm", "LLVM", "unset MYCLANG; mysql_cmake"),
         )
@@ -277,15 +277,15 @@ done
         """
         cases = (
             ("llvm-20-llvm-custom", "LLVM 20", 0),
-            ("llvm-custom-llvm-20", "LLVM 20", 0),
+            ("llvm-custom-llvm-21", "LLVM 21", 0),
             ("gcc-14-gcc-custom", "GCC 14", 0),
             ("gcc-custom-gcc-13", "GCC 13", 0),
             ("gcc-14-llvm-custom", "GCC 14", 0),
             ("llvm-custom-gcc-13", "GCC 13", 0),
-            ("llvm-99-llvm-20", "LLVM 20", 0),
+            ("llvm-99-llvm-21", "LLVM 21", 0),
             ("gcc-13-gcc-14", "GCC 14", 0),
-            ("gcc-13-llvm-20", "LLVM 20", 0),
-            ("llvm-20-gcc-13", "LLVM 20", 0),
+            ("gcc-13-llvm-21", "LLVM 21", 0),
+            ("llvm-21-gcc-13", "LLVM 21", 0),
             ("llvm-99-llvm-custom", "LLVM 99", 1),
             ("gcc-99-gcc-custom", "GCC 99", 1),
         )

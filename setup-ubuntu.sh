@@ -59,6 +59,8 @@ sudo apt install clang-14 clang-14-doc clang-tools-14 lld-14 llvm-14 \
 	clang-tools-19 clangd-19 lld-19 llvm-19 llvm-19-doc llvm-19-tools
 sudo apt install clang-20 clang-20-doc clang-format-20 clang-tidy-20 \
 	clang-tools-20 clangd-20 lld-20 llvm-20 llvm-20-doc llvm-20-tools
+sudo apt install clang-21 clang-21-doc clang-format-21 clang-tidy-21 \
+	clang-tools-21 clangd-21 lld-21 llvm-21 llvm-21-doc llvm-21-tools
 # Absent in 24.10:
 sudo apt install libasan5 libstdc++-doc libgfortran-dev
 # DeepState (x86_64 only)
