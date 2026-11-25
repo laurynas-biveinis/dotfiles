@@ -156,16 +156,16 @@
     ]
   },
   "enabledPlugins": {
-    "claude-code-wakatime@wakatime": true,
-    "clangd-lsp@claude-plugins-official": true
+    "clangd-lsp@claude-plugins-official": true,
+    "claude-code-wakatime@wakatime": true
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "modelSettings": {
-    "claude-opus-5": {
+    "claude-fable-5-1": {
       "effortLevel": "xhigh"
     },
-    "claude-fable-5-1": {
+    "claude-opus-5": {
       "effortLevel": "xhigh"
     }
   },
