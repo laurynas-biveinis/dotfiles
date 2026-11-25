@@ -92,14 +92,14 @@
       (:maintainer "stardiviner" . "numbchild@gmail.com")
       (:commit . "b2ffd8441851659cb1cc844156073967729585e5"))])
  (au-themes
-  . [(0 4 1) ((emacs (29 1)) (modus-themes (5 2 0)))
+  . [(0 4 2) ((emacs (29 1)) (modus-themes (5 2 0)))
      "Sensory-safe themes for autism and neurodivergence" tar
      ((:url . "https://github.com/szymonwilczek/au-themes")
       (:keywords "faces" "themes" "accessibility" "autism"
 		 "neurodivergence")
       (:maintainer "Szymon Wilczek" . "swilczek.lx@gmail.com")
       (:authors ("Szymon Wilczek" . "swilczek.lx@gmail.com"))
-      (:commit . "ac31d5ca03ce474cc6f8bc046ba77f3b51ff9530"))])
+      (:commit . "f7c5fb93d03eb3fe6efd3038b0f510986a1fe4e5"))])
  (auto-dim-other-buffers
   . [(2 2 3) ((emacs (27 1)))
      "Makes windows without focus less prominent" tar
@@ -974,12 +974,12 @@
       (:authors ("Alexey Kutepov" . "reximkut@gmail.com"))
       (:commit . "13e13ea1e2ebd146f279058970835b35de811531"))])
  (gruvbox-theme
-  . [(1 30 3) ((autothemer (0 2)))
+  . [(1 30 5) ((autothemer (0 2 19)))
      "A retro-groove colour theme for Emacs" tar
      ((:url . "https://github.com/greduan/emacs-theme-gruvbox")
       (:maintainer "Jason Milkins" . "jasonm23@gmail.com")
       (:authors ("Jason Milkins" . "jasonm23@gmail.com"))
-      (:commit . "b34b8c0d9fe84190bb69cf084d7354d5e948fd94"))])
+      (:commit . "ba1f46df59a323e6580d75d980a8ce9c59f2c10a"))])
  (guru-mode
   . [(1 0) nil "Become an Emacs guru" tar
      ((:url . "https://github.com/bbatsov/guru-mode")
@@ -1319,12 +1319,12 @@
       (:authors ("Jason R. Blevins" . "jblevins@xbeta.org"))
       (:commit . "f5d520b3ee7722dd2231ab586ba51d8eb166e49b"))])
  (markdown-ts-appear
-  . [(0 4 0) ((emacs (31 1))) "Reveal Markdown source at point" tar
+  . [(0 4 1) ((emacs (31 1))) "Reveal Markdown source at point" tar
      ((:url . "https://github.com/Thysrael/markdown-ts-appear")
       (:keywords "text" "convenience")
       (:maintainer "Thysrael" . "thysrael@163.com")
       (:authors ("Thysrael" . "thysrael@163.com"))
-      (:commit . "812a2155617c6b3175f00ce594f36cea4d84f2f4"))])
+      (:commit . "6d1b95e57a04c938fb39b0c61a04e9dbacbae1ff"))])
  (mastodon
   . [(2 1 8) ((emacs (29 1)) (compat (31)) (persist (0 8)) (tp (0 8)))
      "Client for fediverse services using the Mastodon API" tar
