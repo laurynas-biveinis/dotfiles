@@ -1072,60 +1072,28 @@ mysql_cmake() {
 		;;
 	esac
 
+	declare preset= compiler= compiler_version=
 	case "$build_dir" in
-        *llvm-12*)
-		echo "Using LLVM 12"
-		build_flags+=("${MYCLANG12[@]}")
+        *llvm-<->*)
+		compiler_version="${${(M)build_dir##*llvm-<->}##*llvm-}"
+		preset="MYCLANG$compiler_version" compiler="LLVM $compiler_version"
 		;;
-        *llvm-14*)
-		echo "Using LLVM 14"
-		build_flags+=("${MYCLANG14[@]}")
-		;;
-        *llvm-15*)
-		echo "Using LLVM 15"
-		build_flags+=("${MYCLANG15[@]}")
-		;;
-        *llvm-16*)
-		echo "Using LLVM 16"
-		build_flags+=("${MYCLANG16[@]}")
-		;;
-        *llvm-17*)
-		echo "Using LLVM 17"
-		build_flags+=("${MYCLANG17[@]}")
-		;;
-        *llvm-18*)
-		echo "Using LLVM 18"
-		build_flags+=("${MYCLANG18[@]}")
-		;;
-        *llvm-19*)
-		echo "Using LLVM 19"
-		build_flags+=("${MYCLANG19[@]}")
-		;;
-        *llvm-20*)
-		echo "Using LLVM 20"
-		build_flags+=("${MYCLANG20[@]}")
+        *gcc-<->*)
+		compiler_version="${${(M)build_dir##*gcc-<->}##*gcc-}"
+		preset="MYGCC$compiler_version" compiler="GCC $compiler_version"
 		;;
         *llvm*)
-		echo "Using LLVM"
-		build_flags+=("${MYCLANG[@]}")
-		;;
-        *gcc-11*)
-		echo "Using GCC 11"
-		build_flags+=("${MYGCC11[@]}")
-		;;
-        *gcc-12*)
-		echo "Using GCC 12"
-		build_flags+=("${MYGCC12[@]}")
-		;;
-        *gcc-13*)
-		echo "Using GCC 13"
-		build_flags+=("${MYGCC13[@]}")
-		;;
-        *gcc-14*)
-		echo "Using GCC 14"
-		build_flags+=("${MYGCC14[@]}")
+		preset=MYCLANG compiler=LLVM
 		;;
 	esac
+	if [[ -n $preset ]]; then
+		if (( ! ${(P)+preset} )); then
+			>&2 echo "No compiler preset for $compiler"
+			return 1
+		fi
+		echo "Using $compiler"
+		build_flags+=("${(@P)preset}")
+	fi
 
 	# TODO(laurynas): we might want to brew unlink boost temporarily for
 	# configuration and build, but each of these functions may be called

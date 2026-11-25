@@ -49,6 +49,12 @@ I symlink these into the parent directory of all the source trees.
   for the selected type fails before invoking CMake. Sanitizers and Valgrind
   cannot be combined. Explicit CMake arguments come last and can override the
   selected options.
+  Numbered `llvm-N` and `gcc-N` modifiers select the corresponding `MYCLANGN`
+  and `MYGCCN` presets; an undefined preset fails before invoking CMake. If one
+  compiler is numbered twice, only the last number counts. A numbered `llvm-N`
+  takes precedence over a numbered `gcc-N` wherever either appears. An
+  unnumbered `llvm` modifier uses the unversioned compiler unless a numbered
+  modifier is also present.
   MySQL configurations always set `CMAKE_C_FLAGS`, including an empty value
   when no workaround applies, so reconfiguration clears obsolete C flags.
 - [fetchworksrc](https://github.com/laurynas-biveinis/dotfiles/blob/master/mysql-work/usr/bin/fetchworksrc):

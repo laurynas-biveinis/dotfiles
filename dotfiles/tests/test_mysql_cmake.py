@@ -145,7 +145,7 @@ done
                 ],
             ),
             (
-                "llvm",
+                "llvm-custom",
                 core_dump,
                 [
                     "-DCMAKE_C_COMPILER=/stub-brew/opt/llvm/bin/clang",
@@ -197,7 +197,7 @@ done
                 )
 
     def test_compiler_presets_exist_on_every_platform(self):
-        """A preset defined for one platform only leaves the other unselected."""
+        """A preset defined for one platform only fails its builds on the other."""
         darwin = self.compiler_presets("darwin")
         self.assertIn("MYCLANG20", darwin)
         self.assertEqual(darwin, self.compiler_presets("linux-gnu"))
@@ -217,7 +217,7 @@ done
         """Each Linux compiler modifier selects both its C and C++ compiler."""
         compilers = [("llvm", "clang", "clang++")]
         compilers += [
-            (f"llvm-{v}", f"clang-{v}", f"clang++-{v}") for v in (12, *range(14, 21))
+            (f"llvm-{v}", f"clang-{v}", f"clang++-{v}") for v in range(12, 21)
         ]
         compilers += [(f"gcc-{v}", f"gcc-{v}", f"g++-{v}") for v in range(11, 15)]
         results = self.configure(
@@ -242,6 +242,75 @@ done
                         f"-DCMAKE_CXX_COMPILER={cxx_compiler}",
                     ],
                 )
+
+    def test_undefined_compiler_presets_are_rejected(self):
+        """Unknown versions and missing presets never reach CMake."""
+        cases = (
+            ("llvm-11", "LLVM 11", "mysql_cmake"),
+            ("llvm-99", "LLVM 99", "mysql_cmake"),
+            ("llvm-120", "LLVM 120", "mysql_cmake"),
+            ("gcc-10", "GCC 10", "mysql_cmake"),
+            ("gcc-140", "GCC 140", "mysql_cmake"),
+            ("llvm-20", "LLVM 20", "unset MYCLANG20; mysql_cmake"),
+            ("gcc-14", "GCC 14", "unset MYGCC14; mysql_cmake"),
+            ("llvm", "LLVM", "unset MYCLANG; mysql_cmake"),
+        )
+        for ostype in ("darwin", "linux-gnu"):
+            builds = [
+                Build(f"_build-debug-{modifier}-{ostype}", commands=commands)
+                for modifier, _, commands in cases
+            ]
+            results = self.configure(builds, ostype=ostype)
+            for build, (_, compiler, _) in zip(builds, cases):
+                with self.subTest(ostype=ostype, compiler=compiler):
+                    result = results[build.name]
+                    self.assertEqual(
+                        (result.returncode, result.stderr),
+                        (1, f"No compiler preset for {compiler}\n"),
+                    )
+                    self.assertFalse(self.cmake_called(build.name))
+
+    def test_repeated_compiler_labels_select_one_compiler(self):
+        """A numbered compiler beats a label, and numbered LLVM beats numbered GCC.
+
+        Within one compiler, the last number beats earlier ones.
+        """
+        cases = (
+            ("llvm-20-llvm-custom", "LLVM 20", 0),
+            ("llvm-custom-llvm-20", "LLVM 20", 0),
+            ("gcc-14-gcc-custom", "GCC 14", 0),
+            ("gcc-custom-gcc-13", "GCC 13", 0),
+            ("gcc-14-llvm-custom", "GCC 14", 0),
+            ("llvm-custom-gcc-13", "GCC 13", 0),
+            ("llvm-99-llvm-20", "LLVM 20", 0),
+            ("gcc-13-gcc-14", "GCC 14", 0),
+            ("gcc-13-llvm-20", "LLVM 20", 0),
+            ("llvm-20-gcc-13", "LLVM 20", 0),
+            ("llvm-99-llvm-custom", "LLVM 99", 1),
+            ("gcc-99-gcc-custom", "GCC 99", 1),
+        )
+        for ostype in ("darwin", "linux-gnu"):
+            builds = [Build(f"_build-debug-{name}-{ostype}") for name, _, _ in cases]
+            results = self.configure(builds, ostype=ostype)
+            for build, (_, compiler, status) in zip(builds, cases):
+                with self.subTest(ostype=ostype, build=build.name):
+                    result = results[build.name]
+                    self.assertEqual(
+                        (result.returncode, result.stderr),
+                        (
+                            status,
+                            f"No compiler preset for {compiler}\n" if status else "",
+                        ),
+                    )
+                    self.assertEqual(
+                        [
+                            line
+                            for line in result.stdout.splitlines()
+                            if line.startswith("Using")
+                        ],
+                        [] if status else [f"Using {compiler}"],
+                    )
+                    self.assertEqual(self.cmake_called(build.name), status == 0)
 
     def test_unsupported_build_types_are_rejected(self):
         """Neither modifiers nor caller globals may stand in for base options."""
