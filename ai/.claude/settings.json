@@ -24,36 +24,6 @@
   },
   "enableAllProjectMcpServers": false,
   "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
@@ -82,74 +52,6 @@
             "type": "command",
             "command": "python3 ~/.claude/hooks/validate_elisp_syntax.py",
             "if": "Edit(*.el)"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
-    "StopFailure": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x \"$HOME/.config/iterm2/cc-status\" ]; then \"$HOME/.config/iterm2/cc-status\"; fi"
           }
         ]
       }
