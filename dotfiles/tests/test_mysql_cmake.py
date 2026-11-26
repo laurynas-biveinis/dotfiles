@@ -202,6 +202,17 @@ done
         self.assertIn("MYCLANG20", darwin)
         self.assertEqual(darwin, self.compiler_presets("linux-gnu"))
 
+    def test_darwin_cmake_ar_starts_at_llvm_14(self):
+        """Only Homebrew LLVM 14 on carries the bug 113113 CMAKE_AR setting."""
+        self.assertEqual(
+            self.run_sourced(
+                "darwin",
+                "print -l ${MYCLANG13[(I)-DCMAKE_AR=*]}"
+                " ${MYCLANG14[(I)-DCMAKE_AR=*]}",
+            ),
+            "0\n3\n",
+        )
+
     def test_linux_compiler_modifiers_select_their_compiler(self):
         """Each Linux compiler modifier selects both its C and C++ compiler."""
         compilers = [("llvm", "clang", "clang++")]

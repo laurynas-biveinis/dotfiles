@@ -189,6 +189,14 @@ mysql_get_cmake_flags() {
                     "${(@kv)cmake_flags}"
 }
 
+# Exports array $1 holding the remaining arguments, for a computed name, which
+# export NAME=(...) cannot assign. typeset -gax precedes set -A because
+# startup's warn_create_global would flag set -A creating the export.
+mysql_export_array() {
+    typeset -gax "$1"
+    set -A "$1" "${@[2,-1]}"
+}
+
 # Exports MY<version digits>[D|B] per build type among debug, release and
 # benchmark, built from the caller's myd, myr and myb.
 mysql_export_version() {
@@ -227,9 +235,7 @@ mysql_export_version() {
         esac
         mysql_get_cmake_flags "$version" "$flag_type"
         cmake_args+=(${=REPLY})
-        # Startup's warn_create_global would flag set -A creating the export.
-        typeset -gax "$name"
-        set -A "$name" "${cmake_args[@]}" "${compiler_args[@]}"
+        mysql_export_array "$name" "${cmake_args[@]}" "${compiler_args[@]}"
     done
 }
 
@@ -243,6 +249,10 @@ mysql_export_environment_helpers() {
 
     declare -r min_version="8.0.18"
     declare -r max_version="26.10.0"
+    # The newest versions with compiler presets, which the loops below generate
+    # on both platforms.
+    declare -ri newest_llvm=20 newest_gcc=14
+    declare -i v
 
     # Platform-specific stuff, both building blocks and complete user variables
     if [[ $OSTYPE == darwin* ]]; then
@@ -376,38 +386,16 @@ mysql_export_environment_helpers() {
         # https://bugs.mysql.com/bug.php?id=113113 (Build failure with Homebrew
         # LLVM 14-17 on macOS). Remove the workaround when 8.4.4 and 9.2.0 are
         # the oldest supported versions.
-        export MYCLANG14=("-DCMAKE_C_COMPILER=$brew_opt/llvm@14/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@14/bin/clang++"
-                          "-DCMAKE_AR=$brew_opt/llvm@14/bin/llvm-ar")
-        export MYCLANG15=("-DCMAKE_C_COMPILER=$brew_opt/llvm@15/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@15/bin/clang++"
-                          "-DCMAKE_AR=$brew_opt/llvm@15/bin/llvm-ar")
-        export MYCLANG16=("-DCMAKE_C_COMPILER=$brew_opt/llvm@16/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@16/bin/clang++"
-                          "-DCMAKE_AR=$brew_opt/llvm@16/bin/llvm-ar")
-        export MYCLANG17=("-DCMAKE_C_COMPILER=$brew_opt/llvm@17/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@17/bin/clang++"
-                          "-DCMAKE_AR=$brew_opt/llvm@17/bin/llvm-ar")
-        export MYCLANG18=("-DCMAKE_C_COMPILER=$brew_opt/llvm@18/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@18/bin/clang++"
-                          "-DCMAKE_AR=$brew_opt/llvm@18/bin/llvm-ar")
-        export MYCLANG19=("-DCMAKE_C_COMPILER=$brew_opt/llvm@19/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@19/bin/clang++"
-                          "-DCMAKE_AR=$brew_opt/llvm@19/bin/llvm-ar")
-        export MYCLANG20=("-DCMAKE_C_COMPILER=$brew_opt/llvm@20/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@20/bin/clang++"
-                          "-DCMAKE_AR=$brew_opt/llvm@20/bin/llvm-ar")
+        for (( v = 14; v <= newest_llvm; ++v )); do
+            mysql_export_array "MYCLANG$v" \
+                "-DCMAKE_C_COMPILER=$brew_opt/llvm@$v/bin/clang" \
+                "-DCMAKE_CXX_COMPILER=$brew_opt/llvm@$v/bin/clang++" \
+                "-DCMAKE_AR=$brew_opt/llvm@$v/bin/llvm-ar"
+        done
         export MYCLANG=("-DCMAKE_C_COMPILER=$brew_opt/llvm/bin/clang"
                         "-DCMAKE_CXX_COMPILER=$brew_opt/llvm/bin/clang++"
                         "-DCMAKE_AR=$brew_opt/llvm/bin/llvm-ar")
-        export MYGCC11=("-DCMAKE_C_COMPILER=$brew/bin/gcc-11"
-                        "-DCMAKE_CXX_COMPILER=$brew/bin/g++-11")
-        export MYGCC12=("-DCMAKE_C_COMPILER=$brew/bin/gcc-12"
-                        "-DCMAKE_CXX_COMPILER=$brew/bin/g++-12")
-        export MYGCC13=("-DCMAKE_C_COMPILER=$brew/bin/gcc-13"
-                        "-DCMAKE_CXX_COMPILER=$brew/bin/g++-13")
-        export MYGCC14=("-DCMAKE_C_COMPILER=$brew/bin/gcc-14"
-                        "-DCMAKE_CXX_COMPILER=$brew/bin/g++-14")
+        declare -r gcc_prefix="$brew/bin/"
 
         declare -r emd_libdir="$brew_opt/libeatmydata/lib/"
         export MTR_EMD=(
@@ -433,34 +421,13 @@ mysql_export_environment_helpers() {
         fi
 
         export MY8030_MAX_CORE_DUMP_FLAGS=()
-        export MYCLANG12=("-DCMAKE_C_COMPILER=clang-12"
-                          "-DCMAKE_CXX_COMPILER=clang++-12")
-        export MYCLANG13=("-DCMAKE_C_COMPILER=clang-13"
-                          "-DCMAKE_CXX_COMPILER=clang++-13")
-        export MYCLANG14=("-DCMAKE_C_COMPILER=clang-14"
-                          "-DCMAKE_CXX_COMPILER=clang++-14")
-        export MYCLANG15=("-DCMAKE_C_COMPILER=clang-15"
-                          "-DCMAKE_CXX_COMPILER=clang++-15")
-        export MYCLANG16=("-DCMAKE_C_COMPILER=clang-16"
-                          "-DCMAKE_CXX_COMPILER=clang++-16")
-        export MYCLANG17=("-DCMAKE_C_COMPILER=clang-17"
-                          "-DCMAKE_CXX_COMPILER=clang++-17")
-        export MYCLANG18=("-DCMAKE_C_COMPILER=clang-18"
-                          "-DCMAKE_CXX_COMPILER=clang++-18")
-        export MYCLANG19=("-DCMAKE_C_COMPILER=clang-19"
-                          "-DCMAKE_CXX_COMPILER=clang++-19")
-        export MYCLANG20=("-DCMAKE_C_COMPILER=clang-20"
-                          "-DCMAKE_CXX_COMPILER=clang++-20")
+        for (( v = 12; v <= newest_llvm; ++v )); do
+            mysql_export_array "MYCLANG$v" "-DCMAKE_C_COMPILER=clang-$v" \
+                "-DCMAKE_CXX_COMPILER=clang++-$v"
+        done
         export MYCLANG=("-DCMAKE_C_COMPILER=clang"
                         "-DCMAKE_CXX_COMPILER=clang++")
-        export MYGCC11=("-DCMAKE_C_COMPILER=gcc-11"
-                        "-DCMAKE_CXX_COMPILER=g++-11")
-        export MYGCC12=("-DCMAKE_C_COMPILER=gcc-12"
-                        "-DCMAKE_CXX_COMPILER=g++-12")
-        export MYGCC13=("-DCMAKE_C_COMPILER=gcc-13"
-                        "-DCMAKE_CXX_COMPILER=g++-13")
-        export MYGCC14=("-DCMAKE_C_COMPILER=gcc-14"
-                        "-DCMAKE_CXX_COMPILER=g++-14")
+        declare -r gcc_prefix=
 
         # FIXME(laurynas): incorrect for aarch64
         export MTR_EMD=(
@@ -469,6 +436,10 @@ mysql_export_environment_helpers() {
 
     # Platform-independent helpers
 
+    for (( v = 11; v <= newest_gcc; ++v )); do
+        mysql_export_array "MYGCC$v" "-DCMAKE_C_COMPILER=${gcc_prefix}gcc-$v" \
+            "-DCMAKE_CXX_COMPILER=${gcc_prefix}g++-$v"
+    done
     export MYSAN=("-DWITH_ASAN=ON" "-DWITH_ASAN_SCOPE=ON" "-DWITH_UBSAN=ON")
 
     # Common building blocks
