@@ -249,6 +249,21 @@ class XMLTransactionDateTest(unittest.TestCase):
         )
         self.assertEqual(transaction.date, "2025-12-25")
 
+    def test_non_prefix_unstructured_date_falls_back_to_booking_date(self):
+        """A date-like token that does not start the remittance info, or runs
+        into more text, is not a date prefix, so the booking date is used."""
+        for info in (
+            "25/12/20251",
+            "25/12/2025CARD",
+            "25/12/2025/REF",
+            "Invoice 12/11/2025 paid",
+        ):
+            with self.subTest(info=info):
+                transaction = _transaction_from_xml(
+                    f"<RmtInf><Ustrd>{info}</Ustrd></RmtInf>"
+                )
+                self.assertEqual(transaction.date, "2026-06-11")
+
     def test_value_date_beats_unstructured_date_prefix(self):
         """A value date takes precedence over both other date sources. It goes
         next to the booking date, the only place camt.053 allows <ValDt>."""
