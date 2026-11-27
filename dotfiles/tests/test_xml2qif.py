@@ -249,6 +249,15 @@ class XMLTransactionDateTest(unittest.TestCase):
         )
         self.assertEqual(transaction.date, "2025-12-25")
 
+    def test_value_date_beats_unstructured_date_prefix(self):
+        """A value date takes precedence over both other date sources. It goes
+        next to the booking date, the only place camt.053 allows <ValDt>."""
+        entry = _entry_xml(
+            "<RmtInf><Ustrd>25/12/2025 CARD</Ustrd></RmtInf>", namespaced=True
+        ).replace("</BookgDt>", "</BookgDt><ValDt><Dt>2026-01-02</Dt></ValDt>")
+        transaction = XML2QIF.XMLTransaction(ET.fromstring(entry))
+        self.assertEqual(transaction.date, "2026-01-02")
+
     def test_invalid_unstructured_date_prefix_raises(self):
         """An impossible calendar date in the unstructured date prefix fails
         loud, naming the prefix, instead of falling back to the booking date."""
