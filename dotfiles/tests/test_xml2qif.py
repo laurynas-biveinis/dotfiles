@@ -388,15 +388,15 @@ class FindTransactionRuleTest(unittest.TestCase):
 
 
 class ProcessTransactionsTest(unittest.TestCase):
-    """End-to-end test for process_transactions' suggestion retry path."""
+    """Tests for transaction conversion errors and suggestion retries."""
 
     _DOCUMENT_XML = _document_xml(
         "<RltdPties><Dbtr><Nm>NEW</Nm></Dbtr></RltdPties>", "10.00"
     )
 
     def setUp(self):
-        """Create a scratch config file whose rules do not match the
-        transaction, forcing the suggestion path."""
+        """Create a scratch config file from CONFIG_TEXT, which matches FIRST but
+        not NEW."""
         tmp_dir = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, tmp_dir)
         self.config_path = os.path.join(tmp_dir, "xml2qifrc")
@@ -413,6 +413,34 @@ class ProcessTransactionsTest(unittest.TestCase):
             contextlib.redirect_stdout(io.StringIO()),
         ):
             XML2QIF.process_transactions(root, rules, self.config_path, output)
+
+    def test_invalid_transaction_names_entry(self):
+        """A malformed entry reports its one-based position and the cause."""
+        rules = RULES.load_rule_config(self.config_path)
+        root = ET.fromstring(
+            _document_envelope(
+                _entry_xml(
+                    "<RltdPties><Dbtr><Nm>FIRST</Nm></Dbtr></RltdPties>",
+                    "10.00",
+                    "RCDT",
+                    "NTAV",
+                )
+                + _entry_xml("<RmtInf></RmtInf>", "10.00", family="XBCT")
+            )
+        )
+        with (
+            unittest.mock.patch.object(
+                XML2QIF,
+                "suggest_and_confirm_rule",
+                side_effect=AssertionError("Unexpected rule suggestion"),
+            ),
+            contextlib.redirect_stdout(io.StringIO()),
+            self.assertRaisesRegex(
+                ValueError,
+                r"^Entry 2: Unrecognized PaymentsTransactionFamily code 'XBCT'$",
+            ),
+        ):
+            XML2QIF.process_transactions(root, rules, self.config_path, io.StringIO())
 
     def test_accepted_suggestion_reloads_rules_and_writes_qif(self):
         """An unmatched transaction triggers the suggestion flow, and after

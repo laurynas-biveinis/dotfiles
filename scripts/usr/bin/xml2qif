@@ -9,6 +9,9 @@ remittance info, then the booking date. The prefix may stand alone or precede
 whitespace; the remaining text may span lines. An invalid prefix date stops
 conversion with an error.
 
+Transaction parsing errors identify the entry by its position among all
+entries in the input file, starting at 1, followed by the underlying error.
+
 This is configured by a configuration file ~/.xml2qifrc which contains a
 section per rule. Each rule must have some input and output keys.
 Input keys:
@@ -549,8 +552,11 @@ def process_transactions(root, rules, config_path, output_file):
     load_rule_config, and retries the failing transaction; all subsequent
     transactions in the same run use the reloaded config.
     """
-    for xml_obj in root.findall(XPATH_TRANSACTIONS, NS):
-        xml_transaction = XMLTransaction(xml_obj)
+    for index, xml_obj in enumerate(root.findall(XPATH_TRANSACTIONS, NS), start=1):
+        try:
+            xml_transaction = XMLTransaction(xml_obj)
+        except ValueError as exc:
+            raise ValueError(f"Entry {index}: {exc}") from exc
         print(
             "Before: "
             f"{replace_control_characters(str(xml_transaction), single_line=True)}"
