@@ -4,6 +4,11 @@
 Currently tested banks are Citadele and Luminor. The QIFs are produced with the
 intent to import them to Banktivity.
 
+Dates use the value date, then a leading dd/mm/yyyy date in unstructured
+remittance info, then the booking date. The prefix may stand alone or precede
+whitespace; the remaining text may span lines. An invalid prefix date stops
+conversion with an error.
+
 This is configured by a configuration file ~/.xml2qifrc which contains a
 section per rule. Each rule must have some input and output keys.
 Input keys:
@@ -274,7 +279,7 @@ class Transaction:
 class XMLTransaction(Transaction):
     """A transaction from XML file."""
 
-    _DMY_DATE_PREFIX = re.compile("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
+    _DMY_DATE_PREFIX = re.compile(r"[0-9]{2}/[0-9]{2}/[0-9]{4}(?:\s|$)")
 
     _XPATH_UNSTRUCTURED = ".//ns:NtryDtls/ns:TxDtls/ns:RmtInf/ns:Ustrd"
     _XPATH_VALUE_DATE = ".//ns:ValDt/ns:Dt"

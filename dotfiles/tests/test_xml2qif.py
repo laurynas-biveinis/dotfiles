@@ -273,6 +273,21 @@ class XMLTransactionDateTest(unittest.TestCase):
         transaction = XML2QIF.XMLTransaction(ET.fromstring(entry))
         self.assertEqual(transaction.date, "2026-01-02")
 
+    def test_unstructured_date_prefix_accepts_whitespace_or_end(self):
+        """Whitespace or the end of the text delimits the prefix; what follows
+        the delimiter, even across lines, does not matter."""
+        for info in (
+            "25/12/2025 CARD\nREF",
+            "25/12/2025",
+            "25/12/2025\nCARD",
+            "25/12/2025\tCARD",
+        ):
+            with self.subTest(info=info):
+                transaction = _transaction_from_xml(
+                    f"<RmtInf><Ustrd>{info}</Ustrd></RmtInf>"
+                )
+                self.assertEqual(transaction.date, "2025-12-25")
+
     def test_invalid_unstructured_date_prefix_raises(self):
         """An impossible calendar date in the unstructured date prefix fails
         loud, naming the prefix, instead of falling back to the booking date."""
