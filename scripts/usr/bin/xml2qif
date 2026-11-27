@@ -274,7 +274,7 @@ class Transaction:
 class XMLTransaction(Transaction):
     """A transaction from XML file."""
 
-    _US_DATE_PREFIX = re.compile("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
+    _DMY_DATE_PREFIX = re.compile("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9] .*$")
 
     _XPATH_UNSTRUCTURED = ".//ns:NtryDtls/ns:TxDtls/ns:RmtInf/ns:Ustrd"
     _XPATH_VALUE_DATE = ".//ns:ValDt/ns:Dt"
@@ -382,7 +382,7 @@ class XMLTransaction(Transaction):
         if value_date:
             return value_date
 
-        if self._unstructured_info and self._US_DATE_PREFIX.match(
+        if self._unstructured_info and self._DMY_DATE_PREFIX.match(
             self._unstructured_info
         ):
             date_substr = self._unstructured_info[:10]
